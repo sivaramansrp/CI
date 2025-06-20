@@ -1,7 +1,5 @@
-import {
-  DatosPasos,
-} from '@ng-mf/data-access-user';
 import { Component, ViewChild } from '@angular/core';
+import { DatosPasos } from '@ng-mf/data-access-user';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { PASOS } from '../../constants/pasos.enum';
 import { WizardComponent } from '@ng-mf/data-access-user';

@@ -67,7 +67,7 @@ export class TodospasosComponent {
    /**
    * Este método se utiliza para inicializar el componente.
    */
-   public getValorIndice(e: AccionBoton) {
+   public getValorIndice(e: AccionBoton): void {
     if (e.valor > 0 && e.valor < 5) {
       this.indice = e.valor;
       if (e.accion === 'cont') {

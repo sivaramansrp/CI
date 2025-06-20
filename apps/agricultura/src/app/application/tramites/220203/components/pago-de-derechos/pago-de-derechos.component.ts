@@ -1,16 +1,10 @@
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
-
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-
-import { AlertComponent, AnexarDocumentosComponent, BtnContinuarComponent, Catalogo, CatalogoSelectComponent, ConsultaioQuery, CrosslistComponent, FirmaElectronicaComponent, InputCheckComponent, InputFecha, InputFechaComponent, InputRadioComponent, TableComponent, TituloComponent } from '@ng-mf/data-access-user';
-
+import { AlertComponent, AnexarDocumentosComponent, BtnContinuarComponent, Catalogo, CatalogoSelectComponent, ConsultaioQuery, CrosslistComponent, InputCheckComponent, InputFecha, InputFechaComponent, InputRadioComponent, TableComponent, TituloComponent } from '@ng-mf/data-access-user';
 import { FECHA_SALIDA_ACUICULTURA, TIPO_RADIO } from '../../constantes/220203/importacion-de-acuicultura.enum';
-
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FormularioPago, OpcionDeRadio } from '../../models/220203/importacion-de-acuicultura.module';
-
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-
 import { ImportacionDeAcuiculturaService } from '../../services/220203/importacion-de-acuicultura.service';
 
 
@@ -199,7 +193,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy,AfterViewInit 
   /**
    * @description Verifica si el formulario es válido y actualiza el estado del botón.
    */
-  verificarEstadoDelBoton() {
+  verificarEstadoDelBoton(): void {
     const DATOS = {
       pagoDeformaValida: false,
     }
@@ -215,7 +209,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy,AfterViewInit 
   private obtenerListaJustificacion(): void {
     this.importacionAcuiculturaServicio.obtenerDetallesDelCatalogo('justificacion.json')
       .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((data) => {
+      .subscribe(() => {
         // this.justificacionCatalogo = data.data as Catalogo[];
       }, (error) => {
         console.error(error);
@@ -229,13 +223,8 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy,AfterViewInit 
    */
   /**
  * @description Actualiza el valor de un campo en el formulario y lo guarda en el servicio de importación de acuicultura.
- * @param {FormGroup} formulario El formulario con el campo que se está actualizando.
- * @param {string} campo El nombre del campo que se actualizará.
  */
-  setValoresStore(
-    formulario: FormGroup,
-    campo: string,
-  ): void {
+  setValoresStore(): void {
     this.actualizarValorAleatorio();
     const VALOR = this.formularioPago.value;
     (this.importacionAcuiculturaServicio.actualizarFormularioPago as (value: FormularioPago) => void)(VALOR);

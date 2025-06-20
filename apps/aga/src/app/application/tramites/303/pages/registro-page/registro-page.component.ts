@@ -1,7 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
-import { PASOS } from '@ng-mf/data-access-user';
 import { DatosPasos } from '@ng-mf/data-access-user';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
+import { PASOS } from '@ng-mf/data-access-user';
 import { WizardComponent } from '@ng-mf/data-access-user';
 
 interface AccionBoton {
@@ -30,7 +30,7 @@ export class RegistroPageComponent {
     this.indice = i;
   }
 
-  getValorIndice(e: AccionBoton) {
+  getValorIndice(e: AccionBoton):void {
     if (e.valor > 0 && e.valor < 5) {
       this.indice = e.valor;
       if (e.accion === 'cont') {

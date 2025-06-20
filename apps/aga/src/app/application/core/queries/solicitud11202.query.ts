@@ -1,7 +1,7 @@
 
+import { Solicitud11202State, Solicitud11202Store } from '../estados/tramites/solicitud11202.store';
 import { Injectable } from '@angular/core';
 import { Query } from '@datorama/akita';
-import { Solicitud11202State, Solicitud11202Store } from '../estados/tramites/solicitud11202.store';
 
 
 @Injectable({ providedIn: 'root' })

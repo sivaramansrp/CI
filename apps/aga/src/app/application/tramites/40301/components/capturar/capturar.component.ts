@@ -1,11 +1,12 @@
+import { AGENT_CATALOG, META_INFO_40301 } from '../../enum/caat-naviero.enum';
+import { Catalogo, ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
-import { CATALOGOS_40301_ID } from '../../enum/caat-naviero.enum';
-import { CaatNaviroMetaInfo } from '../../modelos/caat-naviero.modalidad.model';
+import { Tramite40301State, Tramite40301Store } from '../../estados/tramite40301.store';
 import { CapturarService } from '../../services/capturar.service';
-import { Catalogo } from '@libs/shared/data-access-user/src';
-import { Solicitud40301Store } from '../../estados/tramite40301.store';
+// import { Catalogo } from '@libs/shared/data-access-user/src';
+import { Tramite40301Query } from '../../estados/tramite40301.query';
 
 @Component({
   selector: 'app-capturar',
@@ -23,14 +24,14 @@ export class CapturarComponent implements OnInit, OnDestroy {
    * Representa el título del componente.
    * Se espera que esta propiedad se inicialice más tarde y contenga un valor de tipo cadena.
    */
-  titulo!: string;
+  titulo: string = META_INFO_40301.titulo;
 
   /**
    * Representa la etiqueta para el tipo de agente.
    * Esta propiedad se utiliza para almacenar una etiqueta descriptiva
    * asociada con el tipo de agente en la aplicación.
    */
-  tipoAgenteLabel!: string;
+  tipoAgenteLabel: string = META_INFO_40301.tipoAgenteLabel;
 
   /**
    * Representa el identificador único para el trámite actual (procedimiento o proceso).
@@ -43,30 +44,70 @@ export class CapturarComponent implements OnInit, OnDestroy {
    * Esto puede ser utilizado para determinar los permisos o niveles de acceso
    * del usuario dentro de la aplicación.
    */
-  rolesUsuario: string[] = [];
+  rolesUsuario: string[] = META_INFO_40301.roles;
+
   /**
    * Representa un catálogo de agentes.
    * Este arreglo contiene una lista de objetos `Catalogo`, que pueden ser utilizados
    * para almacenar y gestionar datos relacionados con agentes dentro del componente.
    */
-  agentCatalog: Catalogo[] = [];
+  agentCatalog: Catalogo[] = AGENT_CATALOG;
 
   /**
    * Subject para destruir el notificador.
    */
   private destruirNotificador$: Subject<void> = new Subject();
 
+  /**
+   * Estado actual de la solicitud del trámite.
+   */
+  public solicitudState!: Tramite40301State;
+  /**
+   * Estado de la consulta de datos.
+   */
+  consultaDatos!: ConsultaioState;
+
+  /**
+   * Indica si el formulario es de solo lectura.
+   * Se utiliza para determinar si el formulario debe ser editable o no.
+   */
+  soloLectura: boolean = false;
+
+  /**
+   * Constructor del componente CapturarComponent.
+   */
   constructor(
     private fb: FormBuilder,
     private capturarService: CapturarService,
-    private solicitud40301Store: Solicitud40301Store,
+    private tramite40301Store: Tramite40301Store,
+    private tramite40301Query: Tramite40301Query, 
+    private consultaioQuery: ConsultaioQuery
   ) {
-    this.establecerSolicitudForm();
   }
 
   ngOnInit(): void {
-    this.capturarService.setInitialValues();
-    this.readMetaInfo();
+
+    this.tramite40301Query.selectSolicitud$
+      .pipe(takeUntil(this.destruirNotificador$))
+      .subscribe((state) => {
+        this.solicitudState = state;
+      });
+
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destruirNotificador$),
+        map((seccionState) => {
+          this.consultaDatos = seccionState;
+          this.soloLectura = this.consultaDatos.readonly;
+        })
+      )
+      .subscribe();
+
+    this.establecerSolicitudForm();
+
+    if(this.soloLectura) {
+      this.solicitudForm.disable();
+    }
     this.suscribirseAlEstado();
   }
 
@@ -81,12 +122,12 @@ export class CapturarComponent implements OnInit, OnDestroy {
   public establecerSolicitudForm(): void {
     // Inicializar el formulario reactivo
     this.solicitudForm = this.fb.group({
-      cveFolioCaat: [{ value: '', disabled: true }],
-      rol: [{ value: '', disabled: true }],
-      tipoAgente: ['', Validators.required],
-      directorGeneralNombre: ['', [Validators.required, Validators.maxLength(200)]],
-      primerApellido: ['', [Validators.required, Validators.maxLength(200)]],
-      segundoApellido: ['', [Validators.maxLength(200)]],
+      cveFolioCaat: [{ value: this.solicitudState?.cveFolioCaat, disabled: true }],
+      rol: [{ value: this.solicitudState?.rol, disabled: true }],
+      tipoAgente: [{ value: this.solicitudState?.tipoAgente, disabled: this.soloLectura }, [Validators.required]],
+      directorGeneralNombre: [{ value: this.solicitudState?.directorGeneralNombre, disabled: this.soloLectura }, [Validators.required, Validators.maxLength(200)]],
+      primerApellido: [{ value: this.solicitudState?.primerApellido, disabled: this.soloLectura }, [Validators.required, Validators.maxLength(200)]],
+      segundoApellido: [{ value: this.solicitudState?.segundoApellido, disabled: this.soloLectura }, [Validators.maxLength(200)]],
     });
   }
 
@@ -103,29 +144,9 @@ export class CapturarComponent implements OnInit, OnDestroy {
    * utilizando el notificador `destruirNotificador$`.
    */
   public readMetaInfo(): void {
-    // Obtener el título desde el servicio
-    this.capturarService.obtenerMetaInfo(CATALOGOS_40301_ID.OBTENER_META_INFO)
-      .pipe(
-        takeUntil(this.destruirNotificador$),
-        map((info: CaatNaviroMetaInfo) => {
-          this.titulo = info.tutilo;
-          this.tipoAgenteLabel = info.tipoAgenteLabel;
-        })
-      )
-      .subscribe();
-
-    // Obtener roles del usuario
-    this.capturarService.obtenerRolesUsuario()
-      .pipe(
-        takeUntil(this.destruirNotificador$),
-        map((roles: string[]) => {
-          this.rolesUsuario = roles;
-        })
-      )
-      .subscribe();
 
     this.capturarService
-      .getCatalogo(CATALOGOS_40301_ID.AGENT_CATALOG)
+      .getCatalogo()
       .pipe(
         takeUntil(this.destruirNotificador$),
         map((agentCatalog: Catalogo[]) => {
@@ -145,7 +166,7 @@ export class CapturarComponent implements OnInit, OnDestroy {
    */
   public suscribirseAlEstado(): void {
     this.capturarService
-      .getSolicitudState()
+      .getTramiteState()
       .pipe(takeUntil(this.destruirNotificador$))
       .subscribe({
         next: (state) => {
@@ -169,6 +190,7 @@ export class CapturarComponent implements OnInit, OnDestroy {
    */
   limpiarAgente(): void {
     this.solicitudForm.reset();
+    this.tramite40301Store.reset();
   }
 
   /**
@@ -178,40 +200,40 @@ export class CapturarComponent implements OnInit, OnDestroy {
   conTipoAgenteData(control: string): void {
     // Obtener el valor del control tipoAgente desde el formulario
     const AGENT = this.solicitudForm.get(control)?.value;
-    this.solicitud40301Store.setRol(AGENT);
+    this.tramite40301Store.setTipoAgente(AGENT);
   }
 
   /**
    * Actualiza el nombre del Director General en el store.
    *
    * Este método obtiene el valor actual del campo `directorGeneralNombre` del formulario `solicitudForm`
-   * y lo envía al store `solicitud40301Store` mediante el método `setDirectorGeneralNombre`.
+   * y lo envía al store `tramite40301Store` mediante el método `setDirectorGeneralNombre`.
    */
   public actualizarDirectorGeneralNombre(control: string): void {
     const DIRECTOR_GENERAL_NOMBRE = this.solicitudForm.get(control)?.value;
-    this.solicitud40301Store.setDirectorGeneralNombre(DIRECTOR_GENERAL_NOMBRE);
+    this.tramite40301Store.setDirectorGeneralNombre(DIRECTOR_GENERAL_NOMBRE);
   }
 
   /**
    * Actualiza el primer apellido en el store.
    *
    * Este método obtiene el valor actual del campo `primerApellido` del formulario `solicitudForm`
-   * y lo envía al store `solicitud40301Store` mediante el método `setPrimerApellido`.
+   * y lo envía al store `tramite40301Store` mediante el método `setPrimerApellido`.
    */
   public actualizarPrimerApellido(control: string): void {
     const PRIMER_APELLIDO = this.solicitudForm.get(control)?.value;
-    this.solicitud40301Store.setPrimerApellido(PRIMER_APELLIDO);
+    this.tramite40301Store.setPrimerApellido(PRIMER_APELLIDO);
   }
 
   /**
    * Actualiza el segundo apellido en el store.
    *
    * Este método obtiene el valor actual del campo `segundoApellido` del formulario `solicitudForm`
-   * y lo envía al store `solicitud40301Store` mediante el método `setSegundoApellido`.
+   * y lo envía al store `tramite40301Store` mediante el método `setSegundoApellido`.
    */
   public actualizarApellidoMaterno(control: string): void {
     const SEGUNDO_APELLIDO = this.solicitudForm.get(control)?.value;
-    this.solicitud40301Store.setSegundoApellido(SEGUNDO_APELLIDO);
+    this.tramite40301Store.setSegundoApellido(SEGUNDO_APELLIDO);
   }
 
   /**

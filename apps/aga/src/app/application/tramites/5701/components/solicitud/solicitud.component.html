@@ -335,6 +335,7 @@
           [label]="'Hora inicio'"
           [required]="true"
           [inputId]="'horaInicio'"
+          [unmarked]="horaInicioUnmarked"
           (change)="
             setValoresStore(datosServicio, 'horaInicio', 'setHoraInicio')
           "
@@ -369,6 +370,7 @@
           [label]="'Hora Final'"
           [required]="true"
           [inputId]="'horaFinal'"
+          [unmarked]="horaFinUnmarked"
           (change)="changeHoraFinal()"
         ></input-hora>
       </div>
@@ -387,7 +389,7 @@
               <button
                 type="button"
                 class="collpase-button"
-                [ngClass]="colapsable ? 'collapsed' : ''"
+                [ngClass]="colapsable ? '' : 'collapsed'"
                 title="Colapsable"
               ></button>
             </div>
@@ -815,6 +817,7 @@
           formControlName="monto"
           maxlength="12"
           (change)="setValoresStore(pagoCaptura, 'monto', 'setMonto')"
+          libSoloNumeros
         />
       </div>
     </div>
@@ -865,6 +868,14 @@
   </div>
   }
 </form>
+
+<div class="row mt-5" *ngIf="editarSolicitud">
+  <div class="col-md12">
+    <button type="button" class="btn btn-danger">
+      Eliminar Solicitud Pendiente
+    </button>
+  </div>
+</div>
 
 @if(nuevaNotificacion) {
 <section>
