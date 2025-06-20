@@ -218,7 +218,7 @@ export class TratadosComponent implements OnInit, OnDestroy {
    */
   agregarTratado(): void {
     if (this.formularioTratados.valid) {
-      this.registroDeSolicitudesTablaDatos.push({ ...this.TalbleData });
+      this.registroDeSolicitudesTablaDatos.push({ ...this.talbleData });
       this.formularioTratados.reset();
     }
   }
@@ -243,7 +243,7 @@ export class TratadosComponent implements OnInit, OnDestroy {
  * @property {string} tratado - Nombre del tratado relacionado.
  * @property {string} origen - Origen del registro.
  */
-TalbleData: RegistroDeSolicitudesTabla = {
+talbleData: RegistroDeSolicitudesTabla = {
   pais:'',
   tratado: '',
   origen: ''
@@ -252,25 +252,25 @@ TalbleData: RegistroDeSolicitudesTabla = {
 /**
  * Obtiene la descripción correspondiente a un valor seleccionado en un formulario
  * a partir de un arreglo de catálogo y la asigna a la propiedad correspondiente
- * en el objeto `TalbleData`.
+ * en el objeto `talbleData`.
  *
  * @param arr - Arreglo de objetos de tipo `Catalogo` que contiene los datos del catálogo.
  * @param formControl - Nombre del control del formulario cuyo valor se utilizará para buscar la descripción.
  *
- * Asigna la descripción encontrada a la propiedad correspondiente de `TalbleData` según el control:
- * - Si `formControl` es 'pais', asigna a `TalbleData.pais`.
- * - Si `formControl` es 'tratado', asigna a `TalbleData.tratado`.
- * - Si `formControl` es 'origen', asigna a `TalbleData.origen`.
+ * Asigna la descripción encontrada a la propiedad correspondiente de `talbleData` según el control:
+ * - Si `formControl` es 'pais', asigna a `talbleData.pais`.
+ * - Si `formControl` es 'tratado', asigna a `talbleData.tratado`.
+ * - Si `formControl` es 'origen', asigna a `talbleData.origen`.
  */
  getLabelFromCatalogData(arr:Catalogo[],formControl:string): void {
   const ID = this.formularioTratados.get(formControl)?.value;
   const LABLE = arr.find(item => item.id.toString() === ID)?.descripcion;
   if(formControl === 'pais') {
-    this.TalbleData.pais = LABLE || '';
+    this.talbleData.pais = LABLE || '';
   }else if(formControl === 'tratado') {
-    this.TalbleData.tratado = LABLE || '';
+    this.talbleData.tratado = LABLE || '';
 }else if(formControl === 'origen') {
-    this.TalbleData.origen = LABLE || '';
+    this.talbleData.origen = LABLE || '';
   }
 }
 
