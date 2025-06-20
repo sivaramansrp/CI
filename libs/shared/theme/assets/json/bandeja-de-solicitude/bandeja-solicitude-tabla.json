@@ -2699,5 +2699,14 @@
   "diasTranscurridos": "4",
   "departamento": "AGACE",
   "numeroDeProcedimiento": "31101"
-}
+},
+ {
+    "id": 140205,
+    "tipoDeTramite": "Solicitud de Permiso",
+    "fecha": "2023-10-01",
+    "fechaActualizacion": "2023-10-05",
+    "diasTranscurridos": "4",
+    "departamento": "SE",
+    "numeroDeProcedimiento": "140205"
+  }
 ]

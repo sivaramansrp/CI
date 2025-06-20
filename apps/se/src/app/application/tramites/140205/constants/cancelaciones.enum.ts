@@ -1,4 +1,4 @@
-import { CuposTabla, disponsiblesTabla } from "../model/cancelaciones-certificado.model";
+import { CuposTabla, DisponsiblesTabla } from "../model/cancelaciones-certificado.model";
 
 /**
  * Constante que define los pasos del wizard en el trámite.
@@ -120,22 +120,22 @@ export const TABLA_DE_DATOS_DISPONIBLES = {
   encabezadas: [
     {
       encabezado: 'Folio del oficio de certificado',
-      clave: (ele: disponsiblesTabla) => ele.folio,
+      clave: (ele: DisponsiblesTabla) => ele.folio,
       orden: 1,
     },
     {
       encabezado: 'Nombre, Denominación o Razón Social',
-      clave: (ele: disponsiblesTabla) => ele.nombre,
+      clave: (ele: DisponsiblesTabla) => ele.nombre,
       orden: 2,
     },
     {
       encabezado: 'Estado',
-      clave: (ele: disponsiblesTabla) => ele.estado,
+      clave: (ele: DisponsiblesTabla) => ele.estado,
       orden: 3,
     },
     {
       encabezado: 'Fabricante',
-      clave: (ele: disponsiblesTabla) => ele.fabricante,
+      clave: (ele: DisponsiblesTabla) => ele.fabricante,
       orden: 4,
     },
   ],
