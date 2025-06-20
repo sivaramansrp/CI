@@ -2,11 +2,11 @@
     "opcionesDeRadio": [
         {
             "label": "Retorno por primera vez",
-            "value": "TAV.IMP"
+            "value": "primera_vez"
         },
         {
             "label": "Retorno sub-secuente",
-            "value": "TAV.MON"
+            "value": "subsecuente"
         }
     ],
     "required": false
