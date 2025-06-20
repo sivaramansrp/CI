@@ -1,7 +1,8 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState, SolicitanteComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
+import { ModificacionDescripcionService } from '../../services/modificacion-descripcion.service';
 import { ModificacionMercanciaComponent } from '../../components/modificacion-mercancia/modificacion-mercancia.component';
-import { SolicitanteComponent } from '@ng-mf/data-access-user';
 import { SolicitudComponent } from '../../components/solicitud/solicitud.component';
 import { Subject } from 'rxjs';
 import { Tramite130401Query } from '../../../../estados/queries/tramite130401.query';
@@ -54,7 +55,13 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    * el componente se destruye.
    */
   destroyNotifier$: Subject<void> = new Subject();
-
+  /**
+   * @property {ConsultaioState} consultaDatos
+   * @description Estado actual de la consulta, que contiene información relacionada con el trámite y el solicitante.
+   */
+  consultaDatos!: ConsultaioState;
+  /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
+  public esDatosRespuesta: boolean = false;
   /**
    * Constructor del componente.
    * 
@@ -63,7 +70,9 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    */
   constructor(
     public store: Tramite130401Store,
-    public tramiteQuery: Tramite130401Query
+    public tramiteQuery: Tramite130401Query,
+    private consultaioQuery: ConsultaioQuery,
+    private modificacionDescripcionService: ModificacionDescripcionService,
   ) {
     // Constructor
   }
@@ -84,6 +93,19 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
       )
       .subscribe();
     this.indice = this.tramiteState.pestanaActiva;
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.consultaDatos = seccionState;
+        })
+      )
+      .subscribe();
+    if (this.consultaDatos.update) {
+      this.fetchGetDatosConsulta();
+    } else {
+      this.esDatosRespuesta = true;
+    }
   }
 
   /**
@@ -98,7 +120,25 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
     this.indice = i;
     this.store.setPestanaActiva(this.indice);
   }
-
+  /**
+   * Obtiene los datos de consulta desde el servicio y actualiza el estado del store.
+   * 
+   * Este método realiza una solicitud al servicio `ModificacionDescripcionService` para obtener
+   * los datos de consulta relacionados con el trámite. Si la respuesta es exitosa, actualiza
+   * el estado del store con los datos de la solicitud, la mercancía y la tabla de mercancías.
+   */
+  public fetchGetDatosConsulta(): void {
+    this.modificacionDescripcionService
+      .getDatosConsulta()
+      .pipe(takeUntil(this.destroyNotifier$)).subscribe((respuesta) => {
+        if (respuesta.success) {
+          this.esDatosRespuesta = true;
+          this.store.setSolicitud(respuesta.datos.datosSolicitud);
+          this.store.setMercancia(respuesta.datos.mercancia);
+          this.store.setMercanciaTablaDatos(respuesta.datos.mercanciaTablaDatos);
+        }
+      });
+  }
   /**
    * Método que se ejecuta al destruir el componente.
    * 

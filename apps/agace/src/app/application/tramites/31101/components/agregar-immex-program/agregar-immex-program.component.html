@@ -13,7 +13,7 @@
           [label]="entidadFederativa.labelNombre"
           [placeholder]="entidadFederativa.primerOpcion"
           [required]="true"
-          [isDisabled]="false"
+          [isDisabled]="esFormularioSoloLectura"
           name="entidadFederativa"
           id="entidadFederativa"
           (selectionChange)="seleccionArentidadFederativa($event)"
@@ -35,6 +35,7 @@
             id="Iceptar"
             class="btn btn-primary ms-3"
             data-bs-dismiss="modal"
+            [disabled]="esFormularioSoloLectura"
             #closeModal
             (click)="agregarImmexProgram()"
           >
@@ -43,6 +44,7 @@
           <button
             type="button"
             id="cancelar"
+            [disabled]="esFormularioSoloLectura"
             class="btn btn-danger ms-3"
             data-bs-dismiss="modal"
             #closeModal
