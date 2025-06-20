@@ -85,6 +85,6 @@
 
 
 <div class="container-fluid text-end mt-5">
-    <button class="btn btn-buscar me-2">Guardar</button>
-    <button class="btn btn-agregar">Continuar</button>
+    <button class="btn btn-buscar me-2" [disabled]="esFormularioSoloLectura? true : false">Guardar</button>
+    <button class="btn btn-agregar" [disabled]="esFormularioSoloLectura? true : false">Continuar</button>
 </div>
