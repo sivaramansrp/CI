@@ -21,6 +21,31 @@ import { Store, StoreConfig } from '@datorama/akita';
     providedIn: 'root',
 })
 @StoreConfig({ name: 'fitosanitariostore', resettable: true })
+/**
+ * Almacén de estado para el trámite fitosanitario.
+ * 
+ * Esta clase extiende de `Store<ListaDeDatosFinal>` y gestiona el estado relacionado con el formulario fitosanitario,
+ * incluyendo los datos del formulario, información de movilización, pago de derechos, validez de formularios y datos finales de la tabla.
+ * 
+ * Métodos:
+ * - `actualizarDatosForma(datos: DatosForma): void`  
+ *   Actualiza el estado con la información del formulario recibido.
+ * 
+ * - `actualizarMovilizacion(movilizacion: Movilizacion): void`  
+ *   Actualiza el estado con la información de movilización proporcionada.
+ * 
+ * - `actualizarPago(pago: PagoDeDerechos): void`  
+ *   Actualiza el estado con los datos de pago de derechos.
+ * 
+ * - `actualizarformaValida(updatedFormaValida: { [key: string]: boolean }): void`  
+ *   Actualiza el estado de validez de los formularios, permitiendo indicar si cada formulario es válido o no.
+ * 
+ * - `tablaDatosFinal(tablaDatos: FilaSolicitud[]): void`  
+ *   Actualiza el estado con los datos finales de la tabla de solicitudes.
+ * 
+ * - `limpiarFormulario(): void`  
+ *   Restablece el estado a su valor inicial, limpiando todos los datos almacenados.
+ */
 export class FitosanitarioStore extends Store<ListaDeDatosFinal> {
     constructor() {
         super(createDatosState());

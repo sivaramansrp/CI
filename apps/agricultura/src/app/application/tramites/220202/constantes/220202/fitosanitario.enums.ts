@@ -25,12 +25,24 @@ export const PASOS = [
 ];
 
 
-
 /**
- * @description Constante que define los campos para persona moral o física nacional.
- * Cada objeto representa un campo con su etiqueta, nombre de campo, clase CSS, tipo de input,
- * estado disabled, tooltip, validadores y placeholder.
- * @constant {Array<Object>} FITOSANITARIO_PERSONA_MORAL_O_FISICA_NACIONAL
+ * @const FITOSANITARIO_PERSONA_MORAL_O_FISICA_NACIONAL
+ * 
+ * Arreglo de objetos que define la configuración de los campos de formulario para la captura de datos
+ * de una persona moral o física nacional en el contexto fitosanitario.
+ * 
+ * Cada objeto representa un campo del formulario e incluye las siguientes propiedades:
+ * - `labelNombre`: Etiqueta descriptiva que se muestra al usuario.
+ * - `campo`: Nombre de la propiedad asociada al campo.
+ * - `class`: Clases CSS para el diseño responsivo del campo.
+ * - `tipo_input`: Tipo de entrada del campo (por ejemplo, 'text').
+ * - `disabled`: Indica si el campo está deshabilitado.
+ * - `tooltip`: Texto de ayuda que se muestra como tooltip.
+ * - `validators`: Arreglo de validadores aplicados al campo (por ejemplo, 'required', 'maxLength').
+ * - `placeholder`: Texto de marcador de posición para el campo.
+ * 
+ * Este arreglo es utilizado para generar dinámicamente los campos del formulario de dirección y contacto,
+ * asegurando la validación y presentación adecuada de los datos requeridos por el trámite fitosanitario.
  */
 export const FITOSANITARIO_PERSONA_MORAL_O_FISICA_NACIONAL = [
     {
@@ -177,12 +189,12 @@ export const TEXTOS_REQUISITOS = {
     <p>- Si necesitas anexar más de un documento del mismo tipo selecciónalo de la lista y presiona "Agregar nuevo".</p>`,
     ADJUNTAR: `<p>Si deseas adjuntar un nuevo documento, selecciona la opción --Adjuntar nuevo documento-- y presiona el botón "Adjuntar documentos"</p>`,
 };
+
 /**
- * @description Constante que define la configuración para el input de fecha de pago.
- * Esta constante contiene la ruta relativa a los archivos JSON necesarios para la configuración.
- * @constant {Object} URL
+ * Constante que define la ruta relativa a los archivos JSON necesarios para la configuración del input de fecha de pago.
  */
-export const URL = '../../../../../assets/json/220202/';
+export const URL: string = '../../../../../assets/json/220202/';
+
 
 /**
  * @description Constante que define la configuración para el input de fecha final de pago en acuicultura.
@@ -196,7 +208,9 @@ export const FECHA_SALIDA_ACUICULTURA = {
 };
 
 /**
- * @description Constantes con las opciones de radio para la exención de pago.
+ * @description Constante que define las opciones para un campo de tipo radio.
+ * Cada objeto representa una opción con su etiqueta y valor.
+ * @constant {Array<Object>}
  */
 export const TIPO_RADIO = [
     {

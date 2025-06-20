@@ -13,10 +13,6 @@ import { Subject,map, takeUntil } from 'rxjs';
 import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, ConsultaioQuery, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 
-/**
- * @component DatosDeLaSolicitudComponent
- * @description Componente para la sección de datos de la solicitud en el formulario de fitosanitarios.
- */
 @Component({
   selector: 'app-datos-de-la-solicitud',
   templateUrl: './datos-de-la-solicitud.component.html',
@@ -31,6 +27,30 @@ import { CommonModule } from '@angular/common';
     CommonModule
   ],
 })
+/**
+ * Componente encargado de gestionar y mostrar los datos de la solicitud en el trámite agrícola.
+ * 
+ * Este componente administra el formulario principal de la solicitud, así como la visualización y manipulación
+ * de las tablas relacionadas con los datos de la solicitud y mercancías. Permite la carga de catálogos para los
+ * selectores del formulario, la gestión del estado de solo lectura, y la actualización de los datos en el store.
+ * 
+ * Además, implementa la lógica para inicializar los campos del formulario, manejar la selección de filas en las tablas,
+ * y controlar la suscripción a los servicios para evitar fugas de memoria.
+ * 
+ * @remarks
+ * - Utiliza servicios para obtener datos de catálogos y del formulario.
+ * - Permite alternar entre modo edición y solo lectura.
+ * - Implementa OnInit y OnDestroy para el ciclo de vida del componente.
+ * 
+ * @example
+ * ```html
+ * <app-datos-de-la-solicitud></app-datos-de-la-solicitud>
+ * ```
+ * 
+ * @see {@link AgriculturaApiService}
+ * @see {@link FormBuilder}
+ * @see {@link ConsultaioQuery}
+ */
 export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
 
   /** @description Indica si el panel de detalle está colapsado o no. */
