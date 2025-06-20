@@ -19,7 +19,7 @@
  * @templateUrl ./paso-capturar-solicitud.component.html
  */
 import { Component, ViewChild } from '@angular/core';
-import { DatosPasos, ListaPasosWizard, PASOS4, SeccionLibStore, WizardComponent } from '@ng-mf/data-access-user';
+import { DatosPasos, ListaPasosWizard, PASOS4, SeccionLibStore, WizardComponent } from '@libs/shared/data-access-user/src';
 import { AccionBoton } from '../../models/nuevo-programa-industrial.model';
 import { Subject } from 'rxjs';
 import { Tramite80101Query } from '../../estados/tramite80101.query';

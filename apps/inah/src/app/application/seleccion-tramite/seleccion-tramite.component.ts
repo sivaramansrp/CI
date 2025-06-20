@@ -1,5 +1,5 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AMBIENTES,TramiteDetails } from '@ng-mf/data-access-user';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import tramiteDetailsData from '@libs/shared/theme/assets/json/tramiteList.json'
 
 @Component({

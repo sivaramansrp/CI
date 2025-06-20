@@ -5,7 +5,9 @@ import { FraccionArancelariaProsec, OctavaTemporal } from "../models/octava-temp
  * debido a que faltan campos obligatorios por capturar.
  */
 export const ERROR_DE_REGISTRO_ALERT =
-'<strong>¡Error de registrot</strong>Faltan campos por capturar.';
+`<div class="d-flex justify-content-center">
+    <strong>¡Error de registro!</strong> Faltan campos por capturar.
+</div>`;
 
 /*
   * Mensaje de alerta que se muestra cuando hay un error en el registro 
@@ -55,7 +57,7 @@ export const MERCANCIA_TABLA = [
 export const FRACCIONES_ANARCIA_TABLA = [
   {
     encabezado: 'Fracción arancelaria',
-    clave: (ele: FraccionArancelariaProsec): number => ele.fraccionArancelariaProsec,
+    clave: (ele: FraccionArancelariaProsec): number | string => ele.fraccionArancelariaProsec,
     orden: 1,
   },
   {
@@ -65,3 +67,70 @@ export const FRACCIONES_ANARCIA_TABLA = [
   },
  
 ]
+
+/*
+* @constant MODIFICAR_PARTIDAS_FORM
+*/
+export const MODIFICAR_PARTIDAS_FORM = [
+  {
+    id: 'cantidad_partidas',
+    labelNombre: 'Cantidad',
+    campo: 'modificar_cantidad',
+    clase: 'col-md-4',
+    tipoInput: 'number',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [{ tipo: 'required' }],
+    marcadorDePosicion: '',
+    marginTop: 0,
+  },
+   {
+    id: 'descripcion_partidas',
+    labelNombre: 'Descripción',
+    campo: 'modificar_descripcion',
+    clase: 'col-md-8',
+    tipoInput: 'textarea',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [
+      {
+        tipo: 'required',
+        mensaje: '',
+      },
+    ],
+    marcadorDePosicion: '',
+    marginTop: 0,
+  },
+  {
+    id: 'valor_partidas_usd',
+    labelNombre: 'Valor partida USD',
+    campo: 'valor_partidas_usd',
+    clase: 'col-md-4',
+    tipoInput: 'number',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [{ tipo: 'required' }],
+    marcadorDePosicion: '',
+    marginTop: 0,
+  },
+  {
+    id: 'fraccion_partidas',
+    labelNombre: 'Fracción arancelaria TIGIE',
+    campo: 'fraccion_partidas',
+    clase: 'col-md-8',
+    tipoInput: 'select-catalogos',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [{ tipo: '' }],
+    marcadorDePosicion: 'Selecciona una fracción',
+    opciones: [
+      {
+        id: 1,
+        descripcion: '87033302 Usados.',
+      },
+    ],
+    marginTop: 0,
+  },
+ 
+ 
+];
