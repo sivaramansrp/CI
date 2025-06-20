@@ -12,7 +12,7 @@
           [label]="enSuCaracterDeLista.labelNombre"
           [placeholder]="enSuCaracterDeLista.primerOpcion"
           [required]="tipoDePersonaLista.required"
-          [isDisabled]="false"
+          [isDisabled]="esFormularioSoloLectura"
           name="enSuCaracterDe"
           id="enSuCaracterDe"
           (selectionChange)="actualizarMiembroCaracterDe($event)"
@@ -40,7 +40,7 @@
           [label]="nacionalidadLista.labelNombre"
           [placeholder]="nacionalidadLista.primerOpcion"
           [required]="tipoDePersonaLista.required"
-          [isDisabled]="false"
+          [isDisabled]="esFormularioSoloLectura"
           name="nacionalidad"
           id="nacionalidad"
           (selectionChange)="actualizarMiembroNacionalidad($event)"
@@ -70,6 +70,7 @@
             type="button"
             name="Buscar"
             id="btnBusqRfc"
+            [disabled]="esFormularioSoloLectura"
             (click)="buscarRFCDatos()"
             class="btn btn-primary me-5"
           >
@@ -115,7 +116,7 @@
           [label]="tipoDePersonaLista.labelNombre"
           [placeholder]="tipoDePersonaLista.primerOpcion"
           [required]="tipoDePersonaLista.required"
-          [isDisabled]="false"
+          [isDisabled]="esFormularioSoloLectura"
           name="tipoDePersona"
           id="tipoDePersona"
           (selectionChange)="actualizarMiembroTipoPersonaMuestra($event)"
@@ -194,6 +195,7 @@
           <button
             type="button"
             id="Aceptar"
+            [disabled]="esFormularioSoloLectura"
             (click)="aceptarModal()"
             data-bs-dismiss="modal"
             #closeModal
@@ -204,6 +206,7 @@
           <button
             type="button"
             id="Cancelar"
+            [disabled]="esFormularioSoloLectura"
             (click)="cerrarModal()"
             data-bs-dismiss="modal"
             #closeModal

@@ -41,9 +41,7 @@ import {
   Tramite5701Store,
 } from '../../../../core/estados/tramites/tramite5701.store';
 import { Subject, map, takeUntil, tap } from 'rxjs';
-import {
-  CONFIGURACION_ENCABEZADO_TABLA_RESPONSABLES_DESPACHO,
-} from '../../../../core/enums/5701/responsables-despacho.enum';
+import { CONFIGURACION_ENCABEZADO_TABLA_RESPONSABLES_DESPACHO } from '../../../../core/enums/5701/responsables-despacho.enum';
 import { CommonModule } from '@angular/common';
 import { ConsultaResponsableService } from '../../../../core/services/5701/consulta-responsable.service';
 import { ResponsablesDespacho } from '../../../../core/models/5701/tramite5701.model';
@@ -298,6 +296,13 @@ export class AgregaPersonasComponent implements OnInit, OnChanges, OnDestroy {
     ]);
     this.gafeteRespoDespacho.updateValueAndValidity();
 
+    const DATOS_RESPONSABLE = this.personaForm.getRawValue();
+    const ES_VALIDO_RESPONSABLE = Object.values({
+      nombreRespoDespacho: DATOS_RESPONSABLE.nombreRespoDespacho,
+      paternoRespoDespacho: DATOS_RESPONSABLE.paternoRespoDespacho,
+      maternoRespoDespacho: DATOS_RESPONSABLE.maternoRespoDespacho,
+    }).some((valor) => valor !== null && valor !== undefined && valor !== '');
+
     if (this.gafeteRespoDespacho.invalid) {
       this.nuevaNotificacion = {
         tipoNotificacion: 'alert',
@@ -314,7 +319,7 @@ export class AgregaPersonasComponent implements OnInit, OnChanges, OnDestroy {
       return;
     }
 
-    if (this.personaForm.invalid || this.personaForm.disabled) {
+    if (this.personaForm.invalid || !ES_VALIDO_RESPONSABLE) {
       this.nuevaNotificacion = {
         tipoNotificacion: 'alert',
         categoria: '',

@@ -1,5 +1,5 @@
 /* eslint-disable no-empty-function */
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 
 import { ConsultaioQuery, MENSAJEDEALERTA, TableBodyData, TituloComponent } from '@ng-mf/data-access-user';
 
@@ -16,8 +16,8 @@ import importardorTable from '../../../../../../../../../libs/shared/theme/asset
 
 import { AlertComponent } from '@ng-mf/data-access-user';
 
+import { Subject,map,takeUntil } from 'rxjs';
 import { AgregarDestinatoriaComponent } from '../agregar-destinatoria/agregar-destinatoria.component';
-import { map, Subject, takeUntil } from 'rxjs';
 
 
 @Component({
@@ -27,7 +27,7 @@ import { map, Subject, takeUntil } from 'rxjs';
    standalone: true,
   imports: [TituloComponent,TableComponent,AlertComponent,AgregarDestinatoriaComponent],
 })
-export class TercerosRelacionadosComponent implements OnInit {
+export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
 
 
   public establecimientoHeaderData: string[] = [];

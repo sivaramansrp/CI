@@ -1,8 +1,8 @@
 import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState, FormularioDinamico, TIPO_PERSONA, TablaSeleccion } from '@ng-mf/data-access-user';
 import { DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL, PERSONA_MORAL_NACIONAL } from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
-import { FormularioDinamico, TIPO_PERSONA, TablaSeleccion } from '@ng-mf/data-access-user';
 import { Mercancias, PlantasTabla, ProductorIndirecto, SectorTabla } from '../../../../shared/models/complementaria.model';
-import { ReplaySubject, takeUntil } from 'rxjs';
+import { ReplaySubject, map, takeUntil } from 'rxjs';
 import { Bitacora } from '../../../../shared/models/bitacora.model';
 import { CatalogosService } from '../../service/catalogos.service';
 import { SolicitanteComponent } from '@libs/shared/data-access-user/src';
@@ -53,7 +53,15 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
    * Se emite un valor cuando el componente se destruye para cancelar las suscripciones activas.
    */
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
-
+/**
+     * Estado de la consulta, utilizado para manejar el estado de la aplicación.
+     */
+  public consultaState!: ConsultaioState;
+  /**
+   * Indica si los datos de respuesta están disponibles.
+   * Se utiliza para determinar si se deben mostrar los datos del formulario o no.
+   */
+  public esDatosRespuesta: boolean = false;
   /**
    * Lista de datos para la tabla de plantas.
    */
@@ -83,7 +91,7 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
    * Constructor del componente.
    * @param catalogo Servicio para obtener datos de catálogos.
    */
-  constructor(private catalogo: CatalogosService) {
+  constructor(private catalogo: CatalogosService,private consultaQuery: ConsultaioQuery,) {
     // El constructor se utiliza para la inyección de dependencias.
   }
 
@@ -96,8 +104,35 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
     this.obtenerTablaSector();
     this.obtenerTablaMercancia();
     this.obtenerTablaProductor();
-  }
 
+     this.consultaQuery.selectConsultaioState$.pipe(
+      takeUntil(this.destroyed$),
+      map((seccionState) => {
+        this.consultaState = seccionState;
+      })
+    ).subscribe();
+    if (this.consultaState.update) {
+      this.guardarDatosFormularios();
+    } else {
+      this.esDatosRespuesta = true;
+    }
+  }
+ /**
+     * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+     * Luego reinicializa el formulario con los valores actualizados desde el store.
+     */
+  guardarDatosFormularios(): void {
+    this.catalogo
+      .getRegistroTomaMuestrasMercanciasData().pipe(
+        takeUntil(this.destroyed$)
+      )
+      .subscribe((resp) => {
+        if (resp) {
+          this.esDatosRespuesta = true;
+          this.catalogo.actualizarEstadoFormulario(resp);
+        }
+      });
+  }
   /**
    * Método que se ejecuta después de que las vistas del componente han sido inicializadas.
    * Configura los formularios dinámicos y obtiene el tipo de persona.
