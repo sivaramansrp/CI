@@ -80,10 +80,6 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
  */
 isPaisDisabled: boolean = true;
  
-/**
- * Indica si el campo de aduana está deshabilitado en el formulario.
- */
-isAdunaDisabled: boolean = true;
  
 /**
  * Clase CSS utilizada para mostrar mensajes de alerta informativos en la interfaz.
@@ -195,7 +191,11 @@ infoAlert: string = 'info-alert';
   * Subject para destruir notificador.
   */
   consultaDatos!: ConsultaioState;
- 
+
+  /**
+ * Indica si el formulario se encuentra en modo solo lectura.
+ * Si es `true`, los controles del formulario estarán deshabilitados para evitar modificaciones.
+ */
   esFormularioSoloLectura: boolean = false;
   /**
    * Constructor de la clase DatosDelTramiteComponent.

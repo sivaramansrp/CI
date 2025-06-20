@@ -15960,15 +15960,5 @@
     "departamento": "aga",
     "numeroDeProcedimiento": "11102",
     "origin": "FLUJO_FUNCIONARIO_GENERAR_ OPINION"
-  },
-  {
-    "folioTramite": "09922613614736119211102",
-    "tipoDeTramite": "Registro de solicitud de servicio",
-    "nombreDeLaTarea": "Revisión de presupuesto",
-    "fechaDeAsignacion": "2023-10-09",
-    "estadoDeTramite": "Completado",
-    "departamento": "aga",
-    "numeroDeProcedimiento": "11102",
-    "origin": "READ_PROCEDURE"
   }
 ]
