@@ -3,26 +3,24 @@
 <form [formGroup]="formularioTratados">
     <div class="row">
         <div class="col-md-8">
-            <app-catalogo-select [catalogo]="paisCatalogo" formControlName="pais"
-                [label]="'Pais o bloque'" [required]="true" name="Pais o bloque"
-                [isDisabled]="esFormularioSoloLectura"
-                (change)="setValoresStore(formularioTratados,'pais', 'setPais')"></app-catalogo-select>
+            <app-catalogo-select [catalogo]="paisCatalogo" formControlName="pais" [label]="'Pais o bloque'"
+                [required]="true" name="Pais o bloque" [isDisabled]="esFormularioSoloLectura"
+                (change)="setValoresStore(formularioTratados,'pais', 'setPais');getLabelFromCatalogData(paisCatalogo,'pais')"></app-catalogo-select>
         </div>
         <div class="col-md-8">
-            <app-catalogo-select [catalogo]="tratadoCatalogo" formControlName="tratado"
-                [label]="'Tratado o Acuerdo'" [required]="true" name="Tratado o Acuerdo"
-                [isDisabled]="esFormularioSoloLectura"
-                (change)="setValoresStore(formularioTratados,'tratado', 'setTratado')"></app-catalogo-select>
+            <app-catalogo-select [catalogo]="tratadoCatalogo" formControlName="tratado" [label]="'Tratado o Acuerdo'"
+                [required]="true" name="Tratado o Acuerdo" [isDisabled]="esFormularioSoloLectura"
+                (change)="setValoresStore(formularioTratados,'tratado', 'setTratado');getLabelFromCatalogData(tratadoCatalogo,'tratado')"></app-catalogo-select>
         </div>
         <div class="col-md-8">
-            <app-catalogo-select [catalogo]="origenCatalogo" formControlName="origen"
-                [label]="'Criterio de origen'" [required]="true" name="Criterio de origen"
-                [isDisabled]="esFormularioSoloLectura"
-                (change)="setValoresStore(formularioTratados,'origen', 'setOrigen')"></app-catalogo-select>
+            <app-catalogo-select [catalogo]="origenCatalogo" formControlName="origen" [label]="'Criterio de origen'"
+                [required]="true" name="Criterio de origen" [isDisabled]="esFormularioSoloLectura"
+                (change)="setValoresStore(formularioTratados,'origen', 'setOrigen');getLabelFromCatalogData(origenCatalogo,'origen')"></app-catalogo-select>
         </div>
     </div>
     <div class="col-12 d-flex justify-content-end mt-3 mb-4">
-        <button class="btn btn-primary" (click)="agregarTratado()" [disabled]="esFormularioSoloLectura">Agregar tratado</button>
+        <button class="btn btn-primary" (click)="agregarTratado()" [disabled]="esFormularioSoloLectura">Agregar
+            tratado</button>
     </div>
 </form>
 
@@ -30,9 +28,14 @@
 
 <h6 class="fs-4">Pais/bloque-tratado/acuerdo seleccionados por el solicitante</h6>
 
-<ng-table [commonTableHeader]="encabezadosComunesTabla" [commonTableBody]="cuerpoTabla"></ng-table>
+<div class="row">
+    <div class="col-md-12">
+        <app-tabla-dinamica [tipoSeleccionTabla]="tipoSeleccionTabla" [configuracionTabla]="configuracionTabla" [datos]="registroDeSolicitudesTablaDatos">
+        </app-tabla-dinamica>
+    </div>
 
-<div class=" text-end mt-5">
-    <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura">Modificar tratado</button>
-    <button class="btn btn-primary" [disabled]="esFormularioSoloLectura">Eliminar tratado</button>
-</div>
+
+    <div class=" text-end mt-5">
+        <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura">Modificar tratado</button>
+        <button class="btn btn-primary" [disabled]="esFormularioSoloLectura">Eliminar tratado</button>
+    </div>
