@@ -1,5 +1,8 @@
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
+
 import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { ConsultaioQuery, ConsultaioState, SolicitanteComponent, TIPO_PERSONA } from '@libs/shared/data-access-user/src';
+import { SolicitanteComponent, TIPO_PERSONA } from '@libs/shared/data-access-user/src';
+
 import { Subject, map, takeUntil } from 'rxjs';
 import { PermisoOrdinarioProrrogaImportacionMaterialExplosivoService } from '../../services/permiso-ordinario-prorroga-importacion-material-explosivo.service';
 

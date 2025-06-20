@@ -1,8 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
-import { ConsultaioQuery, CrosslistComponent } from '@libs/shared/data-access-user/src';
-
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { CrosslistComponent } from '@libs/shared/data-access-user/src';
 import { DatosDelTramiteComponent } from '../../../../shared/components/datos-del-tramite/datos-del-tramite.component';
 import { DatosDelTramiteFormState } from '../../../../shared/models/datos-del-tramite.model';
 import { JustificacionTramiteFormState } from '../../../../shared/models/datos-del-tramite.model';
