@@ -3,31 +3,22 @@ import {
   CatalogoSelectComponent,
   InputFecha,
   InputFechaComponent,
+  Notificacion,
   TablaDinamicaComponent,
   TablaSeleccion,
   TituloComponent,
   ValidacionesFormularioService
 } from "@libs/shared/data-access-user/src";
+import { Component, ElementRef, OnDestroy, OnInit,ViewChild} from "@angular/core";
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { FECHA_CARTAPORTE, FECHA_DESTINO, FECHA_IMPORTACION, FECHA_VENCIMIENTO, TABLA_DE_DATOS, TEXTOS } from "../../constants/retorno-de-partes.enum";
+import { FormBuilder,FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
+import { ReplaySubject, map, takeUntil } from "rxjs";
+import { Tramite6403State,Tramite6403Store } from "../../estados/tramite6403.store";
 import { CommonModule } from "@angular/common";
-import { Component } from "@angular/core";
-import { ElementRef } from "@angular/core";
-import { FormBuilder } from "@angular/forms";
-import { FormGroup } from "@angular/forms";
 import { Modal } from 'bootstrap';
-import { Notificacion } from '@libs/shared/data-access-user/src';
-import { OnDestroy } from "@angular/core";
-import { OnInit } from "@angular/core";
-import { ReactiveFormsModule } from "@angular/forms";
 import { RetornoDePartesService } from "../../services/retorno-de-partes.service";
-import { Subject } from "rxjs";
 import { Tramite6403Query } from "../../estados/tramite6403.query";
-import { Tramite6403State } from "../../estados/tramite6403.store";
-import { Tramite6403Store } from "../../estados/tramite6403.store";
-import { Validators } from "@angular/forms";
-import { ViewChild } from "@angular/core";
-import { map } from "rxjs";
-import { takeUntil } from "rxjs";
 /**
  * Componente para gestionar el aviso de traslado.
  * 
@@ -40,12 +31,19 @@ import { takeUntil } from "rxjs";
   templateUrl: './solicitud.component.html',
   styleUrl: './solicitud.component.scss',
   imports: [CommonModule, ReactiveFormsModule, TituloComponent, InputFechaComponent, 
-    CatalogoSelectComponent, TablaDinamicaComponent, 
-    
-  ],
+    CatalogoSelectComponent, TablaDinamicaComponent],
   standalone: true,
 })
 export class SolicitudComponent implements OnInit, OnDestroy {
+   /**
+   * Subject para destruir notificador.
+   */
+  consultaDatos!: ConsultaioState;
+   /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  soloLectura: boolean = false;
   /**
    * @property {FormGroup} solicitudFormulario
    * @description Formulario reactivo que contiene los datos del solicitudFormulario en el trámite.
@@ -64,11 +62,10 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    */
   public nuevaNotificacion!: Notificacion;
 
-  /**
-   * @property {Subject<void>} destroyNotifier$
-   * @description Sujeto utilizado para manejar la destrucción de suscripciones y evitar fugas de memoria.
-  */
-  public destroyNotifier$: Subject<void> = new Subject();
+   /**
+   * Subject para manejar la destrucción del componente y evitar fugas de memoria.
+   */
+  private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
   /**
    * @property {Tramite6403State} tramiteState
    * @description Estado actual del trámite 6403, que contiene toda la información relevante del proceso.
@@ -211,8 +208,18 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     public tramiteQuery: Tramite6403Query,
     public retornoDePartesService: RetornoDePartesService,
     private validacionesService: ValidacionesFormularioService,
+    private consultaioQuery: ConsultaioQuery
   ) {
-    // El constructor se utiliza para la inyección de dependencias.
+   this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState) => {
+          this.consultaDatos = seccionState;
+          this.soloLectura = this.consultaDatos.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe()
   }
   /**
    * Método que se ejecuta al inicializar el componente.
@@ -222,7 +229,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.tramiteQuery.selectSolicitud$
       .pipe(
-        takeUntil(this.destroyNotifier$),
+        takeUntil(this.destroyed$),
         map((seccionState) => {
           this.tramiteState = seccionState;
         })
@@ -237,6 +244,33 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     this.cargarMedioDeTransporte();
     this.cargarPaisDeProcedencia();
     this.inicializarMercanciaFormulario();
+    this.inicializarEstadoFormulario();
+  }
+
+  /**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.
+   * Además, obtiene la información del catálogo de mercancía.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.soloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.inicializarFormulario();
+    }
+  }
+  /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormulario(): void {
+    this.inicializarFormulario();
+    if (this.soloLectura) {
+  this.solicitudFormulario.disable();
+  this.mercanciaFormulario.disable();
+} else {
+  this.solicitudFormulario.enable();
+  this.mercanciaFormulario.enable();
+}
   }
 
   /**
@@ -330,7 +364,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   public cargarAduaneras(): void {
     this.retornoDePartesService
       .obtenerAduaneras()
-      .pipe(takeUntil(this.destroyNotifier$))
+      .pipe(takeUntil(this.destroyed$))
       .subscribe(
         (datos: CatalogoLista) => {
           this.aduaneras = datos.datos;
@@ -349,7 +383,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   public cargarAduanas(): void {
     this.retornoDePartesService
       .obtenerAduanas()
-      .pipe(takeUntil(this.destroyNotifier$))
+      .pipe(takeUntil(this.destroyed$))
       .subscribe(
         (datos: CatalogoLista) => {
           this.aduanas = datos.datos;
@@ -367,7 +401,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   public cargarRecintoFiscalizado(): void {
     this.retornoDePartesService
       .obtenerRecintoFiscalizado()
-      .pipe(takeUntil(this.destroyNotifier$))
+      .pipe(takeUntil(this.destroyed$))
       .subscribe(
         (datos: CatalogoLista) => {
           this.recintoFiscalizado = datos.datos;
@@ -385,7 +419,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   public cargarTipoDeDocumento(): void {
     this.retornoDePartesService
       .obtenerTipoDeDocumento()
-      .pipe(takeUntil(this.destroyNotifier$))
+      .pipe(takeUntil(this.destroyed$))
       .subscribe(
         (datos: CatalogoLista) => {
           this.tipoDeDocumento = datos.datos;
@@ -404,7 +438,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   public cargarMedioDeTransporte(): void {
     this.retornoDePartesService
       .obtenerMedioDeTransporte()
-      .pipe(takeUntil(this.destroyNotifier$))
+      .pipe(takeUntil(this.destroyed$))
       .subscribe(
         (datos: CatalogoLista) => {
           this.medioDeTransporte = datos.datos;
@@ -427,7 +461,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   public cargarPaisDeProcedencia(): void {
     this.retornoDePartesService
       .obtenerPaisDeProcedencia()
-      .pipe(takeUntil(this.destroyNotifier$))
+      .pipe(takeUntil(this.destroyed$))
       .subscribe(
         (datos: CatalogoLista) => {
           this.paisDeProcedencia = datos.datos;
@@ -446,7 +480,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   public cargarFederativa(): void {
     this.retornoDePartesService
       .obtenerFederativa()
-      .pipe(takeUntil(this.destroyNotifier$))
+      .pipe(takeUntil(this.destroyed$))
       .subscribe(
         (datos: CatalogoLista) => {
           this.entidadFederativa = datos.datos;
@@ -466,9 +500,9 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   inicializarFormulario(): void {
     this.solicitudFormulario = this.fb.group({
       datosAduana: this.fb.group({
-        cveAduana: [this.tramiteState?.solicitudFormulario?.cveAduana, [Validators.required]],
-        cveSeccionAduanal: [this.tramiteState?.solicitudFormulario?.cveSeccionAduanal, [Validators.required]],
-        cveRecintoFiscalizado: [this.tramiteState?.solicitudFormulario?.cveRecintoFiscalizado, [Validators.required]],
+        cveAduana: [this.tramiteState?.solicitudFormulario?.cveAduana,{ value: '', disabled: this.soloLectura }, [Validators.required]],
+        cveSeccionAduanal: [this.tramiteState?.solicitudFormulario?.cveSeccionAduanal,{ value: '', disabled: this.soloLectura }, [Validators.required]],
+        cveRecintoFiscalizado: [this.tramiteState?.solicitudFormulario?.cveRecintoFiscalizado,{ value: '', disabled: this.soloLectura }, [Validators.required]],
       }),
       datosPedimento: this.fb.group({
         cveTipoDocumento: [this.tramiteState?.solicitudFormulario?.cveTipoDocumento, [Validators.required]],
@@ -651,7 +685,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   public cargarMercanciaTabla(): void {
     this.retornoDePartesService
       .obtenerSolicitudTabla()
-      .pipe(takeUntil(this.destroyNotifier$))
+      .pipe(takeUntil(this.destroyed$))
       .subscribe(
         (datos: SolicitudTablaDatos) => {
           this.tablaDeDatos.datos = datos.datos;
@@ -764,12 +798,13 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * @method ngOnDestroy
    * @description Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
    * 
-   * - Completa el `Subject` `destroyNotifier$` para cancelar todas las suscripciones activas y evitar fugas de memoria.
+   * - Completa el `Subject` `destroyed$` para cancelar todas las suscripciones activas y evitar fugas de memoria.
    *
    * @returns {void}
    */
   ngOnDestroy(): void {
-    this.destroyNotifier$.next();
-    this.destroyNotifier$.complete();
+    this.destroyed$.next(true);
+    this.destroyed$.complete();
+   
   }
 }
