@@ -93,99 +93,99 @@ infoAlert: string = 'info-alert';
    * Formulario principal del trámite.
    */
   tramiteForm!: FormGroup;
- 
+
   /**
    * Formulario para agregar mercancías.
    */
   agregarMercanciasForm!: FormGroup;
- 
+
   /**
    * Sujeto para manejar la destrucción de observables.
    */
   private destroyNotifier$: Subject<void> = new Subject();
- 
+
   /**
    * Estado actual de la solicitud.
    */
   public solicitudState!: Solicitud11102State;
- 
+
   /**
    * Encabezado de la tabla de mercancías.
    */
   public mercanciaHeaderData: string[] = [];
- 
+
   /**
    * Cuerpo de la tabla de mercancías.
    */
   public mercanciaBodyData: TableBodyData[] = [{ tbodyData: [] }];
- 
+
   /**
    * Datos de la tabla de mercancías.
    */
   public getMercanciaTableData = mercanciaTable;
- 
+
   /**
    * Catálogos seleccionados.
    * @type {Catalogo[]}
    */
   fechasSeleccionadas: Catalogo[] = [];
- 
+
   /**
    * Lista de tipos de mercancía disponibles.
    * @type {Catalogo[]}
    */
   tipoDeMercancia!: Catalogo[];
- 
+
   /**
    * Lista de condiciones de mercancía disponibles.
    * @type {Catalogo[]}
    */
   condicionMercancia!: Catalogo[];
- 
+
   /**
    * Lista de unidades de medida disponibles.
    * @type {Catalogo[]}
    */
   unidadMedida!: Catalogo[];
- 
+
   /**
    * Lista de años disponibles.
    * @type {Catalogo[]}
    */
   ano!: Catalogo[];
- 
+
   /**
    * Lista de países disponibles.
    * @type {Catalogo[]}
    */
   pais!: Catalogo[];
- 
+
   /**
    * Lista de aduanas disponibles.
    * @type {Catalogo[]}
    */
   aduana!: Catalogo[];
- 
+
   /**
    * Referencia al elemento del modal para agregar mercancías.
    */
   @ViewChild('modalAgregarMercancias') modalElement!: ElementRef;
- 
+
   /**
    * Referencia al modal de confirmación.
    */
   @ViewChild('confirmarModal') confirmarModalElement!: ElementRef;
- 
+
   /**
    * Referencia al botón para cerrar el modal.
    */
   @ViewChild('closeModal') closeModal!: ElementRef;
- 
+
   /**
    * Referencia al botón para cerrar el modal de confirmación.
    */
   @ViewChild('closeConfirmarModal') closeConfirmarModal!: ElementRef;
- 
+
   /**
    * Datos de las mercancías.
    */
