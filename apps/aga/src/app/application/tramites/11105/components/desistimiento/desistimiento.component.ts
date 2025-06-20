@@ -8,9 +8,8 @@ import {
 import {ReplaySubject, Subject, map,takeUntil } from 'rxjs';
 import { Solicitud11105State, Solicitud11105Store } from '../../estados/solicitud11105.store';
 import { CommonModule } from '@angular/common';
-import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
-import { ConsultaioState } from '@libs/shared/data-access-user/src';
-import { DESISTIMIENTO } from '../../constants/retirad-de-la-autorizacion-de-donaciones.enum';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { ConsultaioState } from '@ng-mf/data-access-user';
 import { Solicitud11105Query } from '../../estados/solicitud11105.query';
 import {TituloComponent } from '@libs/shared/data-access-user/src';
 

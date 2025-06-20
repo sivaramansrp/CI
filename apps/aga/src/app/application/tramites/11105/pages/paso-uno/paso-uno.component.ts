@@ -162,7 +162,6 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
     } else {
       this.esDatosRespuesta = true;
     }
-    // this.indice = this.tramiteState.pestanaActiva;
   }
 
   /**

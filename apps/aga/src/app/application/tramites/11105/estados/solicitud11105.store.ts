@@ -10,26 +10,89 @@ export interface Solicitud11105State {
    * Código de la aduana relacionada con la solicitud.
    */
   aduana: string;
+  /**
+   * Nombre del solicitante.
+   */
   nombre: string;
+  /**
+   * Tipo de mercancía involucrada en la solicitud.
+   */
   tipoMercancia: string;
+  /**
+   * Uso específico de la mercancía.
+   */
   usoEspecifico?: string;
+  /**
+   * Condición de la mercancía.
+   */
   condicion?: string;
+  /**
+   * Marca de la mercancía.
+   */
   marca?: string;
+  /**
+   * Año de fabricación de la mercancía.
+   */
   ano?: string;
+  /**
+   * Modelo de la mercancía.
+   */
   modelo?: string;
+  /**
+   * Número de serie de la mercancía.
+   */
   serie?: string;
+  /**
+   * Manifiesto relacionado con la mercancía.
+   */
   manifesto?: string;
+  /**
+   * Dirección del solicitante.
+   */
   calle?: string;
+  /**
+   * Número exterior de la dirección del solicitante.
+   */
   numeroExterior?: string;
+  /**
+   * Número interior de la dirección del solicitante.
+   */
   numeroInterior?: string;
+  /**
+   * Número de teléfono del solicitante.
+   */
   telefono?: string;
+  /**
+   * Correo electrónico del solicitante.
+   */
   correoElectronico?: string;
+  /**
+   * País del solicitante.
+   */
   pais?: string;
+  /**
+   * Código postal de la dirección del solicitante.
+   */
   codigoPostal?: string;
+  /**
+   * Estado del solicitante.
+   */
   estado?: string;
+  /**
+   * Colonia del solicitante.
+   */
   colonia?: string;
+  /**
+   * Indica si la opción parcial está seleccionada.
+   */
   opcion:boolean;
+  /**
+   * Folio original de la solicitud, si aplica.
+   */
   folioOriginal?: string;
+  /**
+   * Justificación del desistimiento de la solicitud, si aplica.
+   */
   justificacionDelDesistimiento?: string;
 }
 
@@ -116,86 +179,177 @@ export class Solicitud11105Store extends Store<Solicitud11105State> {
     this.update((state) => ({ ...state, aduana }));
   }
 
+ /**
+ * Establece el valor de la propiedad "nombre" en el estado.
+ *
+ * @param nombre - El valor del nombre que se desea establecer.
+ */
   public setNombre(nombre: string): void {
     this.update((state) => ({ ...state, nombre }));
   }
 
+  /**
+   * Establece el valor de la propiedad "tipoMercancia" en el estado.
+   *
+   * @param tipoMercancia - El valor del tipo de mercancía que se desea establecer.
+   */
   public setTipoMercancia(tipoMercancia: string): void {
     this.update((state) => ({ ...state, tipoMercancia }));
   }
 
+  /**
+   * Establece el valor de la propiedad "usoEspecifico" en el estado.
+   *
+   * @param usoEspecifico - El valor del uso específico que se desea establecer.
+   */
   public setUsoEspecifico(usoEspecifico: string): void {
     this.update((state) => ({ ...state, usoEspecifico }));
   }
 
+  /**
+   * Establece el valor de la propiedad "condicion" en el estado.
+   *
+   * @param condicion - El valor de la condición que se desea establecer.
+   */
   public setCondicion(condicion: string): void {
     this.update((state) => ({ ...state, condicion }));
   }
 
+  /**
+   * Establece el valor de la propiedad "marca" en el estado.
+   *
+   * @param marca - El valor de la marca que se desea establecer.
+   */
   public setMarca(marca: string): void {
     this.update((state) => ({ ...state, marca }));
   }
 
+  /**
+   * Establece el valor de la propiedad "ano" en el estado.
+   *
+   * @param ano - El valor del año que se desea establecer.
+   */
   public setAno(ano: string): void {
     this.update((state) => ({ ...state, ano }));
   }
 
+  /**
+   * Establece el valor de la propiedad "modelo" en el estado.
+   *
+   * @param modelo - El valor del modelo que se desea establecer.
+   */
   public setModelo(modelo: string): void {
     this.update((state) => ({ ...state, modelo }));
   }
-
+  /**
+   * Establece el valor de la propiedad "serie" en el estado.
+   *
+   * @param serie - El valor de la serie que se desea establecer.
+   */
   public setSerie(serie: string): void {
     this.update((state) => ({ ...state, serie }));
   }
-
+  /**
+   * Establece el valor de la propiedad "manifesto" en el estado.
+   *
+   * @param manifesto - El valor del manifiesto que se desea establecer.
+   */
   public setManifesto(manifesto: string): void {
     this.update((state) => ({ ...state, manifesto }));
   }
-
+  /**
+   * Establece el valor de la propiedad "calle" en el estado.
+   *
+   * @param calle - El valor de la calle que se desea establecer.
+   */
   public setCalle(calle: string): void {
     this.update((state) => ({ ...state, calle }));
   }
-
+  /**
+   * Establece el valor de la propiedad "numeroExterior" en el estado.
+   *
+   * @param numeroExterior - El valor del número exterior que se desea establecer.
+   */
   public setNumeroExterior(numeroExterior: string): void {
     this.update((state) => ({ ...state, numeroExterior }));
   }
-
+  /**
+   * Establece el valor de la propiedad "numeroInterior" en el estado.
+   *
+   * @param numeroInterior - El valor del número interior que se desea establecer.
+   */
   public setNumeroInterior(numeroInterior: string): void {
     this.update((state) => ({ ...state, numeroInterior }));
   }
-
+  /**
+   * Establece el valor de la propiedad "telefono" en el estado.
+   *
+   * @param telefono - El valor del teléfono que se desea establecer.
+   */
   public setTelefono(telefono: string): void {
     this.update((state) => ({ ...state, telefono }));
   }
-
+  /**
+   * Establece el valor de la propiedad "correoElectronico" en el estado.
+   *
+   * @param correoElectronico - El valor del correo electrónico que se desea establecer.
+   */
   public setCorreoElectronico(correoElectronico: string): void {
     this.update((state) => ({ ...state, correoElectronico }));
   }
-
+  /**
+   * Establece el valor de la propiedad "pais" en el estado.
+   *
+   * @param pais - El valor del país que se desea establecer.
+   */ 
   public setPais(pais: string): void {
     this.update((state) => ({ ...state, pais }));
   }
-
+  /**
+   * Establece el valor de la propiedad "codigoPostal" en el estado.
+   *
+   * @param codigoPostal - El valor del código postal que se desea establecer.
+   */
   public setCodigoPostal(codigoPostal: string): void {
   this.update((state) => ({ ...state, codigoPostal }));
   }
-
+  /**
+   * Establece el valor de la propiedad "estado" en el estado.
+   *
+   * @param estado - El valor del estado que se desea establecer.
+   */
   public setEstado(estado: string): void {
     this.update((state) => ({ ...state, estado }));
   }
-
+  /**
+   * Establece el valor de la propiedad "colonia" en el estado.
+   *
+   * @param colonia - El valor de la colonia que se desea establecer.
+   */
   public setColonia(colonia: string): void {
     this.update((state) => ({ ...state, colonia }));
   }
-
+  /**
+   * Establece el valor de la propiedad "radioParcial" en el estado.
+   *
+   * @param opcion - El valor booleano que indica si la opción parcial está seleccionada.
+   */
   public setFolioOriginal(folioOriginal: string): void {
   this.update((state) => ({ ...state, folioOriginal }));
   }
-
+  /**
+   * Establece el valor de la propiedad "justificacionDelDesistimiento" en el estado.
+   *
+   * @param justificacionDelDesistimiento - La justificación del desistimiento que se desea establecer.
+   */
   public setJustificacionDelDesistimiento(justificacionDelDesistimiento: string): void {
   this.update((state) => ({ ...state, justificacionDelDesistimiento }));
   }
-
+  /**
+   * Establece el valor de la propiedad "opcion" en el estado.
+   *
+   * @param opcion - El valor booleano que indica si la opción está seleccionada.
+   */
   public setOpcion(opcion: boolean): void {
     this.update((state) => ({ ...state, opcion }));
   }
