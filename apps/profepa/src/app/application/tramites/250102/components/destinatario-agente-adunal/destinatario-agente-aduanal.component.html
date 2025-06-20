@@ -9,6 +9,7 @@
           [datos]="agregarDestinatariosTablaDatos"
           [tipoSeleccionTabla]="tablaSeleccionCheckbox"
           (listaDeFilaSeleccionada)="onSeleccionDestinatario($event)"
+          [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
         >
         </app-tabla-dinamica>
       </div>
@@ -17,6 +18,7 @@
           type="button"
           class="btn btn-danger"
           (click)="eliminarUbicacionDetinatario()"
+          [disabled]="esFormularioSoloLectura"
         >
           Eliminar
         </button>
@@ -25,6 +27,7 @@
           class="btn btn-default ms-3"
           id="agregarDestinatario"
           (click)="cambiarDestinatarioSeleccionar()"
+          [disabled]="esFormularioSoloLectura"
         >
           Seleccionar
         </button>
@@ -33,6 +36,7 @@
           class="btn btn-primary ms-3"
           id="capturarDestinatario"
           (click)="cambiarDestinatario()"
+          [disabled]="esFormularioSoloLectura"
         >
           Agregar
         </button>
@@ -48,6 +52,7 @@
           [datos]="agregarAgenteAduanalTablaDatos"
           [tipoSeleccionTabla]="tablaSeleccionCheckbox"
           (listaDeFilaSeleccionada)="onSeleccionAgenteAduanal($event)"
+          [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
         >
         </app-tabla-dinamica>
       </div>
@@ -58,6 +63,7 @@
           class="btn btn-danger"
           id="eliminarRequisito"
           (click)="eliminarAgenteAduanal()"
+          [disabled]="esFormularioSoloLectura"
         >
           Eliminar
         </button>
@@ -66,6 +72,7 @@
           class="btn btn-primary ms-3"
           id="agregarRequisito"
           (click)="cambiarAgenteAduanal()"
+          [disabled]="esFormularioSoloLectura"
         >
           Agregar
         </button>
@@ -426,6 +433,7 @@
     [configuracionTabla]="tablaDestinatariosData"
     [datos]="agregarDestinatariosTablaDatos"
     [tipoSeleccionTabla]="tablaSeleccionCheckbox"
+    [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
   >
   </app-tabla-dinamica>
   <div class="col-md-12 mt-5 d-flex justify-content-end">
@@ -434,6 +442,7 @@
       class="btn btn-danger"
       id="btnCancelarAgente"
       (click)="cambiarDestinatarioSeleccionar()"
+      [disabled]="esFormularioSoloLectura"
     >
       Cancelar
     </button>

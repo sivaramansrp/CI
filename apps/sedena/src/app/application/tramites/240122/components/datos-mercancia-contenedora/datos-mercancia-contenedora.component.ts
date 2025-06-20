@@ -1,5 +1,7 @@
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { Subject,map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 import { DatosMercanciaComponent } from '../../../../shared/components/datos-mercancia/datos-mercancia.component';
 import { MercanciaDetalle } from '../../../../shared/models/datos-del-tramite.model';
 import { NUMERO_TRAMITE } from '../../../../shared/constants/datos-solicitud.enum';
@@ -29,7 +31,7 @@ import { Tramite240122Store } from '../../estados/tramite240122Store.store';
   templateUrl: './datos-mercancia-contenedora.component.html',
   styleUrl: './datos-mercancia-contenedora.component.scss',
 })
-export class DatosMercanciaContenedoraComponent {
+export class DatosMercanciaContenedoraComponent implements OnInit,OnDestroy {
     /**
      * Identificador único del procedimiento asociado al trámite.
      * 
@@ -37,6 +39,25 @@ export class DatosMercanciaContenedoraComponent {
      * @remarks Este valor se utiliza para identificar el trámite específico.
      */
     idProcedimiento = NUMERO_TRAMITE.TRAMITE_240122;
+      /**
+       * Observable para limpiar suscripciones activas al destruir el componente.
+       * 
+       * @property {Subject<void>} unsubscribe$
+       */
+      private unsubscribe$ = new Subject<void>();
+
+       /**
+   * Indica si el formulario debe mostrarse solo en modo de lectura.
+   *
+   * @remarks
+   * Cuando esta propiedad es `true`, el formulario no permite la edición de sus campos.
+   *
+   * @compodoc
+   * @description
+   * Determina si el formulario se presenta únicamente para consulta, deshabilitando la edición de los datos.
+   */
+   esFormularioSoloLectura:boolean=false;
+    
 
     /**
      * Constructor del componente.
@@ -46,7 +67,20 @@ export class DatosMercanciaContenedoraComponent {
      * @returns {void}
      */
     // eslint-disable-next-line no-empty-function
-    constructor(private tramiteStore: Tramite240122Store) {}
+    constructor(private tramiteStore: Tramite240122Store,private readonly consultaioQuery:ConsultaioQuery,private readonly cdr: ChangeDetectorRef) {}
+
+    ngOnInit(): void {
+          this.consultaioQuery.selectConsultaioState$
+              .pipe(
+                takeUntil(this.unsubscribe$),
+                map((seccionState)=>{
+                  this.esFormularioSoloLectura = seccionState.readonly; 
+                   this.cdr.detectChanges();
+                })
+              )
+              .subscribe();
+      
+    }
 
     /**
      * Actualiza los datos de la tabla de mercancía en el store.
@@ -57,5 +91,18 @@ export class DatosMercanciaContenedoraComponent {
      */
     updateMercanciaDetalle(event: MercanciaDetalle[]): void {
       this.tramiteStore.updateMercanciaTablaDatos(event);
+    }
+    
+    /**
+     * @inheritdoc
+     * @description
+     * Método del ciclo de vida de Angular que se llama justo antes de que el componente sea destruido.
+     * Se utiliza para limpiar recursos, como la cancelación de suscripciones a observables, evitando así posibles fugas de memoria.
+     *
+     * @see https://angular.io/guide/lifecycle-hooks#ondestroy
+     */
+    ngOnDestroy(): void {
+      this.unsubscribe$.next();
+      this.unsubscribe$.complete();
     }
 }

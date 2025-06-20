@@ -1,121 +1,481 @@
-import { Catalogo } from '@libs/shared/data-access-user/src/core/models/shared/catalogos.model';
+import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
-import { Store } from '@datorama/akita';
-import {StoreConfig } from '@datorama/akita';
-export interface Tramite40101State {
-  choferes: string[];
-  choferesextranjero: string[];
-  vehiculos: string[];
-  unidadesdearrastre: string[];
-  estado: Catalogo[];
-  seccion: boolean[];
-  formaValida: boolean[];
-  nombre: string;
-  primerApellido: string;
-  segundoApellido: string;
-}
 
-export function create40101State(): Tramite40101State {
-  const STORED_DATA = localStorage.getItem('choferesList');
+import {
+  DatosUnidad,
+  DatosVehiculo,
+} from '../models/registro-muestras-mercancias.model';
+/**
+ * Estado de la store para el trámite 40101.
+ * @property datosVehiculo - Datos del vehículo principal.
+ * @property datosUnidad - Datos de la unidad de arrastre.
+ */
+export interface Tramite40101State {
+  datosVehiculo: DatosVehiculo;
+  datosUnidad: DatosUnidad;
+}
+/**
+ * Crea el estado inicial para el trámite 40101.
+ * @returns Estado inicial con valores vacíos para vehículo y unidad.
+ */
+export function createInitialState(): Tramite40101State {
   return {
-    choferes: STORED_DATA ? JSON.parse(STORED_DATA) : [],
-    choferesextranjero: [],
-    vehiculos: [],
-    unidadesdearrastre: [],
-    estado: [],
-    seccion: [],
-    formaValida: [],
-    nombre: '',
-    primerApellido: '',
-    segundoApellido: '',
+    datosVehiculo: {
+      numero: '',
+      tipoDeVehiculo: '',
+      idDeVehiculo: '',
+      numeroPlaca: '',
+      paisEmisor: '',
+      estado: '',
+      marca: '',
+      modelo: '',
+      ano: '',
+      transponder: '',
+      colorVehiculo: '',
+      numuroEconomico: '',
+      numero2daPlaca: '',
+      estado2daPlaca: '',
+      paisEmisor2daPlaca: '',
+      descripcion: '',
+    },
+    datosUnidad: {
+      vinVehiculo: '',
+      tipoDeUnidadArrastre: '',
+      idDeVehiculo: '',
+      numeroEconomico: '',
+      numeroPlaca: '',
+      paisEmisor: '',
+      estado: '',
+      colorVehiculo: '',
+      numero2daPlaca: '',
+      estado2daPlaca: '',
+      paisEmisor2daPlaca: '',
+      descripcion: '',
+    },
   };
 }
-
-@Injectable({ providedIn: 'root' })
+/**
+ * Store de Akita para el trámite 40101.
+ * Permite actualizar campos individuales de los datos de vehículo y unidad de arrastre.
+ */
+@Injectable({
+  providedIn: 'root',
+})
 @StoreConfig({ name: 'tramite40101', resettable: true })
 export class Tramite40101Store extends Store<Tramite40101State> {
-  constructor() {
-    super(create40101State());
-  }
-
-  set(nacionalArray: string[]) {
-    this.update((state) => ({
-      ...state,
-      choferes: nacionalArray,
-    }));
-  }
-  setVehiculos(vehiculosArray: string[]) {
-    this.update((state) => ({
-      ...state,
-      vehiculos: [...vehiculosArray],
-    }));
-  }
-
-  setUnidadesdeArrastre(unidadesdearrastreArray: string[]) {
-    this.update((state) => ({
-      ...state,
-      unidadesdearrastre: unidadesdearrastreArray,
-    }));
-  }
-  public setsolicitudVehiculoTipoVehiculo(solicitudVehiculo: string) {
-    this.update((state) => ({
-      ...state,
-      solicitudVehiculo,
-    }));
-  }
-    public setsolicitudVehiculoPaisEmisor(solicitudVehiculo: string) {
-      this.update((state) => ({
-        ...state,
-        solicitudVehiculo,
-      }));
-    }
-    public solicitudVehiculoColor(vehiculoColor: string) {
-      this.update((state) => ({
-        ...state,
-        vehiculoColor,
-      }));
-    }
-    public VehiculoPaisEmisor2daPlaca(PaisEmisor2daPlaca: string) {
-      this.update((state) => ({
-        ...state,
-        PaisEmisor2daPlaca,
-      }));
-    }
-    public setanioVehiculoVEH(VehiculoVEH: string) {
-      this.update((state) => ({
-        ...state,
-        VehiculoVEH,
-      }));
-    }
-  setEstado(estado: Catalogo[]) {
-    this.update((state) => ({
-      ...state,
-      estado,
-    }));
-  }
-   /**
-   * Guarda un elemento por cada sección que se encuentre.
-   * @param seccion La validación de la sección.
+  /**
+   * Inicializa la store con el estado inicial.
    */
-   public establecerSeccion(seccion: boolean[]) {
+  constructor() {
+    super(createInitialState());
+  }
+
+  /**
+   * Actualiza el número del vehículo.
+   * @param numero Nuevo número.
+   */
+  public setDatosVehiculoNumero(numero: string): void {
     this.update((state) => ({
       ...state,
-      seccion,
+      datosVehiculo: {
+        ...state.datosVehiculo,
+        numero,
+      },
     }));
   }
 
   /**
-   * Agrega elementos por cada sección indicando si el formulario es válido o no.
-   * @param formaValida La validación del formulario.
+   * Actualiza el tipo de vehículo.
+   * @param tipoDeVehiculo Nuevo tipo de vehículo.
    */
-  public establecerFormaValida(formaValida: boolean[]) {
+  public setDatosVehiculoTipoDeVehiculo(tipoDeVehiculo: string): void {
     this.update((state) => ({
       ...state,
-      formaValida,
+      datosVehiculo: {
+        ...state.datosVehiculo,
+        tipoDeVehiculo,
+      },
     }));
   }
-  
-  public clearChoferes() {
-    this.reset();
+
+  /**
+   * Actualiza el identificador del vehículo.
+   * @param idDeVehiculo Nuevo identificador.
+   */
+  public setDatosVehiculoIdDeVehiculo(idDeVehiculo: string): void {
+    this.update((state) => ({
+      ...state,
+      datosVehiculo: {
+        ...state.datosVehiculo,
+        idDeVehiculo,
+      },
+    }));
   }
+
+  /**
+   * Actualiza el número de placa del vehículo.
+   * @param numeroPlaca Nuevo número de placa.
+   */
+  public setDatosVehiculoNumeroPlaca(numeroPlaca: string): void {
+    this.update((state) => ({
+      ...state,
+      datosVehiculo: {
+        ...state.datosVehiculo,
+        numeroPlaca,
+      },
+    }));
+  }
+
+  /**
+   * Actualiza el país emisor de la placa del vehículo.
+   * @param paisEmisor Nuevo país emisor.
+   */
+  public setDatosVehiculoPaisEmisor(paisEmisor: string): void {
+    this.update((state) => ({
+      ...state,
+      datosVehiculo: {
+        ...state.datosVehiculo,
+        paisEmisor,
+      },
+    }));
+  }
+
+  /**
+   * Actualiza el estado de la placa del vehículo.
+   * @param estado Nuevo estado.
+   */
+  public setDatosVehiculoEstado(estado: string): void {
+    this.update((state) => ({
+      ...state,
+      datosVehiculo: {
+        ...state.datosVehiculo,
+        estado,
+      },
+    }));
+  }
+
+  /**
+   * Actualiza la marca del vehículo.
+   * @param marca Nueva marca.
+   */
+  public setDatosVehiculoMarca(marca: string): void {
+    this.update((state) => ({
+      ...state,
+      datosVehiculo: {
+        ...state.datosVehiculo,
+        marca,
+      },
+    }));
+  }
+
+  /**
+   * Actualiza el modelo del vehículo.
+   * @param modelo Nuevo modelo.
+   */
+  public setDatosVehiculoModelo(modelo: string): void {
+    this.update((state) => ({
+      ...state,
+      datosVehiculo: {
+        ...state.datosVehiculo,
+        modelo,
+      },
+    }));
+  }
+
+  /**
+   * Actualiza el año del vehículo.
+   * @param ano Nuevo año.
+   */
+  public setDatosVehiculoAno(ano: string): void {
+    this.update((state) => ({
+      ...state,
+      datosVehiculo: {
+        ...state.datosVehiculo,
+        ano,
+      },
+    }));
+  }
+
+  /**
+   * Actualiza el transponder del vehículo.
+   * @param transponder Nuevo transponder.
+   */
+  public setDatosVehiculoTransponder(transponder: string): void {
+    this.update((state) => ({
+      ...state,
+      datosVehiculo: {
+        ...state.datosVehiculo,
+        transponder,
+      },
+    }));
+  }
+
+  /**
+   * Actualiza el color del vehículo.
+   * @param colorVehiculo Nuevo color.
+   */
+  public setDatosVehiculoColorVehiculo(colorVehiculo: string): void {
+    this.update((state) => ({
+      ...state,
+      datosVehiculo: {
+        ...state.datosVehiculo,
+        colorVehiculo,
+      },
+    }));
+  }
+
+  /**
+   * Actualiza el número económico del vehículo.
+   * @param numuroEconomico Nuevo número económico.
+   */
+  public setDatosVehiculoNumuroEconomico(numuroEconomico: string): void {
+    this.update((state) => ({
+      ...state,
+      datosVehiculo: {
+        ...state.datosVehiculo,
+        numuroEconomico,
+      },
+    }));
+  }
+
+  /**
+   * Actualiza el número de segunda placa del vehículo.
+   * @param numero2daPlaca Nuevo número de segunda placa.
+   */
+  public setDatosVehiculoNumero2daPlaca(numero2daPlaca: string): void {
+    this.update((state) => ({
+      ...state,
+      datosVehiculo: {
+        ...state.datosVehiculo,
+        numero2daPlaca,
+      },
+    }));
+  }
+
+  /**
+   * Actualiza el estado de la segunda placa del vehículo.
+   * @param estado2daPlaca Nuevo estado de la segunda placa.
+   */
+  public setDatosVehiculoEstado2daPlaca(estado2daPlaca: string): void {
+    this.update((state) => ({
+      ...state,
+      datosVehiculo: {
+        ...state.datosVehiculo,
+        estado2daPlaca,
+      },
+    }));
+  }
+
+  /**
+   * Actualiza el país emisor de la segunda placa del vehículo.
+   * @param paisEmisor2daPlaca Nuevo país emisor de la segunda placa.
+   */
+  public setDatosVehiculoPaisEmisor2daPlaca(paisEmisor2daPlaca: string): void {
+    this.update((state) => ({
+      ...state,
+      datosVehiculo: {
+        ...state.datosVehiculo,
+        paisEmisor2daPlaca,
+      },
+    }));
+  }
+
+  /**
+   * Actualiza la descripción del vehículo.
+   * @param descripcion Nueva descripción.
+   */
+  public setDatosVehiculoDescripcion(descripcion: string): void {
+    this.update((state) => ({
+      ...state,
+      datosVehiculo: {
+        ...state.datosVehiculo,
+        descripcion,
+      },
+    }));
+  }
+
+  /**
+   * Actualiza el VIN de la unidad de arrastre.
+   * @param vinVehiculo Nuevo VIN.
+   */
+  public setDatosUnidadVinVehiculo(vinVehiculo: string): void {
+    this.update((state) => ({
+      ...state,
+      datosUnidad: {
+        ...state.datosUnidad,
+        vinVehiculo,
+      },
+    }));
+  }
+
+  /**
+   * Actualiza el tipo de unidad de arrastre.
+   * @param tipoDeUnidadArrastre Nuevo tipo de unidad.
+   */
+  public setDatosUnidadTipoDeUnidadArrastre(
+    tipoDeUnidadArrastre: string
+  ): void {
+    this.update((state) => ({
+      ...state,
+      datosUnidad: {
+        ...state.datosUnidad,
+        tipoDeUnidadArrastre,
+      },
+    }));
+  }
+
+  /**
+   * Actualiza el número económico de la unidad de arrastre.
+   * @param numeroEconomico Nuevo número económico.
+   */
+  public setDatosUnidadNumeroEconomico(numeroEconomico: string): void {
+    this.update((state) => ({
+      ...state,
+      datosUnidad: {
+        ...state.datosUnidad,
+        numeroEconomico,
+      },
+    }));
+  }
+
+  /**
+   * Actualiza el número de placa de la unidad de arrastre.
+   * @param numeroPlaca Nuevo número de placa.
+   */
+  public setDatosUnidadNumeroPlaca(numeroPlaca: string): void {
+    this.update((state) => ({
+      ...state,
+      datosUnidad: {
+        ...state.datosUnidad,
+        numeroPlaca,
+      },
+    }));
+  }
+
+  /**
+   * Actualiza el país emisor de la unidad de arrastre.
+   * @param paisEmisor Nuevo país emisor.
+   */
+  public setDatosUnidadPaisEmisor(paisEmisor: string): void {
+    this.update((state) => ({
+      ...state,
+      datosUnidad: {
+        ...state.datosUnidad,
+        paisEmisor,
+      },
+    }));
+  }
+
+  /**
+   * Actualiza el estado de la unidad de arrastre.
+   * @param estado Nuevo estado.
+   */
+  public setDatosUnidadEstado(estado: string): void {
+    this.update((state) => ({
+      ...state,
+      datosUnidad: {
+        ...state.datosUnidad,
+        estado,
+      },
+    }));
+  }
+
+  /**
+   * Actualiza el tipo de vehículo de la unidad de arrastre.
+   * @param tipoVehiculo Nuevo tipo de vehículo.
+   */
+  public setDatosUnidadTipoVehiculo(tipoVehiculo: string): void {
+    this.update((state) => ({
+      ...state,
+      datosUnidad: {
+        ...state.datosUnidad,
+        tipoVehiculo,
+      },
+    }));
+  }
+
+  /**
+   * Actualiza el identificador de la unidad de arrastre.
+   * @param idDeVehiculo Nuevo identificador.
+   */
+  public setDatosUnidadIdDeVehiculo(idDeVehiculo: string): void {
+    this.update((state) => ({
+      ...state,
+      datosUnidad: {
+        ...state.datosUnidad,
+        idDeVehiculo,
+      },
+    }));
+  }
+
+  /**
+   * Actualiza el color de la unidad de arrastre.
+   * @param colorVehiculo Nuevo color.
+   */
+  public setDatosUnidadColorVehiculo(colorVehiculo: string): void {
+    this.update((state) => ({
+      ...state,
+      datosUnidad: {
+        ...state.datosUnidad,
+        colorVehiculo,
+      },
+    }));
+  }
+
+  /**
+   * Actualiza el número de segunda placa de la unidad de arrastre.
+   * @param numero2daPlaca Nuevo número de segunda placa.
+   */
+  public setDatosUnidadNumero2daPlaca(numero2daPlaca: string): void {
+    this.update((state) => ({
+      ...state,
+      datosUnidad: {
+        ...state.datosUnidad,
+        numero2daPlaca,
+      },
+    }));
+  }
+
+  /**
+   * Actualiza el estado de la segunda placa de la unidad de arrastre.
+   * @param estado2daPlaca Nuevo estado de la segunda placa.
+   */
+  public setDatosUnidadEstado2daPlaca(estado2daPlaca: string): void {
+    this.update((state) => ({
+      ...state,
+      datosUnidad: {
+        ...state.datosUnidad,
+        estado2daPlaca,
+      },
+    }));
+  }
+
+  /**
+   * Actualiza el país emisor de la segunda placa de la unidad de arrastre.
+   * @param paisEmisor2daPlaca Nuevo país emisor de la segunda placa.
+   */
+  public setDatosUnidadPaisEmisor2daPlaca(paisEmisor2daPlaca: string): void {
+    this.update((state) => ({
+      ...state,
+      datosUnidad: {
+        ...state.datosUnidad,
+        paisEmisor2daPlaca,
+      },
+    }));
+  }
+
+  /**
+   * Actualiza la descripción de la unidad de arrastre.
+   * @param descripcion Nueva descripción.
+   */
+  public setDatosUnidadDescripcion(descripcion: string): void {
+    this.update((state) => ({
+      ...state,
+      datosUnidad: {
+        ...state.datosUnidad,
+        descripcion,
+      },
+    }));
+  }
+
 }
