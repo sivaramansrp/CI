@@ -61,7 +61,6 @@ import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 import { REGEX_NUMEROS } from '@libs/shared/data-access-user/src';
 import { REGEX_SOLO_DIGITOS } from '@libs/shared/data-access-user/src';
-import { map } from 'rxjs/operators';
 /**
  * @title Datos del Trámite
  * @description Componente que gestiona el formulario de datos del trámite como permisos, uso final y selección de aduanas.

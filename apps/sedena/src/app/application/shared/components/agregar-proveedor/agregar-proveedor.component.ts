@@ -11,8 +11,8 @@ import { InputRadioComponent } from '@ng-mf/data-access-user';
 import { Subject } from 'rxjs';
 import { TipoPersona } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
-import { takeUntil } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { takeUntil } from 'rxjs';
 
 /**
  * @component AgregarProveedorComponent
