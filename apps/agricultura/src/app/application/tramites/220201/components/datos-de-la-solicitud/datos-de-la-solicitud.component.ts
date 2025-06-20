@@ -359,7 +359,7 @@ this.datosDelaSolicitud.get('claveUCON')?.valueChanges
       oficinaInspeccion: ['', Validators.required],
       puntoInspeccion: ['', Validators.required],
       claveUCON: [''],
-      establecimientoTIFs: [''],
+      establecimientoTIF: [''],
       nombreVeterinario: [''],
       numeroGuia: [''],
       certficacion: [''],

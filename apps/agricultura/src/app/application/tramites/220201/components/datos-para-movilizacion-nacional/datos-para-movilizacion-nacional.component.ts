@@ -5,7 +5,7 @@ import {
   RespuestaCatalogos,
   SharedModule,
   TituloComponent
-} from '@ng-mf/data-access-user';
+} from '@libs/shared/data-access-user/src';
 
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
