@@ -1,4 +1,3 @@
-import { HttpClient } from '@angular/common/http';
 
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 
@@ -16,6 +15,13 @@ import { PagoDeDerechosComponent } from '../../components/pago-de-derechos/pago-
 import { TercerospageComponent } from '../../components/tercerospage/tercerospage.component';
 
 /**
+ * @fileoverview Componente para el asistente de solicitud.
+ * Este componente gestiona la navegación entre los pasos del formulario de solicitud,
+ * así como la carga y almacenamiento de datos de la solicitud.
+ * @module PasoUnoComponent
+ */
+
+/**
  * Componente para el asistente de solicitud.
  * Este componente gestiona la navegación entre los pasos del formulario de solicitud.
  * @component PasoUnoComponent
@@ -31,8 +37,13 @@ import { TercerospageComponent } from '../../components/tercerospage/tercerospag
   imports:[SolicitanteComponent,DatosDeLaSolicitudComponent,
       DatosParaMovilizacionNacionalComponent,PagoDeDerechosComponent,TercerospageComponent,CommonModule]
 })
-export class PasoUnoComponent implements OnInit,OnDestroy {
-    private destroyNotifier$ = new Subject<void>();
+export class PasoUnoComponent implements OnInit, OnDestroy {
+  /**
+   * Subject utilizado para destruir suscripciones y evitar fugas de memoria.
+   * @property {Subject<void>} destroyNotifier$
+   */
+  private destroyNotifier$ = new Subject<void>();
+
   /**
    * Índice de la pestaña seleccionada.
    * @property {number} indice - Índice de la pestaña actualmente seleccionada.
@@ -53,32 +64,52 @@ export class PasoUnoComponent implements OnInit,OnDestroy {
     { index: 5, title: 'Pago de derechos', component: 'pago-de-derechos' }
   ];
 
-
-  constructor(private readonly seccionStore: SeccionLibStore,private readonly httpServicios: HttpClient,private readonly certificadoZoosanitarioServices: CertificadoZoosanitarioServiceService,
+  /**
+   * Constructor del componente.
+   * Inicializa los stores y servicios necesarios para el manejo de la solicitud.
+   * @method constructor
+   * @param seccionStore Store para el manejo de la validez y estado de las secciones.
+   * @param certificadoZoosanitarioServices Servicio para la gestión de la solicitud.
+   * @param consultaQuery Consulta para el estado de la sección.
+   */
+  constructor(
+    private readonly seccionStore: SeccionLibStore,
+    private readonly certificadoZoosanitarioServices: CertificadoZoosanitarioServiceService,
     private consultaQuery: ConsultaioQuery
   ) {
     this.seccionStore.establecerFormaValida([false]);
-    this.seccionStore.establecerSeccion([true])
+    this.seccionStore.establecerSeccion([true]);
   }
-ngOnInit(): void {
-  this.consultaQuery.selectConsultaioState$
-    .pipe(takeUntil(this.destroyNotifier$))
-    .subscribe((seccionState) => {
-if(seccionState.update){
-        this.guardarDatosFormulario();
-}
-      
-    });
-}
+
+  /**
+   * Ciclo de vida de Angular que se ejecuta al iniciar el componente.
+   * Suscribe al estado de la consulta y guarda los datos del formulario si es necesario.
+   * @method ngOnInit
+   */
+  ngOnInit(): void {
+    this.consultaQuery.selectConsultaioState$
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((seccionState) => {
+        if (seccionState.update) {
+          this.guardarDatosFormulario();
+        }
+      });
+  }
+
+  /**
+   * Guarda los datos del formulario llamando al servicio correspondiente.
+   * @method guardarDatosFormulario
+   */
   guardarDatosFormulario(): void {
-     this.certificadoZoosanitarioServices.guardarDatosFormulario()
-          .pipe(takeUntil(this.destroyNotifier$))
-          .subscribe((data) => {
-   this.certificadoZoosanitarioServices.storeDatosFormulario(data as CapturarSolicitud);
-          }, (error) => {
-            console.error(error);
-          });
+    this.certificadoZoosanitarioServices.guardarDatosFormulario()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data) => {
+        this.certificadoZoosanitarioServices.storeDatosFormulario(data as CapturarSolicitud);
+      }, (error) => {
+        console.error(error);
+      });
   }
+
   /**
    * Evento emitido al cambiar de pestaña.
    * @event tabChanged
@@ -87,7 +118,7 @@ if(seccionState.update){
   @Output() tabChanged = new EventEmitter<number>();
 
   /**
-   * Cambia el índice de la pestaña seleccionada.
+   * Cambia el índice de la pestaña seleccionada y emite el evento correspondiente.
    * @method seleccionaTab
    * @param {number} i - El índice de la pestaña a seleccionar.
    */
@@ -95,7 +126,13 @@ if(seccionState.update){
     this.indice = i;
     this.tabChanged.emit(i);
   }
-   ngOnDestroy(): void {
+
+  /**
+   * Ciclo de vida de Angular que se ejecuta al destruir el componente.
+   * Libera recursos y cancela las suscripciones.
+   * @method ngOnDestroy
+   */
+  ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
