@@ -17,7 +17,7 @@ describe('RepresentanteLegalComponent', () => {
 
   beforeEach(async () => {
     serviceMock = {
-      getrepresentante: jest.fn(),
+      getrepresentante: jest.fn().mockReturnValue(of({})),
     } as unknown as jest.Mocked<CertificadoTecnicoJaponService>;
 
     storeMock = {
@@ -37,8 +37,8 @@ describe('RepresentanteLegalComponent', () => {
     destroyed$ = new Subject<void>();
 
     await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule],
-      declarations: [RepresentanteLegalComponent],
+      imports: [ReactiveFormsModule,RepresentanteLegalComponent],
+      declarations: [],
       providers: [
         { provide: CertificadoTecnicoJaponService, useValue: serviceMock },
         { provide: Tramite110218Store, useValue: storeMock },
@@ -48,6 +48,8 @@ describe('RepresentanteLegalComponent', () => {
 
     fixture = TestBed.createComponent(RepresentanteLegalComponent);
     component = fixture.componentInstance;
+    (component as any).service = serviceMock;
+    (component as any).destroyed$ = destroyed$;
     fixture.detectChanges();
   });
 
@@ -64,7 +66,6 @@ describe('RepresentanteLegalComponent', () => {
     component.inicializarFormulario();
     expect(component.datosdelexportador.value).toEqual({
       nombredelRepresentante: 'Juan Pérez',
-      empresa: '',
       cargo: 'Gerente',
       telefonos: '1234567890',
       faxs: '0987654321',
@@ -75,6 +76,7 @@ describe('RepresentanteLegalComponent', () => {
   it('debería obtener los datos del representante legal desde el servicio', () => {
     const representanteMock = { empresa: 'Empresa XYZ' };
     serviceMock.getrepresentante.mockReturnValue(of(representanteMock));
+    (component as any).destroyed$ = destroyed$;
 
     component.obtenerDatosDeTabla();
 
