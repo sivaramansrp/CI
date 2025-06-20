@@ -16,7 +16,7 @@
       </div>
       <div class="col-md-4">
         <div class="form-group">
-          <app-catalogo-select [catalogo]="derechosList" [label]="'Banco'" [placeholder]="'Seleccione una aduana'" formControlName="banco" (change)="setValoresStore(derechosForm,'banco', 'setbanco')"></app-catalogo-select>
+          <app-catalogo-select [catalogo]="derechosList" [label]="'Banco'" [placeholder]="'Seleccione una aduana'" formControlName="banco" (change)="setValoresStore(derechosForm,'banco', 'setbanco')" [isDisabled]="soloLectura"></app-catalogo-select>
         </div>
       </div>
     </div>
@@ -29,7 +29,7 @@
       </div>
       <div class="col-md-4">
         <div class="form-group">
-          <input-fecha [datos]="fechaInicioInput" name="tipoFetch" (valorCambiado)="onFechaCambiada($event)" [setFecha]="derechosForm.get('tipoFetch')?.value"></input-fecha>
+          <input-fecha [datos]="fechaInicioInput" name="tipoFetch" (valorCambiado)="onFechaCambiada($event)" [setFecha]="derechosForm.get('tipoFetch')?.value" [isDisabled]="soloLectura"></input-fecha>
         </div>
       </div>
       <div class="col-md-4">
@@ -43,7 +43,7 @@
       <div class="col-md-8"></div>
       <div class="col-md-4">
         <div class="btn-group">
-          <button type="button" class="btn btn-primary">Borrar datos del pago</button>
+          <button type="button" class="btn btn-primary" [disabled]="soloLectura">Borrar datos del pago</button>
         </div>
       </div>
     </div>

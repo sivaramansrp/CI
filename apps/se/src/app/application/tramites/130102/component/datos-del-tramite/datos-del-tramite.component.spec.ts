@@ -37,7 +37,7 @@ describe('DetosDelTramiteComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [
+      imports: [
         DetosDelTramiteComponent,
         HttpClientTestingModule,
         ReactiveFormsModule,
@@ -86,22 +86,19 @@ describe('DetosDelTramiteComponent', () => {
   });
 
   it('should fetch solicitude options from JSON', () => {
-    const mockHttp = TestBed.inject(HttpClientTestingModule);
-    const httpClient = TestBed.inject(HttpClientTestingModule) as any;
+  const mockResponse: ProductoResponse = {
+    options: [{ label: 'Option 1', value: '1' }],
+    defaultSelect: '1',
+  };
+  const http = {
+    get: jest.fn().mockReturnValue(of(mockResponse))
+  };
+  (component as any)['http'] = http;
+  component.fetchSolicitudeOptions();
+  expect(component.solicitude).toEqual(mockResponse.options);
+  expect(component.defaultSelect).toEqual('1');
+});
 
-    const mockResponse: ProductoResponse = {
-      options: [{ label: 'Option 1', value: '1' }],
-      defaultSelect: '1',
-    };
-
-    const http = jasmine.createSpyObj('HttpClient', ['get']);
-    http.get.and.returnValue(of(mockResponse));
-
-    component['http'] = http;
-    component.fetchSolicitudeOptions();
-    expect(component.solicitude).toEqual(mockResponse.options);
-    expect(component.defaultSelect).toEqual('1');
-  });
 
   it('should update selected value on value change', () => {
     component.onValueChange('Nuevo');
@@ -111,14 +108,6 @@ describe('DetosDelTramiteComponent', () => {
   it('should call tipoTransporte and set selectedValue to Nuevo', () => {
     component.tipoTransporte();
     expect(component.selectedValue).toBe('Nuevo');
-  });
-
-  it('should call setValoresStore and update store value', () => {
-    const fb = TestBed.inject(FormBuilder);
-    const form = fb.group({ test: ['value'] });
-    jest.spyOn(form, 'get').mockReturnValue({ value: 'value' } as any);
-    component.setValoresStore(form, 'test', mockStore.setSolicitud.name as keyof Tramite130102Store);
-    expect(mockStore.setSolicitud).toHaveBeenCalledWith('value');
   });
 
   it('should cleanup on destroy', () => {

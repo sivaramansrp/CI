@@ -112,6 +112,7 @@ export interface Solicitud230101State {
    * Importe del pago realizado.
    */
   impPago: string;
+  
 }
 
 /**
@@ -120,27 +121,110 @@ export interface Solicitud230101State {
  */
 export function createInitialSolicitudState(): Solicitud230101State {
   return {
-    regimen: '',
-    tipoProducto: '',
-    paisProcedencia: '',
-    selectedOptions: [false, false, false],
-    clasificacionMercancia: '',
-    fraccionArancelaria: '',
-    descFraccionArancelaria: '',
-    cantidad: '',
-    cantidadLetra: '',
-    genero: '',
-    especie: '',
-    nombreComun: '',
-    descripcionProducto: '',
-    cantidadUMC: '',
-    manifiestosYdesc: false,
-    claveDeReferencia: '',
-    cadenaPagoDependencia: '',
-    banco: '',
-    llaveDePago: '',
-    fecPago: '',
-    impPago: ''
+   /**
+ * Régimen del trámite.
+ */
+regimen: '',
+
+/**
+ * Tipo de producto relacionado con el trámite.
+ */
+tipoProducto: '',
+
+/**
+ * País de procedencia del producto.
+ */
+paisProcedencia: '',
+
+/**
+ * Opciones seleccionadas en el trámite.
+ */
+selectedOptions: [false, false, false],
+
+/**
+ * Clasificación de las mercancías.
+ */
+clasificacionMercancia: '',
+
+/**
+ * Fracción arancelaria del producto.
+ */
+fraccionArancelaria: '',
+
+/**
+ * Descripción de la fracción arancelaria.
+ */
+descFraccionArancelaria: '',
+
+/**
+ * Cantidad del producto.
+ */
+cantidad: '',
+
+/**
+ * Cantidad del producto en letras.
+ */
+cantidadLetra: '',
+
+/**
+ * Género del producto.
+ */
+genero: '',
+
+/**
+ * Especie del producto.
+ */
+especie: '',
+
+/**
+ * Nombre común del producto.
+ */
+nombreComun: '',
+
+/**
+ * Descripción del producto.
+ */
+descripcionProducto: '',
+
+/**
+ * Unidad de medida del producto.
+ */
+cantidadUMC: '',
+
+/**
+ * Indica si hay manifiestos y descripción.
+ */
+manifiestosYdesc: false,
+
+/**
+ * Clave de referencia del trámite.
+ */
+claveDeReferencia: '',
+
+/**
+ * Cadena de dependencia asociada al trámite.
+ */
+cadenaPagoDependencia: '',
+
+/**
+ * Banco relacionado con el trámite.
+ */
+banco: '',
+
+/**
+ * Llave de pago del trámite.
+ */
+llaveDePago: '',
+
+/**
+ * Fecha de pago del trámite.
+ */
+fecPago: '',
+
+/**
+ * Importe del pago realizado.
+ */
+impPago: '',
   };
 }
 
@@ -386,4 +470,5 @@ export class Solicitud230101Store extends Store<Solicitud230101State> {
       impPago
     }));
   }
+ 
 }
