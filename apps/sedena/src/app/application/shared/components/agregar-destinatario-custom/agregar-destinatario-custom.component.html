@@ -107,7 +107,7 @@
           formControlName="pais"
           [label]="'País'"
           [required]="true"
-          [isDisabled]="agregarDestinatarioFinal.get('pais')?.disabled ?? false"
+          [isDisabled]="agregarDestinatarioFinal.get('pais')?.disabled || esFormularioSoloLectura? true : false"
         ></app-catalogo-select>
         <div class="error-message">
           <small *ngIf="agregarDestinatarioFinal.get('pais')?.touched && agregarDestinatarioFinal.get('pais')?.hasError('required')" class="text-danger">
@@ -264,6 +264,7 @@
             name="modificarMercancias"
             class="btn btn-default"
             (click)="cancelar()"
+            [disabled]="esFormularioSoloLectura"  
           >
             Cancelar
           </button>
@@ -272,6 +273,7 @@
             name="eliminarMercancias"
             class="btn btn-danger ms-2"
             (click)="limpiarFormulario()"
+             [disabled]="esFormularioSoloLectura"  
           >
             Limpiar
           </button>
@@ -280,6 +282,7 @@
             name="agregarMercancias"
             class="btn btn-primary ms-2"
             (click)="guardarDestinatario()"
+            [disabled]="esFormularioSoloLectura"  
             
           >
             Guardar

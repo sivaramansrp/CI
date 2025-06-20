@@ -11,19 +11,21 @@ import {
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { of as observableOf } from 'rxjs';
 import { SolicitantePageComponent } from './solicitante-page.component';
-import { Tramite40102Store } from '../../estados/tramite40102.store';
-import { Tramite40102Query } from '../../estados/tramite40102.query';
+import { Chofer40102Store } from '../../estados/chofer40102.store';
+import { Chofer40102Query } from '../../estados/chofer40102.query';
 import { WizardComponent } from '@ng-mf/data-access-user';
 
 @Injectable()
-class MockTramite40102Store {
-  establecerSeccion = jest.fn();
-  establecerFormaValida = jest.fn();
+class MockChofer40102Store {
+  establecerSeccion = jest.fn(); // Mock function for establecerSeccion
+  establecerFormaValida = jest.fn(); // Mock function for establecerFormaValida
 }
+
 @Directive({ selector: '[myCustom]' })
 class MyCustomDirective {
   @Input() myCustom: any;
 }
+
 @Pipe({ name: 'translate' })
 class TranslatePipe implements PipeTransform {
   transform(value: any): any {
@@ -48,17 +50,19 @@ class SafeHtmlPipe implements PipeTransform {
 describe('SolicitantePageComponent', () => {
   let fixture: ComponentFixture<SolicitantePageComponent>;
   let component: SolicitantePageComponent;
-  let Tramite40102QueryMock: jest.Mocked<Tramite40102Query>;
-  let tramite40102StoreMock: MockTramite40102Store;
+  let Chofer40102QueryMock: jest.Mocked<Chofer40102Query>;
+  let tramite40102StoreMock: MockChofer40102Store;
 
   beforeEach(async () => {
-    Tramite40102QueryMock = {
+    Chofer40102QueryMock = {
       selectSeccionState$: observableOf({
         pasos: [],
         currentStep: 1,
       }),
-    } as unknown as jest.Mocked<Tramite40102Query>;
-    tramite40102StoreMock = new MockTramite40102Store();
+    } as unknown as jest.Mocked<Chofer40102Query>;
+
+    tramite40102StoreMock = new MockChofer40102Store();
+
     await TestBed.configureTestingModule({
       imports: [FormsModule, ReactiveFormsModule],
       declarations: [
@@ -70,8 +74,8 @@ describe('SolicitantePageComponent', () => {
       ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
       providers: [
-        { provide: Tramite40102Query, useValue: Tramite40102QueryMock },
-        { provide: Tramite40102Store, useValue: tramite40102StoreMock },
+        { provide: Chofer40102Query, useValue: Chofer40102QueryMock },
+        { provide: Chofer40102Store, useValue: tramite40102StoreMock },
       ],
     }).compileComponents();
 
@@ -96,20 +100,12 @@ describe('SolicitantePageComponent', () => {
     expect((component as any).asignarSecciones).toHaveBeenCalled();
   });
 
-  it('should call seleccionaTab() with a given value', () => {
-    const tabMock = 1;
-    jest.spyOn(component, 'seleccionaTab');
-
-    component.seleccionaTab(tabMock);
-
-    expect(component.seleccionaTab).toHaveBeenCalledWith(tabMock);
-  });
-
   it('should call getValorIndice() and trigger wizard navigation', () => {
     component.wizardComponent = {
       siguiente: jest.fn(),
       atras: jest.fn(),
     } as any;
+
     component.getValorIndice({ valor: 2, accion: 'cont' });
     expect(component.wizardComponent.siguiente).toHaveBeenCalled();
 
@@ -119,6 +115,7 @@ describe('SolicitantePageComponent', () => {
 
   it('should assign sections correctly using asignarSecciones()', () => {
     (component as any).asignarSecciones();
+
     expect(tramite40102StoreMock.establecerSeccion).toHaveBeenCalled();
     expect(tramite40102StoreMock.establecerFormaValida).toHaveBeenCalled();
   });

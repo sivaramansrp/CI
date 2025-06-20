@@ -1,8 +1,9 @@
 import { ComponentFixture } from '@angular/core/testing';
-import { HistorialInspeccionFisica } from '@ng-mf/data-access-user';
 import { HistorialInspeccionFisicaComponent } from './historial-inspeccion-fisica.component';
 import { TestBed } from '@angular/core/testing';
 import { TituloComponent } from '@ng-mf/data-access-user';
+import { HistorialInspeccionFisica } from '../../models/solicitud-pantallas.model';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('HistorialInspeccionFisicaComponent', () => {
   let component: HistorialInspeccionFisicaComponent;
@@ -11,7 +12,7 @@ describe('HistorialInspeccionFisicaComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [],
-      imports: [HistorialInspeccionFisicaComponent, TituloComponent],
+      imports: [HistorialInspeccionFisicaComponent, TituloComponent, HttpClientTestingModule],
     }).compileComponents();
   });
 

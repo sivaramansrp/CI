@@ -1,16 +1,17 @@
 // @ts-nocheck
-import { isPlatformBrowser } from '@angular/common';
-import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Injectable, Input, Pipe, PipeTransform } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Input, Output } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { of as observableOf } from 'rxjs';
-import { Component } from '@angular/core';
-import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { By } from '@angular/platform-browser';
+import { Observable, of as observableOf, throwError } from 'rxjs';
 
+import { Component } from '@angular/core';
 import { TercerosRelacionadosContenedoraComponent } from './terceros-relacionados-contenedora.component';
-import { Tramite240121Query } from '../../estados/tramite240121Query.query';
 import { Tramite240121Store } from '../../estados/tramite240121Store.store';
-import { ActivatedRoute } from '@angular/router';
+import { Tramite240121Query } from '../../estados/tramite240121Query.query';
+import { Router, ActivatedRoute } from '@angular/router';
+import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 
 @Injectable()
 class MockTramite240121Store {}
@@ -19,75 +20,40 @@ class MockTramite240121Store {}
 class MockTramite240121Query {}
 
 @Injectable()
-class MockActivatedRoute {
-  snapshot = {
-    data: {},
-    paramMap: {
-      get: () => null,
-    },
-  };
-}
-
-@Directive({ selector: '[myCustom]' })
-class MyCustomDirective {
-  @Input() myCustom;
-}
-
-@Pipe({ name: 'translate' })
-class TranslatePipe implements PipeTransform {
-  transform(value) {
-    return value;
-  }
-}
-
-@Pipe({ name: 'phoneNumber' })
-class PhoneNumberPipe implements PipeTransform {
-  transform(value) {
-    return value;
-  }
-}
-
-@Pipe({ name: 'safeHtml' })
-class SafeHtmlPipe implements PipeTransform {
-  transform(value) {
-    return value;
-  }
+class MockRouter {
+  navigate() {};
 }
 
 describe('TercerosRelacionadosContenedoraComponent', () => {
-  let fixture: ComponentFixture<TercerosRelacionadosContenedoraComponent>;
-  let component: TercerosRelacionadosContenedoraComponent;
+  let fixture;
+  let component;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [FormsModule, ReactiveFormsModule, TercerosRelacionadosContenedoraComponent],
-      declarations: [
-        TranslatePipe,
-        PhoneNumberPipe,
-        SafeHtmlPipe,
-        MyCustomDirective,
-      ],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
+      imports: [ FormsModule, ReactiveFormsModule ],
+      schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
       providers: [
         { provide: Tramite240121Store, useClass: MockTramite240121Store },
         { provide: Tramite240121Query, useClass: MockTramite240121Query },
-        { provide: ActivatedRoute, useClass: MockActivatedRoute },
-      ],
-    })
-      .overrideComponent(TercerosRelacionadosContenedoraComponent, {})
-      .compileComponents();
+        { provide: Router, useClass: MockRouter },
+        {
+          provide: ActivatedRoute,
+          useValue: {
+            snapshot: {url: 'url', params: {}, queryParams: {}, data: {}},
+            url: observableOf('url'),
+            params: observableOf({}),
+            queryParams: observableOf({}),
+            fragment: observableOf('fragment'),
+            data: observableOf({})
+          }
+        },
+        ConsultaioQuery
+      ]
+    }).overrideComponent(TercerosRelacionadosContenedoraComponent, {
 
+    }).compileComponents();
     fixture = TestBed.createComponent(TercerosRelacionadosContenedoraComponent);
     component = fixture.debugElement.componentInstance;
-  });
-
-  afterEach(() => {
-    if (component) {
-      component.ngOnDestroy = () => {};
-    }
-    if (fixture) {
-      fixture.destroy();
-    }
   });
 
   it('should run #constructor()', async () => {
@@ -98,7 +64,10 @@ describe('TercerosRelacionadosContenedoraComponent', () => {
     component.tramiteQuery = component.tramiteQuery || {};
     component.tramiteQuery.getDestinatarioFinalTablaDatos$ = observableOf({});
     component.tramiteQuery.getProveedorTablaDatos$ = observableOf({});
+    component.consultaQuery = component.consultaQuery || {};
+    component.consultaQuery.selectConsultaioState$ = observableOf({});
     component.ngOnInit();
+
   });
 
   it('should run #ngOnDestroy()', async () => {
@@ -109,4 +78,5 @@ describe('TercerosRelacionadosContenedoraComponent', () => {
     expect(component.unsubscribe$.next).toHaveBeenCalled();
     expect(component.unsubscribe$.complete).toHaveBeenCalled();
   });
+
 });
