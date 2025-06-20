@@ -20,7 +20,6 @@ import { takeUntil } from 'rxjs';
   * @export
   * @class AnexoVistaDosYTresComponent
   */
-
 @Component({
   selector: 'app-anexo-vista-dos-y-tres',
   standalone: true,
@@ -83,6 +82,8 @@ export class AnexoVistaDosYTresComponent implements OnInit, OnDestroy {
   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
 */
   ngOnInit(): void {
+    // Se suscribe a los cambios en la lista del Anexo Dos desde el store.  
+    // Actualiza la variable local si la lista contiene elementos.
     this.query.anexoDosTableLista$
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((anexoDosTablaLista) => {
@@ -90,7 +91,8 @@ export class AnexoVistaDosYTresComponent implements OnInit, OnDestroy {
           this.anexoDosTablaLista = anexoDosTablaLista;
         }
       });
-
+// Se suscribe a los cambios en la lista del Anexo Tres desde el store.  
+// Actualiza la variable local si la lista contiene elementos.
       this.query.anexoTresTablaLista$
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((anexoTresTablaLista) => {
