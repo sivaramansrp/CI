@@ -1,9 +1,10 @@
+import { AfterViewInit, Component, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { Catalogo, CatalogoSelectComponent, InputFecha, InputFechaComponent, InputRadioComponent, RespuestaCatalogos, TituloComponent } from '@libs/shared/data-access-user/src';
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import {FECHAPAGODATE, FECHA_DE_PAGO } from '../../constantes/pago-de-derechos.enum';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { EventEmitter } from '@angular/core';
+import { FECHA_DE_PAGO } from '../../constantes/pago-de-derechos.enum';
 import { HttpClient } from '@angular/common/http';
 import { PagoDeDerechos } from '../../../tramites/220201/models/220201/capturar-solicitud.model';
 import { RadioOpcion } from '../../../tramites/220201/models/220201/certificado-zoosanitario.model';
@@ -23,7 +24,7 @@ import { RadioOpcion } from '../../../tramites/220201/models/220201/certificado-
   templateUrl: './pago-de-derecho.component.html',
   styleUrl: './pago-de-derecho.component.scss',
 })
-export class PagoDeDerechoComponent implements OnDestroy,OnInit {
+export class PagoDeDerechoComponent implements OnDestroy,OnInit,AfterViewInit {
    /**
      * Configuración predeterminada para el campo de fecha de pago.
      */
@@ -34,15 +35,8 @@ export class PagoDeDerechoComponent implements OnDestroy,OnInit {
      */
     justificacionSelector: Catalogo[] = [];
   
-    /**
-     * Bandera para determinar si el formulario está en modo solo lectura.
-     */
-    esFormularioSoloLectura: boolean = false;
   
-    /**
-     * Fecha de pago predeterminada que se puede actualizar.
-     */
-    fechaPagoDate: string = FECHAPAGODATE;
+    
   
     /**
      * Lista de opciones para el selector de banco.
@@ -53,13 +47,14 @@ export class PagoDeDerechoComponent implements OnDestroy,OnInit {
      * Formulario reactivo que gestiona los campos del pago de derechos.
      */
     pagoForm: FormGroup = this.fb.group({
-      exentoPago: [{ value: 'si', disabled: false }, Validators.required],
-      justificacion: [{ value: '', disabled: false }, Validators.required],
-      claveReferencia: [{ value: '', disabled: true }],
-      cadenaDependencia: [{ value: '', disabled: true }],
-      banco: [{ value: '', disabled: true }],
-      llavePago: [{ value: '', disabled: true }],
-      importePago: [{ value: '', disabled: true }]
+      exentoPago: [""],
+      justificacion: [""],
+      claveReferencia: [""],
+      cadenaDependencia: [""],
+      banco: [""],
+      llavePago: [""],
+      importePago: [""],
+      fechaPago:[""]
     });
   
     /**
@@ -82,6 +77,30 @@ export class PagoDeDerechoComponent implements OnDestroy,OnInit {
      * @description [Compodoc] Propiedad de entrada que recibe los datos del pago de derechos para ser utilizados en el componente.
      */
     @Input() pagoDeDerechos: PagoDeDerechos = {} as PagoDeDerechos;
+
+    /**
+     * Indica si el formulario debe mostrarse en modo solo lectura.
+     *
+     * @type {boolean}
+     * @default false
+     * @see https://compodoc.app/
+     *
+     * @description
+     * Cuando es verdadero, el formulario se presenta únicamente para visualización,
+     * deshabilitando la edición de los campos.
+     */
+    @Input() esFormularioSoloLectura:boolean = false;
+
+
+      /**
+       * @description
+       * Evento emitido cuando se produce un cambio en el pago de derechos.
+       * 
+       * @param pagoChanged - Emite un objeto de tipo `PagoDeDerechos` con la información actualizada del pago.
+       * 
+       * @event
+       */
+      @Output() pagoChanged = new EventEmitter<PagoDeDerechos>();
     /**
      * Constructor del componente. Inyecta los servicios y realiza una carga inicial de catálogos.
      * @param fb Constructor de formularios reactivos.
@@ -96,16 +115,52 @@ export class PagoDeDerechoComponent implements OnDestroy,OnInit {
     ) {
       this.obtenerDetallesDeListaDeOpciones();
     }
+    /**
+     * @inheritdoc
+     * @description
+     * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+     * 
+     * @remarks
+     * Este método inicializa el formulario `pagoForm` con los valores provenientes del objeto `pagoDeDerechos`.
+     * Si alguna propiedad no está definida, se asigna un valor por defecto.
+     * 
+     * @see https://angular.io/guide/lifecycle-hooks
+     * 
+     * @memberof PagoDeDerechoComponent
+     */
     ngOnInit(): void {
-this.pagoForm.patchValue({
-        exentoPago: this.pagoDeDerechos.exentoPago,
-        justificacion: this.pagoDeDerechos.justificacion,
-        claveReferencia: this.pagoDeDerechos.claveReferencia, 
-        cadenaDependencia: this.pagoDeDerechos.cadenaDependencia,
-        banco: this.pagoDeDerechos.banco,
-        llavePago: this.pagoDeDerechos.llavePago,
-        importePago: this.pagoDeDerechos.importePago
+    this.pagoForm.patchValue({
+        exentoPago: this.pagoDeDerechos.exentoPago || 'no',
+        justificacion: this.pagoDeDerechos.justificacion || '',
+        claveReferencia: this.pagoDeDerechos.claveReferencia || '', 
+        cadenaDependencia: this.pagoDeDerechos.cadenaDependencia || '',
+        banco: this.pagoDeDerechos.banco || '',
+        llavePago: this.pagoDeDerechos.llavePago || '',
+        importePago: this.pagoDeDerechos.importePago || '',
+        fechaPago:this.pagoDeDerechos.fechaPago|| ''
       });
+    
+    }
+    /**
+     * @inheritdoc
+     * @description
+     * Método del ciclo de vida de Angular que se ejecuta después de que la vista del componente ha sido inicializada.
+     * 
+     * @remarks
+     * Este método habilita o deshabilita el formulario `pagoForm` dependiendo del valor de `esFormularioSoloLectura`.
+     * 
+     * @see https://angular.io/guide/lifecycle-hooks
+     * 
+     * @memberof PagoDeDerechoComponent
+     */
+    ngAfterViewInit(): void {
+      if(this.esFormularioSoloLectura){
+        this.pagoForm.disable();
+      }
+      else{
+        this.pagoForm.enable();
+          this.radioChange();
+      }
     }
 
      obtenerDetallesDeListaDeOpciones(): void {
@@ -136,6 +191,39 @@ this.pagoForm.patchValue({
             this.justificacionSelector = DATOS as Catalogo[];
           });
       }
+      
+      radioChange(): void {
+       if(!this.esFormularioSoloLectura && this.pagoForm.value.exentoPago === 'si') {
+          this.pagoForm.get('justificacion')?.enable();
+          this.pagoForm.get('claveReferencia')?.disable();
+          this.pagoForm.get('cadenaDependencia')?.disable();
+          this.pagoForm.get('banco')?.disable();
+          this.pagoForm.get('llavePago')?.disable();
+          this.pagoForm.get('importePago')?.disable();
+               this.pagoForm.get('fechaPago')?.enable();
+        }
+        else if(!this.esFormularioSoloLectura && this.pagoForm.value.exentoPago === 'no') {
+          this.fechaInicioInput.required=true;
+          this.fechaInicioInput.habilitado=false;
+          this.pagoForm.get('justificacion')?.disable();
+          this.pagoForm.get('claveReferencia')?.disable();
+          this.pagoForm.get('cadenaDependencia')?.disable();
+          const BANCO_CONTROL = this.pagoForm.get('banco');
+          BANCO_CONTROL?.setValidators([Validators.required]);
+          BANCO_CONTROL?.enable();
+          this.pagoForm.get('llavePago')?.enable();
+          this.pagoForm.get('importePago')?.disable();
+          this.pagoForm.get('fechaPago')?.enable();
+       }
+        }
+
+  /**
+   * @desc Actualiza el objeto de pago de derechos y emite el evento correspondiente.
+   * @memberof PagoDeDerechoComponent
+   */
+  actualizarPago(): void {
+    this.pagoChanged.emit(this.pagoForm?.value);
+  }
 
    /**
    * Limpia las suscripciones para evitar fugas de memoria al destruir el componente.

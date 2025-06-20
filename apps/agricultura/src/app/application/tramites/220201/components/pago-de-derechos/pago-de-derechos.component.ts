@@ -1,8 +1,9 @@
-import {Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import {Subject, takeUntil } from 'rxjs';
+import {Subject,map, takeUntil } from 'rxjs';
 import { CertificadoZoosanitarioServiceService } from '../../services/220201/certificado-zoosanitario.service';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 import { PagoDeDerechoComponent } from '../../../../shared/components/pago-de-derecho/pago-de-derecho.component';
 import { PagoDeDerechos } from '../../models/220201/capturar-solicitud.model';
 import { ZoosanitarioQuery } from '../../queries/220201/zoosanitario.query';
@@ -30,19 +31,23 @@ import { ZoosanitarioQuery } from '../../queries/220201/zoosanitario.query';
 export class PagoDeDerechosComponent implements OnInit, OnDestroy {
 
  
-pagoData:PagoDeDerechos={
-  exentoPago: 'no',
-  justificacion: '1',
-  claveReferencia: 'REF12345678',
-  cadenaDependencia: 'DEP0987654321XYZ',
-  banco: '1',
-  llavePago: 'LLAVE-456-XYZ',
-  importePago: '1500.00'
-}
+pagoData:PagoDeDerechos={} as PagoDeDerechos;
   /**
    * Sujeto para manejar la destrucción de observables y evitar fugas de memoria.
    */
   private destroyNotifier$ = new Subject<void>();
+
+  /**
+   * Indica si el formulario debe mostrarse en modo solo lectura.
+   *
+   * @remarks
+   * Cuando esta propiedad es `true`, los campos del formulario no serán editables por el usuario.
+   *
+   * @compodoc
+   * @description
+   * Determina si el formulario se presenta únicamente para consulta, deshabilitando la edición de los campos.
+   */
+  esFormularioSoloLectura: boolean = false;
 
   /**
    * Constructor del componente. Inyecta los servicios y realiza una carga inicial de catálogos.
@@ -55,6 +60,8 @@ pagoData:PagoDeDerechos={
   constructor(
     private readonly certificadoZoosanitarioServices: CertificadoZoosanitarioServiceService,
     private readonly certificadoZoosanitarioQuery: ZoosanitarioQuery,
+    private readonly consultaioQuery: ConsultaioQuery,
+    private readonly cdr: ChangeDetectorRef
   ) {
   }
 
@@ -70,23 +77,23 @@ pagoData:PagoDeDerechos={
          this.pagoData = datosDeLaSolicitud;
         }
       });
+    this.consultaioQuery.selectConsultaioState$
+          .pipe(
+            takeUntil(this.destroyNotifier$),
+            map((seccionState) => {
+              this.esFormularioSoloLectura = seccionState.readonly;
+               this.cdr.detectChanges();
+            })
+          )
+          .subscribe();
 
   }
-
-
-  /**
-   * Método que agrupa la carga de catálogos: bancos y justificaciones.
-   */
- 
-
-  /**
+    /**
    * Envía los valores actuales del formulario al store compartido.
    */
-  setValoresStore(): void {
-    const VALOR = this.pagoData;
-    this.certificadoZoosanitarioServices.updatePagoDeDerechos(VALOR);
+onPagoChanged(event: PagoDeDerechos): void {
+this.certificadoZoosanitarioServices.updatePagoDeDerechos(event as PagoDeDerechos);
   }
-
   /**
    * Limpia las suscripciones para evitar fugas de memoria al destruir el componente.
    */
