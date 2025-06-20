@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { ANEXO_I_SERVICIO, ANEXO_IMPORTACION_SERVICIO } from '../../../../shared/constantes/anexo-dos-y-tres.enum';
 import { AnexoDosEncabezado, AnexoUnoEncabezado } from '../../../../shared/models/nuevo-programa-industrial.model';
-import { NO_ERRORS_SCHEMA } from '@angular/core';
+import {  NO_ERRORS_SCHEMA } from '@angular/core';
 import { AnexoUnoComponent } from '../../../../shared/components/anexo-uno/anexo-uno.component';
 
 describe('AnexoVistaUnoComponent', () => {
@@ -25,15 +25,6 @@ describe('AnexoVistaUnoComponent', () => {
     fixture = TestBed.createComponent(AnexoVistaUnoComponent);
     component = fixture.componentInstance;
     router = TestBed.inject(Router);
-    component.anexoUnoConfig = {
-    anexoUnoTablaSeleccionRadio: TablaSeleccion.RADIO,
-      anexoUnoEncabezadoDeTabla: ANEXO_I_SERVICIO
-    };
-
-    component.anexoImportacionConfig = {
-      anexoDosTablaSeleccionRadio: TablaSeleccion.RADIO,
-      anexoDosEncabezadoDeTabla: ANEXO_IMPORTACION_SERVICIO
-    };
 
     fixture.detectChanges();
   });

@@ -23,4 +23,20 @@ describe('EmpresasSubfabricanteComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should call obtenerDatosDelAlmacen and obtenerListaEstado on ngOnInit', () => {
+    const obtenerDatosSpy = jest.spyOn(component, 'obtenerDatosDelAlmacen');
+    const obtenerListaSpy = jest.spyOn(component, 'obtenerListaEstado');
+    component.ngOnInit();
+    expect(obtenerDatosSpy).toHaveBeenCalled();
+    expect(obtenerListaSpy).toHaveBeenCalled();
+  });
+
+   it('should clean up destroy$ on ngOnDestroy', () => {
+    const destroy$Spy = jest.spyOn(component.destroyNotifier$, 'next');
+    const completeSpy = jest.spyOn(component.destroyNotifier$, 'complete');
+    component.ngOnDestroy();
+    expect(destroy$Spy).toHaveBeenCalled();
+    expect(completeSpy).toHaveBeenCalled();
+  });
 });

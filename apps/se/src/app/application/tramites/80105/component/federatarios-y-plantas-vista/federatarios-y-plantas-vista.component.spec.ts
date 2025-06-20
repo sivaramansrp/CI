@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FederatariosYPlantasVistaComponent } from './federatarios-y-plantas-vista.component';
 import { ActivatedRoute } from '@angular/router';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('FederatariosYPlantasVistaComponent', () => {
   let component: FederatariosYPlantasVistaComponent;
@@ -8,7 +9,7 @@ describe('FederatariosYPlantasVistaComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [FederatariosYPlantasVistaComponent],
+      imports: [FederatariosYPlantasVistaComponent, HttpClientTestingModule],
       providers: [{ provide: ActivatedRoute, useValue: {} }],
     }).compileComponents();
 
