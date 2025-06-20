@@ -1,9 +1,9 @@
 import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
-import { appRoutes } from './app.routes';
-import { provideHttpClient } from '@angular/common/http';
-import { provideRouter } from '@angular/router';
+import { APP_ROUTES } from './app.routes';
 import { ENVIRONMENT } from './environments/environment';
 import { provideAnimations } from '@angular/platform-browser/animations';
+import { provideHttpClient } from '@angular/common/http';
+import { provideRouter } from '@angular/router';
 
 import { APPINJECT } from './app.inject';
 
@@ -15,7 +15,7 @@ import { APPINJECT } from './app.inject';
 export const APPCONFIG: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }),
-    provideRouter(appRoutes),
+    provideRouter(APP_ROUTES),
     provideHttpClient(),
     { provide: APPINJECT, useValue: ENVIRONMENT },
     provideAnimations()

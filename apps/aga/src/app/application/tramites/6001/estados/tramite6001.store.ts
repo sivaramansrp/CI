@@ -43,56 +43,56 @@ export class Tramite6001Store extends Store<AgregarCuenta6001State> {
     super(createInitialState());
   }
 
-  public setTitularDeLaCuenta(titularDeLaCuenta: string) {
+  public setTitularDeLaCuenta(titularDeLaCuenta: string): void {
     this.update((state) => ({
       ...state,
       titularDeLaCuenta,
     }));
   }
 
-  public setTipoDePersona(tipoDePersona: string) {
+  public setTipoDePersona(tipoDePersona: string): void {
     this.update((state) => ({
       ...state,
       tipoDePersona,
     }));
   }
 
-  public setRfc(rfc: string) {
+  public setRfc(rfc: string): void {
     this.update((state) => ({
       ...state,
       rfc,
     }));
   }
 
-  public setNumeroDeCuenta(numeroDeCuenta: string) {
+  public setNumeroDeCuenta(numeroDeCuenta: string): void {
     this.update((state) => ({
       ...state,
       numeroDeCuenta,
     }));
   }
 
-  public setPaisDondeRadica(paisDondeRadica: string) {
+  public setPaisDondeRadica(paisDondeRadica: string): void {
     this.update((state) => ({
       ...state,
       paisDondeRadica,
     }));
   }
 
-  public setInstitucion(institucion: string) {
+  public setInstitucion(institucion: string): void {
     this.update((state) => ({
       ...state,
       institucion,
     }));
   }
 
-  public setEstado(estado: string) {
+  public setEstado(estado: string): void {
     this.update((state) => ({
       ...state,
       estado,
     }));
   }
 
-  public setSucursal(sucursal: string) {
+  public setSucursal(sucursal: string): void {
     this.update((state) => ({
       ...state,
       sucursal,
@@ -100,7 +100,7 @@ export class Tramite6001Store extends Store<AgregarCuenta6001State> {
   }
 
 
-  public setNumeroDePlaza(numeroDePlaza: string) {
+  public setNumeroDePlaza(numeroDePlaza: string): void {
     this.update((state) => ({
       ...state,
       numeroDePlaza,

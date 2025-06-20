@@ -80,7 +80,7 @@ export class SolicitudPageComponent {
    * Obtiene el valor del índice de la acción del botón.
    * @param e Acción del botón.
    */
-  getValorIndice(e: AccionBoton) {
+  getValorIndice(e: AccionBoton): void {
     if (e.valor > 0 && e.valor < 5) {
       this.indice = e.valor;
       if (e.accion === 'cont') {
