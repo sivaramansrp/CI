@@ -139,7 +139,12 @@ export class PagoDeDerechoComponent implements OnDestroy,OnInit,AfterViewInit {
         importePago: this.pagoDeDerechos.importePago || '',
         fechaPago:this.pagoDeDerechos.fechaPago|| ''
       });
-    
+      if (this.pagoForm.value.exentoPago === 'no') {
+        this.pagoForm.get('llavePago')?.enable();
+        this.pagoForm.get('llavePago')?.setValidators([Validators.required,
+        Validators.pattern(REGEX_LLAVE_DE_PAGO_DE_DERECHO),
+        Validators.maxLength(30)]);
+      }
     }
     /**
      * @inheritdoc
