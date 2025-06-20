@@ -39,9 +39,12 @@
         <label class="mb-2">Partidas</label>
         <app-tabla-dinamica [configuracionTabla]="mercanciaTablaEncabezados"
           [tipoSeleccionTabla]="tablaSeleccion.CHECKBOX" [datos]="mercanciaTablaDatos"
-          (listaDeFilaSeleccionada)="seleccionDeFilas($event)"></app-tabla-dinamica>
+          (listaDeFilaSeleccionada)="seleccionDeFilas($event)"
+          [disableSeleccionTablaCheckBox]="soloLectura"></app-tabla-dinamica>
         <div class="col-md-12 d-flex justify-content-end">
-          <button type="button" class="btn btn-primary ms-3"> Modificar partida mercancia </button>
+          <button type="button" class="btn btn-primary ms-3" (click)="cargarMercanciaTabla();" [disabled]="soloLectura">
+            Modificar partida
+            mercancia </button>
         </div>
       </div>
     </ng-container>
