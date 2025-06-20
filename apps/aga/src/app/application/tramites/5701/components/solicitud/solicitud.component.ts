@@ -2087,18 +2087,33 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
             this.desactivarSelectSeccionAduanera =
               response && response.datos?.length > 0;
 
+              console.log(this.desactivarSelectSeccionAduanera);
+              
+              console.log(response);
+              console.log(this.desactivarSelectSeccionAduanera);
+              
+              
+
             if (this.desactivarSelectSeccionAduanera) {
               this.seccionAduanera = response?.datos;
               this.despacho.get('idSeccionDespacho')?.enable();
             } else {
+              console.log('SIN SECCION ADUANERA');
+              
               this.seccionAduanera = [
                 {
                   clave: SIN_ITEMS,
                   descripcion: 'No cuenta con sección aduanera',
                 },
               ];
-              this.despacho.get('idSeccionDespacho')?.setValue(SIN_ITEMS);
+              this.despacho.get('idSeccionDespacho')?.enable();
+              this.despacho.get('idSeccionDespacho')?.setValue('-2');
               this.despacho.get('idSeccionDespacho')?.disable();
+
+              console.log(this.seccionAduanera);
+              
+              console.log(this.despacho.get('idSeccionDespacho')?.value);
+              
             }
 
             return this.recintoService.getListaRecintos(ADUANA);
