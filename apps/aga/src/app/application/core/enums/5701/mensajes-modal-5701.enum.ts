@@ -102,6 +102,11 @@ export const MSG_PEDIMENTO_EXISTE_YA_PAGADO =
 export const MSG_PEDIMENTO_EXISTE_PREVIO =
   'Error, verificar que exista como previo';
 
+/**
+ * @description Mensaje de error cuando no hay pedimentos en la tabla.
+ */
+export const MSG_ERROR_NO_PEDIMENTOS = 'No se encontró información.';
+
 // #Secion Linea de captura
 /**
  * @description Mensaje de error cuando no se han llenado los campos obligatorios.
