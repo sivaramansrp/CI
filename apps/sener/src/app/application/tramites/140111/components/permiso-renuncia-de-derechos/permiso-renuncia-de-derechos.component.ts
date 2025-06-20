@@ -5,6 +5,7 @@
  */
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ConsultaioQuery, TituloComponent } from '@ng-mf/data-access-user';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
 import { Tramite140111State, Tramite140111Store } from '../../estados/tramite140111.store';
@@ -12,7 +13,6 @@ import { CommonModule } from '@angular/common';
 import { MANIFIESTO_BAJO_PROTESTA } from '../../enums/permiso-renuncia-de-derechos.enum';
 import { PermisoFormInterface } from '../../model/renuncia-de-derechos.model';
 import { RenunciaDeDerechosAlServicio } from '../../services/renuncia-de-derechos-al.service';
-import { TituloComponent } from '@ng-mf/data-access-user';
 import { Tramite140111Query } from '../../estados/tramite140111.query';
 
 
@@ -44,14 +44,42 @@ export class PermisoRenunciaDeDerechosComponent implements OnInit, OnDestroy {
   public destroyed$ = new Subject<void>();
 
   /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  esFormularioSoloLectura: boolean = false;
+
+  /**
    * Inicializa el componente PermisoRenunciaDeDerechosComponent.
    * @constructor
    * @param {FormBuilder} fb - El constructor de formularios.
    * @returns void
    * @description Inicializa el componente PermisoRenunciaDeDerechosComponent.
    */
-  constructor(private fb:FormBuilder, private Servicio: RenunciaDeDerechosAlServicio, private tramite140111Store:Tramite140111Store,private tramite140111Query:Tramite140111Query) {
-    // El constructor se utiliza para la inyección de dependencias.
+  constructor(
+    private fb:FormBuilder, 
+    private Servicio: RenunciaDeDerechosAlServicio,
+    private tramite140111Store:Tramite140111Store,
+    private tramite140111Query:Tramite140111Query,
+    private consultaQuery: ConsultaioQuery
+  ) {
+    this.crearpermisoForm();
+     /**
+    * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
+    *
+    * - Asigna el valor de solo lectura (`readonly`) a la propiedad `esFormularioSoloLectura`.
+    * - Llama a `inicializarEstadoFormulario()` para aplicar configuraciones basadas en el estado recibido.
+    * - La suscripción se cancela automáticamente cuando `destroyNotifier$` emite un valor (para evitar fugas de memoria).
+    */
+    this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.actualizarEstadoCampos();
+        })
+      )
+      .subscribe();
   }
 
   /**
@@ -60,9 +88,8 @@ export class PermisoRenunciaDeDerechosComponent implements OnInit, OnDestroy {
    * @description Crea el formulario de renuncia de permisos y establece los valores iniciales.
    */
   ngOnInit(): void {
-    this.crearpermisoForm();
     this.enPatchForm();
-    this.datosGuardadosParche()
+    this.datosGuardadosParche();
   }
 
    /**
@@ -127,6 +154,28 @@ export class PermisoRenunciaDeDerechosComponent implements OnInit, OnDestroy {
    setValoresStore(form: FormGroup, campo: string): void {
     const VALOR = form.get(campo)?.value;
     this.tramite140111Store.establecerDatos({[campo]: VALOR});
+  }
+
+
+  /**
+   * Habilita o deshabilita dinámicamente los campos 'motivoRenunciaDeDerechos' y 'mercacniaSolicitudControlar'
+   * según el estado de solo lectura del formulario.
+   *
+   * @returns void
+   * @description Si el formulario está en modo solo lectura, deshabilita ambos campos; de lo contrario, los habilita.
+   */
+  actualizarEstadoCampos(): void {
+    const CAMPOS = ['motivoRenunciaDeDerechos', 'mercacniaSolicitudControlar'];
+    CAMPOS.forEach(campo => {
+      const CONTROL = this.formulario.get(campo);
+      if (CONTROL) {
+        if (this.esFormularioSoloLectura) {
+          CONTROL.disable();
+        } else {
+          CONTROL.enable();
+        }
+      }
+    });
   }
 
   /**

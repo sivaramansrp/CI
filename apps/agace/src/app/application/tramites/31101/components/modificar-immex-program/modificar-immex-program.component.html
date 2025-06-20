@@ -39,7 +39,7 @@
           [label]="tipoDeInstalacion.labelNombre"
           [placeholder]="tipoDeInstalacion.primerOpcion"
           [required]="true"
-          [isDisabled]="false"
+          [isDisabled]="esFormularioSoloLectura"
           name="tipoDeInstalacion"
           id="tipoDeInstalacion"
           (selectionChange)="actualizarTipoDeInstalacion($event)"
@@ -128,6 +128,7 @@
           <button
             type="button"
             id="cancelar"
+            [disabled]="esFormularioSoloLectura"
             class="btn btn-danger ms-3"
             data-bs-dismiss="modal"
             #closeModal
@@ -138,6 +139,7 @@
           <button
             type="button"
             id="Iceptar"
+            [disabled]="esFormularioSoloLectura"
             class="btn btn-primary ms-3"
             data-bs-dismiss="modal"
             #closeModal

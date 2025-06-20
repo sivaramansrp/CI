@@ -8,6 +8,7 @@
           [label]="'Tipo'"
           [required]="true"
           name="tipo"
+          formControlName="tipos" (change)="setValoresStore(montosDeInversionForm, 'tipos', 'setTipos')"
         ></app-catalogo-select>
       </div>
       <div class="col-md-4">
@@ -17,6 +18,7 @@
           id="cantidad"
           formControlName="cantidad"
           type="text"
+          (change)="setValoresStore(montosDeInversionForm, 'cantidad', 'setCantidad')"
         />
       </div>
     </div>
@@ -29,6 +31,7 @@
           id="descripsion"
           formControlName="descripsion"
           placeholder=""
+          (change)="setValoresStore(montosDeInversionForm, 'descripsion', 'setDescripsion')"
         ></textarea>
       </div>
     </div>
@@ -42,6 +45,7 @@
           id="mnx"
           formControlName="mnx"
           type="text"
+          (change)="setValoresStore(montosDeInversionForm, 'mnx', 'setMnx')"
         />
       </div>
     </div>

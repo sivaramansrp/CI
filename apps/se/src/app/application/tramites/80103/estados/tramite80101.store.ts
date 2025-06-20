@@ -1,8 +1,8 @@
 import { AnexoEncabezado, AnexoUnoEncabezado } from '../../../shared/models/nuevo-programa-industrial.model';
 import { AnnexoDosTres, AnnexoUno } from '../models/nuevo-programa-industrial.model';
 import { AnexoDosEncabezado } from '../../../shared/models/nuevo-programa-industrial.model';
-import { Catalogo } from '@ng-mf/data-access-user';
-import { CatalogoPaises } from '@ng-mf/data-access-user';
+import { Catalogo } from '@libs/shared/data-access-user/src';
+import { CatalogoPaises } from '@libs/shared/data-access-user/src';
 import { DatosComplimentos } from '../../../shared/models/complimentos.model';
 import { DatosEmpresaExtranjera} from '../models/nuevo-programa-industrial.model';
 import { DatosSubcontratista } from '../../../shared/models/empresas-subfabricanta.model';
@@ -804,5 +804,50 @@ export class Tramite80101Store extends Store<Tramite80101State> {
       ...state,
       tablaDatosFederatarios: [...state.tablaDatosFederatarios, formaFederatarios],
     }));
+  }
+    /**
+   * Agrega un nuevo conjunto de datos a la tabla de complementos en el estado.
+   * 
+   * @param datos - Objeto que contiene la información de socios o accionistas que se agregará.
+   *                Se genera un identificador único (UUID) para cada entrada.
+   * 
+   * @remarks
+   * Este método actualiza el estado actual añadiendo un nuevo elemento a la lista
+   * `tablaDatosComplimentos`. Utiliza `crypto.randomUUID()` para generar un identificador único.
+   */
+  agregarTablaDatosComplimentos(datos: SociaoAccionistas): void {
+    this.update((state) => {
+      const DATOS = {
+        ...datos,
+        id: crypto.randomUUID().toString(),
+      };
+      return {
+        ...state,
+        tablaDatosComplimentos: [...state.tablaDatosComplimentos, DATOS],
+      };
+    });
+  }
+/**
+   * Agrega un nuevo registro a la tabla de datos de complementos extranjera.
+   * 
+   * @param datos - Objeto que contiene la información del socio o accionista que se agregará.
+   *                Este objeto se extiende con un identificador único generado automáticamente.
+   * 
+   * @remarks
+   * Este método actualiza el estado de la tienda añadiendo un nuevo elemento al arreglo
+   * `tablaDatosComplimentosExtranjera`. El identificador único se genera utilizando 
+   * `crypto.randomUUID()`.
+   */
+  agregarTablaDatosComplimentosExtranjera(datos: SociaoAccionistas): void {
+    this.update((state) => {
+      const DATOS = {
+        ...datos,
+        id: crypto.randomUUID().toString(),
+      };
+      return {
+        ...state,
+        tablaDatosComplimentosExtranjera: [...state.tablaDatosComplimentosExtranjera, DATOS],
+      };
+    });
   }
 }

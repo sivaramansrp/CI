@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { RespuestaCaatTabla } from '../../models/modificacion-transportacion-maritima.model';
 import { RespuestaCatalogos } from '@libs/shared/data-access-user/src';
+import { TransportacionMaritima40202State } from '../../../../core/estados/tramites/tramite40202.store';
 
 /**
  * Servicio para la gestión de datos relacionados con la transportación marítima.
@@ -44,5 +45,14 @@ export class ModificacionTransportacionMaritimaService {
    */
   getPaisCatalogo(): Observable<RespuestaCatalogos> {
     return this.http.get<RespuestaCatalogos>('assets/json/40202/pais-catalogo.json');
+  }
+
+  /**
+   * Obtiene los datos de consulta de la transportación marítima.
+   * @returns Observable<TransportacionMaritima40202State>
+   * @description Este método realiza una petición HTTP GET a un archivo JSON local que contiene los datos de consulta de la transportación marítima.
+   */
+  getConsultaTransportacionMaritimaDatos(): Observable<TransportacionMaritima40202State> {
+    return this.http.get<TransportacionMaritima40202State>('assets/json/40202/consulta-transportacion-maritima.json');
   }
 }
