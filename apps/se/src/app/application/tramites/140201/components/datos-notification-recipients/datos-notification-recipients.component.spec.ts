@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DatosNotificationRecipientsComponent } from './datos-notification-recipients.component';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { of, Subject } from 'rxjs';
+import { of } from 'rxjs';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CancelacionesService } from '../../services/cancelaciones.service';
 import { CancelacionesStore } from '../../estados/cancelaciones.store';
@@ -21,8 +21,9 @@ describe('DatosNotificationRecipientsComponent', () => {
       getInfo: jest.fn().mockReturnValue(of({ apellidoMaterno: 'Rodríguez' })),
       getEntidades: jest.fn().mockReturnValue(of([])),
       getColonia: jest.fn().mockReturnValue(of([])),
-      getmunicipio: jest.fn().mockReturnValue(of([])),
-      getLocalidad: jest.fn().mockReturnValue(of([])),
+      getmunicipio: jest.fn().mockReturnValue(of([])),     
+      getLocalidad: jest.fn().mockReturnValue(of([])),      
+      getCancelacionDeAutorizaciones: jest.fn().mockReturnValue(of([])), 
     };
     cancelacionesStoreMock = {
       setNombre: jest.fn(),
@@ -52,6 +53,8 @@ describe('DatosNotificationRecipientsComponent', () => {
 
     fixture = TestBed.createComponent(DatosNotificationRecipientsComponent);
     component = fixture.componentInstance;
+    // Ensure entidadFederativa$ is always defined for tests
+    component.entidadFederativa$ = of([]);
     fixture.detectChanges();
   });
 

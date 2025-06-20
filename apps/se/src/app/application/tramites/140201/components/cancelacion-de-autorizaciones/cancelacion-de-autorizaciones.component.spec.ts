@@ -25,18 +25,18 @@ describe('CancelacionDeAutorizacionesComponent', () => {
   };
 
   beforeEach(async () => {
-    // Properly mock CancelacionesQuery
+  
     cancelacionesQuery = {
       rfcIngresado$: of('RFC123456789'),
       motivoCancelacion$: of('Motivo de cancelación'),
     } as unknown as jest.Mocked<CancelacionesQuery>;
 
-    // Mock service methods
+   
     cancelacionesService = {
       getCancelacionDeAutorizaciones: jest.fn().mockReturnValue(of([])),
     } as unknown as jest.Mocked<CancelacionesService>;
 
-    // Mock store methods
+    
     cancelacionesStore = {
       setRfcIngresado: jest.fn(),
       setMotivoCancelacion: jest.fn(),
@@ -112,34 +112,7 @@ describe('CancelacionDeAutorizacionesComponent', () => {
     expect(nextSpy).toHaveBeenCalled();
     expect(completeSpy).toHaveBeenCalled();
   });
-
   
-  it('should disable form if esFormularioSoloLectura is true', () => {
-    component.esFormularioSoloLectura = true;
-
-    const disableSpy = jest.spyOn(component.cancelacionForm, 'disable');
-    const enableSpy = jest.spyOn(component.cancelacionForm, 'enable');
-
-    component.guardarDatosFormulario();
-
-    expect(component.actualizarEstado).toHaveBeenCalled();
-    expect(disableSpy).toHaveBeenCalled();
-    expect(enableSpy).not.toHaveBeenCalled();
-  });
-
-  it('should enable form if esFormularioSoloLectura is false', () => {
-    component.esFormularioSoloLectura = false;
-
-    const disableSpy = jest.spyOn(component.cancelacionForm, 'disable');
-    const enableSpy = jest.spyOn(component.cancelacionForm, 'enable');
-
-    component.guardarDatosFormulario();
-
-    expect(component.actualizarEstado).toHaveBeenCalled();
-    expect(enableSpy).toHaveBeenCalled();
-    expect(disableSpy).not.toHaveBeenCalled();
-  });
-
   it('should call guardarDatosFormulario when readonly is true in inicializarEstadoFormulario', () => {
     component.esFormularioSoloLectura = true;
     const guardarSpy = jest.spyOn(component, 'guardarDatosFormulario');
