@@ -1719,6 +1719,15 @@
     "numeroDeProcedimiento": "260905"
   },
   {
+    "id": 80316,
+    "tipoDeTramite": "Solicitud de Permiso",
+    "fecha": "2023-10-01",
+    "fechaActualizacion": "2023-10-05",
+    "diasTranscurridos": "4",
+    "departamento": "SE",
+    "numeroDeProcedimiento": "80316"
+  },
+  {
     "id": 260511,
     "tipoDeTramite": "Solicitud de Permiso",
     "fecha": "2023-10-01",
