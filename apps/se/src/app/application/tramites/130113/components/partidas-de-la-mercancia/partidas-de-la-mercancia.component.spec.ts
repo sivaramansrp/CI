@@ -7,7 +7,7 @@ import { Tramite130113Store } from '../../estados/tramites/tramites130113.store'
 import { of } from 'rxjs';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { ImportacionEquipoAnticontaminanteService } from '../../services/importacion-equipo-anticontaminante-.service';
+import { ImportacionEquipoAnticontaminanteService } from '../../services/importacion-equipo-anticontaminante.service';
 
 describe('SolicitudComponent', () => {
   let component: SolicitudComponent;
@@ -74,12 +74,6 @@ describe('SolicitudComponent', () => {
 
   it('debería crear el componente', () => {
     expect(component).toBeTruthy();
-  });
-
-  it('debería inicializar los formularios en ngOnInit', () => {
-    const SPY = jest.spyOn(component, 'inicializarFormularios');
-    component.ngOnInit();
-    expect(SPY).toHaveBeenCalled();
   });
 
   it('debería llamar a configuracionFormularioSuscripciones en ngOnInit', () => {

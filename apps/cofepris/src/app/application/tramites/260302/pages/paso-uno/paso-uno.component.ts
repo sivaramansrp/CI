@@ -1,5 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { Subject, takeUntil } from 'rxjs';
+import { ExportacionMateriasPrimasService } from '../../service/exportacion-materias-primas.service';
 import { Tramite260302Query } from '../../estados/tramite260302Query.query';
 import { Tramite260302Store } from '../../estados/tramite260302Store.store';
 
@@ -9,6 +11,15 @@ import { Tramite260302Store } from '../../estados/tramite260302Store.store';
   styleUrl: './paso-uno.component.scss',
 })
 export class PasoUnoComponent implements OnDestroy, OnInit {
+
+  /**
+   * Esta variable se utiliza para almacenar el índice del subtítulo.
+   */
+  public consultaState!: ConsultaioState;
+
+  /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
+  public esDatosRespuesta: boolean = false;
+
   /**
    * Índice utilizado para realizar selecciones o identificaciones de elementos. 
    * Puede ser un número o estar indefinido.
@@ -25,10 +36,36 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
 
   constructor(
     private tramite260302Query:Tramite260302Query,
-    private tramite260302Store: Tramite260302Store
+    private tramite260302Store: Tramite260302Store,
+    private consultaQuery: ConsultaioQuery,
+    private exportacionMateriasPrimasServiceService: ExportacionMateriasPrimasService,    
   ) {
-    // Constructor necesario para inyectar el store del trámite
+    this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyNotifier$)).subscribe((seccionState) => {
+      this.consultaState = seccionState;
+      if (this.consultaState && this.consultaState.procedureId === '260302' &&
+        this.consultaState.update) {
+        this.guardarDatosFormulario();
+      } else {
+        this.esDatosRespuesta = true;
+      }
+    }); 
   }
+  /*
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormulario(): void {
+   this.exportacionMateriasPrimasServiceService
+     .getTramiteDatos().pipe(
+       takeUntil(this.destroyNotifier$)
+     )
+     .subscribe((resp) => {
+       if(resp){
+       this.esDatosRespuesta = true;
+       this.exportacionMateriasPrimasServiceService.actualizarEstadoFormulario(resp);
+       }
+     });
+ }
 
   /**
    * Método de ciclo de vida de Angular que se ejecuta al inicializar el componente.

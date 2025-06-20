@@ -13,7 +13,7 @@ describe('PasoTresComponent', () => {
   let component: PasoTresComponent;
   let fixture: ComponentFixture<PasoTresComponent>;
 
-  // Creamos mocks para cada uno de los servicios requeridos.
+  // Creamos mocks para cada uno de los servicios obligatorios.
   let routerMock: Partial<Router>;
   let tramiteFolioServiceMock: Partial<TramiteFolioService>;
   let tramiteStoreMock: Partial<TramiteFolioStore>;

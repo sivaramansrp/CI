@@ -1,4 +1,4 @@
-import { CatalogoLista, DisponiblesTabla, SeleccionadasTabla } from '../models/certificado-origen.model';
+import { CatalogoLista, DisponiblesTabla, RespuestaConsulta, SeleccionadasTabla } from '../models/certificado-origen.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -116,5 +116,13 @@ export class CertificadosOrigenService {
   obtenerPais(): Observable<CatalogoLista> {
     return this.http
       .get<CatalogoLista>('assets/json/110217/pais.json');
+  }
+
+    /**
+ * Obtiene los datos para la consulta del trámite.
+ * @returns {Observable<RespuestaConsulta>} Observable con los datos de consulta.
+ */
+  getDatosConsulta(): Observable<RespuestaConsulta> {
+    return this.http.get<RespuestaConsulta>('assets/json/110217/consulta_110217.json');
   }
 }

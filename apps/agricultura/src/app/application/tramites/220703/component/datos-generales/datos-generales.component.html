@@ -27,7 +27,7 @@
               [label]="aduanaDeIngreso.labelNombre"
               [placeholder]="aduanaDeIngreso.primerOpcion"
               formControlName="aduanaDeIngreso"
-              [isDisabled]="false"
+              [isDisabled]="esFormularioSoloLectura"
               (selectionChange)="cambioAduanaDeIngreso($event)"
             ></app-catalogo-select>
           </div>
@@ -39,7 +39,7 @@
               [label]="oficinaDeInspeccion.labelNombre"
               [placeholder]="oficinaDeInspeccion.primerOpcion"
               formControlName="oficinaDeInspeccion"
-              [isDisabled]="false"
+              [isDisabled]="esFormularioSoloLectura"
               (selectionChange)="cambioOficinaDeInspeccion($event)"
             ></app-catalogo-select>
           </div>
@@ -54,7 +54,7 @@
               [label]="puntoDeInspeccion.labelNombre"
               [placeholder]="puntoDeInspeccion.primerOpcion"
               formControlName="puntoDeInspeccion"
-              [isDisabled]="false"
+              [isDisabled]="esFormularioSoloLectura"
               (selectionChange)="cambioPuntoDeInspeccion($event)"
             ></app-catalogo-select>
           </div>
@@ -80,7 +80,7 @@
               [label]="regimenAlQueDestina.labelNombre"
               [placeholder]="regimenAlQueDestina.primerOpcion"
               formControlName="regimenAlQueDestina"
-              [isDisabled]="false"
+              [isDisabled]="esFormularioSoloLectura"
               (selectionChange)="cambioRegimenAlQueDestina($event)"
             ></app-catalogo-select>
           </div>
@@ -111,7 +111,7 @@
             [label]="datosParaMovilizacion.labelNombre"
             [placeholder]="datosParaMovilizacion.primerOpcion"
             formControlName="datosParaMovilizacion"
-            [isDisabled]="false"
+            [isDisabled]="esFormularioSoloLectura"
             (selectionChange)="cambioDatosParaMovilizacion($event)"
           ></app-catalogo-select>
         </div>
@@ -136,7 +136,7 @@
             [label]="puntoDeVerificacion.labelNombre"
             [placeholder]="puntoDeVerificacion.primerOpcion"
             formControlName="puntoDeVerificacion"
-            [isDisabled]="false"
+            [isDisabled]="esFormularioSoloLectura"
             (selectionChange)="cambioPuntoDeVerificacion($event)"
           ></app-catalogo-select>
         </div>

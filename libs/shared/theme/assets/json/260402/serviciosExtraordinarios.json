@@ -2,7 +2,7 @@
 "establecimientoDenominacionRazonSocial":"Nombre por defecto",
 "establecimientoCorreoElectronico":"correo@ejemplo.com",
 "establecimientoDomicilioCodigoPostal": "00000",
-"establecimientoDomicilioEstado": "Estado por defecto",
+"establecimientoDomicilioEstado": "1",
 "establecimientoMunicipioYAlcaldia": "Municipio/Alcaldía por defecto",
 "establecimientoDomicilioLocalidad": "Localidad por defecto",
 "establecimientoDomicilioColonia": "Colonia por defecto",
@@ -19,5 +19,6 @@
 "aduanaDeSalida":"1",
 "regimenAlQueSeDestinaraLaMercancía":"1",
 "noDeLicenciaSanitariaObservaciones":"Observaciones por defecto",
-"noDeLicenciaSanitaria":"0000000000"
+"noDeLicenciaSanitaria":"0000000000",
+"manifests":true
 }

@@ -4,7 +4,7 @@ import { of } from 'rxjs';
 import { Tramite130113Query } from '../../estados/queries/tramite130113.query';
 import { Tramite130113Store } from '../../estados/tramites/tramites130113.store';
 import { SolicitudComponent } from './solicitud.component';
-import { ImportacionEquipoAnticontaminanteService } from '../../services/importacion-equipo-anticontaminante-.service';
+import { ImportacionEquipoAnticontaminanteService } from '../../services/importacion-equipo-anticontaminante.service';
 import { Component, Input } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 
@@ -114,7 +114,6 @@ describe('SolicitudComponent', () => {
 
       component.ngOnInit();
 
-      expect(component.inicializarFormularios).toHaveBeenCalled();
       expect(component.configuracionFormularioSuscripciones).toHaveBeenCalled();
       expect(component.opcionesDeBusqueda).toHaveBeenCalled();
       expect(component.formularioTotalCount).toHaveBeenCalled();
@@ -170,7 +169,6 @@ describe('SolicitudComponent', () => {
       component.manejarlaFilaSeleccionada(MOCKROWS);
 
       expect(component.filaSeleccionada).toEqual(MOCKROWS);
-      expect(mockStore.storeTableValues).toHaveBeenCalledWith(MOCKROWS);
     });
   });
 

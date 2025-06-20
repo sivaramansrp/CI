@@ -1,0 +1,8 @@
+{
+  "numeroOperacion": 123456,
+  "llave": "ABC123XYZ",
+  "fechaPago": "2025-06-09",
+  "monedaNacional": "EUR",
+  "renovacion": false,
+  "homologacion": false
+}

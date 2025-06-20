@@ -1,6 +1,7 @@
 import { AgregarDestinatarioCustomComponent } from '../../../../shared/components/agregar-destinatario-custom/agregar-destinatario-custom.component';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+
+import { Component, EventEmitter, Output } from '@angular/core';
 import { DestinoFinal } from '../../../../shared/models/terceros-relacionados.model';
 import { Tramite240114Store } from '../../estados/tramite240114Store.store';
 
@@ -17,6 +18,14 @@ import { Tramite240114Store } from '../../estados/tramite240114Store.store';
   templateUrl: './agregar-destinatario-final-contenedora.component.html',
 })
 export class AgregarDestinatarioFinalContenedoraComponent {
+@Output() cerrar = new EventEmitter<void>();
+  /**
+   * @property esFormularioSoloLectura
+   * @description Indica si el formulario es de solo lectura.
+   * @type {boolean}
+   */
+
+  esFormularioSoloLectura: boolean = false;
   /**
    * Constructor del componente.
    *
@@ -37,5 +46,4 @@ export class AgregarDestinatarioFinalContenedoraComponent {
   updateDestinatarioFinalTablaDatos(event: DestinoFinal[]): void {
     this.tramiteStore.updateDestinatarioFinalTablaDatos(event);
   }
- 
 }

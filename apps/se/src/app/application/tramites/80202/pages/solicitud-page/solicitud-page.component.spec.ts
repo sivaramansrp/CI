@@ -19,8 +19,9 @@ describe('SolicitudPageComponent', () => {
         BtnContinuarComponent,
         SolicitanteComponent,
         HttpClientModule,
+        PasoUnoComponent,
       ],
-      declarations: [SolicitudPageComponent, PasoUnoComponent],
+      declarations: [SolicitudPageComponent],
     }).compileComponents();
 
     fixture = TestBed.createComponent(SolicitudPageComponent);

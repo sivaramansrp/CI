@@ -180,12 +180,13 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     private importaciondeVehiculosService: ImportacionDeVehiculosService,
     private consultaioQuery: ConsultaioQuery
   ) {
+    this.inicializarFormularios();
     this.consultaioQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyed$),
         map((seccionState)=>{
           this.esFormularioSoloLectura = seccionState.readonly; 
-          this.inicializarFormularios();
+          
         })
       )
       .subscribe()
@@ -194,7 +195,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * jest.spyOnCiclo de vida de Angular: inicializa formularios, suscripciones y opciones al cargar el componente.
    */
   ngOnInit(): void {
-    this.inicializarFormularios();
     this.configuracionFormularioSuscripciones();
     this.opcionesDeBusqueda();
     this.formularioTotalCount();
@@ -253,7 +253,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     });
  
     this.mercanciaForm = this.fb.group({
-      producto: ['Nuevo'],
+      producto: [],
       descripcion: [
         '',
         [
@@ -390,10 +390,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (data) => {
           this.opcionesSolicitud = data.options;
-          this.tramite130111Store.actualizarEstado({
-            solicitud: data.options[0]?.value || '',
-            defaultSelect: data.defaultSelect || 'Inicial',
-          });
         },
         error: (error) =>
           console.error('Error loading solicitude options:', error),
@@ -422,7 +418,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       ? filasSeleccionadas
       : [];
     if (this.filaSeleccionada) {
-      this.tramite130111Store.storeTableValues(this.filaSeleccionada);
+      this.tramite130111Store.actualizarEstado({filaSeleccionada:this.filaSeleccionada});
     }
   }
 /**
@@ -454,7 +450,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       this.partidasDelaMercanciaForm.markAllAsTouched();
     } else {
       this.mostrarTabla = true;
-      this.tramite130111Store.setMostrarTabla(true);
+      this.tramite130111Store.actualizarEstado({mostrarTabla:true});
 
     }
   }
@@ -465,8 +461,8 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    */
   navegarParaModificarPartida(): void {
     if (this.filaSeleccionada) {
-      this.tramite130111Store.setMostrarTabla(true);
-      this.tramite130111Store.storeTableValues(this.filaSeleccionada);
+      this.tramite130111Store.actualizarEstado({mostrarTabla:true});
+      this.tramite130111Store.actualizarEstado({filaSeleccionada:this.filaSeleccionada});
     }
   }
 /**

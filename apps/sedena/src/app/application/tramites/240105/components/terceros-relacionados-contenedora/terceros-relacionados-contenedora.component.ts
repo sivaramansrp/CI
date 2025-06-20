@@ -1,12 +1,15 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DestinoFinal } from '../../../../shared/models/terceros-relacionados.model';
+import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { Proveedor } from '../../../../shared/models/terceros-relacionados.model';
 import { Subject } from 'rxjs';
 import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-relacionados/terceros-relacionados.component';
 import { Tramite240105Query } from '../../estados/tramite240105Query.query';
 import { Tramite240105Store } from '../../estados/tramite240105Store.store';
+import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
 
 /**
@@ -22,7 +25,7 @@ import { takeUntil } from 'rxjs';
   templateUrl: './terceros-relacionados-contenedora.component.html',
   styleUrl: './terceros-relacionados-contenedora.component.scss',
 })
-export class TercerosRelacionadosContenedoraComponent implements OnInit {
+export class TercerosRelacionadosContenedoraComponent implements OnInit, OnDestroy {
   /**
    * Observable para limpiar las suscripciones activas al destruir el componente.
    * @property {Subject<void>} destroy$
@@ -42,16 +45,27 @@ export class TercerosRelacionadosContenedoraComponent implements OnInit {
   proveedorTablaDatos: Proveedor[] = [];
 
   /**
+   * Indica si el formulario debe mostrarse en modo solo lectura.
+   *
+   * @type {boolean}
+   * @memberof TercerosRelacionadosContenedoraComponent
+   * @default false
+   */
+  esFormularioSoloLectura: boolean = false; 
+
+  /**
    * Constructor del componente.
    *
    * @method constructor
    * @param {Tramite240101Store} tramiteStore - Store de Akita que maneja el estado del trámite.
    * @param {Tramite240101Query} tramiteQuery - Query de Akita para obtener datos del trámite.
+   * @param {ConsultaioQuery} consultaQuery - Query para obtener el estado de la consulta de usuario.
    * @returns {void}
    */
   constructor(
     private tramiteStore: Tramite240105Store,
-    private tramiteQuery: Tramite240105Query
+    private tramiteQuery: Tramite240105Query,
+    private consultaQuery: ConsultaioQuery
   ) // eslint-disable-next-line no-empty-function
   {}
 
@@ -74,5 +88,23 @@ export class TercerosRelacionadosContenedoraComponent implements OnInit {
       .subscribe((data) => {
         this.proveedorTablaDatos = data;
       });
+
+      this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroy$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+        })
+      )
+      .subscribe();
+  }
+
+  /**
+   * Hook que se ejecuta al destruir el componente.
+   * Envía un valor al Subject `unsubscribe$` y lo completa para liberar suscripciones.
+  */
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

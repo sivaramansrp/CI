@@ -1,6 +1,9 @@
 import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, CrossListLable, CrosslistComponent, InputCheckComponent, InputFecha, InputFechaComponent, InputRadioComponent, LISTACLAVESDELOSLOTES, Listaclaves, MERCANCIAS_DATA, MercanciasInfo, NICO_TABLA, Notificacion, ScianModel, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit, QueryList, ViewChildren } from '@angular/core';
-import { FECHA_DE_PAGO, LOCALIDAD_COLONIA } from '../../constantes/certificados-licencias.enum';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { FECHA_DE_PAGO } from '../../constantes/certificados-licencias.enum';
+import { LOCALIDAD_COLONIA } from '../../constantes/certificados-licencias.enum';
+
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { PcuerdoPublicar, PropietarioTipoPersona } from '../../modelos/datos-solicitud.model';
 import { Solicitud260917State, Tramite260917Store } from '../../estados/tramites/tramite260917.store';
@@ -10,6 +13,9 @@ import { CommonModule } from '@angular/common';
 import { MANIFIESTOS_DECLARACION } from '../../constantes/certificados-licencias.enum';
 import { Tramite260917Query } from '../../estados/queries/tramite260917.query';
 import radioOptions from '@libs/shared/theme/assets/json/260917/datos.solicitud.json';
+
+import { Solocitud260917Service } from '../../services/service260917.service';
+
 @Component({
   selector: 'app-datos-solicitud',
   standalone: true,
@@ -36,6 +42,18 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
   @ViewChildren(CrosslistComponent) crossList!: QueryList<CrosslistComponent>;
 
   /**
+   * Texto de los manifiestos.
+   */
+  private destroy$ = new Subject<void>();
+
+    /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los formularios estarán deshabilitados y no se podrán editar.
+   * Cuando es `false`, los formularios estarán habilitados para edición.
+   */
+  public esFormularioSoloLectura: boolean = false;
+
+  /**
    * Constructor del componente DomicilloDelComponent.
    * 
    * @param fb - Una instancia de FormBuilder utilizada para crear y gestionar formularios reactivos.
@@ -44,9 +62,19 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
   constructor(
     private readonly fb: FormBuilder,
     private tramite260917Store: Tramite260917Store,
-    private tramite260917Query: Tramite260917Query
+    private tramite260917Query: Tramite260917Query,
+    private consultaioQuery: ConsultaioQuery,
+    private solocitud260917Service: Solocitud260917Service,
   ) {
     // Dependencia inyectada para uso posterior
+        this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroy$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+        })
+      )
+      .subscribe()
   }
 
   /**
@@ -253,6 +281,54 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
      */
     this.estado = radioOptions?.estado;
 
+
+
+    this.inicializarEstadoFormulario();
+
+        this.solocitud260917Service.getScianDatos().pipe(takeUntil(this.destroy$))
+          .subscribe((response: ScianModel[]) => {
+            this.nicoTablaDatos = response
+          });
+
+          this.solocitud260917Service.getMercanciasDatos().pipe(takeUntil(this.destroy$))
+          .subscribe((response: MercanciasInfo[]) => {
+            this.mercanciasTablaDatos = response
+          });
+    
+  }
+
+    /**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.
+   * Además, obtiene la información del catálogo de estados.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.inicializarFormulario();
+    }
+  }
+
+    /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormulario(): void {
+      this.inicializarFormulario();
+      if (this.esFormularioSoloLectura) {
+        this.domicilio.disable();
+        this.formAgente.disable();
+        this.formMercancias.disable();
+        this.formularioManifiestos.disable();
+      } else {
+        this.domicilio.enable();
+        this.formAgente.enable();
+        this.formMercancias.enable();
+        this.formularioManifiestos.enable();
+      }
+  }
+
+  inicializarFormulario():void{
     /**
  * Suscripción al estado de la sección "solicitud" desde el query de Akita.
  * Se actualiza `solicitudState` cada vez que cambia el estado en el store.
@@ -406,10 +482,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
       /** Apellido materno del representante legal */
       apellidoMaternoRepresentante: [this.solicitudState.apellidoMaternoRepresentante],
     });
-
-
   }
-
 
 
   /**
