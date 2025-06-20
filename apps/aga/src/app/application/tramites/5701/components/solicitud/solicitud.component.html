@@ -331,11 +331,11 @@
 
       <div class="col-md-4">
         <input-hora
+          #horaInicio
           formControlName="horaInicio"
           [label]="'Hora inicio'"
           [required]="true"
           [inputId]="'horaInicio'"
-          [unmarked]="horaInicioUnmarked"
           (change)="
             setValoresStore(datosServicio, 'horaInicio', 'setHoraInicio')
           "
@@ -366,11 +366,11 @@
 
       <div class="col-md-4">
         <input-hora
+          #horaFinal
           formControlName="horaFinal"
           [label]="'Hora Final'"
           [required]="true"
           [inputId]="'horaFinal'"
-          [unmarked]="horaFinUnmarked"
           (change)="changeHoraFinal()"
         ></input-hora>
       </div>
@@ -849,7 +849,11 @@
         A través del siguiente vinculo puedes ingresar a la página para generar
         la línea de captura de la constancia que se solicita:
       </p>
-      <p>Generar línea de captura</p>
+      <p>
+        <a class="link" [href]="linkGeneraLineaCapturaSeguro" target="_blank"
+          >Generar línea de captura</a
+        >
+      </p>
     </div>
 
     <div class="row">
@@ -862,6 +866,11 @@
           (listaDeFilaSeleccionada)="lineaCapturaSeleccionados = $event"
         >
         </app-tabla-dinamica>
+        <div class="row">
+          <div class="col-md-12 d-flex justify-content-center">
+            <app-table-pagination></app-table-pagination>
+          </div>
+        </div>
       </div>
       <div class="col-md-2"></div>
     </div>

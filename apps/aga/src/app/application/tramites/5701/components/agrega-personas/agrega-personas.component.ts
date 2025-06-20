@@ -132,6 +132,12 @@ export class AgregaPersonasComponent implements OnInit, OnChanges, OnDestroy {
    */
   responsableSeleccionado: ResponsablesDespacho[] = [];
 
+  /**
+   * @description
+   * Clase para indicar si el formulario es inválido.
+   */
+  claseFormaNovalida = false;
+
   constructor(
     private fb: FormBuilder,
     private validacionesService: ValidacionesFormularioService,
@@ -316,6 +322,9 @@ export class AgregaPersonasComponent implements OnInit, OnChanges, OnDestroy {
       };
 
       this.gafeteRespoDespacho.markAllAsTouched();
+      this.personaForm.setErrors({ required: true });
+      this.claseFormaNovalida = true;
+
       return;
     }
 
@@ -383,9 +392,11 @@ export class AgregaPersonasComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     this.gafeteRespoDespacho.setValue('');
+    
     responsable = null;
-
+    
     this.gafeteRespoDespacho.reset();
+    this.claseFormaNovalida = false;
     this.personaForm.get('nombreRespoDespacho')?.disable();
     this.personaForm.get('paternoRespoDespacho')?.disable();
     this.personaForm.get('maternoRespoDespacho')?.disable();
