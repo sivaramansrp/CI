@@ -461,7 +461,21 @@ export class AduaneroComponent implements OnInit, AfterViewInit, OnDestroy {
     return this.preOperativeForm?.get('senaleSi')?.value === 'Si';
   }
   
+  /**
+   * Nombre del archivo seleccionado por el usuario.
+   * Se actualiza cada vez que el usuario selecciona un archivo en el input correspondiente.
+   */
   public selectedFileName: string = '';
+
+  /**
+   * Maneja el evento de selección de archivo.
+   * 
+   * Este método se ejecuta cuando el usuario selecciona un archivo en el input de tipo file.
+   * Actualiza la propiedad `selectedFileName` con el nombre del archivo seleccionado.
+   * Si no se selecciona ningún archivo, la propiedad se establece como una cadena vacía.
+   * 
+   *  event Evento de cambio generado por el input de tipo file.
+   */
   onFileSelected(event: Event): void {
     const INPUT = event.target as HTMLInputElement;
     if (INPUT.files && INPUT.files.length > 0) {
