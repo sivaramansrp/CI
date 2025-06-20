@@ -3,8 +3,19 @@ import { DatosComponent } from './datos.component';
 describe('DatosComponent', () => {
   let component: DatosComponent;
 
+  const mockServicio = {
+    getRegistroTomaMuestrasMercanciasData: jest.fn().mockReturnValue({ pipe: () => ({ subscribe: () => {} }) }),
+    actualizarEstadoFormulario: jest.fn()
+  };
+  const mockConsultaQuery = {
+    selectConsultaioState$: { pipe: () => ({ subscribe: () => {} }) }
+  };
+
   beforeEach(() => {
-    component = new DatosComponent();
+    component = new DatosComponent(
+      mockServicio as any,
+      mockConsultaQuery as any
+    );
   });
 
   it('debe crear el componente', () => {

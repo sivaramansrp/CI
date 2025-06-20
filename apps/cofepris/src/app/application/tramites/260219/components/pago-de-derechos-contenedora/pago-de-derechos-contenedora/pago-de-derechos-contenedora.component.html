@@ -2,4 +2,5 @@
   [pagoDerechoFormState]="pagoDerechos"
   [idProcedimiento]="idProcedimiento"
   (updatePagoDerechos)="updatePagoDerechos($event)"
+  [formularioDeshabilitado]="(esFormularioSoloLectura | async) || false"
 ></app-pago-de-derechos>
