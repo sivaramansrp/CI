@@ -1,11 +1,14 @@
 import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
 
+import { Antecesor } from '../../tramites/31601/modelos/antecesor.modal';
+
 
 /**
  * Interfaz que representa el estado de Solicitud31601.
  */
 export interface Solicitud31601State {
+    miembrosSeleccionados: Antecesor[];
     /**
      * El valor de autorizacionIVAIEPS.
      */
@@ -465,6 +468,7 @@ export interface Solicitud31601State {
  */
 export function createInitialState(): Solicitud31601State {
     return {
+        miembrosSeleccionados:[],
         /**
          * El valor de autorizacionIVAIEPS.
          */
@@ -952,6 +956,19 @@ export class Tramite31601Store extends Store<Solicitud31601State>{
      */
     constructor() {
         super(createInitialState());
+    }
+
+    public agregarMiembrodelaempresaTable(miembro: Antecesor):void {
+        this.update((state) => ({
+            ...state,
+            miembrosSeleccionados: [...state.miembrosSeleccionados, miembro],
+        }));
+    }
+    public eliminarMiembrodelaempresaTable(miembro: Antecesor):void {
+        this.update((state) => ({
+            ...state,
+            miembrosSeleccionados: state.miembrosSeleccionados.filter(m => m !== miembro),
+        }));
     }
 
     /**

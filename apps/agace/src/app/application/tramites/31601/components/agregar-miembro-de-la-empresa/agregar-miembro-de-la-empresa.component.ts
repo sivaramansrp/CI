@@ -6,7 +6,7 @@ import {
   OnInit,
   ViewChild,
 } from '@angular/core';
-import { Catalogo, ConsultaioQuery } from '@ng-mf/data-access-user';
+import { Catalogo, ConsultaioQuery, Notificacion, TablaSeleccion } from '@ng-mf/data-access-user';
 import {
   FormBuilder,
   FormGroup,
@@ -19,13 +19,18 @@ import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/trami
 import { InputRadioComponent } from "@libs/shared/data-access-user/src/tramites/components/input-radio/input-radio.component";
 import { Modal } from 'bootstrap';
 import { Modificacion } from '@libs/shared/data-access-user/src/core/enums/31601/modificacion.enum';
-import { TableComponent } from '@ng-mf/data-access-user';
 import { TablePaginationComponent } from '@ng-mf/data-access-user';
 import { Tramite31601Query } from '../../../../estados/queries/tramite31601.query';
 import enSuCaracterDe from '@libs/shared/theme/assets/json/31601/enSuCaracterDe.json';
 import miembrodelaempresaTable from '@libs/shared/theme/assets/json/31601/miembroDeLaEmpresa .json';
 import nacionalidad from '@libs/shared/theme/assets/json/31601/nacionalidad.json';
 import preOperativo from '@libs/shared/theme/assets/json/31601/preOperativo.json';
+
+import { Antecesor } from '../../modelos/antecesor.modal';
+import { CONFIGURACION_ANTECESORES } from '../../constantes/antecesor.enum';
+import { TablaDinamicaComponent } from "@libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component";
+
+import { NotificacionesComponent } from "@libs/shared/data-access-user/src/tramites/components/notificaciones/notificaciones.component";
 
 /**
  * @component
@@ -52,16 +57,28 @@ import preOperativo from '@libs/shared/theme/assets/json/31601/preOperativo.json
   styleUrls: ['./agregar-miembro-de-la-empresa.component.scss'],
   standalone: true,
   imports: [
-    TableComponent,
     TablePaginationComponent,
     ReactiveFormsModule,
     CatalogoSelectComponent,
     InputRadioComponent,
-  ],
+    TablaDinamicaComponent,
+    NotificacionesComponent
+],
 })
 export class AgregarMiembroDeLaEmpresaComponent
   implements OnInit, AfterViewInit, OnDestroy
 {
+
+
+
+    /**
+   * Notificación para mostrar alertas al usuario.
+   */
+  alertaNotificacion: Notificacion | null = null;
+
+  miembrosSeleccionados: Antecesor[] = [];
+
+  configuracionTablaAntecesores = CONFIGURACION_ANTECESORES
   /**
    * Notificador para completar observables al destruir el componente.
    */
@@ -127,15 +144,15 @@ export class AgregarMiembroDeLaEmpresaComponent
    */
   esFormularioSoloLectura: boolean = false;
 
-  /**
-   * Encabezados de la tabla de miembros.
+   /**
+   * Tipo de selección de la tabla (checkbox).
+   * Define cómo los usuarios pueden seleccionar elementos en las tablas.
    */
-  public miembroDeLaEmpresaHeaderData: string[] = [];
-
+  seleccionTabla: TablaSeleccion = TablaSeleccion.CHECKBOX;
   /**
    * Cuerpo de datos de la tabla de miembros.
    */
-  public miembroDeLaEmpresaBodyData: any[] = [];
+  public miembroDeLaEmpresaBodyData: Antecesor[] = [];
   /**
  * @property {Modificacion} textoEstatico
  * @description Propiedad que contiene la enumeración `Modificacion`, la cual define textos estáticos
@@ -182,8 +199,11 @@ export class AgregarMiembroDeLaEmpresaComponent
    * Ciclo de vida de Angular: Inicializa el componente.
    */
   ngOnInit(): void {
-    this.getEstablecimiento();
+    this.setEstablecimiento();
     this.inicializarEstadoFormulario();
+  }
+  setEstablecimiento() :void{
+   this.tramite31601Store.agregarMiembrodelaempresaTable(miembrodelaempresaTable[0]);
   }
 
   /**
@@ -195,6 +215,8 @@ export class AgregarMiembroDeLaEmpresaComponent
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.solicitudState = seccionState;
+          this.miembroDeLaEmpresaBodyData =
+            seccionState.miembrosSeleccionados;
         })
       )
       .subscribe();
@@ -258,12 +280,7 @@ export class AgregarMiembroDeLaEmpresaComponent
   /**
    * Obtiene los datos y encabezados para la tabla.
    */
-  public getEstablecimiento(): void {
-    this.miembroDeLaEmpresaHeaderData =
-      this.getEstablecimientoTableData.tableHeader;
-    this.miembroDeLaEmpresaBodyData =
-      this.getEstablecimientoTableData.tableBody;
-  }
+
 
   /**
    * Actualiza la paginación de la tabla.
@@ -303,7 +320,70 @@ export class AgregarMiembroDeLaEmpresaComponent
       this.AgregarModelInstance = new Modal(this.AgregarMOdel.nativeElement);
     }
   }
+ modificarModal(): void {
+  if(this.miembrosSeleccionados.length>0){
+      if (this.AgregarModelInstance) {
+      this.AgregarModelInstance.show();
+    }
+  }
+  else{
+     this.mostrarAlertaSeleccionarRegistro()
+  }
+}
 
+eliminarMiembro() :void{
+  if (this.miembrosSeleccionados.length > 0) {
+     this.alertaNotificacion = {
+    ttl:'eliminar confirmation',
+    tipoNotificacion: 'alert',
+    categoria: 'danger',
+    modo: 'action',
+    titulo: '',
+    mensaje: 'Confirma la eliminación',
+    cerrar: false,
+    tiempoDeEspera: 2000,
+    txtBtnAceptar: 'Aceptar',
+    txtBtnCancelar: 'Cancelar',
+  }
+  } else {
+    this.mostrarAlertaSeleccionarRegistro();
+  }
+}
+
+confirmarEliminacion($event: boolean): void {
+  if ($event === true && this.alertaNotificacion?.ttl==='eliminar confirmation') {
+    this.tramite31601Store.eliminarMiembrodelaempresaTable(this.miembrosSeleccionados[0]);
+    this.miembrosSeleccionados = [];
+    this.alertaNotificacion = null;
+    setTimeout(() => {
+      this.alertaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: '',
+        titulo: '',
+        mensaje: 'Datos eliminados correctamente',
+        cerrar: false,
+        tiempoDeEspera: 2000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+    }, 300);
+  }
+}
+
+mostrarAlertaSeleccionarRegistro(): void {
+  this.alertaNotificacion = {
+    tipoNotificacion: 'alert',
+    categoria: 'danger',
+    modo: 'action',
+    titulo: '',
+    mensaje: 'Seleccione un registro.',
+    cerrar: false,
+    tiempoDeEspera: 2000,
+    txtBtnAceptar: 'Aceptar',
+    txtBtnCancelar: '',
+  }
+}
   /**
    * Muestra el modal de agregar miembro.
    */
@@ -312,7 +392,9 @@ export class AgregarMiembroDeLaEmpresaComponent
       this.AgregarModelInstance.show();
     }
   }
-
+ aceptar(): void {
+  this.tramite31601Store.agregarMiembrodelaempresaTable(this.agregarMiembroDeLaEmpresaFrom.value)
+}
   /**
    * Cierra el modal de agregar miembro.
    */
@@ -321,7 +403,9 @@ export class AgregarMiembroDeLaEmpresaComponent
       this.AgregarModelInstance.hide();
     }
   }
-
+  obtenerMiembroSeleccionadas($event: Antecesor[]): void {
+    this.miembrosSeleccionados = $event;
+  }
   /**
    * Establece valores en el store.
    * @param form FormGroup de origen
