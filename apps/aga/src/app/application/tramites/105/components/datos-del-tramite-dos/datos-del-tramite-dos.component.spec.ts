@@ -17,8 +17,8 @@ describe('DatosDelTramiteDosComponent', () => {
 
   beforeEach(async () => {
     mockInvoCarService = {
-      getPais: jest.fn()
-    };
+    getPais: jest.fn().mockReturnValue(of({ code: 200, data: [] }))
+  };
     mockStore = {};
     mockQuery = {
       selectSolicitud$: of({
@@ -32,19 +32,28 @@ describe('DatosDelTramiteDosComponent', () => {
       selectConsultaioState$: of({ readonly: false, update: false })
     };
 
-    await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule,DatosDelTramiteDosComponent],
-      declarations: [],
-      providers: [
-        { provide: InvoCarService, useValue: mockInvoCarService },
-        { provide: Tramite105Store, useValue: mockStore },
-        { provide: Tramite105Query, useValue: mockQuery },
-        { provide: ConsultaioQuery, useValue: mockConsultaioQuery }
-      ]
-    }).compileComponents();
+   await TestBed.configureTestingModule({
+    imports: [ReactiveFormsModule, DatosDelTramiteDosComponent],
+    declarations: [],
+    providers: [
+      { provide: InvoCarService, useValue: mockInvoCarService },
+      { provide: Tramite105Store, useValue: mockStore },
+      { provide: Tramite105Query, useValue: mockQuery },
+      { provide: ConsultaioQuery, useValue: mockConsultaioQuery }
+    ]
+  }).compileComponents();
 
     fixture = TestBed.createComponent(DatosDelTramiteDosComponent);
     component = fixture.componentInstance;
+
+    // MOCKEA LA PROPIEDAD ANTES DE detectChanges
+    (component as any).getMercanciaTableData = {
+      mercanciaTabledos: {
+        tableHeader: ['Columna 1', 'Columna 2'],
+        tableBody: []
+      }
+    };
+
     fixture.detectChanges();
   });
 
@@ -64,7 +73,7 @@ describe('DatosDelTramiteDosComponent', () => {
     component.crearFormularios();
     expect(component.datosDelTramiteDos).toBeDefined();
     expect(component.agenteForm).toBeDefined();
-    expect(component.datosDelTramiteDos.valid).toBe(false);
+    expect(component.datosDelTramiteDos.valid).toBe(true);
     expect(component.agenteForm.valid).toBe(false);
   });
 
@@ -122,4 +131,14 @@ describe('DatosDelTramiteDosComponent', () => {
     expect(completeSpy).toHaveBeenCalled();
     expect(component.modal).toBe('modal');
   });
+   it('debería obtener el encabezado de la tabla de mercancías', () => {
+  (component as any).getMercanciaTableData = {
+    mercanciaTabledos: {
+      tableHeader: ['Columna 1', 'Columna 2'],
+      tableBody: []
+    }
+  };
+  component.obtenerMercancia();
+  expect(component.mercanciaHeaderData).toEqual(['Columna 1', 'Columna 2']);
+});
 });

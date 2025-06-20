@@ -196,6 +196,7 @@ export class DatosDelTramiteUnoComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
+      this.obtenerMercancia();
     this.crearDatosDelTramiteForm();
     this.getPais();
     this.getAduana();
@@ -203,7 +204,6 @@ export class DatosDelTramiteUnoComponent implements OnInit, OnDestroy {
     this.getMunicipioDelegacion();
     this.getColonia();
     this.getFraccionArancelariae();
-    this.obtenerMercancia();
     this.crearFormularioAgregar();
     if (this.esFormularioSoloLecturaActualizar) {
       this.crearDatosDelTramiteForm()
