@@ -24,6 +24,16 @@ export interface CuposDisponiblesDatos {
 
 /**
  * Representa los datos de un certificado disponible para cancelación.
+ *
+ * @property folio_del_oficio_de_certificado - Folio del oficio correspondiente al certificado.
+ * @property nombre_denominacion_o_razon_social - Nombre, denominación o razón social del titular del certificado.
+ * @property estado - Estado actual del certificado (por ejemplo, activo, cancelado).
+ * @property fabricante - Nombre del fabricante relacionado con el certificado.
+ * @property importador - Nombre del importador asociado al certificado.
+ * @property unidad_primaria - Unidad primaria utilizada en el certificado.
+ * @property monto_expedido - Monto total expedido en el certificado.
+ * @property monto_a_cancelar - Monto del certificado que se desea cancelar.
+ * @property monto_utilizado - Monto del certificado que ya ha sido utilizado.
  */
 export interface CertificadosDisponibles {
     /** Folio del oficio del certificado */
@@ -76,6 +86,51 @@ export interface FacturasSeleccionadasParaDevolver {
     /** Monto que se devolverá de la factura */
     saldo_a_devolver: string;
 }
+
+/**
+ * Representa la información necesaria para la cancelación de certificados.
+ *
+ * @property folioTramite - Folio del trámite asociado a la cancelación.
+ * @property tipoDeSolicitud - Tipo de solicitud realizada para la cancelación.
+ * @property regimen - Régimen aduanero relacionado con la mercancía.
+ * @property cdr - Código de documento relacionado (CDR).
+ * @property condicionDeLaMercancia - Condición en la que se encuentra la mercancía.
+ * @property fraccionArancelaria - Fracción arancelaria de la mercancía.
+ * @property umt - Unidad de medida de la transacción.
+ * @property cantidad - Cantidad de mercancía involucrada.
+ * @property usd - Valor en dólares estadounidenses (USD) de la mercancía.
+ */
+export interface Cancelacion {
+    folioTramite: string;
+    tipoDeSolicitud: string;
+    regimen: string;
+    cdr: string;
+    condicionDeLaMercancia: string;
+    fraccionArancelaria: string;
+    umt: string;
+    cantidad: string;
+    usd: string;
+}
+
+/**
+ * Representa los permisos y datos asociados a la cancelación de certificados.
+ *
+ * @property {Cancelacion[]} datos - Lista de objetos de cancelación relacionados.
+ * @property {string} [motivoCancelacion] - Motivo opcional de la cancelación.
+ */
+export interface PermisosDatos {
+    datos: CuposDisponiblesCancelacion[];
+}
+
+/**
+ * Representa la interfaz para los cupos disponibles en la cancelación de certificados.
+ * Extiende las interfaces `CuposDisponibles` y `Cancelacion`, combinando sus propiedades.
+ *
+ * @see CuposDisponibles
+ * @see Cancelacion
+ */
+export interface CuposDisponiblesCancelacion extends CuposDisponibles, Cancelacion {}
+
 /**
  * Función para crear el estado inicial de los datos de permiso.
  * Esta función crea y devuelve un objeto de tipo PermisosDatos, 

@@ -13,11 +13,11 @@
           <span class="require">*</span>
           <label class="control-label">:</label>
           <app-catalogo-select [catalogo]="agentCatalog" formControlName="tipoAgente" [required]="true"
-            name="tipoAgente" (change)="conTipoAgenteData('tipoAgente')"></app-catalogo-select>
+            name="tipoAgente" [isDisabled]="soloLectura" (change)="conTipoAgenteData('tipoAgente')"></app-catalogo-select>
         </div>
 
-        <div class="text-end">
-          <button type="button" class="btn btn-danger" (click)="limpiarAgente()">
+        <div class="text-end mt-3">
+          <button type="button" class="btn btn-danger" [disabled]="soloLectura" (click)="limpiarAgente()">
             Limpiar
           </button>
         </div>

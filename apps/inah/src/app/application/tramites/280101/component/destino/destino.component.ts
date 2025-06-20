@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -30,17 +30,25 @@ export class DestinoComponent implements OnInit, OnDestroy {
   /**
    * Formulario reactivo para gestionar los datos del destino.
    */
-  DestinoForm!: FormGroup;
+  destinoForm!: FormGroup;
 
   /**
    * Estado de la solicitud 280101.
    */
-  public solicitudState!: Solicitud280101State;
+  private solicitudState!: Solicitud280101State;
 
   /**
    * Subject para manejar la destrucción del componente.
    */
   private destroyNotifier$: Subject<void> = new Subject();
+
+
+  /**
+   * Indica si el componente debe estar en modo solo lectura.
+   * Cuando es `true`, los campos del componente no serán editables.
+   * @default false
+   */
+  @Input() soloLectura: boolean = false;
 
   /**
    * Constructor del componente.
@@ -74,7 +82,7 @@ export class DestinoComponent implements OnInit, OnDestroy {
    * Establece los valores iniciales del formulario `DestinoForm` utilizando el estado de la solicitud.
    */
   establecerValoresFormulario(): void {
-    this.DestinoForm = this.fb.group({
+    this.destinoForm = this.fb.group({
       pais: [this.solicitudState?.pais, [Validators.required]],
       codigoPostal: [this.solicitudState?.codigoPostal, [Validators.required]],
       estado: [this.solicitudState?.estado, [Validators.required]],
@@ -85,6 +93,10 @@ export class DestinoComponent implements OnInit, OnDestroy {
       numeroInterior: [this.solicitudState?.numeroInterior, [Validators.required]],
       calle: [this.solicitudState?.calle, [Validators.required]],
     });
+
+    if (this.soloLectura) {
+      this.destinoForm.disable(); // Deshabilita el formulario si está en modo solo lectura.
+    }
   }
 
   /**

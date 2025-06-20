@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ConfiguracionColumna, TablaDinamicaComponent, TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Tramite130401State, Tramite130401Store } from '../../../../estados/tramites/tramite130401.store';
 import { CommonModule } from '@angular/common';
@@ -77,6 +78,18 @@ export class ModificacionMercanciaComponent implements OnInit, OnDestroy {
    */
   tablaSeleccion = TablaSeleccion;
   /**
+   * @property {ConsultaioState} consultaDatos
+   * @description Estado actual de la consulta, que contiene información relacionada con el trámite y el solicitante.
+   */
+  consultaDatos!: ConsultaioState;
+
+  /**
+   * @property {boolean} soloLectura
+   * @description Indica si el formulario o los campos están en modo de solo lectura.
+   * @default false
+   */
+  soloLectura: boolean = false;
+  /**
    * Constructor del componente.
    * 
    * @param {Tramite130401Store} store - Store para gestionar el estado del trámite.
@@ -91,6 +104,7 @@ export class ModificacionMercanciaComponent implements OnInit, OnDestroy {
     public fb: FormBuilder,
     private validacionesService: ValidacionesFormularioService,
     private modificacionDescripcionService: ModificacionDescripcionService,
+    private consultaioQuery: ConsultaioQuery,
   ) {
     // Constructor del componente
   }
@@ -111,8 +125,18 @@ export class ModificacionMercanciaComponent implements OnInit, OnDestroy {
       )
       .subscribe();
     this.inicializarFormulario();
-    this.cargarMercanciaTabla();
-    if (!this.tramiteState?.mercancia?.numeroFolioResolucion) {
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.consultaDatos = seccionState;
+          this.soloLectura = this.consultaDatos.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe()
+    this.mercanciaTablaDatos = this.tramiteState?.mercanciaTablaDatos || [];
+    if (!this.tramiteState?.mercancia?.numeroFolioResolucion && !this.consultaDatos.update) {
       this.cargarMercancia();
     }
   }
@@ -127,8 +151,20 @@ export class ModificacionMercanciaComponent implements OnInit, OnDestroy {
       descripcion: [{ value: this.tramiteState?.mercancia?.descripcion, disabled: true }, []],
       descripcionModificacion: [this.tramiteState?.mercancia?.descripcionModificacion, [Validators.required]],
     });
+    this.inicializarEstadoFormulario();
   }
-
+  /**
+     * Inicializa el estado del formulario según el modo de solo lectura.
+     * 
+     * Este método deshabilita el formulario `mercanciaFormulario` si la propiedad `soloLectura` es `true`.
+     */
+  inicializarEstadoFormulario(): void {
+    if (this.soloLectura) {
+      this.mercanciaFormulario.get('descripcionModificacion')?.disable();
+    } else {
+      this.mercanciaFormulario.get('descripcionModificacion')?.enable();
+    }
+  }
   /**
    * Carga los datos de la mercancía desde el servicio y los almacena en el store.
    */

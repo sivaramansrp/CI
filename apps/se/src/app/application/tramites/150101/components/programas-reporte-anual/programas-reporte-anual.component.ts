@@ -1,7 +1,8 @@
-import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, Output } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { ProgramasReporte } from '../../models/programas-reporte.model';
 import { ReporteFechas } from '../../models/programas-reporte.model';
 import { Solicitud150101Query } from '../../estados/solicitud150101.query';
@@ -35,7 +36,7 @@ import { takeUntil } from 'rxjs';
   templateUrl: './programas-reporte-anual.component.html',
   styleUrl: './programas-reporte-anual.component.scss',
 })
-export class ProgramasReporteAnnualComponent implements OnInit, OnDestroy {
+export class ProgramasReporteAnnualComponent implements OnDestroy {
   /** Formulario reactivo para administrar los datos del reporte anual */
   periodoReporteAnual!: FormGroup;
   /**
@@ -82,6 +83,12 @@ export class ProgramasReporteAnnualComponent implements OnInit, OnDestroy {
   solicitudDatos: ProgramasReporte[] = [];
 
   /**
+   * @property {boolean} formularioDeshabilitado
+   * @description Indica si el formulario está deshabilitado (solo lectura).
+   */
+  formularioDeshabilitado: boolean = false;
+
+  /**
    * @property {ConfiguracionColumna<ProgramasReporte>[]} solicitudConfiguracionTabla
    * @description Configuración de las columnas de la tabla para mostrar los datos de programas.
    */
@@ -115,23 +122,38 @@ export class ProgramasReporteAnnualComponent implements OnInit, OnDestroy {
    * @param {Solicitud150101Query} solicitud150101Query - Query para seleccionar datos del estado.
    * @param {SolicitudService} solicitudService - Servicio para manejar solicitudes relacionadas.
    * @param {ValidacionesFormularioService} validacionesService - Servicio para validaciones de formularios.
+   * @param {ConsultaioQuery} consultaioQuery - Query para manejar el estado de la consulta.
    */
   constructor(
     public fb: FormBuilder,
     public solicitud150101Store: Solicitud150101Store,
     public solicitud150101Query: Solicitud150101Query,
     public solicitudService: SolicitudService,
-    private validacionesService: ValidacionesFormularioService
+    private validacionesService: ValidacionesFormularioService,
+    private consultaioQuery: ConsultaioQuery
   ) {
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState) => {
+          this.formularioDeshabilitado = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
+      
+    this.solicitud150101Query.seleccionarSolicitud$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((respuesta: Solicitud150101State) => {
+          this.solicitud150101State = respuesta;
+        })
+      )
+      .subscribe();
+
     this.obtenerReporteFechas();
     this.obtenerProgramasReporte();
-  }
 
-  /**
-   * @method ngOnInit
-   * @description Inicializa el componente y configura el formulario reactivo.
-   */
-  ngOnInit(): void {
     this.periodoReporteAnual = this.fb.group({
       reporteAnualFechaInicio: [{ value: this.solicitud150101State?.reporteAnualFechaInicio, disabled: true }],
       reporteAnualFechaFin: [{ value: this.solicitud150101State?.reporteAnualFechaFin, disabled: true }],
@@ -147,28 +169,28 @@ export class ProgramasReporteAnnualComponent implements OnInit, OnDestroy {
       estatus: [{ value: this.solicitud150101State?.estatus, disabled: true }],
     });
 
-    this.solicitud150101Query.seleccionarSolicitud$
-      .pipe(
-        takeUntil(this.destroyed$),
-        map((respuesta: Solicitud150101State) => {
-          this.solicitud150101State = respuesta;
-          this.periodoReporteAnual.patchValue({
-            reporteAnualFechaInicio: this.solicitud150101State.reporteAnualFechaInicio,
-            reporteAnualFechaFin: this.solicitud150101State.reporteAnualFechaFin,
-            folioPrograma: this.solicitud150101State.folioPrograma,
-            modalidad: this.solicitud150101State.modalidad,
-            tipoPrograma: this.solicitud150101State.folioPrograma,
-            estatus: this.solicitud150101State.estatus,
-          });
-        })
-      )
-      .subscribe();
+    this.inicializarEstadoFormulario();
   }
 
   /**
-     * @description Método para obtener las fechas de inicio y fin del reporte.
-     * Actualiza el estado con las fechas obtenidas del servicio.
-     */
+   * @method inicializarEstadoFormulario
+   * @description Inicializa el estado del formulario `periodoReporteAnual` basado en si el formulario está deshabilitado o no.
+   * Si el formulario está deshabilitado, se deshabilita el campo `periodoReporteAnual`.
+   * Si no está deshabilitado, se habilita el campo `periodoReporteAnual`.
+   * @returns {void}
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.formularioDeshabilitado) {
+      this.periodoReporteAnual.disable();
+    } else if (!this.formularioDeshabilitado) {
+      this.periodoReporteAnual.enable();
+    }
+  }
+
+  /**
+   * @description Método para obtener las fechas de inicio y fin del reporte.
+   * Actualiza el estado con las fechas obtenidas del servicio.
+   */
   obtenerReporteFechas(): void {
     this.solicitudService
       .obtenerReporteFechas()

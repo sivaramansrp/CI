@@ -1,6 +1,7 @@
 import { Catalogo, CatalogoSelectComponent, CatalogosSelect, DATOS_EMPRESA, InputRadioComponent, ListaPasosWizard, Notificacion, NotificacionesComponent, Pedimento, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { ESTADO_DATA, PAIS_DATA, REPRESENTACION_FEDERAL_DATA, SELECCION_DE_SUCURSAL_DATA, SOCIOS_Y_ACCIONISTAS_DATA, SOCIOS_Y_ACCIONISTAS_EXTRANJEROS_DATA, TIPO_EMPRESA_DATA } from '../../constants/column-config.enum';
 
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { ReplaySubject, map, takeUntil } from 'rxjs';
@@ -12,7 +13,8 @@ import { CommonModule } from '@angular/common';
 import { RegistroComoEmpresaService } from '../../services/registro-como-empresa.service';
 import { Solicitud120603Query } from '../../estados/tramite120603.query';
 
-import { NacionalidadMexicana, TipoPersona } from '../../constants/tipopersona.enum';
+import { NacionalidadMexicana, TipoPersona } from '../../constants/tipoPersona.enum';
+
 
 
 
@@ -125,13 +127,22 @@ opcionSeleccionMexicana = [
   /** Notificación nueva */
   public nuevaNotificacion: Notificacion | null = null;
 
+  /** Indica si el formulario es de solo lectura */  
+  esFormularioSoloLectura: boolean = false;
+
+  /** Estado de la consulta que se obtiene del store */
+  consultaDatos!: ConsultaioState;
+
+  /** Estado de la consulta que se obtiene del store. */
+  public consultaState!: ConsultaioState;
 
   /** Constructor del componente */
   constructor(
     private fb: FormBuilder,
     private registroComoEmpresa: RegistroComoEmpresaService,
     public solicitud120603Store: Solicitud120603Store,
-    public solicitud120603Query: Solicitud120603Query
+    public solicitud120603Query: Solicitud120603Query,
+    private consultaioQuery: ConsultaioQuery
   ) {}
 
   /** Método del ciclo de vida que se ejecuta al inicializar el componente */
@@ -157,6 +168,18 @@ opcionSeleccionMexicana = [
     this.registroComoEmpresa.getRepresentacionFederalData().pipe(takeUntil(this.destroyed$)).subscribe(() => {
       this.subscribeToEstadoDataChanges();
     });
+
+    this.consultaioQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.destroyed$),
+      map((seccionState) => {
+        this.consultaDatos = seccionState;
+        this.esFormularioSoloLectura = this.consultaDatos.readonly;
+        this.inicializarEstadoFormulario();
+      })
+    )
+    .subscribe();
+    this.inicializarEstadoFormulario();
   }
 
   /** Método para suscribirse a los cambios en el tipo de empresa */
@@ -416,7 +439,20 @@ opcionSeleccionMexicana = [
       this.esFormularioVisible = false;
     }
   }
-
+  
+  /**
+ * Método para inicializar el estado del formulario.
+ * Si el formulario es de solo lectura, se deshabilita.
+ * De lo contrario, se habilita.
+ */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.formularioEmpresa?.disable();
+    }
+    else {
+      this.formularioEmpresa?.enable();
+    }
+}
 
   /** Método para establecer valores en el store de la solicitud */
   setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Solicitud120603Store): void {

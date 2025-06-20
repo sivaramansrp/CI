@@ -26,13 +26,13 @@
                 <solicitante #Solicitante></solicitante>
             }
             @case (2) {
-              <app-solicitud></app-solicitud>  
+              <app-solicitud [soloLectura]="esFormularioSoloLectura"></app-solicitud>  
             }
             @case (3) {
-             <app-monumento></app-monumento>   
+             <app-monumento [soloLectura]="esFormularioSoloLectura"></app-monumento>   
             }
             @case (4) {
-             <app-destino></app-destino>   
+             <app-destino [soloLectura]="esFormularioSoloLectura"></app-destino>   
             }
             }
         </ng-container>

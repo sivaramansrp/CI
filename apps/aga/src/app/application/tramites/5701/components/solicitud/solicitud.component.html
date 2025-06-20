@@ -181,7 +181,7 @@
             [textoValor]="solicitudState.descripcionImmex"
             [idCheckbox]="'checkIMMEX'"
             [idInputTexto]="'desImmex'"
-            [label]="'Immex (Número/aaaa):'"
+            [label]="'IMMEX (Número/aaaa):'"
             [required]="false"
             [reverse]="true"
             [hidden]="false"
@@ -196,7 +196,7 @@
             [textoValor]="solicitudState.descripcionIndustrialAutomotriz"
             [idCheckbox]="'industriaAutomotriz'"
             [idInputTexto]="'desIndustrialAutomotriz'"
-            [label]="'Industria Automotriz:'"
+            [label]="'Industria automotriz:'"
             [required]="false"
             [reverse]="true"
             [hidden]="false"
@@ -386,7 +386,8 @@
               </h4>
               <button
                 type="button"
-                class="collpase-button collapsed"
+                class="collpase-button"
+                [ngClass]="colapsable ? 'collapsed' : ''"
                 title="Colapsable"
               ></button>
             </div>
@@ -478,7 +479,7 @@
             class="form-control"
             formControlName="folioDDEX"
             placeholder=""
-            (change)="changeFolioDDEX()"
+            (blur)="changeFolioDDEX()"
             [ngClass]="isValid(despacho, 'folioDDEX') ? 'required' : ''"
           />
 
@@ -500,12 +501,10 @@
 
     <div class="row">
       <div class="col-md-4">
-        <div>
-          <label for="">Aduana:</label>
-          <span>*</span>
-        </div>
+        <label class="form-label" for="">Aduana:</label>
+        <span>*</span>
         <select
-          class="form-control"
+          class="form-control form-select"
           formControlName="idAduanaDespacho"
           (change)="changeAduana()"
         >
@@ -514,13 +513,17 @@
             {{ aduana.descripcion }}
           </option>
         </select>
+        <div
+          *ngIf="isErrorNoMenosUno(despacho, 'idAduanaDespacho')"
+          class="mensaje-error"
+        >
+          Este campo es obligatorio.
+        </div>
       </div>
       <div class="col-md-4">
-        <div>
-          <label for="">Sección aduanera:</label>
-        </div>
+        <label class="form-label" for="">Sección aduanera:</label>
         <select
-          class="form-control"
+          class="form-control form-select"
           formControlName="idSeccionDespacho"
           (change)="changeSeccionAduanera()"
           [required]="false"
@@ -538,11 +541,9 @@
     <div class="row">
       @if (!despachoSeleccionado) {
       <div class="col-md-4">
-        <div>
-          <label for="">Nombre del recinto:</label>
-        </div>
+        <label class="form-label" for="">Nombre del recinto:</label>
         <select
-          class="form-control"
+          class="form-control form-select"
           formControlName="nombreRecinto"
           (change)="changeRecinto()"
           [required]="false"
@@ -608,6 +609,7 @@
           [required]="false"
           [reverse]="true"
           formControlName="relacionSociedad"
+          [isDisabled]="!activarRelacionSociedad"
           (change)="
             setValoresStore(despacho, 'relacionSociedad', 'setRelacionSociedad')
           "
@@ -619,6 +621,7 @@
           [required]="false"
           [reverse]="true"
           formControlName="encargoConferido"
+          [isDisabled]="!activarEncargoConferido"
           (change)="
             setValoresStore(despacho, 'encargoConferido', 'setEncargoConferido')
           "

@@ -137,7 +137,7 @@ private inicializarFormulario(): void {
     this.tramite110210Store.setPrimerApellido(FORMVALUES.primerApellido);
     this.tramite110210Store.setSegundoApellido(FORMVALUES.segundoApellido);
     this.tramite110210Store.setNumeroRegistroFiscal(FORMVALUES.numeroRegistroFiscal);
-    this.tramite110210Store.setRazonSocial(FORMVALUES.razaonSocial);
+    this.tramite110210Store.setRazonSocial(FORMVALUES.razonSocial);
   }
 
 }
