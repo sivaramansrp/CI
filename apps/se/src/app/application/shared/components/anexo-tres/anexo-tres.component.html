@@ -21,8 +21,8 @@
               </div>
         </div>
         <div class="col-md-12 mt-5 d-flex justify-content-end">
-            <button type="button" class="btn btn-danger ms-3" (click)="anexoDosElimiar()" >Elimiar</button>
-            <button type="button" class="btn btn-primary ms-3" (click)="anexoDosAgregar()">Agregar</button>
+            <button type="button" class="btn btn-danger ms-3" (click)="anexoDosElimiar()" [disabled]="esFormularioSoloLectura" >Elimiar</button>
+            <button type="button" class="btn btn-primary ms-3" (click)="anexoDosAgregar()" [disabled]="esFormularioSoloLectura">Agregar</button>
         </div>
         <div class="row">
             <h6>Descripción anexo II:</h6>
@@ -30,6 +30,7 @@
                 [configuracionTabla]="configuracionDosDatos"
                 [datos]="anexoDos"
                 [tipoSeleccionTabla]="checkbox"
+                [tipoSeleccionTabla]="checkbox" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
               ></app-tabla-dinamica>
               <nav aria-label="Page navigation example">
                 <ul class="pagination justify-content-center">
@@ -62,8 +63,8 @@
               </div>
         </div>
         <div class="col-md-12 mt-5 d-flex justify-content-end">
-            <button type="button" class="btn btn-danger ms-3" (click)="anexoTresElimiar()">Elimiar</button>
-            <button type="button" class="btn btn-primary ms-3" (click)="anexoTresAgregar()">Agregar</button>
+            <button type="button" class="btn btn-danger ms-3" (click)="anexoTresElimiar()" [disabled]="esFormularioSoloLectura">Elimiar</button>
+            <button type="button" class="btn btn-primary ms-3" (click)="anexoTresAgregar()" [disabled]="esFormularioSoloLectura">Agregar</button>
         </div>
         <div class="row">
             <h6>Descripción anexo III:</h6>
@@ -71,6 +72,7 @@
                 [configuracionTabla]="configuracionDosDatos"
                 [datos]="anexoTres"
                 [tipoSeleccionTabla]="checkbox"
+                [tipoSeleccionTabla]="checkbox" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
               ></app-tabla-dinamica>
               <nav aria-label="Page navigation example">
                 <ul class="pagination justify-content-center">
