@@ -1,4 +1,4 @@
-import { CatalogoLista, DatosSolicitante, SolicitudTablaDatos } from '../models/autorizacion-importacion.model';
+import { CatalogoLista, DatosSolicitante, RespuestaConsulta, SolicitudFormulario, SolicitudTablaDatos } from '../models/autorizacion-importacion.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -109,6 +109,14 @@ export class AutorizacionImportacionService {
    */
   obtenerTipoDeDestino(): Observable<CatalogoLista> {
     return this.http.get<CatalogoLista>(`assets/json/6402/tipo-de-destino.json`);
+  }
+
+  /**
+ * Obtiene los datos para la consulta del trámite.
+ * @returns {Observable<RespuestaConsulta>} Observable con los datos de consulta.
+ */
+  getDatosConsulta(): Observable<RespuestaConsulta> {
+    return this.http.get<RespuestaConsulta>('assets/json/6402/consulta_6402.json');
   }
  
 }

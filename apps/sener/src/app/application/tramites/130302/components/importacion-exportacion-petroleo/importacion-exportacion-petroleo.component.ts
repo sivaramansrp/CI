@@ -22,6 +22,8 @@ import { AVISO_PRIVACIDAD, INFORMACION_DE_LA_OBRA_ARTE } from '../../enums/permi
 import { ExportarIlustraciones130302State, Tramite130302Store } from '../../estados/tramite130302.store';
 import { Tramite130302Query } from '../../estados/queries/tramite130302.query';
 
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+
 /**
  * component ImportacionExportacionPetroleoComponent
  * description Componente para gestionar la importación y exportación de petróleo.
@@ -35,6 +37,12 @@ import { Tramite130302Query } from '../../estados/queries/tramite130302.query';
   styleUrls: ['./importacion-exportacion-petroleo.component.scss']
 })
 export class ImportacionExportacionPetroleoComponent implements OnInit, OnDestroy {
+
+   /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  esFormularioSoloLectura: boolean = false;
   /**
    * property form
    * description Formulario reactivo principal del componente.
@@ -99,18 +107,7 @@ export class ImportacionExportacionPetroleoComponent implements OnInit, OnDestro
     return this.forma.get('ninoFormGroup') as FormGroup;
   }
 
-  /**
-   * method onFechaCambiada
-   * description Maneja el cambio de fecha en el formulario.
-   * param nuevo_valor Nueva fecha seleccionada.
-   */
-  public onFechaCambiada(nuevo_valor: string): void {
-    this.form.get('fechaPago')?.setValue(nuevo_valor);
-    this.form.get('fechaPago')?.markAsUntouched();
-    this.tramite130302Store.setprorrogaAl(nuevo_valor);
-  }
-
-  /**
+/**
    * property tipoSeleccionTabla
    * description Tipo de selección para la tabla dinámica.
    */
@@ -131,7 +128,8 @@ export class ImportacionExportacionPetroleoComponent implements OnInit, OnDestro
    * param tramite130302Query Consultas relacionadas con el trámite.
    */
   constructor(private fb: FormBuilder, private service: PermisoPetroleoService, private tramite130302Store: Tramite130302Store,
-    private tramite130302Query: Tramite130302Query) { }
+    private tramite130302Query: Tramite130302Query, private consultaioQuery: ConsultaioQuery,) 
+    { }
 
   /**
    * property configuracionTabla
@@ -144,7 +142,33 @@ export class ImportacionExportacionPetroleoComponent implements OnInit, OnDestro
    * description Inicializa el componente y carga datos iniciales.
    */
   ngOnInit(): void {
-    this.tramite130302Query.selectExportarIlustraciones$
+
+     this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+        })
+      )
+      .subscribe();
+
+    this.configurarGrupoForm();
+    this.loadMercancias();
+    this.loadAsignacionData();
+  }
+
+  /**
+ * @method configurarGrupoForm
+ * @description Configures the reactive form group for the "Datos del Establecimiento RFC" component.
+ * This method initializes the form group with default values and validation rules for the fields:
+ * - `rfcDel`: Optional field with a maximum length of 254 characters.
+ * - `denominacionRazonSocial`: Required field with a maximum length of 254 characters.
+ * - `correoElectronico`: Required field with a valid email format and a maximum length of 320 characters.
+ * 
+ * @memberof DatosDelEstablecimientoRfcComponent
+ */
+  configurarGrupoForm(): void {
+this.tramite130302Query.selectExportarIlustraciones$
       .pipe(
         takeUntil(this.destroy$),
         map((seccionState) => {
@@ -152,16 +176,50 @@ export class ImportacionExportacionPetroleoComponent implements OnInit, OnDestro
         })
       )
       .subscribe();
-    this.form = new FormGroup({
-      saldoDisponible: new FormControl({ value: '', disabled: true }),
-      prorrogaDel: new FormControl({ value: '', disabled: true }),
-      prorrogaAl: new FormControl({ value: '', disabled: true }),
+    
+      this.form = this.fb.group({
+      saldoDisponible: [new FormControl({ value: '', disabled: true })],
+      fechaPago: [this.exportarIlustracionesState?.fechaPago, { disabled: true }],
+      prorrogaAl: [this.exportarIlustracionesState?.prorrogaAl, { disabled: true }],
       motivoJustificacion: new FormControl(this.exportarIlustracionesState?.motivoJustificacion),
       otrasDeclaraciones: new FormControl(this.exportarIlustracionesState?.otrasDeclaraciones),
+      
     });
-    this.loadMercancias();
-    this.loadAsignacionData();
+ /*
+     * Si el formulario está en modo solo lectura, deshabilita todos los campos.
+     * En caso contrario, habilita los campos para permitir la edición.
+     * Esto asegura que el formulario refleje correctamente el estado de solo lectura.
+     */
+    if (this.esFormularioSoloLectura && this.form ) {
+      this.form.disable();
+    } else {
+      this.form.enable();
+    }
   }
+
+  /**
+   * Actualiza el campo de fecha de pago en el formulario y en el estado global.
+   *
+   * @param nuevo_fechaPago Nueva fecha de pago seleccionada.
+   */
+  cambioFechaPago(nuevo_fechaPago: string): void {
+    this.form.patchValue({
+      fechaPago: nuevo_fechaPago,
+    });
+    this.setValoresStore(this.form, 'fechaPago', 'setfechaPago');
+  }
+  /**
+   * Actualiza el campo de fecha de pago en el formulario y en el estado global.
+   *
+   * @param nuevo_fechaPago Nueva fecha de pago seleccionada.
+   */
+  oncambioFechaPago(nuevo_fechaPago: string): void {
+    this.form.patchValue({
+      fechaPago: nuevo_fechaPago,
+    });
+    this.setValoresStore(this.form, 'prorrogaAl', 'setprorrogaAl');
+  }
+
 
   /**
    * method loadAsignacionData
@@ -173,9 +231,7 @@ export class ImportacionExportacionPetroleoComponent implements OnInit, OnDestro
       .subscribe((data: AvisoValor) => {
         this.form.patchValue({
           saldoDisponible: data.saldoDisponible,
-          prorrogaDel: data.prorrogaDel,
-          prorrogaAl: data.prorrogaAl,
-        });
+         });
       });
   }
 
@@ -190,6 +246,7 @@ export class ImportacionExportacionPetroleoComponent implements OnInit, OnDestro
         this.tercerosProd = resp;
       });
   }
+
 
   /**
    * method establecerCambioDeValor
@@ -222,4 +279,6 @@ export class ImportacionExportacionPetroleoComponent implements OnInit, OnDestro
     this.destroyed$.next();
     this.destroyed$.complete();
   }
+
+ 
 }

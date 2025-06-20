@@ -58,7 +58,7 @@
         [label]="paisCatalogo.labelNombre"
         [placeholder]="paisCatalogo.primerOpcion"
         [required]="paisCatalogo.required"
-        [isDisabled]="true"
+        [isDisabled]="esFormularioSoloLectura"
         formControlName="domicilioPais"
         (selectionChange)="seleccionaPais($event)"
       >
@@ -73,6 +73,7 @@
         [required]="estadoCatalogo.required"
         formControlName="domicilioEstado"
         (selectionChange)="seleccionaEstado($event)"
+         [isDisabled]="esFormularioSoloLectura"
       >
       </app-catalogo-select>
     </div>
@@ -85,6 +86,7 @@
         [required]="municipioCatalogo.required"
         formControlName="domicilioMunicipio"
         (selectionChange)="seleccionaMunicipio($event)"
+         [isDisabled]="esFormularioSoloLectura"
       >
       </app-catalogo-select>
     </div>
@@ -97,6 +99,7 @@
         [required]="localidadCatalogo.required"
         formControlName="domicilioLocalidad"
         (selectionChange)="seleccionaLocalidad($event)"
+        [isDisabled]="esFormularioSoloLectura"
       >
       </app-catalogo-select>
     </div>
@@ -109,6 +112,7 @@
         [required]="codigoCatalogo.required"
         formControlName="domicilioCodigo"
         (selectionChange)="seleccionaCodigo($event)"
+        [isDisabled]="esFormularioSoloLectura"
       >
       </app-catalogo-select>
     </div>
@@ -121,6 +125,7 @@
         [required]="coloniaCatalogo.required"
         formControlName="domicilioColonia"
         (selectionChange)="seleccionaColonia($event)"
+        [isDisabled]="esFormularioSoloLectura"
       >
       </app-catalogo-select>
     </div>
