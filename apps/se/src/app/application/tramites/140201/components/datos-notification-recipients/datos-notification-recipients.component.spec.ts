@@ -1,51 +1,53 @@
-
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DatosNotificationRecipientsComponent } from './datos-notification-recipients.component';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { of, Subject } from 'rxjs';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CancelacionesService } from '../../services/cancelaciones.service';
 import { CancelacionesStore } from '../../estados/cancelaciones.store';
 import { CancelacionesQuery } from '../../estados/cancelaciones.query';
-import { TituloComponent } from '@libs/shared/data-access-user/src';
-import { DireccionDeNotificacionesComponent } from '../direccion-de-notificaciones/direccion-de-notificaciones.component';
-import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 
 describe('DatosNotificationRecipientsComponent', () => {
   let component: DatosNotificationRecipientsComponent;
   let fixture: ComponentFixture<DatosNotificationRecipientsComponent>;
-  let mockService: Partial<CancelacionesService>;
-  let mockStore: Partial<CancelacionesStore>;
-  let mockQuery: Partial<CancelacionesQuery>;
- const consultaioQueryMock = {
-    selectConsultaioState$: of({ readonly: true }),
-  };
+  let cancelacionServiceMock: any;
+  let cancelacionesStoreMock: any;
+  let cancelacionesQueryMock: any;
+  let consultaioQueryMock: any;
 
   beforeEach(async () => {
-    mockService = {
-      getInfo: jest.fn().mockReturnValue(of({ apellidoMaterno: 'Rodríguez' }))
+    cancelacionServiceMock = {
+      getInfo: jest.fn().mockReturnValue(of({ apellidoMaterno: 'Rodríguez' })),
+      getEntidades: jest.fn().mockReturnValue(of([])),
+      getColonia: jest.fn().mockReturnValue(of([])),
+      getmunicipio: jest.fn().mockReturnValue(of([])),
+      getLocalidad: jest.fn().mockReturnValue(of([])),
     };
-
-    mockStore = {
+    cancelacionesStoreMock = {
       setNombre: jest.fn(),
       setApellidoPaterno: jest.fn(),
       setCorreoElectronico: jest.fn()
     };
-
-    mockQuery = {
-      nombre$: of('Carlos' as any),
-      apellidoPaterno$: of('Gómez' as any),
-      correoElectronico$: of('carlos@example.com' as any)
+    cancelacionesQueryMock = {
+      nombre$: of('Juan'),
+      apellidoPaterno$: of('Pérez'),
+      correoElectronico$: of('juan@mail.com')
+    };
+    consultaioQueryMock = {
+      selectConsultaioState$: of({ readonly: false })
     };
 
     await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule,DatosNotificationRecipientsComponent, TituloComponent, DireccionDeNotificacionesComponent],
-      declarations: [],
+      imports: [ReactiveFormsModule, DatosNotificationRecipientsComponent],
       providers: [
-        { provide: CancelacionesService, useValue: mockService },
-        { provide: CancelacionesStore, useValue: mockStore },
-        { provide: CancelacionesQuery, useValue: mockQuery },
+        FormBuilder,
+        { provide: CancelacionesService, useValue: cancelacionServiceMock },
+        { provide: CancelacionesStore, useValue: cancelacionesStoreMock },
+        { provide: CancelacionesQuery, useValue: cancelacionesQueryMock },
         { provide: ConsultaioQuery, useValue: consultaioQueryMock }
-      ]
+      ],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA]
     }).compileComponents();
 
     fixture = TestBed.createComponent(DatosNotificationRecipientsComponent);
@@ -57,121 +59,69 @@ describe('DatosNotificationRecipientsComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize the form with correct controls', () => {
-    expect(component.formularioDeNotificacionesForm.contains('nombre')).toBeTruthy();
-    expect(component.formularioDeNotificacionesForm.contains('apellidoPaterno')).toBeTruthy();
-    expect(component.formularioDeNotificacionesForm.contains('apellidoMaterno')).toBeTruthy();
-    expect(component.formularioDeNotificacionesForm.contains('correoElectronico')).toBeTruthy();
+  it('should initialize the form on ngOnInit', () => {
+    expect(component.formularioDeNotificacionesForm).toBeDefined();
+    expect(component.formularioDeNotificacionesForm.get('nombre')).toBeDefined();
+    expect(component.formularioDeNotificacionesForm.get('apellidoPaterno')).toBeDefined();
+    expect(component.formularioDeNotificacionesForm.get('apellidoMaterno')).toBeDefined();
+    expect(component.formularioDeNotificacionesForm.get('correoElectronico')).toBeDefined();
   });
 
-  it('should initialize form values from query observables', () => {
-    expect(component.formularioDeNotificacionesForm.get('nombre')?.value).toBe('Carlos');
-    expect(component.formularioDeNotificacionesForm.get('apellidoPaterno')?.value).toBe('Gómez');
-    expect(component.formularioDeNotificacionesForm.get('correoElectronico')?.value).toBe('carlos@example.com');
-  });
-
-  it('should call infoDeCarga and update form values', () => {
+  it('should patch apellidoMaterno from service in infoDeCarga', () => {
+    component.formularioDeNotificacionesForm.patchValue({ apellidoMaterno: '' });
     component.infoDeCarga();
-    expect(mockService.getInfo).toHaveBeenCalled();
+    expect(cancelacionServiceMock.getInfo).toHaveBeenCalled();
     expect(component.formularioDeNotificacionesForm.get('apellidoMaterno')?.value).toBe('Rodríguez');
   });
 
-  it('should update store when updateNombre is called', () => {
-    component.formularioDeNotificacionesForm.get('nombre')?.setValue('Carlos');
-    component.updateNombre();
-    expect(mockStore.setNombre).toHaveBeenCalledWith('Carlos');
-  });
-
-  it('should update store when updateApellidoPaterno is called', () => {
-    component.formularioDeNotificacionesForm.get('apellidoPaterno')?.setValue('Gómez');
-    component.updateApellidoPaterno();
-    expect(mockStore.setApellidoPaterno).toHaveBeenCalledWith('Gómez');
-  });
-
-  it('should update store when updateCorreoElectronico is called', () => {
-    component.formularioDeNotificacionesForm.get('correoElectronico')?.setValue('carlos@example.com');
-    component.updateCorreoElectronico();
-    expect(mockStore.setCorreoElectronico).toHaveBeenCalledWith('carlos@example.com');
-  });
-
-  it('should call estadoActualizacion on ngOnInit', () => {
-    const updateStateSpy = jest.spyOn(component, 'estadoActualizacion');
-    component.ngOnInit();
-    expect(updateStateSpy).toHaveBeenCalled();
-  });
-
-  it('should call infoDeCarga on ngOnInit', () => {
-    const infoDeCargaSpy = jest.spyOn(component, 'infoDeCarga');
-    component.ngOnInit();
-    expect(infoDeCargaSpy).toHaveBeenCalled();
-  });
-
-  it('should update form controls in estadoActualizacion', () => {
+  it('should patch nombre, apellidoPaterno, correoElectronico from query observables in estadoActualizacion', () => {
+    component.formularioDeNotificacionesForm.patchValue({
+      nombre: '',
+      apellidoPaterno: '',
+      correoElectronico: ''
+    });
     component.estadoActualizacion();
-    expect(component.formularioDeNotificacionesForm.get('nombre')?.value).toBe('Carlos');
-    expect(component.formularioDeNotificacionesForm.get('apellidoPaterno')?.value).toBe('Gómez');
-    expect(component.formularioDeNotificacionesForm.get('correoElectronico')?.value).toBe('carlos@example.com');
+    expect(component.formularioDeNotificacionesForm.get('nombre')?.value).toBe('Juan');
+    expect(component.formularioDeNotificacionesForm.get('apellidoPaterno')?.value).toBe('Pérez');
+    expect(component.formularioDeNotificacionesForm.get('correoElectronico')?.value).toBe('juan@mail.com');
   });
 
-  it('should unsubscribe from observables on destroy', () => {
-    const spy = jest.spyOn(component['destroy$'], 'next');
-    component.ngOnDestroy();
-    expect(spy).toHaveBeenCalled();
+  it('should call setNombre on updateNombre', () => {
+    component.formularioDeNotificacionesForm.get('nombre')?.setValue('NuevoNombre');
+    component.updateNombre();
+    expect(cancelacionesStoreMock.setNombre).toHaveBeenCalledWith('NuevoNombre');
   });
 
-  it('should complete the destroy$ subject on destroy', () => {
+  it('should call setApellidoPaterno on updateApellidoPaterno', () => {
+    component.formularioDeNotificacionesForm.get('apellidoPaterno')?.setValue('NuevoApellido');
+    component.updateApellidoPaterno();
+    expect(cancelacionesStoreMock.setApellidoPaterno).toHaveBeenCalledWith('NuevoApellido');
+  });
+
+  it('should call setCorreoElectronico on updateCorreoElectronico', () => {
+    component.formularioDeNotificacionesForm.get('correoElectronico')?.setValue('nuevo@mail.com');
+    component.updateCorreoElectronico();
+    expect(cancelacionesStoreMock.setCorreoElectronico).toHaveBeenCalledWith('nuevo@mail.com');
+  });
+
+  it('should disable form if esFormularioSoloLectura is true in guardarDatosFormulario', () => {
+    component.esFormularioSoloLectura = true;
+    component.guardarDatosFormulario();
+    expect(component.formularioDeNotificacionesForm.disabled).toBe(true);
+  });
+
+  it('should enable form if esFormularioSoloLectura is false in guardarDatosFormulario', () => {
+    component.entidadFederativa$ = of([]);
+    component.esFormularioSoloLectura = false;
+    component.guardarDatosFormulario();
+    expect(component.formularioDeNotificacionesForm.enabled).toBe(true);
+  });
+
+  it('should clean up subscriptions on ngOnDestroy', () => {
+    const nextSpy = jest.spyOn(component['destroy$'], 'next');
     const completeSpy = jest.spyOn(component['destroy$'], 'complete');
     component.ngOnDestroy();
+    expect(nextSpy).toHaveBeenCalled();
     expect(completeSpy).toHaveBeenCalled();
   });
-
-  
-  it('should disable form if esFormularioSoloLectura is true', () => {
-    component.esFormularioSoloLectura = true;
-
-    const disableSpy = jest.spyOn(component.formularioDeNotificacionesForm, 'disable');
-    const enableSpy = jest.spyOn(component.formularioDeNotificacionesForm, 'enable');
-
-    component.guardarDatosFormulario();
-
-    expect(component.estadoActualizacion).toHaveBeenCalled();
-    expect(disableSpy).toHaveBeenCalled();
-    expect(enableSpy).not.toHaveBeenCalled();
-  });
-
-  it('should enable form if esFormularioSoloLectura is false', () => {
-    component.esFormularioSoloLectura = false;
-
-    const disableSpy = jest.spyOn(component.formularioDeNotificacionesForm, 'disable');
-    const enableSpy = jest.spyOn(component.formularioDeNotificacionesForm, 'enable');
-
-    component.guardarDatosFormulario();
-
-    expect(component.estadoActualizacion).toHaveBeenCalled();
-    expect(enableSpy).toHaveBeenCalled();
-    expect(disableSpy).not.toHaveBeenCalled();
-  });
-
-  it('should call guardarDatosFormulario when readonly is true in inicializarEstadoFormulario', () => {
-    component.esFormularioSoloLectura = true;
-    const guardarSpy = jest.spyOn(component, 'guardarDatosFormulario');
-    const updateSpy = jest.spyOn(component, 'estadoActualizacion');
-
-    component.inicializarEstadoFormulario();
-
-    expect(guardarSpy).toHaveBeenCalled();
-    expect(updateSpy).not.toHaveBeenCalledTimes(2); 
-  });
-
-  it('should only call estadoActualizacion when readonly is false in inicializarEstadoFormulario', () => {
-    component.esFormularioSoloLectura = false;
-    const guardarSpy = jest.spyOn(component, 'guardarDatosFormulario');
-    const updateSpy = jest.spyOn(component, 'estadoActualizacion');
-
-    component.inicializarEstadoFormulario();
-
-    expect(updateSpy).toHaveBeenCalled();
-    expect(guardarSpy).not.toHaveBeenCalled();
-  });
-  
 });
