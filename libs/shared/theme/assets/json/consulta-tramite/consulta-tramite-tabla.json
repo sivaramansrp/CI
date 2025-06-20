@@ -147,6 +147,15 @@
         "numeroDeProcedimiento": "230101"
     },
     {
+        "id": "230201",
+        "tipoDeTramite": "Datos generales del trámite",
+        "fecha": "2024-11-01",
+        "fechaActualizacion": "2024-11-07",
+        "diasTranscurridos": "4",
+        "departamento": "SEMARNAT",
+        "numeroDeProcedimiento": "230201"
+    },
+    {
         "id": "130108",
         "tipoDeTramite": "Datos generales del trámite",
         "fecha": "2024-11-01",
