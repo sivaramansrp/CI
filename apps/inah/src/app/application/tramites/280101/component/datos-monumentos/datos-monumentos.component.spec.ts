@@ -147,10 +147,9 @@ describe('DatosMonumentoComponent', () => {
   it('should clean up subscriptions on destroy', () => {
     const destroyNotifierSpy = jest.spyOn(component['destroyNotifier$'], 'next');
     const destroyNotifierCompleteSpy = jest.spyOn(component['destroyNotifier$'], 'complete');
-
     component.ngOnDestroy();
-
     expect(destroyNotifierSpy).toHaveBeenCalled();
     expect(destroyNotifierCompleteSpy).toHaveBeenCalled();
   });
+  
 });
