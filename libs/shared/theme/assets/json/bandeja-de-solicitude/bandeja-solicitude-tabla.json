@@ -63,6 +63,15 @@
     "numeroDeProcedimiento": "230401"
   },
   {
+    "id": 230202,
+    "tipoDeTramite": "Solicitud de cs Permiso",
+    "fecha": "2023-10-01",
+    "fechaActualizacion": "2023-10-05",
+    "diasTranscurridos": "4",
+    "departamento": "SEMARNAT",
+    "numeroDeProcedimiento": "230202"
+  },
+  {
     "id": 260215,
     "tipoDeTramite": "Solicitud de Permiso",
     "fecha": "2023-10-01",
