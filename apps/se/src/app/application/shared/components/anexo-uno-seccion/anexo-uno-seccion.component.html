@@ -36,11 +36,11 @@
     </div>
     <div class="row">
       <div class="col-12 container text-end mt-5">
-        <button class="btn btn-default me-2">Eliminar</button>
-        <button class="btn btn-primary me-2" (click)="agregarAnexoUno()">
+        <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura">Eliminar</button>
+        <button class="btn btn-primary me-2" (click)="agregarAnexoUno()" [disabled]="esFormularioSoloLectura">
           Agregar
         </button>
-        <button class="btn btn-primary">Carga por archivo</button>
+        <button class="btn btn-primary" [disabled]="esFormularioSoloLectura">Carga por archivo</button>
       </div>
     </div>
 
@@ -49,6 +49,7 @@
         [configuracionTabla]="tablaSociaAccionistas"
         [tipoSeleccionTabla]="tablaSeleccion.CHECKBOX"
         [datos]="anexoUnoTablaLista"
+         [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
       ></app-tabla-dinamica>
     </div>
   </form>
@@ -58,6 +59,7 @@
         class="btn btn-default me-2"
         data-bs-toggle="modal"
         data-bs-target="#complementarFuncionModal"
+        [disabled]="esFormularioSoloLectura"
       >
         Complementar Función
       </button>
@@ -66,6 +68,7 @@
         class="btn btn-primary me-2"
         data-bs-toggle="modal"
         data-bs-target="#proveedorClienteModal"
+        [disabled]="esFormularioSoloLectura"
       >
         Proveedor Cliente
       </button>
@@ -73,11 +76,12 @@
         class="btn btn-primary me-2"
         data-bs-toggle="modal"
         data-bs-target="#proyectoImmexModal"
+        [disabled]="esFormularioSoloLectura"
       >
         Proyecto IMMEX
       </button>
 
-      <button class="btn btn-primary">Proveedor Cliente por Archivo</button>
+      <button class="btn btn-primary" [disabled]="esFormularioSoloLectura">Proveedor Cliente por Archivo</button>
     </div>
   </div>
   <form class="row mt-5" [formGroup]="anexoDosFormGroup">
@@ -90,9 +94,9 @@
           <input
             class="form-control min-hgt"
             id="fraccionArancelaria"
-            formControlName="fraccionArancelaria"
+            formControlName="fraccionArancelarias"
             type="text"
-            (change)="actualizarControl('anexoDosFormGroup', 'fraccionArancelaria')"
+            (change)="actualizarControl('anexoDosFormGroup', 'fraccionArancelarias')"
           />
         </div>
       </div>
@@ -107,18 +111,18 @@
           <textarea
             id="descripcion"
             class="form-control , txtarea"
-            formControlName="descripcion"
-            (change)="actualizarControl('anexoDosFormGroup', 'descripcion')"
+            formControlName="anexoDosDescripcion"
+            (change)="actualizarControl('anexoDosFormGroup', 'anexoDosDescripcion')"
           ></textarea>
         </div>
       </div>
     </div>
     <div class="row">
       <div class="col-12 container text-end mt-5">
-        <button class="btn btn-default me-2">
+        <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura">
           Eliminar
         </button>
-        <button class="btn btn-primary me-2" (click)="agregarFraccionAnarelaria()"  >
+        <button class="btn btn-primary me-2" (click)="agregarFraccionAnarelaria()" [disabled]="esFormularioSoloLectura"  >
           Agregar
         </button>
       </div>
@@ -130,6 +134,7 @@
             [configuracionTabla]="tableFracionAnarelaria"
             [tipoSeleccionTabla]="tablaSeleccion.CHECKBOX"
             [datos]="anexoFraccionAnarelaria"
+             [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
           ></app-tabla-dinamica>
     </div>
   </form>
@@ -139,6 +144,7 @@
   class="btn btn-default me-2"
   data-bs-toggle="modal"
   data-bs-target="#complementarFuncionModal"
+  [disabled]="esFormularioSoloLectura"
 >
   Complementar Función
 </button>
@@ -146,6 +152,7 @@
         class="btn btn-primary me-2"
         data-bs-toggle="modal"
         data-bs-target="#proveedorClienteModal"
+        [disabled]="esFormularioSoloLectura"
       >
         Proveedor Cliente
       </button>
@@ -171,6 +178,7 @@
           class="btn-close"
           data-bs-dismiss="modal"
           aria-label="Close"
+          [disabled]="esFormularioSoloLectura"
         ></button>
       </div>
       <div class="modal-body">
@@ -222,6 +230,7 @@
             [label]="'catagoria'"
             [required]="true"
             name="catagoria"
+            [isDisabled]="esFormularioSoloLectura"
           ></app-catalogo-select>
               </div>
             </div>
@@ -235,7 +244,7 @@
                 <textarea
                   id="descripcion"
                   class="form-control , txtarea"
-                  formControlName="descripcion"
+                  formControlName="complimentarDescripcion"
                 ></textarea>
               </div>
             </div>
@@ -311,16 +320,16 @@
         </form>
         <div class="row">
           <div class="col-12 container text-end mt-5">
-            <button class="btn btn-default me-2">Guardar</button>
-            <button class="btn btn-primary me-2">Regresar Anexo</button>
+            <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura">Guardar</button>
+            <button class="btn btn-primary me-2" [disabled]="esFormularioSoloLectura">Regresar Anexo</button>
           </div>
         </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" [disabled]="esFormularioSoloLectura">
           Cerrar
         </button>
-        <button type="button" class="btn btn-primary">Guardar</button>
+        <button type="button" class="btn btn-primary" [disabled]="esFormularioSoloLectura">Guardar</button>
       </div>
     </div>
   </div>
@@ -375,6 +384,7 @@
                   [isDisabled]="false"
                   name="paisDestino"
                   formControlName="paisDestino"
+                  [isDisabled]="esFormularioSoloLectura"
                 ></app-catalogo-select>
               </div>
             </div>
@@ -412,7 +422,7 @@
         </form>
 
         <div class="row justify-content-end">
-          <button type="button" class="btn btn-danger col-auto mt-3 me-3">
+          <button type="button" class="btn btn-danger col-auto mt-3 me-3" [disabled]="esFormularioSoloLectura">
             Limpar
           </button>
 
@@ -420,6 +430,7 @@
             type="button"
             class="btn btn-primary col-auto pull-right float-end mt-3"
             (click)="agregarProveedorCliente()"
+            [disabled]="esFormularioSoloLectura"
           >
             Agregar
           </button>
@@ -430,17 +441,19 @@
             [configuracionTabla]="tableProveedorCliente"
             [tipoSeleccionTabla]="tablaSeleccion.CHECKBOX"
             [datos]="proveedorTablaLista"
+             [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
           ></app-tabla-dinamica>
         </div>
 
         <div class="row justify-content-end">
-          <button type="button" class="btn btn-danger col-auto mt-3 me-3">
+          <button type="button" class="btn btn-danger col-auto mt-3 me-3" [disabled]="esFormularioSoloLectura">
             Eliminar
           </button>
 
           <button
             type="button"
             class="btn btn-primary col-auto pull-right float-end mt-3 ml-3"
+            [disabled]="esFormularioSoloLectura"
           >
             Editar
           </button>
@@ -450,16 +463,17 @@
           <button
             type="button"
             class="btn btn-primary col-auto pull-right float-end mt-3"
+            [disabled]="esFormularioSoloLectura"
           >
             Regresar
           </button>
         </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" [disabled]="esFormularioSoloLectura">
           Cerrar
         </button>
-        <button type="button" class="btn btn-primary">Guardar</button>
+        <button type="button" class="btn btn-primary" [disabled]="esFormularioSoloLectura">Guardar</button>
       </div>
     </div>
   </div>
@@ -481,6 +495,7 @@
           class="btn-close"
           data-bs-dismiss="modal"
           aria-label="Close"
+          [disabled]="esFormularioSoloLectura"
         ></button>
       </div>
       <div class="modal-body">
@@ -527,7 +542,7 @@
                 <textarea
                   id="descripcion"
                   class="form-control ,txtarea"
-                  formControlName="descripcion"
+                  formControlName="textDescripcion"
                 ></textarea>
               </div>
             </div>
@@ -541,7 +556,7 @@
             [label]="'Tipo de documento*:'"
             [required]="true"
             [isDisabled]="false"
-          
+          [isDisabled]="esFormularioSoloLectura"
             formControlName="tipoDeDocumente"
           ></app-catalogo-select>
               </div>
@@ -609,7 +624,7 @@
           
         </form>
         <div class="row justify-content-end">
-          <button type="button" class="btn btn-danger col-auto mt-3 mr-5 me-3">
+          <button type="button" class="btn btn-danger col-auto mt-3 mr-5 me-3" [disabled]="esFormularioSoloLectura">
             Limpar
           </button>
 
@@ -617,6 +632,7 @@
             type="button"
              (click)="agregarProyectoImmex()"
             class="btn btn-primary col-auto pull-right float-end mt-3 me-3"
+            [disabled]="esFormularioSoloLectura"
           >
             Agregar
           </button>
@@ -627,31 +643,32 @@
             [configuracionTabla]="tablaProyectoImmex"
             [tipoSeleccionTabla]="tablaSeleccion.CHECKBOX"
             [datos]="proyectoImmexTablaLista"
+             [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
           ></app-tabla-dinamica>
         </div>
         <div class="row justify-content-end">
-          <button type="button" class="btn btn-danger col-auto mt-3 mr-5 me-3">
+          <button type="button" class="btn btn-danger col-auto mt-3 mr-5 me-3"[disabled]="esFormularioSoloLectura" >
             Eliminar
           </button>
 
           <button
             type="button"
-            class="btn btn-primary col-auto pull-right float-end mt-3 me-3"
+            class="btn btn-primary col-auto pull-right float-end mt-3 me-3" [disabled]="esFormularioSoloLectura"
           >
             Editar
           </button>
         </div>
         <div class="row">
           <div class="col-12 container text-end mt-5">
-            <button class="btn btn-primary me-2">Regresar Anexo</button>
+            <button class="btn btn-primary me-2" [disabled]="esFormularioSoloLectura">Regresar Anexo</button>
           </div>
         </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" [disabled]="esFormularioSoloLectura">
           Cerrar
         </button>
-        <button type="button" class="btn btn-primary">Guardar</button>
+        <button type="button" class="btn btn-primary" [disabled]="esFormularioSoloLectura">Guardar</button>
       </div>
     </div>
   </div>

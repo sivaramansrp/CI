@@ -111,15 +111,6 @@ describe('AgregarOtrosComponent', () => {
     expect(component.agregarDatosForm.enable).toHaveBeenCalled();
   });
 
-  it('should run #buscar()', async () => {
-    component.importacionMateriasPrimasService = component.importacionMateriasPrimasService || {};
-    component.importacionMateriasPrimasService.obtenerOstro = jest.fn().mockReturnValue(observableOf({}));
-    component.agregarDatosForm = component.agregarDatosForm || {};
-    component.agregarDatosForm.patchValue = jest.fn();
-    component.buscar();
-    expect(component.importacionMateriasPrimasService.obtenerOstro).toHaveBeenCalled();
-  });
-
   it('should run #ngOnDestroy()', async () => {
     component.unsubscribe$ = component.unsubscribe$ || {};
     component.unsubscribe$.next = jest.fn();

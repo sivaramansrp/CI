@@ -49,7 +49,6 @@ import { EmpresasSubfabricantesComponent } from '../../../../shared/components/e
   * @export
   * @class EmpresasSub
   * */
-
 @Component({
   selector: 'app-empresas-subfabricante',
   standalone: true,
@@ -78,7 +77,6 @@ export class EmpresasSubfabricanteComponent implements OnDestroy, OnInit {
    * Lista de estados obtenida del servicio.
    * @property {Catalogo[]} estadoCatalogo
    */
-
   estadoCatalogo: Catalogo[] = [];
 
   /**
@@ -91,8 +89,7 @@ export class EmpresasSubfabricanteComponent implements OnDestroy, OnInit {
    * Configuración de las columnas de la tabla de subfabricantes.
    * @property {ConfiguracionColumna<PlantasSubfabricante>[]} configuracionTabla
    */
-  configuracionTabla: ConfiguracionColumna<PlantasSubfabricante>[] =
-    SUBFABRICANTE_DISPONIBLES_PLANTAS_TABLA_CONFIGURACION;
+  configuracionTabla: ConfiguracionColumna<PlantasSubfabricante>[] = SUBFABRICANTE_DISPONIBLES_PLANTAS_TABLA_CONFIGURACION;
 
   /**
    * Datos del subfabricante seleccionado.
@@ -163,6 +160,10 @@ export class EmpresasSubfabricanteComponent implements OnDestroy, OnInit {
 * @method obtenerDatosDelAlmacen
 */
   obtenerDatosDelAlmacen(): void {
+    /**
+ * Se suscribe a los cambios en la lista de plantas buscadas.
+ * Si existen elementos, los asigna a 'datosTablaSubfabricantesDisponibles'.
+ */
     this.query.datosSubcontratistaEstado$
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((datosSubcontratista) => {
@@ -171,7 +172,10 @@ export class EmpresasSubfabricanteComponent implements OnDestroy, OnInit {
           esDatosSubcontratistaValido: this.formularioDatosSubcontratista.valid,
         });
       });
-
+/**
+ * Se suscribe a los cambios en la lista de plantas buscadas.
+ * Si existen elementos, los asigna a 'datosTablaSubfabricantesDisponibles'.
+ */
     this.query.plantasBuscadas$
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((plantasBuscadas) => {
@@ -179,7 +183,11 @@ export class EmpresasSubfabricanteComponent implements OnDestroy, OnInit {
           this.datosTablaSubfabricantesDisponibles = plantasBuscadas;
         }
       })
-
+/**
+ * Se suscribe a los cambios en las plantas subfabricantes a agregar.
+ * Si existen elementos, los asigna a 'datosSubfabricanteParaSerAgregados';
+ * en caso contrario, asigna un arreglo vacío.
+ */
     this.query.plantasSubfabricantesAgregar$
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((plantasSubfabricantesAgregar) => {
@@ -328,7 +336,10 @@ export class EmpresasSubfabricanteComponent implements OnDestroy, OnInit {
       this.store.eliminarPlantas(plantasPorEliminar);
     }
   }
-
+/**
+ * Actualiza el store con las plantas por complementar e índice de pestaña actual.
+ * Navega a la ruta relativa 'complementar-plantas' para continuar con el proceso.
+ */
   complementarPlantas(complementarPlantas: PlantasSubfabricante[]): void {
     if (complementarPlantas) {
       this.store.setPlantasPorCompletar(complementarPlantas);

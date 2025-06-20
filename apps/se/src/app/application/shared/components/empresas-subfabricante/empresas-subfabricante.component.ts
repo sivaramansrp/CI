@@ -1,3 +1,7 @@
+/**
+ * Componente Angular para gestionar subcontratistas y plantas subfabricantes.
+ * Importa modelos, componentes compartidos y servicios necesarios.
+ */
 import {
   Catalogo,
   CatalogoSelectComponent,
@@ -5,8 +9,9 @@ import {
   TablaDinamicaComponent,
   TablaSeleccion,
   TituloComponent,
-} from '@ng-mf/data-access-user';
-import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+} from '@libs/shared/data-access-user/src';
+import { Component, ElementRef, EventEmitter, Input,OnInit,Output,ViewChild} from '@angular/core';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 
 import {
   DatosSubcontratista,
@@ -23,6 +28,13 @@ import { DetallesPlantasComponent } from '../detalles-plantas/detalles-plantas.c
 import { Modal } from 'bootstrap';
 import { Router } from '@angular/router';
 
+import {Subject,map,takeUntil } from 'rxjs';
+import { Tramite80101State, Tramite80101Store } from '../../../tramites/80103/estados/tramite80101.store';
+import { Tramite80101Query } from '../../../tramites/80103/estados/tramite80101.query';
+/**
+ * Componente para mostrar y gestionar subfabricantes y sus plantas.
+ * Utiliza componentes compartidos y formularios reactivos.
+ */
 @Component({
   selector: 'empresass-subfabricante',
   standalone: true,
@@ -42,7 +54,7 @@ import { Router } from '@angular/router';
  * Este componente permite gestionar los datos de las empresas subfabricantes,
  * incluyendo la selección de plantas, la configuración de la tabla y el cambio de estados.
  */
-export class EmpresasSubfabricantesComponent {
+export class EmpresasSubfabricantesComponent implements OnInit {
 
   /**
    * Referencia al elemento modal para complementar plantas.
@@ -60,7 +72,10 @@ export class EmpresasSubfabricantesComponent {
    * @description Esta propiedad privada contiene un array de objetos `Catalogo`, que representan los diferentes estados disponibles.
    */
   private _estadoCatalogo: Catalogo[] = [];
-
+ /**
+   * Estado de la solicitud 221601, que contiene los valores actuales de la solicitud.
+   */
+  public solicitudState!: Tramite80101State;
   /**
    * Datos de las plantas subfabricantes disponibles. Esta propiedad almacena las plantas que están disponibles para el proceso.
    * @property {PlantasSubfabricante[]} _datosTablaSubfabricantesDisponibles
@@ -100,7 +115,10 @@ export class EmpresasSubfabricantesComponent {
    * @description Esta propiedad privada almacena el formulario de datos del subcontratista, que incluye campos como el RFC y estado del subcontratista.
    */
   private _formularioDatosSubcontratista!: FormGroup;
-
+/**
+   * Establece el estado del catálogo de las plantas subfabricantes.
+   * @param valor - Lista de estados del catálogo.
+   */
   @Input() tabIndex: number = 0;
 
   /**
@@ -192,12 +210,12 @@ export class EmpresasSubfabricantesComponent {
     return this._datosTablaSubfabricantesSeleccionadas;
   }
 
-  @Input()
-  /**
+ /**
    * Establece el formulario de datos del subcontratista.
    * @param valor - Formulario reactivo con los datos del subcontratista.
    */
-  set formularioDatosSubcontratista(valor: FormGroup) {
+  @Input()
+   set formularioDatosSubcontratista(valor: FormGroup) {
     this._formularioDatosSubcontratista.setValue(valor.value);
   }
 
@@ -248,7 +266,12 @@ export class EmpresasSubfabricantesComponent {
    * @description Este evento se emite cuando el usuario selecciona plantas para eliminar.
    */
   @Output() plantasPorEliminar = new EventEmitter<PlantasSubfabricante[]>();
-
+  /**
+   * Evento emitido cuando se seleccionan plantas para eliminar.
+   * @event plantasPorComplementar
+   * @type {EventEmitter<PlantasSubfabricante[]>}
+   * @description Este evento se emite cuando el usuario selecciona plantas para eliminar.
+   */
   @Output() plantasPorComplementar = new EventEmitter<PlantasSubfabricante[]>();
 
   /**
@@ -270,13 +293,68 @@ export class EmpresasSubfabricantesComponent {
    * @description Esta propiedad almacena las plantas que han sido seleccionadas por el usuario para realizar algún proceso (como eliminación o agrupación).
    */
   plantasSeleccionadas: PlantasSubfabricante[] = [];
-
+  /** Indica si el formulario debe mostrarse en modo solo lectura.  
+ *  Controla la habilitación o deshabilitación de los campos. */
+  esFormularioSoloLectura: boolean = false;
+  /**
+   * Subject utilizado para gestionar la destrucción del componente y evitar memory leaks.
+   */
+  private destroyNotifier$: Subject<void> = new Subject();
   /**
    * Constructor para inicializar el formulario de datos del subcontratista.
    * @param fb - FormBuilder para la creación del formulario reactivo.
    */
-  constructor(private fb: FormBuilder, private router: Router) {
-    this.inicializarFormularioDatosSubcontratista();
+  constructor(private fb: FormBuilder, private router: Router,private consultaioQuery: ConsultaioQuery, public query: Tramite80101Query,
+      private store: Tramite80101Store 
+  ) { 
+       this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+        
+          this.inicializarCertificadoFormulario();
+        })
+      )
+      .subscribe();
+    }
+     /**
+   * Método que se ejecuta cuando el componente es inicializado.
+   * 
+   * Inicializa el formulario reactivo con los valores actuales de la solicitud.
+   */
+  ngOnInit(): void {
+    this.inicializarCertificadoFormulario();
+  }
+ /**
+   * Método para inicializar el formulario reactivo con los datos de la solicitud.
+   * 
+   * Este método configura los campos del formulario con los valores actuales del estado de la solicitud
+   * y aplica las validaciones necesarias. También deshabilita ciertos campos y establece valores predeterminados.
+   */
+  inicializarCertificadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+     this.inicializarFormularioDatosSubcontratista();
+    }  
+  }
+    /**
+   * @comdoc
+   * Guarda los datos del formulario de combinación requerida.
+   * 
+   * Inicializa el formulario y ajusta su estado de habilitación según si es de solo lectura.
+   * - Si el formulario es de solo lectura, lo deshabilita.
+   * - Si no es de solo lectura, lo habilita.
+   * - Si no aplica ninguna de las condiciones anteriores, no realiza ninguna acción adicional.
+   */
+  guardarDatosFormulario(): void {
+      this.inicializarFormularioDatosSubcontratista();
+      if (this.esFormularioSoloLectura) {
+        this._formularioDatosSubcontratista.disable();        
+      } else {
+        this._formularioDatosSubcontratista.enable();       
+      }
   }
 
   /**
@@ -285,9 +363,17 @@ export class EmpresasSubfabricantesComponent {
    * @description Este método configura el formulario de datos del subcontratista con los campos `rfc` y `estado`, ambos con validación requerida.
    */
   inicializarFormularioDatosSubcontratista(): void {
+      this.query.selectSolicitud$
+              .pipe(
+                takeUntil(this.destroyNotifier$),
+                map((seccionState) => {
+                  this.solicitudState = seccionState as Tramite80101State;
+                })
+              )
+              .subscribe();
     this._formularioDatosSubcontratista = this.fb.group({
-      rfc: ['', Validators.required],
-      estado: ['', Validators.required],
+      rfc: [this.solicitudState.empressaSubFabricantePlantas.datosSubcontratista.rfc, Validators.required],
+      estado: [this.solicitudState.empressaSubFabricantePlantas.datosSubcontratista.estado, Validators.required],     
     });
   }
 
