@@ -85,8 +85,17 @@
                   libUppercase
                   name="llavePago"
                   formControlName="llavePago"
+                  [ngClass]="esInvalido('llavePago') ? 'required' : ''"
                   (change)="actualizarPago()"
                   />
+                        <div *ngIf="esInvalido('llavePago')" class="text-danger">
+                           <small *ngIf="pagoForm.controls['llavePago'].errors?.['required']">
+                              Todos los campos de pago son requeridos
+                           </small>
+                           <small *ngIf="pagoForm.controls['llavePago'].errors?.['pattern']">
+                              Existen datos incorrectos que no cumplen con el formato esperado
+                           </small>
+                        </div>
             </div>
          </div>
          <div class="col-md-4">
@@ -96,7 +105,7 @@
                name="fechaPago"
                (change)="actualizarPago()"
                (valorCambiado)="onFechaCambiada($event)"
-               [isDisabled]="true"
+               [isDisabled]="pagoForm.get('exentoPago')?.value === 'si'"
                ></input-fecha>
             </div>
          </div>
