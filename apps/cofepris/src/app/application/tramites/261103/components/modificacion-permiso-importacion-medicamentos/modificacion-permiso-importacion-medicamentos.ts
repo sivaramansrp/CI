@@ -239,7 +239,7 @@ guardarDatosFormulario(): void {
   this.crearFormulario();
   if (this.esFormularioSoloLectura) {
     this.preOperativeForm.disable();
-  } else if (!this.esFormularioSoloLectura) {
+  } else {
     this.preOperativeForm.enable();
   }
 }
