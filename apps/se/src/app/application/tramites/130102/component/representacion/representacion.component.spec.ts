@@ -20,8 +20,8 @@ describe('RepresentacionComponent (Jest)', () => {
   };
 
   const mockQuery = {
-    selectSolicitud$: jest.fn()
-  };
+  selectSolicitud$: of({ entidad: 5, representacion: 3 })
+};
 
   const mockFormService = {
     registrarFormulario: jest.fn()
@@ -32,10 +32,6 @@ describe('RepresentacionComponent (Jest)', () => {
   };
 
   beforeEach(async () => {
-    mockQuery.selectSolicitud$.mockReturnValue(of({
-      entidad: 5,
-      representacion: 3
-    }));
 
     await TestBed.configureTestingModule({
       declarations: [
@@ -90,5 +86,31 @@ describe('RepresentacionComponent (Jest)', () => {
     expect(component.seleccionadaRepresentacionFederal).toEqual(representacion);
   });
 
+  it('should initialize the form with state values', () => {
+    component.inicializarFormulario();
+    expect(component.frmRepresentacion).toBeDefined();
+    expect(component.frmRepresentacion.get('entidad')?.value).toBe(5);
+    expect(component.frmRepresentacion.get('representacion')?.value).toBe(3);
+  });
+
+  it('should disable form when esFormularioSoloLectura is true', () => {
+    component.esFormularioSoloLectura = true;
+    component.guardarDatosFormulario();
+    expect(component.frmRepresentacion.disabled).toBe(true);
+  });
+
+  it('should enable form when esFormularioSoloLectura is false', () => {
+    component.esFormularioSoloLectura = false;
+    component.guardarDatosFormulario();
+    expect(component.frmRepresentacion.enabled).toBe(true);
+  });
+
+  it('should call next and complete on destroyNotifier$ when ngOnDestroy is called', () => {
+    const nextSpy = jest.spyOn(component['destroyNotifier$'], 'next');
+    const completeSpy = jest.spyOn(component['destroyNotifier$'], 'complete');
+    component.ngOnDestroy();
+    expect(nextSpy).toHaveBeenCalled();
+    expect(completeSpy).toHaveBeenCalled();
+  });
  
 });

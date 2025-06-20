@@ -5,20 +5,22 @@
  *
  * @import { Component } from '@angular/core';
  */
+import {
+  Component,
+  OnDestroy,
+  OnInit,
+} from '@angular/core';
 
-import { Component } from '@angular/core';
-import { ConsultaioQuery } from '@ng-mf/data-access-user';
-import { ConsultaioState } from '@ng-mf/data-access-user';
-import { ConsultaioStore } from '@ng-mf/data-access-user';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
+import {
+  ConsultaioQuery,
+  ConsultaioState,
+  ConsultaioStore,
+} from '@ng-mf/data-access-user';
 
 import { ElegibilidadDeTextilesStore } from '../../estados/elegibilidad-de-textiles.store';
 import { ElegibilidadTextilesService } from '../../services/elegibilidad-textiles/elegibilidad-textiles.service';
 
-import { Subject } from 'rxjs';
-import { map } from 'rxjs';
-import { takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-paso-uno',
@@ -27,7 +29,7 @@ import { takeUntil } from 'rxjs';
 })
 export class PasoUnoComponent implements OnInit, OnDestroy {
   /**
-   * @description Constructor del componente.
+   * @description ConstructomostrarOtraPestanar del componente.
    * Inicializa el componente y establece el índice de la pestaña seleccionada.
    */
   formularioDeshabilitado: boolean = false;
@@ -39,7 +41,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
   /**
    * @property {boolean} mostrarOtraPestana - Controla si se muestran las pestañas adicionales.
    */
-  mostrarOtraPestana: boolean = true;
+  mostrarOtraPestana: boolean = false;
 
   /**
    * @property {Subject<void>} destroyNotifier$ - Subject para notificar la destrucción del componente.

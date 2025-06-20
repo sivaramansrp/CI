@@ -1,8 +1,8 @@
 import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { CapturarService } from './capturar.service';
-import { Solicitud40301Store } from '../estados/tramite40301.store';
-import { Solicitud40301Query } from '../estados/tramite40301.query';
+import { Tramite40301Store } from '../estados/tramite40301.store';
+import { Tramite40301Query } from '../estados/tramite40301.query';
 import { CaatNaviroMetaInfo } from '../modelos/caat-naviero.modalidad.model';
 import { Catalogo, TituloComponent, WizardComponent } from '@libs/shared/data-access-user/src';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
@@ -10,25 +10,25 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 describe('CapturarService', () => {
   let service: CapturarService;
   let httpMock: HttpTestingController;
-  let mockStore: jest.Mocked<Solicitud40301Store>;
-  let mockQuery: jest.Mocked<Solicitud40301Query>;
+  let mockStore: jest.Mocked<Tramite40301Store>;
+  let mockQuery: jest.Mocked<Tramite40301Query>;
 
   beforeEach(() => {
     mockStore = {
       update: jest.fn(),
-    } as unknown as jest.Mocked<Solicitud40301Store>;
+    } as unknown as jest.Mocked<Tramite40301Store>;
 
     mockQuery = {
       select: jest.fn(),
-    } as unknown as jest.Mocked<Solicitud40301Query>;
+    } as unknown as jest.Mocked<Tramite40301Query>;
 
     TestBed.configureTestingModule({
       imports: [WizardComponent, TituloComponent, HttpClientTestingModule],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
       providers: [
         CapturarService,
-        { provide: Solicitud40301Store, useValue: mockStore },
-        { provide: Solicitud40301Query, useValue: mockQuery },
+        { provide: Tramite40301Store, useValue: mockStore },
+        { provide: Tramite40301Query, useValue: mockQuery },
       ],
     });
 
@@ -56,7 +56,7 @@ describe('CapturarService', () => {
   });
 
   it('should get solicitud state', () => {
-    service.getSolicitudState();
+    service.getTramiteState();
     expect(mockQuery.select).toHaveBeenCalled();
   });
 

@@ -689,4 +689,12 @@ export class Tramite140216Store extends Store<BusquedaPermisos140216State> {
             paisProcedencia,
         }));
     }
+
+    /**
+     * Actualiza el estado de la consulta de suspensión de permiso.
+     * @param nuevoDatos - Nuevo estado para la consulta de suspensión de permiso.
+     */
+    public setConsultaSuspensionPermisoState(nuevoDatos: BusquedaPermisos140216State): void {
+        this.update(nuevoDatos);
+    }
 }
