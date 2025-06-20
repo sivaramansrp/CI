@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { catchError, switchMap, throwError } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { AlertComponent } from '../alert/alert.component';
@@ -16,13 +16,49 @@ import { Router } from '@angular/router';
   styleUrl: './acuse.component.scss',
 })
 export class AcuseComponent implements OnChanges {
+   /**
+   * Título principal que se mostrará en el encabezado del componente.
+   * Generalmente representa el nombre del trámite o sección.
+   */
   @Input() titulo!: string;
+
+  /**
+   * Texto del mensaje de alerta que se mostrará en el componente.
+   * Se utiliza para mostrar advertencias, errores o información relevante al usuario.
+   */
   @Input() txtAlerta!: string;
+
+  /**
+   * Subtítulo que se mostrará debajo del título principal.
+   * Usado para complementar la información del título o dar contexto adicional.
+   */
   @Input() subtitulo!: string;
+
+  /**
+   * Folio único relacionado con el trámite o solicitud.
+   * Puede usarse para mostrar información específica o para trazabilidad.
+   */
   @Input() folio!: string;
+
+  /**
+   * URL relacionada con el trámite o documento generado.
+   * Esta puede ser utilizada para redireccionar o mostrar documentos.
+   */
   @Input() url!: string;
+
+  /**
+   * Identificador numérico de la solicitud asociada al trámite.
+   * Este ID se utiliza para generar y obtener los documentos correspondientes.
+   */
   @Input() idSolicitud!: number;
 
+    /**
+   * Encabezados de la tabla de acuse.
+   *
+   * Cada elemento representa una columna de la tabla, con su clave asociada
+   * al modelo `BodyTablaAcuse` y el valor que se muestra como encabezado en la UI.
+   *
+   */
   readonly encabezadoTablaAcuse: { valor: string, key: keyof BodyTablaAcuse }[] = [
     {
       key: 'id',
@@ -34,7 +70,9 @@ export class AcuseComponent implements OnChanges {
     },
   ];
 
-  /* Acciones de la tabla */
+    /**
+   * Datos que se muestran en la tabla de acuse.
+   */
   datosTablaAcuse: BodyTablaAcuse[] = [];
 
 
@@ -91,7 +129,7 @@ export class AcuseComponent implements OnChanges {
         this.datosTablaAcuse = [{
           id: 1,
           documento: response.datos!.nombre_archivo,
-          urlPdf: this.crearUrlPdf(response.datos!.contenido),
+          urlPdf: AcuseComponent.crearUrlPdf(response.datos!.contenido),
           idDocumento: '1'
         }];
       },
@@ -107,7 +145,7 @@ export class AcuseComponent implements OnChanges {
    * @param base64 - El contenido del PDF en formato base64.
    * @returns Una URL que puede ser utilizada para mostrar el PDF.
    */
-  crearUrlPdf(base64: string): string {
+  static crearUrlPdf(base64: string): string {
     // Decodificar el base64
     const BYTE_CHARACTERS = atob(base64);
     const BYTE_NUMBERS = new Array(BYTE_CHARACTERS.length);
@@ -127,6 +165,7 @@ export class AcuseComponent implements OnChanges {
    *
    * @param url - La URL del PDF a visualizar.
    */
+  // eslint-disable-next-line class-methods-use-this
   verPdf(url: string): void {
     window.open(url, '_blank');
   }

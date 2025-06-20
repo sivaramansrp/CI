@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { base64ToHex, encodeToISO88591Hex } from '@libs/shared/data-access-user/src/core/utils/utilerias';
-import { catchError, map, switchMap, tap, throwError } from 'rxjs';
+import { catchError, switchMap, tap, throwError } from 'rxjs';
 import { CadenaOriginalRequest } from '@libs/shared/data-access-user/src/core/models/shared/firma-electronica/request/cadena-original-request.model';
 // eslint-disable-next-line sort-imports
 import { TramiteFolioService, TramiteFolioStore } from '@ng-mf/data-access-user';
