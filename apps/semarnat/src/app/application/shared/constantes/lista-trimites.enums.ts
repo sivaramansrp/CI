@@ -51,4 +51,12 @@ export const LISTA_TRIMITES: AccuseComponentes[] = [
             componentName: 'AvisoReciclajeComponent',
         }]
     },
+    {
+        tramite: 231002,
+        listaComponentes: [{
+            id: 'solicitud',
+            componentPath: () => import('../../tramites/231002/pages/aviso-retorno/aviso-retorno.component').then(m => m.AvisoRetornoComponent),
+            componentName: 'AvisoRetornoComponent',
+        }]
+    },
 ];
