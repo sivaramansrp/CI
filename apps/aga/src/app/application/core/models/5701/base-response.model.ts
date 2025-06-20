@@ -12,7 +12,7 @@
  * @version 1.0
  * @category Modelo de entrada
  */
-export interface BaseResponse<T = unknown> {
+export interface BaseResponse<T = any> {
     codigo: string;
     error?: string;
     path: string;

@@ -52,6 +52,7 @@ export class ValidaDespachoService {
    * @return Observable<ValidacionDDEXAutorizacionResponse> Respuesta del servicio con la validación del RFC.
    */
   validaRFCAutorizacionDDEX(
+     bodyValidarRFCAutorizacionDdex: BodyValidarRFCAutorizacionDDEX
   ): Observable<ValidacionDDEXAutorizacionResponse> {
     const ENDPOINT = 'assets/json/5701/validar-despacho-ddx.json';
     return this.http.get<ValidacionDDEXAutorizacionResponse>(ENDPOINT).pipe(
