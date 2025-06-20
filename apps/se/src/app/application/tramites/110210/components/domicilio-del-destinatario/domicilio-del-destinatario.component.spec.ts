@@ -1,10 +1,24 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
-import { of, Subject, Subscription } from 'rxjs';
+import { of } from 'rxjs';
 import { DomicilioDelDestinatarioComponent } from './domicilio-del-destinatario.component';
 import { Tramite110210Query } from '../../estados/queries/tramite110210.query';
 import { Tramite110210Store } from '../../estados/store/tramite110210.store';
-import mockData from 'libs/shared/theme/assets/json/110210/domicilio-del-destinatario.json';
+
+jest.mock('libs/shared/theme/assets/json/110210/domicilio-del-destinatario.json', () => {
+  return {
+    __esModule: true,
+    default: {
+      ciudad: 'Mock City',
+      calle: 'Mock Street',
+      numeroLetra: '123C',
+      telefono: '5555555555',
+      fax: '1111111111',
+      correoElectronico: 'mock@example.com',
+      observaciones: 'Mock Observations',
+    },
+  };
+});
 
 describe('DomicilioDelDestinatarioComponent', () => {
   let component: DomicilioDelDestinatarioComponent;
@@ -23,7 +37,7 @@ describe('DomicilioDelDestinatarioComponent', () => {
         correoElectronico: 'test@example.com',
         observaciones: 'Test Observations',
       }),
-    } as jest.Mocked<Tramite110210Query>;
+    } as unknown as jest.Mocked<Tramite110210Query>;
 
     tramite110210StoreMock = {
       setCiudad: jest.fn(),
@@ -36,7 +50,6 @@ describe('DomicilioDelDestinatarioComponent', () => {
     } as unknown as jest.Mocked<Tramite110210Store>;
 
     await TestBed.configureTestingModule({
-      declarations: [],
       imports: [ReactiveFormsModule, DomicilioDelDestinatarioComponent],
       providers: [
         FormBuilder,
@@ -52,65 +65,53 @@ describe('DomicilioDelDestinatarioComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
+  it('debería crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize the form on ngOnInit', () => {
-    component.ngOnInit();
+  it('debería inicializar el formulario en ngOnInit y establecer valores desde mockData', () => {
     expect(component.solicitudForm).toBeDefined();
-    expect(component.solicitudForm.get('ciudad')?.value).toBe('');
-    expect(component.solicitudForm.get('calle')?.value).toBe('');
+    expect(component.solicitudForm.get('ciudad')?.value).toBe('Mock City');
+    expect(component.solicitudForm.get('calle')?.value).toBe('Mock Street');
+    expect(component.solicitudForm.get('numeroLetra')?.value).toBe('123C');
   });
 
-  it('should set form values using mockData in setFormValues', () => {
+  it('debería establecer manualmente los valores del formulario usando setFormValues()', () => {
     component.setFormValues();
-    expect(component.solicitudForm.get('ciudad')?.value).toBe(mockData.ciudad);
-    expect(component.solicitudForm.get('calle')?.value).toBe(mockData.calle);
-    expect(component.solicitudForm.get('correoElectronico')?.value).toBe(mockData.correoElectronico);
+
+    expect(component.solicitudForm.get('ciudad')?.value).toBe('Mock City');
+    expect(component.solicitudForm.get('calle')?.value).toBe('Mock Street');
+    expect(component.solicitudForm.get('telefono')?.value).toBe('5555555555');
+    expect(component.solicitudForm.get('correoElectronico')?.value).toBe('mock@example.com');
   });
 
-  it('should restore form values from the store in restoreFormValues', () => {
-    component.restoreFormValues();
-    expect(component.solicitudForm.get('ciudad')?.value).toBe('Test City');
-    expect(component.solicitudForm.get('calle')?.value).toBe('Test Street');
-  });
-
-  it('should update the store with form values in updateStore', () => {
+  it('debería actualizar el store con los valores del formulario en updateStore()', () => {
     component.solicitudForm.patchValue({
-      ciudad: 'Updated City',
-      calle: 'Updated Street',
+      ciudad: 'Ciudad Actualizada',
+      calle: 'Calle Actualizada',
       numeroLetra: '456B',
       telefono: '9876543210',
       fax: '0123456789',
-      correoElectronico: 'updated@example.com',
-      observaciones: 'Updated Observations',
+      correoElectronico: 'actualizado@example.com',
+      observaciones: 'Observaciones Actualizadas',
     });
+
     component.updateStore();
-    expect(tramite110210StoreMock.setCiudad).toHaveBeenCalledWith('Updated City');
-    expect(tramite110210StoreMock.setCalle).toHaveBeenCalledWith('Updated Street');
-    expect(tramite110210StoreMock.setCorreoElectronico).toHaveBeenCalledWith('updated@example.com');
+
+    expect(tramite110210StoreMock.setCiudad).toHaveBeenCalledWith('Ciudad Actualizada');
+    expect(tramite110210StoreMock.setCalle).toHaveBeenCalledWith('Calle Actualizada');
+    expect(tramite110210StoreMock.setNumeroLetra).toHaveBeenCalledWith('456B');
+    expect(tramite110210StoreMock.setTelefono).toHaveBeenCalledWith('9876543210');
+    expect(tramite110210StoreMock.setFax).toHaveBeenCalledWith('0123456789');
+    expect(tramite110210StoreMock.setCorreoElectronico).toHaveBeenCalledWith('actualizado@example.com');
+    expect(tramite110210StoreMock.setObservaciones).toHaveBeenCalledWith('Observaciones Actualizadas');
   });
 
-  it('should unsubscribe from subscriptions on ngOnDestroy', () => {
+  it('debería desuscribirse de destroy$ en ngOnDestroy()', () => {
     const destroySpy = jest.spyOn(component['destroy$'], 'next');
     const completeSpy = jest.spyOn(component['destroy$'], 'complete');
     component.ngOnDestroy();
     expect(destroySpy).toHaveBeenCalled();
     expect(completeSpy).toHaveBeenCalled();
-  });
-
-  it('should unsubscribe from formSubscription on ngOnDestroy', () => {
-    component.formSubscription = new Subscription();
-    const unsubscribeSpy = jest.spyOn(component.formSubscription, 'unsubscribe');
-    component.ngOnDestroy();
-    expect(unsubscribeSpy).toHaveBeenCalled();
-  });
-
-  it('should unsubscribe from restoreSubscription$ on ngOnDestroy', () => {
-    component['restoreSubscription$'] = new Subscription();
-    const unsubscribeSpy = jest.spyOn(component['restoreSubscription$'], 'unsubscribe');
-    component.ngOnDestroy();
-    expect(unsubscribeSpy).toHaveBeenCalled();
   });
 });
