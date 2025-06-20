@@ -8,9 +8,9 @@ import { map, takeUntil} from 'rxjs';
 import { Subject} from 'rxjs';
 
 import { TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Tramite420101State, Tramite420101Store } from '../../estados/tramite420101Store.store';
 import { CommonModule } from '@angular/common';
 import { Tramite420101Query } from '../../estados/tramite420101Query.query';
-import { Tramite420101Store } from '../../estados/tramite420101Store.store';
 
 @Component({
   selector: 'app-registrar-de-proveedores',
@@ -114,7 +114,7 @@ export class RegistrarDeProveedoresComponent implements OnInit, OnDestroy {
     if (this.esFormularioSoloLectura) {
       this.tramite420101Query.selectTramiteState$
       .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((state: any) => {
+      .subscribe((state: Tramite420101State) => {
         this.datosTabla = state.datosTabla;
       });
     }

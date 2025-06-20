@@ -3,32 +3,28 @@
     <form [formGroup]="formulario">
         <div class="row mb-3">
             <div class="col-md-4">
-                <app-catalogo-select [catalogo]="entidad" 
-                    [label]="'Entidad federativa'" 
-                    [required]="true"
-                    name="entidad" 
-                    formControlName="entidad"
-                    [isDisabled]="esFormularioSoloLectura"
-                    (change)="setValoresStore(formulario, 'entidad', 'setEntidad')" 
-                    >
+                <app-catalogo-select [catalogo]="entidad" [label]="'Entidad federativa'" [required]="true"
+                    name="entidad" formControlName="entidad" [isDisabled]="esFormularioSoloLectura"
+                    (change)="setValoresStore(formulario, 'entidad', 'setEntidad')">
                 </app-catalogo-select>
             </div>
             <div class="col-md-4">
-                <app-catalogo-select [catalogo]="representacion" 
-                    [label]="'Representación federal'" 
-                    [required]="true"
-                    name="representacion" 
-                    formControlName="representacion"
-                    [isDisabled]="esFormularioSoloLectura"
-                    (change)="setValoresStore(formulario, 'representacion', 'setRepresentacion')"
-                    >
+                <app-catalogo-select [catalogo]="representacion" [label]="'Representación federal'" [required]="true"
+                    name="representacion" formControlName="representacion" [isDisabled]="esFormularioSoloLectura"
+                    (change)="setValoresStore(formulario, 'representacion', 'setRepresentacion')">
                 </app-catalogo-select>
             </div>
         </div>
     </form>
 
     <ng-titulo titulo="Protesto de Decir Verdad" />
-    <div class="form-check bg-light p-3 border rounded">
-        <ng-alert [CONTENIDO]="TEXTOS.ADJUNTAR" [CUSTOMECLASS]="infoAlert"></ng-alert>
+    <div class="alert alert-info manifest-box">
+        <div class="form-check">
+            <input class="form-check-input me-2" type="checkbox" id="protesta" [disabled]="esFormularioSoloLectura"
+                [checked]="esFormularioSoloLectura || actualizacionCounsulta">
+            <span class="form-check-label" for="protesta">
+                {{ TEXTOS.ADJUNTAR }}
+            </span>
+        </div>
     </div>
 </div>

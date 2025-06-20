@@ -1,4 +1,4 @@
-import { AGENT_CATALOG, CATALOGOS_40301_ID, META_INFO_40301 } from '../../enum/caat-naviero.enum';
+import { AGENT_CATALOG, META_INFO_40301 } from '../../enum/caat-naviero.enum';
 import { Catalogo, ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -146,7 +146,7 @@ export class CapturarComponent implements OnInit, OnDestroy {
   public readMetaInfo(): void {
 
     this.capturarService
-      .getCatalogo(CATALOGOS_40301_ID.AGENT_CATALOG)
+      .getCatalogo()
       .pipe(
         takeUntil(this.destruirNotificador$),
         map((agentCatalog: Catalogo[]) => {

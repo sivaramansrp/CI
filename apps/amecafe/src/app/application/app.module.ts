@@ -12,9 +12,9 @@ import { SolicitanteService } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
 
 import { ToastrModule } from 'ngx-toastr';
+import { ToastrService } from 'ngx-toastr';
 import { provideHttpClient } from '@angular/common/http';
 import { provideToastr } from 'ngx-toastr';
-import { ToastrService } from 'ngx-toastr';
 
 @NgModule({
   declarations: [
