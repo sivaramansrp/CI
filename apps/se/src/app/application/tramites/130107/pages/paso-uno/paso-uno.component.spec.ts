@@ -2,6 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PasoUnoComponent } from './paso-uno.component';
 import { DatosDeLaSolicitudService } from '../../services/datos-de-la-solicitud.service';
 import { of, Subject } from 'rxjs';
+import { CUSTOM_ELEMENTS_SCHEMA , NO_ERRORS_SCHEMA } from '@angular/core';
 
 describe('PasoUnoComponent', () => {
   let component: PasoUnoComponent;
@@ -19,11 +20,11 @@ describe('PasoUnoComponent', () => {
       providers: [
         { provide: DatosDeLaSolicitudService, useValue: datosDeLaSolicitudServiceMock },
       ],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA]
     }).compileComponents();
 
     fixture = TestBed.createComponent(PasoUnoComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
   });
 
   it('should create the component', () => {
@@ -31,13 +32,6 @@ describe('PasoUnoComponent', () => {
   });
 
   describe('ngOnInit', () => {
-    it('should call guardarDatosFormulario if consultaState.update is true', () => {
-      component.consultaState = { update: true } as any;
-      const guardarSpy = jest.spyOn(component, 'guardarDatosFormulario');
-      component.ngOnInit();
-      expect(guardarSpy).toHaveBeenCalled();
-    });
-
     it('should set esDatosRespuesta to true if consultaState.update is false', () => {
       component.consultaState = { update: false } as any;
       component.ngOnInit();

@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { ImportacionesAgropecuariasService } from '../../services/importaciones-agropecuarias.service';
 import { TramiteFolioStore } from '@libs/shared/data-access-user/src';
 import { of, Subject, throwError } from 'rxjs';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 describe('PasoTresComponent', () => {
   let component: PasoTresComponent;
@@ -32,6 +33,7 @@ describe('PasoTresComponent', () => {
         { provide: ImportacionesAgropecuariasService, useValue: importacionesSvcMock },
         { provide: TramiteFolioStore, useValue: tramiteStoreMock },
       ],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA]
     }).compileComponents();
 
     fixture = TestBed.createComponent(PasoTresComponent);
