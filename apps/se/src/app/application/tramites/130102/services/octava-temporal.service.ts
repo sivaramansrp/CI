@@ -6,9 +6,9 @@ import { Injectable } from '@angular/core';
 
 import { Solicitud130102State, Tramite130102Store } from '../../../estados/tramites/tramite130102.store';
 
+import { FraccionArancelariaProsec, OctavaTemporal } from '../models/octava-temporal.model';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { FraccionArancelariaProsec, OctavaTemporal } from '../models/octava-temporal.model';
 /**
  * Servicio inyectable disponible en toda la aplicación.
  */

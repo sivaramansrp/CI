@@ -1,5 +1,5 @@
-import { AbstractControl, ValidationErrors, ValidatorFn } from "@angular/forms";
-import { REGEX_FECHA_VALIDA, REGEX_PATRON_DECIMAL_12_3 } from "@libs/shared/data-access-user/src";
+import { AbstractControl, ValidatorFn } from "@angular/forms";
+import { REGEX_FECHA_VALIDA } from "@libs/shared/data-access-user/src";
 /**
  * Representa el estado de Pago de Derechos.
  * Esta interfaz se utiliza para el FormGroup del componente de pago de derechos.

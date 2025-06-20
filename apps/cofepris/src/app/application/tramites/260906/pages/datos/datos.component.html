@@ -20,15 +20,25 @@
       <ng-container> 
         @switch (indice) { 
           @case(1) { 
-            <solicitante [tabindex]="1"></solicitante> 
-          } @case (2) { 
-            <app-datos-establecimiento [tabindex]="2"></app-datos-establecimiento> 
+            @if(esDatosRespuesta) {
+              <solicitante [tabindex]="1"></solicitante>
+            }
+          } @case (2) {
+            @if(esDatosRespuesta) {
+              <app-datos-establecimiento [tabindex]="2"></app-datos-establecimiento> 
+            }
           } @case(3) {
-            <app-terceros-relacionados></app-terceros-relacionados> 
+            @if(esDatosRespuesta) {
+              <app-terceros-relacionados></app-terceros-relacionados>
+            }
           } @case(4) {
-            <app-derechos></app-derechos> 
+            @if(esDatosRespuesta) {
+              <app-derechos></app-derechos> 
+            }
           } @case(5) {
-            <app-asociados></app-asociados> 
+            @if(esDatosRespuesta) {
+              <app-asociados></app-asociados>
+            }
           } 
         } 
       </ng-container>

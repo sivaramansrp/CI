@@ -4,7 +4,6 @@ import { DatosEstablecimientoComponent } from "../../../260211/components/datosE
 import { Tramite260906Query } from "../../../../estados/queries/tramite260906.query";
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from "@angular/forms";
 import { CommonModule } from "@angular/common";
-import { SolicitudDatosService } from "../../services/solicitud-datos.service";
 import { of } from "rxjs";
 
 describe('DatosEstablecimientoComponent', () => {
@@ -21,7 +20,6 @@ describe('DatosEstablecimientoComponent', () => {
         FormBuilder,
         { provide: Tramite260906Store, useValue: jasmine.createSpyObj('Tramite260906Store', ['setTipoOperacion']) },
         { provide: Tramite260906Query, useValue: jasmine.createSpyObj('Tramite260906Query', ['selectSolicitud$']) },
-        { provide: SolicitudDatosService, useValue: {} },
       ],
     }).compileComponents();
 

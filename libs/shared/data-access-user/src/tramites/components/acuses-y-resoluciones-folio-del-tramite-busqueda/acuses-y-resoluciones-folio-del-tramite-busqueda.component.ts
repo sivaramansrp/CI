@@ -162,6 +162,11 @@ export class AcusesYResolucionesFolioDelTramiteBusquedaComponent
       orden: 1,
     },
     {
+      encabezado: 'Número de procedimiento',
+      clave: (artículo) => artículo.numeroDeProcedimiento,
+      orden: 0
+    },
+    {
       encabezado: 'Tipo de trámite',
       clave: (artículo) => artículo.tipoDeTramite,
       orden: 2,
