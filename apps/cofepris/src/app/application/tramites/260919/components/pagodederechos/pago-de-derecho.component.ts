@@ -12,11 +12,13 @@ import { ImportarDeRemediosHerbalsService } from '../../services/importar-de-rem
 import { Solicitud260919Query } from '../../estados/tramites260919.query';
 
 import { Catalogo, InputFecha, TituloComponent } from '@libs/shared/data-access-user/src';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { InputFechaComponent } from '@libs/shared/data-access-user/src';
+
 import {
-  REGEX_SOLO_DIGITOS,
   REGEX_REEMPLAZAR,
+  REGEX_SOLO_DIGITOS,
 } from '@libs/shared/data-access-user/src/tramites/constantes/regex.constants';
 
 /**
@@ -42,6 +44,14 @@ export class PagoDeDerechoComponent implements OnInit, OnDestroy {
 /** Datos del catálogo de bancos. */
 public bancoData = BANCO_DATA;
 
+  /** Estado de la consulta que se obtiene del store. */
+  public consultaState!: ConsultaioState;
+
+  /** Consulta de estado para la solicitud */
+  consultaDatos!: ConsultaioState;
+  /** Indica si el formulario es de solo lectura */
+esFormularioSoloLectura: boolean = false;
+
   /**
  * Configuración para el campo de selección de la fecha de pago.
  */
@@ -64,7 +74,8 @@ public bancoData = BANCO_DATA;
     private fb: FormBuilder,
     private cdr: ChangeDetectorRef,
     private solicitud260919Store: Solicitud260919Store,
-    private solicitud260919Query: Solicitud260919Query
+    private solicitud260919Query: Solicitud260919Query,
+    private consultaioQuery: ConsultaioQuery
   ) {}
 
   /**
@@ -82,6 +93,17 @@ public bancoData = BANCO_DATA;
 
     this.crearFormulario();
     this.getBancoData();
+     this.consultaioQuery.selectConsultaioState$
+        .pipe(
+          takeUntil(this.destroyed$),
+          map((seccionState) => {
+            this.consultaDatos = seccionState;
+            this.esFormularioSoloLectura = this.consultaDatos.readonly;
+            this.inicializarEstadoFormulario();
+          })
+        )
+        .subscribe();
+        this.inicializarEstadoFormulario();
   }
 
   /**
@@ -148,6 +170,20 @@ public bancoData = BANCO_DATA;
   get pagoDeDerechos(): FormGroup {
     return this.pagoDeDerechosForm.get('pagoDeDerechos') as FormGroup;
   }
+
+  /**
+ * Método para inicializar el estado del formulario.
+ * Si el formulario es de solo lectura, lo deshabilita.
+ * De lo contrario, lo habilita.
+ */
+inicializarEstadoFormulario(): void {
+  if (this.esFormularioSoloLectura) {
+    this.pagoDeDerechosForm?.disable();
+  }
+  else {
+    this.pagoDeDerechosForm?.enable();
+  }
+}
 
   /**
    * Establece valores en el store a partir del formulario.

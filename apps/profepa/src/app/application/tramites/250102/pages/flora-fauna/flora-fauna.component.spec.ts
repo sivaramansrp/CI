@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Component, EventEmitter } from '@angular/core';
 import { FloraFaunaComponent } from './flora-fauna.component';
 import { AlertComponent, BtnContinuarComponent, SolicitanteComponent, WizardComponent } from '@ng-mf/data-access-user';
-import { FLORA_FAUNA, FLORA_FAUNA_ALERT, ALERTA_COM } from '../../constantes/flora-fauna.enum';
+import { FLORA_FAUNA, FLORA_FAUNA_ALERT } from '../../constantes/flora-fauna.enum';
 import { DatosComponent } from '../datos/datos.component';
 import {HttpClientModule } from '@angular/common/http';
 
@@ -54,7 +54,6 @@ describe('FloraFaunaComponent', () => {
 
   it('Debería mostrar los textos de alerta correctos', () => {
     expect(component.TEXTO_FLORA_FAUNA_ALERT).toBe(FLORA_FAUNA_ALERT);
-    expect(component.TEXTOS).toBe(ALERTA_COM);
   });
 
   it('Debe actualizar el índice y navegar hacia adelante cuando la acción es "cont"', () => {

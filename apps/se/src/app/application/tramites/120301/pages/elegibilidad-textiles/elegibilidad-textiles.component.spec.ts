@@ -1,14 +1,11 @@
 import { BtnContinuarComponent, WizardComponent } from '@ng-mf/data-access-user';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ElegibilidadTextilesComponent } from './elegibilidad-textiles.component';
+import { HttpClient } from '@angular/common/http';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { TituloComponent } from 'libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
-
-
-
-
 
 describe('ElegibilidadTextilesComponent', () => {
   let component: ElegibilidadTextilesComponent;
@@ -18,7 +15,19 @@ describe('ElegibilidadTextilesComponent', () => {
     await TestBed.configureTestingModule({
       imports: [ReactiveFormsModule, TituloComponent, WizardComponent, BtnContinuarComponent],
       declarations: [ElegibilidadTextilesComponent, PasoUnoComponent],
-      schemas: [NO_ERRORS_SCHEMA]
+      schemas: [NO_ERRORS_SCHEMA],
+      providers: [
+
+        {
+          provide: HttpClient,
+          useValue: {
+            get: jest.fn(),
+            post: jest.fn(),
+            put: jest.fn(),
+            delete: jest.fn()
+          }
+        }
+]
     }).compileComponents();
 
     fixture = TestBed.createComponent(ElegibilidadTextilesComponent);
