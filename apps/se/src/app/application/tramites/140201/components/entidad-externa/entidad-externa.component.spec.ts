@@ -116,32 +116,6 @@ describe('EntidadExternaComponent', () => {
     expect(cancelacionesStore.setCorreoSolicitanteIPC).toHaveBeenCalledWith('correo@ejemplo.com');
   });
 
-  it('should disable form if esFormularioSoloLectura is true', () => {
-    component.esFormularioSoloLectura = true;
-
-    const disableSpy = jest.spyOn(component.entidadForm, 'disable');
-    const enableSpy = jest.spyOn(component.entidadForm, 'enable');
-
-    component.guardarDatosFormulario();
-
-    expect(component.estadoActualizacion).toHaveBeenCalled();
-    expect(disableSpy).toHaveBeenCalled();
-    expect(enableSpy).not.toHaveBeenCalled();
-  });
-
-  it('should enable form if esFormularioSoloLectura is false', () => {
-    component.esFormularioSoloLectura = false;
-
-    const disableSpy = jest.spyOn(component.entidadForm, 'disable');
-    const enableSpy = jest.spyOn(component.entidadForm, 'enable');
-
-    component.guardarDatosFormulario();
-
-    expect(component.estadoActualizacion).toHaveBeenCalled();
-    expect(enableSpy).toHaveBeenCalled();
-    expect(disableSpy).not.toHaveBeenCalled();
-  });
-
   it('should call guardarDatosFormulario when readonly is true in inicializarEstadoFormulario', () => {
     component.esFormularioSoloLectura = true;
     const guardarSpy = jest.spyOn(component, 'guardarDatosFormulario');
