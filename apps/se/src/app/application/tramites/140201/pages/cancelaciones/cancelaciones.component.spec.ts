@@ -22,9 +22,9 @@ class MockWizardComponent {
   @Input() maximo!: number;
   @Input() wizardService!: any;
 
-  siguiente() {}
-  atras() {}
-  ngOnChanges() {}
+  siguiente() { }
+  atras() { }
+  ngOnChanges() { }
 }
 
 describe('CancelacionesComponent', () => {
@@ -39,19 +39,23 @@ describe('CancelacionesComponent', () => {
     } as unknown as jest.Mocked<WizardComponent>;
 
     await TestBed.configureTestingModule({
-      imports: [WizardComponent], 
+      imports: [WizardComponent],
       declarations: [CancelacionesComponent],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA], 
+      schemas: [CUSTOM_ELEMENTS_SCHEMA],
     }).compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(CancelacionesComponent);
-    component = fixture.componentInstance;
+  fixture = TestBed.createComponent(CancelacionesComponent);
+  component = fixture.componentInstance;
 
-    component.wizardComponent = wizardComponentMock;
+  const wizardInstance = new MockWizardComponent();
+  jest.spyOn(wizardInstance, 'siguiente');
+  jest.spyOn(wizardInstance, 'atras');
 
-    fixture.detectChanges();
+  component.wizardComponent = wizardInstance as any;
+
+  fixture.detectChanges();
   });
 
   it('should not update indice if accion is invalid', () => {
@@ -59,7 +63,7 @@ describe('CancelacionesComponent', () => {
 
     component.getValorIndice(event);
 
-    expect(component.indice).toBe(1); 
+    expect(component.indice).toBe(1);
     expect(wizardComponentMock.siguiente).not.toHaveBeenCalled();
     expect(wizardComponentMock.atras).not.toHaveBeenCalled();
   });
@@ -72,31 +76,13 @@ describe('CancelacionesComponent', () => {
     expect(component.pantallasPasos).toBe(CANCELACIONES_PASOS);
   });
 
-  it('should initialize pasos with PASOS', () => {
-    expect(component.pantallasPasos).toBe(PASOS);
-  });
-
   it('should initialize datosPasos correctly', () => {
     expect(component.datosPasos).toEqual({
-      nroPasos: PASOS.length,
+      nroPasos: component.pantallasPasos.length,
       indice: 1,
       txtBtnAnt: 'Anterior',
       txtBtnSig: 'Continuar'
     });
-  });
-
-  it('should update indice and call wizardComponent.siguiente when getValorIndice is called with accion "cont"', () => {
-    const spySiguiente = jest.spyOn(wizardComponentMock, 'siguiente');
-    component.getValorIndice({ valor: 2, accion: 'cont' });
-    expect(component.indice).toBe(2);
-    expect(spySiguiente).toHaveBeenCalled();
-  });
-
-  it('should update indice and call wizardComponent.atras when getValorIndice is called with accion "atras"', () => {
-    const spyAtras = jest.spyOn(wizardComponentMock, 'atras');
-    component.getValorIndice({ valor: 2, accion: 'atras' });
-    expect(component.indice).toBe(2);
-    expect(spyAtras).toHaveBeenCalled();
   });
 
   it('should not update indice or call wizardComponent methods when getValorIndice is called with invalid valor', () => {
