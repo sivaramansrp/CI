@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { Subject, takeUntil } from 'rxjs';
+import { map, Subject, takeUntil } from 'rxjs';
 
 import { EmpresasLista, EmpresasListaResquesta, ModificacionResquesta } from '../../models/prosec.model';
 import { TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
@@ -54,6 +55,16 @@ export class ModificacionComponent implements OnInit, OnDestroy {
    */
   private destruirNotificador$: Subject<void> = new Subject();
 
+   /**
+   * Subject para destruir notificador.
+   */
+  consultaDatos!: ConsultaioState;
+   /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  soloLectura: boolean = false;
+
   /**
    * Constructor del componente.
    * @param {FormBuilder} fb - FormBuilder para crear formularios reactivos.
@@ -61,7 +72,8 @@ export class ModificacionComponent implements OnInit, OnDestroy {
    */
   constructor(
     private fb: FormBuilder,
-    private prosecService: ProsecService
+    private prosecService: ProsecService,
+    private consultaioQuery: ConsultaioQuery
   ) {
     // constructor vacío
   }
@@ -73,11 +85,17 @@ export class ModificacionComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   ngOnInit(): void {
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destruirNotificador$),
+        map((seccionState) => {
+          this.consultaDatos = seccionState;
+          this.soloLectura = this.consultaDatos.readonly;
+        })
+      )
+      .subscribe()
     this.obtenerEmpresasListaDatos();
-    
-    // Inicializar el formulario principal
     this.crearModificacionForm();
-    
     this.obtenerModificacionDatos();
   }
 
