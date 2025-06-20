@@ -354,6 +354,7 @@
               <button
                 type="button"
                 class="btn btn-default"
+                [disabled]="soloLectura"
                 (click)="eliminarDetalle()"
               >
                 Eliminar detalle
@@ -361,6 +362,7 @@
               <button
                 type="button"
                 class="btn btn-primary"
+                [disabled]="soloLectura"
                 (click)="agregarDetalle()"
               >
                 Agregar dettalle
@@ -378,12 +380,13 @@
               ></app-tabla-dinamica>
             </div>
             <div class="col-md-12 mt-5 d-flex justify-content-end">
-              <button type="button" class="btn btn-default">Limpiar</button>
-              <button type="button" class="btn btn-danger ms-3" data-bs-dismiss="modal" #closeModal>
+              <button type="button" [disabled]="soloLectura" class="btn btn-default">Limpiar</button>
+              <button type="button" [disabled]="soloLectura" class="btn btn-danger ms-3" data-bs-dismiss="modal" #closeModal>
                 Cancelar
               </button>
               <button
                 type="button"
+                [disabled]="soloLectura"
                 class="btn btn-primary ms-3"
                 (click)="agregarSolicitud()"
               >
