@@ -1,6 +1,19 @@
 import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
 import { ProgramaACancelar} from '../../shared/models/programa-cancelar.model';
+
+/**
+ * Interfaz que representa la estructura de un programa.
+ */
+export interface Programa {
+  folioPrograma: string;
+  idProgramaSeleccionado: string;
+  modalidad: string;
+  representacionFederal: string;
+  tipoPrograma: string;
+  estatus: string;
+}
+
 /**
  * Creación del estado inicial para la interfaz de trámite 140101
  * @returns Programa140101State
@@ -33,7 +46,7 @@ export interface Programa140101State {
   /**
    * Datos adicionales
    */
-  datos: any[];
+  datos: Programa[];
   
 }
 
@@ -124,7 +137,7 @@ export class Tramite140101Store extends Store<Programa140101State> {
    * Actualiza los datos adicionales.
    * @param estado Nuevo array de datos.
    */
-  public setDatosData(estado: Array<any>):void {
+  public setDatosData(estado: Programa[]):void {
     this.update((state) => ({
       ...state,
       datos: estado,

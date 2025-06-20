@@ -98,7 +98,7 @@ export class IntroPermisoComponent implements OnInit, OnDestroy{
    * @description Lifecycle method executed when the component initializes.
    * Subscribes to the message service to update the search display state.
    */
-  ngOnInit() {
+  ngOnInit(): void {
     this.servicioDeMensajesService.mensaje$
       .pipe(takeUntil(this.destroy$)) // Automatically unsubscribe on destroy
       .subscribe((mensaje) => {

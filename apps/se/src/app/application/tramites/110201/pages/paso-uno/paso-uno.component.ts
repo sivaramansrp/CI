@@ -22,7 +22,7 @@ export class PasoUnoComponent implements AfterViewInit, OnInit,OnDestroy {
   /**
    * Catálogo de entidades federativas.
    */
-  entidadFederativa!: any;
+  entidadFederativa!: { data: string } | null;
  /**
    * Referencia al componente de solicitante.
    */

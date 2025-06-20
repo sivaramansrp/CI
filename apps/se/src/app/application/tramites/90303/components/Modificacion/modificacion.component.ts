@@ -82,7 +82,7 @@ export class ModificacionComponent implements OnInit, OnDestroy, AfterViewInit {
   /**
    * Referencia a una función para encontrar elementos cercanos en el DOM.
    */
-  findClose: any;
+  findClose!: (element: HTMLElement) => HTMLElement | null;
 
   /**
    * Constructor del componente.

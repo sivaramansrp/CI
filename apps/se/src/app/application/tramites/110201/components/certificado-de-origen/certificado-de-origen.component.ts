@@ -385,7 +385,7 @@ optionsTipoFactura!: Catalogo[];
    * Maneja el evento de clic para habilitar el formulario de edición.
    * @param row Fila seleccionada.
    */
-  manejarClic(row: unknown): void {
+  manejarClic(_row: unknown): void {
     this.esFormulario = true;
   }
   /**
@@ -657,8 +657,9 @@ optionsTipoFactura!: Catalogo[];
    * Si no se selecciona ningún archivo, asigna el mensaje "No se eligió ningún archivo".
    * @param event Evento que contiene la información del archivo seleccionado.
    */
-  alSeleccionarArchivo(event: any):void {
-    const FILE = event.target.files[0];
+  alSeleccionarArchivo(event: Event):void {
+    const INPUT = event.target as HTMLInputElement;
+    const FILE = INPUT.files && INPUT.files[0];
     this.nombreArchivo = FILE ? FILE.name : 'No se eligió ningún archivo';
   }
   /**

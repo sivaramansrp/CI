@@ -163,7 +163,7 @@ public setCriterioDictamen(criterioDictamen: string):void {
    * Actualiza la cantidad de productos.
    * @param {number} cantidad - Nueva cantidad.
    */
-  public setcantidad(cantidad: number) {
+  public setcantidad(cantidad: number):void {
     this.update((state) => ({
       ...state,
       cantidad,
@@ -185,7 +185,7 @@ public setCriterioDictamen(criterioDictamen: string):void {
    * Actualiza la cantidad de partidas.
    * @param {number} cantidadPartidas - Nueva cantidad de partidas.
    */
-  public setCantidad_partidas(cantidadPartidas: number) {
+  public setCantidad_partidas(cantidadPartidas: number):void {
     this.update((state) => ({
       ...state,
       cantidadPartidas,
@@ -229,7 +229,7 @@ public setCriterioDictamen(criterioDictamen: string):void {
    * Actualiza el valor en dólares de la partida.
    * @param {number} valorPartidaUSD - Nuevo valor.
    */
-  public setvalorPartidaUSD(valorPartidaUSD: number) {
+  public setvalorPartidaUSD(valorPartidaUSD: number):void {
     this.update((state) => ({
       ...state,
       valorPartidaUSD,

@@ -169,7 +169,7 @@ export class CancelacionDeSolicitudComponent implements OnInit, OnDestroy {
    * @param event Evento que desencadena la búsqueda.
    */
 
-  public busqueda(event: Event): void {
+  public busqueda(_event: Event): void {
     this.servicioDeMensajesService.enviarMensaje(true);
   }
    /**
