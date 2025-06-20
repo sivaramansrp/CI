@@ -5,7 +5,6 @@ import {
   TipoNotificacionEnum,
 } from '@libs/shared/data-access-user/src';
 import { Component, Input, OnInit } from '@angular/core';
-import { TEXTOS } from '../../../enum/choferes-enum';
 
 @Component({
   selector: 'app-chofere-nacional-notification',
