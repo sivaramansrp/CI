@@ -77,6 +77,7 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
    *
    * @param tramiteStore - Store que gestiona el estado de los datos del trámite.
    * @param tramiteQuery - Servicio de consulta que expone observables para leer los datos del store.
+   * @param consultaQuery - Query que proporciona el estado de la consulta actual.
    */
   constructor(
     private tramiteStore: Tramite260207Store,

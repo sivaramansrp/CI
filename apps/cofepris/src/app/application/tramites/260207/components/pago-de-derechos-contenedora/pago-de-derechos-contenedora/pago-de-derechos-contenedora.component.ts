@@ -57,9 +57,9 @@ export class PagoDeDerechosContenedoraComponent implements OnDestroy{
 
    /**
    * @constructor
-   * @description Constructor que inyecta el store `Tramite260209Store` para gestionar el estado del trámite.
+   * @description Constructor que inyecta el store `Tramite260207Store` para gestionar el estado del trámite.
    * Inicializa la propiedad `pagoDerechos` con el valor actual del store.
-   * @param tramiteStore - Store que administra el estado del trámite 260209.
+   * @param tramiteStore - Store que administra el estado del trámite 260207.
    * @param consultaQuery - Query que proporciona el estado de la consulta actual.
    */
   constructor(public tramiteStore: Tramite260207Store, public consultaQuery: ConsultaioQuery) {
