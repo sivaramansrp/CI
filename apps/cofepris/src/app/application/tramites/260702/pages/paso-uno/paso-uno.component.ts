@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@libs/shared/data-access-user/src';
 import { Subject, map, takeUntil } from 'rxjs';
 import { Service260702Service } from '../../services/service260702.service';
@@ -12,7 +12,7 @@ import { Service260702Service } from '../../services/service260702.service';
   templateUrl: './paso-uno.component.html',
   styles: ``,
 })
-export class PasoUnoComponent implements OnInit {
+export class PasoUnoComponent implements OnInit, OnDestroy {
   /** Índice de la pestaña seleccionada. */
   indice: number = 1;
 
@@ -78,5 +78,17 @@ export class PasoUnoComponent implements OnInit {
    */
   seleccionaTab(i: number): void {
     this.indice = i;
+  }
+   /**
+   * Método del ciclo de vida `ngOnDestroy`.
+   * Se ejecuta cuando el componente es destruido.
+   * Notifica a los observables suscritos que deben finalizar y libera los recursos asociados.
+   *
+   * @example
+   * // Angular llama automáticamente a este método al destruir el componente.
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }

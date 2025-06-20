@@ -238,8 +238,7 @@ export class PagoDeDerechoComponent implements OnInit, OnDestroy {
     metodoNombre: keyof Solicitud260702Store
   ): void {
     const VALOR = form.get(campo)?.value;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (this.solicitud260702Store[metodoNombre] as (value: any) => void)(VALOR);
+    (this.solicitud260702Store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
 
   /**

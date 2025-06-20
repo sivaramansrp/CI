@@ -87,8 +87,7 @@ export class TercerosrelacionadosComponent implements OnInit, OnDestroy {
   selectedRows: Set<number> = new Set();
 
   /** Fila seleccionada actualmente */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  selectedRow: any = null;
+  selectedRow: Destinatario | null = null;
 
   /** Estado del destinatario que se está agregando */
   agregarDestinatarioState!: Solicitud260702State;
@@ -262,8 +261,7 @@ export class TercerosrelacionadosComponent implements OnInit, OnDestroy {
     this.solicitud260702Query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyed$),
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        map((seccionState: any) => {
+        map((seccionState: Solicitud260702State) => {
           this.agregarDestinatarioState = seccionState;
         })
       )
@@ -347,8 +345,7 @@ export class TercerosrelacionadosComponent implements OnInit, OnDestroy {
   /**
    * Getter para obtener el tipo de persona seleccionado.
    */
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-  get selectedTipoPersona() {
+  get selectedTipoPersona(): string | undefined {
     return this.agregarDestinatario.get('tipoPersona')?.value;
   }
 
@@ -508,8 +505,7 @@ export class TercerosrelacionadosComponent implements OnInit, OnDestroy {
     metodoNombre: keyof Solicitud260702Store
   ): void {
     const VALOR = form.get(campo)?.value;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (this.solicitud260702Store[metodoNombre] as (value: any) => void)(VALOR);
+    (this.solicitud260702Store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
 
   /**

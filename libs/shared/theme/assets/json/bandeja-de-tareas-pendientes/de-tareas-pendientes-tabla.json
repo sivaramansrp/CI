@@ -8426,16 +8426,6 @@
     "numeroDeProcedimiento": "260702",
     "origin": "FLUJO_FUNCIONARIO_VERIFICAR-REQUERIMIENTO-RESOLUCION"
   },
-   {
-    "folioTramite": "0215523965732296454156770",
-    "tipoDeTramite": "Registro de solicitud de servicio",
-    "nombreDeLaTarea": "Revisión de presupuesto",
-    "fechaDeAsignacion": "2023-10-01",
-    "estadoDeTramite": "En Proceso",
-    "departamento": "cofepris",
-    "numeroDeProcedimiento": "260702",
-    "origin": "READ_PROCEDURE"
-  },
   {
     "folioTramite": "0215523965732296454156770",
     "tipoDeTramite": "Solicitud de Proceso Interno",
