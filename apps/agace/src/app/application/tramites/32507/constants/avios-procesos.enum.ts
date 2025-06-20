@@ -78,7 +78,8 @@ export const RADIO_OPCIONS = [
  */
 export const ENCABEZADAS_CONSTANT = {
   encabezado: '',
-  clave: (ele: AvisoTablaDatos) => '',
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  clave: (ele: AvisoTablaDatos): string => '',
   orden: 0,
 };
 
@@ -91,27 +92,27 @@ export const TABLA_DE_DATOS_AVISO = {
   encabezadas: [
     {
       encabezado: 'ID de transacción de VUCEM',
-      clave: (ele: AvisoTabla) => ele.idTransaccionVUCEM,
+      clave: (ele: AvisoTabla): string => ele.idTransaccionVUCEM,
       orden: 1,
     },
     {
       encabezado: 'Cantidad',
-      clave: (ele: AvisoTabla) => ele.cantidad,
+      clave: (ele: AvisoTabla): string => ele.cantidad,
       orden: 2,
     },
     {
       encabezado: 'Peso (Kg)',
-      clave: (ele: AvisoTabla) => ele.pesoKg,
+      clave: (ele: AvisoTabla): string => ele.pesoKg,
       orden: 3,
     },
     {
       encabezado: 'Descripción Unidad de medida',
-      clave: (ele: AvisoTabla) => ele.descripcionUnidadMedida,
+      clave: (ele: AvisoTabla): string => ele.descripcionUnidadMedida,
       orden: 4,
     },
     {
       encabezado: 'Descripción',
-      clave: (ele: AvisoTabla) => ele.descripcion,
+      clave: (ele: AvisoTabla): string => ele.descripcion,
       orden: 5,
     },
   ],

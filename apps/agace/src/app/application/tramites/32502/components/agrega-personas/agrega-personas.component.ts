@@ -73,7 +73,7 @@ export class AgregaPersonasComponent {
    * @param field - El nombre del campo a verificar.
    * @returns `true` si el campo es válido, `false` en caso contrario.
    */
-  isValid(field: string) {
+  isValid(field: string): boolean | null {
     return this.validacionesService.isValid(this.personaForm, field);
   }
 
@@ -82,7 +82,7 @@ export class AgregaPersonasComponent {
    * 
    * @returns `true` si el campo `gafete` tiene errores y ha sido tocado, `false` en caso contrario.
    */
-  get gafeteIsValid() {
+  get gafeteIsValid(): boolean | null {
     return this.gafete.errors && this.gafete.touched;
   }
 
@@ -91,7 +91,7 @@ export class AgregaPersonasComponent {
    * 
    * Si no se proporciona un gafete o no se encuentran datos, muestra una alerta.
    */
-  buscarGafete() {
+  buscarGafete(): void {
     const GAFETE = this.gafete.value;
 
     if (!GAFETE) {
@@ -135,7 +135,7 @@ export class AgregaPersonasComponent {
    * Si el formulario o el campo `gafete` son inválidos, muestra una alerta y marca todos los campos como tocados.
    * Si ya hay 5 personas en la lista, muestra una alerta indicando que no se pueden agregar más personas.
    */
-  agregarPersona() {
+  agregarPersona(): void {
     this.gafete.setValidators([Validators.required, Validators.maxLength(25)]);
     this.gafete.updateValueAndValidity();
 
@@ -169,7 +169,7 @@ export class AgregaPersonasComponent {
    * 
    * @param i - El índice de la persona a eliminar.
    */
-  eliminar(i: number) {
+  eliminar(i: number): void {
     this.personas.splice(i, 1);
     //modal de confirmacion de elimincacion
   }

@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { RespuestaCatalogos } from '@ng-mf/data-access-user';
