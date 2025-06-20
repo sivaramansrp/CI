@@ -74,10 +74,10 @@ export class DatosCertificacionComponent implements OnInit, OnDestroy {
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.solicitudState = seccionState;
-          this.inicializarFormulario();
         })
       )
     .subscribe();
+    this.inicializarFormulario();
     this.inicializarEstadoFormulario();
   }
 

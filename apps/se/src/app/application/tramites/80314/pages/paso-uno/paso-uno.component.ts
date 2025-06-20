@@ -170,4 +170,13 @@ export class PasoUnoComponent implements AfterViewInit, OnInit {
   continuar(): void {
     this.continuarEvento.emit('');
   }
+
+  /**
+   * Limpia las suscripciones activas al destruir el componente.
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
+  }
+  
 }
