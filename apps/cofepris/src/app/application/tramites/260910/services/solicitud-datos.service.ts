@@ -1,7 +1,7 @@
 import { Asociados } from '../models/asociados.model';
 import { CatalogosSelect } from '@libs/shared/data-access-user/src';
 import { ClavesDeLotes } from '../models/claves-de-lotes.model';
-import { DatosDeSolicitud } from '../models/solicitud-datos.model';
+import { ConsultaDatos, DatosDeSolicitud, RespuestaConsulta } from '../models/solicitud-datos.model';
 import { Destinatario } from '../models/destinatario.model';
 import { DestinatarioCatalogos } from '../models/destinatario.model';
 import { DestinatarioImitar } from '../models/mercancia.model';
@@ -12,10 +12,12 @@ import { Injectable } from '@angular/core';
 import { Mercancia } from '../models/mercancia.model';
 import { MercanciaCatalogos } from '../models/mercancia.model';
 import { MercanciaCrossList } from '../models/mercancia.model';
-import { Observable } from 'rxjs';
+import { catchError, Observable, throwError } from 'rxjs';
 import { Proveedor } from '../models/proveedor.model';
 import { SCIAN } from '../models/SCIAN.model';
 import { Solicitud } from '../models/solicitud-datos.model';
+import { Solicitud260910Store } from '../estados/tramites260910.store';
+
 /**
  * Servicio `SolicitudDatosService`.
  * Este servicio se encarga de gestionar las operaciones relacionadas con los datos de la solicitud 260910.
@@ -29,7 +31,7 @@ export class SolicitudDatosService {
    * Constructor del servicio.
    * @param http - Cliente HTTP para realizar solicitudes al servidor.
    */
-  constructor(public http: HttpClient) {
+  constructor(public http: HttpClient, private solicitudStore: Solicitud260910Store) {
     // Constructor vacío, no requiere inicialización adicional.
   }
 
@@ -242,6 +244,97 @@ export class SolicitudDatosService {
     return this.http
       .get<CatalogosSelect>('../../../assets/json/260910/clave-SCIAN-descripcion.json')
       .pipe();
+  }
+
+  /**
+   * @method
+   * @name getDatosConsulta
+   * @description
+   * Obtiene los datos para la consulta del trámite desde un archivo JSON.
+   * @returns {Observable<RespuestaConsulta>} Observable con los datos de consulta.
+   */
+    getDatosConsulta(): Observable<RespuestaConsulta> {
+      const RUTA_JSON = 'assets/json/260910/consulta-260910.json';
+      return this.http.get<RespuestaConsulta>(RUTA_JSON).pipe(
+        catchError((error) => throwError(() => error))
+      );
+    }
+
+  /**
+   * Actualiza el estado completo del formulario en el store
+   * @param DATOS Objeto con todos los datos del formulario a actualizar
+   */
+  actualizarEstadoFormulario(DATOS: ConsultaDatos): void {
+    this.solicitudStore.setTipoOperacion(DATOS?.tipoOperacion);
+    this.solicitudStore.setObservaciones(DATOS?.observaciones);
+    this.solicitudStore.setRfcSanitario(DATOS?.rfcSanitario);
+    this.solicitudStore.setRazonSocial(DATOS?.razonSocial);
+    this.solicitudStore.setCorreoElectronico(DATOS?.correoElectronico);
+    this.solicitudStore.setCodigoPostal(DATOS?.codigoPostal);
+    this.solicitudStore.setEstado(DATOS?.estado);
+    this.solicitudStore.setMunicipio(DATOS?.municipio);
+    this.solicitudStore.setLocalidad(DATOS?.localidad);
+    this.solicitudStore.setColonia(DATOS?.colonia);
+    this.solicitudStore.setCalle(DATOS?.calle);
+    this.solicitudStore.setLada(DATOS?.lada);
+    this.solicitudStore.setTelefono(DATOS?.telefono);
+    this.solicitudStore.setAvisoDeFuncionamiento(DATOS?.avisoDeFuncionamiento);
+    this.solicitudStore.setLicenciaSanitaria(DATOS?.licenciaSanitaria);
+    this.solicitudStore.setLiveFreshFrozen(DATOS?.liveFreshFrozen);
+    this.solicitudStore.setRegimen(DATOS?.regimen);
+    this.solicitudStore.setAduana(DATOS?.aduana);
+    this.solicitudStore.setClaveSCIAN(DATOS?.claveSCIAN);
+    this.solicitudStore.setClaveSCIANDesc(DATOS?.claveSCIANDesc);
+    this.solicitudStore.setHacerlos(DATOS?.hacerlos);
+    this.solicitudStore.setRfc(DATOS?.rfc);
+    this.solicitudStore.setLegalRazonSocial(DATOS?.legalRazonSocial);
+    this.solicitudStore.setApellidoPaterno(DATOS?.apellidoPaterno);
+    this.solicitudStore.setApellidoMeterno(DATOS?.apellidoMeterno);
+    this.solicitudStore.setMercanciasDatos(DATOS?.mercanciasDatos);
+    this.solicitudStore.setSCIANDatos(DATOS?.SCIANDatos);
+    this.solicitudStore.setManifesto(DATOS?.manifesto);
+    this.solicitudStore.setClasificacionProductos(DATOS?.clasificaionProductos);
+    this.solicitudStore.setEspecificarProducto(DATOS?.especificarProducto);
+    this.solicitudStore.setNombreProductoEspecifico(DATOS?.nombreProductoEspecifico);
+    this.solicitudStore.setDistintiva(DATOS?.distintiva);
+    this.solicitudStore.setCientifico(DATOS?.cientifico);
+    this.solicitudStore.setTipoProducto(DATOS?.tipoProducto);
+    this.solicitudStore.setFarmaceutica(DATOS?.farmaceutica);
+    this.solicitudStore.setFisico(DATOS?.fisico);
+    this.solicitudStore.setFraccionArancelaria(DATOS?.fraccionArancelaria);
+    this.solicitudStore.setDescripcionFraccionArancelaria(DATOS?.descripcionFraccionArancelaria);
+    this.solicitudStore.setCantidadUMT(DATOS?.cantidadUMT);
+    this.solicitudStore.setUmt(DATOS?.umt);
+    this.solicitudStore.setCantidadUMC(DATOS?.cantidadUMC);
+    this.solicitudStore.setUmc(DATOS?.umc);
+    this.solicitudStore.setPresentacionFarmaceutica(DATOS?.presentacionFarmaceutica);
+    this.solicitudStore.setRegistroSanitario(DATOS?.registroSanitario);
+    this.solicitudStore.setFechaCaducidad(DATOS?.fechaCaducidad);
+    this.solicitudStore.setTipoPersona(DATOS?.tipoPersona);
+    this.solicitudStore.setModificarRFC(DATOS?.modificarRFC);
+    this.solicitudStore.setDenominacion(DATOS?.denominacion);
+    this.solicitudStore.setDomicilioPais(DATOS?.domicilioPais);
+    this.solicitudStore.setDomicilioEstado(DATOS?.domicilioEstado);
+    this.solicitudStore.setDomicilioMunicipio(DATOS?.domicilioMunicipio);
+    this.solicitudStore.setDomicilioLocalidad(DATOS?.domicilioLocalidad);
+    this.solicitudStore.setDomicilioCodigo(DATOS?.domicilioCodigo);
+    this.solicitudStore.setDomicilioColonia(DATOS?.domicilioColonia);
+    this.solicitudStore.setDomicilioCalle(DATOS?.domiciliCalle);
+    this.solicitudStore.setDomicilioNumeroExterior(DATOS?.domiciliNumeroExterior);
+    this.solicitudStore.setDomicilioNumeroInterior(DATOS?.domiciliNumeroInterior);
+    this.solicitudStore.setDomicilioLada(DATOS?.domiciliLada);
+    this.solicitudStore.setDomicilioTelefono(DATOS?.domiciliTelefono);
+    this.solicitudStore.setDomicilioCorreoElectronico(DATOS?.domiciliCorreoElectronioco);
+    this.solicitudStore.setDestinatarioDatos(DATOS?.destinatarioDatos);
+    this.solicitudStore.setFabricanteDatos(DATOS?.fabricanteDatos);
+    this.solicitudStore.setProveedorDatos(DATOS?.proveedorDatos);
+    this.solicitudStore.setFacturadorDatos(DATOS?.facturadorDatos);
+    this.solicitudStore.setClaveDeReferencia(DATOS?.claveDeReferencia);
+    this.solicitudStore.setCadenaDeDependencia(DATOS?.cadenaDeDependencia);
+    this.solicitudStore.setBanco(DATOS?.banco);
+    this.solicitudStore.setLiaveDePago(DATOS?.liaveDePago);
+    this.solicitudStore.setFechaDePago(DATOS?.fechaDePago);
+    this.solicitudStore.setImporteDePago(DATOS?.importeDePago);
   }
 
 }
