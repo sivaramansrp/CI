@@ -1,91 +1,66 @@
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DatosComponent } from './datos.component';
-import { NO_ERRORS_SCHEMA } from '@angular/core';
-
-// Mock de WizardComponent
-class WizardComponentMock {
-  siguiente = jest.fn();
-  atras = jest.fn();
-}
+import { ConsultaioQuery, SolicitanteComponent } from '@libs/shared/data-access-user/src';
+import { RegistroParaLaComponent } from '../../components/registro-para-la/registro-para-la.component';
+import { DeLaMuestraComponent } from '../../components/de-la-muestra/de-la-muestra.component';
+import { InformacionDeLaComponent } from '../../components/informacion-de-la/informacion-de-la.component';
+import { PagoDeDerechosComponent } from '../../components/pago-de-derechos/pago-de-derechos.component';
+import { of } from 'rxjs';
+import { Pantallas301Service } from '../../services/pantallas301.service';
+import { Solocitud301Service } from '../../services/service301.service';
 
 describe('DatosComponent', () => {
-  let componente: DatosComponent;
+  let component: DatosComponent;
   let fixture: ComponentFixture<DatosComponent>;
+  const mockPantallas301Service = {};
+  const mockSolocitud301Service = {
+    getRegistroTomaMuestrasMercanciasData: jest.fn(),
+    actualizarEstadoFormulario: jest.fn()
+  };
+  const mockConsultaQuery = {
+    selectConsultaioState$: of({ readonly: false, update: false })
+  };
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [DatosComponent],
-      schemas: [NO_ERRORS_SCHEMA],
-      providers: [],
-      imports: [
-        require('@angular/common/http/testing').HttpClientTestingModule
+      imports: [HttpClientTestingModule, SolicitanteComponent, RegistroParaLaComponent, DeLaMuestraComponent, InformacionDeLaComponent, PagoDeDerechosComponent], // Add necessary imports here if needed
+      providers: [
+        { provide: Pantallas301Service, useValue: mockPantallas301Service },
+        { provide: Solocitud301Service, useValue: mockSolocitud301Service },
+        { provide: ConsultaioQuery, useValue: mockConsultaQuery }
       ]
-    }).compileComponents();
-
+    })
+    .compileComponents();
+    
     fixture = TestBed.createComponent(DatosComponent);
-    componente = fixture.componentInstance;
-    // Inyectar el mock manualmente
-    componente.wizardComponent = new WizardComponentMock() as any;
+    component = fixture.componentInstance;
     fixture.detectChanges();
   });
 
-  it('debería crear el componente', () => {
-    expect(componente).toBeTruthy();
+  it('should create', () => {
+    expect(component).toBeTruthy();
   });
 
-  it('debería tener el índice inicial en 1', () => {
-    expect(componente.indice).toBe(1);
+  it('should set esDatosRespuesta to true when update is false', () => {
+    component.ngOnInit();
+    expect(component.esDatosRespuesta).toBe(true);
   });
 
-  it('debería tener la lista de pasos igual a PASOS_REGISTRO', () => {
-    expect(componente.pasos).toEqual(componente.pantallasPasos);
+  it('should call actualizarEstadoFormulario when guardarDatosFormulario is called with response', () => {
+    const mockResponse = { anyData: true };
+    mockSolocitud301Service.getRegistroTomaMuestrasMercanciasData.mockReturnValue(of(mockResponse));
+    component.guardarDatosFormulario();
+    expect(mockSolocitud301Service.actualizarEstadoFormulario).toHaveBeenCalledWith(mockResponse);
+    expect(component.esDatosRespuesta).toBe(true);
   });
 
-  it('debería tener mensajeAlertaAvisoPrivacidad definido', () => {
-    expect(componente.mensajeAlertaAvisoPrivacidad).toBeDefined();
-  });
-
-  it('debería tener datosPasos con nroPasos igual a la longitud de pasos', () => {
-    expect(componente.datosPasos.nroPasos).toBe(componente.pasos.length);
-  });
-
-  it('debería tener datosPasos.indice igual al índice inicial', () => {
-    expect(componente.datosPasos.indice).toBe(componente.indice);
-  });
-
-  it('debería actualizar el índice y llamar a siguiente si accion es "cont"', () => {
-    const spySiguiente = jest.spyOn(componente.wizardComponent, 'siguiente');
-    const evento = { accion: 'cont', valor: 2 };
-    componente.getValorIndice(evento as any);
-    expect(componente.indice).toBe(2);
-    expect(spySiguiente).toHaveBeenCalled();
-  });
-
-  it('debería actualizar el índice y llamar a atras si accion no es "cont"', () => {
-    const spyAtras = jest.spyOn(componente.wizardComponent, 'atras');
-    const evento = { accion: 'otro', valor: 3 };
-    componente.getValorIndice(evento as any);
-    expect(componente.indice).toBe(3);
-    expect(spyAtras).toHaveBeenCalled();
-  });
-
-  it('no debería actualizar el índice ni llamar métodos si valor es menor o igual a 0', () => {
-    const spySiguiente = jest.spyOn(componente.wizardComponent, 'siguiente');
-    const spyAtras = jest.spyOn(componente.wizardComponent, 'atras');
-    componente.indice = 1;
-    componente.getValorIndice({ accion: 'cont', valor: 0 } as any);
-    expect(componente.indice).toBe(1);
-    expect(spySiguiente).not.toHaveBeenCalled();
-    expect(spyAtras).not.toHaveBeenCalled();
-  });
-
-  it('no debería actualizar el índice ni llamar métodos si valor es mayor o igual a 5', () => {
-    const spySiguiente = jest.spyOn(componente.wizardComponent, 'siguiente');
-    const spyAtras = jest.spyOn(componente.wizardComponent, 'atras');
-    componente.indice = 1;
-    componente.getValorIndice({ accion: 'cont', valor: 5 } as any);
-    expect(componente.indice).toBe(1);
-    expect(spySiguiente).not.toHaveBeenCalled();
-    expect(spyAtras).not.toHaveBeenCalled();
+  it('should call destroyNotifier on ngOnDestroy', () => {
+    const spyNext = jest.spyOn(component['destroyNotifier$'], 'next');
+    const spyComplete = jest.spyOn(component['destroyNotifier$'], 'complete');
+    component.ngOnDestroy();
+    expect(spyNext).toHaveBeenCalled();
+    expect(spyComplete).toHaveBeenCalled();
   });
 });
