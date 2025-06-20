@@ -2618,14 +2618,5 @@
     "diasTranscurridos": "4",
     "departamento": "SE",
     "numeroDeProcedimiento": "80104"
-    },
-    {
-      "id": 230101,
-      "tipoDeTramite": "Solicitud de Permiso",
-      "fecha": "2023-10-01",
-      "fechaActualizacion": "2023-10-05",
-      "diasTranscurridos": "4",
-      "departamento": "SEMARNAT",
-      "numeroDeProcedimiento": "230101"
-      }
+    }
 ]
