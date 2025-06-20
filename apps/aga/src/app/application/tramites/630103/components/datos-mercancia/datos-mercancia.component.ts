@@ -6,15 +6,18 @@ import { CommonModule } from '@angular/common';
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { ModeloDeFormaDinamica } from '@ng-mf/data-access-user';
 
-import { Subject, takeUntil } from 'rxjs';
+import { ConsultaioQuery, ModeloDeFormaDinamica } from '@ng-mf/data-access-user';
+import { takeUntil } from 'rxjs';
+
+import { Subject } from 'rxjs';
 
 import { FORMULARIO_DATOS_MERCANCIA } from '../../enum/autorizacion-importacion-temporal.enum';
 import { Tramite630103Query } from '../../estados/tramite630103.query';
 
 import { Tramite630103State, Tramite630103Store } from '../../estados/tramite630103.store';
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
+
 /**
  * Componente que gestiona los datos de la mercancía para el trámite 630103.
  */
@@ -26,6 +29,11 @@ import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tram
   styleUrl: './datos-mercancia.component.scss',
 })
 export class DatosMercanciaComponent implements OnInit, OnDestroy {
+  /**
+   * Indica si el formulario está en modo solo lectura.
+   */
+  esSoloLectura!: boolean;
+
   /**
    * Subject utilizado para manejar la destrucción de suscripciones y evitar fugas de memoria.
    */
@@ -47,17 +55,38 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
   formularioDatosMercancia: ModeloDeFormaDinamica[] = FORMULARIO_DATOS_MERCANCIA;
 
   /**
+   * Estado actual de la solicitud.
+   */
+  public solicitudState!: Tramite630103State;
+
+  /**
    * Constructor del componente.
    * 
-   * @param formBuilder - Constructor de formularios reactivos.
-   * @param tramite630103Store - Store para manejar el estado del trámite.
-   * @param tramite630103Query - Query para consultar el estado del trámite.
+   * formBuilder - Constructor de formularios reactivos.
+   * tramite630103Store - Store para manejar el estado del trámite.
+   * tramite630103Query - Query para consultar el estado del trámite.
+   * consultaioQuery - Query para observar el estado de solo lectura.
    */
   constructor(
     private formBuilder: FormBuilder,
     private tramite630103Store: Tramite630103Store,
-    private tramite630103Query: Tramite630103Query
-  ) {}
+    private tramite630103Query: Tramite630103Query,
+    private consultaioQuery: ConsultaioQuery,
+  ) {
+    this.datosMercancia = this.formBuilder.group({});
+  }
+
+  /**
+   * Guarda los datos del formulario y ajusta el estado de solo lectura.
+   * Deshabilita o habilita los campos según corresponda.
+   */
+  guardarDatosFormulario(): void {
+    if (this.esSoloLectura) {
+      this.datosMercancia.disable();
+    } else {
+      this.datosMercancia.enable();
+    }
+  }
 
   /**
    * Método del ciclo de vida que se ejecuta al inicializar el componente.
@@ -65,14 +94,21 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.getValorStore();
-    this.inicializarFormulario();
+    this.obtenerEstadoValor()
   }
-
+  
   /**
-   * Inicializa el formulario reactivo con valores predeterminados y validaciones.
+   * Se suscribe al observable del estado del trámite (`Tramite220103Query`)
+   * para obtener y almacenar el estado actual en `estadoSeleccionado`.
+   * La suscripción se gestiona con `takeUntil` para limpiarse automáticamente
+   * en `ngOnDestroy`.
    */
-  inicializarFormulario(): void {
-    this.datosMercancia = this.formBuilder.group({
+  obtenerEstadoValor(): void {
+   this.consultaioQuery.selectConsultaioState$
+    .pipe(takeUntil(this.destroyed$))
+    .subscribe((estadoConsulta) => {
+      this.esSoloLectura = estadoConsulta.readonly;
+      this.guardarDatosFormulario()
     });
   }
 
@@ -89,8 +125,7 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
 
   /**
    * Establece un cambio de valor en el store basado en un evento.
-   * 
-   * @param $event - Evento que contiene el campo y el valor a actualizar.
+   * $event - Evento que contiene el campo y el valor a actualizar.
    */
   establecerCambioDeValor($event: { campo: string; valor: unknown }): void {
     this.tramite630103Store.setTramite630103State($event.campo, $event.valor);

@@ -2,4 +2,6 @@
   [destinatarioFinalTablaDatos]="destinatarioFinalTablaDatos"
   [proveedorTablaDatos]="proveedorTablaDatos"
   [idProcedimiento]="240114"
-></app-terceros-relacionados> 
+  (openModal)="openModal($event)"
+></app-terceros-relacionados>
+ <div><app-modal #modal></app-modal></div>

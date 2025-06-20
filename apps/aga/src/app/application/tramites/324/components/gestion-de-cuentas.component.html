@@ -3,7 +3,7 @@
   <!-- Accesos tabla -->
   <div class="table-container mt-5">
     <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX" [configuracionTabla]="headers"
-      [datos]="accesosTablaDatos"></app-tabla-dinamica>
+      [datos]="accesosTablaDatos" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"></app-tabla-dinamica>
   </div>
   <nav aria-label="Page navigation example">
     <ul class="pagination d-flex justify-content-center">
@@ -11,9 +11,9 @@
     </ul>
   </nav>
   <div class="col-md-12 d-flex justify-content-end">
-    <button type="button" class="btn btn-primary ms-3" data-bs-toggle="modal" data-bs-target="#modalAccesos"
+    <button type="button" class="btn btn-primary ms-3" data-bs-toggle="modal" data-bs-target="#modalAccesos" [disabled]="esFormularioSoloLectura"
       (click)="abrirAccesos()">Agregar</button>
-    <button type="button" class="btn btn-danger ms-3">Eliminar</button>
+    <button type="button" class="btn btn-danger ms-3" [disabled]="esFormularioSoloLectura">Eliminar</button>
   </div>
 
   <!-- Accesos tabla modal popup -->
