@@ -1,5 +1,5 @@
 
-import { ArancelariaLista, MercanciaLista, MercanciaTablaLista, PartidasLista, SolicitudLista } from '../models/modificacion-descripcion.model';
+import { ArancelariaLista, MercanciaLista, MercanciaTablaLista, PartidasLista, RespuestaConsulta, SolicitudLista } from '../models/modificacion-descripcion.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -66,5 +66,16 @@ export class ModificacionDescripcionService {
    */
   obtenerMercanciaTabla(): Observable<MercanciaTablaLista> {
     return this.http.get<MercanciaTablaLista>('assets/json/130401/mercancia-tabla.json');
+  }
+  /**
+   * @method getDatosConsulta
+   * @description Obtiene los datos de consulta desde un archivo JSON local.
+   * 
+   * Este método realiza una solicitud HTTP GET para obtener los datos de consulta simulados desde el archivo `consulta-130401.json`.
+   * 
+   * @returns {Observable<RespuestaConsulta>} Un observable que emite la respuesta de los datos de consulta.
+   */
+  getDatosConsulta(): Observable<RespuestaConsulta> {
+    return this.http.get<RespuestaConsulta>(`assets/json/130401/consulta-130401.json`);
   }
 }

@@ -1,12 +1,12 @@
-import { AfterViewInit, Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { BtnContinuarComponent, DatosPasos, FormularioDinamico, ListaPasosWizard, PASOS, SolicitanteComponent, WizardComponent } from '@ng-mf/data-access-user';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL, PERSONA_MORAL_NACIONAL } from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
+import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ContenedorComponent } from '../../components/contenedor/contenedor.component';
 import { DatosTramiteService } from '../../services/datos-tramite.service';
 import { Tramite11204Store } from '../../estados/tramite11204.store';
-import { map, Subject, takeUntil } from 'rxjs';
 
 /**
  * Interfaz que representa una AccionBoton.
@@ -24,7 +24,7 @@ interface AccionBoton {
   standalone: true,
   imports: [SolicitanteComponent, CommonModule, ContenedorComponent, BtnContinuarComponent]
 })
-export class PasoUnoComponent implements AfterViewInit {
+export class PasoUnoComponent implements AfterViewInit,OnInit {
   /**
    * Referencia al componente Solicitante.
    */

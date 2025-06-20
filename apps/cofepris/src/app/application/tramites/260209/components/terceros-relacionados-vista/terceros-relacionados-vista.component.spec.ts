@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { TercerosRelacionadosVistaComponent } from './terceros-relacionados-vista.component';
 import { ActivatedRoute } from '@angular/router';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('TercerosRelacionadosVistaComponent', () => {
   let component: TercerosRelacionadosVistaComponent;
@@ -8,14 +9,10 @@ describe('TercerosRelacionadosVistaComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [TercerosRelacionadosVistaComponent],
+      imports: [TercerosRelacionadosVistaComponent, HttpClientTestingModule],
       providers: [{
         provide: ActivatedRoute,
         useValue: {
-          snapshot: {
-            params: {},
-            queryParams: {}
-          }
         }
       }]
 

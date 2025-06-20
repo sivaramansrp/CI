@@ -1,4 +1,5 @@
-
+import { NgModule, forwardRef } from '@angular/core';
+import { ToastrModule, ToastrService } from 'ngx-toastr';
 import { AgentesAgenciasAduanalesComponent } from './components/agentes-agencias-aduanales/agentes-agencias-aduanales.component';
 import { AgregarMiembrosEmpresaComponent } from './components/agregar-miembros-empresa/agregar-miembros-empresa.component';
 import { AlertComponent } from '@ng-mf/data-access-user';
@@ -18,7 +19,6 @@ import { InputCheckComponent } from '@ng-mf/data-access-user';
 import { InputFechaComponent } from '@ng-mf/data-access-user';
 import { InputHoraComponent } from '@ng-mf/data-access-user';
 import { NavComponent } from '@ng-mf/data-access-user';
-import { forwardRef, NgModule } from '@angular/core';
 import { PagoDerechosComponent } from './components/pago-derechos/pago-derechos.component';
 import { PasoCuatroComponent } from './pages/paso-cuatro/paso-cuatro.component';
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
@@ -33,7 +33,6 @@ import { SolicitanteComponent } from '@ng-mf/data-access-user';
 import { TestPageComponent } from './pages/test-page/test-page.component';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { WizardComponent } from '@ng-mf/data-access-user';
-import { ToastrModule, ToastrService } from 'ngx-toastr';
 
 @NgModule({
   declarations: [
