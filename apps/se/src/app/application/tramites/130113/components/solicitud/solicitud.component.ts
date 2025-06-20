@@ -131,13 +131,13 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   datosInputFields = [
     {
       label: 'Régimen al que se destinará la mercancía',
-      placeholder: 'Seleccione un documento',
+      placeholder: 'Seleccione un valor',
       required: true,
       controlName: 'regimen',
     },
     {
       label: 'Clasificación del régimen',
-      placeholder: 'Seleccione un documento',
+      placeholder: 'Seleccione un valor',
       required: true,
       controlName: 'clasificacion',
     },

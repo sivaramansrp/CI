@@ -9,6 +9,7 @@ import {
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { DatosDetalle, DatosSolicitud } from '../../models/datos-tramite.model';
 import { ENCABEZADO_DE_TABLA_DETALLE, ENCABEZADO_DE_TABLE_CONFIGURACION } from '../../enum/destinatario-tabla.enum';
 import { FormArray, FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -18,7 +19,6 @@ import { CommonModule } from '@angular/common';
 import { Modal } from 'bootstrap';
 import { PhytosanitaryExportacionService } from '../../services/phytosanitary-exportacion.service';
 import { Tramite230201Query } from '../../estados/tramite230201.query';
-
 /**
  * Componente principal para gestionar los datos de la solicitud del trámite 230201.
  */
@@ -157,6 +157,19 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   @ViewChild('closeModal') closeModal!: ElementRef;
 
   /**
+   * @property {ConsultaioState} consultaDatos
+   * @description Estado actual de la consulta, que contiene información relacionada con el trámite y el solicitante.
+   */
+  consultaDatos!: ConsultaioState;
+
+  /**
+   * @property {boolean} soloLectura
+   * @description Indica si el formulario o los campos están en modo de solo lectura.
+   * @default false
+   */
+  soloLectura: boolean = false;
+
+  /**
    * Etiquetas para la lista de países de origen.
    */
   public paisDeOrigenLabel: CrossListLable = {
@@ -218,6 +231,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     public phytosanitaryExportacionService: PhytosanitaryExportacionService,
     public store: Tramite230201Store,
     public query: Tramite230201Query,
+    private consultaioQuery: ConsultaioQuery,
     public fb: FormBuilder
   ) {}
 
@@ -236,6 +250,41 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       .subscribe();
     this.inicializarFormulario();
     this.datosSolicitud = this.solicitudState.datosSolicitud;
+    
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.consultaDatos = seccionState;
+          this.soloLectura = this.consultaDatos.readonly;
+          this.updateEstadoFormulario();
+        })
+      )
+      .subscribe();
+
+    this.updateEstadoFormulario();
+  }
+
+
+  /**
+   * Actualiza el estado de los formularios del componente según el modo de solo lectura.
+   *
+   * Si la propiedad `soloLectura` es verdadera, deshabilita todos los formularios asociados
+   * (`solicitudForm`, `agregarMercanciasForm`, `exportacionForm`, y `datosMercancia`).
+   * Si es falsa, habilita dichos formularios para permitir la edición.
+   */
+  updateEstadoFormulario(): void {
+    if (this.soloLectura) {
+      this.solicitudForm.disable();
+      this.agregarMercanciasForm.disable();
+      this.exportacionForm?.disable();
+      this.datosMercancia?.disable();
+    } else {
+      this.solicitudForm?.enable();
+      this.agregarMercanciasForm?.enable();
+      this.exportacionForm?.enable();
+      this.datosMercancia?.enable();
+    }
   }
 
   /**
@@ -254,6 +303,9 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     return this.solicitudForm.get('exportacionForm') as FormGroup;
   }
 
+  /**
+   * Obtiene el grupo de formulario de datos de mercancía.
+   */
   inicializarFormulario(): void {
     this.solicitudForm = this.fb.group({
       exportacionForm: this.fb.group({

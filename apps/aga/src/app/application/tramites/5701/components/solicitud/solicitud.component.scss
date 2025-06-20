@@ -13,3 +13,13 @@
   align-content: end;
 }
 
+.link {
+  text-decoration: none;
+  color: black;
+
+  &:hover {
+    text-decoration: underline;
+    color: blue;
+    cursor: pointer;
+  }
+}

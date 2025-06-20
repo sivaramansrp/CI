@@ -9,11 +9,11 @@ import { TEXTOS_303 } from '@ng-mf/data-access-user';
 export class EmpleadosContratadosComponent {
   TEXTOS = TEXTOS_303;
   modal: string = 'modal';
-  abrirModal() {
+  abrirModal(): void {
     this.modal = 'modal-open';
 
   }
-  cerrarModal() {
+  cerrarModal(): void {
     this.modal = 'modal';
   }
 }

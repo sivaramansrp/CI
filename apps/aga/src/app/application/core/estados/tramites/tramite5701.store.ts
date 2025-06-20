@@ -4,9 +4,9 @@ import {
 } from '../../models/5701/tramite5701.model';
 import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
+import { LineaCaptura } from '../../models/5701/linea-captura.model';
 import { Patente } from '../../models/5701/Patente.model';
 import { TransporteDespacho } from '@ng-mf/data-access-user';
-import { LineaCaptura } from '../../models/5701/linea-captura.model';
 
 /**
  * Creacion del estado inicial para la interfaz de tramite 5701
