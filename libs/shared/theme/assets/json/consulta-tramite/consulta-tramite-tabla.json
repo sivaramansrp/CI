@@ -2184,6 +2184,15 @@
         "numeroDeProcedimiento": "240305"
     },
     {
+        "id": "80316",
+        "tipoDeTramite": "Datos generales del trámite",
+        "fecha": "2024-11-01",
+        "fechaActualizacion": "2024-11-07",
+        "diasTranscurridos": "4",
+        "departamento": "SE",
+        "numeroDeProcedimiento": "80316"
+    },
+    {
         "id": "31101",
         "tipoDeTramite": "Datos generales del trámite",
         "fecha": "2024-11-01",

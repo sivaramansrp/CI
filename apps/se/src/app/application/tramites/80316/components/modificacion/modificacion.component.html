@@ -29,7 +29,7 @@
                 <div class="col-md-8">
                     <app-catalogo-select [catalogo]="actividadProductiva" [label]="'Actividad productiva'"
                         formControlName="actividadProductiva" [required]="true"
-                        (change)="actividadProductivaSeleccion()" name="actividadProductiva">
+                        (change)="actividadProductivaSeleccion()" name="actividadProductiva" [isDisabled]="esFormularioSoloLectura">
                     </app-catalogo-select>
                 </div>
             </div>
