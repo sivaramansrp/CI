@@ -1,16 +1,6 @@
-import {
-  AlertComponent,
-  CatalogoSelectComponent,
-  InputFecha,
-  InputFechaComponent,
-  InputHoraComponent,
-  InputRadioComponent,
-  TablaDinamicaComponent,
-  TablaSeleccion,
-  TituloComponent,
-  ValidacionesFormularioService
-} from "@libs/shared/data-access-user/src";
 import { Catalogo, CatalogoLista, SolicitudTabla, SolicitudTablaDatos } from "../../models/autorizacion-importacion.model";
+import { CatalogoSelectComponent,InputFecha,InputFechaComponent,TablaDinamicaComponent,TablaSeleccion,TituloComponent,ValidacionesFormularioService} from "@libs/shared/data-access-user/src";
+import { ConsultaioQuery, ConsultaioState } from "@ng-mf/data-access-user";
 import { FECHA_CARTAPORTE, FECHA_DESTINO, FECHA_IMPORTACION, FECHA_VENCIMIENTO, TABLA_DE_DATOS, TEXTOS } from "../../constants/autorizacion-importacion.enum";
 import { AutorizacionImportacionService } from "../../services/autorizacion-importacion.service";
 import { CommonModule } from "@angular/common";
@@ -20,7 +10,6 @@ import { FormBuilder } from "@angular/forms";
 import { FormGroup } from "@angular/forms";
 import { Modal } from 'bootstrap';
 import { Notificacion } from '@libs/shared/data-access-user/src';
-import { NotificacionesComponent } from '@libs/shared/data-access-user/src';
 import { OnDestroy } from "@angular/core";
 import { OnInit } from "@angular/core";
 import { ReactiveFormsModule } from "@angular/forms";
@@ -43,9 +32,8 @@ import { takeUntil } from "rxjs";
   selector: 'app-solicitud',
   templateUrl: './solicitud.component.html',
   styleUrl: './solicitud.component.scss',
-  imports: [CommonModule, ReactiveFormsModule, TituloComponent, InputFechaComponent, InputHoraComponent,
-    CatalogoSelectComponent, TablaDinamicaComponent, AlertComponent, NotificacionesComponent,
-    InputRadioComponent
+  imports: [CommonModule, ReactiveFormsModule, TituloComponent, InputFechaComponent,
+    CatalogoSelectComponent, TablaDinamicaComponent
   ],
   standalone: true,
 })
@@ -201,6 +189,18 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   TEXTOS = TEXTOS;
 
   /**
+ * @property {ConsultaioState} consultaDatos
+ * @description Estado actual de la consulta, que contiene información relacionada con el trámite y el solicitante.
+ */
+  consultaDatos!: ConsultaioState;
+
+  /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  soloLectura: boolean = false;
+
+  /**
    * Constructor del componente.
    * 
    * @param {FormBuilder} fb - Constructor para crear formularios reactivos.
@@ -215,6 +215,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     public tramiteQuery: Tramite6402Query,
     public autorizacionImportacionService: AutorizacionImportacionService,
     private validacionesService: ValidacionesFormularioService,
+    private consultaioQuery: ConsultaioQuery
   ) {
     // El constructor se utiliza para la inyección de dependencias.
   }
@@ -229,6 +230,15 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.tramiteState = seccionState;
+        })
+      )
+      .subscribe();
+      this.consultaioQuery.selectConsultaioState$.pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.consultaDatos = seccionState;
+          this.soloLectura = this.consultaDatos.readonly;
+          this.inicializarEstadoFormulario();
         })
       )
       .subscribe();
@@ -553,7 +563,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         tranporteMarca: [this.tramiteState?.solicitudFormulario?.tranporteMarca, [Validators.required]],
         tranporteModelo: [this.tramiteState?.solicitudFormulario?.tranporteModelo, [Validators.required]],
         tranportePlaca: [this.tramiteState?.solicitudFormulario?.tranportePlaca, [Validators.required]],
-        observaciones: [this.tramiteState?.solicitudFormulario?.observaciones, [Validators.required]],
+        observaciones: [{ value: this.tramiteState?.solicitudFormulario?.observaciones, disabled: this.soloLectura }, Validators.required],
       }),
       datosDestinoMercancia: this.fb.group({
         conDestino: [this.tramiteState?.solicitudFormulario?.conDestino, [Validators.required]],
@@ -570,6 +580,24 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         autoridadPresentoAvisoDestruccion: [this.tramiteState?.solicitudFormulario?.autoridadPresentoAvisoDestruccion, [Validators.required]],
       }),
     });
+    this.inicializarEstadoFormulario();
+  }
+
+    /**
+  * @method inicializarEstadoFormulario
+  * @description Inicializa el estado del formulario según el modo de solo lectura.
+  * 
+  * Si la propiedad `soloLectura` es verdadera, deshabilita todos los controles del formulario.
+  * En caso contrario, habilita los controles del formulario.
+  * 
+  * @returns {void}
+  */
+  inicializarEstadoFormulario(): void {
+    if (this.soloLectura) {
+      this.solicitudFormulario?.disable();
+    } else {
+      this.solicitudFormulario?.enable();
+    }
   }
 
   /**
@@ -585,7 +613,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     this.mercanciaFormulario = this.fb.group({
       modalDescMercancia: [this.tramiteState?.mercanciaFormulario?.modalDescMercancia, [Validators.required]],
       espeMercancia: [this.tramiteState?.mercanciaFormulario?.espeMercancia, [Validators.required]],
-      marcaMercancia: [this.tramiteState?.mercanciaFormulario?.marcaMercancia, [Validators.required]],
+      marcaMercancia: [{ value: this.tramiteState?.mercanciaFormulario?.marcaMercancia, disabled: this.soloLectura }, Validators.required],
       modeloMercancia: [this.tramiteState?.mercanciaFormulario?.modeloMercancia, [Validators.required]],
       numSerieMercancia: [this.tramiteState?.mercanciaFormulario?.numSerieMercancia, [Validators.required]],
       numParteMercancia: [this.tramiteState?.mercanciaFormulario?.numParteMercancia, [Validators.required]],

@@ -22,9 +22,14 @@
       @switch (indice) { @case (1) {
       <solicitante #Solicitante></solicitante>
       } @case (2) {
-      <app-programas-reporte-anual (filaDeInformeSeleccionada)="getFilaDeInformeSeleccionada($event)"> </app-programas-reporte-anual>
+      @if(esDatosRespuesta){
+      <app-programas-reporte-anual (filaDeInformeSeleccionada)="getFilaDeInformeSeleccionada($event)">
+      </app-programas-reporte-anual>
+      }
       } @case (3) {
+      @if(esDatosRespuesta){
       <app-datos-de-reporte-anual> </app-datos-de-reporte-anual>
+      }
       } }
     </ng-container>
   </div>

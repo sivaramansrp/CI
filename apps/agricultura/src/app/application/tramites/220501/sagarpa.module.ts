@@ -9,7 +9,7 @@ import { AgregarMercanciaComponent } from './components/agregar-mercancia/agrega
 import { AnexarDocumentosComponent } from '@ng-mf/data-access-user'
 import { BtnContinuarComponent } from '@ng-mf/data-access-user';
 import { CarrosDeFerrocarrilComponent } from '../220502/shared/carros-de-ferrocarril/carros-de-ferrocarril.component';
-import { CatalogoSelectComponent } from 'libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { DatosDelTramiteARealizarComponent } from '../220502/shared/datos-del-tramite-a-realizar/datos-del-tramite-a-realizar.component';
 import { DatosGeneralesComponent } from './components/datos-generales/datos-generales.component';
 import { FirmaElectronicaComponent } from '@ng-mf/data-access-user';

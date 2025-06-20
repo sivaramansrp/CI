@@ -14,6 +14,7 @@
           [placeholder]="nombreInstitucionCatalogo.primerOpcion"
           [required]="nombreInstitucionCatalogo.required"
           formControlName="polizaDeFianzaActual"
+          [isDisabled]="esFormularioSoloLectura"
           (selectionChange)="seleccionaNombreInstitucion($event)"
         >
         </app-catalogo-select>
@@ -56,6 +57,7 @@
       <div class="col-md-4">
         <input-fecha
           class="width"
+          [isDisabled]="esFormularioSoloLectura"
           [setFecha]="polizaDeFianzaForm.get('fechaInicioVigencia')?.value"
           [datos]="configuracionFechaDeExpedicion"
         ></input-fecha>
@@ -63,6 +65,7 @@
       <div class="col-md-4">
         <input-fecha
           class="width"
+          [isDisabled]="esFormularioSoloLectura"
           [setFecha]="polizaDeFianzaForm.get('fechaFinVigencia')?.value"
           [datos]="configuracionFechaInicioVigencia"
         ></input-fecha>
@@ -70,6 +73,7 @@
       <div class="col-md-4">
         <input-fecha
           class="width"
+          [isDisabled]="esFormularioSoloLectura"
           [setFecha]="polizaDeFianzaForm.get('fechaFinVigencia')?.value"
           [datos]="configuracionFechaFinVigencia"
         ></input-fecha>
