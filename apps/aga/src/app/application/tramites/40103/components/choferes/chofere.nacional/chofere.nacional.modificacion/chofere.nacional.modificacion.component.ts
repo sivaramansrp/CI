@@ -1,6 +1,6 @@
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { ConsultaioQuery, ConsultaioState, TituloComponent } from '@ng-mf/data-access-user';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { Subject, map, takeUntil } from 'rxjs';
 import {
     TablaDinamicaComponent,

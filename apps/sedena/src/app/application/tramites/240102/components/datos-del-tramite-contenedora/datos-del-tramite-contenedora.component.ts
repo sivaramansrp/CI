@@ -4,7 +4,6 @@ import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 import { DatosDelTramiteComponent } from '../../../../shared/components/datos-del-tramite/datos-del-tramite.component';
 import { DatosDelTramiteFormState } from '../../../../shared/models/datos-del-tramite.model';
 import { ID_PROCEDIMIENTO } from '../../constants/importacion-armas-municiones.enum';
-import { Input } from '@angular/core';
 import { MercanciaDetalle } from '../../../../shared/models/datos-del-tramite.model';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
