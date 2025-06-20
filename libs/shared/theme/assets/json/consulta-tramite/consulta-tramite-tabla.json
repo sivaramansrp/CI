@@ -1165,6 +1165,15 @@
         "numeroDeProcedimiento": "260102"
     },
     {
+        "id": "260207",
+        "tipoDeTramite": "Datos generales del trámite",
+        "fecha": "2024-11-01",
+        "fechaActualizacion": "2024-11-07",
+        "diasTranscurridos": "4",
+        "departamento": "COFEPRIS",
+        "numeroDeProcedimiento": "260207"
+    },
+    {
         "id": "260209",
         "tipoDeTramite": "Datos generales del trámite",
         "fecha": "2024-11-01",
