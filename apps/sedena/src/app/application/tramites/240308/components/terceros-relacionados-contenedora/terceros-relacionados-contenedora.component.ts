@@ -33,7 +33,11 @@ import { AgregarProveedorContenedoraComponent } from '../agregar-proveedor-conte
 export class TercerosRelacionadosContenedoraComponent
   implements OnInit, OnDestroy
 {
-
+  /**
+   * Componente modal para mostrar información adicional.
+   * Se utiliza para abrir los componentes de agregar destinatario final y proveedor.
+   * @property {ModalComponent} modalComponent
+   */
   @ViewChild('modal', { static: false }) modalComponent!: ModalComponent;
   /**
    * Observable para limpiar las suscripciones activas al destruir el componente.
@@ -53,6 +57,10 @@ export class TercerosRelacionadosContenedoraComponent
    */
   proveedorTablaDatos: Proveedor[] = [];
 
+  /**
+   * Indica si el formulario es de solo lectura.  
+   * @property {boolean} esSoloLectura
+   */
     esSoloLectura!: boolean;
 
   /**

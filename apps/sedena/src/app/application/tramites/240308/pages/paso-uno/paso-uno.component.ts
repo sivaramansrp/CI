@@ -16,40 +16,45 @@ import { SolicitudeDeArtificiosPirotecnicosService } from '../../services/solici
   styleUrl: './paso-uno.component.scss',
 })
 export class PasoUnoComponent implements OnInit, OnDestroy {
-   /**
+  /**
    * Índice utilizado para identificar la posición actual en un proceso o lista.
    * @type {number}
    */
-   indice: number = 1;
+  indice: number = 1;
 
-   /**
-    * Selecciona una pestaña específica.
-    * @param i - El índice de la pestaña a seleccionar.
-    */
-   seleccionaTab(i:number): void {
-     this.indice = i;
-   }
-
-     /**
+  /**
    * Indica si los datos de respuesta del servidor están disponibles.
+   * @type {boolean}
    */
   public datosRespuestaDisponibles: boolean = false;
+
   /**
    * Subject para notificar la destrucción del componente y desuscribirse de observables.
+   * @type {Subject<void>}
    */
   private notificadorDestruccion$: Subject<void> = new Subject();
 
   /**
    * Estado actual de la consulta.
+   * @type {ConsultaioState}
    */
   public estadoConsulta!: ConsultaioState;
 
+  /**
+   * Constructor del componente. Inyecta los servicios necesarios.
+   * @param servicio Servicio para obtener y establecer datos de la solicitud.
+   * @param consultaQuery Servicio para consultar el estado de la solicitud.
+   */
   constructor(
     private servicio: SolicitudeDeArtificiosPirotecnicosService,
     private consultaQuery: ConsultaioQuery
   ) {}
 
-   ngOnInit(): void {
+  /**
+   * Método de ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * Se suscribe al estado de la consulta y obtiene los datos si es necesario.
+   */
+  ngOnInit(): void {
     this.consultaQuery.selectConsultaioState$
       .pipe(takeUntil(this.notificadorDestruccion$))
       .subscribe((estadoSeccion) => {
@@ -63,6 +68,17 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Selecciona una pestaña específica.
+   * @param i Índice de la pestaña a seleccionar.
+   */
+  seleccionaTab(i: number): void {
+    this.indice = i;
+  }
+
+  /**
+   * Obtiene los datos de la bandeja de solicitudes desde el servicio y los establece.
+   */
   obtenerDatosBandejaSolicitudes(): void {
     this.servicio.obtenerDatos()
       .pipe(takeUntil(this.notificadorDestruccion$))
@@ -74,8 +90,13 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
       });
   }
 
-    ngOnDestroy(): void {
+  /**
+   * Método de ciclo de vida de Angular que se ejecuta al destruir el componente.
+   * Notifica a los observables para evitar fugas de memoria.
+   */
+  ngOnDestroy(): void {
     this.notificadorDestruccion$.next();
     this.notificadorDestruccion$.complete();
   }
 }
+

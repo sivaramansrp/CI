@@ -24,6 +24,10 @@ import { ConsultaioQuery } from '@ng-mf/data-access-user';
   styleUrl: './pago-de-derechos-contenedora.component.scss',
 })
 export class PagoDeDerechosContenedoraComponent implements OnInit, OnDestroy {
+  /**
+   * Indica si el formulario es de solo lectura.
+   * @property {boolean} esSoloLectura
+   */
   esSoloLectura!: boolean;
   /**
    * Observable para liberar suscripciones al destruir el componente.
