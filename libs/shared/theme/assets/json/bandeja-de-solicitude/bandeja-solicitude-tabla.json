@@ -2339,7 +2339,7 @@
     "numeroDeProcedimiento": "32503"
   },
   {
-     "id": 280101,
+    "id": 280101,
     "tipoDeTramite": "Permiso de exportación temporal o definitiva de monumentos o bienes muebles históricos",
     "fecha": "2023-10-01",
     "fechaActualizacion": "2023-10-05",
@@ -2582,5 +2582,15 @@
      "diasTranscurridos": "4",
      "departamento": "COFEPRIS",
      "numeroDeProcedimiento": "260916"
-    }
+    },
+  {
+  "id": 6403,
+  "tipoDeTramite": "Solicitud de Permiso",
+  "fecha": "2023-10-01",
+  "fechaActualizacion": "2023-10-05",
+  "diasTranscurridos": "4",
+  "departamento": "AGA",
+  "numeroDeProcedimiento": "6403"
+  }
+  
 ]
