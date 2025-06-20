@@ -48,6 +48,11 @@ export class InputHoraComponent implements OnChanges, ControlValueAccessor {
   @Input() required!: boolean;
 
   /**
+   * @decription Identificador para poner el input como unmarked.
+   */
+  @Input() unmarked: boolean = false;
+
+  /**
    * Formulario reactivo que contiene el control 'hora'.
    */
   forma: FormGroup;
@@ -87,6 +92,12 @@ export class InputHoraComponent implements OnChanges, ControlValueAccessor {
         this.forma.get('hora')?.clearValidators();
       }
       this.forma.get('hora')?.updateValueAndValidity();
+    }
+
+    if (changes['unmarked']) {
+      if (this.unmarked) {
+        this.forma.get('hora')?.markAsUntouched();
+      }
     }
   }
 

@@ -102,9 +102,6 @@ export const MSG_PEDIMENTO_EXISTE_YA_PAGADO =
 export const MSG_PEDIMENTO_EXISTE_PREVIO =
   'Error, verificar que exista como previo';
 
-
-
-  
 // #Secion Linea de captura
 /**
  * @description Mensaje de error cuando no se han llenado los campos obligatorios.
@@ -141,6 +138,11 @@ export const MSJ_LINEA_CAPTURA_USADA =
 export const MSJ_LINEA_CAPTURA_NO_PAGADA =
   'La línea de captura no ha sido pagada, favor de verificar.';
 
+/**
+ * @description Mensaje de error cuando la línea de captura ya ha sido agregada a la tabla.
+ */
+export const MSJ_LINEA_CAPTURA_DUPLICADA =
+  'La línea de captura ingresada ya se registró en esta solicitud, favor de verificar.';
 /**
  * @description Mensaje de avertencia cuando se va a cambiar de tipo de solicitud y el formulario tiene datos capturados.
  */

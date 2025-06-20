@@ -451,8 +451,10 @@ export class PedimentoComponent implements OnInit, OnChanges, OnDestroy {
    * @returns {void}
    */
   onSelect({ selected }: { selected: Pedimento[] }): void {
-    this.selected.splice(0, this.selected.length);
-    this.selected.push(...selected);
+    if (selected && selected.length > 0) {
+      this.selected.splice(0, this.selected.length);
+      this.selected.push(...selected);
+    }
   }
 
   /**
@@ -465,9 +467,10 @@ export class PedimentoComponent implements OnInit, OnChanges, OnDestroy {
    */
   actualizarValor(event: Event, cell: string, rowIndex: number): void {
     const TARGET = event.target as HTMLInputElement;
+    
     this.editar[`${rowIndex}-${cell}`] = false;
 
-    if (cell === 'descTipoPedimento' || cell === 'numero') {
+    if (cell === 'descTipoPedimento' || cell === 'numero' || cell === 'comprobanteValor') {
       this.pedimentos[rowIndex][cell] = TARGET.value;
       if (cell === 'descTipoPedimento') {
         const TIPO_PEDIMENTO = this.tiposPedimento.find(
@@ -477,6 +480,7 @@ export class PedimentoComponent implements OnInit, OnChanges, OnDestroy {
         if (TIPO_PEDIMENTO) {
           this.pedimentos[rowIndex].tipoPedimento = TIPO_PEDIMENTO.id;
           this.pedimentos[rowIndex].numero = '';
+          this.pedimentos[rowIndex].comprobanteValor = '';
 
           if (TIPO_PEDIMENTO.id) {
             if (TIPO_PEDIMENTO.id !== 4) {
@@ -516,14 +520,19 @@ export class PedimentoComponent implements OnInit, OnChanges, OnDestroy {
    * @returns {void}
    */
   editarCelda(rowIndex: number): void {
-    if (
-      this.pedimentos[rowIndex].tipoPedimento === 0 ||
-      this.pedimentos[rowIndex].tipoPedimento === 4
-    ) {
-      this.editar[rowIndex + '-numero'] = false;
-      return;
-    }
+    const TIPO_PEDIMENTO = this.pedimentos[rowIndex].tipoPedimento;
+    switch (TIPO_PEDIMENTO) {
+      case 4:
+        this.editar[rowIndex + `-comprobanteValor`] = true;
 
-    this.editar[rowIndex + '-numero'] = true;
+        break;
+      case 0:
+        this.editar[rowIndex + `-numero`] = false;
+        break;
+      default:
+        this.editar[rowIndex + `-numero`] = true;
+
+        break;
+    }
   }
 }
