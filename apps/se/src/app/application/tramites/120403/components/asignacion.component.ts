@@ -1,6 +1,7 @@
 import { ANO_CATALOGO, FECHA_FIN, RADIO_OPCIONS } from '../models/registro.model';
 import { Catalogo, CatalogoSelectComponent, InputFechaComponent, InputRadioComponent, SharedModule, TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ReplaySubject, map, takeUntil } from 'rxjs';
 import { Solicitud120403State, Tramite120403Store } from '../state/Tramite120403.store';
@@ -16,6 +17,15 @@ import { Tramite120403Query } from '../state/Tramite120403.query';
   styleUrl: './asignacion.component.scss',
 })
 export class AsignacionComponent implements OnInit, OnDestroy {
+  /**
+   * Subject para destruir notificador.
+   */
+  consultaDatos!: ConsultaioState;
+   /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  soloLectura: boolean = false;
   /**
    * Formulario reactivo para la asignación.
    */
@@ -74,8 +84,20 @@ export class AsignacionComponent implements OnInit, OnDestroy {
     public fb: FormBuilder,
     private store: Tramite120403Store,
     private query: Tramite120403Query,
-    private validacionesService: ValidacionesFormularioService
-  ) { }
+    private validacionesService: ValidacionesFormularioService,
+     private consultaioQuery: ConsultaioQuery
+  ) { 
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState) => {
+          this.consultaDatos = seccionState;
+          this.soloLectura = this.consultaDatos.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe()
+  }
 
   /**
    * Método que se ejecuta al inicializar el componente.
@@ -91,6 +113,30 @@ export class AsignacionComponent implements OnInit, OnDestroy {
       .subscribe();
     this.donanteDomicilio();
     this.obtenerDatosEstado();
+     this.inicializarEstadoFormulario();
+  }
+  /**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.
+   * Además, obtiene la información del catálogo de mercancía.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.soloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.donanteDomicilio();
+    }
+  }
+  /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormulario(): void {
+    this.donanteDomicilio();
+    if (this.soloLectura) {
+      this.asignacionForm.disable();
+    } else {
+      this.asignacionForm.enable();
+    }
   }
   /**
     * Método para manejar la lógica de búsqueda.
