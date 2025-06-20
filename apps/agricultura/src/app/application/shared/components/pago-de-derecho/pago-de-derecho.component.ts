@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { Catalogo, CatalogoSelectComponent, InputFecha, InputFechaComponent, InputRadioComponent, RespuestaCatalogos, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Catalogo, CatalogoSelectComponent, InputFecha, InputFechaComponent, InputRadioComponent, REGEX_LLAVE_DE_PAGO_DE_DERECHO, RespuestaCatalogos, TituloComponent } from '@libs/shared/data-access-user/src';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
@@ -139,7 +139,12 @@ export class PagoDeDerechoComponent implements OnDestroy,OnInit,AfterViewInit {
         importePago: this.pagoDeDerechos.importePago || '',
         fechaPago:this.pagoDeDerechos.fechaPago|| ''
       });
-    
+      if (this.pagoForm.value.exentoPago === 'no') {
+        this.pagoForm.get('llavePago')?.enable();
+        this.pagoForm.get('llavePago')?.setValidators([Validators.required,
+        Validators.pattern(REGEX_LLAVE_DE_PAGO_DE_DERECHO),
+        Validators.maxLength(30)]);
+      }
     }
     /**
      * @inheritdoc
@@ -212,10 +217,36 @@ export class PagoDeDerechoComponent implements OnDestroy,OnInit,AfterViewInit {
           BANCO_CONTROL?.setValidators([Validators.required]);
           BANCO_CONTROL?.enable();
           this.pagoForm.get('llavePago')?.enable();
+          this.pagoForm.get('llavePago')?.setValidators([Validators.required,
+           Validators.pattern(REGEX_LLAVE_DE_PAGO_DE_DERECHO),
+          Validators.maxLength(30)]);  
           this.pagoForm.get('importePago')?.disable();
           this.pagoForm.get('fechaPago')?.enable();
        }
         }
+
+          /**
+   * @method onFechaCambiada
+   * @description Actualiza la fecha de pago en el formulario.
+   *
+   * @param {string} fecha - Fecha seleccionada en el componente `InputFecha`.
+   */
+  onFechaCambiada(fecha: string): void {
+    this.pagoForm.patchValue({ fechaPago: fecha });
+    this.actualizarPago();
+  }
+
+  /**
+   * @description Verifica si un control del formulario es inválido.
+   * @param nombreControl El nombre del control a verificar.
+   * @returns Verdadero si el control es inválido y está tocado o modificado, de lo contrario, falso.
+   */
+  esInvalido(nombreControl: string): boolean {
+    const CONTROL = this.pagoForm.get(nombreControl);
+    return CONTROL
+      ? CONTROL.invalid && (CONTROL.touched || CONTROL.dirty)
+      : false;
+  }
 
   /**
    * @desc Actualiza el objeto de pago de derechos y emite el evento correspondiente.

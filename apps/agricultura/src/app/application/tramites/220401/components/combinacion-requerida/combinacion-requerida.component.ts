@@ -6,7 +6,7 @@ import { Subject, map, takeUntil } from 'rxjs';
 import { AgregarQuery } from '../../../../estados/queries/agregar.query';
 
 import { Catalogo, ConsultaioQuery } from '@ng-mf/data-access-user';
-import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { CommonModule } from '@angular/common';
 import { Pantallas220401Service } from '../pantallas220401.service';
 import { TercerosRelacionadosComponent } from '../terceros-relacionados/terceros-relacionados.component';
@@ -143,8 +143,6 @@ export class CombinacionRequeridaComponent implements OnInit, OnDestroy {
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.esFormularioSoloLectura = seccionState.readonly;
-          this.esFormularioSoloLectura = true;
-          
         })
       )
       .subscribe()
