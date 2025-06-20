@@ -86,7 +86,7 @@ export class AuthPageComponent implements OnInit {
                 tipoPersona: TipoPersona.FISICA
             }
             this.usuarioStore.establecerUsuario('LEQI', PERFIL_USUARIO, ROLES, '');
-            if (this.primerAcceso) {
+            if (!this.primerAcceso) {
                 window.location.href = '/bandeja-de-tareas-pendientes';
             }
             else {
