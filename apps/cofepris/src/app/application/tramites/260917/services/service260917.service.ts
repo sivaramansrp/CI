@@ -36,7 +36,7 @@ export class Solocitud260917Service {
     this.tramite301Store.setCorreoElectronico(DATOS.correoElectronico);
     this.tramite301Store.setCodigoPostal(DATOS.codigoPostal);
     this.tramite301Store.setEstado(DATOS.estado);
-    this.tramite301Store.setMunicipio(DATOS.municipio);
+    this.tramite301Store.setMuncipio(DATOS.muncipio);
     this.tramite301Store.setLocalidad(DATOS.localidad);
     this.tramite301Store.setColonia(DATOS.colonia);
     this.tramite301Store.setCalle(DATOS.calle);

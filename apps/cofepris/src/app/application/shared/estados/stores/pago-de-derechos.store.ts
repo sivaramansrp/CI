@@ -45,6 +45,18 @@ export interface pagoDerechosState {
   estado: string;
 }
 
+/**
+ * Crea y retorna el estado inicial para el pago de derechos.
+ *
+ * @returns {pagoDerechosState} El estado inicial con los siguientes campos:
+ * - claveReferencia: Clave de referencia del pago.
+ * - cadenaDependencia: Cadena de la dependencia correspondiente.
+ * - banco: Nombre del banco donde se realiza el pago.
+ * - llavePago: Llave única del pago.
+ * - fechaPago: Fecha en la que se realizó el pago.
+ * - importePago: Importe del pago realizado.
+ * - estado: Estado actual del pago.
+ */
 export function createInitialState(): pagoDerechosState {
   return {
     /**

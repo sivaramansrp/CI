@@ -6,7 +6,7 @@
 "correoElectronico":"correo@ejemplo.com",
 "codigoPostal": "00000",
 "estado": "1",
-"municipio": "Municipio/Alcaldía por defecto",
+"muncipio": "Alcaldía por defecto",
 "localidad": "Localidad por defecto",
 "colonia": "Colonia por defecto",
 "calle": "Calle por defecto",
