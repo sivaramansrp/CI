@@ -1,12 +1,15 @@
-import { Component, EventEmitter, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
+import { Subject, map, takeUntil } from 'rxjs';
 import { CapturarComponent } from '../../components/capturar/capturar.component';
+import { CapturarService } from '../../services/capturar.service';
 
 @Component({
   selector: 'app-paso-uno',
   templateUrl: './paso-uno.component.html',
   styles: ``
 })
-export class PasoUnoComponent {
+export class PasoUnoComponent implements OnInit, OnDestroy {
   /**
    * Representa el índice de la pestaña activa.
    * Se utiliza para rastrear y gestionar la pestaña actualmente seleccionada.
@@ -38,7 +41,57 @@ export class PasoUnoComponent {
    * @type {CapturarComponent}
    */
   @ViewChild(CapturarComponent) capturarComponent!: CapturarComponent;
- 
+
+  /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
+  public esDatosRespuesta: boolean = false;
+
+  /** Subject para notificar la destrucción del componente. */
+  public destroyNotifier$: Subject<void> = new Subject();
+  /**
+  * @property {ConsultaioState} consultaDatos
+  * @description Estado actual de la consulta, que contiene información relacionada con el trámite y el solicitante.
+  */
+  consultaDatos!: ConsultaioState;
+
+  constructor(
+    private capturarService: CapturarService,
+    private consultaQuery: ConsultaioQuery
+  ) {
+    
+  }
+  /**
+   * Constructor del componente `PasoUnoComponent`.
+   * Inicializa el componente y establece el índice de la pestaña activa.
+   */
+  ngOnInit(): void {
+    this.consultaQuery.selectConsultaioState$
+    .pipe(takeUntil(this.destroyNotifier$), map((seccionState) => {
+      this.consultaDatos = seccionState;
+    })).subscribe();
+
+    if (this.consultaDatos.update) {
+      this.guardarDatosFormulario();
+    } else {
+      this.esDatosRespuesta = true;
+    }
+  }
+
+  /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormulario(): void {
+    this.capturarService.getTramiteSavedData()
+      .pipe(
+        takeUntil(this.destroyNotifier$)
+      )
+      .subscribe((resp) => {
+        if (resp) {
+          this.esDatosRespuesta = true;
+          this.capturarService.actualizarEstadoFormulario(resp);
+        }
+      });
+  }
   /**
    * @method seleccionaTab
    * @description
@@ -50,6 +103,16 @@ export class PasoUnoComponent {
     this.pestanaCambiado.emit(this.indice);
   }
 
+  /**
+   * Método que se ejecuta al destruir el componente.
+   * 
+   * Este método emite un valor al `destroyNotifier$` y lo completa para cancelar
+   * todas las suscripciones activas y evitar fugas de memoria.
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
+  }
 
 }
 

@@ -168,6 +168,12 @@ export class AgregarDestinatarioFinalComponent
   >();
 
   /**
+   * Evento que se emite cuando el usuario desea cancelar una acción.
+   * @property {EventEmitter<boolean>} cancelarEventListener
+   */
+
+  @Output() cancelarEventListener = new EventEmitter<boolean>();
+  /**
    * Constante que almacena el valor de "Nacional" para su uso en el formulario.
    * @property {string} nacionalStr
    * @default STR_NACIONAL
@@ -468,7 +474,7 @@ export class AgregarDestinatarioFinalComponent
    * @returns {void} Este método no retorna ningún valor.
    */
   cancelar(): void {
-    this.ubicaccion.back();
+    this.cancelarEventListener.emit(true);
   }
 
   /**
