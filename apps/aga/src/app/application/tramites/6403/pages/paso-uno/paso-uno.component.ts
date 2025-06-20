@@ -172,23 +172,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
         }
       });
   }
-  /**
-    * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
-    * Luego reinicializa el formulario con los valores actualizados desde el store.
-    */
-  // guardarDatosFormularios(): void {
-  //   this.reterno
-  //     .getRegistroTomaMuestrasMercanciasData().pipe(
-  //       takeUntil(this.destroyed$)
-  //     )
-  //     .subscribe((resp) => {
-  //       if (resp) {
-  //         this.esDatosRespuesta = true;
-  //         this.reterno.actualizarEstadoFormulario(resp);
-  //       }
-  //     });
-  // }
-
+  
   /**
    * Cambia la pestaña activa.
    * 
