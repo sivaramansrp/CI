@@ -52,3 +52,7 @@ h2 {
     font-size: 0.9em;
     margin-left: 5px;
 }
+
+.disabled-overlay {
+  pointer-events: none;
+}

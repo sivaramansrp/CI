@@ -1,5 +1,22 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Subject, takeUntil } from 'rxjs';
+import {
+  Component,
+  OnDestroy,
+  OnInit
+} from '@angular/core';
+
+import {
+  ConsultaioQuery,
+  ConsultaioState
+} from '@ng-mf/data-access-user';
+
+import { ImportacionDestinadosDonacioService } from '../../services/importacion-destinados-donacio.service';
+
+import {
+  Subject,
+  map,
+  takeUntil
+} from 'rxjs';
+
 import { Tramite260208Query } from '../../estados/tramite260208Query.query';
 import { Tramite260208Store } from '../../estados/tramite260208Store.store';
 
@@ -27,17 +44,33 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
    */
   private destroyNotifier$: Subject<void> = new Subject();
 
+/**
+   * Esta variable se utiliza para almacenar el índice del subtítulo.
+   */
+  public consultaState!: ConsultaioState;
+
+  /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
+  public esDatosRespuesta: boolean = false;
+
   /**
    * Constructor que inyecta las dependencias necesarias para el manejo del estado del trámite.
    * @constructor
    * @param {Tramite260208Query} tramite260208Query - Query para acceder al estado del trámite
    * @param {Tramite260208Store} tramite260208Store - Store para actualizar el estado del trámite
+   * @param {ConsultaioQuery} consultaQuery - Query para acceder al estado de la consulta
+   * @param {ImportacionDestinadosDonacioService} importacionDestinadosDonacioService - Servicio para importar datos de donación
    */
+
   constructor(
     private tramite260208Query: Tramite260208Query,
-    private tramite260208Store: Tramite260208Store
+    private tramite260208Store: Tramite260208Store,
+    private consultaQuery: ConsultaioQuery,
+    private importacionDestinadosDonacioService: ImportacionDestinadosDonacioService
   ) { 
-        // No se necesita lógica de inicialización adicional.
+        this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyNotifier$),
+      map((seccionState) => {
+        this.consultaState = seccionState;
+      })).subscribe();
   }
 
   /**
@@ -46,6 +79,13 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
    * @method ngOnInit
    */
   ngOnInit(): void {
+    if (this.consultaState && this.consultaState.procedureId === '260209' &&
+      this.consultaState.update) {
+      this.guardarDatosFormulario();
+    } else {
+      this.esDatosRespuesta = true;
+    }
+
     this.tramite260208Query.getTabSeleccionado$
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((tab) => {
@@ -53,6 +93,20 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
       });
   }
 
+  /**
+  * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+  * Luego reinicializa el formulario con los valores actualizados desde el store.
+  */
+  guardarDatosFormulario(): void {
+    this.importacionDestinadosDonacioService.getRegistroTomaMuestrasMercanciasData().pipe(
+      takeUntil(this.destroyNotifier$)).subscribe((resp) => {
+        if (resp) {
+          this.esDatosRespuesta = true;
+          this.importacionDestinadosDonacioService.actualizarEstadoFormulario(resp);
+        }
+      });
+  }
+  
   /**
    * Actualiza la pestaña seleccionada en el store del trámite.
    * @method seleccionaTab

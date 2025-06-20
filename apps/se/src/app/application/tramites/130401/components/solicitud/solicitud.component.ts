@@ -1,6 +1,7 @@
 import { ARANCELARIA_TABLA_ENCABEZADOS, PRODUCTO_OPCION_RADIO, SOLICITUD_OPCION_RADIO, SOLICITUD_TABLA_ENCABEZADOS } from '../../constants/modificacion-descripcion.enum';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ConfiguracionColumna, InputRadioComponent, TablaDinamicaComponent, TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { DatosArancelaria, SolicitudTablaDatos } from '../../models/modificacion-descripcion.model';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Tramite130401State, Tramite130401Store } from '../../../../estados/tramites/tramite130401.store';
@@ -88,6 +89,18 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * Contiene las fracciones arancelarias obtenidas desde el servicio.
    */
   arancelariaTablaDatos: DatosArancelaria[] = [];
+  /**
+   * @property {ConsultaioState} consultaDatos
+   * @description Estado actual de la consulta, que contiene información relacionada con el trámite y el solicitante.
+   */
+  consultaDatos!: ConsultaioState;
+
+  /**
+   * @property {boolean} soloLectura
+   * @description Indica si el formulario o los campos están en modo de solo lectura.
+   * @default false
+   */
+  soloLectura: boolean = false;
 
   /**
    * Constructor del componente.
@@ -104,6 +117,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     public fb: FormBuilder,
     private validacionesService: ValidacionesFormularioService,
     private modificacionDescripcionService: ModificacionDescripcionService,
+    private consultaioQuery: ConsultaioQuery,
   ) {
     // Constructor del componente
   }
@@ -123,10 +137,20 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.consultaDatos = seccionState;
+          this.soloLectura = this.consultaDatos.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
     this.inicializarFormulario();
     this.cargarPartidas();
     this.cargararancelaria();
-    if (!this.tramiteState?.datosSolicitud?.numeroFolioTramiteOriginal) {
+    if (!this.tramiteState?.datosSolicitud?.numeroFolioTramiteOriginal && !this.consultaDatos.update) {
       this.cargarSolicitud();
     }
   }
@@ -147,8 +171,18 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       unidadesAutorizadas: [{ value: this.tramiteState?.datosSolicitud?.unidadesAutorizadas, disabled: true }, []],
       importeFacturaAutorizadoUSD: [{ value: this.tramiteState?.datosSolicitud?.importeFacturaAutorizadoUSD, disabled: true }, []],
     });
+    this.inicializarEstadoFormulario();
   }
-
+  /**
+   * Inicializa el estado del formulario según el modo de solo lectura.
+   * 
+   * Este método deshabilita el formulario `solicitudFormulario` si la propiedad `soloLectura` es `true`.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.soloLectura) {
+      this.solicitudFormulario?.disable();
+    }
+  }
   /**
    * Carga las partidas desde el servicio y las almacena en la tabla de partidas.
    */
