@@ -297,7 +297,6 @@ export class AvisoComponent implements OnInit, OnDestroy {
       )
       .subscribe();
 
-    console.log("in avio state check:",this.solicitudState);
     this.crearFormSolicitud();
     this.cargarPais();
     this.cargarAnio();
@@ -548,7 +547,7 @@ export class AvisoComponent implements OnInit, OnDestroy {
         valorVenta: [this.solicitudState?.valorVenta, [Validators.required]],
       }),
     }); 
- console.log("in avio state check:",this.solicitudState.anio);
+
     this.inicializarFormulario();
     
     this.mostrarCampos();
