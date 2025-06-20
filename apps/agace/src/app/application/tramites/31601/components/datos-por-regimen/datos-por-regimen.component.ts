@@ -523,7 +523,7 @@ export class DatosPorRegimenComponent implements OnInit,OnDestroy {
       START_INDEX + this.itemsPerPage
     );
   }
-   /**
+  /**
    * Indica si se debe mostrar la sección de "Importación temporal bajo la modalidad del programa IMMEX (sensibles)".
    * Se muestra si el checkbox correspondiente a régimen_0 está seleccionado.
    * @returns {boolean}

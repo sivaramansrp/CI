@@ -460,7 +460,16 @@ export class AduaneroComponent implements OnInit, AfterViewInit, OnDestroy {
   get showSubcontratacionTable(): boolean {
     return this.preOperativeForm?.get('senaleSi')?.value === 'Si';
   }
-
+  
+  public selectedFileName: string = '';
+  onFileSelected(event: Event): void {
+    const INPUT = event.target as HTMLInputElement;
+    if (INPUT.files && INPUT.files.length > 0) {
+      this.selectedFileName = INPUT.files[0].name;
+    } else {
+      this.selectedFileName = '';
+    }
+  }
   /**
    * Indica si se debe mostrar la sección relacionada con el campo 'senale'.
    * 
