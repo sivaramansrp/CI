@@ -1,4 +1,4 @@
-import { Catalogo } from '@libs/shared/data-access-user/src';
+import { Catalogo, ConsultaioQuery } from '@libs/shared/data-access-user/src';
 import { CatalogosSelect } from '@libs/shared/data-access-user/src';
 import { Component } from '@angular/core';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
@@ -35,7 +35,6 @@ import { takeUntil } from 'rxjs';
   selector: 'app-solicitud-datos',
   templateUrl: './solicitud-datos.component.html',
   styleUrl: './solicitud-datos.component.scss',
-  
 })
 /**
  * Componente que representa los datos de la solicitud
@@ -276,20 +275,43 @@ export class SolicitudDatosComponent implements OnInit, OnDestroy {
   mercanciasDatos: Mercancia[] = [];
 
   /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  esFormularioSoloLectura: boolean = false;
+
+  /**
    * Constructor del componente.
    * Inicializa servicios y otras dependencias necesarias.
    * @param solicitudDatosService - Servicio para manejar datos relacionados con la solicitud.
    * @param solicitud260101Store - Almacén para gestionar el estado de la solicitud.
    * @param solicitud260101Query - Consulta para observar los cambios en el estado de la solicitud.
    * @param fb - Servicio para construir formularios reactivos.
+   * @param consultaioQuery - Servicio para consultar el estado actual desde el store.
    */
   constructor(
     public solicitudDatosService: SolicitudDatosService,
     public solicitud260101Store: Solicitud260101Store,
     public solicitud260101Query: Solicitud260101Query,
-    public fb: FormBuilder
+    public fb: FormBuilder,
+    public consultaioQuery: ConsultaioQuery
   ) {
-    // Constructor vacío, no requiere inicialización adicional.
+    /**
+     * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
+     *
+     * - Asigna el valor de solo lectura (`readonly`) a la propiedad `esFormularioSoloLectura`.
+     * - Llama a `inicializarEstadoFormulario()` para aplicar configuraciones basadas en el estado recibido.
+     * - La suscripción se cancela automáticamente cuando `destroyNotifier$` emite un valor (para evitar fugas de memoria).
+     */
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = !seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
   }
 
   /**
@@ -297,6 +319,44 @@ export class SolicitudDatosComponent implements OnInit, OnDestroy {
    * Inicializa el formulario reactivo y configura las suscripciones necesarias.
    */
   ngOnInit(): void {
+    this.inicializarFormulario();
+  }
+
+  /**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.
+   * Además, obtiene la información del catálogo de mercancía.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.inicializarFormulario();
+    }
+  }
+
+  /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormulario(): void {
+    this.inicializarFormulario();
+    if (this.esFormularioSoloLectura) {
+      this.solicitudForm.disable();
+    } else if (!this.esFormularioSoloLectura) {
+      this.solicitudForm.enable();
+    } else {
+      // No se requiere ninguna acción en el formulario
+    }
+  }
+
+  /**
+   * Inicializa el formulario reactivo para capturar el valor de 'registro'.
+   * Suscribe al estado almacenado en el store mediante el query `tramite301Query.selectSolicitud$`
+   * y lo asigna a la variable local `solicitudState`. Luego, crea el formulario
+   * con el valor inicial obtenido del store.
+   */
+
+  inicializarFormulario(): void {
     this.solicitudForm = this.fb.group({
       /** Razón social del solicitante. */
       razonSocial: [
