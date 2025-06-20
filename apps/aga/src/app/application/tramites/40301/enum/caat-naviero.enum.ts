@@ -33,3 +33,16 @@ export const CATALOGOS_40301_ID = {
   OBTENER_META_INFO: "obtenerMetaInfo",
   AGENT_CATALOG: "tipoAgente"
 }
+
+export const META_INFO_40301 = {
+  titulo: 'Registro CAAT Naviero',
+  tipoAgenteLabel: 'Tipo de Agente',
+  roles: ['Admin', 'User', "personaMoral"], // Roles de usuario que pueden acceder al trámite
+};
+
+
+export const AGENT_CATALOG = [
+  { id: 1, clave: "TIAGN.AN", descripcion: "Agente naviero" },
+  { id: 2, clave: "TIAGN.AIC", descripcion: "Agente internacional de carga" },
+  { id: 3, clave: "TIAGN.CB", descripcion: "Consignatario de buque" }
+];

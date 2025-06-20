@@ -16,6 +16,6 @@ export interface OctavaTemporal {
  * Interfaz que representa la fracción arancelaria para el proceso.
  */
 export interface FraccionArancelariaProsec {
-    fraccionArancelariaProsec: number,
+    fraccionArancelariaProsec: number | string,
     descripción: string
 }

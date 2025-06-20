@@ -25,21 +25,21 @@ export class DatosTransportistaComponent {
     constructor(private fb: FormBuilder,
     ) {}
   
-    abrirModal() {
+    abrirModal(): void {
       this.modal = 'show';
     }
   
-    cerrarModal() { 
+    cerrarModal(): void { 
       this.closeModal.nativeElement.click();
       
     }
     
-    agregarTransportista() {
+    agregarTransportista(): void {
       if(!this.formTransportista.valid) {
         return;
       }
-      const transportista = this.formTransportista.value;
-      this.transportistas.push(transportista);
+      const TRANSPORTISTA = this.formTransportista.value;
+      this.transportistas.push(TRANSPORTISTA);
       this.formTransportista.reset();
       this.cerrarModal();
     }
