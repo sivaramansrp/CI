@@ -1,6 +1,8 @@
 import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
 import { EnlaceConfiguracionItem } from '../../tramites/31601/enum/enlance-tabla.enum';
+import { Mencione } from '../../shared/models/datos-comunes.model';
+import { MencioneConfiguracionItem } from '../../tramites/31601/enum/mencione-tabla.enum';
 
 
 /**
@@ -458,8 +460,14 @@ export interface Solicitud31601State {
      * El valor de tipoDocumento.
      */
     tipoDocumento: string;
-
+    /**
+     * Datos de la tabla de enlaces.
+     */
     enlaceDatos: EnlaceConfiguracionItem[];
+    /**
+     * Datos de la tabla de menciones.
+     */
+    mencioneDatos: MencioneConfiguracionItem[]
     
 }
 /**
@@ -931,8 +939,13 @@ export function createInitialState(): Solicitud31601State {
          * El valor de tipoDocumento.
          */
         tipoDocumento: '',
-
+        /* * Datos de la tabla de enlaces.
+         */
         enlaceDatos: [],
+        /**
+         * Datos de la tabla de menciones.
+         */
+        mencioneDatos: [],
 
     };
 }
@@ -952,13 +965,28 @@ export function createInitialState(): Solicitud31601State {
 @StoreConfig({ name: 'tramite31601', resettable: true })
 
 export class Tramite31601Store extends Store<Solicitud31601State>{
+    /**
+     * Establece los datos de la tabla de menciones.
+     * @param {MencioneConfiguracionItem[]} datosTablaMencione - Los datos de la tabla de menciones.
+     */
+    setMencioneTablaDatos(datosTablaMencione: MencioneConfiguracionItem[]):void {
+        this.update((state) => ({
+            ...state,
+            mencioneDatos: datosTablaMencione,
+        }));
+    }
 
-  setEnlaceTablaDatos(datosTablaEnlace: EnlaceConfiguracionItem[]):void {
-   this.update((state) => ({
-    ...state,
-    enlaceDatos: datosTablaEnlace,
-   }));
-  }
+    /**
+     * Establece los datos de la tabla de enlaces.
+     * @param {EnlaceConfiguracionItem[]} datosTablaEnlace - Los datos de la tabla de enlaces.
+     */
+    setEnlaceTablaDatos(datosTablaEnlace: EnlaceConfiguracionItem[]):void {
+        this.update((state) => ({
+            ...state,
+            enlaceDatos: datosTablaEnlace,
+        }));
+    }
+
     /**
      * Crea una instancia de Tramite31601Store.
      * Inicializa la tienda con el estado inicial.

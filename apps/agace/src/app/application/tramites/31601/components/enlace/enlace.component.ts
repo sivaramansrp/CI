@@ -60,7 +60,7 @@ import enlaceData from '@libs/shared/theme/assets/json/31601/enlace-data.json';
     ReactiveFormsModule,
     TablaDinamicaComponent,
     FormsModule,
-    CommonModule
+    CommonModule,
   ],
   templateUrl: './enlace.component.html',
   styleUrl: './enlace.component.scss',
@@ -128,7 +128,7 @@ export class EnlaceComponent implements OnInit, OnDestroy {
    */
   datosTablaEnlace!: EnlaceConfiguracionItem[];
 
-   /**
+  /**
    * Indica si se debe mostrar el modal de datos de mercancía.
    */
   mostrarModalDatosMercancia: boolean = false;
@@ -157,20 +157,33 @@ export class EnlaceComponent implements OnInit, OnDestroy {
    */
   confirmEliminarPopupCerrado: boolean = true;
 
-   /**
+  /**
    * Indica si se está realizando una operación de actualización.
    */
   esOperacionDeActualizacion: boolean = false;
-
 
   /**
    * Referencia al botón o elemento de cierre del modal.
    */
   @ViewChild('closeModal') closeModal!: ElementRef;
 
+  /**
+   * Indica si el botón de modificar está habilitado.
+   */
   enableModficarBoton: boolean = false;
+  /**
+   * Indica si el botón de eliminar está habilitado.
+   */
   enableEliminarBoton: boolean = false;
+  /**
+   * Lista de filas seleccionadas en la tabla de enlace.
+   * Contiene los items seleccionados para realizar operaciones como modificar o eliminar.
+   */
   listaFilaSeleccionadaEnlace!: EnlaceConfiguracionItem[];
+  /**
+   * Fila seleccionada en la tabla de enlace.
+   * Se usa para almacenar el último item seleccionado para operaciones posteriores.
+   */
   filaSeleccionadaEnlace!: EnlaceConfiguracionItem;
 
   /**
@@ -310,6 +323,10 @@ export class EnlaceComponent implements OnInit, OnDestroy {
     this.represtantante.get('cuidad')?.disable();
   }
 
+  /**
+   * Maneja la fila seleccionada en la tabla de enlace.
+   * Actualiza los botones de modificar y eliminar según la selección.
+   */
   manejarFilaSeleccionada(fila: EnlaceConfiguracionItem[]): void {
     if (fila.length === 0) {
       this.enableModficarBoton = false;
@@ -322,13 +339,22 @@ export class EnlaceComponent implements OnInit, OnDestroy {
     this.enableEliminarBoton = true;
   }
 
-  confirmEliminarEnlaceItem():void {
-     if (this.listaFilaSeleccionadaEnlace.length === 0) {
+  /**
+   * Confirma la eliminación de un enlace item.
+   * Si no hay filas seleccionadas, no hace nada.
+   * Abre un popup de confirmación si hay filas seleccionadas.
+   */
+  confirmEliminarEnlaceItem(): void {
+    if (this.listaFilaSeleccionadaEnlace.length === 0) {
       return;
     }
     this.abrirElimninarConfirmationopup();
   }
 
+  /**
+   * Actualiza la fila seleccionada con los datos más recientes de la tabla.
+   * Si la fila seleccionada no se encuentra en los datos, no hace nada.
+   */
   actualizarFilaSeleccionada(): void {
     const UPDATED_DATA = this.datosTablaEnlace.find(
       (item) => item.id === this.filaSeleccionadaEnlace.id
@@ -339,18 +365,27 @@ export class EnlaceComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Abre el modal para modificar un enlace item.
+   * Si hay una sola fila seleccionada, abre el modal para editar.
+   * Si hay más de una fila seleccionada, abre un popup de selección múltiple.
+   */ 
   modificarItemEnlace(): void {
-      if (this.listaFilaSeleccionadaEnlace.length < 2) {
-  
+    if (this.listaFilaSeleccionadaEnlace.length < 2) {
       this.actualizarFilaSeleccionada();
       this.esOperacionDeActualizacion = true;
-     this.abrirModal()
+      this.abrirModal();
       this.alternarModalMercancia();
     } else {
       this.abrirMultipleSeleccionPopup();
     }
   }
 
+  /**
+   * Elimina un enlace item seleccionado.
+   * Filtra los datos de la tabla para eliminar el item seleccionado.
+   * Limpia la lista de filas seleccionadas y actualiza el store.
+   */
   eliminarEnlaceItem(): void {
     const IDS_TO_DELETE = this.listaFilaSeleccionadaEnlace.map(
       (item) => item.id
@@ -366,8 +401,8 @@ export class EnlaceComponent implements OnInit, OnDestroy {
   }
 
   /**
- * Abre el popup de selección múltiple si el botón de modificar está habilitado.
- */
+   * Abre el popup de selección múltiple si el botón de modificar está habilitado.
+   */
   abrirMultipleSeleccionPopup(): void {
     if (this.enableModficarBoton) {
       this.multipleSeleccionPopupAbierto = true;
@@ -375,36 +410,41 @@ export class EnlaceComponent implements OnInit, OnDestroy {
   }
 
   /**
- * Cierra el popup de selección múltiple.
- */
+   * Cierra el popup de selección múltiple.
+   */
   cerrarMultipleSeleccionPopup(): void {
     this.multipleSeleccionPopupAbierto = false;
     this.multipleSeleccionPopupCerrado = false;
   }
 
   /**
- * Abre el popup de confirmación de eliminación.
- */
+   * Abre el popup de confirmación de eliminación.
+   */
   abrirElimninarConfirmationopup(): void {
     this.confirmEliminarPopupAbierto = true;
   }
 
   /**
- * Cierra el popup de confirmación de eliminación.
- */
+   * Cierra el popup de confirmación de eliminación.
+   */
   cerrarEliminarConfirmationPopup(): void {
     this.confirmEliminarPopupAbierto = false;
     this.confirmEliminarPopupCerrado = false;
   }
 
   /**
- * Alterna la visibilidad del modal de datos de mercancía.
- */
+   * Alterna la visibilidad del modal de datos de mercancía.
+   */
   alternarModalMercancia(): void {
     this.mostrarModalDatosMercancia = !this.mostrarModalDatosMercancia;
   }
 
-  saveDatos():void{
+  /**
+   * Guarda los datos del formulario en la tabla de enlace.
+   * Crea un nuevo objeto con los valores del formulario y lo agrega a la lista de datos de enlace.
+   * Limpia los campos del formulario después de guardar.
+   */
+  saveDatos(): void {
     const VALOR: EnlaceConfiguracionItem = {
       id: new Date().getTime().toString(),
       registroFederal: this.represtantante.get('resigtroReprestantante')?.value,
@@ -416,8 +456,8 @@ export class EnlaceComponent implements OnInit, OnDestroy {
       estadoResidencia: this.represtantante.get('cuidad')?.value,
       telefono: this.represtantante.get('telefonoReprestantante')?.value,
       correo: this.represtantante.get('correoReprestantante')?.value,
-      suplente: this.represtantante.get('suplente')?.value
-    }
+      suplente: this.represtantante.get('suplente')?.value,
+    };
 
     this.datosTablaEnlace = [...this.datosTablaEnlace, VALOR];
     this.tramite31601Store.setEnlaceTablaDatos(this.datosTablaEnlace);
@@ -433,7 +473,6 @@ export class EnlaceComponent implements OnInit, OnDestroy {
     this.represtantante.get('suplente')?.setValue(false);
     this.closeModal.nativeElement.click();
   }
-
 
   /**
    * Establece un valor en el store de Tramite31601 desde el formulario.
