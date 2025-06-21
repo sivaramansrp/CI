@@ -1,17 +1,31 @@
-import { Component, Input, OnDestroy, OnInit, forwardRef } from '@angular/core';
-
-import {FormBuilder,FormGroup,ReactiveFormsModule,ValidatorFn,Validators} from '@angular/forms';
-
+import { CATALOGOS_ID } from '@libs/shared/data-access-user/src/tramites/constantes/constantes';
 import { CommonModule } from '@angular/common';
-
-import { CATALOGOS_ID, TIPO_PERSONA } from '@libs/shared/data-access-user/src/tramites/constantes/constantes';
-import { DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_EXTRANJERA, DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL, PERSONA_FISICA_EXTRANJERO, PERSONA_FISICA_NACIONAL, PERSONA_MORAL_EXTRANJERO, PERSONA_MORAL_NACIONAL } from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
-import { Subject, takeUntil, tap } from 'rxjs';
+import { Component } from '@angular/core';
+import { DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_EXTRANJERA } from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
+import { DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL } from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
+import { FormBuilder } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
 import { FormularioDinamico } from '@libs/shared/data-access-user/src/core/models/shared/forms-model';
 import { FormulariosService } from '@libs/shared/data-access-user/src/core/services/shared/formularios/formularios.service';
+import { Input } from '@angular/core';
+import { OnDestroy } from '@angular/core';
+import { OnInit } from '@angular/core';
+import { PERSONA_FISICA_EXTRANJERO } from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
+import { PERSONA_FISICA_NACIONAL } from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
+import { PERSONA_MORAL_EXTRANJERO } from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
+import { PERSONA_MORAL_NACIONAL } from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
+import { ReactiveFormsModule } from '@angular/forms';
+import { Requerimiento } from '../../models/datos-tramite.model';
 import { SolicitanteService } from '@libs/shared/data-access-user/src/core/services/shared/solicitante/solicitante.service';
+import { Subject } from 'rxjs';
+import { TIPO_PERSONA } from '@libs/shared/data-access-user/src/tramites/constantes/constantes';
 import { TituloComponent } from '@libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
 import { UppercaseDirective } from '@libs/shared/data-access-user/src/tramites/directives/Uppercase/uppercase.directive';
+import { ValidatorFn } from '@angular/forms';
+import { Validators } from '@angular/forms';
+import { forwardRef } from '@angular/core';
+import { takeUntil } from 'rxjs';
+import { tap } from 'rxjs';
 
 @Component({
   selector: 'solicitante',
@@ -70,7 +84,7 @@ export class SolicitanteComponent implements OnInit, OnDestroy {
    *
    * @type {any} - Tipo genérico, se recomienda especificar un tipo más concreto si es posible.
    */
-  folioTramite: any;
+  folioTramite: Requerimiento = {} as Requerimiento;
 
   /**
    * Fecha de inicio del trámite, inicializada con la fecha actual en formato 'YYYY-MM-DD'.

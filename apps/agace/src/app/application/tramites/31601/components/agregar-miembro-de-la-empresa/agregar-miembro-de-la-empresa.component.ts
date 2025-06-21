@@ -1,31 +1,32 @@
-import {
-  AfterViewInit,
-  Component,
-  ElementRef,
-  OnDestroy,
-  OnInit,
-  ViewChild,
-} from '@angular/core';
-import { Catalogo, ConsultaioQuery } from '@ng-mf/data-access-user';
-import {
-  FormBuilder,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
-import { Solicitud31601State, Tramite31601Store } from '../../../../estados/tramites/tramite31601.store';
-import { Subject, map, takeUntil } from 'rxjs';
+import { AfterViewInit } from '@angular/core';
+import { Catalogo } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
+import { Component } from '@angular/core';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { ElementRef } from '@angular/core';
+import { FormBuilder } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
 import { InputRadioComponent } from "@libs/shared/data-access-user/src/tramites/components/input-radio/input-radio.component";
 import { Modal } from 'bootstrap';
 import { Modificacion } from '@libs/shared/data-access-user/src/core/enums/31601/modificacion.enum';
+import { OnDestroy } from '@angular/core';
+import { OnInit } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
+import { Solicitud31601State } from '../../../../estados/tramites/tramite31601.store';
+import { Subject } from 'rxjs';
+import { TableBody } from '../../models/models31601.model';
 import { TableComponent } from '@ng-mf/data-access-user';
 import { TablePaginationComponent } from '@ng-mf/data-access-user';
 import { Tramite31601Query } from '../../../../estados/queries/tramite31601.query';
+import { Tramite31601Store } from '../../../../estados/tramites/tramite31601.store';
+import { Validators } from '@angular/forms';
+import { ViewChild } from '@angular/core';
 import enSuCaracterDe from '@libs/shared/theme/assets/json/31601/enSuCaracterDe.json';
+import { map } from 'rxjs';
 import miembrodelaempresaTable from '@libs/shared/theme/assets/json/31601/miembroDeLaEmpresa .json';
 import nacionalidad from '@libs/shared/theme/assets/json/31601/nacionalidad.json';
 import preOperativo from '@libs/shared/theme/assets/json/31601/preOperativo.json';
+import { takeUntil } from 'rxjs';
 
 /**
  * @component
@@ -135,7 +136,7 @@ export class AgregarMiembroDeLaEmpresaComponent
   /**
    * Cuerpo de datos de la tabla de miembros.
    */
-  public miembroDeLaEmpresaBodyData: any[] = [];
+  public miembroDeLaEmpresaBodyData: TableBody[] = [];
   /**
  * @property {Modificacion} textoEstatico
  * @description Propiedad que contiene la enumeración `Modificacion`, la cual define textos estáticos

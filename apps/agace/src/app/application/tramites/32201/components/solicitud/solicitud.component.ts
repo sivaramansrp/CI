@@ -1,20 +1,27 @@
-import { CommonModule } from '@angular/common';
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { map, Subject, takeUntil } from 'rxjs';
 import * as XLSX from 'xlsx'; // Importa XLSX para leer archivos Excel
-import {
-  AlertComponent,
-  InputCheckComponent,
-  InputRadioComponent,
-  Notificacion,
-  NotificacionesComponent,
-  TituloComponent,
-  VALID_FILE_REGEX,
-} from '@libs/shared/data-access-user/src';
+import { AlertComponent } from '@libs/shared/data-access-user/src';
+import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
+import { EventEmitter } from '@angular/core';
+import { FormBuilder } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
+import { InputCheckComponent } from '@libs/shared/data-access-user/src';
+import { InputRadioComponent } from '@libs/shared/data-access-user/src';
+import { Notificacion } from '@libs/shared/data-access-user/src';
+import { NotificacionesComponent } from '@libs/shared/data-access-user/src';
+import { OnInit } from '@angular/core';
+import { Output } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
 import { SOLICITUD_32201_ENUM } from '../../constantes/anexo';
+import { Solicitud32201State } from '../../estados/tramite32201.store';
+import { Subject } from 'rxjs';
+import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { Tramite32201Query } from '../../estados/tramite32201.query';
-import { Solicitud32201State, Tramite32201Store } from '../../estados/tramite32201.store';
+import { Tramite32201Store } from '../../estados/tramite32201.store';
+import { VALID_FILE_REGEX } from '@libs/shared/data-access-user/src';
+import { map } from 'rxjs';
+import { takeUntil } from 'rxjs';
 
 /**
  * Componente que representa la funcionalidad de la solicitud del trámite 32201.
@@ -30,7 +37,7 @@ import { Solicitud32201State, Tramite32201Store } from '../../estados/tramite322
     InputRadioComponent,
     AlertComponent,
     InputCheckComponent,
-    NotificacionesComponent
+    NotificacionesComponent,
   ],
   templateUrl: './solicitud.component.html',
   styleUrl: './solicitud.component.scss',
@@ -63,7 +70,7 @@ export class SolicitudComponent implements OnInit {
 
   /**
    * Elemento de entrada de archivo HTML.
-   * 
+   *
    * @type {HTMLInputElement}
    */
   elgirArchivo!: HTMLInputElement;
@@ -155,7 +162,7 @@ export class SolicitudComponent implements OnInit {
             { header: 1 }
           );
 
-          const EXPECTED_COLUMNS = 5;  // Agregue aquí el número requerido de columnas o lógica 
+          const EXPECTED_COLUMNS = 5; // Agregue aquí el número requerido de columnas o lógica
           const FIRST_ROW = JSON_DATA[0] as string[];
           if (FIRST_ROW.length === EXPECTED_COLUMNS) {
             this.confirmarModal(); // Abre el modal de confirmación
@@ -180,7 +187,7 @@ export class SolicitudComponent implements OnInit {
       tiempoDeEspera: 2000,
       txtBtnAceptar: 'Aceptar',
       txtBtnCancelar: '',
-    }
+    };
   }
 
   public errorModal(): void {
@@ -194,7 +201,7 @@ export class SolicitudComponent implements OnInit {
       tiempoDeEspera: 2000,
       txtBtnAceptar: 'Aceptar',
       txtBtnCancelar: '',
-    }
+    };
   }
 
   /**
@@ -202,7 +209,9 @@ export class SolicitudComponent implements OnInit {
    * @returns {void}
    */
   activarSeleccionArchivo(): void {
-    this.elgirArchivo = document.getElementById('archivoMedicamentos') as HTMLInputElement;
+    this.elgirArchivo = document.getElementById(
+      'archivoMedicamentos'
+    ) as HTMLInputElement;
     if (this.elgirArchivo) {
       this.elgirArchivo.click();
     }
@@ -210,9 +219,9 @@ export class SolicitudComponent implements OnInit {
 
   /**
    * Maneja el cambio de archivo en el input de archivo.
-   * 
+   *
    * @param event Evento de cambio de archivo.
-   * 
+   *
    * @returns {void}
    */
   onCambioDeArchivo(event: Event): void {
@@ -238,6 +247,8 @@ export class SolicitudComponent implements OnInit {
     metodoNombre: keyof Tramite32201Store
   ): void {
     const FIELD_VALUE = form.get(campo)?.value;
-    (this.tramite32201Store[metodoNombre] as (value: unknown) => void)(FIELD_VALUE);
+    (this.tramite32201Store[metodoNombre] as (value: unknown) => void)(
+      FIELD_VALUE
+    );
   }
 }
