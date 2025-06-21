@@ -158,6 +158,17 @@ export class RegistroSocioAccionistaComponent implements OnInit, OnDestroy {
               this.accionistaStore.setsocioAccionistaNacional(this.socioNacional);
               this.router.navigate(['login/consulta-socio-accionista']);
             } else {
+              this.nuevaNotificacion = {
+                tipoNotificacion: 'alert',
+                categoria: 'danger',
+                modo: 'action',
+                titulo: 'Alerta',
+                mensaje: 'No se encontró un socio accionista con el RFC proporcionado.',
+                cerrar: false,
+                tiempoDeEspera: 2000,
+                txtBtnAceptar: 'Aceptar',
+                txtBtnCancelar: '',
+              };
               console.error('No se encontró un socio accionista con el RFC proporcionado.');
             }
           }),
@@ -184,6 +195,17 @@ export class RegistroSocioAccionistaComponent implements OnInit, OnDestroy {
                 this.accionistaStore.setsocioAccionistaExtranjero(this.socioExtranjero);
                 this.router.navigate(['login/consulta-accionista-extranjero-fisica']);
               } else {
+                this.nuevaNotificacion = {
+                  tipoNotificacion: 'alert',
+                  categoria: 'danger',
+                  modo: 'action',
+                  titulo: 'Alerta',
+                  mensaje: 'No se encontró un socio nacional con el nombre proporcionado.',
+                  cerrar: false,
+                  tiempoDeEspera: 2000,
+                  txtBtnAceptar: 'Aceptar',
+                  txtBtnCancelar: '',
+                };
                 console.error('No se encontró un socio nacional con el nombre proporcionado.');
               }
             }),
@@ -208,6 +230,17 @@ export class RegistroSocioAccionistaComponent implements OnInit, OnDestroy {
                 this.accionistaStore.setsocioAccionistaExtranjeroMoral(this.socioExtranjeroMoral);
                 this.router.navigate(['login/consulta-accionista-extranjero-moral']);
               } else {
+                this.nuevaNotificacion = {
+                  tipoNotificacion: 'alert',
+                  categoria: 'danger',
+                  modo: 'action',
+                  titulo: 'Alerta',
+                  mensaje: 'No se encontró un socio nacional con la razón social proporcionada.',
+                  cerrar: false,
+                  tiempoDeEspera: 2000,
+                  txtBtnAceptar: 'Aceptar',
+                  txtBtnCancelar: '',
+                };
                 console.error('No se encontró un socio nacional con la razón social proporcionada.');
               }
             }),

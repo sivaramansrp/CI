@@ -113,6 +113,9 @@ export class ConsultaPersonaNotificacionesComponent implements OnInit, OnDestroy
    * Cancela la operación y navega a la pantalla de registro de notificaciones.
    */
   cancelarDatos() {
+    if (this.registroState.personasNotificaciones.length > 0) {
+      this.registroStore.setBotonEliminar(true);
+    }
     this.registroStore.setValorRegistro(this.registrarDatos = false);
     this.router.navigate(['login/registro-notificadores']);
   }

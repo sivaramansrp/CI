@@ -153,4 +153,8 @@ export class ConsultaAccionistaExtranjeroFisicaComponent implements OnInit {
       )
       .subscribe();
   }
+
+  cancelarGuardado() {
+    this.router.navigate(['login/registro-socio-accionista']);
+  }
 }

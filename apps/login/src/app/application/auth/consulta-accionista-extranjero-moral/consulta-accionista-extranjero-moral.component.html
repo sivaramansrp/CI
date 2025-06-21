@@ -50,10 +50,17 @@
             </form>
             <div class="row">
                 <div class="d-flex justify-content-lg-end h1">
-                    <button class="btn btn-primary ms-2" type="button" (click)="confirmarSocioExtranjeroMoral()">Confirma datos</button>
-                    <button type="button" class="btn btn-default ms-2">Cancelar</button>
+                    <button class="btn btn-primary ms-2" type="button"
+                        (click)="confirmarSocioExtranjeroMoral()">Confirma datos</button>
+                    <button type="button" class="btn btn-default ms-2" (click)="cancelarGuardado()">Cancelar</button>
                 </div>
             </div>
         </div>
     </div>
 </div>
+@if (nuevaNotificacion) {
+<section>
+    <lib-notificaciones [notificacionInput]="nuevaNotificacion">
+    </lib-notificaciones>
+</section>
+}

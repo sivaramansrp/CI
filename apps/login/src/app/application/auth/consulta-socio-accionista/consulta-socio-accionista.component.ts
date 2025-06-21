@@ -70,6 +70,10 @@ export class ConsultaSocioAccionistaComponent implements OnInit {
     this.accionistaStore.setRegistraDatosNacional(this.registrarDatos = true);
     this.router.navigate(['login/registro-socio-accionista']);
   }
+
+  cancelarGuardado() {
+    this.router.navigate(['login/registro-socio-accionista']);
+  }
 }
 
 

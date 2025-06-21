@@ -113,7 +113,7 @@ export class ConsultaAccionistaExtranjeroMoralComponent implements OnInit {
       ...this.formConsultaSocioExtranjero.getRawValue()
     };
 
-    this.servicioUsuario.guardarSocioExtranjero(DATOS)
+    this.servicioUsuario.guardarSocioExtranjeroMoral(DATOS)
       .pipe(
         map((succes) => {
           if (succes) {
@@ -147,4 +147,7 @@ export class ConsultaAccionistaExtranjeroMoralComponent implements OnInit {
       .subscribe();
   }
 
+  cancelarGuardado() {
+    this.router.navigate(['login/registro-socio-accionista']);
+  }
 }

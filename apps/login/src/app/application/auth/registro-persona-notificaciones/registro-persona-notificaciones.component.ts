@@ -67,6 +67,8 @@ export class RegistroPersonaNotificacionesComponent implements OnInit, OnDestroy
   public modelNotificador?: ConsultaRegistro;
   /** Notificación para mostrar mensajes al usuario.*/
   public nuevaNotificacion!: Notificacion;
+  /** variable para visualizar el botón eliminar notificadores */
+  public botonEliminar: boolean = false;
 
   /**
    * Constructor del componente.
@@ -99,6 +101,7 @@ export class RegistroPersonaNotificacionesComponent implements OnInit, OnDestroy
       .subscribe();
     this.confirmarDatos();
     this.personasNotificaciones = this.registroState.personasNotificaciones;
+    this.botonEliminar = this.registroState.eliminar;
   }
 
   /**

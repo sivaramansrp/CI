@@ -17,6 +17,8 @@ export interface RegistroStore {
     registrarDatos: boolean;
     /** Indica si la tabla de personas notificadoras debe mostrarse en la UI */
     visualizarTabla: boolean;
+    /** Indica si se visualiza el botón eliminar */
+    eliminar: boolean;
 }
 
 /**
@@ -35,7 +37,8 @@ export function createInitialState(): RegistroStore {
             rfc: '',
         },
         registrarDatos: false,
-        visualizarTabla: false
+        visualizarTabla: false,
+        eliminar: false
     };
 }
 
@@ -112,6 +115,17 @@ export class RegistroStates extends Store<RegistroStore> {
         this.update((state) => ({
             ...state,
             visualizarTabla,
+        }));
+    }
+
+    /**
+     * Actualiza el valor que indica si el botón de eliminar debe estar activo o visible en la UI.
+     * @param eliminar Valor booleano para activar o desactivar el botón de eliminar.
+     */
+    public setBotonEliminar(eliminar: boolean): void {
+        this.update((state) => ({
+            ...state,
+            eliminar,
         }));
     }
 }
