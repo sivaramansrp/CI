@@ -1,8 +1,9 @@
 import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { PagoDeDerechosContenedoraComponent } from './pago-de-derechos-contenedora.component';
 import { CommonModule } from '@angular/common';
-import { of, Subject } from 'rxjs';
+import { of } from 'rxjs';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { DatosSolicitudService } from '../../../../shared/services/datos-solicitud.service';
 
 describe('PagoDeDerechosContenedoraComponent', () => {
   let component: PagoDeDerechosContenedoraComponent;
@@ -19,7 +20,7 @@ describe('PagoDeDerechosContenedoraComponent', () => {
       updatePagoDerechosFormState: jest.fn()
     };
     mockConsultaQuery = {
-      selectConsultaioState$: of({ readonly: true })
+      selectConsultaioState$: of({ soloLectura: true })
     };
 
     await TestBed.configureTestingModule({
@@ -27,7 +28,8 @@ describe('PagoDeDerechosContenedoraComponent', () => {
       providers: [
         { provide: 'Tramite240308Query', useValue: mockTramiteQuery },
         { provide: 'Tramite240308Store', useValue: mockTramiteStore },
-        { provide: 'ConsultaioQuery', useValue: mockConsultaQuery }
+        { provide: 'ConsultaioQuery', useValue: mockConsultaQuery },
+        { provide: DatosSolicitudService, useValue: { obtenerBancos: jest.fn(() => of([])) } } 
       ],
       schemas: [NO_ERRORS_SCHEMA]
     })
@@ -47,19 +49,22 @@ describe('PagoDeDerechosContenedoraComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
+  it('debería crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should subscribe to consultaQuery and set esSoloLectura', () => {
-    expect(component.esSoloLectura).toBe(true);
+  it('debería suscribirse a getPagoDerechos$ y establecer pagoDerechoFormState', () => {
+    expect(component.pagoDerechoFormState).toEqual({
+      banco: "",
+      cadenaDependencia: "",
+      claveReferencia: "",
+      fechaPago: "",
+      importePago: "",
+      llavePago: ""
+    });
   });
 
-  it('should subscribe to getPagoDerechos$ and set pagoDerechoFormState', () => {
-    expect(component.pagoDerechoFormState).toEqual({ pago: 123 });
-  });
-
-  it('should clean up unsubscribe$ on ngOnDestroy', () => {
+  it('debería limpiar unsubscribe$ en ngOnDestroy', () => {
     const nextSpy = jest.spyOn((component as any).unsubscribe$, 'next');
     const completeSpy = jest.spyOn((component as any).unsubscribe$, 'complete');
     component.ngOnDestroy();

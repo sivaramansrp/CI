@@ -1,7 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { AgregarProveedorContenedoraComponent } from './agregar-proveedor-contenedora.component';
 import { Tramite240308Store } from '../../estados/tramite240308Store.store';
-import { EventEmitter } from '@angular/core';
+import { DatosSolicitudService } from '../../../../shared/services/datos-solicitud.service';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('AgregarProveedorContenedoraComponent', () => {
   let component: AgregarProveedorContenedoraComponent;
@@ -12,11 +13,11 @@ describe('AgregarProveedorContenedoraComponent', () => {
     mockTramiteStore = {
       updateProveedorTablaDatos: jest.fn()
     } as any;
-
     await TestBed.configureTestingModule({
-      imports: [AgregarProveedorContenedoraComponent],
+      imports: [AgregarProveedorContenedoraComponent, HttpClientTestingModule],
       providers: [
-        { provide: Tramite240308Store, useValue: mockTramiteStore }
+        { provide: Tramite240308Store, useValue: mockTramiteStore },
+        DatosSolicitudService
       ]
     }).compileComponents();
 

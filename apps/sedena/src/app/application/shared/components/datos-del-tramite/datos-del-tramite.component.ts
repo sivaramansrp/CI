@@ -21,9 +21,11 @@ import {
   Component,
   EventEmitter,
   Input,
+  OnChanges,
   OnDestroy,
   OnInit,
   Output,
+  SimpleChanges,
   ViewChild,
 } from '@angular/core';
 import {
@@ -88,7 +90,7 @@ import { DatosMercanciaContenedoraComponent } from '../../../tramites/240118/com
   templateUrl: './datos-del-tramite.component.html',
   styleUrl: './datos-del-tramite.component.scss',
 })
-export class DatosDelTramiteComponent implements OnInit, OnDestroy {
+export class DatosDelTramiteComponent implements OnInit, OnDestroy ,OnChanges{
   showModal: boolean = false;
   /**
    * @property {number} idProcedimiento
@@ -408,6 +410,24 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
     private router: Router,
     private consultaioQuery: ConsultaioQuery
   ) {}
+
+  /**
+   * Hook que se ejecuta cuando cambian las propiedades de entrada del componente.
+   * Permite habilitar o deshabilitar los formularios según el modo de solo lectura.
+   * @param {SimpleChanges} changes - Cambios detectados en las propiedades de entrada.
+   */
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['esFormularioSoloLectura'] && this.form) {
+      if (this.esFormularioSoloLectura) {
+        this.form.disable();
+        this.formDeJustificacion.disable();
+      } else {
+        this.form.enable();
+        this.formDeJustificacion.enable();
+        this.form.get('paisDestino')?.disable();
+      }
+    }
+  }
   /**
    * Evalúa si se debe inicializar o cargar datos en el formulario.
    * Además, obtiene la información del catálogo de mercancía.

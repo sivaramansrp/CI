@@ -38,19 +38,19 @@ describe('SolicitudeDeArtificiosPirotecnicosService', () => {
         expect(service).toBeTruthy();
     });
 
-    it('debería llamar a http.get y devolver un observable en obtenerDatos', (done) => {
-        const mockResponse = { datosDelTramite: {}, destinatarioFinalTablaDatos: [], justificacionTramiteFormState: {}, merccancialTablaDatos: [], pagoDerechos: {}, proveedorTablaDatos: [] };
-        httpMock.get.mockReturnValue(of(mockResponse));
+    it('debería llamar a http.get y devolver un observable en obtenerDatos', (hecho) => {
+        const respuestaMock = { datosDelTramite: {}, destinatarioFinalTablaDatos: [], justificacionTramiteFormState: {}, merccancialTablaDatos: [], pagoDerechos: {}, proveedorTablaDatos: [] };
+        httpMock.get.mockReturnValue(of(respuestaMock));
 
-        service.obtenerDatos().subscribe((result) => {
-            expect(result).toBe(mockResponse);
+        service.obtenerDatos().subscribe((resultado) => {
+            expect(resultado).toBe(respuestaMock);
             expect(httpMock.get).toHaveBeenCalledWith('./assets/json/240308/datos.json');
-            done();
+            hecho();
         });
     });
 
     it('debería actualizar todos los slices del store en establecerDatosDeLaSolicitud', () => {
-        const mockData = {
+        const datosMock = {
             datosDelTramite: { a: 1 },
             destinatarioFinalTablaDatos: [{ b: 2 }],
             justificacionTramiteFormState: { c: 3 },
@@ -59,13 +59,13 @@ describe('SolicitudeDeArtificiosPirotecnicosService', () => {
             proveedorTablaDatos: [{ f: 6 }]
         };
 
-        service.establecerDatosDeLaSolicitud(mockData as any);
+        service.establecerDatosDeLaSolicitud(datosMock as any);
 
-        expect(storeMock.updateDatosDelTramiteFormState).toHaveBeenCalledWith(mockData.datosDelTramite);
-        expect(storeMock.updateDestinatarioFinalTablaDatos).toHaveBeenCalledWith(mockData.destinatarioFinalTablaDatos);
-        expect(storeMock.updateJustificacionFormulario).toHaveBeenCalledWith(mockData.justificacionTramiteFormState);
-        expect(storeMock.updateMercanciaTablaDatos).toHaveBeenCalledWith(mockData.merccancialTablaDatos);
-        expect(storeMock.updatePagoDerechosFormState).toHaveBeenCalledWith(mockData.pagoDerechos);
-        expect(storeMock.updateProveedorTablaDatos).toHaveBeenCalledWith(mockData.proveedorTablaDatos);
+        expect(storeMock.updateDatosDelTramiteFormState).toHaveBeenCalledWith(datosMock.datosDelTramite);
+        expect(storeMock.updateDestinatarioFinalTablaDatos).toHaveBeenCalledWith(datosMock.destinatarioFinalTablaDatos);
+        expect(storeMock.updateJustificacionFormulario).toHaveBeenCalledWith(datosMock.justificacionTramiteFormState);
+        expect(storeMock.updateMercanciaTablaDatos).toHaveBeenCalledWith(datosMock.merccancialTablaDatos);
+        expect(storeMock.updatePagoDerechosFormState).toHaveBeenCalledWith(datosMock.pagoDerechos);
+        expect(storeMock.updateProveedorTablaDatos).toHaveBeenCalledWith(datosMock.proveedorTablaDatos);
     });
 });

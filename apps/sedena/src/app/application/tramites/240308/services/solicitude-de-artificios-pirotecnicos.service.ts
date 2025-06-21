@@ -1,3 +1,7 @@
+/**
+ * Servicio para gestionar la solicitud de artificios pirotécnicos.
+ * Este servicio se encarga de obtener los datos del trámite desde un archivo JSON
+ */
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
@@ -27,11 +31,19 @@ export class SolicitudeDeArtificiosPirotecnicosService {
     private estadoTramite: Tramite240308Store
   ) {}
 
-   obtenerDatos(): Observable<Tramite240308State> {
+  /**
+   * Obtiene los datos del trámite desde un archivo JSON local.
+   * @returns {Observable<Tramite240308State>} Observable con los datos del trámite.
+   */
+  obtenerDatos(): Observable<Tramite240308State> {
     return this.http.get<Tramite240308State>('./assets/json/240308/datos.json');
   }
 
-   establecerDatosDeLaSolicitud(datos: Tramite240308State): void {
+  /**
+   * Establece los datos de la solicitud en el estado global del trámite.
+   * @param {Tramite240308State} datos - Datos del trámite a establecer.
+   */
+  establecerDatosDeLaSolicitud(datos: Tramite240308State): void {
     this.estadoTramite.updateDatosDelTramiteFormState(datos.datosDelTramite);
     this.estadoTramite.updateDestinatarioFinalTablaDatos(datos.destinatarioFinalTablaDatos);
     this.estadoTramite.updateJustificacionFormulario(datos.justificacionTramiteFormState);

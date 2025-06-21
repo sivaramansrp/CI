@@ -1,3 +1,7 @@
+/**
+ *  datos-mercancia-contenedora.component.ts
+ *  Componente Angular para manejar los datos de mercancía en un trámite específico.
+ */
 import { CommonModule } from '@angular/common';
 
 import { Component, EventEmitter, Output } from '@angular/core';
@@ -6,9 +10,9 @@ import { MercanciaDetalle } from '../../../../shared/models/datos-del-tramite.mo
 import { Tramite240308Store } from '../../estados/tramite240308Store.store';
 
 /**
- * @title Datos de la Mercancía Contenedora
- * @description Componente contenedor encargado de recibir los datos de mercancía y actualizar el estado global del trámite.
- * @summary Actúa como puente entre el componente de datos de mercancía y el store de Akita.
+ *  Datos de la Mercancía Contenedora
+ *  Componente contenedor encargado de recibir los datos de mercancía y actualizar el estado global del trámite.
+ *  Actúa como puente entre el componente de datos de mercancía y el store de Akita.
  */
 
 @Component({

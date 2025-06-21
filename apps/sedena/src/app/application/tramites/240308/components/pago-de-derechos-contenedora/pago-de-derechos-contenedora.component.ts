@@ -1,4 +1,9 @@
-import { CommonModule } from '@angular/common';
+
+/**
+ *  Pago de Derechos Contenedora
+ *  Componente contenedor que integra el componente de pago de derechos con el store del trámite 240308.
+ * */
+ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
@@ -11,9 +16,9 @@ import { takeUntil } from 'rxjs';
 
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 /**
- * @title Pago de Derechos Contenedora
- * @description Componente contenedor que se encarga de enlazar el estado de pago de derechos con el formulario correspondiente.
- * @summary Escucha cambios en el estado y propaga las actualizaciones al store.
+ *  Pago de Derechos Contenedora
+ *  Componente contenedor que se encarga de enlazar el estado de pago de derechos con el formulario correspondiente.
+ *  Escucha cambios en el estado y propaga las actualizaciones al store.
  */
 
 @Component({

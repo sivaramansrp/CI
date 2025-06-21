@@ -1,3 +1,7 @@
+/**
+ *  Agregar Destinatario Final Contenedora Component
+ *  Componente contenedor que integra el componente de agregar destinatario final con el store del trámite 240308.
+ */
 import { AgregarDestinatarioFinalComponent } from '../../../../shared/components/agregar-destinatario-final/agregar-destinatario-final.component';
 import { CommonModule } from '@angular/common';
 

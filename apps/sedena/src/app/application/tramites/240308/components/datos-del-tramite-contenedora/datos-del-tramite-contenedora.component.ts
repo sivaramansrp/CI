@@ -1,3 +1,7 @@
+/**
+ *  datos-del-tramite-contenedora.component.ts
+ *  Componente contenedor que maneja el estado del trámite 240308 y enlaza los datos del trámite con la vista.
+ */
 import { Component, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CrosslistComponent } from '@libs/shared/data-access-user/src';
@@ -20,9 +24,9 @@ import { ModalComponent } from '../../../../shared/components/modal/modal.compon
 import { DatosMercanciaContenedoraComponent } from '../datos-mercancia-contenedora/datos-mercancia-contenedora.component';
 
 /**
- * @title Datos del Trámite Contenedora
- * @description Componente contenedor que se encarga de enlazar el estado del trámite con el componente de datos del trámite.
- * @summary Maneja la suscripción al estado y propaga los cambios a través del store.
+ *  Datos del Trámite Contenedora
+ *  Componente contenedor que se encarga de enlazar el estado del trámite con el componente de datos del trámite.
+ *  Maneja la suscripción al estado y propaga los cambios a través del store.
  */
 
 @Component({
@@ -39,7 +43,11 @@ export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
    * @property {ModalComponent} modalComponent
    */
     @ViewChild('modal', { static: false }) modalComponent!: ModalComponent;
-
+ /**
+   * Indica si el formulario es de solo lectura.
+   * @property {boolean} esSoloLectura
+   * @description Esta propiedad se utiliza para determinar si el formulario debe ser editable o no.
+   * */
   esSoloLectura!: boolean;
   /**
    * Observable para limpiar suscripciones activas al destruir el componente.

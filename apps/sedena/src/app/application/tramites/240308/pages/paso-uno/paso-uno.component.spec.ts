@@ -2,8 +2,8 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PasoUnoComponent } from './paso-uno.component';
 import { SolicitudeDeArtificiosPirotecnicosService } from '../../services/solicitude-de-artificios-pirotecnicos.service';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
-import { of, Subject } from 'rxjs';
-
+import { of } from 'rxjs';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 describe('PasoUnoComponent', () => {
   let component: PasoUnoComponent;
   let fixture: ComponentFixture<PasoUnoComponent>;
@@ -18,55 +18,7 @@ describe('PasoUnoComponent', () => {
 
     mockConsultaQuery = {
       selectConsultaioState$: of({
-        update: false,
-        procedureId: '',
-        parameter: '',
-        department: '',
-        folioTramite: '',
-        tipoDeTramite: '',
-        estadoDeTramite: '',
-        readonly: false,
-        create: false,
-        consultaioSolicitante: {
-          folioDelTramite: '',
-          fechaDeInicio: '',
-          estadoDelTramite: ''
-        }
-      })
-    };
-
-    await TestBed.configureTestingModule({
-      declarations: [PasoUnoComponent],
-      providers: [
-        { provide: SolicitudeDeArtificiosPirotecnicosService, useValue: mockServicio },
-        { provide: ConsultaioQuery, useValue: mockConsultaQuery }
-      ]
-    }).compileComponents();
-
-    fixture = TestBed.createComponent(PasoUnoComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
-
-  it('should create the component', () => {
-    expect(component).toBeTruthy();
-  });
-
-  it('should set indice to 1 by default', () => {
-    expect(component.indice).toBe(1);
-  });
-
-  it('should subscribe to selectConsultaioState$ and set estadoConsulta', () => {
-    expect(component.estadoConsulta).toEqual({ update: false });
-  });
-
-  it('should set datosRespuestaDisponibles to true if estadoConsulta.update is false', () => {
-    expect(component.datosRespuestaDisponibles).toBe(true);
-  });
-
-  it('should call obtenerDatosBandejaSolicitudes if estadoConsulta.update is true', () => {
-    mockConsultaQuery.selectConsultaioState$ = of({
-      update: true,
+      update: false,
       procedureId: '',
       parameter: '',
       department: '',
@@ -79,6 +31,70 @@ describe('PasoUnoComponent', () => {
         folioDelTramite: '',
         fechaDeInicio: '',
         estadoDelTramite: ''
+      }
+      })
+    };
+
+    await TestBed.configureTestingModule({
+      declarations: [PasoUnoComponent],
+      providers: [
+      { provide: SolicitudeDeArtificiosPirotecnicosService, useValue: mockServicio },
+      { provide: ConsultaioQuery, useValue: mockConsultaQuery }
+      ],
+      schemas: [NO_ERRORS_SCHEMA]
+    }).compileComponents();
+
+    fixture = TestBed.createComponent(PasoUnoComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+    });
+
+    it('debería crear el componente', () => {
+    expect(component).toBeTruthy();
+    });
+
+    it('debería establecer indice en 1 por defecto', () => {
+    expect(component.indice).toBe(1);
+    });
+
+    it('debería suscribirse a selectConsultaioState$ y establecer estadoConsulta', () => {
+    expect(component.estadoConsulta).toEqual({
+      update: false,
+      procedureId: '',
+      parameter: '',
+      department: '',
+      folioTramite: '',
+      tipoDeTramite: '',
+      estadoDeTramite: '',
+      readonly: false,
+      create: false,
+      consultaioSolicitante: {
+      folioDelTramite: '',
+      fechaDeInicio: '',
+      estadoDelTramite: ''
+      }
+    });
+    });
+
+    it('debería establecer datosRespuestaDisponibles en true si estadoConsulta.update es false', () => {
+    expect(component.datosRespuestaDisponibles).toBe(true);
+    });
+
+    it('debería llamar a obtenerDatosBandejaSolicitudes si estadoConsulta.update es true', () => {
+    mockConsultaQuery.selectConsultaioState$ = of({
+      update: true,
+      procedureId: '',
+      parameter: '',
+      department: '',
+      folioTramite: '',
+      tipoDeTramite: '',
+      estadoDeTramite: '',
+      readonly: false,
+      create: false,
+      consultaioSolicitante: {
+      folioDelTramite: '',
+      fechaDeInicio: '',
+      estadoDelTramite: ''
       },
     });
     const obtenerSpy = jest.spyOn(PasoUnoComponent.prototype, 'obtenerDatosBandejaSolicitudes');
@@ -86,14 +102,14 @@ describe('PasoUnoComponent', () => {
     newFixture.detectChanges();
     expect(obtenerSpy).toHaveBeenCalled();
     obtenerSpy.mockRestore();
-  });
+    });
 
-  it('should set indice when seleccionaTab is called', () => {
+    it('debería establecer indice cuando se llama seleccionaTab', () => {
     component.seleccionaTab(3);
     expect(component.indice).toBe(3);
-  });
+    });
 
-  it('obtenerDatosBandejaSolicitudes should call servicio.obtenerDatos and establecerDatosDeLaSolicitud', () => {
+  it('obtenerDatosBandejaSolicitudes debería llamar a servicio.obtenerDatos y establecerDatosDeLaSolicitud', () => {
     component.datosRespuestaDisponibles = false;
     component.obtenerDatosBandejaSolicitudes();
     expect(mockServicio.obtenerDatos).toHaveBeenCalled();
@@ -101,7 +117,7 @@ describe('PasoUnoComponent', () => {
     expect(component.datosRespuestaDisponibles).toBe(true);
   });
 
-  it('should clean up notificadorDestruccion$ on ngOnDestroy', () => {
+  it('debería limpiar notificadorDestruccion$ en ngOnDestroy', () => {
     const nextSpy = jest.spyOn((component as any).notificadorDestruccion$, 'next');
     const completeSpy = jest.spyOn((component as any).notificadorDestruccion$, 'complete');
     component.ngOnDestroy();

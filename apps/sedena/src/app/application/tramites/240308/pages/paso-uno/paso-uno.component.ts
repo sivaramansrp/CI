@@ -1,3 +1,7 @@
+/**
+ *  PasoUnoComponent
+ *  Componente que representa el primer paso del flujo de solicitud de artificios pirotécnicos.
+ */
 import { Component, OnDestroy, OnInit } from '@angular/core';
 
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';

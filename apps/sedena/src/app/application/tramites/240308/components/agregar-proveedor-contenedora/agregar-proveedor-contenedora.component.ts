@@ -1,10 +1,17 @@
+/**
+ *  Agregar Proveedor Contenedora
+ *  Componente contenedor que integra el componente de agregar proveedor con el store del trámite 240308.
+ */
 import { AgregarProveedorComponent } from '../../../../shared/components/agregar-proveedor/agregar-proveedor.component';
 import { CommonModule } from '@angular/common';
 
 import { Component, EventEmitter, Output } from '@angular/core';
 import { Proveedor } from '../../../../shared/models/terceros-relacionados.model';
 import { Tramite240308Store } from '../../estados/tramite240308Store.store';
-
+/**
+ *  Agregar Proveedor Contenedora
+ *  Componente contenedor que gestiona la integración del componente de proveedor con el store.
+ */
 @Component({
   selector: 'app-agregar-proveedor-contenedora',
   standalone: true,

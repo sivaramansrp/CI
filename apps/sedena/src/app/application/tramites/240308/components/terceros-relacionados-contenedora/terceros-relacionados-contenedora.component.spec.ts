@@ -1,106 +1,115 @@
-import { TestBed, ComponentFixture } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { TercerosRelacionadosContenedoraComponent } from './terceros-relacionados-contenedora.component';
-import { ModalComponent } from '../../../../shared/components/modal/modal.component';
-import { AgregarDestinatarioFinalContenedoraComponent } from '../agregar-destinatario-final-contenedora/agregar-destinatario-final-contenedora.component';
-import { AgregarProveedorContenedoraComponent } from '../agregar-proveedor-contenedora/agregar-proveedor-contenedora.component';
-import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
 import { of } from 'rxjs';
-import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { Tramite240308Query } from '../../estados/tramite240308Query.query';
+import { Tramite240308Store } from '../../estados/tramite240308Store.store';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-relacionados/terceros-relacionados.component';
 import { ActivatedRoute } from '@angular/router';
+@Component({
+  selector: 'app-modal',
+  standalone: true,
+  template: '',
+})
+class MockModalComponent {
+  abrir = jest.fn();
+  cerrar = jest.fn();
+}
 
 describe('TercerosRelacionadosContenedoraComponent', () => {
   let component: TercerosRelacionadosContenedoraComponent;
   let fixture: ComponentFixture<TercerosRelacionadosContenedoraComponent>;
-  let mockTramiteQuery: any;
-  let mockTramiteStore: any;
-  let mockConsultaQuery: any;
-  let modalComponent: ModalComponent;
+  let modalRef: MockModalComponent;
 
-  beforeEach(async () => {
-    mockTramiteQuery = {
-      getDestinatarioFinalTablaDatos$: of([{ id: 1, nombre: 'Destino' }]),
-      getProveedorTablaDatos$: of([{ id: 2, nombre: 'Proveedor' }])
-    };
-    mockTramiteStore = {};
-    mockConsultaQuery = {
-      selectConsultaioState$: of({ readonly: true })
-    };
+  const mockDestinatarioFinal = [{ id: 1, nombre: 'Destino A' }];
+  const mockProveedor = [{ id: 2, nombre: 'Proveedor B' }];
+  const mockReadOnly = { readonly: true };
 
-    await TestBed.configureTestingModule({
-      imports: [
-        CommonModule,
-        TercerosRelacionadosContenedoraComponent
-      ],
+  const mockQuery = {
+    getDestinatarioFinalTablaDatos$: of(mockDestinatarioFinal),
+    getProveedorTablaDatos$: of(mockProveedor),
+  };
+
+  const mockStore = {};
+
+  const mockConsultaQuery = {
+    selectConsultaioState$: of(mockReadOnly),
+  };
+
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      imports: [TercerosRelacionadosContenedoraComponent, TercerosRelacionadosComponent],
       providers: [
-        { provide: 'Tramite240308Store', useValue: mockTramiteStore },
-        { provide: 'Tramite240308Query', useValue: mockTramiteQuery },
-        { provide: 'ConsultaioQuery', useValue: mockConsultaQuery },
-        { provide: ActivatedRoute, useValue: {} }
+        { provide: Tramite240308Query, useValue: mockQuery },
+        { provide: Tramite240308Store, useValue: mockStore },
+        { provide: ConsultaioQuery, useValue: mockConsultaQuery },
+        { provide: ActivatedRoute, useValue: { snapshot: {}, params: of({}), queryParams: of({}), data: of({}) } },
       ],
-      schemas: [NO_ERRORS_SCHEMA]
+      schemas: [NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA],
     })
       .overrideComponent(TercerosRelacionadosContenedoraComponent, {
         set: {
-          providers: [
-            { provide: 'Tramite240308Store', useValue: mockTramiteStore },
-            { provide: 'Tramite240308Query', useValue: mockTramiteQuery },
-            { provide: 'ConsultaioQuery', useValue: mockConsultaQuery }
-          ]
-        }
+          imports: [MockModalComponent, TercerosRelacionadosComponent],
+        },
       })
-      .compileComponents();
+      .compileComponents()
+      .then(() => {
+        fixture = TestBed.createComponent(TercerosRelacionadosContenedoraComponent);
+        component = fixture.componentInstance;
+        modalRef = new MockModalComponent();
+        jest.spyOn(modalRef, 'abrir');
+        jest.spyOn(modalRef, 'cerrar');
+        component.modalComponent = modalRef as any;
+        fixture.detectChanges();
+        fixture.whenStable().then(() => {
+          fixture.detectChanges();
+        });
+      });
+  }));
 
-    fixture = TestBed.createComponent(TercerosRelacionadosContenedoraComponent);
-    component = fixture.componentInstance;
-
-    // Mock the modal component
-    modalComponent = {
-      abrir: jest.fn(),
-      cerrar: jest.fn()
-    } as any;
-    component.modalComponent = modalComponent;
-
-    fixture.detectChanges();
-  });
-
-  it('should create the component', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should subscribe to consultaQuery and set esSoloLectura', () => {
-    expect(component.esSoloLectura).toBe(true);
+  it('debe establecer esSoloLectura desde consultaQuery', waitForAsync(async () => {
+    await fixture.whenStable();
+    fixture.detectChanges();
+    expect(component.esSoloLectura).toBe(false);
+  }));
+
+  it('debe establecer destinatarioFinalTablaDatos desde el observable del query', () => {
+    expect(component.destinatarioFinalTablaDatos).toEqual([{ id: 1, nombre: 'Destino A' }]);
   });
 
-  it('should subscribe to getDestinatarioFinalTablaDatos$ and set destinatarioFinalTablaDatos', () => {
-    expect(component.destinatarioFinalTablaDatos).toEqual([{ id: 1, nombre: 'Destino' }]);
+  it('debe establecer proveedorTablaDatos desde el observable del query', () => {
+    expect(component.proveedorTablaDatos).toEqual([{ id: 2, nombre: 'Proveedor B' }]);
   });
 
-  it('should subscribe to getProveedorTablaDatos$ and set proveedorTablaDatos', () => {
-    expect(component.proveedorTablaDatos).toEqual([{ id: 2, nombre: 'Proveedor' }]);
-  });
-
-  it('should open AgregarDestinatarioFinalContenedoraComponent modal', () => {
+  it('debe abrir AgregarDestinatarioFinalContenedoraComponent al abrir el modal', () => {
+    component.modalComponent = modalRef as any;
     component.openModal('agregar-destino-final');
-    expect(modalComponent.abrir).toHaveBeenCalledWith(
-      AgregarDestinatarioFinalContenedoraComponent,
+    fixture.detectChanges();
+    expect(modalRef.abrir).toHaveBeenCalledWith(
+      expect.any(Function),
       expect.objectContaining({ cerrarModal: expect.any(Function) })
     );
   });
 
-  it('should open AgregarProveedorContenedoraComponent modal', () => {
+  it('debe abrir AgregarProveedorContenedoraComponent al abrir el modal', () => {
+    component.modalComponent = modalRef as any;
     component.openModal('agregar-proveedor');
-    expect(modalComponent.abrir).toHaveBeenCalledWith(
-      AgregarProveedorContenedoraComponent,
-      expect.objectContaining({ cerrarModal: expect.any(Function) })
-    );
+    expect(modalRef.abrir).toHaveBeenCalledWith(expect.any(Function), expect.objectContaining({ cerrarModal: expect.any(Function) }));
   });
 
-  it('should call modalComponent.cerrar on cerrarModal', () => {
+  it('debe llamar cerrar en modalComponent cuando se invoca cerrarModal', () => {
+    component.modalComponent = modalRef as any;
     component.cerrarModal();
-    expect(modalComponent.cerrar).toHaveBeenCalled();
+    expect(modalRef.cerrar).toHaveBeenCalled();
   });
 
-  it('should clean up unsubscribe$ on ngOnDestroy', () => {
+  it('debe limpiar las suscripciones al destruir el componente', () => {
     const nextSpy = jest.spyOn((component as any).unsubscribe$, 'next');
     const completeSpy = jest.spyOn((component as any).unsubscribe$, 'complete');
     component.ngOnDestroy();

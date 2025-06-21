@@ -1,3 +1,7 @@
+/**
+ *  Terceros Relacionados Contenedora
+ *  Componente contenedor encargado de gestionar los destinatarios finales y proveedores del trámite 240308.  
+ */
 import { CommonModule } from '@angular/common';
 
 import { Component, ViewChild } from '@angular/core';
@@ -18,9 +22,9 @@ import { AgregarDestinatarioFinalContenedoraComponent } from '../agregar-destina
 import { AgregarProveedorContenedoraComponent } from '../agregar-proveedor-contenedora/agregar-proveedor-contenedora.component';
 
 /**
- * @title Terceros Relacionados Contenedora
- * @description Componente contenedor encargado de suscribirse a los datos de destinatarios finales y proveedores del trámite.
- * @summary Conecta el estado global del store con el componente visual de terceros relacionados.
+ *  Terceros Relacionados Contenedora
+ *  Componente contenedor encargado de suscribirse a los datos de destinatarios finales y proveedores del trámite.
+ *  Conecta el estado global del store con el componente visual de terceros relacionados.
  */
 
 @Component({
