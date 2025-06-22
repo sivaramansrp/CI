@@ -23,7 +23,7 @@ import { TablePaginationComponent } from '@ng-mf/data-access-user';
 import { Tramite31601Query } from '../../../../estados/queries/tramite31601.query';
 import enSuCaracterDe from '@libs/shared/theme/assets/json/31601/enSuCaracterDe.json';
 import miembrodelaempresaTable from '@libs/shared/theme/assets/json/31601/miembroDeLaEmpresa .json';
-import nacionalidad from '@libs/shared/theme/assets/json/31601/nacionalidad.json';
+import nacionalidadOption from '@libs/shared/theme/assets/json/31601/nacionalidad.json';
 import preOperativo from '@libs/shared/theme/assets/json/31601/preOperativo.json';
 
 import { Antecesor } from '../../modelos/antecesor.modal';
@@ -70,15 +70,23 @@ export class AgregarMiembroDeLaEmpresaComponent
 {
 
 
-
-    /**
+  /**
    * Notificación para mostrar alertas al usuario.
+   * Se utiliza para mostrar mensajes de éxito, error o confirmación en la interfaz.
    */
   alertaNotificacion: Notificacion | null = null;
 
+  /**
+   * Almacena los miembros seleccionados en la tabla.
+   * Se utiliza para operaciones como modificar o eliminar miembros.
+   */
   miembrosSeleccionados: Antecesor[] = [];
 
-  configuracionTablaAntecesores = CONFIGURACION_ANTECESORES
+  /**
+   * Configuración de la tabla de antecesores.
+   * Define las columnas y opciones de visualización de la tabla dinámica.
+   */
+  configuracionTablaAntecesores = CONFIGURACION_ANTECESORES;
   /**
    * Notificador para completar observables al destruir el componente.
    */
@@ -132,7 +140,13 @@ export class AgregarMiembroDeLaEmpresaComponent
   /**
    * Opciones del catálogo de nacionalidades.
    */
-  nacionalidadOptions: Catalogo[] = nacionalidad;
+  nacionalidadOptions: Catalogo[] = nacionalidadOption;
+  /**
+   * Opciones del catálogo de tipo de persona.
+   */ 
+  tipoDePersonaOptions: Catalogo[] = [
+    { id: 1, descripcion: 'Física' },
+    { id: 2, descripcion: 'Moral' }]
 
   /**
    * Estado de la solicitud obtenido desde el store.
@@ -202,9 +216,19 @@ export class AgregarMiembroDeLaEmpresaComponent
     this.setEstablecimiento();
     this.inicializarEstadoFormulario();
   }
+  /**
+   * Sets the establishment by adding the first member from the `miembrodelaempresaTable`
+   * to the `tramite31601Store` using the `agregarMiembrodelaempresaTable` method.
+   *
+   * @remarks
+   * This method assumes that `miembrodelaempresaTable` is an array with at least one element.
+   * It does not perform any validation or error handling for empty arrays.
+   *
+   * @returns void
+   */
   setEstablecimiento() :void{
-   this.tramite31601Store.agregarMiembrodelaempresaTable(miembrodelaempresaTable[0]);
-  }
+    this.tramite31601Store.agregarMiembrodelaempresaTable(miembrodelaempresaTable[0]);
+   }
 
   /**
    * Inicializa los formularios y carga el estado desde el store.
@@ -223,28 +247,35 @@ export class AgregarMiembroDeLaEmpresaComponent
 
     this.agregarMiembroDeLaEmpresaFrom = this.fb.group({
       ensucaracterde: [
-        this.solicitudState?.ensucaracterde ?? 1,
+        this.solicitudState?.ensucaracterde || '',
         Validators.required,
       ],
       rfc: [
-        this.solicitudState?.rfc ?? 'HEJE780514BVA',
-        [Validators.required],
-      ],
-      obligadoaTributarenMéxico: [
-        this.solicitudState?.obligadoaTributarenMéxico ?? true,
+        this.solicitudState?.rfc || ''],
+      obligadoaTributarenMexico: [
+        this.solicitudState?.obligadoaTributarenMexico || '',
         Validators.required,
       ],
       nacionalidad: [
-        this.solicitudState?.nacionalidad ?? 1,
+        this.solicitudState?.nacionalidad || '',
         Validators.required,
       ],
       registroFederaldeContribuyentes: [
-        { value: 'HEJE780514BVA', disabled: true },
-        Validators.required,
-      ],
+        {value:this.solicitudState?.registroFederaldeContribuyentes || 'EDOUTYHE',disabled: true }
+    ],
       nombreCompleto: [
-        { value: 'ERNESTO HERNÁNDEZ URI', disabled: true },
-        Validators.required,
+       {value:this.solicitudState?.nombreCompleto || 'EO383HE', disabled: true},
+      ],
+      tipoDePersonaMiembro: [
+        this.solicitudState?.tipoDePersonaMiembro || '',
+      ],
+      nombreMiembro: [
+         this.solicitudState?.nombreMiembro || ''
+      ],
+      apellidoPaternoMiembro: [this.solicitudState?.apellidoPaternoMiembro || ''],
+      apellidoMaternoMiembro: [this.solicitudState?.apellidoMaternoMiembro || ''],
+      nombreDeLaEmpresaMiembro: [
+        this.solicitudState?.nombreDeLaEmpresaMiembro || '',
       ],
     });
 
@@ -270,16 +301,19 @@ export class AgregarMiembroDeLaEmpresaComponent
       );
     }
 
-    if (this.esFormularioSoloLectura && this.agregarMiembroDeLaEmpresaFrom) {
-      this.agregarMiembroDeLaEmpresaFrom.disable();
-    } else {
-      this.agregarMiembroDeLaEmpresaFrom.enable();
-    }
+
   }
 
-  /**
-   * Obtiene los datos y encabezados para la tabla.
-   */
+/**
+ * Maneja el cambio en el tipo de persona miembro.
+ * Actualiza el valor en el formulario reactivo y sincroniza el valor en el store.
+ * 
+ * @param $event Objeto de tipo Catalogo que representa la opción seleccionada.
+ */
+tipoDePersonaMiembroChange($event: Catalogo): void {
+  this.agregarMiembroDeLaEmpresaFrom.get('tipoDePersonaMiembro')?.setValue($event.id);
+  this.setValoresStore(this.agregarMiembroDeLaEmpresaFrom, 'tipoDePersonaMiembro', 'setTipoDePersonaMiembro');
+}
 
 
   /**
@@ -320,38 +354,95 @@ export class AgregarMiembroDeLaEmpresaComponent
       this.AgregarModelInstance = new Modal(this.AgregarMOdel.nativeElement);
     }
   }
- modificarModal(): void {
-  if(this.miembrosSeleccionados.length>0){
-      if (this.AgregarModelInstance) {
-      this.AgregarModelInstance.show();
-    }
-  }
-  else{
-     this.mostrarAlertaSeleccionarRegistro()
-  }
+/**
+ * Establece las validaciones dinámicas según el valor de "obligado a tributar en México".
+ * Si la respuesta es "Sí", los campos RFC, registro federal y nombre completo son obligatorios.
+ * Si la respuesta es diferente, el campo tipo de persona miembro es obligatorio.
+ */
+/**
+ * Establece las validaciones dinámicas según el valor de "obligado a tributar en México".
+ * Si la respuesta es "Sí", los campos RFC, registro federal y nombre completo son obligatorios.
+ * Si la respuesta es diferente, el campo tipo de persona miembro es obligatorio.
+ */
+setValidacionesObligadoa(): void {
+  const VALUE = this.agregarMiembroDeLaEmpresaFrom.get('obligadoaTributarenMexico')?.value;
+  const CONTROLES = this.agregarMiembroDeLaEmpresaFrom.controls;
+  const ES_SI = VALUE === 'Si';
+   ['registroFederaldeContribuyentes', 'rfc', 'nombreCompleto'].forEach(campo => {
+    CONTROLES[campo].setValidators(ES_SI ? [Validators.required] : null);
+    CONTROLES[campo].updateValueAndValidity();
+  });
+  CONTROLES['tipoDePersonaMiembro'].setValidators(!ES_SI ? [Validators.required] : null);
+  CONTROLES['tipoDePersonaMiembro'].updateValueAndValidity();
 }
 
-eliminarMiembro() :void{
+
+/**
+ * Establece las validaciones dinámicas según el tipo de persona seleccionado.
+ * Si es persona física, los campos de nombre y apellidos son obligatorios.
+ * Si es persona moral, el campo de nombre de la empresa es obligatorio.
+ */
+setValidacionestipo(): void {
+  const TIPO = this.agregarMiembroDeLaEmpresaFrom.get('tipoDePersonaMiembro')?.value;
+  const CONTROLES = this.agregarMiembroDeLaEmpresaFrom.controls;
+  const ES_FISICA = TIPO === 1 || TIPO === '1';
+  ['nombreMiembro', 'apellidoPaternoMiembro', 'apellidoMaternoMiembro'].forEach(campo => {
+    CONTROLES[campo].setValidators(ES_FISICA ? [Validators.required] : null);
+    CONTROLES[campo].updateValueAndValidity();
+  });
+  CONTROLES['nombreDeLaEmpresaMiembro'].setValidators(!ES_FISICA ? [Validators.required] : null);
+  CONTROLES['nombreDeLaEmpresaMiembro'].updateValueAndValidity();
+}
+
+
+/**
+ * Abre el modal de modificación si hay miembros seleccionados.
+ * Si no hay selección, muestra una alerta solicitando seleccionar un registro.
+ */
+modificarModal(): void {
   if (this.miembrosSeleccionados.length > 0) {
-     this.alertaNotificacion = {
-    ttl:'eliminar confirmation',
-    tipoNotificacion: 'alert',
-    categoria: 'danger',
-    modo: 'action',
-    titulo: '',
-    mensaje: 'Confirma la eliminación',
-    cerrar: false,
-    tiempoDeEspera: 2000,
-    txtBtnAceptar: 'Aceptar',
-    txtBtnCancelar: 'Cancelar',
-  }
+    this.agregarMiembroDeLaEmpresaFrom.setValue(this.miembrosSeleccionados[0]);
+    if (this.AgregarModelInstance) {
+      this.AgregarModelInstance.show();
+    }
   } else {
     this.mostrarAlertaSeleccionarRegistro();
   }
 }
 
+/**
+ * Solicita confirmación para eliminar un miembro seleccionado.
+ * Si hay miembros seleccionados, muestra una notificación de confirmación.
+ * Si no hay selección, muestra una alerta solicitando seleccionar un registro.
+ */
+eliminarMiembro(): void {
+  if (this.miembrosSeleccionados.length > 0) {
+    this.alertaNotificacion = {
+      ttl: 'eliminar confirmation',
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: 'Confirma la eliminación',
+      cerrar: false,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: 'Cancelar',
+    };
+  } else {
+    this.mostrarAlertaSeleccionarRegistro();
+  }
+}
+
+/**
+ * Confirma la eliminación de un miembro seleccionado.
+ * Si el usuario acepta la confirmación y la notificación corresponde a la eliminación,
+ * elimina el miembro seleccionado del store, limpia la selección y muestra una notificación de éxito.
+ * 
+ * @param $event Valor booleano que indica si el usuario confirmó la eliminación.
+ */
 confirmarEliminacion($event: boolean): void {
-  if ($event === true && this.alertaNotificacion?.ttl==='eliminar confirmation') {
+  if ($event === true && this.alertaNotificacion?.ttl === 'eliminar confirmation') {
     this.tramite31601Store.eliminarMiembrodelaempresaTable(this.miembrosSeleccionados[0]);
     this.miembrosSeleccionados = [];
     this.alertaNotificacion = null;
@@ -371,6 +462,10 @@ confirmarEliminacion($event: boolean): void {
   }
 }
 
+/**
+ * Muestra una alerta notificando al usuario que debe seleccionar un registro.
+ * Se utiliza cuando se intenta modificar o eliminar sin haber seleccionado un miembro.
+ */
 mostrarAlertaSeleccionarRegistro(): void {
   this.alertaNotificacion = {
     tipoNotificacion: 'alert',
@@ -390,10 +485,33 @@ mostrarAlertaSeleccionarRegistro(): void {
   openAgregarModal(): void {
     if (this.AgregarModelInstance) {
       this.AgregarModelInstance.show();
+      this.agregarMiembroDeLaEmpresaFrom.reset();
     }
   }
- aceptar(): void {
-  this.tramite31601Store.agregarMiembrodelaempresaTable(this.agregarMiembroDeLaEmpresaFrom.value)
+/**
+ * Maneja la acción de aceptar/agregar un nuevo miembro de la empresa.
+ * Si el formulario es inválido, marca todos los campos como tocados para mostrar errores.
+ * Si es válido, agrega el miembro al store, cierra el modal y muestra una notificación de éxito.
+ */
+aceptar(): void {
+  if (this.agregarMiembroDeLaEmpresaFrom.invalid) {
+    this.agregarMiembroDeLaEmpresaFrom.markAllAsTouched();
+  } else if (this.agregarMiembroDeLaEmpresaFrom.valid) {
+    this.tramite31601Store.agregarMiembrodelaempresaTable(this.agregarMiembroDeLaEmpresaFrom.value);
+    this.closeAgregarModal();
+    this.alertaNotificacion = null;
+    this.alertaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'success',
+      modo: '',
+      titulo: '',
+      mensaje: 'Datos guardados correctamente',
+      cerrar: false,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
+  }
 }
   /**
    * Cierra el modal de agregar miembro.
@@ -403,6 +521,12 @@ mostrarAlertaSeleccionarRegistro(): void {
       this.AgregarModelInstance.hide();
     }
   }
+  /**
+   * Actualiza la lista de miembros seleccionados en la tabla.
+   * Este método es llamado cuando la selección de la tabla cambia.
+   * 
+   * @param $event Arreglo de objetos Antecesor seleccionados.
+   */
   obtenerMiembroSeleccionadas($event: Antecesor[]): void {
     this.miembrosSeleccionados = $event;
   }

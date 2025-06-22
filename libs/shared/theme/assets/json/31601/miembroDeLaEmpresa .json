@@ -1,21 +1,28 @@
-
 [
     {
-        "tipoPersona": "Fisica 1",
-        "nombre": "ERNESTO HERNANDEZ URIBE",
+        "ensucaracterde": "1",
         "rfc": "HEUE780514BVA",
-        "caracter": "Accionista",
-        "nacionalidad": "MEXICO (ESTADOS UNIDOS MEXICANOS)",
-        "obligadoTributarMexico": true,
-        "nombreEmpresa": ""
+        "obligadoaTributarenMexico": "Si",
+        "nacionalidad": "1",
+        "registroFederaldeContribuyentes": "HEUE780514BVA",
+        "nombreCompleto": "ERNESTO HERNANDEZ URIBE",
+        "tipoDePersonaMiembro": "Fisica 1",
+        "nombreMiembro": "ERNESTO",
+        "apellidoPaternoMiembro": "HERNANDEZ",
+        "apellidoMaternoMiembro": "URIBE",
+        "nombreDeLaEmpresaMiembro": ""
     },
     {
-        "tipoPersona": "Fisica 2",
-        "nombre": "ERNESTO HERNANDEZ URIBE",
+        "ensucaracterde": "2",
         "rfc": "HEUE780514BVA",
-        "caracter": "Administrador único ",
-        "nacionalidad": "MEXICO (ESTADOS UNIDOS MEXICANOS)",
-        "obligadoTributarMexico": true,
-        "nombreEmpresa": ""
+        "obligadoaTributarenMexico": "Si",
+        "nacionalidad": "1",
+        "registroFederaldeContribuyentes": "HEUE780514BVA",
+        "nombreCompleto": "ERNESTO HERNANDEZ URIBE",
+        "tipoDePersonaMiembro": "Fisica 2",
+        "nombreMiembro": "ERNESTO",
+        "apellidoPaternoMiembro": "HERNANDEZ",
+        "apellidoMaternoMiembro": "URIBE",
+        "nombreDeLaEmpresaMiembro": ""
     }
 ]

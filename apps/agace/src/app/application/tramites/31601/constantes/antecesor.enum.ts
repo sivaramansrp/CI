@@ -1,14 +1,18 @@
 import { Antecesor } from "../modelos/antecesor.modal";
 
+// Configuración de las columnas para mostrar información de los antecesores
 export const CONFIGURACION_ANTECESORES = [
     {
+        // Encabezado de la columna
         encabezado: 'Tipo de persona',
-        clave: (ele: Antecesor): string => ele.tipoPersona,
+        // Función para obtener el valor de la columna
+        clave: (ele: Antecesor): string => ele.tipoDePersonaMiembro ?? '',
+        // Orden de la columna
         orden: 1,
     },
     {
         encabezado: 'Nombre',
-        clave: (ele: Antecesor): string => ele.nombre,
+        clave: (ele: Antecesor): string => ele.nombreMiembro ?? '',
         orden: 2,
     },
     {
@@ -18,22 +22,23 @@ export const CONFIGURACION_ANTECESORES = [
     },
     {
         encabezado: 'Carácter',
-        clave: (ele: Antecesor): string => ele.caracter,
+        clave: (ele: Antecesor): string => String(ele.ensucaracterde),
         orden: 4,
     },
     {
         encabezado: 'Nacionalidad',
-        clave: (ele: Antecesor): string => ele.nacionalidad,
+        clave: (ele: Antecesor): string => String(ele.nacionalidad),
         orden: 5,
     },
     {
         encabezado: 'Obligado a tributar en México',
-        clave: (ele: Antecesor): string => ele.obligadoTributarMexico ? 'Sí' : 'No',
+        clave: (ele: Antecesor): string => ele.obligadoaTributarenMexico,
         orden: 6,
     },
     {
         encabezado: 'Nombre de la empresa',
-        clave: (ele: Antecesor): string => ele.nombreEmpresa,
+        // Si existe nombre de la empresa, lo muestra; si no, concatena nombre y apellidos
+        clave: (ele: Antecesor): string => ele.nombreDeLaEmpresaMiembro ? ele.nombreDeLaEmpresaMiembro : ele.nombreMiembro + ' ' + ele.apellidoPaternoMiembro + ' ' + ele.apellidoMaternoMiembro,
         orden: 7,
     },
 ];
