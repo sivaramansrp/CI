@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import {
   AlertComponent,
   BtnContinuarComponent,
+  ConsultaioQuery,
+  ConsultaioState,
   FormularioDinamico,
   SolicitanteComponent,
   TituloComponent,
@@ -11,7 +13,10 @@ import {
   DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL,
   PERSONA_MORAL_NACIONAL,
 } from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
+import { Subject, map, takeUntil } from 'rxjs';
 import { SolicitudComponent } from '../../components/solicitud/solicitud.component';
+import { Tramite32201Store } from '../../estados/tramite32201.store';
+import { SolicitudService } from '../../services/solicitud.service';
 
 /**
  * Componente que representa la funcionalidad de la paso uno 32201.
@@ -55,6 +60,68 @@ export class PasoUnoComponent implements AfterViewInit {
    * Índice de la pestaña actual.
    */
   indice: number = 1;
+
+  /**
+   * @property {Subject<void>} destroyNotifier$
+   * @description Subject utilizado para notificar y completar las suscripciones activas al destruir el componente, evitando fugas de memoria.
+   */
+  public destroyNotifier$: Subject<void> = new Subject();
+
+  /**
+   * @property {ConsultaioState} consultaDatos
+   * @description Estado actual de la consulta, que contiene información relacionada con el trámite y el solicitante.
+   */
+  consultaDatos!: ConsultaioState;
+
+  /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  esDatosRespuesta: boolean = false;
+
+  constructor(private consultaioQuery: ConsultaioQuery, public tramite32201Store: Tramite32201Store,
+    private solicitudService: SolicitudService
+  ) {
+    // El constructor se utiliza para la inyección de dependencias.
+  }
+
+  ngOnInit(): void {
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.consultaDatos = seccionState;
+        })
+      )
+      .subscribe();
+    if (this.consultaDatos.update) {
+      this.fetchGetDatosConsulta();
+    } else {
+      this.esDatosRespuesta = true;
+    }
+  }
+
+  /**
+ * @method fetchGetDatosConsulta
+ * @description Método para obtener los datos de consulta desde el servicio `DatosTramiteService` y actualizar el estado del store `tramite32508Store`.
+ * 
+ * Este método realiza una solicitud HTTP para obtener los datos de consulta y, si la respuesta es exitosa, actualiza múltiples propiedades del store con los datos recibidos.
+ * Utiliza el operador `takeUntil` para cancelar la suscripción cuando el componente se destruye, evitando fugas de memoria.
+ * 
+ * @returns {void}
+ */
+  public fetchGetDatosConsulta(): void {
+    this.solicitudService
+      .getDatosConsulta()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((respuesta) => {
+        if (respuesta.success) {
+          this.tramite32201Store.setRegimen_0(respuesta.datos.regimen_0);
+          this.tramite32201Store.setRegimen_2(respuesta.datos.regimen_2);
+          this.tramite32201Store.setManifiesto(respuesta.datos.manifiesto);
+        }
+      });
+  }
 
   /**
    * Gancho de ciclo de vida angular que se llama después de que la vista del componente se haya inicializado por completo.

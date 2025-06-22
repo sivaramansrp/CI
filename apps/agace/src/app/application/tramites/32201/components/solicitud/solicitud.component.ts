@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { map, Subject, takeUntil } from 'rxjs';
 import * as XLSX from 'xlsx'; // Importa XLSX para leer archivos Excel
@@ -97,6 +98,19 @@ export class SolicitudComponent implements OnInit {
   public errorNotificacion!: Notificacion;
 
   /**
+   * @property {ConsultaioState} consultaDatos
+   * @description Estado actual de la consulta, que contiene información relacionada con el trámite y el solicitante.
+   */
+  consultaDatos!: ConsultaioState;
+
+  /**
+   * @property {boolean} soloLectura
+   * @description Indica si el formulario o los campos están en modo de solo lectura.
+   * @default false
+   */
+  esFormularioSoloLectura: boolean = false;
+
+  /**
    * Constructor del componente.
    * @param fb - FormBuilder para crear formularios reactivos.
    * @param tramite32201Store - Store para manejar el estado del trámite.
@@ -105,7 +119,8 @@ export class SolicitudComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private tramite32201Store: Tramite32201Store,
-    private tramite32201Query: Tramite32201Query
+    private tramite32201Query: Tramite32201Query,
+    private consultaioQuery: ConsultaioQuery
   ) {
     // Constructor no vacío para evitar el error de ESLint.
   }
@@ -115,6 +130,16 @@ export class SolicitudComponent implements OnInit {
    * Llama a los métodos para obtener datos de establecimientos, empleados, domicilios e instalaciones.
    */
   ngOnInit(): void {
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.consultaDatos = seccionState;
+          this.esFormularioSoloLectura = this.consultaDatos.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
     this.tramite32201Query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -132,6 +157,24 @@ export class SolicitudComponent implements OnInit {
       regimen_3: [this.solicitudState?.regimen_3],
       manifiesto: [this.solicitudState?.manifiesto],
     });
+    this.inicializarEstadoFormulario();
+  }
+
+  /**
+  * @method inicializarEstadoFormulario
+  * @description Inicializa el estado del formulario según el modo de solo lectura.
+  * 
+  * Si la propiedad `soloLectura` es verdadera, deshabilita todos los controles del formulario.
+  * En caso contrario, habilita los controles del formulario
+  * 
+  * @returns {void}
+  */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.solicitudForm?.disable();
+    } else {
+      this.solicitudForm?.enable();
+    }
   }
 
   /**
@@ -240,4 +283,14 @@ export class SolicitudComponent implements OnInit {
     const FIELD_VALUE = form.get(campo)?.value;
     (this.tramite32201Store[metodoNombre] as (value: unknown) => void)(FIELD_VALUE);
   }
+
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
+   * Completa el observable `destroyed$` para evitar fugas de memoria.
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
+  }
+
 }
