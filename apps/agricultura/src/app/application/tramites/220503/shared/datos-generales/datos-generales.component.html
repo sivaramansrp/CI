@@ -132,22 +132,6 @@
     </div>
 
     <div class="row">
-      <ng-titulo titulo="Tipo de Mercancía" />
-      <div class="col-md-12">
-        <label for="certficacion_a">Captura de datos de mercancía*:</label>
-      </div>
-      <div class="col-md-12">
-        <app-input-radio
-          [radioOptions]="opcionDeBotonDeRadio"
-          [isRequired]="true"
-          [selectedValue]="esSolicitudFerrosValor"
-          [layout]="'vertical'"
-          formControlName="capturaDatosMercancia"
-          (valueChange)="setCapturaDatosMercancia($event)"
-        ></app-input-radio>
-      </div>
-    </div>
-    <div class="row">
       <div class="row mt-5">
         <div class="col-md-12">
           <label for="mercancia">Mercancía</label>
@@ -223,23 +207,7 @@
           </div>
         </div>
       </div>
-      <div class="container">
-        <ng-titulo titulo="Destino" />
-        <div class="row">
-          <div class="col-md-4 form-group">
-            <label class="form-label" for="coordenadas"
-              >Coordenadas geográficas:</label
-            >
-            <input
-              class="form-control"
-              id="coordenadas"
-              readonly
-              formControlName="coordenadas"
-              placeholder=""
-              type="text"
-            />
-          </div>
-        </div>
+      <div class="container">    
         <ng-titulo titulo="Medio de transporte" />
         <div class="row">
           <div class="col-md-4">
