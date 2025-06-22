@@ -3,9 +3,11 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Solicitud32102State, Tramite32102Store } from '../../../../estados/tramites/tramite32102.store';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { Solicitud32102Enum } from '../../constants/solicitud32101.enum';
 import {TituloComponent} from '@libs/shared/data-access-user/src';
 import { Tramite32102Query } from '../../../../estados/queries/tramite32102.query';
+
 /**
  * Componente que representa la solicitud en el contexto del trámite 32102.
  * Este componente utiliza un formulario reactivo para gestionar los datos
@@ -47,11 +49,29 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    */
   private destroyNotifier$: Subject<void> = new Subject();
 
+  /**
+   * Indica si el formulario está en modo solo lectura.
+   * Si es verdadero, los campos del formulario estarán deshabilitados para edición.
+   * {boolean}
+   */
+  esFormularioSoloLectura: boolean = false; 
+
   constructor(
     private fb: FormBuilder,
     public tramite32102Store: Tramite32102Store,
-    private tramite32102Query: Tramite32102Query
-  ) {}
+    private tramite32102Query: Tramite32102Query,
+     private consultaioQuery: ConsultaioQuery,
+  ) {
+     this.consultaioQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState) => {
+       this.esFormularioSoloLectura = seccionState.readonly;
+       this.inicializarEstadoFormulario();
+      })
+    )
+    .subscribe()
+  }
 
   /**
    * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
@@ -71,9 +91,34 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-    this.inicializarFormulario();
+    this.inicializarEstadoFormulario();
   }
 
+   /**
+   * Inicializa el estado del formulario dependiendo si es solo lectura o editable.
+   * Si es solo lectura, deshabilita los campos y ajusta la configuración de la fecha.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario(); // Llama al método para cargar los datos del formulario
+    } else {
+      this. inicializarFormulario();
+    }
+  }
+  
+  /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormulario(): void {
+    this.inicializarFormulario();
+    if (this.esFormularioSoloLectura) {
+      this.formularioAvisoDeExtension.disable(); 
+    }  
+    else {
+     this.formularioAvisoDeExtension.enable(); 
+    }
+}
   /**
    * Método del ciclo de vida de Angular que se ejecuta cuando el componente se destruye.
    * Emite un valor en el observable `destroyNotifier$` para notificar a los suscriptores
@@ -91,6 +136,14 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * @returns {void} No retorna ningún valor.
    */
   inicializarFormulario(): void {
+     this.tramite32102Query.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.solicitudState = seccionState;
+        })
+      )
+      .subscribe();
     this.formularioAvisoDeExtension = this.fb.group(
       {
         MANIFIESTO_1: [this.solicitudState?.MANIFIESTO_1 || false],
