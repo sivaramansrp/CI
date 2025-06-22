@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DuplicadoDeCertificadoComponent } from './duplicado-de-certificado.component';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 describe('DuplicadoDeCertificadoComponent', () => {
   let component: DuplicadoDeCertificadoComponent;
@@ -8,6 +9,7 @@ describe('DuplicadoDeCertificadoComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [DuplicadoDeCertificadoComponent],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA],
     }).compileComponents();
   });
 
@@ -17,16 +19,16 @@ describe('DuplicadoDeCertificadoComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
+  it('debería crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should have the correct selector', () => {
+  it('debería tener el selector correcto', () => {
     const compiled = fixture.nativeElement;
     expect(compiled.querySelector('app-duplicado-de-certificado')).toBeDefined();
   });
 
-  it('should render the template', () => {
+  it('debería renderizar la plantilla', () => {
     const compiled = fixture.nativeElement;
     expect(compiled).toBeTruthy();
   });

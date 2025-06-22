@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PartidasDeLaMercanciaComponent } from './partidas-de-la-mercancia.component';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { PARTIDASDELAMERCANCIA_TABLA } from '../../../../shared/constantes/partidas-de-la-mercancia.enum';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
 
@@ -11,22 +11,29 @@ describe('PartidasDeLaMercanciaComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule],
+      imports: [ReactiveFormsModule,PartidasDeLaMercanciaComponent],
       providers: [FormBuilder],
-      declarations: [PartidasDeLaMercanciaComponent]
+      declarations: []
     }).compileComponents();
 
     fixture = TestBed.createComponent(PartidasDeLaMercanciaComponent);
     component = fixture.componentInstance;
     formBuilder = TestBed.inject(FormBuilder);
-
-    // Create mock forms
+    
     component.partidasDelaMercanciaForm = formBuilder.group({
-      descripcion: ['']
+      descripcion: ['', Validators.required],
+      cantidadPartidasDeLaMercancia: [''],
+      fraccionTigiePartidasDeLaMercancia: [''],
+      fraccionDescripcionPartidasDeLaMercancia:[''],
+      descripcionPartidasDeLaMercancia:[],
+      valorPartidaUSDPartidasDeLaMercancia:[]
+    
+      
     });
 
     component.formForTotalCount = formBuilder.group({
-      total: [0]
+      cantidadTotal:[0],
+      valorTotalUSD:[0]
     });
 
     fixture.detectChanges();

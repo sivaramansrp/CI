@@ -1,5 +1,5 @@
 import { BtnContinuarComponent, FirmaElectronicaComponent, WizardComponent } from "@ng-mf/data-access-user";
-import { forwardRef, NgModule } from '@angular/core';
+import { NgModule, forwardRef } from '@angular/core';
 import { ToastrModule, ToastrService } from 'ngx-toastr'
 import { AtencionRequerimientosRoutingModule } from "./atencion-requerimientos-routing.module";
 import { AtenderRequerimientosPageComponent } from "./atender-requerimientos-page/atender-requerimientos-page.component";
