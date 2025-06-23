@@ -1,7 +1,10 @@
-import { DestinoFinal, Proveedor } from '../../../../shared/models/terceros-relacionados.model';
+import {
+  DestinoFinal,
+  Proveedor,
+} from '../../../../shared/models/terceros-relacionados.model';
 import { AgregarProveedorCustomComponent } from '../../../../shared/components/agregar-proveedor-custom/agregar-proveedor-custom.component';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, Output, EventEmitter } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Tramite240119Query } from '../../estados/tramite240119Query.query';
 import { Tramite240119Store } from '../../estados/tramite240119Store.store';
@@ -14,16 +17,19 @@ import { Tramite240119Store } from '../../estados/tramite240119Store.store';
   styleUrl: './agregar-proveedor-contenedora.component.scss',
 })
 export class AgregarProveedorContenedoraComponent {
+  @Output() cerrar = new EventEmitter<void>();
   /**
    * Observable que emite información sobre el destino final, proveedor o un valor nulo/indefinido.
-   * 
+   *
    * @type {Observable<DestinoFinal | Proveedor | null | undefined>}
-   * 
+   *
    * @remarks
    * Este observable se utiliza para gestionar los datos relacionados con los derechos
    * y destinatarios finales en el contexto de la aplicación.
    */
-  public terechosDatos$!: Observable<DestinoFinal | Proveedor | null | undefined>;
+  public terechosDatos$!: Observable<
+    DestinoFinal | Proveedor | null | undefined
+  >;
 
   /**
    * @constructor
@@ -32,8 +38,11 @@ export class AgregarProveedorContenedoraComponent {
    * @param tramite260214Store - Store que administra el estado del trámite 260214.
    */
 
-  constructor(public tramite240119Store: Tramite240119Store, public tramiteQuery: Tramite240119Query) {
-      this.terechosDatos$ = this.tramiteQuery.obtenerTercerosDatos$;
+  constructor(
+    public tramite240119Store: Tramite240119Store,
+    public tramiteQuery: Tramite240119Query
+  ) {
+    this.terechosDatos$ = this.tramiteQuery.obtenerTercerosDatos$;
   }
 
   /**

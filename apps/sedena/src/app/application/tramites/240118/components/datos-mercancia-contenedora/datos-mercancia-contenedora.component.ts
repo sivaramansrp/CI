@@ -1,6 +1,6 @@
 import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, Output, EventEmitter } from '@angular/core';
 import { DatosMercanciaComponent } from '../../../../shared/components/datos-mercancia/datos-mercancia.component';
 import { MercanciaDetalle } from '../../../../shared/models/datos-del-tramite.model';
 import { NUMERO_TRAMITE } from '../../../../shared/constants/datos-solicitud.enum';
@@ -29,7 +29,11 @@ import { Tramite240118Store } from '../../estados/tramite240118Store.store';
   styleUrl: './datos-mercancia-contenedora.component.scss',
 })
 export class DatosMercanciaContenedoraComponent implements OnDestroy {
-
+  /**
+   * Evento emitido al cerrar el componente, utilizado para notificar al componente padre que se debe cerrar.
+   * @type {EventEmitter<void>}
+   */
+  @Output() cerrar = new EventEmitter<void>();
   /**
    * Identificador del procedimiento asociado al trámite.
    * @type {number}
@@ -57,7 +61,7 @@ export class DatosMercanciaContenedoraComponent implements OnDestroy {
    */
   constructor(
     private tramiteStore: Tramite240118Store,
-    private tramiteQuery: Tramite240118Query,
+    private tramiteQuery: Tramite240118Query
   ) {
     this.getMercanciaTablaDatos();
   }
@@ -69,6 +73,7 @@ export class DatosMercanciaContenedoraComponent implements OnDestroy {
    */
   updateMercanciaDetalle(event: MercanciaDetalle[]): void {
     this.tramiteStore.updateMercanciaTablaDatos(event);
+    this.cerrar.emit();
   }
 
   /**

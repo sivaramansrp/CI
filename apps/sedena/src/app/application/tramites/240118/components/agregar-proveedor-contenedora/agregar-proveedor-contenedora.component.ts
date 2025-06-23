@@ -1,8 +1,11 @@
-import { Component, OnInit } from '@angular/core';
-import { DestinoFinal, Proveedor } from '../../../../shared/models/terceros-relacionados.model';
-import { AgregarProveedorCustomComponent } from "../../../../shared/components/agregar-proveedor-custom/agregar-proveedor-custom.component";
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import {
+  DestinoFinal,
+  Proveedor,
+} from '../../../../shared/models/terceros-relacionados.model';
+import { AgregarProveedorCustomComponent } from '../../../../shared/components/agregar-proveedor-custom/agregar-proveedor-custom.component';
 import { CommonModule } from '@angular/common';
-import { Observable } from "rxjs";
+import { Observable } from 'rxjs';
 import { Tramite240118Query } from '../../estados/tramite240118Query.query';
 import { Tramite240118Store } from '../../estados/tramite240118Store.store';
 
@@ -14,7 +17,7 @@ import { Tramite240118Store } from '../../estados/tramite240118Store.store';
   styleUrl: './agregar-proveedor-contenedora.component.scss',
 })
 export class AgregarProveedorContenedoraComponent implements OnInit {
-  
+  @Output() cerrar = new EventEmitter<void>();
   /**
    * @property terechosDatos$
    * @type {Observable<DestinoFinal | Proveedor | null | undefined>}
@@ -23,12 +26,11 @@ export class AgregarProveedorContenedoraComponent implements OnInit {
    * @command Este observable se utiliza para gestionar y observar los datos de los proveedores o destinos finales en el componente.
    */
   terechosDatos$!: Observable<DestinoFinal | Proveedor | null | undefined>;
-   /**
+  /**
    * @property {number} idProcedimiento
    * Identificador del procedimiento actual.
    */
-   public readonly idProcedimiento:number = 240118;
-
+  public readonly idProcedimiento: number = 240118;
 
   /**
    * @constructor
@@ -37,8 +39,11 @@ export class AgregarProveedorContenedoraComponent implements OnInit {
    * @param tramite240118Store - Store que administra el estado del trámite 240118.
    */
 
- constructor(public tramiteStore: Tramite240118Store,public tramiteQuery: Tramite240118Query) {
-  this.terechosDatos$ = this.tramiteQuery.obtenerTercerosDatos$;
+  constructor(
+    public tramiteStore: Tramite240118Store,
+    public tramiteQuery: Tramite240118Query
+  ) {
+    this.terechosDatos$ = this.tramiteQuery.obtenerTercerosDatos$;
   }
 
   /**
@@ -59,5 +64,6 @@ export class AgregarProveedorContenedoraComponent implements OnInit {
    */
   updateProveedorTablaDatos(event: Proveedor[]): void {
     this.tramiteStore.updateProveedorTablaDatos(event);
+    this.cerrar.emit();
   }
 }

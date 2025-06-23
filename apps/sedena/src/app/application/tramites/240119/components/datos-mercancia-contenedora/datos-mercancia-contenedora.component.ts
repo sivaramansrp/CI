@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, Output, EventEmitter } from '@angular/core';
 import { DatosMercanciaComponent } from '../../../../shared/components/datos-mercancia/datos-mercancia.component';
 import { MercanciaDetalle } from '../../../../shared/models/datos-del-tramite.model';
 import { Tramite240119Store } from '../../estados/tramite240119Store.store';
@@ -18,6 +18,13 @@ import { Tramite240119Store } from '../../estados/tramite240119Store.store';
   styleUrl: './datos-mercancia-contenedora.component.scss',
 })
 export class DatosMercanciaContenedoraComponent {
+  /**
+   * Evento emitido para cerrar el componente.
+   *
+   * @type {EventEmitter<void>}
+   * @memberof DatosMercanciaContenedoraComponent
+   */
+  @Output() cerrar = new EventEmitter<void>();
   /**
    * Constructor del componente.
    *
@@ -38,5 +45,6 @@ export class DatosMercanciaContenedoraComponent {
    */
   updateMercanciaDetalle(event: MercanciaDetalle[]): void {
     this.tramiteStore.updateMercanciaTablaDatos(event);
+    this.cerrar.emit();
   }
 }

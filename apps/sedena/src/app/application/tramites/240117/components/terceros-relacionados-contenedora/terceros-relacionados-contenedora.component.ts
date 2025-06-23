@@ -1,7 +1,8 @@
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { DestinoFinal } from '../../../../shared/models/terceros-relacionados.model';
+import { ModalComponent } from '../../../../shared/components/modal/modal.component';
 import { NUMERO_TRAMITE } from '../../../../shared/constants/datos-solicitud.enum';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
@@ -11,7 +12,8 @@ import { TercerosRelacionadosComponent } from '../../../../shared/components/ter
 import { Tramite240117Query } from '../../estados/tramite240117Query.query';
 import { Tramite240117Store } from '../../estados/tramite240117Store.store';
 import { takeUntil } from 'rxjs';
-
+import { AgregarProveedorContenedoraComponent } from '../agregar-proveedor-contenedora/agregar-proveedor-contenedora.component';
+import { AgregarDestinatarioFinalContenedoraComponent } from '../agregar-destinatario-final-contenedora/agregar-destinatario-final-contenedora.component';
 /**
  * @component
  * @name TercerosRelacionadosContenedoraComponent
@@ -19,31 +21,38 @@ import { takeUntil } from 'rxjs';
  * Componente contenedor para gestionar los datos de terceros relacionados en el trámite 240117.
  * Este componente utiliza el patrón de diseño de Akita para manejar el estado y las consultas
  * relacionadas con los datos de destinatarios finales y proveedores.
- * 
+ *
  * @selector app-terceros-relacionados-contenedora
  * @standalone true
  * @imports [CommonModule, TercerosRelacionadosComponent]
  * @templateUrl ./terceros-relacionados-contenedora.component.html
  * @styleUrl ./terceros-relacionados-contenedora.component.scss
- * 
+ *
  * @implements OnInit, OnDestroy
  */
 @Component({
   selector: 'app-terceros-relacionados-contenedora',
   standalone: true,
-  imports: [CommonModule, TercerosRelacionadosComponent],
+  imports: [CommonModule, TercerosRelacionadosComponent, ModalComponent],
   templateUrl: './terceros-relacionados-contenedora.component.html',
   styleUrl: './terceros-relacionados-contenedora.component.scss',
 })
-export class TercerosRelacionadosContenedoraComponent implements OnInit, OnDestroy{
-
+export class TercerosRelacionadosContenedoraComponent
+  implements OnInit, OnDestroy
+{
+  /**
+   * Componente modal para mostrar información adicional o acciones relacionadas con los terceros.
+   *
+   * @property {ModalComponent} modalComponent - Componente modal utilizado en la vista.
+   */
+  @ViewChild('modal', { static: false }) modalComponent!: ModalComponent;
   /**
    * Identificador del procedimiento asignado al trámite específico.
-   * 
+   *
    * @property {NUMERO_TRAMITE} idProcedimiento - Representa el identificador único del trámite.
    * @value TRAMITE_240117 - Código correspondiente al trámite específico.
    */
-    idProcedimiento = NUMERO_TRAMITE.TRAMITE_240117;
+  idProcedimiento = NUMERO_TRAMITE.TRAMITE_240117;
 
   /**
    * Observable para limpiar las suscripciones activas al destruir el componente.
@@ -75,9 +84,8 @@ export class TercerosRelacionadosContenedoraComponent implements OnInit, OnDestr
     private tramiteQuery: Tramite240117Query,
     private tramiteStore: Tramite240117Store,
     private router: Router,
-    private activatedRoute: ActivatedRoute
-  ) // eslint-disable-next-line no-empty-function
-  {}
+    private activatedRoute: ActivatedRoute // eslint-disable-next-line no-empty-function
+  ) {}
 
   /**
    * Hook del ciclo de vida que se ejecuta al inicializar el componente.
@@ -103,9 +111,9 @@ export class TercerosRelacionadosContenedoraComponent implements OnInit, OnDestr
 
   /**
    * Modifica los datos del destinatario final y actualiza la información en el store.
-   * 
+   *
    * @param datos - Objeto de tipo `DestinoFinal` que contiene los datos actualizados del destinatario.
-   * 
+   *
    * @remarks
    * Este método utiliza el store `tramiteStore` para actualizar los datos del destinatario
    * y luego redirige a la sección de acciones mediante el método `irAAcciones`.
@@ -117,12 +125,12 @@ export class TercerosRelacionadosContenedoraComponent implements OnInit, OnDestr
 
   /**
    * Modifica los datos de un proveedor y actualiza el estado correspondiente.
-   * 
+   *
    * @param datos - Objeto de tipo `Proveedor` que contiene la información actualizada del proveedor.
-   * 
+   *
    * @method modificarProveedorDatos
    * @memberof ClaseContenedora
-   * 
+   *
    * @description
    * Este método se encarga de actualizar los datos de un proveedor en el estado de la aplicación
    * utilizando el método `actualizarDatosProveedor` del store. Una vez actualizados los datos,
@@ -144,13 +152,42 @@ export class TercerosRelacionadosContenedoraComponent implements OnInit, OnDestr
       relativeTo: this.activatedRoute,
     });
   }
-
+  /**
+   * Abre el modal correspondiente según el nombre del evento recibido.
+   *
+   * Si el evento es `'Datosmercancia'`, se carga el componente `DatosMercanciaContenedoraComponent`
+   * dentro del modal y se le pasa una función de cierre como input.
+   *
+   * @method openModal
+   * @param {string} event - Nombre del evento que indica qué componente se debe mostrar en el modal.
+   * @returns {void}
+   */
+  openModal(event: string): void {
+    if (event === 'agregar-destino-final') {
+      this.modalComponent.abrir(AgregarDestinatarioFinalContenedoraComponent, {
+        cerrarModal: this.cerrarModal.bind(this),
+      });
+    } else if (event === 'agregar-proveedor') {
+      this.modalComponent.abrir(AgregarProveedorContenedoraComponent, {
+        cerrarModal: this.cerrarModal.bind(this),
+      });
+    }
+  }
+  /**
+   * Cierra el modal dinámico actualmente abierto utilizando el método del componente modal.
+   *
+   * @method cerrarModal
+   * @returns {void}
+   */
+  cerrarModal(): void {
+    this.modalComponent.cerrar();
+  }
   /**
    * Hook que se ejecuta al destruir el componente.
    * Envía un valor al Subject `unsubscribe$` y lo completa para liberar suscripciones.
    */
-    ngOnDestroy(): void {
-      this.destroy$.next();
-      this.destroy$.complete();
-    }
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
 }
