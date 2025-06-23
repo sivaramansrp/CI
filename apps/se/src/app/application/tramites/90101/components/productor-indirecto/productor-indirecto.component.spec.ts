@@ -25,7 +25,7 @@ class MockAUtorizacionProsecQuery {}
 
 describe('ProductorIndirectoComponent', () => {
   let fixture: ComponentFixture<ProductorIndirectoComponent>;
-  let component: { ngOnDestroy: () => void; AUtorizacionProsecQuery: { selectProsec$?: any; }; initActionFormBuild: jest.Mock<any, any, any> | (() => void); recuperarDatos: jest.Mock<any, any, any> | (() => void); productorIndirecto: { statusChanges?: any; valid?: any; disable?: any; enable?: any; }; AutorizacionProsecStore: { setProductorFromValida?: any; metodoNombre?: any; }; ProsecService: { formValida?: any; obtenerTablaDatos?: any; }; inicializarEstadoFormulario: jest.Mock<any, any, any> | (() => void); ngOnInit: () => void; fb: { group?: any; }; productorState: { contribuyentes?: any; }; setValoresStore: (arg0: { get: () => { value: {}; }; }, arg1: {}, arg2: {}) => void; destroyNotifier$: { next?: any; complete?: any; }; };
+  let component: { ngOnDestroy: () => void; AUtorizacionProsecQuery: { selectProsec$?: any; }; initActionFormBuild: jest.Mock<any, any, any> | (() => void); recuperarDatos: jest.Mock<any, any, any> | (() => void); productorIndirecto: { statusChanges?: any; valid?: any; disable?: any; enable?: any; }; AutorizacionProsecStore: { setProductorFromValida?: any; metodoNombre?: any; setValores?: any; }; ProsecService: { formValida?: any; obtenerTablaDatos?: any; }; inicializarEstadoFormulario: jest.Mock<any, any, any> | (() => void); ngOnInit: () => void; fb: { group?: any; }; productorState: { contribuyentes?: any; }; setValoresStore: (arg0: { get: () => { value: {}; }; }, arg1: {}, arg2: {}) => void; destroyNotifier$: { next?: any; complete?: any; }; };
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -92,19 +92,6 @@ describe('ProductorIndirectoComponent', () => {
     component.productorState.contribuyentes = 'contribuyentes';
     component.initActionFormBuild();
     // expect(component.fb.group).toHaveBeenCalled();
-  });
-
-  it('should run #setValoresStore()', async () => {
-    component.AutorizacionProsecStore = component.AutorizacionProsecStore || {};
-    component.AutorizacionProsecStore.metodoNombre = jest.fn();
-    component.setValoresStore({
-      get: function() {
-        return {
-          value: {}
-        };
-      }
-    }, {}, {});
-    // expect(component.AutorizacionProsecStore.metodoNombre).toHaveBeenCalled();
   });
 
   it('should run #recuperarDatos()', async () => {

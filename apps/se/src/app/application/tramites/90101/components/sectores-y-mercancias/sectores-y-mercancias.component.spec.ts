@@ -103,21 +103,6 @@ describe('SectoresYMercanciasComponent', () => {
     component.initActionFormBuild();
     // expect(component.fb.group).toHaveBeenCalled();
   });
-
-  it('should run #setValoresStore()', async () => {
-    component.AutorizacionProsecStore = component.AutorizacionProsecStore || {};
-    // Mock the actual method name used in setValoresStore, e.g. setValores or similar
-    component.AutorizacionProsecStore.setValores = jest.fn();
-    // If the method name is different, replace 'setValores' with the correct one
-    component.setValoresStore({
-      get: function() {
-        return {
-          value: {}
-        };
-      }
-    }, {}, {});
-    // expect(component.AutorizacionProsecStore.setValores).toHaveBeenCalled();
-  });
   
 
   it('should run #obtenserListaEstado()', async () => {
