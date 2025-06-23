@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import {
   DatosDeTablaSeleccionados,
   DatosSolicitudFormState,
@@ -19,7 +19,9 @@ import {
 } from '../../estados/tramite260201Store.store';
 import { map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 import { DatosDeLaSolicitudComponent } from '../../../../shared/components/datos-de-la-solicitud/datos-de-la-solicitud.component';
+import { Observable } from 'rxjs';
 import { Subject } from 'rxjs';
 import { Tramite260201Query } from '../../estados/tramite260201Query.query';
 
@@ -141,6 +143,14 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
   public readonly elementosRequeridos = ELEMENTOS_REQUERIDOS; 
 
   /**
+   * @property {boolean} formularioDeshabilitado
+   * @description
+   * Indica si el formulario está deshabilitado. Por defecto es `false`.
+   */
+  @Input()
+  formularioDeshabilitado: boolean = false;
+
+  /**
    * @constructor
    * @description
    * Inicializa el componente con las dependencias necesarias.
@@ -148,9 +158,11 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
    * @param {Tramite260201Query} tramite260201Query - Consulta para acceder al estado del trámite.
    * @param {Tramite260201Store} tramite260201Store - Tienda para actualizar el estado del trámite.
    */
+
   constructor(
     private tramite260201Query: Tramite260201Query,
-    private tramite260201Store: Tramite260201Store
+    private tramite260201Store: Tramite260201Store,
+    private consultaQuery: ConsultaioQuery
   ) {
     // Constructor vacío, se inyectan las dependencias para su uso en el componente.
   }

@@ -81,6 +81,8 @@ export class CatalogoSelectComponent
    */
   @Input() tooltipQuestionCircle: boolean = false;
 
+  @Input() markUntouched: boolean = false;
+
   /**
    * @description Texto que se muestra en el tooltip del círculo de pregunta.
    * Este texto proporciona información adicional sobre el select cuando el usuario pasa el cursor sobre el círculo de pregunta.
@@ -189,6 +191,12 @@ export class CatalogoSelectComponent
         } else {
           CONTROL.enable();
         }
+      }
+    }
+
+    if (changes['markUntouched']) {
+      if (this.markUntouched) {
+        this.formSelect.get('selectControl')?.markAsUntouched();
       }
     }
   }

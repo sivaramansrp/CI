@@ -104,8 +104,8 @@ export class PasoUnoComponent implements OnInit, AfterViewInit {
       .subscribe((resp) => {
         if (resp) {
           this.esDatosRespuesta = true;
-          this.solicitud220501Store.setSagarpaState(resp);
-          this.sagarpaService.actualizarEstadoFormulario(resp);
+          this.solicitud220501Store.setSagarpaState(resp.solicitud220501State);
+          this.sagarpaService.actualizarEstadoFormulario(resp.solicitud220502State);
         }
       });
   }

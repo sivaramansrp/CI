@@ -1,14 +1,17 @@
-import { AfterViewInit, EventEmitter, Output } from '@angular/core';
-import { FormularioDinamico, SolicitanteComponent } from '@ng-mf/data-access-user';
+import { AfterViewInit, EventEmitter, OnInit, Output } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState, FormularioDinamico, SolicitanteComponent } from '@ng-mf/data-access-user';
+import { Subject, map, takeUntil } from 'rxjs';
 import { AltaPlantaComponent } from "../../components/alta-planta/alta-planta.component";
 import { BitacoraComponent } from "../../components/bitacora/bitacora.component";
 import { CommonModule } from '@angular/common';
 import { ComplementariaImmexComponent } from "../../components/complementaria-immex/complementaria-immex.component";
 import { Component } from '@angular/core';
 import { DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL } from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
+import { ImmerModificacionService } from '../../service/immer-modificacion.service';
 import { Input } from '@angular/core';
 import { ModificacionComponent } from '../../components/modificacion/modificacion.component';
 import { PERSONA_MORAL_NACIONAL } from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
+import { Tramite80314Store } from '../../estados/tramite80314.store';
 import { ViewChild } from '@angular/core';
 
 @Component({
@@ -19,7 +22,7 @@ import { ViewChild } from '@angular/core';
   standalone: true,
   imports: [SolicitanteComponent, CommonModule, ModificacionComponent, AltaPlantaComponent, BitacoraComponent, ComplementariaImmexComponent]
 })
-export class PasoUnoComponent implements AfterViewInit {
+export class PasoUnoComponent implements AfterViewInit, OnInit {
   /**
     * Referencia al componente `SolicitanteComponent`.
     * 
@@ -75,6 +78,46 @@ export class PasoUnoComponent implements AfterViewInit {
    * Esta propiedad utiliza `@Input` para recibir datos del número de pedimento de tipo desconocido.
    */
   @Input() datosNroPedimento!: unknown;
+
+  /**
+   * @property {Subject<void>} destroyNotifier$
+   * @description Subject utilizado para notificar y completar las suscripciones activas al destruir el componente, evitando fugas de memoria.
+   */
+  public destroyNotifier$: Subject<void> = new Subject();
+
+  /**
+   * @property {ConsultaioState} consultaDatos
+   * @description Estado actual de la consulta, que contiene información relacionada con el trámite y el solicitante.
+   */
+  consultaDatos!: ConsultaioState;
+
+  /** 
+   * Indica si los datos son una respuesta de la consulta. 
+   */
+  public esDatosRespuesta: boolean = false;
+
+  constructor(private consultaioQuery: ConsultaioQuery, private immerModificacionService: ImmerModificacionService,
+    public tramite80314Store: Tramite80314Store,
+  ) {
+    // El constructor se utiliza para la inyección de dependencias.
+  }
+  
+  ngOnInit(): void {
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.consultaDatos = seccionState;
+        })
+      )
+      .subscribe();
+    if (this.consultaDatos.update) {
+      this.fetchGetDatosConsulta();
+    } else {
+      this.esDatosRespuesta = true;
+    }
+  }
+
   /**
 * Gancho de ciclo de vida angular que se llama después de que la vista del componente se haya inicializado por completo.
 */
@@ -82,6 +125,30 @@ export class PasoUnoComponent implements AfterViewInit {
     this.persona = PERSONA_MORAL_NACIONAL;
     this.domicilioFiscal = DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL;
   }
+
+  /**
+ * @method fetchGetDatosConsulta
+ * @description Método para obtener los datos de consulta desde el servicio `DatosTramiteService` y actualizar el estado del store `tramite11204Store`.
+ * 
+ * Este método realiza una solicitud HTTP para obtener los datos de consulta y, si la respuesta es exitosa, actualiza múltiples propiedades del store con los datos recibidos.
+ * Utiliza el operador `takeUntil` para cancelar la suscripción cuando el componente se destruye, evitando fugas de memoria.
+ * 
+ * @returns {void}
+ */
+  public fetchGetDatosConsulta(): void {
+    this.immerModificacionService
+      .getDatosConsulta()
+      .pipe(takeUntil(this.destroyNotifier$)).subscribe((respuesta) => {
+        if (respuesta.success) {
+          this.esDatosRespuesta = true;
+          this.tramite80314Store.setActividadProductiva(respuesta.datos.actividadProductiva);
+          this.tramite80314Store.setFechaInicio(respuesta.datos.fechaInicio);
+          this.tramite80314Store.setFechaVigencia(respuesta.datos.fechaVigencia);
+          this.tramite80314Store.setCertificion(respuesta.datos.certificion);
+        }
+      });
+  }
+
   /**
    * Selecciona una pestaña.
    * @param i El índice de la pestaña a seleccionar.
@@ -103,4 +170,13 @@ export class PasoUnoComponent implements AfterViewInit {
   continuar(): void {
     this.continuarEvento.emit('');
   }
+
+  /**
+   * Limpia las suscripciones activas al destruir el componente.
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
+  }
+  
 }

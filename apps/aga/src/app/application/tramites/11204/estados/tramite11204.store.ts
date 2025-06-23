@@ -1,6 +1,7 @@
 import { Store, StoreConfig } from '@datorama/akita';
-import { Injectable } from '@angular/core';
 import { DatosDelContenedor } from '../models/datos-tramite.model';
+import { Injectable } from '@angular/core';
+
 
 /**
  * Interfaz que representa el estado de la solicitud 11204.

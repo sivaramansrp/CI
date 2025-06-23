@@ -75,12 +75,12 @@
         }
       </div>
     </div>
-
-    @if(nuevaNotificacion) {
-    <section>
-      <lib-notificaciones [notificacionInput]="nuevaNotificacion">
-      </lib-notificaciones>
-    </section>
-    }
   </div>
 </div>
+
+@if(nuevaNotificacion) {
+<section>
+  <lib-notificaciones [notificacionInput]="nuevaNotificacion">
+  </lib-notificaciones>
+</section>
+}

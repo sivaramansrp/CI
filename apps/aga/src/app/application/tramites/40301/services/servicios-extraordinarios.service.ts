@@ -37,7 +37,7 @@ export class ServiciosExtraordinariosService {
    * @param id - Identificador único del catálogo a obtener.
    * @returns Un observable que emite la respuesta JSON del servidor.
    */
-  getCatalogoById(id: number): Observable<JSONResponse> {
+  obtenerTramite(id: number): Observable<JSONResponse> {
     return this.http.get<JSONResponse>(`${this.urlServerCatalogos}/${id}`).pipe(
       catchError((error) => {
         return throwError(() => error);
