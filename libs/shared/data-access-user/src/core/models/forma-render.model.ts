@@ -62,4 +62,5 @@ export interface LabelValueDatos {
 export interface Props extends FormaTextProp, CatalogoSelectProp, RadioProps, FetchaProps {
   labelNombre: string;
   campo: string;
+  storeFunction?: string;
 }
