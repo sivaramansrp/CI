@@ -1156,6 +1156,15 @@
         "numeroDeProcedimiento": "230301"
     },
     {
+        "id": "260702",
+        "tipoDeTramite": "Datos generales del trámite",
+        "fecha": "2024-11-01",
+        "fechaActualizacion": "2024-11-07",
+        "diasTranscurridos": "4",
+        "departamento": "COFEPRIS",
+        "numeroDeProcedimiento": "260702"
+    },
+    {
         "id": "80202",
         "tipoDeTramite": "Datos generales del trámite",
         "fecha": "2024-11-01",
@@ -1460,6 +1469,15 @@
         "diasTranscurridos": "4",
         "departamento": "COFEPRIS",
         "numeroDeProcedimiento": "260301"
+    },
+     {
+        "id": "260601",
+        "tipoDeTramite": "Datos generales del trámite",
+        "fecha": "2024-11-01",
+        "fechaActualizacion": "2024-11-07",
+        "diasTranscurridos": "4",
+        "departamento": "COFEPRIS",
+        "numeroDeProcedimiento": "260601"
     },
 
         {

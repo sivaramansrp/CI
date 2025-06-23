@@ -3,7 +3,7 @@
         <div class="col-md-8">
             <app-catalogo-select [catalogo]="productoClasificacion" formControlName="cveProductoClasificacion"
                 [label]="'Clasificación del producto'" [required]="true" name="cveProductoClasificacion"
-                (change)="productoClasificacionSeleccion()"></app-catalogo-select>
+                (change)="productoClasificacionSeleccion()" [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
         </div>
     </div>
     <div class="row">
@@ -11,7 +11,7 @@
             <app-catalogo-select [catalogo]="especificoProductoClasificacion"
                 formControlName="cveEspecificoProductoClasifi" [label]="'Especificar clasificación del producto'"
                 [required]="true" name="cveEspecificoProductoClasifi"
-                (change)="especificoProductoClasificacionSeleccion()"></app-catalogo-select>
+                (change)="especificoProductoClasificacionSeleccion()" [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
         </div>
     </div>
     <div class="row">
@@ -33,7 +33,7 @@
         <div class="col-md-8">
             <app-catalogo-select [catalogo]="tipoProducto" formControlName="cveTipoProducto"
                 [label]="'Tipo de producto'" [required]="true" name="cveTipoProducto"
-                (change)="tipoProductoSeleccion()"></app-catalogo-select>
+                (change)="tipoProductoSeleccion()" [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
         </div>
     </div>
     <div class="row">
@@ -108,7 +108,7 @@
     <div class="row">
         <div class="col-md-8">
             <app-catalogo-select [catalogo]="paisDestino" formControlName="cvePaisDestino" [label]="'País de destino'"
-                [required]="true" name="cvePaisDestino" (change)="paisDestinoSeleccion()"></app-catalogo-select>
+                [required]="true" name="cvePaisDestino" (change)="paisDestinoSeleccion()" [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
         </div>
     </div>
 
