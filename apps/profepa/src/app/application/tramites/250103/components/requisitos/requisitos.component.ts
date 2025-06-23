@@ -118,7 +118,6 @@ export class RequisitosComponent implements OnInit, OnDestroy {
     private tramite250103Query: Tramite250103Query,
     private consultaioQuery: ConsultaioQuery
   ) {
-    // Constructor que inyecta las dependencias necesarias    this.consultaioQuery.selectConsultaioState$
     this.consultaioQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),
