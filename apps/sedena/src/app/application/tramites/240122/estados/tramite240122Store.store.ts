@@ -1,10 +1,12 @@
-import { DatosDelTramiteFormState } from '../../../shared/models/datos-del-tramite.model';
-import { DestinoFinal } from '../../../shared/models/terceros-relacionados.model';
+import {
+  DatosDelTramiteFormState,
+  MercanciaDetalle
+} from '../../../shared/models/datos-del-tramite.model';
+import { DestinoFinal, Proveedor } from '../../../shared/models/terceros-relacionados.model';
+import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
-import { MercanciaDetalle } from '../../../shared/models/datos-del-tramite.model';
-import { Proveedor } from '../../../shared/models/terceros-relacionados.model';
-import { Store } from '@datorama/akita';
-import { StoreConfig } from '@datorama/akita';
+
+
 
 /**
  * Interfaz que representa el estado completo del trámite 240122.
@@ -65,19 +67,25 @@ export class Tramite240122Store extends Store<Tramite240122State> {
     super(createInitialState());
   }
 
-  /**
-   * Cambia la pestaña actualmente seleccionada.
-   *
-   * @method updateTabSeleccionado
-   * @param {number} tabSeleccionado - Índice de la nueva pestaña seleccionada.
-   * @returns {void}
-   */
-  public updateTabSeleccionado(tabSeleccionado: number): void {
-    this.update((state) => ({
-      ...state,
-      tabSeleccionado: tabSeleccionado,
-    }));
-  }
+/**
+ * Updates the currently selected tab index in the application state.
+ *
+ * This method triggers a state update to reflect the new tab selection,
+ * which can be used to control tabbed navigation or UI rendering logic.
+ *
+ * @param {number} tabSeleccionado - The index of the tab to be selected.
+ * @returns {void}
+ *
+ * @example
+ * // Select the third tab (index 2)
+ * this.updateTabSeleccionado(2);
+ */
+public updateTabSeleccionado(tabSeleccionado: number): void {
+  this.update((state) => ({
+    ...state,
+    tabSeleccionado: tabSeleccionado,
+  }));
+}
 
   /**
    * Actualiza los datos generales del formulario de trámite.
@@ -170,5 +178,54 @@ export class Tramite240122Store extends Store<Tramite240122State> {
       modificarProveedorDatos: datos,
       modificarDestinarioDatos: null,
     }));
+  }
+  /**
+   * @method actualizarTrimateState
+   * @description Actualiza el estado del trámite con los datos proporcionados.
+   * @param {Tramite240122State} datos - Objeto que contiene las nuevas propiedades del estado a actualizar.
+   * @returns {void}
+   */
+  public actualizarTrimateState(datos: Tramite240122State): void {
+    this.update((state)=>({
+      ...state,
+      ...datos
+    }))
+  }
+      /**
+ * Actualiza el objeto de mercancía que se está modificando en el estado.
+ * 
+ * @param {MercanciaDetalle} datos - Objeto de mercancía con los datos actualizados.
+ */
+public actualizarMercancias(datos: MercanciaDetalle): void {
+  this.update((state) => ({
+    ...state,
+    modificarMercanciasDatos: datos,
+  }));
+}
+
+
+  /**
+   * Elimina una mercancía específica de la lista `merccancialTablaDatos` en el estado.
+   *
+   * @param datos Los detalles de la mercancía que se desea eliminar.
+   *
+   * @remarks
+   * Esta función actualiza el estado filtrando la mercancía que coincida exactamente con todos los campos de `datos`.
+   *
+   * @example
+   * eliminarMercancias({ id: 1, nombre: 'Producto A', cantidad: 10 });
+   */
+  eliminarMercancias(datos: MercanciaDetalle): void {
+    this.update(state => {
+      const MERCANCIAS_ACTUALIZADAS = state.merccancialTablaDatos.filter(ele =>
+        !Object.keys(datos).every(
+          key => datos[key as keyof MercanciaDetalle] === ele[key as keyof MercanciaDetalle]
+        )
+      );
+      return {
+        ...state,
+        merccancialTablaDatos: MERCANCIAS_ACTUALIZADAS,
+      };
+    });
   }
 }

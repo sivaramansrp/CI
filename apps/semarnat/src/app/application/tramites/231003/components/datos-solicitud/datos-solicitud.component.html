@@ -18,7 +18,7 @@
     <div class="row mb-3">
       <div class="col-md-5 form-group">
         <app-catalogo-select [catalogo]='etiquetasForm.Immex' formControlName="numeroProgramaImmex"
-          [label]="'Número de autorización Immex'" [required]="true" (change)="actualizarCampoSolicitudForm('numeroProgramaImmex')"></app-catalogo-select>
+          [label]="'Número de autorización Immex'" [required]="true" (change)="actualizarCampoSolicitudForm('numeroProgramaImmex')" [isDisabled]="consultaState.readonly"></app-catalogo-select>
       </div>
     </div>
   </form>
@@ -26,7 +26,7 @@
   <h6>Datos de los residuos peligrosos a reciclar*:</h6>
   <div class="row mb-3">
     <div class="col-md-12">
-      <ng-table [commonTableHeader]=" etiquetasForm.table[0].encabezadoDeTabla" [commonTableBody]="etiquetasForm.table[0].cuerpoTabla"></ng-table>
+      <ng-table [commonTableHeader]=" etiquetasForm.table[0].encabezadoDeTabla" [commonTableBody]="etiquetasForm.table[0].cuerpoTabla" [disableSeleccionTablaCheckBox]="consultaState.readonly"></ng-table>
       <nav aria-label="Page navigation example">
         <ul class="pagination d-flex justify-content-center">
           <li class="page-item"><a class="page-link">1</a></li>
@@ -40,6 +40,7 @@
         <button class="btn btn-primary me-2" type="button">Borrar</button>
         <button class="btn btn-danger" type="button"  data-bs-toggle="modal"
         data-bs-target="#modalAgregarMercancias"
+        [disabled]="consultaState.readonly"
         (click)="agregarOperacionImp()"
 >Agregar</button>
       </div>

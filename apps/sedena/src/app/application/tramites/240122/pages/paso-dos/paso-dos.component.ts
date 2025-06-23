@@ -1,10 +1,8 @@
-import { AlertComponent, AnexarDocumentosComponent, CATALOGOS_ID, Catalogo, CatalogosService } from '@ng-mf/data-access-user';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { AlertComponent, AnexarDocumentosComponent, CATALOGOS_ID, Catalogo, CatalogosService ,TituloComponent} from '@ng-mf/data-access-user';
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import { Subject,takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { Subject } from 'rxjs';
 import { TEXTOS_REQUISITOS } from '../../constantes/exportacion-explosivo-enum';
-import { TituloComponent } from '@ng-mf/data-access-user';
-import { takeUntil } from 'rxjs';
 
 /**
  * @component
@@ -70,6 +68,21 @@ export class PasoDosComponent implements OnInit, OnDestroy {
    * @type {Subject<void>}
    */
   private destroyNotifier$: Subject<void> = new Subject();
+  /**
+   * @description Evento que almacena la información relacionada con la carga de archivos.
+   * @type {string}
+   *
+   * @remarks
+   * Esta propiedad se utiliza para gestionar el evento de carga de archivos en el componente.
+   */
+ @Output() reenviarEvento = new EventEmitter<void>();
+  /**
+   * @desc Evento que indica la sección a la que se debe regresar al cargar un documento.
+   * @type {string}
+   * @memberof PasoDosComponent
+   */
+
+ @Output() regresarSeccionCargarDocumentoEvento = new EventEmitter<void>();
 
   /**
    * @constructor

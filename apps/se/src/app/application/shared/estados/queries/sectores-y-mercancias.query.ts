@@ -1,6 +1,6 @@
+import { SolicitudSectoresYMercanciasState, TramiteSectoresYMercanciasStore } from '../stores/sectores-y-mercancias.store';
 import { Injectable } from '@angular/core';
 import { Query } from '@datorama/akita';
-import { SolicitudSectoresYMercanciasState, TramiteSectoresYMercanciasStore } from '../stores/sectores-y-mercancias.store';
 
 @Injectable({ providedIn: 'root' })
 export class TramiteSectoresYMercanciasQuery extends Query<SolicitudSectoresYMercanciasState> {

@@ -2,7 +2,7 @@ import { Component, ElementRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Agente } from '@ng-mf/data-access-user';
 import { TEXTOS_303 } from '@ng-mf/data-access-user';
-declare const bootstrap: any; 
+
 @Component({
   selector: 'agentes-agencias-aduanales',
   templateUrl: './agentes-agencias-aduanales.component.html',
@@ -26,21 +26,21 @@ export class AgentesAgenciasAduanalesComponent {
   constructor(private fb: FormBuilder,
   ) {}
 
-  abrirModal() {
+  abrirModal(): void {
     this.modal = 'show';
   }
 
-  cerrarModal() { 
+  cerrarModal(): void { 
     this.closeModal.nativeElement.click();
     
   }
 
-  agregarAgente() {
+  agregarAgente(): void {
     if(!this.formAgente.valid) {
       return;
     }
-    const agente = this.formAgente.value;
-    this.agentes.push(agente);
+    const AGENTE = this.formAgente.value;
+    this.agentes.push(AGENTE);
     this.formAgente.reset();
     this.cerrarModal();
   }

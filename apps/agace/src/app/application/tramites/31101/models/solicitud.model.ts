@@ -378,3 +378,347 @@ export interface EntidadFederativa {
    */
   calle?: string;
 }
+
+export interface Solicitud31101Model {
+  /** Tipo de garantía, valor numérico */
+  tipoDeGarantia: number | string;
+
+  /** Modalidad de la garantía, valor numérico */
+  modalidadDeLaGarantia: number | string;
+
+  /** Tipo de sector, valor en cadena */
+  tipoSector: string | number;
+
+  /** Concepto, valor numérico */
+  concepto: number;
+
+  /** Número 3500, valor numérico */
+  '3500': number | string;
+
+  /** Número 3501, valor numérico */
+  '3501': number | string;
+
+  /** Número 3502, valor numérico */
+  '3502': number | string;
+
+  /** RFC de los datos generales */
+  datosGeneralesRFC: string;
+
+  /** Número 3503, valor numérico */
+  '3503': number | string;
+
+  /** Número 3504, valor numérico */
+  '3504': number | string;
+
+  /** Número 3505, valor numérico */
+  '3505': number | string;
+
+  /** Número 3506, valor numérico */
+  '3506': number | string;
+
+  /** Número 3507, valor numérico */
+  '3507': number | string;
+
+  /** Número 3508, valor numérico */
+  '3508': number | string;
+
+  /** Número 3509, valor numérico */
+  '3509': number | string;
+
+  /** Número 3511, valor numérico */
+  '3511': number | string;
+
+  /** Número 3512, valor numérico */
+  '3512': number | string;
+
+  /** Número 3513, valor numérico */
+  '3513': number | string;
+
+  /** Texto genérico 1, valor en cadena */
+  textoGenerico1: string;
+
+  /** Texto genérico 2, valor en cadena */
+  textoGenerico2: string;
+
+  /** Número 3514, valor numérico */
+  '3514': number | string;
+
+  /** Número 3515, valor numérico */
+  '3515': number | string;
+
+  /** Número 3516, valor numérico */
+  '3516': number | string;
+
+  /** Texto genérico 3, valor en cadena */
+  textoGenerico3: string;
+
+  /** Número 3517, valor numérico */
+  '3517': number | string;
+
+  /** Número 3518, valor numérico */
+  '3518': number | string;
+
+  /** Número 3519, valor numérico */
+  '3519': number | string;
+
+  /** Número 3520, valor numérico */
+  '3520': number | string;
+
+  /** Tipo de inversión, valor numérico */
+  tipoInversion: number;
+
+  /** Cantidad de inversión, valor en cadena */
+  cantidadInversion: string;
+
+  /** Descripción de la inversión, valor en cadena */
+  descInversion: string;
+
+  /** Número 3521, valor numérico */
+  '3521': number | string;
+
+  /** Número 3522, valor numérico */
+  '3522': number | string;
+
+  /** Clave de enumeración D0 */
+  claveEnumeracionD0: string;
+
+  /** Clave de enumeración D1 */
+  claveEnumeracionD1: string;
+
+  /** Clave de enumeración D2 */
+  claveEnumeracionD2: string;
+
+  /** Clave de enumeración D3 */
+  claveEnumeracionD3: string;
+
+  /** Clave de enumeración H */
+  claveEnumeracionH: string;
+
+  modalidadProgramaImmex: string | number;
+
+  /** Texto genérico 4, valor en cadena */
+  textoGenerico4: string;
+
+  /** Texto genérico 5, valor en cadena */
+  textoGenerico5: string;
+
+  /** Número 3523, valor numérico */
+  '3523': number | string;
+
+  '3524': number | string;
+
+  fechaFinVigencia1: string;
+
+  numeroAutorizacion1: string;
+
+  '3525': number | string;
+
+  '3526': number | string;
+
+  fechaFinVigencia2: string;
+
+  numeroAutorizacion2: string;
+
+  '3527': number | string;
+
+  /** Número 3528, valor numérico */
+  '3528': number | string;
+
+  /** Número 3529, valor numérico */
+  '3529': number | string;
+
+  /** Texto genérico 6, valor en cadena */
+  textoGenerico6: string;
+
+  /** Texto genérico 7, valor en cadena */
+  textoGenerico7: string;
+
+  /** Número 3530, valor numérico */
+  '3530': number | string;
+
+  /** Número 3531, valor numérico */
+  '3531': number | string;
+
+  /** Texto genérico 9, valor en cadena */
+  textoGenerico9: string;
+
+  /** Texto genérico 10, valor numérico */
+  textoGenerico10: number | string;
+
+  /** Texto genérico 11, valor numérico */
+  textoGenerico11: number | string;
+
+  /** Texto genérico 12, valor numérico */
+  textoGenerico12: number | string;
+
+  /** Texto genérico 13, valor numérico */
+  textoGenerico13: number | string;
+
+  /** Texto genérico 14, valor numérico */
+  textoGenerico14: number | string;
+
+  /** Texto genérico 15, valor numérico */
+  textoGenerico15: number | string;
+
+  /** Texto genérico 16, valor numérico */
+  textoGenerico16: number | string;
+
+  /** Texto genérico 17, valor numérico */
+  textoGenerico17: number | string;
+
+  /** Texto genérico 18, valor numérico */
+  textoGenerico18: number | string;
+
+  /** Texto genérico 19, valor numérico */
+  textoGenerico19: number | string;
+
+  /** Texto genérico 20, valor numérico */
+  textoGenerico20: number | string;
+
+  /** Texto genérico 21, valor numérico */
+  textoGenerico21: number | string;
+
+  /** Texto genérico 22, valor numérico */
+  textoGenerico22: number | string;
+
+  /** Texto genérico 23, valor numérico */
+  textoGenerico23: number | string;
+
+  /** Texto genérico 24, valor numérico */
+  textoGenerico24: number | string;
+
+  /** Alerta 2, valor booleano */
+  alerta2: boolean;
+
+  /** Póliza de fianza actual, valor numérico */
+  polizaDeFianzaActual: number;
+
+  /** Número de folio, valor en cadena */
+  numeroFolio: string;
+
+  /** RFC de la institución, valor en cadena */
+  rfcInstitucion: string;
+
+  /** Fecha de expedición, valor en cadena */
+  fechaExpedicion: string;
+
+  /** Fecha de inicio de vigencia no, valor en cadena */
+  fechaInicioVigenciaNo: string;
+
+  /** Fecha de fin de vigencia no, valor en cadena */
+  fechaFinVigenciaNo: string;
+
+  /** Fecha de inicio de vigencia, valor en cadena */
+  fechaInicioVigencia: string;
+
+  /** Fecha de fin de vigencia, valor en cadena */
+  fechaFinVigencia: string;
+
+  /** Importe total, valor en cadena */
+  importeTotal: string;
+
+  /** Razón social anterior, valor en cadena */
+  razonSocialAnterior: string;
+
+  /** Razón social actual, valor en cadena */
+  razonSocialActual: string;
+
+  /** RFC, valor en cadena */
+  rfc: string;
+
+  /** CURP, valor en cadena */
+  curp: string;
+
+  /** Nombre, valor en cadena */
+  nombre: string;
+
+  /** Apellido paterno, valor en cadena */
+  apellidoPaterno: string;
+
+  /** Apellido materno, valor en cadena */
+  apellidoMaterno: string;
+
+  /**
+   * @description Carácter del miembro en la solicitud.
+   */
+  miembroCaracterDe: string | number;
+
+  /**
+   * @description Indica si el miembro tiene obligación de tributar en México.
+   */
+  miembroTributarMexico: number | string;
+
+  /**
+   * @description Nacionalidad del miembro.
+   */
+  miembroNacionalidad: string | number;
+
+  /**
+   * @description Registro Federal de Contribuyentes (RFC) del miembro.
+   */
+  miembroRfc: string;
+
+  /**
+   * @description Registro federal del miembro ante autoridades pertinentes.
+   */
+  miembroRegistroFederal: string;
+
+  /**
+   * @description Nombre completo del miembro.
+   */
+  miembroNombreCompleto: string;
+
+  /**
+   * @description Tipo de persona muestra en la solicitud.
+   */
+  miembroTipoPersonaMuestra: string | number;
+
+  /**
+   * @description Nombre del miembro.
+   */
+  miembroNombre: string;
+
+  /**
+   * @description Apellido paterno del miembro.
+   */
+  miembroApellidoPaterno: string;
+
+  /**
+   * @description Apellido materno del miembro.
+   */
+  miembroApellidoMaterno: string;
+
+  /**
+   * @description Nombre de la empresa del miembro.
+   */
+  miembroNombreEmpresa: string;
+
+  /**
+   * @description Entidad federativa correspondiente al miembro.
+   */
+  entidadFederativa: string | number;
+
+  /** Descripción de las principales instalaciones, puede ser un texto o un número */
+  instalacionesPrincipales: string | number;
+
+  /** Nombre del municipio donde se encuentra la instalación */
+  municipio: string;
+
+  /** Tipo de instalación representado por un número */
+  tipoDeInstalacion: number;
+
+  /** Nombre de la entidad federativa donde se ubica */
+  federativa: string;
+
+  /** Número de registro en la Secretaría correspondiente */
+  registroSE: string;
+
+  /** Descripción detallada de la instalación */
+  desceripe: string;
+
+  /** Código postal de la ubicación */
+  codigoPostal: string;
+
+  /** Identificador del proceso productivo, puede ser un número o una descripción */
+  procesoProductivo: number | string;
+}

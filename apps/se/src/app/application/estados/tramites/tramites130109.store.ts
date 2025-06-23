@@ -178,15 +178,7 @@ export class Tramite130109Store extends Store<Tramite130109State> {
   constructor() {
     super(createInitialState());
   }
-    /**
-     * Actualiza si la tabla dinámica debe mostrarse en el estado.
-     * mostrar Indica si la tabla debe mostrarse.
-     */
-    public setMostrarTabla(mostrar: boolean): void {
-      this.update({ mostrarTabla: mostrar });
-    }
-  
-      /**
+  /**
    * Actualiza el estado del store con los valores proporcionados.
    * Valores a actualizar en el estado.
    */
@@ -196,13 +188,4 @@ export class Tramite130109Store extends Store<Tramite130109State> {
       ...valores,
     }));
   } 
-    /**
-     * Almacena las filas seleccionadas en la tabla dinámica en el estado.
-     * fila Lista de filas seleccionadas.
-     */
-    public storeTableValues(fila: PartidasDeLaMercanciaModelo[]): void {
-      this.update({
-        filaSeleccionada: fila,
-      });
-    }
 }

@@ -1,13 +1,13 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Subject, map, merge, takeUntil } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
 
 import { DonacionesExtranjerasService } from '../../services/donaciones-extranjeras/donaciones-extranjeras.service';
 
-import { CATALOGOS_ID, Catalogo } from '@ng-mf/data-access-user';
 import { Contribuyente, ContribuyenteRespuesta } from '../../models/donaciones-extranjeras.model';
 import { RegistroDeDonacion10303State, Tramite10303Store } from '../../estados/tramites/tramite10303.store';
+import { Catalogo } from '@ng-mf/data-access-user';
 import { Tramite10303Query } from '../../estados/queries/tramite10303.query';
 
 /**
@@ -38,6 +38,11 @@ export class DatosRepLegalDonatarioComponent implements OnInit, OnDestroy {
     * Estado de la registro de donacion.
     */
   public registroDeDonacionState: RegistroDeDonacion10303State | undefined;
+
+  /**
+   * Indica si el formulario está deshabilitado.
+   */
+  @Input() formularioDeshabilitado!: boolean;
 
   /**
    * Constructor del componente.
@@ -74,6 +79,12 @@ export class DatosRepLegalDonatarioComponent implements OnInit, OnDestroy {
     this.crearDatosRepLegalDonatarioForm();
 
     this.paisSeleccion();
+
+    if (this.formularioDeshabilitado) {
+      this.datosRepLegalDonatarioForm.disable();
+    } else if (!this.formularioDeshabilitado) {
+      this.datosRepLegalDonatarioForm.enable();
+    }
   }
 
   /**
@@ -101,7 +112,7 @@ export class DatosRepLegalDonatarioComponent implements OnInit, OnDestroy {
    */
   inicializaCatalogos(): void {
     const PAIS$ = this.donacionesExtranjerasService
-      .getPaises(CATALOGOS_ID.CAT_PAIS)
+      .getPaises()
       .pipe(
         map((resp) => {
           this.pais = resp.data;

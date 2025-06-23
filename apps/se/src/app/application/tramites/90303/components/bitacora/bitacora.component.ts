@@ -9,7 +9,6 @@ import { PlantasComponent } from '../../../../shared/components/plantas/plantas.
 import { ProducirMercanciasComponent } from '../../../../shared/components/producir-mercancias/producir-mercancias.component';
 import { ProductorIndirectoComponent } from '../../../../shared/components/productor-indirecto/productor-indirecto.component';
 import { SectorComponent } from '../../../../shared/components/sector/sector.component';
-import { TablaSeleccion } from '@libs/shared/data-access-user/src';
 
 /**
  * Componente para gestionar y mostrar la tabla de bitácoras.

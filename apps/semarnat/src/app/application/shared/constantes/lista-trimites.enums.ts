@@ -36,11 +36,43 @@ export const LISTA_TRIMITES: AccuseComponentes[] = [
         }]
     },
     {
+        tramite: 230202,
+        listaComponentes: [{
+            id: 'solicitud',
+            componentPath: () => import('../../tramites/230202/pages/paso-uno/paso-uno.component').then(m => m.PasoUnoComponent),
+            componentName: 'PasoUnoComponent',
+        }]
+    },
+    {
         tramite: 230301,
         listaComponentes: [{
             id: 'solicitud',
             componentPath: () => import('../../tramites/230301/pages/paso-uno/paso-uno.component').then(m => m.PasoUnoComponent),
             componentName: 'PasoUnoComponent',
+        }]
+    },
+    {
+        tramite: 230201,
+        listaComponentes: [{
+            id: 'solicitud',
+            componentPath: () => import('../../tramites/230201/pages/paso-uno/paso-uno.component').then(m => m.PasoUnoComponent),
+            componentName: 'PasoUnoComponent',
+        }]
+    },
+    {
+        tramite: 231001,
+        listaComponentes: [{
+            id: 'solicitud',
+            componentPath: () => import('../../tramites/231003/pages/aviso-reciclaje/aviso-reciclaje.component').then(m => m.AvisoReciclajeComponent),
+            componentName: 'AvisoReciclajeComponent',
+        }]
+    },
+    {
+        tramite: 231002,
+        listaComponentes: [{
+            id: 'solicitud',
+            componentPath: () => import('../../tramites/231002/pages/aviso-retorno/aviso-retorno.component').then(m => m.AvisoRetornoComponent),
+            componentName: 'AvisoRetornoComponent',
         }]
     },
 ];

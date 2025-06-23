@@ -50,7 +50,7 @@ export class PasoDosComponent implements OnDestroy {
         this.subscription.add(this._registroCuentasBancariasSvc
           .obtenerTramite(19)
           .pipe(
-            map((tramite) => {
+            map(() => {
               this.router.navigate(['servicios-extraordinarios/acuse']);
             }),
             catchError((_error) => {

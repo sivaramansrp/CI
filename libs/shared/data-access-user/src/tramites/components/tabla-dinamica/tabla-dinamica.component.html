@@ -31,6 +31,12 @@
       </tr>
     </thead>
     <tbody>
+      <tr *ngIf="!datos.length">
+        <td [attr.colspan]="obtenerConfiguracionOrdenada().length + (acciones.length ? 1 : 0) + (tipoSeleccionTabla ? 1 : 0)"
+          style="text-align: center;">
+          SIN DATOS
+        </td>
+      </tr>
       <!-- Crear las filas de manera dinámica -->
       <tr
         *ngFor="let fila of datos; let i = index"
@@ -76,6 +82,7 @@
             [value]="i"
             (click)="cambiarValor({ row: fila, column: '' })"
             aria-label="Seleccionar"
+            [disabled]="desactivarButton"
           >
             {{ obtenerTextoBoton(fila) }}
           </button>
@@ -85,9 +92,7 @@
         <!-- Renderizar cada columna de manera dinámica utilizando la función 'clave' -->
         <td
           *ngFor="let col of obtenerConfiguracionOrdenada()"
-          (click)="
-            col.hiperenlace ? cambiarValor({ row: fila, column: '' }) : null
-          "
+          (click)="col.hiperenlace ? cambiarValor({ row: fila, column: '' }) : null"
           [ngClass]="{ 'cursor-pointer': col.hiperenlace }"
         >
           {{ col.clave(fila) || ' ' }}

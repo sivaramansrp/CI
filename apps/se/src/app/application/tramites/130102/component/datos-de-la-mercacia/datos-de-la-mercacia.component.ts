@@ -1,3 +1,4 @@
+import { REGEX_PERMITE_11_2_DIGITS, REGEX_PERMITE_11_3_DIGITS } from '@libs/shared/data-access-user/src/tramites/constantes/regex.constants';
 /* eslint-disable @nx/enforce-module-boundaries */
 /**
  *compo doc
@@ -207,7 +208,7 @@ export class DetosDelLaMarcaciaComponent implements OnInit , OnDestroy {
         [
           Validators.required,
           Validators.min(1),
-          Validators.pattern(REG_X.SOLO_NUMEROS),
+          DetosDelLaMarcaciaComponent.cantidadPatternValidator,
           DetosDelLaMarcaciaComponent.noLeadingSpacesValidator 
         ],
       ],
@@ -216,7 +217,7 @@ export class DetosDelLaMarcaciaComponent implements OnInit , OnDestroy {
         [
           Validators.required,
           Validators.min(0.01),
-          Validators.pattern(REG_X.DECIMALES_DOS_LUGARES),
+          DetosDelLaMarcaciaComponent.valorFacturaUSDValidator,
           DetosDelLaMarcaciaComponent.noLeadingSpacesValidator 
         ],
       ],
@@ -225,6 +226,60 @@ export class DetosDelLaMarcaciaComponent implements OnInit , OnDestroy {
     this.formDelLa.disable();
   }
   }
+
+  /**
+   * Validador personalizado para el campo de cantidad.
+   * Verifica que el valor ingresado contenga solo números y cumpla con el patrón de 11 o 3 dígitos permitidos.
+   *
+   * @static
+   * @param {AbstractControl} control - Control del formulario a validar.
+   * @returns {ValidationErrors | null} Objeto con los errores de validación o null si es válido.
+   *
+   * @example
+   * this.formBuilder.control('', [CantidadValidator.cantidadPatternValidator])
+   */
+  public static cantidadPatternValidator(control: AbstractControl): ValidationErrors | null {
+    const SOLO_NUMEROS = REG_X.SOLO_NUMEROS;
+    const ONCE_TRES_DIGITS = REGEX_PERMITE_11_3_DIGITS;
+
+    if (control.value && !new RegExp(SOLO_NUMEROS).test(control.value)) {
+      return { soloNumeros: true };
+    }
+
+    if (control.value && !new RegExp(ONCE_TRES_DIGITS).test(control.value)) {
+      return { onceTresDigits: true };
+    }
+
+    return null;
+  }
+
+  /**
+   * Validador personalizado para el campo de valor de factura en USD.
+   * Verifica que el valor ingresado tenga hasta dos decimales y cumpla con el patrón de 11 o 2 dígitos permitidos.
+   *
+   * @static
+   * @param {AbstractControl} control - Control del formulario a validar.
+   * @returns {ValidationErrors | null} Objeto con los errores de validación o null si es válido.
+   *
+   * @example
+   * this.formBuilder.control('', [ValorFacturaValidator.valorFacturaUSDValidator])
+   */
+  public static valorFacturaUSDValidator(control: AbstractControl): ValidationErrors | null {
+    const DECIMALES_DOS_LUGARES = REG_X.DECIMALES_DOS_LUGARES;
+    const ONCE_DOS_DIGITS = REGEX_PERMITE_11_2_DIGITS;
+
+    if (control.value && !new RegExp(DECIMALES_DOS_LUGARES).test(control.value)) {
+      return { decimalesDosLugares: true };
+    }
+
+    if (control.value && !new RegExp(ONCE_DOS_DIGITS).test(control.value)) {
+      return { onceDosDigits: true };
+    }
+
+    return null;
+  }
+
+
     /**
    * Asigna un valor del formulario al store.
    *
@@ -255,7 +310,7 @@ export class DetosDelLaMarcaciaComponent implements OnInit , OnDestroy {
    * @description Carga las opciones de productos desde el JSON.
    */
   fetchProductoOptions(): void {
-    this.producto = productoOptions.options;
+    this.producto = productoOptions?.options;
   }
 
   /**

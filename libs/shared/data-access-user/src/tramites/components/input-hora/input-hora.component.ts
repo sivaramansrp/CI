@@ -13,6 +13,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { Subject, takeUntil, tap, timer } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { HORA_PATTERN } from '../../constantes/regex.constants';
 import { HoraFormatoDirective } from '../../directives/hora-formato/hora-formato.directive';
@@ -32,7 +33,6 @@ import { ValidacionesFormularioService } from '../../../core/services/shared/val
   ],
 })
 export class InputHoraComponent implements OnChanges, ControlValueAccessor {
-
   /**
    * Etiqueta para mostrar junto al componente.
    */
@@ -49,6 +49,11 @@ export class InputHoraComponent implements OnChanges, ControlValueAccessor {
   @Input() required!: boolean;
 
   /**
+   * @decription Identificador para poner el input como unmarked.
+   */
+  @Input() unmarked: boolean = false;
+
+  /**
    * Formulario reactivo que contiene el control 'hora'.
    */
   forma: FormGroup;
@@ -58,22 +63,26 @@ export class InputHoraComponent implements OnChanges, ControlValueAccessor {
    */
   value: string = '';
 
+  /**
+   * Notificador para gestionar la destrucción de suscripciones y evitar fugas de memoria.
+   * @private
+   */
+  private destroyNotifier$: Subject<void> = new Subject();
+
   // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-empty-function
-  private onChange: (value: string) => void = () => { };
+  private onChange: (value: string) => void = () => {};
   // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-empty-function
-  private onTouched: () => void = () => { };
+  private onTouched: () => void = () => {};
 
   constructor(private validacionesService: ValidacionesFormularioService) {
     this.forma = new FormGroup({
-      hora: new FormControl('', [
-        Validators.pattern(HORA_PATTERN),
-      ]),
+      hora: new FormControl('', [Validators.pattern(HORA_PATTERN)]),
     });
   }
 
   /**
    * Detecta cambios en las propiedades de entrada y actualiza las validaciones del campo 'hora'.
-   * 
+   *
    * @param changes - Cambios detectados en las propiedades de entrada.
    * @returns void
    */
@@ -94,11 +103,11 @@ export class InputHoraComponent implements OnChanges, ControlValueAccessor {
   }
 
   /**
-  * Maneja el evento de cambio de un input tipo text.
-  * 
-  * @param event - Evento de cambio del text.
-  * @returns void
-  */
+   * Maneja el evento de cambio de un input tipo text.
+   *
+   * @param event - Evento de cambio del text.
+   * @returns void
+   */
   // ✅ Implement `ControlValueAccessor`
   handleChange(event: Event): void {
     const VALUE = (event.target as HTMLSelectElement).value;
@@ -107,12 +116,17 @@ export class InputHoraComponent implements OnChanges, ControlValueAccessor {
 
   /**
    * Escribe un valor string en el control de formulario 'hora'.
-   * 
+   *
    * @param value - Valor string a establecer en el control.
    * @returns void
    */
   writeValue(value: string): void {
     this.forma.controls['hora'].setValue(value);
+
+    if (!value) {
+      this.forma.controls['hora'].markAsUntouched();
+      this.forma.controls['hora'].markAsPristine();
+    }
   }
 
   /**
@@ -141,4 +155,34 @@ export class InputHoraComponent implements OnChanges, ControlValueAccessor {
   get isValid(): boolean | null | undefined {
     return this.forma.get('hora')?.errors && this.forma.get('hora')?.touched;
   }
-} 
+
+  /**
+   * Verifica si el tipo de error es 'required' en el campo 'hora'.
+   * @param {string} errorType - Tipo de error a verificar.
+   * @returns {boolean} `true` si el error es 'required', de lo contrario `false`.
+   */
+  getTipoError(errorType: string): boolean | null | undefined {
+    return (
+      this.forma.get('hora')?.hasError(errorType) &&
+      this.forma.get('hora')?.touched
+    );
+  }
+
+  /**
+   * @description Resetea el campo 'hora' del formulario a su estado inicial.
+   * @returns {void}
+   */
+  resetVisual(): void {
+    timer(10)
+      .pipe(
+        tap(() => {
+          const CONTROL = this.forma.get('hora');
+          CONTROL?.setValue(null);
+          CONTROL?.markAsUntouched();
+          CONTROL?.markAsPristine();
+        }),
+        takeUntil(this.destroyNotifier$)
+      )
+      .subscribe();
+  }
+}

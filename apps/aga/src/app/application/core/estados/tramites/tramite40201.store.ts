@@ -1,6 +1,6 @@
+import { CAATRegistradoEmpresaForm, PersonaFisicaExtranjeraForm, PersonaFisicaNacionalForm, PersonaMoralExtranjeraForm, PersonaMoralNacionalForm } from '../../../tramites/40201/models/transportacion-maritima.model';
 import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
-import { CAATRegistradoEmpresaForm, PersonaFisicaExtranjeraForm, PersonaFisicaNacionalForm, PersonaMoralExtranjeraForm, PersonaMoralNacionalForm } from '../../../tramites/40201/models/transportacion-maritima.model';
 
 export interface TransportacionMaritima40201State {
     /**

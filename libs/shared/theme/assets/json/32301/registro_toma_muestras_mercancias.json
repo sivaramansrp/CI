@@ -1,0 +1,84 @@
+{
+  "tipoDevAviso": {
+    "modalidadCertificacion": "",
+    "foreignClientsSuppliers": false,
+    "nationalSuppliers": false,
+    "modificationsMembers": false,
+    "changesToLegalDocuments": false,
+    "mergerOrSplitNotice": false,
+    "additionFractions": false,
+    "acepto253": false
+  },
+  "proveedorExtranjero": {
+    "archivoExtranjero": null,
+    "registrosProveedoresExtranjeros": ""
+  },
+
+  "modificacionSocios": {
+    "ensucarácterde": 1,
+   "obligadoaTributarenMéxico": true,
+    "nacionalidad": 1,
+    "registroFederaldeContribuyentes": null,
+    "rfc": "",
+    "nombreCompleto": ""
+  },
+  "modificacionGoceInmueble": {
+    "idAviInmueble": "",
+    "direccion": "",
+    "codigoPostal": "",
+    "cveEntidad": "",
+    "cveMunicipio": "",
+    "cveTipoDoc": "",
+    "fechaInicioAnterior": "",
+    "fechaFinAnterior": "",
+    "fechaInicioActual": "",
+    "fechaFinActual": "",
+    "rfcPartesC": "",
+    "rfcPartesCons": "",
+    "nombrePartesCons": "",
+    "caracterDeCons": "",
+    "observaciones": ""
+  },
+  "personaFusionEscisionDTO": {
+    "rfc": "",
+    "razonSocial": "",
+    "numFolioTramite": "",
+    "fechaInicioVigencia": "",
+    "fechaFinVigencia": ""
+  },
+  "fechasSeleccionadas": {
+    "fechasSeleccionadas": []
+  },
+  "datosEmpresa": {
+    "numeroPrograma": "",
+    "anoPrograma": "",
+    "mesCorrespondeAviso": "",
+    "anoCorrespondeAviso": ""
+  },
+  "cargaTipo": {
+    "cargaTipo": ""
+  },
+  "datosQuienRecibe": {
+    "rfc": "",
+    "numberProgramaQr": "",
+    "anoProgramaQr": ""
+  },
+  "datosDomicilioLugar": {
+    "nombreComercial": "",
+    "entidadFederativa": "",
+    "alcaldiaMunicipio": "",
+    "colonias": "",
+    "calle": "",
+    "numeroExterior": "",
+    "numeroInterior": "",
+    "codigoPostal": ""
+  },
+  "datosMercanciaSubmanufactura": {
+    "fracArancelaria": "",
+    "nico": "",
+    "unidadMedida": "",
+    "cantidad": "",
+    "valorUsd": "",
+    "descripcionMercancia": ""
+  }
+}

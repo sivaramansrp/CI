@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Catalogo } from '@ng-mf/data-access-user';
 import { CATALOGOS_ID } from '@ng-mf/data-access-user';
+import { Catalogo } from '@ng-mf/data-access-user';
 import { CatalogosService } from '@ng-mf/data-access-user';
 import { TEXTOS_303 } from '@ng-mf/data-access-user';
 
@@ -34,7 +34,7 @@ export class PasoDosComponent implements OnInit {
 
   }
 
-  getTiposDocumentos() {
+  getTiposDocumentos(): void {
     this.catalogosServices.getCatalogo(CATALOGOS_ID.CAT_TIPO_DOCUMENTO).subscribe((resp) => {
       if (resp.length > 0) {
         this.tiposDocumentos = resp;
@@ -42,7 +42,7 @@ export class PasoDosComponent implements OnInit {
     })
   }
 
-  agregarDocumento(id: number) {
+  agregarDocumento(id: number): void {
     this.tiposDocumentos.forEach( el => {
       if (el.id === id) {
         this.documentosSeleccionados.push(el);
@@ -50,7 +50,7 @@ export class PasoDosComponent implements OnInit {
     })
   }
 
-  eliminar(i: number) {
+  eliminar(i: number): void {
     this.documentosSeleccionados.splice(i, 1)
   }
 }

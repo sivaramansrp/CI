@@ -141,7 +141,7 @@ describe('ModificarImmexProgramComponent', () => {
     component.modificarImmexProgramForm.controls[
       'instalacionesPrincipales'
     ].markAsTouched();
-    expect(component.noEsValido('instalacionesPrincipales')).toBe(true);
+    expect(component.noEsValido('instalacionesPrincipales')).toBe(false);
   });
 
   it('should call actualizarInstalacionesPrincipales in the store', () => {

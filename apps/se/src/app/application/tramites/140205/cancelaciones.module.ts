@@ -1,29 +1,16 @@
-import { NgModule } from '@angular/core';
-
-import { CommonModule } from '@angular/common';
-
-import { CancelacionesRoutingModule } from './cancelaciones-routing.module';
-
 import {
   AlertComponent,
   BtnContinuarComponent,
-  SolicitanteComponent,
   WizardComponent,
 } from '@libs/shared/data-access-user/src';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-
-import { provideHttpClient } from '@angular/common/http';
-
-import { ToastrService } from 'ngx-toastr';
-
-
-import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
-
-import { SolicitantePageComponent } from './pages/solicitante-page/solicitante-page.component';
-import { RouterModule } from '@angular/router';
+import { CancelacionesRoutingModule } from './cancelaciones-routing.module';
+import { CommonModule } from '@angular/common';
 import { DatosEmpresaComponent } from './components/datos-empresa/datos-empresa.component';
-
-
+import { NgModule } from '@angular/core';
+import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
+import { RouterModule } from '@angular/router';
+import { SolicitantePageComponent } from './pages/solicitante-page/solicitante-page.component';
+import { ToastrService } from 'ngx-toastr';
 @NgModule({
   declarations: [
     
