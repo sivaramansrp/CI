@@ -1,5 +1,5 @@
-import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { PagoDeDerechosComponent } from '../../../../shared/components/pago-de-derechos/pago-de-derechos.component';

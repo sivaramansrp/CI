@@ -391,13 +391,13 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
         )
         .subscribe();
     this.seccionStore.establecerSeccion([false]);
-    const isValid = this.formulario.get('datosRealizer')?.valid &&
+    const ISVALID = this.formulario.get('datosRealizer')?.valid &&
         this.formulario.get('datosMercanica')?.valid &&
         this.formulario.get('datosExporta')?.valid &&
         this.formulario.get('datosProductor')?.valid &&
         this.formulario.get('datosExportador')?.valid;
 
-    if(isValid) {
+    if(ISVALID) {
       this.seccionStore.establecerSeccion([true]);
       this.seccionStore.establecerFormaValida([true])
     }

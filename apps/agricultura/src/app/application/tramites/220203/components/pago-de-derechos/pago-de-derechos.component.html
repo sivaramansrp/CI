@@ -27,12 +27,7 @@
               [required]="true"
               [isDisabled]="false"
               [isDisabled]="esFormularioSoloLectura"
-              (change)="
-              setValoresStore(
-                formularioPago,
-                'justificacion'
-              )
-            " 
+              (change)="setValoresStore()" 
             ></app-catalogo-select>
           </ng-container>
           <ng-template #noTrack>
@@ -44,12 +39,7 @@
               [isDisabled]="true"
               name="justificacion"
               [isDisabled]="esFormularioSoloLectura"
-              (change)="
-              setValoresStore(
-                formularioPago,
-                'justificacion'
-              )
-            " 
+              (change)="setValoresStore()"
             ></app-catalogo-select>
           </ng-template>
         </div>
@@ -65,12 +55,7 @@
             placeholder=""
             type="text"
             libUppercase
-            (change)="
-            setValoresStore(
-              formularioPago,
-              'claveReferencia'
-            )
-          " 
+            (change)="setValoresStore()"
           />
         </div>
         <div class="col-md-4 form-group">
@@ -85,12 +70,7 @@
             placeholder=""
             type="text"
             libUppercase
-            (change)="
-            setValoresStore(
-              formularioPago,
-              'cadenaDependencia'
-            )
-          " 
+            (change)="setValoresStore()"
           />
         </div>
         <div class="col-md-4">
@@ -103,12 +83,7 @@
               [isDisabled]="true"
               name="banco"
               [isDisabled]="esFormularioSoloLectura"
-              (change)="
-            setValoresStore(
-              formularioPago,
-              'banco'
-            )
-          " 
+              (change)="setValoresStore()"
             ></app-catalogo-select>
           </ng-container>
           <ng-template #noBanco>
@@ -120,12 +95,7 @@
               [isDisabled]="false"
               name="banco"
               [isDisabled]="esFormularioSoloLectura"
-              (change)="
-              setValoresStore(
-                formularioPago,
-                'banco'
-              )
-            " 
+              (change)="setValoresStore()"
             ></app-catalogo-select>
           </ng-template>
         </div>
@@ -141,12 +111,7 @@
             placeholder=""
             type="text"
             libUppercase
-            (change)="
-            setValoresStore(
-              formularioPago,
-              'llavePago'
-            )
-          " 
+            (change)="setValoresStore()"
           />
         </div>
         <div class="col-md-4 form-group">
@@ -167,12 +132,7 @@
             placeholder=""
             type="text"
             libUppercase
-            (change)="
-            setValoresStore(
-              formularioPago,
-              'importePago'
-            )
-          " 
+            (change)="setValoresStore()"
           />
         </div>
       </div>

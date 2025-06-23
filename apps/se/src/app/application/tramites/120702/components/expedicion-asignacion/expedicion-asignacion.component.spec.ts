@@ -5,6 +5,7 @@ import { ExpedicionAsignacionComponent } from './expedicion-asignacion.component
 import { Tramite120702Store } from '../../estados/tramite120702.store';
 import { Tramite120702Query } from '../../estados/tramite120702.query';
 import { ExpedicionCertificadosFronteraService } from '../../services/expedicion-certificados-frontera.service';
+import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 
 describe('ExpedicionAsignacionComponent', () => {
   let component: ExpedicionAsignacionComponent;
@@ -22,6 +23,15 @@ describe('ExpedicionAsignacionComponent', () => {
     columns: ['Monto A Expedir'],
     rows: [],
   };
+
+const mockConsultaioQuery = {
+  selectConsultaioState$: of({ readonly: false })
+};
+TestBed.configureTestingModule({
+  providers: [
+    { provide: ConsultaioQuery, useValue: mockConsultaioQuery }
+  ]
+});
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -60,6 +70,18 @@ describe('ExpedicionAsignacionComponent', () => {
     store = TestBed.inject(Tramite120702Store);
     query = TestBed.inject(Tramite120702Query);
     service = TestBed.inject(ExpedicionCertificadosFronteraService);
+    component.consultaState = {
+      procedureId: '',
+      parameter: '',
+      department: '',
+      folioTramite: '',
+      tipoDeTramite: '',
+      estadoDeTramite: '',
+      readonly: false,
+      create: false,
+      update: true,
+      consultaioSolicitante: null,
+    };
     fixture.detectChanges();
   });
 
@@ -107,4 +129,42 @@ describe('ExpedicionAsignacionComponent', () => {
     expect(spyNext).toHaveBeenCalled();
     expect(spyComplete).toHaveBeenCalled();
   });
+
+  it('should not add montoAExpedir to the table if value is empty', () => {
+  component.asignacionForm.get('montoAExpedir')?.setValue('');
+  component.montoTablaFilaDatos = [];
+  component.enviarMontoFormulario();
+  expect(component.montoTablaFilaDatos.length).toBe(0);
+});
+
+it('should patch form values when selectSolicitud$ emits', () => {
+  const solicitud = { anoDelOficio: '2025', estado: 'SONORA', montoAsignado: '700' };
+  (query as any).selectSolicitud$ = of(solicitud);
+
+  fixture = TestBed.createComponent(ExpedicionAsignacionComponent);
+  component = fixture.componentInstance;
+  fixture.detectChanges();
+
+  expect(component.asignacionForm.get('anoDelOficio')?.value).toBe('2025');
+  expect(component.asignacionForm.get('estado')?.value).toBe('SONORA');
+  expect(component.asignacionForm.get('montoAsignado')?.value).toBe('700');
+});
+
+it('should disable the form if esFormularioSoloLectura is true', () => {
+  component.esFormularioSoloLectura = true;
+  component.inicializarEstadoFormulario();
+  expect(component.asignacionForm.disabled).toBe(true);
+});
+
+it('should enable the form if esFormularioSoloLectura is false', () => {
+  component.esFormularioSoloLectura = false;
+  component.asignacionForm.disable();
+  component.inicializarEstadoFormulario();
+  expect(component.asignacionForm.enabled).toBe(true);
+});
+
+it('should not throw if asignacionForm is undefined in inicializarEstadoFormulario', () => {
+  (component as any).asignacionForm = undefined;
+  expect(() => component.inicializarEstadoFormulario()).not.toThrow();
+});
 });

@@ -438,4 +438,13 @@ export class Tramite40202Store extends Store<TransportacionMaritima40202State> {
             mostrarAgregarSeleccionado,
         }));
     }
+
+    /**
+     * Actualiza el estado de la consulta de transportación marítima.
+     * @param nuevoDatos - Nuevo estado de tipo `TransportacionMaritima40202State`.
+     * @description Actualiza el estado de la consulta de transportación marítima con los nuevos datos proporcionados.
+     */
+    public setConsultaTransportacionMaritimaState(nuevoDatos: TransportacionMaritima40202State): void {
+        this.update(nuevoDatos);
+    }
 }

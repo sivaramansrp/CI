@@ -1,4 +1,2 @@
-<app-agregar-proveedor-custom
-[idProcedimiento]="idProcedimiento"
-  (updateProveedorTablaDatos)="updateProveedorTablaDatos($event)"
-></app-agregar-proveedor-custom>
+<app-agregar-proveedor-custom [idProcedimiento]="idProcedimiento" (cancelarEventListener)="cerrar.emit()"
+  (updateProveedorTablaDatos)="updateProveedorTablaDatos($event)"></app-agregar-proveedor-custom>

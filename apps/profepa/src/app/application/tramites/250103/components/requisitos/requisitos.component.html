@@ -6,14 +6,14 @@
                 <div class="form-group ">
                     <app-catalogo-select [catalogo]="medio" formControlName="medio" [label]="'Medio transporte'"
                         [required]="true" name="medio"
-                        (change)="setValoresStore(transporteForm, 'medio')"></app-catalogo-select>
+                        (change)="setValoresStore(transporteForm, 'medio')" [disabled]="esFormularioSoloLectura"></app-catalogo-select>
                 </div>
             </div>
         </div>
         <div class="row ">
             <h6>Transporte:*</h6>
             <app-tabla-dinamica [configuracionTabla]="configuracionTransporteTabla" [datos]="TransporteTabla"
-                [tipoSeleccionTabla]="checkbox"></app-tabla-dinamica>
+                [tipoSeleccionTabla]="checkbox" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"></app-tabla-dinamica>
 
             <nav aria-label="Page navigation example">
                 <ul class="pagination justify-content-center">
@@ -22,8 +22,8 @@
             </nav>
         </div>
         <div class="col-md-12 mt-5 d-flex justify-content-end">
-            <button type="button" class="btn btn-danger">Eliminar</button>
-            <button type="button" class="btn btn-primary ms-3" (click)="transporte()">Agregar</button>
+            <button type="button" class="btn btn-danger" [disabled]="esFormularioSoloLectura">Eliminar</button>
+            <button type="button" class="btn btn-primary ms-3" (click)="transporte()" [disabled]="esFormularioSoloLectura">Agregar</button>
         </div>
         <app-modal [active]="showtransporteModal">
             <ng-titulo titulo="Transporte" />
@@ -84,16 +84,16 @@
             </div>
             <div class="col-md-12 mt-5 d-flex justify-content-end">
                 <button type="button" class="btn btn-danger" id="btnCancelarAgente"
-                    (click)="transporteEliminar()">Cancelar</button>
+                    (click)="transporteEliminar()" [disabled]="esFormularioSoloLectura">Cancelar</button>
                 <button type="button" class="btn btn-primary ms-3" id="btnAgregarAgente"
-                    (click)="transporteDatos()">Agregar</button>
+                    (click)="transporteDatos()" [disabled]="esFormularioSoloLectura">Agregar</button>
             </div>
         </app-modal>
         <ng-titulo titulo="Requisitos" />
         <div class="row">
             <h6>Requisitos:*</h6>
             <app-tabla-dinamica [configuracionTabla]="configuracionRequisitosTabla" [datos]="RequisitosTabla"
-                [tipoSeleccionTabla]="checkbox"></app-tabla-dinamica>
+                [tipoSeleccionTabla]="checkbox" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"></app-tabla-dinamica>
 
             <nav aria-label="Page navigation example">
                 <ul class="pagination justify-content-center">
@@ -102,8 +102,8 @@
             </nav>
         </div>
         <div class="col-md-12 mt-5 d-flex justify-content-end">
-            <button type="button" class="btn btn-danger">Eliminar</button>
-            <button type="button" class="btn btn-primary ms-3" (click)="requisitos()">Agregar</button>
+            <button type="button" class="btn btn-danger" [disabled]="esFormularioSoloLectura">Eliminar</button>
+            <button type="button" class="btn btn-primary ms-3" (click)="requisitos()" [disabled]="esFormularioSoloLectura">Agregar</button>
         </div>
         <app-modal [active]="showrequisitosModal">
             <ng-titulo titulo=" Seleccionar requisito" />
@@ -112,7 +112,7 @@
                     <div class="form-group">
                         <app-catalogo-select [catalogo]="requisitoCatalogo" formControlName="requisito"
                             [label]="'Seleccionar requisito'" [required]="true" name="requisito"
-                            (change)="setValoresStore(transporteForm, 'requisito')"></app-catalogo-select>
+                            (change)="setValoresStore(transporteForm, 'requisito')" [disabled]="esFormularioSoloLectura"></app-catalogo-select>
                     </div>
                 </div>
             </div>
@@ -155,9 +155,9 @@
 
             <div class="col-md-12 mt-5 d-flex justify-content-end">
                 <button type="button" class="btn btn-danger" id="btnCancelarAgente"
-                    (click)="requisitosEliminar()">Cancelar</button>
+                    (click)="requisitosEliminar()" [disabled]="esFormularioSoloLectura">Cancelar</button>
                 <button type="button" class="btn btn-primary ms-3" id="btnAgregarAgente"
-                    (click)="requisitosDatos()">Agregar</button>
+                    (click)="requisitosDatos()" [disabled]="esFormularioSoloLectura">Agregar</button>
             </div>
 
         </app-modal>
