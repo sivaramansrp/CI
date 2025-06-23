@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Query } from '@datorama/akita';
 
 import { Pantallas220401State, Pantallas220401Store } from './store220401';
+import { Observable } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class Dropdown220401Query extends Query<Pantallas220401State> {
@@ -9,7 +10,7 @@ export class Dropdown220401Query extends Query<Pantallas220401State> {
     super(store);
   }
 
-  getDropdownState(key: string) {
+  getDropdownState(key: string): Observable<Pantallas220401State> {
     return this.select(state => state[key]);
   }
 }

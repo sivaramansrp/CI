@@ -1,16 +1,24 @@
-import { Component, OnDestroy,OnInit } from '@angular/core';
+import { Component, Input, OnDestroy,OnInit } from '@angular/core';
 import {
   Destinatario,
   Fabricante,
   Facturador,
   Proveedor,
 } from '../../../../shared/models/terceros-relacionados.model';
-import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 import { ELEMENTOS_REQUERIDOS } from '../../constants/psicotropicos-poretorno.enum';
+
+import {
+  Observable,
+  Subject } from 'rxjs';
 import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-relacionados/terceros-relacionados.component';
 import { Tramite260201Query } from '../../estados/tramite260201Query.query';
 import { Tramite260201Store } from '../../estados/tramite260201Store.store';
+
+import {
+  map,
+  takeUntil } from 'rxjs';
 
 /**
  * @component TercerosRelacionadosVistaComponent
@@ -24,7 +32,7 @@ import { Tramite260201Store } from '../../estados/tramite260201Store.store';
   standalone: true,
   imports: [CommonModule, TercerosRelacionadosComponent],
   templateUrl: './terceros-relacionados-vista.component.html',
-  styleUrl: './terceros-relacionados-vista.component.css',
+  styleUrl: './terceros-relacionados-vista.component.scss',
 })
 export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
   /**
@@ -66,6 +74,14 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
   public readonly elementosRequeridos = ELEMENTOS_REQUERIDOS; 
 
   /**
+   * @property {boolean} formularioDeshabilitado
+   * @description
+   * Indica si el formulario está deshabilitado. Por defecto es `false`.
+   */
+  @Input()
+  formularioDeshabilitado: boolean = false;
+
+  /**
    * @constructor
    * Inyecta los servicios necesarios para consultar y actualizar el estado del trámite.
    *
@@ -74,7 +90,8 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
    */
   constructor(
     private tramiteStore: Tramite260201Store,
-    private tramiteQuery: Tramite260201Query
+    private tramiteQuery: Tramite260201Query,
+    private consultaQuery: ConsultaioQuery
   ) {
     // Constructor vacío, se inyectan los servicios necesarios para el funcionamiento del componente.
   }
