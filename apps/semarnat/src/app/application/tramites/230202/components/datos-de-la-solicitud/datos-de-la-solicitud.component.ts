@@ -9,6 +9,7 @@ import {
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
 import { Component, ElementRef, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { DatosDetalle, DatosSolicitud } from '../../models/datos-tramite.model';
 import { FormArray, FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Solicitud230202State, Tramite230202Store } from '../../estados/tramite230202.store';
@@ -248,6 +249,19 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   ];
 
   /**
+   * @property {ConsultaioState} consultaDatos
+   * @description Estado actual de la consulta, que contiene información relacionada con el trámite y el solicitante.
+   */
+  consultaDatos!: ConsultaioState;
+
+  /**
+   * @property {boolean} soloLectura
+   * @description Indica si el formulario o los campos están en modo de solo lectura.
+   * @default false
+   */
+  soloLectura: boolean = false;
+
+  /**
    * Constructor del componente.
    * @param phytosanitaryReexportacionService Servicio para gestionar datos fitosanitarios.
    * @param store Almacén del estado del trámite.
@@ -258,6 +272,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     public phytosanitaryReexportacionService: PhytosanitaryReexportacionService,
     public store: Tramite230202Store,
     public query: Tramite230202Query,
+    private consultaioQuery: ConsultaioQuery,
     public fb: FormBuilder
   ) {}
 
@@ -276,6 +291,41 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       .subscribe();
     this.inicializarFormulario();
     this.datosSolicitud = this.solicitudState.datosSolicitud;
+    
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.consultaDatos = seccionState;
+          this.soloLectura = this.consultaDatos.readonly;
+          this.updateEstadoFormulario();
+        })
+      )
+      .subscribe();
+
+    this.updateEstadoFormulario();
+  }
+
+
+  /**
+   * Actualiza el estado de los formularios del componente según el modo de solo lectura.
+   *
+   * Si la propiedad `soloLectura` es verdadera, deshabilita todos los formularios asociados
+   * (`solicitudForm`, `agregarMercanciasForm`, `exportacionForm`, y `datosMercancia`).
+   * Si es falsa, habilita dichos formularios para permitir la edición.
+   */
+  updateEstadoFormulario(): void {
+    if (this.soloLectura) {
+      this.solicitudForm.disable();
+      this.agregarMercanciasForm.disable();
+      this.reexportacionForm?.disable();
+      this.datosMercancia?.disable();
+    } else {
+      this.solicitudForm?.enable();
+      this.agregarMercanciasForm?.enable();
+      this.reexportacionForm?.enable();
+      this.datosMercancia?.enable();
+    }
   }
 
   /**
@@ -294,68 +344,71 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     return this.solicitudForm.get('reexportacionForm') as FormGroup;
   }
 
+  /**
+   * Obtiene el grupo de formulario de datos de mercancía.
+   */
   inicializarFormulario(): void {
     this.solicitudForm = this.fb.group({
       reexportacionForm: this.fb.group({
         numeroDeCertificado: [
-          this.solicitudState?.numeroDeCertificado,
+          {value: this.solicitudState?.numeroDeCertificado, disabled: this.soloLectura },
           [Validators.required],
         ],
-        aduana: [this.solicitudState?.aduana, [Validators.required]],
-        pais: [this.solicitudState?.pais, [Validators.required]],
-        entidades: [this.solicitudState?.entidades, [Validators.required]],
+        aduana: [{value: this.solicitudState?.aduana, disabled: this.soloLectura}, [Validators.required]],
+        pais: [{value: this.solicitudState?.pais, disabled: this.soloLectura}, [Validators.required]],
+        entidades: [{value: this.solicitudState?.entidades, disabled: this.soloLectura}, [Validators.required]],
         descripcionProducto: [
-          this.solicitudState?.descripcionProducto,
+          {value: this.solicitudState?.descripcionProducto, disabled: this.soloLectura},
           [Validators.required],
         ],
         unidadDeMedida: [
-          this.solicitudState?.unidadDeMedida,
+          {value: this.solicitudState?.unidadDeMedida, disabled: this.soloLectura},
           Validators.required,
         ],
         lungarDeEntrada: [
-          this.solicitudState?.lungarDeEntrada,
+          {value: this.solicitudState?.lungarDeEntrada, disabled: this.soloLectura},
           Validators.required,
         ],
         medioDeTransporte: [
-          this.solicitudState?.medioDeTransporte,
+          {value: this.solicitudState?.medioDeTransporte, disabled: this.soloLectura},
           Validators.required,
         ],
         numeroYDescripcion: [
-          this.solicitudState?.numeroYDescripcion,
+          {value: this.solicitudState?.numeroYDescripcion, disabled: this.soloLectura},
           Validators.required,
         ],
         codigoPostal: [
-          this.solicitudState?.codigoPostal, 
+          {value: this.solicitudState?.codigoPostal, disabled: this.soloLectura},
           Validators.required,
         ],
         estado: [
-          this.solicitudState?.estado,
+          {value: this.solicitudState?.estado, disabled: this.soloLectura},
           Validators.required,
         ],
         calle: [
-          this.solicitudState?.calle,
+          {value: this.solicitudState?.calle, disabled: this.soloLectura},
           Validators.required,
         ],
         numeroExterior: [
-          this.solicitudState?.numeroExterior,
+          {value: this.solicitudState?.numeroExterior, disabled: this.soloLectura},
           Validators.required,
         ],
         numeroInterior: [
-          this.solicitudState?.numeroInterior,
+          {value: this.solicitudState?.numeroInterior, disabled: this.soloLectura},
           Validators.required,
         ],
         colonia: [
-          this.solicitudState?.colonia,
+          {value: this.solicitudState?.colonia, disabled: this.soloLectura},
           Validators.required,
         ],
-        fechasSeleccionadas: this.fb.array([]),
+        fechasSeleccionadas: this.solicitudState?.fechasSeleccionadas || this.fb.array([]),
       }),
     });
 
     this.agregarMercanciasForm = this.fb.group({
       datosMercancia: this.fb.group({
         fraccionArancelaria: [
-          this.solicitudState?.fraccionArancelaria,
+          {value: this.solicitudState?.fraccionArancelaria, disabled: this.soloLectura},
           [Validators.required],
         ],
         descripcionfraccionArancelaria: [
@@ -364,14 +417,13 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
             disabled: true,
           },
         ],
-        cantidad: [this.solicitudState?.cantidad, Validators.required],
+        cantidad: [{value: this.solicitudState?.cantidad, disabled: this.soloLectura}, Validators.required],
         cantidadLetra: [
           { value: this.solicitudState?.cantidadLetra, disabled: true },
         ],
-        genero: [this.solicitudState?.genero, Validators.required],
-        especie: [this.solicitudState?.especie, Validators.required],
-        nombreComun: [this.solicitudState?.nombreComun, Validators.required],
-       
+        genero: [{ value: this.solicitudState?.genero, disabled: this.soloLectura }, Validators.required],
+        especie: [{ value: this.solicitudState?.especie, disabled: this.soloLectura }, Validators.required],
+        nombreComun: [{ value: this.solicitudState?.nombreComun, disabled: this.soloLectura }, Validators.required],
       }),
     });
   }

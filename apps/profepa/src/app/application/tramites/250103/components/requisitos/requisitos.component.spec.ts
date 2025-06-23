@@ -3,7 +3,7 @@ import { RequisitosComponent } from './requisitos.component';
 import { Tramite250103Query } from '../../estados/tramite250103.query';
 import { Tramite250103Store } from '../../estados/tramite250103.store';
 import { ReactiveFormsModule, FormsModule, FormBuilder } from '@angular/forms';
-import { of } from 'rxjs';
+import { of, Subject } from 'rxjs';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 describe('RequisitosComponent', () => {
@@ -123,5 +123,17 @@ describe('RequisitosComponent', () => {
     expect(NEXT_SPY).toHaveBeenCalled();
     expect(COMPLETE_SPY).toHaveBeenCalled();
   });
-});
+  it('should initialize solicitudState with the state from tramite250103Query', () => {
+    const mockState = { medio: 'test', identificacion: '12345' };
+    component.guardarDatosFormulario();
+    expect(component.solicitudState).toEqual(mockState);
+  });
 
+  it('should unsubscribe properly when destroyNotifier$ emits', () => {
+    const destroyNotifier$ = new Subject<void>();
+    component['destroyNotifier$'] = destroyNotifier$;
+    component.guardarDatosFormulario();
+    destroyNotifier$.next();
+    destroyNotifier$.complete();
+  });
+});

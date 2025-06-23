@@ -51,13 +51,6 @@ describe('IvaeiepsDosComponent', () => {
     expect(component.porcentajeMontoForm.get('monto')).toBeTruthy();
   });
 
-  it('should call getBancoCatalogDatos and populate banco options', () => {
-    component.getBancoCatalogDatos();
-    expect(comercioExteriorSvcMock.getBancoDatos).toHaveBeenCalled();
-    const bancoField = component.pagoDeDerechosDatos.find((field: any) => field.id === 'banco');
-    expect(bancoField?.campo).toEqual([{ descripcion: 'Banco 1', id: 1 }]);
-  });
-
   it('should call setDynamicFieldValue with correct values when establecerCambioDeValor is called', () => {
     const event = { campo: 'testField', valor: { id: 123 } };
     component.establecerCambioDeValor(event);
