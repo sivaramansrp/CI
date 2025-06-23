@@ -2791,6 +2791,24 @@
     "numeroDeProcedimiento": "80314"
   },
   {
+    "id": 90304,
+    "tipoDeTramite": "Solicitud de Permiso",
+    "fecha": "2023-10-01",
+    "fechaActualizacion": "2023-10-05",
+    "diasTranscurridos": "4",
+    "departamento": "SE",
+    "numeroDeProcedimiento": "90304"
+  },
+  {
+    "id": 31301,
+    "tipoDeTramite": "Solicitud de cs Permiso",
+    "fecha": "2023-10-01",
+    "fechaActualizacion": "2023-10-05",
+    "diasTranscurridos": "4",
+    "departamento": "AGACE",
+    "numeroDeProcedimiento": "31301"
+  },
+  {
     "id": 260910,
     "tipoDeTramite": "Solicitud Procedure 260910",
     "fecha": "2023-10-01",
