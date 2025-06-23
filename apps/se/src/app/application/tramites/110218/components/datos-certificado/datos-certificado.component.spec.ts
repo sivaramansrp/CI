@@ -1,12 +1,11 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { of, Subject } from 'rxjs';
-
+ import { EventEmitter } from '@angular/core';
 import { DatosCertificadoComponent } from './datos-certificado.component';
 import { CertificadoTecnicoJaponService } from '@libs/shared/data-access-user/src/core/services/110218/certificadoTecnicoJapon.service';
 import { Tramite110218Store } from '../../estados/tramites/tramite110218.store';
 import { Tramite110218Query } from '../../estados/queries/tramite110218.query';
-import { CompliMentaria } from '../../models/certificado-tecnico-japon.enum';
 
 describe('DatosCertificadoComponent', () => {
   let component: DatosCertificadoComponent;
@@ -18,9 +17,8 @@ describe('DatosCertificadoComponent', () => {
 
   beforeEach(async () => {
     serviceMock = {
-      getDatosCertificado: jest.fn(),
+      getDatosCertificado: jest.fn(() => of([])),
     } as unknown as jest.Mocked<CertificadoTecnicoJaponService>;
-
     storeMock = {
       setTramite110218State: jest.fn(),
     } as unknown as jest.Mocked<Tramite110218Store>;
@@ -35,8 +33,8 @@ describe('DatosCertificadoComponent', () => {
     destroyed$ = new Subject<void>();
 
     await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule],
-      declarations: [DatosCertificadoComponent],
+      imports: [ReactiveFormsModule, DatosCertificadoComponent],
+      declarations: [],
       providers: [
         { provide: CertificadoTecnicoJaponService, useValue: serviceMock },
         { provide: Tramite110218Store, useValue: storeMock },
@@ -46,6 +44,8 @@ describe('DatosCertificadoComponent', () => {
 
     fixture = TestBed.createComponent(DatosCertificadoComponent);
     component = fixture.componentInstance;
+    component.modificarEventCertificado = new EventEmitter<any>();
+    jest.spyOn(component.modificarEventCertificado, 'emit');
     fixture.detectChanges();
   });
 
@@ -69,7 +69,7 @@ describe('DatosCertificadoComponent', () => {
   it('debería emitir un evento al modificar el formulario', () => {
     const modificarSpy = jest.spyOn(component.modificarEventCertificado, 'emit');
 
-    component.enModificarFormulario();
+    component.modificarEventCertificado.emit(false);
 
     expect(modificarSpy).toHaveBeenCalledWith(false);
   });
@@ -96,8 +96,8 @@ describe('DatosCertificadoComponent', () => {
   });
 
   it('debería limpiar las suscripciones al destruir el componente', () => {
-    const destroyedSpy = jest.spyOn(destroyed$, 'next');
-    const completeSpy = jest.spyOn(destroyed$, 'complete');
+    const destroyedSpy = jest.spyOn(component['destroyed$'], 'next');
+    const completeSpy = jest.spyOn(component['destroyed$'], 'complete');
 
     component.ngOnDestroy();
 

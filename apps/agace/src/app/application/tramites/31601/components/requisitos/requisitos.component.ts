@@ -4,7 +4,8 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { Solicitud31601State, Tramite31601Store } from '../../../../estados/tramites/tramite31601.store';
 import {Subject,Subscription,map, takeUntil } from 'rxjs';
-import { TipoDocumento, Tipos } from '@libs/shared/data-access-user/src/core/models/31601/servicios-pantallas.model';
+import { Tipos } from '@libs/shared/data-access-user/src/core/models/31601/servicios-pantallas.model';
+
 import { Catalogo } from '@libs/shared/data-access-user/src/core/models/shared/catalogos.model';
 import { CommonModule } from '@angular/common';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src/core/models/shared/configuracion-columna.model';

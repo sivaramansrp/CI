@@ -61,6 +61,7 @@
                         [label]="'Estado'"
                         [required]="true"
                         (change)="setValoresStore(datosDelTramiteRealizar,'estado', 'setEstado')"
+                        [isDisabled]="esFormularioSoloLectura"
                       ></app-catalogo-select>
                     </div>
                 </div>
@@ -136,6 +137,7 @@
                       [catalogo]="claveScianData.catalogos"
                       [label]="'Clave S.C.I.A.N'"
                       [required]="true"
+                      [isDisabled]="esFormularioSoloLectura"
                       
                     ></app-catalogo-select>
                   </div>
@@ -150,6 +152,7 @@
                       [catalogo]="descripcionDelScianData.catalogos"
                       [label]="'Descripcion del S.C.I.A.N'"
                       [required]="true"
+                      [isDisabled]="esFormularioSoloLectura"
                     ></app-catalogo-select>
                   </div>
                </div>
@@ -194,6 +197,7 @@
             [catalogo]="regimenalqueData.catalogos" 
             [label]="'Régimen al que se destinarán la mercancías'" 
             [required]="true"
+            [isDisabled]="esFormularioSoloLectura"
             (change)="setValoresStore(datosDelTramiteRealizar,'regimenalque', 'setRegimenalque')"></app-catalogo-select>
         </div>
         <div class="col-md-4">
@@ -203,6 +207,7 @@
             [catalogo]="aduanaData.catalogos" 
             [label]="'Aduana'" 
             [required]="false"
+            [isDisabled]="esFormularioSoloLectura"
             (change)="setValoresStore(datosDelTramiteRealizar,'aduana', 'setAduana')">
         </app-catalogo-select>
         </div>
@@ -233,6 +238,7 @@
                   [catalogo]="delProducto.catalogos" 
                   [label]="'Clasificación del producto'" 
                   [required]="true"
+                  [isDisabled]="esFormularioSoloLectura"
                   (change)="setValoresStore(datosDelTramiteRealizar,'clasificaionProductos', 'setClasificaionProductos')"
                   ></app-catalogo-select>
                 </div>
@@ -245,6 +251,7 @@
                   [catalogo]="especificarData.catalogos" 
                   [label]="'Especificar clasificación del producto'"
                    [required]="true"
+                   [isDisabled]="esFormularioSoloLectura"
                    (change)="setValoresStore(datosDelTramiteRealizar,'especificarProducto', 'setEspecificarProducto')"></app-catalogo-select>
                 </div>
               </div>
@@ -270,6 +277,7 @@
                   [catalogo]="tipoProductoData.catalogos"
                    [label]="'Tipo de producto'" 
                    [required]="true"
+                   [isDisabled]="esFormularioSoloLectura"
                    (change)="setValoresStore(datosDelTramiteRealizar,'tipoProducto', 'setTipoProducto')"></app-catalogo-select>
                 </div>
               </div>

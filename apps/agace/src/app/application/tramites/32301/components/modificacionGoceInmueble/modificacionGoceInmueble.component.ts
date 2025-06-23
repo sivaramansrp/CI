@@ -10,6 +10,7 @@ import {
   AlertComponent,
   Catalogo,
   CatalogoSelectComponent,
+  ConsultaioQuery,
   InputRadioComponent,
   NotificacionesComponent,
   TableComponent,
@@ -37,7 +38,7 @@ import {
   REGEX_POSTAL,
   REGEX_RFC,
 } from '@libs/shared/data-access-user/src/tramites/constantes/regex.constants';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 import { AvisoModifyService } from '../../services/aviso-modify.service';
 import { CommonModule } from '@angular/common';
 import { Modal } from 'bootstrap';
@@ -158,18 +159,86 @@ export class ModificacionGoceInmuebleComponent
    * Se usa para manejar notificaciones generales sobre modificaciones dentro del sistema.
    */
   public modificarNotificacion!: Notificacion;
+   /**
+  * Indica si el formulario está en modo solo lectura.
+  * Cuando es `true`, los campos del formulario no se pueden editar.
+  */
+  esFormularioSoloLectura: boolean = false; 
   constructor(
     private fb: FormBuilder,
     private AvisoModifyService: AvisoModifyService,
     private store: Tramite32301Store,
-    private Tramite32301Query: Tramite32301Query
+    private Tramite32301Query: Tramite32301Query,
+    private consultaioQuery: ConsultaioQuery,
   ) {
+     /**
+     * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
+     *
+     * - Asigna el valor de solo lectura (`readonly`) a la propiedad `esFormularioSoloLectura`.
+     * - Llama a `inicializarEstadoFormulario()` para aplicar configuraciones basadas en el estado recibido.
+     * - La suscripción se cancela automáticamente cuando `destroy$` emite un valor (para evitar fugas de memoria).
+     */
+    this.consultaioQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.destroy$),
+      map((seccionState)=>{
+        this.esFormularioSoloLectura = seccionState.readonly; 
+        this.inicializarEstadoFormulario();
+      })
+    )
+    .subscribe()
     // Inicializa el formulario si es necesario
     this.getGridDomiciliosModificados(); // Obtiene los domicilios modificados al iniciar el componente
   }
 
-  ngOnInit(): void {
-    // Inicializa el formulario reactivo
+ /**
+ * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+ * 
+ * Llama al método `inicializarEstadoFormulario()` para configurar el estado inicial
+ * del formulario al momento de cargar el componente.
+ */
+ngOnInit(): void {
+  this.inicializarEstadoFormulario();
+}
+
+
+  /**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.  
+   * Además, obtiene la información del catálogo de mercancía.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.inicializarFormulario();
+    }  
+  }
+
+   /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormulario(): void {
+      this.inicializarFormulario();
+      if (this.esFormularioSoloLectura) {
+        this.direccionGrid.disable();
+        this.modificacionGoceForm.disable();
+      } else if (!this.esFormularioSoloLectura) {
+        this.direccionGrid.enable();
+        this.modificacionGoceForm.enable();
+      } else {
+        // No se requiere ninguna acción en el formulario
+      }
+  }
+  /**
+   * Inicializa el formulario reactivo para capturar el valor de 'registro'.
+   * Suscribe al estado almacenado en el store mediante el query `tramite301Query.selectSolicitud$`
+   * y lo asigna a la variable local `solicitudState`. Luego, crea el formulario
+   * con el valor inicial obtenido del store.
+   */
+
+  inicializarFormulario(): void {
+ // Inicializa el formulario reactivo
     this.modificacionGoceForm = this.fb.group({
       ideGenerica2: ['', Validators.required], // Campo obligatorio para la selección de tipo de modificación
     });
@@ -178,6 +247,8 @@ export class ModificacionGoceInmuebleComponent
     this.getEntidadFederativa(); // Obtiene el catálogo de entidades federativas
     this.getGridMostrarGridModificado(); // Obtiene los datos de la tabla de domicilios modificados
   }
+
+
 
   /** Método para obtener las entidades federativas del servicio */
   getEntidadFederativa(): void {
@@ -253,14 +324,15 @@ export class ModificacionGoceInmuebleComponent
   }
 
   /** Verifica el tipo de modificación seleccionada en el radio y muestra el modal correspondiente */
-  verificaRadioTipoSem(): void {
-    const VALOR = this.modificacionGoceForm.get('ideGenerica2')?.value;
+  verificaRadioTipoSem(ev: string | number): void {
     this.openModificarModel();
-    if (VALOR === 'ModificarDomicilio') {
+    if (ev === 'ModificarDomicilio') {
+
       this.openModificarModel();
       this.mostrarGridNuevo = false;
       this.mostrarGridModificado = true;
-    } else if (VALOR === 'DomicilioNuevo') {
+    } else if (ev === 'DomicilioNuevo') {
+      
       this.mostrarGridNuevo = true;
       this.mostrarGridModificado = false;
     } else {

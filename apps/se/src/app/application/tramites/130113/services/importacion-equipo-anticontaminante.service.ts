@@ -106,24 +106,29 @@ export class ImportacionEquipoAnticontaminanteService {
     );
   }
 
+  /**
+   * Obtiene la tabla de datos de partidas de la mercancía desde un archivo JSON.
+   * {Observable<PartidasDeLaMercanciaModelo[]>} Observable que emite la lista de partidas de la mercancía.
+   */
   getTablaDatos(): Observable<PartidasDeLaMercanciaModelo[]> {
       return this.http.get<PartidasDeLaMercanciaModelo[]>(
             'assets/json/130113/partidas-de-la.json'
           );
     }
 
-          /**
+  /**
    * Actualiza el estado del formulario en el store.
    * @param DATOS Estado actualizado del trámite.
    */
   actualizarEstadoFormulario(DATOS: Tramite130113State): void {
       this.tramite130113Store.actualizarEstado(DATOS);
   }
+  
   /**
- * Obtiene los datos de la solicitud.
- * @returns Observable con los datos de la solicitud.
- */
-getDatosDeLaSolicitud(): Observable<Tramite130113State> {
-    return this.http.get<Tramite130113State>('assets/json/130113/datos-de-la-solicitud.json');
-}
+   * Obtiene los datos de la solicitud.
+   * @returns Observable con los datos de la solicitud.
+   */
+  getDatosDeLaSolicitud(): Observable<Tramite130113State> {
+      return this.http.get<Tramite130113State>('assets/json/130113/datos-de-la-solicitud.json');
+  }
 }

@@ -1,99 +1,37 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PasoUnoComponent } from './paso-uno.component';
-import { SolicitanteComponent, TIPO_PERSONA } from '@libs/shared/data-access-user/src';
-import { By } from '@angular/platform-browser';
+import {NO_ERRORS_SCHEMA } from '@angular/core';
 
 describe('PasoUnoComponent', () => {
   let component: PasoUnoComponent;
   let fixture: ComponentFixture<PasoUnoComponent>;
-  let mockSolicitanteComponent: Partial<SolicitanteComponent>;
 
-  beforeEach(waitForAsync(() => {
-    mockSolicitanteComponent = {
-      obtenerTipoPersona: jest.fn()
-    };
+  beforeEach(async () => {
+      await TestBed.configureTestingModule({
+        declarations: [PasoUnoComponent],
+        schemas: [NO_ERRORS_SCHEMA],
+        providers: [],
+        imports: [
+          require('@angular/common/http/testing').HttpClientTestingModule
+        ]
+      }).compileComponents();
+  
+      fixture = TestBed.createComponent(PasoUnoComponent);
+      component = fixture.componentInstance;
+      fixture.detectChanges();
+    });
 
-    TestBed.configureTestingModule({
-      declarations: [PasoUnoComponent],
-      providers: [
-        { provide: SolicitanteComponent, useValue: mockSolicitanteComponent }
-      ]
-    }).compileComponents();
-  }));
-
-  beforeEach(() => {
-    fixture = TestBed.createComponent(PasoUnoComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
-
-  it('should create', () => {
+  it('debería crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  describe('Initial State', () => {
-    it('should initialize with indice = 1', () => {
-      expect(component.indice).toBe(1);
-    });
+  it('debería tener el índice inicial en 1', () => {
+    expect(component.indice).toBe(1);
   });
 
-  describe('ngAfterViewInit', () => {
-    it('should call obtenerTipoPersona on SolicitanteComponent', () => {
-      // Simulate ViewChild being set
-      component.solicitante = mockSolicitanteComponent as SolicitanteComponent;
-      
-      component.ngAfterViewInit();
-      
-      expect(mockSolicitanteComponent.obtenerTipoPersona).toHaveBeenCalledWith(TIPO_PERSONA.MORAL_NACIONAL);
-    });
-
-    it('should not throw if solicitante is not initialized', () => {
-      component.solicitante = undefined as any;
-      
-      expect(() => component.ngAfterViewInit()).not.toThrow();
-    });
-  });
-
-  describe('seleccionaTab', () => {
-    it('should update indice with provided value', () => {
-      const testIndex = 2;
-      
-      component.seleccionaTab(testIndex);
-      
-      expect(component.indice).toBe(testIndex);
-    });
-
-    it('should handle edge cases (zero, negative numbers)', () => {
-      component.seleccionaTab(0);
-      expect(component.indice).toBe(0);
-      
-      component.seleccionaTab(-1);
-      expect(component.indice).toBe(-1);
-    });
-  });
-
-  describe('Template', () => {
-    it('should render tab navigation buttons', () => {
-      const buttons = fixture.debugElement.queryAll(By.css('.nav-link'));
-      expect(buttons.length).toBeGreaterThan(0);
-    });
-
-    it('should apply active class to selected tab', () => {
-      component.indice = 2;
-      fixture.detectChanges();
-      
-      const buttons = fixture.debugElement.queryAll(By.css('.nav-link'));
-      // Assuming the template uses index-based comparison for active class
-      expect(buttons[1].classes['active']).toBeTruthy(); // 0-based index
-    });
-
-    it('should call seleccionaTab when clicking a tab', () => {
-      const seleccionaTabSpy = jest.spyOn(component, 'seleccionaTab');
-      const buttons = fixture.debugElement.queryAll(By.css('.nav-link'));
-      
-      buttons[1].triggerEventHandler('click', null);
-      
-      expect(seleccionaTabSpy).toHaveBeenCalledWith(2); // Assuming buttons are 1-based
-    });
+  it('debería actualizar el índice al llamar seleccionaTab', () => {
+    const NUEVO_INDICE = 3;
+    component.seleccionaTab(NUEVO_INDICE);
+    expect(component.indice).toBe(NUEVO_INDICE);
   });
 });

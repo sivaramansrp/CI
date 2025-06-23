@@ -157,6 +157,9 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     if (campo === "exposicionOpcion" && VALOR === "true") {
       this.solicitudForm.get('nombre')?.enable(); // Habilita el campo de nombre si la opción de exposición es "true".
     }
+    else if (campo === "exposicionOpcion" && VALOR === "false") {
+    this.solicitudForm.get('nombre')?.disable();
+}
   }
 
   /**

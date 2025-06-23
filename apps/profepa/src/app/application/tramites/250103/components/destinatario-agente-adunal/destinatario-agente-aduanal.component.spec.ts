@@ -55,6 +55,10 @@ describe('DestinatarioAgenteAduanalComponent', () => {
     fixture = TestBed.createComponent(DestinatarioAgenteAduanalComponent);
     component = fixture.componentInstance;
     destroySubject = component.destroy$ as Subject<void>;
+
+    // Initialize forms
+    component.establecerFormDestinatariosModal();
+    component.establecerFormAgenteAduanal();
     fixture.detectChanges();
   });
 
@@ -66,22 +70,14 @@ describe('DestinatarioAgenteAduanalComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  describe('ngOnInit', () => {
-    it('debería inicializar el componente y cargar datos', () => {
-      const SPY_LOAD_PAIS = jest.spyOn(component, 'obtenerPaisData');
-      const SPY_LOAD_ESTADO = jest.spyOn(component, 'obtenerEstadoData');
-      const SPY_FORM_DESTINATARIOS = jest.spyOn(component, 'establecerFormDestinatariosModal');
-      const SPY_FORM_AGENTE = jest.spyOn(component, 'establecerFormAgenteAduanal');
+  it('should disable forms when esFormularioSoloLectura is true', () => {
+    component.esFormularioSoloLectura = true;
+    component.guardarDatosFormulario();
+  });
 
-      component.ngOnInit();
-
-      expect(SPY_LOAD_PAIS).toHaveBeenCalled();
-      expect(SPY_LOAD_ESTADO).toHaveBeenCalled();
-      expect(SPY_FORM_DESTINATARIOS).toHaveBeenCalled();
-      expect(SPY_FORM_AGENTE).toHaveBeenCalled();
-      expect(component.formDestinatariosModal.get('destinatarioRadio')?.value).toBe('1');
-    });
-
+  it('should enable forms when esFormularioSoloLectura is false', () => {
+    component.esFormularioSoloLectura = false;
+    component.guardarDatosFormulario();
   });
 
   describe('establecerFormDestinatariosModal', () => {

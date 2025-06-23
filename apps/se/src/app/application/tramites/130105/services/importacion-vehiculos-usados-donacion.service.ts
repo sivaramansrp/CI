@@ -3,15 +3,13 @@
  * Importación de vehículos usados por donación.
  * Este servicio proporciona métodos para obtener datos relacionados con la importación de vehículos usados por donación.
  */
+import { Tramite130105State, Tramite130105Store } from '../../../estados/tramites/tramites130105.store';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-
 import { Observable } from 'rxjs';
-
-import { ProductoResponse } from '../../../shared/constantes/vehiculos-adaptados.enum';
-
 import { PartidasDeLaMercanciaModelo } from '../../../shared/models/partidas-de-la-mercancia.model';
+import { ProductoResponse } from '../../../shared/constantes/vehiculos-adaptados.enum';
 
 /**
  * Servicio para gestionar la importación de vehículos.
@@ -26,7 +24,7 @@ export class ImportacionVehiculosUsadosDonacionService {
    * Constructor del servicio.
    * Servicio HttpClient para realizar solicitudes HTTP.
    */
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private tramite130105Store:Tramite130105Store) {
     //
   }
 
@@ -95,5 +93,20 @@ export class ImportacionVehiculosUsadosDonacionService {
     return this.http.get<PartidasDeLaMercanciaModelo[]>(
           'assets/json/130105/partidas-de-la.json'
         );
+  }
+
+  /**
+  * Actualiza el estado del formulario en el store.
+  * @param DATOS Estado actualizado del trámite.
+  */
+  actualizarEstadoFormulario(DATOS: Tramite130105State): void {
+      this.tramite130105Store.actualizarEstado(DATOS);
+  }
+  /**
+  * Obtiene los datos de la solicitud.
+  * @returns Observable con los datos de la solicitud.
+  */
+  getDatosDeLaSolicitud(): Observable<Tramite130105State> {
+      return this.http.get<Tramite130105State>('assets/json/130105/datos-de-la-solicitud.json');
   }
 }
