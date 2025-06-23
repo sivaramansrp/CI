@@ -279,7 +279,6 @@ export class BuscarEmpresaCaatComponent implements OnInit, OnDestroy {
             pais: item.pais
           }));
           this.caatRegistradoEmpresaTabla = NUEVO_CUERPO_TABLA;
-            // this.tramite40201Store.setField('caatRegistradoEmpresaTabla', NUEVO_CUERPO_TABLA);
             this.tramite40201Store.setTramite40201State({
           caatRegistradoEmpresaTabla: NUEVO_CUERPO_TABLA
         });
