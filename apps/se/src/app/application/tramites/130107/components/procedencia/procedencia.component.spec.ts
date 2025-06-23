@@ -41,6 +41,7 @@ describe('PaisProcedenciaComponent', () => {
 
     fixture = TestBed.createComponent(PaisProcedenciaComponent);
     component = fixture.componentInstance;
+    component.consultaState = { readonly: false } as any;
     fixture.detectChanges();
   });
 

@@ -42,6 +42,7 @@ describe('DatosDeLaMercanciaComponent', () => {
 
     fixture = TestBed.createComponent(DatosDeLaMercanciaComponent);
     component = fixture.componentInstance;
+    component.consultaState = { readonly: false } as any;
     fixture.detectChanges();
   });
 

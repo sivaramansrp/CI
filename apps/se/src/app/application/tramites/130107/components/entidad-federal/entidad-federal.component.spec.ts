@@ -47,6 +47,7 @@ describe('RepresentacionFederalComponent', () => {
 
     fixture = TestBed.createComponent(RepresentacionFederalComponent);
     component = fixture.componentInstance;
+    component.consultaState = { readonly: false } as any;
     fixture.detectChanges();
   });
 

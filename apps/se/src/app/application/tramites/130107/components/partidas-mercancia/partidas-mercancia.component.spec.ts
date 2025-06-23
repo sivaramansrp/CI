@@ -34,6 +34,7 @@ describe('PartidasDeLaMercanciaComponent', () => {
     });
 
     component = TestBed.inject(PartidasDeLaMercanciaComponent);
+    component.consultaState = { readonly: false } as any;
   });
 
   it('should create the component', () => {
@@ -73,12 +74,12 @@ describe('PartidasDeLaMercanciaComponent', () => {
 
     expect(component.datospartidas.length).toBe(1);
     expect(component.datospartidas[0]).toEqual({
-      cantidad: 10,
-      unidad_de_medida: 'Kilogramo',
-      fraccion_arancelaria_tigie: '9099',
-      descripcion: 'Test',
-      precio_unitario: 1.0,
-      total_usd: 100,
+      cantidad: 100,
+      unidadDeMedida: 'Kilogramo',
+      fraccionArancelaria: '9099',
+      descripcion: 100,
+      precioUnitario: 100,
+      totalUsd: 100,
     });
     expect(mockFormGroup.reset).toHaveBeenCalled();
   });
