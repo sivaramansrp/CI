@@ -7,24 +7,14 @@
         <div class="col-md-4">
           <label class="form-label" for="tipoDeCertificado">Tipo de certificado*:</label>
         </div>
+
       </div>
 
       <div class="row mt-2">
-        <div class="col-md-6">
-          <div class="form-check">
-            <input class="form-check-input me-2" type="radio" name="tipoDeCertificado"
-              formControlName="tipoDeCertificado" value="Exportación" id="Exportación"
-              (change)="setValoresStore(datosDelTramiteRealizar,'tipoDeCertificado', 'setTipoDeCertificado')" />
-            <label class="form-check-label" for="si">Exportación</label>
-          </div>
-        </div>
-        <div class="col-md-6">
-          <div class="form-check">
-            <input class="form-check-input me-2" type="radio" name="tipoDeCertificado"
-              formControlName="tipoDeCertificado" value="Reexportación" id="Reexportación"
-              (change)="setValoresStore(datosDelTramiteRealizar,'tipoDeCertificado', 'setTipoDeCertificado');tipoDeCertificadoCambio()" />
-            <label class="form-check-label" for="no">Reexportación</label>
-          </div>
+        <div class="col-md-8  mt-2">
+          <app-input-radio [radioOptions]="radioOpcions" id="opcion" formControlName="tipoDeCertificado"
+            (change)="setValoresStore(datosDelTramiteRealizar, 'tipoDeCertificado', 'setTipoDeCertificado');tipoDeCertificadoCambio()"
+            [layout]="'horizontal'" class="tipo-certificado"></app-input-radio>
         </div>
       </div>
 
@@ -40,7 +30,7 @@
       <div class="row mt-3">
         <div class="col-md-8">
           <div class="form-group">
-            <label class="form-label" for="puntoDestino">Punto de destino*:</label>
+            <label class="form-label" for="puntoDestino">Punto de ingreso en el país de destino*:</label>
             <input class="form-control" id="puntoDestino" placeholder="Punto de destino" type="text"
               formControlName="puntoDestino"
               [ngClass]="isValid(datosDelTramiteRealizar,'puntoDestino') ? 'required' : ''"
@@ -70,18 +60,10 @@
 
     <ng-titulo titulo="Fecha de inspección de la mercancía" />
     <ng-container formGroupName="datosMercancia">
-      <div class="row">
-        <div class="col-md-4">
-          <label class="form-check-label" for="rangoDeFechas">Rango de fechas:</label>
-          <input class="form-check-input me-3" type="checkbox" value="" id="rangoDeFechas"
-            formControlName="rangoDeFechas"
-            (change)="setValoresStore(datosMercancia,'rangoDeFechas', 'setRangoDeFechas')">
-        </div>
-      </div>
       <div class="row mt-3">
-        <!-- <input-fecha [datos]="fechaInicioInput" (valorCambiado)="cambioFechaInicio($event)"></input-fecha> -->
         <div class="col-md-4">
-          <label for="fechaInicio" class="form-label">Fecha inicio*:</label>
+          <label for="fechaInicio" class="form-label d-block text-left ">Fecha de inspección*:</label>
+          <label for="fechaInicio" class="form-label">Inicio*:</label>
           <input class="form-control" type="date" name="fechaInicio" id="fechaInicio" formControlName="fechaInicio"
             [ngClass]="isValid(datosMercancia,'fechaInicio') ? 'required' : ''"
             (change)="setValoresStore(datosMercancia,'fechaInicio', 'setFechaInicio')">
@@ -93,7 +75,14 @@
           }
         </div>
         <div class="col-md-4">
-          <label for="fechaFinal" class="form-label">Fecha final*:</label>
+          <div>
+            <label class="form-check-label rango-de-fechas-label" for="rangoDeFechas">Rango de fechas:</label>
+            <input class="form-check-input me-3" type="checkbox" value="" id="rangoDeFechas"
+              formControlName="rangoDeFechas"
+              (change)="setValoresStore(datosMercancia,'rangoDeFechas', 'setRangoDeFechas')">
+          </div>
+          @if (FormSolicitud.get('datosMercancia.rangoDeFechas')?.value) {
+          <label for="fechaFinal" class="form-label">Fin*:</label>
           <input class="form-control" type="date" name="fechaFinal" id="fechaFinal" formControlName="fechaFinal"
             [ngClass]="isValid(datosMercancia,'fechaFinal') ? 'required' : ''" [min]="diaMinimo"
             (change)="changeFechaFinal()">
@@ -108,6 +97,7 @@
           <div class="mensaje-error">
             Intervalo de fecha no válido
           </div>
+          }
           }
         </div>
       </div>

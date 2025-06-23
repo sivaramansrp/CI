@@ -1,4 +1,4 @@
-import { AgregarTransporteComponent, NotificacionesComponent } from '@ng-mf/data-access-user';
+import { AgregarTransporteComponent, InputRadioComponent, NotificacionesComponent } from '@ng-mf/data-access-user';
 import { ToastrModule, ToastrService } from 'ngx-toastr';
 import { AgregarDestinatarioComponent } from './components/agregar-destinatario/agregar-destinatario.component';
 import { AlertComponent } from '@ng-mf/data-access-user';
@@ -65,7 +65,8 @@ import { WizardComponent } from '@ng-mf/data-access-user';
     SelectPaisesComponent,
     CatalogoSelectComponent,
     ToastrModule.forRoot(),
-    NotificacionesComponent
+    NotificacionesComponent,
+    InputRadioComponent
   ],
   providers: [ToastrService],
   exports: [],

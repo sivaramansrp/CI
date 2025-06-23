@@ -7,6 +7,7 @@ import { Catalogo } from '@ng-mf/data-access-user';
 import { DatosGenerales } from '../../models/pantallas-captura.model';
 import { InputFecha } from '@ng-mf/data-access-user';
 import { MediodetransporteService } from '../../services/medio-de-transporte.service';
+import { RADIO_OPCIONS } from '../../constantes/certificado-zoosanitario.enum';
 import { Solicitud220402Query } from '../../estados/queries/tramites220402.query';
 import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
 
@@ -96,6 +97,10 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * Configuración de una nueva notificación.
    */
   public nuevaNotificacion!: Notificacion;
+  /**
+  * Opciones disponibles para el grupo de radio.
+  */
+  radioOpcions = RADIO_OPCIONS;
   /**
    * Constructor del componente.
    * @param fb FormBuilder para crear formularios.
@@ -406,11 +411,13 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * se eliminarán las mercancías registradas. Solicita confirmación para proceder con el cambio.
    */
   tipoDeCertificadoCambio(): void {
-    this.abrirModal(
-      'Aceptar',
-      'Cancelar',
-      'Al cambiar de tipo certificado se eliminarán las mercancías registradas ¿Estás seguro de cambiar de certificado?'
-    );
+    if (this.FormSolicitud.get('datosDelTramiteRealizar.tipoDeCertificado')?.value === 'reexportacion') {
+      this.abrirModal(
+        'Aceptar',
+        'Cancelar',
+        'Al cambiar de tipo certificado se eliminarán las mercancías registradas ¿Estás seguro de cambiar de certificado?'
+      );
+    }
   }
 
   /**

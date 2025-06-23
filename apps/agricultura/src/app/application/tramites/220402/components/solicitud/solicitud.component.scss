@@ -38,10 +38,25 @@
   opacity: 0.5;
 }
 
+.rango-de-fechas-label {
+  padding-top: 7px;
+}
+
+#rangoDeFechas {
+  margin-top: 10px;
+}
+
 ::ng-deep {
   .reexportacion {
     .modal-footer {
       justify-content: right;
+    }
+  }
+
+  .tipo-certificado {
+    form>div:first-of-type {
+      display: flex;
+      justify-content: space-between;
     }
   }
 }
