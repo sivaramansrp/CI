@@ -8,7 +8,7 @@ describe('PasoDosComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [PasoDosComponent]
+      declarations: [PasoDosComponent]
     })
     .compileComponents();
 

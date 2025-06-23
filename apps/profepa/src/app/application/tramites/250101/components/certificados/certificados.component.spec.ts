@@ -81,4 +81,15 @@ describe('CertificadosComponent', () => {
   it('should assign tablaFitosanitoriosFilaDatos from getCertificadosFitoFilaDeTabla', () => {
     expect(component.tablaFitosanitoriosFilaDatos).toEqual([{ fito: 2 }]);
   });
+  
+  it('should clean up subscriptions on ngOnDestroy', () => {
+  const destroySpy = jest.spyOn(component['destroy$'], 'next');
+  const completeSpy = jest.spyOn(component['destroy$'], 'complete');
+
+  component.ngOnDestroy();
+
+  expect(destroySpy).toHaveBeenCalled();
+  expect(completeSpy).toHaveBeenCalled();
+});
+  
 });
