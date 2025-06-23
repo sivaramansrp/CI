@@ -1,9 +1,3 @@
-import { CommonModule } from '@angular/common';
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
-import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { map, Subject, takeUntil } from 'rxjs';
-import * as XLSX from 'xlsx'; // Importa XLSX para leer archivos Excel
 import {
   AlertComponent,
   InputCheckComponent,
@@ -13,9 +7,15 @@ import {
   TituloComponent,
   VALID_FILE_REGEX,
 } from '@libs/shared/data-access-user/src';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { Solicitud32201State, Tramite32201Store } from '../../estados/tramite32201.store';
+import { Subject, map, takeUntil } from 'rxjs';
+import * as XLSX from 'xlsx'; // Importa XLSX para leer archivos Excel
+import { CommonModule } from '@angular/common';
 import { SOLICITUD_32201_ENUM } from '../../constantes/anexo';
 import { Tramite32201Query } from '../../estados/tramite32201.query';
-import { Solicitud32201State, Tramite32201Store } from '../../estados/tramite32201.store';
 
 /**
  * Componente que representa la funcionalidad de la solicitud del trámite 32201.
@@ -198,7 +198,7 @@ export class SolicitudComponent implements OnInit {
             { header: 1 }
           );
 
-          const EXPECTED_COLUMNS = 5;  // Agregue aquí el número requerido de columnas o lógica 
+          const EXPECTED_COLUMNS = 5;
           const FIRST_ROW = JSON_DATA[0] as string[];
           if (FIRST_ROW.length === EXPECTED_COLUMNS) {
             this.confirmarModal(); // Abre el modal de confirmación
