@@ -58,7 +58,7 @@ describe('ModificarAgenteComponent', () => {
     component.crearFormulario();
     expect(component.datosTramite).toBeDefined();
     expect(component.datosTramite.get('tipoFigura')?.value).toBe('1');
-    expect(component.datosTramite.get('rfcModal')?.value).toBe('RFCMOD');
+    expect(component.datosTramite.get('rfcModal')?.value).toEqual({ value: 'RFCMOD' });
   });
 
   it('should set selectedAgente from agente$ on ngOnInit', () => {

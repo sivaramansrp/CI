@@ -45,7 +45,7 @@ describe('TipoDeAvisoComponent', () => {
     component.selectedCheckboxes = [];
     component.onCambiarAviso('avisoDeFusion', eventCheck);
     expect(component.selectedCheckboxes).toContain('avisoDeFusion');
-    expect(tramiteStoreMock.setAviso).toHaveBeenCalledWith(true, 'avisoDeFusion');
+    expect(tramiteStoreMock.setAviso).toHaveBeenCalledWith('avisoDeFusion', true);
     expect(emitSpy).toHaveBeenCalledWith(['avisoDeFusion']);
     expect(tramiteStoreMock.setCheckboxDatos).toHaveBeenCalledWith(['avisoDeFusion']);
 
