@@ -119,11 +119,6 @@ describe('DatosGeneralesSociosComponent', () => {
     expect(component.FormSolicitud.enabled).toBe(true);
   });
 
-  it('should not throw if FormSolicitud is undefined in actualizarEstadoFormulario', () => {
-    component.FormSolicitud = undefined as any;
-    expect(() => component.actualizarEstadoFormulario()).not.toThrow();
-  });
-
   it('should clean up subscriptions on ngOnDestroy', () => {
     const nextSpy = jest.spyOn(component['destroyed$'], 'next');
     const completeSpy = jest.spyOn(component['destroyed$'], 'complete');

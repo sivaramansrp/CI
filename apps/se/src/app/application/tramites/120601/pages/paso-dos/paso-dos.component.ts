@@ -1,6 +1,7 @@
 import { AlertComponent, AnexarDocumentosComponent, TituloComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { Subject } from 'rxjs';
 import { TEXTOS } from '@ng-mf/data-access-user';
 
 /**
@@ -34,4 +35,9 @@ export class PasoDosComponent {
    * Obtener el valor de la instrucción e inicializar la variable
    */
   TEXTOS = TEXTOS;
+
+  /**
+   * Subject para manejar la carga de archivos en el evento.
+   */
+   cargaArchivosEvento = new Subject<unknown>();
 }
