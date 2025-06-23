@@ -85,6 +85,11 @@ export interface Notificacion {
    * @description Variable de entrada para definir la alineación del botón de cerrar.
    */
   alineacionBtonoCerrar?: string;
+
+  /**
+   * @description Variable de entrada para definir la alineacion del texto.
+   */
+  alineacionTexto?: string;
 }
 
 /**

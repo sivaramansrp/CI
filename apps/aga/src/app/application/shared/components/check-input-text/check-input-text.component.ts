@@ -113,7 +113,6 @@ export class CheckInputTextComponent implements OnChanges {
     }
 
     if (changes['checkboxValor'] && changes['checkboxValor'].currentValue) {
-      console.log('checkboxValor', changes['checkboxValor'].currentValue);
       
       this.checkboxValor = changes['checkboxValor'].currentValue;
       this.forma.get('checkbox')?.setValue(this.checkboxValor);
