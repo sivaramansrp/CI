@@ -1,25 +1,29 @@
 
-
-  <div class="container">
-    <div class="header">
-      <span class="refresh-button">
-        <i class="fas fa-sync-alt"></i> <!-- Font Awesome Refresh Icon -->
-      </span>
-      <span class="plus-icon" tabindex="0" (click)="toggleContent()" (keyup.enter)="toggleContent()" (keyup.space)="toggleContent()">+</span>
-    </div>
-    <div *ngIf="showContent" class="content">
-        <div class="info-box">
-                    Al dar doble clic en el registro seleccionado creará una nueva solicitud con los mismos datos de la solicitud elegida.
+<div class="row mt-5">
+      <div class="col-md-12 mt-3">
+        <div class="panel-group ficha-collapse" id="accordion">
+          <div class="panel panel-default">
+            <div class="panel-heading" (click)="mostrarColapsable(1)">
+              <h4 class="panel-title">
+                <a> Forma farmacéutica </a>
+              </h4>
+              <button type="button" class="collpase-button" [class.collapsed]="!formFormaceuticaColapsable"></button>
+            </div>
+            @if(formFormaceuticaColapsable){
+            <div class="panel-collapse collapse in" id="panel-01">
+              <div class="panel-body">
+               <div class="info-box">
+                    Al dar doble clic en el registro seleccionado creara una nueva solicitud con los mismos datos de la solicitud elegida.
           </div>
           
-        <h6>solicitud</h6>
+        <h6>Solicitud</h6>
         <table class="custom-table">
             <thead>
               <tr>
                 <th>Fecha Creación</th>
                 <th>Mercancía</th>
                 <th>Cantidad</th>
-                <th>Proveedor</th>
+                <th>Proovedor</th>
               </tr>
             </thead>
             <tbody>
@@ -32,6 +36,11 @@
  
             </tbody>
           </table>
+              </div>
+            </div>
+            }
+          </div>
+        </div>
+      </div>
     </div>
-</div>
   

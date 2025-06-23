@@ -55,7 +55,7 @@ export class Tramite220501Store extends Store<Solicitud220501State> {
    * 
    * @param {string} medioDeTransporte - El medio de transporte seleccionado.
    */
-    public setMedioDeTransporte(medioDeTransporte: string) {
+    public setMedioDeTransporte(medioDeTransporte: string): void {
         this.update((state) => ({
             ...state,
             medioDeTransporte,

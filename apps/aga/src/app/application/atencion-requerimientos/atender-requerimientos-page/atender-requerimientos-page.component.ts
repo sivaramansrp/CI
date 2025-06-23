@@ -46,7 +46,7 @@ export class AtenderRequerimientosPageComponent {
     }
   }
 
-  
+  /* eslint-disable class-methods-use-this */  
   /**
    * Guarda los datos necesarios.
    *

@@ -5,7 +5,6 @@ import {
   ValidacionesFormularioService,
 } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ConsultaioQuery, SolicitanteComponent } from '@ng-mf/data-access-user';
 import {
   FormBuilder,
   FormGroup,
@@ -16,6 +15,7 @@ import { Subject, map, takeUntil } from 'rxjs';
 import {Tramite40401State,Tramite40401Store,} from '../../../../core/estados/tramites/tramite40401.store';
 import { CatalogoLista } from '../../models/certi-registro.model';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DATOS_ALERT } from '../../enum/datos-del-tramite.enum';
 import { RegistroCaatAereoService } from '../../services/RegistroCaatAereoController.service';
 import { Tramite40401Query } from '../../../../core/queries/tramite40401.query';
