@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 
@@ -22,6 +22,26 @@ import { TEXTOS_REQUISITOS } from '../../constants/solicitud-de-sustancias-quimi
   styleUrl: './paso-dos.component.scss',
 })
 export class PasoDosComponent implements OnInit, OnDestroy {
+  /**
+ * Evento de salida que se emite cuando el usuario solicita reenviar información o repetir una acción.
+ * 
+ * Puede ser capturado por el componente padre para activar lógica relacionada con el reenvío de datos, 
+ * validaciones, o navegación hacia una sección anterior.
+ * 
+ * @type {EventEmitter<void>}
+ * @memberof NombreDelComponente
+ */
+  @Output() reenviarEvento = new EventEmitter<void>();
+/**
+ * Evento de salida que se emite cuando el usuario desea regresar a la sección de carga de documentos.
+ * 
+ * Permite al componente padre detectar esta intención y realizar la navegación o acciones necesarias 
+ * para mostrar nuevamente la sección correspondiente.
+ * 
+ * @type {EventEmitter<void>}
+ * @memberof NombreDelComponente
+ */
+  @Output() regresarSeccionCargarDocumentoEvento = new EventEmitter<void>()
   /**
    * @property TEXTOS
    * @description Contiene textos estáticos utilizados en este paso del formulario.
