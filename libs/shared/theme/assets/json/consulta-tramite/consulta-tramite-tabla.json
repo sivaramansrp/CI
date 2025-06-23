@@ -2281,6 +2281,15 @@
         "diasTranscurridos": "4",
         "departamento": "SEMARNAT",
         "numeroDeProcedimiento": "231002"
+    },
+    {
+        "id": "11101",
+        "tipoDeTramite": "Datos generales del trámite",
+        "fecha": "2024-11-01",
+        "fechaActualizacion": "2024-11-07",
+        "diasTranscurridos": "4",
+        "departamento": "AGA",
+        "numeroDeProcedimiento": "11101"
     }
 
 ]

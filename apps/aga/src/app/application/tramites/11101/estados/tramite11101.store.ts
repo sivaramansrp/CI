@@ -7,6 +7,21 @@ import { StoreConfig } from '@datorama/akita';
  * Modelo de estado para el trámite 11101.
  */
 export interface Tramitenacionales11101State {
+  numeroderegistro: string;
+  NobmreDenominationRazonSocial: string;
+  rfctaxid: string;
+  Telefono: string;
+  correoelectronico: string;
+  entidadadfederativa: string;
+  alcadilamunicipio: string;
+  colonia: string;
+  codigopostal: string;
+  calle: string;
+  numeroletraexterior: string;
+  numeroletrainterior: string;
+  entrecalle: string;
+  ycalle: string;
+
   /**
    * Lista que indica el estado de cada sección del formulario (true si está activa, false si no).
    */
@@ -211,8 +226,21 @@ export function createTramiteState(): Tramitenacionales11101State {
     nombreDG: '',
     apellidoPaternoDG: '',
     apellidoMaternoDG: '',
-
-  };
+    numeroderegistro: '',
+    NobmreDenominationRazonSocial: '',
+    rfctaxid: '',
+    Telefono: '',
+    correoelectronico: '',
+    entidadadfederativa: '',
+    alcadilamunicipio: '',
+    colonia: '',
+    codigopostal: '',
+    calle: '',
+    numeroletraexterior: '',
+    numeroletrainterior: '',
+    entrecalle: '',
+    ycalle: ''
+};
 }
 
 /**
@@ -229,6 +257,104 @@ export class Tramite11101Store extends Store<Tramitenacionales11101State> {
     super(createTramiteState());
   }
 
+ public setNumeroderegistro(numeroderegistro: string): void {
+    this.update((state) => ({
+        ...state,
+        numeroderegistro,
+    }));
+}
+
+public setNobmreDenominationRazonSocial(NobmreDenominationRazonSocial: string): void {
+    this.update((state) => ({
+        ...state,
+        NobmreDenominationRazonSocial,
+    }));
+}
+
+public setRfctaxid(rfctaxid: string): void {
+    this.update((state) => ({
+        ...state,
+        rfctaxid,
+    }));
+}
+
+public setTelefono(Telefono: string): void {
+    this.update((state) => ({
+        ...state,
+        Telefono,
+    }));
+}
+
+public setCorreoelectronico(correoelectronico: string): void {
+    this.update((state) => ({
+        ...state,
+        correoelectronico,
+    }));
+}
+
+public setEntidadadfederativa(entidadadfederativa: string): void {
+    this.update((state) => ({
+        ...state,
+        entidadadfederativa,
+    }));
+}
+
+public setAlcadilamunicipio(alcadilamunicipio: string): void {
+    this.update((state) => ({
+        ...state,
+        alcadilamunicipio,
+    }));
+}
+
+public setColonia(colonia: string): void {
+    this.update((state) => ({
+        ...state,
+        colonia,
+    }));
+}
+
+public setCodigopostal(codigopostal: string): void {
+    this.update((state) => ({
+        ...state,
+        codigopostal,
+    }));
+}
+
+public setCalle(calle: string): void {
+    this.update((state) => ({
+        ...state,
+        calle,
+    }));
+}
+
+public setNumeroletraexterior(numeroletraexterior: string): void {
+    this.update((state) => ({
+        ...state,
+        numeroletraexterior,
+    }));
+}
+
+public setNumeroletrainterior(numeroletrainterior: string): void {
+    this.update((state) => ({
+        ...state,
+        numeroletrainterior,
+    }));
+}
+
+public setEntrecalle(entrecalle: string): void {
+    this.update((state) => ({
+        ...state,
+        entrecalle,
+    }));
+}
+
+public setYcalle(ycalle: string): void {
+    this.update((state) => ({
+        ...state,
+        ycalle,
+    }));
+}
+ 
   /**
    * Actualiza el estado de las secciones del formulario.
    * @param seccion - Lista que indica el estado de cada sección (true si está activa, false si no).
