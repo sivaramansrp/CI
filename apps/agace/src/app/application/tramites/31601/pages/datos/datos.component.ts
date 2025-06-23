@@ -84,8 +84,8 @@ export class DatosComponent implements OnInit, AfterViewInit, OnDestroy {
       .pipe(takeUntil(this.destroyNotifier$)) 
       .subscribe((solicitud) => {
         // Observa los cambios en los valores de régimen y actualiza isTabDisabled en consecuencia
-        const { regimen_0, regimen_1, regimen_2, regimen_3 } = solicitud;
-        this.isTabDisabled = !(regimen_0 || regimen_1 || regimen_2 || regimen_3);
+        const { regimen_0: REGIMEN0, regimen_1: REGIMEN1, regimen_2: REGIMEN2, regimen_3: REGIMEN3 } = solicitud;
+        this.isTabDisabled = !(REGIMEN0 || REGIMEN1 || REGIMEN2 || REGIMEN3);
       });
 
   }

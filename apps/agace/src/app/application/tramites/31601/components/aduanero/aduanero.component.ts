@@ -547,6 +547,12 @@ export class AduaneroComponent implements OnInit, AfterViewInit, OnDestroy {
    */
   openModifyModal(): void {
     if (this.modalInstance) {
+      this.preOperativeForm.patchValue({
+        rfc: this.filaSeleccionadaMencione?.rfc,
+        razonSocial: this.filaSeleccionadaMencione?.social,
+        numeroEmpleados: this.filaSeleccionadaMencione?.noumero,
+        empleadosPropios: this.filaSeleccionadaMencione?.bimestre,
+      })
       this.modalInstance.show();
     }
   }

@@ -2,8 +2,8 @@ import { Solicitud31601State, Tramite31601Store } from '../../../estados/tramite
 import { ENVIRONMENT } from '../../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
 import { MencioneConfiguracionItem } from '../enum/mencione-tabla.enum';
+import { Observable } from 'rxjs';
 
 /**
  * Servicio encargado de manejar la lógica relacionada con la solicitud del trámite 31601.
