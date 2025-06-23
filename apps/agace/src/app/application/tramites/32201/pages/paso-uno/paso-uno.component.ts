@@ -1,5 +1,4 @@
-import { AfterViewInit, Component, ViewChild } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import {
   AlertComponent,
   BtnContinuarComponent,
@@ -14,9 +13,10 @@ import {
   PERSONA_MORAL_NACIONAL,
 } from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
 import { Subject, map, takeUntil } from 'rxjs';
+import { CommonModule } from '@angular/common';
 import { SolicitudComponent } from '../../components/solicitud/solicitud.component';
-import { Tramite32201Store } from '../../estados/tramite32201.store';
 import { SolicitudService } from '../../services/solicitud.service';
+import { Tramite32201Store } from '../../estados/tramite32201.store';
 
 /**
  * Componente que representa la funcionalidad de la paso uno 32201.
@@ -35,7 +35,7 @@ import { SolicitudService } from '../../services/solicitud.service';
     SolicitudComponent,
   ],
 })
-export class PasoUnoComponent implements AfterViewInit {
+export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
   /**
    * Referencia al componente Solicitante.
    */
@@ -137,6 +137,15 @@ export class PasoUnoComponent implements AfterViewInit {
    */
   seleccionaTab(i: number): void {
     this.indice = i;
+  }
+
+  /**
+   * Método que se ejecuta al destruir el componente.
+   * Se utiliza para limpiar las suscripciones.
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 
 }

@@ -1,9 +1,9 @@
 import {
   AlertComponent,
   AnexarDocumentosComponent,
+  CATALOGOS_ID,
   Catalogo,
   CatalogosService,
-  CATALOGOS_ID,
   TEXTOS,
   TituloComponent,
 } from '@ng-mf/data-access-user';
@@ -98,8 +98,8 @@ export class PasoDosComponent implements OnInit, OnDestroy {
    * Método que se ejecuta al destruir el componente.
    * Se utiliza para limpiar las suscripciones.
    */
-    ngOnDestroy(): void {
-      this.destroyNotifier$.next();
-      this.destroyNotifier$.complete();
-    }
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
+  }
 }
