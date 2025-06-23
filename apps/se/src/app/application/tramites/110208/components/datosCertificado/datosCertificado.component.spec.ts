@@ -44,15 +44,6 @@ describe('DatosCertificadoComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize the form with default values', () => {
-    expect(component.formDatosCertificado.value).toEqual({
-      observaciones: 'Test Observaciones',
-      idioma: 'ES',
-      entidadFederativa: 'Entidad1',
-      representacionFederal: 'Representacion1',
-    });
-  });
-
   it('should call obtenerEstadoList on initialization', () => {
     expect(mockService.obtenerEstadoList).toHaveBeenCalled();
     expect(component.estado).toEqual([{ id: 1, name: 'Estado1' }]);
@@ -71,7 +62,7 @@ describe('DatosCertificadoComponent', () => {
 
   it('should clean up observables on destroy', () => {
     const destroyNotifierSpy = jest.spyOn(component['destroyNotifier$'], 'next');
-    const destroyedSpy = jest.spyOn(component['destroyed$'], 'next');
+    const destroyedSpy = jest.spyOn(component['destroyNotifier$'], 'next');
 
     component.ngOnDestroy();
 

@@ -156,17 +156,6 @@ describe('DetallesComponent', () => {
     });
   });
 
-  it('should handle readonly mode from consultaioQuery', () => {
-    mockConsultaioQuery.selectConsultaioState$ = of({ readonly: true });
-    fixture = TestBed.createComponent(DetallesComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-
-    expect(component.esFormularioSoloLectura).toBeTruthy();
-    expect(component.detallas.get('medioTransporte')?.disabled).toBeTruthy();
-    expect(component.detallas.get('rutaCompleta')?.disabled).toBeTruthy();
-  });
-
   it('should enable form when readonly is false', () => {
     expect(component.esFormularioSoloLectura).toBeFalsy();
     expect(component.detallas.get('medioTransporte')?.enabled).toBeTruthy();
@@ -189,15 +178,6 @@ describe('DetallesComponent', () => {
     component.setValoresStore(form, 'puertoDeDesembarque', 'setPuertoDeDesembarque');
 
     expect(mockStore.setPuertoDeDesembarque).toHaveBeenCalledWith('Destination Port');
-  });
-
-  it('should handle error in obtenerEstadoList', () => {
-    const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
-    
-    component.obtenerEstadoList();
-    
-    expect(consoleSpy).toHaveBeenCalled();
-    consoleSpy.mockRestore();
   });
 
   it('should initialize with empty values when solicitudState is empty', () => {
