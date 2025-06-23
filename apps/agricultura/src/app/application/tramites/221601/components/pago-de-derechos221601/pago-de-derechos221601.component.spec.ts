@@ -72,6 +72,7 @@ describe('PagoDeDerechos221601Component', () => {
   let tramite221601Query: Tramite221601Query;
 
   const tramite221601StoreMock = {
+     update: jest.fn(),
     setClaves: jest.fn(),
     setDependencia: jest.fn(),
     setBanco: jest.fn(),

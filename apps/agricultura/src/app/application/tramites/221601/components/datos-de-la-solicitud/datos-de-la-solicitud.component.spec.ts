@@ -55,6 +55,7 @@ describe('DatosDeLaSolicitudComponent', () => {
   };
 
   const tramite221601StoreMock = {
+     update: jest.fn(),
     setJustificacion: jest.fn(),
     setAduana: jest.fn(),
     setOficina: jest.fn(),

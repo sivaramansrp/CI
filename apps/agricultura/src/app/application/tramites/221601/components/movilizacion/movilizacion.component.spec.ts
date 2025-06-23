@@ -77,6 +77,7 @@ describe('MovilizacionComponent', () => {
   let tramite221601Query: Tramite221601Query;
 
   const tramite221601StoreMock = {
+     update: jest.fn(),
     setMedio: jest.fn(),
     setTransporte: jest.fn(),
     setVerificacion: jest.fn(),
