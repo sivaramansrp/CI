@@ -1,5 +1,3 @@
-import exp from "constants";
-
 /**
  * @description Constantes con la información de los pasos del wizard.
  */

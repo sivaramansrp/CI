@@ -1,10 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Notificacion, NotificacionesComponent, Pedimento, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
 import { ReplaySubject, map, takeUntil } from 'rxjs';
 import { Solicitud570102State, Tramite570102Store } from '../state/Tramite570102.store';
 import { CommonModule } from '@angular/common';
 import { Tramite570102Query } from '../state/Tramite570102.query';
+import { ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
 
 /**
  * Componente que gestiona la lógica y la interfaz de usuario para la solicitud de desistimiento de servicios extraordinarios.
