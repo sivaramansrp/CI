@@ -5,8 +5,11 @@ import { HttpClientModule } from '@angular/common/http';
 import { of } from 'rxjs';
 
 import { PersonaComponent } from './persona.component';
-import { ServiciosPantallaService } from '../../../../core/services/31601/servicios-pantalla.service';
-import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
+// import { ServiciosPantallaService } from '../../../../core/services/31601/servicios-pantalla.service';
+// import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
+
+import { ServiciosPantallaService } from '@libs/shared/data-access-user/src/core/services/31601/servicios-pantalla.service';
+import { TituloComponent } from '@ng-mf/data-access-user';
 
 class MockServiciosPantallaService {
   // eslint-disable-next-line class-methods-use-this, @typescript-eslint/explicit-function-return-type
@@ -34,7 +37,7 @@ class MockServiciosPantallaService {
 fdescribe('PersonaComponent', () => {
   let component: PersonaComponent;
   let fixture: ComponentFixture<PersonaComponent>;
-  let pantallaSvc: MockServiciosPantallaService;
+  let pantallaSvc: ServiciosPantallaService;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -69,17 +72,17 @@ fdescribe('PersonaComponent', () => {
     component.ngOnInit();
 
     // Expect the service's response to populate personaparas
-    expect(component.personaparas.length).toBe(2);
-    expect(component.personaparas[0].nombre).toBe('John Doe');
-    expect(component.personaparas[1].nombre).toBe('Jane Smith');
+    expect(component.personaParas.length).toBe(2);
+    expect(component.personaParas[0].nombre).toBe('John Doe');
+    expect(component.personaParas[1].nombre).toBe('Jane Smith');
   });
 
   it('should toggle showContent', () => {
-    expect(component.showContent).toBeFalse(); // Initially false
+    expect(component.showContent).toBeFalsy(); // Initially false
     component.toggleContent();
-    expect(component.showContent).toBeTrue(); // After toggle, should be true
+    expect(component.showContent).toBe(true); // After toggle, should be true
     component.toggleContent();
-    expect(component.showContent).toBeFalse(); // After another toggle, should be false
+    expect(component.showContent).toBeFalsy(); // After another toggle, should be false
   });
 
   it('should call loadPersonas and update personaparas', () => {
@@ -87,7 +90,7 @@ fdescribe('PersonaComponent', () => {
     component.loadPersonas();
 
     // Validate if the service response is correctly assigned to personaparas
-    expect(component.personaparas).toEqual([
+    expect(component.personaParas).toEqual([
       {
         rfc: 'AAXX010101HNROZZA',
         curp: 'AAXX010101HNROZZA',
@@ -116,8 +119,8 @@ fdescribe('PersonaComponent', () => {
     expect(pantallaSvc.getPersonapara).toHaveBeenCalledTimes(1);
 
     // Check if the personaparas data is correctly assigned
-    expect(component.personaparas.length).toBe(2);
-    expect(component.personaparas[0].nombre).toBe('John Doe');
-    expect(component.personaparas[1].nombre).toBe('Jane Smith');
+    expect(component.personaParas.length).toBe(2);
+    expect(component.personaParas[0].nombre).toBe('John Doe');
+    expect(component.personaParas[1].nombre).toBe('Jane Smith');
   });
 });

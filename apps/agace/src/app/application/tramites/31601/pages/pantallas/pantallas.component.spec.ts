@@ -1,6 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { WizardComponent, BtnContinuarComponent, SolicitanteComponent } from '@ng-mf/data-access-user';
 import { PantallasComponent } from './pantallas.component';
+import { DatosComponent } from '../datos/datos.component';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('PantallasComponent', () => {
   let component: PantallasComponent;
@@ -8,7 +10,8 @@ describe('PantallasComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [PantallasComponent]
+      imports: [WizardComponent,BtnContinuarComponent,HttpClientTestingModule,SolicitanteComponent],
+      declarations: [PantallasComponent,DatosComponent]
     })
     .compileComponents();
     

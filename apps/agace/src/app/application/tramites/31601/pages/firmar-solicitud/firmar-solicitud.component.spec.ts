@@ -8,9 +8,12 @@ import { TramiteFolioService, TramiteFolioStore } from '@libs/shared/data-access
 fdescribe('FirmarSolicitudComponent', () => {
   let component: FirmarSolicitudComponent;
   let fixture: ComponentFixture<FirmarSolicitudComponent>;
-  let mockRouter: jasmine.SpyObj<Router>;
-  let mockTramiteFolioService: jasmine.SpyObj<TramiteFolioService>;
-  let mockTramiteFolioStore: jasmine.SpyObj<TramiteFolioStore>;
+  let mockRouter: any;
+  let mockTramiteFolioService: any;
+  let mockTramiteFolioStore: any;
+  // let mockRouter: jasmine.SpyObj<Router>;
+  // let mockTramiteFolioService: jasmine.SpyObj<TramiteFolioService>;
+  // let mockTramiteFolioStore: jasmine.SpyObj<TramiteFolioStore>;
 
   beforeEach(async () => {
     mockRouter = jasmine.createSpyObj('Router', ['navigate']);
