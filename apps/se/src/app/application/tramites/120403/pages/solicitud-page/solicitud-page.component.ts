@@ -130,7 +130,7 @@ export class SolicitudPageComponent implements OnInit {
    * Realiza acciones específicas al recibir un índice de acción.
    * @param e Acción del botón.
    */
-  getValorIndices(e: AccionBoton): void {
+  getValorIndices(_e: AccionBoton): void {
     delete (this.datoPaso as { txtBtnAnt?: string }).txtBtnAnt;
     this.alerta = true;
   }

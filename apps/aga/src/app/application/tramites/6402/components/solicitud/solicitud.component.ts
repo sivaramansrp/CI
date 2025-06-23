@@ -1,5 +1,5 @@
-import {AlertComponent,CatalogoSelectComponent,InputFecha,InputFechaComponent,InputHoraComponent,InputRadioComponent,TablaDinamicaComponent,TablaSeleccion,TituloComponent,ValidacionesFormularioService} from "@libs/shared/data-access-user/src";
 import { Catalogo, CatalogoLista, SolicitudTabla, SolicitudTablaDatos } from "../../models/autorizacion-importacion.model";
+import { CatalogoSelectComponent,InputFecha,InputFechaComponent,TablaDinamicaComponent,TablaSeleccion,TituloComponent,ValidacionesFormularioService} from "@libs/shared/data-access-user/src";
 import { ConsultaioQuery, ConsultaioState } from "@ng-mf/data-access-user";
 import { FECHA_CARTAPORTE, FECHA_DESTINO, FECHA_IMPORTACION, FECHA_VENCIMIENTO, TABLA_DE_DATOS, TEXTOS } from "../../constants/autorizacion-importacion.enum";
 import { AutorizacionImportacionService } from "../../services/autorizacion-importacion.service";
@@ -10,7 +10,6 @@ import { FormBuilder } from "@angular/forms";
 import { FormGroup } from "@angular/forms";
 import { Modal } from 'bootstrap';
 import { Notificacion } from '@libs/shared/data-access-user/src';
-import { NotificacionesComponent } from '@libs/shared/data-access-user/src';
 import { OnDestroy } from "@angular/core";
 import { OnInit } from "@angular/core";
 import { ReactiveFormsModule } from "@angular/forms";
@@ -33,9 +32,8 @@ import { takeUntil } from "rxjs";
   selector: 'app-solicitud',
   templateUrl: './solicitud.component.html',
   styleUrl: './solicitud.component.scss',
-  imports: [CommonModule, ReactiveFormsModule, TituloComponent, InputFechaComponent, InputHoraComponent,
-    CatalogoSelectComponent, TablaDinamicaComponent, AlertComponent, NotificacionesComponent,
-    InputRadioComponent
+  imports: [CommonModule, ReactiveFormsModule, TituloComponent, InputFechaComponent,
+    CatalogoSelectComponent, TablaDinamicaComponent
   ],
   standalone: true,
 })

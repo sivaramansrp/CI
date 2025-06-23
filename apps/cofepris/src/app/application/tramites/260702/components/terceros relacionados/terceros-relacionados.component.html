@@ -127,6 +127,7 @@
               [catalogo]="paisData.catalogos" 
                [label]="'Pais'"
                 [required]="true"
+                 [isDisabled]="esFormularioSoloLectura"
                 (change)="setValoresStore(agregarDestinatario,'pais', 'setPais')"
                 ></app-catalogo-select>
             </div>

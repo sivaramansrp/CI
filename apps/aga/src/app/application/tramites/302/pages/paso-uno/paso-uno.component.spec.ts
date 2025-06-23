@@ -20,8 +20,7 @@ describe('PasoUnoComponent', () => {
     };
     component = new PasoUnoComponent(
       consultaQueryMock,
-      consultaStoreMock,
-      solicitudServiceMock
+      consultaStoreMock
     );
   });
 
@@ -35,12 +34,6 @@ describe('PasoUnoComponent', () => {
     component.consultaState = { update: true, readonly: false } as any;
     component.ngOnInit();
     expect(guardarSpy).toHaveBeenCalled();
-  });
-
-  it('should set esDatosRespuesta true and call actualizarEstadoFormulario in guardarDatosFormulario', () => {
-    component.guardarDatosFormulario();
-    expect(component.esDatosRespuesta).toBe(true);
-    expect(solicitudServiceMock.actualizarEstadoFormulario).toHaveBeenCalledWith({ foo: 'bar' });
   });
 
   it('should complete destroyNotifier$ on ngOnDestroy', () => {

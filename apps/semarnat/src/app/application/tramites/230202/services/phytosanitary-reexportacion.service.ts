@@ -1,9 +1,9 @@
 import { MetaInfo, Respuesta, RespuestaDetalle, RespuestaSolicitud } from '../models/datos-tramite.model';
+import { Solicitud230202State, Tramite230202Store } from '../estados/tramite230202.store';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { RespuestaCatalogos } from '@libs/shared/data-access-user/src';
-import { Tramite230202Store } from '../estados/tramite230202.store';
 
 @Injectable({
   providedIn: 'root'
@@ -77,5 +77,60 @@ export class PhytosanitaryReexportacionService {
 
   getEstado(): Observable<RespuestaCatalogos> {
     return this.http.get<RespuestaCatalogos>('assets/json/230202/estado.json');
+  }
+
+  
+  /**
+   * Obtiene el catálogo de destinatarios.
+   * @returns Un observable con la respuesta del catálogo de destinatarios.
+   */
+  getSavedData(): Observable<Solicitud230202State> {
+    return this.http.get<Solicitud230202State>('assets/json/230202/savedData.json');
+  }
+
+  /**
+   * Actualiza el estado del formulario con los datos proporcionados.
+   * @param data Datos de tipo Solicitud230202State que se utilizarán para actualizar el estado del formulario.
+   */
+  actualizarEstadoFormulario(data: Solicitud230202State): void {
+    this.store.update((state) => {
+      return {
+        ...state,
+        aduana: data.aduana,
+        // paisDeProcedencia: data.paisDeProcedencia,
+        pais: data.pais,
+        entidades: data.entidades,
+        descripcionProducto: data.descripcionProducto,
+        datosSolicitud: data.datosSolicitud,
+        datosDetalle: data.datosDetalle,
+        fraccionArancelaria: data.fraccionArancelaria,
+        descripcionFraccionArancelaria: data.descripcionFraccionArancelaria,
+        cantidad: data.cantidad,
+        cantidadLetra: data.cantidadLetra,
+        genero: data.genero,
+        especie: data.especie,
+        nombreComun: data.nombreComun,
+        unidadDeMedida: data.unidadDeMedida,
+        lungarDeEntrada: data.lungarDeEntrada,
+        // destinoDeImportador: data.destinoDeImportador,
+        medioDeTransporte: data.medioDeTransporte,
+        numeroYDescripcion: data.numeroYDescripcion,
+        codigoPostal: data.codigoPostal,
+        estado: data.estado,
+        calle: data.calle,
+        numeroExterior: data.numeroExterior,
+        numeroInterior: data.numeroInterior,
+        colonia: data.colonia,
+        // tercerosPopupState: data.tercerosPopupState,
+        destinatarios: data.destinatarios,
+        claveDeReferencia: data.claveDeReferencia,
+        cadenaPagoDependencia: data.cadenaPagoDependencia,
+        banco: data.banco,
+        llaveDePago: data.llaveDePago,
+        fecPago: data.fecPago,
+        impPago: data.impPago,
+        update: true
+      };
+    });
   }
 }
