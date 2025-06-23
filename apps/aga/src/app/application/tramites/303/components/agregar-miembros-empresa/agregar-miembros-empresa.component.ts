@@ -24,21 +24,21 @@ export class AgregarMiembrosEmpresaComponent {
   constructor(private fb: FormBuilder,
   ) {}
 
-  abrirModal() {
+  abrirModal(): void {
     this.modal = 'show';
   }
 
-  cerrarModal() { 
+  cerrarModal(): void { 
     this.closeModal.nativeElement.click();
     
   }
 
-  agregarMiembro() {
+  agregarMiembro(): void {
     if(!this.formMiembros.valid) {
       return;
     }
-    const miembro = this.formMiembros.value;
-    this.miembros.push(miembro);
+    const MIEMBRO = this.formMiembros.value;
+    this.miembros.push(MIEMBRO);
     this.formMiembros.reset();
     this.cerrarModal();
   }

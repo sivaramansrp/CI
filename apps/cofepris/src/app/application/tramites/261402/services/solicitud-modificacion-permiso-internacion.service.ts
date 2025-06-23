@@ -1,6 +1,7 @@
 import { Catalogo, RespuestaCatalogos } from '@libs/shared/data-access-user/src';
 import { Injectable, OnDestroy } from '@angular/core';
 import { Observable, Subject, takeUntil } from 'rxjs';
+import { Solicitud261402State, Tramite261402Store } from '../../../estados/tramites/tramite261402.store';
 import { HttpClient } from '@angular/common/http';
 import { InformaciondeProcedencia } from '../enums/informacion-de-procedencia.enum';
 import { TramiteAsociados } from '../../../shared/models/tramite-asociados.model';
@@ -22,7 +23,7 @@ export class SolicitudModificacionPermisoInternacionService implements OnDestroy
   * Constructor del servicio.
   * Param http Cliente HTTP para realizar solicitudes a servicios externos.
   */
- constructor(private http: HttpClient) {
+ constructor(private http: HttpClient,private tramite261402Store: Tramite261402Store) {
    // Constructor
  }
 
@@ -75,6 +76,20 @@ export class SolicitudModificacionPermisoInternacionService implements OnDestroy
      'assets/json/261402/tramite-asociados.json'
    );
  }
+   /**
+   * Actualiza el estado del formulario en el store.
+   * @param DATOS Estado actualizado del trámite.
+   */
+  actualizarEstadoFormulario(DATOS: Solicitud261402State): void {
+      this.tramite261402Store.actualizarEstado(DATOS);
+  }
+  /**
+ * Obtiene los datos de la solicitud.
+ * @returns Observable con los datos de la solicitud.
+ */
+getDatosDeLaSolicitud(): Observable<Solicitud261402State> {
+    return this.http.get<Solicitud261402State>('assets/json/261402/datos.json');
+}
 
    /**
    * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.

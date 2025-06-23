@@ -98,7 +98,7 @@ export interface CuposTabla {
 /**
  * Representa los datos de la tabla de disponsiblesTabla.
  */
-export interface disponsiblesTabla {
+export interface DisponsiblesTabla {
 
   folio:string;
   nombre:string;
@@ -108,8 +108,8 @@ export interface disponsiblesTabla {
 /**
  * Representa los datos de la tabla de disponsiblesTablaDatos.
  */
-export interface  disponsiblesTablaDatos{
-datos: disponsiblesTabla[];
+export interface DisponsiblesTablaDatos{
+datos: DisponsiblesTabla[];
 }
 
 

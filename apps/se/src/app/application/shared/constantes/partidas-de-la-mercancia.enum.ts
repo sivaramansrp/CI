@@ -3,32 +3,32 @@ import { PartidasDeLaMercanciaModelo } from '../models/partidas-de-la-mercancia.
   export const PARTIDASDELAMERCANCIA_TABLA = [
     {
       encabezado: 'Cantidad',
-      clave: (ele: PartidasDeLaMercanciaModelo) => ele.cantidad,
+      clave: (ele: PartidasDeLaMercanciaModelo):string => ele.cantidad,
       orden: 1
     },
     {
       encabezado: 'Unidad de medida',
-      clave: (ele: PartidasDeLaMercanciaModelo) => ele.unidadDeMedida,
+      clave: (ele: PartidasDeLaMercanciaModelo):string => ele.unidadDeMedida,
       orden: 2
     },
     {
       encabezado: 'Fracción arancelaria',
-      clave: (ele: PartidasDeLaMercanciaModelo) => ele.fraccionFrancelaria,
+      clave: (ele: PartidasDeLaMercanciaModelo):string => ele.fraccionFrancelaria,
       orden: 3
     },
     {
       encabezado: 'Descripción',
-      clave: (ele: PartidasDeLaMercanciaModelo) => ele.descripcion,
+      clave: (ele: PartidasDeLaMercanciaModelo):string => ele.descripcion,
       orden: 4
     },
     {
       encabezado: 'Precio unitario USD',
-      clave: (ele: PartidasDeLaMercanciaModelo) => ele.precioUnitarioUSD,
+      clave: (ele: PartidasDeLaMercanciaModelo):string => ele.precioUnitarioUSD,
       orden: 5
     },
     {
       encabezado: 'Total USD',
-      clave: (ele: PartidasDeLaMercanciaModelo) => ele.totalUSD,
+      clave: (ele: PartidasDeLaMercanciaModelo):string => ele.totalUSD,
       orden: 6
     }
   ]

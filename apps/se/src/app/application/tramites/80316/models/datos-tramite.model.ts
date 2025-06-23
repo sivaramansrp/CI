@@ -1,3 +1,5 @@
+import { Catalogo } from "@libs/shared/data-access-user/src";
+
 /**
  * Representa los datos del solicitante.
  */
@@ -236,4 +238,32 @@ export interface DatosDeLaTabla {
   id: number;
   folioDePrograma: string;
   tipoDePrograma: string;
+}
+
+/**
+   * Carga los datos de certificación desde el servicio y actualiza el formulario reactivo con los valores obtenidos.
+   */
+export interface DatosCertificacion {
+  certificion: string;
+  fechaInicio: string;
+  fechaVigencia: string;
+}
+
+/**
+ * Representa la respuesta de una consulta de datos.
+ */
+export interface RespuestaConsulta {
+  success: boolean;
+  datos: ConsultaDatos;
+  message: string;
+}
+
+/**
+ * Representa los datos obtenidos de una consulta.
+ */
+export interface ConsultaDatos {
+  /**
+   * Lista de actividades productivas asociadas a la consulta.
+   */
+  actividadProductiva: Catalogo[] | null;
 }

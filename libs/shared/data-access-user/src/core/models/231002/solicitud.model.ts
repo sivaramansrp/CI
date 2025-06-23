@@ -31,6 +31,9 @@ interface Tabla {
 
 export interface SolicitudJson {
     Immex: ImmexItem[];
+    Domicilio: ImmexItem[];
+    Aduana : ImmexItem[];
+    Pais : ImmexItem[];
     table: Tabla[];
     radioOptions: RadioOpcion[];
     nombre: Nombre[];

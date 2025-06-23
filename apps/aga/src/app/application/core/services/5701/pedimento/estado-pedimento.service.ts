@@ -1,5 +1,5 @@
 import { BodyEstadoPedimento, EstadoPedimentoResponse } from "../../../models/5701/pedimento.model";
-import { catchError, map, Observable, throwError } from "rxjs";
+import { Observable, catchError, map, throwError } from "rxjs";
 import { API_VALIDAR_PEDIMENTO } from "../../../../constantes/5701/api-constants";
 import { ENVIRONMENT } from "@libs/shared/data-access-user/src";
 import { HttpClient } from "@angular/common/http";

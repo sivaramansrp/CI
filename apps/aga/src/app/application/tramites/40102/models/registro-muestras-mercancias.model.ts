@@ -505,3 +505,23 @@ export interface UnidadTabla {
   estado: string;
   
 }
+
+/**
+ * Interfaz que define la configuración de la tabla de unidades.
+ * Incluye encabezados y datos de las unidades.
+ */
+export interface UnidadTablaConfig {
+  /**
+   * Lista de encabezados de la tabla.
+   */
+  encabezadas: {
+    encabezado: string;
+    clave: (item: UnidadTabla) => string;
+    orden: number;
+  }[];
+
+  /**
+   * Lista de datos de las unidades.
+   */
+  datos: UnidadTabla[];
+} 

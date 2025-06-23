@@ -1,5 +1,6 @@
 import {
   AlertComponent,
+  ConsultaioQuery,
   NotificacionesComponent,
   TituloComponent,
 } from '@ng-mf/data-access-user';
@@ -10,7 +11,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { Notificacion } from '@libs/shared/data-access-user/src';
 import { ProveedorExtranjero } from '../../models/avisomodify.model';
@@ -49,6 +50,11 @@ export class AdicionProcesosComponent implements OnInit, OnDestroy {
    * Se utiliza para almacenar y gestionar notificaciones dentro del sistema.
    */
   public nuevaNotificacion!: Notificacion;
+  /**
+  * Indica si el formulario está en modo solo lectura.
+  * Cuando es `true`, los campos del formulario no se pueden editar.
+  */
+  esFormularioSoloLectura: boolean = false; 
 
   /**
    * Constructor que inyecta dependencias necesarias como FormBuilder, Store y Query.
@@ -56,9 +62,25 @@ export class AdicionProcesosComponent implements OnInit, OnDestroy {
   constructor(
     private fb: FormBuilder,
     private store: Tramite32301Store,
-    private Tramite32301Query: Tramite32301Query
+    private Tramite32301Query: Tramite32301Query,
+    private consultaioQuery: ConsultaioQuery,
   ) {
-    // Constructor
+         /**
+         * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
+         *
+         * - Asigna el valor de solo lectura (`readonly`) a la propiedad `esFormularioSoloLectura`.
+         * - Llama a `inicializarEstadoFormulario()` para aplicar configuraciones basadas en el estado recibido.
+         * - La suscripción se cancela automáticamente cuando `destroy$` emite un valor (para evitar fugas de memoria).
+         */
+        this.consultaioQuery.selectConsultaioState$
+        .pipe(
+          takeUntil(this.destroy$),
+          map((seccionState)=>{
+            this.esFormularioSoloLectura = seccionState.readonly; 
+            this.inicializarEstadoFormulario();
+          })
+        )
+        .subscribe()
   }
 
   /**
@@ -66,8 +88,45 @@ export class AdicionProcesosComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.ProveedoresTitulo = 'Proceso(s) productivo(s)*';
-    this.inicializaProveedorExtranjer();
+     this.inicializarEstadoFormulario();
+   
+  }
 
+    /**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.  
+   * Además, obtiene la información del catálogo de mercancía.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.inicializarFormulario();
+    }  
+  }
+
+    /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormulario(): void {
+      this.inicializarFormulario();
+      if (this.esFormularioSoloLectura) {
+        this.proveedorXtranjForm.disable();
+      } else if (!this.esFormularioSoloLectura) {
+        this.proveedorXtranjForm.enable();
+      } else {
+        // No se requiere ninguna acción en el formulario
+      }
+  }
+     /**
+   * Inicializa el formulario reactivo para capturar el valor de 'registro'.
+   * Suscribe al estado almacenado en el store mediante el query `tramite301Query.selectSolicitud$`
+   * y lo asigna a la variable local `solicitudState`. Luego, crea el formulario
+   * con el valor inicial obtenido del store.
+   */
+
+  inicializarFormulario(): void {
+ this.inicializaProveedorExtranjer();
     this.Tramite32301Query.select()
       .pipe(takeUntil(this.destroy$))
       .subscribe((state) => {

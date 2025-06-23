@@ -62,19 +62,28 @@
         @switch (indice) { @case (1) {
         <solicitante [tabindex]="1"></solicitante>
         } @case (2) {
+           @if(esDatosRespuesta){
         <app-datos-de-la-solicitud [tabindex]="2"></app-datos-de-la-solicitud>
+           }
         } @case (3) {
+           @if(esDatosRespuesta){
         <app-terceros-relacionados [tabindex]="3"></app-terceros-relacionados>
+           }
         } @case (4) {
+          @if(esDatosRespuesta){
           <app-pago-de-derechos 
           [formularioPagoDerechos]="formularioPagoDerechos"
           [banco]="banco"
           (setValoresStoreEvent)="setValoresStore($event)"
+          [isDisabled]="esFormularioSoloLectura"
           ></app-pago-de-derechos>
+          }
         } @case (5) {
+          @if(esDatosRespuesta){
           <app-tramite-asociados
         [configuracionTabla]="configuracionTabla" [tramiteAsociados]="tramiteAsociados"></app-tramite-asociados>
         } 
+      }
        }
       </ng-container>
     </div>

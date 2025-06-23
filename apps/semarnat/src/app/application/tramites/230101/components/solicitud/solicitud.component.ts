@@ -1,6 +1,7 @@
 import { ADUANAS_DISPONIBLES } from '../../constantes/disponibles-constante.enum';
 import { CargarDatosIniciales } from '../../models/pantallas-captura.model';
-import { Catalogo } from '@ng-mf/data-access-user';
+
+import { Catalogo, ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { Component } from '@angular/core';
 import { DETALLE } from '../../constantes/disponibles-constante.enum';
 import { DISPONSIBLE_ADUANA_CHECKBOXES } from '../../constantes/disponibles-constante.enum';
@@ -109,6 +110,20 @@ export class SolicitudComponent implements OnInit, OnDestroy{
    */
   options!: Catalogo[];
 
+
+   /**
+     * Indica si el formulario es de solo lectura.
+     */
+   esFormularioSoloLectura: boolean = false;
+  
+   /**
+    * Estado de los datos de consulta.
+    */
+   consultaDatos!: ConsultaioState;
+
+ /** Estado de la consulta que se obtiene del store. */
+ public consultaState!: ConsultaioState;
+
   
 
   /**
@@ -152,7 +167,9 @@ export class SolicitudComponent implements OnInit, OnDestroy{
     private solicitud230101Store: Solicitud230101Store,
     private solicitud230101Query: Solicitud230101Query,
     private mediodetransporteService: MediodetransporteService,
-    private validacionesService: ValidacionesFormularioService
+    private validacionesService: ValidacionesFormularioService,
+    private consultaioQuery: ConsultaioQuery
+    
   ) {
     this.cargarDatosIniciales();
   }
@@ -179,8 +196,32 @@ export class SolicitudComponent implements OnInit, OnDestroy{
 
     // Inicializar el formulario principal
     this.crearFormulario();
+
+    this.consultaioQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState) => {
+        this.consultaDatos = seccionState;
+        this.esFormularioSoloLectura = this.consultaDatos.readonly;
+        this.inicializarEstadoFormulario();
+      })
+    )
+    .subscribe();
+    this.inicializarEstadoFormulario();
   }
 
+  /**
+   * Inicializa el estado del formulario según si es de solo lectura o no.
+   * Si es de solo lectura, deshabilita el formulario; de lo contrario, lo habilita.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.FormSolicitud?.disable();
+    }
+    else {
+      this.FormSolicitud?.enable();
+    }
+}
   /**
      * Inicializa los catálogos necesarios para el formulario.
      */
@@ -325,6 +366,12 @@ export class SolicitudComponent implements OnInit, OnDestroy{
     });
   }
 
+  /**
+   * Cambia el tipo de régimen y actualiza la visibilidad de los checkboxes de aduanas.
+   *
+   * Este método se activa cuando el usuario cambia el valor del campo 'regimen' en el formulario.
+   * Dependiendo del valor seleccionado, muestra u oculta los checkboxes correspondientes a las aduanas.
+   */
   cambiarTipoRegimen(): void {
     const VALOR = this.tipoRegimen.get('regimen')?.value;
     if(VALOR === 'definitivos'){
