@@ -5,20 +5,23 @@ import { ImportacionDefinitivaService } from '@libs/shared/data-access-user/src/
 import { of } from 'rxjs';
 import { Tramite130103Query } from '../../../../estados/queries/tramite130103.query';
 import { Tramite130103Store } from '../../../../estados/tramites/tramite130103.store';
+import { FormGroup } from '@angular/forms';
 
 describe('UsoEspecificoDeLaMercanciaComponent', () => {
   let component: UsoEspecificoDeLaMercanciaComponent;
   let fixture: ComponentFixture<UsoEspecificoDeLaMercanciaComponent>;
-  const mockImportacionState = { 
-    some: 'state', 
-    especifico: [{
-      id: 1,
-      descripcion: 'Producto de prueba',
-      fraccionArancelariaTigie: '1234.56.78',
-      cantidad: 10,
-      totalUsd: 100,
-      unidadDeMedida: 'Caja'
-    }]
+  const mockImportacionState = {
+    some: 'state',
+    especifico: [
+      {
+        id: 1,
+        descripcion: 'Producto de prueba',
+        fraccionArancelariaTigie: '1234.56.78',
+        cantidad: 10,
+        totalUsd: 100,
+        unidadDeMedida: 'Caja',
+      },
+    ],
   };
   const tramite130103QueryMock = {
     selectImportacion$: of(mockImportacionState),
@@ -26,21 +29,23 @@ describe('UsoEspecificoDeLaMercanciaComponent', () => {
   let storeMock: any;
   const mockService = {
     getSolicitudMercancia: jest.fn().mockReturnValue(of([])),
-    getFraccionArancelaria: jest.fn().mockReturnValue(of([
-      { id: 1, descripcion: 'Fracción 1' },
-      { id: 2, descripcion: 'Fracción 2' }
-    ]))
+    getFraccionArancelaria: jest.fn().mockReturnValue(
+      of([
+        { id: 1, descripcion: 'Fracción 1' },
+        { id: 2, descripcion: 'Fracción 2' },
+      ])
+    ),
   };
   beforeEach(async () => {
     storeMock = {
-      setDynamicFieldValue: jest.fn()
+      setDynamicFieldValue: jest.fn(),
     };
     await TestBed.configureTestingModule({
       imports: [UsoEspecificoDeLaMercanciaComponent, HttpClientTestingModule],
       providers: [
         { provide: Tramite130103Query, useValue: tramite130103QueryMock },
-        { provide: Tramite130103Store, useValue: storeMock }
-      ]
+        { provide: Tramite130103Store, useValue: storeMock },
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(UsoEspecificoDeLaMercanciaComponent);
@@ -63,7 +68,10 @@ describe('UsoEspecificoDeLaMercanciaComponent', () => {
   it('should call setDynamicFieldValue with primitive value if valor is not object', () => {
     const event = { campo: 'nombre', valor: 'Juan' };
     component.establecerCambioDeValor(event);
-    expect(storeMock.setDynamicFieldValue).toHaveBeenCalledWith('nombre', 'Juan');
+    expect(storeMock.setDynamicFieldValue).toHaveBeenCalledWith(
+      'nombre',
+      'Juan'
+    );
   });
 
   it('should not throw when event.valor is null', () => {
@@ -74,9 +82,11 @@ describe('UsoEspecificoDeLaMercanciaComponent', () => {
 
   it('should not throw when event is undefined or null', () => {
     expect(() => component.establecerCambioDeValor(null as any)).not.toThrow();
-    expect(() => component.establecerCambioDeValor(undefined as any)).not.toThrow();
+    expect(() =>
+      component.establecerCambioDeValor(undefined as any)
+    ).not.toThrow();
   });
-    
+
   it('should push producto to datosTabla if not already added', () => {
     const producto = {
       id: 1,
@@ -84,25 +94,109 @@ describe('UsoEspecificoDeLaMercanciaComponent', () => {
       fraccionArancelariaTigie: '1234.56.78',
       cantidad: 10,
       totalUsd: 100,
-      unidadDeMedida: 'Caja'
+      unidadDeMedida: 'Caja',
     };
     tramite130103QueryMock.selectImportacion$ = of({
-    some: 'state',
-    especifico: [producto]
-  });
-    tramite130103QueryMock.selectImportacion$ = of({ some: 'state', especifico: [producto] });
+      some: 'state',
+      especifico: [producto],
+    });
+    tramite130103QueryMock.selectImportacion$ = of({
+      some: 'state',
+      especifico: [producto],
+    });
     component.datosTabla = [];
     component.ngOnInit();
     expect(component.datosTabla).toContainEqual(producto);
   });
-  
-  
+
   it('should complete destroyNotifier$ on destroy', () => {
-    const completeSpy = jest.spyOn((component as any).destroyNotifier$, 'complete');
+    const completeSpy = jest.spyOn(
+      (component as any).destroyNotifier$,
+      'complete'
+    );
     const nextSpy = jest.spyOn((component as any).destroyNotifier$, 'next');
     component.ngOnDestroy();
     expect(nextSpy).toHaveBeenCalled();
     expect(completeSpy).toHaveBeenCalled();
   });
-  
+
+  it('should return descripcion from fraccionArancelariaArray', () => {
+    component.ninoFormGroup.get('uso_fraccion_arancelaria')?.setValue(1);
+    component['fraccionArancelariaArray'] = [
+      { id: 1, descripcion: 'Fracción 1' },
+      { id: 2, descripcion: 'Fracción 2' },
+    ];
+    const result = component.obtenerFraccionArancelariaProsec();
+    expect(result).toBe('Fracción 1');
+  });
+
+  it('should add row to datosTabla and reset form when form is valid', () => {
+  component.ninoFormGroup.addControl('uso_fraccion_arancelaria', new FormGroup({}));
+  component.ninoFormGroup.addControl('uso_descripcion', new FormGroup({}));
+  component.ninoFormGroup.patchValue({ uso_fraccion_arancelaria: 1, uso_descripcion: 'Descripción' });
+
+  jest.spyOn(component.ninoFormGroup, 'valid', 'get').mockReturnValue(true);
+  jest.spyOn(component.ninoFormGroup, 'reset');
+
+  component['fraccionArancelariaArray'] = [{ id: 1, descripcion: 'Fracción 1' }];
+  component.datosTabla = [];
+
+  component.agregar();
+
+  expect(component.datosTabla.length).toBe(1);
+  expect(storeMock.setDynamicFieldValue).toHaveBeenCalledWith('especifico', component.datosTabla);
+  expect(component.ninoFormGroup.reset).toHaveBeenCalled();
+});
+
+it('should return descripcion from fraccionArancelariaArray', () => {
+  component.ninoFormGroup.get('uso_fraccion_arancelaria')?.setValue(1);
+  component['fraccionArancelariaArray'] = [
+    { id: 1, descripcion: 'Fracción 1' },
+    { id: 2, descripcion: 'Fracción 2' },
+  ];
+  const result = component.obtenerFraccionArancelariaProsec();
+  expect(result).toBe('Fracción 1');
+});
+
+
+it('should add row to datosTabla and reset form when form is valid', () => {
+  component.ninoFormGroup.addControl('uso_fraccion_arancelaria', new FormGroup({}));
+  component.ninoFormGroup.addControl('uso_descripcion', new FormGroup({}));
+  component.ninoFormGroup.patchValue({ uso_fraccion_arancelaria: 1, uso_descripcion: 'Descripción' });
+
+  jest.spyOn(component.ninoFormGroup, 'valid', 'get').mockReturnValue(true);
+  jest.spyOn(component.ninoFormGroup, 'reset');
+
+  component['fraccionArancelariaArray'] = [{ id: 1, descripcion: 'Fracción 1' }];
+  component.datosTabla = [];
+
+  component.agregar();
+
+  expect(component.datosTabla.length).toBe(1);
+  expect(storeMock.setDynamicFieldValue).toHaveBeenCalledWith('especifico', component.datosTabla);
+  expect(component.ninoFormGroup.reset).toHaveBeenCalled();
+});
+
+
+it('should remove selected item from datosTabla', () => {
+  component.datosTabla = [
+    { id: 1, descripcion: 'desc1', fraccionArancelariaProsec: 'F1' },
+    { id: 2, descripcion: 'desc2', fraccionArancelariaProsec: 'F2' },
+  ];
+  (component as any).seleccionadaId = 1;
+
+  component.eliminar();
+
+  expect(component.datosTabla.length).toBe(1);
+  expect(component.datosTabla[0].id).toBe(2);
+  expect(storeMock.setDynamicFieldValue).toHaveBeenCalledWith('especifico', component.datosTabla);
+});
+
+it('should update seleccionadaId with selected row ID', () => {
+  const selectedRow = [{ id: 7 }];
+  component.listaDeFilaSeleccionada(selectedRow);
+  expect((component as any).seleccionadaId).toBe(7);
+});
+
+
 });

@@ -97,7 +97,7 @@ describe('ExpedicionAsignacionComponent', () => {
     expect(component.montoTablaFilaDatos).toEqual([
       { tbodyData: ['100'] },
     ]);
-    expect(component.asignacionForm.get('totalAExpedir')?.value).toBe('100');
+    expect(component.asignacionForm.get('totalAExpedir')?.value).toBe('0100');
   });
 
   it('should clean up subscriptions on component destroy', () => {

@@ -1,5 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PasoUnoComponent } from './paso-uno.component';
+import { SolicitanteComponent } from '@ng-mf/data-access-user';
+import { ExpedicionAsignacionComponent } from '../../components/expedicion-asignacion/expedicion-asignacion.component';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('PasoUnoComponent', () => {
   let component: PasoUnoComponent;
@@ -14,7 +17,7 @@ describe('PasoUnoComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [PasoUnoComponent],
-      imports:[],
+      imports:[SolicitanteComponent, ExpedicionAsignacionComponent, HttpClientTestingModule],
       providers: [
         { provide: 'SolicitanteService', useValue: mockSolicitanteService },
       ],

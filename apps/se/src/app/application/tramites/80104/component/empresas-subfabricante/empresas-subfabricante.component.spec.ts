@@ -1,21 +1,52 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { EmpresasSubfabricanteComponent } from './empresas-subfabricante.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Tramite80101Query } from '../../estados/tramite80101.query';
+import { Tramite80101Store } from '../../estados/tramite80101.store';
+import { NuevoProgramaIndustrialService } from '../../services/modalidad-albergue.service';
+import { of } from 'rxjs';
+import { FormBuilder } from '@angular/forms';
 
 describe('EmpresasSubfabricanteComponent', () => {
   let component: EmpresasSubfabricanteComponent;
   let fixture: ComponentFixture<EmpresasSubfabricanteComponent>;
+  let mockQuery: Partial<Tramite80101Query>;
+  let mockStore: Partial<Tramite80101Store>;
+  let mockService: Partial<NuevoProgramaIndustrialService>;
 
   beforeEach(async () => {
+    mockQuery = {
+      datosSubcontratistaEstado$: of({ rfc: 'ABC123', estado: '1' }),
+      plantasBuscadas$: of([]),
+      plantasSubfabricantesAgregar$: of([])
+    };
+
+    mockStore = {
+      setFormValida: jest.fn(),
+      setDatosSubcontratista: jest.fn(),
+      setPlantasBuscadas: jest.fn(),
+      setPlantasSubfabricantesAgregar: jest.fn(),
+      eliminarPlantas: jest.fn(),
+      setPlantasPorCompletar: jest.fn(),
+      setindicePrevioRuta: jest.fn()
+    };
+
+    mockService = {
+      obtenerListaEstado: jest.fn().mockReturnValue(of({ data: [{ id: 1, descripcion: 'Estado 1' }] })),
+      getSubfabricantesDisponibles: jest.fn().mockReturnValue(of([]))
+    };
+    
     await TestBed.configureTestingModule({
       imports: [EmpresasSubfabricanteComponent, HttpClientTestingModule],
       providers: [
-        {
-          provide: ActivatedRoute,
-          useValue: { snapshot: { paramMap: { get: () => null } } },
-        },
-      ],
+        { provide: Tramite80101Query, useValue: mockQuery },
+        { provide: Tramite80101Store, useValue: mockStore },
+        { provide: NuevoProgramaIndustrialService, useValue: mockService },
+        { provide: Router, useValue: { navigate: jest.fn() } },
+        { provide: ActivatedRoute, useValue: { snapshot: { paramMap: { get: () => null } } } },
+        FormBuilder
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(EmpresasSubfabricanteComponent);
@@ -27,12 +58,58 @@ describe('EmpresasSubfabricanteComponent', () => {
     expect(component).toBeTruthy();
   });
 
+  it('should initialize form with rfc and estado fields', () => {
+    expect(component.formularioDatosSubcontratista.contains('rfc')).toBeTruthy();
+    expect(component.formularioDatosSubcontratista.contains('estado')).toBeTruthy();
+  });
+
+  it('should load data from query on init', () => {
+    component.ngOnInit();
+    expect(component.formularioDatosSubcontratista.value.rfc).toBe('ABC123');
+  });
+
   it('should call obtenerDatosDelAlmacen and obtenerListaEstado on ngOnInit', () => {
     const obtenerDatosSpy = jest.spyOn(component, 'obtenerDatosDelAlmacen');
     const obtenerListaSpy = jest.spyOn(component, 'obtenerListaEstado');
     component.ngOnInit();
     expect(obtenerDatosSpy).toHaveBeenCalled();
     expect(obtenerListaSpy).toHaveBeenCalled();
+  });
+
+  it('should update estado in form and store on estado selection', () => {
+    component.enEstadoSeleccionado({ id: 2, descripcion: 'Estado 2' });
+    expect(component.formularioDatosSubcontratista.get('estado')?.value).toBe('2');
+    expect(mockStore.setDatosSubcontratista).toHaveBeenCalled();
+  });
+
+  it('should call service and update store when performing busqueda', () => {
+    component.formularioDatosSubcontratista.setValue({ rfc: 'ABC123', estado: '1' });
+    component.realizarBusqueda();
+    expect(mockService.getSubfabricantesDisponibles).toHaveBeenCalled();
+  });
+
+  it('should store plantas to agregar', () => {
+    const mockPlantas = [{ calle: 'X', numExterior: 1, numInterior: 2, codigoPostal: 1111, colonia: 'Centro' }];
+    component.agregarPlantas(mockPlantas as any);
+    expect(mockStore.setPlantasSubfabricantesAgregar).toHaveBeenCalledWith(mockPlantas);
+  });
+
+  it('should call eliminarPlantas on store', () => {
+    const plantas = [{ calle: 'X', numExterior: 1, numInterior: 2, codigoPostal: 1111, colonia: 'Centro' }];
+    component.eliminarPlantas(plantas as any);
+    expect(mockStore.eliminarPlantas).toHaveBeenCalledWith(plantas);
+  });
+
+  it('should set plantas por completar and navigate on complementarPlantas()', () => {
+    const router = TestBed.inject(Router);
+    const navigateSpy = jest.spyOn(router, 'navigate');
+
+    const plantas = [{ calle: 'A', numExterior: 1, numInterior: 1, codigoPostal: 1234, colonia: 'Roma' }];
+    component.tabIndex = 3;
+    component.complementarPlantas(plantas as any);
+    expect(mockStore.setPlantasPorCompletar).toHaveBeenCalledWith(plantas);
+    expect(mockStore.setindicePrevioRuta).toHaveBeenCalledWith(3);
+    expect(navigateSpy).toHaveBeenCalled();
   });
 
    it('should clean up destroy$ on ngOnDestroy', () => {

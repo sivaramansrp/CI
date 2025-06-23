@@ -542,7 +542,7 @@ export class PartidasDeLaMercanciaComponent
    * @method abrirModalEditar
    */
   guardarEdicion(): void {
-    if (!this.partidasSeleccionadas.length) {
+    if (this.partidasSeleccionadas.length) {
       const INDEX = this.datosTabla.findIndex((item) => item === this.partidasSeleccionadas[0]);
       if (INDEX !== -1) {
         this.datosTabla[INDEX] = {

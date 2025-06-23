@@ -1,8 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { EmpresasTerciarizadaasComponent } from './empresas-terciarizadaas.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { NuevoProgramaIndustrialService } from '../../services/modalidad-terciarización.service';
 import { of } from 'rxjs';
+import { NuevoProgramaIndustrialService } from '../../services/modalidad-terciarización.service';
 
 describe('EmpresasTerciarizadaasComponent', () => {
   let component: EmpresasTerciarizadaasComponent;
@@ -73,4 +73,48 @@ describe('EmpresasTerciarizadaasComponent', () => {
     expect(nextSpy).toHaveBeenCalled();
     expect(completeSpy).toHaveBeenCalled();
   });
+
+  it('should handle empty data array from obtenerListaEstado()', () => {
+  const mockResponse = {
+    code: 200,
+    message: 'Success',
+    data: [],
+  };
+  serviceMock.obtenerListaEstado.mockReturnValue(of(mockResponse));
+  component.obtenerListaEstado();
+  expect(serviceMock.obtenerListaEstado).toHaveBeenCalled();
+  expect(component.estadosCatalogo).toEqual([]);
+});
+
+it('should extract values correctly using parentTablaConfig claves', () => {
+  const mockItem = {
+    calle: 'Av. Reforma',
+    numeroExterior: '123',
+    numeroInterior: '456',
+    codigoPostal: '11200',
+    colonia: 'Centro',
+    municipioDelegacion: 'Cuauhtémoc',
+    entidadFederativa: 'CDMX',
+    pais: 'México',
+    registroFederalContribuyentes: 'ABC123',
+    domicilioFiscalSolicitante: 'Sí',
+    razonSocial: 'Empresa SA de CV',
+  };
+
+  const results = component.parentTablaConfig.map(cfg => cfg.clave(mockItem));
+  expect(results).toEqual([
+    'Av. Reforma',
+    '123',
+    '456',
+    '11200',
+    'Centro',
+    'Cuauhtémoc',
+    'CDMX',
+    'México',
+    'ABC123',
+    'Sí',
+    'Empresa SA de CV',
+  ]);
+});
+
 });

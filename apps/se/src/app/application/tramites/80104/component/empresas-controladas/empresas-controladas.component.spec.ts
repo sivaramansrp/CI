@@ -3,6 +3,7 @@ import { EmpresasControladasComponent } from './empresas-controladas.component';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { of } from 'rxjs';
 import { NuevoProgramaIndustrialService } from '../../services/modalidad-albergue.service';
+import { RespuestaCatalogos } from '@libs/shared/data-access-user/src';
 
 describe('EmpresasControladasComponent', () => {
   let component: EmpresasControladasComponent;
@@ -82,4 +83,60 @@ describe('EmpresasControladasComponent', () => {
     expect(nextSpy).toHaveBeenCalled();
     expect(completeSpy).toHaveBeenCalled();
   });
+
+  it('should not update estadosCatalogo if response.data is empty array', () => {
+  const original = [...component.estadosCatalogo];
+  mockService.obtenerListaEstado.mockReturnValue(of({
+    code: 200,
+    message: 'OK',
+    data: []
+  } as unknown as RespuestaCatalogos));
+  component.obtenerListaEstado();
+  expect(component.estadosCatalogo).toEqual([]);
+});
+
+
+it('should return correct value from clave functions in parentTablaConfig', () => {
+  const row = {
+    calle: 'Av. Reforma',
+    numeroExterior: '10',
+    numeroInterior: '',
+    codigoPostal: '12345',
+    colonia: 'Centro',
+    municipioDelegacion: 'Cuauhtémoc',
+    entidadFederativa: 'CDMX',
+    pais: 'México',
+    registroFederalContribuyentes: 'RFC123',
+    domicilioFiscalSolicitante: 'Sí',
+    razonSocial: 'Empresa SA de CV'
+  };
+
+  const keys = component.parentTablaConfig.map((col) => col.clave(row));
+  expect(keys).toEqual([
+    'Av. Reforma',
+    '10',
+    '',              // numeroInterior fallback
+    '12345',
+    'Centro',
+    'Cuauhtémoc',
+    'CDMX',
+    'México',
+    'RFC123',
+    'Sí',
+    'Empresa SA de CV',
+  ]);
+});
+
+it('should handle empty estadosCatalogo after valid fetch', () => {
+  const mockResponse = {
+    code: 200,
+    message: 'Success',
+    data: [],
+  };
+  mockService.obtenerListaEstado.mockReturnValue(of(mockResponse));
+  component.obtenerListaEstado();
+  expect(component.estadosCatalogo).toEqual([]);
+});
+
+
 });
