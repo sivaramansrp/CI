@@ -10,6 +10,7 @@ import {
   AlertComponent,
   Catalogo,
   CatalogoSelectComponent,
+  ConsultaioQuery,
   InputRadioComponent,
   NotificacionesComponent,
   TableComponent,
@@ -26,7 +27,7 @@ import {
   ModificacionSocios,
   TableDataNgTable,
 } from '../../models/avisomodify.model';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 import { AvisoModifyService } from '../../services/aviso-modify.service';
 import { CommonModule } from '@angular/common';
 import { MESSAGE_NAC } from '../../enums/modificacionSocios.enum';
@@ -117,10 +118,17 @@ export class ModificacionSociosComponent
    * Se utiliza para almacenar y gestionar notificaciones que indican acciones exitosas.
    */
   public correctamenteNotificacion!: Notificacion;
+   /**
+  * Indica si el formulario está en modo solo lectura.
+  * Cuando es `true`, los campos del formulario no se pueden editar.
+  */
+  esFormularioSoloLectura: boolean = false; 
+
   /**
    * Constructor de la clase, donde se inyectan los servicios y almacenes necesarios
    * para la gestión del trámite 32301 y la manipulación de formularios reactivos.
    */
+  
   constructor(
     /**
      * Servicio para la creación y gestión de formularios reactivos.
@@ -140,11 +148,26 @@ export class ModificacionSociosComponent
     /**
      * Servicio de consultas que permite obtener información relacionada con el trámite 32301.
      */
-    private Tramite32301Query: Tramite32301Query
+    private Tramite32301Query: Tramite32301Query,
+
+    private consultaioQuery: ConsultaioQuery,
   ) {
     /**
-     * Bloque de inicialización del constructor.
+     * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
+     *
+     * - Asigna el valor de solo lectura (`readonly`) a la propiedad `esFormularioSoloLectura`.
+     * - Llama a `inicializarEstadoFormulario()` para aplicar configuraciones basadas en el estado recibido.
+     * - La suscripción se cancela automáticamente cuando `destroy$` emite un valor (para evitar fugas de memoria).
      */
+    this.consultaioQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.destroy$),
+      map((seccionState)=>{
+        this.esFormularioSoloLectura = seccionState.readonly; 
+        this.inicializarEstadoFormulario();
+      })
+    )
+    .subscribe()
   }
 
   /**
@@ -152,7 +175,45 @@ export class ModificacionSociosComponent
    * Se encarga de realizar llamadas a servicios para obtener los datos necesarios.
    */
   ngOnInit(): void {
-    /**
+   this.inicializarEstadoFormulario();
+  }
+
+  /**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.  
+   * Además, obtiene la información del catálogo de mercancía.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.inicializarFormulario();
+    }  
+  }
+
+   /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormulario(): void {
+      this.inicializarFormulario();
+      if (this.esFormularioSoloLectura) {
+        this.agregarMiembroDeLaEmpresaFrom.disable();
+      } else if (!this.esFormularioSoloLectura) {
+        this.agregarMiembroDeLaEmpresaFrom.enable();
+      } else {
+        // No se requiere ninguna acción en el formulario
+      }
+  }
+
+   /**
+   * Inicializa el formulario reactivo para capturar el valor de 'registro'.
+   * Suscribe al estado almacenado en el store mediante el query `tramite301Query.selectSolicitud$`
+   * y lo asigna a la variable local `solicitudState`. Luego, crea el formulario
+   * con el valor inicial obtenido del store.
+   */
+
+  inicializarFormulario(): void {
+ /**
      * Inicializa el formulario para agregar un miembro a la empresa.
      */
     this.initAgregarMiembroDeLaEmpresaForm();
