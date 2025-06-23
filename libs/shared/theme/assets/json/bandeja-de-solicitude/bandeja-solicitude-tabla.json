@@ -2753,5 +2753,14 @@
   "diasTranscurridos": "4",
   "departamento": "AGA",
   "numeroDeProcedimiento": "6403"
+  },
+  {
+    "id": 260910,
+    "tipoDeTramite": "Solicitud Procedure 260910",
+    "fecha": "2023-10-01",
+    "fechaActualizacion": "2023-10-05",
+    "diasTranscurridos": "4",
+    "departamento": "COFEPRIS",
+    "numeroDeProcedimiento": "260910"
   }
 ]
