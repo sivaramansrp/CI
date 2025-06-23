@@ -26,7 +26,6 @@ import {
   OnInit,
   Output,
   SimpleChanges,
-  ViewChild,
 } from '@angular/core';
 import {
   ConfiguracionColumna,
