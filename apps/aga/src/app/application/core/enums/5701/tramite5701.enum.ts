@@ -181,7 +181,7 @@ export const SECCION_ADUANERA = 'seccionAduanera';
 export const RECINTO_FISCALIZADO = 'recintoFiscalizado';
 
 /**
- *@descrption Constante para el RFC del solicitante, este se va a eliminar, cuando se implemente el store del inicio de sesion 
+ *@descrption Constante para el RFC del solicitante, este se va a eliminar, cuando se implemente el store del inicio de sesion
  */
 export const RFC_SOLICITANTE = 'DODM930823EG4';
 
@@ -194,3 +194,9 @@ export const TIPO_DESPACHO_DDEX = 3;
  * @description Valor select Tipo Operacion Exportacion
  */
 export const TIPO_OPERACION_EXPORTACION = 2;
+
+/**
+ * @desdcription Link para generar la línea de captura
+ */
+export const URL_GENERAR_LINEA_CAPTURA =
+  'https://pccem.mat.sat.gob.mx/PTSC/cet/FmpceContr/faces/resources/pages/pagos/formularioMultiplePago.jsf ';
