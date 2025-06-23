@@ -345,7 +345,7 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
    * @method obtenserLista
    * @description Obtiene las listas de datos de estados, representación federal y actividad productiva.
    */
-   obtenerLista() {
+   obtenerLista():void {
     this.obtenerListaEstado();
     this.obtenerListaFederal();
     this.obtenerListaActividad();

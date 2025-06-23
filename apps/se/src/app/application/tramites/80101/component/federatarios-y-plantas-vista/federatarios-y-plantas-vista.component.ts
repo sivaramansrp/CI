@@ -1,5 +1,5 @@
-import { CommonModule } from '@angular/common';
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { TablaSeleccion } from '@ng-mf/data-access-user';
 
 import {
@@ -10,8 +10,8 @@ import {
   PlantasDisponibles,
   PlantasImmex,
 } from '../../../../shared/models/federatarios-y-plantas.model';
-import { FederatariosYPlantasComponent } from '../../../../shared/components/federatarios-y-plantas/federatarios-y-plantas.component';
 import { Observable, Subject, takeUntil } from 'rxjs';
+import { FederatariosYPlantasComponent } from '../../../../shared/components/federatarios-y-plantas/federatarios-y-plantas.component';
 import { Tramite80101Query } from '../../estados/tramite80101.query';
 import { Tramite80101Store } from '../../estados/tramite80101.store';
 

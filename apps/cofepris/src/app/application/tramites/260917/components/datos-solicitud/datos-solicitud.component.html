@@ -36,7 +36,7 @@
         <div class="row mt-5">
             <div class="col-md-8"></div>
             <div class="col-md-4 d-flex justify-content-end">
-                <button type="button" class="btn btn-primary" (click)="abrirModal()">
+                <button type="button" class="btn btn-primary" (click)="abrirModal()" [disabled]="esFormularioSoloLectura">
                     Seleccionar establecimiento
                 </button>
             </div>
@@ -105,7 +105,7 @@
                 </div>
             </div>
             <div class="col-md-4">
-                <app-catalogo-select [catalogo]="estado" formControlName="estado" [label]="'Estado'" [required]="true"
+                <app-catalogo-select [catalogo]="estado" formControlName="estado" [label]="'Estado'" [required]="true"  [isDisabled]="esFormularioSoloLectura"
                     (change)="setValoresStore(domicilio,'estado', 'setEstado')" name="estado">
                 </app-catalogo-select>
             </div>
@@ -193,13 +193,13 @@
             </div>
         </div>
         <div class="row">
-            <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccionCheckbox" [configuracionTabla]="nicoTabla"
+            <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccionCheckbox" [configuracionTabla]="nicoTabla" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
                 [datos]="nicoTablaDatos">
             </app-tabla-dinamica>
             <div class="container text-end mt-5">
-                <button class="btn btn-default me-2">Eliminar</button>
+                <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura">Eliminar</button>
                 <button class="btn btn-primary me-2" data-bs-toggle="modal"
-                    data-bs-target="#modalAddAgent">Agregar</button>
+                    data-bs-target="#modalAddAgent" [disabled]="esFormularioSoloLectura">Agregar</button>
             </div>
         </div>
         <div class="row align-item-center">
@@ -207,7 +207,7 @@
                 <div class="form-check">
                     <lib-input-check [id]="'avisoCheckbox'"
                     [label]="'Aviso de funcionamiento'" [required]="false"
-                    formControlName="avisoCheckbox"
+                    formControlName="avisoCheckbox" [isDisabled]="esFormularioSoloLectura"
                     (change)="setValoresStore(domicilio, 'avisoCheckbox', 'setAvisoCheckbox')"></lib-input-check>
                 </div>
             </div>
@@ -227,7 +227,7 @@
                 <div class="form-check">
                     <lib-input-check [id]="'marcarEnCasoDeQueSea'"
                         [label]="'Marcar en caso de que sea VIVO/FRESCO/ENHIELADO'" [required]="false"
-                        formControlName="marcarEnCasoDeQueSea"
+                        formControlName="marcarEnCasoDeQueSea" [isDisabled]="esFormularioSoloLectura"
                         (change)="setValoresStore(domicilio, 'marcarEnCasoDeQueSea', 'setMarcarEnCasoDeQueSea')"></lib-input-check>
                 </div>
             </div>
@@ -235,13 +235,13 @@
 
         <div class="row">
             <div class="col-md-8">
-                <app-catalogo-select [catalogo]="estado" formControlName="regimen"
+                <app-catalogo-select [catalogo]="estado" formControlName="regimen" [isDisabled]="esFormularioSoloLectura"
                     [label]="'Régimen al que se destinará la mercancía'" [required]="true"
                     (change)="setValoresStore(domicilio,'regimen', 'setRegimen')" name="regimen">
                 </app-catalogo-select>
             </div>
             <div class="col-md-4">
-                <app-catalogo-select [catalogo]="estado" formControlName="aduanasEntradas" [label]="'Aduanas'"
+                <app-catalogo-select [catalogo]="estado" formControlName="aduanasEntradas" [label]="'Aduanas'" [isDisabled]="esFormularioSoloLectura"
                     [required]="true" (change)="setValoresStore(domicilio,'aduanasEntradas', 'setAduanasEntradas')"
                     name="aduanasEntradas">
                 </app-catalogo-select>
@@ -254,14 +254,14 @@
             </div>
         </div>
         <div class="row mt-5">
-            <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccionCheckbox" [configuracionTabla]="mercanciasTabla"
+            <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccionCheckbox" [configuracionTabla]="mercanciasTabla" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
                 [datos]="mercanciasTablaDatos">
             </app-tabla-dinamica>
             <div class="container text-end mt-5">
-                <button class="btn btn-default me-2">Modificar</button>
-                <button class="btn btn-default me-2">Eliminar</button>
+                <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura">Modificar</button>
+                <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura">Eliminar</button>
                 <button class="btn btn-primary me-2" data-bs-toggle="modal"
-                    data-bs-target="#modalAddAgentMercancias">Agregar</button>
+                    data-bs-target="#modalAddAgentMercancias" [disabled]="esFormularioSoloLectura">Agregar</button>
             </div>
         </div>
 
@@ -580,7 +580,7 @@
                     <div class="col-md-1 mt-5">
                         <lib-input-check [id]="'manifesto'"
                         [label]="''" [required]="true"
-                        formControlName="aceptaManifiestos"
+                        formControlName="aceptaManifiestos" [isDisabled]="esFormularioSoloLectura"
                         (change)="setValoresStore(formularioManifiestos, 'aceptaManifiestos', 'setAceptaManifiestos')"></lib-input-check>
                     </div>
                     <div class="col-md-11 mt-4">
@@ -621,7 +621,7 @@
         </div>
 
         <div class="col-md-2 mt-4">
-            <button type="button" class="btn btn-default btn-space">Buscar</button>
+            <button type="button" class="btn btn-default btn-space" [disabled]="esFormularioSoloLectura">Buscar</button>
         </div>
 
         <div class="col-md-6 mt-4"></div>

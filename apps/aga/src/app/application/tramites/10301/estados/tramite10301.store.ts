@@ -105,259 +105,259 @@ export class Tramite10301Store extends Store<Solicitud10301State> {
     super(createInitialState());
   }
 
-  public setTableCheck(tableCheck: string) {
+  public setTableCheck(tableCheck: string): void {
     this.update((state) => ({
       ...state,
       tableCheck,
     }));
   }
 
-  public setDonacion(donacion: string) {
+  public setDonacion(donacion: string): void {
     this.update((state) => ({
       ...state,
       donacion,
     }));
   }
 
-  public setPersona(persona: string) {
+  public setPersona(persona: string): void {
     this.update((state) => ({
       ...state,
       persona,
     }));
   }
 
-  public setOtro(otro: string) {
+  public setOtro(otro: string): void {
     this.update((state) => ({
       ...state,
       otro,
     }));
   }
 
-  public setManifesto(manifesto: string) {
+  public setManifesto(manifesto: string): void {
     this.update((state) => ({
       ...state,
       manifesto,
     }));
   }
 
-  public setAduana(aduana: Catalogo[]) {
+  public setAduana(aduana: Catalogo[]): void {
     this.update((state) => ({
       ...state,
       aduana,
     }));
   }
 
-  public setDocumentos(documentos: Catalogo[]) {
+  public setDocumentos(documentos: Catalogo[]): void {
     this.update((state) => ({
       ...state,
       documentos,
     }));
   }
 
-  public setNombre(nombre: string) {
+  public setNombre(nombre: string): void {
     this.update((state) => ({
       ...state,
       nombre,
     }));
   }
 
-  public setAno(ano: Catalogo[]) {
+  public setAno(ano: Catalogo[]): void {
     this.update((state) => ({
       ...state,
       ano,
     }));
   }
 
-  public setCondicion(condicion: Catalogo[]) {
+  public setCondicion(condicion: Catalogo[]): void {
     this.update((state) => ({
       ...state,
       condicion,
     }));
   }
 
-  public setPais(pais: Catalogo[]) {
+  public setPais(pais: Catalogo[]): void {
     this.update((state) => ({
       ...state,
       pais,
     }));
   }
 
-  public setTipoDocumento(tipoDocumento: Catalogo[]) {
+  public setTipoDocumento(tipoDocumento: Catalogo[]): void {
     this.update((state) => ({
       ...state,
       tipoDocumento,
     }));
   }
 
-  public setFechasSeleccionadas(fechasSeleccionadas: Catalogo[]) {
+  public setFechasSeleccionadas(fechasSeleccionadas: Catalogo[]): void {
     this.update((state) => ({
       ...state,
       fechasSeleccionadas,
     }));
   }
 
-  public setFinesElegidos(finesElegidos: string[]) {
+  public setFinesElegidos(finesElegidos: string[]): void {
     this.update((state) => ({
       ...state,
       finesElegidos,
     }));
   }
 
-  public setElegidosSeleccionados(elegidosSeleccionados: string[]) {
+  public setElegidosSeleccionados(elegidosSeleccionados: string[]): void {
     this.update((state) => ({
       ...state,
       elegidosSeleccionados,
     }));
   }
 
-  public setSelectRangoDias(selectRangoDias: string[]) {
+  public setSelectRangoDias(selectRangoDias: string[]): void {
     this.update((state) => ({
       ...state,
       selectRangoDias,
     }));
   }
 
-  public setFechasDatos(fechasDatos: string[]) {
+  public setFechasDatos(fechasDatos: string[]): void {
     this.update((state) => ({
       ...state,
       fechasDatos,
     }));
   }
 
-  public setFecha(fecha: string) {
+  public setFecha(fecha: string): void {
     this.update((state) => ({
       ...state,
       fecha,
     }));
   }
 
-  public setFechaSeleccionada(fechaSeleccionada: string) {
+  public setFechaSeleccionada(fechaSeleccionada: string): void {
     this.update((state) => ({
       ...state,
       fechaSeleccionada,
     }));
   }
 
-  public setShowTabla(showTabla: boolean) {
+  public setShowTabla(showTabla: boolean): void {
     this.update((state) => ({
       ...state,
       showTabla,
     }));
   }
 
-  public setIsPopupOpen(isPopupOpen: boolean) {
+  public setIsPopupOpen(isPopupOpen: boolean): void {
     this.update((state) => ({
       ...state,
       isPopupOpen,
     }));
   }
 
-  public setIsPopupClose(isPopupClose: boolean) {
+  public setIsPopupClose(isPopupClose: boolean): void {
     this.update((state) => ({
       ...state,
       isPopupClose,
     }));
   }
 
-  public setValorSeleccionado(valorSeleccionado: string) {
+  public setValorSeleccionado(valorSeleccionado: string): void {
     this.update((state) => ({
       ...state,
       valorSeleccionado,
     }));
   }
 
-  public setTipoMercancia(tipoMercancia: string) {
+  public setTipoMercancia(tipoMercancia: string): void {
     this.update((state) => ({
       ...state,
       tipoMercancia,
     }));
   }
 
-  public setUsoEspecifico(usoEspecifico: string) {
+  public setUsoEspecifico(usoEspecifico: string): void {
     this.update((state) => ({
       ...state,
       usoEspecifico,
     }));
   }
 
-  public setMarca(marca: string) {
+  public setMarca(marca: string): void {
     this.update((state) => ({
       ...state,
       marca,
     }));
   }
 
-  public setModelo(modelo: string) {
+  public setModelo(modelo: string): void {
     this.update((state) => ({
       ...state,
       modelo,
     }));
   }
 
-  public setSerie(serie: string) {
+  public setSerie(serie: string): void {
     this.update((state) => ({
       ...state,
       serie,
     }));
   }
 
-  public setCalle(calle: string) {
+  public setCalle(calle: string): void {
     this.update((state) => ({
       ...state,
       calle,
     }));
   }
 
-  public setNumeroExterior(numeroExterior: number) {
+  public setNumeroExterior(numeroExterior: number): void {
     this.update((state) => ({
       ...state,
       numeroExterior,
     }));
   }
 
-  public setNumeroInterior(numeroInterior: number) {
+  public setNumeroInterior(numeroInterior: number): void {
     this.update((state) => ({
       ...state,
       numeroInterior,
     }));
   }
 
-  public setTelefono(telefono: number) {
+  public setTelefono(telefono: number): void {
     this.update((state) => ({
       ...state,
       telefono,
     }));
   }
 
-  public setCorreoElectronico(correoElectronico: string) {
+  public setCorreoElectronico(correoElectronico: string): void {
     this.update((state) => ({
       ...state,
       correoElectronico,
     }));
   }
 
-  public setCodigoPostal(codigoPostal: number) {
+  public setCodigoPostal(codigoPostal: number): void {
     this.update((state) => ({
       ...state,
       codigoPostal,
     }));
   }
 
-  public setEstado(estado: number) {
+  public setEstado(estado: number): void {
     this.update((state) => ({
       ...state,
       estado,
     }));
   }
 
-  public setColonia(colonia: number) {
+  public setColonia(colonia: number): void {
     this.update((state) => ({
       ...state,
       colonia,
     }));
   }
 
-  public setOpcion(opcion: string) {
+  public setOpcion(opcion: string): void {
     this.update((state) => ({
       ...state,
       opcion,
@@ -367,7 +367,7 @@ export class Tramite10301Store extends Store<Solicitud10301State> {
   /**
    * Limpia los datos de la solicitud
    */
-  public limpiarSolicitud() {
+  public limpiarSolicitud(): void{
     this.reset();
   }
 }

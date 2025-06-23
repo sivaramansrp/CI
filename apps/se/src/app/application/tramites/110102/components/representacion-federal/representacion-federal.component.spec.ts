@@ -57,7 +57,7 @@ describe('RepresentacionFederalComponent', () => {
 
   it('cargarEntidadesFederativas debe llenar entidadesFederativas', () => {
     component.cargarEntidadesFederativas();
-    expect(component.entidadesFederativas).toEqual([{ id: '01', nombre: 'Entidad 1' }]);
+    expect(component.entidadesFederativas).toEqual([{ id: 1, descripcion: 'Entidad 1' }]);
   });
 
   it('alCambiarEntidadFederativa debe llamar a obtenerRepresentacionFederal y establecerValoresEnEstado si el valor no es -1', () => {
@@ -76,7 +76,7 @@ describe('RepresentacionFederalComponent', () => {
 
   it('obtenerRepresentacionFederal debe llenar opcionesRepresentacionFederal', () => {
     component.obtenerRepresentacionFederal('01');
-    expect(component.opcionesRepresentacionFederal).toEqual([{ id: 'RF1', nombre: 'Representación 1' }]);
+    expect(component.opcionesRepresentacionFederal).toEqual([{ id: 1, descripcion: 'Representación 1' }]);
   });
 
   it('establecerValoresEnEstado debe llamar a establecerDatos en el store', () => {
