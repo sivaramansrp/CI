@@ -1,3 +1,4 @@
+import { CAATSolicitud } from '../models/transportacion-maritima.model';
 import { Catalogo } from '@libs/shared/data-access-user/src';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
@@ -49,9 +50,9 @@ export class Tramite40402Service {
    * @param claveFolioCAAT - Clave única del folio CAAT para realizar la búsqueda.
    * @returns Un observable que emite los datos de la solicitud encontrada o un error en caso de fallo.
    */
-  buscarSolicitudPorCAATe(claveFolioCAAT: string): Observable<any> {
-    const baseUrl = `/api/solicitud/buscarPorCAAT?claveFolioCAAT=${claveFolioCAAT}`;
-    return this.http.get<any>(baseUrl).pipe(
+  buscarSolicitudPorCAATe(claveFolioCAAT: string): Observable<CAATSolicitud> {
+    const BASE_URL = `/api/solicitud/buscarPorCAAT?claveFolioCAAT=${claveFolioCAAT}`;
+    return this.http.get<CAATSolicitud>(BASE_URL).pipe(
       catchError((error) => {
         return throwError(() => error);
       })

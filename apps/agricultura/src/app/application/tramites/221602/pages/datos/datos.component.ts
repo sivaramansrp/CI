@@ -7,7 +7,7 @@
  */
 import {Component, OnInit } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user'
-import { Subject,map,takeUntil } from 'rxjs';
+import { Subject,takeUntil } from 'rxjs';
 import { Solocitud221602Service } from '../../service/service221602.service';
 /**
  * compo doc
