@@ -70,6 +70,13 @@ export class DatosAdicionalesComponent implements OnInit, OnDestroy {
    * Cuando es `true`, los campos del formulario no se pueden editar.
    */
   public esFormularioSoloLectura: boolean = false;
+
+  /**
+   * Indica si se está realizando una actualización de la consulta.
+   * 
+   * @default false
+   */
+  actualizacionCounsulta: boolean = false;
   /**
     * Una constante que contiene el valor del objeto 'PROTESTA'.
     * Se utiliza para almacenar datos adicionales relacionados con el componente.
@@ -100,6 +107,9 @@ export class DatosAdicionalesComponent implements OnInit, OnDestroy {
         map((seccionState) => {
           this.esFormularioSoloLectura = seccionState.readonly;
           this.crearFormulario();
+          if(seccionState.update) {
+            this.actualizacionCounsulta=seccionState.update;
+          }
         })
       )
       .subscribe();
