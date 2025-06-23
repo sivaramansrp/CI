@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { DatosMercanciaComponent } from '../../../../shared/components/datos-mercancia/datos-mercancia.component';
 import { ID_PROCEDIMIENTO } from '../../constants/agregar-destinatario.enum';
 import { MercanciaDetalle } from '../../../../shared/models/datos-del-tramite.model';
@@ -12,6 +12,17 @@ import { Tramite240112Store } from '../../estados/tramite240112Store.store';
   imports: [ DatosMercanciaComponent]
 })
 export class DatosMercanciaContenedoraComponent {
+    /**
+   * @event cerrar
+   * @description Evento emitido para indicar que se debe cerrar el componente.
+   * @remarks
+   * Este evento no envía ningún valor, simplemente notifica a los componentes padres que se debe realizar la acción de cierre.
+   * 
+   * @eventType void
+   * @es
+   * Evento que se dispara para cerrar el componente actual.
+   */
+  @Output() cerrar = new EventEmitter<void>();
   /**
      * @property {string} idProcedimiento
      * @description Identificador del procedimiento asociado al trámite.
