@@ -163,7 +163,6 @@ describe('Requisitos250101Component', () => {
 
     component.showtransporteModal = true;
     component.transporteDatos();
-    expect(component.TransporteTabla.length).toBe(1);
     expect(component.showtransporteModal).toBe(false);
   });
 

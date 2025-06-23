@@ -13,6 +13,8 @@ describe('CertificadosComponent', () => {
       getFitosanitoriosEncabezadoDeTabla: jest.fn().mockReturnValue(of({ columns: ['Fito1', 'Fito2'] })),
       getPermisoCertificadosDeTabla: jest.fn().mockReturnValue(of({ columns: ['Permiso1', 'Permiso2'] })),
       getCertificadosDeTabla: jest.fn().mockReturnValue(of({ columns: ['Cert1', 'Cert2'] })),
+      getCertificadosFilaDeTabla: jest.fn().mockReturnValue(of([{ row: 1 }])),
+      getCertificadosFitoFilaDeTabla: jest.fn().mockReturnValue(of([{ fito: 2 }])),
     };
 
     await TestBed.configureTestingModule({
