@@ -1,13 +1,16 @@
 import { Component, ViewChild } from '@angular/core';
 import { DatosDelTramiteFormState, JustificacionTramiteFormState } from '../../../../shared/models/datos-del-tramite.model';
+import { Subject, map} from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { CrosslistComponent } from '@libs/shared/data-access-user/src';
 import { DatosDelTramiteComponent } from '../../../../shared/components/datos-del-tramite/datos-del-tramite.component';
+import { DatosMercanciaContenedoraComponent } from '../datos-mercancia-contenedora/datos-mercancia-contenedora.component';
 import { MercanciaDetalle } from '../../../../shared/models/datos-del-tramite.model';
+import { ModalComponent } from '../../../../shared/components/modal/modal.component';
 import { NUMERO_TRAMITE } from '../../../../shared/constants/datos-solicitud.enum';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
-import { Subject } from 'rxjs';
 import { Tramite240305Query } from '../../estados/tramite240305Query.query';
 import { Tramite240305Store } from '../../estados/tramite240305Store.store';
 import { takeUntil } from 'rxjs';
@@ -22,11 +25,19 @@ import { takeUntil } from 'rxjs';
 @Component({
   selector: 'app-datos-del-tramite-contenedora',
   standalone: true,
-  imports: [CommonModule, DatosDelTramiteComponent],
+  imports: [CommonModule, DatosDelTramiteComponent,ModalComponent],
   templateUrl: './datos-del-tramite-contenedora.component.html',
   styleUrl: './datos-del-tramite-contenedora.component.scss',
 })
 export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
+/**
+ * Referencia al componente modal.
+ *
+ * Esta propiedad utiliza el decorador `@ViewChild` para acceder a una instancia del
+ * componente `ModalComponent` dentro de la plantilla. Se utiliza cuando se necesita
+ */
+   @ViewChild('modal', { static: false }) modalComponent!: ModalComponent;
+   
   /**
    * Observable para limpiar suscripciones activas al destruir el componente.
    * @property {Subject<void>} unsubscribe$
@@ -48,6 +59,8 @@ export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
 
   idProcedimiento :number = NUMERO_TRAMITE.TRAMITE_240305;
 
+  esFormularioSoloLectura: boolean = false;
+
    /**
    * Referencia al componente Crosslist para manejar la selección de aduanas.
    */
@@ -64,9 +77,19 @@ export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
    */
   constructor(
     private tramite240305Query: Tramite240305Query,
-    private tramite240305Store: Tramite240305Store 
+    private tramite240305Store: Tramite240305Store,
+    private consultaQuery: ConsultaioQuery,
   ) {
-    //constructor
+
+
+    this.consultaQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.unsubscribe$),
+      map((seccionState) => {
+        this.esFormularioSoloLectura = seccionState.readonly;
+      })
+    )
+    .subscribe();
   }
 
   /**
@@ -127,5 +150,32 @@ export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
   */
   updateJustificacionFormulario(event: JustificacionTramiteFormState): void {
     this.tramite240305Store.updateJustificacionFormulario(event);
+  }
+   /**
+   * Abre el modal correspondiente según el nombre del evento recibido.
+   *
+   * Si el evento es `'Datosmercancia'`, se carga el componente `DatosMercanciaContenedoraComponent`
+   * dentro del modal y se le pasa una función de cierre como input.
+   *
+   * @method openModal
+   * @param {string} event - Nombre del evento que indica qué componente se debe mostrar en el modal.
+   * @returns {void}
+   */
+  openModal(event: string): void {
+    if (event === 'Datosmercancia') {
+      this.modalComponent.abrir(DatosMercanciaContenedoraComponent, {
+        cerrarModal: this.cerrarModal.bind(this),
+      });
+    }
+  }
+
+  /**
+   * Cierra el modal dinámico actualmente abierto utilizando el método del componente modal.
+   *
+   * @method cerrarModal
+   * @returns {void}
+   */
+  cerrarModal(): void {
+    this.modalComponent.cerrar();
   }
 }

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 
@@ -22,6 +22,17 @@ import { TEXTOS_REQUISITOS } from '../../constants/permiso-ordinario-importacion
   styleUrl: './paso-dos.component.scss',
 })
 export class PasoDosComponent implements OnInit, OnDestroy {
+
+  /**
+ * Evento que se emite cuando el usuario desea reenviar la solicitud actual.
+ * Usado comúnmente para repetir el proceso de carga o verificación.
+ */
+  @Output() reenviarEvento = new EventEmitter<void>();
+  /**
+ * Evento que se emite cuando el usuario desea regresar a la sección de carga de documentos.
+ * Ideal para permitir correcciones o ajustes en documentos previamente cargados.
+ */
+  @Output() regresarSeccionCargarDocumentoEvento = new EventEmitter<void>()
   /**
    * @property TEXTOS
    * @description Contiene textos estáticos utilizados en este paso del formulario.
