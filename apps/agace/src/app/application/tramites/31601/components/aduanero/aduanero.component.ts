@@ -8,7 +8,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
-import { Catalogo, TableBodyData, TableComponent, TableData, TablePaginationComponent, TituloComponent } from '@ng-mf/data-access-user';
+import { Catalogo, ConfiguracionColumna, TablaSeleccion, TableBodyData, TableComponent, TableData, TablePaginationComponent, TituloComponent } from '@ng-mf/data-access-user';
 import {
   FormBuilder,
   FormGroup,

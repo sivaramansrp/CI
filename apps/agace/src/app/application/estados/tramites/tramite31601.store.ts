@@ -1,7 +1,6 @@
 import { Store, StoreConfig } from '@datorama/akita';
-import { Injectable } from '@angular/core';
 import { EnlaceConfiguracionItem } from '../../tramites/31601/enum/enlance-tabla.enum';
-import { Mencione } from '../../shared/models/datos-comunes.model';
+import { Injectable } from '@angular/core';
 import { MencioneConfiguracionItem } from '../../tramites/31601/enum/mencione-tabla.enum';
 
 import { Antecesor } from '../../tramites/31601/modelos/antecesor.modal';
@@ -495,6 +494,16 @@ export interface Solicitud31601State {
      * El valor de tipoDocumento.
      */
     tipoDocumento: string;
+
+    /**
+     * Datos de la tabla de menciones.
+     */
+    mencioneDatos: MencioneConfiguracionItem[];
+
+    /**
+     * Datos de la tabla de enlaces.
+     */
+    enlaceDatos: EnlaceConfiguracionItem[];
 }
 /**
  * Función para crear el estado inicial de Solicitud31601.
