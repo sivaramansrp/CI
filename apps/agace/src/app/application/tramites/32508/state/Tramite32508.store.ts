@@ -118,7 +118,7 @@ export class Tramite32508Store extends Store<Solicitud32508State> {
    * Actualiza el adace.
    * @param adace Nuevo adace.
    */
-  public setAdace(adace: string) {
+  public setAdace(adace: string):void {
     this.update((state) => ({ ...state, adace }));
   }
 
@@ -142,7 +142,7 @@ export class Tramite32508Store extends Store<Solicitud32508State> {
    * Actualiza el nombre del fiscalizado.
    * @param nombre Nuevo nombre.
    */
-  public setNombre(nombre: string) {
+  public setNombre(nombre: string):void {
     this.update((state) => ({ ...state, nombre }));
   }
 

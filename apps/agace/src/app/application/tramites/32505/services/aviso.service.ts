@@ -1,8 +1,8 @@
+import { AvisoTablaDatos, CatalogoLista, DatosSolicitante} from '../models/avios-model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { RespuestaCatalogos } from '@ng-mf/data-access-user';
 import { Observable } from 'rxjs';
-import { AvisoTablaDatos, CatalogoLista, DatosSolicitante} from '../models/avios-model';
+import { RespuestaCatalogos } from '@ng-mf/data-access-user';
 
 @Injectable({
   providedIn: 'any'
@@ -103,21 +103,21 @@ export class AvisoService {
    * Obtiene la lista de tipos de documentos.
    * @returns {Observable<CatalogoLista>} Un observable que emite la lista de tipos de documentos.
    * */
-  getFraccionArancelariaCatalogo(catalogo: string): Observable<RespuestaCatalogos> {
+  getFraccionArancelariaCatalogo(): Observable<RespuestaCatalogos> {
     return this.http.get<RespuestaCatalogos>('assets/json/32502/fraccion-arancelaria-catalogo.json');
   }
 /**
    * Obtiene la lista de tipos de documentos.
    * @returns {Observable<CatalogoLista>} Un observable que emite la lista de tipos de documentos.
    * */
-  getFraccionReglaCatalogo(catalogo: string): Observable<RespuestaCatalogos> {
+  getFraccionReglaCatalogo(): Observable<RespuestaCatalogos> {
     return this.http.get<RespuestaCatalogos>('assets/json/32502/fraccion-regla-catalogo.json');
   }
 /**
    * Obtiene la lista de tipos de documentos.
    * @returns {Observable<CatalogoLista>} Un observable que emite la lista de tipos de documentos.
    * */
-  getTipoDocumento(catalogo: string) : Observable<RespuestaCatalogos> {
+  getTipoDocumento() : Observable<RespuestaCatalogos> {
     return this.http.get<RespuestaCatalogos>('assets/json/32502/tipoDocumento.json');
   }
 

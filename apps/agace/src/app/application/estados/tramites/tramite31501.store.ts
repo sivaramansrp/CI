@@ -74,8 +74,9 @@ export function createInitialState(): Solicitud31501State {
  * el método `update` para modificar propiedades específicas del estado.
  */
 export class Tramite31501Store extends Store<Solicitud31501State> {
-  setFraccionRegla(arg0: string): void {
-    throw new Error('Method not implemented.');
+  setFraccionRegla(_arg0: string): void {
+    // Placeholder implementation to satisfy linter
+    throw new Error('Method not implemented in Tramite31501Store: ' + this.constructor.name);
   }
   constructor() {
     super(createInitialState());
@@ -86,7 +87,7 @@ export class Tramite31501Store extends Store<Solicitud31501State> {
    *
    * @param tipoBusqueda - El tipo de búsqueda que se desea establecer.
    */
-  public setTipoBusqueda(tipoBusqueda: string) {
+  public setTipoBusqueda(tipoBusqueda: string): void {
     this.update((state) => ({
       ...state,
       tipoBusqueda,
@@ -98,7 +99,7 @@ export class Tramite31501Store extends Store<Solicitud31501State> {
    *
    * @param rfc - El RFC (Registro Federal de Contribuyentes) que se desea establecer.
    */
-  public setRfc(rfc: string) {
+  public setRfc(rfc: string): void {
     this.update((state) => ({
       ...state,
       rfc,
@@ -110,7 +111,7 @@ export class Tramite31501Store extends Store<Solicitud31501State> {
    *
    * @param tipoDeTramite - El tipo de trámite que se desea establecer.
    */
-  public setTipoDeTramite(tipoDeTramite: string) {
+  public setTipoDeTramite(tipoDeTramite: string): void {
     this.update((state) => ({
       ...state,
       tipoDeTramite,
@@ -122,7 +123,7 @@ export class Tramite31501Store extends Store<Solicitud31501State> {
    *
    * @param tipoDeRequerimiento - El tipo de requerimiento que se desea establecer.
    */
-  public setTipoDeRequerimiento(tipoDeRequerimiento: string) {
+  public setTipoDeRequerimiento(tipoDeRequerimiento: string): void {
     this.update((state) => ({
       ...state,
       tipoDeRequerimiento,
@@ -134,7 +135,7 @@ export class Tramite31501Store extends Store<Solicitud31501State> {
    *
    * @param folioDeTramite - El folio del trámite que se desea establecer.
    */
-  public setFolioDeTramite(folioDeTramite: string) {
+  public setFolioDeTramite(folioDeTramite: string): void {
     this.update((state) => ({
       ...state,
       folioDeTramite,

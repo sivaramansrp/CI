@@ -220,9 +220,11 @@ export class AvisoComponent implements OnInit {
   inicializarFormGroup(
     configuracion: MenuConfig[],
     nombreGrupo: string,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     indiceGrupo: number,
   ): void {
     const GRUPO = this.formulario.get(nombreGrupo) as FormGroup;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     configuracion.forEach((campo: MenuConfig, menuIndex: number) => {
       const VALIDATORS = campo.props?.validators ? AvisoComponent.obtenerValidadores(campo.props.validators) : [Validators.required];
       const CONTROL_NAME = campo.props.campo ? campo.props.campo : campo.props.labelNombre;

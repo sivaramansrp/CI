@@ -16,7 +16,7 @@ export interface Contenedores {
 
 export interface RespuestaContenedor {
   success: boolean;
-  datos: datosDeLaTabla
+  datos: DatosDeLaTabla
   message: string;
 }
 
@@ -26,7 +26,7 @@ export interface RespuestaContenedores {
   message: string;
 }
 
-export interface datosDeLaTabla {
+export interface DatosDeLaTabla {
   id: number;
   folioTramite: string;
   tipoTramite: string;
@@ -40,4 +40,62 @@ export interface FormaRequerimiento {
   tipoTramite: string;
   motivoCancelacion: string;
   tipoDeRequerimiento: string;
+}
+
+export interface FolioTramite {
+  /** Folio único del trámite. */
+  folioTramite: string;
+
+  /** Tipo de trámite realizado. */
+  tipoTramite: string;
+}
+
+/**
+ * Representa un requerimiento con su columna asociada y datos de fila.
+ */
+export interface Requerimiento {
+  /**
+   * Nombre o identificador de la columna (usado en visualización o estructura).
+   */
+  column: string;
+
+  /**
+   * Objeto que contiene los datos del requerimiento.
+   */
+  row: RequerimientoOpciones;
+}
+
+/**
+ * Representa las opciones asociadas a un requerimiento específico.
+ */
+export interface RequerimientoOpciones {
+  /**
+   * Estado actual del trámite.
+   */
+  estadoDelTramite: number;
+
+  /**
+   * Folio único que identifica el trámite.
+   */
+  folioTramite: string;
+
+  /**
+   * Identificador único del requerimiento.
+   */
+  id: number;
+
+  /**
+   * Razón social de la entidad asociada al trámite.
+   */
+  razonSocial: string;
+
+  /**
+   * RFC de la entidad o persona relacionada con el trámite.
+   */
+  rfc: string;
+
+  /**
+   * Tipo de trámite que se está gestionando.
+   */
+  tipoTramite: string;
 }

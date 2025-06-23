@@ -1,17 +1,15 @@
-import { AfterViewInit, Component, ViewChild } from '@angular/core';
+import { AfterViewInit } from '@angular/core';
+import { AlertComponent } from '@ng-mf/data-access-user';
+import { BtnContinuarComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
-import {
-  AlertComponent,
-  BtnContinuarComponent,
-  FormularioDinamico,
-  SolicitanteComponent,
-  TituloComponent,
-} from '@ng-mf/data-access-user';
-import {
-  DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL,
-  PERSONA_MORAL_NACIONAL,
-} from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
+import { Component } from '@angular/core';
+import { DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL } from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
+import { FormularioDinamico } from '@ng-mf/data-access-user';
+import { PERSONA_MORAL_NACIONAL } from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
+import { SolicitanteComponent } from '@ng-mf/data-access-user';
 import { SolicitudComponent } from '../../components/solicitud/solicitud.component';
+import { TituloComponent } from '@ng-mf/data-access-user';
+import { ViewChild } from '@angular/core';
 
 /**
  * Componente que representa la funcionalidad de la paso uno 32201.
@@ -71,5 +69,4 @@ export class PasoUnoComponent implements AfterViewInit {
   seleccionaTab(i: number): void {
     this.indice = i;
   }
-
 }

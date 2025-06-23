@@ -28,21 +28,21 @@ export class TramiteAgaceStore extends Store<DatosPorRegimenAgaceState> {
     super(crearEstadoInicial());
   }
 
-  public establecerComboBimestresUno(comboBimestresUno: string) {
+  public establecerComboBimestresUno(comboBimestresUno: string): void {
     this.update((state) => ({
       ...state,
       comboBimestresUno,
     }));
   }
 
-  public establecerComboBimestresDos(comboBimestresDos: string) {
+  public establecerComboBimestresDos(comboBimestresDos: string): void {
     this.update((state) => ({
       ...state,
       comboBimestresDos,
     }));
   }
 
-  public establecerComboBimestresTres(comboBimestresTres: string) {
+  public establecerComboBimestresTres(comboBimestresTres: string): void {
     this.update((state) => ({
       ...state,
       comboBimestresTres,
