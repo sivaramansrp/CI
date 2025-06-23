@@ -27,9 +27,16 @@
       </div>
       <div class="modal-body">
         @if(notificacionInput.modo) {
-        <div [innerHTML]="notificacionInput.mensaje" class="align-p"></div>
+        <div
+          [innerHTML]="notificacionInput.mensaje"
+          [ngClass]="
+            notificacionInput.alineacionTexto
+              ? notificacionInput.alineacionTexto
+              : 'center'
+          "
+        ></div>
         }@else {
-        <p>{{ notificacionInput.mensaje }}</p>
+        <p class="align-center">{{ notificacionInput.mensaje }}</p>
         }
       </div>
       <div

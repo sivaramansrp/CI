@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { ConsultaioQuery, SolicitanteComponent, TercerosComponent } from '@libs/shared/data-access-user/src';
-import { Subject, map, takeUntil } from 'rxjs';
+import { ConsultaioQuery, SolicitanteComponent } from '@libs/shared/data-access-user/src';
+import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { DatosDeLaSolicitudComponent } from '../../components/datos-de-la-solicitud/datos-de-la-solicitud.component';
 import { DatosParaMovilizacionComponent } from '../../components/datos-para-movilizacion/datos-para-movilizacion.component';

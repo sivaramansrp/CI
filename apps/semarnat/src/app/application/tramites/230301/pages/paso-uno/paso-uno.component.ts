@@ -1,4 +1,4 @@
-import { AVISO, ConsultaioQuery, ConsultaioState, SeccionLibStore } from '@ng-mf/data-access-user';
+import { AVISO, ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subject, map, takeUntil } from 'rxjs';
 import { DesistimientoSolicitudService } from '../../services/desistimiento-solicitud.service';
