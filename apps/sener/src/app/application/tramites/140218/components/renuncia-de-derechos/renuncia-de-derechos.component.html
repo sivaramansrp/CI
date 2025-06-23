@@ -122,7 +122,8 @@
     <div class="row">
       <div class="alert alert-info">
         <label class="inline-box">
-          <input type="checkbox" id="manifesto" />
+          <input type="checkbox" id="manifesto" formControlName="manifesto"
+          (change)="eventoDeCambioDeValor($event, 'manifesto')"/>
           <span class="manifestoText">
             {{manifestoText.Texto}}</span>
         </label>
