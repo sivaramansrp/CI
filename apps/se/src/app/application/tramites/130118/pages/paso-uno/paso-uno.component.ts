@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { AfterViewInit, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL, PERSONA_MORAL_NACIONAL } from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
@@ -51,7 +52,7 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
   /**
    * Subject para notificar la destrucción del componente y cancelar suscripciones.
    */
-  private destroyNotifier$: Subject<void> = new Subject();
+  public destroyNotifier$: Subject<void> = new Subject();
 
   /**
    * Estado de la consulta obtenido desde el store.
@@ -62,6 +63,8 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
    * Indica si existen datos de respuesta del servidor para actualizar el formulario.
    */
   public esDatosRespuesta: boolean = false;
+  
+  cargaArchivosEvento = new Subject<any>();
 
   /**
    * Constructor del componente.
