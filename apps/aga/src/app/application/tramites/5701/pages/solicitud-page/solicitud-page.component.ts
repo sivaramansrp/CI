@@ -219,26 +219,42 @@ export class SolicitudPageComponent implements OnInit {
                 txtBtnAceptar: '',
                 txtBtnCancelar: '',
               };
-            } else {
-              if (e.valor > 0 && e.valor < 5) {
-                this.alertaNotificacion = {
-                  tipoNotificacion: 'banner',
-                  categoria: 'success',
-                  modo: 'action',
-                  titulo: '',
-                  mensaje: MSG_REGISTRO_EXITOSO(this.folioTemporal.toString()),
-                  cerrar: true,
-                  txtBtnAceptar: '',
-                  txtBtnCancelar: '',
-                };
-                this.indice = e.valor;
-                if (e.accion === 'cont') {
-                  this.wizardComponent.siguiente();
-                } else {
-                  this.wizardComponent.atras();
-                }
+              this.indice = 1;
+              this.wizardComponent.indiceActual = 1;
+              return;
+            }
+
+            if (e.valor > 0 && e.valor < 5) {
+              this.alertaNotificacion = {
+                tipoNotificacion: 'banner',
+                categoria: 'success',
+                modo: 'action',
+                titulo: '',
+                mensaje: MSG_REGISTRO_EXITOSO(this.folioTemporal.toString()),
+                cerrar: true,
+                txtBtnAceptar: '',
+                txtBtnCancelar: '',
+              };
+              this.indice = e.valor;
+              if (e.accion === 'cont') {
+                this.wizardComponent.siguiente();
+              } else {
+                this.wizardComponent.atras();
               }
             }
+          }),
+          catchError(() => {
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'toastr',
+              categoria: 'error',
+              modo: 'action',
+              titulo: '',
+              mensaje: 'Error al guardar la solicitud. Intente nuevamente.',
+              cerrar: false,
+              txtBtnAceptar: '',
+              txtBtnCancelar: '',
+            };
+            return of(false);
           })
         )
         .subscribe();
@@ -369,12 +385,13 @@ export class SolicitudPageComponent implements OnInit {
           (transporte: Partial<TransporteDespacho>) => {
             const RESULTADO: Partial<TransporteDespacho> = {
               tipo_transporte: TIPO_TRANSPORTE_ARRIBO_SALIDA,
-              arribo_pendiente_aereo: transporte.arribo_pendiente_aereo === 'Sí' ? true : false,
+              arribo_pendiente_aereo:
+                transporte.arribo_pendiente_aereo,
               guia_master_aereo: transporte.guia_master_aereo || '',
               guia_house_aereo: transporte.guia_house_aereo || '',
               fecha_arribo_aereo: transporte.fecha_arribo_aereo || '',
               hora_arribo_aereo: transporte.hora_arribo_aereo || '',
-              guia_valida: transporte.guia_valida === 'Sí' ? true : false,
+              guia_valida: transporte.guia_valida,
               observaciones: transporte.observaciones,
             };
             return RESULTADO as TransporteDespacho;
@@ -612,7 +629,10 @@ export class SolicitudPageComponent implements OnInit {
           if (response.datos.id_solicitud) {
             this.solicitudState.idSolicitud = response.datos.id_solicitud;
             this.folioTemporal = response.datos.id_solicitud;
-            localStorage.setItem('id_solicitud', response.datos.id_solicitud.toString());
+            localStorage.setItem(
+              'id_solicitud',
+              response.datos.id_solicitud.toString()
+            );
             return true;
           }
 

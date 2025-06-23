@@ -37,6 +37,7 @@ import {
 } from '@angular/forms';
 
 import {
+  MSG_ERROR_NO_PEDIMENTOS,
   MSG_NRO_PEDIMENTO,
   MSG_NRO_PEDIMENTO_LLENAR_DATOS,
   MSG_PEDIMENTO_EXISTE_PREVIO,
@@ -385,6 +386,20 @@ export class PedimentoComponent implements OnInit, OnChanges, OnDestroy {
    * y se abre el modal para mostrar un aviso al usuario.
    */
   abrirModalEliminar(): void {
+    if (this.pedimentos.length === 0) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: TITULO_MODAL_AVISO,
+        mensaje: MSG_ERROR_NO_PEDIMENTOS,
+        cerrar: false,
+        txtBtnAceptar: TEXTO_CERRAR,
+        txtBtnCancelar: '',
+      };
+      return;
+    }
+    
     if (this.selected.length === 0) {
       this.nuevaNotificacion = {
         tipoNotificacion: 'alert',

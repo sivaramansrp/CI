@@ -11,6 +11,7 @@ import {
   FechasService,
   FormulariosService,
   ICatalogo,
+  InputHoraComponent,
   MENSAJE_ALERTA_NO_FECHAS,
   MSG_ALERTA_ELIMINAR_ELEMENTO,
   MSG_ELIMINA_ELEMENTO,
@@ -69,6 +70,7 @@ import {
   TIPO_DESPACHO_DDEX,
   TIPO_OPERACION_EXPORTACION,
   TRANSPORTE,
+  URL_GENERAR_LINEA_CAPTURA,
   VEHICULO,
 } from '../../../../core/enums/5701/tramite5701.enum';
 import {
@@ -79,6 +81,7 @@ import {
   OnDestroy,
   OnInit,
   SimpleChanges,
+  ViewChild,
 } from '@angular/core';
 import {
   DatosComponentePedimento,
@@ -132,6 +135,7 @@ import patentes from 'libs/shared/theme/assets/json/5701/patentes.json';
 // eslint-disable-next-line @nx/enforce-module-boundaries
 import rfcs from 'libs/shared/theme/assets/json/5701/rfcs.json';
 
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import {
   MSG_ADUANA_PEDIMENTO,
   MSG_BORRAR_CAMPOS_RECINTOS,
@@ -140,6 +144,7 @@ import {
   MSG_MONTO_PAGADO_CUBIERTO,
   MSJ_ERROR_FECHAS_NO_SELECCIONADAS,
   MSJ_ERROR_FECHA_DIA,
+  MSJ_ERROR_FECHA_FINAL_MENOR_INICIAL,
   MSJ_ERROR_FECHA_FINAL_NO_SELECCIONADA,
   MSJ_ERROR_FECHA_INICIAL_NO_SELECCIONADA,
   MSJ_ERROR_FECHA_MES,
@@ -177,6 +182,16 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    * @description Bandera para indicar si se está editando una solicitud existente.
    */
   @Input() editarSolicitud: boolean = false;
+
+  /**
+   * @description Referencia al componente hijo `InputHoraComponent` asociado con el campo de hora final.
+   */
+  @ViewChild('horaFinal') horaFinal!: InputHoraComponent;
+
+  /**
+   * @description Referencia al componente hijo `InputHoraComponent` asociado con el campo de hora inicial.
+   */
+  @ViewChild('horaInicio') horaInicio!: InputHoraComponent;
 
   /**
    * Catalogo tipos de solicitud disponibles.
@@ -453,6 +468,11 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    */
   horaFinUnmarked: boolean = false;
 
+  /**
+   * @description Url para generar la línea de captura.
+   */
+  linkGeneraLineaCapturaSeguro!: SafeUrl;
+
   constructor(
     private seccionQuery: SeccionLibQuery,
     private seccionStore: SeccionLibStore,
@@ -484,7 +504,8 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
     private readonly validaLineaCapturaService: ValidaLineaCapturaService,
     private readonly parametroMontoService: ParametroMontoService,
     private cdRef: ChangeDetectorRef,
-    private validaDespachosService: ValidaDespachoService
+    private validaDespachosService: ValidaDespachoService,
+    private domSanitizer: DomSanitizer
   ) {}
 
   ngOnInit(): void {
@@ -528,6 +549,8 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
 
     this.calcularMontoTotal();
     this.verificarDatosExistentesStore();
+    this.linkGeneraLineaCapturaSeguro =
+      this.domSanitizer.bypassSecurityTrustUrl(URL_GENERAR_LINEA_CAPTURA);
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -1576,10 +1599,29 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
 
     this.setValoresStore(this.datosServicio, 'horaFinal', 'setHoraFinal');
 
+    if (
+      this.fechaInicioPasadaFechaFinalError() &&
+      this.tipoSolicitudSeleccionada === TIPO_SOLICITUD.INDIVIDUAL
+    ) {
+      this.limpiarFechasHoras();
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: 'Avisos',
+        mensaje: MSJ_ERROR_FECHA_FINAL_MENOR_INICIAL,
+        cerrar: false,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+      return;
+    }
+
     if (this.fechaInicioPasadaFechaFinalError()) {
       this.limpiarFechasHoras();
       return;
     }
+
     const MSJ_ERROR_FECHA =
       this.tipoSolicitudSeleccionada === TIPO_SOLICITUD.INDIVIDUAL
         ? MSJ_ERROR_FECHA_DIA
@@ -1587,10 +1629,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
         ? MSJ_ERROR_FECHA_SEMANA
         : MSJ_ERROR_FECHA_MES;
 
-    if (
-      this.datosServicio.hasError('endDateBeforeStartDate') ||
-      this.datosServicio.hasError('invalidIntervalo')
-    ) {
+    if (this.datosServicio.hasError('invalidIntervalo')) {
       this.limpiarFechasHoras();
       this.nuevaNotificacion = {
         tipoNotificacion: 'alert',
@@ -1648,14 +1687,12 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    * Método que limpia el formulario de las fechas y horas.
    */
   limpiarFechasHoras(): void {
-    this.datosServicio.get('horaInicio')?.setValue('');
-    this.datosServicio.get('horaInicio')?.markAsUntouched();
     this.horaFinUnmarked = true;
     this.horaInicioUnmarked = true;
+    this.datosServicio.get('horaInicio')?.setValue(null);
     this.datosServicio.get('fechaInicio')?.setValue('');
     this.datosServicio.get('fechaInicio')?.markAsUntouched();
-    this.datosServicio.get('horaFinal')?.setValue('');
-    this.datosServicio.get('horaFinal')?.markAsUntouched();
+    this.datosServicio.get('horaFinal')?.setValue(null);
     this.datosServicio.get('fechaFinal')?.setValue('');
     this.datosServicio.get('fechaFinal')?.markAsUntouched();
 
@@ -1665,6 +1702,10 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
     this.setValoresStore(this.datosServicio, 'horaInicio', 'setHoraInicio');
     this.setValoresStore(this.datosServicio, 'fechaFinal', 'setFechaFinal');
     this.setValoresStore(this.datosServicio, 'horaFinal', 'setHoraFinal');
+
+    this.horaFinal.resetVisual();
+
+    this.horaInicio.resetVisual();
   }
 
   /**
@@ -2086,7 +2127,6 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
           switchMap((response) => {
             this.desactivarSelectSeccionAduanera =
               response && response.datos?.length > 0;
-
             if (this.desactivarSelectSeccionAduanera) {
               this.seccionAduanera = response?.datos;
               this.despacho.get('idSeccionDespacho')?.enable();
@@ -2097,7 +2137,8 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
                   descripcion: 'No cuenta con sección aduanera',
                 },
               ];
-              this.despacho.get('idSeccionDespacho')?.setValue(SIN_ITEMS);
+              this.despacho.get('idSeccionDespacho')?.enable();
+              this.despacho.get('idSeccionDespacho')?.setValue('-2');
               this.despacho.get('idSeccionDespacho')?.disable();
             }
 
@@ -3087,7 +3128,11 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
         ? MENSAJES_ERROR.faltaInicial
         : '';
 
-    if (MENSAJE_ERROR && RFC_AUTORIZACION_LDA?.dirty) {
+    if (
+      MENSAJE_ERROR &&
+      RFC_AUTORIZACION_LDA?.value &&
+      RFC_AUTORIZACION_LDA?.dirty
+    ) {
       this.nuevaNotificacion = {
         tipoNotificacion: 'alert',
         categoria: 'danger',
@@ -3187,7 +3232,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
         ? MENSAJES_ERROR.faltaInicial
         : '';
 
-    if (MENSAJE_ERROR && FOLIO_DDEX?.dirty) {
+    if (MENSAJE_ERROR && FOLIO_DDEX?.value && FOLIO_DDEX?.dirty) {
       this.nuevaNotificacion = {
         tipoNotificacion: 'alert',
         categoria: 'danger',

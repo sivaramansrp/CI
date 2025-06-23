@@ -8,6 +8,7 @@ import {
 } from '@angular/core';
 import {
   AlertComponent,
+  ConsultaioQuery,
   InputRadioComponent,
   NotificacionesComponent,
   TableComponent,
@@ -17,6 +18,7 @@ import {
 import {
   CANTIDAD_BIENES_OPTION,
   FUSIONRADIO_OPTIONS,
+  FUSIONRADIO_OPTIONS_ONLY,
 } from '../../enums/fusionOEscision.enum';
 import {
   FormBuilder,
@@ -131,32 +133,113 @@ export class FusionOEscisionComponent
    * Se utiliza para almacenar y gestionar notificaciones que indican acciones exitosas dentro del sistema.
    */
   public correctamenteNotificacion!: Notificacion;
+  /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  esFormularioSoloLectura: boolean = false;
 
+  /** Observable para gestionar el ciclo de vida del componente */
+  public destroy$: Subject<void> = new Subject<void>();
   /**
    * Constructor del componente, inyecta formularios, servicios y manejo de estado.
    */
+  /**
+   * Crea una instancia del componente `FusionOEscisionComponent`.
+   *
+   * @param fb - FormBuilder para crear formularios reactivos.
+   * @param AvisoModifyService - Servicio para manejar la lógica de modificación de avisos.
+   * @param store - Store para manejar el estado del trámite 32301.
+   * @param Tramite32301Query - Query para obtener datos del estado del trámite 32301.
+   * @param consultaioQuery - Query para obtener el estado de la consulta.
+   */
+
   constructor(
     private fb: FormBuilder,
     private AvisoModifyService: AvisoModifyService,
     private store: Tramite32301Store,
-    private Tramite32301Query: Tramite32301Query
+    private Tramite32301Query: Tramite32301Query,
+    private consultaioQuery: ConsultaioQuery
   ) {
-    //constructor
+    /**
+     * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
+     *
+     * - Asigna el valor de solo lectura (`readonly`) a la propiedad `esFormularioSoloLectura`.
+     * - Llama a `inicializarEstadoFormulario()` para aplicar configuraciones basadas en el estado recibido.
+     * - La suscripción se cancela automáticamente cuando `destroy$` emite un valor (para evitar fugas de memoria).
+     */
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroy$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
   }
-
-  /** Observable para gestionar el ciclo de vida del componente */
-  public destroy$: Subject<void> = new Subject<void>();
 
   /** Inicializa formularios y obtiene opciones del servicio */
   ngOnInit(): void {
-    this.initializeForm();
+    this.inicializarEstadoFormulario();
+  }
+  /**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.
+   * Además, obtiene la información del catálogo de mercancía.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.inicializarFormulario();
+    }
+  }
+
+  /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormulario(): void {
+    this.inicializarFormulario();
+    if (this.esFormularioSoloLectura) {
+      this.formulario.disable();
+      this.modelFormulario.disable();
+      const CONTROL = this.formulario.get('personaFusionEscisionDTO');
+      if (CONTROL) {
+        CONTROL.disable();
+      }
+
+      this.mpersonaFusionEscisionDTO.disable();
+    } else if (!this.esFormularioSoloLectura) {
+      this.formulario.enable();
+      const CONTROL = this.formulario.get('personaFusionEscisionDTO');
+      if (CONTROL) {
+        CONTROL.disable();
+      }
+      this.modelFormulario.enable();
+      this.personaFusionEscisionDTO.enable();
+      this.mpersonaFusionEscisionDTO.enable();
+    } else {
+      // No se requiere ninguna acción en el formulario
+    }
+  }
+
+  /**
+   * Inicializa el formulario reactivo para capturar el valor de 'registro'.
+   * Suscribe al estado almacenado en el store mediante el query `Tramite32301Query.selectSolicitud$`
+   * y lo asigna a la variable local `solicitudState`. Luego, crea el formulario
+   * con el valor inicial obtenido del store.
+   */
+
+  async inicializarFormulario(): Promise<void> {
+    await this.initializeForm();
     this.getCapacidadAlmacenamiento();
     this.getGridsubFusionOescision();
   }
 
   /** Llama al servicio para obtener opciones de capacidad de almacenamiento */
   getCapacidadAlmacenamiento(): void {
-      this.AvisoModifyService.getCapacidadAlmacenamiento()
+    this.AvisoModifyService.getCapacidadAlmacenamiento()
       .pipe(takeUntil(this.destroy$))
       .subscribe((resp) => {
         this.radioOptions = Object.assign([], resp);
@@ -202,54 +285,50 @@ export class FusionOEscisionComponent
   }
 
   /** Oculta la opción de escisión si se selecciona cierto valor */
-  ocultarEscicion(): void {
-    const VALOR = this.formulario.get('capacidadAlmacenamiento')?.value;
-    if (VALOR === 'fusion2') {
-      this.fusionradioOptions.pop();
-    } else {
+  ocultarEscicion(ev: string | number): void {
+    if (ev === 'fusion1') {
       this.fusionradioOptions = FUSIONRADIO_OPTIONS;
+    }
+    if (ev === 'fusion2') {
+      this.fusionradioOptions = FUSIONRADIO_OPTIONS_ONLY
     }
   }
 
   /** Cambia dinámicamente los títulos y etiquetas según la opción seleccionada */
-  mostrarFusionOEscision(): void {
-    const VALOR = this.formulario.get('numeroTotalCarros')?.value;
-    this.divCompletoVisible = VALOR === '1' || VALOR === '0';
+  mostrarFusionOEscision(ev: string | number): void {
+   
+    this.divCompletoVisible = ev === '1' || ev === '0';
     this.fusionOescisionTitulo =
-      VALOR === 1
+      ev === 1
         ? 'Datos de las empresas fusionadas'
         : 'Datos de las empresas escindidas';
     this.subFusionOescisionTitulo = this.fusionOescisionTitulo;
     this.labelFechaFusionOscision =
-      VALOR === 1
+      ev === 1
         ? 'Fecha en que surte efecto la fusión'
         : 'Fecha en que surte efecto la escisión';
   }
 
   /** Muestra u oculta los bloques de certificación según la opción elegida */
-  mostrarCertificacionFusionada(ismodel?: string): void {
-    const CANTIDAD_BIENES = this.formulario.get('cantidadBienes')?.value;
-    this.conCertificacionPrincipalVisible = CANTIDAD_BIENES === '1';
+  mostrarCertificacionFusionada(ev: string | number, ismodel?: string): void {
+    this.conCertificacionPrincipalVisible = ev === '1';
 
     if (ismodel === 'isModel') {
-      const MODELCANTIDAD_BIENES =
-        this.modelFormulario.get('mCantidadBienes')?.value;
-      this.sinCertificacionPrincipalVisible = MODELCANTIDAD_BIENES === '1';
+      this.sinCertificacionPrincipalVisible = ev === '1';
     }
   }
 
   /** Carga los datos de persona fusionada desde el servicio y los guarda en el store */
   cargarDatosPersonaFusion(): void {
-      this.AvisoModifyService.cargarDatosPersonaFusion()
-        .pipe(
-          takeUntil(this.destroy$),
-          map((resp) => {
-            this.personaFusionEscisionDTO.patchValue(resp);
-            this.store.SetpersonaFusionEscisionDTO(resp);
-          })
-        )
-        .subscribe();
-        
+    this.AvisoModifyService.cargarDatosPersonaFusion()
+      .pipe(
+        takeUntil(this.destroy$),
+        map((resp) => {
+          this.personaFusionEscisionDTO.patchValue(resp);
+          this.store.SetpersonaFusionEscisionDTO(resp);
+        })
+      )
+      .subscribe();
   }
 
   /** Carga los datos de persona fusionada desde el query del store hacia el modal */
@@ -266,13 +345,11 @@ export class FusionOEscisionComponent
   }
 
   getGridsubFusionOescision(): void {
-      this.AvisoModifyService.gridsubFusionOescision()
+    this.AvisoModifyService.gridsubFusionOescision()
       .pipe(takeUntil(this.destroy$))
-      .subscribe(
-        (resp: TableDataNgTable) => {
-          this.gridFusionEscisionHeader = resp.tableHeader; // Asigna los encabezados para los domicilios nuevos
-        }
-      );
+      .subscribe((resp: TableDataNgTable) => {
+        this.gridFusionEscisionHeader = resp.tableHeader; // Asigna los encabezados para los domicilios nuevos
+      });
   }
 
   /** Getter del grupo de persona fusionada en el formulario principal */
