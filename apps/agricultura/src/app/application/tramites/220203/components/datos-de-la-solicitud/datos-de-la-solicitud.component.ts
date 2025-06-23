@@ -243,7 +243,7 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit, AfterView
   /**
    * @description Crea el grupo de formularios para los datos de la mercancía.
    */
-  createFromGroup() {
+  createFromGroup(): void {
     this.datosMercanciaFormGroup = this.fb.group({
       realizarGroup: this.createRealizarGroup(),
       mercanciaGroup: this.createMercanciaGroup(),
@@ -254,7 +254,7 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit, AfterView
   /**
    * Creates the 'realizarGroup' form group.
    */
-  createRealizarGroup() {
+  createRealizarGroup(): FormGroup {
     return this.fb.group({
       aduanaIngreso: [this.datosMercanciaStore.realizarGroup.aduanaIngreso || '', Validators.required],
       oficinaInspeccion: [this.datosMercanciaStore.realizarGroup.oficinaInspeccion || '', Validators.required],
@@ -267,7 +267,7 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit, AfterView
   /**
    * Creates the 'mercanciaGroup' form group.
    */
-  createMercanciaGroup() {
+  createMercanciaGroup(): FormGroup {
     const MERCANCIADATA = this.datosMercanciaStore.mercanciaGroup || {};
 
     const FORMGROUP = this.fb.group({
@@ -295,19 +295,14 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit, AfterView
     return FORMGROUP;
   }
 
-
-
-
-
   /**
    * Creates the 'detalles' form group.
    */
-  createDetallesGroup() {
+  createDetallesGroup(): FormGroup {
     return this.fb.group({
       nombreCientifico: [this.datosMercanciaStore.detalles.nombreCientifico || ''],
     });
   }
-
 
   ngOnInit(): void {
      this.createFromGroup();
@@ -321,7 +316,7 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit, AfterView
   ngAfterViewInit(): void {
       this.datosMercanciaFormGroup.valueChanges
       .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((changes) => {
+      .subscribe(() => {
         this.verificarEstadoDelBoton();
       }, (error) => {
         console.error(error);
@@ -342,7 +337,7 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit, AfterView
   /**
    * @description Obtiene los datos del catálogo de transporte.
    */
-  obtenerCatalogosTransporte() {
+  obtenerCatalogosTransporte(): void {
     this.importacionDeAcuiculturaServices.obtenerDetallesDelCatalogo('punto.json')
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((data) => {
@@ -356,7 +351,7 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit, AfterView
   /**
    * @description Obtiene los datos del catálogo de arancelaria.
    */
-  obtenerCatalogosArancelaria() {
+  obtenerCatalogosArancelaria(): void {
     this.importacionDeAcuiculturaServices.obtenerDetallesDelCatalogo('punto.json')
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((data) => {
@@ -369,7 +364,7 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit, AfterView
   /**
    * @description Obtiene los datos del catálogo de UMC.
    */
-  obtenerCatalogosUMC() {
+  obtenerCatalogosUMC(): void {
     this.importacionDeAcuiculturaServices.obtenerDetallesDelCatalogo('aduana_de_ingreso.json')
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((data) => {
@@ -383,7 +378,7 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit, AfterView
   /**
    * @description Obtiene los datos del catálogo de UMT.
    */
-  obtenerCatalogosUMT() {
+  obtenerCatalogosUMT(): void {
     this.importacionDeAcuiculturaServices.obtenerDetallesDelCatalogo('empresa.json')
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((data) => {
@@ -398,7 +393,7 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit, AfterView
   /**
    * @description Obtiene los datos del catálogo de USO.
    */
-  obtenerCatalogosUSO() {
+  obtenerCatalogosUSO(): void {
     this.importacionDeAcuiculturaServices.obtenerDetallesDelCatalogo('oficina_de_inspeccion.json')
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((data) => {
@@ -413,14 +408,14 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit, AfterView
   /**
    * @description Muestra o esconde la sección colapsable.
    */
-  mostrar_colapsable() {
+  mostrar_colapsable(): void {
     this.colapsable = !this.colapsable;
   }
 
   /**
    * @description Verifica el estado del formulario y habilita o deshabilita el botón según su validez.
    */
-  verificarEstadoDelBoton() {
+  verificarEstadoDelBoton(): void {
     const DATOS = {
       dataDeLaSolicitud: false,
     };

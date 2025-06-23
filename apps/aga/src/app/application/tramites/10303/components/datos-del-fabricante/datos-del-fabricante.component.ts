@@ -5,7 +5,6 @@ import { ToastrService } from 'ngx-toastr';
 import { Contribuyente, ContribuyenteRespuesta } from '../../models/donaciones-extranjeras.model';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { RegistroDeDonacion10303State, Tramite10303Store } from '../../estados/tramites/tramite10303.store';
-import { CATALOGOS_ID } from '@ng-mf/data-access-user';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { DonacionesExtranjerasService } from '../../services/donaciones-extranjeras/donaciones-extranjeras.service';
 import { Tramite10303Query } from '../../estados/queries/tramite10303.query';
@@ -111,7 +110,7 @@ export class DatosDelFabricanteComponent implements OnInit, OnDestroy {
    */
   inicializaCatalogos(): void {
     const PAIS$: Observable<void> = this.donacionesExtranjerasService
-      .getPaises(CATALOGOS_ID.CAT_PAIS)
+      .getPaises()
       .pipe(
         map((resp) => {
           this.pais = resp.data;

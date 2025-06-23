@@ -1,4 +1,4 @@
-import { Anexo, Bitacora, Complimentaria, DatosDeLaTabla, Empresas, Federetarios, FraccionSensible, Operacions, Plantas, Servicios } from '../models/datos-tramite.model';
+import { Anexo, Bitacora, Complimentaria, DatosDeLaTabla, Empresas, Federetarios, FraccionSensible, Operacions, Plantas, RespuestaConsulta, Servicios } from '../models/datos-tramite.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -31,11 +31,9 @@ export class SolicitudService {
 
   /**
    * Obtiene los datos de modificación desde un archivo JSON local.
-   * 
-   * @returns {Observable<RespuestaCatalogos[]>} Un observable que emite un arreglo de datos de modificación.
    */
-  getDatosModificacion(): Observable<RespuestaCatalogos[]> {
-    return this.http.get<RespuestaCatalogos[]>(`assets/json/80316/modificacion.json`);
+  getDatosModificacion() {
+    return this.http.get(`assets/json/80316/modificacion.json`);
   }
 
   /**
@@ -162,5 +160,24 @@ export class SolicitudService {
    */
   getTipoDePersona(): Observable<RespuestaCatalogos> {
     return this.http.get<RespuestaCatalogos>(`assets/json/80316/tipoDePersona.json`);
+  }
+
+  /**
+   * @method getDatosConsulta
+   * @description Obtiene los datos de consulta desde un archivo JSON local.
+   * 
+   * Este método realiza una solicitud HTTP GET para obtener los datos de consulta simulados desde el archivo `consultaDatos.json`.
+   * 
+   * @returns {Observable<RespuestaConsulta>} Un observable que emite la respuesta de los datos de consulta.
+   */
+  getDatosConsulta(): Observable<RespuestaConsulta> {
+    return this.http.get<RespuestaConsulta>(`assets/json/80316/consultaDatos.json`);
+  }
+
+  /**
+   * Obtiene los datos de certification desde un archivo JSON local.
+   */
+  getDatosCertificacion() {
+    return this.http.get(`assets/json/80316/certification.json`);
   }
 }
