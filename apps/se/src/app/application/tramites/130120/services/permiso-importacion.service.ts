@@ -4,17 +4,29 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { PermisoImportacionStore } from '../estados/permiso-importacion.store';
 
+/**
+ * Servicio para gestionar las operaciones relacionadas con el permiso de importación.
+ * Permite actualizar el estado del formulario y obtener datos de registro de toma de muestras.
+ *
+ * @export
+ * @class PermisoImportacionService
+ */
 @Injectable({
   providedIn: 'root'
 })
 export class PermisoImportacionService {
 
-  constructor(private readonly http: HttpClient,
-  private store: PermisoImportacionStore
+  /**
+   * Constructor del servicio.
+   * @param http Cliente HTTP para realizar peticiones.
+   * @param store Store de Akita para manejar el estado del permiso de importación.
+   */
+  constructor(
+    private readonly http: HttpClient,
+    private store: PermisoImportacionStore
   ) {
-      // constructor code
+      // Código del constructor
     }
-
 
   /**
    * Actualiza el estado del formulario en el store del trámite.
