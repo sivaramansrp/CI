@@ -43,8 +43,6 @@ Thumbs.db
 .nx/cache
 .nx/workspace-data
 .angular
-./.package-lock.json
-package-lock.json
 pnpm-lock.yaml
 .bablerc
 /.vs/frontend/FileContentIndex
