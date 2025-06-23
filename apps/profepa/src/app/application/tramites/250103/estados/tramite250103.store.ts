@@ -89,10 +89,10 @@ export interface Tramite250103State {
   origen: string;
   /** Lugar de procedencia del producto. */
   procedencia: string;
-    /** Lista de productos agregados */
-    productos: Producto[];
-    /** Detalles de cada producto, almacenados como entradas de mapa */
-    detalles: [number, Detalle[]][];
+  /** Lista de productos agregados */
+  productos: Producto[];
+  /** Detalles de cada producto, almacenados como entradas de mapa */
+  detalles: [number, Detalle[]][];
 }
 
 
@@ -239,12 +239,23 @@ export class Tramite250103Store extends Store<Tramite250103State> {
     this.update((state) => ({ ...state, agenteAduanalRowData }));
   }
 
-/**
- * Restaura el estado inicial del store.
- */
-public resetStore(): void {
+  /**
+   * Actualiza el estado del store con los valores proporcionados.
+   * Valores a actualizar en el estado.
+  */
+  public actualizarEstado(valores: Partial<Tramite250103State>): void {
+    this.update((state) => ({
+      ...state,
+      ...valores,
+    }));
+  }
+
+  /**
+  * Restaura el estado inicial del store.
+  */
+ public resetStore(): void {
   this.reset();
-}
+ }
 
 }
 
