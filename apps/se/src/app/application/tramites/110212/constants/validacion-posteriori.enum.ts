@@ -79,42 +79,42 @@ export const FECHAFACTURA = {
 export const COLUMNAS_SELECCIONADAS =[
      {
        encabezado: 'Fracción arancelaria',
-       clave: (ele: SeleccionadasTabla) => ele.fraccionArancelaria,
+       clave: (ele: SeleccionadasTabla):string => ele.fraccionArancelaria,
        orden: 1,
      },
      {
        encabezado: 'Cantidad',
-       clave: (ele: SeleccionadasTabla) => ele.cantidad,
+       clave: (ele: SeleccionadasTabla):string => ele.cantidad,
        orden: 2,
      },
      {
        encabezado: 'Unidad de medida',
-       clave: (ele: SeleccionadasTabla) => ele.unidadMedida,
+       clave: (ele: SeleccionadasTabla):string => ele.unidadMedida,
        orden: 3,
      },
      {
        encabezado: 'Valor mercancía',
-       clave: (ele: SeleccionadasTabla) => ele.valorMercancia,
+       clave: (ele: SeleccionadasTabla):string => ele.valorMercancia,
        orden: 4,
      },
      {
        encabezado: 'Tipo de factura',
-       clave: (ele: SeleccionadasTabla) => ele.tipoFactura,
+       clave: (ele: SeleccionadasTabla):string => ele.tipoFactura,
        orden: 5,
      },
      {
        encabezado: 'Número factura',
-       clave: (ele: SeleccionadasTabla) => ele.numFactura,
+       clave: (ele: SeleccionadasTabla):string => ele.numFactura,
        orden: 6,
      },
      {
        encabezado: 'Complemento descripción',
-       clave: (ele: SeleccionadasTabla) => ele.complementoDescripcion,
+       clave: (ele: SeleccionadasTabla):string => ele.complementoDescripcion,
        orden: 7,
      },
      {
        encabezado: 'Fecha factura',
-       clave: (ele: SeleccionadasTabla) => ele.fechaFactura,
+       clave: (ele: SeleccionadasTabla):string => ele.fechaFactura,
        orden: 8,
      },
    ];
@@ -124,32 +124,32 @@ export const COLUMNAS_SELECCIONADAS =[
   export const COLUMNAS_DSPONIBLES =[
        {
          encabezado: 'Fracción arancelaria',
-         clave: (ele: DisponiblesTabla) => ele.fraccionArancelaria,
+         clave: (ele: DisponiblesTabla):string => ele.fraccionArancelaria,
          orden: 1,
        },
        {
          encabezado: 'Nombre técnico',
-         clave: (ele: DisponiblesTabla) => ele.nombreTecnico,
+         clave: (ele: DisponiblesTabla):string => ele.nombreTecnico,
          orden: 2,
        },
        {
          encabezado: 'Nombre comercial',
-         clave: (ele: DisponiblesTabla) => ele.nombreComercial,
+         clave: (ele: DisponiblesTabla):string => ele.nombreComercial,
          orden: 3,
        },
        {
          encabezado: 'Número de registro de productos',
-         clave: (ele: DisponiblesTabla) => ele.numeroRegistroProductos,
+         clave: (ele: DisponiblesTabla):string => ele.numeroRegistroProductos,
          orden: 4,
        },
        {
          encabezado: 'Fecha expedición',
-         clave: (ele: DisponiblesTabla) => ele.fechaExpedicion,
+         clave: (ele: DisponiblesTabla):string => ele.fechaExpedicion,
          orden: 5,
        },
        {
          encabezado: 'Fecha vencimiento',
-         clave: (ele: DisponiblesTabla) => ele.fechaVencimiento,
+         clave: (ele: DisponiblesTabla):string => ele.fechaVencimiento,
          orden: 6,
        },
      ];

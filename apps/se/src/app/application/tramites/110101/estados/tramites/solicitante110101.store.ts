@@ -90,7 +90,7 @@ export class Tramite110101Store extends Store<Solicitante110101State> {
    * Actualiza el estado con el RFC especificado.
    * @param rfc - El RFC a establecer en el estado.
    */
-  public setRfc(rfc: string) {
+  public setRfc(rfc: string):void {
     this.update((state) => ({
       ...state,
       rfc,
@@ -101,7 +101,7 @@ export class Tramite110101Store extends Store<Solicitante110101State> {
    * Actualiza el estado con la denominación especificada.
    * @param denominacion - La denominación a establecer en el estado.
    */
-  public setDenominacion(denominacion: string) {
+  public setDenominacion(denominacion: string):void {
     this.update((state) => ({
       ...state,
       denominacion,
@@ -113,7 +113,7 @@ export class Tramite110101Store extends Store<Solicitante110101State> {
    * @param actividadEconomica - La actividad económica a establecer en el estado.
    */
 
-  public setActividadEconomica(actividadEconomica: string) {
+  public setActividadEconomica(actividadEconomica: string):void {
     this.update((state) => ({
       ...state,
       actividadEconomica,
@@ -124,7 +124,7 @@ export class Tramite110101Store extends Store<Solicitante110101State> {
    * Actualiza el estado con el correo electrónico especificado.
    * @param correoElectronico - El correo electrónico a establecer en el estado.
    */ 
-  public setCorreoElectronico(correoElectronico: string) {
+  public setCorreoElectronico(correoElectronico: string):void {
     this.update((state) => ({
       ...state,
       correoElectronico,
@@ -135,7 +135,7 @@ export class Tramite110101Store extends Store<Solicitante110101State> {
    * Actualiza el estado con el país especificado.
    * @param pais - El país a establecer en el estado.
    */
-  public setPais(pais: string) {
+  public setPais(pais: string):void {
     this.update((state) => ({
       ...state,
       pais,
@@ -146,7 +146,7 @@ export class Tramite110101Store extends Store<Solicitante110101State> {
    * Actualiza el estado con el país especificado.
    * @param tratado - El país a establecer en el estado.
    */
-  public setTratado(tratado: string) {
+  public setTratado(tratado: string):void {
     this.update((state) => ({
       ...state,
       tratado,
@@ -157,7 +157,7 @@ export class Tramite110101Store extends Store<Solicitante110101State> {
    * Actualiza el estado con el país especificado.
    * @param origen - El país a establecer en el estado.
    */
-  public setOrigen(origen: string) {
+  public setOrigen(origen: string):void {
     this.update((state) => ({
       ...state,
       origen,
@@ -168,7 +168,7 @@ export class Tramite110101Store extends Store<Solicitante110101State> {
    * Actualiza el estado con el país especificado.
    * @param nombreComercial - El país a establecer en el estado.
    */
-  public setNombreComercial(nombreComercial: string) {
+  public setNombreComercial(nombreComercial: string):void {
     this.update((state) => ({
       ...state,
       nombreComercial,
@@ -179,7 +179,7 @@ export class Tramite110101Store extends Store<Solicitante110101State> {
    * Actualiza el estado con el país especificado.
    * @param nombreIngles - El país a establecer en el estado.
    */
-  public setNombreIngles(nombreIngles: string) {
+  public setNombreIngles(nombreIngles: string):void {
     this.update((state) => ({
       ...state,
       nombreIngles,
@@ -190,7 +190,7 @@ export class Tramite110101Store extends Store<Solicitante110101State> {
    * Actualiza el estado con el país especificado.
    * @param fraccionArancelaria - El país a establecer en el estado.
    */
-  public setFraccionArancelaria(fraccionArancelaria: string) {
+  public setFraccionArancelaria(fraccionArancelaria: string):void {
     this.update((state) => ({
       ...state,
       fraccionArancelaria,
@@ -201,7 +201,7 @@ export class Tramite110101Store extends Store<Solicitante110101State> {
    * Actualiza el estado con el país especificado.
    * @param descripcion - El país a establecer en el estado.
    */
-  public setDescripcion(descripcion: string) {
+  public setDescripcion(descripcion: string):void {
     this.update((state) => ({
       ...state,
       descripcion,
@@ -212,7 +212,7 @@ export class Tramite110101Store extends Store<Solicitante110101State> {
    * Actualiza el estado con el país especificado.
    * @param valorTransaccion - El país a establecer en el estado.
    */
-  public setValorTransaccion(valorTransaccion: string) {
+  public setValorTransaccion(valorTransaccion: string):void {
     this.update((state) => ({
       ...state,
       valorTransaccion,
@@ -223,7 +223,7 @@ export class Tramite110101Store extends Store<Solicitante110101State> {
    * Actualiza el estado con el país especificado.
    * @param entidad - El país a establecer en el estado.
    */
-  public setEntidad(entidad: string) {
+  public setEntidad(entidad: string):void {
     this.update((state) => ({
       ...state,
       entidad,
@@ -234,7 +234,7 @@ export class Tramite110101Store extends Store<Solicitante110101State> {
    * Actualiza el estado con el país especificado.
    * @param representacion - El país a establecer en el estado.
    */
-  public setRepresentacion(representacion: string) {
+  public setRepresentacion(representacion: string):void {
     this.update((state) => ({
       ...state,
       representacion,

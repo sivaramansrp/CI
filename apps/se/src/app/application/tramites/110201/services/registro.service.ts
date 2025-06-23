@@ -35,7 +35,7 @@ export class RegistroService {
    * Obtiene el catálogo de tratados.
    * @returns Observable con la respuesta del catálogo de tratados.
    */
-  getTratado() {
+  getTratado(): Observable<RespuestaCatalogos> {
     return this.http.get<RespuestaCatalogos>('assets/json/110201/tratado.json');
   }
 
@@ -43,7 +43,7 @@ export class RegistroService {
    * Obtiene el catálogo de países.
    * @returns Observable con la respuesta del catálogo de países.
    */
-  getPais() {
+  getPais(): Observable<RespuestaCatalogos> {
     return this.http.get<RespuestaCatalogos>('assets/json/110201/pais.json');
   }
 
@@ -51,7 +51,7 @@ export class RegistroService {
    * Obtiene el catálogo de idiomas.
    * @returns Observable con la respuesta del catálogo de idiomas.
    */
-  getIdioma() {
+  getIdioma(): Observable<RespuestaCatalogos> {
     return this.http.get<RespuestaCatalogos>('assets/json/110201/idioma.json');
   }
 
@@ -59,7 +59,7 @@ export class RegistroService {
    * Obtiene el catálogo de países de destino.
    * @returns Observable con la respuesta del catálogo de países de destino.
    */
-  getPaisDestino() {
+  getPaisDestino(): Observable<RespuestaCatalogos> {
     return this.http.get<RespuestaCatalogos>('assets/json/110201/pais-destino.json');
   }
 
@@ -67,7 +67,7 @@ export class RegistroService {
    * Obtiene el catálogo de transportes.
    * @returns Observable con la respuesta del catálogo de transportes.
    */
-  getTransporte() {
+  getTransporte(): Observable<RespuestaCatalogos> {
     return this.http.get<RespuestaCatalogos>('assets/json/110201/transporte.json');
   }
 
@@ -75,7 +75,7 @@ export class RegistroService {
    * Obtiene el catálogo de entidades.
    * @returns Observable con la respuesta del catálogo de entidades.
    */
-  getEntidad() {
+  getEntidad(): Observable<RespuestaCatalogos> {
     return this.http.get<RespuestaCatalogos>('assets/json/110201/entidad.json');
   }
 
@@ -83,7 +83,7 @@ export class RegistroService {
    * Obtiene el catálogo de representaciones.
    * @returns Observable con la respuesta del catálogo de representaciones.
    */
-  getRepresentacion() {
+  getRepresentacion(): Observable<RespuestaCatalogos> {
     return this.http.get<RespuestaCatalogos>('assets/json/110201/representacion.json');
   }
 
@@ -91,7 +91,7 @@ export class RegistroService {
    * Obtiene el catálogo de tipos de factura.
    * @returns Observable con la respuesta del catálogo de tipos de factura.
    */
-  getTipoFactura() {
+  getTipoFactura(): Observable<RespuestaCatalogos> {
     return this.http.get<RespuestaCatalogos>(
       'assets/json/110201/tipofactura.json'
     );
@@ -101,7 +101,7 @@ export class RegistroService {
    * Obtiene el catálogo de unidades de medida comercial (UMC).
    * @returns Observable con la respuesta del catálogo de UMC.
    */
-  getUMC() {
+  getUMC(): Observable<RespuestaCatalogos> {
     return this.http.get<RespuestaCatalogos>('assets/json/110201/umc.json');
   }
 
@@ -109,7 +109,7 @@ export class RegistroService {
    * Obtiene el catálogo de unidades de medida.
    * @returns Observable con la respuesta del catálogo de unidades de medida.
    */
-  getUnidadMedida() {
+  getUnidadMedida(): Observable<RespuestaCatalogos> {
     return this.http.get<RespuestaCatalogos>('assets/json/110201/umc.json');
   }
 
@@ -118,7 +118,7 @@ export class RegistroService {
    * @param id Identificador del catálogo.
    * @returns Observable con la respuesta del catálogo solicitado.
    */
-  getCatalogoById(id: number) {
+  getCatalogoById(id: number): Observable<JSONResponse> {
     return this.http.get<JSONResponse>(`${this.urlServerCatalogos}/${id}`);
   }
 

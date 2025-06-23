@@ -5,14 +5,14 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { TituloComponent } from '@libs/shared/data-access-user/src';
+import { Subject, map, takeUntil } from 'rxjs';
 import {
   Tramite140205State,
   Tramite140205Store,
 } from '../../../../estados/tramites/tramite140205.store';
 import { CancelacionCertificadosService } from '../../services/cancelacionCertificados.service';
+import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { Tramite140205Query } from '../../../../estados/queries/tramite140205.query';
-import { map, Subject, takeUntil } from 'rxjs';
 
 
 /**

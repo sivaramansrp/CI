@@ -58,7 +58,7 @@ export class DatosCertificacionComponent implements OnInit, OnDestroy {
    * Método que se ejecuta al inicializar el componente.
    * Configura el formulario, carga los datos de modificación y los datos de la tabla.
    */
-  ngOnInit() {
+  ngOnInit(): void {
     this.consultaioQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),

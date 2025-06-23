@@ -2373,6 +2373,15 @@
         "numeroDeProcedimiento": "80314"
     },
     {
+        "id": "90304",
+        "tipoDeTramite": "Datos generales del trámite",
+        "fecha": "2023-11-01",
+        "fechaActualizacion": "2023-11-07",
+        "diasTranscurridos": "4",
+        "departamento": "SE",
+        "numeroDeProcedimiento": "90304"
+    },
+    {
         "id": "31301",
         "tipoDeTramite": "Datos generales del trámite",
         "fecha": "2024-11-01",
@@ -2380,6 +2389,15 @@
         "diasTranscurridos": "4",
         "departamento": "AGACE",
         "numeroDeProcedimiento": "31301"
+    },
+    {
+        "id": "260910",
+        "tipoDeTramite": "Datos generales del trámite",
+        "fecha": "2024-11-01",
+        "fechaActualizacion": "2024-11-07",
+        "diasTranscurridos": "4",
+        "departamento": "COFEPRIS",
+        "numeroDeProcedimiento": "260910"
     }
 
 ]
