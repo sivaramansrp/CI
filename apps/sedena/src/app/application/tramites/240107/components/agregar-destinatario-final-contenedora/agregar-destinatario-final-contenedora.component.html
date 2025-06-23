@@ -2,5 +2,7 @@
 [idProcedimiento]="idProcedimiento"
   (updateDestinatarioFinalTablaDatos)="
     updateDestinatarioFinalTablaDatos($event)
-  "
+"
+  [idProcedimiento]="240107"
+  (cancelarEventListener)="cerrar.emit()"
 ></app-agregar-destinatario-final>

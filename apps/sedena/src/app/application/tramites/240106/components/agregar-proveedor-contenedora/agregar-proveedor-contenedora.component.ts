@@ -1,7 +1,7 @@
+import { Component, EventEmitter, Output } from '@angular/core';
 import { DestinoFinal, Proveedor } from '../../../../shared/models/terceros-relacionados.model';
 import { AgregarProveedorComponent } from '../../../../shared/components/agregar-proveedor/agregar-proveedor.component';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Tramite240106Query } from '../../estados/tramite240106Query.query';
 import { Tramite240106Store } from '../../estados/tramite240106Store.store';
@@ -24,6 +24,8 @@ import { Tramite240106Store } from '../../estados/tramite240106Store.store';
   styleUrl: './agregar-proveedor-contenedora.component.scss',
 })
 export class AgregarProveedorContenedoraComponent {
+
+    @Output() cerrar = new EventEmitter<void>();
   /**
    * Observable que emite información sobre el destino final, proveedor o un valor nulo/indefinido.
    *

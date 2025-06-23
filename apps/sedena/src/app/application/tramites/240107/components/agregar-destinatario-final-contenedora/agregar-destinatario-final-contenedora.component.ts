@@ -1,6 +1,6 @@
+import { Component , EventEmitter, Output } from '@angular/core';
 import { AgregarDestinatarioFinalComponent } from '../../../../shared/components/agregar-destinatario-final/agregar-destinatario-final.component';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
 import { DestinoFinal } from '../../../../shared/models/terceros-relacionados.model';
 import { ID_PROCEDIMIENTO } from '../../constantes/sustancias-quimicas.enum';
 import { Tramite240107Store } from '../../estados/tramite240107Store.store';
@@ -19,6 +19,9 @@ import { Tramite240107Store } from '../../estados/tramite240107Store.store';
   styleUrl: './agregar-destinatario-final-contenedora.component.scss',
 })
 export class AgregarDestinatarioFinalContenedoraComponent {
+
+   @Output() cerrar = new EventEmitter<void>();
+ 
   /**
    * Identificador del procedimiento.
    * @property {number} idProcedimiento

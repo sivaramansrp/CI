@@ -1,4 +1,6 @@
 <app-agregar-proveedor
   (updateProveedorTablaDatos)="updateProveedorTablaDatos($event)"
   [formaDatos]="terechosDatos$ | async"
+  [idProcedimiento]="240106"
+  (cancelarEventListener)="cerrar.emit()"
 ></app-agregar-proveedor>

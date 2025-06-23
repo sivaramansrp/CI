@@ -1,5 +1,5 @@
+import { Component, EventEmitter, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
 import { DatosMercanciaComponent } from '../../../../shared/components/datos-mercancia/datos-mercancia.component';
 import { ID_PROCEDIMIENTO } from '../../constantes/sustancias-quimicas.enum';
 import { MercanciaDetalle } from '../../../../shared/models/datos-del-tramite.model';
@@ -19,6 +19,8 @@ import { Tramite240107Store } from '../../estados/tramite240107Store.store';
   styleUrl: './datos-mercancia-contenedora.component.scss',
 })
 export class DatosMercanciaContenedoraComponent {
+  
+    @Output() cerrar = new EventEmitter<void>();
 
     /**
    * Identificador del procedimiento.
