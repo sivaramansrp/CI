@@ -16,6 +16,7 @@ import { DatosDelModificacion } from '../estados/models/datos-tramite.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { RespuestTablaDatos } from '../models/datos-tramite.model';
+import { RespuestaConsulta } from '../models/datos-tramite.model';
 
 /**
  * @typedef ComplimentariaResponse
@@ -257,4 +258,17 @@ export class ImmerModificacionService {
       .get<DatosModificacionResponse>('assets/json/80314/datos-modificacion.json')
       .pipe(map((res: DatosModificacionResponse) => res.data));
   }
+
+  /**
+   * @method getDatosConsulta
+   * @description Obtiene los datos de consulta desde un archivo JSON local.
+   * 
+   * Este método realiza una solicitud HTTP GET para obtener los datos de consulta simulados desde el archivo `consultaDatos.json`.
+   * 
+   * @returns {Observable<RespuestaConsulta>} Un observable que emite la respuesta de los datos de consulta.
+   */
+  getDatosConsulta(): Observable<RespuestaConsulta> {
+    return this.http.get<RespuestaConsulta>(`assets/json/80314/consultaDatos.json`);
+  }
+
 }

@@ -594,8 +594,7 @@ export const CONFIGURACION_BITACORA_TABLA = [
 export const CONFIGURACION_ANEXOS_TABLA = [
   {
     encabezado: 'Fracción arancelaria del producto de exportación',
-    clave: (ele: Anexo): string | undefined =>
-      ele.fraccionArancelariaExportacion,
+    clave: (ele: Anexo): string | undefined => ele.fraccionArancelariaExportacion,
     orden: 1,
   },
   {
@@ -626,14 +625,12 @@ export const CONFIGURACION_ANEXOS_TABLA = [
 export const CONFIGURACION_ANEXOS_IMPORTACION = [
   {
     encabezado: 'Fracción arancelaria del producto de exportación',
-    clave: (ele: Anexo): string | undefined =>
-      ele.fraccionArancelariaExportacion,
+    clave: (ele: Anexo): string | undefined => ele.fraccionArancelariaExportacion,
     orden: 1,
   },
   {
     encabezado: 'Fracción arancelaria de la mercancía de importación',
-    clave: (ele: Anexo): string | undefined =>
-      ele.fraccionArancelariaImportacion,
+    clave: (ele: Anexo): string | undefined => ele.fraccionArancelariaImportacion,
     orden: 1,
   },
   {

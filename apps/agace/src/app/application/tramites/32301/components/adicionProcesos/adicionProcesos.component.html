@@ -1,5 +1,5 @@
 <div class="container">
-  <form [formGroup]="proveedorXtranjForm">
+  <form [formGroup]="proveedorXtranjForm" [ngStyle]="{ 'pointer-events': esFormularioSoloLectura ? 'none' : 'auto' }">
     <div class="row">
       <div class="col-md-12 mb-4">
         <ng-titulo [titulo]="ProveedoresTitulo"></ng-titulo>
