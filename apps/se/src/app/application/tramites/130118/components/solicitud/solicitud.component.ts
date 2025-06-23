@@ -4,8 +4,8 @@ import { Subject, map, merge, takeUntil } from 'rxjs';
 
 import { CATALOGOS_ID, Catalogo, ConsultaioQuery, ConsultaioState, FECHA_SALIDA, InputFecha, REGEX_ONCE_ENTEROS_DOS_DECIMALES, REGEX_ONCE_ENTEROS_TRES_DECIMALES, ValidacionesFormularioService } from '@ng-mf/data-access-user';
 import { Solicitud130118State, Tramite130118Store } from '../../estados/tramites/tramite130118.store';
-import { Tramite130118Query } from '../../estados/queries/tramite130118.query';
 import { PeximService } from '../../service/pexim.service';
+import { Tramite130118Query } from '../../estados/queries/tramite130118.query';
 
 /**
  * Componente para la vista de la solicitud de la sección de "130118".
@@ -243,7 +243,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         clasifiRegimen: [{ value: this.solicitudState?.clasifiRegimen, disabled: true }]
       }),
       datosMercancia: this.fb.group({
-        valueTA: [{ value: this.solicitudState?.valueTA, disabled: true }, [Validators.maxLength(1000), Validators.pattern(/^[^~`^]*$/)]],
+        valueTA: [{ value: this.solicitudState?.valueTA}, [Validators.maxLength(1000), Validators.pattern(/^[^~`^]*$/)]],
         fraccionArancelaria: [this.solicitudState?.fraccionArancelaria, Validators.required],
         nico: [this.solicitudState?.nico, Validators.required],
         unidadMedidaTarifaria: [this.solicitudState?.unidadMedidaTarifaria, Validators.required],

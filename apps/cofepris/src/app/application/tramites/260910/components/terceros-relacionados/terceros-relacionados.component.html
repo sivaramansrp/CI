@@ -9,7 +9,7 @@
     <label class="form-label" for="">Fabricante:</label>
     <app-tabla-dinamica [tipoSeleccionTabla]="fabricanteSeleccionTabla"
       [configuracionTabla]="fabricanteConfiguracionTabla" [datos]="fabricanteDatos"
-      (listaDeFilaSeleccionada)="getFabricanteDatos($event)">
+      (listaDeFilaSeleccionada)="getFabricanteDatos($event)" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura">
     </app-tabla-dinamica>
   </div>
 
@@ -17,14 +17,14 @@
     <div class="btn-group">
       @if (selectedFabricante.length > 0) {
       <button class="btn btn-default ms-3" type="button" name="eliminar" id="eliminarFabricante" data-bs-toggle="modal"
-        data-bs-target="#modal-confirmar" (click)="confirmarEliminar('fabricante')">
+        data-bs-target="#modal-confirmar" (click)="confirmarEliminar('fabricante')" [disabled]="esFormularioSoloLectura">
         Eliminar
       </button>
-      <button type="button" class="btn btn-default btn-space ms-3">
+      <button type="button" class="btn btn-default btn-space ms-3" [disabled]="esFormularioSoloLectura">
         Modificar
       </button>
       }
-      <button type="button" class="btn btn-primary ms-3">
+      <button type="button" class="btn btn-primary ms-3" [disabled]="esFormularioSoloLectura">
         Agregar
       </button>
     </div>
@@ -34,7 +34,7 @@
     <label class="form-label" for="">Destinatario (destino final)*:</label>
     <app-tabla-dinamica [tipoSeleccionTabla]="destinatarioSeleccionTabla"
       [configuracionTabla]="destinatarioConfiguracionTabla" [datos]="destinatarioDatos"
-      (listaDeFilaSeleccionada)="getDestinatarioDatos($event)">
+      (listaDeFilaSeleccionada)="getDestinatarioDatos($event)" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura">
     </app-tabla-dinamica>
   </div>
 
@@ -42,14 +42,14 @@
     <div class="btn-group">
       @if (selectedDestinatario.length > 0) {
       <button class="btn btn-default ms-3" type="button" name="eliminar" id="eliminarDestinatario" data-bs-toggle="modal"
-        data-bs-target="#modal-confirmar" (click)="confirmarEliminar('destinatario')">
+        data-bs-target="#modal-confirmar" (click)="confirmarEliminar('destinatario')" [disabled]="esFormularioSoloLectura">
         Eliminar
       </button>
-      <button type="button" class="btn btn-default btn-space ms-3">
+      <button type="button" class="btn btn-default btn-space ms-3" [disabled]="esFormularioSoloLectura">
         Modificar
       </button>
       }
-      <button type="button" class="btn btn-primary ms-3">
+      <button type="button" class="btn btn-primary ms-3" [disabled]="esFormularioSoloLectura">
         Agregar
       </button>
     </div>
@@ -59,7 +59,7 @@
     <label class="form-label" for="">Proveedor:</label>
     <app-tabla-dinamica [tipoSeleccionTabla]="proveedorSeleccionTabla"
       [configuracionTabla]="proveedorConfiguracionTabla" [datos]="proveedorDatos"
-      (listaDeFilaSeleccionada)="getProveedorDatos($event)">
+      (listaDeFilaSeleccionada)="getProveedorDatos($event)" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura">
     </app-tabla-dinamica>
   </div>
 
@@ -67,14 +67,14 @@
     <div class="btn-group">
       @if (selectedProveedor.length > 0) {
       <button class="btn btn-default ms-3" type="button" name="eliminar" id="eliminarProveedor" data-bs-toggle="modal"
-        data-bs-target="#modal-confirmar" (click)="confirmarEliminar('proveedor')">
+        data-bs-target="#modal-confirmar" (click)="confirmarEliminar('proveedor')" [disabled]="esFormularioSoloLectura">
         Eliminar
       </button>
-      <button type="button" class="btn btn-default btn-space ms-3">
+      <button type="button" class="btn btn-default btn-space ms-3" [disabled]="esFormularioSoloLectura">
         Modificar
       </button>
       }
-      <button type="button" class="btn btn-primary ms-3">
+      <button type="button" class="btn btn-primary ms-3" [disabled]="esFormularioSoloLectura">
         Agregar
       </button>
     </div>
@@ -84,7 +84,7 @@
     <label class="form-label" for="">Facturador:</label>
     <app-tabla-dinamica [tipoSeleccionTabla]="facturadorSeleccionTabla"
       [configuracionTabla]="facturadorConfiguracionTabla" [datos]="facturadorDatos"
-      (listaDeFilaSeleccionada)="getFacturadorDatos($event)">
+      (listaDeFilaSeleccionada)="getFacturadorDatos($event)" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura">
     </app-tabla-dinamica>
   </div>
 
@@ -92,14 +92,14 @@
     <div class="btn-group">
       @if (selectedFacturador.length > 0) {
       <button class="btn btn-default ms-3" type="button" name="eliminar" id="eliminarFacturador" data-bs-toggle="modal"
-        data-bs-target="#modal-confirmar" (click)="confirmarEliminar('facturador')">
+        data-bs-target="#modal-confirmar" (click)="confirmarEliminar('facturador')" [disabled]="esFormularioSoloLectura">
         Eliminar
       </button>
-      <button type="button" class="btn btn-default btn-space ms-3">
+      <button type="button" class="btn btn-default btn-space ms-3" [disabled]="esFormularioSoloLectura">
         Modificar
       </button>
       }
-      <button type="button" class="btn btn-primary ms-3">
+      <button type="button" class="btn btn-primary ms-3" [disabled]="esFormularioSoloLectura">
         Agregar
       </button>
     </div>

@@ -94,7 +94,7 @@ export class RegistroCuentasBancariasService {
    *
    * @param component - El nombre del componente al que se desea cambiar.
    */
-  public cambiarComponente(component: string) {
+  public cambiarComponente(component: string): void {
     this.componentSource.next(component);
   }
 

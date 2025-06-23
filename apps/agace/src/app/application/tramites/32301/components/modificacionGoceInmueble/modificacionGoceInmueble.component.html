@@ -22,7 +22,7 @@
             [layout]="'horizontal'"
             [gap]="'50px'"
             formControlName="ideGenerica2"
-            (change)="verificaRadioTipoSem()"
+            (valueChange)="verificaRadioTipoSem($event)"
           ></app-input-radio>
         </div>
       </div>
@@ -152,6 +152,7 @@
                   [placeholder]="'Seleccione un valor'"
                   [catalogo]="entidadFederativa"
                   formControlName="cveEntidad"
+                  [isDisabled]="esFormularioSoloLectura"
                 >
                 </app-catalogo-select>
               </div>
@@ -164,6 +165,7 @@
                 [label]="'Alcaldía o Municipio'"
                 [required]="true"
                 name="cveFraccionArancelaria"
+                [isDisabled]="esFormularioSoloLectura"
               ></app-catalogo-select>
             </div>
           </div>
@@ -177,12 +179,13 @@
                 "
                 [required]="true"
                 name="cveTipoDoc"
+                [isDisabled]="esFormularioSoloLectura"
               ></app-catalogo-select>
             </div>
           </div>
           <div class="row">
             <div class="col-md-4">
-              <div class="input-group">
+              <div class="form-group">
                 <label for="fechaInicialAnteriorCon"
                   >Fecha inicial anterior :</label
                 >
@@ -196,7 +199,7 @@
               </div>
             </div>
             <div class="col-md-4">
-              <div class="input-group">
+              <div class="form-group">
                 <label for="fechaFinalAnteriorCon">Fecha final anterior</label>
                 <input
                   type="date"

@@ -129,7 +129,7 @@ setValoresStore(event: { formGroupName: string, campo: string, valor: undefined,
       next: (data) => {
         this.idiomaDatos = data as Catalogo[];
       },
-      error: (error: HttpErrorResponse) => {
+      error: (_error: HttpErrorResponse) => {
         this.idiomaDatos = [];
       },
     });
@@ -148,7 +148,7 @@ setValoresStore(event: { formGroupName: string, campo: string, valor: undefined,
       next: (data) => {
         this.entidadFederativas = data as Catalogo[];
       },
-      error: (error: HttpErrorResponse) => {
+      error: (_error: HttpErrorResponse) => {
         this.entidadFederativas = [];
       },
     });
@@ -167,7 +167,7 @@ setValoresStore(event: { formGroupName: string, campo: string, valor: undefined,
       next: (data) => {
         this.representacionFederal = data as Catalogo[];
       },
-      error: (error: HttpErrorResponse) => {
+      error: (_error: HttpErrorResponse) => {
         this.representacionFederal = [];
       },
     });

@@ -1,5 +1,7 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { CancelacionCertificadosComponent } from '../../components/cancelacion-certificados/cancelacion-certificados.component';
 import { CommonModule } from '@angular/common';
+import { DatosEmpresaComponent } from '../../components/datos-empresa/datos-empresa.component';
 import { SolicitanteComponent } from '@ng-mf/data-access-user';
 import { Subject } from 'rxjs';
 import { Tramite140205Query } from '../../../../estados/queries/tramite140205.query';
@@ -7,8 +9,6 @@ import { Tramite140205State } from '../../../../estados/tramites/tramite140205.s
 import { Tramite140205Store } from '../../../../estados/tramites/tramite140205.store';
 import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
-import { DatosEmpresaComponent } from '../../components/datos-empresa/datos-empresa.component';
-import { CancelacionCertificadosComponent } from '../../components/cancelacion-certificados/cancelacion-certificados.component';
 
 /**
  * Componente para gestionar el paso uno del trámite.

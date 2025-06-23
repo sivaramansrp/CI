@@ -1,9 +1,7 @@
-import { Catalogo } from '@libs/shared/data-access-user/src';
-
+import { GrupoCupo, GrupoDatalleCupo, GrupoEmpresa, GrupoFolio } from '../../tramites/140205/model/cancelaciones-certificado.model';
 import { Injectable } from '@angular/core';
 import { Store } from '@datorama/akita';
 import { StoreConfig } from '@datorama/akita';
-import { GrupoCupo, GrupoDatalleCupo, GrupoEmpresa, GrupoFolio } from '../../tramites/140205/model/cancelaciones-certificado.model';
 /**
  * Interfaz que define el estado inicial del trámite 140205.
  * 
