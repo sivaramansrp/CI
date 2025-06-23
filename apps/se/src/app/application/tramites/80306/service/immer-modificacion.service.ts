@@ -1,9 +1,10 @@
-import { Anexo, Bitacora, Complimentaria, DatosModificacion, DomicilioInfo, Federetarios, Operacions } from '../estados/models/plantas-consulta.model';
+import { Anexo, Bitacora, Complimentaria, ComplimentariaDatos, DatosModificacion, DomicilioInfo, Federetarios, Operacions } from '../estados/models/plantas-consulta.model';
 import { Catalogo, RespuestaCatalogos } from '@libs/shared/data-access-user/src';
 import { Observable, map } from 'rxjs';
 import { DatosDelModificacion } from '../estados/models/datos-tramite.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { RespuestTablaDatos } from '../models/datos-tramite.model';
 
 @Injectable({
   providedIn: 'root'
@@ -18,10 +19,10 @@ export class ImmerModificacionService {
      * Obtener una lista de Transporte
      * 
      * @param {string} catalogo - El nombre del catálogo a obtener.
-     * @returns {Observable<RespuestaCatalogos>} Un observable con la respuesta del catálogo de transporte.
+     * @returns {Observable<RespuestTablaDatos>} Un observable con la respuesta del catálogo de transporte.
      */
-    getTablaData(catalogo: string): Observable<RespuestaCatalogos> {
-      return this.http.get<RespuestaCatalogos>(`assets/json/80306/${catalogo}.json`);
+    getTablaData(catalogo: string): Observable<RespuestTablaDatos> {
+      return this.http.get<RespuestTablaDatos>(`assets/json/80306/${catalogo}.json`);
     }
 
       /**
@@ -75,7 +76,7 @@ export class ImmerModificacionService {
      */
     obtenerComplimentaria(): Observable<Complimentaria[]> {
     return this.http
-      .get<Complimentaria[]>('assets/json/80306/complimentaria.json').pipe(map((res: any) => res.data));
+      .get<ComplimentariaDatos>('assets/json/80306/complimentaria.json').pipe(map((res: ComplimentariaDatos) => res.data));
   }
 
   /**
@@ -85,7 +86,7 @@ export class ImmerModificacionService {
    */
   obtenerAnexo(): Observable<Anexo[]> {
     return this.http
-      .get<Anexo[]>('assets/json/80306/anexo.json').pipe(map((res: any) => res.data));
+      .get<{data: Anexo[]}>('assets/json/80306/anexo.json').pipe(map((res: {data:Anexo[]}) => res.data));
   }
 
   /**
@@ -95,7 +96,7 @@ export class ImmerModificacionService {
    */
   obtenerFederetarios(): Observable<Federetarios[]> {
     return this.http
-      .get<Federetarios[]>('assets/json/80306/federetarios.json').pipe(map((res: any) => res.data));
+      .get<{data: Federetarios[]}>('assets/json/80306/federetarios.json').pipe(map((res: {data: Federetarios[]}) => res.data));
   }
   
   /**
@@ -106,7 +107,7 @@ export class ImmerModificacionService {
    */
   obtenerOperacion(): Observable<Operacions[]> {
     return this.http
-      .get<Operacions[]>('assets/json/80306/operacion.json').pipe(map((res: any) => res.data));
+      .get<{data: Operacions[]}>('assets/json/80306/operacion.json').pipe(map((res: {data: Operacions[]}) => res.data));
   }
 
   /**
@@ -116,7 +117,7 @@ export class ImmerModificacionService {
    */
   obtenerPlanta(): Observable<Operacions[]> {
     return this.http
-      .get<Operacions[]>('assets/json/80306/planta.json').pipe(map((res: any) => res.data));
+      .get<{data: Operacions[]}>('assets/json/80306/planta.json').pipe(map((res: {data: Operacions[]}) => res.data));
   }
 
   /**
@@ -126,7 +127,7 @@ export class ImmerModificacionService {
    */
   obtenerServicios(): Observable<Operacions[]> {
     return this.http
-      .get<Operacions[]>('assets/json/80306/servicios.json').pipe(map((res: any) => res.data));
+      .get<{data: Operacions[]}>('assets/json/80306/servicios.json').pipe(map((res: {data: Operacions[]}) => res.data));
   }
 
   /**
@@ -136,21 +137,21 @@ export class ImmerModificacionService {
      */
     obtenerListaEstado(): Observable<Catalogo[]> {
       return this.http
-        .get<Catalogo[]>('./assets/json/80306/estado.json').pipe(map((res: any) => res.data));
+        .get<{data: Catalogo[]}>('./assets/json/80306/estado.json').pipe(map((res: {data: Catalogo[]}) => res.data));
     }
   
     obtenerDomicilios(): Observable<DomicilioInfo[]> {
       return this.http
-        .get<DomicilioInfo[]>('assets/json/80306/domicilio.json').pipe(map((res: any) => res.data));
+        .get<{data: DomicilioInfo[]}>('assets/json/80306/domicilio.json').pipe(map((res: {data: DomicilioInfo[]}) => res.data));
     }
   
     obtenerBitacora(): Observable<Bitacora[]> {
       return this.http
-        .get<Bitacora[]>('assets/json/80306/bitacora.json').pipe(map((res: any) => res.data));
+        .get<{data: Bitacora[]}>('assets/json/80306/bitacora.json').pipe(map((res: {data: Bitacora[]}) => res.data));
     }
   
     obtenerDatosGenerales(): Observable<DatosModificacion> {
       return this.http
-        .get<DatosModificacion>('assets/json/80306/datos-modificacion.json').pipe(map((res: any) => res.data));
+        .get<{data: DatosModificacion}>('assets/json/80306/datos-modificacion.json').pipe(map((res: {data: DatosModificacion}) => res.data));
     }
 }

@@ -2,7 +2,6 @@ import { GrupoCupo, GrupoDatalleCupo, GrupoEmpresa, GrupoFolio } from '../../tra
 import { Injectable } from '@angular/core';
 import { Store } from '@datorama/akita';
 import { StoreConfig } from '@datorama/akita';
-
 /**
  * Interfaz que define el estado inicial del trámite 140205.
  * 

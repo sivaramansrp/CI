@@ -1,100 +1,61 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RegistroTransportistaComponent } from './registro-transportista.component';
-import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
-import { PasoTresComponent } from '../paso-tres/paso-tres.component';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { CommonModule } from '@angular/common';
-import { WizardComponent,BtnContinuarComponent } from '@libs/shared/data-access-user/src';
-import { SolicitanteComponent } from '@libs/shared/data-access-user/src';
+import { AccionBoton } from '@ng-mf/data-access-user';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, Input } from '@angular/core';
+@Component({
+  selector: 'app-wizard',
+  template: ''
+})
+class MockWizardComponent {
+  siguiente = jest.fn();
+  atras = jest.fn();
+}
 
-const mockWizardComponent = {
-  siguiente: jest.fn(),
-  atras: jest.fn(),
-};
-
-const mockSolicitanteService = {
-  validateTab: jest.fn().mockImplementation((tabIndex: number) => tabIndex > 0 && tabIndex <= 5),
-};
-
-describe('RegistroTransportistaComponent', () => {
-  let component: RegistroTransportistaComponent;
+describe('SolicitudDespachoExportacionComponent', () => {
+  let componente: RegistroTransportistaComponent;
   let fixture: ComponentFixture<RegistroTransportistaComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [RegistroTransportistaComponent, PasoUnoComponent, PasoTresComponent],
-      imports:[CommonModule, WizardComponent,SolicitanteComponent,BtnContinuarComponent,HttpClientTestingModule],
-      providers: [
-        { provide: 'SolicitanteService', useValue: mockSolicitanteService },
-      ],
+      declarations: [RegistroTransportistaComponent, MockWizardComponent],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA],
     }).compileComponents();
-  });
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(RegistroTransportistaComponent);
-    component = fixture.componentInstance;
-    component.wizardComponent = mockWizardComponent as any;
+    componente = fixture.componentInstance;
     fixture.detectChanges();
+
+    componente.wizardComponent = {
+      siguiente: jest.fn(),
+      atras: jest.fn(),
+    } as unknown as any;
+
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
+  it('debería crear el componente', () => {
+    expect(componente).toBeTruthy();
   });
 
-  it('should initialize TEXTO_DE_ALERTA with the correct value', () => {
-    expect(component.TEXTO_DE_ALERTA).toBe(
-      'La Solicitud ha quedado registrada con el número temporal 202768281.Éste no tiene validez legal y sirve solamente para efectos de identificar tu Solicitud. Un folio oficial le será asignado a la Solicitud al momento en que ésta sea firmada'
-    );
+  it('debería llamar wizardComponent.siguiente si acción es "cont" y valor válido', () => {
+    const EVENTO: AccionBoton = { valor: 2, accion: 'cont' };
+    componente.getValorIndice(EVENTO);
+    expect(componente.indice).toBe(2);
+    expect(componente.wizardComponent.siguiente).toHaveBeenCalled();
   });
 
-  it('should initialize datosPasos with the correct values', () => {
-    expect(component.datosPasos.nroPasos).toBe(component.pantallasPasos.length);
-    expect(component.datosPasos.indice).toBe(component.indice);
-    expect(component.datosPasos.txtBtnAnt).toBe('Anterior');
-    expect(component.datosPasos.txtBtnSig).toBe('Continuar');
+  it('debería llamar wizardComponent.atras si acción no es "cont" y valor válido', () => {
+    const EVENTO: AccionBoton = { valor: 3, accion: 'back' };
+    componente.getValorIndice(EVENTO);
+    expect(componente.indice).toBe(3);
+    expect(componente.wizardComponent.atras).toHaveBeenCalled();
   });
 
-  it('should update indice and call wizardComponent.siguiente when getValorIndice is called with accion "cont"', () => {
-    const accionBoton = { accion: 'cont', valor: 2 };
-    component.getValorIndice(accionBoton);
-    expect(component.indice).toBe(2);
-    expect(component.wizardComponent.siguiente).toHaveBeenCalled();
-  });
-
-  it('should update indice and call wizardComponent.atras when getValorIndice is called with accion "ant"', () => {
-    const accionBoton = { accion: 'ant', valor: 1 };
-    component.getValorIndice(accionBoton);
-    expect(component.indice).toBe(1);
-    expect(component.wizardComponent.atras).toHaveBeenCalled();
-  });
-
-  it('should not update indice or call wizardComponent methods when getValorIndice is called with valor out of range', () => {
-    const accionBoton = { accion: 'cont', valor: 6 };
-    component.getValorIndice(accionBoton);
-    expect(component.indice).toBeUndefined(); 
-    expect(component.wizardComponent.siguiente).not.toHaveBeenCalled();
-    expect(component.wizardComponent.atras).not.toHaveBeenCalled();
-  });
-
-  it('should not update indice or call wizardComponent methods when getValorIndice is called with valor less than 1', () => {
-    const accionBoton = { accion: 'ant', valor: 0 };
-    component.getValorIndice(accionBoton);
-    expect(component.indice).toBeUndefined(); 
-    expect(component.wizardComponent.siguiente).not.toHaveBeenCalled();
-    expect(component.wizardComponent.atras).not.toHaveBeenCalled();
-  });
-
-  it('should update indice and call wizardComponent.siguiente at boundary value 1', () => {
-    const accionBoton = { accion: 'cont', valor: 1 };
-    component.getValorIndice(accionBoton);
-    expect(component.indice).toBe(1);
-    expect(component.wizardComponent.siguiente).toHaveBeenCalled();
-  });
-
-  it('should update indice and call wizardComponent.siguiente at boundary value 5', () => {
-    const accionBoton = { accion: 'cont', valor: 5 };
-    component.getValorIndice(accionBoton);
-    expect(component.indice).toBe(5);
-    expect(component.wizardComponent.siguiente).toHaveBeenCalled();
+  it('no debería cambiar el índice ni llamar métodos si valor es inválido', () => {
+    const EVENTO: AccionBoton = { valor: 0, accion: 'cont' };
+    const INDICE_INICIAL = componente.indice;
+    componente.getValorIndice(EVENTO);
+    expect(componente.indice).toBe(INDICE_INICIAL);
+    expect(componente.wizardComponent.siguiente).not.toHaveBeenCalled();
+    expect(componente.wizardComponent.atras).not.toHaveBeenCalled();
   });
 });

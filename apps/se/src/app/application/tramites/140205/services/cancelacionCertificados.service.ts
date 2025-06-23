@@ -1,8 +1,7 @@
-import { CatalogoLista, CuposTablaDatos, RespuestaConsulta } from '../model/cancelaciones-certificado.model';
+import { CatalogoLista, CuposTablaDatos } from '../model/cancelaciones-certificado.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-
 
 
 /**

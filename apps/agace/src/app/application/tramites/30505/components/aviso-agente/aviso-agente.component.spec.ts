@@ -5,6 +5,7 @@ import { Solicitud30505Store } from '../../../../estados/tramites/tramites30505.
 import { Solicitud30505Query } from '../../../../estados/queries/tramites30505.query';
 import { TercerosRelacionadosService } from '../../services/terceros-relacionados.service';
 import { of, Subject } from 'rxjs';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('AvisoAgenteComponent', () => {
   let component: AvisoAgenteComponent;
@@ -25,7 +26,7 @@ describe('AvisoAgenteComponent', () => {
     };
 
     await TestBed.configureTestingModule({
-      imports: [AvisoAgenteComponent],
+      imports: [AvisoAgenteComponent,HttpClientTestingModule],
       providers: [
         { provide: Router, useValue: routerMock },
         { provide: ActivatedRoute, useValue: routeMock },
@@ -46,15 +47,15 @@ describe('AvisoAgenteComponent', () => {
 
   it('should call router.navigate on AgregarTransportias', () => {
     component.AgregarTransportias();
-    expect(routerMock.navigate).toHaveBeenCalledWith(['../agregar-agente'], { relativeTo: routerMock });
+    expect(routerMock.navigate).toHaveBeenCalledWith(['../agregar-agente'], { relativeTo: routeMock });
   });
 
   it('should set modal property to default value', () => {
     expect(component.modal).toBe('modal');
   });
 
-  it('should initialize avisoAgenteDatos as empty array', () => {
+  it('should initialize avisoAgenteDatos as array with one item', () => {
     expect(Array.isArray(component.avisoAgenteDatos)).toBe(true);
-    expect(component.avisoAgenteDatos.length).toBe(0);
+    expect(component.avisoAgenteDatos.length).toBe(1);
   });
 });

@@ -1,85 +1,110 @@
-// @ts-nocheck
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { By } from '@angular/platform-browser';
-import { Observable, of as observableOf, throwError } from 'rxjs';
-
-import { Component } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { TramitesAsociadosComponent } from './tramites-asociados.component';
 import { RegistrarSolicitudMcpService } from '../../services/registrar-solicitud-mcp.service';
-import { Router } from '@angular/router';
+import { of, Subject } from 'rxjs';
+import {
+  NotificacionesComponent,
+  TablaDinamicaComponent,
+  TituloComponent,
+} from '@libs/shared/data-access-user/src';
+import { DESTINATARIO_CONFIGURACION_TABLA2 } from '../../constants/column-config.enum';
+import { ReactiveFormsModule } from '@angular/forms';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
-class MockRegistrarSolicitudMcpService {
-  getTramitesAsociados() {
-    return observableOf([]); // Mocked response
-  }
+export interface Pedimento {
+  id: number;
 }
-
-class MockRouter {
-  navigate = jest.fn();
-}
-
 describe('TramitesAsociadosComponent', () => {
-  let fixture;
-  let component;
+  let component: TramitesAsociadosComponent;
+  let fixture: ComponentFixture<TramitesAsociadosComponent>;
+  let mockService: any;
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule,TramitesAsociadosComponent ],
-      schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
+  beforeEach(async () => {
+    mockService = {
+      getTramitesAsociados: jest
+        .fn()
+        .mockReturnValue(of([{ id: 1, nombre: 'Trámite 1' }])),
+    };
+
+    await TestBed.configureTestingModule({
+      imports: [
+        TramitesAsociadosComponent,
+        TablaDinamicaComponent,
+        TituloComponent,
+        NotificacionesComponent,
+        ReactiveFormsModule,
+        HttpClientTestingModule,
+      ],
       providers: [
-        { provide: RegistrarSolicitudMcpService, useClass: MockRegistrarSolicitudMcpService },
-        { provide: Router, useClass: MockRouter }
-      ]
-    }).overrideComponent(TramitesAsociadosComponent, {
-
+        { provide: RegistrarSolicitudMcpService, useValue: mockService },
+      ],
     }).compileComponents();
+
     fixture = TestBed.createComponent(TramitesAsociadosComponent);
-    component = fixture.debugElement.componentInstance;
+    component = fixture.componentInstance;
+    fixture.detectChanges();
   });
 
-  afterEach(() => {
-    fixture.destroy();
-  });
-
-  it('should run #constructor()', async () => {
+  it('should create the component', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should run #ngOnInit()', async () => {
-    component.getTramitesAsociados = jest.fn();
+  it('should call getTramitesAsociados on init', () => {
+    const spy = jest.spyOn(component, 'getTramitesAsociados');
     component.ngOnInit();
-    expect(component.getTramitesAsociados).toHaveBeenCalled();
+    expect(spy).toHaveBeenCalled();
   });
 
-  it('should run #getTramitesAsociados()', async () => {
-    component.registrarsolicitudmcp = component.registrarsolicitudmcp || {};
-    component.registrarsolicitudmcp.getTramitesAsociados = jest.fn().mockReturnValue(observableOf({}));
+  it('should set tablaFilaDatos when getTramitesAsociados is called', () => {
     component.getTramitesAsociados();
-    expect(component.registrarsolicitudmcp.getTramitesAsociados).toHaveBeenCalled();
+    expect(component.tablaFilaDatos).toEqual([{ id: 1, nombre: 'Trámite 1' }]);
   });
 
-  it('should run #showModal()', async () => {
-
-    component.showModal();
-
+  it('should show modal and call abrirModal', () => {
+    const abrirModalSpy = jest.spyOn(component, 'abrirModal');
+    component.mostrarModal();
+    expect(component.esModalVisible).toBe(true);
+    expect(abrirModalSpy).toHaveBeenCalled();
   });
 
-  it('should run #hideModal()', async () => {
-
-    component.hideModal();
-
+  it('should hide modal', () => {
+    component.esModalVisible = true;
+    component.ocultarModal();
+    expect(component.esModalVisible).toBe(false);
   });
 
-  it('should run #ngOnDestroy()', async () => {
-    component.destroyed$ = component.destroyed$ || {};
-    component.destroyed$.next = jest.fn();
-    component.destroyed$.complete = jest.fn();
+  it('should remove pedimento when eliminarPedimento is called with true', () => {
+    component.pedimentos = [{ id: 1 } as any, { id: 2 } as any];
+    component.elementoParaEliminar = 0;
+    component.eliminarPedimento(true);
+    expect(component.pedimentos.length).toBe(1);
+    // expect(component.pedimentos[0].id).toBe(2);
+  });
+
+  it('should not remove pedimento when eliminarPedimento is called with false', () => {
+    component.pedimentos = [{ id: 1 } as any, { id: 2 } as any];
+    component.elementoParaEliminar = 0;
+    component.eliminarPedimento(false);
+    expect(component.pedimentos.length).toBe(2);
+  });
+
+  it('should set nuevaNotificacion and elementoParaEliminar when abrirModal is called', () => {
+    component.abrirModal(3);
+    expect(component.nuevaNotificacion).not.toBeNull();
+    expect(component.elementoParaEliminar).toBe(3);
+  });
+
+  it('should complete destroyed$ on ngOnDestroy', () => {
+    const destroyed$ = new Subject<boolean>();
+    (component as any).destroyed$ = destroyed$;
+    const completeSpy = jest.spyOn(destroyed$, 'complete');
     component.ngOnDestroy();
-    expect(component.destroyed$.next).toHaveBeenCalled();
-    expect(component.destroyed$.complete).toHaveBeenCalled();
+    expect(completeSpy).toHaveBeenCalled();
   });
 
+  it('should have correct destinatarioConfiguracionTabla', () => {
+    expect(component.destinatarioConfiguracionTabla).toBe(
+      DESTINATARIO_CONFIGURACION_TABLA2
+    );
+  });
 });

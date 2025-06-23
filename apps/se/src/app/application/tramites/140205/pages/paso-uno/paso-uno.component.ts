@@ -1,18 +1,14 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { CancelacionCertificadosComponent } from '../../components/cancelacion-certificados/cancelacion-certificados.component';
-import { CancelacionCertificadosService } from '../../services/cancelacionCertificados.service';
 import { CommonModule } from '@angular/common';
 import { DatosEmpresaComponent } from '../../components/datos-empresa/datos-empresa.component';
-import { SolicitanteComponent} from '@ng-mf/data-access-user';
+import { SolicitanteComponent } from '@ng-mf/data-access-user';
 import { Subject } from 'rxjs';
 import { Tramite140205Query } from '../../../../estados/queries/tramite140205.query';
 import { Tramite140205State } from '../../../../estados/tramites/tramite140205.store';
 import { Tramite140205Store } from '../../../../estados/tramites/tramite140205.store';
 import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
-
-
 
 /**
  * Componente para gestionar el paso uno del trámite.

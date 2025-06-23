@@ -1,6 +1,6 @@
 import { API_GET_VALIDA_LINEA_PAGO, LINEA_PAGO_QUERY } from "../../../../constantes/5701/api-constants";
 import { CatalogosResponse, ENVIRONMENT } from "@libs/shared/data-access-user/src";
-import { catchError, map, Observable, throwError } from "rxjs";
+import { Observable, catchError, map, throwError } from "rxjs";
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 

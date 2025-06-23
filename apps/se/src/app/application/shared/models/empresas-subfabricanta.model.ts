@@ -17,3 +17,8 @@ export interface PlantasSubfabricante {
       plantasSubfabricantesAgregar:PlantasSubfabricante [],
       plantasPorCompletar:PlantasSubfabricante[]
   }
+
+export interface RespuestaSubfabricantes {
+  code: number;
+  data: PlantasSubfabricante[];
+}

@@ -1,4 +1,4 @@
-import { CatalogoLista, DatosSolicitante, RespuestaConsulta, SolicitudFormulario, SolicitudTablaDatos } from '../models/autorizacion-importacion.model';
+import { CatalogoLista, DatosSolicitante, RespuestaConsulta, SolicitudTablaDatos } from '../models/autorizacion-importacion.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';

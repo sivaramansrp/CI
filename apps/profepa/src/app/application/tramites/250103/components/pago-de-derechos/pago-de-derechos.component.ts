@@ -1,7 +1,12 @@
-import { Catalogo, CatalogoSelectComponent, InputFechaComponent, TituloComponent } from '@libs/shared/data-access-user/src';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import {
+  Catalogo,
+  ConsultaioQuery,
+  TituloComponent,
+} from '@ng-mf/data-access-user';
+import { CatalogoSelectComponent, InputFechaComponent } from '@libs/shared/data-access-user/src';
+import { Component, OnDestroy} from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Subject, map, takeUntil } from 'rxjs';
+import { Subject, Subscription, map, takeUntil } from 'rxjs';
 import { INPUT_FECHA_PAGO } from '../../constantes/embalaje-de-madera.enum';
 import catalogoDatos from '@libs/shared/theme/assets/json/250103/banco.json';
 import pago from '@libs/shared/theme/assets/json/250103/pago-formdatos.json';
@@ -58,14 +63,11 @@ import { Tramite250103Query } from '../../estados/tramite250103.query';
  * pago de derechos, como clave, dependencia, banco, llave, fecha e importe.
  * @property {Catalogo[]} bancocatalogo - Lista de opciones de bancos obtenidas del catálogo.
  * @property {Solicitud250103State} solicitudState - Estado de la solicitud 250103 que contiene los valores actuales de la solicitud.
- * 
- * @method ngOnInit() - Método que se ejecuta cuando el componente es inicializado. Inicializa el formulario reactivo
- * y carga los datos de la solicitud.
  * @method setValoresStore() - Método para actualizar el store del trámite con los valores del formulario.
  * @method ngOnDestroy() - Método que se ejecuta cuando el componente es destruido, liberando recursos y completando
  * la notificación de destrucción.
  */
-export class PagoDeDerechosComponent implements OnInit, OnDestroy {
+export class PagoDeDerechosComponent implements OnDestroy {
 
   /**
    * Lista de opciones de banco obtenidas de un catálogo.
@@ -92,6 +94,24 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * Subject utilizado para gestionar la destrucción del componente y evitar memory leaks.
    */
   private destroyNotifier$: Subject<void> = new Subject();
+  
+    /**
+     * Suscripción a los cambios en el formulario reactivo.
+     */
+    private subscription: Subscription = new Subscription();
+  
+    /**
+     * Indica si el formulario está en modo solo lectura.
+     * Cuando es `true`, los campos del formulario no se pueden editar.
+     */
+    esFormularioSoloLectura: boolean = false;
+  
+    /**
+     * Estado interno de la sección actual del trámite 130110.
+     * Utilizado para gestionar y almacenar la información relacionada con esta sección.
+     * Propiedad privada.
+     */
+    private seccionState!: Tramite250103State;
 
   /**
    * Constructor del componente. Inicializa las dependencias necesarias y prepara el formulario reactivo.
@@ -99,21 +119,56 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * @param fb - FormBuilder utilizado para crear el formulario reactivo.
    * @param tramite221602Store - Store que gestiona los valores persistentes del trámite 221602.
    * @param tramite221602Query - Query que se utiliza para obtener el estado actual de la solicitud 221602.
+   * @param consultaioQuery Consulta para obtener el estado de la consulta.
    */
   constructor(
     private fb: FormBuilder,
     private tramite250103Store: Tramite250103Store,
-    private tramite250103Query: Tramite250103Query
-  ) { // Constructor que inyecta las dependencias necesarias
+    private tramite250103Query: Tramite250103Query,
+    private consultaioQuery: ConsultaioQuery
+  ) { 
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
   }
 
   /**
-   * Método que se ejecuta cuando el componente es inicializado.
-   * 
-   * Inicializa el formulario reactivo con los valores actuales de la solicitud.
+   * Evalúa si se debe inicializar o cargar datos en el formulario.
+   * Además, obtiene la información del catálogo de mercancía.
    */
-  ngOnInit(): void {
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.inicializarFormulario();
+    }
+  }
+
+  /**
+   * @method
+   * @name guardarDatosFormulario
+   * @description
+   * Inicializa los formularios y obtiene los datos de la tabla.
+   * Dependiendo del modo de solo lectura (`esFormularioSoloLectura`),
+   * deshabilita o habilita todos los formularios del componente.
+   * Si el formulario está en modo solo lectura, todos los formularios se deshabilitan para evitar modificaciones.
+   * Si no está en modo solo lectura, todos los formularios se habilitan para permitir la edición.
+   *
+   * @returns {void}
+   */
+  guardarDatosFormulario(): void {
     this.inicializarFormulario();
+    if (this.esFormularioSoloLectura) {
+      this.pagoDerechosForm.disable();
+    } else {
+      this.pagoDerechosForm.enable();
+    }
   }
 
   /**
@@ -172,6 +227,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * Libera los recursos y completa la notificación de destrucción del componente.
    */
   ngOnDestroy(): void {
+    this.subscription.unsubscribe();
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }

@@ -1,30 +1,3 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import {
-  FormBuilder,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
-import {
-  Tramite140205State,
-  Tramite140205Store,
-} from '../../../../estados/tramites/tramite140205.store';
-import { map, takeUntil } from 'rxjs';
-import { ReplaySubject } from 'rxjs';
-
-import {
-  CatalogoSelectComponent,
-  TablaDinamicaComponent,
-  TablaSeleccion,
-  TituloComponent,
-  ValidacionesFormularioService,
-} from '@libs/shared/data-access-user/src';
-import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
-import { Subject } from 'rxjs';
-
-import { CancelacionCertificadosService } from '../../services/cancelacionCertificados.service';
-import { Tramite140205Query } from '../../../../estados/queries/tramite140205.query';
-
 import {
   Catalogo,
   CatalogoLista,
@@ -32,13 +5,32 @@ import {
   CuposTablaDatos,
   DisponsiblesTabla,
 } from '../../model/cancelaciones-certificado.model';
-
-import { CommonModule } from '@angular/common';
-
+import {
+  CatalogoSelectComponent,
+  TablaDinamicaComponent,
+  TablaSeleccion,
+  TituloComponent,
+  ValidacionesFormularioService,
+} from '@libs/shared/data-access-user/src';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import { Subject, map, takeUntil } from 'rxjs';
 import {
   TABLA_DE_DATOS_CUPOS,
   TABLA_DE_DATOS_DISPONIBLES,
 } from '../../constants/cancelaciones.enum';
+import {
+  Tramite140205State,
+  Tramite140205Store,
+} from '../../../../estados/tramites/tramite140205.store';
+import { CancelacionCertificadosService } from '../../services/cancelacionCertificados.service';
+import { CommonModule } from '@angular/common';
+import { Tramite140205Query } from '../../../../estados/queries/tramite140205.query';
 
 /**
  * @component
@@ -339,7 +331,7 @@ export class CancelacionCertificadosComponent implements OnInit, OnDestroy {
   filaDisposibleLista: DisponsiblesTabla[] = [];
 
   /**
-   * @property {disponsiblesTabla[]} filaDisposibleLista
+   * @property {DisponsiblesTabla[]} filaDisposibleLista
    * @description Lista de filas disponibles seleccionadas.
    */
   filaSeleccionadaLista: CuposTabla[] = [];
