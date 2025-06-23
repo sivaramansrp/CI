@@ -1,16 +1,40 @@
-import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, InputCheckComponent, InputRadioComponent, REGEX_RFC, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
-import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
-import { CONTROL_INVENTARIOS_TABLA, ControlInventarios, DATOS_COMUNES_TEXTOS_TRES, INSTALACIONES_PRINCIPALES_TABLA, InstalacionesPrincipalesTablaInfo } from '../../models/datos-comunes.model';
-import { Component, Inject, OnDestroy, OnInit, TemplateRef } from '@angular/core';
-import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
-import { DatosComunesState, DatosComunesStore } from '../../estados/stores/datos-comunes.store';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Subject,map, takeUntil } from 'rxjs';
+import { AlertComponent } from '@libs/shared/data-access-user/src';
+import { BsModalRef } from 'ngx-bootstrap/modal';
+import { BsModalService } from 'ngx-bootstrap/modal';
+import { CONTROL_INVENTARIOS_TABLA } from '../../models/datos-comunes.model';
+import { Catalogo } from '@libs/shared/data-access-user/src';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
+import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { ControlInventarios } from '../../models/datos-comunes.model';
+import { DATOS_COMUNES_TEXTOS_TRES } from '../../models/datos-comunes.model';
 import { DatosComunesQuery } from '../../estados/queries/datos-comunes.query';
 import { DatosComunesService } from '../../services/datos-comunes.service';
+import { DatosComunesState } from '../../estados/stores/datos-comunes.store';
+import { DatosComunesStore } from '../../estados/stores/datos-comunes.store';
+import { FormBuilder } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
+import { INSTALACIONES_PRINCIPALES_TABLA } from '../../models/datos-comunes.model';
+import { Inject } from '@angular/core';
+import { InputCheckComponent } from '@libs/shared/data-access-user/src';
+import { InputRadioComponent } from '@libs/shared/data-access-user/src';
+import { InstalacionesPrincipalesTablaInfo } from '../../models/datos-comunes.model';
+import { OnDestroy } from '@angular/core';
+import { OnInit } from '@angular/core';
+import { REGEX_RFC } from '@libs/shared/data-access-user/src';
+import { ReactiveFormsModule } from '@angular/forms';
+import { Subject } from 'rxjs';
+import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
+import { TablaSeleccion } from '@libs/shared/data-access-user/src';
+import { TemplateRef } from '@angular/core';
+import { TituloComponent } from '@libs/shared/data-access-user/src';
+import { Validators } from '@angular/forms';
 import dinamicaradio from '@libs/shared/theme/assets/json/31602/dinamica-radio-datos.json';
+import { map } from 'rxjs';
 import radio_si_no from '@libs/shared/theme/assets/json/31601/radio_si_no.json';
+import { takeUntil } from 'rxjs';
 
 
 
