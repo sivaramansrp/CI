@@ -1,4 +1,3 @@
-import { BusquedaFolioComponent } from './pages/busqueda-folio/busqueda-folio.component';
 import { IntroPermisoComponent } from './pages/intro-permiso/intro-permiso.component';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';

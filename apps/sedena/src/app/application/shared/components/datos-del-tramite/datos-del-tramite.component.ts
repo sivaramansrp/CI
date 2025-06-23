@@ -24,7 +24,6 @@ import {
   OnDestroy,
   OnInit,
   Output,
-  ViewChild,
 } from '@angular/core';
 import {
   ConfiguracionColumna,
@@ -61,11 +60,8 @@ import {
 import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
-import { DatosMercanciaComponent } from '../datos-mercancia/datos-mercancia.component';
 import { REGEX_NUMEROS } from '@libs/shared/data-access-user/src';
 import { REGEX_SOLO_DIGITOS } from '@libs/shared/data-access-user/src';
-import { map } from 'rxjs/operators';
-import { DatosMercanciaContenedoraComponent } from '../../../tramites/240118/components/datos-mercancia-contenedora/datos-mercancia-contenedora.component';
 /**
  * @title Datos del Trámite
  * @description Componente que gestiona el formulario de datos del trámite como permisos, uso final y selección de aduanas.

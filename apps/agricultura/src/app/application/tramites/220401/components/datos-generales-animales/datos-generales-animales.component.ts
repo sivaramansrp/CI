@@ -1,5 +1,5 @@
 import { AbstractControl,FormBuilder,FormGroup,ReactiveFormsModule,ValidationErrors,Validators} from '@angular/forms';
-import { Agregar220401Store, solicitud220401State } from '../../../../estados/tramites/agregar220401.store';
+import { Agregar220401Store, Solicitud220401State } from '../../../../estados/tramites/agregar220401.store';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ConsultaioQuery, REGEX_DESCRIPCION_ESPECIALES,REGEX_LEADING_SPACES} from '@ng-mf/data-access-user';
 import { Subject,map,takeUntil } from 'rxjs';
@@ -45,7 +45,7 @@ export class DatosGeneralesAnimalesComponent implements OnInit, OnDestroy {
      * Si el formulario está en modo solo lectura (`esFormularioSoloLectura`), guarda los datos actuales del formulario.
      * De lo contrario, inicializa el formulario para su edición.
      */
-    public solicitudState!: solicitud220401State;
+    public solicitudState!: Solicitud220401State;
   /** Configuración del primer select de aduanas */
   aduanas: Catalogo[] = aduanasJson;
  
