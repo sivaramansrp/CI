@@ -2,16 +2,16 @@ import { AppComponent } from './app.component';
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 
-import { AppRoutingModule } from './app-routing.module';
 import {
   FooterComponent,
   SolicitanteService,
   TituloComponent,
 } from '@ng-mf/data-access-user';
+import { ToastrModule, ToastrService, provideToastr } from 'ngx-toastr';
+import { AppRoutingModule } from './app-routing.module';
 import { HeaderComponent } from '@ng-mf/data-access-user';
-import { provideHttpClient } from '@angular/common/http';
-import { provideToastr, ToastrModule, ToastrService } from 'ngx-toastr';
 import { SeleccionTramiteComponent } from './seleccion-tramite/seleccion-tramite.component';
+import { provideHttpClient } from '@angular/common/http';
 
 @NgModule({
   declarations: [AppComponent, SeleccionTramiteComponent],

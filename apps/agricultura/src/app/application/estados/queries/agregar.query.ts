@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
 
-import { solicitud220401State } from '../../estados/tramites/agregar220401.store';
+import { Solicitud220401State } from '../../estados/tramites/agregar220401.store';
 
 import { Agregar220401Store } from '../tramites/agregar220401.store';
 import { Query } from '@datorama/akita';
 
 @Injectable({ providedIn: 'root' })
-export class AgregarQuery extends Query<solicitud220401State> {
+export class AgregarQuery extends Query<Solicitud220401State> {
   selectedEstado$ = this.select((state) => state.selectedEstado);
   /**
    * Selecciona el estado completo de la solicitud

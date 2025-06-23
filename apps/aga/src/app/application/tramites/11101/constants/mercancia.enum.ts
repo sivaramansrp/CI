@@ -54,7 +54,7 @@ export const CONFIGURACION_PARA_PFE_ENCABEZADO_DE_TABLA: ConfiguracionColumna<Di
  * 
  * @type {{ id: number, descripcion: string }[]}
  */
-export const DocumentosSeleccionados = [
+export const DOCUMENTOS_SELECCIONADOS = [
   {
     id: 1,
     descripcion: 'Documentos que ampare el valor de la mercancía',

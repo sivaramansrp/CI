@@ -1,4 +1,4 @@
-import { DatosSolicitud, Mercancia } from "../../tramites/130401/models/modificacion-descripcion.model";
+import { DatosSolicitud, Mercancia, MercanciaTablaDatos } from "../../tramites/130401/models/modificacion-descripcion.model";
 import { Injectable } from "@angular/core";
 import { Store } from "@datorama/akita";
 import { StoreConfig } from "@datorama/akita";
@@ -46,6 +46,10 @@ export interface Tramite130401State {
    * Contiene información detallada sobre la mercancía asociada al trámite.
    */
   mercancia: Mercancia;
+  /**
+   * Datos de la tabla de mercancías.
+   */
+  mercanciaTablaDatos: MercanciaTablaDatos[];
 }
 
 /**
@@ -81,7 +85,8 @@ export function createInitialState(): Tramite130401State {
       cantidadLibreMercancia: '',
       descripcion: '',
       descripcionModificacion: '',
-    }
+    },
+    mercanciaTablaDatos: []
   };
 }
 
@@ -176,6 +181,19 @@ export class Tramite130401Store extends Store<Tramite130401State> {
     this.update((state) => ({
       ...state,
       mercancia: { ...state.mercancia, descripcionModificacion },
+    }));
+  }
+  /**
+   * Actualiza los datos de la tabla de mercancías en el estado del trámite.
+   * 
+   * Este método permite establecer los datos de la tabla de mercancías en el estado del trámite.
+   * 
+   * @param {MercanciaTablaDatos[]} mercanciaTablaDatos - Lista de datos de mercancías que se mostrarán en la tabla.
+   */
+  public setMercanciaTablaDatos(mercanciaTablaDatos: MercanciaTablaDatos[]): void {
+    this.update((state) => ({
+      ...state,
+      mercanciaTablaDatos,
     }));
   }
 }
