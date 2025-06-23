@@ -21,7 +21,7 @@ import { CertificadoDisponiblesService } from '@ng-mf/data-access-user';
   templateUrl: './certificado-disponibles.component.html',
   styleUrl: './certificado-disponibles.component.scss',
 })
-export class CertificadoDisponiblesComponent<T> implements OnInit, OnDestroy {
+export class CertificadoDisponiblesComponent implements OnInit, OnDestroy {
 
   /**
    * Configuración de la tabla que se utilizará en el componente.

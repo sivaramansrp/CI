@@ -1,10 +1,10 @@
-import { Injectable } from '@angular/core';
 import {
   SolicitudSectoresYMercanciasState,
   TramiteSectoresYMercanciasStore,
 } from '../estados/stores/sectores-y-mercancias.store';
-import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 import { RespuestaCatalogos } from '@libs/shared/data-access-user/src/core/models/shared/catalogos.model';
 
 @Injectable({

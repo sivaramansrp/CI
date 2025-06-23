@@ -281,7 +281,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
       this.esFormulario = false;
     } else {
       this.esFormulario = true;
-    }  }
+    } }
 
   /**
    * Valida el formulario del destinatario.
