@@ -3,7 +3,7 @@
 
 // module.exports = withModuleFederation(config);
 
-/* eslint-disable @typescript-eslint/no-var-requires */ //Add commentMore actions
+/* eslint-disable @typescript-eslint/no-var-requires */
 /* eslint-disable @typescript-eslint/naming-convention */
 /* Este archivo se utiliza para configurar Webpack para la aplicación inah en una configuración de federación de módulos */
 const { ModuleFederationPlugin } = require('webpack').container;

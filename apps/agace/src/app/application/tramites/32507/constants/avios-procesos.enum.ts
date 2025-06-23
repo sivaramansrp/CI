@@ -1,4 +1,5 @@
-import { AvisoTabla, AvisoTablaDatos } from '../models/aviso-traslado.model';
+import { AvisoTabla } from '../models/aviso-traslado.model';
+import { AvisoTablaDatos } from '../models/aviso-traslado.model';
 
 /**
  * Constante que define los pasos del wizard en el trámite.
@@ -78,8 +79,7 @@ export const RADIO_OPCIONS = [
  */
 export const ENCABEZADAS_CONSTANT = {
   encabezado: '',
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  clave: (ele: AvisoTablaDatos): string => '',
+  clave: (_ele: AvisoTablaDatos): string => '',
   orden: 0,
 };
 

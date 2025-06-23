@@ -15,8 +15,7 @@ import { ColumnasTabla } from "../models/avios-model";
 * **/
 export const ENCABEZADAS_CONSTANT = {
   encabezado: '',
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  clave:(ele: ColumnasTabla): string => '',
+  clave:(_ele: ColumnasTabla): string => '',
   orden: 0,
 };
 

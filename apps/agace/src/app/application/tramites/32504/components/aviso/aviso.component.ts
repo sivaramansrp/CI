@@ -1,25 +1,38 @@
-import { ANIO_CONFIG, CARGO_TIPO, DATOS_EMPRESA, MES_CONFIG} from '../../constants/aviso.enum';
-import { BotonAccionesTipos, ConsultaioQuery, InputTypes} from '@ng-mf/data-access-user';
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
-import { FormaValidators, InputConfig, MenuConfig, Props } from '@ng-mf/data-access-user';
+import { ANIO_CONFIG } from '../../constants/aviso.enum';
 import { AvisoDatosService } from '../../services/aviso-datos.service';
+import { BotonAccionesTipos } from '@ng-mf/data-access-user';
+import { CARGO_TIPO} from '../../constants/aviso.enum';
 import { CargaMasivaComponent } from '../carga-masiva/carga-masiva.component';
 import { CatalogoSelectComponent } from "@ng-mf/data-access-user";
 import { CatalogosService } from '@ng-mf/data-access-user';
 import { ColumnasTabla } from '../../models/aviso.model';
 import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
+import { ConsultaioQuery} from '@ng-mf/data-access-user';
+import { DATOS_EMPRESA} from '../../constants/aviso.enum';
+import { FormBuilder } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
+import { FormaValidators} from '@ng-mf/data-access-user';
 import { FormularioDinamico } from '@ng-mf/data-access-user';
+import { InputConfig } from '@ng-mf/data-access-user';
 import { InputFechaComponent } from "@ng-mf/data-access-user";
 import { InputRadioComponent } from "@ng-mf/data-access-user";
+import { InputTypes} from '@ng-mf/data-access-user';
 import { LabelValueDatos } from '@ng-mf/data-access-user';
+import { MES_CONFIG} from '../../constants/aviso.enum';
 import { ManualAvisoComponent } from '../manual-aviso/manual-aviso.component';
+import { MenuConfig } from '@ng-mf/data-access-user';
+import { OnInit } from '@angular/core';
+import { Props } from '@ng-mf/data-access-user';
+import { ReactiveFormsModule } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { TablaSeleccion } from '@ng-mf/data-access-user';
 import { TituloComponent } from "@ng-mf/data-access-user";
 import { Tramite32504Query } from '../../estados/tramite32504.query';
 import { Tramite32504Store } from '../../estados/tramite32504.store';
+import { ValidatorFn } from '@angular/forms';
+import { Validators } from '@angular/forms';
 import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
 
@@ -220,12 +233,10 @@ export class AvisoComponent implements OnInit {
   inicializarFormGroup(
     configuracion: MenuConfig[],
     nombreGrupo: string,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    indiceGrupo: number,
+    _indiceGrupo: number,
   ): void {
     const GRUPO = this.formulario.get(nombreGrupo) as FormGroup;
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    configuracion.forEach((campo: MenuConfig, menuIndex: number) => {
+    configuracion.forEach((campo: MenuConfig, _menuIndex: number) => {
       const VALIDATORS = campo.props?.validators ? AvisoComponent.obtenerValidadores(campo.props.validators) : [Validators.required];
       const CONTROL_NAME = campo.props.campo ? campo.props.campo : campo.props.labelNombre;
       GRUPO.addControl(

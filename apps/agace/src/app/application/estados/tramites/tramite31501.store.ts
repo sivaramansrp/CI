@@ -75,8 +75,8 @@ export function createInitialState(): Solicitud31501State {
  */
 export class Tramite31501Store extends Store<Solicitud31501State> {
   setFraccionRegla(_arg0: string): void {
-    // Placeholder implementation to satisfy linter
-    throw new Error('Method not implemented in Tramite31501Store: ' + this.constructor.name);
+    // Implementación de marcador de posición para satisfacer el linter
+    throw new Error('Método no implementado en Tramite31501Store: ' + this.constructor.name);
   }
   constructor() {
     super(createInitialState());
