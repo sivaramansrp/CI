@@ -1,7 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { map, takeUntil } from 'rxjs';
+import { Solicitud260910State } from '../../estados/tramites260910.store';
 import { SolicitudDatosService } from '../../services/solicitud-datos.service';
 import { Subject } from 'rxjs';
 
@@ -47,6 +48,11 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
   solicitudForm!: FormGroup;
 
   /**
+   * Estado actual de la solicitud.
+   */
+  solicitud260910State: Solicitud260910State = {} as Solicitud260910State;
+
+  /**
    * Constructor del componente.
    * @param {SolicitudDatosService} service - Servicio para obtener datos de solicitud
    * @param {ConsultaioQuery} consultaioQuery - Query para acceder al estado de consulta
@@ -63,8 +69,8 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.solicitudForm = this.fb.group({
-      folioDeDesistimiento: [{ value: 'DES-2024-006543', disabled: true }],
-      folioOriginal: [{ value: 'SOL-2024-001234', disabled: true }]
+      folioDeDesistimiento: [{ value: this.solicitud260910State.folioDeDesistimiento, disabled: true }, [Validators.required]],
+      folioOriginal: [{ value: this.solicitud260910State.folioOriginal, disabled: true }, [Validators.required]]
     });
 
     this.configurarSuscripcionEstadoConsulta();

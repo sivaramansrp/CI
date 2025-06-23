@@ -1,7 +1,8 @@
+import { ConsultaDatos, DatosDeSolicitud, RespuestaConsulta } from '../models/solicitud-datos.model';
+import { Observable, catchError, throwError } from 'rxjs';
 import { Asociados } from '../models/asociados.model';
 import { CatalogosSelect } from '@libs/shared/data-access-user/src';
 import { ClavesDeLotes } from '../models/claves-de-lotes.model';
-import { ConsultaDatos, DatosDeSolicitud, RespuestaConsulta } from '../models/solicitud-datos.model';
 import { Destinatario } from '../models/destinatario.model';
 import { DestinatarioCatalogos } from '../models/destinatario.model';
 import { DestinatarioImitar } from '../models/mercancia.model';
@@ -12,7 +13,6 @@ import { Injectable } from '@angular/core';
 import { Mercancia } from '../models/mercancia.model';
 import { MercanciaCatalogos } from '../models/mercancia.model';
 import { MercanciaCrossList } from '../models/mercancia.model';
-import { catchError, Observable, throwError } from 'rxjs';
 import { Proveedor } from '../models/proveedor.model';
 import { SCIAN } from '../models/SCIAN.model';
 import { Solicitud } from '../models/solicitud-datos.model';
@@ -335,6 +335,8 @@ export class SolicitudDatosService {
     this.solicitudStore.setLiaveDePago(DATOS?.liaveDePago);
     this.solicitudStore.setFechaDePago(DATOS?.fechaDePago);
     this.solicitudStore.setImporteDePago(DATOS?.importeDePago);
+    this.solicitudStore.setFolioDeDesistimiento(DATOS?.folioDeDesistimiento);
+    this.solicitudStore.setFolioOriginal(DATOS?.folioOriginal);
   }
 
 }
