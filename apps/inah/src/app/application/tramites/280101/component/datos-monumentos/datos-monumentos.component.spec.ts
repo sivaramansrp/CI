@@ -45,7 +45,7 @@ describe('DatosMonumentoComponent', () => {
       declarations: [],
       imports: [
         ReactiveFormsModule,
-        HttpClientModule, // Added HttpClientModule to resolve NullInjectorError
+        HttpClientModule,
         DatosMonumentoComponent,
         TituloComponent,
         TablaDinamicaComponent,
@@ -76,7 +76,6 @@ describe('DatosMonumentoComponent', () => {
     expect(getAduanaSpy).toHaveBeenCalled();
     expect(inicializarFormularioSpy).toHaveBeenCalled();
     expect(component.mercanciaForm).toBeDefined();
-    //expect(component.aduana.length).toBeGreaterThan(0);
   });
 
   it('should call setMonumento and reset the form on valid Guardar', () => {
