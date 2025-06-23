@@ -1,4 +1,2 @@
-<app-datos-mercancia
-[idProcedimiento]="idProcedimiento"
-  (updateMercanciaDetalle)="updateMercanciaDetalle($event)"
-></app-datos-mercancia>
+<app-datos-mercancia [idProcedimiento]="idProcedimiento" (cancelarEventListener)="cerrar.emit()"
+  (updateMercanciaDetalle)="updateMercanciaDetalle($event)"></app-datos-mercancia>
