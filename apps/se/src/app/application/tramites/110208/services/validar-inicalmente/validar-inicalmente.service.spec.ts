@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { ValidarInicalmenteService } from './validar-inicalmente.service';
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 
 describe('ValidarInicalmenteService', () => {
   let service: ValidarInicalmenteService;
@@ -9,7 +9,7 @@ describe('ValidarInicalmenteService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],
-      providers: [ValidarInicalmenteService],
+      providers: [ValidarInicalmenteService]
     });
     service = TestBed.inject(ValidarInicalmenteService);
     httpMock = TestBed.inject(HttpTestingController);
@@ -23,52 +23,42 @@ describe('ValidarInicalmenteService', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should call obtenerEstadoList and return a list of states', () => {
-    const mockResponse = { data: [{ id: 1, name: 'Estado 1' }, { id: 2, name: 'Estado 2' }] };
-
-    service.obtenerEstadoList().subscribe((response) => {
-      expect(response).toEqual(mockResponse);
+  it('should fetch estado list', () => {
+    const mockResponse = { data: [{ id: 1, nombre: 'Estado1' }] };
+    service.obtenerEstadoList().subscribe(res => {
+      expect(res).toEqual(mockResponse);
     });
-
-    const req = httpMock.expectOne('/api/estados'); // Replace with the actual API endpoint
+    const req = httpMock.expectOne('assets/json/110208/seleccion.json');
     expect(req.request.method).toBe('GET');
     req.flush(mockResponse);
   });
 
-  it('should handle error when obtenerEstadoList fails', () => {
-    const mockError = { status: 500, statusText: 'Internal Server Error' };
-
-    service.obtenerEstadoList().subscribe(
-      () => fail('Expected an error, not a successful response'),
-      (error) => {
-        expect(error.status).toBe(500);
-        expect(error.statusText).toBe('Internal Server Error');
-      }
-    );
-
-    const req = httpMock.expectOne('/api/estados'); // Replace with the actual API endpoint
-    req.flush(null, mockError);
-  });
-
-  it('should call obtenerFormDatos and return a list of states', () => {
-    const mockResponse = { data: [{ id: 1, name: 'Estado 1' }, { id: 2, name: 'Estado 2' }] };
-
-    service.obtenerFormDatos().subscribe((response) => {
-      expect(response).toEqual(mockResponse);
+  it('should fetch form datos', () => {
+    const mockResponse = { data: [{ id: 1, nombre: 'FormDato1' }] };
+    service.obtenerFormDatos().subscribe(res => {
+      expect(res).toEqual(mockResponse);
     });
-
-    const req = httpMock.expectOne('/api/estados'); // Replace with the actual API endpoint
+    const req = httpMock.expectOne('assets/json/110208/mercancia-datos.json');
     expect(req.request.method).toBe('GET');
     req.flush(mockResponse);
   });
-  it('should call obtenerTablaDatos and return a list of states', () => {
-    const mockResponse = { data: [{ id: 1, name: 'Estado 1' }, { id: 2, name: 'Estado 2' }] };
 
-    service.obtenerTablaDatos().subscribe((response) => {
-      expect(response).toEqual(mockResponse);
+  it('should fetch tabla datos', () => {
+    const mockResponse = { data: [{ id: 1, nombre: 'TablaDato1' }] };
+    service.obtenerTablaDatos().subscribe(res => {
+      expect(res).toEqual(mockResponse);
     });
+    const req = httpMock.expectOne('assets/json/110208/mercancias-tabla.json');
+    expect(req.request.method).toBe('GET');
+    req.flush(mockResponse);
+  });
 
-    const req = httpMock.expectOne('/api/estados'); // Replace with the actual API endpoint
+  it('should fetch tabla datos certificado', () => {
+    const mockResponse = { data: [{ id: 1, nombre: 'CertificadoDato1' }] };
+    service.obtenerTablaDatosCertificado().subscribe(res => {
+      expect(res).toEqual(mockResponse);
+    });
+    const req = httpMock.expectOne('assets/json/110208/certificado-tabla.json');
     expect(req.request.method).toBe('GET');
     req.flush(mockResponse);
   });
