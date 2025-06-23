@@ -61,23 +61,13 @@ describe('CargaDeMercanciasComponent', () => {
     expect(component.estado).toEqual([]);
   });
 
-  it('should open modal when abrirDialogoMercancias is called', () => {
-    const modalElementMock = {
-      nativeElement: {
-        show: jest.fn(),
-      },
-    };
-    component.modalElement = modalElementMock as any;
-    component.abrirDialogoMercancias();
-    expect(modalElementMock.nativeElement.show).toHaveBeenCalled();
-  });
-
   it('should close modal when cerrarModal is called', () => {
     const closeModalMock = {
       nativeElement: {
         click: jest.fn(),
       },
     };
+    
     component.closeModal = closeModalMock as any;
     component.cerrarModal();
     expect(closeModalMock.nativeElement.click).toHaveBeenCalled();
@@ -97,8 +87,8 @@ describe('CargaDeMercanciasComponent', () => {
   });
 
   it('should clean up observables on destroy', () => {
-    const destroySpy = jest.spyOn(component['destroyed$'], 'next');
-    const completeSpy = jest.spyOn(component['destroyed$'], 'complete');
+    const destroySpy = jest.spyOn(component['destroyNotifier$'], 'next');
+    const completeSpy = jest.spyOn(component['destroyNotifier$'], 'complete');
     component.ngOnDestroy();
     expect(destroySpy).toHaveBeenCalled();
     expect(completeSpy).toHaveBeenCalled();

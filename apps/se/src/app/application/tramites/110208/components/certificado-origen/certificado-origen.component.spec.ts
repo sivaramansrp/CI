@@ -14,9 +14,11 @@ describe('CertificadoOrigenComponent', () => {
   let tramite110208QueryMock: jest.Mocked<Tramite110208Query>;
 
   beforeEach(async () => {
-    validarInicalmenteServiceMock = {
+      validarInicalmenteServiceMock = {
       obtenerEstadoList: jest.fn().mockReturnValue(of({ data: [{ id: 1, nombre: 'Estado1' }] })),
       obtenerTablaDatosCertificado: jest.fn().mockReturnValue(of({ data: [{ id: 1, nombre: 'Dato1' }] })),
+      obtenerTablaDatos: jest.fn().mockReturnValue(of({ data: [{ id: 1, nombre: 'Dato2' }] })), 
+      obtenerFormDatos: jest.fn().mockReturnValue(of({ data: [{ id: 1, nombre: 'FormDato1' }] })),
     } as unknown as jest.Mocked<ValidarInicalmenteService>;
 
     tramite110208StoreMock = {
@@ -88,8 +90,8 @@ describe('CertificadoOrigenComponent', () => {
   });
 
   it('should clean up observables on ngOnDestroy', () => {
-    const destroySpy = jest.spyOn(component['destroyed$'], 'next');
-    const completeSpy = jest.spyOn(component['destroyed$'], 'complete');
+    const destroySpy = jest.spyOn(component['destroyNotifier$'], 'next');
+    const completeSpy = jest.spyOn(component['destroyNotifier$'], 'complete');
     component.ngOnDestroy();
     expect(destroySpy).toHaveBeenCalled();
     expect(completeSpy).toHaveBeenCalled();
@@ -98,25 +100,25 @@ describe('CertificadoOrigenComponent', () => {
     const mockForm = new FormBuilder().group({
       testField: ['TestValue']
     });
-  
+
     component.setValoresStore(mockForm, 'testField', 'setEntidadFederativa');
     expect(tramite110208StoreMock.setEntidadFederativa).toHaveBeenCalledWith('TestValue');
   });
-  
+
   it('should not call the store method if the form field value is null', () => {
     const mockForm = new FormBuilder().group({
       testField: [null]
     });
-  
+
     component.setValoresStore(mockForm, 'testField', 'setEntidadFederativa');
     expect(tramite110208StoreMock.setEntidadFederativa).not.toHaveBeenCalled();
   });
-  
+
   it('should handle undefined form field gracefully', () => {
     const mockForm = new FormBuilder().group({});
-  
+
     component.setValoresStore(mockForm, 'nonExistentField', 'setEntidadFederativa');
     expect(tramite110208StoreMock.setEntidadFederativa).not.toHaveBeenCalled();
   });
-  
+
 });
