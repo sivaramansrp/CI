@@ -30,21 +30,16 @@
           }
         ],
         "styles": [
-             "node_modules/bootstrap/scss/bootstrap.scss",
-              "node_modules/bootstrap-icons/font/bootstrap-icons.css",
-              "node_modules/ngx-toastr/toastr.css",
-             "libs/shared/theme/assets/styles/main.scss"
-            ],
-        "scripts": [
-          "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"
+          "node_modules/bootstrap/scss/bootstrap.scss",
+          "libs/shared/theme/assets/styles/main.scss",
+          "node_modules/bootstrap-icons/font/bootstrap-icons.css",
+          "node_modules/ngx-toastr/toastr.css"
         ],
+        "scripts": ["node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"],
         "customWebpackConfig": {
           "path": "apps/aga/webpack.config.ts"
         },
-        "allowedCommonJsDependencies": [
-          "node-forge",
-          "moment"
-       ]
+        "allowedCommonJsDependencies": ["node-forge", "moment"]
       },
       "configurations": {
         "production": {
