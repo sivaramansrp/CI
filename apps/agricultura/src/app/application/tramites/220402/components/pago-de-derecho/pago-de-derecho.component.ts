@@ -1,6 +1,7 @@
 import { Catalogo, ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CatalogosSelect } from '@ng-mf/data-access-user';
+import { EXENTO_DE_PAGO } from '../../constantes/certificado-zoosanitario.enum';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { MediodetransporteService } from '../../services//medio-de-transporte.service';
@@ -64,6 +65,11 @@ export class PagoDeDerechoComponent implements OnInit, OnDestroy {
    * @description Banco seleccionado por el usuario en el formulario.
    */
   bancoSeleccionado!: Catalogo;
+
+  /**
+    * Opciones disponibles para el grupo de radio.
+    */
+  radioOpcions = EXENTO_DE_PAGO;
 
   /**
    * @property {CatalogosSelect} bancoCatalogo
@@ -145,19 +151,19 @@ export class PagoDeDerechoComponent implements OnInit, OnDestroy {
         exentoDePago: [this.derechoState?.exentoDePago, [Validators.required]],
         nombreImportExport: [this.derechoState?.nombreImportExport, [Validators.required]],
         justificacion: [this.derechoState?.justificacion, [Validators.required]],
-        claveDeReferencia: [this.derechoState?.claveDeReferencia, [Validators.required]],
+        claveDeReferencia: [this.derechoState?.claveDeReferencia, []],
         cadenaDependencia: [this.derechoState?.cadenaDependencia, [Validators.required]],
         banco: [this.derechoState?.banco, [Validators.required]],
         llaveDePago: [this.derechoState?.llaveDePago, [Validators.required]],
         fechaPago: [this.derechoState?.fechaPago, [Validators.required]],
-        importePago: [this.derechoState?.importePago, [Validators.required]],
+        importePago: [this.derechoState?.importePago, []],
       }),
     });
     this.inicializarEstadoFormulario();
 
     // Activa la lógica cuando el formulario se ha inicializado
     if (this.consultaDatos.create) {
-      this.actualizarCamposDeFormularioBasadosEnExentoDePago('No');
+      this.actualizarCamposDeFormularioBasadosEnExentoDePago();
     }
   }
   /**
@@ -175,9 +181,8 @@ export class PagoDeDerechoComponent implements OnInit, OnDestroy {
    * @method exentoDePagoChange
    * @description Actualiza los campos del formulario según el valor seleccionado en el campo 'exentoDePago'.
    */
-  exentoDePagoChange(event: Event): void {
-    const VALUE = (event.target as HTMLSelectElement).value;
-    this.actualizarCamposDeFormularioBasadosEnExentoDePago(VALUE);
+  exentoDePagoChange(): void {
+    this.actualizarCamposDeFormularioBasadosEnExentoDePago();
   }
   /**
    * @method actualizarBanco
@@ -207,46 +212,39 @@ export class PagoDeDerechoComponent implements OnInit, OnDestroy {
    * @param value - El valor de 'exentoDePago' para determinar las actualizaciones de los campos del formulario.
    */
 
-  actualizarCamposDeFormularioBasadosEnExentoDePago(value: string): void {
-    if (value === 'No') {
-      this.FormSolicitud.get(
-        'datosImportadorExportador.claveDeReferencia'
-      )?.setValue('454000554');
-      this.FormSolicitud.get('datosImportadorExportador.importePago')?.setValue(
-        '594.0'
-      );
-
-      this.FormSolicitud.get(
-        'datosImportadorExportador.justificacion'
-      )?.disable();
-      this.FormSolicitud.get(
-        'datosImportadorExportador.claveDeReferencia'
-      )?.disable();
-      this.FormSolicitud.get(
-        'datosImportadorExportador.importePago'
-      )?.disable();
+  actualizarCamposDeFormularioBasadosEnExentoDePago(): void {
+    const EXENTODEPAGO = this.FormSolicitud.get('datosImportadorExportador.exentoDePago')?.value;
+    this.FormSolicitud.reset({
+      datosImportadorExportador: { exentoDePago: EXENTODEPAGO }
+    });
+    this.FormSolicitud?.enable();
+    if (EXENTODEPAGO === 'No') {
+      this.FormSolicitud.patchValue({
+        datosImportadorExportador: { claveDeReferencia: 454000554, importePago: 594.0 }
+      });
+      this.FormSolicitud.get('datosImportadorExportador.cadenaDependencia')?.setValidators([Validators.required]);
+      this.FormSolicitud.get('datosImportadorExportador.llaveDePago')?.setValidators([Validators.required]);
+      this.FormSolicitud.get('datosImportadorExportador.fechaPago')?.setValidators([Validators.required]);
+      this.FormSolicitud.get('datosImportadorExportador.justificacion')?.setValidators([]);
+      this.FormSolicitud.get('datosImportadorExportador.justificacion')?.disable();
+      this.FormSolicitud.get('datosImportadorExportador.claveDeReferencia')?.disable();
+      this.FormSolicitud.get('datosImportadorExportador.importePago')?.disable();
     } else {
-      this.FormSolicitud.get(
-        'datosImportadorExportador.justificacion'
-      )?.reset();
-      this.FormSolicitud.get(
-        'datosImportadorExportador.cadenaDependencia'
-      )?.reset();
-      this.FormSolicitud.get('datosImportadorExportador.importePago')?.reset();
-
-      this.FormSolicitud.get(
-        'datosImportadorExportador.claveDeReferencia'
-      )?.disable();
-      this.FormSolicitud.get(
-        'datosImportadorExportador.cadenaDependencia'
-      )?.disable();
-      this.FormSolicitud.get(
-        'datosImportadorExportador.importePago'
-      )?.disable();
+      this.FormSolicitud.get('datosImportadorExportador.justificacion')?.setValidators([Validators.required]);
+      this.FormSolicitud.get('datosImportadorExportador.cadenaDependencia')?.setValidators([]);
+      this.FormSolicitud.get('datosImportadorExportador.llaveDePago')?.setValidators([]);
+      this.FormSolicitud.get('datosImportadorExportador.fechaPago')?.setValidators([]);
+      this.FormSolicitud.get('datosImportadorExportador.claveDeReferencia')?.disable();
+      this.FormSolicitud.get('datosImportadorExportador.importePago')?.disable();
+      this.FormSolicitud.get('datosImportadorExportador.cadenaDependencia')?.disable();
+      this.FormSolicitud.get('datosImportadorExportador.llaveDePago')?.disable();
       this.FormSolicitud.get('datosImportadorExportador.fechaPago')?.disable();
-      this.FormSolicitud.get(
-        'datosImportadorExportador.llaveDePago'
-      )?.disable();
+    }
+    const GRUPO = this.FormSolicitud.get('datosImportadorExportador') as FormGroup;
+    if (GRUPO) {
+      Object.values(GRUPO.controls).forEach(control => {
+        control.updateValueAndValidity();
+      });
     }
   }
   /**
