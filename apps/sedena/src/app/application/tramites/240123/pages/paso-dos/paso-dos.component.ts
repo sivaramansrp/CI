@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter,Output  } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 
@@ -22,6 +22,8 @@ import { TEXTOS_REQUISITOS } from '../../constants/exportacion-sustancias-quimic
   styleUrl: './paso-dos.component.scss',
 })
 export class PasoDosComponent implements OnInit, OnDestroy {
+   @Output() reenviarEvento = new EventEmitter<void>();
+ @Output() regresarSeccionCargarDocumentoEvento = new EventEmitter<void>()
   /**
    * @property TEXTOS
    * @description Contiene los textos literales estáticos utilizados en este paso del formulario.

@@ -2,6 +2,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { DATOS_ESTATICOS, ID_PROCEDIMIENTO } from '../../constants/exportacion-sustancias-quimicas.enum';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DestinoFinal } from '../../../../shared/models/terceros-relacionados.model';
 import { OnInit } from '@angular/core';
 import { Proveedor } from '../../../../shared/models/terceros-relacionados.model';
@@ -9,6 +10,7 @@ import { Subject } from 'rxjs';
 import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-relacionados/terceros-relacionados.component';
 import { Tramite240123Query } from '../../estados/tramite240123Query.query';
 import { Tramite240123Store } from '../../estados/tramite240123Store.store';
+import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
 
 /**
@@ -24,6 +26,14 @@ import { takeUntil } from 'rxjs';
   styleUrl: './terceros-relacionados-contenedora.component.scss',
 })
 export class TercerosRelacionadosContenedoraComponent implements OnInit {
+ /**
+   * Indica si el formulario debe mostrarse en modo solo lectura.
+   *
+   * @type {boolean}
+   * @memberof TercerosRelacionadosContenedoraComponent
+   * @default false
+   */
+  esFormularioSoloLectura: boolean = false;
 
   /**
    * @property
@@ -65,8 +75,18 @@ export class TercerosRelacionadosContenedoraComponent implements OnInit {
     private tramiteStore: Tramite240123Store,
     private tramiteQuery: Tramite240123Query,
     private router: Router,
-    private activatedRoute: ActivatedRoute
-  ) {}
+    private activatedRoute: ActivatedRoute,
+    private consultaQuery: ConsultaioQuery
+  ) {
+     this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.unsubscribe$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+        })
+      )
+      .subscribe();
+  }
 
   /**
    * Hook del ciclo de vida que se ejecuta al inicializar el componente.

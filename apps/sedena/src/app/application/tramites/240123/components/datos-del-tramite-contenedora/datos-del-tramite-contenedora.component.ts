@@ -1,6 +1,7 @@
 import { DatosDelTramiteFormState, MERCANCIA_ENCABEZADO_DE_TABLA } from '../../../../shared/models/datos-del-tramite.model';
 import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { Component } from '@angular/core';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
 import { DatosDelTramiteComponent } from '../../../../shared/components/datos-del-tramite/datos-del-tramite.component';
@@ -11,6 +12,7 @@ import { OnInit } from '@angular/core';
 import { Subject } from 'rxjs';
 import { Tramite240123Query } from '../../estados/tramite240123Query.query';
 import { Tramite240123Store } from '../../estados/tramite240123Store.store';
+import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
 
 /**
@@ -27,6 +29,15 @@ import { takeUntil } from 'rxjs';
 })
 export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
   
+  /**
+   * Indica si el formulario debe mostrarse en modo solo lectura.
+   *
+   * @type {boolean}
+   * @memberof DatosDelTramiteContenedoraComponent
+   * @default false
+   */
+  esFormularioSoloLectura: boolean = false;
+
   /**
    * @property
    * @name idProcedimiento
@@ -89,8 +100,18 @@ export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
   constructor(
     private tramiteQuery: Tramite240123Query,
     private tramiteStore: Tramite240123Store,
-    public activatedRoute: ActivatedRoute
-  ) {}
+    public activatedRoute: ActivatedRoute,
+    private consultaQuery: ConsultaioQuery,
+  ) {
+     this.consultaQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.unsubscribe$),
+      map((seccionState) => {
+        this.esFormularioSoloLectura = seccionState.readonly;
+      })
+    )
+    .subscribe();
+  }
 
   /**
    * Hook del ciclo de vida que se ejecuta al inicializar el componente.
