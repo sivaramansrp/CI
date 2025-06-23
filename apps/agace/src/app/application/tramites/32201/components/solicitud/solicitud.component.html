@@ -10,6 +10,7 @@
               [required]="true"
               formControlName="regimen_0"
               (change)="setValoresStore(solicitudForm, 'regimen_0', 'setRegimen_0')"
+              [isDisabled]="esFormularioSoloLectura"
         ></lib-input-check>
       </div>
 
@@ -21,6 +22,7 @@
               [required]="true"
               formControlName="regimen_1"
               (change)="setValoresStore(solicitudForm, 'regimen_1', 'setRegimen_1')"
+              [isDisabled]="esFormularioSoloLectura"
         ></lib-input-check>
       </div>
 
@@ -31,6 +33,7 @@
               [required]="true"
               formControlName="regimen_2"
               (change)="setValoresStore(solicitudForm, 'regimen_2', 'setRegimen_2')"
+              [isDisabled]="esFormularioSoloLectura"
         ></lib-input-check>
       </div>
 
@@ -41,6 +44,7 @@
               [required]="true"
               formControlName="regimen_3"
               (change)="setValoresStore(solicitudForm, 'regimen_3', 'setRegimen_3')"
+              [isDisabled]="esFormularioSoloLectura"
         ></lib-input-check>
       </div>
     </div>
@@ -52,11 +56,13 @@
     <div class="col-md-12">
       <label class="form-label text-justify">
         Para descargar plantilla del archivo de excel de click
-        <a [href]="" target="_blank" class="text-primary fw-bold">aquí</a>.
+        <a [href]="" target="_blank" class="text-primary fw-bold" (click)="esFormularioSoloLectura ? $event.preventDefault() : null"
+        [class.disabled]="esFormularioSoloLectura">aquí</a>.
       </label>
       <div class="row mt-4 mb-4">
         <div class="col-md-8">
-          <button type="button" for="archivoMedicamentos" class="file-upload" (click)="activarSeleccionArchivo()">
+          <button type="button" for="archivoMedicamentos" class="file-upload" (click)="activarSeleccionArchivo()"
+            [disabled]="esFormularioSoloLectura">
             Elgir archivo
           </button>
           <span class="ml-2">{{ elgirDeArchivo }}</span>
@@ -64,7 +70,7 @@
             style="display: none" />
         </div>
         <div class="col-md-4 d-flex justify-content-end">
-          <button type="button" class="btn btn-default" (click)="cargarProveedores()">
+          <button type="button" class="btn btn-default" (click)="cargarProveedores()" [disabled]="esFormularioSoloLectura">
             Cargar Proveedores
           </button>
         </div>
@@ -76,8 +82,9 @@
         <div class="alert alert-info">
           <label style="font-weight: normal">
             <input type="checkbox" formControlName="manifiesto" (change)="
-                setValoresStore(solicitudForm, 'manifiesto', 'setManifiesto')
-              " />{{ TEXTOS.TEXTO_PROVEEDORES_EXISTENTES_ACTUALMENTE }}
+                setValoresStore(solicitudForm, 'manifiesto', 'setManifiesto')"
+                [disabled]="esFormularioSoloLectura" />
+                {{ TEXTOS.TEXTO_PROVEEDORES_EXISTENTES_ACTUALMENTE }}
           </label>
         </div>
       </div>
