@@ -9,7 +9,6 @@ import {
 } from '@ng-mf/data-access-user';
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
-import documentList from '@libs/shared/theme/assets/json/10302/document-list.json';
 
 /**
  * Componente que representa el paso dos del trámite.

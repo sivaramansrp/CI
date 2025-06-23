@@ -111,8 +111,8 @@ export const ELVALORALERTA = {
 };
 
 export const PROTESTA = {
-  ADJUNTAR: `<input class="form-check-input" type="checkbox" id="protesta">
-  <p>El/la que suscribe manifiesto(a) bajo protesta de decir verdad, que la información declarada en el presente trámite de REGISTRO ÚNICO DE PRODUCTOS ELEGIBLES PARA PREFERENCIAS Y CONCESIONES ARANCELARIAS es copia fiel, íntegra e inalterada de la información y documentación soporte que obra en poder del (de la) solicitante.</p>`,
+  ADJUNTAR: `
+  El/la que suscribe manifiesto(a) bajo protesta de decir verdad, que la información declarada en el presente trámite de REGISTRO ÚNICO DE PRODUCTOS ELEGIBLES PARA PREFERENCIAS Y CONCESIONES ARANCELARIAS es copia fiel, íntegra e inalterada de la información y documentación soporte que obra en poder del (de la) solicitante.`,
 };
 export const FECHA_SALIDA = {
   labelNombre: 'Fecha de expedición de certificado de molino o de calidad',

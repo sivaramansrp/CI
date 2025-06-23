@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Store, StoreConfig } from '@datorama/akita';
 
 export interface Pantallas220401State {
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 export function createInitialState(): Pantallas220401State {

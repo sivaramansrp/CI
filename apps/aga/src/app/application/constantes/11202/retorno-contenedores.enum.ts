@@ -1,5 +1,6 @@
-import { ConfiguracionColumna } from "@libs/shared/data-access-user/src";
 import { DatosDelContenedor, GridContenedores } from "@libs/shared/data-access-user/src/core/models/11202/datos-tramite.model";
+import { ConfiguracionColumna } from "@libs/shared/data-access-user/src";
+
 /**
  * @constant PASOS
  * @description Representa los pasos del trámite 11202.

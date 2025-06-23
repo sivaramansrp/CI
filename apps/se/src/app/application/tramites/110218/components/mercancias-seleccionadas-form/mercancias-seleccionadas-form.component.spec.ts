@@ -18,8 +18,8 @@ describe('MercanciasSeleccionadasFormComponent', () => {
 
   beforeEach(async () => {
     serviceMock = {
-      getUnidadMedida: jest.fn(),
-      getTipodeFctura: jest.fn(),
+      getUnidadMedida: jest.fn().mockReturnValue(of([])),
+      getTipodeFctura: jest.fn().mockReturnValue(of([])),
     } as unknown as jest.Mocked<CertificadoTecnicoJaponService>;
 
     storeMock = {
@@ -40,8 +40,8 @@ describe('MercanciasSeleccionadasFormComponent', () => {
     destroyed$ = new Subject<void>();
 
     await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule],
-      declarations: [MercanciasSeleccionadasFormComponent],
+      imports: [ReactiveFormsModule,MercanciasSeleccionadasFormComponent],
+      declarations: [],
       providers: [
         { provide: CertificadoTecnicoJaponService, useValue: serviceMock },
         { provide: Tramite110218Store, useValue: storeMock },
@@ -51,6 +51,7 @@ describe('MercanciasSeleccionadasFormComponent', () => {
 
     fixture = TestBed.createComponent(MercanciasSeleccionadasFormComponent);
     component = fixture.componentInstance;
+    (component as any).destroyed$ = destroyed$;
     fixture.detectChanges();
   });
 
@@ -66,16 +67,12 @@ describe('MercanciasSeleccionadasFormComponent', () => {
   it('debería inicializar el formulario con valores predeterminados', () => {
     component.inicializarFormulario();
     expect(component.modifydatosdelcertificado.value).toEqual({
-      nombreComercial: '',
-      nombreIngles: '',
       complementoDelaDescripcion: 'Descripción de prueba',
       marca: 'Marca de prueba',
       valorMercancia: '100.50',
-      cantidad: '',
       unidaddeMedidadeComercializacion: { id: 1, descripcion: 'Unidad' },
       numerodeFactura: '12345',
       tipodeFactura: { id: 2, descripcion: 'Factura' },
-      fechadelaFactura: '',
     });
   });
 

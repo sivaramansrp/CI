@@ -14,7 +14,7 @@ import { FormsModule } from '@angular/forms';
 
 import { TituloComponent } from '@ng-mf/data-access-user';
 
-import { Agregar220401Store, solicitud220401State } from '../../../../estados/tramites/agregar220401.store';
+import { Agregar220401Store, Solicitud220401State } from '../../../../estados/tramites/agregar220401.store';
 import { AgregarQuery } from '../../../../estados/queries/agregar.query';
 
 /**
@@ -55,10 +55,10 @@ export class PagoDeDerechoComponent implements OnInit, OnDestroy {
     /**
      * @comdoc
      * @descripcion Estado actual de la solicitud del trámite 220401.
-     * @tipo solicitud220401State
+     * @tipo Solicitud220401State
      * @uso Almacena los datos de la solicitud para ser utilizados y actualizados en el formulario de pago de derecho.
      */
-    public solicitudState!: solicitud220401State;
+    public solicitudState!: Solicitud220401State;
   // Respuesta seleccionada por el usuario
   /**
    * @comdoc
