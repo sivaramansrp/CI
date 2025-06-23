@@ -6,7 +6,7 @@ import { DonacionesExtranjerasService } from '../../services/donaciones-extranje
 import mercanciaTable from '@libs/shared/theme/assets/json/10303/mercancia-table.json';
 
 import { BasicRequerimientos, BasicRequerimientosRespuesta, Manifiestos, ManifiestosRespuesta } from '../../models/donaciones-extranjeras.model';
-import { CATALOGOS_ID, Catalogo, ConsultaioQuery, TableBodyData } from '@ng-mf/data-access-user';
+import { Catalogo, ConsultaioQuery, TableBodyData } from '@ng-mf/data-access-user';
 import { FECHA_CADUCIDAD, OPCIONES_DE_BOTON_DE_RADIO, PANELS, TEXTOS } from '../../constantes/donaciones-extranjeras.enum';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { RegistroDeDonacion10303State, Tramite10303Store } from '../../estados/tramites/tramite10303.store';
@@ -438,7 +438,7 @@ export class RegistroDeDonacionComponent implements OnInit, OnDestroy {
    */
   private inicializaCatalogos(): void {
     const ADUANA$ = this.donacionesExtranjerasService
-      .getAduana(CATALOGOS_ID.CAT_ADUANA)
+      .getAduana()
       .pipe(
         map((resp) => {
           this.aduana = resp.data;
@@ -446,7 +446,7 @@ export class RegistroDeDonacionComponent implements OnInit, OnDestroy {
       );
 
     const DESTINO_DONACION$ = this.donacionesExtranjerasService
-      .getDestinoDonacion(CATALOGOS_ID.CAT_DESTINO_DONACION)
+      .getDestinoDonacion()
       .pipe(
         map((resp) => {
           this.destinoDonacion = resp.data;
@@ -454,7 +454,7 @@ export class RegistroDeDonacionComponent implements OnInit, OnDestroy {
       );
 
     const TIPO_DE_MERCANCIA$ = this.donacionesExtranjerasService
-      .getTipoDeMercancia(CATALOGOS_ID.CAT_TIPO_DE_MERCANCIA)
+      .getTipoDeMercancia()
       .pipe(
         map((resp) => {
           this.tipoDeMercancia = resp.data;
@@ -462,7 +462,7 @@ export class RegistroDeDonacionComponent implements OnInit, OnDestroy {
       );
 
     const UNIDAD_MEDIDA$ = this.donacionesExtranjerasService
-      .getUnidadMedida(CATALOGOS_ID.CAT_UMC)
+      .getUnidadMedida()
       .pipe(
         map((resp) => {
           this.unidadMedida = resp.data;
@@ -470,7 +470,7 @@ export class RegistroDeDonacionComponent implements OnInit, OnDestroy {
       );
 
     const UMT$ = this.donacionesExtranjerasService
-      .getUmt(CATALOGOS_ID.CAT_UMT)
+      .getUmt()
       .pipe(
         map((resp) => {
           this.UMT = resp.data;
@@ -478,7 +478,7 @@ export class RegistroDeDonacionComponent implements OnInit, OnDestroy {
       );
 
     const PAIS_PROCEDENCIA_OTRO$ = this.donacionesExtranjerasService
-      .getProcedenciaOtro(CATALOGOS_ID.CAT_PROCEDENCIA_OTRO)
+      .getProcedenciaOtro()
       .pipe(
         map((resp) => {
           this.paisProcedenciaOtro = resp.data;
@@ -486,7 +486,7 @@ export class RegistroDeDonacionComponent implements OnInit, OnDestroy {
       );
 
     const CONDICION_MERCANCIA$ = this.donacionesExtranjerasService
-      .getCondicionMercancia(CATALOGOS_ID.CAT_CONDICION_MERCANCIA)
+      .getCondicionMercancia()
       .pipe(
         map((resp) => {
           this.condicionMercancia = resp.data;
@@ -494,7 +494,7 @@ export class RegistroDeDonacionComponent implements OnInit, OnDestroy {
       );
 
     const PAIS_ORIGEN_MEDICAMENTO$ = this.donacionesExtranjerasService
-      .getPaisOrigenMedicamento(CATALOGOS_ID.CAT_PAIS_ORIGEN_MEDICAMENTO)
+      .getPaisOrigenMedicamento()
       .pipe(
         map((resp) => {
           this.paisOrigenMedicamento = resp.data;
@@ -502,7 +502,7 @@ export class RegistroDeDonacionComponent implements OnInit, OnDestroy {
       );
 
     const PAIS_PROCEDENCIA_MEDICAMENTO$ = this.donacionesExtranjerasService
-      .getPaisProcedenciaMedicamento(CATALOGOS_ID.CAT_PAIS_PROCEDENCIA_MEDICAMENTO)
+      .getPaisProcedenciaMedicamento()
       .pipe(
         map((resp) => {
           this.paisProcedenciaMedicamento = resp.data;
