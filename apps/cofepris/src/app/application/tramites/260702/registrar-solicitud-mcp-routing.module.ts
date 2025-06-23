@@ -1,9 +1,11 @@
 import { NgModule } from '@angular/core';
+
 import { RouterModule, Routes } from '@angular/router';
 import { RegistroPageComponent } from './pages/registro-page/registro-page.component';
+
 import { AcusePageComponent } from '@libs/shared/data-access-user/src/tramites/pages/acuse-page/acuse-page.component';
 
-const routes: Routes = [
+const ROUTES: Routes = [
 
   {
     path: 'registro',
@@ -22,7 +24,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forChild(routes)],
+  imports: [RouterModule.forChild(ROUTES)],
   exports: [RouterModule]
 })
 export class RegistrarSolicitudMCPRoutingModule { }

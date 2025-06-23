@@ -1,27 +1,36 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-relacionados/terceros-relacionados.component';
+
 import { TEXTOS, TIPO_PERSONA_RADIO_OPTIONS } from '../../constants/constantes.enum';
+
 import { AlertComponent, Notificacion, NotificacionesComponent, Pedimento } from '@libs/shared/data-access-user/src';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
+
 import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src';
-import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
+
 import { Destinatario } from '../../models/destinatario.model';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+
 import { Catalogo, CatalogosSelect } from '@ng-mf/data-access-user';
 import { ReplaySubject } from 'rxjs';
+
 import { map, takeUntil } from 'rxjs/operators';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RegistrarSolicitudMcpService } from '../../services/registrar-solicitud-mcp.service';
+
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { Modal } from 'bootstrap';
 import { Solicitud260702Query } from '../../estados/tramites260702.query';
+
 import {
   Solicitud260702State,
   Solicitud260702Store,
 } from '../../estados/tramites260702.store';
 import{ InputRadioComponent} from '@libs/shared/data-access-user/src';
+
 import { DESTINATARIO_CONFIGURACION_TABLA } from '../../constants/column-config.enum';
 
 
@@ -59,7 +68,7 @@ export class TercerosrelacionadosComponent implements OnInit, OnDestroy {
   selectedRows: Set<number> = new Set();
 
   /** Fila seleccionada actualmente */
-  selectedRow: any = null;
+  selectedRow = null;
 
   /** Estado del destinatario que se está agregando */
   agregarDestinatarioState!: Solicitud260702State;
@@ -189,7 +198,7 @@ pedimentos: Array<Pedimento> = [];
     this.solicitud260702Query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyed$),
-        map((seccionState: any) => {
+        map((seccionState) => {
           this.agregarDestinatarioState = seccionState;
         })
       )
@@ -247,7 +256,7 @@ pedimentos: Array<Pedimento> = [];
   /**
    * Obtiene los datos del catálogo de países.
    */
-  getPaisData() {
+  getPaisData(): void {
     this.registrarsolicitudmcp
       .getPaisData()
       .pipe(takeUntil(this.destroyed$))
@@ -259,7 +268,7 @@ pedimentos: Array<Pedimento> = [];
   /**
    * Getter para obtener el tipo de persona seleccionado.
    */
-  get selectedTipoPersona() {
+  get selectedTipoPersona():void {
     return this.agregarDestinatario.get('tipoPersona')?.value;
   }
 
@@ -273,15 +282,15 @@ pedimentos: Array<Pedimento> = [];
   /**
    * Guarda los datos del formulario en la tabla.
    */
-  onGuardar() {
-    const formData = this.destinatarioForm.value;
-    if (formData.agregarDestinatario) {
-      const destinatario = {
-        ...formData.agregarDestinatario,
-        ...formData.datosPersonales, // Combina objetos anidados en una estructura plana
-        pais: this.getPaisName(formData.datosPersonales.pais), // Mapea el id de `pais` a su descripción
+  onGuardar():void {
+    const FORM_DATA = this.destinatarioForm.value;
+    if (FORM_DATA.agregarDestinatario) {
+      const DESTINATARIO = {
+        ...FORM_DATA.agregarDestinatario,
+        ...FORM_DATA.datosPersonales, // Combina objetos anidados en una estructura plana
+        pais: this.getPaisName(FORM_DATA.datosPersonales.pais), // Mapea el id de `pais` a su descripción
       };
-      this.tableData.push(destinatario);
+      this.tableData.push(DESTINATARIO);
     }
     this.destinatarioForm.reset();
   }
@@ -292,10 +301,10 @@ pedimentos: Array<Pedimento> = [];
    * @returns Nombre del país o 'N/A' si no se encuentra.
    */
   private getPaisName(paisId: string): string {
-    const pais = this.paisData.catalogos.find(
+    const PAISES = this.paisData.catalogos.find(
       (catalogo) => catalogo.id === Number(paisId)
     );
-    return pais ? pais.descripcion : 'N/A';
+    return PAISES ? PAISES.descripcion : 'N/A';
   }
 
   /**
@@ -325,31 +334,31 @@ pedimentos: Array<Pedimento> = [];
    */
   openModificarMercancias(): void {
     if (this.selectedRows.size === 1) {
-      const selectedId = Array.from(this.selectedRows)[0];
-      const selectedRowData = this.tableData.find(
-        (row) => row.id === selectedId
+      const SELECTED_ID = Array.from(this.selectedRows)[0];
+      const SELECTED_ROW_DATA = this.tableData.find(
+        (row) => row.id === SELECTED_ID
       );
 
-      if (selectedRowData) {
+      if (SELECTED_ROW_DATA) {
         this.destinatarioForm.patchValue({
           agregarDestinatario: {
-            tipoPersona: selectedRowData.tipoPersona,
+            tipoPersona: SELECTED_ROW_DATA.tipoPersona,
           },
           datosPersonales: {
-            nombre: selectedRowData.nombre,
-            primerApellido: selectedRowData.primerApellido,
-            segundoApellido: selectedRowData.segundoApellido,
-            denominacion: selectedRowData.denominacion,
-            pais: selectedRowData.pais,
-            domicilio: selectedRowData.domicilio,
-            estado: selectedRowData.estado,
-            codigopostal: selectedRowData.codigopostal,
-            calle: selectedRowData.calle,
-            numeroExterior: selectedRowData.numeroExterior,
-            numeroInterior: selectedRowData.numeroInterior,
-            lada: selectedRowData.lada,
-            telefono: selectedRowData.telefono,
-            correoElectronico: selectedRowData.correoElectronico,
+            nombre: SELECTED_ROW_DATA.nombre,
+            primerApellido: SELECTED_ROW_DATA.primerApellido,
+            segundoApellido: SELECTED_ROW_DATA.segundoApellido,
+            denominacion: SELECTED_ROW_DATA.denominacion,
+            pais: SELECTED_ROW_DATA.pais,
+            domicilio: SELECTED_ROW_DATA.domicilio,
+            estado: SELECTED_ROW_DATA.estado,
+            codigopostal: SELECTED_ROW_DATA.codigopostal,
+            calle: SELECTED_ROW_DATA.calle,
+            numeroExterior: SELECTED_ROW_DATA.numeroExterior,
+            numeroInterior: SELECTED_ROW_DATA.numeroInterior,
+            lada: SELECTED_ROW_DATA.lada,
+            telefono: SELECTED_ROW_DATA.telefono,
+            correoElectronico: SELECTED_ROW_DATA.correoElectronico,
           },
         });
 
@@ -382,10 +391,10 @@ pedimentos: Array<Pedimento> = [];
    */
   onConfirmarEliminacion(): void {
     this.eliminarMercancias();
-    const modalElement = document.getElementById('datoseliminadosModal');
-    if (modalElement) {
-      const datosEliminadosModal = new Modal(modalElement);
-      datosEliminadosModal.show();
+    const MODAL_ELEMENT = document.getElementById('datoseliminadosModal');
+    if (MODAL_ELEMENT) {
+      const DATOS_ELIMINADOS_MODAL = new Modal(MODAL_ELEMENT);
+      DATOS_ELIMINADOS_MODAL.show();
     }
     this.abrirModal();
   }
@@ -393,7 +402,7 @@ pedimentos: Array<Pedimento> = [];
   /**
    * Limpia los datos del formulario.
    */
-  limpiarFormulario() {
+  limpiarFormulario():void {
     this.destinatarioForm.reset();
     
   }
@@ -420,7 +429,7 @@ pedimentos: Array<Pedimento> = [];
     metodoNombre: keyof Solicitud260702Store
   ): void {
     const VALOR = form.get(campo)?.value;
-    (this.solicitud260702Store[metodoNombre] as (value: any) => void)(VALOR);
+    (this.solicitud260702Store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
 
   /**

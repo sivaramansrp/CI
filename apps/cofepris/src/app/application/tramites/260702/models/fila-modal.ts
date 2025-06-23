@@ -20,7 +20,7 @@ export interface FilaData {
  */
 export interface FilaData2 {
   /** Identificador único de la fila. */
-  id: any;
+  id: unknown;
 
   /** Clasificación de los productos. */
   clasificaionProductos: string;

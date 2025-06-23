@@ -1,39 +1,50 @@
 import { ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { Catalogo, CatalogosSelect, ConfiguracionColumna, InputFecha, InputRadioComponent, Notificacion, NotificacionesComponent, Pedimento, TablaSeleccion } from '@libs/shared/data-access-user/src';
+
+import { Catalogo, InputFecha, InputRadioComponent, Notificacion, NotificacionesComponent, Pedimento, TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+
 import { FilaData, FilaData2, ListaClave } from '../../models/fila-modal';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
+
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
-import { CrosslistComponent } from '../../../../../../../../../libs/shared/data-access-user/src/tramites/components/crosslist/crosslist.component';
-import { FECHAINICIAL, FECHAFINAL } from '../../models/destinatario.model';
-import { InputFechaComponent } from '../../../../../../../../../libs/shared/data-access-user/src/tramites/components/input-fecha/input-fecha.component';
-import { map, ReplaySubject, takeUntil } from 'rxjs';
-import { MercanciaCrossList, CrossList, CrossListLable } from '../../models/mercancia.model';
+
+import { CrosslistComponent } from '@libs/shared/data-access-user/src/tramites/components/crosslist/crosslist.component';
+
+import { InputFechaComponent } from '@libs/shared/data-access-user/src/tramites/components/input-fecha/input-fecha.component';
+
+import { ReplaySubject, map, takeUntil } from 'rxjs';
+
+import { CrossList, MercanciaCrossList } from '../../models/mercancia.model';
 import { Modal } from 'bootstrap';
-import { RadioOpcion } from '../../models/radio.model';
+
 import { RegistrarSolicitudMcpService } from '../../services/registrar-solicitud-mcp.service';
-import { RegistrarSolicitudMCPModule } from '../../registrar-solicitud-mcp.module';
+
 import { Solicitud260702Query } from '../../estados/tramites260702.query';
+
 import { Solicitud260702State, Solicitud260702Store } from '../../estados/tramites260702.store';
 import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
+
 import { TEXTOS } from '../../constants/constantes.enum';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
+
 import { InputCheckComponent } from '@libs/shared/data-access-user/src';
+
 import {
-  ESTADO_DATA,
-  CLAVE_SCIAN_DATA,
-  DESCRIPCION_SCIAN_DATA,
-  REGIMEN_AL_QUE_DATA,
   ADUANA_DATA,
   CLASIFICACION_PRODUCTO_DATA,
+  CLAVE_SCIAN_DATA,
+  DESCRIPCION_SCIAN_DATA,
   ESPECIFICAR_DATA,
+  ESTADO_DATA,
+  REGIMEN_AL_QUE_DATA,
   TIPO_PRODUCTO_DATA,
 } from '../../constants/catalogs.enum';
+
 import {
-  CONFIGURACION_COLUMNAS_SOLI,
-  CONFIGURACION_COLUMNAS_MERCANCIAS,
   CONFIGURACION_COLUMNAS_LISTA_CLAVE,
+  CONFIGURACION_COLUMNAS_MERCANCIAS,
+  CONFIGURACION_COLUMNAS_SOLI,
 } from '../../constants/column-config.enum';
 
 /**
@@ -164,7 +175,7 @@ opcionDeBotonDeRadio = [
   ];
 
   /** Fila seleccionada */
-  selectedRow: any;
+  selectedRow: unknown;
 
   /** Configuración de datos del estado */
   public estadoData = ESTADO_DATA;
@@ -236,7 +247,7 @@ opcionDeBotonDeRadio = [
  * Método para crear el formulario principal de datos de la solicitud.
  * Inicializa un formulario reactivo con todos los campos necesarios y sus validaciones.
  */
-createForm(){
+createForm(): void {
   this.dataDeLaSolicitudForm = this.fb.group({
     claveDeLosLotes: [this.dataDeLaSolicitudState?.claveDeLosLotes, Validators.required],
     fechaDeFabricacion: [this.dataDeLaSolicitudState?.fechaDeFabricacion,Validators.required],
@@ -290,10 +301,10 @@ clearNotificacion(): void {
  * Busca el elemento del modal en el DOM, lo oculta y limpia cualquier notificación activa.
  */
 closeModal(): void {
-  const modalElement = document.getElementById('modalAgregarMercancia');
-  if (modalElement) {
-    const modal = new Modal(modalElement);
-    modal.hide();
+  const MODAL_ELEMENT = document.getElementById('modalAgregarMercancia');
+  if (MODAL_ELEMENT) {
+    const MODAL = new Modal(MODAL_ELEMENT);
+    MODAL.hide();
     this.clearNotificacion(); // Limpia la notificación cuando el modal se cierra programáticamente
   }
 }
@@ -389,10 +400,10 @@ getMercanciaCrosslistData(): void {
     .subscribe({
       next: (respuesta: MercanciaCrossList[]) => {
         if (respuesta.length > 0) {
-          const firstItem = respuesta[0];
-          this.paisOrigenCrossList = firstItem.paisOrigenCrossList;
-          this.paisProcedencisCrossList = firstItem.paisProcedencisCrossList;
-          this.usoEspecificoCrossList = firstItem.usoEspecificoCrossList;
+          const FIRST_ITEM = respuesta[0];
+          this.paisOrigenCrossList = FIRST_ITEM.paisOrigenCrossList;
+          this.paisProcedencisCrossList = FIRST_ITEM.paisProcedencisCrossList;
+          this.usoEspecificoCrossList = FIRST_ITEM.usoEspecificoCrossList;
         } else { /* vacío */ }
       },
       error: (err) => {
@@ -425,7 +436,7 @@ usoEspecificoColapsable(): void {
 }
 
    /** Obtiene los datos de los estados */
-  getEstadosData() {
+  getEstadosData():void {
     this.registrarsolicitudmcp.getEstadosData()
       .pipe(takeUntil(this.destroyed$))
       .subscribe((data: Catalogo[]) => {
@@ -433,7 +444,7 @@ usoEspecificoColapsable(): void {
       });
   }
     /** Obtiene los datos de clave SCIAN */
-  getClaveScianData() {
+  getClaveScianData():void {
     this.registrarsolicitudmcp.getClaveScianData()
       .pipe(takeUntil(this.destroyed$))
       .subscribe((data) => {
@@ -442,7 +453,7 @@ usoEspecificoColapsable(): void {
   }
 
     /** Obtiene los datos de descripción del SCIAN */
-  getClaveDescripcionDelData(){
+  getClaveDescripcionDelData():void{
     this.registrarsolicitudmcp.getClaveDescripcionDelData()
       .pipe(takeUntil(this.destroyed$))
       .subscribe((data) => {
@@ -451,7 +462,7 @@ usoEspecificoColapsable(): void {
   }
 
     /** Obtiene los datos del régimen */
-  getRegimenalqueData(){
+  getRegimenalqueData():void{
     this.registrarsolicitudmcp.getRegimenalqueData()
       .pipe(takeUntil(this.destroyed$))
       .subscribe((data) => {
@@ -460,7 +471,7 @@ usoEspecificoColapsable(): void {
   }
 
     /** Obtiene los datos de la aduana */
-  getAduanaData(){
+  getAduanaData():void{
     this.registrarsolicitudmcp.getAduanaData()
       .pipe(takeUntil(this.destroyed$))
       .subscribe((data) => {
@@ -479,7 +490,7 @@ usoEspecificoColapsable(): void {
 
     /** Obtiene los datos de mercancias */
 
-  getMercanciasData(){
+  getMercanciasData():void{
     this.registrarsolicitudmcp.getMercanciasData()
       .pipe(takeUntil(this.destroyed$))
       .subscribe((data) => {
@@ -487,7 +498,7 @@ usoEspecificoColapsable(): void {
       });
   }
     /** Obtiene los datos de clasificación del producto */
-  getClasificacionDelProductoData(){
+  getClasificacionDelProductoData():void{
     this.registrarsolicitudmcp.getClasificacionDelProductoData()
     .pipe(takeUntil(this.destroyed$))
     .subscribe((data) => {
@@ -495,7 +506,7 @@ usoEspecificoColapsable(): void {
     });
   }
     /** Obtiene los datos para especificar clasificación del producto */
-  getEspificarData(){
+  getEspificarData():void{
     this.registrarsolicitudmcp.getEspificarData()
     .pipe(takeUntil(this.destroyed$))
     .subscribe((data) => {
@@ -504,7 +515,7 @@ usoEspecificoColapsable(): void {
   }
 
     /** Obtiene los datos del tipo de producto */
-  getTipoProductoData(){
+  getTipoProductoData():void{
     this.registrarsolicitudmcp.getTipoProductoData()
     .pipe(takeUntil(this.destroyed$))
     .subscribe((data) => {
@@ -514,7 +525,7 @@ usoEspecificoColapsable(): void {
 
     /** Obtiene los datos de la lista de claves */
 
-  getListaClaveData(){
+  getListaClaveData():void{
     this.registrarsolicitudmcp.getListaClaveData()
     .pipe(takeUntil(this.destroyed$))
     .subscribe((data) => {
@@ -530,16 +541,16 @@ usoEspecificoColapsable(): void {
   
     /** Maneja el evento de envío del formulario */
 
-  onSubmit() {
-    const formData = { ...this.clavaScianForm.value };
-    formData.claveScianG.claveScian = this.claveScianData.catalogos.find(
-      (item: Catalogo) => String(item.id) === String(formData.claveScianG.claveScian)
+  onSubmit():void {
+    const FORM_DATA = { ...this.clavaScianForm.value };
+    FORM_DATA.claveScianG.claveScian = this.claveScianData.catalogos.find(
+      (item: Catalogo) => String(item.id) === String(FORM_DATA.claveScianG.claveScian)
     )?.descripcion || 'Not Found';
   
-    formData.claveScianG.descripcionDelScian = this.descripcionDelScianData.catalogos.find(
-      (item: Catalogo) => String(item.id) === String(formData.claveScianG.descripcionDelScian)
+    FORM_DATA.claveScianG.descripcionDelScian = this.descripcionDelScianData.catalogos.find(
+      (item: Catalogo) => String(item.id) === String(FORM_DATA.claveScianG.descripcionDelScian)
     )?.descripcion || 'Not Found';
-    this.tableData.push(formData);
+    this.tableData.push(FORM_DATA);
     this.showClavaScianForm = false;
       this.clavaScianForm.reset(); 
   }
@@ -558,18 +569,18 @@ usoEspecificoColapsable(): void {
      }
     }
     /** Elimina las filas seleccionadas */
-  onEliminar(){
+  onEliminar():void{
     if (!this.filasSeleccionadas || this.filasSeleccionadas.size === 0) {
-      const modalElement = document.getElementById('seleccionaRegistroModal');
-      if (modalElement) {
-        const modal = new Modal(modalElement);
-        modal.show();
+      const MODAL_ELEMENT = document.getElementById('seleccionaRegistroModal');
+      if (MODAL_ELEMENT) {
+        const MODAL = new Modal(MODAL_ELEMENT);
+        MODAL.show();
       }
     } else {
-    const modalElement = document.getElementById('confirmarEliminarModal');
-    if (modalElement) {
-      const modal = new Modal(modalElement);
-      modal.show();
+    const MODAL_ELEMENT = document.getElementById('confirmarEliminarModal');
+    if (MODAL_ELEMENT) {
+      const MODAL = new Modal(MODAL_ELEMENT);
+      MODAL.show();
     }
     }
     this.clavaScianForm.reset(); 
@@ -587,14 +598,14 @@ usoEspecificoColapsable(): void {
 
   }
     /** Limpia el formulario de clave SCIAN */
-  onLimpiar() {
+  onLimpiar():void {
     this.clavaScianForm.reset();
   }
 
 /**
  * Muestra el formulario para agregar una nueva clave SCIAN.
  */  
-onAgregar(){
+onAgregar():void{
     this.showClavaScianForm = true; 
   }
 
@@ -609,15 +620,15 @@ onAgregar(){
     }
 
     this.tableData = this.tableData.filter((row) => {
-      const rowId = row.id || (row.claveScianG && row.claveScianG.claveScian); 
-      return !this.filasSeleccionadas.has(Number(rowId));
+      const ROW_ID = row.id || (row.claveScianG && row.claveScianG.claveScian); 
+      return !this.filasSeleccionadas.has(Number(ROW_ID));
     });
     this.filasSeleccionadas.clear();
   }
   
     /** Cancela la acción de agregar clave SCIAN */
 
-  onCancelar() {
+  onCancelar():void {
     this.showClavaScianForm = false; 
     this.clavaScianForm.reset(); 
   }
@@ -636,14 +647,14 @@ onAgregar(){
  * @param event Evento que contiene el valor ingresado en el campo.
  */
  onClaveDeLosLotesChange(event: Event): void {
-  const target = event.target as HTMLInputElement; // Cast EventTarget to HTMLInputElement
+  const TARGET = event.target as HTMLInputElement; // Cast EventTarget to HTMLInputElement
 
-  if (target && this.ediciondeindicedefila !== null) {
-    const value = target.value;
+  if (TARGET && this.ediciondeindicedefila !== null) {
+    const VALUE = TARGET.value;
 
     this.listaClaveTabla[this.ediciondeindicedefila] = {
       ...this.listaClaveTabla[this.ediciondeindicedefila],
-      claveDeLosLotes: value,
+      claveDeLosLotes: VALUE,
     };
   } else { /* empty */ }
 }
@@ -674,22 +685,22 @@ onAgregar(){
 
 onAgregarListaClave(): void {
   
-  const claveDeLosLotes = this.dataDeLaSolicitudForm.get('claveDeLosLotes')?.value;
-  const fechaDeFabricacion = this.dataDeLaSolicitudForm.get('fechaDeFabricacion')?.value;
-  const fechaDeCaducidad = this.dataDeLaSolicitudForm.get('fechaDeCaducidad')?.value;
+  const CLAVE_DE_LOS_LOTES = this.dataDeLaSolicitudForm.get('claveDeLosLotes')?.value;
+  const FECHA_DE_FABRICACION = this.dataDeLaSolicitudForm.get('fechaDeFabricacion')?.value;
+  const FECHA_DE_CADUCIDAD = this.dataDeLaSolicitudForm.get('fechaDeCaducidad')?.value;
  
-  if (!claveDeLosLotes && fechaDeFabricacion && fechaDeCaducidad) {
+  if (!CLAVE_DE_LOS_LOTES && FECHA_DE_FABRICACION && FECHA_DE_CADUCIDAD) {
     console.error('All fields are required to add a row.');
     return;
   }
-  const newRow = {
+  const NEW_ROW = {
     id: this.listaClaveTabla.length + 1, 
-    claveDeLosLotes,
-    fechaDeFabricacion,
-    fechaDeCaducidad,
+    claveDeLosLotes: CLAVE_DE_LOS_LOTES,
+    fechaDeFabricacion: FECHA_DE_FABRICACION,
+    fechaDeCaducidad: FECHA_DE_CADUCIDAD,
   };
 
-  this.listaClaveTabla.push(newRow);
+  this.listaClaveTabla.push(NEW_ROW);
   this.dataDeLaSolicitudForm.reset();
 }
 
@@ -701,23 +712,23 @@ onModificar(): void {
     return;
   }
 
-  const indiceFilaSeleccionada = Array.from(this.filasSeleccionadas)[0];
-  const rowIndex = this.listaClaveTabla.findIndex(
-    (row) => Number(row.claveDeLosLotes) === indiceFilaSeleccionada
+  const INDICE_FILA_SELECCIONADA = Array.from(this.filasSeleccionadas)[0];
+  const ROW_INDEX = this.listaClaveTabla.findIndex(
+    (row) => Number(row.claveDeLosLotes) === INDICE_FILA_SELECCIONADA
   );
 
-  if (rowIndex === -1) {
+  if (ROW_INDEX === -1) {
     return;
   }
 
-  this.ediciondeindicedefila = rowIndex; // Set the index of the row being edited
+  this.ediciondeindicedefila = ROW_INDEX; // Set the index of the row being edited
 
-  const selectedRow = this.listaClaveTabla[rowIndex];
+  const SELECTED_ROW = this.listaClaveTabla[ROW_INDEX];
 
   this.dataDeLaSolicitudForm.patchValue({
-    claveDeLosLotes: selectedRow.claveDeLosLotes || '',
-    fechaDeFabricacion: selectedRow.fechaDeFabricacion || '',
-    fechaDeCaducidad: selectedRow.fechaDeCaducidad || '',
+    claveDeLosLotes: SELECTED_ROW.claveDeLosLotes || '',
+    fechaDeFabricacion: SELECTED_ROW.fechaDeFabricacion || '',
+    fechaDeCaducidad: SELECTED_ROW.fechaDeCaducidad || '',
   });
   
 }
@@ -734,7 +745,7 @@ setValoresStore(
   metodoNombre: keyof Solicitud260702Store
 ): void {
   const VALOR = form.get(campo)?.value;
-  (this.solicitud260702Store[metodoNombre] as (value: any) => void)(VALOR);
+  (this.solicitud260702Store[metodoNombre] as (value: unknown) => void)(VALOR);
 }
 
 

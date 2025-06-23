@@ -1,14 +1,19 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
-import { Component, OnDestroy, OnInit, ChangeDetectorRef } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Catalogo, CatalogosSelect,InputFecha, TituloComponent } from '@libs/shared/data-access-user/src';
+
+import { Catalogo,InputFecha, TituloComponent } from '@libs/shared/data-access-user/src';
 import { RegistrarSolicitudMcpService } from '../../services/registrar-solicitud-mcp.service';
-import { map, ReplaySubject, takeUntil } from 'rxjs';
+
+import { ReplaySubject, map, takeUntil } from 'rxjs';
 import { Solicitud260702Query } from '../../estados/tramites260702.query';
+
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
+
 import { Solicitud260702State, Solicitud260702Store } from '../../estados/tramites260702.store';
 import { InputFechaComponent } from '@libs/shared/data-access-user/src';
+
 import { BANCO_DATA } from '../../constants/catalogs.enum';
 /**
  * Componente para gestionar el pago de derechos en el trámite.
@@ -131,7 +136,7 @@ public bancoData = BANCO_DATA;
     metodoNombre: keyof Solicitud260702Store
   ): void {
     const VALOR = form.get(campo)?.value;
-    (this.solicitud260702Store[metodoNombre] as (value: any) => void)(VALOR);
+    (this.solicitud260702Store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
 
   /**

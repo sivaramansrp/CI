@@ -1,11 +1,14 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ReplaySubject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+
 import { RegistrarSolicitudMcpService } from '../../services/registrar-solicitud-mcp.service';
 import { TramitesAsociados } from '../../models/destinatario.model';
-import { ConfiguracionColumna, Notificacion, NotificacionesComponent, Pedimento } from '@libs/shared/data-access-user/src';
+
+import { Notificacion, NotificacionesComponent, Pedimento } from '@libs/shared/data-access-user/src';
 import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
+
 import { DESTINATARIO_CONFIGURACION_TABLA2 } from '../../constants/column-config.enum';
 
 @Component({
