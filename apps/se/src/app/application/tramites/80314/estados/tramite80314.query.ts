@@ -31,6 +31,10 @@ export class Tramite80314Query extends Query<TramiteState> {
     return state.altaPlanta;
   });
 
+  selectSolicitud$ = this.select((state) => {
+    return state;
+  });
+
   constructor(protected override store: Tramite80314Store) {
     super(store);
   }
