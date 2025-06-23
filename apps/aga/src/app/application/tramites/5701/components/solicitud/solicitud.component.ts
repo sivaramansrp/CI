@@ -475,6 +475,10 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    */
   linkGeneraLineaCapturaSeguro!: SafeUrl;
 
+  certificacionesDisabled: boolean = true;
+  OEAdisabled: boolean = true;
+  revisionDisabled: boolean = true;
+
   constructor(
     private seccionQuery: SeccionLibQuery,
     private seccionStore: SeccionLibStore,
@@ -1406,40 +1410,6 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   /**
-   * Selecciona una aduana y actualiza los campos correspondientes en el formulario.
-   *
-   * @param aduana - El objeto de tipo Catalogo que contiene la información de la aduana seleccionada.
-   * @returns {void}
-   */
-  aduanaSeleccion(aduana: Catalogo): void {
-    SolicitudComponent.darValorCampoFormulario(
-      this.despacho,
-      'idAduanaDespacho',
-      aduana.id
-    );
-    SolicitudComponent.darValorCampoFormulario(
-      this.despacho,
-      'aduanaDespacho',
-      aduana.descripcion
-    );
-    this.validacionPedimento = true;
-
-    const PATENTE = FormulariosService.convertirValorANumero(
-      this.despacho,
-      'patente'
-    );
-    const ID_ADUANA = FormulariosService.convertirValorANumero(
-      this.despacho,
-      'idAduanaDespacho'
-    );
-
-    this.datosPedimentoComponente = {
-      patente: PATENTE,
-      idAduanaDespacho: ID_ADUANA,
-    };
-  }
-
-  /**
    * Valida el campo de la aduana en el formulario.
    *
    * @returns {void} No retorna ningún valor.
@@ -2120,6 +2090,10 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    */
   public changeAduana(): void {
     const ADUANA = this.despacho.get('idAduanaDespacho')?.value;
+    this.datosPedimentoComponente = {
+      patente: this.solicitudState?.patente.patente,
+      idAduanaDespacho: ADUANA,
+    };
 
     if (ADUANA) {
       this.despacho.get('idSeccionDespacho')?.setValue(SIN_VALOR);

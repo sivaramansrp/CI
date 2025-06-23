@@ -223,6 +223,7 @@
             "
             id="tipoEmpresaCertificada"
             formControlName="tipoEmpresaCertificada"
+            [disabled]="!certificacionesDisabled"
           >
           </app-input-radio>
         </div>
@@ -240,6 +241,7 @@
             [id]="'certificacionOEA'"
             [label]="'Operador económico autorizado'"
             [required]="false"
+            [isDisabled]="OEAdisabled"
             formControlName="certificacionOEA"
             (change)="
               setValoresStore(
@@ -254,6 +256,7 @@
             [id]="'revision'"
             [label]="'Revisión en origen'"
             [required]="false"
+            [isDisabled]="revisionDisabled"
             formControlName="revision"
             (change)="
               setValoresStore(
@@ -660,6 +663,7 @@
     [validacion]="validacionPedimento"
     [datosNroPedimento]="datosPedimentoComponente"
     [tablaPedimento]="solicitudState.pedimentos"
+    [numeroPatente]="solicitudState.patente.patente"
     (validaCampos)="validaCampoPedimento()"
     (datosTablaPedimento)="changeAgregarPedimento($event)"
   ></c-pedimento>
