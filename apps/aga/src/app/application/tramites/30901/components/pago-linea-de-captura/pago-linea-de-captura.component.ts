@@ -1,6 +1,7 @@
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
@@ -99,7 +100,7 @@ export class PagoLineaDeCapturaComponent implements OnInit, OnDestroy {
    * Configuración de las columnas de la tabla.
    * Define el encabezado, la clave de acceso a los datos y el orden de las columnas.
    */
-  configuracionColumnas = [
+  configuracionColumnas: ConfiguracionColumna<PagoDerechosLista>[] = [
     {
       encabezado: 'Línea de captura', // Título de la columna
       clave: (item: PagoDerechosLista) => item.linea, // Accede a la propiedad 'linea'

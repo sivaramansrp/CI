@@ -21,7 +21,7 @@ export class PasoUnoComponent implements AfterViewInit, OnInit,OnDestroy {
   /**
    * Catálogo de entidades federativas.
    */
-  entidadFederativa!: any;
+  entidadFederativa!: { data: string } | null;
  /**
  * Notificador para destruir observables al destruir el componente.
  * Se utiliza para gestionar la cancelación de suscripciones activas y evitar fugas de memoria.

@@ -1,9 +1,9 @@
 import { Component, Input, OnDestroy } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
+import { ReplaySubject, map, takeUntil } from 'rxjs';
 import { TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Bitacora } from '../../models/bitacora.model';
 import { TABLA_BITACORA } from '../../constantes/bitacora.enum';
-import { ReplaySubject, takeUntil, map } from 'rxjs';
 
 /**
  * Componente para mostrar la tabla de bitácoras.

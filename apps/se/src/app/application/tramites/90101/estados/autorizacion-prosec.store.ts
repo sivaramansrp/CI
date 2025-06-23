@@ -77,7 +77,7 @@ export class AutorizacionProsecStore extends Store<ProsecState> {
      * Actualiza el estado con la modalidad seleccionada.
      * @param modalidad Modalidad seleccionada.
      */
-    public setModalidad(modalidad: string) {
+    public setModalidad(modalidad: string):void {
         this.update((state) => ({
             ...state,
             modalidad,
@@ -89,7 +89,7 @@ export class AutorizacionProsecStore extends Store<ProsecState> {
      * Actualiza el estado con la información de los estados seleccionados.
      * @param Estado Lista de estados seleccionados.
      */
-    public setEstado(Estado: Catalogo[]) {
+    public setEstado(Estado: Catalogo[]):void {
         this.update((state) => ({
             ...state,
             Estado,
@@ -101,7 +101,7 @@ export class AutorizacionProsecStore extends Store<ProsecState> {
      * Actualiza el estado con la información de la representación federal seleccionada.
      * @param RepresentacionFederal Lista de representaciones federales seleccionadas.
      */
-    public setRepresentacionFederal(RepresentacionFederal: Catalogo[]) {
+    public setRepresentacionFederal(RepresentacionFederal: Catalogo[]):void {
         this.update((state) => ({
             ...state,
             RepresentacionFederal,
@@ -113,7 +113,7 @@ export class AutorizacionProsecStore extends Store<ProsecState> {
      * Actualiza el estado con la información de la actividad productiva seleccionada.
      * @param ActividadProductiva Lista de actividades productivas seleccionadas.
      */
-    public setActividadProductiva(ActividadProductiva: Catalogo[]) {
+    public setActividadProductiva(ActividadProductiva: Catalogo[]):void {
         this.update((state) => ({
             ...state,
             ActividadProductiva,
@@ -125,7 +125,7 @@ export class AutorizacionProsecStore extends Store<ProsecState> {
      * Actualiza el estado con la información de los sectores seleccionados.
      * @param Sector Lista de sectores seleccionados.
      */
-    public setSector(Sector: Catalogo[]) {
+    public setSector(Sector: Catalogo[]):void {
         this.update((state) => ({
             ...state,
             Sector,
@@ -137,7 +137,7 @@ export class AutorizacionProsecStore extends Store<ProsecState> {
      * Actualiza el estado con la fracción arancelaria seleccionada.
      * @param Fraccion_arancelaria Fracción arancelaria seleccionada.
      */
-    public setFraccionArancelaria(Fraccion_arancelaria: string) {
+    public setFraccionArancelaria(Fraccion_arancelaria: string):void {
         this.update((state) => ({
             ...state,
             Fraccion_arancelaria,
@@ -149,7 +149,7 @@ export class AutorizacionProsecStore extends Store<ProsecState> {
      * Actualiza el estado con los contribuyentes registrados.
      * @param contribuyentes Contribuyentes registrados.
      */
-    public setcontribuyentes(contribuyentes: string) {
+    public setcontribuyentes(contribuyentes: string):void {
         this.update((state) => ({
             ...state,
             contribuyentes,
@@ -161,7 +161,7 @@ export class AutorizacionProsecStore extends Store<ProsecState> {
      * Actualiza el estado de validez del formulario.
      * @param formaValida Lista que indica el estado de validez del formulario.
      */
-    public setFormaValida(formaValida: Catalogo[]){
+    public setFormaValida(formaValida: Catalogo[]):void {
         this.update((state) => ({
             ...state,
             formaValida,

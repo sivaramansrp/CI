@@ -16,7 +16,7 @@ export interface Contenedores {
 
 export interface RespuestaContenedor {
   success: boolean;
-  datos: datosDeLaTabla
+  datos: DatosDeLaTabla
   message: string;
 }
 
@@ -26,8 +26,14 @@ export interface RespuestaContenedores {
   message: string;
 }
 
-export interface datosDeLaTabla {
+export interface DatosDeLaTabla {
   id: number;
   folioDePrograma: string;
   tipoDePrograma: string;
+}
+
+export interface RespuestTablaDatos {
+  code: number;
+  data: DatosDeLaTabla[];
+  message: string;
 }

@@ -1,11 +1,9 @@
+import { BaseResponse } from '../../../models/5701/base-response.model';
+import { ENVIRONMENT } from '@libs/shared/data-access-user/src';
+import { FirmarRequest } from '../../../models/5701/firmar-request-model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { CatalogosBooleanResponse, ENVIRONMENT } from '@libs/shared/data-access-user/src';
-import { catchError, map, Observable, throwError } from 'rxjs';
-import { DocumentosRequest } from '../../../../../../../../../libs/shared/data-access-user/src/core/models/shared/documentos-request.model';
-import { BaseResponse } from '../../../models/5701/base-response.model';
-import { FirmarRequest } from '../../../models/5701/firmar-request-model';
-
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
