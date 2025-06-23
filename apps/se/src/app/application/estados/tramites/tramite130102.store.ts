@@ -355,7 +355,7 @@ public setCriterioDictamen(criterioDictamen: string):void {
     * Actualiza el estado de la solicitud.
     * @param {string} solicitud - Nueva solicitud.
     */
-  public setPartidasTabla(fieldName: string, value: OctavaTemporal[]) {
+  public setPartidasTabla(fieldName: string, value: OctavaTemporal[]):void {
     this.update((state) => ({
       ...state,
       [fieldName]: value,

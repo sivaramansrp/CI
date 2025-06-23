@@ -43,35 +43,35 @@ export class Tramite90303Store extends Store<Solicitud90303State> {
    * Actualiza el estado del store con los nuevos valores.
    * @param updateFunc Función que recibe el estado actual y retorna el nuevo estado.
    */   
-  public setEstatus(estatus: string) {
+  public setEstatus(estatus: string):void {
    this.update((state) => ({...state, estatus, }));
   }
   /**
    * Actualiza el estado del store con los nuevos valores.
    * @param updateFunc Función que recibe el estado actual y retorna el nuevo estado.
    */
-  public setRegistroFederalContribuyentes(registroFederalContribuyentes: string) {
+  public setRegistroFederalContribuyentes(registroFederalContribuyentes: string):void {
     this.update((state) => ({...state, registroFederalContribuyentes, }));
   }
   /**
    * Actualiza el estado del store con los nuevos valores.
    * @param updateFunc Función que recibe el estado actual y retorna el nuevo estado.
    */
-  public setRepresentacionFederal(representacionFederal: string) {
+  public setRepresentacionFederal(representacionFederal: string):void {
     this.update((state) => ({...state, representacionFederal, }));
   }
   /**
    * Actualiza el estado del store con los nuevos valores.
    * @param updateFunc Función que recibe el estado actual y retorna el nuevo estado.
    */
-  public setTipoModificacion(tipoModificacion: string) {
+  public setTipoModificacion(tipoModificacion: string):void {
     this.update((state) => ({...state, tipoModificacion, }));
   }
   /**
    * Actualiza el estado del store con los nuevos valores.
    * @param updateFunc Función que recibe el estado actual y retorna el nuevo estado.
    */
-  public setModificacionPrograma(modificacionPrograma: string) {
+  public setModificacionPrograma(modificacionPrograma: string):void {
     this.update((state) => ({...state, modificacionPrograma, }));
   }
   /**
