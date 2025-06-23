@@ -514,8 +514,8 @@ export class AmpliacionServiciosComponent implements OnInit, OnDestroy {
       this.campoDeshabilitar=true;
     } else {
       this.campoDeshabilitar=false;
-    
     }
+
 }
 
   /**

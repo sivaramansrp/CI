@@ -1,12 +1,12 @@
-import { Component } from '@angular/core';
 import {
   ConsultaioQuery,
   ConsultaioState,
 } from '@libs/shared/data-access-user/src';
+import { Subject, map} from 'rxjs';
+import { Component } from '@angular/core';
 import { DatosSolicitudService } from '../../../../shared/services/datos-solicitud.service';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
-import { map, Subject } from 'rxjs';
 import { Tramite240118Query } from '../../estados/tramite240118Query.query';
 import { Tramite240118Store } from '../../estados/tramite240118Store.store';
 import { takeUntil } from 'rxjs';

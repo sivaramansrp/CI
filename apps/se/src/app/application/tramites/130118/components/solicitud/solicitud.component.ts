@@ -243,7 +243,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         clasifiRegimen: [{ value: this.solicitudState?.clasifiRegimen, disabled: true }]
       }),
       datosMercancia: this.fb.group({
-        valueTA: [{ value: this.solicitudState?.valueTA, disabled: true }, [Validators.maxLength(1000), Validators.pattern(/^[^~`^]*$/)]],
+        valueTA: [{ value: this.solicitudState?.valueTA}, [Validators.maxLength(1000), Validators.pattern(/^[^~`^]*$/)]],
         fraccionArancelaria: [this.solicitudState?.fraccionArancelaria, Validators.required],
         nico: [this.solicitudState?.nico, Validators.required],
         unidadMedidaTarifaria: [this.solicitudState?.unidadMedidaTarifaria, Validators.required],

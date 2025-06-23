@@ -13,12 +13,7 @@
             [required]="true"
             name="medioDeTransporte"
             [isDisabled]="esFormularioSoloLectura"
-            (change)="
-            setValoresStore(
-              formularioMovilizacion,
-              'medioDeTransporte'
-            )
-          " 
+            (change)="setValoresStore()" 
           ></app-catalogo-select>
         </div>
         <div class="col-md-4 form-group">
@@ -32,12 +27,7 @@
             placeholder=""
             name="identificacionTransporte"
             type="text"
-            (change)="
-            setValoresStore(
-              formularioMovilizacion,
-              'identificacionTransporte'
-            )
-          " 
+            (change)="setValoresStore()" 
           />
         </div>
       </div>
@@ -50,12 +40,7 @@
             [required]="false"
             name="puntoVerificacion"
             [isDisabled]="esFormularioSoloLectura"
-            (change)="
-            setValoresStore(
-              formularioMovilizacion,
-              'puntoVerificacion'
-            )
-          " 
+            (change)="setValoresStore()" 
           ></app-catalogo-select>
         </div>
         <div class="col-md-8 form-group">
@@ -69,12 +54,7 @@
             name="nombreEmpresaTransportista"
             placeholder=""
             type="text"
-            (change)="
-            setValoresStore(
-              formularioMovilizacion,
-              'nombreEmpresaTransportista'
-            )
-          " 
+            (change)="setValoresStore()" 
           />
         </div>
       </div>
