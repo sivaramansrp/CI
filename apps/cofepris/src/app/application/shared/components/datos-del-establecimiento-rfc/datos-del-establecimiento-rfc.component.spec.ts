@@ -1,157 +1,115 @@
-import { TestBed, ComponentFixture } from '@angular/core/testing';
-import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
-import { of, Subject } from 'rxjs';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DatosDelEstablecimientoRFCComponent } from './datos-del-establecimiento-rfc.component';
-import { DomicilioStore } from '../../estados/stores/domicilio.store'; 
-import { DomicilioQuery } from '../../estados/queries/domicilio.query';
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { AvisocalidadStore } from '../../estados/stores/aviso-calidad.store';
+import { AvisocalidadQuery } from '../../estados/queries/aviso-calidad.query';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { of, Subject } from 'rxjs';
+import { CUSTOM_ELEMENTS_SCHEMA, ElementRef } from '@angular/core';
 
 describe('DatosDelEstablecimientoRFCComponent', () => {
   let component: DatosDelEstablecimientoRFCComponent;
   let fixture: ComponentFixture<DatosDelEstablecimientoRFCComponent>;
-  let mockTramiteStore: jest.Mocked<DomicilioStore>;
-  let mockTramiteQuery: jest.Mocked<DomicilioQuery>;
-
-   const mockConsultaioQuery = {
-    selectConsultaioState$: of({ readonly: true }),
-  };
-
-  const mockAvisocalidadQuery = {
-    selectSolicitud$: of({ solicitudId: 123 }),
-  };
+  let avisocalidadStoreMock: any;
+  let avisocalidadQueryMock: any;
+  let consultaioQueryMock: any;
 
   beforeEach(async () => {
-    mockTramiteStore = {
-      setDenominacion: jest.fn(),
+    avisocalidadStoreMock = {
+      setRFC: jest.fn(),
+      setDenominacionRazonSocial: jest.fn(),
       setCorreoElectronico: jest.fn(),
-    } as unknown as jest.Mocked<DomicilioStore>;
-
-    mockTramiteQuery = {
+    };
+    avisocalidadQueryMock = {
       selectSolicitud$: of({
-        denominacion: 'Test Denominacion',
-        correoElectronico: 'test@example.com',
+        rfcDel: 'RFC123',
+        denominacionRazonSocial: 'Empresa SA',
+        correoElectronico: 'test@email.com',
       }),
-    } as unknown as jest.Mocked<DomicilioQuery>;
+    };
+    consultaioQueryMock = {
+      selectConsultaioState$: of({ readonly: false }),
+    };
 
     await TestBed.configureTestingModule({
-      imports: [DatosDelEstablecimientoRFCComponent, ReactiveFormsModule],
+      imports: [ReactiveFormsModule, DatosDelEstablecimientoRFCComponent],
       providers: [
         FormBuilder,
-        { provide: DomicilioStore, useValue: mockTramiteStore },
-        { provide: DomicilioQuery, useValue: mockTramiteQuery },
-        { provide: ConsultaioQuery, useValue: mockConsultaioQuery },
+        { provide: AvisocalidadStore, useValue: avisocalidadStoreMock },
+        { provide: AvisocalidadQuery, useValue: avisocalidadQueryMock },
+        { provide: ConsultaioQuery, useValue: consultaioQueryMock },
       ],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA],
     }).compileComponents();
-  });
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(DatosDelEstablecimientoRFCComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
-  });
-
-  afterEach(() => {
-    component.ngOnDestroy();
   });
 
   it('should create the component', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize the form on ngOnInit', () => {
-    component.ngOnInit();
-    expect(component.datosDelForm).toBeDefined();
-    expect(component.datosDelForm.get('denominacion')?.value).toBe('Test Denominacion');
-    expect(component.datosDelForm.get('correoElectronico')?.value).toBe('test@example.com');
+  it('should initialize form with values from solicitudState', () => {
+    expect(component.datosDelForm.value).toEqual({
+      rfcDel: 'RFC123',
+      denominacionRazonSocial: 'Empresa SA',
+      correoElectronico: 'test@email.com',
+    });
   });
 
-  it('should open the modal when abrirModal is called', () => {
-    component.abrirModal();
-    expect(component.modal).toBe('show');
-  });
-
-  it('should set values in the store using setValoresStore', () => {
-    const form = component.datosDelForm;
-    form.get('denominacion')?.setValue('New Denominacion');
-    component.setValoresStore(form, 'denominacion', 'setDenominacionRazonSocial');
-    expect(mockTramiteStore.setDenominacion).toHaveBeenCalledWith('New Denominacion');
-
-    form.get('correoElectronico')?.setValue('new@example.com');
-    component.setValoresStore(form, 'correoElectronico', 'setCorreoElectronico');
-    expect(mockTramiteStore.setCorreoElectronico).toHaveBeenCalledWith('new@example.com');
-  });
-
-  it('should clean up observables on ngOnDestroy', () => {
-    const destroyNotifierSpy = jest.spyOn(component['destroyNotifier$'], 'next');
-    const destroyNotifierCompleteSpy = jest.spyOn(component['destroyNotifier$'], 'complete');
-
-    component.ngOnDestroy();
-
-    expect(destroyNotifierSpy).toHaveBeenCalled();
-    expect(destroyNotifierCompleteSpy).toHaveBeenCalled();
-  });
-
-   it('should disable form if esFormularioSoloLectura is true and datosDelForm exists', () => {
+  it('should disable form if esFormularioSoloLectura is true', () => {
     component.esFormularioSoloLectura = true;
-
-    const disableSpy = jest.spyOn(component.datosDelForm, 'disable');
-    const enableSpy = jest.spyOn(component.datosDelForm, 'enable');
-
+    component.solicitudState = {
+      rfcDel: 'RFC123',
+      denominacionRazonSocial: 'Empresa SA',
+      correoElectronico: 'test@email.com',
+    } as any;
     component.configurarGrupoForm();
-
-    expect(disableSpy).toHaveBeenCalled();
-    expect(enableSpy).not.toHaveBeenCalled();
+    expect(component.datosDelForm.disabled).toBe(true);
   });
 
   it('should enable form if esFormularioSoloLectura is false', () => {
     component.esFormularioSoloLectura = false;
-
-    const disableSpy = jest.spyOn(component.datosDelForm, 'disable');
-    const enableSpy = jest.spyOn(component.datosDelForm, 'enable');
-
+    component.solicitudState = {
+      rfcDel: 'RFC123',
+      denominacionRazonSocial: 'Empresa SA',
+      correoElectronico: 'test@email.com',
+    } as any;
     component.configurarGrupoForm();
+    expect(component.datosDelForm.enabled).toBe(true);
+  });
 
-    expect(enableSpy).toHaveBeenCalled();
-    expect(disableSpy).not.toHaveBeenCalled();
+  it('should open modal and set nuevaNotificacion and elementoParaEliminar', () => {
+    component.abrirModal(2);
+    expect(component.nuevaNotificacion).toBeDefined();
+    expect(component.elementoParaEliminar).toBe(2);
+  });
+
+  it('should remove pedimento when eliminarPedimento is called with true', () => {
+    component.pedimentos = [{}, {}, {}] as any;
+    component.elementoParaEliminar = 1;
+    component.eliminarPedimento(true);
+    expect(component.pedimentos.length).toBe(2);
+  });
+
+  it('should not remove pedimento when eliminarPedimento is called with false', () => {
+    component.pedimentos = [{}, {}, {}] as any;
+    component.elementoParaEliminar = 1;
+    component.eliminarPedimento(false);
+    expect(component.pedimentos.length).toBe(3);
+  });
+
+it('should clean up on ngOnDestroy', () => {
+    const spy = jest.spyOn((component as any).destroyNotifier$, 'next');
+    component.ngOnDestroy();
+    expect(spy).toHaveBeenCalled();
+  });
+
+ it('should handle closeModal ElementRef if present', () => {
+    component.closeModal = { nativeElement: { click: jest.fn() } } as any;
+    // No method uses closeModal directly, but this ensures assignment doesn't throw
+    expect(component.closeModal).toBeDefined();
   });
 });
-
- describe('Standalone: esFormularioSoloLectura from ConsultaioQuery', () => {
-    let component: DatosDelEstablecimientoRFCComponent;
-    let fixture: ComponentFixture<DatosDelEstablecimientoRFCComponent>;
-
-    beforeEach(async () => {
-      await TestBed.configureTestingModule({
-        imports: [DatosDelEstablecimientoRFCComponent, ReactiveFormsModule],
-        providers: [
-          FormBuilder,
-          { provide: DomicilioStore, useValue: {
-            setDenominacion: jest.fn(),
-            setCorreoElectronico: jest.fn(),
-          }},
-          { provide: DomicilioQuery, useValue: {
-            selectSolicitud$: of({
-              denominacion: 'Test Denominacion',
-              correoElectronico: 'test@example.com',
-            }),
-          }},
-          { provide: ConsultaioQuery, useValue: {
-            selectConsultaioState$: of({ readonly: true }),
-          }},
-        ],
-      }).compileComponents();
-
-      fixture = TestBed.createComponent(DatosDelEstablecimientoRFCComponent);
-      component = fixture.componentInstance;
-      fixture.detectChanges();
-    });
-
-    it('should set esFormularioSoloLectura from ConsultaioQuery and configure form on ngOnInit', () => {
-      const configurarSpy = jest.spyOn(component, 'configurarGrupoForm');
-
-      component.ngOnInit();
-
-      expect(component.esFormularioSoloLectura).toBe(true);
-      expect(configurarSpy).toHaveBeenCalled();
-    });
-  });

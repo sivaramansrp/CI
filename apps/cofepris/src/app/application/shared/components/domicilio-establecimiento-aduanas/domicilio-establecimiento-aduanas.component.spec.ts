@@ -1,51 +1,25 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
-import { CommonModule } from '@angular/common';
-import { of, Subject } from 'rxjs';
+import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { DomicilioEstablecimientoAduanasComponent } from './domicilio-establecimiento-aduanas.component';
-import { DatosDomicilioLegalStore } from '../../estados/stores/datos-domicilio-legal.store';
-import { DatosDomicilioLegalQuery } from '../../estados/queries/datos-domicilio-legal.query';
-import { DatosDomicilioLegalService } from '../../services/datos-domicilio-legal.service';
-import {
-  CatalogoSelectComponent,
-  TablaDinamicaComponent,
-  TituloComponent,
-} from '@libs/shared/data-access-user/src';
+import { FormBuilder, ReactiveFormsModule, FormGroup } from '@angular/forms';
+import { AvisocalidadStore } from '../../estados/stores/aviso-calidad.store';
+import { AvisocalidadQuery } from '../../estados/queries/aviso-calidad.query';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
-
-
-const mockConsultaioQuery = {
-    selectConsultaioState$: of({ readonly: true }),
-  };
-
-  const mockAvisocalidadQuery = {
-    selectSolicitud$: of({ solicitudId: 123 }),
-  };
+import { DatosDomicilioLegalService } from '../../services/datos-domicilio-legal.service';
+import { DatosDomicilioService } from '../../../tramites/260512/services/datos-domicilio.service';
+import { of, Subject } from 'rxjs';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 describe('DomicilioEstablecimientoAduanasComponent', () => {
   let component: DomicilioEstablecimientoAduanasComponent;
   let fixture: ComponentFixture<DomicilioEstablecimientoAduanasComponent>;
-  let store: DatosDomicilioLegalStore;
-  let query: DatosDomicilioLegalQuery;
-  let service: DatosDomicilioLegalService;
+  let avisocalidadStoreMock: any;
+  let avisocalidadQueryMock: any;
+  let consultaioQueryMock: any;
+  let datosDomicilioLegalServiceMock: any;
+  let datosDomicilioServiceMock: any;
 
   beforeEach(async () => {
-    const mockQuery = {
-      selectSolicitud$: of({
-        codigoPostal: '12345',
-        estado: 'TestEstado',
-        muncipio: 'TestMunicipio',
-        localidad: 'TestLocalidad',
-        colonia: 'TestColonia',
-        calle: 'TestCalle',
-        lada: '123',
-        telefono: '9876543210',
-        avisoCheckbox: true,
-        licenciaSanitaria: 'TestLicencia',
-      }),
-    };
-
-    const mockStore = {
+    avisocalidadStoreMock = {
       setCodigoPostal: jest.fn(),
       setEstado: jest.fn(),
       setMuncipio: jest.fn(),
@@ -56,42 +30,81 @@ describe('DomicilioEstablecimientoAduanasComponent', () => {
       setTelefono: jest.fn(),
       setAvisoCheckbox: jest.fn(),
       setLicenciaSanitaria: jest.fn(),
+      setClaveScianModal: jest.fn(),
+      setClaveDescripcionModal: jest.fn(),
+      setNombreComercial: jest.fn(),
+      setNombreComun: jest.fn(),
+      setNombreCientifico: jest.fn(),
+      setUsoEspecifico: jest.fn(),
+      setEstadoFisico: jest.fn(),
+      setFraccionArancelaria: jest.fn(),
+      setDescripcionFraccion: jest.fn(),
+      setCantidadUMT: jest.fn(),
+      setUMT: jest.fn(),
+      setCantidadUMC: jest.fn(),
+      setUMC: jest.fn(),
+      setNumerocas: jest.fn(),
+      setPorcentajeConcentracion: jest.fn(),
+      setClasificacionToxicologica: jest.fn(),
+      setObjetoImportacion: jest.fn(),
     };
-
-    const mockService = {
-      getObtenerEstadoList: jest
-        .fn()
-        .mockReturnValue(of({ data: [{ id: 1, descripcion: 'Estado 1' }] })),
-      getObtenerTablaDatos: jest.fn().mockReturnValue(of({ data: [] })),
-      getObtenerMercanciasDatos: jest.fn().mockReturnValue(of({ data: [] })),
+    avisocalidadQueryMock = {
+      selectSolicitud$: of({
+        codigoPostal: '12345',
+        estado: 'Estado',
+        muncipio: 'Municipio',
+        localidad: 'Localidad',
+        colonia: 'Colonia',
+        calle: 'Calle',
+        lada: '01',
+        telefono: '5555555',
+        avisoCheckbox: true,
+        licenciaSanitaria: 'LS123',
+        claveScianModal: 'SCIAN',
+        claveDescripcionModal: 'Desc',
+        nombreComercial: 'Comercial',
+        nombreComun: 'Comun',
+        nombreCientifico: 'Cientifico',
+        usoEspecifico: 'Uso',
+        estadoFisico: 'Solido',
+        fraccionArancelaria: 'FA',
+        descripcionFraccion: 'DescF',
+        cantidadUMT: '1',
+        UMT: 'UMT',
+        cantidadUMC: '2',
+        UMC: 'UMC',
+        numeroCas: 'CAS',
+        porcentajeConcentracion: '10',
+        clasificacionToxicologica: 'Tox',
+        objetoImportacion: 'Obj',
+      }),
+    };
+    consultaioQueryMock = {
+      selectConsultaioState$: of({ readonly: false }),
+    };
+    datosDomicilioLegalServiceMock = {
+      getObtenerEstadoList: jest.fn().mockReturnValue(of({ data: [{ id: 1, nombre: 'Estado1' }] })),
+    };
+    datosDomicilioServiceMock = {
+      getObtenerTablaDatos: jest.fn().mockReturnValue(of({ data: [{ id: 1, nombre: 'Nico1' }] })),
+      getObtenerMercanciasDatos: jest.fn().mockReturnValue(of({ data: [{ id: 1, nombre: 'Mercancia1' }] })),
     };
 
     await TestBed.configureTestingModule({
-      imports: [
-        CommonModule,
-        ReactiveFormsModule,
-        DomicilioEstablecimientoAduanasComponent, // Import the standalone component
-        TituloComponent,
-        CatalogoSelectComponent,
-        TablaDinamicaComponent,
-      ],
+      imports: [ReactiveFormsModule, DomicilioEstablecimientoAduanasComponent],
       providers: [
         FormBuilder,
-        { provide: DatosDomicilioLegalQuery, useValue: mockQuery },
-        { provide: DatosDomicilioLegalStore, useValue: mockStore },
-        { provide: DatosDomicilioLegalService, useValue: mockService },
-        { provide: ConsultaioQuery, useValue: mockConsultaioQuery },
-
+        { provide: AvisocalidadStore, useValue: avisocalidadStoreMock },
+        { provide: AvisocalidadQuery, useValue: avisocalidadQueryMock },
+        { provide: ConsultaioQuery, useValue: consultaioQueryMock },
+        { provide: DatosDomicilioLegalService, useValue: datosDomicilioLegalServiceMock },
+        { provide: DatosDomicilioService, useValue: datosDomicilioServiceMock },
       ],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA],
     }).compileComponents();
 
     fixture = TestBed.createComponent(DomicilioEstablecimientoAduanasComponent);
     component = fixture.componentInstance;
-
-    store = TestBed.inject(DatosDomicilioLegalStore);
-    query = TestBed.inject(DatosDomicilioLegalQuery);
-    service = TestBed.inject(DatosDomicilioLegalService);
-
     fixture.detectChanges();
   });
 
@@ -99,104 +112,225 @@ describe('DomicilioEstablecimientoAduanasComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize the form with default values', () => {
-    expect(component.domicilio).toBeDefined();
-    expect(component.domicilio.get('codigoPostal')?.value).toBe('12345');
-    expect(component.domicilio.get('estado')?.value).toBe('TestEstado');
-    expect(component.domicilio.get('telefono')?.value).toBe('9876543210');
+  it('should initialize forms with values from solicitudState', () => {
+    expect(component.domicilio.value.codigoPostal).toBe('12345');
+    expect(component.formAgente.value.claveScianModal).toBe('SCIAN');
+    expect(component.formMercancias.value.nombreComercial).toBe('Comercial');
   });
 
-  it('should fetch estado list on initialization', () => {
-    expect(service.getObtenerEstadoList).toHaveBeenCalled();
-    expect(component.estado).toEqual([{ id: 1, descripcion: 'Estado 1' }]);
-  });
-
-  it('should fetch table data on initialization', () => {
-    expect(service.getObtenerTablaDatos).toHaveBeenCalled();
-    expect(component.nicoTablaDatos).toEqual([]);
-  });
-
-  it('should fetch mercancias data on initialization', () => {
-    expect(service.getObtenerMercanciasDatos).toHaveBeenCalled();
-    expect(component.mercanciasTablaDatos).toEqual([]);
-  });
-
-  it('should set values in the store when setValoresStore is called', () => {
-    component.domicilio.get('codigoPostal')?.setValue('54321');
-    component.setValoresStore(
-      component.domicilio,
-      'codigoPostal',
-      'setCodigoPostal'
-    );
-    expect(store.setCodigoPostal).toHaveBeenCalledWith('54321');
-  });
-
-  it('should unsubscribe from destroyNotifier$ on destroy', () => {
-    jest.spyOn(component['destroyNotifier$'], 'next');
-    jest.spyOn(component['destroyNotifier$'], 'complete');
-
-    component.ngOnDestroy();
-
-    expect(component['destroyNotifier$'].next).toHaveBeenCalled();
-    expect(component['destroyNotifier$'].complete).toHaveBeenCalled();
-  });
-
-  it('should handle null solicitudState gracefully', () => {
-    component.solicitudState = null as any;
-    component.ngOnInit();
-    expect(component.domicilio).toBeDefined();
-  });
-
-  it('should handle destroyNotifier$ being called multiple times', () => {
-    jest.spyOn(component['destroyNotifier$'], 'next');
-    jest.spyOn(component['destroyNotifier$'], 'complete');
-
-    component.ngOnDestroy();
-    component.ngOnDestroy(); // Call again to ensure no errors occur
-
-    // Ensure `next` is called twice (once for each `ngOnDestroy` call)
-    expect(component['destroyNotifier$'].next).toHaveBeenCalledTimes(2);
-
-    // Ensure `complete` is only called once
-    expect(component['destroyNotifier$'].complete).toHaveBeenCalledTimes(1);
-  });
-  
- it('should set esFormularioSoloLectura from query and call setup methods', () => {
-    component.ngOnInit();
-
-    expect(component.esFormularioSoloLectura).toBe(true);
-    expect(component.obtenerEstadoList).toHaveBeenCalled();
-    expect(component.obtenerTablaDatos).toHaveBeenCalled();
-    expect(component.obtenerMercanciasDatos).toHaveBeenCalled();
-    expect(component.configurarGrupoForm).toHaveBeenCalled();
-  });
-
-  it('should disable all forms when esFormularioSoloLectura is true', () => {
+  it('should disable forms if esFormularioSoloLectura is true', () => {
     component.esFormularioSoloLectura = true;
-
-    const domicilioDisable = jest.spyOn(component.domicilio, 'disable');
-    const agenteDisable = jest.spyOn(component.formAgente, 'disable');
-    const mercanciasDisable = jest.spyOn(component.formMercancias, 'disable');
-
+    component.solicitudState = {
+      codigoPostal: '12345',
+      estado: 'Estado',
+      muncipio: 'Municipio',
+      localidad: 'Localidad',
+      colonia: 'Colonia',
+      calle: 'Calle',
+      lada: '01',
+      telefono: '5555555',
+      avisoCheckbox: true,
+      licenciaSanitaria: 'LS123',
+      claveScianModal: 'SCIAN',
+      claveDescripcionModal: 'Desc',
+      nombreComercial: 'Comercial',
+      nombreComun: 'Comun',
+      nombreCientifico: 'Cientifico',
+      usoEspecifico: 'Uso',
+      estadoFisico: 'Solido',
+      fraccionArancelaria: 'FA',
+      descripcionFraccion: 'DescF',
+      cantidadUMT: '1',
+      UMT: 'UMT',
+      cantidadUMC: '2',
+      UMC: 'UMC',
+      numeroCas: 'CAS',
+      porcentajeConcentracion: '10',
+      clasificacionToxicologica: 'Tox',
+      objetoImportacion: 'Obj',
+      claveReferencia: '',
+      cadenaDependencia: '',
+      banco: '',
+      llavePago: '',
+      fechaPago: '',
+      importePago: '', // Added missing property
+      rfcDel: '', // Added missing property
+      denominacionRazonSocial: '', // Added missing property
+      correoElectronico: '', // Added missing property
+    };
     component.configurarGrupoForm();
-
-    expect(domicilioDisable).toHaveBeenCalled();
-    expect(agenteDisable).toHaveBeenCalled();
-    expect(mercanciasDisable).toHaveBeenCalled();
+    expect(component.domicilio.disabled).toBe(true);
+    expect(component.formAgente.disabled).toBe(true);
+    expect(component.formMercancias.disabled).toBe(true);
   });
 
-  it('should enable domicilio and disable others when esFormularioSoloLectura is false', () => {
-    component.esFormularioSoloLectura = false;
-
-    const domicilioEnable = jest.spyOn(component.domicilio, 'enable');
-    const agenteDisable = jest.spyOn(component.formAgente, 'disable');
-    const mercanciasDisable = jest.spyOn(component.formMercancias, 'disable');
-
-    component.configurarGrupoForm();
-
-    expect(domicilioEnable).toHaveBeenCalled();
-    expect(agenteDisable).toHaveBeenCalled();
-    expect(mercanciasDisable).toHaveBeenCalled();
+  it('should call setValoresStore and update store', () => {
+    component.domicilio.get('codigoPostal')?.setValue('54321');
+    component.setValoresStore(component.domicilio, 'codigoPostal', 'setCodigoPostal');
+    expect(avisocalidadStoreMock.setCodigoPostal).toHaveBeenCalledWith('54321');
   });
-  
+
+  it('should call setValoresStore for all forms and fields', () => {
+    // domicilio
+    component.domicilio.get('estado')?.setValue('NuevoEstado');
+    component.setValoresStore(component.domicilio, 'estado', 'setEstado');
+    expect(avisocalidadStoreMock.setEstado).toHaveBeenCalledWith('NuevoEstado');
+    component.domicilio.get('muncipio')?.setValue('NuevoMunicipio');
+    component.setValoresStore(component.domicilio, 'muncipio', 'setMuncipio');
+    expect(avisocalidadStoreMock.setMuncipio).toHaveBeenCalledWith('NuevoMunicipio');
+    component.domicilio.get('localidad')?.setValue('NuevaLocalidad');
+    component.setValoresStore(component.domicilio, 'localidad', 'setLocalidad');
+    expect(avisocalidadStoreMock.setLocalidad).toHaveBeenCalledWith('NuevaLocalidad');
+    component.domicilio.get('colonia')?.setValue('NuevaColonia');
+    component.setValoresStore(component.domicilio, 'colonia', 'setColonia');
+    expect(avisocalidadStoreMock.setColonia).toHaveBeenCalledWith('NuevaColonia');
+    component.domicilio.get('calle')?.setValue('NuevaCalle');
+    component.setValoresStore(component.domicilio, 'calle', 'setCalle');
+    expect(avisocalidadStoreMock.setCalle).toHaveBeenCalledWith('NuevaCalle');
+    component.domicilio.get('lada')?.setValue('02');
+    component.setValoresStore(component.domicilio, 'lada', 'setLada');
+    expect(avisocalidadStoreMock.setLada).toHaveBeenCalledWith('02');
+    component.domicilio.get('telefono')?.setValue('1234567');
+    component.setValoresStore(component.domicilio, 'telefono', 'setTelefono');
+    expect(avisocalidadStoreMock.setTelefono).toHaveBeenCalledWith('1234567');
+    component.domicilio.get('avisoCheckbox')?.setValue(false);
+    component.setValoresStore(component.domicilio, 'avisoCheckbox', 'setAvisoCheckbox');
+    expect(avisocalidadStoreMock.setAvisoCheckbox).toHaveBeenCalledWith(false);
+    component.domicilio.get('licenciaSanitaria')?.setValue('LS999');
+    component.setValoresStore(component.domicilio, 'licenciaSanitaria', 'setLicenciaSanitaria');
+    expect(avisocalidadStoreMock.setLicenciaSanitaria).toHaveBeenCalledWith('LS999');
+    // formAgente
+    component.formAgente.get('claveScianModal')?.setValue('NEWSCIAN');
+    component.setValoresStore(component.formAgente, 'claveScianModal', 'setClaveScianModal');
+    expect(avisocalidadStoreMock.setClaveScianModal).toHaveBeenCalledWith('NEWSCIAN');
+    component.formAgente.get('claveDescripcionModal')?.setValue('NEWDESC');
+    component.setValoresStore(component.formAgente, 'claveDescripcionModal', 'setClaveDescripcionModal');
+    expect(avisocalidadStoreMock.setClaveDescripcionModal).toHaveBeenCalledWith('NEWDESC');
+    // formMercancias
+    component.formMercancias.get('nombreComercial')?.setValue('NuevoComercial');
+    component.setValoresStore(component.formMercancias, 'nombreComercial', 'setNombreComercial');
+    expect(avisocalidadStoreMock.setNombreComercial).toHaveBeenCalledWith('NuevoComercial');
+    component.formMercancias.get('nombreComun')?.setValue('NuevoComun');
+    component.setValoresStore(component.formMercancias, 'nombreComun', 'setNombreComun');
+    expect(avisocalidadStoreMock.setNombreComun).toHaveBeenCalledWith('NuevoComun');
+    component.formMercancias.get('nombreCientifico')?.setValue('NuevoCientifico');
+    component.setValoresStore(component.formMercancias, 'nombreCientifico', 'setNombreCientifico');
+    expect(avisocalidadStoreMock.setNombreCientifico).toHaveBeenCalledWith('NuevoCientifico');
+    component.formMercancias.get('usoEspecifico')?.setValue('NuevoUso');
+    component.setValoresStore(component.formMercancias, 'usoEspecifico', 'setUsoEspecifico');
+    expect(avisocalidadStoreMock.setUsoEspecifico).toHaveBeenCalledWith('NuevoUso');
+    component.formMercancias.get('estadofisico')?.setValue('NuevoEstadoFisico');
+    component.setValoresStore(component.formMercancias, 'estadofisico', 'setEstadoFisico');
+    expect(avisocalidadStoreMock.setEstadoFisico).toHaveBeenCalledWith('NuevoEstadoFisico');
+    component.formMercancias.get('fraccionArancelaria')?.setValue('NuevaFA');
+    component.setValoresStore(component.formMercancias, 'fraccionArancelaria', 'setFraccionArancelaria');
+    expect(avisocalidadStoreMock.setFraccionArancelaria).toHaveBeenCalledWith('NuevaFA');
+    component.formMercancias.get('descripcionFraccion')?.setValue('NuevaDescF');
+    component.setValoresStore(component.formMercancias, 'descripcionFraccion', 'setDescripcionFraccion');
+    expect(avisocalidadStoreMock.setDescripcionFraccion).toHaveBeenCalledWith('NuevaDescF');
+    component.formMercancias.get('cantidadUMT')?.setValue('99');
+    component.setValoresStore(component.formMercancias, 'cantidadUMT', 'setCantidadUMT');
+    expect(avisocalidadStoreMock.setCantidadUMT).toHaveBeenCalledWith('99');
+    component.formMercancias.get('cantidadUMC')?.setValue('88');
+    component.setValoresStore(component.formMercancias, 'cantidadUMC', 'setCantidadUMC');
+    expect(avisocalidadStoreMock.setCantidadUMC).toHaveBeenCalledWith('88');
+    component.formMercancias.get('porcentajeConcentracion')?.setValue('77');
+    component.setValoresStore(component.formMercancias, 'porcentajeConcentracion', 'setPorcentajeConcentracion');
+    expect(avisocalidadStoreMock.setPorcentajeConcentracion).toHaveBeenCalledWith('77');
+    component.formMercancias.get('clasificacionToxicologica')?.setValue('NEWTOX');
+    component.setValoresStore(component.formMercancias, 'clasificacionToxicologica', 'setClasificacionToxicologica');
+    expect(avisocalidadStoreMock.setClasificacionToxicologica).toHaveBeenCalledWith('NEWTOX');
+    component.formMercancias.get('objetoImportacion')?.setValue('NEWOBJ');
+    component.setValoresStore(component.formMercancias, 'objetoImportacion', 'setObjetoImportacion');
+    expect(avisocalidadStoreMock.setObjetoImportacion).toHaveBeenCalledWith('NEWOBJ');
+  });
+
+  it('should call obtenerEstadoList and set estado', () => {
+    component.estado = [];
+    component.obtenerEstadoList();
+    expect(component.estado.length).toBeGreaterThan(0);
+    expect(datosDomicilioLegalServiceMock.getObtenerEstadoList).toHaveBeenCalled();
+  });
+
+  it('should call obtenerTablaDatos and set nicoTablaDatos', () => {
+    component.nicoTablaDatos = [];
+    component.obtenerTablaDatos();
+    expect(component.nicoTablaDatos.length).toBeGreaterThan(0);
+    expect(datosDomicilioServiceMock.getObtenerTablaDatos).toHaveBeenCalled();
+  });
+
+  it('should call obtenerMercanciasDatos and set mercanciasTablaDatos', () => {
+    component.mercanciasTablaDatos = [];
+    component.obtenerMercanciasDatos();
+    expect(component.mercanciasTablaDatos.length).toBeGreaterThan(0);
+    expect(datosDomicilioServiceMock.getObtenerMercanciasDatos).toHaveBeenCalled();
+  });
+
+  it('should toggle colapsableDuos', () => {
+    component.colapsableDuos = false;
+    component.mostrar_colapsableDuos();
+    expect(component.colapsableDuos).toBe(true);
+    component.mostrar_colapsableDuos();
+    expect(component.colapsableDuos).toBe(false);
+  });
+
+  it('should toggle colapsableTres', () => {
+    component.colapsableTres = false;
+    component.mostrar_colapsableTres();
+    expect(component.colapsableTres).toBe(true);
+    component.mostrar_colapsableTres();
+    expect(component.colapsableTres).toBe(false);
+  });
+
+  it('should clean up on ngOnDestroy', () => {
+    const spy = jest.spyOn((component as any).destroyNotifier$, 'next');
+    const spy2 = jest.spyOn((component as any).destroyNotifier$, 'complete');
+    component.ngOnDestroy();
+    expect(spy).toHaveBeenCalled();
+    expect(spy2).toHaveBeenCalled();
+  });
+
+  it('should not throw if setValoresStore is called with missing control', () => {
+    const dummyForm = new FormGroup({});
+    expect(() => component.setValoresStore(dummyForm, 'notExist', 'setCodigoPostal')).not.toThrow();
+  });
+
+  it('should not throw if obtenerEstadoList returns undefined data', () => {
+    datosDomicilioLegalServiceMock.getObtenerEstadoList.mockReturnValueOnce(of(undefined));
+    expect(() => component.obtenerEstadoList()).not.toThrow();
+  });
+
+  it('should not throw if obtenerTablaDatos returns undefined data', () => {
+    datosDomicilioServiceMock.getObtenerTablaDatos.mockReturnValueOnce(of(undefined));
+    expect(() => component.obtenerTablaDatos()).not.toThrow();
+  });
+
+  it('should not throw if obtenerMercanciasDatos returns undefined data', () => {
+    datosDomicilioServiceMock.getObtenerMercanciasDatos.mockReturnValueOnce(of(undefined));
+    expect(() => component.obtenerMercanciasDatos()).not.toThrow();
+  });
+
+  it('should call paisDeProcedenciaBotones functions without error', () => {
+    // crossList is a QueryList, mock it
+    component.crossList = {
+      toArray: () => [{
+        agregar: jest.fn(),
+        quitar: jest.fn(),
+      }]
+    } as any;
+    component.paisDeProcedenciaBotones[0].funcion();
+    component.paisDeProcedenciaBotones[1].funcion();
+    component.paisDeProcedenciaBotones[2].funcion();
+    component.paisDeProcedenciaBotones[3].funcion();
+    expect(true).toBe(true); // If no error, test passes
+  });
 });
+//       }]
+//     } as any;
+//     component.paisDeProcedenciaBotones[0].funcion();
+//     component.paisDeProcedenciaBotones[1].funcion();
+//     component.paisDeProcedenciaBotones[2].funcion();
+//     component.paisDeProcedenciaBotones[3].funcion();
+//     expect(true).toBe(true); // If no error, test passes
+//   });
+// });

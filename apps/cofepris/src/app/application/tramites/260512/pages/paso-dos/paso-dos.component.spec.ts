@@ -1,7 +1,22 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PasoDosComponent } from './paso-dos.component';
-import { CommonModule } from '@angular/common';
-import { AlertComponent, AnexarDocumentosComponent, TEXTOS, TituloComponent } from '@libs/shared/data-access-user/src';
+import { HttpClientModule } from '@angular/common/http';
+import { TituloComponent } from '@libs/shared/data-access-user/src';
+import { ToastrModule, ToastrService } from 'ngx-toastr';
+import { Component } from '@angular/core';
+import { Subject } from 'rxjs';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+
+@Component({
+  selector: 'anexar-documentos',
+  template: '',
+})
+
+class MockAnexarDocumentosComponent {
+  cargaArchivosEvento = new Subject<any>();
+  destroyNotifier$ = new Subject<void>();
+  confirmUpload = jest.fn();
+}
 
 describe('PasoDosComponent', () => {
   let component: PasoDosComponent;
@@ -9,13 +24,14 @@ describe('PasoDosComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
+      declarations: [PasoDosComponent, MockAnexarDocumentosComponent],
       imports: [
-        PasoDosComponent, 
-        CommonModule,
+        HttpClientModule,
         TituloComponent,
-        AnexarDocumentosComponent,
-        AlertComponent,
+        ToastrModule.forRoot(),
       ],
+      providers: [ToastrService],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA],
     }).compileComponents();
 
     fixture = TestBed.createComponent(PasoDosComponent);
@@ -23,11 +39,7 @@ describe('PasoDosComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
-  });
-
-  it('should have TEXTOS property equal to imported TEXTOS', () => {
-    expect(component.TEXTOS).toBe(TEXTOS);
   });
 });

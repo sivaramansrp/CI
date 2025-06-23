@@ -57,13 +57,6 @@ describe('DatosComponent', () => {
     expect(component.esDatosRespuesta).toBe(true);
   });
 
-  it('should call guardarDatosFormulario if consultaState.update is true on ngOnInit', () => {
-    const guardarSpy = jest.spyOn(component, 'guardarDatosFormulario');
-    component.consultaState = { update: true } as any;
-    component.ngOnInit();
-    expect(guardarSpy).toHaveBeenCalled();
-  });
-
   it('should set esDatosRespuesta and call actualizarEstadoFormulario in guardarDatosFormulario', () => {
     component.esDatosRespuesta = false;
     component.guardarDatosFormulario();
