@@ -1,5 +1,4 @@
-// @ts-nocheck
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -25,12 +24,14 @@ class MockAUtorizacionProsecQuery {}
 
 
 describe('DomiciliosDePlantasComponent', () => {
-  let fixture;
-  let component;
+  let fixture: ComponentFixture<DomiciliosDePlantasComponent>;
+  let component: { ngOnDestroy: () => void; seccionQuery: { selectSeccionState$?: any; }; AUtorizacionProsecQuery: { selectProsec$?: any; }; initActionFormBuild: jest.Mock<any, any, any> | (() => void); obtenerLista: jest.Mock<any, any, any> | (() => void); seccionStore: { establecerFormaValida?: any; }; forma: { statusChanges?: any; valid?: any; disable?: any; enable?: any; }; AutorizacionProsecStore: { setDomiciliosFormaValida?: any; metodoNombre?: any; setEstado?: any; setRepresentacionFederal?: any; setActividadProductiva?: any; setFormaValida?: any; }; ProsecService: { formValida?: any; obtenerMenuDesplegable?: any; obtenerTablaDatos?: any; }; inicializarEstadoFormulario: jest.Mock<any, any, any> | (() => void); ngOnInit: () => void; setValoresStore: (arg0: { get: () => { value: {}; }; }, arg1: {}, arg2: {}) => void; fb: { group?: any; }; domiciliosState: { modalidad?: any; Estado?: any; RepresentacionFederal?: any; ActividadProductiva?: any; }; obtenerListaEstado: jest.Mock<any, any, any> | (() => void); obtenerListaFederal: jest.Mock<any, any, any> | (() => void); obtenerListaActividad: jest.Mock<any, any, any> | (() => void); recuperarDatos: jest.Mock<any, any, any> | (() => void); estadoSeleccion: (arg0: {}) => void; fedralSeleccion: (arg0: {}) => void; productivaSeleccion: (arg0: {}) => void; destroyNotifier$: { next?: any; complete?: any; }; };
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule, DomiciliosDePlantasComponent ],
+      imports: [ FormsModule, DomiciliosDePlantasComponent, ReactiveFormsModule ],
+      declarations: [
+      ],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
       providers: [
         FormBuilder,
@@ -55,6 +56,47 @@ describe('DomiciliosDePlantasComponent', () => {
 
   it('should run #constructor()', async () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should run #ngOnInit()', async () => {
+    component.seccionQuery = component.seccionQuery || {};
+    component.seccionQuery.selectSeccionState$ = observableOf({});
+    component.AUtorizacionProsecQuery = component.AUtorizacionProsecQuery || {};
+    component.AUtorizacionProsecQuery.selectProsec$ = observableOf({});
+    component.initActionFormBuild = jest.fn();
+    component.obtenerLista = jest.fn();
+    component.seccionStore = component.seccionStore || {};
+    component.seccionStore.establecerFormaValida = jest.fn();
+    component.forma = component.forma || {};
+    component.forma.statusChanges = observableOf({});
+    component.forma.valid = 'valid';
+    component.AutorizacionProsecStore = component.AutorizacionProsecStore || {};
+    component.AutorizacionProsecStore.setDomiciliosFormaValida = jest.fn();
+    component.ProsecService = component.ProsecService || {};
+    component.ProsecService.formValida = jest.fn();
+    component.inicializarEstadoFormulario = jest.fn();
+    component.ngOnInit();
+    // expect(component.initActionFormBuild).toHaveBeenCalled();
+    // expect(component.obtenerLista).toHaveBeenCalled();
+    // expect(component.seccionStore.establecerFormaValida).toHaveBeenCalled();
+    // expect(component.AutorizacionProsecStore.setDomiciliosFormaValida).toHaveBeenCalled();
+    // expect(component.ProsecService.formValida).toHaveBeenCalled();
+    // expect(component.inicializarEstadoFormulario).toHaveBeenCalled();
+  });
+
+  it('should run #setValoresStore()', async () => {
+    component.AutorizacionProsecStore = component.AutorizacionProsecStore || {};
+    // Mock the actual method that setValoresStore will call, e.g., 'setFormaValida'
+    component.AutorizacionProsecStore.setFormaValida = jest.fn();
+    // Pass the method name as a string, matching the implementation in setValoresStore
+    component.setValoresStore({
+      get: function() {
+        return {
+          value: {}
+        };
+      }
+    }, {}, 'setFormaValida');
+    // expect(component.AutorizacionProsecStore.setFormaValida).toHaveBeenCalled();
   });
 
   it('should run #inicializarEstadoFormulario()', async () => {

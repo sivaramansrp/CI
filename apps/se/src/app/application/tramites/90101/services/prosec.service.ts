@@ -1,5 +1,5 @@
 import { AutorizacionProsecStore, ProsecState } from '../estados/autorizacion-prosec.store';
-import { Catalogo, RespuestaCatalogos } from '@ng-mf/data-access-user';
+import { Catalogo, RespuestaCatalogos, SeccionLibStore } from '@ng-mf/data-access-user';
 import { Observable, map } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
@@ -14,7 +14,7 @@ import { Injectable } from '@angular/core';
 export class ProsecService {
   url: string = '../../../../../assets/json/90101/';
 
-  constructor(private readonly http: HttpClient,private store: AutorizacionProsecStore) { }
+  constructor(private readonly http: HttpClient,private store: AutorizacionProsecStore, private seccionStore: SeccionLibStore) { }
   /**
    * Obtiene la lista de bancos.
    * @returns Observable de la lista de bancos.
@@ -52,5 +52,14 @@ export class ProsecService {
     this.store.setFraccionArancelaria(DATOS.Fraccion_arancelaria);
     this.store.setcontribuyentes(DATOS.contribuyentes);
 
+  }
+
+  public formValida(): void {
+    if(this.store.getValue().domiciliosFormaValida &&
+       this.store.getValue().productorFromValida &&
+       this.store.getValue().sectoresFromValida) {
+      this.seccionStore.establecerSeccion([true]);
+      this.seccionStore.establecerFormaValida([true])
+    }
   }
 }

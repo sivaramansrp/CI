@@ -13,7 +13,7 @@ import { AutorizacionProsecStore, ProsecState } from '../../estados/autorizacion
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { ConfiguracionColumna, ConsultaioQuery, TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { Subject, map, takeUntil } from 'rxjs';
+import { Subject, delay, map, takeUntil, tap } from 'rxjs';
 import { AUtorizacionProsecQuery } from '../../queries/autorizacion-prosec.query';
 import { CommonModule } from '@angular/common';
 import { FilaProductos } from '../../models/prosec.module';
@@ -137,6 +137,19 @@ export class ProductorIndirectoComponent implements OnInit, OnDestroy {
       .subscribe();
     this.initActionFormBuild();
     this.recuperarDatos();
+
+    this.productorIndirecto.statusChanges
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        delay(10),
+        tap((_value) => {
+          if (this.productorIndirecto.valid) {
+            this.AutorizacionProsecStore.setProductorFromValida(true);
+            this.ProsecService.formValida()
+          }
+        })
+      )
+      .subscribe();
 
     if(this.formularioDeshabilitado) {
       this.inicializarEstadoFormulario();

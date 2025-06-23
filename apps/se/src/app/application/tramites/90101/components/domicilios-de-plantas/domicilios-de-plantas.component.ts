@@ -204,7 +204,8 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
             delay(10),
             tap((_value) => {
               if (this.forma.valid) {
-                this.AutorizacionProsecStore.setFormaValida([{ id: 1, descripcion: "Valida" }])
+                this.AutorizacionProsecStore.setDomiciliosFormaValida(true);
+                this.ProsecService.formValida()
               }
             })
           )
@@ -212,14 +213,6 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
 
     if(this.formularioDeshabilitado){
       this.inicializarEstadoFormulario();
-    }
-
-    if(this.domiciliosState.formaValida[0].descripcion === 'AllValida'){
-      this.seccionStore.establecerSeccion([true]);
-      this.seccionStore.establecerFormaValida([true])
-    }
-    else{
-      this.seccionStore.establecerFormaValida([false]);
     }
   }
 

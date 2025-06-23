@@ -38,7 +38,21 @@ export interface ProsecState {
     /**
      * @descripcion Estado de validez del formulario.
      */
-    formaValida: Catalogo[];
+    domiciliosFormaValida: boolean;
+        /**
+     * @property {boolean} productorFromValida
+     * @description
+     * Indica si el formulario de productor ha sido validado correctamente.
+     * Se utiliza para controlar la habilitación de acciones o la navegación en el trámite según la validez de la sección de productor.
+     */
+    productorFromValida: boolean;
+    /**
+     * @property {boolean} sectoresFromValida
+     * @description
+     * Indica si el formulario de sectores ha sido validado correctamente.
+     * Permite gestionar la lógica de validación y flujo del trámite en la sección de sectores.
+     */
+    sectoresFromValida: boolean;
 }
 
 /**
@@ -54,7 +68,9 @@ export function createInitialState(): ProsecState {
         Sector: [],
         Fraccion_arancelaria: '',
         contribuyentes: '',
-        formaValida: []
+        domiciliosFormaValida: false,
+        productorFromValida: false,
+        sectoresFromValida: false,
     }
 }
 
@@ -77,7 +93,7 @@ export class AutorizacionProsecStore extends Store<ProsecState> {
      * Actualiza el estado con la modalidad seleccionada.
      * @param modalidad Modalidad seleccionada.
      */
-    public setModalidad(modalidad: string) {
+    public setModalidad(modalidad: string): void {
         this.update((state) => ({
             ...state,
             modalidad,
@@ -89,7 +105,7 @@ export class AutorizacionProsecStore extends Store<ProsecState> {
      * Actualiza el estado con la información de los estados seleccionados.
      * @param Estado Lista de estados seleccionados.
      */
-    public setEstado(Estado: Catalogo[]) {
+    public setEstado(Estado: Catalogo[]): void {
         this.update((state) => ({
             ...state,
             Estado,
@@ -101,7 +117,7 @@ export class AutorizacionProsecStore extends Store<ProsecState> {
      * Actualiza el estado con la información de la representación federal seleccionada.
      * @param RepresentacionFederal Lista de representaciones federales seleccionadas.
      */
-    public setRepresentacionFederal(RepresentacionFederal: Catalogo[]) {
+    public setRepresentacionFederal(RepresentacionFederal: Catalogo[]): void {
         this.update((state) => ({
             ...state,
             RepresentacionFederal,
@@ -113,7 +129,7 @@ export class AutorizacionProsecStore extends Store<ProsecState> {
      * Actualiza el estado con la información de la actividad productiva seleccionada.
      * @param ActividadProductiva Lista de actividades productivas seleccionadas.
      */
-    public setActividadProductiva(ActividadProductiva: Catalogo[]) {
+    public setActividadProductiva(ActividadProductiva: Catalogo[]): void {
         this.update((state) => ({
             ...state,
             ActividadProductiva,
@@ -125,7 +141,7 @@ export class AutorizacionProsecStore extends Store<ProsecState> {
      * Actualiza el estado con la información de los sectores seleccionados.
      * @param Sector Lista de sectores seleccionados.
      */
-    public setSector(Sector: Catalogo[]) {
+    public setSector(Sector: Catalogo[]): void {
         this.update((state) => ({
             ...state,
             Sector,
@@ -137,7 +153,7 @@ export class AutorizacionProsecStore extends Store<ProsecState> {
      * Actualiza el estado con la fracción arancelaria seleccionada.
      * @param Fraccion_arancelaria Fracción arancelaria seleccionada.
      */
-    public setFraccionArancelaria(Fraccion_arancelaria: string) {
+    public setFraccionArancelaria(Fraccion_arancelaria: string): void {
         this.update((state) => ({
             ...state,
             Fraccion_arancelaria,
@@ -149,7 +165,7 @@ export class AutorizacionProsecStore extends Store<ProsecState> {
      * Actualiza el estado con los contribuyentes registrados.
      * @param contribuyentes Contribuyentes registrados.
      */
-    public setcontribuyentes(contribuyentes: string) {
+    public setcontribuyentes(contribuyentes: string): void {
         this.update((state) => ({
             ...state,
             contribuyentes,
@@ -159,12 +175,37 @@ export class AutorizacionProsecStore extends Store<ProsecState> {
     /**
      * @descripcion
      * Actualiza el estado de validez del formulario.
-     * @param formaValida Lista que indica el estado de validez del formulario.
+     * @param domiciliosFormaValida Lista que indica el estado de validez del formulario.
      */
-    public setFormaValida(formaValida: Catalogo[]){
+    public setDomiciliosFormaValida(domiciliosFormaValida: boolean): void {
         this.update((state) => ({
             ...state,
-            formaValida,
+            domiciliosFormaValida,
         }))
     }
+
+    /**
+     * @descripcion
+     * Actualiza el estado de validez del formulario de productor.
+     * @param productorFromValida Lista que indica el estado de validez del formulario de productor.
+     */
+    public setProductorFromValida(productorFromValida: boolean): void {
+        this.update((state) => ({
+            ...state,
+            productorFromValida,
+        }))
+    }
+    /**
+     * @descripcion
+     * Actualiza el estado de validez del formulario de sectores.
+     * @param sectoresFromValida Lista que indica el estado de validez del formulario de sectores.
+     */
+    public setSectoresFromValida(sectoresFromValida: boolean): void {
+        this.update((state) => ({
+            ...state,
+            sectoresFromValida,
+        }))
+    }
+
+
 }

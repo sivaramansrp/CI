@@ -187,7 +187,8 @@ esFormularioSoloLectura: boolean = false;
         delay(10),
         tap((_value) => {
           if (this.sectoresYMercancias.valid) {
-            this.AutorizacionProsecStore.setFormaValida([{ id: 2, descripcion: "AllValida" }])
+            this.AutorizacionProsecStore.setSectoresFromValida(true);
+            this.ProsecService.formValida();
           }
         })
       )
@@ -195,14 +196,6 @@ esFormularioSoloLectura: boolean = false;
 
       if(this.formularioDeshabilitado){
         this.inicializarEstadoFormulario();
-      }
-
-      if(this.sectoresState.formaValida[0].descripcion === 'AllValida'){
-        this.seccionStore.establecerSeccion([true]);
-        this.seccionStore.establecerFormaValida([true])
-      }
-      else{
-        this.seccionStore.establecerFormaValida([false]);
       }
 
     }
