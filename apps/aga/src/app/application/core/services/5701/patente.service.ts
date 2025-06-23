@@ -1,7 +1,7 @@
 import { API_GET_PATENTE, RFC_QUERY } from '../../../constantes/5701/api-constants';
-import { catchError, map, Observable, throwError } from 'rxjs';
-import { ENVIRONMENT } from '@libs/shared/data-access-user/src';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable, catchError, map, throwError } from 'rxjs';
+import { ENVIRONMENT } from '@libs/shared/data-access-user/src';
 import { Injectable } from '@angular/core';
 import { PatenteResponse } from '../../models/5701/Patente.model';
 

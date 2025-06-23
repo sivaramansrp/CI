@@ -1,3 +1,11 @@
+jest.mock('@libs/shared/theme/assets/json/260501/fabricante-select-options-data.json', () => ({
+  default: {
+    paisSelectData: [
+      { id: '1', descripcion: 'México' },
+      { id: '2', descripcion: 'Estados Unidos' },
+    ],
+  }
+}));
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { TercerosRelacionados260507Component } from "./terceros-relacionados.component";
 import { NO_ERRORS_SCHEMA } from "@angular/core";

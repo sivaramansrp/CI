@@ -3,10 +3,10 @@
  * @description Servicio para obtener los datos del permiso IMMEX.
  */
 import { ImmexRegistroState, ImmexRegistroStore } from '../../estados/tramites/tramite80203.store';
+import { ImmexTablaJson, immexRegistroform } from '../../modelos/immex-registro-de-solicitud-modality.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { immexRegistroform } from '../../modelos/immex-registro-de-solicitud-modality.model';
 
 @Injectable({
   providedIn: 'root'
@@ -30,8 +30,8 @@ export class PermisoImmexDatosService {
    * @description Obtiene los datos del permiso IMMEX desde el archivo JSON.
    * @returns {Observable<any[]>} Observable que emite los datos del permiso IMMEX.
    */
-  getDatos(): Observable<any> {
-    return this.httpClient.get<any[]>(this.jsonUrl).pipe(
+  getDatos(): Observable<ImmexTablaJson> {
+    return this.httpClient.get<ImmexTablaJson>(this.jsonUrl).pipe(
     );
   }  
   /**

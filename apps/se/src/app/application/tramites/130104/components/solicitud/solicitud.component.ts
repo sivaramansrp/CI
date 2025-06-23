@@ -1,24 +1,22 @@
-import { Catalogo, REGEX_NUMERO_DECIMAL_ENTERO, REG_X } from '@ng-mf/data-access-user';
+import { Catalogo, ConsultaioQuery, REGEX_NUMERO_DECIMAL_ENTERO, REG_X } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
+import { Tramite130104State, Tramite130104Store } from '../../../../estados/tramites/tramite130104.store';
 import { ConfiguracionColumna } from '@ng-mf/data-access-user';
 import { HttpClient } from '@angular/common/http';
+import { ImportacionOtrosVehiculosUsadosService } from '../../services/importacion-otros-vehiculos-usados.service';
+import { PARTIDASDELAMERCANCIA_TABLA } from '../../../../shared/constantes/partidas-de-la-mercancia.enum';
+import { PartidasDeLaMercanciaModelo } from '../../../../shared/models/partidas-de-la-mercancia.model';
 import PartidasdelaTable from '@libs/shared/theme/assets/json/130104/partidas-de-la.json';
 import { ProductoOpción } from '../../../../shared/constantes/vehiculos-adaptados.enum';
 import { TEXTOS } from '../../../../shared/constantes/representacion-federal.enum';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
+import { Tramite130104Query } from '../../../../estados/queries/tramite130104.query';
 import fractionValues from '@libs/shared/theme/assets/json/130104/fraccion_arancelaria.json';
 import solicitudeSelectVal from '@libs/shared/theme/assets/json/130104/solicitud-select.json';
 import unidadOptions from '@libs/shared/theme/assets/json/130104/unidad_da.json';
 
-import { ImportacionOtrosVehiculosUsadosService } from '../../services/importacion-otros-vehiculos-usados.service';
-import { PartidasDeLaMercanciaModelo } from '../../../../shared/models/partidas-de-la-mercancia.model';
-
-import { PARTIDASDELAMERCANCIA_TABLA } from '../../../../shared/constantes/partidas-de-la-mercancia.enum';
-import { Tramite130104Store } from '../../../../estados/tramites/tramite130104.store';
-
-import { Tramite130104Query } from '../../../../estados/queries/tramite130104.query';
 
 /**
  * jest.spyOnComponente para gestionar la solicitud de mercancías.
@@ -158,6 +156,19 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * jest.spyOnObjeto o constante que contiene los textos utilizados en la aplicación.
    */
   TEXTOS = TEXTOS;
+  /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+    esFormularioSoloLectura: boolean = false;
+
+   /**
+    * Estado interno de la sección actual del trámite 130110.
+    * Utilizado para gestionar y almacenar la información relacionada con esta sección.
+    * Propiedad privada.
+   */
+    private seccionState!: Tramite130104State;
+
 
   /**
    * Constructor del componente.
@@ -167,15 +178,23 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     private http: HttpClient,
     private tramite130104Store: Tramite130104Store,
     private tramite130104Query: Tramite130104Query,
-    private importacionOtrosVehiculosUsadosService: ImportacionOtrosVehiculosUsadosService
+    private importacionOtrosVehiculosUsadosService: ImportacionOtrosVehiculosUsadosService,
+    private consultaioQuery: ConsultaioQuery,
   ) {
-    //constructor
+    this.inicializarFormularios();
+      this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState)=>{
+          this.esFormularioSoloLectura = seccionState.readonly; 
+        })
+      )
+      .subscribe()
   }
   /**
    * jest.spyOnCiclo de vida de Angular: inicializa formularios, suscripciones y opciones al cargar el componente.
    */
   ngOnInit(): void {
-    this.inicializarFormularios();
     this.configuracionFormularioSuscripciones();
     this.opcionesDeBusqueda();
     this.formularioTotalCount();
@@ -195,26 +214,26 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * jest.spyOnInicializa los formularios reactivos `formDelTramite` y `mercanciaForm`.
    */
   
-     inicializarFormularios(): void {
+  inicializarFormularios(): void {
     this.formDelTramite = this.fb.group({
-      solicitud: ['', Validators.required],
-      regimen: ['', Validators.required],
-      clasificacion: ['', Validators.required],
+      solicitud: [this.seccionState?.solicitud, Validators.required],
+      regimen: [this.seccionState?.regimen, Validators.required],
+      clasificacion: [this.seccionState?.clasificacion, Validators.required],
     });
  
     this.mercanciaForm = this.fb.group({
-      producto: ['Nuevo'],
+      producto: [],
       descripcion: [
-        '',
+        this.seccionState?.descripcion,
         [
           Validators.required,
           Validators.minLength(10),
           Validators.maxLength(500),
         ],
       ],
-      fraccion: ['', Validators.required],
+      fraccion: [this.seccionState?.fraccion, Validators.required],
       cantidad: [
-        '',
+        this.seccionState?.cantidad,
         [
           Validators.required,
           Validators.pattern(REG_X.SOLO_NUMEROS),
@@ -223,7 +242,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       ],
  
       valorFacturaUSD: [
-        '',
+        this.seccionState?.valorFacturaUSD,
         [
           Validators.required,
           Validators.pattern(REG_X.DECIMALES_DOS_LUGARES),
@@ -231,11 +250,11 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         ],
       ],
  
-      unidadMedida: ['', Validators.required],
+      unidadMedida: [this.seccionState?.unidadMedida, Validators.required],
     });
     this.partidasDelaMercanciaForm = this.fb.group({
       cantidadPartidasDeLaMercancia: [
-        '',
+       this.seccionState?.cantidadPartidasDeLaMercancia,
         [
           Validators.required,
           Validators.pattern(REG_X.SOLO_NUMEROS),
@@ -243,11 +262,11 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         ],
       ],
       descripcionPartidasDeLaMercancia: [
-        '',
+        this.seccionState?.descripcionPartidasDeLaMercancia,
         [Validators.required, Validators.maxLength(255)],
       ],
       valorPartidaUSDPartidasDeLaMercancia: [
-        '',
+       this.seccionState?.valorPartidaUSDPartidasDeLaMercancia,
         [
           Validators.required,
           Validators.min(0),
@@ -258,14 +277,14 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     });
  
     this.paisForm = this.fb.group({
-      bloque: [''],
-      usoEspecifico: ['', Validators.required],
-      justificacionImportacionExportacion: ['', [Validators.required]],
-      observaciones: [''],
+      bloque: [this.seccionState?.bloque],
+      usoEspecifico: [this.seccionState?.usoEspecifico, Validators.required],
+      justificacionImportacionExportacion: [this.seccionState?.justificacionImportacionExportacion, [Validators.required]],
+      observaciones: [this.seccionState?.observaciones],
     });
     this.frmRepresentacionForm = this.fb.group({
-      entidad: ['', Validators.required],
-      representacion: ['', Validators.required],
+      entidad: [this.seccionState?.entidad, Validators.required],
+      representacion: [this.seccionState?.representacion, Validators.required],
     });
   }
   /**
@@ -372,7 +391,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       ? filasSeleccionadas
       : [];
     if (this.filaSeleccionada) {
-      this.tramite130104Store.storeTableValues(this.filaSeleccionada);
+      this.tramite130104Store.actualizarEstado({filaSeleccionada:this.filaSeleccionada});
     }
   }
 /**
@@ -404,7 +423,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       this.partidasDelaMercanciaForm.markAllAsTouched();
     } else {
       this.mostrarTabla = true;
-      this.tramite130104Store.setMostrarTabla(true);
+      this.tramite130104Store.actualizarEstado({mostrarTabla:true});
 
     }
   }
@@ -415,8 +434,8 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    */
   navegarParaModificarPartida(): void {
     if (this.filaSeleccionada) {
-      this.tramite130104Store.setMostrarTabla(true);
-      this.tramite130104Store.storeTableValues(this.filaSeleccionada);
+     this.tramite130104Store.actualizarEstado({mostrarTabla:true});
+     this.tramite130104Store.actualizarEstado({filaSeleccionada:this.filaSeleccionada});
     }
   }
 /**

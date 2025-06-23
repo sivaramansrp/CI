@@ -39,8 +39,8 @@ import { TituloComponent } from '@ng-mf/data-access-user';
 
 import { ES_CURP } from '../../constants/datos-del-tramilte.enum';
 import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { takeUntil } from 'rxjs';
 
 /**
  * Componente para agregar un destinatario final (Destinatario) al formulario y almacenarlo.
@@ -167,6 +167,12 @@ export class AgregarDestinatarioFinalComponent
     DestinoFinal[]
   >();
 
+  /**
+   * Evento que se emite cuando el usuario desea cancelar una acción.
+   * @property {EventEmitter<boolean>} cancelarEventListener
+   */
+
+  @Output() cancelarEventListener = new EventEmitter<boolean>();
   /**
    * Constante que almacena el valor de "Nacional" para su uso en el formulario.
    * @property {string} nacionalStr
@@ -468,7 +474,7 @@ export class AgregarDestinatarioFinalComponent
    * @returns {void} Este método no retorna ningún valor.
    */
   cancelar(): void {
-    this.ubicaccion.back();
+    this.cancelarEventListener.emit(true);
   }
 
   /**

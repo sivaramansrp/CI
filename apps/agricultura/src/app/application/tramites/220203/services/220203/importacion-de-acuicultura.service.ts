@@ -1,28 +1,9 @@
-import { Injectable } from '@angular/core';
-
-import { HttpClient } from '@angular/common/http';
-
-import {
-  Observable,
-  map
-} from 'rxjs';
-
-import {
-  Acuicultura,
-
-  DatosMercancia220203,
-
-  EnviarDatos,
-
-  FormularioMovilizacion,
-
-  FormularioPago,
-} from '../../models/220203/importacion-de-acuicultura.module';
-
-import { AcuiculturaStore } from '../../estados/220203/sanidad-certificado.store';
-
+import { Acuicultura, DatosMercancia220203, EnviarDatos, FormularioMovilizacion, FormularioPago } from '../../models/220203/importacion-de-acuicultura.module';
+import { Observable, map } from 'rxjs';
 import { PersonaTerceros, RespuestaCatalogos, SeccionLibStore } from '@ng-mf/data-access-user';
-
+import { AcuiculturaStore } from '../../estados/220203/sanidad-certificado.store';
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 
 /**
  * @description Servicio para la importación de acuicultura, encargado de obtener datos de catálogos.
@@ -49,7 +30,7 @@ export class ImportacionDeAcuiculturaService {
    * @param nombreDelArchivo Nombre del archivo JSON del catálogo.
    * @returns Observable con la respuesta del catálogo.
    */
-  obtenerDetallesDelCatalogo(nombreDelArchivo: string) {
+  obtenerDetallesDelCatalogo(nombreDelArchivo: string): Observable<RespuestaCatalogos> {
     const BASEURL: string = this.url + nombreDelArchivo; // CamelCase variable name
     return this.http.get<RespuestaCatalogos>(BASEURL);
   }

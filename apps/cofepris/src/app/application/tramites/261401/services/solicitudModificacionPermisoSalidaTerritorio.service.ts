@@ -1,3 +1,4 @@
+import { Solicitud261401State, Tramite261401Store } from '../../../estados/tramites/tramite261401.store';
 import { Catalogo } from '@libs/shared/data-access-user/src';
 import { Destinatario } from '../enums/destinatario.enum';
 import { HttpClient } from '@angular/common/http';
@@ -19,7 +20,8 @@ export class SolicitudModificacionPermisoSalidaTerritorioService {
    * Constructor del servicio.
    * Param http Cliente HTTP para realizar solicitudes a servicios externos.
    */
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient,private tramite261401Store: Tramite261401Store
+     ) {
     // Constructor
   }
 
@@ -80,4 +82,18 @@ export class SolicitudModificacionPermisoSalidaTerritorioService {
   getPaisData(): Observable<Catalogo[]> {
     return this.http.get<Catalogo[]>('./assets/json/261401/pais.json');
   }
+  /**
+   * Actualiza el estado del formulario en el store.
+   * @param DATOS Estado actualizado del trámite.
+   */
+  actualizarEstadoFormulario(DATOS: Solicitud261401State): void {
+      this.tramite261401Store.actualizarEstado(DATOS);
+  }
+  /**
+ * Obtiene los datos de la solicitud.
+ * @returns Observable con los datos de la solicitud.
+ */
+getDatosDeLaSolicitud(): Observable<Solicitud261401State> {
+    return this.http.get<Solicitud261401State>('assets/json/261401/datos.json');
+}
 }

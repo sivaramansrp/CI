@@ -4,386 +4,421 @@ import { EnlaceConfiguracionItem } from '../../tramites/31601/enum/enlance-tabla
 import { Mencione } from '../../shared/models/datos-comunes.model';
 import { MencioneConfiguracionItem } from '../../tramites/31601/enum/mencione-tabla.enum';
 
+import { Antecesor } from '../../tramites/31601/modelos/antecesor.modal';
+
 
 /**
  * Interfaz que representa el estado de Solicitud31601.
  */
 export interface Solicitud31601State {
     /**
+     * El nombre completo del miembro.
+     */
+    nombreCompleto: string;
+    /**
+     * El tipo de persona del miembro.
+     */
+    tipoDePersonaMiembro: string;
+
+    /**
+     * El nombre del miembro.
+     */
+    nombreMiembro: string;
+
+    /**
+     * El apellido paterno del miembro.
+     */
+    apellidoPaternoMiembro: string;
+
+    /**
+     * El apellido materno del miembro.
+     */
+    apellidoMaternoMiembro: string;
+
+    /**
+     * El nombre de la empresa del miembro.
+     */
+    nombreDeLaEmpresaMiembro: string;
+
+    /**
+     * Lista de miembros seleccionados.
+     */
+    miembrosSeleccionados: Antecesor[];
+    /**
      * El valor de autorizacionIVAIEPS.
      */
     autorizacionIVAIEPS: string;
-    
+
     /**
      * El valor de regimen_0.
      */
     regimen_0: boolean;
-    
+
     /**
      * El valor de regimen_1.
      */
     regimen_1: boolean;
-    
+
     /**
      * El valor de regimen_2.
      */
     regimen_2: boolean;
-    
+
     /**
      * El valor de regimen_3.
      */
     regimen_3: boolean;
-    
+
     /**
      * El valor de sectorProductivo.
      */
     sectorProductivo: string;
-    
+
     /**
      * El valor de servicio.
      */
     servicio: string;
-    
+
     /**
      * El valor de preOperativo.
      */
     preOperativo: boolean;
-    
+
     /**
      * El valor de indiqueSi.
      */
     indiqueSi: boolean;
-    
+
     /**
      * El valor de senale.
      */
     senale: boolean;
-    
+
     /**
      * El valor de empPropios.
      */
     empPropios: string;
-    
+
     /**
      * El valor de bimestre.
      */
     bimestre: string;
-    
+
     /**
      * El valor de senaleSi.
      */
     senaleSi: boolean;
-    
+
     /**
      * El valor de seMomento.
      */
     seMomento: boolean;
-    
+
     /**
      * El valor de cumplir.
      */
     cumplir: boolean;
-    
+
     /**
      * El valor de indique.
      */
     indique: boolean;
-    
+
     /**
      * El valor de encuentra.
      */
     encuentra: boolean;
-    
+
     /**
      * El valor de delMismo.
      */
     delMismo: boolean;
-    
+
     /**
      * El valor de senaleMomento.
      */
     senaleMomento: boolean;
-    
+
     /**
      * El valor de enCaso.
      */
     enCaso: boolean;
-    
+
     /**
      * El valor de comboBimestresIDCSeleccione.
      */
     comboBimestresIDCSeleccione: string;
-    
+
     /**
      * El valor de ingresar.
      */
     ingresar: boolean;
-    
+
     /**
      * El valor de encuentraSus.
      */
     encuentraSus: boolean;
-    
+
     /**
      * El valor de registrosQue.
      */
     registrosQue: string;
-    
+
     /**
      * El valor de registrosQue2.
      */
     registrosQue2: string;
-    
+
     /**
      * El valor de momentoIngresar.
      */
     momentoIngresar: boolean;
-    
+
     /**
      * El valor de indiqueCuenta.
      */
     indiqueCuenta: boolean;
-    
+
     /**
      * El valor de nombreDel.
      */
     nombreDel: string;
-    
+
     /**
      * El valor de lugarDeRadicacion.
      */
     lugarDeRadicacion: string;
-    
+
     /**
      * El valor de contabilidad.
      */
     contabilidad: boolean;
-    
+
     /**
      * El valor de rmfRadio.
      */
     rmfRadio: boolean;
-    
+
     /**
      * El valor de vinculacionRegistroCancelado.
      */
     vinculacionRegistroCancelado: boolean;
-    
+
     /**
      * El valor de proveedoresListadoSAT.
      */
     proveedoresListadoSAT: boolean;
-    
+
     /**
      * El valor de indiqueCheck.
      */
     indiqueCheck: boolean;
-    
+
     /**
      * El valor de resigtro.
      */
     resigtro: string;
-    
+
     /**
      * El valor de telefono.
      */
     telefono: string;
-    
+
     /**
      * El valor de correo.
      */
     correo: string;
-    
+
     /**
      * El valor de manifieste.
      */
     manifieste: string;
-    
+
     /**
      * El valor de indiqueIva.
      */
     indiqueIva: string;
-    
+
     /**
      * El valor de empleados.
      */
     empleados: boolean;
-    
+
     /**
      * El valor de infraestructura.
      */
     infraestructura: boolean;
-    
+
     /**
      * El valor de monto.
      */
     monto: boolean;
-    
+
     /**
      * El valor de antiguedad.
      */
     antiguedad: boolean;
-    
+
     /**
      * El valor de tipoDe.
      */
     tipoDe: string;
-    
+
     /**
      * El valor de valorPesos.
      */
     valorPesos: string;
-    
+
     /**
      * El valor de descripcion.
      */
     descripcion: string;
-    
+
     /**
      * El valor de haContado.
      */
     haContado: string;
-    
+
     /**
      * El valor de enCasoIva.
      */
     enCasoIva: string;
-    
+
     /**
      * El valor de numeroOperacion.
      */
     numeroOperacion: string;
-    
+
     /**
      * El valor de banco.
      */
     banco: string;
-    
+
     /**
      * El valor de llavePago.
      */
     llavePago: string;
-    
+
     /**
      * El valor de importaciones.
      */
     importaciones: string;
-    
+
     /**
      * El valor de infraestructuraIndique.
      */
     infraestructuraIndique: string;
-    
+
     /**
      * El valor de ultimosMeses.
      */
     ultimosMeses: string;
-    
+
     /**
      * El valor de operacionesmeses.
      */
     operacionesmeses: string;
-    
+
     /**
      * El valor de valor.
      */
     valor: string;
-    
+
     /**
      * El valor de transferencias.
      */
     transferencias: number;
-    
+
     /**
      * El valor de transferenciasVir.
      */
     transferenciasVir: number;
-    
+
     /**
      * El valor de retornos.
      */
     retornos: number;
-    
+
     /**
      * El valor de retornosSe.
      */
     retornosSe: number;
-    
+
     /**
      * El valor de constancias.
      */
     constancias: number;
-    
+
     /**
      * El valor de constanciasDe.
      */
     constanciasDe: number;
-    
+
     /**
      * El valor de empleadosPropiosRegimen.
      */
     empleadosPropiosRegimen: string;
-    
+
     /**
      * El valor de numeroEmpleadosUno.
      */
     numeroEmpleadosUno: number;
-    
+
     /**
      * El valor de numeroEmpleadosDos.
      */
     numeroEmpleadosDos: number;
-    
+
     /**
      * El valor de numeroEmpleadosTres.
      */
     numeroEmpleadosTres: number;
-    
+
     /**
      * El valor de comboBimestresUno.
      */
     comboBimestresUno: string;
-    
+
     /**
      * El valor de comboBimestresDos.
      */
     comboBimestresDos: string;
-    
+
     /**
      * El valor de comboBimestresTres.
      */
     comboBimestresTres: string;
-    
+
     /**
      * El valor de proveedorCumplimiento.
      */
     proveedorCumplimiento: string;
-    
+
     /**
      * El valor de declaracionISR.
      */
     declaracionISR: string;
-    
+
     /**
      * El valor de cancelacion.
      */
     cancelacion: string;
-    
+
     /**
      * El valor de cumplimientoReglas.
      */
     cumplimientoReglas: string;
-    
+
     /**
      * El valor de recintoFiscalizado.
      */
     recintoFiscalizado: string;
-    
+
     /**
      * El valor de recintoEstrategico.
      */
     recintoEstrategico: string;
-    
+
     /**
      * El valor de cumplimientoLineamientos.
      */
@@ -407,7 +442,7 @@ export interface Solicitud31601State {
     /**
      * El valor de obligadoaTributarenMéxico.
      */
-    obligadoaTributarenMéxico: string;
+    obligadoaTributarenMexico: string;
     /**
      * El valor de nacionalidad.
      */
@@ -460,15 +495,6 @@ export interface Solicitud31601State {
      * El valor de tipoDocumento.
      */
     tipoDocumento: string;
-    /**
-     * Datos de la tabla de enlaces.
-     */
-    enlaceDatos: EnlaceConfiguracionItem[];
-    /**
-     * Datos de la tabla de menciones.
-     */
-    mencioneDatos: MencioneConfiguracionItem[]
-    
 }
 /**
  * Función para crear el estado inicial de Solicitud31601.
@@ -477,380 +503,408 @@ export interface Solicitud31601State {
 export function createInitialState(): Solicitud31601State {
     return {
         /**
+         * El nombre completo del miembro.
+         * */
+        nombreCompleto: '',
+        /**
+         * El tipo de persona del miembro.
+         */
+        tipoDePersonaMiembro: '',
+        /**
+         * El nombre del miembro.
+         */
+        nombreMiembro: '',
+        /**
+         * El apellido paterno del miembro.
+         */
+        apellidoPaternoMiembro: '',
+        /**
+         * El apellido materno del miembro.
+         */
+        apellidoMaternoMiembro: '',
+        /**
+         * El nombre de la empresa del miembro.
+         */
+        nombreDeLaEmpresaMiembro: '',
+        /**
+         * Lista de miembros seleccionados.
+         */
+        miembrosSeleccionados: [],
+        /**
          * El valor de autorizacionIVAIEPS.
          */
         autorizacionIVAIEPS: '',
-        
+
         /**
          * El valor de regimen_0.
          */
         regimen_0: false,
-        
+
         /**
          * El valor de regimen_1.
          */
         regimen_1: false,
-        
+
         /**
          * El valor de regimen_2.
          */
         regimen_2: false,
-        
+
         /**
          * El valor de regimen_3.
          */
         regimen_3: false,
-        
+
         /**
          * El valor de sectorProductivo.
          */
         sectorProductivo: '',
-        
+
         /**
          * El valor de servicio.
          */
         servicio: '',
-        
+
         /**
          * El valor de preOperativo.
          */
         preOperativo: false,
-        
+
         /**
          * El valor de indiqueSi.
          */
         indiqueSi: false,
-        
+
         /**
          * El valor de senale.
          */
         senale: false,
-        
+
         /**
          * El valor de empPropios.
          */
         empPropios: '',
-        
+
         /**
          * El valor de bimestre.
          */
         bimestre: '',
-        
+
         /**
          * El valor de senaleSi.
          */
         senaleSi: false,
-        
+
         /**
          * El valor de seMomento.
          */
         seMomento: false,
-        
+
         /**
          * El valor de cumplir.
          */
         cumplir: false,
-        
+
         /**
          * El valor de indique.
          */
         indique: false,
-        
+
         /**
          * El valor de encuentra.
          */
         encuentra: false,
-        
+
         /**
          * El valor de delMismo.
          */
         delMismo: false,
-        
+
         /**
          * El valor de senaleMomento.
          */
         senaleMomento: false,
-        
+
         /**
          * El valor de enCaso.
          */
         enCaso: false,
-        
+
         /**
          * El valor de comboBimestresIDCSeleccione.
          */
         comboBimestresIDCSeleccione: '',
-        
+
         /**
          * El valor de ingresar.
          */
         ingresar: false,
-        
+
         /**
          * El valor de encuentraSus.
          */
         encuentraSus: false,
-        
+
         /**
          * El valor de registrosQue.
          */
         registrosQue: '',
-        
+
         /**
          * El valor de registrosQue2.
          */
         registrosQue2: '',
-        
+
         /**
          * El valor de momentoIngresar.
          */
         momentoIngresar: false,
-        
+
         /**
          * El valor de indiqueCuenta.
          */
         indiqueCuenta: false,
-        
+
         /**
          * El valor de nombreDel.
          */
         nombreDel: '',
-        
+
         /**
          * El valor de lugarDeRadicacion.
          */
         lugarDeRadicacion: '',
-        
+
         /**
          * El valor de contabilidad.
          */
         contabilidad: false,
-        
+
         /**
          * El valor de rmfRadio.
          */
         rmfRadio: false,
-        
+
         /**
          * El valor de vinculacionRegistroCancelado.
          */
         vinculacionRegistroCancelado: false,
-        
+
         /**
          * El valor de proveedoresListadoSAT.
          */
         proveedoresListadoSAT: false,
-        
+
         /**
          * El valor de indiqueCheck.
          */
         indiqueCheck: false,
-        
+
         /**
          * El valor de resigtro.
          */
         resigtro: '',
-        
+
         /**
          * El valor de telefono.
          */
         telefono: '',
-        
+
         /**
          * El valor de correo.
          */
         correo: '',
-        
+
         /**
          * El valor de manifieste.
          */
         manifieste: '',
-        
+
         /**
          * El valor de indiqueIva.
          */
         indiqueIva: '',
-        
+
         /**
          * El valor de empleados.
          */
         empleados: false,
-        
+
         /**
          * El valor de infraestructura.
          */
         infraestructura: false,
-        
+
         /**
          * El valor de monto.
          */
         monto: false,
-        
+
         /**
          * El valor de antiguedad.
          */
         antiguedad: false,
-        
+
         /**
          * El valor de tipoDe.
          */
         tipoDe: '',
-        
+
         /**
          * El valor de valorPesos.
          */
         valorPesos: '',
-        
+
         /**
          * El valor de descripcion.
          */
         descripcion: '',
-        
+
         /**
          * El valor de haContado.
          */
         haContado: '',
-        
+
         /**
          * El valor de enCasoIva.
          */
         enCasoIva: '',
-        
+
         /**
          * El valor de numeroOperacion.
          */
         numeroOperacion: '',
-        
+
         /**
          * El valor de banco.
          */
         banco: '',
-        
+
         /**
          * El valor de llavePago.
          */
         llavePago: '',
-        
+
         /**
          * El valor de importaciones.
          */
         importaciones: '',
-        
+
         /**
          * El valor de infraestructuraIndique.
          */
         infraestructuraIndique: '',
-        
+
         /**
          * El valor de ultimosMeses.
          */
         ultimosMeses: '',
-        
+
         /**
          * El valor de operacionesmeses.
          */
         operacionesmeses: '',
-        
+
         /**
          * El valor de valor.
          */
         valor: '',
-        
+
         /**
          * El valor de transferencias.
          */
         transferencias: 0,
-        
+
         /**
          * El valor de transferenciasVir.
          */
         transferenciasVir: 0,
-        
+
         /**
          * El valor de retornos.
          */
         retornos: 0,
-        
+
         /**
          * El valor de retornosSe.
          */
         retornosSe: 0,
-        
+
         /**
          * El valor de constancias.
          */
         constancias: 0,
-        
+
         /**
          * El valor de constanciasDe.
          */
         constanciasDe: 0,
-        
+
         /**
          * El valor de empleadosPropiosRegimen.
          */
         empleadosPropiosRegimen: '',
-        
+
         /**
          * El valor de numeroEmpleadosUno.
          */
         numeroEmpleadosUno: 1,
-        
+
         /**
          * El valor de numeroEmpleadosDos.
          */
         numeroEmpleadosDos: 1,
-        
+
         /**
          * El valor de numeroEmpleadosTres.
          */
         numeroEmpleadosTres: 1,
-        
+
         /**
          * El valor de comboBimestresUno.
          */
         comboBimestresUno: '',
-        
+
         /**
          * El valor de comboBimestresDos.
          */
         comboBimestresDos: '',
-        
+
         /**
          * El valor de comboBimestresTres.
          */
         comboBimestresTres: '',
-        
+
         /**
          * El valor de proveedorCumplimiento.
          */
         proveedorCumplimiento: '',
-        
+
         /**
          * El valor de declaracionISR.
          */
         declaracionISR: '',
-        
+
         /**
          * El valor de cancelacion.
          */
         cancelacion: '',
-        
+
         /**
          * El valor de cumplimientoReglas.
          */
         cumplimientoReglas: '',
-        
+
         /**
          * El valor de recintoFiscalizado.
          */
         recintoFiscalizado: '',
-        
+
         /**
          * El valor de recintoEstrategico.
          */
         recintoEstrategico: '',
-        
+
         /**
          * El valor de cumplimientoLineamientos.
          */
@@ -876,7 +930,7 @@ export function createInitialState(): Solicitud31601State {
         /**
          * El valor de obligadoaTributarenMéxico.
          */
-        obligadoaTributarenMéxico: '',
+        obligadoaTributarenMexico: '',
 
         /**
          * El valor de nacionalidad.
@@ -950,9 +1004,9 @@ export function createInitialState(): Solicitud31601State {
     };
 }
 
- /**
- * Decorador Injectable para hacer que la tienda esté disponible a nivel raíz.
- */
+/**
+* Decorador Injectable para hacer que la tienda esté disponible a nivel raíz.
+*/
 @Injectable({
     providedIn: 'root',
 })
@@ -964,7 +1018,7 @@ export function createInitialState(): Solicitud31601State {
  */
 @StoreConfig({ name: 'tramite31601', resettable: true })
 
-export class Tramite31601Store extends Store<Solicitud31601State>{
+export class Tramite31601Store extends Store<Solicitud31601State> {
     /**
      * Establece los datos de la tabla de menciones.
      * @param {MencioneConfiguracionItem[]} datosTablaMencione - Los datos de la tabla de menciones.
@@ -993,6 +1047,74 @@ export class Tramite31601Store extends Store<Solicitud31601State>{
      */
     constructor() {
         super(createInitialState());
+    }
+
+    public agregarMiembrodelaempresaTable(miembro: Antecesor): void {
+        this.update((state) => ({
+            ...state,
+            miembrosSeleccionados: [...state.miembrosSeleccionados, miembro],
+        }));
+    }
+    public eliminarMiembrodelaempresaTable(miembro: Antecesor): void {
+        this.update((state) => ({
+            ...state,
+            miembrosSeleccionados: state.miembrosSeleccionados.filter(m => m !== miembro),
+        }));
+    }
+
+    /**
+     * Establece el estado de tipoDePersonaMiembro.
+     * @param tipoDePersonaMiembro - El valor de tipoDePersonaMiembro.
+     */
+    public setTipoDePersonaMiembro(tipoDePersonaMiembro: string): void {
+        this.update((state) => ({
+            ...state,
+            tipoDePersonaMiembro,
+        }));
+    }
+
+    /**
+     * Establece el estado de nombreMiembro.
+     * @param nombreMiembro - El valor de nombreMiembro.
+     */
+    public setNombreMiembro(nombreMiembro: string): void {
+        this.update((state) => ({
+            ...state,
+            nombreMiembro,
+        }));
+    }
+
+    /**
+     * Establece el estado de apellidoPaternoMiembro.
+     * @param apellidoPaternoMiembro - El valor de apellidoPaternoMiembro.
+     */
+    public setApellidoPaternoMiembro(apellidoPaternoMiembro: string): void {
+        this.update((state) => ({
+            ...state,
+            apellidoPaternoMiembro,
+        }));
+    }
+
+    /**
+     * Establece el estado de apellidoMaternoMiembro.
+     * @param apellidoMaternoMiembro - El valor de apellidoMaternoMiembro.
+     */
+    public setApellidoMaternoMiembro(apellidoMaternoMiembro: string): void {
+        this.update((state) => ({
+            ...state,
+            apellidoMaternoMiembro,
+        }));
+    }
+
+    /**
+     * Establece el estado de nombreDeLaEmpresaMiembro.
+     * @param nombreDeLaEmpresaMiembro - El valor de nombreDeLaEmpresaMiembro.
+     */
+    public setNombreDeLaEmpresaMiembro(nombreDeLaEmpresaMiembro: string): void {
+        this.update((state) => ({
+            ...state,
+            nombreDeLaEmpresaMiembro,
+        }));
     }
 
     /**
@@ -1692,335 +1814,334 @@ export class Tramite31601Store extends Store<Solicitud31601State>{
  * Establece el estado de numeroEmpleadosUno.
  * @param numeroEmpleadosUno - El valor de numeroEmpleadosUno.
  */
-public setNumeroEmpleadosUno(numeroEmpleadosUno: number) {
-    this.update((state) => ({
-        ...state,
-        numeroEmpleadosUno,
-    }));
-}
+    public setNumeroEmpleadosUno(numeroEmpleadosUno: number) {
+        this.update((state) => ({
+            ...state,
+            numeroEmpleadosUno,
+        }));
+    }
 
-/**
- * Establece el estado de numeroEmpleadosDos.
- * @param numeroEmpleadosDos - El valor de numeroEmpleadosDos.
- */
-public setNumeroEmpleadosDos(numeroEmpleadosDos: number) {
-    this.update((state) => ({
-        ...state,
-        numeroEmpleadosDos,
-    }));
-}
+    /**
+     * Establece el estado de numeroEmpleadosDos.
+     * @param numeroEmpleadosDos - El valor de numeroEmpleadosDos.
+     */
+    public setNumeroEmpleadosDos(numeroEmpleadosDos: number) {
+        this.update((state) => ({
+            ...state,
+            numeroEmpleadosDos,
+        }));
+    }
 
-/**
- * Establece el estado de numeroEmpleadosTres.
- * @param numeroEmpleadosTres - El valor de numeroEmpleadosTres.
- */
-public setNumeroEmpleadosTres(numeroEmpleadosTres: number) {
-    this.update((state) => ({
-        ...state,
-        numeroEmpleadosTres,
-    }));
-}
+    /**
+     * Establece el estado de numeroEmpleadosTres.
+     * @param numeroEmpleadosTres - El valor de numeroEmpleadosTres.
+     */
+    public setNumeroEmpleadosTres(numeroEmpleadosTres: number) {
+        this.update((state) => ({
+            ...state,
+            numeroEmpleadosTres,
+        }));
+    }
 
-/**
- * Establece el estado de comboBimestresUno.
- * @param comboBimestresUno - El valor de comboBimestresUno.
- */
-public setComboBimestresUno(comboBimestresUno: string) {
-    this.update((state) => ({
-        ...state,
-        comboBimestresUno,
-    }));
-}
+    /**
+     * Establece el estado de comboBimestresUno.
+     * @param comboBimestresUno - El valor de comboBimestresUno.
+     */
+    public setComboBimestresUno(comboBimestresUno: string) {
+        this.update((state) => ({
+            ...state,
+            comboBimestresUno,
+        }));
+    }
 
-/**
- * Establece el estado de comboBimestresDos.
- * @param comboBimestresDos - El valor de comboBimestresDos.
- */
-public setComboBimestresDos(comboBimestresDos: string) {
-    this.update((state) => ({
-        ...state,
-        comboBimestresDos,
-    }));
-}
+    /**
+     * Establece el estado de comboBimestresDos.
+     * @param comboBimestresDos - El valor de comboBimestresDos.
+     */
+    public setComboBimestresDos(comboBimestresDos: string) {
+        this.update((state) => ({
+            ...state,
+            comboBimestresDos,
+        }));
+    }
 
-/**
- * Establece el estado de comboBimestresTres.
- * @param comboBimestresTres - El valor de comboBimestresTres.
- */
-public setComboBimestresTres(comboBimestresTres: string) {
-    this.update((state) => ({
-        ...state,
-        comboBimestresTres,
-    }));
-}
+    /**
+     * Establece el estado de comboBimestresTres.
+     * @param comboBimestresTres - El valor de comboBimestresTres.
+     */
+    public setComboBimestresTres(comboBimestresTres: string) {
+        this.update((state) => ({
+            ...state,
+            comboBimestresTres,
+        }));
+    }
 
-/**
- * Establece el estado de proveedorCumplimiento.
- * @param proveedorCumplimiento - El valor de proveedorCumplimiento.
- */
-public setProveedorCumplimiento(proveedorCumplimiento: string) {
-    this.update((state) => ({
-        ...state,
-        proveedorCumplimiento,
-    }));
-}
+    /**
+     * Establece el estado de proveedorCumplimiento.
+     * @param proveedorCumplimiento - El valor de proveedorCumplimiento.
+     */
+    public setProveedorCumplimiento(proveedorCumplimiento: string) {
+        this.update((state) => ({
+            ...state,
+            proveedorCumplimiento,
+        }));
+    }
 
-/**
- * Establece el estado de declaracionISR.
- * @param declaracionISR - El valor de declaracionISR.
- */
-public setDeclaracionISR(declaracionISR: string) {
-    this.update((state) => ({
-        ...state,
-        declaracionISR,
-    }));
-}
+    /**
+     * Establece el estado de declaracionISR.
+     * @param declaracionISR - El valor de declaracionISR.
+     */
+    public setDeclaracionISR(declaracionISR: string) {
+        this.update((state) => ({
+            ...state,
+            declaracionISR,
+        }));
+    }
 
-/**
- * Establece el estado de cancelacion.
- * @param cancelacion - El valor de cancelacion.
- */
-public setCancelacion(cancelacion: string) {
-    this.update((state) => ({
-        ...state,
-        cancelacion,
-    }));
-}
+    /**
+     * Establece el estado de cancelacion.
+     * @param cancelacion - El valor de cancelacion.
+     */
+    public setCancelacion(cancelacion: string) {
+        this.update((state) => ({
+            ...state,
+            cancelacion,
+        }));
+    }
 
-/**
- * Establece el estado de cumplimientoReglas.
- * @param cumplimientoReglas - El valor de cumplimientoReglas.
- */
-public setCumplimientoReglas(cumplimientoReglas: string) {
-    this.update((state) => ({
-        ...state,
-        cumplimientoReglas,
-    }));
-}
+    /**
+     * Establece el estado de cumplimientoReglas.
+     * @param cumplimientoReglas - El valor de cumplimientoReglas.
+     */
+    public setCumplimientoReglas(cumplimientoReglas: string) {
+        this.update((state) => ({
+            ...state,
+            cumplimientoReglas,
+        }));
+    }
 
-/**
- * Establece el estado de recintoFiscalizado.
- * @param recintoFiscalizado - El valor de recintoFiscalizado.
- */
-public setRecintoFiscalizado(recintoFiscalizado: string) {
-    this.update((state) => ({
-        ...state,
-        recintoFiscalizado,
-    }));
-}
+    /**
+     * Establece el estado de recintoFiscalizado.
+     * @param recintoFiscalizado - El valor de recintoFiscalizado.
+     */
+    public setRecintoFiscalizado(recintoFiscalizado: string) {
+        this.update((state) => ({
+            ...state,
+            recintoFiscalizado,
+        }));
+    }
 
-/**
- * Establece el estado de recintoEstrategico.
- * @param recintoEstrategico - El valor de recintoEstrategico.
- */
-public setRecintoEstrategico(recintoEstrategico: string) {
-    this.update((state) => ({
-        ...state,
-        recintoEstrategico,
-    }));
-}
+    /**
+     * Establece el estado de recintoEstrategico.
+     * @param recintoEstrategico - El valor de recintoEstrategico.
+     */
+    public setRecintoEstrategico(recintoEstrategico: string) {
+        this.update((state) => ({
+            ...state,
+            recintoEstrategico,
+        }));
+    }
 
-/**
- * Establece el estado de cumplimientoLineamientos.
- * @param cumplimientoLineamientos - El valor de cumplimientoLineamientos.
- */
-public setCumplimientoLineamientos(cumplimientoLineamientos: string) {
-    this.update((state) => ({
-        ...state,
-        cumplimientoLineamientos,
-    }));
-}
+    /**
+     * Establece el estado de cumplimientoLineamientos.
+     * @param cumplimientoLineamientos - El valor de cumplimientoLineamientos.
+     */
+    public setCumplimientoLineamientos(cumplimientoLineamientos: string) {
+        this.update((state) => ({
+            ...state,
+            cumplimientoLineamientos,
+        }));
+    }
 
-/**
- * Establece el estado de squemaIntegral.
- * @param squemaIntegral - El valor de squemaIntegral.
- */
-public setSquemaIntegral(squemaIntegral: string) {
-    this.update((state) => ({
-        ...state,
-        squemaIntegral,
-    }));
-}
+    /**
+     * Establece el estado de squemaIntegral.
+     * @param squemaIntegral - El valor de squemaIntegral.
+     */
+    public setSquemaIntegral(squemaIntegral: string) {
+        this.update((state) => ({
+            ...state,
+            squemaIntegral,
+        }));
+    }
 
-/**
- * Establece el estado de sidoModificadas.
- * @param sidoModificadas - El valor de sidoModificadas.
- */
-public setSidoModificadas(sidoModificadas: string) {
-    this.update((state) => ({
-        ...state,
-        sidoModificadas,
-    }));
-}
-/**
- * Establece el estado de ensucaracterde.
- * @param ensucaracterde - El valor de ensucaracterde.
- */
-public setEnsucaracterde(ensucaracterde: string) {
-    this.update((state) => ({
-        ...state,
-        ensucaracterde,
-    }));
-}
-/**
- * Establece el estado de rfc.
- * @param rfc - El valor de rfc.
- */
-public setRfc(rfc: string) {
-    this.update((state) => ({
-        ...state,
-        rfc,
-    }));
-}
-/**
- * Establece el estado de obligadoaTributarenMéxico.
- * @param obligadoaTributarenMéxico - El valor de obligadoaTributarenMéxico.
- */
-public setObligadoaTributarenMéxico(obligadoaTributarenMéxico: string) {
-    this.update((state) => ({
-        ...state,
-        obligadoaTributarenMéxico,
-    }));
-}
+    /**
+     * Establece el estado de sidoModificadas.
+     * @param sidoModificadas - El valor de sidoModificadas.
+     */
+    public setSidoModificadas(sidoModificadas: string) {
+        this.update((state) => ({
+            ...state,
+            sidoModificadas,
+        }));
+    }
+    /**
+     * Establece el estado de ensucaracterde.
+     * @param ensucaracterde - El valor de ensucaracterde.
+     */
+    public setEnsucaracterde(ensucaracterde: string) {
+        this.update((state) => ({
+            ...state,
+            ensucaracterde,
+        }));
+    }
+    /**
+     * Establece el estado de rfc.
+     * @param rfc - El valor de rfc.
+     */
+    public setRfc(rfc: string) {
+        this.update((state) => ({
+            ...state,
+            rfc,
+        }));
+    }
+    /**
+     * Establece el estado de obligadoaTributarenMéxico.
+     * @param obligadoaTributarenMéxico - El valor de obligadoaTributarenMéxico.
+     */
+    public setObligadoaTributarenMexico(obligadoaTributarenMexico: string) {
+        this.update((state) => ({
+            ...state,
+            obligadoaTributarenMexico,
+        }));
+    }
 
-/**
- * Establece el estado de nacionalidad.
- * @param nacionalidad - El valor de nacionalidad.
- */
-public setNacionalidad(nacionalidad: string) {
-    this.update((state) => ({
-        ...state,
-        nacionalidad,
-    }));
-}
+    /**
+     * Establece el estado de nacionalidad.
+     * @param nacionalidad - El valor de nacionalidad.
+     */
+    public setNacionalidad(nacionalidad: string) {
+        this.update((state) => ({
+            ...state,
+            nacionalidad,
+        }));
+    }
 
-/**
- * Establece el estado de registroFederaldeContribuyentes.
- * @param registroFederaldeContribuyentes - El valor de registroFederaldeContribuyentes.
- */
-public setRegistroFederaldeContribuyentes(registroFederaldeContribuyentes: string) {
-    this.update((state) => ({
-        ...state,
-        registroFederaldeContribuyentes,
-    }));
-}
-/**
- * Establece el estado de resigtroReprestantante.
- * @param resigtroReprestantante - El valor de resigtroReprestantante.
- */
-public setResigtroReprestantante(resigtroReprestantante: string) {
-    this.update((state) => ({
-        ...state,
-        resigtroReprestantante,
-    }));
-}
+    /**
+     * Establece el estado de registroFederaldeContribuyentes.
+     * @param registroFederaldeContribuyentes - El valor de registroFederaldeContribuyentes.
+     */
+    public setRegistroFederaldeContribuyentes(registroFederaldeContribuyentes: string) {
+        this.update((state) => ({
+            ...state,
+            registroFederaldeContribuyentes,
+        }));
+    }
+    /**
+     * Establece el estado de resigtroReprestantante.
+     * @param resigtroReprestantante - El valor de resigtroReprestantante.
+     */
+    public setResigtroReprestantante(resigtroReprestantante: string) {
+        this.update((state) => ({
+            ...state,
+            resigtroReprestantante,
+        }));
+    }
 
-/**
- * Establece el estado de rfcReprestantante.
- * @param rfcReprestantante - El valor de rfcReprestantante.
- */
-public setRfcReprestantante(rfcReprestantante: string) {
-    this.update((state) => ({
-        ...state,
-        rfcReprestantante,
-    }));
-}
+    /**
+     * Establece el estado de rfcReprestantante.
+     * @param rfcReprestantante - El valor de rfcReprestantante.
+     */
+    public setRfcReprestantante(rfcReprestantante: string) {
+        this.update((state) => ({
+            ...state,
+            rfcReprestantante,
+        }));
+    }
 
-/**
- * Establece el estado de nombreReprestante.
- * @param nombreReprestante - El valor de nombreReprestante.
- */
-public setNombreReprestante(nombreReprestante: string) {
-    this.update((state) => ({
-        ...state,
-        nombreReprestante,
-    }));
-}
-/**
- * Establece el estado de apellidoPaterno.
- * @param apellidoPaterno - El valor de apellidoPaterno.
- */
-public setApellidoPaterno(apellidoPaterno: string) {
-    this.update((state) => ({
-        ...state,
-        apellidoPaterno,
-    }));
-}
+    /**
+     * Establece el estado de nombreReprestante.
+     * @param nombreReprestante - El valor de nombreReprestante.
+     */
+    public setNombreReprestante(nombreReprestante: string) {
+        this.update((state) => ({
+            ...state,
+            nombreReprestante,
+        }));
+    }
+    /**
+     * Establece el estado de apellidoPaterno.
+     * @param apellidoPaterno - El valor de apellidoPaterno.
+     */
+    public setApellidoPaterno(apellidoPaterno: string) {
+        this.update((state) => ({
+            ...state,
+            apellidoPaterno,
+        }));
+    }
 
-/**
- * Establece el estado de apellidoMaterno.
- * @param apellidoMaterno - El valor de apellidoMaterno.
- */
-public setApellidoMaterno(apellidoMaterno: string) {
-    this.update((state) => ({
-        ...state,
-        apellidoMaterno,
-    }));
-}
+    /**
+     * Establece el estado de apellidoMaterno.
+     * @param apellidoMaterno - El valor de apellidoMaterno.
+     */
+    public setApellidoMaterno(apellidoMaterno: string) {
+        this.update((state) => ({
+            ...state,
+            apellidoMaterno,
+        }));
+    }
 
-/**
- * Establece el estado de cuidad.
- * @param cuidad - El valor de cuidad.
- */
-public setCuidad(cuidad: string) {
-    this.update((state) => ({
-        ...state,
-        cuidad,
-    }));
-}
+    /**
+     * Establece el estado de cuidad.
+     * @param cuidad - El valor de cuidad.
+     */
+    public setCuidad(cuidad: string) {
+        this.update((state) => ({
+            ...state,
+            cuidad,
+        }));
+    }
 
-/**
- * Establece el estado de cargo.
- * @param cargo - El valor de cargo.
- */
-public setCargo(cargo: string) {
-    this.update((state) => ({
-        ...state,
-        cargo,
-    }));
-}
+    /**
+     * Establece el estado de cargo.
+     * @param cargo - El valor de cargo.
+     */
+    public setCargo(cargo: string) {
+        this.update((state) => ({
+            ...state,
+            cargo,
+        }));
+    }
 
-/**
- * Establece el estado de telefonoReprestantante.
- * @param telefonoReprestantante - El valor de telefonoReprestantante.
- */
-public setTelefonoReprestantante(telefonoReprestantante: string) {
-    this.update((state) => ({
-        ...state,
-        telefonoReprestantante,
-    }));
-}
+    /**
+     * Establece el estado de telefonoReprestantante.
+     * @param telefonoReprestantante - El valor de telefonoReprestantante.
+     */
+    public setTelefonoReprestantante(telefonoReprestantante: string) {
+        this.update((state) => ({
+            ...state,
+            telefonoReprestantante,
+        }));
+    }
 
-/**
- * Establece el estado de correoReprestantante.
- * @param correoReprestantante - El valor de correoReprestantante.
- */
-public setCorreoReprestantante(correoReprestantante: string) {
-    this.update((state) => ({
-        ...state,
-        correoReprestantante,
-    }));
-}
+    /**
+     * Establece el estado de correoReprestantante.
+     * @param correoReprestantante - El valor de correoReprestantante.
+     */
+    public setCorreoReprestantante(correoReprestantante: string) {
+        this.update((state) => ({
+            ...state,
+            correoReprestantante,
+        }));
+    }
 
-/**
- * Establece el estado de suplente.
- * @param suplente - El valor de suplente.
- */
-public setSuplente(suplente: string) {
-    this.update((state) => ({
-        ...state,
-        suplente,
-    }));
+    /**
+     * Establece el estado de suplente.
+     * @param suplente - El valor de suplente.
+     */
+    public setSuplente(suplente: string) {
+        this.update((state) => ({
+            ...state,
+            suplente,
+        }));
+    }
+    /**
+     * Establece el estado de tipoDocumento.
+     * @param tipoDocumento - El valor de tipoDocumento.
+     */
+    public setTipoDocumento(tipoDocumento: string) {
+        this.update((state) => ({
+            ...state,
+            tipoDocumento,
+        }));
+    }
 }
-/**
- * Establece el estado de tipoDocumento.
- * @param tipoDocumento - El valor de tipoDocumento.
- */
-public setTipoDocumento(tipoDocumento: string) {
-    this.update((state) => ({
-        ...state,
-        tipoDocumento,
-    }));
-}
-} 
-  

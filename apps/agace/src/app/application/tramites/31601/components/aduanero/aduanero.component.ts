@@ -8,14 +8,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
-import {
-  Catalogo,
-  ConfiguracionColumna,
-  TablaSeleccion,
-  TableComponent,
-  TablePaginationComponent,
-  TituloComponent,
-} from '@ng-mf/data-access-user';
+import { Catalogo, TableBodyData, TableComponent, TableData, TablePaginationComponent, TituloComponent } from '@ng-mf/data-access-user';
 import {
   FormBuilder,
   FormGroup,
@@ -160,7 +153,7 @@ export class AduaneroComponent implements OnInit, AfterViewInit, OnDestroy {
   /**
    * Datos de control de inventarios obtenidos desde JSON
    */
-  controlInventarios: any = controlInventarios;
+  controlInventarios: TableData = controlInventarios;
 
   /**
    * Lista de opciones IMMEX cargadas desde JSON
@@ -235,7 +228,7 @@ export class AduaneroComponent implements OnInit, AfterViewInit, OnDestroy {
   /**
    * Datos del cuerpo de la tabla de empleados
    */
-  public empleadosBodyData: any[] = [];
+  public empleadosBodyData: TableBodyData[] = [];
 
   /**
    * Encabezados de la tabla de domicilios
@@ -245,7 +238,7 @@ export class AduaneroComponent implements OnInit, AfterViewInit, OnDestroy {
   /**
    * Datos del cuerpo de la tabla de domicilios
    */
-  public domiciliosBodyData: any[] = [];
+  public domiciliosBodyData: TableBodyData[] = [];
 
   /**
    * Encabezados de la tabla de instalaciones
@@ -255,7 +248,7 @@ export class AduaneroComponent implements OnInit, AfterViewInit, OnDestroy {
   /**
    * Datos del cuerpo de la tabla de instalaciones
    */
-  public InstalacionesBodyData: any[] = [];
+  public InstalacionesBodyData: TableBodyData[] = [];
 
   /**
    * Estado de la solicitud

@@ -3,6 +3,7 @@
   [inputFields]="datosInputFields"
   [catalogosArray]="catalogosArray"
   [solicitudOpciones]="opcionesSolicitud"
+  [esFormularioSoloLectura] ="esFormularioSoloLectura"
   (setValoresStoreEvent)="setValoresStore($event)"
 ></app-datos-del-tramite>
 
@@ -11,6 +12,7 @@
   [productoOpciones]="productoOpciones"
   [fraccionCatalogo]="fraccionCatalogo"
   [unidadCatalogo]="unidadCatalogo"
+  [esFormularioSoloLectura] ="esFormularioSoloLectura"
   (setValoresStoreEvent)="setValoresStore($event)"
 ></app-datos-de-la-mercancia>
 
@@ -21,6 +23,7 @@
   [tableHeaderData]="tableHeaderData"
   [tableBodyData]="tableBodyData"
   [mostrarTabla]="mostrarTabla"
+  [esFormularioSoloLectura] ="esFormularioSoloLectura"
   (filaSeleccionadaChange)="manejarlaFilaSeleccionada($event)"
   (validarYEnviarFormularioEvent)="validarYEnviarFormulario()"
   (navegarParaModificarPartidaEvent)="navegarParaModificarPartida()"
@@ -33,6 +36,7 @@
 [elementosDeBloque]="elementosDeBloque"
 [paisesPorBloque]="paisesPorBloque"
 [selectRangoDias]="selectRangoDias"
+[esFormularioSoloLectura] ="esFormularioSoloLectura"
 (bloqueCambiar)="enCambioDeBloque($event)"
 (setValoresStoreEvent)="setValoresStore($event)"
 ></app-pais-procendencia>
@@ -42,5 +46,6 @@
 [entidadFederativa]="entidadFederativa"
 [representacionFederal]="representacionFederal"
 [TEXTOS]="TEXTOS"
+[esFormularioSoloLectura] ="esFormularioSoloLectura"
 (setValoresStoreEvent)="setValoresStore($event)">
 </app-representacion>
