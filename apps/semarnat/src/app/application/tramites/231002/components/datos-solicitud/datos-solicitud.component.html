@@ -7,7 +7,7 @@
     </div>
     <div class="row">
       <div class="col-md-10 mb-3">
-        <app-input-radio [radioOptions]="avisoOpcionesDeRadio.opcionesDeRadio" [isRequired]="avisoOpcionesDeRadio.required" [selectedValue]="solicitudForm.get('ideGenerica1')?.value" [layout]="'horizontal'" (valueChange)="setTipoDeAviso($event)"></app-input-radio>
+        <app-input-radio [radioOptions]="avisoOpcionesDeRadio.opcionesDeRadio" [isRequired]="avisoOpcionesDeRadio.required" [selectedValue]="solicitudForm.get('ideGenerica1')?.value" [layout]="'horizontal'" (valueChange)="setTipoDeAviso($event)" formControlName="ideGenerica1"></app-input-radio>
       </div>
     </div>
     <ng-titulo titulo="Datos del generador de residuos" />
@@ -23,12 +23,12 @@
     </div>
     <div class="row mb-3">
       <div class="col-md-5 form-group">
-        <app-catalogo-select [catalogo]='etiquetasForm.Immex' formControlName="numeroProgramaImmex" [label]="'Número de autorización IMMEX'" [required]="true" (change)="actualizarCampoSolicitudForm('numeroProgramaImmex')"></app-catalogo-select>
+        <app-catalogo-select [catalogo]='etiquetasForm.Immex' formControlName="numeroProgramaImmex" [label]="'Número de autorización IMMEX'" [required]="true" (change)="actualizarCampoSolicitudForm('numeroProgramaImmex')" [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
       </div>
     </div>
     <div class="row mb-3">
       <div class="col-md-5 form-group">
-        <app-catalogo-select [catalogo]='etiquetasForm.Immex' formControlName="domicilio" [label]="'Domicilio'" [required]="true" (change)="actualizarCampoSolicitudForm('domicilio')"></app-catalogo-select>
+        <app-catalogo-select [catalogo]='etiquetasForm.Domicilio' formControlName="domicilio" [label]="'Domicilio'" [required]="true" (change)="actualizarCampoSolicitudForm('domicilio')" [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
       </div>
     </div>
   </form>
@@ -36,7 +36,7 @@
   <h6>Datos de los residuos peligrosos a retornar por primera vez ó subsecuente*:</h6>
   <div class="row mb-3">
     <div class="col-md-12">
-      <ng-table [commonTableHeader]=" etiquetasForm.table[0].encabezadoDeTabla" [commonTableBody]="etiquetasForm.table[0].cuerpoTabla"></ng-table>
+      <ng-table [commonTableHeader]=" etiquetasForm.table[0].encabezadoDeTabla" [commonTableBody]="etiquetasForm.table[0].cuerpoTabla" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"></ng-table>
       <nav aria-label="Page navigation example">
         <ul class="pagination d-flex justify-content-center">
           <li class="page-item">
@@ -49,8 +49,8 @@
   <div class="row mb-5">
     <div class="col text-end">
       <div class="btn-group">
-        <button class="btn btn-primary me-2" type="button">Borrar</button>
-        <button class="btn btn-danger" type="button" data-bs-toggle="modal" data-bs-target="#modalAgregarMercancias" (click)="agregarOperacionImp()">Agregar</button>
+        <button class="btn btn-primary me-2" type="button" [disabled]="esFormularioSoloLectura">Borrar</button>
+        <button class="btn btn-danger" type="button" data-bs-toggle="modal" data-bs-target="#modalAgregarMercancias" (click)="agregarOperacionImp()" [disabled]="esFormularioSoloLectura">Agregar</button>
       </div>
     </div>
   </div>
@@ -117,7 +117,7 @@
 <div [formGroup]="formularioPrecaucionesManejo">
   <div class="row mb-3">
     <div class="col-md-5 form-group">
-      <app-catalogo-select [catalogo]='etiquetasForm.Immex' formControlName="clave" [label]="'Aduana de salida'" [required]="true" (change)="actualizarCampoPrecaucionesManejo('clave')"></app-catalogo-select>
+      <app-catalogo-select [catalogo]='etiquetasForm.Aduana' formControlName="clave" [label]="'Aduana de salida'" [required]="true" (change)="actualizarCampoPrecaucionesManejo('clave')" [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
     </div>
   </div>
   <div class="row mb-3">
@@ -141,7 +141,7 @@
   </div>
   <div class="row mb-5">
     <div class="col-md-4">
-      <app-catalogo-select [catalogo]="etiquetasForm.Immex" [label]="'País destino'" [required]="true" formControlName="pais" name="pais"></app-catalogo-select>
+      <app-catalogo-select [catalogo]="etiquetasForm.Pais" [label]="'País destino'" [required]="true" formControlName="pais" name="pais" [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
     </div>
   </div>
   <div class="row mb-5">

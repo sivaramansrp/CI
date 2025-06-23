@@ -39,6 +39,11 @@ describe('ImportacionOtrosVehiculosUsadosPageComponent', () => {
   });
 
   it('should update the indice and call "siguiente" when action is "cont"', () => {
+    component.wizardComponent = {
+      siguiente: jest.fn(),
+      atras: jest.fn(),
+    } as unknown as WizardComponent;
+
     const mockEvent = { accion: 'cont', valor: 2 };
 
     component.getValorIndice(mockEvent);
@@ -49,6 +54,11 @@ describe('ImportacionOtrosVehiculosUsadosPageComponent', () => {
   });
 
   it('should update the indice and call "atras" when action is not "cont"', () => {
+    component.wizardComponent = {
+      siguiente: jest.fn(),
+      atras: jest.fn(),
+    } as unknown as WizardComponent;
+
     const mockEvent = { accion: 'prev', valor: 2 };
 
     component.getValorIndice(mockEvent);
@@ -59,6 +69,11 @@ describe('ImportacionOtrosVehiculosUsadosPageComponent', () => {
   });
 
   it('should not update the indice or call any wizard methods if valor is out of range', () => {
+    component.wizardComponent = {
+      siguiente: jest.fn(),
+      atras: jest.fn(),
+    } as unknown as WizardComponent;
+    
     const mockEvent = { accion: 'cont', valor: 0 };
 
     component.getValorIndice(mockEvent);

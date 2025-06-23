@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { SolicitanteComponent, TIPO_PERSONA } from '@libs/shared/data-access-user/src';
 import { Subject, map, takeUntil } from 'rxjs';
@@ -17,7 +17,7 @@ import { Solocitud6502Service } from '../../service/service6502.service';
   selector: 'app-paso-uno',
   templateUrl: './paso-uno.component.html',
 })
-export class PasoUnoComponent implements AfterViewInit,OnInit,OnDestroy {
+export class PasoUnoComponent implements OnInit,OnDestroy {
   
   /**
    * Índice para manejar la pestaña seleccionada.
@@ -83,16 +83,6 @@ export class PasoUnoComponent implements AfterViewInit,OnInit,OnDestroy {
 
   }
 
-  /**
-   * Método del ciclo de vida de Angular que se ejecuta después de que la vista ha sido inicializada.
-   * En este método se llama al componente `SolicitanteComponent` para establecer el tipo de persona.
-   *
-   * @memberof PasoUnoComponent
-   */
-  ngAfterViewInit(): void {
-    // Llama al método para obtener el tipo de persona (en este caso, una persona moral nacional)
-    this.solicitante.obtenerTipoPersona(TIPO_PERSONA.MORAL_NACIONAL);
-  }
 
   /**
    * Permite que el usuario seleccione una pestaña cambiando el valor de `indice`.

@@ -341,7 +341,7 @@ export class Tramite110208Store extends Store<Solicitud110208State>{
      * Establece el estado de entidadFederativa.
      * @param entidadFederativa - El valor de entidadFederativa.
      */
-    public setEntidadFederativa(entidadFederativa: string) {
+    public setEntidadFederativa(entidadFederativa: string):void {
         this.update((state) => ({
             ...state,
             entidadFederativa,
@@ -351,7 +351,7 @@ export class Tramite110208Store extends Store<Solicitud110208State>{
      * Establece el estado de bloque.
      * @param bloque - El valor de bloque.
      */
-    public setBloque(bloque: string) {
+    public setBloque(bloque: string):void {
         this.update((state) => ({
             ...state,
             bloque,
@@ -361,7 +361,7 @@ export class Tramite110208Store extends Store<Solicitud110208State>{
      * Establece el estado de fraccionArancelariaForm.
      * @param fraccionArancelariaForm - El valor de fraccionArancelariaForm.
      */
-    public setFraccionArancelariaForm(fraccionArancelariaForm: string) {
+    public setFraccionArancelariaForm(fraccionArancelariaForm: string):void {
         this.update((state) => ({
             ...state,
             fraccionArancelariaForm,
@@ -371,7 +371,7 @@ export class Tramite110208Store extends Store<Solicitud110208State>{
      * Establece el estado de registroProductoForm.
      * @param registroProductoForm - El valor de registroProductoForm.
      */
-    public setRegistroProductoForm(registroProductoForm: string) {
+    public setRegistroProductoForm(registroProductoForm: string):void {
         this.update((state) => ({
             ...state,
             registroProductoForm,
@@ -381,7 +381,7 @@ export class Tramite110208Store extends Store<Solicitud110208State>{
      * Establece el estado de nombreComercialForm.
      * @param nombreComercialForm - El valor de nombreComercialForm.
      */
-    public setNombreComercialForm(nombreComercialForm: string) {
+    public setNombreComercialForm(nombreComercialForm: string):void {
         this.update((state) => ({
             ...state,
             nombreComercialForm,
@@ -391,7 +391,7 @@ export class Tramite110208Store extends Store<Solicitud110208State>{
      * Establece el estado de fechaInicio.
      * @param fechaInicio - El valor de fechaInicio.
      */
-    public setFechaInicio(fechaInicio: string) {
+    public setFechaInicio(fechaInicio: string):void {
         this.update((state) => ({
             ...state,
             fechaInicio,
@@ -401,7 +401,7 @@ export class Tramite110208Store extends Store<Solicitud110208State>{
      * Establece el estado de fechaFinal.
      * @param fechaFinal - El valor de fechaFinal.
      */
-    public setFechaFinal(fechaFinal: string) {
+    public setFechaFinal(fechaFinal: string):void {
         this.update((state) => ({
             ...state,
             fechaFinal,
@@ -411,7 +411,7 @@ export class Tramite110208Store extends Store<Solicitud110208State>{
      * Establece el estado de tercerOperador.
      * @param tercerOperador - El valor de tercerOperador.
      */
-    public setTercerOperador(tercerOperador: string) {
+    public setTercerOperador(tercerOperador: string):void {
         this.update((state) => ({
             ...state,
             tercerOperador,
@@ -421,7 +421,7 @@ export class Tramite110208Store extends Store<Solicitud110208State>{
      * Establece el estado de marca.
      * @param marca - El valor de marca.
      */
-    public setMarca(marca: string) {
+    public setMarca(marca: string):void {
         this.update((state) => ({
             ...state,
             marca,
@@ -431,7 +431,7 @@ export class Tramite110208Store extends Store<Solicitud110208State>{
      * Establece el estado de cantidad.
      * @param cantidad - El valor de cantidad.
      */
-    public setCantidad(cantidad: string) {
+    public setCantidad(cantidad: string):void {
         this.update((state) => ({
             ...state,
             cantidad,
@@ -441,7 +441,7 @@ export class Tramite110208Store extends Store<Solicitud110208State>{
      * Establece el estado de umc.
      * @param umc - El valor de umc.
      */
-    public setUmc(umc: string) {
+    public setUmc(umc: string):void {
         this.update((state) => ({
             ...state,
             umc,
@@ -451,7 +451,7 @@ export class Tramite110208Store extends Store<Solicitud110208State>{
      * Establece el estado de valorDeLa.
      * @param valorDeLa - El valor de valorDeLa.
      */
-    public setValorDeLa(valorDeLa: string) {
+    public setValorDeLa(valorDeLa: string):void {
         this.update((state) => ({
             ...state,
             valorDeLa,
@@ -461,7 +461,7 @@ export class Tramite110208Store extends Store<Solicitud110208State>{
      * Establece el estado de complementoDescripcion.
      * @param complementoDescripcion - El valor de complementoDescripcion.
      */
-    public setComplementoDescripcion(complementoDescripcion: string) {
+    public setComplementoDescripcion(complementoDescripcion: string):void {
         this.update((state) => ({
             ...state,
             complementoDescripcion,
@@ -471,7 +471,7 @@ export class Tramite110208Store extends Store<Solicitud110208State>{
      * Establece el estado de nFactura.
      * @param nFactura - El valor de nFactura.
      */
-    public setNFactura(nFactura: string) {
+    public setNFactura(nFactura: string):void {
         this.update((state) => ({
             ...state,
             nFactura,
@@ -481,7 +481,7 @@ export class Tramite110208Store extends Store<Solicitud110208State>{
      * Establece el estado de tipoDeFactura.
      * @param tipoDeFactura - El valor de tipoDeFactura.
      */
-    public setTipoDeFactura(tipoDeFactura: string) {
+    public setTipoDeFactura(tipoDeFactura: string):void {
         this.update((state) => ({
             ...state,
             tipoDeFactura,
@@ -491,7 +491,7 @@ export class Tramite110208Store extends Store<Solicitud110208State>{
      * Establece el estado de fechaFactura.
      * @param fechaFactura - El valor de fechaFactura.
      */
-    public setFechaFactura(fechaFactura: string) {
+    public setFechaFactura(fechaFactura: string):void {
         this.update((state) => ({
             ...state,
             fechaFactura,
@@ -501,7 +501,7 @@ export class Tramite110208Store extends Store<Solicitud110208State>{
      * Establece el estado de ciudad.
      * @param ciudad - El valor de ciudad.
      */
-    public setCiudad(ciudad: string) {
+    public setCiudad(ciudad: string):void {
         this.update((state) => ({
             ...state,
             ciudad,
@@ -511,7 +511,7 @@ export class Tramite110208Store extends Store<Solicitud110208State>{
      * Establece el estado de calle.
      * @param calle - El valor de calle.
      */
-    public setCalle(calle: string) {
+    public setCalle(calle: string):void {
         this.update((state) => ({
             ...state,
             calle,
@@ -521,7 +521,7 @@ export class Tramite110208Store extends Store<Solicitud110208State>{
      * Establece el estado de numeroLetra.
      * @param numeroLetra - El valor de numeroLetra.
      */
-    public setNumeroLetra(numeroLetra: string) {
+    public setNumeroLetra(numeroLetra: string):void {
         this.update((state) => ({
             ...state,
             numeroLetra,
@@ -531,7 +531,7 @@ export class Tramite110208Store extends Store<Solicitud110208State>{
      * Establece el estado de lada.
      * @param lada - El valor de lada.
      */
-    public setLada(lada: string) {
+    public setLada(lada: string):void {
         this.update((state) => ({
             ...state,
             lada,
@@ -541,7 +541,7 @@ export class Tramite110208Store extends Store<Solicitud110208State>{
      * Establece el estado de telefono.
      * @param telefono - El valor de telefono.
      */
-    public setTelefono(telefono: string) {
+    public setTelefono(telefono: string):void {
         this.update((state) => ({
             ...state,
             telefono,
@@ -551,7 +551,7 @@ export class Tramite110208Store extends Store<Solicitud110208State>{
      * Establece el estado de fax.
      * @param fax - El valor de fax.
      */
-    public setFax(fax: string) {
+    public setFax(fax: string):void {
         this.update((state) => ({
             ...state,
             fax,
@@ -561,7 +561,7 @@ export class Tramite110208Store extends Store<Solicitud110208State>{
      * Establece el estado de correoElectronico.
      * @param correoElectronico - El valor de correoElectronico.
      */
-    public setCorreoElectronico(correoElectronico: string) {
+    public setCorreoElectronico(correoElectronico: string):void {
         this.update((state) => ({
             ...state,
             correoElectronico,
@@ -571,7 +571,7 @@ export class Tramite110208Store extends Store<Solicitud110208State>{
      * Establece el estado de paisDestino.
      * @param paisDestino - El valor de paisDestino.
      */
-    public setPaisDestino(paisDestino: string) {
+    public setPaisDestino(paisDestino: string):void {
         this.update((state) => ({
             ...state,
             paisDestino,
@@ -581,7 +581,7 @@ export class Tramite110208Store extends Store<Solicitud110208State>{
      * Establece el estado de nombres.
      * @param nombres - El valor de nombres.
      */
-    public setNombres(nombres: string) {
+    public setNombres(nombres: string):void {
         this.update((state) => ({
             ...state,
             nombres,
@@ -591,7 +591,7 @@ export class Tramite110208Store extends Store<Solicitud110208State>{
      * Establece el estado de primerApellido.
      * @param primerApellido - El valor de primerApellido.
      */
-    public setPrimerApellido(primerApellido: string) {
+    public setPrimerApellido(primerApellido: string):void {
         this.update((state) => ({
             ...state,
             primerApellido,
@@ -601,7 +601,7 @@ export class Tramite110208Store extends Store<Solicitud110208State>{
      * Establece el estado de segundoApellido.
      * @param segundoApellido - El valor de segundoApellido.
      */
-    public setSegundoApellido(segundoApellido: string) {
+    public setSegundoApellido(segundoApellido: string):void {
         this.update((state) => ({
             ...state,
             segundoApellido,
@@ -611,7 +611,7 @@ export class Tramite110208Store extends Store<Solicitud110208State>{
      * Establece el estado de numeroFiscal.
      * @param numeroFiscal - El valor de numeroFiscal.
      */
-    public setNumeroFiscal(numeroFiscal: string) {
+    public setNumeroFiscal(numeroFiscal: string):void {
         this.update((state) => ({
             ...state,
             numeroFiscal,
@@ -621,7 +621,7 @@ export class Tramite110208Store extends Store<Solicitud110208State>{
      * Establece el estado de razonSocial.
      * @param razonSocial - El valor de razonSocial.
      */
-    public setRazonSocial(razonSocial: string) {
+    public setRazonSocial(razonSocial: string):void {
         this.update((state) => ({
             ...state,
             razonSocial,
@@ -631,7 +631,7 @@ export class Tramite110208Store extends Store<Solicitud110208State>{
      * Establece el estado de medioTransporte.
      * @param medioTransporte - El valor de medioTransporte.
      */
-    public setMedioTransporte(medioTransporte: string) {
+    public setMedioTransporte(medioTransporte: string):void {
         this.update((state) => ({
             ...state,
             medioTransporte,
@@ -641,7 +641,7 @@ export class Tramite110208Store extends Store<Solicitud110208State>{
      * Establece el estado de rutaCompleta.
      * @param rutaCompleta - El valor de rutaCompleta.
      */
-    public setRutaCompleta(rutaCompleta: string) {
+    public setRutaCompleta(rutaCompleta: string):void {
         this.update((state) => ({
             ...state,
             rutaCompleta,
@@ -651,7 +651,7 @@ export class Tramite110208Store extends Store<Solicitud110208State>{
      * Establece el estado de puertoDeEmbarque.
      * @param puertoDeEmbarque - El valor de puertoDeEmbarque.
      */
-    public setPuertoDeEmbarque(puertoDeEmbarque: string) {
+    public setPuertoDeEmbarque(puertoDeEmbarque: string):void {
         this.update((state) => ({
             ...state,
             puertoDeEmbarque,
@@ -661,7 +661,7 @@ export class Tramite110208Store extends Store<Solicitud110208State>{
      * Establece el estado de puertoDeDesembarque.
      * @param puertoDeDesembarque - El valor de puertoDeDesembarque.
      */
-    public setPuertoDeDesembarque(puertoDeDesembarque: string) {
+    public setPuertoDeDesembarque(puertoDeDesembarque: string):void {
         this.update((state) => ({
             ...state,
             puertoDeDesembarque,
@@ -671,7 +671,7 @@ export class Tramite110208Store extends Store<Solicitud110208State>{
      * Establece el estado de observaciones.
      * @param observaciones - El valor de observaciones.
      */
-    public setObservaciones(observaciones: string) {
+    public setObservaciones(observaciones: string):void {
         this.update((state) => ({
             ...state,
             observaciones,
@@ -681,7 +681,7 @@ export class Tramite110208Store extends Store<Solicitud110208State>{
      * Establece el estado de idioma.
      * @param idioma - El valor de idioma.
      */
-    public setIdioma(idioma: string) {
+    public setIdioma(idioma: string):void {
         this.update((state) => ({
             ...state,
             idioma,
@@ -691,7 +691,7 @@ export class Tramite110208Store extends Store<Solicitud110208State>{
      * Establece el estado de entidadFederativaCertificado.
      * @param entidadFederativaCertificado - El valor de entidadFederativaCertificado.
      */
-    public setEntidadFederativaCertificado(entidadFederativaCertificado: string) {
+    public setEntidadFederativaCertificado(entidadFederativaCertificado: string):void {
         this.update((state) => ({
             ...state,
             entidadFederativaCertificado,
@@ -701,7 +701,7 @@ export class Tramite110208Store extends Store<Solicitud110208State>{
      * Establece el estado de representacionFederal.
      * @param representacionFederal - El valor de representacionFederal.
      */
-    public setRepresentacionFederal(representacionFederal: string) {
+    public setRepresentacionFederal(representacionFederal: string):void {
         this.update((state) => ({
             ...state,
             representacionFederal,

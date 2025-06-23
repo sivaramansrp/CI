@@ -5,6 +5,7 @@ import { CatalogosSelect } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
+import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 import { DOMICILIOS_CONFIGURACION_COLUMNAS } from '../../constants/solicitud.enum';
 import { DatosGeneralesDeLaSolicitudCatologo } from '../../models/solicitud.model';
 import { DatosGeneralesDeLaSolicitudRadioLista } from '../../models/solicitud.model';
@@ -180,13 +181,36 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
   @ViewChild('agregarImmexProgram', { static: false })
   agregarImmexProgramElement!: ElementRef;
 
+  /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  esFormularioSoloLectura: boolean = false;
+
   /** Constructor del componente que inyecta dependencias y obtiene datos iniciales */
   constructor(
     public fb: FormBuilder,
     public solicitudService: SolicitudService,
     public solicitud31101Store: Solicitud31101Store,
-    public solicitud31101Query: Solicitud31101Query
+    public solicitud31101Query: Solicitud31101Query,
+    public consultaioQuery: ConsultaioQuery
   ) {
+    /**
+     * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
+     *
+     * - Asigna el valor de solo lectura (`readonly`) a la propiedad `esFormularioSoloLectura`.
+     * - Llama a `inicializarEstadoFormulario()` para aplicar configuraciones basadas en el estado recibido.
+     * - La suscripción se cancela automáticamente cuando `destroyNotifier$` emite un valor (para evitar fugas de memoria).
+     */
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroy$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
     this.conseguirDatosGeneralesOpcionDeRadio();
     this.conseguirDatosGeneralesCatologo();
     this.conseguirListaDeSubcontratistas();
@@ -205,6 +229,36 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
    * - Emite el cambio de `tipoDeEndoso` una vez que los datos se actualizan.
    */
   ngOnInit(): void {
+    this.inicializarEstadoFormulario();
+  }
+
+  /**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario(); // Llama al método para cargar los datos del formulario
+    } else {
+      this.inicializarFormulario();
+    }
+  }
+
+  /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormulario(): void {
+    this.inicializarFormulario();
+    if (this.esFormularioSoloLectura) {
+      this.datosGeneralesForm.disable();
+    } else if (!this.esFormularioSoloLectura) {
+      this.datosGeneralesForm.enable();
+    } else {
+      // No se requiere ninguna acción en el formulario
+    }
+  }
+
+  inicializarFormulario(): void {
     this.datosGeneralesForm = this.fb.group({
       tipoDeGarantia: [
         { value: this.solicitud31101State.tipoDeGarantia, disabled: false },

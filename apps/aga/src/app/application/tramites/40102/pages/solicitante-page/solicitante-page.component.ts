@@ -8,11 +8,11 @@ import { Chofer40102Query } from '../../estados/chofer40102.query';
 import { DatosPasos } from '@ng-mf/data-access-user';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { PASOS } from '@ng-mf/data-access-user';
+import { SECCIONES_TRAMITE_40102 } from '../../constants/solicitud.enums';
 import { Subject } from 'rxjs';
 import { WizardComponent } from '@ng-mf/data-access-user';
 import { map } from 'rxjs/operators';
 import { takeUntil } from 'rxjs/operators';
-import { SECCIONES_TRAMITE_40102 } from '../../constants/solicitud.enums';
 
 interface AccionBoton {
   accion: string;

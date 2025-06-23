@@ -7,6 +7,7 @@
         [configuracionTabla]="configuracionColumnas" 
         [datos]="solicitudState.destinatarios"
         [tipoSeleccionTabla]="tipoSeleccionTabla"
+        [disableSeleccionTablaCheckBox]="soloLectura"
         (listaDeFilaSeleccionada)="manejarFilaSeleccionada($event)">
       </app-tabla-dinamica>
     </div>
@@ -159,7 +160,8 @@
                 [catalogo]="paisesDatos" 
                 formControlName="pais" 
                 [label]="'País'" 
-                [required]="true">
+                [required]="true"
+                [isDisabled]="soloLectura">
               </app-catalogo-select>
               <div *ngIf="isInvalid('pais')" class="mensaje-error">
                 Este campo es obligatorio.
