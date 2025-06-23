@@ -4,6 +4,7 @@ import { of, throwError } from 'rxjs';
 import { PasoDosComponent } from './paso-dos.component';
 import { ServiciosPantallaService } from '@libs/shared/data-access-user/src/core/services/31601/servicios-pantalla.service';
 import { TramiteStore } from '../../../../estados/tramite.store';
+import {CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 describe('PasoDosComponent', () => {
   let component: PasoDosComponent;
@@ -32,6 +33,7 @@ describe('PasoDosComponent', () => {
         { provide: ServiciosPantallaService, useValue: serviciosPantallaServiceMock },
         { provide: TramiteStore, useValue: tramiteStoreMock },
       ],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA],
     }).compileComponents();
 
     fixture = TestBed.createComponent(PasoDosComponent);

@@ -2,6 +2,8 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PasoUnoComponent } from './paso-uno.component';
 import { SolicitanteComponent, TIPO_PERSONA } from '@libs/shared/data-access-user/src';
 import { Component, Input } from '@angular/core';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 
 @Component({
   selector: 'app-solicitante',
@@ -20,6 +22,8 @@ describe('PasoUnoComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [PasoUnoComponent, MockSolicitanteComponent],
+      imports: [HttpClientTestingModule],
+      schemas: [NO_ERRORS_SCHEMA], 
     }).compileComponents();
 
     fixture = TestBed.createComponent(PasoUnoComponent);
