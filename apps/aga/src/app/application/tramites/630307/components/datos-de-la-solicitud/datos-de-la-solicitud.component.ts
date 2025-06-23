@@ -12,8 +12,8 @@ import { ModeloDeFormaDinamica } from '@ng-mf/data-access-user';
 
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
 
-import { Subject, takeUntil } from 'rxjs';
-
+import { Subject, Subscription, map, takeUntil } from 'rxjs';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DatosRetornoAutorizacionComponent } from '../datos-retorno-autorizacion/datos-retorno-autorizacion.component';
 import { DatosRetornoProrrogaComponent } from '../datos-retorno-prorroga/datos-retorno-prorroga.component';
 
@@ -65,6 +65,17 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   estadoSeleccionado!: Tramite630307State;
 
+   /**
+   * Suscripción a los cambios en el formulario reactivo.
+   */
+  private subscription: Subscription = new Subscription();
+
+  /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  esFormularioSoloLectura: boolean = false;
+
   /**
    * Constructor del componente.
    * 
@@ -77,20 +88,66 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private retornoImportacionTemporalService: RetornoImportacionTemporalService,
     private tramite630307Store: Tramite630307Store,
-    private tramite630307Query: Tramite630307Query
-  ) { }
+    private tramite630307Query: Tramite630307Query,
+   private consultaioQuery: ConsultaioQuery
+  ) {
+  this.consultaioQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.destroyed$),
+      map((seccionState) => {
+       this.esFormularioSoloLectura = seccionState.readonly;
+       this.inizializarFormulario();
+      })
+    )
+    .subscribe();
+  }
 
   /**
    * Ciclo de vida: Inicializa el formulario y carga datos de catálogos al iniciar el componente.
    */
   ngOnInit(): void {
     this.getValorStore();
-    this.inizializarFormulario();
+    this.inicializarEstadoFormulario();
     this.getAduanaDeIngreso();
     this.getSeccionAduanera();
     this.getProrroga();
     this.cambiarCuentaProrroga();
   }
+
+   /**
+   * @method
+   * @name guardarDatosFormulario
+   * @description
+   * Inicializa los formularios y obtiene los datos de la tabla.
+   * Dependiendo del modo de solo lectura (`esFormularioSoloLectura`),
+   * deshabilita o habilita todos los formularios del componente.
+   * Si el formulario está en modo solo lectura, todos los formularios se deshabilitan para evitar modificaciones.
+   * Si no está en modo solo lectura, todos los formularios se habilitan para permitir la edición.
+   *
+   * @returns {void}
+   */
+  guardarDatosFormulario(): void {
+    this.inizializarFormulario();
+    if (this.esFormularioSoloLectura) {
+      this.datosImportacionTemporalFormulario.disable();
+    } else {
+      this.datosImportacionTemporalFormulario.enable();
+    }
+  }
+
+    /**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.
+   * Además, obtiene la información del catálogo de mercancía.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+    this.inizializarFormulario();
+    }
+  }
+
+  
 
   /**
    * Inicializa el formulario reactivo vacío (campos dinámicos se agregan aparte).
