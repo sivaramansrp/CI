@@ -1,5 +1,7 @@
-import { withModuleFederation } from '@nx/angular/module-federation';
+/* eslint-disable @typescript-eslint/no-var-requires */
+/* eslint-disable @typescript-eslint/naming-convention */
 import config from './module-federation.config';
+import { withModuleFederation } from '@nx/angular/module-federation';
 
 export default withModuleFederation(config);
 // import { withModuleFederation } from '@nx/angular/module-federation';
