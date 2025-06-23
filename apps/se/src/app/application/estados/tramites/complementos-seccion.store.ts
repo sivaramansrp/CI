@@ -7,7 +7,7 @@ import { Injectable } from '@angular/core';
  * Es un objeto dinámico que puede contener cualquier clave y valor.
  */
 export interface ComplementosSeccionState {
-  [key: string]: any; // Claves dinámicas con valores de cualquier tipo
+  [key: string]: unknown; // Claves dinámicas con valores de cualquier tipo
 }
 
 /**
@@ -46,7 +46,7 @@ export class ComplementosSeccionStore extends Store<ComplementosSeccionState> {
    * @param {string} fieldName - El nombre del campo que se desea actualizar.
    * @param {any} value - El valor que se desea asignar al campo.
    */
-  public setDynamicFieldValue(fieldName: string, value: any): void {
+  public setDynamicFieldValue(fieldName: string, value: unknown): void {
     this.update((state) => ({
       ...state, // Mantiene el estado actual
       [fieldName]: value, // Actualiza el campo especificado con el nuevo valor

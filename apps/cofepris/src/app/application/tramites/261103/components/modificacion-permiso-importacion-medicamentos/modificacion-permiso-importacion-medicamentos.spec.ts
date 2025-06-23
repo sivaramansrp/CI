@@ -101,4 +101,34 @@ describe('ModificacionPermisoImportacionMedicamentosComponent', () => {
     expect(DESTROY_SPY).toHaveBeenCalledWith();
     expect(COMPLETE_SPY).toHaveBeenCalled();
   });
+
+  it('should call obtenerDatosFormulario and crearFormulario', () => {
+    const OBTENER_DATOS_FORMULARIO_SPY = jest.spyOn(component, 'obtenerDatosFormulario');
+    const CREAR_FORMULARIO_SPY = jest.spyOn(component, 'crearFormulario');
+
+    component.guardarDatosFormulario();
+
+    expect(OBTENER_DATOS_FORMULARIO_SPY).toHaveBeenCalled();
+    expect(CREAR_FORMULARIO_SPY).toHaveBeenCalled();
+  });
+
+  it('should disable the form if esFormularioSoloLectura is true', () => {
+    component.esFormularioSoloLectura = true;
+
+    const DISABLE_SPY = jest.spyOn(component.preOperativeForm, 'disable');
+
+    component.guardarDatosFormulario();
+
+    expect(DISABLE_SPY).toHaveBeenCalled();
+  });
+
+  it('should enable the form if esFormularioSoloLectura is false', () => {
+    component.esFormularioSoloLectura = false;
+
+    const ENABLE_SPY = jest.spyOn(component.preOperativeForm, 'enable');
+
+    component.guardarDatosFormulario();
+
+    expect(ENABLE_SPY).toHaveBeenCalled();
+  });
 });

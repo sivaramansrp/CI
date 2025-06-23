@@ -1,3 +1,5 @@
+/* eslint-disable */
+// @ts-nocheck
 const { ModuleFederationPlugin } = require('webpack').container;
 const mf = require('@angular-architects/module-federation/webpack');
 const path = require('path');

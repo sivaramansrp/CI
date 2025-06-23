@@ -144,13 +144,13 @@
                             <div class="col-md-6">
                                 <app-catalogo-select [catalogo]="claveScian" formControlName="cveSCIAN"
                                     [label]="'Clave S.C.I.A.N.'" [required]="true" name="cveSCIAN"
-                                    (change)="claveScianSeleccion()"></app-catalogo-select>
+                                    (change)="claveScianSeleccion()" [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-md-6">
                                 <app-catalogo-select [catalogo]="descripcionScian" formControlName="cveSCIANDescripcion" class="seleccion-solo-lectura"
-                                    [label]="'Descripción del S.C.I.A.N.'" name="cveSCIANDescripcion"></app-catalogo-select>
+                                    [label]="'Descripción del S.C.I.A.N.'" name="cveSCIANDescripcion" [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
                             </div>
                         </div>
                     </form>
@@ -191,11 +191,11 @@
         <div class="col-md-4">
             <app-catalogo-select [catalogo]="regimenes" formControlName="cveRegimenes"
                 [label]="'Régimen al que se destinará'" [required]="true" name="cveRegimenes"
-                (change)="regimenesSeleccion()"></app-catalogo-select>
+                (change)="regimenesSeleccion()" [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
         </div>
         <div class="col-md-8">
             <app-catalogo-select [catalogo]="aduanas" formControlName="cveAduanas" [label]="'Aduana'" [required]="true"
-                name="cveAduanas" (change)="aduanaSeleccion()"></app-catalogo-select>
+                name="cveAduanas" (change)="aduanaSeleccion()" [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
         </div>
     </div>
 

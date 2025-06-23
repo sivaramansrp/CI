@@ -74,7 +74,7 @@ It will show tasks that you can run with Nx.
 - Create new application - npx nx g @nx/angular:remote apps/aga
 - Angular 18.0.3
 - Node version 22.0.0 / 23.4.0
-- Lint : npx nx lint aga
+- Lint : npx nx run aga:lint
 - Test : npx nx test aga
 - Unittest coverage: npx nx test aga --coverage
 - Compodoc : npm run compodoc
@@ -109,8 +109,32 @@ It will show tasks that you can run with Nx.
 - If application / procedure specific
 - npx nx test se --testPathPattern=apps/se/src/app/application/tramites/120301
 
+# Unit Testing - statements 80% coverage
+- npx nx test inah --coverage
+
+For procedure specific configuration:
+- Goto jest.config.ts file
+- collectCoverageFrom - specify the path for which 80% coverage to be validated.
+    For Department specific - "apps/inah/src/app/application/**/*.ts"
+    For procedure specific - "apps/inah/src/app/application/tramite/280101/**/*.ts"
+
+- testMatch - specify the pattern for which files the coverage to be carried out.
+- coverageThreshold - specify the coverage path for which 80% coverage is required.
+    If the coverage is against statements(Branches/Functions/Lines can also be added),
+    add statements to be 80.
+    For Department specific - "apps/inah/src/app/application/**/*.ts"
+    For procedure specific - "apps/inah/src/app/application/tramite/280101/**/*.ts"
+
+- coverageReporters: 
+    text-summary - to get the coverage report as a summary in the console.
+    html - to get the coverage report as index.html file.
+
+- coveragePathIgnorePatterns - specify the pattern where no unit testing coverage is required.
+    - This paramater excludes all the other ts file extensions other than spec.ts,service.ts and component.ts files where no unit testing coverage is required.
+    - In future if any new files is added with .ts file extension where no spec.ts is required, it is to be included in the coveragePathIgnorePatterns parameter available in jest configuration.
+
 # Lint
-- npx nx run lint:aga
+- npx nx run aga:lint
 - If application / procedure specific
 - npx nx lint aga --lint-file-patterns="apps/aga/src/app/application/tramites/120301/**/*"
 

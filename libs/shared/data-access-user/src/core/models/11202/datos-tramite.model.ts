@@ -74,16 +74,16 @@ export interface DatosDelContenedor {
  * @property {string} idConstancia - Identificador de la constancia.
  */
 export interface GridContenedores {
-  id: number;
+  id?: number;
   inicialesContenedor: string;
   numeroContenedor: number;
-  digitoVerificador: string;
+  digitoVerificador?: string;
   digito: number;
   tipoContenedor: string;
-  estadoConstancia: string;
+  estadoConstancia?: string;
   aduana: number;
-  existeEnVUCEM: string;
-  idConstancia: string;
+  existeEnVUCEM?: string;
+  idConstancia?: string;
 }
 
 /**

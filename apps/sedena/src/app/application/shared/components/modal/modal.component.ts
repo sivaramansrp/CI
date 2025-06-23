@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import {
   Component,
   ComponentRef,
@@ -8,6 +7,7 @@ import {
   ViewContainerRef,
 } from '@angular/core';
 import { ModalDirective, ModalModule } from 'ngx-bootstrap/modal';
+import { CommonModule } from '@angular/common';
 /**
  * Componente reutilizable para mostrar modales y cargar componentes dinámicos dentro del modal.
  * @component ModalComponent
@@ -47,7 +47,7 @@ export class ModalComponent implements OnDestroy {
    * @property {ComponentRef<any>} componentRef
    * @private
    */
-  private componentRef?: ComponentRef<any>;
+  private componentRef?: ComponentRef<unknown>;
 
   /**
    * Carga un componente dinámico dentro del contenedor, sin mostrar el modal.
@@ -56,7 +56,7 @@ export class ModalComponent implements OnDestroy {
    * @param {any} [data] - Propiedades a asignar al componente.
    * @returns {void}
    */
-  loadComponent(component: Type<any>, data?: any): void {
+  loadComponent(component: Type<unknown>, data?: unknown): void {
     this.container.clear();
     this.componentRef = this.container.createComponent(component);
 
@@ -73,16 +73,17 @@ export class ModalComponent implements OnDestroy {
    * @param {Record<string, any>} [inputs] - Propiedades de entrada para el componente.
    * @returns {void}
    */
-  abrir(component: Type<any>, inputs?: Record<string, any>): void {
+  abrir(component: Type<unknown>, inputs?: Record<string, unknown>): void {
     this.container.clear();
     this.componentRef = this.container.createComponent(component);
 
     if (inputs) {
-      Object.assign(this.componentRef.instance, inputs);
+      Object.assign(this.componentRef.instance as object, inputs);
     }
 
-    if ((this.componentRef.instance as any).cerrar?.subscribe) {
-      (this.componentRef.instance as any).cerrar.subscribe(() => this.cerrar());
+    const INSTANCE = this.componentRef.instance as { cerrar?: { subscribe: (fn: () => void) => void } };
+    if (INSTANCE && INSTANCE.cerrar && typeof INSTANCE.cerrar.subscribe === 'function') {
+      INSTANCE.cerrar.subscribe(() => this.cerrar());
     }
 
     this.modal?.show();

@@ -49,7 +49,7 @@ export class CapturarService {
    * Recupera el título para el proceso de "capturar".
    * @returns Observable<string>
    */
-  obtenerMetaInfo(catalogo: string): Observable<CaatNaviroMetaInfo> {
+  obtenerMetaInfo(): Observable<CaatNaviroMetaInfo> {
     return this.http.get<CaatNaviroMetaInfo>(`${this.baseUrl}/metaData.json`);
   }
 
@@ -63,10 +63,9 @@ export class CapturarService {
 
   /**
    * Recupera el catálogo de agentes.
-   * @param AGENT_CATALOG - Identificador del catálogo de agentes.
    * @returns Observable<Catalogo[]>
    */
-  getCatalogo(AGENT_CATALOG: string): Observable<Catalogo[]> {
+  getCatalogo(): Observable<Catalogo[]> {
     return this.http.get<Catalogo[]>(`${this.baseUrl}/tipoAgentoData.json`);
   }
 
