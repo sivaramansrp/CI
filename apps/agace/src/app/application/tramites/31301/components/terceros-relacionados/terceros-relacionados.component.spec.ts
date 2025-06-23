@@ -4,7 +4,10 @@ import { of } from 'rxjs';
 import { TercerosRelacionadosComponent } from './terceros-relacionados.component';
 import { SolicitudService } from '../../services/solicitud.service';
 import { RecibirNotificaciones } from '../../models/solicitud.model';
-import { TablaDinamicaComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import {
+  TablaDinamicaComponent,
+  TituloComponent,
+} from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 
 describe('TercerosRelacionadosComponent', () => {
@@ -13,11 +16,11 @@ describe('TercerosRelacionadosComponent', () => {
 
   const mockRecibirNotificaciones: RecibirNotificaciones[] = [
     {
-      rfc: 'RFC123',
-      curp: 'CURP123',
-      nombre: 'John',
-      apellidoPaterno: 'Doe',
-      apellidoMaterno: 'Smith',
+      rfc: 'GODE561231GR8',
+      curp: 'GODE561231HDFRRN04',
+      nombre: 'Juan',
+      apellidoPaterno: 'Gómez',
+      apellidoMaterno: 'Delgado',
     },
   ];
 
@@ -28,7 +31,7 @@ describe('TercerosRelacionadosComponent', () => {
         CommonModule,
         TituloComponent,
         TablaDinamicaComponent,
-        TercerosRelacionadosComponent
+        TercerosRelacionadosComponent,
       ],
       providers: [SolicitudService],
     });
@@ -48,7 +51,15 @@ describe('TercerosRelacionadosComponent', () => {
   it('should initialize with default values', () => {
     expect(component.tipoSeleccionTabla).toBe('undefined');
     expect(component.configuracionColumnas.length).toBe(5);
-    expect(component.orecibirNotificacionesLista).toEqual([]);
+    expect(component.orecibirNotificacionesLista).toEqual([
+      {
+        rfc: 'GODE561231GR8',
+        curp: 'GODE561231HDFRRN04',
+        nombre: 'Juan',
+        apellidoPaterno: 'Gómez',
+        apellidoMaterno: 'Delgado',
+      },
+    ]);
   });
 
   it('should fetch recibirNotificaciones on initialization', () => {
