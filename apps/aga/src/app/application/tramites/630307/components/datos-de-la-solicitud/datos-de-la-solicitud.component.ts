@@ -236,6 +236,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * Ciclo de vida: Libera recursos al destruir el componente.
    */
   ngOnDestroy(): void {
+    this.subscription.unsubscribe();
     this.destroyed$.next();
     this.destroyed$.complete();
   }

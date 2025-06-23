@@ -267,6 +267,7 @@ export class TipoPropietarioComponent implements OnInit, OnDestroy {
    * Libera las suscripciones activas para evitar fugas de memoria.
    */
   ngOnDestroy(): void {
+    this.subscription.unsubscribe();
     this.destroyed$.next();
     this.destroyed$.complete();
   }
