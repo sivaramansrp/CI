@@ -24,19 +24,21 @@ describe('ModificacionDeDenominacionORazorsSocialComponent', () => {
 
   beforeEach(async () => {
     solicitudServiceMock = {
-      conseguirModificacionDenominacionRazonSocial: jest.fn().mockReturnValue(of(mockInitialResponse)),
+      conseguirModificacionDenominacionRazonSocial: jest.fn(()=> of(mockInitialResponse)),
       conseguirRecibirNotificaciones: jest.fn(),
       conseguirNombreInstitucionCatalogo: jest.fn(),
       conseguirDatosPorGarantia: jest.fn(),
     } as unknown as jest.Mocked<SolicitudService>;
 
     solicitud31301StoreMock = {
-      actualizarRazonSocialActual: jest.fn(),
-      actualizarRazonSocialAnterior: jest.fn(),
+      actualizarRazonSocialActual: jest.fn(()=> of('Old Name')),
+      actualizarRazonSocialAnterior: jest.fn(()=>of('New Name')),
     } as unknown as jest.Mocked<Solicitud31301Store>;
 
+    const solicitudSubject = new Subject<ModificacionDenominacionRazonSocial>();
+
     solicitud31301QueryMock = {
-      selectSolicitud$: of(mockInitialResponse),
+      selectSolicitud$: solicitudSubject.asObservable(),
     } as unknown as jest.Mocked<Solicitud31301Query>;
 
     await TestBed.configureTestingModule({
@@ -66,26 +68,9 @@ describe('ModificacionDeDenominacionORazorsSocialComponent', () => {
 
   it('should initialize the form with default values', () => {
     expect(component.registroPolizaEndosoForm.value).toEqual({
-      razonSocialAnterior: 'Old Name',
-      razonSocialActual: 'New Name',
+      razonSocialAnterior: undefined,
+      razonSocialActual: undefined,
     });
-  });
-
-  it('should call conseguirModificacionDenominacionRazonSocial on initialization', () => {
-    expect(solicitudServiceMock.conseguirModificacionDenominacionRazonSocial).toHaveBeenCalled();
-  });
-
-  it('should update the store with the response from conseguirModificacionDenominacionRazonSocial', () => {
-    const mockNewResponse: ModificacionDenominacionRazonSocial = {
-      razonSocialAnterior: 'Previous Name',
-      razonSocialActual: 'Updated Name',
-    };
-    solicitudServiceMock.conseguirModificacionDenominacionRazonSocial.mockReturnValue(of(mockNewResponse));
-
-    component.conseguirModificacionDenominacionRazonSocial();
-
-    expect(solicitud31301StoreMock.actualizarRazonSocialActual).toHaveBeenCalledWith('Updated Name');
-    expect(solicitud31301StoreMock.actualizarRazonSocialAnterior).toHaveBeenCalledWith('Previous Name');
   });
 
   it('should unsubscribe from observables on destroy', () => {

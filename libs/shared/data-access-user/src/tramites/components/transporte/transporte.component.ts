@@ -10,6 +10,7 @@ import {
   MODIFICAR_ITEM_TRANSPORTE,
   MSG_AGREGA_TRANSPORTE_EXITOSAMENTE,
   MSG_CAMBIO_TIPO_TRANSPORTE,
+  MSG_ELIMNA_TRANSPORTE_EXITOSAMENTE,
   MSG_INGRESA_UNA_GUIA,
   MSG_NUMERO_BL_INVALIDO,
   MSG_NUMERO_BL_VACIO,
@@ -42,6 +43,7 @@ import {
   TransporteDespacho,
 } from '../../../core/models/shared/agregar-transporte.model';
 import {
+  MSG_ELIMINA_ELEMENTO,
   MSG_MODIFICA_ELEMENTO,
   TITULO_MODAL_AVISO,
 } from '../../../core/enums/mensajes-modal-comunes.enum';
@@ -327,7 +329,7 @@ export class TransporteComponent implements OnInit, OnChanges {
       this.procesoModal = 'cambioTipoTransporte';
       return;
     }
-
+    this.tipoTransporte = this.tipoTransporteForma.get('tipoTransporte')?.value;
     this.creaTablaTransporte();
   }
 
@@ -647,7 +649,24 @@ export class TransporteComponent implements OnInit, OnChanges {
           (seleccionado) => seleccionado === transporte
         )
     );
+    const DESCRIPCION_TIPO_TRANSPORTE =
+      this.LISTA_TIPO_TRANSPORTE.find(
+        (item) => item.id === parseInt(this.tipoTransporte, 10)
+      )?.nombre ?? '';
 
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: '',
+      modo: 'action',
+      titulo: 'Aviso',
+      mensaje: MSG_ELIMNA_TRANSPORTE_EXITOSAMENTE.replace(
+        '{tipoTransporte}',
+        DESCRIPCION_TIPO_TRANSPORTE.toLowerCase()
+      ),
+      cerrar: false,
+      txtBtnAceptar: 'Cerrar',
+      txtBtnCancelar: '',
+    };
     this.datosTabla.emit(this.bodyTabla);
   }
 
@@ -697,7 +716,7 @@ export class TransporteComponent implements OnInit, OnChanges {
       guia_house_aereo: '',
       fecha_arribo_aereo: '',
       hora_arribo_aereo: '',
-      guia_valida: true,
+      guia_valida: false,
     });
 
     // Marítimo
@@ -809,15 +828,22 @@ export class TransporteComponent implements OnInit, OnChanges {
       case LISTA_TIPO_TRANSPORTE[2].id: {
         // Aéreo
         const TRANSPORTE: TransporteDespacho = this.aereoForma.getRawValue();
-        TRANSPORTE.arribo_pendiente_aereo = TRANSPORTE.arribo_pendiente_aereo
-          ? 'Sí'
-          : 'No';
-        TRANSPORTE.guia_valida = TRANSPORTE.guia_valida ? 'Sí' : 'No';
+        TRANSPORTE.arribo_pendiente_aereo_des =
+          TRANSPORTE.arribo_pendiente_aereo ? 'Sí' : 'No';
+        TRANSPORTE.guia_valida_des = TRANSPORTE.guia_valida ? 'Sí' : 'No';
         TRANSPORTE.observaciones = this.observaciones.value;
         TRANSPORTE.seleccionado = false;
 
         this.bodyTabla.push(TRANSPORTE);
-        this.aereoForma.reset();
+
+        this.aereoForma.reset({
+          arribo_pendiente_aereo: false,
+          guia_master_aereo: '',
+          guia_house_aereo: '',
+          fecha_arribo_aereo: '',
+          hora_arribo_aereo: '',
+          guia_valida: false,
+        });
         break;
       }
 
@@ -994,6 +1020,7 @@ export class TransporteComponent implements OnInit, OnChanges {
           } else {
             this.aereoForma.get('guia_master_aereo')?.setValue('');
             this.aereoForma.get('guia_house_aereo')?.setValue('');
+            this.aereoForma.get('guia_valida')?.setValue(false);
           }
         }),
         takeUntil(this.destroyNotifier$)
@@ -1151,17 +1178,28 @@ export class TransporteComponent implements OnInit, OnChanges {
           numero_equipo: this.ferroviarioForma.get('numero_equipo')?.value,
         });
         break;
-      case LISTA_TIPO_TRANSPORTE[2].id: // Aéreo
+      case LISTA_TIPO_TRANSPORTE[2].id: {
+        // Aéreo
+
         Object.assign(TRANSPORTE, {
           arribo_pendiente_aereo: this.aereoForma.get('arribo_pendiente_aereo')
             ?.value,
+          arribo_pendiente_aereo_des: this.aereoForma.get(
+            'arribo_pendiente_aereo'
+          )?.value
+            ? 'Sí'
+            : 'No',
           guia_master_aereo: this.aereoForma.get('guia_master_aereo')?.value,
           guia_house_aereo: this.aereoForma.get('guia_house_aereo')?.value,
           fecha_arribo_aereo: this.aereoForma.get('fecha_arribo_aereo')?.value,
           hora_arribo_aereo: this.aereoForma.get('hora_arribo_aereo')?.value,
           guia_valida: this.aereoForma.get('guia_valida')?.value,
+          guia_valida_des: this.aereoForma.get('guia_valida')?.value
+            ? 'Sí'
+            : 'No',
         });
         break;
+      }
       case LISTA_TIPO_TRANSPORTE[3].id: // Marítimo
         Object.assign(TRANSPORTE, {
           guia_bl_Maritimo: this.maritimoForma.get('guia_bl_Maritimo')?.value,

@@ -1,4 +1,4 @@
-import { AnexarDocumentosComponent, Catalogo, TEXTOS, TituloComponent,AlertComponent } from '@ng-mf/data-access-user';
+import { AlertComponent, AnexarDocumentosComponent, Catalogo, TEXTOS, TituloComponent } from '@ng-mf/data-access-user';
 import { Component, OnDestroy } from '@angular/core';
 import { Subject, catchError, map, takeUntil } from 'rxjs';
 import { Router } from '@angular/router';

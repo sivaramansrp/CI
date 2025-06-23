@@ -34,7 +34,7 @@ export class TramiteAgriState extends Store<TramiteAgriStateModel> {
    *
    * @param idTramite
    */
-  public establecerTramite(idTramite: string, firma: string) {
+  public establecerTramite(idTramite: string, firma: string): void {
     this.update((state) => ({
       ...state,
       idTramite,
@@ -46,7 +46,7 @@ export class TramiteAgriState extends Store<TramiteAgriStateModel> {
    * Limpia el estado del trámite
    */
 
-  public limpiarTramite() {
+  public limpiarTramite(): void {
     this.reset();
   }
 }

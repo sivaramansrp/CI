@@ -23,10 +23,10 @@ import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/trami
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { InputRadioComponent } from "@libs/shared/data-access-user/src/tramites/components/input-radio/input-radio.component";
 import { Pantallas220401Service } from '../pantallas220401.service';
+import { Solicitud220401State } from '../../../../estados/tramites/agregar220401.store';
 import { TableComponent } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import radioOptionsData from '@libs/shared/theme/assets/json/220401/tipo-de-certifico.json';
-import { solicitud220401State } from '../../../../estados/tramites/agregar220401.store';
 import unidadRadioFields from '@libs/shared/theme/assets/json/220401/unidad.json';
 /**
  * Componente que gestiona los datos del certificado en la solicitud 220401.
@@ -70,7 +70,7 @@ export class DatosDelCertificadoComponent implements OnInit, OnDestroy {
   /**
    * Estado de la solicitud 220401.
    */
-  public solicitudState!: solicitud220401State;
+  public solicitudState!: Solicitud220401State;
   /**
    * Arreglo para almacenar el catálogo de estados.
    */
