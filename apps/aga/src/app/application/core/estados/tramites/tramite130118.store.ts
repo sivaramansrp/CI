@@ -70,70 +70,70 @@ export class Tramite130118Store extends Store<Solicitud130118State> {
     super(createInitialState());
   }
 
-  public setRegimenMercancia(regimenMercancia: string) {
+  public setRegimenMercancia(regimenMercancia: string): void {
     this.update((state) => ({
       ...state,
       regimenMercancia,
     }));
   }
 
-  public setClasifiRegimen(clasifiRegimen: string) {
+  public setClasifiRegimen(clasifiRegimen: string): void {
     this.update((state) => ({
       ...state,
       clasifiRegimen,
     }));
   }
 
-  public setFraccionArancelaria(fraccionArancelaria: string) {
+  public setFraccionArancelaria(fraccionArancelaria: string): void {
     this.update((state) => ({
       ...state,
       fraccionArancelaria,
     }));
   }
 
-  public setNico(nico: string) {
+  public setNico(nico: string): void {
     this.update((state) => ({
       ...state,
       nico,
     }));
   }
 
-  public setUnidadMedidaTarifaria(unidadMedidaTarifaria: string) {
+  public setUnidadMedidaTarifaria(unidadMedidaTarifaria: string): void {
     this.update((state) => ({
       ...state,
       unidadMedidaTarifaria,
     }));
   }
 
-  public setPaisOrigen(paisOrigen: string) {
+  public setPaisOrigen(paisOrigen: string): void {
     this.update((state) => ({
       ...state,
       paisOrigen,
     }));
   }
 
-  public setPaisDestino(paisDestino: string) {
+  public setPaisDestino(paisDestino: string): void {
     this.update((state) => ({
       ...state,
       paisDestino,
     }));
   }
 
-  public setMolino(molino: string) {
+  public setMolino(molino: string): void {
     this.update((state) => ({
       ...state,
       molino,
     }));
   }
 
-  public setEstado(estado: string) {
+  public setEstado(estado: string): void {
     this.update((state) => ({
       ...state,
       estado,
     }));
   }
 
-  public setRepresentacionFederal(representacionFederal: string) {
+  public setRepresentacionFederal(representacionFederal: string): void {
     this.update((state) => ({
       ...state,
       representacionFederal,

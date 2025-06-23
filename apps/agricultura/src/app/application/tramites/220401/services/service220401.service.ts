@@ -1,8 +1,8 @@
+import { Agregar220401Store, Solicitud220401State } from '../../../estados/tramites/agregar220401.store';
 import { ENVIRONMENT } from '../../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Agregar220401Store, solicitud220401State } from '../../../estados/tramites/agregar220401.store';
 
 @Injectable({
   providedIn: 'root',
@@ -18,7 +18,7 @@ export class Solocitud220401Service {
     // Lógica de inicialización si es necesario
   }
 
-  actualizarEstadoFormulario(DATOS: solicitud220401State): void {
+  actualizarEstadoFormulario(DATOS: Solicitud220401State): void {
     this.tramite301Store.setCertificada(DATOS.certificada);
     this.tramite301Store.setidentificationDelTransporte(DATOS.identificationDelTransporte);
     this.tramite301Store.setJustificacion(DATOS.Justificacion);
@@ -58,10 +58,13 @@ export class Solocitud220401Service {
     this.tramite301Store.setregimenMercancia(DATOS.regimenMercancia);
     this.tramite301Store.setpaisOrigen(DATOS.paisOrigen);
     this.tramite301Store.setexentoPago(DATOS.exentoPago);
+    this.tramite301Store.setTratamiento(DATOS.tratamiento);
+    this.tramite301Store.settipoDeTransporte(DATOS.tipoDeTransporte);
+    this.tramite301Store.setPresentacion(DATOS.presentacion);  
   }
 
-  getRegistroTomaMuestrasMercanciasData(): Observable<solicitud220401State> {
-    return this.http.get<solicitud220401State>('assets/json/220401/serviciosExtraordinarios.json');
+  getRegistroTomaMuestrasMercanciasData(): Observable<Solicitud220401State> {
+    return this.http.get<Solicitud220401State>('assets/json/220401/serviciosExtraordinarios.json');
   }
 
 }

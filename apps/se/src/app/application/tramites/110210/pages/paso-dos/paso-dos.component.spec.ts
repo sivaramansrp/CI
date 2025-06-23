@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PasoDosComponent } from './paso-dos.component';
 import { TEXTOS } from '@ng-mf/data-access-user';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 describe('PasoDosComponent', () => {
   let component: PasoDosComponent;
@@ -9,6 +10,7 @@ describe('PasoDosComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [PasoDosComponent],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA],
     }).compileComponents();
   });
 
@@ -18,11 +20,11 @@ describe('PasoDosComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
+  it('debería crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize TEXTOS with the imported TEXTOS constant', () => {
+  it('debería inicializar TEXTOS con la constante TEXTOS importada', () => {
     expect(component.TEXTOS).toEqual(TEXTOS);
   });
 });
