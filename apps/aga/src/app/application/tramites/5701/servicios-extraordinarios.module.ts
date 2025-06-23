@@ -4,7 +4,9 @@ import {
   CatalogosService,
   InputRadioComponent,
   NotificacionesComponent,
+  SoloNumerosDirective,
   TablaDinamicaComponent,
+  TablePaginationComponent,
   TransporteComponent,
   UppercaseDirective,
 } from '@ng-mf/data-access-user';
@@ -83,6 +85,8 @@ import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.co
     forwardRef(() => CargaDocumentoComponent),
     forwardRef(() => TransporteComponent),
     forwardRef(() => TablaDinamicaComponent),
+    forwardRef(() => SoloNumerosDirective),
+    forwardRef(() => TablePaginationComponent),
     ToastrModule.forRoot(),
   ],
   exports: [PasoUnoComponent],

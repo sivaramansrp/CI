@@ -3,6 +3,7 @@ import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DatosProcedureQuery } from '../../../../estados/queries/tramites261103.query';
 import { DatosProcedureState } from '../../../../estados/tramites/tramites261103.store';
 import { FormControl } from '@angular/forms';
@@ -15,6 +16,7 @@ import { Subject } from 'rxjs';
 import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src'
 import { TablaSeleccion } from '@libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
+import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
 @Component({
   selector: 'app-mercancias',
@@ -59,14 +61,24 @@ export class MercanciasComponent implements OnInit, OnDestroy {
  */
   private seccionState!: DatosProcedureState;
 
+/**
+ * Subject para notificar la destrucción del componente.
+ */
+private destroyNotifier$: Subject<void> = new Subject();
 
+/**
+* Indica si el formulario está en modo solo lectura.
+* Cuando es `true`, los campos del formulario no se pueden editar.
+*/
+esFormularioSoloLectura: boolean = false;
   /**
    * Constructor para SolicitanteComponent.
    * 
    * @param fb - Una instancia de FormBuilder utilizada para crear y gestionar formularios.
    */
+  
   constructor( private modificacionPermisoImportacionMedicamentosService: ModificacionPermisoImportacionMedicamentosService,
-    private query: DatosProcedureQuery,
+    private query: DatosProcedureQuery,private consultaioQuery: ConsultaioQuery
   ) {
     // Constructor del componente
   }
@@ -77,9 +89,17 @@ export class MercanciasComponent implements OnInit, OnDestroy {
    * 
    */
   ngOnInit(): void {
+    this.crearFormulario();
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState: { readonly: boolean }) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+        })
+      )
+      .subscribe()
     this.mercanciasData();
     this.obtenerDatosFormulario();
-    this.crearFormulario();
   }
 
   /**
@@ -103,9 +123,22 @@ export class MercanciasComponent implements OnInit, OnDestroy {
  * en el contexto del componente.
  */
   crearFormulario(): void {
+    this.query.selectProrroga$
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState) => {
+        this.seccionState = seccionState;
+      })
+    )
+    .subscribe()
     this.Aduana = new FormGroup({
       Aduana: new FormControl(this.seccionState),
     });
+    if (this.esFormularioSoloLectura) {
+      this.Aduana.disable();
+    } else {
+      this.Aduana.enable();
+    }
   }
 
 
@@ -125,6 +158,33 @@ export class MercanciasComponent implements OnInit, OnDestroy {
       .subscribe((data: DatosProcedureState) => {
         this.seccionState = data;
       });
+  }
+  /**
+ * Inicializa el estado del formulario.
+ * 
+ * Este método realiza las siguientes acciones dependiendo del modo del formulario:
+ * 
+ * 1. Si el formulario está en modo solo lectura (`esFormularioSoloLectura`):
+ *    - Llama al método `crearFormulario` para inicializar el formulario reactivo.
+ * 
+ * 2. Si el formulario no está en modo solo lectura:
+ *    - Llama al método `mercanciasData` para cargar los datos de las mercancías.
+ *    - Llama al método `obtenerDatosFormulario` para obtener los datos del estado actual.
+ *    - Llama al método `crearFormulario` para inicializar el formulario reactivo.
+ * 
+ * Este método es útil para configurar el estado inicial del formulario y sincronizarlo
+ * con los datos del estado global de la aplicación.
+ * 
+ * @returns {void}
+ */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.crearFormulario();
+    } else {
+      this.mercanciasData();
+      this.obtenerDatosFormulario();
+      this.crearFormulario();
+    }
   }
 }
 

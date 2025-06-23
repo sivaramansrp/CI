@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 import { RespuestaCatalogos } from '@libs/shared/data-access-user/src';
 import { Tramite10301Store} from '../../10301/estados/tramite10301.store'
 import { tap } from 'rxjs/operators';
@@ -22,7 +23,7 @@ export class ImportadorExportadorService {
    * Obtiene el catálogo de aduanas por las que ingresará la mercancía.
    * @returns Observable con la respuesta del catálogo de aduanas.
    */
-  getAduanaIngresara() {
+  getAduanaIngresara(): Observable<RespuestaCatalogos> {
     return this.http.get<RespuestaCatalogos>(
       'assets/json/10301/aduanaIngresara.json'
     ).pipe(
@@ -34,7 +35,7 @@ export class ImportadorExportadorService {
    * Obtiene el catálogo de años.
    * @returns Observable con la respuesta del catálogo de años.
    */
-  getAno() {
+  getAno(): Observable<RespuestaCatalogos> {
     return this.http.get<RespuestaCatalogos>('assets/json/10301/ano.json').pipe(
       tap(response => this.store.setAno(response.data))
     );
@@ -44,7 +45,7 @@ export class ImportadorExportadorService {
    * Obtiene el catálogo de condiciones.
    * @returns Observable con la respuesta del catálogo de condiciones.
    */
-  getCondicion() {
+  getCondicion(): Observable<RespuestaCatalogos> {
     return this.http.get<RespuestaCatalogos>(
       'assets/json/10301/condicion.json'
     ).pipe(
@@ -56,7 +57,7 @@ export class ImportadorExportadorService {
    * Obtiene el catálogo de países.
    * @returns Observable con la respuesta del catálogo de países.
    */
-  getPais() {
+  getPais(): Observable<RespuestaCatalogos> {
     return this.http.get<RespuestaCatalogos>('assets/json/10301/pais.json').pipe(
       tap(response => this.store.setPais(response.data))
     );
@@ -66,7 +67,7 @@ export class ImportadorExportadorService {
    * Obtiene el catálogo de tipos de documentos.
    * @returns Observable con la respuesta del catálogo de tipos de documentos.
    */
-  getTipoDocumento() {
+  getTipoDocumento(): Observable<RespuestaCatalogos> {
     return this.http.get<RespuestaCatalogos>(
       'assets/json/10301/tipodocumento.json'
     ).pipe(
@@ -74,7 +75,7 @@ export class ImportadorExportadorService {
     );
   }
 
-  getFechasSeleccionadas(){
+  getFechasSeleccionadas(): Observable<RespuestaCatalogos>{
     return this.http.get<RespuestaCatalogos>(
       'assets/json/10301/fechasSeleccionadas.json'
     ).pipe(
@@ -82,7 +83,7 @@ export class ImportadorExportadorService {
     );
   }
 
-  getDocumentos() {
+  getDocumentos(): Observable<RespuestaCatalogos> {
     return this.http.get<RespuestaCatalogos>(
       'assets/json/10301/documentos.json'
     )
