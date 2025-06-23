@@ -508,37 +508,6 @@ tipoPersonaExportador: string = 'Física';
   }
 
   /**
-   * Muestra en consola la validez de cada grupo del formulario.
-   */
-  trigger(): void {
-    const groupNames = [
-      'datosRealizer',
-      'datosMercanica',
-      'datosExporta',
-      'datosProductor',
-      'datosExportador',
-      'datosFederal'
-    ];
-
-    groupNames.forEach(groupName => {
-      const group = this.formulario.get(groupName) as FormGroup;
-      const isValid = group?.valid;
-      console.log(`${groupName}:`, isValid);
-
-      if (!isValid && group) {
-        const invalidControls = Object.keys(group.controls)
-          .filter(key => group.get(key)?.invalid)
-          .map(key => ({
-            control: key,
-            errors: group.get(key)?.errors
-          }));
-        console.log(`Invalid controls in ${groupName}:`, invalidControls);
-      }
-    });
-    
-  }
-  
-  /**
    * Crea el formulario principal e inicializa los subgrupos.
    */
   crearFormulario(): void {
