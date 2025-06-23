@@ -120,7 +120,7 @@ export class BusquedaFolioComponent implements OnInit, OnDestroy {
    * 
    * @param event Evento que desencadena la acción
    */
-  public agregarSelect(event: Event): void {
+  public agregarSelect(_event: Event): void {
     if (this.montoACancelarForm.invalid) {
       this.montoACancelarForm.markAllAsTouched();
       return;
@@ -134,7 +134,7 @@ export class BusquedaFolioComponent implements OnInit, OnDestroy {
    * 
    * @param event Evento que desencadena la acción
    */
-  public agregar(event: Event): void {
+  public agregar(_event: Event): void {
     this.servicioDeMensajesService.enviarMensaje(false);
     this.servicioDeMensajesService.establecerDatosDePermiso(true);
   }
@@ -146,7 +146,7 @@ export class BusquedaFolioComponent implements OnInit, OnDestroy {
    * 
    * @param event Evento que desencadena la cancelación
    */
-  public cancelar(event: Event): void {
+  public cancelar(_event: Event): void {
     this.servicioDeMensajesService.enviarMensaje(false);
   }
 

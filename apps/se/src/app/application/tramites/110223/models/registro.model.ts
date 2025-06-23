@@ -347,10 +347,10 @@ export interface ConsultaDatos {
 /**
  * Columnas para la tabla del historial de certificados.
  * 
- * @constant historicoTableColumns
+ * @constant HISTORICOTABLECOLUMNS
  * @type {ConfiguracionColumna<HistoricoColumnas>[]}
  */
-export const historicoTableColumns: ConfiguracionColumna<HistoricoColumnas>[] = [
+export const HISTORICOTABLECOLUMNS: ConfiguracionColumna<HistoricoColumnas>[] = [
   { encabezado: 'Nombre del productor', clave: (elementos) => elementos.nombreProductor, orden: 1 },
   { encabezado: 'Número de registro fiscal', clave: (elementos) => elementos.numeroRegistroFiscal, orden: 2 },
   { encabezado: 'Dirección', clave: (elementos) => elementos.direccion, orden: 3 },
@@ -362,10 +362,10 @@ export const historicoTableColumns: ConfiguracionColumna<HistoricoColumnas>[] = 
 /**
  * Columnas para la tabla de elementos seleccionados.
  * 
- * @constant headersDataSeleccionadasTabla
+ * @constant HEADERSDATASELECCIONADASTABLA
  * @type {ConfiguracionColumna<SeleccionadasTabla>[]}
  */
-export const headersDataSeleccionadasTabla: ConfiguracionColumna<SeleccionadasTabla>[] = [
+export const HEADERSDATASELECCIONADASTABLA: ConfiguracionColumna<SeleccionadasTabla>[] = [
   { encabezado: 'Fracción arancelaria', clave: (ele: SeleccionadasTabla) => ele.fraccionArancelaria, orden: 1 },
   { encabezado: 'Cantidad', clave: (ele: SeleccionadasTabla) => ele.cantidad, orden: 2 },
   { encabezado: 'Unidad de medida', clave: (ele: SeleccionadasTabla) => ele.unidadMedida, orden: 3 },
