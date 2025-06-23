@@ -1,7 +1,7 @@
+import { DatosModificacion, DatosSolicitante } from '../../tramites/80302/estados/models/datos-tramite.model';
 import { Injectable } from '@angular/core';
 import { Store, } from '@datorama/akita';
 import { StoreConfig } from '@datorama/akita';
-import { DatosModificacion, DatosSolicitante } from '../../tramites/80302/estados/models/datos-tramite.model';
 
 /**
  * Creacion del estado inicial para la interfaz de tramite 80302

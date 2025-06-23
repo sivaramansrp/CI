@@ -1,8 +1,10 @@
 import {
   Catalogo,
   ConfiguracionColumna,
+  SolicitanteComponent,
 } from '@libs/shared/data-access-user/src';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit,ViewChild } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState} from '@ng-mf/data-access-user';
 import {
   FormBuilder,
   FormControl,
@@ -16,6 +18,7 @@ import { DatosProcedureStore } from '../../../../estados/tramites/tramites261103
 import { ModificacionPermisoImportacionMedicamentosService } from '../../services/modificacion-permiso-importacion-medicamentos.service';
 import { Subject } from 'rxjs';
 import { TramiteAsociados } from '../../../../shared/models/tramite-asociados.model';
+import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
 
 
@@ -64,7 +67,25 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    * Esto ayuda a evitar fugas de memoria.
    */
   private notificadorDestruccion$: Subject<void> = new Subject();
-
+        /** 
+   * Estado de consulta que almacena la información del estado actual del proceso.
+   * Este estado se actualiza a través de un observable y se utiliza para determinar
+   * el flujo de la lógica del componente.
+   */
+        public consultaState!:ConsultaioState;
+        /**
+     * Referencia al componente SolicitanteComponent para acceder a sus métodos y propiedades.
+     */
+    @ViewChild(SolicitanteComponent) solicitante!: SolicitanteComponent;
+  
+    /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
+    public esDatosRespuesta: boolean = false;
+      /**
+  * Indica si el formulario está en modo solo lectura.
+  * Cuando es `true`, los campos del formulario no se pueden editar.
+  */
+      esFormularioSoloLectura: boolean = false; 
+      /**
   /**
    * Constructor del componente.
    * Inicializa los servicios y dependencias necesarias.
@@ -73,9 +94,18 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
     private formBuilder: FormBuilder,
     private modificacionPermisoImportacionMedicamentosService: ModificacionPermisoImportacionMedicamentosService,
     private store: DatosProcedureStore,
-    private query: DatosProcedureQuery
+    private query: DatosProcedureQuery,
+    private consultaQuery: ConsultaioQuery,
   ) {
     //no hacer nada
+    this.consultaQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.notificadorDestruccion$),
+      map((seccionState: { readonly: boolean })=>{
+        this.esFormularioSoloLectura = seccionState.readonly; 
+      })
+    )
+    .subscribe();
   }
 
   /**
@@ -97,6 +127,19 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
       });
 
     this.modificacionPermisoImportacionMedicamentosService.inicializaPagoDeDerechosDatosCatalogos();
+    this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.notificadorDestruccion$),
+        map((seccionState) => {
+          this.consultaState = seccionState;
+        })
+      )
+      .subscribe();
+    if (this.consultaState.update) {
+      this.guardarDatosFormulario();
+    } else {
+      this.esDatosRespuesta = true;
+    }
   }
 
   /**
@@ -164,4 +207,21 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
     this.notificadorDestruccion$.next();
     this.notificadorDestruccion$.complete();
   }
+
+      /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+      guardarDatosFormulario(): void {
+        this.modificacionPermisoImportacionMedicamentosService
+          .getRegistroPasoUnoData().pipe(
+            takeUntil(this.notificadorDestruccion$)
+          )
+          .subscribe((resp) => {                
+            if(resp){
+            this.esDatosRespuesta = true;
+            this.modificacionPermisoImportacionMedicamentosService.actualizarEstadoFormulario(resp);
+            } 
+         });
+        }
 }

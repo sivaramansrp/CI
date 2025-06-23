@@ -27,7 +27,7 @@ export class DesistimientoStore extends Store<CuposDisponiblesDatos> {
      */
     
     public actualizarDatosForma(datos: CuposDisponibles[]): void {
-        this.update(state => ({
+        this.update(_state => ({
             datos
         }));
     }
