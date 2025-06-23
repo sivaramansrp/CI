@@ -322,12 +322,8 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
     };
   }
 
-  /**
-   * Ciclo de vida de Angular que se ejecuta después de que la vista ha sido inicializada.
-   * @method ngAfterViewInit
-   */
-  ngAfterViewInit(): void {
-    this.datosDelaSolicitud.valueChanges.pipe(takeUntil(this.destroyNotifier$)).subscribe(() => {
+   ngAfterViewInit(): void {
+       this.datosDelaSolicitud.valueChanges.pipe(takeUntil(this.destroyNotifier$)).subscribe(() => {
       const FORMA_VALIDA_ACTUALIZADA = {
         dataDeLaSolicitud: false,
       };
@@ -363,7 +359,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
    * Inicializa el grupo de formularios anidado para los datos de la solicitud.
    * @method initActionFormBuild
    */
-  initActionFormBuild(): void {
+  initActionFormBuild(): void { 
     this.datosDelaSolicitud = this.fb.group({
       tipoMercancia: ['yes', Validators.required],
       aduanaIngreso: ['', Validators.required],

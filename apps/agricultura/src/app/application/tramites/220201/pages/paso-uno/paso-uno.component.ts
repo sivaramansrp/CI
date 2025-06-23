@@ -1,14 +1,9 @@
-
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
-
 import { ConsultaioQuery, SeccionLibStore, SolicitanteComponent } from '@ng-mf/data-access-user';
-
 import { Subject, takeUntil } from 'rxjs';
-import { CommonModule } from '@angular/common';
-
-import { CertificadoZoosanitarioServiceService } from '../../services/220201/certificado-zoosanitario.service';
-
 import { CapturarSolicitud } from '../../models/220201/capturar-solicitud.model';
+import { CertificadoZoosanitarioServiceService } from '../../services/220201/certificado-zoosanitario.service';
+import { CommonModule } from '@angular/common';
 import { DatosDeLaSolicitudComponent } from '../../components/datos-de-la-solicitud/datos-de-la-solicitud.component';
 import { DatosParaMovilizacionNacionalComponent } from '../../components/datos-para-movilizacion-nacional/datos-para-movilizacion-nacional.component';
 import { PagoDeDerechosComponent } from '../../components/pago-de-derechos/pago-de-derechos.component';
