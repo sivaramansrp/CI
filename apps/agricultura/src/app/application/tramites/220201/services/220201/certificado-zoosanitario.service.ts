@@ -3,7 +3,6 @@ import {
   DatosDeLaSolicitud,
   DatosParaMovilizacionNacional,
   PagoDeDerechos,
-  Solicitante,
   ValidarEnvio,
 } from '../../models/220201/capturar-solicitud.model';
 
@@ -41,16 +40,6 @@ export class CertificadoZoosanitarioServiceService {
     private readonly seccionStore: SeccionLibStore,
     private readonly http: HttpClient
   ) {}
-
-  /**
-   * Actualiza los datos del solicitante en el store.
-   * @method updateSolicitante
-   * @param {Solicitante} solicitante Datos del solicitante.
-   * @memberof CertificadoZoosanitarioServiceService
-   */
-  updateSolicitante(solicitante: Solicitante): void {
-    this.zoosanitarioStore.actualizarSolicitante(solicitante);
-  }
 
   /**
    * Actualiza los datos de la solicitud en el store.
