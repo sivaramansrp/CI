@@ -1,3 +1,4 @@
+import { Tramite250103State, Tramite250103Store } from '../estados/tramite250103.store';
 import { Catalogo } from '@libs/shared/data-access-user/src';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
@@ -18,7 +19,7 @@ export class TipoMovimientoService {
    * 
    * @param http Instancia de HttpClient para realizar las peticiones.
    */
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private tramite250103Store:Tramite250103Store) {
     //
   }
 
@@ -29,7 +30,7 @@ export class TipoMovimientoService {
    * @returns {Observable<Catalogo[]>} Observable con la lista de aduanas.
    */
   obtenerAduanaData(): Observable<Catalogo[]> {
-    return this.http.get<Catalogo[]>('assets/json/250102/aduana.json');
+    return this.http.get<Catalogo[]>('assets/json/250103/aduana.json');
   }
 
   /**
@@ -39,7 +40,7 @@ export class TipoMovimientoService {
    * @returns {Observable<Catalogo[]>} Observable con la lista de inspectorías.
    */
   obtenerInspectoriaData(): Observable<Catalogo[]> {
-    return this.http.get<Catalogo[]>('assets/json/250102/inspectoria-profepa.json');
+    return this.http.get<Catalogo[]>('assets/json/250103/inspectoria-profepa.json');
   }
 
   /**
@@ -49,6 +50,22 @@ export class TipoMovimientoService {
    * @returns {Observable<Catalogo[]>} Observable con la lista de alcaldías.
    */
   obtenerAlcaldíaData(): Observable<Catalogo[]> {
-    return this.http.get<Catalogo[]>('assets/json/250102/municipio-alcaldia.json');
+    return this.http.get<Catalogo[]>('assets/json/250103/municipio-alcaldia.json');
+  }
+
+  /**
+  * Actualiza el estado del formulario en el store.
+  * @param DATOS Estado actualizado del trámite.
+  */
+  actualizarEstadoFormulario(DATOS: Tramite250103State): void {
+    this.tramite250103Store.actualizarEstado(DATOS);
+  }
+
+  /**
+  * Obtiene los datos de la solicitud.
+  * @returns Observable con los datos de la solicitud.
+  */
+  getTipoMovimiento(): Observable<Tramite250103State> {
+      return this.http.get<Tramite250103State>('assets/json/250103/tipo-movimiento.json');
   }
 }

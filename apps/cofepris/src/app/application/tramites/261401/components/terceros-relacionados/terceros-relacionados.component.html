@@ -14,6 +14,7 @@
         [tipoSeleccionTabla]="tipoSeleccionTabla"
         [datos]="destinatarioDatos"
         (listaDeFilaSeleccionada)="onSelectedRowsChange($event)"
+        [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
       ></app-tabla-dinamica>
     </div>
     
@@ -26,7 +27,7 @@
               class="btn btn-default 3"
               type="button"
               (click)="onEliminar()"
-            
+
             >
               Eliminar
             </button>
@@ -43,7 +44,8 @@
           name="agregarMercancias"
           class="btn btn-primary ms-2"
           data-bs-toggle="modal"
-          data-bs-target="#modalAgregar">
+          data-bs-target="#modalAgregar"
+          [disabled]="esFormularioSoloLectura">
           Agregar
         </button>
       </div>

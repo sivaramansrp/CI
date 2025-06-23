@@ -18,11 +18,11 @@ export interface Solicitud130118State {
   /** Unidad de medida tarifaria utilizada. */
   unidadMedidaTarifaria: string;
   /** Cantidad tarifaria declarada. */
-  cantidadTarifaria: number;
+  cantidadTarifaria: number | null;
   /** Valor de la factura en dólares estadounidenses. */
-  valorFacturaUSD: number;
+  valorFacturaUSD: number | null;
   /** Precio unitario en dólares estadounidenses. */
-  precioUnitarioUSD: number;
+  precioUnitarioUSD: number | null;
   /** País de origen de la mercancía. */
   paisOrigen: string;
   /** País de destino de la mercancía. */
@@ -65,9 +65,9 @@ export function createInitialState(): Solicitud130118State {
     fraccionArancelaria: '',
     nico: '',
     unidadMedidaTarifaria: '',
-    cantidadTarifaria: 0,
-    valorFacturaUSD: 0,
-    precioUnitarioUSD: 0,
+    cantidadTarifaria: null,
+    valorFacturaUSD: null,
+    precioUnitarioUSD: null,
     paisOrigen: '',
     paisDestino: '',
     lote: '',
@@ -171,7 +171,7 @@ export class Tramite130118Store extends Store<Solicitud130118State> {
    * Actualiza la cantidad tarifaria.
    * @param cantidadTarifaria Nueva cantidad tarifaria.
    */
-  public setCantidadTarifaria(cantidadTarifaria: number): void {
+  public setCantidadTarifaria(cantidadTarifaria: number | null): void {
     this.update((state) => ({
       ...state,
       cantidadTarifaria,
@@ -182,7 +182,7 @@ export class Tramite130118Store extends Store<Solicitud130118State> {
    * Actualiza el valor de la factura en USD.
    * @param valorFacturaUSD Nuevo valor de la factura en USD.
    */
-  public setValorFacturaUSD(valorFacturaUSD: number): void {
+  public setValorFacturaUSD(valorFacturaUSD: number | null): void {
     this.update((state) => ({
       ...state,
       valorFacturaUSD,
@@ -193,7 +193,7 @@ export class Tramite130118Store extends Store<Solicitud130118State> {
    * Actualiza el precio unitario en USD.
    * @param precioUnitarioUSD Nuevo precio unitario en USD.
    */
-  public setPrecioUnitarioUSD(precioUnitarioUSD: number): void {
+  public setPrecioUnitarioUSD(precioUnitarioUSD: number | null): void {
     this.update((state) => ({
       ...state,
       precioUnitarioUSD,

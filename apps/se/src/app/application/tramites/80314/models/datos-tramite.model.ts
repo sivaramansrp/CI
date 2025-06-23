@@ -83,6 +83,11 @@ export interface DatosDeLaTabla {
   tipoDePrograma: string;
 }
 
+export interface RespuestTablaDatos {
+  code: number;
+  data: DatosDeLaTabla[];
+  message: string;
+}
 /**
  * Representa la respuesta de una consulta de datos.
  */

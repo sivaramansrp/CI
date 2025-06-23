@@ -1,6 +1,19 @@
-import { Store, EntityState, EntityStore, StoreConfig } from '@datorama/akita';
+import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
 import { ProgramaACancelar} from '../../shared/models/programa-cancelar.model';
+
+/**
+ * Interfaz que representa la estructura de un programa.
+ */
+export interface Programa {
+  folioPrograma: string;
+  idProgramaSeleccionado: string;
+  modalidad: string;
+  representacionFederal: string;
+  tipoPrograma: string;
+  estatus: string;
+}
+
 /**
  * Creación del estado inicial para la interfaz de trámite 140101
  * @returns Programa140101State
@@ -33,7 +46,7 @@ export interface Programa140101State {
   /**
    * Datos adicionales
    */
-  datos: any[];
+  datos: Programa[];
   
 }
 
@@ -80,7 +93,7 @@ export class Tramite140101Store extends Store<Programa140101State> {
    * Actualiza el estado de las observaciones de la solicitud.
    * @param estado Nuevo valor para solicitudObservaciones.
    */
-  public setSolicitudObservaciones(estado: string) {
+  public setSolicitudObservaciones(estado: string):void {
     this.update((state) => ({
       ...state, 
       solicitudObservaciones: estado,
@@ -91,7 +104,7 @@ export class Tramite140101Store extends Store<Programa140101State> {
    * Actualiza el estado de confirmación.
    * @param estado Nuevo valor para confirmar.
    */
-  public setConfirmar(estado: boolean) {
+  public setConfirmar(estado: boolean):void {
     this.update((state) => ({
       ...state,
       confirmar: estado,
@@ -102,7 +115,7 @@ export class Tramite140101Store extends Store<Programa140101State> {
    * Actualiza el estado del programa a cancelar.
    * @param estado Nuevo valor para programaACancelar.
    */
-  public setPrograma(estado: ProgramaACancelar) {
+  public setPrograma(estado: ProgramaACancelar):void {
     this.update((state) => ({
       ...state,
       programaACancelar: estado,
@@ -113,7 +126,7 @@ export class Tramite140101Store extends Store<Programa140101State> {
    * Actualiza la selección de radio.
    * @param estado Nuevo valor para radio.
    */
-  public setRadioSelection(estado: number) {
+  public setRadioSelection(estado: number):void {
     this.update((state) => ({
       ...state,
       radio: estado,
@@ -124,7 +137,7 @@ export class Tramite140101Store extends Store<Programa140101State> {
    * Actualiza los datos adicionales.
    * @param estado Nuevo array de datos.
    */
-  public setDatosData(estado: Array<any>) {
+  public setDatosData(estado: Programa[]):void {
     this.update((state) => ({
       ...state,
       datos: estado,
