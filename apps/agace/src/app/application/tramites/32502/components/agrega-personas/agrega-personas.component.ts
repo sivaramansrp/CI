@@ -1,8 +1,7 @@
-/* eslint-disable no-alert */
 import {FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
+import { Notificacion, NotificacionesComponent, ValidacionesFormularioService } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
 
 import { Solicitud32502State, Tramite32502Store } from '../../../../estados/tramites/tramite32502.store';
 import { Persona } from '../../../../core/models/32502/tramite32502.model';
@@ -13,7 +12,7 @@ import { Tramite32502Query } from '../../../../estados/queries/tramite32502.quer
 @Component({
   selector: 'agrega-personas',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule],
+  imports: [ReactiveFormsModule, CommonModule, NotificacionesComponent],
   templateUrl: './agrega-personas.component.html',
   styleUrl: './agrega-personas.component.scss',
 })
@@ -57,6 +56,8 @@ export class AgregaPersonasComponent {
    */
   private destroyNotifier$: Subject<void> = new Subject();
 
+  public notificacion?: Notificacion;
+
   constructor(
     private fb: FormBuilder,
     private validacionesService: ValidacionesFormularioService,
@@ -95,14 +96,32 @@ export class AgregaPersonasComponent {
     const GAFETE = this.gafete.value;
 
     if (!GAFETE) {
-      alert('No has proporcionado información que es requerida.');
+      this.notificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: 'Información requerida',
+        mensaje: 'No has proporcionado información que es requerida.',
+        cerrar: true,
+        tiempoDeEspera: 3000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
       return;
     }
 
     if (!this.persona) {
-      alert(
-        'No se encontraron datos con el número de gafete, intenta de nuevo o agrega los datos restantes.'
-      );
+      this.notificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'warning',
+        modo: 'action',
+        titulo: 'No encontrado',
+        mensaje: 'No se encontraron datos con el número de gafete, intenta de nuevo o agrega los datos restantes.',
+        cerrar: true,
+        tiempoDeEspera: 3000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
       this.habilitarCamposFormulario();
     }
   }
@@ -136,11 +155,21 @@ export class AgregaPersonasComponent {
    * Si ya hay 5 personas en la lista, muestra una alerta indicando que no se pueden agregar más personas.
    */
   agregarPersona(): void {
-    this.gafete.setValidators([Validators.required, Validators.maxLength(25)]);
+   this.gafete.setValidators([Validators.required, Validators.maxLength(25)]);
     this.gafete.updateValueAndValidity();
 
     if (this.gafete.invalid || this.personaForm.invalid) {
-      alert('Debes capturar todos los datos marcados como obligatorios.');
+      this.notificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: 'Campos obligatorios',
+        mensaje: 'Debes capturar todos los datos marcados como obligatorios.',
+        cerrar: true,
+        tiempoDeEspera: 3000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
       this.gafete.markAllAsTouched();
       this.personaForm.markAllAsTouched();
       this.habilitarCamposFormulario();
@@ -148,7 +177,17 @@ export class AgregaPersonasComponent {
     }
 
     if (this.personas.length >= 5) {
-      alert('Solo puede agregar hasta 5 personas');
+      this.notificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: 'Límite alcanzado',
+        mensaje: 'Solo puede agregar hasta 5 personas',
+        cerrar: true,
+        tiempoDeEspera: 3000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
       return;
     }
 
