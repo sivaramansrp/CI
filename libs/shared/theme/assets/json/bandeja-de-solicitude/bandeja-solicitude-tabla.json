@@ -2491,6 +2491,15 @@
     "departamento": "COFEPRIS",
     "numeroDeProcedimiento": "260302"
   },
+    {
+    "id": 260702,
+    "tipoDeTramite": "Solicitud de Permiso",
+    "fecha": "2023-10-01",
+    "fechaActualizacion": "2023-10-05",
+    "diasTranscurridos": "4",
+    "departamento": "COFEPRIS",
+    "numeroDeProcedimiento": "260702"
+  },
   {
     "id": 260102,
     "tipoDeTramite": "Solicitud de Permiso",
@@ -2753,5 +2762,68 @@
   "diasTranscurridos": "4",
   "departamento": "AGA",
   "numeroDeProcedimiento": "6403"
+  },
+  {   
+    "id": 140218,
+     "fecha": "2023-11-01",
+     "tipoDeTramite": "Solicitud",
+     "fechaActualizacion": "2023-12-05",
+     "diasTranscurridos": "4",
+     "departamento": "SENER",
+     "numeroDeProcedimiento": "140218"
+    },
+  {
+     "id": 260507,
+    "tipoDeTramite": "Solicitud Procedure 260507",
+    "fecha": "2024-11-01",
+    "fechaActualizacion": "2024-11-07",
+    "diasTranscurridos": "4",
+    "departamento": "COFEPRIS",
+    "numeroDeProcedimiento": "260507"
+  },
+  {
+    "id": 80314,
+    "tipoDeTramite": "Solicitud de Permiso",
+    "fecha": "2023-10-01",
+    "fechaActualizacion": "2023-10-05",
+    "diasTranscurridos": "4",
+    "departamento": "SE",
+    "numeroDeProcedimiento": "80314"
+  },
+  {
+    "id": 90304,
+    "tipoDeTramite": "Solicitud de Permiso",
+    "fecha": "2023-10-01",
+    "fechaActualizacion": "2023-10-05",
+    "diasTranscurridos": "4",
+    "departamento": "SE",
+    "numeroDeProcedimiento": "90304"
+  },
+  {
+    "id": 31301,
+    "tipoDeTramite": "Solicitud de cs Permiso",
+    "fecha": "2023-10-01",
+    "fechaActualizacion": "2023-10-05",
+    "diasTranscurridos": "4",
+    "departamento": "AGACE",
+    "numeroDeProcedimiento": "31301"
+  },
+  {
+    "id": 260910,
+    "tipoDeTramite": "Solicitud Procedure 260910",
+    "fecha": "2023-10-01",
+    "fechaActualizacion": "2023-10-05",
+    "diasTranscurridos": "4",
+    "departamento": "COFEPRIS",
+    "numeroDeProcedimiento": "260910"
+  },
+  {
+    "id": 324,
+    "tipoDeTramite": "Solicitud de Permiso",
+    "fecha": "2023-10-01",
+    "fechaActualizacion": "2023-10-05",
+    "diasTranscurridos": "4",
+    "departamento": "AGA",
+    "numeroDeProcedimiento": "324"
   }
 ]

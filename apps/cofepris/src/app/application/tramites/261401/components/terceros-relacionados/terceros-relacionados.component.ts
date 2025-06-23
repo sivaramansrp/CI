@@ -2,12 +2,14 @@
  * Importaciones necesarias para el componente de terceros relacionados.
  * Incluye módulos y servicios para gestionar la tabla dinámica de destinatarios relacionados.
  */
-import { AlertComponent, Catalogo, CatalogoSelectComponent, CatalogosSelect, InputRadioComponent, Notificacion, REGEX_CORREO_ELECTRONICO, REGEX_NOMBRE, REGEX_TELEFONO_DIGITOS, TablaDinamicaComponent, TipoPersona, TituloComponent } from '@ng-mf/data-access-user';
+import { AlertComponent, Catalogo, CatalogosSelect, Notificacion, REGEX_CORREO_ELECTRONICO, REGEX_NOMBRE, REGEX_TELEFONO_DIGITOS, TablaDinamicaComponent, TipoPersona, TituloComponent } from '@ng-mf/data-access-user';
+import { CatalogoSelectComponent, InputRadioComponent } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Solicitud261401State, Tramite261401Store } from '../../../../estados/tramites/tramite261401.store';
 import { CommonModule } from '@angular/common';
 import { ConfiguracionColumna } from '@ng-mf/data-access-user';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DESTINATARIO_ENCABEZADO_DE_TABLA } from '../../enums/destinatario.enum';
 import { Destinatario } from '../../enums/destinatario.enum';
 import { MENSAJE_TABLA_OBLIGATORIA } from '../../../../shared/models/terceros-relacionados.model';
@@ -18,7 +20,6 @@ import { TablaSeleccion } from '@ng-mf/data-access-user';
 import { Tramite261401Query } from '../../../../estados/queries/tramite261401.query';
 import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
-
 /**
  * Componente que representa la sección de terceros relacionados.
  * Este componente es standalone y utiliza CommonModule, AlertComponent, TituloComponent y TablaDinamicaComponent.
@@ -133,7 +134,11 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    * sin necesidad de hardcodear los valores en la vista.
    */
   public TipoPersonaEnum = TipoPersona;
-
+  /**
+   * Indica si el formulario debe mostrarse en modo solo lectura.
+   * Cuando es verdadero, los campos del formulario no pueden ser editados por el usuario.
+   */
+  esFormularioSoloLectura: boolean = false;
   /**
    * Constructor del componente.
    * @param solicitudDatosService Servicio para obtener los datos de los destinatarios.
@@ -145,8 +150,17 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
     public solicitudDatosService: SolicitudModificacionPermisoSalidaTerritorioService,
     private tramite261401Store: Tramite261401Store,
     private tramite261401Query: Tramite261401Query,
+    private consultaioQuery: ConsultaioQuery
   ) {
-    // Constructor
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
   }
 
   /**
@@ -154,14 +168,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    * Obtiene la lista de destinatarios relacionados.
    */
   ngOnInit(): void {
-    this.tramite261401Query.selectSolicitud$
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-        map((seccionState) => {
-          this.agregarDestinatarioState = seccionState;
-        })
-      )
-      .subscribe();
+    
 
     this.crearFormTransporte();
     this.getPaisData();
@@ -193,6 +200,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    * teléfono y correo electrónico.
    */
    crearFormTransporte(): void {
+    this.obtenerEstadoSolicitud();
     this.destinatarioForm = this.fb.group({
      
         tipoPersona: [
@@ -240,8 +248,37 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
 
   }    
   
-
-
+  /**
+ * Inicializa el estado de los formularios según el modo de solo lectura.
+ *
+ * Si el formulario está en modo solo lectura (`esFormularioSoloLectura`), llama a `guardarDatosFormulario()`
+ * para deshabilitar todos los controles. En caso contrario, inicializa los formularios normalmente.
+ */
+   inicializarEstadoFormulario(): void {
+      this.crearFormTransporte();
+  }
+  /**
+   * Suscribe al observable `selectSolicitud$` del query para obtener el estado actual de la solicitud y actualizar la propiedad `seccionState` con los datos recibidos. La suscripción se mantiene activa hasta que se emite un valor en `destroyed$`, evitando fugas de memoria.
+   */
+  obtenerEstadoSolicitud(): void {
+   this.tramite261401Query.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.agregarDestinatarioState = seccionState;
+        })
+      )
+     
+  }
+    /**
+ * Guarda y actualiza el estado de los formularios según el modo de solo lectura.
+ *
+ * Inicializa los formularios y luego los deshabilita si el formulario está en modo solo lectura,
+ * o los habilita si está en modo edición.
+ */
+  guardarDatosFormulario(): void {
+    this.crearFormTransporte();
+}
    /**
    * Guarda los datos del formulario en la tabla.
    */

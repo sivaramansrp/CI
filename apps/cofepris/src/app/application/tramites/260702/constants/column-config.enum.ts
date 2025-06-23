@@ -1,8 +1,6 @@
-import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
-
-import { FilaData, FilaData2, ListaClave } from '../models/fila-modal';
-
 import { Destinatario, TramitesAsociados } from '../models/destinatario.model';
+import { FilaData, FilaData2, ListaClave } from '../models/fila-modal';
+import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
 
 export const DESTINATARIO_CONFIGURACION_TABLA: ConfiguracionColumna<Destinatario>[] = [
   {
