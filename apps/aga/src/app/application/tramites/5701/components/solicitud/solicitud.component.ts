@@ -4,6 +4,7 @@ import {
   ADV_BORRAR_CAMPOS,
   ALFANUMERICO_ESPACIO,
   AduanaService,
+  CAMPO_VACIO,
   Catalogo,
   CatalogoPaises,
   CrossListLable,
@@ -14,6 +15,7 @@ import {
   InputHoraComponent,
   MENSAJE_ALERTA_NO_FECHAS,
   MSG_ALERTA_ELIMINAR_ELEMENTO,
+  MSG_DATOS_GUARDADOS,
   MSG_ELIMINA_ELEMENTO,
   Notificacion,
   PROGRAMA_FOMENTO,
@@ -2397,6 +2399,16 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
           if (this.montoPagadoLineas < MONTO_A_CUBRIR) {
             this.montoPagadoLineas +=
               responseLineaCapturaPagada.datos.pago_model.importe;
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'alert',
+              categoria: 'danger',
+              modo: 'action',
+              titulo: TITULO_MODAL_AVISO,
+              mensaje: MSG_DATOS_GUARDADOS,
+              cerrar: false,
+              txtBtnAceptar: TEXTO_ACEPTAR,
+              txtBtnCancelar: CAMPO_VACIO,
+            };
             this.datosTablaPagos.push(PAGO);
           } else {
             this.nuevaNotificacion = {
@@ -2406,8 +2418,8 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
               titulo: TITULO_MODAL_AVISO,
               mensaje: MSG_MONTO_PAGADO_CUBIERTO,
               cerrar: false,
-              txtBtnAceptar: 'Aceptar',
-              txtBtnCancelar: '',
+              txtBtnAceptar: TEXTO_ACEPTAR,
+              txtBtnCancelar: CAMPO_VACIO,
             };
             this.pagoCaptura.get('lineaCaptura')?.reset();
             this.pagoCaptura.get('monto')?.reset();
@@ -2537,8 +2549,8 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
                   titulo: TITULO_MODAL_AVISO,
                   mensaje: MSG_ELIMINA_ELEMENTO,
                   cerrar: false,
-                  txtBtnAceptar: 'Cerrar',
-                  txtBtnCancelar: '',
+                  txtBtnAceptar: TEXTO_ACEPTAR,
+                  txtBtnCancelar: CAMPO_VACIO,
                 };
               }),
               takeUntil(this.destroyNotifier$)
