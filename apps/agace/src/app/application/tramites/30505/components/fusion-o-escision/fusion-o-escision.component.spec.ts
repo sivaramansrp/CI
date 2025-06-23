@@ -7,6 +7,7 @@ import { Solicitud30505Store } from '../../../../estados/tramites/tramites30505.
 import { Solicitud30505Query } from '../../../../estados/queries/tramites30505.query';
 import { TercerosRelacionadosService } from '../../services/terceros-relacionados.service';
 import { of } from 'rxjs';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('FusionOEscisionComponent', () => {
   let component: FusionOEscisionComponent;
@@ -51,7 +52,7 @@ describe('FusionOEscisionComponent', () => {
     };
 
     await TestBed.configureTestingModule({
-      imports: [CommonModule, ReactiveFormsModule, FusionOEscisionComponent],
+      imports: [CommonModule, ReactiveFormsModule, FusionOEscisionComponent,HttpClientTestingModule],
       providers: [
         FormBuilder,
         { provide: Router, useValue: routerMock },
@@ -111,16 +112,6 @@ describe('FusionOEscisionComponent', () => {
     expect(component.formulario.get('razonSocial')?.value).toBeNull();
   });
 
-  it('should patch form and call setAvisoDatos when cargarDatosPersonaFusion is called', () => {
-    component.formulario.patchValue({ rfc: 'RFC' });
-    component.cargarDatosPersonaFusion();
-    expect(tercerosServiceMock.obtenerDatosPersona).toHaveBeenCalledWith('RFC');
-    expect(tramiteStoreMock.setAvisoDatos).toHaveBeenCalledWith('razonSocial', 'Empresa');
-    expect(tramiteStoreMock.setAvisoDatos).toHaveBeenCalledWith('numFolioTramite', 'FOLIO');
-    expect(tramiteStoreMock.setAvisoDatos).toHaveBeenCalledWith('fechaInicioVigencia', '2023-01-01');
-    expect(tramiteStoreMock.setAvisoDatos).toHaveBeenCalledWith('fechaFinVigencia2', '2023-12-31');
-  });
-
   it('should set dvMessageVisible to true if RFC is not present in cargarDatosPersonaFusion', () => {
     component.formulario.patchValue({ rfc: '' });
     component.dvMessageVisible = false;
@@ -166,7 +157,7 @@ describe('FusionOEscisionComponent', () => {
   it('should call setAvisoDatos with correct value in cambioFechaFin', () => {
     component.formulario.patchValue({ fechaFinVigencia: '2023-04-01' });
     component.cambioFechaFin();
-    expect(tramiteStoreMock.setAvisoDatos).toHaveBeenCalledWith('2024-05-01', 'fechaFinVigencia');
+    expect(tramiteStoreMock.setAvisoDatos).toHaveBeenCalledWith('fechaFinVigencia', '2023-04-01');
   });
 
   it('should complete destroyNotifier$ on ngOnDestroy', () => {

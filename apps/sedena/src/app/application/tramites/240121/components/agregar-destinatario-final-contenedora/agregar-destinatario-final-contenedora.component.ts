@@ -1,7 +1,7 @@
+import { Component, EventEmitter, Output } from '@angular/core';
 import { DestinoFinal, Proveedor } from '../../../../shared/models/terceros-relacionados.model';
 import { AgregarDestinatarioCustomComponent } from '../../../../shared/components/agregar-destinatario-custom/agregar-destinatario-custom.component';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
 import { ID_PROCEDIMIENTO } from '../../constantes/exportacion-armas-explosivo.enum';
 import { Observable } from 'rxjs';
 import { Tramite240121Query } from '../../estados/tramite240121Query.query';
@@ -34,7 +34,17 @@ import { Tramite240121Store } from '../../estados/tramite240121Store.store';
   styleUrl: './agregar-destinatario-final-contenedora.component.scss',
 })
 export class AgregarDestinatarioFinalContenedoraComponent {
-
+  /**
+   * @event cerrar
+   * @description Evento emitido para indicar que se debe cerrar el componente.
+   * @remarks
+   * Este evento no envía ningún valor, simplemente notifica a los componentes padres que se debe realizar la acción de cierre.
+   * 
+   * @eventType void
+   * @es
+   * Evento que se dispara para cerrar el componente actual.
+   */
+  @Output() cerrar = new EventEmitter<void>();
   /**
    * Identificador único del procedimiento asociado al componente.
    * 

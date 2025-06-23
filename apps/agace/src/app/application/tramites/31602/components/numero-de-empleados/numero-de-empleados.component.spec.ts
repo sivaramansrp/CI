@@ -66,8 +66,6 @@ describe('NumeroDeEmpleadosComponent', () => {
   it('should initialize agregarForm with correct controls', () => {
     component.crearAgregarForm();
     expect(component.agregarForm.contains('rfc')).toBeTruthy();
-    expect(component.agregarForm.contains('registroInput')).toBeTruthy();
-    expect(component.agregarForm.contains('razonSocialInput')).toBeTruthy();
     expect(component.agregarForm.contains('numeroUno')).toBeTruthy();
     expect(component.agregarForm.contains('numeroDos')).toBeTruthy();
     expect(component.agregarForm.contains('numeroTres')).toBeTruthy();

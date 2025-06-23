@@ -1,15 +1,16 @@
-import { AfterViewInit, Component } from '@angular/core';
-import { ConsultaioQuery, ConsultaioState, SolicitanteComponent } from '@ng-mf/data-access-user';
-import { Subject,map } from 'rxjs';
+import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
+import {
+  ConsultaioQuery,
+  ConsultaioState,
+  SolicitanteComponent
+} from '@ng-mf/data-access-user';
+import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { DatosDelTramiteContenedoraComponent } from '../../components/datos-del-tramite-contenedora/datos-del-tramite-contenedora.component';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
 import { SolicitudService } from '../../services/solicitud/solicitud.service';
 import { TercerosRelacionadosContenedoraComponent } from '../../components/terceros-relacionados-contenedora/terceros-relacionados-contenedora.component';
 import { Tramite240122Query } from '../../estados/tramite240122Query.query';
 import { Tramite240122Store } from '../../estados/tramite240122Store.store';
-import { takeUntil } from 'rxjs';
 
 /**
  * @component
@@ -64,12 +65,15 @@ export class PasoUnoComponent implements OnDestroy, OnInit,AfterViewInit {
    * 
    * @param {Tramite240122Query} tramite240122Query Query para acceder al estado del trámite.
    * @param {Tramite240122Store} tramite240122Store Store para actualizar el estado del trámite.
+   * @param {SolicitudService} solicitudService Servicio para manejar la lógica de solicitudes.
+   * @param {ConsultaioQuery} consultaQuery Query para acceder al estado de la consulta
+   * @returns {void}
    */
   constructor(
     private tramite240122Query: Tramite240122Query,
     private tramite240122Store: Tramite240122Store,
     private readonly solicitudService: SolicitudService ,
-    private readonly consultaQuery: ConsultaioQuery// eslint-disable-next-line no-empty-function
+    private readonly consultaQuery: ConsultaioQuery
   ) {}
 
   /**
