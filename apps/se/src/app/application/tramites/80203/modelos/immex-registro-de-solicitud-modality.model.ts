@@ -207,9 +207,6 @@ export interface nicoInfo {
   estatus: boolean;
 }
 
-
-// Interfaces para immex-table.json
-
 export interface PermisoImmexDato {
   IMMEX_Columna_1: string;
   IMMEX_Columna_2: string;
