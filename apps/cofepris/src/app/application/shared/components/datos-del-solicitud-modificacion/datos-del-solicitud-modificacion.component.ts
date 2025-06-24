@@ -954,7 +954,7 @@ export class DatosDelSolicitudModificacionComponent
   /**
    * Método para crear el formulario.
    */
-  hasError(form: FormGroup, controlName: string, error: string) {
+  static hasError(form: FormGroup, controlName: string, error: string): boolean | undefined {
     return (
       form.get(controlName)?.touched && form.get(controlName)?.hasError(error)
     );

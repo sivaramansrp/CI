@@ -10,23 +10,23 @@ import {
   FECHA_DE_PAGO,
   PagoDerechosFormState,
 } from '../../models/terceros-relacionados.model';
+import { PagoDerechosStore,pagoDerechosState } from '../../estados/stores/pago-de-derechos.store';
+import { Subject,map } from 'rxjs';
 import { BANCO } from '../../constantes/datos-solicitud.enum';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { InputFecha } from '@ng-mf/data-access-user';
 import { InputFechaComponent } from '@ng-mf/data-access-user';
 import { OnInit } from '@angular/core';
+import { PagoDerechosQuery } from '../../estados/queries/pago-derechos.query';
 import { ReactiveFormsModule } from '@angular/forms';
-import { map, Subject } from 'rxjs';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { Validators } from '@angular/forms';
 import { takeUntil } from 'rxjs';
-import { pagoDerechosState, PagoDerechosStore } from '../../estados/stores/pago-de-derechos.store';
-import { PagoDerechosQuery } from '../../estados/queries/pago-derechos.query';
-import { ConsultaioQuery } from '@ng-mf/data-access-user';
 /**
  * @component PagoDeDerechosComponent
  * @description Componente responsable de capturar y gestionar la información relacionada

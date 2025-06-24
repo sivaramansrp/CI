@@ -1,7 +1,7 @@
 
+import { PagoDerechosStore,pagoDerechosState } from '../stores/pago-de-derechos.store';
 import { Injectable } from '@angular/core';
 import { Query } from '@datorama/akita';
-import { pagoDerechosState, PagoDerechosStore } from '../stores/pago-de-derechos.store';
 
 @Injectable({ providedIn: 'root' })
 export class PagoDerechosQuery extends Query<pagoDerechosState> {
