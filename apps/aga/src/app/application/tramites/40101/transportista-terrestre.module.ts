@@ -24,10 +24,10 @@ import { SolicitanteComponent } from './components/solicitante/solicitante.compo
 import { SolicitantePageComponent } from './pages/solicitante-page/solicitante-page.component';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { ToastrService } from 'ngx-toastr';
+import { TransportistaTerrestreRoutingModule } from './transportista-terrestre-routing.module';
 import { VehiculosComponent } from './components/vehiculos/vehiculos.component';
 import { WizardComponent } from '@ng-mf/data-access-user';
 import { forwardRef } from '@angular/core';
-import { TransportistaTerrestreRoutingModule } from './transportista-terrestre-routing.module';
 
 @NgModule({
   declarations: [

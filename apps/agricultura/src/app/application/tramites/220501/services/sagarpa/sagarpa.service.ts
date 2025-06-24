@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import { Solicitud220502State, Solicitud220502Store } from '../../../220502/estados/tramites220502.store';
+import { RegistroTomaMuestrasMercanciasDatos } from '../../models/datos-generales.model';
 import { RespuestaCatalogos } from '@ng-mf/data-access-user';
 
 /**
@@ -53,7 +54,7 @@ export class SagarpaService {
    * Método para obtener los datos de registro de toma de muestras de mercancías.
    * @returns Observable con los datos del registro de toma de muestras de mercancías.
    */
-  getRegistroTomaMuestrasMercanciasData(): Observable<any> {
-    return this.http.get<any>('assets/json/220501/registro_toma_muestras_mercancias.json');
+  getRegistroTomaMuestrasMercanciasData(): Observable<RegistroTomaMuestrasMercanciasDatos> {
+    return this.http.get<RegistroTomaMuestrasMercanciasDatos>('assets/json/220501/registro_toma_muestras_mercancias.json');
   }
 }

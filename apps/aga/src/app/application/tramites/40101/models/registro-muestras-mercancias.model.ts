@@ -505,3 +505,23 @@ export interface UnidadTabla {
   estado: string;
   
 }
+
+/**
+ * Interfaz que define la configuración de la tabla de vehículos.
+ * Contiene encabezados y datos para la visualización en una tabla.
+ */
+export interface VehiculoTablaConfig {
+  /**
+   * Lista de encabezados de la tabla.
+   */
+  encabezadas: {
+    encabezado: string;
+    clave: (item: VehiculoTabla) => string;
+    orden: number;
+  }[];
+
+  /**
+   * Lista de datos de vehículos que se mostrarán en la tabla.
+   */
+  datos: VehiculoTabla[];
+}

@@ -39,8 +39,8 @@ import { TituloComponent } from '@ng-mf/data-access-user';
 
 import { ES_CURP } from '../../constants/datos-del-tramilte.enum';
 import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { takeUntil } from 'rxjs';
 
 /**
  * Componente para agregar un destinatario final (Destinatario) al formulario y almacenarlo.

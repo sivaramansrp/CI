@@ -1,4 +1,5 @@
-import { UnidadTabla, VehiculoTabla } from "../models/registro-muestras-mercancias.model";
+import { UnidadTabla, UnidadTablaConfig, VehiculoTabla } from "../models/registro-muestras-mercancias.model";
+import { VehiculoTablaConfig } from "../../40101/models/registro-muestras-mercancias.model";
 
 export const CHOFERES_PAGE = {
   MODAL: 'modal',
@@ -65,7 +66,7 @@ export const VEHICULO_PAGE= {
 };
 
 
-export const VEHICULOS_TABLA_CONFIG = {
+export const VEHICULOS_TABLA_CONFIG: VehiculoTablaConfig = {
   encabezadas: [
     {
       encabezado: 'Número de identificación vehicular',
@@ -151,7 +152,7 @@ export const VEHICULOS_TABLA_CONFIG = {
    datos: [],
 };
 
-export const UNIDAD_TABLA_CONFIG = {
+export const UNIDAD_TABLA_CONFIG: UnidadTablaConfig = {
   encabezadas: [
     {
       encabezado: 'VIN del vehículo',

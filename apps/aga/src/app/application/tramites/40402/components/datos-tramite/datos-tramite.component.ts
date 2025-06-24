@@ -3,6 +3,7 @@ import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Tramite40402Store, Tramitenacionales40402State } from '../../estados/tramite40402.store';
 import { map, takeUntil } from 'rxjs';
+import { CAATSolicitud } from '../../models/transportacion-maritima.model';
 import { Catalogo } from '@libs/shared/data-access-user/src';
 import { Subject } from 'rxjs';
 import { Tramite40402Query } from '../../estados/tramite40402.query';
@@ -148,16 +149,6 @@ export class DatosTramiteComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Convierte a mayúsculas el campo claveFolioCAAT
-   * 
-   * @param event - Evento de entrada
-   */
-  caatConMayusculas(event: any): void {
-    const VALOR = event.target.value;
-    this.formulario.get('claveFolioCAAT')?.setValue(VALOR.toUpperCase());
-  }
-
-  /**
    * Carga códigos de transportación desde servicio
    */
   public cargarCodigoTransportacion(): void {
@@ -205,7 +196,7 @@ export class DatosTramiteComponent implements OnInit, OnDestroy {
       this.tramite40402Service
         .buscarSolicitudPorCAATe(CLAVE_FOLIO)
         .pipe(takeUntil(this.destroyNotifier$))
-        .subscribe((respuesta) => {
+        .subscribe((respuesta: CAATSolicitud) => {
           if (respuesta) {
             this.formulario.patchValue({
               idSolicitud: respuesta.idSolicitud || '',

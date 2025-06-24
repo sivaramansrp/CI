@@ -1,10 +1,10 @@
 import { Component,Input, OnDestroy } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
+import { ReplaySubject, map, takeUntil } from 'rxjs';
 import { TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
+import { CommonModule } from '@angular/common';
 import { PLANTAS } from '../../constantes/complementaria.enum';
 import { PlantasTabla } from '../../models/complementaria.model';
-import { ReplaySubject, takeUntil, map } from 'rxjs';
 
 /**
  * Componente que representa la sección de "Plantas".
@@ -73,7 +73,7 @@ export class PlantasComponent implements OnDestroy {
      * Método que se ejecuta al destruir el componente.
      * Se utiliza para limpiar los recursos y evitar fugas de memoria.
      */
-    ngOnDestroy() {
+    ngOnDestroy(): void {
       this.destroyed$.next(true);
       this.destroyed$.complete();
     }

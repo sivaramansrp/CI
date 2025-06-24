@@ -1,4 +1,4 @@
-import { CuposTabla, disponsiblesTabla } from "../model/cancelaciones-certificado.model";
+import { CuposTabla, DisponsiblesTabla } from "../model/cancelaciones-certificado.model";
 
 /**
  * Constante que define los pasos del wizard en el trámite.
@@ -84,27 +84,27 @@ export const TABLA_DE_DATOS_CUPOS = {
   encabezadas: [
     {
       encabezado: 'Cupo',
-      clave: (ele: CuposTabla) => ele.cupo,
+      clave: (ele: CuposTabla):string => ele.cupo,
       orden: 1,
     },
     {
       encabezado: 'Nombre de producto',
-      clave: (ele: CuposTabla) => ele.nombreProducto,
+      clave: (ele: CuposTabla):string => ele.nombreProducto,
       orden: 2,
     },
     {
       encabezado: 'Nombre del subproducto',
-      clave: (ele: CuposTabla) => ele.nombreSubproducto,
+      clave: (ele: CuposTabla):string => ele.nombreSubproducto,
       orden: 3,
     },
     {
       encabezado: 'Mecanismo de asignación',
-      clave: (ele: CuposTabla) => ele.mecanismoAsignacion,
+      clave: (ele: CuposTabla):string => ele.mecanismoAsignacion,
       orden: 4,
     },
     {
       encabezado: 'Tipo cupo',
-      clave: (ele: CuposTabla) => ele.tipoCupo,
+      clave: (ele: CuposTabla):string => ele.tipoCupo,
       orden: 5,
     },
   ],
@@ -120,22 +120,22 @@ export const TABLA_DE_DATOS_DISPONIBLES = {
   encabezadas: [
     {
       encabezado: 'Folio del oficio de certificado',
-      clave: (ele: disponsiblesTabla) => ele.folio,
+      clave: (ele: DisponsiblesTabla):string => ele.folio,
       orden: 1,
     },
     {
       encabezado: 'Nombre, Denominación o Razón Social',
-      clave: (ele: disponsiblesTabla) => ele.nombre,
+      clave: (ele: DisponsiblesTabla):string => ele.nombre,
       orden: 2,
     },
     {
       encabezado: 'Estado',
-      clave: (ele: disponsiblesTabla) => ele.estado,
+      clave: (ele: DisponsiblesTabla):string => ele.estado,
       orden: 3,
     },
     {
       encabezado: 'Fabricante',
-      clave: (ele: disponsiblesTabla) => ele.fabricante,
+      clave: (ele: DisponsiblesTabla):string => ele.fabricante,
       orden: 4,
     },
   ],

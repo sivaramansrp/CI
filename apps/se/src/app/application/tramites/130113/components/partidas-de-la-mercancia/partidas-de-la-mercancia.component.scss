@@ -8,3 +8,6 @@
 .btn-row{
     margin-top: 300px;
 }
+:host ::ng-deep .ng-alert .alert-info{
+    text-align: center;
+}
