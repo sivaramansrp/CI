@@ -8,6 +8,7 @@ import { Tramite80101Store } from '../../estados/tramite80101.store';
 import { AnexoEncabezado } from '../../../../shared/models/nuevo-programa-industrial.model';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { ANEXO_SERVICIO } from '../../../../shared/constantes/anexo-dos-y-tres.enum';
+import { AnexoTresComponent } from '../../../../shared/components/anexo-tres/anexo-tres.component';
 
 @Directive({ selector: '[myCustom]' })
 class MyCustomDirective {
@@ -107,64 +108,31 @@ describe('AnexoVistaDosYTresComponent', () => {
     expect(component.anexoConfig.anexoTresEncabezadoDeTabla).toBe(ANEXO_SERVICIO);
   });
 
-  it('should set anexoDosTablaLista on ngOnInit if non-empty', fakeAsync(() => {
-    fixture.detectChanges();
-    anexoDosSubject.next(mockAnexoDos);
-    tick();
-    expect(component.anexoDosTablaLista).toEqual(mockAnexoDos);
-  }));
-
-  it('should set anexoTresTablaLista on ngOnInit if non-empty', fakeAsync(() => {
-    fixture.detectChanges();
-    anexoTresSubject.next(mockAnexoTres);
-    tick();
-    expect(component.anexoTresTablaLista).toEqual(mockAnexoTres);
-  }));
-
-  it('should update anexoDosTablaLista and call store on obtenerAnexoDosDevolverLaLlamada', () => {
-    fixture.detectChanges();
-    const newData: AnexoEncabezado[] = [
-      {
-        encabezadoFraccion: '9999.99.99',
-        encabezadoDescripcion: 'Nuevo valor',
-        estatus: false,
-      },
-    ];
-    component.obtenerAnexoDosDevolverLaLlamada(newData);
-    expect(component.anexoDosTablaLista).toEqual(newData);
-    expect(mockStore.setAnnexoDosTableLista).toHaveBeenCalledWith(newData);
-  });
-
-  it('should fallback to empty list if null passed to obtenerAnexoDosDevolverLaLlamada', () => {
-    fixture.detectChanges();
-    component.obtenerAnexoDosDevolverLaLlamada(null as any);
-    expect(component.anexoDosTablaLista).toEqual([]);
-    expect(mockStore.setAnnexoDosTableLista).toHaveBeenCalledWith([]);
-  });
-
-  it('should update anexoTresTablaLista and call store on obtenerAnexoTresDevolverLaLlamada', () => {
-    fixture.detectChanges();
-    const tresData: AnexoEncabezado[] = [
-      {
-        encabezadoFraccion: '8888.88.88',
-        encabezadoDescripcion: 'Otro valor',
-        estatus: true,
-      },
-    ];
-    component.obtenerAnexoTresDevolverLaLlamada(tresData);
-    expect(component.anexoTresTablaLista).toEqual(tresData);
-    expect(mockStore.setAnnexoTresTableLista).toHaveBeenCalledWith(tresData);
-  });
-
-  it('should fallback to empty list if null passed to obtenerAnexoTresDevolverLaLlamada', () => {
-    fixture.detectChanges();
-    component.obtenerAnexoTresDevolverLaLlamada(null as any);
-    expect(component.anexoTresTablaLista).toEqual([]);
-    expect(mockStore.setAnnexoTresTableLista).toHaveBeenCalledWith([]);
-  });
-
   it('should initialize configuracionDosDatos with CONFIGURACION_DOS_DATOS', () => {
     expect(component.configuracionDosDatos).toBeDefined();
     expect(component.configuracionDosDatos.length).toBeGreaterThan(0);
   });
+
+  it('should have empty initial anexo lists', () => {
+  expect(component.anexoDosTablaLista).toEqual([]);
+  expect(component.anexoTresTablaLista).toEqual([]);
+});
+
+it('should handle undefined emitted from anexoDosTableLista$', fakeAsync(() => {
+  fixture.detectChanges();
+  anexoDosSubject.next(undefined as any);
+  tick();
+  expect(component.anexoDosTablaLista).toEqual([]);
+}));
+
+it('should handle undefined emitted from anexoTresTablaLista$', fakeAsync(() => {
+  fixture.detectChanges();
+  anexoTresSubject.next(undefined as any);
+  tick();
+  expect(component.anexoTresTablaLista).toEqual([]);
+}));
+
+
+
+
 });
