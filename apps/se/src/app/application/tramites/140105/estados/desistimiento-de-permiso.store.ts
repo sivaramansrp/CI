@@ -21,7 +21,7 @@ export class DesistimientoStore extends Store<PermisosDatos> {
    */
 
   public actualizarDatosForma(datos: Cancelacion[]): void {
-    this.update((state) => ({
+    this.update((_state) => ({
       datos,
     }));
   }

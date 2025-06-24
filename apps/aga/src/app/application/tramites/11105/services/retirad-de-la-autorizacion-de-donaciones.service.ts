@@ -3,6 +3,7 @@ import { DetallesDelMercancia } from '@libs/shared/data-access-user/src/core/mod
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { RespuestaConsulta } from '@libs/shared/data-access-user/src/core/models/11105/detalles-del-merchancia.model';
 
 /**
  * Servicio para gestionar las operaciones relacionadas con la retirada de la autorización de donaciones.
@@ -34,6 +35,16 @@ export class RetiradaDeLaAutorizacionDeDonacionesService {
   getDetallesDelMercanciaDatos(): Observable<DetallesDelMercancia> {
     return this.http.get<DetallesDelMercancia>(
       'assets/json/11105/detalles-del-mercancia-datos.json'
+    );
+  }
+
+  /**
+   * Obtiene los datos para la consulta del trámite.
+   * @returns {Observable<RespuestaConsulta>} Observable con los datos de consulta.
+   */
+  getDatosConsulta(): Observable<RespuestaConsulta> {
+    return this.http.get<RespuestaConsulta>(
+      'assets/json/11105/consulta_11105.json'
     );
   }
 }

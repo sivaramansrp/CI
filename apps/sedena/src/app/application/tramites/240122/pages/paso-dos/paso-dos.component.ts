@@ -1,10 +1,8 @@
-import { AlertComponent, AnexarDocumentosComponent, CATALOGOS_ID, Catalogo, CatalogosService } from '@ng-mf/data-access-user';
+import { AlertComponent, AnexarDocumentosComponent, CATALOGOS_ID, Catalogo, CatalogosService ,TituloComponent} from '@ng-mf/data-access-user';
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import { Subject,takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { Subject } from 'rxjs';
 import { TEXTOS_REQUISITOS } from '../../constantes/exportacion-explosivo-enum';
-import { TituloComponent } from '@ng-mf/data-access-user';
-import { takeUntil } from 'rxjs';
 
 /**
  * @component

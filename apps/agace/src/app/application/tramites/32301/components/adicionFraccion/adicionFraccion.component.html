@@ -21,7 +21,7 @@
             [layout]="'horizontal'"
             [gap]="'50px'"
             formControlName="idCarga"
-            (change)="valorSeleccionadoTipoCarga()"
+            (valueChange)="valorSeleccionadoTipoCarga($event)"
           ></app-input-radio>
         </div>
       </div>
@@ -184,6 +184,7 @@
                   [label]="'Actividad relacionada con el proceso'"
                   [required]="true"
                   [catalogo]="activRelProcMod"
+                    [isDisabled]="esFormularioSoloLectura"
                 ></app-catalogo-select>
               </div>
             </div>
@@ -208,6 +209,7 @@
                   [label]="'Correlación fracción actual'"
                   [required]="true"
                   [catalogo]="cveFraccionCorrelacionMod"
+                    [isDisabled]="esFormularioSoloLectura"
                 ></app-catalogo-select>
               </div>
             </div>
@@ -219,6 +221,7 @@
                   [label]="'Unidad de medida de la tarifa (UMT)'"
                   [required]="true"
                   [catalogo]="unidadMedidaMod"
+                    [isDisabled]="esFormularioSoloLectura"
                 ></app-catalogo-select>
               </div>
             </div>
@@ -229,6 +232,7 @@
                   [label]="'NICO'"
                   [required]="true"
                   [catalogo]="cveNicoMod"
+                    [isDisabled]="esFormularioSoloLectura"
                 ></app-catalogo-select>
               </div>
             </div>
@@ -247,7 +251,7 @@
               </div>
             </div>
           </div>
-          <div class="row">
+          <div class="row" [ngStyle]="{ 'pointer-events': esFormularioSoloLectura ? 'none' : 'auto' }">
             <div class="col-12">
               <ng-titulo [titulo]="'País(es) de origen'"></ng-titulo>
             </div>
