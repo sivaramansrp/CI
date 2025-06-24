@@ -29,12 +29,7 @@ import {
   DatosComponentePedimento,
   Pedimento,
 } from '../../../../core/models/5701/tramite5701.model';
-import {
-  FormControl,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import {
   MSG_ERROR_NO_PEDIMENTOS,
@@ -57,6 +52,12 @@ import { EstadoPedimentoService } from '../../../../core/services/5701/pedimento
 import { TITULO_MODAL_AVISO } from '@libs/shared/data-access-user/src/tramites/constantes/terceros.enums';
 import { ToastrService } from 'ngx-toastr';
 import { Tramite5701Query } from '../../../../core/queries/tramite5701.query';
+
+/**
+ * Componente responsable de gestionar la captura, validación y presentación
+ * de datos relacionados con pedimentos aduanales en un formulario interactivo.
+ * Permite seleccionar, editar y emitir eventos de cambios hacia componentes padres.
+ */
 @Component({
   selector: 'c-pedimento',
   standalone: true,
@@ -71,50 +72,53 @@ import { Tramite5701Query } from '../../../../core/queries/tramite5701.query';
   styleUrl: './pedimento.component.scss',
   providers: [ToastrService],
 })
+
+/**
+ * Componente encargado de gestionar la lógica de captura, validación y emisión de datos
+ * relacionados con los pedimentos aduanales dentro del trámite 5701.
+ */
 export class PedimentoComponent implements OnInit, OnChanges, OnDestroy {
   /**
-   * @description Propiedades de entrada del componente.
-   * @param validacion: Indica si la validación es correcta.
+   * Propiedades de entrada del componente.
+   * validacion: Indica si la validación es correcta.
    */
   @Input({ required: true }) validacion!: boolean | undefined;
 
   /**
-   * @description Propiedades de entrada del componente.
-   * @param datosNroPedimento: Datos del número de pedimento.
-   * patente: numero
-   * idAduanaDespacho: numero
+   * Propiedades de entrada del componente.
+   * {datosNroPedimento: DatosComponentePedimento} Datos del número de pedimento.
    */
   @Input({ required: true }) datosNroPedimento!: DatosComponentePedimento;
 
   /**
-   * @description Datos de la tabla de pedimentos.
+   * Datos de la tabla de pedimentos.
    */
   @Input() tablaPedimento!: Pedimento[];
 
   /**
-   * @description Emisor de eventos para la tabla de pedimentos.
+   * Emisor de eventos para la tabla de pedimentos.
    * Se utiliza para emitir los datos de la tabla de pedimentos al componente padre.
    */
   @Output() datosTablaPedimento: EventEmitter<Pedimento[]> = new EventEmitter();
 
   /**
-   * @description Estado de la solicitud 5701.
+   * Estado de la solicitud 5701.
    */
   public solicitudState!: Solicitud5701State;
 
   /**
-   * @description Subject para manejar la destrucción del componente y limpiar las suscripciones.
+   * Subject para manejar la destrucción del componente y limpiar las suscripciones.
    */
   private destroyNotifier$: Subject<void> = new Subject();
 
   /**
-   * @description Emisor de eventos para validar los campos del formulario.
+   * Emisor de eventos para validar los campos del formulario.
    * Se utiliza para emitir un evento cuando se requiere validar los campos del formulario.
    */
   validaCampos = output<void>();
 
   /**
-   * @description Formulario reactivo para el componente de pedimento.
+   * Formulario reactivo para el componente de pedimento.
    * Se utiliza para manejar la validación y los valores del formulario.
    */
   public pedimentoForm: FormControl = new FormControl('', [
@@ -122,60 +126,60 @@ export class PedimentoComponent implements OnInit, OnChanges, OnDestroy {
   ]);
 
   /**
-   * @description Array con los datos de los pedimentos.
+   * Array con los datos de los pedimentos.
    * Se utiliza para almacenar los pedimentos ingresados por el usuario.
    */
   public pedimentos: Pedimento[] = [];
 
   /**
-   * @descripcion Notificación para mostrar mensajes al usuario.
+   * Notificación para mostrar mensajes al usuario.
    */
   public nuevaNotificacion!: Notificacion;
 
   /**
-   * @description Tipos de pedimento disponibles.
+   * Tipos de pedimento disponibles.
    */
   public tiposPedimento: Catalogo[] = [];
 
   /**
-   * @description Lista de pedimentos seleccionados en la tabla.
+   * Lista de pedimentos seleccionados en la tabla.
    * Se utiliza para almacenar los pedimentos que han sido seleccionados por el usuario en la tabla.
    */
   public selected: Pedimento[] = [];
 
   /**
-   * @description Tipo de selección para la tabla de pedimentos.
+   * Tipo de selección para la tabla de pedimentos.
    * Se utiliza para definir el tipo de selección en la tabla de pedimentos.
    */
   public SelectionType = SelectionType;
 
   /**
-   * @description Objeto para manejar la edición de celdas en la tabla de pedimentos.
+   * Objeto para manejar la edición de celdas en la tabla de pedimentos.
    * Se utiliza para determinar si una celda está en modo de edición.
    */
   public editar: { [key: string]: boolean } = {};
 
   /**
-   * @description Modo de visualización de columnas en la tabla de pedimentos.
+   * Modo de visualización de columnas en la tabla de pedimentos.
    * Se utiliza para definir el modo de visualización de las columnas en la tabla de pedimentos.
    */
   public ColumnMode = ColumnMode;
 
   /**
-   * @description Mensajes personalizados para la tabla de pedimentos.
-   * Se utiliza para mostrar mensajes personalizados cuando no hay datos disponibles en la tabla.
+   * Mensajes personalizados para la tabla de pedimentos.
+   * Actualmente contiene el mensaje a mostrar cuando no hay registros disponibles.
    */
   public mensajes = {
     emptyMessage: 'No hay datos disponibles',
   };
 
   /**
-   * @description Constructor del componente Pedimento.
+   * Constructor del componente Pedimento.
    * Se inyectan las dependencias necesarias para el componente, incluyendo servicios y store.
-   * @param tramite5701Query
-   * @param tramite5701Store
-   * @param estadoPedimentoService
-   * @param tipoPedimentoService
+   * tramite5701Query
+   * tramite5701Store
+   * estadoPedimentoService
+   * tipoPedimentoService
    */
   constructor(
     private tramite5701Query: Tramite5701Query,
@@ -187,8 +191,6 @@ export class PedimentoComponent implements OnInit, OnChanges, OnDestroy {
   /**
    * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
    * Se utiliza para obtener los tipos de pedimento y suscribirse al estado de la solicitud 5701.
-   * @param {no parameters} - No recibe parámetros.
-   * @returns {void}
    */
   ngOnInit(): void {
     this.getTiposPedimento();
@@ -204,8 +206,6 @@ export class PedimentoComponent implements OnInit, OnChanges, OnDestroy {
 
   /**
    * Obtiene los tipos de pedimento disponibles y los almacena en una variable.
-   * @param {no parameters} - No recibe parámetros.
-   * @returns {void} - No retorna ningún valor.
    */
   getTiposPedimento(): void {
     this.tipoPedimentoService
@@ -225,10 +225,7 @@ export class PedimentoComponent implements OnInit, OnChanges, OnDestroy {
 
   /**
    * Verifica si el formulario de pedimento es válido.
-   *@param {no parameters} - No recibe parámetros.
-   * @returns {boolean | null} - Devuelve `true` si el formulario tiene errores y ha sido tocado,
-   *                             `false` si no tiene errores o no ha sido tocado,
-   *                             o `null` si no se puede determinar.
+   * {boolean | null} - Retorna true si el formulario es válido, false si no lo es, o null si no hay errores.
    */
   get isValid(): boolean | null {
     return this.pedimentoForm.errors && this.pedimentoForm.touched;
@@ -236,8 +233,7 @@ export class PedimentoComponent implements OnInit, OnChanges, OnDestroy {
 
   /**
    * Método del ciclo de vida de Angular que se llama cuando uno o más valores de las propiedades de entrada de un componente cambian.
-   * @param changes - Un objeto que contiene los cambios detectados en las propiedades de entrada.
-   * @returns {void} No retorna ningún valor.
+   * changes - Un objeto que contiene los cambios detectados en las propiedades de entrada.
    */
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['tablaPedimento'] && changes['tablaPedimento'].currentValue) {
@@ -256,10 +252,7 @@ export class PedimentoComponent implements OnInit, OnChanges, OnDestroy {
 
   /**
    * Agrega un nuevo pedimento.
-   *
    * Esta función emite un evento para validar los campos y luego ejecuta las acciones correspondientes.
-   *@param {no parameters} - No recibe parámetros.
-   * @returns {void} No retorna ningún valor.
    */
   agregaPedimento(): void {
     this.validaCampos.emit();
@@ -270,16 +263,6 @@ export class PedimentoComponent implements OnInit, OnChanges, OnDestroy {
 
   /**
    * Realiza las acciones necesarias para validar y agregar un pedimento.
-   *
-   * - Si `this.validacion` es verdadero:
-   *   - Obtiene el número de pedimento desde el formulario.
-   *   - Si el número de pedimento es diferente de 0:
-   *     - Crea un objeto `PEDIMENTO` con los datos necesarios.
-   *     - Muestra un modal con un mensaje de aviso y agrega el pedimento a la tabla.
-   *   - Si el número de pedimento es 0:
-   *     - Muestra un modal con un mensaje de aviso indicando que el número de pedimento no es válido.
-   * @param {no parameters} - No recibe parámetros.
-   * @returns {void}
    */
   acciones(): void {
     if (this.validacion) {
@@ -404,12 +387,7 @@ export class PedimentoComponent implements OnInit, OnChanges, OnDestroy {
 
   /**
    * Elimina un elemento de la lista de pedimentos en la posición especificada.
-   *
-   * @param {number} i - El índice del elemento a eliminar.
-   *
-   * @remarks
-   * Después de eliminar el elemento, se actualiza el título y mensaje del modal,
-   * y se abre el modal para mostrar un aviso al usuario.
+   * {number} i - El índice del elemento a eliminar.
    */
   abrirModalEliminar(): void {
     if (this.pedimentos.length === 0) {
@@ -459,37 +437,18 @@ export class PedimentoComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   /**
-   * Método para establecer valores en el store de Tramite5701.
-   * @param form - Formulario del componente.
-   * @param campo - Campo del formulario cuyo valor se desea establecer.
-   * @param metodoNombre - Nombre del método en el store que se utilizará para establecer el valor.
-   * @returns {void}
-   */
-  setValoresStore(
-    form: FormGroup,
-    campo: string,
-    metodoNombre: keyof Tramite5701Store
-  ): void {
-    const VALOR = form.get(campo)?.value;
-    (this.tramite5701Store[metodoNombre] as (value: string) => void)(VALOR);
-  }
-
-  /**
    * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
    * Notifica y completa el observable `destroyNotifier$` para limpiar suscripciones.
-   * @returns {void}
    */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
 
-  //Metodos para el checkbox
   /**
    * Método que se ejecuta cuando se selecciona un pedimento en la tabla.
    * Actualiza la lista de pedimentos seleccionados.
-   * @param { selected } - Objeto que contiene los pedimentos seleccionados.
-   * @returns {void}
+   * { selected } - Objeto que contiene los pedimentos seleccionados.
    */
   onSelect({ selected }: { selected: Pedimento[] }): void {
     if (selected && selected.length > 0) {
@@ -501,10 +460,9 @@ export class PedimentoComponent implements OnInit, OnChanges, OnDestroy {
   /**
    * Método para actualizar el valor de una celda en la tabla de pedimentos.
    * Este método se ejecuta cuando se edita una celda en la tabla.
-   * @param {Event} event - El evento que se dispara al editar la celda.
-   * @param { string } cell - El nombre de la celda que se está editando.
-   * @param { number } rowIndex - El índice de la fila que contiene la celda que se está editando.
-   * @returns {void}
+   * {Event} event - El evento que se dispara al editar la celda.
+   * { string } cell - El nombre de la celda que se está editando.
+   * { number } rowIndex - El índice de la fila que contiene la celda que se está editando.
    */
   actualizarValor(event: Event, cell: string, rowIndex: number): void {
     const TARGET = event.target as HTMLInputElement;
@@ -560,9 +518,8 @@ export class PedimentoComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   /**
-   * @description Método para editar una celda en la tabla de pedimentos.
-   * @param rowIndex - El índice de la fila que contiene el pedimento a editar.
-   * @returns {void}
+   * Método para editar una celda en la tabla de pedimentos.
+   * rowIndex - El índice de la fila que contiene el pedimento a editar.
    */
   editarCelda(rowIndex: number): void {
     const TIPO_PEDIMENTO = this.pedimentos[rowIndex].tipoPedimento;
