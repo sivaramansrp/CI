@@ -2,8 +2,8 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { LibBandejaComponent } from './lib-bandeja.component';
 
 describe('LibBandejaComponent', () => {
-  let component: LibBandejaComponent;
-  let fixture: ComponentFixture<LibBandejaComponent>;
+  let component: LibBandejaComponent<any>;
+  let fixture: ComponentFixture<LibBandejaComponent<any>>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
