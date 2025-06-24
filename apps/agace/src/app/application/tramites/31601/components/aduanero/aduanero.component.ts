@@ -1,40 +1,43 @@
-import {
-  AfterViewInit,
-  Component,
-  ElementRef,
-  OnDestroy,
-  OnInit,
-  TemplateRef,
-  ViewChild,
-} from '@angular/core';
-import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
-import { Catalogo, ConfiguracionColumna, TablaSeleccion, TableBodyData, TableComponent, TableData, TablePaginationComponent, TituloComponent } from '@ng-mf/data-access-user';
-import {
-  FormBuilder,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
-import {
-  MENCIONE_TABLA_CONFIGURACION,
-  MencioneConfiguracionItem,
-} from '../../enum/mencione-tabla.enum';
-import {
-  Solicitud31601State,
-  Tramite31601Store,
-} from '../../../../estados/tramites/tramite31601.store';
-import { Subject, map, takeUntil } from 'rxjs';
+import { AfterViewInit } from '@angular/core';
 import { AgregarMiembroDeLaEmpresaComponent } from '../agregar-miembro-de-la-empresa/agregar-miembro-de-la-empresa.component';
+import { BsModalRef } from 'ngx-bootstrap/modal';
+import { BsModalService } from 'ngx-bootstrap/modal';
+import { Catalogo } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
+import { ConfiguracionColumna } from '@ng-mf/data-access-user';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { ElementRef } from '@angular/core';
+import { FormBuilder } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
 import { InputRadioComponent } from '@libs/shared/data-access-user/src/tramites/components/input-radio/input-radio.component';
 import Instalaciones from '@libs/shared/theme/assets/json/31601/Instalaciones.json';
+import { MENCIONE_TABLA_CONFIGURACION } from '../../enum/mencione-tabla.enum';
+import { MencioneConfiguracionItem } from '../../enum/mencione-tabla.enum';
 import { Modal } from 'bootstrap';
+import { OnDestroy } from '@angular/core';
+import { OnInit } from '@angular/core';
 import { REGEX_RFC } from '@libs/shared/data-access-user/src/tramites/constantes/regex.constants';
+import { ReactiveFormsModule } from '@angular/forms';
+import { Solicitud31601State } from '../../../../estados/tramites/tramite31601.store';
 import { Solocitud31601Service } from '../../services/service31601.service';
+import { Subject } from 'rxjs';
+import { Tabla } from '../../models/models31601.model';
 import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
+import { TablaSeleccion } from '@ng-mf/data-access-user';
+import { TableBody } from '../../models/models31601.model';
+import { TableComponent } from '@ng-mf/data-access-user';
+import { TablePaginationComponent } from '@ng-mf/data-access-user';
+import { TemplateRef } from '@angular/core';
+import { TituloComponent } from '@ng-mf/data-access-user';
 import { Tramite31601Query } from '../../../../estados/queries/tramite31601.query';
+import { Tramite31601Store } from '../../../../estados/tramites/tramite31601.store';
+import { Validators } from '@angular/forms';
+import { ViewChild } from '@angular/core';
+import { map } from 'rxjs';
+import { takeUntil } from 'rxjs';
+
 import applicantRegistrados from '@libs/shared/theme/assets/json/31601/applicantRegistrados.json';
 import comboBimestres from '@libs/shared/theme/assets/json/31601/comboBimestres.json';
 import comboIMMEXJson from '@libs/shared/theme/assets/json/31601/comboIMMEX.json';
@@ -47,6 +50,7 @@ import preOperativo from '@libs/shared/theme/assets/json/31601/preOperativo.json
 import prejson from '@libs/shared/theme/assets/json/31601/prejson.json';
 import productivo from '@libs/shared/theme/assets/json/31601/productivo.json';
 import serviciosAgace from '@libs/shared/theme/assets/json/31601/serviciosAgace.json';
+
 
 /**
  * Componente para manejar el formulario reactivo y la paginación de una tabla relacionada con trámites aduaneros.
@@ -153,7 +157,7 @@ export class AduaneroComponent implements OnInit, AfterViewInit, OnDestroy {
   /**
    * Datos de control de inventarios obtenidos desde JSON
    */
-  controlInventarios: TableData = controlInventarios;
+  controlInventarios: Tabla = controlInventarios;
 
   /**
    * Lista de opciones IMMEX cargadas desde JSON
@@ -228,7 +232,7 @@ export class AduaneroComponent implements OnInit, AfterViewInit, OnDestroy {
   /**
    * Datos del cuerpo de la tabla de empleados
    */
-  public empleadosBodyData: TableBodyData[] = [];
+  public empleadosBodyData: TableBody[] = [];
 
   /**
    * Encabezados de la tabla de domicilios
@@ -238,7 +242,7 @@ export class AduaneroComponent implements OnInit, AfterViewInit, OnDestroy {
   /**
    * Datos del cuerpo de la tabla de domicilios
    */
-  public domiciliosBodyData: TableBodyData[] = [];
+  public domiciliosBodyData: TableBody[] = [];
 
   /**
    * Encabezados de la tabla de instalaciones
@@ -248,7 +252,7 @@ export class AduaneroComponent implements OnInit, AfterViewInit, OnDestroy {
   /**
    * Datos del cuerpo de la tabla de instalaciones
    */
-  public InstalacionesBodyData: TableBodyData[] = [];
+  public InstalacionesBodyData: TableBody[] = [];
 
   /**
    * Estado de la solicitud

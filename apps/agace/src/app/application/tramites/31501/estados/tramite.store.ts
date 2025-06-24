@@ -4,19 +4,19 @@ import { Injectable } from '@angular/core';
 /**
  * Estado para el número de trámite
  */
-export interface TramiteAgaceState {
-  idTramite: string;
-  firma: string;
+export interface TramiteState {
+  idTramite: string | null;
+  firma: string | null;
 }
 
 /**
  * Creación del estado inicial para el trámite
  * @returns TramiteState
  */
-export function createInitialState(): TramiteAgaceState {
+export function createInitialState(): TramiteState {
   return {
-    idTramite: '',
-    firma: '',
+    idTramite: null,
+    firma: null,
   };
 }
 
@@ -24,7 +24,7 @@ export function createInitialState(): TramiteAgaceState {
   providedIn: 'root',
 })
 @StoreConfig({ name: 'tramite', resettable: true })
-export class TramiteAgaceStore extends Store<TramiteAgaceState> {
+export class TramiteStore extends Store<TramiteState> {
   constructor() {
     super(createInitialState());
   }
