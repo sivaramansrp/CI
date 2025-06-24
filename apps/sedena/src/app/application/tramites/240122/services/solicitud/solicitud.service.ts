@@ -8,7 +8,12 @@ import { Tramite240122State } from '../../estados/tramite240122Store.store';
 })
 export class SolicitudService {
 
-  constructor(private readonly http:HttpClient) { }
+  /**
+   * Crea una nueva instancia del servicio de solicitud.
+   * 
+   * @param http - Instancia de HttpClient utilizada para realizar solicitudes HTTP.
+   */
+  constructor(private readonly http: HttpClient) { }
 
   /**
    * @description

@@ -1,8 +1,6 @@
+import { AccionBoton, DatosPasos, ListaPasosWizard, PASOS, WizardComponent } from '@libs/shared/data-access-user/src';
 import { Component, ViewChild } from '@angular/core';
 import { TITULOMENSAJE } from '../../constants/agregar-destinatario.enum';
-
-import { AccionBoton, DatosPasos, ListaPasosWizard, PASOS, WizardComponent } from '@libs/shared/data-access-user/src';
-
 @Component({
   selector: 'app-solicitud-page',
   templateUrl: './solicitud-page.component.html',

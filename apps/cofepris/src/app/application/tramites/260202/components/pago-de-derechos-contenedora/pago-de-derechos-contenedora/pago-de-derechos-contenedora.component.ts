@@ -1,8 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
-import { ID_PROCEDIMIENTO } from '../../../constants/importacion-materias-primas.enum';
+import { Component } from '@angular/core';
+import { Input } from '@angular/core';
 import { PagoDeDerechosComponent } from '../../../../../shared/components/pago-de-derechos/pago-de-derechos.component';
 import { PagoDerechosFormState } from '../../../../../shared/models/terceros-relacionados.model';
+
+import { ID_PROCEDIMIENTO } from '../../../constants/importacion-materias-primas.enum';
 import { Tramite260202Store } from '../../../estados/tramite260202Store.store';
 
 /**

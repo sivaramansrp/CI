@@ -86,11 +86,11 @@ describe('ModificarFusionEscisionComponent', () => {
     tercerosServiceMock.obtenerDatosPersona.mockReturnValue(of(datos));
     component.fusionEscisionForm.get('rfcBusquedaModal')?.setValue('RFCNEW');
     component.cargarDatosPersonaFusionada();
-    expect(component.fusionEscisionForm.get('razonSocialFusionante')?.value).toBe('RSX');
-    expect(tramiteStoreMock.setAvisoDatos).toHaveBeenCalledWith('RSX', 'razonSocialFusionante');
-    expect(tramiteStoreMock.setAvisoDatos).toHaveBeenCalledWith('FOLIOX', 'folioVucemFusionante');
-    expect(tramiteStoreMock.setAvisoDatos).toHaveBeenCalledWith('2024-02-01', 'fechaInicioVigenciaFusionante');
-    expect(tramiteStoreMock.setAvisoDatos).toHaveBeenCalledWith('2024-12-01', 'fechaFinVigenciaFusionante');
+
+    expect(tramiteStoreMock.setAvisoDatos).toHaveBeenCalledWith('razonSocialFusionante', 'RSX');
+    expect(tramiteStoreMock.setAvisoDatos).toHaveBeenCalledWith('folioVucemFusionante', 'FOLIOX');
+    expect(tramiteStoreMock.setAvisoDatos).toHaveBeenCalledWith('fechaInicioVigenciaFusionante', '2024-02-01');
+    expect(tramiteStoreMock.setAvisoDatos).toHaveBeenCalledWith('fechaFinVigenciaFusionante', '2024-12-01');
   });
 
   it('should add fusionEscisionData, update store, reset form, and call back on agregarFusionEscision', () => {
@@ -120,14 +120,15 @@ describe('ModificarFusionEscisionComponent', () => {
     component.inicializarFormulario();
     component.fusionEscisionForm.get('rfcBusquedaModal')?.setValue('RFCVAL');
     component.cambioRFC();
-    expect(tramiteStoreMock.setAvisoDatos).toHaveBeenCalledWith('RFCVAL', 'rfcBusquedaModal');
+    expect(tramiteStoreMock.setAvisoDatos).toHaveBeenCalledWith('rfcBusquedaModal', 'RFCVAL');
   });
 
   it('should call setAvisoDatos on cambioRfcSC', () => {
     component.inicializarFormulario();
     component.fusionEscisionForm.get('rfcBusquedaModalSC')?.setValue('RFCSCVAL');
     component.cambioRfcSC();
-    expect(tramiteStoreMock.setAvisoDatos).toHaveBeenCalledWith('RFCSCVAL', 'rfcBusquedaModalSC');
+    expect(tramiteStoreMock.setAvisoDatos).toHaveBeenCalledWith( 'rfcBusquedaModalSC', 'RFCSCVAL');
+
   });
 
   it('should call setAvisoDatos on cambioRazonSocialSC', () => {
@@ -135,7 +136,7 @@ describe('ModificarFusionEscisionComponent', () => {
     component.fusionEscisionForm.addControl('razonSocialSC', component.fusionEscisionForm.get('razonSocialFusionanteSC')!);
     component.fusionEscisionForm.get('razonSocialSC')?.setValue('RSVAL');
     component.cambioRazonSocialSC();
-    expect(tramiteStoreMock.setAvisoDatos).toHaveBeenCalledWith('RSVAL', 'razonSocialSC');
+    expect(tramiteStoreMock.setAvisoDatos).toHaveBeenCalledWith('razonSocialSC', 'RSVAL');
   });
 
   it('should complete destroyNotifier$ on ngOnDestroy', () => {

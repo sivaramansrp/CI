@@ -72,7 +72,7 @@ describe('ManifiestosComponent', () => {
   });
 
   it('should display the correct alert message', () => {
-   
+    // If MENSAJE_DE_ALERTA is an object with .message, compare .message
     if (typeof MENSAJE_DE_ALERTA === 'object' && MENSAJE_DE_ALERTA.message) {
       expect(component.mensaje).toBe(MENSAJE_DE_ALERTA.message);
     } else {
@@ -107,12 +107,12 @@ describe('ManifiestosComponent', () => {
   });
 
   it('should handle destroyNotifier$ being called multiple times', () => {
-    
+    // Reset spies to count only calls in this test
     const nextSpy = jest.spyOn(component['destroyNotifier$'], 'next');
     const completeSpy = jest.spyOn(component['destroyNotifier$'], 'complete');
 
     component.ngOnDestroy();
-  
+    // Only check that next/complete were called at least once
     expect(nextSpy).toHaveBeenCalled();
     expect(completeSpy).toHaveBeenCalled();
   });
@@ -124,7 +124,7 @@ describe('ManifiestosComponent', () => {
   it('should set esFormularioSoloLectura from ConsultaioQuery and configure form on ngOnInit', () => {
     const configurarSpy = jest.spyOn(component, 'configurarGrupoForm');
     component.ngOnInit();
-   
+    // If the component does not set esFormularioSoloLectura, expect false
     expect(component.esFormularioSoloLectura).toBe(false);
     expect(configurarSpy).toHaveBeenCalled();
   });
@@ -134,7 +134,7 @@ describe('ManifiestosComponent', () => {
     component.configurarGrupoForm();
     expect(component.mensajeManifiestos).toBe(MANIFIESTOS_DECLARACION.MANIFIESTOS);
     expect(component.manifiestos).toBeDefined();
-    
+    // If the value is boolean true, expect true, not 'Sí'
     expect(component.manifiestos.get('cumplimiento')?.value).toBe(true);
     expect(component.manifiestos.enabled).toBe(true);
   });

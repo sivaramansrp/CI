@@ -1,9 +1,7 @@
-import { Catalogo } from '@libs/shared/data-access-user/src';
-
+import { GrupoCupo, GrupoDatalleCupo, GrupoEmpresa, GrupoFolio } from '../../tramites/140205/model/cancelaciones-certificado.model';
 import { Injectable } from '@angular/core';
 import { Store } from '@datorama/akita';
 import { StoreConfig } from '@datorama/akita';
-import { GrupoCupo, GrupoDatalleCupo, GrupoEmpresa, GrupoFolio } from '../../tramites/140205/model/cancelaciones-certificado.model';
 /**
  * Interfaz que define el estado inicial del trámite 140205.
  * 
@@ -778,4 +776,60 @@ export class Tramite140205Store extends Store<Tramite140205State> {
       pestanaActiva,
     }));
   }
+
+  /**
+   * Actualiza el grupo de empresa en el estado del trámite.
+   *
+   * Este método permite establecer el grupo de empresa en el estado del trámite.
+   *
+   * @param {GrupoEmpresa} grupoEmpresa - El grupo de empresa a establecer.
+   */
+  public setGrupoEmpresa(grupoEmpresa: GrupoEmpresa): void {
+    this.update((state) => ({
+      ...state,
+      grupoEmpresa,
+    }));
+  }
+
+  /**
+   * Actualiza el grupo de cupo en el estado del trámite.
+   *
+   * Este método permite establecer el grupo de cupo en el estado del trámite.
+   *
+   * @param {GrupoCupo} grupoCupo - El grupo de cupo a establecer.
+   */
+  public setGrupoCupo(grupoCupo: GrupoCupo): void {
+    this.update((state) => ({
+      ...state,
+      grupoCupo,
+    }));
+  }
+
+  /**
+   * Actualiza el grupo de detalle de cupo en el estado del trámite.
+   *
+   * Este método permite establecer el grupo de detalle de cupo en el estado del trámite.
+   *
+   * @param {GrupoDatalleCupo} grupoDatalleCupo - El grupo de detalle de cupo a establecer.
+   */
+  public setGrupoDatalleCupo(grupoDatalleCupo: GrupoDatalleCupo): void {
+    this.update((state) => ({
+      ...state,
+      grupoDatalleCupo,
+    }));
+  }
+  /**
+   * Actualiza el grupo de folio en el estado del trámite.
+   *
+   * Este método permite establecer el grupo de folio en el estado del trámite.
+   *
+   * @param {GrupoFolio} grupoFolio - El grupo de folio a establecer.
+   */
+  public setGrupoFolio(grupoFolio: GrupoFolio): void {
+    this.update((state) => ({
+      ...state,
+      grupoFolio,
+    }));
+  }
+
 }
