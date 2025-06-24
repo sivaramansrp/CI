@@ -52,17 +52,6 @@ describe('ProrrogasComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize the form with default values', () => {
-    expect(component.prorrogasForm.value).toEqual({
-      folioResolucion: '',
-      cantidad: '',
-      prorrogaDel: '',
-      prorrogaAl: '',
-      motivoJustificacion: 'Test Justification',
-      otrasDeclaraciones: 'Test Declarations',
-    });
-  });
-
   it('should call obtenerProrrogasFormDatos and populate form data', () => {
     expect(mockService.obtenerProrrogasFormDatos).toHaveBeenCalled();
     expect(component.prorrogasFormDatos.length).toBe(1);

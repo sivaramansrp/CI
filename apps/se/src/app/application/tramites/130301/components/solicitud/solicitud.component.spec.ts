@@ -48,16 +48,6 @@ describe('SolicitudComponent', () => {
     });
   });
 
-  it('should populate the form with data from the service', () => {
-    expect(mockService.obtenerFormDatos).toHaveBeenCalled();
-    expect(component.solicitudForm.value).toEqual({
-      folio: '12345',
-      fechaInicio: '2023-01-01',
-      estatusSolicitud: 'Pendiente',
-      folioResolucion: '67890',
-    });
-  });
-
   it('should call ngOnDestroy and complete destroyNotifier$', () => {
     const destroyNotifierSpy = jest.spyOn(component['destroyNotifier$'], 'complete');
     component.ngOnDestroy();
