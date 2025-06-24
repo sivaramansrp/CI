@@ -49,7 +49,6 @@ import { provideHttpClient } from '@angular/common/http';
     BtnContinuarComponent,
     RequisitosComponent,
     ToastrModule.forRoot(),
-    BrowserModule
   ],
   providers: [
     Solocitud31601Service,

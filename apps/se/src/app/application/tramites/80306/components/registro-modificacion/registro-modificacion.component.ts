@@ -2,10 +2,10 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import {ConfiguracionColumna, TablaDinamicaComponent,TituloComponent} from '@libs/shared/data-access-user/src';
 import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { DatosDeLaTabla } from '../../models/datos-tramite.model';
 import { FormsModule } from '@angular/forms';
 import { ImmerModificacionService } from '../../service/immer-modificacion.service';
 import { Router } from '@angular/router';
-import { datosDeLaTabla } from '../../models/datos-tramite.model';
 
 @Component({
   selector: 'app-registro-modificacion',
@@ -38,16 +38,16 @@ export class RegistroModificacionComponent implements OnInit, OnDestroy {
    * incluyendo el encabezado, la clave para acceder a los datos, el orden de la columna
    * y si debe mostrarse como un hiperenlace.
    * 
-   * @type {ConfiguracionColumna<datosDeLaTabla>[]}
+   * @type {ConfiguracionColumna<DatosDeLaTabla>[]}
    * 
    * @property {string} encabezado - El texto que se mostrará como encabezado de la columna.
-   * @property {(artículo: datosDeLaTabla) => any} clave - Una función que define cómo acceder
-   * a los datos de la columna desde un objeto de tipo `datosDeLaTabla`.
+   * @property {(artículo: DatosDeLaTabla) => any} clave - Una función que define cómo acceder
+   * a los datos de la columna desde un objeto de tipo `DatosDeLaTabla`.
    * @property {number} orden - El orden en el que se mostrará la columna en la tabla.
    * @property {boolean} [hiperenlace] - Indica si el contenido de la columna debe mostrarse
    * como un hiperenlace. Este campo es opcional.
    */
-  public encabezadoDeTabla: ConfiguracionColumna<datosDeLaTabla>[] = [
+  public encabezadoDeTabla: ConfiguracionColumna<DatosDeLaTabla>[] = [
     {
       encabezado: 'Folio de programa',
       clave: (artículo) => artículo.folioDePrograma,
@@ -64,9 +64,9 @@ export class RegistroModificacionComponent implements OnInit, OnDestroy {
   /**
    * Arreglo que almacena los datos de la tabla relacionados con los contenedores.
    *
-   * @type {datosDeLaTabla[]}
+   * @type {DatosDeLaTabla[]}
    */
-  public datosDelContenedor: datosDeLaTabla[] = [];
+  public datosDelContenedor: DatosDeLaTabla[] = [];
 
   /**
     * Observable para notificar la destrucción del componente.
@@ -127,7 +127,7 @@ export class RegistroModificacionComponent implements OnInit, OnDestroy {
     this.immerModificacionService
       .getTablaData('tablaLista').pipe(takeUntil(this.destroyNotifier$))
       .subscribe((resp) => {
-        this.datosDelContenedor = resp.data.map((item: any) => ({
+        this.datosDelContenedor = resp.data.map((item: DatosDeLaTabla) => ({
           id: item.id,
           folioDePrograma: item.folioDePrograma,
           tipoDePrograma: item.tipoDePrograma,

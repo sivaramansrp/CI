@@ -453,7 +453,7 @@ setValoresStore(form: FormGroup, campo: string): void {
  * LicitacionesVigentesComponent
  * 
  */
-abrirModificarModal(event: Complementaria): void {
+abrirModificarModal(_event: Complementaria): void {
   if(this.esFormularioSoloLectura){
     return
   }

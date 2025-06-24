@@ -89,7 +89,8 @@
           <app-tabla-dinamica
             [configuracionTabla]="configuracionTabla"
             [datos]="datosData"
-            [tipoSeleccionTabla]="tipoSeleccionTabla.CHECKBOX">
+            [tipoSeleccionTabla]="tipoSeleccionTabla.CHECKBOX"
+            [disableSeleccionTablaCheckBox]="esFormularioSoloLectura">
           </app-tabla-dinamica>
         </div>
       </div>
@@ -111,7 +112,8 @@
     <div class="col-md-3">
         <lib-input-check [id]="'funciona'" [label]="'Aviso de funcionamiento'" [required]="false"
         formControlName="funcionamiento"
-        (change)="setValoresStore(domicilioEstablecimiento,'funcionamiento')"></lib-input-check>
+        (change)="setValoresStore(domicilioEstablecimiento,'funcionamiento')"
+        [disabled]="esFormularioSoloLectura"></lib-input-check>
     </div>
     <div class="col-md-4">
         <div class="form-group">
