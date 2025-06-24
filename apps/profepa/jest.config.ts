@@ -20,7 +20,7 @@ export default {
   },
   coverageReporters: ['text-summary', 'html'],
   coveragePathIgnorePatterns: [
-    'src/app/application/.*\\.(module|store|query|enums?|enum|model|constants?|constantes|interfaces?)\\.ts$',
+    'src/app/application/.*\\.(module|store|query|enums?|enum|model|models|constants?|constantes|interfaces?)\\.ts$',
     'src/app/application/seleccion-tramite/.*\\.ts$',
   ],
   transform: {
