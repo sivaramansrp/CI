@@ -11,14 +11,40 @@ import { takeUntil } from 'rxjs';
   templateUrl: './paso-capturar-solicitud.component.html',
 })
 export class PasoCapturarSolicitudComponent implements OnDestroy {
+  /**
+   * Almacena los pasos del wizard definidos en PASOS4.
+   * @type {ListaPasosWizard[]}
+   */
   pasos: ListaPasosWizard[] = PASOS4;
+  /**
+   * Almacena el índice actual del paso en el wizard.
+   * @type {number}
+   */
   indice: number = 1;
+  /**
+   * Almacena el mensaje de aviso para el wizard.
+   * @type {AVISO}
+   */
   datosPasos: DatosPasos = {
     nroPasos: this.pasos.length,
     indice: this.indice,
     txtBtnAnt: 'Anterior',
     txtBtnSig: 'Continuar',
   };
+  /**
+   * Referencia al componente `WizardComponent` dentro de la plantilla.
+   * Esta propiedad utiliza el decorador `@ViewChild` para obtener una instancia del componente
+   * `WizardComponent` que se encuentra en la plantilla del componente actual.
+   * 
+   * Uso:
+   * - Se utiliza para acceder a los métodos y propiedades del componente `WizardComponent`.
+   * - Por ejemplo, se llama a los métodos `siguiente()` y `atras()` para navegar entre los pasos
+   *   del asistente (wizard).
+   * 
+   * Nota:
+   * - Esta propiedad se inicializa después de que Angular haya renderizado la vista.
+   * - Asegúrese de que el componente `WizardComponent` esté presente en la plantilla.
+   */
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
   /**
  * 
@@ -33,6 +59,13 @@ export class PasoCapturarSolicitudComponent implements OnDestroy {
    */
   destroyNotifier$: Subject<void> = new Subject();
 
+  /**
+   * Constructor del componente `PasoCapturarSolicitudComponent`.
+   * Inicializa el componente y establece la validez del formulario en el store.
+   * 
+   * @param {Tramite80101Query} tramiteQuery - Servicio para gestionar el estado del trámite.
+   * @param {SeccionLibStore} seccion - Servicio para gestionar el estado de la sección.
+   */
   constructor(
     private tramiteQuery: Tramite80101Query,
     private seccion: SeccionLibStore

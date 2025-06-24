@@ -1,5 +1,7 @@
 import { Store, StoreConfig } from '@datorama/akita';
+import { EnlaceConfiguracionItem } from '../../tramites/31601/enum/enlance-tabla.enum';
 import { Injectable } from '@angular/core';
+import { MencioneConfiguracionItem } from '../../tramites/31601/enum/mencione-tabla.enum';
 
 import { Antecesor } from '../../tramites/31601/modelos/antecesor.modal';
 
@@ -493,6 +495,15 @@ export interface Solicitud31601State {
      */
     tipoDocumento: string;
 
+    /**
+     * Datos de la tabla de menciones.
+     */
+    mencioneDatos: MencioneConfiguracionItem[];
+
+    /**
+     * Datos de la tabla de enlaces.
+     */
+    enlaceDatos: EnlaceConfiguracionItem[];
 }
 /**
  * Función para crear el estado inicial de Solicitud31601.
@@ -991,6 +1002,14 @@ export function createInitialState(): Solicitud31601State {
          * El valor de tipoDocumento.
          */
         tipoDocumento: '',
+        /* * Datos de la tabla de enlaces.
+         */
+        enlaceDatos: [],
+        /**
+         * Datos de la tabla de menciones.
+         */
+        mencioneDatos: [],
+
     };
 }
 
@@ -1009,6 +1028,28 @@ export function createInitialState(): Solicitud31601State {
 @StoreConfig({ name: 'tramite31601', resettable: true })
 
 export class Tramite31601Store extends Store<Solicitud31601State> {
+    /**
+     * Establece los datos de la tabla de menciones.
+     * @param {MencioneConfiguracionItem[]} datosTablaMencione - Los datos de la tabla de menciones.
+     */
+    setMencioneTablaDatos(datosTablaMencione: MencioneConfiguracionItem[]):void {
+        this.update((state) => ({
+            ...state,
+            mencioneDatos: datosTablaMencione,
+        }));
+    }
+
+    /**
+     * Establece los datos de la tabla de enlaces.
+     * @param {EnlaceConfiguracionItem[]} datosTablaEnlace - Los datos de la tabla de enlaces.
+     */
+    setEnlaceTablaDatos(datosTablaEnlace: EnlaceConfiguracionItem[]):void {
+        this.update((state) => ({
+            ...state,
+            enlaceDatos: datosTablaEnlace,
+        }));
+    }
+
     /**
      * Crea una instancia de Tramite31601Store.
      * Inicializa la tienda con el estado inicial.

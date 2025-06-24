@@ -33,7 +33,7 @@ describe('EmpresasTerciarizadaasComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
@@ -117,4 +117,8 @@ it('should extract values correctly using parentTablaConfig claves', () => {
   ]);
 });
 
+  it('debe llamar obtenerListaEstado al inicializar y asignar estadosCatalogo', () => {
+    expect(serviceMock.obtenerListaEstado).toHaveBeenCalled();
+    expect(component.estadosCatalogo).toEqual([{ id: 1, nombre: 'Estado 1' }]);
+  });
 });
