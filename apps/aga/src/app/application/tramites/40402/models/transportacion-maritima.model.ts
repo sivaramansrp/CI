@@ -675,3 +675,75 @@ export interface RespuestaContribuyenteTabla {
      */
     personaMoralExtranjeraTabla: PersonaMoralExtranjeraForm[];
   }
+
+  /**
+   * CAATSolicitud: Interfaz que representa una solicitud de CAAT
+   * @interface CAATSolicitud
+   */
+  export interface CAATSolicitud{
+    /**
+     * Identificador único de la solicitud
+     * @type {string}
+     */
+    idSolicitud: string;
+
+    /**
+     * Identificador de la persona que realizó la solicitud
+     * @type {string}
+     */
+    idPersonaSolicitud: string;
+
+    /**
+     * Identificador genérico de la solicitud
+     * @type {string}
+     */
+    ideGenerica1: string;
+
+    /**
+     * Clave del folio CAAT
+     * @type {string}
+     */
+    claveFolioCAAT: string;
+
+    /**
+     * Clave del folio CAAT
+     * @type {string}
+     */
+    cveFolioCaat: string;
+
+    /**
+     * Descripción del tipo de CAAT
+     * @type {string}
+     */
+    descripcionTipoCaat: string;
+
+    /**
+     * Tipo de CAAT aérea
+     * @type {string}
+     */
+    tipoDeCaatAerea: string;
+
+    /**
+     * Identificador del código de transportación aérea
+     * @type {string}
+     */
+    ideCodTransportacionAerea: string;
+
+    /**
+     * Código IATA/ICAO
+     * @type {string}
+     */
+    codIataIcao: string;
+
+    /**
+     * Fecha de inicio de vigencia del CAAT
+     * @type {string}
+     */
+    fechaInicioVigencia: string;
+
+    /**
+     * Fecha de fin de vigencia del CAAT
+     * @type {string}
+     */
+    fechaFinVigencia: string;
+  }

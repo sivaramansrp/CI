@@ -1,5 +1,4 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { SolicitanteComponent, TercerosComponent } from '@libs/shared/data-access-user/src';
 import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user'
@@ -7,6 +6,7 @@ import { DatosDeLaSolicitudComponent } from '../../components/datos-de-la-solici
 import { ExportaccionAcuicolaService } from '../../services/exportaccion-acuicola.service';
 import { PagoDeDerechosComponent } from '../../components/pago-de-derechos/pago-de-derechos.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { SolicitanteComponent } from '@libs/shared/data-access-user/src';
 import { TercerospageComponent } from '../../components/tercerospage/tercerospage.component';
 import { TransporteComponent } from '../../components/transporte/transporte.component';
 

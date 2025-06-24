@@ -186,7 +186,7 @@
     "tramite": 80202,
     "linkDashboard": "/se/immex-ampliacion-sensibles/solicitud",
     "linkDepartment": "/pago/immex-ampliacion-sensibles/solicitud",
-    "department": "agace"
+    "department": "se"
   },
   {
     "id": 28,
@@ -437,7 +437,7 @@
     "id": 63,
     "tramite": 130120,
     "linkDashboard": "/se/permiso-importacion/intro-permiso",
-    "linkDepartment": "/se/permiso-importacion/intro-permiso",
+    "linkDepartment": "/pago/permiso-importacion/intro-permiso",
     "department": "se"
   },
   {
@@ -738,7 +738,7 @@
     "id": 106,
     "tramite": 140104,
     "linkDashboard": "/se/cancelacion-de-certificados-de-cupo/solicitante",
-    "linkDepartment": "/se/cancelacion-de-certificados-de-cupo/solicitante",
+    "linkDepartment": "/pago/cancelacion-de-certificados-de-cupo/solicitante",
     "department": "se"
   },
   {
@@ -3117,7 +3117,7 @@
   {
     "id": 448,
     "tramite": 32516,
-    "linkDashboard": "/agace/acta-de-hechos/solicituds",
+    "linkDashboard": "/agace/acta-de-hechos/solicitud",
     "linkDepartment": "/pago/acta-de-hechos/solicitud",
     "department": "agace"
   },

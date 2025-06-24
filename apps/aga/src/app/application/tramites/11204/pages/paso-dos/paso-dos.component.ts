@@ -1,4 +1,4 @@
-import { CATALOGOS_ID, TEXTOS, Catalogo, CatalogosService } from '@ng-mf/data-access-user';
+import { CATALOGOS_ID, Catalogo, CatalogosService, TEXTOS } from '@ng-mf/data-access-user';
 import { Component, OnInit } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 

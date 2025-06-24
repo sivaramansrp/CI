@@ -11,8 +11,8 @@ import { Tramite240321Store } from '../../estados/tramite240321Store.store';
 import { takeUntil } from 'rxjs';
 /**
  * @title Pago de Derechos Contenedora
- * @description Componente contenedor que se encarga de enlazar el estado de pago de derechos con el formulario correspondiente.
- * @summary Escucha cambios en el estado y propaga las actualizaciones al store.
+ * @description Container component responsible for linking the payment rights state with the corresponding form.
+ * @summary Listens for state changes and propagates updates to the store.
  */
 
 @Component({
@@ -49,6 +49,7 @@ export class PagoDeDerechosContenedoraComponent implements OnInit, OnDestroy,Aft
    * @method constructor
    * @param {Tramite240321Query} tramiteQuery - Query para obtener el estado actual del pago de derechos.
    * @param {Tramite240321Store} tramiteStore - Store que administra el estado del pago de derechos.
+   * @param {ConsultaioQuery} consultaioQuery - Query para acceder al estado de la consulta.
    * @returns {void}
    */
   constructor(
@@ -56,7 +57,6 @@ export class PagoDeDerechosContenedoraComponent implements OnInit, OnDestroy,Aft
     private tramiteStore: Tramite240321Store,
     private readonly consultaioQuery:ConsultaioQuery
   ) {
-    // 
   }
 
   /**

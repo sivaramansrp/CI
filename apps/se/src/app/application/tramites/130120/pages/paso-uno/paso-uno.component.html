@@ -10,13 +10,18 @@
       </ul>
   
       <ng-container>
-        @switch (indice) { @case (1) {
-            <solicitante></solicitante>
-        } 
-        @case (2) {
-            <app-datos-de-la-solicitud></app-datos-de-la-solicitud>
-        } 
-    }
+        @switch (indice) {
+          @case (1) {
+              @if(esDatosRespuesta){
+              <solicitante></solicitante>
+              }
+          }
+          @case (2) {
+              @if(esDatosRespuesta){
+                <app-datos-de-la-solicitud></app-datos-de-la-solicitud>
+              }
+          }
+        }
       </ng-container>
     </div>
   </div>

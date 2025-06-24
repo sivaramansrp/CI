@@ -1,7 +1,7 @@
 import { PantallasComponent } from './pantallas.component';
 import { WizardComponent } from '@ng-mf/data-access-user';
-import { PANTA_PASOS } from '@libs/shared/data-access-user/src/core/enums/260604/aviso-exportacion.enum';
-import { AccionBoton } from '@libs/shared/data-access-user/src/core/models/260604/aviso-exportacion.model';
+import { AccionBoton } from '@ng-mf/data-access-user';
+import { PANTA_PASOS } from '@ng-mf/data-access-user';
 
 describe('PantallasComponent', () => {
   let component: PantallasComponent;

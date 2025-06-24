@@ -1,8 +1,7 @@
-/* eslint-disable sort-imports */
 import { Component, OnInit } from '@angular/core';
-import { CatalogoSelectComponent, TituloComponent } from '@ng-mf/data-access-user';
 import { Catalogo } from '@ng-mf/data-access-user';
-
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
+import { TituloComponent } from '@ng-mf/data-access-user';
 @Component({
   selector: 'app-agregar-destinatoria',
   templateUrl: './agregar-destinatoria.component.html',
@@ -18,14 +17,13 @@ export class AgregarDestinatoriaComponent implements OnInit {
    * @description Arreglo que almacena los datos de los países.
    */
   public pais!: Catalogo[];
-  // eslint-disable-next-line @typescript-eslint/no-inferrable-types
   /**
    * @property fisica
    * @type {boolean}
    * @description Indica si la persona es física.
    */
   public fisica: boolean = true;
-  // eslint-disable-next-line @typescript-eslint/no-inferrable-types
+
   /**
    * @property moral
    * @type {boolean}
@@ -33,12 +31,13 @@ export class AgregarDestinatoriaComponent implements OnInit {
    */
   public moral: boolean = false;
 
-  // eslint-disable-next-line @typescript-eslint/no-empty-function, no-empty-function
   /**
    * @constructor
    * @description Constructor de la clase AgregarDestinatoriaComponent.
    */
-  constructor() { }
+  constructor() { 
+    //
+  }
 
   /**
    * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
@@ -68,11 +67,6 @@ export class AgregarDestinatoriaComponent implements OnInit {
     ];
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-empty-function, no-empty-function, @typescript-eslint/no-unused-vars, class-methods-use-this
-  /**
-   * @descripcion Método que se ejecuta cuando se selecciona un documento.
-   */
-  docSeleccionado(): void { }
 
   /**
    * 

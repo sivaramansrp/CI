@@ -1,60 +1,136 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { PasoUnoComponent } from './paso-uno.component';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { of, Subject } from 'rxjs';
+import { DatosDelTramiteService } from '../../services/datos-del-tramite.service';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 
-describe('PasoUnoComponent', () => {
-  let component: PasoUnoComponent;
-  let fixture: ComponentFixture<PasoUnoComponent>;
+describe('DatosComponent', () => {
+    let componente: PasoUnoComponent;
+    let fixture: ComponentFixture<PasoUnoComponent>;
+  
+    beforeEach(async () => {
+      await TestBed.configureTestingModule({
+        declarations: [PasoUnoComponent],
+        schemas: [NO_ERRORS_SCHEMA],
+        providers: [],
+        imports: [
+          require('@angular/common/http/testing').HttpClientTestingModule
+        ]
+      }).compileComponents();
+  
+      fixture = TestBed.createComponent(PasoUnoComponent);
+      componente = fixture.componentInstance;
+      fixture.detectChanges();
+    });
+  it('debería crear el componente', () => {
+    expect(componente).toBeTruthy();
+  });
 
-  const mockSolicitanteService = { 
-    validateTab: jest.fn().mockImplementation((tabIndex: number) => {
-      return tabIndex > 0 && tabIndex <= 5; 
-    }),
-  };
+  it('debería tener el índice inicial en 1', () => {
+    expect(componente.indice).toBe(1);
+  });
+
+  it('debería actualizar el índice al llamar seleccionaTab', () => {
+    const NUEVO_INDICE = 3;
+    componente.seleccionaTab(NUEVO_INDICE);
+    expect(componente.indice).toBe(NUEVO_INDICE);
+  });
+});
+describe('PasoUnoComponent - Cobertura Completa', () => {
+  let componente: PasoUnoComponent;
+  let fixture: any;
+  let mockDatosDelTramiteService: any;
+  let mockConsultaQuery: any;
+  let destroyNotifier$: Subject<void>;
 
   beforeEach(async () => {
+    mockDatosDelTramiteService = {
+      getRegistroTomaMuestrasMercanciasData: jest.fn().mockReturnValue(of({ foo: 'bar' })),
+      actualizarEstadoFormulario: jest.fn()
+    };
+    mockConsultaQuery = {
+      selectConsultaioState$: of({ update: true })
+    };
     await TestBed.configureTestingModule({
       declarations: [PasoUnoComponent],
-      imports:[],
+      schemas: [NO_ERRORS_SCHEMA],
       providers: [
-        { provide: 'SolicitanteService', useValue: mockSolicitanteService },
+        { provide: DatosDelTramiteService, useValue: mockDatosDelTramiteService },
+        { provide: ConsultaioQuery, useValue: mockConsultaQuery }
       ],
-    })
-    .compileComponents();
+      imports: [
+        require('@angular/common/http/testing').HttpClientTestingModule
+      ]
+    }).compileComponents();
 
     fixture = TestBed.createComponent(PasoUnoComponent);
-    component = fixture.componentInstance;
+    componente = fixture.componentInstance;
+    destroyNotifier$ = (componente as any).destroyNotifier$;
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
-    expect(component).toBeTruthy();
+  afterEach(() => {
+    jest.clearAllMocks();
   });
 
-  it('should have a default value of indice as 1', () => {
-    expect(component.indice).toBe(1);
+  it('debería crear el componente', () => {
+    expect(componente).toBeTruthy();
   });
 
-  it('should update indice when seleccionaTab is called', () => {
-    component.seleccionaTab(3);
-    expect(component.indice).toBe(3);
+  it('debería tener el índice inicial en 1', () => {
+    expect(componente.indice).toBe(1);
   });
 
-  it('should validate the tab index using the mock service', () => {
-    const isValid = mockSolicitanteService.validateTab(3); 
-    expect(isValid).toBe(true); 
+  it('debería actualizar el índice al llamar seleccionaTab', () => {
+    componente.seleccionaTab(5);
+    expect(componente.indice).toBe(5);
+  });
+
+  it('debería suscribirse a selectConsultaioState$ y llamar guardarDatosFormulario si update es true', () => {
+    const guardarSpy = jest.spyOn(componente as any, 'guardarDatosFormulario');
+    componente.consultaState = { update: false } as any;
+    componente.ngOnInit();
+    expect(componente.consultaState.update).toBe(true);
+    expect(guardarSpy).toHaveBeenCalled();
+  });
+
+  it('debería poner esDatosRespuesta en true si update es false', () => {
+    mockConsultaQuery.selectConsultaioState$ = of({ update: false });
+    fixture = TestBed.createComponent(PasoUnoComponent);
+    componente = fixture.componentInstance;
+    componente.ngOnInit();
+    expect(componente.esDatosRespuesta).toBe(true);
+  });
+
+  it('guardarDatosFormulario debería llamar actualizarEstadoFormulario si resp existe', () => {
+    const spy = jest.spyOn(mockDatosDelTramiteService, 'actualizarEstadoFormulario');
+    (componente as any).guardarDatosFormulario();
+    expect(componente.esDatosRespuesta).toBe(true);
+    expect(spy).toHaveBeenCalledWith({ foo: 'bar' });
+  });
+
   
-    const isInvalid = mockSolicitanteService.validateTab(6); 
-    expect(isInvalid).toBe(false); 
+
+  it('ngOnDestroy debería llamar next y complete en destroyNotifier$', () => {
+    const nextSpy = jest.spyOn(destroyNotifier$, 'next');
+    const completeSpy = jest.spyOn(destroyNotifier$, 'complete');
+    componente.ngOnDestroy();
+    expect(nextSpy).toHaveBeenCalled();
+    expect(completeSpy).toHaveBeenCalled();
   });
 
-  it('should handle negative values in seleccionaTab', () => {
-    component.seleccionaTab(-1);
-    expect(component.indice).toBe(-1);
+  it('debería limpiar recursos correctamente al destruir el componente', () => {
+    const nextSpy = jest.spyOn((componente as any).destroyNotifier$, 'next');
+    const completeSpy = jest.spyOn((componente as any).destroyNotifier$, 'complete');
+    componente.ngOnDestroy();
+    expect(nextSpy).toHaveBeenCalledTimes(1);
+    expect(completeSpy).toHaveBeenCalledTimes(1);
   });
 
-  it('should handle zero in seleccionaTab', () => {
-    component.seleccionaTab(0);
-    expect(component.indice).toBe(0);
+  it('debería asignar consultaState correctamente desde el observable', () => {
+    componente.ngOnInit();
+    expect(componente.consultaState).toBeDefined();
+    expect(typeof componente.consultaState.update).toBe('boolean');
   });
 });

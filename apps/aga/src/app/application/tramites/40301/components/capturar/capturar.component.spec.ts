@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { CapturarComponent } from './capturar.component';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { CapturarService } from '../../services/capturar.service';
-import { Solicitud40301Store } from '../../estados/tramite40301.store';
+import { Tramite40301Store } from '../../estados/tramite40301.store';
 import { of } from 'rxjs';
 import { CaatNaviroMetaInfo } from '../../modelos/caat-naviero.modalidad.model';
 import { Catalogo, TituloComponent, WizardComponent } from '@libs/shared/data-access-user/src';
@@ -11,7 +11,7 @@ describe('CapturarComponent', () => {
   let component: CapturarComponent;
   let fixture: ComponentFixture<CapturarComponent>;
   let mockCapturarService: jest.Mocked<CapturarService>;
-  let mockSolicitudStore: jest.Mocked<Solicitud40301Store>;
+  let mockSolicitudStore: jest.Mocked<Tramite40301Store>;
 
   beforeEach(async () => {
     mockCapturarService = {
@@ -27,7 +27,7 @@ describe('CapturarComponent', () => {
       setDirectorGeneralNombre: jest.fn(),
       setPrimerApellido: jest.fn(),
       setSegundoApellido: jest.fn(),
-    } as unknown as jest.Mocked<Solicitud40301Store>;
+    } as unknown as jest.Mocked<Tramite40301Store>;
 
     await TestBed.configureTestingModule({
       declarations: [CapturarComponent],
@@ -35,7 +35,7 @@ describe('CapturarComponent', () => {
       providers: [
         FormBuilder,
         { provide: CapturarService, useValue: mockCapturarService },
-        { provide: Solicitud40301Store, useValue: mockSolicitudStore },
+        { provide: Tramite40301Store, useValue: mockSolicitudStore },
       ],
     }).compileComponents();
 

@@ -294,10 +294,12 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
    * Maneja el evento de clic para habilitar el formulario de edición.
    * @param row Fila seleccionada.
    */
-  manejarClic(row: unknown) {
+  manejarClic(_row: unknown):void {
     this.esFormulario = true;
-    const MODALEI = document.getElementById('datosMercancia')!;
-    new Modal(MODALEI).show();
+    const MODALEI = document.getElementById('datosMercancia');
+    if (MODALEI) {
+      new Modal(MODALEI).show();
+    }
   }
 
   /**
@@ -417,7 +419,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
    * Si el valor está presente, establece `hayMercanciasDisponibles` en `true`; de lo contrario, lo establece en `false`.
    * Además, actualiza los catálogos necesarios llamando a los métodos `getTratado`, `getPais`, `getUMC`, `getUnidadMedida` y `getTipoFactura`.
    */
-  buscarMercancias() {
+  buscarMercancias():void {
     if (this.registroForm.get('validacionForm.tratado')?.value === 0) {
       this.hayMercanciasDisponibles = false;
     } else {
@@ -432,7 +434,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
   /**
    * Agrega una mercancía al formulario.
    */
-  agregar() {
+  agregar():void {
     this.getTratado();
     this.getPais();
     this.getUMC();
@@ -456,7 +458,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
   /**
    * Modifica una mercancía existente.
    */
-  modificar() {
+  modificar():void {
     this.esMercanciaEnEdicion = false;
 
     this.getTratado();
@@ -470,14 +472,14 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
    * Activa el formulario para cargar un archivo.
    * Cambia el estado de la variable `cargarArchivo` a `true` para mostrar el formulario de carga de archivos.
    */
-  cargaArchivo() {
+  cargaArchivo():void {
     this.cargarArchivo = true;
   }
   /**
    * Muestra errores en el formulario y desactiva la carga de archivos.
    * Cambia el estado de las variables `mostrarErrores` a `true` y `cargarArchivo` a `false`.
    */
-  darError() {
+  darError():void {
     this.mostrarErrores = true;
     this.cargarArchivo = false;
   }
@@ -554,7 +556,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
    * Si no se selecciona ningún archivo, asigna el mensaje "No se eligió ningún archivo".
    * @param event Evento que contiene la información del archivo seleccionado.
    */
-  alSeleccionarArchivo(event: Event) {
+  alSeleccionarArchivo(event: Event):void {
     const FILE = (event.target as HTMLInputElement).files?.[0];
     this.nombreArchivo = FILE ? FILE.name : 'No se eligió ningún archivo';
   }

@@ -74,7 +74,7 @@ export class PedimentoComponent implements OnChanges {
    * 
    * @returns `true` si el formulario tiene errores y ha sido tocado, `false` en caso contrario.
    */
-  get isValid() {
+  get isValid(): boolean | null {
     return this.pedimentoForm.errors && this.pedimentoForm.touched;
   }
 
@@ -83,7 +83,7 @@ export class PedimentoComponent implements OnChanges {
    * 
    * @param changes - Objeto que contiene los cambios detectados.
    */
-  ngOnChanges(changes: SimpleChanges) {
+  ngOnChanges(changes: SimpleChanges): void {
     if (changes['validacion']) {
       this.validacion = changes['validacion'].currentValue;
     }

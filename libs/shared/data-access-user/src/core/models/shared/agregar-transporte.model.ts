@@ -96,12 +96,14 @@ export interface TransporteDespacho {
   guia_master_valida?: boolean | string;
   descripcion_equipo?: string;
 
-  arribo_pendiente_aereo?: boolean | string;
+  arribo_pendiente_aereo?: boolean;
+  arribo_pendiente_aereo_des?: string;
   guia_master_aereo?: string;
   guia_house_aereo?: string;
   fecha_arribo_aereo?: string;
   hora_arribo_aereo?: string;
-  guia_valida?: boolean | string;
+  guia_valida?: boolean;
+  guia_valida_des?: string;
 
   tipo_transporte_des?: string;
   datos_transporte?: string;

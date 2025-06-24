@@ -1,8 +1,12 @@
-import { Component } from '@angular/core';
-import { FirmaElectronicaComponent, TramiteFolioService} from '@ng-mf/data-access-user';
-import { ReplaySubject, Subscription,catchError, map, takeUntil } from 'rxjs';
+import { Component, OnDestroy } from '@angular/core';
+import { FirmaElectronicaComponent } from '@ng-mf/data-access-user';
+import { ReplaySubject } from 'rxjs';
 import { Router } from '@angular/router';
-import { TramiteStore } from '@ng-mf/data-access-user'; 
+import { TramiteFolioService } from '@ng-mf/data-access-user';
+import { TramiteStore } from '@ng-mf/data-access-user';
+import { catchError } from 'rxjs';
+import { map } from 'rxjs';
+import { takeUntil } from 'rxjs';
 /**
  * Componente que representa el paso tres del trámite.
  */
@@ -13,17 +17,16 @@ import { TramiteStore } from '@ng-mf/data-access-user';
   standalone: true,
   imports: [FirmaElectronicaComponent],
 })
-export class PasoTresComponent  {
-  
-   /**
-    * Tipo de persona.
-    */
-   tipoPersona!: number;
+export class PasoTresComponent implements OnDestroy {
   /**
-      * Observable para manejar la destrucción del componente.
-      * Se utiliza para cancelar suscripciones activas.
-      */
-     private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
+   * Tipo de persona.
+   */
+  tipoPersona!: number;
+  /**
+   * Observable para manejar la destrucción del componente.
+   * Se utiliza para cancelar suscripciones activas.
+   */
+  private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
   constructor(
     private router: Router,
@@ -49,7 +52,8 @@ export class PasoTresComponent  {
       // Obtiene el número de trámite
       this.serviciosExtraordinariosServices
         .obtenerTramite(19)
-        .pipe(takeUntil(this.destroyed$),
+        .pipe(
+          takeUntil(this.destroyed$),
           map((tramite) => {
             this.tramiteStore.establecerTramite(tramite.data, FIRMA);
             this.router.navigate(['pago/registro-solicitud/acuse']);
@@ -61,13 +65,12 @@ export class PasoTresComponent  {
         .subscribe();
     }
   }
- /**
+  /**
    * Método que se ejecuta al destruir el componente.
    * Libera los recursos utilizados por las suscripciones.
    */
- ngOnDestroy(): void {
-  this.destroyed$.next(true);
-  this.destroyed$.complete();
-}
-
+  ngOnDestroy(): void {
+    this.destroyed$.next(true);
+    this.destroyed$.complete();
+  }
 }

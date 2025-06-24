@@ -1,57 +1,71 @@
-import { Component, ViewChild } from '@angular/core';
-import { Tramite40102State,Tramite40102Store } from '../../estados/tramite40102.store';
-import { Tramite40102Query } from '../../estados/tramite40102.query';
-import { Subject, map, takeUntil } from 'rxjs';
+
+import {
+  Chofer40102Store,
+  Choferesnacionales40102State,
+} from '../../estados/chofer40102.store';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Chofer40102Query } from '../../estados/chofer40102.query';
 import { DatosPasos } from '@ng-mf/data-access-user';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { PASOS } from '@ng-mf/data-access-user';
 import { SECCIONES_TRAMITE_40102 } from '../../constants/solicitud.enums';
-import { SeccionLibStore, WizardComponent } from '@ng-mf/data-access-user';
+import { Subject } from 'rxjs';
+import { WizardComponent } from '@ng-mf/data-access-user';
+import { map } from 'rxjs/operators';
+import { takeUntil } from 'rxjs/operators';
 
-/**
- * Interfaz para definir la estructura de una acción de botón.
- */
 interface AccionBoton {
   accion: string;
   valor: number;
 }
 
-/**
- * Componente para gestionar la página del solicitante.
- */
 @Component({
   selector: 'app-solicitante-page',
   templateUrl: './solicitante-page.component.html',
   styleUrl: './solicitante-page.component.scss',
 })
-export class SolicitantePageComponent {
+export class SolicitantePageComponent implements OnInit, OnDestroy {
   /**
-   * Lista de pasos del wizard.
+   * Lista de pasos del wizard que se mostrarán en la página.
+   *
+   * @type {Array<ListaPasosWizard>}
    */
   pasos: Array<ListaPasosWizard> = PASOS.slice(0, 2);
 
   /**
-   * Índice del paso actual.
+   * Índice actual del paso en el wizard.
+   *
+   * @type {number}
    */
   indice: number = 1;
 
   /**
-   * Estado de la sección de choferes nacionales.
+   * Estado de la sección actual del trámite.
+   *
+   * @type {Choferesnacionales40102State}
    */
-  public seccion!: Tramite40102State;
+  public seccion!: Choferesnacionales40102State;
 
   /**
-   * Notificador para destruir las suscripciones.
+   * Observable utilizado para manejar la limpieza de recursos al destruir el componente.
+   *
+   * @type {Subject<void>}
    */
   private destroyNotifier$: Subject<void> = new Subject();
 
   /**
-   * Referencia al componente del wizard.
+   * Referencia al componente hijo `WizardComponent` dentro de la plantilla.
+   * Permite acceder a las propiedades y métodos públicos del componente hijo.
+   *
+   * @type {WizardComponent}
    */
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
 
   /**
-   * Datos de los pasos del wizard.
+   * Datos relacionados con los pasos del wizard, como el número de pasos, el índice actual,
+   * y los textos de los botones de navegación.
+   *
+   * @type {DatosPasos}
    */
   datosPasos: DatosPasos = {
     nroPasos: this.pasos.length,
@@ -61,29 +75,31 @@ export class SolicitantePageComponent {
   };
 
   /**
-   * Constructor para inyectar las dependencias necesarias.
-   * @param chofer40102Query - Servicio para consultar el estado de choferes.
-   * @param chofer40102Store - Servicio para gestionar el estado de choferes.
+   * Constructor del componente. Inicializa las dependencias necesarias.
+   *
+   * @param {Chofer40102Query} chofer40102Query - Servicio para consultar el estado del store.
+   * @param {Chofer40102Store} chofer40102Store - Servicio para manejar el estado del store.
    */
   constructor(
-    private tramite40102Query: Tramite40102Query,
-    private tramite40102Store: Tramite40102Store,
-    private seccionStore: SeccionLibStore
-    
+    private chofer40102Query: Chofer40102Query,
+    private chofer40102Store: Chofer40102Store
   ) {}
 
   /**
-   * Método que se ejecuta al inicializar el componente.
+   * Método de ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * Configura los pasos del wizard y suscribe al estado de la sección.
+   *
+   * @returns {void}
    */
-  ngOnInit() {
-    this.pasos = PASOS.slice(0, 2);
-    this.pasos = this.pasos.map((paso) => {
+  ngOnInit(): void {
+    this.pasos = PASOS.slice(0, 2).map((paso) => {
       if (paso.indice === 2 && paso.titulo === 'Anexar necesarios') {
         return { ...paso, titulo: 'Firmar solicitud' };
       }
       return paso;
     });
-    this.tramite40102Query.selectSeccionState$
+
+    this.chofer40102Query.selectSeccionState$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
@@ -96,18 +112,34 @@ export class SolicitantePageComponent {
   }
 
   /**
-   * Selecciona una pestaña del wizard.
-   * @param i - Índice de la pestaña a seleccionar.
+   * Método de ciclo de vida de Angular que se ejecuta al destruir el componente.
+   * Limpia los recursos y completa los observables.
+   *
+   * @returns {void}
    */
-  seleccionaTab(i: number): void {
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
+  }
+
+  /**
+   * Cambia el índice actual del wizard al valor proporcionado.
+   *
+   * @param {number} i - Índice del paso seleccionado.
+   * @returns {void}
+   */
+  seleccionadosTodos(i: number): void {
     this.indice = i;
   }
 
   /**
-   * Obtiene el valor del índice del evento de acción del botón.
-   * @param e - Evento de acción del botón.
+   * Cambia el índice actual del wizard basado en la acción del botón.
+   * Navega hacia adelante o hacia atrás en el wizard.
+   *
+   * @param {AccionBoton} e - Objeto que contiene la acción y el valor del índice.
+   * @returns {void}
    */
-  getValorIndice(e: AccionBoton) {
+  getValorIndice(e: AccionBoton): void {
     if (e.valor > 0 && e.valor < 6) {
       this.indice = e.valor;
       if (e.accion === 'cont') {
@@ -119,17 +151,23 @@ export class SolicitantePageComponent {
   }
 
   /**
-   * Método para asignar las secciones existentes al store.
+   * Método privado para asignar las secciones existentes al store.
+   * Configura las secciones y las formas válidas en el estado del store.
+   *
+   * @returns {void}
    */
-  private asignarSecciones() {
-    const secciones: boolean[] = [];
-    const formaValida: boolean[] = [];
-    for (const llaveSeccion in SECCIONES_TRAMITE_40102.PASO_1) {
-      // @ts-ignore - fix this
-      secciones.push(SECCIONES_TRAMITE_40102.PASO_1[llaveSeccion]);
-      formaValida.push(false);
+  private asignarSecciones(): void {
+    const SECCIONES: boolean[] = [];
+    const FORMA_VALIDA: boolean[] = [];
+
+    for (const LLAVE_SECCION of Object.keys(
+      SECCIONES_TRAMITE_40102.PASO_1
+    ) as Array<keyof typeof SECCIONES_TRAMITE_40102.PASO_1>) {
+      SECCIONES.push(SECCIONES_TRAMITE_40102.PASO_1[LLAVE_SECCION]);
+      FORMA_VALIDA.push(false);
     }
-    this.seccionStore.establecerSeccion(secciones);
-    this.seccionStore.establecerFormaValida(formaValida);
+
+    this.chofer40102Store.establecerSeccion(SECCIONES);
+    this.chofer40102Store.establecerFormaValida(FORMA_VALIDA);
   }
 }

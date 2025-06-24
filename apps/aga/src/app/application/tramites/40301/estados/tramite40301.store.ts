@@ -2,11 +2,11 @@ import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
 
 /**
- * ## Solicitud40301State
+ * ## Tramite40301State
  * 
  * Esta interfaz define la estructura del estado de una solicitud 40301.
  */
-export interface Solicitud40301State {
+export interface Tramite40301State {
   /**
    * ## cveFolioCaat
    * 
@@ -56,9 +56,9 @@ export interface Solicitud40301State {
  * Esta función crea el estado inicial de la solicitud.
  * 
  * ### Retorno
- * Un objeto `Solicitud40301State` con todos los campos vacíos.
+ * Un objeto `Tramite40301State` con todos los campos vacíos.
  */
-export function createInitialState(): Solicitud40301State {
+export function createInitialState(): Tramite40301State {
   return {
     cveFolioCaat: '',
     rol: '',
@@ -85,14 +85,14 @@ export function createInitialState(): Solicitud40301State {
  * Configura el almacén de estado con las siguientes opciones:
  * 
  * ### Parámetros
- * - **name**: `'solicitud40301'`  
+ * - **name**: `'tramite40301'`  
  *   Nombre del almacén de estado.
  * - **resettable**: `true`  
  *   Indica que el almacén puede ser reseteado a su estado inicial.
  */
-@StoreConfig({ name: 'solicitud40301', resettable: true })
+@StoreConfig({ name: 'tramite40301', resettable: true })
 /**
- * ## Solicitud40301Store
+ * ## Tramite40301Store
  * 
  * Este almacén de estado (`Store`) gestiona los datos relacionados con una solicitud 40301 utilizando Akita.
  * 
@@ -100,7 +100,7 @@ export function createInitialState(): Solicitud40301State {
  * 
  * Inicializa el almacén con el estado inicial creado por `createInitialState`.
  */
-export class Solicitud40301Store extends Store<Solicitud40301State> {
+export class Tramite40301Store extends Store<Tramite40301State> {
   /**
  * ## Constructor
  * 
@@ -115,10 +115,10 @@ export class Solicitud40301Store extends Store<Solicitud40301State> {
 
   
   /**
-   * Establece los valores iniciales para el estado de `Solicitud40301Store`.
+   * Establece los valores iniciales para el estado de `Tramite40301Store`.
    *
-   * @param store - La instancia del almacén de tipo `Solicitud40301Store` a actualizar.
-   * @returns El estado actualizado de tipo `Solicitud40301State` con valores iniciales predefinidos.
+   * @param store - La instancia del almacén de tipo `Tramite40301Store` a actualizar.
+   * @returns El estado actualizado de tipo `Tramite40301State` con valores iniciales predefinidos.
    *
    * La función inicializa las siguientes propiedades en el estado:
    * - `cveFolioCaat`: Una cadena que representa el código de folio CAAT, inicializado a '3L6V'.
@@ -129,7 +129,7 @@ export class Solicitud40301Store extends Store<Solicitud40301State> {
    * - `segundoApellido`: Una cadena que representa el segundo apellido del director general, inicializado a 'AVILA'.
    * - `rol`: Una cadena que representa el rol, inicializado a 'Agente Naviero'.
    */
-  public setInitialValues(): Solicitud40301State {
+  public setInitialValues(): Tramite40301State {
     return this.update((state) => ({
       ...state,
       cveFolioCaat: '3L6V',
@@ -199,10 +199,38 @@ export class Solicitud40301Store extends Store<Solicitud40301State> {
     }));
   }
 
+  /**
+   * ## setRol
+   * Establece el rol en el estado.
+   * ### Parámetros
+   * - **rol**: `string`  
+   *   Nuevo rol.
+   * ### Funcionalidad
+   * Actualiza el estado manteniendo los demás campos intactos.
+   */
   public setRol(rol: string): void {
     this.update((state) => ({
       ...state,
       rol: rol,
+    }));
+  }
+
+  /**
+   * ## setTipoAgente
+   * 
+   * Establece el tipo de agente en el estado.
+   * 
+   * ### Parámetros
+   * - **tipoAgente**: `string`  
+   *   Nuevo tipo de agente.
+   * 
+   * ### Funcionalidad
+   * Actualiza el estado manteniendo los demás campos intactos.
+   */
+  public setTipoAgente(tipoAgente: string): void {
+    this.update((state) => ({
+      ...state,
+      tipoAgente,
     }));
   }
 

@@ -7,7 +7,9 @@ import { Catalogo } from '@libs/shared/data-access-user/src';
 import { CertificadosDisponibles } from '../../models/cancelacion-de-certificados.model';
 import { Component } from '@angular/core';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { CuposDisponibles } from '../../models/cancelacion-de-certificados.model';
+import { DesistimientoQuery } from '../../estados/desistimiento-de-permiso.query';
 import { FormBuilder} from '@angular/forms';
 import { FormControl } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
@@ -17,6 +19,8 @@ import { ServicioDeMensajesService } from '../../services/servicio-de-mensajes.s
 import { Subject } from 'rxjs';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { Validators } from '@angular/forms';
+import { map } from 'rxjs';
+import { takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-cancelacion-de-certificados',
@@ -141,7 +145,16 @@ export class CancelacionDeCertificadosComponent implements OnInit, OnDestroy {
    */
   cancelacionForm: FormGroup;
 
-  constructor(private fb: FormBuilder, private servicioDeMensajesService: ServicioDeMensajesService) {
+      /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  esFormularioSoloLectura: boolean = false;
+
+  constructor(private fb: FormBuilder, private servicioDeMensajesService: ServicioDeMensajesService,
+        private consultaQuery: ConsultaioQuery,
+    private desistimientoQuery: DesistimientoQuery
+  ) {
     // Formulario de búsqueda
     this.formularioGrupo = new FormGroup({
       regimenAduanero: new FormControl('', Validators.required),
@@ -184,6 +197,14 @@ export class CancelacionDeCertificadosComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.mecanismoAsignacionList = mecanismoAsignacionDatos as Catalogo[];
     this.regimenAduaneroList = regimenAduaneroListDatos as Catalogo[];
+    this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotificationSubject$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+        })
+      )
+      .subscribe();
   }
 
   ngOnDestroy(): void {
@@ -195,14 +216,14 @@ export class CancelacionDeCertificadosComponent implements OnInit, OnDestroy {
   /**
    * Ejecuta la acción de búsqueda y notifica a otros componentes a través del servicio de mensajes.
    */
-  public busqueda(event: Event): void {
+  public busqueda(_event: Event): void {
     this.servicioDeMensajesService.enviarMensaje(true);
   }
 
   /**
    * Ejecuta la acción de buscar registros y muestra los datos precargados en las tablas.
    */
-  public buscar(event: Event): void {
+  public buscar(_event: Event): void {
     this.mostrarDetalleDelCupo = true;
     this.cuposDisponiblesTabla = [cuposDisponiblesDatos as CuposDisponibles];
     this.CertificadosDisponiblesTabla = [certificadosDisponiblesDatos as CertificadosDisponibles];
@@ -212,7 +233,7 @@ export class CancelacionDeCertificadosComponent implements OnInit, OnDestroy {
   /**
    * Maneja la selección de registros. Envía un mensaje de selección activa y limpia la intención de devolver facturas.
    */
-  public seleccionar(event: Event): void {
+  public seleccionar(_event: Event): void {
     this.servicioDeMensajesService.enviarMensaje(true);
     this.servicioDeMensajesService.enviarDevolverFacturasMensaje(false);
   }
@@ -220,7 +241,7 @@ export class CancelacionDeCertificadosComponent implements OnInit, OnDestroy {
   /**
    * Marca los certificados seleccionados como listos para devolución.
    */
-  public devlover(event: Event): void {
+  public devlover(_event: Event): void {
     this.servicioDeMensajesService.enviarMensaje(true);
     this.servicioDeMensajesService.enviarDevolverFacturasMensaje(true);
   }
