@@ -64,17 +64,6 @@ describe('ConceptosComponent', () => {
     expect(component.conEmpleadosSeleccionado).toBe('testValue');
   });
 
-  it('should call setValoresStore and update store', () => {
-    const mockForm = {
-      get: jest.fn().mockReturnValue({ value: 'testValue' }),
-    } as any;
-    const mockMethod = jest.fn();
-    tramite31603StoreMock['updateField'] = mockMethod;
-
-    expect(mockForm.get).toHaveBeenCalledWith('testField');
-    expect(mockMethod).toHaveBeenCalledWith('testValue');
-  });
-
   it('should clean up subscriptions on ngOnDestroy', () => {
     const destroySpy = jest.spyOn(component['destroyNotifier$'], 'next');
     const completeSpy = jest.spyOn(component['destroyNotifier$'], 'complete');

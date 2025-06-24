@@ -1,3 +1,22 @@
+// Must be placed before any imports
+jest.mock('@libs/shared/theme/assets/json/221601/zoosanitario.json', () => ({
+  __esModule: true,
+  default: {
+    medio: [
+      { id: 1, descripcion: 'Camión' },
+      { id: 2, descripcion: 'Tren' }
+    ],
+    verificacion: [
+      { id: 1, descripcion: 'Alta' },
+      { id: 2, descripcion: 'Baja' }
+    ],
+    formData: {
+      transporte: '435345',
+      empresa: '45453453'
+    }
+  }
+}), { virtual: true });
+
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormBuilder, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { of } from 'rxjs';
@@ -58,6 +77,7 @@ describe('MovilizacionComponent', () => {
   let tramite221601Query: Tramite221601Query;
 
   const tramite221601StoreMock = {
+     update: jest.fn(),
     setMedio: jest.fn(),
     setTransporte: jest.fn(),
     setVerificacion: jest.fn(),

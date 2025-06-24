@@ -74,7 +74,7 @@ export class Tramite120601Store extends Store<Tramites120601State> {
    * Actualiza la cadena de dependencia en los datos generales de socios.
    * @param cadenaDependencia Nueva cadena de dependencia o RFC.
    */
-  public setCadenaDependencia(cadenaDependencia: string) {
+  public setCadenaDependencia(cadenaDependencia: string):void {
     this.update((state) => ({
       ...state,
       datosGeneralesSocios: {
@@ -88,7 +88,7 @@ export class Tramite120601Store extends Store<Tramites120601State> {
    * Actualiza la nacionalidad en los datos generales de socios.
    * @param nacionalidad Nueva nacionalidad.
    */
-  public setNacionalidad(nacionalidad: string) {
+  public setNacionalidad(nacionalidad: string):void {
     this.update((state) => ({
       ...state,
       datosGeneralesSocios: {
@@ -102,7 +102,7 @@ export class Tramite120601Store extends Store<Tramites120601State> {
    * Actualiza el tipo de persona en los datos generales de socios.
    * @param persona Nuevo tipo de persona.
    */
-  public setPersona(persona: string) {
+  public setPersona(persona: string):void {
     this.update((state) => ({
       ...state,
       datosGeneralesSocios: {
@@ -116,7 +116,7 @@ export class Tramite120601Store extends Store<Tramites120601State> {
    * Actualiza el tipo de empresa en los datos de la solicitud.
    * @param tipoDeEmpresa Nuevo tipo de empresa.
    */
-  public setTipoDeEmpresa(tipoDeEmpresa: string) {
+  public setTipoDeEmpresa(tipoDeEmpresa: string):void {
     this.update((state) => ({
       ...state,
       datosDeLaSolicitud: {
@@ -130,7 +130,7 @@ export class Tramite120601Store extends Store<Tramites120601State> {
    * Actualiza la clave de actividad económica en los datos de la solicitud.
    * @param actividadEconomicaClave Nueva clave de actividad económica.
    */
-  public setActividadEconomicaClave(actividadEconomicaClave: string) {
+  public setActividadEconomicaClave(actividadEconomicaClave: string):void {
     this.update((state) => ({
       ...state,
       datosDeLaSolicitud: {
@@ -144,7 +144,7 @@ export class Tramite120601Store extends Store<Tramites120601State> {
    * Actualiza el estado en la representación federal.
    * @param estado Nuevo estado seleccionado.
    */
-  public setEstado(estado: string) {
+  public setEstado(estado: string):void {
     this.update((state) => ({
       ...state,
       representacionFederal: {
@@ -158,7 +158,7 @@ export class Tramite120601Store extends Store<Tramites120601State> {
    * Actualiza la representación en la representación federal.
    * @param representacion Nueva representación seleccionada.
    */
-  public setRepresentacion(representacion: string) {
+  public setRepresentacion(representacion: string):void {
     this.update((state)=> ({
       ...state,
       representacionFederal: {

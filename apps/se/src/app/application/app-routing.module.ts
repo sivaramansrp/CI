@@ -1,7 +1,5 @@
 import { RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
-
-import { ComplementarPlantaComponent } from './shared/components/complementar-planta/complementar-planta.component';
 import { SeleccionTramiteComponent } from './seleccion-tramite/seleccion-tramite.component';
 const ROUTES: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'seleccion-tramite' },

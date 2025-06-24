@@ -1,12 +1,11 @@
 import { ActivatedRoute, Router } from '@angular/router';
-import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { DatosDelTramiteComponent } from '../../../../shared/components/datos-del-tramite/datos-del-tramite.component';
 import { DatosDelTramiteFormState } from '../../../../shared/models/datos-del-tramite.model';
 import { ID_PROCEDIMIENTO } from '../../../240118/constants/solicitud-permiso-extraordinario-exportacion';
 import { MercanciaDetalle } from '../../../../shared/models/datos-del-tramite.model';
-
 import { Tramite240118Query } from '../../estados/tramite240118Query.query';
 import { Tramite240118Store } from '../../estados/tramite240118Store.store';
 

@@ -228,7 +228,7 @@ ngAfterViewInit(): void {
       next: (data) => {
         this.umc = data as Catalogo[];
       },
-      error: (error: HttpErrorResponse) => {
+      error: (_error: HttpErrorResponse) => {
         this.umc = [];
       },
     });
@@ -245,7 +245,7 @@ ngAfterViewInit(): void {
       next: (data) => {
         this.factura = data as Catalogo[];
       },
-      error: (error: HttpErrorResponse) => {
+      error: (_error: HttpErrorResponse) => {
         this.factura = [];
       },
     });

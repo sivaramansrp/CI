@@ -1,9 +1,11 @@
+import { BtnContinuarComponent, DatosPasos } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { AccionBoton } from '../../model/cancelaciones-certificado.model';
-import { BtnContinuarComponent, DatosPasos } from '@ng-mf/data-access-user';
+import { CommonModule } from '@angular/common';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { PASOS } from '../../constants/cancelaciones.enum';
 
+import { PasoUnoComponent } from '../../../140205/pages/paso-uno/paso-uno.component';
 import { Subject } from 'rxjs';
 import { TEXTOS } from '../../constants/cancelaciones.enum';
 import { Tramite140205Query } from '../../../../estados/queries/tramite140205.query';
@@ -12,8 +14,6 @@ import { Tramite140205Store } from '../../../../estados/tramites/tramite140205.s
 import { WizardComponent } from '@ng-mf/data-access-user';
 import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
-import { CommonModule } from '@angular/common';
-import { PasoUnoComponent } from '../../../140205/pages/paso-uno/paso-uno.component';
 
 
 /**

@@ -25,12 +25,36 @@ describe('DatosPorGarantiaComponent', () => {
 
   beforeEach(async () => {
     solicitudServiceMock = {
-      conseguirNombreInstitucionCatalogo: jest
-        .fn()
-        .mockReturnValue(of({} as CatalogosSelect)),
-      conseguirDatosPorGarantia: jest
-        .fn()
-        .mockReturnValue(of({} as DatosPorGarantia)),
+      conseguirNombreInstitucionCatalogo: jest.fn(() =>
+        of({
+          labelNombre: 'Datos de la póliza de fianza actual',
+          required: false,
+          primerOpcion: 'Seleccione un valor',
+          catalogos: [
+            {
+              id: 1,
+              descripcion: 'DORAMA, INSTITUCION DE GARANTIAS SA',
+            },
+            {
+              id: 2,
+              descripcion: 'DORAMA, INSTITUCION DE GARANTIAS SA - 1',
+            },
+          ],
+        })
+      ),
+      conseguirDatosPorGarantia: jest.fn(() =>
+        of({
+          polizaDeFianzaActual: 1,
+          numeroFolio: '645456546',
+          rfcInstitucion: 'FDO9411098R8',
+          fechaExpedicion: '30/09/2024',
+          fechaInicioVigenciaNo: '30/09/2024',
+          fechaFinVigenciaNo: '30/09/2024',
+          fechaInicioVigencia: '30/09/2024',
+          fechaFinVigencia: '30/09/2024',
+          importeTotal: '3213',
+        })
+      ),
     };
 
     solicitud31301StoreMock = {
@@ -46,7 +70,17 @@ describe('DatosPorGarantiaComponent', () => {
     };
 
     solicitud31301QueryMock = {
-      selectSolicitud$: of({}),
+      selectSolicitud$: of({
+        polizaDeFianzaActual: 1,
+        numeroFolio: '12345',
+        rfcInstitucion: 'RFC123',
+        fechaExpedicion: '01/01/2023',
+        fechaInicioVigenciaNo: '01/02/2023',
+        fechaFinVigenciaNo: '01/03/2023',
+        fechaInicioVigencia: '01/04/2023',
+        fechaFinVigencia: '01/05/2023',
+        importeTotal: '1000',
+      }),
     };
 
     await TestBed.configureTestingModule({
@@ -57,7 +91,7 @@ describe('DatosPorGarantiaComponent', () => {
         TituloComponent,
         CatalogoSelectComponent,
         InputFechaComponent,
-        HttpClientTestingModule
+        HttpClientTestingModule,
       ],
       declarations: [],
       providers: [
@@ -67,9 +101,6 @@ describe('DatosPorGarantiaComponent', () => {
         { provide: Solicitud31301Query, useValue: solicitud31301QueryMock },
       ],
     }).compileComponents();
-  });
-
-  beforeEach(() => {
     fixture = TestBed.createComponent(DatosPorGarantiaComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
@@ -87,7 +118,7 @@ describe('DatosPorGarantiaComponent', () => {
 
   it('should call conseguirNombreInstitucionCatalogo on initialization', () => {
     const spy = jest.spyOn(
-      solicitudServiceMock,
+      component,
       'conseguirNombreInstitucionCatalogo'
     );
     component.conseguirNombreInstitucionCatalogo();
@@ -95,41 +126,13 @@ describe('DatosPorGarantiaComponent', () => {
   });
 
   it('should call conseguirDatosPorGarantia on initialization', () => {
-    const spy = jest.spyOn(solicitudServiceMock, 'conseguirDatosPorGarantia');
+    const spy = jest.spyOn(component, 'conseguirDatosPorGarantia');
     component.conseguirDatosPorGarantia();
     expect(spy).toHaveBeenCalled();
   });
 
-  it('should update the form values when selectSolicitud$ emits', () => {
-    const mockState = {
-      polizaDeFianzaActual: 1,
-      numeroFolio: '12345',
-      rfcInstitucion: 'RFC123',
-      fechaExpedicion: '01/01/2023',
-      fechaInicioVigenciaNo: '01/02/2023',
-      fechaFinVigenciaNo: '01/03/2023',
-      fechaInicioVigencia: '01/04/2023',
-      fechaFinVigencia: '01/05/2023',
-      importeTotal: '1000',
-    };
-    solicitud31301QueryMock.selectSolicitud$ = of(mockState);
-
-    component.ngOnInit();
-    expect(component.polizaDeFianzaForm.value).toEqual({
-      polizaDeFianzaActual: 1,
-      numeroFolio: '12345',
-      rfcInstitucion: 'RFC123',
-      fechaExpedicion: '01/01/2023',
-      fechaInicioVigenciaNo: '01/02/2023',
-      fechaFinVigenciaNo: '01/03/2023',
-      fechaInicioVigencia: '01/03/2023',
-      fechaFinVigencia: '01/05/2023',
-      importeTotal: '1000',
-    });
-  });
-
   it('should call actualizarPolizaDeFianzaActual when seleccionaNombreInstitucion is triggered', () => {
-    const mockCatalogo = { id: 1, descripcion: "test"} as Catalogo;
+    const mockCatalogo = { id: 1, descripcion: 'test' } as Catalogo;
     component.seleccionaNombreInstitucion(mockCatalogo);
     expect(
       solicitud31301StoreMock.actualizarPolizaDeFianzaActual

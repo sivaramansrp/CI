@@ -1,7 +1,6 @@
 import * as formData from '@libs/shared/theme/assets/json/140105/datos-del-formulario.json';
 import { Component, OnDestroy } from '@angular/core';
 import { Subject, map, takeUntil } from 'rxjs';
-import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
@@ -79,7 +78,7 @@ export class BusquedaFolioComponent implements OnDestroy {
    * @param event Evento que desencadena la búsqueda.
    */
 
-  public buscar(event: Event): void {
+  public buscar(_event: Event): void {
     if (this.busquedaForm.invalid) {
       this.busquedaForm.markAllAsTouched();
       // alert('El formulario contiene errores. Por favor, corrígelos antes de continuar.');
@@ -97,7 +96,7 @@ export class BusquedaFolioComponent implements OnDestroy {
    * @param event Evento que desencadena la acción de agregar.
    */
 
-  public agregar(event: Event): void {
+  public agregar(_event: Event): void {
     this.servicioDeMensajesService.enviarMensaje(false);
     this.servicioDeMensajesService.establecerDatosDePermiso(true);
   }
@@ -109,7 +108,7 @@ export class BusquedaFolioComponent implements OnDestroy {
    * @param event Evento que desencadena la acción de cancelar.
    */
 
-  public detalleCancelar(event: Event): void {
+  public detalleCancelar(_event: Event): void {
     this.detalleDelPermiso = false;
   }
 
@@ -120,7 +119,7 @@ export class BusquedaFolioComponent implements OnDestroy {
    * @param event Evento que desencadena la cancelación de la acción.
    */
 
-  public cancelar(event: Event): void {
+  public cancelar(_event: Event): void {
     this.servicioDeMensajesService.enviarMensaje(false);
   }
 
