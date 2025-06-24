@@ -18,7 +18,6 @@ import { Tramite240311Store } from '../../estados/tramite240311Store.store';
  * @description Componente contenedor encargado de suscribirse a los datos de destinatarios finales y proveedores del trámite.
  * @summary Conecta el estado global del store con el componente visual de terceros relacionados.
  */
-
 @Component({
   selector: 'app-terceros-relacionados-contenedora',
   standalone: true,
@@ -26,10 +25,16 @@ import { Tramite240311Store } from '../../estados/tramite240311Store.store';
   templateUrl: './terceros-relacionados-contenedora.component.html',
   styleUrl: './terceros-relacionados-contenedora.component.scss',
 })
+
+/**
+ * Clase que representa el componente contenedor de terceros relacionados.
+ * Este componente se encarga de gestionar la lógica de negocio relacionada con los destinatarios finales y proveedores
+ * del trámite 240311, suscribiéndose a los datos del store y proporcionando funcionalidades
+ */
 export class TercerosRelacionadosContenedoraComponent
   implements OnInit, OnDestroy
 {
-   @ViewChild('modal', { static: false }) modalComponent!: ModalComponent;
+  @ViewChild('modal', { static: false }) modalComponent!: ModalComponent;
   /**
    * Observable para limpiar las suscripciones activas al destruir el componente.
    * @property {Subject<void>} destroy$
@@ -48,11 +53,11 @@ export class TercerosRelacionadosContenedoraComponent
    */
   proveedorTablaDatos: Proveedor[] = [];
 
-   /**
-  * Indica si el formulario está en modo solo lectura.
-  * Cuando es `true`, los campos del formulario no se pueden editar.
-  */
-   esFormularioSoloLectura: boolean = false;
+  /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  esFormularioSoloLectura: boolean = false;
 
   /**
    * Constructor del componente.
@@ -65,42 +70,42 @@ export class TercerosRelacionadosContenedoraComponent
   constructor(
     private tramiteStore: Tramite240311Store,
     private tramiteQuery: Tramite240311Query,
-    private consultaioQuery: ConsultaioQuery 
+    private consultaioQuery: ConsultaioQuery
   ) {
-    // Constructor del componente 
-      this.consultaioQuery.selectConsultaioState$
-    .pipe(
-      takeUntil(this.unsubscribe$),
-      map((seccionState) => {
-       this.esFormularioSoloLectura = seccionState.readonly;
-      })
-    )
-    .subscribe()
+    // Constructor del componente
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.unsubscribe$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+        })
+      )
+      .subscribe();
   }
 
   /**
-     * Abre el modal correspondiente según el nombre del evento recibido.
-     *
-     * Si el evento es `'Datosmercancia'`, se carga el componente `DatosMercanciaContenedoraComponent`
-     * dentro del modal y se le pasa una función de cierre como input.
-     *
-     * @method openModal
-     * @param {string} event - Nombre del evento que indica qué componente se debe mostrar en el modal.
-     * @returns {void}
-     */
-    openModal(event: string): void {
-      if (event === 'agregar-destino-final') {
-        this.modalComponent.abrir(AgregarDestinatarioFinalContenedoraComponent, {
-          cerrarModal: this.cerrarModal.bind(this),
-        });
-      } else if (event === 'agregar-proveedor') {
-        this.modalComponent.abrir(AgregarProveedorContenedoraComponent, {
-          cerrarModal: this.cerrarModal.bind(this),
-        });
-      }
+   * Abre el modal correspondiente según el nombre del evento recibido.
+   *
+   * Si el evento es `'Datosmercancia'`, se carga el componente `DatosMercanciaContenedoraComponent`
+   * dentro del modal y se le pasa una función de cierre como input.
+   *
+   * @method openModal
+   * @param {string} event - Nombre del evento que indica qué componente se debe mostrar en el modal.
+   * @returns {void}
+   */
+  openModal(event: string): void {
+    if (event === 'agregar-destino-final') {
+      this.modalComponent.abrir(AgregarDestinatarioFinalContenedoraComponent, {
+        cerrarModal: this.cerrarModal.bind(this),
+      });
+    } else if (event === 'agregar-proveedor') {
+      this.modalComponent.abrir(AgregarProveedorContenedoraComponent, {
+        cerrarModal: this.cerrarModal.bind(this),
+      });
     }
+  }
 
-     /**
+  /**
    * Cierra el modal dinámico actualmente abierto utilizando el método del componente modal.
    *
    * @method cerrarModal

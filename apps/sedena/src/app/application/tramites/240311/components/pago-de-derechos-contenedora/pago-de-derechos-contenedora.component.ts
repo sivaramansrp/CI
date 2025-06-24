@@ -13,7 +13,6 @@ import { Tramite240311Store } from '../../estados/tramite240311Store.store';
  * @description Componente contenedor que se encarga de enlazar el estado de pago de derechos con el formulario correspondiente.
  * @summary Escucha cambios en el estado y propaga las actualizaciones al store.
  */
-
 @Component({
   selector: 'app-pago-de-derechos-contenedora',
   standalone: true,
@@ -21,6 +20,12 @@ import { Tramite240311Store } from '../../estados/tramite240311Store.store';
   templateUrl: './pago-de-derechos-contenedora.component.html',
   styleUrl: './pago-de-derechos-contenedora.component.scss',
 })
+
+/**
+ * Clase que representa el componente contenedor del pago de derechos.
+ * Este componente se encarga de gestionar el estado del formulario de pago de derechos,
+ * suscribiéndose a los cambios y actualizando el store correspondiente.
+ */
 export class PagoDeDerechosContenedoraComponent implements OnInit, OnDestroy {
   /**
    * Observable para liberar suscripciones al destruir el componente.
@@ -34,11 +39,11 @@ export class PagoDeDerechosContenedoraComponent implements OnInit, OnDestroy {
    */
   public pagoDerechoFormState!: PagoDerechosFormState;
 
-   /**
-  * Indica si el formulario está en modo solo lectura.
-  * Cuando es `true`, los campos del formulario no se pueden editar.
-  */
-   esFormularioSoloLectura: boolean = false;
+  /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  esFormularioSoloLectura: boolean = false;
 
   /**
    * Constructor del componente.
@@ -51,17 +56,17 @@ export class PagoDeDerechosContenedoraComponent implements OnInit, OnDestroy {
   constructor(
     private tramiteQuery: Tramite240311Query,
     private tramiteStore: Tramite240311Store,
-    private consultaioQuery: ConsultaioQuery 
+    private consultaioQuery: ConsultaioQuery
   ) {
-   // Constructor del componente 
-      this.consultaioQuery.selectConsultaioState$
-    .pipe(
-      takeUntil(this.unsubscribe$),
-      map((seccionState) => {
-       this.esFormularioSoloLectura = seccionState.readonly;
-      })
-    )
-    .subscribe()
+    // Constructor del componente
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.unsubscribe$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+        })
+      )
+      .subscribe();
   }
 
   /**
