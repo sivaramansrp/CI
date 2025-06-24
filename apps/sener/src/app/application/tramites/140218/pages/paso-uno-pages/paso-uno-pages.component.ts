@@ -1,13 +1,14 @@
 /**
  * Componente para la modificación de permisos de importación de tratamientos.
  */
-import { Component, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
+import { Subject, map, takeUntil } from 'rxjs';
 import { Renuncia } from '../../models/renuncia-de-permiso.model';
 import { RenunciaDeDerechosComponent } from '../../components/renuncia-de-derechos/renuncia-de-derechos.component';
 import { SolicitanteComponent } from '@libs/shared/data-access-user/src';
 import { SolicitanteData } from '../../models/renuncia-de-permiso.model';
-import { map, Subject, takeUntil } from 'rxjs';
+
 import { Solicitud140218Service } from '../../service/solicitud140218.service';
 
 /**
@@ -25,7 +26,7 @@ import { Solicitud140218Service } from '../../service/solicitud140218.service';
  * @export
  * @class PasoUnoPagesComponent
  */
-export class PasoUnoPagesComponent {
+export class PasoUnoPagesComponent implements OnInit {
   /**
      * Referencia al componente `SolicitanteComponent` para acceder a sus métodos y propiedades.
      */
