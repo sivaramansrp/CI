@@ -72,15 +72,27 @@ describe('Datos90305Component', () => {
     expect(component.guardarDatosFormulario).toHaveBeenCalled();
   });
 
-  it('should set esDatosRespuesta to true if consultaState.update is false', () => {
+  it('should set esDatosRespuesta to true if consultaState.update is false', async () => {
     const mockConsultaioQueryFalse = {
       selectConsultaioState$: of(MOCK_CONSULTA_STATE_NO_UPDATE),
     };
 
-    TestBed.overrideProvider(ConsultaioQuery, { useValue: mockConsultaioQueryFalse });
+    await TestBed.resetTestingModule()
+      .configureTestingModule({
+        declarations: [Datos90305Component, MockSolicitanteComponent],
+        providers: [
+          { provide: ProsecModificacionServiceTsService, useValue: mockProsecService },
+          { provide: ConsultaioQuery, useValue: mockConsultaioQueryFalse },
+        ],
+        schemas: [NO_ERRORS_SCHEMA],
+      })
+      .compileComponents();
+
     fixture = TestBed.createComponent(Datos90305Component);
     component = fixture.componentInstance;
     component.solicitante = new MockSolicitanteComponent() as any;
+
+    jest.spyOn(component, 'guardarDatosFormulario');
 
     fixture.detectChanges();
 
@@ -88,11 +100,14 @@ describe('Datos90305Component', () => {
     expect(component.guardarDatosFormulario).not.toHaveBeenCalled();
   });
 
-  it('should call obtenerTipoPersona on solicitante after view init', () => {
-    fixture.detectChanges();
-    component.ngAfterViewInit();
-    expect(component.solicitante.obtenerTipoPersona).toHaveBeenCalledWith(TIPO_PERSONA.MORAL_NACIONAL);
-  });
+it('should call obtenerTipoPersona on solicitante after view init', () => {
+  // manually mock the @ViewChild
+  component.solicitante = { obtenerTipoPersona: jest.fn() } as any;
+
+  component.ngAfterViewInit();
+
+  expect(component.solicitante.obtenerTipoPersona).toHaveBeenCalledWith(TIPO_PERSONA.MORAL_NACIONAL);
+});
 
   it('should set indice when seleccionaTab is called', () => {
     component.seleccionaTab(3);
