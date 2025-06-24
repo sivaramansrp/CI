@@ -1,3 +1,4 @@
+import { DestinatarioRespuesta } from '../models/pantallas-captura.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -81,5 +82,16 @@ export class CapturaSolicitudeService {
    */
   getRegistroTomaMuestrasMercanciasData(): Observable<Solicitud220402State> {
     return this.http.get<Solicitud220402State>('assets/json/220402/registro_220402.json');
+  }
+  /**
+   * Obtiene la lista de destinatarios desde un archivo JSON local.
+   * 
+   * Este método realiza una solicitud HTTP para obtener los datos de destinatarios almacenados
+   * en un archivo JSON local y los devuelve como un observable.
+   * 
+   * @returns {Observable<DestinatarioRespuesta>} Observable que emite la respuesta con la lista de destinatarios.
+   */
+  obtenerDestinatario(): Observable<DestinatarioRespuesta> {
+    return this.http.get<DestinatarioRespuesta>('assets/json/220402/destinatario.json');
   }
 }

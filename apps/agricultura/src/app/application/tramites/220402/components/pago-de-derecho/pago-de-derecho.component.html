@@ -44,6 +44,10 @@
                 [ngClass]="isValid(datosImportadorExportador,'cadenaDependencia') ? 'required' : ''"
                 (change)="setValoresStore(datosImportadorExportador,'cadenaDependencia', 'setCadenaDependencia')"
                 libUppercase />
+              @if (FormSolicitud.get('datosImportadorExportador.cadenaDependencia')?.hasError('required') &&
+              FormSolicitud.get('datosImportadorExportador.cadenaDependencia')?.touched) {
+              <div class="mensaje-error">Este campo es obligatorio.</div>
+              }
             </div>
           </div>
           <div class="col-md-4">
@@ -66,6 +70,10 @@
               <input class="form-control" id="llaveDePago" formControlName="llaveDePago" type="text"
                 [ngClass]="isValid(datosImportadorExportador,'llaveDePago') ? 'required' : ''"
                 (change)="setValoresStore(datosImportadorExportador,'llaveDePago', 'setllaveDePago')" />
+              @if (FormSolicitud.get('datosImportadorExportador.llaveDePago')?.hasError('required') &&
+              FormSolicitud.get('datosImportadorExportador.llaveDePago')?.touched) {
+              <div class="mensaje-error">Este campo es obligatorio.</div>
+              }
             </div>
           </div>
 
@@ -75,6 +83,10 @@
               <input class="form-control" id="fechaPago" formControlName="fechaPago" type="date"
                 [ngClass]="isValid(datosImportadorExportador,'fechaPago') ? 'required' : ''"
                 (change)="setValoresStore(datosImportadorExportador,'fechaPago', 'setFechaPago')" />
+              @if (FormSolicitud.get('datosImportadorExportador.fechaPago')?.hasError('required') &&
+              FormSolicitud.get('datosImportadorExportador.fechaPago')?.touched) {
+              <div class="mensaje-error">Este campo es obligatorio.</div>
+              }
             </div>
           </div>
 

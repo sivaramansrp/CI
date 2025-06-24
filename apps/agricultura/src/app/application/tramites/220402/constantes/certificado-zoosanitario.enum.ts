@@ -1,3 +1,4 @@
+import { Destinatario } from "../models/pantallas-captura.model";
 /**
  * Pasos del trámite.
  * 
@@ -145,4 +146,20 @@ export const RADIO_OPCIONS = [
 export const EXENTO_DE_PAGO = [
   { label: 'No', value: 'No' },
   { label: 'Si', value: 'Si' },
+];
+export const MENSAJEDEALERTA = {
+  ADJUNTAR: `<p class="text-center">Las tablas con asterisco son obligatorias y debes agregar por lo menos un registro.</p>`,
+};
+/**
+ * Configuración de las columnas de la tabla para los destinatarios.
+ * Cada objeto en esta lista representa una columna de la tabla que se mostrará,
+ * con un encabezado, una clave de acceso al campo del destinatario, y un orden
+ * de visualización.
+ */
+export const CONFIGURATION_TABLA_DESTINATARIO = [
+  { encabezado: 'Nombre/denominación o razón social', clave: (item: Destinatario): string => item.nombreDenominacionORazonSocial, orden: 1 },
+  { encabezado: 'Teléfono', clave: (item: Destinatario): string => item.telefono, orden: 2 },
+  { encabezado: 'Correo electrónico', clave: (item: Destinatario): string => item.correoElectronico, orden: 3 },
+  { encabezado: 'Domicilio', clave: (item: Destinatario): string | undefined => item.domicilio, orden: 4 },
+  { encabezado: 'País', clave: (item: Destinatario): string | undefined => item.pais, orden: 5 },
 ];

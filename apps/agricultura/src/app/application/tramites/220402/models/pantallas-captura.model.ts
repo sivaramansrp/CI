@@ -51,3 +51,26 @@ export interface DatosGenerales {
   marcasDistintivas: string;
   USO: string;
 }
+/**
+ * Representa la información de un destinatario.
+ * 
+ * Contiene los datos básicos de un destinatario, como su identificación, nombre o razón social,
+ * teléfono, correo electrónico, domicilio y país.
+ */
+export interface Destinatario {
+  id: number;
+  nombreDenominacionORazonSocial: string;
+  telefono: string;
+  correoElectronico: string;
+  domicilio: string | undefined;
+  pais: string | undefined;
+}
+
+/**
+ * Representa la respuesta de una consulta de destinatarios.
+ * 
+ * Contiene una lista de destinatarios obtenidos como resultado de una consulta.
+ */
+export interface DestinatarioRespuesta {
+  datos: Destinatario[];
+}

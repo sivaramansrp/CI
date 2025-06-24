@@ -1,4 +1,4 @@
-import { AgregarTransporteComponent, InputRadioComponent, NotificacionesComponent } from '@ng-mf/data-access-user';
+import { AgregarTransporteComponent, InputRadioComponent, NotificacionesComponent, TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { ToastrModule, ToastrService } from 'ngx-toastr';
 import { AgregarDestinatarioComponent } from './components/agregar-destinatario/agregar-destinatario.component';
 import { AlertComponent } from '@ng-mf/data-access-user';
@@ -27,6 +27,7 @@ import { SolicitanteComponent } from '@ng-mf/data-access-user';
 import { SolicitudComponent } from './components/solicitud/solicitud.component';
 import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.component';
 import { TituloComponent } from '@ng-mf/data-access-user';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { TransporteComponent } from './components/transporte/transporte.component';
 import { WizardComponent } from '@ng-mf/data-access-user';
 
@@ -66,7 +67,9 @@ import { WizardComponent } from '@ng-mf/data-access-user';
     CatalogoSelectComponent,
     ToastrModule.forRoot(),
     NotificacionesComponent,
-    InputRadioComponent
+    InputRadioComponent,
+    TablaDinamicaComponent,
+    TooltipModule
   ],
   providers: [ToastrService],
   exports: [],
