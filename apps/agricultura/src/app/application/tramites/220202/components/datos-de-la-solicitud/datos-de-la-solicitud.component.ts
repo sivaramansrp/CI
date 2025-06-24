@@ -4,7 +4,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 
 import { AgriculturaApiService } from '../../services/220202/agricultura-api.service';
 
-import { DatosDeFila, DatosForma, FilaSolicitud } from '../../models/220202/fitosanitario.model';
+import { DatosDeFila, DatosForma, FilaSolicitud, SolicitudFilaTabla } from '../../models/220202/fitosanitario.model';
 
 import { INSTRUCCION_DOBLE_CLIC } from '../../constantes/220202/fitosanitario.enums';
 
@@ -13,10 +13,6 @@ import { Subject,map, takeUntil } from 'rxjs';
 import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, ConsultaioQuery, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 
-/**
- * @component DatosDeLaSolicitudComponent
- * @description Componente para la sección de datos de la solicitud en el formulario de fitosanitarios.
- */
 @Component({
   selector: 'app-datos-de-la-solicitud',
   templateUrl: './datos-de-la-solicitud.component.html',
@@ -31,6 +27,30 @@ import { CommonModule } from '@angular/common';
     CommonModule
   ],
 })
+/**
+ * Componente encargado de gestionar y mostrar los datos de la solicitud en el trámite agrícola.
+ * 
+ * Este componente administra el formulario principal de la solicitud, así como la visualización y manipulación
+ * de las tablas relacionadas con los datos de la solicitud y mercancías. Permite la carga de catálogos para los
+ * selectores del formulario, la gestión del estado de solo lectura, y la actualización de los datos en el store.
+ * 
+ * Además, implementa la lógica para inicializar los campos del formulario, manejar la selección de filas en las tablas,
+ * y controlar la suscripción a los servicios para evitar fugas de memoria.
+ * 
+ * @remarks
+ * - Utiliza servicios para obtener datos de catálogos y del formulario.
+ * - Permite alternar entre modo edición y solo lectura.
+ * - Implementa OnInit y OnDestroy para el ciclo de vida del componente.
+ * 
+ * @example
+ * ```html
+ * <app-datos-de-la-solicitud></app-datos-de-la-solicitud>
+ * ```
+ * 
+ * @see {@link AgriculturaApiService}
+ * @see {@link FormBuilder}
+ * @see {@link ConsultaioQuery}
+ */
 export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
 
   /** @description Indica si el panel de detalle está colapsado o no. */
@@ -148,7 +168,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @description Tipo de selección para la tabla de solicitudes.
    * @type {TablaSeleccion}
    */
-  tipoSeleccionsoli: TablaSeleccion = TablaSeleccion.CHECKBOX;
+  tipoSeleccionsoli: TablaSeleccion = TablaSeleccion.UNDEFINED;
   
   /**
    * @description Tipo de selección para la tabla de mercancías.
@@ -169,6 +189,31 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     { encabezado: 'Fracción arancelaria', clave: (fila) => fila.fraccionArancelaria, orden: 5 },
     { encabezado: 'Descripción de la fracción', clave: (fila) => fila.descripcionFraccion, orden: 6 },
     { encabezado: 'Nico', clave: (fila) => fila.nico, orden: 7 },
+    { encabezado: 'Nico', clave: (fila) => fila.nico, orden: 7 },
+    { encabezado: 'Descripción Nico', clave: (fila) => fila.descripcionNico, orden: 8 },
+    { encabezado: 'Descripción', clave: (fila) => fila.descripcion, orden: 9 },
+    { encabezado: 'Unidad de medida de tarifa (UMT)', clave: (fila) => fila.umt, orden: 10 },
+    { encabezado: 'Cantidad UMT', clave: (fila) => fila.cantidadUMT, orden: 11 },
+    { encabezado: 'Unidad de medida de comercialización (UMC)', clave: (fila) => fila.umc, orden: 12 },
+    { encabezado: 'Cantidad UMC', clave: (fila) => fila.cantidadUMC, orden: 13 },
+    { encabezado: 'Uso', clave: (fila) => fila.uso, orden: 14 },
+    { encabezado: 'Tipo de Producto', clave: (fila) => fila.tipoDeProducto, orden: 15 },
+    { encabezado: 'Número de lote', clave: (fila) => fila.numeroDeLote, orden: 16 },
+    { encabezado: 'País de origen', clave: (fila) => fila.paisDeOrigen, orden: 17 },
+    { encabezado: 'País de procedencia', clave: (fila) => fila.paisDeProcedencia, orden: 18 },
+    { encabezado: 'Certificado Internacional Electrónico', clave: (fila) => fila.certificadoInternacionalElectronico, orden: 19 }
+  ];
+
+  /**
+   * @description Configuración de las columnas de la tabla de solicitudes.
+   * Cada objeto define el encabezado, la clave de acceso y el orden de la columna.
+   * @type {ConfiguracionColumna<SolicitudFilaTabla>[]}
+   */
+  solicitudConfigurationColumnasoli: ConfiguracionColumna<SolicitudFilaTabla>[] = [
+    { encabezado: 'Fecha Creación', clave: (fila) => fila.fechaCreacion, orden: 1 },
+    { encabezado: 'Mercancía', clave: (fila) => fila.mercancia, orden: 2 },
+    { encabezado: 'Cantidad', clave: (fila) => fila.cantidad, orden: 3 },
+    { encabezado: 'Proovedor', clave: (fila) => fila.proveedor, orden: 4 },
   ];
 
   /**
@@ -176,6 +221,12 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @type {FilaSolicitud[]}
    */
     cuerpoTabla: FilaSolicitud[] = [];
+
+  /**
+   * @description Lista de solicitudes para la tabla.
+   * @type {SolicitudFilaTabla[]}
+   */
+    solicitubLista: SolicitudFilaTabla[] = [];
 
   /**
    * @description Subject utilizado para destruir las suscripciones y evitar fugas de memoria cuando el componente se destruye.
@@ -302,15 +353,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       regimen: [{ value: FORMULARIO.regimen || '', disabled: this.esFormularioSoloLectura }, Validators.required],
       numeroDeGuia: [{ value: FORMULARIO.numeroDeGuia || '', disabled: this.esFormularioSoloLectura }],
       numeroDeCarro: [{ value: FORMULARIO.numeroDeCarro || '', disabled: this.esFormularioSoloLectura }],
-      tipoDeRequisito: [{ value: FORMULARIO.tipoDeRequisito || '', disabled: this.esFormularioSoloLectura }, Validators.required],
-      fraccionArancelaria: [{ value: FORMULARIO.fraccionArancelaria || '', disabled: this.esFormularioSoloLectura }, Validators.required],
-      nico: [{ value: FORMULARIO.nico || '', disabled: this.esFormularioSoloLectura }, Validators.required],
-      cantidadUMT: [{ value: FORMULARIO.cantidadUMT || '', disabled: this.esFormularioSoloLectura }, Validators.required],
-      umt: [{ value: FORMULARIO.umt || '', disabled: this.esFormularioSoloLectura }, Validators.required],
-      cantidadUMC: [{ value: FORMULARIO.cantidadUMC || '', disabled: this.esFormularioSoloLectura }, Validators.required],
-      umc: [{ value: FORMULARIO.umc || '', disabled: this.esFormularioSoloLectura }, Validators.required],
-      uso: [{ value: FORMULARIO.uso || '', disabled: this.esFormularioSoloLectura }, Validators.required],
-      tipoDeProducto: [{ value: FORMULARIO.tipoDeProducto || '', disabled: this.esFormularioSoloLectura }, Validators.required],
     };
   }
   
@@ -468,6 +510,32 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   ): void {
     const VALOR = this.forma.value;
     (this.agriculturaApiService.updateDatosForma as (value: DatosForma) => void)(VALOR);
+  }
+
+  /**
+   * Maneja la selección de una fila en la tabla de solicitudes.
+   *
+   * Cuando se selecciona una fila, este método actualiza los valores del formulario (`forma`)
+   * con datos predefinidos relacionados con la solicitud seleccionada.
+   *
+   * @param event - Objeto de tipo `SolicitudFilaTabla` que representa la fila seleccionada en la tabla.
+   */
+  seleccionFila(event: SolicitudFilaTabla): void {
+    if (event) {
+      this.forma.patchValue({
+        aduanaDeIngreso: "1",
+        oficinaDeInspeccion: "1",
+        puntoDeInspeccion: "1",
+        numeroDeGuia: "GUIA123456",
+        regimen: "1",
+        numeroDeCarro: "CARRO7890",
+        requisito: "Certificado Zoosanitario",
+        numeroCertificadoInternacional: "CERTINTL2024",
+        descripcionFraccion: "Caballos de raza pura",
+        descripcionNico: "Caballos para carreras",
+        descripcion: "Importación de caballos de carreras"
+      });
+    }
   }
 
   /**

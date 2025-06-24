@@ -1,31 +1,43 @@
-import {
-  AfterViewInit,
-  Component,
-  ElementRef,
-  OnDestroy,
-  OnInit,
-  TemplateRef,
-  ViewChild,
-} from '@angular/core';
-import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
-import { Catalogo, TableBodyData, TableComponent, TableData, TablePaginationComponent, TituloComponent } from '@ng-mf/data-access-user';
-import {
-  FormBuilder,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
-import { Solicitud31601State, Tramite31601Store } from '../../../../estados/tramites/tramite31601.store';
-import { Subject, map, takeUntil } from 'rxjs';
+import { AfterViewInit } from '@angular/core';
 import { AgregarMiembroDeLaEmpresaComponent } from '../agregar-miembro-de-la-empresa/agregar-miembro-de-la-empresa.component';
+import { BsModalRef } from 'ngx-bootstrap/modal';
+import { BsModalService } from 'ngx-bootstrap/modal';
+import { Catalogo } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
+import { ConfiguracionColumna } from '@ng-mf/data-access-user';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
-import { InputRadioComponent } from "@libs/shared/data-access-user/src/tramites/components/input-radio/input-radio.component";
+import { ElementRef } from '@angular/core';
+import { FormBuilder } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
+import { InputRadioComponent } from '@libs/shared/data-access-user/src/tramites/components/input-radio/input-radio.component';
 import Instalaciones from '@libs/shared/theme/assets/json/31601/Instalaciones.json';
+import { MENCIONE_TABLA_CONFIGURACION } from '../../enum/mencione-tabla.enum';
+import { MencioneConfiguracionItem } from '../../enum/mencione-tabla.enum';
 import { Modal } from 'bootstrap';
+import { OnDestroy } from '@angular/core';
+import { OnInit } from '@angular/core';
 import { REGEX_RFC } from '@libs/shared/data-access-user/src/tramites/constantes/regex.constants';
+import { ReactiveFormsModule } from '@angular/forms';
+import { Solicitud31601State } from '../../../../estados/tramites/tramite31601.store';
+import { Solocitud31601Service } from '../../services/service31601.service';
+import { Subject } from 'rxjs';
+import { Tabla } from '../../models/models31601.model';
+import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
+import { TablaSeleccion } from '@ng-mf/data-access-user';
+import { TableBody } from '../../models/models31601.model';
+import { TableComponent } from '@ng-mf/data-access-user';
+import { TablePaginationComponent } from '@ng-mf/data-access-user';
+import { TemplateRef } from '@angular/core';
+import { TituloComponent } from '@ng-mf/data-access-user';
 import { Tramite31601Query } from '../../../../estados/queries/tramite31601.query';
+import { Tramite31601Store } from '../../../../estados/tramites/tramite31601.store';
+import { Validators } from '@angular/forms';
+import { ViewChild } from '@angular/core';
+import { map } from 'rxjs';
+import { takeUntil } from 'rxjs';
+
 import applicantRegistrados from '@libs/shared/theme/assets/json/31601/applicantRegistrados.json';
 import comboBimestres from '@libs/shared/theme/assets/json/31601/comboBimestres.json';
 import comboIMMEXJson from '@libs/shared/theme/assets/json/31601/comboIMMEX.json';
@@ -42,14 +54,14 @@ import serviciosAgace from '@libs/shared/theme/assets/json/31601/serviciosAgace.
 
 /**
  * Componente para manejar el formulario reactivo y la paginación de una tabla relacionada con trámites aduaneros.
- * 
+ *
  * Este componente implementa:
  * - Formularios reactivos con validación
  * - Modales para interacciones adicionales
  * - Tablas con paginación
  * - Integración con un estado global (NGXS)
  * - Carga de datos desde archivos JSON estáticos
- * 
+ *
  * @implements {OnInit, AfterViewInit, OnDestroy}
  */
 @Component({
@@ -66,8 +78,9 @@ import serviciosAgace from '@libs/shared/theme/assets/json/31601/serviciosAgace.
     TablePaginationComponent,
     TituloComponent,
     AgregarMiembroDeLaEmpresaComponent,
+    TablaDinamicaComponent,
   ],
-  providers: [BsModalService]
+  providers: [BsModalService],
 })
 export class AduaneroComponent implements OnInit, AfterViewInit, OnDestroy {
   /**
@@ -144,7 +157,7 @@ export class AduaneroComponent implements OnInit, AfterViewInit, OnDestroy {
   /**
    * Datos de control de inventarios obtenidos desde JSON
    */
-  controlInventarios: TableData = controlInventarios;
+  controlInventarios: Tabla = controlInventarios;
 
   /**
    * Lista de opciones IMMEX cargadas desde JSON
@@ -219,7 +232,7 @@ export class AduaneroComponent implements OnInit, AfterViewInit, OnDestroy {
   /**
    * Datos del cuerpo de la tabla de empleados
    */
-  public empleadosBodyData: TableBodyData[] = [];
+  public empleadosBodyData: TableBody[] = [];
 
   /**
    * Encabezados de la tabla de domicilios
@@ -229,7 +242,7 @@ export class AduaneroComponent implements OnInit, AfterViewInit, OnDestroy {
   /**
    * Datos del cuerpo de la tabla de domicilios
    */
-  public domiciliosBodyData: TableBodyData[] = [];
+  public domiciliosBodyData: TableBody[] = [];
 
   /**
    * Encabezados de la tabla de instalaciones
@@ -239,7 +252,7 @@ export class AduaneroComponent implements OnInit, AfterViewInit, OnDestroy {
   /**
    * Datos del cuerpo de la tabla de instalaciones
    */
-  public InstalacionesBodyData: TableBodyData[] = [];
+  public InstalacionesBodyData: TableBody[] = [];
 
   /**
    * Estado de la solicitud
@@ -260,11 +273,75 @@ export class AduaneroComponent implements OnInit, AfterViewInit, OnDestroy {
    * Referencia al modal de ngx-bootstrap
    */
   modalRef?: BsModalRef;
-    
+
   /**
    * Indica si el formulario está en modo solo lectura
    */
-  esFormularioSoloLectura: boolean = false; 
+  esFormularioSoloLectura: boolean = false;
+
+  /**
+   * Configuración de las columnas para la tabla de mencione.
+   */
+  configuracionTablaMencione: ConfiguracionColumna<MencioneConfiguracionItem>[] =
+    MENCIONE_TABLA_CONFIGURACION;
+
+  /**
+   * Tipo de selección para la tabla dinámica.
+   */
+  tipoSeleccionTabla = TablaSeleccion.CHECKBOX;
+
+  /**
+   * Datos de la tabla de mencione.
+   */
+  datosTablaMencione!: MencioneConfiguracionItem[];
+
+  /**
+   * Indica si el botón de eliminar debe estar habilitado o no en la interfaz de usuario.
+   */
+  enableEliminarBoton: boolean = false;
+  /**
+   * Indica si el botón de modificar debe estar habilitado o no en la interfaz de usuario.
+   */
+  enableModficarBoton: boolean = false;
+  /**
+   * Lista de filas seleccionadas en la tabla de mencione.
+   */
+  listaFilaSeleccionadaMencione: MencioneConfiguracionItem[] = [];
+  /**
+   * Fila seleccionada actualmente en la tabla de mencione.
+   */
+  filaSeleccionadaMencione: MencioneConfiguracionItem | null = null;
+  /**
+   * Indica si se debe mostrar la tabla de menciones.
+   */
+  showMencioneTabla: boolean = false;
+  /**
+   * Indica si el popup está abierto.
+   */
+  multipleSeleccionPopupAbierto: boolean = false;
+
+  /**
+   * Indica si el popup está cerrado.
+   */
+  multipleSeleccionPopupCerrado: boolean = true;
+
+  /**
+   * Indica si el popup está abierto.
+   */
+  confirmEliminarPopupAbierto: boolean = false;
+
+  /**
+   * Indica si el popup está cerrado.
+   */
+  confirmEliminarPopupCerrado: boolean = true;
+
+  /**
+   * Indica si los campos obligatorios han sido respondidos.
+   * 
+   * @type {boolean}
+   * @memberof AduaneroComponent
+   */
+  mandatoryFieldsAnswered: boolean = false;
   /**
    * Constructor del componente
    * @param fb - FormBuilder para crear formularios reactivos
@@ -279,17 +356,18 @@ export class AduaneroComponent implements OnInit, AfterViewInit, OnDestroy {
     private tramite31601Query: Tramite31601Query,
     private modalService: BsModalService,
     private consultaioQuery: ConsultaioQuery,
+    private solicitudService: Solocitud31601Service
   ) {
     // Suscripción al estado de Consultaio para manejar el modo de solo lectura
     this.consultaioQuery.selectConsultaioState$
-    .pipe(
-      takeUntil(this.destroyNotifier$),
-      map((seccionState)=>{
-        this.esFormularioSoloLectura = seccionState.readonly; 
-        this.inicializarEstadoFormulario();
-      })
-    )
-    .subscribe()
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
   }
 
   /**
@@ -297,12 +375,35 @@ export class AduaneroComponent implements OnInit, AfterViewInit, OnDestroy {
    * - Configura el estado inicial del formulario
    * - Carga datos de establecimientos, empleados, domicilios e instalaciones
    */
-  ngOnInit():void {
+  ngOnInit(): void {
     this.inicializarEstadoFormulario();
     this.getEstablecimiento();
     this.getEmpleadosData();
     this.getDomiciliosData();
     this.getInstalaciones();
+
+    this.tramite31601Query.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+      )
+      .subscribe((seccionState) => {
+          this.datosTablaMencione = seccionState.mencioneDatos || [];
+      });
+
+    this.showMencioneTabla = this.preOperativeForm.get('senaleSi')?.value === 'Si';
+    this.preOperativeForm.get('senaleSi')?.valueChanges
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((value) => {
+        this.showMencioneTabla = value === 'Si';
+      });
+
+    
+    this.solicitudService.getMencioneDatos()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((datos) => {
+        this.datosTablaMencione = datos;
+        this.tramite31601Store.setMencioneTablaDatos(this.datosTablaMencione);
+      });
   }
 
   /**
@@ -319,116 +420,112 @@ export class AduaneroComponent implements OnInit, AfterViewInit, OnDestroy {
           this.solicitudState = seccionState;
         })
       )
-      .subscribe()
-      
-      // Creación del formulario reactivo con validaciones
-      this.preOperativeForm = this.fb.group({
-        autorizacionIVAIEPS: [this.solicitudState?.autorizacionIVAIEPS, Validators.required],
-        regimen_0:[this.solicitudState?.regimen_0],
-        regimen_1:[this.solicitudState?.regimen_1],
-        regimen_2:[this.solicitudState?.regimen_2],
-        regimen_3:[this.solicitudState?.regimen_3],
-        sectorProductivo:[this.solicitudState?.sectorProductivo],
-        servicio:[this.solicitudState?.servicio],
-        preOperativo: [this.solicitudState?.preOperativo, Validators.required],
-        indiqueSi: [this.solicitudState?.indiqueSi, Validators.required],
-        senale: [this.solicitudState?.senale, Validators.required],
-        empPropios:[this.solicitudState?.empPropios],
-        bimestre:[this.solicitudState?.bimestre],
-        senaleSi: [this.solicitudState?.senaleSi, Validators.required],
-        seMomento: [this.solicitudState?.seMomento, Validators.required],
-        cumplir: [this.solicitudState?.cumplir, Validators.required],
-        indique: [this.solicitudState?.indique, Validators.required],
-        encuentra: [this.solicitudState?.encuentra, Validators.required],
-        delMismo: [this.solicitudState?.delMismo, Validators.required],
-        senaleMomento: [this.solicitudState?.senaleMomento, Validators.required],
-        enCaso: [this.solicitudState?.enCaso, Validators.required],
-        comboBimestresIDCSeleccione:[this.solicitudState?.comboBimestresIDCSeleccione],
-        ingresar: [this.solicitudState?.ingresar, Validators.required],
-        encuentraSus: [this.solicitudState?.encuentraSus, Validators.required],
-        registrosQue:[this.solicitudState?.registrosQue],
-        registrosQue2:[this.solicitudState?.registrosQue2],
-        momentoIngresar: [this.solicitudState?.momentoIngresar, Validators.required],
-        indiqueCuenta: [this.solicitudState?.indiqueCuenta, Validators.required],
-        indiqueCheck:[this.solicitudState?.indiqueCheck],
-        nombreDel: [
-          this.solicitudState?.nombreDel,
-          [
-            Validators.required,
-            Validators.minLength(3),
-            Validators.maxLength(250),
-          ],
+      .subscribe();
+
+    // Creación del formulario reactivo con validaciones
+    this.preOperativeForm = this.fb.group({
+      autorizacionIVAIEPS: [
+        this.solicitudState?.autorizacionIVAIEPS,
+        Validators.required,
+      ],
+      regimen_0: [this.solicitudState?.regimen_0],
+      regimen_1: [this.solicitudState?.regimen_1],
+      regimen_2: [this.solicitudState?.regimen_2],
+      regimen_3: [this.solicitudState?.regimen_3],
+      sectorProductivo: [this.solicitudState?.sectorProductivo],
+      servicio: [this.solicitudState?.servicio],
+      preOperativo: [this.solicitudState?.preOperativo, Validators.required],
+      indiqueSi: [this.solicitudState?.indiqueSi, Validators.required],
+      senale: [this.solicitudState?.senale, Validators.required],
+      empPropios: [this.solicitudState?.empPropios],
+      bimestre: [this.solicitudState?.bimestre],
+      senaleSi: [this.solicitudState?.senaleSi, Validators.required],
+      seMomento: [this.solicitudState?.seMomento, Validators.required],
+      cumplir: [this.solicitudState?.cumplir, Validators.required],
+      indique: [this.solicitudState?.indique, Validators.required],
+      encuentra: [this.solicitudState?.encuentra, Validators.required],
+      delMismo: [this.solicitudState?.delMismo, Validators.required],
+      senaleMomento: [this.solicitudState?.senaleMomento, Validators.required],
+      enCaso: [this.solicitudState?.enCaso, Validators.required],
+      comboBimestresIDCSeleccione: [
+        this.solicitudState?.comboBimestresIDCSeleccione,
+      ],
+      ingresar: [this.solicitudState?.ingresar, Validators.required],
+      encuentraSus: [this.solicitudState?.encuentraSus, Validators.required],
+      registrosQue: [this.solicitudState?.registrosQue],
+      registrosQue2: [this.solicitudState?.registrosQue2],
+      momentoIngresar: [
+        this.solicitudState?.momentoIngresar,
+        Validators.required,
+      ],
+      indiqueCuenta: [this.solicitudState?.indiqueCuenta, Validators.required],
+      indiqueCheck: [this.solicitudState?.indiqueCheck],
+      nombreDel: [
+        this.solicitudState?.nombreDel,
+        [
+          Validators.required,
+          Validators.minLength(3),
+          Validators.maxLength(250),
         ],
-        lugarDeRadicacion: [
-          this.solicitudState?.lugarDeRadicacion,
-          [
-            Validators.required,
-            Validators.minLength(3),
-            Validators.maxLength(250),
-          ],
+      ],
+      lugarDeRadicacion: [
+        this.solicitudState?.lugarDeRadicacion,
+        [
+          Validators.required,
+          Validators.minLength(3),
+          Validators.maxLength(250),
         ],
-        contabilidad: [this.solicitudState?.contabilidad, Validators.required],
-        rmfRadio: [this.solicitudState?.rmfRadio, Validators.required],
-        vinculacionRegistroCancelado: [this.solicitudState?.vinculacionRegistroCancelado, Validators.required],
-        proveedoresListadoSAT: [this.solicitudState?.proveedoresListadoSAT, Validators.required],
-        numeroAutorizacionCITES: [
-          '',
-          [
-            Validators.required,
-            Validators.pattern(REGEX_RFC),
-          ],
+      ],
+      contabilidad: [this.solicitudState?.contabilidad, Validators.required],
+      rmfRadio: [this.solicitudState?.rmfRadio, Validators.required],
+      vinculacionRegistroCancelado: [
+        this.solicitudState?.vinculacionRegistroCancelado,
+        Validators.required,
+      ],
+      proveedoresListadoSAT: [
+        this.solicitudState?.proveedoresListadoSAT,
+        Validators.required,
+      ],
+      numeroAutorizacionCITES: [
+        '',
+        [Validators.required, Validators.pattern(REGEX_RFC)],
+      ],
+      rfc: ['', [Validators.required, Validators.pattern(REGEX_RFC)]],
+      razonSocial: ['', [Validators.required, Validators.minLength(3)]],
+      numeroEmpleados: [
+        '',
+        [Validators.required, Validators.pattern(/^[0-9]+$/)],
+      ],
+      empleadosPropios: [
+        '',
+        [
+          Validators.required,
+          Validators.pattern('^[0-9]+$'),
+          Validators.min(1),
+          Validators.max(99999999),
+          Validators.maxLength(8),
         ],
-        rfc: [
-          '',
-          [
-            Validators.required,
-            Validators.pattern(REGEX_RFC),
-          ],
-        ],
-        razonSocial: [
-          '',
-          [
-            Validators.required,
-            Validators.minLength(3),
-          ],
-        ],
-        numeroEmpleados: [
-          '',
-          [
-            Validators.required,
-            Validators.pattern(/^[0-9]+$/),
-          ],
-        ],
-        empleadosPropios: [
-          '',
-          [
-            Validators.required,
-            Validators.pattern('^[0-9]+$'),
-            Validators.min(1),
-            Validators.max(99999999),
-            Validators.maxLength(8),
-          ],
-        ],
-        archivoNacionales: ['']
-      });
-    
+      ],
+      archivoNacionales: [''],
+    });
+
     // Configuración del modo de solo lectura
     if (this.esFormularioSoloLectura) {
       Object.keys(this.preOperativeForm.controls).forEach((key) => {
         this.preOperativeForm.get(key)?.disable();
-      })
+      });
     } else {
       Object.keys(this.preOperativeForm.controls).forEach((key) => {
         this.preOperativeForm.get(key)?.enable();
-      })
-    }  
+      });
+    }
   }
 
   /**
    * Método ejecutado después de inicializada la vista:
    * - Inicializa los modales de modificación e instalaciones
    */
-  ngAfterViewInit():void {
+  ngAfterViewInit(): void {
     // Inicializa el modal de modificación
     if (this.modifyModal) {
       this.modalInstance = new Modal(this.modifyModal.nativeElement);
@@ -445,8 +542,14 @@ export class AduaneroComponent implements OnInit, AfterViewInit, OnDestroy {
   /**
    * Abre el modal de modificación
    */
-  openModifyModal():void {
+  openModifyModal(): void {
     if (this.modalInstance) {
+      this.preOperativeForm.patchValue({
+        rfc: this.filaSeleccionadaMencione?.rfc,
+        razonSocial: this.filaSeleccionadaMencione?.social,
+        numeroEmpleados: this.filaSeleccionadaMencione?.noumero,
+        empleadosPropios: this.filaSeleccionadaMencione?.bimestre,
+      })
       this.modalInstance.show();
     }
   }
@@ -454,7 +557,7 @@ export class AduaneroComponent implements OnInit, AfterViewInit, OnDestroy {
   /**
    * Cierra el modal de modificación
    */
-  closeModifyModal():void {
+  closeModifyModal(): void {
     if (this.modalInstance) {
       this.modalInstance.hide();
     }
@@ -463,7 +566,7 @@ export class AduaneroComponent implements OnInit, AfterViewInit, OnDestroy {
   /**
    * Abre el modal de instalaciones
    */
-  openInstalacionesModal():void {
+  openInstalacionesModal(): void {
     if (this.modalInstanceInstalaciones) {
       this.modalInstanceInstalaciones.show();
     }
@@ -472,7 +575,7 @@ export class AduaneroComponent implements OnInit, AfterViewInit, OnDestroy {
   /**
    * Obtiene y asigna los datos de empleados desde JSON
    */
-  public getEmpleadosData():void {
+  public getEmpleadosData(): void {
     this.empleadosHeaderData = this.empleadosSubcontratacion.tableHeader;
     this.empleadosBodyData = this.empleadosSubcontratacion.tableBody;
   }
@@ -480,7 +583,7 @@ export class AduaneroComponent implements OnInit, AfterViewInit, OnDestroy {
   /**
    * Obtiene y asigna los datos de domicilios desde JSON
    */
-  public getDomiciliosData():void {
+  public getDomiciliosData(): void {
     this.domiciliosHeaderData = this.applicantRegistrados.tableHeader;
     this.domiciliosBodyData = this.applicantRegistrados.tableBody;
   }
@@ -488,7 +591,7 @@ export class AduaneroComponent implements OnInit, AfterViewInit, OnDestroy {
   /**
    * Obtiene y asigna los datos de instalaciones desde JSON
    */
-  public getInstalaciones():void {
+  public getInstalaciones(): void {
     this.InstalacionesHeaderData = this.Instalaciones.tableHeader;
     this.InstalacionesBodyData = this.Instalaciones.tableBody;
   }
@@ -496,7 +599,7 @@ export class AduaneroComponent implements OnInit, AfterViewInit, OnDestroy {
   /**
    * Obtiene y asigna los datos de establecimientos desde JSON
    */
-  public getEstablecimiento():void {
+  public getEstablecimiento(): void {
     this.establecimientoHeaderData =
       this.getEstablecimientoTableData.tableHeader;
     this.establecimientoBodyData = this.getEstablecimientoTableData.tableBody;
@@ -505,7 +608,7 @@ export class AduaneroComponent implements OnInit, AfterViewInit, OnDestroy {
   /**
    * Actualiza la paginación de la tabla de establecimientos
    */
-  updatePagination():void {
+  updatePagination(): void {
     const START_INDEX = (this.currentPage - 1) * this.itemsPerPage;
     this.establecimientoBodyData = this.fullEstablecimientoBodyData.slice(
       START_INDEX,
@@ -517,7 +620,7 @@ export class AduaneroComponent implements OnInit, AfterViewInit, OnDestroy {
    * Maneja el cambio de página en la paginación
    * @param page - Número de página seleccionada
    */
-  onPageChange(page: number):void {
+  onPageChange(page: number): void {
     this.currentPage = page;
     this.updatePagination();
   }
@@ -526,7 +629,7 @@ export class AduaneroComponent implements OnInit, AfterViewInit, OnDestroy {
    * Maneja el cambio en el número de elementos por página
    * @param itemsPerPage - Número de elementos por página
    */
-  onItemsPerPageChange(itemsPerPage: number):void {
+  onItemsPerPageChange(itemsPerPage: number): void {
     this.itemsPerPage = itemsPerPage;
     this.currentPage = 1;
     this.updatePagination();
@@ -538,8 +641,15 @@ export class AduaneroComponent implements OnInit, AfterViewInit, OnDestroy {
    * @param campo - Nombre del campo a guardar
    * @param metodoNombre - Nombre del método en el store
    */
-  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite31601Store): void {
+  setValoresStore(
+    form: FormGroup,
+    campo: string,
+    metodoNombre: keyof Tramite31601Store
+  ): void {
     const VALOR = form.get(campo)?.value;
+   if(campo === 'senaleSi' && VALOR === 'Si') {
+    this.showMencioneTabla = true;
+   }
     (this.tramite31601Store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
 
@@ -549,7 +659,7 @@ export class AduaneroComponent implements OnInit, AfterViewInit, OnDestroy {
    */
   subirArchivo(template: TemplateRef<void>): void {
     this.modalRef = this.modalService.show(template);
-    if(this.preOperativeForm.get('archivoNacionales')?.value === '') {
+    if (this.preOperativeForm.get('archivoNacionales')?.value === '') {
       this.noSeHaSubidoNingunArchivo = true;
     }
   }
@@ -561,6 +671,119 @@ export class AduaneroComponent implements OnInit, AfterViewInit, OnDestroy {
     this.modalRef?.hide();
     this.noSeHaSubidoNingunArchivo = false;
   }
+
+  /**
+   * Maneja la selección de filas en la tabla de mencione.
+   * 
+   * Habilita o deshabilita los botones de modificar y eliminar según si hay filas seleccionadas.
+   * Actualiza la lista de filas seleccionadas y la última fila seleccionada.
+   * 
+   * @param fila - Arreglo de elementos seleccionados de tipo MencioneConfiguracionItem.
+   */
+  manejarFilaSeleccionada(fila: MencioneConfiguracionItem[]): void {
+    if (fila.length === 0) {
+      this.enableModficarBoton = false;
+      this.enableEliminarBoton = false;
+      return;
+    }
+    this.listaFilaSeleccionadaMencione = fila;
+    this.filaSeleccionadaMencione = fila[fila.length - 1];
+    this.enableModficarBoton = true;
+    this.enableEliminarBoton = true;
+  }
+
+  /**
+   * Confirma la eliminación de los elementos seleccionados en la tabla de mencione.
+   * 
+   * Si no hay elementos seleccionados, no realiza ninguna acción.
+   * Si hay elementos seleccionados, abre el popup de confirmación de eliminación.
+   */
+  confirmEliminarMencioneItem(): void {
+    if (this.listaFilaSeleccionadaMencione.length === 0) {
+      return;
+    }
+    this.abrirElimninarConfirmationopup();
+  }
+
+  /**
+ * Abre el popup de selección múltiple si el botón de modificar está habilitado.
+ */
+  abrirMultipleSeleccionPopup(): void {
+    if (this.enableModficarBoton) {
+      this.multipleSeleccionPopupAbierto = true;
+    }
+  }
+
+  /**
+ * Cierra el popup de selección múltiple.
+ */
+  cerrarMultipleSeleccionPopup(): void {
+    this.multipleSeleccionPopupAbierto = false;
+    this.multipleSeleccionPopupCerrado = false;
+  }
+
+  /**
+ * Abre el popup de confirmación de eliminación.
+ */
+  abrirElimninarConfirmationopup(): void {
+    this.confirmEliminarPopupAbierto = true;
+  }
+
+  /**
+ * Cierra el popup de confirmación de eliminación.
+ */
+  cerrarEliminarConfirmationPopup(): void {
+    this.confirmEliminarPopupAbierto = false;
+    this.confirmEliminarPopupCerrado = false;
+  }
+
+  /**
+ * Filtra y elimina los elementos seleccionados de la tabla de mercancías.
+ * Actualiza el estado del almacén y cierra el popup de confirmación de eliminación.
+ */
+  eliminarMercanciaItem(): void {
+    const IDS_TO_DELETE = this.listaFilaSeleccionadaMencione.map(
+      (item) => item.id
+    );
+
+    this.datosTablaMencione = this.datosTablaMencione.filter(
+      (item) => !IDS_TO_DELETE.includes(item.id)
+    );
+
+    this.listaFilaSeleccionadaMencione = [];
+    this.tramite31601Store.setMencioneTablaDatos(this.datosTablaMencione);
+    this.cerrarEliminarConfirmationPopup();
+  }
+
+  /**
+   * Agrega un nuevo elemento a la tabla de mencione si los campos obligatorios están completos y válidos.
+   *
+   * Valida que los campos RFC, razón social, número de empleados, empleados propios y número de autorización CITES sean válidos.
+   * Si la validación es exitosa, crea un nuevo objeto MencioneConfiguracionItem y lo agrega a la tabla,
+   * actualizando el estado correspondiente en el store.
+   */
+  addNewMencioneItem(): void {
+    this.mandatoryFieldsAnswered =
+      Boolean(this.preOperativeForm.get('rfc')?.valid) &&
+      Boolean(this.preOperativeForm.get('razonSocial')?.valid) &&
+      Boolean(this.preOperativeForm.get('numeroEmpleados')?.valid) &&
+      Boolean(this.preOperativeForm.get('empleadosPropios')?.valid) &&
+      Boolean(this.preOperativeForm.get('numeroAutorizacionCITES')?.valid);
+
+    if (this.mandatoryFieldsAnswered) {
+      const NEWITEM: MencioneConfiguracionItem = {
+        id: (this.datosTablaMencione.length + 1).toString(),
+        rfc: this.preOperativeForm.get('rfc')?.value,
+        social: this.preOperativeForm.get('razonSocial')?.value,
+        noumero: this.preOperativeForm.get('numeroEmpleados')?.value,
+        bimestre: this.preOperativeForm.get('empleadosPropios')?.value,
+      };
+      this.datosTablaMencione.push(NEWITEM);
+      this.tramite31601Store.setMencioneTablaDatos(this.datosTablaMencione);
+      this.mandatoryFieldsAnswered = false;
+    }
+  }
+
 
   /**
    * Método ejecutado al destruir el componente:
