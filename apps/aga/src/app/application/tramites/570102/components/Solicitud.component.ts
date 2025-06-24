@@ -50,7 +50,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    */
   constructor(
     public fb: FormBuilder,
-    private store: Tramite570102Store,
+    public store: Tramite570102Store,
     private query: Tramite570102Query,
     private validacionesService: ValidacionesFormularioService,
      private consultaioQuery: ConsultaioQuery
@@ -103,11 +103,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    */
   guardarDatosFormulario(): void {
     this.donanteDomicilio();
-    if (this.soloLectura) {
-      this.solicitudForm.disable();
-    } else {
-      this.solicitudForm.enable();
-    }
+   
   }
   /**
    * Valida el formulario y marca todos los campos como tocados si es inválido.
@@ -148,8 +144,8 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    */
   donanteDomicilio(): void {
     this.solicitudForm = this.fb.group({
-      folio: [this.solicitudState?.folio, [Validators.required]],
-      motivoDelDes: [this.solicitudState?.motivoDelDes, [Validators.required]],
+       folio: [{ value: this.solicitudState?.folio, disabled: this.soloLectura }, [Validators.required]],
+  motivoDelDes: [{ value: this.solicitudState?.motivoDelDes, disabled: this.soloLectura }, [Validators.required]],
     });
   }
 
