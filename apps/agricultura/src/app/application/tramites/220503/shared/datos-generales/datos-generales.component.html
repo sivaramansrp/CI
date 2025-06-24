@@ -28,7 +28,7 @@
             [catalogo]="aduanaIngreso.catalogos"
             [label]="aduanaIngreso.labelNombre"
             [placeholder]="aduanaIngreso.primerOpcion"
-            [isDisabled]="esFormularioSoloLectura"
+            [isDisabled]="true"
             formControlName="aduanaIngreso"
             (selectionChange)="seleccionarAduanaIngreso($event)"
           ></app-catalogo-select>
@@ -38,7 +38,7 @@
             [catalogo]="oficianaInspeccion.catalogos"
             [label]="oficianaInspeccion.labelNombre"
             [placeholder]="oficianaInspeccion.primerOpcion"
-            [isDisabled]="esFormularioSoloLectura"
+            [isDisabled]="true"
             formControlName="oficinaInspeccion"
             (selectionChange)="seleccionarOficianaInspeccion($event)"
           ></app-catalogo-select>
@@ -50,7 +50,7 @@
             [catalogo]="puntoInspeccion.catalogos"
             [label]="puntoInspeccion.labelNombre"
             [placeholder]="puntoInspeccion.primerOpcion"
-            [isDisabled]="esFormularioSoloLectura"
+            [isDisabled]="true"
             formControlName="puntoInspeccion"
             (selectionChange)="seleccionarPuntoInspeccion($event)"
           ></app-catalogo-select>
@@ -82,7 +82,7 @@
             [catalogo]="establecimiento.catalogos"
             [label]="establecimiento.labelNombre"
             [placeholder]="establecimiento.primerOpcion"
-            [isDisabled]="esFormularioSoloLectura"
+            [isDisabled]="true"
             formControlName="establecimientoTIF"
           ></app-catalogo-select>
         </div>
@@ -124,7 +124,7 @@
             [label]="regimenDestinaran.labelNombre"
             [placeholder]="regimenDestinaran.primerOpcion"
             formControlName="regimen"
-            [isDisabled]="esFormularioSoloLectura"
+            [isDisabled]="true"
             (selectionChange)="seleccionarRegimen($event)"
           ></app-catalogo-select>
         </div>
@@ -215,7 +215,7 @@
               [catalogo]="movilizacionNacional.catalogos"
               [label]="movilizacionNacional.labelNombre"
               [placeholder]="movilizacionNacional.primerOpcion"
-              [isDisabled]="esFormularioSoloLectura"
+              [isDisabled]="true"
               formControlName="movilizacion"
               (selectionChange)="seleccionarMovilizacionNacional($event)"
             ></app-catalogo-select>
@@ -238,7 +238,7 @@
               [catalogo]="puntoVerificacion.catalogos"
               [label]="puntoVerificacion.labelNombre"
               [placeholder]="puntoVerificacion.primerOpcion"
-              [isDisabled]="esFormularioSoloLectura"
+              [isDisabled]="true"
               formControlName="punto"
               (selectionChange)="seleccionarPuntoVerificacion($event)"
             ></app-catalogo-select>
@@ -248,7 +248,7 @@
               [catalogo]="empresaTransportista.catalogos"
               [label]="empresaTransportista.labelNombre"
               [placeholder]="empresaTransportista.primerOpcion"
-              [isDisabled]="esFormularioSoloLectura"
+              [isDisabled]="true"
               formControlName="nombreEmpresa"
             ></app-catalogo-select>
           </div>
