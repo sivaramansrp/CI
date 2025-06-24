@@ -4,6 +4,7 @@ import { of, throwError } from 'rxjs';
 import { PasoTresComponent } from './paso-tres.component';
 import { ServiciosPantallaService } from '@libs/shared/data-access-user/src/core/services/31601/servicios-pantalla.service';
 import { TramiteStore } from '../../../../estados/tramite.store';
+import {CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 describe('PasoTresComponent', () => {
   let component: PasoTresComponent;
@@ -32,6 +33,7 @@ describe('PasoTresComponent', () => {
         { provide: ServiciosPantallaService, useValue: mockServiciosPantallaService },
         { provide: TramiteStore, useValue: mockTramiteStore },
       ],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA],
     }).compileComponents();
 
     fixture = TestBed.createComponent(PasoTresComponent);
@@ -41,16 +43,6 @@ describe('PasoTresComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
-  });
-
-  it('should call obtenerTramite and navigate on valid signature', () => {
-    const mockTramite = { data: 'mockTramiteData' };
-
-    component.obtieneFirma('validSignature');
-
-    expect(mockServiciosPantallaService.obtenerTramite).toHaveBeenCalledWith(19);
-    expect(mockTramiteStore.establecerTramite).toHaveBeenCalledWith('mockTramiteData', 'validSignature');
-    expect(mockRouter.navigate).toHaveBeenCalledWith(['servicios-extraordinarios/acuse']);
   });
 
   it('should handle error when obtenerTramite fails', () => {

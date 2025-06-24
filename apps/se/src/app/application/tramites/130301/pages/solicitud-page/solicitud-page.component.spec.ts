@@ -2,26 +2,35 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SolicitudPageComponent } from './solicitud-page.component';
 import { WizardComponent } from '@libs/shared/data-access-user/src';
 import { PASOS } from '@libs/shared/data-access-user/src/core/enums/130301/modificacion.enum';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 describe('SolicitudPageComponent', () => {
   let component: SolicitudPageComponent;
   let fixture: ComponentFixture<SolicitudPageComponent>;
-  let mockWizardComponent: jest.Mocked<WizardComponent>;
+  let mockWizardComponent: { siguiente: jest.Mock; atras: jest.Mock };
 
   beforeEach(async () => {
     mockWizardComponent = {
       siguiente: jest.fn(),
       atras: jest.fn(),
-    } as unknown as jest.Mocked<WizardComponent>;
+    };
 
     await TestBed.configureTestingModule({
       declarations: [SolicitudPageComponent],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA],
     }).compileComponents();
 
     fixture = TestBed.createComponent(SolicitudPageComponent);
     component = fixture.componentInstance;
-    component.wizardComponent = mockWizardComponent;
     fixture.detectChanges();
+     component.wizardComponent = mockWizardComponent as any;
+  });
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+    if (component) {
+      component.indice = 1;
+    }
   });
 
   it('should create', () => {

@@ -2,7 +2,8 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PasoUnoComponent } from './paso-uno.component';
 import { SolicitanteComponent, TIPO_PERSONA } from '@libs/shared/data-access-user/src';
 import { Component } from '@angular/core';
-
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { CUSTOM_ELEMENTS_SCHEMA , NO_ERRORS_SCHEMA} from '@angular/core';
 @Component({
   selector: 'app-mock-solicitante',
   template: '',
@@ -18,7 +19,9 @@ describe('PasoUnoComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
+      imports: [HttpClientTestingModule],
       declarations: [PasoUnoComponent, MockSolicitanteComponent],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA , NO_ERRORS_SCHEMA],
     }).compileComponents();
 
     fixture = TestBed.createComponent(PasoUnoComponent);
@@ -37,6 +40,7 @@ describe('PasoUnoComponent', () => {
   });
 
   it('should call obtenerTipoPersona with TIPO_PERSONA.MORAL_NACIONAL on ngAfterViewInit', () => {
+    component.solicitante = mockSolicitante as unknown as SolicitanteComponent;
     component.ngAfterViewInit();
     expect(mockSolicitante.obtenerTipoPersona).toHaveBeenCalledWith(TIPO_PERSONA.MORAL_NACIONAL);
   });
