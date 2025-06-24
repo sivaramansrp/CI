@@ -1,17 +1,35 @@
-import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
-import { Component, Inject, Input, OnDestroy, OnInit, TemplateRef } from '@angular/core';
-import { ConfiguracionColumna, TablaDinamicaComponent, TablaSeleccion } from '@libs/shared/data-access-user/src';
-import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
-import { ENLACE_TABLA, EnlaceOperativo, PERSONAS_PARA,Personas } from '../../models/terceros-relacionados.model';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Subject,map,takeUntil } from 'rxjs';
-import { TercerosRelacionadosState, TercerosRelacionadosStore } from '../../estados/stores/terceros-relacionados.store';
+import { BsModalRef } from 'ngx-bootstrap/modal';
+import { BsModalService } from 'ngx-bootstrap/modal';
 import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
+import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { ConsultaioState } from '@ng-mf/data-access-user';
+import { ENLACE_TABLA } from '../../models/terceros-relacionados.model';
+import { EnlaceOperativo } from '../../models/terceros-relacionados.model';
+import { FormBuilder } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
+import { Inject } from '@angular/core';
+import { Input } from '@angular/core';
+import { OnDestroy } from '@angular/core';
+import { OnInit } from '@angular/core';
+import { PERSONAS_PARA } from '../../models/terceros-relacionados.model';
+import { Personas } from '../../models/terceros-relacionados.model';
 import { REPRESENTANTE_LEGAL } from '../../constants/terceros-relacionados.enum';
+import { ReactiveFormsModule } from '@angular/forms';
+import { Subject } from 'rxjs';
+import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
+import { TablaSeleccion } from '@libs/shared/data-access-user/src';
+import { TemplateRef } from '@angular/core';
 import { TercerosRelacionadosQuery } from '../../estados/queries/terceros-relacionados.query';
 import { TercerosRelacionadosService } from '../../services/terceros-relacionados.service';
+import { TercerosRelacionadosState } from '../../estados/stores/terceros-relacionados.store';
+import { TercerosRelacionadosStore } from '../../estados/stores/terceros-relacionados.store';
 import { TituloComponent } from '@libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
+import { Validators } from '@angular/forms';
+import { map } from 'rxjs';
+import { takeUntil } from 'rxjs';
 
 /**
  * Componente que representa la funcionalidad de "Terceros Relacionados".
@@ -289,12 +307,12 @@ export class TercerosRelacionadosComponent implements OnInit,OnDestroy {
    * Si el `valor` es un objeto con una propiedad `id`, se extrae el `id` y se utiliza para actualizar el store.
    * De lo contrario, se utiliza el `valor` en sí mismo para actualizar el store.
    */
-  public establecerCambioDeValor(event: { campo: string; valor: any }): void {
+  public establecerCambioDeValor(event: { campo: string; valor: unknown }): void {
     if (event && typeof event.valor === 'object' && event.valor !== null && 'id' in event.valor) {
       const VALOR = event.valor.id;
-      this.tercerosRelacionadosStore.setDynamicFieldValue(event.campo, VALOR);
+      this.tercerosRelacionadosStore.setDynamicFieldValue(event.campo, VALOR as string | number | boolean );
     } else if (event) {
-      this.tercerosRelacionadosStore.setDynamicFieldValue(event.campo, event.valor);
+      this.tercerosRelacionadosStore.setDynamicFieldValue(event.campo, event.valor as string | number | boolean);
     }
   }
 

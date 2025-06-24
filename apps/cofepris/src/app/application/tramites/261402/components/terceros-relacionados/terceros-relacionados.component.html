@@ -13,6 +13,7 @@
         [configuracionTabla]="configuracionTablaInformaciondeProcedencia"
         [tipoSeleccionTabla]="tipoSeleccionTabla"
         [datos]="destinatarioDatos"
+        [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
       ></app-tabla-dinamica>
     </div>
     
@@ -22,7 +23,8 @@
         <button
           type="button"
           name="agregarMercancias"
-          class="btn btn-primary ms-2">
+          class="btn btn-primary ms-2"
+          [disabled]="esFormularioSoloLectura">
           Agregar
         </button>
       </div>

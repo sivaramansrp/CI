@@ -47,6 +47,8 @@
             [required]="false"
             [isDisabled]="esFormularioSoloLectura"
             name="guiaIdentificacion"
+            [tooltipQuestionCircle]="true"
+            [tooltipQuestionCircleText]="'Es el primer punto de Inspección Federal dentro del territorio nacional por donde cruzará el embarque'"
             (change)="
             setValoresStore(
               forma,

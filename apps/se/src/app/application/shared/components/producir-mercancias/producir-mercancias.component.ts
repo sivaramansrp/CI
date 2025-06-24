@@ -1,9 +1,9 @@
 import { Component, Input, OnDestroy } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
+import { ReplaySubject, map, takeUntil } from 'rxjs';
 import { TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Mercancias } from '../../models/complementaria.model';
 import { TABLA_PRODUCIR_MERCANCIAS } from '../../constantes/complementaria.enum';
-import { ReplaySubject, takeUntil, map } from 'rxjs';
 
 /**
  * Componente para mostrar la tabla de mercancías a producir.
@@ -72,7 +72,7 @@ export class ProducirMercanciasComponent implements OnDestroy {
      * Método que se ejecuta al destruir el componente.
      * Se utiliza para limpiar los recursos y evitar fugas de memoria.
      */
-    ngOnDestroy() {
+    ngOnDestroy(): void {
       this.destroyed$.next(true);
       this.destroyed$.complete();
     }

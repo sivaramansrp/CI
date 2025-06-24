@@ -1,9 +1,9 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
+import { Subject, map, takeUntil } from 'rxjs';
+import { NuevoProgramaIndustrialService } from '../../services/nuevo-programa-industrial.service';
 import { SECCIONES_TRAMITE_80101 } from '../../constantes/nuevo-programa.enum';
 import { SeccionLibStore } from '@libs/shared/data-access-user/src/core/estados/seccion.store';
-import { map, Subject, takeUntil } from 'rxjs';
-import { NuevoProgramaIndustrialService } from '../../services/nuevo-programa-industrial.service';
 @Component({
   selector: 'app-paso-uno-cs',
   templateUrl: './paso-uno-cs.component.html',

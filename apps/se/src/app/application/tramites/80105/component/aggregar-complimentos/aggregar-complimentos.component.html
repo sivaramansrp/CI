@@ -1,4 +1,4 @@
-<app-complementos-seccion>
+<app-complimentos
   [datosFormaComplimentos]="datosComplimentos"
   (complimentosDatos)="modifierComplimentos($event)"
   [datosSocioAccionistas]="(tablaDatosComplimentos$ | async) || []"
@@ -8,4 +8,4 @@
   (accionistasAgregados)="accionistasAgregados($event)"
   (accionistasEliminados)="accionistasEliminados($event)"
   (accionistasExtranjerosEliminado)="accionistasExtranjerosEliminado($event)"
-></app-complementos-seccion>
+></app-complimentos>

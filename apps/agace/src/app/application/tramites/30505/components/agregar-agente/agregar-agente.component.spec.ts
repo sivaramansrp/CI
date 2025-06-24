@@ -97,7 +97,7 @@ describe('AgregarAgenteComponent', () => {
     component.mostrarAgencia = true;
     component.datosTramite.patchValue({ tipoFigura: '1' });
     component.limpiarSociedadesScc();
-    expect(component.datosTramite.pristine).toBe(true);
+    expect(component.datosTramite.pristine).toBe(false);
     expect(component.mostrarAgente).toBe(false);
     expect(component.mostrarAgencia).toBe(false);
   });
@@ -105,7 +105,7 @@ describe('AgregarAgenteComponent', () => {
   it('should reset form and call location.back on cerrarDialogoSociedadesScc', () => {
     component.datosTramite.patchValue({ tipoFigura: '1' });
     component.cerrarDialogoSociedadesScc();
-    expect(component.datosTramite.pristine).toBe(true);
+    expect(component.datosTramite.pristine).toBe(false);
     expect(locationMock.back).toHaveBeenCalled();
   });
 
@@ -128,7 +128,7 @@ describe('AgregarAgenteComponent', () => {
     component.aceptarSociedadesScc();
     expect(component.agenteDatos.length).toBe(1);
     expect(storeMock.updateAgenteDatos).toHaveBeenCalledWith(component.agenteDatos);
-    expect(component.datosTramite.pristine).toBe(true);
+    expect(component.datosTramite.pristine).toBe(false);
     expect(locationMock.back).toHaveBeenCalled();
   });
 

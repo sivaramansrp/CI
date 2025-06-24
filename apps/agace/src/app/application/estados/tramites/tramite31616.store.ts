@@ -372,7 +372,7 @@ export class Tramite31616Store extends Store<Solicitud31616State>{
      * Establece el estado de sectorProductivo.
      * @param sectorProductivo - El valor de sectorProductivo.
      */
-    public setSectorProductivo(sectorProductivo: string) {
+    public setSectorProductivo(sectorProductivo: string): void {
         this.update((state) => ({
             ...state,
             sectorProductivo,
@@ -383,7 +383,7 @@ export class Tramite31616Store extends Store<Solicitud31616State>{
      * Establece el estado de servicio.
      * @param servicio - El valor de servicio.
      */
-    public setServicio(servicio: string) {
+    public setServicio(servicio: string): void {
         this.update((state) => ({
             ...state,
             servicio,
@@ -394,7 +394,7 @@ export class Tramite31616Store extends Store<Solicitud31616State>{
      * Establece el estado de solicitudDeInspeccion.
      * @param solicitudDeInspeccion - El valor de solicitudDeInspeccion.
      */
-    public setSolicitudDeInspeccion(solicitudDeInspeccion: string) {
+    public setSolicitudDeInspeccion(solicitudDeInspeccion: string): void {
         this.update((state) => ({
             ...state,
             solicitudDeInspeccion,
@@ -405,7 +405,7 @@ export class Tramite31616Store extends Store<Solicitud31616State>{
      * Establece el estado de indiqueAutorizo.
      * @param indiqueAutorizo - El valor de indiqueAutorizo.
      */
-    public setIndiqueAutorizo(indiqueAutorizo: string) {
+    public setIndiqueAutorizo(indiqueAutorizo: string): void {
         this.update((state) => ({
             ...state,
             indiqueAutorizo,
@@ -415,7 +415,7 @@ export class Tramite31616Store extends Store<Solicitud31616State>{
      * Establece el estado de senaleCuentaEmpleados.
      * @param senaleCuentaEmpleados - El valor de senaleCuentaEmpleados.
      */
-    public setSenaleCuentaEmpleados(senaleCuentaEmpleados: string) {
+    public setSenaleCuentaEmpleados(senaleCuentaEmpleados: string): void {
         this.update((state) => ({
             ...state,
             senaleCuentaEmpleados,
@@ -425,7 +425,7 @@ export class Tramite31616Store extends Store<Solicitud31616State>{
      * Establece el estado de bimestre.
      * @param bimestre - El valor de bimestre.
      */
-    public setBimestre(bimestre: string) {
+    public setBimestre(bimestre: string): void {
         this.update((state) => ({
             ...state,
             bimestre,
@@ -435,7 +435,7 @@ export class Tramite31616Store extends Store<Solicitud31616State>{
      * Establece el estado de numeroDeEmpleados.
      * @param numeroDeEmpleados - El valor de numeroDeEmpleados.
      */
-    public setNumeroDeEmpleados(numeroDeEmpleados: string) {
+    public setNumeroDeEmpleados(numeroDeEmpleados: string): void {
         this.update((state) => ({
             ...state,
             numeroDeEmpleados,
@@ -445,7 +445,7 @@ export class Tramite31616Store extends Store<Solicitud31616State>{
      * Establece el estado de cumpleConLaObligacion.
      * @param cumpleConLaObligacion - El valor de cumpleConLaObligacion.
      */
-    public setCumpleConLaObligacion(cumpleConLaObligacion: string) {
+    public setCumpleConLaObligacion(cumpleConLaObligacion: string): void {
         this.update((state) => ({
             ...state,
             cumpleConLaObligacion,
@@ -455,7 +455,7 @@ export class Tramite31616Store extends Store<Solicitud31616State>{
      * Establece el estado de acreditaRealizar.
      * @param acreditaRealizar - El valor de acreditaRealizar.
      */
-    public setAcreditaRealizar(acreditaRealizar: string) {
+    public setAcreditaRealizar(acreditaRealizar: string): void {
         this.update((state) => ({
             ...state,
             acreditaRealizar,
@@ -465,7 +465,7 @@ export class Tramite31616Store extends Store<Solicitud31616State>{
      * Establece el estado de senaleSiAlMomento.
      * @param senaleSiAlMomento - El valor de senaleSiAlMomento.
      */
-    public setSenaleSiAlMomento(senaleSiAlMomento: string) {
+    public setSenaleSiAlMomento(senaleSiAlMomento: string): void {
         this.update((state) => ({
             ...state,
             senaleSiAlMomento,
@@ -475,7 +475,7 @@ export class Tramite31616Store extends Store<Solicitud31616State>{
      * Establece el estado de rfc.
      * @param rfc - El valor de rfc.
      */
-    public setRfc(rfc: string) {
+    public setRfc(rfc: string): void {
         this.update((state) => ({
             ...state,
             rfc,
@@ -485,7 +485,7 @@ export class Tramite31616Store extends Store<Solicitud31616State>{
      * Establece el estado de numeroDeEmpleadosForma.
      * @param numeroDeEmpleadosForma - El valor de numeroDeEmpleadosForma.
      */
-    public setNumeroDeEmpleadosForma(numeroDeEmpleadosForma: string) {
+    public setNumeroDeEmpleadosForma(numeroDeEmpleadosForma: string): void {
         this.update((state) => ({
             ...state,
             numeroDeEmpleadosForma,
@@ -495,7 +495,7 @@ export class Tramite31616Store extends Store<Solicitud31616State>{
      * Establece el estado de bimestreForma.
      * @param bimestreForma - El valor de bimestreForma.
      */
-    public setBimestreForma(bimestreForma: string) {
+    public setBimestreForma(bimestreForma: string): void {
         this.update((state) => ({
             ...state,
             bimestreForma,
@@ -505,7 +505,7 @@ export class Tramite31616Store extends Store<Solicitud31616State>{
      * Establece el estado de acreditaCumplir.
      * @param acreditaCumplir - El valor de acreditaCumplir.
      */
-    public setAcreditaCumplir(acreditaCumplir: string) {
+    public setAcreditaCumplir(acreditaCumplir: string): void {
         this.update((state) => ({
             ...state,
             acreditaCumplir,
@@ -515,7 +515,7 @@ export class Tramite31616Store extends Store<Solicitud31616State>{
      * Establece el estado de fraccionVI.
      * @param fraccionVI - El valor de fraccionVI.
      */
-    public setFraccionVI(fraccionVI: string) {
+    public setFraccionVI(fraccionVI: string): void {
         this.update((state) => ({
             ...state,
             fraccionVI,
@@ -525,7 +525,7 @@ export class Tramite31616Store extends Store<Solicitud31616State>{
      * Establece el estado de novenoParrafoDelCff.
      * @param novenoParrafoDelCff - El valor de novenoParrafoDelCff.
      */
-    public setNovenoParrafoDelCff(novenoParrafoDelCff: string) {
+    public setNovenoParrafoDelCff(novenoParrafoDelCff: string): void {
         this.update((state) => ({
             ...state,
             novenoParrafoDelCff,
@@ -535,7 +535,7 @@ export class Tramite31616Store extends Store<Solicitud31616State>{
      * Establece el estado de digitalesEstanVigentes.
      * @param digitalesEstanVigentes - El valor de digitalesEstanVigentes.
      */
-    public setDigitalesEstanVigentes(digitalesEstanVigentes: string) {
+    public setDigitalesEstanVigentes(digitalesEstanVigentes: string): void {
         this.update((state) => ({
             ...state,
             digitalesEstanVigentes,
@@ -545,7 +545,7 @@ export class Tramite31616Store extends Store<Solicitud31616State>{
      * Establece el estado de ultimosDoceMeses.
      * @param ultimosDoceMeses - El valor de ultimosDoceMeses.
      */
-    public setUltimosDoceMeses(ultimosDoceMeses: string) {
+    public setUltimosDoceMeses(ultimosDoceMeses: string): void {
         this.update((state) => ({
             ...state,
             ultimosDoceMeses,
@@ -555,7 +555,7 @@ export class Tramite31616Store extends Store<Solicitud31616State>{
      * Establece el estado de prestacionDeServicios.
      * @param prestacionDeServicios - El valor de prestacionDeServicios.
      */
-    public setPrestacionDeServicios(prestacionDeServicios: string) {
+    public setPrestacionDeServicios(prestacionDeServicios: string): void {
         this.update((state) => ({
             ...state,
             prestacionDeServicios,
@@ -565,7 +565,7 @@ export class Tramite31616Store extends Store<Solicitud31616State>{
      * Establece el estado de instalacionesPrincipales.
      * @param instalacionesPrincipales - El valor de instalacionesPrincipales.
      */
-    public setInstalacionesPrincipales(instalacionesPrincipales: string) {
+    public setInstalacionesPrincipales(instalacionesPrincipales: string): void {
         this.update((state) => ({
             ...state,
             instalacionesPrincipales,
@@ -575,7 +575,7 @@ export class Tramite31616Store extends Store<Solicitud31616State>{
      * Establece el estado de municipioAlcaldia.
      * @param municipioAlcaldia - El valor de municipioAlcaldia.
      */
-    public setMunicipioAlcaldia(municipioAlcaldia: string) {
+    public setMunicipioAlcaldia(municipioAlcaldia: string): void {
         this.update((state) => ({
             ...state,
             municipioAlcaldia,
@@ -585,7 +585,7 @@ export class Tramite31616Store extends Store<Solicitud31616State>{
      * Establece el estado de tipoDeInstalcion.
      * @param tipoDeInstalcion - El valor de tipoDeInstalcion.
      */
-    public setTipoDeInstalcion(tipoDeInstalcion: string) {
+    public setTipoDeInstalcion(tipoDeInstalcion: string): void {
         this.update((state) => ({
             ...state,
             tipoDeInstalcion,
@@ -595,7 +595,7 @@ export class Tramite31616Store extends Store<Solicitud31616State>{
      * Establece el estado de procesoProductivo.
      * @param procesoProductivo - El valor de procesoProductivo.
      */
-    public setProcesoProductivo(procesoProductivo: string) {
+    public setProcesoProductivo(procesoProductivo: string): void {
         this.update((state) => ({
             ...state,
             procesoProductivo,
@@ -605,7 +605,7 @@ export class Tramite31616Store extends Store<Solicitud31616State>{
      * Establece el estado de acreditacionDelUso.
      * @param acreditacionDelUso - El valor de acreditacionDelUso.
      */
-    public setAcreditacionDelUso(acreditacionDelUso: string) {
+    public setAcreditacionDelUso(acreditacionDelUso: string): void {
         this.update((state) => ({
             ...state,
             acreditacionDelUso,
@@ -615,7 +615,7 @@ export class Tramite31616Store extends Store<Solicitud31616State>{
      * Establece el estado de prefilMensajeria.
      * @param prefilMensajeria - El valor de prefilMensajeria.
      */
-    public setPrefilMensajeria(prefilMensajeria: string) {
+    public setPrefilMensajeria(prefilMensajeria: string): void {
         this.update((state) => ({
             ...state,
             prefilMensajeria,
@@ -625,7 +625,7 @@ export class Tramite31616Store extends Store<Solicitud31616State>{
      * Establece el estado de articuloDelCff.
      * @param articuloDelCff - El valor de articuloDelCff.
      */
-    public setArticuloDelCff(articuloDelCff: string) {
+    public setArticuloDelCff(articuloDelCff: string): void {
         this.update((state) => ({
             ...state,
             articuloDelCff,
@@ -635,7 +635,7 @@ export class Tramite31616Store extends Store<Solicitud31616State>{
      * Establece el estado de exportadoresSectorial.
      * @param exportadoresSectorial - El valor de exportadoresSectorial.
      */
-    public setExportadoresSectorial(exportadoresSectorial: string) {
+    public setExportadoresSectorial(exportadoresSectorial: string): void {
         this.update((state) => ({
             ...state,
             exportadoresSectorial,
@@ -645,7 +645,7 @@ export class Tramite31616Store extends Store<Solicitud31616State>{
      * Establece el estado de archivoNacionales.
      * @param archivoNacionales - El valor de archivoNacionales.
      */
-    public setArchivoNacionales(archivoNacionales: string) {
+    public setArchivoNacionales(archivoNacionales: string): void {
         this.update((state) => ({
             ...state,
             archivoNacionales,
@@ -655,7 +655,7 @@ export class Tramite31616Store extends Store<Solicitud31616State>{
      * Establece el estado de proveedores.
      * @param proveedores - El valor de proveedores.
      */
-    public setProveedores(proveedores: string) {
+    public setProveedores(proveedores: string): void {
         this.update((state) => ({
             ...state,
             proveedores,
@@ -665,7 +665,7 @@ export class Tramite31616Store extends Store<Solicitud31616State>{
      * Establece el estado de solicitudDeCertificacion.
      * @param solicitudDeCertificacion - El valor de solicitudDeCertificacion.
      */
-    public setSolicitudDeCertificacion(solicitudDeCertificacion: string) {
+    public setSolicitudDeCertificacion(solicitudDeCertificacion: string): void {
         this.update((state) => ({
             ...state,
             solicitudDeCertificacion,
@@ -675,7 +675,7 @@ export class Tramite31616Store extends Store<Solicitud31616State>{
      * Establece el estado de controlInventarios.
      * @param controlInventarios - El valor de controlInventarios.
      */
-    public setControlInventarios(controlInventarios: string) {
+    public setControlInventarios(controlInventarios: string): void {
         this.update((state) => ({
             ...state,
             controlInventarios,
@@ -685,7 +685,7 @@ export class Tramite31616Store extends Store<Solicitud31616State>{
      * Establece el estado de nombreDelSistema.
      * @param nombreDelSistema - El valor de nombreDelSistema.
      */
-    public setNombreDelSistema(nombreDelSistema: string) {
+    public setNombreDelSistema(nombreDelSistema: string): void {
         this.update((state) => ({
             ...state,
             nombreDelSistema,
@@ -695,7 +695,7 @@ export class Tramite31616Store extends Store<Solicitud31616State>{
      * Establece el estado de lugarDeRadicacion.
      * @param lugarDeRadicacion - El valor de lugarDeRadicacion.
      */
-    public setLugarDeRadicacion(lugarDeRadicacion: string) {
+    public setLugarDeRadicacion(lugarDeRadicacion: string): void {
         this.update((state) => ({
             ...state,
             lugarDeRadicacion,
@@ -705,7 +705,7 @@ export class Tramite31616Store extends Store<Solicitud31616State>{
      * Establece el estado de previstas.
      * @param previstas - El valor de previstas.
      */
-    public setPrevistas(previstas: string) {
+    public setPrevistas(previstas: string): void {
         this.update((state) => ({
             ...state,
             previstas,
@@ -715,7 +715,7 @@ export class Tramite31616Store extends Store<Solicitud31616State>{
      * Establece el estado de delCffLasReglas.
      * @param delCffLasReglas - El valor de delCffLasReglas.
      */
-    public setDelCffLasReglas(delCffLasReglas: string) {
+    public setDelCffLasReglas(delCffLasReglas: string): void {
         this.update((state) => ({
             ...state,
             delCffLasReglas,
@@ -725,7 +725,7 @@ export class Tramite31616Store extends Store<Solicitud31616State>{
      * Establece el estado de enSeCaracter.
      * @param enSeCaracter - El valor de enSeCaracter.
      */
-    public setEnSeCaracter(enSeCaracter: string) {
+    public setEnSeCaracter(enSeCaracter: string): void {
         this.update((state) => ({
             ...state,
             enSeCaracter,
@@ -735,7 +735,7 @@ export class Tramite31616Store extends Store<Solicitud31616State>{
      * Establece el estado de obligadoTributar.
      * @param obligadoTributar - El valor de obligadoTributar.
      */
-    public setObligadoTributar(obligadoTributar: string) {
+    public setObligadoTributar(obligadoTributar: string): void {
         this.update((state) => ({
             ...state,
             obligadoTributar,
@@ -745,7 +745,7 @@ export class Tramite31616Store extends Store<Solicitud31616State>{
      * Establece el estado de nacionalidad.
      * @param nacionalidad - El valor de nacionalidad.
      */
-    public setNacionalidad(nacionalidad: string) {
+    public setNacionalidad(nacionalidad: string): void {
         this.update((state) => ({
             ...state,
             nacionalidad,
@@ -755,7 +755,7 @@ export class Tramite31616Store extends Store<Solicitud31616State>{
      * Establece el estado de conformidad.
      * @param conformidad - El valor de conformidad.
      */
-    public setConformidad(conformidad: string) {
+    public setConformidad(conformidad: string): void {
         this.update((state) => ({
             ...state,
             conformidad,
@@ -765,7 +765,7 @@ export class Tramite31616Store extends Store<Solicitud31616State>{
      * Establece el estado de esquemaIntegralCertificacion.
      * @param esquemaIntegralCertificacion - El valor de esquemaIntegralCertificacion.
      */
-    public setEsquemaIntegralCertificacion(esquemaIntegralCertificacion: string) {
+    public setEsquemaIntegralCertificacion(esquemaIntegralCertificacion: string): void {
         this.update((state) => ({
             ...state,
             esquemaIntegralCertificacion,
@@ -775,7 +775,7 @@ export class Tramite31616Store extends Store<Solicitud31616State>{
      * Establece el estado de modificadasRevocadas.
      * @param modificadasRevocadas - El valor de modificadasRevocadas.
      */
-    public setModificadasRevocadas(modificadasRevocadas: string) {
+    public setModificadasRevocadas(modificadasRevocadas: string): void {
         this.update((state) => ({
             ...state,
             modificadasRevocadas,
