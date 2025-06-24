@@ -10,7 +10,7 @@ import {
   FECHA_DE_PAGO,
   PagoDerechosFormState,
 } from '../../models/terceros-relacionados.model';
-import { PagoDerechosStore,pagoDerechosState } from '../../estados/stores/pago-de-derechos.store';
+import { PagoDerechosStore,PagoDerechosState } from '../../estados/stores/pago-de-derechos.store';
 import { Subject,map } from 'rxjs';
 import { BANCO } from '../../constantes/datos-solicitud.enum';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
@@ -129,9 +129,9 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
 
   /**
    * Estado actual de la solicitud, obtenido del store.
-   * @type {pagoDerechosState}
+   * @type {PagoDerechosState}
    */
-  public solicitudState!: pagoDerechosState;
+  public solicitudState!: PagoDerechosState;
 
   /**
    * @constructor

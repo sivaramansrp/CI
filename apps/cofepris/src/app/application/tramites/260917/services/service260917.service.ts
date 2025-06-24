@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 
 import { MercanciasInfo, ScianModel } from '@libs/shared/data-access-user/src';
 
-import { PagoDerechosStore,pagoDerechosState } from '../../../shared/estados/stores/pago-de-derechos.store';
+import { PagoDerechosStore,PagoDerechosState } from '../../../shared/estados/stores/pago-de-derechos.store';
 
 import { Solicitud260917State, Tramite260917Store } from '../estados/tramites/tramite260917.store';
 
@@ -65,7 +65,7 @@ export class Solocitud260917Service {
  * @param DATOS - Objeto que contiene los datos necesarios para actualizar el pago de derechos,
  * incluyendo clave de referencia, cadena de la dependencia, llave de pago, fecha e importe.
  */
-actualizarPagoDerechosFormulario(DATOS: pagoDerechosState): void {
+actualizarPagoDerechosFormulario(DATOS: PagoDerechosState): void {
     this.pagoDerechosStore.setCadenaDependencia(DATOS.cadenaDependencia);
     this.pagoDerechosStore.setClaveReferencia(DATOS.claveReferencia);
     this.pagoDerechosStore.setllavePago(DATOS.llavePago);
@@ -102,7 +102,7 @@ actualizarPagoDerechosFormulario(DATOS: pagoDerechosState): void {
    * Obtiene los datos del pago de derechos.
    * @returns Observable con el estado del permiso de importación biológica.
    */
-  getPagoDerechos(): Observable<pagoDerechosState> {
-    return this.http.get<pagoDerechosState>('assets/json/260917/pagoDerechos.json');
+  getPagoDerechos(): Observable<PagoDerechosState> {
+    return this.http.get<PagoDerechosState>('assets/json/260917/pagoDerechos.json');
   }
 }
