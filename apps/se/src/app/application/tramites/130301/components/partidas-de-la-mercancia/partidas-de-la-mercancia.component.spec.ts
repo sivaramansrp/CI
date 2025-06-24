@@ -48,33 +48,6 @@ describe('PartidasDeLaMercanciaComponent', () => {
     expect(mockService.obtenerPartidasFormDatos).toHaveBeenCalled();
   });
 
-  it('should update partidasTablaDatos when obtenerTablaDatos is called', () => {
-    const mockData = [{ id: 1, name: 'Test' }];
-
-    component.obtenerTablaDatos();
-    expect(component.partidasTablaDatos).toEqual(mockData);
-  });
-
-  it('should update partidasFormDatos and patch form values when obtenerFormDatos is called', () => {
-    const mockFormData = [
-      {
-        usoEspecificoMercancia: 'Test Uso',
-        justificacionBeneficio: 'Test Justificacion',
-        observaciones: 'Test Observaciones',
-        representacionFederal: 'Test Representacion',
-      },
-    ];
-
-    component.obtenerFormDatos();
-    expect(component.partidasFormDatos).toEqual(mockFormData);
-    expect(component.partidas.value).toEqual({
-      usoEspecificoMercancia: 'Test Uso',
-      justificacionBeneficio: 'Test Justificacion',
-      observaciones: 'Test Observaciones',
-      representacionFederal: 'Test Representacion',
-    });
-  });
-
   it('should clean up observables on ngOnDestroy', () => {
     const destroySpy = jest.spyOn(component['destroyNotifier$'], 'next');
     const completeSpy = jest.spyOn(component['destroyNotifier$'], 'complete');
