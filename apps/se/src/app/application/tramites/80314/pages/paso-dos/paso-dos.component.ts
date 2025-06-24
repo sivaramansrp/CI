@@ -63,7 +63,7 @@ export class PasoDosComponent implements OnInit, OnDestroy {
    * @description Sujeto utilizado para manejar la destrucción de suscripciones y evitar fugas de memoria.
    * Se emite un valor cuando el componente se destruye, lo que permite completar las suscripciones activas.
    */
-  private destroy$: Subject<void> = new Subject<void>();
+  public destroy$: Subject<void> = new Subject<void>();
 
   /**
    * Constructor de la clase PasoDosComponent.
