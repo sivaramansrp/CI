@@ -1,5 +1,7 @@
+import { Component, EventEmitter, OnDestroy, Output } from '@angular/core';
+import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DatosMercanciaComponent } from '../../../../shared/components/datos-mercancia/datos-mercancia.component';
 import { MercanciaDetalle } from '../../../../shared/models/datos-del-tramite.model';
 import { Tramite240102Store } from '../../estados/tramite240102Store.store';
@@ -17,7 +19,32 @@ import { Tramite240102Store } from '../../estados/tramite240102Store.store';
   templateUrl: './datos-mercancia-contenedora.component.html',
   styleUrl: './datos-mercancia-contenedora.component.scss',
 })
-export class DatosMercanciaContenedoraComponent {
+export class DatosMercanciaContenedoraComponent implements OnDestroy {
+
+  /**
+   * @event cerrar
+   * @description Evento emitido para indicar que se debe cerrar el componente.
+   * @remarks
+   * Este evento no envía ningún valor, simplemente notifica a los componentes padres que se debe realizar la acción de cierre.
+   * 
+   * @eventType void
+   * @es
+   * Evento que se dispara para cerrar el componente actual.
+   */
+  @Output() cerrar = new EventEmitter<void>();
+
+  /**
+   * Indica si el formulario debe mostrarse solo en modo de lectura.
+   */
+  esFormularioSoloLectura: boolean = false
+
+  /**
+   * Observable para limpiar suscripciones activas al destruir el componente.
+   * 
+   * @property {Subject<void>} destroyNotifier$
+   */
+  private destroyNotifier$ = new Subject<void>();
+
   /**
    * Constructor del componente.
    *
@@ -25,8 +52,17 @@ export class DatosMercanciaContenedoraComponent {
    * @param {Tramite240102Store} tramiteStore - Store de Akita para actualizar el estado de la tabla de mercancías.
    * @returns {void}
    */
-  // eslint-disable-next-line no-empty-function
-  constructor(private tramiteStore: Tramite240102Store) {}
+  constructor(private tramiteStore: Tramite240102Store, private readonly consultaioQuery: ConsultaioQuery) {
+  
+    this.consultaioQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState) => {
+        this.esFormularioSoloLectura = seccionState.readonly;
+      })
+    )
+    .subscribe();
+  }
 
   /**
    * Actualiza los datos de la tabla de mercancía en el store.
@@ -37,5 +73,16 @@ export class DatosMercanciaContenedoraComponent {
    */
   updateMercanciaDetalle(event: MercanciaDetalle[]): void {
     this.tramiteStore.updateMercanciaTablaDatos(event);
+    this.cerrar.emit();
+  }
+
+  /**
+   * @description
+   * Método del ciclo de vida de Angular que se llama justo antes de que el componente sea destruido.
+   * Se utiliza para limpiar recursos, como la cancelación de suscripciones a observables, evitando así posibles fugas de memoria.
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }

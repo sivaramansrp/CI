@@ -1,17 +1,17 @@
-import { ActivatedRoute } from '@angular/router';
+import { Component, ViewChild } from '@angular/core';
+import { AgregarDestinatarioFinalContenedoraComponent } from '../agregar-destinatario-final-contenedora/agregar-destinatario-final-contenedora.component';
+import { AgregarProveedorContenedoraComponent } from '../agregar-proveedor-contenedora/agregar-proveedor-contenedora.component';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
 import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 import { DestinoFinal } from '../../../../shared/models/terceros-relacionados.model';
 import { ID_PROCEDIMIENTO } from '../../constants/importacion-armas-municiones.enum';
+import { ModalComponent } from '../../../../shared/components/modal/modal.component';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { Proveedor } from '../../../../shared/models/terceros-relacionados.model';
-import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-relacionados/terceros-relacionados.component';
 import { Tramite240102Query } from '../../estados/tramite240102Query.query';
-import { Tramite240102Store } from '../../estados/tramite240102Store.store';
 import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
 /**
@@ -23,13 +23,28 @@ import { takeUntil } from 'rxjs';
 @Component({
   selector: 'app-terceros-relacionados-contenedora',
   standalone: true,
-  imports: [CommonModule, TercerosRelacionadosComponent],
+  imports: [CommonModule, TercerosRelacionadosComponent, ModalComponent],
   templateUrl: './terceros-relacionados-contenedora.component.html',
   styleUrl: './terceros-relacionados-contenedora.component.scss',
 })
 export class TercerosRelacionadosContenedoraComponent
   implements OnInit, OnDestroy
 {
+
+  /**
+   * @description Referencia al componente ModalComponent dentro de la plantilla.
+   * Utiliza el decorador ViewChild para acceder a la instancia del modal y manipularlo desde el código TypeScript.
+   * @example
+   * // Para abrir el modal:
+   * this.modalComponent.open();
+   * 
+   * @see ModalComponent
+   * 
+   * @es
+   * Referencia al componente modal para mostrar u ocultar diálogos modales en la interfaz de usuario.
+   */
+  @ViewChild('modal', { static: false }) modalComponent!: ModalComponent;
+
   public idProcedimiento = ID_PROCEDIMIENTO; // ID del procedimiento actual
   /**
    * Observable para limpiar las suscripciones activas al destruir el componente.
@@ -70,10 +85,7 @@ export class TercerosRelacionadosContenedoraComponent
    * @returns {void}
    */
   constructor(
-    private tramiteStore: Tramite240102Store,
     private tramiteQuery: Tramite240102Query, // eslint-disable-next-line no-empty-function
-    private router: Router,
-    private activatedRoute: ActivatedRoute,
     private consultaQuery: ConsultaioQuery
   ) {}
 
@@ -107,32 +119,6 @@ export class TercerosRelacionadosContenedoraComponent
       .subscribe();
   }
 
-  /**
-   * Modifica los datos del destinatario en el store y navega a la sección de acciones.
-   *
-   * Llama al método `actualizarDatosDestinatario` del store con el objeto recibido,
-   * y luego ejecuta la función `irAAcciones()` para continuar con el flujo.
-   *
-   * @param {DestinoFinal} datos - Objeto que contiene los datos actualizados del destinatario.
-   * @returns {void}
-   */
-  modificarDestinarioDatos(datos: DestinoFinal): void {
-    this.tramiteStore.actualizarDatosDestinatario(datos);
-    this.irAAcciones('../agregar-destino-final');
-  }
-
-  /**
-   * Modifica los datos del proveedor en el store.
-   *
-   * Llama al método `actualizarDatosProveedor` del store con el objeto recibido.
-   *
-   * @param {Proveedor} datos - Objeto que contiene los datos actualizados del proveedor.
-   * @returns {void}
-   */
-  modificarProveedorDatos(datos: Proveedor): void {
-    this.tramiteStore.actualizarDatosProveedor(datos);
-    this.irAAcciones('../agregar-destino-final');
-  }
 
   /**
    * Hook que se ejecuta al destruir el componente.
@@ -143,15 +129,35 @@ export class TercerosRelacionadosContenedoraComponent
     this.unsubscribe$.complete();
   }
 
+
+   /**
+    * Abre el modal correspondiente según el nombre del evento recibido.
+    *
+    * Si el evento es `'Datosmercancia'`, se carga el componente `DatosMercanciaContenedoraComponent`
+    * dentro del modal y se le pasa una función de cierre como input.
+    *
+    * @method openModal
+    * @param {string} event - Nombre del evento que indica qué componente se debe mostrar en el modal.
+    * @returns {void}
+    */
+   openModal(event: string): void {
+    if (event === 'agregar-destino-final') {
+      this.modalComponent.abrir(AgregarDestinatarioFinalContenedoraComponent, {
+        cerrarModal: this.cerrarModal.bind(this),
+      });
+    } else if (event === 'agregar-proveedor') {
+      this.modalComponent.abrir(AgregarProveedorContenedoraComponent, {
+        cerrarModal: this.cerrarModal.bind(this),
+      });
+    }
+  }
   /**
-   * Navega a una ruta relativa dentro del flujo actual.
-   * @method irAAcciones
-   * @param {string} accionesPath - Ruta relativa a la que se desea navegar.
+   * Cierra el modal dinámico actualmente abierto utilizando el método del componente modal.
+   *
+   * @method cerrarModal
    * @returns {void}
    */
-  irAAcciones(accionesPath: string): void {
-    this.router.navigate([accionesPath], {
-      relativeTo: this.activatedRoute,
-    });
+  cerrarModal(): void {
+    this.modalComponent.cerrar();
   }
 }
