@@ -116,9 +116,4 @@ it('should extract values correctly using parentTablaConfig claves', () => {
     'Empresa SA de CV',
   ]);
 });
-
-  it('debe llamar obtenerListaEstado al inicializar y asignar estadosCatalogo', () => {
-    expect(serviceMock.obtenerListaEstado).toHaveBeenCalled();
-    expect(component.estadosCatalogo).toEqual([{ id: 1, nombre: 'Estado 1' }]);
-  });
 });

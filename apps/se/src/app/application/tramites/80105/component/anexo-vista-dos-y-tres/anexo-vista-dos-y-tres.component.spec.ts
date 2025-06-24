@@ -1,7 +1,7 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { Pipe, PipeTransform, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
+import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { Pipe, PipeTransform, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { of } from 'rxjs';
+import { Subject } from 'rxjs';
 import { AnexoVistaDosYTresComponent } from './anexo-vista-dos-y-tres.component';
 import { Tramite80101Query } from '../../estados/tramite80101.query';
 import { Tramite80101Store } from '../../estados/tramite80101.store';
@@ -14,62 +14,82 @@ class MyCustomDirective {
   @Input() myCustom: any;
 }
 
-@Pipe({name: 'translate'})
+@Pipe({ name: 'translate' })
 class TranslatePipe implements PipeTransform {
-  transform(value: any) { return value; }
+  transform(value: any) {
+    return value;
+  }
 }
 
-@Pipe({name: 'phoneNumber'})
+@Pipe({ name: 'phoneNumber' })
 class PhoneNumberPipe implements PipeTransform {
- transform(value: any) { return value; }
+  transform(value: any) {
+    return value;
+  }
 }
 
-@Pipe({name: 'safeHtml'})
+@Pipe({ name: 'safeHtml' })
 class SafeHtmlPipe implements PipeTransform {
-  transform(value: any) { return value; }
+  transform(value: any) {
+    return value;
+  }
 }
 
 describe('AnexoVistaDosYTresComponent', () => {
   let fixture: ComponentFixture<AnexoVistaDosYTresComponent>;
   let component: AnexoVistaDosYTresComponent;
   let mockQuery: Partial<Tramite80101Query>;
-  let mockStore: Partial<Tramite80101Store>;
-  const mockAnexoDos: AnexoEncabezado[] = [{
-    encabezadoFraccion: '0101.21.01',
-    encabezadoDescripcion: 'Descripción Anexo Dos',
-    estatus: true
-  }];
+  let mockStore: jest.Mocked<Tramite80101Store>;
+  let anexoDosSubject: Subject<AnexoEncabezado[]>;
+  let anexoTresSubject: Subject<AnexoEncabezado[]>;
 
-  const mockAnexoTres: AnexoEncabezado[] = [{
-    encabezadoFraccion: '0202.31.01',
-    encabezadoDescripcion: 'Descripción Anexo Tres',
-    estatus: false
-  }];
+  const mockAnexoDos: AnexoEncabezado[] = [
+    {
+      encabezadoFraccion: '0101.21.01',
+      encabezadoDescripcion: 'Descripción Anexo Dos',
+      estatus: true,
+    },
+  ];
+
+  const mockAnexoTres: AnexoEncabezado[] = [
+    {
+      encabezadoFraccion: '0202.31.01',
+      encabezadoDescripcion: 'Descripción Anexo Tres',
+      estatus: false,
+    },
+  ];
+
   beforeEach(() => {
+    anexoDosSubject = new Subject<AnexoEncabezado[]>();
+    anexoTresSubject = new Subject<AnexoEncabezado[]>();
+
     mockQuery = {
-      anexoDosTableLista$: of(mockAnexoDos),
-      anexoTresTablaLista$: of(mockAnexoTres),
+      anexoDosTableLista$: anexoDosSubject.asObservable(),
+      anexoTresTablaLista$: anexoTresSubject.asObservable(),
     };
 
     mockStore = {
       setAnnexoDosTableLista: jest.fn(),
       setAnnexoTresTableLista: jest.fn(),
-    };
+    } as unknown as jest.Mocked<Tramite80101Store>;
 
     TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule, AnexoVistaDosYTresComponent ],
-      declarations: [
-        TranslatePipe, PhoneNumberPipe, SafeHtmlPipe,
-        MyCustomDirective
-      ],
-     schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
+      imports: [FormsModule, ReactiveFormsModule, AnexoVistaDosYTresComponent],
+      declarations: [TranslatePipe, PhoneNumberPipe, SafeHtmlPipe, MyCustomDirective],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
       providers: [
         { provide: Tramite80101Query, useValue: mockQuery },
         { provide: Tramite80101Store, useValue: mockStore },
-      ]
-    })
+      ],
+    });
+
     fixture = TestBed.createComponent(AnexoVistaDosYTresComponent);
-    component = fixture.debugElement.componentInstance;
+    component = fixture.componentInstance;
+  });
+
+  afterEach(() => {
+    anexoDosSubject.complete();
+    anexoTresSubject.complete();
   });
 
   it('should clean up destroyNotifier$ on ngOnDestroy', () => {
@@ -87,30 +107,64 @@ describe('AnexoVistaDosYTresComponent', () => {
     expect(component.anexoConfig.anexoTresEncabezadoDeTabla).toBe(ANEXO_SERVICIO);
   });
 
-    it('should set anexoDosTablaLista on init if data exists', () => {
-    fixture.detectChanges(); 
-    expect(component.anexoDosTablaLista.length).toBe(1);
-    expect(component.anexoDosTablaLista[0].encabezadoFraccion).toBe('0101.21.01');
+  it('should set anexoDosTablaLista on ngOnInit if non-empty', fakeAsync(() => {
+    fixture.detectChanges();
+    anexoDosSubject.next(mockAnexoDos);
+    tick();
+    expect(component.anexoDosTablaLista).toEqual(mockAnexoDos);
+  }));
+
+  it('should set anexoTresTablaLista on ngOnInit if non-empty', fakeAsync(() => {
+    fixture.detectChanges();
+    anexoTresSubject.next(mockAnexoTres);
+    tick();
+    expect(component.anexoTresTablaLista).toEqual(mockAnexoTres);
+  }));
+
+  it('should update anexoDosTablaLista and call store on obtenerAnexoDosDevolverLaLlamada', () => {
+    fixture.detectChanges();
+    const newData: AnexoEncabezado[] = [
+      {
+        encabezadoFraccion: '9999.99.99',
+        encabezadoDescripcion: 'Nuevo valor',
+        estatus: false,
+      },
+    ];
+    component.obtenerAnexoDosDevolverLaLlamada(newData);
+    expect(component.anexoDosTablaLista).toEqual(newData);
+    expect(mockStore.setAnnexoDosTableLista).toHaveBeenCalledWith(newData);
   });
 
-  it('should set anexoTresTablaLista on init if data exists', () => {
-    fixture.detectChanges(); 
-    expect(component.anexoTresTablaLista.length).toBe(1);
-    expect(component.anexoTresTablaLista[0].encabezadoFraccion).toBe('0202.31.01');
+  it('should fallback to empty list if null passed to obtenerAnexoDosDevolverLaLlamada', () => {
+    fixture.detectChanges();
+    component.obtenerAnexoDosDevolverLaLlamada(null as any);
+    expect(component.anexoDosTablaLista).toEqual([]);
+    expect(mockStore.setAnnexoDosTableLista).toHaveBeenCalledWith([]);
   });
 
-  it('should call store.setAnnexoDosTableLista on obtenerAnexoDosDevolverLaLlamada()', () => {
-    const event: AnexoEncabezado[] = [{ encabezadoFraccion: '', encabezadoDescripcion: '', estatus: false }];
-    component.obtenerAnexoDosDevolverLaLlamada(event);
-    expect(component.anexoDosTablaLista).toEqual(event);
-    expect(mockStore.setAnnexoDosTableLista).toHaveBeenCalledWith(event);
+  it('should update anexoTresTablaLista and call store on obtenerAnexoTresDevolverLaLlamada', () => {
+    fixture.detectChanges();
+    const tresData: AnexoEncabezado[] = [
+      {
+        encabezadoFraccion: '8888.88.88',
+        encabezadoDescripcion: 'Otro valor',
+        estatus: true,
+      },
+    ];
+    component.obtenerAnexoTresDevolverLaLlamada(tresData);
+    expect(component.anexoTresTablaLista).toEqual(tresData);
+    expect(mockStore.setAnnexoTresTableLista).toHaveBeenCalledWith(tresData);
   });
 
-  it('should call store.setAnnexoTresTableLista on obtenerAnexoTresDevolverLaLlamada()', () => {
-    const event: AnexoEncabezado[] = [{ encabezadoFraccion: '', encabezadoDescripcion: '', estatus: false }];
-    component.obtenerAnexoTresDevolverLaLlamada(event);
-    expect(component.anexoTresTablaLista).toEqual(event);
-    expect(mockStore.setAnnexoTresTableLista).toHaveBeenCalledWith(event);
+  it('should fallback to empty list if null passed to obtenerAnexoTresDevolverLaLlamada', () => {
+    fixture.detectChanges();
+    component.obtenerAnexoTresDevolverLaLlamada(null as any);
+    expect(component.anexoTresTablaLista).toEqual([]);
+    expect(mockStore.setAnnexoTresTableLista).toHaveBeenCalledWith([]);
   });
 
+  it('should initialize configuracionDosDatos with CONFIGURACION_DOS_DATOS', () => {
+    expect(component.configuracionDosDatos).toBeDefined();
+    expect(component.configuracionDosDatos.length).toBeGreaterThan(0);
+  });
 });
