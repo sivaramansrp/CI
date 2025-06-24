@@ -1,29 +1,29 @@
-import {
-  Catalogo,
-  CatalogoSelectComponent,
-  CatalogosSelect,
-  InputFecha,
-  InputFechaComponent,
-  TituloComponent,
-  ValidacionesFormularioService,
-} from '@libs/shared/data-access-user/src';
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FECHA_FINAL, FECHA_INICIAL, FECHA_PAGO } from '../models/registro.model';
-import {
-  FormBuilder,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
-import { ReplaySubject, Subject, map, takeUntil } from 'rxjs';
-import {
-  Solicitud31803State,
-  Tramite31803Store,
-} from '../state/Tramite31803.store';
+import { Catalogo } from '@libs/shared/data-access-user/src';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
+import { CatalogosSelect } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
+import { FECHA_FINAL } from '../models/registro.model';
+import { FECHA_INICIAL } from '../models/registro.model';
+import { FECHA_PAGO } from '../models/registro.model';
+import { FormBuilder } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
+import { InputFecha } from '@libs/shared/data-access-user/src';
+import { InputFechaComponent } from '@libs/shared/data-access-user/src';
+import { OnDestroy } from '@angular/core';
+import { OnInit } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
 import { RegistroSolicitudService } from '../services/registro-solicitud-service.service';
+import { ReplaySubject } from 'rxjs';
 import { Solicitud31803Enum } from '../constantes/solicitud31803.enum';
+import { Solicitud31803State } from '../state/Tramite31803.store';
+import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { Tramite31803Query } from '../state/Tramite31803.query';
+import { Tramite31803Store } from '../state/Tramite31803.store';
+import { ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
+import { Validators } from '@angular/forms';
+import { map } from 'rxjs';
+import { takeUntil } from 'rxjs';
 
 /**
  * Componente que gestiona la solicitud del trámite 31803.
@@ -206,7 +206,10 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       llave: [this.solicitudState?.llave, [Validators.required]],
       manifiesto1: [this.solicitudState?.manifiesto1, [Validators.required]],
       manifiesto2: [this.solicitudState?.manifiesto2, [Validators.required]],
-      numeroOperacion: [this.solicitudState?.numeroOperacion, [Validators.required],],
+      numeroOperacion: [
+        this.solicitudState?.numeroOperacion,
+        [Validators.required],
+      ],
       fechaPago: [this.solicitudState?.fechaPago, [Validators.required]],
     });
   }
