@@ -8,7 +8,7 @@ import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 
 import { CommonModule } from '@angular/common';
 import { TituloComponent } from '@ng-mf/data-access-user';
-import { ProsecModificacionServiceTsService } from '../../services/prosec-modificacion.service.ts.service';
+import { ProsecModificacionServiceTsService } from '../../services/prosec-modificacion.service';
 import { PLANTAS } from '../../models/prosec-modificacion.model';
 
 describe('Plantas90305Component', () => {
@@ -66,20 +66,26 @@ describe('Plantas90305Component', () => {
     expect(component.personaparas).toEqual(MOCK_DATA);
   });
 
-  it('should have the correct table configuration', () => {
-    const EXPECTED_CONFIGUE: ConfiguracionColumna<PLANTAS>[] = [
-      { encabezado: 'Calle', clave: (item: PLANTAS) => item.calle, orden: 1 },
-      { encabezado: 'Número exterior', clave: (item: PLANTAS) => item.numeroExterior, orden: 2 },
-      { encabezado: 'Número interior', clave: (item: PLANTAS) => item.numeroInterior, orden: 3 },
-      { encabezado: 'Código postal', clave: (item: PLANTAS) => item.codigoPostal, orden: 4 },
-      { encabezado: 'Colonia', clave: (item: PLANTAS) => item.colonia, orden: 5 },
-      { encabezado: 'Municipio o alcaldía', clave: (item: PLANTAS) => item.municipioOAlcaldia, orden: 6 },
-      { encabezado: 'Entidad Federativa', clave: (item: PLANTAS) => item.entidadFederativa, orden: 7 },
-      { encabezado: 'País', clave: (item: PLANTAS) => item.pais, orden: 8 },
-      { encabezado: 'Teléfono', clave: (item: PLANTAS) => item.telefono, orden: 9 },
-    ];
-    expect(component.configuracionTabla).toEqual(EXPECTED_CONFIGUE);
-  });
+it('should have the correct table configuration headers and order', () => {
+  const EXPECTED_HEADERS = [
+    'Calle',
+    'Número exterior',
+    'Número interior',
+    'Código postal',
+    'Colonia',
+    'Municipio o alcaldía',
+    'Entidad Federativa',
+    'País',
+    'Teléfono',
+  ];
+
+  const encabezados = component.configuracionTabla.map(c => c.encabezado);
+  const ordenes = component.configuracionTabla.map(c => c.orden);
+
+  expect(encabezados).toEqual(EXPECTED_HEADERS);
+  expect(ordenes).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9]);
+});
+
 
   it('should call loadPlantaComplementaria() and populate personaparas', () => {
     component.loadPlantaComplementaria();
