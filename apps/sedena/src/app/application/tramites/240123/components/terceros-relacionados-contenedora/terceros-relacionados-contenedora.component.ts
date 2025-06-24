@@ -1,9 +1,11 @@
 import { ActivatedRoute, Router } from '@angular/router';
+import { Component, ViewChild } from '@angular/core';
 import { DATOS_ESTATICOS, ID_PROCEDIMIENTO } from '../../constants/exportacion-sustancias-quimicas.enum';
+import { AgregarDestinatarioFinalContenedoraComponent } from '../../../240123/components/agregar-destinatario-final-contenedora/agregar-destinatario-final-contenedora.component';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DestinoFinal } from '../../../../shared/models/terceros-relacionados.model';
+import { ModalComponent } from '../../../../shared/components/modal/modal.component';
 import { OnInit } from '@angular/core';
 import { Proveedor } from '../../../../shared/models/terceros-relacionados.model';
 import { Subject } from 'rxjs';
@@ -21,12 +23,14 @@ import { takeUntil } from 'rxjs';
 @Component({
   selector: 'app-terceros-relacionados-contenedora',
   standalone: true,
-  imports: [CommonModule, TercerosRelacionadosComponent],
+  imports: [CommonModule, TercerosRelacionadosComponent, ModalComponent],
   templateUrl: './terceros-relacionados-contenedora.component.html',
   styleUrl: './terceros-relacionados-contenedora.component.scss',
 })
 export class TercerosRelacionadosContenedoraComponent implements OnInit {
- /**
+  @ViewChild('modal', { static: false }) modalComponent!: ModalComponent;
+
+  /**
    * Indica si el formulario debe mostrarse en modo solo lectura.
    *
    * @type {boolean}
@@ -104,6 +108,33 @@ export class TercerosRelacionadosContenedoraComponent implements OnInit {
       
     this.proveedorTablaDatos = DATOS_ESTATICOS;
   }
+
+    /**
+     * Abre el modal correspondiente según el nombre del evento recibido.
+     *
+     * Si el evento es `'Datosmercancia'`, se carga el componente `DatosMercanciaContenedoraComponent`
+     * dentro del modal y se le pasa una función de cierre como input.
+     *
+     * @method openModal
+     * @param {string} event - Nombre del evento que indica qué componente se debe mostrar en el modal.
+     * @returns {void}
+     */
+    openModal(event: string): void {
+      if (event === 'agregar-destino-final') {
+        this.modalComponent.abrir(AgregarDestinatarioFinalContenedoraComponent, {
+          cerrarModal: this.cerrarModal.bind(this),
+        });
+      } 
+    }
+    /**
+     * Cierra el modal dinámico actualmente abierto utilizando el método del componente modal.
+     *
+     * @method cerrarModal
+     * @returns {void}
+     */
+    cerrarModal(): void {
+      this.modalComponent.cerrar();
+    }
 
   /**
    * Modifica los datos de un destinatario final y redirige a la vista de modificación.

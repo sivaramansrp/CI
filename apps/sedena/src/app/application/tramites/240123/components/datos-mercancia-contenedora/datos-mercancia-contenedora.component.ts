@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
 import { Catalogo } from '@libs/shared/data-access-user/src';
@@ -25,7 +25,8 @@ import { Tramite240123Store } from '../../estados/tramite240123Store.store';
   templateUrl: './datos-mercancia-contenedora.component.html',
   styleUrl: './datos-mercancia-contenedora.component.scss',
 })
-export class DatosMercanciaContenedoraComponent implements OnInit {
+export class DatosMercanciaContenedoraComponent implements OnInit, OnDestroy {
+  @Output() cerrar = new EventEmitter<void>();
 
   /**
    * Observable para controlar el ciclo de vida de las suscripciones.
@@ -127,7 +128,6 @@ export class DatosMercanciaContenedoraComponent implements OnInit {
     this.datosMercancias.push(DATOS_MERCANCIA);
     this.updateMercanciaDetalle(this.datosMercancias);
     this.datosMercancia.reset();
-    this.ubicaccion.back();
   }
 
   /**
@@ -150,6 +150,7 @@ export class DatosMercanciaContenedoraComponent implements OnInit {
    */
   updateMercanciaDetalle(event: MercanciaDetalle[]): void {
     this.tramiteStore.updateMercanciaTablaDatos(event);
+    this.cerrar.emit();
   }
 
   /**
@@ -201,5 +202,10 @@ export class DatosMercanciaContenedoraComponent implements OnInit {
    */
   cancelar(): void {
     this.ubicaccion.back();
+  }
+
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 }

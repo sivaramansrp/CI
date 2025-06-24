@@ -1,15 +1,12 @@
-import { Component, EventEmitter,Output  } from '@angular/core';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
-
+import { Component, EventEmitter,Output } from '@angular/core';
 import { CATALOGOS_ID } from '@ng-mf/data-access-user';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { CatalogosService } from '@ng-mf/data-access-user';
-
+import { OnDestroy } from '@angular/core';
+import { OnInit } from '@angular/core';
 import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs';
-
 import { TEXTOS_REQUISITOS } from '../../constants/exportacion-sustancias-quimicas.enum';
+import { takeUntil } from 'rxjs';
 
 /**
  * @component PasoDosComponent
