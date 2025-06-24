@@ -1,61 +1,78 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { AdministrarResiduosComponent } from './administrar-residuos.component';
-import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule } from '@angular/forms';
-import { TableComponent } from '../../../../shared/components/table/table.component';
-import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
-import administrarResiduosMesa from '../../../../../assets/json/231001/administrar-residuos-mesa.json';
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { AdministrarResiduosService } from '@ng-mf/data-access-user';
+import { of, Subject } from 'rxjs';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 
 describe('AdministrarResiduosComponent', () => {
   let component: AdministrarResiduosComponent;
   let fixture: ComponentFixture<AdministrarResiduosComponent>;
+  let serviceMock: jest.Mocked<AdministrarResiduosService>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [CommonModule, ReactiveFormsModule, TituloComponent, TableComponent, AdministrarResiduosComponent]
-    })
-    .compileComponents();
-  });
+beforeEach(async () => {
+  serviceMock = {
+    getAdministrarResiduos: jest.fn().mockReturnValue(of([])) // <-- FIXED
+  } as any;
 
-  beforeEach(() => {
-    fixture = TestBed.createComponent(AdministrarResiduosComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+  await TestBed.configureTestingModule({
+    imports: [AdministrarResiduosComponent, ReactiveFormsModule],
+    providers: [
+      FormBuilder,
+      { provide: AdministrarResiduosService, useValue: serviceMock }
+    ],
+    schemas: [NO_ERRORS_SCHEMA]
+  }).compileComponents();
 
-  it('should create', () => {
+  fixture = TestBed.createComponent(AdministrarResiduosComponent);
+  component = fixture.componentInstance;
+  // If destroyed$ is not declared in your component, add it for test
+  if (!(component as any).destroyed$) {
+    (component as any).destroyed$ = new Subject<void>();
+  }
+  fixture.detectChanges();
+});
+
+  it('should create the component', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize tableHeaderData and tableBodyData on getEstablecimiento', () => {
-    component.getEstablecimiento();
-    expect(component.tableHeaderData).toEqual(administrarResiduosMesa.tableHeader);
-    expect(component.tableBodyData).toEqual(administrarResiduosMesa.tableBody);
+  describe('getEstablecimiento', () => {
+    it('should set tableHeaderData and tableBodyData from getEstablecimientoTableData', () => {
+      component.getEstablecimientoTableData = {
+        tableHeader: ['header1', 'header2'],
+        tableBody: [{ tbodyData: ['row1'] }, { tbodyData: ['row2'] }]
+      };
+      component.getEstablecimiento();
+      expect(component.tableHeaderData).toEqual(['header1', 'header2']);
+      expect(component.tableBodyData).toEqual([{ tbodyData: ['row1'] }, { tbodyData: ['row2'] }]);
+    });
   });
 
-  it('should create formForTotalCount on formularioTotalCount', () => {
-    component.formularioTotalCount();
-    expect(component.formForTotalCount).toBeTruthy();
-    expect(component.formForTotalCount.get('recuentoTotalDeFilas')).toBeTruthy();
+  describe('actualizarRecuentoTotalDeFilas', () => {
+    it('should patch the form with the total row count', () => {
+      component.formularioParaRecuentoTotal = new FormBuilder().group({
+        recuentoTotalDeFilas: [{ value: '', disabled: true }]
+      });
+      component.tableBodyData = [{ tbodyData: ['a'] }, { tbodyData: ['b'] }, { tbodyData: ['c'] }];
+      component.actualizarRecuentoTotalDeFilas();
+      expect(component.formularioParaRecuentoTotal.get('recuentoTotalDeFilas')?.value).toBe(3);
+    });
   });
 
-  it('should update recuentoTotalDeFilas on actualizarRecuentoTotalDeFilas', () => {
-    component.tableBodyData = administrarResiduosMesa.tableBody;
-    component.formularioTotalCount();
-    component.actualizarRecuentoTotalDeFilas();
-    expect(component.formForTotalCount.get('recuentoTotalDeFilas')?.value).toBe(component.tableBodyData.length);
-  });
-
-  it('should call getEstablecimiento, formularioTotalCount, and actualizarRecuentoTotalDeFilas on ngOnInit', () => {
-    spyOn(component, 'getEstablecimiento').and.callThrough();
-    spyOn(component, 'formularioTotalCount').and.callThrough();
-    spyOn(component, 'actualizarRecuentoTotalDeFilas').and.callThrough();
-
-    component.ngOnInit();
-
-    expect(component.getEstablecimiento).toHaveBeenCalled();
-    expect(component.formularioTotalCount).toHaveBeenCalled();
-    expect(component.actualizarRecuentoTotalDeFilas).toHaveBeenCalled();
+  describe('loadAdministrarResiduos', () => {
+    it('should load data, call getEstablecimiento and actualizarRecuentoTotalDeFilas', () => {
+      const mockData = {
+        tableHeader: ['header1'],
+        tableBody: [{ tbodyData: ['row1'] }]
+      };
+      serviceMock.getAdministrarResiduos.mockReturnValue(of(mockData));
+      const getEstablecimientoSpy = jest.spyOn(component, 'getEstablecimiento');
+      const actualizarRecuentoSpy = jest.spyOn(component, 'actualizarRecuentoTotalDeFilas');
+      component.loadAdministrarResiduos();
+      expect(component.getEstablecimientoTableData).toEqual(mockData);
+      expect(getEstablecimientoSpy).toHaveBeenCalled();
+      expect(actualizarRecuentoSpy).toHaveBeenCalled();
+    });
   });
 });

@@ -86,18 +86,30 @@
       @switch (indice) { @case (1) {
       <solicitante [tabindex]="1"></solicitante>
       } @case (2) {
+         @if (esDatosRespuesta) { 
       <app-aggregar-complimentos></app-aggregar-complimentos>
+         }
       } @case (3) {
+         @if (esDatosRespuesta) { 
       <app-anexo-vista-uno></app-anexo-vista-uno>
+         }
       } @case (4) {
+         @if (esDatosRespuesta) { 
       <app-federatarios-y-plantas-vista></app-federatarios-y-plantas-vista>
+         }
       } @case (5){
+         @if (esDatosRespuesta) { 
       <app-empresas-subfabricante></app-empresas-subfabricante>
+         }
       } @case (6){
+         @if (esDatosRespuesta) {
       <app-empresas-terciarizadaas></app-empresas-terciarizadaas>
+        }
       }
       @case (7){
+         @if (esDatosRespuesta) { 
         <app-anexo-vista-dos-y-tres></app-anexo-vista-dos-y-tres>
+         }
         } }
     </ng-container>
   </div>

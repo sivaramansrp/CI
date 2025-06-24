@@ -4,6 +4,8 @@ import {
   Servicio,
   ServicioInmex,
 } from '../models/nuevo-programa-industrial.model';
+import { ConfiguracionColumna } from '../../80205/models/configuracion-columna.model';
+import { FraccionArancelariaDescripcion } from '../../../shared/models/empresas.model';
 
 /**
  * @const PASOS
@@ -359,3 +361,8 @@ export const DOCUMENTO_CATALOGO_DATOS = [
     descripcion: 'Cantrado De Maqula'
   }
 ]
+
+export const CONFIGURACION_DOS_DATOS: ConfiguracionColumna<FraccionArancelariaDescripcion>[] = [
+    { encabezado: 'FracciónArancelaria', clave: (item: FraccionArancelariaDescripcion) => item.fraccionArancelaria, orden: 1 },
+    { encabezado: 'Descripción', clave: (item: FraccionArancelariaDescripcion) => item.descripcion, orden: 1 },
+  ]
