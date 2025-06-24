@@ -1,5 +1,5 @@
 
-import { PagoDerechosStore,PagoDerechosState } from '../stores/pago-de-derechos.store';
+import { PagoDerechosState,PagoDerechosStore } from '../stores/pago-de-derechos.store';
 import { Injectable } from '@angular/core';
 import { Query } from '@datorama/akita';
 

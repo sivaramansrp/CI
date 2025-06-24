@@ -10,7 +10,7 @@ import {
   FECHA_DE_PAGO,
   PagoDerechosFormState,
 } from '../../models/terceros-relacionados.model';
-import { PagoDerechosStore,PagoDerechosState } from '../../estados/stores/pago-de-derechos.store';
+import { PagoDerechosState,PagoDerechosStore } from '../../estados/stores/pago-de-derechos.store';
 import { Subject,map } from 'rxjs';
 import { BANCO } from '../../constantes/datos-solicitud.enum';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
