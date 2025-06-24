@@ -74,7 +74,7 @@ export class DatosDelEstablecimientoComponent implements OnInit, OnDestroy {
     if (this.esFormularioSoloLectura) {
     this.datosDelEstablecimientoForm.get('correoElectronico')?.disable();
     this.datosDelEstablecimientoForm.get('razonSocial')?.disable();
-  }else if (!this.esFormularioSoloLectura){
+  }else{
     this.datosDelEstablecimientoForm.get('correoElectronico')?.enable();
     this.datosDelEstablecimientoForm.get('razonSocial')?.enable();
   }

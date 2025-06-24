@@ -76,7 +76,7 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy{
   guardarDatosFormulario(): void {
     if (this.esFormularioSoloLectura) {
     this.representanteLegalForm.disable();
-  }else if (!this.esFormularioSoloLectura){
+  }else{
     this.representanteLegalForm.enable();
   }
 }

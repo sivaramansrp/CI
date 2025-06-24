@@ -319,7 +319,7 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy {
   guardarDatosFormulario(): void {
     if (this.esFormularioSoloLectura) {
       this.domicilloDelEstablecimientoForm.disable()
-    } else if (!this.esFormularioSoloLectura) {
+    } else{
       this.domicilloDelEstablecimientoForm.enable()
     }
   }
