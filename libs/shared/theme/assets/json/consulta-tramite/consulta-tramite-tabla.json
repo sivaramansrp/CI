@@ -2491,13 +2491,22 @@
         "numeroDeProcedimiento": "11105"
     },
     {
-        "id": "570102",
+        "id": "130120",
+        "tipoDeTramite": "Datos generales del trámite",
+        "fecha": "2024-11-01",
+        "fechaActualizacion": "2024-11-07",
+        "diasTranscurridos": "4",
+        "departamento": "SE",
+        "numeroDeProcedimiento": "130120"
+    },
+    {
+      "id": "570102",
         "tipoDeTramite": "Datos generales del trámite",
         "fecha": "2024-11-01",
         "fechaActualizacion": "2024-11-07",
         "diasTranscurridos": "4",
         "departamento": "AGA",
-        "numeroDeProcedimiento": "570102"
+        "numeroDeProcedimiento": "570102"  
     }
 
 ]
