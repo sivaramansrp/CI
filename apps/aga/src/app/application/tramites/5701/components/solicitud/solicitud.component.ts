@@ -2186,7 +2186,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    * @returns {void} No retorna ningún valor.
    */
   private getCertificaciones(rfc: string): void {
-    //Obtiene certificacion IMMEX
+    /** Obtiene certificacion IMMEX */
     this.certificacionService
       .getCertificacion(rfc, PROGRAMA_IMMEX)
       .pipe(
@@ -2226,7 +2226,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
       )
       .subscribe();
 
-    // Obtiene certificación de industria automotriz
+    /** Obtiene certificación de industria automotriz */
     this.certificacionIndustriaAutomotrizService
       .getCertificacionAutomotriz(rfc)
       .pipe(
@@ -2247,7 +2247,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
       )
       .subscribe();
 
-    // Obtiene certificación de origen
+    /** Obtiene certificación de origen */
     this.certificacionOrigenService
       .getCertificacionOrigen(rfc)
       .pipe(
@@ -2268,7 +2268,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
       )
       .subscribe();
 
-    // Obtiene certificación OEA
+    /** Obtiene certificación OEA */
     const VALIDACION_OEA_IMPEXP$ =
       this.certificacionOeaService.getValidacionCertificacion(
         MODALIDAD_OEA_IMPEXP,
@@ -2334,8 +2334,6 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
         })
       )
       .subscribe();
-
-    // Obtiene certificacion A
   }
 
   /**
@@ -2463,10 +2461,10 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
             return;
           }
 
-          // Actualizar el estado una vez, en lugar de en cada iteración
+          /** Actualizar el estado una vez, en lugar de en cada iteración */
           this.tramite5701Store.setLineasCaptura(this.datosTablaPagos);
 
-          //Limpia los campos de la línea de captura y monto
+          /**  Limpia los campos de la línea de captura y monto */
           this.pagoCaptura.get('lineaCaptura')?.reset();
           this.pagoCaptura.get('monto')?.reset();
 
@@ -2532,7 +2530,6 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
           const CHECK_DD = this.solicitudState.dd;
 
           if (CHECK_DD || CHECK_LDA) {
-            // Uno de ellos esta seleccionado
             if (confirmar) {
               this.despacho.get(this.tipoDespacho)?.setValue(false);
               this.limpiaCamposDdaLda();
@@ -3376,7 +3373,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
       revision: false,
     });
 
-    //Limpia store
+    /** Limpia store */
     this.tramite5701Store.update({
       RFCImportadorExportador: '',
       nombre: '',
