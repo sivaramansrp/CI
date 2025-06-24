@@ -583,8 +583,8 @@
   {
     "id": 84,
     "tramite": 231001,
-    "linkDashboard": "/aviso-de-materiales/datos",
-    "linkDepartment": "/aviso-de-materiales/datos",
+    "linkDashboard": "/semarnat/aviso-de-materiales/datos",
+    "linkDepartment": "/pago/aviso-de-materiales/datos",
     "department": "semarnat"
   },
   {
