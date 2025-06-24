@@ -1,15 +1,55 @@
-import { ALPHANUMERIC_PATTERN, ENCABEZADAS_CONSTANT, RADIO_OPCIONS, RADIO_OPCIONS_AVISO, RADIO_TIPO_AVISO, TABLA_DE_DATOS_AVISO } from '../../constants/avios-procesos.enum';
-import { AvisoTablaDatos, CatalogoLista, ColumnasTabla } from '../../models/avios-model';
-import { BotonAccionesTipos, Catalogo, CatalogoSelectComponent, TablaDinamicaComponent, TablaSeleccion, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { InputRadioComponent, Notificacion, NotificacionesComponent, TituloComponent } from '@libs/shared/data-access-user/src';
-import { Solicitud32505State, Tramite32505Store } from '../../../../estados/tramites/trimite32505.store';
+import {
+  ALPHANUMERIC_PATTERN,
+  ENCABEZADAS_CONSTANT,
+  RADIO_OPCIONS,
+  RADIO_OPCIONS_AVISO,
+  RADIO_TIPO_AVISO,
+  TABLA_DE_DATOS_AVISO,
+} from '../../constants/avios-procesos.enum';
+import {
+  AvisoTablaDatos,
+  CatalogoLista,
+  ColumnasTabla,
+} from '../../models/avios-model';
+import {
+  BotonAccionesTipos,
+  Catalogo,
+  CatalogoSelectComponent,
+  TablaDinamicaComponent,
+  TablaSeleccion,
+  ValidacionesFormularioService,
+} from '@libs/shared/data-access-user/src';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
+
+import {
+  Component,
+  ElementRef,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import {
+  InputRadioComponent,
+  Notificacion,
+  NotificacionesComponent,
+  TituloComponent,
+} from '@libs/shared/data-access-user/src';
+import {
+  Solicitud32505State,
+  Tramite32505Store,
+} from '../../../../estados/tramites/trimite32505.store';
 import { map, takeUntil } from 'rxjs';
 import { AvisoService } from '../../services/aviso.service';
 import { CargaMasivaComponent } from '../carga-masiva/carga-masiva.component';
 import { CommonModule } from '@angular/common';
 import { Modal } from 'bootstrap';
+import {ReplaySubject} from 'rxjs';
 import { Subject } from 'rxjs';
 import { Tramite32505Query } from '../../../../estados/queries/tramite32505.query';
 
@@ -17,7 +57,7 @@ import { Tramite32505Query } from '../../../../estados/queries/tramite32505.quer
  * @component AvisoComponent
  * @description Componente encargado de gestionar la interfaz de usuario para el manejo de avisos relacionados con trámites.
  * Proporciona formularios, tablas dinámicas y modales para capturar, visualizar y gestionar datos de avisos.
- * 
+ *
  * @selector app-aviso
  * @templateUrl ./aviso.component.html
  * @styleUrl ./aviso.component.scss
@@ -35,11 +75,30 @@ import { Tramite32505Query } from '../../../../estados/queries/tramite32505.quer
     TablaDinamicaComponent,
     CargaMasivaComponent,
     InputRadioComponent,
-    NotificacionesComponent
+    NotificacionesComponent,
   ],
   standalone: true,
 })
 export class AvisoComponent implements OnInit, OnDestroy {
+  /**
+   * Subject para destruir notificador.
+   */
+  consultaDatos!: ConsultaioState;
+  /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  soloLectura: boolean = false;
+
+  /**
+   * @property {ReplaySubject<boolean>} destroyed$
+   *  @description Sujeto que emite un valor cuando el componente se destruye.
+   * Se utiliza para limpiar las suscripciones y evitar fugas de memoria.
+   *  @type {ReplaySubject<boolean>}
+   */
+  private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
+ 
+
   /**
    * @property {typeof RADIO_OPCIONS} radioOpcions
    * @description Opciones de radio disponibles para selección.
@@ -117,7 +176,7 @@ export class AvisoComponent implements OnInit, OnDestroy {
    * @description Configuración de la tabla de datos utilizada en el componente.
    */
   tablaDeDatos: {
-    encabezadas: typeof ENCABEZADAS_CONSTANT[];
+    encabezadas: (typeof ENCABEZADAS_CONSTANT)[];
     datos: ColumnasTabla[];
   } = TABLA_DE_DATOS_AVISO;
 
@@ -205,6 +264,8 @@ export class AvisoComponent implements OnInit, OnDestroy {
    */
   filaSeleccionadaLista: ColumnasTabla[] = [];
 
+
+
   /**
    * @constructor
    * @param {FormBuilder} fb - Servicio para construir formularios reactivos.
@@ -218,7 +279,8 @@ export class AvisoComponent implements OnInit, OnDestroy {
     public store: Tramite32505Store,
     public tramiteQuery: Tramite32505Query,
     private avisoService: AvisoService,
-    private validacionesService: ValidacionesFormularioService
+    private validacionesService: ValidacionesFormularioService,
+    private consultaioQuery: ConsultaioQuery
   ) {}
 
   /**
@@ -234,6 +296,7 @@ export class AvisoComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
+
     this.crearFormSolicitud();
     this.cargarPais();
     this.cargarAnio();
@@ -244,6 +307,19 @@ export class AvisoComponent implements OnInit, OnDestroy {
     this.cargarPaisIssued();
     this.cargarAduana();
     this.openModalCancelarTramite();
+
+     this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState) => {
+          this.consultaDatos = seccionState;
+          this.soloLectura = this.consultaDatos.readonly;
+          this.inicializarFormulario();
+        })
+      )
+      .subscribe();
+
+   
   }
 
   /**
@@ -380,24 +456,25 @@ export class AvisoComponent implements OnInit, OnDestroy {
   /**
    * @method crearFormSolicitud
    * @description Crea el formulario principal de la solicitud.
+   * 
    */
   crearFormSolicitud(): void {
     this.aviosForm = this.fb.group({
       adaceForm: this.fb.group({
         adace: [
-          { value: this.solicitudState?.adace, disabled: true },
+          { value: this.solicitudState.adace, disabled: true },
           [Validators.required],
         ],
-        pais: [this.solicitudState?.pais, [Validators.required]],
-        anio: [this.solicitudState?.anio, [Validators.required]],
-        tipoBusqueda: [this.solicitudState?.tipoBusqueda, Validators.required],
+        pais: [{value:this.solicitudState.pais, disable:this.soloLectura },[Validators.required]],
+        anio: [this.solicitudState.anio, [Validators.required]],
+        tipoBusqueda: [this.solicitudState?.tipoBusqueda, [Validators.required]],
         tipoBusquedaAviso: [
           this.solicitudState?.tipoBusquedaAviso,
           Validators.required,
         ],
-        folioTipo: [this.solicitudState?.folioTipo, Validators.required],
+        folioTipo: [this.solicitudState?.folioTipo, [Validators.required]],
         numeroSerie: [
-          this.solicitudState?.numeroSerie,
+         {value:this.solicitudState?.numeroSerie,disable:this.soloLectura},
           [Validators.required, Validators.pattern(ALPHANUMERIC_PATTERN)],
         ],
         numeroNIV: [
@@ -468,10 +545,32 @@ export class AvisoComponent implements OnInit, OnDestroy {
         ],
         valorVenta: [this.solicitudState?.valorVenta, [Validators.required]],
       }),
-    });
+    }); 
 
+    this.inicializarFormulario();
+    
     this.mostrarCampos();
     this.mostrarCamposAviso();
+    
+  }
+
+  
+
+  /**
+   * Destruye el componente y libera recursos.
+   *
+   * Este método se llama cuando el componente se destruye, asegurando que no queden suscripciones activas.
+   */
+  inicializarFormulario(): void {
+    
+    if (this.soloLectura) {
+      this.datosDelAvisoVisible = true;
+      this.aviosForm.disable();
+      this.cargarAvisoTabla();
+    } else {
+      this.aviosForm.enable();
+    }
+   
   }
 
   /**
@@ -481,7 +580,7 @@ export class AvisoComponent implements OnInit, OnDestroy {
   mostrarCamposAviso(): void {
     const AVISO_TIPO_BUSQUEDA = this.adaceForm.get('tipoBusquedaAviso')?.value;
     const FOLIO_TIPO = this.adaceForm.get('folioTipo')?.value;
-    
+
     if (AVISO_TIPO_BUSQUEDA === 'Importación') {
       this.datosDelVehiculo = true;
       this.datosFolioVUCEM = false;
@@ -526,7 +625,7 @@ export class AvisoComponent implements OnInit, OnDestroy {
    */
   mostrarCampos(): void {
     const TIPO_BUSQUEDA = this.adaceForm.get('tipoBusqueda')?.value;
-    
+
     if (TIPO_BUSQUEDA === 'Manual') {
       this.datosDelAvisoVisible = true;
       this.datosCargaMasiva = false;
