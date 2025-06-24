@@ -134,6 +134,7 @@
             name="agregarMercancias"
             class="btn btn-primary ms-2"
             (click)="onReset()"
+            [disabled]="esFormularioSoloLectura"
           >
             Borrar datos del pago
           </button>

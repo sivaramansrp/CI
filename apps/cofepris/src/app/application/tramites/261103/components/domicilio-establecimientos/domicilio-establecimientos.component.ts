@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DatosProcedureQuery } from '../../../../estados/queries/tramites261103.query';
 import { DatosProcedureState } from '../../../../estados/tramites/tramites261103.store';
 import { DatosProcedureStore } from '../../../../estados/tramites/tramites261103.store';
@@ -18,6 +19,7 @@ import { Subject } from 'rxjs';
 import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src'
 import { TablaSeleccion } from '@libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
 import { Validators } from '@angular/forms';
+import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
 
 
@@ -71,6 +73,16 @@ export class DomicilioEstablecimientosComponent implements OnInit, OnDestroy {
  */
   private seccionState!: DatosProcedureState;
 
+ /**
+   * Subject para notificar la destrucción del componente.
+   */
+  private destroyNotifier$: Subject<void> = new Subject();
+  
+  /**
+  * Indica si el formulario está en modo solo lectura.
+  * Cuando es `true`, los campos del formulario no se pueden editar.
+  */
+  esFormularioSoloLectura: boolean = false; 
   /**
    * Constructor del componente DomicilioEstablecimientosComponent.
    * 
@@ -85,8 +97,25 @@ export class DomicilioEstablecimientosComponent implements OnInit, OnDestroy {
     private modificacionPermisoImportacionMedicamentosService: ModificacionPermisoImportacionMedicamentosService,
     private store: DatosProcedureStore,
     private query: DatosProcedureQuery,
+    private consultaioQuery: ConsultaioQuery
   ) {
     // Constructor del componente
+                /**
+             * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
+             *
+             * - Asigna el valor de solo lectura (`readonly`) a la propiedad `esFormularioSoloLectura`.
+             * - Llama a `inicializarEstadoFormulario()` para aplicar configuraciones basadas en el estado recibido.
+             * - La suscripción se cancela automáticamente cuando `destroyNotifier$` emite un valor (para evitar fugas de memoria).
+             */
+                this.consultaioQuery.selectConsultaioState$
+                .pipe(
+                  takeUntil(this.destroyNotifier$),
+                  map((seccionState: { readonly: boolean })=>{
+                    this.esFormularioSoloLectura = seccionState.readonly; 
+                    this.guardarDatosFormulario();
+                  })
+                )
+                .subscribe()
   }
 
 /**
@@ -101,10 +130,7 @@ export class DomicilioEstablecimientosComponent implements OnInit, OnDestroy {
  * @returns {void}
  */
 ngOnInit(): void {
-  this.loadStorData(); // Carga los datos almacenados en el estado.
-  this.establecerdomicilioEstablecimiento(); // Inicializa el formulario de domicilio.
-  this.avisodeFuncionamientomiento(); // Configura el formulario de aviso de funcionamiento.
-  this.loadScian(); // Carga los datos del catálogo SCIAN.
+  this.inicializarEstadoFormulario();
 }
 
   /**
@@ -113,6 +139,14 @@ ngOnInit(): void {
  * Los controles del formulario incluyen:
  */
   public establecerdomicilioEstablecimiento(): void {
+    this.query.selectProrroga$
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState) => {
+        this.seccionState = seccionState;
+      })
+    )
+    .subscribe()
     this.domicilioEstablecimiento = this.fb.group({
       codigo: [this.seccionState?.codigo,],
       estado: [{ value: this.seccionState.estado, disabled: false }, [Validators.required]],
@@ -125,6 +159,11 @@ ngOnInit(): void {
       lada: [{ value: this.seccionState?.lada, disabled: false }],
       telefono: [{ value: this.seccionState?.telefono, disabled: false }]
     });
+    if (this.esFormularioSoloLectura) {
+      this.domicilioEstablecimiento.disable();
+    } else{
+      this.domicilioEstablecimiento.enable();
+    }
   }
 
     /**
@@ -137,13 +176,26 @@ ngOnInit(): void {
    * 
    * @returns {void}
    */
-  public avisodeFuncionamientomiento(): void {
-    this.AvisodeFuncionamiento = this.fb.group({
-      funcionamiento: [{ value: this.seccionState?.funcionamiento, disabled: false }],
-      licencia: [{ value: this.seccionState?.licencia, disabled: false }],
-      regimen: [{ value: this.seccionState?.regimen, disabled: false }],
-    });
-  }
+    public avisodeFuncionamientomiento(): void {
+      this.query.selectProrroga$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.seccionState = seccionState;
+        })
+      )
+      .subscribe()
+      this.AvisodeFuncionamiento = this.fb.group({
+        funcionamiento: [{ value: this.seccionState?.funcionamiento, disabled: false }],
+        licencia: [{ value: this.seccionState?.licencia, disabled: false }],
+        regimen: [{ value: this.seccionState?.regimen, disabled: false }],
+      });
+      if (this.esFormularioSoloLectura) {
+        this.AvisodeFuncionamiento.disable();
+      } else{
+        this.AvisodeFuncionamiento.enable();
+      }
+    }
 
   /**
     * Pasa el valor de un campo del formulario a la tienda para la gestión del estado.
@@ -191,5 +243,47 @@ ngOnInit(): void {
         this.seccionState = data;
       });
   }
+    /**
+ * Inicializa el estado del formulario.
+ * 
+ * Este método realiza las siguientes acciones:
+ * 
+ * 1. Llama al método `establecerdomicilioEstablecimiento` para inicializar el formulario reactivo
+ *    relacionado con el domicilio del establecimiento.
+ * 2. Llama al método `avisodeFuncionamientomiento` para configurar el formulario reactivo
+ *    relacionado con el aviso de funcionamiento.
+ * 
+ * Este método es útil para establecer los valores iniciales de los formularios y sincronizarlos
+ * con los datos del estado global de la aplicación.
+ * 
+ * @returns {void}
+ */
+inicializarEstadoFormulario(): void {
+  this.establecerdomicilioEstablecimiento();
+  this.avisodeFuncionamientomiento(); // Configura el formulario de aviso de funcionamiento.        
+  } 
+  /**
+   * Carga los datos desde el estado y los catálogos, y actualiza el formulario reactivo.
+   * 
+   * Este método realiza las siguientes acciones:
+   * 
+   * 1. Llama al método `loadStorData` para cargar los datos almacenados en el estado.
+   * 2. Llama al método `establecerdomicilioEstablecimiento` para inicializar el formulario reactivo
+   *    relacionado con el domicilio del establecimiento.
+   * 3. Llama al método `avisodeFuncionamientomiento` para configurar el formulario reactivo
+   *    relacionado con el aviso de funcionamiento.
+   * 4. Llama al método `loadScian` para cargar los datos del catálogo SCIAN.
+   * 
+   * Este método es útil para sincronizar los datos del formulario con el estado global de la aplicación
+   * y cargar información adicional desde los catálogos.
+   * 
+   * @returns {void}
+   */
+      guardarDatosFormulario(): void {
+        this.loadStorData(); 
+        this.establecerdomicilioEstablecimiento(); 
+        this.avisodeFuncionamientomiento(); 
+        this.loadScian();
+    }
 }
 

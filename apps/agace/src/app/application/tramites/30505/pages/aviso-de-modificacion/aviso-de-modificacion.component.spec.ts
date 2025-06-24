@@ -5,6 +5,7 @@ import { PasoDosComponent } from '../paso-dos/paso-dos.component';
 import { PasoTresComponent } from '../paso-tres/paso-tres.component';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import {AvisoDeModificacionComponent} from './aviso-de-modificacion.component';
+import { WizardComponent,BtnContinuarComponent,SolicitanteComponent } from '@ng-mf/data-access-user';
 
 describe('AvisoDeModificacionComponent', () => {
   let component: AvisoDeModificacionComponent;
@@ -12,7 +13,7 @@ describe('AvisoDeModificacionComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [CommonModule, HttpClientTestingModule],
+      imports: [CommonModule, HttpClientTestingModule,WizardComponent,BtnContinuarComponent,SolicitanteComponent],
       declarations: [
         AvisoDeModificacionComponent,
         PasoUnoComponent,

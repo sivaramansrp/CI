@@ -1,5 +1,4 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { PantallasComponent } from './pantallas.component';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 
@@ -14,12 +13,17 @@ describe('PantallasComponent', () => {
     })
     .compileComponents();
     
+      declarations: [PantallasComponent],
+    }).compileComponents();
+  });
+
+  beforeEach(() => {
     fixture = TestBed.createComponent(PantallasComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('should create the component', () => {
     expect(component).toBeTruthy();
   });
 });
