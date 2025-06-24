@@ -1241,8 +1241,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
         txtBtnAceptar: 'Aceptar',
         txtBtnCancelar: '',
       };
-      this.datosImportadorExportador.get('nombre')?.setValue('');
-      this.datosImportadorExportador.get('RFCImpExp')?.setValue('');
+      this.desactivaCamposCertificaciones();
       return;
     }
 
@@ -1251,36 +1250,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
       this.datosImportadorExportador.get('nombre')?.value
     ) {
       // Si el RFC está vacío pero el nombre tiene un valor, se limpia el nombre.
-      this.datosImportadorExportador.reset({
-        RFCImpExp: '',
-        nombre: '',
-        tipoEmpresaCertificada: '',
-        certificacionOEA: false,
-        revision: false,
-      })
-  
-      //Limpia store
-      this.tramite5701Store.update({
-        RFCImportadorExportador: '',
-        nombre: '',
-        tipoEmpresaCertificada: '',
-        certificacionOEA: false,
-        revision: false,
-
-        checkIMMEX: false,
-        descripcionImmex: '',
-
-        programa: false,
-        descripcionProgramaFomento: '',
-
-        industriaAutomotriz: false,
-        descripcionIndustrialAutomotriz: '',
-      })
-
-      this.tramite5701Store.setNombre('');
-      this.certificacionOEADisabled = true;
-      this.revisionDisabled = true;
-      this.certificacionesDisabled = true;
+      this.desactivaCamposCertificaciones();
       return;
     }
 
@@ -3387,5 +3357,38 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
         )
         .subscribe();
     }
+  }
+
+  desactivaCamposCertificaciones(): void {
+    this.datosImportadorExportador.reset({
+      RFCImpExp: '',
+      nombre: '',
+      tipoEmpresaCertificada: '',
+      certificacionOEA: false,
+      revision: false,
+    });
+
+    //Limpia store
+    this.tramite5701Store.update({
+      RFCImportadorExportador: '',
+      nombre: '',
+      tipoEmpresaCertificada: '',
+      certificacionOEA: false,
+      revision: false,
+
+      checkIMMEX: false,
+      descripcionImmex: '',
+
+      programa: false,
+      descripcionProgramaFomento: '',
+
+      industriaAutomotriz: false,
+      descripcionIndustrialAutomotriz: '',
+    });
+
+    this.datosImportadorExportador.get('tipoEmpresaCertificada')?.disable();
+    this.certificacionOEADisabled = true;
+    this.revisionDisabled = true;
+    this.certificacionesDisabled = true;
   }
 }
