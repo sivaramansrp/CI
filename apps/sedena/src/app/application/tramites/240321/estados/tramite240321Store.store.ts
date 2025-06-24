@@ -214,12 +214,26 @@ export class Tramite240321Store extends Store<Tramite240321State> {
    * @returns {void}
    */
 
+  /**
+   * Actualiza el valor del folio en el estado de la tienda.
+   *
+   * @param folio - El nuevo valor de folio a establecer.
+   * @remarks
+   * Utilice este método para cambiar el folio asociado al estado actual.
+   */
   public updateFolio(folio:string): void {
     this.update((state) => ({
       ...state,
       folio: folio,
     }));
   }
+  /**
+   * Actualiza el estado del store con los valores proporcionados en el nuevo estado.
+   * 
+   * @param state - El nuevo estado parcial que se fusionará con el estado actual.
+   * @remarks
+   * Utiliza la función `update` para combinar el estado actual con el nuevo estado.
+   */
   public updateState(state: Tramite240321State): void {
     this.update((currentState) => ({
       ...currentState,

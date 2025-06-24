@@ -103,32 +103,32 @@ export interface DetalledelaLicitacion{
 export const CONFIGURACION_ACCIONISTAS_TABLA = [
     {
         encabezado: 'Número de licitación',
-        clave: (ele: LicitacionesDisponibles) => ele.numeroDeLicitacion,
+        clave: (ele: LicitacionesDisponibles):string => ele.numeroDeLicitacion,
         orden: 1
       },
       {
         encabezado: 'Fecha de evento de licitación pública',
-        clave: (ele: LicitacionesDisponibles) => ele.fechaDeLicitacion,
+        clave: (ele: LicitacionesDisponibles):string => ele.fechaDeLicitacion,
         orden: 2
       },
       {
         encabezado: 'Descripción del producto ',
-        clave: (ele: LicitacionesDisponibles) => ele.descripcion,
+        clave: (ele: LicitacionesDisponibles):string => ele.descripcion,
         orden: 3
       },
       {
         encabezado: 'Monto adjudicado',
-        clave: (ele: LicitacionesDisponibles) => ele.montoAdjudicado,
+        clave: (ele: LicitacionesDisponibles):string => ele.montoAdjudicado,
         orden: 4
       },
       {
         encabezado: 'Fecha inicio vigencia',
-        clave: (ele: LicitacionesDisponibles) => ele.fechaInicioVigencia,
+        clave: (ele: LicitacionesDisponibles):string => ele.fechaInicioVigencia,
         orden: 5
       },
       {
         encabezado: 'Fecha fin vigencia',
-        clave: (ele: LicitacionesDisponibles) => ele.fechaFinVigencia,
+        clave: (ele: LicitacionesDisponibles):string => ele.fechaFinVigencia,
         orden: 6
       }
 ]

@@ -1,5 +1,7 @@
 import { AbstractControl } from '@angular/forms';
 import { Catalogo } from '@libs/shared/data-access-user/src';
+import { DatosProcedureState } from '../../../estados/tramites/tramites261103.store';
+import { DatosProcedureStore } from '../../../estados/tramites/tramites261103.store';
 import { Domicilio } from '../modelos/domicilio-establecimientos.model';
 import { FormGroup } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
@@ -40,7 +42,7 @@ export class ModificacionPermisoImportacionMedicamentosService implements OnDest
  */
 private destroyNotifier$: Subject<void> = new Subject<void>();
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient,private store: DatosProcedureStore) {
     // No se necesita lógica de inicialización adicional.
     
   }
@@ -151,5 +153,27 @@ private destroyNotifier$: Subject<void> = new Subject<void>();
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
+  }
+
+  /**
+   * Obtiene los datos del registro del paso uno.
+   * @returns {Observable<PasoUno>} : Retorna un observable con los datos del paso uno.
+   */
+  getRegistroPasoUnoData(): Observable<DatosProcedureState> {
+    return this.http.get<DatosProcedureState>('assets/json/261103/tramites-datos.json');
+  }
+  /**
+ * Actualiza el estado del formulario con los datos proporcionados.
+ * 
+ * Este método toma un objeto `DatosProcedureState` y lo utiliza para actualizar
+ * el estado almacenado en el `store`. Es útil para sincronizar los datos del formulario
+ * con el estado global de la aplicación.
+ * 
+ * @param {DatosProcedureState} DATOS - Los datos que se utilizarán para actualizar el estado del formulario.
+ * 
+ * @returns {void}
+ */
+  actualizarEstadoFormulario(DATOS: DatosProcedureState): void {
+    this.store.establecerDatos(DATOS);
   }
 }

@@ -5,15 +5,14 @@ import {
   TEXTOS,
 } from '@libs/shared/data-access-user/src';
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 /**
  * Componente que representa el segundo paso del proceso de solicitud.
-
  */
 @Component({
   selector: 'app-paso-dos',
-  standalone: false,
   templateUrl: './paso-dos.component.html',
 })
 export class PasoDosComponent implements OnInit, OnDestroy {
@@ -29,8 +28,8 @@ export class PasoDosComponent implements OnInit, OnDestroy {
   /** Catálogo completo de documentos disponibles. */
   catalogoDocumentos: Catalogo[] = [];
 
-  /** Suscripción para manejar la respuesta del servicio. */
-  private subscription: Subscription | null = null;
+  /** Subject para manejar la destrucción de observables. */
+  private destroy$ = new Subject<void>();
 
   /**
    * Constructor del componente.
@@ -46,11 +45,33 @@ export class PasoDosComponent implements OnInit, OnDestroy {
   /**
    * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
    *
-   * Inicializa la lista de tipos de documentos disponibles.
+   * Inicializa la lista de tipos de documentos disponibles y define algunos
+   * documentos seleccionados por defecto.
    */
   ngOnInit(): void {
-    this.subscription = this.catalogosServices
+    this.getTiposDocumentos();
+  }
+
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
+   *
+   * Completa todos los observables para evitar fugas de memoria.
+   */
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  /**
+   * Obtiene el catálogo de tipos de documentos disponibles para el trámite.
+   *
+   * Este método realiza una solicitud al servicio de catálogos para cargar la lista
+   * de documentos disponibles que el usuario podrá seleccionar.
+   */
+  getTiposDocumentos(): void {
+    this.catalogosServices
       .getCatalogo(CATALOGOS_ID.CAT_TIPO_DOCUMENTO)
+      .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (resp): void => {
           // Si la respuesta tiene documentos, los almacena en catalogoDocumentos
@@ -62,16 +83,5 @@ export class PasoDosComponent implements OnInit, OnDestroy {
           // Manejo de errores, actualmente vacío pero puede ser implementado
         },
       });
-  }
-
-  /**
-   * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
-   *
-   * Libera la suscripción activa para evitar fugas de memoria.
-   */
-  ngOnDestroy(): void {
-    if (this.subscription) {
-      this.subscription.unsubscribe();
-    }
   }
 }

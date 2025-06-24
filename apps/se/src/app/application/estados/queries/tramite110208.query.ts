@@ -1,7 +1,6 @@
-
+import { Solicitud110208State, Tramite110208Store } from '../tramites/tramite110208.store';
 import { Injectable } from '@angular/core';
 import { Query } from '@datorama/akita';
-import { Solicitud110208State, Tramite110208Store } from '../tramites/tramite110208.store';
 
 /**
  * Servicio para consultar el estado de la Solicitud31601.

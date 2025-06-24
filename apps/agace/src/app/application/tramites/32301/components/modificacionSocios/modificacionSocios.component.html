@@ -8,7 +8,7 @@
       ></ng-titulo>
     </div>
   </div>
-  <div class="row">
+  <div class="row" [ngStyle]="{ 'pointer-events': esFormularioSoloLectura ? 'none' : 'auto' }">
     <div class="col-md-12">
       <label class="form-label text-left"
         >Socios, accionistas, miembros o integrantes, administrador unico o
@@ -32,7 +32,7 @@
       </app-table-pagination>
     </div>
   </div>
-  <div class="row">
+  <div class="row" >
     <div class="col-md-12">
       <label class="form-label text-left"
         >Declare la información requerida en cada uno de los movimientos que
@@ -40,8 +40,8 @@
         modificación
       </label>
     </div>
-
-    <ng-table
+<div class="col-12" [ngStyle]="{ 'pointer-events': esFormularioSoloLectura ? 'none' : 'auto' }">
+ <ng-table
       [commonTableHeader]="declaretableColumns"
       [commonTableBody]="declareData"
     ></ng-table>
@@ -55,6 +55,9 @@
       >
       </app-table-pagination>
     </div>
+</div>
+   
+
     <div class="d-flex justify-content-end mt-5">
       <button
         type="button"
@@ -101,6 +104,7 @@
                     [required]="true"
                     [catalogo]="enSuCaracterDeOptions"
                     formControlName="ensucarácterde"
+                   [isDisabled]="esFormularioSoloLectura"
                     (change)="
                       setValoresStore(
                         agregarMiembroDeLaEmpresaFrom,
@@ -135,7 +139,7 @@
                 </div>
               </div>
             </div>
-            <div class="row">
+            <div class="row" [ngStyle]="{ 'pointer-events': esFormularioSoloLectura ? 'none' : 'auto' }">
               <div class="col-4">
                 <div class="form-group">
                   <label for="obligadoaTributarenMéxico" class="form-label"
@@ -191,6 +195,7 @@
                     [required]="true"
                     [catalogo]="nacionalidadOptions"
                     formControlName="nacionalidad"
+                       [isDisabled]="esFormularioSoloLectura"
                     (change)="
                       setValoresStore(
                         agregarMiembroDeLaEmpresaFrom,

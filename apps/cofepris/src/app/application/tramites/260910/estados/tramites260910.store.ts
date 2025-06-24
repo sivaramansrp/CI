@@ -197,16 +197,13 @@ export interface Solicitud260910State {
   destinatarioDatos: Destinatario[];
 
   /** Lista de fabricante relacionados con la solicitud. */
-  
   fabricanteDatos: Fabricante[];
 
   /** Lista de proveedor relacionados con la solicitud. */
-
   proveedorDatos: Proveedor[];
 
   /** Lista de facturador relacionados con la solicitud. */
-
-  facturadorDatos:Facturador[];
+  facturadorDatos: Facturador[];
 
   /** Clave de referencia asociada al trámite. */
   claveDeReferencia: string;
@@ -225,6 +222,12 @@ export interface Solicitud260910State {
 
   /** Importe del pago realizado para la solicitud. */
   importeDePago: string;
+
+  /** Folio de desistimiento asociado a la solicitud. */
+  folioDeDesistimiento: string;
+
+  /** Folio original asociado a la solicitud. */
+  folioOriginal: string;
 }
 
 /**
@@ -234,214 +237,78 @@ export interface Solicitud260910State {
  */
 export function createInitialState(): Solicitud260910State {
   return {
-
-    /** Seleccione Tipo Operación */
     tipoOperacion: '',
-
-    /** Justificación */
     observaciones: '',
-
-    /** RFC del responsable sanitario */
     rfcSanitario: '',
-
-    /** Razón social del solicitante. */
     razonSocial: '',
-
-    /** Correo electrónico del solicitante. */
     correoElectronico: '',
-
-    /** Código postal del domicilio del solicitante. */
     codigoPostal: '',
-
-    /** Identificador del estado asociado al domicilio. */
     estado: 0,
-
-    /** Municipio donde reside el solicitante. */
     municipio: '',
-
-    /** Localidad específica del domicilio del solicitante. */
     localidad: '',
-
-    /** Colonia asociada al domicilio del solicitante. */
     colonia: '',
-
-    /** Calle del domicilio del solicitante. */
     calle: '',
-
-    /** Código LADA asociado al teléfono del solicitante. */
     lada: 0,
-
-    /** Número telefónico del solicitante. */
     telefono: 0,
-
-    /** Número Clave SCIAN. */
     claveSCIAN: 0,
-
-    /** Número Clave descripcion del SCIAN. */
     claveSCIANDesc: 0,
-
-    /** Indicador de si existe aviso de funcionamiento. */
     avisoDeFuncionamiento: false,
-
-    /** Licencia sanitaria asociada al solicitante. */
     licenciaSanitaria: '',
-
-    /** Indicador del estado del producto (fresco, congelado o vivo). */
     liveFreshFrozen: false,
-
-    /** Régimen fiscal asociado al solicitante. */
     regimen: 0,
-
-    /** Aduana asociada al trámite. */
     aduana: 0,
-
-    /** Acción relacionada con la solicitud ("hacerlos"). */
     hacerlos: '',
-
-    /** Registro Federal de Contribuyentes (RFC) del solicitante. */
     rfc: '',
-
-    /** Razón social del representante legal del solicitante. */
     legalRazonSocial: '',
-
-    /** Apellido paterno del solicitante. */
     apellidoPaterno: '',
-
-    /** Apellido materno del solicitante. */
     apellidoMeterno: '',
-
-    /** Lista de mercancías asociadas con la solicitud. */
     mercanciasDatos: [],
-
-    /** Lista de SCIAN asociadas con la solicitud. */
     SCIANDatos: [],
-
-    /** Indicador de si se ha presentado un manifiesto. */
     manifesto: false,
-
-    /** Clasificación del producto relacionado con la solicitud. */
     clasificaionProductos: '',
-
-    /** Especificación del producto identificada numéricamente. */
     especificarProducto: 0,
-
-    /** Nombre específico del producto. */
     nombreProductoEspecifico: '',
-
-    /** Distintiva del producto. */
     distintiva: '',
-
-    /** Cientifico del producto. */
     cientifico: '',
-
-    /** Tipo de producto identificado numéricamente. */
     tipoProducto: 0,
-
-    /** Forma farmacéutica */
     farmaceutica: 0,
-
-    /** Estado físico */
     fisico: 0,
-
-    /** Fracción arancelaria del producto. */
     fraccionArancelaria: '',
-
-    /** Descripción de la fracción arancelaria. */
     descripcionFraccionArancelaria: '',
-
-    /** Cantidad del producto medida en la Unidad de Medida de Tarifa (UMT). */
     cantidadUMT: '',
-
-    /** Unidad de Medida de Tarifa (UMT). */
     umt: '',
-
-    /** Cantidad del producto medida en la Unidad de Medida de Comercialización (UMC). */
     cantidadUMC: '',
-
-    /** Unidad de Medida de Comercialización (UMC). */
     umc: 0,
-
-    /** Presentación Farmacéutica o tipo de envase */
     presentacionFarmaceutica: '',
-
-    /** Registro sanitario asociado a la mercancía. */
     registroSanitario: 0,
-
-    /** Fecha de caducidad de los lotes del producto. */
     fechaCaducidad: '',
-
-    /** Tipo de persona (física o moral). */
     tipoPersona: '',
-
-    /** Indicador para modificar el RFC del solicitante. */
     modificarRFC: '',
-
-    /** Denominación social del solicitante. */
     denominacion: '',
-
-    /** Identificador del país asociado al domicilio del solicitante. */
     domicilioPais: 0,
-
-    /** Identificador del estado asociado al domicilio del solicitante. */
     domicilioEstado: 0,
-
-    /** Identificador del municipio asociado al domicilio del solicitante. */
     domicilioMunicipio: 0,
-
-    /** Identificador de la localidad asociada al domicilio del solicitante. */
     domicilioLocalidad: 0,
-
-    /** Código postal asociado al domicilio del solicitante. */
     domicilioCodigo: 0,
-
-    /** Identificador de la colonia asociada al domicilio del solicitante. */
     domicilioColonia: 0,
-
-    /** Calle del domicilio del solicitante. */
     domiciliCalle: '',
-
-    /** Número exterior del domicilio del solicitante. */
     domiciliNumeroExterior: '',
-
-    /** Número interior del domicilio del solicitante. */
     domiciliNumeroInterior: '',
-
-    /** Código LADA del teléfono del domicilio del solicitante. */
     domiciliLada: '',
-
-    /** Número telefónico del domicilio del solicitante. */
     domiciliTelefono: '',
-
-    /** Correo electrónico del domicilio del solicitante. */
     domiciliCorreoElectronioco: '',
-
-    /** Lista de destinatarios relacionados con la solicitud. */
     destinatarioDatos: [],
-
-    /** Lista de fabricante relacionados con la solicitud. */
     fabricanteDatos: [],
-
     proveedorDatos: [],
-
     facturadorDatos: [],
-
-    /** Clave de referencia asociada con la solicitud. */
     claveDeReferencia: '',
-
-    /** Cadena de dependencia asociada con la solicitud. */
     cadenaDeDependencia: '',
-
-    /** Banco asociado al trámite. */
     banco: 0,
-
-    /** Llave de pago asociada al trámite. */
     liaveDePago: '',
-
-    /** Fecha en que se realizó el pago. */
     fechaDePago: '',
-
-    /** Importe del pago realizado. */
     importeDePago: '',
+    folioDeDesistimiento: '',
+    folioOriginal: ''
   };
 }
 
@@ -466,22 +333,22 @@ export class Solicitud260910Store extends Store<Solicitud260910State> {
   /**
    * Actualiza la tipo Operación en el estado.
    * @param tipoOperacion - Nuevo valor para la tipo Operación.
-  */
+   */
   public setTipoOperacion(tipoOperacion: string | number): void {
     this.update((state) => ({
       ...state,
-      tipoOperacion: tipoOperacion
+      tipoOperacion
     }));
-
   }
+
   /**
-     * Actualiza la observaciones en el estado.
-     * @param observaciones - Nuevo valor para la observaciones.
-    */
-  setObservaciones(observaciones: string): void {
+   * Actualiza la observaciones en el estado.
+   * @param observaciones - Nuevo valor para la observaciones.
+   */
+  public setObservaciones(observaciones: string): void {
     this.update((state) => ({
       ...state,
-      observaciones: observaciones
+      observaciones
     }));
   }
 
@@ -503,7 +370,7 @@ export class Solicitud260910Store extends Store<Solicitud260910State> {
   public setRazonSocial(razonSocial: string): void {
     this.update((state) => ({
       ...state,
-      razonSocial,
+      razonSocial
     }));
   }
 
@@ -514,7 +381,7 @@ export class Solicitud260910Store extends Store<Solicitud260910State> {
   public setCorreoElectronico(correoElectronico: string): void {
     this.update((state) => ({
       ...state,
-      correoElectronico,
+      correoElectronico
     }));
   }
 
@@ -525,7 +392,7 @@ export class Solicitud260910Store extends Store<Solicitud260910State> {
   public setCodigoPostal(codigoPostal: string): void {
     this.update((state) => ({
       ...state,
-      codigoPostal,
+      codigoPostal
     }));
   }
 
@@ -536,7 +403,7 @@ export class Solicitud260910Store extends Store<Solicitud260910State> {
   public setEstado(estado: number): void {
     this.update((state) => ({
       ...state,
-      estado,
+      estado
     }));
   }
 
@@ -547,7 +414,7 @@ export class Solicitud260910Store extends Store<Solicitud260910State> {
   public setMunicipio(municipio: string): void {
     this.update((state) => ({
       ...state,
-      municipio,
+      municipio
     }));
   }
 
@@ -558,7 +425,7 @@ export class Solicitud260910Store extends Store<Solicitud260910State> {
   public setLocalidad(localidad: string): void {
     this.update((state) => ({
       ...state,
-      localidad,
+      localidad
     }));
   }
 
@@ -569,7 +436,7 @@ export class Solicitud260910Store extends Store<Solicitud260910State> {
   public setColonia(colonia: string): void {
     this.update((state) => ({
       ...state,
-      colonia,
+      colonia
     }));
   }
 
@@ -580,7 +447,7 @@ export class Solicitud260910Store extends Store<Solicitud260910State> {
   public setCalle(calle: string): void {
     this.update((state) => ({
       ...state,
-      calle,
+      calle
     }));
   }
 
@@ -591,7 +458,7 @@ export class Solicitud260910Store extends Store<Solicitud260910State> {
   public setLada(lada: number): void {
     this.update((state) => ({
       ...state,
-      lada,
+      lada
     }));
   }
 
@@ -602,7 +469,7 @@ export class Solicitud260910Store extends Store<Solicitud260910State> {
   public setTelefono(telefono: number): void {
     this.update((state) => ({
       ...state,
-      telefono,
+      telefono
     }));
   }
 
@@ -613,7 +480,7 @@ export class Solicitud260910Store extends Store<Solicitud260910State> {
   public setAvisoDeFuncionamiento(avisoDeFuncionamiento: boolean): void {
     this.update((state) => ({
       ...state,
-      avisoDeFuncionamiento,
+      avisoDeFuncionamiento
     }));
   }
 
@@ -624,7 +491,7 @@ export class Solicitud260910Store extends Store<Solicitud260910State> {
   public setLicenciaSanitaria(licenciaSanitaria: string): void {
     this.update((state) => ({
       ...state,
-      licenciaSanitaria,
+      licenciaSanitaria
     }));
   }
 
@@ -635,7 +502,7 @@ export class Solicitud260910Store extends Store<Solicitud260910State> {
   public setLiveFreshFrozen(liveFreshFrozen: boolean): void {
     this.update((state) => ({
       ...state,
-      liveFreshFrozen,
+      liveFreshFrozen
     }));
   }
 
@@ -646,7 +513,7 @@ export class Solicitud260910Store extends Store<Solicitud260910State> {
   public setRegimen(regimen: number): void {
     this.update((state) => ({
       ...state,
-      regimen,
+      regimen
     }));
   }
 
@@ -657,13 +524,13 @@ export class Solicitud260910Store extends Store<Solicitud260910State> {
   public setAduana(aduana: number): void {
     this.update((state) => ({
       ...state,
-      aduana,
+      aduana
     }));
   }
 
   /**
-   * Actualiza la aduana asociada al trámite.
-   * @param aduana - Nuevo identificador para la aduana.
+   * Actualiza la clave SCIAN asociada al trámite.
+   * @param claveSCIAN - Nuevo identificador para la clave SCIAN.
    */
   public setClaveSCIAN(claveSCIAN: number): void {
     this.update((state) => ({
@@ -673,8 +540,8 @@ export class Solicitud260910Store extends Store<Solicitud260910State> {
   }
 
   /**
-   * Actualiza la aduana asociada al trámite.
-   * @param aduana - Nuevo identificador para la aduana.
+   * Actualiza la descripción de la clave SCIAN asociada al trámite.
+   * @param claveSCIANDesc - Nuevo identificador para la descripción de la clave SCIAN.
    */
   public setClaveSCIANDesc(claveSCIANDesc: number): void {
     this.update((state) => ({
@@ -690,7 +557,7 @@ export class Solicitud260910Store extends Store<Solicitud260910State> {
   public setHacerlos(hacerlos: string | number): void {
     this.update((state) => ({
       ...state,
-      hacerlos,
+      hacerlos
     }));
   }
 
@@ -701,9 +568,10 @@ export class Solicitud260910Store extends Store<Solicitud260910State> {
   public setRfc(rfc: string): void {
     this.update((state) => ({
       ...state,
-      rfc,
+      rfc
     }));
   }
+
   /**
    * Actualiza la razón social legal en el estado.
    * @param legalRazonSocial - Nuevo valor para la razón social legal.
@@ -711,7 +579,7 @@ export class Solicitud260910Store extends Store<Solicitud260910State> {
   public setLegalRazonSocial(legalRazonSocial: string): void {
     this.update((state) => ({
       ...state,
-      legalRazonSocial,
+      legalRazonSocial
     }));
   }
 
@@ -722,7 +590,7 @@ export class Solicitud260910Store extends Store<Solicitud260910State> {
   public setApellidoPaterno(apellidoPaterno: string): void {
     this.update((state) => ({
       ...state,
-      apellidoPaterno,
+      apellidoPaterno
     }));
   }
 
@@ -733,7 +601,7 @@ export class Solicitud260910Store extends Store<Solicitud260910State> {
   public setApellidoMeterno(apellidoMeterno: string): void {
     this.update((state) => ({
       ...state,
-      apellidoMeterno,
+      apellidoMeterno
     }));
   }
 
@@ -744,7 +612,7 @@ export class Solicitud260910Store extends Store<Solicitud260910State> {
   public setMercanciasDatos(mercanciasDatos: Mercancia[]): void {
     this.update((state) => ({
       ...state,
-      mercanciasDatos,
+      mercanciasDatos
     }));
   }
 
@@ -766,7 +634,7 @@ export class Solicitud260910Store extends Store<Solicitud260910State> {
   public addMercanciasDatos(newMercancia: Mercancia): void {
     this.update((state) => ({
       ...state,
-      mercanciasDatos: [...state.mercanciasDatos, newMercancia],
+      mercanciasDatos: [...state.mercanciasDatos, newMercancia]
     }));
   }
 
@@ -777,7 +645,7 @@ export class Solicitud260910Store extends Store<Solicitud260910State> {
   public addSCIANDatos(newSCIAN: SCIAN): void {
     this.update((state) => ({
       ...state,
-      SCIANDatos: [...state.SCIANDatos, newSCIAN],
+      SCIANDatos: [...state.SCIANDatos, newSCIAN]
     }));
   }
 
@@ -789,28 +657,23 @@ export class Solicitud260910Store extends Store<Solicitud260910State> {
     this.update((state) => ({
       ...state,
       mercanciasDatos: state.mercanciasDatos.filter(
-        (mercancia) =>
-          mercancia.nombreProductoEspecifico !==
-          mercanciaToRemove.nombreProductoEspecifico
-      ),
+        (mercancia) => mercancia.nombreProductoEspecifico !== mercanciaToRemove.nombreProductoEspecifico
+      )
     }));
   }
 
   /**
    * Elimina una SCIAN específica del estado.
-   * @param SCIANToELiminar - Objeto de SCIAN que será eliminado.
+   * @param eliminarSCIAN - Objeto de SCIAN que será eliminado.
    */
   public eliminarSCAINDatos(eliminarSCIAN: SCIAN): void {
     this.update((state) => ({
       ...state,
-      SCIANDatos:state.SCIANDatos.filter(
-        (SCIAN) =>
-          SCIAN !== eliminarSCIAN
-      ),
+      SCIANDatos: state.SCIANDatos.filter(
+        (SCIAN) => SCIAN !== eliminarSCIAN
+      )
     }));
   }
-
-
 
   /**
    * Actualiza la clasificación de productos en el estado.
@@ -819,7 +682,7 @@ export class Solicitud260910Store extends Store<Solicitud260910State> {
   public setClasificacionProductos(clasificaionProductos: string): void {
     this.update((state) => ({
       ...state,
-      clasificaionProductos,
+      clasificaionProductos
     }));
   }
 
@@ -830,7 +693,7 @@ export class Solicitud260910Store extends Store<Solicitud260910State> {
   public setEspecificarProducto(especificarProducto: number): void {
     this.update((state) => ({
       ...state,
-      especificarProducto,
+      especificarProducto
     }));
   }
 
@@ -841,7 +704,7 @@ export class Solicitud260910Store extends Store<Solicitud260910State> {
   public setNombreProductoEspecifico(nombreProductoEspecifico: string): void {
     this.update((state) => ({
       ...state,
-      nombreProductoEspecifico,
+      nombreProductoEspecifico
     }));
   }
 
@@ -874,14 +737,13 @@ export class Solicitud260910Store extends Store<Solicitud260910State> {
   public setTipoProducto(tipoProducto: number): void {
     this.update((state) => ({
       ...state,
-      tipoProducto,
+      tipoProducto
     }));
   }
 
   /**
-   * Establece el valor de la propiedad `farmaceutica` en el estado de la tienda.
-   *
-   * @param farmaceutica - El nuevo valor para la propiedad `farmaceutica`.
+   * Actualiza la forma farmacéutica en el estado.
+   * @param farmaceutica - Nuevo valor para la forma farmacéutica.
    */
   public setFarmaceutica(farmaceutica: number): void {
     this.update((state) => ({
@@ -891,9 +753,8 @@ export class Solicitud260910Store extends Store<Solicitud260910State> {
   }
 
   /**
-   * Establece el valor de la propiedad `fisico` en el estado de la tienda.
-   * 
-   * @param fisico - El nuevo valor para la propiedad `fisico`.
+   * Actualiza el estado físico en el estado.
+   * @param fisico - Nuevo valor para el estado físico.
    */
   public setFisico(fisico: number): void {
     this.update((state) => ({
@@ -909,7 +770,7 @@ export class Solicitud260910Store extends Store<Solicitud260910State> {
   public setFraccionArancelaria(fraccionArancelaria: string): void {
     this.update((state) => ({
       ...state,
-      fraccionArancelaria,
+      fraccionArancelaria
     }));
   }
 
@@ -917,12 +778,10 @@ export class Solicitud260910Store extends Store<Solicitud260910State> {
    * Actualiza la descripción de la fracción arancelaria en el estado.
    * @param descripcionFraccionArancelaria - Nueva descripción de la fracción arancelaria.
    */
-  public setDescripcionFraccionArancelaria(
-    descripcionFraccionArancelaria: string
-  ): void {
+  public setDescripcionFraccionArancelaria(descripcionFraccionArancelaria: string): void {
     this.update((state) => ({
       ...state,
-      descripcionFraccionArancelaria,
+      descripcionFraccionArancelaria
     }));
   }
 
@@ -933,7 +792,7 @@ export class Solicitud260910Store extends Store<Solicitud260910State> {
   public setCantidadUMT(cantidadUMT: string): void {
     this.update((state) => ({
       ...state,
-      cantidadUMT,
+      cantidadUMT
     }));
   }
 
@@ -944,7 +803,7 @@ export class Solicitud260910Store extends Store<Solicitud260910State> {
   public setUmt(umt: string): void {
     this.update((state) => ({
       ...state,
-      umt,
+      umt
     }));
   }
 
@@ -955,7 +814,7 @@ export class Solicitud260910Store extends Store<Solicitud260910State> {
   public setCantidadUMC(cantidadUMC: string): void {
     this.update((state) => ({
       ...state,
-      cantidadUMC,
+      cantidadUMC
     }));
   }
 
@@ -966,14 +825,13 @@ export class Solicitud260910Store extends Store<Solicitud260910State> {
   public setUmc(umc: number): void {
     this.update((state) => ({
       ...state,
-      umc,
+      umc
     }));
   }
 
   /**
-   * Establece la presentación farmacéutica en el estado de la tienda.
-   *
-   * @param presentacionFarmaceutica - La presentación farmacéutica que se desea establecer.
+   * Actualiza la presentación farmacéutica o tipo de envase en el estado.
+   * @param presentacionFarmaceutica - Nuevo valor para la presentación farmacéutica.
    */
   public setPresentacionFarmaceutica(presentacionFarmaceutica: string): void {
     this.update((state) => ({
@@ -983,9 +841,8 @@ export class Solicitud260910Store extends Store<Solicitud260910State> {
   }
 
   /**
-   * Establece el valor del registro sanitario en el estado de la tienda.
-   *
-   * @param registroSanitario - El número del registro sanitario que se desea establecer.
+   * Actualiza el registro sanitario en el estado.
+   * @param registroSanitario - Nuevo valor para el registro sanitario.
    */
   public setRegistroSanitario(registroSanitario: number): void {
     this.update((state) => ({
@@ -994,7 +851,6 @@ export class Solicitud260910Store extends Store<Solicitud260910State> {
     }));
   }
 
-
   /**
    * Actualiza la fecha de caducidad en el estado.
    * @param fechaCaducidad - Nuevo valor para la fecha de caducidad.
@@ -1002,11 +858,9 @@ export class Solicitud260910Store extends Store<Solicitud260910State> {
   public setFechaCaducidad(fechaCaducidad: string): void {
     this.update((state) => ({
       ...state,
-      fechaCaducidad,
+      fechaCaducidad
     }));
   }
-
-
 
   /**
    * Actualiza el tipo de persona en el estado.
@@ -1015,7 +869,7 @@ export class Solicitud260910Store extends Store<Solicitud260910State> {
   public setTipoPersona(tipoPersona: string | number): void {
     this.update((state) => ({
       ...state,
-      tipoPersona,
+      tipoPersona
     }));
   }
 
@@ -1026,7 +880,7 @@ export class Solicitud260910Store extends Store<Solicitud260910State> {
   public setModificarRFC(modificarRFC: string): void {
     this.update((state) => ({
       ...state,
-      modificarRFC,
+      modificarRFC
     }));
   }
 
@@ -1037,7 +891,7 @@ export class Solicitud260910Store extends Store<Solicitud260910State> {
   public setDenominacion(denominacion: string): void {
     this.update((state) => ({
       ...state,
-      denominacion,
+      denominacion
     }));
   }
 
@@ -1048,7 +902,7 @@ export class Solicitud260910Store extends Store<Solicitud260910State> {
   public setDomicilioPais(domicilioPais: number): void {
     this.update((state) => ({
       ...state,
-      domicilioPais,
+      domicilioPais
     }));
   }
 
@@ -1059,7 +913,7 @@ export class Solicitud260910Store extends Store<Solicitud260910State> {
   public setDomicilioEstado(domicilioEstado: number): void {
     this.update((state) => ({
       ...state,
-      domicilioEstado,
+      domicilioEstado
     }));
   }
 
@@ -1070,7 +924,7 @@ export class Solicitud260910Store extends Store<Solicitud260910State> {
   public setDomicilioMunicipio(domicilioMunicipio: number): void {
     this.update((state) => ({
       ...state,
-      domicilioMunicipio,
+      domicilioMunicipio
     }));
   }
 
@@ -1081,7 +935,7 @@ export class Solicitud260910Store extends Store<Solicitud260910State> {
   public setDomicilioLocalidad(domicilioLocalidad: number): void {
     this.update((state) => ({
       ...state,
-      domicilioLocalidad,
+      domicilioLocalidad
     }));
   }
 
@@ -1092,7 +946,7 @@ export class Solicitud260910Store extends Store<Solicitud260910State> {
   public setDomicilioCodigo(domicilioCodigo: number): void {
     this.update((state) => ({
       ...state,
-      domicilioCodigo,
+      domicilioCodigo
     }));
   }
 
@@ -1103,7 +957,7 @@ export class Solicitud260910Store extends Store<Solicitud260910State> {
   public setDomicilioColonia(domicilioColonia: number): void {
     this.update((state) => ({
       ...state,
-      domicilioColonia,
+      domicilioColonia
     }));
   }
 
@@ -1114,7 +968,7 @@ export class Solicitud260910Store extends Store<Solicitud260910State> {
   public setDomicilioCalle(domiciliCalle: string): void {
     this.update((state) => ({
       ...state,
-      domiciliCalle,
+      domiciliCalle
     }));
   }
 
@@ -1125,7 +979,7 @@ export class Solicitud260910Store extends Store<Solicitud260910State> {
   public setDomicilioNumeroExterior(domiciliNumeroExterior: string): void {
     this.update((state) => ({
       ...state,
-      domiciliNumeroExterior,
+      domiciliNumeroExterior
     }));
   }
 
@@ -1136,7 +990,7 @@ export class Solicitud260910Store extends Store<Solicitud260910State> {
   public setDomicilioNumeroInterior(domiciliNumeroInterior: string): void {
     this.update((state) => ({
       ...state,
-      domiciliNumeroInterior,
+      domiciliNumeroInterior
     }));
   }
 
@@ -1147,7 +1001,7 @@ export class Solicitud260910Store extends Store<Solicitud260910State> {
   public setDomicilioLada(domiciliLada: string): void {
     this.update((state) => ({
       ...state,
-      domiciliLada,
+      domiciliLada
     }));
   }
 
@@ -1158,7 +1012,7 @@ export class Solicitud260910Store extends Store<Solicitud260910State> {
   public setDomicilioTelefono(domiciliTelefono: string): void {
     this.update((state) => ({
       ...state,
-      domiciliTelefono,
+      domiciliTelefono
     }));
   }
 
@@ -1166,12 +1020,10 @@ export class Solicitud260910Store extends Store<Solicitud260910State> {
    * Actualiza el correo electrónico del domicilio en el estado.
    * @param domiciliCorreoElectronioco - Nuevo valor para el correo electrónico.
    */
-  public setDomicilioCorreoElectronico(
-    domiciliCorreoElectronioco: string
-  ): void {
+  public setDomicilioCorreoElectronico(domiciliCorreoElectronioco: string): void {
     this.update((state) => ({
       ...state,
-      domiciliCorreoElectronioco,
+      domiciliCorreoElectronioco
     }));
   }
 
@@ -1182,7 +1034,7 @@ export class Solicitud260910Store extends Store<Solicitud260910State> {
   public setDestinatarioDatos(destinatarioDatos: Destinatario[]): void {
     this.update((state) => ({
       ...state,
-      destinatarioDatos,
+      destinatarioDatos
     }));
   }
 
@@ -1195,7 +1047,7 @@ export class Solicitud260910Store extends Store<Solicitud260910State> {
       ...state,
       destinatarioDatos: state.destinatarioDatos.filter(
         (destinatario) => destinatario.rfc !== destinatarioToRemove.rfc
-      ),
+      )
     }));
   }
 
@@ -1210,6 +1062,10 @@ export class Solicitud260910Store extends Store<Solicitud260910State> {
     }));
   }
 
+  /**
+   * Actualiza los datos de proveedor en el estado.
+   * @param proveedorDatos - Nuevo arreglo con los datos de proveedor.
+   */
   public setProveedorDatos(proveedorDatos: Proveedor[]): void {
     this.update((state) => ({
       ...state,
@@ -1217,6 +1073,10 @@ export class Solicitud260910Store extends Store<Solicitud260910State> {
     }));
   }
 
+  /**
+   * Actualiza los datos de facturador en el estado.
+   * @param facturadorDatos - Nuevo arreglo con los datos de facturador.
+   */
   public setFacturadorDatos(facturadorDatos: Facturador[]): void {
     this.update((state) => ({
       ...state,
@@ -1224,30 +1084,42 @@ export class Solicitud260910Store extends Store<Solicitud260910State> {
     }));
   }
 
+  /**
+   * Elimina un fabricante específico del estado.
+   * @param fabricanteToRemove - Objeto del fabricante a eliminar.
+   */
   public removeFabricanteDato(fabricanteToRemove: Fabricante): void {
     this.update((state) => ({
       ...state,
       fabricanteDatos: state.fabricanteDatos.filter(
         (fabricante) => fabricante !== fabricanteToRemove
-      ),
+      )
     }));
   }
 
+  /**
+   * Elimina un proveedor específico del estado.
+   * @param proveedorToRemove - Objeto del proveedor a eliminar.
+   */
   public removeProveedorDato(proveedorToRemove: Proveedor): void {
     this.update((state) => ({
       ...state,
       proveedorDatos: state.proveedorDatos.filter(
         (proveedor) => proveedor !== proveedorToRemove
-      ),
+      )
     }));
   }
 
+  /**
+   * Elimina un facturador específico del estado.
+   * @param facturadorToRemove - Objeto del facturador a eliminar.
+   */
   public removeFacturadorDato(facturadorToRemove: Facturador): void {
     this.update((state) => ({
       ...state,
       facturadorDatos: state.facturadorDatos.filter(
         (facturador) => facturador !== facturadorToRemove
-      ),
+      )
     }));
   }
 
@@ -1258,7 +1130,7 @@ export class Solicitud260910Store extends Store<Solicitud260910State> {
   public addDestinatarioDato(newDestinatario: Destinatario): void {
     this.update((state) => ({
       ...state,
-      destinatarioDatos: [...state.destinatarioDatos, newDestinatario],
+      destinatarioDatos: [...state.destinatarioDatos, newDestinatario]
     }));
   }
 
@@ -1269,7 +1141,7 @@ export class Solicitud260910Store extends Store<Solicitud260910State> {
   public setClaveDeReferencia(claveDeReferencia: string): void {
     this.update((state) => ({
       ...state,
-      claveDeReferencia,
+      claveDeReferencia
     }));
   }
 
@@ -1280,7 +1152,7 @@ export class Solicitud260910Store extends Store<Solicitud260910State> {
   public setCadenaDeDependencia(cadenaDeDependencia: string): void {
     this.update((state) => ({
       ...state,
-      cadenaDeDependencia,
+      cadenaDeDependencia
     }));
   }
 
@@ -1291,7 +1163,7 @@ export class Solicitud260910Store extends Store<Solicitud260910State> {
   public setBanco(banco: number): void {
     this.update((state) => ({
       ...state,
-      banco,
+      banco
     }));
   }
 
@@ -1302,7 +1174,7 @@ export class Solicitud260910Store extends Store<Solicitud260910State> {
   public setLiaveDePago(liaveDePago: string): void {
     this.update((state) => ({
       ...state,
-      liaveDePago,
+      liaveDePago
     }));
   }
 
@@ -1313,7 +1185,7 @@ export class Solicitud260910Store extends Store<Solicitud260910State> {
   public setFechaDePago(fechaDePago: string): void {
     this.update((state) => ({
       ...state,
-      fechaDePago,
+      fechaDePago
     }));
   }
 
@@ -1324,7 +1196,7 @@ export class Solicitud260910Store extends Store<Solicitud260910State> {
   public setImporteDePago(importeDePago: string): void {
     this.update((state) => ({
       ...state,
-      importeDePago,
+      importeDePago
     }));
   }
 
@@ -1335,7 +1207,29 @@ export class Solicitud260910Store extends Store<Solicitud260910State> {
   public setManifesto(manifesto: boolean): void {
     this.update((state) => ({
       ...state,
-      manifesto,
+      manifesto
+    }));
+  }
+
+  /**
+   * Actualiza el folio de desistimiento en el estado.
+   * @param folioDeDesistimiento - Nuevo valor para el folio de desistimiento.
+   */
+  public setFolioDeDesistimiento(folioDeDesistimiento: string): void {
+    this.update((state) => ({
+      ...state,
+      folioDeDesistimiento
+    }));
+  }
+
+  /**
+   * Actualiza el folio original en el estado.
+   * @param folioOriginal - Nuevo valor para el folio original.
+   */
+  public setFolioOriginal(folioOriginal: string): void {
+    this.update((state) => ({
+      ...state,
+      folioOriginal
     }));
   }
 

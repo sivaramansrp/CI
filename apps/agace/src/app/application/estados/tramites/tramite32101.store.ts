@@ -155,16 +155,12 @@ export class Tramite32101Store extends Store<Solicitud32101State> {
   constructor() {
     super(createInitialState());
   }
-
-  static setFraccionRegla(arg0: string): void {
-    throw new Error('Method not implemented.');
-  }
   /**
    * Establece el tipo de inversión en el estado de la tienda.
    *
    * @param tipoDeInversion - Un arreglo de objetos del tipo `Catalogo` que representa el tipo de inversión.
    */
-  public setTipoDeInversion(tipoDeInversion: Catalogo[]) {
+  public setTipoDeInversion(tipoDeInversion: Catalogo[]): void {
     this.update((state) => ({
       ...state,
       tipoDeInversion,
@@ -176,7 +172,7 @@ export class Tramite32101Store extends Store<Solicitud32101State> {
    *
    * @param valorEnPesos - El nuevo valor en pesos que se debe asignar al estado.
    */
-  public setValorEnPesos(valorEnPesos: number) {
+  public setValorEnPesos(valorEnPesos: number): void {
     this.update((state) => ({
       ...state,
       valorEnPesos,
@@ -188,7 +184,7 @@ export class Tramite32101Store extends Store<Solicitud32101State> {
    *
    * @param descripcionGeneral - La nueva descripción general que se asignará al estado.
    */
-  public setDescripcionGeneral(descripcionGeneral: string) {
+  public setDescripcionGeneral(descripcionGeneral: string): void {
     this.update((state) => ({
       ...state,
       descripcionGeneral,
@@ -200,7 +196,7 @@ export class Tramite32101Store extends Store<Solicitud32101State> {
    *
    * @param abc - Los datos de la tabla que se asignarán al estado.
    */
-  public setAbc(abc: DatosDeLaTabla) {
+  public setAbc(abc: DatosDeLaTabla): void {
     this.update((state) => ({
       ...state,
       abc,
@@ -212,7 +208,7 @@ export class Tramite32101Store extends Store<Solicitud32101State> {
    *
    * @param manifiesto1 - El nuevo valor para el campo `manifiesto1`.
    */
-  public setManifiesto1(manifiesto1: string) {
+  public setManifiesto1(manifiesto1: string): void {
     this.update((state) => ({
       ...state,
       manifiesto1,
@@ -224,7 +220,7 @@ export class Tramite32101Store extends Store<Solicitud32101State> {
    *
    * @param manifiesto2 - El nuevo valor para la propiedad `manifiesto2`.
    */
-  public setManifiesto2(manifiesto2: string) {
+  public setManifiesto2(manifiesto2: string): void {
     this.update((state) => ({
       ...state,
       manifiesto2,
@@ -236,7 +232,7 @@ export class Tramite32101Store extends Store<Solicitud32101State> {
    *
    * @param manifiesto3 - El nuevo valor para la propiedad `manifiesto3`.
    */
-  public setManifiesto3(manifiesto3: string) {
+  public setManifiesto3(manifiesto3: string): void {
     this.update((state) => ({
       ...state,
       manifiesto3,
@@ -248,7 +244,7 @@ export class Tramite32101Store extends Store<Solicitud32101State> {
    *
    * @param claveDeReferencia - El número que representa la clave de referencia a establecer.
    */
-  public setClaveDeReferencia(claveDeReferencia: number) {
+  public setClaveDeReferencia(claveDeReferencia: number): void {
     this.update((state) => ({
       ...state,
       claveDeReferencia,
@@ -260,7 +256,7 @@ export class Tramite32101Store extends Store<Solicitud32101State> {
    *
    * @param importeDePago - El nuevo importe de pago que se debe asignar.
    */
-  public setImporteDePago(importeDePago: number) {
+  public setImporteDePago(importeDePago: number): void {
     this.update((state) => ({
       ...state,
       importeDePago,
@@ -272,7 +268,7 @@ export class Tramite32101Store extends Store<Solicitud32101State> {
    *
    * @param cadenaDeLaDependencia - La nueva cadena de la dependencia que se establecerá en el estado.
    */
-  public setCadenaDeLaDependencia(cadenaDeLaDependencia: string) {
+  public setCadenaDeLaDependencia(cadenaDeLaDependencia: string): void {
     this.update((state) => ({
       ...state,
       cadenaDeLaDependencia,
@@ -284,7 +280,7 @@ export class Tramite32101Store extends Store<Solicitud32101State> {
    *
    * @param numeroDeOperacion - El número de operación que se debe asignar al estado.
    */
-  public setNumeroDeOperacion(numeroDeOperacion: number) {
+  public setNumeroDeOperacion(numeroDeOperacion: number): void {
     this.update((state) => ({
       ...state,
       numeroDeOperacion,
@@ -296,7 +292,7 @@ export class Tramite32101Store extends Store<Solicitud32101State> {
    *
    * @param banco - Un arreglo de objetos de tipo `Catalogo` que representa el banco a establecer.
    */
-  public setBanco(banco: Catalogo[]) {
+  public setBanco(banco: Catalogo[]): void {
     this.update((state) => ({
       ...state,
       banco,
@@ -308,7 +304,7 @@ export class Tramite32101Store extends Store<Solicitud32101State> {
    *
    * @param llaveDePago - El número que representa la llave de pago a establecer.
    */
-  public setLlaveDePago(llaveDePago: number) {
+  public setLlaveDePago(llaveDePago: number): void {
     this.update((state) => ({
       ...state,
       llaveDePago,
@@ -320,7 +316,7 @@ export class Tramite32101Store extends Store<Solicitud32101State> {
    *
    * @param fechaInicialInput - La fecha inicial proporcionada como una cadena de texto.
    */
-  public setFechaInicialInput(fechaInicialInput: string) {
+  public setFechaInicialInput(fechaInicialInput: string): void {
     this.update((state) => ({
       ...state,
       fechaInicialInput,
@@ -332,7 +328,7 @@ export class Tramite32101Store extends Store<Solicitud32101State> {
    *
    * @param listaDeDocumentos - La nueva lista de documentos que se asignará al estado.
    */
-  public setListaDeDocumentos(listaDeDocumentos: string) {
+  public setListaDeDocumentos(listaDeDocumentos: string): void {
     this.update((state) => ({
       ...state,
       listaDeDocumentos,
@@ -344,7 +340,7 @@ export class Tramite32101Store extends Store<Solicitud32101State> {
    *
    * @param datosDelContenedor - Un arreglo de objetos de tipo `datosDeLaTabla` que representa los datos a actualizar en el contenedor.
    */
-  public setDatosDelContenedor(datosDelContenedor: DatosDeLaTabla[]) {
+  public setDatosDelContenedor(datosDelContenedor: DatosDeLaTabla[]): void {
     this.update((state) => ({
       ...state,
       datosDelContenedor,

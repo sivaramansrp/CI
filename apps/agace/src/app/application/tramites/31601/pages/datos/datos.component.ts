@@ -3,6 +3,7 @@ import { ConsultaioQuery, ConsultaioState, SolicitanteComponent } from '@ng-mf/d
 import { Subject, map, takeUntil } from 'rxjs';
 import { Solocitud31601Service } from '../../services/service31601.service';
 import { TIPO_PERSONA } from '@libs/shared/data-access-user/src/tramites/constantes/constantes';
+import { Tramite31601Query } from '../../../../estados/queries/tramite31601.query';
 
 /**
  * Este componente se encarga de gestionar la visualización y carga de datos
@@ -34,6 +35,7 @@ export class DatosComponent implements OnInit, AfterViewInit, OnDestroy {
   constructor(
     private consultaQuery: ConsultaioQuery,
     private solocitud31601Service: Solocitud31601Service,
+    private tramite31601Query: Tramite31601Query
   ) {}
 
   /**
@@ -56,6 +58,8 @@ export class DatosComponent implements OnInit, AfterViewInit, OnDestroy {
    */
   public consultaState!: ConsultaioState;
 
+  public isTabDisabled: boolean = true;
+
   /**
    * Hook de inicialización del componente. Verifica el estado de actualización del store
    * y carga datos en caso necesario.
@@ -75,6 +79,15 @@ export class DatosComponent implements OnInit, AfterViewInit, OnDestroy {
     } else {
       this.esDatosRespuesta = true;
     }
+
+    this.tramite31601Query.selectSolicitud$
+      .pipe(takeUntil(this.destroyNotifier$)) 
+      .subscribe((solicitud) => {
+        // Observa los cambios en los valores de régimen y actualiza isTabDisabled en consecuencia
+        const { regimen_0: REGIMEN0, regimen_1: REGIMEN1, regimen_2: REGIMEN2, regimen_3: REGIMEN3 } = solicitud;
+        this.isTabDisabled = !(REGIMEN0 || REGIMEN1 || REGIMEN2 || REGIMEN3);
+      });
+
   }
 
   /**

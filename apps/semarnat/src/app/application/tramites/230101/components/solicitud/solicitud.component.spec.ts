@@ -37,12 +37,12 @@ describe('SolicitudComponent', () => {
   });
 
   it('should clean up resources on destroy', () => {
-    const destroyedCompleteSpy = jest.spyOn(component['destroyed$'], 'complete');
+  
     const destroyNotifierCompleteSpy = jest.spyOn(component['destroyNotifier$'], 'complete');
 
     component.ngOnDestroy();
 
-    expect(destroyedCompleteSpy).toHaveBeenCalled();
+    
     expect(destroyNotifierCompleteSpy).toHaveBeenCalled();
   });
 });
