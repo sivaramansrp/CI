@@ -4,7 +4,6 @@ import { ToastrModule, ToastrService } from 'ngx-toastr';
 import { AduaneroComponent } from '../components/aduanero/aduanero.component';
 import { AnexarRequisitosComponent } from '../components/anexar-requisitos/anexar-requisitos.component';
 import { AntecesorRoutingModule } from './antecesor-routing.module';
-import { BrowserModule } from '@angular/platform-browser';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { BtnContinuarComponent } from '@ng-mf/data-access-user';
 import { CapturarIvaeiepsComponent } from '../components/capturar-ivaeieps/capturar-ivaeieps.component';
@@ -35,7 +34,6 @@ import { provideHttpClient } from '@angular/common/http';
     EnlaceComponent,
     PersonaComponent,
     SolicitanteComponent,
-
     NavComponent,
     AduaneroComponent,
     FormsModule,

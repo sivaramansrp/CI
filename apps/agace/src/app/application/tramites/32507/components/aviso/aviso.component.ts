@@ -1,27 +1,7 @@
-import {
-  AvisoTabla,
-  AvisoTablaDatos,
-  Catalogo,
-  CatalogoLista,
-} from '../../models/aviso-traslado.model';
-import {
-  RADIO_OPCIONS,
-  TABLA_DE_DATOS_AVISO,
-} from '../../constants/avios-procesos.enum';
+import { AvisoTabla,AvisoTablaDatos,Catalogo,CatalogoLista } from '../../models/aviso-traslado.model';
+import { RADIO_OPCIONS, TABLA_DE_DATOS_AVISO } from '../../constants/avios-procesos.enum';
 
-import {
-  CatalogoSelectComponent,
-  ConsultaioQuery,
-  ConsultaioState,
-  REGEX_IMPORTE_PAGO,
-  REGEX_NUMEROS,
-  REGEX_NUMEROS_USD,
-  REGEX_REEMPLAZAR,
-  TablaDinamicaComponent,
-  TablaSeleccion,
-  TituloComponent,
-  ValidacionesFormularioService,
-} from '@libs/shared/data-access-user/src';
+import { CatalogoSelectComponent, ConsultaioQuery, ConsultaioState, REGEX_IMPORTE_PAGO, REGEX_NUMEROS,REGEX_NUMEROS_USD, REGEX_REEMPLAZAR, TablaDinamicaComponent, TablaSeleccion, TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
 import { InputRadioComponent } from '@libs/shared/data-access-user/src';
 
 import { CommonModule } from '@angular/common';
@@ -185,6 +165,8 @@ export class AvisoComponent implements OnInit, OnDestroy {
    * @description Formulario reactivo que contiene los datos relacionados con la mercancía.
    */
   mercanciaFormulario!: FormGroup;
+
+  avisoComponent: typeof AvisoComponent = AvisoComponent;
   /**
    * @property {Catalogo[]} fraccionArancelaria
    * @description Lista de fracciones arancelarias cargadas desde un catálogo.
@@ -282,7 +264,7 @@ export class AvisoComponent implements OnInit, OnDestroy {
     this.avisoFormulario = this.fb.group({
       adaceFormulario: this.fb.group({
         adace: [
-          { value: this.tramiteState?.avisoFormulario?.adace, disabled: true },
+          this.tramiteState?.avisoFormulario?.adace,
           [Validators.required],
         ],
       }),
@@ -371,7 +353,7 @@ export class AvisoComponent implements OnInit, OnDestroy {
    * @method abrirModalMercancia
    * @description Método para abrir el modal de mercancía.
    */
-  sanitizeAlphanumeric(form: FormGroup, control: string, event: Event): void {
+  static sanitizeAlphanumeric(form: FormGroup, control: string, event: Event): void {
     const INPUT = event?.target as HTMLInputElement;
     const REEMPLAZAR = INPUT?.value.replace(REGEX_REEMPLAZAR, '');
     form.get(control)?.setValue(REEMPLAZAR, { emitEvent: false });
