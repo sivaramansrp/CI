@@ -8,7 +8,7 @@ describe('TercerosRelacionadoComponent', () => {
   let component: TercerosRelacionadoComponent;
   let fixture: ComponentFixture<TercerosRelacionadoComponent>;
 
-  // Mocks
+ 
   let mockService: any;
   let mockExportacionStore: any;
   let mockExportacionQuery: any;
@@ -188,12 +188,6 @@ describe('TercerosRelacionadoComponent', () => {
     expect(component.facturatorForm).toBeDefined();
     expect(component.facturatorForm.get('nombre')).toBeDefined();
   });
-
-  // it('should call correct store method in setValoresStore', () => {
-  //   const form = new FormBuilder().group({ nombre: ['Juan'] });
-  //   component.setValoresStore(form, 'nombre', 'setNombre');
-  //   expect(mockExportacionStore.setNombre).toHaveBeenCalledWith('Juan');
-  // });
 
   it('should set fisica and moral correctly in inputChecked', () => {
     component.inputChecked('fisica');

@@ -119,7 +119,7 @@ describe('DomicilioDelEstablecimientoComponent', () => {
 
     fixture = TestBed.createComponent(DomicilioDelEstablecimientoComponent);
     component = fixture.componentInstance;
-    // Mock ViewChilds
+    
     component.closeModal = { nativeElement: { click: jest.fn() } } as any;
     component.crossList = { toArray: () => [
       { agregar: jest.fn(), quitar: jest.fn() }

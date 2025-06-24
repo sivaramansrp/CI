@@ -153,10 +153,10 @@ describe('DomicilioEstablecimientoAduanasComponent', () => {
       banco: '',
       llavePago: '',
       fechaPago: '',
-      importePago: '', // Added missing property
-      rfcDel: '', // Added missing property
-      denominacionRazonSocial: '', // Added missing property
-      correoElectronico: '', // Added missing property
+      importePago: '', 
+      rfcDel: '', 
+      denominacionRazonSocial: '', 
+      correoElectronico: '', 
     };
     component.configurarGrupoForm();
     expect(component.domicilio.disabled).toBe(true);
@@ -322,15 +322,7 @@ describe('DomicilioEstablecimientoAduanasComponent', () => {
     component.paisDeProcedenciaBotones[1].funcion();
     component.paisDeProcedenciaBotones[2].funcion();
     component.paisDeProcedenciaBotones[3].funcion();
-    expect(true).toBe(true); // If no error, test passes
+    expect(true).toBe(true); 
   });
 });
-//       }]
-//     } as any;
-//     component.paisDeProcedenciaBotones[0].funcion();
-//     component.paisDeProcedenciaBotones[1].funcion();
-//     component.paisDeProcedenciaBotones[2].funcion();
-//     component.paisDeProcedenciaBotones[3].funcion();
-//     expect(true).toBe(true); // If no error, test passes
-//   });
-// });
+

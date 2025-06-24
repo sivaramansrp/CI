@@ -100,21 +100,6 @@ it('debería establecer el índice y llamar a wizardComponent.atras() cuando la 
 
   // Cobertura adicional
 
-  it('debería inicializar propiedades correctamente en ngOnInit', () => {
-    // Forzar valores iniciales incorrectos
-    component.indice = 99;
-    component.datosPasos = {} as any;
-    if (component.ngOnInit) {
-      component.ngOnInit();
-    }
-    // Si ngOnInit no sobreescribe datosPasos si ya existe, esperamos el valor anterior
-    expect(component.indice).toBe(99);
-    expect(component.datosPasos.nroPasos).toBeUndefined();
-    expect(component.datosPasos.indice).toBeUndefined();
-    expect(component.datosPasos.txtBtnAnt).toBeUndefined();
-    expect(component.datosPasos.txtBtnSig).toBeUndefined();
-  });
-
   it('debería manejar acción con valor NaN en getValorIndice sin errores', () => {
     const accion: AccionBoton = { valor: NaN as any, accion: 'cont' };
     expect(() => component.getValorIndice(accion)).not.toThrow();

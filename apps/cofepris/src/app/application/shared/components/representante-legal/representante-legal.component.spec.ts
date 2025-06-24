@@ -31,24 +31,8 @@ describe('RepresentanteLegalComponent', () => {
     expect(component.representanteLegalForm.get('apellidoMaterno')?.disabled).toBe(true);
   });
 
-  // it('should validate form controls', () => {
-  //   const form = component.representanteLegalForm;
-
-  //   // Test initial state
-  //   expect(form.valid).toBe(false);
-
-  //   // Set valid values
-  //   form.get('nombreRazonSocial')?.setValue('Test Name');
-  //   form.get('apellidoPaterno')?.setValue('Paterno');
-  //   form.get('apellidoMaterno')?.setValue('Materno');
-
-  //   expect(form.valid).toBe(true);
-  // });
-
-  it('should handle invalid form controls', () => {
+ it('should handle invalid form controls', () => {
     const form = component.representanteLegalForm;
-
-    // Set invalid values
     form.get('nombreRazonSocial')?.setValue('');
     form.get('apellidoPaterno')?.setValue('');
 

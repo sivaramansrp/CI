@@ -109,7 +109,7 @@ it('should clean up on ngOnDestroy', () => {
 
  it('should handle closeModal ElementRef if present', () => {
     component.closeModal = { nativeElement: { click: jest.fn() } } as any;
-    // No method uses closeModal directly, but this ensures assignment doesn't throw
+    
     expect(component.closeModal).toBeDefined();
   });
 });

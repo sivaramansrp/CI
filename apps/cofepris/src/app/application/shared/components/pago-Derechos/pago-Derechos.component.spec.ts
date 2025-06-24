@@ -123,18 +123,11 @@ describe('PagoDerechosComponent', () => {
     const spy = jest.spyOn(mockStore, 'setfechaPago');
     component.derechosForm.get('fechaPago')?.setValue(null);
     component.setValoresStore(component.derechosForm, 'fechaPago', 'setfechaPago');
-    // The store method is called with null, so check the call argument
+  
     expect(spy).toHaveBeenCalledWith(null);
   });
 
-  // it('should mark fechaPago as untouched after cambioFechaIngreso', () => {
-  //   const fechaPagoControl = component.derechosForm.get('fechaPago');
-  //   fechaPagoControl?.markAsTouched();
-  //   component.cambioFechaPago('2023-03-01');
-  //   expect(fechaPagoControl?.untouched).toBeTruthy();
-  // });
-
-  it('should handle destroyed$ subject correctly on ngOnDestroy', () => {
+ it('should handle destroyed$ subject correctly on ngOnDestroy', () => {
     const nextSpy = jest.spyOn(component['destroyed$'], 'next');
     const completeSpy = jest.spyOn(component['destroyed$'], 'complete');
     component.ngOnDestroy();
@@ -183,7 +176,7 @@ describe('PagoDerechosComponent', () => {
   });
 
   it('should handle error in loadComboUnidadMedida gracefully', () => {
-    // The implementation expects an observable with .pipe, so we must return an observable, not a fake subscribe
+    
     mockService.getDatos.mockReturnValueOnce({
       pipe: () => ({
         subscribe: (success: any, error: any) => error && error('error')
@@ -205,11 +198,11 @@ describe('PagoDerechosComponent', () => {
   });
 
   it('should set esFormularioSoloLectura from ConsultaioQuery and configure form on ngOnInit', () => {
-    // Patch the ConsultaioQuery to emit readonly: true before ngOnInit
+
     mockConsultaioQuery.selectConsultaioState$ = of({ readonly: true });
     const configurarSpy = jest.spyOn(component, 'configurarGrupoForm');
     component.ngOnInit();
-    // If the component does not set esFormularioSoloLectura, expect false
+  
     expect(component.esFormularioSoloLectura).toBe(false);
     expect(configurarSpy).toHaveBeenCalled();
   });
@@ -232,7 +225,7 @@ describe('PagoDerechosComponent', () => {
   });
 
 it('should throw if setValoresStore when store method is not a function', () => {
-    // Patch store method to non-function
+   
     mockStore.setfechaPago = 123;
     expect(() => component.setValoresStore(component.derechosForm, 'fechaPago', 'setfechaPago')).toThrow();
   });
@@ -252,7 +245,7 @@ it('should throw if setValoresStore when store method is not a function', () => 
 
   describe('esInvalido', () => {
     beforeEach(() => {
-      // Ensure fechaPago control exists for these tests
+      
       if (!component.derechosForm.get('fechaPago')) {
         component.derechosForm.addControl('fechaPago', component['fb'].control(''));
       }
