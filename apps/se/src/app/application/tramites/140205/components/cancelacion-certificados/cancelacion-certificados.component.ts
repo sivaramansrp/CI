@@ -7,6 +7,8 @@ import {
 } from '../../model/cancelaciones-certificado.model';
 import {
   CatalogoSelectComponent,
+  ConsultaioQuery,
+  ConsultaioState,
   TablaDinamicaComponent,
   TablaSeleccion,
   TituloComponent,
@@ -19,7 +21,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Subject, map, takeUntil } from 'rxjs';
+import { ReplaySubject, Subject, map, takeUntil } from 'rxjs';
 import {
   TABLA_DE_DATOS_CUPOS,
   TABLA_DE_DATOS_DISPONIBLES,
@@ -59,6 +61,19 @@ import { Tramite140205Query } from '../../../../estados/queries/tramite140205.qu
   ],
 })
 export class CancelacionCertificadosComponent implements OnInit, OnDestroy {
+  /**
+   * Subject para destruir notificador.
+   */
+  consultaDatos!: ConsultaioState;
+  /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  soloLectura: boolean = false;
+
+  
+  private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
+
   /**
    * @property {FormGroup} solicitudForm
    * @description Formulario reactivo para gestionar los datos de la solicitud.
@@ -153,7 +168,8 @@ export class CancelacionCertificadosComponent implements OnInit, OnDestroy {
     private store: Tramite140205Store,
     private query: Tramite140205Query,
     private cancelacionCertificadosService: CancelacionCertificadosService,
-    private validacionesService: ValidacionesFormularioService
+    private validacionesService: ValidacionesFormularioService,
+    private consultaioQuery: ConsultaioQuery
   ) {}
 
   /**
@@ -177,6 +193,32 @@ export class CancelacionCertificadosComponent implements OnInit, OnDestroy {
     this.cargarNombreProducto();
     this.cargarNombreSubproducto();
     this.cargarFederal();
+
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState) => {
+          this.consultaDatos = seccionState;
+          this.soloLectura = this.consultaDatos.readonly;
+          this.inicializarFormulario();
+        })
+      )
+      .subscribe();
+  }
+
+  /**
+   * Destruye el componente y libera recursos.
+   *
+   * Este método se llama cuando el componente se destruye, asegurando que no queden suscripciones activas.
+   */
+  inicializarFormulario(): void {
+    if (this.soloLectura) {
+      this.solicitudForm.disable();
+  //  this.filaDisposible([]);
+      this.cargarCuposTabla();
+    } else {
+      this.solicitudForm.enable();
+    }
   }
   /**
    * @method grupoCupo
@@ -260,6 +302,7 @@ export class CancelacionCertificadosComponent implements OnInit, OnDestroy {
         ],
       }),
     });
+    this.inicializarFormulario();
   }
   /**
    * @property {TablaSeleccion} tablaSeleccion

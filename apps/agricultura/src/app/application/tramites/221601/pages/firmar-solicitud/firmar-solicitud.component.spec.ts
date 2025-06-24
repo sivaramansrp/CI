@@ -7,7 +7,7 @@ describe('FirmarSolicitudComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [FirmarSolicitudComponent],
+      imports: [FirmarSolicitudComponent],
     }).compileComponents();
 
     fixture = TestBed.createComponent(FirmarSolicitudComponent);

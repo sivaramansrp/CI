@@ -12,6 +12,18 @@ describe('DatosPorRegimenComponent', () => {
 
     fixture = TestBed.createComponent(DatosPorRegimenComponent);
     component = fixture.componentInstance;
+  component.consultaState = {
+      procedureId: '',
+      parameter: '',
+      department: '',
+      folioTramite: '',
+      tipoDeTramite: '',
+      estadoDeTramite: '',
+      readonly: false,
+      create: false,
+      update: true,
+      consultaioSolicitante: null,
+    };
     fixture.detectChanges();
   });
 
