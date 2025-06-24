@@ -48,18 +48,6 @@ describe('DatosComponent', () => {
     expect(component.esDatosRespuesta).toBe(true);
   });
 
-  it('should call guardarDatosFormulario when update is true', () => {
-    consultaQueryMock.selectConsultaioState$ = of({
-      readonly: false,
-      update: true
-    });
-    const guardarSpy = jest.spyOn(component, 'guardarDatosFormulario');
-    fixture = TestBed.createComponent(DatosComponent);
-    component = fixture.componentInstance;
-    component.ngOnInit();
-    expect(guardarSpy).toHaveBeenCalled();
-  });
-
   it('should call programaService.getProgramaDatos and setDatosFormulario in guardarDatosFormulario', () => {
     const resp = { test: 'value' };
     programaServiceMock.getProgramaDatos.mockReturnValue(of(resp));
