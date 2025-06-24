@@ -234,7 +234,9 @@ export class DatosEmpresaComponent implements OnInit, OnDestroy {
     * Obtiene las opciones del catálogo federal y estatal.
     */
   obtenerFederalEstatal(): void {
+    if(dropDown && dropDown.listaDesplegable){
     this.federalEstatal = dropDown.listaDesplegable;
+    }
   }
 
   /**
