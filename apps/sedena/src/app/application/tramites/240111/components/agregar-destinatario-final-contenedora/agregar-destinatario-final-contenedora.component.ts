@@ -1,6 +1,6 @@
+import { Component, EventEmitter, Output } from '@angular/core';
 import { AgregarDestinatarioFinalComponent } from '../../../../shared/components/agregar-destinatario-final/agregar-destinatario-final.component';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
 import { DestinoFinal } from '../../../../shared/models/terceros-relacionados.model';
 import { ID_PROCEDIMIENTO } from '../../constants/importacion-armas-municiones.enum';
 import { Tramite240111Store } from '../../estados/tramite240111Store.store';
@@ -20,6 +20,9 @@ import { Tramite240111Store } from '../../estados/tramite240111Store.store';
   styleUrl: './agregar-destinatario-final-contenedora.component.css',
 })
 export class AgregarDestinatarioFinalContenedoraComponent {
+
+  @Output() cerrar = new EventEmitter<void>();
+
   public readonly idProcedimiento = ID_PROCEDIMIENTO;
   /**
    * Constructor del componente.
