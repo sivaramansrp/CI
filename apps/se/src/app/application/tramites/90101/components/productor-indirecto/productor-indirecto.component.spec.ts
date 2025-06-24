@@ -91,14 +91,14 @@ describe('ProductorIndirectoComponent', () => {
     component.productorState = component.productorState || {};
     component.productorState.contribuyentes = 'contribuyentes';
     component.initActionFormBuild();
-    // expect(component.fb.group).toHaveBeenCalled();
+    expect(component.fb.group).toHaveBeenCalled();
   });
 
   it('should run #recuperarDatos()', async () => {
     component.ProsecService = component.ProsecService || {};
     component.ProsecService.obtenerTablaDatos = jest.fn().mockReturnValue(observableOf({}));
     component.recuperarDatos();
-    // expect(component.ProsecService.obtenerTablaDatos).toHaveBeenCalled();
+    expect(component.ProsecService.obtenerTablaDatos).toHaveBeenCalled();
   });
 
   it('should run #ngOnDestroy()', async () => {
@@ -106,8 +106,8 @@ describe('ProductorIndirectoComponent', () => {
     component.destroyNotifier$.next = jest.fn();
     component.destroyNotifier$.complete = jest.fn();
     component.ngOnDestroy();
-    // expect(component.destroyNotifier$.next).toHaveBeenCalled();
-    // expect(component.destroyNotifier$.complete).toHaveBeenCalled();
+    expect(component.destroyNotifier$.next).toHaveBeenCalled();
+    expect(component.destroyNotifier$.complete).toHaveBeenCalled();
   });
 
 });

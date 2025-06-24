@@ -63,19 +63,36 @@ describe('DomiciliosDePlantasComponent', () => {
     component.seccionQuery.selectSeccionState$ = observableOf({});
     component.AUtorizacionProsecQuery = component.AUtorizacionProsecQuery || {};
     component.AUtorizacionProsecQuery.selectProsec$ = observableOf({});
+
+    // Mock methods called by ngOnInit
     component.initActionFormBuild = jest.fn();
     component.obtenerLista = jest.fn();
+    component.inicializarEstadoFormulario = jest.fn();
+
     component.seccionStore = component.seccionStore || {};
     component.seccionStore.establecerFormaValida = jest.fn();
+
     component.forma = component.forma || {};
-    component.forma.statusChanges = observableOf({});
-    component.forma.valid = 'valid';
+    // Use a Subject to emit a value after ngOnInit subscribes
+    const statusChangesSubject = new Observable(subscriber => {
+      setTimeout(() => {
+        subscriber.next({});
+        subscriber.complete();
+      }, 0);
+    });
+    component.forma.statusChanges = statusChangesSubject;
+    component.forma.valid = true;
+
     component.AutorizacionProsecStore = component.AutorizacionProsecStore || {};
     component.AutorizacionProsecStore.setDomiciliosFormaValida = jest.fn();
+
     component.ProsecService = component.ProsecService || {};
     component.ProsecService.formValida = jest.fn();
-    component.inicializarEstadoFormulario = jest.fn();
+    // Mock obtenerMenuDesplegable to avoid TypeError
+    component.ProsecService.obtenerMenuDesplegable = jest.fn().mockReturnValue(observableOf({}));
+
     component.ngOnInit();
+
     // expect(component.initActionFormBuild).toHaveBeenCalled();
     // expect(component.obtenerLista).toHaveBeenCalled();
     // expect(component.seccionStore.establecerFormaValida).toHaveBeenCalled();
@@ -96,7 +113,7 @@ describe('DomiciliosDePlantasComponent', () => {
         };
       }
     }, {}, 'setFormaValida');
-    // expect(component.AutorizacionProsecStore.setFormaValida).toHaveBeenCalled();
+    expect(component.AutorizacionProsecStore.setFormaValida).toHaveBeenCalled();
   });
 
   it('should run #inicializarEstadoFormulario()', async () => {
@@ -117,28 +134,28 @@ describe('DomiciliosDePlantasComponent', () => {
     component.domiciliosState.RepresentacionFederal = 'RepresentacionFederal';
     component.domiciliosState.ActividadProductiva = 'ActividadProductiva';
     component.initActionFormBuild();
-    // expect(component.fb.group).toHaveBeenCalled();
+    expect(component.fb.group).toHaveBeenCalled();
   });
 
   it('should run #obtenerListaEstado()', async () => {
     component.ProsecService = component.ProsecService || {};
     component.ProsecService.obtenerMenuDesplegable = jest.fn().mockReturnValue(observableOf({}));
     component.obtenerListaEstado();
-    // expect(component.ProsecService.obtenerMenuDesplegable).toHaveBeenCalled();
+    expect(component.ProsecService.obtenerMenuDesplegable).toHaveBeenCalled();
   });
 
   it('should run #obtenerListaFederal()', async () => {
     component.ProsecService = component.ProsecService || {};
     component.ProsecService.obtenerMenuDesplegable = jest.fn().mockReturnValue(observableOf({}));
     component.obtenerListaFederal();
-    // expect(component.ProsecService.obtenerMenuDesplegable).toHaveBeenCalled();
+    expect(component.ProsecService.obtenerMenuDesplegable).toHaveBeenCalled();
   });
 
   it('should run #obtenerListaActividad()', async () => {
     component.ProsecService = component.ProsecService || {};
     component.ProsecService.obtenerMenuDesplegable = jest.fn().mockReturnValue(observableOf({}));
     component.obtenerListaActividad();
-    // expect(component.ProsecService.obtenerMenuDesplegable).toHaveBeenCalled();
+    expect(component.ProsecService.obtenerMenuDesplegable).toHaveBeenCalled();
   });
 
   it('should run #obtenerLista()', async () => {
@@ -147,38 +164,38 @@ describe('DomiciliosDePlantasComponent', () => {
     component.obtenerListaActividad = jest.fn();
     component.recuperarDatos = jest.fn();
     component.obtenerLista();
-    // expect(component.obtenerListaEstado).toHaveBeenCalled();
-    // expect(component.obtenerListaFederal).toHaveBeenCalled();
-    // expect(component.obtenerListaActividad).toHaveBeenCalled();
-    // expect(component.recuperarDatos).toHaveBeenCalled();
+    expect(component.obtenerListaEstado).toHaveBeenCalled();
+    expect(component.obtenerListaFederal).toHaveBeenCalled();
+    expect(component.obtenerListaActividad).toHaveBeenCalled();
+    expect(component.recuperarDatos).toHaveBeenCalled();
   });
 
   it('should run #estadoSeleccion()', async () => {
     component.AutorizacionProsecStore = component.AutorizacionProsecStore || {};
     component.AutorizacionProsecStore.setEstado = jest.fn();
     component.estadoSeleccion({});
-    // expect(component.AutorizacionProsecStore.setEstado).toHaveBeenCalled();
+    expect(component.AutorizacionProsecStore.setEstado).toHaveBeenCalled();
   });
 
   it('should run #fedralSeleccion()', async () => {
     component.AutorizacionProsecStore = component.AutorizacionProsecStore || {};
     component.AutorizacionProsecStore.setRepresentacionFederal = jest.fn();
     component.fedralSeleccion({});
-    // expect(component.AutorizacionProsecStore.setRepresentacionFederal).toHaveBeenCalled();
+    expect(component.AutorizacionProsecStore.setRepresentacionFederal).toHaveBeenCalled();
   });
 
   it('should run #productivaSeleccion()', async () => {
     component.AutorizacionProsecStore = component.AutorizacionProsecStore || {};
     component.AutorizacionProsecStore.setActividadProductiva = jest.fn();
     component.productivaSeleccion({});
-    // expect(component.AutorizacionProsecStore.setActividadProductiva).toHaveBeenCalled();
+    expect(component.AutorizacionProsecStore.setActividadProductiva).toHaveBeenCalled();
   });
 
   it('should run #recuperarDatos()', async () => {
     component.ProsecService = component.ProsecService || {};
     component.ProsecService.obtenerTablaDatos = jest.fn().mockReturnValue(observableOf({}));
     component.recuperarDatos();
-    // expect(component.ProsecService.obtenerTablaDatos).toHaveBeenCalled();
+    expect(component.ProsecService.obtenerTablaDatos).toHaveBeenCalled();
   });
 
   it('should run #ngOnDestroy()', async () => {
@@ -186,8 +203,8 @@ describe('DomiciliosDePlantasComponent', () => {
     component.destroyNotifier$.next = jest.fn();
     component.destroyNotifier$.complete = jest.fn();
     component.ngOnDestroy();
-    // expect(component.destroyNotifier$.next).toHaveBeenCalled();
-    // expect(component.destroyNotifier$.complete).toHaveBeenCalled();
+    expect(component.destroyNotifier$.next).toHaveBeenCalled();
+    expect(component.destroyNotifier$.complete).toHaveBeenCalled();
   });
 
 });

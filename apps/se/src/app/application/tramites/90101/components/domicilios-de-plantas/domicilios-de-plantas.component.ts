@@ -81,23 +81,23 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
    * @descripcion
    * Subject utilizado como notificador para destruir suscripciones y evitar fugas de memoria.
    * Se utiliza junto con el operador `takeUntil` para cancelar las suscripciones al destruir el componente.
-   * @private
+   * @public
    */
-  private destroyNotifier$: Subject<void> = new Subject();
+  public destroyNotifier$: Subject<void> = new Subject();
 
   /**
    * @descripcion
    * Estado actual de los domicilios, obtenido del store de Prosec.
-   * @private
+   * @public
    */
-  private domiciliosState!: ProsecState;
+  public domiciliosState!: ProsecState;
 
   /**
    * @descripcion
    * Estado actual de la sección, obtenido del store de la sección.
-   * @private
+   * @public
    */
-  private seccionState!: SeccionLibState;
+  public seccionState!: SeccionLibState;
 
   /**
    * @descripcion
@@ -152,13 +152,13 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
    * @param {ConsultaioQuery} consultaQuery - Query para operaciones de consulta adicionales.
    */
   constructor(
-    private readonly fb: FormBuilder, 
-    private ProsecService: ProsecService, 
-    private AutorizacionProsecStore: AutorizacionProsecStore,
-    private AUtorizacionProsecQuery: AUtorizacionProsecQuery,
-    private seccionStore: SeccionLibStore,
-    private seccionQuery: SeccionLibQuery,
-    private consultaQuery: ConsultaioQuery
+    public fb: FormBuilder, 
+    public ProsecService: ProsecService, 
+    public AutorizacionProsecStore: AutorizacionProsecStore,
+    public AUtorizacionProsecQuery: AUtorizacionProsecQuery,
+    public seccionStore: SeccionLibStore,
+    public seccionQuery: SeccionLibQuery,
+    public consultaQuery: ConsultaioQuery
   ) {
     // Constructor logic can be added here if needed
   }
