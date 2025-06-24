@@ -171,7 +171,7 @@ export const HEADER_TABLA_MARITIMO: ItemTransporteDespacho[] = [
  */
 export const HEADER_TABLA_AEREO: ItemTransporteDespacho[] = [
   {
-    llave: 'arribo_pendiente_aereo',
+    llave: 'arribo_pendiente_aereo_des',
     valor: 'Arribo pendiente',
   },
   {
@@ -191,7 +191,7 @@ export const HEADER_TABLA_AEREO: ItemTransporteDespacho[] = [
     valor: 'Hora de arribo',
   },
   {
-    llave: 'guia_valida',
+    llave: 'guia_valida_des',
     valor: 'Guía válida',
   },
   {
@@ -220,6 +220,11 @@ export const MSG_CAMBIO_TIPO_TRANSPORTE =
  * @description Constante para el manejo del mensaje de éxito al agregar un tipo de transporte a la tabla.
  */
 export const MSG_AGREGA_TRANSPORTE_EXITOSAMENTE = `El ${DESCRIPCION_TIPO_TRANSPORTE} fue agregado correctamente.`;
+
+/**
+ * @description Constante para el manejo del mensaje de éxito al agregar un tipo de transporte a la tabla.
+ */
+export const MSG_ELIMNA_TRANSPORTE_EXITOSAMENTE = `Se eliminó exitosamente el ${DESCRIPCION_TIPO_TRANSPORTE}.`;
 
 /**
  * @description Constante de aviso  para el mensaje cuando se intenta hacer una búsqueda de un número BL y no se ha iingresado el valor.
@@ -602,7 +607,7 @@ export const CONFIGURACION_ENCABEZADO_TABLA_TRANSPORTE_AEREO: ConfiguracionColum
      */
     {
       encabezado: 'Arribo pendiente',
-      clave: (fila) => fila.arribo_pendiente_aereo,
+      clave: (fila) => fila.arribo_pendiente_aereo_des,
       orden: 1,
     },
 
@@ -662,7 +667,7 @@ export const CONFIGURACION_ENCABEZADO_TABLA_TRANSPORTE_AEREO: ConfiguracionColum
      */
     {
       encabezado: 'Guía válida',
-      clave: (fila) => fila.guia_valida,
+      clave: (fila) => fila.guia_valida_des,
       orden: 6,
     },
 
@@ -716,7 +721,7 @@ export const CONFIGURACION_ENCABEZADO_TABLA_TRANSPORTE_OTRO: ConfiguracionColumn
      * - Orden: 3.
      */
     {
-      encabezado: 'Datos de transporte',
+      encabezado: 'Datos del transporte',
       clave: (fila) => fila.datos_transporte,
       orden: 3,
     },

@@ -8,8 +8,10 @@
           type="text"
           required="true"
           class="form-control"
+          name="folioOriginal"
           id="folioOriginal"
           formControlName="folioOriginal"
+          (change)="setValoresStore(desisitimientoForm, 'folioOriginal', 'setFolioOriginal')"
         />
       </div>
 
@@ -19,8 +21,10 @@
           type="text"
           required="true"
           class="form-control"
+          name="justificacionDelDesistimiento"
           id="justificacionDelDesistimiento"
           formControlName="justificacionDelDesistimiento"
+          (change)="setValoresStore(desisitimientoForm, 'justificacionDelDesistimiento', 'setJustificacionDelDesistimiento')"
         />
       </div>
     </div>

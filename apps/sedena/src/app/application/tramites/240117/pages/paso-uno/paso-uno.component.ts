@@ -1,20 +1,20 @@
-import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { DatosDelTramiteContenedoraComponent } from '../../components/datos-del-tramite-contenedora/datos-del-tramite-contenedora.component';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
-import { PagoDeDerechosContenedoraComponent } from '../../components/pago-de-derechos-contenedora/pago-de-derechos-contenedora.component';
 import {
   ConsultaioQuery,
   ConsultaioState,
   SolicitanteComponent,
 } from '@ng-mf/data-access-user';
-import { map, Subject } from 'rxjs';
+import { Subject, map, } from 'rxjs';
+import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
+import { DatosDelTramiteContenedoraComponent } from '../../components/datos-del-tramite-contenedora/datos-del-tramite-contenedora.component';
+import { DatosSolicitudService } from '../../../../shared/services/datos-solicitud.service';
+import { OnDestroy } from '@angular/core';
+import { OnInit } from '@angular/core';
+import { PagoDeDerechosContenedoraComponent } from '../../components/pago-de-derechos-contenedora/pago-de-derechos-contenedora.component';
 import { TercerosRelacionadosContenedoraComponent } from '../../components/terceros-relacionados-contenedora/terceros-relacionados-contenedora.component';
 import { Tramite240117Query } from '../../estados/tramite240117Query.query';
 import { Tramite240117Store } from '../../estados/tramite240117Store.store';
 import { takeUntil } from 'rxjs';
-import { DatosSolicitudService } from '../../../../shared/services/datos-solicitud.service';
 
 /**
  * @component

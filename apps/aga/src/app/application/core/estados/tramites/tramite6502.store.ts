@@ -62,7 +62,7 @@ export class Tramite6502Store extends Store<Solicitud6502State>{
      * Establece el estado de curpActualizada.
      * @param curpActualizada - El valor de curpActualizada.
      */
-    public setCurpActualizada(curpActualizada: string) {
+    public setCurpActualizada(curpActualizada: string): void {
         this.update((state) => ({
             ...state,
             curpActualizada,
@@ -72,7 +72,7 @@ export class Tramite6502Store extends Store<Solicitud6502State>{
      * Establece el estado de confirmacioCurpActualizada.
      * @param confirmacioCurpActualizada - El valor de confirmacioCurpActualizada.
      */
-    public setConfirmacioCurpActualizada(confirmacioCurpActualizada: string) {
+    public setConfirmacioCurpActualizada(confirmacioCurpActualizada: string): void {
         this.update((state) => ({
             ...state,
             confirmacioCurpActualizada,

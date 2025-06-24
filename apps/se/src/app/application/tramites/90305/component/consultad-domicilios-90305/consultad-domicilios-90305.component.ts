@@ -20,8 +20,8 @@ import {
 } from '@angular/forms';
 import { Tramite90305State, Tramite90305Store } from '../../estados/tramite90305.store';
 import { map, takeUntil } from 'rxjs/operators';
-import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { CatalogoResponse} from '@ng-mf/data-access-user';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { CommonModule } from '@angular/common';
 import { ProsecModificacionServiceTsService } from '../../services/prosec-modificacion.service';
 import { Subject } from 'rxjs';

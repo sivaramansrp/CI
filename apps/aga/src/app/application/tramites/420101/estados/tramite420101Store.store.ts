@@ -1,5 +1,5 @@
+import { DatosDelRegistrar, DatosDelRegistrarManual } from '../models/proveedores.model';
 import { CROSLISTA_DE_DATOS } from '../constants/proveedores.enum';
-import { DatosDelRegistrarManual } from '../models/proveedores.model';
 import { Injectable } from '@angular/core';
 import { Store } from '@datorama/akita';
 import { StoreConfig } from '@datorama/akita';
@@ -43,10 +43,10 @@ export interface Tramite420101State {
   datosProveedoresManual: DatosDelRegistrarManual[];
 
   /**
-   * @type {DatosDelRegistrarManual[]}
+   * @type {DatosDelRegistrar[]}
    * Datos que se muestran en la tabla
    */
-  datosTabla: DatosDelRegistrarManual[];
+  datosTabla: DatosDelRegistrar[];
 
 }
 

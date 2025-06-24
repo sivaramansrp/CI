@@ -55,7 +55,7 @@
           [label]="conceptoLista.labelNombre"
           [placeholder]="conceptoLista.primerOpcion"
           [required]="false"
-          [isDisabled]="true"
+          [isDisabled]="esFormularioSoloLectura"
           name="concepto"
           id="concepto"
         ></app-catalogo-select>
@@ -133,6 +133,7 @@
             type="button"
             name="Agregar"
             id="btnBusqRfc"
+            [disabled]="esFormularioSoloLectura"
             class="btn btn-primary me-5"
           >
             Agregar
@@ -152,6 +153,7 @@
           <button
             type="button"
             name="eliminar"
+            [disabled]="esFormularioSoloLectura"
             id="btnBusqRfcEliminar"
             class="btn btn-danger me-5"
           >
@@ -279,6 +281,7 @@
               type="button"
               name="cargaArchivoProcesos"
               id="cargaArchivoProcesos"
+              [disabled]="esFormularioSoloLectura"
               class="btn btn-primary me-md-3"
             >
               Cargar archivo
@@ -320,6 +323,7 @@
               type="button"
               name="cargaArchivoProcesos"
               id="cargaArchivoProcesos"
+              [disabled]="esFormularioSoloLectura"
               class="btn btn-primary me-md-3"
             >
               Cargar archivo
@@ -501,17 +505,18 @@
 
       <div class="col-md-12">
         <div class="d-flex justify-content-end">
-          <button type="button" id="eliminarSocio" class="btn btn-danger">
+          <button type="button" id="eliminarSocio" class="btn btn-danger" [disabled]="esFormularioSoloLectura">
             Eliminar
           </button>
           <button
             type="button"
+            [disabled]="esFormularioSoloLectura"
             id="modificarSocio"
             class="btn btn-secondary ms-3"
           >
             Modificar
           </button>
-          <button type="button" id="agregarSocio" class="btn btn-primary ms-3">
+          <button type="button" id="agregarSocio" class="btn btn-primary ms-3" [disabled]="esFormularioSoloLectura">
             Agregar
           </button>
         </div>
@@ -589,7 +594,7 @@
           [label]="tipoDeInversionLista.labelNombre"
           [placeholder]="tipoDeInversionLista.primerOpcion"
           [required]="true"
-          [isDisabled]="true"
+          [isDisabled]="esFormularioSoloLectura"
           name="tipoInversion"
           id="tipoInversion"
         ></app-catalogo-select>
@@ -632,10 +637,10 @@
 
       <div class="col-md-12">
         <div class="d-flex justify-content-end">
-          <button type="button" id="eliminarSocio" class="btn btn-danger">
+          <button type="button" id="eliminarSocio" class="btn btn-danger" [disabled]="esFormularioSoloLectura">
             Eliminar
           </button>
-          <button type="button" id="agregarSocio" class="btn btn-primary ms-3">
+          <button type="button" id="agregarSocio" class="btn btn-primary ms-3" [disabled]="esFormularioSoloLectura">
             Agregar
           </button>
         </div>
@@ -713,15 +718,15 @@
       </div>
       <div class="col-md-12">
         <div class="d-flex justify-content-end">
-          <button type="button" id="modificarSocio" class="btn btn-secondary">
+          <button type="button" id="modificarSocio" class="btn btn-secondary" [disabled]="esFormularioSoloLectura">
             Modificar
           </button>
 
-          <button type="button" id="eliminarSocio" class="btn btn-danger ms-3">
+          <button type="button" id="eliminarSocio" class="btn btn-danger ms-3" [disabled]="esFormularioSoloLectura">
             Eliminar
           </button>
 
-          <button type="button" id="agregarSocio" class="btn btn-primary ms-3">
+          <button type="button" id="agregarSocio" class="btn btn-primary ms-3" [disabled]="esFormularioSoloLectura">
             Agregar
           </button>
         </div>
@@ -847,6 +852,7 @@
               type="button"
               name="cargaArchivoProcesos"
               id="cargaArchivoProcesos"
+              [disabled]="esFormularioSoloLectura"
               class="btn btn-primary me-md-3"
             >
               Cargar archivo

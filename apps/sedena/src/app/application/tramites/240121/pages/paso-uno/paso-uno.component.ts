@@ -1,9 +1,7 @@
+import { Component,OnDestroy,OnInit } from '@angular/core';
 import { ConsultaioQuery,ConsultaioState } from '@ng-mf/data-access-user';
 import { Subject, map,takeUntil } from 'rxjs';
-import { Component } from '@angular/core';
 import { ID_PROCEDIMIENTO } from '../../constantes/exportacion-armas-explosivo.enum';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
 import { PermisoOrdinarioExportacionExplosivoService } from '../../services/permiso-ordinario-exportacion-explosivo.service';
 import { Tramite240121Query } from '../../estados/tramite240121Query.query';
 import { Tramite240121Store } from '../../estados/tramite240121Store.store';

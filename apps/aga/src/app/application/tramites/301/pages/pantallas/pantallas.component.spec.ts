@@ -1,51 +1,62 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { PantallasComponent } from './pantallas.component';
-import { AccionBoton, AlertComponent, BtnContinuarComponent, DatosPasos, PASOS, SolicitanteComponent, WizardComponent } from '@libs/shared/data-access-user/src';
-import { PasoDosComponent } from '../../../103/pages/paso-dos/paso-dos.component';
-import { PasoTresComponent } from '../paso-tres/paso-tres.component';
-import { DatosComponent } from '../datos/datos.component';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { WizardComponent } from '@libs/shared/data-access-user/src/tramites/components/wizard/wizard.component';
+import { AccionBoton } from '@ng-mf/data-access-user';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, Input } from '@angular/core';
+@Component({
+  selector: 'app-wizard',
+  template: ''
+})
+class MockWizardComponent {
+  siguiente = jest.fn();
+  atras = jest.fn();
+}
 
-describe('PantallasComponent', () => {
-  let component: PantallasComponent;
+describe('SolicitudDespachoExportacionComponent', () => {
+  let componente: PantallasComponent;
   let fixture: ComponentFixture<PantallasComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [PantallasComponent, DatosComponent, PasoTresComponent],
-      imports: [WizardComponent, BtnContinuarComponent, AlertComponent, PasoDosComponent, HttpClientTestingModule, SolicitanteComponent]
-    })
-    .compileComponents();
-    
+      declarations: [PantallasComponent, MockWizardComponent],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    }).compileComponents();
+
     fixture = TestBed.createComponent(PantallasComponent);
-    component = fixture.componentInstance;
+    componente = fixture.componentInstance;
     fixture.detectChanges();
+
+    componente.wizardComponent = {
+      siguiente: jest.fn(),
+      atras: jest.fn(),
+    } as unknown as any;
+
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
+  it('debería crear el componente', () => {
+    expect(componente).toBeTruthy();
   });
 
-  it('should set ADVERTENCIA constants correctly', () => {
-    expect(component.ADVERTENCIA).toBeTruthy(); 
+  it('debería llamar wizardComponent.siguiente si acción es "cont" y valor válido', () => {
+    const EVENTO: AccionBoton = { valor: 2, accion: 'cont' };
+    componente.getValorIndice(EVENTO);
+    expect(componente.indice).toBe(2);
+    expect(componente.wizardComponent.siguiente).toHaveBeenCalled();
   });
 
-  it('should initialize pantallasPasos correctly', () => {
-    expect(component.pantallasPasos).toEqual(PASOS);
+  it('debería llamar wizardComponent.atras si acción no es "cont" y valor válido', () => {
+    const EVENTO: AccionBoton = { valor: 3, accion: 'back' };
+    componente.getValorIndice(EVENTO);
+    expect(componente.indice).toBe(3);
+    expect(componente.wizardComponent.atras).toHaveBeenCalled();
   });
 
-  it('should initialize indice as 1', () => {
-    expect(component.indice).toBe(1);
-  });
-
-  it('should initialize datosPasos correctly', () => {
-    const expectedDatos: DatosPasos = {
-      nroPasos: PASOS.length,
-      indice: 1,
-      txtBtnAnt: 'Anterior',
-      txtBtnSig: 'Continuar',
-    };
-    expect(component.datosPasos).toEqual(expectedDatos);
+  it('no debería cambiar el índice ni llamar métodos si valor es inválido', () => {
+    const EVENTO: AccionBoton = { valor: 0, accion: 'cont' };
+    const INDICE_INICIAL = componente.indice;
+    componente.getValorIndice(EVENTO);
+    expect(componente.indice).toBe(INDICE_INICIAL);
+    expect(componente.wizardComponent.siguiente).not.toHaveBeenCalled();
+    expect(componente.wizardComponent.atras).not.toHaveBeenCalled();
   });
 });

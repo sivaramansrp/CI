@@ -1,34 +1,33 @@
 <div class="container">
-  <form [formGroup]="SolicitudForm">
+  <form [formGroup]="solicitudForm">
     <div class="container">
     <ng-titulo titulo="Modalidad"/>
     <div class="row">
       <div class="col-md-4">
-        <label class="form-label" for="Modalidad"
+        <label class="form-label" for="modalidadOpcion"
           >Modalidad*:
         </label>
         <app-input-radio
             [radioOptions]="radioOpcions"
             formControlName="modalidadOpcion"
-            (change)="setValoresStore(SolicitudForm, 'modalidadOpcion', 'setModalidad')"
+            (change)="setValoresStore(solicitudForm, 'modalidadOpcion', 'setModalidad')"
             >
           </app-input-radio>
-          <div *ngIf="SolicitudForm.get('modalidadOpcion')?.errors?.['required'] && SolicitudForm.get('modalidadOpcion')?.touched">
+          <div *ngIf="solicitudForm.get('modalidadOpcion')?.errors?.['required'] && solicitudForm.get('modalidadOpcion')?.touched">
             <small class="text-danger">Este campo es obligatorio.</small>
           </div>
       </div>
       <div class="col-md-4">
-        <label class="form-label" for="van-a-exposicion"
-          >¿ Van a exposición?*:</label>
-        ><span class="bi bi-question-circle-fill fs-4 m-1 require"></span>
+        <label class="form-label" for="van-a-exposicion">¿ Van a exposición?*:</label>
+        <span class="bi bi-question-circle-fill fs-4 m-1 require"></span>
         <app-input-radio
             [radioOptions]="exposicionRadioOpcions"
             formControlName="exposicionOpcion"
             [layout]="'horizontal'"
-            (change)="setValoresStore(SolicitudForm, 'exposicionOpcion', 'setExposicionOpcion')"
+            (change)="setValoresStore(solicitudForm, 'exposicionOpcion', 'setExposicionOpcion')"
             >
           </app-input-radio>
-          <div *ngIf="SolicitudForm.get('exposicionOpcion')?.errors?.['required'] && SolicitudForm.get('exposicionOpcion')?.touched">
+          <div *ngIf="solicitudForm.get('exposicionOpcion')?.errors?.['required'] && solicitudForm.get('exposicionOpcion')?.touched">
             <small class="text-danger">Este campo es obligatorio.</small>
           </div>
       </div>
@@ -41,7 +40,7 @@
             class="form-control"
             id="nombreExposicion"
             formControlName="nombre"
-            (change)="setValoresStore(SolicitudForm, 'nombre', 'setNombre')"
+            (change)="setValoresStore(solicitudForm, 'nombre', 'setNombre')"
           />
         </div>   
     </div>
@@ -52,17 +51,17 @@
     <div class="row">
       <div class="col-md-4">
         <app-catalogo-select [catalogo]="aduana" formControlName="aduana" [label]="'Aduana de salida'"
-                [required]="true" name="aduana" [placeholder]="'Selecciona un valor'" (change)="setValoresStore(SolicitudForm, 'aduana', 'setAduana')"></app-catalogo-select>
-                <div *ngIf="SolicitudForm.get('aduana')?.errors?.['required'] && SolicitudForm.get('aduana')?.touched">
+                [required]="true" name="aduana" [isDisabled]="soloLectura" [placeholder]="'Selecciona un valor'" (change)="setValoresStore(solicitudForm, 'aduana', 'setAduana')"></app-catalogo-select>
+                <div *ngIf="solicitudForm.get('aduana')?.errors?.['required'] && solicitudForm.get('aduana')?.touched">
                   <small class="text-danger">Este campo es obligatorio.</small>
                 </div>
 
       </div>
-      @if (SolicitudForm.get('modalidadOpcion')?.value === '2') {
+      @if (solicitudForm.get('modalidadOpcion')?.value === '2') {
       <div class="col-md-4">
         <app-catalogo-select [catalogo]="aduana" formControlName="aduanaEntrada" [label]="'Aduanas de entrada'"
-                [required]="true" name="aduana" [placeholder]="'Selecciona un valor'" (change)="setValoresStore(SolicitudForm, 'aduanaEntrada', 'setAduanaEntrada')"></app-catalogo-select>
-                <div *ngIf="SolicitudForm.get('aduanaEntrada')?.errors?.['required'] && SolicitudForm.get('aduanaEntrada')?.touched">
+                [required]="true" name="aduana" [isDisabled]="soloLectura" [placeholder]="'Selecciona un valor'" (change)="setValoresStore(solicitudForm, 'aduanaEntrada', 'setAduanaEntrada')"></app-catalogo-select>
+                <div *ngIf="solicitudForm.get('aduanaEntrada')?.errors?.['required'] && solicitudForm.get('aduanaEntrada')?.touched">
                   <small class="text-danger">Este campo es obligatorio.</small>
                 </div>
 
@@ -82,9 +81,9 @@
           formControlName="descripcionClobGenerica"
           cols="100"
           rows="5"
-          (change)="setValoresStore(SolicitudForm, 'descripcionClobGenerica', 'setDescripcionClobGenerica')"
+          (change)="setValoresStore(solicitudForm, 'descripcionClobGenerica', 'setDescripcionClobGenerica')"
         ></textarea>
-        <div *ngIf="SolicitudForm.get('descripcionClobGenerica')?.errors?.['required'] && SolicitudForm.get('descripcionClobGenerica')?.touched">
+        <div *ngIf="solicitudForm.get('descripcionClobGenerica')?.errors?.['required'] && solicitudForm.get('descripcionClobGenerica')?.touched">
           <small class="text-danger">Este campo es obligatorio.</small>
         </div>
       </div>
@@ -103,7 +102,7 @@
           class="form-control"
           id="cantAutoriBienesCult"
           formControlName="cantMonumentos"
-          (change)="setValoresStore(SolicitudForm, 'cantMonumentos', 'setCantMonumentos')"
+          (change)="setValoresStore(solicitudForm, 'cantMonumentos', 'setCantMonumentos')"
         />
       </div>
     </div>

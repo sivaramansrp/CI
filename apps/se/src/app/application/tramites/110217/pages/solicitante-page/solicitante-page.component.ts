@@ -1,8 +1,11 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { AccionBoton } from '../../models/certificado-origen.model';
 import { AlertComponent, BtnContinuarComponent, DatosPasos } from '@ng-mf/data-access-user';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AVISO } from '@libs/shared/data-access-user/src/tramites/constantes/aviso-privacidad.enum';
+import { AccionBoton } from '../../models/certificado-origen.model';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { PASOS } from '../../constants/certificado-origen.enum';
+import { PasoTresComponent } from '../paso-tres/paso-tres.component';
+import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { Subject } from 'rxjs';
 import { Tramite110217Query } from '../../../../estados/queries/tramite110217.query';
 import { Tramite110217State } from '../../../../estados/tramites/tramite110217.store';
@@ -10,9 +13,6 @@ import { Tramite110217Store } from '../../../../estados/tramites/tramite110217.s
 import { WizardComponent } from '@ng-mf/data-access-user';
 import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
-import { AVISO } from '@libs/shared/data-access-user/src/tramites/constantes/aviso-privacidad.enum';
-import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
-import { PasoTresComponent } from '../paso-tres/paso-tres.component';
 
 
 /**

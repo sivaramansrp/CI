@@ -1,7 +1,10 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { SolicitanteComponent, TIPO_PERSONA } from '@libs/shared/data-access-user/src';
 import { AvisoComponent } from '../../components/aviso/aviso.component';
+import { AvisoTrasladoService } from '../../services/aviso-traslado.service';
 import { CommonModule } from '@angular/common';
-import { SolicitanteComponent } from '../../components/solicitante/solicitante.component';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { ConsultaioState } from '@ng-mf/data-access-user';
 import { Subject } from 'rxjs';
 import { Tramite32503Query } from '../../../../estados/queries/tramite32503.query';
 import { Tramite32503State } from '../../../../estados/tramites/tramite32503.store';
@@ -22,7 +25,7 @@ import { takeUntil } from 'rxjs';
   standalone: true,
   imports: [CommonModule, SolicitanteComponent, AvisoComponent]
 })
-export class PasoUnoComponent implements OnInit, OnDestroy {
+export class PasoUnoComponent implements OnInit, OnDestroy, AfterViewInit {
 
   /**
    * Referencia al componente `SolicitanteComponent`.
@@ -53,7 +56,13 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    * el componente se destruye.
    */
   destroyNotifier$: Subject<void> = new Subject();
-
+  /**
+   * @property {ConsultaioState} consultaDatos
+   * @description Estado actual de la consulta, que contiene información relacionada con el trámite y el solicitante.
+   */
+  consultaDatos!: ConsultaioState;
+  /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
+  public esDatosRespuesta: boolean = false;
   /**
    * Constructor del componente.
    * 
@@ -62,7 +71,9 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    */
   constructor(
     public store: Tramite32503Store,
-    public tramiteQuery: Tramite32503Query
+    public tramiteQuery: Tramite32503Query,
+    private consultaioQuery: ConsultaioQuery,
+    public avisoTrasladoService: AvisoTrasladoService,
   ) {
     // El constructor se utiliza para la inyección de dependencias.
   }
@@ -83,8 +94,59 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
       )
       .subscribe();
     this.indice = this.tramiteState.pestanaActiva;
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.consultaDatos = seccionState;
+        })
+      )
+      .subscribe();
+    if (this.consultaDatos.update) {
+      this.fetchGetDatosConsulta();
+    } else {
+      this.esDatosRespuesta = true;
+    }
   }
-
+  /**
+   * Obtiene los datos de consulta desde el servicio y actualiza el estado del store.
+   * 
+   * Este método realiza una solicitud al servicio `AvisoTrasladoService` para obtener
+   * los datos de consulta relacionados con el trámite. Si la respuesta es exitosa, actualiza
+   * el estado del store con los datos del formulario de aviso y la tabla de datos.
+   */
+  public fetchGetDatosConsulta(): void {
+    this.avisoTrasladoService
+      .getDatosConsulta()
+      .pipe(takeUntil(this.destroyNotifier$)).subscribe((respuesta) => {
+        if (respuesta.success) {
+          this.esDatosRespuesta = true;
+          this.store.setAvisoFormulario(respuesta.datos.avisoFormulario);
+          this.store.setTablaDeDatos(respuesta.datos.tablaDeDatos);
+        }
+      });
+  }
+  /**
+  * Gancho de ciclo de vida angular que se llama después de que la vista del componente se haya inicializado por completo.
+  */
+  ngAfterViewInit(): void {
+    this.obtenerTipoPersona();
+  }
+  /**
+  * @method obtenerTipoPersona
+  * @description Obtiene el tipo de persona y lo establece en el componente `SolicitanteComponent`.
+  * 
+  * Este método utiliza un `setTimeout` para ejecutar la función `obtenerTipoPersona` del componente `SolicitanteComponent` con el valor `TIPO_PERSONA.MORAL_NACIONAL`.
+  * 
+  * @returns {void}
+  */
+  obtenerTipoPersona(): void {
+    setTimeout(() => {
+      if (this.solicitante) {
+        this.solicitante.obtenerTipoPersona(TIPO_PERSONA.MORAL_NACIONAL);
+      }
+    }, 50);
+  }
   /**
    * Cambia la pestaña activa.
    * 
@@ -96,6 +158,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
   seleccionaTab(i: number): void {
     this.indice = i;
     this.store.setPestanaActiva(this.indice);
+    this.obtenerTipoPersona();
   }
 
   /**
