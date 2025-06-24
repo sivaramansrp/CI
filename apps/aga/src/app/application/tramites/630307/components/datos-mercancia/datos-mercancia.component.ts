@@ -29,6 +29,9 @@ import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tram
   styleUrl: './datos-mercancia.component.scss',
 })
 export class DatosMercanciaComponent implements OnInit, OnDestroy {
+  datosImportacionTemporalFormulario(datosImportacionTemporalFormulario: any) {
+    throw new Error('Method not implemented.');
+  }
   /**
    * Subject utilizado para manejar la destrucción de suscripciones y evitar fugas de memoria.
    */
