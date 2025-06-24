@@ -543,15 +543,6 @@
         "numeroDeProcedimiento": "40302"
     },
     {
-        "id": "317",
-        "tipoDeTramite": "Datos generales del trámite",
-        "fecha": "2023-11-01",
-        "fechaActualizacion": "2023-11-07",
-        "diasTranscurridos": "4",
-        "departamento": "AGACE",
-        "numeroDeProcedimiento": "317"
-    },
-    {
         "id": "221602",
         "tipoDeTramite": "Datos generales del trámite",
         "fecha": "2023-11-01",
@@ -813,24 +804,6 @@
         "numeroDeProcedimiento": "260917"
     },
     {
-        "id": "280101",
-        "tipoDeTramite": "Datos generales del trámite",
-        "fecha": "2024-11-01",
-        "fechaActualizacion": "2024-11-07",
-        "diasTranscurridos": "4",
-        "departamento": "INAH",
-        "numeroDeProcedimiento": "280101"
-    },
-    {
-        "id": "270101",
-        "tipoDeTramite": "Datos generales del trámite",
-        "fecha": "2024-11-01",
-        "fechaActualizacion": "2024-11-07",
-        "diasTranscurridos": "4",
-        "departamento": "INBAL",
-        "numeroDeProcedimiento": "270101"
-    },
-    {
         "id": "270301",
         "tipoDeTramite": "Datos generales del trámite",
         "fecha": "2024-11-01",
@@ -838,15 +811,6 @@
         "diasTranscurridos": "4",
         "departamento": "INBAL",
         "numeroDeProcedimiento": "270301"
-    },
-    {
-        "id": "250101",
-        "tipoDeTramite": "Datos generales del trámite",
-        "fecha": "2024-11-01",
-        "fechaActualizacion": "2024-11-07",
-        "diasTranscurridos": "4",
-        "departamento": "PROFEPA",
-        "numeroDeProcedimiento": "250101"
     },
     {
         "id": "5601",
@@ -1244,15 +1208,6 @@
         "diasTranscurridos": "4",
         "departamento": "COFEPRIS",
         "numeroDeProcedimiento": "260219"
-    },
-    {
-        "id": "31401",
-        "tipoDeTramite": "Datos generales del trámite",
-        "fecha": "2024-11-01",
-        "fechaActualizacion": "2024-11-07",
-        "diasTranscurridos": "4",
-        "departamento": "AGACE",
-        "numeroDeProcedimiento": "31401"
     },
     {
         "id": "260201",
