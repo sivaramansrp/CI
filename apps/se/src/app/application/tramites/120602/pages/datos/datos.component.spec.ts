@@ -7,7 +7,8 @@ import { ConsultaioQuery, ConsultaioState } from '@libs/shared/data-access-user/
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 class MockSolicitud120602Service {
-  getSomething = jest.fn(() => of([]));
+  getEmpresaSolicitudData = jest.fn(() => of([]));
+  actualizarEstadoFormulario = jest.fn();
 }
 
 describe('DatosComponent', () => {
