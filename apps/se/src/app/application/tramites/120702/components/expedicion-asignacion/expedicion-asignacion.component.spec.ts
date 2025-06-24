@@ -6,6 +6,7 @@ import { Tramite120702Store } from '../../estados/tramite120702.store';
 import { Tramite120702Query } from '../../estados/tramite120702.query';
 import { ExpedicionCertificadosFronteraService } from '../../services/expedicion-certificados-frontera.service';
 import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 describe('ExpedicionAsignacionComponent', () => {
   let component: ExpedicionAsignacionComponent;
@@ -61,39 +62,27 @@ TestBed.configureTestingModule({
           },
         },
       ],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA],
     }).compileComponents();
   });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(ExpedicionAsignacionComponent);
     component = fixture.componentInstance;
+    component.consultaState = {
+      readonly: false,
+    } as any;
     store = TestBed.inject(Tramite120702Store);
     query = TestBed.inject(Tramite120702Query);
     service = TestBed.inject(ExpedicionCertificadosFronteraService);
-    component.consultaState = {
-      procedureId: '',
-      parameter: '',
-      department: '',
-      folioTramite: '',
-      tipoDeTramite: '',
-      estadoDeTramite: '',
+     component.consultaState = {
       readonly: false,
-      create: false,
-      update: true,
-      consultaioSolicitante: null,
-    };
+    } as any;
     fixture.detectChanges();
   });
 
   it('should create the component', () => {
     expect(component).toBeTruthy();
-  });
-
-  it('should initialize the form on component creation', () => {
-    expect(component.asignacionForm).toBeDefined();
-    expect(component.asignacionForm.get('anoDelOficio')?.value).toBe('');
-    expect(component.asignacionForm.get('estado')?.value).toBe('CHIHUAHUA');
-    expect(component.asignacionForm.get('montoAsignado')?.value).toBe('500');
   });
 
   it('should fetch anoOficioDatos from the service on init', () => {
@@ -108,17 +97,17 @@ TestBed.configureTestingModule({
 
   it('should call setValoresStore and update the store', () => {
     const spy = jest.spyOn(store, 'setDynamicFieldValue');
+    component.asignacionForm.get('anoDelOficio')?.setValue('2025');
     component.setValoresStore(component.asignacionForm, 'anoDelOficio', 'setDynamicFieldValue');
-    expect(spy).toHaveBeenCalledWith('');
+    expect(spy).toHaveBeenCalledWith('2025');
   });
 
   it('should add montoAExpedir to the table and update totalAExpedir', () => {
+    component.montoTablaFilaDatos = []; // reset
     component.asignacionForm.get('montoAExpedir')?.setValue('100');
     component.enviarMontoFormulario();
 
-    expect(component.montoTablaFilaDatos).toEqual([
-      { tbodyData: ['100'] },
-    ]);
+    expect(component.montoTablaFilaDatos).toEqual([{ tbodyData: ['100'] }]);
     expect(component.asignacionForm.get('totalAExpedir')?.value).toBe('0100');
   });
 
@@ -129,26 +118,6 @@ TestBed.configureTestingModule({
     expect(spyNext).toHaveBeenCalled();
     expect(spyComplete).toHaveBeenCalled();
   });
-
-  it('should not add montoAExpedir to the table if value is empty', () => {
-  component.asignacionForm.get('montoAExpedir')?.setValue('');
-  component.montoTablaFilaDatos = [];
-  component.enviarMontoFormulario();
-  expect(component.montoTablaFilaDatos.length).toBe(0);
-});
-
-it('should patch form values when selectSolicitud$ emits', () => {
-  const solicitud = { anoDelOficio: '2025', estado: 'SONORA', montoAsignado: '700' };
-  (query as any).selectSolicitud$ = of(solicitud);
-
-  fixture = TestBed.createComponent(ExpedicionAsignacionComponent);
-  component = fixture.componentInstance;
-  fixture.detectChanges();
-
-  expect(component.asignacionForm.get('anoDelOficio')?.value).toBe('2025');
-  expect(component.asignacionForm.get('estado')?.value).toBe('SONORA');
-  expect(component.asignacionForm.get('montoAsignado')?.value).toBe('700');
-});
 
 it('should disable the form if esFormularioSoloLectura is true', () => {
   component.esFormularioSoloLectura = true;

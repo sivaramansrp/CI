@@ -1,17 +1,50 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PasoUnoComponent } from './paso-uno.component';
-import { SolicitanteComponent } from '@ng-mf/data-access-user';
+import { ConsultaioQuery, ConsultaioState, SolicitanteComponent } from '@ng-mf/data-access-user';
 import { ExpedicionAsignacionComponent } from '../../components/expedicion-asignacion/expedicion-asignacion.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { of, Subject } from 'rxjs';
+import { ExpedicionCertificadosFronteraService } from '../../services/expedicion-certificados-frontera.service';
 
 describe('PasoUnoComponent', () => {
   let component: PasoUnoComponent;
   let fixture: ComponentFixture<PasoUnoComponent>;
+  let consultaQuery: ConsultaioQuery;
+  let expedicionService: ExpedicionCertificadosFronteraService;
 
   const mockSolicitanteService = { 
     validateTab: jest.fn().mockImplementation((tabIndex: number) => {
       return tabIndex > 0 && tabIndex <= 5; 
     }),
+  };
+
+  const destroy$ = new Subject<void>();
+
+  const mockConsultaStateUpdateTrue: ConsultaioState = {
+    readonly: false,
+    update: true
+  } as any;
+
+  const mockConsultaStateUpdateFalse: ConsultaioState = {
+    readonly: false,
+    update: false
+  } as any;
+
+  const mockRegistroResponse = {
+    anoDelOficio: '2023',
+    numeroOficio: 'XYZ987',
+    montoAExpedir: '1500',
+    fechaInicioVigencia: '2024-06-01',
+    fechaFinVigencia: '2024-12-31'
+  };
+
+  const mockConsultaioQuery = {
+    selectConsultaioState$: of(mockConsultaStateUpdateTrue)
+  };
+
+  const mockExpedicionService = {
+    getRegistroTomaMuestrasMercanciasData: jest.fn().mockReturnValue(of(mockRegistroResponse)),
+    actualizarEstadoFormulario: jest.fn()
   };
 
   beforeEach(async () => {
@@ -20,12 +53,16 @@ describe('PasoUnoComponent', () => {
       imports:[SolicitanteComponent, ExpedicionAsignacionComponent, HttpClientTestingModule],
       providers: [
         { provide: 'SolicitanteService', useValue: mockSolicitanteService },
+        { provide: ConsultaioQuery, useValue: mockConsultaioQuery },
+        { provide: ExpedicionCertificadosFronteraService, useValue: mockExpedicionService }
       ],
     })
     .compileComponents();
 
     fixture = TestBed.createComponent(PasoUnoComponent);
     component = fixture.componentInstance;
+    consultaQuery = TestBed.inject(ConsultaioQuery);
+    expedicionService = TestBed.inject(ExpedicionCertificadosFronteraService);
     fixture.detectChanges();
   });
 
@@ -58,5 +95,22 @@ describe('PasoUnoComponent', () => {
   it('should handle zero in seleccionaTab', () => {
     component.seleccionaTab(0);
     expect(component.indice).toBe(0);
+  });
+
+  it('should call actualizarEstadoFormulario and set esDatosRespuesta = true in guardarDatosFormulario()', () => {
+    component['guardarDatosFormulario']();
+    expect(expedicionService.getRegistroTomaMuestrasMercanciasData).toHaveBeenCalled();
+    expect(expedicionService.actualizarEstadoFormulario).toHaveBeenCalledWith(mockRegistroResponse);
+    expect(component.esDatosRespuesta).toBe(true);
+  });
+
+  it('should call destroyNotifier$ on ngOnDestroy()', () => {
+    const nextSpy = jest.spyOn(component['destroyNotifier$'], 'next');
+    const completeSpy = jest.spyOn(component['destroyNotifier$'], 'complete');
+
+    component.ngOnDestroy();
+
+    expect(nextSpy).toHaveBeenCalled();
+    expect(completeSpy).toHaveBeenCalled();
   });
 });

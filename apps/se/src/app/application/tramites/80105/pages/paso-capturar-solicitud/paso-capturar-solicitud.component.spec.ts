@@ -73,4 +73,18 @@ describe('PasoCapturarSolicitudComponent', () => {
     expect(nextSpy).toHaveBeenCalled();
     expect(completeSpy).toHaveBeenCalled();
   });
+
+  it('should not call wizardComponent methods if valor is out of range', () => {
+    const wizardMock = {
+      siguiente: jest.fn(),
+      atras: jest.fn(),
+    };
+    component.wizardComponent = wizardMock as any;
+    const originalIndex = component.indice;
+    component.getValorIndice({ valor: 0, accion: 'cont' });
+    component.getValorIndice({ valor: 5, accion: 'back' });
+    expect(component.indice).toBe(originalIndex);
+    expect(wizardMock.siguiente).not.toHaveBeenCalled();
+    expect(wizardMock.atras).not.toHaveBeenCalled();
+  });
 });

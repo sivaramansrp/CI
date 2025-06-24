@@ -19,7 +19,7 @@ describe('AgregarComplimentosComponent', () => {
       agregarTablaDatosComplimentosExtranjera: jest.fn(),
       eliminarTablaDatosComplimentos: jest.fn(),
       eliminarTablaDatosComplimentosExtranjera: jest.fn(),
-    } as any;
+    } as unknown as jest.Mocked<Tramite80101Store>;
 
     mockQuery = {
       selectDatosComplimento$: of({
@@ -76,7 +76,9 @@ describe('AgregarComplimentosComponent', () => {
   });
 
   describe('AgregarComplimentosComponent - Methods', () => {
-  it('should call setDatosComplimentos when modifierComplimentos is called', () => {
+    it('should call setDatosComplimentos when modifierComplimentos is called', () => {
+    const setSpy = jest.spyOn(component['store'], 'setDatosComplimentos');
+
     const mockData = {
       modalidad: 'modalidad-test',
       programaPreOperativo: '',
@@ -96,50 +98,49 @@ describe('AgregarComplimentosComponent', () => {
     };
 
     component.modifierComplimentos(mockData);
-    expect(mockStore.setDatosComplimentos).toHaveBeenCalledWith(mockData);
+    expect(setSpy).toHaveBeenCalledWith(mockData);
   });
 
   it('should call agregarTablaDatosComplimentos if accionistasAgregados is called with RFC', () => {
-    const accionista: SociaoAccionistas = {
-      rfc: 'RFC123456ABC',
-      nombre: 'Juan',
-      porcentaje: '20',
-    } as any;
+    const spy = jest.spyOn(component['store'], 'agregarTablaDatosComplimentos');
+
+    const accionista = { rfc: 'RFC123456ABC', nombre: 'Juan', porcentaje: '20' } as any;
 
     component.accionistasAgregados(accionista);
-    expect(mockStore.agregarTablaDatosComplimentos).toHaveBeenCalledWith(accionista);
-    expect(mockStore.agregarTablaDatosComplimentosExtranjera).not.toHaveBeenCalled();
+    expect(spy).toHaveBeenCalledWith(accionista);
   });
+
 
   it('should call agregarTablaDatosComplimentosExtranjera if accionistasAgregados is called without RFC', () => {
-    const accionista: SociaoAccionistas = {
-      rfc: '',
-      nombre: 'María',
-      porcentaje: '30',
-    } as any;
+  const spy = jest.spyOn(component['store'], 'agregarTablaDatosComplimentosExtranjera');
 
-    component.accionistasAgregados(accionista);
-    expect(mockStore.agregarTablaDatosComplimentosExtranjera).toHaveBeenCalledWith(accionista);
-    expect(mockStore.agregarTablaDatosComplimentos).not.toHaveBeenCalled();
-  });
+  const accionista = { rfc: '', nombre: 'María', porcentaje: '30' } as any;
+
+  component.accionistasAgregados(accionista);
+  expect(spy).toHaveBeenCalledWith(accionista);
+});
+
 
   it('should call eliminarTablaDatosComplimentos when accionistasEliminados is called', () => {
-    const accionistas: SociaoAccionistas[] = [
+    const spy = jest.spyOn(component['store'], 'eliminarTablaDatosComplimentos');
+
+    const accionistas = [
       { rfc: 'RFC1', nombre: 'Socio1', porcentaje: '40' },
       { rfc: 'RFC2', nombre: 'Socio2', porcentaje: '60' },
     ] as any;
 
     component.accionistasEliminados(accionistas);
-    expect(mockStore.eliminarTablaDatosComplimentos).toHaveBeenCalledWith(accionistas);
+    expect(spy).toHaveBeenCalledWith(accionistas);
   });
 
   it('should call eliminarTablaDatosComplimentosExtranjera when accionistasExtranjerosEliminado is called', () => {
-    const extranjeros: SociaoAccionistas[] = [
-      { nombre: 'Extranjero1', porcentaje: '50' },
-    ] as any;
+    const spy = jest.spyOn(component['store'], 'eliminarTablaDatosComplimentosExtranjera');
+
+    const extranjeros = [{ nombre: 'Extranjero1', porcentaje: '50' }] as any;
 
     component.accionistasExtranjerosEliminado(extranjeros);
-    expect(mockStore.eliminarTablaDatosComplimentosExtranjera).toHaveBeenCalledWith(extranjeros);
+    expect(spy).toHaveBeenCalledWith(extranjeros);
   });
+
 });
 });

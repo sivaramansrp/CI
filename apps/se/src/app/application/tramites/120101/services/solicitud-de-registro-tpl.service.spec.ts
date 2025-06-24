@@ -67,4 +67,84 @@ describe('SolicitudDeRegistroTplService', () => {
   service.actualizarEstadoFormulario('pais', 'México');
   expect(store.setDynamicFieldValue).toHaveBeenCalledWith('pais', 'México');
 });
+
+it('should fetch pais data', () => {
+  const mockData: Catalogo[] = [{ id: 2, descripcion: 'México' }];
+  service.getPaisData().subscribe((data) => {
+    expect(data).toEqual(mockData);
+  });
+  const req = httpMock.expectOne('assets/json/120101/pais.json');
+  expect(req.request.method).toBe('GET');
+  req.flush(mockData);
+});
+
+it('should fetch estados data (Catalogo)', () => {
+  const mockData: Catalogo = { id: 5, descripcion: 'CDMX' };
+  service.getEstadosDatos().subscribe((data) => {
+    expect(data).toEqual(mockData);
+  });
+  const req = httpMock.expectOne('assets/json/120101/estados.json');
+  expect(req.request.method).toBe('GET');
+  req.flush(mockData);
+});
+
+it('should fetch representacion federal data', () => {
+  const mockData: Catalogo = { id: 3, descripcion: 'Representación' };
+  service.getRepresentacionFederalDatos().subscribe((data) => {
+    expect(data).toEqual(mockData);
+  });
+  const req = httpMock.expectOne('assets/json/120101/representacion-federal.json');
+  expect(req.request.method).toBe('GET');
+  req.flush(mockData);
+});
+
+it('should fetch insumos tabla data', () => {
+  const mockData: InsumosTabla[] = [
+    {
+      DescripcionDelInsumo: 'Textil',
+      FraccionArancelaria: '5201.00.00',
+      PaisDeOrigen: 'Colombia',
+    },
+  ];
+  service.obtenerDatosTablaInsumos().subscribe((data) => {
+    expect(data).toEqual(mockData);
+  });
+  const req = httpMock.expectOne('assets/json/120101/insumos-tabla.json');
+  expect(req.request.method).toBe('GET');
+  req.flush(mockData);
+});
+
+it('should fetch datos fraccion arancelaria', () => {
+  const mockData: Catalogo[] = [{ id: 9, descripcion: 'Fracción X' }];
+  service.obtenerDatosFraccionArancelaria().subscribe((data) => {
+    expect(data).toEqual(mockData);
+  });
+  const req = httpMock.expectOne('assets/json/120101/pais.json');
+  expect(req.request.method).toBe('GET');
+  req.flush(mockData);
+});
+
+it('should fetch datos estados (array)', () => {
+  const mockData: Catalogo[] = [{ id: 10, descripcion: 'Estado Y' }];
+  service.obtenerDatosEstados().subscribe((data) => {
+    expect(data).toEqual(mockData);
+  });
+  const req = httpMock.expectOne('assets/json/120101/estados.json');
+  expect(req.request.method).toBe('GET');
+  req.flush(mockData);
+});
+
+it('should fetch indicar data for radio options', () => {
+  const mockData = [
+    { label: 'Sí', value: '1' },
+    { label: 'No', value: '0' },
+  ];
+  service.obtenerIndicarData().subscribe((data) => {
+    expect(data).toEqual(mockData);
+  });
+  const req = httpMock.expectOne('assets/json/120101/proceso-productivo.json');
+  expect(req.request.method).toBe('GET');
+  req.flush(mockData);
+});
+
 });

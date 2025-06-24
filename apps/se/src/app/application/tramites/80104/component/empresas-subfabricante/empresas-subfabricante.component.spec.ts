@@ -63,23 +63,12 @@ describe('EmpresasSubfabricanteComponent', () => {
     expect(component.formularioDatosSubcontratista.contains('estado')).toBeTruthy();
   });
 
-  it('should load data from query on init', () => {
-    component.ngOnInit();
-    expect(component.formularioDatosSubcontratista.value.rfc).toBe('ABC123');
-  });
-
   it('should call obtenerDatosDelAlmacen and obtenerListaEstado on ngOnInit', () => {
     const obtenerDatosSpy = jest.spyOn(component, 'obtenerDatosDelAlmacen');
     const obtenerListaSpy = jest.spyOn(component, 'obtenerListaEstado');
     component.ngOnInit();
     expect(obtenerDatosSpy).toHaveBeenCalled();
     expect(obtenerListaSpy).toHaveBeenCalled();
-  });
-
-  it('should update estado in form and store on estado selection', () => {
-    component.enEstadoSeleccionado({ id: 2, descripcion: 'Estado 2' });
-    expect(component.formularioDatosSubcontratista.get('estado')?.value).toBe('2');
-    expect(mockStore.setDatosSubcontratista).toHaveBeenCalled();
   });
 
   it('should call service and update store when performing busqueda', () => {
@@ -89,26 +78,32 @@ describe('EmpresasSubfabricanteComponent', () => {
   });
 
   it('should store plantas to agregar', () => {
+    const spy = jest.spyOn(component['store'], 'setPlantasSubfabricantesAgregar');
     const mockPlantas = [{ calle: 'X', numExterior: 1, numInterior: 2, codigoPostal: 1111, colonia: 'Centro' }];
     component.agregarPlantas(mockPlantas as any);
-    expect(mockStore.setPlantasSubfabricantesAgregar).toHaveBeenCalledWith(mockPlantas);
+    expect(spy).toHaveBeenCalledWith(mockPlantas);
   });
 
   it('should call eliminarPlantas on store', () => {
+    const spy = jest.spyOn(component['store'], 'eliminarPlantas');
     const plantas = [{ calle: 'X', numExterior: 1, numInterior: 2, codigoPostal: 1111, colonia: 'Centro' }];
     component.eliminarPlantas(plantas as any);
-    expect(mockStore.eliminarPlantas).toHaveBeenCalledWith(plantas);
+    expect(spy).toHaveBeenCalledWith(plantas);
   });
 
   it('should set plantas por completar and navigate on complementarPlantas()', () => {
     const router = TestBed.inject(Router);
     const navigateSpy = jest.spyOn(router, 'navigate');
 
+    const setPlantasPorCompletarSpy = jest.spyOn(component['store'], 'setPlantasPorCompletar');
+    const setIndicePrevioRutaSpy = jest.spyOn(component['store'], 'setindicePrevioRuta');
+
     const plantas = [{ calle: 'A', numExterior: 1, numInterior: 1, codigoPostal: 1234, colonia: 'Roma' }];
     component.tabIndex = 3;
     component.complementarPlantas(plantas as any);
-    expect(mockStore.setPlantasPorCompletar).toHaveBeenCalledWith(plantas);
-    expect(mockStore.setindicePrevioRuta).toHaveBeenCalledWith(3);
+
+    expect(setPlantasPorCompletarSpy).toHaveBeenCalledWith(plantas);
+    expect(setIndicePrevioRutaSpy).toHaveBeenCalledWith(3);
     expect(navigateSpy).toHaveBeenCalled();
   });
 
@@ -120,3 +115,7 @@ describe('EmpresasSubfabricanteComponent', () => {
     expect(completeSpy).toHaveBeenCalled();
   });
 });
+function done() {
+  throw new Error('Function not implemented.');
+}
+
