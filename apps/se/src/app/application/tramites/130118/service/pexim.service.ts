@@ -1,8 +1,7 @@
+import { Solicitud130118State, Tramite130118Store } from '../estados/tramites/tramite130118.store';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-// import { RespuestaCatalogos } from '../../../models/shared/catalogos.model';
-import { Solicitud130118State, Tramite130118Store } from '../estados/tramites/tramite130118.store';
 import { RespuestaCatalogos } from '@libs/shared/data-access-user/src/core/models/shared/catalogos.model';
 
 /**

@@ -243,27 +243,27 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         clasifiRegimen: [{ value: this.solicitudState?.clasifiRegimen, disabled: true }]
       }),
       datosMercancia: this.fb.group({
-        valueTA: [{ value: this.solicitudState?.valueTA}, [Validators.maxLength(1000), Validators.pattern(/^[^~`^]*$/)]],
+        valueTA: [this.solicitudState?.valueTA,[Validators.maxLength(1000), Validators.pattern(/^[^~`^]*$/)]],
         fraccionArancelaria: [this.solicitudState?.fraccionArancelaria, Validators.required],
         nico: [this.solicitudState?.nico, Validators.required],
         unidadMedidaTarifaria: [this.solicitudState?.unidadMedidaTarifaria, Validators.required],
-        cantidadTarifaria: [{ value: this.solicitudState?.cantidadTarifaria, disabled: true }, [Validators.min(0), Validators.max(999999999.99), Validators.pattern(REGEX_ONCE_ENTEROS_DOS_DECIMALES)]],
-        valorFacturaUSD: [{ value: this.solicitudState?.valorFacturaUSD, disabled: true }, [Validators.min(0), Validators.max(999999999.999), Validators.pattern(REGEX_ONCE_ENTEROS_TRES_DECIMALES)]],
-        precioUnitarioUSD: [{ value: this.solicitudState?.precioUnitarioUSD, disabled: true }],
+        cantidadTarifaria: [this.solicitudState?.cantidadTarifaria, [Validators.min(0), Validators.max(999999999.99), Validators.pattern(REGEX_ONCE_ENTEROS_DOS_DECIMALES)]],
+        valorFacturaUSD: [this.solicitudState?.valorFacturaUSD, [Validators.min(0), Validators.max(999999999.999), Validators.pattern(REGEX_ONCE_ENTEROS_TRES_DECIMALES)]],
+        precioUnitarioUSD: [ { value: this.solicitudState?.precioUnitarioUSD, disabled: true }],
         paisOrigen: [this.solicitudState?.paisOrigen, Validators.required],
         paisDestino: [this.solicitudState?.paisDestino, Validators.required],
-        lote: [{ value: this.solicitudState?.lote, disabled: true }, [Validators.maxLength(60)]],
+        lote: [this.solicitudState?.lote, [Validators.maxLength(60)]],
         fechaSalida: [this.solicitudState?.fechaSalida, [Validators.required]],
-        observaciones: [{ value: this.solicitudState?.observaciones, disabled: true }, [Validators.maxLength(250)]],
+        observaciones: [this.solicitudState?.observaciones, [Validators.maxLength(250)]],
         observacionMerc: this.solicitudState?.observacionMerc
       }),
       datosProducto: this.fb.group({
-        tipoPersona: [{ value: this.solicitudState?.tipoPersona, disabled: true }],
+        tipoPersona: [this.solicitudState?.tipoPersona],
         nombre: [this.solicitudState?.nombre, [Validators.required, Validators.maxLength(200)]],
         apellidoPaterno: [this.solicitudState?.apellidoPaterno, [Validators.required, Validators.maxLength(200)]],
         apellidoMaterno: [this.solicitudState?.apellidoMaterno, [Validators.maxLength(200)]],
         razonSocial: [{ value: this.solicitudState?.razonSocial, disabled: true }, [Validators.maxLength(250)]],
-        domicilio: [{ value: this.solicitudState?.domicilio, disabled: true }, [Validators.maxLength(1000)]]
+        domicilio: [this.solicitudState?.domicilio, [Validators.maxLength(1000)]]
       }),
       registroFederal: this.fb.group({
         estado: [this.solicitudState?.estado, Validators.required],
