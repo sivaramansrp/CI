@@ -1,21 +1,59 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
+// @ts-nocheck
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { PasoUnoComponent } from './paso-uno.component';
+import { By } from '@angular/platform-browser';
+import { Observable, of as observableOf, throwError } from 'rxjs';
 
+import { Component } from '@angular/core';
+import { PasoUnoComponent } from './paso-uno.component';
+import { ImmerModificacionService } from '../../service/immer-modificacion.service';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { Tramite80306Store } from '../../estados/tramite80306.store';
+
+@Injectable()
+class MockImmerModificacionService {}
+
+@Injectable()
+class MockTramite80306Store {}
+
+@Directive({ selector: '[myCustom]' })
+class MyCustomDirective {
+  @Input() myCustom;
+}
+
+@Pipe({name: 'translate'})
+class TranslatePipe implements PipeTransform {
+  transform(value) { return value; }
+}
+
+@Pipe({name: 'phoneNumber'})
+class PhoneNumberPipe implements PipeTransform {
+  transform(value) { return value; }
+}
+
+@Pipe({name: 'safeHtml'})
+class SafeHtmlPipe implements PipeTransform {
+  transform(value) { return value; }
+}
 
 describe('PasoUnoComponent', () => {
-  let fixture: ComponentFixture<PasoUnoComponent>;
-  let component: { ngOnDestroy: () => void; ngAfterViewInit: () => void; seleccionaTab: (arg0: {}) => void; continuarEvento: { emit?: any; }; continuar: () => void; };
+  let fixture;
+  let component;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule, PasoUnoComponent ],
-      declarations: [       
+      imports: [  PasoUnoComponent, FormsModule, ReactiveFormsModule ],
+      declarations: [
+        TranslatePipe, PhoneNumberPipe, SafeHtmlPipe,
+        MyCustomDirective
       ],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
       providers: [
-
+        { provide: ImmerModificacionService, useClass: MockImmerModificacionService },
+        ConsultaioQuery,
+        { provide: Tramite80306Store, useClass: MockTramite80306Store }
       ]
     }).overrideComponent(PasoUnoComponent, {
 
@@ -31,6 +69,13 @@ describe('PasoUnoComponent', () => {
 
   it('should run #constructor()', async () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should run #ngOnInit()', async () => {
+    component.consultaioQuery = component.consultaioQuery || {};
+    component.consultaioQuery.selectConsultaioState$ = observableOf({});
+    component.ngOnInit();
+
   });
 
   it('should run #ngAfterViewInit()', async () => {

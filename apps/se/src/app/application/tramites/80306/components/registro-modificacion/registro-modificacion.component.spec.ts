@@ -1,6 +1,12 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
+// @ts-nocheck
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { By } from '@angular/platform-browser';
+import { Observable, of as observableOf, throwError } from 'rxjs';
+
+import { Component } from '@angular/core';
 import { RegistroModificacionComponent } from './registro-modificacion.component';
 import { Router } from '@angular/router';
 import { ImmerModificacionService } from '../../service/immer-modificacion.service';
@@ -13,15 +19,36 @@ class MockRouter {
 @Injectable()
 class MockImmerModificacionService {}
 
+@Directive({ selector: '[myCustom]' })
+class MyCustomDirective {
+  @Input() myCustom;
+}
+
+@Pipe({name: 'translate'})
+class TranslatePipe implements PipeTransform {
+  transform(value) { return value; }
+}
+
+@Pipe({name: 'phoneNumber'})
+class PhoneNumberPipe implements PipeTransform {
+  transform(value) { return value; }
+}
+
+@Pipe({name: 'safeHtml'})
+class SafeHtmlPipe implements PipeTransform {
+  transform(value) { return value; }
+}
+
 describe('RegistroModificacionComponent', () => {
-  let fixture: ComponentFixture<RegistroModificacionComponent>;
-  let component: { ngOnDestroy: () => void; llenarLaTabla: jest.Mock<any, any, any>; ngOnInit: () => void; destroyNotifier$: { next?: any; complete?: any; }; };
+  let fixture;
+  let component;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule, RegistroModificacionComponent ],
+      imports: [ RegistroModificacionComponent, FormsModule, ReactiveFormsModule ],
       declarations: [
-        
+        TranslatePipe, PhoneNumberPipe, SafeHtmlPipe,
+        MyCustomDirective
       ],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
       providers: [
@@ -58,4 +85,15 @@ describe('RegistroModificacionComponent', () => {
     expect(component.destroyNotifier$.next).toHaveBeenCalled();
     expect(component.destroyNotifier$.complete).toHaveBeenCalled();
   });
+
+  it('should run #valorDeAlternancia()', async () => {
+    component.router = component.router || {};
+    component.router.url = {
+      includes: function() {}
+    };
+    component.router.navigate = jest.fn();
+    component.valorDeAlternancia();
+    expect(component.router.navigate).toHaveBeenCalled();
+  });
+
 });

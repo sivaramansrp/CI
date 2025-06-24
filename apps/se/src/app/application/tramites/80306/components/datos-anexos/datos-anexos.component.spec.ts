@@ -1,72 +1,83 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DatosAnexosComponent } from './datos-anexos.component';
+import { of, throwError } from 'rxjs';
+import { Anexo } from '../../estados/models/plantas-consulta.model';
+import { ToastrModule, ToastrService } from 'ngx-toastr';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ImmerModificacionService } from '../../service/immer-modificacion.service';
-import { ToastrService } from 'ngx-toastr';
-import { of as observableOf } from 'rxjs';
-
-@Injectable()
-class MockImmerModificacionService {}
-
-@Injectable()
-class MockToastrService {
-  success(message?: string, title?: string): void {}
-  error(message?: string, title?: string): void {}
-  info(message?: string, title?: string): void {}
-  warning(message?: string, title?: string): void {}
-}
 
 describe('DatosAnexosComponent', () => {
+  let component: DatosAnexosComponent;
   let fixture: ComponentFixture<DatosAnexosComponent>;
-  let component: { ngOnDestroy: () => void; solicitudService: { obtenerAnexo?: any; }; toastr: { error?: any; }; obteneComplimentaria: () => void; destroyNotifier$: { next?: any; complete?: any; }; };
+  let mockImmerModificacionService: jest.Mocked<ImmerModificacionService>;
+  let toastrService: jest.Mocked<ToastrService>;
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule, DatosAnexosComponent ],
-      declarations: [
-        
-      ],
-      schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
+  const dummyAnexos: Anexo[] = [
+    {
+      tipoFraccion: 'Exportación',
+      fraccionArancelariaExportacion: '1234.56.78',
+      fraccionArancelariaImportacion: '8765.43.21',
+      descripcion: 'Descripción de prueba',
+      valoresAnteriores: 'Valor 1',
+    },
+  ];
+
+  beforeEach(async () => {
+    mockImmerModificacionService = {
+      obtenerAnexo: jest.fn(),
+    } as unknown as jest.Mocked<ImmerModificacionService>;
+
+    toastrService = {
+      error: jest.fn(),
+    } as unknown as jest.Mocked<ToastrService>;
+
+    await TestBed.configureTestingModule({
+      imports: [DatosAnexosComponent, HttpClientTestingModule, ToastrModule.forRoot()],
       providers: [
-        { provide: ImmerModificacionService, useClass: MockImmerModificacionService },
-        ToastrService
-      ]
-    }).overrideComponent(DatosAnexosComponent, {
-
-      set: { providers: [{ provide: ImmerModificacionService, useClass: MockImmerModificacionService },
-{ provide: ToastrService, useClass: MockToastrService }] }    
+        { provide: ImmerModificacionService, useValue: mockImmerModificacionService },
+        { provide: ToastrService, useValue: toastrService },
+        {
+          provide: '_HttpClient',
+          useValue: {} // Mock implementation of _HttpClient
+        }
+      ],
     }).compileComponents();
+
     fixture = TestBed.createComponent(DatosAnexosComponent);
-    component = fixture.debugElement.componentInstance;
+    component = fixture.componentInstance;
+    
   });
 
-  afterEach(() => {
-    component.ngOnDestroy = function() {};
-    fixture.destroy();
-  });
-
-  it('should run #constructor()', async () => {
+  it('should create the component', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should run #obteneComplimentaria()', async () => {
-    component.solicitudService = component.solicitudService || {};
-    component.solicitudService.obtenerAnexo = jest.fn().mockReturnValue(observableOf({}));
-    component.toastr = component.toastr || {};
-    component.toastr.error = jest.fn();
-    component.obteneComplimentaria();
-    expect(component.solicitudService.obtenerAnexo).toHaveBeenCalled();
-    expect(component.toastr.error).toHaveBeenCalled();
+  it('should call obtenerAnexo and populate datosAnexo and datosImportacion', () => {
+    mockImmerModificacionService.obtenerAnexo.mockReturnValue(of(dummyAnexos));
+    
+    fixture.detectChanges(); // triggers ngOnInit, which calls obteneComplimentaria
+
+    expect(mockImmerModificacionService.obtenerAnexo).toHaveBeenCalled();
+    expect(component.datosAnexo).toEqual(dummyAnexos);
+    expect(component.datosImportacion).toEqual(dummyAnexos);
   });
 
-  it('should run #ngOnDestroy()', async () => {
-    component.destroyNotifier$ = component.destroyNotifier$ || {};
-    component.destroyNotifier$.next = jest.fn();
-    component.destroyNotifier$.complete = jest.fn();
+  it('should handle error when obtenerAnexo fails', () => {
+    mockImmerModificacionService.obtenerAnexo.mockReturnValue(throwError(() => new Error('Error')));
+    
+    fixture.detectChanges(); // triggers ngOnInit, which calls obteneComplimentaria
+
+    expect(mockImmerModificacionService.obtenerAnexo).toHaveBeenCalled();
+    expect(toastrService.error).toHaveBeenCalledWith('Error al cargar los anexos');
+  });
+
+  it('should clean up subscriptions on destroy', () => {
+    const spy = jest.spyOn(component['destroyNotifier$'], 'next');
+    const spyComplete = jest.spyOn(component['destroyNotifier$'], 'complete');
+
     component.ngOnDestroy();
-    expect(component.destroyNotifier$.next).toHaveBeenCalled();
-    expect(component.destroyNotifier$.complete).toHaveBeenCalled();
-  });
 
+    expect(spy).toHaveBeenCalled();
+    expect(spyComplete).toHaveBeenCalled();
+  });
 });
