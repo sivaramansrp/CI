@@ -1,4 +1,4 @@
-import { Anexo, Bitacora, Complimentaria, DatosDeLaTabla, Empresas, Federetarios, FraccionSensible, Operacions, Plantas, RespuestaConsulta, Servicios } from '../models/datos-tramite.model';
+import { Anexo, Bitacora, Complimentaria, DatosCertificacion, DatosDeLaTabla, DatosModificacion, Empresas, Federetarios, FraccionSensible, Operacions, Plantas, RespuestaConsulta, Servicios } from '../models/datos-tramite.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -32,8 +32,8 @@ export class SolicitudService {
   /**
    * Obtiene los datos de modificación desde un archivo JSON local.
    */
-  getDatosModificacion() {
-    return this.http.get(`assets/json/80316/modificacion.json`);
+  getDatosModificacion(): Observable<Pick<DatosModificacion, 'rfc' | 'federal' | 'tipo' | 'programa' | 'actividadActual'>> {
+    return this.http.get<Pick<DatosModificacion, 'rfc' | 'federal' | 'tipo' | 'programa' | 'actividadActual'>>(`assets/json/80316/modificacion.json`);
   }
 
   /**
@@ -177,7 +177,7 @@ export class SolicitudService {
   /**
    * Obtiene los datos de certification desde un archivo JSON local.
    */
-  getDatosCertificacion() {
-    return this.http.get(`assets/json/80316/certification.json`);
+  getDatosCertificacion(): Observable<DatosCertificacion> {
+    return this.http.get<DatosCertificacion>(`assets/json/80316/certification.json`);
   }
 }

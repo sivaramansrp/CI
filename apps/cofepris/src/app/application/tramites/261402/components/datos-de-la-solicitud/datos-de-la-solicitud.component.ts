@@ -2,8 +2,10 @@
  * Componente que representa la sección de datos de la solicitud.
  * Este componente es standalone y utiliza ReactiveFormsModule y CommonModule.
  */
+import { Subject, map } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { OnDestroy } from '@angular/core';
@@ -12,12 +14,10 @@ import { PropietarioComponent } from '../../../../shared/components/propietario/
 import { ReactiveFormsModule } from '@angular/forms';
 import { Solicitud261402State } from '../../../../estados/tramites/tramite261402.store';
 import { SolicitudModificacionPermisoInternacionService } from '../../services/solicitud-modificacion-permiso-internacion.service';
-import { Subject } from 'rxjs';
 import { Tramite261402Query } from '../../../../estados/queries/tramite261402.query';
 import { Tramite261402Store } from '../../../../estados/tramites/tramite261402.store';
 import { Validators } from '@angular/forms';
 import { takeUntil } from 'rxjs';
-
 /**
  * Componente que representa la sección de datos de la solicitud.
  * Este componente es standalone y utiliza ReactiveFormsModule y CommonModule.
@@ -49,7 +49,10 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * Estado actual de la solicitud.
    */
   private seccionState!: Solicitud261402State;
-
+  /**
+   * Indica si el formulario debe mostrarse solo en modo lectura.
+   */
+  esFormularioSoloLectura: boolean = false;
   /**
    * Constructor del componente.
    * Param fb FormBuilder para la creación de formularios reactivos.
@@ -61,9 +64,18 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private tramite261402Store: Tramite261402Store,
     private tramite261402Query: Tramite261402Query,
-    private service: SolicitudModificacionPermisoInternacionService
+    private service: SolicitudModificacionPermisoInternacionService,
+    private consultaioQuery: ConsultaioQuery
   ) {
-    // Constructor
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroy$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
   }
 
   /**
@@ -71,11 +83,15 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * Suscribe al estado de la solicitud y crea el formulario.
    */
   ngOnInit(): void {
-    this.tramite261402Query.selectSolicitud$?.pipe(takeUntil(this.destroy$))
+
+    this.inicializarEstadoFormulario();
+   
+  }
+    obtenerEstadoSolicitud(): void {
+     this.tramite261402Query.selectSolicitud$?.pipe(takeUntil(this.destroy$))
       .subscribe((data: Solicitud261402State) => {
         this.seccionState = data;
       });
-    this.crearFormulario();
   }
 
   /**
@@ -101,8 +117,41 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * Crea el formulario reactivo con los campos necesarios.
    */
   crearFormulario(): void {
+    this. obtenerEstadoSolicitud();
     this.formulario = this.fb.group({
       observaciones: [this.seccionState?.observaciones, [Validators.required]],
     });
   }
+
+  
+   /**
+ * Inicializa el estado de los formularios según el modo de solo lectura.
+ *
+ * Si el formulario está en modo solo lectura (`esFormularioSoloLectura`), llama a `guardarDatosFormulario()`
+ * para deshabilitar todos los controles. En caso contrario, inicializa los formularios normalmente.
+ */
+   inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario(); 
+    } else {
+      this.crearFormulario();
+    }
+  }
+
+    /**
+ * Guarda y actualiza el estado de los formularios según el modo de solo lectura.
+ *
+ * Inicializa los formularios y luego los deshabilita si el formulario está en modo solo lectura,
+ * o los habilita si está en modo edición.
+ */
+  guardarDatosFormulario(): void {
+    this.crearFormulario();
+    if (this.esFormularioSoloLectura) {
+      this.formulario.disable();
+     
+    } else{
+      this.formulario.enable();
+     
+    } 
+}
 }

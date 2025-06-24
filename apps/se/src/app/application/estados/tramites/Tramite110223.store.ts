@@ -1,6 +1,6 @@
 import { Store, StoreConfig } from '@datorama/akita';
-import { Injectable } from '@angular/core';
 import { AgregarDatosProductorFormulario } from '../../tramites/110223/models/certificado-origen.model';
+import { Injectable } from '@angular/core';
 
 /** CONSTANTES PARA VALORES PREDEFINIDOS */
 const VALOR_POR_DEFECTO = '';

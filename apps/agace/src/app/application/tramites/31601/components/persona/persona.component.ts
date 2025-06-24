@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ConsultaioQuery, TituloComponent } from '@ng-mf/data-access-user';
-import { Persona, Personas } from '@libs/shared/data-access-user/src/core/models/31601/servicios-pantallas.model';
+import { Personas } from '@libs/shared/data-access-user/src/core/models/31601/servicios-pantallas.model';
+
 import { Subject, Subscription, map,takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src/core/models/shared/configuracion-columna.model';

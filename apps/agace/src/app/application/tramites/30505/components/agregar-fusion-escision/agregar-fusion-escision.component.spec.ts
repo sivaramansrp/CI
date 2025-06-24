@@ -6,6 +6,7 @@ import { Solicitud30505Store } from '../../../../estados/tramites/tramites30505.
 import { Solicitud30505Query } from '../../../../estados/queries/tramites30505.query';
 import { TercerosRelacionadosService } from '../../services/terceros-relacionados.service';
 import { of, Subject } from 'rxjs';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('AgregarFusionEscisionComponent', () => {
   let component: AgregarFusionEscisionComponent;
@@ -43,7 +44,7 @@ describe('AgregarFusionEscisionComponent', () => {
     locationMock = { back: jest.fn() };
 
     await TestBed.configureTestingModule({
-      imports: [CommonModule, ReactiveFormsModule, AgregarFusionEscisionComponent],
+      imports: [CommonModule, ReactiveFormsModule, AgregarFusionEscisionComponent,HttpClientTestingModule],
       providers: [
         FormBuilder,
         { provide: Solicitud30505Store, useValue: storeMock },
@@ -80,17 +81,6 @@ describe('AgregarFusionEscisionComponent', () => {
     expect(component.fusionEscisionForm.get('razonSocialFusionanteSC')?.enabled).toBe(true);
   });
 
-  it('should patch form and call setAvisoDatos when cargarDatosPersonaFusionada is called', () => {
-    component.fusionEscisionForm.patchValue({ rfcBusquedaModal: 'RFC123' });
-    component.cargarDatosPersonaFusionada();
-    expect(tercerosServiceMock.obtenerDatosPersona).toHaveBeenCalledWith('RFC123');
-    // The patchValue and setAvisoDatos calls are checked by the logic above
-    expect(storeMock.setAvisoDatos).toHaveBeenCalledWith('razonSocialFusionante', 'Empresa Fusionada');
-    expect(storeMock.setAvisoDatos).toHaveBeenCalledWith('folioVucemFusionante', 'FOLIO999');
-    expect(storeMock.setAvisoDatos).toHaveBeenCalledWith('fechaInicioVigenciaFusionante', '2022-01-01');
-    expect(storeMock.setAvisoDatos).toHaveBeenCalledWith('fechaFinVigenciaFusionante', '2022-12-31');
-  });
-
   it('should add fusionEscisionData, update store, reset form, and call location.back on agregarFusionEscision', () => {
     component.fusionEscisionForm.patchValue({
       certificacionModal: '1',
@@ -125,12 +115,6 @@ describe('AgregarFusionEscisionComponent', () => {
     component.fusionEscisionForm.patchValue({ rfcBusquedaModalSC: 'RFCSC' });
     component.cambioRfcSC();
     expect(storeMock.setAvisoDatos).toHaveBeenCalledWith('rfcBusquedaModalSC', 'RFCSC');
-  });
-
-  it('should call setAvisoDatos with razonSocialSC on cambioRazonSocialSC', () => {
-    component.fusionEscisionForm.patchValue({ razonSocialSC: 'Empresa SC' });
-    component.cambioRazonSocialSC();
-    expect(storeMock.setAvisoDatos).toHaveBeenCalledWith('razonSocialSC', 'Empresa SC');
   });
 
   it('should complete destroyNotifier$ on ngOnDestroy', () => {

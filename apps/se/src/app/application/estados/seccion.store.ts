@@ -33,7 +33,7 @@ export class SeccionStore extends Store<SeccionState> {
    * Guarda un elemento por cada sección que se encuentre
    * @param seccion validacion
    */
-  public establecerSeccion(seccion: boolean[]) {
+  public establecerSeccion(seccion: boolean[]):void {
     this.update(state => ({
       ...state,
       seccion,
@@ -44,7 +44,7 @@ export class SeccionStore extends Store<SeccionState> {
    * Agrega elementos por cada seccion indicando si el formulario es válido o no
    * @param formaValida 
    */
-  public establecerFormaValida(formaValida: boolean[]) {
+  public establecerFormaValida(formaValida: boolean[]):void {
     this.update(state => ({
       ...state,
       formaValida,
@@ -54,7 +54,7 @@ export class SeccionStore extends Store<SeccionState> {
   /**
    * Limpia los datos de la sección
    */
-  public limpiarSeccion() {
+  public limpiarSeccion():void {
     this.reset();
   }
 }

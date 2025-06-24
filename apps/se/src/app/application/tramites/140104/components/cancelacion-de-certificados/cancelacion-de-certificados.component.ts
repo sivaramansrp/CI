@@ -216,14 +216,14 @@ export class CancelacionDeCertificadosComponent implements OnInit, OnDestroy {
   /**
    * Ejecuta la acción de búsqueda y notifica a otros componentes a través del servicio de mensajes.
    */
-  public busqueda(event: Event): void {
+  public busqueda(_event: Event): void {
     this.servicioDeMensajesService.enviarMensaje(true);
   }
 
   /**
    * Ejecuta la acción de buscar registros y muestra los datos precargados en las tablas.
    */
-  public buscar(event: Event): void {
+  public buscar(_event: Event): void {
     this.mostrarDetalleDelCupo = true;
     this.cuposDisponiblesTabla = [cuposDisponiblesDatos as CuposDisponibles];
     this.CertificadosDisponiblesTabla = [certificadosDisponiblesDatos as CertificadosDisponibles];
@@ -233,7 +233,7 @@ export class CancelacionDeCertificadosComponent implements OnInit, OnDestroy {
   /**
    * Maneja la selección de registros. Envía un mensaje de selección activa y limpia la intención de devolver facturas.
    */
-  public seleccionar(event: Event): void {
+  public seleccionar(_event: Event): void {
     this.servicioDeMensajesService.enviarMensaje(true);
     this.servicioDeMensajesService.enviarDevolverFacturasMensaje(false);
   }
@@ -241,7 +241,7 @@ export class CancelacionDeCertificadosComponent implements OnInit, OnDestroy {
   /**
    * Marca los certificados seleccionados como listos para devolución.
    */
-  public devlover(event: Event): void {
+  public devlover(_event: Event): void {
     this.servicioDeMensajesService.enviarMensaje(true);
     this.servicioDeMensajesService.enviarDevolverFacturasMensaje(true);
   }

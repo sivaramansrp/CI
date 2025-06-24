@@ -44,45 +44,45 @@ export function createInitialState(): Solicitud140103State {
     }
 
 
-    public setRegimen(regimen: string) {
+    public setRegimen(regimen: string):void {
         this.update((state) => ({
             ...state,
             regimen,
         }));
     }
-    public setMecanismo(mecanismo: string) {
+    public setMecanismo(mecanismo: string):void {
         this.update((state) => ({
             ...state,
             mecanismo,
         }));
     }
-    public setTratado(tratado: string) {
+    public setTratado(tratado: string):void {
         this.update((state) => ({
             ...state,
             tratado,
         }));
     }
 
-    public setProducto(producto: string) {
+    public setProducto(producto: string):void {
         this.update((state) => ({
             ...state,
             producto,
         }));
     }
-    public setSubproducto(subproducto: string) {
+    public setSubproducto(subproducto: string):void {
         this.update((state) => ({
             ...state,
             subproducto,
         }));
     }
-    public setRepresentacion(representacion: string) {
+    public setRepresentacion(representacion: string):void {
         this.update((state) => ({
             ...state,
             representacion,
         }));
     }
 
- public setCantidad(cantidad: string) {
+ public setCantidad(cantidad: string):void {
     this.update((state) => ({
         ...state,
         cantidad,
