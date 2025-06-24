@@ -7,6 +7,8 @@ import {
 } from '../../model/cancelaciones-certificado.model';
 import {
   CatalogoSelectComponent,
+  ConsultaioQuery,
+  ConsultaioState,
   TablaDinamicaComponent,
   TablaSeleccion,
   TituloComponent,
@@ -19,7 +21,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Subject, map, takeUntil } from 'rxjs';
+import { ReplaySubject, Subject, map, takeUntil } from 'rxjs';
 import {
   TABLA_DE_DATOS_CUPOS,
   TABLA_DE_DATOS_DISPONIBLES,
