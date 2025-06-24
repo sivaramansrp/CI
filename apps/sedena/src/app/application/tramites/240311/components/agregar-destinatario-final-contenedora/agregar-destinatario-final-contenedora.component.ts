@@ -1,8 +1,9 @@
+import { Component,EventEmitter, Output } from '@angular/core';
 import { AgregarDestinatarioFinalComponent } from '../../../../shared/components/agregar-destinatario-final/agregar-destinatario-final.component';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
 import { DestinoFinal } from '../../../../shared/models/terceros-relacionados.model';
 import { Tramite240311Store } from '../../estados/tramite240311Store.store';
+
 
 
 /**
@@ -19,6 +20,7 @@ import { Tramite240311Store } from '../../estados/tramite240311Store.store';
   styleUrl: './agregar-destinatario-final-contenedora.component.scss',
 })
 export class AgregarDestinatarioFinalContenedoraComponent {
+  @Output() cerrar = new EventEmitter<void>();
   /**
    * Constructor del componente.
    *
