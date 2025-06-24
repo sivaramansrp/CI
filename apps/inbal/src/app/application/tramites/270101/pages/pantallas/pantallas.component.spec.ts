@@ -136,11 +136,67 @@ describe('PantallasComponent', () => {
     expect(component.indice).toBe(1);
   });
 
-  it('should set itinerarioError to true if aduanaArray has 1 or fewer items', () => {
+  it('should set itinerarioError to true if aduanaArray is empty and forma is valid', () => {
     mockExportarIlustracionesService.aduanaArray = [];
     jest.spyOn(mockExportarIlustracionesService, 'getFormValidity').mockReturnValue(true);
+    component.itinerarioError = false;
     component.esElFormularioValido();
     expect(component.itinerarioError).toBe(true);
+  });
+
+  it('should set formaError to true if all forms are valid', () => {
+    jest.spyOn(mockExportarIlustracionesService, 'getFormValidity').mockReturnValue(true);
+    // No direct assignment to component.formaError since it's read-only
+    component.esElFormularioValido();
+    expect(component.formaError).toBe(true);
+  });
+
+  it('should set formaError to false if any form is invalid', () => {
+    jest.spyOn(mockExportarIlustracionesService, 'getFormValidity').mockReturnValue(false);
+   
+    component.esElFormularioValido();
+    expect(component.formaError).toBe(false);
+  });
+
+  it('should not set itinerarioError if aduanaArray has more than 1 item', () => {
+    mockExportarIlustracionesService.aduanaArray = [mockAduana, mockAduana];
+    jest.spyOn(mockExportarIlustracionesService, 'getFormValidity').mockReturnValue(true);
+    component.itinerarioError = false;
+    component.esElFormularioValido();
+    expect(component.itinerarioError).toBe(false);
+  });
+
+  it('should handle getValorIndice with accion not "cont"', () => {
+    const mockEvent: AccionBoton = { valor: 2, accion: 'otro' };
+    component.indice = 1;
+    component.getValorIndice(mockEvent);
+    expect(component.indice).toBe(1);
+  });
+
+  it('should handle getValorIndice with valor 1', () => {
+    const mockEvent: AccionBoton = { valor: 1, accion: 'cont' };
+    mockExportarIlustracionesService.aduanaArray = [mockAduana];
+    mockExportarIlustracionesService.datosDeSolicitudArray = [mockSolicitud];
+    jest.spyOn(mockExportarIlustracionesService, 'getFormValidity').mockReturnValue(true);
+    component.getValorIndice(mockEvent);
+    expect(component.indice).toBe(1);
+  });
+
+  it('should handle pestanaCambiado with undefined', () => {
+    component.indiceDePestanaSeleccionada = 2;
+    component.pestanaCambiado(undefined as any);
+    expect(component.indiceDePestanaSeleccionada).toBe(1);
+  });
+
+  it('should handle ngOnDestroy multiple times gracefully', () => {
+    component.ngOnDestroy();
+    expect(() => component.ngOnDestroy()).not.toThrow();
+  });
+
+  it('should handle getValorIndice with invalid event', () => {
+    component.indice = 1;
+    component.getValorIndice(undefined as any);
+    expect(component.indice).toBe(1);
   });
 
   it('should complete destroyNotifier$ on ngOnDestroy', () => {
@@ -159,7 +215,7 @@ describe('PantallasComponent', () => {
 
   it('should reset indiceDePestanaSeleccionada to 1 when valor is not 1', () => {
     component.indiceDePestanaSeleccionada = 3;
-    mockExportarIlustracionesService.aduanaArray = [mockAduana];
+    mockExportarIlustracionesService.aduanaArray = [mockAduana, mockAduana];
     mockExportarIlustracionesService.datosDeSolicitudArray = [mockSolicitud];
     jest.spyOn(mockExportarIlustracionesService, 'getFormValidity').mockReturnValue(true);
     const mockEvent: AccionBoton = { valor: 2, accion: 'cont' };
@@ -167,6 +223,6 @@ describe('PantallasComponent', () => {
     expect(component.indiceDePestanaSeleccionada).toBe(1);
   });
 
-
-
 });
+
+

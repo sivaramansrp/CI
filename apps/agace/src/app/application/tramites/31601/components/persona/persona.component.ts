@@ -1,14 +1,19 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ConsultaioQuery, TituloComponent } from '@ng-mf/data-access-user';
-import { Personas } from '@libs/shared/data-access-user/src/core/models/31601/servicios-pantallas.model';
-
-import { Subject, Subscription, map,takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src/core/models/shared/configuracion-columna.model';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
+import { OnDestroy } from '@angular/core';
+import { OnInit } from '@angular/core';
+import { Personas } from '@libs/shared/data-access-user/src/core/models/31601/servicios-pantallas.model';
 import { ServiciosPantallaService } from '@libs/shared/data-access-user/src/core/services/31601/servicios-pantalla.service';
+import { Subject } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
+import { TituloComponent } from '@ng-mf/data-access-user';
+import { map } from 'rxjs';
+import { takeUntil } from 'rxjs';
 
 /**
  * Componente `PersonaComponent`.

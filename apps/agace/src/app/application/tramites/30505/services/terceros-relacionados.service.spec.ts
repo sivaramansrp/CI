@@ -87,35 +87,6 @@ describe('TercerosRelacionadosService', () => {
     req.flush(mockResponse);
   });
 
-  beforeEach(() => {
-    tramiteStoreMock = {
-      setNumeroEstablecimiento: jest.fn(),
-      setDescClobGenerica: jest.fn(),
-      setActividadProductiva: jest.fn(),
-      setFechaInicioVigencia: jest.fn(),
-      setFechaFinVigencia: jest.fn(),
-      setCheckboxDatos: jest.fn(),
-      setFolioAcuse: jest.fn(),
-      setTipoSolicitudPexim: jest.fn(),
-      setCapacidadAlmacenamiento: jest.fn(),
-      setTipoCaat: jest.fn(),
-      setTipoProgFomExp: jest.fn(),
-      setTipoTransito: jest.fn(),
-      setMedioTransporte: jest.fn(),
-      setNombreBanco: jest.fn(),
-      setNomOficialAutorizado: jest.fn(),
-      setObservaciones: jest.fn(),
-      setEmpresaControladora: jest.fn(),
-      setDescripcionLugarEmbarque: jest.fn(),
-      updateFusionDatos: jest.fn(),
-      updateAgenteDatos: jest.fn(),
-      setAvisoDatos: jest.fn(),
-      setAviso: jest.fn()
-    };
-
-    service = TestBed.inject(TercerosRelacionadosService);
-  });
-
   it('should call all store methods with correct values in setDatosFormulario', () => {
     const datos: any = {
       numeroEstablecimiento: '1',

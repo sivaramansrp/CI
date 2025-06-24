@@ -1,36 +1,31 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
-import { CommonModule } from '@angular/common';
-import { of, Subject } from 'rxjs';
-import { TramitePagoBancoQuery } from '../../estados/queries/pago-banco.query';
-import { TramitePagoBancoStore } from '../../estados/stores/pago-banco.store';
-import { PagoBancoService } from '../../services/pago-banco.service';
 import { PagoDeDerechosBancoComponent } from './pago-de-derechos-banco.component';
-import {
-  CatalogoSelectComponent,
-  TituloComponent,
-} from '@libs/shared/data-access-user/src';
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { of, Subject } from 'rxjs';
+import { TramitePagoBancoStore } from '../../estados/stores/pago-banco.store';
+import { TramitePagoBancoQuery } from '../../estados/queries/pago-banco.query';
+import { PagoBancoService } from '../../services/pago-banco.service';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 
 describe('PagoDeDerechosBancoComponent', () => {
   let component: PagoDeDerechosBancoComponent;
   let fixture: ComponentFixture<PagoDeDerechosBancoComponent>;
-  let tramitePagoBancoQuery: TramitePagoBancoQuery;
-  let tramitePagoBancoStore: TramitePagoBancoStore;
-  let service: PagoBancoService;
+  let mockTramitePagoBancoStore: any;
+  let mockTramitePagoBancoQuery: any;
+  let mockPagoBancoService: any;
+  let mockConsultaioQuery: any;
+
+  const solicitudStateMock = {
+    claveDeReferencia: '123456789',
+    cadenaDependencia: 'ABCDEFGHIJKLMN',
+    banco: 'BANCO1',
+    llaveDePago: 'LLAVE1234567890',
+    fechaPago: '2024-06-01',
+    importePago: '1000'
+  };
 
   beforeEach(async () => {
-    const mockTramitePagoBancoQuery = {
-      selectSolicitud$: of({
-        claveDeReferencia: 'testClave',
-        cadenaDependencia: 'testCadena',
-        banco: 'testBanco',
-        llaveDePago: 'testLlave',
-        fechaPago: '2025-03-28',
-        importePago: 1000,
-      }),
-    };
-
-    const mockTramitePagoBancoStore = {
+    mockTramitePagoBancoStore = {
       setClaveDeReferencia: jest.fn(),
       setCadenaDependencia: jest.fn(),
       setBanco: jest.fn(),
@@ -39,120 +34,151 @@ describe('PagoDeDerechosBancoComponent', () => {
       setImportePago: jest.fn(),
     };
 
-    const mockPagoBancoService = {
-      getBancoData: jest
-        .fn()
-        .mockReturnValue(of([{ id: 1, descripcion: 'Banco 1' }])),
+    mockTramitePagoBancoQuery = {
+      selectSolicitud$: of(solicitudStateMock)
+    };
+
+    mockPagoBancoService = {
+      consultarDatosBanco: jest.fn().mockReturnValue(of([{ id: 1, nombre: 'Banco 1' }]))
+    };
+
+    mockConsultaioQuery = {
+      selectConsultaioState$: of({ readonly: false })
     };
 
     await TestBed.configureTestingModule({
-      imports: [
-        CommonModule,
-        ReactiveFormsModule,
-        PagoDeDerechosBancoComponent, // Import the standalone component here
-        TituloComponent,
-        CatalogoSelectComponent,
-      ],
+      imports: [ReactiveFormsModule, PagoDeDerechosBancoComponent],
       providers: [
         FormBuilder,
-        { provide: TramitePagoBancoQuery, useValue: mockTramitePagoBancoQuery },
         { provide: TramitePagoBancoStore, useValue: mockTramitePagoBancoStore },
+        { provide: TramitePagoBancoQuery, useValue: mockTramitePagoBancoQuery },
         { provide: PagoBancoService, useValue: mockPagoBancoService },
-      ],
+        { provide: ConsultaioQuery, useValue: mockConsultaioQuery }
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(PagoDeDerechosBancoComponent);
     component = fixture.componentInstance;
-
-    tramitePagoBancoQuery = TestBed.inject(TramitePagoBancoQuery);
-    tramitePagoBancoStore = TestBed.inject(TramitePagoBancoStore);
-    service = TestBed.inject(PagoBancoService);
-
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize formSolicitud with default values', () => {
+  it('should initialize bancoCatalogo', () => {
+    expect(component.bancoCatalogo.labelNombre).toBe('Banco');
+    expect(component.bancoCatalogo.required).toBe(true);
+    expect(component.bancoCatalogo.catalogos.length).toBe(1);
+  });
+
+  it('should initialize formSolicitud with correct values', () => {
     expect(component.formSolicitud).toBeDefined();
-    const formGroup = component.formSolicitud.get('datosImportadorExportador');
-    expect(formGroup?.get('claveDeReferencia')?.value).toBe('testClave');
-    expect(formGroup?.get('cadenaDependencia')?.value).toBe('testCadena');
-    expect(formGroup?.get('banco')?.value).toBe('testBanco');
-    expect(formGroup?.get('llaveDePago')?.value).toBe('testLlave');
-    expect(formGroup?.get('fechaPago')?.value).toBe('2025-03-28');
-    expect(formGroup?.get('importePago')?.value).toBe(1000);
+    expect(component.datosImportadorExportador.value.claveDeReferencia).toBe('123456789');
+    expect(component.datosImportadorExportador.value.cadenaDependencia).toBe('ABCDEFGHIJKLMN');
+    expect(component.datosImportadorExportador.value.banco).toBe('BANCO1');
+    expect(component.datosImportadorExportador.value.llaveDePago).toBe('LLAVE1234567890');
+    expect(component.datosImportadorExportador.value.fechaPago).toBe('2024-06-01');
+    expect(component.datosImportadorExportador.value.importePago).toBe('1000');
   });
 
-  it('should fetch banco data on initialization', () => {
-    expect(service.getBancoData).toHaveBeenCalled();
-    expect(component.bancoCatalogo.catalogos).toEqual([
-      { id: 1, descripcion: 'Banco 1' },
-    ]);
+  it('should call setValoresStore and update store', () => {
+    component.setValoresStore(component.datosImportadorExportador, 'claveDeReferencia', 'setClaveDeReferencia');
+    expect(mockTramitePagoBancoStore.setClaveDeReferencia).toHaveBeenCalledWith('123456789');
   });
 
-  it('should set valores in store when setValoresStore is called', () => {
-    const form = component.formSolicitud;
-    form
-      .get('datosImportadorExportador')
-      ?.get('claveDeReferencia')
-      ?.setValue('newClave');
-    component.setValoresStore(
-      form,
-      'datosImportadorExportador.claveDeReferencia',
-      'setClaveDeReferencia'
-    );
-    expect(tramitePagoBancoStore.setClaveDeReferencia).toHaveBeenCalledWith(
-      'newClave'
-    );
+  it('should patch fechaPago and update store on cambioFechaPago', () => {
+    const spy = jest.spyOn(component.datosImportadorExportador, 'patchValue');
+    component.cambioFechaPago('2024-06-10');
+    expect(spy).toHaveBeenCalledWith({ fechaPago: '2024-06-10' });
+    expect(mockTramitePagoBancoStore.setFechaPago).toHaveBeenCalledWith('2024-06-10');
   });
 
-  it('should unsubscribe from destroyNotifier$ on destroy', () => {
-    jest.spyOn(component['destroyNotifier$'], 'next');
-    jest.spyOn(component['destroyNotifier$'], 'complete');
+  it('should disable form on guardarDatosFormulario if readonly', () => {
+    component.esFormularioSoloLectura = true;
+    component.guardarDatosFormulario();
+    expect(component.formSolicitud.disabled).toBe(true);
+  });
 
+  it('should enable form on guardarDatosFormulario if not readonly', () => {
+    component.esFormularioSoloLectura = false;
+    component.guardarDatosFormulario();
+    expect(component.formSolicitud.enabled).toBe(true);
+  });
+
+  it('should reset datosImportadorExportador on borrarDatos', () => {
+    const spy = jest.spyOn(component.datosImportadorExportador, 'reset');
+    component.borrarDatos();
+    expect(spy).toHaveBeenCalled();
+  });
+
+  it('should clean up on ngOnDestroy', () => {
+    const spy = jest.spyOn((component as any).destroyNotifier$, 'next');
+    const spy2 = jest.spyOn((component as any).destroyNotifier$, 'complete');
     component.ngOnDestroy();
-
-    expect(component['destroyNotifier$'].next).toHaveBeenCalled();
-    expect(component['destroyNotifier$'].complete).toHaveBeenCalled();
+    expect(spy).toHaveBeenCalled();
+    expect(spy2).toHaveBeenCalled();
   });
 
-  it('should return datosImportadorExportador form group', () => {
-    const formGroup = component.datosImportadorExportador;
-    expect(formGroup).toBe(
-      component.formSolicitud.get('datosImportadorExportador')
-    );
+  describe('validarNumeroEntero', () => {
+    it('should return null for integer', () => {
+      const control = { value: '123' } as any;
+      expect(PagoDeDerechosBancoComponent.validarNumeroEntero(control)).toBeNull();
+    });
+    it('should return error for non-integer', () => {
+      const control = { value: '123.45' } as any;
+      expect(PagoDeDerechosBancoComponent.validarNumeroEntero(control)).toEqual({ notWholeNumber: true });
+    });
+    it('should return null for empty', () => {
+      const control = { value: '' } as any;
+      expect(PagoDeDerechosBancoComponent.validarNumeroEntero(control)).toBeNull();
+    });
   });
 
-  it('should handle empty banco data gracefully', () => {
-    jest.spyOn(service, 'getBancoData').mockReturnValue(of([]));
-    component.fetchBancoData();
-    expect(component.bancoCatalogo.catalogos).toEqual([]);
+  describe('validarFechaNoFutura', () => {
+    it('should return null for today', () => {
+      const today = new Date();
+      const control = { value: today.toISOString().split('T')[0] } as any;
+      expect(PagoDeDerechosBancoComponent.validarFechaNoFutura(control)).toBeNull();
+    });
+    it('should return error for future date', () => {
+      const future = new Date();
+      future.setDate(future.getDate() + 1);
+      const control = { value: future.toISOString().split('T')[0] } as any;
+      expect(PagoDeDerechosBancoComponent.validarFechaNoFutura(control)).toEqual({ fechaFuturaInvalida: true });
+    });
   });
 
-  it('should handle banco data correctly', () => {
-    const mockBancoData = [{ id: 2, descripcion: 'Banco 2' }];
-    jest.spyOn(service, 'getBancoData').mockReturnValue(of(mockBancoData));
-    component.fetchBancoData();
-    expect(component.bancoCatalogo.catalogos).toEqual(mockBancoData);
+  it('should call obtenerDatosBanco and update bancoCatalogo', () => {
+    const service = TestBed.inject(PagoBancoService);
+    jest.spyOn(service, 'consultarDatosBanco').mockReturnValue(of([{ id: 2, nombre: 'Banco 2', descripcion: 'Banco 2' }]));
+    component.obtenerDatosBanco();
+    expect(component.bancoCatalogo.catalogos).toEqual([{ id: 2, nombre: 'Banco 2', descripcion: 'Banco 2' }]);
   });
 
-  it('should handle null solicitudState gracefully', () => {
-    component.solicitudState = null as any;
+  it('should call inicializarEstadoFormulario and call guardarDatosFormulario if readonly', () => {
+    component.esFormularioSoloLectura = true;
+    const spy = jest.spyOn(component, 'guardarDatosFormulario');
+    component.inicializarEstadoFormulario();
+    expect(spy).toHaveBeenCalled();
+  });
+
+  it('should call inicializarEstadoFormulario and call inicializarFormulario if not readonly', () => {
+    component.esFormularioSoloLectura = false;
+    const spy = jest.spyOn(component, 'inicializarFormulario');
+    component.inicializarEstadoFormulario();
+    expect(spy).toHaveBeenCalled();
+  });
+
+  it('should call configurarFormularioPagoBanco in inicializarFormulario', () => {
+    const spy = jest.spyOn(component, 'configurarFormularioPagoBanco');
+    component.inicializarFormulario();
+    expect(spy).toHaveBeenCalled();
+  });
+
+  it('should call configurarFormularioPagoBanco in ngOnInit', () => {
+    const spy = jest.spyOn(component, 'configurarFormularioPagoBanco');
     component.ngOnInit();
-    expect(component.formSolicitud).toBeDefined();
-  });
-
-  it('should handle destroyNotifier$ being called multiple times', () => {
-    jest.spyOn(component['destroyNotifier$'], 'next');
-    jest.spyOn(component['destroyNotifier$'], 'complete');
-
-    component.ngOnDestroy();
-    component.ngOnDestroy(); // Call again to ensure no errors occur
-
-    expect(component['destroyNotifier$'].next).toHaveBeenCalledTimes(1);
-    expect(component['destroyNotifier$'].complete).toHaveBeenCalledTimes(1);
+    expect(spy).toHaveBeenCalled();
   });
 });
