@@ -5,11 +5,7 @@
  *
  * @import { Component } from '@angular/core';
  */
-import {
-  Component,
-  OnDestroy,
-  OnInit,
-} from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 
 import {
   ConsultaioQuery,
@@ -55,10 +51,10 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
   public consultaState!: ConsultaioState;
 
   /**
-   * @method seleccionaTab
-   * @description Selecciona una pestaña y actualiza el índice.
-   * @param {number} i - El índice de la pestaña seleccionada.
-   */
+  @method seleccionaTab
+  @description Selecciona una pestaña y actualiza el índice.
+  @param {number} i - El índice de la pestaña seleccionada.
+  */
   seleccionaTab(i: number): void {
     this.indice = i;
   }
@@ -86,6 +82,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
       )
       .subscribe();
   }
+
   /**
    * @method onMostrarTabs
    * @description Maneja el evento emitido por el componente hijo para mostrar las pestañas adicionales.

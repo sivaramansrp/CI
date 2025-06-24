@@ -6,13 +6,7 @@
  * @import { Component } from '@angular/core';
  * @import { FormBuilder, FormGroup, Validators } from '@angular/forms';
  */
-import {
-  Component,
-  EventEmitter,
-  Input,
-  OnInit,
-  Output,
-} from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -74,6 +68,7 @@ export class ConstanciaDelRegistroComponent implements OnInit {
   formularioDeshabilitado: boolean = false;
   /**
    * @property {FormGroup} fitosanitarioForm - El grupo de formularios para capturar los datos del certificado de registro.
+   * @compodoc-field
    */
   fitosanitarioForm!: FormGroup;
 
@@ -89,6 +84,7 @@ export class ConstanciaDelRegistroComponent implements OnInit {
 
   /**
    * @property {FormGroup} ConstanciaDelRegistro - El grupo de formularios para los datos del certificado de registro.
+   * @compodoc-field
    */
   ConstanciaDelRegistro!: FormGroup;
 
@@ -104,11 +100,15 @@ export class ConstanciaDelRegistroComponent implements OnInit {
 
   /**
    * @property {Subject<void>} destroyNotifier$ - Sujeto para manejar la destrucción de suscripciones.
+   * @private
+   * @compodoc-field
    */
   private destroyNotifier$: Subject<void> = new Subject();
 
   /**
    * @property {TextilesState} constanciaState - Estado actual de los textiles.
+   * @private
+   * @compodoc-field
    */
   private constanciaState!: TextilesState;
 
@@ -405,14 +405,12 @@ export class ConstanciaDelRegistroComponent implements OnInit {
   }
 
   /**
-   * @method
-   * @description
-   * Valida los campos 'anoDeLaConstancia' y 'numeroDeLaConstancia' del formulario fitosanitario.
+   * @method buscarEvaluar
+   * @description Valida los campos 'anoDeLaConstancia' y 'numeroDeLaConstancia' del formulario fitosanitario.
    * Si alguno de los campos es inválido, marca los controles como tocados y detiene la ejecución.
    * Si ambos campos son válidos, recupera los datos asociados y actualiza el estado de la tienda
    * ElegibilidadDeTextilesStore con los valores actuales del formulario.
-   *
-   * @returns {void} No retorna ningún valor.
+   * @returns {void}
    */
   buscarEvaluar(): void {
     const ANO_CONTROL = this.fitosanitarioForm.get('anoDeLaConstancia');
@@ -441,10 +439,11 @@ export class ConstanciaDelRegistroComponent implements OnInit {
   }
 
   /**
-   * Emite un evento para mostrar las pestañas (tabs) en la interfaz de usuario.
-   *
-   * @returns {void} No retorna ningún valor.
+   * @method guardarEvaluate
+   * @description Emite un evento para mostrar las pestañas (tabs) en la interfaz de usuario y realiza un scroll al inicio de la página.
+   * @returns {void}
    * @event mostrarTabs
+   * @compodoc-method
    */
   guardarEvaluate(): void {
     this.mostrarTabs.emit(true);
@@ -493,20 +492,17 @@ export class ConstanciaDelRegistroComponent implements OnInit {
     datos: ConstanciaTramiteConfiguracion[]
   ): ConstanciaTramiteConfiguracion[] {
     const ANO_DE_LA_CONSTANCIA =
-      this.fitosanitarioForm.get('anoDeLaConstancia')?.value;
-    const NUMERO_CONSTANCIA = this.fitosanitarioForm.get(
-      'numeroDeLaConstancia'
-    )?.value;
+      this.fitosanitarioForm.get('anoDeLaConstancia')?.value || '';
+    const NUMERO_CONSTANCIA =
+      this.fitosanitarioForm.get('numeroDeLaConstancia')?.value || '';
 
     return datos.filter((ITEM) => {
-      const ANO_ITEM = new Date(
-        ITEM.fechaInicioVigencia.split('/').reverse().join('/')
-      ).getFullYear();
+      const ANO_ITEM = new Date(ITEM.fechaInicioVigencia).getFullYear();
       const FILTRO_ANO = ANO_DE_LA_CONSTANCIA
-        ? ANO_ITEM === Number(ANO_DE_LA_CONSTANCIA)
+        ? ANO_ITEM === parseInt(ANO_DE_LA_CONSTANCIA, 10)
         : true;
       const FILTRO_NUMERO = NUMERO_CONSTANCIA
-        ? ITEM.numeroDeConstancia === NUMERO_CONSTANCIA
+        ? ITEM.numeroDeConstancia.toString() === NUMERO_CONSTANCIA.toString()
         : true;
 
       return FILTRO_ANO && FILTRO_NUMERO;
