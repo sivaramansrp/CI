@@ -76,6 +76,7 @@ import {
   VEHICULO,
 } from '../../../../core/enums/5701/tramite5701.enum';
 import {
+  AfterViewInit,
   ChangeDetectorRef,
   Component,
   Input,
@@ -97,6 +98,7 @@ import {
   catchError,
   delay,
   first,
+  forkJoin,
   map,
   merge,
   switchMap,
@@ -162,6 +164,7 @@ import {
 } from '../../../../core/enums/5701/mensajes-modal-5701.enum';
 import { SIN_VALOR_SELECT } from '@libs/shared/data-access-user/src/core/enums/transporte-componente.enum';
 import { ValidaDespachoService } from '../../../../core/services/5701/valida-despacho.service';
+import { CheckInputTextComponent } from '../../../../shared/components/check-input-text/check-input-text.component';
 @Component({
   selector: 'app-solicitud',
   templateUrl: './solicitud.component.html',
@@ -476,8 +479,13 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
   linkGeneraLineaCapturaSeguro!: SafeUrl;
 
   certificacionesDisabled: boolean = true;
-  OEAdisabled: boolean = true;
+  certificacionOEADisabled: boolean = true;
   revisionDisabled: boolean = true;
+
+  @ViewChild('programaImmex') programaImmex!: CheckInputTextComponent;
+  @ViewChild('programaFomento') programaFomento!: CheckInputTextComponent;
+  @ViewChild('industriaAutomotriz')
+  industriaAutomotriz!: CheckInputTextComponent;
 
   constructor(
     private seccionQuery: SeccionLibQuery,
@@ -538,6 +546,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
       .subscribe();
 
     this.crearFormSolicitud();
+    this.datosImportadorExportador.get('tipoEmpresaCertificada')?.disable();
 
     this.FormSolicitud.statusChanges
       .pipe(
@@ -739,9 +748,14 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    * @param {string} field - El nombre del campo a validar.
    * @returns {boolean} - Retorna `true` si el campo es válido, de lo contrario `false`.
    */
-  isValid(form: FormGroup, field: string): boolean {
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    return this.validacionesService.isValid(form, field)!;
+  // eslint-disable-next-line class-methods-use-this
+  isValid(form: FormGroup, field: string): boolean | null {
+    const CONTROL = form.get(field) as FormControl;
+    if (CONTROL) {
+      const ERRORS = CONTROL.errors;
+      return ERRORS && CONTROL.touched;
+    }
+    return false;
   }
 
   /**
@@ -1212,6 +1226,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    */
   validaRfc(): void {
     const RFC_IMP_EXP = this.datosImportadorExportador.get('RFCImpExp')?.value;
+
     if (
       RFC_IMP_EXP &&
       !this.datosImportadorExportador.get('RFCImpExp')?.valid
@@ -1226,8 +1241,8 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
         txtBtnAceptar: 'Aceptar',
         txtBtnCancelar: '',
       };
-      this.datosImportadorExportador.get('nombre')?.reset();
-      this.datosImportadorExportador.get('RFCImpExp')?.reset();
+      this.datosImportadorExportador.get('nombre')?.setValue('');
+      this.datosImportadorExportador.get('RFCImpExp')?.setValue('');
       return;
     }
 
@@ -1236,60 +1251,89 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
       this.datosImportadorExportador.get('nombre')?.value
     ) {
       // Si el RFC está vacío pero el nombre tiene un valor, se limpia el nombre.
-      this.datosImportadorExportador.get('nombre')?.reset();
+      this.datosImportadorExportador.reset({
+        RFCImpExp: '',
+        nombre: '',
+        tipoEmpresaCertificada: '',
+        certificacionOEA: false,
+        revision: false,
+      })
+  
+      //Limpia store
+      this.tramite5701Store.update({
+        RFCImportadorExportador: '',
+        nombre: '',
+        tipoEmpresaCertificada: '',
+        certificacionOEA: false,
+        revision: false,
+
+        checkIMMEX: false,
+        descripcionImmex: '',
+
+        programa: false,
+        descripcionProgramaFomento: '',
+
+        industriaAutomotriz: false,
+        descripcionIndustrialAutomotriz: '',
+      })
+
       this.tramite5701Store.setNombre('');
+      this.certificacionOEADisabled = true;
+      this.revisionDisabled = true;
+      this.certificacionesDisabled = true;
       return;
     }
 
-    this.validaRfcService
-      .getValidacionRfc(RFC_IMP_EXP)
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-        switchMap((validacionResponse) => {
-          if (validacionResponse) {
-            this.muestraCertificaciones = !validacionResponse.datos;
-            this.tramite5701Store.setRfcGenerico(validacionResponse.datos);
+    if (RFC_IMP_EXP && this.datosImportadorExportador.get('RFCImpExp')?.valid) {
+      this.validaRfcService
+        .getValidacionRfc(RFC_IMP_EXP)
+        .pipe(
+          takeUntil(this.destroyNotifier$),
+          switchMap((validacionResponse) => {
+            if (validacionResponse) {
+              this.muestraCertificaciones = !validacionResponse.datos;
+              this.tramite5701Store.setRfcGenerico(validacionResponse.datos);
 
-            if (validacionResponse.datos) {
-              // Aqui se hará la busqueda del rfc, para obtener el nombre
-              SolicitudComponent.llenarCamposDesactivados(
-                this.datosImportadorExportador,
-                'nombre',
-                RFC_GENERICO
-              );
-              this.tramite5701Store.setNombre(RFC_GENERICO);
-              return EMPTY;
+              if (validacionResponse.datos) {
+                // Aqui se hará la busqueda del rfc, para obtener el nombre
+                SolicitudComponent.llenarCamposDesactivados(
+                  this.datosImportadorExportador,
+                  'nombre',
+                  RFC_GENERICO
+                );
+                this.tramite5701Store.setNombre(RFC_GENERICO);
+                return EMPTY;
+              }
+              return this.idcService
+                .getInformacionContribuyente(RFC_IMP_EXP)
+                .pipe(tap());
             }
-            return this.idcService
-              .getInformacionContribuyente(RFC_IMP_EXP)
-              .pipe(tap());
-          }
-          return EMPTY;
-        }),
-        tap((idcResponse) => {
-          const NOMBRE = idcResponse.datos?.nombre
-            ? idcResponse.datos?.nombre
-            : idcResponse.datos?.razon_social;
-          if (NOMBRE) {
-            this.datosImportadorExportador.get('nombre')?.setValue(NOMBRE);
-            this.getCertificaciones(RFC_IMP_EXP);
-          } else {
-            this.nuevaNotificacion = {
-              tipoNotificacion: 'alert',
-              categoria: 'danger',
-              modo: 'action',
-              titulo: 'Avisos',
-              mensaje: MSG_ERROR_RFC_NO_ENCONTRADO,
-              cerrar: false,
-              txtBtnAceptar: 'Aceptar',
-              txtBtnCancelar: '',
-            };
-          }
-        })
-      )
-      .subscribe();
-
-    this.tramite5701Store.setRFCImportadorExportador(RFC_IMP_EXP);
+            return EMPTY;
+          }),
+          tap((idcResponse) => {
+            const NOMBRE = idcResponse.datos?.nombre
+              ? idcResponse.datos?.nombre
+              : idcResponse.datos?.razon_social;
+            if (NOMBRE) {
+              this.datosImportadorExportador.get('nombre')?.setValue(NOMBRE);
+              this.getCertificaciones(RFC_IMP_EXP);
+            } else {
+              this.nuevaNotificacion = {
+                tipoNotificacion: 'alert',
+                categoria: 'danger',
+                modo: 'action',
+                titulo: 'Avisos',
+                mensaje: MSG_ERROR_RFC_NO_ENCONTRADO,
+                cerrar: false,
+                txtBtnAceptar: 'Aceptar',
+                txtBtnCancelar: '',
+              };
+            }
+          })
+        )
+        .subscribe();
+      this.tramite5701Store.setRFCImportadorExportador(RFC_IMP_EXP);
+    }
   }
 
   /**
@@ -2159,15 +2203,23 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    * @returns {void} No retorna ningún valor.
    */
   private getCertificaciones(rfc: string): void {
+    //Obtiene certificacion IMMEX
     this.certificacionService
       .getCertificacion(rfc, PROGRAMA_IMMEX)
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((response) => {
-          if (response) {
-            this.tramite5701Store.setBlnImmex(response.datos.immex);
-            this.tramite5701Store.setDescripcionImmex(response.datos.des_immex);
+          if (response.datos) {
+            const VALORES_IMMEX: DatosCheckInputText = {
+              checkbox: response.datos.immex,
+              texto: response.datos.des_immex,
+            };
+            this.checkImmex(VALORES_IMMEX);
           }
+        }),
+        catchError((error) => {
+          console.log('Error al obtener certificación IMMEX:', error);
+          return throwError(() => error);
         })
       )
       .subscribe();
@@ -2178,20 +2230,26 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
         takeUntil(this.destroyNotifier$),
         map((response) => {
           if (response.datos) {
-            this.tramite5701Store.setBlnProgramaFomento(
-              response.datos.programa_fomento
-            );
-            this.tramite5701Store.setDescripcionImmex(
-              response.datos.des_programa_fomento
-            );
+            const VALORES_PROGRAMA_FOMENTO: DatosCheckInputText = {
+              checkbox: response.datos.programa_fomento,
+              texto: response.datos.des_programa_fomento,
+            };
+
+            this.checkPrograma(VALORES_PROGRAMA_FOMENTO);
           }
         }),
         catchError((error) => {
+          console.log(
+            'Error al obtener certificación de programa de fomento:',
+            error
+          );
+
           return throwError(() => error);
         })
       )
       .subscribe();
 
+    // Obtiene certificación de industria automotriz
     this.certificacionIndustriaAutomotrizService
       .getCertificacionAutomotriz(rfc)
       .pipe(
@@ -2212,11 +2270,20 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
       )
       .subscribe();
 
+    // Obtiene certificación de origen
     this.certificacionOrigenService
       .getCertificacionOrigen(rfc)
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((response) => {
+          console.log('Respuesta de certificación de origen:', response);
+          this.datosImportadorExportador
+            .get('revision')
+            ?.setValue(response.datos);
+          this.tramite5701Store.setRevision(response.datos);
+
+          this.revisionDisabled = response.datos ? true : false;
+
           this.tramite5701Store.setBlnRevisionOrigen(response.datos);
         }),
         catchError((error) => {
@@ -2225,6 +2292,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
       )
       .subscribe();
 
+    // Obtiene certificación OEA
     const VALIDACION_OEA_IMPEXP$ =
       this.certificacionOeaService.getValidacionCertificacion(
         MODALIDAD_OEA_IMPEXP,
@@ -2256,23 +2324,42 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
         rfc
       );
 
-    merge(
+    forkJoin([
       VALIDACION_OEA_IMPEXP$,
       VALIDACION_OEA_CTRL$,
       VALIDACION_OEA_AEREO$,
       VALIDACION_OEA_SECIIT$,
       VALIDACION_OEA_TEXTIL$,
-      VALIDACION_OEA_RFESTRATEGICO$
-    )
+      VALIDACION_OEA_RFESTRATEGICO$,
+    ])
       .pipe(
         takeUntil(this.destroyNotifier$),
-        first(),
-        tap((response) => {
-          this.tramite5701Store.setBlnOEA(response.datos);
-          return response.datos;
+        tap((responses) => {
+          const ALGUNA_TIENE_VALOR = responses.some((res) =>
+            Boolean(res.datos)
+          );
+          if (ALGUNA_TIENE_VALOR) {
+            this.datosImportadorExportador
+              .get('certificacionOEA')
+              ?.setValue(true);
+            this.datosImportadorExportador
+              .get('tipoEmpresaCertificada')
+              ?.disable();
+            this.certificacionOEADisabled = true;
+          } else {
+            this.datosImportadorExportador
+              .get('certificacionOEA')
+              ?.setValue(false);
+            this.datosImportadorExportador
+              .get('tipoEmpresaCertificada')
+              ?.enable();
+            this.certificacionOEADisabled = false;
+          }
         })
       )
       .subscribe();
+
+    // Obtiene certificacion A
   }
 
   /**
@@ -2561,6 +2648,8 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
     const RECINTO_ESPECIFICADO = this.validaCampoRecintoEspecifique();
 
     if (CHECKED) {
+      console.log('El check está activado');
+
       if (
         RECINTO_ESPECIFICADO ||
         ID_ADUANA_DESPACHO !== SIN_VALOR_SELECT ||
@@ -3041,8 +3130,8 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
                 titulo: TITULO_MODAL_AVISO,
                 mensaje: MSJ_ERROR_ID_SOCIO_COMERCIAL,
                 cerrar: false,
-                txtBtnAceptar: 'Aceptar',
-                txtBtnCancelar: '',
+                txtBtnAceptar: TEXTO_CERRAR,
+                txtBtnCancelar: CAMPO_VACIO,
               };
               return EMPTY;
             }
@@ -3059,11 +3148,11 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
               tipoNotificacion: 'alert',
               categoria: 'danger',
               modo: 'action',
-              titulo: 'Error',
-              mensaje: 'Ocurrió un error al obtener el socio comercial.',
+              titulo: TITULO_MODAL_AVISO,
+              mensaje: MSJ_ERROR_ID_SOCIO_COMERCIAL,
               cerrar: false,
-              txtBtnAceptar: 'Aceptar',
-              txtBtnCancelar: '',
+              txtBtnAceptar: TEXTO_CERRAR,
+              txtBtnCancelar: CAMPO_VACIO,
             };
             return EMPTY; // Evita que el error se propague
           })
