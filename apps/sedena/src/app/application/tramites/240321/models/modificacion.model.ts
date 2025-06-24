@@ -1,7 +1,7 @@
 /**
- * @fileoverview This file defines the models used for handling responses related to 
- * "DestinoFinal" and "Proveedor" entities in the application. These interfaces are 
- * used to structure the API response data for these entities.
+ * @fileoverview Este archivo define los modelos utilizados para manejar las respuestas relacionadas con 
+ * las entidades "DestinoFinal" y "Proveedor" en la aplicación. Estas interfaces se utilizan 
+ * para estructurar los datos de respuesta de la API para estas entidades.
  */
 
 import { DestinoFinal } from '../../../shared/models/terceros-relacionados.model';
@@ -9,10 +9,10 @@ import { Proveedor } from '../../../shared/models/terceros-relacionados.model';
 
 /**
  * @interface DestinoFinalRespuesta
- * @description Represents the structure of the API response for "DestinoFinal" data.
- * @property {number} code - The status code of the API response.
- * @property {DestinoFinal[]} data - The array of "DestinoFinal" objects returned by the API.
- * @property {string} message - The message associated with the API response.
+ * @description Representa la estructura de la respuesta de la API para los datos de "DestinoFinal".
+ * @property {number} code - El código de estado de la respuesta de la API.
+ * @property {DestinoFinal[]} data - El arreglo de objetos "DestinoFinal" devueltos por la API.
+ * @property {string} message - El mensaje asociado con la respuesta de la API.
  */
 export interface DestinoFinalRespuesta {
     code: number;
@@ -22,10 +22,10 @@ export interface DestinoFinalRespuesta {
 
 /**
  * @interface ProveedorRespuesta
- * @description Represents the structure of the API response for "Proveedor" data.
- * @property {number} code - The status code of the API response.
- * @property {Proveedor[]} data - The array of "Proveedor" objects returned by the API.
- * @property {string} message - The message associated with the API response.
+ * @description Representa la estructura de la respuesta de la API para los datos de "Proveedor".
+ * @property {number} code - El código de estado de la respuesta de la API.
+ * @property {Proveedor[]} data - El arreglo de objetos "Proveedor" devueltos por la API.
+ * @property {string} message - El mensaje asociado con la respuesta de la API.
  */
 export interface ProveedorRespuesta {
     code: number;
