@@ -49,7 +49,7 @@ private consultaQuery: ConsultaioQuery,
 ) {
 //no hacer nada
 this.consultaQuery.selectConsultaioState$
-.pipe( 
+.pipe(  
   takeUntil(this.notificadorDestruccion$),
   map((seccionState: { readonly: boolean })=>{
     this.esFormularioSoloLectura = seccionState.readonly; 
