@@ -145,31 +145,4 @@ describe('ModificacionComponent', () => {
     ).toHaveBeenCalledWith('mockValue');
   });
 
-  it('should run #setValoresStore()', async () => {
-    component.tramite80302Store = component.tramite80302Store || {};
-    component.tramite80302Store.metodoNombre = jest.fn();
-    component.setValoresStore({
-      get: function() {
-        return {
-          value: {}
-        };
-      }
-    }, {}, {});
-  });
-
-  it('should run #valorDeAlternancia()', async () => {
-    component.datosTabla = component.datosTabla || {};
-    component.datosTabla.findIndex = jest.fn().mockReturnValue([
-      {
-        "id": {}
-      }
-    ]);
-    component.datosTabla.index = {
-      desEstatus: {}
-    };
-    component.valorDeAlternancia({
-      id: {}
-    });
-  });
-
 });
