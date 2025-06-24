@@ -2781,6 +2781,15 @@
     "departamento": "AGA",
     "numeroDeProcedimiento": "324"
   },
+  {
+    "id": 80105,
+    "tipoDeTramite": "Solicitud de Permiso",
+    "fecha": "2023-10-01",
+    "fechaActualizacion": "2023-10-05",
+    "diasTranscurridos": "4",
+    "departamento": "SE",
+    "numeroDeProcedimiento": "80105"
+  },
    {
     "id": 32505,
     "tipoDeTramite": "Solicitud de Permiso",
