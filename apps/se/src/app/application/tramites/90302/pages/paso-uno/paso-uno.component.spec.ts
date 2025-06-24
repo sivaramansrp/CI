@@ -78,25 +78,20 @@ describe('PasoUnoComponent', () => {
     component.consultaQuery.selectConsultaioState$ = observableOf({});
     component.guardarDatosFormulario = jest.fn();
     component.ngOnInit();
-    // expect(component.guardarDatosFormulario).toHaveBeenCalled();
-  });
+    });
 
   it('should run #guardarDatosFormulario()', async () => {
     component.ampliacionServiciosService = component.ampliacionServiciosService || {};
     component.ampliacionServiciosService.getServiciosData = jest.fn().mockReturnValue(observableOf({}));
     component.ampliacionServiciosService.actualizarEstadoFormulario = jest.fn();
     component.guardarDatosFormulario();
-    // expect(component.ampliacionServiciosService.getServiciosData).toHaveBeenCalled();
-    // expect(component.ampliacionServiciosService.actualizarEstadoFormulario).toHaveBeenCalled();
-  });
+    });
 
   it('should run #ngOnDestroy()', async () => {
     component.destroyNotifier$ = component.destroyNotifier$ || {};
     component.destroyNotifier$.next = jest.fn();
     component.destroyNotifier$.complete = jest.fn();
     component.ngOnDestroy();
-    // expect(component.destroyNotifier$.next).toHaveBeenCalled();
-    // expect(component.destroyNotifier$.complete).toHaveBeenCalled();
-  });
+     });
 
 });

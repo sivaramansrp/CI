@@ -70,18 +70,14 @@ describe('TercerosRelacionadosComponent', () => {
   it('should run #inicializarEstadoFormulario()', async () => {
     component.guardarDatosFormulario = jest.fn();
     component.inicializarEstadoFormulario();
-    // expect(component.guardarDatosFormulario).toHaveBeenCalled();
-  });
+   });
 
   it('should run #ngOnInit()', async () => {
     component.inicializarEstadoFormulario = jest.fn();
     component.getDatos = jest.fn();
     component.getDatosDestinatario = jest.fn();
     component.ngOnInit();
-    // expect(component.inicializarEstadoFormulario).toHaveBeenCalled();
-    // expect(component.getDatos).toHaveBeenCalled();
-    // expect(component.getDatosDestinatario).toHaveBeenCalled();
-  });
+    });
 
   it('should run #guardarDatosFormulario()', async () => {
 
@@ -96,8 +92,7 @@ describe('TercerosRelacionadosComponent', () => {
       data: {}
     }));
     component.getDatos();
-    // expect(component.fitosanitarioService.getDatosExportador).toHaveBeenCalled();
-  });
+    });
 
   it('should run #getDatosDestinatario()', async () => {
     component.fitosanitarioService = component.fitosanitarioService || {};
@@ -106,16 +101,13 @@ describe('TercerosRelacionadosComponent', () => {
       data: {}
     }));
     component.getDatosDestinatario();
-    // expect(component.fitosanitarioService.getDatosDestinatarioInfo).toHaveBeenCalled();
-  });
+    });
 
   it('should run #ngOnDestroy()', async () => {
     component.destroyNotifier$ = component.destroyNotifier$ || {};
     component.destroyNotifier$.next = jest.fn();
     component.destroyNotifier$.unsubscribe = jest.fn();
     component.ngOnDestroy();
-    // expect(component.destroyNotifier$.next).toHaveBeenCalled();
-    // expect(component.destroyNotifier$.unsubscribe).toHaveBeenCalled();
-  });
+   });
 
 });

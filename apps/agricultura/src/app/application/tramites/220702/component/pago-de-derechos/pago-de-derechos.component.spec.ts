@@ -81,15 +81,13 @@ describe('PagoDeDerechosComponent', () => {
     component.tramiteStore = component.tramiteStore || {};
     component.tramiteStore.setFechaPagoDeDerechos = jest.fn();
     component.cambioFechaPagoDeDerechos({});
-    // expect(component.tramiteStore.setFechaPagoDeDerechos).toHaveBeenCalled();
-  });
+     });
 
   it('should run #cambioFechaPagoDeDerechosRevision()', async () => {
     component.tramiteStore = component.tramiteStore || {};
     component.tramiteStore.setFechaPagoDeDerechosRevision = jest.fn();
     component.cambioFechaPagoDeDerechosRevision({});
-    // expect(component.tramiteStore.setFechaPagoDeDerechosRevision).toHaveBeenCalled();
-  });
+   });
 
   it('should run #ngOnInit()', async () => {
     component.iniciarFormulario = jest.fn();
@@ -99,12 +97,7 @@ describe('PagoDeDerechosComponent', () => {
     component.pagoDeCargarDatos = jest.fn();
     component.pagoDerechosRevision = jest.fn();
     component.ngOnInit();
-    // expect(component.iniciarFormulario).toHaveBeenCalled();
-    // expect(component.pagosDeDerechosForm.disable).toHaveBeenCalled();
-    // expect(component.getBancoDatos).toHaveBeenCalled();
-    // expect(component.pagoDeCargarDatos).toHaveBeenCalled();
-    // expect(component.pagoDerechosRevision).toHaveBeenCalled();
-  });
+    });
 
   it('should run #iniciarFormulario()', async () => {
     component.fb = component.fb || {};
@@ -127,7 +120,7 @@ describe('PagoDeDerechosComponent', () => {
     component.tramiteStoreQuery = component.tramiteStoreQuery || {};
     component.tramiteStoreQuery.selectSolicitudTramite$ = observableOf({});
     component.iniciarFormulario();
-    // expect(component.fb.group).toHaveBeenCalled();
+  
   });
 
   it('should run #pagoDeCargarDatos()', async () => {
@@ -144,11 +137,7 @@ describe('PagoDeDerechosComponent', () => {
     component.tramiteStore.setCadenaDependencia = jest.fn();
     component.tramiteStore.setImporteDePago = jest.fn();
     component.pagoDeCargarDatos();
-    // expect(component.fitosanitarioService.pagoDeCargarDatos).toHaveBeenCalled();
-    // expect(component.tramiteStore.setClaveDeReferencia).toHaveBeenCalled();
-    // expect(component.tramiteStore.setCadenaDependencia).toHaveBeenCalled();
-    // expect(component.tramiteStore.setImporteDePago).toHaveBeenCalled();
-  });
+    });
 
   it('should run #getBancoDatos()', async () => {
     component.fitosanitarioService = component.fitosanitarioService || {};
@@ -157,8 +146,7 @@ describe('PagoDeDerechosComponent', () => {
       data: {}
     }));
     component.getBancoDatos();
-    // expect(component.fitosanitarioService.getBancoDatos).toHaveBeenCalled();
-  });
+    });
 
   it('should run #pagoDerechosRevision()', async () => {
     component.fitosanitarioService = component.fitosanitarioService || {};
@@ -178,13 +166,7 @@ describe('PagoDeDerechosComponent', () => {
     component.tramiteStore.setLlaveDePagoRevision = jest.fn();
     component.tramiteStore.setImporteDePagoRevision = jest.fn();
     component.pagoDerechosRevision();
-    // expect(component.fitosanitarioService.getPagoDerechosRevision).toHaveBeenCalled();
-    // expect(component.tramiteStore.setClaveDeReferenciaRevision).toHaveBeenCalled();
-    // expect(component.tramiteStore.setCadenaDependenciaRevision).toHaveBeenCalled();
-    // expect(component.tramiteStore.setBancoRevision).toHaveBeenCalled();
-    // expect(component.tramiteStore.setLlaveDePagoRevision).toHaveBeenCalled();
-    // expect(component.tramiteStore.setImporteDePagoRevision).toHaveBeenCalled();
-  });
+    });
 
   it('should run #cambioClaveDeReferencia()', async () => {
     component.tramiteStore = component.tramiteStore || {};
@@ -194,8 +176,7 @@ describe('PagoDeDerechosComponent', () => {
         value: {}
       }
     });
-    // expect(component.tramiteStore.setClaveDeReferencia).toHaveBeenCalled();
-  });
+   });
 
   it('should run #setllaveDePago()', async () => {
     component.tramiteStore = component.tramiteStore || {};
@@ -205,8 +186,7 @@ describe('PagoDeDerechosComponent', () => {
         value: {}
       }
     });
-    // expect(component.tramiteStore.setLlaveDePago).toHaveBeenCalled();
-  });
+    });
 
   it('should run #selectBancoCatalogo()', async () => {
     component.tramiteStore = component.tramiteStore || {};
@@ -214,16 +194,13 @@ describe('PagoDeDerechosComponent', () => {
     component.selectBancoCatalogo({
       id: {}
     });
-    // expect(component.tramiteStore.setBanco).toHaveBeenCalled();
-  });
+    });
 
   it('should run #ngOnDestroy()', async () => {
     component.destroyNotifier$ = component.destroyNotifier$ || {};
     component.destroyNotifier$.next = jest.fn();
     component.destroyNotifier$.unsubscribe = jest.fn();
     component.ngOnDestroy();
-    // expect(component.destroyNotifier$.next).toHaveBeenCalled();
-    // expect(component.destroyNotifier$.unsubscribe).toHaveBeenCalled();
-  });
+    });
 
 });

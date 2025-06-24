@@ -111,18 +111,7 @@ describe('DatosGeneralesComponent', () => {
     component.seccionQuery = component.seccionQuery || {};
     component.seccionQuery.selectSeccionState$ = observableOf({});
     component.ngOnInit();
-    // expect(component.inicializarEstadoFormulario).toHaveBeenCalled();
-    // expect(component.iniciarFormulario).toHaveBeenCalled();
-    // expect(component.getAduanaDeIngreso).toHaveBeenCalled();
-    // expect(component.getOficinaDeInspeccion).toHaveBeenCalled();
-    // expect(component.getPuntoDeInspeccion).toHaveBeenCalled();
-    // expect(component.getRegimenAlQue).toHaveBeenCalled();
-    // expect(component.getPuntoDeVerificacion).toHaveBeenCalled();
-    // expect(component.getDatosParaMovilizacion).toHaveBeenCalled();
-    // expect(component.getDatos).toHaveBeenCalled();
-    // expect(component.datosGeneralesForm.patchValue).toHaveBeenCalled();
-    // expect(component.tramiteStore.setSolicitudTramite).toHaveBeenCalled();
-  });
+    });
 
   it('should run #guardarDatosFormulario()', async () => {
     component.iniciarFormulario = jest.fn();
@@ -130,16 +119,13 @@ describe('DatosGeneralesComponent', () => {
     component.datosGeneralesForm.disable = jest.fn();
     component.datosGeneralesForm.enable = jest.fn();
     component.guardarDatosFormulario();
-    // expect(component.iniciarFormulario).toHaveBeenCalled();
-    // expect(component.datosGeneralesForm.disable).toHaveBeenCalled();
-    // expect(component.datosGeneralesForm.enable).toHaveBeenCalled();
-  });
+    });
 
   it('should run #iniciarFormulario()', async () => {
     component.fb = component.fb || {};
     component.fb.group = jest.fn();
     component.iniciarFormulario();
-    // expect(component.fb.group).toHaveBeenCalled();
+    
   });
 
   it('should run #getAduanaDeIngreso()', async () => {
@@ -149,8 +135,7 @@ describe('DatosGeneralesComponent', () => {
       data: {}
     }));
     component.getAduanaDeIngreso();
-    // expect(component.fitosanitarioService.getAduanaDeIngreso).toHaveBeenCalled();
-  });
+   });
 
   it('should run #getDatos()', async () => {
     component.fitosanitarioService = component.fitosanitarioService || {};
@@ -159,8 +144,7 @@ describe('DatosGeneralesComponent', () => {
       data: {}
     }));
     component.getDatos();
-    // expect(component.fitosanitarioService.getDatosMercania).toHaveBeenCalled();
-  });
+   });
 
   it('should run #getOficinaDeInspeccion()', async () => {
     component.fitosanitarioService = component.fitosanitarioService || {};
@@ -169,8 +153,7 @@ describe('DatosGeneralesComponent', () => {
       data: {}
     }));
     component.getOficinaDeInspeccion();
-    // expect(component.fitosanitarioService.getOficinaDeInspeccion).toHaveBeenCalled();
-  });
+   });
 
   it('should run #getPuntoDeInspeccion()', async () => {
     component.fitosanitarioService = component.fitosanitarioService || {};
@@ -179,8 +162,7 @@ describe('DatosGeneralesComponent', () => {
       data: {}
     }));
     component.getPuntoDeInspeccion();
-    // expect(component.fitosanitarioService.getPuntoDeInspeccion).toHaveBeenCalled();
-  });
+   });
 
   it('should run #getRegimenAlQue()', async () => {
     component.fitosanitarioService = component.fitosanitarioService || {};
@@ -189,8 +171,7 @@ describe('DatosGeneralesComponent', () => {
       data: {}
     }));
     component.getRegimenAlQue();
-    // expect(component.fitosanitarioService.getRegimenAlQue).toHaveBeenCalled();
-  });
+   });
 
   it('should run #getDatosParaMovilizacion()', async () => {
     component.fitosanitarioService = component.fitosanitarioService || {};
@@ -199,8 +180,7 @@ describe('DatosGeneralesComponent', () => {
       data: {}
     }));
     component.getDatosParaMovilizacion();
-    // expect(component.fitosanitarioService.getDatosParaMovilizacion).toHaveBeenCalled();
-  });
+    });
 
   it('should run #getPuntoDeVerificacion()', async () => {
     component.fitosanitarioService = component.fitosanitarioService || {};
@@ -209,16 +189,13 @@ describe('DatosGeneralesComponent', () => {
       data: {}
     }));
     component.getPuntoDeVerificacion();
-    // expect(component.fitosanitarioService.getPuntoDeVerificacion).toHaveBeenCalled();
-  });
+    });
 
   it('should run #ngOnDestroy()', async () => {
     component.destroyNotifier$ = component.destroyNotifier$ || {};
     component.destroyNotifier$.next = jest.fn();
     component.destroyNotifier$.unsubscribe = jest.fn();
     component.ngOnDestroy();
-    // expect(component.destroyNotifier$.next).toHaveBeenCalled();
-    // expect(component.destroyNotifier$.unsubscribe).toHaveBeenCalled();
-  });
+    });
 
 });

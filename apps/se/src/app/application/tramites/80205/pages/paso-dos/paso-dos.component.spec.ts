@@ -5,7 +5,6 @@ import { isPlatformBrowser } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { Observable, of as observableOf, throwError } from 'rxjs';
-
 import { Component } from '@angular/core';
 import { PasoDosComponent } from './paso-dos.component';
 

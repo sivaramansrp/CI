@@ -95,9 +95,7 @@ describe('AmpliacionServiciosComponent', () => {
     component.guardarDatosFormulario = jest.fn();
     component.inicializarFormularioInfoRegistro = jest.fn();
     component.inicializarEstadoFormulario();
-    // expect(component.guardarDatosFormulario).toHaveBeenCalled();
-    // expect(component.inicializarFormularioInfoRegistro).toHaveBeenCalled();
-  });
+   });
 
   it('should run #ngOnInit()', async () => {
     component.inicializarEstadoFormulario = jest.fn();
@@ -107,13 +105,7 @@ describe('AmpliacionServiciosComponent', () => {
     component.suscribirseADatos = jest.fn();
     component.suscribirseAFields = jest.fn();
     component.ngOnInit();
-    // expect(component.inicializarEstadoFormulario).toHaveBeenCalled();
-    // expect(component.obtenerIngresoSelectList).toHaveBeenCalled();
-    // expect(component.getDatos).toHaveBeenCalled();
-    // expect(component.suscribirseADatosImmex).toHaveBeenCalled();
-    // expect(component.suscribirseADatos).toHaveBeenCalled();
-    // expect(component.suscribirseAFields).toHaveBeenCalled();
-  });
+    });
 
   it('should run #enCambioDeCampo()', async () => {
     component.ampliacionServiciosStore = component.ampliacionServiciosStore || {};
@@ -121,10 +113,7 @@ describe('AmpliacionServiciosComponent', () => {
     component.ampliacionServiciosStore.setNumeroPrograma = jest.fn();
     component.ampliacionServiciosStore.setTiempoPrograma = jest.fn();
     component.enCambioDeCampo({}, {});
-    // expect(component.ampliacionServiciosStore.setRfcEmpresa).toHaveBeenCalled();
-    // expect(component.ampliacionServiciosStore.setNumeroPrograma).toHaveBeenCalled();
-    // expect(component.ampliacionServiciosStore.setTiempoPrograma).toHaveBeenCalled();
-  });
+      });
 
   it('should run #suscribirseADatos()', async () => {
     component.subscription = component.subscription || {};
@@ -132,7 +121,7 @@ describe('AmpliacionServiciosComponent', () => {
     component.ampliacionServiciosQuery = component.ampliacionServiciosQuery || {};
     component.ampliacionServiciosQuery.selectDatos$ = observableOf({});
     component.suscribirseADatos();
-    // expect(component.subscription.add).toHaveBeenCalled();
+    
   });
 
   it('should run #suscribirseAFields()', async () => {
@@ -156,9 +145,7 @@ describe('AmpliacionServiciosComponent', () => {
       }
     });
     component.suscribirseAFields();
-    // expect(component.subscription.add).toHaveBeenCalled();
-    // expect(component.ampliacionServiciosQuery.select).toHaveBeenCalled();
-  });
+    });
 
   it('should run #getDatos()', async () => {
     component.subscription = component.subscription || {};
@@ -169,11 +156,7 @@ describe('AmpliacionServiciosComponent', () => {
     component.ampliacionServiciosStore.setInfoRegistro = jest.fn();
     component.initializeFormFromStore = jest.fn();
     component.getDatos();
-    // expect(component.subscription.add).toHaveBeenCalled();
-    // expect(component.ampliacionServiciosService.getDatos).toHaveBeenCalled();
-    // expect(component.ampliacionServiciosStore.setInfoRegistro).toHaveBeenCalled();
-    // expect(component.initializeFormFromStore).toHaveBeenCalled();
-  });
+    });
 
   it('should run #suscribirseADatosImmex()', async () => {
     component.ampliacionServiciosQuery = component.ampliacionServiciosQuery || {};
@@ -192,14 +175,14 @@ describe('AmpliacionServiciosComponent', () => {
     component.fb = component.fb || {};
     component.fb.group = jest.fn();
     component.initializeFormFromStore();
-    // expect(component.fb.group).toHaveBeenCalled();
+    
   });
 
   it('should run #inicializarFormularioInfoRegistro()', async () => {
     component.fb = component.fb || {};
     component.fb.group = jest.fn();
     component.inicializarFormularioInfoRegistro();
-    // expect(component.fb.group).toHaveBeenCalled();
+    
   });
 
   it('should run #obtenerIngresoSelectList()', async () => {
@@ -212,16 +195,12 @@ describe('AmpliacionServiciosComponent', () => {
     component.ampliacionServiciosQuery = component.ampliacionServiciosQuery || {};
     component.ampliacionServiciosQuery.selectAduanaDeIngreso$ = observableOf({});
     component.obtenerIngresoSelectList();
-    // expect(component.subscription.add).toHaveBeenCalled();
-    // expect(component.ampliacionServiciosService.obtenerIngresoSelectList).toHaveBeenCalled();
-    // expect(component.ampliacionServiciosStore.setAduanaDeIngreso).toHaveBeenCalled();
-  });
+      });
 
   it('should run #guardarDatosFormulario()', async () => {
     component.inicializarFormularioInfoRegistro = jest.fn();
     component.guardarDatosFormulario();
-    // expect(component.inicializarFormularioInfoRegistro).toHaveBeenCalled();
-  });
+    });
 
   it('should run #eliminarServiciosGrid()', async () => {
     component.datosImmex = component.datosImmex || {};
@@ -235,22 +214,8 @@ describe('AmpliacionServiciosComponent', () => {
     component.ampliacionServiciosStore = component.ampliacionServiciosStore || {};
     component.ampliacionServiciosStore.setDatosImmex = jest.fn();
     component.eliminarServiciosGrid();
-    // expect(component.datosImmex.findIndex).toHaveBeenCalled();
-    // expect(component.ampliacionServiciosStore.setDatosImmex).toHaveBeenCalled();
-  });
+     });
 
- /* it('should run #agregarServiciosAmpliacion()', async () => {
-    component.recibioDatos = component.recibioDatos || {};
-    component.recibioDatos = {
-      descripcion: ''
-      tipode: {}
-    };
-    component.ampliacionServiciosStore = component.ampliacionServiciosStore || {};
-    component.ampliacionServiciosStore.setDatosImmex = jest.fn();
-    component.agregarServiciosAmpliacion();
-    // expect(component.ampliacionServiciosStore.setDatosImmex).toHaveBeenCalled();
-  });
-*/
   it('should run #eliminarEmpresasNacionales()', async () => {
     component.datos = component.datos || {};
     component.datos.findIndex = jest.fn().mockReturnValue([
@@ -265,32 +230,26 @@ describe('AmpliacionServiciosComponent', () => {
     component.ampliacionServiciosStore = component.ampliacionServiciosStore || {};
     component.ampliacionServiciosStore.setDatos = jest.fn();
     component.eliminarEmpresasNacionales();
-    // expect(component.datos.findIndex).toHaveBeenCalled();
-    // expect(component.ampliacionServiciosStore.setDatos).toHaveBeenCalled();
-  });
+    });
 
   it('should run #actualizaGridEmpresasNacionales()', async () => {
     component.ampliacionServiciosStore = component.ampliacionServiciosStore || {};
     component.ampliacionServiciosStore.setDatos = jest.fn();
     component.ampliacionServiciosStore.setCamposEmpresa = jest.fn();
     component.actualizaGridEmpresasNacionales();
-    // expect(component.ampliacionServiciosStore.setDatos).toHaveBeenCalled();
-    // expect(component.ampliacionServiciosStore.setCamposEmpresa).toHaveBeenCalled();
   });
 
   it('should run #ngOnDestroy()', async () => {
     component.subscription = component.subscription || {};
     component.subscription.unsubscribe = jest.fn();
     component.ngOnDestroy();
-    // expect(component.subscription.unsubscribe).toHaveBeenCalled();
-  });
+    });
 
   it('should run #procesarDatosDelHijo()', async () => {
     component.ampliacionServiciosStore = component.ampliacionServiciosStore || {};
     component.ampliacionServiciosStore.setAduanaDeIngresoSeleccion = jest.fn();
     component.procesarDatosDelHijo({});
-    // expect(component.ampliacionServiciosStore.setAduanaDeIngresoSeleccion).toHaveBeenCalled();
-  });
+    });
 
   it('should run #seleccionarDomicilios()', async () => {
 

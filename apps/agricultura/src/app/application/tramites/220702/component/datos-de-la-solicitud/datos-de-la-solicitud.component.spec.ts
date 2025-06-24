@@ -99,8 +99,7 @@ describe('DatosDeLaSolicitudComponent', () => {
     component.guardarDatosFormulario = jest.fn();
     component.iniciarFormulario = jest.fn();
     component.inicializarEstadoFormulario();
-    // expect(component.guardarDatosFormulario).toHaveBeenCalled();
-    // expect(component.iniciarFormulario).toHaveBeenCalled();
+    
   });
 
   it('should run #ngOnInit()', async () => {
@@ -119,18 +118,7 @@ describe('DatosDeLaSolicitudComponent', () => {
     component.datosDeLaSolicitudForm = component.datosDeLaSolicitudForm || {};
     component.datosDeLaSolicitudForm.patchValue = jest.fn();
     component.ngOnInit();
-    // expect(component.inicializarEstadoFormulario).toHaveBeenCalled();
-    // expect(component.getHoraDeInspeccion).toHaveBeenCalled();
-    // expect(component.cargarDatos).toHaveBeenCalled();
-    // expect(component.getAduanaDeIngreso).toHaveBeenCalled();
-    // expect(component.getOficinaDeInspeccion).toHaveBeenCalled();
-    // expect(component.getPuntoDeInspeccion).toHaveBeenCalled();
-    // expect(component.getTipoContenedor).toHaveBeenCalled();
-    // expect(component.obtenerResponsableDatos).toHaveBeenCalled();
-    // expect(component.getMedioDeTransporte).toHaveBeenCalled();
-    // expect(component.getDatos).toHaveBeenCalled();
-    // expect(component.datosDeLaSolicitudForm.patchValue).toHaveBeenCalled();
-  });
+    });
 
   it('should run #guardarDatosFormulario()', async () => {
     component.iniciarFormulario = jest.fn();
@@ -138,10 +126,7 @@ describe('DatosDeLaSolicitudComponent', () => {
     component.datosDeLaSolicitudForm.disable = jest.fn();
     component.datosDeLaSolicitudForm.enable = jest.fn();
     component.guardarDatosFormulario();
-    // expect(component.iniciarFormulario).toHaveBeenCalled();
-    // expect(component.datosDeLaSolicitudForm.disable).toHaveBeenCalled();
-    // expect(component.datosDeLaSolicitudForm.enable).toHaveBeenCalled();
-  });
+    });
 
   it('should run #iniciarFormulario()', async () => {
     component.fb = component.fb || {};
@@ -162,7 +147,7 @@ describe('DatosDeLaSolicitudComponent', () => {
     component.tramiteState.identificacionTransporte = 'identificacionTransporte';
     component.tramiteState.esSolicitudFerros = 'esSolicitudFerros';
     component.iniciarFormulario();
-    // expect(component.fb.group).toHaveBeenCalled();
+   
   });
 
   it('should run #mostrarColapsable()', async () => {
@@ -181,9 +166,7 @@ describe('DatosDeLaSolicitudComponent', () => {
     component.tramiteStore = component.tramiteStore || {};
     component.tramiteStore.setCertificadosAutorizados = jest.fn();
     component.cargarDatos();
-    // expect(component.fitosanitarioService.obtenerDatosCertificados).toHaveBeenCalled();
-    // expect(component.tramiteStore.setCertificadosAutorizados).toHaveBeenCalled();
-  });
+    });
 
   it('should run #getHoraDeInspeccion()', async () => {
     component.fitosanitarioService = component.fitosanitarioService || {};
@@ -192,8 +175,7 @@ describe('DatosDeLaSolicitudComponent', () => {
       data: {}
     }));
     component.getHoraDeInspeccion();
-    // expect(component.fitosanitarioService.getHoraDeInspeccion).toHaveBeenCalled();
-  });
+    });
 
   it('should run #getAduanaDeIngreso()', async () => {
     component.fitosanitarioService = component.fitosanitarioService || {};
@@ -202,8 +184,7 @@ describe('DatosDeLaSolicitudComponent', () => {
       data: {}
     }));
     component.getAduanaDeIngreso();
-    // expect(component.fitosanitarioService.getAduanaDeIngreso).toHaveBeenCalled();
-  });
+   });
 
   it('should run #getDatos()', async () => {
     component.fitosanitarioService = component.fitosanitarioService || {};
@@ -212,8 +193,7 @@ describe('DatosDeLaSolicitudComponent', () => {
       data: {}
     }));
     component.getDatos();
-    // expect(component.fitosanitarioService.getDatosDeLaMercancia).toHaveBeenCalled();
-  });
+    });
 
   it('should run #getOficinaDeInspeccion()', async () => {
     component.fitosanitarioService = component.fitosanitarioService || {};
@@ -222,8 +202,7 @@ describe('DatosDeLaSolicitudComponent', () => {
       data: {}
     }));
     component.getOficinaDeInspeccion();
-    // expect(component.fitosanitarioService.getOficinaDeInspeccion).toHaveBeenCalled();
-  });
+   });
 
   it('should run #getPuntoDeInspeccion()', async () => {
     component.fitosanitarioService = component.fitosanitarioService || {};
@@ -232,8 +211,7 @@ describe('DatosDeLaSolicitudComponent', () => {
       data: {}
     }));
     component.getPuntoDeInspeccion();
-    // expect(component.fitosanitarioService.getPuntoDeInspeccion).toHaveBeenCalled();
-  });
+   });
 
   it('should run #getTipoContenedor()', async () => {
     component.fitosanitarioService = component.fitosanitarioService || {};
@@ -242,8 +220,7 @@ describe('DatosDeLaSolicitudComponent', () => {
       data: {}
     }));
     component.getTipoContenedor();
-    // expect(component.fitosanitarioService.getTipoContenedor).toHaveBeenCalled();
-  });
+   });
 
   it('should run #getMedioDeTransporte()', async () => {
     component.fitosanitarioService = component.fitosanitarioService || {};
@@ -252,8 +229,7 @@ describe('DatosDeLaSolicitudComponent', () => {
       data: {}
     }));
     component.getMedioDeTransporte();
-    // expect(component.fitosanitarioService.getMedioDeTransporte).toHaveBeenCalled();
-  });
+    });
 
   it('should run #obtenerResponsableDatos()', async () => {
     component.fitosanitarioService = component.fitosanitarioService || {};
@@ -271,12 +247,7 @@ describe('DatosDeLaSolicitudComponent', () => {
     component.tramiteStore.setSegundoApellido = jest.fn();
     component.tramiteStore.setCantidadContenedores = jest.fn();
     component.obtenerResponsableDatos();
-    // expect(component.fitosanitarioService.obtenerResponsableDatos).toHaveBeenCalled();
-    // expect(component.tramiteStore.setNombreInspector).toHaveBeenCalled();
-    // expect(component.tramiteStore.setPrimerApellido).toHaveBeenCalled();
-    // expect(component.tramiteStore.setSegundoApellido).toHaveBeenCalled();
-    // expect(component.tramiteStore.setCantidadContenedores).toHaveBeenCalled();
-  });
+    });
 
   it('should run #cambioIdentificacionTransporte()', async () => {
     component.tramiteStore = component.tramiteStore || {};
@@ -286,8 +257,7 @@ describe('DatosDeLaSolicitudComponent', () => {
         value: {}
       }
     });
-    // expect(component.tramiteStore.setIdentificacionTransporte).toHaveBeenCalled();
-  });
+    });
 
   it('should run #cambioTipoContenedor()', async () => {
     component.tramiteStore = component.tramiteStore || {};
@@ -295,8 +265,7 @@ describe('DatosDeLaSolicitudComponent', () => {
     component.cambioTipoContenedor({
       id: {}
     });
-    // expect(component.tramiteStore.setTipoContenedor).toHaveBeenCalled();
-  });
+    });
 
   it('should run #cambioJustificacion()', async () => {
     component.tramiteStore = component.tramiteStore || {};
@@ -306,8 +275,7 @@ describe('DatosDeLaSolicitudComponent', () => {
         value: {}
       }
     });
-    // expect(component.tramiteStore.setJustificacion).toHaveBeenCalled();
-  });
+   });
 
   it('should run #cambioAduanaDeIngreso()', async () => {
     component.tramiteStore = component.tramiteStore || {};
@@ -315,16 +283,13 @@ describe('DatosDeLaSolicitudComponent', () => {
     component.cambioAduanaDeIngreso({
       id: {}
     });
-    // expect(component.tramiteStore.setAduanaDeIngreso).toHaveBeenCalled();
-  });
+    });
 
   it('should run #ngOnDestroy()', async () => {
     component.destroyNotifier$ = component.destroyNotifier$ || {};
     component.destroyNotifier$.next = jest.fn();
     component.destroyNotifier$.unsubscribe = jest.fn();
     component.ngOnDestroy();
-    // expect(component.destroyNotifier$.next).toHaveBeenCalled();
-    // expect(component.destroyNotifier$.unsubscribe).toHaveBeenCalled();
-  });
+    });
 
 });

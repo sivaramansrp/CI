@@ -71,7 +71,7 @@ describe('PasoTresComponent', () => {
     component.router = component.router || {};
     component.router.navigate = jest.fn();
     component.obtieneFirma({});
-    // expect(component.router.navigate).toHaveBeenCalled();
+    
   });
 
 });
