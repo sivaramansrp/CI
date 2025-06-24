@@ -2818,6 +2818,24 @@
     "numeroDeProcedimiento": "11105"
   },
   {
+  "id": 130120,
+  "tipoDeTramite": "Solicitud de Permiso",
+  "fecha": "2023-10-01",
+  "fechaActualizacion": "2023-10-05",
+  "diasTranscurridos": "4",
+  "departamento": "SE",
+  "numeroDeProcedimiento": "130120"
+  },
+  {
+    "id": 570102,
+    "tipoDeTramite": "Solicitud de Permiso",
+    "fecha": "2023-10-01",
+    "fechaActualizacion": "2023-10-05",
+    "diasTranscurridos": "4",
+    "departamento": "AGA",
+    "numeroDeProcedimiento": "570102"
+  },
+  {
     "id": 6001,
     "tipoDeTramite": "Solicitud de Permiso",
     "fecha": "2023-10-01",

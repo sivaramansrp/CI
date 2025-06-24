@@ -5,102 +5,109 @@ import { CertificadoZoosanitarioServiceService } from '../../services/220201/cer
 import { CommonModule } from '@angular/common';
 import { ZoosanitarioQuery } from '../../queries/220201/zoosanitario.query';
 
+/**
+ * @fileoverview Componente para la gestión de terceros relacionados en el trámite.
+ * Este componente permite visualizar y actualizar la lista de personas asociadas como terceros,
+ * así como controlar el modo de solo lectura del formulario.
+ * @module TercerospageComponent
+ */
+
+/**
+ * Componente para la gestión de terceros relacionados en el trámite.
+ * @class TercerospageComponent
+ * @implements {OnInit, OnDestroy, AfterViewInit}
+ */
 @Component({
   selector: 'app-tercerospage',
   standalone: true,
-  imports: [CommonModule,
+  imports: [
+    CommonModule,
     TercerosComponent
   ],
   templateUrl: './tercerospage.component.html',
   styleUrl: './tercerospage.component.scss',
 })
-export class TercerospageComponent implements OnInit,OnDestroy,AfterViewInit {
-    /**
-     * Subject utilizado como notificador para destruir suscripciones y evitar fugas de memoria.
-     * 
-     * @remarks
-     * Este Subject se emite cuando el componente se destruye, permitiendo que las suscripciones
-     * a observables se cancelen correctamente usando el operador `takeUntil`.
-     * 
-     * @copodoc
-     * Notificador para la destrucción de suscripciones en el ciclo de vida del componente.
-     */
-    private destroyNotifier$ = new Subject<void>();
-    /**
-     * @property {PersonaTerceros[]} personas
-     * @description Lista de personas asociadas como terceros en el trámite actual.
-     * @desc [es] Lista de personas asociadas como terceros en el trámite actual.
-     */
-    personas:PersonaTerceros[]=[];
-      /**
-       * Indica si el formulario se encuentra en modo solo lectura.
-       * 
-       * @desc [es] Determina si el formulario debe mostrarse únicamente para lectura, sin permitir modificaciones.
-       */
-      esFormularioSoloLectura:boolean = false;
+export class TercerospageComponent implements OnInit, OnDestroy, AfterViewInit {
   /**
-   * Constructor for TercerosPageComponent.
-   *
-   * @param consultaQuery - Service for querying Consultaio data.
-   * @param certificadoZoosanitarioServices - Service for managing Certificado Zoosanitario operations.
-   * @param certificadoZoosanitarioQuery - Query service for Certificado Zoosanitario state management.
-   *
-   * @author
-   * @see ConsultaioQuery
-   * @see CertificadoZoosanitarioServiceService
-   * @see ZoosanitarioQuery
+   * Subject utilizado como notificador para destruir suscripciones y evitar fugas de memoria.
+   * 
+   * @remarks
+   * Este Subject se emite cuando el componente se destruye, permitiendo que las suscripciones
+   * a observables se cancelen correctamente usando el operador `takeUntil`.
+   * 
+   * @compodoc
+   * @property {Subject<void>} destroyNotifier$
    */
-  constructor(private consultaQuery: ConsultaioQuery, private readonly certificadoZoosanitarioServices: CertificadoZoosanitarioServiceService,private readonly certificadoZoosanitarioQuery:ZoosanitarioQuery){
-  }
+  private destroyNotifier$ = new Subject<void>();
+
   /**
-   * @inheritdoc
+   * Lista de personas asociadas como terceros en el trámite actual.
+   * @property {PersonaTerceros[]} personas
+   */
+  personas: PersonaTerceros[] = [];
+
+  /**
+   * Indica si el formulario se encuentra en modo solo lectura.
    * 
-   * @description
-   * Lifecycle hook that is called after Angular has initialized all data-bound properties of a directive.
-   * 
-   * Subscribes to the `selectConsultaioState$` observable from `consultaQuery` and updates the `esFormularioSoloLectura`
-   * property based on the `readonly` value from the emitted `seccionState`. The subscription is automatically
-   * unsubscribed when the `destroyNotifier$` emits, preventing memory leaks.
-   *
-   * @see https://angular.io/api/core/OnInit
+   * @desc [es] Determina si el formulario debe mostrarse únicamente para lectura, sin permitir modificaciones.
+   * @property {boolean} esFormularioSoloLectura
+   */
+  esFormularioSoloLectura: boolean = false;
+
+  /**
+   * Constructor del componente.
+   * @method constructor
+   * @param consultaQuery Servicio para consultar el estado de solo lectura.
+   * @param certificadoZoosanitarioServices Servicio para actualizar terceros relacionados.
+   * @param certificadoZoosanitarioQuery Servicio para consultar el estado de terceros relacionados.
+   */
+  constructor(
+    private consultaQuery: ConsultaioQuery,
+    private readonly certificadoZoosanitarioServices: CertificadoZoosanitarioServiceService,
+    private readonly certificadoZoosanitarioQuery: ZoosanitarioQuery
+  ) {}
+
+  /**
+   * Ciclo de vida de Angular que se ejecuta al iniciar el componente.
+   * Suscribe al estado de solo lectura y actualiza la propiedad correspondiente.
+   * @method ngOnInit
    */
   ngOnInit(): void {
-     this.consultaQuery.selectConsultaioState$
-        .pipe(takeUntil(this.destroyNotifier$))
-        .subscribe((seccionState) => {
-          this.esFormularioSoloLectura=seccionState?.readonly;
-        });
-      }
-      
-      /**
-   * @inheritdoc
-   * 
-   * @ngAfterViewInit
-   * Lifecycle hook that is called after Angular has initialized all data-bound properties of a directive.
-   * 
-   * Subscribes to the `selectConsultaioState$` observable from `consultaQuery` and updates the `esFormularioSoloLectura`
-   * property based on the `readonly` value from the emitted `seccionState`. The subscription is automatically
-   * unsubscribed when the `destroyNotifier$` emits, preventing memory leaks.
-   *
-   * @see https://angular.io/api/core/OnInit
-   */
-      ngAfterViewInit(): void {
-          this.certificadoZoosanitarioQuery.seleccionarTercerosRelacionados$.pipe(takeUntil(this.destroyNotifier$)).subscribe((datosDeLaSolicitud) => {
-     if (datosDeLaSolicitud) {
-        this.personas = datosDeLaSolicitud;
-      }
-    });
-      }
-    /**
-   * Configuración para el selector de identificación del transporte.
-   * @property {onPersonasChanged} onPersonasChanged
-   */    
-onPersonasChanged(event: PersonaTerceros[]):void {
-this.certificadoZoosanitarioServices.updateTercerosRelacionados(event);
-}
+    this.consultaQuery.selectConsultaioState$
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((seccionState) => {
+        this.esFormularioSoloLectura = seccionState?.readonly;
+      });
+  }
+
   /**
-   * Configuración para el selector de identificación del transporte.
-   * @property {ngOnDestroy} ngOnDestroy
+   * Ciclo de vida de Angular que se ejecuta después de que la vista ha sido inicializada.
+   * Suscribe a los terceros relacionados y actualiza la lista de personas.
+   * @method ngAfterViewInit
+   */
+  ngAfterViewInit(): void {
+    this.certificadoZoosanitarioQuery.seleccionarTercerosRelacionados$
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((datosDeLaSolicitud) => {
+        if (datosDeLaSolicitud) {
+          this.personas = datosDeLaSolicitud;
+        }
+      });
+  }
+
+  /**
+   * Actualiza la lista de terceros relacionados en el store.
+   * @method onPersonasChanged
+   * @param {PersonaTerceros[]} event - Nueva lista de personas terceros.
+   */
+  onPersonasChanged(event: PersonaTerceros[]): void {
+    this.certificadoZoosanitarioServices.updateTercerosRelacionados(event);
+  }
+
+  /**
+   * Ciclo de vida de Angular que se ejecuta al destruir el componente.
+   * Libera recursos y cancela las suscripciones.
+   * @method ngOnDestroy
    */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
