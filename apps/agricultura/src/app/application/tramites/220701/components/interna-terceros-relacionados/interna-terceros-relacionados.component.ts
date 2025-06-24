@@ -1,23 +1,66 @@
-import { AlertComponent } from '@libs/shared/data-access-user/src';
-import { ChangeDetectorRef } from '@angular/core';
+/**
+ * @component
+ * @name InternaTercerosRelacionadosComponent
+ * @description
+ * Componente para gestionar los terceros relacionados (exportadores y destinos) en el trámite 220701.
+ * Permite visualizar, seleccionar y manejar la información de exportadores y destinos asociados al trámite.
+ * Utiliza tablas dinámicas, consume servicios para obtener los datos y permite la interacción mediante selección tipo radio y checkbox.
+ * Implementa la lógica de inicialización, carga de datos y actualización de la vista.
+ * 
+ * @example
+ * <interna-terceros-relacionados></interna-terceros-relacionados>
+ */
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
-import { DESTINO_SERVICIO } from '../../modelos/datos-de-interfaz.model';
-import { EXPORTADOR_SERVICIO } from '../../modelos/datos-de-interfaz.model';
-import { ExportadorDatosService } from '../../servicios/exportador-datos.service';
-import { MANDATORY_INSTRUCTION } from '../../constantes/inspeccion-fisica-zoosanitario.enums';
-import { OnInit } from '@angular/core';
+
+import {
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+} from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
+
 import { Subject } from 'rxjs';
-import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
-import { TablaSeleccion } from '@ng-mf/data-access-user';
-import { TituloComponent } from '@libs/shared/data-access-user/src';
-import { destinoInfo} from '../../modelos/datos-de-interfaz.model';
-import { exportadorInfo} from '../../modelos/datos-de-interfaz.model';
 import { takeUntil } from 'rxjs/operators';
 
-@Component({
+import {
+  AlertComponent,
+  ConfiguracionColumna,
+  TituloComponent,
+} from '@libs/shared/data-access-user/src';
+
+import {
+  TablaDinamicaComponent,
+  TablaSeleccion,
+} from '@ng-mf/data-access-user';
+
+import { MANDATORY_INSTRUCTION } from '../../constantes/inspeccion-fisica-zoosanitario.enums';
+
+import {
+  DESTINO_SERVICIO,
+  EXPORTADOR_SERVICIO,
+  destinoInfo,
+  exportadorInfo,
+} from '../../modelos/datos-de-interfaz.model';
+
+import { ExportadorDatosService } from '../../servicios/exportador-datos.service';
+
+/**
+ * @component
+ * @name InternaTercerosRelacionadosComponent
+ * @description
+ * Componente para gestionar los terceros relacionados (exportadores y destinos) en el trámite 220701.
+ * Permite visualizar, seleccionar y manejar la información de exportadores y destinos asociados al trámite.
+ * Utiliza tablas dinámicas, consume servicios para obtener los datos y permite la interacción mediante selección tipo radio y checkbox.
+ * Implementa la lógica de inicialización, carga de datos y actualización de la vista.
+ *
+ * - Visualiza y selecciona exportadores y destinos asociados al trámite.
+ * - Utiliza tablas dinámicas para mostrar la información.
+ * - Permite la selección de filas mediante radio y checkbox.
+ * - Consume servicios para obtener los datos y actualiza la vista automáticamente.
+ *
+ * @example
+ * <interna-terceros-relacionados></interna-terceros-relacionados>
+ */@Component({
   selector: 'interna-terceros-relacionados',
   standalone: true,
   imports: [AlertComponent, CommonModule, ReactiveFormsModule, TituloComponent, TablaDinamicaComponent],
