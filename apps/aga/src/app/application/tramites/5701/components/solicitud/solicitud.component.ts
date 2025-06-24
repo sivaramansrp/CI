@@ -2188,7 +2188,6 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
           }
         }),
         catchError((error) => {
-          console.log('Error al obtener certificación IMMEX:', error);
           return throwError(() => error);
         })
       )
@@ -2209,11 +2208,6 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
           }
         }),
         catchError((error) => {
-          console.log(
-            'Error al obtener certificación de programa de fomento:',
-            error
-          );
-
           return throwError(() => error);
         })
       )
@@ -2246,7 +2240,6 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((response) => {
-          console.log('Respuesta de certificación de origen:', response);
           this.datosImportadorExportador
             .get('revision')
             ?.setValue(response.datos);
@@ -2618,8 +2611,6 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
     const RECINTO_ESPECIFICADO = this.validaCampoRecintoEspecifique();
 
     if (CHECKED) {
-      console.log('El check está activado');
-
       if (
         RECINTO_ESPECIFICADO ||
         ID_ADUANA_DESPACHO !== SIN_VALOR_SELECT ||
