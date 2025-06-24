@@ -14,8 +14,8 @@ describe('PasoUnoComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [PasoUnoComponent],
-      imports: [SolicitanteComponent, HttpClientModule],
+      declarations: [],
+      imports: [PasoUnoComponent, SolicitanteComponent, HttpClientModule],
       providers: [SolicitanteService],
     }).compileComponents();
 
@@ -30,14 +30,12 @@ describe('PasoUnoComponent', () => {
   });
 
   it('should update the indice and emit tabChanged event when seleccionaTab is called', () => {
-    // Arrange
     const newIndex = 2;
     jest.spyOn(component.tabChanged, 'emit');
 
-    // Act
     component.seleccionaTab(newIndex);
 
-    // Assert
+
     expect(component.indice).toBe(newIndex);
     expect(component.tabChanged.emit).toHaveBeenCalledWith(newIndex);
   });

@@ -1,7 +1,7 @@
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { headersDataSeleccionadasTabla, historicoTableColumns } from '../../models/registro.model';
+import { HEADERSDATASELECCIONADASTABLA, HISTORICOTABLECOLUMNS } from '../../models/registro.model';
 import { map, takeUntil } from 'rxjs';
 import { CertificadosOrigenService } from '../../../110223/services/certificado-origen.service';
 import { CommonModule } from '@angular/common';
@@ -44,7 +44,7 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
   /**
    * Configuración de las columnas de la tabla dinámica.
    */
-  tableColumns = historicoTableColumns;
+  tableColumns = HISTORICOTABLECOLUMNS;
 
   /**
    * Lista de productores disponibles para el exportador.
@@ -298,7 +298,7 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
   /**
    * Configuración de las columnas de la tabla de mercancías seleccionadas.
    */
-  public headersData = headersDataSeleccionadasTabla;
+  public headersData = HEADERSDATASELECCIONADASTABLA;
     /**
    * Inicializa el estado del formulario (habilitado/deshabilitado) basado en el modo de solo lectura.
    */

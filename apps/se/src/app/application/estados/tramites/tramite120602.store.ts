@@ -84,158 +84,158 @@ export class Tramite120602Store extends Store<Solicitud120602State>{
    *
    * @param estado - El estado que se va a guardar.
    */
-    public setEstado(estado: string) {
+    public setEstado(estado: string):void {
         this.update((state) => ({
             ...state,
             estado,
         }));
     }
 
-    public setRepresentacionFederal(representacionFederal: string) {
+    public setRepresentacionFederal(representacionFederal: string):void {
         this.update((state) => ({
             ...state,
             representacionFederal,
         }));
     }
-    public setTipoEmpresa(tipoEmpresa: string) {
+    public setTipoEmpresa(tipoEmpresa: string):void {
         this.update((state) => ({
             ...state,
             tipoEmpresa,
         }));
     }
-    public setEspecifique(especifique: string) { 
+    public setEspecifique(especifique: string):void { 
         this.update((state) => ({
             ...state,
             especifique,
         }));
     }
-    public setActividadEconomicaPreponderante(actividadEconomicaPreponderante: string) {
+    public setActividadEconomicaPreponderante(actividadEconomicaPreponderante: string):void {
         this.update((state) => ({
             ...state,
             actividadEconomicaPreponderante,
         }));
     }
-    public setDescripcion(descripcion: string) {
+    public setDescripcion(descripcion: string):void {
         this.update((state) => ({
             ...state,
             descripcion,
         }));
     }
-    public setPais(pais: string) {
+    public setPais(pais: string):void {
         this.update((state) => ({
             ...state,
             pais,
         }));
     }
-    public setCodigoPostal(codigoPostal: string) {
+    public setCodigoPostal(codigoPostal: string):void {
         this.update((state) => ({
             ...state,
             codigoPostal,
         }));
     }
-    public setEstadoDomicilio(estadoDomicilio: string) {
+    public setEstadoDomicilio(estadoDomicilio: string):void {
         this.update((state) => ({
             ...state,
             estadoDomicilio,
         }));
     }
-    public setMunicipioAlcaldia(municipioAlcaldia: string) {
+    public setMunicipioAlcaldia(municipioAlcaldia: string):void {
         this.update((state) => ({
             ...state,
             municipioAlcaldia,
         }));
     }
-    public setLocalidad(localidad: string) {
+    public setLocalidad(localidad: string):void {
         this.update((state) => ({
             ...state,
             localidad,
         }));
     }
-    public setColonia(colonia: string) {
+    public setColonia(colonia: string):void {
         this.update((state) => ({
             ...state,
             colonia,
         }));
     }
-    public setCalle(calle: string) {
+    public setCalle(calle: string):void {
         this.update((state) => ({
             ...state,
             calle,
         }));
     }
-    public setNumeroExterior(numeroExterior: string) {
+    public setNumeroExterior(numeroExterior: string):void {
         this.update((state) => ({
             ...state,
             numeroExterior,
         }));
     }
-    public setNumeroInterior(numeroInterior: string) {
+    public setNumeroInterior(numeroInterior: string):void {
         this.update((state) => ({
             ...state,
             numeroInterior,
         }));
     }
-    public setLada(lada: string) {
+    public setLada(lada: string):void {
         this.update((state) => ({
             ...state,
             lada,
         }));
     }
-    public setTelefono(telefono: string) {
+    public setTelefono(telefono: string):void {
         this.update((state) => ({
             ...state,
             telefono,
         }));
     }
-    public setNacionalidad(nacionalidad: string) {
+    public setNacionalidad(nacionalidad: string):void {
         this.update((state) => ({
             ...state,
             nacionalidad,
         }));
     }
-    public setTipoDePersona(tipoDePersona: string) {
+    public setTipoDePersona(tipoDePersona: string):void {
         this.update((state) => ({
             ...state,
             tipoDePersona,
         }));
     }
-    public setTaxId(taxId: string) {
+    public setTaxId(taxId: string):void {
         this.update((state) => ({
             ...state,
             taxId,
         }));
     }
-    public setDenominacion(denominacion: string) {
+    public setDenominacion(denominacion: string):void {
         this.update((state) => ({
             ...state,
             denominacion,
         }));
     }
-    public setDatosPais(datosPais: string) {
+    public setDatosPais(datosPais: string):void {
         this.update((state) => ({
             ...state,
             datosPais,
         }));
     }
-    public setDatosCodigoPostal(datosCodigoPostal: string) {
+    public setDatosCodigoPostal(datosCodigoPostal: string):void {
         this.update((state) => ({
             ...state,
             datosCodigoPostal,
         }));
     }
-    public setDatosEstado(datosEstado: string) {
+    public setDatosEstado(datosEstado: string):void {
         this.update((state) => ({
             ...state,
             datosEstado,
         }));
     }
-    public setCorreoElectronico(correoElectronico: string) {
+    public setCorreoElectronico(correoElectronico: string):void {
         this.update((state) => ({
             ...state,
             correoElectronico,
         }));
     }
-    public limpiarDatosEmpresa() {
+    public limpiarDatosEmpresa():void {
         this.reset();
     }
 } 

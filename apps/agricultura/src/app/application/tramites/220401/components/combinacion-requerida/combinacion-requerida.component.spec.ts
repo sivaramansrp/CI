@@ -18,7 +18,7 @@ describe('CombinacionRequeridaComponent', () => {
 
   beforeEach(async () => {
     agregar220401StoreMock = {
-      setEspecie: jest.fn(),
+      setespecie: jest.fn(),
       setFuncionZootecnica: jest.fn(),
       setMercancia: jest.fn(),
       setPaisDestino: jest.fn(),
@@ -74,8 +74,8 @@ describe('CombinacionRequeridaComponent', () => {
     };
 
     await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule],
-      declarations: [CombinacionRequeridaComponent],
+      imports: [ReactiveFormsModule,CombinacionRequeridaComponent],
+      declarations: [],
       providers: [
         FormBuilder,
         { provide: ValidacionesFormularioService, useValue: validacionesServiceMock },
@@ -139,8 +139,8 @@ describe('CombinacionRequeridaComponent', () => {
   it('debe llamar al método del store correspondiente en setValoresStore', () => {
     component.inicializarFormulario();
     component.formCombinacion.get('especie')?.setValue('valorTest');
-    component.setValoresStore(component.formCombinacion, 'especie', 'setEspecie');
-    expect(agregar220401StoreMock.setEspecie).toHaveBeenCalledWith('valorTest');
+    component.setValoresStore(component.formCombinacion, 'especie', 'setespecie');
+    expect(agregar220401StoreMock.setespecie).toHaveBeenCalledWith('valorTest');
   });
 
   it('debe retornar true en isValid si el campo es válido', () => {

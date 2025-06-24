@@ -5,14 +5,14 @@
         <app-tabla-expandible [datos]="producto" [configuracionTabla]="configuracionTabla"
             [configuracionTablaAnidada]="configuracionMercanciasTabla" [obtenerDatosAnidados]="obtenerDatosAnidados"
             [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX" [tableId]="'products-table'"
-            (filaSeleccionada)="alSeleccionarProducto($event)">
+            (filaSeleccionada)="alSeleccionarProducto($event)" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura">
         </app-tabla-expandible>
     </div>
 
     <div class="col-md-12 mt-5 d-flex justify-content-end">
-        <button type="button" class="btn btn-danger">Borrar</button>
-        <button type="button" class="btn btn-default ms-3">Guardar datos</button>
-        <button type="button" class="btn btn-primary ms-3" (click)="abrirModalMercancias()">Agregar</button>
+        <button type="button" class="btn btn-danger" [disabled]="esFormularioSoloLectura">Borrar</button>
+        <button type="button" class="btn btn-default ms-3" [disabled]="esFormularioSoloLectura">Guardar datos</button>
+        <button type="button" class="btn btn-primary ms-3" (click)="abrirModalMercancias()" [disabled]="esFormularioSoloLectura">Agregar</button>
     </div>
 </div>
 

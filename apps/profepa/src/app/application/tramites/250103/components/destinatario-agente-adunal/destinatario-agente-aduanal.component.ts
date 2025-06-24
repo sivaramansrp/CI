@@ -7,16 +7,16 @@ import {
 } from '../../models/embalaje-de-madera.models';
 import {
   Catalogo,
-  CatalogoSelectComponent,
+  ConsultaioQuery,
+  TablaDinamicaComponent,
+  TituloComponent
+} from '@ng-mf/data-access-user';
+import {
   CategoriaMensaje,
   ConfiguracionColumna,
-  InputRadioComponent,
   Notificacion,
   NotificacionesComponent,
-  TablaDinamicaComponent,
-  TablaSeleccion,
   TipoNotificacionEnum,
-  TituloComponent,
  } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
@@ -26,13 +26,16 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, Subscription, map, takeUntil } from 'rxjs';
+import { Tramite250103State, Tramite250103Store } from '../../estados/tramite250103.store';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { CommonModule } from '@angular/common';
 import { DESTINATARIO_OPCIONES_DE_BOTON_DE_RADIO } from '../../constantes/embalaje-de-madera.enum';
 import { DistinatarioService } from '../../../250103/services/distinatario.service';
+import { InputRadioComponent } from "@libs/shared/data-access-user/src/tramites/components/input-radio/input-radio.component";
 import { ModalComponent } from '../modal/modal.component';
+import { TablaSeleccion } from '@libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
 import { Tramite250103Query } from '../../estados/tramite250103.query';
-import { Tramite250103Store } from '../../estados/tramite250103.store';
 
 /**
  * Componente encargado de gestionar los destinatarios y agentes aduanales dentro del trámite 250103.
@@ -59,7 +62,6 @@ export class DestinatarioAgenteAduanalComponent implements OnInit ,OnDestroy {
   /** Configuración de la tabla de destinatarios. */
   public tablaDestinatariosData: ConfiguracionColumna<Destinatarios>[] =
     AGREGAR_MIEMBRO_TABLA;
-    
   /** Configuración de la tabla de agentes aduanales. */
   public tablaAgenteAduanalData: ConfiguracionColumna<Adunal>[] =
     TABLA_AGENT_ADUNALDATA;
@@ -99,25 +101,52 @@ export class DestinatarioAgenteAduanalComponent implements OnInit ,OnDestroy {
   public selectedDestinatarioRows: Destinatarios[] = [];
    /** Filas seleccionadas de agentes aduanales. */
   public selectedAgenteAduanalRows: Adunal[] = [];
-    /**
+  /**
    * Notificación que se muestra al usuario.
    */
-    public nuevaNotificacion!: Notificacion;
+  public nuevaNotificacion!: Notificacion;
+  /**
+  * Suscripción a los cambios en el formulario reactivo.
+  */
+  private subscription: Subscription = new Subscription();
+  /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  esFormularioSoloLectura: boolean = false;
+   /**
+    * Estado interno de la sección actual del trámite 130110.
+    * Utilizado para gestionar y almacenar la información relacionada con esta sección.
+    * Propiedad privada.
+    */
+  private seccionState!: Tramite250103State;
+
    /**
    * Constructor.
    * @param fb Construye formularios reactivos.
    * @param tramite250103Store Almacén de estado del trámite.
    * @param tramite250103Query Consulta el estado del trámite.
    * @param destinatarioService Obtiene datos de países y entidades.
+   * @param consultaioQuery Consulta para obtener el estado de la consulta.
    */
   constructor(
     private fb: FormBuilder,
     private tramite250103Store: Tramite250103Store,
     private tramite250103Query: Tramite250103Query,
-    private destinatarioService: DistinatarioService
+    private destinatarioService: DistinatarioService,
+    private consultaioQuery: ConsultaioQuery
   ) {
-    //
+     this.consultaioQuery.selectConsultaioState$
+        .pipe(
+          takeUntil(this.destroy$),
+          map((seccionState) => {
+            this.esFormularioSoloLectura = seccionState.readonly;
+            this.inicializarEstadoFormulario();
+          })
+        )
+        .subscribe();
   }
+  
    /**
    * Inicializa el componente, carga datos y configura formularios.
    */
@@ -150,8 +179,42 @@ export class DestinatarioAgenteAduanalComponent implements OnInit ,OnDestroy {
         })
       );
     });
-    this.establecerFormDestinatariosModal();
     this.establecerFormAgenteAduanal();
+  }
+
+  /**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.
+   * Además, obtiene la información del catálogo de mercancía.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.establecerFormDestinatariosModal();
+    }
+  }
+
+    /**
+   * @method
+   * @name guardarDatosFormulario
+   * @description
+   * Inicializa los formularios y obtiene los datos de la tabla.
+   * Dependiendo del modo de solo lectura (`esFormularioSoloLectura`),
+   * deshabilita o habilita todos los formularios del componente.
+   * Si el formulario está en modo solo lectura, todos los formularios se deshabilitan para evitar modificaciones.
+   * Si no está en modo solo lectura, todos los formularios se habilitan para permitir la edición.
+   *
+   * @returns {void}
+   */
+  guardarDatosFormulario(): void {
+    this.establecerFormDestinatariosModal();
+    if (this.esFormularioSoloLectura) {
+      this.formDestinatariosModal.disable();
+      this.formAgenteAduanal.disable();
+    } else {
+      this.formDestinatariosModal.enable();
+      this.formAgenteAduanal.enable();
+    }
   }
 
 /**
@@ -419,10 +482,11 @@ export class DestinatarioAgenteAduanalComponent implements OnInit ,OnDestroy {
     this.formAgenteAduanal.reset();
   }
 
-    /**
+  /**
    * Limpia suscripciones al destruir el componente.
    */
   ngOnDestroy(): void {
+    this.subscription.unsubscribe();
     this.destroy$.next();
     this.destroy$.complete();
   }

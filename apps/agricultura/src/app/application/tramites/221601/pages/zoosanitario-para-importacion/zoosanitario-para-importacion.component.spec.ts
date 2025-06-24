@@ -1,5 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ZoosanitarioParaImportacionComponent } from './zoosanitario-para-importacion.component';
+import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule } from '@angular/forms';
 
 describe('ZoosanitarioParaImportacionComponent', () => {
   let component: ZoosanitarioParaImportacionComponent;
@@ -7,7 +9,8 @@ describe('ZoosanitarioParaImportacionComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ZoosanitarioParaImportacionComponent],
+      imports: [ZoosanitarioParaImportacionComponent,ReactiveFormsModule,
+        CommonModule],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ZoosanitarioParaImportacionComponent);

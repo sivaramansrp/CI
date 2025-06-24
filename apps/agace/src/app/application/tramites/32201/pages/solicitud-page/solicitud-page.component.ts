@@ -1,9 +1,6 @@
-import { CommonModule } from '@angular/common';
-import { Component, ViewChild } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
-  AlertComponent,
   AVISO,
+  AlertComponent,
   BtnContinuarComponent,
   DatosPasos,
   ListaPasosWizard,
@@ -11,6 +8,9 @@ import {
   SolicitanteComponent,
   WizardComponent,
 } from '@ng-mf/data-access-user';
+import { Component, ViewChild } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 import { PasoDosComponent } from '../paso-dos/paso-dos.component';
 import { PasoTresComponent } from '../paso-tres/paso-tres.component';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';

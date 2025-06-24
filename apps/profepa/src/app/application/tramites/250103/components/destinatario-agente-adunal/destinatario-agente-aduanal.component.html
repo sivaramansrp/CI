@@ -8,6 +8,7 @@
           [configuracionTabla]="tablaDestinatariosData"
           [datos]="agregarDestinatariosTablaDatos"
           [tipoSeleccionTabla]="tablaSeleccionCheckbox"
+          [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
           (listaDeFilaSeleccionada)="onSeleccionDestinatario($event)"
         >
         </app-tabla-dinamica>
@@ -16,6 +17,7 @@
         <button
           type="button"
           class="btn btn-danger"
+          [disabled]="esFormularioSoloLectura"
           (click)="eliminarUbicacionDetinatario()"
         >
           Eliminar
@@ -24,6 +26,7 @@
           type="button"
           class="btn btn-primary ms-3"
           id="capturarDestinatario"
+          [disabled]="esFormularioSoloLectura"
           (click)="cambiarDestinatario()"
         >
           Agregar
@@ -39,6 +42,7 @@
           [configuracionTabla]="tablaAgenteAduanalData"
           [datos]="agregarAgenteAduanalTablaDatos"
           [tipoSeleccionTabla]="tablaSeleccionCheckbox"
+          [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
           (listaDeFilaSeleccionada)="onSeleccionAgenteAduanal($event)"
         >
         </app-tabla-dinamica>
@@ -49,6 +53,7 @@
           type="button"
           class="btn btn-danger"
           id="eliminarRequisito"
+          [disabled]="esFormularioSoloLectura"
           (click)="eliminarAgenteAduanal()"
         >
           Eliminar
@@ -57,6 +62,7 @@
           type="button"
           class="btn btn-primary ms-3"
           id="agregarRequisito"
+          [disabled]="esFormularioSoloLectura"
           (click)="cambiarAgenteAduanal()"
         >
           Agregar
@@ -77,6 +83,7 @@
         id="destinatarioRadio"
         formControlName="destinatarioRadio"
         name="destinatarioRadio"
+        [disabled]="esFormularioSoloLectura"
         (valueChange)="onDestinatarioRadioChange($event)"
       ></app-input-radio>
 
@@ -117,6 +124,7 @@
             [catalogo]="paisData"
             [label]="'País'"
             [required]="true"
+            [isDisabled]="esFormularioSoloLectura"
             name="paisNacionalDestinatario"
             id="paisNacionalDestinatario1"
             formControlName="paisNacionalDestinatario"
@@ -158,6 +166,7 @@
             [catalogo]="estadoData"
             [label]="'Entidad Federativa*:'"
             [required]="true"
+            [isDisabled]="esFormularioSoloLectura"
             name="entidadFederativaDestinatario"
             id="entidadFederativaDestinatario"
             formControlName="entidadFederativaDestinatario"
@@ -238,6 +247,7 @@
           type="button"
           class="btn btn-danger"
           id="cancelarDestinatarioBtn"
+          [disabled]="esFormularioSoloLectura"
           (click)="cambiarDestinatario()"
         >
           Cancelar
@@ -246,6 +256,7 @@
           type="button"
           class="btn btn-default ms-3"
           id="limpiarDestinatarioBtn"
+          [disabled]="esFormularioSoloLectura"
           (click)="limparDestinatario()"
         >
           Limpiar
@@ -254,6 +265,7 @@
           type="button"
           class="btn btn-primary ms-3"
           id="registroDestinatarioBtn"
+          [disabled]="esFormularioSoloLectura"
           (click)="openAceptarModal()"
         >
           Agregar

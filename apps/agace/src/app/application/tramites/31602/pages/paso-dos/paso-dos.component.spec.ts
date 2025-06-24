@@ -1,5 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PasoDosComponent } from './paso-dos.component';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import {AlertComponent, TituloComponent, AnexarDocumentosComponent} from '@libs/shared/data-access-user/src';
+import { Subject } from 'rxjs';
 
 describe('PasoDosComponent', () => {
   let component: PasoDosComponent;
@@ -7,6 +10,7 @@ describe('PasoDosComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
+      imports: [HttpClientTestingModule,TituloComponent,AlertComponent,AnexarDocumentosComponent],
       declarations: [PasoDosComponent],
     }).compileComponents();
 

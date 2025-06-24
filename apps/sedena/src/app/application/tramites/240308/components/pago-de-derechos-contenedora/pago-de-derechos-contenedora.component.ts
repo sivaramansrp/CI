@@ -1,4 +1,9 @@
-import { CommonModule } from '@angular/common';
+
+/**
+ *  Pago de Derechos Contenedora
+ *  Componente contenedor que integra el componente de pago de derechos con el store del trámite 240308.
+ * */
+ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
@@ -8,10 +13,12 @@ import { Subject } from 'rxjs';
 import { Tramite240308Query } from '../../estados/tramite240308Query.query';
 import { Tramite240308Store } from '../../estados/tramite240308Store.store';
 import { takeUntil } from 'rxjs';
+
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 /**
- * @title Pago de Derechos Contenedora
- * @description Componente contenedor que se encarga de enlazar el estado de pago de derechos con el formulario correspondiente.
- * @summary Escucha cambios en el estado y propaga las actualizaciones al store.
+ *  Pago de Derechos Contenedora
+ *  Componente contenedor que se encarga de enlazar el estado de pago de derechos con el formulario correspondiente.
+ *  Escucha cambios en el estado y propaga las actualizaciones al store.
  */
 
 @Component({
@@ -22,6 +29,11 @@ import { takeUntil } from 'rxjs';
   styleUrl: './pago-de-derechos-contenedora.component.scss',
 })
 export class PagoDeDerechosContenedoraComponent implements OnInit, OnDestroy {
+  /**
+   * Indica si el formulario es de solo lectura.
+   * @property {boolean} esSoloLectura
+   */
+  esSoloLectura!: boolean;
   /**
    * Observable para liberar suscripciones al destruir el componente.
    * @property {Subject<void>} unsubscribe$
@@ -44,7 +56,8 @@ export class PagoDeDerechosContenedoraComponent implements OnInit, OnDestroy {
    */
   constructor(
     private tramiteQuery: Tramite240308Query,
-    private tramiteStore: Tramite240308Store 
+    private tramiteStore: Tramite240308Store,
+    private consultaQuery: ConsultaioQuery
   ) {
     // 
   }
@@ -57,6 +70,12 @@ export class PagoDeDerechosContenedoraComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   ngOnInit(): void {
+        this.consultaQuery.selectConsultaioState$
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((estadoConsulta) => {
+        this.esSoloLectura = estadoConsulta.readonly;
+      })
+
     this.tramiteQuery.getPagoDerechos$
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((data) => {
