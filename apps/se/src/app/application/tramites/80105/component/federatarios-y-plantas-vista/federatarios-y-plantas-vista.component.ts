@@ -1,6 +1,6 @@
+import { Catalogo, TablaSeleccion } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { TablaSeleccion } from '@ng-mf/data-access-user';
 
 import {
   FEDERATARIOS,
@@ -45,6 +45,15 @@ export class FederatariosYPlantasVistaComponent {
     TablaSeleccion: TablaSeleccion.CHECKBOX,
     TablaEncabezado: PLANTAS_DIPONIBLES,
   };
+  /**
+   * Catálogo de estados disponibles.
+   * 
+   * Esta propiedad contiene un arreglo de objetos de tipo `Catalogo` que representan los estados disponibles
+   * para selección en la interfaz. Cada objeto incluye un identificador único (`id`) y una descripción del estado.
+   * 
+   * @type {Catalogo[]}
+   */
+  public estadosCatalogos: Catalogo[] = [{ "id": 1, "descripcion": "JALISCO" }];
 
   /**
    * Configuración de la tabla de plantas IMMEX

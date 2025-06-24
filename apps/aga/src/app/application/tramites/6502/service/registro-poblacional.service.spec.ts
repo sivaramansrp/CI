@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { RegistroPoblacionalService } from './registro-poblacional.service';
-import { InstalacionesPrincipalesRespuestaTabla, formaRespuestaDatos } from '@libs/shared/data-access-user/src/core/models/6502/dato-comunes.model';
+import { InstalacionesPrincipalesRespuestaTabla, FormaRespuestaDatos } from '@libs/shared/data-access-user/src/core/models/6502/dato-comunes.model';
 
 describe('RegistroPoblacionalService', () => {
   let service: RegistroPoblacionalService;
@@ -16,7 +16,7 @@ describe('RegistroPoblacionalService', () => {
         "registro_poblacional": "LEQI810131HDGSXGC" },
     ]
   };
-  const mockFormaDatosResponse: formaRespuestaDatos = {
+  const mockFormaDatosResponse: FormaRespuestaDatos = {
     "code": 200,
     "data": [
       {
@@ -94,7 +94,7 @@ describe('RegistroPoblacionalService', () => {
 
     it('should handle empty response', () => {
       service.obtenerFromaDatos().subscribe(data => {
-        expect(data).toEqual({} as formaRespuestaDatos);
+        expect(data).toEqual({} as FormaRespuestaDatos);
       });
 
       const req = httpMock.expectOne('assets/json/6502/forma-datos.json');

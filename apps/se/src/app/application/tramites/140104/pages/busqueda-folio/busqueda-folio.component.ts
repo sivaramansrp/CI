@@ -1,6 +1,7 @@
 import * as formData from '@libs/shared/theme/assets/json/140105/datos-del-formulario.json';
 import { Component } from '@angular/core';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { FacturasDisponiblesParaDevolver } from '../../models/cancelacion-de-certificados.model';
 import { FacturasSeleccionadasParaDevolver } from '../../models/cancelacion-de-certificados.model';
 import { FormBuilder } from '@angular/forms';
@@ -9,8 +10,12 @@ import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { REG_X } from '@libs/shared/data-access-user/src/tramites/constantes/regex.constants';
 import { ServicioDeMensajesService } from '../../services/servicio-de-mensajes.service';
+import { Subject } from 'rxjs';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { Validators } from '@angular/forms';
+import { map } from 'rxjs';
+import { takeUntil } from 'rxjs';
+
 /**
  * Componente para realizar la búsqueda de folios, visualización de datos de facturas
  * y gestionar formularios relacionados con devoluciones y cancelaciones.
@@ -63,12 +68,32 @@ export class BusquedaFolioComponent implements OnInit, OnDestroy {
   ];
 
   /**
+     * Notificador para destruir las suscripciones al destruir el componente.
+     */
+    public destroyNotifier$: Subject<void> = new Subject();
+
+/**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  esFormularioSoloLectura: boolean = false;
+
+  /**
    * Constructor del componente. Inyecta servicios necesarios y establece el formulario principal.
    * @param servicioDeMensajesService Servicio de mensajería compartido entre componentes
    * @param fb FormBuilder para crear los formularios reactivos
    */
-  constructor(private servicioDeMensajesService: ServicioDeMensajesService, private fb: FormBuilder) {
-    this.establecerMontoACancelarForm();
+  constructor(private servicioDeMensajesService: ServicioDeMensajesService, private fb: FormBuilder, private consultaQuery: ConsultaioQuery) {
+    
+    this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.establecerMontoACancelarForm();
+        })
+      )
+      .subscribe();
   }
 
   /**
@@ -95,7 +120,7 @@ export class BusquedaFolioComponent implements OnInit, OnDestroy {
    * 
    * @param event Evento que desencadena la acción
    */
-  public agregarSelect(event: Event): void {
+  public agregarSelect(_event: Event): void {
     if (this.montoACancelarForm.invalid) {
       this.montoACancelarForm.markAllAsTouched();
       return;
@@ -109,7 +134,7 @@ export class BusquedaFolioComponent implements OnInit, OnDestroy {
    * 
    * @param event Evento que desencadena la acción
    */
-  public agregar(event: Event): void {
+  public agregar(_event: Event): void {
     this.servicioDeMensajesService.enviarMensaje(false);
     this.servicioDeMensajesService.establecerDatosDePermiso(true);
   }
@@ -121,7 +146,7 @@ export class BusquedaFolioComponent implements OnInit, OnDestroy {
    * 
    * @param event Evento que desencadena la cancelación
    */
-  public cancelar(event: Event): void {
+  public cancelar(_event: Event): void {
     this.servicioDeMensajesService.enviarMensaje(false);
   }
 
@@ -168,5 +193,7 @@ export class BusquedaFolioComponent implements OnInit, OnDestroy {
    */
   ngOnDestroy(): void {
     this.servicioDeMensajesService.establecerDatosDePermiso(false);
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }

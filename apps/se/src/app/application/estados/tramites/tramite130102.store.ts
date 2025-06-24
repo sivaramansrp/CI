@@ -1,3 +1,4 @@
+import { FraccionArancelariaProsec, OctavaTemporal } from '../../tramites/130102/models/octava-temporal.model';
 import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
 
@@ -66,6 +67,12 @@ export interface Solicitud130102State {
   productos: string;
 
   solicitud :string; // Indica si la solicitud está activa o pendiente de revisión.
+
+  /** Lista de partidas temporales (octava regla) asociadas a la solicitud. */
+  partidas_tabla?: OctavaTemporal[];
+
+  /** Lista de usos específicos relacionados con fracciones arancelarias PROSEC. */
+  uso_especifico_tabla?: FraccionArancelariaProsec[];
 }
 /**
  * Crea y devuelve el estado inicial de la solicitud.
@@ -94,6 +101,9 @@ export function createInitialState(): Solicitud130102State {
     observaciones: '', // Sin observaciones iniciales.
     productos: '', // Sin productos asignados.
     solicitud : '', // Indica que la solicitud no está activa por defecto.
+    partidas_tabla: [], // Lista de partidas vacía por defecto.
+    uso_especifico_tabla: [], // Lista de usos específicos vacía por defecto.;
+
   };
 }
 
@@ -109,7 +119,7 @@ export class Tramite130102Store extends Store<Solicitud130102State> {
   constructor() {
     super(createInitialState()); // Inicializa el estado con los valores por defecto.
   }
-public setCriterioDictamen(criterioDictamen: string) {
+public setCriterioDictamen(criterioDictamen: string):void {
     this.update((state) => ({
       ...state,
       criterioDictamen,
@@ -119,7 +129,7 @@ public setCriterioDictamen(criterioDictamen: string) {
    * Actualiza el valor de la fracción arancelaria.
    * @param {string} fraccion - Nueva fracción arancelaria.
    */
-  public setFraccion(fraccion: string) {
+  public setFraccion(fraccion: string):void {
     this.update((state) => ({
       ...state,
       fraccion,
@@ -130,7 +140,7 @@ public setCriterioDictamen(criterioDictamen: string) {
    * Actualiza la descripción del trámite.
    * @param {string} descripcion - Nueva descripción del trámite.
    */
-  public setDescripcion(descripcion: string) {
+  public setDescripcion(descripcion: string):void {
     this.update((state) => ({
       ...state,
       descripcion,
@@ -141,7 +151,7 @@ public setCriterioDictamen(criterioDictamen: string) {
    * Actualiza la fracción arancelaria.
    * @param {string} fraccionArancelaria - Nuevo valor de fracción arancelaria.
    */
-  public setFraccionArancelaria(fraccionArancelaria: string) {
+  public setFraccionArancelaria(fraccionArancelaria: string):void {
     this.update((state) => ({
       ...state,
       fraccionArancelaria,
@@ -152,7 +162,7 @@ public setCriterioDictamen(criterioDictamen: string) {
    * Actualiza la unidad de medida.
    * @param {string} unidadMedida - Nueva unidad de medida.
    */
-  public setUnidadMedida(unidadMedida: string) {
+  public setUnidadMedida(unidadMedida: string):void {
     this.update((state) => ({
       ...state,
       unidadMedida,
@@ -163,7 +173,7 @@ public setCriterioDictamen(criterioDictamen: string) {
    * Actualiza la cantidad de productos.
    * @param {number} cantidad - Nueva cantidad.
    */
-  public setcantidad(cantidad: number) {
+  public setcantidad(cantidad: number):void {
     this.update((state) => ({
       ...state,
       cantidad,
@@ -174,7 +184,7 @@ public setCriterioDictamen(criterioDictamen: string) {
    * Actualiza el valor de la factura en dólares USD.
    * @param {string} valorFacturaUSD - Nuevo valor de factura.
    */
-  public setValorFacturaUSD(valorFacturaUSD: string) {
+  public setValorFacturaUSD(valorFacturaUSD: string):void {
     this.update((state) => ({
       ...state,
       valorFacturaUSD,
@@ -185,7 +195,7 @@ public setCriterioDictamen(criterioDictamen: string) {
    * Actualiza la cantidad de partidas.
    * @param {number} cantidadPartidas - Nueva cantidad de partidas.
    */
-  public setCantidad_partidas(cantidadPartidas: number) {
+  public setCantidad_partidas(cantidadPartidas: number):void {
     this.update((state) => ({
       ...state,
       cantidadPartidas,
@@ -196,7 +206,7 @@ public setCriterioDictamen(criterioDictamen: string) {
    * Actualiza la fracción arancelaria TIGIE.
    * @param {string} fraccionArancelariaTIGIE - Nuevo valor.
    */
-  public setFraccionArancelariaTIGIE(fraccionArancelariaTIGIE: string) {
+  public setFraccionArancelariaTIGIE(fraccionArancelariaTIGIE: string):void {
     this.update((state) => ({
       ...state,
       fraccionArancelariaTIGIE,
@@ -207,7 +217,7 @@ public setCriterioDictamen(criterioDictamen: string) {
    * Actualiza el código extendido de la fracción TIGIE.
    * @param {string} fraccionArancelariaTIGIE_TIGIE - Nuevo código.
    */
-  public setFraccionArancelariaTIGIE_TIGIE(fraccionArancelariaTIGIE_TIGIE: string) {
+  public setFraccionArancelariaTIGIE_TIGIE(fraccionArancelariaTIGIE_TIGIE: string):void {
     this.update((state) => ({
       ...state,
       fraccionArancelariaTIGIE_TIGIE,
@@ -218,7 +228,7 @@ public setCriterioDictamen(criterioDictamen: string) {
    * Actualiza la descripción de las partidas.
    * @param {string} descripcionPartidas - Nueva descripción.
    */
-  public setdescripcion_partidas(descripcionPartidas: string) {
+  public setdescripcion_partidas(descripcionPartidas: string):void {
     this.update((state) => ({
       ...state,
       descripcionPartidas,
@@ -229,7 +239,7 @@ public setCriterioDictamen(criterioDictamen: string) {
    * Actualiza el valor en dólares de la partida.
    * @param {number} valorPartidaUSD - Nuevo valor.
    */
-  public setvalorPartidaUSD(valorPartidaUSD: number) {
+  public setvalorPartidaUSD(valorPartidaUSD: number):void {
     this.update((state) => ({
       ...state,
       valorPartidaUSD,
@@ -240,7 +250,7 @@ public setCriterioDictamen(criterioDictamen: string) {
    * Actualiza la fracción arancelaria.
    * @param {string} fraccionArancelariaProsec - Nueva fracción.
    */
-  public setFraccionArancelariaProsec(fraccionArancelariaProsec: string) {
+  public setFraccionArancelariaProsec(fraccionArancelariaProsec: string):void {
     this.update((state) => ({
       ...state,
       fraccionArancelariaProsec,
@@ -251,7 +261,7 @@ public setCriterioDictamen(criterioDictamen: string) {
    * Actualiza la solicitud de mercancía.
    * @param {string} solicitudMercancia - Nueva solicitud.
    */
-  public setsolicitudMercancia(solicitudMercancia: string) {
+  public setsolicitudMercancia(solicitudMercancia: string):void {
     this.update((state) => ({
       ...state,
       solicitudMercancia,
@@ -262,7 +272,7 @@ public setCriterioDictamen(criterioDictamen: string) {
    * Actualiza la entidad.
    * @param {string} entidad - Nueva entidad.
    */
-  public setEntidad(entidad: string) {
+  public setEntidad(entidad: string):void {
     this.update((state) => ({
       ...state,
       entidad,
@@ -273,7 +283,7 @@ public setCriterioDictamen(criterioDictamen: string) {
    * Actualiza la representación.
    * @param {string} representacion - Nueva representación.
    */
-  public setRepresentacion(representacion: string) {
+  public setRepresentacion(representacion: string):void {
     this.update((state) => ({
       ...state,
       representacion,
@@ -284,7 +294,7 @@ public setCriterioDictamen(criterioDictamen: string) {
    * Actualiza el bloque del trámite.
    * @param {string} bloque - Nuevo bloque.
    */
-  public setBloque(bloque: string) {
+  public setBloque(bloque: string):void {
     this.update((state) => ({
       ...state,
       bloque,
@@ -295,7 +305,7 @@ public setCriterioDictamen(criterioDictamen: string) {
    * Actualiza la justificación del trámite.
    * @param {string} descripcionJustificacion - Nueva justificación.
    */
-  public setDescripcionJustificacion(descripcionJustificacion: string) {
+  public setDescripcionJustificacion(descripcionJustificacion: string):void {
     this.update((state) => ({
       ...state,
       descripcionJustificacion,
@@ -306,7 +316,7 @@ public setCriterioDictamen(criterioDictamen: string) {
    * Actualiza las observaciones.
    * @param {string} observaciones - Nuevas observaciones.
    */
-  public setObservaciones(observaciones: string) {
+  public setObservaciones(observaciones: string):void {
     this.update((state) => ({
       ...state,
       observaciones,
@@ -317,7 +327,7 @@ public setCriterioDictamen(criterioDictamen: string) {
    * Actualiza los productos involucrados.
    * @param {string} productos - Nueva lista de productos.
    */
-  public setProducto(productos: string) {
+  public setProducto(productos: string):void {
     this.update((state) => ({
       ...state,
       productos,
@@ -327,7 +337,7 @@ public setCriterioDictamen(criterioDictamen: string) {
     * Actualiza el estado de la solicitud.
     * @param {string} solicitud - Nueva solicitud.
     */
-  public setSolicitude(solicitud: string) {
+  public setSolicitude(solicitud: string):void {
  this.update((state) => ({
       ...state,
       solicitud,
@@ -337,7 +347,30 @@ public setCriterioDictamen(criterioDictamen: string) {
   /**
    * Limpia todos los datos de la solicitud, restaurándolos a su estado inicial.
    */
-  public limpiarSolicitud() {
+  public limpiarSolicitud():void {
     this.reset();
+  }
+
+  /*
+    * Actualiza el estado de la solicitud.
+    * @param {string} solicitud - Nueva solicitud.
+    */
+  public setPartidasTabla(fieldName: string, value: OctavaTemporal[]):void {
+    this.update((state) => ({
+      ...state,
+      [fieldName]: value,
+    }));
+  }
+
+  /**
+   * Set a value dynamically in the store by field name.
+   * @param fieldName The name of the field to update.
+   * @param value The value to set.
+   */
+  public setDynamicFieldValue(fieldName: string, value: unknown): void {
+    this.update((state) => ({
+      ...state,
+      [fieldName]: value,
+    }));
   }
 }

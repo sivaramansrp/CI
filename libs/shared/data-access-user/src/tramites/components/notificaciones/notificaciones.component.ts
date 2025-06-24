@@ -71,9 +71,25 @@ export interface Notificacion {
    */
   txtBtnCancelar: string;
 
+  /**
+   * @description Variable de entrada para definir el tamaño del modal.
+   */
   tamanioModal?: string;
 
+  /**
+   * @description Variable de entrada para definir la ruta del documento a mostrar en el modal.
+   */
   ruta?: string;
+
+  /**
+   * @description Variable de entrada para definir la alineación del botón de cerrar.
+   */
+  alineacionBtonoCerrar?: string;
+
+  /**
+   * @description Variable de entrada para definir la alineacion del texto.
+   */
+  alineacionTexto?: string;
 }
 
 /**

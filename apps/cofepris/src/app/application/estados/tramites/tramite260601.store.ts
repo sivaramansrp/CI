@@ -812,7 +812,7 @@ export class Tramite260601Store extends Store<AvisoSanitarioState> {
      * 
      * @param seleccionadaManifiesto Nuevo valor del seleccionada manifiesto.
      */
-    public setSeleccionadaManifiesto(seleccionadaManifiesto: []): void {
+    public setSeleccionadaManifiesto(seleccionadaManifiesto: boolean[]): void {
         this.update((state) => ({
             ...state,
             seleccionadaManifiesto

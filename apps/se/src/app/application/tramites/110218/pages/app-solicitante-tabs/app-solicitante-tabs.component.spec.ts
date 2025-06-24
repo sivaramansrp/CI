@@ -1,13 +1,16 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { AppSolicitanteTabsComponent } from './app-solicitante-tabs.component';
-
+ import { NO_ERRORS_SCHEMA } from '@angular/core';
 describe('AppSolicitanteTabsComponent', () => {
   let component: AppSolicitanteTabsComponent;
   let fixture: ComponentFixture<AppSolicitanteTabsComponent>;
 
   beforeEach(async () => {
+   
+    
     await TestBed.configureTestingModule({
       declarations: [AppSolicitanteTabsComponent],
+      schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
   });
 
