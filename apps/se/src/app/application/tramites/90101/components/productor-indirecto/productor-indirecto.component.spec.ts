@@ -1,113 +1,162 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { By } from '@angular/platform-browser';
-import { Observable, of as observableOf, throwError } from 'rxjs';
+import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
+import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
+import { of as observableOf } from 'rxjs';
 
-import { Component } from '@angular/core';
 import { ProductorIndirectoComponent } from './productor-indirecto.component';
-import { FormBuilder } from '@angular/forms';
 import { ProsecService } from '../../services/prosec.service';
 import { AutorizacionProsecStore } from '../../estados/autorizacion-prosec.store';
 import { AUtorizacionProsecQuery } from '../../queries/autorizacion-prosec.query';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { ProsecState } from '../../estados/autorizacion-prosec.store';
+import { FilaProductos } from '../../models/prosec.module';
 
-@Injectable()
-class MockProsecService {}
+const mockProsecState: ProsecState = {
+  modalidad: '',
+  Estado: [],
+  RepresentacionFederal: [],
+  ActividadProductiva: [],
+  Sector: [],
+  Fraccion_arancelaria: '',
+  contribuyentes: 'ABC123XYZ',
+  domiciliosFormaValida: false,
+  productorFromValida: false,
+  sectoresFromValida: false
+};
 
-@Injectable()
-class MockAutorizacionProsecStore {}
+class MockAUtorizacionProsecQuery {
+  selectProsec$ = observableOf(mockProsecState);
+}
 
-@Injectable()
-class MockAUtorizacionProsecQuery {}
+class MockAutorizacionProsecStore {
+  setProductorFromValida = jest.fn();
+  setContribuyentes = jest.fn();
+}
 
+class MockProsecService {
+  formValida = jest.fn();
+  obtenerTablaDatos = jest.fn().mockReturnValue(observableOf([
+    { contribuyentes: 'ABC123', razonSocial: 'Test S.A.', Correo: 'test@example.com' }
+  ]));
+}
 
 describe('ProductorIndirectoComponent', () => {
+  let component: ProductorIndirectoComponent;
   let fixture: ComponentFixture<ProductorIndirectoComponent>;
-  let component: { ngOnDestroy: () => void; AUtorizacionProsecQuery: { selectProsec$?: any; }; initActionFormBuild: jest.Mock<any, any, any> | (() => void); recuperarDatos: jest.Mock<any, any, any> | (() => void); productorIndirecto: { statusChanges?: any; valid?: any; disable?: any; enable?: any; }; AutorizacionProsecStore: { setProductorFromValida?: any; metodoNombre?: any; setValores?: any; }; ProsecService: { formValida?: any; obtenerTablaDatos?: any; }; inicializarEstadoFormulario: jest.Mock<any, any, any> | (() => void); ngOnInit: () => void; fb: { group?: any; }; productorState: { contribuyentes?: any; }; setValoresStore: (arg0: { get: () => { value: {}; }; }, arg1: {}, arg2: {}) => void; destroyNotifier$: { next?: any; complete?: any; }; };
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule, ProductorIndirectoComponent ],
-      declarations: [
-      ],
-      schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [FormsModule, ReactiveFormsModule, ProductorIndirectoComponent],
       providers: [
         FormBuilder,
         { provide: ProsecService, useClass: MockProsecService },
         { provide: AutorizacionProsecStore, useClass: MockAutorizacionProsecStore },
         { provide: AUtorizacionProsecQuery, useClass: MockAUtorizacionProsecQuery },
         ConsultaioQuery
-      ]
-    }).overrideComponent(ProductorIndirectoComponent, {
-
+      ],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
     }).compileComponents();
+
     fixture = TestBed.createComponent(ProductorIndirectoComponent);
-    component = fixture.debugElement.componentInstance;
+    component = fixture.componentInstance;
+    fixture.detectChanges();
   });
 
   afterEach(() => {
-    component.ngOnDestroy = function() {};
     fixture.destroy();
   });
 
-  it('should run #constructor()', async () => {
+  it('should create the component', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should run #ngOnInit()', async () => {
-    component.AUtorizacionProsecQuery = component.AUtorizacionProsecQuery || {};
-    component.AUtorizacionProsecQuery.selectProsec$ = observableOf({});
-    component.initActionFormBuild = jest.fn();
-    component.recuperarDatos = jest.fn();
-    component.productorIndirecto = component.productorIndirecto || {};
-    component.productorIndirecto.statusChanges = observableOf({});
-    component.AutorizacionProsecStore = component.AutorizacionProsecStore || {};
-    component.AutorizacionProsecStore.setProductorFromValida = jest.fn();
-    component.ProsecService = component.ProsecService || {};
-    component.ProsecService.formValida = jest.fn();
-    component.inicializarEstadoFormulario = jest.fn();
-    component.ngOnInit();
-    // expect(component.initActionFormBuild).toHaveBeenCalled();
-    // expect(component.recuperarDatos).toHaveBeenCalled();
-    // expect(component.AutorizacionProsecStore.setProductorFromValida).toHaveBeenCalled();
-    // expect(component.ProsecService.formValida).toHaveBeenCalled();
-    // expect(component.inicializarEstadoFormulario).toHaveBeenCalled();
-  });
+  it('should initialize form and subscribe in ngOnInit', () => {
+  jest.useFakeTimers(); // Ensure fake timers are active
 
-  it('should run #inicializarEstadoFormulario()', async () => {
-    component.productorIndirecto = component.productorIndirecto || {};
-    component.productorIndirecto.disable = jest.fn();
-    component.productorIndirecto.enable = jest.fn();
+  const prosecService = TestBed.inject(ProsecService);
+  const autorizacionProsecStore = TestBed.inject(AutorizacionProsecStore);
+
+  const formValidaSpy = jest.spyOn(prosecService, 'formValida');
+  const setValidSpy = jest.spyOn(autorizacionProsecStore, 'setProductorFromValida');
+
+  // Mock the state used in initActionFormBuild
+  (component as any).productorState = { contribuyentes: '' };
+
+  // Init component and form
+  component.ngOnInit();
+  fixture.detectChanges();
+
+  // Make the form valid by setting a non-empty value
+  const formControl = component.productorIndirecto.get('contribuyentes');
+  formControl?.setValue('TEST');
+
+  // Trigger change detection and RxJS delay
+  fixture.detectChanges();
+  jest.advanceTimersByTime(50); // Must be more than 10ms used in delay()
+
+  // Expect calls
+  expect(setValidSpy).toHaveBeenCalledWith(true);
+  expect(formValidaSpy).toHaveBeenCalled();
+
+  jest.useRealTimers(); // Clean up
+});
+
+  it('should call disable if esFormularioSoloLectura is true', () => {
+    component.esFormularioSoloLectura = true;
+    component.productorIndirecto = component['fb'].group({ contribuyentes: [''] });
+    const disableSpy = jest.spyOn(component.productorIndirecto, 'disable');
     component.inicializarEstadoFormulario();
-    // expect(component.productorIndirecto.disable).toHaveBeenCalled();
-    // expect(component.productorIndirecto.enable).toHaveBeenCalled();
+    expect(disableSpy).toHaveBeenCalled();
   });
 
-  it('should run #initActionFormBuild()', async () => {
-    component.fb = component.fb || {};
-    component.fb.group = jest.fn();
-    component.productorState = component.productorState || {};
-    component.productorState.contribuyentes = 'contribuyentes';
+  it('should call enable if esFormularioSoloLectura is false', () => {
+    component.esFormularioSoloLectura = false;
+    component.productorIndirecto = component['fb'].group({ contribuyentes: [''] });
+    const enableSpy = jest.spyOn(component.productorIndirecto, 'enable');
+    component.inicializarEstadoFormulario();
+    expect(enableSpy).toHaveBeenCalled();
+  });
+
+  it('should build the form with initActionFormBuild', () => {
     component.initActionFormBuild();
-    expect(component.fb.group).toHaveBeenCalled();
+    expect(component.productorIndirecto.get('contribuyentes')).toBeTruthy();
+    expect(component.productorIndirecto.value.contribuyentes).toBe('ABC123XYZ');
   });
 
-  it('should run #recuperarDatos()', async () => {
-    component.ProsecService = component.ProsecService || {};
-    component.ProsecService.obtenerTablaDatos = jest.fn().mockReturnValue(observableOf({}));
+  it('should call obtenerTablaDatos and populate productorDato', () => {
     component.recuperarDatos();
-    expect(component.ProsecService.obtenerTablaDatos).toHaveBeenCalled();
+    expect(component.productorDato.length).toBeGreaterThan(0);
   });
 
-  it('should run #ngOnDestroy()', async () => {
-    component.destroyNotifier$ = component.destroyNotifier$ || {};
-    component.destroyNotifier$.next = jest.fn();
-    component.destroyNotifier$.complete = jest.fn();
+  it('should NOT set productorDato if response is null', () => {
+
+jest.spyOn(component['ProsecService'], 'obtenerTablaDatos').mockReturnValue(observableOf([] as FilaProductos[] ));
+    component.recuperarDatos();
+    expect(component.productorDato.length).toBe(0);
+  });
+
+  it('should call store method in setValoresStore', () => {
+  const form = component['fb'].group({ contribuyentes: ['XYZ987'] });
+
+  // Inject the mocked store
+  const store = component['AutorizacionProsecStore'];
+
+  // Manually define the mocked method on the store
+  store.setcontribuyentes = jest.fn();
+
+  // Call the method under test
+  component.setValoresStore(form, 'contribuyentes', 'setcontribuyentes' as any);
+
+  // Expect the mocked method to have been called correctly
+  expect(store.setcontribuyentes).toHaveBeenCalledWith('XYZ987');
+});
+
+
+  it('should clean up on ngOnDestroy', () => {
+    const nextSpy = jest.spyOn(component['destroyNotifier$'], 'next');
+    const completeSpy = jest.spyOn(component['destroyNotifier$'], 'complete');
     component.ngOnDestroy();
-    expect(component.destroyNotifier$.next).toHaveBeenCalled();
-    expect(component.destroyNotifier$.complete).toHaveBeenCalled();
+    expect(nextSpy).toHaveBeenCalled();
+    expect(completeSpy).toHaveBeenCalled();
   });
-
 });
