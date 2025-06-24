@@ -1,43 +1,63 @@
-/* eslint-disable @nx/enforce-module-boundaries */
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
-/* eslint-disable class-methods-use-this */
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable sort-imports */
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { of } from 'rxjs';
+import { of, Subject } from 'rxjs';
 import { RequisitosComponent } from './requisitos.component';
-import { ServiciosPantallaService } from '../../../../core/services/31601/servicios-pantalla.service';
-import { CatalogoSelectComponent } from '../../../../shared/components/catalogo-select/catalogo-select.component';
-import { TableComponent } from '../../../../shared/components/table/table.component';
-import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
-import { CATALOGOS_ID } from '../../../../shared/constantes/constantes';
-import { Catalogo } from '../../../../core/models/shared/catalogos.model';
-import { Tipos } from '../../../../core/models/31601/servicios-pantallas.model';
+import { ServiciosPantallaService } from '@libs/shared/data-access-user/src/core/services/31601/servicios-pantalla.service';
+import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
+import { TableComponent } from '@ng-mf/data-access-user';
+import { TituloComponent } from '@ng-mf/data-access-user';
 import { HttpClientModule } from '@angular/common/http';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, FormBuilder } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import MockValue from 'libs/shared/theme/assets/json/31601/mock-value.json';
+import { Tramite31601Store } from '../../../../estados/tramites/tramite31601.store';
+import { Tramite31601Query } from '../../../../estados/queries/tramite31601.query';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+
+const mockTipos = [
+  { tiposData: 'Tipo Document 1' },
+  { tiposData: 'Tipo Document 2' }
+];
+
+const mockTipoCatalogResponse = {
+  data: [
+    { id: 1, descripcion: 'Catalogo 1', tam: 'A4', dpi: '300' }
+  ]
+};
+
+const mockSolicitudState = {
+  tipoDocumento: 'Tipo Document 1'
+};
+
 class MockServiciosPantallaService {
   getTiposCatalog() {
-    return of(MockValue.tiposCatalog);
+    return of(mockTipos);
   }
-
-  getTipoCatalog(catalogo: string) {
-    return of(MockValue.tipoCatalogResponse);
+  getTipoCatalog() {
+    return of(mockTipoCatalogResponse);
   }
 }
 
-fdescribe('RequisitosComponent', () => {
+class MockTramite31601Store {
+  setTipoDocumento = jest.fn();
+}
+
+class MockTramite31601Query {
+  selectSolicitud$ = of(mockSolicitudState);
+}
+
+describe('RequisitosComponent', () => {
   let component: RequisitosComponent;
   let fixture: ComponentFixture<RequisitosComponent>;
-  let pantallaSvc: MockServiciosPantallaService;
+  let store: MockTramite31601Store;
+  let consultaioQueryMock: any;
 
   beforeEach(async () => {
+    consultaioQueryMock = { selectConsultaioState$: of({ readonly: false }) };
+
     await TestBed.configureTestingModule({
-      declarations: [],
       imports: [
         HttpClientModule,
         FormsModule,
+        ReactiveFormsModule,
         CommonModule,
         RequisitosComponent,
         TituloComponent,
@@ -45,16 +65,17 @@ fdescribe('RequisitosComponent', () => {
         CatalogoSelectComponent,
       ],
       providers: [
-        {
-          provide: ServiciosPantallaService,
-          useClass: MockServiciosPantallaService,
-        },
+        { provide: ServiciosPantallaService, useClass: MockServiciosPantallaService },
+        { provide: Tramite31601Store, useClass: MockTramite31601Store },
+        { provide: Tramite31601Query, useClass: MockTramite31601Query },
+        { provide: ConsultaioQuery, useValue: consultaioQueryMock },
+        FormBuilder
       ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(RequisitosComponent);
     component = fixture.componentInstance;
-    pantallaSvc = TestBed.inject(ServiciosPantallaService);
+    store = TestBed.inject(Tramite31601Store) as any;
     fixture.detectChanges();
   });
 
@@ -62,29 +83,51 @@ fdescribe('RequisitosComponent', () => {
     expect(component).toBeTruthy();
   });
 
+  it('should initialize the form with correct value from store', () => {
+    expect(component.requisitos).toBeDefined();
+    expect(component.requisitos.get('tipoDocumento')?.value).toBe('Tipo Document 1');
+  });
+
+  it('should disable form controls if esFormularioSoloLectura is true', () => {
+    component.esFormularioSoloLectura = true;
+    component.inicializarEstadoFormulario();
+    expect(component.requisitos.get('tipoDocumento')?.disabled).toBe(true);
+  });
+
+  it('should enable form controls if esFormularioSoloLectura is false', () => {
+    component.esFormularioSoloLectura = false;
+    component.inicializarEstadoFormulario();
+    expect(component.requisitos.get('tipoDocumento')?.enabled).toBe(true);
+  });
+
   it('should loadTipos and set correct values', () => {
     component.loadTipos();
-
-    // Validate the values from mock service
-    expect(component.tipos).toEqual([
-      { tiposData: 'Tipo Document 1' },
-      { tiposData: 'Tipo Document 2' },
-    ]);
-
-    expect(component.tipocatlog).toEqual([
-      { id: 1, descripcion: 'Catalogo 1', tam: 'A4', dpi: '300' },
-    ]);
-
-    expect(component.tipoHeaderData).toEqual(
-      component.tipoTableData.tableHeader
-    );
+    expect(component.tipos).toEqual(mockTipos);
+    expect(component.tipocatlog).toEqual(mockTipoCatalogResponse.data);
+    expect(component.tipoHeaderData).toEqual(component.tipoTableData.tableHeader);
   });
 
   it('should toggle showContent', () => {
-    expect(component.showContent).toBeFalse();
+    expect(component.showContent).toBe(false);
     component.toggleContent();
-    expect(component.showContent).toBeTrue();
+    expect(component.showContent).toBe(true);
     component.toggleContent();
-    expect(component.showContent).toBeFalse();
+    expect(component.showContent).toBe(false);
+  });
+
+  it('should call setValoresStore and update store', () => {
+    component.requisitos.get('tipoDocumento')?.setValue('Tipo Document 2');
+    component.setValoresStore(component.requisitos, 'tipoDocumento', 'setTipoDocumento');
+    expect(store.setTipoDocumento).toHaveBeenCalledWith('Tipo Document 2');
+  });
+
+  it('should unsubscribe and complete destroyNotifier$ on ngOnDestroy', () => {
+    const destroySpy = jest.spyOn((component as any).destroyNotifier$, 'next');
+    const completeSpy = jest.spyOn((component as any).destroyNotifier$, 'complete');
+    const unsubSpy = jest.spyOn((component as any).tiposCatalogSubscription, 'unsubscribe');
+    component.ngOnDestroy();
+    expect(destroySpy).toHaveBeenCalled();
+    expect(completeSpy).toHaveBeenCalled();
+    expect(unsubSpy).toHaveBeenCalled();
   });
 });
