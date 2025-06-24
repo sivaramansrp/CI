@@ -46,7 +46,7 @@
                 <div class="col-md-4">
                     <div class="form-group">
                         <app-catalogo-select [catalogo]="bancocatalogo" formControlName="banco" [label]="'Banco'"
-                            [required]="true" name="banco"
+                            [required]="true" name="banco" [isDisabled]="esFormularioSoloLectura"
                             (change)="setValoresStore(pagoDerechosForm, 'banco')"></app-catalogo-select>
                     </div>
                 </div>
@@ -75,7 +75,7 @@
                 <div class="col-md-4">
                     <div class="form-group">
                         <input-fecha [datos]="INPUT_FECHA_CONFIG" [setFecha]="pagoDerechosForm.get('fecha')?.value"
-                            (valorCambiado)="cambioFechaFinal($event)">
+                        [isDisabled]="esFormularioSoloLectura" (valorCambiado)="cambioFechaFinal($event)">
                         </input-fecha>
                     </div>
                     @if(pagoDerechosForm.controls['fecha'].invalid && pagoDerechosForm.controls['fecha'].touched) {
@@ -111,8 +111,8 @@
 
         <div class="col-md-12 mt-5 d-flex justify-content-end">
 
-            <button type="button" class="btn btn-danger ms-3">Borrar datos del pago</button>
-            <button type="button" class="btn btn-primary ms-3">Guardar pago</button>
+            <button type="button" class="btn btn-danger ms-3" [disabled]="esFormularioSoloLectura">Borrar datos del pago</button>
+            <button type="button" class="btn btn-primary ms-3" [disabled]="esFormularioSoloLectura">Guardar pago</button>
         </div>
 
         <div class="mb-3">

@@ -85,7 +85,7 @@ export class Tramite130301Store extends Store<Solicitud130301State>{
      * Establece el estado de paisEmisorCertificado.
      * @param paisEmisorCertificado - El valor de paisEmisorCertificado.
      */
-    public setPaisEmisorCertificado(paisEmisorCertificado: string) {
+    public setPaisEmisorCertificado(paisEmisorCertificado: string):void {
         this.update((state) => ({
             ...state,
             paisEmisorCertificado,
@@ -95,7 +95,7 @@ export class Tramite130301Store extends Store<Solicitud130301State>{
      * Establece el estado de mixed.
      * @param mixed - El valor de mixed.
      */
-    public setMixed(mixed: string) {
+    public setMixed(mixed: string):void {
         this.update((state) => ({
             ...state,
             mixed,
@@ -105,7 +105,7 @@ export class Tramite130301Store extends Store<Solicitud130301State>{
      * Establece el estado de paisDeOrigen.
      * @param paisDeOrigen - El valor de paisDeOrigen.
      */
-    public setPaisDeOrigen(paisDeOrigen: string) {
+    public setPaisDeOrigen(paisDeOrigen: string):void {
         this.update((state) => ({
             ...state,
             paisDeOrigen,
@@ -115,7 +115,7 @@ export class Tramite130301Store extends Store<Solicitud130301State>{
      * Establece el estado de motivoJustificacion.
      * @param motivoJustificacion - El valor de motivoJustificacion.
      */
-    public setMotivoJustificacion(motivoJustificacion: string) {
+    public setMotivoJustificacion(motivoJustificacion: string):void {
         this.update((state) => ({
             ...state,
             motivoJustificacion,
@@ -125,7 +125,7 @@ export class Tramite130301Store extends Store<Solicitud130301State>{
      * Establece el estado de otrasDeclaraciones.
      * @param otrasDeclaraciones - El valor de otrasDeclaraciones.
      */
-    public setOtrasDeclaraciones(otrasDeclaraciones: string) {
+    public setOtrasDeclaraciones(otrasDeclaraciones: string):void {
         this.update((state) => ({
             ...state,
             otrasDeclaraciones,

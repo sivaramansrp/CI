@@ -1,9 +1,9 @@
 import { Component, Input, OnDestroy } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
+import { ReplaySubject, map, takeUntil } from 'rxjs';
 import { TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { ProductorIndirecto } from '../../models/complementaria.model';
 import { TABLA_PRODUCTOR_INDIRECTO } from '../../constantes/complementaria.enum';
-import { ReplaySubject, takeUntil, map } from 'rxjs';
 
 
 /**
@@ -75,7 +75,7 @@ export class ProductorIndirectoComponent implements OnDestroy {
      * Método que se ejecuta al destruir el componente.
      * Se utiliza para limpiar los recursos y evitar fugas de memoria.
      */
-    ngOnDestroy() {
+    ngOnDestroy(): void {
       this.destroyed$.next(true);
       this.destroyed$.complete();
     }
