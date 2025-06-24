@@ -1,4 +1,4 @@
-import { AlertComponent, AnexarDocumentosComponent, TituloComponent } from '@ng-mf/data-access-user';
+//import { AlertComponent, AnexarDocumentosComponent, TituloComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { TEXTOS } from '@ng-mf/data-access-user';
@@ -25,7 +25,7 @@ import { TEXTOS } from '@ng-mf/data-access-user';
 @Component({
   selector: 'app-paso-dos',
   standalone: true,
-  imports: [CommonModule, AnexarDocumentosComponent, AlertComponent, TituloComponent],
+  imports: [CommonModule],
   templateUrl: './paso-dos.component.html',
   styleUrl: './paso-dos.component.scss',
 })
