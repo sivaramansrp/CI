@@ -123,7 +123,7 @@ describe('AduanaComponent', () => {
     jest
       .spyOn(exportarIlustracionesService, 'getAduanaDeSalidaData')
       .mockReturnValue(of(mockData));
-    component.obtenerAduanaDeSalida();
+    component.obtenerAduanaDeSalida(() => {}); // Pass a dummy callback
     expect(component.aduanaData).toEqual(mockData);
   });
 
