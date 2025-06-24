@@ -24,16 +24,9 @@ import {
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { RegistroSolicitudService } from '../services/registro-solicitud-service.service';
-import { ReplaySubject } from 'rxjs';
 import { Solicitud31803Enum } from '../constantes/solicitud31803.enum';
-import { Solicitud31803State } from '../state/Tramite31803.store';
-import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { Tramite31803Query } from '../state/Tramite31803.query';
-import { Tramite31803Store } from '../state/Tramite31803.store';
-import { ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
-import { Validators } from '@angular/forms';
-import { map } from 'rxjs';
-import { takeUntil } from 'rxjs';
+
 
 /**
  * Componente que gestiona la solicitud del trámite 31803.

@@ -74,7 +74,6 @@ export class Tramite31803Store extends Store<Solicitud31803State> {
    * @param numeroOperacion Número de operación de tipo `string`.
    */
   public setNumeroOperacion(numeroOperacion: string): void {
-  public setNumeroOperacion(numeroOperacion: string): void {
     this.update((state) => ({ ...state, numeroOperacion }));
   }
 
@@ -91,7 +90,6 @@ export class Tramite31803Store extends Store<Solicitud31803State> {
    * @param manifiesto1 Primer manifiesto de tipo `string`.
    */
   public setManifiesto1(manifiesto1: string): void {
-  public setManifiesto1(manifiesto1: string): void {
     this.update((state) => ({ ...state, manifiesto1 }));
   }
 
@@ -99,7 +97,6 @@ export class Tramite31803Store extends Store<Solicitud31803State> {
    * Actualiza el segundo manifiesto en el estado.
    * @param manifiesto2 Segundo manifiesto de tipo `string`.
    */
-  public setManifiesto2(manifiesto2: string): void {
   public setManifiesto2(manifiesto2: string): void {
     this.update((state) => ({ ...state, manifiesto2 }));
   }
@@ -109,14 +106,12 @@ export class Tramite31803Store extends Store<Solicitud31803State> {
    * @param fechaPago Fecha de pago de tipo `string`.
    */
   public setFechaPago(fechaPago: string): void {
-  public setFechaPago(fechaPago: string): void {
     this.update((state) => ({ ...state, fechaPago }));
   }
 
   /**
    * Restaura el estado al valor inicial.
    */
-  public limpiarSolicitud(): void {
   public limpiarSolicitud(): void {
     this.reset();
   }
