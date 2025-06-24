@@ -1,49 +1,81 @@
 /**
- * Módulo común de Angular.
- * Proporciona directivas y servicios básicos para aplicaciones Angular.
- */
-import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-
-import { Catalogo } from '@ng-mf/data-access-user';
-import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
-import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
-
-import { EXPEDICION_FACTURA_FECHA } from '../../constantes/inspeccion-fisica-zoosanitario.enums';
-
-import { FormBuilder } from '@angular/forms';
-import { FormGroup } from '@angular/forms';
-import { FormularioPago } from '../../modelos/importacion-de-acuicultura.module';
-import { FormularioPagoInt } from '../../modelos/datos-de-interfaz.model'; 
-import { ImportacionDeAcuiculturaService } from '../../servicios/importacion-de-agricultura.service';
-import { InputFecha } from '@ng-mf/data-access-user';
-import { InputFechaComponent } from '@ng-mf/data-access-user';
-import { InputRadioComponent } from '@ng-mf/data-access-user';
-import { OnDestroy } from '@angular/core'; 
-import { OnInit } from '@angular/core';
-import { OpcionDeRadio } from '../../modelos/importacion-de-acuicultura.module';
-import { ReactiveFormsModule } from '@angular/forms';
-import { SeccionLibQuery} from '@libs/shared/data-access-user/src'; 
-import { SeccionLibState} from '@libs/shared/data-access-user/src'; 
-import { SeccionLibStore } from '@libs/shared/data-access-user/src'; 
-import { Subject } from 'rxjs'; 
-
-import { TIPO_RADIO } from '../../constantes/inspeccion-fisica-zoosanitario.enums';
-import { TituloComponent } from '@libs/shared/data-access-user/src';
-import { TramiteState } from '../../estados/tramite220701.store'; 
-import { TramiteStore } from '../../estados/tramite220701.store'; 
-import { TramiteStoreQuery } from '../../estados/tramite220701.query'; 
-import { Validators } from '@angular/forms';
-import { delay } from 'rxjs/operators'; 
-import { map } from 'rxjs/operators'; 
-import { takeUntil } from 'rxjs/operators'; 
-import { tap } from 'rxjs/operators'; 
-
-/**
- * Componente para gestionar el pago de derechos.
+ * @component
+ * @name InternaPagoDeDerechosComponent
+ * @description
+ * Componente para gestionar el pago de derechos en el trámite 220701.
  * Permite capturar, validar y almacenar la información relacionada con el pago de derechos en trámites de importación de acuicultura.
  * Incluye lógica para la gestión de catálogos, validaciones, estado de la sección y comunicación con el store y servicios.
- * @author [Tu Nombre o Equipo]
+ * Utiliza formularios reactivos y consume múltiples servicios para obtener catálogos y datos relacionados.
+ * Implementa la lógica de inicialización, carga de catálogos, manejo de estado y sincronización con el store de Akita.
+ * 
+ * @example
+ * <interna-pago-de-derechos [esFormularioSoloLectura]="true"></interna-pago-de-derechos>
+ */
+import { CommonModule } from '@angular/common';
+
+import {
+  Component,
+  OnDestroy,
+  OnInit,
+} from '@angular/core';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+
+import { Subject, delay, map, takeUntil, tap } from 'rxjs';
+
+import {
+  ConsultaioQuery,
+  SeccionLibQuery,
+  SeccionLibState,
+  SeccionLibStore,
+  TituloComponent,
+} from '@libs/shared/data-access-user/src';
+
+import {
+  Catalogo,
+  CatalogoSelectComponent,
+  InputFecha,
+  InputFechaComponent,
+  InputRadioComponent,
+} from '@ng-mf/data-access-user';
+
+import {
+  EXPEDICION_FACTURA_FECHA,
+  TIPO_RADIO,
+} from '../../constantes/inspeccion-fisica-zoosanitario.enums';
+
+import {
+  FormularioPago,
+  OpcionDeRadio,
+} from '../../modelos/importacion-de-acuicultura.module';
+import {
+  FormularioPagoInt,
+} from '../../modelos/datos-de-interfaz.model';
+
+import { ImportacionDeAcuiculturaService } from '../../servicios/importacion-de-agricultura.service';
+
+import {
+  TramiteState,
+  TramiteStore,
+} from '../../estados/tramite220701.store';
+import { TramiteStoreQuery } from '../../estados/tramite220701.query';
+
+/**
+ * @component
+ * @name InternaPagoDeDerechosComponent
+ * @description
+ * Componente para gestionar el pago de derechos en el trámite 220701.
+ * Permite capturar, validar y almacenar la información relacionada con el pago de derechos en trámites de importación de acuicultura.
+ * Incluye lógica para la gestión de catálogos, validaciones, estado de la sección y comunicación con el store y servicios.
+ * Utiliza formularios reactivos y consume múltiples servicios para obtener catálogos y datos relacionados.
+ * Implementa la lógica de inicialización, carga de catálogos, manejo de estado y sincronización con el store de Akita.
+ * 
+ * @example
+ * <interna-pago-de-derechos [esFormularioSoloLectura]="true"></interna-pago-de-derechos>
  */
 @Component({
   selector: 'interna-pago-de-derechos',

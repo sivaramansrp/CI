@@ -1,37 +1,61 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { AgregarDestinatarioFinalContenedoraComponent } from './agregar-destinatario-final-contenedora.component';
-import { DatosSolicitudService } from '../../../../shared/services/datos-solicitud.service';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { AgregarDestinatarioFinalComponent } from '../../../../shared/components/agregar-destinatario-final/agregar-destinatario-final.component';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+import { Tramite240112Store } from '../../estados/tramite240112Store.store';
+import { Tramite240112Query } from '../../estados/tramite240112Query.query';
 
-describe('AgregarDestinatarioFinalContenedoraComponent', () => {
+describe('AgregarDestinatarioFinalContenedoraComponent (Jest)', () => {
   let component: AgregarDestinatarioFinalContenedoraComponent;
-  let fixture: ComponentFixture<AgregarDestinatarioFinalContenedoraComponent>;
 
-  beforeEach(async () => {
-    jest.spyOn(console, 'warn');
+  const mockTramiteStore = {
+    updateDestinatarioFinalTablaDatos: jest.fn(),
+  };
 
-    await TestBed.configureTestingModule({
-      declarations: [],
-      imports: [
-        AgregarDestinatarioFinalComponent,
-        AgregarDestinatarioFinalContenedoraComponent,
-        ReactiveFormsModule,
-        FormsModule,
-        CommonModule,
-        HttpClientTestingModule
+  const mockTramiteQuery = {
+    obtenerTercerosDatos$: jest.fn(),
+  };
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [
+        { provide: Tramite240112Store, useValue: mockTramiteStore },
+        { provide: Tramite240112Query, useValue: mockTramiteQuery },
       ],
-      providers: [DatosSolicitudService],
-    }).compileComponents();
+    });
 
-    fixture = TestBed.createComponent(AgregarDestinatarioFinalContenedoraComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+    component = new AgregarDestinatarioFinalContenedoraComponent(
+      mockTramiteStore as any,
+
+    );
   });
 
-  it('should create', () => {
+  it('should be created', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should call updateDestinatarioFinalTablaDatos() with given data', () => {
+    const mockDestinatariosFinal = [
+      {
+        nombreRazonSocial: 'Destinatario Ejemplo',
+        rfc: 'RFC123456',
+        direccion: 'Av. Reforma, 123',
+        telefono: '5551234567',
+        correoElectronico: 'destinatario@correo.com',
+        curp: 'CURP123456789',
+        calle: 'Av. Reforma',
+        numeroExterior: '123',
+        numeroInterior: 'A',
+        colonia: 'Centro',
+        codigoPostal: '06000',
+        entidadFederativa: 'CDMX',
+        municipioAlcaldia: 'Cuauhtémoc',
+        pais: 'México',
+        localidad: 'Ciudad de México',
+        estadoLocalidad: 'CDMX',
+      }
+    ];
+
+    component.updateDestinatarioFinalTablaDatos(mockDestinatariosFinal);
+
+    expect(mockTramiteStore.updateDestinatarioFinalTablaDatos).toHaveBeenCalledWith(mockDestinatariosFinal);
   });
 });
