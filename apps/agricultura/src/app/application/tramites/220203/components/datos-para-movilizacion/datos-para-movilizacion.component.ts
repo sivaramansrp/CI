@@ -1,16 +1,10 @@
-import { AlertComponent, AnexarDocumentosComponent, BtnContinuarComponent, Catalogo, CatalogoSelectComponent, ConsultaioQuery, CrosslistComponent, FirmaElectronicaComponent, InputCheckComponent, InputFechaComponent, InputRadioComponent, SolicitanteComponent, TableComponent, TercerosComponent, TituloComponent } from '@ng-mf/data-access-user';
-
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
-
-import { FormularioMovilizacion } from '../../models/220203/importacion-de-acuicultura.module';
-
+import { AlertComponent, AnexarDocumentosComponent, BtnContinuarComponent, Catalogo, CatalogoSelectComponent, ConsultaioQuery, CrosslistComponent, FirmaElectronicaComponent, InputCheckComponent, InputFechaComponent, InputRadioComponent, SolicitanteComponent, TableComponent, TercerosComponent, TituloComponent } from '@ng-mf/data-access-user';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-
-import { ImportacionDeAcuiculturaService } from '../../services/220203/importacion-de-acuicultura.service';
-
 import { Subject, map, takeUntil } from 'rxjs';
-
 import { CommonModule } from '@angular/common';
+import { FormularioMovilizacion } from '../../models/220203/importacion-de-acuicultura.module';
+import { ImportacionDeAcuiculturaService } from '../../services/220203/importacion-de-acuicultura.service';
 
 
 /**
@@ -102,7 +96,7 @@ export class DatosParaMovilizacionComponent implements OnInit, OnDestroy,AfterVi
 ngAfterViewInit(): void {
    this.formularioMovilizacion.valueChanges
       .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((changes) => {
+      .subscribe(() => {
         this.verificarEstadoDelBoton();
       }, (error) => {
         console.error('Error en cambios de formulario:', error);
@@ -132,7 +126,7 @@ inicializarEstadoFormulario(): void {
   /**
    * @description Obtiene los datos del catálogo de transporte y los asigna a la lista de transportes.
    */
-  obtenerCatalogosTransporte() {
+  obtenerCatalogosTransporte(): void {
     this.importacionDeAcuiculturaServices.obtenerDetallesDelCatalogo('transporte.json')
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((data) => {
@@ -145,7 +139,7 @@ inicializarEstadoFormulario(): void {
   /**
    * @description Obtiene los datos del catálogo de puntos de verificación y los asigna a la lista de puntos.
    */
-  obtenerCatalogosPuntos() {
+  obtenerCatalogosPuntos(): void {
     this.importacionDeAcuiculturaServices.obtenerDetallesDelCatalogo('punto.json')
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((data) => {
@@ -158,7 +152,7 @@ inicializarEstadoFormulario(): void {
   /**
    * @description Verifica si el formulario de movilización es válido y actualiza el estado del botón.
    */
-  verificarEstadoDelBoton() {
+  verificarEstadoDelBoton(): void {
     const DATOS = {
       dataParaMovilizacion: false,
     };
@@ -170,13 +164,8 @@ inicializarEstadoFormulario(): void {
 
   /**
    * @description Establece los valores del formulario en el servicio correspondiente.
-   * @param {FormGroup} form El formulario que contiene los valores a almacenar.
-   * @param {string} campo El campo que se actualizará en el servicio.
    */
-  setValoresStore(
-    form: FormGroup,
-    campo: string,
-  ): void {
+  setValoresStore(): void {
     const VALOR = this.formularioMovilizacion.value;
     (this.importacionDeAcuiculturaServices.actualizarFormularioMovilizacion as (value: FormularioMovilizacion) => void)(
       VALOR

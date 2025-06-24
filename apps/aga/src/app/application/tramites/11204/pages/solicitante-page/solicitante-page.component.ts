@@ -1,9 +1,9 @@
-import { PASOS } from '@ng-mf/data-access-user';
+import { ANEXAR, CARGAR } from '../../enums/datos-tramite.enum';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { DatosPasos } from '@ng-mf/data-access-user';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
+import { PASOS } from '@ng-mf/data-access-user';
 import { WizardComponent } from '@ng-mf/data-access-user';
-import { ANEXAR, CARGAR } from '../../enums/datos-tramite.enum';
 
 /**
  * Interfaz que representa una AccionBoton.

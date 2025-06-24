@@ -1,7 +1,43 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DatosComponent } from './datos.component';
-import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { WizardComponent } from '@ng-mf/data-access-user';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { By } from '@angular/platform-browser';
+import { PASOS_REGISTRO } from '@ng-mf/data-access-user';
+
+/**
+ * Stub para WizardComponent
+ */
+@Component({
+  selector: 'app-wizard',
+  template: ''
+})
+class WizardStubComponent {
+  @Input() listaPasos: any;
+  siguiente = jest.fn();
+  atras = jest.fn();
+}
+
+/**
+ * Stub para PasoUno, PasoDos, PasoTres
+ */
+@Component({selector: 'app-paso-uno', template: ''})
+class PasoUnoStub {}
+@Component({selector: 'app-paso-dos', template: ''})
+class PasoDosStub {}
+@Component({selector: 'app-paso-tres', template: ''})
+class PasoTresStub {}
+
+/**
+ * Stub para btn-continuar
+ */
+@Component({
+  selector: 'btn-continuar',
+  template: ''
+})
+class BtnContinuarStub {
+  @Input() datos: any;
+  @Output() continuarEvento = new EventEmitter<any>();
+}
 
 describe('DatosComponent', () => {
   let component: DatosComponent;
@@ -9,8 +45,14 @@ describe('DatosComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [DatosComponent],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA]
+      declarations: [
+        DatosComponent,
+        WizardStubComponent,
+        PasoUnoStub,
+        PasoDosStub,
+        PasoTresStub,
+        BtnContinuarStub
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(DatosComponent);
@@ -18,56 +60,87 @@ describe('DatosComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should have default values for properties', () => {
-    expect(Array.isArray(component.pasos)).toBe(true);
-    expect(Array.isArray(component.pantallasPasos)).toBe(true);
-    expect(typeof component.indice).toBe('number');
-    expect(component.datosPasos.nroPasos).toBe(component.pasos.length);
-    expect(component.datosPasos.indice).toBe(component.indice);
-    expect(component.datosPasos.txtBtnAnt).toBe('Anterior');
-    expect(component.datosPasos.txtBtnSig).toBe('Continuar');
+  it('debe renderizar el título', () => {
+    const h1 = fixture.nativeElement.querySelector('h1');
+    expect(h1.textContent).toContain('Solicitud empresa de la frontera persona física.');
   });
 
-  describe('getValorIndice', () => {
-    beforeEach(() => {
-      // Mock wizardComponent with jest.fn()
-      component.wizardComponent = {
-        siguiente: jest.fn(),
-        atras: jest.fn()
-      } as any;
-    });
+  it('debe renderizar el wizard con los pasos correctos', () => {
+    const wizard = fixture.debugElement.query(By.directive(WizardStubComponent));
+    expect(wizard).toBeTruthy();
+    expect(wizard.componentInstance.listaPasos).toEqual(PASOS_REGISTRO);
+  });
 
-    it('should update indice and call wizardComponent.siguiente for accion "cont"', () => {
-      component.indice = 1;
-      component.getValorIndice({ valor: 2, accion: 'cont' });
-      expect(component.indice).toBe(2);
-      expect(component.wizardComponent.siguiente).toHaveBeenCalled();
-      expect(component.wizardComponent.atras).not.toHaveBeenCalled();
-    });
+  it('debe renderizar app-paso-uno cuando indice es 1', () => {
+    component.indice = 1;
+    fixture.detectChanges();
+    expect(fixture.debugElement.query(By.directive(PasoUnoStub))).toBeTruthy();
+    expect(fixture.debugElement.query(By.directive(PasoDosStub))).toBeFalsy();
+    expect(fixture.debugElement.query(By.directive(PasoTresStub))).toBeFalsy();
+  });
 
-    it('should update indice and call wizardComponent.atras for accion not "cont"', () => {
-      component.indice = 2;
-      component.getValorIndice({ valor: 3, accion: 'atras' });
-      expect(component.indice).toBe(3);
-      expect(component.wizardComponent.atras).toHaveBeenCalled();
-      expect(component.wizardComponent.siguiente).not.toHaveBeenCalled();
-    });
+  it('debe renderizar app-paso-dos cuando indice es 2', () => {
+    component.indice = 2;
+    fixture.detectChanges();
+    expect(fixture.debugElement.query(By.directive(PasoUnoStub))).toBeFalsy();
+    expect(fixture.debugElement.query(By.directive(PasoDosStub))).toBeTruthy();
+    expect(fixture.debugElement.query(By.directive(PasoTresStub))).toBeFalsy();
+  });
 
-    it('should not update indice or call wizard methods if valor is out of range', () => {
-      component.indice = 1;
-      component.getValorIndice({ valor: 0, accion: 'cont' });
-      expect(component.indice).toBe(1);
-      expect(component.wizardComponent.siguiente).not.toHaveBeenCalled();
-      expect(component.wizardComponent.atras).not.toHaveBeenCalled();
+  it('debe renderizar app-paso-tres cuando indice es 3', () => {
+    component.indice = 3;
+    fixture.detectChanges();
+    expect(fixture.debugElement.query(By.directive(PasoUnoStub))).toBeFalsy();
+    expect(fixture.debugElement.query(By.directive(PasoDosStub))).toBeFalsy();
+    expect(fixture.debugElement.query(By.directive(PasoTresStub))).toBeTruthy();
+  });
 
-      component.getValorIndice({ valor: 5, accion: 'cont' });
-      expect(component.indice).toBe(1);
-      expect(component.wizardComponent.siguiente).not.toHaveBeenCalled();
-      expect(component.wizardComponent.atras).not.toHaveBeenCalled();
-    });
+  it('debe renderizar "Firmar solicitud" cuando indice es 4', () => {
+    component.indice = 4;
+    fixture.detectChanges();
+    expect(fixture.nativeElement.textContent).toContain('Firmar solicitud');
+  });
+
+  it('debe renderizar btn-continuar con los datos correctos', () => {
+    const btn = fixture.debugElement.query(By.directive(BtnContinuarStub));
+    expect(btn).toBeTruthy();
+    expect(btn.componentInstance.datos).toEqual(component.datosPasos);
+  });
+
+  it('debe llamar a wizardComponent.siguiente() cuando getValorIndice es llamado con accion "cont"', () => {
+    // Asignar un mock wizardComponent
+    const wizard = TestBed.createComponent(WizardStubComponent).componentInstance as any;
+    component.wizardComponent = wizard;
+    component.wizardComponent.siguiente = jest.fn();
+    component.getValorIndice({accion: 'cont', valor: 2});
+    expect(component.indice).toBe(2);
+    expect(component.wizardComponent.siguiente).toHaveBeenCalled();
+  });
+
+  it('debe llamar a wizardComponent.atras() cuando getValorIndice es llamado con accion distinta de "cont"', () => {
+    const wizard = TestBed.createComponent(WizardStubComponent).componentInstance as any;
+    component.wizardComponent = wizard;
+    component.wizardComponent.atras = jest.fn();
+    component.getValorIndice({accion: 'back', valor: 2});
+    expect(component.indice).toBe(2);
+    expect(component.wizardComponent.atras).toHaveBeenCalled();
+  });
+
+  it('no debe cambiar indice ni llamar métodos del wizard si valor está fuera de rango', () => {
+    const wizard = TestBed.createComponent(WizardStubComponent).componentInstance as any;
+    component.wizardComponent = wizard;
+    component.wizardComponent.siguiente = jest.fn();
+    component.wizardComponent.atras = jest.fn();
+    component.indice = 1;
+    component.getValorIndice({accion: 'cont', valor: 0});
+    expect(component.indice).toBe(1);
+    expect(component.wizardComponent.siguiente).not.toHaveBeenCalled();
+    component.getValorIndice({accion: 'back', valor: 5});
+    expect(component.indice).toBe(1);
+    expect(component.wizardComponent.atras).not.toHaveBeenCalled();
   });
 });

@@ -63,3 +63,4 @@ export const COMPLEMENTO_DE_PLANTA = [
     orden: 8,
   },
 ];
+export const CATALOGO_TIPO = [{ "id": 1, "descripcion": "JALISCO" }];

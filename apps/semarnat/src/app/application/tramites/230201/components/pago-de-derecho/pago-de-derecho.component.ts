@@ -1,4 +1,5 @@
 import { Catalogo, CatalogoSelectComponent, TituloComponent } from '@ng-mf/data-access-user';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Solicitud230201State, Tramite230201Store } from '../../estados/tramite230201.store';
 import { CatalogosSelect } from '@ng-mf/data-access-user';
@@ -84,6 +85,19 @@ export class PagoDeDerechoComponent implements OnInit, OnDestroy {
   public bancoCatalogo: CatalogosSelect = DESTINATARIO_BANCO;
 
   /**
+   * @property {ConsultaioState} consultaDatos
+   * @description Estado actual de la consulta, que contiene información relacionada con el trámite y el solicitante.
+   */
+  consultaDatos!: ConsultaioState;
+
+  /**
+   * @property {boolean} soloLectura
+   * @description Indica si el formulario o los campos están en modo de solo lectura.
+   * @default false
+   */
+  soloLectura: boolean = false;
+
+  /**
    * Constructor de la clase PagoDeDerechoComponent.
    * 
    * @param fb - Servicio `FormBuilder` para la creación y gestión de formularios reactivos.
@@ -97,6 +111,7 @@ export class PagoDeDerechoComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private solicitud230201Store: Tramite230201Store,
     private solicitud230201Query: Tramite230201Query,
+        private consultaioQuery: ConsultaioQuery,
     private validacionesService: ValidacionesFormularioService,
     private mediodetransporteService: MediodetransporteService
   ) {
@@ -142,7 +157,44 @@ export class PagoDeDerechoComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
+    
+    this.inicializarFormulario();
 
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.consultaDatos = seccionState;
+          this.soloLectura = this.consultaDatos.readonly;
+          this.updateEstadoFormulario();
+        })
+      )
+      .subscribe();
+
+    this.updateEstadoFormulario();
+  }
+
+  /**
+   * Actualiza el estado de los formularios del componente según el modo de solo lectura.
+   *
+   * Si la propiedad `soloLectura` es verdadera, deshabilita todos los formularios asociados
+   * (`solicitudForm`, `agregarMercanciasForm`, `exportacionForm`, y `datosMercancia`).
+   * Si es falsa, habilita dichos formularios para permitir la edición.
+   */
+  updateEstadoFormulario(): void {
+    if (this.soloLectura) {
+      this.FormSolicitud?.disable();
+      this.pagodeDerechos?.disable();
+    } else {
+      this.FormSolicitud?.enable();
+      this.pagodeDerechos?.enable();
+    }
+  }
+
+  /**
+   * Obtiene el grupo de formulario de datos de mercancía.
+   */
+  inicializarFormulario(): void {
     this.FormSolicitud = this.fb.group({
       pagodeDerechos: this.fb.group({
         claveDeReferencia: [{ value: this.derechoState?.claveDeReferencia, disabled: true }, [Validators.required, Validators.maxLength(50)]],
@@ -153,7 +205,6 @@ export class PagoDeDerechoComponent implements OnInit, OnDestroy {
         impPago: [{ value: this.derechoState?.impPago, disabled: true }, [Validators.required, Validators.maxLength(16)]]
       }),
     });
-
   }
 
   /**

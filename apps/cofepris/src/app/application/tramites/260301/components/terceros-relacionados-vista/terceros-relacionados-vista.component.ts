@@ -6,7 +6,7 @@ import {
   TablaSeleccion,
   TituloComponent,
 } from '@ng-mf/data-access-user';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import {
   Destinatario,
   Fabricante,
@@ -42,6 +42,15 @@ import { Tramite260301Store } from '../../estados/tramite260301Store.store';
   styleUrl: './terceros-relacionados-vista.component.css',
 })
 export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
+
+  /**
+   * @input
+   * @description
+   * Indica si el formulario debe estar deshabilitado. Cuando es `true`, los controles del formulario estarán inactivos y no permitirán la edición por parte del usuario.
+   * @type {boolean}
+   */
+   @Input() formularioDeshabilitado: boolean = false;
+
   /**
    * @property {number} idProcedimiento
    * Identificador único del procedimiento asociado a la solicitud.

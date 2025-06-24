@@ -1,3 +1,6 @@
+import { Solicitud220501State } from "../estados/tramites220501.store";
+import { Solicitud220502State } from "../../220502/estados/tramites220502.store";
+
 /** 
  * Interfaz que representa los datos de la solicitud. 
  */
@@ -43,4 +46,20 @@ export interface DatosDelaSolicitud {
     /** Punto específico donde se realiza la movilización. */
     punto: string;
   }
+
+  /**
+   * Interfaz que representa los datos de registro de toma de muestras de mercancías.
+   * Contiene el estado de las solicitudes 220501 y 220502.
+   */
+  export interface RegistroTomaMuestrasMercanciasDatos {
+    /** 
+     * Estado de la solicitud 220501. 
+     */
+    solicitud220501State: Solicitud220501State;
+
+    /** 
+     * Estado de la solicitud 220502. 
+     */
+    solicitud220502State: Solicitud220502State;
+}
   
