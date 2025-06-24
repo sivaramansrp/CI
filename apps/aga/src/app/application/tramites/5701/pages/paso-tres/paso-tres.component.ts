@@ -2,8 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { base64ToHex, encodeToISO88591Hex } from '@libs/shared/data-access-user/src/core/utils/utilerias';
 import { catchError, switchMap, tap, throwError } from 'rxjs';
 import { CadenaOriginalRequest } from '@libs/shared/data-access-user/src/core/models/shared/firma-electronica/request/cadena-original-request.model';
-// eslint-disable-next-line sort-imports
-import { TramiteFolioService, TramiteFolioStore } from '@ng-mf/data-access-user';
+
+import { CadenaOriginalService, TramiteFolioService, TramiteFolioStore } from '@ng-mf/data-access-user';
+
 
 import { BaseResponse } from '../../../../core/models/5701/base-response.model';
 import { FirmaElectronicaService } from '@libs/shared/data-access-user/src/core/services/shared/firma-electronica/firma-electronica.service';
@@ -28,11 +29,6 @@ export class PasoTresComponent implements OnInit {
  */
   url: string = '';
 
-  /**
-   * Objeto con los datos del trámite necesarios para generar la cadena original.
-   * Este objeto debe cumplir con la interfaz `CadenaOriginalRequest` e incluir información como folio, datos del usuario, etc.
-   */
-  datosTramite!: CadenaOriginalRequest;
 
   /**
    * Cadena original generada a partir de los datos del trámite.
@@ -45,6 +41,12 @@ export class PasoTresComponent implements OnInit {
    * Este folio es único para cada trámite y se utiliza para identificarlo en el sistema.
    */
   folio!: string;
+
+  /**
+   * Objeto que contiene los datos necesarios para generar la cadena original.
+   * Este objeto es enviado al servicio de firma electrónica para obtener la cadena original.
+   */
+  datosCadena!: CadenaOriginalRequest;
 
   /**
    * Objeto que contiene los datos reales de la firma electrónica generada después del proceso de firma.
@@ -73,7 +75,8 @@ export class PasoTresComponent implements OnInit {
     private tramiteStore: TramiteFolioStore,
     private firma: FirmaElectronicaService,
     private tramite5701Query: Tramite5701Query,
-    private tramite5701Store: Tramite5701Store
+    private tramite5701Store: Tramite5701Store,
+    private cadenaOriginalService: CadenaOriginalService
   ) { }
 
   /**
@@ -84,54 +87,25 @@ export class PasoTresComponent implements OnInit {
     const URL_ACTUAL = this.router.url;
     const URL_SEPARADA = URL_ACTUAL.split('/');
     this.url = URL_SEPARADA.slice(0, 3).join('/');
-    this.onObtenerCadenaOriginal();
+    this.obtenerCadenaOriginal();
   }
 
-
-  onObtenerCadenaOriginal(): void {
-    this.datosTramite = {
-      id_solicitud: 24,
-      num_folio_tramite: 'FOLIO-TEST-001',
-      boolean_extranjero: false,
-      documento_requerido: [
-        {
-          nombre: 'Martin',
-          id: '1',
-          id_documento_seleccionado: 1,
-          id_tipo_Documento: '1',
-          hash_documento: '1234567890ABCDEF',
-          sello_documento: '',
-          cve_persona: 9007199254740991,
-          regla_anexada: true,
-          num_anexo_documento: 'string'
-        }
-      ],
-      solicitante: {
-        id_domicilio: 42,
-        nombre: 'Maria',
-        apellido_paterno: 'Chávez',
-        apellido_materno: 'Martínez',
-        razon_social: 'INTEGRADORA DE URBANIZACIONES SIGNUM, S DE RL DE CV',
-        rfc: 'SAAA980822LP1',
-        curp: 'SAAA980822LP112',
-        cve_usuario: '42',
-        descripcion_giro: 'Descripción del giro',
-        numero_identificacion_fiscal: '2',
-        nss: '123029102',
-        correo_electronico: 'luz.arellano@sat.gob.mx'
+ /**
+  *  Obtiene la cadena original del trámite 5701.
+  *  Realiza una solicitud al servicio `CadenaOriginalService` para obtener los datos
+  *  necesarios para generar la cadena original.
+  */
+   obtenerCadenaOriginal(): void {
+    this.cadenaOriginalService.generarCadena().subscribe({
+      next: (response) => {
+        this.datosCadena = response.datos;
+        this.firma.obtenerCadenaOriginal(this.datosCadena).subscribe({
+          next: (resp) => { this.cadenaOriginal = resp.datos;
+           },
+          error: (err) => console.error('Error al generar cadena:', err)
+        });
       },
-      cve_rol_capturista: 'CapturistaGubernamental',
-      cve_usuario_capturista: 'Gubernamental',
-      fecha_firma: '2025-04-15T10:00:00Z'
-    };
-
-    this.firma.obtenerCadenaOriginal(this.datosTramite).subscribe({
-      next: (resp) => {
-        this.cadenaOriginal = resp.datos;
-      },
-      error: (err) => {
-        console.error('Error al obtener cadena original:', err);
-      }
+      error: (err) => console.error('Error al cargar datos del trámite:', err)
     });
   }
 
@@ -139,15 +113,18 @@ export class PasoTresComponent implements OnInit {
    * Maneja el evento de firma y obtiene los datos de la firma.
    * @param datos - Objeto que contiene la firma, número de serie del certificado y RFC.
    */
-  onDatosFirma(datos: { firma: string; certSerialNumber: string; rfc: string, fechaFin: string }): void {
+  datosFirma(datos: { firma: string; certSerialNumber: string; rfc: string, fechaFin: string }): void {
     this.datosFirmaReales = datos;
     this.obtieneFirma(datos.firma);
   }
 
 
   /**
-   * Maneja el evento para obtener la firma y realiza acciones adicionales.
-   * @param ev - La cadena de texto que representa la firma obtenida.
+   * Envía la firma al servidor y maneja la respuesta.
+   * Convierte la cadena original y la firma a formato hexadecimal,
+   * construye el payload para la solicitud de firma y envía la solicitud.
+   * Al recibir una respuesta exitosa, guarda el trámite y redirige al acuse.
+   * @param firma - Firma en base64 que se debe procesar.
    */
   obtieneFirma(firma: string): void {
     if (!this.cadenaOriginal || !this.datosFirmaReales) {
@@ -192,8 +169,8 @@ export class PasoTresComponent implements OnInit {
         switchMap(() => this.tramiteFolioServices.obtenerTramite(19)),
         tap((tramite) => {
           // Guardamos el trámite y el folio real
-          this.tramiteStore.establecerTramite(tramite.data, firma, ID_SOLICITUD!);
-          this.tramiteStore.establecerTramite(this.folio, firma, ID_SOLICITUD!);
+          this.tramiteStore.establecerTramite(tramite.data, firma, ID_SOLICITUD ?? 0);
+          this.tramiteStore.establecerTramite(this.folio, firma, ID_SOLICITUD ?? 0);
           this.router.navigate([`${this.url}/acuse`]);
         }),
         catchError((error) => {

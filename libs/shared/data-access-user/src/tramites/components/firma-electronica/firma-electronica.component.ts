@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { FileType, OperationType } from '../../../core/enums/firma-electronica.enum';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { FirmaElectronicaService } from '../../../core/services/shared/firma-electronica/firma-electronica.service';
@@ -130,14 +131,14 @@ export class FirmaElectronicaComponent {
       const FILE = INPUT.files[0];
 
       // Validar extensión y tipo MIME
-      if (type === 'cer') {
+      if (type === FileType.CERTIFICATE) {
         if (!FILE.name.endsWith('.cer') && !FILE.type.includes('application/x-x509-ca-cert')) {
           this.toastrService.error('El archivo debe ser un certificado (.cer)');
           return;
         }
         this.certFileObj = FILE;
         this.cerInputElement = INPUT;
-      } else if (type === 'key') {
+      } else if (type === FileType.PRIVATE_KEY) {
         if (!FILE.name.endsWith('.key') && !FILE.type.includes('application/x-pem-file')) {
           this.toastrService.error('El archivo debe ser una llave privada (.key)');
           return;
@@ -169,7 +170,7 @@ export class FirmaElectronicaComponent {
     this.isLoading = true;
 
     try {
-      const ESLOGIN = this.tipo === 'login';
+      const ESLOGIN = this.tipo === OperationType.LOGIN;
       const RESULTADO = await this.firmaService.firmarCadena(
         this.cerInputElement,
         this.keyInputElement,

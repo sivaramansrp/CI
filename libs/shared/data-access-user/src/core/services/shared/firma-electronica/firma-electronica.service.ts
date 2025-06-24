@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { API_ENVIAR_FIRMA, API_GENERAR_CADENA_ORIGINAL } from '../../../constants/api-constants';
 import { BaseResponse } from '../../../models/shared/base-response.model';
 import { CadenaOriginalRequest } from '../../../models/shared/firma-electronica/request/cadena-original-request.model';
 import { ENVIRONMENT } from '../../../../enviroments/enviroment';
@@ -21,7 +22,7 @@ export class FirmaElectronicaService {
    * Obtiene la cadena original para firmar.
    */
   obtenerCadenaOriginal(body: CadenaOriginalRequest): Observable<BaseResponse> {
-    return this.http.post<BaseResponse>(`${this.urlServer}/api/tramite/solicitud/genera-cadena-original`, body);
+    return this.http.post<BaseResponse>(`${this.urlServer}/${API_GENERAR_CADENA_ORIGINAL}`, body);
   }
 
   /**
@@ -31,7 +32,7 @@ export class FirmaElectronicaService {
  * @returns Un `Observable` de tipo `BaseResponse` que contiene el resultado de la operación.
  */
   enviarFirma(body: FirmarRequest): Observable<BaseResponse> {
-    return this.http.post<BaseResponse>(`${this.urlServer}/api/tramite/firmar`, body);
+    return this.http.post<BaseResponse>(`${this.urlServer}/${API_ENVIAR_FIRMA}`, body);
   }
 
   /**
@@ -75,8 +76,7 @@ export class FirmaElectronicaService {
             if (error_code === 0) {
               try {
                 const CERT = new PKI.SAT.Certificado(certificado);
-                //this.validarVigenciaCertificado(cert);
-
+                
                 resolve({
                   firma: soloValidar ? undefined : firma,
                   certificado: certificado.hex,
@@ -101,7 +101,7 @@ export class FirmaElectronicaService {
   }
 
   /**
-   * Valida la vigencia del certificado.
+   * Valida la vigencia del certificado (USAR CUANDO SEA NECESARIO).
    * @param cert El certificado a validar.
    * @throws Error si el certificado no está vigente.
    */

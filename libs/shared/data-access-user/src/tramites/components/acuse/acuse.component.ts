@@ -126,12 +126,16 @@ export class AcuseComponent implements OnChanges {
       })
     ).subscribe({
       next: (response) => {
-        this.datosTablaAcuse = [{
-          id: 1,
-          documento: response.datos!.nombre_archivo,
-          urlPdf: AcuseComponent.crearUrlPdf(response.datos!.contenido),
-          idDocumento: '1'
-        }];
+        if (response?.datos) {
+          this.datosTablaAcuse = [{
+            id: 1,
+            documento: response.datos.nombre_archivo,
+            urlPdf: AcuseComponent.crearUrlPdf(response.datos.contenido),
+            idDocumento: '1'
+          }];
+        } else {
+          this.datosTablaAcuse = [];
+        }
       },
       error: (err) => {
         console.error('Error:', err);

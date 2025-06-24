@@ -47,8 +47,9 @@ export class TramiteFolioQueries extends Query<TramiteFolioState> {
   }
 
   /**
- * Getter para ID de solicitud
- */
+   * @description Función para obtener el ID de solicitud
+   * @returns Un número que representa el ID de la solicitud.
+   */
   getIdSolicitud(): number {
     return this.getValue()?.idSolicitud ?? 0;
   }
