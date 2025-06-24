@@ -1,4 +1,4 @@
-import { CatalogoLista, CuposTablaDatos } from '../model/cancelaciones-certificado.model';
+import { CatalogoLista, CuposTablaDatos, RespuestaConsulta } from '../model/cancelaciones-certificado.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -83,5 +83,13 @@ export class CancelacionCertificadosService {
    */
   obtenerAvisoTabla(): Observable<CuposTablaDatos> {
     return this.http.get<CuposTablaDatos>(`assets/json/140205/cupo-tabla.json`);
+  }
+
+      /**
+ * Obtiene los datos para la consulta del trámite.
+ * @returns {Observable<RespuestaConsulta>} Observable con los datos de consulta.
+ */
+  getDatosConsulta(): Observable<RespuestaConsulta> {
+    return this.http.get<RespuestaConsulta>('assets/json/140205/consulta_140205.json');
   }
 }

@@ -2444,6 +2444,52 @@
         "departamento": "COFEPRIS",
         "numeroDeProcedimiento": "260910"
     },
+     {
+    "id": "140205",
+    "tipoDeTramite": "Datos generales del trámite",
+    "fecha": "2025-06-17",
+    "fechaActualizacion": "2025-06-17",
+    "diasTranscurridos": "4",
+    "departamento": "SE",
+    "numeroDeProcedimiento": "140205"
+  },
+  {
+    "id": "110217",
+    "tipoDeTramite": "Datos generales del trámite",
+    "fecha": "2025-06-17",
+    "fechaActualizacion": "2025-06-17",
+    "diasTranscurridos": "4",
+    "departamento": "SE",
+    "numeroDeProcedimiento": "110217"
+  },
+  {
+    "id": "32507",
+    "tipoDeTramite": "Datos generales del trámite",
+    "fecha": "2024-11-01",
+    "fechaActualizacion": "2024-11-07",
+    "diasTranscurridos": "4",
+    "departamento": "AGACE",
+    "numeroDeProcedimiento": "32507"
+  },
+   {
+        "id":"32505",
+        "folioTramite": "3170001000320251005000002",
+        "tipoDeTramite": "Datos generales del trámite",
+        "fecha": "2023-10-01",
+        "fechaActualizacion": "2023-10-05",
+        "diasTranscurridos": "4",
+        "departamento": "AGACE",
+        "numeroDeProcedimiento": "32505"
+    },
+    {
+        "id": "11105",
+        "tipoDeTramite": "Datos generales del trámite",
+        "fecha": "2024-11-01",
+        "fechaActualizacion": "2024-11-07",
+        "diasTranscurridos": "4",
+        "departamento": "AGA",
+        "numeroDeProcedimiento": "11105"
+    },
     {
         "id": "130120",
         "tipoDeTramite": "Datos generales del trámite",
