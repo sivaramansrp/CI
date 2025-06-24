@@ -1,43 +1,34 @@
 import {
+  AfterViewInit,
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  Output
+} from '@angular/core';
+import {
   COLONIA_FIELD_FLAG,
+  DESTINATARIO_TITULO_CUSTOM,
   NUMERO_TRAMITE,
   PROCEDIMIENTOS_PARA_NO_CONTRIBUYENTE,
+  STR_NACIONAL,
+  TERCEROS_NACIONALIDAD_OPCIONES,
+  TIPO_PERSONA_OPCIONES
 } from '../../constants/datos-solicitud.enum';
-import { STR_NACIONAL } from '../../constants/datos-solicitud.enum';
-import { TERCEROS_NACIONALIDAD_OPCIONES } from '../../constants/datos-solicitud.enum';
-import { TIPO_PERSONA_OPCIONES } from '../../constants/datos-solicitud.enum';
-
+import { Catalogo, CatalogoSelectComponent, InputRadioComponent, TipoPersona, TituloComponent } from '@ng-mf/data-access-user';
+import { CommonModule, Location } from '@angular/common';
+import { DestinoFinal, Proveedor } from '../../models/terceros-relacionados.model';
 import {
-  DestinoFinal,
-  Proveedor,
-} from '../../models/terceros-relacionados.model';
-import { DESTINATARIO_TITULO_CUSTOM } from '../../constants/datos-solicitud.enum';
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators
+} from '@angular/forms';
+import { Subject, takeUntil } from 'rxjs';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
 
-import { CommonModule } from '@angular/common';
-import { Location } from '@angular/common';
-
-import { AfterViewInit, Component } from '@angular/core';
-import { EventEmitter } from '@angular/core';
-import { Input } from '@angular/core';
-import { OnChanges } from '@angular/core';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
-import { Output } from '@angular/core';
-
-import { FormBuilder } from '@angular/forms';
-import { FormGroup } from '@angular/forms';
-import { ReactiveFormsModule } from '@angular/forms';
-import { Validators } from '@angular/forms';
-
-import { Catalogo } from '@ng-mf/data-access-user';
-import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
-import { InputRadioComponent } from '@ng-mf/data-access-user';
-import { TipoPersona } from '@ng-mf/data-access-user';
-import { TituloComponent } from '@ng-mf/data-access-user';
-
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-agregar-destinatario-custom',
@@ -53,8 +44,7 @@ import { takeUntil } from 'rxjs';
   styleUrl: './agregar-destinatario-custom.component.scss',
 })
 export class AgregarDestinatarioCustomComponent
-  implements OnDestroy, OnInit, OnChanges, AfterViewInit
-{
+  implements OnDestroy, OnInit, OnChanges, AfterViewInit {
   /**
    * Subject utilizado para gestionar la desuscripción de observables.
    * Se completa en `ngOnDestroy()` para prevenir fugas de memoria.
@@ -253,10 +243,8 @@ export class AgregarDestinatarioCustomComponent
     const NUEVO_DESTINATARIO: DestinoFinal = {
       nombreRazonSocial: DENOMINACIONRAZON_ONLY_FLAG
         ? `${this.agregarDestinatarioFinal.value.denominacionRazon}`.trim()
-        : `${this.agregarDestinatarioFinal.value.nombres} ${
-            this.agregarDestinatarioFinal.value.primerApellido
-          } ${
-            this.agregarDestinatarioFinal.value.segundoApellido || ''
+        : `${this.agregarDestinatarioFinal.value.nombres} ${this.agregarDestinatarioFinal.value.primerApellido
+          } ${this.agregarDestinatarioFinal.value.segundoApellido || ''
           } `.trim(),
       rfc: this.agregarDestinatarioFinal.value.rfc,
       curp: '',

@@ -1,46 +1,23 @@
 import {
   CAMPO_OBLIGATORIO_DESTINATARIO,
   PROCEDIMIENTOS_PARA_NO_CONTRIBUYENTE,
-  TIPO_PERSONA_OPCIONES_NO_CONTRIBUYENTE,
+  STR_NACIONAL,
+  TERCEROS_NACIONALIDAD_OPCIONES,
+  TIPO_PERSONA_OPCIONES,
+  TIPO_PERSONA_OPCIONES_NO_CONTRIBUYENTE
 } from '../../constants/datos-solicitud.enum';
-import { STR_NACIONAL } from '../../constants/datos-solicitud.enum';
-import { TERCEROS_NACIONALIDAD_OPCIONES } from '../../constants/datos-solicitud.enum';
-import { TIPO_PERSONA_OPCIONES } from '../../constants/datos-solicitud.enum';
-
+import { Catalogo, CatalogoSelectComponent, InputRadioComponent, TipoPersona, TituloComponent } from '@ng-mf/data-access-user';
+import { CommonModule, Location } from '@angular/common';
+import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output } from '@angular/core';
 import {
   DestinoFinal,
-  Proveedor,
+  Proveedor
 } from '../../models/terceros-relacionados.model';
-
-import { DatosSolicitudService } from '../../services/datos-solicitud.service';
-
-import { CommonModule } from '@angular/common';
-import { Location } from '@angular/common';
-
-import { Component } from '@angular/core';
-import { EventEmitter } from '@angular/core';
-import { Input } from '@angular/core';
-import { OnChanges } from '@angular/core';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
-import { Output } from '@angular/core';
-
-import { FormBuilder } from '@angular/forms';
-import { FormGroup } from '@angular/forms';
-import { ReactiveFormsModule } from '@angular/forms';
-import { Validators } from '@angular/forms';
-
-import { Catalogo } from '@ng-mf/data-access-user';
-import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Subject, map, takeUntil } from 'rxjs';
 import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
-import { InputRadioComponent } from '@ng-mf/data-access-user';
-import { TipoPersona } from '@ng-mf/data-access-user';
-import { TituloComponent } from '@ng-mf/data-access-user';
-
+import { DatosSolicitudService } from '../../services/datos-solicitud.service';
 import { ES_CURP } from '../../constants/datos-del-tramilte.enum';
-import { Subject } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { takeUntil } from 'rxjs';
 
 /**
  * Componente para agregar un destinatario final (Destinatario) al formulario y almacenarlo.
@@ -62,8 +39,7 @@ import { takeUntil } from 'rxjs';
   styleUrl: './agregar-destinatario-final.component.scss',
 })
 export class AgregarDestinatarioFinalComponent
-  implements OnDestroy, OnInit, OnChanges
-{
+  implements OnDestroy, OnInit, OnChanges {
   /**
    * Subject utilizado para gestionar la desuscripción de observables.
    * Se completa en `ngOnDestroy()` para prevenir fugas de memoria.
@@ -287,9 +263,8 @@ export class AgregarDestinatarioFinalComponent
       return;
     }
     const NUEVO_DESTINATARIO: DestinoFinal = {
-      nombreRazonSocial: `${this.agregarDestinatarioFinal.value.nombres} ${
-        this.agregarDestinatarioFinal.value.primerApellido
-      } ${this.agregarDestinatarioFinal.value.segundoApellido || ''}`.trim(),
+      nombreRazonSocial: `${this.agregarDestinatarioFinal.value.nombres} ${this.agregarDestinatarioFinal.value.primerApellido
+        } ${this.agregarDestinatarioFinal.value.segundoApellido || ''}`.trim(),
       rfc: this.agregarDestinatarioFinal.value.rfc,
       curp: this.agregarDestinatarioFinal.value.curp,
       telefono:
