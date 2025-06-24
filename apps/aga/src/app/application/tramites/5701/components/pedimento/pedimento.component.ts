@@ -117,13 +117,15 @@ export class PedimentoComponent implements OnInit, OnChanges, OnDestroy {
    * @description Formulario reactivo para el componente de pedimento.
    * Se utiliza para manejar la validación y los valores del formulario.
    */
-  pedimentoForm: FormControl = new FormControl('', [Validators.maxLength(7)]);
+  public pedimentoForm: FormControl = new FormControl('', [
+    Validators.maxLength(7),
+  ]);
 
   /**
    * @description Array con los datos de los pedimentos.
    * Se utiliza para almacenar los pedimentos ingresados por el usuario.
    */
-  pedimentos: Pedimento[] = [];
+  public pedimentos: Pedimento[] = [];
 
   /**
    * @descripcion Notificación para mostrar mensajes al usuario.
@@ -133,35 +135,48 @@ export class PedimentoComponent implements OnInit, OnChanges, OnDestroy {
   /**
    * @description Tipos de pedimento disponibles.
    */
-  tiposPedimento: Catalogo[] = [];
+  public tiposPedimento: Catalogo[] = [];
 
   /**
    * @description Lista de pedimentos seleccionados en la tabla.
    * Se utiliza para almacenar los pedimentos que han sido seleccionados por el usuario en la tabla.
    */
-  selected: Pedimento[] = [];
+  public selected: Pedimento[] = [];
 
   /**
    * @description Tipo de selección para la tabla de pedimentos.
    * Se utiliza para definir el tipo de selección en la tabla de pedimentos.
    */
-  SelectionType = SelectionType;
+  public SelectionType = SelectionType;
 
   /**
    * @description Objeto para manejar la edición de celdas en la tabla de pedimentos.
    * Se utiliza para determinar si una celda está en modo de edición.
    */
-  editar: { [key: string]: boolean } = {};
+  public editar: { [key: string]: boolean } = {};
 
   /**
    * @description Modo de visualización de columnas en la tabla de pedimentos.
    * Se utiliza para definir el modo de visualización de las columnas en la tabla de pedimentos.
    */
-  ColumnMode = ColumnMode;
+  public ColumnMode = ColumnMode;
 
-  mensajes = {
+  /**
+   * @description Mensajes personalizados para la tabla de pedimentos.
+   * Se utiliza para mostrar mensajes personalizados cuando no hay datos disponibles en la tabla.
+   */
+  public mensajes = {
     emptyMessage: 'No hay datos disponibles',
   };
+
+  /**
+   * @description Constructor del componente Pedimento.
+   * Se inyectan las dependencias necesarias para el componente, incluyendo servicios y store.
+   * @param tramite5701Query
+   * @param tramite5701Store
+   * @param estadoPedimentoService
+   * @param tipoPedimentoService
+   */
   constructor(
     private tramite5701Query: Tramite5701Query,
     private tramite5701Store: Tramite5701Store,
@@ -169,6 +184,12 @@ export class PedimentoComponent implements OnInit, OnChanges, OnDestroy {
     private tipoPedimentoService: TipoPedimentoService
   ) {}
 
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * Se utiliza para obtener los tipos de pedimento y suscribirse al estado de la solicitud 5701.
+   * @param {no parameters} - No recibe parámetros.
+   * @returns {void}
+   */
   ngOnInit(): void {
     this.getTiposPedimento();
     this.tramite5701Query.selectSolicitud$
@@ -183,6 +204,8 @@ export class PedimentoComponent implements OnInit, OnChanges, OnDestroy {
 
   /**
    * Obtiene los tipos de pedimento disponibles y los almacena en una variable.
+   * @param {no parameters} - No recibe parámetros.
+   * @returns {void} - No retorna ningún valor.
    */
   getTiposPedimento(): void {
     this.tipoPedimentoService
@@ -202,7 +225,7 @@ export class PedimentoComponent implements OnInit, OnChanges, OnDestroy {
 
   /**
    * Verifica si el formulario de pedimento es válido.
-   *
+   *@param {no parameters} - No recibe parámetros.
    * @returns {boolean | null} - Devuelve `true` si el formulario tiene errores y ha sido tocado,
    *                             `false` si no tiene errores o no ha sido tocado,
    *                             o `null` si no se puede determinar.
@@ -213,6 +236,8 @@ export class PedimentoComponent implements OnInit, OnChanges, OnDestroy {
 
   /**
    * Método del ciclo de vida de Angular que se llama cuando uno o más valores de las propiedades de entrada de un componente cambian.
+   * @param changes - Un objeto que contiene los cambios detectados en las propiedades de entrada.
+   * @returns {void} No retorna ningún valor.
    */
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['tablaPedimento'] && changes['tablaPedimento'].currentValue) {
@@ -233,7 +258,7 @@ export class PedimentoComponent implements OnInit, OnChanges, OnDestroy {
    * Agrega un nuevo pedimento.
    *
    * Esta función emite un evento para validar los campos y luego ejecuta las acciones correspondientes.
-   *
+   *@param {no parameters} - No recibe parámetros.
    * @returns {void} No retorna ningún valor.
    */
   agregaPedimento(): void {
@@ -253,6 +278,7 @@ export class PedimentoComponent implements OnInit, OnChanges, OnDestroy {
    *     - Muestra un modal con un mensaje de aviso y agrega el pedimento a la tabla.
    *   - Si el número de pedimento es 0:
    *     - Muestra un modal con un mensaje de aviso indicando que el número de pedimento no es válido.
+   * @param {no parameters} - No recibe parámetros.
    * @returns {void}
    */
   acciones(): void {
@@ -399,7 +425,7 @@ export class PedimentoComponent implements OnInit, OnChanges, OnDestroy {
       };
       return;
     }
-    
+
     if (this.selected.length === 0) {
       this.nuevaNotificacion = {
         tipoNotificacion: 'alert',
@@ -482,10 +508,14 @@ export class PedimentoComponent implements OnInit, OnChanges, OnDestroy {
    */
   actualizarValor(event: Event, cell: string, rowIndex: number): void {
     const TARGET = event.target as HTMLInputElement;
-    
+
     this.editar[`${rowIndex}-${cell}`] = false;
 
-    if (cell === 'descTipoPedimento' || cell === 'numero' || cell === 'comprobanteValor') {
+    if (
+      cell === 'descTipoPedimento' ||
+      cell === 'numero' ||
+      cell === 'comprobanteValor'
+    ) {
       this.pedimentos[rowIndex][cell] = TARGET.value;
       if (cell === 'descTipoPedimento') {
         const TIPO_PEDIMENTO = this.tiposPedimento.find(
