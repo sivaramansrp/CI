@@ -4,7 +4,7 @@ import {
   CATALOGOS_ID,
   TituloComponent,
 } from '@ng-mf/data-access-user';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { CatalogosService } from '@ng-mf/data-access-user';
@@ -52,18 +52,15 @@ export class PasoDosComponent implements OnInit, OnDestroy {
   catalogoDocumentos: Catalogo[] = [];
 
   /**
-   * Lista de documentos seleccionados por el usuario.
-   * Esta propiedad almacena los documentos que han sido marcados
-   * como seleccionados en el flujo actual de la aplicación.
-   */
-  documentosSeleccionados = documentList.documentosSeleccionados;
-
-  /**
    * @private
    * @description Sujeto utilizado para manejar la destrucción de suscripciones y evitar fugas de memoria.
    * Se emite un valor cuando el componente se destruye, lo que permite completar las suscripciones activas.
    */
   public destroy$: Subject<void> = new Subject<void>();
+
+  @Output() reenviarEvento = new EventEmitter<void>();
+  @Output() regresarSeccionCargarDocumentoEvento = new EventEmitter<void>();
+
 
   /**
    * Constructor de la clase PasoDosComponent.
