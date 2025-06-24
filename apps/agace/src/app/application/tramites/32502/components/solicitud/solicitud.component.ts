@@ -5,6 +5,7 @@ import { Solicitud32502State, Tramite32502Store } from '../../../../estados/tram
 import { Subject, map, merge, takeUntil } from 'rxjs';
 import { AvisoService } from '../../services/aviso.service';
 import { Catalogo } from '@ng-mf/data-access-user';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { TEXTOS } from '@ng-mf/data-access-user';
 import { Tramite32502Query } from '../../../../estados/queries/tramite32502.query';
 import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
@@ -58,7 +59,23 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    */
   declaracionDeResponsabilidadSolidaria : string = TEXTOS.DECLARACION_DE_RESPONSABILIDAD_SOLIDARIA;
   private destroy$: Subject<void> = new Subject<void>();
-
+    /**
+    * Indica si el formulario está en modo solo lectura.
+    * Cuando es `true`, los campos del formulario no se pueden editar.
+    */
+    esFormularioSoloLectura: boolean = false;
+    /**
+ * Estado de la sección que contiene los datos del procedimiento.
+ * 
+ * Esta propiedad almacena el estado actual de los datos relacionados con el procedimiento.
+ * Se inicializa a través de un observable en el método `obtenerDatosFormulario`, 
+ * que suscribe a los cambios en el estado y actualiza esta propiedad con los datos más recientes.
+ * 
+ * Tipo: `DatosProcedureState`
+ * 
+ * @private
+ */
+  private seccionState!: Solicitud32502State;
   /**
    * Constructor del componente.
    * @param avisoService Servicio para obtener datos de PEXIM.
@@ -72,9 +89,23 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     private validacionesService: ValidacionesFormularioService,
     public tramite32502Store: Tramite32502Store,
      private tramite32502Query: Tramite32502Query
-  ) {
-    // Inicializar el formulario principal
-    this.crearFormSolicitud();
+     ,private consultaioQuery: ConsultaioQuery) {
+          /**
+       * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
+       *
+       * - Asigna el valor de solo lectura (`readonly`) a la propiedad `esFormularioSoloLectura`.
+       * - Llama a `inicializarEstadoFormulario()` para aplicar configuraciones basadas en el estado recibido.
+       * - La suscripción se cancela automáticamente cuando `destroyNotifier$` emite un valor (para evitar fugas de memoria).
+       */
+          this.consultaioQuery.selectConsultaioState$
+          .pipe(
+            takeUntil(this.destroy$),
+            map((seccionState: { readonly: boolean }) => {
+              this.esFormularioSoloLectura = seccionState.readonly;
+              this.guardarDatosFormulario();
+            })
+          )
+          .subscribe()
   }
 
   /**
@@ -87,6 +118,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   ngOnInit(): void {
+    this.inicializarEstadoFormulario();
     this.inicializaCatalogos();
     this.tramite32502Query.select()
       .pipe(takeUntil(this.destroy$))
@@ -155,6 +187,14 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * Método para crear el formulario principal de la solicitud.
    */
   crearFormSolicitud(): void {
+    this.tramite32502Query.selectSolicitud$
+    .pipe(
+      takeUntil(this.destroy$),
+      map((seccionState) => {
+        this.seccionState = seccionState;
+      })
+    )
+    .subscribe()
     this.FormSolicitud = this.fb.group({
       adaceForm: this.fb.group({
         adace: [
@@ -266,6 +306,11 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         ]
       })
     });
+    if (this.esFormularioSoloLectura) {
+      this.FormSolicitud.disable();
+    } else {
+      this.FormSolicitud.enable();
+    }
   }
 
   /**
@@ -309,7 +354,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    */
   fraccionReglaSeleccion(): void {
     const REGLAFRACCION = this.FormSolicitud.get('reglaFraccion')?.value;
-    this.tramite32502Store.setFraccionRegla(REGLAFRACCION);
+    Tramite32502Store.setFraccionRegla(REGLAFRACCION);
   }
 
   /**
@@ -317,7 +362,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    */
   onEntidadFederativaChange(): void {
     const ENTIDADFEDERATIVA = this.FormSolicitud.get('reglaFraccion')?.value;
-    this.tramite32502Store.setFraccionRegla(ENTIDADFEDERATIVA);
+    Tramite32502Store.setFraccionRegla(ENTIDADFEDERATIVA);
   }
 
   /**
@@ -325,7 +370,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    */
   sanitizarNumeroPedimento(): void {
     const NUMPEDIMENTO = this.FormSolicitud.get('reglaFraccion')?.value;
-    this.tramite32502Store.setFraccionRegla(NUMPEDIMENTO);
+    Tramite32502Store.setFraccionRegla(NUMPEDIMENTO);
   }
 
   /**
@@ -336,45 +381,9 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * @param {string} metodoNombre - El nombre del método en el store que se va a invocar con el valor del campo.
    * @returns {void}
    */
-  setValoresStore(form: FormGroup, campo: string, metodoNombre: string): void {
+  setValoresStore(form: FormGroup, campo: string): void {
   const VALOR = form.get(campo)?.value;
-
-  const METHODMAP: Record<string, (value: string | number | boolean) => void> = {
-    setRazonSocial: (value) => this.tramite32502Store.setRazonSocial(String(value)),
-    setRfcExtranjero: (value) => this.tramite32502Store.setRfcExtranjero(String(value)),
-    setFraccionArancelaria: (value) => this.tramite32502Store.setCveFraccionArancelaria(String(value)),
-    setFraccionRegla: (value) => this.tramite32502Store.setReglaFraccion(String(value)),
-    setEntidadFederativa: (value) => this.tramite32502Store.setEntidadFederativa(String(value)),
-    setNumeroPedimento: (value) => this.tramite32502Store.setNumeroPedimento(String(value)),
-    setFechaInicio: (value) => this.tramite32502Store.setFechaInicio(String(value)),
-    setRfc: (value) => this.tramite32502Store.setRfc(String(value)),
-    setDescripcionMercancia: (value) => this.tramite32502Store.setDescripcionMercancia(String(value)),
-    setInformacionExtra: (value) => this.tramite32502Store.setInformacionExtra(String(value)),
-    setDelegacionMunicipio: (value) => this.tramite32502Store.setDelegacionMunicipio(String(value)),
-    setColonia: (value) => this.tramite32502Store.setColonia(String(value)),
-    setCalle: (value) => this.tramite32502Store.setCalle(String(value)),
-    setNumeroExterior: (value) => this.tramite32502Store.setNumeroExterior(String(value)),
-    setNumeroInterior: (value) => this.tramite32502Store.setNumeroInterior(String(value)),
-    setCodigoPostal: (value) => this.tramite32502Store.setCodigoPostal(String(value)),
-    setPatenteAutorizacion: (value) => this.tramite32502Store.setPatenteAutorizacion(String(value)),
-    setRfcAgenteAduanal: (value) => this.tramite32502Store.setRfcAgenteAduanal(String(value)),
-    setClaveAduana: (value) => this.tramite32502Store.setClaveAduana(String(value)),
-    setNombre: (value) => this.tramite32502Store.setNombre(String(value)),
-    setPrimerApellido: (value) => this.tramite32502Store.setPrimerApellido(String(value)),
-    setSegundoApellido: (value) => this.tramite32502Store.setSegundoApellido(String(value)),
-    setAdace: (value) => this.tramite32502Store.setAdace(String(value)),
-    setNico: (value) => this.tramite32502Store.setNico(String(value)),
-    setValorUSD: (value) => this.tramite32502Store.setValorUSD(String(value)),
-    setMarca: (value) => this.tramite32502Store.setMarca(String(value)),
-    setPeso: (value) => this.tramite32502Store.setPeso(String(value)),
-    setNumeroSerie: (value) => this.tramite32502Store.setNumeroSerie(String(value)),
-  };
-
-  if (METHODMAP[metodoNombre]) {
-    METHODMAP[metodoNombre](VALOR);
-  } else {
-    console.error(`El método ${metodoNombre} no existe en el mapa de métodos.`);
-  }
+  this.tramite32502Store.establecerDatos(VALOR);
 }
 
 
@@ -403,4 +412,48 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     this.mercanciaST.get('fechaInicio')?.markAsUntouched();
     this.tramite32502Store.setFechaInicio(nuevo_valor);
   }
+
+  /**
+ * Inicializa el estado del formulario.
+ * 
+ * Este método evalúa si el formulario debe ser inicializado en modo solo lectura o en modo editable.
+ * 
+ * 1. Si el formulario está en modo solo lectura (`esFormularioSoloLectura`):
+ *    - Llama al método `guardarDatosFormulario` para cargar los datos y deshabilitar el formulario.
+ * 
+ * 2. Si el formulario no está en modo solo lectura:
+ *    - Llama al método `obtenerDatosFormulario` para cargar los datos del estado actual.
+ * 
+ * Este método es útil para configurar el estado inicial del formulario y sincronizarlo
+ * con los datos del estado global de la aplicación.
+ * 
+ * @returns {void}
+ */
+inicializarEstadoFormulario(): void {
+  if (this.esFormularioSoloLectura) {
+    this.guardarDatosFormulario();
+  } else {
+    this.crearFormSolicitud();
+  }
+}
+
+  /**
+* Carga los datos del formulario y actualiza su estado.
+* 
+* Este método realiza las siguientes acciones:
+* 
+* 1. Llama al método `obtenerDatosFormulario` para cargar los datos del estado actual.
+* 2. Llama al método `crearFormulario` para inicializar el formulario reactivo con los datos obtenidos.
+* 3. Evalúa si el formulario está en modo solo lectura (`esFormularioSoloLectura`):
+*    - Si está en modo solo lectura, deshabilita el formulario utilizando el método `disable`.
+*    - Si no está en modo solo lectura, habilita el formulario utilizando el método `enable`.
+* 
+* Este método es útil para sincronizar los datos del formulario con el estado global de la aplicación
+* y configurar su estado (habilitado o deshabilitado) según corresponda.
+* 
+* @returns {void}
+*/
+guardarDatosFormulario(): void {
+  this.crearFormSolicitud();
+}
 }

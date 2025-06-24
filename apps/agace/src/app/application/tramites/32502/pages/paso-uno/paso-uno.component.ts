@@ -1,13 +1,18 @@
-import { AfterViewInit, Component, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ConsultaioState, SolicitanteComponent, TIPO_PERSONA } from '@ng-mf/data-access-user';
 import { DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL, PERSONA_MORAL_NACIONAL } from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
-import { SolicitanteComponent, TIPO_PERSONA } from '@ng-mf/data-access-user';
+import { map, takeUntil } from 'rxjs';
+import { AvisoService } from '../../services/aviso.service';
+import { ConsultaioQuery} from '@ng-mf/data-access-user';
 import { FormularioDinamico } from '@ng-mf/data-access-user';
+import { Solicitud32502State } from '../../../../estados/tramites/tramite32502.store';
+import { Subject } from 'rxjs';
 @Component({
   selector: 'paso-uno',
   templateUrl: './paso-uno.component.html',
   styleUrl: './paso-uno.component.scss'
 })
-export class PasoUnoComponent implements AfterViewInit {
+export class PasoUnoComponent implements OnInit,OnDestroy, AfterViewInit {
 
   @ViewChild(SolicitanteComponent) solicitante!: SolicitanteComponent;
 
@@ -15,7 +20,82 @@ export class PasoUnoComponent implements AfterViewInit {
   persona: FormularioDinamico[] = [];
   domicilioFiscal: FormularioDinamico[] = [];
   indice: number = 1;
+    /**
+   * Observable utilizado para limpiar las suscripciones al destruir el componente.
+   * Esto ayuda a evitar fugas de memoria.
+   */
+    private notificadorDestruccion$: Subject<void> = new Subject();
+  /**
+  * Indica si el formulario está en modo solo lectura.
+  * Cuando es `true`, los campos del formulario no se pueden editar.
+  */
+  esFormularioSoloLectura: boolean = false; 
+    /**
+    * Indica si los datos de respuesta del servidor están disponibles.
+    */
+    public datosRespuestaDisponibles: boolean = false;
+  
+    /**
+     * Estado actual de la consulta.
+     */
+    public estadoConsulta!: ConsultaioState;
+  /**
+/**
+* Constructor del componente.
+* Inicializa los servicios y dependencias necesarias.
+*/
+constructor( private AvisoService:AvisoService,
+private consultaQuery: ConsultaioQuery,
+) {
+//no hacer nada
+this.consultaQuery.selectConsultaioState$
+.pipe(
+  takeUntil(this.notificadorDestruccion$),
+  map((seccionState: { readonly: boolean })=>{
+    this.esFormularioSoloLectura = seccionState.readonly; 
+  })
+)
+.subscribe();
+}
 
+/**
+   * Hook del ciclo de vida que se llama al inicializar el componente.
+   * Realiza la suscripción al estado de la consulta y obtiene los datos de la bandeja de solicitudes si es necesario.
+   */
+     ngOnInit(): void {
+    this.consultaQuery.selectConsultaioState$
+      .pipe(takeUntil(this.notificadorDestruccion$))
+      .subscribe((estadoSeccion) => {
+        this.estadoConsulta = estadoSeccion;
+      });
+
+    if (this.estadoConsulta.update) {
+      this.obtenerDatosBandejaSolicitudes();
+    } else {
+      this.datosRespuestaDisponibles = true;
+    }
+  }
+
+  /**
+   * Obtiene los datos de la bandeja de solicitudes desde el servidor.
+   */
+  obtenerDatosBandejaSolicitudes(): void {
+    this.AvisoService.obtenerDatosEstado()
+      .pipe(takeUntil(this.notificadorDestruccion$))
+      .subscribe((datos: Solicitud32502State) => {
+        if (datos) {
+          this.datosRespuestaDisponibles = true;
+          this.AvisoService.establecerDatosEstado(datos);
+        }
+      });
+  }
+  /**
+   * Hook del ciclo de vida que se llama cuando el componente es destruido.
+   */
+  ngOnDestroy(): void {
+    this.notificadorDestruccion$.next();
+    this.notificadorDestruccion$.complete();
+  }
   ngAfterViewInit(): void {
 
     this.persona = PERSONA_MORAL_NACIONAL;
@@ -26,5 +106,4 @@ export class PasoUnoComponent implements AfterViewInit {
   seleccionaTab(i: number): void {
     this.indice = i;
   }
-
 }
