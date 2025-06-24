@@ -82,8 +82,8 @@ describe('BitacoraComponent', () => {
   it('should run #getBitacoraProsec()', async () => {
     component.ampliacionServiciosService = component.ampliacionServiciosService || {};
     component.ampliacionServiciosService.getBitacoraProsec = jest.fn().mockReturnValue(observableOf({
-      code: {},
-      data: {}
+      code: 200,
+      data: "abc"
     }));
     component.getBitacoraProsec();
     // expect(component.ampliacionServiciosService.getBitacoraProsec).toHaveBeenCalled();
@@ -92,8 +92,8 @@ describe('BitacoraComponent', () => {
   it('should run #getMercanciasProsec()', async () => {
     component.ampliacionServiciosService = component.ampliacionServiciosService || {};
     component.ampliacionServiciosService.getMercanciasProsec = jest.fn().mockReturnValue(observableOf({
-      code: {},
-      data: {}
+      code: 200,
+      data: "abc"
     }));
     component.getMercanciasProsec();
     // expect(component.ampliacionServiciosService.getMercanciasProsec).toHaveBeenCalled();
@@ -102,8 +102,8 @@ describe('BitacoraComponent', () => {
   it('should run #getPlantasProsec()', async () => {
     component.ampliacionServiciosService = component.ampliacionServiciosService || {};
     component.ampliacionServiciosService.getPlantasProsec = jest.fn().mockReturnValue(observableOf({
-      code: {},
-      data: {}
+      code: 200,
+      data: "abc"
     }));
     component.getPlantasProsec();
     // expect(component.ampliacionServiciosService.getPlantasProsec).toHaveBeenCalled();
@@ -112,8 +112,8 @@ describe('BitacoraComponent', () => {
   it('should run #getProductorProsec()', async () => {
     component.ampliacionServiciosService = component.ampliacionServiciosService || {};
     component.ampliacionServiciosService.getProductorIndirectoProsec = jest.fn().mockReturnValue(observableOf({
-      code: {},
-      data: {}
+      code: 200,
+      data: "abc"
     }));
     component.getProductorProsec();
     // expect(component.ampliacionServiciosService.getProductorIndirectoProsec).toHaveBeenCalled();
@@ -122,8 +122,8 @@ describe('BitacoraComponent', () => {
   it('should run #getSectoresProsec()', async () => {
     component.ampliacionServiciosService = component.ampliacionServiciosService || {};
     component.ampliacionServiciosService.getSectoresProsec = jest.fn().mockReturnValue(observableOf({
-      code: {},
-      data: {}
+      code: 200,
+      data: "abc"
     }));
     component.getSectoresProsec();
     // expect(component.ampliacionServiciosService.getSectoresProsec).toHaveBeenCalled();
