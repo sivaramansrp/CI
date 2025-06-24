@@ -2,31 +2,35 @@ import { AfterViewInit } from '@angular/core';
 import { AgregarMiembroDeLaEmpresaComponent } from '../agregar-miembro-de-la-empresa/agregar-miembro-de-la-empresa.component';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { BsModalService } from 'ngx-bootstrap/modal';
-import { Catalogo, ConfiguracionColumna, TablaSeleccion } from '@ng-mf/data-access-user';
+import { Catalogo } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { ConfiguracionColumna } from '@ng-mf/data-access-user';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { ElementRef } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { InputRadioComponent } from '@libs/shared/data-access-user/src/tramites/components/input-radio/input-radio.component';
 import Instalaciones from '@libs/shared/theme/assets/json/31601/Instalaciones.json';
+import { MENCIONE_TABLA_CONFIGURACION } from '../../enum/mencione-tabla.enum';
+import { MencioneConfiguracionItem } from '../../enum/mencione-tabla.enum';
 import { Modal } from 'bootstrap';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { REGEX_RFC } from '@libs/shared/data-access-user/src/tramites/constantes/regex.constants';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Solicitud31601State } from '../../../../estados/tramites/tramite31601.store';
+import { Solocitud31601Service } from '../../services/service31601.service';
 import { Subject } from 'rxjs';
 import { Tabla } from '../../models/models31601.model';
+import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
+import { TablaSeleccion } from '@ng-mf/data-access-user';
 import { TableBody } from '../../models/models31601.model';
 import { TableComponent } from '@ng-mf/data-access-user';
 import { TablePaginationComponent } from '@ng-mf/data-access-user';
 import { TemplateRef } from '@angular/core';
 import { TituloComponent } from '@ng-mf/data-access-user';
-import { Solocitud31601Service } from '../../services/service31601.service';
-import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
 import { Tramite31601Query } from '../../../../estados/queries/tramite31601.query';
 import { Tramite31601Store } from '../../../../estados/tramites/tramite31601.store';
 import { Validators } from '@angular/forms';
@@ -46,7 +50,7 @@ import preOperativo from '@libs/shared/theme/assets/json/31601/preOperativo.json
 import prejson from '@libs/shared/theme/assets/json/31601/prejson.json';
 import productivo from '@libs/shared/theme/assets/json/31601/productivo.json';
 import serviciosAgace from '@libs/shared/theme/assets/json/31601/serviciosAgace.json';
-import { MENCIONE_TABLA_CONFIGURACION, MencioneConfiguracionItem } from '../../enum/mencione-tabla.enum';
+
 
 /**
  * Componente para manejar el formulario reactivo y la paginación de una tabla relacionada con trámites aduaneros.

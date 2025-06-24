@@ -1,5 +1,5 @@
 import { AfterViewInit } from '@angular/core';
-import { Catalogo, TablaSeleccion } from '@ng-mf/data-access-user';
+import { Catalogo } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { Component } from '@angular/core';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
@@ -14,8 +14,7 @@ import { OnInit } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Solicitud31601State } from '../../../../estados/tramites/tramite31601.store';
 import { Subject } from 'rxjs';
-import { TableBody } from '../../models/models31601.model';
-import { TableComponent } from '@ng-mf/data-access-user';
+import { TablaSeleccion } from '@ng-mf/data-access-user';
 import { TablePaginationComponent } from '@ng-mf/data-access-user';
 import { Tramite31601Query } from '../../../../estados/queries/tramite31601.query';
 import { Tramite31601Store } from '../../../../estados/tramites/tramite31601.store';

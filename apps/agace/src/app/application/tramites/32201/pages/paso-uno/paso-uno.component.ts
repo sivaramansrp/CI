@@ -8,11 +8,13 @@ import { FormularioDinamico } from '@ng-mf/data-access-user';
 import { PERSONA_MORAL_NACIONAL } from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
 import { SolicitanteComponent } from '@ng-mf/data-access-user';
 import { SolicitudComponent } from '../../components/solicitud/solicitud.component';
-import { TituloComponent } from '@ng-mf/data-access-user';
-import { ViewChild } from '@angular/core';
-import { map, Subject, takeUntil } from 'rxjs';
-import { Tramite32201Store } from '../../estados/tramite32201.store';
 import { SolicitudService } from '../../services/solicitud.service';
+import { Subject } from 'rxjs';
+import { TituloComponent } from '@ng-mf/data-access-user';
+import { Tramite32201Store } from '../../estados/tramite32201.store';
+import { ViewChild } from '@angular/core';
+import { map } from 'rxjs';
+import { takeUntil } from 'rxjs';
 
 /**
  * Componente que representa la funcionalidad de la paso uno 32201.
