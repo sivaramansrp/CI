@@ -1,15 +1,12 @@
-import { AfterViewInit, Component } from '@angular/core';
-import {Subject, map } from 'rxjs';
+import { AfterViewInit, Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import { Subject, map, takeUntil } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { AgregarDestinatarioCustomComponent } from '../../../../shared/components/agregar-destinatario-custom/agregar-destinatario-custom.component';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 import { DestinoFinal } from '../../../../shared/models/terceros-relacionados.model';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
 import { Tramite240321Query } from '../../estados/tramite240321Query.query';
 import { Tramite240321Store } from '../../estados/tramite240321Store.store';
-import { takeUntil } from 'rxjs';
 
 
 /**
@@ -26,6 +23,17 @@ import { takeUntil } from 'rxjs';
   styleUrl: './agregar-destinatario-final-contenedora.component.scss',
 })
 export class AgregarDestinatarioFinalContenedoraComponent implements OnInit, OnDestroy,AfterViewInit {
+      /**
+     * @event cerrar
+     * @description Evento emitido para indicar que se debe cerrar el componente.
+     * @remarks
+     * Este evento no envía ningún valor, simplemente notifica a los componentes padres que se debe realizar la acción de cierre.
+     * 
+     * @eventType void
+     * @es
+     * Evento que se dispara para cerrar el componente actual.
+     */
+    @Output() cerrar = new EventEmitter<void>();
    /**
      * Subject utilizado para gestionar la desuscripción de observables.
      * Se completa en `ngOnDestroy()` para prevenir fugas de memoria.
@@ -59,10 +67,13 @@ export class AgregarDestinatarioFinalContenedoraComponent implements OnInit, OnD
    *
    * @method constructor
    * @param {Tramite240321Store} tramiteStore - Store que administra el estado del trámite.
+   * @param {ActivatedRoute} route - Ruta activa para obtener parámetros de la URL.
+   * @param {Tramite240321Query} tramiteQuery - Query de Akita
+   * para obtener datos del trámite.
+   * @param {ConsultaioQuery} consultaioQuery - Query para obtener el estado de la sección de consulta.
    * @returns {void}
    */
   constructor(public tramiteStore: Tramite240321Store,private route: ActivatedRoute,private tramiteQuery: Tramite240321Query,private readonly consultaioQuery:ConsultaioQuery) {
-    // 
   }
 
   /**
@@ -84,6 +95,11 @@ export class AgregarDestinatarioFinalContenedoraComponent implements OnInit, OnD
    */
 
 
+  /**
+   * Actualiza los datos existentes del destinatario en el store con la lista proporcionada de destinos finales.
+   *
+   * @param event - Un arreglo de objetos `DestinoFinal` que representa los datos actualizados del destinatario.
+   */
   actualizaExistenteEnDestinatarioDatos(event: DestinoFinal[]): void {
     this.tramiteStore.actualizaExistenteEnDestinatarioDatos(event);
   }
