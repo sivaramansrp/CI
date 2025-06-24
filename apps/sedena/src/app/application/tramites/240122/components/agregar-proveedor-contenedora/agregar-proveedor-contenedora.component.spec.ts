@@ -9,6 +9,7 @@ import { Observable, of as observableOf, throwError } from 'rxjs';
 import { Component } from '@angular/core';
 import { AgregarProveedorContenedoraComponent } from './agregar-proveedor-contenedora.component';
 import { Tramite240122Store } from '../../estados/tramite240122Store.store';
+import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 import { Tramite240122Query } from '../../estados/tramite240122Query.query';
 import { DatosSolicitudService } from '../../../../shared/services/datos-solicitud.service';
 
@@ -16,16 +17,10 @@ import { DatosSolicitudService } from '../../../../shared/services/datos-solicit
 class MockTramite240122Store {}
 
 @Injectable()
-class MockTramite240122Query {
-  obtenerTercerosDatos$ = {};
-}
-
+class MockTramite240122Query {}
 @Injectable()
-class MockDatosSolicitudService {
-  obtenerDatosSolicitud() {
-    return observableOf({});
-  }
-}
+class MockDatosSolicitudService {}
+
 
 describe('AgregarProveedorContenedoraComponent', () => {
   let fixture;
@@ -40,7 +35,7 @@ describe('AgregarProveedorContenedoraComponent', () => {
         { provide: Tramite240122Store, useClass: MockTramite240122Store },
         { provide: Tramite240122Query, useClass: MockTramite240122Query },
         { provide: DatosSolicitudService, useClass: MockDatosSolicitudService },
-
+        ConsultaioQuery
       ]
     }).overrideComponent(AgregarProveedorContenedoraComponent, {
 
@@ -49,19 +44,30 @@ describe('AgregarProveedorContenedoraComponent', () => {
     component = fixture.debugElement.componentInstance;
   });
 
-  afterEach(() => {
-    fixture.destroy();
-  });
 
   it('should run #constructor()', async () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should run #ngOnInit()', async () => {
+    component.consultaioQuery = component.consultaioQuery || {};
+    component.consultaioQuery.selectConsultaioState$ = observableOf({});
+    component.ngOnInit();
+
   });
 
   it('should run #updateProveedorTablaDatos()', async () => {
     component.tramite240122Store = component.tramite240122Store || {};
     component.tramite240122Store.updateProveedorTablaDatos = jest.fn();
     component.updateProveedorTablaDatos({});
-    expect(component.tramite240122Store.updateProveedorTablaDatos).toHaveBeenCalled();
+     expect(component.tramite240122Store.updateProveedorTablaDatos).toHaveBeenCalled();
+  });
+
+  it('should run #ngOnDestroy()', async () => {
+    component.destroyNotifier$ = component.destroyNotifier$ || {};
+    component.destroyNotifier$.next = jest.fn();
+    component.destroyNotifier$.complete = jest.fn();
+    component.ngOnDestroy();
   });
 
 });

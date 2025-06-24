@@ -1,9 +1,28 @@
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
+import {
+  ConfiguracionColumna,
+  TablaDinamicaComponent,
+  TablaSeleccion,
+  TableBodyData,
+} from '@ng-mf/data-access-user';
+import {
+  ENLACE_TABLA_CONFIGURACION,
+  EnlaceConfiguracionItem,
+} from '../../enum/enlance-tabla.enum';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { Solicitud31601State, Tramite31601Store } from '../../../../estados/tramites/tramite31601.store';
-import { Subject,map, takeUntil } from 'rxjs';
-import { TableBodyData, TableComponent } from '@ng-mf/data-access-user';
+import {
+  Solicitud31601State,
+  Tramite31601Store,
+} from '../../../../estados/tramites/tramite31601.store';
+import { Subject, map, takeUntil } from 'rxjs';
+import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { Tramite31601Query } from '../../../../estados/queries/tramite31601.query';
@@ -13,7 +32,7 @@ import enlaceData from '@libs/shared/theme/assets/json/31601/enlace-data.json';
 /**
  * @component EnlaceComponent
  * @description Componente para gestionar el enlace de un representante, incluyendo su información en un formulario reactivo. Forma parte del trámite 31601.
- * 
+ *
  * Este componente:
  * - Muestra una tabla con datos precargados.
  * - Muestra y gestiona un formulario reactivo con datos del representante.
@@ -21,26 +40,27 @@ import enlaceData from '@libs/shared/theme/assets/json/31601/enlace-data.json';
  * - Usa datos precargados desde archivos JSON.
  * - Maneja el estado mediante un store y un query personalizados.
  * - Controla un modal para ingresar o editar información del representante.
- * 
+ *
  * @example
  * <app-enlace></app-enlace>
- * 
+ *
  * @imports
  * - TableComponent
  * - TituloComponent
  * - ReactiveFormsModule
  * - FormsModule
- * 
+ *
  * @author Equipo Angular
  */
 @Component({
   selector: 'app-enlace',
   standalone: true,
   imports: [
-    TableComponent,
     TituloComponent,
     ReactiveFormsModule,
+    TablaDinamicaComponent,
     FormsModule,
+    CommonModule,
   ],
   templateUrl: './enlace.component.html',
   styleUrl: './enlace.component.scss',
@@ -93,13 +113,82 @@ export class EnlaceComponent implements OnInit, OnDestroy {
   public modal: string = 'modal';
 
   /**
+   * Configuración de las columnas para la tabla de enlace.
+   */
+  configuracionTablaEnlace: ConfiguracionColumna<EnlaceConfiguracionItem>[] =
+    ENLACE_TABLA_CONFIGURACION;
+
+  /**
+   * Tipo de selección para la tabla dinámica.
+   */
+  tipoSeleccionTabla = TablaSeleccion.CHECKBOX;
+
+  /**
+   * Datos de la tabla de enlace.
+   */
+  datosTablaEnlace!: EnlaceConfiguracionItem[];
+
+  /**
+   * Indica si se debe mostrar el modal de datos de mercancía.
+   */
+  mostrarModalDatosMercancia: boolean = false;
+
+  /**
+   * Indica si se debe mostrar el popup de selección múltiple.
+   */
+  mostrarPopupSeleccionMultiple: boolean = false;
+  /**
+   * Indica si el popup está abierto.
+   */
+  multipleSeleccionPopupAbierto: boolean = false;
+
+  /**
+   * Indica si el popup está cerrado.
+   */
+  multipleSeleccionPopupCerrado: boolean = true;
+
+  /**
+   * Indica si el popup está abierto.
+   */
+  confirmEliminarPopupAbierto: boolean = false;
+
+  /**
+   * Indica si el popup está cerrado.
+   */
+  confirmEliminarPopupCerrado: boolean = true;
+
+  /**
+   * Indica si se está realizando una operación de actualización.
+   */
+  esOperacionDeActualizacion: boolean = false;
+
+  /**
    * Referencia al botón o elemento de cierre del modal.
    */
   @ViewChild('closeModal') closeModal!: ElementRef;
 
   /**
+   * Indica si el botón de modificar está habilitado.
+   */
+  enableModficarBoton: boolean = false;
+  /**
+   * Indica si el botón de eliminar está habilitado.
+   */
+  enableEliminarBoton: boolean = false;
+  /**
+   * Lista de filas seleccionadas en la tabla de enlace.
+   * Contiene los items seleccionados para realizar operaciones como modificar o eliminar.
+   */
+  listaFilaSeleccionadaEnlace!: EnlaceConfiguracionItem[];
+  /**
+   * Fila seleccionada en la tabla de enlace.
+   * Se usa para almacenar el último item seleccionado para operaciones posteriores.
+   */
+  filaSeleccionadaEnlace!: EnlaceConfiguracionItem;
+
+  /**
    * Constructor del componente.
-   * 
+   *
    * @param fb Instancia de FormBuilder para creación de formularios.
    * @param tramite31601Store Store personalizado para manejar el estado.
    * @param tramite31601Query Query para leer el estado del trámite.
@@ -109,7 +198,7 @@ export class EnlaceComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private tramite31601Store: Tramite31601Store,
     private tramite31601Query: Tramite31601Query,
-    private consultaioQuery: ConsultaioQuery,
+    private consultaioQuery: ConsultaioQuery
   ) {
     this.consultaioQuery.selectConsultaioState$
       .pipe(
@@ -120,6 +209,12 @@ export class EnlaceComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
+
+    this.tramite31601Query.selectSolicitud$
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((seccionState) => {
+        this.datosTablaEnlace = seccionState.enlaceDatos;
+      });
   }
 
   /**
@@ -160,7 +255,8 @@ export class EnlaceComponent implements OnInit, OnDestroy {
 
     this.represtantante = this.fb.group({
       resigtroReprestantante: [
-        this.solicitudState?.resigtroReprestantante ?? this.representativeData.resigtro,
+        this.solicitudState?.resigtroReprestantante ??
+          this.representativeData.resigtro,
         Validators.required,
       ],
       rfcReprestantante: [
@@ -168,15 +264,18 @@ export class EnlaceComponent implements OnInit, OnDestroy {
         Validators.required,
       ],
       nombreReprestante: [
-        this.solicitudState?.nombreReprestante ?? this.representativeData.nombre,
+        this.solicitudState?.nombreReprestante ??
+          this.representativeData.nombre,
         Validators.required,
       ],
       apellidoPaterno: [
-        this.solicitudState?.apellidoPaterno ?? this.representativeData.apellidoPaterno,
+        this.solicitudState?.apellidoPaterno ??
+          this.representativeData.apellidoPaterno,
         Validators.required,
       ],
       apellidoMaterno: [
-        this.solicitudState?.apellidoMaterno ?? this.representativeData.apellidoMaterno,
+        this.solicitudState?.apellidoMaterno ??
+          this.representativeData.apellidoMaterno,
         Validators.required,
       ],
       cargo: [
@@ -188,17 +287,16 @@ export class EnlaceComponent implements OnInit, OnDestroy {
         Validators.required,
       ],
       telefonoReprestantante: [
-        this.solicitudState?.telefonoReprestantante ?? this.representativeData.telefono,
+        this.solicitudState?.telefonoReprestantante ??
+          this.representativeData.telefono,
         Validators.required,
       ],
       correoReprestantante: [
-        this.solicitudState?.correoReprestantante ?? this.representativeData.correo,
+        this.solicitudState?.correoReprestantante ??
+          this.representativeData.correo,
         Validators.required,
       ],
-      suplente: [
-        this.solicitudState?.suplente,
-        Validators.required,
-      ],
+      suplente: [this.solicitudState?.suplente, Validators.required],
     });
 
     if (this.esFormularioSoloLectura) {
@@ -226,13 +324,168 @@ export class EnlaceComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Maneja la fila seleccionada en la tabla de enlace.
+   * Actualiza los botones de modificar y eliminar según la selección.
+   */
+  manejarFilaSeleccionada(fila: EnlaceConfiguracionItem[]): void {
+    if (fila.length === 0) {
+      this.enableModficarBoton = false;
+      this.enableEliminarBoton = false;
+      return;
+    }
+    this.listaFilaSeleccionadaEnlace = fila;
+    this.filaSeleccionadaEnlace = fila[fila.length - 1];
+    this.enableModficarBoton = true;
+    this.enableEliminarBoton = true;
+  }
+
+  /**
+   * Confirma la eliminación de un enlace item.
+   * Si no hay filas seleccionadas, no hace nada.
+   * Abre un popup de confirmación si hay filas seleccionadas.
+   */
+  confirmEliminarEnlaceItem(): void {
+    if (this.listaFilaSeleccionadaEnlace.length === 0) {
+      return;
+    }
+    this.abrirElimninarConfirmationopup();
+  }
+
+  /**
+   * Actualiza la fila seleccionada con los datos más recientes de la tabla.
+   * Si la fila seleccionada no se encuentra en los datos, no hace nada.
+   */
+  actualizarFilaSeleccionada(): void {
+    const UPDATED_DATA = this.datosTablaEnlace.find(
+      (item) => item.id === this.filaSeleccionadaEnlace.id
+    );
+
+    if (UPDATED_DATA) {
+      this.filaSeleccionadaEnlace = { ...UPDATED_DATA };
+    }
+  }
+
+  /**
+   * Abre el modal para modificar un enlace item.
+   * Si hay una sola fila seleccionada, abre el modal para editar.
+   * Si hay más de una fila seleccionada, abre un popup de selección múltiple.
+   */ 
+  modificarItemEnlace(): void {
+    if (this.listaFilaSeleccionadaEnlace.length < 2) {
+      this.actualizarFilaSeleccionada();
+      this.esOperacionDeActualizacion = true;
+      this.abrirModal();
+      this.alternarModalMercancia();
+    } else {
+      this.abrirMultipleSeleccionPopup();
+    }
+  }
+
+  /**
+   * Elimina un enlace item seleccionado.
+   * Filtra los datos de la tabla para eliminar el item seleccionado.
+   * Limpia la lista de filas seleccionadas y actualiza el store.
+   */
+  eliminarEnlaceItem(): void {
+    const IDS_TO_DELETE = this.listaFilaSeleccionadaEnlace.map(
+      (item) => item.id
+    );
+
+    this.datosTablaEnlace = this.datosTablaEnlace.filter(
+      (item) => !IDS_TO_DELETE.includes(item.id)
+    );
+
+    this.listaFilaSeleccionadaEnlace = [];
+    this.tramite31601Store.setEnlaceTablaDatos(this.datosTablaEnlace);
+    this.cerrarEliminarConfirmationPopup();
+  }
+
+  /**
+   * Abre el popup de selección múltiple si el botón de modificar está habilitado.
+   */
+  abrirMultipleSeleccionPopup(): void {
+    if (this.enableModficarBoton) {
+      this.multipleSeleccionPopupAbierto = true;
+    }
+  }
+
+  /**
+   * Cierra el popup de selección múltiple.
+   */
+  cerrarMultipleSeleccionPopup(): void {
+    this.multipleSeleccionPopupAbierto = false;
+    this.multipleSeleccionPopupCerrado = false;
+  }
+
+  /**
+   * Abre el popup de confirmación de eliminación.
+   */
+  abrirElimninarConfirmationopup(): void {
+    this.confirmEliminarPopupAbierto = true;
+  }
+
+  /**
+   * Cierra el popup de confirmación de eliminación.
+   */
+  cerrarEliminarConfirmationPopup(): void {
+    this.confirmEliminarPopupAbierto = false;
+    this.confirmEliminarPopupCerrado = false;
+  }
+
+  /**
+   * Alterna la visibilidad del modal de datos de mercancía.
+   */
+  alternarModalMercancia(): void {
+    this.mostrarModalDatosMercancia = !this.mostrarModalDatosMercancia;
+  }
+
+  /**
+   * Guarda los datos del formulario en la tabla de enlace.
+   * Crea un nuevo objeto con los valores del formulario y lo agrega a la lista de datos de enlace.
+   * Limpia los campos del formulario después de guardar.
+   */
+  saveDatos(): void {
+    const VALOR: EnlaceConfiguracionItem = {
+      id: new Date().getTime().toString(),
+      registroFederal: this.represtantante.get('resigtroReprestantante')?.value,
+      rfc: this.represtantante.get('rfcReprestantante')?.value,
+      nombre: this.represtantante.get('nombreReprestante')?.value,
+      apellidoPaterno: this.represtantante.get('apellidoPaterno')?.value,
+      apellidoMaterno: this.represtantante.get('apellidoMaterno')?.value,
+      cargo: this.represtantante.get('cargo')?.value,
+      estadoResidencia: this.represtantante.get('cuidad')?.value,
+      telefono: this.represtantante.get('telefonoReprestantante')?.value,
+      correo: this.represtantante.get('correoReprestantante')?.value,
+      suplente: this.represtantante.get('suplente')?.value,
+    };
+
+    this.datosTablaEnlace = [...this.datosTablaEnlace, VALOR];
+    this.tramite31601Store.setEnlaceTablaDatos(this.datosTablaEnlace);
+    this.represtantante.get('resigtroReprestantante')?.setValue('');
+    this.represtantante.get('rfcReprestantante')?.setValue('');
+    this.represtantante.get('nombreReprestante')?.setValue('');
+    this.represtantante.get('apellidoPaterno')?.setValue('');
+    this.represtantante.get('apellidoMaterno')?.setValue('');
+    this.represtantante.get('cargo')?.setValue('');
+    this.represtantante.get('cuidad')?.setValue('');
+    this.represtantante.get('telefonoReprestantante')?.setValue('');
+    this.represtantante.get('correoReprestantante')?.setValue('');
+    this.represtantante.get('suplente')?.setValue(false);
+    this.closeModal.nativeElement.click();
+  }
+
+  /**
    * Establece un valor en el store de Tramite31601 desde el formulario.
-   * 
+   *
    * @param form Formulario del cual se toma el valor.
    * @param campo Nombre del campo del formulario.
    * @param metodoNombre Nombre del método del store al que se enviará el valor.
    */
-  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite31601Store): void {
+  setValoresStore(
+    form: FormGroup,
+    campo: string,
+    metodoNombre: keyof Tramite31601Store
+  ): void {
     const VALOR = form.get(campo)?.value;
     (this.tramite31601Store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
@@ -245,4 +498,3 @@ export class EnlaceComponent implements OnInit, OnDestroy {
     this.destroyNotifier$.complete();
   }
 }
-

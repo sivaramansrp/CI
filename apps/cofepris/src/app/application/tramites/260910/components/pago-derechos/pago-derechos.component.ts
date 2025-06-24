@@ -1,4 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Catalogo } from '@libs/shared/data-access-user/src';
 import { CatalogosSelect } from '@libs/shared/data-access-user/src';
@@ -12,8 +13,9 @@ import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
 
 /**
- * Componente PagoDerechosComponent.
- * Gestiona la lógica y el formulario para el registro del pago de derechos.
+ * Componente para gestionar el registro del pago de derechos.
+ * 
+ * Este componente maneja el formulario y la lógica relacionada con el pago de derechos.
  */
 @Component({
   selector: 'app-pago-derechos',
@@ -27,14 +29,12 @@ export class PagoDerechosComponent implements OnInit, OnDestroy {
   pagoDeDerechosForm!: FormGroup;
 
   /**
-   * Catálogo de bancos para seleccionar dentro del formulario.
-   * Inicializado como un objeto vacío.
+   * Catálogo de bancos para seleccionar en el formulario.
    */
   bancoCatalogo: CatalogosSelect = {} as CatalogosSelect;
 
   /**
    * Configuración para el campo de fecha de pago.
-   * Incluye nombre de etiqueta, estado de requerido, y habilitación.
    */
   fechaPago: InputFecha = {
     labelNombre: 'Fecha de pago',
@@ -44,54 +44,72 @@ export class PagoDerechosComponent implements OnInit, OnDestroy {
 
   /**
    * Estado actual de la solicitud 260910.
-   * Inicializado como un objeto vacío con la estructura correspondiente.
    */
   solicitud260910State: Solicitud260910State = {} as Solicitud260910State;
 
   /**
-   * Subject para manejar la destrucción del componente y cancelar las suscripciones activas.
+   * Controlador para manejar la destrucción del componente.
    */
   private destroyNotifier$: Subject<void> = new Subject();
 
   /**
+   * Estado actual de la consulta (lectura/edición).
+   */
+  public consultaState!: ConsultaioState;
+
+  /**
+   * Indica si el formulario es de solo lectura.
+   */
+  public esFormularioSoloLectura: boolean = false;
+
+  /**
    * Constructor del componente.
-   * Inicializa los servicios y obtiene el catálogo de pagos de derechos.
-   * @param fb - Servicio para construir formularios reactivos.
-   * @param solicitudDatosService - Servicio para obtener datos relacionados con la solicitud.
-   * @param solicitud260910Store - Almacén para gestionar el estado de la solicitud.
-   * @param solicitud260910Query - Consulta para observar cambios en el estado de la solicitud.
+   * 
+   * @param fb Constructor de formularios reactivos
+   * @param solicitudDatosService Servicio para datos de solicitud
+   * @param solicitud260910Store Almacén para estado de solicitud
+   * @param solicitud260910Query Consulta para estado de solicitud
+   * @param consultaQuery Consulta para estado de consulta
    */
   constructor(
     public fb: FormBuilder,
     public solicitudDatosService: SolicitudDatosService,
     public solicitud260910Store: Solicitud260910Store,
-    public solicitud260910Query: Solicitud260910Query
+    public solicitud260910Query: Solicitud260910Query,
+    private consultaQuery: ConsultaioQuery
   ) {
     this.obtenerPagoDerechos();
   }
 
   /**
-   * Método del ciclo de vida `OnInit`.
-   * Inicializa el formulario reactivo y suscribe a cambios en el estado de la solicitud.
+   * Inicialización del componente.
    */
   ngOnInit(): void {
+    this.inicializarFormulario();
+    this.configurarSuscripcionEstadoConsulta();
+  }
+
+  /**
+   * Inicializa el formulario reactivo para el pago de derechos.
+   */
+  private inicializarFormulario(): void {
     this.pagoDeDerechosForm = this.fb.group({
-      /** Clave de referencia del pago. */
+      /** Clave de referencia del pago */
       claveDeReferencia: [this.solicitud260910State.claveDeReferencia],
-      /** Cadena de dependencia asociada al pago. */
+      /** Cadena de dependencia asociada al pago */
       cadenaDeDependencia: [this.solicitud260910State.cadenaDeDependencia],
-      /** Banco seleccionado para el pago. */
+      /** Banco seleccionado para el pago */
       banco: [this.solicitud260910State.banco],
-      /** Llave de pago proporcionada por el sistema. */
+      /** Llave de pago proporcionada por el sistema */
       liaveDePago: [this.solicitud260910State.liaveDePago],
-      /** Fecha en la que se realizó el pago. */
+      /** Fecha en la que se realizó el pago */
       fechaDePago: [this.solicitud260910State.fechaDePago],
-      /** Importe total del pago realizado. */
+      /** Importe total del pago realizado */
       importeDePago: [this.solicitud260910State.importeDePago],
     });
 
-    // Suscripción al estado de la solicitud y actualización del formulario reactivo.
-    this.solicitud260910Query.seleccionarSolicitud$.pipe(
+    this.solicitud260910Query.seleccionarSolicitud$
+      .pipe(
         takeUntil(this.destroyNotifier$),
         map((respuesta: Solicitud260910State) => {
           this.solicitud260910State = respuesta;
@@ -109,7 +127,24 @@ export class PagoDerechosComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Obtiene el catálogo de pagos de derechos desde el servicio y actualiza `bancoCatalogo`.
+   * Configura la suscripción al estado de consulta.
+   * Controla el modo de solo lectura para el formulario.
+   */
+  private configurarSuscripcionEstadoConsulta(): void {
+    this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.consultaState = seccionState;
+          this.esFormularioSoloLectura = seccionState?.readonly;
+          this.actualizarEstadoFormularios();
+        })
+      )
+      .subscribe();
+  }
+
+  /**
+   * Obtiene el catálogo de pagos de derechos.
    */
   obtenerPagoDerechos(): void {
     this.solicitudDatosService
@@ -122,8 +157,8 @@ export class PagoDerechosComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Actualiza la clave de referencia del pago en el Store.
-   * @param evento - Evento que contiene el valor ingresado por el usuario.
+   * Actualiza la clave de referencia del pago en el almacén de estado.
+   * @param evento Evento de entrada que contiene el valor
    */
   setClaveDeReferencia(evento: Event): void {
     const VALOR = (evento.target as HTMLInputElement).value;
@@ -131,8 +166,8 @@ export class PagoDerechosComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Actualiza la cadena de dependencia en el Store.
-   * @param evento - Evento que contiene el valor ingresado por el usuario.
+   * Actualiza la cadena de dependencia en el almacén de estado.
+   * @param evento Evento de entrada que contiene el valor
    */
   setCadenaDeDependencia(evento: Event): void {
     const VALOR = (evento.target as HTMLInputElement).value;
@@ -140,16 +175,17 @@ export class PagoDerechosComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Actualiza el banco seleccionado en el Store.
-   * @param evento - Objeto que contiene el banco seleccionado.
+   * Actualiza el banco seleccionado en el almacén de estado.
+   * @param evento Catálogo con el banco seleccionado
    */
   setBanco(evento: Catalogo): void {
     this.solicitud260910Store.setBanco(evento.id);
   }
 
   /**
-   * Actualiza la llave de pago en el Store.
-   * @param evento - Evento que contiene el valor ingresado por el usuario.
+   * Actualiza la llave de pago en el almacén de estado.
+   * 
+   * @param evento Evento de entrada que contiene el valor
    */
   setLiaveDePago(evento: Event): void {
     const VALOR = (evento.target as HTMLInputElement).value;
@@ -157,16 +193,18 @@ export class PagoDerechosComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Actualiza la fecha de pago seleccionada en el Store.
-   * @param evento - Cadena con la fecha seleccionada.
+   * Actualiza la fecha de pago en el almacén de estado.
+   * 
+   * @param evento Cadena con la fecha seleccionada
    */
   seleccionarFechaInicio(evento: string): void {
     this.solicitud260910Store.setFechaDePago(evento);
   }
 
   /**
-   * Actualiza el importe del pago en el Store.
-   * @param evento - Evento que contiene el valor ingresado por el usuario.
+   * Actualiza el importe del pago en el almacén de estado.
+   * 
+   * @param evento Evento de entrada que contiene el valor
    */
   setImporteDePago(evento: Event): void {
     const VALOR = (evento.target as HTMLInputElement).value;
@@ -174,8 +212,18 @@ export class PagoDerechosComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Método del ciclo de vida `OnDestroy`.
-   * Libera los recursos y elimina las suscripciones activas.
+   * Actualiza el estado de habilitación de los formularios.
+   */
+  private actualizarEstadoFormularios(): void {
+    if (this.esFormularioSoloLectura) {
+      this.pagoDeDerechosForm.disable();
+    } else {
+      this.pagoDeDerechosForm.enable();
+    }
+  }
+
+  /**
+   * Destrucción del componente.
    */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();

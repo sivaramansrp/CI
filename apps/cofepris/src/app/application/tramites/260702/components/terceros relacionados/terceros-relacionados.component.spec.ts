@@ -1,251 +1,268 @@
-// @ts-nocheck
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { By } from '@angular/platform-browser';
-import { Observable, of as observableOf, throwError } from 'rxjs';
-
-import { Component } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { of, Subject } from 'rxjs';
 import { TercerosrelacionadosComponent } from './terceros-relacionados.component';
 import { RegistrarSolicitudMcpService } from '../../services/registrar-solicitud-mcp.service';
 import { Solicitud260702Store } from '../../estados/tramites260702.store';
 import { Solicitud260702Query } from '../../estados/tramites260702.query';
+import { ConsultaioQuery, AlertComponent, TituloComponent, TablaDinamicaComponent,
+        CatalogoSelectComponent,
+        NotificacionesComponent,
+        InputRadioComponent } from '@libs/shared/data-access-user/src';
+import { Catalogo } from '@ng-mf/data-access-user';
+import { CommonModule } from '@angular/common';
+import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-relacionados/terceros-relacionados.component';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 
-class MockRegistrarSolicitudMcpService {
-  getPaisData() {
-    return observableOf([]); // Mocked response for getPaisData
-  }
-}
-
-class MockSolicitud260702Store {
-  metodoNombre = jest.fn();
-}
-
-class MockSolicitud260702Query {
-  selectSolicitud$ = observableOf({});
-}
 describe('TercerosrelacionadosComponent', () => {
-  let fixture;
-  let component;
+  let component: TercerosrelacionadosComponent;
+  let fixture: ComponentFixture<TercerosrelacionadosComponent>;
+  let mockRegistrarSolicitudMcpService: any;
+  let mockSolicitud260702Store: any;
+  let mockSolicitud260702Query: any;
+  let mockConsultaioQuery: any;
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule,TercerosrelacionadosComponent ],
-      schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
+  beforeEach(async () => {
+    mockRegistrarSolicitudMcpService = {
+      getPaisData: jest
+        .fn()
+        .mockReturnValue(of([{ id: 1, descripcion: 'México' }] as Catalogo[])),
+    };
+    mockSolicitud260702Store = {};
+    mockSolicitud260702Query = {
+      selectSolicitud$: of({
+        tipoPersona: 'fisica',
+        nombre: 'Juan',
+        primerApellido: 'Pérez',
+        segundoApellido: 'López',
+        denominacion: 'Empresa',
+        pais: 1,
+        domicilio: 'Calle 1',
+        estado: 'CDMX',
+        codigopostal: '12345',
+        calle: 'Calle 1',
+        numeroExterior: '10',
+        numeroInterior: '2',
+        lada: '55',
+        telefono: '12345678',
+        correoElectronico: 'test@mail.com',
+      }),
+    };
+    mockConsultaioQuery = {
+      selectConsultaioState$: of({ readonly: false }),
+    };
+
+    await TestBed.configureTestingModule({
+      imports: [
+        TercerosrelacionadosComponent,
+        ReactiveFormsModule,
+        CommonModule,
+        TercerosRelacionadosComponent,
+        AlertComponent,
+        TituloComponent,
+        TablaDinamicaComponent,
+        CatalogoSelectComponent,
+        NotificacionesComponent,
+        InputRadioComponent,
+        HttpClientTestingModule],
+      declarations: [],
       providers: [
         FormBuilder,
-        { provide: RegistrarSolicitudMcpService, useClass: MockRegistrarSolicitudMcpService },
-        { provide: Solicitud260702Store, useClass: MockSolicitud260702Store },
-        { provide: Solicitud260702Query, useClass: MockSolicitud260702Query }
-      ]
-    }).overrideComponent(TercerosrelacionadosComponent, {
-
+        {
+          provide: RegistrarSolicitudMcpService,
+          useValue: mockRegistrarSolicitudMcpService,
+        },
+        { provide: Solicitud260702Store, useValue: mockSolicitud260702Store },
+        { provide: Solicitud260702Query, useValue: mockSolicitud260702Query },
+        { provide: ConsultaioQuery, useValue: mockConsultaioQuery },
+      ],
     }).compileComponents();
+
     fixture = TestBed.createComponent(TercerosrelacionadosComponent);
-    component = fixture.debugElement.componentInstance;
+    component = fixture.componentInstance;
+    fixture.detectChanges();
   });
 
-  afterEach(() => {
-   
-  });
-
-
-  it('should run #constructor()', async () => {
+  it('should create the component', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should run GetterDeclaration #selectedTipoPersona', async () => {
-    component.agregarDestinatario = component.agregarDestinatario || {};
-    component.agregarDestinatario.get = jest.fn().mockReturnValue({
-      value: {}
-    });
-    const selectedTipoPersona = component.selectedTipoPersona;
-    expect(component.agregarDestinatario.get).toHaveBeenCalled();
+  it('should initialize the form with default values', () => {
+    expect(component.destinatarioForm).toBeDefined();
+    expect(component.destinatarioForm.get('agregarDestinatario')).toBeDefined();
+    expect(component.destinatarioForm.get('datosPersonales')).toBeDefined();
   });
 
-  it('should run GetterDeclaration #selectedTipoPersona', async () => {
-    jest.spyOn(component, 'agregarDestinatario', 'get').mockReturnValue({
-      get: jest.fn().mockReturnValue({ value: {} }),
-    });
-  
-    const selectedTipoPersona = component.selectedTipoPersona;
-    expect(component.agregarDestinatario.get).toHaveBeenCalled();
-  });
-
-  it('should run #crearFormTransporte()', async () => {
-    component.fb = component.fb || {};
-    component.fb.group = jest.fn();
-    component.agregarDestinatarioState = component.agregarDestinatarioState || {};
-    component.agregarDestinatarioState.tipoPersona = 'tipoPersona';
-    component.agregarDestinatarioState.nombre = 'nombre';
-    component.agregarDestinatarioState.primerApellido = 'primerApellido';
-    component.agregarDestinatarioState.segundoApellido = 'segundoApellido';
-    component.agregarDestinatarioState.denominacion = 'denominacion';
-    component.agregarDestinatarioState.pais = 'pais';
-    component.agregarDestinatarioState.domicilio = 'domicilio';
-    component.agregarDestinatarioState.estado = 'estado';
-    component.agregarDestinatarioState.codigopostal = 'codigopostal';
-    component.agregarDestinatarioState.calle = 'calle';
-    component.agregarDestinatarioState.numeroExterior = 'numeroExterior';
-    component.agregarDestinatarioState.numeroInterior = 'numeroInterior';
-    component.agregarDestinatarioState.lada = 'lada';
-    component.agregarDestinatarioState.telefono = 'telefono';
-    component.agregarDestinatarioState.correoElectronico = 'correoElectronico';
-    component.crearFormTransporte();
-    expect(component.fb.group).toHaveBeenCalled();
-  });
-
-  it('should run #ngOnInit()', async () => {
-    component.solicitud260702Query = component.solicitud260702Query || {};
-    component.solicitud260702Query.selectSolicitud$ = observableOf({});
-    component.crearFormTransporte = jest.fn();
-    component.getPaisData = jest.fn();
-    component.ngOnInit();
-    expect(component.crearFormTransporte).toHaveBeenCalled();
-    expect(component.getPaisData).toHaveBeenCalled();
-  });
-
-  it('should run #getPaisData()', async () => {
-    component.registrarsolicitudmcp = component.registrarsolicitudmcp || {};
-    component.registrarsolicitudmcp.getPaisData = jest.fn().mockReturnValue(observableOf({}));
-    component.paisData = component.paisData || {};
-    component.paisData.catalogos = 'catalogos';
+  it('should call getPaisData and set paisData.catalogos', () => {
     component.getPaisData();
-    expect(component.registrarsolicitudmcp.getPaisData).toHaveBeenCalled();
+    expect(mockRegistrarSolicitudMcpService.getPaisData).toHaveBeenCalled();
+    expect(component.paisData.catalogos.length).toBeGreaterThan(0);
+    expect(component.paisData.catalogos[0].descripcion).toBe('México');
   });
 
-  it('should run #onGuardar()', async () => {
-    component.destinatarioForm = component.destinatarioForm || {};
-    component.destinatarioForm.value = {
-      agregarDestinatario: {},
+  it('should add a new destinatario to tableData on onGuardar', () => {
+    component.paisData.catalogos = [{ id: 1, descripcion: 'México' }];
+    component.destinatarioForm.setValue({
+      agregarDestinatario: { tipoPersona: 'fisica' },
       datosPersonales: {
-        pais: {}
-      }
-    };
-    component.destinatarioForm.reset = jest.fn();
-    component.getPaisName = jest.fn();
-    component.tableData = component.tableData || {};
-    component.tableData.push = jest.fn();
+        nombre: 'Juan',
+        primerApellido: 'Pérez',
+        segundoApellido: 'López',
+        denominacion: 'Empresa',
+        pais: 1,
+        domicilio: 'Calle 1',
+        estado: 'CDMX',
+        codigopostal: '12345',
+        calle: 'Calle 1',
+        numeroExterior: '10',
+        numeroInterior: '2',
+        lada: '55',
+        telefono: '12345678',
+        correoElectronico: 'test@mail.com',
+      },
+    });
     component.onGuardar();
-    expect(component.destinatarioForm.reset).toHaveBeenCalled();
-    expect(component.getPaisName).toHaveBeenCalled();
-    expect(component.tableData.push).toHaveBeenCalled();
+    expect(component.tableData.length).toBe(1);
+    expect(component.tableData[0].nombre).toBe('Juan');
+    expect(component.tableData[0].pais).toBe('México');
   });
 
-  it('should run #getPaisName()', async () => {
-    component.paisData = component.paisData || {};
-    component.paisData.catalogos = {
-      find: function() {
-        return [
-          {
-            "id": {}
-          }
-        ];
-      }
-    };
-    component.getPaisName({});
-
-  });
-
-  it('should run #onSelectedRowsChange()', async () => {
-
-    component.onSelectedRowsChange([{
-      id: {}
-    }]);
-
-  });
-
-  it('should run #eliminarMercancias()', async () => {
-    component.selectedRows = component.selectedRows || {};
-    component.selectedRows.size = 'size';
-    component.selectedRows.has = jest.fn();
-    component.selectedRows.clear = jest.fn();
-    component.tableData = component.tableData || {};
-    component.tableData = ['tableData'];
-    component.eliminarMercancias();
-    expect(component.selectedRows.has).toHaveBeenCalled();
-    expect(component.selectedRows.clear).toHaveBeenCalled();
-  });
-
-  it('should run #openModificarMercancias()', async () => {
-    component.selectedRows = new Set([{ id: 1 }]);
-      component.tableData = [
-      { id: 1, name: 'Test Data' }
+  it('should clear selectedRows and remove rows from tableData on eliminarMercancias', () => {
+    component.tableData = [
+      { id: 1, nombre: 'A', tipoPersona: 'fisica' } as any,
+      { id: 2, nombre: 'B', tipoPersona: 'moral' } as any,
     ];
-    jest.spyOn(component.tableData, 'find').mockReturnValue({
-      id: 1,
-      name: 'Test Data'
-    });
-  
-    component.destinatarioForm = {
-      patchValue: jest.fn()
-    } as any;
-  
-    component.openModificarMercancias();
-  
-    expect(component.tableData.find).toHaveBeenCalled();
-  
-    expect(component.destinatarioForm.patchValue).toHaveBeenCalledWith({
-      id: 1,
-      name: 'Test Data'
-    });
+    component.selectedRows = new Set([1]);
+    component.eliminarMercancias();
+    expect(component.tableData.length).toBe(1);
+    expect(component.tableData[0].id).toBe(2);
+    expect(component.selectedRows.size).toBe(0);
   });
 
-  it('should run #agregarMercancias()', async () => {
-    component.destinatarioForm = component.destinatarioForm || {};
-    component.destinatarioForm.reset = jest.fn();
+  it('should set esFormularioVisible to true and reset form on agregarMercancias', () => {
+    const resetSpy = jest.spyOn(component.destinatarioForm, 'reset');
+    component.esFormularioVisible = false;
     component.agregarMercancias();
-    expect(component.destinatarioForm.reset).toHaveBeenCalled();
+    expect(component.esFormularioVisible).toBe(true);
+    expect(resetSpy).toHaveBeenCalled();
   });
 
-  it('should run #cancelarFormulario()', async () => {
-
+  it('should set esFormularioVisible to false on cancelarFormulario', () => {
+    component.esFormularioVisible = true;
     component.cancelarFormulario();
-
+    expect(component.esFormularioVisible).toBe(false);
   });
 
-  it('should run #onConfirmarEliminacion()', async () => {
-    component.eliminarMercancias = jest.fn();
-    component.onConfirmarEliminacion();
-    expect(component.eliminarMercancias).toHaveBeenCalled();
+  it('should patch form and set esFormularioVisible to true on openModificarMercancias with one selected row', () => {
+    component.tableData = [
+      {
+        id: 1,
+        tipoPersona: 'fisica',
+        nombre: 'Juan',
+        primerApellido: 'Pérez',
+        segundoApellido: 'López',
+        denominacion: 'Empresa',
+        pais: 1,
+        domicilio: 'Calle 1',
+        estado: 'CDMX',
+        codigopostal: '12345',
+        calle: 'Calle 1',
+        numeroExterior: '10',
+        numeroInterior: '2',
+        lada: '55',
+        telefono: '12345678',
+        correoElectronico: 'test@mail.com',
+      } as any,
+    ];
+    component.selectedRows = new Set([1]);
+    component.openModificarMercancias();
+    expect(component.esFormularioVisible).toBe(true);
+    expect(
+      component.destinatarioForm.get('datosPersonales.nombre')?.value
+    ).toBe('Juan');
   });
 
-  it('should run #limpiarFormulario()', async () => {
-    component.destinatarioForm = component.destinatarioForm || {};
-    component.destinatarioForm.reset = jest.fn();
+  it('should set tipoPersonaSeleccionada on setTipoPersona', () => {
+    component.setTipoPersona('moral');
+    expect(component.tipoPersonaSeleccionada).toBe('moral');
+  });
+
+  it('should clear form on limpiarFormulario', () => {
+    const resetSpy = jest.spyOn(component.destinatarioForm, 'reset');
     component.limpiarFormulario();
-    expect(component.destinatarioForm.reset).toHaveBeenCalled();
+    expect(resetSpy).toHaveBeenCalled();
   });
 
-  it('should run #setValoresStore()', async () => {
-    // Mock solicitud260702Store and metodoNombre
-    component.solicitud260702Store = {
-      metodoNombre: jest.fn(), // Mock metodoNombre as a function
-    };
-  
-    // Mock form behavior
-    const mockForm = {
-      get: jest.fn().mockReturnValue({ value: 'mockValue' }), // Mock form.get(campo)?.value
-    };
-  
-    // Call setValoresStore
-    component.setValoresStore(mockForm, 'campo', 'metodoNombre');
-  
-    // Verify that metodoNombre was called with the correct value
-    expect(component.solicitud260702Store.metodoNombre).toHaveBeenCalledWith('mockValue');
+  it('should set nuevaNotificacion and elementoParaEliminar on abrirModal when not deleted', () => {
+    component.selectedRows = new Set([1]);
+    component.abrirModal(2, false);
+    expect(component.nuevaNotificacion).toBeDefined();
+    expect(component.nuevaNotificacion.categoria).toBe('danger');
+    expect(component.elementoParaEliminar).toBe(2);
   });
 
-  it('should run #ngOnDestroy()', async () => {
-    component.destroyed$ = {
-      next: jest.fn(),
-      complete: jest.fn(),
-    };
+  it('should set nuevaNotificacion on abrirModal when isDeleted', () => {
+    component.abrirModal(0, true);
+    expect(component.nuevaNotificacion).toBeDefined();
+    expect(component.nuevaNotificacion.categoria).toBe('success');
+  });
+
+  it('should call abrirModal on onDeleted if selectedRows.size > 0', () => {
+    const abrirModalSpy = jest.spyOn(component, 'abrirModal');
+    component.selectedRows = new Set([1]);
+    component.onDeleted();
+    expect(abrirModalSpy).toHaveBeenCalled();
+  });
+
+  it('should call eliminarMercancias and abrirModal on onConfirmarEliminacion', () => {
+    const eliminarMercanciasSpy = jest.spyOn(component, 'eliminarMercancias');
+    const abrirModalSpy = jest.spyOn(component, 'abrirModal');
+    // Mock document.getElementById and Modal
+    const showMock = jest.fn();
+    (global as any).document.getElementById = jest
+      .fn()
+      .mockReturnValue({} as any);
+    (global as any).Modal = jest
+      .fn()
+      .mockImplementation(() => ({ show: showMock }));
+    component.onConfirmarEliminacion();
+    expect(eliminarMercanciasSpy).toHaveBeenCalled();
+    expect(abrirModalSpy).toHaveBeenCalled();
+  });
+
+  it('should call store method in setValoresStore', () => {
+    const fakeStoreMethod = jest.fn();
+    component.destinatarioForm
+      .get('agregarDestinatario')
+      ?.setValue({ tipoPersona: 'fisica' });
+    mockSolicitud260702Store['setTipoPersona'] = fakeStoreMethod;
+    component.setValoresStore(
+      component.destinatarioForm,
+      'agregarDestinatario',
+      'setTipoPersona'
+    );
+    expect(fakeStoreMethod).toHaveBeenCalled();
+  });
+
+  it('should clean up destroyed$ on ngOnDestroy', () => {
+    const nextSpy = jest.spyOn((component as any).destroyed$, 'next');
+    const completeSpy = jest.spyOn((component as any).destroyed$, 'complete');
     component.ngOnDestroy();
-    expect(component.destroyed$.next).toHaveBeenCalled();
-    expect(component.destroyed$.complete).toHaveBeenCalled();
+    expect(nextSpy).toHaveBeenCalledWith(true);
+    expect(completeSpy).toHaveBeenCalled();
   });
 
+  it('should return N/A if pais not found in getPaisName', () => {
+    component.paisData.catalogos = [];
+    // @ts-ignore
+    expect(component['getPaisName']('999')).toBe('N/A');
+  });
+
+  it('should update selectedRows and hide form on onSelectedRowsChange', () => {
+    component.esFormularioVisible = true;
+    component.onSelectedRowsChange([{ id: 5 } as any]);
+    expect(component.selectedRows.has(5)).toBe(true);
+    expect(component.esFormularioVisible).toBe(false);
+  });
 });

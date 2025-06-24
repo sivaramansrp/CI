@@ -25,7 +25,7 @@
             <div class="form-group">
               <div class="form-group">
                 <app-catalogo-select [catalogo]="bancoCatalogo.catalogos" formControlName="banco" [label]="'Banco'"
-                  [required]="true"
+                  [required]="true" [isDisabled]="soloLectura"
                   (change)="setValoresStore(pagodeDerechos,'banco', 'setBanco');"></app-catalogo-select>
               </div>
             </div>

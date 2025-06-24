@@ -1,4 +1,4 @@
-import { AlertComponent, BtnContinuarComponent, Catalogo, CatalogoSelectComponent, CatalogosSelect, DATOS_EMPRESA, InputRadioComponent, ListaPasosWizard, Notificacion, NotificacionesComponent, Pedimento, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Catalogo, CatalogoSelectComponent, CatalogosSelect, DATOS_EMPRESA, InputRadioComponent, ListaPasosWizard, Notificacion, NotificacionesComponent, Pedimento, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { ESTADO_DATA, PAIS_DATA, REPRESENTACION_FEDERAL_DATA, SELECCION_DE_SUCURSAL_DATA, SOCIOS_Y_ACCIONISTAS_DATA, SOCIOS_Y_ACCIONISTAS_EXTRANJEROS_DATA, TIPO_EMPRESA_DATA } from '../../constants/column-config.enum';
 
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
@@ -22,7 +22,7 @@ import { NacionalidadMexicana, TipoPersona } from '../../constants/tipoPersona.e
 @Component({
   selector: 'app-datos-empresa',
   standalone: true,
-  imports: [CommonModule, TituloComponent, AlertComponent, ReactiveFormsModule, BtnContinuarComponent, CatalogoSelectComponent, TablaDinamicaComponent, InputRadioComponent, NotificacionesComponent],
+  imports: [CommonModule, TituloComponent, ReactiveFormsModule, CatalogoSelectComponent, TablaDinamicaComponent, InputRadioComponent, NotificacionesComponent],
   templateUrl: './datos-empresa.component.html',
   styleUrl: './datos-empresa.component.scss',
 })

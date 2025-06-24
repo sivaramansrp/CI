@@ -156,7 +156,7 @@ export class CancelacionDeSolicitudComponent implements OnInit, OnDestroy {
    * para evitar posibles fugas de memoria o actualizaciones 
    * innecesarias cuando el componente ya no está activo.
    */
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this.servicioDeMensajesService.establecerDatosDePermiso(false);
     this.destroyNotificationSubject$.next();
     this.destroyNotificationSubject$.complete();
@@ -169,7 +169,7 @@ export class CancelacionDeSolicitudComponent implements OnInit, OnDestroy {
    * @param event Evento que desencadena la búsqueda.
    */
 
-  public busqueda(event: Event): void {
+  public busqueda(_event: Event): void {
     this.servicioDeMensajesService.enviarMensaje(true);
   }
    /**
@@ -179,7 +179,7 @@ export class CancelacionDeSolicitudComponent implements OnInit, OnDestroy {
    * 
    * @param event Evento que desencadena la eliminación.
    */
-  public eliminarRegistro(event: Event): void {
+  public eliminarRegistro(_event: Event): void {
     this.cuerpoTablaCancelacion = [];
     this.servicioDeMensajesService.actualizarDatosForma(this.cuerpoTablaCancelacion as Cancelacion[]);
   }

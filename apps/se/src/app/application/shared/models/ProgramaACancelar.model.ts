@@ -11,7 +11,7 @@
  */
 
 
-export interface programaACancelar {
+export interface ProgramaACancelar {
 
     folioPrograma: string; 
     idProgramaSeleccionado: string; 
@@ -24,4 +24,4 @@ export interface programaACancelar {
  * Constante que representa el identificador de la tabla de cancelaciones disponibles.
  */
 
-export const tableId = "cancelacionesDisponibles";
+export const TABLEID = "cancelacionesDisponibles";

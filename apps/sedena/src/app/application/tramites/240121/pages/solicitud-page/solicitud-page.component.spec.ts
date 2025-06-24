@@ -65,7 +65,6 @@ describe('SolicitudPageComponent', () => {
     fixture = TestBed.createComponent(SolicitudPageComponent);
     component = fixture.debugElement.componentInstance;
 
-    // ✅ Mock wizardComponent
     const siguienteSpy = jest.fn();
     const atrasSpy = jest.fn();
 
@@ -74,7 +73,6 @@ describe('SolicitudPageComponent', () => {
       atras: atrasSpy,
     };
 
-    // ✅ Mock getValorIndice
     component.getValorIndice = function (event: { valor: any; accion: string }) {
       if (event.accion === 'siguiente') {
         this.wizardComponent?.siguiente();
@@ -84,10 +82,6 @@ describe('SolicitudPageComponent', () => {
     };
   });
 
-  afterEach(() => {
-    component.ngOnDestroy = function () {};
-    fixture.destroy();
-  });
 
   it('should run #constructor()', async () => {
     expect(component).toBeTruthy();

@@ -10,20 +10,20 @@ import {
   TramiteSectoresYMercanciasStore,
 } from '../../estados/stores/sectores-y-mercancias.store';
 import { Subject, map, merge, takeUntil } from 'rxjs';
-import { AlertComponent } from 'libs/shared/data-access-user/src/tramites/components/alert/alert.component';
-import { Catalogo } from 'libs/shared/data-access-user/src/core/models/shared/catalogos.model';
-import { CommonModule } from '@angular/common';
-import { ConfiguracionColumna } from 'libs/shared/data-access-user/src/core/models/shared/configuracion-columna.model';
-import { SectoresTabla } from 'libs/shared/data-access-user/src/core/models/90201/expansion-de-productores.model';
-import { SECTORESY } from '@libs/shared/data-access-user/src';
-import { TablaDinamicaComponent } from 'libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
-import { TablaSeleccion } from 'libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
-import { TituloComponent } from 'libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
-import { TramiteSectoresYMercanciasQuery } from '../../estados/queries/sectores-y-mercancias.query';
-import sectoresTabla from 'libs/shared/theme/assets/json/90201/sectores-tabla.json';
-import { SectoresMercanciasService } from '../../services/sectores-mercancias.service';
-import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { AlertComponent } from '@libs/shared/data-access-user/src/tramites/components/alert/alert.component';
+import { Catalogo } from '@libs/shared/data-access-user/src/core/models/shared/catalogos.model';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
+import { CommonModule } from '@angular/common';
+import { ConfiguracionColumna } from '@libs/shared/data-access-user/src/core/models/shared/configuracion-columna.model';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { SECTORESY } from '@libs/shared/data-access-user/src';
+import { SectoresMercanciasService } from '../../services/sectores-mercancias.service';
+import { SectoresTabla } from '@libs/shared/data-access-user/src/core/models/90201/expansion-de-productores.model';
+import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
+import { TablaSeleccion } from '@libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
+import { TituloComponent } from '@libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
+import { TramiteSectoresYMercanciasQuery } from '../../estados/queries/sectores-y-mercancias.query';
+import sectoresTabla from '@libs/shared/theme/assets/json/90201/sectores-tabla.json';
 /**
  * Componente SectoresYMercancias que se utiliza para mostrar y gestionar los SectoresYMercancias.
  *
