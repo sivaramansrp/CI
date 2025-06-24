@@ -5,6 +5,7 @@ import { of, Subject } from 'rxjs';
 import { AvisoUnicoService } from '../../services/aviso-unico.service';
 import { UnicoStore } from '../../estados/renovacion.store';
 import { UnicoQuery } from '../../estados/queries/unico.query';
+import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 
 describe('AvisoDeRenovacionComponent', () => {
   let component: AvisoDeRenovacionComponent;
@@ -53,8 +54,9 @@ describe('AvisoDeRenovacionComponent', () => {
     const service = TestBed.inject(AvisoUnicoService);
     const store = TestBed.inject(UnicoStore);
     const query = TestBed.inject(UnicoQuery);
+    const consultaioQuery = TestBed.inject(ConsultaioQuery)
 
-    component = new AvisoDeRenovacionComponent(fb, service, store, query);
+    component = new AvisoDeRenovacionComponent(fb,consultaioQuery, service, store, query);
   });
 
   it('should initialize and set up form and states', () => {

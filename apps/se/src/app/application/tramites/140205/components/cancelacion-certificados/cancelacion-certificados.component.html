@@ -4,21 +4,21 @@
     <div class="row">
       <div class="col-md-4">
         <app-catalogo-select [catalogo]="optionsAduanero" [label]="'Régimen aduanero'" [required]="true" id="aduanero"
-          formControlName="aduanero" [ngClass]="isValid(grupoCupo,'aduanero') ? 'required' : ''"
+          formControlName="aduanero" [isDisabled]="soloLectura" [ngClass]="isValid(grupoCupo,'aduanero') ? 'required' : ''"
           (change)="setValoresStore(grupoCupo, 'aduanero', 'setGrupoCupoAduanero')">
         </app-catalogo-select>
       </div>
 
       <div class="col-md-4">
         <app-catalogo-select [catalogo]="optionsMecanismo" [label]="'Mecanismo de asignación'" [required]="true"
-          id="mecanismo" formControlName="mecanismo" [ngClass]="isValid(grupoCupo,'mecanismo') ? 'required' : ''"
+          id="mecanismo" formControlName="mecanismo" [isDisabled]="soloLectura" [ngClass]="isValid(grupoCupo,'mecanismo') ? 'required' : ''"
           (change)="setValoresStore(grupoCupo, 'mecanismo', 'setGrupoCupoMecanismo')">
         </app-catalogo-select>
       </div>
 
       <div class="col-md-4">
         <app-catalogo-select [catalogo]="optionsMecanismo" [label]="'Tratado o bloque comercial'" [required]="true"
-          id="tratado" formControlName="tratado" [ngClass]="isValid(grupoCupo,'tratado') ? 'required' : ''"
+          id="tratado" formControlName="tratado" [isDisabled]="soloLectura" [ngClass]="isValid(grupoCupo,'tratado') ? 'required' : ''"
           (change)="setValoresStore(grupoCupo, 'tratado', 'setGrupoCupoTratado')">
         </app-catalogo-select>
       </div>
@@ -28,7 +28,7 @@
     <div class="row">
       <div class="col-md-4">
         <app-catalogo-select [catalogo]="optionsMecanismo" [label]="'Nombre de producto'" [required]="true"
-          id="nombreProducto" formControlName="nombreProducto"
+          id="nombreProducto" formControlName="nombreProducto" [isDisabled]="soloLectura"
           [ngClass]="isValid(grupoCupo,'nombreProducto') ? 'required' : ''"
           (change)="setValoresStore(grupoCupo, 'nombreProducto', 'setGrupoCupoNombreProducto')">
         </app-catalogo-select>
@@ -36,14 +36,14 @@
 
       <div class="col-md-4">
         <app-catalogo-select [catalogo]="optionsMecanismo" [label]="'Nombre del subproducto'" [required]="true"
-          id="nombreSubproducto" formControlName="nombreSubproducto"
+          id="nombreSubproducto" formControlName="nombreSubproducto" [isDisabled]="soloLectura"
           [ngClass]="isValid(grupoCupo,'nombreSubproducto') ? 'required' : ''"
           (change)="setValoresStore(grupoCupo, 'nombreSubproducto', 'setGrupoCupoNombreProducto')">
         </app-catalogo-select>
       </div>
       <div class="col-md-4">
         <app-catalogo-select [catalogo]="optionsMecanismo" [label]="'Representación federal'" [required]="true"
-          id="federal" formControlName="federal" [ngClass]="isValid(grupoCupo,'federal') ? 'required' : ''"
+          id="federal" formControlName="federal" [isDisabled]="soloLectura" [ngClass]="isValid(grupoCupo,'federal') ? 'required' : ''"
           (change)="setValoresStore(grupoCupo, 'federal', 'setGrupoCupoNombreProducto')">
         </app-catalogo-select>
       </div>
@@ -51,7 +51,7 @@
     <div class="row">
       <div class="col-md-12 mt-3">
         <div class="pull-right">
-          <button type="button" class="btn btn-primary" (click)="buscarCupos()">
+          <button type="button" class="btn btn-primary" [disabled]="soloLectura" (click)="buscarCupos()">
             Buscar
           </button>
         </div>

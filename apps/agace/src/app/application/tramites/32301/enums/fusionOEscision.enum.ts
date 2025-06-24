@@ -38,6 +38,19 @@ export const FUSIONRADIO_OPTIONS = [
 ];
 
 /**
+* Opciones de radio para indicar si la operación es una fusión o una escisión.
+*/
+export const FUSIONRADIO_OPTIONS_ONLY = [
+  {
+      /**
+       * Opción para indicar que la operación es una fusión.
+       */
+      "label": "Fusión",
+      "value": "1"
+  },
+];
+
+/**
 * Opciones para seleccionar si hay una cantidad de bienes determinada.
 */
 export const CANTIDAD_BIENES_OPTION = [

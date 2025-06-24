@@ -13,6 +13,7 @@ describe('PasoDosComponent', () => {
   });
 
   it('should call getTiposDocumentos on ngOnInit', () => {
+    catalogosServiceMock.getCatalogo.mockReturnValue(of([]));
     const spy = jest.spyOn(component, 'getTiposDocumentos');
     component.ngOnInit();
     expect(spy).toHaveBeenCalled();

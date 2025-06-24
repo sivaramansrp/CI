@@ -5,6 +5,9 @@ import { Solicitud30505Query } from '../../../../estados/queries/tramites30505.q
 import { Solicitud30505Store } from '../../../../estados/tramites/tramites30505.store';
 import { TercerosRelacionadosService } from '../../services/terceros-relacionados.service';
 import { of, Subject } from 'rxjs';
+import { SolicitanteComponent } from '@ng-mf/data-access-user';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+
 
 describe('PasoUnoComponent', () => {
   let component: PasoUnoComponent;
@@ -30,6 +33,7 @@ describe('PasoUnoComponent', () => {
     };
 
     await TestBed.configureTestingModule({
+      imports: [SolicitanteComponent,HttpClientTestingModule],
       declarations: [PasoUnoComponent],
       providers: [
         { provide: ConsultaioQuery, useValue: consultaQueryMock },
@@ -58,10 +62,10 @@ describe('PasoUnoComponent', () => {
 
   it('should call guardarDatosFormulario on ngOnInit when update is true', () => {
     consultaQueryMock.selectConsultaioState$ = of({ readonly: false, update: true });
-    const guardarSpy = jest.spyOn(component, 'guardarDatosFormulario');
     fixture = TestBed.createComponent(PasoUnoComponent);
     component = fixture.componentInstance;
-    component.ngOnInit();
+    const guardarSpy = jest.spyOn(component, 'guardarDatosFormulario');
+    fixture.detectChanges();
     expect(guardarSpy).toHaveBeenCalled();
   });
 
