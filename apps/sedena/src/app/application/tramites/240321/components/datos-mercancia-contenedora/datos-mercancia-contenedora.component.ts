@@ -86,5 +86,6 @@ export class DatosMercanciaContenedoraComponent implements OnInit {
    */
   updateMercanciaDetalle(event: MercanciaDetalle[]): void {
     this.tramiteStore.updateMercanciaTablaDatos(event);
+     this.cerrar.emit();
   }
 }
