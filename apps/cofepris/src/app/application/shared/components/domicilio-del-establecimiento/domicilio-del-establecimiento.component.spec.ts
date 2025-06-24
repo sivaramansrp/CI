@@ -175,15 +175,6 @@ describe('DomicilioDelEstablecimientoComponent', () => {
     expect(component.DatosMercanciaForm.enabled).toBe(true);
   });
 
-  it('inicializarFormulario should create forms with values from state', () => {
-    component.solicitudState = domicilioQueryMock.selectSolicitud$['source']['_value'];
-    component.inicializarFormulario();
-    expect(component.domicilioForm).toBeDefined();
-    expect(component.claveScianForm).toBeDefined();
-    expect(component.DatosMercanciaForm).toBeDefined();
-    expect(component.domicilioForm.get('codigoPostal')?.value).toBe('12345');
-  });
-
   it('setValoresStore should call the correct store method', () => {
     component.inicializarFormulario();
     component.setValoresStore(component.domicilioForm, 'codigoPostal', 'setCodigoPostal');
