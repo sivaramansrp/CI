@@ -1,5 +1,5 @@
 import { ENVIRONMENT, RespuestaCatalogos } from '@ng-mf/data-access-user';
-import { Solicitud11102State, Tramite11102Store } from '../estados/tramite11102.store';
+import { Solicitud11102StaObjResp, Solicitud11102State, Tramite11102Store } from '../estados/tramite11102.store';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -105,10 +105,10 @@ export class ModificacionDonacionesImmexService {
  
   /**
  * Obtiene los datos del aviso de renovación desde un archivo JSON local.
- * @returns Un observable con los datos del estado de la solicitud (Solicitud31802State).
+ * @returns Un observable con los datos del estado de la solicitud (Solicitud11102StaObjResp).
  */
  
-  public getDatosDeTrtamitelDoc(): Observable<Solicitud11102State> {
-    return this.http.get<Solicitud11102State>('assets/json/11102/datos-del-tramite.json');
+  public getDatosDeTrtamitelDoc(): Observable<Solicitud11102StaObjResp> {
+    return this.http.get<Solicitud11102StaObjResp>('assets/json/11102/datos-del-tramite.json');
   }
 }

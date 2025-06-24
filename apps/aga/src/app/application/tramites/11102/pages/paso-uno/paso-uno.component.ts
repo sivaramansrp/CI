@@ -14,6 +14,7 @@ import {
 import { Subject, map, takeUntil } from 'rxjs';
 import { ModificacionDonacionesImmexService } from '../../services/modificacion-donaciones-immex.service';
 import { PASOS } from '../../constants/pasos.enum';
+import { Solicitud11102StaObjResp } from '../../estados/tramite11102.store';
  
 interface AccionBoton {
   /**
@@ -136,11 +137,12 @@ export class PasoUnoComponent implements OnInit, OnDestroy,AfterViewInit {
       .getDatosDeTrtamitelDoc().pipe(
         takeUntil(this.destroyNotifier$) // Se desuscribe al destruir el componente
       )
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      .subscribe((resp:any) => {
+      .subscribe((resp:Solicitud11102StaObjResp) => {
         if (resp) {
+          //console.log(resp, typeof resp);
+          
           this.esDatosRespuesta = true; // Marca que hay datos de respuesta
-          this.service11102.actualizarEstadoFormulario(resp?.modificacionDonacionesImmex); // Actualiza el estado del formulario con la respuesta
+          this.service11102.actualizarEstadoFormulario(resp.modificacionDonacionesImmex); // Actualiza el estado del formulario con la respuesta
         }
       });
   }

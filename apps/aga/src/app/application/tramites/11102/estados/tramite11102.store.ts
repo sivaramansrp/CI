@@ -159,6 +159,13 @@ export interface Solicitud11102State {
   datosDelMercancia: [];
 }
  
+export interface Solicitud11102StaObjResp {
+  /**
+   * Nombre del organismo público.
+   */
+  modificacionDonacionesImmex: Solicitud11102State;
+ 
+}
 export interface ModificacionDonacionesImmexResponse {
   modificacionDonacionesImmex: {
     organismoPublico: string;
@@ -189,6 +196,7 @@ export interface ModificacionDonacionesImmexResponse {
     };
   };
 }
+
 /**
  * Función que crea el estado inicial de la solicitud 11102.
  * @returns Estado inicial de la solicitud.
