@@ -98,7 +98,7 @@ export interface CuposTabla {
 /**
  * Representa los datos de la tabla de disponsiblesTabla.
  */
-export interface disponsiblesTabla {
+export interface DisponsiblesTabla {
 
   folio:string;
   nombre:string;
@@ -108,8 +108,8 @@ export interface disponsiblesTabla {
 /**
  * Representa los datos de la tabla de disponsiblesTablaDatos.
  */
-export interface  disponsiblesTablaDatos{
-datos: disponsiblesTabla[];
+export interface DisponsiblesTablaDatos{
+datos: DisponsiblesTabla[];
 }
 
 
@@ -119,3 +119,24 @@ datos: disponsiblesTabla[];
 export interface CuposTablaDatos {
    datos: CuposTabla[];
 }
+
+/**
+ *  Representa los datos del formulario de certificado de origen.
+  *  @interface FormularioCertificadoOrigen
+  */ 
+export interface RespuestaConsulta {
+  success: boolean;
+  datos: ConsultaDatos;
+  message: string;
+}
+
+/**
+ *  Representa los datos de la consulta del certificado de origen.
+ *  @interface ConsultaDatos
+  */
+export interface ConsultaDatos {
+  GrupoFolio: GrupoFolio;
+  GrupoEmpresa: GrupoEmpresa;
+  GrupoCupo: GrupoCupo;
+  GrupoDatalleCupo: GrupoDatalleCupo;
+  }

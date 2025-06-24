@@ -200,7 +200,7 @@ setValoresStore(event: { formGroupName: string, campo: string, valor: undefined,
       next: (data) => {
         this.estado = data as Catalogo[];
       },
-      error: (error: HttpErrorResponse) => {
+      error: (_error: HttpErrorResponse) => {
         this.estado = [];
       },
     });
@@ -219,7 +219,7 @@ setValoresStore(event: { formGroupName: string, campo: string, valor: undefined,
       next: (data) => {
         this.pais = data as Catalogo[];
       },
-      error: (error: HttpErrorResponse) => {
+      error: (_error: HttpErrorResponse) => {
         this.pais = [];
       },
     });
@@ -243,7 +243,7 @@ setValoresStore(event: { formGroupName: string, campo: string, valor: undefined,
           this.disponiblesDatos = [];
         }
       },
-      error: (error: HttpErrorResponse) => {
+      error: (_error: HttpErrorResponse) => {
         this.disponiblesDatos = [];
       },
     });

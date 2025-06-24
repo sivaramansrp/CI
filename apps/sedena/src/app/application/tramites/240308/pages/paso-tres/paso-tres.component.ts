@@ -1,9 +1,12 @@
+/**
+ * Paso Tres Component
+ */
 import { Component } from '@angular/core';
 
 /**
- * @title Paso Tres
- * @description Componente correspondiente al tercer paso del trámite. Contiene la sección de firma electrónica.
- * @summary Encapsula el componente de firma electrónica como parte final del flujo de solicitud.
+ *  Paso Tres
+ *  Componente correspondiente al tercer paso del trámite. Contiene la sección de firma electrónica.
+ *  Encapsula el componente de firma electrónica como parte final del flujo de solicitud.
  */
 
 @Component({

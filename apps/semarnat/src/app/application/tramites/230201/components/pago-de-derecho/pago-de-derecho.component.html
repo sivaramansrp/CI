@@ -7,7 +7,8 @@
           <div class="col-md-4">
             <div class="form-group">
               <label class="form-label" for="claveDeReferencia">Clave de referencia*:</label>
-              <input class="form-control" id="claveDeReferencia" formControlName="claveDeReferencia" type="text"
+              <input class="form-control" id="claveDeReferencia" 
+                formControlName="claveDeReferencia" type="text"
                 [ngClass]="isValid(pagodeDerechos,'claveDeReferencia') ? 'required' : ''"
                 (change)="setValoresStore(pagodeDerechos,'claveDeReferencia', 'setClaveDeReferencia')" />
             </div>
@@ -25,7 +26,7 @@
             <div class="form-group">
               <div class="form-group">
                 <app-catalogo-select [catalogo]="bancoCatalogo.catalogos" formControlName="banco" [label]="'Banco'"
-                  [required]="true"
+                  [required]="true" [isDisabled]="soloLectura"
                   (change)="setValoresStore(pagodeDerechos,'banco', 'setBanco');"></app-catalogo-select>
               </div>
             </div>
@@ -45,7 +46,8 @@
           <div class="col-md-4">
             <div class="form-group">
               <label class="form-label" for="fecPago">Fecha de pago*:</label>
-              <input class="form-control" id="fecPago" formControlName="fecPago" type="date"
+              <input class="form-control" id="fecPago" 
+                formControlName="fecPago" type="date"
                 [ngClass]="isValid(pagodeDerechos,'fecPago') ? 'required' : ''"
                 (change)="setValoresStore(pagodeDerechos,'fecPago', 'setFecPago')" />
             </div>
@@ -54,7 +56,8 @@
           <div class="col-md-4">
             <div class="form-group">
               <label class="form-label" for="impPago">Importe de pago*:</label>
-              <input class="form-control" id="impPago" formControlName="impPago" type="text"
+              <input class="form-control" id="impPago" 
+                formControlName="impPago" type="text"
                 [ngClass]="isValid(pagodeDerechos,'impPago') ? 'required' : ''"
                 (change)="setValoresStore(pagodeDerechos,'impPago', 'setImpPago')" appUppercase />
             </div>

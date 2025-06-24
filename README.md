@@ -74,7 +74,7 @@ It will show tasks that you can run with Nx.
 - Create new application - npx nx g @nx/angular:remote apps/aga
 - Angular 18.0.3
 - Node version 22.0.0 / 23.4.0
-- Lint : npx nx lint aga
+- Lint : npx nx run aga:lint
 - Test : npx nx test aga
 - Unittest coverage: npx nx test aga --coverage
 - Compodoc : npm run compodoc
@@ -109,8 +109,40 @@ It will show tasks that you can run with Nx.
 - If application / procedure specific
 - npx nx test se --testPathPattern=apps/se/src/app/application/tramites/120301
 
+# Unit Testing - statements 80% coverage
+- npx nx test inah --coverage
+
+- to view the 80% coverage for the particular department, refer the index.html(coverage report) - all files section available in the header of the file.
+
+For procedure specific configuration:
+- Goto jest.config.ts file
+- collectCoverageFrom - specify the path for which 80% coverage to be validated.
+    For Department specific - "apps/inah/src/app/application/**/*.ts"
+    For Procedure specific - "apps/inah/src/app/application/tramites/280101/**/*.ts"
+
+- testMatch - specify the pattern for which files the coverage to be carried out.
+    For Department specific - "<rootDir>/src/app/application/**/*.ts"
+    For Procedure specific - "<rootDir>/src/app/application/tramites/280101/**/*.spec.ts"
+    
+- coverageThreshold - specify the coverage path for which 80% coverage is required.
+    If the coverage is against statements(Branches/Functions/Lines can also be added),
+    add statements to be 80.
+    For Department specific - "apps/inah/src/app/application/**/*.ts"
+    For Procedure specific - "apps/inah/src/app/application/tramite/280101/**/*.ts"
+
+- coverageReporters: 
+    text-summary - to get the coverage report as a summary in the console.
+    html - to get the coverage report as index.html file.
+
+- coveragePathIgnorePatterns - specify the pattern where no unit testing coverage is required.
+    - This paramater excludes all the other ts file extensions other than spec.ts,service.ts and component.ts files where no unit testing coverage is required.
+    - In future if any new files is added with .ts file extension where no spec.ts is required, it is to be included in the coveragePathIgnorePatterns parameter available in jest configuration.
+
+- to get the concise coverage summary in separate file,run the below command
+    - npx nx test inah --coverage --coverageReporters=html --coverageReporters=text-summary > inah-coverage-summary.txt
+
 # Lint
-- npx nx run lint:aga
+- npx nx run aga:lint
 - If application / procedure specific
 - npx nx lint aga --lint-file-patterns="apps/aga/src/app/application/tramites/120301/**/*"
 

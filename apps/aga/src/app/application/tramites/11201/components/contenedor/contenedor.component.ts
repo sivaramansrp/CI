@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { AlertComponent, ConsultaioQuery, ConsultaioState, Notificacion, NotificacionesComponent, Pedimento, REGEX_LLAVE_DE_PAGO_DE_DERECHO, REGEX_SOLO_NÚMERO } from '@ng-mf/data-access-user';
 import { ENCABEZADO_TABLA_CONTENEDOR, ENCABEZADO_TABLA_CONTENEDOR_MANIFIESTO } from '../../enum/solicitante.enum';
 import { Aduanas } from '@libs/shared/data-access-user/src/core/models/11201/datos-tramite.model';
@@ -37,8 +38,6 @@ import { ViewChild } from '@angular/core';
 import { map } from 'rxjs';
 import moment from 'moment';
 import { takeUntil } from 'rxjs';
-
-
 
 /**
  * Componente para gestionar la solicitud de contenedores.

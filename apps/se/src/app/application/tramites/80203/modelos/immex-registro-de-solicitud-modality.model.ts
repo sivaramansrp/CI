@@ -206,3 +206,34 @@ export interface nicoInfo {
   NICO_Columna_2: string;
   estatus: boolean;
 }
+
+export interface PermisoImmexDato {
+  IMMEX_Columna_1: string;
+  IMMEX_Columna_2: string;
+  IMMEX_Columna_3: string;
+  IMMEX_Columna_4: string;
+  IMMEX_Columna_5: string;
+  IMMEX_Columna_6: string;
+  IMMEX_Columna_7: string;
+  estatus: boolean;
+}
+
+export interface FraccionDato {
+  FRACCION_Columna_1: string;
+  FRACCION_Columna_2: string;
+  FRACCION_Columna_3: string;
+  FRACCION_Columna_4: string;
+  FRACCION_Columna_5: string;
+  FRACCION_Columna_6: string;
+}
+
+export interface NicoDato {
+  NICO_Columna_1: string;
+  NICO_Columna_2: string;
+}
+
+export interface ImmexTablaJson {
+  permisoImmexDatos: PermisoImmexDato[];
+  fraccionDatos: FraccionDato[];
+  nicoDatos: NicoDato[];
+}

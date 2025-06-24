@@ -1,33 +1,14 @@
-import {
-  CatalogoSelectComponent,
-  CatalogosSelect,
-  ConfiguracionColumna,
-  InputRadioComponent,
-  TablaDinamicaComponent,
-  TablaSeleccion,
-  TituloComponent,
-  ValidacionesFormularioService,
-} from '@ng-mf/data-access-user';
-import {
-  Component,
-  EventEmitter,
-  OnDestroy,
-  OnInit,
-  Output,
-} from '@angular/core';
-import {
-  FormBuilder,
-  FormGroup,
-  FormsModule,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
-import { ReplaySubject, takeUntil } from 'rxjs';
+import { CatalogoSelectComponent,CatalogosSelect,ConfiguracionColumna,ConsultaioQuery,ConsultaioState,InputRadioComponent,TablaDinamicaComponent,TablaSeleccion,TituloComponent,ValidacionesFormularioService } from '@ng-mf/data-access-user';
+import { Component,EventEmitter,OnDestroy,OnInit,Output } from '@angular/core';
+import { FormBuilder,FormGroup,FormsModule,ReactiveFormsModule,Validators } from '@angular/forms';
+import { ReplaySubject, Subject, map, takeUntil } from 'rxjs';
+import { Solicitud11105State, Solicitud11105Store } from '../../estados/solicitud11105.store';
 import { Catalogo } from '@libs/shared/data-access-user/src/core/models/40102/transportista-terrestre.model';
 import { CommonModule } from '@angular/common';
 import { DATOS_GENERERALES_DE_LA_SOLICICTUD } from '../../constants/retirad-de-la-autorizacion-de-donaciones.enum';
 import { DetallesDelMercancia } from '@libs/shared/data-access-user/src/core/models/11105/detalles-del-merchancia.model';
 import { RetiradaDeLaAutorizacionDeDonacionesService } from '../../services/retirad-de-la-autorizacion-de-donaciones.service';
+import { Solicitud11105Query } from '../../estados/solicitud11105.query';
 
 /**
  * Texto de adjuntar para terceros.
@@ -54,7 +35,18 @@ const TERCEROS_TEXTO_DE_ADJUNTAR =
   ],
 })
 export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
-  
+ 
+/**
+   * Subject para destruir notificador.
+   */
+  consultaDatos!: ConsultaioState;
+  /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  soloLectura: boolean = false;
+
+ 
   /**
    * Evento de salida que emite un valor de tipo cadena.
    * Este evento se utiliza para notificar cuando se debe continuar con una acción específica.
@@ -189,6 +181,18 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
   ];
 
   /**
+   * Sujeto utilizado como notificador para la destrucción del componente.
+   * Se emite un valor cuando el componente se destruye, permitiendo cancelar
+   * suscripciones o liberar recursos asociados.
+   */
+  private destroyNotifier$: Subject<void> = new Subject();
+
+  /**
+   * Estado actual de la solicitud.
+   */
+  public solicitudState!: Solicitud11105State;
+
+  /**
    * Constructor de la clase.
    * @param retiradaDeLaAutorizacionDeDonacionesService Servicio para manejar datos relacionados con la autorización de donaciones.
    * @param formBuilder FormBuilder para construir formularios reactivos.
@@ -197,7 +201,10 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
   constructor(
     private retiradaDeLaAutorizacionDeDonacionesService: RetiradaDeLaAutorizacionDeDonacionesService,
     public formBuilder: FormBuilder,
-    private validacionesService: ValidacionesFormularioService
+    private validacionesService: ValidacionesFormularioService,
+    private consultaioQuery: ConsultaioQuery,
+    private store: Solicitud11105Store,
+    private query: Solicitud11105Query,
   ) {
     // El constructor se utiliza para la inyección de dependencias.
   }
@@ -206,10 +213,43 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
    * Método de inicialización del componente.
    */
   ngOnInit(): void {
+    this.query.seleccionarSolicitud$
+          .pipe(
+            takeUntil(this.destroyNotifier$),
+            map((seccionState) => {
+              this.solicitudState = seccionState;
+            })
+          )
+          .subscribe();
     this.donanteDomicilio();
     this.buscarAduanaDatos();
     this.buscarpropositoDeLaMercanciaDatos();
     this.buscarDetallesDelMercanciaDatos();
+
+    
+     this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState) => {
+          this.consultaDatos = seccionState;
+          this.soloLectura = this.consultaDatos.readonly;
+          this.domecilioFormulario();
+        })
+      )
+      .subscribe();
+  }
+
+    /**
+   * Configura el formulario del destinatario según el estado de la solicitud.
+   *  Si el formulario está en modo solo lectura, deshabilita los campos del formulario.
+   *  @returns {void}
+   */
+    domecilioFormulario(): void {
+    if (this.soloLectura) {
+      this.tramiteForm.disable();
+    } else {
+      this.tramiteForm.enable();
+    }
   }
 
   /**
@@ -300,71 +340,84 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   donanteDomicilio(): void {
     this.tramiteForm = this.formBuilder.group({
-      retiradaDeDonaciones: this.formBuilder.group({
-        aduana: [{ value: '', disabled: true }, [Validators.required]],
-        nombre: [
-          { value: '', disabled: true },
+        aduana: [{ value: this.solicitudState?.aduana, disabled: true }, [Validators.required]],
+        nombre: [ this.solicitudState?.nombre,
           [Validators.required, Validators.maxLength(50)],
         ],
         tipoMercancia: [
-          { value: '', disabled: true },
+          { value: this.solicitudState?.tipoMercancia, disabled: true },
           [Validators.required, Validators.maxLength(100)],
         ],
         usoEspecifico: [
-          { value: '', disabled: true },
+          { value: this.solicitudState?.usoEspecifico, disabled: true },
           [Validators.required, Validators.maxLength(512)],
         ],
-        condicion: [{ value: '', disabled: true }, Validators.required],
+        condicion: [{ value: this.solicitudState?.condicion, disabled: true }, Validators.required],
         marca: [
-          { value: '', disabled: true },
+          { value: this.solicitudState?.marca, disabled: true },
           [Validators.required, Validators.maxLength(50)],
         ],
-        ano: [{ value: '', disabled: true }, [Validators.required]],
+        ano: [{ value: this.solicitudState?.ano, disabled: true }, [Validators.required]],
         modelo: [
-          { value: '', disabled: true },
+          { value: this.solicitudState?.modelo, disabled: true },
           [Validators.required, Validators.maxLength(50)],
         ],
         serie: [
-          { value: '', disabled: true },
+          { value: this.solicitudState?.serie, disabled: true },
           [Validators.required, Validators.maxLength(50)],
         ],
-        manifesto: [{ value: '', disabled: true }, Validators.required],
+        manifesto: [{ value: this.solicitudState?.manifesto }, Validators.required],
         calle: [
-          { value: '', disabled: true },
+          { value: this.solicitudState?.calle, disabled: true },
           [Validators.required, Validators.maxLength(100)],
         ],
         numeroExterior: [
-          { value: '', disabled: true },
+          { value: this.solicitudState?.numeroExterior, disabled: true },
           [Validators.required, Validators.maxLength(10)],
         ],
         numeroInterior: [
-          { value: '', disabled: true },
+          { value: this.solicitudState?.numeroInterior, disabled: true },
           [Validators.maxLength(10)],
         ],
         telefono: [
-          { value: '', disabled: true },
+          { value: this.solicitudState?.telefono, disabled: true },
           [Validators.required, Validators.pattern(/^\d{10}$/)],
         ],
         correoElectronico: [
-          { value: '', disabled: true },
+          { value: this.solicitudState?.correoElectronico, disabled: true },
           [Validators.required, Validators.email],
         ],
-        pais: [{ value: '', disabled: true }, Validators.required],
+        pais: [{ value: this.solicitudState?.pais, disabled: true }, Validators.required],
         codigoPostal: [
-          { value: '', disabled: true },
+          { value: this.solicitudState?.codigoPostal, disabled: true },
           [Validators.required, Validators.pattern(/^\d{5}$/)],
         ],
         estado: [
-          { value: '', disabled: true },
+          { value: this.solicitudState?.estado, disabled: true },
           [Validators.required, Validators.maxLength(50)],
         ],
         colonia: [
-          { value: '', disabled: true },
+          { value: this.solicitudState?.colonia, disabled: true },
           [Validators.required, Validators.maxLength(50)],
         ],
-        opcion: [{ value: 'false' }, Validators.maxLength(50)],
-      }),
+        opcion: [{ value: this.solicitudState?.opcion }, Validators.maxLength(50)],
     });
+     this.domecilioFormulario();
+  }
+
+  /**
+   * Actualiza un valor en el estado global utilizando el almacén.
+   * @param form Formulario reactivo.
+   * @param campo Nombre del campo a actualizar.
+   * @param metodoNombre Nombre del método del almacén para actualizar el estado.
+   */
+  setValoresStore(
+    form: FormGroup,
+    campo: string,
+    metodoNombre: keyof Solicitud11105Store
+  ): void {
+    const VALOR = form.get(campo)?.value;
+    (this.store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
 
   /**

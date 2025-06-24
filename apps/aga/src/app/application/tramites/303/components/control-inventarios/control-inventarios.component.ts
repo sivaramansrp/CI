@@ -22,21 +22,21 @@ export class ControlInventariosComponent {
     constructor(private fb: FormBuilder,
     ) {}
   
-    abrirModal() {
+    abrirModal(): void {
       this.modal = 'show';
     }
   
-    cerrarModal() { 
+    cerrarModal(): void { 
       this.closeModal.nativeElement.click();
       
     }
 
-    agregarInventario() {  
+    agregarInventario(): void {  
       if(!this.formInventarios.valid) {
         return;
       }
-      const inventario = this.formInventarios.value;
-      this.inventarios.push(inventario);
+      const INVENTARIO = this.formInventarios.value;
+      this.inventarios.push(INVENTARIO);
       this.formInventarios.reset();
       this.cerrarModal();
     }

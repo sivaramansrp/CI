@@ -37,6 +37,6 @@
     <ng-titulo titulo="Lista de empresas"></ng-titulo>
 
     <app-tabla-dinamica [tableId]="'gridEmpresas'" [configuracionTabla]="configuracionTabla" [datos]="empresasLista"
-        [tipoSeleccionTabla]="tablaSeleccion" (alternarValor)="alternarValor($event)">
+        [desactivarButton]="soloLectura" [tipoSeleccionTabla]="tablaSeleccion" (alternarValor)="alternarValor($event)">
     </app-tabla-dinamica>
 </div>

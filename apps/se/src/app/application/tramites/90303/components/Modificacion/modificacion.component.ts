@@ -1,12 +1,12 @@
 import { AfterViewInit, Component, OnDestroy, OnInit, Renderer2 } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
-import { TablaDinamicaComponent, TablaSeleccion, TituloComponent, ValidacionesFormularioService } from '@ng-mf/data-access-user';
-import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { LISTA_DE_SECTORS, LISTA_DE_SECTORS_BAJA } from '../../constantes/constantes90303.enum';
 import { ListaTabla, ListaTablaBaja } from '../../models/registro.model';
 import { Mercancias, PlantasTabla, ProductorIndirecto, SectorTabla } from '../../../../shared/models/complementaria.model';
 import { ReplaySubject, map, takeUntil } from 'rxjs';
 import { Solicitud90303State, Tramite90303Store } from '../../state/Tramite90303.store';
+import { TablaDinamicaComponent, TablaSeleccion, TituloComponent, ValidacionesFormularioService } from '@ng-mf/data-access-user';
 import { CatalogosService } from '../../service/catalogos.service';
 import { CommonModule } from '@angular/common';
 import { PlantasComponent } from "../../../../shared/components/plantas/plantas.component";
@@ -100,7 +100,7 @@ export class ModificacionComponent implements OnInit, OnDestroy, AfterViewInit {
   /**
    * Referencia a una función para encontrar elementos cercanos en el DOM.
    */
-  findClose: any;
+  findClose!: (element: HTMLElement) => HTMLElement | null;
   /**
      * Estado actual de la solicitud.
      */

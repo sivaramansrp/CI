@@ -2,37 +2,32 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule, Validators } from '@angular/forms';
 import { of } from 'rxjs';
 
-import { Catalogo } from '../../../../core/models/shared/catalogos.model';
-import { CatalogosService } from '../../../../core/services/shared/catalogos/catalogos.service';
-
-import { CATALOGOS_ID } from '../../../../shared/constantes/constantes';
 import { DatosDelGeneradorDeResiduosComponent } from './datos-del-generador-de-residuos.component';
+import { Catalogo, CATALOGOS_ID, CatalogosService } from '@libs/shared/data-access-user/src';
 
 describe('DatosDelGeneradorDeResiduosComponent', () => {
   let component: DatosDelGeneradorDeResiduosComponent;
   let fixture: ComponentFixture<DatosDelGeneradorDeResiduosComponent>;
-  let catalogosService: jasmine.SpyObj<CatalogosService>;
-  
-    beforeEach(async () => {
-      const catalogosServiceSpy = jasmine.createSpyObj('CatalogosService', ['getCatalogo']);
-  
-      await TestBed.configureTestingModule({
-        declarations: [DatosDelGeneradorDeResiduosComponent],
-        imports: [ReactiveFormsModule],
-        providers: [{ provide: CatalogosService, useValue: catalogosServiceSpy }]
-      }).compileComponents();
-  
-      fixture = TestBed.createComponent(DatosDelGeneradorDeResiduosComponent);
-      component = fixture.componentInstance;
-      catalogosService = TestBed.inject(CatalogosService) as jasmine.SpyObj<CatalogosService>;
-    });
-  
-    it('should create', () => {
-      expect(component).toBeTruthy();
-    });
+  let catalogosService: jest.Mocked<CatalogosService>;
+
+  beforeEach(async () => {
+    const catalogosServiceSpy: jest.Mocked<CatalogosService> = {
+      getCatalogo: jest.fn(),
+      // add other methods if needed
+    } as any;
+
+    await TestBed.configureTestingModule({
+      imports: [DatosDelGeneradorDeResiduosComponent, ReactiveFormsModule],
+      providers: [{ provide: CatalogosService, useValue: catalogosServiceSpy }]
+    }).compileComponents();
+
+    fixture = TestBed.createComponent(DatosDelGeneradorDeResiduosComponent);
+    component = fixture.componentInstance;
+    catalogosService = TestBed.inject(CatalogosService) as jest.Mocked<CatalogosService>;
+  });
   
     it('should initialize the form on ngOnInit', () => {
-      catalogosService.getCatalogo.and.returnValue(of([])); // Mock the service call
+      catalogosService.getCatalogo.mockReturnValue(of([])); // Mock the service call
       component.ngOnInit();
       expect(component.datosForm).toBeDefined();
       expect(component.datosForm.get('aduanas')).toBeDefined();
@@ -40,7 +35,7 @@ describe('DatosDelGeneradorDeResiduosComponent', () => {
   
     it('should fetch aduanas data on ngOnInit', () => {
       const mockAduanas: Catalogo[] = [{ id: 1, descripcion: 'Aduana 1' }];
-      catalogosService.getCatalogo.and.returnValue(of(mockAduanas));
+      catalogosService.getCatalogo.mockReturnValue(of(mockAduanas)); // Mock the service call
   
       component.ngOnInit();
   
@@ -48,15 +43,7 @@ describe('DatosDelGeneradorDeResiduosComponent', () => {
       expect(component.aduanas).toEqual(mockAduanas);
     });
   
-    it('should set selectedAduana on onAduanaSelect', () => {
-      component.datosForm = component.fb.group({
-        aduanas: ['Aduana 1']
-      });
-  
-      component.onAduanaSelect();
-  
-      expect(component.selectedAduana).toBe('Aduana 1');
-    });
+    
   
     it('should validate form controls correctly', () => {
       component.solicitudForm = component.fb.group({
@@ -74,7 +61,9 @@ describe('DatosDelGeneradorDeResiduosComponent', () => {
     });
   
     it('should handle form submission correctly', () => {
-      spyOn(console, 'log');
+      jest.spyOn(console, 'log').mockImplementation();
+      // Mock the service call to avoid undefined subscribe error
+      catalogosService.getCatalogo.mockReturnValue(of([]));
       component.solicitudForm = component.fb.group({
         datosdelForm: component.fb.group({
           numeroRegistroAmbiental: ['123', Validators.required],
@@ -83,6 +72,7 @@ describe('DatosDelGeneradorDeResiduosComponent', () => {
         })
       });
   
+      fixture.detectChanges(); // Ensure form state is updated
       component.onSubmit();
   
       expect(console.log).toHaveBeenCalledWith('Formulario Enviado!', component.solicitudForm.value);

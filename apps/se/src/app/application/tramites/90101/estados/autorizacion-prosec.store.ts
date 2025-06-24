@@ -165,7 +165,7 @@ export class AutorizacionProsecStore extends Store<ProsecState> {
      * Actualiza el estado con los contribuyentes registrados.
      * @param contribuyentes Contribuyentes registrados.
      */
-    public setcontribuyentes(contribuyentes: string): void {
+    public setcontribuyentes(contribuyentes: string):void {
         this.update((state) => ({
             ...state,
             contribuyentes,
