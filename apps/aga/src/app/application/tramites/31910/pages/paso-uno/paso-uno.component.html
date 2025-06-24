@@ -29,8 +29,10 @@
         @switch (indice) { @case (1) {
         <solicitante [tabindex]="1"></solicitante>
         } @case (2) {
+          @if(esDatosRespuesta){
         <app-tab-desistir-solicitud-info-historica [tabindex]="2"></app-tab-desistir-solicitud-info-historica>
-        } 
+         } 
+        }
        }
       </ng-container>
     </div>

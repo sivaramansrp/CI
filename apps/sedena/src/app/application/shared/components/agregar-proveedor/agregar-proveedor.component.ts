@@ -1,8 +1,27 @@
-import { AGREGARPROVEEDORFORM, CAMPO_OBLIGATORIO_PROVEEDOR, TIPO_PERSONA_OPCIONES } from '../../constants/datos-solicitud.enum';
+import {
+  AGREGARPROVEEDORFORM,
+  CAMPO_OBLIGATORIO_PROVEEDOR,
+  TIPO_PERSONA_OPCIONES,
+} from '../../constants/datos-solicitud.enum';
 import { CommonModule, Location } from '@angular/common';
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { DestinoFinal, Proveedor } from '../../models/terceros-relacionados.model';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+} from '@angular/core';
+import {
+  DestinoFinal,
+  Proveedor,
+} from '../../models/terceros-relacionados.model';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
@@ -11,8 +30,8 @@ import { InputRadioComponent } from '@ng-mf/data-access-user';
 import { Subject } from 'rxjs';
 import { TipoPersona } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
-import { takeUntil } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { takeUntil } from 'rxjs';
 
 /**
  * @component AgregarProveedorComponent
@@ -87,13 +106,19 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit {
    */
   @Output() updateProveedorTablaDatos = new EventEmitter<Proveedor[]>();
 
-    /**
+  /**
+   * Evento que se emite cuando el usuario desea cancelar una acción.
+   * @property {EventEmitter<boolean>} cancelarEventListener
+   */
+  @Output() cancelarEventListener = new EventEmitter<boolean>();
+
+  /**
    * Datos del formulario que pueden ser de tipo `DestinoFinal`, `Proveedor`, `null` o `undefined`.
    * Este input se utiliza para recibir la información necesaria desde el componente padre.
    *
    * @type {DestinoFinal | Proveedor | null | undefined}
    */
-    @Input() formaDatos!: DestinoFinal | Proveedor | null | undefined;
+  @Input() formaDatos!: DestinoFinal | Proveedor | null | undefined;
 
   /**
    * Opciones de radio para seleccionar el tipo de persona.
@@ -116,15 +141,15 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit {
    * @param datosSolicitudService - Servicio para obtener datos del backend.
    * @param ubicaccion - Servicio de ubicación para navegar entre vistas.
    * @param consultaioQuery - Servicio para consultar el estado del trámite.
-   * 
+   *
    */
   constructor(
     private fb: FormBuilder,
     private datosSolicitudService: DatosSolicitudService,
     private ubicaccion: Location,
-    private consultaioQuery: ConsultaioQuery 
+    private consultaioQuery: ConsultaioQuery
   ) {
-        this.consultaioQuery.selectConsultaioState$
+    this.consultaioQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState: { readonly: boolean }) => {
@@ -134,7 +159,7 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit {
       )
       .subscribe();
   }
-    /**
+  /**
    * Evalúa si se debe inicializar o cargar datos en el formulario.
    * Además, obtiene la información del catálogo de mercancía.
    */
@@ -146,7 +171,7 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit {
     }
   }
 
-    /**
+  /**
    * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
    * Luego reinicializa el formulario con los valores actualizados desde el store.
    */
@@ -199,16 +224,17 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit {
    */
   ngOnInit(): void {
     this.crearFormaulario();
-    this.campoObligatorio = CAMPO_OBLIGATORIO_PROVEEDOR.includes(this.idProcedimiento)
+    this.campoObligatorio = CAMPO_OBLIGATORIO_PROVEEDOR.includes(
+      this.idProcedimiento
+    );
     this.campoObligatorioChange();
-        if (AGREGARPROVEEDORFORM.includes(this.idProcedimiento)) {
+    if (AGREGARPROVEEDORFORM.includes(this.idProcedimiento)) {
       this.agregarProveedorForm.enable();
-    }
-    else {
+    } else {
       this.agregarProveedorForm.disable();
     }
     this.cargarDatos();
-    if(this.formaDatos) {
+    if (this.formaDatos) {
       this.agregarProveedorForm.patchValue(this.formaDatos);
     }
   }
@@ -227,15 +253,14 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit {
     const CODIGOPOSTAL = this.agregarProveedorForm.get('codigoPostal');
     const CALLE = this.agregarProveedorForm.get('calle');
     const NUMEROEXTERIOR = this.agregarProveedorForm.get('numeroExterior');
-    if(this.campoObligatorio){
+    if (this.campoObligatorio) {
       NOMBRES?.setValidators([Validators.required]);
       PRIMERAPELLIDO?.setValidators([Validators.required]);
       ESTADO?.setValidators([Validators.required]);
       CODIGOPOSTAL?.setValidators([Validators.required]);
       CALLE?.setValidators([Validators.required]);
       NUMEROEXTERIOR?.setValidators([Validators.required]);
-    }
-    else{
+    } else {
       NOMBRES?.clearValidators();
       PRIMERAPELLIDO?.clearValidators();
       ESTADO?.clearValidators();
@@ -318,7 +343,7 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit {
    * @returns {void} Este método no retorna ningún valor.
    */
   cancelar(): void {
-    this.ubicaccion.back();
+    this.cancelarEventListener.emit(true);
   }
   /**
    * * Método que se ejecuta cuando se selecciona un país en el formulario.

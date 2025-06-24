@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { DestinoFinal, Proveedor } from '../../../../shared/models/terceros-relacionados.model';
 import { Observable, Subject,map,takeUntil } from 'rxjs';
 import { AgregarDestinatarioCustomComponent } from '../../../../shared/components/agregar-destinatario-custom/agregar-destinatario-custom.component';
@@ -42,7 +42,17 @@ import { Tramite240122Store } from '../../estados/tramite240122Store.store';
   styleUrl: './agregar-destinatario-final-contenedora.component.scss',
 })
 export class AgregarDestinatarioFinalContenedoraComponent implements OnInit,OnDestroy {
-  
+    /**
+     * @event cerrar
+     * @description Evento emitido para indicar que se debe cerrar el componente.
+     * @remarks
+     * Este evento no envía ningún valor, simplemente notifica a los componentes padres que se debe realizar la acción de cierre.
+     * 
+     * @eventType void
+     * @es
+     * Evento que se dispara para cerrar el componente actual.
+     */
+    @Output() cerrar = new EventEmitter<void>();
   /**
    * @property {number} idProcedimiento - Identificador del procedimiento asociado al trámite.
    * @remarks Este valor se utiliza para identificar el trámite 240122.
@@ -56,6 +66,21 @@ export class AgregarDestinatarioFinalContenedoraComponent implements OnInit,OnDe
    */
   public terechosDatos$!: Observable<DestinoFinal | Proveedor | null | undefined>;
 
+  /**
+   * Indica si el formulario debe mostrarse en modo solo lectura.
+   * 
+   * @remarks
+   * Cuando esta propiedad es `true`, los campos del formulario no serán editables.
+   * 
+   * @defaultValue false
+   * 
+   * @example
+   * // Para activar el modo solo lectura:
+   * this.esFormularioSoloLectura = true;
+   * 
+   * @es
+   * Indica si el formulario es solo de lectura.
+   */
   public esFormularioSoloLectura:boolean = false;
     /**
    * Subject para notificar la destrucción del componente.
@@ -68,6 +93,7 @@ export class AgregarDestinatarioFinalContenedoraComponent implements OnInit,OnDe
    * @method constructor
    * @param {Tramite240122Store} tramiteStore - Store que administra el estado del trámite.
    * @param {Tramite240122Query} tramiteQuery - Query que permite obtener datos relacionados con el trámite.
+   * @param {ConsultaioQuery} consultaioQuery - Query que permite obtener el estado de la consulta.
    * @returns {void}
    */
   constructor(public tramiteStore: Tramite240122Store, public tramiteQuery: Tramite240122Query,private readonly consultaioQuery:ConsultaioQuery) {

@@ -4,25 +4,28 @@ import { PasoDosComponent } from './paso-dos.component';
 import { AlertComponent, AnexarDocumentosComponent, CatalogosService, TituloComponent } from '@libs/shared/data-access-user/src';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { of } from 'rxjs';
+import { CATALOGOS_ID } from '@libs/shared/data-access-user/src';
+import { HttpClientModule } from '@angular/common/http'; // Importar HttpClientModule
+import { TEXTOS } from '@ng-mf/data-access-user';
 
 describe('PasoDosComponent', () => {
   let component: PasoDosComponent;
   let fixture: ComponentFixture<PasoDosComponent>;
-  let catalogosServiceMock: any;
+  let catalogosServiceMock: jest.Mocked<CatalogosService>;
 
   beforeEach(async () => {
-
+    // Crear un mock de CatalogosService
     catalogosServiceMock = {
-      getCatalogo: jest.fn().mockReturnValue(of([{ id: 1, descripcion: 'Documento 1' }]))
-    };
-    
+      getCatalogo: jest.fn().mockReturnValue(of([])), // Mock del método getCatalogo
+    } as unknown as jest.Mocked<CatalogosService>;
+
     await TestBed.configureTestingModule({
       declarations: [PasoDosComponent],
-      imports: [HttpClientTestingModule, TituloComponent, AlertComponent, AnexarDocumentosComponent],
       providers: [
-        { provide: CatalogosService, useValue: catalogosServiceMock }
+        { provide: CatalogosService, useValue: catalogosServiceMock }, // Proveer el servicio mock
       ],
-      schemas: [NO_ERRORS_SCHEMA]
+      imports: [HttpClientModule], // Importar HttpClientModule
+      schemas: [NO_ERRORS_SCHEMA], // Ignorar componentes desconocidos como 'ng-titulo'
     }).compileComponents();
 
     fixture = TestBed.createComponent(PasoDosComponent);
@@ -30,13 +33,34 @@ describe('PasoDosComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('debería crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should call getTiposDocumentos and populate catalogoDocumentos', () => {
+  it('debería tener TEXTOS definido', () => {
+    expect(component.TEXTOS).toEqual(TEXTOS);
+  });
+
+  it('debería llamar a getCatalogo en la inicialización', () => {
+    const spy = jest.spyOn(catalogosServiceMock, 'getCatalogo');
+    component.ngOnInit();
+    expect(spy).toHaveBeenCalledWith(CATALOGOS_ID.CAT_TIPO_DOCUMENTO);
+  });
+
+  it('debería almacenar los documentos del catálogo en catalogoDocumentos', () => {
+    const mockCatalogo = [{ id: 1, descripcion: 'Documento 1' }];
+    catalogosServiceMock.getCatalogo.mockReturnValue(of(mockCatalogo));
+
     component.getTiposDocumentos();
-    expect(catalogosServiceMock.getCatalogo).toHaveBeenCalled();
-    expect(component.catalogoDocumentos.length).toBeGreaterThan(0);
+
+    expect(component.catalogoDocumentos).toEqual(mockCatalogo);
+  });
+
+  it('debería manejar una respuesta vacía de getCatalogo', () => {
+    catalogosServiceMock.getCatalogo.mockReturnValue(of([]));
+
+    component.getTiposDocumentos();
+
+    expect(component.catalogoDocumentos).toEqual([]);
   });
 });

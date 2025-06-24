@@ -1,37 +1,83 @@
 @if (notificacionInput.tipoNotificacion === eTipoNoficacionEnum.ALERTA) {
-<div *ngIf="mostrarModal" [config]="{ show: true, backdrop: 'static'}" (onHidden)="onHidden()" bsModal #modal="bs-modal"
-    class="modal fade" tabindex="-1" role="dialog" aria-labelledby="dialog-auto-name">
-    <div class="modal-dialog" [ngClass]="notificacionInput.tamanioModal ? notificacionInput.tamanioModal : 'modal-sm' "
-        role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 id="dialog-auto-name" class="modal-title pull-left"> {{ notificacionInput.titulo }} </h4>
-            </div>
-            <div class="modal-body">
-                @if(notificacionInput.modo) {
-                <div [innerHTML]="notificacionInput.mensaje"></div>
-                }@else {
-                <p>{{ notificacionInput.mensaje }}</p>
-                }
-            </div>
-            <div class="modal-footer center">
-                @if (notificacionInput.txtBtnCancelar !== '') {
-                <button type="button" class="btn btn-default" (click)="declinarAccion()">{{
-                    notificacionInput.txtBtnCancelar }}</button>
-                }
-                <button type="button" class="btn btn-primary" (click)="confirmarAccion()"> {{
-                    notificacionInput.txtBtnAceptar }} </button>
-            </div>
-        </div>
+<div
+  *ngIf="mostrarModal"
+  [config]="{ show: true, backdrop: 'static' }"
+  (onHidden)="onHidden()"
+  bsModal
+  #modal="bs-modal"
+  class="modal fade"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="dialog-auto-name"
+>
+  <div
+    class="modal-dialog"
+    [ngClass]="
+      notificacionInput.tamanioModal
+        ? notificacionInput.tamanioModal
+        : 'modal-sm'
+    "
+    role="document"
+  >
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 id="dialog-auto-name" class="modal-title pull-left">
+          {{ notificacionInput.titulo }}
+        </h4>
+      </div>
+      <div class="modal-body">
+        @if(notificacionInput.modo) {
+        <div
+          [innerHTML]="notificacionInput.mensaje"
+          [ngClass]="
+            notificacionInput.alineacionTexto
+              ? notificacionInput.alineacionTexto
+              : 'center'
+          "
+        ></div>
+        }@else {
+        <p class="align-center">{{ notificacionInput.mensaje }}</p>
+        }
+      </div>
+      <div
+        class="modal-footer"
+        [ngClass]="
+          notificacionInput.alineacionBtonoCerrar
+            ? notificacionInput.alineacionBtonoCerrar
+            : 'center'
+        "
+      >
+        @if (notificacionInput.txtBtnCancelar !== '') {
+        <button
+          type="button"
+          class="btn btn-default"
+          (click)="declinarAccion()"
+        >
+          {{ notificacionInput.txtBtnCancelar }}
+        </button>
+        }
+        <button
+          type="button"
+          class="btn btn-primary"
+          (click)="confirmarAccion()"
+        >
+          {{ notificacionInput.txtBtnAceptar }}
+        </button>
+      </div>
     </div>
+  </div>
 </div>
 } @else if (notificacionInput.tipoNotificacion === eTipoNoficacionEnum.BANNER) {
 <div class="row">
-    <div class="col-md-12 hidden-xs">
-        <alert [type]="notificacionInput.categoria" [dismissible]="notificacionInput.cerrar"
-            [dismissOnTimeout]="notificacionInput.tiempoDeEspera" (onClose)="verBanner = false">
-            <span [innerHTML]="notificacionInput.mensaje"></span>
-        </alert>
-    </div>
+  <div class="col-md-12 hidden-xs">
+    <alert
+      [type]="notificacionInput.categoria"
+      [dismissible]="notificacionInput.cerrar"
+      [dismissOnTimeout]="notificacionInput.tiempoDeEspera"
+      (onClose)="verBanner = false"
+    >
+      <span [innerHTML]="notificacionInput.mensaje"></span>
+    </alert>
+  </div>
 </div>
 }

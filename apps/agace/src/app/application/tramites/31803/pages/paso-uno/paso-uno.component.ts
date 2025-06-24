@@ -16,7 +16,12 @@ import { SolicitudComponent } from "../../components/Solicitud.component";
   templateUrl: './paso-uno.component.html',
   styles: ``,
   standalone: true,
-  imports: [SharedModule, CommonModule, SolicitanteComponent, SolicitudComponent],
+  imports: [
+    SharedModule,
+    CommonModule,
+    SolicitanteComponent,
+    SolicitudComponent,
+  ],
 })
 export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
 

@@ -1,5 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Datos270201Component } from './datos-270201.component';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 describe('Datos270201Component', () => {
   let component: Datos270201Component;
@@ -8,8 +10,11 @@ describe('Datos270201Component', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [Datos270201Component],
-      imports:[],
-      providers:[]
+      imports: [
+        HttpClientTestingModule
+      ],
+      providers: [],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA]
     })
     .compileComponents();
 

@@ -83,6 +83,9 @@ const invalidData: TerecerosTabla[] = [
 
     fixture = TestBed.createComponent(TerecerosRelacionadosComponent);
     component = fixture.componentInstance;
+    component.consultaState = {
+      readonly: false,
+    } as any;
     fixture.detectChanges();
   });
 

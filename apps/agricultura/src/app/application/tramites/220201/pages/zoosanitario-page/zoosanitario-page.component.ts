@@ -1,22 +1,26 @@
-import { Component, ViewChild } from '@angular/core';
-
 import { AccionBoton, ListaPasosWizard, } from '../../models/220201/certificado-zoosanitario.model';
-
-import { MENSAJE_DE_EXITO_ETAPA_UNO, PASOS } from '../../constantes/certificado-zoosanitario.enum';
-
 import { BtnContinuarComponent, DatosPasos, WizardComponent } from '@ng-mf/data-access-user';
+import { Component, ViewChild } from '@angular/core';
+import { MENSAJE_DE_EXITO_ETAPA_UNO, PASOS } from '../../constantes/certificado-zoosanitario.enum';
 import { CommonModule } from '@angular/common';
 import { PasoDosComponent } from '../paso-dos/paso-dos.component';
 import { PasoTresComponent } from '../paso-tres/paso-tres.component';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 
 /**
- * Componente principal para el formulario de certificado zoosanitario.
+ * @fileoverview Componente principal para el formulario de certificado zoosanitario.
  * Este componente gestiona el flujo del formulario a través de un asistente (wizard),
  * controlando la navegación entre los pasos y la información mostrada en cada uno.
+ * @module ZoosanitarioPageComponent
+ */
+
+/**
+ * Componente principal para el formulario de certificado zoosanitario.
+ * Gestiona el flujo del wizard, la navegación entre pasos y la visualización de mensajes.
  * @component ZoosanitarioPageComponent
  * @selector app-zoosanitario-page
  * @templateUrl ./zoosanitario-page.component.html
+ * @styleUrls ./zoosanitario-page.component.scss
  */
 @Component({
   selector: 'app-zoosanitario-page',
@@ -66,6 +70,10 @@ export class ZoosanitarioPageComponent {
    */
   mensajeDeTextoDeExito: string = MENSAJE_DE_EXITO_ETAPA_UNO;
 
+  /**
+   * Constructor del componente. Inicializa los pasos del asistente.
+   * @method constructor
+   */
   constructor() {
     this.pasos = PASOS;
   }
@@ -85,8 +93,6 @@ export class ZoosanitarioPageComponent {
       }
     }
   }
-
-
 
   /**
    * Cambia el título del mensaje según la pestaña seleccionada.
