@@ -76,7 +76,6 @@ import {
   VEHICULO,
 } from '../../../../core/enums/5701/tramite5701.enum';
 import {
-  AfterViewInit,
   ChangeDetectorRef,
   Component,
   Input,
@@ -97,7 +96,6 @@ import {
   Subject,
   catchError,
   delay,
-  first,
   forkJoin,
   map,
   merge,
@@ -162,9 +160,9 @@ import {
   MSJ_LINEA_CAPTURA_NO_PAGADA,
   MSJ_LINEA_CAPTURA_USADA,
 } from '../../../../core/enums/5701/mensajes-modal-5701.enum';
+import { CheckInputTextComponent } from '../../../../shared/components/check-input-text/check-input-text.component';
 import { SIN_VALOR_SELECT } from '@libs/shared/data-access-user/src/core/enums/transporte-componente.enum';
 import { ValidaDespachoService } from '../../../../core/services/5701/valida-despacho.service';
-import { CheckInputTextComponent } from '../../../../shared/components/check-input-text/check-input-text.component';
 @Component({
   selector: 'app-solicitud',
   templateUrl: './solicitud.component.html',
@@ -478,13 +476,24 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    */
   linkGeneraLineaCapturaSeguro!: SafeUrl;
 
+  /**
+   * @description Bandera para deshabilitar el campo de certificaciones.
+   */
   certificacionesDisabled: boolean = true;
+
+  /**
+   * @description Bandera para deshabilitar el campo de certificación OEA.
+   */
   certificacionOEADisabled: boolean = true;
+
+  /**
+   * @description Bandera para deshabilitar el campo de certificación revisión de origen.
+   */
   revisionDisabled: boolean = true;
 
-  @ViewChild('programaImmex') programaImmex!: CheckInputTextComponent;
-  @ViewChild('programaFomento') programaFomento!: CheckInputTextComponent;
-  @ViewChild('industriaAutomotriz')
+  /**
+   * @description Bandera para deshabilitar el campo de certificación industria automotriz.
+   */
   industriaAutomotriz!: CheckInputTextComponent;
 
   constructor(
@@ -575,6 +584,10 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
     }
   }
 
+  /**
+   * @description Valida tipo de persona y obtiene la patente si es persona física.
+   * @returns {void}
+   */
   private validaTipoPersona(): void {
     // Esta validación debería cambiar y validar contra el valor almacenado
     // en el store.
@@ -3350,6 +3363,10 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
     }
   }
 
+  /**
+   * @description Desactiva los campos de certificaciones y limpia los valores del store.
+   * @returns {void} No retorna ningún valor.
+   */
   desactivaCamposCertificaciones(): void {
     this.datosImportadorExportador.reset({
       RFCImpExp: '',
