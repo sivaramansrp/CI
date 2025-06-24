@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 
 import { MercanciasInfo, ScianModel } from '@libs/shared/data-access-user/src';
 
-import { PagoDerechosStore,PagoDerechosState } from '../../../shared/estados/stores/pago-de-derechos.store';
+import { PagoDerechosState,PagoDerechosStore } from '../../../shared/estados/stores/pago-de-derechos.store';
 
 import { Solicitud260917State, Tramite260917Store } from '../estados/tramites/tramite260917.store';
 
