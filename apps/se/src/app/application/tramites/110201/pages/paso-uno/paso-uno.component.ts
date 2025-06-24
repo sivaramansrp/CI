@@ -50,7 +50,7 @@ export class PasoUnoComponent implements AfterViewInit, OnInit,OnDestroy {
  /**
    * Subject para notificar la destrucción del componente y cancelar suscripciones.
    */
-  private destroyNotifier$: Subject<void> = new Subject();
+  public destroyNotifier$: Subject<void> = new Subject();
 
   /**
    * Estado de la consulta obtenido desde el store.
