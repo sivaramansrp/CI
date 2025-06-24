@@ -1332,15 +1332,6 @@
     "numeroDeProcedimiento": "110205"
   },
   {
-    "id": 130106,
-    "tipoDeTramite": "Expedición de Certificados de Cupo Licitación pública",
-    "fecha": "2023-10-01",
-    "fechaActualizacion": "2023-10-05",
-    "diasTranscurridos": "4",
-    "departamento": "SE",
-    "numeroDeProcedimiento": "130106"
-  },
-  {
     "id": 220702,
     "tipoDeTramite": "Solicitud",
     "fecha": "2024-10-05",
@@ -1357,6 +1348,15 @@
     "diasTranscurridos": "4",
     "departamento": "AGA",
     "numeroDeProcedimiento": "302"
+  },
+  {
+    "id": 5601,
+    "tipoDeTramite": "Solicitud de cs Permiso",
+    "fecha": "2023-10-01",
+    "fechaActualizacion": "2023-10-05",
+    "diasTranscurridos": "4",
+    "departamento": "AGA",
+    "numeroDeProcedimiento": "5601"
   },
   {
     "id": 150103,
@@ -1402,6 +1402,15 @@
     "diasTranscurridos": "4",
     "departamento": "COFEPRIS",
     "numeroDeProcedimiento": "260211"
+  },
+  {
+    "id": 260212,
+    "tipoDeTramite": "Solicitud de Permiso",
+    "fecha": "2023-10-01",
+    "fechaActualizacion": "2023-10-05",
+    "diasTranscurridos": "4",
+    "departamento": "COFEPRIS",
+    "numeroDeProcedimiento": "260212"
   },
   {
     "id": 110204,
@@ -1711,7 +1720,7 @@
   },
     {
     "id": 260704,
-    "tipoDeTramite": "Solicitud Procedure 260701",
+    "tipoDeTramite": "Solicitud Procedure 260704",
     "fecha": "2024-11-01",
     "fechaActualizacion": "2024-11-07",
     "diasTranscurridos": "4",
@@ -2807,6 +2816,15 @@
     "diasTranscurridos": "4",
     "departamento": "AGA",
     "numeroDeProcedimiento": "11105"
+  },
+  {
+    "id": 6001,
+    "tipoDeTramite": "Solicitud de Permiso",
+    "fecha": "2023-10-01",
+    "fechaActualizacion": "2023-10-05",
+    "diasTranscurridos": "4",
+    "departamento": "AGA",
+    "numeroDeProcedimiento": "6001"
   }
 
 
