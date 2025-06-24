@@ -1,6 +1,6 @@
+import { Component, EventEmitter, Output } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { Component, Output, EventEmitter } from '@angular/core';
 import { DatosMercanciaComponent } from '../../../../shared/components/datos-mercancia/datos-mercancia.component';
 import { MercanciaDetalle } from '../../../../shared/models/datos-del-tramite.model';
 import { NUMERO_TRAMITE } from '../../../../shared/constants/datos-solicitud.enum';

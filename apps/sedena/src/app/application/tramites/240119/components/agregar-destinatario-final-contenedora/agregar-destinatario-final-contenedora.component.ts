@@ -1,10 +1,10 @@
+import { Component, EventEmitter, Output } from '@angular/core';
 import {
   DestinoFinal,
   Proveedor,
 } from '../../../../shared/models/terceros-relacionados.model';
 import { AgregarDestinatarioCustomComponent } from '../../../../shared/components/agregar-destinatario-custom/agregar-destinatario-custom.component';
 import { CommonModule } from '@angular/common';
-import { Component, Output, EventEmitter } from '@angular/core';
 import { ID_PROCEDIMIENTO } from '../../constants/artefactos-pirotecnicos-ordinarios.enum';
 import { Observable } from 'rxjs';
 import { Tramite240119Query } from '../../estados/tramite240119Query.query';

@@ -1,6 +1,8 @@
 import { ActivatedRoute, Router } from '@angular/router';
-import { CommonModule } from '@angular/common';
 import { Component, ViewChild } from '@angular/core';
+import { AgregarDestinatarioFinalContenedoraComponent } from '../agregar-destinatario-final-contenedora/agregar-destinatario-final-contenedora.component';
+import { AgregarProveedorContenedoraComponent } from '../agregar-proveedor-contenedora/agregar-proveedor-contenedora.component';
+import { CommonModule } from '@angular/common';
 import { DestinoFinal } from '../../../../shared/models/terceros-relacionados.model';
 import { ModalComponent } from '../../../../shared/components/modal/modal.component';
 import { NUMERO_TRAMITE } from '../../../../shared/constants/datos-solicitud.enum';
@@ -12,8 +14,6 @@ import { TercerosRelacionadosComponent } from '../../../../shared/components/ter
 import { Tramite240117Query } from '../../estados/tramite240117Query.query';
 import { Tramite240117Store } from '../../estados/tramite240117Store.store';
 import { takeUntil } from 'rxjs';
-import { AgregarProveedorContenedoraComponent } from '../agregar-proveedor-contenedora/agregar-proveedor-contenedora.component';
-import { AgregarDestinatarioFinalContenedoraComponent } from '../agregar-destinatario-final-contenedora/agregar-destinatario-final-contenedora.component';
 /**
  * @component
  * @name TercerosRelacionadosContenedoraComponent

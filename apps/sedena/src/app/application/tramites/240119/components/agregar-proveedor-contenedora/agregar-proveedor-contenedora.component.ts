@@ -1,10 +1,10 @@
+import { Component, EventEmitter, Output } from '@angular/core';
 import {
   DestinoFinal,
   Proveedor,
 } from '../../../../shared/models/terceros-relacionados.model';
 import { AgregarProveedorCustomComponent } from '../../../../shared/components/agregar-proveedor-custom/agregar-proveedor-custom.component';
 import { CommonModule } from '@angular/common';
-import { Component, Output, EventEmitter } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Tramite240119Query } from '../../estados/tramite240119Query.query';
 import { Tramite240119Store } from '../../estados/tramite240119Store.store';

@@ -1,10 +1,10 @@
+import { Component, EventEmitter, Output } from '@angular/core';
 import {
   DestinoFinal,
   Proveedor,
 } from '../../../../shared/models/terceros-relacionados.model';
 import { AgregarDestinatarioCustomComponent } from '../../../../shared/components/agregar-destinatario-custom/agregar-destinatario-custom.component';
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Output } from '@angular/core';
 import { NUMERO_TRAMITE } from '../../../../shared/constants/datos-solicitud.enum';
 import { Observable } from 'rxjs';
 import { Tramite240117Query } from '../../estados/tramite240117Query.query';

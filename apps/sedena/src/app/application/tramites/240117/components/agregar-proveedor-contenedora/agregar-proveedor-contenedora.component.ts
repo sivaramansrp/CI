@@ -1,6 +1,6 @@
+import { Component, EventEmitter, Output } from '@angular/core';
 import { AgregarProveedorCustomComponent } from '../../../../shared/components/agregar-proveedor-custom/agregar-proveedor-custom.component';
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Output } from '@angular/core';
 import { NUMERO_TRAMITE } from '../../../../shared/constants/datos-solicitud.enum';
 import { Proveedor } from '../../../../shared/models/terceros-relacionados.model';
 import { Tramite240117Store } from '../../estados/tramite240117Store.store';
