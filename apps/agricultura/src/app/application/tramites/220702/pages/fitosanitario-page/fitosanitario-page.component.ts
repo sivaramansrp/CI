@@ -14,8 +14,22 @@ import { SeccionQuery } from '../../../../estados/queries/seccion.query';
 import { Subject } from 'rxjs';
 import { WizardComponent } from '@libs/shared/data-access-user/src';
 
+/**
+ * Interfaz que representa la acción de un botón.
+ * @export
+ * @interface AccionBoton
+ */
 interface AccionBoton {
+  /**
+   * Acción asociada al botón.
+   * @property {string} accion
+   */
   accion: string;
+
+  /**
+   * Valor asociado a la acción del botón.
+   * @property {number} valor
+   */
   valor: number;
 }
 
