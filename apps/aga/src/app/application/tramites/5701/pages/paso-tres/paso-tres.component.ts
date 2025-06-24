@@ -7,22 +7,31 @@ import { Router } from '@angular/router';
 import { TramiteFolioService } from '@ng-mf/data-access-user';
 import { TramiteFolioStore } from '@ng-mf/data-access-user';
 
+/**
+ * Componente que representa el paso tres del proceso de solicitud de documentos.
+ * Este componente se encarga de manejar la firma del documento y redirigir al usuario al
+ * acuse del trámite una vez que la firma ha sido obtenida.
+ */
 @Component({
   selector: 'paso-tres',
   templateUrl: './paso-tres.component.html',
   styleUrl: './paso-tres.component.scss',
 })
+
+/**
+ * Clase que representa el componente PasoTresComponent.
+ */
 export class PasoTresComponent implements OnInit {
   /**
-   * @description URL de la aplicación, se utiliza para redirigir al usuario al acuse del trámite.
+   * URL de la aplicación, se utiliza para redirigir al usuario al acuse del trámite.
    */
   url: string = '';
-  
+
   /**
-   * @description Constructor del componente PasoTresComponent.
-   * @param router - Inyecta el servicio Router para la navegación.
-   * @param tramiteFolioServices - Inyecta el servicio TramiteFolioService para obtener los datos del trámite.
-   * @param tramiteStore - Inyecta el store TramiteFolioStore para manejar el estado del trámite.
+   * Constructor del componente PasoTresComponent.
+   * router - Inyecta el servicio Router para la navegación.
+   * tramiteFolioServices - Inyecta el servicio TramiteFolioService para obtener los datos del trámite.
+   *  tramiteStore - Inyecta el store TramiteFolioStore para manejar el estado del trámite.
    */
   constructor(
     private router: Router,
@@ -43,7 +52,7 @@ export class PasoTresComponent implements OnInit {
 
   /**
    * Maneja el evento para obtener la firma y realiza acciones adicionales.
-   * @param ev - La cadena de texto que representa la firma obtenida.
+   *  ev - La cadena de texto que representa la firma obtenida.
    */
   obtieneFirma(ev: string): void {
     const FIRMA: string = ev;
@@ -95,7 +104,7 @@ export class PasoTresComponent implements OnInit {
   }
 
   /**
-   * @description Datos simulados para la firma del trámite.
+   *   Datos simulados para la firma del trámite.
    * Estos datos simulan la estructura de una firma digital para el trámite 5701.
    */
   private datosFirmaSimulada = {
