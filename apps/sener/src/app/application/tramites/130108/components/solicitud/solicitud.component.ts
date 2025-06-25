@@ -31,13 +31,21 @@ import solicitudeSelectVal from '@libs/shared/theme/assets/json/130108/solicitud
 
 import nicoCatalogoVal from '@libs/shared/theme/assets/json/130108/nico.json';
 
+// Para el selector del componente, agregar:
+/**
+ * @selector app-solicitud
+ * @description Selector del componente de solicitud para exportación de minerales de hierro
+ */
+
+// Para las propiedades del decorador @Component, agregar:
+/**
+ * @template ./solicitud.component.html
+ * @description Plantilla HTML del componente de solicitud
+ */
 
 /**
- * Componente de Solicitud para gestionar la solicitud de exportación de minerales de hierro.
- * Este componente permite la creación, edición y visualización de la solicitud.
- * 
- * @example
- * <app-solicitud></app-solicitud>
+ * @styleUrl ./solicitud.component.scss
+ * @description Estilos SCSS específicos del componente de solicitud
  */
 @Component({
   selector: 'app-solicitud',
@@ -1005,16 +1013,20 @@ tituloParte = TITULO_ORIGEN;
     return disabled;
   }
 
-  /**
-  * Se ejecuta cuando el componente o servicio es destruido.
-  * 
-  * Este método es parte del ciclo de vida de un componente de Angular. Se utiliza para liberar recursos y evitar
-  * fugas de memoria, cancelando observables o tareas que ya no son necesarias una vez que el componente ha sido destruido.
-  * En este caso, se emite un valor a través de `destroyed$` y se completa el observable, lo que indica que el 
-  * componente ya no necesita estar suscrito o escuchar cambios.
-  * 
-  * @returns {void}
-  */
+ /**
+ * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
+ * Se encarga de limpiar las suscripciones activas para evitar fugas de memoria.
+ * Emite un valor en el Subject `destroyed$` y lo completa para notificar a todos
+ * los observables suscritos que deben cancelar sus suscripciones.
+ * 
+ * @method ngOnDestroy
+ * @implements {OnDestroy}
+ * @returns {void}
+ * 
+ * @example
+ * // Este método se ejecuta automáticamente cuando Angular destruye el componente
+ * // No es necesario llamarlo manualmente
+ */
   ngOnDestroy(): void {
     // Emite un valor indicando que el componente ha sido destruido
     this.destroyed$.next();

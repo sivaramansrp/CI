@@ -150,4 +150,5 @@ describe('SolicitudComponent', () => {
     expect(spyNext).toHaveBeenCalled();
     expect(spyComplete).toHaveBeenCalled();
   });
+  
 });
