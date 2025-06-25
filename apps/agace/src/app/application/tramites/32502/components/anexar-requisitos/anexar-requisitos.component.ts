@@ -1,11 +1,10 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @nx/enforce-module-boundaries */
 import { CommonModule } from '@angular/common';
 
 import { CatalogoSelectComponent, TEXTOS } from '@ng-mf/data-access-user';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { AlertComponent } from '@ng-mf/data-access-user';
+// eslint-disable-next-line @nx/enforce-module-boundaries
 import documentosTable from 'libs/shared/theme/assets/json/32502/anexar.json';
 
 /**
@@ -61,8 +60,8 @@ export class AnexarRequisitosComponent implements OnInit {
    * Inicializa el grupo de formularios `anexarForm` con un único control de formulario `valorSeleccionado`.
    * El control de formulario se inicializa con una cadena vacía como valor predeterminado.
    */
-  anexarEquisitosForm(): void {
-    const GROUP: any = {};
+    anexarEquisitosForm(): void {
+    const GROUP: Record<string, FormControl> = {};
     this.documentos.forEach((_, index) => {
       GROUP['valorSeleccionado' + index] = new FormControl('');
     });
@@ -76,8 +75,9 @@ export class AnexarRequisitosComponent implements OnInit {
    * @param event - El evento de cambio de archivo.
    * @param index - El índice del documento en la lista de documentos.
    */
-  cambioDeArchivo(event: any, index: number): void {
-    const FILE = event.target.files[0]; // Obtener el archivo seleccionado
+  cambioDeArchivo(event: Event, index: number): void {
+    const INPUT = event.target as HTMLInputElement;
+    const FILE = INPUT.files && INPUT.files[0]; // Obtener el archivo seleccionado
     if (FILE) {
       const FILE_URL = URL.createObjectURL(FILE); // Crear una URL para el archivo seleccionado
       this.documentos[index].archivoDisponible.descripcion = FILE.name;

@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
-import { TituloComponent } from '@libs/shared/data-access-user/src';
+import { CancelacionCertificadosService } from '../../services/cancelacionCertificados.service';
 
 import {
   FormBuilder,
@@ -8,14 +8,14 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Subject, map, takeUntil } from 'rxjs';
+import { ReplaySubject, Subject, map, takeUntil } from 'rxjs';
 import {
   Tramite140205State,
   Tramite140205Store,
 } from '../../../../estados/tramites/tramite140205.store';
-import {map, takeUntil} from 'rxjs';
-import { CancelacionCertificadosService } from '../../services/cancelacionCertificados.service';
+
 import { TituloComponent } from '@libs/shared/data-access-user/src';
+
 import { Tramite140205Query } from '../../../../estados/queries/tramite140205.query';
 
 
