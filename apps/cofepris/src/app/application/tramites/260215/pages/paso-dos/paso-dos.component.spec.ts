@@ -42,6 +42,8 @@ describe('PasoDosComponent', () => {
   });
 
   it('should call getTiposDocumentos on ngOnInit', async () => {
+    // Mock getCatalogo to return an observable to avoid undefined error
+    (mockCatalogosService.getCatalogo as jest.Mock).mockReturnValue(of([]));
     const getTiposDocumentosSpy = jest.spyOn(component, 'getTiposDocumentos');
     await component.ngOnInit();
     expect(getTiposDocumentosSpy).toHaveBeenCalled();
