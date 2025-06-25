@@ -1,9 +1,9 @@
-import { Component, ViewChild } from '@angular/core';
 import { BtnContinuarComponent, DatosPasos } from '@ng-mf/data-access-user';
+import { Component, ViewChild } from '@angular/core';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { PASOS } from './../../constants/avios-procesos.enum';
-import { WizardComponent } from '@ng-mf/data-access-user';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
+import { WizardComponent } from '@ng-mf/data-access-user';
 interface AccionBoton {
   accion: string;
   valor: number;

@@ -78,6 +78,7 @@ export class AgregarProveedorContenedoraComponent implements OnInit, OnDestroy,A
    */
   updateProveedorTablaDatos(event: Proveedor[]): void {
     this.tramite240321Store.updateProveedorTablaDatos(event);
+      this.cerrar.emit();
   }
   /**
    * @method actualizaExistenteEnProveedorDatos
