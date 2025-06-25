@@ -39,3 +39,43 @@ export interface DetallesDelMercancia {
      */
     numeroDeSerie: string;
 }
+
+
+/**
+ *  Representa los datos del formulario de certificado de origen.
+  *  @interface FormularioCertificadoOrigen
+  */ 
+export interface RespuestaConsulta {
+  success: boolean;
+  datos: ConsultaDatos;
+  message: string;
+}
+
+/**
+ *  Representa los datos de la consulta del certificado de origen.
+ *  @interface ConsultaDatos
+  */
+export interface ConsultaDatos {
+ aduana: string;
+nombre: string;
+tipoMercancia: string;
+usoEspecifico: string;
+condicion: string;
+marca: string;
+ano: string;
+modelo: string;
+serie: string;
+manifesto: string;
+calle: string;
+numeroExterior: string;
+numeroInterior: string;
+telefono: string;
+correoElectronico: string;
+pais: string;
+codigoPostal: string;
+estado: string;
+colonia: string;
+opcion: boolean;
+folioOriginal: string;
+justificacionDelDesistimiento: string;
+  }

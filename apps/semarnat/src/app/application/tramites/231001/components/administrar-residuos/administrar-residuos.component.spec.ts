@@ -1,61 +1,67 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { AdministrarResiduosComponent } from './administrar-residuos.component';
-import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule } from '@angular/forms';
-import { TableComponent } from '../../../../shared/components/table/table.component';
-import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
-import administrarResiduosMesa from '../../../../../assets/json/231001/administrar-residuos-mesa.json';
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { AdministrarResiduosService } from '../../services/administrar-residuos.service';
+import { of, Subject } from 'rxjs';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 
 describe('AdministrarResiduosComponent', () => {
   let component: AdministrarResiduosComponent;
   let fixture: ComponentFixture<AdministrarResiduosComponent>;
+  let mockService: any;
+  let mockQuery: any;
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [CommonModule, ReactiveFormsModule, TituloComponent, TableComponent, AdministrarResiduosComponent]
-    })
-    .compileComponents();
-  });
+    mockService = {
+      getAdministrarResiduos: jest.fn().mockReturnValue(of({
+        tableHeader: ['Col1', 'Col2'],
+        tableBody: [{ tbodyData: ['A', 'B'] }]
+      }))
+    };
 
-  beforeEach(() => {
+    mockQuery = {
+      selectConsultaioState$: of({ readonly: true })
+    };
+
+    await TestBed.configureTestingModule({
+      imports: [ReactiveFormsModule,AdministrarResiduosComponent],
+      declarations: [],
+      providers: [
+        FormBuilder,
+        { provide: AdministrarResiduosService, useValue: mockService },
+        { provide: ConsultaioQuery, useValue: mockQuery }
+      ]
+    }).compileComponents();
+
     fixture = TestBed.createComponent(AdministrarResiduosComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('should create the component', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize tableHeaderData and tableBodyData on getEstablecimiento', () => {
-    component.getEstablecimiento();
-    expect(component.tableHeaderData).toEqual(administrarResiduosMesa.tableHeader);
-    expect(component.tableBodyData).toEqual(administrarResiduosMesa.tableBody);
+  it('should initialize form in ngOnInit', () => {
+    expect(component.formularioParaRecuentoTotal).toBeDefined();
+    expect(component.formularioParaRecuentoTotal.get('recuentoTotalDeFilas')).toBeDefined();
   });
 
-  it('should create formForTotalCount on formularioTotalCount', () => {
-    component.formularioTotalCount();
-    expect(component.formForTotalCount).toBeTruthy();
-    expect(component.formForTotalCount.get('recuentoTotalDeFilas')).toBeTruthy();
+  it('should set esFormularioSoloLectura from query', () => {
+    expect(component.esFormularioSoloLectura).toBe(false);
   });
 
-  it('should update recuentoTotalDeFilas on actualizarRecuentoTotalDeFilas', () => {
-    component.tableBodyData = administrarResiduosMesa.tableBody;
-    component.formularioTotalCount();
-    component.actualizarRecuentoTotalDeFilas();
-    expect(component.formForTotalCount.get('recuentoTotalDeFilas')?.value).toBe(component.tableBodyData.length);
+  it('should load table data and update row count', () => {
+    component.loadAdministrarResiduos();
+    expect(component.getEstablecimientoTableData.tableHeader).toEqual(['Col1', 'Col2']);
+    expect(component.tableHeaderData).toEqual(['Col1', 'Col2']);
+    expect(component.tableBodyData).toEqual([{ tbodyData: ['A', 'B'] }]);
+    expect(component.formularioParaRecuentoTotal.get('recuentoTotalDeFilas')?.value).toBe(1);
   });
 
-  it('should call getEstablecimiento, formularioTotalCount, and actualizarRecuentoTotalDeFilas on ngOnInit', () => {
-    spyOn(component, 'getEstablecimiento').and.callThrough();
-    spyOn(component, 'formularioTotalCount').and.callThrough();
-    spyOn(component, 'actualizarRecuentoTotalDeFilas').and.callThrough();
-
-    component.ngOnInit();
-
-    expect(component.getEstablecimiento).toHaveBeenCalled();
-    expect(component.formularioTotalCount).toHaveBeenCalled();
-    expect(component.actualizarRecuentoTotalDeFilas).toHaveBeenCalled();
+  it('should clean up subscriptions on destroy', () => {
+    const spy = jest.spyOn((component as any).destroyed$, 'next');
+    component.ngOnDestroy();
+    expect(spy).toHaveBeenCalled();
   });
 });

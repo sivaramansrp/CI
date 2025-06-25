@@ -14,6 +14,9 @@ describe('DescripcionCupoComponent', () => {
 
     fixture = TestBed.createComponent(DescripcionCupoComponent);
     component = fixture.componentInstance;
+    component.consultaState = {
+      readonly: false,
+    } as any;
     fixture.detectChanges();
   });
 

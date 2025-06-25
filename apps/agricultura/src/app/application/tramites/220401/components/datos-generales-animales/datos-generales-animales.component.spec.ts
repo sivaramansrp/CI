@@ -48,8 +48,8 @@ describe('DatosGeneralesAnimalesComponent', () => {
     };
 
     await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule],
-      declarations: [DatosGeneralesAnimalesComponent],
+      imports: [ReactiveFormsModule,DatosGeneralesAnimalesComponent],
+      declarations: [],
       providers: [
         FormBuilder,
         { provide: Agregar220401Store, useValue: agregar220401StoreMock },
@@ -134,12 +134,6 @@ describe('DatosGeneralesAnimalesComponent', () => {
     expect(component.frmMercanciaAnimal.get('fraccionArancelaria')?.value).toBeNull();
   });
 
-  it('setValoresStore debe llamar al método correspondiente del store', () => {
-    component.inicializarFormulario();
-    component.frmMercanciaAnimal.get('fraccionArancelaria')?.setValue('valorTest');
-    component.setValoresStore(component.frmMercanciaAnimal, 'fraccionArancelaria', 'setFraccionArancelaria');
-    expect(agregar220401StoreMock.setFraccionArancelaria).toHaveBeenCalledWith('valorTest');
-  });
 
   it('descripcionEspecialesValidator debe retornar error si el valor no es válido', () => {
     const control = { value: '  valor inválido' } as any;

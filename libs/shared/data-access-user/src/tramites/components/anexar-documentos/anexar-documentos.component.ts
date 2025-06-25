@@ -171,19 +171,21 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
   ) { }
 
   ngOnInit(): void {
-  
+  if (this.cargaArchivosEvento) {
     this.cargaArchivosEvento
       .pipe(takeUntil(this.destroyNotifier$),
         map(() => this.confirmUpload())
       )
       .subscribe();
-
-    this.regresarSeccionCargarDocumentoEvento
-      .pipe(takeUntil(this.destroyNotifier$),
-        map(() => this.mostrarSeccionCargaArchivosAccion())
-      )
-      .subscribe();
-
+  }
+    
+  if (this.regresarSeccionCargarDocumentoEvento) {
+      this.regresarSeccionCargarDocumentoEvento
+        .pipe(takeUntil(this.destroyNotifier$),
+          map(() => this.mostrarSeccionCargaArchivosAccion())
+        )
+        .subscribe();
+  }
   }
 
   /**

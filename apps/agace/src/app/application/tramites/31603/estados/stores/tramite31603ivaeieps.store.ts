@@ -493,7 +493,7 @@ export class Tramite31603IvaeiepsStore extends Store<Solicitud31603IvaeiepsState
  * Establece el estado de indiqueCheck.
  * @param indiqueCheck - El valor de indiqueCheck.
  */
-public setIndiqueCheck(indiqueCheck: boolean) {
+public setIndiqueCheck(indiqueCheck: boolean): void {
     this.update((state) => ({
         ...state,
         indiqueCheck,
@@ -504,7 +504,7 @@ public setIndiqueCheck(indiqueCheck: boolean) {
  * Establece el estado de resigtro.
  * @param resigtro - El valor de resigtro.
  */
-public setResigtro(resigtro: string) {
+public setResigtro(resigtro: string): void {
     this.update((state) => ({
         ...state,
         resigtro,
@@ -515,7 +515,7 @@ public setResigtro(resigtro: string) {
  * Establece el estado de telefono.
  * @param telefono - El valor de telefono.
  */
-public setTelefono(telefono: string) {
+public setTelefono(telefono: string): void{
     this.update((state) => ({
         ...state,
         telefono,
@@ -526,7 +526,7 @@ public setTelefono(telefono: string) {
  * Establece el estado de correo.
  * @param correo - El valor de correo.
  */
-public setCorreo(correo: string) {
+public setCorreo(correo: string): void {
     this.update((state) => ({
         ...state,
         correo,
@@ -537,7 +537,7 @@ public setCorreo(correo: string) {
  * Establece el estado de manifieste.
  * @param manifieste - El valor de manifieste.
  */
-public setManifieste(manifieste: string) {
+public setManifieste(manifieste: string): void {
     this.update((state) => ({
         ...state,
         manifieste,
@@ -548,7 +548,7 @@ public setManifieste(manifieste: string) {
  * Establece el estado de indiqueIva.
  * @param indiqueIva - El valor de indiqueIva.
  */
-public setIndiqueIva(indiqueIva: string) {
+public setIndiqueIva(indiqueIva: string): void {
     this.update((state) => ({
         ...state,
         indiqueIva,
@@ -559,7 +559,7 @@ public setIndiqueIva(indiqueIva: string) {
  * Establece el estado de empleados.
  * @param empleados - El valor de empleados.
  */
-public setEmpleados(empleados: boolean) {
+public setEmpleados(empleados: boolean): void {
     this.update((state) => ({
         ...state,
         empleados,
@@ -570,7 +570,7 @@ public setEmpleados(empleados: boolean) {
  * Establece el estado de infraestructura.
  * @param infraestructura - El valor de infraestructura.
  */
-public setInfraestructura(infraestructura: boolean) {
+public setInfraestructura(infraestructura: boolean): void {
     this.update((state) => ({
         ...state,
         infraestructura,
@@ -581,7 +581,7 @@ public setInfraestructura(infraestructura: boolean) {
  * Establece el estado de monto.
  * @param monto - El valor de monto.
  */
-public setMonto(monto: boolean) {
+public setMonto(monto: boolean): void {
     this.update((state) => ({
         ...state,
         monto,
@@ -592,7 +592,7 @@ public setMonto(monto: boolean) {
  * Establece el estado de antiguedad.
  * @param antiguedad - El valor de antiguedad.
  */
-public setAntiguedad(antiguedad: boolean) {
+public setAntiguedad(antiguedad: boolean): void {
     this.update((state) => ({
         ...state,
         antiguedad,
@@ -603,7 +603,7 @@ public setAntiguedad(antiguedad: boolean) {
  * Establece el estado de tipoDe.
  * @param tipoDe - El valor de tipoDe.
  */
-public setTipoDe(tipoDe: string) {
+public setTipoDe(tipoDe: string): void {
     this.update((state) => ({
         ...state,
         tipoDe,
@@ -614,7 +614,7 @@ public setTipoDe(tipoDe: string) {
  * Establece el estado de valorPesos.
  * @param valorPesos - El valor de valorPesos.
  */
-public setValorPesos(valorPesos: string) {
+public setValorPesos(valorPesos: string): void {
     this.update((state) => ({
         ...state,
         valorPesos,
@@ -625,7 +625,7 @@ public setValorPesos(valorPesos: string) {
  * Establece el estado de descripcion.
  * @param descripcion - El valor de descripcion.
  */
-public setDescripcion(descripcion: string) {
+public setDescripcion(descripcion: string): void {
     this.update((state) => ({
         ...state,
         descripcion,
@@ -636,7 +636,7 @@ public setDescripcion(descripcion: string) {
  * Establece el estado de haContado.
  * @param haContado - El valor de haContado.
  */
-public setHaContado(haContado: string) {
+public setHaContado(haContado: string): void {
     this.update((state) => ({
         ...state,
         haContado,
@@ -647,7 +647,7 @@ public setHaContado(haContado: string) {
  * Establece el estado de enCasoIva.
  * @param enCasoIva - El valor de enCasoIva.
  */
-public setEnCasoIva(enCasoIva: string) {
+public setEnCasoIva(enCasoIva: string): void {
     this.update((state) => ({
         ...state,
         enCasoIva,
@@ -658,7 +658,7 @@ public setEnCasoIva(enCasoIva: string) {
  * Establece el estado de numeroOperacion.
  * @param numeroOperacion - El valor de numeroOperacion.
  */
-public setNumeroOperacion(numeroOperacion: string) {
+public setNumeroOperacion(numeroOperacion: string): void {
     this.update((state) => ({
         ...state,
         numeroOperacion,
@@ -669,7 +669,7 @@ public setNumeroOperacion(numeroOperacion: string) {
  * Establece el estado de banco.
  * @param banco - El valor de banco.
  */
-public setBanco(banco: string) {
+public setBanco(banco: string): void {
     this.update((state) => ({
         ...state,
         banco,
@@ -680,7 +680,7 @@ public setBanco(banco: string) {
  * Establece el estado de llavePago.
  * @param llavePago - El valor de llavePago.
  */
-public setLlavePago(llavePago: string) {
+public setLlavePago(llavePago: string): void {
     this.update((state) => ({
         ...state,
         llavePago,
@@ -691,7 +691,7 @@ public setLlavePago(llavePago: string) {
  * Establece el estado de importaciones.
  * @param importaciones - El valor de importaciones.
  */
-public setImportaciones(importaciones: string) {
+public setImportaciones(importaciones: string): void{
     this.update((state) => ({
         ...state,
         importaciones,
@@ -702,7 +702,7 @@ public setImportaciones(importaciones: string) {
  * Establece el estado de infraestructuraIndique.
  * @param infraestructuraIndique - El valor de infraestructuraIndique.
  */
-public setInfraestructuraIndique(infraestructuraIndique: string) {
+public setInfraestructuraIndique(infraestructuraIndique: string): void{
     this.update((state) => ({
         ...state,
         infraestructuraIndique,
@@ -713,7 +713,7 @@ public setInfraestructuraIndique(infraestructuraIndique: string) {
  * Establece el estado de ultimosMeses.
  * @param ultimosMeses - El valor de ultimosMeses.
  */
-public setUltimosMeses(ultimosMeses: string) {
+public setUltimosMeses(ultimosMeses: string): void {
     this.update((state) => ({
         ...state,
         ultimosMeses,
@@ -724,7 +724,7 @@ public setUltimosMeses(ultimosMeses: string) {
  * Establece el estado de operacionesmeses.
  * @param operacionesmeses - El valor de operacionesmeses.
  */
-public setOperacionesmeses(operacionesmeses: string) {
+public setOperacionesmeses(operacionesmeses: string): void {
     this.update((state) => ({
         ...state,
         operacionesmeses,
@@ -735,7 +735,7 @@ public setOperacionesmeses(operacionesmeses: string) {
  * Establece el estado de valor.
  * @param valor - El valor de valor.
  */
-public setValor(valor: string) {
+public setValor(valor: string): void {
     this.update((state) => ({
         ...state,
         valor,
@@ -746,7 +746,7 @@ public setValor(valor: string) {
  * Establece el estado de transferencias.
  * @param transferencias - El valor de transferencias.
  */
-public setTransferencias(transferencias: number) {
+public setTransferencias(transferencias: number): void {
     this.update((state) => ({
         ...state,
         transferencias,
@@ -757,7 +757,7 @@ public setTransferencias(transferencias: number) {
  * Establece el estado de transferenciasVir.
  * @param transferenciasVir - El valor de transferenciasVir.
  */
-public setTransferenciasVir(transferenciasVir: number) {
+public setTransferenciasVir(transferenciasVir: number): void {
     this.update((state) => ({
         ...state,
         transferenciasVir,
@@ -768,7 +768,7 @@ public setTransferenciasVir(transferenciasVir: number) {
  * Establece el estado de retornos.
  * @param retornos - El valor de retornos.
  */
-public setRetornos(retornos: number) {
+public setRetornos(retornos: number): void {
     this.update((state) => ({
         ...state,
         retornos,
@@ -779,7 +779,7 @@ public setRetornos(retornos: number) {
  * Establece el estado de retornosSe.
  * @param retornosSe - El valor de retornosSe.
  */
-public setRetornosSe(retornosSe: number) {
+public setRetornosSe(retornosSe: number): void {
     this.update((state) => ({
         ...state,
         retornosSe,
@@ -790,7 +790,7 @@ public setRetornosSe(retornosSe: number) {
  * Establece el estado de constancias.
  * @param constancias - El valor de constancias.
  */
-public setConstancias(constancias: number) {
+public setConstancias(constancias: number): void {
     this.update((state) => ({
         ...state,
         constancias,
@@ -801,7 +801,7 @@ public setConstancias(constancias: number) {
  * Establece el estado de constanciasDe.
  * @param constanciasDe - El valor de constanciasDe.
  */
-public setConstanciasDe(constanciasDe: number) {
+public setConstanciasDe(constanciasDe: number): void {
     this.update((state) => ({
         ...state,
         constanciasDe,
@@ -812,7 +812,7 @@ public setConstanciasDe(constanciasDe: number) {
  * Establece el estado de empleadosPropios.
  * @param empleadosPropios - El valor de empleadosPropios.
  */
-public setEmpleadosPropios(empleadosPropios: string) {
+public setEmpleadosPropios(empleadosPropios: string): void {
     this.update((state) => ({
         ...state,
         empleadosPropios,
@@ -823,7 +823,7 @@ public setEmpleadosPropios(empleadosPropios: string) {
 * Establece el estado de numeroEmpleados.
 * @param numeroEmpleados - El valor de numeroEmpleados.
 */
-public setNumeroEmpleados(numeroEmpleados: number) {
+public setNumeroEmpleados(numeroEmpleados: number): void {
 this.update((state) => ({
     ...state,
     numeroEmpleados,
@@ -834,7 +834,7 @@ this.update((state) => ({
 * Establece el estado de numeroEmpleadosDos.
 * @param numeroEmpleadosDos - El valor de numeroEmpleadosDos.
 */
-public setNumeroEmpleadosDos(numeroEmpleadosDos: number) {
+public setNumeroEmpleadosDos(numeroEmpleadosDos: number): void {
 this.update((state) => ({
     ...state,
     numeroEmpleadosDos,
@@ -845,7 +845,7 @@ this.update((state) => ({
 * Establece el estado de numeroEmpleadosTres.
 * @param numeroEmpleadosTres - El valor de numeroEmpleadosTres.
 */
-public setNumeroEmpleadosTres(numeroEmpleadosTres: number) {
+public setNumeroEmpleadosTres(numeroEmpleadosTres: number): void {
 this.update((state) => ({
     ...state,
     numeroEmpleadosTres,
@@ -856,7 +856,7 @@ this.update((state) => ({
 * Establece el estado de comboBimestresUno.
 * @param comboBimestresUno - El valor de comboBimestresUno.
 */
-public setComboBimestresUno(comboBimestresUno: string) {
+public setComboBimestresUno(comboBimestresUno: string): void {
 this.update((state) => ({
     ...state,
     comboBimestresUno,
@@ -867,7 +867,7 @@ this.update((state) => ({
 * Establece el estado de comboBimestresDos.
 * @param comboBimestresDos - El valor de comboBimestresDos.
 */
-public setComboBimestresDos(comboBimestresDos: string) {
+public setComboBimestresDos(comboBimestresDos: string): void {
 this.update((state) => ({
     ...state,
     comboBimestresDos,
@@ -878,7 +878,7 @@ this.update((state) => ({
 * Establece el estado de comboBimestresTres.
 * @param comboBimestresTres - El valor de comboBimestresTres.
 */
-public setComboBimestresTres(comboBimestresTres: string) {
+public setComboBimestresTres(comboBimestresTres: string): void {
 this.update((state) => ({
     ...state,
     comboBimestresTres,
@@ -889,7 +889,7 @@ this.update((state) => ({
 * Establece el estado de proveedorCumplimiento.
 * @param proveedorCumplimiento - El valor de proveedorCumplimiento.
 */
-public setProveedorCumplimiento(proveedorCumplimiento: string) {
+public setProveedorCumplimiento(proveedorCumplimiento: string): void {
 this.update((state) => ({
     ...state,
     proveedorCumplimiento,
@@ -900,7 +900,7 @@ this.update((state) => ({
 * Establece el estado de declaracionISR.
 * @param declaracionISR - El valor de declaracionISR.
 */
-public setDeclaracionISR(declaracionISR: string) {
+public setDeclaracionISR(declaracionISR: string): void {
 this.update((state) => ({
     ...state,
     declaracionISR,
@@ -911,7 +911,7 @@ this.update((state) => ({
 * Establece el estado de cancelacion.
 * @param cancelacion - El valor de cancelacion.
 */
-public setCancelacion(cancelacion: string) {
+public setCancelacion(cancelacion: string): void {
 this.update((state) => ({
     ...state,
     cancelacion,
@@ -922,7 +922,7 @@ this.update((state) => ({
 * Establece el estado de cumplimientoReglas.
 * @param cumplimientoReglas - El valor de cumplimientoReglas.
 */
-public setCumplimientoReglas(cumplimientoReglas: string) {
+public setCumplimientoReglas(cumplimientoReglas: string): void {
 this.update((state) => ({
     ...state,
     cumplimientoReglas,
@@ -933,7 +933,7 @@ this.update((state) => ({
 * Establece el estado de recintoFiscalizado.
 * @param recintoFiscalizado - El valor de recintoFiscalizado.
 */
-public setRecintoFiscalizado(recintoFiscalizado: string) {
+public setRecintoFiscalizado(recintoFiscalizado: string): void {
 this.update((state) => ({
     ...state,
     recintoFiscalizado,
@@ -944,7 +944,7 @@ this.update((state) => ({
 * Establece el estado de recintoEstrategico.
 * @param recintoEstrategico - El valor de recintoEstrategico.
 */
-public setRecintoEstrategico(recintoEstrategico: string) {
+public setRecintoEstrategico(recintoEstrategico: string): void {
 this.update((state) => ({
     ...state,
     recintoEstrategico,
@@ -955,7 +955,7 @@ this.update((state) => ({
 * Establece el estado de cumplimientoLineamientos.
 * @param cumplimientoLineamientos - El valor de cumplimientoLineamientos.
 */
-public setCumplimientoLineamientos(cumplimientoLineamientos: string) {
+public setCumplimientoLineamientos(cumplimientoLineamientos: string): void {
 this.update((state) => ({
     ...state,
     cumplimientoLineamientos,
@@ -966,7 +966,7 @@ this.update((state) => ({
 * Establece el estado de total.
 * @param total - El valor de total.
 */
-    public setTotal(total: string) {
+    public setTotal(total: string): void {
         this.update((state) => ({
         ...state,
         total,
@@ -976,7 +976,7 @@ this.update((state) => ({
      * Establece el estado de totalDos.
      * @param totalDos - El valor de totalDos.
      */
-    public setTotalDos(totalDos: string) {
+    public setTotalDos(totalDos: string): void {
         this.update((state) => ({
         ...state,
         totalDos,
@@ -986,7 +986,7 @@ this.update((state) => ({
      * Establece el estado de conEmpleados.
      * @param conEmpleados - El valor de conEmpleados.
      */
-    public setConEmpleados(conEmpleados: string) {
+    public setConEmpleados(conEmpleados: string): void {
         this.update((state) => ({
         ...state,
         conEmpleados,
@@ -996,7 +996,7 @@ this.update((state) => ({
      * Establece el estado de indiqueSiLosSocios.
      * @param indiqueSiLosSocios - El valor de indiqueSiLosSocios.
      */
-    public setIndiqueSiLosSocios(indiqueSiLosSocios: string) {
+    public setIndiqueSiLosSocios(indiqueSiLosSocios: string): void {
         this.update((state) => ({
         ...state,
         indiqueSiLosSocios,
