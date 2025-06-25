@@ -36,7 +36,11 @@
 
 
     <div class=" text-end mt-5">
-        <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura">Modificar tratado</button>
+       <button class="btn btn-default me-2"
+        [disabled]="esFormularioSoloLectura"
+        (click)="modificarTratado()">
+  Modificar tratado
+</button>
         <button class="btn btn-primary"
           [disabled]="esFormularioSoloLectura"
           (click)="eliminarTratado()">
