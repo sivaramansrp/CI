@@ -1,3 +1,45 @@
+jest.mock('@libs/shared/theme/assets/json/221602/realizar.json', () => ({
+  __esModule: true,
+  default: {
+    exportador: [
+      {
+        nombreDenominacionORazonSocial: 'dfdfsd',
+        telefono: '---',
+        correoElectronico: '---',
+        domicilio: 'dfgdfgfd',
+        pais: 'BELICE'
+      }
+    ],
+    destinatario: [
+      {
+        nombreDenominacionORazonSocial: 'ADVICS MANUFACTURING MEXICO S DE R.L. DE C.V.',
+        telefono: '555-3456789',
+        correoElectronico: 'nose@gmail.com',
+        calle: 'Av. Cazcanes',
+        numeroExterior: '2210',
+        numeroInterior: '',
+        pais: 'MEXICO (ESTADOS UNIDOS MEXICANOS)',
+        colonia: 'COLINAS DE LAGOS',
+        municipioOAlcaldia: 'LAGOS DE MORENO',
+        entidadFederativa: 'JALISCO',
+        codigoPostal: '47515'
+      }
+    ],
+    pais: [
+      { id: 'MEX', descripcion: 'MÉXICO' }
+    ],
+    estado: [
+      { id: 'JAL', descripcion: 'Jalisco' },
+      { id: 'CDMX', descripcion: 'Ciudad de México' }
+    ],
+    municipio: [
+      { id: 'LAGOS', descripcion: 'Lagos de Moreno' }
+    ],
+    colonia: [
+      { id: 'COLINAS', descripcion: 'Colinas de Lagos' }
+    ]
+  }
+}), { virtual: true });
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { TercerosComponent } from './terceros.component';
 import { TituloComponent, TablaDinamicaComponent, AlertComponent } from '@libs/shared/data-access-user/src';
@@ -43,7 +85,7 @@ describe('TercerosComponent', () => {
   });
 
   it('should have the correct configuracionTabla for exportador', () => {
-    expect(component.configuracionTabla.length).toBe(4);
+    expect(component.configuracionTabla.length).toBe(5);
     expect(component.configuracionTabla[0].encabezado).toBe('Nombre/denominación o razón social');
     expect(component.configuracionTabla[1].encabezado).toBe('Teléfono');
     expect(component.configuracionTabla[2].encabezado).toBe('Correo electrónico');

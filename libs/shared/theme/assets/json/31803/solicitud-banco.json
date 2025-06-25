@@ -1,0 +1,14 @@
+{
+  "numeroOperacion": "123456",
+  "monedaNacional": "EUR",
+  "banco": [
+    { "id": 0, "descripcion": "CITIBANK" },
+    { "id": 1, "descripcion": "GRUPO FINANCIERO MONEX" },
+    { "id": 2, "descripcion": "HSBC" },
+    { "id": 3, "descripcion": "INBURSA" }
+  ],
+  "llave": "ABC123XYZ",
+  "manifiesto1": "1234567890",
+  "manifiesto2": "0987654321",
+  "fechaPago": "2025-06-12"
+}

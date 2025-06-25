@@ -45,130 +45,99 @@ describe('MercanciasComponent', () => {
       FIXTURE.detectChanges();
     });
   
-    // ...pruebas existentes...
-  });  
-  let MOCK_MODIFICACION_PERMISO_IMPORTACION_MEDICAMENTOS_SERVICE: {getMercanciasData:jest.Mock};
-  let MOCK_DATOS_PROCEDURE_STORE: {selectProrroga:jest.Mock};
-  let MOCK_DATOS_PROCEDURE_QUERY: {selectProrroga:jest.Mock};
+    it('DEBERÍA CREAR EL COMPONENTE', () => {
+      expect(COMPONENTE).toBeTruthy();
+    });
 
-  beforeEach(async () => {
-    MOCK_MODIFICACION_PERMISO_IMPORTACION_MEDICAMENTOS_SERVICE = {
-      getMercanciasData: jest.fn().mockReturnValue(of([])),
-    };
-    MOCK_DATOS_PROCEDURE_STORE = {
-      selectProrroga: jest.fn(),
-    };
-    MOCK_DATOS_PROCEDURE_QUERY = {
-      selectProrroga: jest.fn().mockReturnValue(of({ aduanas: 'Aduana de Prueba' })),
-    };
+    it('DEBERÍA INICIALIZAR EL FORMULARIO EN NGONINIT', () => {
+      const CREAR_FORMULARIO_SPY = jest.spyOn(COMPONENTE, 'crearFormulario');
+      COMPONENTE.ngOnInit();
+      expect(CREAR_FORMULARIO_SPY).toHaveBeenCalled();
+      expect(COMPONENTE.Aduana).toBeDefined();
+    });
 
-    await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule, MercanciasComponent],
-      providers: [
-        FormBuilder,
-        { provide: ModificacionPermisoImportacionMedicamentosService, useValue: MOCK_MODIFICACION_PERMISO_IMPORTACION_MEDICAMENTOS_SERVICE },
-        { provide: DatosProcedureStore, useValue: MOCK_DATOS_PROCEDURE_STORE },
-        { provide: DatosProcedureQuery, useValue: MOCK_DATOS_PROCEDURE_QUERY },
-      ],
-    }).compileComponents();
+    it('DEBERÍA LLAMAR A MERCANCIASDATA EN NGONINIT', () => {
+      const MERCANCIAS_DATA_SPY = jest.spyOn(COMPONENTE, 'mercanciasData');
+      COMPONENTE.ngOnInit();
+      expect(MERCANCIAS_DATA_SPY).toHaveBeenCalled();
+    });
 
-    FIXTURE = TestBed.createComponent(MercanciasComponent);
-    COMPONENTE = FIXTURE.componentInstance;
-    FIXTURE.detectChanges();
-  });
+    it('DEBERÍA ESTABLECER SECCIONSTATE DESDE QUERY.SELECTPRORROGA$', () => {
+      COMPONENTE.ngOnInit();
+    });
 
-  it('debería crear el componente', () => {
-    expect(COMPONENTE).toBeTruthy();
-  });
+    it('DEBERÍA LLAMAR A GETMERCANCIASDATA Y ESTABLECER MERCANCIASDATA', () => {
+      const MOCK_RESPONSE = [{ clasificacionDelProducto: 'Prueba' }];
+      MOCK_MODIFICACION_PERMISO_IMPORTACION_MEDICAMENTOS_SERVICE.getMercanciasData.mockReturnValue(of(MOCK_RESPONSE));
 
-  it('debería inicializar el formulario en ngOnInit', () => {
-    const CREAR_FORMULARIO_SPY = jest.spyOn(COMPONENTE, 'crearFormulario');
-    COMPONENTE.ngOnInit();
-    expect(CREAR_FORMULARIO_SPY).toHaveBeenCalled();
-    expect(COMPONENTE.Aduana).toBeDefined();
-  });
+      COMPONENTE.mercanciasData();
+      expect(MOCK_MODIFICACION_PERMISO_IMPORTACION_MEDICAMENTOS_SERVICE.getMercanciasData).toHaveBeenCalled();
+      expect(COMPONENTE.mercanciasDatas).toEqual(MOCK_RESPONSE);
+    });
 
-  it('debería llamar a mercanciasData en ngOnInit', () => {
-    const MERCANCIAS_DATA_SPY = jest.spyOn(COMPONENTE, 'mercanciasData');
-    COMPONENTE.ngOnInit();
-    expect(MERCANCIAS_DATA_SPY).toHaveBeenCalled();
-  });
+    it('DEBERÍA INICIALIZAR EL FORMULARIO EN CREARFORMULARIO', () => {
+      COMPONENTE.crearFormulario();
+      expect(COMPONENTE.Aduana.value).toEqual({ Aduana: { aduanas: 'Aduana de Prueba' } });
+    });
 
-  it('debería establecer seccionState desde query.selectProrroga$', () => {
-    COMPONENTE.ngOnInit();
-  });
+    it('DEBERÍA TENER LA CONFIGURACIÓN CORRECTA DE LA TABLA', () => {
+      expect(COMPONENTE.configuracionTabla).toBeDefined();
+      expect(COMPONENTE.configuracionTabla.length).toBe(7);
+      expect(COMPONENTE.configuracionTabla[0].encabezado).toBe('Clasificación del producto ');
+    });
 
-  it('debería llamar a getMercanciasData y establecer Mercanciasdata', () => {
-    const MOCK_RESPONSE = [{ clasificacionDelProducto: 'Prueba' }];
-    MOCK_MODIFICACION_PERMISO_IMPORTACION_MEDICAMENTOS_SERVICE.getMercanciasData.mockReturnValue(of(MOCK_RESPONSE));
+    it('DEBERÍA DESTRUIR LAS SUSCRIPCIONES AL DESTRUIR EL COMPONENTE', () => {
+      const DESTROY_SPY = jest.spyOn(COMPONENTE['destroy$'], 'next');
+      const COMPLETE_SPY = jest.spyOn(COMPONENTE['destroy$'], 'complete');
 
-    COMPONENTE.mercanciasData();
-    expect(MOCK_MODIFICACION_PERMISO_IMPORTACION_MEDICAMENTOS_SERVICE.getMercanciasData).toHaveBeenCalled();
-    expect(COMPONENTE.mercanciasDatas).toEqual(MOCK_RESPONSE);
-  });
+      COMPONENTE.ngOnDestroy();
 
-  it('debería inicializar el formulario en crearFormulario', () => {
-    COMPONENTE.crearFormulario();
-    expect(COMPONENTE.Aduana.value).toEqual({ Aduana: { aduanas: 'Aduana de Prueba' } });
-  });
+      expect(DESTROY_SPY).toHaveBeenCalledWith();
+      expect(COMPLETE_SPY).toHaveBeenCalled();
+    });
 
-  it('debería tener la configuración correcta de la tabla', () => {
-    expect(COMPONENTE.configuracionTabla).toBeDefined();
-    expect(COMPONENTE.configuracionTabla.length).toBe(7);
-    expect(COMPONENTE.configuracionTabla[0].encabezado).toBe('Clasificación del producto ');
-  });
+    it('DEBERÍA TENER LOS VALORES PREDETERMINADOS CORRECTOS', () => {
+      expect(COMPONENTE.TablaSeleccion).toBe(TablaSeleccion.CHECKBOX);
+      expect(COMPONENTE.mercanciasDatas).toEqual([]);
+    });
 
-  it('debería destruir las suscripciones al destruir el componente', () => {
-    const DESTROY_SPY = jest.spyOn(COMPONENTE['destroy$'], 'next');
-    const COMPLETE_SPY = jest.spyOn(COMPONENTE['destroy$'], 'complete');
+    it('DEBERÍA MANEJAR ERRORES EN GETMERCANCIASDATA CORRECTAMENTE', () => {
+      const ERROR = new Error('Error de prueba');
+      MOCK_MODIFICACION_PERMISO_IMPORTACION_MEDICAMENTOS_SERVICE.getMercanciasData.mockReturnValue(of(() => { throw ERROR; }));
 
-    COMPONENTE.ngOnDestroy();
+      expect(() => COMPONENTE.mercanciasData()).not.toThrow();
+    });
 
-    expect(DESTROY_SPY).toHaveBeenCalledWith();
-    expect(COMPLETE_SPY).toHaveBeenCalled();
-  });
+    it('DEBERÍA ACTUALIZAR SECCIONSTATE CORRECTAMENTE CUANDO QUERY EMITE UN NUEVO VALOR', () => {
+      const NEW_VALUE = { aduanas: 'Aduana Actualizada' };
+      MOCK_DATOS_PROCEDURE_QUERY.selectProrroga.mockReturnValue(of(NEW_VALUE));
+      COMPONENTE.ngOnInit();
+    });
 
-  it('debería tener los valores predeterminados correctos', () => {
-    expect(COMPONENTE.TablaSeleccion).toBe(TablaSeleccion.CHECKBOX);
-    expect(COMPONENTE.mercanciasDatas).toEqual([]);
-  });
+    it('DEBERÍA DESUSCRIBIRSE DE LOS OBSERVABLES EN NGONDESTROY', () => {
+      const DESTROY_SPY = jest.spyOn(COMPONENTE['destroy$'], 'next');
+      const COMPLETE_SPY = jest.spyOn(COMPONENTE['destroy$'], 'complete');
+      COMPONENTE.ngOnDestroy();
+      expect(DESTROY_SPY).toHaveBeenCalledWith();
+      expect(COMPLETE_SPY).toHaveBeenCalled();
+    });
 
-  it('debería manejar errores en getMercanciasData correctamente', () => {
-    const ERROR = new Error('Error de prueba');
-    MOCK_MODIFICACION_PERMISO_IMPORTACION_MEDICAMENTOS_SERVICE.getMercanciasData.mockReturnValue(of(() => { throw ERROR; }));
+    it('DEBERÍA INICIALIZAR CONFIGURACIONTABLA CORRECTAMENTE', () => {
+      expect(COMPONENTE.configuracionTabla).toBeDefined();
+      expect(COMPONENTE.configuracionTabla.length).toBeGreaterThan(0);
+    });
 
-    expect(() => COMPONENTE.mercanciasData()).not.toThrow();
-  });
+    it('DEBERÍA VALIDAR LOS CONTROLES DEL FORMULARIO CORRECTAMENTE', () => {
+      COMPONENTE.crearFormulario(); 
+      const CONTROL = COMPONENTE.Aduana.get('Aduana');
+      CONTROL?.setValue('Aduana Válida');
+      expect(CONTROL?.valid).toBeTruthy();
+    });
 
-  it('debería actualizar seccionState correctamente cuando query emite un nuevo valor', () => {
-    const NEW_VALUE = { aduanas: 'Aduana Actualizada' };
-    MOCK_DATOS_PROCEDURE_QUERY.selectProrroga.mockReturnValue(of(NEW_VALUE));
-    COMPONENTE.ngOnInit();
-  });
-
-  it('debería desuscribirse de los observables en ngOnDestroy', () => {
-    const DESTROY_SPY = jest.spyOn(COMPONENTE['destroy$'], 'next');
-    const COMPLETE_SPY = jest.spyOn(COMPONENTE['destroy$'], 'complete');
-    COMPONENTE.ngOnDestroy();
-    expect(DESTROY_SPY).toHaveBeenCalledWith();
-    expect(COMPLETE_SPY).toHaveBeenCalled();
-  });
-
-  it('debería inicializar configuracionTabla correctamente', () => {
-    expect(COMPONENTE.configuracionTabla).toBeDefined();
-    expect(COMPONENTE.configuracionTabla.length).toBeGreaterThan(0);
-  });
-
-  it('debería validar los controles del formulario correctamente', () => {
-    COMPONENTE.crearFormulario(); 
-    const CONTROL = COMPONENTE.Aduana.get('Aduana');
-    CONTROL?.setValue('Aduana Válida');
-    expect(CONTROL?.valid).toBeTruthy();
-  });
-
-  it('debería manejar respuesta vacía de getMercanciasData', () => {
-    MOCK_MODIFICACION_PERMISO_IMPORTACION_MEDICAMENTOS_SERVICE.getMercanciasData.mockReturnValue(of([]));
-    COMPONENTE.mercanciasData();
-    expect(COMPONENTE.mercanciasDatas).toEqual([]);
+    it('DEBERÍA MANEJAR RESPUESTA VACÍA DE GETMERCANCIASDATA', () => {
+      MOCK_MODIFICACION_PERMISO_IMPORTACION_MEDICAMENTOS_SERVICE.getMercanciasData.mockReturnValue(of([]));
+      COMPONENTE.mercanciasData();
+      expect(COMPONENTE.mercanciasDatas).toEqual([]);
+    });
   });
 });

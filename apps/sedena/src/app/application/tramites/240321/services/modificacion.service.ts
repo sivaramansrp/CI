@@ -12,8 +12,8 @@ import { Tramite240321State } from "../estados/tramite240321Store.store";
 
 /**
  * @class ModificacionService
- * @description Service to handle data retrieval for "DestinoFinal" and "Proveedor" entities.
- * This service fetches data from local JSON files and provides it as observables.
+ * @description Servicio para manejar la obtención de datos de las entidades "DestinoFinal" y "Proveedor".
+ * Este servicio obtiene datos de archivos JSON locales y los proporciona como observables.
  */
 @Injectable({
   providedIn: 'root',
@@ -21,20 +21,20 @@ import { Tramite240321State } from "../estados/tramite240321Store.store";
 export class ModificacionService {
   /**
    * @private
-   * @property {string} apiUrl - Base URL for accessing the JSON files containing the data.
+   * @property {string} apiUrl - URL base para acceder a los archivos JSON que contienen los datos.
    */
   private apiUrl = 'assets/json/240321/';
 
   /**
    * @constructor
-   * @param {HttpClient} http - Angular's HTTP client for making HTTP requests.
+   * @param {HttpClient} http - Cliente HTTP de Angular para realizar solicitudes HTTP.
    */
   constructor(private http: HttpClient) {}
 
   /**
    * @method getDestinatariosFinales
-   * @description Fetches the list of "DestinoFinal" entities from a JSON file.
-   * @returns {Observable<DestinoFinalRespuesta>} Observable emitting the response containing "DestinoFinal" data.
+   * @description Obtiene la lista de entidades "DestinoFinal" desde un archivo JSON.
+   * @returns {Observable<DestinoFinalRespuesta>} Observable que emite la respuesta con los datos de "DestinoFinal".
    */
   getDestinatariosFinales(): Observable<DestinoFinalRespuesta> {
     return this.http.get<DestinoFinalRespuesta>(`${this.apiUrl}destino-final.json`)
@@ -43,17 +43,17 @@ export class ModificacionService {
 
   /**
    * @method getProveedores
-   * @description Fetches the list of "Proveedor" entities from a JSON file.
-   * @returns {Observable<ProveedorRespuesta>} Observable emitting the response containing "Proveedor" data.
+   * @description Obtiene la lista de entidades "Proveedor" desde un archivo JSON.
+   * @returns {Observable<ProveedorRespuesta>} Observable que emite la respuesta con los datos de "Proveedor".
    */
   getProveedores(): Observable<ProveedorRespuesta> {
     return this.http.get<ProveedorRespuesta>(`${this.apiUrl}proveedor.json`)
       .pipe(map((res) => res));
   }
-   /**
+  /**
    * @method getProveedores
-   * @description Fetches the list of "Proveedor" entities from a JSON file.
-   * @returns {Observable<ProveedorRespuesta>} Observable emitting the response containing "Proveedor" data.
+   * @description Obtiene la lista de entidades "Proveedor" desde un archivo JSON.
+   * @returns {Observable<ProveedorRespuesta>} Observable que emite la respuesta con los datos de "Proveedor".
    */
   getTrimateState240321(): Observable<Tramite240321State> {
     return this.http.get<Tramite240321State>(`${this.apiUrl}tramateState240321.json`)

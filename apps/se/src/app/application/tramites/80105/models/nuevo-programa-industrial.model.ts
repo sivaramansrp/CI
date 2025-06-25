@@ -135,3 +135,20 @@ export interface AnnexoUno{
   datosParaNavegar:AnexoUnoEncabezado | AnexoDosEncabezado ;
   seccionActiva: string;
 }
+
+export interface AmpliacionServiciosData {
+  idsubmanufacturer: string;
+  infoServicios: InfoServicios;
+}
+
+export interface AmpliacionServiciosResponse {
+  code: number;
+  data: AmpliacionServiciosData;
+}
+
+export interface AmpliacionImmexDropdownItem {
+  id: number;
+  descripcion: string;
+  tipode: string;
+  value: string;
+}
