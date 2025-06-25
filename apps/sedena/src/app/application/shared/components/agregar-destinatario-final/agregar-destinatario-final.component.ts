@@ -195,13 +195,11 @@ export class AgregarDestinatarioFinalComponent
    * Crea el componente e inicializa el grupo de formulario.
    *
    * @param {FormBuilder} fb - Inyector de FormBuilder para crear formularios reactivos.
-   * @param {Location} ubicaccion - Servicio de Angular para navegar hacia atrás en el historial.
    * @param {DatosSolicitudService} datosSolicitudService - Servicio para obtener diferentes listas de datos.
    * @param consultaioQuery - Servicio para consultar el estado del trámite.
    */
   constructor(
     private fb: FormBuilder,
-    private ubicaccion: Location,
     private datosSolicitudService: DatosSolicitudService,
     private consultaioQuery: ConsultaioQuery
   ) {
@@ -287,7 +285,6 @@ export class AgregarDestinatarioFinalComponent
     this.destinatarios.push(NUEVO_DESTINATARIO);
     this.updateDestinatarioFinalTablaDatos.emit(this.destinatarios);
     this.agregarDestinatarioFinal.reset();
-    this.ubicaccion.back();
   }
 
   /**

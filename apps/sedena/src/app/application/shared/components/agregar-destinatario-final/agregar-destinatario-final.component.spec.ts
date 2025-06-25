@@ -89,7 +89,6 @@ describe('AgregarDestinatarioFinalComponent', () => {
     };
     component.destinatarios = component.destinatarios || {};
     component.updateDestinatarioFinalTablaDatos = component.updateDestinatarioFinalTablaDatos || {};
-    component.ubicaccion.back = jest.fn();
     component.guardarDestinatario();
     expect(component.agregarDestinatarioFinal.markAllAsTouched).toHaveBeenCalled();
   });

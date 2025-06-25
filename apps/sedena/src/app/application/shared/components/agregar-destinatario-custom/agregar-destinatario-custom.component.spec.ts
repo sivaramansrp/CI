@@ -81,12 +81,10 @@ describe('AgregarDestinatarioCustomComponent', () => {
     component.updateDestinatarioFinalTablaDatos = component.updateDestinatarioFinalTablaDatos || {};
     component.updateDestinatarioFinalTablaDatos.emit = jest.fn();
     component.ubicaccion = component.ubicaccion || {};
-    component.ubicaccion.back = jest.fn();
     component.guardarDestinatario();
     expect(component.agregarDestinatarioFinal.reset).toHaveBeenCalled();
     expect(component.destinatarios.push).toHaveBeenCalled();
     expect(component.actualizaExistenteEnDestinatarioDatos.emit).toHaveBeenCalled();
-    expect(component.ubicaccion.back).toHaveBeenCalled();
   });
 
   it('should run #ngOnInit()', async () => {
