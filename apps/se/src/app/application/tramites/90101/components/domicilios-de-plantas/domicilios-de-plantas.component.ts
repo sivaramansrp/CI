@@ -43,6 +43,14 @@ import { TablaSeleccion } from '@ng-mf/data-access-user';
 })
 export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
 
+    /**
+   * @input
+   * @property {boolean} formularioDeshabilitado
+   * @description
+   * Indica si el formulario debe estar deshabilitado (modo solo lectura).
+   * Cuando es `true`, todos los controles del formulario estarán deshabilitados y no permitirán edición.
+   * Este valor puede ser establecido desde el componente padre.
+   */
   @Input() formularioDeshabilitado: boolean = false;
 
   /**
@@ -290,9 +298,14 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
     })
   }
 
-  /**
-   * @method obtenserListaEstado
-   * @description Obtiene la lista de estados desde el servicio.
+    /**
+   * @method obtenerListaEstado
+   * @description
+   * Obtiene la lista de estados desde el servicio llamando al archivo `estado.json`.
+   * Si la petición es exitosa, asigna los datos recibidos a la propiedad `estadoSeleccionar`.
+   * En caso de error, muestra el error en consola y asigna un arreglo vacío.
+   * 
+   * @returns {void}
    */
   obtenerListaEstado(): void {
     this.ProsecService.obtenerMenuDesplegable('estado.json').subscribe({
@@ -303,13 +316,17 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
         console.error('Error al obtener los datos:', error);
         this.estadoSeleccionar = [];
       }
-    }
-  );
+    });
   }
 
   /**
-   * @method obtenserListaFederal
-   * @description Obtiene la lista de representación federal desde el servicio.
+   * @method obtenerListaFederal
+   * @description
+   * Obtiene la lista de representación federal desde el servicio llamando al archivo `federal.json`.
+   * Si la petición es exitosa, asigna los datos recibidos a la propiedad `RepresentacionFederal`.
+   * En caso de error, muestra el error en consola y asigna un arreglo vacío.
+   * 
+   * @returns {void}
    */
   obtenerListaFederal(): void {
     this.ProsecService.obtenerMenuDesplegable('federal.json').subscribe({
@@ -323,9 +340,14 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
     });
   }
 
-  /**
-   * @method obtenserListaActividad
-   * @description Obtiene la lista de actividad productiva desde el servicio.
+    /**
+   * @method obtenerListaActividad
+   * @description
+   * Obtiene la lista de actividades productivas desde el servicio llamando al archivo `actividad_productiva.json`.
+   * Si la petición es exitosa, asigna los datos recibidos a la propiedad `ActividadProductiva`.
+   * En caso de error, muestra el error en consola y asigna un arreglo vacío.
+   * 
+   * @returns {void}
    */
   obtenerListaActividad(): void {
     this.ProsecService.obtenerMenuDesplegable('actividad_productiva.json').subscribe({
@@ -339,11 +361,16 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
     });
   }
 
-   /**
-   * @method obtenserLista
-   * @description Obtiene las listas de datos de estados, representación federal y actividad productiva.
+  /**
+   * @method obtenerLista
+   * @description
+   * Obtiene todas las listas necesarias para el formulario de domicilios de plantas.
+   * Llama a los métodos para obtener la lista de estados, representación federal, actividad productiva y los datos de plantas.
+   * Este método centraliza la carga de catálogos y datos requeridos para el correcto funcionamiento del formulario.
+   * 
+   * @returns {void}
    */
-   obtenerLista():void {
+  obtenerLista(): void {
     this.obtenerListaEstado();
     this.obtenerListaFederal();
     this.obtenerListaActividad();

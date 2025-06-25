@@ -1,11 +1,3 @@
-/**
- * @component PasoUnoComponent
- * @description Este componente es responsable de manejar el primer paso del trámite PROSEC.
- * Controla la selección de pestañas, el estado de lectura del formulario, y la sincronización con el estado global.
- * 
- * @import { Component } from '@angular/core';
- */
-
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ConsultaioQuery, SolicitanteComponent } from '@libs/shared/data-access-user/src';
 import { Subject, takeUntil } from 'rxjs';
@@ -15,6 +7,16 @@ import { ProductorIndirectoComponent } from '../../components/productor-indirect
 import { ProsecService } from '../../services/prosec.service';
 import { SectoresYMercanciasComponent } from '../../components/sectores-y-mercancias/sectores-y-mercancias.component';
 
+/**
+ * @component
+ * @description
+ * Componente PasoUnoComponent para el primer paso del trámite 90101.
+ * Gestiona la selección de pestañas, el estado de solo lectura y la sincronización con el estado global.
+ * Se encarga de obtener y actualizar los datos de acuicultura a través de los servicios correspondientes.
+ * 
+ * @example
+ * <app-paso-uno></app-paso-uno>
+ */
 @Component({
   selector: 'app-paso-uno',
   templateUrl: './paso-uno.component.html',
@@ -50,8 +52,9 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
 
   /**
    * @constructor
-   * @param prosecService Servicio de PROSEC que gestiona la lógica de datos de acuicultura.
-   * @param consultaQuery Query para obtener el estado global de la sección.
+   * @description Constructor del componente PasoUnoComponent.
+   * @param {ProsecService} prosecService Servicio de PROSEC que gestiona la lógica de datos de acuicultura.
+   * @param {ConsultaioQuery} consultaQuery Query para obtener el estado global de la sección.
    */
   constructor(
     private prosecService: ProsecService,
@@ -72,7 +75,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    * @method ngOnInit
    * @description Hook de ciclo de vida que se ejecuta al inicializar el componente.
    * Se suscribe al estado de la sección para detectar cambios y gestionar la habilitación del formulario.
-   * Llama a `guardarDatosFormulario()` si el estado indica actualización.
+   * Llama a guardarDatosFormulario() si el estado indica actualización.
    * @returns {void}
    */
   ngOnInit(): void {
@@ -91,7 +94,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
   /**
    * @method guardarDatosFormulario
    * @description Obtiene los datos de acuicultura desde el servicio y actualiza el estado del formulario.
-   * Se asegura de evitar fugas de memoria utilizando `takeUntil`.
+   * Se asegura de evitar fugas de memoria utilizando takeUntil.
    * @returns {void}
    */
   guardarDatosFormulario(): void {

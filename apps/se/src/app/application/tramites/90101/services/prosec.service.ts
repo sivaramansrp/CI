@@ -1,3 +1,11 @@
+/**
+ * @module ProsecService
+ * @description
+ * Servicio para la gestión de catálogos y datos del trámite PROSEC.
+ * @author
+ * @since 2024
+ * @language es
+ */
 import { AutorizacionProsecStore, ProsecState } from '../estados/autorizacion-prosec.store';
 import { Catalogo, RespuestaCatalogos, SeccionLibStore } from '@ng-mf/data-access-user';
 import { Observable, map } from 'rxjs';
@@ -16,13 +24,15 @@ import { Injectable } from '@angular/core';
 export class ProsecService {
   /**
    * @property {string} url
-   * @description Ruta base donde se encuentran los archivos JSON con los catálogos y datos.
+   * @description
+   * Ruta base donde se encuentran los archivos JSON con los catálogos y datos utilizados en el trámite PROSEC.
    */
   url: string = '../../../../../assets/json/90101/';
 
   /**
-   * @method constructor
-   * @description Constructor del servicio que inyecta dependencias necesarias como el `HttpClient` y los stores.
+   * @constructor
+   * @description
+   * Constructor del servicio que inyecta las dependencias necesarias para el manejo de datos y estado.
    * @param http Cliente HTTP para consumir archivos JSON.
    * @param store Store para el estado de autorización PROSEC.
    * @param seccionStore Store de control de secciones.
@@ -35,7 +45,8 @@ export class ProsecService {
 
   /**
    * @method obtenerMenuDesplegable
-   * @description Obtiene un catálogo desde un archivo JSON ubicado localmente.
+   * @description
+   * Obtiene un catálogo desde un archivo JSON ubicado localmente.
    * @param {string} fileName Nombre del archivo JSON a consultar.
    * @returns {Observable<Catalogo[]>} Observable con los datos del catálogo.
    */
@@ -48,7 +59,8 @@ export class ProsecService {
 
   /**
    * @method obtenerTablaDatos
-   * @description Obtiene una lista de datos genéricos desde un archivo JSON local.
+   * @description
+   * Obtiene una lista de datos genéricos desde un archivo JSON local.
    * @param {string} fileName Nombre del archivo JSON.
    * @returns {Observable<T[]>} Observable con la lista de objetos genéricos.
    */
@@ -59,7 +71,8 @@ export class ProsecService {
 
   /**
    * @method getAcuiculturaData
-   * @description Obtiene los datos precargados del formulario PROSEC (modo acuicultura) desde archivo local.
+   * @description
+   * Obtiene los datos precargados del formulario PROSEC (modo acuicultura) desde archivo local.
    * @returns {Observable<ProsecState>} Observable con los datos del formulario.
    */
   public getAcuiculturaData(): Observable<ProsecState> {
@@ -68,7 +81,8 @@ export class ProsecService {
 
   /**
    * @method actualizarEstadoFormulario
-   * @description Actualiza todo el estado del formulario con los datos proporcionados.
+   * @description
+   * Actualiza todo el estado del formulario con los datos proporcionados.
    * @param {ProsecState} DATOS Objeto con los datos del formulario.
    * @returns {void}
    */
@@ -84,7 +98,9 @@ export class ProsecService {
 
   /**
    * @method formValida
-   * @description Verifica si todas las secciones del formulario son válidas y actualiza el store correspondiente.
+   * @description
+   * Verifica si todas las secciones del formulario son válidas y actualiza el store correspondiente.
+   * Si todas las validaciones son verdaderas, marca la sección y el formulario como válidos en el store de secciones.
    * @returns {void}
    */
   public formValida(): void {
