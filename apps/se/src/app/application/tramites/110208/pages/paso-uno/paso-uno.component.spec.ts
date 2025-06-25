@@ -32,22 +32,22 @@ describe('PasoUnoComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize with default tab index as 1', () => {
+  it('debe inicializar con el índice de pestaña por defecto en 1', () => {
     expect(component.indice).toBe(1);
   });
 
-  it('should call obtenerTipoPersona with MORAL_NACIONAL after view init', () => {
+  it('debe llamar a obtenerTipoPersona con MORAL_NACIONAL después de ngAfterViewInit', () => {
     const obtenerTipoPersonaSpy = jest.spyOn(solicitanteComponentMock, 'obtenerTipoPersona');
     component.solicitante = solicitanteComponentMock as any;
     component.ngAfterViewInit();
     expect(obtenerTipoPersonaSpy).toHaveBeenCalledWith(TIPO_PERSONA.MORAL_NACIONAL);
   });
 
-  it('should update indice when seleccionaTab is called', () => {
+  it('debe actualizar el índice cuando se llama seleccionaTab', () => {
     component.seleccionaTab(2);
     expect(component.indice).toBe(2);
   });

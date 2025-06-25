@@ -65,11 +65,11 @@ describe('Solocitud110208Service', () => {
     httpMock.verify();
   });
 
-  it('should be created', () => {
+  it('debe crear el servicio', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should update store with provided DATOS in actualizarEstadoFormulario', () => {
+  it('debe actualizar el store con los DATOS proporcionados en actualizarEstadoFormulario', () => {
     const datos: Solicitud110208State = {
       entidadFederativa: 'A',
       bloque: 'B',
@@ -151,7 +151,7 @@ describe('Solocitud110208Service', () => {
     expect(tramite110208StoreMock.setRepresentacionFederal).toHaveBeenCalledWith('AF');
   });
 
-  it('should fetch registro toma muestras mercancias data', () => {
+  it('debe obtener los datos de registro toma muestras mercancias', () => {
     const mockResponse = { campo: 'valor' };
     service.getRegistroTomaMuestrasMercanciasData().subscribe(res => {
       expect(res).toEqual(mockResponse);

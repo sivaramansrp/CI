@@ -8,7 +8,7 @@ describe('DestinatarioComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [DestinatarioComponent , HttpClientTestingModule],
+      imports: [DestinatarioComponent, HttpClientTestingModule],
     }).compileComponents();
 
     fixture = TestBed.createComponent(DestinatarioComponent);
@@ -16,7 +16,7 @@ describe('DestinatarioComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 });

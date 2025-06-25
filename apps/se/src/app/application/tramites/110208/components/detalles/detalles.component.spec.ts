@@ -56,11 +56,11 @@ describe('DetallesComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize solicitudState and form on ngOnInit', () => {
+  it('debe inicializar solicitudState y el formulario en ngOnInit', () => {
     expect(component.solicitudState).toEqual({
       medioTransporte: 'Terrestre',
       rutaCompleta: 'Ruta 1',
@@ -75,7 +75,7 @@ describe('DetallesComponent', () => {
     });
   });
 
-  it('should call obtenerEstadoList and set estado', () => {
+  it('debe llamar a obtenerEstadoList y establecer estado', () => {
     const mockData = { data: [{ id: 1, name: 'Estado 1' }] };
 
     component.obtenerEstadoList();
@@ -84,7 +84,7 @@ describe('DetallesComponent', () => {
     expect(component.estado).toEqual(mockData.data);
   });
 
-  it('should call setValoresStore and update store value', () => {
+  it('debe llamar a setValoresStore y actualizar el valor en el store', () => {
     const form = component.detallas;
     form.get('medioTransporte')?.setValue('Aéreo');
 
@@ -93,7 +93,7 @@ describe('DetallesComponent', () => {
     expect(mockStore.setMedioTransporte).toHaveBeenCalledWith('Aéreo');
   });
 
-  it('should clean up observables on ngOnDestroy', () => {
+  it('debe limpiar los observables al destruir el componente', () => {
     const destroyNotifierSpy = jest.spyOn(component['destroyNotifier$'], 'next');
     const destroyNotifierCompleteSpy = jest.spyOn(component['destroyNotifier$'], 'complete');
 
@@ -103,7 +103,7 @@ describe('DetallesComponent', () => {
     expect(destroyNotifierCompleteSpy).toHaveBeenCalled();
   });
 
-  it('should update form values when solicitudState changes', () => {
+  it('debe actualizar los valores del formulario cuando cambia solicitudState', () => {
     const newState: Solicitud110208State = {
       medioTransporte: 'Marítimo',
       rutaCompleta: 'Ruta 2',
@@ -156,31 +156,31 @@ describe('DetallesComponent', () => {
     });
   });
 
-  it('should enable form when readonly is false', () => {
+  it('debe habilitar el formulario cuando readonly es false', () => {
     expect(component.esFormularioSoloLectura).toBeFalsy();
     expect(component.detallas.get('medioTransporte')?.enabled).toBeTruthy();
     expect(component.detallas.get('rutaCompleta')?.enabled).toBeTruthy();
   });
 
-  it('should call setValoresStore for puertoDeEmbarque', () => {
+  it('debe llamar a setValoresStore para puertoDeEmbarque', () => {
     const form = component.detallas;
-    form.get('puertoDeEmbarque')?.setValue('New Port');
+    form.get('puertoDeEmbarque')?.setValue('Nuevo Puerto');
 
     component.setValoresStore(form, 'puertoDeEmbarque', 'setPuertoDeEmbarque');
 
-    expect(mockStore.setPuertoDeEmbarque).toHaveBeenCalledWith('New Port');
+    expect(mockStore.setPuertoDeEmbarque).toHaveBeenCalledWith('Nuevo Puerto');
   });
 
-  it('should call setValoresStore for puertoDeDesembarque', () => {
+  it('debe llamar a setValoresStore para puertoDeDesembarque', () => {
     const form = component.detallas;
-    form.get('puertoDeDesembarque')?.setValue('Destination Port');
+    form.get('puertoDeDesembarque')?.setValue('Puerto Destino');
 
     component.setValoresStore(form, 'puertoDeDesembarque', 'setPuertoDeDesembarque');
 
-    expect(mockStore.setPuertoDeDesembarque).toHaveBeenCalledWith('Destination Port');
+    expect(mockStore.setPuertoDeDesembarque).toHaveBeenCalledWith('Puerto Destino');
   });
 
-  it('should initialize with empty values when solicitudState is empty', () => {
+  it('debe inicializar con valores vacíos cuando solicitudState está vacío', () => {
     mockQuery.selectSolicitud$ = of({} as Solicitud110208State);
     fixture = TestBed.createComponent(DetallesComponent);
     component = fixture.componentInstance;
@@ -195,7 +195,7 @@ describe('DetallesComponent', () => {
     });
   });
 
-  it('should handle ngOnDestroy with no subscriptions', () => {
+  it('debe manejar ngOnDestroy sin suscripciones', () => {
     fixture = TestBed.createComponent(DetallesComponent);
     component = fixture.componentInstance;
     
@@ -208,7 +208,7 @@ describe('DetallesComponent', () => {
     expect(destroyNotifierCompleteSpy).toHaveBeenCalled();
   });
 
-  it('should update form controls when solicitudState changes', () => {
+  it('debe actualizar los controles del formulario cuando cambia solicitudState', () => {
     const newState: Solicitud110208State = {
       medioTransporte: 'Aéreo',
       rutaCompleta: 'Nueva Ruta',

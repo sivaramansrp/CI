@@ -19,11 +19,11 @@ describe('ValidarInicalmenteService', () => {
     httpMock.verify();
   });
 
-  it('should be created', () => {
+  it('debe crear el servicio', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should fetch estado list', () => {
+  it('debe obtener la lista de estados', () => {
     const mockResponse = { data: [{ id: 1, nombre: 'Estado1' }] };
     service.obtenerEstadoList().subscribe(res => {
       expect(res).toEqual(mockResponse);
@@ -33,7 +33,7 @@ describe('ValidarInicalmenteService', () => {
     req.flush(mockResponse);
   });
 
-  it('should fetch form datos', () => {
+  it('debe obtener los datos del formulario', () => {
     const mockResponse = { data: [{ id: 1, nombre: 'FormDato1' }] };
     service.obtenerFormDatos().subscribe(res => {
       expect(res).toEqual(mockResponse);
@@ -43,7 +43,7 @@ describe('ValidarInicalmenteService', () => {
     req.flush(mockResponse);
   });
 
-  it('should fetch tabla datos', () => {
+  it('debe obtener los datos de la tabla', () => {
     const mockResponse = { data: [{ id: 1, nombre: 'TablaDato1' }] };
     service.obtenerTablaDatos().subscribe(res => {
       expect(res).toEqual(mockResponse);
@@ -53,7 +53,7 @@ describe('ValidarInicalmenteService', () => {
     req.flush(mockResponse);
   });
 
-  it('should fetch tabla datos certificado', () => {
+  it('debe obtener los datos de la tabla certificado', () => {
     const mockResponse = { data: [{ id: 1, nombre: 'CertificadoDato1' }] };
     service.obtenerTablaDatosCertificado().subscribe(res => {
       expect(res).toEqual(mockResponse);

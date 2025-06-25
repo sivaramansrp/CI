@@ -35,23 +35,23 @@ describe('SolicitudPageComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should set esDatosRespuesta to true if consultaState.update is false on ngOnInit', () => {
+  it('debe establecer esDatosRespuesta en true si consultaState.update es false en ngOnInit', () => {
     component.consultaState = { update: false } as any;
     component.ngOnInit();
     expect(component.esDatosRespuesta).toBe(true);
   });
 
-  it('should call actualizarEstadoFormulario and set esDatosRespuesta to true in guardarDatosFormulario', () => {
+  it('debe llamar a actualizarEstadoFormulario y establecer esDatosRespuesta en true en guardarDatosFormulario', () => {
     component.guardarDatosFormulario();
     expect(solocitud110208ServiceMock.actualizarEstadoFormulario).toHaveBeenCalledWith({ campo: 'valor' });
     expect(component.esDatosRespuesta).toBe(true);
   });
 
-  it('should update indice and call wizardComponent.siguiente when getValorIndice is called with accion "cont"', () => {
+  it('debe actualizar el índice y llamar a wizardComponent.siguiente cuando getValorIndice es llamado con accion "cont"', () => {
     component.wizardComponent = {
       siguiente: jest.fn(),
       atras: jest.fn(),
@@ -61,7 +61,7 @@ describe('SolicitudPageComponent', () => {
     expect(component.wizardComponent.siguiente).toHaveBeenCalled();
   });
 
-  it('should update indice and call wizardComponent.atras when getValorIndice is called with accion "atras"', () => {
+  it('debe actualizar el índice y llamar a wizardComponent.atras cuando getValorIndice es llamado con accion "atras"', () => {
     component.wizardComponent = {
       siguiente: jest.fn(),
       atras: jest.fn(),
@@ -71,7 +71,7 @@ describe('SolicitudPageComponent', () => {
     expect(component.wizardComponent.atras).toHaveBeenCalled();
   });
 
-  it('should not update indice or call wizardComponent methods when getValorIndice is called with invalid valor', () => {
+  it('no debe actualizar el índice ni llamar métodos de wizardComponent cuando getValorIndice es llamado con valor inválido', () => {
     component.wizardComponent = {
       siguiente: jest.fn(),
       atras: jest.fn(),
@@ -91,7 +91,7 @@ describe('SolicitudPageComponent', () => {
     expect(spyAtras).not.toHaveBeenCalled();
   });
 
-  it('should clean up subscriptions on ngOnDestroy', () => {
+  it('debe limpiar las suscripciones al destruir el componente', () => {
     const nextSpy = jest.spyOn<any, any>(component['destroyNotifier$'], 'next');
     const completeSpy = jest.spyOn<any, any>(component['destroyNotifier$'], 'complete');
     component.ngOnDestroy();
