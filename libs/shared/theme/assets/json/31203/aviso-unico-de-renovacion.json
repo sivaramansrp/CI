@@ -1,0 +1,16 @@
+{
+  "mapTipoTramite": "RENOVACION",
+  "mapDeclaracionSolicitud": "Bajo protesta de decir verdad",
+  "envioAviso": "ENVIADO",
+  "numeroAviso": "AV31203001",
+  "claveReferencia": "284000255",
+  "numeroOperacion": "OP123456789",
+  "cadenaDependencia": "0111514EC10102",
+  "banco": {
+    "id": 1,
+    "descripcion": "BANCO NACIONAL"
+  },
+  "llavePago": "LLAVE123456",
+  "fechaPago": "2023-10-01",
+  "importePago": "30739"
+}

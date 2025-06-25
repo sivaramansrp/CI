@@ -31,7 +31,7 @@ import {
 } from '../../../../core/enums/5701/tramite5701.enum';
 import { Observable, Subject, catchError, map, of, takeUntil, tap } from 'rxjs';
 import { GuardaSolicitudService } from '../../../../core/services/5701/guardar/guarda-solicitud.service';
-import { Solicitud5701State } from '../../../../core/estados/tramites/tramite5701.store';
+import { Solicitud5701State, Tramite5701Store } from '../../../../core/estados/tramites/tramite5701.store';
 import { Tramite5701Query } from '../../../../core/queries/tramite5701.query';
 import { WizardComponent } from '@libs/shared/data-access-user/src';
 
@@ -142,6 +142,7 @@ export class SolicitudPageComponent implements OnInit {
     private seccionStore: SeccionLibStore,
     private tramite5701Query: Tramite5701Query,
     private tercerosQuery: TercerosQuery,
+    private tramite5701Store: Tramite5701Store,
     private guardarSolicitudService: GuardaSolicitudService
   ) {}
 
@@ -585,7 +586,7 @@ export class SolicitudPageComponent implements OnInit {
           fecha_fin_servicio: this.solicitudState.fechaFinal,
           hora_inicio_servicio: this.solicitudState.horaInicio,
           hora_fin_servicio: this.solicitudState.horaFinal,
-          patente: parseInt(this.solicitudState.patente.patente, 10),
+          patente: this.solicitudState.patente.patente,
           id_patentes_aduanales: 1,
         },
         lista_pagos: [
@@ -629,10 +630,7 @@ export class SolicitudPageComponent implements OnInit {
           if (response.datos.id_solicitud) {
             this.solicitudState.idSolicitud = response.datos.id_solicitud;
             this.folioTemporal = response.datos.id_solicitud;
-            localStorage.setItem(
-              'id_solicitud',
-              response.datos.id_solicitud.toString()
-            );
+            this.tramite5701Store.setIdSolicitud(response.datos.id_solicitud);
             return true;
           }
 

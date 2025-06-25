@@ -46,3 +46,37 @@ export function dateLessThanOrEqualToday(control: AbstractControl): ValidationEr
     }
     return null;
 }
+
+/**
+ * Convierte una cadena de texto a su representación hexadecimal en ISO-8859-1 (Latin-1).
+ * Los caracteres fuera del rango ISO-8859-1 (mayores a 255) son reemplazados por '3F' (el signo '?').
+ * 
+ * @param input - La cadena de texto a codificar
+ * @returns Una cadena hexadecimal que representa los bytes de la cadena codificada en ISO-8859-1
+ * 
+ */
+ export function encodeToISO88591Hex(input: string): string {
+  let hexString = '';
+  
+  for (let i = 0; i < input.length; i++) {
+    const charCode = input.charCodeAt(i);
+    const byte = charCode > 255 ? 0x3F : charCode;
+    const hexByte = byte.toString(16).padStart(2, '0');
+    hexString += hexByte;
+  }
+  return hexString;
+}
+
+/**
+ * Convierte una cadena codificada en Base64 a su representación hexadecimal.
+ * 
+ * @param base64 - La cadena codificada en Base64 a convertir
+ * @returns Una cadena hexadecimal que representa los datos binarios decodificados
+ * 
+ */
+ export function base64ToHex(base64: string): string {
+    const binary = atob(base64);
+    return Array.from(binary)
+      .map(char => char.charCodeAt(0).toString(16).padStart(2, '0'))
+      .join('');
+  }

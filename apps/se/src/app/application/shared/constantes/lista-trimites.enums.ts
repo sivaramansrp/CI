@@ -1090,8 +1090,6 @@ export const LISTA_TRIMITES: AccuseComponentes[] = [
       },
     ]
   },
-
-  
   {
     tramite: 80105,
     listaComponentes: [

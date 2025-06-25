@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FederatariosYPlantasVistaComponent } from './federatarios-y-plantas-vista.component';
-import { Tramite80101Store } from '../../estados/tramite80101.store';
-import { Tramite80101Query } from '../../estados/tramite80101.query';
+import { ActivatedRoute } from '@angular/router';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { of } from 'rxjs';
 
 describe('FederatariosYPlantasVistaComponent', () => {
@@ -19,11 +19,8 @@ describe('FederatariosYPlantasVistaComponent', () => {
     };
 
     await TestBed.configureTestingModule({
-      imports: [FederatariosYPlantasVistaComponent],
-      providers: [
-        { provide: Tramite80101Store, useValue: mockStore },
-        { provide: Tramite80101Query, useValue: mockQuery }
-      ]
+      imports: [FederatariosYPlantasVistaComponent, HttpClientTestingModule],
+      providers: [{ provide: ActivatedRoute, useValue: {} }],
     }).compileComponents();
 
     fixture = TestBed.createComponent(FederatariosYPlantasVistaComponent);
