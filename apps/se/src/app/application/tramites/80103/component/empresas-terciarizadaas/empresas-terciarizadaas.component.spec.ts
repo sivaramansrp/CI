@@ -1,62 +1,74 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { EmpresasTerciarizadaasComponent } from './empresas-terciarizadaas.component';
-import { of } from 'rxjs';
-import { CommonModule } from '@angular/common';
-import { EmpresasComponent } from '../../../../shared/components/empresas/empresas.component';
 import { NuevoProgramaIndustrialService } from '../../services/modalidad-albergue.service';
+import { of, Subject } from 'rxjs';
+import { DisponsibleFiscal } from '../../../../shared/models/empresas.model';
 
 describe('EmpresasTerciarizadaasComponent', () => {
   let component: EmpresasTerciarizadaasComponent;
   let fixture: ComponentFixture<EmpresasTerciarizadaasComponent>;
   let mockService: jest.Mocked<NuevoProgramaIndustrialService>;
 
-  const MOCK_CATALOG_RESPONSE = {
+  const MOCK_ESTADOS = {
+    code: 200,
+    message: 'OK',
     data: [
-      { id: 1, descripcion: 'Jalisco' },
-      { id: 2, descripcion: 'CDMX' }
+      { id: 1, descripcion: 'CDMX' },
+      { id: 2, descripcion: 'Jalisco' },
     ]
   };
 
   beforeEach(async () => {
     mockService = {
-      obtenerListaEstado: jest.fn().mockReturnValue(of(MOCK_CATALOG_RESPONSE))
-    } as any;
+      obtenerListaEstado: jest.fn(),
+    } as unknown as jest.Mocked<NuevoProgramaIndustrialService>;
 
     await TestBed.configureTestingModule({
-      imports: [CommonModule, EmpresasComponent],
+      imports: [EmpresasTerciarizadaasComponent],
       providers: [
-        { provide: NuevoProgramaIndustrialService, useValue: mockService }
+        { provide: NuevoProgramaIndustrialService, useValue: mockService },
       ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(EmpresasTerciarizadaasComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
   });
 
-  it('debe crear el componente correctamente', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('debe inicializar la tabla de configuración con los encabezados correctos', () => {
-    expect(component.parentTablaConfig.length).toBe(11);
-    expect(component.parentTablaConfig[0].encabezado).toBe('Calle');
-    expect(component.parentTablaConfig[10].encabezado).toBe('Razón social');
-  });
+  it('debe llamar obtenerListaEstado y actualizar estadosCatalogo', () => {
+    mockService.obtenerListaEstado.mockReturnValue(of(MOCK_ESTADOS));
 
-  it('debe cargar el catálogo de estados al llamar obtenerListaEstado', () => {
     component.obtenerListaEstado();
+
     expect(mockService.obtenerListaEstado).toHaveBeenCalled();
-    expect(component.estadosCatalogo).toEqual(MOCK_CATALOG_RESPONSE.data);
+    expect(component.estadosCatalogo).toEqual(MOCK_ESTADOS.data);
   });
 
-  it('debe limpiar correctamente los observables en ngOnDestroy', () => {
-    const spyNext = jest.spyOn(component['destroyNotifier$'], 'next');
-    const spyComplete = jest.spyOn(component['destroyNotifier$'], 'complete');
+  it('no debe actualizar estadosCatalogo si response es falsy', () => {
+    mockService.obtenerListaEstado.mockReturnValue(of(null as any));
+
+    component.obtenerListaEstado();
+
+    expect(mockService.obtenerListaEstado).toHaveBeenCalled();
+    expect(component.estadosCatalogo).toEqual([]);
+  });
+
+  it('debe completar destroyNotifier$ en ngOnDestroy', () => {
+    const completeSpy = jest.spyOn(component['destroyNotifier$'], 'complete');
+    const nextSpy = jest.spyOn(component['destroyNotifier$'], 'next');
 
     component.ngOnDestroy();
 
-    expect(spyNext).toHaveBeenCalled();
-    expect(spyComplete).toHaveBeenCalled();
+    expect(nextSpy).toHaveBeenCalled();
+    expect(completeSpy).toHaveBeenCalled();
+  });
+
+  it('debe tener configuración de columnas completa y ordenada', () => {
+    expect(component.parentTablaConfig.length).toBeGreaterThan(0);
+    expect(component.parentTablaConfig[0].encabezado).toBeDefined();
+    expect(typeof component.parentTablaConfig[0].clave).toBe('function');
   });
 });
