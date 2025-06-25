@@ -105,6 +105,7 @@
         [required]="estadoCatalogo.required"
         formControlName="estado"
         (selectionChange)="setEstado($event)"
+        [isDisabled]="esFormularioSoloLectura"
       >
       </app-catalogo-select>
     </div>
@@ -212,6 +213,7 @@
         type="text"
         formControlName="licenciaSanitaria"
         (change)="setLicenciaSanitaria($event)"
+        [disabled]="esFormularioSoloLectura"
       />
     </div>
 
@@ -240,6 +242,7 @@
         [required]="regimenCatalogo.required"
         formControlName="regimen"
         (selectionChange)="setRegimen($event)"
+         [isDisabled]="esFormularioSoloLectura"
       >
       </app-catalogo-select>
     </div>
@@ -253,6 +256,7 @@
         [required]="aduanaCatalogo.required"
         formControlName="aduana"
         (selectionChange)="setAduana($event)"
+         [isDisabled]="esFormularioSoloLectura"
       >
       </app-catalogo-select>
     </div>
@@ -398,7 +402,11 @@
       />
     </div>
   </div>
-  <div
+
+  
+</form>
+
+<div
     class="modal fade"
     id="modalAgregarMercancias"
     tabindex="-1"
@@ -407,8 +415,8 @@
   >
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
-        <app-modificar-mercancias></app-modificar-mercancias>
+        <app-modificar-mercancias></app-modificar-mercancias> 
       </div>
     </div>
   </div>
-</form>
+  

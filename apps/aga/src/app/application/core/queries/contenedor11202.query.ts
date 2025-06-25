@@ -1,6 +1,6 @@
+import { Contenedor11202State, Contenedor11202Store } from "../estados/tramites/contenedor11202.store";
 import { Injectable } from "@angular/core";
 import { Query } from '@datorama/akita';
-import { Contenedor11202State, Contenedor11202Store } from "../estados/tramites/contenedor11202.store";
 
 @Injectable({ providedIn: 'root' })
 export class Contenedor11202Query extends Query<Contenedor11202State> {

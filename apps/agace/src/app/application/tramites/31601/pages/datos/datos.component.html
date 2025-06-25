@@ -11,8 +11,12 @@
             <li [ngClass]="indice === 3 ? 'active' : ''">
                 <a data-toggle="tab" (keyup)="seleccionaTab(1)" (click)="seleccionaTab(3)">Terceros Relacionados</a>
             </li>
-            <li [ngClass]="indice === 4 ? 'active' : ''">
-                <a data-toggle="tab" (keyup)="seleccionaTab(1)" (click)="seleccionaTab(4)">Datos por Régimen</a>
+            <li  [class.disabled]="isTabDisabled" [ngClass]="indice === 4 ? 'active' : ''">
+                @if(isTabDisabled){
+                    <a data-toggle="tab" role="button" tabindex="4">Datos por Régimen</a>
+                } @else {
+                    <a data-toggle="tab" (keyup)="seleccionaTab(1)" (click)="seleccionaTab(4)">Datos por Régimen</a>
+                }
             </li>
             <li [ngClass]="indice === 5 ? 'active' : ''">
                 <a data-toggle="tab" (keyup)="seleccionaTab(1)" (click)="seleccionaTab(5)">IVA e IEPS A</a>

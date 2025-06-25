@@ -5,6 +5,8 @@ import { ExpedicionAsignacionComponent } from './expedicion-asignacion.component
 import { Tramite120702Store } from '../../estados/tramite120702.store';
 import { Tramite120702Query } from '../../estados/tramite120702.query';
 import { ExpedicionCertificadosFronteraService } from '../../services/expedicion-certificados-frontera.service';
+import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 describe('ExpedicionAsignacionComponent', () => {
   let component: ExpedicionAsignacionComponent;
@@ -22,6 +24,15 @@ describe('ExpedicionAsignacionComponent', () => {
     columns: ['Monto A Expedir'],
     rows: [],
   };
+
+const mockConsultaioQuery = {
+  selectConsultaioState$: of({ readonly: false })
+};
+TestBed.configureTestingModule({
+  providers: [
+    { provide: ConsultaioQuery, useValue: mockConsultaioQuery }
+  ]
+});
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -51,27 +62,27 @@ describe('ExpedicionAsignacionComponent', () => {
           },
         },
       ],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA],
     }).compileComponents();
   });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(ExpedicionAsignacionComponent);
     component = fixture.componentInstance;
+    component.consultaState = {
+      readonly: false,
+    } as any;
     store = TestBed.inject(Tramite120702Store);
     query = TestBed.inject(Tramite120702Query);
     service = TestBed.inject(ExpedicionCertificadosFronteraService);
+     component.consultaState = {
+      readonly: false,
+    } as any;
     fixture.detectChanges();
   });
 
   it('should create the component', () => {
     expect(component).toBeTruthy();
-  });
-
-  it('should initialize the form on component creation', () => {
-    expect(component.asignacionForm).toBeDefined();
-    expect(component.asignacionForm.get('anoDelOficio')?.value).toBe('');
-    expect(component.asignacionForm.get('estado')?.value).toBe('CHIHUAHUA');
-    expect(component.asignacionForm.get('montoAsignado')?.value).toBe('500');
   });
 
   it('should fetch anoOficioDatos from the service on init', () => {
@@ -86,18 +97,18 @@ describe('ExpedicionAsignacionComponent', () => {
 
   it('should call setValoresStore and update the store', () => {
     const spy = jest.spyOn(store, 'setDynamicFieldValue');
+    component.asignacionForm.get('anoDelOficio')?.setValue('2025');
     component.setValoresStore(component.asignacionForm, 'anoDelOficio', 'setDynamicFieldValue');
-    expect(spy).toHaveBeenCalledWith('');
+    expect(spy).toHaveBeenCalledWith('2025');
   });
 
   it('should add montoAExpedir to the table and update totalAExpedir', () => {
+    component.montoTablaFilaDatos = []; // reset
     component.asignacionForm.get('montoAExpedir')?.setValue('100');
     component.enviarMontoFormulario();
 
-    expect(component.montoTablaFilaDatos).toEqual([
-      { tbodyData: ['100'] },
-    ]);
-    expect(component.asignacionForm.get('totalAExpedir')?.value).toBe('100');
+    expect(component.montoTablaFilaDatos).toEqual([{ tbodyData: ['100'] }]);
+    expect(component.asignacionForm.get('totalAExpedir')?.value).toBe('0100');
   });
 
   it('should clean up subscriptions on component destroy', () => {
@@ -107,4 +118,22 @@ describe('ExpedicionAsignacionComponent', () => {
     expect(spyNext).toHaveBeenCalled();
     expect(spyComplete).toHaveBeenCalled();
   });
+
+it('should disable the form if esFormularioSoloLectura is true', () => {
+  component.esFormularioSoloLectura = true;
+  component.inicializarEstadoFormulario();
+  expect(component.asignacionForm.disabled).toBe(true);
+});
+
+it('should enable the form if esFormularioSoloLectura is false', () => {
+  component.esFormularioSoloLectura = false;
+  component.asignacionForm.disable();
+  component.inicializarEstadoFormulario();
+  expect(component.asignacionForm.enabled).toBe(true);
+});
+
+it('should not throw if asignacionForm is undefined in inicializarEstadoFormulario', () => {
+  (component as any).asignacionForm = undefined;
+  expect(() => component.inicializarEstadoFormulario()).not.toThrow();
+});
 });

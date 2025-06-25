@@ -62,6 +62,11 @@ export class DesistirSolicitudInformacionHistoricaComponent {
     return;
   }
   this.indice = e.valor;
-  const VALOR_INDICE = e.accion === 'cont' ? this.wizardComponent.siguiente() : this.wizardComponent.atras();
+
+  if (e.accion === 'cont') {
+    this.wizardComponent.siguiente();
+  } else {
+    this.wizardComponent.atras();
+  }
 }
 }

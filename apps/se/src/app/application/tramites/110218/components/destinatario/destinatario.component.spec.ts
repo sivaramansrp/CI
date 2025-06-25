@@ -43,8 +43,8 @@ describe('DestinatarioComponent', () => {
     destroyed$ = new Subject<void>();
 
     await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule],
-      declarations: [DestinatarioComponent],
+      imports: [ReactiveFormsModule, DestinatarioComponent],
+      declarations: [],
       providers: [
         { provide: CertificadoTecnicoJaponService, useValue: serviceMock },
         { provide: Tramite110218Store, useValue: storeMock },
@@ -120,8 +120,8 @@ describe('DestinatarioComponent', () => {
   });
 
   it('debería limpiar las suscripciones al destruir el componente', () => {
-    const destroyedSpy = jest.spyOn(destroyed$, 'next');
-    const completeSpy = jest.spyOn(destroyed$, 'complete');
+    const destroyedSpy = jest.spyOn(component['destroyed$'], 'next');
+    const completeSpy = jest.spyOn(component['destroyed$'], 'complete');
 
     component.ngOnDestroy();
 

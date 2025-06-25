@@ -31,7 +31,7 @@ import {
 } from '../../../../core/enums/5701/tramite5701.enum';
 import { Observable, Subject, catchError, map, of, takeUntil, tap } from 'rxjs';
 import { GuardaSolicitudService } from '../../../../core/services/5701/guardar/guarda-solicitud.service';
-import { Solicitud5701State } from '../../../../core/estados/tramites/tramite5701.store';
+import { Solicitud5701State, Tramite5701Store } from '../../../../core/estados/tramites/tramite5701.store';
 import { Tramite5701Query } from '../../../../core/queries/tramite5701.query';
 import { WizardComponent } from '@libs/shared/data-access-user/src';
 
@@ -142,6 +142,7 @@ export class SolicitudPageComponent implements OnInit {
     private seccionStore: SeccionLibStore,
     private tramite5701Query: Tramite5701Query,
     private tercerosQuery: TercerosQuery,
+    private tramite5701Store: Tramite5701Store,
     private guardarSolicitudService: GuardaSolicitudService
   ) {}
 
@@ -219,26 +220,42 @@ export class SolicitudPageComponent implements OnInit {
                 txtBtnAceptar: '',
                 txtBtnCancelar: '',
               };
-            } else {
-              if (e.valor > 0 && e.valor < 5) {
-                this.alertaNotificacion = {
-                  tipoNotificacion: 'banner',
-                  categoria: 'success',
-                  modo: 'action',
-                  titulo: '',
-                  mensaje: MSG_REGISTRO_EXITOSO(this.folioTemporal.toString()),
-                  cerrar: true,
-                  txtBtnAceptar: '',
-                  txtBtnCancelar: '',
-                };
-                this.indice = e.valor;
-                if (e.accion === 'cont') {
-                  this.wizardComponent.siguiente();
-                } else {
-                  this.wizardComponent.atras();
-                }
+              this.indice = 1;
+              this.wizardComponent.indiceActual = 1;
+              return;
+            }
+
+            if (e.valor > 0 && e.valor < 5) {
+              this.alertaNotificacion = {
+                tipoNotificacion: 'banner',
+                categoria: 'success',
+                modo: 'action',
+                titulo: '',
+                mensaje: MSG_REGISTRO_EXITOSO(this.folioTemporal.toString()),
+                cerrar: true,
+                txtBtnAceptar: '',
+                txtBtnCancelar: '',
+              };
+              this.indice = e.valor;
+              if (e.accion === 'cont') {
+                this.wizardComponent.siguiente();
+              } else {
+                this.wizardComponent.atras();
               }
             }
+          }),
+          catchError(() => {
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'toastr',
+              categoria: 'error',
+              modo: 'action',
+              titulo: '',
+              mensaje: 'Error al guardar la solicitud. Intente nuevamente.',
+              cerrar: false,
+              txtBtnAceptar: '',
+              txtBtnCancelar: '',
+            };
+            return of(false);
           })
         )
         .subscribe();
@@ -369,12 +386,13 @@ export class SolicitudPageComponent implements OnInit {
           (transporte: Partial<TransporteDespacho>) => {
             const RESULTADO: Partial<TransporteDespacho> = {
               tipo_transporte: TIPO_TRANSPORTE_ARRIBO_SALIDA,
-              arribo_pendiente_aereo: transporte.arribo_pendiente_aereo === 'Sí' ? true : false,
+              arribo_pendiente_aereo:
+                transporte.arribo_pendiente_aereo,
               guia_master_aereo: transporte.guia_master_aereo || '',
               guia_house_aereo: transporte.guia_house_aereo || '',
               fecha_arribo_aereo: transporte.fecha_arribo_aereo || '',
               hora_arribo_aereo: transporte.hora_arribo_aereo || '',
-              guia_valida: transporte.guia_valida === 'Sí' ? true : false,
+              guia_valida: transporte.guia_valida,
               observaciones: transporte.observaciones,
             };
             return RESULTADO as TransporteDespacho;
@@ -568,7 +586,7 @@ export class SolicitudPageComponent implements OnInit {
           fecha_fin_servicio: this.solicitudState.fechaFinal,
           hora_inicio_servicio: this.solicitudState.horaInicio,
           hora_fin_servicio: this.solicitudState.horaFinal,
-          patente: parseInt(this.solicitudState.patente.patente, 10),
+          patente: this.solicitudState.patente.patente,
           id_patentes_aduanales: 1,
         },
         lista_pagos: [
@@ -612,7 +630,7 @@ export class SolicitudPageComponent implements OnInit {
           if (response.datos.id_solicitud) {
             this.solicitudState.idSolicitud = response.datos.id_solicitud;
             this.folioTemporal = response.datos.id_solicitud;
-            localStorage.setItem('id_solicitud', response.datos.id_solicitud.toString());
+            this.tramite5701Store.setIdSolicitud(response.datos.id_solicitud);
             return true;
           }
 

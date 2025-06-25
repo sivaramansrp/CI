@@ -50,3 +50,13 @@ export const MSG_SELECCIONA_REGISTRO = 'Selecciona un registro.';
  * @description Mensaje de modificación exitosa de un elemento en la tabla.
  */
 export const MSG_MODIFICA_ELEMENTO = 'Registro modificado correctamente.';
+
+/**
+ * @description Sin titulo para el modal.
+ */
+export const SIN_TITULO_MODAL = '';
+
+/**
+ * @description Campo vacío.
+ */
+export const CAMPO_VACIO = '';

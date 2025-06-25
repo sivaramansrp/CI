@@ -1,10 +1,16 @@
 import { Component, ViewChild } from '@angular/core';
-import { DatosPasos } from '@ng-mf/data-access-user';
+import { DatosPasos,WizardComponent } from '@ng-mf/data-access-user';
 import { ListaPasosWizard } from '../../modelos/exportacion-explosivo.model';
 import { PASOS } from '../../constantes/exportacion-armas-explosivo.enum';
 import { TITULOMENSAJE } from '../../constantes/exportacion-armas-explosivo.enum';
-import { WizardComponent } from '@ng-mf/data-access-user';
 
+/**
+ * @interface AccionBoton
+ * Representa una acción de botón con un nombre de acción y un valor asociado.
+ *
+ * @property {string} accion - El nombre o identificador de la acción del botón.
+ * @property {number} valor - El valor numérico asociado a la acción.
+ */
 interface AccionBoton {
   accion: string;
   valor: number;
@@ -27,6 +33,20 @@ export class SolicitudPageComponent {
    */
   tituloMensaje: string | null = 'Registro nacional de exportadores';
 
+  /**
+   * @description Referencia al componente `WizardComponent` dentro de la plantilla.
+   * Utiliza el decorador `@ViewChild` para acceder a las propiedades y métodos públicos del componente hijo.
+   * 
+   * @remarks
+   * Esta propiedad se inicializa automáticamente después de que Angular ha renderizado la vista.
+   * 
+   * @example
+   * // Acceder a métodos del wizard desde el componente padre:
+   * this.wizardComponent.nextStep();
+   * 
+   * @comando
+   * Utilice esta propiedad para controlar el flujo del wizard desde el componente principal.
+   */
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
 
   /**

@@ -33,6 +33,7 @@ import { Tramite130102Query } from '../../../../estados/queries/tramite130102.qu
 import { Subject, map, takeUntil } from 'rxjs';
 import { FormularioRegistroService } from '../../services/octava-temporal.service';
 
+import { CROSLISTA_DE_PAISES } from '../../../130103/constantes/importacion-definitiva.enum';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 /**
  * Componente para la gestión de la selección de países de procedencia.
@@ -82,9 +83,14 @@ export class PaisProcendenciaComponent implements OnInit {
   fechasDatos: string[] = [];
 
   /**
+     * Lista de paises.
+     */
+    private crosListaDePaises = CROSLISTA_DE_PAISES;
+
+  /**
    * Lista de rangos de días seleccionados.
    */
-  selectRangoDias: string[] = [];
+  selectRangoDias: string[] = this.crosListaDePaises;
 
   /**
    * Catálogo de países de procedencia.

@@ -17,7 +17,7 @@ describe('PasoDosComponent', () => {
 
   beforeEach(async () => {
     mockCatalogosService = {
-      getCatalogo: jest.fn(),
+      getCatalogo: jest.fn().mockReturnValue(of([])),
     };
 
     await TestBed.configureTestingModule({

@@ -26,6 +26,10 @@
     apellidoSegundo?: string;
   }
 
+   export interface ComplimentariaDatos {
+    data: Complimentaria[];
+  }
+
   export interface Federetarios {
     nombre?: string;
     apellidoPrimer?: string;

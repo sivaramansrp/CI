@@ -9,7 +9,8 @@
               <label class="form-label" for="claveDeReferencia">Clave de referencia*:</label>
               <input class="form-control" id="claveDeReferencia" formControlName="claveDeReferencia" type="text"
                 [ngClass]="isValid(pagodeDerechos,'claveDeReferencia') ? 'required' : ''"
-                (change)="setValoresStore(pagodeDerechos,'claveDeReferencia', 'setClaveDeReferencia')" />
+                (change)="setValoresStore(pagodeDerechos,'claveDeReferencia', 'setClaveDeReferencia')"
+                [disabled]="esFormularioSoloLectura" />
             </div>
           </div>
           <div class="col-md-4">
@@ -18,7 +19,8 @@
               <input class="form-control" id="cadenaPagoDependencia" formControlName="cadenaPagoDependencia" type="text"
                 [ngClass]="isValid(pagodeDerechos,'cadenaPagoDependencia') ? 'required' : ''"
                 (change)="setValoresStore(pagodeDerechos,'cadenaPagoDependencia', 'setCadenaPagoDependencia')"
-                appUppercase />
+                appUppercase 
+                [disabled]="esFormularioSoloLectura"/>
             </div>
           </div>
           <div class="col-md-4">
@@ -26,7 +28,9 @@
               <div class="form-group">
                 <app-catalogo-select [catalogo]="bancoCatalogo.catalogos" formControlName="banco" [label]="'Banco'"
                   [required]="true"
-                  (change)="setValoresStore(pagodeDerechos,'banco', 'setBanco');"></app-catalogo-select>
+                  (change)="setValoresStore(pagodeDerechos,'banco', 'setBanco');"
+                  [isDisabled]="esFormularioSoloLectura ? true : false"
+                  ></app-catalogo-select>
               </div>
             </div>
           </div>
@@ -38,7 +42,8 @@
               <label class="form-label" for="llaveDePago">Llave de pago*:</label>
               <input class="form-control" id="llaveDePago" formControlName="llaveDePago" type="text"
                 [ngClass]="isValid(pagodeDerechos,'llaveDePago') ? 'required' : ''"
-                (change)="setValoresStore(pagodeDerechos,'llaveDePago', 'setllaveDePago')" />
+                (change)="setValoresStore(pagodeDerechos,'llaveDePago', 'setllaveDePago')" 
+                [disabled]="esFormularioSoloLectura"/>
             </div>
           </div>
 
@@ -47,7 +52,8 @@
               <label class="form-label" for="fecPago">Fecha de pago*:</label>
               <input class="form-control" id="fecPago" formControlName="fecPago" type="date"
                 [ngClass]="isValid(pagodeDerechos,'fecPago') ? 'required' : ''"
-                (change)="setValoresStore(pagodeDerechos,'fecPago', 'setFecPago')" />
+                (change)="setValoresStore(pagodeDerechos,'fecPago', 'setFecPago')" 
+                [disabled]="esFormularioSoloLectura"/>
             </div>
           </div>
 
@@ -56,7 +62,8 @@
               <label class="form-label" for="impPago">Importe de pago*:</label>
               <input class="form-control" id="impPago" formControlName="impPago" type="text"
                 [ngClass]="isValid(pagodeDerechos,'impPago') ? 'required' : ''"
-                (change)="setValoresStore(pagodeDerechos,'impPago', 'setImpPago')" appUppercase />
+                (change)="setValoresStore(pagodeDerechos,'impPago', 'setImpPago')" appUppercase
+                [disabled]="esFormularioSoloLectura" />
             </div>
           </div>
         </div>

@@ -128,14 +128,14 @@
         <ng-template
           ngx-datatable-cell-template
           let-rowIndex="rowIndex"
-          let-value="value"
+          let-valueNumero="value"
           let-row="row"
         >
           @if (editar[rowIndex + '-numero']) {
           <input
             (blur)="actualizarValor($event, 'numero', rowIndex)"
             type="text"
-            [value]="value"
+            [value]="valueNumero"
             maxlength="70"
           />
           } @else {
@@ -143,14 +143,34 @@
             title="Doble click para editar"
             (dblclick)="editarCelda(rowIndex)"
           >
-            {{ row.numero ? row.numero : 'Sin número' }}
+            {{ row.numero || '\u00A0\u00A0\u00A0\u00A0\u00A0' }}
           </span>
           }
         </ng-template>
       </ngx-datatable-column>
 
       <ngx-datatable-column name="Comprobante de valor" prop="comprobanteValor">
-        <ng-template let-row="row" ngx-datatable-cell-template>
+        <ng-template
+          ngx-datatable-cell-template
+          let-rowIndex="rowIndex"
+          let-valueComprobanteValor="value"
+          let-row="row"
+        >
+          @if (editar[rowIndex + '-comprobanteValor']) {
+          <input
+            (blur)="actualizarValor($event, 'comprobanteValor', rowIndex)"
+            type="text"
+            [value]="valueComprobanteValor"
+            maxlength="70"
+          />
+          } @else {
+          <span
+            title="Doble click para editar"
+            (dblclick)="editarCelda(rowIndex)"
+          >
+            {{ row.comprobanteValor || '\u00A0\u00A0\u00A0\u00A0\u00A0' }}
+          </span>
+          }
           {{ row.comprobanteValor }}
         </ng-template>
       </ngx-datatable-column>
@@ -164,7 +184,7 @@
   </div>
 </div>
 
-<div class="row mt-3" *ngIf="pedimentos.length > 0">
+<div class="row mt-3">
   <div class="col-md-12 d-flex justify-content-end">
     <button
       type="button"
@@ -175,7 +195,6 @@
       Eliminar
     </button>
   </div>
-
 </div>
 @if (nuevaNotificacion) {
 <section>

@@ -10,9 +10,11 @@ describe('TercerosRelacionadosComponent', () => {
       obtenerDatos: jest.fn()
     };
     component = new TercerosRelacionadosComponent(serviceMock);
+    (component as any).TercerosService = serviceMock;
   });
 
   it('should call cargarDatos on ngOnInit', () => {
+    serviceMock.obtenerDatos.mockReturnValue(of([]));
     const spy = jest.spyOn(component, 'cargarDatos');
     component.ngOnInit();
     expect(spy).toHaveBeenCalled();

@@ -14,7 +14,6 @@
   </div>
   <div *ngIf="showContent" class="content">
     <app-tabla-dinamica 
-   
     [configuracionTabla]="configuracionTabla" 
     [datos]="tipos">
   </app-tabla-dinamica>
@@ -59,14 +58,14 @@
           [label]="'Tipo de Documento'"
           [required]="true"
           formControlName="tipoDocumento"
-          [isDisabled]="esFormularioSoloLectura ? true : false"
+          [isDisabled]="esFormularioSoloLectura"
           (change)="setValoresStore(requisitos, 'tipoDocumento', 'setTipoDocumento')"
         >
         </app-catalogo-select>
   
         <div class="row" style="padding-top: 20px; text-align: right">
           <div>
-            <button type="button" class="btn btn-primary btn-space" disabled="esFormularioSoloLectura ? true : false">
+            <button type="button" class="btn btn-primary btn-space" [disabled]="esFormularioSoloLectura">
               Agregar
             </button>
           </div>

@@ -1,20 +1,22 @@
+import { ConfiguracionColumna, TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { ANEXO_SERVICIO } from '../../../../shared/constantes/anexo-dos-y-tres.enum';
-import { AnexoDosYTresComponent } from '../../../../shared/components/anexo-dos-y-tres.component/anexo-dos-y-tres.component';
 import { AnexoEncabezado } from '../../../../shared/models/nuevo-programa-industrial.model';
+import { AnexoTresComponent } from '../../../../shared/components/anexo-tres/anexo-tres.component';
+import { CONFIGURACION_DOS_DATOS } from '../../constantes/nuevo-programa.enum';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { FraccionArancelariaDescripcion } from '../../../../shared/models/empresas.model';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { Subject } from 'rxjs';
-import { TablaSeleccion } from '@libs/shared/data-access-user/src';
-import { Tramite80101Query } from '../../estados/tramite80101.query';
-import { Tramite80101Store } from '../../estados/tramite80101.store';
+import { Tramite80101Query } from '../../../80103/estados/tramite80101.query';
+import { Tramite80101Store } from '../../../80103/estados/tramite80101.store';
 import { takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-anexo-vista-dos-y-tres',
   standalone: true,
-  imports: [CommonModule, AnexoDosYTresComponent],
+  imports: [CommonModule, AnexoTresComponent],
   templateUrl: './anexo-vista-dos-y-tres.component.html',
   styleUrl: './anexo-vista-dos-y-tres.component.scss',
 })
@@ -46,6 +48,11 @@ export class AnexoVistaDosYTresComponent implements OnInit, OnDestroy {
     anexoTresEncabezadoDeTabla: ANEXO_SERVICIO,
   };
 
+  /*
+  * Almacena la configuración de las pestañas del primer paso.
+  */
+   configuracionDosDatos: ConfiguracionColumna<FraccionArancelariaDescripcion>[] =CONFIGURACION_DOS_DATOS
+
   /**
    * Notificador utilizado para manejar la destrucción o desuscripción de observables.
    * Se usa comúnmente para limpiar suscripciones cuando el componente es destruido.
@@ -65,7 +72,7 @@ export class AnexoVistaDosYTresComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((anexoDosTablaLista) => {
         if (anexoDosTablaLista.length > 0) {
-          this.anexoDosTablaLista = anexoDosTablaLista;
+          this.anexoDosTablaLista = anexoDosTablaLista ?? [];
         }
       });
 
@@ -73,7 +80,7 @@ export class AnexoVistaDosYTresComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((anexoTresTablaLista) => {
         if (anexoTresTablaLista.length > 0) {
-          this.anexoTresTablaLista = anexoTresTablaLista;
+          this.anexoTresTablaLista = anexoTresTablaLista ?? [];
         }
       });
   }

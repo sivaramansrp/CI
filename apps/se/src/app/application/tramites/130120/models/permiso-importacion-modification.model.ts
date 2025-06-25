@@ -1,16 +1,26 @@
+/**
+ * Interfaz que representa el estado completo de los datos agrupados del trámite.
+ */
 export interface DatosGrupos {
     datosRealizer: DatosRealizer,
     datosMercanica: DatosMercanica,
     datosExporta: DatosExporta,
     datosProductor: DatosProductor,
     datosExportador: DatosExportador,
+    datosFederal: DatosFederal,
 }
 
+/**
+ * Interfaz para los datos del trámite a realizar.
+ */
 export interface DatosRealizer {
   régimen: string,
   classifición_régimen: string,
 }
 
+/**
+ * Interfaz para los datos de la mercancía.
+ */
 export interface DatosMercanica {
   descripción: string,
   marca: string,
@@ -35,6 +45,9 @@ export interface DatosMercanica {
   valor_total_factura_usd: string,
 }
 
+/**
+ * Interfaz para los datos del documento de exportación.
+ */
 export interface DatosExporta {
   número_documento: string,
   fecha_documento: string,
@@ -45,6 +58,9 @@ export interface DatosExporta {
   precio_unitario_usd: string,
 }
 
+/**
+ * Interfaz para los datos del productor.
+ */
 export interface DatosProductor {
   persona_tipo: string,
   personales_nombre: string,
@@ -54,6 +70,9 @@ export interface DatosProductor {
   domicilio: string,
 }
 
+/**
+ * Interfaz para los datos del exportador.
+ */
 export interface DatosExportador {
   persona_tipo: string,
   personales_nombre: string,
@@ -64,6 +83,19 @@ export interface DatosExportador {
   observaciones: string,
 }
 
+/**
+ * Interfaz para los datos de la representación federal.
+ */
+export interface DatosFederal {
+  entidad_federativa: string,
+  representacion_federal: string,
+}
+
+/**
+ * Función para crear el estado inicial de los datos agrupados del trámite.
+ * @param params Parámetros opcionales para inicializar el estado.
+ * @returns Estado inicial de DatosGrupos.
+ */
 export function createDatosGruposState(params: Partial<DatosGrupos> = {}): DatosGrupos {
   return {
     datosRealizer: params.datosRealizer || {
@@ -118,6 +150,11 @@ export function createDatosGruposState(params: Partial<DatosGrupos> = {}): Datos
       razón_social: '',
       domicilio: '',
       observaciones: '',
-    }
+    },
+    datosFederal: params.datosFederal || {
+      entidad_federativa: '',
+      representacion_federal: '',
+    } 
+
   };
 }
