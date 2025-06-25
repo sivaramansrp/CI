@@ -129,6 +129,7 @@ export class PagoDeDerechoComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
+    this.inicializarFormulario();    
     this.consultaioQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -139,7 +140,6 @@ export class PagoDeDerechoComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-    this.inicializarFormulario();
   }
   /**
    * @method inicializarFormulario
@@ -159,12 +159,6 @@ export class PagoDeDerechoComponent implements OnInit, OnDestroy {
         importePago: [this.derechoState?.importePago, []],
       }),
     });
-    this.inicializarEstadoFormulario();
-
-    // Activa la lógica cuando el formulario se ha inicializado
-    if (this.consultaDatos.create) {
-      this.actualizarCamposDeFormularioBasadosEnExentoDePago();
-    }
   }
   /**
    * @method inicializarEstadoFormulario
