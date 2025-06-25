@@ -150,14 +150,22 @@ esFormularioSoloLectura: boolean = false;
     private consultaQuery: ConsultaioQuery
   ) {}
 
-  /**
+    /**
    * @method ngOnInit
-   * @description Inicializa el componente y obtiene las listas de datos.
+   * @description
+   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * Realiza las siguientes acciones:
+   * - Se suscribe al estado de la sección y actualiza la propiedad `seccionState` con los datos recibidos.
+   * - Se suscribe al estado de autorización PROSEC y actualiza la propiedad `sectoresState`.
+   * - Inicializa el formulario reactivo llamando a `initActionFormBuild()`.
+   * - Obtiene la lista de sectores desde el servicio llamando a `obtenserListaEstado()`.
+   * - Recupera los datos de los sectores llamando a `recuperarDatos()`.
+   * - Establece el formulario como no válido por defecto en el store de la sección.
+   * - Se suscribe a los cambios de estado del formulario (`statusChanges`) y, si el formulario es válido, actualiza el store y llama a la validación global del formulario.
+   * - Si el formulario está deshabilitado (`formularioDeshabilitado`), inicializa el estado del formulario en modo solo lectura.
+   * 
+   * @returns {void}
    */
-  // ngOnInit(): void {
-  //   this.obtenserLista();
-  // }
-
   ngOnInit(): void {
     this.seccionQuery.selectSeccionState$
       .pipe(
@@ -167,21 +175,21 @@ esFormularioSoloLectura: boolean = false;
         })
       )
       .subscribe();
-      this.AUtorizacionProsecQuery.selectProsec$
-        .pipe(
-          takeUntil(this.destroyNotifier$),
-          map((state) => {
-            this.sectoresState = state as ProsecState;
-          })
-        )
-        .subscribe();
-      this.initActionFormBuild();
-      this.obtenserListaEstado();
-      this.recuperarDatos();
+    this.AUtorizacionProsecQuery.selectProsec$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((state) => {
+          this.sectoresState = state as ProsecState;
+        })
+      )
+      .subscribe();
+    this.initActionFormBuild();
+    this.obtenserListaEstado();
+    this.recuperarDatos();
 
-      this.seccionStore.establecerFormaValida([false]);
+    this.seccionStore.establecerFormaValida([false]);
 
-      this.sectoresYMercancias.statusChanges
+    this.sectoresYMercancias.statusChanges
       .pipe(
         takeUntil(this.destroyNotifier$),
         delay(10),
@@ -194,13 +202,21 @@ esFormularioSoloLectura: boolean = false;
       )
       .subscribe();
 
-      if(this.formularioDeshabilitado){
-        this.inicializarEstadoFormulario();
-      }
-
+    if (this.formularioDeshabilitado) {
+      this.inicializarEstadoFormulario();
     }
+  }
 
-    inicializarEstadoFormulario(): void {
+  /**
+   * @method inicializarEstadoFormulario
+   * @description
+   * Inicializa el estado del formulario de sectores y mercancías según el modo de solo lectura.
+   * Si el formulario está en modo solo lectura (`esFormularioSoloLectura` es `true`), deshabilita todos los controles del formulario.
+   * En caso contrario, habilita los controles para permitir la edición por parte del usuario.
+   * 
+   * @returns {void}
+   */
+  inicializarEstadoFormulario(): void {
     if (this.esFormularioSoloLectura) {
       this.sectoresYMercancias.disable();
     }
@@ -209,17 +225,26 @@ esFormularioSoloLectura: boolean = false;
     } 
   }
   
-    initActionFormBuild(): void {
-      this.sectoresYMercancias = this.fb.group({
-        sector: [
-          this.sectoresState.Sector,
-          Validators.required
-        ],
-        Fraccion_arancelaria: [
-          this.sectoresState.Fraccion_arancelaria
-        ]
-      })
-    }
+  /**
+   * @method initActionFormBuild
+   * @description
+   * Inicializa el formulario reactivo `sectoresYMercancias` con los valores actuales del estado de sectores.
+   * Define los controles del formulario para el sector (obligatorio) y la fracción arancelaria.
+   * Este método se utiliza para construir la estructura del formulario al cargar el componente o al actualizar el estado.
+   * 
+   * @returns {void}
+   */
+  initActionFormBuild(): void {
+    this.sectoresYMercancias = this.fb.group({
+      sector: [
+        this.sectoresState.Sector,
+        Validators.required
+      ],
+      Fraccion_arancelaria: [
+        this.sectoresState.Fraccion_arancelaria
+      ]
+    })
+  }
 
     /**
      * @method setValoresStore
@@ -263,22 +288,25 @@ esFormularioSoloLectura: boolean = false;
   }
 
   /**
- * @descripcion
- * Recupera los datos de los sectores desde el servicio y actualiza la lista de sectores en el componente.
- * Realiza una suscripción al servicio que obtiene los datos de la tabla 'sectorDatos.json'.
- * Si la respuesta es un arreglo válido, asigna los datos a la propiedad `sectors`.
- */
-recuperarDatos(): void {
-  this.ProsecService.obtenerTablaDatos('sectorDatos.json').subscribe(
-    (response) => {
-      if (response && Array.isArray(response)) {
-        this.sectors = response as FilaSectors[];
+   * @method recuperarDatos
+   * @description
+   * Recupera los datos de los sectores desde el servicio llamando al método `obtenerTablaDatos` con el archivo `sectorDatos.json`.
+   * Si la respuesta es un arreglo, actualiza la propiedad `sectors` con los datos obtenidos.
+   * 
+   * @returns {void}
+   */
+  recuperarDatos(): void {
+    this.ProsecService.obtenerTablaDatos('sectorDatos.json').subscribe(
+      (response) => {
+        if (response && Array.isArray(response)) {
+          this.sectors = response as FilaSectors[];
+        }
       }
-    }
-  );
-}
+    );
+  }
 
 /**
+ * @method sectorSeleccion
  * @descripcion
  * Actualiza el estado del store con el sector seleccionado.
  * @param Sector - Objeto de tipo `Catalogo` que representa el sector seleccionado.
@@ -288,6 +316,7 @@ sectorSeleccion(Sector: Catalogo): void {
 }
 
 /**
+ * @method ngOnDestroy
  * @descripcion
  * Método del ciclo de vida que se ejecuta al destruir el componente.
  * Notifica y completa el Subject para cancelar todas las suscripciones activas y evitar fugas de memoria.

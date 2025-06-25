@@ -28,7 +28,12 @@ import { SeccionLibStore } from '@ng-mf/data-access-user';
 import { TEXTO } from '../../constantes/prosec.module';
 import { TablaSeleccion } from '@ng-mf/data-access-user';
 
-
+/**
+ * @class DomiciliosDePlantasComponent
+ * @description
+ * Componente que permite la gestión de domicilios de plantas como parte del formulario PROSEC.
+ * Maneja formularios, selección de catálogos y carga dinámica de información desde archivos JSON.
+ */
 @Component({
   selector: 'app-domicilios-de-plantas',
   templateUrl: './domicilios-de-plantas.component.html',
@@ -387,6 +392,7 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * @method recuperarDatos
    * @description Recupera los datos de las plantas desde un archivo JSON utilizando el servicio ProsecService.
    * Llama al método `obtenerTablaDatos` con el nombre del archivo y suscribe a la respuesta.
    * Si la respuesta es un arreglo, asigna los datos a la propiedad `plantasDatos`.
@@ -405,6 +411,7 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * @method ngOnDestroy
    * @inheritdoc
    * @description
    * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
