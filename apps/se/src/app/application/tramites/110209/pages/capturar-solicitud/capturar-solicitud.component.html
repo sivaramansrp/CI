@@ -24,17 +24,25 @@
         <solicitante></solicitante>
         }
         @case (2) {
+          @if(esDatosRespuesta){
          <app-detalles-del-transporte></app-detalles-del-transporte>
+          }
         }
         @case (3) {
+          @if(esDatosRespuesta){
         <app-datos-del-destinatario></app-datos-del-destinatario>
         <app-domicilio-del-destinatario></app-domicilio-del-destinatario>
+          }
         }
         @case (4) {
+          @if(esDatosRespuesta){
               <app-transporte></app-transporte>
+          }
         }
         @case (5) {
+          @if(esDatosRespuesta){
            <app-datos-del-certificado (modificarEventCertificado)="modificarEventCapturar.emit($event)"></app-datos-del-certificado>
+          }
         }
         }
       </ng-container>

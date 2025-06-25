@@ -285,7 +285,7 @@ export class RepresentacionFederalComponent implements OnInit, OnDestroy {
    * this.establecerCambioDeValor({ campo: 'observaciones', valor: 'Sin observaciones' });
    * // Actualiza el estado dinámico del campo "observaciones" con el valor "Sin observaciones".
    */
-  establecerCambioDeValor(event: { campo: string; valor: string }): void {
+  establecerCambioDeValor(event: { campo: string; valor: string | null }): void {
     if (event) {
       this.tramite130103Store.setDynamicFieldValue(event.campo, event.valor);
     }

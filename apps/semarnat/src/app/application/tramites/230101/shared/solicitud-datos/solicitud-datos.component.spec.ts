@@ -1,10 +1,10 @@
 import { AlertComponent } from '@ng-mf/data-access-user';
 import { ComponentFixture } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
-import { Solicitud } from '@ng-mf/data-access-user';
 import { SolicitudDatosComponent } from './solicitud-datos.component';
 import { TestBed } from '@angular/core/testing';
 import { TituloComponent } from '@ng-mf/data-access-user';
+import { Solicitud } from '../../models/pantallas-captura.model';
 
 describe('SolicitudDatosComponent', () => {
   let component: SolicitudDatosComponent;
