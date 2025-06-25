@@ -1,23 +1,63 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { By } from '@angular/platform-browser';
+import { Observable, of as observableOf, throwError } from 'rxjs';
+import { provideHttpClient } from '@angular/common/http'; 
 
+import { Component } from '@angular/core';
 import { PasoDosComponent } from './paso-dos.component';
+import { CatalogosService } from '@ng-mf/data-access-user';
+
+@Directive({ selector: '[myCustom]' })
+class MyCustomDirective {
+  @Input() myCustom: any;
+}
 
 describe('PasoDosComponent', () => {
-  let component: PasoDosComponent;
   let fixture: ComponentFixture<PasoDosComponent>;
+  let component: { ngOnDestroy: () => void; getTiposDocumentos: jest.Mock<any, any, any> | (() => void); ngOnInit: () => void; catalogosServices: { getCatalogo?: any; }; };
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      declarations: [PasoDosComponent]
-    })
-    .compileComponents();
-    
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [ FormsModule, ReactiveFormsModule,PasoDosComponent ],
+      declarations: [
+        MyCustomDirective
+      ],
+      schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
+      providers: [
+        provideHttpClient(),
+        CatalogosService
+      ],   
+      
+    }).overrideComponent(PasoDosComponent, {
+
+    }).compileComponents();
     fixture = TestBed.createComponent(PasoDosComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+    component = fixture.debugElement.componentInstance;
   });
 
-  it('should create', () => {
+  afterEach(() => {
+    component.ngOnDestroy = function() {};
+    fixture.destroy();
+  });
+
+  it('should run #constructor()', async () => {
     expect(component).toBeTruthy();
   });
+
+  it('should run #ngOnInit()', async () => {
+    component.getTiposDocumentos = jest.fn();
+    component.ngOnInit();
+    expect(component.getTiposDocumentos).toHaveBeenCalled();
+  });
+
+  it('should run #getTiposDocumentos()', async () => {
+    component.catalogosServices = component.catalogosServices || {};
+    component.catalogosServices.getCatalogo = jest.fn().mockReturnValue(observableOf({}));
+    component.getTiposDocumentos();
+    expect(component.catalogosServices.getCatalogo).toHaveBeenCalled();
+  });
+
 });

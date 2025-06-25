@@ -4,7 +4,7 @@ import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive } from '@angular/co
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { SolicitudDeReporteComponent } from './solicitud-de-reporte.component';
-
+import { provideHttpClient } from '@angular/common/http';
 @Directive({ selector: '[myCustom]' })
 class MyCustomDirective {}
 
@@ -22,6 +22,7 @@ describe('SolicitudDeReporteComponent', () => {
       ],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
       providers: [
+        provideHttpClient()
 
       ]
     }).overrideComponent(SolicitudDeReporteComponent, {
@@ -44,11 +45,21 @@ describe('SolicitudDeReporteComponent', () => {
     component.wizardComponent = component.wizardComponent || {};
     component.wizardComponent.siguiente = jest.fn();
     component.wizardComponent.atras = jest.fn();
+  
     component.getValorIndice({
-      valor: {},
-      accion: {}
+      valor: 2, 
+      accion: 'cont', 
     });
+  
     expect(component.wizardComponent.siguiente).toHaveBeenCalled();
+    expect(component.wizardComponent.atras).not.toHaveBeenCalled();
+  
+    
+    component.getValorIndice({
+      valor: 1, 
+      accion: 'atras', 
+    });
+  
     expect(component.wizardComponent.atras).toHaveBeenCalled();
   });
 

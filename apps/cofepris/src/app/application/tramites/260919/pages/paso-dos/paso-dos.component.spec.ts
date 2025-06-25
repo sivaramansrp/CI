@@ -7,6 +7,7 @@ import { AlertComponent } from '@libs/shared/data-access-user/src';
 import { AnexarDocumentosComponent } from '@libs/shared/data-access-user/src';
 import { ToastrModule } from 'ngx-toastr';
 import { ToastrService } from 'ngx-toastr';
+import { of } from 'rxjs';
 
 describe('PasoDosComponent', () => {
   let component: PasoDosComponent;
@@ -15,13 +16,16 @@ describe('PasoDosComponent', () => {
 
   beforeEach(async () => {
     catalogosServiceMock = {
-      getCatalogo: jest.fn()
+      getCatalogo: jest.fn().mockReturnValue(of([])) 
     };
+  
 
     await TestBed.configureTestingModule({
       declarations: [PasoDosComponent],
       imports: [TituloComponent, AlertComponent, AnexarDocumentosComponent, ToastrModule.forRoot()],
-      providers: [provideHttpClient(), CatalogosService, ToastrService]
+      providers: [provideHttpClient(), 
+        { provide: CatalogosService, useValue: catalogosServiceMock}, 
+        CatalogosService, ToastrService]
     }).compileComponents();
   });
 

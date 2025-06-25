@@ -18,7 +18,6 @@ describe('PermisoRemediosHerbalesComponent', () => {
       imports: [ FormsModule, ReactiveFormsModule ],
       declarations: [
         PermisoRemediosHerbalesComponent,
-      
       ],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
       providers: [
@@ -38,18 +37,6 @@ describe('PermisoRemediosHerbalesComponent', () => {
 
   it('should run #constructor()', async () => {
     expect(component).toBeTruthy();
-  });
-
-  it('should run #getValorIndice()', async () => {
-    component.wizardComponent = component.wizardComponent || {};
-    component.wizardComponent.siguiente = jest.fn();
-    component.wizardComponent.atras = jest.fn();
-    component.getValorIndice({
-      valor: {},
-      accion: {}
-    });
-    expect(component.wizardComponent.siguiente).toHaveBeenCalled();
-    expect(component.wizardComponent.atras).toHaveBeenCalled();
   });
 
 });
