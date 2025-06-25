@@ -1,13 +1,16 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { PagoDeDerechosComponent } from '../../../../shared/components/pago-de-derechos/pago-de-derechos.component';
 import { PagoDerechosFormState } from '../../../../shared/models/pago-de-derechos.model';
+
 import { Subject } from 'rxjs';
 import { Tramite240411Query } from '../../estados/tramite240411Query.query';
 import { Tramite240411Store } from '../../estados/tramite240411Store.store';
 import { takeUntil } from 'rxjs';
+
 /**
  * @title Pago de Derechos Contenedora
  * @description Componente contenedor que se encarga de enlazar el estado de pago de derechos con el formulario correspondiente.
@@ -33,6 +36,12 @@ export class PagoDeDerechosContenedoraComponent implements OnInit, OnDestroy {
    * @property {PagoDerechosFormState} pagoDerechoFormState
    */
   public pagoDerechoFormState!: PagoDerechosFormState;
+  
+  /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  esFormularioSoloLectura: boolean = false;
 
   /**
    * Constructor del componente.
@@ -44,10 +53,11 @@ export class PagoDeDerechosContenedoraComponent implements OnInit, OnDestroy {
    */
   constructor(
     private tramiteQuery: Tramite240411Query,
-    private tramiteStore: Tramite240411Store 
-  ) {
-    // 
-  }
+    private tramiteStore: Tramite240411Store,
+    private consultaioQuery: ConsultaioQuery
+      ) {
+    // Constructor vacío: La inicialización se realizará en métodos específicos según sea necesario.
+     }
 
   /**
    * Hook del ciclo de vida que se ejecuta al inicializar el componente.
@@ -57,13 +67,28 @@ export class PagoDeDerechosContenedoraComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   ngOnInit(): void {
-    this.tramiteQuery.getPagoDerechos$
+   
+     this.obtenerEstadoValor()
+      this.tramiteQuery.getPagoDerechos$
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((data) => {
         this.pagoDerechoFormState = data;
       });
-  }
 
+  }
+/**
+   * Se suscribe al observable del estado del trámite (`Tramite220103Query`)
+   * para obtener y almacenar el estado actual en `estadoSeleccionado`.
+   * La suscripción se gestiona con `takeUntil` para limpiarse automáticamente
+   * en `ngOnDestroy`.
+   */
+  obtenerEstadoValor(): void {
+   this.consultaioQuery.selectConsultaioState$
+    .pipe(takeUntil(this.unsubscribe$))
+    .subscribe((seccionState) => {
+      this.esFormularioSoloLectura = seccionState.readonly;
+    });
+  }
   /**
    * Hook del ciclo de vida que se ejecuta al destruir el componente.
    * Libera las suscripciones para evitar fugas de memoria.
