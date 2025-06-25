@@ -18,8 +18,8 @@
  *
  * @templateUrl ./paso-capturar-solicitud.component.html
  */
-import { Component, ViewChild } from '@angular/core';
-import { DatosPasos, ListaPasosWizard, PASOS4, SeccionLibStore, WizardComponent } from '@libs/shared/data-access-user/src';
+import { Component, OnDestroy, ViewChild } from '@angular/core';
+import { DatosPasos, ListaPasosWizard, PASOS4, SeccionLibStore, WizardComponent } from '@ng-mf/data-access-user';
 import { AccionBoton } from '../../models/nuevo-programa-industrial.model';
 import { Subject } from 'rxjs';
 import { Tramite80101Query } from '../../estados/tramite80101.query';
@@ -37,7 +37,7 @@ import { takeUntil } from 'rxjs';
  * Clase que representa el componente de captura de solicitud.
  * Este componente gestiona el flujo del wizard para la captura de la solicitud en el trámite 80103.
  */
-export class PasoCapturarSolicitudComponent {
+export class PasoCapturarSolicitudComponent implements OnDestroy {
   /**
    * Almacena los pasos del wizard definidos en PASOS4.
    * @type {ListaPasosWizard[]}
@@ -84,7 +84,7 @@ export class PasoCapturarSolicitudComponent {
    * @private
    * @type {Subject<void>}
    */
-  destroyNotifier$: Subject<void> = new Subject();
+  public destroyNotifier$: Subject<void> = new Subject();
 
   /**
    * Constructor del componente `PasoCapturarSolicitudComponent`.
@@ -118,5 +118,27 @@ export class PasoCapturarSolicitudComponent {
         this.wizardComponent.atras();
       }
     }
+  }
+
+  /**
+   * @method ngOnDestroy
+   * @description
+   * Este método es parte del ciclo de vida del componente y se ejecuta automáticamente
+   * cuando el componente está a punto de ser destruido. Se utiliza para limpiar las suscripciones
+   * activas y evitar fugas de memoria en la aplicación.
+   *
+   * Funcionalidad:
+   * - Notifica a través del `Subject` `destroy$` que el componente será destruido.
+   * - Completa el `Subject` para liberar los recursos asociados.
+   *
+   * @example
+   * ngOnDestroy(): void {
+   *   this.destroy$.next();
+   *   this.destroy$.complete();
+   * }
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }

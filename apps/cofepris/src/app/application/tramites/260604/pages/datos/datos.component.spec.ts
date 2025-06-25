@@ -43,16 +43,16 @@ describe('DatosComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('debe inicializar indice en 1', () => {
+  it('debe inicializar el índice en 1', () => {
     expect(component.indice).toBe(1);
   });
 
-  it('debe cambiar el indice al llamar seleccionaTab', () => {
+  it('debe cambiar el índice al llamar a seleccionaTab', () => {
     component.seleccionaTab(3);
     expect(component.indice).toBe(3);
   });
 
-  it('debe suscribirse a selectConsultaioState$ y llamar guardarDatosFormulario si update es true', () => {
+  it('debe suscribirse a selectConsultaioState$ y llamar a guardarDatosFormulario si update es true', () => {
     const consultaState = { update: true };
     mockConsultaioQuery.selectConsultaioState$ = of(consultaState);
     const guardarSpy = jest.spyOn(component, 'guardarDatosFormulario').mockImplementation();
@@ -69,7 +69,7 @@ describe('DatosComponent', () => {
     expect(component.esDatosRespuesta).toBe(true);
   });
 
-  it('guardarDatosFormulario debe actualizar esDatosRespuesta y llamar actualizarEstadoFormulario', () => {
+  it('guardarDatosFormulario debe actualizar esDatosRespuesta y llamar a actualizarEstadoFormulario', () => {
     const resp = { test: 'value' };
     mockDatosService.getRegistroTomaMuestrasMercanciasData.mockReturnValue(of(resp));
     component.esDatosRespuesta = false;
@@ -86,7 +86,7 @@ describe('DatosComponent', () => {
     expect(mockDatosService.actualizarEstadoFormulario).not.toHaveBeenCalled();
   });
 
-  it('ngAfterViewInit debe llamar obtenerTipoPersona con MORAL_NACIONAL', () => {
+  it('ngAfterViewInit debe llamar a obtenerTipoPersona con MORAL_NACIONAL', () => {
     component.ngAfterViewInit();
     expect(mockSolicitanteComponent.obtenerTipoPersona).toHaveBeenCalledWith(TIPO_PERSONA.MORAL_NACIONAL);
   });
