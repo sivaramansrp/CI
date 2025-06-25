@@ -39,17 +39,17 @@ describe('PasoTresComponent', () => {
     jest.clearAllMocks();
   });
 
-  it('should create the component', () => {
+  it('debería crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should navigate to "servicios-extraordinarios/acuse" when obtieneFirma is called with a valid signature', () => {
+  it('debería navegar a "servicios-extraordinarios/acuse" cuando obtieneFirma es llamada con una firma válida', () => {
     const firma = 'valid-signature';
     component.obtieneFirma(firma);
     expect(mockRouter.navigate).toHaveBeenCalledWith(['servicios-extraordinarios/acuse']);
   });
 
-  it('should not navigate when obtieneFirma is called with an empty signature', () => {
+  it('no debería navegar cuando obtieneFirma es llamada con una firma vacía', () => {
     const firma = '';
     component.obtieneFirma(firma);
     expect(mockRouter.navigate).not.toHaveBeenCalled();
