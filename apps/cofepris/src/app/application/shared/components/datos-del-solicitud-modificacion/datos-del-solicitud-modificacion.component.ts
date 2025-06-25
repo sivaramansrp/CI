@@ -105,7 +105,10 @@ import { NUEVA_NOTIFICACION, PAIS_DE_PROCEDENCIA_LABEL } from '../../constantes/
 export class DatosDelSolicitudModificacionComponent
   implements OnInit, OnDestroy, AfterViewInit
 {
-
+/**
+ * @description
+ * Componente que gestiona la modificación de datos relacionados con una solicitud.
+ */
   public DatosDelSolicitudModificacionComponent = DatosDelSolicitudModificacionComponent;
 
   /**
