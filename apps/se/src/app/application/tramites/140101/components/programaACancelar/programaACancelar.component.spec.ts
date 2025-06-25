@@ -50,7 +50,7 @@ describe('ProgramaACancelarComponent', () => {
     };
 
     await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule , ProgramaACancelarComponent , HttpClientTestingModule],
+      imports: [ReactiveFormsModule, ProgramaACancelarComponent, HttpClientTestingModule],
       declarations: [],
       providers: [
         FormBuilder,
@@ -66,11 +66,11 @@ describe('ProgramaACancelarComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize form with correct values', () => {
+  it('debe inicializar el formulario con los valores correctos', () => {
     expect(component.programaForm.value).toMatchObject({
       idProgramaSeleccionado: 1,
       solicitudObservaciones: 'Obs',
@@ -78,7 +78,7 @@ describe('ProgramaACancelarComponent', () => {
     });
   });
 
-  it('should patch form and update store on valorDeAlternancia', () => {
+  it('debe actualizar el formulario y el store al llamar valorDeAlternancia', () => {
     const row = { folioPrograma: 'FOL999', idProgramaSeleccionado: '2', modalidad: 'MOD2', representacionFederal: 'REP2', tipoPrograma: 'TIPO2', estatus: 'INACTIVO' };
     component.datosTabla = [row];
     component.valorDeAlternancia(row);
@@ -86,19 +86,19 @@ describe('ProgramaACancelarComponent', () => {
     expect(component.programaForm.get('folioPrograma')?.value).toBe('FOL999');
   });
 
-  it('should disable form if soloLectura is true', () => {
+  it('debe deshabilitar el formulario si soloLectura es true', () => {
     component.soloLectura = true;
     component.inicializarFormulario();
     expect(component.programaForm.disabled).toBe(true);
   });
 
-  it('should call formValidator.isValid in isValid()', () => {
+  it('debe llamar a formValidator.isValid en isValid()', () => {
     const result = component.isValid('folioPrograma');
     expect(mockFormValidator.isValid).toHaveBeenCalledWith(component.programaForm, 'folioPrograma');
     expect(result).toBe(true);
   });
 
-  it('should clean up subscriptions on destroy', () => {
+  it('debe limpiar las suscripciones al destruir el componente', () => {
     const nextSpy = jest.spyOn(component.destroyNotifier$, 'next');
     const completeSpy = jest.spyOn(component.destroyNotifier$, 'complete');
     component.ngOnDestroy();

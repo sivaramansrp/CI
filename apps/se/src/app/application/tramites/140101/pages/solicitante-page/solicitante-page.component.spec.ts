@@ -22,33 +22,33 @@ describe('SolicitantePageComponent', () => {
     fixture = TestBed.createComponent(SolicitantePageComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
-    // Assign the mock after detectChanges so @ViewChild is set
+    // Asignar el mock después de detectChanges para que @ViewChild esté definido
     component.wizardComponent = mockWizardComponent as any;
   });
 
-  it('should create', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize indice to 1', () => {
+  it('debe inicializar indice en 1', () => {
     expect(component.indice).toBe(1);
   });
 
-  it('should update indice and call wizardComponent.siguiente on getValorIndice with "cont"', () => {
+  it('debe actualizar indice y llamar a wizardComponent.siguiente al ejecutar getValorIndice con "cont"', () => {
     component.wizardComponent = mockWizardComponent as any;
     component.getValorIndice({ valor: 2, accion: 'cont' });
     expect(component.indice).toBe(2);
     expect(mockWizardComponent.siguiente).toHaveBeenCalled();
   });
 
-  it('should update indice and call wizardComponent.atras on getValorIndice with "atras"', () => {
+  it('debe actualizar indice y llamar a wizardComponent.atras al ejecutar getValorIndice con "atras"', () => {
     component.wizardComponent = mockWizardComponent as any;
     component.getValorIndice({ valor: 3, accion: 'atras' });
     expect(component.indice).toBe(3);
     expect(mockWizardComponent.atras).toHaveBeenCalled();
   });
 
-  it('should not update indice or call wizardComponent methods if valor is out of range', () => {
+  it('no debe actualizar indice ni llamar métodos de wizardComponent si valor está fuera de rango', () => {
     component.wizardComponent = mockWizardComponent as any;
     component.getValorIndice({ valor: 0, accion: 'cont' });
     expect(component.indice).toBe(1);
@@ -56,13 +56,13 @@ describe('SolicitantePageComponent', () => {
     expect(mockWizardComponent.atras).not.toHaveBeenCalled();
   });
 
-  it('should have TEXTOS defined', () => {
+  it('debe tener TEXTOS definido', () => {
     expect(component.TEXTOS).toBeDefined();
     expect(component.TEXTOS.AVISO).toBeDefined();
     expect(component.TEXTOS.FIRMAR).toBeDefined();
   });
 
-  it('should have datosPasos initialized correctly', () => {
+  it('debe inicializar datosPasos correctamente', () => {
     expect(component.datosPasos.nroPasos).toBe(component.pantallasPasos.length);
     expect(component.datosPasos.indice).toBe(component.indice);
     expect(component.datosPasos.txtBtnAnt).toBe('Anterior');
