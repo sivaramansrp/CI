@@ -23,6 +23,7 @@ export class PasoTresComponent implements OnInit {
    * @param router - Inyecta el servicio Router para la navegación.
    * @param tramiteFolioServices - Inyecta el servicio TramiteFolioService para obtener los datos del trámite.
    * @param tramiteStore - Inyecta el store TramiteFolioStore para manejar el estado del trámite.
+   * @param firmaService - Inyecta el servicio DocumentosService para manejar la firma de documentos.
    */
   constructor(
     private router: Router,
@@ -42,7 +43,7 @@ export class PasoTresComponent implements OnInit {
   }
 
   /**
-   * Maneja el evento para obtener la firma y realiza acciones adicionales.
+   *@description Maneja el evento para obtener la firma y realiza acciones adicionales.
    * @param ev - La cadena de texto que representa la firma obtenida.
    */
   obtieneFirma(ev: string): void {
