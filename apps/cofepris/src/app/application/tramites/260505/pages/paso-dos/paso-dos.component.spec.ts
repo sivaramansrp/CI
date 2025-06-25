@@ -17,7 +17,7 @@ describe('PasoDosComponent', () => {
 
   beforeEach(async () => {
     mockCatalogosService = {
-      getCatalogo: jest.fn(),
+      getCatalogo: jest.fn().mockReturnValue(of([])),
     };
 
     await TestBed.configureTestingModule({
@@ -25,7 +25,7 @@ describe('PasoDosComponent', () => {
       providers: [
         { provide: CatalogosService, useValue: mockCatalogosService },
       ],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA], // Add this to handle unknown elements like 'ng-titulo'
+      schemas: [CUSTOM_ELEMENTS_SCHEMA],
     }).compileComponents();
 
     fixture = TestBed.createComponent(PasoDosComponent);

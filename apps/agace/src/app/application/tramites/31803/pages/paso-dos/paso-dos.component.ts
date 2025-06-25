@@ -6,8 +6,8 @@ import {
 } from '@ng-mf/data-access-user';
 import { Catalogo, CatalogosService, TEXTOS } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ReplaySubject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { ReplaySubject, Subscription, takeUntil } from 'rxjs';
 
 /**
  * Componente que representa el segundo paso del trámite.
