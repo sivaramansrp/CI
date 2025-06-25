@@ -3,6 +3,7 @@ import { ToastrModule } from 'ngx-toastr';
 import { Router } from '@angular/router';
 import { PasoTresComponent } from './paso-tres.component';
 import { FirmaElectronicaComponent } from '@libs/shared/data-access-user/src';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('PasoTresComponent', () => {
   let component: PasoTresComponent;
@@ -22,7 +23,7 @@ describe('PasoTresComponent', () => {
 
     await TestBed.configureTestingModule({
       declarations: [PasoTresComponent],
-      imports:[FirmaElectronicaComponent,ToastrModule.forRoot()],
+      imports:[HttpClientTestingModule,FirmaElectronicaComponent,ToastrModule.forRoot()],
       providers: [{ provide: Router, useValue: mockRouter },
       { provide: '_ToastrService', useValue: mockToastrService },
       { provide: 'ToastConfig', useValue: mockToastConfig }, 

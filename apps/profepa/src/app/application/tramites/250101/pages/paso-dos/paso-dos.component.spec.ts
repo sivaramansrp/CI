@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { PasoDosComponent } from './paso-dos.component';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
@@ -8,6 +9,7 @@ describe('PasoDosComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
+      imports: [HttpClientTestingModule],
       declarations: [PasoDosComponent],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
     }).compileComponents();
