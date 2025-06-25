@@ -9,6 +9,7 @@ import { Observable, of as observableOf, throwError } from 'rxjs';
 import { Component } from '@angular/core';
 import { PasoTresComponent } from './paso-tres.component';
 import { ToastrModule } from 'ngx-toastr';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 @Directive({ selector: '[myCustom]' })
 class MyCustomDirective {
@@ -36,7 +37,7 @@ describe('PasoTresComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [FormsModule, ReactiveFormsModule,PasoTresComponent, ToastrModule.forRoot()],
+      imports: [FormsModule, ReactiveFormsModule,PasoTresComponent, ToastrModule.forRoot(),HttpClientTestingModule],
       declarations: [
         TranslatePipe, PhoneNumberPipe, SafeHtmlPipe,
         MyCustomDirective
