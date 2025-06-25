@@ -9,48 +9,30 @@ import { Observable, of as observableOf, throwError } from 'rxjs';
 import { Component } from '@angular/core';
 import { PasoTresComponent } from './paso-tres.component';
 import { Router } from '@angular/router';
+import { InjectionToken } from '@angular/core';
+import { provideToastr, ToastrService } from 'ngx-toastr';
 
 @Injectable()
 class MockRouter {
   navigate() {};
 }
+const MOCK_TOAST_CONFIG = new InjectionToken('ToastConfig');
 
-@Directive({ selector: '[myCustom]' })
-class MyCustomDirective {
-  @Input() myCustom: any;
-}
-
-@Pipe({name: 'translate'})
-class TranslatePipe implements PipeTransform {
-  transform(value: any) { return value; }
-}
-
-@Pipe({name: 'phoneNumber'})
-class PhoneNumberPipe implements PipeTransform {
-  transform(value: any) { return value; }
-}
-
-@Pipe({name: 'safeHtml'})
-class SafeHtmlPipe implements PipeTransform {
-  transform(value: any) { return value; }
-}
 
 describe('PasoTresComponent', () => {
   let fixture: ComponentFixture<PasoTresComponent>;
   let component: { ngOnDestroy: () => void; router: { navigate?: any; }; obtieneFirma: (arg0: {}) => void; };
-
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule ],
-      declarations: [
-        PasoTresComponent,
-        TranslatePipe, PhoneNumberPipe, SafeHtmlPipe,
-        MyCustomDirective
-      ],
+      imports: [ FormsModule, ReactiveFormsModule,PasoTresComponent],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
       providers: [
-        { provide: Router, useClass: MockRouter }
-      ]
+        { provide: Router, useClass: MockRouter },
+        { provide: MOCK_TOAST_CONFIG, useValue: {},ToastrService },
+        provideToastr({
+          positionClass: 'toast-top-right',
+        }), 
+      ],
     }).overrideComponent(PasoTresComponent, {
 
     }).compileComponents();
@@ -59,7 +41,9 @@ describe('PasoTresComponent', () => {
   });
 
   afterEach(() => {
-    component.ngOnDestroy = function() {};
+    if (component.ngOnDestroy) {
+      component.ngOnDestroy(); 
+    }
     fixture.destroy();
   });
 

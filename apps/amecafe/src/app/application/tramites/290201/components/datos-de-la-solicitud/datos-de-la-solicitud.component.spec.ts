@@ -1,5 +1,5 @@
-// @ts-nocheck
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+
+import {  ComponentFixture, TestBed } from '@angular/core/testing';
 import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -13,29 +13,9 @@ import { RegistrarSolicitudService } from '../../services/registrar-solicitud.se
 @Injectable()
 class MockRegistrarSolicitudService {}
 
-@Directive({ selector: '[myCustom]' })
-class MyCustomDirective {
-  @Input() myCustom;
-}
-
-@Pipe({name: 'translate'})
-class TranslatePipe implements PipeTransform {
-  transform(value) { return value; }
-}
-
-@Pipe({name: 'phoneNumber'})
-class PhoneNumberPipe implements PipeTransform {
-  transform(value) { return value; }
-}
-
-@Pipe({name: 'safeHtml'})
-class SafeHtmlPipe implements PipeTransform {
-  transform(value) { return value; }
-}
-
 describe('DatosDeLaSolicitudComponent', () => {
-  let fixture;
-  let component;
+  let fixture: ComponentFixture<DatosDeLaSolicitudComponent>;
+  let component: { ngOnDestroy: () => void; getSolicitudData: jest.Mock<any, any, any> | (() => void); ngOnInit: () => void; mostrarColapsable: () => void; registrarsolicitud: { getSolicitudData?: any; }; destroyed$: { next?: any; complete?: any; }; };
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -63,7 +43,7 @@ describe('DatosDeLaSolicitudComponent', () => {
   it('should run #ngOnInit()', async () => {
     component.getSolicitudData = jest.fn();
     component.ngOnInit();
-    // expect(component.getSolicitudData).toHaveBeenCalled();
+    expect(component.getSolicitudData).toHaveBeenCalled();
   });
 
   it('should run #mostrarColapsable()', async () => {
@@ -76,13 +56,7 @@ describe('DatosDeLaSolicitudComponent', () => {
     component.registrarsolicitud = component.registrarsolicitud || {};
     component.registrarsolicitud.getSolicitudData = jest.fn().mockReturnValue(observableOf({}));
     component.getSolicitudData();
-    // expect(component.registrarsolicitud.getSolicitudData).toHaveBeenCalled();
-  });
-
-  it('should run #onClick()', async () => {
-
-    component.onClick();
-
+    expect(component.registrarsolicitud.getSolicitudData).toHaveBeenCalled();
   });
 
   it('should run #ngOnDestroy()', async () => {
@@ -90,8 +64,8 @@ describe('DatosDeLaSolicitudComponent', () => {
     component.destroyed$.next = jest.fn();
     component.destroyed$.complete = jest.fn();
     component.ngOnDestroy();
-    // expect(component.destroyed$.next).toHaveBeenCalled();
-    // expect(component.destroyed$.complete).toHaveBeenCalled();
+    expect(component.destroyed$.next).toHaveBeenCalled();
+    expect(component.destroyed$.complete).toHaveBeenCalled();
   });
 
 });
