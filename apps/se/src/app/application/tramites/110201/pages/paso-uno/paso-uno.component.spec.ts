@@ -86,17 +86,5 @@ it('should call guardarDatosFormularios if consultaState.update is true', async 
     expect(component.solicitante.obtenerTipoPersona).toHaveBeenCalledWith(TIPO_PERSONA.MORAL_NACIONAL);
   });
 
-  // it('seleccionaTab should set indice', () => {
-  //   component.indice = 1;
-  //   component.seleccionaTab(3);
-  //   expect(component.indice).toBe(3);
-  // });
-
-  // it('ngOnDestroy should complete destroyNotifier$', () => {
-  //   const nextSpy = jest.spyOn(component.destroyNotifier$, 'next');
-  //   const completeSpy = jest.spyOn(component.destroyNotifier$, 'complete');
-  //   component.ngOnDestroy();
-  //   expect(nextSpy).toHaveBeenCalled();
-  //   expect(completeSpy).toHaveBeenCalled();
-  // });
+  
 });
