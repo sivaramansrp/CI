@@ -108,17 +108,17 @@ describe('DomicilioEstablecimientoAduanasComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize forms with values from solicitudState', () => {
+  it('debe inicializar los formularios con valores de solicitudState', () => {
     expect(component.domicilio.value.codigoPostal).toBe('12345');
     expect(component.formAgente.value.claveScianModal).toBe('SCIAN');
     expect(component.formMercancias.value.nombreComercial).toBe('Comercial');
   });
 
-  it('should disable forms if esFormularioSoloLectura is true', () => {
+  it('debe deshabilitar los formularios si esFormularioSoloLectura es verdadero', () => {
     component.esFormularioSoloLectura = true;
     component.solicitudState = {
       codigoPostal: '12345',
@@ -164,13 +164,13 @@ describe('DomicilioEstablecimientoAduanasComponent', () => {
     expect(component.formMercancias.disabled).toBe(true);
   });
 
-  it('should call setValoresStore and update store', () => {
+  it('debe llamar setValoresStore y actualizar el store', () => {
     component.domicilio.get('codigoPostal')?.setValue('54321');
     component.setValoresStore(component.domicilio, 'codigoPostal', 'setCodigoPostal');
     expect(avisocalidadStoreMock.setCodigoPostal).toHaveBeenCalledWith('54321');
   });
 
-  it('should call setValoresStore for all forms and fields', () => {
+  it('debe llamar setValoresStore para todos los formularios y campos', () => {
     // domicilio
     component.domicilio.get('estado')?.setValue('NuevoEstado');
     component.setValoresStore(component.domicilio, 'estado', 'setEstado');
@@ -245,28 +245,28 @@ describe('DomicilioEstablecimientoAduanasComponent', () => {
     expect(avisocalidadStoreMock.setObjetoImportacion).toHaveBeenCalledWith('NEWOBJ');
   });
 
-  it('should call obtenerEstadoList and set estado', () => {
+  it('debe llamar obtenerEstadoList y establecer estado', () => {
     component.estado = [];
     component.obtenerEstadoList();
     expect(component.estado.length).toBeGreaterThan(0);
     expect(datosDomicilioLegalServiceMock.getObtenerEstadoList).toHaveBeenCalled();
   });
 
-  it('should call obtenerTablaDatos and set nicoTablaDatos', () => {
+  it('debe llamar obtenerTablaDatos y establecer nicoTablaDatos', () => {
     component.nicoTablaDatos = [];
     component.obtenerTablaDatos();
     expect(component.nicoTablaDatos.length).toBeGreaterThan(0);
     expect(datosDomicilioServiceMock.getObtenerTablaDatos).toHaveBeenCalled();
   });
 
-  it('should call obtenerMercanciasDatos and set mercanciasTablaDatos', () => {
+  it('debe llamar obtenerMercanciasDatos y establecer mercanciasTablaDatos', () => {
     component.mercanciasTablaDatos = [];
     component.obtenerMercanciasDatos();
     expect(component.mercanciasTablaDatos.length).toBeGreaterThan(0);
     expect(datosDomicilioServiceMock.getObtenerMercanciasDatos).toHaveBeenCalled();
   });
 
-  it('should toggle colapsableDuos', () => {
+  it('debe alternar colapsableDuos', () => {
     component.colapsableDuos = false;
     component.mostrar_colapsableDuos();
     expect(component.colapsableDuos).toBe(true);
@@ -274,7 +274,7 @@ describe('DomicilioEstablecimientoAduanasComponent', () => {
     expect(component.colapsableDuos).toBe(false);
   });
 
-  it('should toggle colapsableTres', () => {
+  it('debe alternar colapsableTres', () => {
     component.colapsableTres = false;
     component.mostrar_colapsableTres();
     expect(component.colapsableTres).toBe(true);
@@ -282,7 +282,7 @@ describe('DomicilioEstablecimientoAduanasComponent', () => {
     expect(component.colapsableTres).toBe(false);
   });
 
-  it('should clean up on ngOnDestroy', () => {
+  it('debe limpiar recursos en ngOnDestroy', () => {
     const spy = jest.spyOn((component as any).destroyNotifier$, 'next');
     const spy2 = jest.spyOn((component as any).destroyNotifier$, 'complete');
     component.ngOnDestroy();
@@ -290,27 +290,27 @@ describe('DomicilioEstablecimientoAduanasComponent', () => {
     expect(spy2).toHaveBeenCalled();
   });
 
-  it('should not throw if setValoresStore is called with missing control', () => {
+  it('no debe lanzar error si setValoresStore es llamado con un control faltante', () => {
     const dummyForm = new FormGroup({});
     expect(() => component.setValoresStore(dummyForm, 'notExist', 'setCodigoPostal')).not.toThrow();
   });
 
-  it('should not throw if obtenerEstadoList returns undefined data', () => {
+  it('no debe lanzar error si obtenerEstadoList retorna datos indefinidos', () => {
     datosDomicilioLegalServiceMock.getObtenerEstadoList.mockReturnValueOnce(of(undefined));
     expect(() => component.obtenerEstadoList()).not.toThrow();
   });
 
-  it('should not throw if obtenerTablaDatos returns undefined data', () => {
+  it('no debe lanzar error si obtenerTablaDatos retorna datos indefinidos', () => {
     datosDomicilioServiceMock.getObtenerTablaDatos.mockReturnValueOnce(of(undefined));
     expect(() => component.obtenerTablaDatos()).not.toThrow();
   });
 
-  it('should not throw if obtenerMercanciasDatos returns undefined data', () => {
+  it('no debe lanzar error si obtenerMercanciasDatos retorna datos indefinidos', () => {
     datosDomicilioServiceMock.getObtenerMercanciasDatos.mockReturnValueOnce(of(undefined));
     expect(() => component.obtenerMercanciasDatos()).not.toThrow();
   });
 
-  it('should call paisDeProcedenciaBotones functions without error', () => {
+  it('debe llamar funciones de paisDeProcedenciaBotones sin error', () => {
     // crossList is a QueryList, mock it
     component.crossList = {
       toArray: () => [{

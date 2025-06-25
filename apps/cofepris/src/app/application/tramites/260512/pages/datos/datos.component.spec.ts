@@ -5,18 +5,18 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 
 describe('DatosComponent', () => {
-  let component: DatosComponent;
+  let componente: DatosComponent;
   let fixture: ComponentFixture<DatosComponent>;
-  let mockSolicitudService: any;
-  let mockConsultaQuery: any;
+  let servicioSolicitudMock: any;
+  let consultaQueryMock: any;
 
   beforeEach(async () => {
-    mockSolicitudService = {
+    servicioSolicitudMock = {
       getRegistroTomaMuestrasMercanciasData: jest.fn().mockReturnValue(of({ some: 'data' })),
       actualizarEstadoFormulario: jest.fn(),
     };
 
-    mockConsultaQuery = {
+    consultaQueryMock = {
       selectConsultaioState$: of({ update: false }),
     };
 
@@ -24,55 +24,55 @@ describe('DatosComponent', () => {
       imports: [HttpClientTestingModule], 
       declarations: [DatosComponent],
       providers: [
-        { provide: 'SolicitudService', useValue: mockSolicitudService },
-        { provide: 'ConsultaioQuery', useValue: mockConsultaQuery },
+        { provide: 'SolicitudService', useValue: servicioSolicitudMock },
+        { provide: 'ConsultaioQuery', useValue: consultaQueryMock },
       ],
       schemas: [NO_ERRORS_SCHEMA], 
     })
       .overrideComponent(DatosComponent, {
         set: {
           providers: [
-            { provide: 'SolicitudService', useValue: mockSolicitudService },
-            { provide: 'ConsultaioQuery', useValue: mockConsultaQuery },
+            { provide: 'SolicitudService', useValue: servicioSolicitudMock },
+            { provide: 'ConsultaioQuery', useValue: consultaQueryMock },
           ],
         },
       })
       .compileComponents();
 
     fixture = TestBed.createComponent(DatosComponent);
-    component = fixture.componentInstance;
+    componente = fixture.componentInstance;
 
-    (component as any).solicitudService = mockSolicitudService;
-    (component as any).consultaQuery = mockConsultaQuery;
+    (componente as any).solicitudService = servicioSolicitudMock;
+    (componente as any).consultaQuery = consultaQueryMock;
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
-    expect(component).toBeTruthy();
+  it('debería crear el componente', () => {
+    expect(componente).toBeTruthy();
   });
 
-  it('should set esDatosRespuesta to true if consultaState.update is false on ngOnInit', () => {
-    component.consultaState = { update: false } as any;
-    component.ngOnInit();
-    expect(component.esDatosRespuesta).toBe(true);
+  it('debería establecer esDatosRespuesta en true si consultaState.update es false en ngOnInit', () => {
+    componente.consultaState = { update: false } as any;
+    componente.ngOnInit();
+    expect(componente.esDatosRespuesta).toBe(true);
   });
 
-  it('should set esDatosRespuesta and call actualizarEstadoFormulario in guardarDatosFormulario', () => {
-    component.esDatosRespuesta = false;
-    component.guardarDatosFormulario();
-    expect(component.esDatosRespuesta).toBe(true);
-    expect(mockSolicitudService.actualizarEstadoFormulario).toHaveBeenCalledWith({ some: 'data' });
+  it('debería establecer esDatosRespuesta y llamar actualizarEstadoFormulario en guardarDatosFormulario', () => {
+    componente.esDatosRespuesta = false;
+    componente.guardarDatosFormulario();
+    expect(componente.esDatosRespuesta).toBe(true);
+    expect(servicioSolicitudMock.actualizarEstadoFormulario).toHaveBeenCalledWith({ some: 'data' });
   });
 
-  it('should update indice when seleccionaTab is called', () => {
-    component.seleccionaTab(5);
-    expect(component.indice).toBe(5);
+  it('debería actualizar indice cuando se llama seleccionaTab', () => {
+    componente.seleccionaTab(5);
+    expect(componente.indice).toBe(5);
   });
 
-  it('should clean up subscriptions on ngOnDestroy', () => {
-    const nextSpy = jest.spyOn(component['destroyNotifier$'], 'next');
-    const completeSpy = jest.spyOn(component['destroyNotifier$'], 'complete');
-    component.ngOnDestroy();
+  it('debería limpiar las suscripciones en ngOnDestroy', () => {
+    const nextSpy = jest.spyOn(componente['destroyNotifier$'], 'next');
+    const completeSpy = jest.spyOn(componente['destroyNotifier$'], 'complete');
+    componente.ngOnDestroy();
     expect(nextSpy).toHaveBeenCalled();
     expect(completeSpy).toHaveBeenCalled();
   });

@@ -3,39 +3,39 @@ import { HttpClient } from '@angular/common/http';
 import { of } from 'rxjs';
 
 describe('DatosDomicilioService', () => {
-  let service: DatosDomicilioService;
-  let httpClientMock: { get: jest.Mock };
+  let servicio: DatosDomicilioService;
+  let httpClienteMock: { get: jest.Mock };
 
   beforeEach(() => {
-    httpClientMock = { get: jest.fn() };
-    service = new DatosDomicilioService(httpClientMock as any);
+    httpClienteMock = { get: jest.fn() };
+    servicio = new DatosDomicilioService(httpClienteMock as any);
   });
 
-  it('should be created', () => {
-    expect(service).toBeTruthy();
+  it('debería ser creado', () => {
+    expect(servicio).toBeTruthy();
   });
 
-  it('should call http.get with correct URL for getObtenerTablaDatos', (done) => {
-    const mockResponse = { data: 'test' };
-    httpClientMock.get.mockReturnValue(of(mockResponse));
-    service.getObtenerTablaDatos().subscribe((res) => {
-      expect(res).toEqual(mockResponse);
-      expect(httpClientMock.get).toHaveBeenCalledWith('assets/json/cofepris/clave-scian.json');
+  it('debería llamar a http.get con la URL correcta para getObtenerTablaDatos', (done) => {
+    const respuestaMock = { data: 'prueba' };
+    httpClienteMock.get.mockReturnValue(of(respuestaMock));
+    servicio.getObtenerTablaDatos().subscribe((res) => {
+      expect(res).toEqual(respuestaMock);
+      expect(httpClienteMock.get).toHaveBeenCalledWith('assets/json/cofepris/clave-scian.json');
       done();
     });
   });
 
-  it('should call http.get with correct URL for getObtenerMercanciasDatos', (done) => {
-    const mockResponse = { mercancias: [] };
-    httpClientMock.get.mockReturnValue(of(mockResponse));
-    service.getObtenerMercanciasDatos().subscribe((res) => {
-      expect(res).toEqual(mockResponse);
-      expect(httpClientMock.get).toHaveBeenCalledWith('assets/json/cofepris/mercancias-tabla.json');
+  it('debería llamar a http.get con la URL correcta para getObtenerMercanciasDatos', (done) => {
+    const respuestaMock = { mercancias: [] };
+    httpClienteMock.get.mockReturnValue(of(respuestaMock));
+    servicio.getObtenerMercanciasDatos().subscribe((res) => {
+      expect(res).toEqual(respuestaMock);
+      expect(httpClienteMock.get).toHaveBeenCalledWith('assets/json/cofepris/mercancias-tabla.json');
       done();
     });
   });
 
-  it('should have http injected as a public property', () => {
-    expect(service.http).toBe(httpClientMock);
+  it('debería tener http inyectado como una propiedad pública', () => {
+    expect(servicio.http).toBe(httpClienteMock);
   });
 });

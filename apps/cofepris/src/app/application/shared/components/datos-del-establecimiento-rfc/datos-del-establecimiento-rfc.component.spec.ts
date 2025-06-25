@@ -47,11 +47,11 @@ describe('DatosDelEstablecimientoRFCComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize form with values from solicitudState', () => {
+  it('debe inicializar el formulario con valores de solicitudState', () => {
     expect(component.datosDelForm.value).toEqual({
       rfcDel: 'RFC123',
       denominacionRazonSocial: 'Empresa SA',
@@ -59,7 +59,7 @@ describe('DatosDelEstablecimientoRFCComponent', () => {
     });
   });
 
-  it('should disable form if esFormularioSoloLectura is true', () => {
+  it('debe deshabilitar el formulario si esFormularioSoloLectura es verdadero', () => {
     component.esFormularioSoloLectura = true;
     component.solicitudState = {
       rfcDel: 'RFC123',
@@ -70,7 +70,7 @@ describe('DatosDelEstablecimientoRFCComponent', () => {
     expect(component.datosDelForm.disabled).toBe(true);
   });
 
-  it('should enable form if esFormularioSoloLectura is false', () => {
+  it('debe habilitar el formulario si esFormularioSoloLectura es falso', () => {
     component.esFormularioSoloLectura = false;
     component.solicitudState = {
       rfcDel: 'RFC123',
@@ -81,35 +81,34 @@ describe('DatosDelEstablecimientoRFCComponent', () => {
     expect(component.datosDelForm.enabled).toBe(true);
   });
 
-  it('should open modal and set nuevaNotificacion and elementoParaEliminar', () => {
+  it('debe abrir el modal y establecer nuevaNotificacion y elementoParaEliminar', () => {
     component.abrirModal(2);
     expect(component.nuevaNotificacion).toBeDefined();
     expect(component.elementoParaEliminar).toBe(2);
   });
 
-  it('should remove pedimento when eliminarPedimento is called with true', () => {
+  it('debe eliminar el pedimento cuando eliminarPedimento es llamado con true', () => {
     component.pedimentos = [{}, {}, {}] as any;
     component.elementoParaEliminar = 1;
     component.eliminarPedimento(true);
     expect(component.pedimentos.length).toBe(2);
   });
 
-  it('should not remove pedimento when eliminarPedimento is called with false', () => {
+  it('no debe eliminar el pedimento cuando eliminarPedimento es llamado con false', () => {
     component.pedimentos = [{}, {}, {}] as any;
     component.elementoParaEliminar = 1;
     component.eliminarPedimento(false);
     expect(component.pedimentos.length).toBe(3);
   });
 
-it('should clean up on ngOnDestroy', () => {
+  it('debe limpiar recursos en ngOnDestroy', () => {
     const spy = jest.spyOn((component as any).destroyNotifier$, 'next');
     component.ngOnDestroy();
     expect(spy).toHaveBeenCalled();
   });
 
- it('should handle closeModal ElementRef if present', () => {
+  it('debe manejar closeModal ElementRef si está presente', () => {
     component.closeModal = { nativeElement: { click: jest.fn() } } as any;
-    
     expect(component.closeModal).toBeDefined();
   });
 });

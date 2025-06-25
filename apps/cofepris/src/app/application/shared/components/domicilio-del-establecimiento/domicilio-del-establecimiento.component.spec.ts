@@ -127,11 +127,11 @@ describe('DomicilioDelEstablecimientoComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('debería crearse', () => {
     expect(component).toBeTruthy();
   });
 
-  it('ngOnInit should initialize and call data methods', () => {
+  it('ngOnInit debería inicializar y llamar a los métodos de datos', () => {
     const spy1 = jest.spyOn(component, 'cargarEstadoData');
     const spy2 = jest.spyOn(component, 'cargarDatosTabla');
     const spy3 = jest.spyOn(component, 'cargarDatosProductoTabla');
@@ -149,7 +149,7 @@ describe('DomicilioDelEstablecimientoComponent', () => {
     expect(spy7).toHaveBeenCalled();
   });
 
-  it('inicializarEstadoFormulario should call guardarDatosFormulario or inicializarFormulario', () => {
+  it('inicializarEstadoFormulario debería llamar a guardarDatosFormulario o inicializarFormulario', () => {
     const spyGuardar = jest.spyOn(component, 'guardarDatosFormulario');
     const spyInit = jest.spyOn(component, 'inicializarFormulario');
     component.esFormularioSoloLectura = true;
@@ -160,7 +160,7 @@ describe('DomicilioDelEstablecimientoComponent', () => {
     expect(spyInit).toHaveBeenCalled();
   });
 
-  it('guardarDatosFormulario disables/enables forms based on esFormularioSoloLectura', () => {
+  it('guardarDatosFormulario deshabilita/habilita formularios según esFormularioSoloLectura', () => {
     component.inicializarFormulario();
     component.esFormularioSoloLectura = true;
     component.guardarDatosFormulario();
@@ -175,19 +175,19 @@ describe('DomicilioDelEstablecimientoComponent', () => {
     expect(component.DatosMercanciaForm.enabled).toBe(true);
   });
 
-  it('setValoresStore should call the correct store method', () => {
+  it('setValoresStore debería llamar al método correcto del store', () => {
     component.inicializarFormulario();
     component.setValoresStore(component.domicilioForm, 'codigoPostal', 'setCodigoPostal');
     expect(domicilioStoreMock.setCodigoPostal).toHaveBeenCalled();
   });
 
-  it('mostrar_colapsable should toggle colapsable', () => {
+  it('mostrar_colapsable debería alternar colapsable', () => {
     const prev = component.colapsable;
     component.mostrar_colapsable();
     expect(component.colapsable).toBe(!prev);
   });
 
-  it('toggleNoLicenciaSanitaria disables/enables field', () => {
+  it('toggleNoLicenciaSanitaria deshabilita/habilita el campo', () => {
     component.inicializarFormulario();
     const event = { target: { checked: true } } as any;
     component.toggleNoLicenciaSanitaria(event);
@@ -197,52 +197,52 @@ describe('DomicilioDelEstablecimientoComponent', () => {
     expect(component.domicilioForm.get('noLicenciaSanitaria')?.enabled).toBe(true);
   });
 
-  it('cargarEstadoData should set datosEstado', () => {
+  it('cargarEstadoData debería establecer datosEstado', () => {
     component.cargarEstadoData();
     expect(component.datosEstado.length).toBeGreaterThan(0);
   });
 
-  it('cargarDatosTabla should set datosData', () => {
+  it('cargarDatosTabla debería establecer datosData', () => {
     component.cargarDatosTabla();
     expect(component.datosData.length).toBeGreaterThan(0);
   });
 
-  it('cargarDatosProductoTabla should set datosProducto', () => {
+  it('cargarDatosProductoTabla debería establecer datosProducto', () => {
     component.cargarDatosProductoTabla();
     expect(component.datosProducto.length).toBeGreaterThan(0);
   });
 
-  it('obtenerDatosClave should set claveScian', () => {
+  it('obtenerDatosClave debería establecer claveScian', () => {
     component.obtenerDatosClave();
     expect(component.claveScian.length).toBeGreaterThan(0);
   });
 
-  it('obtenerDatosDescripcion should set descripcionScian', () => {
+  it('obtenerDatosDescripcion debería establecer descripcionScian', () => {
     component.obtenerDatosDescripcion();
     expect(component.descripcionScian.length).toBeGreaterThan(0);
   });
 
-  it('obtenerDatosPreOperativo should set radioOptions', () => {
+  it('obtenerDatosPreOperativo debería establecer radioOptions', () => {
     component.obtenerDatosPreOperativo();
     expect(component.radioOptions.length).toBeGreaterThan(0);
   });
 
-  it('obtenerclassificacionProductos should set clasificacionProducto', () => {
+  it('obtenerclassificacionProductos debería establecer clasificacionProducto', () => {
     component.obtenerclassificacionProductos();
     expect(component.clasificacionProducto.length).toBeGreaterThan(0);
   });
 
-  it('mostrarModeloClave should set modal to show', () => {
+  it('mostrarModeloClave debería establecer modal a mostrar', () => {
     component.mostrarModeloClave();
     expect(component.modal).toBe('show');
   });
 
-  it('datosDelProducto should set modal to show', () => {
+  it('datosDelProducto debería establecer modal a mostrar', () => {
     component.datosDelProducto();
     expect(component.modal).toBe('show');
   });
 
-  it('ngOnDestroy should complete destroy$', () => {
+  it('ngOnDestroy debería completar destroy$', () => {
     const spy = jest.spyOn(component['destroy$'], 'next');
     const spy2 = jest.spyOn(component['destroy$'], 'complete');
     component.ngOnDestroy();
@@ -250,7 +250,7 @@ describe('DomicilioDelEstablecimientoComponent', () => {
     expect(spy2).toHaveBeenCalled();
   });
 
-  it('paisDeProcedenciaBotons functions should call agregar/quitar', () => {
+  it('las funciones de paisDeProcedenciaBotons deberían llamar a agregar/quitar', () => {
     const agregar = jest.fn();
     const quitar = jest.fn();
     component.crossList = { toArray: () => [{ agregar, quitar }] } as any;

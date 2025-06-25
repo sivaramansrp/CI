@@ -8,25 +8,25 @@ import { AvisocalidadQuery } from '../../estados/queries/aviso-calidad.query';
 import { FECHA_DE_PAGO } from '../../models/pago-derechos.model';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 
- const mockConsultaioQuery = {
-    selectConsultaioState$: of({ readonly: true }),
-  };
+const consultaioQuerySimulado = {
+  selectConsultaioState$: of({ readonly: true }),
+};
 
-describe('PagoDerechosComponent', () => {
-  let component: PagoDerechosComponent;
+describe('ComponentePagoDerechos', () => {
+  let componente: PagoDerechosComponent;
   let fixture: ComponentFixture<PagoDerechosComponent>;
-  let mockService: any;
-  let mockStore: any;
-  let mockQuery: any;
+  let servicioSimulado: any;
+  let storeSimulado: any;
+  let querySimulado: any;
 
   beforeEach(() => {
-    mockService = {
+    servicioSimulado = {
       getDatos: jest.fn().mockReturnValue(of([{ id: 1, name: 'Derecho 1' }])),
     };
-    mockStore = {
+    storeSimulado = {
       setfechaPago: jest.fn(),
     };
-    mockQuery = {
+    querySimulado = {
       selectSolicitud$: of({
         claveReferencia: '123',
         cadenaDependencia: 'ABC',
@@ -38,28 +38,27 @@ describe('PagoDerechosComponent', () => {
     };
 
     TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule, PagoDerechosComponent], 
+      imports: [ReactiveFormsModule, PagoDerechosComponent],
       providers: [
         FormBuilder,
-        { provide: AvisoImportacionService, useValue: mockService },
-        { provide: AvisocalidadStore, useValue: mockStore },
-        { provide: AvisocalidadQuery, useValue: mockQuery },
-        { provide: ConsultaioQuery, useValue: mockConsultaioQuery },
-
+        { provide: AvisoImportacionService, useValue: servicioSimulado },
+        { provide: AvisocalidadStore, useValue: storeSimulado },
+        { provide: AvisocalidadQuery, useValue: querySimulado },
+        { provide: ConsultaioQuery, useValue: consultaioQuerySimulado },
       ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(PagoDerechosComponent);
-    component = fixture.componentInstance;
+    componente = fixture.componentInstance;
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
-    expect(component).toBeTruthy();
+  it('debería crear el componente', () => {
+    expect(componente).toBeTruthy();
   });
 
-  it('should initialize the form and load data on ngOnInit', () => {
-    expect(component.derechosForm.value).toEqual({
+  it('debería inicializar el formulario y cargar datos en ngOnInit', () => {
+    expect(componente.derechosForm.value).toEqual({
       claveReferencia: '123',
       cadenaDependencia: 'ABC',
       banco: 'XYZ',
@@ -67,43 +66,43 @@ describe('PagoDerechosComponent', () => {
       fechaPago: '2023-01-01',
       importePago: 1000,
     });
-    expect(component.derechosList).toEqual([{ id: 1, name: 'Derecho 1' }]);
+    expect(componente.derechosList).toEqual([{ id: 1, name: 'Derecho 1' }]);
   });
 
-  it('should update fechaPago in the form and store on cambioFechaIngreso', () => {
-    component.cambioFechaPago('2023-02-01');
-    expect(component.derechosForm.get('fechaPago')?.value).toBe('2023-02-01');
-    expect(mockStore.setfechaPago).toHaveBeenCalledWith('2023-02-01');
+  it('debería actualizar fechaPago en el formulario y store al cambiar la fecha', () => {
+    componente.cambioFechaPago('2023-02-01');
+    expect(componente.derechosForm.get('fechaPago')?.value).toBe('2023-02-01');
+    expect(storeSimulado.setfechaPago).toHaveBeenCalledWith('2023-02-01');
   });
 
-  it('should call setValoresStore with correct parameters', () => {
-    const spy = jest.spyOn(mockStore, 'setfechaPago');
-    component.setValoresStore(component.derechosForm, 'fechaPago', 'setfechaPago');
-    expect(spy).toHaveBeenCalledWith('2023-01-01');
+  it('debería llamar setValoresStore con los parámetros correctos', () => {
+    const espia = jest.spyOn(storeSimulado, 'setfechaPago');
+    componente.setValoresStore(componente.derechosForm, 'fechaPago', 'setfechaPago');
+    expect(espia).toHaveBeenCalledWith('2023-01-01');
   });
 
-  it('should unsubscribe on ngOnDestroy', () => {
-    const destroyed$Spy = jest.spyOn(component['destroyed$'], 'next');
-    const completeSpy = jest.spyOn(component['destroyed$'], 'complete');
-    component.ngOnDestroy();
-    expect(destroyed$Spy).toHaveBeenCalled();
-    expect(completeSpy).toHaveBeenCalled();
+  it('debería desuscribirse en ngOnDestroy', () => {
+    const espiaNext = jest.spyOn(componente['destroyed$'], 'next');
+    const espiaComplete = jest.spyOn(componente['destroyed$'], 'complete');
+    componente.ngOnDestroy();
+    expect(espiaNext).toHaveBeenCalled();
+    expect(espiaComplete).toHaveBeenCalled();
   });
 
-  it('should load derechos list from the service', () => {
-    component.loadComboUnidadMedida();
-    expect(mockService.getDatos).toHaveBeenCalled();
-    expect(component.derechosList).toEqual([{ id: 1, name: 'Derecho 1' }]);
+  it('debería cargar la lista de derechos desde el servicio', () => {
+    componente.loadComboUnidadMedida();
+    expect(servicioSimulado.getDatos).toHaveBeenCalled();
+    expect(componente.derechosList).toEqual([{ id: 1, name: 'Derecho 1' }]);
   });
 
-  it('should have the correct initial value for fechaInicioInput', () => {
-    expect(component.fechaInicioInput).toBe(FECHA_DE_PAGO);
+  it('debería tener el valor inicial correcto para fechaInicioInput', () => {
+    expect(componente.fechaInicioInput).toBe(FECHA_DE_PAGO);
   });
 
-  it('should handle empty solicitudState gracefully', () => {
-    mockQuery.selectSolicitud$ = of(null);
-    component.ngOnInit();
-    expect(component.derechosForm.value).toEqual({
+  it('debería manejar un estado de solicitud vacío sin errores', () => {
+    querySimulado.selectSolicitud$ = of(null);
+    componente.ngOnInit();
+    expect(componente.derechosForm.value).toEqual({
       claveReferencia: null,
       cadenaDependencia: null,
       banco: null,
@@ -113,34 +112,32 @@ describe('PagoDerechosComponent', () => {
     });
   });
 
-  it('should handle loadComboUnidadMedida with empty data', () => {
-    mockService.getDatos.mockReturnValue(of([]));
-    component.loadComboUnidadMedida();
-    expect(component.derechosList).toEqual([]);
+  it('debería manejar loadComboUnidadMedida con datos vacíos', () => {
+    servicioSimulado.getDatos.mockReturnValue(of([]));
+    componente.loadComboUnidadMedida();
+    expect(componente.derechosList).toEqual([]);
   });
 
-  it('should not call store method if form field is null in setValoresStore', () => {
-    const spy = jest.spyOn(mockStore, 'setfechaPago');
-    component.derechosForm.get('fechaPago')?.setValue(null);
-    component.setValoresStore(component.derechosForm, 'fechaPago', 'setfechaPago');
-  
-    expect(spy).toHaveBeenCalledWith(null);
+  it('no debería llamar al método del store si el campo del formulario es null en setValoresStore', () => {
+    const espia = jest.spyOn(storeSimulado, 'setfechaPago');
+    componente.derechosForm.get('fechaPago')?.setValue(null);
+    componente.setValoresStore(componente.derechosForm, 'fechaPago', 'setfechaPago');
+    expect(espia).toHaveBeenCalledWith(null);
   });
 
- it('should handle destroyed$ subject correctly on ngOnDestroy', () => {
-    const nextSpy = jest.spyOn(component['destroyed$'], 'next');
-    const completeSpy = jest.spyOn(component['destroyed$'], 'complete');
-    component.ngOnDestroy();
-    expect(nextSpy).toHaveBeenCalledWith();
-    expect(completeSpy).toHaveBeenCalled();
+  it('debería manejar correctamente el subject destroyed$ en ngOnDestroy', () => {
+    const espiaNext = jest.spyOn(componente['destroyed$'], 'next');
+    const espiaComplete = jest.spyOn(componente['destroyed$'], 'complete');
+    componente.ngOnDestroy();
+    expect(espiaNext).toHaveBeenCalledWith();
+    expect(espiaComplete).toHaveBeenCalled();
   });
 
-  it('should initialize and disable the form when esFormularioSoloLectura is true', () => {
-    component.esFormularioSoloLectura = true;
-    component.configurarGrupoForm();
-    const formValue = component.derechosForm.value;
-    // The form value should match the mockQuery data
-    expect(formValue).toEqual({
+  it('debería inicializar y deshabilitar el formulario cuando esFormularioSoloLectura es true', () => {
+    componente.esFormularioSoloLectura = true;
+    componente.configurarGrupoForm();
+    const valorForm = componente.derechosForm.value;
+    expect(valorForm).toEqual({
       claveReferencia: '123',
       cadenaDependencia: 'ABC',
       banco: 'XYZ',
@@ -148,159 +145,153 @@ describe('PagoDerechosComponent', () => {
       fechaPago: '2023-01-01',
       importePago: 1000
     });
-    expect(component.derechosForm.disabled).toBe(true);
+    expect(componente.derechosForm.disabled).toBe(true);
   });
 
-  it('should initialize and enable the form when esFormularioSoloLectura is false', () => {
-    component.esFormularioSoloLectura = false;
-
-    component.configurarGrupoForm();
-
-    expect(component.derechosForm.disabled).toBe(false);
+  it('debería inicializar y habilitar el formulario cuando esFormularioSoloLectura es false', () => {
+    componente.esFormularioSoloLectura = false;
+    componente.configurarGrupoForm();
+    expect(componente.derechosForm.disabled).toBe(false);
   });
 
-  it('should not throw if setValoresStore is called with a non-existent field', () => {
-    expect(() => component.setValoresStore(component.derechosForm, 'noField', 'setfechaPago')).not.toThrow();
+  it('no debería lanzar error si setValoresStore se llama con un campo inexistente', () => {
+    expect(() => componente.setValoresStore(componente.derechosForm, 'noField', 'setfechaPago')).not.toThrow();
   });
 
-  it('should handle cambioFechaPago with undefined/null', () => {
-    expect(() => component.cambioFechaPago(undefined as any)).not.toThrow();
-    expect(() => component.cambioFechaPago(null as any)).not.toThrow();
+  it('debería manejar cambioFechaPago con undefined/null', () => {
+    expect(() => componente.cambioFechaPago(undefined as any)).not.toThrow();
+    expect(() => componente.cambioFechaPago(null as any)).not.toThrow();
   });
 
-  it('should allow ngOnDestroy to be called multiple times safely', () => {
+  it('debería permitir llamar ngOnDestroy varias veces sin error', () => {
     expect(() => {
-      component.ngOnDestroy();
-      component.ngOnDestroy();
+      componente.ngOnDestroy();
+      componente.ngOnDestroy();
     }).not.toThrow();
   });
 
-  it('should handle error in loadComboUnidadMedida gracefully', () => {
-    
-    mockService.getDatos.mockReturnValueOnce({
+  it('debería manejar error en loadComboUnidadMedida sin lanzar excepción', () => {
+    servicioSimulado.getDatos.mockReturnValueOnce({
       pipe: () => ({
         subscribe: (success: any, error: any) => error && error('error')
       })
     });
-    expect(() => component.loadComboUnidadMedida()).not.toThrow();
+    expect(() => componente.loadComboUnidadMedida()).not.toThrow();
   });
 
-  it('should patch derechosForm with partial data', () => {
-    component.derechosForm.patchValue({ claveReferencia: '999' });
-    expect(component.derechosForm.get('claveReferencia')?.value).toBe('999');
+  it('debería actualizar derechosForm con datos parciales', () => {
+    componente.derechosForm.patchValue({ claveReferencia: '999' });
+    expect(componente.derechosForm.get('claveReferencia')?.value).toBe('999');
   });
 
-  it('should not re-disable the form if already disabled in configurarGrupoForm', () => {
-    component.esFormularioSoloLectura = true;
-    component.derechosForm.disable();
-    expect(() => component.configurarGrupoForm()).not.toThrow();
-    expect(component.derechosForm.disabled).toBe(true);
+  it('no debería volver a deshabilitar el formulario si ya está deshabilitado en configurarGrupoForm', () => {
+    componente.esFormularioSoloLectura = true;
+    componente.derechosForm.disable();
+    expect(() => componente.configurarGrupoForm()).not.toThrow();
+    expect(componente.derechosForm.disabled).toBe(true);
   });
 
-  it('should set esFormularioSoloLectura from ConsultaioQuery and configure form on ngOnInit', () => {
-
-    mockConsultaioQuery.selectConsultaioState$ = of({ readonly: true });
-    const configurarSpy = jest.spyOn(component, 'configurarGrupoForm');
-    component.ngOnInit();
-  
-    expect(component.esFormularioSoloLectura).toBe(false);
-    expect(configurarSpy).toHaveBeenCalled();
+  it('debería establecer esFormularioSoloLectura desde ConsultaioQuery y configurar el formulario en ngOnInit', () => {
+    consultaioQuerySimulado.selectConsultaioState$ = of({ readonly: true });
+    const espiaConfigurar = jest.spyOn(componente, 'configurarGrupoForm');
+    componente.ngOnInit();
+    expect(componente.esFormularioSoloLectura).toBe(false);
+    expect(espiaConfigurar).toHaveBeenCalled();
   });
 
-  it('should throw if setValoresStore is called with a non-existent store method', () => {
+  it('debería lanzar error si setValoresStore se llama con un método de store inexistente', () => {
     // @ts-ignore
-    expect(() => component.setValoresStore(component.derechosForm, 'fechaPago', 'noSuchMethod')).toThrow();
+    expect(() => componente.setValoresStore(componente.derechosForm, 'fechaPago', 'noSuchMethod')).toThrow();
   });
 
-  it('should set derechosList to undefined when observable emits undefined', () => {
-    mockService.getDatos.mockReturnValueOnce(of(undefined));
-    expect(() => component.loadComboUnidadMedida()).not.toThrow();
-    expect(component.derechosList).toBe(undefined);
+  it('debería establecer derechosList a undefined cuando el observable emite undefined', () => {
+    servicioSimulado.getDatos.mockReturnValueOnce(of(undefined));
+    expect(() => componente.loadComboUnidadMedida()).not.toThrow();
+    expect(componente.derechosList).toBe(undefined);
   });
 
-  it('should set derechosList to null when observable emits null', () => {
-    mockService.getDatos.mockReturnValueOnce(of(null));
-    expect(() => component.loadComboUnidadMedida()).not.toThrow();
-    expect(component.derechosList).toBe(null);
+  it('debería establecer derechosList a null cuando el observable emite null', () => {
+    servicioSimulado.getDatos.mockReturnValueOnce(of(null));
+    expect(() => componente.loadComboUnidadMedida()).not.toThrow();
+    expect(componente.derechosList).toBe(null);
   });
 
-it('should throw if setValoresStore when store method is not a function', () => {
-   
-    mockStore.setfechaPago = 123;
-    expect(() => component.setValoresStore(component.derechosForm, 'fechaPago', 'setfechaPago')).toThrow();
+  it('debería lanzar error si setValoresStore cuando el método del store no es una función', () => {
+    storeSimulado.setfechaPago = 123;
+    expect(() => componente.setValoresStore(componente.derechosForm, 'fechaPago', 'setfechaPago')).toThrow();
   });
 
-  it('should throw if loadComboUnidadMedida when getDatos throws', () => {
-    mockService.getDatos.mockImplementationOnce(() => { throw new Error('fail'); });
-    expect(() => component.loadComboUnidadMedida()).toThrow();
+  it('debería lanzar error si loadComboUnidadMedida cuando getDatos lanza excepción', () => {
+    servicioSimulado.getDatos.mockImplementationOnce(() => { throw new Error('fail'); });
+    expect(() => componente.loadComboUnidadMedida()).toThrow();
   });
 
   describe('alReiniciar', () => {
-    it('should reset the form', () => {
-      const resetSpy = jest.spyOn(component.derechosForm, 'reset');
-      component.alReiniciar();
-      expect(resetSpy).toHaveBeenCalled();
+    it('debería reiniciar el formulario', () => {
+      const espiaReset = jest.spyOn(componente.derechosForm, 'reset');
+      componente.alReiniciar();
+      expect(espiaReset).toHaveBeenCalled();
     });
   });
 
   describe('esInvalido', () => {
     beforeEach(() => {
-      
-      if (!component.derechosForm.get('fechaPago')) {
-        component.derechosForm.addControl('fechaPago', component['fb'].control(''));
+      if (!componente.derechosForm.get('fechaPago')) {
+        componente.derechosForm.addControl('fechaPago', componente['fb'].control(''));
       }
     });
 
-    it('should return false if fechaPago is empty string', () => {
-      component.derechosForm.get('fechaPago')?.setValue('');
-      expect(component.esInvalido('fechaPago')).toBe(false);
+    it('debería retornar false si fechaPago es cadena vacía', () => {
+      componente.derechosForm.get('fechaPago')?.setValue('');
+      expect(componente.esInvalido('fechaPago')).toBe(false);
     });
 
-    it('should return false if fechaPago is null', () => {
-      component.derechosForm.get('fechaPago')?.setValue(null);
-      expect(component.esInvalido('fechaPago')).toBe(false);
+    it('debería retornar false si fechaPago es null', () => {
+      componente.derechosForm.get('fechaPago')?.setValue(null);
+      expect(componente.esInvalido('fechaPago')).toBe(false);
     });
 
-    it('should return true if fechaPago is invalid (esFechaValida false)', () => {
-      component.derechosForm.get('fechaPago')?.setValue('2020-01-01');
-      jest.spyOn(component, 'esFechaPasada').mockImplementation(() => {});
-      component.esFechaValida = false;
-      expect(component.esInvalido('fechaPago')).toBe(true);
-      expect(component.derechosForm.get('fechaPago')?.errors).toEqual({ esFechaPasada: true });
+    it('debería retornar true si fechaPago es inválida (esFechaValida false)', () => {
+      componente.derechosForm.get('fechaPago')?.setValue('2020-01-01');
+      jest.spyOn(componente, 'esFechaPasada').mockImplementation(() => {});
+      componente.esFechaValida = false;
+      expect(componente.esInvalido('fechaPago')).toBe(true);
+      expect(componente.derechosForm.get('fechaPago')?.errors).toEqual({ esFechaPasada: true });
     });
 
-    it('should return false if fechaPago is valid (esFechaValida true)', () => {
-      component.derechosForm.get('fechaPago')?.setValue('2099-01-01');
-      jest.spyOn(component, 'esFechaPasada').mockImplementation(() => {});
-      component.esFechaValida = true;
-      expect(component.esInvalido('fechaPago')).toBe(false);
-      expect(component.derechosForm.get('fechaPago')?.errors).toEqual({ esFechaPasada: false });
+    it('debería retornar false si fechaPago es válida (esFechaValida true)', () => {
+      componente.derechosForm.get('fechaPago')?.setValue('2099-01-01');
+      jest.spyOn(componente, 'esFechaPasada').mockImplementation(() => {});
+      componente.esFechaValida = true;
+      expect(componente.esInvalido('fechaPago')).toBe(false);
+      expect(componente.derechosForm.get('fechaPago')?.errors).toEqual({ esFechaPasada: false });
     });
 
-    it('should return false if control does not exist', () => {
-      expect(component.esInvalido('noSuchControl')).toBe(false);
+    it('debería retornar false si el control no existe', () => {
+      expect(componente.esInvalido('noSuchControl')).toBe(false);
     });
 
-    it('should return true if control is invalid and touched', () => {
-      component.derechosForm.addControl('testControl', component['fb'].control('', { updateOn: 'change' }));
-      const ctrl = component.derechosForm.get('testControl');
+    it('debería retornar true si el control es inválido y tocado', () => {
+      componente.derechosForm.addControl('testControl', componente['fb'].control('', { updateOn: 'change' }));
+      const ctrl = componente.derechosForm.get('testControl');
       ctrl?.setErrors({ required: true });
       ctrl?.markAsTouched();
-      expect(component.esInvalido('testControl')).toBe(true);
+      expect(componente.esInvalido('testControl')).toBe(true);
     });
 
-    it('should return true if control is invalid and dirty', () => {
-      component.derechosForm.addControl('dirtyControl', component['fb'].control('', { updateOn: 'change' }));
-      const ctrl = component.derechosForm.get('dirtyControl');
+    it('debería retornar true si el control es inválido y dirty', () => {
+      componente.derechosForm.addControl('dirtyControl', componente['fb'].control('', { updateOn: 'change' }));
+      const ctrl = componente.derechosForm.get('dirtyControl');
       ctrl?.setErrors({ required: true });
       ctrl?.markAsDirty();
-      expect(component.esInvalido('dirtyControl')).toBe(true);
+      expect(componente.esInvalido('dirtyControl')).toBe(true);
     });
 
-    it('should return false if control is valid', () => {
-      component.derechosForm.addControl('validControl', component['fb'].control('valid'));
-      expect(component.esInvalido('validControl')).toBe(false);
+    it('debería retornar false si el control es válido', () => {
+      componente.derechosForm.addControl('validControl', componente['fb'].control('valid'));
+      expect(componente.esInvalido('validControl')).toBe(false);
     });
   });
 });
+
 

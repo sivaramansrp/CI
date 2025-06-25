@@ -17,11 +17,11 @@ describe('SolicitudeComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('debe crearse', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should call a public method if present', () => {
+  it('debe llamar a un método público si está presente', () => {
     if (typeof (component as any)['someMethod'] === 'function') {
       const spy = jest.spyOn(component as any, 'someMethod');
       (component as any).someMethod();
@@ -29,13 +29,13 @@ describe('SolicitudeComponent', () => {
     }
   });
 
-  it('should have default property values', () => {
+  it('debe tener valores por defecto en las propiedades', () => {
     if ('someProperty' in component) {
       expect((component as any).someProperty).toBeDefined();
     }
   });
 
-  it('should handle button click', () => {
+  it('debe manejar el clic del botón', () => {
     if (typeof (component as any)['onButtonClick'] === 'function') {
       const spy = jest.spyOn(component as any, 'onButtonClick');
       const button = fixture.nativeElement.querySelector('button');
@@ -46,7 +46,7 @@ describe('SolicitudeComponent', () => {
     }
   });
 
-  it('should emit output event', () => {
+  it('debe emitir un evento de salida', () => {
     if ((component as any).someEvent && (component as any).someEvent.emit) {
       const spy = jest.spyOn((component as any).someEvent, 'emit');
       if (typeof (component as any)['triggerEvent'] === 'function') {
@@ -66,7 +66,7 @@ describe('SolicitudeComponent', () => {
       };
     });
 
-    it('should set indice and call siguiente when accion is "cont"', () => {
+    it('debe establecer el índice y llamar a siguiente cuando la acción es "cont"', () => {
       const accion = { valor: 2, accion: 'cont' };
       (component as any).getValorIndice(accion);
       expect((component as any).indice).toBe(2);
@@ -75,7 +75,7 @@ describe('SolicitudeComponent', () => {
       expect((component as any).wizardComponent.atras).not.toHaveBeenCalled();
     });
 
-    it('should set indice and call atras when accion is not "cont"', () => {
+    it('debe establecer el índice y llamar a atras cuando la acción no es "cont"', () => {
       const accion = { valor: 1, accion: 'back' };
       (component as any).getValorIndice(accion);
       expect((component as any).indice).toBe(1);
@@ -84,7 +84,7 @@ describe('SolicitudeComponent', () => {
       expect((component as any).wizardComponent.siguiente).not.toHaveBeenCalled();
     });
 
-    it('should do nothing if valor is not > 0', () => {
+    it('no debe hacer nada si valor no es > 0', () => {
       const accion = { valor: 0, accion: 'cont' };
       (component as any).indice = 5;
       (component as any).datosPasos.indice = 5;
@@ -95,7 +95,7 @@ describe('SolicitudeComponent', () => {
       expect((component as any).wizardComponent.atras).not.toHaveBeenCalled();
     });
 
-    it('should do nothing if valor is greater than pantallasPasos.length', () => {
+    it('no debe hacer nada si valor es mayor que la longitud de pantallasPasos', () => {
       const accion = { valor: 10, accion: 'cont' };
       (component as any).indice = 3;
       (component as any).datosPasos.indice = 3;
@@ -106,7 +106,7 @@ describe('SolicitudeComponent', () => {
       expect((component as any).wizardComponent.atras).not.toHaveBeenCalled();
     });
 
-    it('should do nothing if e is null', () => {
+    it('no debe hacer nada si e es null', () => {
       (component as any).indice = 1;
       (component as any).datosPasos.indice = 1;
       (component as any).getValorIndice(null);
@@ -116,7 +116,7 @@ describe('SolicitudeComponent', () => {
       expect((component as any).wizardComponent.atras).not.toHaveBeenCalled();
     });
 
-    it('should do nothing if e is undefined', () => {
+    it('no debe hacer nada si e es undefined', () => {
       (component as any).indice = 2;
       (component as any).datosPasos.indice = 2;
       (component as any).getValorIndice(undefined);
@@ -126,7 +126,7 @@ describe('SolicitudeComponent', () => {
       expect((component as any).wizardComponent.atras).not.toHaveBeenCalled();
     });
 
-    it('should do nothing if e.valor is undefined', () => {
+    it('no debe hacer nada si e.valor es undefined', () => {
       (component as any).indice = 2;
       (component as any).datosPasos.indice = 2;
       (component as any).getValorIndice({ accion: 'cont' });

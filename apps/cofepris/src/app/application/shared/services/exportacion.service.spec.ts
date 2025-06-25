@@ -4,7 +4,7 @@ import { ExportacionService } from './exportacion.service';
 import { PermisoModel } from '../../shared/models/aviso-exportacion.model';
 import { PreOperativo } from '../models/datos-modificacion.model';
 
-describe('ExportacionService', () => {
+describe('Servicio ExportacionService', () => {
   let service: ExportacionService;
   let httpMock: HttpTestingController;
 
@@ -21,12 +21,12 @@ describe('ExportacionService', () => {
     httpMock.verify();
   });
 
-  it('should be created', () => {
+  it('debería ser creado', () => {
     expect(service).toBeTruthy();
   });
 
   describe('obtenerDatosLocalidad', () => {
-    it('should return data from the http get', (done) => {
+    it('debería retornar datos del http get', (done) => {
       const mockData = { foo: 'bar' };
       service.obtenerDatosLocalidad().subscribe(data => {
         expect(data).toEqual(mockData);
@@ -37,7 +37,7 @@ describe('ExportacionService', () => {
       req.flush(mockData);
     });
 
-    it('should handle error', (done) => {
+    it('debería manejar el error', (done) => {
       service.obtenerDatosLocalidad().subscribe({
         error: (err) => {
           expect(err.status).toBe(500);
@@ -50,7 +50,7 @@ describe('ExportacionService', () => {
   });
 
   describe('obtenerTabla', () => {
-    it('should return PermisoModel[] from http get', (done) => {
+    it('debería retornar PermisoModel[] desde http get', (done) => {
       const mockTable: PermisoModel[] = [{ id: 1 } as unknown as PermisoModel];
       service.obtenerTabla().subscribe(data => {
         expect(data).toEqual(mockTable);
@@ -63,7 +63,7 @@ describe('ExportacionService', () => {
   });
 
   describe('obtenerRadio', () => {
-    it('should return PreOperativo[] from http get', (done) => {
+    it('debería retornar PreOperativo[] desde http get', (done) => {
       const mockRadio: PreOperativo[] = [{ id: 1, nombre: 'Fisica' } as unknown as PreOperativo];
       service.obtenerRadio().subscribe(data => {
         expect(data).toEqual(mockRadio);

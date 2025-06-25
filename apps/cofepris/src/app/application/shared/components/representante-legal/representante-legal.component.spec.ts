@@ -2,7 +2,7 @@ import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
 import { RepresentanteLegalComponent } from './representante-legal.component';
 
-describe('RepresentanteLegalComponent', () => {
+describe('Componente RepresentanteLegalComponent', () => {
   let component: RepresentanteLegalComponent;
   let fixture: ComponentFixture<RepresentanteLegalComponent>;
 
@@ -19,11 +19,11 @@ describe('RepresentanteLegalComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
+  it('debería crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize the form on ngOnInit', () => {
+  it('debería inicializar el formulario en ngOnInit', () => {
     component.ngOnInit();
     expect(component.representanteLegalForm).toBeDefined();
     expect(component.representanteLegalForm.get('nombreRazonSocial')?.disabled).toBe(true);
@@ -31,7 +31,7 @@ describe('RepresentanteLegalComponent', () => {
     expect(component.representanteLegalForm.get('apellidoMaterno')?.disabled).toBe(true);
   });
 
- it('should handle invalid form controls', () => {
+  it('debería manejar controles de formulario inválidos', () => {
     const form = component.representanteLegalForm;
     form.get('nombreRazonSocial')?.setValue('');
     form.get('apellidoPaterno')?.setValue('');
@@ -40,7 +40,7 @@ describe('RepresentanteLegalComponent', () => {
   });
 
   describe('guardarDatosFormulario', () => {
-    it('should disable the form if esFormularioSoloLectura is true', () => {
+    it('debería deshabilitar el formulario si esFormularioSoloLectura es verdadero', () => {
       component.esFormularioSoloLectura = true;
       component.representanteLegalForm.enable(); 
       const initSpy = jest.spyOn(component, 'inicializarFormulario');
@@ -49,9 +49,9 @@ describe('RepresentanteLegalComponent', () => {
       expect(component.representanteLegalForm.disabled).toBe(true);
     });
 
-    it('should enable the form if esFormularioSoloLectura is false', () => {
+    it('debería habilitar el formulario si esFormularioSoloLectura es falso', () => {
       component.esFormularioSoloLectura = false;
-      component.representanteLegalForm.disable(); // ensure disabled before
+      component.representanteLegalForm.disable(); // asegurar que esté deshabilitado antes
       const initSpy = jest.spyOn(component, 'inicializarFormulario');
       component.guardarDatosFormulario();
       expect(initSpy).toHaveBeenCalled();

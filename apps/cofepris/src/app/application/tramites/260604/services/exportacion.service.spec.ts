@@ -5,7 +5,7 @@ import { of, throwError } from 'rxjs';
 import { ExportacionService } from './exportacion.service';
 import { PermisoModel } from '@libs/shared/data-access-user/src/core/models/260604/aviso-exportacion.model';
 
-describe('ExportacionService', () => {
+describe('Servicio ExportacionService', () => {
   let service: ExportacionService;
   let httpClientMock: jest.Mocked<HttpClient>;
 
@@ -23,12 +23,12 @@ describe('ExportacionService', () => {
     service = TestBed.inject(ExportacionService);
   });
 
-  it('should be created', () => {
+  it('debería ser creado', () => {
     expect(service).toBeTruthy();
   });
 
   describe('getLocalidaddata', () => {
-    it('should return data from the http get', (done) => {
+    it('debería devolver datos del método http get', (done) => {
       const mockData = { foo: 'bar' };
       httpClientMock.get.mockReturnValue(of(mockData));
       service.getLocalidaddata().subscribe(data => {
@@ -37,8 +37,8 @@ describe('ExportacionService', () => {
       });
     });
 
-    it('should handle error and call throwError', (done) => {
-      const error = new Error('Test error');
+    it('debería manejar el error y llamar a throwError', (done) => {
+      const error = new Error('Error de prueba');
       httpClientMock.get.mockReturnValue(throwError(() => error));
       service.getLocalidaddata().subscribe({
         error: (err) => {
@@ -50,7 +50,7 @@ describe('ExportacionService', () => {
   });
 
   describe('getTable', () => {
-    it('should return PermisoModel[] from http get', (done) => {
+    it('debería devolver PermisoModel[] del método http get', (done) => {
       const mockTable: PermisoModel[] = [{ id: 1 } as unknown as PermisoModel];
       httpClientMock.get.mockReturnValue(of(mockTable));
       service.getTable().subscribe(data => {

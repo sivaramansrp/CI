@@ -21,11 +21,11 @@ describe('DatosService', () => {
     httpMock.verify();
   });
 
-  it('should be created', () => {
+  it('debería ser creado', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should get estado data', (done) => {
+  it('debería obtener datos de estado', (done) => {
     const mockData: Catalogo[] = [{ id: 1, nombre: 'Estado' } as unknown as Catalogo];
     service.obtenerEstadoData().subscribe(data => {
       expect(data).toEqual(mockData);
@@ -36,7 +36,7 @@ describe('DatosService', () => {
     req.flush(mockData);
   });
 
-  it('should get datos-scian-tabla data', (done) => {
+  it('debería obtener datos de datos-scian-tabla', (done) => {
     const mockData: ScianData[] = [{ id: 1, descripcion: 'desc' } as unknown as ScianData];
     service.obternerDatosData().subscribe(data => {
       expect(data).toEqual(mockData);
@@ -47,7 +47,7 @@ describe('DatosService', () => {
     req.flush(mockData);
   });
 
-  it('should get clave-scian data', (done) => {
+  it('debería obtener datos de clave-scian', (done) => {
     const mockData: Catalogo[] = [{ id: 1, nombre: 'Clave' } as unknown as Catalogo];
     service.obtenerClaveScian().subscribe(data => {
       expect(data).toEqual(mockData);
@@ -58,7 +58,7 @@ describe('DatosService', () => {
     req.flush(mockData);
   });
 
-  it('should get descripcion-scian data', (done) => {
+  it('debería obtener datos de descripcion-scian', (done) => {
     const mockData: Catalogo[] = [{ id: 1, nombre: 'Desc' } as unknown as Catalogo];
     service.obtenerDescripcionScian().subscribe(data => {
       expect(data).toEqual(mockData);
@@ -69,7 +69,7 @@ describe('DatosService', () => {
     req.flush(mockData);
   });
 
-  it('should get pre-operativo data', (done) => {
+  it('debería obtener datos de pre-operativo', (done) => {
     const mockData: PreOperativo[] = [{ id: 1, nombre: 'Pre' } as unknown as PreOperativo];
     service.obtenerPreOperativo().subscribe(data => {
       expect(data).toEqual(mockData);
@@ -80,7 +80,7 @@ describe('DatosService', () => {
     req.flush(mockData);
   });
 
-  it('should get datos-producto data', (done) => {
+  it('debería obtener datos de datos-producto', (done) => {
     const mockData: DatosProducto[] = [{ id: 1, nombre: 'Prod' } as unknown as DatosProducto];
     service.obtenerDatosProducto().subscribe(data => {
       expect(data).toEqual(mockData);
@@ -91,7 +91,7 @@ describe('DatosService', () => {
     req.flush(mockData);
   });
 
-  it('should get clasificacion-producto data', (done) => {
+  it('debería obtener datos de clasificacion-producto', (done) => {
     const mockData: Catalogo[] = [{ id: 1, nombre: 'Clas' } as unknown as Catalogo];
     service.obtenerClasificationProductos().subscribe(data => {
       expect(data).toEqual(mockData);

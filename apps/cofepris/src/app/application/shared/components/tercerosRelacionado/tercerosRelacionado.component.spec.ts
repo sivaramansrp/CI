@@ -4,7 +4,7 @@ import { of, Subject } from 'rxjs';
 import { TercerosRelacionadoComponent } from './tercerosRelacionado.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 
-describe('TercerosRelacionadoComponent', () => {
+describe('Componente TercerosRelacionado', () => {
   let component: TercerosRelacionadoComponent;
   let fixture: ComponentFixture<TercerosRelacionadoComponent>;
 
@@ -96,11 +96,11 @@ describe('TercerosRelacionadoComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('debería crearse', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize and call all loading methods on ngOnInit', () => {
+  it('debería inicializar y llamar todos los métodos de carga en ngOnInit', () => {
     const loadMercanciasSpy = jest.spyOn(component, 'loadMercancias');
     const loadLocalidadSpy = jest.spyOn(component, 'loadLocalidad');
     const getFacturatorSpy = jest.spyOn(component, 'getFacturator');
@@ -114,21 +114,21 @@ describe('TercerosRelacionadoComponent', () => {
     expect(inicializarEstadoFormularioSpy).toHaveBeenCalled();
   });
 
-  it('should call guardarDatosFormulario if esFormularioSoloLectura is true in inicializarEstadoFormulario', () => {
+  it('debería llamar a guardarDatosFormulario si esFormularioSoloLectura es true en inicializarEstadoFormulario', () => {
     component.esFormularioSoloLectura = true;
     const guardarSpy = jest.spyOn(component, 'guardarDatosFormulario');
     component.inicializarEstadoFormulario();
     expect(guardarSpy).toHaveBeenCalled();
   });
 
-  it('should call getFacturator if esFormularioSoloLectura is false in inicializarEstadoFormulario', () => {
+  it('debería llamar a getFacturator si esFormularioSoloLectura es false en inicializarEstadoFormulario', () => {
     component.esFormularioSoloLectura = false;
     const getFacturatorSpy = jest.spyOn(component, 'getFacturator');
     component.inicializarEstadoFormulario();
     expect(getFacturatorSpy).toHaveBeenCalled();
   });
 
-  it('guardarDatosFormulario disables form if esFormularioSoloLectura is true', () => {
+  it('guardarDatosFormulario deshabilita el formulario si esFormularioSoloLectura es true', () => {
     component.getFacturator = jest.fn(() => {
       component.facturatorForm = new FormBuilder().group({ test: [''] });
       component.facturatorForm.enable();
@@ -138,7 +138,7 @@ describe('TercerosRelacionadoComponent', () => {
     expect(component.facturatorForm.disabled).toBe(true);
   });
 
-  it('guardarDatosFormulario enables form if esFormularioSoloLectura is false', () => {
+  it('guardarDatosFormulario habilita el formulario si esFormularioSoloLectura es false', () => {
     component.getFacturator = jest.fn(() => {
       component.facturatorForm = new FormBuilder().group({ test: [''] });
       component.facturatorForm.disable();
@@ -148,7 +148,7 @@ describe('TercerosRelacionadoComponent', () => {
     expect(component.facturatorForm.enabled).toBe(true);
   });
 
-  it('guardarDatosFormulario does nothing if esFormularioSoloLectura is neither true nor false', () => {
+  it('guardarDatosFormulario no hace nada si esFormularioSoloLectura no es ni true ni false', () => {
     component.getFacturator = jest.fn(() => {
       component.facturatorForm = new FormBuilder().group({ test: [''] });
       component.facturatorForm.enable();
@@ -158,38 +158,38 @@ describe('TercerosRelacionadoComponent', () => {
     expect(component.facturatorForm.enabled).toBe(true);
   });
 
-  it('should set tipoPersonaOptions in cargarRadio', () => {
+  it('debería establecer tipoPersonaOptions en cargarRadio', () => {
     component.tipoPersonaOptions = [];
     component.cargarRadio();
     expect(component.tipoPersonaOptions.length).toBeGreaterThan(0);
   });
 
-  it('should set tercerosProd in loadMercancias', () => {
+  it('debería establecer tercerosProd en loadMercancias', () => {
     component.tercerosProd = [];
     component.loadMercancias();
     expect(component.tercerosProd.length).toBeGreaterThan(0);
   });
 
-  it('should set localidadList in loadLocalidad', () => {
+  it('debería establecer localidadList en loadLocalidad', () => {
     component.localidadList = [];
     component.loadLocalidad();
     expect(component.localidadList.length).toBeGreaterThan(0);
   });
 
-  it('should open modal and call getFacturator in abrirModalfacurator', () => {
+  it('debería abrir el modal y llamar a getFacturator en abrirModalfacurator', () => {
     component.getFacturator = jest.fn();
     component.abrirModalfacurator();
     expect(component.modal).toBe('show');
     expect(component.getFacturator).toHaveBeenCalled();
   });
 
-  it('should initialize facturatorForm in getFacturator', () => {
+  it('debería inicializar facturatorForm en getFacturator', () => {
     component.getFacturator();
     expect(component.facturatorForm).toBeDefined();
     expect(component.facturatorForm.get('nombre')).toBeDefined();
   });
 
-  it('should set fisica and moral correctly in inputChecked', () => {
+  it('debería establecer fisica y moral correctamente en inputChecked', () => {
     component.inputChecked('fisica');
     expect(component.fisica).toBe(true);
     expect(component.moral).toBe(false);
@@ -198,13 +198,13 @@ describe('TercerosRelacionadoComponent', () => {
     expect(component.moral).toBe(true);
   });
 
-  it('should call inputChecked in cambiarRadioFisica', () => {
+  it('debería llamar a inputChecked en cambiarRadioFisica', () => {
     const spy = jest.spyOn(component, 'inputChecked');
     component.cambiarRadioFisica('fisica');
     expect(spy).toHaveBeenCalledWith('fisica');
   });
 
-  it('should complete destroyed$ on ngOnDestroy', () => {
+  it('debería completar destroyed$ en ngOnDestroy', () => {
     const nextSpy = jest.spyOn((component as any).destroyed$, 'next');
     const completeSpy = jest.spyOn((component as any).destroyed$, 'complete');
     component.ngOnDestroy();
