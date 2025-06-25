@@ -40,17 +40,17 @@ describe('PartidasDeLaMercanciaComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize datosTabla on ngOnInit', () => {
+  it('debería inicializar datosTabla en ngOnInit', () => {
     component.ngOnInit();
     expect(component.datosTabla.length).toBeGreaterThan(0);
     expect(component.datosTabla[0].id).toBe(1);
   });
 
-  it('should add a new item when agregar is called and form is valid', () => {
+  it('debería agregar un nuevo elemento cuando se llama a agregar y el formulario es válido', () => {
     const ninoFormGroup = new FormGroup({
       partidas_cantidad: new FormControl(10),
       partidas_descripcion: new FormControl('Producto'),
@@ -70,7 +70,7 @@ describe('PartidasDeLaMercanciaComponent', () => {
     );
   });
 
-  it('should return fraccion arancelaria description', () => {
+  it('debería retornar la descripción de la fracción arancelaria', () => {
     const ninoFormGroup = new FormGroup({
       seleccion_fraccion: new FormControl(1),
     });
@@ -79,7 +79,7 @@ describe('PartidasDeLaMercanciaComponent', () => {
     expect(desc).toContain('Usados');
   });
 
-  it('should call store with correct value on establecerCambioDeValor', () => {
+  it('debería llamar al store con el valor correcto en establecerCambioDeValor', () => {
     component.establecerCambioDeValor({ campo: 'test', valor: 'value' });
     expect(tramiteStoreMock.setDynamicFieldValue).toHaveBeenCalledWith(
       'test',
@@ -87,7 +87,7 @@ describe('PartidasDeLaMercanciaComponent', () => {
     );
   });
 
-  it('should set selected rows and patch form in onPartidasSeleccion', () => {
+  it('debería establecer las filas seleccionadas y actualizar el formulario en onPartidasSeleccion', () => {
     const row = {
       id: 1,
       cantidad: 1,
@@ -102,7 +102,7 @@ describe('PartidasDeLaMercanciaComponent', () => {
     ).toBe(1);
   });
 
-  it('should remove selected partidas in eliminar', () => {
+  it('debería eliminar las partidas seleccionadas en eliminar', () => {
     const item = { id: 1 };
     component.datosTabla = [item];
     component.partidasSeleccionadas = [item];
@@ -111,7 +111,7 @@ describe('PartidasDeLaMercanciaComponent', () => {
     expect(tramiteStoreMock.setDynamicFieldValue).toHaveBeenCalled();
   });
 
-  it('should initialize modal instance in ngAfterViewInit', () => {
+  it('debería inicializar la instancia del modal en ngAfterViewInit', () => {
     const modalElement = document.createElement('div');
     modalElement.id = 'testModal';
     document.body.appendChild(modalElement);
@@ -121,21 +121,21 @@ describe('PartidasDeLaMercanciaComponent', () => {
     modalElement.remove();
   });
 
-  it('should call show on cargarArchivoInstance when cargarArchivo is called', () => {
+  it('debería llamar a show en cargarArchivoInstance cuando se llama a cargarArchivo', () => {
     const showMock = jest.fn();
     component['cargarArchivoInstance'] = { show: showMock } as any;
     component.cargarArchivo();
     expect(showMock).toHaveBeenCalled();
   });
 
-  it('should call hide on cargarArchivoInstance when cerrar is called', () => {
+  it('debería llamar a hide en cargarArchivoInstance cuando se llama a cerrar', () => {
     const hideMock = jest.fn();
     component['cargarArchivoInstance'] = { hide: hideMock } as any;
     component.cerrar();
     expect(hideMock).toHaveBeenCalled();
   });
 
-  it('should not add item when agregar is called and form is invalid', () => {
+  it('debería no agregar un elemento cuando se llama a agregar y el formulario es inválido', () => {
     jest.clearAllMocks();
     const ninoFormGroup = new FormGroup({
       partidas_cantidad: new FormControl(null, Validators.required), // invalid: null
@@ -153,14 +153,14 @@ describe('PartidasDeLaMercanciaComponent', () => {
     expect(tramiteStoreMock.setDynamicFieldValue).not.toHaveBeenCalled();
   });
 
-  it('should not patch form when no row is selected in onPartidasSeleccion', () => {
+  it('debería no actualizar el formulario cuando no hay fila seleccionada en onPartidasSeleccion', () => {
     const patchSpy = jest.spyOn(component.modificarPartidaForm, 'patchValue');
     component.onPartidasSeleccion([]);
     expect(component.partidasSeleccionadas.length).toBe(0);
     expect(patchSpy).not.toHaveBeenCalled();
   });
 
-  it('should update selected item in guardarEdicion', () => {
+  it('debería actualizar el elemento seleccionado en guardarEdicion', () => {
     const partida = {
       id: 1,
       cantidad: 5,
@@ -192,7 +192,7 @@ describe('PartidasDeLaMercanciaComponent', () => {
     modalElement.remove();
   });
 
-  it('should cleanup in ngOnDestroy', () => {
+  it('debería limpiar en ngOnDestroy', () => {
     const nextSpy = jest.spyOn<any, any>(component['destroyNotifier$'], 'next');
     const completeSpy = jest.spyOn<any, any>(
       component['destroyNotifier$'],
