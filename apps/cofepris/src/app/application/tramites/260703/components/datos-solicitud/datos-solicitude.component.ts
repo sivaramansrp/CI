@@ -80,7 +80,7 @@ export class DatosSolitudeComponent implements OnInit, OnDestroy {
     if (this.esFormularioSoloLectura) {
     this.preOperativeForm.get('ideGenerica1')?.disable();
     this.preOperativeForm.get('observaciones')?.disable();
-  }else if (!this.esFormularioSoloLectura){
+  }else {
     this.preOperativeForm.get('ideGenerica1')?.enable();
     this.preOperativeForm.get('observaciones')?.enable();
   }

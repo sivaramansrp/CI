@@ -92,7 +92,7 @@ export class ManifiestosYDeclaracionesComponent implements OnInit, OnDestroy {
     if (this.esFormularioSoloLectura) {
     this.manifiestosForm.disable();
     this.manifiestosForm.get('informacionConfidencial')?.disable();
-  }else if (!this.esFormularioSoloLectura){
+  }else{
     this.manifiestosForm.disable();
     this.manifiestosForm.get('informacionConfidencial')?.enable();
   }
