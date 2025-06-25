@@ -15,7 +15,7 @@ describe('OficioComponent', () => {
   let consultaioQueryMock: any;
 
   beforeEach(async () => {
-    // Mock observable stream for selectConsultaioState$
+    // Mock observable stream para selectConsultaioState$
     consultaioQueryMock = {
       selectConsultaioState$: of({ readonly: false })
     };
@@ -34,11 +34,11 @@ describe('OficioComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize oficioForm with oficioData group and controls', () => {
+  it('debe inicializar oficioForm con el grupo oficioData y sus controles', () => {
     expect(component.oficioForm.contains('oficioData')).toBe(true);
     const oficioData = component.oficioForm.get('oficioData');
     expect(oficioData).toBeTruthy();
@@ -47,7 +47,7 @@ describe('OficioComponent', () => {
     });
   });
 
-  it('should set default values and disable fields in updateformfied', () => {
+  it('debe establecer valores por defecto y deshabilitar campos en updateformfied', () => {
     component.updateformfied();
     const oficioData = component.oficioForm.get('oficioData');
     expect(oficioData?.get('asignado')?.disabled).toBe(true);
@@ -57,28 +57,28 @@ describe('OficioComponent', () => {
     expect(oficioData?.get('cancelar')?.value).toBe('12');
   });
 
-  it('should disable the form if esFormularioSoloLectura is true in guardarDatosFormulario', () => {
+  it('debe deshabilitar el formulario si esFormularioSoloLectura es true en guardarDatosFormulario', () => {
     component.esFormularioSoloLectura = true;
     component.oficioForm.enable();
     component.guardarDatosFormulario();
     expect(component.oficioForm.disabled).toBe(true);
   });
 
-  it('should enable the form if esFormularioSoloLectura is false in guardarDatosFormulario', () => {
+  it('debe habilitar el formulario si esFormularioSoloLectura es false en guardarDatosFormulario', () => {
     component.esFormularioSoloLectura = false;
     component.oficioForm.disable();
     component.guardarDatosFormulario();
     expect(component.oficioForm.enabled).toBe(true);
   });
 
-  it('should call guardarDatosFormulario if oficioForm exists and esFormularioSoloLectura is true in inicializarEstadoFormulario', () => {
+  it('debe llamar a guardarDatosFormulario si oficioForm existe y esFormularioSoloLectura es true en inicializarEstadoFormulario', () => {
     component.esFormularioSoloLectura = true;
     const spy = jest.spyOn(component, 'guardarDatosFormulario');
     component.inicializarEstadoFormulario();
     expect(spy).toHaveBeenCalled();
   });
 
-  it('should clean up subscriptions on ngOnDestroy', () => {
+  it('debe limpiar las suscripciones en ngOnDestroy', () => {
     const nextSpy = jest.spyOn<any, any>(component['destroyNotifier$'], 'next');
     const completeSpy = jest.spyOn<any, any>(component['destroyNotifier$'], 'complete');
     component.ngOnDestroy();
@@ -86,7 +86,7 @@ describe('OficioComponent', () => {
     expect(completeSpy).toHaveBeenCalled();
   });
 
-  it('should filter oficio data where unidadPrimaria === 12', () => {
+  it('debe filtrar los datos de oficio donde unidadPrimaria === 12', () => {
     expect(Array.isArray(component.filteredData)).toBe(true);
     expect(component.filteredData.every(item => item.unidadPrimaria === 12)).toBe(true);
   });

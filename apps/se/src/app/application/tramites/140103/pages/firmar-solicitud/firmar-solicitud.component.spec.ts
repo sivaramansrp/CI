@@ -26,16 +26,16 @@ describe('FirmarSolicitudComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should navigate to acuse when obtieneFirma is called with a non-empty string', () => {
+  it('debe navegar a acuse cuando obtieneFirma es llamado con un string no vacío', () => {
     component.obtieneFirma('firma123');
     expect(routerMock.navigate).toHaveBeenCalledWith(['servicios-extraordinarios/acuse']);
   });
 
-  it('should not navigate when obtieneFirma is called with an empty string', () => {
+  it('no debe navegar cuando obtieneFirma es llamado con un string vacío', () => {
     component.obtieneFirma('');
     expect(routerMock.navigate).not.toHaveBeenCalled();
   });

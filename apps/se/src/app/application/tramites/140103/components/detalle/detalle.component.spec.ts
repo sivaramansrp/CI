@@ -29,11 +29,11 @@ describe('DetalleComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should disable the form and set default values in getFormData', () => {
+  it('debe deshabilitar el formulario y establecer valores por defecto en getFormData', () => {
     component.getFormData();
     expect(component.detalleForm.disabled).toBe(true);
     const detalleData = component.detalleForm.get('DetalleData');
@@ -50,28 +50,28 @@ describe('DetalleComponent', () => {
     expect(detalleData?.get('fecha')?.value).toBe('2024-12-31');
   });
 
-  it('should disable the form if esFormularioSoloLectura is true in guardarDatosFormulario', () => {
+  it('debe deshabilitar el formulario si esFormularioSoloLectura es true en guardarDatosFormulario', () => {
     component.esFormularioSoloLectura = true;
     component.detalleForm.enable();
     component.guardarDatosFormulario();
     expect(component.detalleForm.disabled).toBe(true);
   });
 
-  it('should enable the form if esFormularioSoloLectura is false in guardarDatosFormulario', () => {
+  it('debe habilitar el formulario si esFormularioSoloLectura es false en guardarDatosFormulario', () => {
     component.esFormularioSoloLectura = false;
     component.detalleForm.disable();
     component.guardarDatosFormulario();
     expect(component.detalleForm.enabled).toBe(true);
   });
 
-  it('should call guardarDatosFormulario if detalleForm exists and esFormularioSoloLectura is true in inicializarEstadoFormulario', () => {
+  it('debe llamar a guardarDatosFormulario si detalleForm existe y esFormularioSoloLectura es true en inicializarEstadoFormulario', () => {
     component.esFormularioSoloLectura = true;
     const spy = jest.spyOn(component, 'guardarDatosFormulario');
     component.inicializarEstadoFormulario();
     expect(spy).toHaveBeenCalled();
   });
 
-  it('should clean up subscriptions on ngOnDestroy', () => {
+  it('debe limpiar las suscripciones en ngOnDestroy', () => {
     const nextSpy = jest.spyOn<any, any>(component['destroyNotifier$'], 'next');
     const completeSpy = jest.spyOn<any, any>(component['destroyNotifier$'], 'complete');
     component.ngOnDestroy();

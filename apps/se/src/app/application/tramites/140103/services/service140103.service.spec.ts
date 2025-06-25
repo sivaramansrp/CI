@@ -35,11 +35,11 @@ describe('Solicitud140103Service', () => {
     httpMock.verify();
   });
 
-  it('should be created', () => {
+  it('debe crear el servicio', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should update store with provided DATOS in actualizarEstadoFormulario', () => {
+  it('debe actualizar el store con los DATOS proporcionados en actualizarEstadoFormulario', () => {
     const datos = {
       regimen: 'reg1',
       mecanismo: 'mec1',
@@ -61,7 +61,7 @@ describe('Solicitud140103Service', () => {
     expect(tramite140103StoreMock.setCantidad).toHaveBeenCalledWith(5);
   });
 
-  it('should only update defined fields in actualizarEstadoFormulario', () => {
+  it('solo debe actualizar los campos definidos en actualizarEstadoFormulario', () => {
     const datos = { regimen: 'reg1', cantidad: 10 };
     service.actualizarEstadoFormulario(datos as any);
 
@@ -74,7 +74,7 @@ describe('Solicitud140103Service', () => {
     expect(tramite140103StoreMock.setRepresentacion).not.toHaveBeenCalled();
   });
 
-  it('should fetch registro toma muestras mercancias data', () => {
+  it('debe obtener los datos de registro toma muestras mercancias', () => {
     const mockResponse = { regimen: 'reg1' };
     service.getRegistroTomaMuestrasMercanciasData().subscribe(data => {
       expect(data).toEqual(mockResponse);

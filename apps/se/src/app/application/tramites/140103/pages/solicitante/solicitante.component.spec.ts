@@ -24,11 +24,11 @@ describe('Solicitante140103Component', () => {
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should set default values in establecerValoresDeFormulario', () => {
+  it('debe establecer valores por defecto en establecerValoresDeFormulario', () => {
     component.establecerValoresDeFormulario();
     expect(component.solicitudForm.get('rfc')?.value).toBe('AALM87326');
     expect(component.solicitudForm.get('denominacion')?.value).toBe('SVHGSA ASCV 332');
@@ -36,7 +36,7 @@ describe('Solicitante140103Component', () => {
     expect(component.solicitudForm.get('correoElectronico')?.value).toBe('SV US');
   });
 
-  it('should call establecerValoresDeFormulario on ngOnInit', () => {
+  it('debe llamar a establecerValoresDeFormulario en ngOnInit', () => {
     const spy = jest.spyOn(component, 'establecerValoresDeFormulario');
     component.ngOnInit();
     expect(spy).toHaveBeenCalled();

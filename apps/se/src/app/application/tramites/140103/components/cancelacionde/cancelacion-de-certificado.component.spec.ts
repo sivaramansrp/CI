@@ -54,11 +54,11 @@ describe('CancelacionDeCertificateComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize the form with correct controls', () => {
+  it('debe inicializar el formulario con los controles correctos', () => {
     expect(component.cancelacionForm.contains('regimen')).toBeTruthy();
     expect(component.cancelacionForm.contains('mecanismo')).toBeTruthy();
     expect(component.cancelacionForm.contains('tratado')).toBeTruthy();
@@ -67,7 +67,7 @@ describe('CancelacionDeCertificateComponent', () => {
     expect(component.cancelacionForm.contains('representacion')).toBeTruthy();
   });
 
-  it('should patch form values from solicitudState', () => {
+  it('debe asignar valores al formulario desde solicitudState', () => {
     expect(component.cancelacionForm.value).toEqual({
       regimen: 'regimen1',
       mecanismo: 'mecanismo1',
@@ -78,26 +78,26 @@ describe('CancelacionDeCertificateComponent', () => {
     });
   });
 
-  it('should disable form if esFormularioSoloLectura is true', () => {
+  it('debe deshabilitar el formulario si esFormularioSoloLectura es true', () => {
     component.esFormularioSoloLectura = true;
     component.guardarDatosFormulario();
     expect(component.cancelacionForm.disabled).toBe(true);
   });
 
-  it('should enable form if esFormularioSoloLectura is false', () => {
+  it('debe habilitar el formulario si esFormularioSoloLectura es false', () => {
     component.esFormularioSoloLectura = false;
     component.guardarDatosFormulario();
     expect(component.cancelacionForm.enabled).toBe(true);
   });
 
-  it('should call the correct store method in setValoresStore', () => {
+  it('debe llamar el método correcto del store en setValoresStore', () => {
     const form = component.cancelacionForm;
     form.get('regimen')?.setValue('regimenTest');
     component.setValoresStore(form, 'regimen', 'setRegimen');
     expect(tramite140103StoreMock.setRegimen).toHaveBeenCalledWith('regimenTest');
   });
 
-  it('should clean up subscriptions on ngOnDestroy', () => {
+  it('debe limpiar las suscripciones en ngOnDestroy', () => {
     const nextSpy = jest.spyOn<any, any>(component['destroyNotifier$'], 'next');
     const completeSpy = jest.spyOn<any, any>(component['destroyNotifier$'], 'complete');
     component.ngOnDestroy();

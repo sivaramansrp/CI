@@ -31,42 +31,42 @@ describe('CancelacionDeComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should update indice and call wizardComponent.siguiente when getValorIndice is called with accion "cont"', () => {
+  it('debe actualizar el índice y llamar a wizardComponent.siguiente cuando getValorIndice se llama con acción "cont"', () => {
     component.wizardComponent = new MockWizardComponent() as any; 
     component.getValorIndice({ valor: 2, accion: 'cont' });
     expect(component.indice).toBe(2);
     expect(component.wizardComponent.siguiente).toHaveBeenCalled();
   });
 
-  it('should update indice and call wizardComponent.atras when getValorIndice is called with accion "atras"', () => {
+  it('debe actualizar el índice y llamar a wizardComponent.atras cuando getValorIndice se llama con acción "atras"', () => {
     component.wizardComponent = new MockWizardComponent() as any; 
     component.getValorIndice({ valor: 3, accion: 'atras' });
     expect(component.indice).toBe(3);
     expect(component.wizardComponent.atras).toHaveBeenCalled();
   });
 
-  it('should not update indice or call wizardComponent methods when getValorIndice is called with invalid valor', () => {
-  component.wizardComponent = {
-    siguiente: jest.fn(),
-    atras: jest.fn()
-  } as any;
+  it('no debe actualizar el índice ni llamar métodos de wizardComponent cuando getValorIndice se llama con valor inválido', () => {
+    component.wizardComponent = {
+      siguiente: jest.fn(),
+      atras: jest.fn()
+    } as any;
 
-  const spySiguiente = jest.spyOn(component.wizardComponent, 'siguiente');
-  const spyAtras = jest.spyOn(component.wizardComponent, 'atras');
-  const initialIndice = component.indice;
+    const spySiguiente = jest.spyOn(component.wizardComponent, 'siguiente');
+    const spyAtras = jest.spyOn(component.wizardComponent, 'atras');
+    const initialIndice = component.indice;
 
-  component.getValorIndice({ valor: 0, accion: 'cont' });
-  expect(component.indice).toBe(initialIndice);
-  expect(spySiguiente).not.toHaveBeenCalled();
-  expect(spyAtras).not.toHaveBeenCalled();
+    component.getValorIndice({ valor: 0, accion: 'cont' });
+    expect(component.indice).toBe(initialIndice);
+    expect(spySiguiente).not.toHaveBeenCalled();
+    expect(spyAtras).not.toHaveBeenCalled();
 
-  component.getValorIndice({ valor: 5, accion: 'atras' });
-  expect(component.indice).toBe(initialIndice);
-  expect(spySiguiente).not.toHaveBeenCalled();
-  expect(spyAtras).not.toHaveBeenCalled();
-});
+    component.getValorIndice({ valor: 5, accion: 'atras' });
+    expect(component.indice).toBe(initialIndice);
+    expect(spySiguiente).not.toHaveBeenCalled();
+    expect(spyAtras).not.toHaveBeenCalled();
+  });
 });
