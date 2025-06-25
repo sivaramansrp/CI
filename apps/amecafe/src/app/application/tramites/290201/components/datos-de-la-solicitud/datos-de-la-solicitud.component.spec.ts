@@ -13,11 +13,6 @@ import { RegistrarSolicitudService } from '../../services/registrar-solicitud.se
 @Injectable()
 class MockRegistrarSolicitudService {}
 
-@Directive({ selector: '[myCustom]' })
-class MyCustomDirective {
-  @Input() myCustom: any;
-}
-
 describe('DatosDeLaSolicitudComponent', () => {
   let fixture: ComponentFixture<DatosDeLaSolicitudComponent>;
   let component: { ngOnDestroy: () => void; getSolicitudData: jest.Mock<any, any, any> | (() => void); ngOnInit: () => void; mostrarColapsable: () => void; registrarsolicitud: { getSolicitudData?: any; }; destroyed$: { next?: any; complete?: any; }; };
@@ -25,9 +20,6 @@ describe('DatosDeLaSolicitudComponent', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [ FormsModule, ReactiveFormsModule,DatosDeLaSolicitudComponent ],
-      declarations: [
-        MyCustomDirective
-      ],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
       providers: [
         { provide: RegistrarSolicitudService, useClass: MockRegistrarSolicitudService }

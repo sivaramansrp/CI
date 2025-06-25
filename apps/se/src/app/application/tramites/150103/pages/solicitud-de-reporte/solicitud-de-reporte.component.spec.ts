@@ -5,8 +5,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { SolicitudDeReporteComponent } from './solicitud-de-reporte.component';
 import { provideHttpClient } from '@angular/common/http';
-@Directive({ selector: '[myCustom]' })
-class MyCustomDirective {}
 
 
 

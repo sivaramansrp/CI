@@ -13,11 +13,6 @@ import { ImportarDeRemediosHerbalsService } from '../../services/importar-de-rem
 @Injectable()
 class MockImportarDeRemediosHerbalsService {}
 
-@Directive({ selector: '[myCustom]' })
-class MyCustomDirective {
-  @Input() myCustom: any;
-}
-
 describe('TramitesAsociadosComponent', () => {
   let fixture: ComponentFixture<TramitesAsociadosComponent>;
   let component: { ngOnDestroy: () => void; getTramitesAsociados: jest.Mock<any, any, any> | (() => void); ngOnInit: () => void; importarDeRemediosHerbals: { getTramitesAsociados?: any; }; destroyed$: { next?: any; complete?: any; }; };
@@ -25,9 +20,6 @@ describe('TramitesAsociadosComponent', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [ FormsModule, ReactiveFormsModule,TramitesAsociadosComponent ],
-      declarations: [
-        MyCustomDirective
-      ],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
       providers: [
         { provide: ImportarDeRemediosHerbalsService, useClass: MockImportarDeRemediosHerbalsService }

@@ -9,11 +9,6 @@ import { Observable, of as observableOf, throwError } from 'rxjs';
 import { Component } from '@angular/core';
 import { CorreccionInternaDeLaCofeprisComponent } from './correccion-interna-de-la-cofepris.component';
 
-@Directive({ selector: '[myCustom]' })
-class MyCustomDirective {}
-
-
-
 describe('CorreccionInternaDeLaCofeprisComponent', () => {
   let fixture: ComponentFixture<CorreccionInternaDeLaCofeprisComponent>;
   let component: { ngOnDestroy: () => void; wizardComponent: { siguiente?: any; atras?: any; }; getValorIndice: (arg0: { valor: {}; accion: {}; }) => void; };

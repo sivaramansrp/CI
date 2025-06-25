@@ -32,10 +32,6 @@ class MockSolicitud290201Store {}
 @Injectable()
 class MockSolicitud290201Query {}
 
-@Directive({ selector: '[myCustom]' })
-class MyCustomDirective {
-  @Input() myCustom: any;
-}
 
 describe('DatosDelCafeComponent', () => {
   let fixture: ComponentFixture<DatosDelCafeComponent>;
@@ -48,10 +44,6 @@ describe('DatosDelCafeComponent', () => {
     TestBed.configureTestingModule({
       
       imports: [ FormsModule, ReactiveFormsModule,DatosDelCafeComponent],
-        declarations: [
-       
-          MyCustomDirective
-        ],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
       providers: [
         { provide: RegistrarSolicitudService, useClass: MockRegistrarSolicitudService },

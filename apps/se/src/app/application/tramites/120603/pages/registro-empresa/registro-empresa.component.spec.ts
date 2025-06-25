@@ -10,10 +10,7 @@ import { Component } from '@angular/core';
 import { RegistroEmpresaComponent } from './registro-empresa.component';
 import { SeccionLibQuery, SeccionLibStore } from '@ng-mf/data-access-user';
 import { provideHttpClient } from '@angular/common/http';
-@Directive({ selector: '[myCustom]' })
-class MyCustomDirective {
-  @Input() myCustom: any;
-}
+
 
 describe('RegistroEmpresaComponent', () => {
   let fixture: ComponentFixture<RegistroEmpresaComponent>;
@@ -26,7 +23,6 @@ describe('RegistroEmpresaComponent', () => {
       imports: [ FormsModule, ReactiveFormsModule ],
       declarations: [
         RegistroEmpresaComponent,
-        MyCustomDirective
       ],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
       providers: [

@@ -23,11 +23,6 @@ class MockSolicitud150103Query {}
 @Injectable()
 class MockInformeAnualProgramaService {}
 
-@Directive({ selector: '[myCustom]' })
-class MyCustomDirective {
-  @Input() myCustom: any;
-}
-
 
 describe('DatosDeReporteAnualComponent', () => {
   let fixture: ComponentFixture<DatosDeReporteAnualComponent>;
@@ -38,10 +33,6 @@ describe('DatosDeReporteAnualComponent', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [ FormsModule, ReactiveFormsModule,DatosDeReporteAnualComponent ],
-      declarations: [
-        
-        MyCustomDirective
-      ],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
       providers: [
         provideHttpClient(),

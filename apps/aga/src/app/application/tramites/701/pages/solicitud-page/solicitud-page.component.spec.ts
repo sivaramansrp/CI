@@ -15,13 +15,6 @@ import { SeccionQuery } from '../../../../core/queries/seccion.query';
 @Injectable()
 class MockSeccionStore {}
 
-@Directive({ selector: '[myCustom]' })
-class MyCustomDirective {
-  @Input() myCustom: any;
-}
-
-
-
 describe('SolicitudPageComponent', () => {
   let fixture: ComponentFixture<SolicitudPageComponent>;
   let component: { ngOnDestroy: () => void; seccionQuery: { selectSeccionState$?: any; }; asignarSecciones: jest.Mock<any, any, any> | (() => void); ngOnInit: () => void; seleccionaTab: (arg0: {}) => void; wizardComponent: { siguiente?: any; atras?: any; }; getValorIndice: (arg0: { valor: {}; accion: {}; }) => void; seccionStore: { establecerSeccion?: any; establecerFormaValida?: any; }; };
@@ -29,9 +22,6 @@ describe('SolicitudPageComponent', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [ FormsModule, ReactiveFormsModule,SolicitudPageComponent ],
-      declarations: [
-        MyCustomDirective
-      ],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
       providers: [
         SeccionQuery,

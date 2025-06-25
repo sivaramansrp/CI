@@ -22,11 +22,6 @@ class MockSolicitud150103Query {}
 @Injectable()
 class MockInformeAnualProgramaService {}
 
-@Directive({ selector: '[myCustom]' })
-class MyCustomDirective {
-  @Input() myCustom: any;
-}
-
 describe('PasoUnoComponent', () => {
   let fixture: ComponentFixture<PasoUnoComponent>;
   let component: { ngOnDestroy: () => void; solicitante: { obtenerTipoPersona?: any; }; ngAfterViewInit: () => void; consultaQuery: { selectConsultaioState$?: any; }; guardarDatosFormulario: jest.Mock<any, any, any> | (() => void); ngOnInit: () => void; informaAnualPrograma: { getRegistroData?: any; actualizarEstadoFormulario?: any; }; seleccionaTab: (arg0: {}) => void; getFilaDeInformeSeleccionada: (arg0: {}) => void; destroyNotifier$: { next?: any; complete?: any; }; };
@@ -36,7 +31,7 @@ describe('PasoUnoComponent', () => {
       imports: [ FormsModule, ReactiveFormsModule ],
       declarations: [
         PasoUnoComponent,
-        MyCustomDirective
+        
       ],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
       providers: [

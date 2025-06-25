@@ -21,12 +21,6 @@ class MockSolicitud120603Query {}
 @Injectable()
 class MockRegistroComoEmpresaService {}
 
-@Directive({ selector: '[myCustom]' })
-class MyCustomDirective {
-  @Input() myCustom: any;
-}
-
-
 describe('PasoUnoComponent', () => {
   let fixture: ComponentFixture<PasoUnoComponent>;
   let component: { ngOnDestroy: () => void; consultaQuery: { selectConsultaioState$?: any; }; guardarDatosFormulario: jest.Mock<any, any, any> | (() => void); ngOnInit: () => void; registroComoEmpresa: { getConsultaData?: any; actualizarEstadoFormulario?: any; }; seleccionaTab: (arg0: {}) => void; destroyNotifier$: { next?: any; complete?: any; }; };
@@ -36,7 +30,6 @@ describe('PasoUnoComponent', () => {
       imports: [ FormsModule, ReactiveFormsModule ],
       declarations: [
         PasoUnoComponent,
-        MyCustomDirective
       ],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
       providers: [

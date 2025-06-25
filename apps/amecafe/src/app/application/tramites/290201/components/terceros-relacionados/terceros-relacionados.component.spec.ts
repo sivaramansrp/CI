@@ -26,12 +26,6 @@ class MockSolicitud290201Store {}
 @Injectable()
 class MockSolicitud290201Query {}
 
-@Directive({ selector: '[myCustom]' })
-class MyCustomDirective {
-  @Input() myCustom: any;
-}
-
-
 describe('TercerosRelacionadosComponent', () => {
   let fixture: ComponentFixture<TercerosRelacionadosComponent>;
   let component: { ngOnDestroy: () => void; destinatarioForm: { get?: any; value?: any; reset?: any; patchValue?: any; disable?: any; enable?: any; }; selectedTipoPersona: any; datosDelTramiteRealizar: any; solicitud290201Query: { selectSolicitud$?: any; }; createForm: jest.Mock<any, any, any> | (() => void); consultaioQuery: { selectConsultaioState$?: any; }; inicializarEstadoFormulario: jest.Mock<any, any, any> | (() => void); ngOnInit: () => void; fb: { group?: any; }; destinatarioState: { tipoPersona?: any; denominacion?: any; domicilio?: any; pais?: any; codigopostal?: any; telefono?: any; correoelectronico?: any; }; registrarsolicitud: { getPaisData?: any; }; paisData: { catalogos?: any; }; getPaisData: () => void; newDestinatarioData: any[]; changeDetectorRef: { markForCheck?: any; }; enEnviar: () => void; onLimpiar: () => void; onSelectedRowsChange: (arg0: { id: {}; }[]) => void; selectedRow: { datosDelTramiteRealizar?: any; }; enModificar: () => void; selectedRows: { size?: any; has?: any; clear?: any; }; tableData: string[]; onDeleteSelectedRows: () => void; onRowClick: (arg0: { datosDelTramiteRealizar: { tipoPersona: {}; denominacion: {}; domicilio: {}; pais: {}; codigopostal: {}; telefono: {}; correoelectronico: {}; }; }) => void; solicitud290201Store: { metodoNombre?: any; }; setValoresStore: (arg0: { get: () => { value: {}; }; }, arg1: {}, arg2: {}) => void; destroyed$: { next?: any; complete?: any; }; };
@@ -39,9 +33,6 @@ describe('TercerosRelacionadosComponent', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [ FormsModule, ReactiveFormsModule,TercerosRelacionadosComponent],
-      declarations: [
-        MyCustomDirective
-      ],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
       providers: [
         { provide: RegistrarSolicitudService, useClass: MockRegistrarSolicitudService },

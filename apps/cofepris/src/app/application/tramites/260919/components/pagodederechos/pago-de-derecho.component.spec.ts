@@ -23,12 +23,6 @@ class MockSolicitud260919Store {}
 @Injectable()
 class MockSolicitud260919Query {}
 
-@Directive({ selector: '[myCustom]' })
-class MyCustomDirective {
-  @Input() myCustom: any;
-}
-
-
 describe('PagoDeDerechoComponent', () => {
   let fixture: ComponentFixture<PagoDeDerechoComponent>;
   let component: { ngOnDestroy: () => void; pagoDeDerechosForm: { get?: any; reset?: any; disable?: any; enable?: any; }; pagoDeDerechos: any; solicitud260919Query: { selectSolicitud$?: any; }; crearFormulario: jest.Mock<any, any, any> | (() => void); getBancoData: jest.Mock<any, any, any> | (() => void); consultaioQuery: { selectConsultaioState$?: any; }; inicializarEstadoFormulario: jest.Mock<any, any, any> | (() => void); ngOnInit: () => void; importarDeRemediosHerbals: { getBancoData?: any; }; bancoData: { catalogos?: any; }; fb: { group?: any; }; pagoDeDerechosState: { clavedereferencia?: any; cadenadeladependencia?: any; banco?: any; llavedepago?: any; fechadepago?: any; importedepago?: any; }; solicitud260919Store: { setFechadePago?: any; metodoNombre?: any; }; seleccionarFechaInicio: (arg0: {}) => void; clearForm: () => void; setValoresStore: (arg0: { get: () => { value: {}; }; }, arg1: {}, arg2: {}) => void; destroyed$: { next?: any; complete?: any; }; };
@@ -36,9 +30,6 @@ describe('PagoDeDerechoComponent', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [ FormsModule, ReactiveFormsModule,PagoDeDerechoComponent ],
-      declarations: [
-        MyCustomDirective
-      ],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
       providers: [
         provideHttpClient(),

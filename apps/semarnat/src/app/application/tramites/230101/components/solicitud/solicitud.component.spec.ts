@@ -37,11 +37,6 @@ class MockMediodetransporteService {
 
 }
 
-@Directive({ selector: '[myCustom]' })
-class MyCustomDirective {
-  @Input() myCustom: any;
-}
-
 describe('SolicitudComponent', () => {
   let fixture: ComponentFixture<SolicitudComponent>;
   let component: { ngOnDestroy: () => void; FormSolicitud: { get?: any; disable?: any; enable?: any; }; tipoRegimen: { get?: any; }; aduanasSalida: { get?: any; }; selectedOptions: { controls?: any; }; mercancia: any; detalle: any; manifiestosForm: any; inicializaCatalogos: jest.Mock<any, any, any> | (() => void); solicitud230101Query: { selectSolicitud$?: any; }; crearFormulario: jest.Mock<any, any, any> | (() => void); consultaioQuery: { selectConsultaioState$?: any; }; inicializarEstadoFormulario: jest.Mock<any, any, any> | (() => void); ngOnInit: () => void; mediodetransporteService: { getMedioDeTransporte?: any; }; fb: { group?: any; array?: any; }; solicitudState: { regimen?: any; tipoProducto?: any; paisProcedencia?: any; selectedOptions?: any; clasificacionMercancia?: any; fraccionArancelaria?: any; descFraccionArancelaria?: any; cantidad?: any; cantidadLetra?: any; genero?: any; especie?: any; nombreComun?: any; descripcionProducto?: any; cantidadUMC?: any; manifiestosYdesc?: any; }; setValoresStore: jest.Mock<any, any, any> | ((arg0: { get: () => { value: {}; }; }, arg1: {}, arg2: {}) => void); cambiar: (arg0: { target: { checked: {}; }; }, arg1: {}) => void; solicitudService: { getData?: any; }; cargarDatosIniciales: () => void; disponsibleAduanaCheckboxes: {}; cambiarTipoRegimen: () => void; solicitud230101Store: {
@@ -53,7 +48,6 @@ describe('SolicitudComponent', () => {
       imports: [ FormsModule, ReactiveFormsModule,BtnContinuarComponent,WizardComponent],
       declarations: [
         SolicitudComponent,
-        MyCustomDirective
       ],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
       providers: [

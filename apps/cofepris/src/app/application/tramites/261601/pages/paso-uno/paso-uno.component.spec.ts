@@ -22,11 +22,6 @@ class MockSolicitud261601Query {}
 @Injectable()
 class MockCorreccionInternaDeLaCofeprisService {}
 
-@Directive({ selector: '[myCustom]' })
-class MyCustomDirective {
-  @Input() myCustom: any;
-}
-
 
 describe('PasoUnoComponent', () => {
   let fixture: ComponentFixture<PasoUnoComponent>;
@@ -36,8 +31,7 @@ describe('PasoUnoComponent', () => {
     TestBed.configureTestingModule({
       imports: [ FormsModule, ReactiveFormsModule ],
       declarations: [
-        PasoUnoComponent,
-        MyCustomDirective
+        PasoUnoComponent
       ],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
       providers: [

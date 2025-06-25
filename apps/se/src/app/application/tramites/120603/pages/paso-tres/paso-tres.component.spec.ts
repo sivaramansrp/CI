@@ -15,11 +15,6 @@ class MockRouter {
   navigate() {};
 }
 
-@Directive({ selector: '[myCustom]' })
-class MyCustomDirective {
-  @Input() myCustom: any;
-}
-
 
 describe('PasoTresComponent', () => {
   let fixture: ComponentFixture<PasoTresComponent>;
@@ -30,7 +25,7 @@ describe('PasoTresComponent', () => {
       imports: [ FormsModule, ReactiveFormsModule ],
       declarations: [
         PasoTresComponent,
-        MyCustomDirective
+        
       ],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
       providers: [

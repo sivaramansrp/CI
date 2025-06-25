@@ -23,11 +23,6 @@ class MockSolicitud261601Store {}
 @Injectable()
 class MockSolicitud261601Query {}
 
-@Directive({ selector: '[myCustom]' })
-class MyCustomDirective {
-  @Input() myCustom: any;
-}
-
 describe('SolicitudComponent', () => {
   let fixture: ComponentFixture<SolicitudComponent>;
   let component: { ngOnDestroy: () => void; solicitud261601Query: { selectSolicitud$?: any; }; createForm: jest.Mock<any, any, any> | (() => void); loadFolioDelTramite: jest.Mock<any, any, any> | (() => void); consultaioQuery: { selectConsultaioState$?: any; }; inicializarEstadoFormulario: jest.Mock<any, any, any> | (() => void); ngOnInit: () => void; fb: { group?: any; }; solicitudState: { detalledelaSolicitud?: any; cumplocon?: any; rfc?: any; legalRazonSocial?: any; apellidoPaterno?: any; apellidoMaterno?: any; }; correccionService: { getTramitesAsociados?: any; getSolicitudData?: any; }; solicitudForm: { patchValue?: any; get?: any; disable?: any; enable?: any; }; getSolicitudData: () => void; solicitud261601Store: { metodoNombre?: any; }; setValoresStore: (arg0: { get: () => { value: {}; }; }, arg1: {}, arg2: {}) => void; destroyed$: { next?: any; complete?: any; }; };
@@ -35,9 +30,6 @@ describe('SolicitudComponent', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [ FormsModule, ReactiveFormsModule,SolicitudComponent],
-      declarations: [
-        MyCustomDirective
-      ],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
       providers: [
         { provide: CorreccionInternaDeLaCofeprisService, useClass: MockCorreccionInternaDeLaCofeprisService },

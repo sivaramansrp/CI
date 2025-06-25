@@ -10,13 +10,6 @@ import { Component } from '@angular/core';
 import { PasoDosComponent } from './paso-dos.component';
 import { CatalogosService } from '@ng-mf/data-access-user';
 
-@Directive({ selector: '[myCustom]' })
-class MyCustomDirective {
-  @Input() myCustom: any;
-}
-
-
-
 describe('PasoDosComponent', () => {
   let fixture: ComponentFixture<PasoDosComponent>;
   let component: { ngOnDestroy: () => void; getTiposDocumentos: jest.Mock<any, any, any> | (() => void); ngOnInit: () => void; catalogosServices: { getCatalogo?: any; }; };
@@ -25,8 +18,7 @@ describe('PasoDosComponent', () => {
     TestBed.configureTestingModule({
       imports: [ FormsModule, ReactiveFormsModule, ],
       declarations: [
-        PasoDosComponent,
-        MyCustomDirective
+        PasoDosComponent
       ],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
       providers: [

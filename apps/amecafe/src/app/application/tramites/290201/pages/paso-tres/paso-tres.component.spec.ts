@@ -18,10 +18,6 @@ class MockRouter {
 }
 const MOCK_TOAST_CONFIG = new InjectionToken('ToastConfig');
 
-@Directive({ selector: '[myCustom]' })
-class MyCustomDirective {
-  @Input() myCustom: any;
-}
 
 describe('PasoTresComponent', () => {
   let fixture: ComponentFixture<PasoTresComponent>;
@@ -29,9 +25,6 @@ describe('PasoTresComponent', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [ FormsModule, ReactiveFormsModule,PasoTresComponent],
-      declarations: [
-        MyCustomDirective
-      ],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
       providers: [
         provideHttpClient(),
