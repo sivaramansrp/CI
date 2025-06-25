@@ -85,6 +85,7 @@ export class AgregarDestinatarioFinalContenedoraComponent implements OnInit, OnD
    */
   updateDestinatarioFinalTablaDatos(event: DestinoFinal[]): void {
     this.tramiteStore.updateDestinatarioFinalTablaDatos(event);
+      this.cerrar.emit();
   }
   /**
    * Actualiza los datos de un destinatario final existente en el store.
