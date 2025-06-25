@@ -1,75 +1,60 @@
-// @ts-nocheck
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import {
-  Pipe,
-  PipeTransform,
-  Injectable,
   CUSTOM_ELEMENTS_SCHEMA,
   NO_ERRORS_SCHEMA,
-  Directive,
-  Input,
-  Output,
 } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { By } from '@angular/platform-browser';
-import { Observable, of as observableOf, throwError } from 'rxjs';
-
-import { Component } from '@angular/core';
+import { FormsModule, ReactiveFormsModule, FormBuilder } from '@angular/forms';
 import { DetallesPlantasComponent } from './detalles-plantas.component';
-import { FormBuilder } from '@angular/forms';
 
 describe('DetallesPlantasComponent', () => {
-  let fixture;
-  let component;
+  let fixture: ComponentFixture<DetallesPlantasComponent>;
+  let component: DetallesPlantasComponent;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [FormsModule, ReactiveFormsModule],
+      imports: [FormsModule, ReactiveFormsModule, DetallesPlantasComponent],
       schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
       providers: [FormBuilder],
-    })
-      .overrideComponent(DetallesPlantasComponent, {})
-      .compileComponents();
+    }).compileComponents();
+
     fixture = TestBed.createComponent(DetallesPlantasComponent);
-    component = fixture.debugElement.componentInstance;
+    component = fixture.componentInstance;
+    fixture.detectChanges();
   });
 
-  it('should run #constructor()', async () => {
+  it('should create the component', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should run #inicializarFormularioDatosPlantas()', async () => {
-    component.fb = component.fb || {};
-    component.fb.group = jest.fn().mockReturnValue({
-      get: function () {},
-    });
+  it('should initialize the form in constructor', () => {
+    expect(component.formularioDatosPlantas).toBeDefined();
+    expect(component.formularioDatosPlantas.get('permaneceMercancia')).toBeTruthy();
+    expect(component.formularioDatosPlantas.get('fechaOpinion')?.disabled).toBe(true);
+  });
+
+  it('should run inicializarFormularioDatosPlantas() and disable fechaOpinion', () => {
     component.inicializarFormularioDatosPlantas();
-    // expect(component.fb.group).toHaveBeenCalled();
+    expect(component.formularioDatosPlantas.get('permaneceMercancia')).toBeTruthy();
+    expect(component.formularioDatosPlantas.get('fechaOpinion')?.disabled).toBe(true);
   });
 
-  it('should run #regresarPlantas()', async () => {
-    component.alRegresarPlantas = component.alRegresarPlantas || {};
-    component.alRegresarPlantas.emit = jest.fn();
+  it('should emit when regresarPlantas() is called', () => {
+    const emitSpy = jest.spyOn(component.alRegresarPlantas, 'emit');
     component.regresarPlantas();
-    // expect(component.alRegresarPlantas.emit).toHaveBeenCalled();
+    expect(emitSpy).toHaveBeenCalled();
   });
 
-  it('should run #cambiarPermaneceMerCancia()', async () => {
-    component.formularioDatosPlantas = component.formularioDatosPlantas || {};
-    component.formularioDatosPlantas.patchValue = jest.fn();
-    component.cambiarPermaneceMerCancia({
-      id: {},
-    });
-    // expect(component.formularioDatosPlantas.patchValue).toHaveBeenCalled();
+  it('should patch value in cambiarPermaneceMerCancia()', () => {
+    const patchSpy = jest.spyOn(component.formularioDatosPlantas, 'patchValue');
+    const mockCatalogo = { id: 5, descripcion: 'Sí' };
+    component.cambiarPermaneceMerCancia(mockCatalogo);
+    expect(patchSpy).toHaveBeenCalledWith({ permaneceMercancia: 5 });
   });
 
-  it('should run #cambiartipoContribuyente()', async () => {
-    component.formularioDatosPlantas = component.formularioDatosPlantas || {};
-    component.formularioDatosPlantas.patchValue = jest.fn();
-    component.cambiartipoContribuyente({
-      id: {},
-    });
-    // expect(component.formularioDatosPlantas.patchValue).toHaveBeenCalled();
+  it('should patch value in cambiartipoContribuyente()', () => {
+    const patchSpy = jest.spyOn(component.formularioDatosPlantas, 'patchValue');
+    const mockCatalogo = { id: 2, descripcion: 'Moral' };
+    component.cambiartipoContribuyente(mockCatalogo);
+    expect(patchSpy).toHaveBeenCalledWith({ tipoContribuyente: 2 });
   });
 });

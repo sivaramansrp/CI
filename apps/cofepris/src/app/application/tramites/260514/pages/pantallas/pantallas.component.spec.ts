@@ -20,11 +20,11 @@ describe('PantallasComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize pantallasPasos and datosPasos correctly', () => {
+  it('debe inicializar pantallasPasos y datosPasos correctamente', () => {
     expect(component.pantallasPasos).toEqual(PANTA_PASOS);
     expect(component.datosPasos).toEqual({
       nroPasos: PANTA_PASOS.length,
@@ -34,7 +34,7 @@ describe('PantallasComponent', () => {
     });
   });
 
-  it('should update indice and navigate forward when getValorIndice is called with "cont"', () => {
+  it('debe actualizar el índice y navegar hacia adelante cuando getValorIndice es llamado con "cont"', () => {
     const mockWizardComponent = {
       siguiente: jest.fn(),
       atras: jest.fn(),
@@ -50,7 +50,7 @@ describe('PantallasComponent', () => {
     expect(mockWizardComponent.atras).not.toHaveBeenCalled();
   });
 
-  it('should update indice and navigate backward when getValorIndice is called with "atras"', () => {
+  it('debe actualizar el índice y navegar hacia atrás cuando getValorIndice es llamado con "atras"', () => {
     const mockWizardComponent = {
       siguiente: jest.fn(),
       atras: jest.fn(),
@@ -66,7 +66,7 @@ describe('PantallasComponent', () => {
     expect(mockWizardComponent.siguiente).not.toHaveBeenCalled();
   });
 
-  it('should not update indice or call navigation methods if valor is out of range', () => {
+  it('no debe actualizar el índice ni llamar métodos de navegación si el valor está fuera de rango', () => {
     const mockWizardComponent = {
       siguiente: jest.fn(),
       atras: jest.fn(),

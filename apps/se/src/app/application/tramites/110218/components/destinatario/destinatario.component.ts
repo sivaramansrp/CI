@@ -10,11 +10,13 @@ import { REGEX_DESCRIPCION_ESPECIALES } from '@libs/shared/data-access-user/src'
 import { ReactiveFormsModule } from '@angular/forms';
 import { Validators } from '@angular/forms';
 
+import {ConsultaioQuery} from "@ng-mf/data-access-user";
+
 import { REG_X } from '@libs/shared/data-access-user/src';
 
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 
-import { CertificadoTecnicoJaponService } from '@libs/shared/data-access-user/src/core/services/110218/certificadoTecnicoJapon.service';
+import { CertificadoTecnicoJaponService } from '../../service/certificadoTecnicoJapon.service';
 
 import { Tramite110218Query } from '../../estados/queries/tramite110218.query';
 
@@ -37,6 +39,12 @@ import { takeUntil } from 'rxjs';
   styleUrls: ['./destinatario.component.scss'],
 })
 export class DestinatarioComponent implements OnInit, OnDestroy {
+
+  /**
+   * Indica si el formulario está en modo solo lectura.
+   * Si es verdadero, los campos del formulario estarán deshabilitados para evitar edición.
+   */
+  esSoloLectura!: boolean;
   /**
    * Formulario para los datos personales del destinatario.
    * Contiene campos como nombre, apellidos, número de registro fiscal y razón social.
@@ -72,7 +80,8 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
     public formBuilder: FormBuilder,
     private tramite110218Store: Tramite110218Store,
     private tramite110218Query: Tramite110218Query,
-    private service: CertificadoTecnicoJaponService
+    private service: CertificadoTecnicoJaponService,
+    private consultaQuery: ConsultaioQuery
   ) {}
 
   /**
@@ -169,6 +178,27 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
     this.getValorStore();
     this.crearFormularioDatosDelDestinatario();
     this.crearFormularioDomicilioDelDestinatario();
+
+     this.consultaQuery.selectConsultaioState$
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((estadoConsulta) => {
+        this.esSoloLectura = estadoConsulta.readonly;
+        this.habilitarDeshabilitarFormulario();
+      });
+  }
+  /**
+   * Habilita o deshabilita los formularios según el modo de solo lectura.
+   * Si es solo lectura, deshabilita ambos formularios para evitar edición.
+   * Si no, los habilita para permitir la captura de datos.
+   */
+  habilitarDeshabilitarFormulario(): void {
+    if (this.esSoloLectura) {
+      this.datosDelDestinatario.disable();
+      this.domicilioDelDestinatario.disable();
+    } else {
+      this.datosDelDestinatario.enable();
+      this.domicilioDelDestinatario.enable();
+    }
   }
 
   

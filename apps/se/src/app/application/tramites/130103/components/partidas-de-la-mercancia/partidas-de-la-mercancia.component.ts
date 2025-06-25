@@ -399,6 +399,9 @@ export class PartidasDeLaMercanciaComponent
    * // Actualiza el estado dinámico del campo "cantidad" con el valor 100.
    */
   establecerCambioDeValor(event: { campo: string; valor: string }): void {
+    if (!event) {
+      return;
+    }
     this.tramite130103Store.setDynamicFieldValue(event.campo, event.valor);
   }
 
@@ -539,7 +542,7 @@ export class PartidasDeLaMercanciaComponent
    * @method abrirModalEditar
    */
   guardarEdicion(): void {
-    if (!this.partidasSeleccionadas.length) {
+    if (this.partidasSeleccionadas.length) {
       const INDEX = this.datosTabla.findIndex((item) => item === this.partidasSeleccionadas[0]);
       if (INDEX !== -1) {
         this.datosTabla[INDEX] = {

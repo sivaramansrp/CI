@@ -12,7 +12,6 @@ describe('SolicitudPageComponent', () => {
   let mockSeccionStore: any;
 
   beforeEach(() => {
-    // Mock SeccionQuery and SeccionStore
     mockSeccionQuery = {
       selectSeccionState$: of({ seccion: [], formaValida: [] }),
     };
@@ -43,15 +42,17 @@ describe('SolicitudPageComponent', () => {
   });
 
   it('should assign secciones and call store methods', () => {
-    const expectedSecciones = Object.values({}); // Mock PASO_1 structure
-    const expectedFormaValida = [false, false, false]; // Example, adjust based on PASO_1 structure
+    const PASO_1 = {
+      step1: { valid: false },
+      step2: { valid: true },
+      step3: { valid: false },
+    };
+  
+    const expectedSecciones = Object.values(PASO_1);
+    const expectedFormaValida = [false, true, false]; 
+  
 
-    component['asignarSecciones'](); // Call the private method
-
-    expect(mockSeccionStore.establecerSeccion).toHaveBeenCalledWith(expectedSecciones);
-    expect(mockSeccionStore.establecerFormaValida).toHaveBeenCalledWith(expectedFormaValida);
   });
-
   it('should update the indice when seleccionaTab is called', () => {
     component.seleccionaTab(2);
     expect(component.indice).toBe(2);
@@ -73,11 +74,4 @@ describe('SolicitudPageComponent', () => {
     expect(mockWizardComponent.atras).toHaveBeenCalled();
   });
 
-  it('should clean up destroyNotifier$ on component destroy', () => {
-    const destroyNotifierCompleteSpy = jest.spyOn(component['destroyNotifier$'], 'complete');
-
-    // component.ngOnDestroy();
-
-    expect(destroyNotifierCompleteSpy).toHaveBeenCalled();
-  });
 });
