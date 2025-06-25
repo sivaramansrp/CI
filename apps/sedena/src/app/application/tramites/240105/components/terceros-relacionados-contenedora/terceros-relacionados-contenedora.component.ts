@@ -1,17 +1,14 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { AgregarDestinatarioFinalContenedoraComponent } from '../agregar-destinatario-final-contenedora/agregar-destinatario-final-contenedora.component';
 import { AgregarProveedorContenedoraComponent } from '../agregar-proveedor-contenedora/agregar-proveedor-contenedora.component';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DestinoFinal } from '../../../../shared/models/terceros-relacionados.model';
 import { ModalComponent } from '../../../../shared/components/modal/modal.component';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
 import { Proveedor } from '../../../../shared/models/terceros-relacionados.model';
 import { Subject } from 'rxjs';
 import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-relacionados/terceros-relacionados.component';
 import { Tramite240105Query } from '../../estados/tramite240105Query.query';
-import { Tramite240105Store } from '../../estados/tramite240105Store.store';
 import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
 
@@ -75,13 +72,11 @@ export class TercerosRelacionadosContenedoraComponent implements OnInit, OnDestr
    * Constructor del componente.
    *
    * @method constructor
-   * @param {Tramite240101Store} tramiteStore - Store de Akita que maneja el estado del trámite.
    * @param {Tramite240101Query} tramiteQuery - Query de Akita para obtener datos del trámite.
    * @param {ConsultaioQuery} consultaQuery - Query para obtener el estado de la consulta de usuario.
    * @returns {void}
    */
   constructor(
-    private tramiteStore: Tramite240105Store,
     private tramiteQuery: Tramite240105Query,
     private consultaQuery: ConsultaioQuery
   ) // eslint-disable-next-line no-empty-function

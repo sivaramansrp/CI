@@ -59,6 +59,7 @@ export class DatosMercanciaContenedoraComponent implements OnDestroy {
    *
    * @method constructor
    * @param {Tramite240105Store} tramiteStore - Store de Akita para actualizar el estado de la tabla de mercancías.
+   * @param {ConsultaioQuery} consultaioQuery - Query de Akita para obtener el estado de la sección del formulario.
    * @returns {void}
    */
   constructor(private tramiteStore: Tramite240105Store, private readonly consultaioQuery: ConsultaioQuery) {

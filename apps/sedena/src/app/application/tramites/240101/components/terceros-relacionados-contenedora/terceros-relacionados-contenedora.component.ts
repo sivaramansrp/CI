@@ -1,18 +1,15 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Subject, map, takeUntil } from 'rxjs';
 import { AgregarDestinatarioFinalContenedoraComponent } from '../agregar-destinatario-final-contenedora/agregar-destinatario-final-contenedora.component';
 import { AgregarProveedorContenedoraComponent } from '../agregar-proveedor-contenedora/agregar-proveedor-contenedora.component';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 import { DestinoFinal } from '../../../../shared/models/terceros-relacionados.model';
 import { ModalComponent } from '../../../../shared/components/modal/modal.component';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
 import { Proveedor } from '../../../../shared/models/terceros-relacionados.model';
-import { Subject } from 'rxjs';
 import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-relacionados/terceros-relacionados.component';
 import { Tramite240101Query } from '../../estados/tramite240101Query.query';
-import { map } from 'rxjs';
-import { takeUntil } from 'rxjs';
+
 
 /**
  * @title Terceros Relacionados Contenedora
@@ -69,7 +66,6 @@ export class TercerosRelacionadosContenedoraComponent
    * Constructor del componente.
    *
    * @method constructor
-   * @param {Tramite240101Store} tramiteStore - Store de Akita que maneja el estado del trámite.
    * @param {Tramite240101Query} tramiteQuery - Query de Akita para obtener datos del trámite.
    * @param {ConsultaioQuery} consultaQuery - Servicio para realizar consultas adicionales relacionadas.
    * @returns {void}

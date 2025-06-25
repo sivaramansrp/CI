@@ -1,4 +1,5 @@
-import { Component, EventEmitter, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DatosDelTramiteComponent } from '../../../../shared/components/datos-del-tramite/datos-del-tramite.component';
@@ -7,12 +8,6 @@ import { DatosMercanciaContenedoraComponent } from '../datos-mercancia-contenedo
 import { ID_PROCEDIMIENTO } from '../../constants/importacion-armas-municiones.enum';
 import { MercanciaDetalle } from '../../../../shared/models/datos-del-tramite.model';
 import { ModalComponent } from '../../../../shared/components/modal/modal.component';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
-import { Subject } from 'rxjs';
-import { map } from 'rxjs';
-import { takeUntil } from 'rxjs';
-
 import { Tramite240105Query } from '../../estados/tramite240105Query.query';
 import { Tramite240105Store } from '../../estados/tramite240105Store.store';
 

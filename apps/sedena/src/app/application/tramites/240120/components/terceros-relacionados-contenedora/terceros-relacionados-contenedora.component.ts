@@ -1,5 +1,5 @@
 import { ActivatedRoute, Router } from '@angular/router';
-import { Component, ViewChild } from '@angular/core';
+import { Component,OnDestroy,OnInit, ViewChild } from '@angular/core';
 import { Subject, map,takeUntil } from 'rxjs';
 import { AgregarDestinatarioFinalContenedoraComponent } from '../agregar-destinatario-final-contenedora/agregar-destinatario-final-contenedora.component';
 import { AgregarProveedorContenedoraComponent } from '../agregar-proveedor-contenedora/agregar-proveedor-contenedora.component';
@@ -8,8 +8,6 @@ import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 import { DestinoFinal } from '../../../../shared/models/terceros-relacionados.model';
 import { ModalComponent } from '../../../../shared/components/modal/modal.component';
 import { NUMERO_TRAMITE } from '../../../../shared/constants/datos-solicitud.enum';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
 import { Proveedor } from '../../../../shared/models/terceros-relacionados.model';
 import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-relacionados/terceros-relacionados.component';
 import { Tramite240120Query } from '../../estados/tramite240120Query.query';

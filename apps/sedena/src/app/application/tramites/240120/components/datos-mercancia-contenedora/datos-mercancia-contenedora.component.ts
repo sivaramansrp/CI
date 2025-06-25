@@ -1,11 +1,9 @@
-import { Component, EventEmitter, Output} from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output} from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { DatosMercanciaComponent } from '../../../../shared/components/datos-mercancia/datos-mercancia.component';
 import { MercanciaDetalle } from '../../../../shared/models/datos-del-tramite.model';
 import { NUMERO_TRAMITE } from '../../../../shared/constants/datos-solicitud.enum';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
 import { Tramite240120Query } from '../../estados/tramite240120Query.query';
 import { Tramite240120Store } from '../../estados/tramite240120Store.store';
 

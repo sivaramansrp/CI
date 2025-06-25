@@ -1,4 +1,5 @@
-import { Component, EventEmitter, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 import { DatosDelTramiteComponent } from '../../../../shared/components/datos-del-tramite/datos-del-tramite.component';
@@ -6,13 +7,9 @@ import { DatosDelTramiteFormState } from '../../../../shared/models/datos-del-tr
 import { DatosMercanciaContenedoraComponent } from '../datos-mercancia-contenedora/datos-mercancia-contenedora.component';
 import { MercanciaDetalle } from '../../../../shared/models/datos-del-tramite.model';
 import { ModalComponent } from '../../../../shared/components/modal/modal.component';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
-import { Subject } from 'rxjs';
 import { Tramite240101Query } from '../../estados/tramite240101Query.query';
 import { Tramite240101Store } from '../../estados/tramite240101Store.store';
-import { map } from 'rxjs';
-import { takeUntil } from 'rxjs';
+
 
 /**
  * @title Datos del Trámite Contenedora

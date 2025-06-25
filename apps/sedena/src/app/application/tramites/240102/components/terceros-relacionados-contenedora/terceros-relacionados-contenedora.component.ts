@@ -1,4 +1,5 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Subject, map, takeUntil } from 'rxjs';
 import { AgregarDestinatarioFinalContenedoraComponent } from '../agregar-destinatario-final-contenedora/agregar-destinatario-final-contenedora.component';
 import { AgregarProveedorContenedoraComponent } from '../agregar-proveedor-contenedora/agregar-proveedor-contenedora.component';
 import { CommonModule } from '@angular/common';
@@ -6,14 +7,10 @@ import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 import { DestinoFinal } from '../../../../shared/models/terceros-relacionados.model';
 import { ID_PROCEDIMIENTO } from '../../constants/importacion-armas-municiones.enum';
 import { ModalComponent } from '../../../../shared/components/modal/modal.component';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
 import { Proveedor } from '../../../../shared/models/terceros-relacionados.model';
-import { Subject } from 'rxjs';
 import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-relacionados/terceros-relacionados.component';
 import { Tramite240102Query } from '../../estados/tramite240102Query.query';
-import { map } from 'rxjs';
-import { takeUntil } from 'rxjs';
+
 /**
  * @title Terceros Relacionados Contenedora
  * @description Componente contenedor encargado de suscribirse a los datos de destinatarios finales y proveedores del trámite.
@@ -77,10 +74,7 @@ export class TercerosRelacionadosContenedoraComponent
    * Constructor del componente.
    *
    * @constructor
-   * @param {Tramite240102Store} tramiteStore - Store de Akita que gestiona el estado del trámite.
    * @param {Tramite240102Query} tramiteQuery - Query de Akita para obtener los datos del trámite.
-   * @param {Router} router - Servicio de enrutamiento de Angular.
-   * @param {ActivatedRoute} activatedRoute - Ruta activa actual.
    * @param {ConsultaioQuery} consultaQuery - Query para consultar información adicional.
    * @returns {void}
    */
