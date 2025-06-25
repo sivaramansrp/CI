@@ -1,7 +1,7 @@
 /**
  * Importaciones necesarias para el componente DatosDelCertificado.
  */
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 /**
  * Importaciones necesarias para el componente DatosDelCertificado.
@@ -21,13 +21,16 @@ import { AgregarQuery } from '../../../../estados/queries/agregar.query';
 import { CatalogoResponse } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { DatosGeneralesAnimalesComponent } from '../datos-generales-animales/datos-generales-animales.component';
 import { InputRadioComponent } from "@libs/shared/data-access-user/src/tramites/components/input-radio/input-radio.component";
+import { Modal } from 'bootstrap';
 import { Pantallas220401Service } from '../pantallas220401.service';
 import { Solicitud220401State } from '../../../../estados/tramites/agregar220401.store';
 import { TableComponent } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import radioOptionsData from '@libs/shared/theme/assets/json/220401/tipo-de-certifico.json';
 import unidadRadioFields from '@libs/shared/theme/assets/json/220401/unidad.json';
+
 /**
  * Componente que gestiona los datos del certificado en la solicitud 220401.
  */
@@ -44,11 +47,14 @@ import unidadRadioFields from '@libs/shared/theme/assets/json/220401/unidad.json
     InputRadioComponent,
     AgregarArchivoComponent,
     TableComponent,
-    CatalogoSelectComponent,
+    CatalogoSelectComponent,DatosGeneralesAnimalesComponent
   ],
 })
 export class DatosDelCertificadoComponent implements OnInit, OnDestroy {
- 
+  /**
+   * Referencia al elemento del modal para agregar mercancías.
+   */
+  @ViewChild('modalAgregarMercancias') modalElement!: ElementRef;
   /** Formulario principal para la solicitud. */
   solicitudForm!:FormGroup;
  /** Opciones de radio importadas desde JSON. */
@@ -221,6 +227,15 @@ this.inicializarCertificadoFormulario();
         DROP_DOWN.setValue("1");
       }
     });
+  }
+    /**
+   * Abre el modal para modificar mercancías.
+   */
+  openModificarMercancias(): void {
+    if (this.modalElement) {
+      const MODAL_INSTANCE = new Modal(this.modalElement.nativeElement);
+      MODAL_INSTANCE.show();
+    }
   }
 
       /**
