@@ -96,7 +96,7 @@
             }
             <div class="row">
               <div class="col-md-4 mb-3">
-                <app-catalogo-select [catalogo]="options" formControlName="pais" [label]="'País'" [required]="true"
+                <app-catalogo-select [catalogo]="Opciones" formControlName="pais" [label]="'País'" [required]="true"
                   (change)="setValoresStore(datosPersonales,'pais', 'setPais')"
                   [isDisabled]="soloLectura"></app-catalogo-select>
               </div>
@@ -148,7 +148,7 @@
         <button type="button" class="btn btn-default" [disabled]="soloLectura" (click)="limpiar()">Limpiar</button>
         <button type="button" class="btn btn-danger" data-bs-dismiss="modal" #closeDomicilio [disabled]="soloLectura">
           Cancelar </button>
-        <button type="button" class="btn btn-primary ms-3" (click)="validarDestinatarioFormulario()"
+        <button type="button" class="btn btn-primary" (click)="validarDestinatarioFormulario()"
           [disabled]="soloLectura">Guardar</button>
       </div>
     </div>

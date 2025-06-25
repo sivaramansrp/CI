@@ -175,6 +175,7 @@ export class PagoDeDerechoComponent implements OnInit, OnDestroy {
       this.FormSolicitud?.disable();
     } else {
       this.FormSolicitud?.enable();
+      this.actualizarCamposDeFormularioBasadosEnExentoDePago();
     }
   }
   /**

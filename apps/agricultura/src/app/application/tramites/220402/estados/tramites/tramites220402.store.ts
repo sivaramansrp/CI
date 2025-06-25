@@ -1,5 +1,5 @@
+import { DatosGenerales, Destinatario } from '../../models/pantallas-captura.model';
 import { Store, StoreConfig } from '@datorama/akita';
-import { DatosGenerales } from '../../models/pantallas-captura.model';
 import { Injectable } from '@angular/core';
 
 /**
@@ -258,6 +258,8 @@ export interface Solicitud220402State {
    * Descripción detallada del producto.
    */
   descripcionProducto: string;
+  /** Lista de destinatarios relacionados con el trámite. */
+  destinatario: Destinatario[];
 }
 
 export function createInitialSolicitudState(): Solicitud220402State {
@@ -311,7 +313,8 @@ export function createInitialSolicitudState(): Solicitud220402State {
     importePago: '',
     nombreComun: '',
     nombreCientifico: '',
-    descripcionProducto: ''
+    descripcionProducto: '',
+    destinatario: []
   }
 }
 
@@ -825,6 +828,17 @@ export class Solicitud220402Store extends Store<Solicitud220402State> {
     this.update((state) => ({
       ...state,
       descripcionProducto
+    }));
+  }
+  /**
+   * Actualiza el estado con la lista de destinatarios relacionados con el trámite.
+   * 
+   * @param {Destinatario[]} destinatario - Lista de destinatarios a actualizar en el estado.
+   */
+  public setDestinatario(destinatario: Destinatario[]): void {
+    this.update((state) => ({
+      ...state,
+      destinatario
     }));
   }
 

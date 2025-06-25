@@ -57,7 +57,7 @@ export class AgregarDestinatarioComponent implements OnDestroy, OnInit {
    * @property {Catalogo[]} options
    * @description Lista de opciones disponibles en el catálogo.
    */
-  options!: Catalogo[];
+  Opciones!: Catalogo[];
 
   /**
    * @property {FormGroup} destinatarioForm
@@ -158,6 +158,7 @@ export class AgregarDestinatarioComponent implements OnDestroy, OnInit {
       )
       .subscribe();
     this.crearFormTransporte();
+    this.destinatario = this.destinatarioState.destinatario || [];
   }
 
   /**
@@ -245,7 +246,7 @@ export class AgregarDestinatarioComponent implements OnDestroy, OnInit {
       .getMedioDeTransporte()
       .pipe(takeUntil(this.destroyed$))
       .subscribe((data): void => {
-        this.options = data as Catalogo[];
+        this.Opciones = data as Catalogo[];
       });
   }
 
@@ -255,7 +256,17 @@ export class AgregarDestinatarioComponent implements OnDestroy, OnInit {
   validarDestinatarioFormulario(): void {
     this.destinatarioForm.markAllAsTouched();
     if (this.destinatarioForm.valid) {
-      this.cargarDestinatario();
+      const VALOR = this.destinatarioForm.getRawValue();
+      const PAIS: string = this.Opciones.find(opt => opt.id.toString() === VALOR.datosPersonales.pais)?.descripcion || '';
+      this.destinatario = [...this.destinatario,
+      {
+        id: this.destinatario.length = 1,
+        nombreDenominacionORazonSocial: VALOR.datosPersonales.denominacion,
+        telefono: VALOR.datosPersonales.telefono,
+        correoElectronico: VALOR.datosPersonales.telefono,
+        domicilio: VALOR.datosPersonales.domicilio,
+        pais: PAIS
+      }]
       this.closeDomicilio.nativeElement.click();
     }
   }

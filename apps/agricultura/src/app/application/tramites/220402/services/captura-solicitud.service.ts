@@ -67,6 +67,7 @@ export class CapturaSolicitudeService {
     this.tramite220402Store.setJustificacion(DATOS.justificacion);
     this.tramite220402Store.setClaveDeReferencia(DATOS.claveDeReferencia);
     this.tramite220402Store.setImportePago(DATOS.importePago);
+    this.tramite220402Store.setDestinatario(DATOS.destinatario);
   }
 
   /**
