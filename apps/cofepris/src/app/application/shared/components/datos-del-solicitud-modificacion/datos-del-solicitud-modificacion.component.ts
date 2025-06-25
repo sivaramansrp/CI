@@ -106,6 +106,8 @@ export class DatosDelSolicitudModificacionComponent
   implements OnInit, OnDestroy, AfterViewInit
 {
 
+  public DatosDelSolicitudModificacionComponent = DatosDelSolicitudModificacionComponent;
+
   /**
  * @input mostrarScianBotones
  * @description

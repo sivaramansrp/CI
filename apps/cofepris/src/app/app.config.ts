@@ -4,8 +4,6 @@ import { ENVIRONMENT } from './environments/environment';
 import { provideHttpClient } from '@angular/common/http';
 import { provideRouter } from '@angular/router';
 
-import { APPINJECT } from './app.inject';
-
 /**
  * Esta es la configuración principal de la aplicación Agace.
  * Aquí se definen los proveedores y la configuración de la aplicación.
@@ -15,7 +13,6 @@ export const APPCONFIG: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(APP_ROUTES),
-    provideHttpClient(),
-    { provide: APPINJECT, useValue: ENVIRONMENT },
+    provideHttpClient()
   ],
 };
