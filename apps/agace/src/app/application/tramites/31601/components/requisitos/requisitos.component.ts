@@ -1,22 +1,34 @@
-import { CATALOGOS_ID, CatalogoSelectComponent } from '@ng-mf/data-access-user';
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { Solicitud31601State, Tramite31601Store } from '../../../../estados/tramites/tramite31601.store';
-import {Subject,Subscription,map, takeUntil } from 'rxjs';
+import { CATALOGOS_ID } from '@ng-mf/data-access-user';
 import { Catalogo } from '@libs/shared/data-access-user/src/core/models/shared/catalogos.model';
-import { Tipos } from '@libs/shared/data-access-user/src/core/models/31601/servicios-pantallas.model';
-
+import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src/core/models/shared/configuracion-columna.model';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { FormBuilder } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
+import { HttpClientModule } from '@angular/common/http';
+import { OnDestroy } from '@angular/core';
+import { OnInit } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
 import { ServiciosPantallaService } from '@libs/shared/data-access-user/src/core/services/31601/servicios-pantalla.service';
+import { Solicitud31601State } from '../../../../estados/tramites/tramite31601.store';
+import { Subject } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
-
 import { TableBodyData } from '@ng-mf/data-access-user';
 import { TableComponent } from '@ng-mf/data-access-user';
+import { Tipos } from '@libs/shared/data-access-user/src/core/models/31601/servicios-pantallas.model';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { Tramite31601Query } from '../../../../estados/queries/tramite31601.query';
+import { Tramite31601Store } from '../../../../estados/tramites/tramite31601.store';
+import { Validators } from '@angular/forms';
+import { map } from 'rxjs';
+import { takeUntil } from 'rxjs';
+
+
 /**
  * @component RequisitosComponent
  * @description

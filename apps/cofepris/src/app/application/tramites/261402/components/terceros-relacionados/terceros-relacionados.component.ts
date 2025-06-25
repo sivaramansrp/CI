@@ -4,15 +4,15 @@
  */
 import { AlertComponent, TablaDinamicaComponent, TituloComponent } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Subject, map } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ConfiguracionColumna } from '@ng-mf/data-access-user';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DESTINATARIO_ENCABEZADO_DE_TABLA } from '../../enums/informacion-de-procedencia.enum';
 import { InformaciondeProcedencia } from '../../enums/informacion-de-procedencia.enum';
 import { MENSAJE_TABLA_OBLIGATORIA } from '../../../../shared/models/terceros-relacionados.model';
-import { TablaSeleccion } from '@ng-mf/data-access-user';
-
 import { SolicitudModificacionPermisoInternacionService } from '../../services/solicitud-modificacion-permiso-internacion.service';
-import { Subject } from 'rxjs';
+import { TablaSeleccion } from '@ng-mf/data-access-user';
 import { Tramite261402Query } from '../../../../estados/queries/tramite261402.query';
 import { Tramite261402Store } from '../../../../estados/tramites/tramite261402.store';
 import { takeUntil } from 'rxjs';
@@ -59,7 +59,10 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    * Subject utilizado para manejar la destrucción de suscripciones.
    */
   private destroyNotifier$: Subject<void> = new Subject();
-
+  /**
+   * Indica si el formulario debe mostrarse en modo solo lectura.
+   */
+  esFormularioSoloLectura: boolean = false;
   /**
    * Constructor del componente.
    * @param solicitudDatosService Servicio para obtener los datos de los destinatarios.
@@ -70,8 +73,16 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
     public solicitudDatosService: SolicitudModificacionPermisoInternacionService,
     private tramite261402Store: Tramite261402Store,
     private tramite261402Query: Tramite261402Query,
+ private consultaioQuery: ConsultaioQuery
   ) {
-    // Constructor
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+        })
+      )
+      .subscribe();
   }
 
   /**

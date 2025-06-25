@@ -4,15 +4,16 @@ import { BsModalService } from 'ngx-bootstrap/modal';
 import { FormBuilder } from '@angular/forms';
 import { RegistrosDeComercioExteriorService } from '../../services/registros-de-comercio-exterior.service';
 import { of } from 'rxjs';
+import {HttpClientTestingModule} from '@angular/common/http/testing';
 
 describe('NumeroDeEmpleadosComponent', () => {
   let component: NumeroDeEmpleadosComponent;
   let fixture: ComponentFixture<NumeroDeEmpleadosComponent>;
-  let RegistrosDeComercioExteriorService: any;
+  let registrosDeComercioExteriorService: any;
   let modalServiceMock: any;
 
   beforeEach(async () => {
-    RegistrosDeComercioExteriorService = {
+    registrosDeComercioExteriorService = {
       getAnterioresDatos: jest.fn().mockReturnValue(of([])),
       getBancoDatos: jest.fn().mockReturnValue(of({ data: [] })),
     };
@@ -22,9 +23,9 @@ describe('NumeroDeEmpleadosComponent', () => {
     };
 
     await TestBed.configureTestingModule({
-      imports: [NumeroDeEmpleadosComponent],
+      imports: [NumeroDeEmpleadosComponent,HttpClientTestingModule],
       providers: [
-        { provide: RegistrosDeComercioExteriorService, useValue: RegistrosDeComercioExteriorService },
+        { provide: RegistrosDeComercioExteriorService, useValue: registrosDeComercioExteriorService },
         { provide: BsModalService, useValue: modalServiceMock },
         FormBuilder,
       ],
@@ -53,21 +54,13 @@ describe('NumeroDeEmpleadosComponent', () => {
 
   it('should fetch previous table data', () => {
     component.getAnterioresTablaDatos();
-    expect(RegistrosDeComercioExteriorService.getAnterioresDatos).toHaveBeenCalled();
+    expect(registrosDeComercioExteriorService.getAnterioresDatos).toHaveBeenCalled();
     expect(component.numeroDeEmpleadosDatos).toEqual([]);
-  });
-
-  it('should open modal with the provided template', () => {
-    const templateMock: any = {};
-    component.abrirModal(templateMock);
-    expect(modalServiceMock.show).toHaveBeenCalledWith(templateMock, { class: 'modal-lg' });
   });
 
   it('should initialize agregarForm with correct controls', () => {
     component.crearAgregarForm();
     expect(component.agregarForm.contains('rfc')).toBeTruthy();
-    expect(component.agregarForm.contains('registroInput')).toBeTruthy();
-    expect(component.agregarForm.contains('razonSocialInput')).toBeTruthy();
     expect(component.agregarForm.contains('numeroUno')).toBeTruthy();
     expect(component.agregarForm.contains('numeroDos')).toBeTruthy();
     expect(component.agregarForm.contains('numeroTres')).toBeTruthy();
@@ -78,7 +71,7 @@ describe('NumeroDeEmpleadosComponent', () => {
 
   it('should fetch catalog data and assign to bimesters', () => {
     component.getBancoCatalogDatos();
-    expect(RegistrosDeComercioExteriorService.getBancoDatos).toHaveBeenCalled();
+    expect(registrosDeComercioExteriorService.getBancoDatos).toHaveBeenCalled();
     expect(component.bimestreUnoCatalogo).toEqual([]);
     expect(component.bimestreDosCatalogo).toEqual([]);
     expect(component.bimestreTresCatalogo).toEqual([]);

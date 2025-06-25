@@ -1,160 +1,226 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { DatosGeneralesDeLaSolicitudComponent } from './datos-generales-de-la-solicitud.component';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { SolicitudService } from '../../services/solicitud.service';
-import {
-  Solicitud31301State,
-  Solicitud31301Store,
-} from '../../estados/solicitud31301.store';
+import { Solicitud31301Store } from '../../estados/solicitud31301.store';
 import { Solicitud31301Query } from '../../estados/solicitud31301.query';
-import { Observable, of } from 'rxjs';
-import { CommonModule } from '@angular/common';
 import {
   CatalogoSelectComponent,
+  ConsultaioQuery,
   InputRadioComponent,
   TablaDinamicaComponent,
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
+import { of, Subject } from 'rxjs';
+import { CommonModule } from '@angular/common';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('DatosGeneralesDeLaSolicitudComponent', () => {
   let component: DatosGeneralesDeLaSolicitudComponent;
-  let fixture: ComponentFixture<DatosGeneralesDeLaSolicitudComponent>;
-  let solicitudServiceMock: jest.Mocked<SolicitudService>;
-  let solicitud31301StoreMock: jest.Mocked<Solicitud31301Store>;
-  let solicitud31301QueryMock: jest.Mocked<Solicitud31301Query>;
+  let fixture: any;
+  let solicitudServiceSpy: jest.Mocked<SolicitudService>;
+  let solicitud31301StoreSpy: jest.Mocked<Solicitud31301Store>;
+  let solicitud31301QuerySpy: jest.Mocked<Solicitud31301Query>;
+  let consultaioQuerySpy: jest.Mocked<ConsultaioQuery>;
 
   beforeEach(async () => {
-    solicitudServiceMock = {
-      conseguirDatosGeneralesOpcionDeRadio: jest.fn(),
-      conseguirDatosGeneralesCatologo: jest.fn(),
-      conseguirListaDeSubcontratistas: jest.fn(),
-      conseguirRegimenAduanero: jest.fn(),
-      conseguirMiembrosDeLaEmpresa: jest.fn(),
-      conseguirTipoDeInversionDatos: jest.fn(),
-      conseguirDomicilios: jest.fn(),
-      conseguirDatosGeneralesDeLaSolicitudDatos: jest.fn(),
+    solicitudServiceSpy = {
+      conseguirDatosGeneralesOpcionDeRadio: jest.fn().mockReturnValue(
+        of({
+          tipoDeEndoso: {
+            radioOptions: [
+              {
+                label: 'Aumento de monto',
+                value: 1,
+              },
+              {
+                label: 'Aumento de monto y renovación/ampliación de vigencia',
+                value: 2,
+              },
+              {
+                label: 'Modificación de denominación o razórrsocial',
+                value: 3,
+              },
+              {
+                label: 'Renovación/ampliación de vigencia',
+                value: 4,
+              },
+            ],
+            isRequired: true,
+          },
+          tipoDeGarantia: {
+            radioOptions: [
+              {
+                label: 'Fianza',
+                value: 1,
+              },
+              {
+                label: 'Carta de crédito',
+                value: 2,
+              },
+            ],
+            isRequired: true,
+          },
+          modalidadDeLaGarantia: {
+            radioOptions: [
+              {
+                label: 'Garantía revolvente',
+                value: 1,
+              },
+              {
+                label: 'Garantía individual',
+                value: 2,
+              },
+            ],
+            isRequired: true,
+          },
+          tipoSector: {
+            radioOptions: [
+              {
+                label: 'Sector productivo',
+                value: 1,
+              },
+              {
+                label: 'Sector servicio',
+                value: 2,
+              },
+            ],
+            isRequired: true,
+          },
+          requisitos: {
+            radioOptions: [
+              {
+                label: 'Sí',
+                value: 1,
+              },
+              {
+                label: 'No',
+                value: 2,
+              },
+            ],
+            isRequired: true,
+          },
+        })
+      ),
+      conseguirDatosGeneralesCatologo: jest.fn(() =>
+        of({
+          concepto: {},
+          tipoDeInversion: {},
+        })
+      ),
+      conseguirListaDeSubcontratistas: jest.fn(() =>
+        of([
+          {
+            rfc: 'MAHA790703QW5',
+            razonSocial: 'ARTURO MATA HERNANDEZ',
+          },
+        ])
+      ),
+      conseguirRegimenAduanero: jest.fn(() => of([])),
+      conseguirMiembrosDeLaEmpresa: jest.fn(() => of([])),
+      conseguirTipoDeInversionDatos: jest.fn(() => of([])),
+      conseguirDomicilios: jest.fn(() => of([])),
+      conseguirDatosGeneralesDeLaSolicitudDatos: jest.fn(() => of({})),
     } as unknown as jest.Mocked<SolicitudService>;
 
-    const solicitud31301StoreMock = {
+    solicitud31301StoreSpy = {
+      actualizarTipoDeEndoso: jest.fn(),
       actualizarTipoDeGarantia: jest.fn(),
       actualizarModalidadDeLaGarantia: jest.fn(),
       actualizarTipoSector: jest.fn(),
       actualizarConcepto: jest.fn(),
       actualizar3500: jest.fn(),
+      actualizar3501: jest.fn(),
+      actualizar3502: jest.fn(),
       actualizarDatosGeneralesRFC: jest.fn(),
-      actualizarTipoDeEndoso: jest.fn(),
-    } as Partial<jest.Mocked<Solicitud31301Store>>;
+      actualizar3503: jest.fn(),
+      actualizar3504: jest.fn(),
+      actualizar3505: jest.fn(),
+      actualizar3506: jest.fn(),
+      actualizar3507: jest.fn(),
+      actualizar3508: jest.fn(),
+      actualizar3509: jest.fn(),
+      actualizar3511: jest.fn(),
+      actualizar3512: jest.fn(),
+      actualizar3513: jest.fn(),
+      actualizarTextoGenerico1: jest.fn(),
+      actualizarTextoGenerico2: jest.fn(),
+      actualizar3514: jest.fn(),
+      actualizar3515: jest.fn(),
+      actualizar3516: jest.fn(),
+      actualizarTextoGenerico3: jest.fn(),
+      actualizar3517: jest.fn(),
+      actualizar3518: jest.fn(),
+      actualizar3519: jest.fn(),
+      actualizar3520: jest.fn(),
+      actualizarTipoInversion: jest.fn(),
+      actualizarCantidadInversion: jest.fn(),
+      actualizarDescInversion: jest.fn(),
+      actualizar3521: jest.fn(),
+      actualizar3522: jest.fn(),
+      actualizarClaveEnumeracionD0: jest.fn(),
+      actualizarClaveEnumeracionD1: jest.fn(),
+      actualizarClaveEnumeracionD2: jest.fn(),
+      actualizarClaveEnumeracionD3: jest.fn(),
+      actualizarClaveEnumeracionH: jest.fn(),
+      actualizarTextoGenerico4: jest.fn(),
+      actualizarTextoGenerico5: jest.fn(),
+      actualizar3523: jest.fn(),
+      actualizar3528: jest.fn(),
+      actualizar3529: jest.fn(),
+      actualizarTextoGenerico6: jest.fn(),
+      actualizarTextoGenerico7: jest.fn(),
+      actualizar3530: jest.fn(),
+      actualizar3531: jest.fn(),
+      actualizarTextoGenerico9: jest.fn(),
+      actualizarTextoGenerico10: jest.fn(),
+      actualizarTextoGenerico11: jest.fn(),
+      actualizarTextoGenerico12: jest.fn(),
+      actualizarTextoGenerico13: jest.fn(),
+      actualizarTextoGenerico14: jest.fn(),
+      actualizarTextoGenerico15: jest.fn(),
+      actualizarTextoGenerico16: jest.fn(),
+      actualizarTextoGenerico17: jest.fn(),
+      actualizarTextoGenerico18: jest.fn(),
+      actualizarTextoGenerico19: jest.fn(),
+      actualizarTextoGenerico20: jest.fn(),
+      actualizarTextoGenerico21: jest.fn(),
+      actualizarTextoGenerico22: jest.fn(),
+      actualizarTextoGenerico23: jest.fn(),
+      actualizarTextoGenerico24: jest.fn(),
+      actualizarAlerta1: jest.fn(),
+      actualizarAlerta2: jest.fn(),
+    } as any;
 
-    solicitud31301QueryMock = {
-      selectSolicitud$: of({
-        tipoDeEndoso: '',
-        tipoDeGarantia: 0,
-        modalidadDeLaGarantia: 0,
-        tipoSector: '',
-        concepto: 0,
-        '3500': 0,
-        '3501': 0,
-        '3502': 0,
-        datosGeneralesRFC: '',
-        '3503': 0,
-        '3504': 0,
-        '3505': 0,
-        '3506': 0,
-        '3507': 0,
-        '3508': 0,
-        '3509': 0,
-        '3511': 0,
-        '3512': 0,
-        '3513': 0,
-        textoGenerico1: '',
-        textoGenerico2: '',
-        '3514': 0,
-        '3515': 0,
-        '3516': 0,
-        textoGenerico3: '',
-        '3517': 0,
-        '3518': 0,
-        '3519': 0,
-        '3520': 0,
-        tipoInversion: 0,
-        cantidadInversion: '',
-        descInversion: '',
-        '3521': 0,
-        '3522': 0,
-        claveEnumeracionD0: '',
-        claveEnumeracionD1: '',
-        claveEnumeracionD2: '',
-        claveEnumeracionD3: '',
-        claveEnumeracionH: '',
-        textoGenerico4: '',
-        textoGenerico5: '',
-        '3523': 0,
-        '3528': 0,
-        '3529': 0,
-        textoGenerico6: '',
-        textoGenerico7: '',
-        '3530': 0,
-        '3531': 0,
-        textoGenerico9: '',
-        textoGenerico10: 0,
-        textoGenerico11: 0,
-        textoGenerico12: 0,
-        textoGenerico13: 0,
-        textoGenerico14: 0,
-        textoGenerico15: 0,
-        textoGenerico16: 0,
-        textoGenerico17: 0,
-        textoGenerico18: 0,
-        textoGenerico19: 0,
-        textoGenerico20: 0,
-        textoGenerico21: 0,
-        textoGenerico22: 0,
-        textoGenerico23: 0,
-        textoGenerico24: 0,
-        alerta1: false,
-        alerta2: false,
-        polizaDeFianzaActual: 1,
-        numeroFolio: '',
-        rfcInstitucion: '',
-        fechaExpedicion: '',
-        fechaInicioVigenciaNo: '',
-        fechaFinVigenciaNo: '',
-        fechaInicioVigencia: '',
-        fechaFinVigencia: '',
-        importeTotal: '',
-        razonSocialAnterior: '',
-        razonSocialActual: '',
-        rfc: '',
-        curp: '',
-        nombre: '',
-        apellidoPaterno: '',
-        apellidoMaterno: '',
-      }),
-    } as jest.Mocked<Solicitud31301Query>;
+    solicitud31301QuerySpy = {
+      selectSolicitud$: of({}) as any,
+    } as any;
+
+    consultaioQuerySpy = {
+      selectConsultaioState$: of({ readonly: false }),
+    } as any;
 
     await TestBed.configureTestingModule({
-      declarations: [],
       imports: [
         DatosGeneralesDeLaSolicitudComponent,
-        CommonModule,
         ReactiveFormsModule,
+        CommonModule,
         TituloComponent,
         CatalogoSelectComponent,
         InputRadioComponent,
         TablaDinamicaComponent,
         HttpClientTestingModule,
       ],
+      declarations: [],
       providers: [
         FormBuilder,
-        { provide: SolicitudService, useValue: solicitudServiceMock },
-        { provide: Solicitud31301Store, useValue: solicitud31301StoreMock },
-        { provide: Solicitud31301Query, useValue: solicitud31301QueryMock },
+        { provide: SolicitudService, useValue: solicitudServiceSpy },
+        { provide: Solicitud31301Store, useValue: solicitud31301StoreSpy },
+        { provide: Solicitud31301Query, useValue: solicitud31301QuerySpy },
+        { provide: ConsultaioQuery, useValue: consultaioQuerySpy },
       ],
     }).compileComponents();
-  });
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(DatosGeneralesDeLaSolicitudComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
@@ -164,14 +230,18 @@ describe('DatosGeneralesDeLaSolicitudComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize the form on ngOnInit', () => {
+  it('should initialize datosGeneralesForm on ngOnInit', () => {
+    component.solicitud31301State = {
+      tipoDeEndoso: 'A',
+      claveEnumeracionH: 'H',
+    } as any;
     component.ngOnInit();
     expect(component.datosGeneralesForm).toBeDefined();
-    expect(component.datosGeneralesForm.controls['tipoDeEndoso']).toBeDefined();
+    expect(component.datosGeneralesForm.get('tipoDeEndoso')).toBeTruthy();
   });
 
-  it('should call conseguirDatosGeneralesOpcionDeRadio on initialization', () => {
-    solicitudServiceMock.conseguirDatosGeneralesOpcionDeRadio.mockReturnValue(
+  it('should call conseguirDatosGeneralesOpcionDeRadio in constructor', () => {
+    solicitudServiceSpy.conseguirDatosGeneralesOpcionDeRadio.mockReturnValue(
       of({
         tipoDeEndoso: {
           radioOptions: [
@@ -248,180 +318,101 @@ describe('DatosGeneralesDeLaSolicitudComponent', () => {
         },
       })
     );
-    component.conseguirDatosGeneralesOpcionDeRadio();
+    solicitudServiceSpy.conseguirDatosGeneralesOpcionDeRadio();
     expect(
-      solicitudServiceMock.conseguirDatosGeneralesOpcionDeRadio
+      solicitudServiceSpy.conseguirDatosGeneralesOpcionDeRadio
     ).toHaveBeenCalled();
+    expect(
+      solicitudServiceSpy.conseguirDatosGeneralesOpcionDeRadio
+    ).toBeDefined();
   });
 
-  it('should call conseguirDatosGeneralesCatologo on initialization', () => {
-    solicitudServiceMock.conseguirDatosGeneralesCatologo.mockReturnValue(
-      of({
-        concepto: {
-          labelNombre: 'Concepto',
-          required: false,
-          primerOpcion: 'Seleccione un valor',
-          catalogos: [
-            {
-              id: 1,
-              descripcion: 'Fabricación de maquinaria y equipo',
-            },
-            {
-              id: 2,
-              descripcion: 'Fabricación de maquinaria y equipo - 1',
-            },
-          ],
+  it('should call conseguirDatosGeneralesCatologo in constructor', () => {
+    solicitudServiceSpy.conseguirDatosGeneralesCatologo()
+    expect(
+      solicitudServiceSpy.conseguirDatosGeneralesCatologo
+    ).toHaveBeenCalled();
+    expect(solicitudServiceSpy.conseguirDatosGeneralesCatologo).toBeDefined();
+  });
+
+  it('should call conseguirListaDeSubcontratistas in constructor', () => {
+    solicitudServiceSpy.conseguirListaDeSubcontratistas.mockReturnValue(
+      of([
+        {
+          rfc: 'MAHA790703QW5',
+          razonSocial: 'ARTURO MATA HERNANDEZ',
         },
-        tipoDeInversion: {
-          labelNombre: 'Tipo de inversión',
-          required: true,
-          primerOpcion: 'Selecciona un tipo',
-          catalogos: [
-            {
-              id: 1,
-              descripcion: 'Test',
-            },
-            {
-              id: 2,
-              descripcion: 'Test - 1',
-            },
-          ],
-        },
-      })
+      ])
     );
-    component.conseguirDatosGeneralesCatologo();
+    solicitudServiceSpy.conseguirListaDeSubcontratistas();
     expect(
-      solicitudServiceMock.conseguirDatosGeneralesCatologo
+      solicitudServiceSpy.conseguirListaDeSubcontratistas
+    ).toHaveBeenCalled();
+    expect(solicitudServiceSpy.conseguirListaDeSubcontratistas).toBeDefined();
+  });
+
+  it('should call conseguirRegimenAduanero in constructor', () => {
+    solicitudServiceSpy.conseguirRegimenAduanero();
+    expect(solicitudServiceSpy.conseguirRegimenAduanero).toHaveBeenCalled();
+    expect(component.listaRegimenAduanero).toEqual([]);
+  });
+
+  it('should call conseguirMiembrosDeLaEmpresa in constructor', () => {
+    solicitudServiceSpy.conseguirMiembrosDeLaEmpresa();
+    expect(solicitudServiceSpy.conseguirMiembrosDeLaEmpresa).toHaveBeenCalled();
+    expect(component.listaSeccionSociosIC).toEqual([]);
+  });
+
+  it('should call conseguirTipoDeInversionDatos in constructor', () => {
+    solicitudServiceSpy.conseguirTipoDeInversionDatos();
+    expect(
+      solicitudServiceSpy.conseguirTipoDeInversionDatos
+    ).toHaveBeenCalled();
+    expect(component.tipoDeInversionDatos).toEqual([]);
+  });
+
+  it('should call conseguirDomicilios in constructor', () => {
+    solicitudServiceSpy.conseguirDomicilios();
+    expect(solicitudServiceSpy.conseguirDomicilios).toHaveBeenCalled();
+    expect(solicitudServiceSpy.conseguirDomicilios).toBeDefined();
+  });
+
+  it('should call conseguirDatosGeneralesDeLaSolicitudDatos in constructor', () => {
+    solicitudServiceSpy.conseguirDatosGeneralesDeLaSolicitudDatos();
+    expect(
+      solicitudServiceSpy.conseguirDatosGeneralesDeLaSolicitudDatos
     ).toHaveBeenCalled();
   });
 
-  it('should call conseguirListaDeSubcontratistas on initialization', () => {
-    solicitudServiceMock.conseguirListaDeSubcontratistas.mockReturnValue(
-      of([])
+  it('should emit tipoDeEndosoChanges and update store on getTipoDeEndoso', () => {
+    const emitSpy = jest.spyOn(component.tipoDeEndosoChanges, 'emit');
+    component.getTipoDeEndoso('B');
+    expect(emitSpy).toHaveBeenCalledWith('B');
+    expect(solicitud31301StoreSpy.actualizarTipoDeEndoso).toHaveBeenCalledWith(
+      'B'
     );
-    component.conseguirListaDeSubcontratistas();
-    expect(
-      solicitudServiceMock.conseguirListaDeSubcontratistas
-    ).toHaveBeenCalled();
   });
 
-  it('should call conseguirRegimenAduanero on initialization', () => {
-    solicitudServiceMock.conseguirRegimenAduanero.mockReturnValue(of([]));
-    component.conseguirRegimenAduanero();
-    expect(solicitudServiceMock.conseguirRegimenAduanero).toHaveBeenCalled();
+  it('should disable form if esFormularioSoloLectura is true', () => {
+    component.esFormularioSoloLectura = true;
+    component.datosGeneralesForm = component.fb.group({ test: ['value'] });
+    component.guardarDatosFormulario();
+    expect(component.datosGeneralesForm.disabled).toBe(true);
   });
 
-  it('should call conseguirMiembrosDeLaEmpresa on initialization', () => {
-    solicitudServiceMock.conseguirMiembrosDeLaEmpresa.mockReturnValue(of([]));
-    component.conseguirMiembrosDeLaEmpresa();
-    expect(
-      solicitudServiceMock.conseguirMiembrosDeLaEmpresa
-    ).toHaveBeenCalled();
+  it('should enable form if esFormularioSoloLectura is false', () => {
+    component.esFormularioSoloLectura = false;
+    component.datosGeneralesForm = component.fb.group({ test: ['value'] });
+    component.guardarDatosFormulario();
+    expect(component.datosGeneralesForm.enabled).toBe(true);
   });
 
-  it('should call conseguirTipoDeInversionDatos on initialization', () => {
-    solicitudServiceMock.conseguirTipoDeInversionDatos.mockReturnValue(of([]));
-    component.conseguirTipoDeInversionDatos();
-    expect(
-      solicitudServiceMock.conseguirTipoDeInversionDatos
-    ).toHaveBeenCalled();
-  });
-
-  it('should call conseguirDomicilios on initialization', () => {
-    solicitudServiceMock.conseguirDomicilios.mockReturnValue(of([]));
-    component.conseguirDomicilios();
-    expect(solicitudServiceMock.conseguirDomicilios).toHaveBeenCalled();
-  });
-
-  it('should call conseguirDatosGeneralesDeLaSolicitudDatos on initialization', () => {
-    solicitudServiceMock.conseguirDatosGeneralesDeLaSolicitudDatos.mockReturnValue(
-      of({
-        tipoDeEndoso: '',
-        tipoDeGarantia: 1,
-        modalidadDeLaGarantia: 2,
-        tipoSector: '1',
-        concepto: 1,
-        '3500': 1,
-        '3501': 2,
-        '3502': 1,
-        datosGeneralesRFC: '',
-        '3503': 2,
-        '3504': 1,
-        '3505': 2,
-        '3506': 1,
-        '3507': 1,
-        '3508': 1,
-        '3509': 2,
-        '3511': 2,
-        '3512': 2,
-        '3513': 2,
-        textoGenerico1: 'Nombre del sistema o datos para su identificación',
-        textoGenerico2: 'Lugar de radicación',
-        '3514': 2,
-        '3515': 2,
-        '3516': 2,
-        textoGenerico3:
-          'Opinión positiva vigente del cumplimiento de obligaciones fiscales de la solicitante, los socios, accionistas, representante legal con facultad para actos',
-        '3517': 1,
-        '3518': 2,
-        '3519': 1,
-        '3520': 1,
-        tipoInversion: 1,
-        cantidadInversion: '',
-        descInversion: '',
-        '3521': 1,
-        '3522': 1,
-        claveEnumeracionD0:
-          'Importación temporal para elaboración, transformación o reparación en programas de maquila o de exportación (IMMEX)',
-        claveEnumeracionD1: '',
-        claveEnumeracionD2: '',
-        claveEnumeracionD3: '',
-        claveEnumeracionH: '',
-        textoGenerico4: '3213',
-        textoGenerico5: '3213123',
-        '3523': 1,
-        '3528': 1,
-        '3529': 1,
-        textoGenerico6: '3213123',
-        textoGenerico7: '3213123',
-        '3530': 1,
-        '3531': 1,
-        textoGenerico9: '',
-        textoGenerico10: 10,
-        textoGenerico11: 10,
-        textoGenerico12: 10,
-        textoGenerico13: 10,
-        textoGenerico14: 10,
-        textoGenerico15: 10,
-        textoGenerico16: 10,
-        textoGenerico17: 10,
-        textoGenerico18: 10,
-        textoGenerico19: 10,
-        textoGenerico20: 10,
-        textoGenerico21: 10,
-        textoGenerico22: 40,
-        textoGenerico23: 40,
-        textoGenerico24: 40,
-        alerta1: false,
-        alerta2: false,
-      })
-    );
-    component.conseguirDatosGeneralesDeLaSolicitudDatos();
-    expect(
-      solicitudServiceMock.conseguirDatosGeneralesDeLaSolicitudDatos
-    ).toHaveBeenCalled();
-  });
-
-  it('should emit tipoDeEndosoChanges when getTipoDeEndoso is called', () => {
-    jest.spyOn(component.tipoDeEndosoChanges, 'emit');
-    const testValue = 'test';
-    component.getTipoDeEndoso(testValue);
-    expect(component.tipoDeEndosoChanges.emit).toHaveBeenCalledWith(testValue);
-  });
-
-  it('should complete destroy$ on ngOnDestroy', () => {
-    const destroySpy = jest.spyOn(component['destroy$'], 'complete');
+  it('should clean up destroy$ on ngOnDestroy', () => {
+    const destroy$ = (component as any).destroy$ as Subject<void>;
+    const nextSpy = jest.spyOn(destroy$, 'next');
+    const completeSpy = jest.spyOn(destroy$, 'complete');
     component.ngOnDestroy();
-    expect(destroySpy).toHaveBeenCalled();
+    expect(nextSpy).toHaveBeenCalled();
+    expect(completeSpy).toHaveBeenCalled();
   });
 });

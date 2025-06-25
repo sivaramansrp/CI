@@ -25,6 +25,7 @@ describe('DatosDeLaSolicitudPlasticaComponent', () => {
     destinofinal: '',
     periodoEstancia: '',
     aduanaEntrada: '',
+    ObraDeArte: [], // <-- Added missing property
   };
 
   beforeEach(async () => {
@@ -48,7 +49,7 @@ describe('DatosDeLaSolicitudPlasticaComponent', () => {
       imports: [ReactiveFormsModule, DatosDeLaSolicitudPlasticaComponent],
       providers: [
         { provide: SolicitudService, useValue: solicitudServiceMock },
-        { provide: Agregar270301Store, useValue: {} },
+        { provide: Agregar270301Store, useValue: { setObraDeArte: jest.fn() } }, // <-- Add setObraDeArte mock
         { provide: AgregarQuery, useValue: agregarQueryMock },
       ],
     }).compileComponents();
@@ -114,6 +115,8 @@ describe('DatosDeLaSolicitudPlasticaComponent', () => {
       fraccionArancelaria: '1',
       descripcionArancelaria: 'Descripcion Test',
     });
+
+    component.obraDeArteRowData = []; 
 
     component.submitDeArteForm();
 
