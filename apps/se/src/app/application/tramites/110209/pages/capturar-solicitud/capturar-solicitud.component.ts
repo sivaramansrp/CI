@@ -29,8 +29,6 @@ export class CapturarSolicitudComponent implements OnInit, OnDestroy {
    */
   @Output() modificarEventCapturar: EventEmitter<boolean> = new EventEmitter<boolean>(true);
 
-
-
   /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
   public esDatosRespuesta: boolean = false;
 
@@ -41,8 +39,13 @@ export class CapturarSolicitudComponent implements OnInit, OnDestroy {
   public consultaState!:ConsultaioState;
 
   /** Subject para notificar la destrucción del componente. */
-    public destroyNotifier$: Subject<void> = new Subject();
+  public destroyNotifier$: Subject<void> = new Subject();
 
+  /**
+   * Constructor del componente.
+   * @param certificadoService Servicio para la gestión de certificados SGP.
+   * @param consultaQuery Servicio para consultar el estado global de la solicitud.
+   */  
   constructor(
       @Inject(SgpCertificadoService)
       public certificadoService: SgpCertificadoService,
@@ -100,6 +103,10 @@ export class CapturarSolicitudComponent implements OnInit, OnDestroy {
     this.indice = i;
   }
 
+  /**
+   * Método del ciclo de vida que se ejecuta al destruir el componente.
+   * Libera las suscripciones y recursos asociados para evitar fugas de memoria.
+   */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
