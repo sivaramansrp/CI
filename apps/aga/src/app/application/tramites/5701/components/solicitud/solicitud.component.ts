@@ -1221,7 +1221,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
         txtBtnCancelar: '',
       };
       this.datosImportadorExportador.get('nombre')?.reset();
-      this.datosImportadorExportador.get('RFCImpExp')?.reset();
+      this.datosImportadorExportador.get('RFCImpExp')?.setValue('');
       return;
     }
 
