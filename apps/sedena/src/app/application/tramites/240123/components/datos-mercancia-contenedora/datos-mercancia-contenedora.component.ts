@@ -26,6 +26,17 @@ import { Tramite240123Store } from '../../estados/tramite240123Store.store';
   styleUrl: './datos-mercancia-contenedora.component.scss',
 })
 export class DatosMercanciaContenedoraComponent implements OnInit, OnDestroy {
+  
+  /**
+   * Evento que se emite cuando se actualiza la tabla de mercancías o se requiere cerrar el componente.
+   * 
+   * @event cerrar
+   * @type {EventEmitter<void>}
+   * @memberof DatosMercanciaContenedoraComponent
+   * @description
+   * Este evento se utiliza para notificar al componente padre que se debe cerrar el componente actual,
+   * por ejemplo, después de guardar o actualizar los datos de la mercancía.
+   */
   @Output() cerrar = new EventEmitter<void>();
 
   /**

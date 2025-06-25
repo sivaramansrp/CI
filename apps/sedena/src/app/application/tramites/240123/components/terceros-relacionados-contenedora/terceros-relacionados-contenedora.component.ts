@@ -28,8 +28,17 @@ import { takeUntil } from 'rxjs';
   styleUrl: './terceros-relacionados-contenedora.component.scss',
 })
 export class TercerosRelacionadosContenedoraComponent implements OnInit {
-  @ViewChild('modal', { static: false }) modalComponent!: ModalComponent;
-
+  
+/**
+ * Referencia al componente Modal utilizado para mostrar diálogos modales en la vista.
+ *
+ * @type {ModalComponent}
+ * @memberof TercerosRelacionadosContenedoraComponent
+ * @see ModalComponent
+ * @example
+ * this.modalComponent.abrir(Componente, { ... });
+ */
+@ViewChild('modal', { static: false }) modalComponent!: ModalComponent;
   /**
    * Indica si el formulario debe mostrarse en modo solo lectura.
    *
