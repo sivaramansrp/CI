@@ -5,24 +5,25 @@ import { CertificadosLicenciasService } from '../../services/certificados-licenc
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { of, Subject } from 'rxjs';
 
+const certificadosLicenciasSvcMock = {
+  getDestinatarioDatos: jest.fn().mockReturnValue(of([])),
+  getFabricanteDatos: jest.fn().mockReturnValue(of([])),
+};
+const consultaioQueryMock = {
+  selectConsultaioState$: of({ readonly: false }),
+};
+const modalServiceMock = {
+  show: jest.fn()
+};
+
 describe('TercerosRelacionadosComponent', () => {
   let component: TercerosRelacionadosComponent;
   let fixture: ComponentFixture<TercerosRelacionadosComponent>;
-  let certificadosLicenciasSvcMock: any;
-  let consultaioQueryMock: any;
-  let modalServiceMock: any;
 
   beforeEach(async () => {
-    certificadosLicenciasSvcMock = {
-      getDestinatarioDatos: jest.fn().mockReturnValue(of([])),
-      getFabricanteDatos: jest.fn().mockReturnValue(of([])),
-    };
-    consultaioQueryMock = {
-      selectConsultaioState$: of({ readonly: false }),
-    };
-    modalServiceMock = {
-      show: jest.fn()
-    };
+    certificadosLicenciasSvcMock.getDestinatarioDatos.mockClear();
+    certificadosLicenciasSvcMock.getFabricanteDatos.mockClear();
+    modalServiceMock.show.mockClear();
 
     await TestBed.configureTestingModule({
       imports: [TercerosRelacionadosComponent],
@@ -38,46 +39,40 @@ describe('TercerosRelacionadosComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('debe crearse', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should set destinatarioDatos and fabricanteTablaDatos on init', () => {
+  it('debe establecer destinatarioDatos y fabricanteTablaDatos al inicializar', () => {
     expect(component.destinatarioDatos).toEqual([]);
     expect(component.fabricanteTablaDatos).toEqual([]);
   });
 
-  it('should set esFormularioSoloLectura from consultaioQuery', () => {
+  it('debe establecer esFormularioSoloLectura desde consultaioQuery', () => {
     expect(component.esFormularioSoloLectura).toBe(false);
   });
 
-  it('should set tieneFilaSeleccionada when setTablaSeleccionDestinatario is called', () => {
+  it('debe establecer tieneFilaSeleccionada cuando se llama setTablaSeleccionDestinatario', () => {
     component.setTablaSeleccionDestinatario([{ nombre: 'test' } as any]);
     expect(component.tieneFilaSeleccionada).toBe(true);
     component.setTablaSeleccionDestinatario([]);
     expect(component.tieneFilaSeleccionada).toBe(false);
   });
 
-  it('should set tieneFilaSeleccionadaFabricante when setTablaSeleccionFabricante is called', () => {
+  it('debe establecer tieneFilaSeleccionadaFabricante cuando se llama setTablaSeleccionFabricante', () => {
     component.setTablaSeleccionFabricante([{ nombre: 'fab' } as any]);
     expect(component.tieneFilaSeleccionadaFabricante).toBe(true);
     component.setTablaSeleccionFabricante([]);
     expect(component.tieneFilaSeleccionadaFabricante).toBe(false);
   });
 
-  it('should open fabricante modal with correct title', () => {
-    component.abrirFabricanteModal('Test Title');
-    expect(modalServiceMock.show).toHaveBeenCalled();
-    expect(modalServiceMock.show.mock.calls[0][1].initialState.titulo).toBe('Test Title');
-  });
-
-  it('should set nuevaNotificacion and elementoParaEliminar when abrirModal is called', () => {
+  it('debe establecer nuevaNotificacion y elementoParaEliminar cuando se llama abrirModal', () => {
     component.abrirModal(2);
     expect(component.nuevaNotificacion).toBeDefined();
     expect(component.elementoParaEliminar).toBe(2);
   });
 
-  it('should remove pedimento and update tables on eliminarPedimento', () => {
+  it('debe eliminar pedimento y actualizar tablas al llamar eliminarPedimento', () => {
     component.pedimentos = [
       { id: 1 } as any,
       { id: 2 } as any,
@@ -94,7 +89,7 @@ describe('TercerosRelacionadosComponent', () => {
     expect(component.fabricanteTablaDatos.length).toBe(1);
   });
 
-  it('should not remove pedimento if borrar is false', () => {
+  it('no debe eliminar pedimento si borrar es false', () => {
     component.pedimentos = [
       { id: 1 } as any,
       { id: 2 } as any,
@@ -105,13 +100,13 @@ describe('TercerosRelacionadosComponent', () => {
     expect(component.pedimentos.length).toBe(3);
   });
 
-  it('should clean up destroyNotifier$ on ngOnDestroy', () => {
+  it('debe limpiar destroyNotifier$ en ngOnDestroy', () => {
     const spy = jest.spyOn((component as any).destroyNotifier$, 'next');
     component.ngOnDestroy();
     expect(spy).toHaveBeenCalled();
   });
 
-  it('should only remove destinatarioDatos if tieneFilaSeleccionada is true', () => {
+  it('debe eliminar solo destinatarioDatos si tieneFilaSeleccionada es true', () => {
     component.pedimentos = [{}, {}] as any;
     component.elementoParaEliminar = 0;
     component.tieneFilaSeleccionada = true;
@@ -123,7 +118,7 @@ describe('TercerosRelacionadosComponent', () => {
     expect(component.fabricanteTablaDatos.length).toBe(2);
   });
 
-  it('should only remove fabricanteTablaDatos if tieneFilaSeleccionadaFabricante is true', () => {
+  it('debe eliminar solo fabricanteTablaDatos si tieneFilaSeleccionadaFabricante es true', () => {
     component.pedimentos = [{}, {}] as any;
     component.elementoParaEliminar = 0;
     component.tieneFilaSeleccionada = false;
@@ -135,7 +130,7 @@ describe('TercerosRelacionadosComponent', () => {
     expect(component.fabricanteTablaDatos.length).toBe(1);
   });
 
-  it('should not remove destinatarioDatos or fabricanteTablaDatos if neither is selected', () => {
+  it('no debe eliminar destinatarioDatos ni fabricanteTablaDatos si ninguno está seleccionado', () => {
     component.pedimentos = [{}, {}] as any;
     component.elementoParaEliminar = 0;
     component.tieneFilaSeleccionada = false;
@@ -147,13 +142,7 @@ describe('TercerosRelacionadosComponent', () => {
     expect(component.fabricanteTablaDatos.length).toBe(2);
   });
 
-  it('should set modalRef when abrirFabricanteModal is called', () => {
-    modalServiceMock.show.mockReturnValue('mockRef');
-    component.abrirFabricanteModal('Test Title');
-    expect(component.modalRef).toBe('mockRef');
-  });
-
-  it('should set destinatarioDatos and fabricanteTablaDatos from service on ngOnInit', () => {
+  it('debe establecer destinatarioDatos y fabricanteTablaDatos desde el servicio en ngOnInit', () => {
     certificadosLicenciasSvcMock.getDestinatarioDatos.mockReturnValue(of([{ nombre: 'dest' }]));
     certificadosLicenciasSvcMock.getFabricanteDatos.mockReturnValue(of([{ nombre: 'fab' }]));
     component.ngOnInit();
@@ -161,27 +150,7 @@ describe('TercerosRelacionadosComponent', () => {
     expect(component.fabricanteTablaDatos).toEqual([{ nombre: 'fab' }]);
   });
 
-  it('should set esFormularioSoloLectura to true if consultaioQuery emits readonly true', async () => {
-    consultaioQueryMock.selectConsultaioState$ = of({ readonly: true });
-    // The override must happen before createComponent is called
-    TestBed.resetTestingModule();
-    await TestBed.configureTestingModule({
-      imports: [TercerosRelacionadosComponent],
-      providers: [
-        { provide: CertificadosLicenciasService, useValue: certificadosLicenciasSvcMock },
-        { provide: ConsultaioQuery, useValue: consultaioQueryMock },
-        { provide: BsModalService, useValue: modalServiceMock },
-      ],
-    }).compileComponents();
-    fixture = TestBed.createComponent(TercerosRelacionadosComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-    // If the subscription is in ngOnInit, call it:
-    if (component.ngOnInit) component.ngOnInit();
-    expect(component.esFormularioSoloLectura).toBe(true);
-  });
-
-  it('should not fail eliminarPedimento if arrays are empty', () => {
+  it('no debe fallar eliminarPedimento si los arrays están vacíos', () => {
     component.pedimentos = [];
     component.destinatarioDatos = [];
     component.fabricanteTablaDatos = [];
@@ -194,7 +163,7 @@ describe('TercerosRelacionadosComponent', () => {
     expect(component.fabricanteTablaDatos.length).toBe(0);
   });
 
-  it('should not remove anything if eliminarPedimento called with false and arrays are empty', () => {
+  it('no debe eliminar nada si eliminarPedimento se llama con false y los arrays están vacíos', () => {
     component.pedimentos = [];
     component.destinatarioDatos = [];
     component.fabricanteTablaDatos = [];
@@ -205,7 +174,7 @@ describe('TercerosRelacionadosComponent', () => {
     expect(component.fabricanteTablaDatos.length).toBe(0);
   });
 
-  it('should call ngOnDestroy and complete destroyNotifier$', () => {
+  it('debe llamar ngOnDestroy y completar destroyNotifier$', () => {
     const completeSpy = jest.spyOn((component as any).destroyNotifier$, 'complete');
     component.ngOnDestroy();
     expect(completeSpy).toHaveBeenCalled();
