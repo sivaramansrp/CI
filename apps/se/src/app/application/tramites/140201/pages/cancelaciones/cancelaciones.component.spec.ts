@@ -1,96 +1,97 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CancelacionesComponent } from './cancelaciones.component';
-
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-
-import { WizardComponent, DatosPasos, ListaPasosWizard, PASOS } from '@libs/shared/data-access-user/src';
-import { AccionBoton } from '../../../80205/models/datos-info.model';
 import { CANCELACIONES_PASOS } from '../../constantes/cancelaciones.enum';
-import { Component, Input, EventEmitter } from '@angular/core';
-
-@Component({
-  selector: 'app-wizard',
-  template: ''
-})
-class MockWizardComponent {
-  @Input() listaPasos!: ListaPasosWizard[];
-  @Input() indice!: EventEmitter<any>;
-  @Input() indiceActual!: number;
-  @Input() estadoInicial!: boolean;
-  @Input() lista!: any[];
-  @Input() maximo!: number;
-  @Input() wizardService!: any;
-
-  siguiente() { }
-  atras() { }
-  ngOnChanges() { }
-}
 
 describe('CancelacionesComponent', () => {
   let component: CancelacionesComponent;
   let fixture: ComponentFixture<CancelacionesComponent>;
-  let wizardComponentMock: jest.Mocked<WizardComponent>;
+  let mockWizardComponent: { siguiente: jest.Mock; atras: jest.Mock };
 
   beforeEach(async () => {
-    wizardComponentMock = {
+    mockWizardComponent = {
       siguiente: jest.fn(),
       atras: jest.fn(),
-    } as unknown as jest.Mocked<WizardComponent>;
+    };
 
     await TestBed.configureTestingModule({
-      imports: [WizardComponent],
       declarations: [CancelacionesComponent],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
     }).compileComponents();
+
+    fixture = TestBed.createComponent(CancelacionesComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+    component.wizardComponent = mockWizardComponent as any;
   });
 
   beforeEach(() => {
-  fixture = TestBed.createComponent(CancelacionesComponent);
-  component = fixture.componentInstance;
-
-  const wizardInstance = new MockWizardComponent();
-  jest.spyOn(wizardInstance, 'siguiente');
-  jest.spyOn(wizardInstance, 'atras');
-
-  component.wizardComponent = wizardInstance as any;
-
-  fixture.detectChanges();
+    mockWizardComponent.siguiente.mockClear();
+    mockWizardComponent.atras.mockClear();
   });
 
-  it('should not update indice if accion is invalid', () => {
-    const event: AccionBoton = { valor: 10, accion: 'invalid' };
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
 
-    component.getValorIndice(event);
-
+  it('should initialize with correct default values', () => {
     expect(component.indice).toBe(1);
-    expect(wizardComponentMock.siguiente).not.toHaveBeenCalled();
-    expect(wizardComponentMock.atras).not.toHaveBeenCalled();
-  });
-
-  it('should have initial indice value as 1', () => {
-    expect(component.indice).toBe(1);
-  });
-
-  it('should initialize pantallasPasos with CANCELACIONES', () => {
     expect(component.pantallasPasos).toBe(CANCELACIONES_PASOS);
+    expect(component.datosPasos.nroPasos).toBe(CANCELACIONES_PASOS.length);
+    expect(component.datosPasos.indice).toBe(1);
+    expect(component.datosPasos.txtBtnAnt).toBe('Anterior');
+    expect(component.datosPasos.txtBtnSig).toBe('Continuar');
   });
 
-  it('should initialize datosPasos correctly', () => {
-    expect(component.datosPasos).toEqual({
-      nroPasos: component.pantallasPasos.length,
-      indice: 1,
-      txtBtnAnt: 'Anterior',
-      txtBtnSig: 'Continuar'
-    });
+  it('should update indice and call siguiente on getValorIndice with accion "cont"', () => {
+    component.indice = 1;
+    component.getValorIndice({ valor: 2, accion: 'cont' });
+    expect(component.indice).toBe(2);
+    expect(mockWizardComponent.siguiente).toHaveBeenCalled();
+    expect(mockWizardComponent.atras).not.toHaveBeenCalled();
   });
 
-  it('should not update indice or call wizardComponent methods when getValorIndice is called with invalid valor', () => {
-    const spySiguiente = jest.spyOn(wizardComponentMock, 'siguiente');
-    const spyAtras = jest.spyOn(wizardComponentMock, 'atras');
-    component.getValorIndice({ valor: 5, accion: 'cont' });
+  it('should update indice and call atras on getValorIndice with accion "atras"', () => {
+    component.indice = 2;
+    component.getValorIndice({ valor: 3, accion: 'atras' });
+    expect(component.indice).toBe(3);
+    expect(mockWizardComponent.atras).toHaveBeenCalled();
+    expect(mockWizardComponent.siguiente).not.toHaveBeenCalled();
+  });
+
+  it('should not update indice or call wizardComponent if valor is out of range (0)', () => {
+    component.indice = 1;
+    component.getValorIndice({ valor: 0, accion: 'cont' });
     expect(component.indice).toBe(1);
-    expect(spySiguiente).not.toHaveBeenCalled();
-    expect(spyAtras).not.toHaveBeenCalled();
+    expect(mockWizardComponent.siguiente).not.toHaveBeenCalled();
+    expect(mockWizardComponent.atras).not.toHaveBeenCalled();
   });
+
+  it('should not update indice or call wizardComponent if valor is out of range (5)', () => {
+    component.indice = 1;
+    component.getValorIndice({ valor: 5, accion: 'atras' });
+    expect(component.indice).toBe(1);
+    expect(mockWizardComponent.siguiente).not.toHaveBeenCalled();
+    expect(mockWizardComponent.atras).not.toHaveBeenCalled();
+  });
+
+  it('should call atras if accion is not "cont"', () => {
+    component.indice = 2;
+    component.getValorIndice({ valor: 3, accion: 'atras' });
+    expect(mockWizardComponent.atras).toHaveBeenCalled();
+  });
+
+  it('should call siguiente if accion is "cont"', () => {
+    component.indice = 2;
+    component.getValorIndice({ valor: 3, accion: 'cont' });
+    expect(mockWizardComponent.siguiente).toHaveBeenCalled();
+  });
+
+  it('should not throw if wizardComponent is undefined', () => {
+    component.wizardComponent = undefined as any;
+    expect(() => component.getValorIndice({ valor: 2, accion: 'cont' })).not.toThrow();
+    expect(() => component.getValorIndice({ valor: 2, accion: 'atras' })).not.toThrow();
+  });
+
 });
