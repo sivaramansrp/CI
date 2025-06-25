@@ -67,11 +67,11 @@ describe('DatosAdicionalesComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
+  it('debería crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize form with values from store', () => {
+  it('debería inicializar el formulario con valores del store', () => {
     component.inicializarFormulario();
     expect(component.formulario.value).toEqual({
       entidad: 'SINALOA',
@@ -79,29 +79,29 @@ describe('DatosAdicionalesComponent', () => {
     });
   });
 
-  it('should disable form in readonly mode', () => {
+  it('debería deshabilitar el formulario en modo solo lectura', () => {
     component.esFormularioSoloLectura = true;
     component.guardarDatosFormulario();
     expect(component.formulario.disabled).toBe(true);
   });
 
-  it('should enable form when not readonly', () => {
+  it('debería habilitar el formulario cuando no es solo lectura', () => {
     component.esFormularioSoloLectura = false;
     component.guardarDatosFormulario();
     expect(component.formulario.enabled).toBe(true);
   });
 
-  it('should load entidad federativa catalog', () => {
+  it('debería cargar el catálogo de entidad federativa', () => {
     component.getEntidadFederativa();
     expect(component.entidad.length).toBeGreaterThan(0);
   });
 
-  it('should load representacion federal catalog', () => {
+  it('debería cargar el catálogo de representación federal', () => {
     component.getRepresentacionFederal();
     expect(component.representacion.length).toBeGreaterThan(0);
   });
 
-  it('should call store methods with correct values', () => {
+  it('debería llamar los métodos del store con los valores correctos', () => {
     component.inicializarFormulario();
     component.setValoresStore(component.formulario, 'entidad', 'setEntidad');
     component.setValoresStore(component.formulario, 'representacion', 'setRepresentacion');
@@ -110,7 +110,7 @@ describe('DatosAdicionalesComponent', () => {
     expect(mockStore.setRepresentacion).toHaveBeenCalledWith('CULIACAN');
   });
 
-  it('should complete destroy$ on ngOnDestroy', () => {
+  it('debería completar destroy$ en ngOnDestroy', () => {
     const nextSpy = jest.spyOn(component['destroy$'], 'next');
     const completeSpy = jest.spyOn(component['destroy$'], 'complete');
 

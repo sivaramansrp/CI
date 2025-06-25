@@ -38,12 +38,12 @@ describe('PantallasComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should call wizardComponent.siguiente() when accion is "cont" and valor is in range', () => {
-    // Ensure wizardComponent is assigned
+  it('debe llamar a wizardComponent.siguiente() cuando accion es "cont" y valor está en rango', () => {
+    // Asegura que wizardComponent esté asignado
     if (!component.wizardComponent) {
       const wizardDebug = fixture.debugElement.query(By.directive(MockWizardComponent));
       component.wizardComponent = wizardDebug.componentInstance;
@@ -54,8 +54,8 @@ describe('PantallasComponent', () => {
     expect(spy).toHaveBeenCalled();
   });
 
-  it('should call wizardComponent.atras() when accion is not "cont" and valor is in range', () => {
-    // Ensure wizardComponent is assigned
+  it('debe llamar a wizardComponent.atras() cuando accion no es "cont" y valor está en rango', () => {
+    // Asegura que wizardComponent esté asignado
     if (!component.wizardComponent) {
       const wizardDebug = fixture.debugElement.query(By.directive(MockWizardComponent));
       component.wizardComponent = wizardDebug.componentInstance;
@@ -66,8 +66,8 @@ describe('PantallasComponent', () => {
     expect(spy).toHaveBeenCalled();
   });
 
-  it('should not change index or call wizard methods when valor is out of range', () => {
-    // Ensure wizardComponent is assigned
+  it('no debe cambiar el índice ni llamar métodos del wizard cuando valor está fuera de rango', () => {
+    // Asegura que wizardComponent esté asignado
     if (!component.wizardComponent) {
       const wizardDebug = fixture.debugElement.query(By.directive(MockWizardComponent));
       component.wizardComponent = wizardDebug.componentInstance;
@@ -76,12 +76,12 @@ describe('PantallasComponent', () => {
     const spyBack = jest.spyOn(component.wizardComponent, 'atras');
 
     component.getValorIndice({ accion: 'cont', valor: 0 });
-    expect(component.indice).toBe(1); // default
+    expect(component.indice).toBe(1); // valor por defecto
     expect(spyNext).not.toHaveBeenCalled();
     expect(spyBack).not.toHaveBeenCalled();
 
     component.getValorIndice({ accion: 'cont', valor: 5 });
-    expect(component.indice).toBe(1); // still unchanged
+    expect(component.indice).toBe(1); // sigue sin cambios
     expect(spyNext).not.toHaveBeenCalled();
     expect(spyBack).not.toHaveBeenCalled();
   });

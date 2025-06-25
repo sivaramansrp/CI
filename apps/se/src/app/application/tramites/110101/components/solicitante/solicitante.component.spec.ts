@@ -44,11 +44,11 @@ describe('SolicitanteComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('debe crearse el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize form with mockData values', () => {
+  it('debe inicializar el formulario con los valores de mockData', () => {
     expect(component.solicitudForm.value).toEqual({
       rfc: mockData.rfc,
       denominacion: mockData.denominacion,
@@ -57,7 +57,7 @@ describe('SolicitanteComponent', () => {
     });
   });
 
-  it('should set form values from mockData', () => {
+  it('debe establecer los valores del formulario desde mockData', () => {
     component.setFormValues();
     expect(component.solicitudForm.get('rfc')?.value).toBe(mockData.rfc);
     expect(component.solicitudForm.get('denominacion')?.value).toBe(mockData.denominacion);
@@ -65,7 +65,7 @@ describe('SolicitanteComponent', () => {
     expect(component.solicitudForm.get('correoElectronico')?.value).toBe(mockData.correoElectronico);
   });
 
-  it('should render form fields as readonly', () => {
+  it('debe renderizar los campos del formulario como solo lectura', () => {
     fixture.detectChanges();
     const compiled = fixture.nativeElement;
     expect(compiled.querySelector('#rfc').readOnly).toBeTruthy();
@@ -74,7 +74,7 @@ describe('SolicitanteComponent', () => {
     expect(compiled.querySelector('#correo-electronico').readOnly).toBeTruthy();
   });
 
-  it('should update the store with form values', () => {
+  it('debe actualizar el store con los valores del formulario', () => {
     component.solicitudForm.setValue({
       rfc: 'TEST123456789',
       denominacion: 'Test Denominacion',

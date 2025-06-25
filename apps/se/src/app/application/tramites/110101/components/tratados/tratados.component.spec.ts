@@ -104,18 +104,18 @@ describe('TratadosComponent (Jest)', () => {
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should load catalogs correctly', () => {
+  it('debe cargar los catálogos correctamente', () => {
     component.getCatalogoList();
     expect(component.paisCatalogo).toEqual(MOCK_CATALOGOS.pais);
     expect(component.tratadoCatalogo).toEqual(MOCK_CATALOGOS.tratado);
     expect(component.origenCatalogo).toEqual(MOCK_CATALOGOS.origen);
   });
 
-  it('should initialize form with values from store', () => {
+  it('debe inicializar el formulario con valores del store', () => {
     component.inicializarFormulario();
     expect(component.formularioTratados.value).toEqual({
       pais: 'MX',
@@ -124,19 +124,19 @@ describe('TratadosComponent (Jest)', () => {
     });
   });
 
-  it('should disable form in readonly mode', () => {
+  it('debe deshabilitar el formulario en modo solo lectura', () => {
     component.esFormularioSoloLectura = true;
     component.guardarDatosFormulario();
     expect(component.formularioTratados.disabled).toBe(true);
   });
 
-  it('should enable form in editable mode', () => {
+  it('debe habilitar el formulario en modo editable', () => {
     component.esFormularioSoloLectura = false;
     component.guardarDatosFormulario();
     expect(component.formularioTratados.enabled).toBe(true);
   });
 
-  it('should reset form when valid on agregarTratado', () => {
+  it('debe resetear el formulario cuando es válido al agregarTratado', () => {
     component.inicializarFormulario();
     component.formularioTratados.setValue({
       pais: 'MX',
@@ -148,7 +148,7 @@ describe('TratadosComponent (Jest)', () => {
     expect(resetSpy).toHaveBeenCalled();
   });
 
-  it('should not reset form when invalid on agregarTratado', () => {
+  it('no debe resetear el formulario cuando es inválido al agregarTratado', () => {
     component.inicializarFormulario();
     component.formularioTratados.get('pais')?.setValue(null);
     const resetSpy = jest.spyOn(component.formularioTratados, 'reset');
@@ -156,7 +156,7 @@ describe('TratadosComponent (Jest)', () => {
     expect(resetSpy).not.toHaveBeenCalled();
   });
 
-  it('should update store using setValoresStore', () => {
+  it('debe actualizar el store usando setValoresStore', () => {
     component.inicializarFormulario();
     component.formularioTratados.setValue({
       pais: 'MX',
@@ -173,7 +173,7 @@ describe('TratadosComponent (Jest)', () => {
     expect(mockTramiteStore.actualizarOrigen).toHaveBeenCalledWith('Nacional');
   });
 
-  it('should complete destroy$ on ngOnDestroy', () => {
+  it('debe completar destroy$ en ngOnDestroy', () => {
     const nextSpy = jest.spyOn(component['destroy$'], 'next');
     const completeSpy = jest.spyOn(component['destroy$'], 'complete');
     component.ngOnDestroy();

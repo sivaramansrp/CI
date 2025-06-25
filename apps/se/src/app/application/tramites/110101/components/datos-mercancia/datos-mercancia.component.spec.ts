@@ -94,52 +94,51 @@ beforeEach(async () => {
 });
 
 
+it('debe crear el componente', () => {
+  expect(component).toBeTruthy();
+});
 
-  it('should create the component', () => {
-    expect(component).toBeTruthy();
-  });
+it('debe inicializar el formulario con los valores del estado', () => {
+  const form = component.formMercancia;
+  expect(form).toBeDefined();
+  expect(form.get('nombreComercial')?.value).toBe(SOLICITANTE_STATE.nombreComercial);
+  expect(form.get('nombreIngles')?.value).toBe(SOLICITANTE_STATE.nombreIngles);
+  expect(form.get('fraccionArancelaria')?.value).toBe(mercanciaMock.fraccionArancelaria);
+  expect(form.get('descripcion')?.value).toBe(mercanciaMock.descripcion);
+  expect(form.get('valorTransaccion')?.value).toBe(mercanciaMock.valorTransaccion);
+});
 
-  it('should initialize the form with state values', () => {
-    const form = component.formMercancia;
-    expect(form).toBeDefined();
-    expect(form.get('nombreComercial')?.value).toBe(SOLICITANTE_STATE.nombreComercial);
-    expect(form.get('nombreIngles')?.value).toBe(SOLICITANTE_STATE.nombreIngles);
-    expect(form.get('fraccionArancelaria')?.value).toBe(mercanciaMock.fraccionArancelaria);
-    expect(form.get('descripcion')?.value).toBe(mercanciaMock.descripcion);
-    expect(form.get('valorTransaccion')?.value).toBe(mercanciaMock.valorTransaccion);
-  });
+it('debe deshabilitar el formulario cuando esFormularioSoloLectura es true', () => {
+  component.esFormularioSoloLectura = true;
+  component.guardarDatosFormulario();
+  expect(component.formMercancia.disabled).toBe(true);
+});
 
-  it('should disable the form when esFormularioSoloLectura is true', () => {
-    component.esFormularioSoloLectura = true;
-    component.guardarDatosFormulario();
-    expect(component.formMercancia.disabled).toBe(true);
-  });
+it('debe habilitar el formulario cuando esFormularioSoloLectura es false', () => {
+  component.esFormularioSoloLectura = false;
+  component.guardarDatosFormulario();
+  expect(component.formMercancia.enabled).toBe(true);
+});
 
-  it('should enable the form when esFormularioSoloLectura is false', () => {
-    component.esFormularioSoloLectura = false;
-    component.guardarDatosFormulario();
-    expect(component.formMercancia.enabled).toBe(true);
-  });
+it('debe llamar al método del store cuando se llama setValoresStore', () => {
+  const dummyForm = component.formMercancia;
+  dummyForm.get('nombreComercial')?.setValue('Nuevo Nombre');
+  component.setValoresStore(dummyForm, 'nombreComercial', 'setNombreComercial');
+  expect(mockTramiteStore.setNombreComercial).toHaveBeenCalledWith('Nuevo Nombre');
+});
 
-  it('should call store method when setValoresStore is called', () => {
-    const dummyForm = component.formMercancia;
-    dummyForm.get('nombreComercial')?.setValue('Nuevo Nombre');
-    component.setValoresStore(dummyForm, 'nombreComercial', 'setNombreComercial');
-    expect(mockTramiteStore.setNombreComercial).toHaveBeenCalledWith('Nuevo Nombre');
-  });
+it('debe llamar destroy$ en ngOnDestroy', () => {
+  const spy = jest.spyOn(component['destroy$'], 'next');
+  const spyComplete = jest.spyOn(component['destroy$'], 'complete');
 
-  it('should call destroy$ on ngOnDestroy', () => {
-    const spy = jest.spyOn(component['destroy$'], 'next');
-    const spyComplete = jest.spyOn(component['destroy$'], 'complete');
+  component.ngOnDestroy();
 
-    component.ngOnDestroy();
+  expect(spy).toHaveBeenCalled();
+  expect(spyComplete).toHaveBeenCalled();
+});
 
-    expect(spy).toHaveBeenCalled();
-    expect(spyComplete).toHaveBeenCalled();
-  });
-
-  it('should validate form control with isValid method', () => {
-    const result = component.isValid('nombreComercial');
-    expect(result).toBe(true);
-  });
+it('debe validar el control del formulario con el método isValid', () => {
+  const result = component.isValid('nombreComercial');
+  expect(result).toBe(true);
+});
 });
