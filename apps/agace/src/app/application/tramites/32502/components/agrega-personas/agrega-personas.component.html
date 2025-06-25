@@ -9,6 +9,9 @@
       <button class="btn btn-default" type="button" (click)="buscarGafete()">Buscar</button>
       <button class="btn btn-primary ms-2" type="button" (click)="agregarPersona()">Agregar</button>
     </div>
+    <section *ngIf="notificacion">
+      <lib-notificaciones [notificacionInput]="notificacion" (confirmacionModal)="notificacion = undefined"></lib-notificaciones>
+    </section>
   </div>
 </div>
 

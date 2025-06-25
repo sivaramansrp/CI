@@ -102,6 +102,7 @@ export class DatosMercanciaContenedoraComponent implements OnInit, OnDestroy {
    */
   updateMercanciaDetalle(event: MercanciaDetalle[]): void {
     this.tramiteStore.updateMercanciaTablaDatos(event);
+     this.cerrar.emit();
   }
 
   /**
