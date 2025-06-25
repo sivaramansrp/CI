@@ -52,38 +52,37 @@ describe('DomicilioComponent', () => {
     jest.clearAllMocks();
   });
 
-  it('should create the component', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize tipoPersona and domicilioFiscal as nacional by default', () => {
+  it('debe inicializar tipoPersona y domicilioFiscal como nacional por defecto', () => {
     expect(component.tipoPersona).toBe(TIPO_PERSONA.FISICA_NACIONAL);
     expect(component.domicilioFiscal).toBe(DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL);
   });
 
-  it('should set domicilioFiscal to extranjera config when tipoPersona is extranjera', () => {
+  it('debe establecer domicilioFiscal a la configuración extranjera cuando tipoPersona es extranjera', () => {
     component.obtenerTipoPersona(TIPO_PERSONA.FISICA_EXTRANJERA);
     expect(component.domicilioFiscal).toBe(DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_EXTRANJERA);
   });
 
-  it('should call getDatosGenerales on ngOnInit', () => {
+  it('debe llamar a getDatosGenerales en ngOnInit', () => {
     const spy = jest.spyOn(component, 'getDatosGenerales');
     component.ngOnInit();
     expect(spy).toHaveBeenCalled();
   });
 
-  it('should unsubscribe on ngOnDestroy', () => {
+  it('debe desuscribirse en ngOnDestroy', () => {
     if (component['subscription']) {
       const spy = jest.spyOn(component['subscription'], 'unsubscribe');
       component.ngOnDestroy();
       expect(spy).toHaveBeenCalled();
     } else {
-      // If subscription is not set, ngOnDestroy should not throw
       expect(() => component.ngOnDestroy()).not.toThrow();
     }
   });
 
-  it('should call agregarValorCampoDesactivado for each field in getDatosGenerales', () => {
+  it('debe llamar a agregarValorCampoDesactivado por cada campo en getDatosGenerales', () => {
     component.getDatosGenerales();
     expect(FormulariosService.agregarValorCampoDesactivado).toHaveBeenCalledWith(
       component.domicilioFiscalForm,

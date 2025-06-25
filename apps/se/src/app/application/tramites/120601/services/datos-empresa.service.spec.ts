@@ -36,41 +36,41 @@ describe('DatosEmpresaService', () => {
     service = TestBed.inject(DatosEmpresaService);
   });
 
-  it('should be created', () => {
+  it('debe crear el servicio', () => {
     expect(service).toBeTruthy();
   });
 
-  it('obtenerDatosTablaDeSocios should call http.get with correct URL', () => {
+  it('obtenerDatosTablaDeSocios debe llamar a http.get con la URL correcta', () => {
     httpMock.get.mockReturnValue(of([]));
     service.obtenerDatosTablaDeSocios().subscribe();
     expect(httpMock.get).toHaveBeenCalledWith('/assets/json/120601/datosSocios-table.json');
   });
 
-  it('obtenerEstado should call http.get with correct URL', () => {
+  it('obtenerEstado debe llamar a http.get con la URL correcta', () => {
     httpMock.get.mockReturnValue(of([]));
     service.obtenerEstado().subscribe();
     expect(httpMock.get).toHaveBeenCalledWith('/assets/json/120601/tipoDeEmpresa.json');
   });
 
-  it('obtenerDatosDeRepresentacionFederal should call http.get with correct URL', () => {
+  it('obtenerDatosDeRepresentacionFederal debe llamar a http.get con la URL correcta', () => {
     httpMock.get.mockReturnValue(of([]));
     service.obtenerDatosDeRepresentacionFederal().subscribe();
     expect(httpMock.get).toHaveBeenCalledWith('/assets/json/120601/representacionFederal.json');
   });
 
-  it('ObtenerTablaDeRepresentaciónFederal should call http.get with correct URL', () => {
+  it('ObtenerTablaDeRepresentaciónFederal debe llamar a http.get con la URL correcta', () => {
     httpMock.get.mockReturnValue(of([]));
     service.ObtenerTablaDeRepresentaciónFederal().subscribe();
     expect(httpMock.get).toHaveBeenCalledWith('/assets/json/120601/representacionFederal-table.json');
   });
 
-  it('getRegistroTomaMuestrasMercanciasData should call http.get with correct URL', () => {
+  it('getRegistroTomaMuestrasMercanciasData debe llamar a http.get con la URL correcta', () => {
     httpMock.get.mockReturnValue(of({}));
     service.getRegistroTomaMuestrasMercanciasData().subscribe();
     expect(httpMock.get).toHaveBeenCalledWith('/assets/json/120601/datosEmpresa.json');
   });
 
-  it('actualizarEstadoFormulario should update store with FormSolicitud.datosImportadorExportador', () => {
+  it('actualizarEstadoFormulario debe actualizar el store con FormSolicitud.datosImportadorExportador', () => {
     const datos = {
       FormSolicitud: {
         datosImportadorExportador: {
@@ -88,7 +88,7 @@ describe('DatosEmpresaService', () => {
     expect(storeMock.setCadenaDependencia).toHaveBeenCalledWith('cadena');
   });
 
-  it('actualizarEstadoFormulario should update store with solicitudForm.tipoDeEmpresa and actividadEconomicaClave', () => {
+  it('actualizarEstadoFormulario debe actualizar el store con solicitudForm.tipoDeEmpresa y actividadEconomicaClave', () => {
     const datos = {
       FormSolicitud: {},
       solicitudForm: {
@@ -102,7 +102,7 @@ describe('DatosEmpresaService', () => {
     expect(storeMock.setActividadEconomicaClave).toHaveBeenCalledWith('clave');
   });
 
-  it('actualizarEstadoFormulario should update store with representacionFederal', () => {
+  it('actualizarEstadoFormulario debe actualizar el store con representacionFederal', () => {
     const datos = {
       FormSolicitud: {},
       solicitudForm: {},

@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DatosDeLaSolicitudComponent } from './datos-de-la-solicitud.component';
 import { ReactiveFormsModule } from '@angular/forms';
-import { of, BehaviorSubject, throwError } from 'rxjs';
+import { of, BehaviorSubject } from 'rxjs';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { DatosEmpresaService } from '../../services/datos-empresa.service';
 import { Tramite120601Store } from '../../estados/tramite-120601.store';
@@ -73,7 +73,7 @@ describe('DatosDeLaSolicitudComponent', () => {
     initComponent();
     expect(component.solicitudForm.get('tipoDeEmpresa')?.value).toBe('EMP123');
     expect(component.solicitudForm.get('actividadEconomicaClave')?.value).toBe('1122');
-    // Simulate change
+    // Simula el cambio de valor en los subjects
     tipoEmpresaSubject.next('EMP999');
     actividadClaveSubject.next('9999');
     fixture.detectChanges();
@@ -107,6 +107,7 @@ describe('DatosDeLaSolicitudComponent', () => {
 
   it('debería completar las suscripciones al destruir el componente', () => {
     initComponent();
+    // Espía las llamadas a next y complete del subject destroyed$
     const nextSpy = jest.spyOn((component as any).destroyed$, 'next');
     const completeSpy = jest.spyOn((component as any).destroyed$, 'complete');
     component.ngOnDestroy();

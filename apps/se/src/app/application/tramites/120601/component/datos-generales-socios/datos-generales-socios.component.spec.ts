@@ -51,47 +51,47 @@ describe('DatosGeneralesSociosComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize FormSolicitud and formularioParaConteoTotal on ngOnInit', () => {
+  it('debe inicializar FormSolicitud y formularioParaConteoTotal en ngOnInit', () => {
     expect(component.FormSolicitud).toBeDefined();
     expect(component.FormSolicitud.get('datosImportadorExportador.nacionalidad')).toBeDefined();
     expect(component.formularioParaConteoTotal).toBeDefined();
   });
 
-  it('should patch values from query observables', () => {
+  it('debe actualizar los valores desde los observables del query', () => {
     expect(component.FormSolicitud.get('datosImportadorExportador.nacionalidad')?.value).toBe('MX');
     expect(component.FormSolicitud.get('datosImportadorExportador.persona')?.value).toBe('FISICA');
     expect(component.FormSolicitud.get('datosImportadorExportador.cadenaDependencia')?.value).toBe('cadena');
   });
 
-  it('should get datosSocios from empresaService', () => {
+  it('debe obtener datosSocios desde empresaService', () => {
     component.obtenerDatosTablaDeSocios();
     expect(empresaServiceMock.obtenerDatosTablaDeSocios).toHaveBeenCalled();
     expect(component.datosSocios).toEqual([{ id: 1, nombre: 'Socio 1' }]);
   });
 
-  it('should call store.setNacionalidad on enCambioNacionalidad', () => {
+  it('debe llamar a store.setNacionalidad en enCambioNacionalidad', () => {
     component.FormSolicitud.get('datosImportadorExportador.nacionalidad')?.setValue('MX');
     component.enCambioNacionalidad();
     expect(storeMock.setNacionalidad).toHaveBeenCalledWith('MX');
   });
 
-  it('should call store.setPersona on enCambioPersona', () => {
+  it('debe llamar a store.setPersona en enCambioPersona', () => {
     component.FormSolicitud.get('datosImportadorExportador.persona')?.setValue('FISICA');
     component.enCambioPersona();
     expect(storeMock.setPersona).toHaveBeenCalledWith('FISICA');
   });
 
-  it('should call store.setCadenaDependencia on enCambioCadenaDependencia', () => {
+  it('debe llamar a store.setCadenaDependencia en enCambioCadenaDependencia', () => {
     component.FormSolicitud.get('datosImportadorExportador.cadenaDependencia')?.setValue('cadena');
     component.enCambioCadenaDependencia();
     expect(storeMock.setCadenaDependencia).toHaveBeenCalledWith('cadena');
   });
 
-  it('should disable fields if esFormularioSoloLectura is true in guardarDatosFormulario', () => {
+  it('debe deshabilitar los campos si esFormularioSoloLectura es true en guardarDatosFormulario', () => {
     component.esFormularioSoloLectura = true;
     component.guardarDatosFormulario();
     expect(component.FormSolicitud.get('datosImportadorExportador.nacionalidad')?.disabled).toBe(true);
@@ -99,7 +99,7 @@ describe('DatosGeneralesSociosComponent', () => {
     expect(component.FormSolicitud.get('datosImportadorExportador.cadenaDependencia')?.disabled).toBe(true);
   });
 
-  it('should enable fields if esFormularioSoloLectura is false in guardarDatosFormulario', () => {
+  it('debe habilitar los campos si esFormularioSoloLectura es false en guardarDatosFormulario', () => {
     component.esFormularioSoloLectura = false;
     component.guardarDatosFormulario();
     expect(component.FormSolicitud.get('datosImportadorExportador.nacionalidad')?.enabled).toBe(true);
@@ -107,19 +107,19 @@ describe('DatosGeneralesSociosComponent', () => {
     expect(component.FormSolicitud.get('datosImportadorExportador.cadenaDependencia')?.enabled).toBe(true);
   });
 
-  it('should disable FormSolicitud if esFormularioSoloLectura is true in actualizarEstadoFormulario', () => {
+  it('debe deshabilitar FormSolicitud si esFormularioSoloLectura es true en actualizarEstadoFormulario', () => {
     component.esFormularioSoloLectura = true;
     component.actualizarEstadoFormulario();
     expect(component.FormSolicitud.disabled).toBe(true);
   });
 
-  it('should enable FormSolicitud if esFormularioSoloLectura is false in actualizarEstadoFormulario', () => {
+  it('debe habilitar FormSolicitud si esFormularioSoloLectura es false en actualizarEstadoFormulario', () => {
     component.esFormularioSoloLectura = false;
     component.actualizarEstadoFormulario();
     expect(component.FormSolicitud.enabled).toBe(true);
   });
 
-  it('should clean up subscriptions on ngOnDestroy', () => {
+  it('debe limpiar las suscripciones en ngOnDestroy', () => {
     const nextSpy = jest.spyOn(component['destroyed$'], 'next');
     const completeSpy = jest.spyOn(component['destroyed$'], 'complete');
     component.ngOnDestroy();

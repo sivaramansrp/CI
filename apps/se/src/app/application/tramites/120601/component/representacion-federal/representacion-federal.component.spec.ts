@@ -51,52 +51,52 @@ describe('RepresentacionFederalComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize the form on ngOnInit', () => {
+  it('debe inicializar el formulario en ngOnInit', () => {
     expect(component.formulario).toBeDefined();
     expect(component.formulario.get('estado')).toBeDefined();
     expect(component.formulario.get('representacion')).toBeDefined();
   });
 
-  it('should patch estado and representacion from query observables', () => {
+  it('debe establecer estado y representacion desde los observables del query', () => {
     expect(component.formulario.get('estado')?.value).toBe('Estado 1');
     expect(component.formulario.get('representacion')?.value).toBe('Rep 1');
   });
 
-  it('should get entidad federativa from service', () => {
+  it('debe obtener entidad federativa desde el servicio', () => {
     component.getEntidadFederativa();
     expect(datosEmpresaServiceMock.obtenerEstado).toHaveBeenCalled();
     expect(component.estado).toEqual([{ id: 1, descripcion: 'Estado 1' }]);
   });
 
-  it('should get representacion federal from service', () => {
+  it('debe obtener representacion federal desde el servicio', () => {
     component.getRepresentacionFederal();
     expect(datosEmpresaServiceMock.obtenerDatosDeRepresentacionFederal).toHaveBeenCalled();
     expect(component.representacion).toEqual([{ id: 2, descripcion: 'Rep 1' }]);
   });
 
-  it('should get datos socios from service', () => {
+  it('debe obtener datos de socios desde el servicio', () => {
     component.getDatosSocios();
     expect(datosEmpresaServiceMock.ObtenerTablaDeRepresentaciónFederal).toHaveBeenCalled();
     expect(component.datosSocios).toEqual([{ id: 3, nombre: 'Socio 1' }]);
   });
 
-  it('should call store.setEstado on docSeleccionado', () => {
+  it('debe llamar a store.setEstado al ejecutar docSeleccionado', () => {
     component.formulario.get('estado')?.setValue('Estado 1');
     component.docSeleccionado({} as any);
     expect(tramiteStoreMock.setEstado).toHaveBeenCalledWith('Estado 1');
   });
 
-  it('should call store.setRepresentacion on validarRepresentacionFederalIDCSECEROR_', () => {
+  it('debe llamar a store.setRepresentacion al ejecutar validarRepresentacionFederalIDCSECEROR_', () => {
     component.formulario.get('representacion')?.setValue('Rep 1');
     component.validarRepresentacionFederalIDCSECEROR_({} as any);
     expect(tramiteStoreMock.setRepresentacion).toHaveBeenCalledWith('Rep 1');
   });
 
-  it('should clean up subscriptions on ngOnDestroy', () => {
+  it('debe limpiar las suscripciones en ngOnDestroy', () => {
     const nextSpy = jest.spyOn(component['destroyed$'], 'next');
     const completeSpy = jest.spyOn(component['destroyed$'], 'complete');
     component.ngOnDestroy();
