@@ -230,4 +230,27 @@ describe('UsoEspicificoComponent', () => {
     expect(result).toBe('Fracción 2');
   });
 
+it('should disable form if readonly is true in guardarDatosFormulario', () => {
+  fixture = TestBed.createComponent(UsoEspicificoComponent);
+  component = fixture.componentInstance;
+  component.consultaState = { readonly: true } as any;
+
+  component.inicializarFormulario();
+  component.guardarDatosFormulario();
+
+  expect(component.usoEspicificoForm.disabled).toBe(true);
+});
+
+it('should enable form if readonly is false in guardarDatosFormulario', () => {
+  fixture = TestBed.createComponent(UsoEspicificoComponent);
+  component = fixture.componentInstance;
+  component.consultaState = { readonly: false } as any;
+
+  component.inicializarFormulario();
+  component.guardarDatosFormulario();
+
+  expect(component.usoEspicificoForm.enabled).toBe(true);
+});
+
+
 });

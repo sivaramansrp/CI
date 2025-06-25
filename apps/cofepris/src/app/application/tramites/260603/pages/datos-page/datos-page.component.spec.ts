@@ -35,24 +35,24 @@ describe('DatosComponent', () => {
 
     fixture = TestBed.createComponent(DatosPageComponent);
     component = fixture.componentInstance;
-    // Mock ViewChild
+    // Simula ViewChild
     component.solicitante = mockSolicitanteComponent;
   });
 
-  it('debe crear el componente', () => {
+  it('debería crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('debe inicializar indice en 1', () => {
+  it('debería inicializar el índice en 1', () => {
     expect(component.indice).toBe(1);
   });
 
-  it('debe cambiar el indice al llamar seleccionaTab', () => {
+  it('debería cambiar el índice al llamar seleccionaTab', () => {
     component.seleccionaTab(3);
     expect(component.indice).toBe(3);
   });
 
-  it('debe suscribirse a selectConsultaioState$ y llamar guardarDatosFormulario si update es true', () => {
+  it('debería suscribirse a selectConsultaioState$ y llamar guardarDatosFormulario si update es true', () => {
     const consultaState = { update: true };
     mockConsultaioQuery.selectConsultaioState$ = of(consultaState);
     const guardarSpy = jest.spyOn(component, 'guardarDatosFormulario').mockImplementation();
@@ -61,7 +61,7 @@ describe('DatosComponent', () => {
     expect(guardarSpy).toHaveBeenCalled();
   });
 
-  it('debe suscribirse a selectConsultaioState$ y poner esDatosRespuesta en true si update es false', () => {
+  it('debería suscribirse a selectConsultaioState$ y poner esDatosRespuesta en true si update es false', () => {
     const consultaState = { update: false };
     mockConsultaioQuery.selectConsultaioState$ = of(consultaState);
     component.ngOnInit();
@@ -69,7 +69,7 @@ describe('DatosComponent', () => {
     expect(component.esDatosRespuesta).toBe(true);
   });
 
-  it('guardarDatosFormulario debe actualizar esDatosRespuesta y llamar actualizarEstadoFormulario', () => {
+  it('guardarDatosFormulario debería actualizar esDatosRespuesta y llamar actualizarEstadoFormulario', () => {
     const resp = { test: 'value' };
     mockDatosService.getRegistroTomaMuestrasMercanciasData.mockReturnValue(of(resp));
     component.esDatosRespuesta = false;
@@ -78,7 +78,7 @@ describe('DatosComponent', () => {
     expect(mockDatosService.actualizarEstadoFormulario).toHaveBeenCalledWith(resp);
   });
 
-  it('guardarDatosFormulario no debe fallar si resp es falsy', () => {
+  it('guardarDatosFormulario no debería fallar si resp es falsy', () => {
     mockDatosService.getRegistroTomaMuestrasMercanciasData.mockReturnValue(of(null));
     component.esDatosRespuesta = false;
     component.guardarDatosFormulario();
@@ -86,12 +86,12 @@ describe('DatosComponent', () => {
     expect(mockDatosService.actualizarEstadoFormulario).not.toHaveBeenCalled();
   });
 
-  it('ngAfterViewInit debe llamar obtenerTipoPersona con MORAL_NACIONAL', () => {
+  it('ngAfterViewInit debería llamar obtenerTipoPersona con MORAL_NACIONAL', () => {
     component.ngAfterViewInit();
     expect(mockSolicitanteComponent.obtenerTipoPersona).toHaveBeenCalledWith(TIPO_PERSONA.MORAL_NACIONAL);
   });
 
-  it('ngOnDestroy debe completar destroyNotifier$', () => {
+  it('ngOnDestroy debería completar destroyNotifier$', () => {
     const completeSpy = jest.spyOn((component as any).destroyNotifier$, 'complete');
     const nextSpy = jest.spyOn((component as any).destroyNotifier$, 'next');
     component.ngOnDestroy();

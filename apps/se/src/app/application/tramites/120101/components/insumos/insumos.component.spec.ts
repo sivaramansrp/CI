@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { InsumosComponent } from './insumos.component';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { of } from 'rxjs';
 import { SolicitudDeRegistroTplService } from '../../services/solicitud-de-registro-tpl.service';
 import { ServicioDeFormularioService } from '../../services/forma-servicio/servicio-de-formulario.service';
@@ -20,7 +20,8 @@ describe('InsumosComponent', () => {
       obtenerDatosTablaInsumos: jest.fn().mockReturnValue(of([])),
       obtenerDatosFraccionArancelaria: jest.fn().mockReturnValue(of([])),
       obtenerDatosEstados: jest.fn().mockReturnValue(of([])),
-      obtenerTablaInsumos: jest.fn().mockReturnValue(of([]))
+      obtenerTablaInsumos: jest.fn().mockReturnValue(of([])),
+      establecerTablaInsumos: jest.fn()
     };
 
     servicioDeFormularioServiceMock = {
@@ -90,4 +91,66 @@ describe('InsumosComponent', () => {
     expect(destroySpy).toHaveBeenCalled();
     expect(completeSpy).toHaveBeenCalled();
   });
+
+  it('should update tablaInsumos when obtenerDatosTablaInsumos is called', () => {
+    const insumos = [{ DescripcionDelInsumo: 'Test Insumo', FraccionArancelaria: '1234', PaisDeOrigen: 'MX' }];
+    solicitudDeRegistroTplServiceMock.obtenerDatosTablaInsumos.mockReturnValue(of(insumos));
+
+    component.obtenerDatosTablaInsumos();
+
+    expect(component.tablaInsumos).toEqual(insumos);
+  });
+
+  it('should populate opciones in insumosFormData for descfraccion field', () => {
+  const data = [{ id: 1, descripcion: 'Test Desc' }];
+  solicitudDeRegistroTplServiceMock.obtenerDatosFraccionArancelaria.mockReturnValue(of(data));
+
+  const targetField = component.insumosFormData.find((f) => f.campo === 'descfraccion');
+  targetField!.opciones = undefined;
+
+  component.obtenerDatosFraccionArancelaria();
+
+  expect(targetField!.opciones).toEqual([{ id: 1, descripcion: 'Test Desc' }]);
+});
+
+
+
+it('should populate opciones in insumosFormData for Pais field', () => {
+  const data = [{ id: 2, descripcion: 'Mexico' }];
+  solicitudDeRegistroTplServiceMock.obtenerDatosEstados.mockReturnValue(of(data));
+
+  const targetField = component.insumosFormData.find((f) => f.campo === 'Pais');
+  targetField!.opciones = undefined;
+
+  component.obtenerDatosEstados();
+
+  expect(targetField!.opciones).toEqual([{ id: 2, descripcion: 'Mexico' }]);
+});
+
+it('should add insumo and call establecerTablaInsumos if form is valid', () => {
+  const establecerTablaSpy = jest.spyOn(solicitudDeRegistroTplServiceMock, 'establecerTablaInsumos');
+
+  const mockGroup = new FormGroup({
+    descripcionInsumo: new FormControl('desc'),
+    fraccion: new FormControl('123'),
+    Pais: new FormControl('MX'),
+  });
+
+  component.forma = new FormGroup({
+    ninoFormGroup: mockGroup,
+  });
+
+  component.agregarInsumo();
+
+  expect(component.tablaInsumos.length).toBe(1);
+  expect(component.tablaInsumos[0]).toEqual({
+    DescripcionDelInsumo: 'desc',
+    FraccionArancelaria: '123',
+    PaisDeOrigen: 'MX',
+  });
+  expect(establecerTablaSpy).toHaveBeenCalledWith(component.tablaInsumos);
+});
+
+
+
 });

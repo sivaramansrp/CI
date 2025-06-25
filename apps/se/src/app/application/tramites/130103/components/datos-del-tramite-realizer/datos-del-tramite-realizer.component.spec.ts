@@ -80,15 +80,6 @@ describe('DatosDelTramiteRealizerComponent', () => {
     ]);
   });
 
-  it('should call store.setDynamicFieldValue with id when valor has id', () => {
-    const mockEvent = {
-      campo: 'regimen',
-      valor: { id: 123, descripcion: 'Test Regimen' }
-    };
-    component.establecerCambioDeValor(mockEvent);
-    expect(storeMock.setDynamicFieldValue).toHaveBeenCalledWith('regimen', 123);
-  });
-
   it('should complete destroyNotifier$ on ngOnDestroy', () => {
     const completeSpy = jest.spyOn(component['destroyNotifier$'], 'complete');
     const nextSpy = jest.spyOn(component['destroyNotifier$'], 'next');

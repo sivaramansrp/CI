@@ -368,7 +368,10 @@ export class UsoEspecificoDeLaMercanciaComponent implements OnInit, OnDestroy {
    * this.establecerCambioDeValor({ campo: 'descripcion', valor: 'Descripción específica' });
    * // Actualiza el estado dinámico del campo "descripcion" con el valor "Descripción específica".
    */
-  establecerCambioDeValor(event: { campo: string; valor: string }): void {
+  establecerCambioDeValor(event: { campo: string; valor: string | null }): void {
+    if (!event) {
+      return;
+    }
     this.tramite130103Store.setDynamicFieldValue(event.campo, event.valor);
   }
 

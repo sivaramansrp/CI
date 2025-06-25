@@ -17,7 +17,7 @@ describe('PasoDosComponent', () => {
 
   beforeEach(async () => {
     mockCatalogosService = {
-      getCatalogo: jest.fn(),
+      getCatalogo: jest.fn().mockReturnValue(of([])),
     };
 
     await TestBed.configureTestingModule({
@@ -72,5 +72,16 @@ describe('PasoDosComponent', () => {
       CATALOGOS_ID.CAT_TIPO_DOCUMENTO
     );
     expect(component.catalogoDocumentos).toEqual([]);
+  });
+
+  it('should call getTiposDocumentos on ngOnInit', async () => {
+    const mockCatalogo: Catalogo[] = [{ id: 1, descripcion: 'Documento 1' }];
+    (mockCatalogosService.getCatalogo as jest.Mock).mockReturnValue(
+      of(mockCatalogo)
+    );
+    const getTiposDocumentosSpy = jest.spyOn(component, 'getTiposDocumentos');
+    await component.ngOnInit();
+    expect(getTiposDocumentosSpy).toHaveBeenCalled();
+    expect(component.catalogoDocumentos).toEqual(mockCatalogo);
   });
 });
