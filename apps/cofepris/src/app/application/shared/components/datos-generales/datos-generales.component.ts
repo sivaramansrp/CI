@@ -26,6 +26,7 @@ import { Subject, takeUntil } from 'rxjs';
 import TipoPersonaBtn from '@libs/shared/theme/assets/json/260402/tipoPersonaBtn.json';
 
 import { TercerosProcedenciaService } from '../../services/terceros-procedencia.service';
+import { TipoMoModel } from '../../models/permiso-importacion-biologica.models';
 @Component({
   selector: 'app-datos-generales',
   standalone: true,
@@ -50,7 +51,7 @@ export class DatosGeneralesComponent implements OnInit, OnDestroy {
   /**
    * Evento que emite los datos del formulario cuando este es válido.
    */
-  @Output() formularioGuardar = new EventEmitter<void>();
+  @Output() formularioGuardar = new EventEmitter<TipoMoModel>();
   /**
    * Evento que emite cuando se cancela la sección de datos generales.
    */
