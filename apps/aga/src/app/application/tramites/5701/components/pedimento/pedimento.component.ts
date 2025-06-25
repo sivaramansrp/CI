@@ -29,13 +29,13 @@ import {
   DatosComponentePedimento,
   Pedimento,
 } from '../../../../core/models/5701/tramite5701.model';
+import { EMPTY, Subject, catchError, map, takeUntil } from 'rxjs';
 import {
   FormControl,
   FormGroup,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-
 import {
   MSG_ERROR_NO_PEDIMENTOS,
   MSG_NRO_PEDIMENTO,
@@ -50,7 +50,6 @@ import {
   Solicitud5701State,
   Tramite5701Store,
 } from '../../../../core/estados/tramites/tramite5701.store';
-import { Subject, map, takeUntil } from 'rxjs';
 import { BodyEstadoPedimento } from '../../../../core/models/5701/pedimento.model';
 import { CommonModule } from '@angular/common';
 import { EstadoPedimentoService } from '../../../../core/services/5701/pedimento/estado-pedimento.service';
@@ -90,6 +89,11 @@ export class PedimentoComponent implements OnInit, OnChanges, OnDestroy {
    * @description Datos de la tabla de pedimentos.
    */
   @Input() tablaPedimento!: Pedimento[];
+
+  /**
+   * @description Número de la patente del pedimento.
+   */
+  @Input({ required: true }) numeroPatente!: string;
 
   /**
    * @description Emisor de eventos para la tabla de pedimentos.
@@ -160,7 +164,7 @@ export class PedimentoComponent implements OnInit, OnChanges, OnDestroy {
   ColumnMode = ColumnMode;
 
   mensajes = {
-    emptyMessage: 'No hay datos disponibles',
+    emptyMessage: '',
   };
   constructor(
     private tramite5701Query: Tramite5701Query,
@@ -308,11 +312,12 @@ export class PedimentoComponent implements OnInit, OnChanges, OnDestroy {
               txtBtnAceptar: TEXTO_CERRAR,
               txtBtnCancelar: '',
             };
+            return;
           }
 
           const BODY: BodyEstadoPedimento = {
             aduana: parseInt(this.solicitudState.idAduanaDespacho, 10),
-            patente: 23424,
+            patente: this.numeroPatente,
             pedimento: parseInt(this.pedimentoForm.value, 10),
           };
 
@@ -326,7 +331,7 @@ export class PedimentoComponent implements OnInit, OnChanges, OnDestroy {
                     {
                       const PEDIMENTO: Pedimento = {
                         idPedimento: 0,
-                        patente: response.datos.patente,
+                        patente: this.numeroPatente,
                         pedimento: response.datos.pedimento,
                         aduana: response.datos.aduana,
                         tipoPedimento: 0,
@@ -367,6 +372,37 @@ export class PedimentoComponent implements OnInit, OnChanges, OnDestroy {
                     };
                     break;
                 }
+              }),
+              catchError((_error) => {
+                this.nuevaNotificacion = {
+                  tipoNotificacion: 'alert',
+                  categoria: 'danger',
+                  modo: 'action',
+                  titulo: TITULO_MODAL_AVISO,
+                  mensaje: MSG_PEDIMENTO_NO_VALIDO,
+                  cerrar: false,
+                  txtBtnAceptar: TEXTO_CERRAR,
+                  txtBtnCancelar: '',
+                };
+
+                const PEDIMENTO: Pedimento = {
+                  idPedimento: this.pedimentos.length + 1,
+                  patente: this.datosNroPedimento.patente,
+                  pedimento: NUMERO_PEDIMENTO,
+                  aduana: this.datosNroPedimento.idAduanaDespacho,
+                  tipoPedimento: 0,
+                  estadoPedimento: '',
+                  subEstadoPedimento: '',
+                  descTipoPedimento: 'Por evaluar',
+                  numero: '',
+                  comprobanteValor: '',
+                  pedimentoValidado: 'No validado',
+                };
+
+                this.pedimentos.push(PEDIMENTO);
+                this.pedimentoForm.reset();
+                this.datosTablaPedimento.emit(this.pedimentos);
+                return EMPTY;
               })
             )
             .subscribe();
@@ -399,7 +435,7 @@ export class PedimentoComponent implements OnInit, OnChanges, OnDestroy {
       };
       return;
     }
-    
+
     if (this.selected.length === 0) {
       this.nuevaNotificacion = {
         tipoNotificacion: 'alert',
@@ -482,10 +518,14 @@ export class PedimentoComponent implements OnInit, OnChanges, OnDestroy {
    */
   actualizarValor(event: Event, cell: string, rowIndex: number): void {
     const TARGET = event.target as HTMLInputElement;
-    
+
     this.editar[`${rowIndex}-${cell}`] = false;
 
-    if (cell === 'descTipoPedimento' || cell === 'numero' || cell === 'comprobanteValor') {
+    if (
+      cell === 'descTipoPedimento' ||
+      cell === 'numero' ||
+      cell === 'comprobanteValor'
+    ) {
       this.pedimentos[rowIndex][cell] = TARGET.value;
       if (cell === 'descTipoPedimento') {
         const TIPO_PEDIMENTO = this.tiposPedimento.find(
