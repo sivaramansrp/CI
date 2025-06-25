@@ -30,8 +30,20 @@ import { Tramite240117Store } from '../../estados/tramite240117Store.store';
   styleUrl: './datos-mercancia-contenedora.component.scss',
 })
 export class DatosMercanciaContenedoraComponent {
+  /**
+   * Identificador del procedimiento asociado al trámite.
+   * Este valor se utiliza para identificar el trámite específico en el store.
+   *
+   * @type {number}
+   */
   idProcedimiento = NUMERO_TRAMITE.TRAMITE_240117;
 
+  /**
+   * Evento que se emite cuando se cierra el componente.
+   * Este evento permite a los componentes padres reaccionar al cierre del modal.
+   *
+   * @type {EventEmitter<void>}
+   */
   @Output() cerrar = new EventEmitter<void>();
   /**
    * Constructor del componente.

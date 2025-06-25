@@ -24,6 +24,12 @@ import { Tramite240118Store } from '../../estados/tramite240118Store.store';
   styleUrl: './agregar-destinatario-final-contenedora.component.scss',
 })
 export class AgregarDestinatarioFinalContenedoraComponent implements OnInit {
+  /**
+   * Evento que se emite cuando se cierra el componente.
+   * Permite a los componentes padres reaccionar al cierre del modal.
+   *
+   * @type {EventEmitter<void>}
+   */
   @Output() cerrar = new EventEmitter<void>();
   /**
    * @property terechosDatos$
@@ -45,6 +51,7 @@ export class AgregarDestinatarioFinalContenedoraComponent implements OnInit {
    *
    * @method constructor
    * @param {Tramite240118Store} tramiteStore - Store que administra el estado del trámite.
+   * @param {Tramite240118Query} tramiteQuery - Consulta que proporciona acceso a los datos del trámite.
    * @returns {void}
    */
   constructor(

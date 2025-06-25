@@ -17,6 +17,12 @@ import { Tramite240118Store } from '../../estados/tramite240118Store.store';
   styleUrl: './agregar-proveedor-contenedora.component.scss',
 })
 export class AgregarProveedorContenedoraComponent implements OnInit {
+  /**
+   * Evento que se emite cuando se cierra el componente.
+   * Permite a los componentes padres reaccionar al cierre del modal.
+   *
+   * @type {EventEmitter<void>}
+   */
   @Output() cerrar = new EventEmitter<void>();
   /**
    * @property terechosDatos$
@@ -37,6 +43,8 @@ export class AgregarProveedorContenedoraComponent implements OnInit {
    * @description Constructor que inyecta el store `Tramite240118Store` para gestionar el estado del trámite.
    *
    * @param tramite240118Store - Store que administra el estado del trámite 240118.
+   * @param tramite240118Query - Consulta que proporciona acceso a los datos del trámite 240118.
+   * @returns {void}
    */
 
   constructor(

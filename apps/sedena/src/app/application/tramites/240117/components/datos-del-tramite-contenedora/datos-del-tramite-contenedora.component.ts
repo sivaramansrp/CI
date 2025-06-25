@@ -120,6 +120,14 @@ export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
   cerrarModal(): void {
     this.modalComponent.cerrar();
   }
+
+  /**
+   * Hook del ciclo de vida que se ejecuta al inicializar el componente.
+   * Se suscribe a los observables del store para obtener los datos de mercancía y del trámite.
+   *
+   * @method ngOnInit
+   * @returns {void}
+   */
   ngOnInit(): void {
     this.tramiteQuery.getMercanciaTablaDatos$
       .pipe(takeUntil(this.unsubscribe$))

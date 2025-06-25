@@ -69,6 +69,7 @@ export class AgregarDestinatarioFinalContenedoraComponent {
    *
    * @method constructor
    * @param {Tramite240117Store} tramiteStore - Store que administra el estado del trámite.
+   * @param {Tramite240117Query} tramiteQuery - Consulta que proporciona acceso a los datos del trámite.
    * @returns {void}
    */
   constructor(
