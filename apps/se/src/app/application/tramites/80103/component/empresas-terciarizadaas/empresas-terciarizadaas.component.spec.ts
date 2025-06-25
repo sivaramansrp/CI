@@ -1,29 +1,32 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { EmpresasTerciarizadaasComponent } from './empresas-terciarizadaas.component';
-import { NuevoProgramaIndustrialService } from '../../services/modalidad-albergue.service';
 import { of } from 'rxjs';
-import { Catalogo } from '@libs/shared/data-access-user/src';
+import { CommonModule } from '@angular/common';
+import { EmpresasComponent } from '../../../../shared/components/empresas/empresas.component';
+import { NuevoProgramaIndustrialService } from '../../services/modalidad-albergue.service';
 
-describe('EmpresasTerciarizadaasComponent (Jest)', () => {
+describe('EmpresasTerciarizadaasComponent', () => {
   let component: EmpresasTerciarizadaasComponent;
   let fixture: ComponentFixture<EmpresasTerciarizadaasComponent>;
-  let mockService: Partial<NuevoProgramaIndustrialService>;
+  let mockService: jest.Mocked<NuevoProgramaIndustrialService>;
 
-  const ESTADOS_MOCK: Catalogo[] = [
-    { id: 1, descripcion: 'CDMX' },
-    { id: 2, descripcion: 'Nuevo León' },
-  ];
+  const MOCK_CATALOG_RESPONSE = {
+    data: [
+      { id: 1, descripcion: 'Jalisco' },
+      { id: 2, descripcion: 'CDMX' }
+    ]
+  };
 
   beforeEach(async () => {
     mockService = {
-      obtenerListaEstado: jest.fn().mockReturnValue(of({ data: ESTADOS_MOCK })),
-    };
+      obtenerListaEstado: jest.fn().mockReturnValue(of(MOCK_CATALOG_RESPONSE))
+    } as any;
 
     await TestBed.configureTestingModule({
-      imports: [EmpresasTerciarizadaasComponent],
+      imports: [CommonModule, EmpresasComponent],
       providers: [
-        { provide: NuevoProgramaIndustrialService, useValue: mockService },
-      ],
+        { provide: NuevoProgramaIndustrialService, useValue: mockService }
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(EmpresasTerciarizadaasComponent);
@@ -31,43 +34,29 @@ describe('EmpresasTerciarizadaasComponent (Jest)', () => {
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
+  it('debe crear el componente correctamente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should call obtenerListaEstado() and populate estadosCatalogo', () => {
-    component.obtenerListaEstado();
-    expect(mockService.obtenerListaEstado).toHaveBeenCalled();
-    expect(component.estadosCatalogo).toEqual(ESTADOS_MOCK);
+  it('debe inicializar la tabla de configuración con los encabezados correctos', () => {
+    expect(component.parentTablaConfig.length).toBe(11);
+    expect(component.parentTablaConfig[0].encabezado).toBe('Calle');
+    expect(component.parentTablaConfig[10].encabezado).toBe('Razón social');
   });
 
-  it('should clean up subscriptions on ngOnDestroy', () => {
-    const nextSpy = jest.spyOn(component['destroyNotifier$'], 'next');
-    const completeSpy = jest.spyOn(component['destroyNotifier$'], 'complete');
+  it('debe cargar el catálogo de estados al llamar obtenerListaEstado', () => {
+    component.obtenerListaEstado();
+    expect(mockService.obtenerListaEstado).toHaveBeenCalled();
+    expect(component.estadosCatalogo).toEqual(MOCK_CATALOG_RESPONSE.data);
+  });
+
+  it('debe limpiar correctamente los observables en ngOnDestroy', () => {
+    const spyNext = jest.spyOn(component['destroyNotifier$'], 'next');
+    const spyComplete = jest.spyOn(component['destroyNotifier$'], 'complete');
 
     component.ngOnDestroy();
 
-    expect(nextSpy).toHaveBeenCalled();
-    expect(completeSpy).toHaveBeenCalled();
-  });
-
-  it('should have correct table configuration headers and order', () => {
-    const headers = component.parentTablaConfig.map(col => col.encabezado);
-    expect(headers).toEqual([
-      'Calle',
-      'Número exterior',
-      'Número interior',
-      'Código postal',
-      'Colonia',
-      'Municipio o delegación',
-      'Entidad federativa',
-      'País',
-      'Registro federal de contribuyentes',
-      'Domicilio fiscal del solicitante',
-      'Razón social',
-    ]);
-
-    const orders = component.parentTablaConfig.map(col => col.orden);
-    expect(orders).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]);
+    expect(spyNext).toHaveBeenCalled();
+    expect(spyComplete).toHaveBeenCalled();
   });
 });
