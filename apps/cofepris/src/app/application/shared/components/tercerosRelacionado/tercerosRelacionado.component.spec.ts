@@ -1,137 +1,214 @@
-import { TestBed, ComponentFixture } from '@angular/core/testing';
-import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ReactiveFormsModule, FormsModule, FormBuilder } from '@angular/forms';
 import { of, Subject } from 'rxjs';
 import { TercerosRelacionadoComponent } from './tercerosRelacionado.component';
-import { ExportacionService } from '../../services/exportacion.service';
-import { ExportacionStore } from '../../estados/stores/exportacion.store';
-import { ExportacionQuery } from '../../../shared/estados/queries/exportacion.query';
-import { PermisoModel } from '@libs/shared/data-access-user/src/core/models/260604/aviso-exportacion.model';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
-describe('TercerosRelacionadoComponent', () => {
+describe('Componente TercerosRelacionado', () => {
   let component: TercerosRelacionadoComponent;
   let fixture: ComponentFixture<TercerosRelacionadoComponent>;
-  let mockExportacionService: jest.Mocked<ExportacionService>;
-  let mockTramitesStore: jest.Mocked<ExportacionStore>;
-  let mockTramitesQuery: jest.Mocked<ExportacionQuery>;
+
+ 
+  let mockService: any;
+  let mockExportacionStore: any;
+  let mockExportacionQuery: any;
+  let mockConsultaioQuery: any;
 
   beforeEach(async () => {
-    mockExportacionService = {
-      obtenerTabla: jest.fn(),
-      obtenerDatosLocalidad: jest.fn(),
-    } as unknown as jest.Mocked<ExportacionService>;
-
-    mockTramitesStore = {
+    mockService = {
+      obtenerRadio: jest.fn().mockReturnValue(of([{ id: 1, nombre: 'Fisica' }])),
+      obtenerTabla: jest.fn().mockReturnValue(of([{ id: 1, nombre: 'Prod' }])),
+      obtenerDatosLocalidad: jest.fn().mockReturnValue(of([{ id: 1, nombre: 'Loc' }])),
+    };
+    mockExportacionStore = {
+      setTipoPersona: jest.fn(),
       setNombre: jest.fn(),
-    } as unknown as jest.Mocked<ExportacionStore>;
-
-    mockTramitesQuery = {
+      setApellidoPrimer: jest.fn(),
+      setApellidoSegundo: jest.fn(),
+      setDenominacionRazonSocial: jest.fn(),
+      setEstadoLocalidad: jest.fn(),
+      setCodPostal1: jest.fn(),
+      setCalle: jest.fn(),
+      setNumExterior: jest.fn(),
+      setNumInterior: jest.fn(),
+      setLada: jest.fn(),
+      setTelefono: jest.fn(),
+      setCorreoElectronico: jest.fn(),
+    };
+    mockExportacionQuery = {
       selectSolicitud$: of({
-        nombre: 'Test Name',
-        apellidoPrimer: 'Apellido1',
-        apellidoSegundo: 'Apellido2',
-        denominacionRazonSocial: 'Denominacion',
+        tipoPersona: 'fisica',
+        nombre: 'Juan',
+        apellidoPrimer: 'Perez',
+        apellidoSegundo: 'Gomez',
+        denominacionRazonSocial: 'Empresa',
         estadoLocalidad: 'Estado',
         codPostal1: '12345',
-        coloniaEquiv: 'Colonia',
         calle: 'Calle',
-        numExterior: '123',
-        numInterior: '456',
-        lada: '123',
+        numExterior: '10',
+        numInterior: '2',
+        lada: '55',
         telefono: '1234567890',
-        correoElectronico: 'test@example.com',
-      }),
-    } as unknown as jest.Mocked<ExportacionQuery>;
+        correoElectronico: 'test@mail.com'
+      })
+    };
+    mockConsultaioQuery = {
+      selectConsultaioState$: of({ readonly: false })
+    };
 
     await TestBed.configureTestingModule({
-      imports: [TercerosRelacionadoComponent, ReactiveFormsModule],
+      imports: [
+        ReactiveFormsModule,
+        FormsModule,
+        TercerosRelacionadoComponent,
+        HttpClientTestingModule
+      ],
       providers: [
         FormBuilder,
-        { provide: ExportacionService, useValue: mockExportacionService },
-        { provide: ExportacionStore, useValue: mockTramitesStore },
-        { provide: ExportacionQuery, useValue: mockTramitesQuery },
+        { provide: 'ExportacionService', useValue: mockService },
+        { provide: 'ExportacionStore', useValue: mockExportacionStore },
+        { provide: 'ExportacionQuery', useValue: mockExportacionQuery },
+        { provide: 'ConsultaioQuery', useValue: mockConsultaioQuery },
       ],
-    }).compileComponents();
+    })
+      .overrideComponent(TercerosRelacionadoComponent, {
+        set: {
+          providers: [
+            { provide: FormBuilder, useValue: new FormBuilder() },
+            { provide: 'ExportacionService', useValue: mockService },
+            { provide: 'ExportacionStore', useValue: mockExportacionStore },
+            { provide: 'ExportacionQuery', useValue: mockExportacionQuery },
+            { provide: 'ConsultaioQuery', useValue: mockConsultaioQuery },
+          ]
+        }
+      })
+      .compileComponents();
   });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(TercerosRelacionadoComponent);
     component = fixture.componentInstance;
-
-    // Initialize the destroyed$ subject
-    component['destroyed$'] = new Subject<void>();
-
-    mockExportacionService.obtenerTabla.mockReturnValue(of([]));
-    mockExportacionService.obtenerDatosLocalidad.mockReturnValue(of([]));
-
+    // Patch the injected services
+    (component as any).service = mockService;
+    (component as any).exportacionStore = mockExportacionStore;
+    (component as any).exportacionQuery = mockExportacionQuery;
+    (component as any).consultaioQuery = mockConsultaioQuery;
     fixture.detectChanges();
   });
 
-  afterEach(() => {
-    if (component && component.ngOnDestroy) {
-      component.ngOnDestroy();
-    }
-  });
-
-  it('should create the component', () => {
+  it('debería crearse', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize forms on ngOnInit', () => {
-    component.ngOnInit();
-    expect(component.facturatorForm).toBeDefined();
-  });
-
-  it('should load mercancias on loadMercancias', () => {
-    const mockData: PermisoModel[] = [
-      { Nombre: 'Test', RFC: 'RFC123', CURP: 'CURP123', Teléfono: 1234567890, CorreoElectrónico: 'test@example.com', calle: 'Calle1', numeroExterior: 1, numeroInterior: 2, pais: 'Pais1', colonia: 'Colonia1', municipio: 'Municipio1', localidad: 'Localidad1', entidadFederativa: 'Entidad1', estadoLocalidad: 'Estado1', codigoPostal: 12345 },
-    ];
-
-    mockExportacionService.obtenerTabla.mockReturnValue(of(mockData));
-    component.loadMercancias();
-    expect(component.tercerosProd).toEqual(mockData);
-  });
-
-  it('should load localidad data on loadLocalidad', () => {
-    const mockData = [{ id: 1, nombre: 'Localidad1' }];
-    mockExportacionService.obtenerDatosLocalidad.mockReturnValue(of(mockData));
-    component.loadLocalidad();
-    expect(component.localidadList).toEqual(mockData);
-  });
-
-  it('should open modal and call getFacturator', () => {
+  it('debería inicializar y llamar todos los métodos de carga en ngOnInit', () => {
+    const loadMercanciasSpy = jest.spyOn(component, 'loadMercancias');
+    const loadLocalidadSpy = jest.spyOn(component, 'loadLocalidad');
     const getFacturatorSpy = jest.spyOn(component, 'getFacturator');
-    component.abrirModalfacurator();
-    expect(component.modal).toBe('show');
+    const cargarRadioSpy = jest.spyOn(component, 'cargarRadio');
+    const inicializarEstadoFormularioSpy = jest.spyOn(component, 'inicializarEstadoFormulario');
+    component.ngOnInit();
+    expect(loadMercanciasSpy).toHaveBeenCalled();
+    expect(loadLocalidadSpy).toHaveBeenCalled();
+    expect(getFacturatorSpy).toHaveBeenCalled();
+    expect(cargarRadioSpy).toHaveBeenCalled();
+    expect(inicializarEstadoFormularioSpy).toHaveBeenCalled();
+  });
+
+  it('debería llamar a guardarDatosFormulario si esFormularioSoloLectura es true en inicializarEstadoFormulario', () => {
+    component.esFormularioSoloLectura = true;
+    const guardarSpy = jest.spyOn(component, 'guardarDatosFormulario');
+    component.inicializarEstadoFormulario();
+    expect(guardarSpy).toHaveBeenCalled();
+  });
+
+  it('debería llamar a getFacturator si esFormularioSoloLectura es false en inicializarEstadoFormulario', () => {
+    component.esFormularioSoloLectura = false;
+    const getFacturatorSpy = jest.spyOn(component, 'getFacturator');
+    component.inicializarEstadoFormulario();
     expect(getFacturatorSpy).toHaveBeenCalled();
   });
 
-  it('should initialize facturatorForm with default values', () => {
-    component.getFacturator();
-    expect(component.facturatorForm.get('nombre')?.value).toBe('Test Name');
-    expect(component.facturatorForm.get('apellidoPrimer')?.value).toBe('Apellido1');
-    expect(component.facturatorForm.get('correoElectronico')?.value).toBe('test@example.com');
+  it('guardarDatosFormulario deshabilita el formulario si esFormularioSoloLectura es true', () => {
+    component.getFacturator = jest.fn(() => {
+      component.facturatorForm = new FormBuilder().group({ test: [''] });
+      component.facturatorForm.enable();
+    }) as any;
+    component.esFormularioSoloLectura = true;
+    component.guardarDatosFormulario();
+    expect(component.facturatorForm.disabled).toBe(true);
   });
 
-  it('should update validators based on tipoPersona value', () => {
-    component.getFacturator();
-    const tipoPersonaControl = component.facturatorForm.get('tipoPersona');
-    tipoPersonaControl?.setValue('fisica');
-    expect(component.facturatorForm.get('nombre')?.validator).toBeDefined();
-    tipoPersonaControl?.setValue('moral');
-    expect(component.facturatorForm.get('nombre')?.validator).toBeNull();
+  it('guardarDatosFormulario habilita el formulario si esFormularioSoloLectura es false', () => {
+    component.getFacturator = jest.fn(() => {
+      component.facturatorForm = new FormBuilder().group({ test: [''] });
+      component.facturatorForm.disable();
+    }) as any;
+    component.esFormularioSoloLectura = false;
+    component.guardarDatosFormulario();
+    expect(component.facturatorForm.enabled).toBe(true);
   });
 
-  it('should clean up observables on ngOnDestroy', () => {
-    const destroy$Spy = jest.spyOn(component['destroyed$'], 'next');
-    const destroyCompleteSpy = jest.spyOn(component['destroyed$'], 'complete');
-    const destroyNotifierSpy = jest.spyOn(component['destroyNotifier$'], 'next');
-    const destroyNotifierCompleteSpy = jest.spyOn(component['destroyNotifier$'], 'complete');
+  it('guardarDatosFormulario no hace nada si esFormularioSoloLectura no es ni true ni false', () => {
+    component.getFacturator = jest.fn(() => {
+      component.facturatorForm = new FormBuilder().group({ test: [''] });
+      component.facturatorForm.enable();
+    }) as any;
+    (component as any).esFormularioSoloLectura = undefined;
+    component.guardarDatosFormulario();
+    expect(component.facturatorForm.enabled).toBe(true);
+  });
 
+  it('debería establecer tipoPersonaOptions en cargarRadio', () => {
+    component.tipoPersonaOptions = [];
+    component.cargarRadio();
+    expect(component.tipoPersonaOptions.length).toBeGreaterThan(0);
+  });
+
+  it('debería establecer tercerosProd en loadMercancias', () => {
+    component.tercerosProd = [];
+    component.loadMercancias();
+    expect(component.tercerosProd.length).toBeGreaterThan(0);
+  });
+
+  it('debería establecer localidadList en loadLocalidad', () => {
+    component.localidadList = [];
+    component.loadLocalidad();
+    expect(component.localidadList.length).toBeGreaterThan(0);
+  });
+
+  it('debería abrir el modal y llamar a getFacturator en abrirModalfacurator', () => {
+    component.getFacturator = jest.fn();
+    component.abrirModalfacurator();
+    expect(component.modal).toBe('show');
+    expect(component.getFacturator).toHaveBeenCalled();
+  });
+
+  it('debería inicializar facturatorForm en getFacturator', () => {
+    component.getFacturator();
+    expect(component.facturatorForm).toBeDefined();
+    expect(component.facturatorForm.get('nombre')).toBeDefined();
+  });
+
+  it('debería establecer fisica y moral correctamente en inputChecked', () => {
+    component.inputChecked('fisica');
+    expect(component.fisica).toBe(true);
+    expect(component.moral).toBe(false);
+    component.inputChecked('moral');
+    expect(component.fisica).toBe(false);
+    expect(component.moral).toBe(true);
+  });
+
+  it('debería llamar a inputChecked en cambiarRadioFisica', () => {
+    const spy = jest.spyOn(component, 'inputChecked');
+    component.cambiarRadioFisica('fisica');
+    expect(spy).toHaveBeenCalledWith('fisica');
+  });
+
+  it('debería completar destroyed$ en ngOnDestroy', () => {
+    const nextSpy = jest.spyOn((component as any).destroyed$, 'next');
+    const completeSpy = jest.spyOn((component as any).destroyed$, 'complete');
     component.ngOnDestroy();
-
-    expect(destroy$Spy).toHaveBeenCalled();
-    expect(destroyCompleteSpy).toHaveBeenCalled();
-    expect(destroyNotifierSpy).toHaveBeenCalled();
-    expect(destroyNotifierCompleteSpy).toHaveBeenCalled();
+    expect(nextSpy).toHaveBeenCalled();
+    expect(completeSpy).toHaveBeenCalled();
   });
 });

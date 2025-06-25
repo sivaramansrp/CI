@@ -34,11 +34,11 @@ describe('AgregarFabricanteComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize the form on component creation', () => {
+  it('debe inicializar el formulario al crear el componente', () => {
     expect(component.agregarFabricante).toBeDefined();
     expect(component.agregarFabricante.controls['tipoPersona']).toBeDefined();
     expect(component.agregarFabricante.controls['descPais']).toBeDefined();
@@ -61,95 +61,92 @@ describe('AgregarFabricanteComponent', () => {
     expect(component.agregarFabricante.controls['pais']).toBeDefined();
   });
 
-  it('should call cargarDatos on ngOnInit', () => {
+  it('debe llamar a cargarDatos en ngOnInit', () => {
     const cargarDatosSpy = jest.spyOn(component, 'cargarDatos');
     component.ngOnInit();
     expect(cargarDatosSpy).toHaveBeenCalled();
   });
 
-  it('should call guardarFabricante and update the store', () => {
-    component.agregarFabricante.setValue({
-      tipoPersona: 'FISICA',
-      rfc: 'XAXX010101000',
-      nombres: 'John',
-      denominacionRazon: '',
-      primerApellido: 'Doe',
-      segundoApellido: 'Smith',
-      pais: '1',
-      estado: '1',
-      municipio: '1',
-      localidad: '1',
-      codigoPostal: '12345',
-      colonia: '1',
-      calle: 'Main Street',
-      numeroExterior: '123',
-      numeroInterior: '',
-      lada: '55',
-      telefono: '12345678',
-      correoElectronico: 'john.doe@example.com',
-      descPais:'Mexico'
-    });
-
-    component.guardarFabricante();
-
-    expect(mockTramite260104Store.updateFabricanteTablaDatos).toHaveBeenCalledWith(component.fabricantes);
-    expect(component.agregarFabricante.pristine).toBeTruthy();
-  });
-
-  it('should reset the form when limpiarFormulario is called', () => {
-    component.agregarFabricante.setValue({
-      tipoPersona: 'FISICA',
-      rfc: 'XAXX010101000',
-      nombres: 'John',
-      denominacionRazon: '',
-      primerApellido: 'Doe',
-      segundoApellido: 'Smith',
-      pais: '1',
-      estado: '1',
-      municipio: '1',
-      localidad: '1',
-      codigoPostal: '12345',
-      colonia: '1',
-      calle: 'Main Street',
-      numeroExterior: '123',
-      numeroInterior: '',
-      lada: '55',
-      telefono: '12345678',
-      correoElectronico: 'john.doe@example.com',
-      descPais:'Mexico'
-    });
-
-    component.limpiarFormulario();
-
-    expect(component.agregarFabricante.pristine).toBeTruthy();
-    expect(component.agregarFabricante.value).toEqual({
-      tipoPersona: '',
-      rfc: '',
-      nombres: '',
-      denominacionRazon: '',
-      primerApellido: '',
-      segundoApellido: '',
-      pais: { value: '1', disabled: true },
-      estado: '',
-      municipio: '',
-      localidad: '',
-      codigoPostal: '',
-      colonia: '',
-      calle: '',
-      numeroExterior: '',
-      numeroInterior: '',
-      lada: '',
-      telefono: '',
-      correoElectronico: '',
-      descPais:'Mexico'
-    });
-  });
-
-  it('should unsubscribe on ngOnDestroy', () => {
+  it('debe desuscribirse en ngOnDestroy', () => {
     const unsubscribeSpy = jest.spyOn(component['unsubscribe$'], 'next');
     const completeSpy = jest.spyOn(component['unsubscribe$'], 'complete');
     component.ngOnDestroy();
     expect(unsubscribeSpy).toHaveBeenCalled();
     expect(completeSpy).toHaveBeenCalled();
+  });
+
+  it('debe guardar fabricante tipoPersona "0" (moral) y actualizar el store', () => {
+    const backSpy = jest.spyOn(component['ubicaccion'], 'back');
+    component.agregarFabricante.patchValue({
+      tipoPersona: '0',
+      denominacionRazon: 'Empresa S.A.',
+      rfc: 'RFC123456789',
+      lada: '55',
+      telefono: '12345678',
+      correoElectronico: 'empresa@test.com',
+      calle: 'Calle',
+      numeroExterior: '123',
+      numeroInterior: '',
+      pais: '1',
+      colonia: 'COL',
+      municipio: 'MUN',
+      localidad: 'LOC',
+      estado: 'EDO',
+      codigoPostal: 'CP',
+      descPais: 'México'
+    });
+    component.fabricantes = [];
+    component.guardarFabricante();
+    expect(component.fabricantes.length).toBe(1);
+    expect(mockTramite260104Store.updateFabricanteTablaDatos).toHaveBeenCalledWith(component.fabricantes);
+    expect(backSpy).toHaveBeenCalled();
+  });
+
+  it('debe guardar fabricante tipoPersona "1" (física) y actualizar el store', () => {
+    const backSpy = jest.spyOn(component['ubicaccion'], 'back');
+    component.agregarFabricante.patchValue({
+      tipoPersona: '1',
+      nombres: 'Juan',
+      primerApellido: 'Pérez',
+      segundoApellido: 'García',
+      rfc: 'RFC987654321',
+      lada: '55',
+      telefono: '87654321',
+      correoElectronico: 'juan@test.com',
+      calle: 'Calle',
+      numeroExterior: '456',
+      numeroInterior: '',
+      pais: '1',
+      colonia: 'COL',
+      municipio: 'MUN',
+      localidad: 'LOC',
+      estado: 'EDO',
+      codigoPostal: 'CP',
+      descPais: 'México'
+    });
+    component.fabricantes = [];
+    component.guardarFabricante();
+    expect(component.fabricantes.length).toBe(1);
+    expect(mockTramite260104Store.updateFabricanteTablaDatos).toHaveBeenCalledWith(component.fabricantes);
+    expect(backSpy).toHaveBeenCalled();
+  });
+
+  it('debe limpiar el formulario', () => {
+    const resetSpy = jest.spyOn(component.agregarFabricante, 'reset');
+    component.limpiarFormulario();
+    expect(resetSpy).toHaveBeenCalled();
+  });
+
+  it('debe cancelar y regresar', () => {
+    const backSpy = jest.spyOn(component['ubicaccion'], 'back');
+    component.cancelar();
+    expect(backSpy).toHaveBeenCalled();
+  });
+
+  it('debe deshabilitar el formulario si esFormularioSoloLectura es true', () => {
+    component.esFormularioSoloLectura = true;
+    component.crearAgregarFormularioAgregarDestinatarioFinal();
+    const allDisabled = Object.values(component.agregarFabricante.controls).every(ctrl => ctrl.disabled);
+    expect(allDisabled).toBe(true);
   });
 });

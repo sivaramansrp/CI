@@ -44,23 +44,23 @@ describe('DatosDelEstablecimientoComponent', () => {
     component.ngOnDestroy();
   });
 
-  it('should create the component', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize the form on ngOnInit', () => {
+  it('debe inicializar el formulario en ngOnInit', () => {
     component.ngOnInit();
     expect(component.datosDelForm).toBeDefined();
     expect(component.datosDelForm.get('denominacion')?.value).toBe('Test Denominacion');
     expect(component.datosDelForm.get('correoElectronico')?.value).toBe('test@example.com');
   });
 
-  it('should open the modal when abrirModal is called', () => {
+  it('debe abrir el modal cuando se llama abrirModal', () => {
     component.abrirModal();
     expect(component.modal).toBe('show');
   });
 
-  it('should set values in the store using setValoresStore', () => {
+  it('debe establecer valores en el store usando setValoresStore', () => {
     const form = component.datosDelForm;
     form.get('denominacion')?.setValue('New Denominacion');
     component.setValoresStore(form, 'denominacion', 'setDenominacion');
@@ -71,7 +71,7 @@ describe('DatosDelEstablecimientoComponent', () => {
     expect(mockTramiteStore.setCorreoElectronico).toHaveBeenCalledWith('new@example.com');
   });
 
-  it('should clean up observables on ngOnDestroy', () => {
+  it('debe limpiar los observables en ngOnDestroy', () => {
     const destroyNotifierSpy = jest.spyOn(component['destroyNotifier$'], 'next');
     const destroyNotifierCompleteSpy = jest.spyOn(component['destroyNotifier$'], 'complete');
 
