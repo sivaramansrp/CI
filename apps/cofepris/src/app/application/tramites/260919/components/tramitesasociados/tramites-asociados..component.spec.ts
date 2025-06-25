@@ -19,7 +19,7 @@ describe('TramitesAsociadosComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule,TramitesAsociadosComponent],
+      imports: [ FormsModule, ReactiveFormsModule,TramitesAsociadosComponent ],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
       providers: [
         { provide: ImportarDeRemediosHerbalsService, useClass: MockImportarDeRemediosHerbalsService }
@@ -43,7 +43,7 @@ describe('TramitesAsociadosComponent', () => {
   it('should run #ngOnInit()', async () => {
     component.getTramitesAsociados = jest.fn();
     component.ngOnInit();
-    expect(component.getTramitesAsociados).toHaveBeenCalled();
+     expect(component.getTramitesAsociados).toHaveBeenCalled();
   });
 
   it('should run #getTramitesAsociados()', async () => {
@@ -58,8 +58,8 @@ describe('TramitesAsociadosComponent', () => {
     component.destroyed$.next = jest.fn();
     component.destroyed$.complete = jest.fn();
     component.ngOnDestroy();
-    expect(component.destroyed$.next).toHaveBeenCalled();
-    expect(component.destroyed$.complete).toHaveBeenCalled();
+     expect(component.destroyed$.next).toHaveBeenCalled();
+     expect(component.destroyed$.complete).toHaveBeenCalled();
   });
 
 });
