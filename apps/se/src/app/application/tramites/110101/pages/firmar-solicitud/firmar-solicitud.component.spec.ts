@@ -38,11 +38,11 @@ describe('FirmarSolicitudComponent', () => {
     component = fixture.componentInstance;
   });
 
-  it('should create the component', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should call obtenerTramite, update store, and navigate when firma is provided', () => {
+  it('debe llamar obtenerTramite, actualizar el store y navegar cuando se proporciona la firma', () => {
     const MOCK_TRAMITE_RESPONSE = { data: { idTramite: '123' } };
     mockTramiteService.obtenerTramite.mockReturnValue(of(MOCK_TRAMITE_RESPONSE));
 
@@ -57,7 +57,7 @@ describe('FirmarSolicitudComponent', () => {
     expect(mockRouter.navigate).toHaveBeenCalledWith(['servicios-extraordinarios/acuse']);
   });
 
-  it('should not call anything if firma is falsy', () => {
+  it('no debe llamar nada si la firma es falsy', () => {
     component.obtieneFirma('');
 
     expect(mockTramiteService.obtenerTramite).not.toHaveBeenCalled();
@@ -65,7 +65,7 @@ describe('FirmarSolicitudComponent', () => {
     expect(mockRouter.navigate).not.toHaveBeenCalled();
   });
 
-  it('should catch and return error from obtenerTramite', () => {
+  it('debe capturar y retornar el error de obtenerTramite', () => {
     const mockError = new Error('Network error');
     mockTramiteService.obtenerTramite.mockReturnValue(throwError(() => mockError));
 
