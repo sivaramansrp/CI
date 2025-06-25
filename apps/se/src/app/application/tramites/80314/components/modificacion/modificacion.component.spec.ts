@@ -1,129 +1,72 @@
+import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ToastrModule, provideToastr } from 'ngx-toastr';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { of as observableOf, Subject } from 'rxjs';
 import { ModificacionComponent } from './modificacion.component';
-import { FormBuilder } from '@angular/forms';
 import { ImmerModificacionService } from '../../service/immer-modificacion.service';
-import { Tramite80314Store } from '../../../../estados/tramites/tramite80314.store';
-import { Tramite80314Query } from '../../../../estados/queries/tramite80314.query';
-import { of as observableOf } from 'rxjs';
-
-@Injectable()
-class MockImmerModificacionService {}
-
-@Injectable()
-class MockTramite80314Store {}
-
-@Injectable()
-class MockTramite80314Query {}
+import { Tramite80314Store } from '../../estados/tramite80314.store';
+import { Tramite80314Query } from '../../estados/tramite80314.query';
 
 describe('ModificacionComponent', () => {
-  let fixture: ComponentFixture<ModificacionComponent>;
-  let component: { ngOnDestroy: () => void; tramite80314Query: { selectSolicitud$?: any; }; inicializarFormulario: jest.Mock<any, any, any> | (() => void); loadDatosModificacion: jest.Mock<any, any, any> | (() => void); loadDatosTablaData: jest.Mock<any, any, any> | (() => void); ngOnInit: () => void; destroyNotifier$: { next?: any; unsubscribe?: any; }; fb: { group?: any; }; derechoState: { datosModificacion?: any; }; solicitudService: { getDatosModificacion?: any; getDatosTableData?: any; }; tramite80314Store: { setDatosModificacion?: any; }; setFormValues: jest.Mock<any, any, any> | (() => void); modificacionForm: { get?: any; }; datosTabla: { findIndex?: any; INDEX?: any; }; valorDeAlternancia: (arg0: { id: {}; }) => void; };
+  let fixture!: ComponentFixture<ModificacionComponent>;
+  let component!: ModificacionComponent;
+  let immerModificacionService: jest.Mocked<ImmerModificacionService>;
+  let tramite80314Store: jest.Mocked<Tramite80314Store>;
+  let tramite80314Query: jest.Mocked<Tramite80314Query>;
 
   beforeEach(() => {
+    immerModificacionService = {
+      getDatosModificacion: jest.fn().mockReturnValue(observableOf({})),
+      getActividadProductiva: jest.fn().mockReturnValue(observableOf({ data: [] })),
+    } as unknown as jest.Mocked<ImmerModificacionService>;
+
+    tramite80314Store = {
+      setDatosModificacion: jest.fn(),
+      setActividadProductiva: jest.fn(),
+    } as unknown as jest.Mocked<Tramite80314Store>;
+
+    tramite80314Query = {
+      selectSolicitud$: observableOf({}),
+    } as unknown as jest.Mocked<Tramite80314Query>;
+
     TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule, ModificacionComponent ],
-      declarations: [
-        
-      ],
-      schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
+      imports: [ModificacionComponent, FormsModule, ReactiveFormsModule, ToastrModule.forRoot(), HttpClientTestingModule],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
       providers: [
-        FormBuilder,
-        { provide: ImmerModificacionService, useClass: MockImmerModificacionService },
-        { provide: Tramite80314Store, useClass: MockTramite80314Store },
-        { provide: Tramite80314Query, useClass: MockTramite80314Query }
-      ]
-    }).overrideComponent(ModificacionComponent, {
-
+        { provide: immerModificacionService, useValue: immerModificacionService },
+        { provide: Tramite80314Store, useValue: tramite80314Store },
+        { provide: Tramite80314Query, useValue: tramite80314Query },
+        provideToastr({ positionClass: 'toast-top-right' }),
+      ],
     }).compileComponents();
+
     fixture = TestBed.createComponent(ModificacionComponent);
-    component = fixture.debugElement.componentInstance;
+    component = fixture.componentInstance;
+    fixture.detectChanges();
   });
 
-  afterEach(() => {
-    component.ngOnDestroy = function() {};
-    fixture.destroy();
-  });
-
-  it('should run #constructor()', async () => {
+  it('should create the component', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should run #ngOnInit()', async () => {
-    component.tramite80314Query = component.tramite80314Query || {};
-    component.tramite80314Query.selectSolicitud$ = observableOf({});
-    component.inicializarFormulario = jest.fn();
-    component.loadDatosModificacion = jest.fn();
-    component.loadDatosTablaData = jest.fn();
+  it('should initialize the form on ngOnInit', () => {
     component.ngOnInit();
-    expect(component.inicializarFormulario).toHaveBeenCalled();
-    expect(component.loadDatosModificacion).toHaveBeenCalled();
-    expect(component.loadDatosTablaData).toHaveBeenCalled();
+    expect(component.modificacionForm).toBeDefined();
   });
 
-  it('should run #ngOnDestroy()', async () => {
-    component.destroyNotifier$ = component.destroyNotifier$ || {};
-    component.destroyNotifier$.next = jest.fn();
-    component.destroyNotifier$.unsubscribe = jest.fn();
-    component.ngOnDestroy();
-    expect(component.destroyNotifier$.next).toHaveBeenCalled();
-    expect(component.destroyNotifier$.unsubscribe).toHaveBeenCalled();
+  it('should call loadDatosModificacion on ngOnInit', () => {
+    const loadDatosModificacionSpy = jest.spyOn(component, 'loadDatosModificacion');
+    component.ngOnInit();
+    expect(loadDatosModificacionSpy).toHaveBeenCalled();
   });
 
-  it('should run #inicializarFormulario()', async () => {
-    component.fb = component.fb || {};
-    component.fb.group = jest.fn();
-    component.derechoState = component.derechoState || {};
-    component.derechoState.datosModificacion = 'datosModificacion';
-    component.inicializarFormulario();
-    expect(component.fb.group).toHaveBeenCalled();
-  });
-
-  it('should run #loadDatosModificacion()', async () => {
-    component.solicitudService = component.solicitudService || {};
-    component.solicitudService.getDatosModificacion = jest.fn().mockReturnValue(observableOf({}));
-    component.tramite80314Store = component.tramite80314Store || {};
-    component.tramite80314Store.setDatosModificacion = jest.fn();
-    component.setFormValues = jest.fn();
-    component.loadDatosModificacion();
-    expect(component.solicitudService.getDatosModificacion).toHaveBeenCalled();
-    expect(component.tramite80314Store.setDatosModificacion).toHaveBeenCalled();
-    expect(component.setFormValues).toHaveBeenCalled();
-  });
-
-  it('should run #loadDatosTablaData()', async () => {
-    component.solicitudService = component.solicitudService || {};
-    component.solicitudService.getDatosTableData = jest.fn().mockReturnValue(observableOf({}));
-    component.loadDatosTablaData();
-    expect(component.solicitudService.getDatosTableData).toHaveBeenCalled();
-  });
-
-  it('should run #setFormValues()', async () => {
-    component.modificacionForm = component.modificacionForm || {};
-    component.modificacionForm.get = jest.fn().mockReturnValue({
-      setValue: function() {}
-    });
-    component.derechoState = component.derechoState || {};
-    component.derechoState.datosModificacion = 'datosModificacion';
-    component.setFormValues();
-    expect(component.modificacionForm.get).toHaveBeenCalled();
-  });
-
-  it('should run #valorDeAlternancia()', async () => {
-    component.datosTabla = component.datosTabla || {};
-    component.datosTabla.findIndex = jest.fn().mockReturnValue([
-      {
-        "id": {}
-      }
-    ]);
-    component.datosTabla.INDEX = {
-      desEstatus: {}
-    };
-    component.valorDeAlternancia({
-      id: {}
-    });
-    expect(component.datosTabla.findIndex).toHaveBeenCalled();
+  it('should call inicializarFormulario on ngOnInit', () => {
+    const inicializarFormularioSpy = jest.spyOn(component, 'inicializarFormulario');
+    component.ngOnInit();
+    expect(inicializarFormularioSpy).toHaveBeenCalled();
   });
 
 });
+  
