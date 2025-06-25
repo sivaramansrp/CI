@@ -1,15 +1,17 @@
 import { CONFIGURATION_TABLA_GENERALES, CONFIGURATION_TABLA_MERCANCIA, MUNICIPIODE_OPCIONS, RADIO_OPCIONS } from '../../constantes/certificado-zoosanitario.enum';
+import { CatalogoSelectComponent, ConfiguracionColumna, ConsultaioQuery, ConsultaioState, FECHA_FINAL, FECHA_INICIO, InputRadioComponent, Notificacion, NotificacionesComponent, REGEX_SOLO_DIGITOS, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@ng-mf/data-access-user';
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { ConfiguracionColumna, ConsultaioQuery, ConsultaioState, FECHA_FINAL, FECHA_INICIO, Notificacion, REGEX_SOLO_DIGITOS, TablaSeleccion } from '@ng-mf/data-access-user';
 import { DatosGenerales, TablaMercancia } from '../../models/pantallas-captura.model';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Solicitud220402State, Solicitud220402Store } from '../../estados/tramites/tramites220402.store';
 import { Subject, map, takeUntil } from 'rxjs';
 import { Catalogo } from '@ng-mf/data-access-user';
+import { CommonModule } from '@angular/common';
 import { InputFecha } from '@ng-mf/data-access-user';
 import { MediodetransporteService } from '../../services/medio-de-transporte.service';
 import { Modal } from 'bootstrap';
 import { Solicitud220402Query } from '../../estados/queries/tramites220402.query';
+import { ToastrService } from 'ngx-toastr';
 import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
 
 
@@ -21,6 +23,18 @@ import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
   selector: 'solicitud',
   templateUrl: './solicitud.component.html',
   styleUrl: './solicitud.component.scss',
+  standalone: true,
+  imports: [
+    CommonModule,
+    NotificacionesComponent,
+    FormsModule,
+    ReactiveFormsModule,
+    CatalogoSelectComponent,
+    TituloComponent,
+    TablaDinamicaComponent,
+    InputRadioComponent
+  ],
+  providers: [ToastrService]
 })
 
 /**
@@ -647,6 +661,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         empaques: EMPAQUES,
       }];
       this.closeGeneralesMercancia.nativeElement.click();
+      this.limpiar();
     }
   }
   /**

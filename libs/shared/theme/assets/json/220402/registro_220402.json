@@ -7,11 +7,11 @@
     "rangoDeFechas": true,
     "fechaInicio": "2023-10-07",
     "fechaFinal": "2023-10-07",
-    "fraccionArancelaria": "valor ficticio",
+    "fraccionArancelaria": "08044001",
     "descdelaFraccion": "valor ficticio",
     "cantidadUMT": "valor ficticio",
     "UMT": "valor ficticio",
-    "cantidadUMC": "valor ficticio",
+    "cantidadUMC": "123",
     "UMC": "2",
     "paisdeOrigen": "3",
     "entidadFederativadeOrigen": "2",
@@ -65,6 +65,9 @@
     "llaveDePago": "valor ficticio",
     "fechaPago": "2023-10-07",
     "importePago": "100",
+    "nombreComun":"2",
+    "nombreCientifico":"3",
+    "descripcionProducto":"producto",
     "destinatario": [
         {
             "nombreDenominacionORazonSocial": "acapulco oficina  de inspeccion",

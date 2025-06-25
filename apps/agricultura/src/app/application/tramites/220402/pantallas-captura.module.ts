@@ -35,7 +35,6 @@ import { WizardComponent } from '@ng-mf/data-access-user';
 @NgModule({
   declarations: [
     SolicitudPageComponent,
-    SolicitudComponent,
     PasoUnoComponent,
     PasoDosComponent,
     PasoTresComponent,
@@ -69,7 +68,8 @@ import { WizardComponent } from '@ng-mf/data-access-user';
     NotificacionesComponent,
     InputRadioComponent,
     TablaDinamicaComponent,
-    TooltipModule
+    TooltipModule,
+    SolicitudComponent
   ],
   providers: [ToastrService],
   exports: [],
