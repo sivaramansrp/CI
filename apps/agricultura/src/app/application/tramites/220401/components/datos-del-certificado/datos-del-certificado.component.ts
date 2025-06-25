@@ -284,7 +284,7 @@ this.inicializarCertificadoFormulario();
     },
     {
       catalogo: this.delegacionesJson,
-      label: 'Delegaciones estatales SAGARPA',
+      label: 'OISA',
       controlName: 'delegacionesControl2',
       required: true,
       catalogos: DatosDelCertificadoComponent.getCatalogos(),
@@ -292,7 +292,7 @@ this.inicializarCertificadoFormulario();
     },
     {
       catalogo: this.delegacionesJson,
-      label: 'Delegaciones estatales SAGARPA',
+      label: 'Distrito desarrollo rural (DDR)',
       controlName: 'delegacionesControl3',
       required: true,
       catalogos: DatosDelCertificadoComponent.getCatalogos(),
@@ -300,7 +300,7 @@ this.inicializarCertificadoFormulario();
     },
     {
       catalogo: this.delegacionesJson,
-      label: 'Delegaciones estatales SAGARPA',
+      label: 'Oficina central:',
       controlName: 'delegacionesControl4',
       required: false,
       catalogos: DatosDelCertificadoComponent.getCatalogos(),

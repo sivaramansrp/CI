@@ -2,15 +2,19 @@ import { Component, OnInit } from '@angular/core';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { TituloComponent } from '@ng-mf/data-access-user';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 @Component({
   selector: 'app-agregar-destinatoria',
   templateUrl: './agregar-destinatoria.component.html',
   styleUrl: './agregar-destinatoria.component.scss',
   standalone: true,
-  imports: [TituloComponent, CatalogoSelectComponent],
+  imports: [TituloComponent, CatalogoSelectComponent,FormsModule,ReactiveFormsModule,CommonModule]
 })
 export class AgregarDestinatoriaComponent implements OnInit {
 
+
+  destinatarioForm!: FormGroup;
   /**
    * @property pais
    * @type {Catalogo[]}
@@ -35,7 +39,7 @@ export class AgregarDestinatoriaComponent implements OnInit {
    * @constructor
    * @description Constructor de la clase AgregarDestinatoriaComponent.
    */
-  constructor() { 
+  constructor(private fb: FormBuilder) { 
     //
   }
 
@@ -45,6 +49,18 @@ export class AgregarDestinatoriaComponent implements OnInit {
    */
   ngOnInit(): void {
     this.getPais();
+      this.destinatarioForm = this.fb.group({
+      tipoPersona: ['fisica'],
+      nombre: [''],
+      primerApellido: [''],
+      segundoApellido: [''],
+      denominacion: [''],
+      pais: [''],
+      domicilio: [''],
+        lada: ['', [Validators.pattern('^[0-9]{4}$'), Validators.maxLength(4)]],
+      telefono: [''],
+      correoElectronico: ['', [Validators.email]],
+    });
   }
 
   /**
