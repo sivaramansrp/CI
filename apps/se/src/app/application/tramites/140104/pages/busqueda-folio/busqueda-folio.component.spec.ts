@@ -1,7 +1,7 @@
 
 import {  ComponentFixture, TestBed } from '@angular/core/testing';
 import { Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { BusquedaFolioComponent } from './busqueda-folio.component';
 import { ServicioDeMensajesService } from '../../services/servicio-de-mensajes.service';
@@ -46,7 +46,6 @@ describe('BusquedaFolioComponent', () => {
     expect(component).toBeTruthy();
   });
 
-
   it('should initialize montoACancelarForm with correct validators', () => {
     component.establecerMontoACancelarForm();
     expect(component.montoACancelarForm).toBeDefined();
@@ -65,4 +64,16 @@ describe('BusquedaFolioComponent', () => {
     expect(component.cantidadADevolver.get('cantidad')).toBeDefined();
     expect(component.devolver.get('totalDevolver')).toBeDefined();
   });
+
+  it('should initialize devloverForm, cantidadADevolver, and devolver in estableDevloverForm', () => {
+  component.estableDevloverForm();
+  expect(component.devloverForm).toBeDefined();
+  expect(component.cantidadADevolver).toBeDefined();
+  expect(component.devolver).toBeDefined();
+  expect(component.devloverForm.get('folioDelOficioDeCertificado')).toBeDefined();
+  expect(component.cantidadADevolver.get('cantidad')).toBeDefined();
+  expect(component.devolver.get('totalDevolver')).toBeDefined();
+  expect(component.devolver.get('totalDevolverMetrosCuadrados')).toBeDefined();
+});
+
 });
