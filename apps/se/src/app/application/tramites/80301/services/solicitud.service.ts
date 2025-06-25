@@ -1,5 +1,6 @@
-import { Anexo, Complimentaria, Federetarios, Operacions } from '../models/plantas-consulta.model';
+import { Anexo, Bitacora, Complimentaria, Federetarios, Operacions } from '../models/plantas-consulta.model';
 import { Observable, map } from 'rxjs';
+import { Solicitud80301State, Tramite80301Store } from '../estados/tramite80301.store';
 import { DatosDelModificacion } from '../models/datos-tramite.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
@@ -22,7 +23,7 @@ interface ComplimentariaResponse {
   providedIn: 'root',
 })
 export class SolicitudService {
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private store:Tramite80301Store) {}
 
   
   /**
@@ -61,7 +62,7 @@ export class SolicitudService {
    */
   getDatosTableData(): Observable<DatosDelModificacion[]> {
     return this.http.get<DatosDelModificacion[]>(
-      `assets/json/80301/datosTabla.json`
+      `assets/json/80301/datos-tabla.json`
     );
   }
 
@@ -72,7 +73,7 @@ export class SolicitudService {
      */
     obtenerComplimentaria(): Observable<Complimentaria[]> {
         return this.http
-          .get<ComplimentariaResponse>('assets/json/80301/complimentaria.json')
+          .get<ComplimentariaResponse>('assets/json/80301/complimentria-opracion.json')
           .pipe(map((res: ComplimentariaResponse) => res.data));
       }
 
@@ -109,4 +110,26 @@ export class SolicitudService {
       .get<OperacionsResponse>('assets/json/80301/operacion.json')
       .pipe(map((res: OperacionsResponse) => res.data));
 }
+
+  obtenerBitacora(): Observable<Bitacora[]> {
+    return this.http
+      .get<{ data: Bitacora[] }>('assets/json/80301/bitcora-one-tablo.json')
+      .pipe(map((res) => res.data));
+  }
+    /**
+     * Obtiene los datos del trámite desde un archivo JSON local.
+     * @returns Observable con objeto parcial de TramiteState.
+     */
+
+
+    actualizarEstadoFormulario(DATOS: Solicitud80301State): void {
+    this.store.setRfc(DATOS.datosModificacion.rfc);
+    this.store.setFederal(DATOS.datosModificacion.federal);
+    this.store.setTipo(DATOS.datosModificacion.tipo);
+    this.store.setPrograma(DATOS.datosModificacion.programa);
+  }
+    obtenerTramiteDatos(): Observable<Partial<Solicitud80301State>> {
+      return this.http
+        .get<Partial<Solicitud80301State>>('assets/json/80301/tramite_datos.json')
+    }
 }

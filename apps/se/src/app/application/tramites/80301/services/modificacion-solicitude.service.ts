@@ -31,13 +31,13 @@ export class ModificacionSolicitudeService {
 
   obtenerDomicilios(): Observable<DomicilioInfo[]> {
     return this.http
-      .get<{ data: DomicilioInfo[] }>('assets/json/80301/domicilio.json')
+      .get<{ data: DomicilioInfo[] }>('assets/json/80301/domicilo-tablo.json')
       .pipe(map((res) => res.data));
   }
 
-  obtenerBitacora(): Observable<Bitacora[]> {
+ obtenerBitacora(): Observable<Bitacora[]> {
     return this.http
-      .get<{ data: Bitacora[] }>('assets/json/80301/bitacora.json')
+      .get<{ data: Bitacora[] }>('assets/json/80301/bitcora-one-tablo.json')
       .pipe(map((res) => res.data));
   }
 
@@ -61,7 +61,7 @@ export class ModificacionSolicitudeService {
 
   obtenerComplimentaria(): Observable<Complimentaria[]> {
     return this.http
-      .get<{ data: Complimentaria[] }>('assets/json/80301/complimentaria.json')
+      .get<{ data: Complimentaria[] }>('assets/json/80301/complimentria-opracion.json')
       .pipe(map((res) => res.data));
   }
 
