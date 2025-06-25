@@ -72,7 +72,7 @@ export class AnexoVistaDosYTresComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((anexoDosTablaLista) => {
         if (anexoDosTablaLista.length > 0) {
-          this.anexoDosTablaLista = anexoDosTablaLista;
+          this.anexoDosTablaLista = anexoDosTablaLista ?? [];
         }
       });
 
@@ -80,7 +80,7 @@ export class AnexoVistaDosYTresComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((anexoTresTablaLista) => {
         if (anexoTresTablaLista.length > 0) {
-          this.anexoTresTablaLista = anexoTresTablaLista;
+          this.anexoTresTablaLista = anexoTresTablaLista ?? [];
         }
       });
   }

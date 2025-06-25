@@ -92,8 +92,6 @@ export * from './core/services/120402/representacionFederal/representacion-feder
 export * from './core/services/120402/seleccion-del-cupo/seleccion-del-cupo.service';
 export * from './core/services/120602/empresa-frontera-solicitud.enum';
 export * from './core/services/220471/servicios-pantallas.service';
-export * from './core/services/231001/administrar-residuos.service';
-export * from './core/services/231001/materia-prima-formservice.service';
 export * from './core/services/shared/catalogos/aduana.service';
 export * from './core/services/shared/catalogos/catalogos.service';
 export * from './core/services/shared/catalogos/recinto.service';
@@ -167,8 +165,6 @@ export * from './tramites/shared.module';
 export * from './core/models/shared/datos-generales.model';
 export * from './core/enums/constantes-alertas.enum';
 export * from './tramites/directives/solo-numeros/solo-numeros.directive';
-export * from './core/services/231001/materia-prima-formservice.service';
-export * from './core/services/231001/administrar-residuos.service';
 export * from './core/services/shared/tramite-folio/tramite-folio.service';
 export * from './core/models/260303/certificados-licencias-permisos.model';
 export * from './core/models/260701/certificados-licencias.model';
