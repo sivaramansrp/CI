@@ -823,6 +823,10 @@ export class DatosDelSolicitudModificacionComponent
    * Guarda un nuevo dato SCIAN y lo agrega a la tabla.
    */
   guardarScian(): void {
+     if (this.scianForm.invalid) {
+    this.scianForm.markAllAsTouched();
+    return;
+  }
     if (this.scianForm.valid) {
       const SCIAN_DATA: ScianModel = {
         claveScian: this.scianForm.get('scian')?.value,
