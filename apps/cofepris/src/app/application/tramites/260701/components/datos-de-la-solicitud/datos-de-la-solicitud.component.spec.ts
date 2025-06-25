@@ -45,11 +45,11 @@ describe('DatosDeLaSolicitudComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('debería crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize the form with values from the query', () => {
+  it('debería inicializar el formulario con valores de la consulta', () => {
     expect(component.forma.value).toEqual({
       tipoOperacion: 'Operacion1',
       justificacion: 'Justificacion1',
@@ -58,7 +58,7 @@ describe('DatosDeLaSolicitudComponent', () => {
     });
   });
 
-  it('should toggle colapsable state', () => {
+  it('debería alternar el estado colapsable', () => {
     expect(component.colapsable).toBe(true);
     component.mostrar_colapsable();
     expect(component.colapsable).toBe(false);
@@ -66,21 +66,21 @@ describe('DatosDeLaSolicitudComponent', () => {
     expect(component.colapsable).toBe(true);
   });
 
-  it('should enable all form controls when toggleFormControls is called', () => {
+  it('debería habilitar todos los controles del formulario cuando se llama toggleFormControls', () => {
     component.toggleFormControls();
     Object.keys(component.forma.controls).forEach((controlName) => {
       expect(component.forma.get(controlName)?.enabled).toBe(true);
     });
   });
 
-  it('should call the appropriate store method when setValoresStore is called', () => {
+  it('debería llamar al método apropiado del store cuando se llama setValoresStore', () => {
     const form = component.forma;
     form.get('tipoOperacion')?.setValue('NewOperacion');
     component.setValoresStore(form, 'tipoOperacion', 'setTipoOperacion');
     expect(tramite260701StoreMock.setTipoOperacion).toHaveBeenCalledWith('NewOperacion');
   });
 
-  it('should complete destroyNotifier$ on ngOnDestroy', () => {
+  it('debería completar destroyNotifier$ en ngOnDestroy', () => {
     const destroySpy = jest.spyOn(component['destroyNotifier$'], 'complete');
     component.ngOnDestroy();
     expect(destroySpy).toHaveBeenCalled();
