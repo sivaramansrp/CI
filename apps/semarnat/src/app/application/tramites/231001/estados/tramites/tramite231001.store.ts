@@ -1,10 +1,10 @@
-import { Store, StoreConfig } from '@datorama/akita';
 import { Catalogo } from '@libs/shared/data-access-user/src';
 import { Injectable } from '@angular/core';
+import { Store } from '@datorama/akita';
+import { StoreConfig } from '@datorama/akita';
 
 /**
  * Creacion del estado inicial para la interfaz de tramite 5701
- * @returns Solicitud5701
  */
 export interface Solicitud231001State {
   numeroRegistroAmbiental: string;
@@ -12,12 +12,14 @@ export interface Solicitud231001State {
   nombreDeLaMateriaPrima: string;
   cantidad: number;
   numeroProgramaImmex: Catalogo | null;
-  aduanas: string;
+  aduanas: Catalogo | null;
   unidadMedidaComercial: Catalogo | null;
   capituloFraccion: Catalogo | null;
   partidaFraccion: Catalogo | null;
   subPartidaFraccion: Catalogo | null;
   fraccion: Catalogo | null;
+  cantidadEnLetra?: string;
+ 
 }
 
 export function createInitialState(): Solicitud231001State {
@@ -27,12 +29,13 @@ export function createInitialState(): Solicitud231001State {
     nombreDeLaMateriaPrima: '',
     cantidad: 0,
     numeroProgramaImmex: null,
-    aduanas: '',
+    aduanas: null,
     unidadMedidaComercial: null,
     capituloFraccion: null,
     partidaFraccion: null,
     subPartidaFraccion: null,
-    fraccion: null
+    fraccion: null,
+    cantidadEnLetra: '100'
   }
 }
 
@@ -45,72 +48,15 @@ export class Tramite231001Store extends Store<Solicitud231001State> {
     super(createInitialState());
   }
 
-  public setNumeroRegistroAmbiental(numeroRegistroAmbiental: string): void {
-    this.update((state) => ({
-      ...state,
-      numeroRegistroAmbiental,
-    }));
-  }
 
-  public setDescripcionGenerica1(descripcionGenerica1: string): void {
+    /**
+   * Actualiza el estado del store con los valores proporcionados.
+   * Valores parciales para actualizar el estado.
+   */
+  public actualizarEstado(valores: Partial<Solicitud231001State>): void {
     this.update((state) => ({
       ...state,
-      descripcionGenerica1,
-    }));
-  }
-
-  public setNombreDeLaMateriaPrima(nombreDeLaMateriaPrima: string): void {
-    this.update((state) => ({
-      ...state,
-      nombreDeLaMateriaPrima,
-    }));
-  }
-  public setcantidad(cantidad: number): void {
-    this.update((state) => ({
-      ...state,
-      cantidad,
-    }));
-  }
-  public setnumeroProgramaImmex(numeroProgramaImmex: Catalogo): void {
-    this.update((state) => ({
-      ...state,
-      numeroProgramaImmex,
-    }));
-  }
-  public setAduanas(aduanas: string): void {
-    this.update((state) => ({
-      ...state,
-      aduanas,
-    }));
-  }
-  public setDescUnidadMedida(unidadMedidaComercial: Catalogo): void {
-    this.update((state) => ({
-      ...state,
-      unidadMedidaComercial
-    }));
-  }
-  public setCapituloFraccion(capituloFraccion: Catalogo): void {
-    this.update((state) => ({
-      ...state,
-      capituloFraccion,
-    }));
-  }
-  public setpartidaFraccion(partidaFraccion: Catalogo): void {
-    this.update((state) => ({
-      ...state,
-      partidaFraccion,
-    }));
-  }
-  public setSubPartidaFraccion(subPartidaFraccion: Catalogo): void {
-    this.update((state) => ({
-      ...state,
-      subPartidaFraccion,
-    }));
-  }
-  public setFraccion(fraccion: Catalogo): void {
-    this.update((state) => ({
-      ...state,
-      fraccion
+      ...valores,
     }));
   }
 }

@@ -140,4 +140,98 @@ describe('AnexoUnoComponent', () => {
     component.setRuta({});
     expect(component.rutaLaFraccionDeComplemento.emit).toHaveBeenCalled();
   });
+
+  describe('#ngOnInit', () => {
+    it('should disable forms if formularioDeshabilitado is true', () => {
+      component.formularioDeshabilitado = true;
+      component.ngOnInit();
+      expect(component.anexoUnoFormGroup.disabled).toBe(true);
+      expect(component.anexoDosFormGroup.disabled).toBe(true);
+    });
+
+    it('should not disable forms if formularioDeshabilitado is false', () => {
+      component.formularioDeshabilitado = false;
+      component.ngOnInit();
+      expect(component.anexoUnoFormGroup.enabled).toBe(true);
+      expect(component.anexoDosFormGroup.enabled).toBe(true);
+    });
+  });
+
+  it('should filter and emit anexoUnoTablaLista in eliminarAnexoUno', () => {
+    const emitSpy = jest.spyOn(component.obtenerAnexoUnoDevolverLaLlamada, 'emit');
+    component.anexoUnoTablaLista = [{ estatus: false }, { estatus: true }] as any;
+    component.eliminarAnexoUno();
+    expect(component.anexoUnoTablaLista.length).toBe(1);
+    expect(emitSpy).toHaveBeenCalledWith(component.anexoUnoTablaLista);
+  });
+
+  it('should filter and emit anexoDosTablaLista in eliminarAnexoDos', () => {
+    const emitSpy = jest.spyOn(component.obtenerAnexoDosDevolverLaLlamada, 'emit');
+    component.anexoDosTablaLista = [{ estatus: false }, { estatus: true }] as any;
+    component.eliminarAnexoDos();
+    expect(component.anexoDosTablaLista.length).toBe(1);
+    expect(emitSpy).toHaveBeenCalledWith(component.anexoDosTablaLista);
+  });
+
+  it('should add entry to anexoUnoTablaLista and emit it', () => {
+    const emitSpy = jest.spyOn(component.obtenerAnexoUnoDevolverLaLlamada, 'emit');
+    component.anexoUnoFormGroup.setValue({
+      fraccionArancelaria: '0101',
+      descripcion: 'desc',
+    });
+    component.anexoUnoTablaLista = [];
+    component.agregarAnexoUno();
+    expect(component.anexoUnoTablaLista.length).toBe(1);
+    expect(emitSpy).toHaveBeenCalledWith(component.anexoUnoTablaLista);
+    expect(component.anexoUnoFormGroup.value.fraccionArancelaria).toBeFalsy();
+  });
+
+  it('should add entry to anexoDosTablaLista and emit it', () => {
+    const emitSpy = jest.spyOn(component.obtenerAnexoDosDevolverLaLlamada, 'emit');
+    component.anexoDosFormGroup.setValue({
+      fraccionArancelaria: '0102',
+      descripcion: 'desc 2',
+    });
+    component.anexoDosTablaLista = [];
+    component.agregarAnexoDos();
+    expect(component.anexoDosTablaLista.length).toBe(1);
+    expect(emitSpy).toHaveBeenCalledWith(component.anexoDosTablaLista);
+    expect(component.anexoDosFormGroup.value.fraccionArancelaria).toBeFalsy();
+  });
+
+  it('should set selected import item on setAnexoUnoLista', () => {
+    const mockItem = { encabezadoFraccion: '0103' } as any;
+    component.setAnexoUnoLista(mockItem);
+    expect(component.datosImportacionSeleccionados).toEqual(mockItem);
+  });
+
+  it('should set selected export item on setAnexoDosLista', () => {
+    const mockItem = { encabezadoFraccion: '0104' } as any;
+    component.setAnexoDosLista(mockItem);
+    expect(component.datosExportacionSeleccionados).toEqual(mockItem);
+  });
+
+  it('should emit rutaLaFraccionDeComplemento with correct payload on setRuta IMPORT', () => {
+    const emitSpy = jest.spyOn(component.rutaLaFraccionDeComplemento, 'emit');
+    const mockImport = { encabezadoFraccion: '0001' } as any;
+    component.datosImportacionSeleccionados = mockImport;
+    component.setRuta('some-name', 'IMPORT');
+    expect(emitSpy).toHaveBeenCalledWith({
+      catagoria: 'some-name',
+      id: 'IMPORT',
+      datos: mockImport,
+    });
+  });
+
+  it('should emit rutaLaFraccionDeComplemento with correct payload on setRuta EXPORT', () => {
+    const emitSpy = jest.spyOn(component.rutaLaFraccionDeComplemento, 'emit');
+    const mockExport = { encabezadoFraccion: '0002' } as any;
+    component.datosExportacionSeleccionados = mockExport;
+    component.setRuta('other-name', 'EXPORT');
+    expect(emitSpy).toHaveBeenCalledWith({
+      catagoria: 'other-name',
+      id: 'EXPORT',
+      datos: mockExport,
+    });
+  });
 });

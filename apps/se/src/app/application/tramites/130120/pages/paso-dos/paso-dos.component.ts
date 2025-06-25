@@ -1,5 +1,6 @@
 import { AlertComponent } from "@ng-mf/data-access-user";
 import { AnexarDocumentosComponent } from "@ng-mf/data-access-user";
+import { CommonModule } from "@angular/common";
 import { Component } from '@angular/core';
 import { TEXTOS_REQUISITOS } from '../../constants/permiso-importacion-modification.enum';
 import { TituloComponent } from "@ng-mf/data-access-user";
@@ -9,7 +10,7 @@ import { TituloComponent } from "@ng-mf/data-access-user";
   templateUrl: './paso-dos.component.html',
   styleUrl: './paso-dos.component.scss',
   standalone: true,
-  imports: [TituloComponent, AlertComponent, AnexarDocumentosComponent],
+  imports: [CommonModule, TituloComponent, AlertComponent, AnexarDocumentosComponent],
 })
 export class PasoDosComponent {
   /**

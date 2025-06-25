@@ -22,9 +22,7 @@ export class PagoDeDerechocComponent implements OnInit, OnDestroy {
    * Indica si el formulario debe estar deshabilitado. Cuando es `true`, los controles del formulario estarán inactivos y no permitirán la edición por parte del usuario.
    * @type {boolean}
    */
-   @Input() formularioDeshabilitado: boolean = false;
-
-   
+   @Input() formularioDeshabilitado: boolean = false;   
   /**
      * @var {number} idProcedimiento
      * @description Identificador único del procedimiento asociado.
@@ -55,9 +53,9 @@ export class PagoDeDerechocComponent implements OnInit, OnDestroy {
      * @returns {void}
      */
     constructor(
-          private tramiteQuery: Tramite240112Query,
-          private tramiteStore: Tramite240112Store
-    ) // eslint-disable-next-line no-empty-function
+          public tramiteQuery: Tramite240112Query,
+          public tramiteStore: Tramite240112Store
+    ) 
     {}
   
     /**
