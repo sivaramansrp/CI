@@ -302,6 +302,20 @@ describe('CertificadoDeOrigenComponent', () => {
     expect(registroServiceMock.getTipoFactura).toHaveBeenCalled();
   });
 
+  it('should call guardarDatosFormulario if soloLectura in inicializarEstadoFormulario', () => {
+    component.soloLectura = true;
+    jest.spyOn(component, 'guardarDatosFormulario');
+    component.inicializarEstadoFormulario();
+    expect(component.guardarDatosFormulario).toHaveBeenCalled();
+  });
+
+  it('should call donanteDomicilio if not soloLectura in inicializarEstadoFormulario', () => {
+    component.soloLectura = false;
+    jest.spyOn(component, 'donanteDomicilio');
+    component.inicializarEstadoFormulario();
+    expect(component.donanteDomicilio).toHaveBeenCalled();
+  });
+
   it('should call getSolicitudesTabla and set mercanciaDisponsiblesTablaDatos', () => {
     component.getSolicitudesTabla();
     expect(registroServiceMock.getSolicitudesTabla).toHaveBeenCalled();
@@ -311,18 +325,5 @@ describe('CertificadoDeOrigenComponent', () => {
     component.getSolicitudesDataTabla();
     expect(registroServiceMock.getSolicitudesDataTabla).toHaveBeenCalled();
   });
-
-  // it('should complete destroyNotifier$ and destroyed$ on ngOnDestroy', () => {
-  //   component.getMercanciaTable = { tableHeader: [], tableBody: [] };
-  //   const destroyNotifierNext = jest.spyOn(component.destroyNotifier$, 'next');
-  //   const destroyNotifierComplete = jest.spyOn(component.destroyNotifier$, 'complete');
-  //   component['destroyed$'] = { next: jest.fn(), complete: jest.fn() } as any;
-  //   const destroyedNext = jest.spyOn(component['destroyed$'], 'next');
-  //   const destroyedComplete = jest.spyOn(component['destroyed$'], 'complete');
-  //   component.ngOnDestroy();
-  //   expect(destroyNotifierNext).toHaveBeenCalled();
-  //   expect(destroyNotifierComplete).toHaveBeenCalled();
-  //   expect(destroyedNext).toHaveBeenCalled();
-  //   expect(destroyedComplete).toHaveBeenCalled();
-  // });
+ 
 });

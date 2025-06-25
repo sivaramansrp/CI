@@ -84,6 +84,7 @@ describe('DestinatarioComponent', () => {
     component.onClick();
     expect(component.isDisabled).toBe(true);
   });
+  
 
   it('should call guardarDatosFormulario if soloLectura in inicializarEstadoFormulario', () => {
     component.soloLectura = true;

@@ -74,23 +74,26 @@ export class PasoUnoComponent implements AfterViewInit, OnInit,OnDestroy {
    * Obtiene el catálogo de entidades federativas y lo procesa.
    */
   ngOnInit(): void {
-    this.consultaQuery.selectConsultaioState$.pipe(
-      takeUntil(this.destroyNotifier$),
-      map((seccionState) => {
-        this.consultaState = seccionState;
-      })
-    ).subscribe();
-    if (this.consultaState.update) {
-      this.guardarDatosFormularios();
-    } else {
-      this.esDatosRespuesta = true;
-    }
-
     this.registro.getCatalogoById(21).subscribe((resp) => {
       this.entidadFederativa = resp;
       const DATA = JSON.parse(this.entidadFederativa.data);
       this.entidadFederativa = DATA?.domicilioFiscal?.entidadFederativa;
     });
+
+     this.consultaQuery.selectConsultaioState$.pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState) => {
+        this.consultaState = seccionState;
+      })
+    ).subscribe();
+
+    Promise.resolve().then(() => {
+    if (this.consultaState.update) {
+      this.guardarDatosFormularios();
+    } else {
+      this.esDatosRespuesta = true;
+    }
+  });
   }
 /**
    * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
