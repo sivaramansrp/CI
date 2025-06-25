@@ -25,17 +25,17 @@ describe('PasoDosComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should call getTiposDocumentos on ngOnInit', () => {
+  it('debe llamar a getTiposDocumentos en ngOnInit', () => {
     const getTiposDocumentosSpy = jest.spyOn(component, 'getTiposDocumentos');
     component.ngOnInit();
     expect(getTiposDocumentosSpy).toHaveBeenCalled();
   });
 
-  it('should complete destroyed$ on ngOnDestroy', () => {
+  it('debe completar destroyed$ en ngOnDestroy', () => {
     const destroyedSpy = jest.spyOn(component['destroyed$'], 'complete');
     component.ngOnDestroy();
     expect(destroyedSpy).toHaveBeenCalled();

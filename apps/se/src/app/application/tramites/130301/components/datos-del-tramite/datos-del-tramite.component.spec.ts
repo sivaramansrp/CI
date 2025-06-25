@@ -42,12 +42,12 @@ describe('DatosDelTramiteComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize the form with disabled controls', () => {
-    const controls = [
+  it('debe inicializar el formulario con los controles deshabilitados', () => {
+    const controles = [
       'numeroFolioTramiteOriginal',
       'solicitudOpcion',
       'regimen',
@@ -59,13 +59,13 @@ describe('DatosDelTramiteComponent', () => {
       'cantidad',
       'valorFactura',
     ];
-    controls.forEach((ctrl) => {
+    controles.forEach((ctrl) => {
       expect(component.datosDelTramite.get(ctrl)).toBeTruthy();
       expect(component.datosDelTramite.get(ctrl)?.disabled).toBe(true);
     });
   });
 
-  it('should call obtenerFormDatos and patch form values', () => {
+  it('debe llamar a obtenerFormDatos y actualizar los valores del formulario', () => {
     component.obtenerFormDatos();
     expect(mockService.obtenerDelTramiteFormDatos).toHaveBeenCalled();
     expect(component.delTramiteFormDatos).toEqual(mockFormData);
@@ -83,7 +83,7 @@ describe('DatosDelTramiteComponent', () => {
     });
   });
 
-  it('should clean up subscriptions on destroy', () => {
+  it('debe limpiar las suscripciones al destruir el componente', () => {
     const completeSpy = jest.spyOn(component['destroyNotifier$'], 'complete');
     const nextSpy = jest.spyOn(component['destroyNotifier$'], 'next');
     component.ngOnDestroy();

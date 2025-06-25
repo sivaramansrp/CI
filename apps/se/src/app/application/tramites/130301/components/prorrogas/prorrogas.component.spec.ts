@@ -48,24 +48,24 @@ describe('ProrrogasComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should call obtenerProrrogasFormDatos and populate form data', () => {
+  it('debe llamar a obtenerProrrogasFormDatos y llenar los datos del formulario', () => {
     expect(mockService.obtenerProrrogasFormDatos).toHaveBeenCalled();
     expect(component.prorrogasFormDatos.length).toBe(1);
     expect(component.prorrogasForm.value.folioResolucion).toBe('123');
     expect(component.prorrogasForm.value.cantidad).toBe(1);
   });
 
-  it('should call setValoresStore with correct parameters', () => {
+  it('debe llamar a setValoresStore con los parámetros correctos', () => {
     const spy = jest.spyOn(mockStore, 'setMotivoJustificacion');
     component.setValoresStore(component.prorrogasForm, 'motivoJustificacion', 'setMotivoJustificacion');
     expect(spy).toHaveBeenCalledWith('Test Justification');
   });
 
-  it('should clean up observables on destroy', () => {
+  it('debe limpiar los observables al destruir el componente', () => {
     const spy = jest.spyOn(component['destroyNotifier$'], 'next');
     const completeSpy = jest.spyOn(component['destroyNotifier$'], 'complete');
     component.ngOnDestroy();

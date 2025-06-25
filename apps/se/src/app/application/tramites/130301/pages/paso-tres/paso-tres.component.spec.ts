@@ -4,7 +4,7 @@ import { of, throwError } from 'rxjs';
 import { PasoTresComponent } from './paso-tres.component';
 import { ServiciosPantallaService } from '@libs/shared/data-access-user/src/core/services/31601/servicios-pantalla.service';
 import { TramiteStore } from '../../../../estados/tramite.store';
-import {CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 describe('PasoTresComponent', () => {
   let component: PasoTresComponent;
@@ -41,22 +41,22 @@ describe('PasoTresComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should handle error when obtenerTramite fails', () => {
-    const mockError = new Error('Error fetching tramite');
+  it('debe manejar el error cuando obtenerTramite falla', () => {
+    const mockError = new Error('Error al obtener el trámite');
     mockServiciosPantallaService.obtenerTramite.mockReturnValue(throwError(() => mockError));
 
-    component.obtieneFirma('validSignature');
+    component.obtieneFirma('firmaValida');
 
     expect(mockServiciosPantallaService.obtenerTramite).toHaveBeenCalledWith(19);
     expect(mockTramiteStore.establecerTramite).not.toHaveBeenCalled();
     expect(mockRouter.navigate).not.toHaveBeenCalled();
   });
 
-  it('should not call obtenerTramite if signature is empty', () => {
+  it('no debe llamar a obtenerTramite si la firma está vacía', () => {
     component.obtieneFirma('');
 
     expect(mockServiciosPantallaService.obtenerTramite).not.toHaveBeenCalled();
@@ -64,7 +64,7 @@ describe('PasoTresComponent', () => {
     expect(mockRouter.navigate).not.toHaveBeenCalled();
   });
 
-  it('should complete destroyed$ on ngOnDestroy', () => {
+  it('debe completar destroyed$ al llamar ngOnDestroy', () => {
     const destroyedSpy = jest.spyOn((component as any).destroyed$, 'next');
     const completeSpy = jest.spyOn((component as any).destroyed$, 'complete');
 

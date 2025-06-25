@@ -33,24 +33,23 @@ describe('Solocitud130301Service', () => {
     httpMock.verify();
   });
 
-  it('should be created', () => {
+  it('debe crear el servicio', () => {
     expect(service).toBeTruthy();
   });
 
-it('should call all store setters with undefined if properties are missing in actualizarEstadoFormulario', () => {
-  
-  const datos: Partial<Solicitud130301State> = {};
+  it('debe llamar a todos los setters del store con undefined si faltan propiedades en actualizarEstadoFormulario', () => {
+    const datos: Partial<Solicitud130301State> = {};
 
-  service.actualizarEstadoFormulario(datos as Solicitud130301State);
+    service.actualizarEstadoFormulario(datos as Solicitud130301State);
 
-  expect(tramite130301StoreMock.setPaisEmisorCertificado).toHaveBeenCalledWith(undefined);
-  expect(tramite130301StoreMock.setMixed).toHaveBeenCalledWith(undefined);
-  expect(tramite130301StoreMock.setPaisDeOrigen).toHaveBeenCalledWith(undefined);
-  expect(tramite130301StoreMock.setMotivoJustificacion).toHaveBeenCalledWith(undefined);
-  expect(tramite130301StoreMock.setOtrasDeclaraciones).toHaveBeenCalledWith(undefined);
-});
+    expect(tramite130301StoreMock.setPaisEmisorCertificado).toHaveBeenCalledWith(undefined);
+    expect(tramite130301StoreMock.setMixed).toHaveBeenCalledWith(undefined);
+    expect(tramite130301StoreMock.setPaisDeOrigen).toHaveBeenCalledWith(undefined);
+    expect(tramite130301StoreMock.setMotivoJustificacion).toHaveBeenCalledWith(undefined);
+    expect(tramite130301StoreMock.setOtrasDeclaraciones).toHaveBeenCalledWith(undefined);
+  });
 
-  it('should fetch registro toma muestras mercancias data', () => {
+  it('debe obtener los datos de registro toma muestras mercancias', () => {
     const mockResponse: Solicitud130301State = {
       paisEmisorCertificado: 'MX',
       mixed: 'true',

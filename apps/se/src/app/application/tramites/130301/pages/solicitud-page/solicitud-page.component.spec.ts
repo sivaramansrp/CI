@@ -23,7 +23,7 @@ describe('SolicitudPageComponent', () => {
     fixture = TestBed.createComponent(SolicitudPageComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
-     component.wizardComponent = mockWizardComponent as any;
+    component.wizardComponent = mockWizardComponent as any;
   });
 
   beforeEach(() => {
@@ -33,19 +33,19 @@ describe('SolicitudPageComponent', () => {
     }
   });
 
-  it('should create', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize indice to 1', () => {
+  it('debe inicializar indice en 1', () => {
     expect(component.indice).toBe(1);
   });
 
-  it('should initialize pasos with PASOS', () => {
+  it('debe inicializar pasos con PASOS', () => {
     expect(component.pasos).toBe(PASOS);
   });
 
-  it('should initialize datosPasos correctly', () => {
+  it('debe inicializar datosPasos correctamente', () => {
     expect(component.datosPasos).toEqual({
       nroPasos: PASOS.length,
       indice: 1,
@@ -54,19 +54,19 @@ describe('SolicitudPageComponent', () => {
     });
   });
 
-  it('should update indice and call wizardComponent.siguiente on getValorIndice with "cont"', () => {
+  it('debe actualizar indice y llamar a wizardComponent.siguiente al ejecutar getValorIndice con "cont"', () => {
     component.getValorIndice({ accion: 'cont', valor: 2 });
     expect(component.indice).toBe(2);
     expect(mockWizardComponent.siguiente).toHaveBeenCalled();
   });
 
-  it('should update indice and call wizardComponent.atras on getValorIndice with "atras"', () => {
+  it('debe actualizar indice y llamar a wizardComponent.atras al ejecutar getValorIndice con "atras"', () => {
     component.getValorIndice({ accion: 'atras', valor: 1 });
     expect(component.indice).toBe(1);
     expect(mockWizardComponent.atras).toHaveBeenCalled();
   });
 
-  it('should not update indice or call wizardComponent methods if valor is out of range', () => {
+  it('no debe actualizar indice ni llamar métodos de wizardComponent si valor está fuera de rango', () => {
     component.getValorIndice({ accion: 'cont', valor: 5 });
     expect(component.indice).toBe(1);
     expect(mockWizardComponent.siguiente).not.toHaveBeenCalled();

@@ -28,11 +28,11 @@ describe('PartidasDeLaMercanciaComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize partidas form on ngOnInit', () => {
+  it('debe inicializar el formulario de partidas en ngOnInit', () => {
     expect(component.partidas).toBeDefined();
     expect(component.partidas.get('usoEspecificoMercancia')).toBeTruthy();
     expect(component.partidas.get('justificacionBeneficio')).toBeTruthy();
@@ -40,15 +40,15 @@ describe('PartidasDeLaMercanciaComponent', () => {
     expect(component.partidas.get('representacionFederal')).toBeTruthy();
   });
 
-  it('should call obtenerTablaDatos on ngOnInit', () => {
+  it('debe llamar a obtenerTablaDatos en ngOnInit', () => {
     expect(mockService.obtenerTablaDatos).toHaveBeenCalled();
   });
 
-  it('should call obtenerFormDatos on ngOnInit', () => {
+  it('debe llamar a obtenerFormDatos en ngOnInit', () => {
     expect(mockService.obtenerPartidasFormDatos).toHaveBeenCalled();
   });
 
-  it('should clean up observables on ngOnDestroy', () => {
+  it('debe limpiar los observables al destruir el componente', () => {
     const destroySpy = jest.spyOn(component['destroyNotifier$'], 'next');
     const completeSpy = jest.spyOn(component['destroyNotifier$'], 'complete');
 

@@ -44,11 +44,11 @@ describe('CertificadoKimberleyComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize the form with default values', () => {
+  it('debe inicializar el formulario con los valores por defecto', () => {
     expect(component.certificadoKimberley.value).toEqual({
       certificadosEmitidos: undefined,
       numeroCertificadokimberley: undefined,
@@ -68,19 +68,19 @@ describe('CertificadoKimberleyComponent', () => {
     });
   });
 
-  it('should call obtenerEstadoList on initialization', () => {
+  it('debe llamar a obtenerEstadoList al inicializar', () => {
     const obtenerEstadoListSpy = jest.spyOn(mockService, 'obtenerEstadoList');
     component.ngOnInit();
     expect(obtenerEstadoListSpy).toHaveBeenCalled();
   });
 
-  it('should call obtenerFormDatos on initialization', () => {
+  it('debe llamar a obtenerCertificadoKimberleyFormDatos al inicializar', () => {
     const obtenerFormDatosSpy = jest.spyOn(mockService, 'obtenerCertificadoKimberleyFormDatos');
     component.ngOnInit();
     expect(obtenerFormDatosSpy).toHaveBeenCalled();
   });
 
-  it('should patch form values when obtenerFormDatos is called', () => {
+  it('debe actualizar los valores del formulario cuando se llama a obtenerFormDatos', () => {
     const mockData = {
       data: [
         {
@@ -99,26 +99,29 @@ describe('CertificadoKimberleyComponent', () => {
         },
       ],
     };
+    // Simular la llamada y el patchValue
+    (mockService.obtenerCertificadoKimberleyFormDatos as jest.Mock).mockReturnValueOnce(of(mockData));
+    component.ngOnInit();
     expect(component.certificadoKimberley.value).toEqual({
-      certificadosEmitidos: undefined,
-      numeroCertificadokimberley: undefined,
+      certificadosEmitidos: '123',
+      numeroCertificadokimberley: '456',
       paisEmisorCertificado: 'MX',
-      nombreIngles: undefined,
+      nombreIngles: 'Test Name',
       mixed: "true",
       paisDeOrigen: 'US',
-      nombreExportador: undefined,
-      direccionExportador: undefined,
-      nombreImportador: undefined,
-      direccionImportador: undefined,
-      numeroEnLetra: undefined,
-      numeroEnLetraIngles: undefined,
-      numeroFactura: undefined,
-      cantidadQuilates: undefined,
-      valorDiamantes: undefined,
+      nombreExportador: 'Exporter Name',
+      direccionExportador: 'Exporter Address',
+      nombreImportador: 'Importer Name',
+      direccionImportador: 'Importer Address',
+      numeroEnLetra: 'One Hundred',
+      numeroEnLetraIngles: 'One Hundred (EN)',
+      numeroFactura: '789',
+      cantidadQuilates: '10',
+      valorDiamantes: '1000',
     });
   });
 
-  it('should clean up subscriptions on destroy', () => {
+  it('debe limpiar las suscripciones al destruir el componente', () => {
     const destroySpy = jest.spyOn(component['destroyNotifier$'], 'next');
     const completeSpy = jest.spyOn(component['destroyNotifier$'], 'complete');
     component.ngOnDestroy();

@@ -35,11 +35,11 @@ describe('SolicitudComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize the form with default values', () => {
+  it('debe inicializar el formulario con valores por defecto', () => {
     expect(component.solicitudForm.value).toEqual({
       folio: '',
       fechaInicio: '',
@@ -48,7 +48,7 @@ describe('SolicitudComponent', () => {
     });
   });
 
-  it('should call ngOnDestroy and complete destroyNotifier$', () => {
+  it('debe llamar a ngOnDestroy y completar destroyNotifier$', () => {
     const destroyNotifierSpy = jest.spyOn(component['destroyNotifier$'], 'complete');
     component.ngOnDestroy();
     expect(destroyNotifierSpy).toHaveBeenCalled();
