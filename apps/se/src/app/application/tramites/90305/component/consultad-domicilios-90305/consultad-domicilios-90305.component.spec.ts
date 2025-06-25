@@ -125,6 +125,10 @@ beforeEach(async () => {
       mockProsecService.getEstadoData.mockReturnValue(of(ESTADO_DATA));
       fixture.detectChanges();
     });
+
+    it('should set esFormularioSoloLectura to true', () => {
+      expect(component.esFormularioSoloLectura).toBe(false);
+    });
   });
 
 
