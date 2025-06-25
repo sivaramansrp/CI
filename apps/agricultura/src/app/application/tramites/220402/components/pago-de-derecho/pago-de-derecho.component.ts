@@ -1,8 +1,8 @@
+import { AbstractControl, FormBuilder, ValidatorFn } from '@angular/forms';
 import { Catalogo, ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CatalogosSelect } from '@ng-mf/data-access-user';
 import { EXENTO_DE_PAGO } from '../../constantes/certificado-zoosanitario.enum';
-import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { MediodetransporteService } from '../../services//medio-de-transporte.service';
 import { ReplaySubject } from 'rxjs';
@@ -155,7 +155,7 @@ export class PagoDeDerechoComponent implements OnInit, OnDestroy {
         cadenaDependencia: [this.derechoState?.cadenaDependencia, [Validators.required]],
         banco: [this.derechoState?.banco, [Validators.required]],
         llaveDePago: [this.derechoState?.llaveDePago, [Validators.required]],
-        fechaPago: [this.derechoState?.fechaPago, [Validators.required]],
+        fechaPago: [this.derechoState?.fechaPago, [Validators.required, PagoDeDerechoComponent.fechaLimValidator()]],
         importePago: [this.derechoState?.importePago, []],
       }),
     });
@@ -224,7 +224,7 @@ export class PagoDeDerechoComponent implements OnInit, OnDestroy {
       });
       this.FormSolicitud.get('datosImportadorExportador.cadenaDependencia')?.setValidators([Validators.required]);
       this.FormSolicitud.get('datosImportadorExportador.llaveDePago')?.setValidators([Validators.required]);
-      this.FormSolicitud.get('datosImportadorExportador.fechaPago')?.setValidators([Validators.required]);
+      this.FormSolicitud.get('datosImportadorExportador.fechaPago')?.setValidators([Validators.required, PagoDeDerechoComponent.fechaLimValidator()]);
       this.FormSolicitud.get('datosImportadorExportador.justificacion')?.setValidators([]);
       this.FormSolicitud.get('datosImportadorExportador.justificacion')?.disable();
       this.FormSolicitud.get('datosImportadorExportador.claveDeReferencia')?.disable();
@@ -307,6 +307,23 @@ export class PagoDeDerechoComponent implements OnInit, OnDestroy {
   */
   get datosImportadorExportador(): FormGroup {
     return this.FormSolicitud.get('datosImportadorExportador') as FormGroup;
+  }
+  /**
+   * Validador para asegurar que la fecha seleccionada no sea en el futuro.
+   */
+  public static fechaLimValidator(): ValidatorFn {
+    return (control: AbstractControl): { [key: string]: unknown } | null => {
+      const LIM = control.value;
+      if (LIM) {
+        const [YEAR, MONTH, DAY] = LIM.split('-');
+        const FECHA = new Date(+Number(YEAR), +Number(MONTH) - 1, +Number(DAY));
+        const TODAY = new Date();
+        if (FECHA.getTime() > TODAY.getTime()) {
+          return { fechaLim: true }; // Retorna error si la fecha está en el futuro
+        }
+      }
+      return null; // Fecha válida
+    };
   }
 
   /**

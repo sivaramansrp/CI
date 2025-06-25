@@ -83,9 +83,19 @@
               <input class="form-control" id="fechaPago" formControlName="fechaPago" type="date"
                 [ngClass]="isValid(datosImportadorExportador,'fechaPago') ? 'required' : ''"
                 (change)="setValoresStore(datosImportadorExportador,'fechaPago', 'setFechaPago')" />
-              @if (FormSolicitud.get('datosImportadorExportador.fechaPago')?.hasError('required') &&
-              FormSolicitud.get('datosImportadorExportador.fechaPago')?.touched) {
-              <div class="mensaje-error">Este campo es obligatorio.</div>
+
+              @if(datosImportadorExportador.get('fechaPago')?.invalid &&
+              datosImportadorExportador.get('fechaPago')?.touched){
+              @if(datosImportadorExportador.get('fechaPago')?.errors?.['required']){
+              <p class="mensaje-error">
+                Este campo es obligatorio.
+              </p>
+              }
+              @else if (datosImportadorExportador.get('fechaPago')?.errors?.['fechaLim']) {
+              <p class="mensaje-error">
+                La fecha de pago debe ser menor o igual a la fecha actual.
+              </p>
+              }
               }
             </div>
           </div>
