@@ -74,6 +74,7 @@ export class PasoTresComponent implements OnInit, OnDestroy {
    * @param router - Inyecta el servicio Router para la navegación.
    * @param tramiteFolioServices - Inyecta el servicio TramiteFolioService para obtener los datos del trámite.
    * @param tramiteStore - Inyecta el store TramiteFolioStore para manejar el estado del trámite.
+   * @param firmaService - Inyecta el servicio DocumentosService para manejar la firma de documentos.
    */
   constructor(
     private router: Router,
