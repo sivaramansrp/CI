@@ -12,12 +12,23 @@
             [isDisabled]="esFormularioSoloLectura"
             (change)="getMunicipios()"
           ></app-catalogo-select>
+           <div *ngIf="formConsulta.get('estadoControl')?.invalid && (formConsulta.get('estadoControl')?.touched || formConsulta.get('estadoControl')?.dirty)" class="text-danger">
+          El estado es obligatorio.
+        </div>
         </div>
       </div>
         <div
         class="d-flex justify-content-end align-items-center mt-5"
+      >      <button
+        type="button"
+        class="btn-primary btn"
+        name="Buscardomicilios"
+        [disabled]="esFormularioSoloLectura"
+        (click)="buscarDomicilios()"
       >
-        <button type="button" class="btn-primary btn" name="Buscardomicilios" [disabled]="esFormularioSoloLectura">Buscar domicilios</button>
+        Buscar domicilios
+      </button>
+      
       </div>
      
     </form>

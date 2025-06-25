@@ -5,7 +5,7 @@
  * Contiene múltiples subcomponentes que representan diferentes secciones del proceso de modificación.
  */
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 
 import { BtnContinuarComponent, DatosPasos, ListaPasosWizard, PASOS } from '@ng-mf/data-access-user';
 
@@ -39,6 +39,12 @@ import { Sector90305Component } from '../sector-90305/sector-90305.component';
   styleUrl: './modificacion-90305.component.scss',
 })
 export class Modificacion90305Component {
+   @Output() domiciliosBuscados = new EventEmitter<any[]>();
+    domiciliosParaTabla: any[] = [];
+
+onDomiciliosBuscados(data: any[]) {
+  this.domiciliosParaTabla = data;
+}
   /** Lista de pasos del asistente de modificación */
   pasos: ListaPasosWizard[] = PASOS;
   /** Índice actual del asistente */

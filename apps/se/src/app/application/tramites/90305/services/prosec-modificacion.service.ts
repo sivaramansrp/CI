@@ -8,13 +8,17 @@ import { Observable } from 'rxjs';
 
 import { BitacoraModel , MercanciasModel , ModificacionInfo , PLANTAS, ProductorIndirecto , ProsecModificacionModel , SectorModel } from '../models/prosec-modificacion.model';
 import { Tramite90305State, Tramite90305Store } from '../estados/tramite90305.store';
+import { FormGroup } from '@angular/forms';
 
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProsecModificacionServiceTsService {
-
+/**
+   * Mapa que almacena los formularios registrados.
+   */
+  private formularios = new Map<string, FormGroup>();
   /**
    * Servicio para manejar la lógica de negocio relacionada con el trámite 90305.
    * Proporciona métodos para obtener datos desde archivos JSON y actualizar el estado del formulario.
@@ -98,6 +102,10 @@ export class ProsecModificacionServiceTsService {
     this.tramite90305Store.setSelectedEstado(DATOS.selectedEstado);
     }
   }
+  registrarFormulario(key: string, formulario: FormGroup): void {
+    this.formularios.set(key, formulario);
+  }
+
 
   /**
    * Método para obtener los datos del registro de toma de muestras de mercancías.
@@ -106,6 +114,19 @@ export class ProsecModificacionServiceTsService {
   getRegistroTomaMuestrasMercanciasData(): Observable<Tramite90305State> {
     return this.http.get<Tramite90305State>('assets/json/90305/registro_toma_muestras_mercancias.json');
   }
-  
+    validarTodosFormularios(): boolean {
+    let todosValidos = true;
+
+    this.formularios.forEach(formulario => {
+      formulario.markAllAsTouched();
+      formulario.updateValueAndValidity();
+
+      if (formulario.invalid) {
+        todosValidos = false;
+      }
+    });
+
+    return todosValidos;
+  }
 }
 

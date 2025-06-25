@@ -101,6 +101,10 @@ export class ConsultadDomicilios90305Component implements OnInit, OnDestroy {
 
     
     this.inicializarEstadoFormulario();
+      this.listaDomicilios.registrarFormulario(
+      'formConsulta',
+      this.formConsulta
+    );
   }
 
   /**
@@ -115,7 +119,12 @@ export class ConsultadDomicilios90305Component implements OnInit, OnDestroy {
     }
     this.getEstadoCatalogo();
   }
-
+buscarDomicilios() {
+  if (this.formConsulta.invalid) {
+    this.formConsulta.markAllAsTouched();
+  }
+ 
+}
   /**
    * Inicializa el formulario reactivo para capturar el estado seleccionado.
    */
