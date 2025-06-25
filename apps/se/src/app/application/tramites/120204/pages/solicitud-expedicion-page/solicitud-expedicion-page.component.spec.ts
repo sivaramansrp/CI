@@ -28,11 +28,11 @@ describe('SolicitudExpedicionPageComponent', () => {
     component.wizardComponent = new MockWizardComponent() as any;
   });
 
-  it('should create the component', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize pantallasPasos and datosPasos correctly', () => {
+  it('debe inicializar pantallasPasos y datosPasos correctamente', () => {
     expect(Array.isArray(component.pantallasPasos)).toBe(true);
     expect(component.datosPasos.nroPasos).toBe(component.pantallasPasos.length);
     expect(component.datosPasos.indice).toBe(component.indice);
@@ -40,19 +40,19 @@ describe('SolicitudExpedicionPageComponent', () => {
     expect(component.datosPasos.txtBtnSig).toBe('Continuar');
   });
 
-  it('should update indice and call wizardComponent.siguiente when getValorIndice is called with accion "cont"', () => {
+  it('debe actualizar el índice y llamar a wizardComponent.siguiente cuando getValorIndice es llamado con acción "cont"', () => {
     component.getValorIndice({ valor: 2, accion: 'cont' });
     expect(component.indice).toBe(2);
     expect(component.wizardComponent.siguiente).toHaveBeenCalled();
   });
 
-  it('should update indice and call wizardComponent.atras when getValorIndice is called with accion "atras"', () => {
+  it('debe actualizar el índice y llamar a wizardComponent.atras cuando getValorIndice es llamado con acción "atras"', () => {
     component.getValorIndice({ valor: 3, accion: 'atras' });
     expect(component.indice).toBe(3);
     expect(component.wizardComponent.atras).toHaveBeenCalled();
   });
 
-  it('should not update indice or call wizardComponent methods when getValorIndice is called with invalid valor', () => {
+  it('no debe actualizar el índice ni llamar métodos de wizardComponent cuando getValorIndice es llamado con valor inválido', () => {
     const initialIndice = component.indice;
 
     component.getValorIndice({ valor: 0, accion: 'cont' });

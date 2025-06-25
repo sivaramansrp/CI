@@ -65,29 +65,29 @@ describe('CapturarExpedicionCertificadosComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should set esFormularioSoloLectura from readonly input on ngOnInit', () => {
+  it('debe establecer esFormularioSoloLectura desde el input readonly en ngOnInit', () => {
     component.readonly = true;
     component.ngOnInit();
     expect(component.esFormularioSoloLectura).toBe(true);
   });
 
-  it('should get entidad federativa and set options', () => {
+  it('debe obtener entidad federativa y establecer las opciones', () => {
     component.getEntidadFederativa();
     expect(serviceMock.getEntidadFederativa).toHaveBeenCalled();
     expect(component.entidadFederativaOptions).toEqual([{ id: 1, nombre: 'Entidad1' }]);
   });
 
-  it('should get representacion federal and set options', () => {
+  it('debe obtener representación federal y establecer las opciones', () => {
     component.getRepresentacionFederal();
     expect(serviceMock.getRepresentacionFederal).toHaveBeenCalled();
     expect(component.representacionFederalOptions).toEqual([{ id: 1, nombre: 'Rep1' }]);
   });
 
-  it('should patch detalledelaLicitacionForm with licitacion details', () => {
+  it('debe actualizar detalledelaLicitacionForm con los detalles de la licitación', () => {
     component.detalledelaLicitacionForm = new FormBuilder().group({
       numeraDelicitacion: [''],
       fechaDelEventoDelicitacion: [''],
@@ -98,13 +98,13 @@ describe('CapturarExpedicionCertificadosComponent', () => {
     expect(component.detalledelaLicitacionForm.value.numeraDelicitacion).toBe('123');
   });
 
-  it('should set datos from obtenerDatosTabla', () => {
+  it('debe establecer datos desde obtenerDatosTabla', () => {
     component.obtenerDatosTabla();
     expect(serviceMock.obtenerDatosTabla).toHaveBeenCalled();
     expect(component.datos).toEqual([{ id: 1, nombre: 'Licitacion1' }]);
   });
 
-  it('should patch distribucionSaldoForm with distribucion saldo', () => {
+  it('debe actualizar distribucionSaldoForm con la distribución de saldo', () => {
     component.distribucionSaldoForm = new FormBuilder().group({
       montoDisponible: ['']
     });
@@ -113,7 +113,7 @@ describe('CapturarExpedicionCertificadosComponent', () => {
     expect(component.distribucionSaldoForm.value.montoDisponible).toBe('1000');
   });
 
-  it('should call store setEntidadFederativa on onCambiarEntiadFederative', () => {
+  it('debe llamar al store setEntidadFederativa en onCambiarEntiadFederative', () => {
     component.formulario = new FormBuilder().group({
       entidadFederativa: ['Entidad1']
     });
@@ -121,7 +121,7 @@ describe('CapturarExpedicionCertificadosComponent', () => {
     expect(storeMock.setEntidadFederativa).toHaveBeenCalledWith('Entidad1');
   });
 
-  it('should call store setRepresentacionFederal on onCambiarRepresentacionFederal', () => {
+  it('debe llamar al store setRepresentacionFederal en onCambiarRepresentacionFederal', () => {
     component.formulario = new FormBuilder().group({
       representacionFederal: ['Rep1']
     });
@@ -129,7 +129,7 @@ describe('CapturarExpedicionCertificadosComponent', () => {
     expect(storeMock.setRepresentacionFederal).toHaveBeenCalledWith('Rep1');
   });
 
-  it('should call store setMontoExpedir on onCambiarMontoAExpedir', () => {
+  it('debe llamar al store setMontoExpedir en onCambiarMontoAExpedir', () => {
     component.distribucionSaldoForm = new FormBuilder().group({
       montoAExpedir: ['100']
     });
@@ -137,7 +137,7 @@ describe('CapturarExpedicionCertificadosComponent', () => {
     expect(storeMock.setMontoExpedir).toHaveBeenCalledWith('100');
   });
 
-  it('should call store setMontoExpedirCheck on onCambiarMontoAExpedirCheck', () => {
+  it('debe llamar al store setMontoExpedirCheck en onCambiarMontoAExpedirCheck', () => {
     component.distribucionSaldoForm = new FormBuilder().group({
       montoAExpedirCheck: [true]
     });
@@ -145,7 +145,7 @@ describe('CapturarExpedicionCertificadosComponent', () => {
     expect(storeMock.setMontoExpedirCheck).toHaveBeenCalledWith(true);
   });
 
-  it('should add montoAExpedir to totalAExpedir and update store', () => {
+  it('debe sumar montoAExpedir a totalAExpedir y actualizar el store', () => {
     component.distribucionSaldoForm = new FormBuilder().group({
       montoAExpedir: ['100'],
       totalAExpedir: ['200']
@@ -155,7 +155,7 @@ describe('CapturarExpedicionCertificadosComponent', () => {
     expect(storeMock.setTotalExpedir).toHaveBeenCalledWith(300);
   });
 
-  it('should return true if distribucionSaldoForm control is invalid and touched', () => {
+  it('debe retornar true si el control de distribucionSaldoForm es inválido y tocado', () => {
     component.distribucionSaldoForm = new FormBuilder().group({
       test: ['val']
     });
@@ -165,12 +165,12 @@ describe('CapturarExpedicionCertificadosComponent', () => {
     expect(component.isInvalid('test')).toBe(true);
   });
 
-  it('should return null if distribucionSaldoForm control does not exist', () => {
+  it('debe retornar null si el control de distribucionSaldoForm no existe', () => {
     component.distribucionSaldoForm = new FormBuilder().group({});
     expect(component.isInvalid('notExist')).toBeNull();
   });
 
-  it('should clean up subscriptions on ngOnDestroy', () => {
+  it('debe limpiar las suscripciones al destruir el componente', () => {
     const nextSpy = jest.spyOn<any, any>(component['destroyed$'], 'next');
     const completeSpy = jest.spyOn<any, any>(component['destroyed$'], 'complete');
     component.ngOnDestroy();

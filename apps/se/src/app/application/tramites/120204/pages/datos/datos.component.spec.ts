@@ -34,28 +34,28 @@ describe('DatosComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should set esDatosRespuesta to true if consultaState.update is false on ngOnInit', () => {
+  it('debe establecer esDatosRespuesta en true si consultaState.update es false en ngOnInit', () => {
     component.consultaState = { update: false, readonly: false } as any;
     component.ngOnInit();
     expect(component.esDatosRespuesta).toBe(true);
   });
 
-  it('should set esDatosRespuesta to true and call setDatosFormulario in guardarDatosFormulario', () => {
+  it('debe establecer esDatosRespuesta en true y llamar a setDatosFormulario en guardarDatosFormulario', () => {
     component.guardarDatosFormulario();
     expect(component.esDatosRespuesta).toBe(true);
     expect(expedicionServiceMock.setDatosFormulario).toHaveBeenCalledWith({ campo: 'valor' });
   });
 
-  it('should set indice when seleccionaTab is called', () => {
+  it('debe establecer el índice cuando se llama seleccionaTab', () => {
     component.seleccionaTab(5);
     expect(component.indice).toBe(5);
   });
 
-  it('should clean up subscriptions on ngOnDestroy', () => {
+  it('debe limpiar las suscripciones al destruir el componente', () => {
     const nextSpy = jest.spyOn<any, any>(component['destroyNotifier$'], 'next');
     const completeSpy = jest.spyOn<any, any>(component['destroyNotifier$'], 'complete');
     component.ngOnDestroy();
