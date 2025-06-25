@@ -6,7 +6,8 @@ import { OnInit } from '@angular/core';
 
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
-import { REGEX_DESCRIPCION_ESPECIALES } from '@ng-mf/data-access-user';
+
+import { ConsultaioQuery, REGEX_DESCRIPCION_ESPECIALES } from '@ng-mf/data-access-user';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Validators } from '@angular/forms';
 
@@ -14,7 +15,7 @@ import { REG_X } from '@ng-mf/data-access-user';
 
 import { TituloComponent } from '@ng-mf/data-access-user';
 
-import { CertificadoTecnicoJaponService } from '@libs/shared/data-access-user/src/core/services/110218/certificadoTecnicoJapon.service';
+import { CertificadoTecnicoJaponService } from '../../service/certificadoTecnicoJapon.service';
 import { Solicitud110218State } from '../../estados/tramites/tramite110218.store';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs';
@@ -37,6 +38,11 @@ import { Tramite110218Store } from '../../estados/tramites/tramite110218.store';
   styleUrl: './representante-legal.component.scss',
 })
 export class RepresentanteLegalComponent implements OnDestroy, OnInit {
+  /**
+   * Indica si el formulario debe estar en modo solo lectura.
+   * Se actualiza según el estado de la consulta.
+   */
+  esSoloLectura!: boolean;
   /**
    * Formulario para los datos del exportador.
    * Contiene los campos relacionados con el representante legal, como nombre, cargo, teléfono, etc.
@@ -66,6 +72,7 @@ export class RepresentanteLegalComponent implements OnDestroy, OnInit {
     public formBuilder: FormBuilder,
     private tramite110218Store: Tramite110218Store,
     private tramite110218Query: Tramite110218Query,
+    private consultaQuery: ConsultaioQuery,
     private service: CertificadoTecnicoJaponService
   ) {}
 
@@ -128,6 +135,25 @@ export class RepresentanteLegalComponent implements OnDestroy, OnInit {
     this.obtenerDatosDeTabla();
     this.getValorStore();
     this.inicializarFormulario();
+    this.consultaQuery.selectConsultaioState$
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((estadoConsulta) => {
+        this.esSoloLectura = estadoConsulta.readonly;
+        this.habilitarDeshabilitarFormulario();
+      });
+
+  }
+  /**
+   * Habilita o deshabilita el formulario según el modo de solo lectura.
+   * Si `esSoloLectura` es verdadero, deshabilita todos los controles del formulario.
+   * Si es falso, habilita todos los controles.
+   */
+  habilitarDeshabilitarFormulario(): void {
+    if (this.esSoloLectura) {
+      this.datosdelexportador.disable();
+    } else {
+      this.datosdelexportador.enable();
+    }
   }
 
   /**

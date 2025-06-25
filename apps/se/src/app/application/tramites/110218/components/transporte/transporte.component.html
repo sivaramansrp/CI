@@ -12,7 +12,8 @@
               type="text" class="form-control" id="puertodeEmbarque" 
               placeholder="Veracruz" formControlName="puertodeEmbarque"
               [class.is-invalid]="detallestransporte.get('puertodeEmbarque')?.touched && detallestransporte.get('puertodeEmbarque')?.invalid"
-              (change)="setValorStore(detallestransporte,'puertodeEmbarque')">
+              (change)="setValorStore(detallestransporte,'puertodeEmbarque')"
+              [class.bg-white]="!detallestransporte.get('puertodeEmbarque')?.disabled">
             <div class="invalid-feedback">
               Corrija el nombre.
             </div>
@@ -24,7 +25,8 @@
               type="text" class="form-control" id="puertodeDesembarque" 
               placeholder="Altamira" formControlName="puertodeDesembarque"
               [class.is-invalid]="detallestransporte.get('puertodeDesembarque')?.touched && detallestransporte.get('puertodeDesembarque')?.invalid"
-              (change)="setValorStore(detallestransporte,'puertodeDesembarque')" >
+              (change)="setValorStore(detallestransporte,'puertodeDesembarque')" 
+              [class.bg-white]="!detallestransporte.get('puertodeDesembarque')?.disabled">
             <div class="invalid-feedback">
               Corrija el nombre.
             </div>
@@ -36,7 +38,8 @@
               type="text" class="form-control" id="puertodeTransito" 
               placeholder="Dos Bocas" formControlName="puertodeTransito"
               [class.is-invalid]="detallestransporte.get('puertodeTransito')?.touched && detallestransporte.get('puertodeTransito')?.invalid"
-              (change)="setValorStore(detallestransporte,'puertodeTransito')">
+              (change)="setValorStore(detallestransporte,'puertodeTransito')"
+              [class.bg-white]="!detallestransporte.get('puertodeTransito')?.disabled">
             <div class="invalid-feedback">
               Corrija el nombre.
             </div>
@@ -49,7 +52,8 @@
               type="text" class="form-control" id="nombredelaEmbarcacion" 
               placeholder="Embarcación Prueba" formControlName="nombredelaEmbarcacion"
               [class.is-invalid]="detallestransporte.get('nombredelaEmbarcacion')?.touched && detallestransporte.get('nombredelaEmbarcacion')?.invalid"
-              (change)="setValorStore(detallestransporte,'nombredelaEmbarcacion')">
+              (change)="setValorStore(detallestransporte,'nombredelaEmbarcacion')"
+              [class.bg-white]="!detallestransporte.get('nombredelaEmbarcacion')?.disabled">
             <div class="invalid-feedback">
               Corrija el nombre.
             </div>
@@ -61,7 +65,8 @@
               type="text" class="form-control" id="numerodeVuelo" 
               placeholder="123456789012345" formControlName="numerodeVuelo"
               [class.is-invalid]="detallestransporte.get('numerodeVuelo')?.touched && detallestransporte.get('numerodeVuelo')?.invalid"
-              (change)="setValorStore(detallestransporte,'numerodeVuelo')">
+              (change)="setValorStore(detallestransporte,'numerodeVuelo')"
+              [class.bg-white]="!detallestransporte.get('numerodeVuelo')?.disabled">
            
             <div class="invalid-feedback"
             *ngIf="detallestransporte.get('numerodeVuelo')?.touched && detallestransporte.get('numerodeVuelo')?.invalid">
