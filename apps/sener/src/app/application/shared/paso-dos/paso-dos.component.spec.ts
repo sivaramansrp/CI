@@ -2,7 +2,6 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Component } from '@angular/core';
 import { TEXTOS } from '@ng-mf/data-access-user';
 
-// Create a test version of your component without the problematic imports
 @Component({
   selector: 'app-paso-dos-test',
   template: `
@@ -32,13 +31,13 @@ describe('PasoDosComponent', () => {
     fixture.detectChanges();
   });
 
-  // it('should create', () => {
-  //   expect(component).toBeTruthy();
-  // });
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
 
-  // it('should have TEXTOS property defined', () => {
-  //   expect(component.TEXTOS).toBeDefined();
-  // });
+  it('should have TEXTOS property defined', () => {
+    expect(component.TEXTOS).toBeDefined();
+  });
 
   it('should render container', () => {
     const compiled = fixture.nativeElement as HTMLElement;

@@ -94,16 +94,19 @@ export class DatosDelTramiteComponent implements OnInit{
     this.form.get(this.inputFields[0].controlName) &&
     this.form.get(this.inputFields[1].controlName)
   ) {
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    this.form.get(this.inputFields[0].controlName)!.valueChanges.subscribe(() => {
-      const SEGUNDO_CONTROL = this.form.get(this.inputFields[1].controlName);
-      if (SEGUNDO_CONTROL) {
-        SEGUNDO_CONTROL.reset();
-        SEGUNDO_CONTROL.markAsPristine();
-        SEGUNDO_CONTROL.markAsUntouched();
-        this.setValoresStore(this.form, this.inputFields[1].controlName);
-      }
-    });
+    
+    const PRIMER_CONTROL = this.form.get(this.inputFields[0].controlName);
+    if (PRIMER_CONTROL) {
+      PRIMER_CONTROL.valueChanges.subscribe(() => {
+        const SEGUNDO_CONTROL = this.form.get(this.inputFields[1].controlName);
+        if (SEGUNDO_CONTROL) {
+          SEGUNDO_CONTROL.reset();
+          SEGUNDO_CONTROL.markAsPristine();
+          SEGUNDO_CONTROL.markAsUntouched();
+          this.setValoresStore(this.form, this.inputFields[1].controlName);
+        }
+      });
+    }
   }
 }
 

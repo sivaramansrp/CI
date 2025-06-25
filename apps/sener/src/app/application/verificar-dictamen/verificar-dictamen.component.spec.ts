@@ -6,11 +6,6 @@ import { Router } from '@angular/router';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { of } from 'rxjs';
 
-// jest-preset-angular setup should be handled globally, not in individual spec files.
-
-// Ensure no jasmine references are present; use jest for spies and mocks.
-
-// Mocks
 class MockVerificaDictamenService {
   obtenerDictamen() {
     return of({
@@ -65,7 +60,6 @@ describe('VerificarDictamenComponent', () => {
 
     fixture = TestBed.createComponent(VerificarDictamenComponent);
     component = fixture.componentInstance;
-    // Do not call fixture.detectChanges() here; call it in each test after setting up spies if needed
   });
 
   it('should create', () => {
@@ -88,8 +82,6 @@ describe('VerificarDictamenComponent', () => {
   it('should set tramite and slectTramite on selectTramite()', () => {
     component.selectTramite(1);
     expect(component.tramite).toBe(1);
-    // slectTramite can be undefined if LISTA_TRIMITES is empty or not matching
-    // So just check that property exists
     expect('slectTramite' in component).toBe(true);
   });
 
