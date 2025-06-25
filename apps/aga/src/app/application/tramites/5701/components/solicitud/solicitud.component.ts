@@ -1254,7 +1254,6 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
         txtBtnAceptar: 'Aceptar',
         txtBtnCancelar: '',
       };
-      console.log('Marcamos como touched el campo RFCImpExp');
 
       this.desactivaCamposCertificaciones();
       return;
@@ -1264,8 +1263,6 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
       RFC_IMP_EXP === '' &&
       this.datosImportadorExportador.get('nombre')?.value
     ) {
-      // Si el RFC está vacío pero el nombre tiene un valor, se limpia el nombre.
-      this.datosImportadorExportador.get('RFCImpExp')?.setValue(null);
       this.desactivaCamposCertificaciones();
       return;
     }
@@ -3271,10 +3268,8 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    * @returns {void} No retorna ningún valor.
    */
   desactivaCamposCertificaciones(): void {
-    this.datosImportadorExportador.get('RFCImpExp')?.setValue('');
-    this.datosImportadorExportador.get('RFCImpExp')?.markAsTouched();
-
-    this.datosImportadorExportador.reset({
+    this.datosImportadorExportador.patchValue({
+      RFCImpExp: '',
       nombre: '',
       tipoEmpresaCertificada: '',
       certificacionOEA: false,
@@ -3303,8 +3298,6 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
     this.certificacionOEADisabled = true;
     this.revisionDisabled = true;
     this.certificacionesDisabled = true;
-
-    console.log(this.datosImportadorExportador.get('RFCImpExp'));
   }
 
   // eslint-disable-next-line class-methods-use-this
