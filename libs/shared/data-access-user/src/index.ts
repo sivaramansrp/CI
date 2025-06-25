@@ -1,4 +1,4 @@
-import exp from 'constants';
+
 
 export { AcusesYResolucionesFolioDelTramiteBusquedaComponent } from './tramites/components/acuses-y-resoluciones-folio-del-tramite-busqueda/acuses-y-resoluciones-folio-del-tramite-busqueda.component';
 export { AcusesYResolucionesFolioDelTramiteDetallesComponent } from './tramites/components/acuses-y-resoluciones-folio-del-tramite-detalles/acuses-y-resoluciones-folio-del-tramite-detalles.component';
@@ -207,3 +207,4 @@ export * from './core/enums/tipoIdentificacion.enum';
 export * from './core/enums/mensajes-modal-comunes.enum';
 export * from './tramites/directives/alfanumerico/alfanumerico-formato.directive';
 export * from './tramites/components/pie-pagina-informacion/pie-pagina-informacion.component';
+export * from './core/services/shared/cadena-original/cadena-original.service';

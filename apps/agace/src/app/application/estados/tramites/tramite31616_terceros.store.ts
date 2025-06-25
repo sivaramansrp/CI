@@ -114,7 +114,7 @@ export class Tramite31616TercerosStore extends Store<Solicitud31616TercerosState
      * Establece el estado de resigtro.
      * @param resigtro - El valor de resigtro.
      */
-    public setResigtro(resigtro: string) {
+    public setResigtro(resigtro: string): void {
         this.update((state) => ({
             ...state,
             resigtro,
@@ -125,7 +125,7 @@ export class Tramite31616TercerosStore extends Store<Solicitud31616TercerosState
      * Establece el estado de telefono.
      * @param telefono - El valor de telefono.
      */
-    public setTelefono(telefono: string) {
+    public setTelefono(telefono: string): void {
         this.update((state) => ({
             ...state,
             telefono,
@@ -136,7 +136,7 @@ export class Tramite31616TercerosStore extends Store<Solicitud31616TercerosState
      * Establece el estado de correo.
      * @param correo - El valor de correo.
      */
-    public setCorreo(correo: string) {
+    public setCorreo(correo: string): void {
         this.update((state) => ({
             ...state,
             correo,
@@ -146,7 +146,7 @@ export class Tramite31616TercerosStore extends Store<Solicitud31616TercerosState
      * Establece el estado de resigtroFedral.
      * @param resigtroFedral - El valor de resigtroFedral.
      */
-    public setResigtroFedral(resigtroFedral: string) {
+    public setResigtroFedral(resigtroFedral: string): void {
         this.update((state) => ({
             ...state,
             resigtroFedral,
@@ -156,7 +156,7 @@ export class Tramite31616TercerosStore extends Store<Solicitud31616TercerosState
      * Establece el estado de cargo.
      * @param cargo - El valor de cargo.
      */
-    public setCargo(cargo: string) {
+    public setCargo(cargo: string): void {
         this.update((state) => ({
             ...state,
             cargo,
@@ -166,7 +166,7 @@ export class Tramite31616TercerosStore extends Store<Solicitud31616TercerosState
      * Establece el estado de telefonoEnlace.
      * @param telefonoEnlace - El valor de telefonoEnlace.
      */
-    public setTelefonoEnlace(telefonoEnlace: string) {
+    public setTelefonoEnlace(telefonoEnlace: string): void {
         this.update((state) => ({
             ...state,
             telefonoEnlace,
@@ -176,7 +176,7 @@ export class Tramite31616TercerosStore extends Store<Solicitud31616TercerosState
      * Establece el estado de correoEnlace.
      * @param correoEnlace - El valor de correoEnlace.
      */
-    public setCorreoEnlace(correoEnlace: string) {
+    public setCorreoEnlace(correoEnlace: string): void {
         this.update((state) => ({
             ...state,
             correoEnlace,
@@ -186,7 +186,7 @@ export class Tramite31616TercerosStore extends Store<Solicitud31616TercerosState
      * Establece el estado de suplente.
      * @param suplente - El valor de suplente.
      */
-    public setSuplente(suplente: string) {
+    public setSuplente(suplente: string): void {
         this.update((state) => ({
             ...state,
             suplente,

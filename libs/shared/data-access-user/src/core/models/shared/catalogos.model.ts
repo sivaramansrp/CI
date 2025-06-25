@@ -1,4 +1,4 @@
-import { deprecate } from 'util';
+
 
 /**
  * Representa la respuesta de un catálogo básico.

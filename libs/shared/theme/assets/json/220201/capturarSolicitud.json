@@ -43,7 +43,6 @@
   }
   ],
    "validarEnvio": {
-      "pagoDeformaValida": true,
       "dataParaMovilizacion": true,
       "dataDeLaSolicitud": true
     }

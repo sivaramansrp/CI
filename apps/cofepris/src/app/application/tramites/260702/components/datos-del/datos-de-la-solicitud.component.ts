@@ -8,6 +8,7 @@ import {
   REGIMEN_AL_QUE_DATA,
   TIPO_PRODUCTO_DATA,
 } from '../../constants/catalogs.enum';
+
 import {
   CONFIGURACION_COLUMNAS_LISTA_CLAVE,
   CONFIGURACION_COLUMNAS_MERCANCIAS,
