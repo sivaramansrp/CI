@@ -52,11 +52,11 @@ describe('Solicitud120602Service', () => {
     httpMock.verify();
   });
 
-  it('should be created', () => {
+  it('debe crear el servicio', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should fetch empresa solicitud data', () => {
+  it('debe obtener los datos de la empresa para la solicitud', () => {
     const mockResponse = { estado: 'CDMX' };
     service.getEmpresaSolicitudData().subscribe(res => {
       expect(res).toEqual(mockResponse);
@@ -67,7 +67,7 @@ describe('Solicitud120602Service', () => {
     req.flush(mockResponse);
   });
 
-  it('should update store with provided DATOS in actualizarEstadoFormulario', () => {
+  it('debe actualizar el store con los DATOS proporcionados en actualizarEstadoFormulario', () => {
     const datos: any = {
       estado: 'CDMX',
       representacionFederal: 'Federal',
@@ -125,11 +125,11 @@ describe('Solicitud120602Service', () => {
     expect(tramite120602StoreMock.setCorreoElectronico).toHaveBeenCalledWith('test@mail.com');
   });
 
-  it('should call store setters with default values if optional fields are missing', () => {
+  it('debe llamar a los setters del store con valores por defecto si faltan campos opcionales', () => {
     const datos: any = {
       estado: 'CDMX',
       representacionFederal: 'Federal',
-      // tipoEmpresa, especifique, datosPais, datosCodigoPostal, datosEstado are missing
+      // tipoEmpresa, especifique, datosPais, datosCodigoPostal, datosEstado faltan
     };
 
     service.actualizarEstadoFormulario(datos);

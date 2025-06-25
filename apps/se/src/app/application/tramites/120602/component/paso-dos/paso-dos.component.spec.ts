@@ -26,25 +26,25 @@ describe('PasoDosComponent', () => {
     component = fixture.componentInstance;
   });
 
-  it('should create', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should set catalogoDocumentos when getTiposDocumentos returns data', () => {
+  it('debe establecer catalogoDocumentos cuando getTiposDocumentos retorna datos', () => {
     const mockDocs = [{ id: 1, descripcion: 'Doc1' }, { id: 2, descripcion: 'Doc2' }];
     mockCatalogosService.getCatalogo.mockReturnValue(of(mockDocs));
     component.getTiposDocumentos();
     expect(component.catalogoDocumentos).toEqual(mockDocs);
   });
 
-  it('should not set catalogoDocumentos when getTiposDocumentos returns empty array', () => {
+  it('no debe establecer catalogoDocumentos cuando getTiposDocumentos retorna un arreglo vacío', () => {
     mockCatalogosService.getCatalogo.mockReturnValue(of([]));
-    component.catalogoDocumentos = [{ id: 1, descripcion: 'Should be replaced' }];
+    component.catalogoDocumentos = [{ id: 1, descripcion: 'Debe permanecer' }];
     component.getTiposDocumentos();
-    expect(component.catalogoDocumentos).toEqual([{ id: 1, descripcion: 'Should be replaced' }]);
+    expect(component.catalogoDocumentos).toEqual([{ id: 1, descripcion: 'Debe permanecer' }]);
   });
 
-  it('should handle error in getTiposDocumentos gracefully', () => {
+  it('debe manejar el error en getTiposDocumentos sin lanzar excepción', () => {
     mockCatalogosService.getCatalogo.mockReturnValue(throwError(() => new Error('fail')));
     expect(() => component.getTiposDocumentos()).not.toThrow();
   });

@@ -24,13 +24,13 @@ describe('PasoTresComponent', () => {
     };
 
     await TestBed.configureTestingModule({
-      imports: [PasoTresComponent , HttpClientTestingModule],
+      imports: [PasoTresComponent, HttpClientTestingModule],
       providers: [
-      { provide: Router, useValue: router },
-      { provide: TramiteFolioService, useValue: tramiteFolioService },
-      { provide: TramiteStore, useValue: tramiteStore },
-      { provide: ToastrService, useValue: { error: jest.fn(), success: jest.fn(), info: jest.fn(), warning: jest.fn() } }
-    ]
+        { provide: Router, useValue: router },
+        { provide: TramiteFolioService, useValue: tramiteFolioService },
+        { provide: TramiteStore, useValue: tramiteStore },
+        { provide: ToastrService, useValue: { error: jest.fn(), success: jest.fn(), info: jest.fn(), warning: jest.fn() } }
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(PasoTresComponent);
@@ -38,17 +38,16 @@ describe('PasoTresComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
- 
-  it('should not call obtenerTramite if FIRMA is falsy', () => {
+  it('no debe llamar a obtenerTramite si la FIRMA es falsy', () => {
     component.obtieneFirma('');
     expect(tramiteFolioService.obtenerTramite).not.toHaveBeenCalled();
   });
 
-  it('should handle error in obtenerTramite observable', (done) => {
+  it('debe manejar el error en el observable de obtenerTramite', (done) => {
     tramiteFolioService.obtenerTramite.mockReturnValue(throwError(() => new Error('fail')));
     const spy = jest.spyOn(tramiteStore, 'establecerTramite');
     component.obtieneFirma('firma');
