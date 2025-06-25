@@ -585,7 +585,7 @@ export class SolicitudPageComponent implements OnInit {
           fecha_fin_servicio: this.solicitudState.fechaFinal,
           hora_inicio_servicio: this.solicitudState.horaInicio,
           hora_fin_servicio: this.solicitudState.horaFinal,
-          patente: parseInt(this.solicitudState.patente.patente, 10),
+          patente: this.solicitudState.patente.patente,
           id_patentes_aduanales: 1,
         },
         lista_pagos: [

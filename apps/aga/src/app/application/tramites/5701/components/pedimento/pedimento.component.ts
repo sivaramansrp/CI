@@ -29,8 +29,9 @@ import {
   DatosComponentePedimento,
   Pedimento,
 } from '../../../../core/models/5701/tramite5701.model';
-import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 
+import { EMPTY, Subject, catchError, map, takeUntil } from 'rxjs';
+import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import {
   MSG_ERROR_NO_PEDIMENTOS,
   MSG_NRO_PEDIMENTO,
@@ -45,7 +46,6 @@ import {
   Solicitud5701State,
   Tramite5701Store,
 } from '../../../../core/estados/tramites/tramite5701.store';
-import { Subject, map, takeUntil } from 'rxjs';
 import { BodyEstadoPedimento } from '../../../../core/models/5701/pedimento.model';
 import { CommonModule } from '@angular/common';
 import { EstadoPedimentoService } from '../../../../core/services/5701/pedimento/estado-pedimento.service';
@@ -97,6 +97,10 @@ export class PedimentoComponent implements OnInit, OnChanges, OnDestroy {
 
   /**
    * Emisor de eventos para la tabla de pedimentos.
+   */
+  @Input({ required: true }) numeroPatente!: string;
+
+  /**
    * Se utiliza para emitir los datos de la tabla de pedimentos al componente padre.
    */
   @Output() datosTablaPedimento: EventEmitter<Pedimento[]> = new EventEmitter();
@@ -170,7 +174,7 @@ export class PedimentoComponent implements OnInit, OnChanges, OnDestroy {
    * Actualmente contiene el mensaje a mostrar cuando no hay registros disponibles.
    */
   public mensajes = {
-    emptyMessage: 'No hay datos disponibles',
+    emptyMessage: '',
   };
 
   /**
@@ -317,11 +321,12 @@ export class PedimentoComponent implements OnInit, OnChanges, OnDestroy {
               txtBtnAceptar: TEXTO_CERRAR,
               txtBtnCancelar: '',
             };
+            return;
           }
 
           const BODY: BodyEstadoPedimento = {
             aduana: parseInt(this.solicitudState.idAduanaDespacho, 10),
-            patente: 23424,
+            patente: this.numeroPatente,
             pedimento: parseInt(this.pedimentoForm.value, 10),
           };
 
@@ -335,7 +340,7 @@ export class PedimentoComponent implements OnInit, OnChanges, OnDestroy {
                     {
                       const PEDIMENTO: Pedimento = {
                         idPedimento: 0,
-                        patente: response.datos.patente,
+                        patente: this.numeroPatente,
                         pedimento: response.datos.pedimento,
                         aduana: response.datos.aduana,
                         tipoPedimento: 0,
@@ -376,6 +381,37 @@ export class PedimentoComponent implements OnInit, OnChanges, OnDestroy {
                     };
                     break;
                 }
+              }),
+              catchError((_error) => {
+                this.nuevaNotificacion = {
+                  tipoNotificacion: 'alert',
+                  categoria: 'danger',
+                  modo: 'action',
+                  titulo: TITULO_MODAL_AVISO,
+                  mensaje: MSG_PEDIMENTO_NO_VALIDO,
+                  cerrar: false,
+                  txtBtnAceptar: TEXTO_CERRAR,
+                  txtBtnCancelar: '',
+                };
+
+                const PEDIMENTO: Pedimento = {
+                  idPedimento: this.pedimentos.length + 1,
+                  patente: this.datosNroPedimento.patente,
+                  pedimento: NUMERO_PEDIMENTO,
+                  aduana: this.datosNroPedimento.idAduanaDespacho,
+                  tipoPedimento: 0,
+                  estadoPedimento: '',
+                  subEstadoPedimento: '',
+                  descTipoPedimento: 'Por evaluar',
+                  numero: '',
+                  comprobanteValor: '',
+                  pedimentoValidado: 'No validado',
+                };
+
+                this.pedimentos.push(PEDIMENTO);
+                this.pedimentoForm.reset();
+                this.datosTablaPedimento.emit(this.pedimentos);
+                return EMPTY;
               })
             )
             .subscribe();
