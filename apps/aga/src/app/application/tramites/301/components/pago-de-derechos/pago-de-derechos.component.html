@@ -89,13 +89,17 @@
         </div>
       </div>
       <div class="row mt-5">
-        <p>
-        <strong>
-          A través del siguiente vinculo puedes ingresar a la página para
-          generar la línea de captura de la constancia que se solicita:
-        </strong>
-      </p>
-      <a [href]="generarLineaCapturaURL" target="_blank">Generar línea de captura</a>
+        <div class="col-md-12">
+          <p>
+            <strong>
+              A través del siguiente vinculo puedes ingresar a la página para
+              generar la línea de captura de la constancia que se solicita:
+            </strong>
+          </p>
+        </div>
+        <div class="col-md-6">
+          <a class="custom-link" [href]="generarLineaCapturaURL" target="_blank">Generar línea de captura</a>
+        </div>
       </div>
     </div>
   </form>

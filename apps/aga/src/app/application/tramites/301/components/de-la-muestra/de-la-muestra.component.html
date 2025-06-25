@@ -28,12 +28,13 @@
 
         <div class="col-md-4">
           <div class="form-group">
-            <label class="form-label" for="folio">Folio anterior: </label>
+            <label class="form-label" for="folio">Folio anterior*: </label>
             <input
               class="form-control"
               id="folio"
               formControlName="folio"
               type="text"
+              [ngClass]="{ 'required': esInvalido() }"
               (change)="
                 sobreElCambioFolio();
                 setValoresStore(
@@ -43,6 +44,9 @@
                 )
               "
             />
+            @if (Informaciondela.get('datosImportadorExportador.folio')?.hasError('required') && Informaciondela.get('datosImportadorExportador.folio')?.touched) {
+              <div class="mensaje-error">Este campo es obligatorio.</div>
+            }
           </div>
         </div>
       </div>
