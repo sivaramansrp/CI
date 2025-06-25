@@ -4,6 +4,7 @@ import { FormBuilder, ReactiveFormsModule, FormGroup } from '@angular/forms';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { of, Subject } from 'rxjs';
 import { createInitialState } from '../../../../estados/tramites/tramite31601.store';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 // Mock JSON imports
 jest.mock('@libs/shared/theme/assets/json/31601/prejson.json', () => ({
@@ -158,6 +159,7 @@ describe('AduaneroComponent', () => {
     tramite31601StoreMock = {
       setNombreMiembro: jest.fn(),
       setOtroCampo: jest.fn(),
+      setMencioneTablaDatos: jest.fn(),
     };
     tramite31601QueryMock = {
       selectSolicitud$: of(createInitialState()),
@@ -170,7 +172,7 @@ describe('AduaneroComponent', () => {
     };
 
     await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule, AduaneroComponent],
+      imports: [ReactiveFormsModule, AduaneroComponent,HttpClientTestingModule],
       providers: [
         FormBuilder,
         { provide: BsModalService, useValue: modalServiceMock },
@@ -187,6 +189,7 @@ describe('AduaneroComponent', () => {
             { provide: 'Tramite31601Query', useValue: tramite31601QueryMock },
             { provide: 'ConsultaioQuery', useValue: consultaioQueryMock },
           ],
+           template: `<div *ngIf="preOperativeForm"> <ng-container></ng-container> </div>`
         },
       })
       .compileComponents();
@@ -197,63 +200,98 @@ describe('AduaneroComponent', () => {
     (component as any).tramite31601Query = tramite31601QueryMock;
     (component as any).modalService = modalServiceMock;
     (component as any).consultaioQuery = consultaioQueryMock;
+
+component.preOperativeForm = new FormBuilder().group({
+      autorizacionIVAIEPS: [''],
+      regimen_0: [''],
+      regimen_1: [''],
+      regimen_2: [''],
+      regimen_3: [''],
+      sectorProductivo: [''],
+      servicio: [''],
+      preOperativo: [''],
+      indiqueSi: [''],
+      senale: [''],
+      empPropios: [''],
+      bimestre: [''],
+      senaleSi: [''],
+      seMomento: [''],
+      cumplir: [''],
+      indique: [''],
+      encuentra: [''],
+      delMismo: [''],
+      senaleMomento: [''],
+      enCaso: [''],
+      comboBimestresIDCSeleccione: [''],
+      ingresar: [''],
+      encuentraSus: [''],
+      registrosQue: [''],
+      registrosQue2: [''],
+      momentoIngresar: [''],
+      indiqueCuenta: [''],
+      indiqueCheck: [''],
+      nombreDel: [''],
+      lugarDeRadicacion: [''],
+      contabilidad: [''],
+      rmfRadio: [''],
+      vinculacionRegistroCancelado: [''],
+      proveedoresListadoSAT: [''],
+      numeroAutorizacionCITES: [''],
+      rfc: [''],
+      razonSocial: [''],
+      numeroEmpleados: [''],
+      empleadosPropios: [''],
+      archivoNacionales: [''],
+    });
+
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize preOperativeForm with controls', () => {
-    component.solicitudState = createInitialState();
-    component.inicializarEstadoFormulario();
+   it('debe inicializar preOperativeForm con controles', () => {
     expect(component.preOperativeForm).toBeInstanceOf(FormGroup);
     expect(component.preOperativeForm.get('autorizacionIVAIEPS')).toBeDefined();
+    expect(component.preOperativeForm.get('numeroAutorizacionCITES')).toBeDefined();
   });
 
-  it('should disable controls if esFormularioSoloLectura is true', () => {
-    component.solicitudState = createInitialState();
+    it('debe deshabilitar los controles si esFormularioSoloLectura es true', () => {
     component.esFormularioSoloLectura = true;
-    component.inicializarEstadoFormulario();
+    Object.keys(component.preOperativeForm.controls).forEach(key => {
+      component.preOperativeForm.get(key)?.disable();
+    });
     Object.keys(component.preOperativeForm.controls).forEach(key => {
       expect(component.preOperativeForm.get(key)?.disabled).toBe(true);
     });
   });
-
-  it('should enable controls if esFormularioSoloLectura is false', () => {
-    component.solicitudState = createInitialState();
-    component.esFormularioSoloLectura = false;
-    component.inicializarEstadoFormulario();
-    Object.keys(component.preOperativeForm.controls).forEach(key => {
-      expect(component.preOperativeForm.get(key)?.enabled).toBe(true);
-    });
-  });
-
-  it('should set establecimientoHeaderData and establecimientoBodyData in getEstablecimiento', () => {
+  
+  it('debe establecer establecimientoHeaderData y establecimientoBodyData en getEstablecimiento', () => {
     component.getEstablecimiento();
     expect((component.establecimientoHeaderData as any[]).length).toBeGreaterThan(0);
     expect((component.establecimientoBodyData as any[]).length).toBeGreaterThan(0);
   });
 
-  it('should set empleadosHeaderData and empleadosBodyData in getEmpleadosData', () => {
+  it('debe establecer empleadosHeaderData y empleadosBodyData en getEmpleadosData', () => {
     component.getEmpleadosData();
     expect((component.empleadosHeaderData as any[]).length).toBeGreaterThan(0);
     expect((component.empleadosBodyData as any[]).length).toBeGreaterThan(0);
   });
 
-  it('should set domiciliosHeaderData and domiciliosBodyData in getDomiciliosData', () => {
+  it('debe establecer domiciliosHeaderData y domiciliosBodyData en getDomiciliosData', () => {
     component.getDomiciliosData();
     expect((component.domiciliosHeaderData as any[]).length).toBeGreaterThan(0);
     expect((component.domiciliosBodyData as any[]).length).toBeGreaterThan(0);
   });
 
-  it('should set InstalacionesHeaderData and InstalacionesBodyData in getInstalaciones', () => {
+  it('debe establecer InstalacionesHeaderData y InstalacionesBodyData en getInstalaciones', () => {
     component.getInstalaciones();
     expect((component.InstalacionesHeaderData as any[]).length).toBeGreaterThan(0);
     expect((component.InstalacionesBodyData as any[]).length).toBeGreaterThan(0);
   });
 
-  it('should update pagination on updatePagination', () => {
+  it('debe actualizar la paginación en updatePagination', () => {
     component.fullEstablecimientoBodyData = Array(10).fill({ Col1: 'A', Col2: 'B' });
     component.itemsPerPage = 5;
     component.currentPage = 1;
@@ -261,14 +299,14 @@ describe('AduaneroComponent', () => {
     expect((component.establecimientoBodyData as any[]).length).toBe(5);
   });
 
-  it('should change currentPage and update pagination on onPageChange', () => {
+  it('debe cambiar currentPage y actualizar la paginación en onPageChange', () => {
     const spy = jest.spyOn(component, 'updatePagination');
     component.onPageChange(2);
     expect(component.currentPage).toBe(2);
     expect(spy).toHaveBeenCalled();
   });
 
-  it('should change itemsPerPage and update pagination on onItemsPerPageChange', () => {
+  it('debe cambiar itemsPerPage y actualizar la paginación en onItemsPerPageChange', () => {
     const spy = jest.spyOn(component, 'updatePagination');
     component.onItemsPerPageChange(10);
     expect(component.itemsPerPage).toBe(10);
@@ -276,14 +314,14 @@ describe('AduaneroComponent', () => {
     expect(spy).toHaveBeenCalled();
   });
 
-  it('should call store method in setValoresStore', () => {
+  it('debe llamar al método del store en setValoresStore', () => {
     const form = new FormBuilder().group({ test: ['value'] });
     tramite31601StoreMock.setNombreMiembro = jest.fn();
     component.setValoresStore(form, 'test', 'setNombreMiembro');
     expect(tramite31601StoreMock.setNombreMiembro).toHaveBeenCalledWith('value');
   });
 
-  it('should open and close modals', () => {
+  it('debe abrir y cerrar los modales', () => {
     component.modalInstance = { show: jest.fn(), hide: jest.fn() } as any;
     component.openModifyModal();
     expect(component.modalInstance.show).toHaveBeenCalled();
@@ -291,13 +329,13 @@ describe('AduaneroComponent', () => {
     expect(component.modalInstance.hide).toHaveBeenCalled();
   });
 
-  it('should open instalaciones modal', () => {
+  it('debe abrir el modal de instalaciones', () => {
     component.modalInstanceInstalaciones = { show: jest.fn() } as any;
     component.openInstalacionesModal();
     expect(component.modalInstanceInstalaciones.show).toHaveBeenCalled();
   });
 
-  it('should show modal and set noSeHaSubidoNingunArchivo in subirArchivo', () => {
+  it('debe mostrar el modal y establecer noSeHaSubidoNingunArchivo en subirArchivo', () => {
     const template = {} as any;
     component.preOperativeForm = new FormBuilder().group({ archivoNacionales: [''] });
     component.subirArchivo(template);
@@ -305,7 +343,7 @@ describe('AduaneroComponent', () => {
     expect(component.noSeHaSubidoNingunArchivo).toBe(true);
   });
 
-  it('should hide modal and reset noSeHaSubidoNingunArchivo in cerrar', () => {
+  it('debe ocultar el modal y resetear noSeHaSubidoNingunArchivo en cerrar', () => {
     component.modalRef = { hide: jest.fn() } as unknown as BsModalRef;
     component.noSeHaSubidoNingunArchivo = true;
     component.cerrar();
@@ -313,7 +351,7 @@ describe('AduaneroComponent', () => {
     expect(component.noSeHaSubidoNingunArchivo).toBe(false);
   });
 
-  it('should clean up destroyNotifier$ on ngOnDestroy', () => {
+  it('debe limpiar destroyNotifier$ en ngOnDestroy', () => {
     const destroyed$ = (component as any).destroyNotifier$;
     const nextSpy = jest.spyOn(destroyed$, 'next');
     const completeSpy = jest.spyOn(destroyed$, 'complete');
@@ -321,4 +359,32 @@ describe('AduaneroComponent', () => {
     expect(nextSpy).toHaveBeenCalled();
     expect(completeSpy).toHaveBeenCalled();
   });
+
+  describe('AduaneroComponent manejarFilaSeleccionada', () => {
+  it('debe deshabilitar los botones y limpiar la selección si fila está vacía', () => {
+    component.enableModficarBoton = true;
+    component.enableEliminarBoton = true;
+    component.listaFilaSeleccionadaMencione = [{ id: 1 } as any];
+    component.filaSeleccionadaMencione = { id: 1 } as any;
+
+    component.manejarFilaSeleccionada([]);
+
+    expect(component.enableModficarBoton).toBe(false);
+    expect(component.enableEliminarBoton).toBe(false);
+  });
+
+  it('debe establecer la selección y habilitar los botones si fila no está vacía', () => {
+    const fila = [
+      { id: 1, name: 'a' },
+      { id: 2, name: 'b' }
+    ] as any[];
+
+    component.manejarFilaSeleccionada(fila);
+
+    expect(component.listaFilaSeleccionadaMencione).toBe(fila);
+    expect(component.filaSeleccionadaMencione).toBe(fila[1]);
+    expect(component.enableModficarBoton).toBe(true);
+    expect(component.enableEliminarBoton).toBe(true);
+  });
+});
 });

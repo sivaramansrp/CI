@@ -52,7 +52,6 @@ describe('DatosPorRegimenComponent', () => {
       setComboBimestresThree: jest.fn()
     };
     tramite31601QueryMock = {
-      // selectSolicitud$ should emit a valid Solicitud31601State object
       selectSolicitud$: of({
         importaciones: '',
         infraestructuraIndique: '',
@@ -81,7 +80,6 @@ describe('DatosPorRegimenComponent', () => {
         recintoFiscalizado: '',
         recintoEstrategico: '',
         cumplimientoLineamientos: '',
-        // Add all other required fields with dummy values
         nombreCompleto: '',
         tipoDePersonaMiembro: '',
         nombreMiembro: '',
@@ -200,24 +198,24 @@ describe('DatosPorRegimenComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize one catalogs on init', () => {
+  it('debe inicializar el catálogo uno al iniciar', () => {
     expect(pantallaSvc.getBimestreUnoCatalogo).toHaveBeenCalledTimes(1);
   });
 
-  it('should initialize form on creation', () => {
+  it('debe inicializar el formulario al crear', () => {
     expect(component.regimenForm).toBeDefined();
   });
 
-  it('should create form on initialization', () => {
+  it('debe crear el formulario al inicializar', () => {
     component.crearRegimenForm();
     expect(component.regimenForm).toBeDefined();
   });
 
-  it('should validate form fields', () => {
+  it('debe validar los campos del formulario', () => {
     validacionesService.isValid.mockReturnValue(true);
     expect(component.isValid('importaciones')).toBe(true);
     expect(validacionesService.isValid).toHaveBeenCalledWith(
@@ -226,7 +224,7 @@ describe('DatosPorRegimenComponent', () => {
     );
   });
 
-  it('should handle bimestre selections', () => {
+  it('debe manejar las selecciones de bimestres', () => {
     component.regimenForm.get('comboBimestresUno')?.setValue('Bimestre 1');
     component.bimestreUnoSeleccion();
     expect(tramiteAgaceStoreMock.establecerComboBimestresUno).toHaveBeenCalledWith(
@@ -246,7 +244,7 @@ describe('DatosPorRegimenComponent', () => {
     );
   });
 
-  it('should open modal and initialize form', () => {
+  it('debe abrir el modal e inicializar el formulario', () => {
     component.abrirModal();
     expect(component.modal).toBe('show');
     expect(component.agregarForm).toBeDefined();

@@ -57,11 +57,11 @@ fdescribe('PersonaComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create the PersonaComponent', () => {
+  it('debe crear el componente PersonaComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize and load personaparas on ngOnInit', () => {
+  it('debe inicializar y cargar personaparas en ngOnInit', () => {
     component.ngOnInit();
 
     expect(component.personaParas.length).toBe(2);
@@ -69,7 +69,7 @@ fdescribe('PersonaComponent', () => {
     expect(component.personaParas[1].nombre).toBe('Jane Smith');
   });
 
-  it('should toggle showContent', () => {
+  it('debe alternar showContent', () => {
     expect(component.showContent).toBeFalsy(); 
     component.toggleContent();
     expect(component.showContent).toBe(true); 
@@ -77,7 +77,7 @@ fdescribe('PersonaComponent', () => {
     expect(component.showContent).toBeFalsy(); 
   });
 
-  it('should call loadPersonas and update personaparas', () => {
+  it('debe llamar a loadPersonas y actualizar personaparas', () => {
     component.loadPersonas();
 
     expect(component.personaParas).toEqual([
@@ -98,7 +98,7 @@ fdescribe('PersonaComponent', () => {
     ]);
   });
 
-it('should call getPersonapara and assign data to personaparas when loadPersonas is called', () => {
+it('debe llamar a getPersonapara y asignar datos a personaparas cuando se llama loadPersonas', () => {
   jest.spyOn(pantallaSvc, 'getPersonapara');
   component.loadPersonas();
   expect(pantallaSvc.getPersonapara).toHaveBeenCalledTimes(1);

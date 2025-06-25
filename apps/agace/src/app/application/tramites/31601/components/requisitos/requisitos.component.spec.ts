@@ -79,35 +79,35 @@ describe('RequisitosComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize the form with correct value from store', () => {
+  it('debe inicializar el formulario con el valor correcto del store', () => {
     expect(component.requisitos).toBeDefined();
     expect(component.requisitos.get('tipoDocumento')?.value).toBe('Tipo Document 1');
   });
 
-  it('should disable form controls if esFormularioSoloLectura is true', () => {
+  it('debe deshabilitar los controles del formulario si esFormularioSoloLectura es true', () => {
     component.esFormularioSoloLectura = true;
     component.inicializarEstadoFormulario();
     expect(component.requisitos.get('tipoDocumento')?.disabled).toBe(true);
   });
 
-  it('should enable form controls if esFormularioSoloLectura is false', () => {
+  it('debe habilitar los controles del formulario si esFormularioSoloLectura es false', () => {
     component.esFormularioSoloLectura = false;
     component.inicializarEstadoFormulario();
     expect(component.requisitos.get('tipoDocumento')?.enabled).toBe(true);
   });
 
-  it('should loadTipos and set correct values', () => {
+  it('debe cargar los tipos y establecer los valores correctos', () => {
     component.loadTipos();
     expect(component.tipos).toEqual(mockTipos);
     expect(component.tipocatlog).toEqual(mockTipoCatalogResponse.data);
     expect(component.tipoHeaderData).toEqual(component.tipoTableData.tableHeader);
   });
 
-  it('should toggle showContent', () => {
+  it('debe alternar showContent', () => {
     expect(component.showContent).toBe(false);
     component.toggleContent();
     expect(component.showContent).toBe(true);
@@ -115,13 +115,13 @@ describe('RequisitosComponent', () => {
     expect(component.showContent).toBe(false);
   });
 
-  it('should call setValoresStore and update store', () => {
+  it('debe llamar a setValoresStore y actualizar el store', () => {
     component.requisitos.get('tipoDocumento')?.setValue('Tipo Document 2');
     component.setValoresStore(component.requisitos, 'tipoDocumento', 'setTipoDocumento');
     expect(store.setTipoDocumento).toHaveBeenCalledWith('Tipo Document 2');
   });
 
-  it('should unsubscribe and complete destroyNotifier$ on ngOnDestroy', () => {
+  it('debe desuscribirse y completar destroyNotifier$ en ngOnDestroy', () => {
     const destroySpy = jest.spyOn((component as any).destroyNotifier$, 'next');
     const completeSpy = jest.spyOn((component as any).destroyNotifier$, 'complete');
     const unsubSpy = jest.spyOn((component as any).tiposCatalogSubscription, 'unsubscribe');

@@ -4,7 +4,6 @@ import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 
-// Mock the documentosTable import
 jest.mock('@libs/shared/theme/assets/json/31601/anexar.json', () => ({
   __esModule: true,
   default: {
@@ -100,39 +99,39 @@ describe('AnexarRequisitosComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize the form on ngOnInit', () => {
+  it('debe inicializar el formulario en ngOnInit', () => {
     expect(component.anexarForm).toBeDefined();
     expect(component.anexarForm.get('valorSeleccionado')).toBeDefined();
   });
 
-  it('should set documentos from JSON', () => {
+  it('debe establecer los documentos desde el JSON', () => {
     expect(component.documentos).toBeDefined();
     expect(Array.isArray(component.documentos)).toBe(true);
     expect(component.documentos.length).toBeGreaterThan(0);
     expect(component.documentos[0]).toHaveProperty('tipo');
   });
 
-  it('should update form value on cambioDeArchivo', () => {
+  it('debe actualizar el valor del formulario en cambioDeArchivo', () => {
     const mockEvent = { target: { value: 'testValue' } };
     component.cambioDeArchivo(mockEvent);
     expect(component.anexarForm.get('valorSeleccionado')?.value).toBe('testValue');
   });
 
-  it('should patch value with empty string if event target value is empty', () => {
+  it('debe establecer valor vacío si el valor del evento es vacío en cambioDeArchivo', () => {
     const mockEvent = { target: { value: '' } };
     component.cambioDeArchivo(mockEvent);
     expect(component.anexarForm.get('valorSeleccionado')?.value).toBe('');
   });
 
-  it('should not throw if cambioDeArchivo called with undefined event', () => {
+  it('no debe lanzar error si cambioDeArchivo se llama con evento indefinido', () => {
     expect(() => component.cambioDeArchivo({ target: {} })).not.toThrow();
   });
 
-  it('should re-initialize the form when anexarEquisitosForm is called', () => {
+  it('debe reinicializar el formulario cuando se llama anexarEquisitosForm', () => {
     component.anexarForm.get('valorSeleccionado')?.setValue('oldValue');
     component.anexarEquisitosForm();
     expect(component.anexarForm.get('valorSeleccionado')?.value).toBe('');

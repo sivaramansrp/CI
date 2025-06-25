@@ -38,11 +38,11 @@ describe('ReprestantanteComponent', () => {
     fixture.detectChanges(); 
   });
 
-  it('should create the component', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize the form correctly', () => {
+  it('debe inicializar el formulario correctamente', () => {
     expect(component.represtantante).toBeDefined();
     expect(component.represtantante.get('resigtro')).toBeDefined();
     expect(component.represtantante.get('rfc')).toBeDefined();
@@ -53,7 +53,7 @@ describe('ReprestantanteComponent', () => {
     expect(component.represtantante.get('correo')).toBeDefined();
   });
 
- it('should disable specific form controls', () => {
+ it('debe deshabilitar controles específicos del formulario', () => {
   component.esFormularioSoloLectura = true;
   component.inicializarEstadoFormulario();
 
@@ -68,7 +68,7 @@ describe('ReprestantanteComponent', () => {
   expect(apellidoMaterno?.disabled).toBe(true);
 });
 
-  it('should patch form values correctly', () => {
+  it('debe asignar correctamente los valores al formulario', () => {
     const representativeData = component.datosRepresentativos;
 
     const resigtro = component.represtantante.get('resigtro');
@@ -88,7 +88,7 @@ describe('ReprestantanteComponent', () => {
     expect(correo?.value).toBe(representativeData.correo);
   });
   
-it('should call ngOnInit and set up the form correctly', () => {
+it('debe llamar a ngOnInit y configurar el formulario correctamente', () => {
   component.esFormularioSoloLectura = true;
   const spyPatchValue = jest.spyOn(component, 'ngOnInit');
   component.ngOnInit();

@@ -10,7 +10,6 @@ describe('Solocitud31601Service', () => {
 
   beforeEach(() => {
     mockStore = {};
-    // Mock all store setter methods used in actualizarEstadoFormulario
     [
       'setAutorizacionIVAIEPS', 'setRegimen_0', 'setRegimen_1', 'setRegimen_2', 'setRegimen_3',
       'setSectorProductivo', 'setServicio', 'setPreOperativo', 'setIndiqueSi', 'setSenale',
@@ -40,12 +39,11 @@ describe('Solocitud31601Service', () => {
     service = new Solocitud31601Service(mockHttp as any, mockStore as Tramite31601Store);
   });
 
-  it('should be created', () => {
+  it('debe crearse el servicio', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should call all store setters in actualizarEstadoFormulario with correct types', () => {
-    // Fill all properties with correct types
+  it('debe llamar a todos los setters del store en actualizarEstadoFormulario con los tipos correctos', () => {
     const datos: Solicitud31601State = {
       nombreCompleto: 'Nombre',
       tipoDePersonaMiembro: 'Física',
@@ -147,18 +145,19 @@ describe('Solocitud31601Service', () => {
       telefonoReprestantante: '0987654321',
       correoReprestantante: 'rep@dominio.com',
       suplente: 'Suplente',
-      tipoDocumento: 'INE'
+      tipoDocumento: 'INE',
+      mencioneDatos: [], 
+      enlaceDatos: [],  
     };
 
     service.actualizarEstadoFormulario(datos);
 
-    // Check that all store setters were called
     Object.keys(mockStore).forEach(key => {
       expect(mockStore[key]).toHaveBeenCalled();
     });
   });
 
-  it('should call http.get with correct URL in getRegistroTomaMuestrasMercanciasData', () => {
+  it('debe llamar a http.get con la URL correcta en getRegistroTomaMuestrasMercanciasData', () => {
     const mockResponse = { foo: 'bar' };
     mockHttp.get.mockReturnValue(of(mockResponse));
     const obs$ = service.getRegistroTomaMuestrasMercanciasData();

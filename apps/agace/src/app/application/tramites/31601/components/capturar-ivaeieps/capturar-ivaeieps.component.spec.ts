@@ -77,22 +77,22 @@ fdescribe('CapturarIvaeiepsComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize forms correctly', () => {
+  it('debe inicializar los formularios correctamente', () => {
     expect(component.ivaForm).toBeDefined();
     expect(component.formularioDePago).toBeDefined();
   });
 
-  it('should toggle mostrarContenido', () => {
+  it('debe alternar mostrarContenido', () => {
     expect(component.mostrarContenido).toBeFalsy();
     component.alternarContenido();
     expect(component.mostrarContenido).toBe(true);
   });
 
-  it('should open and close modal', () => {
+  it('debe abrir y cerrar el modal', () => {
     expect(component.mostrarModal).toBe(false);
     component.agregarOpenModal();
     expect(component.mostrarModal).toBe(true);
@@ -100,30 +100,30 @@ fdescribe('CapturarIvaeiepsComponent', () => {
     expect(component.mostrarModal).toBe(false);
   });
 
-  it('should change valorSeleccionado on cambioDeValor', () => {
+  it('debe cambiar valorSeleccionado en cambioDeValor', () => {
     component.cambioDeValor('No');
     expect(component.valorSeleccionado).toBe('No');
   });
 
-  it('should change predeterminadoSeleccionar on cambioDeValorIndique', () => {
+  it('debe cambiar predeterminadoSeleccionar en cambioDeValorIndique', () => {
     component.cambioDeValorIndique('No');
     expect(component.predeterminadoSeleccionar).toBe('No');
   });
 
-  it('should add data to destinatarioHeaderData on agregarDatos', () => {
+  it('debe agregar datos a destinatarioHeaderData en agregarDatos', () => {
     component.ivaForm.patchValue({ rfc: 'ABC123456XYZ', denominacion: 'Test Name', domicilio: 'Test Address' });
     component.agregarDatos();
     expect(component.destinatarioHeaderData.tableBody[0].tbodyData.length).toBeGreaterThan(0);
   });
 
-  it('should reset the form after agregarDatos', () => {
+  it('debe resetear el formulario después de agregarDatos', () => {
     const resetSpy = jest.spyOn(component.ivaForm, 'reset');
     component.ivaForm.patchValue({ rfc: 'ABC123456XYZ' }); 
     component.agregarDatos(); 
     expect(resetSpy).toHaveBeenCalled(); 
   });
 
-  it('should patch values in formularioDePago on poblarPagoForm', () => {
+  it('debe asignar valores en formularioDePago al llamar poblarPagoForm', () => {
     const mockData = {
       claveReferencia: '123',
       numeroOperacion: '456',
@@ -138,7 +138,7 @@ fdescribe('CapturarIvaeiepsComponent', () => {
     expect(component.formularioDePago.get('banco')?.value).toBe('');
   });
 
-  it('should disable specific fields on form initialization', () => {
+  it('debe deshabilitar campos específicos al inicializar el formulario', () => {
     expect(component.ivaForm.get('denominacion')?.disabled).toBe(false);
     expect(component.ivaForm.get('domicilio')?.disabled).toBe(false);
     expect(component.formularioDePago.get('claveReferencia')?.disabled).toBe(false);
