@@ -38,6 +38,7 @@ describe('SolicitudComponent', () => {
     tramiteQueryMock = {
       selectSolicitud$: of({}),
       mostrarTabla$: of(false),
+      selectConsultaioState$: of({ readonly: false })
     };
 
     await TestBed.configureTestingModule({
