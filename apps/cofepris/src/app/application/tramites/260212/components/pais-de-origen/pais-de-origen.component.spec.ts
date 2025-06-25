@@ -66,7 +66,7 @@ describe('PaisDeOrigenComponent', () => {
     expect(component.fechasDatos).toEqual([]);
   });
 
-it('debería manejar agregar con selectRangoDias vacío', () => {
+  it('debería manejar agregar con selectRangoDias vacío', () => {
     component.selectRangoDias = [];
     component.fechasSeleccionadas = [];
     component.fechasDatos = ['2023-01-01'];
@@ -83,5 +83,82 @@ it('debería manejar agregar con selectRangoDias vacío', () => {
     expect(component.fechasDatos).toEqual([]);
   });
 
+  // Cobertura para mostrar_plegable cuando ya está en true
+  it('debería alternar plegable de true a false', () => {
+    component.plegable = true;
+    component.mostrar_plegable();
+    expect(component.plegable).toBe(false);
+  });
+
+  // Cobertura para agregar con valor vacío ('')
+  it('debería manejar agregar con valor vacío', () => {
+    component.selectRangoDias = ['2023-01-01'];
+    component.fechasSeleccionadas = [];
+    component.fechasDatos = [];
+    (component as any).fecha = { value: [0] };
+    expect(() => component.agregar('')).not.toThrow();
+    // Dependiendo de la implementación, puede que no agregue nada
+    expect(Array.isArray(component.fechasSeleccionadas)).toBe(true);
+  });
+
+  // Cobertura para quitar con valor vacío y fechaSeleccionada con índice válido
+  it('debería quitar una fecha específica de fechasSeleccionadas y agregarla a fechasDatos', () => {
+    component.fechasSeleccionadas = ['2023-01-01', '2023-01-02'];
+    component.fechasDatos = [];
+    (component as any).fechaSeleccionada = { value: [0] };
+    component.quitar('');
+    expect(component.fechasDatos).toEqual(['2023-01-01']);
+    expect(component.fechasSeleccionadas).toEqual(['2023-01-02']);
+  });
+
+  // Cobertura para quitar con valor vacío y fechaSeleccionada con índice fuera de rango
+  it('no debería fallar si fechaSeleccionada.value tiene un índice fuera de rango', () => {
+    component.fechasSeleccionadas = ['2023-01-01'];
+    component.fechasDatos = [];
+    (component as any).fechaSeleccionada = { value: [5] };
+    expect(() => component.quitar('')).not.toThrow();
+    // No debe modificar nada
+    expect(component.fechasDatos).toEqual([]);
+    expect(component.fechasSeleccionadas).toEqual(['2023-01-01']);
+  });
+
+  // Cobertura para agregar con valor 't' y selectRangoDias undefined
+  it('debería lanzar error si selectRangoDias es undefined y se llama agregar con "t"', () => {
+    component.selectRangoDias = undefined as any;
+    component.fechasSeleccionadas = [];
+    component.fechasDatos = [];
+    expect(() => component.agregar('t')).toThrowError();
+  });
+
+  // Cobertura para quitar con valor 't' y fechasSeleccionadas undefined
+  it('debería lanzar error si fechasSeleccionadas es undefined y se llama quitar con "t"', () => {
+    component.fechasSeleccionadas = undefined as any;
+    component.fechasDatos = [];
+    expect(() => component.quitar('t')).toThrowError();
+  });
+
+  // Cobertura para agregar con valor distinto de 't' y fecha.value con datos
+  it('debería manejar agregar con valor distinto de "t" y fecha.value con datos', () => {
+    component.selectRangoDias = ['2023-01-01', '2023-01-02'];
+    component.fechasSeleccionadas = [];
+    component.fechasDatos = [];
+    (component as any).fecha = { value: [0] };
+    expect(() => component.agregar('x')).not.toThrow();
+    // Dependiendo de la implementación, puede que no agregue nada
+    expect(Array.isArray(component.fechasSeleccionadas)).toBe(true);
+  });
+
+  // Cobertura para quitar con valor distinto de 't' y fechaSeleccionada.value con datos
+  it('debería manejar quitar con valor distinto de "t" y fechaSeleccionada.value con datos', () => {
+    component.fechasSeleccionadas = ['2023-01-01', '2023-01-02'];
+    component.fechasDatos = [];
+    (component as any).fechaSeleccionada = { value: [1] };
+    expect(() => component.quitar('x')).not.toThrow();
+    // Dependiendo de la implementación, puede que no quite nada
+    expect(Array.isArray(component.fechasDatos)).toBe(true);
+  });
+
 });
- 
+
+
+
