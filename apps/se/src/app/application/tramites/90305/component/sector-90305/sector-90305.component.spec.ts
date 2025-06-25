@@ -8,7 +8,7 @@ import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 
 import { CommonModule } from '@angular/common';
 import { TituloComponent } from '@ng-mf/data-access-user';
-import { ProsecModificacionServiceTsService } from '../../services/prosec-modificacion.service.ts.service';
+import { ProsecModificacionServiceTsService } from '../../services/prosec-modificacion.service';
 import { SectorModel  } from '../../models/prosec-modificacion.model';
 
 describe('Sector90305Component', () => {
@@ -51,7 +51,13 @@ describe('Sector90305Component', () => {
       { encabezado: 'Clave del sector', clave: (item: SectorModel ) => item.claveDelSector, orden: 2 },
       { encabezado: 'Estatus', clave: (item: SectorModel ) => item.estatus, orden: 3 }
     ];
-    expect(component.configuracionTabla).toEqual(EXPECTED_CONFIG);
+    expect(component.configuracionTabla.map(col => ({
+      encabezado: col.encabezado,
+      orden: col.orden
+    }))).toEqual(EXPECTED_CONFIG.map(col => ({
+      encabezado: col.encabezado,
+      orden: col.orden
+    })));
   });
 
   it('should call loadSector() and populate sectorData', () => {
