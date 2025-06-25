@@ -143,5 +143,74 @@ describe('ConsultarCupoComponent', () => {
     ]);
   }));
   
-  
+  it('should emit event when controladorDeClicsArchivo is called', () => {
+  const spy = jest.spyOn(component.emitirFilaClicControlador, 'emit');
+  const mockRow = {
+    id: 1,
+    cveTratado: 'MX-USA',
+    categoriaTextil: 'CT-1',
+  } as InstrumentoCupoTPLForm;
+  component.controladorDeClicsArchivo(mockRow);
+  expect(spy).toHaveBeenCalledWith(mockRow);
+});
+
+  it('should fetch tabla data, update cuerpoTabla and store, and emit row if readonly', fakeAsync(() => {
+  const mockTabla = [{
+    id: 1,
+    cveTratado: 'MX',
+    cveRegimenClasificacion: 'R1',
+    cvePaisDestino: 'USA',
+    fraccionArancelaria: '123456',
+    categoriaTextilDescripcion: 'Textil A',
+    productoDescripcion: 'Producto A',
+    subProductoClasificacion: 'Sub',
+    fechaInicioVigencia: '2024-01-01',
+    fechaFinVigencia: '2024-12-31',
+    montoDisponible: '100',
+    categoriaTextil: 'CT',
+    asignacionMecanismo: 'Manual',
+    unidad: 'Kg',
+    conversionFactor: 1.0,
+  }];
+
+  component.consultaState.readonly = true;
+
+  jest.spyOn(component['solicitudDeRegistroTplService'], 'obtenerTablaDatos')
+    .mockReturnValue(of({
+      code: 200,
+      message: 'Success',
+      data: mockTabla
+    }));
+
+  const storeSpy = jest.spyOn(component['tramite120101Store'], 'setDynamicFieldValue');
+  const emitSpy = jest.spyOn(component.emitirFilaClicControlador, 'emit');
+
+  component.obtenerTablaDatos();
+  tick();
+
+  expect(component.cuerpoTabla.length).toBe(1);
+  expect(storeSpy).toHaveBeenCalledWith('cuerpoTabla', component.cuerpoTabla);
+  expect(emitSpy).toHaveBeenCalledWith(mockTabla[0]);
+}));
+
+it('should subscribe to selectSolicitudDeRegistroTpl$, update cuerpoTabla and register form on init', fakeAsync(() => {
+  const mockState = {
+    cuerpoTabla: [
+      { id: 1, categoriaTextilDescripcion: 'Textil A' } as InstrumentoCupoTPLForm
+    ]
+  } as any;
+
+  component['tramite120101Query'].selectSolicitudDeRegistroTpl$ = of(mockState) as any;
+  const registerSpy = jest.spyOn(component['servicioDeFormularioService'], 'registerForm');
+  component.ngOnInit();
+  tick();
+
+  expect(component.cuerpoTabla.length).toBe(1);
+  expect(component.cuerpoTabla[0].categoriaTextilDescripcion).toBe('Textil A');
+  expect(registerSpy).toHaveBeenCalledWith('consultarCupoForm', component.ninoFormGroup);
+}));
+
+
+
+
 });

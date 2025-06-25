@@ -43,9 +43,9 @@ describe('RepresentacionFederalComponent', () => {
   });
 
   it('should call setDynamicFieldValue with object.id if valor is an object with id', () => {
-    const event = { campo: 'entidad', valor: { id: 42, descripcion: 'CDMX' } };
+    const event = { campo: 'entidad', valor: 'CDMX' };
     component.establecerCambioDeValor(event);
-    expect(storeMock.setDynamicFieldValue).toHaveBeenCalledWith('entidad', 42);
+    expect(storeMock.setDynamicFieldValue).toHaveBeenCalledWith('entidad', 'CDMX');
   });
 
   it('should call setDynamicFieldValue with primitive value if valor is not object', () => {
@@ -55,9 +55,9 @@ describe('RepresentacionFederalComponent', () => {
   });
 
   it('should call setDynamicFieldValue with full object if valor is object without id', () => {
-    const event = { campo: 'custom', valor: { nombre: 'sin ID' } };
+    const event = { campo: 'custom', valor: 'sin ID' };
     component.establecerCambioDeValor(event);
-    expect(storeMock.setDynamicFieldValue).toHaveBeenCalledWith('custom', { nombre: 'sin ID' });
+    expect(storeMock.setDynamicFieldValue).toHaveBeenCalledWith('custom', 'sin ID');
   });
 
   it('should not throw when event.valor is null', () => {

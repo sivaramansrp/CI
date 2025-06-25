@@ -106,4 +106,18 @@ export const API_GET_DOCUMENTOS_OBLIGATORIOS = `tramite/{numeroTramite}/document
  */
 export const API_GET_PAISES = 'catalogo/paises';
 
+/**
+ * API para generar la cadena original de un trámite.
+ * @see http://api-vucem-1069277193.us-east-1.elb.amazonaws.com/api/tramite-flujo/swagger-ui/index.html#/Cadena/generar
+ */
+export const API_GENERAR_CADENA_ORIGINAL = 'api/tramite/solicitud/genera-cadena-original';
+
+/**
+ * API para enviar una firma electrónica.
+ * @see http://api-vucem-1069277193.us-east-1.elb.amazonaws.com/api/firma/swagger-ui/index.html#/Firma/firmar
+ */
+export const API_ENVIAR_FIRMA = 'api/tramite/firmar';
+
+
+
 

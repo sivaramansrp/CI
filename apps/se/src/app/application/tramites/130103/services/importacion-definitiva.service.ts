@@ -18,7 +18,7 @@ export class ImportacionDefinitivaService {
    /**
  * @constructor
  * @description
- * Constructor del servicio `ImportacionDefinitivaService`.
+ * Constructor del servicio  `ImportacionDefinitivaService`.
  * @param {HttpClient} http - Servicio de Angular para realizar solicitudes HTTP.
  * @param {Tramite130103Store} tramite130103Store - Store para manejar el estado del trámite 130103.
  */
