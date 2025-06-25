@@ -46,6 +46,20 @@
   margin-top: 10px;
 }
 
+.red-require {
+  color: #CE0923;
+  font-weight: bold;
+}
+
+.modal-dialog {
+  max-width: 1100px !important;
+}
+
+.pagination {
+  display: table;
+  margin: 0 auto;
+}
+
 ::ng-deep {
   .reexportacion {
     .modal-footer {

@@ -1,4 +1,4 @@
-import { Destinatario } from "../models/pantallas-captura.model";
+import { DatosGenerales, Destinatario, TablaMercancia } from "../models/pantallas-captura.model";
 /**
  * Pasos del trámite.
  * 
@@ -162,4 +162,34 @@ export const CONFIGURATION_TABLA_DESTINATARIO = [
   { encabezado: 'Correo electrónico', clave: (item: Destinatario): string => item.correoElectronico, orden: 3 },
   { encabezado: 'Domicilio', clave: (item: Destinatario): string | undefined => item.domicilio, orden: 4 },
   { encabezado: 'País', clave: (item: Destinatario): string | undefined => item.pais, orden: 5 },
+];
+/** Configuración de las columnas de la tabla de datos generales. */
+export const CONFIGURATION_TABLA_GENERALES = [
+  { encabezado: 'No. partida', clave: (item: DatosGenerales): number => item.id, orden: 1 },
+  { encabezado: 'Fracción arancelaria', clave: (item: DatosGenerales): string => item.fraccionArancelaria, orden: 2 },
+  { encabezado: 'Descripción de la fracción', clave: (item: DatosGenerales): string => item.descdelaFraccion, orden: 3 },
+  { encabezado: 'Cantidad UMT', clave: (item: DatosGenerales): string | undefined => item.cantidadUMT, orden: 4 },
+  { encabezado: 'Unidad de medida de tarifa (UMT)', clave: (item: DatosGenerales): string | undefined => item.UMT, orden: 5 },
+  { encabezado: 'Cantidad UMC', clave: (item: DatosGenerales): string | undefined => item.cantidadUMC, orden: 6 },
+  { encabezado: 'Unidad de medida de comercialización (UMC)', clave: (item: DatosGenerales): string | undefined => item.UMC, orden: 7 },
+  { encabezado: 'Descripción adicional del producto', clave: (item: DatosGenerales): string | undefined => item.descripcionProducto, orden: 8 },
+  { encabezado: 'Nombre común', clave: (item: DatosGenerales): string | undefined => item.nombreComun, orden: 9 },
+  { encabezado: 'Nombre científico', clave: (item: DatosGenerales): string | undefined => item.nombreCientifico, orden: 10 },
+  { encabezado: 'Uso', clave: (item: DatosGenerales): string | undefined => item.USO, orden: 11 },
+  { encabezado: 'País de orígen', clave: (item: DatosGenerales): string | undefined => item.paisdeOrigen, orden: 12 },
+  { encabezado: 'Marcas distintivas', clave: (item: DatosGenerales): string | undefined => item.marcasDistintivas, orden: 13 },
+  { encabezado: 'Número', clave: (item: DatosGenerales): string | undefined => item.numero, orden: 14 },
+  { encabezado: 'Descripción de los empaques', clave: (item: DatosGenerales): string | undefined => item.empaques, orden: 15 },
+];
+/** Configuración de las columnas de la tabla de mercancías. */
+export const CONFIGURATION_TABLA_MERCANCIA = [
+  { encabezado: 'No. partida', clave: (item: TablaMercancia): number => item.id, orden: 1 },
+  { encabezado: 'Entidad Federativa de Origen', clave: (item: TablaMercancia): string => item.federativaOrigen, orden: 2 },
+  { encabezado: 'Municipio de Origen', clave: (item: TablaMercancia): string => item.origen, orden: 3 },
+];
+/** Opciones disponibles para los municipios. */
+export const MUNICIPIODE_OPCIONS = [
+  { label: 'Municipio 1', value: 'Municipio 1' },
+  { label: 'Municipio 2', value: 'Municipio 2' },
+  { label: 'Municipio 3', value: 'Municipio 3' }
 ];
