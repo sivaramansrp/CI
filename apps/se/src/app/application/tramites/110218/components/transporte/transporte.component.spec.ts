@@ -47,11 +47,11 @@ describe('TransporteComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
+  it('debería crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize the form with values from estadoSeleccionado', () => {
+  it('debería inicializar el formulario con valores de estadoSeleccionado', () => {
     component.estadoSeleccionado = {
       puertodeEmbarque: 'Kobe',
       puertodeDesembarque: 'Lázaro Cárdenas',
@@ -67,28 +67,28 @@ describe('TransporteComponent', () => {
     expect(component.detallestransporte.get('numerodeVuelo')?.value).toBe('67890');
   });
 
-  it('should enable the form if esSoloLectura is false', () => {
+  it('debería habilitar el formulario si esSoloLectura es falso', () => {
     component.inicializarFormulario();
     component.esSoloLectura = false;
     component.habilitarDeshabilitarFormulario();
     expect(component.detallestransporte.enabled).toBe(true);
   });
 
-  it('should disable the form if esSoloLectura is true', () => {
+  it('debería deshabilitar el formulario si esSoloLectura es verdadero', () => {
     component.inicializarFormulario();
     component.esSoloLectura = true;
     component.habilitarDeshabilitarFormulario();
     expect(component.detallestransporte.disabled).toBe(true);
   });
 
-  it('should update store with setValorStore', () => {
+  it('debería actualizar el store con setValorStore', () => {
     component.inicializarFormulario();
     component.detallestransporte.get('puertodeEmbarque')?.setValue('Nagoya');
     component.setValorStore(component.detallestransporte, 'puertodeEmbarque');
     expect(mockStore.setTramite110218State).toHaveBeenCalledWith({ puertodeEmbarque: 'Nagoya' });
   });
 
-  it('should update estadoSeleccionado on getValorStore', () => {
+  it('debería actualizar estadoSeleccionado al llamar getValorStore', () => {
     component.getValorStore();
     expect(component.estadoSeleccionado).toEqual(expect.objectContaining({
       puertodeEmbarque: 'Yokohama',
@@ -96,7 +96,7 @@ describe('TransporteComponent', () => {
     }));
   });
 
-  it('should clean up destroyed$ on ngOnDestroy', () => {
+  it('debería limpiar destroyed$ en ngOnDestroy', () => {
     const nextSpy = jest.spyOn((component as any).destroyed$, 'next');
     const completeSpy = jest.spyOn((component as any).destroyed$, 'complete');
     component.ngOnDestroy();

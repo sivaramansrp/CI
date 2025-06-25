@@ -53,23 +53,23 @@ describe('MercanciasSeleccionadasFormComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
+  it('debería crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize unidaddeMedidadeComercializacionOptions on unidadMedidaData', () => {
+  it('debería inicializar unidaddeMedidadeComercializacionOptions al llamar unidadMedidaData', () => {
     component.unidadMedidaData();
     expect(mockService.getUnidadMedida).toHaveBeenCalled();
     expect(component.unidaddeMedidadeComercializacionOptions).toEqual([{ id: 1, descripcion: 'Unidad' }]);
   });
 
-  it('should initialize tipodeFacturaOptions on tipoDeFactura', () => {
+  it('debería inicializar tipodeFacturaOptions al llamar tipoDeFactura', () => {
     component.tipoDeFactura();
     expect(mockService.getTipodeFctura).toHaveBeenCalled();
     expect(component.tipodeFacturaOptions).toEqual([{ id: 2, descripcion: 'Factura' }]);
   });
 
-  it('should patch form values in tableDataValues if receivedData exists', () => {
+  it('debería actualizar los valores del formulario en tableDataValues si receivedData existe', () => {
     component.inicializarFormulario();
     component.receivedData = [{ nombreComercial: 'Com', nombreIngles: 'Ing' }];
     component.tableDataValues();
@@ -79,20 +79,20 @@ describe('MercanciasSeleccionadasFormComponent', () => {
     expect(component.modifydatosdelcertificado.get('fechadelaFactura')?.value).toBe('2024-11-13');
   });
 
-  it('should emit true on modificarSuccess', () => {
+  it('debería emitir true en modificarSuccess', () => {
     const spy = jest.spyOn(component.modificarÉxitoBtn, 'emit');
     component.modificarSuccess();
     expect(spy).toHaveBeenCalledWith(true);
   });
 
-  it('should update store with setValorStore', () => {
+  it('debería actualizar el store con setValorStore', () => {
     component.inicializarFormulario();
     component.modifydatosdelcertificado.get('marca')?.setValue('NuevaMarca');
     component.setValorStore(component.modifydatosdelcertificado, 'marca');
     expect(mockStore.setTramite110218State).toHaveBeenCalledWith({ marca: 'NuevaMarca' });
   });
 
-  it('should update estadoSeleccionado on getValorStore', () => {
+  it('debería actualizar estadoSeleccionado al llamar getValorStore', () => {
     component.getValorStore();
     expect(component.estadoSeleccionado).toEqual(expect.objectContaining({
       complementoDelaDescripcion: 'desc',
@@ -100,7 +100,7 @@ describe('MercanciasSeleccionadasFormComponent', () => {
     }));
   });
 
-  it('should clean up destroyed$ on ngOnDestroy', () => {
+  it('debería limpiar destroyed$ en ngOnDestroy', () => {
     const nextSpy = jest.spyOn((component as any).destroyed$, 'next');
     const completeSpy = jest.spyOn((component as any).destroyed$, 'complete');
     component.ngOnDestroy();
@@ -108,7 +108,7 @@ describe('MercanciasSeleccionadasFormComponent', () => {
     expect(completeSpy).toHaveBeenCalled();
   });
 
-  it('should initialize the form with correct default values', () => {
+  it('debería inicializar el formulario con los valores por defecto correctos', () => {
     component.estadoSeleccionado = {
       complementoDelaDescripcion: 'desc',
       marca: 'marca',

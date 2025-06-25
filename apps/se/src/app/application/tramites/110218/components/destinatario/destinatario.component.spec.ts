@@ -57,11 +57,11 @@ describe('DestinatarioComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
+  it('debería crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should create datosDelDestinatario form with correct values', () => {
+  it('debería crear el formulario datosDelDestinatario con los valores correctos', () => {
     component.estadoSeleccionado = {
       nombre: 'Juan',
       primerApellido: 'Pérez',
@@ -77,7 +77,7 @@ describe('DestinatarioComponent', () => {
     expect(component.datosDelDestinatario.get('razonSocial')?.value).toBe('Empresa SA');
   });
 
-  it('should create domicilioDelDestinatario form with correct values', () => {
+  it('debería crear el formulario domicilioDelDestinatario con los valores correctos', () => {
     component.estadoSeleccionado = {
       calle: 'Calle 1',
       numeroLetra: '10A',
@@ -95,7 +95,7 @@ describe('DestinatarioComponent', () => {
     expect(component.domicilioDelDestinatario.get('telefono')?.value).toBe('5555555');
   });
 
-  it('should enable both forms if esSoloLectura is false', () => {
+  it('debería habilitar ambos formularios si esSoloLectura es falso', () => {
     component.crearFormularioDatosDelDestinatario();
     component.crearFormularioDomicilioDelDestinatario();
     component.esSoloLectura = false;
@@ -104,7 +104,7 @@ describe('DestinatarioComponent', () => {
     expect(component.domicilioDelDestinatario.enabled).toBe(true);
   });
 
-  it('should disable both forms if esSoloLectura is true', () => {
+  it('debería deshabilitar ambos formularios si esSoloLectura es verdadero', () => {
     component.crearFormularioDatosDelDestinatario();
     component.crearFormularioDomicilioDelDestinatario();
     component.esSoloLectura = true;
@@ -113,14 +113,14 @@ describe('DestinatarioComponent', () => {
     expect(component.domicilioDelDestinatario.disabled).toBe(true);
   });
 
-  it('should update store with setValorStore', () => {
+  it('debería actualizar el store con setValorStore', () => {
     component.crearFormularioDatosDelDestinatario();
     component.datosDelDestinatario.get('nombre')?.setValue('Pedro');
     component.setValorStore(component.datosDelDestinatario, 'nombre');
     expect(mockStore.setTramite110218State).toHaveBeenCalledWith({ nombre: 'Pedro' });
   });
 
-  it('should update estadoSeleccionado on getValorStore', () => {
+  it('debería actualizar estadoSeleccionado al llamar getValorStore', () => {
     component.getValorStore();
     expect(component.estadoSeleccionado).toEqual(expect.objectContaining({
       nombre: 'Juan',
@@ -128,7 +128,7 @@ describe('DestinatarioComponent', () => {
     }));
   });
 
-  it('should clean up destroyed$ on ngOnDestroy', () => {
+  it('debería limpiar destroyed$ en ngOnDestroy', () => {
     const nextSpy = jest.spyOn((component as any).destroyed$, 'next');
     const completeSpy = jest.spyOn((component as any).destroyed$, 'complete');
     component.ngOnDestroy();

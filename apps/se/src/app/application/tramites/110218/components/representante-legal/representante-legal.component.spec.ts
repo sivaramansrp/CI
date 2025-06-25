@@ -53,11 +53,11 @@ describe('RepresentanteLegalComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
+  it('debería crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize the form with values from estadoSeleccionado', () => {
+  it('debería inicializar el formulario con valores de estadoSeleccionado', () => {
     component.estadoSeleccionado = {
       nombredelRepresentante: 'Luis',
       cargo: 'Gerente',
@@ -73,35 +73,35 @@ describe('RepresentanteLegalComponent', () => {
     expect(component.datosdelexportador.get('correoElectronicos')?.value).toBe('luis@mail.com');
   });
 
-  it('should enable the form if esSoloLectura is false', () => {
+  it('debería habilitar el formulario si esSoloLectura es falso', () => {
     component.inicializarFormulario();
     component.esSoloLectura = false;
     component.habilitarDeshabilitarFormulario();
     expect(component.datosdelexportador.enabled).toBe(true);
   });
 
-  it('should disable the form if esSoloLectura is true', () => {
+  it('debería deshabilitar el formulario si esSoloLectura es verdadero', () => {
     component.inicializarFormulario();
     component.esSoloLectura = true;
     component.habilitarDeshabilitarFormulario();
     expect(component.datosdelexportador.disabled).toBe(true);
   });
 
-  it('should patch empresa value from service in obtenerDatosDeTabla', () => {
+  it('debería actualizar el valor de empresa desde el servicio en obtenerDatosDeTabla', () => {
     component.inicializarFormulario();
     component.obtenerDatosDeTabla();
     expect(mockService.getrepresentante).toHaveBeenCalled();
     expect(component.datosdelexportador.get('empresa')?.value).toBe('MiEmpresa');
   });
 
-  it('should update store with setValorStore', () => {
+  it('debería actualizar el store con setValorStore', () => {
     component.inicializarFormulario();
     component.datosdelexportador.get('cargo')?.setValue('Director');
     component.setValorStore(component.datosdelexportador, 'cargo');
     expect(mockStore.setTramite110218State).toHaveBeenCalledWith({ cargo: 'Director' });
   });
 
-  it('should update estadoSeleccionado on getValorStore', () => {
+  it('debería actualizar estadoSeleccionado en getValorStore', () => {
     component.getValorStore();
     expect(component.estadoSeleccionado).toEqual(expect.objectContaining({
       nombredelRepresentante: 'Ana',
@@ -109,7 +109,7 @@ describe('RepresentanteLegalComponent', () => {
     }));
   });
 
-  it('should clean up destroyed$ on ngOnDestroy', () => {
+  it('debería limpiar destroyed$ en ngOnDestroy', () => {
     const nextSpy = jest.spyOn((component as any).destroyed$, 'next');
     const completeSpy = jest.spyOn((component as any).destroyed$, 'complete');
     component.ngOnDestroy();

@@ -50,71 +50,71 @@ describe('DatosCertificadoComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
+  it('debería crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize the form with values from estadoSeleccionado', () => {
+  it('debería inicializar el formulario con valores de estadoSeleccionado', () => {
     component.estadoSeleccionado = { lugar: 'Tokio', observaciones: 'Obs' } as any;
     component.inicializarFormulario();
     expect(component.datosDelCertificado.get('lugar')?.value).toBe('Tokio');
     expect(component.datosDelCertificado.get('observaciones')?.value).toBe('Obs');
   });
 
-  it('should enable the form if esSoloLectura is false', () => {
+  it('debería habilitar el formulario si esSoloLectura es falso', () => {
     component.inicializarFormulario();
     component.esSoloLectura = false;
     component.habilitarDeshabilitarFormulario();
     expect(component.datosDelCertificado.enabled).toBe(true);
   });
 
-  it('should disable the form if esSoloLectura is true', () => {
+  it('debería deshabilitar el formulario si esSoloLectura es verdadero', () => {
     component.inicializarFormulario();
     component.esSoloLectura = true;
     component.habilitarDeshabilitarFormulario();
     expect(component.datosDelCertificado.disabled).toBe(true);
   });
 
-  it('should call getDatosCertificado and set datos as array', () => {
+  it('debería llamar a getDatosCertificado y establecer datos como array', () => {
     mockService.getDatosCertificado.mockReturnValue(of([{ id: 1 }]));
     component.obtenerDatosDeTabla();
     expect(mockService.getDatosCertificado).toHaveBeenCalled();
     expect(Array.isArray(component.datos)).toBe(true);
   });
 
-  it('should update filaSeleccionada on manejarFilaSeleccionada', () => {
+  it('debería actualizar filaSeleccionada al manejarFilaSeleccionada', () => {
     const fila = { id: 1, nombre: 'Fila' } as any;
     component.manejarFilaSeleccionada(fila);
     expect(component.filaSeleccionada).toBe(fila);
   });
 
-  it('should emit modificarEventCertificado on enModificarFormulario if filaSeleccionada exists', () => {
+  it('debería emitir modificarEventCertificado en enModificarFormulario si filaSeleccionada existe', () => {
     const spy = jest.spyOn(component.modificarEventCertificado, 'emit');
     component.filaSeleccionada = { id: 1 } as any;
     component.enModificarFormulario();
     expect(spy).toHaveBeenCalledWith(false);
   });
 
-  it('should not emit modificarEventCertificado if filaSeleccionada does not exist', () => {
+  it('no debería emitir modificarEventCertificado si filaSeleccionada no existe', () => {
     const spy = jest.spyOn(component.modificarEventCertificado, 'emit');
     component.filaSeleccionada = undefined as any;
     component.enModificarFormulario();
     expect(spy).not.toHaveBeenCalled();
   });
 
-  it('should update tramite110218Store with setValorStore', () => {
+  it('debería actualizar tramite110218Store con setValorStore', () => {
     component.inicializarFormulario();
     component.datosDelCertificado.get('lugar')?.setValue('Osaka');
     component.setValorStore(component.datosDelCertificado, 'lugar');
     expect(mockStore.setTramite110218State).toHaveBeenCalledWith({ lugar: 'Osaka' });
   });
 
-  it('should update estadoSeleccionado on getValorStore', () => {
+  it('debería actualizar estadoSeleccionado en getValorStore', () => {
     component.getValorStore();
     expect(component.estadoSeleccionado).toEqual({ lugar: 'Tokio', observaciones: 'Observación' });
   });
 
-  it('should clean up destroyed$ on ngOnDestroy', () => {
+  it('debería limpiar destroyed$ en ngOnDestroy', () => {
     const nextSpy = jest.spyOn((component as any).destroyed$, 'next');
     const completeSpy = jest.spyOn((component as any).destroyed$, 'complete');
     component.ngOnDestroy();

@@ -36,17 +36,17 @@ describe('TratadosComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
+  it('debería crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize the form with default values', () => {
+  it('debería inicializar el formulario con valores por defecto', () => {
     expect(component.detallesdeltransporte.get('fechadeExpedicion')?.value).toBe('2025-01-01');
     expect(component.detallesdeltransporte.get('fechadeVencimiento')?.value).toBe('2025-04-03');
     expect(component.detallesdeltransporte.get('tratadoAcuerdo')?.disabled).toBe(true);
   });
 
-  it('should patch form values from obtenerDatosDeTabla', () => {
+  it('debería actualizar los valores del formulario desde obtenerDatosDeTabla', () => {
     component.obtenerDatosDeTabla();
     expect(mockService.gettratados).toHaveBeenCalled();
     expect(component.detallesdeltransporte.get('tratadoAcuerdo')?.value).toBe('TLC');
@@ -57,12 +57,12 @@ describe('TratadosComponent', () => {
     expect(component.detallesdeltransporte.get('fechadeVencimiento')?.value).toBe('2025-04-03');
   });
 
-  it('should patch fechadeVencimiento on cambioFechaFinal', () => {
+  it('debería actualizar fechadeVencimiento en cambioFechaFinal', () => {
     component.cambioFechaFinal('2025-04-03');
     expect(component.detallesdeltransporte.get('fechadeVencimiento')?.value).toBe('2025-04-03');
   });
 
-  it('should clean up destroyed$ on ngOnDestroy', () => {
+  it('debería limpiar destroyed$ en ngOnDestroy', () => {
     const nextSpy = jest.spyOn((component as any).destroyed$, 'next');
     const completeSpy = jest.spyOn((component as any).destroyed$, 'complete');
     component.ngOnDestroy();
