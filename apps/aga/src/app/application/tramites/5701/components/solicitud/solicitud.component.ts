@@ -146,12 +146,12 @@ import {
   MSG_MONTO_PAGADO_CUBIERTO,
   MSJ_ERROR_FECHAS_NO_SELECCIONADAS,
   MSJ_ERROR_FECHA_DIA,
-  MSJ_ERROR_FECHA_FINAL_MENOR_INICIAL,
   MSJ_ERROR_FECHA_FINAL_NO_SELECCIONADA,
   MSJ_ERROR_FECHA_INICIAL_NO_SELECCIONADA,
   MSJ_ERROR_FECHA_MES,
   MSJ_ERROR_FECHA_SEMANA,
   MSJ_ERROR_FOLIO_DDEX,
+  MSJ_ERROR_HORA_FINAL_MENOR_INICIAL,
   MSJ_ERROR_ID_SOCIO_COMERCIAL,
   MSJ_ERROR_LINEA_CAPTURA,
   MSJ_ERROR_LINEA_CAPTURA_NO_VALIDA,
@@ -1254,6 +1254,8 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
         txtBtnAceptar: 'Aceptar',
         txtBtnCancelar: '',
       };
+      console.log('Marcamos como touched el campo RFCImpExp');
+
       this.desactivaCamposCertificaciones();
       return;
     }
@@ -1263,6 +1265,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
       this.datosImportadorExportador.get('nombre')?.value
     ) {
       // Si el RFC está vacío pero el nombre tiene un valor, se limpia el nombre.
+      this.datosImportadorExportador.get('RFCImpExp')?.setValue(null);
       this.desactivaCamposCertificaciones();
       return;
     }
@@ -1608,7 +1611,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
         categoria: 'danger',
         modo: 'action',
         titulo: 'Avisos',
-        mensaje: MSJ_ERROR_FECHA_FINAL_MENOR_INICIAL,
+        mensaje: MSJ_ERROR_HORA_FINAL_MENOR_INICIAL,
         cerrar: false,
         txtBtnAceptar: 'Aceptar',
         txtBtnCancelar: '',
@@ -2939,105 +2942,6 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   /**
-   * Limpia el formulario FormSolicitud, excepto el campo de tipoSolicitud y actualiza el store correspondiente.
-   * @returns {void} No retorna ningún valor.
-   */
-  limpiarFormulario(): void {
-    this.FormSolicitud.reset({
-      folioSolicitud: null,
-      tipoSolicitud: this.FormSolicitud.get('tipoSolicitud')?.value,
-      descripcionTipoSolicitud: this.FormSolicitud.get(
-        'descripcionTipoSolicitud'
-      )?.value,
-      datosImportadorExportador: {
-        apoderadoPatente: null,
-        empresaApoderado: null,
-        empresasApoderado: null,
-        RFCImpExp: '',
-        nombre: '',
-        desNumeroRegistro: '',
-        programa: false,
-        desProgramaFomento: '',
-        checkIMMEX: false,
-        desImmex: '',
-        industriaAutomotriz: false,
-        desIndustrialAutomotriz: '',
-        tipoEmpresaCertificada: '',
-        socioComercial: false,
-        certificacionOEA: false,
-        revision: false,
-        idSocioComercial: '',
-      },
-      datosServicio: {
-        fechaInicio: '',
-        fechaFinal: '',
-        horaInicio: '',
-        horaFinal: '',
-        fechasSeleccionadas: [],
-      },
-      despacho: {
-        lda: false,
-        rfcDespachoLDA: '',
-        dd: false,
-        folioDDEX: '',
-        idAduanaDespacho: SIN_VALOR_SELECT,
-        aduanaDespacho: '',
-        idSeccionDespacho: SIN_VALOR_SELECT,
-        seccionAduanera: '',
-        idRecinto: null,
-        nombreRecinto: SIN_VALOR_SELECT,
-        tipoDespacho: -1,
-        descripcionTipoDespacho: '',
-        tipoOperacion: SIN_VALOR_SELECT,
-        patente: this.despacho.get('patente')?.value,
-        relacionSociedad: false,
-        encargoConferido: false,
-        domicilioDespacho: '',
-        especifique: '',
-      },
-      mercancia: {
-        paisOrigen: 0,
-        paisProcedencia: 0,
-        descripcionGenerica: '',
-        justificacion: '',
-      },
-      pedimento: [],
-      personasResponsablesDespacho: [],
-      vehiculo: {
-        tipoTransporte: '',
-        vehiculoDatos: [],
-      },
-      transporteArriboSalida: {
-        tipoTransporte: '',
-        transporteArriboDatos: [],
-      },
-      pagoCaptura: {
-        montoAPagar: this.pagoCaptura.get('montoAPagar')?.value,
-        lineaCaptura: '',
-        monto: '',
-      },
-    });
-
-    this.selectRangoDias = [];
-    this.pedimento.clear();
-    this.personasResponsablesDespacho.clear();
-
-    this.tramite5701Store.limpiarSolicitud();
-
-    this.setValoresStore(
-      this.FormSolicitud,
-      'tipoSolicitud',
-      'setTipoSolicitud'
-    );
-
-    this.setValoresStore(
-      this.FormSolicitud,
-      'descripcionTipoSolicitud',
-      'setDescripcionTipoSolicitud'
-    );
-  }
-
-  /**
    * Elimina un elemento de la tabla de lineas de captura
    * @returns {void} No retorna ningún valor.
    */
@@ -3209,46 +3113,48 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
       tipo_patente: this.solicitudState.patente.tipo_patente,
     };
 
-    this.validaDespachosService
-      .validaRFCAutorizacionLda(BODY)
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-        tap((response) => {
-          if (response.datos.length > 0 || !response.datos) {
+    if (RFC_AUTORIZACION_LDA?.value) {
+      this.validaDespachosService
+        .validaRFCAutorizacionLda(BODY)
+        .pipe(
+          takeUntil(this.destroyNotifier$),
+          tap((response) => {
+            if (response.datos.length > 0 || !response.datos) {
+              this.despacho.get('idAduanaDespacho')?.enable();
+              this.despacho.get('tipoDespacho')?.enable();
+              this.activarCatalogoDespacho = false;
+            } else {
+              this.nuevaNotificacion = {
+                tipoNotificacion: 'alert',
+                categoria: 'danger',
+                modo: 'action',
+                titulo: TITULO_MODAL_AVISO,
+                mensaje: MSJ_ERROR_RFC_AUTORIZACION_LDA,
+                cerrar: false,
+                txtBtnAceptar: 'Aceptar',
+                txtBtnCancelar: '',
+              };
+              this.despacho.get('idAduanaDespacho')?.enable();
+              this.despacho.get('tipoDespacho')?.enable();
+              this.activarCatalogoDespacho = false;
+            }
+
+            this.setValoresStore(
+              this.despacho,
+              'rfcDespachoLDA',
+              'setAutorizacionLDA'
+            );
+          }),
+          catchError((_error) => {
             this.despacho.get('idAduanaDespacho')?.enable();
             this.despacho.get('tipoDespacho')?.enable();
             this.activarCatalogoDespacho = false;
-          } else {
-            this.nuevaNotificacion = {
-              tipoNotificacion: 'alert',
-              categoria: 'danger',
-              modo: 'action',
-              titulo: TITULO_MODAL_AVISO,
-              mensaje: MSJ_ERROR_RFC_AUTORIZACION_LDA,
-              cerrar: false,
-              txtBtnAceptar: 'Aceptar',
-              txtBtnCancelar: '',
-            };
-            this.despacho.get('idAduanaDespacho')?.enable();
-            this.despacho.get('tipoDespacho')?.enable();
-            this.activarCatalogoDespacho = false;
-          }
 
-          this.setValoresStore(
-            this.despacho,
-            'rfcDespachoLDA',
-            'setAutorizacionLDA'
-          );
-        }),
-        catchError((_error) => {
-          this.despacho.get('idAduanaDespacho')?.enable();
-          this.despacho.get('tipoDespacho')?.enable();
-          this.activarCatalogoDespacho = false;
-
-          return EMPTY; // Evita que el error se propague
-        })
-      )
-      .subscribe();
+            return EMPTY; // Evita que el error se propague
+          })
+        )
+        .subscribe();
+    }
   }
 
   /**
@@ -3290,7 +3196,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
         txtBtnCancelar: '',
       };
 
-      FOLIO_DDEX?.reset();
+      FOLIO_DDEX?.setValue(null);
       FOLIO_DDEX?.markAsUntouched();
       return;
     }
@@ -3365,8 +3271,10 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    * @returns {void} No retorna ningún valor.
    */
   desactivaCamposCertificaciones(): void {
+    this.datosImportadorExportador.get('RFCImpExp')?.setValue('');
+    this.datosImportadorExportador.get('RFCImpExp')?.markAsTouched();
+
     this.datosImportadorExportador.reset({
-      RFCImpExp: '',
       nombre: '',
       tipoEmpresaCertificada: '',
       certificacionOEA: false,
@@ -3395,5 +3303,16 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
     this.certificacionOEADisabled = true;
     this.revisionDisabled = true;
     this.certificacionesDisabled = true;
+
+    console.log(this.datosImportadorExportador.get('RFCImpExp'));
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  cambiosInput(campo: string, form: FormGroup): void {
+    const CONTROL = form.get(campo);
+    if (CONTROL?.value === '') {
+      CONTROL.markAsTouched(); // Para que se dispare la clase de error
+      CONTROL.updateValueAndValidity(); // Revalida el campo
+    }
   }
 }

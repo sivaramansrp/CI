@@ -96,6 +96,7 @@
             }"
             libUppercase
             (blur)="validaRfc()"
+            (input)=""
           />
 
           <div
@@ -467,6 +468,7 @@
             class="form-control"
             formControlName="rfcDespachoLDA"
             placeholder=""
+            (input)="cambiosInput('rfcDespachoLDA', despacho)"
             (blur)="changeRfcAutorizacionLDA()"
             maxlength="13"
             [ngClass]="isValid(despacho, 'rfcDespachoLDA') ? 'required' : ''"
@@ -490,6 +492,7 @@
             formControlName="folioDDEX"
             placeholder=""
             (blur)="changeFolioDDEX()"
+            (input)="cambiosInput('folioDDEX', despacho)"
             maxlength="16"
             [ngClass]="isValid(despacho, 'folioDDEX') ? 'required' : ''"
           />

@@ -30,7 +30,7 @@ export const MSJ_ERROR_FECHA_DIA =
   /**
    * @description Mensaje de error cuando la fecha final es menor que la fecha inicial.
    */
-export const MSJ_ERROR_FECHA_FINAL_MENOR_INICIAL = 'Fecha inválida. La fecha final no puede ser menor a la fecha de incio.';
+export const MSJ_ERROR_HORA_FINAL_MENOR_INICIAL = 'Hora inválida. La hora final no puede ser menor a la hora de incio.';
 
 // #Mensajes del modal para el componente Persona Responsable del Despacho
 /**
