@@ -12,6 +12,7 @@ import { Modificacion90305Component } from './modificacion-90305.component';
 import { Plantas90305Component } from '../plantas-90305/plantas-90305.component';
 import { ProductorIndirecto90305Component } from '../productorIndirecto-90305/productorIndirecto-90305.component';
 import { Sector90305Component } from '../sector-90305/sector-90305.component';
+import { HttpClientModule } from '@angular/common/http';
 
 describe('Modification90305Component', () => {
   let component: Modificacion90305Component;
@@ -29,8 +30,9 @@ describe('Modification90305Component', () => {
         ProductorIndirecto90305Component,
         ModificacionInfo90305Component,
         BtnContinuarComponent,
+        Modificacion90305Component,
+        HttpClientModule
       ],
-      declarations: [Modificacion90305Component],
     }).compileComponents();
   });
 

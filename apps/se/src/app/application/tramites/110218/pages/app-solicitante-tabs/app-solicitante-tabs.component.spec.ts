@@ -1,38 +1,64 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { AppSolicitanteTabsComponent } from './app-solicitante-tabs.component';
- import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { CertificadoTecnicoJaponService } from '../../service/certificadoTecnicoJapon.service';
+import { of, Subject } from 'rxjs';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
+
 describe('AppSolicitanteTabsComponent', () => {
   let component: AppSolicitanteTabsComponent;
   let fixture: ComponentFixture<AppSolicitanteTabsComponent>;
+  let mockConsultaioQuery: any;
+  let mockServicio: any;
 
   beforeEach(async () => {
-   
-    
+    mockConsultaioQuery = {
+      selectConsultaioState$: of({ update: false })
+    };
+    mockServicio = {
+      obtenerRegistro: jest.fn().mockReturnValue(of({ id: 1 })),
+      actualizarRegistro: jest.fn()
+    };
+
     await TestBed.configureTestingModule({
       declarations: [AppSolicitanteTabsComponent],
-      schemas: [NO_ERRORS_SCHEMA],
+      providers: [
+        { provide: ConsultaioQuery, useValue: mockConsultaioQuery },
+        { provide: CertificadoTecnicoJaponService, useValue: mockServicio }
+      ],
+      schemas: [NO_ERRORS_SCHEMA]
     }).compileComponents();
-  });
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(AppSolicitanteTabsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('should create the component', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should have default tab index as 1', () => {
-    expect(component.indice).toBe(1);
+  it('should set datosRespuestaDisponibles to true if update is false', () => {
+    component.ngOnInit();
+    expect(component.datosRespuestaDisponibles).toBe(true);
   });
 
-  it('should update the tab index when seleccionaTab is called', () => {
-    component.seleccionaTab(2);
-    expect(component.indice).toBe(2);
+  it('should call obtenerDatosBandejaSolicitudes if update is true', () => {
+    mockConsultaioQuery.selectConsultaioState$ = of({ update: true });
+    const obtenerDatosSpy = jest.spyOn(component, 'obtenerDatosBandejaSolicitudes');
+    component.ngOnInit();
+    expect(obtenerDatosSpy).toHaveBeenCalled();
+  });
 
-    component.seleccionaTab(0);
-    expect(component.indice).toBe(0);
+  it('should set datosRespuestaDisponibles to true and call actualizarRegistro if respuesta exists', () => {
+    component.datosRespuestaDisponibles = false;
+    component.obtenerDatosBandejaSolicitudes();
+    expect(component.datosRespuestaDisponibles).toBe(true);
+    expect(mockServicio.actualizarRegistro).toHaveBeenCalledWith({ id: 1 });
+  });
+
+  it('should update indice when seleccionaTab is called', () => {
+    component.seleccionaTab(3);
+    expect(component.indice).toBe(3);
   });
 });

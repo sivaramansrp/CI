@@ -1,3 +1,15 @@
+jest.mock('@libs/shared/theme/assets/json/110203/mediocatalogo.json', () => ({
+  __esModule: true,
+  default: {
+    placeholder: {
+      nombre: 'Nombre',
+      primer: 'Primer apellido',
+      segundo: 'Segundo apellido',
+      // Add others as needed based on the model
+    }
+  }
+}));
+
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule, FormBuilder, FormsModule } from '@angular/forms';
 import { of } from 'rxjs';
