@@ -6,6 +6,15 @@ import { of } from 'rxjs';
 import { FederatariosEncabezado } from '../../../../shared/models/federatarios-y-plantas.model';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+
+const mockActivatedRoute = {
+  snapshot: {
+    params: {},
+    queryParams: {},
+    data: {},
+  }
+};
 
 describe('FederatariosYPlantasVistaComponent', () => {
   let component: FederatariosYPlantasVistaComponent;
@@ -39,6 +48,7 @@ describe('FederatariosYPlantasVistaComponent', () => {
         HttpClientTestingModule, // required for internal services
       ],
       providers: [
+        { provide: ActivatedRoute, useValue: mockActivatedRoute },
         { provide: Tramite80101Query, useValue: mockQuery },
         { provide: Tramite80101Store, useValue: mockStore },
       ],
