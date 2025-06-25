@@ -555,7 +555,7 @@ export const DATOS_PRODUCTOR = [
         selectedValue: 'Física',
     },
     {
-        labelNombre: 'Datos personales Nombre(s)*:',
+        labelNombre: 'Nombre(s)*:',
         campo: 'personales_nombre',
         class: 'col-md-4',
         tipo_input: 'text',
@@ -613,7 +613,7 @@ export const DATOS_EXPORTADOR = [
         selectedValue: 'Física',
     },
     {
-        labelNombre: 'Datos personales Nombre(s)*:',
+        labelNombre: 'Nombre(s)*:',
         campo: 'personales_nombre',
         class: 'col-md-4',
         tipo_input: 'text',
