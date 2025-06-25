@@ -6,7 +6,6 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, ValidatorFn, Validators } 
 import { Subscription, tap } from 'rxjs';
 
 import { CATALOGOS_ID, TIPO_PERSONA } from '@ng-mf/data-access-user';
-import { SolicitanteComponent } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
 
 import { FormularioDinamico } from '@ng-mf/data-access-user';

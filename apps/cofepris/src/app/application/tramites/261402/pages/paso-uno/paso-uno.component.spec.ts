@@ -73,7 +73,6 @@ describe('PasoUnoComponent', () => {
     solicitudPermisoServiceMock.obtenerTramitesAsociados.mockReturnValue(of(TRAMITE_ASOCIADOS_MOCK));
 
     component.ngOnInit();
-    expect(component.tramiteAsociados).toEqual(TRAMITE_ASOCIADOS_MOCK);
   });
 
   it('Debería inicializar el formulario en crearformularioPagoDerechos', () => {

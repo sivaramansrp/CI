@@ -85,13 +85,15 @@
           <input
             class="form-control"
             id="rfc"
-            placeholder="RFC"
+            placeholder=""
             type="text"
             formControlName="RFCImpExp"
             maxlength="13"
-            [ngClass]="
-              isValid(datosImportadorExportador, 'RFCImpExp') ? 'required' : ''
-            "
+            [ngClass]="{
+              'is-invalid':
+                isRequired(datosImportadorExportador, 'RFCImpExp') ||
+                isErrorPattern(datosImportadorExportador, 'RFCImpExp')
+            }"
             libUppercase
             (blur)="validaRfc()"
           />
@@ -118,7 +120,7 @@
             class="form-control"
             id="nombre"
             formControlName="nombre"
-            placeholder="Nombre"
+            placeholder=""
             type="text"
             appUppercase
           />
@@ -162,6 +164,7 @@
       <div class="row">
         <div class="col-md-4">
           <lib-check-input-text
+            #programaFomento
             [checkboxValor]="solicitudState.programa"
             [textoValor]="solicitudState.descripcionProgramaFomento"
             [idCheckbox]="'programa'"
@@ -171,12 +174,14 @@
             [reverse]="true"
             [hidden]="false"
             [maxLengthValidacion]="300"
+            [tipo]="'visible'"
             (checkboxChange)="checkPrograma($event)"
           ></lib-check-input-text>
         </div>
 
         <div class="col-md-4">
           <lib-check-input-text
+            #programaImmex
             [checkboxValor]="solicitudState.checkIMMEX"
             [textoValor]="solicitudState.descripcionImmex"
             [idCheckbox]="'checkIMMEX'"
@@ -192,6 +197,7 @@
 
         <div class="col-md-4">
           <lib-check-input-text
+            #industriaAutomotriz
             [checkboxValor]="solicitudState.industriaAutomotriz"
             [textoValor]="solicitudState.descripcionIndustrialAutomotriz"
             [idCheckbox]="'industriaAutomotriz'"
@@ -240,6 +246,7 @@
             [id]="'certificacionOEA'"
             [label]="'Operador económico autorizado'"
             [required]="false"
+            [isDisabled]="certificacionOEADisabled"
             formControlName="certificacionOEA"
             (change)="
               setValoresStore(
@@ -254,6 +261,7 @@
             [id]="'revision'"
             [label]="'Revisión en origen'"
             [required]="false"
+            [isDisabled]="revisionDisabled"
             formControlName="revision"
             (change)="
               setValoresStore(
@@ -482,6 +490,7 @@
             formControlName="folioDDEX"
             placeholder=""
             (blur)="changeFolioDDEX()"
+            maxlength="16"
             [ngClass]="isValid(despacho, 'folioDDEX') ? 'required' : ''"
           />
 
@@ -660,6 +669,7 @@
     [validacion]="validacionPedimento"
     [datosNroPedimento]="datosPedimentoComponente"
     [tablaPedimento]="solicitudState.pedimentos"
+    [numeroPatente]="solicitudState.patente.patente"
     (validaCampos)="validaCampoPedimento()"
     (datosTablaPedimento)="changeAgregarPedimento($event)"
   ></c-pedimento>

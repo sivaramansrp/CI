@@ -7,7 +7,7 @@
     >{{ label }}@if(required){*}: @if(tooltipQuestionCircle){
     <span
       class="bi bi-question-circle-fill"
-      title="{{ label }}"
+      title="{{ tooltipQuestionCircleText ? tooltipQuestionCircleText : label }}"
       data-bs-toggle="tooltip"
     ></span
     >}

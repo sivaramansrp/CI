@@ -40,6 +40,11 @@ export interface Solicitud32502State {
   individualCheckbox: boolean [];
 }
 
+/**
+ * Crea el estado inicial para la solicitud 32502.
+ *
+ * @returns {Solicitud32502State} Objeto con todos los campos inicializados.
+ */
 export function createInitialState(): Solicitud32502State {
   return {
     adace: '',
@@ -81,10 +86,16 @@ export function createInitialState(): Solicitud32502State {
   providedIn: 'root',
 })
 @StoreConfig({ name: 'tramite32502', resettable: true })
+/**
+ * Clase encargada de manejar y actualizar el estado de la solicitud 32502.
+ */
 export class Tramite32502Store extends Store<Solicitud32502State> {
   static setFraccionRegla(arg0: string): void {
     throw new Error('Method not implemented.');
   }
+  /**
+   * Constructor: inicializa el estado con valores por defecto.
+   */
   constructor() {
     super(createInitialState());
   }

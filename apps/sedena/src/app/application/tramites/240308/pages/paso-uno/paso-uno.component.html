@@ -50,13 +50,19 @@
       @switch (indice) { @case (1) {
       <solicitante [tabindex]="1"></solicitante>
       } @case (2) {
-
+        @if(datosRespuestaDisponibles){
       <app-datos-del-tramite-contenedora></app-datos-del-tramite-contenedora>
+        }
       } @case (3) {
+         @if(datosRespuestaDisponibles){
       <app-terceros-relacionados-contenedora></app-terceros-relacionados-contenedora>
+         }
       } @case(4){
+        @if(datosRespuestaDisponibles){
       <app-pago-de-derechos-contenedora></app-pago-de-derechos-contenedora>
-      } }
+        }
+      } 
+    }
     </ng-container>
   </div>
 </div>

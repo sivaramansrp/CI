@@ -1,3 +1,7 @@
+/**
+ *  SolicitudPageComponent
+ *  Componente que gestiona el flujo de solicitud de artificios pirotécnicos.
+ */
 import { AccionBoton } from '@ng-mf/data-access-user';
 import { Component } from '@angular/core';
 import { DatosPasos } from '@ng-mf/data-access-user';
@@ -8,9 +12,9 @@ import { ViewChild } from '@angular/core';
 import { WizardComponent } from '@ng-mf/data-access-user';
 
 /**
- * @title Página de Solicitud
- * @description Componente principal que contiene el flujo del trámite a través de un wizard dividido en pasos.
- * @summary Administra la navegación entre pasos del trámite y organiza los componentes visuales del flujo.
+ *  Página de Solicitud
+ *  Componente principal que contiene el flujo del trámite a través de un wizard dividido en pasos.
+ *  Administra la navegación entre pasos del trámite y organiza los componentes visuales del flujo.
  */
 @Component({
   selector: 'app-solicitud-page',
@@ -20,7 +24,7 @@ import { WizardComponent } from '@ng-mf/data-access-user';
 })
 export class SolicitudPageComponent {
   /**
-   * @property tituloMensaje
+   * tituloMensaje
    * @description Título que se muestra en la parte superior del wizard.
    * Se actualiza dependiendo del paso seleccionado.
    * @type {string | null}
@@ -28,7 +32,7 @@ export class SolicitudPageComponent {
   public tituloMensaje: string | null = TITULOMENSAJE;
 
   /**
-   * @property pasos
+   * pasos
    * @description Listado de pasos definidos para el wizard, incluyendo
    * información y componentes asociados.
    * @type {ListaPasosWizard[]}
@@ -36,14 +40,14 @@ export class SolicitudPageComponent {
   public pasos: ListaPasosWizard[] = PASOS;
 
   /**
-   * @property indice
+   * indice
    * @description Índice del paso actual en el wizard.
    * @type {number}
    */
   public indice: number = 1;
 
   /**
-   * @property wizardComponent
+   * wizardComponent
    * @description Referencia al componente `WizardComponent`, utilizada
    * para invocar métodos de navegación interna como `siguiente()` y `atras()`.
    * @type {WizardComponent}
@@ -52,7 +56,7 @@ export class SolicitudPageComponent {
   public wizardComponent!: WizardComponent;
 
   /**
-   * @property datosPasos
+   * datosPasos
    * @description Configuración de la barra de navegación del wizard:
    * número de pasos, índice actual y textos de los botones.
    * @type {DatosPasos}
@@ -65,7 +69,7 @@ export class SolicitudPageComponent {
   };
 
   /**
-   * @method seleccionaTab
+   * seleccionaTab
    * @description Permite cambiar el paso actual de forma manual
    * al hacer clic en las pestañas (tabs) del wizard.
    * @param {number} i - Índice del paso seleccionado.
@@ -76,7 +80,7 @@ export class SolicitudPageComponent {
   }
 
   /**
-   * @method getValorIndice
+   * getValorIndice
    * @description Controla la navegación del wizard en función
    * de la acción recibida (`cont` o `atras`). Actualiza el paso
    * actual y el título mostrado, y llama a los métodos de
@@ -101,7 +105,7 @@ export class SolicitudPageComponent {
   }
 
   /**
-   * @method obtenerNombreDelTítulo
+   * obtenerNombreDelTítulo
    * @description Método estático que determina el título
    * a mostrar de acuerdo al índice del paso actual.
    * @param {number} valor - Índice del paso.

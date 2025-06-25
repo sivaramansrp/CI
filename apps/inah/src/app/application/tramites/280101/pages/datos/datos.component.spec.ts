@@ -3,6 +3,8 @@ import { DatosComponent } from './datos.component';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { PermisoDeExportacionService } from '../../services/permiso-de-exportacion.service';
 import { of } from 'rxjs';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 
 describe('DatosComponent', () => {
   let component: DatosComponent;
@@ -22,10 +24,12 @@ describe('DatosComponent', () => {
 
     await TestBed.configureTestingModule({
       declarations: [DatosComponent],
+      imports: [HttpClientTestingModule],
       providers: [
         { provide: ConsultaioQuery, useValue: consultaQueryMock },
         { provide: PermisoDeExportacionService, useValue: permisoServiceMock }
-      ]
+      ],
+      schemas: [NO_ERRORS_SCHEMA]
     }).compileComponents();
 
     fixture = TestBed.createComponent(DatosComponent);
@@ -46,8 +50,8 @@ describe('DatosComponent', () => {
   it('should call guardarDatosFormulario on ngOnInit when update is true', () => {
     consultaQueryMock.selectConsultaioState$ = of({ readonly: false, update: true });
     const guardarSpy = jest.spyOn(component, 'guardarDatosFormulario');
-    fixture = TestBed.createComponent(DatosComponent);
-    component = fixture.componentInstance;
+    fixture.detectChanges(); // Trigger ngOnInit
+    expect(component.esFormularioSoloLectura).toBe(false);
     component.ngOnInit();
     expect(guardarSpy).toHaveBeenCalled();
   });

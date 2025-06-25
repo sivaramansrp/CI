@@ -47,7 +47,7 @@ export class SolicitudComponent implements OnInit, OnDestroy{
    * Este Subject se utiliza para emitir un evento cuando el componente se destruye,
    * permitiendo que las suscripciones se cancelen adecuadamente.
    */
-  private destroyNotifier$: Subject<void> = new Subject();
+  public destroyNotifier$: Subject<void> = new Subject();
 
    /**
    * Lista de checkboxes disponibles para las aduanas.
