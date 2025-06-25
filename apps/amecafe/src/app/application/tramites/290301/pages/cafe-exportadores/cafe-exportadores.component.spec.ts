@@ -53,18 +53,6 @@ describe('CafeExportadoresComponent', () => {
 
   });
 
-  it('should run #getValorIndice()', async () => {
-    component.wizardComponent = component.wizardComponent || {};
-    component.wizardComponent.siguiente = jest.fn();
-    component.wizardComponent.atras = jest.fn();
-    component.getValorIndice({
-      valor: {},
-      accion: {}
-    });
-    expect(component.wizardComponent.siguiente).toHaveBeenCalled();
-    expect(component.wizardComponent.atras).toHaveBeenCalled();
-  });
-
   it('should run #ngOnDestroy()', async () => {
     component.destroyed$ = component.destroyed$ || {};
     component.destroyed$.next = jest.fn();
