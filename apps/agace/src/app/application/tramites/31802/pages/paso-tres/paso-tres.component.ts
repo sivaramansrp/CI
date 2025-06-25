@@ -1,8 +1,13 @@
-import { Component, OnDestroy } from '@angular/core';
-import { FirmaElectronicaComponent, TramiteFolioService, TramiteStore} from '@ng-mf/data-access-user';
-import { ReplaySubject, Subscription,catchError, map, takeUntil } from 'rxjs';
+import { Component } from '@angular/core';
+import { OnDestroy } from '@angular/core';
+import { ReplaySubject } from 'rxjs';
 import { Router } from '@angular/router';
-// import { TramiteStore } from '@ng-mf/data-access-user'; 
+import { TramiteFolioService} from '@ng-mf/data-access-user';
+import { TramiteStore} from '@ng-mf/data-access-user';
+import { catchError } from 'rxjs';
+import { map } from 'rxjs';
+import { takeUntil } from 'rxjs';
+
 /**
  * Componente que representa el paso tres del trámite.
  */

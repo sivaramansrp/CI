@@ -2,7 +2,8 @@ import { CAMPO_OBLIGATORIO_DERECHOS } from '../../constants/datos-solicitud.enum
 import { Catalogo } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+
+import { Component, OnChanges, SimpleChanges } from '@angular/core';
 import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
 import { EventEmitter } from '@angular/core';
@@ -44,7 +45,7 @@ import { takeUntil } from 'rxjs';
   templateUrl: './pago-de-derechos.component.html',
   styleUrl: './pago-de-derechos.component.scss',
 })
-export class PagoDeDerechosComponent implements OnInit, OnDestroy {
+export class PagoDeDerechosComponent implements OnInit, OnDestroy, OnChanges {
   /**
    * @method eliminarMercancia
    * @description Emits an event to delete one or more merchandise items.
@@ -135,6 +136,23 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
+  }
+  /**
+   * @method ngOnChanges
+   * @description Hook que se ejecuta cuando cambian las propiedades de entrada del componente.
+   * Si cambia el valor de 'esFormularioSoloLectura' y el formulario ya está inicializado,
+   * habilita o deshabilita el formulario según corresponda.
+   *
+   * @param {SimpleChanges} changes - Objeto que contiene los cambios de las propiedades de entrada.
+   */
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['esFormularioSoloLectura'] && this.pagoDerechosForm) {
+      if (this.esFormularioSoloLectura) {
+        this.pagoDerechosForm.disable();
+      } else {
+        this.pagoDerechosForm.enable();
+      }
+    }
   }
   /**
    * Evalúa si se debe inicializar o cargar datos en el formulario.

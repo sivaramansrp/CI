@@ -16,7 +16,7 @@ describe('TabDesistirSolicitudInfoHistoricaComponent', () => {
     };
 
     tramite31910QueryMock = {
-      selectSolicitud$: of({ observaciones: 'Test Observación' }),
+      selectSolicitud$: of({ observaciones: 'Test Observación', justificacion: '' }),
     };
 
     TestBed.configureTestingModule({
@@ -38,11 +38,11 @@ describe('TabDesistirSolicitudInfoHistoricaComponent', () => {
   });
 
   it('debe inicializar el formulario con observaciones del estado', () => {
-    expect(component.formulario.get('observaciones')?.value).toBe('Test Observación');
+    expect(component.solicitud.get('observaciones')?.value).toBe('Test Observación');
   });
 
   it('debe llamar a actualizarEstado cuando se invoca setValoresStore', () => {
-    const FORM = component.formulario;
+    const FORM = component.solicitud;
     FORM.get('observaciones')?.setValue('Nueva Observación');
     component.setValoresStore(FORM, 'observaciones');
 

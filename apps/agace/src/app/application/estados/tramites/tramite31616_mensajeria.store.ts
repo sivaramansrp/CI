@@ -308,7 +308,7 @@ export class Tramite31616MensajeriaStore extends Store<Solicitud31616MensajeriaS
      * Establece el estado de laSolicitante.
      * @param laSolicitante - El valor de laSolicitante.
      */
-    public setLaSolicitante(laSolicitante: string) {
+    public setLaSolicitante(laSolicitante: string):void {
         this.update((state) => ({
             ...state,
             laSolicitante,
@@ -318,7 +318,7 @@ export class Tramite31616MensajeriaStore extends Store<Solicitud31616MensajeriaS
      * Establece el estado de susFiliales.
      * @param susFiliales - El valor de susFiliales.
      */
-    public setSusFiliales(susFiliales: string) {
+    public setSusFiliales(susFiliales: string):void {
         this.update((state) => ({
             ...state,
             susFiliales,
@@ -328,7 +328,7 @@ export class Tramite31616MensajeriaStore extends Store<Solicitud31616MensajeriaS
      * Establece el estado de lasEmpresas.
      * @param lasEmpresas - El valor de lasEmpresas.
      */
-    public setLasEmpresas(lasEmpresas: string) {
+    public setLasEmpresas(lasEmpresas: string):void {
         this.update((state) => ({
             ...state,
             lasEmpresas,
@@ -338,7 +338,7 @@ export class Tramite31616MensajeriaStore extends Store<Solicitud31616MensajeriaS
      * Establece el estado de finDeVigencia.
      * @param finDeVigencia - El valor de finDeVigencia.
      */
-    public setFinDeVigencia(finDeVigencia: string) {
+    public setFinDeVigencia(finDeVigencia: string):void {
         this.update((state) => ({
             ...state,
             finDeVigencia,
@@ -348,7 +348,7 @@ export class Tramite31616MensajeriaStore extends Store<Solicitud31616MensajeriaS
      * Establece el estado de numeroDeOficio.
      * @param numeroDeOficio - El valor de numeroDeOficio.
      */
-    public setNumeroDeOficio(numeroDeOficio: string) {
+    public setNumeroDeOficio(numeroDeOficio: string):void {
         this.update((state) => ({
             ...state,
             numeroDeOficio,
@@ -358,7 +358,7 @@ export class Tramite31616MensajeriaStore extends Store<Solicitud31616MensajeriaS
      * Establece el estado de fechaDePresentacion.
      * @param fechaDePresentacion - El valor de fechaDePresentacion.
      */
-    public setFechaDePresentacion(fechaDePresentacion: string) {
+    public setFechaDePresentacion(fechaDePresentacion: string):void {
         this.update((state) => ({
             ...state,
             fechaDePresentacion,
@@ -368,7 +368,7 @@ export class Tramite31616MensajeriaStore extends Store<Solicitud31616MensajeriaS
      * Establece el estado de mensajeriaPaqueteria.
      * @param mensajeriaPaqueteria - El valor de mensajeriaPaqueteria.
      */
-    public setMensajeriaPaqueteria(mensajeriaPaqueteria: string) {
+    public setMensajeriaPaqueteria(mensajeriaPaqueteria: string):void {
         this.update((state) => ({
             ...state,
             mensajeriaPaqueteria,
@@ -378,7 +378,7 @@ export class Tramite31616MensajeriaStore extends Store<Solicitud31616MensajeriaS
      * Establece el estado de laSolicitanteInterna.
      * @param laSolicitanteInterna - El valor de laSolicitanteInterna.
      */
-    public setLaSolicitanteInterna(laSolicitanteInterna: string) {
+    public setLaSolicitanteInterna(laSolicitanteInterna: string):void {
         this.update((state) => ({
             ...state,
             laSolicitanteInterna,
@@ -388,7 +388,7 @@ export class Tramite31616MensajeriaStore extends Store<Solicitud31616MensajeriaS
      * Establece el estado de subsidiaria.
      * @param subsidiaria - El valor de subsidiaria.
      */
-    public setSubsidiaria(subsidiaria: string) {
+    public setSubsidiaria(subsidiaria: string):void {
         this.update((state) => ({
             ...state,
             subsidiaria,
@@ -398,7 +398,7 @@ export class Tramite31616MensajeriaStore extends Store<Solicitud31616MensajeriaS
      * Establece el estado de filiales.
      * @param filiales - El valor de filiales.
      */
-    public setFiliales(filiales: string) {
+    public setFiliales(filiales: string):void {
         this.update((state) => ({
             ...state,
             filiales,
@@ -408,7 +408,7 @@ export class Tramite31616MensajeriaStore extends Store<Solicitud31616MensajeriaS
      * Establece el estado de matrices.
      * @param matrices - El valor de matrices.
      */
-    public setMatrices(matrices: string) {
+    public setMatrices(matrices: string):void {
         this.update((state) => ({
             ...state,
             matrices,
@@ -418,7 +418,7 @@ export class Tramite31616MensajeriaStore extends Store<Solicitud31616MensajeriaS
      * Establece el estado de aeronauticaCivil.
      * @param aeronauticaCivil - El valor de aeronauticaCivil.
      */
-    public setAeronauticaCivil(aeronauticaCivil: string) {
+    public setAeronauticaCivil(aeronauticaCivil: string):void {
         this.update((state) => ({
             ...state,
             aeronauticaCivil,
@@ -428,7 +428,7 @@ export class Tramite31616MensajeriaStore extends Store<Solicitud31616MensajeriaS
      * Establece el estado de conformidadArticulos.
      * @param conformidadArticulos - El valor de conformidadArticulos.
      */
-    public setConformidadArticulos(conformidadArticulos: string) {
+    public setConformidadArticulos(conformidadArticulos: string):void {
         this.update((state) => ({
             ...state,
             conformidadArticulos,
@@ -438,7 +438,7 @@ export class Tramite31616MensajeriaStore extends Store<Solicitud31616MensajeriaS
      * Establece el estado de rfc.
      * @param rfc - El valor de rfc.
      */
-    public setRfc(rfc: string) {
+    public setRfc(rfc: string):void {
         this.update((state) => ({
             ...state,
             rfc,
@@ -448,7 +448,7 @@ export class Tramite31616MensajeriaStore extends Store<Solicitud31616MensajeriaS
      * Establece el estado de documentosMercancias.
      * @param documentosMercancias - El valor de documentosMercancias.
      */
-    public setDocumentosMercancias(documentosMercancias: string) {
+    public setDocumentosMercancias(documentosMercancias: string):void {
         this.update((state) => ({
             ...state,
             documentosMercancias,
@@ -458,7 +458,7 @@ export class Tramite31616MensajeriaStore extends Store<Solicitud31616MensajeriaS
      * Establece el estado de rfcLasEmpresas.
      * @param rfcLasEmpresas - El valor de rfcLasEmpresas.
      */
-    public setRfcLasEmpresas(rfcLasEmpresas: string) {
+    public setRfcLasEmpresas(rfcLasEmpresas: string):void {
         this.update((state) => ({
             ...state,
             rfcLasEmpresas,
@@ -468,7 +468,7 @@ export class Tramite31616MensajeriaStore extends Store<Solicitud31616MensajeriaS
      * Establece el estado de generalAeronauticaCivil.
      * @param generalAeronauticaCivil - El valor de generalAeronauticaCivil.
      */
-    public setGeneralAeronauticaCivil(generalAeronauticaCivil: string) {
+    public setGeneralAeronauticaCivil(generalAeronauticaCivil: string):void {
         this.update((state) => ({
             ...state,
             generalAeronauticaCivil,
@@ -478,7 +478,7 @@ export class Tramite31616MensajeriaStore extends Store<Solicitud31616MensajeriaS
      * Establece el estado de exteriorConformidad.
      * @param exteriorConformidad - El valor de exteriorConformidad.
      */
-    public setExteriorConformidad(exteriorConformidad: string) {
+    public setExteriorConformidad(exteriorConformidad: string):void {
         this.update((state) => ({
             ...state,
             exteriorConformidad,
@@ -488,7 +488,7 @@ export class Tramite31616MensajeriaStore extends Store<Solicitud31616MensajeriaS
      * Establece el estado de reconocimientoMutuo.
      * @param reconocimientoMutuo - El valor de reconocimientoMutuo.
      */
-    public setReconocimientoMutuo(reconocimientoMutuo: string) {
+    public setReconocimientoMutuo(reconocimientoMutuo: string):void {
         this.update((state) => ({
             ...state,
             reconocimientoMutuo,
@@ -498,7 +498,7 @@ export class Tramite31616MensajeriaStore extends Store<Solicitud31616MensajeriaS
      * Establece el estado de rfcListado.
      * @param rfcListado - El valor de rfcListado.
      */
-    public setRfcListado(rfcListado: string) {
+    public setRfcListado(rfcListado: string):void {
         this.update((state) => ({
             ...state,
             rfcListado,
@@ -508,7 +508,7 @@ export class Tramite31616MensajeriaStore extends Store<Solicitud31616MensajeriaS
      * Establece el estado de nombreRazonSocialListado.
      * @param nombreRazonSocialListado - El valor de nombreRazonSocialListado.
      */
-    public setNombreRazonSocialListado(nombreRazonSocialListado: string) {
+    public setNombreRazonSocialListado(nombreRazonSocialListado: string):void {
         this.update((state) => ({
             ...state,
             nombreRazonSocialListado,
@@ -518,7 +518,7 @@ export class Tramite31616MensajeriaStore extends Store<Solicitud31616MensajeriaS
      * Establece el estado de direccionFiscalListado.
      * @param direccionFiscalListado - El valor de direccionFiscalListado.
      */
-    public setDireccionFiscalListado(direccionFiscalListado: string) {
+    public setDireccionFiscalListado(direccionFiscalListado: string):void {
         this.update((state) => ({
             ...state,
             direccionFiscalListado,
@@ -528,7 +528,7 @@ export class Tramite31616MensajeriaStore extends Store<Solicitud31616MensajeriaS
      * Establece el estado de paginaElectronicaListado.
      * @param paginaElectronicaListado - El valor de paginaElectronicaListado.
      */
-    public setPaginaElectronicaListado(paginaElectronicaListado: string) {
+    public setPaginaElectronicaListado(paginaElectronicaListado: string):void {
         this.update((state) => ({
             ...state,
             paginaElectronicaListado,
@@ -538,7 +538,7 @@ export class Tramite31616MensajeriaStore extends Store<Solicitud31616MensajeriaS
      * Establece el estado de correoElectronicaListado.
      * @param correoElectronicaListado - El valor de correoElectronicaListado.
      */
-    public setCorreoElectronicaListado(correoElectronicaListado: string) {
+    public setCorreoElectronicaListado(correoElectronicaListado: string):void {
         this.update((state) => ({
             ...state,
             correoElectronicaListado,
@@ -548,7 +548,7 @@ export class Tramite31616MensajeriaStore extends Store<Solicitud31616MensajeriaS
      * Establece el estado de telefonoContactoListado.
      * @param telefonoContactoListado - El valor de telefonoContactoListado.
      */
-    public setTelefonoContactoListado(telefonoContactoListado: string) {
+    public setTelefonoContactoListado(telefonoContactoListado: string):void {
         this.update((state) => ({
             ...state,
             telefonoContactoListado,
@@ -558,7 +558,7 @@ export class Tramite31616MensajeriaStore extends Store<Solicitud31616MensajeriaS
      * Establece el estado de informacionProporcionada.
      * @param informacionProporcionada - El valor de informacionProporcionada.
      */
-    public setInformacionProporcionada(informacionProporcionada: string) {
+    public setInformacionProporcionada(informacionProporcionada: string):void {
         this.update((state) => ({
             ...state,
             informacionProporcionada,
@@ -568,7 +568,7 @@ export class Tramite31616MensajeriaStore extends Store<Solicitud31616MensajeriaS
      * Establece el estado de claveReferencia.
      * @param claveReferencia - El valor de claveReferencia.
      */
-    public setClaveReferencia(claveReferencia: string) {
+    public setClaveReferencia(claveReferencia: string):void {
         this.update((state) => ({
             ...state,
             claveReferencia,
@@ -578,7 +578,7 @@ export class Tramite31616MensajeriaStore extends Store<Solicitud31616MensajeriaS
      * Establece el estado de numeroOperacion.
      * @param numeroOperacion - El valor de numeroOperacion.
      */
-    public setNumeroOperacion(numeroOperacion: string) {
+    public setNumeroOperacion(numeroOperacion: string):void {
         this.update((state) => ({
             ...state,
             numeroOperacion,
@@ -588,7 +588,7 @@ export class Tramite31616MensajeriaStore extends Store<Solicitud31616MensajeriaS
      * Establece el estado de cadenaDependencia.
      * @param cadenaDependencia - El valor de cadenaDependencia.
      */
-    public setCadenaDependencia(cadenaDependencia: string) {
+    public setCadenaDependencia(cadenaDependencia: string):void {
         this.update((state) => ({
             ...state,
             cadenaDependencia,
@@ -598,7 +598,7 @@ export class Tramite31616MensajeriaStore extends Store<Solicitud31616MensajeriaS
      * Establece el estado de banco.
      * @param banco - El valor de banco.
      */
-    public setBanco(banco: string) {
+    public setBanco(banco: string):void {
         this.update((state) => ({
             ...state,
             banco,
@@ -608,7 +608,7 @@ export class Tramite31616MensajeriaStore extends Store<Solicitud31616MensajeriaS
      * Establece el estado de llavePago.
      * @param llavePago - El valor de llavePago.
      */
-    public setLlavePago(llavePago: string) {
+    public setLlavePago(llavePago: string):void {
         this.update((state) => ({
             ...state,
             llavePago,
@@ -618,7 +618,7 @@ export class Tramite31616MensajeriaStore extends Store<Solicitud31616MensajeriaS
      * Establece el estado de fechaFactura.
      * @param fechaFactura - El valor de fechaFactura.
      */
-    public setFechaFactura(fechaFactura: string) {
+    public setFechaFactura(fechaFactura: string):void {
         this.update((state) => ({
             ...state,
             fechaFactura,
@@ -628,7 +628,7 @@ export class Tramite31616MensajeriaStore extends Store<Solicitud31616MensajeriaS
      * Establece el estado de importePago.
      * @param importePago - El valor de importePago.
      */
-    public setImportePago(importePago: string) {
+    public setImportePago(importePago: string):void {
         this.update((state) => ({
             ...state,
             importePago,

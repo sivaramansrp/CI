@@ -67,13 +67,12 @@ describe('PermisoDeExportacionComponent', () => {
   });
 
   it('should not update indice or call wizard methods if accion is invalid', () => {
-    component.indice = 1; // Ensure the initial value of indice is set
-    component.wizardComponent = wizardMock;
-    const accionBoton = { valor: 2, accion: 'invalid' };
-    component.getValorIndice(accionBoton);
-
-    expect(component.indice).toBe(1); // Ensure indice remains unchanged
-    expect(wizardMock.siguiente).not.toHaveBeenCalled();
-    expect(wizardMock.atras).not.toHaveBeenCalled();
+    component.indice = 2;
+    component.wizardComponent = { siguiente: jest.fn(), atras: jest.fn() } as any;
+    const e = { valor: 10, accion: 'invalid' };
+    component.getValorIndice(e);
+    expect(component.indice).toBe(2);
+    expect(component.wizardComponent.siguiente).not.toHaveBeenCalled();
+    expect(component.wizardComponent.atras).not.toHaveBeenCalled();
   });
 });

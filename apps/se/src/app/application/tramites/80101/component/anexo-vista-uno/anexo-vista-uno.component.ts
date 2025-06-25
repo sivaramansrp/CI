@@ -1,3 +1,4 @@
+import { Component, Input } from '@angular/core';
 import { ANEXO_IMPORTACION_SERVICIO } from '../../../../shared/constantes/anexo-dos-y-tres.enum';
 import { ANEXO_I_SERVICIO } from '../../../../shared/constantes/anexo-dos-y-tres.enum';
 import { ActivatedRoute } from '@angular/router';
@@ -5,7 +6,6 @@ import { AnexoDosEncabezado } from '../../../../shared/models/nuevo-programa-ind
 import { AnexoUnoComponent } from '../../../../shared/components/anexo-uno/anexo-uno.component';
 import { AnexoUnoEncabezado } from '../../../../shared/models/nuevo-programa-industrial.model';
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { Router } from '@angular/router';
