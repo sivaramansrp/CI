@@ -1764,6 +1764,15 @@
     "numeroDeProcedimiento": "31802"
   },
   {
+   "id": 31803,
+   "tipoDeTramite": "Solicitud de acuso",
+   "fecha": "2023-10-01",
+   "fechaActualizacion": "2023-10-05",
+   "diasTranscurridos": "4",
+   "departamento": "AGACE",
+   "numeroDeProcedimiento": "31803"
+},
+{
     "id": 260104,
     "tipoDeTramite": "Antecesor",
     "fecha": "2023-10-01",
