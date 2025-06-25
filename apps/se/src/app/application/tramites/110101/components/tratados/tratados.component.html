@@ -30,12 +30,17 @@
 
 <div class="row">
     <div class="col-md-12">
-        <app-tabla-dinamica [tipoSeleccionTabla]="tipoSeleccionTabla" [configuracionTabla]="configuracionTabla" [datos]="registroDeSolicitudesTablaDatos">
+        <app-tabla-dinamica [tipoSeleccionTabla]="tipoSeleccionTabla" [configuracionTabla]="configuracionTabla" [datos]="registroDeSolicitudesTablaDatos" (listaDeFilaSeleccionada)="onSeleccionChange($event)">
         </app-tabla-dinamica>
     </div>
 
 
     <div class=" text-end mt-5">
         <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura">Modificar tratado</button>
-        <button class="btn btn-primary" [disabled]="esFormularioSoloLectura">Eliminar tratado</button>
+        <button class="btn btn-primary"
+          [disabled]="esFormularioSoloLectura"
+          (click)="eliminarTratado()">
+    Eliminar tratado
+  </button>
     </div>
+</div>

@@ -299,6 +299,23 @@ talbleData: RegistroDeSolicitudesTabla = {
     this.destroy$.next();
     this.destroy$.complete();
   }
+selectedRows: RegistroDeSolicitudesTabla[] = [];
 
+onSeleccionChange(selected: RegistroDeSolicitudesTabla[]) {
+  this.selectedRows = selected;
+}
+
+eliminarTratado(): void {
+  console.log('Eliminar tratado');
+  console.log('Filas seleccionadas:', this.selectedRows);
+  if (this.selectedRows.length === 0) 
+    {return}
+  console.log('Filas seleccionadas:', this.selectedRows);
+  this.registroDeSolicitudesTablaDatos = this.registroDeSolicitudesTablaDatos.filter(
+    row => !this.selectedRows.includes(row)
+  );
+  console.log("deleted");
+  this.selectedRows = [];
+}
 
 }
