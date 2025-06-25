@@ -4,7 +4,7 @@
   </div>
   <div class="row mt-5">
     <label>Folio VUCEM</label>
-    <input type="text" class="form-control gris-color" readonly />
+    <input type="text" class="form-control gris-color" formControlName="folio" [disabled]="soloLectura" readonly />
   </div>
   <div class="row mt-5">
     <div class="col-md-4">
@@ -14,7 +14,7 @@
         Este campo es obligatorio
       </div>
       <textarea cols="50" rows="5" formControlName="motivoDelDes"
-        (change)=" setValoresStore( solicitudForm, 'motivoDelDes', 'setMotivoDelDes' ) "></textarea>
+        (change)=" setValoresStore( solicitudForm, 'motivoDelDes', 'setMotivoDelDes' ) " [disabled]="soloLectura"></textarea>
     </div>
   </div> 
 </form>

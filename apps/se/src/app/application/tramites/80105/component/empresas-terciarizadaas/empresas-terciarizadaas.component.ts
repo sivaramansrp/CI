@@ -9,14 +9,14 @@ import { NuevoProgramaIndustrialService } from '../../services/modalidad-terciar
 @Component({
   selector: 'app-empresas-terciarizadaas',
   standalone: true,
-  imports: [CommonModule,EmpresasComponent],
+  imports: [CommonModule, EmpresasComponent],
   templateUrl: './empresas-terciarizadaas.component.html',
   styleUrl: './empresas-terciarizadaas.component.scss',
 })
 export class EmpresasTerciarizadaasComponent implements OnDestroy {
 
-  constructor(private nuevoProgramaIndustrialService: NuevoProgramaIndustrialService,){
-
+  constructor(private nuevoProgramaIndustrialService: NuevoProgramaIndustrialService) {
+    this.obtenerListaEstado();
   }
 
   /**
@@ -40,29 +40,33 @@ export class EmpresasTerciarizadaasComponent implements OnDestroy {
     { encabezado: 'Domicilio fiscal del solicitante', clave: (item) => item.domicilioFiscalSolicitante, orden: 10 },
     { encabezado: 'Razón social', clave: (item) => item.razonSocial, orden: 11 },
   ];
-  estadosCatalogo: Catalogo[]=[];
-
-   /**
-   * Obtiene la lista de estados desde el servicio y actualiza la propiedad estadoCatalogo.
-   * @method obtenerListaEstado
+  /**
+   * Arreglo que contiene los estados disponibles en el catálogo.
+   * Cada elemento es de tipo `Catalogo`.
    */
-    obtenerListaEstado(): void {
-      this.nuevoProgramaIndustrialService
-        .obtenerListaEstado()
-        .pipe(takeUntil(this.destroyNotifier$))
-        .subscribe((response) => {
-          if (response) {
-            this.estadosCatalogo = response.data;
-          }
-        });
-    }
+  estadosCatalogo: Catalogo[] = [];
+
+  /**
+  * Obtiene la lista de estados desde el servicio y actualiza la propiedad estadoCatalogo.
+  * @method obtenerListaEstado
+  */
+  obtenerListaEstado(): void {
+    this.nuevoProgramaIndustrialService
+      .obtenerListaEstado()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((response) => {
+        if (response) {
+          this.estadosCatalogo = response.data;
+        }
+      });
+  }
 
 
-    /**
-   * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
-   * Limpia las suscripciones y actualiza los BehaviorSubject para ocultar las tablas.
-   * @method ngOnDestroy
-   */
+  /**
+ * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
+ * Limpia las suscripciones y actualiza los BehaviorSubject para ocultar las tablas.
+ * @method ngOnDestroy
+ */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();

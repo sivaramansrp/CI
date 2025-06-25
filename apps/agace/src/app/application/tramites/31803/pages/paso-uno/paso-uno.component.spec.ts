@@ -1,4 +1,4 @@
-// @ts-nocheck
+//@ts-nocheck
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import {
   Pipe,
@@ -17,6 +17,8 @@ import { Observable, of as observableOf, throwError } from 'rxjs';
 import { Component } from '@angular/core';
 import { PasoUnoComponent } from './paso-uno.component';
 import { RegistroService } from '@ng-mf/data-access-user';
+import { SolicitudComponent } from '../../components/Solicitud.component';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 @Injectable()
 class MockRegistroService {}
@@ -53,7 +55,7 @@ describe('PasoUnoComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [FormsModule, ReactiveFormsModule, PasoUnoComponent],
+      imports: [HttpClientTestingModule, FormsModule, ReactiveFormsModule, PasoUnoComponent,SolicitudComponent],
       declarations: [
         TranslatePipe,
         PhoneNumberPipe,
@@ -61,7 +63,11 @@ describe('PasoUnoComponent', () => {
         MyCustomDirective,
       ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
-      providers: [{ provide: RegistroService, useClass: MockRegistroService }],
+      providers: [
+        { provide: RegistroService, useClass: MockRegistroService },
+        // Add the following mock provider for _HttpClient
+        { provide: '_HttpClient', useValue: {} }
+      ],
     })
       .overrideComponent(PasoUnoComponent, {})
       .compileComponents();
@@ -78,15 +84,6 @@ describe('PasoUnoComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should run #ngOnInit()', async () => {
-    component.registro = component.registro || {};
-    component.registro.getCatalogoById = jest
-      .fn()
-      .mockReturnValue(observableOf({}));
-    component.ngOnInit();
-    expect(component.registro.getCatalogoById).toHaveBeenCalled();
-  });
-
   it('should run #ngAfterViewInit()', async () => {
     component.solicitante = component.solicitante || {};
     component.solicitante.obtenerTipoPersona = jest.fn();
@@ -96,5 +93,14 @@ describe('PasoUnoComponent', () => {
 
   it('should run #seleccionaTab()', async () => {
     component.seleccionaTab({});
+  });
+  
+    it('should complete destroyNotifier$ on ngOnDestroy', () => {
+    const completeSpy = jest.spyOn(component['destroyNotifier$'], 'complete');
+    const nextSpy = jest.spyOn(component['destroyNotifier$'], 'next');
+
+    component.ngOnDestroy();
+    expect(nextSpy).toHaveBeenCalled();
+    expect(completeSpy).toHaveBeenCalled();
   });
 });

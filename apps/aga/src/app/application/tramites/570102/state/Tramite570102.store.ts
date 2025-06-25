@@ -6,6 +6,11 @@ import { Injectable } from '@angular/core';
  */
 export interface Solicitud570102State {
   /**
+   * Folio de la solicitud.
+   * Representa el identificador único de la solicitud dentro del sistema.
+   */
+  folio: string;
+  /**
    * Motivo del desistimiento.
    * Representa la razón por la cual se realiza el desistimiento de la solicitud.
    */
@@ -18,10 +23,7 @@ export interface Solicitud570102State {
  */
 export function createInitialState(): Solicitud570102State {
   return {
-    /**
-     * Valor inicial del motivo del desistimiento.
-     * Se inicializa como una cadena vacía.
-     */
+    folio: '', 
     motivoDelDes: '',
   };
 }
@@ -42,7 +44,13 @@ export class Tramite570102Store extends Store<Solicitud570102State> {
   constructor() {
     super(createInitialState());
   }
-
+  /**
+   * Actualiza el estado global con los nuevos valores proporcionados.
+   * @param state Objeto que contiene los nuevos valores para el estado.
+   */
+  public setFolio(folio: string): void {
+    this.update((state) => ({ ...state, folio }));
+  }
   /**
    * Actualiza el motivo del desistimiento en el estado global.
    * @param motivoDelDes Nuevo motivo del desistimiento.

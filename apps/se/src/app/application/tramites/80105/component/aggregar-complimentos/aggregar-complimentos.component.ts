@@ -1,16 +1,16 @@
 import { Observable, Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { ComplementosSeccionComponent } from '../../../../shared/components/complementos-seccion/complementos-seccion.component';
+import { ComplimentosComponent } from '../../../../shared/components/complimentos/complimentos.component';
 import { Component } from '@angular/core';
 import { DatosComplimentos } from '../../../../shared/models/complimentos.model';
 import { SociaoAccionistas } from '../../../../shared/models/complimentos.model';
-import { Tramite80101Query } from '../../estados/tramite80101.query';
-import { Tramite80101Store } from '../../estados/tramite80101.store';
+import { Tramite80101Query } from '../../../80103/estados/tramite80101.query';
+import { Tramite80101Store } from '../../../80103/estados/tramite80101.store';
 
 @Component({
   selector: 'app-aggregar-complimentos',
   standalone: true,
-  imports: [CommonModule, ComplementosSeccionComponent],
+  imports: [CommonModule, ComplimentosComponent],
   templateUrl: './aggregar-complimentos.component.html',
   styleUrl: './aggregar-complimentos.component.scss',
 })
@@ -81,4 +81,5 @@ export class AggregarComplimentosComponent {
   accionistasExtranjerosEliminado(datos: SociaoAccionistas[]): void {
     this.store.eliminarTablaDatosComplimentosExtranjera(datos);
   }
+  
 }
