@@ -31,11 +31,11 @@ describe('CancelacionesComponent', () => {
     mockWizardComponent.atras.mockClear();
   });
 
-  it('should create', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize with correct default values', () => {
+  it('debe inicializar con los valores por defecto correctos', () => {
     expect(component.indice).toBe(1);
     expect(component.pantallasPasos).toBe(CANCELACIONES_PASOS);
     expect(component.datosPasos.nroPasos).toBe(CANCELACIONES_PASOS.length);
@@ -44,7 +44,7 @@ describe('CancelacionesComponent', () => {
     expect(component.datosPasos.txtBtnSig).toBe('Continuar');
   });
 
-  it('should update indice and call siguiente on getValorIndice with accion "cont"', () => {
+  it('debe actualizar el índice y llamar a siguiente en getValorIndice con acción "cont"', () => {
     component.indice = 1;
     component.getValorIndice({ valor: 2, accion: 'cont' });
     expect(component.indice).toBe(2);
@@ -52,7 +52,7 @@ describe('CancelacionesComponent', () => {
     expect(mockWizardComponent.atras).not.toHaveBeenCalled();
   });
 
-  it('should update indice and call atras on getValorIndice with accion "atras"', () => {
+  it('debe actualizar el índice y llamar a atras en getValorIndice con acción "atras"', () => {
     component.indice = 2;
     component.getValorIndice({ valor: 3, accion: 'atras' });
     expect(component.indice).toBe(3);
@@ -60,7 +60,7 @@ describe('CancelacionesComponent', () => {
     expect(mockWizardComponent.siguiente).not.toHaveBeenCalled();
   });
 
-  it('should not update indice or call wizardComponent if valor is out of range (0)', () => {
+  it('no debe actualizar el índice ni llamar métodos del wizardComponent si el valor está fuera de rango (0)', () => {
     component.indice = 1;
     component.getValorIndice({ valor: 0, accion: 'cont' });
     expect(component.indice).toBe(1);
@@ -68,7 +68,7 @@ describe('CancelacionesComponent', () => {
     expect(mockWizardComponent.atras).not.toHaveBeenCalled();
   });
 
-  it('should not update indice or call wizardComponent if valor is out of range (5)', () => {
+  it('no debe actualizar el índice ni llamar métodos del wizardComponent si el valor está fuera de rango (5)', () => {
     component.indice = 1;
     component.getValorIndice({ valor: 5, accion: 'atras' });
     expect(component.indice).toBe(1);
@@ -76,22 +76,21 @@ describe('CancelacionesComponent', () => {
     expect(mockWizardComponent.atras).not.toHaveBeenCalled();
   });
 
-  it('should call atras if accion is not "cont"', () => {
+  it('debe llamar a atras si la acción no es "cont"', () => {
     component.indice = 2;
     component.getValorIndice({ valor: 3, accion: 'atras' });
     expect(mockWizardComponent.atras).toHaveBeenCalled();
   });
 
-  it('should call siguiente if accion is "cont"', () => {
+  it('debe llamar a siguiente si la acción es "cont"', () => {
     component.indice = 2;
     component.getValorIndice({ valor: 3, accion: 'cont' });
     expect(mockWizardComponent.siguiente).toHaveBeenCalled();
   });
 
-  it('should not throw if wizardComponent is undefined', () => {
+  it('no debe lanzar error si wizardComponent es undefined', () => {
     component.wizardComponent = undefined as any;
     expect(() => component.getValorIndice({ valor: 2, accion: 'cont' })).not.toThrow();
     expect(() => component.getValorIndice({ valor: 2, accion: 'atras' })).not.toThrow();
   });
-
 });

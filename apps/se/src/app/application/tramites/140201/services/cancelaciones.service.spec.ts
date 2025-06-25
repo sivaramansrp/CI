@@ -20,11 +20,11 @@ describe('CancelacionesService', () => {
     service = TestBed.inject(CancelacionesService);
   });
 
-  it('should be created', () => {
+  it('debe crear el servicio', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should get entidades', () => {
+  it('debe obtener entidades', () => {
     httpMock.get.mockReturnValue(of([{ id: 1, descripcion: 'Entidad' }]));
     service.getEntidades().subscribe(result => {
       expect(result).toEqual([{ id: 1, descripcion: 'Entidad' }]);
@@ -32,7 +32,7 @@ describe('CancelacionesService', () => {
     expect(httpMock.get).toHaveBeenCalledWith('assets/json/140201/entidad140201.json');
   });
 
-  it('should get colonia', () => {
+  it('debe obtener colonia', () => {
     httpMock.get.mockReturnValue(of([{ id: 2, descripcion: 'Colonia' }]));
     service.getColonia().subscribe(result => {
       expect(result).toEqual([{ id: 2, descripcion: 'Colonia' }]);
@@ -40,7 +40,7 @@ describe('CancelacionesService', () => {
     expect(httpMock.get).toHaveBeenCalledWith('assets/json/140201/colonia140201.json');
   });
 
-  it('should get municipio', () => {
+  it('debe obtener municipio', () => {
     httpMock.get.mockReturnValue(of([{ id: 3, descripcion: 'Municipio' }]));
     service.getmunicipio().subscribe(result => {
       expect(result).toEqual([{ id: 3, descripcion: 'Municipio' }]);
@@ -48,7 +48,7 @@ describe('CancelacionesService', () => {
     expect(httpMock.get).toHaveBeenCalledWith('assets/json/140201/municipio140201.json');
   });
 
-  it('should get localidad', () => {
+  it('debe obtener localidad', () => {
     httpMock.get.mockReturnValue(of([{ id: 4, descripcion: 'Localidad' }]));
     service.getLocalidad().subscribe(result => {
       expect(result).toEqual([{ id: 4, descripcion: 'Localidad' }]);
@@ -56,7 +56,7 @@ describe('CancelacionesService', () => {
     expect(httpMock.get).toHaveBeenCalledWith('assets/json/140201/localidad140201.json');
   });
 
-  it('should get info', () => {
+  it('debe obtener info', () => {
     httpMock.get.mockReturnValue(of({ calle: 'Av. Siempre Viva' }));
     service.getInfo().subscribe(result => {
       expect(result).toEqual({ calle: 'Av. Siempre Viva' });
@@ -64,7 +64,7 @@ describe('CancelacionesService', () => {
     expect(httpMock.get).toHaveBeenCalledWith('assets/json/140201/notificacionsInfo.json');
   });
 
-  it('should get cancelacion de autorizaciones', () => {
+  it('debe obtener cancelación de autorizaciones', () => {
     httpMock.get.mockReturnValue(of([{ id: 5, nombre: 'Cancelacion' }]));
     service.getCancelacionDeAutorizaciones().subscribe(result => {
       expect(result).toEqual([{ id: 5, nombre: 'Cancelacion' }]);

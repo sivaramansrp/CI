@@ -53,16 +53,15 @@ describe('DatosNotificationRecipientsComponent', () => {
 
     fixture = TestBed.createComponent(DatosNotificationRecipientsComponent);
     component = fixture.componentInstance;
-    // Ensure entidadFederativa$ is always defined for tests
     component.entidadFederativa$ = of([]);
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize the form on ngOnInit', () => {
+  it('debe inicializar el formulario en ngOnInit', () => {
     expect(component.formularioDeNotificacionesForm).toBeDefined();
     expect(component.formularioDeNotificacionesForm.get('nombre')).toBeDefined();
     expect(component.formularioDeNotificacionesForm.get('apellidoPaterno')).toBeDefined();
@@ -70,14 +69,14 @@ describe('DatosNotificationRecipientsComponent', () => {
     expect(component.formularioDeNotificacionesForm.get('correoElectronico')).toBeDefined();
   });
 
-  it('should patch apellidoMaterno from service in infoDeCarga', () => {
+  it('debe actualizar apellidoMaterno desde el servicio en infoDeCarga', () => {
     component.formularioDeNotificacionesForm.patchValue({ apellidoMaterno: '' });
     component.infoDeCarga();
     expect(cancelacionServiceMock.getInfo).toHaveBeenCalled();
     expect(component.formularioDeNotificacionesForm.get('apellidoMaterno')?.value).toBe('Rodríguez');
   });
 
-  it('should patch nombre, apellidoPaterno, correoElectronico from query observables in estadoActualizacion', () => {
+  it('debe actualizar nombre, apellidoPaterno y correoElectronico desde los observables en estadoActualizacion', () => {
     component.formularioDeNotificacionesForm.patchValue({
       nombre: '',
       apellidoPaterno: '',
@@ -89,38 +88,38 @@ describe('DatosNotificationRecipientsComponent', () => {
     expect(component.formularioDeNotificacionesForm.get('correoElectronico')?.value).toBe('juan@mail.com');
   });
 
-  it('should call setNombre on updateNombre', () => {
+  it('debe llamar setNombre en updateNombre', () => {
     component.formularioDeNotificacionesForm.get('nombre')?.setValue('NuevoNombre');
     component.updateNombre();
     expect(cancelacionesStoreMock.setNombre).toHaveBeenCalledWith('NuevoNombre');
   });
 
-  it('should call setApellidoPaterno on updateApellidoPaterno', () => {
+  it('debe llamar setApellidoPaterno en updateApellidoPaterno', () => {
     component.formularioDeNotificacionesForm.get('apellidoPaterno')?.setValue('NuevoApellido');
     component.updateApellidoPaterno();
     expect(cancelacionesStoreMock.setApellidoPaterno).toHaveBeenCalledWith('NuevoApellido');
   });
 
-  it('should call setCorreoElectronico on updateCorreoElectronico', () => {
+  it('debe llamar setCorreoElectronico en updateCorreoElectronico', () => {
     component.formularioDeNotificacionesForm.get('correoElectronico')?.setValue('nuevo@mail.com');
     component.updateCorreoElectronico();
     expect(cancelacionesStoreMock.setCorreoElectronico).toHaveBeenCalledWith('nuevo@mail.com');
   });
 
-  it('should disable form if esFormularioSoloLectura is true in guardarDatosFormulario', () => {
+  it('debe deshabilitar el formulario si esFormularioSoloLectura es true en guardarDatosFormulario', () => {
     component.esFormularioSoloLectura = true;
     component.guardarDatosFormulario();
     expect(component.formularioDeNotificacionesForm.disabled).toBe(true);
   });
 
-  it('should enable form if esFormularioSoloLectura is false in guardarDatosFormulario', () => {
+  it('debe habilitar el formulario si esFormularioSoloLectura es false en guardarDatosFormulario', () => {
     component.entidadFederativa$ = of([]);
     component.esFormularioSoloLectura = false;
     component.guardarDatosFormulario();
     expect(component.formularioDeNotificacionesForm.enabled).toBe(true);
   });
 
-  it('should clean up subscriptions on ngOnDestroy', () => {
+  it('debe limpiar las suscripciones en ngOnDestroy', () => {
     const nextSpy = jest.spyOn(component['destroy$'], 'next');
     const completeSpy = jest.spyOn(component['destroy$'], 'complete');
     component.ngOnDestroy();
