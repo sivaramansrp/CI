@@ -14,8 +14,6 @@ class MockServicioDeMensajesService {
   }
 }
 
-
-
 describe('BusquedaFolioComponent', () => {
   let fixture: ComponentFixture<BusquedaFolioComponent>;
   let component: BusquedaFolioComponent;
@@ -48,4 +46,23 @@ describe('BusquedaFolioComponent', () => {
     expect(component).toBeTruthy();
   });
 
+
+  it('should initialize montoACancelarForm with correct validators', () => {
+    component.establecerMontoACancelarForm();
+    expect(component.montoACancelarForm).toBeDefined();
+    component.montoACancelarForm.get('monto')?.setValue('abc');
+    expect(component.montoACancelarForm.get('monto')?.valid).toBe(false);
+    component.montoACancelarForm.get('monto')?.setValue('123');
+    expect(component.montoACancelarForm.get('monto')?.valid).toBe(true);
+  });
+
+  it('estableDevloverForm should initialize all devolver forms', () => {
+    component.estableDevloverForm();
+    expect(component.devloverForm).toBeDefined();
+    expect(component.cantidadADevolver).toBeDefined();
+    expect(component.devolver).toBeDefined();
+    expect(component.devloverForm.get('folioDelOficioDeCertificado')).toBeDefined();
+    expect(component.cantidadADevolver.get('cantidad')).toBeDefined();
+    expect(component.devolver.get('totalDevolver')).toBeDefined();
+  });
 });
