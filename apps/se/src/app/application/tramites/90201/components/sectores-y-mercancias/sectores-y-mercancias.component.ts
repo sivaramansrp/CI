@@ -1,4 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ConsultaioQuery, Notificacion, NotificacionesComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 
 import {
@@ -16,7 +17,6 @@ import {
 import { AlertComponent } from '@libs/shared/data-access-user/src/tramites/components/alert/alert.component';
 import { Catalogo } from '@libs/shared/data-access-user/src/core/models/shared/catalogos.model';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
-import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { ExpansionDeProductoresService } from '@libs/shared/data-access-user/src/core/services/90201/expansion-de-productores.service';
 
 import { SECTORESY } from '@libs/shared/data-access-user/src';
@@ -46,7 +46,8 @@ import { Tramite90201Query } from '../../../../estados/queries/tramite90201.quer
     CommonModule,
     ReactiveFormsModule,
     TablaDinamicaComponent,
-    TituloComponent
+    TituloComponent,
+    NotificacionesComponent
   ],
   templateUrl: './sectores-y-mercancias.component.html',
   styleUrl: './sectores-y-mercancias.component.scss',
@@ -57,6 +58,12 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
    * Este formulario se utiliza para gestionar y validar los datos de entrada relacionados con sectores y mercancías.
    */
   public sectoresForm!: FormGroup;
+    /**
+   * Representa una nueva notificación que será utilizada en el componente.
+   * 
+   * @type {Notificacion}
+   */
+  public nuevaNotificacion!: Notificacion;
   /**
    * Indica si un elemento está seleccionado.
    *
@@ -123,6 +130,8 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
    * @type {Subscription}
    */
   private subscription: Subscription = new Subscription();
+
+  public seleccionadoDatos: SectoresTabla[] = [];
 
   /**
    * Constructor del componente SectoresYMercanciasComponent.
@@ -272,5 +281,30 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
   ): void {
     const VALOR = form.get(campo)?.value;
     (this.tramite90201Store[metodoNombre] as (value: unknown) => void)(VALOR);
+  }
+
+  public eliminarSector():void {
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: '¿Está seguro que desea eliminar el sector seleccionado?',
+      cerrar: false,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: 'Cancelar',
+    };
+  }
+
+  public seleccionDeFilaDeTabla(event: SectoresTabla): void {
+    this.seleccionadoDatos.push(event);
+  }
+
+  public eliminarPedimento(borrar: boolean): void {
+    if (borrar) {
+      const INDEX = this.sectores.findIndex((sector: SectoresTabla) => sector.claveDel === this.seleccionadoDatos[0].claveDel && sector.sectores === this.seleccionadoDatos[0].sectores);
+      this.sectores.splice(INDEX, 1);
+    }
   }
 }
