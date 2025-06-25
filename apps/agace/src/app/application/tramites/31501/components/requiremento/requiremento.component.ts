@@ -1,12 +1,24 @@
-import { ActivatedRoute, Router } from '@angular/router';
-import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
-import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
-import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { Subject, map, takeUntil } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
 import { AutoridadService } from '../../services/autoridad.service';
 import { CapturarRequerimientoComponent } from '../capturar-requerimiento/capturar-requerimiento.component';
 import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { ConsultaioState } from '@ng-mf/data-access-user';
+import { EventEmitter } from '@angular/core';
+import { FolioTramite } from '../../models/datos-tramite.model';
+import { FormBuilder } from '@angular/forms';
 import { FormaRequerimiento } from '../../models/datos-tramite.model';
+import { FormsModule } from '@angular/forms';
+import { OnDestroy } from '@angular/core';
+import { OnInit } from '@angular/core';
+import { Output } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
+import { Subject } from 'rxjs';
+import { map } from 'rxjs';
+import { takeUntil } from 'rxjs';
+
 
 @Component({
   selector: 'app-requiremento',
@@ -22,7 +34,7 @@ export class RequirementoComponent implements OnInit, OnDestroy {
    * 
    * @type {any} - El tipo es genérico, se recomienda especificar un tipo más concreto si es posible.
    */
-  folioTramite: any;
+  folioTramite: FolioTramite = {} as FolioTramite;
 
   /**
     * Índice del paso actual en el wizard.
@@ -78,7 +90,11 @@ export class RequirementoComponent implements OnInit, OnDestroy {
    * - En caso contrario, establece el modo de solo lectura (`soloLectura`) en verdadero.
    */
   ngOnInit(): void {
-    this.folioTramite = history.state.data;
+    const FOLIO_TRAMITE = history.state.data;
+    this.folioTramite = {
+            folioTramite: FOLIO_TRAMITE.folioTramite,
+            tipoTramite: FOLIO_TRAMITE.tipoTramite,
+          };
     this.consultaioQuery.selectConsultaioState$
     .pipe(
       takeUntil(this.destroy$),

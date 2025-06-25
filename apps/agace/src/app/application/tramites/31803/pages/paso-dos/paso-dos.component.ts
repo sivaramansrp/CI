@@ -1,13 +1,17 @@
-import {
-  AlertComponent,
-  AnexarDocumentosComponent,
-  CATALOGOS_ID,
-  TituloComponent,
-} from '@ng-mf/data-access-user';
-import { Catalogo, CatalogosService, TEXTOS } from '@ng-mf/data-access-user';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { AlertComponent } from '@ng-mf/data-access-user';
+import { AnexarDocumentosComponent } from '@ng-mf/data-access-user';
+import { CATALOGOS_ID } from '@ng-mf/data-access-user';
+import { Catalogo } from '@ng-mf/data-access-user';
+import { CatalogosService } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
-import { ReplaySubject, Subscription, takeUntil } from 'rxjs';
+import { Component } from '@angular/core';
+import { OnDestroy } from '@angular/core';
+import { OnInit } from '@angular/core';
+import { ReplaySubject } from 'rxjs';
+import { TEXTOS } from '@ng-mf/data-access-user';
+import { TituloComponent } from '@ng-mf/data-access-user';
+import { takeUntil } from 'rxjs';
+
 
 /**
  * Componente que representa el segundo paso del trámite.
