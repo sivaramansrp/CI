@@ -45,21 +45,21 @@ describe('PaisProcedenciaComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should set solicitudDeRegistroState from query observable', () => {
+  it('debe establecer solicitudDeRegistroState desde el observable del query', () => {
     expect(component['solicitudDeRegistroState']).toEqual({ some: 'state' });
   });
 
-  it('should fetch and populate bloque options', () => {
+  it('debe obtener y poblar las opciones de bloque', () => {
     component.datosBloque();
     const bloqueField = component.paisProcedencia.find(field => field.campo === 'bloque') as { opciones?: { id: number; descripcion: string; }[] };
     expect(bloqueField?.opciones).toEqual([{ id: 1, descripcion: 'Mercosur' }]);
   });
 
-  it('should call store and form service on establecerCambioDeValor', () => {
+  it('debe llamar al store y al servicio de formulario en establecerCambioDeValor', () => {
     const event = { campo: 'paisOrigen', valor: 'Brasil' };
     component.establecerCambioDeValor(event);
 
@@ -69,7 +69,7 @@ describe('PaisProcedenciaComponent', () => {
     });
   });
 
-  it('should clean up on ngOnDestroy', () => {
+  it('debe limpiar las suscripciones en ngOnDestroy', () => {
     const destroySpy = jest.spyOn(component['destroy$'], 'next');
     const completeSpy = jest.spyOn(component['destroy$'], 'complete');
 

@@ -27,12 +27,12 @@ describe('PasoUnoComponent', () => {
     component = fixture.componentInstance;
   });
 
-  it('should create the component', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
   describe('ngOnInit', () => {
-    it('should set esDatosRespuesta to true if consultaState.update is false', () => {
+    it('debe establecer esDatosRespuesta en true si consultaState.update es false', () => {
       component.consultaState = { update: false } as any;
       component.ngOnInit();
       expect(component.esDatosRespuesta).toBe(true);
@@ -40,28 +40,28 @@ describe('PasoUnoComponent', () => {
   });
 
   describe('guardarDatosFormulario', () => {
-    it('should set esDatosRespuesta to true and update store for each key', () => {
+    it('debe establecer esDatosRespuesta en true y actualizar el store por cada clave', () => {
       component.guardarDatosFormulario();
       expect(component.esDatosRespuesta).toBe(true);
       expect(datosDeLaSolicitudServiceMock.actualizarEstadoFormulario).toHaveBeenCalledWith('campo1', 'valor1');
       expect(datosDeLaSolicitudServiceMock.actualizarEstadoFormulario).toHaveBeenCalledWith('campo2', 'valor2');
     });
 
-    it('should not throw if response is undefined', () => {
+    it('no debe lanzar error si la respuesta es undefined', () => {
       datosDeLaSolicitudServiceMock.getImportacionDefinitivaData.mockReturnValueOnce(of(undefined));
       expect(() => component.guardarDatosFormulario()).not.toThrow();
     });
   });
 
   describe('seleccionaTab', () => {
-    it('should set indice to the provided value', () => {
+    it('debe establecer indice al valor proporcionado', () => {
       component.seleccionaTab(5);
       expect(component.indice).toBe(5);
     });
   });
 
   describe('ngOnDestroy', () => {
-    it('should call next and complete on destroyNotifier$', () => {
+    it('debe llamar next y complete en destroyNotifier$', () => {
       const nextSpy = jest.spyOn(component['destroyNotifier$'], 'next');
       const completeSpy = jest.spyOn(component['destroyNotifier$'], 'complete');
       component.ngOnDestroy();

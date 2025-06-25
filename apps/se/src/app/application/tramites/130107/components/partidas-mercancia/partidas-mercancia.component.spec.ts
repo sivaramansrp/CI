@@ -37,11 +37,11 @@ describe('PartidasDeLaMercanciaComponent', () => {
     component.consultaState = { readonly: false } as any;
   });
 
-  it('should create the component', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize solicitudDeRegistroState on ngOnInit', () => {
+  it('debe inicializar solicitudDeRegistroState en ngOnInit', () => {
     const mockState = { key: 'value' };
     importacionesQueryMock.selectSolicitudDeRegistroTpl$ = of(mockState);
 
@@ -50,7 +50,7 @@ describe('PartidasDeLaMercanciaComponent', () => {
     expect(component.solicitudDeRegistroState).toEqual(mockState);
   });
 
-  it('should call establecerCambioDeValor and update store and form', () => {
+  it('debe llamar establecerCambioDeValor y actualizar el store y el formulario', () => {
     const mockEvent = { campo: 'campo1', valor: 'valor1' };
 
     component.establecerCambioDeValor(mockEvent);
@@ -59,7 +59,7 @@ describe('PartidasDeLaMercanciaComponent', () => {
     expect(formularioServiceMock.setFormValue).toHaveBeenCalledWith('partidasForm', { campo1: 'valor1' });
   });
 
-  it('should add a new partida on agregarPartida', () => {
+  it('debe agregar una nueva partida al llamar agregarPartida', () => {
     const mockFormGroup = {
       valid: true,
       get: jest.fn().mockImplementation((field) => ({
@@ -84,7 +84,7 @@ describe('PartidasDeLaMercanciaComponent', () => {
     expect(mockFormGroup.reset).toHaveBeenCalled();
   });
 
-  it('should complete destroy$ on ngOnDestroy', () => {
+  it('debe completar destroy$ al llamar ngOnDestroy', () => {
     const destroySpy = jest.spyOn(component['destroy$'], 'next');
     const completeSpy = jest.spyOn(component['destroy$'], 'complete');
 

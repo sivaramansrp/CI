@@ -25,11 +25,11 @@ describe('ImportacionesAgropecuariasService', () => {
     service = TestBed.inject(ImportacionesAgropecuariasService);
   });
 
-  it('should be created', () => {
+  it('debe crear el servicio', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should call http.get with correct URL in obtenerTramite', (done) => {
+  it('debe llamar a http.get con la URL correcta en obtenerTramite', (done) => {
     const mockResponse = { data: 'test' };
     httpMock.get.mockReturnValue(of(mockResponse));
     service.obtenerTramite(123).subscribe(result => {
@@ -39,7 +39,7 @@ describe('ImportacionesAgropecuariasService', () => {
     });
   });
 
-  it('should handle errors in obtenerTramite', (done) => {
+  it('debe manejar errores en obtenerTramite', (done) => {
     const error = new Error('Network error');
     httpMock.get.mockReturnValue(throwError(() => error));
     service.obtenerTramite(456).subscribe({
@@ -51,7 +51,7 @@ describe('ImportacionesAgropecuariasService', () => {
     });
   });
 
-  it('should call http.get with correct path in datosDeLaSolicitud', (done) => {
+  it('debe llamar a http.get con la ruta correcta en datosDeLaSolicitud', (done) => {
     const mockData = { campo: 'valor' };
     httpMock.get.mockReturnValue(of(mockData));
     service.datosDeLaSolicitud().subscribe(result => {

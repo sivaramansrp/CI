@@ -19,7 +19,7 @@ describe('RepresentacionFederalComponent', () => {
 
   beforeEach(async () => {
     importacionesServiceMock = {
-      datosDeLaSolicitud: jest.fn().mockReturnValue(of({ entidad: [] })), // Mocked to return an observable
+      datosDeLaSolicitud: jest.fn().mockReturnValue(of({ entidad: [] })),
     } as unknown as jest.Mocked<ImportacionesAgropecuariasService>;
 
     importacionesStoreMock = {
@@ -51,11 +51,11 @@ describe('RepresentacionFederalComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize solicitudDeRegistroState on ngOnInit', () => {
+  it('debe inicializar solicitudDeRegistroState en ngOnInit', () => {
     const mockState = { key: 'value' };
     importacionesQueryMock.selectSolicitudDeRegistroTpl$ = of(mockState);
 
@@ -64,7 +64,7 @@ describe('RepresentacionFederalComponent', () => {
     expect(component.solicitudDeRegistroState).toEqual(mockState);
   });
 
-  it('should call datosEntidad and update ENTIDAD_FIELD options', () => {
+  it('debe llamar a datosEntidad y actualizar las opciones del campo ENTIDAD_FIELD', () => {
     const mockEntidadData = [
       { id: 1, descripcion: 'Entidad 1' },
       { id: 2, descripcion: 'Entidad 2' },
@@ -91,7 +91,7 @@ describe('RepresentacionFederalComponent', () => {
     expect(ENTIDAD_FIELD).toBeDefined();
   });
 
-  it('should handle errors in datosEntidad', () => {
+  it('debe manejar errores en datosEntidad', () => {
     importacionesServiceMock.datosDeLaSolicitud.mockReturnValue(throwError(() => new Error('Error fetching data')));
 
     component.datosEntidad();
@@ -100,7 +100,7 @@ describe('RepresentacionFederalComponent', () => {
     expect(ENTIDAD_FIELD).toBeDefined();
   });
 
-  it('should clean up subscriptions on ngOnDestroy', () => {
+  it('debe limpiar las suscripciones en ngOnDestroy', () => {
     const destroyedSpy = jest.spyOn(component['destroy$'], 'next');
     const completeSpy = jest.spyOn(component['destroy$'], 'complete');
 

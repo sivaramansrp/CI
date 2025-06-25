@@ -24,11 +24,11 @@ describe('DatosDeLaSolicitudService', () => {
     service = TestBed.inject(DatosDeLaSolicitudService);
   });
 
-  it('should be created', () => {
+  it('debe crear el servicio', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should get importacion definitiva data', (done) => {
+  it('debe obtener los datos de importación definitiva', (done) => {
     const mockData = { campo: 'valor' };
     httpMock.get.mockReturnValue(of(mockData));
     service.getImportacionDefinitivaData().subscribe(result => {
@@ -38,7 +38,7 @@ describe('DatosDeLaSolicitudService', () => {
     });
   });
 
-  it('should update store with actualizarEstadoFormulario', () => {
+  it('debe actualizar el store con actualizarEstadoFormulario', () => {
     service.actualizarEstadoFormulario('pais', 'México');
     expect(storeMock.setDynamicFieldValue).toHaveBeenCalledWith('pais', 'México');
   });

@@ -23,7 +23,7 @@ describe('DatosDeLaSolicitudComponent', () => {
       setDynamicFieldValue: jest.fn(),
     };
     mockQuery = {
-      selectSolicitudDeRegistroTpl$: of({ readonly: false }), // Always emit an object with readonly
+      selectSolicitudDeRegistroTpl$: of({ readonly: false }),
     };
     mockFormService = {
       setFormValue: jest.fn(),
@@ -46,11 +46,11 @@ describe('DatosDeLaSolicitudComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should complete destroy$ on ngOnDestroy', () => {
+  it('debe completar destroy$ al llamar ngOnDestroy', () => {
     const nextSpy = jest.spyOn<any, any>(component['destroy$'], 'next');
     const completeSpy = jest.spyOn<any, any>(component['destroy$'], 'complete');
     component.ngOnDestroy();
@@ -58,13 +58,13 @@ describe('DatosDeLaSolicitudComponent', () => {
     expect(completeSpy).toHaveBeenCalled();
   });
 
-  it('should call setDynamicFieldValue and setFormValue in establecerCambioDeValor', () => {
+  it('debe llamar a setDynamicFieldValue y setFormValue en establecerCambioDeValor', () => {
     component.establecerCambioDeValor({ campo: 'test', valor: 'value' });
     expect(mockStore.setDynamicFieldValue).toHaveBeenCalledWith('test', 'value');
     expect(mockFormService.setFormValue).toHaveBeenCalledWith('solicitudForm', { test: 'value' });
   });
 
-  it('should call setDynamicFieldValue with stringified object if valor is object', () => {
+  it('debe llamar a setDynamicFieldValue con el objeto como string si valor es un objeto', () => {
     const obj = { foo: 'bar' };
     component.establecerCambioDeValor({ campo: 'test', valor: obj });
     expect(mockStore.setDynamicFieldValue).toHaveBeenCalledWith('test', JSON.stringify(obj));
