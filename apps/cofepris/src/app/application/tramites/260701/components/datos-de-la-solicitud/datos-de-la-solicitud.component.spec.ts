@@ -28,7 +28,7 @@ describe('DatosDeLaSolicitudComponent', () => {
         estado: '',
         municipio: '',
         localidad: '',
-        // Add all other required properties with mock values
+        
       } as Solicitud260701State),
     };
 
