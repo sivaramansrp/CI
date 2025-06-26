@@ -194,11 +194,9 @@ export class LibBandejaComponent<T> implements OnInit {
    * Maneja el clic sobre una fila de la tabla.
    * Navega a la ruta correspondiente dependiendo del origen del trámite
    */
-  public onFilaClic(event: any): void {
-    const ROW_OBJETO = event;
-    const PROCEDURE: unknown | number = Number(
-      ROW_OBJETO.numeroDeProcedimiento
-    );
+  public onFilaClic(event: T): void {
+    const ROW_OBJETO = event as unknown as BandejaDeTareasPendientes;
+    const PROCEDURE: number = Number(ROW_OBJETO.numeroDeProcedimiento);
     ROW_OBJETO.origin = "FLUJO_FUNCIONARIO_EVALUAR";
     const ORIGIN: string = ROW_OBJETO.origin; // Inicializar ORIGEN con un valor predeterminado
     this.tramiteData = tramiteDetailsData.filter(
