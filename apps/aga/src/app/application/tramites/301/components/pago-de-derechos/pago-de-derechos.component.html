@@ -95,7 +95,7 @@
           generar la línea de captura de la constancia que se solicita:
         </strong>
       </p>
-      <a [href]="generarLineaCapturaURL" target="_blank">Generar línea de captura</a>
+      <a [href]="generarLineaCapturaURL" target="_blank" [ngClass]="{ 'disabled-link': esFormularioSoloLectura }">Generar línea de captura</a>
       </div>
     </div>
   </form>
