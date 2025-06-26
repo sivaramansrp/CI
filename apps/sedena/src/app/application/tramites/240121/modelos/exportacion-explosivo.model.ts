@@ -1,17 +1,25 @@
 /**
- * Interfaz que define la estructura de cada paso en el asistente (wizard).
- * 
- * @export
  * @interface ListaPasosWizard
- * 
- * @property {number} indice - Número de orden del paso dentro del proceso.
- * @property {string} titulo - Nombre o descripción del paso.
- * @property {boolean} activo - Indica si el paso está activo actualmente.
- * @property {boolean} completado - Indica si el paso ya fue completado.
+ * Representa un paso dentro del flujo de un wizard o asistente.
  */
 export interface ListaPasosWizard {
+  /**
+   * Índice del paso dentro del wizard.
+   */
   indice: number;
+
+  /**
+   * Título descriptivo del paso.
+   */
   titulo: string;
+
+  /**
+   * Indica si el paso actual está activo (visible y habilitado).
+   */
   activo: boolean;
+
+  /**
+   * Indica si el paso ya fue completado.
+   */
   completado: boolean;
 }
