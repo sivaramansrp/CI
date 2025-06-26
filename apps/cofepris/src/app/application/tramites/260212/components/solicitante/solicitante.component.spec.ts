@@ -35,20 +35,5 @@ describe('SolicitanteComponent', () => {
     expect(component.solicitudForm.get('pais')?.value).toBe('ESTADOS UNIDOS MEXICANOS');
   });
 
-  // it('should call establecerValoresDeFormulario on initialization', () => {
-  //   const spy = spyOn(component, 'establecerValoresDeFormulario').and.callThrough();
-  //   component.ngOnInit();
-  //   expect(spy).toHaveBeenCalled();
-  // });
-
-  // it('should initialize solicitudForm with correct controls and disabled state', () => {
-  //   const form = component.solicitudForm;
-  
-  // it('should call establecerValoresDeFormulario on initialization', () => {
-  //   const spy = spyOn(component, 'establecerValoresDeFormulario').and.callThrough();
-  //   component.ngOnInit(); 
-  //   expect(spy).toHaveBeenCalled();
-  // });
-  
 })
 
