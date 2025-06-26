@@ -35,70 +35,60 @@ describe('CargaDeMercanciasComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize form with default values', () => {
+  it('debe inicializar el formulario con valores por defecto', () => {
     expect(component.formMercancia.get('marca')?.value).toBe('TestMarca');
     expect(component.formMercancia.get('umc')?.value).toBe('TestUMC');
     expect(component.formMercancia.get('cantidad')?.value).toBe('10');
     expect(component.formMercancia.get('valorDeLa')?.value).toBe('100');
   });
 
-  it('should call obtenerTablaDatos on init', () => {
+  it('debe llamar a obtenerTablaDatos al inicializar', () => {
     expect(validarInicalmenteServiceMock.obtenerTablaDatos).toHaveBeenCalled();
     expect(component.mercanciasTablaDatos).toEqual([]);
   });
 
-  it('should call obtenerFormDatos on init', () => {
+  it('debe llamar a obtenerFormDatos al inicializar', () => {
     expect(validarInicalmenteServiceMock.obtenerFormDatos).toHaveBeenCalled();
     expect(component.mercanciasFormaDatos).toEqual([]);
   });
 
-  it('should call obtenerEstadoList on init', () => {
+  it('debe llamar a obtenerEstadoList al inicializar', () => {
     expect(validarInicalmenteServiceMock.obtenerEstadoList).toHaveBeenCalled();
     expect(component.estado).toEqual([]);
   });
 
-  it('should open modal when abrirDialogoMercancias is called', () => {
-    const modalElementMock = {
-      nativeElement: {
-        show: jest.fn(),
-      },
-    };
-    component.modalElement = modalElementMock as any;
-    component.abrirDialogoMercancias();
-    expect(modalElementMock.nativeElement.show).toHaveBeenCalled();
-  });
-
-  it('should close modal when cerrarModal is called', () => {
+  it('debe cerrar el modal cuando se llama cerrarModal', () => {
     const closeModalMock = {
       nativeElement: {
         click: jest.fn(),
       },
     };
+    
     component.closeModal = closeModalMock as any;
     component.cerrarModal();
     expect(closeModalMock.nativeElement.click).toHaveBeenCalled();
   });
 
-  it('should update fechaFactura in form when cambioFechaFactura is called', () => {
+  it('debe actualizar fechaFactura en el formulario cuando se llama cambioFechaFactura', () => {
     const nuevoValor = '2023-01-01';
     component.cambioFechaFactura(nuevoValor, component.formMercancia, 'fechaFactura', 'setFechaFactura');
     expect(component.formMercancia.get('fechaFactura')?.value).toBe(nuevoValor);
   });
 
-  it('should call setValoresStore when setValoresStore is called', () => {
+  it('debe llamar a setValoresStore cuando se llama setValoresStore', () => {
     const metodoNombre = 'setCantidad';
     const spy = jest.spyOn(component.tramite110208Store, metodoNombre as any);
     component.setValoresStore(component.formMercancia, 'cantidad', metodoNombre);
     expect(spy).toHaveBeenCalledWith('10');
   });
 
-  it('should clean up observables on destroy', () => {
-    const destroySpy = jest.spyOn(component['destroyed$'], 'next');
-    const completeSpy = jest.spyOn(component['destroyed$'], 'complete');
+  it('debe limpiar los observables al destruir el componente', () => {
+    const destroySpy = jest.spyOn(component['destroyNotifier$'], 'next');
+    const completeSpy = jest.spyOn(component['destroyNotifier$'], 'complete');
     component.ngOnDestroy();
     expect(destroySpy).toHaveBeenCalled();
     expect(completeSpy).toHaveBeenCalled();

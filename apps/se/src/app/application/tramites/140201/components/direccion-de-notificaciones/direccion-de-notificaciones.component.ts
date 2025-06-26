@@ -180,8 +180,6 @@ export class DireccionDeNotificacionesComponent implements OnInit, OnDestroy {
       this.direccionNotificacionesForm.enable();
     } 
   }
-
-
   /**
    * Método estadoActualizacion
    *
