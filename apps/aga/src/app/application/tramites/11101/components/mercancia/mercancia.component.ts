@@ -57,36 +57,35 @@ export class MercanciaComponent implements OnInit {
      * y suscribe a los cambios en el estado del trámite.
      */
     ngOnInit(): void {
-        this.mercanciaForm = this.fb.group({
-            estado: [''],
-            cantidad: [''],
-            formapartadepatrimonia: [''],
-            descripcion: [''],
-            valor: [''],
-            unidadmedida: [''],
-            fraccionarancelaria: [''],
-            nico: [''],
-            marca: [''],
-            modelo: [''],
-            numerodeserie: [''],
-            moneda: [''],
-            fin: [''],
-            especifique: [''],
-        });
+       
         this.setFormValues();
         this.tramite11101Query.selectSeccionState$
             .pipe(
                 takeUntil(this.destruirNotificador$),
                 map((seccionState) => {
-                    const sessionStateMock : DiscripccionDeLaMercanciaForm[] =[
+                    const SESSION_STATE_MOCK : DiscripccionDeLaMercanciaForm[] =[
                         {
                             consecutivo: "1",
                             estado: "Nuevo",
                             cantidad: "1",
                             formaParteDePatrimonio: "SI",
+                            numeroderegistro: '',
+                            NobmreDenominationRazonSocial: '',
+                            rfctaxid: '',
+                            Telefono: '',
+                            correoelectronico: '',
+                            entidadadfederativa: '',
+                            alcadilamunicipio: '',
+                            colonia: '',
+                            codigopostal: '',
+                            calle: '',
+                            numeroletraexterior: '',
+                            numeroletrainterior: '',
+                            entrecalle: '',
+                            ycalle: ''
                         }
                     ]
-                       this.discripccionDeLaMercanciaForm = seccionState.discripccionDeLaMercanciaTabla || sessionStateMock;
+                       this.discripccionDeLaMercanciaForm = seccionState.discripccionDeLaMercanciaTabla || SESSION_STATE_MOCK;
                 })
             )
             .subscribe();
