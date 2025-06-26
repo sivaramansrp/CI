@@ -10,7 +10,7 @@ import { Subject, map, takeUntil } from 'rxjs';
 import { Tramite630104State, Tramite630104Store } from '../../estados/tramites/tramite630104.store';
 import { CommonModule } from '@angular/common';
 import { FORMULARIO_DATOS_MERCANCIA } from '../../enums/retorno-importacion-temporal.enum';
-import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component'; // Adjust the path as needed
+import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component'; 
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { Tramite630104Query } from '../../estados/queries/tramite630104.query';
 
