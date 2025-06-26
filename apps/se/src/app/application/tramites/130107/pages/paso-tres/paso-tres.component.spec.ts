@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { ImportacionesAgropecuariasService } from '../../services/importaciones-agropecuarias.service';
 import { TramiteFolioStore } from '@libs/shared/data-access-user/src';
 import { of, Subject, throwError } from 'rxjs';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 describe('PasoTresComponent', () => {
   let component: PasoTresComponent;
@@ -32,6 +33,7 @@ describe('PasoTresComponent', () => {
         { provide: ImportacionesAgropecuariasService, useValue: importacionesSvcMock },
         { provide: TramiteFolioStore, useValue: tramiteStoreMock },
       ],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA]
     }).compileComponents();
 
     fixture = TestBed.createComponent(PasoTresComponent);
@@ -39,11 +41,11 @@ describe('PasoTresComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should handle errors in obtieneFirma gracefully', () => {
+  it('debe manejar errores en obtieneFirma correctamente', () => {
     importacionesSvcMock.obtenerTramite.mockReturnValue(throwError(() => new Error('Error fetching trámite')));
 
     component.obtieneFirma('valid-firma');
@@ -53,7 +55,7 @@ describe('PasoTresComponent', () => {
     expect(routerMock.navigate).not.toHaveBeenCalled();
   });
 
-  it('should not call obtieneFirma if firma is empty', () => {
+  it('no debe llamar obtieneFirma si firma está vacía', () => {
     component.obtieneFirma('');
 
     expect(importacionesSvcMock.obtenerTramite).not.toHaveBeenCalled();
@@ -61,7 +63,7 @@ describe('PasoTresComponent', () => {
     expect(routerMock.navigate).not.toHaveBeenCalled();
   });
 
-  it('should clean up subscriptions on ngOnDestroy', () => {
+  it('debe limpiar las suscripciones en ngOnDestroy', () => {
     const destroyedSpy = jest.spyOn(component['destroyed$'], 'next');
     const completeSpy = jest.spyOn(component['destroyed$'], 'complete');
 

@@ -54,7 +54,7 @@ class Tramite250101QueryMock {
   selectSolicitud$ = of({
     descripcion: 1,
     fraccion: 1,
-    arancelaria: 'ARAN',
+    arancelaria: '1234',
     cantidad: 10,
     medida: 1,
     genero: 1,
@@ -125,48 +125,79 @@ describe('MercanciasComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
+  it('debería crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should toggle the mercancias modal', () => {
+  it('debería alternar el modal de mercancías', () => {
     expect(component.showMercanciasModal).toBe(false);
     component.mercancias();
     expect(component.showMercanciasModal).toBe(true);
   });
 
-  it('should initialize the form with values from state', () => {
+  it('debería inicializar el formulario con valores del estado', () => {
+    component.ngOnInit();
+    expect(component.formMercancias).toBeDefined();
     const form = component.formMercancias;
     expect(form).toBeDefined();
     expect(form.get('descripcion')?.value).toBe(mockSolicitudState.descripcion);
-    expect(form.get('arancelaria')?.disabled).toBe(true);
+    expect(form.get('arancelaria')?.disabled).toBeTruthy();
   });
 
-  it('should push new detalle data on detalleData call', () => {
+  it('debería agregar un nuevo objeto detalle a fraccionData cuando se llama a detalleData', () => {
+    // Preparación: configurar el formulario y solicitudState con valores de catálogo coincidentes
+    component.formMercancias.patchValue({
+      fraccion: 1,
+      medida: 1,
+      genero: 1,
+      comun: 1,
+      origen: 1,
+      procedencia: 1
+    });
+    component.solicitudState = { cantidad: 10 } as any;
+    component.fraccionData = [];
+
     component.detalleData();
-    expect(component.fraccionData.length).toBeGreaterThan(0);
-    expect(component.fraccionData[0].cantidad).toBe(mockSolicitudState.cantidad);
+
+    expect(component.fraccionData.length).toBe(1);
+    expect(component.fraccionData[0]).toEqual({
+      fraccionArancelaria: 'Frac 1',
+      cantidad: 10,
+      unidadMedida: 'Medida 1',
+      nombreCientifico: 'Genero 1',
+      nombreComun: 'Comun 1',
+      paisOrigen: 'Origen 1',
+      paisProcedencia: 'Procedencia 1',
+    });
   });
 
-  it('should update store value with setValoresStore', () => {
+
+  it('debería actualizar el valor en el store con setValoresStore', () => {
     const field = 'descripcion';
     component.setValoresStore(component.formMercancias, field, 'setDescripcion');
     expect(mockStore.setDescripcion).toHaveBeenCalledWith(mockSolicitudState.descripcion);
   });
 
-  it('should toggle modal on detalleCancelar', () => {
+  it('debería alternar el modal en detalleCancelar', () => {
     component.showMercanciasModal = true;
     component.detalleCancelar();
     expect(component.showMercanciasModal).toBe(false);
   });
 
-  it('should push producto and close modal on detalleGuardar', () => {
-    component.detalleGuardar();
-    expect(component.producto.length).toBe(1);
-    expect(component.showMercanciasModal).toBe(true);
-  });
+ it('debería agregar un nuevo producto y alternar showMercanciasModal cuando se llama a detalleGuardar', () => {
+  // Preparación: establecer un valor válido de descripcion en el formulario
+  component.formMercancias.patchValue({ descripcion: 1 });
+  component.producto = [];
+  component.showMercanciasModal = false;
 
-  it('should clean up on ngOnDestroy', () => {
+  component.detalleGuardar();
+
+  expect(component.producto.length).toBe(1);
+  expect(component.producto[0].descripcion).toBe('Desc 1');
+  expect(component.showMercanciasModal).toBe(true);
+});
+
+  it('debería limpiar recursos en ngOnDestroy', () => {
     const spyNext = jest.spyOn(component['destroyNotifier$'], 'next');
     const spyComplete = jest.spyOn(component['destroyNotifier$'], 'complete');
     component.ngOnDestroy();
@@ -174,21 +205,21 @@ describe('MercanciasComponent', () => {
     expect(spyComplete).toHaveBeenCalled();
   });
 
-    it('should disable the form if esFormularioSoloLectura is true', () => {
+    it('debería deshabilitar el formulario si esFormularioSoloLectura es true', () => {
     component.esFormularioSoloLectura = true;
     component.formMercancias.enable(); 
     component.inicializarEstadoFormulario();
     expect(component.formMercancias.disabled).toBe(true);
-  });
+    });
 
-  it('should enable the form if esFormularioSoloLectura is false', () => {
+  it('debería habilitar el formulario si esFormularioSoloLectura es falso', () => {
     component.esFormularioSoloLectura = false;
     component.formMercancias.disable(); 
     component.inicializarEstadoFormulario();
     expect(component.formMercancias.enabled).toBe(true);
   });
 
-    it('should disable the form and push dummy product if esFormularioSoloLectura is true and producto is empty', () => {
+    it('debería deshabilitar el formulario y agregar un producto ficticio si esFormularioSoloLectura es true y producto está vacío', () => {
     component.esFormularioSoloLectura = true;
     component.producto = [];
     component.formMercancias.enable();
@@ -196,25 +227,25 @@ describe('MercanciasComponent', () => {
     expect(component.formMercancias.disabled).toBe(true);
     expect(component.producto.length).toBe(1);
     expect(component.producto[0].descripcion).toBe('Desc 1');
-  });
+    });
 
-  it('should not push dummy product if producto is not empty', () => {
+  it('no debe agregar un producto ficticio si producto no está vacío', () => {
     component.esFormularioSoloLectura = true;
-    component.producto = [{ descripcion: 'Already exists' }];
+    component.producto = [{ descripcion: 'Ya existe' }];
     component.formMercancias.enable();
     component.guardarDatosFormulario();
     expect(component.producto.length).toBe(1);
-    expect(component.producto[0].descripcion).toBe('Already exists');
+    expect(component.producto[0].descripcion).toBe('Ya existe');
   });
 
-  it('should enable the form if esFormularioSoloLectura is false', () => {
+  it('debería habilitar el formulario si esFormularioSoloLectura es falso', () => {
     component.esFormularioSoloLectura = false;
     component.formMercancias.disable();
     component.guardarDatosFormulario();
     expect(component.formMercancias.enabled).toBe(true);
   });
 
-  it('should call detalleData on every call', () => {
+  it('debería llamar a detalleData en cada llamada', () => {
     const spy = jest.spyOn(component, 'detalleData');
     component.guardarDatosFormulario();
     expect(spy).toHaveBeenCalled();

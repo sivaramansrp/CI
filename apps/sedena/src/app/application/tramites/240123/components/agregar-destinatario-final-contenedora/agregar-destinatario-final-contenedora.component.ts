@@ -1,5 +1,5 @@
 import { Catalogo, TipoPersona } from '@libs/shared/data-access-user/src';
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
@@ -31,8 +31,8 @@ import { Tramite240123Store } from '../../estados/tramite240123Store.store';
   templateUrl: './agregar-destinatario-final-contenedora.component.html',
   styleUrl: './agregar-destinatario-final-contenedora.component.scss',
 })
-export class AgregarDestinatarioFinalContenedoraComponent implements OnInit {
-
+export class AgregarDestinatarioFinalContenedoraComponent implements OnInit, OnDestroy {
+@Output() cerrar = new EventEmitter<void>();
   /**
    * @private
    * @property unsubscribe$
@@ -321,7 +321,7 @@ export class AgregarDestinatarioFinalContenedoraComponent implements OnInit {
     this.destinatarios.push(NUEVO_DESTINATARIO);
     this.updateDestinatarioFinalTablaDatos(this.destinatarios);
     this.agregarDestinatarioFinal.reset();
-    this.ubicaccion.back();
+    this.cerrar.emit()
   }
 
   /**
@@ -340,7 +340,7 @@ export class AgregarDestinatarioFinalContenedoraComponent implements OnInit {
    * @returns {void}
    */
   cancelar(): void {
-    this.ubicaccion.back();
+    this.cerrar.emit()
   }
 
   /**
@@ -376,4 +376,8 @@ export class AgregarDestinatarioFinalContenedoraComponent implements OnInit {
       nacionalidad: event,
     });
   }
+  ngOnDestroy(): void {
+  this.unsubscribe$.next();
+  this.unsubscribe$.complete();
+}
 }

@@ -85,7 +85,6 @@ export * from './core/services/110102/representacion-federal/representacionFeder
 export * from './core/services/110210/buscar-certificado-de-origen/buscarCertificadoDeOrigen.service';
 export * from './core/services/110210/certificado-disponibles/certificadoDisponibles.service';
 export * from './core/services/110210/domicilio-tabla/domicilioTabla.service';
-export * from './core/services/110218/validar-certificado-tecnico.enum';
 export * from './core/services/120402/asignacion-directa-de-cupo.enum';
 export * from './core/services/120402/descripcion-del-cupo/descripcionDelCupo.service';
 export * from './core/services/120402/representacionFederal/representacion-federal.service';

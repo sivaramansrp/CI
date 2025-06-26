@@ -31,7 +31,7 @@ describe('DomicilloDelDestinatarioComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [DomicilloDelDestinatarioComponent,ReactiveFormsModule],
+      imports: [DomicilloDelDestinatarioComponent, ReactiveFormsModule],
       providers: [
         FormBuilder,
         {
@@ -72,11 +72,11 @@ describe('DomicilloDelDestinatarioComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize the form on component creation', () => {
+  it('debe inicializar el formulario al crear el componente', () => {
     expect(component.domicilioDestinatario).toBeDefined();
     expect(component.domicilioDestinatario.get('ciudad')?.value).toBe(mockSolicitudState.ciudad);
     expect(component.domicilioDestinatario.get('calle')?.value).toBe(mockSolicitudState.calle);
@@ -84,19 +84,19 @@ describe('DomicilloDelDestinatarioComponent', () => {
     expect(component.domicilioDestinatario.get('correoElectronico')?.value).toBe(mockSolicitudState.correoElectronico);
   });
 
-  it('should call obtenerEstadoList and set estado list', () => {
+  it('debe llamar a obtenerEstadoList y establecer la lista de estados', () => {
     component.obtenerEstadoList();
     expect(service.obtenerEstadoList).toHaveBeenCalled();
     expect(component.estado).toEqual(mockEstadoList);
   });
 
-  it('should call setValoresStore and update the store', () => {
+  it('debe llamar a setValoresStore y actualizar el store', () => {
     const spy = jest.spyOn(store, 'setCiudad');
     component.setValoresStore(component.domicilioDestinatario, 'ciudad', 'setCiudad');
     expect(spy).toHaveBeenCalledWith(mockSolicitudState.ciudad);
   });
 
-  it('should clean up subscriptions on component destroy', () => {
+  it('debe limpiar las suscripciones al destruir el componente', () => {
     const spyNext = jest.spyOn(component['destroyNotifier$'], 'next');
     const spyComplete = jest.spyOn(component['destroyNotifier$'], 'complete');
     component.ngOnDestroy();

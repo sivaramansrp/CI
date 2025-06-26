@@ -4,6 +4,7 @@ import { ConsultaTramiteComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { provideHttpClient } from '@angular/common/http';
 
+
 describe('ConsultaTramiteComponent', () => {
   let component: MenuConsultaTramiteComponent;
   let fixture: ComponentFixture<MenuConsultaTramiteComponent>;
@@ -22,7 +23,24 @@ describe('ConsultaTramiteComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('Se crea componente correctamente', () => {
     expect(component).toBeTruthy();
   });
+
+  it('se actualiza y llama al método numeroDeProcedimiento ', () => {
+    const evento = { campo: 'numeroDeProcedimiento', valor: '12345' };
+    component.selectedDepartamentoObj.numeroDeProcedimiento = '';
+    component.procedureNumero(evento);
+    expect(component.selectedDepartamentoObj.numeroDeProcedimiento).toBe('12345');
+  });
+
+  it('debe inicializar bandejaTablaDatos como un arreglo vacío', () => {
+    expect(Array.isArray(component.bandejaTablaDatos)).toBe(true);
+    expect(component.bandejaTablaDatos.length).toBe(0);
+  });
+
+it('debe llamar a ngOnDestroy sin errores', () => {
+  expect(() => component.ngOnDestroy()).not.toThrow();
+});
+
 });

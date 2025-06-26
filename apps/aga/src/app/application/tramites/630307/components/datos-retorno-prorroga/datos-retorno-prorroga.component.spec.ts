@@ -5,6 +5,12 @@ import { Tramite630307Store } from '../../estados/tramite630307.store';
 import { Tramite630307Query } from '../../estados/tramite630307.query';
 import { of, Subject } from 'rxjs';
 
+/**
+ * Pruebas unitarias para el componente DatosRetornoProrrogaComponent.
+ * Este componente gestiona los datos de retorno de prórroga para el trámite 630307,
+ * inicializa formularios, obtiene datos de catálogos y maneja el estado del formulario.
+ */
+
 describe('DatosRetornoProrrogaComponent', () => {
   let componente: DatosRetornoProrrogaComponent;
   let fixture: ComponentFixture<DatosRetornoProrrogaComponent>;
