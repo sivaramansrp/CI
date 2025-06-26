@@ -21,24 +21,66 @@ import { Injectable } from '@angular/core';
  */
 export function createInitialState(): Tramite80207State {
   const INFO_REGISTRO: InfoRegistro = {
+    /**
+     * Modalidad del registro.
+     * @property {string} modalidad
+     */
     modalidad: '',
+
+    /**
+     * Folio asociado al registro.
+     * @property {string} folio
+     */
     folio: '',
+
+    /**
+     * Año del registro.
+     * @property {number} ano
+     */
     ano: 0,
   };
+
   const DATOS_SUBCONTRATISTA: DatosSubcontratista = {
     rfc: '',
     estado: '',
   };
-  return {
-    infoRegistro: INFO_REGISTRO,
-    datosSubcontratista: DATOS_SUBCONTRATISTA,
-    formaValida: {
-      esDatosSubcontratistaValido: false
-    },
-    plantasBuscadas:[],
-    plantasSubfabricantesAgregar: [],
-    
 
+  return {
+    /**
+     * Información del registro inicial.
+     * @property {InfoRegistro} infoRegistro
+     */
+    infoRegistro: INFO_REGISTRO,
+
+    /**
+     * Información del subcontratista.
+     * @property {DatosSubcontratista} datosSubcontratista
+     */
+    datosSubcontratista: DATOS_SUBCONTRATISTA,
+
+    /**
+     * Validación de la forma.
+     * @property {Object} formaValida
+     */
+    formaValida: {
+      /**
+       * Indica si los datos del subcontratista son válidos.
+       * @property {boolean} esDatosSubcontratistaValido
+       */
+      esDatosSubcontratistaValido: false,
+    },
+
+    /**
+     * Lista inicial de plantas buscadas.
+     * @property {SubfabricanteDireccionModelo[]} plantasBuscadas
+     */
+    plantasBuscadas: [],
+
+    /**
+     * Lista inicial de plantas subfabricantes a agregar.
+     * @property {SubfabricanteDireccionModelo[]} plantasSubfabricantesAgregar
+     */
+    plantasSubfabricantesAgregar: [],
   };
 }
 
