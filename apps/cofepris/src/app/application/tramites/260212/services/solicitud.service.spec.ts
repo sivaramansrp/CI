@@ -1,16 +1,33 @@
-import { TestBed } from '@angular/core/testing';
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
-import { SolicitudService } from './solicitud.service';
+export interface Solicitud {
+  id?: number;
+  nombre: string;
+}
 
-describe('SolicitudService', () => {
-  let service: SolicitudService;
+@Injectable({
+  providedIn: 'root'
+})
+export class SolicitudService {
+  private apiUrl = '/api/solicitudes';
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({});
-    service = TestBed.inject(SolicitudService);
-  });
+  constructor(private http: HttpClient) {}
 
-  it('should be created', () => {
-    expect(service).toBeTruthy();
-  });
-});
+  obtenerSolicitudes(): Observable<Solicitud[]> {
+    return this.http.get<Solicitud[]>(this.apiUrl);
+  }
+
+  crearSolicitud(solicitud: Solicitud): Observable<Solicitud> {
+    return this.http.post<Solicitud>(this.apiUrl, solicitud);
+  }
+
+  actualizarSolicitud(solicitud: Solicitud): Observable<Solicitud> {
+    return this.http.put<Solicitud>(`${this.apiUrl}/${solicitud.id}`, solicitud);
+  }
+
+  eliminarSolicitud(id: number): Observable<null> {
+    return this.http.delete<null>(`${this.apiUrl}/${id}`);
+  }
+}
