@@ -15,10 +15,8 @@ import { TramiteDetails } from '../../../core/models/tramiteDetails';
 import { map } from 'rxjs';
 import tramiteDetailsData from '@libs/shared/theme/assets/json/tramiteList.json';
 
-import { ConsultaioStore } from '../../../core/estados/consulta.store';
 import { ModeloDeFormaDinamica } from '../../../core/models/shared/forms-model';
 
-import { AcuseYResolucionesFolioTramite } from '../../../core/models/shared/acuse-y-resoluciones-folio-tramite.model';
 
 
 /*
@@ -26,16 +24,9 @@ import { AcuseYResolucionesFolioTramite } from '../../../core/models/shared/acus
  * Este componente es reutilizable para mostrar una bandeja dinámica con tabla, paginación y formularios.
  * Permite navegar a diferentes rutas dependiendo del origen del trámite y mostrar configuraciones dinámicas.
  */
-/*
- * Clase genérica LibBandejaComponent<T>
- * Este componente representa una bandeja reutilizable con tabla dinámica, formularios y navegación basada en datos.
- * Se puede utilizar con cualquier tipo de datos que se especifique mediante el tipo genérico <T>.
- * Implementa la interfaz OnInit para inicializar la lógica al montar el componente.
- */
-interface TieneNumeroDeProcedimiento extends AcuseYResolucionesFolioTramite{
-  origin:string;
+interface Re {
   numeroDeProcedimiento: string;
-  departamento:string;
+  departamento:string
 }
 
 @Component({
@@ -59,7 +50,9 @@ interface TieneNumeroDeProcedimiento extends AcuseYResolucionesFolioTramite{
  * Se puede utilizar con cualquier tipo de datos que se especifique mediante el tipo genérico <T>.
  * Implementa la interfaz OnInit para inicializar la lógica al montar el componente.
  */
-export class LibBandejaComponent<T> implements OnInit {
+
+
+export class LibBandejaComponent<T extends Re > implements OnInit {
   /**
    *  Título mostrado en el encabezado de la bandeja 
    */
@@ -79,18 +72,15 @@ export class LibBandejaComponent<T> implements OnInit {
   /**
    * Datos que se muestran en la tabla 
    */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @Input() configuracionTablaDatos: any[] = [];
+  @Input() configuracionTablaDatos: T[] = [];
   /**
     * Datos que se usan en el formulario de la bandeja 
     */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @Input() public bandejaSolicitudeDatos: any[] = [];
+  @Input() public bandejaSolicitudeDatos: ModeloDeFormaDinamica[] = [];
   /**
    * Propiedad de entrada que contiene un arreglo de objetos de datos a duplicar.
    */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @Input() public duplicarDatos: any[] = [];
+  @Input() public duplicarDatos: T[] = [];
   /**
    * EventEmitter que emite un evento cada vez que un valor cambia en el componente.
    */
@@ -125,8 +115,7 @@ export class LibBandejaComponent<T> implements OnInit {
   /**
    * Copia original de la configuración de la tabla 
    */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  public originalConfiguracionTabla: any[] = [];
+  public originalConfiguracionTabla: T[] = [];
   /**
    * Lista de detalles de trámite desde JSON 
    */
@@ -194,9 +183,10 @@ export class LibBandejaComponent<T> implements OnInit {
    */
   public enviarDatos(): void {
       
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const BANDEJA_SOLICITUDE_FORM_GROUP: null | any = this.dinamicasBandejaForma.get('bandejaSolicitudeFormGroup');
-    if(BANDEJA_SOLICITUDE_FORM_GROUP.get('solicitudId').valid) {
+
+    const BANDEJA_SOLICITUDE_FORM_GROUP: FormGroup | null = this.dinamicasBandejaForma.get('bandejaSolicitudeFormGroup') as FormGroup | null;
+    const SOLICITUD_ID_CONTROL = BANDEJA_SOLICITUDE_FORM_GROUP?.get('solicitudId');
+    if (BANDEJA_SOLICITUDE_FORM_GROUP && SOLICITUD_ID_CONTROL && SOLICITUD_ID_CONTROL.valid) {
       this.configuracionTablaDatos = this.duplicarDatos;
       const SELECTED_PROCEDURE = this.configuracionTablaDatos.filter((item) => Number(item.numeroDeProcedimiento) === Number(this.seleccionadoDepartamento.numeroDeProcedimiento));
       this.configuracionTablaDatos = SELECTED_PROCEDURE;
@@ -329,9 +319,8 @@ export class LibBandejaComponent<T> implements OnInit {
    */
   public filterDatos(): void {
     
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const BANDEJA_SOLICITUDE_FORM_GROUP: null | any = this.dinamicasBandejaForma.get('bandejaSolicitudeFormGroup');
-    const TIPO_SOLICITUD = BANDEJA_SOLICITUDE_FORM_GROUP.controls['tipoSolicitud']?.value;
+    const BANDEJA_SOLICITUDE_FORM_GROUP: FormGroup | null = this.dinamicasBandejaForma.get('bandejaSolicitudeFormGroup') as FormGroup | null;
+    const TIPO_SOLICITUD = BANDEJA_SOLICITUDE_FORM_GROUP?.controls['tipoSolicitud']?.value;
     const BODY = {
       rfc_usuario: "",
       roles: [""]
@@ -348,7 +337,7 @@ export class LibBandejaComponent<T> implements OnInit {
 
         this.bandejaDeSolicitudeService.postBandejaTareas(BODY).pipe(
         map((datos: BandejaDeTareasPendientes[]) => {
-          this.configuracionTablaDatos = datos;
+          this.configuracionTablaDatos = datos as unknown as T[];
         })
       ).subscribe();
       this.hasValidForm = true

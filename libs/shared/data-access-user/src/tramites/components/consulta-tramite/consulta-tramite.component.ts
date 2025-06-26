@@ -17,13 +17,23 @@ import { TramiteDetails } from '../../../core/models/tramiteDetails';
 
 import { ModeloDeFormaDinamica } from '../../../core/models/shared/forms-model';
 
+/**
+ * Interfaz que representa un objeto con número de procedimiento y datos asociados a un trámite.
+ */
 interface TieneNumeroDeProcedimiento {
-  id:number;
+  /** Identificador único del trámite */
+  id: number;
+  /** Número de procedimiento asociado al trámite */
   numeroDeProcedimiento: string;
-  departamento:string
+  /** Nombre del departamento relacionado */
+  departamento: string;
+  /** Origen del trámite */
   origin: string;
+  /** Folio del trámite */
   folioTramite: string;
+  /** Tipo de trámite */
   tipoDeTramite: string;
+  /** Estado actual del trámite */
   estadoDeTramite: string;
 }
 @Component({
