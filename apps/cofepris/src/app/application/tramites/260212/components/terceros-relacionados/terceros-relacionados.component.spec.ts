@@ -127,11 +127,11 @@ describe('TercerosRelacionadosComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
+  it('debería crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize dropdown data on component creation', () => {
+  it('debería inicializar los datos de los dropdowns al crear el componente', () => {
     expect(component.dropdownData).toEqual(mockDropdownData);
     expect(component.paisDropdownData).toEqual(mockDropdownData);
     expect(component.municipioDropdownData).toEqual(mockDropdownData);
@@ -140,90 +140,88 @@ describe('TercerosRelacionadosComponent', () => {
     expect(component.localidadDropdownData).toEqual(mockDropdownData);
   });
 
-  it('should initialize form groups on component creation', () => {
+  it('debería inicializar los grupos de formularios al crear el componente', () => {
     expect(component.agregarFabricanteFormGroup).toBeDefined();
     expect(component.agregarDestinatarioFormGroup).toBeDefined();
     expect(component.agregarProveedorFormGroup).toBeDefined();
     expect(component.agregarFacturadorFormGroup).toBeDefined();
   });
 
-  it('should toggle visibility for Fabricante form', () => {
+  it('debería alternar la visibilidad del formulario de Fabricante', () => {
     component.toggleDivFabricante();
     expect(component.showTableDiv).toBe(false);
     expect(component.showFabricante).toBe(true);
   });
 
-  it('should toggle visibility for Destinatario form', () => {
+  it('debería alternar la visibilidad del formulario de Destinatario', () => {
     component.toggleDivDestinatario();
     expect(component.showTableDiv).toBe(false);
     expect(component.showDestinatario).toBe(true);
   });
 
-  it('should toggle visibility for Proveedor form', () => {
+  it('debería alternar la visibilidad del formulario de Proveedor', () => {
     component.toggleDivProveedor();
     expect(component.showTableDiv).toBe(false);
     expect(component.showProveedor).toBe(true);
   });
 
-  it('should toggle visibility for Facturador form', () => {
+  it('debería alternar la visibilidad del formulario de Facturador', () => {
     component.toggleDivFacturador();
     expect(component.showTableDiv).toBe(false);
     expect(component.showFacturador).toBe(true);
   });
 
-  it('should handle tipoPersonaChecked for Facturador', () => {
+  it('debería manejar tipoPersonaChecked para Facturador', () => {
     component.tipoPersonaChecked('1', 'Facturador');
     expect(component.fisica).toBe(true);
     expect(component.moral).toBe(false);
     expect(component.agregarFacturadorFormGroup.get('nombre')?.enabled).toBe(true);
   });
 
-  it('should handle tipoPersonaChecked for Proveedor', () => {
+  it('debería manejar tipoPersonaChecked para Proveedor', () => {
     component.tipoPersonaChecked('2', 'Proveedor');
     expect(component.fisica).toBe(false);
     expect(component.moral).toBe(true);
     expect(component.agregarProveedorFormGroup.get('nombre')?.enabled).toBe(true);
   });
 
-  // Add coverage for cancel/reset methods and toggling back
-  it('should cancel Fabricante form and show table', () => {
+  it('debería cancelar el formulario de Fabricante y mostrar la tabla', () => {
     component.showFabricante = true;
     component.cancelFabricante();
     expect(component.showFabricante).toBe(false);
     expect(component.showTableDiv).toBe(true);
   });
 
-  it('should cancel Destinatario form and show table', () => {
+  it('debería cancelar el formulario de Destinatario y mostrar la tabla', () => {
     component.showDestinatario = true;
     component.cancelDestinatario();
     expect(component.showDestinatario).toBe(false);
     expect(component.showTableDiv).toBe(true);
   });
 
-  it('should cancel Proveedor form and show table', () => {
+  it('debería cancelar el formulario de Proveedor y mostrar la tabla', () => {
     component.showProveedor = true;
     component.cancelProveedor();
     expect(component.showProveedor).toBe(false);
     expect(component.showTableDiv).toBe(true);
   });
 
-  it('should cancel Facturador form and show table', () => {
+  it('debería cancelar el formulario de Facturador y mostrar la tabla', () => {
     component.showFacturador = true;
     component.cancelFacturador();
     expect(component.showFacturador).toBe(false);
     expect(component.showTableDiv).toBe(true);
   });
 
-  // Edge/negative cases for tipoPersonaChecked
-  it('should handle unknown tipoPersonaChecked type gracefully', () => {
+  it('debería manejar tipoPersonaChecked desconocido correctamente', () => {
     component.fisica = true;
     component.moral = true;
     component.tipoPersonaChecked('3', 'Unknown');
     expect(component.fisica).toBe(false);
-    expect(component.moral).toBe(true); // Ajusta según la lógica real del componente
+    expect(component.moral).toBe(true);
   });
-// Test toggling back to table from forms
-  it('should show table when calling showTable', () => {
+
+  it('debería mostrar la tabla al llamar showTable', () => {
     component.showFabricante = true;
     component.showDestinatario = true;
     component.showProveedor = true;
@@ -236,8 +234,7 @@ describe('TercerosRelacionadosComponent', () => {
     expect(component.showFacturador).toBe(false);
   });
 
-  // If ngOnInit/ngOnDestroy exist, add coverage
-  it('should call ngOnInit if present', () => {
+  it('debería llamar ngOnInit si existe', () => {
     if (component.ngOnInit) {
       jest.spyOn(component, 'ngOnInit');
       component.ngOnInit();
@@ -245,55 +242,53 @@ describe('TercerosRelacionadosComponent', () => {
     }
   });
 
- 
-  describe('validators', () => {
-    it('requiredPaisValidator should return null for valid value', () => {
+  describe('validadores', () => {
+    it('requiredPaisValidator debe retornar null para valor válido', () => {
       const control = { value: '10' } as any;
       expect(component.requiredPaisValidator(control)).toBeNull();
     });
-    it('requiredPaisValidator should return error for empty', () => {
+    it('requiredPaisValidator debe retornar error para vacío', () => {
       const control = { value: '' } as any;
       expect(component.requiredPaisValidator(control)).toEqual({ requiredPais: true });
     });
-    it('requiredPaisValidator should return error for -1', () => {
+    it('requiredPaisValidator debe retornar error para -1', () => {
       const control = { value: '-1' } as any;
       expect(component.requiredPaisValidator(control)).toEqual({ requiredPais: true });
     });
 
-    it('rfcValidator should validate RFC FISICA', () => {
+    it('rfcValidator debe validar RFC FISICA', () => {
       const control = { value: 'ABCD123456XYZ' } as any;
       expect(component.rfcValidator(control)).toBeNull();
     });
-    it('rfcValidator should validate RFC MORAL', () => {
+    it('rfcValidator debe validar RFC MORAL', () => {
       const control = { value: 'ABC123456XYZ' } as any;
       expect(component.rfcValidator(control)).toBeNull();
     });
-    it('rfcValidator should return error for invalid RFC', () => {
+    it('rfcValidator debe retornar error para RFC inválido', () => {
       const control = { value: 'INVALID' } as any;
       expect(component.rfcValidator(control)).toEqual({ invalidRFC: true });
     });
 
-    it('curpValidator should validate correct CURP', () => {
+    it('curpValidator debe validar CURP correcto', () => {
       const control = { value: 'ABCD990101HMNLLL09' } as any;
       expect(component.curpValidator(control)).toBeNull();
     });
-    it('curpValidator should return error for invalid CURP', () => {
+    it('curpValidator debe retornar error para CURP inválido', () => {
       const control = { value: 'INVALID' } as any;
       expect(component.curpValidator(control)).toEqual({ invalidCURP: true });
     });
 
-    it('telefonoValidator should validate correct phone', () => {
+    it('telefonoValidator debe validar teléfono correcto', () => {
       const control = { value: '123-456(789)' } as any;
       expect(component.telefonoValidator(control)).toBeNull();
     });
-    it('telefonoValidator should return error for invalid phone', () => {
+    it('telefonoValidator debe retornar error para teléfono inválido', () => {
       const control = { value: '123*456' } as any;
       expect(component.telefonoValidator(control)).toEqual({ invalidTelefono: true });
     });
   });
 
-  // Form initializers
-  it('should initialize all form groups', () => {
+  it('debería inicializar todos los grupos de formularios', () => {
     component.initializeAgregarFabricanteFormGroup();
     expect(component.agregarFabricanteFormGroup).toBeDefined();
     component.initializeAgregarDestinatarioFormGroup();
@@ -304,34 +299,32 @@ describe('TercerosRelacionadosComponent', () => {
     expect(component.agregarFacturadorFormGroup).toBeDefined();
   });
 
-  
-  it('should set showFabricanteButtons on selectedFabricanteRows', () => {
+  it('debería activar/desactivar botones de Fabricante según selección', () => {
     component.selectedFabricanteRows({ checked: true } as any);
     expect(component.showFabricanteButtons).toBe(true);
     component.selectedFabricanteRows({ checked: false } as any);
     expect(component.showFabricanteButtons).toBe(false);
   });
-  it('should set showDestinatarioButtons on selectedDestinatarioRows', () => {
+  it('debería activar/desactivar botones de Destinatario según selección', () => {
     component.selectedDestinatarioRows({ checked: true } as any);
     expect(component.showDestinatarioButtons).toBe(true);
     component.selectedDestinatarioRows({ checked: false } as any);
     expect(component.showDestinatarioButtons).toBe(false);
   });
-  it('should set showProveedorButtons on selectedProveedorRows', () => {
+  it('debería activar/desactivar botones de Proveedor según selección', () => {
     component.selectedProveedorRows({ checked: true } as any);
     expect(component.showProveedorButtons).toBe(true);
     component.selectedProveedorRows({ checked: false } as any);
     expect(component.showProveedorButtons).toBe(false);
   });
-  it('should set showFacturadorButtons on selectedFacturadorRows', () => {
+  it('debería activar/desactivar botones de Facturador según selección', () => {
     component.selectedFacturadorRows({ checked: true } as any);
     expect(component.showFacturadorButtons).toBe(true);
     component.selectedFacturadorRows({ checked: false } as any);
     expect(component.showFacturadorButtons).toBe(false);
   });
 
-  
-  it('should set nacional/extranjero on tercerosInputChecked', () => {
+  it('debería establecer nacional/extranjero en tercerosInputChecked', () => {
     component.tercerosInputChecked('1');
     expect(component.nacional).toBe(true);
     expect(component.extranjero).toBe(false);
@@ -340,8 +333,7 @@ describe('TercerosRelacionadosComponent', () => {
     expect(component.extranjero).toBe(true);
   });
 
-  
-  it('should enable correct fields for tipoPersonaChecked: Facturador', () => {
+  it('debería habilitar/deshabilitar campos para tipoPersonaChecked: Facturador', () => {
     component.tipoPersonaChecked('1', 'Facturador');
     expect(component.fisica).toBe(true);
     expect(component.moral).toBe(false);
@@ -349,7 +341,7 @@ describe('TercerosRelacionadosComponent', () => {
     expect(component.fisica).toBe(false);
     expect(component.moral).toBe(true);
   });
-  it('should enable correct fields for tipoPersonaChecked: Proveedor', () => {
+  it('debería habilitar/deshabilitar campos para tipoPersonaChecked: Proveedor', () => {
     component.tipoPersonaChecked('1', 'Proveedor');
     expect(component.fisica).toBe(true);
     expect(component.moral).toBe(false);
@@ -357,7 +349,7 @@ describe('TercerosRelacionadosComponent', () => {
     expect(component.fisica).toBe(false);
     expect(component.moral).toBe(true);
   });
-  it('should enable correct fields for tipoPersonaChecked: Destinatario', () => {
+  it('debería habilitar/deshabilitar campos para tipoPersonaChecked: Destinatario', () => {
     component.tipoPersonaChecked('1', 'Destinatario');
     expect(component.fisica).toBe(true);
     expect(component.moral).toBe(false);
@@ -365,7 +357,7 @@ describe('TercerosRelacionadosComponent', () => {
     expect(component.fisica).toBe(false);
     expect(component.moral).toBe(true);
   });
-  it('should enable correct fields for tipoPersonaChecked: Fabricante', () => {
+  it('debería habilitar/deshabilitar campos para tipoPersonaChecked: Fabricante', () => {
     component.tipoPersonaChecked('1', 'Fabricante');
     expect(component.fisica).toBe(true);
     expect(component.moral).toBe(false);
@@ -374,29 +366,28 @@ describe('TercerosRelacionadosComponent', () => {
     expect(component.moral).toBe(true);
   });
 
-  // toggleDiv methods
-  it('should toggleDivFabricante', () => {
+  it('debería alternar toggleDivFabricante', () => {
     const prevShowTableDiv = component.showTableDiv;
     const prevShowFabricante = component.showFabricante;
     component.toggleDivFabricante();
     expect(component.showTableDiv).toBe(!prevShowTableDiv);
     expect(component.showFabricante).toBe(!prevShowFabricante);
   });
-  it('should toggleDivDestinatario', () => {
+  it('debería alternar toggleDivDestinatario', () => {
     const prevShowTableDiv = component.showTableDiv;
     const prevShowDestinatario = component.showDestinatario;
     component.toggleDivDestinatario();
     expect(component.showTableDiv).toBe(!prevShowTableDiv);
     expect(component.showDestinatario).toBe(!prevShowDestinatario);
   });
-  it('should toggleDivProveedor', () => {
+  it('debería alternar toggleDivProveedor', () => {
     const prevShowTableDiv = component.showTableDiv;
     const prevShowProveedor = component.showProveedor;
     component.toggleDivProveedor();
     expect(component.showTableDiv).toBe(!prevShowTableDiv);
     expect(component.showProveedor).toBe(!prevShowProveedor);
   });
-  it('should toggleDivFacturador', () => {
+  it('debería alternar toggleDivFacturador', () => {
     const prevShowTableDiv = component.showTableDiv;
     const prevShowFacturador = component.showFacturador;
     component.toggleDivFacturador();
@@ -404,26 +395,23 @@ describe('TercerosRelacionadosComponent', () => {
     expect(component.showFacturador).toBe(!prevShowFacturador);
   });
 
-  // Public properties
-  it('should have TEXTO_DE_ALERTA defined', () => {
+  it('debería tener TEXTO_DE_ALERTA definido', () => {
     expect(component.TEXTO_DE_ALERTA).toBeDefined();
   });
-  it('should have nacionalidadOpcionDeBotonDeRadio defined', () => {
+  it('debería tener nacionalidadOpcionDeBotonDeRadio definido', () => {
     expect(component.nacionalidadOpcionDeBotonDeRadio).toBeDefined();
   });
-  it('should have personaOpcionDeBotonDeRadio defined', () => {
+  it('debería tener personaOpcionDeBotonDeRadio definido', () => {
     expect(component.personaOpcionDeBotonDeRadio).toBeDefined();
   });
 
-  // Cobertura para submitFabricanteForm: valores de catálogo correctamente mapeados
-  it('should map dropdown values correctly in submitFabricanteForm', () => {
+  it('debería mapear valores de dropdown correctamente en submitFabricanteForm', () => {
     component.localidadDropdownData = [{ id: 2, descripcion: 'Localidad X' }];
     component.paisDropdownData = [{ id: 1, descripcion: 'México' }];
     component.municipioDropdownData = [{ id: 3, descripcion: 'Municipio Y' }];
     component.codigoPostalDropdownData = [{ id: 4, descripcion: 'CP Z' }];
     component.coloniaDropdownData = [{ id: 5, descripcion: 'Colonia W' }];
 
-    // Solo incluye los controles realmente presentes en el form y asegúrate de que todos tengan valor
     const formValue: any = {};
     component.agregarFabricanteFormGroup.controls &&
       Object.keys(component.agregarFabricanteFormGroup.controls).forEach(key => {
@@ -440,13 +428,10 @@ describe('TercerosRelacionadosComponent', () => {
     const spy = jest.spyOn(tramite260212Store, 'setFabricante');
     component.submitFabricanteForm();
 
-    // El componente retorna un array de objetos con la propiedad tbodyData, así que validamos el contenido ahí
     const rowData = spy.mock.calls[0][0] as { tbodyData: any[] }[] | { tbodyData: any[] };
     expect(rowData).toBeDefined();
-    // Busca los valores mapeados en tbodyData
     const tbodyData = Array.isArray(rowData) ? rowData[0]?.tbodyData : rowData?.tbodyData;
     expect(tbodyData).toBeDefined();
-    // Los valores mapeados deben estar presentes en tbodyData
     expect(tbodyData).toContain('México');
     expect(tbodyData).toContain('Localidad X');
     expect(tbodyData).toContain('Municipio Y');
@@ -454,8 +439,7 @@ describe('TercerosRelacionadosComponent', () => {
     expect(tbodyData).toContain('Colonia W');
   });
 
-  // Cobertura para submitFabricanteForm: valores de catálogo no encontrados (undefined)
-  it('should handle missing dropdown values in submitFabricanteForm', () => {
+  it('debería manejar valores de catálogo no encontrados en submitFabricanteForm', () => {
     component.localidadDropdownData = [];
     component.paisDropdownData = [];
     component.municipioDropdownData = [];
@@ -481,12 +465,10 @@ describe('TercerosRelacionadosComponent', () => {
     const rowData = spy.mock.calls[0][0] as { tbodyData: any[] }[] | { tbodyData: any[] };
     const tbodyData = Array.isArray(rowData) ? rowData[0]?.tbodyData : rowData?.tbodyData;
     expect(tbodyData).toBeDefined();
-    // Los valores no encontrados deben ser undefined o null en tbodyData
     expect(tbodyData).toContain(undefined);
   });
 
- // Cobertura para tipoPersonaChecked: habilitar y deshabilitar campos de todos los formularios
-  it('should disable fields for Facturador', () => {
+  it('debería deshabilitar campos para Facturador', () => {
     component.agregarFacturadorFormGroup.get('nombre')?.disable();
     component.agregarFacturadorFormGroup.get('primerApellido')?.disable();
     component.agregarFacturadorFormGroup.get('segundoApellido')?.disable();
@@ -497,7 +479,7 @@ describe('TercerosRelacionadosComponent', () => {
     expect(component.agregarFacturadorFormGroup.get('denominacionRazonSocial')?.disabled).toBe(true);
   });
 
-  it('should enable fields for Facturador', () => {
+  it('debería habilitar campos para Facturador', () => {
     component.agregarFacturadorFormGroup.get('nombre')?.enable();
     component.agregarFacturadorFormGroup.get('primerApellido')?.enable();
     component.agregarFacturadorFormGroup.get('segundoApellido')?.enable();
@@ -508,7 +490,7 @@ describe('TercerosRelacionadosComponent', () => {
     expect(component.agregarFacturadorFormGroup.get('denominacionRazonSocial')?.enabled).toBe(true);
   });
 
-  it('should enable fields for Proveedor', () => {
+  it('debería habilitar campos para Proveedor', () => {
     component.agregarProveedorFormGroup.get('nombre')?.enable();
     component.agregarProveedorFormGroup.get('primerApellido')?.enable();
     component.agregarProveedorFormGroup.get('segundoApellido')?.enable();
@@ -519,7 +501,7 @@ describe('TercerosRelacionadosComponent', () => {
     expect(component.agregarProveedorFormGroup.get('denominacionRazonSocial')?.enabled).toBe(true);
   });
 
-  it('should enable fields for Destinatario', () => {
+  it('debería habilitar campos para Destinatario', () => {
     component.agregarDestinatarioFormGroup.get('rfc')?.enable();
     component.agregarDestinatarioFormGroup.get('curp')?.enable();
     component.agregarDestinatarioFormGroup.get('denominacionRazonSocial')?.enable();
@@ -528,7 +510,7 @@ describe('TercerosRelacionadosComponent', () => {
     expect(component.agregarDestinatarioFormGroup.get('denominacionRazonSocial')?.enabled).toBe(true);
   });
 
-  it('should enable fields for Fabricante', () => {
+  it('debería habilitar campos para Fabricante', () => {
     component.agregarFabricanteFormGroup.get('rfc')?.enable();
     component.agregarFabricanteFormGroup.get('curp')?.enable();
     component.agregarFabricanteFormGroup.get('denominacionRazonSocial')?.enable();
