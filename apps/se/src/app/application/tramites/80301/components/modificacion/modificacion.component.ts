@@ -39,17 +39,7 @@ export class ModificacionComponent implements OnInit, OnDestroy {
     private tramite80301Store: Tramite80301Store,
     private tramite80301Query: Tramite80301Query,
     private consultaioQuery: ConsultaioQuery,
-  ) {
-    this.consultaioQuery.selectConsultaioState$
-      .pipe(takeUntil(this.destroyNotifier$),
-        map((seccionState) => {
-          this.consultaDatos = seccionState;
-          this.esFormularioSoloLectura = this.consultaDatos.readonly;
-          this.inicializarEstadoFormulario()
-        })
-      )
-      .subscribe()
-  }
+  ) {}  
 
 
   /**
