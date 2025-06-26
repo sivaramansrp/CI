@@ -30,8 +30,8 @@ import {
   TIPO_TRAMITE,
 } from '../../../../core/enums/5701/tramite5701.enum';
 import { Observable, Subject, catchError, map, of, takeUntil, tap } from 'rxjs';
-import { GuardaSolicitudService } from '../../../../core/services/5701/guardar/guarda-solicitud.service';
 import { Solicitud5701State, Tramite5701Store } from '../../../../core/estados/tramites/tramite5701.store';
+import { GuardaSolicitudService } from '../../../../core/services/5701/guardar/guarda-solicitud.service';
 import { Tramite5701Query } from '../../../../core/queries/tramite5701.query';
 import { WizardComponent } from '@libs/shared/data-access-user/src';
 
