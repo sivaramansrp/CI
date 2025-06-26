@@ -46,7 +46,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   /**
    * Estado de la solicitud.
    */
-  public solicitudState!: Solicitud32502State;
+  public seccionState!: Solicitud32502State;
 
   /**
    * Formulario principal de la solicitud.
@@ -64,18 +64,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     * Cuando es `true`, los campos del formulario no se pueden editar.
     */
     esFormularioSoloLectura: boolean = false;
-    /**
- * Estado de la sección que contiene los datos del procedimiento.
- * 
- * Esta propiedad almacena el estado actual de los datos relacionados con el procedimiento.
- * Se inicializa a través de un observable en el método `obtenerDatosFormulario`, 
- * que suscribe a los cambios en el estado y actualiza esta propiedad con los datos más recientes.
- * 
- * Tipo: `DatosProcedureState`
- * 
- * @private
- */
-  private seccionState!: Solicitud32502State;
+
   /**
    * Constructor del componente.
    * @param avisoService Servicio para obtener datos de PEXIM.
@@ -123,7 +112,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     this.tramite32502Query.select()
       .pipe(takeUntil(this.destroy$))
       .subscribe(state => {
-        this.solicitudState = state;
+        this.seccionState = state;
         this.crearFormSolicitud();
       });
   }
@@ -198,116 +187,117 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     this.FormSolicitud = this.fb.group({
       adaceForm: this.fb.group({
         adace: [
-          { value: this.solicitudState?.adace || 'Centro', disabled: true }
+          { value: this.seccionState?.adace || 'Centro', disabled: true }
         ]
       }),
       extranjeroAvisoAgace: this.fb.group({
         razonSocial: [
-          this.solicitudState?.razonSocial || '',
+          this.seccionState?.razonSocial || '',
           Validators.required
         ],
         rfc: [
-          this.solicitudState?.rfc,
+          this.seccionState?.rfc,
           Validators.required
         ],
         rfcExtranjero: [
-          this.solicitudState?.rfcExtranjero,
+          this.seccionState?.rfcExtranjero,
           Validators.required
         ]
       }),
       mercanciaST: this.fb.group({
         cveFraccionArancelaria: [
-          this.solicitudState?.cveFraccionArancelaria,
+          this.seccionState?.cveFraccionArancelaria,
           Validators.required
         ],
         reglaFraccion: [
-          this.solicitudState?.reglaFraccion,
+          this.seccionState?.reglaFraccion,
           Validators.required
         ],
         nico: [
-          this.solicitudState?.nico,
+          this.seccionState?.nico,
           Validators.required
         ],
         valorUSD: [
-          this.solicitudState?.valorUSD,
+          this.seccionState?.valorUSD,
           Validators.required
         ],
         marca: [
-          this.solicitudState?.marca,
+          this.seccionState?.marca,
           Validators.required
         ],
         peso: [
-          this.solicitudState?.peso,
+          this.seccionState?.peso,
           Validators.required
         ],
         fechaInicio: [
-          this.solicitudState?.fechaInicio,
+          this.seccionState?.fechaInicio,
           Validators.required
         ],
         numeroSerie: [
-          this.solicitudState?.numeroSerie,
+          this.seccionState?.numeroSerie,
           Validators.required
         ],
         descripcionMercancia: [
-          this.solicitudState?.descripcionMercancia,
+          this.seccionState?.descripcionMercancia,
           Validators.required
         ]
       }),
       direccionST: this.fb.group({
         informacionExtra: [
-          this.solicitudState?.informacionExtra,
+          this.seccionState?.informacionExtra,
           Validators.required
         ],
         entidadFederativa: [
-          this.solicitudState?.entidadFederativa,
+          this.seccionState?.entidadFederativa,
           Validators.required
         ],
         delegacionMunicipio: [
-          this.solicitudState?.delegacionMunicipio,
+          this.seccionState?.delegacionMunicipio,
           Validators.required
         ],
         colonia: [
-          this.solicitudState?.colonia,
+          this.seccionState?.colonia,
           Validators.required
         ],
         calle: [
-          this.solicitudState?.calle,
+          this.seccionState?.calle,
           Validators.required
         ],
         numeroExterior: [
-          this.solicitudState?.numeroExterior,
+          this.seccionState?.numeroExterior,
           Validators.required
         ],
         numeroInterior: [
-          this.solicitudState?.numeroInterior,
+          this.seccionState?.numeroInterior,
           Validators.required
         ],
         codigoPostal: [
-          this.solicitudState?.codigoPostal,
+          this.seccionState?.codigoPostal,
           Validators.required
         ]
       }),
       pedimentoST: this.fb.group({
         patenteAutorizacion: [
-          this.solicitudState?.patenteAutorizacion,
+          this.seccionState?.patenteAutorizacion,
           Validators.required
         ],
         rfcAgenteAduanal: [
-          this.solicitudState?.rfcAgenteAduanal,
+          this.seccionState?.rfcAgenteAduanal,
           Validators.required
         ],
         numeroPedimento: [
-          this.solicitudState?.numeroPedimento,
+          this.seccionState?.numeroPedimento,
           Validators.required
         ],
         claveAduana: [
-          this.solicitudState?.claveAduana,
+          this.seccionState?.claveAduana,
           Validators.required
         ]
       })
     });
     if (this.esFormularioSoloLectura) {
       this.FormSolicitud.disable();
+      this.esFormularioSoloLectura=true;
     } else {
       this.FormSolicitud.enable();
     }
@@ -347,6 +337,11 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   fraccionArancelariaSeleccion(): void {
     const FRACCION_ARANCELATIA = this.FormSolicitud.get('fraccionArancelaria')?.value;
     this.tramite32502Store.setCveFraccionArancelaria(FRACCION_ARANCELATIA);
+    if (this.esFormularioSoloLectura) {
+      this.FormSolicitud.disable();
+    } else {
+      this.FormSolicitud.enable();
+    }
   }
 
   /**
@@ -381,10 +376,39 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * @param {string} metodoNombre - El nombre del método en el store que se va a invocar con el valor del campo.
    * @returns {void}
    */
-  setValoresStore(form: FormGroup, campo: string): void {
-  const VALOR = form.get(campo)?.value;
-  this.tramite32502Store.establecerDatos(VALOR);
-}
+  setValoresStore(form: FormGroup): void {
+    const VALORES = {
+      razonSocial: form.get('razonSocial')?.value,
+      rfc: form.get('rfc')?.value,
+      rfcExtranjero: form.get('rfcExtranjero')?.value,
+      cveFraccionArancelaria: form.get('cveFraccionArancelaria')?.value,
+      reglaFraccion: form.get('reglaFraccion')?.value,
+      nico: form.get('nico')?.value,
+      valorUSD: form.get('valorUSD')?.value,
+      marca: form.get('marca')?.value,
+      peso: form.get('peso')?.value,
+      fechaInicio: form.get('fechaInicio')?.value,
+      numeroSerie: form.get('numeroSerie')?.value,
+      descripcionMercancia: form.get('descripcionMercancia')?.value,
+      informacionExtra: form.get('informacionExtra')?.value,
+      entidadFederativa: form.get('entidadFederativa')?.value,
+      delegacionMunicipio: form.get('delegacionMunicipio')?.value,
+      colonia: form.get('colonia')?.value,
+      calle: form.get('calle')?.value,
+      numeroExterior: form.get('numeroExterior')?.value,
+      numeroInterior: form.get('numeroInterior')?.value,
+      codigoPostal: form.get('codigoPostal')?.value,
+      patenteAutorizacion: form.get('patenteAutorizacion')?.value,
+      rfcAgenteAduanal: form.get('rfcAgenteAduanal')?.value,
+      numeroPedimento: form.get('numeroPedimento')?.value,
+      claveAduana: form.get('claveAduana')?.value,
+      nombre: form.get('nombre')?.value,
+      primerApellido: form.get('primerApellido')?.value,
+      segundoApellido: form.get('segundoApellido')?.value,
+      adace: form.get('adace')?.value,
+    };
+    this.tramite32502Store.establecerDatos(VALORES);
+  }
 
 
 
