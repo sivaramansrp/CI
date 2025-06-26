@@ -19,7 +19,7 @@ describe('DatosEstablecimientoComponent', () => {
     readonly: false
   } as ConsultaioState;
 
-  const mockSelectSolicitud: Solicitud260906State ={
+  const mockSelectSolicitud: Solicitud260906State = {
     tipoOperacion: 'operacion1',
     tipoOperacionJustificacion: 'justificacion',
     rfcResponsableSanitario: 'RFC123',
