@@ -351,6 +351,25 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     this.listaSeleccionadas = event;
   }
 
+   /**
+ * Maneja la transformación a mayúsculas de los valores de los campos de entrada.
+ *
+ * @param {string} field - Nombre del campo de control del formulario.
+ * @param {Event} event - Evento activado por el cambio en el campo de entrada.
+ *
+ * @description
+ * Este método captura el evento de entrada y convierte el valor ingresado
+ * a mayúsculas antes de actualizar el control de formulario especificado. 
+ * Se evita la emisión del evento para prevenir actualizaciones innecesarias del formulario.
+ */
+
+  public manejarEntradaMayusculas(event: Event): void {
+    const INPUT = event.target as HTMLInputElement;
+    if (INPUT && INPUT.value) {
+      this.FormSolicitud.get('pagodederechos.linea')?.setValue(INPUT.value.toUpperCase(), { emitEvent: false });
+    }
+  }
+
   /**
    * Método `ngOnDestroy()`.
    * Este método se ejecuta cuando el componente se destruye y realiza las siguientes acciones:
