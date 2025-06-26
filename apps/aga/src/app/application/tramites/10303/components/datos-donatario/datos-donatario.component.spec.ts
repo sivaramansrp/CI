@@ -7,7 +7,7 @@ import { DatosDonatarioComponent } from './datos-donatario.component';
 import { DonacionesExtranjerasService } from '../../services/donaciones-extranjeras/donaciones-extranjeras.service';
 import { Tramite10303Store } from '../../estados/tramites/tramite10303.store';
 import { Tramite10303Query } from '../../estados/queries/tramite10303.query';
-import { CATALOGOS_ID, Catalogo, CatalogoSelectComponent } from '@ng-mf/data-access-user';
+import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { ContribuyenteRespuesta } from '../../models/donaciones-extranjeras.model';
 
 describe('DatosDonatarioComponent', () => {
@@ -67,9 +67,9 @@ describe('DatosDonatarioComponent', () => {
   });
 
   it('should call inicializaCatalogos on ngOnInit', () => {
-    const spy = jest.spyOn(component, 'inicializaCatalogos');
+    const SPY = jest.spyOn(component, 'inicializaCatalogos');
     component.ngOnInit();
-    expect(spy).toHaveBeenCalled();
+    expect(SPY).toHaveBeenCalled();
   });
 
   it('should initialize the form on ngOnInit', () => {
@@ -91,18 +91,18 @@ describe('DatosDonatarioComponent', () => {
   });
 
   it('should call construirDonatario with encontrado=false if DATA is null and valor === 1', () => {
-    const mockData = null;
-    const construirDonatarioSpy = jest.spyOn(component, 'construirDonatario');
-    jest.spyOn(mockDonacionesExtranjerasService, 'buscarContribuyente').mockReturnValue(of({ data: [mockData] }));
+    const MOCK_DATA = null;
+    const CONSTRUIR_DONATARIO_SPY = jest.spyOn(component, 'construirDonatario');
+    jest.spyOn(mockDonacionesExtranjerasService, 'buscarContribuyente').mockReturnValue(of({ data: [MOCK_DATA] }));
 
     component.buscarContribuyenteRfc(1, 'RFC123');
 
-    expect(construirDonatarioSpy).toHaveBeenCalledWith(mockData, false);
+    expect(CONSTRUIR_DONATARIO_SPY).toHaveBeenCalledWith(MOCK_DATA, false);
   });
 
   it('should call toastr.error if DATA is null and valor !== 1', () => {
-    const mockData = null;
-    jest.spyOn(mockDonacionesExtranjerasService, 'buscarContribuyente').mockReturnValue(of({ data: [mockData] }));
+    const MOCK_DATA = null;
+    jest.spyOn(mockDonacionesExtranjerasService, 'buscarContribuyente').mockReturnValue(of({ data: [MOCK_DATA] }));
 
     component.buscarContribuyenteRfc(0, 'RFC123');
 
@@ -140,14 +140,14 @@ describe('DatosDonatarioComponent', () => {
   });
 
   it('should update tramite10303Store with selected pais', () => {
-    const spy = jest.spyOn(mockTramite10303Store, 'setCvePaisDonatario');
+    const SPY = jest.spyOn(mockTramite10303Store, 'setCvePaisDonatario');
     component.datosDonatarioForm.patchValue({ cvePaisDonatario: 'IN' });
     component.paisSeleccion();
-    expect(spy).toHaveBeenCalledWith('IN');
+    expect(SPY).toHaveBeenCalledWith('IN');
   });
 
   it('should search contribuyente by RFC and update the form', () => {
-    const mockResponse: ContribuyenteRespuesta = {
+    const MOCK_RESPONSE: ContribuyenteRespuesta = {
       data: [
         {
           rfc: 'RFC123',
@@ -176,7 +176,7 @@ describe('DatosDonatarioComponent', () => {
       correoElectronicoDonatario: [''],
       telefonoDonatario: ['']
     });
-    jest.spyOn(mockDonacionesExtranjerasService, 'buscarContribuyente').mockReturnValue(of(mockResponse));
+    jest.spyOn(mockDonacionesExtranjerasService, 'buscarContribuyente').mockReturnValue(of(MOCK_RESPONSE));
 
     component.buscarContribuyenteRfc(1, 'RFC123');
 
@@ -210,22 +210,22 @@ describe('DatosDonatarioComponent', () => {
   });
 
   it('should complete destruirNotificador$ on ngOnDestroy', () => {
-    const nextSpy = jest.spyOn(component['destruirNotificador$'], 'next');
-    const completeSpy = jest.spyOn(component['destruirNotificador$'], 'complete');
+    const NEXT_SPY = jest.spyOn(component['destruirNotificador$'], 'next');
+    const COMPLETE_SPY = jest.spyOn(component['destruirNotificador$'], 'complete');
 
     component.ngOnDestroy();
 
-    expect(nextSpy).toHaveBeenCalled();
-    expect(completeSpy).toHaveBeenCalled();
+    expect(NEXT_SPY).toHaveBeenCalled();
+    expect(COMPLETE_SPY).toHaveBeenCalled();
   });
 
   it('should call the correct store method with the form value', () => {
-    const form = new FormBuilder().group({
+    const FORM = new FormBuilder().group({
       testField: ['testValue']
     });
     mockTramite10303Store.setNombreDonatario = jest.fn();
 
-    component.setValoresStore(form, 'testField', 'setNombreDonatario');
+    component.setValoresStore(FORM, 'testField', 'setNombreDonatario');
 
     expect(mockTramite10303Store.setNombreDonatario).toHaveBeenCalledWith('testValue');
   });
@@ -233,8 +233,8 @@ describe('DatosDonatarioComponent', () => {
   it('should call the store method with undefined if the field does not exist', () => {
     mockTramite10303Store.setNombreDonatario = jest.fn();
 
-    const form = new FormBuilder().group({});
-    component.setValoresStore(form, 'nonExistentField', 'setNombreDonatario');
+    const FORM = new FormBuilder().group({});
+    component.setValoresStore(FORM, 'nonExistentField', 'setNombreDonatario');
 
     expect(mockTramite10303Store.setNombreDonatario).toHaveBeenCalledWith(undefined);
   });
