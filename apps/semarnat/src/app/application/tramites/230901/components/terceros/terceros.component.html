@@ -7,6 +7,7 @@
         formControlName="entidadFederativa"
         class="col-md-4"
         [label]="'Entidad federativa'"
+        [isDisabled]="esFormularioSoloLectura"
         (change)="manejarCambioEntidadFederativa()"
       ></app-catalogo-select>
     </div>
@@ -16,6 +17,7 @@
         [configuracionTabla]="configuracionColumnas"
         [datos]="datosTabla"
         [tipoSeleccionTabla]="tipoSeleccionTabla"
+        [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
         (listaDeFilaSeleccionada)="manejarFilaSeleccionada($event)"
       ></app-tabla-dinamica>
     </div>
@@ -26,15 +28,16 @@
       *ngIf="datosTabla.length > 0"
     >
       <div>
-        <button type="button" class="btn btn-default me-2">
+        <button type="button" class="btn btn-default me-2" [disabled]="esFormularioSoloLectura">
           Eliminar Seleccionados
         </button>
-        <button type="button" class="btn btn-danger me-2">
+        <button type="button" class="btn btn-danger me-2" [disabled]="esFormularioSoloLectura">
           Eliminar no seleccionados
         </button>
         <button
           type="button"
           class="btn btn-primary me-2"
+          [disabled]="esFormularioSoloLectura"
           (click)="abrirPopup()"
         >
           Modificar
@@ -48,7 +51,7 @@
       *ngIf="datosTabla.length === 0"
     >
       <div class="col-md-6">
-        <button type="button" class="btn btn-primary">Agregar</button>
+        <button type="button" class="btn btn-primary" [disabled]="esFormularioSoloLectura">Agregar</button>
       </div>
     </div>
     <div
@@ -71,6 +74,7 @@
             <button
               type="button"
               class="btn btn-primary"
+              [disabled]="esFormularioSoloLectura"
               (click)="cerrarPopup()"
             >
               Aceptar

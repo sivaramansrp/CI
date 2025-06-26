@@ -3,6 +3,7 @@ import { ToastrModule } from 'ngx-toastr';
 import { Router } from '@angular/router';
 import { PasoTresComponent } from './paso-tres.component';
 import { FirmaElectronicaComponent } from '@libs/shared/data-access-user/src';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('PasoTresComponent', () => {
   let component: PasoTresComponent;
@@ -22,7 +23,7 @@ describe('PasoTresComponent', () => {
 
     await TestBed.configureTestingModule({
       declarations: [PasoTresComponent],
-      imports:[FirmaElectronicaComponent,ToastrModule.forRoot()],
+      imports:[HttpClientTestingModule,FirmaElectronicaComponent,ToastrModule.forRoot()],
       providers: [{ provide: Router, useValue: mockRouter },
       { provide: '_ToastrService', useValue: mockToastrService },
       { provide: 'ToastConfig', useValue: mockToastConfig }, 
@@ -39,17 +40,17 @@ describe('PasoTresComponent', () => {
     jest.clearAllMocks();
   });
 
-  it('should create the component', () => {
+  it('debería crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should navigate to "servicios-extraordinarios/acuse" when obtieneFirma is called with a valid signature', () => {
+  it('debería navegar a "servicios-extraordinarios/acuse" cuando obtieneFirma es llamada con una firma válida', () => {
     const firma = 'valid-signature';
     component.obtieneFirma(firma);
     expect(mockRouter.navigate).toHaveBeenCalledWith(['servicios-extraordinarios/acuse']);
   });
 
-  it('should not navigate when obtieneFirma is called with an empty signature', () => {
+  it('no debería navegar cuando obtieneFirma es llamada con una firma vacía', () => {
     const firma = '';
     component.obtieneFirma(firma);
     expect(mockRouter.navigate).not.toHaveBeenCalled();

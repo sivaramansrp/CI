@@ -4,7 +4,7 @@ import { ModificacionInfo90305Component } from './modificacion-info-90305.compon
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 
 import { of } from 'rxjs';
-import { ProsecModificacionServiceTsService } from '../../services/prosec-modificacion.service.ts.service';
+import { ProsecModificacionServiceTsService } from '../../services/prosec-modificacion.service';
 
 describe('ModificacionInfo90305Component', () => {
   let component: ModificacionInfo90305Component;
@@ -44,13 +44,18 @@ describe('ModificacionInfo90305Component', () => {
   });
 
   it('should call loadInfo on ngOnInit', () => {
-    spyOn(component, 'loadInfo');
+    jest.spyOn(component, 'loadInfo');
     component.ngOnInit();
     expect(component.loadInfo).toHaveBeenCalled();
   });
 
   it('should load modification info and update form', () => {
-    spyOn(mockService, 'getModoficacionInfo').and.callThrough();
+    jest.spyOn(mockService, 'getModoficacionInfo').mockImplementation(() => of({
+      registroFederalContribuyentes: 'RFC123',
+      representacionFederal: 'Federal',
+      tipoModificacion: 'Mod1',
+      modificacionPrograma: 'Program1',
+    }));
     component.loadInfo();
     expect(mockService.getModoficacionInfo).toHaveBeenCalled();
     expect(component.modificationInfoForm.value).toEqual({
@@ -62,15 +67,15 @@ describe('ModificacionInfo90305Component', () => {
   });
 
   it('should complete destroyed$ on ngOnDestroy', () => {
-    const DESTRY_$ = (component as any).DESTRY_$; // Cast to `any` to access private property
-  
-    spyOn(DESTRY_$, 'next');
-    spyOn(DESTRY_$, 'complete');
-  
+    // Mock the destroyed$ property as a Subject with spies on next and complete
+    const nextSpy = jest.fn();
+    const completeSpy = jest.fn();
+    (component as any).destroyed$ = { next: nextSpy, complete: completeSpy };
+
     component.ngOnDestroy();
-  
-    expect(DESTRY_$.next).toHaveBeenCalled();
-    expect(DESTRY_$.complete).toHaveBeenCalled();
+
+    expect(nextSpy).toHaveBeenCalled();
+    expect(completeSpy).toHaveBeenCalled();
   });
   
 });
