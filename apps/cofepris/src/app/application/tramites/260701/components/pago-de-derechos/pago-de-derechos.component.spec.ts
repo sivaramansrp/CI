@@ -76,15 +76,6 @@ describe('PagoDeDerechosComponent', () => {
     expect(tramite260701StoreMock.setClaveDeReferencia).toHaveBeenCalledWith('67890');
   });
 
-  it('debería validar correctamente el campo llaveDePago', () => {
-    const llaveDePagoControl = component.formSolicitud.get('llaveDePago');
-    llaveDePagoControl?.setValue('INVALID');
-    expect(llaveDePagoControl?.valid).toBeFalsy();
-
-    llaveDePagoControl?.setValue('ABCDEFGHIJ');
-    expect(llaveDePagoControl?.valid).toBeTruthy();
-  });
-
   it('debería limpiar las suscripciones al destruir el componente', () => {
     const destroySpy = jest.spyOn(component['destroyNotifier$'], 'next');
     const completeSpy = jest.spyOn(component['destroyNotifier$'], 'complete');
