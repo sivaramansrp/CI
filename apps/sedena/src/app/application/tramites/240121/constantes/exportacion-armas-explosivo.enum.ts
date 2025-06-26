@@ -1,33 +1,89 @@
 /**
- * @const PASOS
- * @description Arreglo que define los pasos de un proceso en una solicitud.
- * Cada paso contiene información sobre su índice, título, estado de actividad y si ha sido completado.
- * 
- * @property {number} indice - El número de orden del paso dentro del proceso.
- * @property {string} titulo - El título descriptivo del paso.
- * @property {boolean} activo - Indica si el paso está activo actualmente.
- * @property {boolean} completado - Indica si el paso ha sido completado.
+ * Constantes para los pasos del proceso.
+ * @export
+ * @constant {Array<Object>} PASOS
+ * @property {number} indice - Índice del paso.
+ * @property {string} titulo - Título del paso.
+ * @property {boolean} activo - Indica si el paso está activo.
+ * @property {boolean} completado - Indica si el paso está completado.
  */
 export const PASOS = [
-    {
-      indice: 1,
-      titulo: 'Capturar solicitud',
-      activo: true,
-      completado: true,
-    },
-    {
-      indice: 2,
-      titulo: 'Anexar requisitos',
-      activo: false,
-      completado: false,
-    },
-    {
-      indice: 3,
-      titulo: 'Firmar solicitud',
-      activo: false,
-      completado: false,
-    },
-  ];
+  {
+    /**
+     * Índice del paso.
+     * @property {number} indice
+     */
+    indice: 1,
+
+    /**
+     * Título del paso.
+     * @property {string} titulo
+     */
+    titulo: 'Capturar solicitud',
+
+    /**
+     * Indica si el paso está activo.
+     * @property {boolean} activo
+     */
+    activo: true,
+
+    /**
+     * Indica si el paso está completado.
+     * @property {boolean} completado
+     */
+    completado: true,
+  },
+  {
+    /**
+     * Índice del paso.
+     * @property {number} indice
+     */
+    indice: 2,
+
+    /**
+     * Título del paso.
+     * @property {string} titulo
+     */
+    titulo: 'Requisitos necesarios',
+
+    /**
+     * Indica si el paso está activo.
+     * @property {boolean} activo
+     */
+    activo: false,
+
+    /**
+     * Indica si el paso está completado.
+     * @property {boolean} completado
+     */
+    completado: false,
+  },
+  {
+    /**
+     * Índice del paso.
+     * @property {number} indice
+     */
+    indice: 3,
+
+    /**
+     * Título del paso.
+     * @property {string} titulo
+     */
+    titulo: 'Firmar solicitud',
+
+    /**
+     * Indica si el paso está activo.
+     * @property {boolean} activo
+     */
+    activo: false,
+
+    /**
+     * Indica si el paso está completado.
+     * @property {boolean} completado
+     */
+    completado: false,
+  },
+];
   
 /**
  * @const TITULOMENSAJE

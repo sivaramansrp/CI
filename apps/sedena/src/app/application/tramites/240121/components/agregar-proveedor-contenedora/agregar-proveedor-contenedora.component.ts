@@ -56,5 +56,6 @@ export class AgregarProveedorContenedoraComponent {
    */
   updateProveedorTablaDatos(event: Proveedor[]): void {
     this.tramite240121Store.updateProveedorTablaDatos(event);
+     this.cerrar.emit();
   }
 }

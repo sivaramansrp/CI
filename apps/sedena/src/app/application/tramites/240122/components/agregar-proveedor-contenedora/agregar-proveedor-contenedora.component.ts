@@ -113,6 +113,7 @@ export class AgregarProveedorContenedoraComponent implements OnInit, OnDestroy {
    */
   updateProveedorTablaDatos(event: Proveedor[]): void {
     this.tramite240122Store.updateProveedorTablaDatos(event);
+    this.cerrar.emit();
   }
   /**
 * Hook del ciclo de vida que se ejecuta al destruir el componente.
