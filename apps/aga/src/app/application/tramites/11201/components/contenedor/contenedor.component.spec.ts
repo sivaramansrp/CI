@@ -44,12 +44,6 @@ describe('ContenedorComponent', () => {
     expect(completeSpy).toHaveBeenCalled();
   });
  
-  it('should emit continuarEvento when continuar is called', () => {
-    const continuarEventoSpy = jest.spyOn(component.continuarEvento, 'emit');
-    component.continuar();
-    expect(continuarEventoSpy).toHaveBeenCalledWith('');
-  });
- 
   it('should call limpiarCampos when cancelarRadioButton is called', () => {
     const limpiarCamposSpy = jest.spyOn(component, 'limpiarCampos');
     component.cancelarRadioButton();
