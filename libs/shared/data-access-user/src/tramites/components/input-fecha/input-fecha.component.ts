@@ -91,12 +91,14 @@ export class InputFechaComponent implements OnInit {
   ngOnInit(): void {
     if (this.setFecha) {
       const FECHA = this.setFecha.split('/');
+      if(FECHA.length === 3) {
       const OBJECT_DATE = moment(`${FECHA[2]}-${FECHA[1]}-${FECHA[0]}`);
       this.generarFormulario(OBJECT_DATE);
       this.Formulario.controls['fechaString'].enable();
       this.Formulario.get('fechaString')?.setValue(
         moment(OBJECT_DATE).format('DD/MM/YYYY')
       );
+    }
       this.Formulario.controls['fechaString'].disable();
     } else {
       this.Formulario.controls['fechaString'].enable();

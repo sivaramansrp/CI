@@ -1,13 +1,19 @@
 import { AfterViewInit, Component, ViewChild } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState, SolicitanteComponent, TIPO_PERSONA } from '@ng-mf/data-access-user';
 import { DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL, PERSONA_MORAL_NACIONAL } from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
-import { SolicitanteComponent, TIPO_PERSONA } from '@ng-mf/data-access-user';
+import { OnDestroy, OnInit } from '@angular/core';
 import { FormularioDinamico } from '@ng-mf/data-access-user';
+
+import { map, takeUntil } from 'rxjs';
+import { AvisoDeAmpliacionService } from '../../services/Aviso-De-Ampliacion.service';
+import { Subject } from 'rxjs';
+
 @Component({
   selector: 'paso-uno',
   templateUrl: './paso-uno.component.html',
   styleUrl: './paso-uno.component.scss'
 })
-export class PasoUnoComponent implements AfterViewInit {
+export class PasoUnoComponent implements OnInit, OnDestroy, AfterViewInit {
 
   /**
    * Referencia al componente `SolicitanteComponent` dentro de la vista.
@@ -47,6 +53,62 @@ export class PasoUnoComponent implements AfterViewInit {
    * Se inicializa con el valor 1.
    */
   indice: number = 1;
+   /**
+   * Indica si los datos de respuesta del servidor están disponibles para actualizar el formulario.
+   */
+  public esDatosRespuesta: boolean = false;
+
+  /**
+   * Subject para notificar la destrucción del componente y cancelar suscripciones activas.
+   */
+  private destroyNotifier$: Subject<void> = new Subject();
+
+  /**
+   * Estado de la consulta actual, obtenido desde el store.
+   */
+  public consultaState!: ConsultaioState;
+  
+  constructor(
+    private avisoDeAmpliacionService: AvisoDeAmpliacionService,
+    private consultaQuery: ConsultaioQuery
+  ) {
+    // Constructor vacío: La inicialización se realizará en métodos específicos según sea necesario.
+  }
+
+  /**
+   * Método del ciclo de vida que se ejecuta al inicializar el componente.
+   * Suscribe al estado de la consulta y decide si cargar datos o mostrar respuesta.
+   */
+  ngOnInit(): void {
+    this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.consultaState = seccionState;
+        })
+      )
+      .subscribe();
+    if (this.consultaState.update) {
+      this.guardarDatosFormulario();
+    } else {
+      this.esDatosRespuesta = true;
+    }
+  }
+
+  /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormulario(): void {
+    this.avisoDeAmpliacionService
+      .getRegistroTomaMuestrasMercanciasData()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((resp) => {
+        this.esDatosRespuesta = true;
+        this.avisoDeAmpliacionService.actualizarEstadoFormulario(resp);
+       
+      });
+  }
 
   /**
    * Método del ciclo de vida de Angular que se ejecuta después de que la vista del componente ha sido inicializada.
@@ -70,6 +132,15 @@ export class PasoUnoComponent implements AfterViewInit {
    */
   seleccionaTab(i: number): void {
     this.indice = i;
+  }
+
+  /**
+   * Método del ciclo de vida que se ejecuta al destruir el componente.
+   * Libera las suscripciones activas para evitar fugas de memoria.
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 
 }

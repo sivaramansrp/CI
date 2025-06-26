@@ -197,13 +197,4 @@ export class Tramite130110Store extends Store<Tramite130110State> {
       ...valores,
     }));
   }
-    /**
-     * Almacena las filas seleccionadas en la tabla dinámica en el estado.
-     * fila Lista de filas seleccionadas.
-     */
-    public storeTableValues(fila: PartidasDeLaMercanciaModelo[]): void {
-      this.update({
-        filaSeleccionada: fila,
-      });
-    }
 }

@@ -10,7 +10,7 @@ import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
 
 import { AlertComponent } from '@ng-mf/data-access-user';
-import { ProsecModificacionServiceTsService } from '../../services/prosec-modificacion.service.ts.service';
+import { ProsecModificacionServiceTsService } from '../../services/prosec-modificacion.service';
 import { BitacoraModel  } from '../../models/prosec-modificacion.model';
 
 describe('Bitacora90305Component', () => {
@@ -38,11 +38,12 @@ describe('Bitacora90305Component', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should call loadBitacora on ngOnInit', () => {
-    spyOn(component, 'loadBitacora').and.callThrough();
-    component.ngOnInit();
-    expect(component.loadBitacora).toHaveBeenCalled();
-  });
+it('should call loadBitacora on ngOnInit', () => {
+  const spy = jest.spyOn(component as any, 'loadBitacora');
+  component.ngOnInit();
+  expect(spy).toHaveBeenCalled();
+});
+
 
   it('should have default values for `infoAlert` and `TEXTO_ALERT`', () => {
     expect(component.infoAlert).toBe('alert-info');
@@ -51,8 +52,8 @@ describe('Bitacora90305Component', () => {
 
   it('should initialize `configuracionTabla` with correct column settings', () => {
     expect(component.configuracionTabla.length).toBe(4);
-    expect(component.configuracionTabla[0].encabezado).toBe('Tipo modificación');
-    expect(component.configuracionTabla[1].encabezado).toBe('Fecha modificación');
+    expect(component.configuracionTabla[0].encabezado).toBe('Tipo de modificación');
+    expect(component.configuracionTabla[1].encabezado).toBe('Fecha de modificación');
     expect(component.configuracionTabla[2].encabezado).toBe('Valores anteriores');
     expect(component.configuracionTabla[3].encabezado).toBe('Valores nuevos');
   });
