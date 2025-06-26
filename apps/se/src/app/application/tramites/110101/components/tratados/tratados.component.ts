@@ -192,7 +192,13 @@ export class TratadosComponent implements OnInit, OnDestroy {
  /**
      * Un array de objetos `RegistroDeSolicitudesTabla` que representa los datos para la tabla de solicitudes.
      */
-    public registroDeSolicitudesTablaDatos: RegistroDeSolicitudesTabla[] = [];
+    public registroDeSolicitudesTablaDatos: RegistroDeSolicitudesTabla[] = [
+       {
+    pais: 'México',
+    tratado: 'T-MEC',
+    origen: 'Nacional'
+  }
+    ];
 
 /**
    * Tipo de selección utilizado en la tabla, definido como casillas de verificación (checkbox).
@@ -216,54 +222,59 @@ export class TratadosComponent implements OnInit, OnDestroy {
    * 
    * @method agregarTratado
    */
-  // agregarTratado(): void {
-  //   if (this.formularioTratados.valid) {
-  //     this.registroDeSolicitudesTablaDatos.push({ ...this.talbleData });
-  //     this.formularioTratados.reset();
-  //   }
-  // }
+ 
 agregarTratado(): void {
   if (this.formularioTratados.valid) {
-    const paisId = this.formularioTratados.get('pais')?.value;
-    const tratadoId = this.formularioTratados.get('tratado')?.value;
-    const origenId = this.formularioTratados.get('origen')?.value;
+   
+    const PAIS_ID = this.formularioTratados.get('pais')?.value;
+    const TRATADO_ID = this.formularioTratados.get('tratado')?.value;
+    const ORIGEN_ID = this.formularioTratados.get('origen')?.value;
 
-    const paisDesc = this.paisCatalogo.find(item => item.id.toString() === paisId)?.descripcion || '';
-    const tratadoDesc = this.tratadoCatalogo.find(item => item.id.toString() === tratadoId)?.descripcion || '';
-    const origenDesc = this.origenCatalogo.find(item => item.id.toString() === origenId)?.descripcion || '';
+    
+    const PAIS_DESC = this.paisCatalogo.find(item => item.id.toString() === PAIS_ID)?.descripcion || '';
+    const TRATADO_DESC = this.tratadoCatalogo.find(item => item.id.toString() === TRATADO_ID)?.descripcion || '';
+    const ORIGENDESC = this.origenCatalogo.find(item => item.id.toString() === ORIGEN_ID)?.descripcion || '';
 
-    const rowData = {
-      pais: paisDesc,
-      tratado: tratadoDesc,
-      origen: origenDesc
+    const ROW_DATA = {
+      pais: PAIS_DESC,
+      tratado: TRATADO_DESC,
+      origen: ORIGENDESC
     };
 
-    if (this.selectedRowIndex !== null && this.selectedRowIndex > -1) {
-      this.registroDeSolicitudesTablaDatos[this.selectedRowIndex] = rowData;
-      this.selectedRowIndex = null;
-    } else {
-      this.registroDeSolicitudesTablaDatos.push(rowData);
-    }
+   if (this.isEditMode && this.selectedRowIndex !== null && this.selectedRowIndex > -1) {
+  
+  const UPDATED_ROW = { ...this.registroDeSolicitudesTablaDatos[this.selectedRowIndex] };
+  if (PAIS_DESC){ UPDATED_ROW.pais = PAIS_DESC}
+  if (TRATADO_DESC) {UPDATED_ROW.tratado = TRATADO_DESC}
+  if (ORIGENDESC) {UPDATED_ROW.origen = ORIGENDESC}
+  this.registroDeSolicitudesTablaDatos[this.selectedRowIndex] = UPDATED_ROW;
+
+  this.isEditMode = false;
+  this.selectedRowIndex = null;
+  this.selectedRows = [];
+} else {
+  
+  this.registroDeSolicitudesTablaDatos.push(ROW_DATA);
+}
     this.formularioTratados.reset();
   }
 }
 selectedRowIndex: number | null = null;
 
-
-modificarTratado() {
-  if (this.selectedRows && this.selectedRows.length === 1) {
-    const selected = this.selectedRows[0];
-    this.selectedRowIndex = this.registroDeSolicitudesTablaDatos.findIndex(
-      row => row === selected
-    );
-    // Find IDs from descriptions for dropdowns
-    const paisId = this.paisCatalogo.find(item => item.descripcion === selected.pais)?.id ?? '';
-    const tratadoId = this.tratadoCatalogo.find(item => item.descripcion === selected.tratado)?.id ?? '';
-    const origenId = this.origenCatalogo.find(item => item.descripcion === selected.origen)?.id ?? '';
+isEditMode: boolean = false;
+modificarTratado(): void {
+  if (this.selectedRowIndex !== null && this.selectedRowIndex > -1) {
+    this.isEditMode = true;
+    const SELECTED = this.registroDeSolicitudesTablaDatos[this.selectedRowIndex];
+    // Find the IDs from the catalogs using the description values
+    const PAIS_ID = this.paisCatalogo.find(item => item.descripcion === SELECTED.pais)?.id ?? '';
+    const TRATADO_ID = this.tratadoCatalogo.find(item => item.descripcion === SELECTED.tratado)?.id ?? '';
+    const ORIGEN_ID = this.origenCatalogo.find(item => item.descripcion === SELECTED.origen)?.id ?? '';
+    // Patch the form with the found IDs
     this.formularioTratados.patchValue({
-      pais: paisId,
-      tratado: tratadoId,
-      origen: origenId
+      pais: PAIS_ID,
+      tratado: TRATADO_ID,
+      origen: ORIGEN_ID
     });
   }
 }
@@ -346,25 +357,14 @@ talbleData: RegistroDeSolicitudesTabla = {
 selectedRows: RegistroDeSolicitudesTabla[] = [];
 
 onSeleccionChange(selected: RegistroDeSolicitudesTabla[]) {
-  this.selectedRows = selected;
   if (selected && selected.length === 1) {
-    // Find the index of the selected row
+    this.selectedRows = [selected[0]];
     this.selectedRowIndex = this.registroDeSolicitudesTablaDatos.findIndex(
       row => row === selected[0]
     );
-
-    // Find the IDs from the catalogs using the description values
-    const paisId = this.paisCatalogo.find(item => item.descripcion === selected[0].pais)?.id ?? '';
-    const tratadoId = this.tratadoCatalogo.find(item => item.descripcion === selected[0].tratado)?.id ?? '';
-    const origenId = this.origenCatalogo.find(item => item.descripcion === selected[0].origen)?.id ?? '';
-
-    // Patch the form with the found IDs
-    this.formularioTratados.patchValue({
-      pais: paisId,
-      tratado: tratadoId,
-      origen: origenId
-    });
+    // Do NOT patch the form here!
   } else {
+    this.selectedRows = [];
     this.selectedRowIndex = null;
     this.formularioTratados.reset();
   }
