@@ -2746,6 +2746,15 @@
     "numeroDeProcedimiento": "260507"
   },
   {
+     "id": 11101,
+    "tipoDeTramite": "Solicitud Procedure 11101",
+    "fecha": "2024-11-01",
+    "fechaActualizacion": "2024-11-07",
+    "diasTranscurridos": "4",
+    "departamento": "AGA",
+    "numeroDeProcedimiento": "11101"
+  },
+  {
     "id": 6403,
   "tipoDeTramite": "Solicitud de Permiso",
   "fecha": "2023-10-01",
