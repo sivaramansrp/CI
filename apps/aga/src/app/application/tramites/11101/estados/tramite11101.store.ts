@@ -7,6 +7,21 @@ import { StoreConfig } from '@datorama/akita';
  * Modelo de estado para el trámite 11101.
  */
 export interface Tramitenacionales11101State {
+  numeroderegistro: string;
+  NobmreDenominationRazonSocial: string;
+  rfctaxid: string;
+  Telefono: string;
+  correoelectronico: string;
+  entidadadfederativa: string;
+  alcadilamunicipio: string;
+  colonia: string;
+  codigopostal: string;
+  calle: string;
+  numeroletraexterior: string;
+  numeroletrainterior: string;
+  entrecalle: string;
+  ycalle: string;
+
   /**
    * Lista que indica el estado de cada sección del formulario (true si está activa, false si no).
    */
@@ -211,8 +226,21 @@ export function createTramiteState(): Tramitenacionales11101State {
     nombreDG: '',
     apellidoPaternoDG: '',
     apellidoMaternoDG: '',
-
-  };
+    numeroderegistro: '',
+    NobmreDenominationRazonSocial: '',
+    rfctaxid: '',
+    Telefono: '',
+    correoelectronico: '',
+    entidadadfederativa: '',
+    alcadilamunicipio: '',
+    colonia: '',
+    codigopostal: '',
+    calle: '',
+    numeroletraexterior: '',
+    numeroletrainterior: '',
+    entrecalle: '',
+    ycalle: ''
+};
 }
 
 /**
@@ -229,6 +257,160 @@ export class Tramite11101Store extends Store<Tramitenacionales11101State> {
     super(createTramiteState());
   }
 
+ /**
+ * Establece el número de registro.
+ * @param numeroderegistro - Número de registro a asignar al estado.
+ */
+public setNumeroderegistro(numeroderegistro: string): void {
+    this.update((state) => ({
+        ...state,
+        numeroderegistro,
+    }));
+}
+
+/**
+ * Establece el nombre, denominación o razón social.
+ * @param NobmreDenominationRazonSocial - Nombre, denominación o razón social a asignar al estado.
+ */
+public setNobmreDenominationRazonSocial(NobmreDenominationRazonSocial: string): void {
+    this.update((state) => ({
+        ...state,
+        NobmreDenominationRazonSocial,
+    }));
+}
+
+/**
+ * Establece el RFC o Tax ID.
+ * @param rfctaxid - RFC o identificación fiscal a asignar al estado.
+ */
+public setRfctaxid(rfctaxid: string): void {
+    this.update((state) => ({
+        ...state,
+        rfctaxid,
+    }));
+}
+
+/**
+ * Establece el número de teléfono.
+ * @param Telefono - Teléfono a asignar al estado.
+ */
+public setTelefono(Telefono: string): void {
+    this.update((state) => ({
+        ...state,
+        Telefono,
+    }));
+}
+
+/**
+ * Establece el correo electrónico.
+ * @param correoelectronico - Correo electrónico a asignar al estado.
+ */
+public setCorreoelectronico(correoelectronico: string): void {
+    this.update((state) => ({
+        ...state,
+        correoelectronico,
+    }));
+}
+
+/**
+ * Establece la entidad federativa.
+ * @param entidadadfederativa - Entidad federativa a asignar al estado.
+ */
+public setEntidadadfederativa(entidadadfederativa: string): void {
+    this.update((state) => ({
+        ...state,
+        entidadadfederativa,
+    }));
+}
+
+/**
+ * Establece la alcaldía o municipio.
+ * @param alcadilamunicipio - Alcaldía o municipio a asignar al estado.
+ */
+public setAlcadilamunicipio(alcadilamunicipio: string): void {
+    this.update((state) => ({
+        ...state,
+        alcadilamunicipio,
+    }));
+}
+
+/**
+ * Establece la colonia.
+ * @param colonia - Colonia a asignar al estado.
+ */
+public setColonia(colonia: string): void {
+    this.update((state) => ({
+        ...state,
+        colonia,
+    }));
+}
+
+/**
+ * Establece el código postal.
+ * @param codigopostal - Código postal a asignar al estado.
+ */
+public setCodigopostal(codigopostal: string): void {
+    this.update((state) => ({
+        ...state,
+        codigopostal,
+    }));
+}
+
+/**
+ * Establece la calle.
+ * @param calle - Calle a asignar al estado.
+ */
+public setCalle(calle: string): void {
+    this.update((state) => ({
+        ...state,
+        calle,
+    }));
+}
+
+/**
+ * Establece el número o letra exterior.
+ * @param numeroletraexterior - Número o letra exterior a asignar al estado.
+ */
+public setNumeroletraexterior(numeroletraexterior: string): void {
+    this.update((state) => ({
+        ...state,
+        numeroletraexterior,
+    }));
+}
+
+/**
+ * Establece el número o letra interior.
+ * @param numeroletrainterior - Número o letra interior a asignar al estado.
+ */
+public setNumeroletrainterior(numeroletrainterior: string): void {
+    this.update((state) => ({
+        ...state,
+        numeroletrainterior,
+    }));
+}
+
+/**
+ * Establece la calle entre la cual se encuentra.
+ * @param entrecalle - Calle entre la cual se encuentra el domicilio.
+ */
+public setEntrecalle(entrecalle: string): void {
+    this.update((state) => ({
+        ...state,
+        entrecalle,
+    }));
+}
+
+/**
+ * Establece la calle adicional (y calle).
+ * @param ycalle - Otra calle cercana al domicilio.
+ */
+public setYcalle(ycalle: string): void {
+    this.update((state) => ({
+        ...state,
+        ycalle,
+    }));
+}
+ 
   /**
    * Actualiza el estado de las secciones del formulario.
    * @param seccion - Lista que indica el estado de cada sección (true si está activa, false si no).

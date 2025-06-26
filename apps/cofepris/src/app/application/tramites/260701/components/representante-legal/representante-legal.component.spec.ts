@@ -40,11 +40,11 @@ describe('RepresentanteLegalComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('debería crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize the form with values from the query', () => {
+  it('debería inicializar el formulario con valores de la consulta', () => {
     expect(component.representante.value).toEqual({
       rfc: 'RFC123456',
       nombre: 'John',
@@ -53,7 +53,7 @@ describe('RepresentanteLegalComponent', () => {
     });
   });
 
-  it('should call setValoresStore when obtenerValor is invoked', () => {
+  it('debería llamar setValoresStore cuando se invoca obtenerValor', () => {
     jest.spyOn(component, 'setValoresStore');
     component.representante.get('rfc')?.setValue('RFC123456');
     component.obtenerValor();
@@ -75,7 +75,7 @@ describe('RepresentanteLegalComponent', () => {
     );
   });
 
-  it('should disable form fields after calling obtenerValor', () => {
+  it('debería deshabilitar los campos del formulario después de llamar obtenerValor', () => {
     component.representante.get('rfc')?.setValue('RFC123456');
     component.obtenerValor();
 
@@ -84,7 +84,7 @@ describe('RepresentanteLegalComponent', () => {
     expect(component.representante.get('apellidoMaterno')?.disabled).toBe(true);
   });
 
-  it('should call store methods with correct values in setValoresStore', () => {
+  it('debería llamar métodos del store con valores correctos en setValoresStore', () => {
     const form = component.representante;
     form.get('nombre')?.setValue('John');
     component.setValoresStore(form, 'nombre', 'setNombre');
@@ -92,7 +92,7 @@ describe('RepresentanteLegalComponent', () => {
     expect(tramite260701StoreMock.setNombre).toHaveBeenCalledWith('John');
   });
 
-  it('should complete destroyNotifier$ on component destruction', () => {
+  it('debería completar destroyNotifier$ al destruir el componente', () => {
     const destroySpy = jest.spyOn(component['destroyNotifier$'], 'complete');
     component.ngOnDestroy();
     expect(destroySpy).toHaveBeenCalled();
