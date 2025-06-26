@@ -1,34 +1,30 @@
 // @ts-nocheck
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Input, Output } from '@angular/core';
-import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { Injectable } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { By } from '@angular/platform-browser';
-import { Observable, of as observableOf, throwError } from 'rxjs';
+import { of as observableOf } from 'rxjs';
 
-import { Component } from '@angular/core';
 import { DatosDeLaSolicitudComponent } from './datos-de-la-solicitud.component';
-import { FormBuilder } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
-import { DatosSolicitudService } from '../../services/datos-solicitud.service';
 import { CatalogoSelectComponent, TablaDinamicaComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { AlertComponent } from 'ngx-bootstrap/alert';
 import { HttpClientModule } from '@angular/common/http';
 
 @Injectable()
 class MockRouter {
-  navigate() {};
+  navigate() { };
 }
 
 @Injectable()
 class MockDatosSolicitudService {
-  obtenerRespuestaPorUrl = function() {};
+  obtenerRespuestaPorUrl = function () { };
 }
 
 describe('DatosDeLaSolicitudComponent', () => {
-  let component: DatosDeLaSolicitudComponent;
+  let componente: DatosDeLaSolicitudComponent;
   let fixture: ComponentFixture<DatosDeLaSolicitudComponent>;
- beforeEach(async () => {
+  beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
         DatosDeLaSolicitudComponent,
@@ -53,9 +49,9 @@ describe('DatosDeLaSolicitudComponent', () => {
         },
       ],
     }).compileComponents();
-   fixture = TestBed.createComponent(DatosDeLaSolicitudComponent);
-    component = fixture.componentInstance;
-    component.datosSolicitudFormState = {
+    fixture = TestBed.createComponent(DatosDeLaSolicitudComponent);
+    componente = fixture.componentInstance;
+    componente.datosSolicitudFormState = {
       rfcSanitario: '',
       denominacionRazon: '',
       correoElectronico: '',
@@ -81,25 +77,24 @@ describe('DatosDeLaSolicitudComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should run #constructor()', async () => {
-    expect(component).toBeTruthy();
+  it('debería crear el componente', async () => {
+    expect(componente).toBeTruthy();
   });
 
-  it('should run #ngOnInit()', async () => {
-    component.crearDatosSolicitudForm = jest.fn();
-    component.actualizarDatosFormularioSolicitud = jest.fn();
-    component.datosSolicitudForm = component.datosSolicitudForm || {};
-    component.datosSolicitudForm.valueChanges = observableOf({});
-    component.datosSolicitudForm.getRawValue = jest.fn();
-    component.datasolicituActualizar = component.datasolicituActualizar || {};
-    component.datasolicituActualizar.emit = jest.fn();
-    component.ngOnInit();
-    expect(component.crearDatosSolicitudForm).toHaveBeenCalled();
+  it('debería ejecutar ngOnInit()', async () => {
+    componente.crearDatosSolicitudForm = jest.fn();
+    componente.actualizarDatosFormularioSolicitud = jest.fn();
+    componente.datosSolicitudForm = componente.datosSolicitudForm || {};
+    componente.datosSolicitudForm.valueChanges = observableOf({});
+    componente.datosSolicitudForm.getRawValue = jest.fn();
+    componente.datasolicituActualizar = componente.datasolicituActualizar || {};
+    componente.datasolicituActualizar.emit = jest.fn();
+    componente.ngOnInit();
+    expect(componente.crearDatosSolicitudForm).toHaveBeenCalled();
   });
 
-  it('should run #isValid()', async () => {
-
-    component.isValid({
+  it('debería ejecutar isValid()', async () => {
+    componente.isValid({
       controls: {
         campo: {
           errors: {},
@@ -109,209 +104,241 @@ describe('DatosDeLaSolicitudComponent', () => {
       errors: {},
       touched: {}
     }, {});
-
   });
 
-  it('should run #buscarRepresentanteRfc()', async () => {
-    component.datosSolicitudForm = component.datosSolicitudForm || {};
-    component.datosSolicitudForm.get = jest.fn().mockReturnValue({
+  it('debería ejecutar buscarRepresentanteRfc()', async () => {
+    componente.datosSolicitudForm = componente.datosSolicitudForm || {};
+    componente.datosSolicitudForm.get = jest.fn().mockReturnValue({
       value: {}
     });
-    component.datosSolicitudForm.patchValue = jest.fn();
-    component.abrirRfcModal = jest.fn();
-    component.buscarRepresentanteRfc();
-  
+    componente.datosSolicitudForm.patchValue = jest.fn();
+    componente.abrirRfcModal = jest.fn();
+    componente.buscarRepresentanteRfc();
   });
 
-  it('should emit scianSeleccionado when eliminarScian is called', () => {
-    jest.spyOn(component.scianSeleccionado, 'emit');
-    component.scianConfig = { datos: [{ clave: '123' }] } as any;
-    component.scianLista = [{ clave: '123' }] as any;
-    component.eliminarScian();
+  it('debería emitir scianSeleccionado al llamar eliminarScian', () => {
+    jest.spyOn(componente.scianSeleccionado, 'emit');
+    componente.scianConfig = { datos: [{ clave: '123' }] } as any;
+    componente.scianLista = [{ clave: '123' }] as any;
+    componente.eliminarScian();
   });
 
-  it('should run #aceptar()', async () => {
-
-    component.aceptar();
-
+  it('debería ejecutar aceptar()', async () => {
+    componente.aceptar();
   });
 
-  it('should run #eliminarMercancias()', async () => {
-    component.tablaMercanciasLista = component.tablaMercanciasLista || {};
-    component.tablaMercanciasLista.some = jest.fn().mockReturnValue([
+  it('debería ejecutar eliminarMercancias()', async () => {
+    componente.tablaMercanciasLista = componente.tablaMercanciasLista || {};
+    componente.tablaMercanciasLista.some = jest.fn().mockReturnValue([
       {
         "clasificacionProducto": {}
       }
     ]);
-    component.tablaMercanciasConfig = component.tablaMercanciasConfig || {};
-    component.tablaMercanciasConfig.datos = [
+    componente.tablaMercanciasConfig = componente.tablaMercanciasConfig || {};
+    componente.tablaMercanciasConfig.datos = [
       {
         "clasificacionProducto": {}
       }
     ];
-    component.mercanciasSeleccionado = component.mercanciasSeleccionado || {};
-    component.mercanciasSeleccionado.emit = jest.fn();
-    component.eliminarMercancias();
-
+    componente.mercanciasSeleccionado = componente.mercanciasSeleccionado || {};
+    componente.mercanciasSeleccionado.emit = jest.fn();
+    componente.eliminarMercancias();
   });
 
-  it('should run #irAAcciones()', async () => {
-    component.router = component.router || {};
-    component.router.navigate = jest.fn();
-    component.irAAcciones({});
-    expect(component.router.navigate).toHaveBeenCalled();
+  it('debería ejecutar irAAcciones()', async () => {
+    componente.router = componente.router || {};
+    componente.router.navigate = jest.fn();
+    componente.irAAcciones({});
+    expect(componente.router.navigate).toHaveBeenCalled();
   });
 
-  it('should run #agregarScian()', async () => {
-    component.scianConfig = component.scianConfig || {};
-    component.scianConfig.datos = {
-      concat: function() {}
+  it('debería ejecutar agregarScian()', async () => {
+    componente.scianConfig = componente.scianConfig || {};
+    componente.scianConfig.datos = {
+      concat: function () { }
     };
-    component.scianSeleccionado = component.scianSeleccionado || {};
-    component.scianSeleccionado.emit = jest.fn();
-    component.irAAcciones = jest.fn();
-    component.agregarScian();
-    expect(component.scianSeleccionado.emit).toHaveBeenCalled();
-    expect(component.irAAcciones).toHaveBeenCalled();
+    componente.scianSeleccionado = componente.scianSeleccionado || {};
+    componente.scianSeleccionado.emit = jest.fn();
+    componente.irAAcciones = jest.fn();
+    componente.agregarScian();
+    expect(componente.scianSeleccionado.emit).toHaveBeenCalled();
+    expect(componente.irAAcciones).toHaveBeenCalled();
   });
 
-  it('should run #agregarMercancias()', async () => {
-    component.tablaMercanciasConfig = component.tablaMercanciasConfig || {};
-    component.tablaMercanciasConfig.datos = {
-      concat: function() {}
+  it('debería ejecutar agregarMercancias()', async () => {
+    componente.tablaMercanciasConfig = componente.tablaMercanciasConfig || {};
+    componente.tablaMercanciasConfig.datos = {
+      concat: function () { }
     };
-    component.mercanciasSeleccionado = component.mercanciasSeleccionado || {};
-    component.mercanciasSeleccionado.emit = jest.fn();
-    component.irAAcciones = jest.fn();
-    component.agregarMercancias();
-    expect(component.mercanciasSeleccionado.emit).toHaveBeenCalled();
-    expect(component.irAAcciones).toHaveBeenCalled();
+    componente.mercanciasSeleccionado = componente.mercanciasSeleccionado || {};
+    componente.mercanciasSeleccionado.emit = jest.fn();
+    componente.irAAcciones = jest.fn();
+    componente.agregarMercancias();
+    expect(componente.mercanciasSeleccionado.emit).toHaveBeenCalled();
+    expect(componente.irAAcciones).toHaveBeenCalled();
   });
 
-  it('should run #modificarDatos()', async () => {
-    component.tablaMercanciasLista = component.tablaMercanciasLista || {};
-    component.datosDeTablaSeleccionados = component.datosDeTablaSeleccionados || {};
-    component.datosDeTablaSeleccionados.emit = jest.fn();
-    component.irAAcciones = jest.fn();
-    component.modificarDatos();
+  it('debería ejecutar modificarDatos()', async () => {
+    componente.tablaMercanciasLista = componente.tablaMercanciasLista || {};
+    componente.datosDeTablaSeleccionados = componente.datosDeTablaSeleccionados || {};
+    componente.datosDeTablaSeleccionados.emit = jest.fn();
+    componente.irAAcciones = jest.fn();
+    componente.modificarDatos();
   });
 
-  it('should run #mostrarColapsable()', async () => {
-    component.datosDeTablaSeleccionados = component.datosDeTablaSeleccionados || {};
-    component.datosDeTablaSeleccionados.emit = jest.fn();
-    component.mostrarColapsable({});
+  it('debería ejecutar mostrarColapsable()', async () => {
+    componente.datosDeTablaSeleccionados = componente.datosDeTablaSeleccionados || {};
+    componente.datosDeTablaSeleccionados.emit = jest.fn();
+    componente.mostrarColapsable({});
   });
 
-  it('should run #cambioDeEstado()', async () => {
-    component.datosSolicitudForm = component.datosSolicitudForm || {};
-    component.datosSolicitudForm.get = jest.fn().mockReturnValue({
-      setValue: function() {}
+  it('debería ejecutar cambioDeEstado()', async () => {
+    componente.datosSolicitudForm = componente.datosSolicitudForm || {};
+    componente.datosSolicitudForm.get = jest.fn().mockReturnValue({
+      setValue: function () { }
     });
-    component.cambioDeEstado({});
+    componente.cambioDeEstado({});
   });
 
-  it('should run #esCampoRequerido()', async () => {
-    component.elementosRequeridos = component.elementosRequeridos || {};
-    component.elementosRequeridos.includes = jest.fn();
-    component.esCampoRequerido({});
+  it('debería ejecutar esCampoRequerido()', async () => {
+    componente.elementosRequeridos = componente.elementosRequeridos || {};
+    componente.elementosRequeridos.includes = jest.fn();
+    componente.esCampoRequerido({});
   });
 
-  it('should run #mostrarCamposDelProcedimiento()', async () => {
-    component.elementosAnadidos = component.elementosAnadidos || {};
-    component.elementosAnadidos.includes = jest.fn();
-    component.mostrarCamposDelProcedimiento({});
+  it('debería ejecutar mostrarCamposDelProcedimiento()', async () => {
+    componente.elementosAnadidos = componente.elementosAnadidos || {};
+    componente.elementosAnadidos.includes = jest.fn();
+    componente.mostrarCamposDelProcedimiento({});
   });
 
-  it('should run #cambioAviso()', async () => {
-    component.datosSolicitudForm = component.datosSolicitudForm || {};
-    component.datosSolicitudForm.get = jest.fn().mockReturnValue({
-      updateValueAndValidity: function() {},
-      setValidators: function() {},
-      enable: function() {},
-      disable: function() {},
-      clearValidators: function() {}
+  it('debería ejecutar cambioAviso()', async () => {
+    componente.datosSolicitudForm = componente.datosSolicitudForm || {};
+    componente.datosSolicitudForm.get = jest.fn().mockReturnValue({
+      updateValueAndValidity: function () { },
+      setValidators: function () { },
+      enable: function () { },
+      disable: function () { },
+      clearValidators: function () { }
     });
-    component.cambioAviso({
+    componente.cambioAviso({
       target: {
         checked: {}
       }
     });
   });
 
-  it('should run #cambioLicenciaSanitaria()', async () => {
-    component.datosSolicitudForm = component.datosSolicitudForm || {};
-    component.datosSolicitudForm.get = jest.fn().mockReturnValue({
-      enable: function() {},
-      disable: function() {}
+  it('debería ejecutar cambioLicenciaSanitaria()', async () => {
+    componente.datosSolicitudForm = componente.datosSolicitudForm || {};
+    componente.datosSolicitudForm.get = jest.fn().mockReturnValue({
+      enable: function () { },
+      disable: function () { }
     });
-    component.cambioLicenciaSanitaria({
+    componente.cambioLicenciaSanitaria({
       target: {
         value: {}
       }
     });
   });
 
-  it('should run #cambireCorreoElectronico()', async () => {
-    component.datosSolicitudForm = component.datosSolicitudForm || {};
-    component.datosSolicitudForm.get = jest.fn().mockReturnValue({
-      setValue: function() {},
+  it('debería ejecutar cambireCorreoElectronico()', async () => {
+    componente.datosSolicitudForm = componente.datosSolicitudForm || {};
+    componente.datosSolicitudForm.get = jest.fn().mockReturnValue({
+      setValue: function () { },
       value: {}
     });
-    component.cambireCorreoElectronico();
+    componente.cambireCorreoElectronico();
   });
 
-  it('should run #abrirModal()', async () => {
-    component.alternarControlesDeFormulario = jest.fn();
-    component.abrirModal();
+  it('debería ejecutar abrirModal()', async () => {
+    componente.alternarControlesDeFormulario = jest.fn();
+    componente.abrirModal();
   });
 
-  it('should run #eliminarModal()', async () => {
-    component.scianLista = component.scianLista || {};
-    component.eliminarModal();
-
+  it('debería ejecutar eliminarModal()', async () => {
+    componente.scianLista = componente.scianLista || {};
+    componente.eliminarModal();
   });
 
-  it('should run #getEliminarScianModal()', async () => {
-    component.eliminarScian = jest.fn();
-    component.nuevaNotificacion = component.nuevaNotificacion || {};
-    component.nuevaNotificacion.cerrar = 'cerrar';
-    component.getEliminarScianModal({});
+  it('debería ejecutar getEliminarScianModal()', async () => {
+    componente.eliminarScian = jest.fn();
+    componente.nuevaNotificacion = componente.nuevaNotificacion || {};
+    componente.nuevaNotificacion.cerrar = 'cerrar';
+    componente.getEliminarScianModal({});
   });
 
-  it('should run #controlYaDeshabilitado()', async () => {
-
-    component.controlYaDeshabilitado({});
-
+  it('debería ejecutar controlYaDeshabilitado()', async () => {
+    componente.controlYaDeshabilitado({});
   });
 
-  it('should run #alternarControlesDeFormulario()', async () => {
-    component.datosSolicitudForm = component.datosSolicitudForm || {};
-    component.datosSolicitudForm.controls = 'controls';
-    component.datosSolicitudForm.get = jest.fn().mockReturnValue({
-      disable: function() {},
-      enable: function() {}
+  it('debería ejecutar alternarControlesDeFormulario()', async () => {
+    componente.datosSolicitudForm = componente.datosSolicitudForm || {};
+    componente.datosSolicitudForm.controls = 'controls';
+    componente.datosSolicitudForm.get = jest.fn().mockReturnValue({
+      disable: function () { },
+      enable: function () { }
     });
-    component.controlYaDeshabilitado = jest.fn();
-    component.alternarControlesDeFormulario({});
+    componente.controlYaDeshabilitado = jest.fn();
+    componente.alternarControlesDeFormulario({});
   });
 
-  it('should run #abrirRfcModal()', async () => {
-
-    component.abrirRfcModal();
-
+  it('debería ejecutar abrirRfcModal()', async () => {
+    componente.abrirRfcModal();
   });
 
-  it('should run #eliminarPedimento()', async () => {
-    component.pedimentos = component.pedimentos || {};
-    component.pedimentos.splice = jest.fn();
-    component.eliminarPedimento({});
+  it('debería ejecutar eliminarPedimento()', async () => {
+    componente.pedimentos = componente.pedimentos || {};
+    componente.pedimentos.splice = jest.fn();
+    componente.eliminarPedimento({});
   });
 
-  it('should run #ngOnDestroy()', async () => {
-    component.destroyNotifier$ = component.destroyNotifier$ || {};
-    component.destroyNotifier$.next = jest.fn();
-    component.destroyNotifier$.complete = jest.fn();
-    component.ngOnDestroy();
+  it('debería NO emitir en scianSeleccionado si no existe al eliminarScian', () => {
+    componente.scianConfig = { datos: [{ clave: '1' }] } as any;
+    componente.scianLista = [{ clave: '2' }] as any;
+    componente.scianSeleccionado = undefined as any;
+    expect(() => componente.eliminarScian()).not.toThrow();
+  });
+
+  it('debería mostrar alerta si tablaMercanciasLista está vacía en eliminarMercancias', () => {
+    componente.tablaMercanciasLista = [];
+    componente.tablaMercanciasConfig = { datos: [{ clasificacionProducto: 'A' }] } as any;
+    componente.eliminarMercancias();
+    expect(componente.mostrarAlerta).toBe(true);
+  });
+
+  it('debería mostrar alerta si tablaMercanciasLista está vacía en modificarDatos', () => {
+    componente.tablaMercanciasLista = [];
+    componente.modificarDatos();
+    expect(componente.mostrarAlerta).toBe(true);
+  });
+
+  it('debería NO emitir en mercanciasSeleccionado si no existe al eliminarMercancias', () => {
+    componente.tablaMercanciasLista = [{ clasificacionProducto: 'A' }] as any;
+    componente.tablaMercanciasConfig = { datos: [{ clasificacionProducto: 'A' }] } as any;
+    componente.mercanciasSeleccionado = undefined as any;
+    expect(() => componente.eliminarMercancias()).not.toThrow();
+  });
+
+  it('debería NO emitir en scianSeleccionado si no existe al agregarScian', () => {
+    componente.scianConfig = { datos: [], concat: Array.prototype.concat } as any;
+    componente.scianLista = [{ clave: 'A' }] as any;
+    componente.scianSeleccionado = undefined as any;
+    componente.irAAcciones = jest.fn();
+    expect(() => componente.agregarScian()).not.toThrow();
+  });
+
+  it('debería NO eliminar pedimento si borrar es false', () => {
+    componente.pedimentos = [{}, {}] as any;
+    componente.elementoParaEliminar = 1;
+    componente.eliminarPedimento(false);
+    expect(componente.pedimentos.length).toBe(2);
+  });
+
+  it('debería ejecutar ngOnDestroy()', async () => {
+    componente.destroyNotifier$ = componente.destroyNotifier$ || {};
+    componente.destroyNotifier$.next = jest.fn();
+    componente.destroyNotifier$.complete = jest.fn();
+    componente.ngOnDestroy();
   });
 
 });

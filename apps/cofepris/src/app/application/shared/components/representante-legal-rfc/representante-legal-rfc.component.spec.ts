@@ -50,11 +50,11 @@ describe('RepresentanteLegalRfcComponent', () => {
     component = new RepresentanteLegalRfcComponent(fb, mockStore, mockQuery,mockConsultaioQuery);
   });
 
-  it('should create the component', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize the form and state on ngOnInit', () => {
+  it('debe inicializar el formulario y el estado en ngOnInit', () => {
     component.ngOnInit();
 
     expect(component.solicitudState).toEqual({ rfc: 'ABC123456789' });
@@ -63,7 +63,7 @@ describe('RepresentanteLegalRfcComponent', () => {
     expect(component.representante.get('nombre')?.disabled).toBe(true);
   });
 
-  it('should patch form values in obtenerValor', () => {
+  it('debe actualizar los valores del formulario en obtenerValor', () => {
     component.ngOnInit();
     component.obtenerValor();
 
@@ -72,7 +72,7 @@ describe('RepresentanteLegalRfcComponent', () => {
     expect(component.representante.get('apellidoMaterno')?.value).toBe('Materno');
   });
 
-  it('should call the correct store method in setValoresStore', () => {
+  it('debe llamar el método correcto del store en setValoresStore', () => {
     component.ngOnInit();
     component.representante.patchValue({ nombre: 'John' });
 
@@ -80,7 +80,7 @@ describe('RepresentanteLegalRfcComponent', () => {
     expect(mockStore.setNombre).toHaveBeenCalledWith('John');
   });
 
-  it('should clean up observables on ngOnDestroy', () => {
+  it('debe limpiar los observables en ngOnDestroy', () => {
     const destroySpy = jest.spyOn(component['destroyNotifier$'], 'next');
     const completeSpy = jest.spyOn(component['destroyNotifier$'], 'complete');
 
@@ -90,7 +90,7 @@ describe('RepresentanteLegalRfcComponent', () => {
     expect(completeSpy).toHaveBeenCalled();
   });
 
-   it('should set esFormularioSoloLectura from ConsultaioQuery and configure form on ngOnInit', () => {
+  it('debe establecer esFormularioSoloLectura desde ConsultaioQuery y configurar el formulario en ngOnInit', () => {
     const configurarSpy = jest.spyOn(component, 'configurarGrupoForm');
 
     component.ngOnInit();
@@ -98,7 +98,7 @@ describe('RepresentanteLegalRfcComponent', () => {
     expect(component.esFormularioSoloLectura).toBe(true);
     expect(configurarSpy).toHaveBeenCalled();
   });
-   test('should disable representante FormGroup when esFormularioSoloLectura is true', () => {
+   test('debe deshabilitar el FormGroup representante cuando esFormularioSoloLectura es verdadero', () => {
     component.esFormularioSoloLectura = true;
 
     component.configurarGrupoForm();
@@ -106,7 +106,7 @@ describe('RepresentanteLegalRfcComponent', () => {
     expect(component.representante.disabled).toBe(true);
   });
 
-  test('should enable representante FormGroup when esFormularioSoloLectura is false', () => {
+  test('debe habilitar el FormGroup representante cuando esFormularioSoloLectura es falso', () => {
     component.esFormularioSoloLectura = false;
 
     component.configurarGrupoForm();

@@ -11,8 +11,7 @@
                 formControlName="nombreDeLaMateriaPrima"
                 class="form-control"
                 id="nombreDeLaMateriaPrima"
-                [placeholder]="'Nombre de la materia prima'"
-                (change)="setValoresStore(materiaPrimaForm,'nombreDeLaMateriaPrima', 'setNombreDeLaMateriaPrima')"
+                (change)="setValoresStore(materiaPrimaForm,'nombreDeLaMateriaPrima')"
               />
               <div *ngIf="materiaPrimaForm.get('nombreDeLaMateriaPrima')?.invalid && (materiaPrimaForm.get('nombreDeLaMateriaPrima')?.dirty || materiaPrimaForm.get('nombreDeLaMateriaPrima')?.touched)">
                   <div *ngIf="materiaPrimaForm.get('nombreDeLaMateriaPrima')?.errors?.['required']">
@@ -30,9 +29,8 @@
                 formControlName="cantidad"
                 class="form-control"
                 id="cantidad"
-                [placeholder]="'1'"
                 (blur)="obtenerLetraCantidad(materiaPrimaForm.get('cantidad')?.value)"
-                (change)="setValoresStore(materiaPrimaForm,'cantidad', 'setcantidad')"
+                (change)="setValoresStore(materiaPrimaForm,'cantidad')"
               />
               <div *ngIf="materiaPrimaForm.get('cantidad')?.invalid && (materiaPrimaForm.get('cantidad')?.dirty || materiaPrimaForm.get('cantidad')?.touched)">
                   <div *ngIf="materiaPrimaForm.get('cantidad')?.errors?.['required']">
@@ -52,27 +50,29 @@
                 formControlName="cantidadEnLetra"
                 class="form-control"
                 id="cantidadEnLetra"
-                [placeholder]="'UNO '"
+                (change)="setValoresStore(materiaPrimaForm,'cantidadEnLetra')"
               />
             </div>
           </div>
           <div class="col-md-4">
-            <app-catalogo-select  (change)="cambiaUnidadMedida()" 
+            <app-catalogo-select  (change)="setValoresStore(materiaPrimaForm, 'unidadMedidaComercial')" 
              formControlName="unidadMedidaComercial" 
              [catalogo]="comboUnidadMedida" 
              [label]="'Unidad de medida'"
-             [required]="true"></app-catalogo-select>
+             [required]="true"
+             [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
           </div>
         </div>
     
         <div class="row mt-3">
           <div class="col-md-12">
             <div class="form-group">
-              <app-catalogo-select  (change)="cambiaCapituloFraccion()"  
+              <app-catalogo-select  (change)="setValoresStore(materiaPrimaForm, 'capituloFraccion')"  
                formControlName="capituloFraccion"
                [catalogo]="comboCapituloFraccion" 
                [label]="'Capítulo'"
-               [required]="true">
+               [required]="true"
+               [isDisabled]="esFormularioSoloLectura">
               </app-catalogo-select>
             </div>
           </div>
@@ -81,11 +81,12 @@
         <div class="row mt-3">
           <div class="col-md-12">
             <div class="form-group">
-              <app-catalogo-select  (change)="cambiaPartidaFraccion()"  
+              <app-catalogo-select  (change)="setValoresStore(materiaPrimaForm, 'partidaFraccion')" 
                formControlName="partidaFraccion" 
                [catalogo]="comboPartidaFraccion" 
                [label]="'Partida'"
-               [required]="true">
+               [required]="true"
+               [isDisabled]="esFormularioSoloLectura">
               </app-catalogo-select>
             </div>
           </div>
@@ -94,30 +95,37 @@
         <div class="row mt-3">
           <div class="col-md-4">
             <div class="form-group">
-              <app-catalogo-select  (change)="cambiaSubPartidaFraccion()"  
+              <app-catalogo-select  (change)="setValoresStore(materiaPrimaForm, 'subPartidaFraccion')"   
                formControlName="subPartidaFraccion" 
                [catalogo]="comboSubPartidaFraccion" 
                [label]="'Sub partida'"
-               [required]="true">
+               [required]="true"
+               [isDisabled]="esFormularioSoloLectura">
              </app-catalogo-select>
             </div>
           </div>
           <div class="col-md-8">
             <div class="form-group">
-              <app-catalogo-select  (change)="cambiaFraccion()"  
+              <app-catalogo-select (change)="setValoresStore(materiaPrimaForm, 'fraccion')"   
                formControlName="fraccion" 
                [catalogo]="comboFraccionArancelariaParametros" 
                [label]="'Fracción arancelaria'"
-               [required]="true">
+               [required]="true"
+               [isDisabled]="esFormularioSoloLectura">
           </app-catalogo-select>
         </div>
       </div>
     </div>
 
-    <div class="row mt-3">
-      <div class="col-md-12">
-        <btn-continuar [datos]="datosPasosGuardar"></btn-continuar>
+
+     <div class="row mb-5 mt-5">
+        <div class="col-md-6 col-sm-6"></div>
+        <div class="col-md-6 col-sm-6 text-end">
+          <div class="btn-group">
+            <button class="btn btn-danger me-2" type="button" [disabled]="esFormularioSoloLectura">Cancelar</button>
+            <button class="btn btn-primary" type="button" [disabled]="esFormularioSoloLectura">Guardar</button>
+          </div>
+        </div>
       </div>
-    </div>
   </form>
 </div>
