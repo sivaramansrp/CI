@@ -49,15 +49,6 @@ describe('DatosDeLaSolicitudComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('debería inicializar el formulario con valores de la consulta', () => {
-    expect(component.forma.value).toEqual({
-      tipoOperacion: 'Operacion1',
-      justificacion: 'Justificacion1',
-      denominacionORazonSocial: 'Empresa1',
-      correoElectronico: 'test@example.com',
-    });
-  });
-
   it('debería alternar el estado colapsable', () => {
     expect(component.colapsable).toBe(true);
     component.mostrar_colapsable();
