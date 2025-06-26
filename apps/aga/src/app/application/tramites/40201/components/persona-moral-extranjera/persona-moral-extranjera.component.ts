@@ -1,15 +1,17 @@
+import { Catalogo, CatalogoSelectComponent, TablaDinamicaComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, map, merge, takeUntil } from 'rxjs';
-import { CommonModule } from '@angular/common';
-
-import { Catalogo, CatalogoSelectComponent, TablaDinamicaComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Tramite40201Store, TransportacionMaritima40201State } from '../../../../core/estados/tramites/tramite40201.store';
 import { CONFIGURACION_PARA_PME_ENCABEZADO_DE_TABLA } from '../../constantes/transportacion-maritima.enum';
+import { CommonModule } from '@angular/common';
+import { ConsultaioQuery} from '@ng-mf/data-access-user';
 import { PersonaMoralExtranjeraForm } from '../../models/transportacion-maritima.model';
 import { TEXTOS } from '../../constantes/transportacion-maritima.enum';
+import { TablaSeleccion } from '@ng-mf/data-access-user';
 import { Tramite40201Query } from '../../../../core/queries/tramite40201.query';
 import { TransportacionMaritimaService } from '../../services/transportacion-maritima/transportacion-maritima.service';
+
 
 /**
  * Componente para la captura de datos de persona moral extranjera.
@@ -72,7 +74,14 @@ export class PersonaMoralExtranjeraComponent implements OnInit, OnDestroy {
    * Subject para destruir notificador.
    */
   private destruirNotificador$: Subject<void> = new Subject();
-
+  /**
+   * Tabla de selección para la persona moral extranjera.
+   */
+  TablaSeleccion = TablaSeleccion;
+   /**
+   * Indica si el formulario está en modo solo lectura
+   */
+   esFormularioSoloLectura: boolean = false;
   /**
    * Constructor del componente.
    * @param {FormBuilder} fb - Servicio para construir formularios reactivos.
@@ -85,8 +94,17 @@ export class PersonaMoralExtranjeraComponent implements OnInit, OnDestroy {
     private tramite40201Store: Tramite40201Store,
     private tramite40201Query: Tramite40201Query,
     private transportacionMaritimaService: TransportacionMaritimaService,
+    private consultaioQuery: ConsultaioQuery
   ) {
-    // El constructor se utiliza para la inyección de dependencias
+   this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destruirNotificador$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
   }
 
   /**
@@ -102,12 +120,10 @@ export class PersonaMoralExtranjeraComponent implements OnInit, OnDestroy {
         map((seccionState) => {
           this.transportacionMaritimaState = seccionState;
           this.personaMoralExtranjeraTabla = seccionState.personaMoralExtranjeraTabla || [];
+          this.inicializarEstadoFormulario();
         })
       )
       .subscribe();
-
-    // Inicializar el formulario principal
-    this.crearAgregarPMNForm();
 
     this.paisSeleccion();
   }
@@ -117,81 +133,82 @@ export class PersonaMoralExtranjeraComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   crearAgregarPMNForm(): void {
+     const STATE = this.transportacionMaritimaState || {} as TransportacionMaritima40201State;
     this.personaMoralExtranjeraForm = this.fb.group({
       denominacionPME: [
-        this.transportacionMaritimaState.denominacionPME,
+        STATE.denominacionPME,
         [
           Validators.required,
           Validators.maxLength(254)
         ]
       ],
       correoPME: [
-        this.transportacionMaritimaState.correoPME,
+        STATE.correoPME,
         [
           Validators.required,
           Validators.maxLength(320)
         ]
       ],
       paisPME: [
-        this.transportacionMaritimaState.paisPME,
+        STATE.paisPME,
       ],
       codigoPostalPME: [
-        this.transportacionMaritimaState.codigoPostalPME,
+       STATE.codigoPostalPME,
         [
           Validators.required,
           Validators.maxLength(12)
         ]
       ],
       ciudadPME: [
-        this.transportacionMaritimaState.ciudadPME,
+       STATE.ciudadPME,
         [
           Validators.required,
           Validators.maxLength(100)
         ]
       ],
       estadoPME: [
-        this.transportacionMaritimaState.estadoPME,
+        STATE.estadoPME,
         [
           Validators.required,
           Validators.maxLength(200)
         ]
       ],
       callePME: [
-        this.transportacionMaritimaState.callePME,
+        STATE.callePME,
         [
           Validators.required,
           Validators.maxLength(100)
         ]
       ],
       numeroExteriorPME: [
-        this.transportacionMaritimaState.numeroExteriorPME,
+        STATE.numeroExteriorPME,
         [
           Validators.required,
           Validators.maxLength(55)
         ]
       ],
       numeroInteriorPME: [
-        this.transportacionMaritimaState.numeroInteriorPME,
+        STATE.numeroInteriorPME,
         [
           Validators.maxLength(55)
         ]
       ],
       nombreDG: [
-        this.transportacionMaritimaState.nombreDG,
+        STATE.nombreDG,
         [
           Validators.required,
           Validators.maxLength(28)
         ]
       ],
       apellidoPaternoDG: [
-        this.transportacionMaritimaState.apellidoPaternoDG,
+        STATE.apellidoPaternoDG,
         [
           Validators.required,
           Validators.maxLength(20)
         ]
       ],
       apellidoMaternoDG: [
-        this.transportacionMaritimaState.apellidoMaternoDG,
+       STATE.apellidoMaternoDG,
         [
           Validators.maxLength(20)
         ]
@@ -199,6 +216,32 @@ export class PersonaMoralExtranjeraComponent implements OnInit, OnDestroy {
     });
   }
 
+  
+  /**
+   * Inicializa el estado del formulario.
+   * Si el formulario es de solo lectura, guarda los datos del formulario.
+   * Si no, crea el formulario reactivo.
+   */
+   inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.crearAgregarPMNForm();
+    }
+  }
+/**
+   * Guarda los datos del formulario y habilita o deshabilita el formulario según el estado de solo lectura.
+   * @returns {void}
+   * @description Este método se utiliza para guardar los datos del formulario y habilitar o deshabilitar el formulario según el estado de solo lectura.
+   */
+  guardarDatosFormulario(): void {
+    this.crearAgregarPMNForm();
+    if (this.esFormularioSoloLectura) {
+      this.personaMoralExtranjeraForm.disable();
+    } else {
+      this.personaMoralExtranjeraForm.enable();
+    }
+}
   /**
    * Inicializa los catálogos necesarios para el formulario.
    */
@@ -225,7 +268,8 @@ export class PersonaMoralExtranjeraComponent implements OnInit, OnDestroy {
    */
   paisSeleccion(): void {
     const PAIS = this.personaMoralExtranjeraForm.get('paisPME')?.value;
-    this.tramite40201Store.setPaisPME(PAIS);
+    this.tramite40201Store.setTramite40201State({
+      paisPME: PAIS});
   }
 
   /**
@@ -248,30 +292,21 @@ export class PersonaMoralExtranjeraComponent implements OnInit, OnDestroy {
       domicilioPME: `${personaMoralExtranjeraFormDatos.callePME} ${personaMoralExtranjeraFormDatos.numeroExteriorPME} ${personaMoralExtranjeraFormDatos.estadoPME} ${PAIS} ${personaMoralExtranjeraFormDatos.codigoPostalPME}`.trim(),
     });
     this.personaMoralExtranjeraTabla = NUEVO_CUERPO_TABLA;
-    this.tramite40201Store.setPersonaMoralExtranjeraTabla(this.personaMoralExtranjeraTabla);
+      this.tramite40201Store.setTramite40201State({ personaMoralExtranjeraTabla: NUEVO_CUERPO_TABLA });
     this.limpiarDatosPME();
     this.cerrarModal();
   }
 
-  /**
-   * Actualiza el estado del formulario y los valores en el store.
-   * @returns {void}
-   */
-  actualizarFormularioState(): void {
-    this.setValoresStore(this.personaMoralExtranjeraForm, 'paisPME', 'setPaisPME');
-    this.setValoresStore(this.personaMoralExtranjeraForm, 'codigoPostalPME', 'setCodigoPostalPME');
-    this.setValoresStore(this.personaMoralExtranjeraForm, 'ciudadPME', 'setCiudadPME');
-    this.setValoresStore(this.personaMoralExtranjeraForm, 'estadoPME', 'setEstadoPME');
-    this.setValoresStore(this.personaMoralExtranjeraForm, 'callePME', 'setCallePME');
-    this.setValoresStore(this.personaMoralExtranjeraForm, 'numeroExteriorPME', 'setNumeroExteriorPME');
-    this.setValoresStore(this.personaMoralExtranjeraForm, 'numeroInteriorPME', 'setNumeroInteriorPME');
-    this.setValoresStore(this.personaMoralExtranjeraForm, 'nombreDG', 'setNombreDG');
-    this.setValoresStore(this.personaMoralExtranjeraForm, 'apellidoPaternoDG', 'setApellidoPaternoDG');
-    this.setValoresStore(this.personaMoralExtranjeraForm, 'apellidoMaternoDG', 'setApellidoMaternoDG');
-    this.setValoresStore(this.personaMoralExtranjeraForm, 'denominacionPME', 'setDenominacionPME');
-    this.setValoresStore(this.personaMoralExtranjeraForm, 'correoPME', 'setCorreoPME');
-  }
 
+  /**
+   * Actualiza el estado del formulario en el store de tramite40201.
+   * @returns {void}
+   * @description Este método se utiliza para actualizar el estado del formulario en el store de tramite40201.
+   */
+actualizarFormularioState(): void {
+  const VALUES = this.personaMoralExtranjeraForm.value;
+  this.tramite40201Store.setTramite40201State(VALUES);
+}
   /**
    * Limpia los datos del formulario de persona moral extranjera.
    * @returns {void}
@@ -300,10 +335,10 @@ export class PersonaMoralExtranjeraComponent implements OnInit, OnDestroy {
    * @param {string} metodoNombre - El nombre del método en el store que se va a invocar con el valor del campo.
    * @returns {void}
    */
-  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite40201Store): void {
-    const VALOR = form.get(campo)?.value;
-    (this.tramite40201Store[metodoNombre] as (value: unknown) => void)(VALOR);
-  }
+   setValoresStore(form: FormGroup, campo: keyof TransportacionMaritima40201State): void {
+  const VALOR = form.get(campo)?.value;
+  this.tramite40201Store.setTramite40201State({ [campo]: VALOR });
+}
 
   /**
    * Se ejecuta al destruir el componente.

@@ -7,7 +7,7 @@
             <div class="col-md-12">
                 <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'vertical'"
                     formControlName="tipoDeEmpresaOpcion"
-                    (change)="setValoresStore(tipoDeEmpresa,'tipoDeEmpresaOpcion', 'setTipoDeEmpresaOpcion')"
+                    (change)="setValoresStore(tipoDeEmpresa,'tipoDeEmpresaOpcion')"
                     (valueChange)="enCambioDeValor($event)"></app-input-radio>
             </div>
         </div>
@@ -21,14 +21,14 @@
                         title="{{ TEXTOS.RFC_TITULO_TOOLTIP }}" data-bs-toggle="tooltip"></span></label>
                 <input type="text" class="form-control" id="buscarPorRFCNa" maxlength="20"
                     formControlName="buscarPorRFCNa"
-                    (change)="setValoresStore(tipoDeEmpresaNacional,'buscarPorRFCNa', 'setBuscarPorRFCNa')">
+                    (change)="setValoresStore(tipoDeEmpresaNacional,'buscarPorRFCNa')">
             </div>
             <div class="form-group mt-4">
                 <label class="form-label" for="buscarPorDenominacionNa">Nombre, denominación o razón
                     social:</label>
                 <input type="text" class="form-control" name="buscarPorDenominacionNa"
                     formControlName="buscarPorDenominacionNa" maxlength="50" id="buscarPorDenominacionNa"
-                    (change)="setValoresStore(tipoDeEmpresaNacional,'buscarPorDenominacionNa', 'setBuscarPorDenominacionNa')">
+                    (change)="setValoresStore(tipoDeEmpresaNacional,'buscarPorDenominacionNa')">
             </div>
             <div class="form-group mt-4">
                 <label class="form-label" for="folioCaatBusquedaNa">CAAT: <span class="bi bi-question-circle-fill"
@@ -36,7 +36,7 @@
                         data-bs-toggle="tooltip"></span></label>
                 <input type="text" class="form-control" name="folioCaatBusquedaNa" formControlName="folioCaatBusquedaNa"
                     maxlength="50" id="folioCaatBusquedaNa"
-                    (change)="setValoresStore(tipoDeEmpresaNacional,'folioCaatBusquedaNa', 'setFolioCaatBusquedaNa')">
+                    (change)="setValoresStore(tipoDeEmpresaNacional,'folioCaatBusquedaNa')">
             </div>
         </div>
         <div class="col-md-offset-7 col-md-1 mt-5">
@@ -55,7 +55,7 @@
                         social:</label>
                     <input type="text" class="form-control" name="buscarPorDenominacionEx"
                         formControlName="buscarPorDenominacionEx" maxlength="50" id="buscarPorDenominacionEx"
-                        (change)="setValoresStore(tipoDeEmpresaExtranjera,'buscarPorDenominacionEx', 'setBuscarPorDenominacionEx')">
+                        (change)="setValoresStore(tipoDeEmpresaExtranjera,'buscarPorDenominacionEx')">
                 </div>
                 <div class="form-group mt-4">
                     <label class="form-label" for="folioCaatBusquedaEx">CAAT: <span class="bi bi-question-circle-fill"
@@ -63,7 +63,7 @@
                             data-bs-toggle="tooltip"></span></label>
                     <input type="text" class="form-control" name="folioCaatBusquedaEx"
                         formControlName="folioCaatBusquedaEx" maxlength="50" id="folioCaatBusquedaEx"
-                        (change)="setValoresStore(tipoDeEmpresaExtranjera,'folioCaatBusquedaEx', 'setFolioCaatBusquedaEx')">
+                        (change)="setValoresStore(tipoDeEmpresaExtranjera,'folioCaatBusquedaEx')">
                 </div>
             </div>
             <div class="col-md-offset-7 col-md-1 mt-5">
@@ -80,7 +80,8 @@
     <div class="row mt-5">
         <div class="col-md-12">
             <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccionCheckbox"
-                [configuracionTabla]="caatRegistradoEmpresaEncabezadoDeTabla" [datos]="caatRegistradoEmpresaTabla">
+                [configuracionTabla]="caatRegistradoEmpresaEncabezadoDeTabla" [datos]="caatRegistradoEmpresaTabla"
+                [disableSeleccionTablaCheckBox]="esFormularioSoloLectura">
             </app-tabla-dinamica>
         </div>
     </div>

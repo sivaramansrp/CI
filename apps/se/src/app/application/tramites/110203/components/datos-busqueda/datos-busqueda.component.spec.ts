@@ -6,6 +6,7 @@ import { Tramite110203Query } from '../../../../estados/queries/tramite110203.qu
 import { Tramite110203Store } from '../../../../estados/tramites/tramite110203.store';
 import { of } from 'rxjs';
 import datosBusquedaDropdown from '@libs/shared/theme/assets/json/110203/datos-busqueda.json';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('DatosBusquedaComponent', () => {
   let componente: DatosBusquedaComponent;
@@ -61,7 +62,7 @@ describe('DatosBusquedaComponent', () => {
     };
 
     await TestBed.configureTestingModule({
-      imports: [DatosBusquedaComponent],
+      imports: [DatosBusquedaComponent,HttpClientTestingModule],
       providers: [
         FormBuilder,
         { provide: Tramite110203Query, useValue: tramite110203QueryMock },
@@ -132,7 +133,7 @@ describe('DatosBusquedaComponent', () => {
 
 
   it('debería llamar a actualizarStore cuando cambian los valores del formulario', (): void => {
-    const espiaActualizarStore = jest.spyOn(componente as any, 'actualizarStore');
+    const espiaActualizarStore = jest.spyOn(tramite110203StoreMock, 'setNumeroDeCertificado');
     componente.datosBusquedaFormulario.patchValue({ numeroDeCertificado: '99999' });
     expect(espiaActualizarStore).toHaveBeenCalled();
   });

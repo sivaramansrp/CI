@@ -24,7 +24,7 @@ import {
 } from '@angular/forms';
 import { Modal } from 'bootstrap';
 
-import { map, Subject, takeUntil } from 'rxjs';
+import { Subject,map, takeUntil } from 'rxjs';
 
 import {
   ConfiguracionColumna,

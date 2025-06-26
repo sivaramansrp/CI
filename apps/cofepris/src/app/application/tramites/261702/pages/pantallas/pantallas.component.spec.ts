@@ -1,105 +1,119 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PantallasComponent } from './pantallas.component';
-import { ConsultaioQuery } from '@ng-mf/data-access-user';
-import { of, Subject } from 'rxjs';
 import { WizardComponent } from '@libs/shared/data-access-user/src';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { AccionBoton } from '@libs/shared/data-access-user/src/core/models/31601/servicios-pantallas.model';
+import { AVISO } from '@libs/shared/data-access-user/src/tramites/constantes/aviso-privacidad.enum';
+import { PANTA_PASOS } from '@libs/shared/data-access-user/src/core/services/31601/servicios-pantallas.enum';
 
 describe('PantallasComponent', () => {
   let component: PantallasComponent;
   let fixture: ComponentFixture<PantallasComponent>;
-  let consultaQueryMock: any;
 
   beforeEach(async () => {
-    consultaQueryMock = {
-      selectConsultaioState$: of({ update: true }),
-    };
-
     await TestBed.configureTestingModule({
       declarations: [PantallasComponent],
-      providers: [
-        { provide: ConsultaioQuery, useValue: consultaQueryMock },
-      ],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA],
     }).compileComponents();
+  });
 
+  beforeEach(() => {
     fixture = TestBed.createComponent(PantallasComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
+    // Mock del wizardComponent (must be after detectChanges)
+    component.wizardComponent = {
+      siguiente: jest.fn(),
+      atras: jest.fn(),
+    } as unknown as WizardComponent;
   });
 
-  it('debe crearse correctamente', () => {
+  it('debería crearse el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('ngOnInit debe suscribirse y actualizar consultaState', () => {
-    component.consultaState = undefined as any;
-    component.ngOnInit();
-    expect(component.consultaState).toEqual({ update: true });
+  it('debería inicializar pantallasPasos con PANTA_PASOS', () => {
+    expect(component.pantallasPasos).toBe(PANTA_PASOS);
   });
 
-  it('ngOnDestroy debe limpiar el subject destroyNotifier$', () => {
-    const spyNext = jest.spyOn((component as any).destroyNotifier$, 'next');
-    const spyComplete = jest.spyOn((component as any).destroyNotifier$, 'complete');
-    component.ngOnDestroy();
-    expect(spyNext).toHaveBeenCalled();
-    expect(spyComplete).toHaveBeenCalled();
-  });
-
-  it('getValorIndice debe actualizar el índice y llamar a wizardComponent.siguiente o atras', () => {
-    component.wizardComponent = {
-      siguiente: jest.fn(),
-      atras: jest.fn(),
-    } as any;
-
-    // Acción "cont" (continuar)
-    const accionCont: AccionBoton = { valor: 2, accion: 'cont' } as any;
-    component.getValorIndice(accionCont);
-    expect(component.indice).toBe(2);
-    expect(component.datosPasos.indice).toBe(2);
-    expect(component.wizardComponent.siguiente).toHaveBeenCalled();
-
-    // Acción "atras"
-    const accionAtras: AccionBoton = { valor: 1, accion: 'atras' } as any;
-    component.getValorIndice(accionAtras);
+  it('debería tener el índice predeterminado como 1', () => {
     expect(component.indice).toBe(1);
-    expect(component.datosPasos.indice).toBe(1);
-    expect(component.wizardComponent.atras).toHaveBeenCalled();
   });
 
-  it('getValorIndice debe resetear indiceDePestanaSeleccionada si valor !== 1', () => {
-    component.wizardComponent = {
-      siguiente: jest.fn(),
-      atras: jest.fn(),
-    } as any;
-    const accion: AccionBoton = { valor: 3, accion: 'cont' } as any;
-    component.getValorIndice(accion);
+  it('debería tener avisoPrivacidadAlert igual a AVISO.Aviso', () => {
+    expect(component.avisoPrivacidadAlert).toBe(AVISO.Aviso);
+  });
+
+  it('debería inicializar datosPasos correctamente', () => {
+    expect(component.datosPasos.nroPasos).toBe(component.pantallasPasos.length);
+    expect(component.datosPasos.indice).toBe(component.indice);
+    expect(component.datosPasos.txtBtnAnt).toBe('Anterior');
+    expect(component.datosPasos.txtBtnSig).toBe('Continuar');
+  });
+
+  it('debería tener indiceDePestanaSeleccionada predeterminado como 1', () => {
     expect(component.indiceDePestanaSeleccionada).toBe(1);
   });
 
-  it('getValorIndice no debe cambiar nada si valor fuera de rango', () => {
-    component.indice = 1;
-    component.datosPasos.indice = 1;
-    component.wizardComponent = {
-      siguiente: jest.fn(),
-      atras: jest.fn(),
-    } as any;
-    const accion: AccionBoton = { valor: 0, accion: 'cont' } as any;
-    component.getValorIndice(accion);
-    expect(component.indice).toBe(1);
-    expect(component.datosPasos.indice).toBe(1);
+  describe('getValorIndice', () => {
+    it('debería actualizar el índice y llamar a siguiente cuando la acción es "cont"', () => {
+      const event: AccionBoton = { valor: 2, accion: 'cont' } as AccionBoton;
+      component.getValorIndice(event);
+      expect(component.indice).toBe(2);
+      expect(component.datosPasos.indice).toBe(2);
+      expect(component.wizardComponent.siguiente).toHaveBeenCalled();
+      expect(component.indiceDePestanaSeleccionada).toBe(1);
+    });
+
+    it('debería actualizar el índice y llamar a atras cuando la acción no es "cont"', () => {
+      const event: AccionBoton = { valor: 2, accion: 'back' } as AccionBoton;
+      component.getValorIndice(event);
+      expect(component.indice).toBe(2);
+      expect(component.datosPasos.indice).toBe(2);
+      expect(component.wizardComponent.atras).toHaveBeenCalled();
+      expect(component.indiceDePestanaSeleccionada).toBe(1);
+    });
+
+    it('no debería actualizar el índice si el valor está fuera de rango', () => {
+      const event: AccionBoton = { valor: 0, accion: 'cont' } as AccionBoton;
+      component.indice = 1;
+      component.datosPasos.indice = 1;
+      component.getValorIndice(event);
+      expect(component.indice).toBe(1);
+      expect(component.datosPasos.indice).toBe(1);
+      expect(component.wizardComponent.siguiente).not.toHaveBeenCalled();
+    });
+
+    it('no debería reiniciar indiceDePestanaSeleccionada si valor es 1', () => {
+      component.indiceDePestanaSeleccionada = 2;
+      const event: AccionBoton = { valor: 1, accion: 'cont' } as AccionBoton;
+      component.getValorIndice(event);
+      expect(component.indiceDePestanaSeleccionada).toBe(2);
+    });
   });
 
-  it('pestanaCambiado debe actualizar indiceDePestanaSeleccionada correctamente', () => {
-    component.pestanaCambiado(5);
-    expect(component.indiceDePestanaSeleccionada).toBe(5);
+  describe('pestanaCambiado', () => {
+    it('debería establecer indiceDePestanaSeleccionada al evento si es válido', () => {
+      component.pestanaCambiado(2);
+      expect(component.indiceDePestanaSeleccionada).toBe(2);
+    });
 
-    component.pestanaCambiado(undefined as any);
-    expect(component.indiceDePestanaSeleccionada).toBe(1);
+    it('debería establecer indiceDePestanaSeleccionada en 1 si el evento es undefined', () => {
+      component.indiceDePestanaSeleccionada = 3;
+      component.pestanaCambiado(undefined as unknown as number);
+      expect(component.indiceDePestanaSeleccionada).toBe(1);
+    });
 
-    component.pestanaCambiado(null as any);
-    expect(component.indiceDePestanaSeleccionada).toBe(1);
+    it('debería establecer indiceDePestanaSeleccionada en 1 si el evento es null', () => {
+      component.indiceDePestanaSeleccionada = 3;
+      component.pestanaCambiado(null as unknown as number);
+      expect(component.indiceDePestanaSeleccionada).toBe(1);
+    });
 
-    component.pestanaCambiado(NaN);
-    expect(component.indiceDePestanaSeleccionada).toBe(1);
+    it('debería establecer indiceDePestanaSeleccionada en 1 si el evento es NaN', () => {
+      component.indiceDePestanaSeleccionada = 3;
+      component.pestanaCambiado(NaN);
+      expect(component.indiceDePestanaSeleccionada).toBe(1);
+    });
   });
 });

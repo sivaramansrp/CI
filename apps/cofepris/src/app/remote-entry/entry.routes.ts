@@ -6,7 +6,7 @@ import { Route } from '@angular/router';
  * @export
  * @const {Route[]}
  */
-export const remoteRoutes: Route[] = [
+export const REMOTE_ROUTES: Route[] = [
   /**
    * Ruta por defecto que redirige a 'pago'.
    * 

@@ -1,11 +1,12 @@
+import { OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src/core/models/shared/configuracion-columna.model';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
 import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
 import { PermisosCancelar } from '../../models/permisos-cancelar.model';
 import { PermisosCancelarData } from '../../models/permisos-cancelar.model';
 
@@ -14,11 +15,10 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
-import { takeUntil } from 'rxjs';
-
 import { Tramite140112Query } from '../../estados/tramite-140112.query';
 import { Tramite140112Store } from '../../estados/tramite-140112.store';
 import { Validators } from '@angular/forms';
+import { takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-permisos-cancelar',
@@ -33,7 +33,13 @@ import { Validators } from '@angular/forms';
   templateUrl: './permisos-cancelar.component.html',
   styleUrls: ['./permisos-cancelar.component.scss'],
 })
-export class PermisosCancelarComponent implements OnInit, OnDestroy {
+export class PermisosCancelarComponent implements OnInit, OnDestroy, OnChanges {
+   /**
+   * Indica si el formulario es de solo lectura.
+   * @property {boolean} esSoloLectura
+   */
+  esSoloLectura!: boolean;
+
   /** Enum para el tipo de selección de tabla */
   public TablaSeleccion: TablaSeleccion = TablaSeleccion.CHECKBOX;
 
@@ -88,10 +94,26 @@ export class PermisosCancelarComponent implements OnInit, OnDestroy {
     private PermisosCancelarService: PermisosCancelarService,
     private store: Tramite140112Store,
     private query: Tramite140112Query,
-    private fb: FormBuilder,
+    private fb: FormBuilder, private consultaQuery: ConsultaioQuery
   ) {
     //constructer
+     this.consultaQuery.selectConsultaioState$
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((estadoConsulta) => {
+        this.esSoloLectura = estadoConsulta.readonly;
+      })
   }
+
+  ngOnChanges(changes: SimpleChanges): void {
+      // Verifica si el formulario ha cambiado y actualiza su estado
+      if (changes['estadoConsulta']) {
+        if (this.esSoloLectura) {
+        this.solicitud.disable();
+        }else{
+          this.solicitud.enable();
+        }
+      }
+    }
 
   /**
    * Gancho de ciclo de vida OnInit
@@ -104,6 +126,13 @@ export class PermisosCancelarComponent implements OnInit, OnDestroy {
       });
     });
     this.loadPermisoCancelar();
+     if (this.esSoloLectura) {
+      this.solicitud.disable();
+
+    } else{
+      this.solicitud.enable();
+
+    } 
   }
 
   /**
@@ -114,6 +143,9 @@ export class PermisosCancelarComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe(response => {
         this.permisosCancelar = response;
+        this.solicitud.patchValue({
+          descripcionClobGenerica1: response[0]?.descripcionClobGenerica1 || ''
+        });
       });
   }
 
