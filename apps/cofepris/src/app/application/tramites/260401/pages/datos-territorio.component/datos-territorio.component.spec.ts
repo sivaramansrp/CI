@@ -48,19 +48,19 @@ describe('DatosTerritorioComponent', () => {
     jest.clearAllMocks();
   });
 
-  it('should create', () => {
+  it('debe crearse', () => {
     expect(component).toBeTruthy();
   });
 
   describe('ngOnInit', () => {
-    it('should call guardarDatosFormulario if consultaState.update is true', () => {
+    it('debe llamar a guardarDatosFormulario si consultaState.update es verdadero', () => {
       const guardarDatosFormularioSpy = jest.spyOn(component, 'guardarDatosFormulario');
       consultaQueryMock.selectConsultaioState$ = of({ update: true });
       component.ngOnInit();
       expect(guardarDatosFormularioSpy).toHaveBeenCalled();
     });
 
-    it('should set esDatosRespuesta to true if consultaState.update is false', () => {
+    it('debe establecer esDatosRespuesta en true si consultaState.update es falso', () => {
       consultaQueryMock.selectConsultaioState$ = of({ update: false });
       component.ngOnInit();
       expect(component.esDatosRespuesta).toBe(true);
@@ -68,7 +68,7 @@ describe('DatosTerritorioComponent', () => {
   });
 
   describe('guardarDatosFormulario', () => {
-    it('should call actualizarEstadoFormulario and actualizarPagoDerechosFormulario', (done) => {
+    it('debe llamar a actualizarEstadoFormulario y actualizarPagoDerechosFormulario', (done) => {
       (component as any).solicitud260401Service = solicitud260401ServiceMock;
       component.solicitante = solicitanteComponentMock;
       component.guardarDatosFormulario();
@@ -80,7 +80,7 @@ describe('DatosTerritorioComponent', () => {
       }, 0);
     });
 
-    it('should not call actualizarEstadoFormulario if registro is falsy', (done) => {
+    it('no debe llamar a actualizarEstadoFormulario si registro es falsy', (done) => {
       solicitud260401ServiceMock.getRegistroTomaMuestrasMercanciasData.mockReturnValue(of(null));
       solicitud260401ServiceMock.getPagoDerechos.mockReturnValue(of('permisoData'));
       component.guardarDatosFormulario();
@@ -91,7 +91,7 @@ describe('DatosTerritorioComponent', () => {
       }, 0);
     });
 
-    it('should not call actualizarPagoDerechosFormulario if permiso is falsy', (done) => {
+    it('no debe llamar a actualizarPagoDerechosFormulario si permiso es falsy', (done) => {
       solicitud260401ServiceMock.getRegistroTomaMuestrasMercanciasData.mockReturnValue(of('registroData'));
       solicitud260401ServiceMock.getPagoDerechos.mockReturnValue(of(null));
       component.guardarDatosFormulario();
@@ -104,7 +104,7 @@ describe('DatosTerritorioComponent', () => {
   });
 
   describe('ngAfterViewInit', () => {
-    it('should call solicitante.obtenerTipoPersona with MORAL_NACIONAL', () => {
+    it('debe llamar a solicitante.obtenerTipoPersona con MORAL_NACIONAL', () => {
       component.solicitante = solicitanteComponentMock;
       component.ngAfterViewInit();
       expect(solicitanteComponentMock.obtenerTipoPersona).toHaveBeenCalledWith(TIPO_PERSONA.MORAL_NACIONAL);
@@ -112,7 +112,7 @@ describe('DatosTerritorioComponent', () => {
   });
 
   describe('seleccionaTab', () => {
-    it('should update indice', () => {
+    it('debe actualizar el índice', () => {
       component.indice = 1;
       component.seleccionaTab(3);
       expect(component.indice).toBe(3);
