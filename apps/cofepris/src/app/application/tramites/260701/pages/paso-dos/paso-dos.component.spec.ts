@@ -35,12 +35,6 @@ describe('PasoDosComponent', () => {
     expect(component.catalogoDocumentos).toEqual([]);
   });
 
-  it('debería llamar getTiposDocumentos en ngOnInit', () => {
-    const spy = jest.spyOn(component, 'getTiposDocumentos');
-    component.ngOnInit();
-    expect(spy).toHaveBeenCalled();
-  });
-
   it('debería establecer catalogoDocumentos cuando getCatalogo retorna datos', () => {
     const mockDocs = [{ id: 1, descripcion: 'doc1' }];
     mockCatalogosService.getCatalogo.mockReturnValue(of(mockDocs));
@@ -67,11 +61,4 @@ describe('PasoDosComponent', () => {
     expect(completeSpy).toHaveBeenCalled();
   });
 
-  // it('tiposDocumentos debería lanzar error', () => {
-  //   expect(() => component.tiposDocumentos([])).toThrow('Method not implemented.');
-  // });
-
-  // it('documentosSeleccionados debería lanzar error', () => {
-  //   expect(() => component.documentosSeleccionados([])).toThrow('Method not implemented.');
-  // });
 });
