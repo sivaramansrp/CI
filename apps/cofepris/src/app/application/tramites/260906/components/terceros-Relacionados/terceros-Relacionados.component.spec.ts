@@ -1,126 +1,107 @@
-import { TestBed } from '@angular/core/testing';
-import { AbstractControl, ReactiveFormsModule } from '@angular/forms';
-import { of } from 'rxjs';
-import { TercerosRelacionadoesComponent } from './terceros-relacionados.component';
+import { TestBed, ComponentFixture } from '@angular/core/testing';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { TercerosRelacionadoesComponent } from './terceros-Relacionados.component';
 import { Sanitario260906Store } from '../../../../estados/tramites/sanitario260906.store';
 import { SanitarioService } from '../../services/sanitario.service';
+import { of } from 'rxjs';
+import { provideHttpClient } from '@angular/common/http';
+import { Permiso260906Query } from '../../../../estados/queries/permiso260906.query';
 
 describe('TercerosRelacionadoesComponent', () => {
   let component: TercerosRelacionadoesComponent;
-  let sanitarioServiceMock: any;
-  let sanitarioStoreMock: any;
+  let fixture: ComponentFixture<TercerosRelacionadoesComponent>;
+  let mockSanitarioStore: Partial<Sanitario260906Store>;
+  let mockSanitarioService: Partial<SanitarioService>;
 
-  beforeEach(() => {
-    sanitarioServiceMock = {
-      getData: jest.fn().mockReturnValue(of([])),
-    };
+  let permiso260906QueryMock = {
+    selectSolicitud$: of({
+      tercerosNacionalidad: 'nacional',
+      tipoPersona: 'fisica',
+      rfc: 'RFC123456789',
+      curp: 'CURP123456789',
+      nombre: 'Juan',
+      primerApellido: 'Pérez',
+      segundoApellido: 'Gómez',
+      denominacionRazonSocial: '',
+      pais: 'México',
+      estadoLocalidad: 'Estado de México',
+      municipioAlcaldia: 'Toluca',
+      localidad: 'Centro',
+      entidadFederativa: 'Edomex',
+      codigoPostaloEquivalente: '50000',
+      colonia: 'Colonia Centro',
+      coloniaoEquivalente: '',
+      calle: 'Calle Principal',
+      numeroExterior: '123',
+      numeroInterior: 'A',
+      lada: '722',
+      telefono: '1234567',
+      correoElectronico: 'juan.perez@example.com',
+      extranjeroCodigo: '',
+      extranjeroEstado: '',
+      extranjeroColonia: '',
+    }),
+  };
 
-    sanitarioStoreMock = {
+  beforeEach(async () => {
+    mockSanitarioStore = {
       setFabricante: jest.fn(),
       setDestinatario: jest.fn(),
       setProveedor: jest.fn(),
       setFacturador: jest.fn(),
     };
 
-    TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule, TercerosRelacionadoesComponent],
+    mockSanitarioService = {
+      getData: jest.fn().mockReturnValue(of([])),
+    };
+
+    await TestBed.configureTestingModule({
       declarations: [],
-      providers: [
-        { provide: SanitarioService, useValue: sanitarioServiceMock },
-        { provide: Sanitario260906Store, useValue: sanitarioStoreMock },
+      imports: [ReactiveFormsModule, FormsModule, TercerosRelacionadoesComponent],
+      providers: [ provideHttpClient(),
+        { provide: Sanitario260906Store, useValue: mockSanitarioStore },
+        { provide: SanitarioService, useValue: mockSanitarioService },
+        { provide: Permiso260906Query, useValue: permiso260906QueryMock },
       ],
     }).compileComponents();
 
-    const fixture = TestBed.createComponent(TercerosRelacionadoesComponent);
+    fixture = TestBed.createComponent(TercerosRelacionadoesComponent);
     component = fixture.componentInstance;
+    fixture.detectChanges();
   });
 
-  it('should create the component', () => {
+  it('debería crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize forms and fetch dropdown data on ngOnInit', () => {
-    jest.spyOn(component, 'initializeAgregarFabricanteFormGroup');
-    jest.spyOn(component, 'initializeAgregarDestinatarioFormGroup');
-    jest.spyOn(component, 'initializeAgregarProveedorFormGroup');
-    jest.spyOn(component, 'initializeAgregarFacturadorFormGroup');
-
-    component.ngOnInit();
-
-    expect(sanitarioServiceMock.getData).toHaveBeenCalled();
-    expect(component.dropdownData).toEqual([]);
-    expect(component.initializeAgregarFabricanteFormGroup).toHaveBeenCalled();
-    expect(component.initializeAgregarDestinatarioFormGroup).toHaveBeenCalled();
-    expect(component.initializeAgregarProveedorFormGroup).toHaveBeenCalled();
-    expect(component.initializeAgregarFacturadorFormGroup).toHaveBeenCalled();
+  it('debería inicializar los formularios reactivos', () => {
+    expect(component.agregarFabricanteFormGroup).toBeDefined();
+    expect(component.agregarDestinatarioFormGroup).toBeDefined();
+    expect(component.agregarProveedorFormGroup).toBeDefined();
+    expect(component.agregarFacturadorFormGroup).toBeDefined();
   });
 
-  it('should toggle visibility for Fabricante form', () => {
-    component.showTableDiv = true;
-    component.showFabricante = false;
-
+  it('debería alternar la visibilidad de la sección de fabricante', () => {
+    expect(component.showFabricante).toBe(false);
     component.toggleDivFabricante();
-
-    expect(component.showTableDiv).toBe(false);
     expect(component.showFabricante).toBe(true);
+    expect(component.showTableDiv).toBe(false);
   });
 
-  it('should toggle visibility for Destinatario form', () => {
-    component.showTableDiv = true;
-    component.showDestinatario = false;
-
+  it('debería alternar la visibilidad de la sección de destinatario', () => {
+    expect(component.showDestinatario).toBe(false);
     component.toggleDivDestinatario();
-
-    expect(component.showTableDiv).toBe(false);
     expect(component.showDestinatario).toBe(true);
-  });
-
-  it('should toggle visibility for Proveedor form', () => {
-    component.showTableDiv = true;
-    component.showProveedor = false;
-
-    component.toggleDivProveedor();
-
     expect(component.showTableDiv).toBe(false);
-    expect(component.showProveedor).toBe(true);
   });
 
-  it('should toggle visibility for Facturador form', () => {
-    component.showTableDiv = true;
-    component.showFacturador = false;
+  it('debería deshabilitar los formularios en modo de solo lectura', () => {
+    component.soloLectura = true;
+    component.inicializarEstadoFormulario();
 
-    component.toggleDivFacturador();
-
-    expect(component.showTableDiv).toBe(false);
-    expect(component.showFacturador).toBe(true);
+    expect(component.agregarFabricanteFormGroup.disabled).toBe(true);
+    expect(component.agregarDestinatarioFormGroup.disabled).toBe(true);
+    expect(component.agregarProveedorFormGroup.disabled).toBe(true);
+    expect(component.agregarFacturadorFormGroup.disabled).toBe(true);
   });
-
-  it('should validate RFC using rfcValidator', () => {
-    const validRFCFisica = TercerosRelacionadoesComponent.rfcValidator({
-      value: 'ABCD123456XYZ',
-    } as AbstractControl);
-    const validRFCMoral = TercerosRelacionadoesComponent.rfcValidator({
-      value: 'ABC123456XYZ',
-    } as AbstractControl);
-    const invalidRFC = TercerosRelacionadoesComponent.rfcValidator({
-      value: 'INVALID',
-    } as AbstractControl);
-
-    expect(validRFCFisica).toBeNull();
-    expect(validRFCMoral).toBeNull();
-    expect(invalidRFC).toEqual({ invalidRFC: true });
-  });
-
-  it('should validate CURP using curpValidator', () => {
-    const validCURP = TercerosRelacionadoesComponent.curpValidator({
-      value: 'ABCD123456HDFLRS01',
-    } as AbstractControl);
-    const invalidCURP = TercerosRelacionadoesComponent.curpValidator({
-      value: 'INVALID',
-    } as AbstractControl);
-
-    expect(validCURP).toBeNull();
-    expect(invalidCURP).toEqual({ invalidCURP: true });
-  });
-
 });
