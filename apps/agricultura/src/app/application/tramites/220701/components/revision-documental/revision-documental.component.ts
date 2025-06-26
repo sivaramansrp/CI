@@ -1,13 +1,33 @@
-import { ChangeDetectionStrategy } from '@angular/core';
-import { ChangeDetectorRef } from '@angular/core';
+/**
+ * @component
+ * @name RevisionDocumentalComponent
+ * @description
+ * Componente para gestionar la revisión documental del trámite 220701.
+ * Permite navegar entre diferentes secciones del formulario, como datos generales, terceros relacionados y pago de derechos.
+ * Utiliza componentes internos para cada sección y controla la navegación mediante pestañas.
+ *
+ * - Gestiona la navegación entre secciones del formulario.
+ * - Emite eventos al cambiar de pestaña.
+ * - Utiliza componentes hijos para mostrar cada sección.
+ *
+ * @example
+ * <revision-documental (tabChanged)="onTabChanged($event)"></revision-documental>
+ */
+
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { EventEmitter } from '@angular/core';
-import { InternaDatosGeneralesComponent } from "../interna-datos-generales/interna-datos-generales.component";
+
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  Output,
+} from '@angular/core';
+
+import { InternaDatosGeneralesComponent } from '../interna-datos-generales/interna-datos-generales.component';
 import { InternaPagoDeDerechosComponent } from '../interna-pago-de-derechos/interna-pago-de-derechos.component';
 import { InternaTercerosRelacionadosComponent } from '../interna-terceros-relacionados/interna-terceros-relacionados.component';
 
-import { Output } from '@angular/core';
 
 @Component({
   selector: 'revision-documental',

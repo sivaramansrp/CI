@@ -7,7 +7,7 @@ import { TituloComponent } from '@ng-mf/data-access-user';
 
 import { ReactiveFormsModule } from '@angular/forms';
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
-import { ProsecModificacionServiceTsService } from '../../services/prosec-modificacion.service.ts.service';
+import { ProsecModificacionServiceTsService } from '../../services/prosec-modificacion.service';
 
 describe('ListaDomicilios90305Component', () => {
   let component: ListaDomicilios90305Component;
@@ -46,14 +46,27 @@ describe('ListaDomicilios90305Component', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize and call loadDomicilios on ngOnInit', () => {
-    spyOn(component, 'loadDomicilios').and.callThrough();
-    component.ngOnInit();
-    expect(component.loadDomicilios).toHaveBeenCalled();
-  });
+it('should initialize and call loadDomicilios on ngOnInit', () => {
+  const spy = jest.spyOn(component as any, 'loadDomicilios');
+  component.ngOnInit();
+  expect(spy).toHaveBeenCalled();
+});
 
   it('should load domicilios and update personaparas', () => {
-    spyOn(mockService, 'getListaDomicilios').and.callThrough();
+    const spy = jest.spyOn(mockService, 'getListaDomicilios').mockReturnValue(of([
+      {
+        calle: 'Av. Siempre Viva',
+        numeroExterior: '742',
+        numeroInterior: 'A',
+        codigoPostal: '12345',
+        colonia: 'Springfield',
+        localidad: 'Centro',
+        municipioOAlcaldia: 'Springfield',
+        entidadFederativa: 'Illinois',
+        pais: 'USA',
+        telefono: '1234567890',
+      },
+    ]));
     component.loadDomicilios();
     expect(mockService.getListaDomicilios).toHaveBeenCalled();
     expect(component.personaparas.length).toBe(1);

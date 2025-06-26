@@ -20,4 +20,27 @@ describe('PasoUnoComponent', () => {
   it('debería crear el componente', () => {
     expect(component).toBeTruthy();
   });
+
+  it('debería tener el índice inicial en 1', () => {
+    expect(component.indice).toBe(1);
+  });
+
+  it('debería cambiar el índice al seleccionar una pestaña', () => {
+    component.seleccionaTab(2);
+    expect(component.indice).toBe(2);
+  });
+
+  it('debería establecer esDatosRespuesta en true si no hay actualización', () => {
+    component.consultaState = { update: false } as any;
+    component.ngOnInit();
+    expect(component.esDatosRespuesta).toBe(true);
+  });
+
+  it('debería limpiar las suscripciones al destruir el componente', () => {
+    const spyNext = spyOn(component['destroyNotifier$'], 'next').and.callThrough();
+    const spyComplete = spyOn(component['destroyNotifier$'], 'complete').and.callThrough();
+    component.ngOnDestroy();
+    expect(spyNext).toHaveBeenCalled();
+    expect(spyComplete).toHaveBeenCalled();
+  });
 });

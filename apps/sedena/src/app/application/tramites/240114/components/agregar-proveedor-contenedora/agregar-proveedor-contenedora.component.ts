@@ -10,7 +10,6 @@ import { Tramite240114Store } from '../../estados/tramite240114Store.store';
   standalone: true,
   imports: [CommonModule, AgregarProveedorCustomComponent],
   templateUrl: './agregar-proveedor-contenedora.component.html',
-
 })
 export class AgregarProveedorContenedoraComponent {
   @Output() cerrar = new EventEmitter<void>();
@@ -30,10 +29,8 @@ export class AgregarProveedorContenedoraComponent {
    * @param {Proveedor[]} event - Lista de proveedores que se actualizarán en el store.
    * @returns {void} Este método no retorna ningún valor.
    */
-  
+
   updateProveedorTablaDatos(event: Proveedor[]): void {
     this.tramite240114Store.updateProveedorTablaDatos(event);
   }
-  
-  
 }

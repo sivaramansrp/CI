@@ -119,3 +119,24 @@ datos: DisponsiblesTabla[];
 export interface CuposTablaDatos {
    datos: CuposTabla[];
 }
+
+/**
+ *  Representa los datos del formulario de certificado de origen.
+  *  @interface FormularioCertificadoOrigen
+  */ 
+export interface RespuestaConsulta {
+  success: boolean;
+  datos: ConsultaDatos;
+  message: string;
+}
+
+/**
+ *  Representa los datos de la consulta del certificado de origen.
+ *  @interface ConsultaDatos
+  */
+export interface ConsultaDatos {
+  GrupoFolio: GrupoFolio;
+  GrupoEmpresa: GrupoEmpresa;
+  GrupoCupo: GrupoCupo;
+  GrupoDatalleCupo: GrupoDatalleCupo;
+  }

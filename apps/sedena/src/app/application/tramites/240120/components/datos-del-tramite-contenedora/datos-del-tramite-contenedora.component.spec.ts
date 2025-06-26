@@ -12,6 +12,7 @@ import { Tramite240120Query } from '../../estados/tramite240120Query.query';
 import { Tramite240120Store } from '../../estados/tramite240120Store.store';
 import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 import { ActivatedRoute } from '@angular/router';
+import { ModalComponent } from '../../../../shared/components/modal/modal.component';
 
 @Injectable()
 class MockTramite240120Query { }
@@ -25,7 +26,7 @@ describe('DatosDelTramiteContenedoraComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [FormsModule, ReactiveFormsModule],
+      imports: [FormsModule, ReactiveFormsModule,ModalComponent],
       schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
       providers: [
         { provide: Tramite240120Query, useClass: MockTramite240120Query },
@@ -76,6 +77,29 @@ describe('DatosDelTramiteContenedoraComponent', () => {
     component.ngOnDestroy();
     expect(component.destroy$.next).toHaveBeenCalled();
     expect(component.destroy$.complete).toHaveBeenCalled();
+  });
+  
+  it('should run #openModal()', async () => {
+    component.modalComponent = component.modalComponent || {};
+    component.modalComponent.abrir = jest.fn();
+    component.cerrarModal = component.cerrarModal || {};
+    component.cerrarModal.bind = jest.fn();
+    component.openModal('Datosmercancia');
+    expect(component.modalComponent.abrir).toHaveBeenCalled();
+  });
+
+  it('should run #cerrarModal()', async () => {
+    component.modalComponent = component.modalComponent || {};
+    component.modalComponent.cerrar = jest.fn();
+    component.cerrarModal();
+    expect(component.modalComponent.cerrar).toHaveBeenCalled();
+  });
+  
+  it('should run #eliminarMercanciasDatos()', async () => {
+    component.tramiteStore = component.tramiteStore || {};
+    component.tramiteStore.eliminarMercancias = jest.fn();
+    component.eliminarMercanciasDatos({test: 1});
+    expect(component.tramiteStore.eliminarMercancias).toHaveBeenCalled();
   });
 
 });

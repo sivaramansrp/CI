@@ -1,4 +1,12 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+// @ts-nocheck
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { By } from '@angular/platform-browser';
+import { Observable, of as observableOf, throwError } from 'rxjs';
+
+import { Component } from '@angular/core';
 import { TercerosRelacionadosContenedoraComponent } from './terceros-relacionados-contenedora.component';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Tramite240101Store } from '../../estados/tramite240101Store.store'; // <-- Ensure this path is correct
@@ -52,12 +60,12 @@ describe('TercerosRelacionadosContenedoraComponent', () => {
         { provide: ActivatedRoute, useValue: activatedRouteMock },
       ],
     }).compileComponents();
-
     fixture = TestBed.createComponent(TercerosRelacionadosContenedoraComponent);
     component = fixture.componentInstance;
   });
 
-  it('should create', () => {
+
+  it('should run #constructor()', async () => {
     expect(component).toBeTruthy();
   });
 

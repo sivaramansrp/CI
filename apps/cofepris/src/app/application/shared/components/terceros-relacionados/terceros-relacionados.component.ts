@@ -13,6 +13,7 @@ import {
   Notificacion,
   NotificacionesComponent,
 } from '@ng-mf/data-access-user';
+import { Subject,map, takeUntil } from 'rxjs';
 import { ConfiguracionColumna } from '@ng-mf/data-access-user';
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { TablaSeleccion } from '@ng-mf/data-access-user';
@@ -34,7 +35,6 @@ import { MENSAJE_TABLA_OBLIGATORIA } from '../../models/terceros-relacionados.mo
 import { PROVEEDOR_ENCABEZADO_DE_TABLA } from '../../models/terceros-relacionados.model';
 import { Proveedor } from '../../models/terceros-relacionados.model';
 import { TercerosRelacionadosFebService } from '../../services/tereceros-relacionados-feb.service';
-import { map, Subject, takeUntil } from 'rxjs';
 
 /**
  * @component TercerosRelacionadosComponent

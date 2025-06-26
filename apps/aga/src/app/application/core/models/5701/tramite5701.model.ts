@@ -101,7 +101,7 @@ export interface Personas {
 
 // Pedimento
 export interface DatosComponentePedimento {
-    patente: number;
+    patente: string;
     idAduanaDespacho: number;
 }
 
@@ -130,7 +130,7 @@ export interface Persona {
  */
 export interface Pedimento {
     idPedimento: number;
-    patente: number;
+    patente: string;
     pedimento: number;
     aduana: number;
     tipoPedimento: number;

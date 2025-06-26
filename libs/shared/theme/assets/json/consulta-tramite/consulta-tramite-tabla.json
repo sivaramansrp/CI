@@ -165,6 +165,15 @@
         "numeroDeProcedimiento": "230201"
     },
     {
+        "id": "230202",
+        "tipoDeTramite": "Datos generales del trámite",
+        "fecha": "2024-11-01",
+        "fechaActualizacion": "2024-11-07",
+        "diasTranscurridos": "4",
+        "departamento": "SEMARNAT",
+        "numeroDeProcedimiento": "230202"
+    },
+    {
         "id": "130108",
         "tipoDeTramite": "Datos generales del trámite",
         "fecha": "2024-11-01",
@@ -534,15 +543,6 @@
         "numeroDeProcedimiento": "40302"
     },
     {
-        "id": "317",
-        "tipoDeTramite": "Datos generales del trámite",
-        "fecha": "2023-11-01",
-        "fechaActualizacion": "2023-11-07",
-        "diasTranscurridos": "4",
-        "departamento": "AGACE",
-        "numeroDeProcedimiento": "317"
-    },
-    {
         "id": "221602",
         "tipoDeTramite": "Datos generales del trámite",
         "fecha": "2023-11-01",
@@ -804,24 +804,6 @@
         "numeroDeProcedimiento": "260917"
     },
     {
-        "id": "280101",
-        "tipoDeTramite": "Datos generales del trámite",
-        "fecha": "2024-11-01",
-        "fechaActualizacion": "2024-11-07",
-        "diasTranscurridos": "4",
-        "departamento": "INAH",
-        "numeroDeProcedimiento": "280101"
-    },
-    {
-        "id": "270101",
-        "tipoDeTramite": "Datos generales del trámite",
-        "fecha": "2024-11-01",
-        "fechaActualizacion": "2024-11-07",
-        "diasTranscurridos": "4",
-        "departamento": "INBAL",
-        "numeroDeProcedimiento": "270101"
-    },
-    {
         "id": "270301",
         "tipoDeTramite": "Datos generales del trámite",
         "fecha": "2024-11-01",
@@ -829,15 +811,6 @@
         "diasTranscurridos": "4",
         "departamento": "INBAL",
         "numeroDeProcedimiento": "270301"
-    },
-    {
-        "id": "250101",
-        "tipoDeTramite": "Datos generales del trámite",
-        "fecha": "2024-11-01",
-        "fechaActualizacion": "2024-11-07",
-        "diasTranscurridos": "4",
-        "departamento": "PROFEPA",
-        "numeroDeProcedimiento": "250101"
     },
     {
         "id": "5601",
@@ -1048,6 +1021,15 @@
         "numeroDeProcedimiento": "120603"
     },
     {
+        "id": "31203",
+        "tipoDeTramite": "Datos generales del trámite",
+        "fecha": "2025-06-10",
+        "fechaActualizacion": "2025-06-10",
+        "diasTranscurridos": "4",
+        "departamento": "AGA",
+        "numeroDeProcedimiento": "31203"
+    },
+    {
         "id": "240107",
         "tipoDeTramite": "Datos generales del trámite",
         "fecha": "2024-11-01",
@@ -1210,6 +1192,15 @@
         "numeroDeProcedimiento": "260209"
     },
     {
+        "id": "31803",
+        "tipoDeTramite": "Datos generales del trámite",
+        "fecha": "2024-11-01",
+        "fechaActualizacion": "2024-11-07",
+        "diasTranscurridos": "4",
+        "departamento": "AGACE",
+        "numeroDeProcedimiento": "31803"
+    },
+    {
         "id": "140104",
         "tipoDeTramite": "Datos generales del trámite",
         "fecha": "2024-11-01",
@@ -1226,15 +1217,6 @@
         "diasTranscurridos": "4",
         "departamento": "COFEPRIS",
         "numeroDeProcedimiento": "260219"
-    },
-    {
-        "id": "31401",
-        "tipoDeTramite": "Datos generales del trámite",
-        "fecha": "2024-11-01",
-        "fechaActualizacion": "2024-11-07",
-        "diasTranscurridos": "4",
-        "departamento": "AGACE",
-        "numeroDeProcedimiento": "31401"
     },
     {
         "id": "260201",
@@ -2211,6 +2193,42 @@
         "numeroDeProcedimiento": "240305"
     },
     {
+        "id": "32201",
+        "tipoDeTramite": "Datos generales del trámite",
+        "fecha": "2024-11-01",
+        "fechaActualizacion": "2024-11-07",
+        "diasTranscurridos": "4",
+        "departamento": "AGACE",
+        "numeroDeProcedimiento": "32201"
+    },
+    {
+        "id": "32508",
+        "tipoDeTramite": "Datos generales del trámite",
+        "fecha": "2024-11-01",
+        "fechaActualizacion": "2024-11-07",
+        "diasTranscurridos": "4",
+        "departamento": "AGACE",
+        "numeroDeProcedimiento": "32508"
+    },
+    {
+        "id": "10302",
+        "tipoDeTramite": "Datos generales del trámite",
+        "fecha": "2024-11-01",
+        "fechaActualizacion": "2024-11-07",
+        "diasTranscurridos": "4",
+        "departamento": "AGA",
+        "numeroDeProcedimiento": "10302"
+    },
+    {
+        "id": "11204",
+        "tipoDeTramite": "Datos generales del trámite",
+        "fecha": "2024-11-01",
+        "fechaActualizacion": "2024-11-07",
+        "diasTranscurridos": "4",
+        "departamento": "AGA",
+        "numeroDeProcedimiento": "11204"
+    },
+    {
         "id": "80205",
         "tipoDeTramite": "Datos generales del trámite",
         "fecha": "2024-11-01",
@@ -2398,6 +2416,205 @@
         "diasTranscurridos": "4",
         "departamento": "COFEPRIS",
         "numeroDeProcedimiento": "260910"
+    },
+     {
+    "id": "140205",
+    "tipoDeTramite": "Datos generales del trámite",
+    "fecha": "2025-06-17",
+    "fechaActualizacion": "2025-06-17",
+    "diasTranscurridos": "4",
+    "departamento": "SE",
+    "numeroDeProcedimiento": "140205"
+  },
+  {
+    "id": "110217",
+    "tipoDeTramite": "Datos generales del trámite",
+    "fecha": "2025-06-17",
+    "fechaActualizacion": "2025-06-17",
+    "diasTranscurridos": "4",
+    "departamento": "SE",
+    "numeroDeProcedimiento": "110217"
+  },
+  {
+    "id": "32507",
+    "tipoDeTramite": "Datos generales del trámite",
+    "fecha": "2024-11-01",
+    "fechaActualizacion": "2024-11-07",
+    "diasTranscurridos": "4",
+    "departamento": "AGACE",
+    "numeroDeProcedimiento": "32507"
+  },
+   {
+        "id":"32505",
+        "folioTramite": "3170001000320251005000002",
+        "tipoDeTramite": "Datos generales del trámite",
+        "fecha": "2023-10-01",
+        "fechaActualizacion": "2023-10-05",
+        "diasTranscurridos": "4",
+        "departamento": "AGACE",
+        "numeroDeProcedimiento": "32505"
+    },
+    {
+        "id": "11105",
+        "tipoDeTramite": "Datos generales del trámite",
+        "fecha": "2024-11-01",
+        "fechaActualizacion": "2024-11-07",
+        "diasTranscurridos": "4",
+        "departamento": "AGA",
+        "numeroDeProcedimiento": "11105"
+    },
+    {
+        "id": "130120",
+        "tipoDeTramite": "Datos generales del trámite",
+        "fecha": "2024-11-01",
+        "fechaActualizacion": "2024-11-07",
+        "diasTranscurridos": "4",
+        "departamento": "SE",
+        "numeroDeProcedimiento": "130120"
+    },
+    {
+      "id": "570102",
+        "tipoDeTramite": "Datos generales del trámite",
+        "fecha": "2024-11-01",
+        "fechaActualizacion": "2024-11-07",
+        "diasTranscurridos": "4",
+        "departamento": "AGA",
+        "numeroDeProcedimiento": "570102"  
+    },
+    {
+       "id": "240123",
+        "tipoDeTramite": "Datos generales del trámite",
+        "fecha": "2024-11-01",
+        "fechaActualizacion": "2024-11-07",
+        "diasTranscurridos": "4",
+        "departamento": "SEDENA",
+        "numeroDeProcedimiento": "240123"  
+    },
+    {
+       "id": "240308",
+        "tipoDeTramite": "Datos generales del trámite",
+        "fecha": "2024-11-01",
+        "fechaActualizacion": "2024-11-07",
+        "diasTranscurridos": "4",
+        "departamento": "SEDENA",
+        "numeroDeProcedimiento": "240308"  
+    },
+    {
+       "id": "240405",
+        "tipoDeTramite": "Datos generales del trámite",
+        "fecha": "2024-11-01",
+        "fechaActualizacion": "2024-11-07",
+        "diasTranscurridos": "4",
+        "departamento": "SEDENA",
+        "numeroDeProcedimiento": "240405"  
+    },
+    {
+       "id": "240407",
+        "tipoDeTramite": "Datos generales del trámite",
+        "fecha": "2024-11-01",
+        "fechaActualizacion": "2024-11-07",
+        "diasTranscurridos": "4",
+        "departamento": "SEDENA",
+        "numeroDeProcedimiento": "240407"  
+    },
+    {
+       "id": "240411",
+        "tipoDeTramite": "Datos generales del trámite",
+        "fecha": "2024-11-01",
+        "fechaActualizacion": "2024-11-07",
+        "diasTranscurridos": "4",
+        "departamento": "SEDENA",
+        "numeroDeProcedimiento": "240411"  
+    },
+    {
+       "id": "130201",
+        "tipoDeTramite": "Datos generales del trámite",
+        "fecha": "2024-11-01",
+        "fechaActualizacion": "2024-11-07",
+        "diasTranscurridos": "4",
+        "departamento": "SENER",
+        "numeroDeProcedimiento": "130201"  
+    },
+    {
+       "id": "130204",
+        "tipoDeTramite": "Datos generales del trámite",
+        "fecha": "2024-11-01",
+        "fechaActualizacion": "2024-11-07",
+        "diasTranscurridos": "4",
+        "departamento": "SENER",
+        "numeroDeProcedimiento": "130204"  
+    },
+    {
+       "id": "300105",
+        "tipoDeTramite": "Datos generales del trámite",
+        "fecha": "2024-11-01",
+        "fechaActualizacion": "2024-11-07",
+        "diasTranscurridos": "4",
+        "departamento": "SENER",
+        "numeroDeProcedimiento": "300105"  
+    },
+    {
+       "id": "324",
+        "tipoDeTramite": "Datos generales del trámite",
+        "fecha": "2024-11-01",
+        "fechaActualizacion": "2024-11-07",
+        "diasTranscurridos": "4",
+        "departamento": "AGA",
+        "numeroDeProcedimiento": "324"  
+    },
+    {
+       "id": "630103",
+        "tipoDeTramite": "Datos generales del trámite",
+        "fecha": "2024-11-01",
+        "fechaActualizacion": "2024-11-07",
+        "diasTranscurridos": "4",
+        "departamento": "AGA",
+        "numeroDeProcedimiento": "630103"  
+    },
+    {
+       "id": "220103",
+        "tipoDeTramite": "Datos generales del trámite",
+        "fecha": "2024-11-01",
+        "fechaActualizacion": "2024-11-07",
+        "diasTranscurridos": "4",
+        "departamento": "AGRICULTURA",
+        "numeroDeProcedimiento": "220103"  
+    },
+    {
+       "id": "260507",
+        "tipoDeTramite": "Datos generales del trámite",
+        "fecha": "2024-11-01",
+        "fechaActualizacion": "2024-11-07",
+        "diasTranscurridos": "4",
+        "departamento": "COFEPRIS",
+        "numeroDeProcedimiento": "260507"  
+    },
+    {
+       "id": "250102",
+        "tipoDeTramite": "Datos generales del trámite",
+        "fecha": "2024-11-01",
+        "fechaActualizacion": "2024-11-07",
+        "diasTranscurridos": "4",
+        "departamento": "PROFEPA",
+        "numeroDeProcedimiento": "250102"  
+    },
+    {
+       "id": "250103",
+        "tipoDeTramite": "Datos generales del trámite",
+        "fecha": "2024-11-01",
+        "fechaActualizacion": "2024-11-07",
+        "diasTranscurridos": "4",
+        "departamento": "PROFEPA",
+        "numeroDeProcedimiento": "250103"  
+    },
+    {
+       "id": "240311",
+        "tipoDeTramite": "Datos generales del trámite",
+        "fecha": "2024-11-01",
+        "fechaActualizacion": "2024-11-07",
+        "diasTranscurridos": "4",
+        "departamento": "SEDENA",
+        "numeroDeProcedimiento": "240311"  
     }
 
 ]

@@ -1,14 +1,18 @@
 import { ActivatedRoute, Router } from '@angular/router';
+import { Component, ViewChild } from '@angular/core';
 import { DATOS_ESTATICOS, ID_PROCEDIMIENTO } from '../../constants/exportacion-sustancias-quimicas.enum';
+import { AgregarDestinatarioFinalContenedoraComponent } from '../../../240123/components/agregar-destinatario-final-contenedora/agregar-destinatario-final-contenedora.component';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DestinoFinal } from '../../../../shared/models/terceros-relacionados.model';
+import { ModalComponent } from '../../../../shared/components/modal/modal.component';
 import { OnInit } from '@angular/core';
 import { Proveedor } from '../../../../shared/models/terceros-relacionados.model';
 import { Subject } from 'rxjs';
 import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-relacionados/terceros-relacionados.component';
 import { Tramite240123Query } from '../../estados/tramite240123Query.query';
 import { Tramite240123Store } from '../../estados/tramite240123Store.store';
+import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
 
 /**
@@ -19,11 +23,30 @@ import { takeUntil } from 'rxjs';
 @Component({
   selector: 'app-terceros-relacionados-contenedora',
   standalone: true,
-  imports: [CommonModule, TercerosRelacionadosComponent],
+  imports: [CommonModule, TercerosRelacionadosComponent, ModalComponent],
   templateUrl: './terceros-relacionados-contenedora.component.html',
   styleUrl: './terceros-relacionados-contenedora.component.scss',
 })
 export class TercerosRelacionadosContenedoraComponent implements OnInit {
+  
+/**
+ * Referencia al componente Modal utilizado para mostrar diálogos modales en la vista.
+ *
+ * @type {ModalComponent}
+ * @memberof TercerosRelacionadosContenedoraComponent
+ * @see ModalComponent
+ * @example
+ * this.modalComponent.abrir(Componente, { ... });
+ */
+@ViewChild('modal', { static: false }) modalComponent!: ModalComponent;
+  /**
+   * Indica si el formulario debe mostrarse en modo solo lectura.
+   *
+   * @type {boolean}
+   * @memberof TercerosRelacionadosContenedoraComponent
+   * @default false
+   */
+  esFormularioSoloLectura: boolean = false;
 
   /**
    * @property
@@ -65,8 +88,18 @@ export class TercerosRelacionadosContenedoraComponent implements OnInit {
     private tramiteStore: Tramite240123Store,
     private tramiteQuery: Tramite240123Query,
     private router: Router,
-    private activatedRoute: ActivatedRoute
-  ) {}
+    private activatedRoute: ActivatedRoute,
+    private consultaQuery: ConsultaioQuery
+  ) {
+     this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.unsubscribe$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+        })
+      )
+      .subscribe();
+  }
 
   /**
    * Hook del ciclo de vida que se ejecuta al inicializar el componente.
@@ -84,6 +117,33 @@ export class TercerosRelacionadosContenedoraComponent implements OnInit {
       
     this.proveedorTablaDatos = DATOS_ESTATICOS;
   }
+
+    /**
+     * Abre el modal correspondiente según el nombre del evento recibido.
+     *
+     * Si el evento es `'Datosmercancia'`, se carga el componente `DatosMercanciaContenedoraComponent`
+     * dentro del modal y se le pasa una función de cierre como input.
+     *
+     * @method openModal
+     * @param {string} event - Nombre del evento que indica qué componente se debe mostrar en el modal.
+     * @returns {void}
+     */
+    openModal(event: string): void {
+      if (event === 'agregar-destino-final') {
+        this.modalComponent.abrir(AgregarDestinatarioFinalContenedoraComponent, {
+          cerrarModal: this.cerrarModal.bind(this),
+        });
+      } 
+    }
+    /**
+     * Cierra el modal dinámico actualmente abierto utilizando el método del componente modal.
+     *
+     * @method cerrarModal
+     * @returns {void}
+     */
+    cerrarModal(): void {
+      this.modalComponent.cerrar();
+    }
 
   /**
    * Modifica los datos de un destinatario final y redirige a la vista de modificación.

@@ -35,13 +35,13 @@ describe('PagoDeDerechoComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize the form with correct controls', () => {
-    expect(component.FormSolicitud).toBeDefined();
-    expect(component.FormSolicitud.get('datosImportadorExportador.exentoDePago')).toBeTruthy();
-    expect(component.FormSolicitud.get('datosImportadorExportador.Justificacion')).toBeTruthy();
-    expect(component.FormSolicitud.get('datosImportadorExportador.Banco')).toBeTruthy();
-  });
-
+ it('should initialize the form with correct controls', () => {
+  expect(component.FormSolicitud).toBeDefined();
+  expect(component.FormSolicitud.get('exentoDePago')).toBeTruthy();
+  expect(component.FormSolicitud.get('Justificacion')).toBeTruthy();
+  expect(component.FormSolicitud.get('Banco')).toBeTruthy();
+  expect(component.FormSolicitud.get('rfcImportExport')).toBeTruthy();
+});
   it('should call getJustificacion and set Justificacion correctly', () => {
     component.getJustificacion();
     expect(component.Justificacion).toEqual([
@@ -58,21 +58,23 @@ describe('PagoDeDerechoComponent', () => {
     ]);
   });
 
-  it('should update form fields when "exentoDePago" is "No"', () => {
-    component.updateFormFieldsBasedOnExentoDePago('No');
-    
-    expect(component.FormSolicitud.get('datosImportadorExportador.rfcImportExport')?.value).toBe('454000554');
-    expect(component.FormSolicitud.get('datosImportadorExportador.cadenaDependencia')?.value).toBe('0001012A0000EX');
-    expect(component.FormSolicitud.get('datosImportadorExportador.importePago')?.value).toBe('594.0');
-  });
+it('should update form fields when "exentoDePago" is "No"', () => {
+  component.updateFormFieldsBasedOnExentoDePago('No');
 
-  it('should reset form fields when "exentoDePago" is not "No"', () => {
-    component.updateFormFieldsBasedOnExentoDePago('Si');
-    
-    expect(component.FormSolicitud.get('datosImportadorExportador.rfcImportExport')?.value).toBeNull();
-    expect(component.FormSolicitud.get('datosImportadorExportador.cadenaDependencia')?.value).toBeNull();
-    expect(component.FormSolicitud.get('datosImportadorExportador.importePago')?.value).toBeNull();
-  });
+  expect(component.FormSolicitud.get('rfcImportExport')?.value).toBe('454000554');
+  expect(component.FormSolicitud.get('cadenaDependencia')?.value).toBe('0001012A0000EX');
+  expect(component.FormSolicitud.get('importePago')?.value).toBe('594.0');
+});
+
+
+ it('should reset form fields when "exentoDePago" is not "No"', () => {
+  component.updateFormFieldsBasedOnExentoDePago('Si');
+  
+  expect(component.FormSolicitud.get('rfcImportExport')?.value).toBeNull();
+  expect(component.FormSolicitud.get('cadenaDependencia')?.value).toBeNull();
+  expect(component.FormSolicitud.get('importePago')?.value).toBeNull();
+});
+
 
 
 });

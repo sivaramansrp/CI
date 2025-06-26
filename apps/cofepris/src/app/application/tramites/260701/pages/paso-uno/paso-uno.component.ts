@@ -1,5 +1,7 @@
 import { Subject,map, takeUntil } from 'rxjs';
+
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
+
 import { Component, OnInit } from '@angular/core';
 import { CertificadosLicenciasService } from '../../services/certificados-licencias.service';
 

@@ -1,31 +1,40 @@
+import { Component, ViewChild } from '@angular/core';
+import { Subject, map, takeUntil } from 'rxjs';
+import { AgregarDestinatarioFinalContenedoraComponent } from '../../../240311/components/agregar-destinatario-final-contenedora/agregar-destinatario-final-contenedora.component';
+import { AgregarProveedorContenedoraComponent } from '../../../240311/components/agregar-proveedor-contenedora/agregar-proveedor-contenedora.component';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DestinoFinal } from '../../../../shared/models/terceros-relacionados.model';
+import { ModalComponent } from '../../../../shared/components/modal/modal.component';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { Proveedor } from '../../../../shared/models/terceros-relacionados.model';
-import { Subject } from 'rxjs';
 import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-relacionados/terceros-relacionados.component';
 import { Tramite240311Query } from '../../estados/tramite240311Query.query';
 import { Tramite240311Store } from '../../estados/tramite240311Store.store';
-import { takeUntil } from 'rxjs';
 
 /**
  * @title Terceros Relacionados Contenedora
  * @description Componente contenedor encargado de suscribirse a los datos de destinatarios finales y proveedores del trámite.
  * @summary Conecta el estado global del store con el componente visual de terceros relacionados.
  */
-
 @Component({
   selector: 'app-terceros-relacionados-contenedora',
   standalone: true,
-  imports: [CommonModule, TercerosRelacionadosComponent],
+  imports: [CommonModule, TercerosRelacionadosComponent, ModalComponent],
   templateUrl: './terceros-relacionados-contenedora.component.html',
   styleUrl: './terceros-relacionados-contenedora.component.scss',
 })
+
+/**
+ * Clase que representa el componente contenedor de terceros relacionados.
+ * Este componente se encarga de gestionar la lógica de negocio relacionada con los destinatarios finales y proveedores
+ * del trámite 240311, suscribiéndose a los datos del store y proporcionando funcionalidades
+ */
 export class TercerosRelacionadosContenedoraComponent
   implements OnInit, OnDestroy
 {
+  @ViewChild('modal', { static: false }) modalComponent!: ModalComponent;
   /**
    * Observable para limpiar las suscripciones activas al destruir el componente.
    * @property {Subject<void>} destroy$
@@ -45,6 +54,12 @@ export class TercerosRelacionadosContenedoraComponent
   proveedorTablaDatos: Proveedor[] = [];
 
   /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  esFormularioSoloLectura: boolean = false;
+
+  /**
    * Constructor del componente.
    *
    * @method constructor
@@ -54,9 +69,50 @@ export class TercerosRelacionadosContenedoraComponent
    */
   constructor(
     private tramiteStore: Tramite240311Store,
-    private tramiteQuery: Tramite240311Query 
+    private tramiteQuery: Tramite240311Query,
+    private consultaioQuery: ConsultaioQuery
   ) {
-    // Constructor del componente 
+    // Constructor del componente
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.unsubscribe$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+        })
+      )
+      .subscribe();
+  }
+
+  /**
+   * Abre el modal correspondiente según el nombre del evento recibido.
+   *
+   * Si el evento es `'Datosmercancia'`, se carga el componente `DatosMercanciaContenedoraComponent`
+   * dentro del modal y se le pasa una función de cierre como input.
+   *
+   * @method openModal
+   * @param {string} event - Nombre del evento que indica qué componente se debe mostrar en el modal.
+   * @returns {void}
+   */
+  openModal(event: string): void {
+    if (event === 'agregar-destino-final') {
+      this.modalComponent.abrir(AgregarDestinatarioFinalContenedoraComponent, {
+        cerrarModal: this.cerrarModal.bind(this),
+      });
+    } else if (event === 'agregar-proveedor') {
+      this.modalComponent.abrir(AgregarProveedorContenedoraComponent, {
+        cerrarModal: this.cerrarModal.bind(this),
+      });
+    }
+  }
+
+  /**
+   * Cierra el modal dinámico actualmente abierto utilizando el método del componente modal.
+   *
+   * @method cerrarModal
+   * @returns {void}
+   */
+  cerrarModal(): void {
+    this.modalComponent.cerrar();
   }
 
   /**

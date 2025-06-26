@@ -1,5 +1,5 @@
-<form [formGroup]="aviosForm">
-    <div class="col-md-8 mb-3">
+<form [formGroup]="aviosForm" class="w-100">
+    <div class="col-md-12 mb-3">
         <ng-container formGroupName="adaceForm">
             <div class="row mb-3">
                 <div class="col-md-4">
@@ -17,7 +17,8 @@
                 <div class="col-md-6">
                     <div>
                         <app-catalogo-select class="optionsPais" [catalogo]="optionsPais" [required]="true" id="pais"
-                            formControlName="pais" [ngClass]="isValid(adaceForm,'pais') ? 'required' : ''"
+                            formControlName="pais" [isDisabled]="soloLectura"
+                            [ngClass]="isValid(adaceForm,'pais') ? 'required' : ''"
                             (change)="setValoresStore(adaceForm, 'pais', 'setPais')">
                         </app-catalogo-select>
                     </div>
@@ -31,7 +32,8 @@
                 <div class="col-md-6 ">
                     <div>
                         <app-catalogo-select class="optionsAnio" [catalogo]="optionsAnio" [required]="true" id="anio"
-                            formControlName="anio" [ngClass]="isValid(adaceForm,'anio') ? 'required' : ''"
+                            formControlName="anio" [isDisabled]="soloLectura"
+                            [ngClass]="isValid(adaceForm,'anio') ? 'required' : ''"
                             (change)="setValoresStore(adaceForm, 'anio', 'setAnio')">
                         </app-catalogo-select>
                     </div>
@@ -56,25 +58,26 @@
 
             <ng-titulo titulo="Datos del aviso" />
             <div class="row">
-                <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX"
-                    [configuracionTabla]="tablaDeDatos.encabezadas" [datos]="tablaDeDatos.datos"
-                    (listaDeFilaSeleccionada)="filaSeleccionada($event)">
+                <div class="col-md-12">
+                    <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX"
+                        [configuracionTabla]="tablaDeDatos.encabezadas" [datos]="tablaDeDatos.datos"
+                        (listaDeFilaSeleccionada)="filaSeleccionada($event)">
 
-                </app-tabla-dinamica>
-                <div class="d-flex justify-content-end">
-                    <button type="button" class="btn btn-primary ms-3" [disabled]="true"
-                        (click)="accionesBotones(botonAccionesTipos.ELIMINAR)">
-                        Eliminar
-                    </button>
-                    <button type="button" class="btn btn-primary ms-3" [disabled]="false" (click)="datosDelAviso()">
-                        Modificar
-                    </button>
-                    <button type="button" class="btn btn-primary ms-3" [disabled]="false" (click)="datosDelAviso()">
-                        Agregar
-                    </button>
+                    </app-tabla-dinamica>
+                    <div class="d-flex justify-content-end">
+                        <button type="button" class="btn btn-primary ms-3" [disabled]="true"
+                            (click)="accionesBotones(botonAccionesTipos.ELIMINAR)" [disabled]="soloLectura">
+                            Eliminar
+                        </button>
+                        <button type="button" class="btn btn-primary ms-3" [disabled]="false" (click)="datosDelAviso()" [disabled]="soloLectura">
+                            Modificar
+                        </button>
+                        <button type="button" class="btn btn-primary ms-3" [disabled]="false" (click)="datosDelAviso()" [disabled]="soloLectura">
+                            Agregar
+                        </button>
+                    </div>
                 </div>
             </div>
-
 
         </ng-container>
 
@@ -143,19 +146,21 @@
                                         <div class="col-md-4 mb-3">
                                             <label>NIV o número de serie*:</label>
                                             <input type="text" class="form-control" formControlName="numeroNIV"
+                                                [disabled]="soloLectura"
                                                 [ngClass]="isValid(adaceForm,'numeroNIV') ? 'required' : ''"
                                                 (change)="setValoresStore(adaceForm, 'numeroNIV', 'setNumeroNIV')" />
                                         </div>
                                         <div class="col-md-4 mb-3">
                                             <label>Año modelo*:</label>
                                             <input type="text" class="form-control" id="anoModelo"
-                                                formControlName="anoModelo"
+                                                formControlName="anoModelo" [disabled]="soloLectura"
                                                 [ngClass]="isValid(adaceForm,'anoModelo') ? 'required' : ''"
                                                 (change)="setValoresStore(adaceForm, 'anoModelo','setAnoModelo')" />
                                         </div>
                                         <div class="col-md-4 mb-3">
                                             <label>Marca*:</label>
                                             <input type="text" class="form-control" id="marca" formControlName="marca"
+                                                [disabled]="soloLectura"
                                                 [ngClass]="isValid(adaceForm,'marca') ? 'required' : ''" (change)="
                                           setValoresStore(adaceForm, 'marca', 'setMarca')" />
                                         </div>
@@ -168,20 +173,21 @@
                                         <div class="col-md-4 mb-3">
                                             <label>Modelo*:</label>
                                             <input type="text" class="form-control" formControlName="modelo"
+                                                [disabled]="soloLectura"
                                                 [ngClass]="isValid(adaceForm,'modelo') ? 'required' : ''"
                                                 (change)="setValoresStore(adaceForm, 'modelo', 'setModelo')" />
                                         </div>
                                         <div class="col-md-4 mb-3">
                                             <label>Tipo/Variante/Versión*:</label>
                                             <input type="text" class="form-control" id="tipoVariante"
-                                                formControlName="tipoVariante"
+                                                formControlName="tipoVariante" [disabled]="soloLectura"
                                                 [ngClass]="isValid(adaceForm,'tipoVariante') ? 'required' : ''"
                                                 (change)="setValoresStore(adaceForm, 'anoModelo','setTipoVariante')" />
                                         </div>
                                         <div class="col-md-4 ">
                                             <app-catalogo-select class="optionCilindros" [label]="'No. de cilindros'"
                                                 [catalogo]="optionCilindros" [required]="true" id="cilindros"
-                                                formControlName="cilindros"
+                                                formControlName="cilindros" [isDisabled]="soloLectura"
                                                 [ngClass]="isValid(adaceForm,'cilindros') ? 'required' : ''"
                                                 (change)="setValoresStore(adaceForm, 'cilindros', 'setCilindros')">
                                             </app-catalogo-select>
@@ -194,7 +200,7 @@
                                         <div class="col-md-4 mb-3">
                                             <app-catalogo-select class="optionCilindros" [label]="'No. de puertas'"
                                                 [catalogo]="optionCilindros" [required]="true" id="cilindros"
-                                                formControlName="puertas"
+                                                formControlName="puertas" [isDisabled]="soloLectura"
                                                 [ngClass]="isValid(adaceForm,'puertas') ? 'required' : ''"
                                                 (change)="setValoresStore(adaceForm, 'puertas', 'setPuertas')">
                                             </app-catalogo-select>
@@ -204,6 +210,7 @@
                                             <app-catalogo-select class="optionCombustible"
                                                 [label]="'Tipo de combustible'" [catalogo]="optionCombustible"
                                                 [required]="true" id="combustible" formControlName="combustible"
+                                                [isDisabled]="soloLectura"
                                                 [ngClass]="isValid(adaceForm,'combustible') ? 'required' : ''"
                                                 (change)="setValoresStore(adaceForm, 'combustible', 'setCombustible')">
                                             </app-catalogo-select>
@@ -212,6 +219,7 @@
                                         <div class="col-md-4 mb-3">
                                             <label>No. del título de propiedad*:</label>
                                             <input type="text" class="form-control" formControlName="propiedad"
+                                                [disabled]="soloLectura"
                                                 [ngClass]="isValid(adaceForm,'propiedad') ? 'required' : ''"
                                                 (change)="setValoresStore(adaceForm, 'propiedad', 'setPropiedad')" />
                                         </div>
@@ -227,6 +235,7 @@
                                                 la persona a la que se haya concedido la propiedad*:
                                                 :</label>
                                             <input type="text" class="form-control" formControlName="nombreTitulo"
+                                                [disabled]="soloLectura"
                                                 [ngClass]="isValid(adaceForm,'nombreTitulo') ? 'required' : ''"
                                                 (change)="setValoresStore(adaceForm, 'nombreTitulo', 'setNombreTitulo')" />
                                         </div>
@@ -238,7 +247,7 @@
                                             <app-catalogo-select class="paisIssued"
                                                 [label]="'País que emitió el título de propiedad'"
                                                 [catalogo]="paisIssued" [required]="true" id="paisEmitio"
-                                                formControlName="paisEmitio"
+                                                formControlName="paisEmitio" [isDisabled]="soloLectura"
                                                 [ngClass]="isValid(adaceForm,'paisEmitio') ? 'required' : ''"
                                                 (change)="setValoresStore(adaceForm, 'paisEmitio', 'setPaisEmitio')">
                                             </app-catalogo-select>
@@ -246,6 +255,7 @@
                                         <div class="col-md-6 mb-3">
                                             <label>Estado o provincia de emisión del título de propiedad</label>
                                             <input type="text" class="form-control" formControlName="provinciaEmision"
+                                                [disabled]="soloLectura"
                                                 [ngClass]="isValid(adaceForm,'provinciaEmision') ? 'required' : ''"
                                                 (change)="setValoresStore(adaceForm, 'provinciaEmision', 'setProvinciaEmision')" />
                                         </div>
@@ -257,13 +267,14 @@
                                         <div class="col-md-6 mb-3">
                                             <label>No. de placas de circulación en el país de procedencia</label>
                                             <input type="text" class="form-control" formControlName="procedencia"
+                                                [disabled]="soloLectura"
                                                 (change)="setValoresStore(adaceForm, 'procedencia', 'setProcedencia')" />
                                         </div>
                                         <div class="col-md-6 mb-3">
                                             <app-catalogo-select class="paisIssued"
                                                 [label]="'Forma de adquisición del vehículo importado'"
                                                 [catalogo]="paisIssued" [required]="true" id="vehiculoImportado"
-                                                formControlName="paisEmitio"
+                                                formControlName="paisEmitio" [isDisabled]="soloLectura"
                                                 [ngClass]="isValid(adaceForm,'vehiculoImportado') ? 'required' : ''"
                                                 (change)="setValoresStore(adaceForm, 'vehiculoImportado', 'setVehiculoImportado')">
                                             </app-catalogo-select>
@@ -276,6 +287,7 @@
                                         <div class="col-md-6 mb-3">
                                             <label>No. de documento de exportación*:</label>
                                             <input type="text" class="form-control" formControlName="exportacion"
+                                                [disabled]="soloLectura"
                                                 [ngClass]="isValid(adaceForm,'exportacion') ? 'required' : ''"
                                                 (change)="setValoresStore(adaceForm, 'exportacion', 'setExportacion')" />
                                         </div>
@@ -290,7 +302,7 @@
                                         <div class="col-md-4">
                                             <app-catalogo-select class="paisIssued" [label]="'Aduana de importación'"
                                                 [catalogo]="optionAduana" [required]="true" id="aduanaImportacion"
-                                                formControlName="aduanaImportacion"
+                                                formControlName="aduanaImportacion" [isDisabled]="soloLectura"
                                                 [ngClass]="isValid(adaceForm,'aduanaImportacion') ? 'required' : ''"
                                                 (change)="setValoresStore(adaceForm, 'aduanaImportacion', 'setAduanaImportacion')">
                                             </app-catalogo-select>
@@ -299,6 +311,7 @@
                                         <div class="col-md-4 ">
                                             <label>Patente de importación*:</label>
                                             <input type="text" class="form-control" formControlName="patenteImportacion"
+                                                [disabled]="soloLectura"
                                                 [ngClass]="isValid(adaceForm,'patenteImportacion') ? 'required' : ''"
                                                 (change)="setValoresStore(adaceForm, 'patenteImportacion', 'setPatenteImportacion')" />
                                         </div>
@@ -306,7 +319,7 @@
                                         <div class="col-md-4 ">
                                             <label>Pedimento de importación*:</label>
                                             <input type="text" class="form-control"
-                                                formControlName="pedimentoImportacion"
+                                                formControlName="pedimentoImportacion" [disabled]="soloLectura"
                                                 [ngClass]="isValid(adaceForm,'pedimentoImportacion') ? 'required' : ''"
                                                 (change)="setValoresStore(adaceForm, 'pedimentoImportacion', 'setPedimentoImportacion')" />
                                         </div>
@@ -322,6 +335,7 @@
                                         <div class="col-md-6 ">
                                             <label>Kilometraje a la fecha de la importación*:</label>
                                             <input type="text" class="form-control" formControlName="kilometraje"
+                                                [disabled]="soloLectura"
                                                 [ngClass]="isValid(adaceForm,'kilometraje') ? 'required' : ''"
                                                 (change)="setValoresStore(adaceForm, 'kilometraje', 'setKilometraje')" />
                                         </div>
@@ -329,6 +343,7 @@
                                         <div class="col-md-6 ">
                                             <label>Valor en la aduana*:</label>
                                             <input type="text" class="form-control" formControlName="valorAduana"
+                                                [disabled]="soloLectura"
                                                 [ngClass]="isValid(adaceForm,'valorAduana') ? 'required' : ''"
                                                 (change)="setValoresStore(adaceForm, 'valorAduana', 'setValorAduana')" />
                                         </div>
@@ -340,6 +355,7 @@
                                         <div class="col-md-4 ">
                                             <label>Monto de IGI pagado*:</label>
                                             <input type="text" class="form-control" formControlName="montoIGI"
+                                                [disabled]="soloLectura"
                                                 [ngClass]="isValid(adaceForm,'montoIGI') ? 'required' : ''"
                                                 (change)="setValoresStore(adaceForm, 'montoIGI', 'setMontoIGI')" />
                                         </div>
@@ -347,7 +363,7 @@
                                         <div class="col-md-4">
                                             <app-catalogo-select class="paisIssued" [label]="'Forma de pago del IGI*:'"
                                                 [catalogo]="optionAduana" [required]="true" id="formaPagoIGI"
-                                                formControlName="formaPagoIGI"
+                                                formControlName="formaPagoIGI" [isDisabled]="soloLectura"
                                                 [ngClass]="isValid(adaceForm,'formaPagoIGI') ? 'required' : ''"
                                                 (change)="setValoresStore(adaceForm, 'formaPagoIGI', 'setFormaPagoIGI')">
                                             </app-catalogo-select>
@@ -355,6 +371,7 @@
                                         <div class="col-md-4 ">
                                             <label>Monto de DTA pagado*:</label>
                                             <input type="text" class="form-control" formControlName="montoDTA"
+                                                [disabled]="soloLectura"
                                                 [ngClass]="isValid(adaceForm,'montoDTA') ? 'required' : ''"
                                                 (change)="setValoresStore(adaceForm, 'montoDTA', 'setMontoDTA')" />
                                         </div>
@@ -368,6 +385,7 @@
                                         <div class="col-md-4 ">
                                             <label>Monto de IVA pagado*:</label>
                                             <input type="text" class="form-control" formControlName="montoIVA"
+                                                [disabled]="soloLectura"
                                                 [ngClass]="isValid(adaceForm,'montoIVA') ? 'required' : ''"
                                                 (change)="setValoresStore(adaceForm, 'montoIVA', 'setMontoIVA')" />
                                         </div>
@@ -375,6 +393,7 @@
                                         <div class="col-md-4 ">
                                             <label>Valor en dólares*:</label>
                                             <input type="text" class="form-control" formControlName="valorDolares"
+                                                [disabled]="soloLectura"
                                                 [ngClass]="isValid(adaceForm,'valorDolares') ? 'required' : ''"
                                                 (change)="setValoresStore(adaceForm, 'valorDolares', 'setValorDolares')" />
                                         </div>
@@ -388,6 +407,7 @@
                                         <div class="col-md-12 ">
                                             <label>Folio del CFDI por el servicio de importación:</label>
                                             <input type="text" class="form-control" formControlName="folioCFDI"
+                                                [disabled]="soloLectura"
                                                 [ngClass]="isValid(adaceForm,'folioCFDI') ? 'required' : ''"
                                                 (change)="setValoresStore(adaceForm, 'folioCFDI', 'setFolioCFDI')" />
                                         </div>
@@ -402,6 +422,7 @@
                                         <div class="col-md-6 ">
                                             <label>Folio del CFDI por la venta en territorio nacional*:</label>
                                             <input type="text" class="form-control" formControlName="folioVenta"
+                                                [disabled]="soloLectura"
                                                 [ngClass]="isValid(adaceForm,'folioVenta') ? 'required' : ''"
                                                 (change)="setValoresStore(adaceForm, 'folioVenta', 'setFolioVenta')" />
                                         </div>
@@ -409,6 +430,7 @@
                                         <div class="col-md-6 ">
                                             <label>Valor de venta en territorio nacional sin IVA*:</label>
                                             <input type="text" class="form-control" formControlName="valorVenta"
+                                                [disabled]="soloLectura"
                                                 [ngClass]="isValid(adaceForm,'valorVenta') ? 'required' : ''"
                                                 (change)="setValoresStore(adaceForm, 'valorVenta', 'setValorVenta')" />
                                         </div>

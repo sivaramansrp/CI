@@ -51,12 +51,12 @@ describe('DatosDelTramiteContenedoraComponent', () => {
         { provide: ActivatedRoute, useValue: {} }
       ]
     }).compileComponents();
-
     fixture = TestBed.createComponent(DatosDelTramiteContenedoraComponent);
     component = fixture.componentInstance;
   });
 
-  it('should create', () => {
+
+  it('should run #constructor()', async () => {
     expect(component).toBeTruthy();
   });
 

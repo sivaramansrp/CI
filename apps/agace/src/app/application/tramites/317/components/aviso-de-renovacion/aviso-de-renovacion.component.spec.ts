@@ -7,7 +7,7 @@ import { UnicoStore } from '../../estados/renovacion.store';
 import { UnicoQuery } from '../../estados/queries/unico.query';
 
 const mockService = {
-  getSolicitante: jest.fn(),
+  getSolicitante: jest.fn().mockReturnValue(of({})), 
   obtenerDatosLocalidad: jest.fn().mockReturnValue(of([])),
   obtenerRadio: jest.fn().mockReturnValue(of([])), 
 };
@@ -75,7 +75,7 @@ describe('AvisoDeRenovacionComponent', () => {
       claveReferencia: [{ value: '', disabled: false }],
     });
     component.esFormularioSoloLectura = true;
-   
+    component.actualizarEstado();
     expect(component.avisoForm.disabled).toBe(true);
   });
 
@@ -94,7 +94,7 @@ describe('AvisoDeRenovacionComponent', () => {
       claveReferencia: [{ value: '', disabled: false }],
     });
     component.esFormularioSoloLectura = false;
-   
+    component.actualizarEstado();
     expect(component.avisoForm.enabled).toBe(true);
   });
 

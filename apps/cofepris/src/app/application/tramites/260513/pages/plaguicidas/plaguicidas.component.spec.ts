@@ -3,6 +3,7 @@ import { PlaguicidasComponent } from './plaguicidas.component';
 import { WizardComponent } from '@libs/shared/data-access-user/src/tramites/components/wizard/wizard.component';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { By } from '@angular/platform-browser';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('PlaguicidasComponent', () => {
   let component: PlaguicidasComponent;
@@ -11,7 +12,7 @@ describe('PlaguicidasComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [PlaguicidasComponent],
-      imports: [WizardComponent], // Import the standalone component here
+      imports: [WizardComponent, HttpClientTestingModule], // Import the standalone component here
       schemas: [CUSTOM_ELEMENTS_SCHEMA], // Add this to suppress unknown element errors
     }).compileComponents();
 

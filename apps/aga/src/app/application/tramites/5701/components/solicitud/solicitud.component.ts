@@ -4,6 +4,7 @@ import {
   ADV_BORRAR_CAMPOS,
   ALFANUMERICO_ESPACIO,
   AduanaService,
+  CAMPO_VACIO,
   Catalogo,
   CatalogoPaises,
   CrossListLable,
@@ -14,6 +15,7 @@ import {
   InputHoraComponent,
   MENSAJE_ALERTA_NO_FECHAS,
   MSG_ALERTA_ELIMINAR_ELEMENTO,
+  MSG_DATOS_GUARDADOS,
   MSG_ELIMINA_ELEMENTO,
   Notificacion,
   PROGRAMA_FOMENTO,
@@ -94,7 +96,7 @@ import {
   Subject,
   catchError,
   delay,
-  first,
+  forkJoin,
   map,
   merge,
   switchMap,
@@ -158,6 +160,7 @@ import {
   MSJ_LINEA_CAPTURA_NO_PAGADA,
   MSJ_LINEA_CAPTURA_USADA,
 } from '../../../../core/enums/5701/mensajes-modal-5701.enum';
+import { CheckInputTextComponent } from '../../../../shared/components/check-input-text/check-input-text.component';
 import { SIN_VALOR_SELECT } from '@libs/shared/data-access-user/src/core/enums/transporte-componente.enum';
 import { ValidaDespachoService } from '../../../../core/services/5701/valida-despacho.service';
 @Component({
@@ -473,6 +476,26 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    */
   linkGeneraLineaCapturaSeguro!: SafeUrl;
 
+  /**
+   * @description Bandera para deshabilitar el campo de certificaciones.
+   */
+  certificacionesDisabled: boolean = true;
+
+  /**
+   * @description Bandera para deshabilitar el campo de certificación OEA.
+   */
+  certificacionOEADisabled: boolean = true;
+
+  /**
+   * @description Bandera para deshabilitar el campo de certificación revisión de origen.
+   */
+  revisionDisabled: boolean = true;
+
+  /**
+   * @description Bandera para deshabilitar el campo de certificación industria automotriz.
+   */
+  industriaAutomotriz!: CheckInputTextComponent;
+
   constructor(
     private seccionQuery: SeccionLibQuery,
     private seccionStore: SeccionLibStore,
@@ -532,6 +555,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
       .subscribe();
 
     this.crearFormSolicitud();
+    this.datosImportadorExportador.get('tipoEmpresaCertificada')?.disable();
 
     this.FormSolicitud.statusChanges
       .pipe(
@@ -560,6 +584,10 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
     }
   }
 
+  /**
+   * @description Valida tipo de persona y obtiene la patente si es persona física.
+   * @returns {void}
+   */
   private validaTipoPersona(): void {
     // Esta validación debería cambiar y validar contra el valor almacenado
     // en el store.
@@ -733,9 +761,14 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    * @param {string} field - El nombre del campo a validar.
    * @returns {boolean} - Retorna `true` si el campo es válido, de lo contrario `false`.
    */
-  isValid(form: FormGroup, field: string): boolean {
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    return this.validacionesService.isValid(form, field)!;
+  // eslint-disable-next-line class-methods-use-this
+  isValid(form: FormGroup, field: string): boolean | null {
+    const CONTROL = form.get(field) as FormControl;
+    if (CONTROL) {
+      const ERRORS = CONTROL.errors;
+      return ERRORS && CONTROL.touched;
+    }
+    return false;
   }
 
   /**
@@ -910,7 +943,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
   private obtenerPatente(): void {
     let patente: Patente;
     this.patenteService
-      .getListaPatente('SAAA980822LP1')
+      .getListaPatente('SAAE5901017V9')
       .pipe(
         switchMap((pantenteResponse) => {
           if (pantenteResponse) {
@@ -1206,6 +1239,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    */
   validaRfc(): void {
     const RFC_IMP_EXP = this.datosImportadorExportador.get('RFCImpExp')?.value;
+
     if (
       RFC_IMP_EXP &&
       !this.datosImportadorExportador.get('RFCImpExp')?.valid
@@ -1220,8 +1254,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
         txtBtnAceptar: 'Aceptar',
         txtBtnCancelar: '',
       };
-      this.datosImportadorExportador.get('nombre')?.reset();
-      this.datosImportadorExportador.get('RFCImpExp')?.reset();
+      this.desactivaCamposCertificaciones();
       return;
     }
 
@@ -1230,60 +1263,60 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
       this.datosImportadorExportador.get('nombre')?.value
     ) {
       // Si el RFC está vacío pero el nombre tiene un valor, se limpia el nombre.
-      this.datosImportadorExportador.get('nombre')?.reset();
-      this.tramite5701Store.setNombre('');
+      this.desactivaCamposCertificaciones();
       return;
     }
 
-    this.validaRfcService
-      .getValidacionRfc(RFC_IMP_EXP)
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-        switchMap((validacionResponse) => {
-          if (validacionResponse) {
-            this.muestraCertificaciones = !validacionResponse.datos;
-            this.tramite5701Store.setRfcGenerico(validacionResponse.datos);
+    if (RFC_IMP_EXP && this.datosImportadorExportador.get('RFCImpExp')?.valid) {
+      this.validaRfcService
+        .getValidacionRfc(RFC_IMP_EXP)
+        .pipe(
+          takeUntil(this.destroyNotifier$),
+          switchMap((validacionResponse) => {
+            if (validacionResponse) {
+              this.muestraCertificaciones = !validacionResponse.datos;
+              this.tramite5701Store.setRfcGenerico(validacionResponse.datos);
 
-            if (validacionResponse.datos) {
-              // Aqui se hará la busqueda del rfc, para obtener el nombre
-              SolicitudComponent.llenarCamposDesactivados(
-                this.datosImportadorExportador,
-                'nombre',
-                RFC_GENERICO
-              );
-              this.tramite5701Store.setNombre(RFC_GENERICO);
-              return EMPTY;
+              if (validacionResponse.datos) {
+                // Aqui se hará la busqueda del rfc, para obtener el nombre
+                SolicitudComponent.llenarCamposDesactivados(
+                  this.datosImportadorExportador,
+                  'nombre',
+                  RFC_GENERICO
+                );
+                this.tramite5701Store.setNombre(RFC_GENERICO);
+                return EMPTY;
+              }
+              return this.idcService
+                .getInformacionContribuyente(RFC_IMP_EXP)
+                .pipe(tap());
             }
-            return this.idcService
-              .getInformacionContribuyente(RFC_IMP_EXP)
-              .pipe(tap());
-          }
-          return EMPTY;
-        }),
-        tap((idcResponse) => {
-          const NOMBRE = idcResponse.datos?.nombre
-            ? idcResponse.datos?.nombre
-            : idcResponse.datos?.razon_social;
-          if (NOMBRE) {
-            this.datosImportadorExportador.get('nombre')?.setValue(NOMBRE);
-            this.getCertificaciones(RFC_IMP_EXP);
-          } else {
-            this.nuevaNotificacion = {
-              tipoNotificacion: 'alert',
-              categoria: 'danger',
-              modo: 'action',
-              titulo: 'Avisos',
-              mensaje: MSG_ERROR_RFC_NO_ENCONTRADO,
-              cerrar: false,
-              txtBtnAceptar: 'Aceptar',
-              txtBtnCancelar: '',
-            };
-          }
-        })
-      )
-      .subscribe();
-
-    this.tramite5701Store.setRFCImportadorExportador(RFC_IMP_EXP);
+            return EMPTY;
+          }),
+          tap((idcResponse) => {
+            const NOMBRE = idcResponse.datos?.nombre
+              ? idcResponse.datos?.nombre
+              : idcResponse.datos?.razon_social;
+            if (NOMBRE) {
+              this.datosImportadorExportador.get('nombre')?.setValue(NOMBRE);
+              this.getCertificaciones(RFC_IMP_EXP);
+            } else {
+              this.nuevaNotificacion = {
+                tipoNotificacion: 'alert',
+                categoria: 'danger',
+                modo: 'action',
+                titulo: 'Avisos',
+                mensaje: MSG_ERROR_RFC_NO_ENCONTRADO,
+                cerrar: false,
+                txtBtnAceptar: 'Aceptar',
+                txtBtnCancelar: '',
+              };
+            }
+          })
+        )
+        .subscribe();
+      this.tramite5701Store.setRFCImportadorExportador(RFC_IMP_EXP);
+    }
   }
 
   /**
@@ -1401,40 +1434,6 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    */
   mostrarColapsable(): void {
     this.colapsable = !this.colapsable;
-  }
-
-  /**
-   * Selecciona una aduana y actualiza los campos correspondientes en el formulario.
-   *
-   * @param aduana - El objeto de tipo Catalogo que contiene la información de la aduana seleccionada.
-   * @returns {void}
-   */
-  aduanaSeleccion(aduana: Catalogo): void {
-    SolicitudComponent.darValorCampoFormulario(
-      this.despacho,
-      'idAduanaDespacho',
-      aduana.id
-    );
-    SolicitudComponent.darValorCampoFormulario(
-      this.despacho,
-      'aduanaDespacho',
-      aduana.descripcion
-    );
-    this.validacionPedimento = true;
-
-    const PATENTE = FormulariosService.convertirValorANumero(
-      this.despacho,
-      'patente'
-    );
-    const ID_ADUANA = FormulariosService.convertirValorANumero(
-      this.despacho,
-      'idAduanaDespacho'
-    );
-
-    this.datosPedimentoComponente = {
-      patente: PATENTE,
-      idAduanaDespacho: ID_ADUANA,
-    };
   }
 
   /**
@@ -2118,6 +2117,10 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    */
   public changeAduana(): void {
     const ADUANA = this.despacho.get('idAduanaDespacho')?.value;
+    this.datosPedimentoComponente = {
+      patente: this.solicitudState?.patente.patente,
+      idAduanaDespacho: ADUANA,
+    };
 
     if (ADUANA) {
       this.despacho.get('idSeccionDespacho')?.setValue(SIN_VALOR);
@@ -2183,15 +2186,22 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    * @returns {void} No retorna ningún valor.
    */
   private getCertificaciones(rfc: string): void {
+    /** Obtiene certificacion IMMEX */
     this.certificacionService
       .getCertificacion(rfc, PROGRAMA_IMMEX)
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((response) => {
-          if (response) {
-            this.tramite5701Store.setBlnImmex(response.datos.immex);
-            this.tramite5701Store.setDescripcionImmex(response.datos.des_immex);
+          if (response.datos) {
+            const VALORES_IMMEX: DatosCheckInputText = {
+              checkbox: response.datos.immex,
+              texto: response.datos.des_immex,
+            };
+            this.checkImmex(VALORES_IMMEX);
           }
+        }),
+        catchError((error) => {
+          return throwError(() => error);
         })
       )
       .subscribe();
@@ -2202,12 +2212,12 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
         takeUntil(this.destroyNotifier$),
         map((response) => {
           if (response.datos) {
-            this.tramite5701Store.setBlnProgramaFomento(
-              response.datos.programa_fomento
-            );
-            this.tramite5701Store.setDescripcionImmex(
-              response.datos.des_programa_fomento
-            );
+            const VALORES_PROGRAMA_FOMENTO: DatosCheckInputText = {
+              checkbox: response.datos.programa_fomento,
+              texto: response.datos.des_programa_fomento,
+            };
+
+            this.checkPrograma(VALORES_PROGRAMA_FOMENTO);
           }
         }),
         catchError((error) => {
@@ -2216,6 +2226,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
       )
       .subscribe();
 
+    /** Obtiene certificación de industria automotriz */
     this.certificacionIndustriaAutomotrizService
       .getCertificacionAutomotriz(rfc)
       .pipe(
@@ -2236,11 +2247,19 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
       )
       .subscribe();
 
+    /** Obtiene certificación de origen */
     this.certificacionOrigenService
       .getCertificacionOrigen(rfc)
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((response) => {
+          this.datosImportadorExportador
+            .get('revision')
+            ?.setValue(response.datos);
+          this.tramite5701Store.setRevision(response.datos);
+
+          this.revisionDisabled = response.datos ? true : false;
+
           this.tramite5701Store.setBlnRevisionOrigen(response.datos);
         }),
         catchError((error) => {
@@ -2249,6 +2268,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
       )
       .subscribe();
 
+    /** Obtiene certificación OEA */
     const VALIDACION_OEA_IMPEXP$ =
       this.certificacionOeaService.getValidacionCertificacion(
         MODALIDAD_OEA_IMPEXP,
@@ -2280,20 +2300,37 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
         rfc
       );
 
-    merge(
+    forkJoin([
       VALIDACION_OEA_IMPEXP$,
       VALIDACION_OEA_CTRL$,
       VALIDACION_OEA_AEREO$,
       VALIDACION_OEA_SECIIT$,
       VALIDACION_OEA_TEXTIL$,
-      VALIDACION_OEA_RFESTRATEGICO$
-    )
+      VALIDACION_OEA_RFESTRATEGICO$,
+    ])
       .pipe(
         takeUntil(this.destroyNotifier$),
-        first(),
-        tap((response) => {
-          this.tramite5701Store.setBlnOEA(response.datos);
-          return response.datos;
+        tap((responses) => {
+          const ALGUNA_TIENE_VALOR = responses.some((res) =>
+            Boolean(res.datos)
+          );
+          if (ALGUNA_TIENE_VALOR) {
+            this.datosImportadorExportador
+              .get('certificacionOEA')
+              ?.setValue(true);
+            this.datosImportadorExportador
+              .get('tipoEmpresaCertificada')
+              ?.disable();
+            this.certificacionOEADisabled = true;
+          } else {
+            this.datosImportadorExportador
+              .get('certificacionOEA')
+              ?.setValue(false);
+            this.datosImportadorExportador
+              .get('tipoEmpresaCertificada')
+              ?.enable();
+            this.certificacionOEADisabled = false;
+          }
         })
       )
       .subscribe();
@@ -2397,6 +2434,16 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
           if (this.montoPagadoLineas < MONTO_A_CUBRIR) {
             this.montoPagadoLineas +=
               responseLineaCapturaPagada.datos.pago_model.importe;
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'alert',
+              categoria: 'danger',
+              modo: 'action',
+              titulo: TITULO_MODAL_AVISO,
+              mensaje: MSG_DATOS_GUARDADOS,
+              cerrar: false,
+              txtBtnAceptar: TEXTO_ACEPTAR,
+              txtBtnCancelar: CAMPO_VACIO,
+            };
             this.datosTablaPagos.push(PAGO);
           } else {
             this.nuevaNotificacion = {
@@ -2406,18 +2453,18 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
               titulo: TITULO_MODAL_AVISO,
               mensaje: MSG_MONTO_PAGADO_CUBIERTO,
               cerrar: false,
-              txtBtnAceptar: 'Aceptar',
-              txtBtnCancelar: '',
+              txtBtnAceptar: TEXTO_ACEPTAR,
+              txtBtnCancelar: CAMPO_VACIO,
             };
             this.pagoCaptura.get('lineaCaptura')?.reset();
             this.pagoCaptura.get('monto')?.reset();
             return;
           }
 
-          // Actualizar el estado una vez, en lugar de en cada iteración
+          /** Actualizar el estado una vez, en lugar de en cada iteración */
           this.tramite5701Store.setLineasCaptura(this.datosTablaPagos);
 
-          //Limpia los campos de la línea de captura y monto
+          /**  Limpia los campos de la línea de captura y monto */
           this.pagoCaptura.get('lineaCaptura')?.reset();
           this.pagoCaptura.get('monto')?.reset();
 
@@ -2483,7 +2530,6 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
           const CHECK_DD = this.solicitudState.dd;
 
           if (CHECK_DD || CHECK_LDA) {
-            // Uno de ellos esta seleccionado
             if (confirmar) {
               this.despacho.get(this.tipoDespacho)?.setValue(false);
               this.limpiaCamposDdaLda();
@@ -2537,8 +2583,8 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
                   titulo: TITULO_MODAL_AVISO,
                   mensaje: MSG_ELIMINA_ELEMENTO,
                   cerrar: false,
-                  txtBtnAceptar: 'Cerrar',
-                  txtBtnCancelar: '',
+                  txtBtnAceptar: TEXTO_ACEPTAR,
+                  txtBtnCancelar: CAMPO_VACIO,
                 };
               }),
               takeUntil(this.destroyNotifier$)
@@ -3055,8 +3101,8 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
                 titulo: TITULO_MODAL_AVISO,
                 mensaje: MSJ_ERROR_ID_SOCIO_COMERCIAL,
                 cerrar: false,
-                txtBtnAceptar: 'Aceptar',
-                txtBtnCancelar: '',
+                txtBtnAceptar: TEXTO_CERRAR,
+                txtBtnCancelar: CAMPO_VACIO,
               };
               return EMPTY;
             }
@@ -3073,11 +3119,11 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
               tipoNotificacion: 'alert',
               categoria: 'danger',
               modo: 'action',
-              titulo: 'Error',
-              mensaje: 'Ocurrió un error al obtener el socio comercial.',
+              titulo: TITULO_MODAL_AVISO,
+              mensaje: MSJ_ERROR_ID_SOCIO_COMERCIAL,
               cerrar: false,
-              txtBtnAceptar: 'Aceptar',
-              txtBtnCancelar: '',
+              txtBtnAceptar: TEXTO_CERRAR,
+              txtBtnCancelar: CAMPO_VACIO,
             };
             return EMPTY; // Evita que el error se propague
           })
@@ -3312,5 +3358,42 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
         )
         .subscribe();
     }
+  }
+
+  /**
+   * @description Desactiva los campos de certificaciones y limpia los valores del store.
+   * @returns {void} No retorna ningún valor.
+   */
+  desactivaCamposCertificaciones(): void {
+    this.datosImportadorExportador.reset({
+      RFCImpExp: '',
+      nombre: '',
+      tipoEmpresaCertificada: '',
+      certificacionOEA: false,
+      revision: false,
+    });
+
+    /** Limpia store */
+    this.tramite5701Store.update({
+      RFCImportadorExportador: '',
+      nombre: '',
+      tipoEmpresaCertificada: '',
+      certificacionOEA: false,
+      revision: false,
+
+      checkIMMEX: false,
+      descripcionImmex: '',
+
+      programa: false,
+      descripcionProgramaFomento: '',
+
+      industriaAutomotriz: false,
+      descripcionIndustrialAutomotriz: '',
+    });
+
+    this.datosImportadorExportador.get('tipoEmpresaCertificada')?.disable();
+    this.certificacionOEADisabled = true;
+    this.revisionDisabled = true;
+    this.certificacionesDisabled = true;
   }
 }
