@@ -68,5 +68,35 @@ describe('ModificacionComponent', () => {
     expect(inicializarFormularioSpy).toHaveBeenCalled();
   });
 
+  it('should set form values with setFormValues', () => {
+    component.derechoState = {
+      datosModificacion: {
+        rfc: 'RFC123',
+        federal: 'FED456',
+        tipo: 'TIPO789',
+        programa: 'PROG101',
+        actividadProductivaActual: 'ACTPROD',
+        actividadProductiva: 'ACTPROD2',
+      },
+    } as any;
+    component.inicializarFormulario();
+    component.setFormValues();
+
+    expect(component.modificacionForm.get('rfc')?.value).toBe('RFC123');
+    expect(component.modificacionForm.get('federal')?.value).toBe('FED456');
+    expect(component.modificacionForm.get('tipo')?.value).toBe('TIPO789');
+    expect(component.modificacionForm.get('programa')?.value).toBe('PROG101');
+    expect(component.modificacionForm.get('actividadProductivaActual')?.value).toBe('ACTPROD');
+  });
+
+  it('should call the correct store method in setValoresStore', () => {
+    component.inicializarFormulario();
+    component.modificacionForm.get('rfc')?.setValue('RFC999');
+
+    const storeSpy = jest.spyOn(component['tramite80314Store'], 'setDatosModificacion');
+
+    component.setValoresStore(component.modificacionForm, 'rfc', 'setDatosModificacion');
+
+    expect(storeSpy).toHaveBeenCalledWith('RFC999');
+  });
 });
-  
