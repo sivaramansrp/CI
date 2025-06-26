@@ -6,6 +6,7 @@
           "regimen" : "Definitivos",
           "clasificacionRegimen" : "De importación",
           "condicionDeLaMercancia" : "Nuevo",
-          "fraccionArancelaria" : "27090099 Los demás"
+          "fraccionArancelaria" : "27090099 Los demás",
+           "descripcionClobGenerica1" : "Texto de ejemplo para el motivo"
       }
   ]

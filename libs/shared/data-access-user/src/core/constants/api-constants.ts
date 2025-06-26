@@ -121,3 +121,10 @@ export const API_ENVIAR_FIRMA = 'api/tramite/firmar';
 
 
 
+/**
+ * API para recuperar las tareas por usuario.
+ * @see http://api-vucem-1069277193.us-east-1.elb.amazonaws.com/api/bandeja-tarea/swagger-ui/index.html#/Bandeja%20tarea/consultar-tareas-servicio
+ */
+export const API_GET_BANDEJATAREA = 'bandeja-tarea/usuario/tarea';
+
+

@@ -1,17 +1,13 @@
 
-import {CatalogoSelectComponent, InputFecha, ModeloDeFormaDinamica } from "@ng-mf/data-access-user";
-
+import {CatalogoSelectComponent, ConsultaioQuery, InputFecha, ModeloDeFormaDinamica } from "@ng-mf/data-access-user";
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Subject, takeUntil } from "rxjs";
-
-import { CommonModule } from '@angular/common';
-
-import { InputFechaComponent } from "@ng-mf/data-access-user";
-
 import { ESTIMADA_RETORNO, FECHA_ESTIMADA_DE_INGRESO, FORMULARIO_FECHA_IMPORTACION } from '../../enums/retorno-importacion-temporal.enum';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Subject, map, takeUntil } from "rxjs";
 import { Tramite630104State, Tramite630104Store } from '../../estados/tramites/tramite630104.store';
+import { CommonModule } from '@angular/common';
 import { FormasDinamicasComponent } from "@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component";
+import { InputFechaComponent } from "@ng-mf/data-access-user";
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { Tramite630104Query } from '../../estados/queries/tramite630104.query';
 
@@ -61,16 +57,33 @@ export class FechaDeImportacionComponent implements OnInit, OnDestroy {
   estadoSeleccionado!: Tramite630104State;
 
   /**
+   * Indica si el formulario está en modo solo lectura.
+   */
+  esSoloLectura!: boolean;
+
+  /**
    * Constructor del componente.
    * @param fb - Servicio para construir formularios reactivos.
    * @param tramite630104Store - Servicio para gestionar el estado del trámite 630104.
    * @param tramite630104Query - Servicio para consultar el estado del trámite 630104.
-   */
+    @param consultaioQuery - Servicio para consultar el estado de la consulta de entrada/salida.
+    
+  */
   constructor(
     private fb: FormBuilder,
     private tramite630104Store: Tramite630104Store,
-    private tramite630104Query: Tramite630104Query
-  ) {}
+    private tramite630104Query: Tramite630104Query,
+    private consultaioQuery: ConsultaioQuery
+  ) {
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState) => {
+          this.esSoloLectura = seccionState.readonly;
+        })
+      )
+      .subscribe();
+  }
 
   /**
    * Método del ciclo de vida `OnInit`.
@@ -78,6 +91,13 @@ export class FechaDeImportacionComponent implements OnInit, OnDestroy {
    * y configura el formulario reactivo.
    */
   ngOnInit(): void {
+    this.tramite630104Query.selectSeccionState$
+    .pipe(takeUntil(this.destroyed$))
+    .subscribe((estado: Tramite630104State) => {
+      this.estadoSeleccionado = estado;
+      this.inizializarFormulario(); 
+      this.inicializarEstadoFormulario(); 
+    });
     this.getValorStore();
     this.inizializarFormulario();
   }
@@ -88,10 +108,43 @@ export class FechaDeImportacionComponent implements OnInit, OnDestroy {
   inizializarFormulario(): void {
     this.FechaDeImportacionTemporalFormulario = this.fb.group({
       fechaLimiteRetorno: [this.estadoSeleccionado?.['fechaLimiteRetorno'] || '', Validators.required],
-      cuentaProrroga: [this.estadoSeleccionado?.['cuentaProrroga'] || '', Validators.required],
+      fechaIngreso: [this.estadoSeleccionado?.['fechaIngreso'] || '', Validators.required],
     });
   }
 
+  /**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.
+   * Además, obtiene la información del catálogo de mercancía.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.inizializarFormulario();
+    }
+  }
+
+  /**
+   * @method
+   * @name guardarDatosFormulario
+   * @description
+   * Inicializa los formularios y obtiene los datos de la tabla.
+   * Dependiendo del modo de solo lectura (`esFormularioSoloLectura`),
+   * deshabilita o habilita todos los formularios del componente.
+   * Si el formulario está en modo solo lectura, todos los formularios se deshabilitan para evitar modificaciones.
+   * Si no está en modo solo lectura, todos los formularios se habilitan para permitir la edición.
+   *
+   * @returns {void}
+   */
+  guardarDatosFormulario(): void {
+    this.inizializarFormulario();
+    if (this.esSoloLectura) {
+      this.FechaDeImportacionTemporalFormulario.disable();
+    } else {
+      this.FechaDeImportacionTemporalFormulario.enable();
+    }
+  }
+  
   /**
    * Obtiene el valor del estado del store y lo asigna a `estadoSeleccionado`.
    */

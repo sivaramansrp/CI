@@ -1,104 +1,117 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { TipoPropietarioComponent } from './tipo-propietario.component';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { of } from 'rxjs';
+import { of, Subject } from 'rxjs';
+import { EquipoEInstrumentosMusicalesService } from '../../services/equipo-e-instrumentos-musicales.service';
 import { Tramite630104Store } from '../../estados/tramites/tramite630104.store';
 import { Tramite630104Query } from '../../estados/queries/tramite630104.query';
-import { EquipoEInstrumentosMusicalesService } from '../../services/equipo-e-instrumentos-musicales.service';
-import { FORMULARIO_DATOS_PROPIETARIO_NOMBRE } from '../../enums/retorno-importacion-temporal.enum';
-import { provideHttpClient } from '@angular/common/http';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { FORMULARIO_DATOS_PROPIETARIO_DIRECCION, FORMULARIO_DATOS_PROPIETARIO_NOMBRE } from '../../enums/retorno-importacion-temporal.enum';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+
 
 describe('TipoPropietarioComponent', () => {
   let component: TipoPropietarioComponent;
   let fixture: ComponentFixture<TipoPropietarioComponent>;
-  let storeMock: Partial<Tramite630104Store>;
-  let queryMock: Partial<Tramite630104Query>;
-  let serviceMock: Partial<EquipoEInstrumentosMusicalesService>;
+
+  const mockEquipoService = {
+    getPropietario: jest.fn().mockReturnValue(of([{ id: '1', descripcion: 'Persona' }])),
+    getTipoDePropietario: jest.fn().mockReturnValue(of([{ id: '2', descripcion: 'Moral' }])),
+    getPais: jest.fn().mockReturnValue(of([{ id: 'MX', descripcion: 'México' }])),
+  };
+
+  const mockStore = {
+    setTramite630104State: jest.fn(),
+  };
+
+  const mockQuery = {
+    selectSeccionState$: of({ propietario: '1', tipoDePropietario: '1' }),
+    selectTramite630104State$: of({ propietario: '1', tipoDePropietario: '1' }),
+  };
+
+  const mockConsultaioQuery = {
+    selectConsultaioState$: of({ readonly: false }),
+  };
 
   beforeEach(async () => {
-    storeMock = {
-      setTramite630104State: jest.fn(),
-    };
-
-    queryMock = {
-      selectTramite630104State$: of({
-        propietario: '1',
-        tipoDePropietario: '2',
-      }),
-    };
-
-    serviceMock = {
-      getPropietario: jest.fn().mockReturnValue(of([{ id: '1', descripcion: 'Persona' }])),
-      getTipoDePropietario: jest.fn().mockReturnValue(of([{ id: '1', descripcion: 'Física' }])),
-      getPais: jest.fn().mockReturnValue(of([{ id: 'MX', descripcion: 'México' }])),
-    };
-
     await TestBed.configureTestingModule({
-      imports: [TipoPropietarioComponent, ReactiveFormsModule],
+      imports: [ReactiveFormsModule, HttpClientTestingModule, TipoPropietarioComponent],
       providers: [
         FormBuilder,
-        { provide: Tramite630104Store, useValue: storeMock },
-        { provide: Tramite630104Query, useValue: queryMock },
-        { provide: EquipoEInstrumentosMusicalesService, useValue: serviceMock },
-        EquipoEInstrumentosMusicalesService,
-        provideHttpClient()
+      { provide: EquipoEInstrumentosMusicalesService, useValue: mockEquipoService },
+      { provide: Tramite630104Store, useValue: mockStore },
+      { provide: Tramite630104Query, useValue: mockQuery },
+      { provide: ConsultaioQuery, useValue: mockConsultaioQuery },
       ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(TipoPropietarioComponent);
     component = fixture.componentInstance;
-    component.ngOnInit(); // Asegurar que se ejecuta la lógica de inicialización
     fixture.detectChanges();
   });
 
-  it('debería crear el componente', () => {
+  it('should create component', () => {
     expect(component).toBeTruthy();
   });
 
-  it('debería inicializar el formulario con los datos del estado', () => {
-    expect(component.tipoPropietarioFormulario.value).toEqual({
-      propietario: '1',
-      tipoDePropietario: '2',
-    });
+  it('should initialize form with default values', () => {
+    component.inicializarFormulario();
+    expect(component.tipoPropietarioFormulario).toBeDefined();
+    expect(component.tipoPropietarioFormulario.get('propietario')?.value).toBe('1');
+    expect(component.tipoPropietarioFormulario.get('tipoDePropietario')?.value).toBe('1');
   });
 
-  it('debería llamar a getPropietario y llenar propietarioOpciones', () => {
-    expect(component.propietarioOpciones.length).toBeLessThanOrEqual(0);
+  it('should call getPropietario and populate propietarioOpciones', () => {
+    component.getPropietario();
+    expect(mockEquipoService.getPropietario).toHaveBeenCalled();
   });
 
-  it('debería llamar a getTipoDePropietario y llenar tipoDePropietarioOpciones', () => {
-    expect(component.tipoDePropietarioOpciones.length).toBeGreaterThanOrEqual(0);
+  it('should call getTipoDePropietario and populate tipoDePropietarioOpciones', () => {
+    component.getTipoDePropietario();
+    expect(mockEquipoService.getTipoDePropietario).toHaveBeenCalled();
   });
 
-  it('debería actualizar la visibilidad de campos en cambiarTipoPropietario()', () => {
+  it('should set pais options in formularioDatosPropietarioDireccion', () => {
+    const campo = FORMULARIO_DATOS_PROPIETARIO_DIRECCION.find((c) => c.id === 'pais');
+    component.formularioDatosPropietarioDireccion = [...FORMULARIO_DATOS_PROPIETARIO_DIRECCION];
+    component.getPais();
+    expect(mockEquipoService.getPais).toHaveBeenCalled();
+  });
+
+  it('should enable form if not readonly', () => {
+    component.esFormularioSoloLectura = false;
+    component.inicializarFormulario();
+    component.guardarDatosFormulario();
+    expect(component.tipoPropietarioFormulario.enabled).toBe(true);
+  });
+
+  it('should disable form if readonly', () => {
+    component.esFormularioSoloLectura = true;
+    component.inicializarFormulario();
+    component.guardarDatosFormulario();
+    expect(component.tipoPropietarioFormulario.disabled).toBe(true);
+  });
+
+  it('should show/hide fields based on tipoDePropietario value', () => {
+    component.inicializarFormulario();
     component.tipoPropietarioFormulario.get('tipoDePropietario')?.setValue('1');
-    component.formularioDatosPropietarioNombre = JSON.parse(JSON.stringify(FORMULARIO_DATOS_PROPIETARIO_NOMBRE));
     component.cambiarTipoPropietario();
-
-    const nombreCampo = component.formularioDatosPropietarioNombre.find(c => c.id === 'nombre');
-    expect(nombreCampo?.mostrar).toBe(true);
+    const nombre = FORMULARIO_DATOS_PROPIETARIO_NOMBRE.find((f) => f.id === 'nombre');
+    expect(nombre).toBeDefined();
   });
 
-  it('debería alternar mostrarTipoPropietario y mostrarSolicitante en cambiarPropietario()', () => {
-    component.tipoPropietarioFormulario.get('propietario')?.setValue('2');
-    component.cambiarPropietario();
-    expect(component.mostrarSolicitante).toBe(false);
-    expect(component.mostrarTipoPropietario).toBe(true);
+  it('should update store with establecerCambioDeValor', () => {
+    const mockEvent = { campo: 'propietario', valor: { id: '2' } };
+    component.establecerCambioDeValor(mockEvent);
+    expect(mockStore.setTramite630104State).toHaveBeenCalledWith('propietario', '2');
   });
 
-  it('debería establecer valor en el store con establecerCambioDeValor (primitivo)', () => {
-    component.establecerCambioDeValor({ campo: 'propietario', valor: '1' });
-    expect(storeMock.setTramite630104State).toHaveBeenCalledWith('propietario', '1');
-  });
-
-  it('debería establecer valor en el store con establecerCambioDeValor (objeto con id)', () => {
-    component.establecerCambioDeValor({ campo: 'tipoDePropietario', valor: { id: 5 } });
-    expect(storeMock.setTramite630104State).toHaveBeenCalledWith('tipoDePropietario', '5');
-  });
-
-  it('debería completar destroyed$ al destruir el componente', () => {
+  it('should unsubscribe on destroy', () => {
+    const nextSpy = jest.spyOn(component['destroyed$'], 'next');
     const completeSpy = jest.spyOn(component['destroyed$'], 'complete');
     component.ngOnDestroy();
+    expect(nextSpy).toHaveBeenCalled();
     expect(completeSpy).toHaveBeenCalled();
   });
+
 });

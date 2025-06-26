@@ -12,9 +12,4 @@ export const APP_ROUTES: Route[] = [
    * 
    * @type {Route}
    */
-  {
-    path: '',
-    loadChildren: () =>
-      import('./remote-entry/entry.routes').then((m) => m.remoteRoutes),
-  },
 ];

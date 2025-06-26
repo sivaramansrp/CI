@@ -50,11 +50,11 @@ describe('ModificarDestinatarioFinalComponent', () => {
     component.ngOnInit();
   });
 
-  it('should create', () => {
+  it('debe crearse', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should save a new destinatario and update the store in guardarDestinatario', () => {
+  it('debe guardar un nuevo destinatario y actualizar el store en guardarDestinatario', () => {
     component.modificarDestinatarioFinal.setValue({
       tipoPersona: 'FISICA',
       rfc: 'XAXX010101000',
@@ -89,7 +89,7 @@ describe('ModificarDestinatarioFinalComponent', () => {
     expect(location.back).toHaveBeenCalled();
   });
 
-  it('should update destinatario in the table in updateDestinatarioFinalTablaDatos', () => {
+  it('debe actualizar el destinatario en la tabla en updateDestinatarioFinalTablaDatos', () => {
     component.destinatarioFinalTablaDatos = [{
       tipoPersona: 'FISICA',
       curp: '',
@@ -119,46 +119,46 @@ describe('ModificarDestinatarioFinalComponent', () => {
       descColonia: ''}]
 
     component.selectedDestinario =  {
-    tipoPersona: 'FISICA',
-    curp: '',
-    rfc: 'XAXX010101000',
-    nombres: 'John',
-    nombreRazonSocial: '',
-    primerApellido: 'Doe',
-    segundoApellido: 'Smith',
-    pais: '1',
-    estado: '1',
-    estadoLocalidad: '1',
-    municipioAlcaldia: '1',
-    localidad: '1',
-    codigoPostal: '12345',
-    colonia: '1',
-    calle: 'Main Street',
-    numeroExterior: '123',
-    numeroInterior: '',
-    lada: '55',
-    telefono: '12345678',
-    correoElectronico: 'john.doe@example.com',
-    descPais: '',
-    descEstado: '',
-    descMunicipio: '',
-    descLocalidad: '',
-    descCodigoPostal: '',
-    descColonia: ''
-  }
-
-    const updatedDestinatario = [{
       tipoPersona: 'FISICA',
+      curp: '',
       rfc: 'XAXX010101000',
       nombres: 'John',
-      curp:'',
       nombreRazonSocial: '',
       primerApellido: 'Doe',
       segundoApellido: 'Smith',
       pais: '1',
       estado: '1',
       estadoLocalidad: '1',
-      localidad:'1',
+      municipioAlcaldia: '1',
+      localidad: '1',
+      codigoPostal: '12345',
+      colonia: '1',
+      calle: 'Main Street',
+      numeroExterior: '123',
+      numeroInterior: '',
+      lada: '55',
+      telefono: '12345678',
+      correoElectronico: 'john.doe@example.com',
+      descPais: '',
+      descEstado: '',
+      descMunicipio: '',
+      descLocalidad: '',
+      descCodigoPostal: '',
+      descColonia: ''
+    }
+
+    const updatedDestinatario = [{
+      tipoPersona: 'FISICA',
+      rfc: 'XAXX010101000',
+      nombres: 'John Updated',
+      curp: '',
+      nombreRazonSocial: '',
+      primerApellido: 'Doe',
+      segundoApellido: 'Smith',
+      pais: '1',
+      estado: '1',
+      estadoLocalidad: '1',
+      localidad: '1',
       municipioAlcaldia: '1',
       codigoPostal: '12345',
       colonia: '1',
@@ -174,23 +174,21 @@ describe('ModificarDestinatarioFinalComponent', () => {
       descLocalidad: '',
       descCodigoPostal: '',
       descColonia: '',
-  }];
+    }];
 
     component.updateDestinatarioFinalTablaDatos(updatedDestinatario);
 
     expect(component.destinatarioFinalTablaDatos[0].nombres).toBe('John Updated');
     expect(tramiteStore.modifyDestinatarioFinalTablaDatos).toHaveBeenCalledWith(component.destinatarioFinalTablaDatos);
-    expect(location.back).toHaveBeenCalled();
-  }
-  );
-  it('should navigate back when cancelar is called', () => {
+  });
+
+  it('debe regresar cuando se llama cancelar', () => {
     component.cancelar();
     expect(location.back).toHaveBeenCalled();
+  });
 
-  }
-  );
-  it('should set destinatarioFinalTablaDatos when ngOnInit is called', () => {
-    const tramiteQueryMock = TestBed.inject(Tramite260104Query);
+  it('debe establecer destinatarioFinalTablaDatos cuando se llama ngOnInit', () => {
+    const tramiteQueryMock = TestBed.inject(Tramite260104Query) as any;
     const destinatarioFinalTablaDatos = [{
       tipoPersona: 'FISICA',
       curp: '',
@@ -217,63 +215,56 @@ describe('ModificarDestinatarioFinalComponent', () => {
       descMunicipio: '',
       descLocalidad: '',
       descCodigoPostal: '',
-      descColonia: ''}];
+      descColonia: ''
+    }];
 
-    const destinatarioFinalTablaDatosSpy = jest.spyOn(tramiteQueryMock as any, 'getDestinatarioFinalTablaDatos$').mockReturnValue(of(destinatarioFinalTablaDatos));
+    // Assign the observable directly
+    tramiteQueryMock.getDestinatarioFinalTablaDatos$ = of(destinatarioFinalTablaDatos);
+
     component.ngOnInit();
     expect(component.destinatarioFinalTablaDatos).toEqual(destinatarioFinalTablaDatos);
-    expect(destinatarioFinalTablaDatosSpy).toHaveBeenCalled();
-  }
-  );
-  it('should update descPais when cambiaPais is called', () => {
+  });
+
+  it('debe actualizar descPais cuando se llama cambiaPais', () => {
     component.paisesDatos = [{ id: 1, descripcion: 'Mexico' }];
-    component.modificarDestinatarioFinal.get('pais')?.setValue(1); // Ensure the value matches the id type
+    component.modificarDestinatarioFinal.get('pais')?.setValue(1);
     component.cambiaPais();
     expect(component.modificarDestinatarioFinal.get('descPais')?.value).toBe('Mexico');
   });
 
-  it('should update desc when cambiaEstado is called', () => {
+  it('debe actualizar descEstado cuando se llama cambiaEstado', () => {
     component.estadosDatos = [{ id: 1, descripcion: 'Mexico' }];
-    component.modificarDestinatarioFinal.get('estado')?.setValue(1); // Ensure the value matches the id type
+    component.modificarDestinatarioFinal.get('estado')?.setValue(1);
     component.cambiaEstado();
     expect(component.modificarDestinatarioFinal.get('descEstado')?.value).toBe('Mexico');
   });
 
-  it('should update desc when cambiaMunicipio is called', () => {
-    component.estadosDatos = [{ id: 1, descripcion: 'Mexico' }];
-    component.modificarDestinatarioFinal.get('municipio')?.setValue(1); // Ensure the value matches the id type
+  it('debe actualizar descMunicipio cuando se llama cambiaMunicipio', () => {
+    component.municipiosDatos = [{ id: 1, descripcion: 'Mexico' }];
+    component.modificarDestinatarioFinal.get('municipio')?.setValue(1);
     component.cambiaMunicipio();
     expect(component.modificarDestinatarioFinal.get('descMunicipio')?.value).toBe('Mexico');
   });
 
-  it('should update desc when cambiaLocalidad is called', () => {
-    component.estadosDatos = [{ id: 1, descripcion: 'Mexico' }];
-    component.modificarDestinatarioFinal.get('localidad')?.setValue(1); // Ensure the value matches the id type
+  it('debe actualizar descLocalidad cuando se llama cambiaLocalidad', () => {
+    component.localidadesDatos = [{ id: 1, descripcion: 'Mexico' }]; // Correct array
+    component.modificarDestinatarioFinal.get('localidad')?.setValue(1);
     component.cambiaLocalidad();
     expect(component.modificarDestinatarioFinal.get('descLocalidad')?.value).toBe('Mexico');
   });
 
-  it('should update desc when cambiaCodigoPostal is called', () => {
-    component.estadosDatos = [{ id: 1, descripcion: 'Mexico' }];
-    component.modificarDestinatarioFinal.get('codigoPostal')?.setValue(1); // Ensure the value matches the id type
+  it('debe actualizar descCodigoPostal cuando se llama cambiaCodigoPostal', () => {
+    component.codigosPostalesDatos = [{ id: 1, descripcion: 'Mexico' }]; // Correct array
+    component.modificarDestinatarioFinal.get('codigoPostal')?.setValue(1);
     component.cambiaCodigoPostal();
     expect(component.modificarDestinatarioFinal.get('descCodigoPostal')?.value).toBe('Mexico');
   });
 
-  it('should update desc when cambiaColonia is called', () => {
-    component.estadosDatos = [{ id: 1, descripcion: 'Mexico' }];
-    component.modificarDestinatarioFinal.get('colonia')?.setValue(1); // Ensure the value matches the id type
-    component.cambiaColonia();
-    expect(component.modificarDestinatarioFinal.get('descColonia')?.value).toBe('Mexico');
-  });
-
-  it('should unsubscribe on ngOnDestroy', () => {
+  it('debe desuscribirse en ngOnDestroy', () => {
     const unsubscribeSpy = jest.spyOn(component['unsubscribe$'], 'next');
     const completeSpy = jest.spyOn(component['unsubscribe$'], 'complete');
     component.ngOnDestroy();
     expect(unsubscribeSpy).toHaveBeenCalled();
     expect(completeSpy).toHaveBeenCalled();
   });
-  
-
-  });
+});

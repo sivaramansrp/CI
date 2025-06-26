@@ -1,6 +1,8 @@
 <app-agregar-destinatario-custom
-[formaDatos]="terechosDatos$ | async"
+  [formaDatos]="terechosDatos$ | async"
   (updateDestinatarioFinalTablaDatos)="
-    updateDestinatarioFinalTablaDatos($event)">
+    updateDestinatarioFinalTablaDatos($event)
+  "
+  (cancelarEventListener)="cerrar.emit()"
+>
 </app-agregar-destinatario-custom>
-
