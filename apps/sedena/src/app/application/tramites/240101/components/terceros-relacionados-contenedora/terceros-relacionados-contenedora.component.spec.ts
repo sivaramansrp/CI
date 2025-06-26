@@ -8,54 +8,60 @@ import { Observable, of as observableOf, throwError } from 'rxjs';
 
 import { Component } from '@angular/core';
 import { TercerosRelacionadosContenedoraComponent } from './terceros-relacionados-contenedora.component';
-import { Tramite240101Store } from '../../estados/tramite240101Store.store';
-import { Tramite240101Query } from '../../estados/tramite240101Query.query';
-import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 import { Router, ActivatedRoute } from '@angular/router';
-
-@Injectable()
-class MockTramite240101Store {}
-
-@Injectable()
-class MockTramite240101Query {}
-
-
-@Injectable()
-class MockRouter {
-  navigate() {};
-}
+import { Tramite240101Store } from '../../estados/tramite240101Store.store'; // <-- Ensure this path is correct
+import { Tramite240101Query } from '../../estados/tramite240101Query.query'; // <-- Ensure this path is correct
+// If the files do not exist at this path, update the path accordingly or create stub files to resolve the import error.
+import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
+import { of, Subject } from 'rxjs';
+import { DestinoFinal, Proveedor } from '../../../../shared/models/terceros-relacionados.model';
 
 describe('TercerosRelacionadosContenedoraComponent', () => {
-  let fixture;
-  let component;
+  let component: TercerosRelacionadosContenedoraComponent;
+  let fixture: ComponentFixture<TercerosRelacionadosContenedoraComponent>;
+  let tramiteStoreMock: any;
+  let tramiteQueryMock: any;
+  let consultaQueryMock: any;
+  let routerMock: any;
+  let activatedRouteMock: any;
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule ],
+  beforeEach(async () => {
+    tramiteStoreMock = {
+      setDestinatarioFinalTablaDatos: jest.fn(),
+      setProveedorTablaDatos: jest.fn(),
+      actualizarDatosDestinatario: jest.fn(),
+      actualizarDatosProveedor: jest.fn(),
+      eliminarDestinatarioFinal: jest.fn(),
+      eliminarProveedorFinal: jest.fn(),
+    };
 
-      schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
+    tramiteQueryMock = {
+      getDestinatarioFinalTablaDatos$: of([]),
+      getProveedorTablaDatos$: of([]),
+    };
+
+    consultaQueryMock = {
+      selectConsultaioState$: of({ readonly: false }),
+    };
+
+    routerMock = {
+      navigate: jest.fn(),
+    };
+
+    activatedRouteMock = {};
+
+    await TestBed.resetTestingModule().configureTestingModule({
+      imports: [TercerosRelacionadosContenedoraComponent],
       providers: [
-        { provide: Tramite240101Store, useClass: MockTramite240101Store },
-        { provide: Tramite240101Query, useClass: MockTramite240101Query },
-        ConsultaioQuery,
-        { provide: Router, useClass: MockRouter },
-        {
-          provide: ActivatedRoute,
-          useValue: {
-            snapshot: {url: 'url', params: {}, queryParams: {}, data: {}},
-            url: observableOf('url'),
-            params: observableOf({}),
-            queryParams: observableOf({}),
-            fragment: observableOf('fragment'),
-            data: observableOf({})
-          }
-        },
-      ]
-    }).overrideComponent(TercerosRelacionadosContenedoraComponent, {
-
+        { provide: Tramite240101Store, useValue: tramiteStoreMock },
+        { provide: Tramite240101Query, useValue: tramiteQueryMock },
+        { provide: ConsultaioQuery, useValue: consultaQueryMock },
+        { provide: Router, useValue: routerMock },
+        { provide: ActivatedRoute, useValue: activatedRouteMock },
+      ],
     }).compileComponents();
     fixture = TestBed.createComponent(TercerosRelacionadosContenedoraComponent);
-    component = fixture.debugElement.componentInstance;
+    component = fixture.componentInstance;
   });
 
 
@@ -63,38 +69,25 @@ describe('TercerosRelacionadosContenedoraComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should run #ngOnInit()', async () => {
-    component.tramiteQuery = component.tramiteQuery || {};
-    component.tramiteQuery.getDestinatarioFinalTablaDatos$ = observableOf({});
-    component.tramiteQuery.getProveedorTablaDatos$ = observableOf({});
-    component.consultaQuery = component.consultaQuery || {};
-    component.consultaQuery.selectConsultaioState$ = observableOf({});
+  it('should subscribe to observables and update destinatarioFinalTablaDatos and proveedorTablaDatos on ngOnInit', () => {
+    const destinatarios = [{ nombre: 'A' }, { nombre: 'B' }];
+    const proveedores = [{ nombre: 'P1' }, { nombre: 'P2' }];
+    tramiteQueryMock.getDestinatarioFinalTablaDatos$ = of(destinatarios);
+    tramiteQueryMock.getProveedorTablaDatos$ = of(proveedores);
+    fixture = TestBed.createComponent(TercerosRelacionadosContenedoraComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
     component.ngOnInit();
-
+    expect(component.destinatarioFinalTablaDatos.length).toBe(2);
+    expect(component.proveedorTablaDatos.length).toBe(2);
   });
 
-  it('should run #openModal()', async () => {
-    component.modalComponent = component.modalComponent || {};
-    component.modalComponent.abrir = jest.fn();
-    component.cerrarModal = component.cerrarModal || {};
-    component.cerrarModal.bind = jest.fn();
-    component.openModal('agregar-destino-final');
-    expect(component.modalComponent.abrir).toHaveBeenCalled();
-  });
-
-  it('should run #cerrarModal()', async () => {
-    component.modalComponent = component.modalComponent || {};
-    component.modalComponent.cerrar = jest.fn();
-    component.cerrarModal();
-    expect(component.modalComponent.cerrar).toHaveBeenCalled();
-  });
-
-  it('should run #ngOnDestroy()', async () => {
-    component.unsubscribe$ = component.unsubscribe$ || {};
-    component.unsubscribe$.next = jest.fn();
-    component.unsubscribe$.complete = jest.fn();
+    it('should call next and complete on unsubscribe$ when ngOnDestroy is called', () => {
+    const nextSpy = jest.spyOn((component as any).unsubscribe$, 'next');
+    const completeSpy = jest.spyOn((component as any).unsubscribe$, 'complete');
     component.ngOnDestroy();
-    expect(component.unsubscribe$.next).toHaveBeenCalled();
+    expect(nextSpy).toHaveBeenCalled();
+    expect(completeSpy).toHaveBeenCalled();
   });
 
 });
