@@ -156,13 +156,19 @@ import {
   MSJ_ERROR_LINEA_CAPTURA,
   MSJ_ERROR_LINEA_CAPTURA_NO_VALIDA,
   MSJ_ERROR_RFC_AUTORIZACION_LDA,
+  MSJ_FECHA_DENTRO_DE_HORARIO_ADUANA,
   MSJ_LINEA_CAPTURA_DUPLICADA,
   MSJ_LINEA_CAPTURA_NO_PAGADA,
   MSJ_LINEA_CAPTURA_USADA,
+  MSJ_NO_RELACION_ENCARGO_CONFERIDO,
 } from '../../../../core/enums/5701/mensajes-modal-5701.enum';
 import { CheckInputTextComponent } from '../../../../shared/components/check-input-text/check-input-text.component';
 import { SIN_VALOR_SELECT } from '@libs/shared/data-access-user/src/core/enums/transporte-componente.enum';
 import { ValidaDespachoService } from '../../../../core/services/5701/valida-despacho.service';
+import { ValidaHorarioService } from '../../../../core/services/5701/valida-horario.service';
+import { BodyValidaHorario } from '../../../../core/models/5701/ValidaHorario.model';
+import { EncargoConferidoService } from '../../../../core/services/5701/encargo-conferido.service';
+import { BodyValidarEncargoConferido } from '../../../../core/models/5701/encargo-conferido.models';
 @Component({
   selector: 'app-solicitud',
   templateUrl: './solicitud.component.html',
@@ -496,6 +502,8 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    */
   industriaAutomotriz!: CheckInputTextComponent;
 
+  resetearFechaInicioTouch = false;
+
   constructor(
     private seccionQuery: SeccionLibQuery,
     private seccionStore: SeccionLibStore,
@@ -528,7 +536,9 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
     private readonly parametroMontoService: ParametroMontoService,
     private cdRef: ChangeDetectorRef,
     private validaDespachosService: ValidaDespachoService,
-    private domSanitizer: DomSanitizer
+    private domSanitizer: DomSanitizer,
+    private readonly validaHorarioService: ValidaHorarioService,
+    private readonly encargoConferidoService: EncargoConferidoService
   ) {}
 
   ngOnInit(): void {
@@ -1139,7 +1149,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    * cumpla con las restricciones específicas según el tipo de solicitud seleccionada.
    * @returns {Function} Una función que toma un `FormGroup` y devuelve un objeto con una clave booleana indicando si el intervalo es inválido, o `null` si el intervalo es válido.
    */
-  fechaIntervaloValidator(): void {    
+  fechaIntervaloValidator(): void {
     const FECHA_INICIO_STR = this.datosServicio.get('fechaInicio')?.value;
     const FECHA_FINAL_STR = this.datosServicio.get('fechaFinal')?.value;
 
@@ -1157,7 +1167,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
       [FECHA_INICIO, FECHA_FINAL, HORA_INICIO, HORA_FINAL].every(Boolean) &&
       INTERVALO_DIAS !== null;
 
-    if (CAMPOS_NO_NULOS) {      
+    if (CAMPOS_NO_NULOS) {
       const FECHA_INICIO_HORA = new Date(FECHA_INICIO);
       const FECHA_FINAL_HORA = new Date(FECHA_FINAL);
 
@@ -1211,6 +1221,13 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
         this.datosServicio.setErrors({ invalidIntervalo: true });
         return;
       }
+
+      this.tramite5701Store.update({
+        fechaInicio: FECHA_INICIO_STR,
+        fechaFinal: FECHA_FINAL_STR,
+        horaInicio: HORA_INICIO,
+        horaFinal: HORA_FINAL,
+      });
       this.calcularRangoFechas();
     }
   }
@@ -1546,6 +1563,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    */
   changeHoraInicio(): void {
     this.fechaIntervaloValidator();
+    this.validaHorarioFechaInicio();
     this.setValoresStore(this.datosServicio, 'horaInicio', 'setHoraInicio');
   }
 
@@ -1554,8 +1572,8 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    *
    */
   changeFechaInicio(): void {
-    this.datosServicio.updateValueAndValidity();
     this.fechaIntervaloValidator();
+    this.validaHorarioFechaInicio();
 
     const FECHA_INICIO = this.datosServicio.get('fechaInicio');
 
@@ -1578,6 +1596,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
 
     if (this.datosServicio.hasError('invalidIntervalo')) {
       this.limpiarFechasHoras();
+
       this.nuevaNotificacion = {
         tipoNotificacion: 'alert',
         categoria: 'danger',
@@ -1588,6 +1607,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
         txtBtnAceptar: 'Aceptar',
         txtBtnCancelar: '',
       };
+      this.resetearFechaInicioTouch = true;
       return;
     }
 
@@ -1602,7 +1622,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    * @returns {void} No retorna ningún valor.
    */
   changeFechaFinal(): void {
-    this.datosServicio.updateValueAndValidity();
+    // this.datosServicio.updateValueAndValidity();
     this.fechaIntervaloValidator();
 
     const FECHA_FINAL = this.datosServicio.get('fechaFinal');
@@ -1639,7 +1659,6 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
       return;
     }
 
-    // this.calcularRangoFechas();
     this.setValoresStore(this.datosServicio, 'fechaFinal', 'setFechaFinal');
   }
 
@@ -1742,7 +1761,14 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    * Método que limpia el formulario de las fechas y horas.
    */
   limpiarFechasHoras(): void {
-    this.datosServicio.reset();
+    this.datosServicio.reset({
+      horaInicio: '',
+      fechaInicio: '',
+      horaFinal: '',
+      fechaFinal: '',
+    });
+    this.despacho.markAsPristine();
+    this.despacho.markAsUntouched();
 
     timer(5)
       .pipe(
@@ -3320,5 +3346,119 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
       CONTROL.markAsTouched(); // Para que se dispare la clase de error
       CONTROL.updateValueAndValidity(); // Revalida el campo
     }
+  }
+
+  /**
+   * Valida horario de hora inicio y fecha inicio si hay aduana seleccionada
+   */
+  validaHorarioFechaInicio(): void {
+    const FECHA_INICIO = this.datosServicio.get('fechaInicio')?.value;
+    const HORA_INICIO = this.datosServicio.get('horaInicio')?.value;
+    const ID_ADUANA = parseInt(
+      this.despacho.get('idAduanaDespacho')?.value,
+      10
+    );
+    const TIPO_OPERACION = parseInt(
+      this.despacho.get('tipoOperacion')?.value,
+      10
+    );
+
+    const FECHA_FORMATO = FECHA_INICIO.split('-');
+
+    const FECHA_FORMATO_BODY = `${FECHA_FORMATO[2]}/${FECHA_FORMATO[1]}/${FECHA_FORMATO[0]}`;
+
+    const VALIDACION =
+      FECHA_FORMATO_BODY && HORA_INICIO && ID_ADUANA > 0 && TIPO_OPERACION > 0;
+
+    if (VALIDACION) {
+      const BODY_VALIDAR_HORARIO: BodyValidaHorario = {
+        fecha: FECHA_FORMATO_BODY,
+        horario: HORA_INICIO,
+        cve_aduana: ID_ADUANA.toString(),
+        id_seccion: this.despacho.get('idSeccionDespacho')?.value,
+        tipo_operacion: TIPO_OPERACION.toString(),
+      };
+
+      this.validaHorarioService
+        .postValidaHorario(BODY_VALIDAR_HORARIO)
+        .pipe(
+          takeUntil(this.destroyNotifier$),
+          tap((response) => {
+            if (!response.datos) {
+              this.nuevaNotificacion = {
+                tipoNotificacion: 'alert',
+                categoria: 'success',
+                modo: 'action',
+                titulo: TITULO_MODAL_AVISO,
+                mensaje: MSJ_FECHA_DENTRO_DE_HORARIO_ADUANA,
+                cerrar: false,
+                txtBtnAceptar: TEXTO_ACEPTAR,
+                txtBtnCancelar: CAMPO_VACIO,
+              };
+            }
+          }),
+          catchError((error) => {
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'alert',
+              categoria: 'danger',
+              modo: 'action',
+              titulo: TITULO_MODAL_AVISO,
+              mensaje:
+                error.error?.mensaje || MSJ_FECHA_DENTRO_DE_HORARIO_ADUANA,
+              cerrar: false,
+              txtBtnAceptar: TEXTO_CERRAR,
+              txtBtnCancelar: CAMPO_VACIO,
+            };
+            return EMPTY;
+          })
+        )
+        .subscribe();
+    }
+  }
+
+  /**
+   * Validar si el rfc tiene encargo conferido
+   */
+  changeTipoOperacion(): void {
+    //Peticion
+    this.setValoresStore(this.despacho, 'folioDDEX', 'setAutorizacionDDEX');
+    const BODY: BodyValidarEncargoConferido = {
+      rfc: this.datosImportadorExportador.get('RFCImpExp')?.value,
+      tipoOperacion: this.despacho.get('tipoOperacion')?.value,
+    };
+
+    this.encargoConferidoService
+      .getEncargoConferido(BODY)
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        tap((response) => {
+          if (response.datos) {
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'alert',
+              categoria: 'danger',
+              modo: 'action',
+              titulo: TITULO_MODAL_AVISO,
+              mensaje: MSJ_NO_RELACION_ENCARGO_CONFERIDO,
+              cerrar: false,
+              txtBtnAceptar: TEXTO_CERRAR,
+              txtBtnCancelar: CAMPO_VACIO,
+            };
+          }
+        }),
+        catchError((_error) => {
+          this.nuevaNotificacion = {
+            tipoNotificacion: 'alert',
+            categoria: 'danger',
+            modo: 'action',
+            titulo: TITULO_MODAL_AVISO,
+            mensaje: MSJ_NO_RELACION_ENCARGO_CONFERIDO,
+            cerrar: false,
+            txtBtnAceptar: TEXTO_CERRAR,
+            txtBtnCancelar: CAMPO_VACIO,
+          };
+          return EMPTY;
+        })
+      )
+      .subscribe();
   }
 }

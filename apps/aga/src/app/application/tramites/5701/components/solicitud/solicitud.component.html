@@ -326,8 +326,9 @@
           id="fechaInicio"
           formControlName="fechaInicio"
           placeholder="dd/mm/yyyy"
-          [ngClass]="isValid(datosServicio, 'fechaInicio') ? 'required' : ''"
+          autofocus = "false"
           (change)="changeFechaInicio()"
+          [ngClass]="isValid(datosServicio, 'fechaInicio') ? 'required' : ''"
           (keydown)="$event.preventDefault()"
         />
         <div
@@ -359,8 +360,8 @@
           name="fechaFinal"
           id="fechaFinal"
           formControlName="fechaFinal"
-          [ngClass]="isValid(datosServicio, 'fechaFinal') ? 'required' : ''"
           (change)="changeFechaFinal()"
+          [ngClass]="{'is-invalid' : isRequired(datosServicio, 'fechaFinal')}"
           (keydown)="$event.preventDefault()"
         />
         <div
@@ -595,7 +596,7 @@
           [hiddenPrimerOption]="false"
           [disabledPrimerOption]="false"
           (change)="
-            setValoresStore(despacho, 'tipoOperacion', 'setTipoOperacion')
+            changeTipoOperacion()
           "
         ></app-catalogo-select>
       </div>
@@ -901,6 +902,7 @@
 <section>
   <lib-notificaciones
     [notificacionInput]="nuevaNotificacion"
+    [forma] = 'datosServicio'
     (confirmacionModal)="confirmacionModal($event)"
   >
   </lib-notificaciones>
