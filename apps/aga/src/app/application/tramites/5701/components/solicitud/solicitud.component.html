@@ -345,9 +345,7 @@
           [label]="'Hora inicio'"
           [required]="true"
           [inputId]="'horaInicio'"
-          (change)="
-            setValoresStore(datosServicio, 'horaInicio', 'setHoraInicio')
-          "
+          (change)="changeHoraInicio()"
         ></input-hora>
       </div>
     </div>

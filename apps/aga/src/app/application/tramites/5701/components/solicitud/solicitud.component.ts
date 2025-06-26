@@ -1139,7 +1139,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    * cumpla con las restricciones específicas según el tipo de solicitud seleccionada.
    * @returns {Function} Una función que toma un `FormGroup` y devuelve un objeto con una clave booleana indicando si el intervalo es inválido, o `null` si el intervalo es válido.
    */
-  fechaIntervaloValidator(): void {
+  fechaIntervaloValidator(): void {    
     const FECHA_INICIO_STR = this.datosServicio.get('fechaInicio')?.value;
     const FECHA_FINAL_STR = this.datosServicio.get('fechaFinal')?.value;
 
@@ -1157,7 +1157,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
       [FECHA_INICIO, FECHA_FINAL, HORA_INICIO, HORA_FINAL].every(Boolean) &&
       INTERVALO_DIAS !== null;
 
-    if (CAMPOS_NO_NULOS) {
+    if (CAMPOS_NO_NULOS) {      
       const FECHA_INICIO_HORA = new Date(FECHA_INICIO);
       const FECHA_FINAL_HORA = new Date(FECHA_FINAL);
 
@@ -1209,7 +1209,9 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
           DIFERENCIA_EN_DIAS > 31)
       ) {
         this.datosServicio.setErrors({ invalidIntervalo: true });
+        return;
       }
+      this.calcularRangoFechas();
     }
   }
 
@@ -1539,6 +1541,61 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   /**
+   * Cambia la hora de inicio del servicio.
+   * Esta función actualiza la validez de los datos del servicio y establece
+   */
+  changeHoraInicio(): void {
+    this.fechaIntervaloValidator();
+    this.setValoresStore(this.datosServicio, 'horaInicio', 'setHoraInicio');
+  }
+
+  /**
+   * Cambia la fecha de inicio del servicio.
+   *
+   */
+  changeFechaInicio(): void {
+    this.datosServicio.updateValueAndValidity();
+    this.fechaIntervaloValidator();
+
+    const FECHA_INICIO = this.datosServicio.get('fechaInicio');
+
+    if (!FECHA_INICIO?.dirty || !FECHA_INICIO?.touched) {
+      this.setValoresStore(this.datosServicio, 'fechaInicio', 'setFechaInicio');
+      return;
+    }
+
+    if (this.datosServicio.hasError('endDateBeforeStartDate')) {
+      this.limpiarFechasHoras();
+      return;
+    }
+
+    const MSJ_ERROR_FECHA =
+      this.tipoSolicitudSeleccionada === TIPO_SOLICITUD.INDIVIDUAL
+        ? MSJ_ERROR_FECHA_DIA
+        : this.tipoSolicitudSeleccionada === TIPO_SOLICITUD.SEMANAL
+        ? MSJ_ERROR_FECHA_SEMANA
+        : MSJ_ERROR_FECHA_MES;
+
+    if (this.datosServicio.hasError('invalidIntervalo')) {
+      this.limpiarFechasHoras();
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: 'Avisos',
+        mensaje: MSJ_ERROR_FECHA,
+        cerrar: false,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+      return;
+    }
+
+    // this.calcularRangoFechas();
+    this.setValoresStore(this.datosServicio, 'fechaInicio', 'setFechaInicio');
+  }
+
+  /**
    * Cambia la fecha final del servicio.
    * Esta función actualiza la validez de los datos del servicio y establece
    * los valores correspondientes en el store.
@@ -1582,7 +1639,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
       return;
     }
 
-    this.calcularRangoFechas();
+    // this.calcularRangoFechas();
     this.setValoresStore(this.datosServicio, 'fechaFinal', 'setFechaFinal');
   }
 
@@ -1640,10 +1697,9 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
         txtBtnAceptar: 'Aceptar',
         txtBtnCancelar: '',
       };
-      return;
     }
 
-    this.calcularRangoFechas();
+    // this.calcularRangoFechas();
   }
 
   /**
@@ -1686,72 +1742,29 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    * Método que limpia el formulario de las fechas y horas.
    */
   limpiarFechasHoras(): void {
-    this.horaFinUnmarked = true;
-    this.horaInicioUnmarked = true;
-    this.datosServicio.get('horaInicio')?.setValue(null);
-    this.datosServicio.get('fechaInicio')?.setValue('');
-    this.datosServicio.get('fechaInicio')?.markAsUntouched();
-    this.datosServicio.get('horaFinal')?.setValue(null);
-    this.datosServicio.get('fechaFinal')?.setValue('');
-    this.datosServicio.get('fechaFinal')?.markAsUntouched();
+    this.datosServicio.reset();
+
+    timer(5)
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        tap(() => {
+          this.datosServicio.reset({
+            horaFinal: '',
+          });
+        })
+      )
+      .subscribe();
 
     this.selectRangoDias = [];
-
-    this.setValoresStore(this.datosServicio, 'fechaInicio', 'setFechaInicio');
-    this.setValoresStore(this.datosServicio, 'horaInicio', 'setHoraInicio');
-    this.setValoresStore(this.datosServicio, 'fechaFinal', 'setFechaFinal');
-    this.setValoresStore(this.datosServicio, 'horaFinal', 'setHoraFinal');
-
-    this.horaFinal.resetVisual();
-
-    this.horaInicio.resetVisual();
+    this.tramite5701Store.update({
+      fechaInicio: '',
+      horaInicio: '',
+      fechaFinal: '',
+      horaFinal: '',
+      fechasSeleccionadas: [],
+    });
   }
 
-  /**
-   * Cambia la fecha de inicio del servicio.
-   *
-   */
-  changeFechaInicio(): void {
-    this.datosServicio.updateValueAndValidity();
-    this.fechaIntervaloValidator();
-
-    const FECHA_INICIO = this.datosServicio.get('fechaInicio');
-
-    if (!FECHA_INICIO?.dirty || !FECHA_INICIO?.touched) {
-      this.setValoresStore(this.datosServicio, 'fechaInicio', 'setFechaInicio');
-      return;
-    }
-
-    if (this.datosServicio.hasError('endDateBeforeStartDate')) {
-      this.limpiarFechasHoras();
-      return;
-    }
-
-    const MSJ_ERROR_FECHA =
-      this.tipoSolicitudSeleccionada === TIPO_SOLICITUD.INDIVIDUAL
-        ? MSJ_ERROR_FECHA_DIA
-        : this.tipoSolicitudSeleccionada === TIPO_SOLICITUD.SEMANAL
-        ? MSJ_ERROR_FECHA_SEMANA
-        : MSJ_ERROR_FECHA_MES;
-
-    if (this.datosServicio.hasError('invalidIntervalo')) {
-      this.limpiarFechasHoras();
-      this.nuevaNotificacion = {
-        tipoNotificacion: 'alert',
-        categoria: 'danger',
-        modo: 'action',
-        titulo: 'Avisos',
-        mensaje: MSJ_ERROR_FECHA,
-        cerrar: false,
-        txtBtnAceptar: 'Aceptar',
-        txtBtnCancelar: '',
-      };
-      return;
-    }
-
-    this.calcularRangoFechas();
-    this.setValoresStore(this.datosServicio, 'fechaInicio', 'setFechaInicio');
-  }
   /**
    * Método del ciclo de vida de Angular que se llama justo antes de que el componente sea destruido.
    *
