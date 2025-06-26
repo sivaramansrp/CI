@@ -52,7 +52,10 @@ export class AggregarComplimentosComponent {
    *                Si el objeto incluye un RFC válido, se agrega a la tabla de datos nacionales.
    *                De lo contrario, se agrega a la tabla de datos extranjeros.
    */
-  accionistasAgregados(datos: SociaoAccionistas): void {
+  accionistasAgregados(datos: SociaoAccionistas | null | undefined): void {
+    if (!datos) {
+      return;
+    }
     if (datos.rfc) {
       this.store.aggregarTablaDatosComplimentos(datos);
     } else {

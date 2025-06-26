@@ -953,7 +953,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
   private obtenerPatente(): void {
     let patente: Patente;
     this.patenteService
-      .getListaPatente('SAAA980822LP1')
+      .getListaPatente('SAAE5901017V9')
       .pipe(
         switchMap((pantenteResponse) => {
           if (pantenteResponse) {

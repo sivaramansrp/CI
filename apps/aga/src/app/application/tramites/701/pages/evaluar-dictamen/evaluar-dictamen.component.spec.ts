@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { EvaluarDictamenComponent } from './evaluar-dictamen.component';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 describe('EvaluarDictamenComponent', () => {
   let component: EvaluarDictamenComponent;
@@ -8,7 +9,8 @@ describe('EvaluarDictamenComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [EvaluarDictamenComponent]
+      declarations: [EvaluarDictamenComponent,],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA], 
     })
     .compileComponents();
     

@@ -1,8 +1,11 @@
-import { Component, OnInit } from '@angular/core';
-import { DestinoFinal, Proveedor } from '../../../../shared/models/terceros-relacionados.model';
-import { AgregarProveedorCustomComponent } from "../../../../shared/components/agregar-proveedor-custom/agregar-proveedor-custom.component";
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import {
+  DestinoFinal,
+  Proveedor,
+} from '../../../../shared/models/terceros-relacionados.model';
+import { AgregarProveedorCustomComponent } from '../../../../shared/components/agregar-proveedor-custom/agregar-proveedor-custom.component';
 import { CommonModule } from '@angular/common';
-import { Observable } from "rxjs";
+import { Observable } from 'rxjs';
 import { Tramite240118Query } from '../../estados/tramite240118Query.query';
 import { Tramite240118Store } from '../../estados/tramite240118Store.store';
 
@@ -14,7 +17,13 @@ import { Tramite240118Store } from '../../estados/tramite240118Store.store';
   styleUrl: './agregar-proveedor-contenedora.component.scss',
 })
 export class AgregarProveedorContenedoraComponent implements OnInit {
-  
+  /**
+   * Evento que se emite cuando se cierra el componente.
+   * Permite a los componentes padres reaccionar al cierre del modal.
+   *
+   * @type {EventEmitter<void>}
+   */
+  @Output() cerrar = new EventEmitter<void>();
   /**
    * @property terechosDatos$
    * @type {Observable<DestinoFinal | Proveedor | null | undefined>}
@@ -23,22 +32,26 @@ export class AgregarProveedorContenedoraComponent implements OnInit {
    * @command Este observable se utiliza para gestionar y observar los datos de los proveedores o destinos finales en el componente.
    */
   terechosDatos$!: Observable<DestinoFinal | Proveedor | null | undefined>;
-   /**
+  /**
    * @property {number} idProcedimiento
    * Identificador del procedimiento actual.
    */
-   public readonly idProcedimiento:number = 240118;
-
+  public readonly idProcedimiento: number = 240118;
 
   /**
    * @constructor
    * @description Constructor que inyecta el store `Tramite240118Store` para gestionar el estado del trámite.
    *
    * @param tramite240118Store - Store que administra el estado del trámite 240118.
+   * @param tramite240118Query - Consulta que proporciona acceso a los datos del trámite 240118.
+   * @returns {void}
    */
 
- constructor(public tramiteStore: Tramite240118Store,public tramiteQuery: Tramite240118Query) {
-  this.terechosDatos$ = this.tramiteQuery.obtenerTercerosDatos$;
+  constructor(
+    public tramiteStore: Tramite240118Store,
+    public tramiteQuery: Tramite240118Query
+  ) {
+    this.terechosDatos$ = this.tramiteQuery.obtenerTercerosDatos$;
   }
 
   /**
@@ -59,5 +72,6 @@ export class AgregarProveedorContenedoraComponent implements OnInit {
    */
   updateProveedorTablaDatos(event: Proveedor[]): void {
     this.tramiteStore.updateProveedorTablaDatos(event);
+    this.cerrar.emit();
   }
 }

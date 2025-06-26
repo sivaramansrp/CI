@@ -4,12 +4,8 @@ export default {
   preset: '../../jest.preset.js',
   setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
   coverageDirectory: '../../coverage/apps/stps',
-  collectCoverageFrom: [
-    'src/app/application/**/*.ts',
-  ],
-  testMatch: [
-    '<rootDir>/src/app/application/**/*.spec.ts',
-  ],
+  collectCoverageFrom: ['src/app/application/**/*.ts'],
+  testMatch: ['<rootDir>/src/app/application/**/*.spec.ts'],
   coverageThreshold: {
     global: {
       statements: 80,
@@ -32,7 +28,7 @@ export default {
       },
     ],
   },
-  transformIgnorePatterns: ['node_modules/(?!.*\\.mjs$)'],
+  transformIgnorePatterns: [],
   snapshotSerializers: [
     'jest-preset-angular/build/serializers/no-ng-attributes',
     'jest-preset-angular/build/serializers/ng-snapshot',

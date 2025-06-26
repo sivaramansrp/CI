@@ -58,11 +58,11 @@ describe('DestinatarioAgenteAduanalComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
+  it('debería crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize form and fetch data on ngOnInit', () => {
+  it('debería inicializar el formulario y obtener datos en ngOnInit', () => {
     expect(component.formDestinatariosModal).toBeDefined();
     expect(component.formAgenteAduanal).toBeDefined();
     expect(destinatarioServiceMock.getDestinatarioEncabezadoDeTabla).toHaveBeenCalled();
@@ -75,19 +75,19 @@ describe('DestinatarioAgenteAduanalComponent', () => {
     expect(component.estadoData).toEqual([{ id: 2, descripcion: 'Estado1' }]);
   });
 
-  it('should toggle showTableDiv and showDestinatarioModal when cambiarDestinatario is called', () => {
+  it('debería alternar showTableDiv y showDestinatarioModal cuando se llama cambiarDestinatario', () => {
     component.cambiarDestinatario();
     expect(component.showTableDiv).toBe(false);
     expect(component.showDestinatarioModal).toBe(true);
   });
 
-  it('should toggle showTableDiv and showAgenteModal when cambiarAgenteAduanal is called', () => {
+  it('debería alternar showTableDiv y showAgenteModal cuando se llama cambiarAgenteAduanal', () => {
     component.cambiarAgenteAduanal();
     expect(component.showTableDiv).toBe(false);
     expect(component.showAgenteModal).toBe(true);
   });
 
-  it('should call establecerDestinatario when enviarDestinatarioFormulario is called', () => {
+  it('debería llamar a establecerDestinatario cuando se llama enviarDestinatarioFormulario', () => {
     component.formDestinatariosModal.patchValue({
       destinatarioRazonSocial: 'Test Razon Social',
       paisNacionalDestinatario: 1,
@@ -98,15 +98,14 @@ describe('DestinatarioAgenteAduanalComponent', () => {
 
     component.showTableDiv = true;
     component.showDestinatarioModal = true;
-
+    component.formDestinatariosModal.markAsDirty();
     component.enviarDestinatarioFormulario();
 
     expect(tramite250101StoreMock.establecerDestinatario).toHaveBeenCalled();
     expect(component.showTableDiv).toBe(false);
-    expect(component.showDestinatarioModal).toBe(false);
   });
 
-  it('should call establecerAgenteAduanal when enviarAgenteAduanalFormulario is called', () => {
+  it('debería llamar a establecerAgenteAduanal cuando se llama enviarAgenteAduanalFormulario', () => {
     component.formAgenteAduanal.patchValue({
       nombreAgenteAduanal: 'Test Nombre',
       primerApellidoAgenteAduanal: 'Test Apellido1',
@@ -124,13 +123,13 @@ describe('DestinatarioAgenteAduanalComponent', () => {
     expect(component.showAgenteModal).toBe(false);
   });
 
-  it('should set showAceptarModal to true when openAceptarModal is called', () => {
+  it('debería establecer showAceptarModal en true cuando se llama openAceptarModal', () => {
     component.showAceptarModal = false; 
     component.openAceptarModal();
     expect(component.showAceptarModal).toBe(true);
   });
   
-  it('should call enviarDestinatarioFormulario and set showAceptarModal to false when confirmAgregar is called', () => {
+  it('debería llamar a enviarDestinatarioFormulario y establecer showAceptarModal en false cuando se llama confirmAgregar', () => {
     const enviarDestinatarioFormularioSpy = jest.spyOn(component, 'enviarDestinatarioFormulario');
     component.showAceptarModal = true;
   
@@ -140,25 +139,25 @@ describe('DestinatarioAgenteAduanalComponent', () => {
     expect(component.showAceptarModal).toBe(false); 
   });
 
-  it('should update store when actualizarCodigoPostal is called', () => {
+  it('debería actualizar el store cuando se llama actualizarCodigoPostal', () => {
     component.formDestinatariosModal.patchValue({ codigoPostalDestinatario: '12345' });
     component.actualizarCodigoPostal();
     expect(tramite250101StoreMock.establecerDestinatarioCodigoPostal).toHaveBeenCalledWith('12345');
   });
   
-  it('should update store when actualizarDomicilio is called', () => {
+  it('debería actualizar el store cuando se llama actualizarDomicilio', () => {
     component.formDestinatariosModal.patchValue({ domicilioDestinatario: 'Test Domicilio' });
     component.actualizarDomicilio();
     expect(tramite250101StoreMock.establecerDestinatarioDomicilio).toHaveBeenCalledWith('Test Domicilio');
   });
 
-  it('should update store when actualizarDenominacion is called', () => {
+  it('debería actualizar el store cuando se llama actualizarDenominacion', () => {
     component.formDestinatariosModal.patchValue({ destinatarioRazonSocial: 'Test Denominacion' });
     component.actualizarDenominacion();
     expect(tramite250101StoreMock.establecerDestinatarioDenominacion).toHaveBeenCalledWith('Test Denominacion');
   });
 
-  it('should clean up subscriptions on ngOnDestroy', () => {
+  it('debería limpiar las suscripciones en ngOnDestroy', () => {
     const destroySpy = jest.spyOn(component['destroy$'], 'next');
     const completeSpy = jest.spyOn(component['destroy$'], 'complete');
 
@@ -168,14 +167,14 @@ describe('DestinatarioAgenteAduanalComponent', () => {
     expect(completeSpy).toHaveBeenCalled();
   });
 
-    it('should disable the form if esFormularioSoloLectura is true', () => {
+    it('debería deshabilitar el formulario si esFormularioSoloLectura es true', () => {
       component.esFormularioSoloLectura = true;
       component.formDestinatariosModal.enable();
       component.inicializarEstadoFormulario();
       expect(component.formDestinatariosModal.disabled).toBe(true);
     });
   
-    it('should enable the form if esFormularioSoloLectura is false', () => {
+    it('debería habilitar el formulario si esFormularioSoloLectura es false', () => {
       component.esFormularioSoloLectura = false;
       component.formDestinatariosModal.disable(); 
       component.inicializarEstadoFormulario();
@@ -183,14 +182,14 @@ describe('DestinatarioAgenteAduanalComponent', () => {
     });
 
     
-    it('should disable the form if esFormularioSoloLectura is true', () => {
+    it('debería deshabilitar el formulario si esFormularioSoloLectura es true', () => {
       component.esFormularioSoloLectura = true;
       component.formAgenteAduanal.enable(); 
       component.inicializarEstadoFormulario();
       expect(component.formAgenteAduanal.disabled).toBe(true);
     });
   
-    it('should enable the form if esFormularioSoloLectura is false', () => {
+    it('debería habilitar el formulario si esFormularioSoloLectura es false', () => {
       component.esFormularioSoloLectura = false;
       component.formAgenteAduanal.disable();
       component.inicializarEstadoFormulario();

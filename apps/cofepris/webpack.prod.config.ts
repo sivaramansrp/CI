@@ -1,3 +1,4 @@
+/* eslint-disable sort-imports */
 import { withModuleFederation } from '@nx/angular/module-federation';
 import config from './module-federation.config';
 

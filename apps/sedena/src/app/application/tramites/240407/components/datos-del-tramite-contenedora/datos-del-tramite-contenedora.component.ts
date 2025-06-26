@@ -1,18 +1,24 @@
 import { Component, ViewChild } from '@angular/core';
+import { Subject, map} from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { CrosslistComponent } from '@libs/shared/data-access-user/src';
 import { DatosDelTramiteComponent } from '../../../../shared/components/datos-del-tramite/datos-del-tramite.component';
 import { DatosDelTramiteFormState } from '../../../../shared/models/datos-del-tramite.model';
+import { DatosMercanciaContenedoraComponent } from '../datos-mercancia-contenedora/datos-mercancia-contenedora.component';
 import { JustificacionTramiteFormState } from '../../../../shared/models/datos-del-tramite.model';
 import { MercanciaDetalle } from '../../../../shared/models/datos-del-tramite.model';
+import { ModalComponent } from '../../../../shared/components/modal/modal.component';
 import { NUMERO_TRAMITE } from '../../../../shared/constants/datos-solicitud.enum';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
-import { Subject } from 'rxjs';
 import { Tramite240407Query } from '../../estados/tramite240407Query.query';
 import { Tramite240407Store } from '../../estados/tramite240407Store.store';
 import { construirAduanasBotones } from '../../constants/solicitud-prorroga-aviso-importacion.enum';
 import { takeUntil } from 'rxjs';
+
+
+
 
 /**
  * title Datos del Trámite Contenedora
@@ -23,11 +29,20 @@ import { takeUntil } from 'rxjs';
 @Component({
   selector: 'app-datos-del-tramite-contenedora',
   standalone: true,
-  imports: [CommonModule, DatosDelTramiteComponent],
+  imports: [CommonModule, DatosDelTramiteComponent,ModalComponent],
   templateUrl: './datos-del-tramite-contenedora.component.html',
   styleUrl: './datos-del-tramite-contenedora.component.scss',
 })
 export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
+  @ViewChild('modal', { static: false }) modalComponent!: ModalComponent;
+  /**
+   * Indica si el formulario debe mostrarse en modo solo lectura.
+   *
+   * @type {boolean}
+   * @memberof DatosDelTramiteContenedoraComponent
+   * @default false
+   */
+  esFormularioSoloLectura: boolean = false;
   /**
    * Observable para limpiar suscripciones activas al destruir el componente.
    * @property {Subject<void>} unsubscribe$
@@ -81,9 +96,17 @@ export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
    */
   constructor(
     private tramiteQuery: Tramite240407Query,
-    private tramiteStore: Tramite240407Store
+    private tramiteStore: Tramite240407Store,
+    private consultaQuery: ConsultaioQuery,
   ) {
-    //
+    this.consultaQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.unsubscribe$),
+      map((seccionState) => {
+        this.esFormularioSoloLectura = seccionState.readonly;
+      })
+    )
+    .subscribe();
   }
 
   /**
@@ -147,5 +170,33 @@ export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
   */
   updateJustificacionFormulario(event: JustificacionTramiteFormState): void {
     this.tramiteStore.updateJustificacionFormulario(event);
+  }
+
+   /**
+   * Abre el modal correspondiente según el nombre del evento recibido.
+   *
+   * Si el evento es `'Datosmercancia'`, se carga el componente `DatosMercanciaContenedoraComponent`
+   * dentro del modal y se le pasa una función de cierre como input.
+   *
+   * @method openModal
+   * @param {string} event - Nombre del evento que indica qué componente se debe mostrar en el modal.
+   * @returns {void}
+   */
+  openModal(event: string): void {
+    if (event === 'Datosmercancia') {
+      this.modalComponent.abrir(DatosMercanciaContenedoraComponent, {
+        cerrarModal: this.cerrarModal.bind(this),
+      });
+    }
+  }
+
+  /**
+   * Cierra el modal dinámico actualmente abierto utilizando el método del componente modal.
+   *
+   * @method cerrarModal
+   * @returns {void}
+   */
+  cerrarModal(): void {
+    this.modalComponent.cerrar();
   }
 }

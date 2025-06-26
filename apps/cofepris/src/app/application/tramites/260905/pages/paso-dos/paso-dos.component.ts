@@ -5,11 +5,10 @@
  * @component PasoDosComponent
  * @description
 */
-import { Component } from '@angular/core';
-
-import { TEXTOS } from '@libs/shared/data-access-user/src';
-import {  Catalogo,CATALOGOS_ID, CatalogosService } from '@libs/shared/data-access-user/src';
+import { CATALOGOS_ID,Catalogo, CatalogosService } from '@libs/shared/data-access-user/src';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
+import { TEXTOS } from '@libs/shared/data-access-user/src';
 
 /**
  * @nombre PasoDosComponent
@@ -20,7 +19,7 @@ import { Subject, takeUntil } from 'rxjs';
   selector: 'app-paso-dos',
   templateUrl: './paso-dos.component.html', 
 })
-export class PasoDosComponent {
+export class PasoDosComponent implements OnInit, OnDestroy {
   /**
    * @prop {any} TEXTOS - Contiene constantes de texto utilizadas en la UI.
    */
@@ -74,7 +73,6 @@ export class PasoDosComponent {
                 this.catalogoDocumentos = resp;
               }
             },
-            error: (_error): void => {},
           });
       }
     /**

@@ -239,9 +239,10 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
     metodoNombre: keyof Tramite110208Store
   ): void {
     const VALOR = form.get(campo)?.value;
+    if (VALOR && VALOR!== null) {
     (this.tramite110208Store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
-
+}
   /**
    * Método que se ejecuta al destruir el componente.
    * Libera recursos y evita pérdidas de memoria.
