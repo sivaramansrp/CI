@@ -1,14 +1,16 @@
+import { AlertComponent, Catalogo, CatalogoSelectComponent, TablaDinamicaComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { CONFIGURACION_PARA_PMN_ENCABEZADO_DE_TABLA, TEXTOS } from '../../constantes/transportacion-maritima.enum';
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, map, merge, takeUntil } from 'rxjs';
-import { CommonModule } from '@angular/common';
-
-import { AlertComponent, Catalogo, CatalogoSelectComponent, TablaDinamicaComponent, TituloComponent } from '@libs/shared/data-access-user/src';
-import { CONFIGURACION_PARA_PMN_ENCABEZADO_DE_TABLA, TEXTOS } from '../../constantes/transportacion-maritima.enum';
 import { Tramite40201Store, TransportacionMaritima40201State } from '../../../../core/estados/tramites/tramite40201.store';
+import { CommonModule } from '@angular/common';
+import { ConsultaioQuery} from '@ng-mf/data-access-user';
 import { PersonaMoralNacionalForm } from '../../models/transportacion-maritima.model';
+import { TablaSeleccion } from '@ng-mf/data-access-user';
 import { Tramite40201Query } from '../../../../core/queries/tramite40201.query';
 import { TransportacionMaritimaService } from '../../services/transportacion-maritima/transportacion-maritima.service';
+
 
 /**
  * Componente para gestionar la información de personas morales nacionales.
@@ -95,6 +97,15 @@ export class PersonaMoralNacionalComponent implements OnInit, OnDestroy {
   private destruirNotificador$: Subject<void> = new Subject();
 
   /**
+   * Tabla de selección para la persona moral nacional.
+   */
+  TablaSeleccion = TablaSeleccion;
+
+   /**
+   * Indica si el formulario está en modo solo lectura
+   */
+   esFormularioSoloLectura: boolean = false;
+  /**
    * Constructor del componente.
    * @param fb FormBuilder para crear formularios reactivos.
    * @param tramite40201Store Store para gestionar el estado del trámite 40201.
@@ -106,8 +117,17 @@ export class PersonaMoralNacionalComponent implements OnInit, OnDestroy {
     private tramite40201Store: Tramite40201Store,
     private tramite40201Query: Tramite40201Query,
     private transportacionMaritimaService: TransportacionMaritimaService,
+    private consultaioQuery: ConsultaioQuery
   ) {
-    // El constructor se utiliza para la inyección de dependencias
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destruirNotificador$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
   }
 
   /**
@@ -123,12 +143,10 @@ export class PersonaMoralNacionalComponent implements OnInit, OnDestroy {
         map((seccionState) => {
           this.transportacionMaritimaState = seccionState;
           this.personaMoralNacionalTabla = seccionState.personaMoralNacionalTabla || [];
+         this.inicializarEstadoFormulario();
         })
       )
       .subscribe();
-
-    // Inicializar el formulario principal
-    this.crearAgregarPMNForm();
 
     this.paisSeleccion();
     this.estadoSeleccion();
@@ -141,96 +159,124 @@ export class PersonaMoralNacionalComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   crearAgregarPMNForm(): void {
+     const STATE = this.transportacionMaritimaState || {} as TransportacionMaritima40201State;
     this.personaMoralForm = this.fb.group({
       buscarRfcPMN: [
-        this.transportacionMaritimaState.buscarRfcPMN,
+        STATE.buscarRfcPMN,
         [
           Validators.required,
           Validators.maxLength(13)
         ]
       ],
       rfcPMN: [
-        { value: this.transportacionMaritimaState.rfcPMN, disabled: true },
+        { value: STATE.rfcPMN, disabled: true },
         [
           Validators.maxLength(13)
         ]
       ],
       denominacionPMN: [
-        { value: this.transportacionMaritimaState.denominacionPMN, disabled: true },
+        { value: STATE.denominacionPMN, disabled: true },
         [
           Validators.maxLength(254)
         ]
       ],
       correoPMN: [
-        { value: this.transportacionMaritimaState.correoPMN, disabled: true },
+        { value: STATE.correoPMN, disabled: true },
         [
           Validators.maxLength(320)
         ]
       ],
       paisPMN: [
-        this.transportacionMaritimaState.paisPMN,
+        STATE.paisPMN,
       ],
       codigoPostalPMN: [
-        { value: this.transportacionMaritimaState.codigoPostalPMN, disabled: true },
+        { value: STATE.codigoPostalPMN, disabled: true },
         [
           Validators.maxLength(12)
         ]
       ],
       estadoPMN: [
-        this.transportacionMaritimaState.estadoPMN,
+        STATE.estadoPMN,
       ],
       municipioPMN: [
-        this.transportacionMaritimaState.municipioPMN,
+        STATE.municipioPMN,
       ],
       localidadPMN: [
-        { value: this.transportacionMaritimaState.localidadPMN, disabled: true },
+        { value: STATE.localidadPMN, disabled: true },
         [
           Validators.maxLength(120)
         ]
       ],
       coloniaPMN: [
-        this.transportacionMaritimaState.coloniaPMN,
+        STATE.coloniaPMN,
       ],
       callePMN: [
-        { value: this.transportacionMaritimaState.callePMN, disabled: true },
+        { value:STATE.callePMN, disabled: true },
         [
           Validators.maxLength(100)
         ]
       ],
       numeroExteriorPMN: [
-        { value: this.transportacionMaritimaState.numeroExteriorPMN, disabled: true },
+        { value: STATE.numeroExteriorPMN, disabled: true },
         [
           Validators.maxLength(55)
         ]
       ],
       numeroInteriorPMN: [
-        { value: this.transportacionMaritimaState.numeroInteriorPMN, disabled: true },
+        { value: STATE.numeroInteriorPMN, disabled: true },
         [
           Validators.maxLength(55)
         ]
       ],
       nombreDirectorGeneral: [
-        this.transportacionMaritimaState.nombreDirectorGeneral,
+        STATE.nombreDirectorGeneral,
         [
           Validators.required,
           Validators.maxLength(200)
         ]
       ],
       apellidoPaternoDirectorGeneral: [
-        this.transportacionMaritimaState.apellidoPaternoDirectorGeneral,
+        STATE.apellidoPaternoDirectorGeneral,
         [
           Validators.required,
           Validators.maxLength(200)
         ]
       ],
       apellidoMaternoDirectorGeneral: [
-        this.transportacionMaritimaState.apellidoMaternoDirectorGeneral,
+        STATE.apellidoMaternoDirectorGeneral,
         [
           Validators.maxLength(200)
         ]
       ]
     });
   }
+
+  
+  /**
+   * Inicializa el estado del formulario.
+   * Si el formulario es de solo lectura, guarda los datos del formulario.
+   * Si no, crea el formulario reactivo.
+   */
+    inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.crearAgregarPMNForm();
+    }
+  }
+/**
+   * Guarda los datos del formulario y habilita o deshabilita el formulario según el estado de solo lectura.
+   * @returns {void}
+   * @description Este método se utiliza para guardar los datos del formulario y habilitar o deshabilitar el formulario según el estado de solo lectura.
+   */
+  guardarDatosFormulario(): void {
+    this.crearAgregarPMNForm();
+    if (this.esFormularioSoloLectura) {
+      this.personaMoralForm.disable();
+    } else{
+      this.personaMoralForm.enable();
+    }
+}
 
   /**
    * Inicializa los catálogos necesarios para el formulario.
@@ -284,7 +330,7 @@ export class PersonaMoralNacionalComponent implements OnInit, OnDestroy {
    */
   paisSeleccion(): void {
     const PAIS = this.personaMoralForm.get('paisPMN')?.value;
-    this.tramite40201Store.setPaisPMN(PAIS);
+    this.tramite40201Store.setTramite40201State({ paisPMN: PAIS });
   }
 
   /**
@@ -293,7 +339,7 @@ export class PersonaMoralNacionalComponent implements OnInit, OnDestroy {
    */
   estadoSeleccion(): void {
     const ESTADO = this.personaMoralForm.get('estadoPMN')?.value;
-    this.tramite40201Store.setEstadoPMN(ESTADO);
+    this.tramite40201Store.setTramite40201State({ estadoPMN: ESTADO });
   }
 
   /**
@@ -302,7 +348,7 @@ export class PersonaMoralNacionalComponent implements OnInit, OnDestroy {
    */
   municipioSeleccion(): void {
     const MUNICIPIO = this.personaMoralForm.get('municipioPMN')?.value;
-    this.tramite40201Store.setMunicipioPMN(MUNICIPIO);
+    this.tramite40201Store.setTramite40201State({ municipioPMN: MUNICIPIO });
   }
 
   /**
@@ -311,7 +357,7 @@ export class PersonaMoralNacionalComponent implements OnInit, OnDestroy {
    */
   coloniaSeleccion(): void {
     const COLONIA = this.personaMoralForm.get('coloniaPMN')?.value;
-    this.tramite40201Store.setColoniaPMN(COLONIA);
+    this.tramite40201Store.setTramite40201State({ coloniaPMN: COLONIA });
   }
 
   /**
@@ -374,35 +420,20 @@ export class PersonaMoralNacionalComponent implements OnInit, OnDestroy {
       domicilioPMN: `${personaMoralNacionalFormDatos.callePMN} ${personaMoralNacionalFormDatos.numeroExteriorPMN} ${COLONIA} ${ESTADO} ${MUNICIPIO} ${PAIS} ${personaMoralNacionalFormDatos.codigoPostalPMN}`.trim(),
     });
     this.personaMoralNacionalTabla = NUEVO_CUERPO_TABLA;
-    this.tramite40201Store.setPersonaMoralNacionalTabla(this.personaMoralNacionalTabla);
+     this.tramite40201Store.setTramite40201State({ personaMoralNacionalTabla: NUEVO_CUERPO_TABLA });
     this.limpiarDatosPMN();
     this.cerrarModal();
   }
 
   /**
-   * Actualiza el estado del formulario.
+   * Actualiza el estado del formulario en el store.
    * @returns {void}
-   * @description Este método se utiliza para actualizar el estado del formulario y establecer los valores en el store.
+   * @description Este método se utiliza para actualizar el estado del formulario en el store de tramite40201.
    */
   actualizarFormularioState(): void {
-    this.setValoresStore(this.personaMoralForm, 'buscarRfcPMN', 'setBuscarRfcPMN');
-    this.setValoresStore(this.personaMoralForm, 'rfcPMN', 'setRfcPMN');
-    this.setValoresStore(this.personaMoralForm, 'denominacionPMN', 'setDenominacionPMN');
-    this.setValoresStore(this.personaMoralForm, 'correoPMN', 'setCorreoPMN');
-    this.setValoresStore(this.personaMoralForm, 'paisPMN', 'setPaisPMN');
-    this.setValoresStore(this.personaMoralForm, 'codigoPostalPMN', 'setCodigoPostalPMN');
-    this.setValoresStore(this.personaMoralForm, 'estadoPMN', 'setEstadoPMN');
-    this.setValoresStore(this.personaMoralForm, 'callePMN', 'setCallePMN');
-    this.setValoresStore(this.personaMoralForm, 'municipioPMN', 'setMunicipioPMN');
-    this.setValoresStore(this.personaMoralForm, 'localidadPMN', 'setLocalidadPMN');
-    this.setValoresStore(this.personaMoralForm, 'coloniaPMN', 'setColoniaPMN');
-    this.setValoresStore(this.personaMoralForm, 'numeroExteriorPMN', 'setNumeroExteriorPMN');
-    this.setValoresStore(this.personaMoralForm, 'numeroInteriorPMN', 'setNumeroInteriorPMN');
-    this.setValoresStore(this.personaMoralForm, 'nombreDirectorGeneral', 'setNombreDirectorGeneral');
-    this.setValoresStore(this.personaMoralForm, 'apellidoPaternoDirectorGeneral', 'setApellidoPaternoDirectorGeneral');
-    this.setValoresStore(this.personaMoralForm, 'apellidoMaternoDirectorGeneral', 'setApellidoMaternoDirectorGeneral');
-  }
-
+  const VALUES = this.personaMoralForm.value;
+  this.tramite40201Store.setTramite40201State(VALUES);
+}
   /**
    * Limpia los datos del formulario de persona moral nacional.
    * @returns {void}
@@ -432,10 +463,10 @@ export class PersonaMoralNacionalComponent implements OnInit, OnDestroy {
    * @param {string} metodoNombre - El nombre del método en el store que se va a invocar con el valor del campo.
    * @returns {void}
    */
-  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite40201Store): void {
-    const VALOR = form.get(campo)?.value;
-    (this.tramite40201Store[metodoNombre] as (value: unknown) => void)(VALOR);
-  }
+   setValoresStore(form: FormGroup, campo: keyof TransportacionMaritima40201State): void {
+  const VALOR = form.get(campo)?.value;
+  this.tramite40201Store.setTramite40201State({ [campo]: VALOR });
+}
 
   /**
    * Se ejecuta al destruir el componente.

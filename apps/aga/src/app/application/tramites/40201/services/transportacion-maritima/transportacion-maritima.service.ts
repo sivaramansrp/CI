@@ -1,8 +1,8 @@
+import { RespuestaCaatTabla, RespuestaContribuyentePMNTabla, RespuestaContribuyenteTabla } from '../../models/transportacion-maritima.model';
+import { Tramite40201Store ,TransportacionMaritima40201State} from '../../../../core/estados/tramites/tramite40201.store';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-
-import { RespuestaCaatTabla, RespuestaContribuyentePMNTabla, RespuestaContribuyenteTabla } from '../../models/transportacion-maritima.model';
 import { RespuestaCatalogos } from '@libs/shared/data-access-user/src';
 
 /**
@@ -24,7 +24,8 @@ export class TransportacionMaritimaService {
    * @description El constructor inyecta la dependencia HttpClient para realizar peticiones HTTP.
    */
   constructor(
-    private http: HttpClient
+    private http: HttpClient,
+    private tramite40201Store: Tramite40201Store
   ) {
     // El constructor se utiliza para la inyección de dependencias
   }
@@ -91,4 +92,25 @@ export class TransportacionMaritimaService {
   buscarContribuyentePMN(): Observable<RespuestaContribuyentePMNTabla> {
     return this.http.get<RespuestaContribuyentePMNTabla>('assets/json/40201/buscar-contribuyente-pmn-datos.json');
   }
+
+
+  /**
+   * Actualiza el estado del formulario de transportación marítima.
+   * @param DATOS - Datos del estado de transportación marítima.
+   * @description Este método actualiza el estado del formulario en el store de la aplicación con los datos proporcionados.
+   */
+ actualizarEstadoFormulario(DATOS:TransportacionMaritima40201State): void {
+    this.tramite40201Store.setTramite40201State(DATOS);
+  }
+
+  /**
+   * Obtiene los datos del registro de toma de muestras de mercancías.
+   * @returns Observable<TransportacionMaritima40201State>
+   * @description Este método realiza una petición HTTP GET a un archivo JSON local que contiene los datos del registro de toma de muestras de mercancías.
+   */
+
+  getRegistroTomaMuestrasMercanciasData():Observable<TransportacionMaritima40201State> {
+    return this.http.get<TransportacionMaritima40201State>('assets/json/40201/registro-del-codigo.json');
+  }
+
 }
