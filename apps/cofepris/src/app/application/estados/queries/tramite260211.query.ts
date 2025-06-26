@@ -1,7 +1,7 @@
 
+import { Solicitud260211State, Tramite260211Store } from '../tramites/tramite260211.store';
 import { Injectable } from '@angular/core';
 import { Query } from '@datorama/akita';
-import { Solicitud260211State, Tramite260211Store } from '../tramites/tramite260211.store';
 
 /**
  * Service to query the state of Solicitud31601.
