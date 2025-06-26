@@ -38,29 +38,27 @@ describe('SolicitudComponent', () => {
     };
 
     solicitud6101StoreMock = {
-      actualizarAduanaAux: jest.fn(),
-      actualizarJuntaTecnicaDerivada: jest.fn(),
-      actualizarNumeroPedimento: jest.fn(),
-      actualizarNombreComercialMercancia: jest.fn(),
-      actualizarDescDetalladaMercancia: jest.fn(),
-      actualizarFraccionI: jest.fn(),
-      actualizarCapitulo: jest.fn(),
-      actualizarPartida: jest.fn(),
-      actualizarSubpartida: jest.fn(),
-      actualizarSubdivision: jest.fn(),
-      actualizarManifiestosSeleccionados: jest.fn(),
-
-      actualizarFraccionII: jest.fn(),
-      actualizarCapituloII: jest.fn(),
-      actualizarPartidaII: jest.fn(),
-      actualizarSubpartidaII: jest.fn(),
-      actualizarSubdivisionII: jest.fn(),
-
-      actualizarFraccionIII: jest.fn(),
-      actualizarCapituloIII: jest.fn(),
-      actualizarPartidaIII: jest.fn(),
-      actualizarSubpartidaIII: jest.fn(),
-      actualizarSubdivisionIII: jest.fn(),
+      actualizarAduanaAux: jest.fn(()=> of()),
+      actualizarJuntaTecnicaDerivada: jest.fn(()=> of()),
+      actualizarNumeroPedimento: jest.fn(()=> of()),
+      actualizarNombreComercialMercancia: jest.fn(()=> of()),
+      actualizarDescDetalladaMercancia: jest.fn(()=> of()),
+      actualizarFraccionI: jest.fn(()=> of()),
+      actualizarCapitulo: jest.fn(()=> of()),
+      actualizarPartida: jest.fn(()=> of()),
+      actualizarSubpartida: jest.fn(()=> of()),
+      actualizarSubdivision: jest.fn(()=> of()),
+      actualizarManifiestosSeleccionados: jest.fn(()=> of()),
+      actualizarFraccionII: jest.fn(()=> of()),
+      actualizarCapituloII: jest.fn(()=> of()),
+      actualizarPartidaII: jest.fn(()=> of()),
+      actualizarSubpartidaII: jest.fn(()=> of()),
+      actualizarSubdivisionII: jest.fn(()=> of()),
+      actualizarFraccionIII: jest.fn(()=> of()),
+      actualizarCapituloIII: jest.fn(()=> of()),
+      actualizarPartidaIII: jest.fn(()=> of()),
+      actualizarSubpartidaIII: jest.fn(()=> of()),
+      actualizarSubdivisionIII: jest.fn(()=> of()),
     };
 
     solicitud6101QueryMock = {
@@ -109,6 +107,11 @@ describe('SolicitudComponent', () => {
 
     fixture = TestBed.createComponent(SolicitudComponent);
     component = fixture.componentInstance;
+    component.guardarDatosFormulario = jest.fn();
+    component.inicializarFormulario = jest.fn();
+    component.inicializarFormulario = jest.fn();
+    jest.spyOn(component.solicitudForm, 'disable');
+    jest.spyOn(component.solicitudForm, 'enable');
     fixture.detectChanges();
   });
 
@@ -196,32 +199,88 @@ describe('SolicitudComponent', () => {
   it('should process and update fraccionII on onFraccionII', () => {
     const mockEvent = { target: { value: '1234567890' } } as unknown as Event;
     component.onFraccionII(mockEvent);
-  
-    expect(solicitud6101StoreMock.actualizarFraccionII).toHaveBeenCalledWith('1234567890');
-    expect(solicitud6101StoreMock.actualizarCapituloII).toHaveBeenCalledWith('12');
-    expect(solicitud6101StoreMock.actualizarPartidaII).toHaveBeenCalledWith('1234');
-    expect(solicitud6101StoreMock.actualizarSubpartidaII).toHaveBeenCalledWith('123456');
-    expect(solicitud6101StoreMock.actualizarSubdivisionII).toHaveBeenCalledWith('90');
+
+    expect(solicitud6101StoreMock.actualizarFraccionII).toHaveBeenCalledWith(
+      '1234567890'
+    );
+    expect(solicitud6101StoreMock.actualizarCapituloII).toHaveBeenCalledWith(
+      '12'
+    );
+    expect(solicitud6101StoreMock.actualizarPartidaII).toHaveBeenCalledWith(
+      '1234'
+    );
+    expect(solicitud6101StoreMock.actualizarSubpartidaII).toHaveBeenCalledWith(
+      '123456'
+    );
+    expect(solicitud6101StoreMock.actualizarSubdivisionII).toHaveBeenCalledWith(
+      '90'
+    );
   });
 
   it('should process and update fraccionIII on onFraccionIII', () => {
     const mockEvent = { target: { value: '9876543210' } } as unknown as Event;
     component.onFraccionIII(mockEvent);
-  
-    expect(solicitud6101StoreMock.actualizarFraccionIII).toHaveBeenCalledWith('9876543210');
-    expect(solicitud6101StoreMock.actualizarCapituloIII).toHaveBeenCalledWith('98');
-    expect(solicitud6101StoreMock.actualizarPartidaIII).toHaveBeenCalledWith('9876');
-    expect(solicitud6101StoreMock.actualizarSubpartidaIII).toHaveBeenCalledWith('987654');
-    expect(solicitud6101StoreMock.actualizarSubdivisionIII).toHaveBeenCalledWith('10');
+
+    expect(solicitud6101StoreMock.actualizarFraccionIII).toHaveBeenCalledWith(
+      '9876543210'
+    );
+    expect(solicitud6101StoreMock.actualizarCapituloIII).toHaveBeenCalledWith(
+      '98'
+    );
+    expect(solicitud6101StoreMock.actualizarPartidaIII).toHaveBeenCalledWith(
+      '9876'
+    );
+    expect(solicitud6101StoreMock.actualizarSubpartidaIII).toHaveBeenCalledWith(
+      '987654'
+    );
+    expect(
+      solicitud6101StoreMock.actualizarSubdivisionIII
+    ).toHaveBeenCalledWith('10');
   });
 
   it('should update manifiestosSeleccionados on onManifiesto', () => {
     const mockEvent = { target: { checked: true } } as unknown as Event;
     component.onManifiesto(mockEvent);
-  
-    expect(solicitud6101StoreMock.actualizarManifiestosSeleccionados).toHaveBeenCalledWith(true);
+
+    expect(
+      solicitud6101StoreMock.actualizarManifiestosSeleccionados
+    ).toHaveBeenCalledWith(true);
   });
-  
+
+  it('should call guardarDatosFormulario if esFormularioSoloLectura is true', () => {
+    component.esFormularioSoloLectura = true;
+    component.inicializarEstadoFormulario();
+    expect(component.guardarDatosFormulario).toHaveBeenCalled();
+    // expect(component.inicializarFormulario).not.toHaveBeenCalled();
+  });
+
+  it('should call inicializarFormulario if esFormularioSoloLectura is false', () => {
+    component.esFormularioSoloLectura = false;
+    component.inicializarEstadoFormulario();
+    expect(component.inicializarFormulario).toHaveBeenCalled();
+    expect(component.guardarDatosFormulario).not.toHaveBeenCalled();
+  });
+
+  it('should call inicializarFormulario and disable the form if esFormularioSoloLectura is true', () => {
+    component.esFormularioSoloLectura = true;
+    component.guardarDatosFormulario();
+    expect(component.inicializarFormulario).toHaveBeenCalled();
+    expect(component.solicitudForm.enable).not.toHaveBeenCalled();
+  });
+
+  it('should call inicializarFormulario and enable the form if esFormularioSoloLectura is false', () => {
+    component.esFormularioSoloLectura = false;
+    component.guardarDatosFormulario();
+    expect(component.inicializarFormulario).toHaveBeenCalled();
+    expect(component.solicitudForm.disable).not.toHaveBeenCalled();
+  });
+
+  it('should call inicializarFormulario and not enable/disable if esFormularioSoloLectura is neither true nor false', () => {
+    component.guardarDatosFormulario();
+    expect(component.inicializarFormulario).toHaveBeenCalled();
+    expect(component.solicitudForm.enable).not.toHaveBeenCalled();
+    expect(component.solicitudForm.disable).not.toHaveBeenCalled();
+  });
 
   it('should complete destroyNotifier$ on ngOnDestroy', () => {
     const destroyNotifierSpy = jest.spyOn(

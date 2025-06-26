@@ -236,6 +236,44 @@ describe('DatosProrrogaMuestrasMercanciasComponent', () => {
     );
   });
 
+  it('should call guardarDatosFormulario when esFormularioSoloLectura is true in inicializarEstadoFormulario', () => {
+    component.esFormularioSoloLectura = true;
+    const spy = jest.spyOn(component, 'guardarDatosFormulario');
+    component.inicializarEstadoFormulario();
+    expect(spy).toHaveBeenCalled();
+  });
+
+  it('should call inicializarFormulario when esFormularioSoloLectura is false in inicializarEstadoFormulario', () => {
+    component.esFormularioSoloLectura = false;
+    const spy = jest.spyOn(component, 'inicializarFormulario');
+    component.inicializarEstadoFormulario();
+    expect(spy).toHaveBeenCalled();
+  });
+
+  it('should disable formDatosProrroga when esFormularioSoloLectura is true in guardarDatosFormulario', () => {
+    component.formDatosProrroga = new FormBuilder().group({
+      fechaInicioVigencia: [''],
+      fechaFinVigencia: [''],
+    });
+    component.esFormularioSoloLectura = true;
+    jest.spyOn(component, 'inicializarFormulario').mockImplementation(() => {});
+    const disableSpy = jest.spyOn(component.formDatosProrroga, 'disable');
+    component.guardarDatosFormulario();
+    expect(disableSpy).toHaveBeenCalled();
+  });
+
+  it('should enable formDatosProrroga when esFormularioSoloLectura is false in guardarDatosFormulario', () => {
+    component.formDatosProrroga = new FormBuilder().group({
+      fechaInicioVigencia: [''],
+      fechaFinVigencia: [''],
+    });
+    component.esFormularioSoloLectura = false;
+    jest.spyOn(component, 'inicializarFormulario').mockImplementation(() => {});
+    const enableSpy = jest.spyOn(component.formDatosProrroga, 'enable');
+    component.guardarDatosFormulario();
+    expect(enableSpy).toHaveBeenCalled();
+  });
+
   it('should unsubscribe darseDeBaja and complete destroyed$', () => {
     const unsubscribeSpy = jest.fn();
     component.darseDeBaja = {
