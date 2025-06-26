@@ -45,4 +45,8 @@ describe('PasoUnoComponent', () => {
     component.seleccionaTab({});
   });
 
+  it('should run fetchGetDatosConsulta without errors', () => {
+    expect(() => component.fetchGetDatosConsulta()).not.toThrow();
+  });
+
 });
