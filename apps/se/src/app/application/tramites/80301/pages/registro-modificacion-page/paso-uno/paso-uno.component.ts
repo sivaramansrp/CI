@@ -1,4 +1,8 @@
-import { Component } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState, DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL, FormularioDinamico, PERSONA_MORAL_NACIONAL } from '@ng-mf/data-access-user';
+import { Subject, map, takeUntil } from 'rxjs';
+import { SolicitudService } from '../../../services/solicitud.service';
+import { Tramite80301Store } from '../../../estados/tramite80301.store';
 
 /**
  * @component PasoUnoComponent
@@ -9,7 +13,7 @@ import { Component } from '@angular/core';
   selector: 'app-paso-uno',
   templateUrl: './paso-uno.component.html',
 })
-export class PasoUnoComponent {
+export class PasoUnoComponent implements OnInit, AfterViewInit, OnDestroy {
 
   /**
    * @property {number} indice
@@ -18,6 +22,87 @@ export class PasoUnoComponent {
    * @default 1
    */
   indice: number = 1;
+
+  /**
+ * Estado actual de la consulta para el componente.
+ *
+ * Esta propiedad almacena la información relacionada con el estado de la consulta
+ * en el flujo del trámite. Utiliza el tipo `ConsultaioState` para definir la estructura
+ * de los datos gestionados.
+ */
+  public consultaState!: ConsultaioState;
+
+  /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
+  public esDatosRespuesta: boolean = false;
+
+  /** Subject para notificar la destrucción del componente. */
+  private destroyNotifier$: Subject<void> = new Subject();
+
+  /**
+ * Lista de formularios dinámicos para la persona.
+ *
+ * Esta propiedad contiene un array de objetos `FormularioDinamico` que representan los formularios dinámicos de la persona.
+ */
+  persona: FormularioDinamico[] = [];
+
+  /**
+   * Lista de formularios dinámicos para el domicilio fiscal.
+   *
+   * Esta propiedad contiene un array de objetos `FormularioDinamico` que representan los formularios dinámicos del domicilio fiscal.
+   */
+  domicilioFiscal: FormularioDinamico[] = [];
+  /**
+ * Constructor del componente PasoUno.
+ *
+ * @param consultaQuery Servicio para consultar el estado de la consulta.
+ * @param serviciosPermisoSanitarioService Servicio para gestionar los permisos sanitarios.
+ *
+ * Al inicializar, se suscribe al observable del estado de la consulta y actualiza la propiedad `consultaState`.
+ * Si el estado indica que se debe actualizar (`update`), guarda los datos del formulario.
+ * En caso contrario, establece la bandera `esDatosRespuesta` en verdadero.
+ */
+  constructor(
+    private consultaQuery: ConsultaioQuery,
+    public solicitudService: SolicitudService,
+    private store: Tramite80301Store
+  ) { }
+  ngOnInit(): void {
+    this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyNotifier$),
+      map((seccionState) => {
+        this.consultaState = seccionState;
+      })).subscribe();
+    if (this.consultaState.update) {
+      this.guardarDatosFormulario()
+    } else {
+      this.esDatosRespuesta = true
+    }
+  }
+
+  /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormulario(): void {
+    this.solicitudService
+      .obtenerTramiteDatos().pipe(
+        takeUntil(this.destroyNotifier$)
+      )
+
+      .subscribe((resp) => {
+        if (resp?.datosModificacion) {
+          this.esDatosRespuesta = true;
+          this.solicitudService.actualizarEstadoFormulario(resp.datosModificacion);
+        }
+      });
+  }
+
+  /**
+* Método que se ejecuta después de que la vista ha sido inicializada.
+*/
+  ngAfterViewInit(): void {
+    this.persona = PERSONA_MORAL_NACIONAL;
+    this.domicilioFiscal = DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL;
+  }
   /**
    * @method seleccionaTab
    * @description Cambia el índice de la pestaña seleccionada.
@@ -27,5 +112,20 @@ export class PasoUnoComponent {
    */
   seleccionaTab(i: number): void {
     this.indice = i;
+  }
+  /**
+ * Método para emitir un evento de continuar.
+ *
+ * Este método emite un evento `continuarEvento` con una cadena vacía como valor.
+ * Se utiliza para indicar que se debe continuar al siguiente paso en el proceso.
+ *
+ * @example
+ * // Llamar al método para emitir el evento de continuar
+ * this.continuar();
+ */
+  ngOnDestroy(): void {
+    // Se ejecuta al destruir el componente
+    this.destroyNotifier$.next(); // Emite el evento de destrucción
+    this.destroyNotifier$.complete(); // Completa el subject para limpiar suscripciones
   }
 }
