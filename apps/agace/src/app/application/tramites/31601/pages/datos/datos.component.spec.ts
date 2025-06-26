@@ -1,5 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DatosComponent } from './datos.component';
+import { SolicitanteComponent } from '@ng-mf/data-access-user';
+import {NO_ERRORS_SCHEMA } from '@angular/core';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('DatosComponent', () => {
   let component: DatosComponent;
@@ -7,7 +10,10 @@ describe('DatosComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [DatosComponent]
+      imports: [HttpClientTestingModule,SolicitanteComponent,require('@angular/common/http/testing').HttpClientTestingModule],
+      declarations: [DatosComponent],
+      schemas: [NO_ERRORS_SCHEMA],
+      providers: []
     })
     .compileComponents();
 

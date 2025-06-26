@@ -86,4 +86,8 @@ describe('SolicitudPageComponent', () => {
     expect(destroyNotifierSpy).toHaveBeenCalled();
     expect(destroyNotifierCompleteSpy).toHaveBeenCalled();
   });
+  it('should call getValorIndice with the correct arguments when guardar is called', () => {
+    component.guardar();
+    expect(component.indice).toBe(2);
+  });
 });

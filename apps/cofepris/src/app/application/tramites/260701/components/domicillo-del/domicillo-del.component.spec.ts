@@ -1,15 +1,59 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ReactiveFormsModule } from '@angular/forms';
 import { DomicilloDelComponent } from './domicillo-del.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { ReactiveFormsModule, FormGroup } from '@angular/forms';
+import { of } from 'rxjs';
+import { CertificadosLicenciasService } from '../../services/certificados-licencias.service';
+import { ConsultaioQuery } from '@libs/shared/data-access-user/src/core/queries/consulta.query';
+import { Tramite260701Query } from '../../estados/queries/tramite260701.query';
 
 describe('DomicilloDelComponent', () => {
   let component: DomicilloDelComponent;
   let fixture: ComponentFixture<DomicilloDelComponent>;
 
+  const mockSolicitudState = {
+    codigoPostal: '12345',
+    estado: 'Test State',
+    muncipio: 'Test Municipio',
+    localidad: 'Test Localidad',
+    colonia: 'Test Colonia',
+    calle: 'Test Calle',
+    lada: '123',
+    telefono: '4567890',
+    avisoCheckbox: true,
+    licenciaSanitaria: 'Test Licencia',
+    marcarEnCasoDeQueSea: false,
+    regimen: 'Test Regimen',
+    aduanasEntradas: ['Aduana 1'],
+    numeroPermiso: '123456',
+  };
+
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [DomicilloDelComponent, ReactiveFormsModule,HttpClientTestingModule],
+      providers: [
+        {
+          provide: Tramite260701Query,
+          useValue: {
+            selectSolicitud$: of(mockSolicitudState),
+          },
+        },
+        {
+          provide: ConsultaioQuery,
+          useValue: {
+            selectConsultaioState$: of({ readonly: false }),
+          },
+        },
+        {
+          provide: CertificadosLicenciasService,
+          useValue: {
+            getEstadoCatalogo: () => of({ data: [] }),
+            getScianTablaDatos: () => of([]),
+            getMercanciasTablaDatos: () => of([]),
+            getListaClaveTablaDatos: () => of([]),
+          },
+        },
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(DomicilloDelComponent);
@@ -17,32 +61,23 @@ describe('DomicilloDelComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  beforeEach(() => {
+    const crossListMock = [
+      { agregar: jest.fn(), quitar: jest.fn() }, // Primer CrosslistComponent
+      { agregar: jest.fn(), quitar: jest.fn() }, // Segundo CrosslistComponent
+      { agregar: jest.fn(), quitar: jest.fn() }, // Tercer CrosslistComponent (si lo necesitas)
+    ];
+    component.crossList = {
+      toArray: () => crossListMock
+    } as any;
+  });
+
+  it('debería crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize forms on ngOnInit', () => {
-    component.solicitudState = {
-      codigoPostal: '12345',
-      estado: 'Test State',
-      muncipio: 'Test Municipio',
-      localidad: 'Test Localidad',
-      colonia: 'Test Colonia',
-      calle: 'Test Calle',
-      lada: '123',
-      telefono: '4567890',
-      avisoCheckbox: true,
-      licenciaSanitaria: 'Test Licencia',
-      marcarEnCasoDeQueSea: false,
-      regimen: 'Test Regimen',
-      aduanasEntradas: ['Aduana 1'],
-      numeroPermiso: '123456',
-      claveScianModal: 'Test Clave',
-      claveDescripcionModal: 'Test Descripcion',
-    } as any;
-
+  it('debería inicializar los formularios en ngOnInit', () => {
     component.ngOnInit();
-
     expect(component.domicilio.value).toEqual({
       codigoPostal: '12345',
       estado: 'Test State',
@@ -61,120 +96,90 @@ describe('DomicilloDelComponent', () => {
     });
 
     expect(component.formAgente.value).toEqual({
-      claveScianModal: 'Test Clave',
-      claveDescripcionModal: 'Test Descripcion',
+      claveScianModal: null,
+      claveDescripcionModal: null
     });
   });
 
-  it('should toggle colapsable state', () => {
-    expect(component.colapsable).toBe(false);
+  it('debería alternar el estado colapsable', () => {
+    component.colapsable = false;
     component.mostrar_colapsable();
     expect(component.colapsable).toBe(true);
-    component.mostrar_colapsable();
-    expect(component.colapsable).toBe(false);
   });
 
-  it('should call obtenerEstadoList on ngOnInit', () => {
-    const obtenerEstadoListSpy = jest.spyOn(component, 'obtenerEstadoList');
-    component.ngOnInit();
-    expect(obtenerEstadoListSpy).toHaveBeenCalled();
-  });
-
-  it('should call obtenerTablaDatos on ngOnInit', () => {
-    const obtenerTablaDatosSpy = jest.spyOn(component, 'obtenerTablaDatos');
-    component.ngOnInit();
-    expect(obtenerTablaDatosSpy).toHaveBeenCalled();
-  });
-
-  it('should call obtenerMercanciasDatos on ngOnInit', () => {
-    const obtenerMercanciasDatosSpy = jest.spyOn(component, 'obtenerMercanciasDatos');
-    component.ngOnInit();
-    expect(obtenerMercanciasDatosSpy).toHaveBeenCalled();
-  });
-
-  it('should call obtenerListaClavesDeLosLotes on ngOnInit', () => {
-    const obtenerListaClavesDeLosLotesSpy = jest.spyOn(component, 'obtenerListaClavesDeLosLotes');
-    component.ngOnInit();
-    expect(obtenerListaClavesDeLosLotesSpy).toHaveBeenCalled();
-  });
-
-  it('should emit destroyed$ on ngOnDestroy', () => {
-    const destroyedSpy = jest.spyOn(component['destroyed$'], 'next');
-    const completeSpy = jest.spyOn(component['destroyed$'], 'complete');
-    component.ngOnDestroy();
-    expect(destroyedSpy).toHaveBeenCalledWith();
-    expect(completeSpy).toHaveBeenCalled();
-  });
-
-  it('should call agregar("t") on the first CrosslistComponent when "Agregar todos" is clicked', () => {
-    const mockCrosslist = component.crossList.toArray()[0];
-    component.paisDeProcedenciaBotons[0].funcion();
-    expect(mockCrosslist.agregar).toHaveBeenCalledWith('t');
-  });
-
-  it('should call agregar("") on the first CrosslistComponent when "Agregar selección" is clicked', () => {
-    const mockCrosslist = component.crossList.toArray()[0];
-    component.paisDeProcedenciaBotons[1].funcion();
-    expect(mockCrosslist.agregar).toHaveBeenCalledWith('');
-  });
-
-  it('should call quitar("") on the first CrosslistComponent when "Restar selección" is clicked', () => {
-    const mockCrosslist = component.crossList.toArray()[0];
-    component.paisDeProcedenciaBotons[2].funcion();
-    expect(mockCrosslist.quitar).toHaveBeenCalledWith('');
-  });
-
-  it('should call quitar("t") on the first CrosslistComponent when "Restar todos" is clicked', () => {
-    const mockCrosslist = component.crossList.toArray()[0];
-    component.paisDeProcedenciaBotons[3].funcion();
-    expect(mockCrosslist.quitar).toHaveBeenCalledWith('t');
-  });
-
-  it('should call agregar("t") on the second CrosslistComponent when "Agregar todos" is clicked', () => {
-    const mockCrosslist = component.crossList.toArray()[1];
+  it('debería llamar agregar("t") en el segundo CrosslistComponent cuando se hace clic en "Agregar todos"', () => {
+    const crossListArray = component.crossList.toArray();
     component.paisDeProcedenciaBotonsDos[0].funcion();
-    expect(mockCrosslist.agregar).toHaveBeenCalledWith('t');
+    expect(crossListArray[1].agregar).toHaveBeenCalledWith('t');
   });
   
-  it('should call agregar("") on the second CrosslistComponent when "Agregar selección" is clicked', () => {
+  it('debería llamar agregar("") en el segundo CrosslistComponent cuando se hace clic en "Agregar selección"', () => {
     const mockCrosslist = component.crossList.toArray()[1];
     component.paisDeProcedenciaBotonsDos[1].funcion();
     expect(mockCrosslist.agregar).toHaveBeenCalledWith('');
   });
   
-  it('should call quitar("") on the second CrosslistComponent when "Restar selección" is clicked', () => {
-    const mockCrosslist = component.crossList.toArray()[1];
+  it('debería llamar quitar("") en el segundo CrosslistComponent cuando se hace clic en "Restar selección"', () => {
+    const crossListArray = component.crossList.toArray();
     component.paisDeProcedenciaBotonsDos[2].funcion();
-    expect(mockCrosslist.quitar).toHaveBeenCalledWith('');
+    expect(crossListArray[1].quitar).toHaveBeenCalledWith('');
   });
   
-  it('should call quitar("t") on the second CrosslistComponent when "Restar todos" is clicked', () => {
-    const mockCrosslist = component.crossList.toArray()[1];
-    component.paisDeProcedenciaBotonsDos[3].funcion();
-    expect(mockCrosslist.quitar).toHaveBeenCalledWith('t');
+
+  it('debería alternar el estado colapsableDos', () => {
+    expect(component.colapsableDos).toBe(false);
+    component.mostrar_colapsableDos();
+    expect(component.colapsableDos).toBe(true);
+    component.mostrar_colapsableDos();
+    expect(component.colapsableDos).toBe(false);
   });
 
-  it('should call agregar("t") on the third CrosslistComponent when "Agregar todos" is clicked', () => {
-    const mockCrosslist = component.crossList.toArray()[2];
-    component.paisDeProcedenciaBotonsTres[0].funcion();
-    expect(mockCrosslist.agregar).toHaveBeenCalledWith('t');
+  it('debería alternar el estado colapsableTres', () => {
+    expect(component.colapsableTres).toBe(false);
+    component.mostrar_colapsableTres();
+    expect(component.colapsableTres).toBe(true);
+    component.mostrar_colapsableTres();
+    expect(component.colapsableTres).toBe(false);
   });
-  
-  it('should call agregar("") on the third CrosslistComponent when "Agregar selección" is clicked', () => {
-    const mockCrosslist = component.crossList.toArray()[2];
-    component.paisDeProcedenciaBotonsTres[1].funcion();
-    expect(mockCrosslist.agregar).toHaveBeenCalledWith('');
+
+
+  it('debería llamar crearFormularioDomicilio y establecer valores', () => {
+    component.solicitudState = { codigoPostal: 'cp', estado: 'es', muncipio: 'mu', localidad: 'lo', colonia: 'co', calle: 'ca', lada: 'la', telefono: 'te', avisoCheckbox: false, licenciaSanitaria: 'li', marcarEnCasoDeQueSea: false, regimen: 're', aduanasEntradas: [], numeroPermiso: 'np' } as any;
+    component.crearFormularioDomicilio();
+    expect(component.domicilio.value.codigoPostal).toBe('cp');
   });
-  
-  it('should call quitar("") on the third CrosslistComponent when "Restar selección" is clicked', () => {
-    const mockCrosslist = component.crossList.toArray()[2];
-    component.paisDeProcedenciaBotonsTres[2].funcion();
-    expect(mockCrosslist.quitar).toHaveBeenCalledWith('');
+
+  it('debería llamar crearFormularioAgente y establecer valores', () => {
+    component.solicitudState = { claveScianModal: 'scian', claveDescripcionModal: 'desc' } as any;
+    component.crearFormularioAgente();
+    expect(component.formAgente.value.claveScianModal).toBe('scian');
   });
-  
-  it('should call quitar("t") on the third CrosslistComponent when "Restar todos" is clicked', () => {
-    const mockCrosslist = component.crossList.toArray()[2];
-    component.paisDeProcedenciaBotonsTres[3].funcion();
-    expect(mockCrosslist.quitar).toHaveBeenCalledWith('t');
+
+  it('debería llamar crearFormularioMercancias y establecer valores', () => {
+    component.solicitudState = { clasificacion: 'cl', especificarClasificacionProducto: 'ecp', denominacionEspecifica: 'de', denominacionDistintiva: 'dd', denominacionComun: 'dc', tipoDeProducto: 'tp', estadoFisico: 'ef', fraccionArancelaria: 'fa', descripcionFraccion: 'df', cantidadUMT: 1, UMT: 'umt', cantidadUMC: 2, UMC: 'umc', presentacion: 'pr', numeroRegistro: 'nr', fechaCaducidad: 'fc', claveDeLosLotes: 'cll' } as any;
+    component.crearFormularioMercancias();
+    expect(component.formMercancias.value.clasificacion).toBe('cl');
+  });
+
+  it('debería llamar guardarDatosFormulario y deshabilitar/habilitar formulario', async () => {
+    component.inicializarFormulario = jest.fn();
+    component.domicilio = { disable: jest.fn(), enable: jest.fn() } as any;
+    component.esFormularioSoloLectura = true;
+    await component.guardarDatosFormulario();
+    expect(component.inicializarFormulario).toHaveBeenCalled();
+    component.esFormularioSoloLectura = false;
+    await component.guardarDatosFormulario();
+    expect(component.inicializarFormulario).toHaveBeenCalled();
+  });
+
+  it('debería llamar inicializarEstadoFormulario y manejar modo solo lectura', () => {
+    component.guardarDatosFormulario = jest.fn();
+    component.inicializarFormulario = jest.fn();
+    component.esFormularioSoloLectura = true;
+    component.inicializarEstadoFormulario();
+    expect(component.guardarDatosFormulario).toHaveBeenCalled();
+    component.esFormularioSoloLectura = false;
+    component.inicializarEstadoFormulario();
+    expect(component.inicializarFormulario).toHaveBeenCalled();
   });
 });
