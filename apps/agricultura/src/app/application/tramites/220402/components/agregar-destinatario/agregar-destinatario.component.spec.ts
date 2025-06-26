@@ -7,6 +7,7 @@ import { Solicitud220402Store } from '../../estados/tramites/tramites220402.stor
 import { Solicitud220402Query } from '../../estados/queries/tramites220402.query';
 import { AlertComponent, CatalogoSelectComponent, TablaDinamicaComponent, TituloComponent, ValidacionesFormularioService } from '@ng-mf/data-access-user';
 import { of } from 'rxjs';
+import { Modal } from 'bootstrap';
 
 describe('AgregarDestinatarioComponent', () => {
   let component: AgregarDestinatarioComponent;
@@ -19,7 +20,15 @@ describe('AgregarDestinatarioComponent', () => {
 
   beforeEach(async () => {
     capturaSolicitudeServiceMock = {
-      obtenerDestinatario: jest.fn().mockReturnValue(of({ datos: [] })),
+      obtenerDestinatario: jest.fn().mockReturnValue(of({
+        datos: [{
+          "nombreDenominacionORazonSocial": "acapulco oficina  de inspeccion",
+          "telefono": "744 484 00 00",
+          "correoElectronico": "Electronico",
+          "domicilio": "Domicilio",
+          "pais": "pais"
+        }]
+      })),
     };
 
     mediodetransporteServiceMock = {
@@ -117,5 +126,57 @@ describe('AgregarDestinatarioComponent', () => {
     component.limpiar();
     expect(component.destinatarioForm.get('datosPersonales.nombre')?.value).toBeNull();
     expect(component.destinatarioForm.get('datosPersonales.primerApellido')?.value).toBeNull();
+  });
+  
+  it('should disable the form when soloLectura is true', () => {
+    component.soloLectura = true;
+    component.inicializarEstadoFormulario();
+    expect(component.destinatarioForm.disabled).toBe(true);
+  });
+
+  it('should enable the form when soloLectura is false', () => {
+    component.soloLectura = false;
+    component.inicializarEstadoFormulario();
+    expect(component.destinatarioForm.enabled).toBe(true);
+  });
+
+  it('should show the modal when tercerosAgregar is called', () => {
+    const modalSpy = jest.spyOn(Modal.prototype, 'show');
+    component.tercerosAgregar();
+    expect(modalSpy).toHaveBeenCalled();
+  });
+
+  it('should update seleccionarDestinatario when seleccionarDatos is called', () => {
+    const mockEvento = [
+      {
+        id: 1,
+        nombreDenominacionORazonSocial: 'Destinatario 1',
+        telefono: '1234567890',
+        correoElectronico: 'correo@dominio.com',
+        domicilio: 'Calle 123',
+        pais: 'País 1',
+      },
+    ];
+    component.seleccionarDatos(mockEvento);
+    expect(component.seleccionarDestinatario).toEqual(mockEvento);
+  });
+
+  it('should update form validations based on tipoPersona when tipoPersonaCambiar is called', () => {
+    component.destinatarioForm.get('agregarDestinatario.tipoPersona')?.setValue('fisica');
+    component.tipoPersonaCambiar();
+    expect(component.destinatarioForm.get('datosPersonales.nombre')?.validator).toBeTruthy();
+    expect(component.destinatarioForm.get('datosPersonales.denominacion')?.validator).toBeNull();
+
+    component.destinatarioForm.get('agregarDestinatario.tipoPersona')?.setValue('moral');
+    component.tipoPersonaCambiar();
+    expect(component.destinatarioForm.get('datosPersonales.denominacion')?.validator).toBeTruthy();
+    expect(component.destinatarioForm.get('datosPersonales.nombre')?.validator).toBeNull();
+  });
+
+  it('should fetch destinatarios and update the destinatario list when cargarDestinatario is called', () => {
+    component.cargarDestinatario();
+    expect(capturaSolicitudeServiceMock.obtenerDestinatario).toHaveBeenCalled();
+    expect(component.destinatario.length).toBe(1);
+    expect(component.destinatario[0].nombreDenominacionORazonSocial).toBe('acapulco oficina  de inspeccion');
   });
 });

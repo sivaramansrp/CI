@@ -68,11 +68,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   FormSolicitud!: FormGroup;
 
   /**
-   * Indica si la persona mercancia es visible.
-   */
-  mercanciaCollapsable: boolean = true;
-
-  /**
    * Lista de catálogos de Seleccione una opción.
    */
   Opciones!: Catalogo[];
@@ -390,14 +385,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Método para mostrar los campos correspondientes a una mercancia.
-   * @returns void
-   */
-  mercanciaColapsable(): void {
-    this.mercanciaCollapsable = !this.mercanciaCollapsable;
-  }
-
-  /**
    * Método para eliminar una mercancía de la lista.
    * @param {number} i - Índice de la mercancía a eliminar.
    * @returns {void}
@@ -406,17 +393,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     this.datosGeneralesArr.splice(i, 1);
   }
 
-  /**
-   * Agrega los datos generales de la mercancía al arreglo `datosGeneralesArr`
-   * y colapsa la sección de mercancía.
-   *
-   * @method mercanciaAgregar
-   * @memberof SolicitudComponent
-   */
-  mercanciaAgregar(): void {
-    this.datosGeneralesArr = [...this.datosGeneralesArr, this.datosMercancia.get('datosGenerales')?.value];
-    this.mercanciaColapsable();
-  }
 
   /**
    * @method municipioAgregar

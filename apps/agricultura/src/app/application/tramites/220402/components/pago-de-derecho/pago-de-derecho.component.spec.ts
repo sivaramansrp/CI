@@ -5,7 +5,7 @@ import { MediodetransporteService } from '../../services/medio-de-transporte.ser
 import { Solicitud220402Store } from '../../estados/tramites/tramites220402.store';
 import { Solicitud220402Query } from '../../estados/queries/tramites220402.query';
 import { of } from 'rxjs';
-import { CatalogoSelectComponent, InputRadioComponent, TituloComponent, ValidacionesFormularioService } from '@ng-mf/data-access-user';
+import { CatalogoSelectComponent, InputRadioComponent, TituloComponent, ValidacionesFormularioService, Catalogo } from '@ng-mf/data-access-user';
 
 describe('PagoDeDerechoComponent', () => {
   let component: PagoDeDerechoComponent;
@@ -100,5 +100,51 @@ describe('PagoDeDerechoComponent', () => {
     const form = component.FormSolicitud;
     component.setValoresStore(form, 'datosImportadorExportador.justificacion', 'setJustificacion');
     expect(solicitud220402StoreMock.setJustificacion).toHaveBeenCalled();
+  });
+  
+  it('should disable the form when soloLectura is true', () => {
+    component.soloLectura = true;
+    component.inicializarEstadoFormulario();
+    expect(component.FormSolicitud.disabled).toBe(true);
+  });
+
+  it('should enable the form and update fields when soloLectura is false', () => {
+    component.soloLectura = false;
+    component.inicializarEstadoFormulario();
+    expect(component.FormSolicitud.enabled).toBe(true);
+    expect(component.FormSolicitud.get('datosImportadorExportador.justificacion')?.disabled).toBe(true);
+  });
+
+  it('should call actualizarCamposDeFormularioBasadosEnExentoDePago when exentoDePagoChange is called', () => {
+    const spy = jest.spyOn(component, 'actualizarCamposDeFormularioBasadosEnExentoDePago');
+    component.exentoDePagoChange();
+    expect(spy).toHaveBeenCalled();
+  });
+
+  it('should update bancoSeleccionado when actualizarBanco is called', () => {
+    const mockBanco: Catalogo = { id: 1, descripcion: 'Banco 1' };
+    component.actualizarBanco(mockBanco);
+    expect(component.bancoSeleccionado).toEqual(mockBanco);
+  });
+
+  it('should update form fields based on exentoDePago value', () => {
+    component.FormSolicitud.get('datosImportadorExportador.exentoDePago')?.setValue('No');
+    component.actualizarCamposDeFormularioBasadosEnExentoDePago();
+    expect(component.FormSolicitud.get('datosImportadorExportador.claveDeReferencia')?.disabled).toBe(true);
+    expect(component.FormSolicitud.get('datosImportadorExportador.importePago')?.disabled).toBe(true);
+
+    component.FormSolicitud.get('datosImportadorExportador.exentoDePago')?.setValue('Yes');
+    component.actualizarCamposDeFormularioBasadosEnExentoDePago();
+    expect(component.FormSolicitud.get('datosImportadorExportador.justificacion')?.enabled).toBe(true);
+  });
+
+  it('should validate that the date is not in the future using fechaLimValidator', () => {
+    const control = { value: '2099-12-31' } as any;
+    const result = PagoDeDerechoComponent.fechaLimValidator()(control);
+    expect(result).toEqual({ fechaLim: true });
+
+    control.value = '2023-01-01';
+    const validResult = PagoDeDerechoComponent.fechaLimValidator()(control);
+    expect(validResult).toBeNull();
   });
 });
