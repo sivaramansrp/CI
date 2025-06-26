@@ -162,13 +162,13 @@ import {
   MSJ_LINEA_CAPTURA_USADA,
   MSJ_NO_RELACION_ENCARGO_CONFERIDO,
 } from '../../../../core/enums/5701/mensajes-modal-5701.enum';
+import { BodyValidaHorario } from '../../../../core/models/5701/ValidaHorario.model';
+import { BodyValidarEncargoConferido } from '../../../../core/models/5701/encargo-conferido.models';
 import { CheckInputTextComponent } from '../../../../shared/components/check-input-text/check-input-text.component';
+import { EncargoConferidoService } from '../../../../core/services/5701/encargo-conferido.service';
 import { SIN_VALOR_SELECT } from '@libs/shared/data-access-user/src/core/enums/transporte-componente.enum';
 import { ValidaDespachoService } from '../../../../core/services/5701/valida-despacho.service';
 import { ValidaHorarioService } from '../../../../core/services/5701/valida-horario.service';
-import { BodyValidaHorario } from '../../../../core/models/5701/ValidaHorario.model';
-import { EncargoConferidoService } from '../../../../core/services/5701/encargo-conferido.service';
-import { BodyValidarEncargoConferido } from '../../../../core/models/5701/encargo-conferido.models';
 @Component({
   selector: 'app-solicitud',
   templateUrl: './solicitud.component.html',
