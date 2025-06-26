@@ -105,11 +105,6 @@ public tablaCertificadosFilaDatos: TablaDatos[]=[];
   public esFormularioSoloLectura: boolean = false;
 
   /**
- * Notificador para destruir suscripciones al destruir el componente.
- * Utiliza un Subject para emitir una señal de finalización.
- */
-   private destroyNotifier$: Subject<void> = new Subject();
-  /**
    * @constructor
    * @description
    * Constructor del componente. Inicializa los servicios necesarios.
@@ -127,43 +122,43 @@ public tablaCertificadosFilaDatos: TablaDatos[]=[];
    */
   ngOnInit(): void {
   this.consultaioQuery.selectConsultaioState$
-    .pipe(takeUntil(this.destroyNotifier$))
+    .pipe(takeUntil(this.destroy$))
     .subscribe(state => {
       this.esFormularioSoloLectura = Boolean(state.readonly);
     });
 
     this.certificadosService
-      .getFitosanitoriosEncabezadoDeTabla()
+      .getFitosanitoriosEncabezadoDeTabla().pipe(takeUntil(this.destroy$))
       .subscribe((data: CertificadosTablaDatos) => {
         this.tablaFitosanitoriosData = data.columns; // Asigna los datos de la tabla de fitosanitarios.
       });
 
     this.certificadosService
-      .getPermisoCertificadosDeTabla()
+      .getPermisoCertificadosDeTabla().pipe(takeUntil(this.destroy$))
       .subscribe((data: CertificadosTablaDatos) => {
         this.tablaPermisoCertificadosData = data.columns; // Asigna los datos de la tabla de permisos.
       });
 
     this.certificadosService
-      .getCertificadosDeTabla()
+      .getCertificadosDeTabla().pipe(takeUntil(this.destroy$))
       .subscribe((data: CertificadosTablaDatos) => {
         this.tablaCertificadosData = data.columns; // Asigna los datos de la tabla de certificados.
       });
 
       this.certificadosService
-      .getCertificadosFilaDeTabla()
+      .getCertificadosFilaDeTabla().pipe(takeUntil(this.destroy$))
       .subscribe((data: CertificadosFilaTableDatos) => {
         this.tablaCertificadosFilaDatos = [data.data]; // Asigna los datos de la tabla de certificados fila.
       });
 
       this.certificadosService
-      .getCertificadosFitoFilaDeTabla()
+      .getCertificadosFitoFilaDeTabla().pipe(takeUntil(this.destroy$))
       .subscribe((data: CertificadosFitoFilaTableDatos) => {
         this.tablaFitosanitoriosFilaDatos = [data.data]; // Asigna los datos de la tabla de certificados fito fila.
       });
 
       this.certificadosService
-      .getPermisoCertificadosFilaDeTabla()
+      .getPermisoCertificadosFilaDeTabla().pipe(takeUntil(this.destroy$))
       .subscribe((data: PermisosCertificadosFitoFilaTableDatos) => {
         this.tablaPermisoCertificadosFilaDatos= [data.data]; // Asigna los datos de la tabla de permiso certificados fila.
       });

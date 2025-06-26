@@ -4,6 +4,7 @@ import { BandejaDeSolicitudesComponent } from './bandeja-de-solicitudes.componen
 import { BandejaDeSolicitudeService } from '../services/bandeja-de-solicitude.service';
 import { of, throwError } from 'rxjs';
 import { LibBandejaComponent, BandejaDeSolicitudes, JSONResponse } from '@libs/shared/data-access-user/src';
+import { provideHttpClient } from '@angular/common/http';
 
 describe('BandejaDeSolicitudesComponent (Jest)', () => {
   let component: BandejaDeSolicitudesComponent;
@@ -18,7 +19,8 @@ describe('BandejaDeSolicitudesComponent (Jest)', () => {
       fechaActualizacion: "2023-10-05",
       diasTranscurridos: "4",
       departamento: "AGA",
-      numeroDeProcedimiento: "301"
+      numeroDeProcedimiento: "301",
+      id_solicitud: ''
     }
   ];
   
@@ -37,7 +39,9 @@ describe('BandejaDeSolicitudesComponent (Jest)', () => {
 
     await TestBed.configureTestingModule({
       imports: [CommonModule, LibBandejaComponent, BandejaDeSolicitudesComponent],
-      providers: [{ provide: BandejaDeSolicitudeService, useValue: mockService }]
+      providers: [
+        { provide: BandejaDeSolicitudeService, useValue: mockService, },
+        provideHttpClient()]
     }).compileComponents();
 
     fixture = TestBed.createComponent(BandejaDeSolicitudesComponent);

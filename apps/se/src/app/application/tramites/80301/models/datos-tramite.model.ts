@@ -49,14 +49,7 @@ export interface Aduanas {
     actividadEconomica: string;
     correoElectronico: string;
   }
-  
-  export interface DatosModificacion {
-    rfc: string;
-    federal: string;
-    tipo: string;
-    programa: string;
-  }
-  
+
   export interface DatosDelModificacion {
     codigoPostal: string | undefined;
     localidad: string | undefined;

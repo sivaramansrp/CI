@@ -93,7 +93,7 @@ export class OficioComponent implements OnInit, OnDestroy{
   /**
    * Lista de datos de oficios, cada uno representando un certificado que será mostrado en la tabla.
    */
-  oficio: CertificadosCancelar[] = oficiodata;
+  oficio: CertificadosCancelar[] = oficiodata ?? [];
 
   /**
    * Configuración de las columnas para la tabla de oficios.

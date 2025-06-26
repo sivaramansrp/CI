@@ -10,7 +10,6 @@ import {
   AfterViewInit,
   Component,
   ElementRef,
-  Input,
   OnDestroy,
   OnInit,
   ViewChild,
@@ -25,8 +24,8 @@ import {
   TablaSeleccion,
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
+import { DatosDelSolicituteSeccionState,DatosDelSolicituteSeccionStateStore } from '../../estados/stores/datos-del-solicitute-seccion.store';
 import { DatosDelSolicituteSeccionQuery } from '../../estados/queries/datos-del-solicitute-seccion.query';
-import { DatosDelSolicituteSeccionStateStore, DatosDelSolicituteSeccionState } from '../../estados/stores/datos-del-solicitute-seccion.store';
 
 import {
   FormBuilder,
@@ -37,7 +36,7 @@ import {
 } from '@angular/forms';
 import { EstablecimientoService } from '../../services/establecimiento.service';
 
-import { map, Subject, takeUntil } from 'rxjs';
+import { Subject,map, takeUntil } from 'rxjs';
 import { ScianModel } from '../../models/datos-de-la-solicitud.model';
 
 import { Modal } from 'bootstrap';
