@@ -72,14 +72,14 @@ describe('PasoTresComponent', () => {
       expect(component.url).toBe('/tramite/5701');
     });
 
-    it('debería llamar a onObtenerCadenaOriginal', () => {
-      const spy = jest.spyOn(component, 'onObtenerCadenaOriginal');
+    it('debería llamar a obtenerCadenaOriginal', () => {
+      const spy = jest.spyOn(component, 'obtenerCadenaOriginal');
       component.ngOnInit();
       expect(spy).toHaveBeenCalled();
     });
   });
 
-  describe('onObtenerCadenaOriginal', () => {
+  describe('obtenerCadenaOriginal', () => {
     it('debería obtener la cadena original correctamente', fakeAsync(() => {
       const mockResponse: BaseResponse<string> = {
         codigo: '0',
@@ -91,7 +91,7 @@ describe('PasoTresComponent', () => {
 
       mockFirmaService.obtenerCadenaOriginal.mockReturnValue(of(mockResponse));
 
-      component.onObtenerCadenaOriginal();
+      component.obtenerCadenaOriginal();
       tick();
 
       expect(mockFirmaService.obtenerCadenaOriginal).toHaveBeenCalled();
@@ -102,7 +102,7 @@ describe('PasoTresComponent', () => {
       const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
       mockFirmaService.obtenerCadenaOriginal.mockReturnValue(throwError(() => new Error('Error test')));
 
-      component.onObtenerCadenaOriginal();
+      component.obtenerCadenaOriginal();
       tick();
 
       expect(consoleSpy).toHaveBeenCalledWith('Error al obtener cadena original:', expect.any(Error));
@@ -120,7 +120,7 @@ describe('PasoTresComponent', () => {
         fechaFin: '2025-12-31'
       };
 
-      component.onDatosFirma(testData);
+      component.datosFirma(testData);
 
       expect(component.datosFirmaReales).toEqual(testData);
       expect(spy).toHaveBeenCalledWith('FIRMA_TEST');
@@ -193,7 +193,7 @@ describe('PasoTresComponent', () => {
 
       // Caso 2: Faltan datos de firma
       component.cadenaOriginal = 'CADENA_TEST';
-      component.datosFirmaReales = undefined;
+      component.datosFirmaReales = undefined as any;
       component.obtieneFirma('FIRMA_TEST');
       expect(mockFirmaService.enviarFirma).not.toHaveBeenCalled();
     });

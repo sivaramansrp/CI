@@ -2,13 +2,13 @@
 export interface CatalogosResponse {
     codigo: string;
     mensaje: string;
-    datos: ICatalogo[];
+    datos: Catalogos[];
 }
 
 /**
  * Modelo para cada uno de los registros regresados por las diferentes APIs
  */
-export interface ICatalogo {
+export interface Catalogos {
     clave: string;
     descripcion: string;
 }

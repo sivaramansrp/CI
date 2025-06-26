@@ -28,9 +28,9 @@ export class CadenaOriginalService {
  *
  * 
  */
-  generarCadena(): Observable<BaseResponse> {
+  generarCadena<T>(): Observable<BaseResponse<T>>{
     const ENDPOINT = 'assets/json/5701/cadena-original.json';
-    return this.http.get<BaseResponse>(ENDPOINT).pipe(
+    return this.http.get<BaseResponse<T>>(ENDPOINT).pipe(
       tap((response) => {
         return response;
       }),

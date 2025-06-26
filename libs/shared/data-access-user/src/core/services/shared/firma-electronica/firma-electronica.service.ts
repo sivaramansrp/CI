@@ -21,8 +21,8 @@ export class FirmaElectronicaService {
   /**
    * Obtiene la cadena original para firmar.
    */
-  obtenerCadenaOriginal(body: CadenaOriginalRequest): Observable<BaseResponse> {
-    return this.http.post<BaseResponse>(`${this.urlServer}/${API_GENERAR_CADENA_ORIGINAL}`, body);
+  obtenerCadenaOriginal<T>(body: CadenaOriginalRequest): Observable<BaseResponse<T>> {
+    return this.http.post<BaseResponse<T>>(`${this.urlServer}/${API_GENERAR_CADENA_ORIGINAL}`, body);
   }
 
   /**
@@ -31,8 +31,8 @@ export class FirmaElectronicaService {
  * @param body Objeto de tipo `FirmarRequest` que contiene los datos necesarios para firmar el trámite.
  * @returns Un `Observable` de tipo `BaseResponse` que contiene el resultado de la operación.
  */
-  enviarFirma(body: FirmarRequest): Observable<BaseResponse> {
-    return this.http.post<BaseResponse>(`${this.urlServer}/${API_ENVIAR_FIRMA}`, body);
+  enviarFirma<T>(body: FirmarRequest): Observable<BaseResponse<any>> {
+    return this.http.post<BaseResponse<T>>(`${this.urlServer}/${API_ENVIAR_FIRMA}`, body);
   }
 
   /**

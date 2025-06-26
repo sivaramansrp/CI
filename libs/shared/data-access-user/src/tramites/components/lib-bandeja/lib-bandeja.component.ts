@@ -3,7 +3,6 @@ import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ConfiguracionColumna } from '../../../core/models/shared/configuracion-columna.model';
-import { ConsultaioStore } from '@ng-mf/data-access-user';
 import { FormasDinamicasComponent } from '../formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
 import { SeleccionadoDepartamento } from '../../../core/models/shared/bandeja-de-tareas-pendientes.model';
 import { TablaAcciones } from '../../../core/enums/tabla-seleccion.enum';
@@ -12,11 +11,29 @@ import { TablePaginationComponent } from '../table-pagination/table-pagination.c
 import { TramiteDetails } from '../../../core/models/tramiteDetails';
 import tramiteDetailsData from '@libs/shared/theme/assets/json/tramiteList.json';
 
+import { ConsultaioStore } from '../../../core/estados/consulta.store';
+import { ModeloDeFormaDinamica } from '../../../core/models/shared/forms-model';
+
+import { AcuseYResolucionesFolioTramite } from '../../../core/models/shared/acuse-y-resoluciones-folio-tramite.model';
+
+
 /*
  * Componente LibBandejaComponent
  * Este componente es reutilizable para mostrar una bandeja dinámica con tabla, paginación y formularios.
  * Permite navegar a diferentes rutas dependiendo del origen del trámite y mostrar configuraciones dinámicas.
  */
+/*
+ * Clase genérica LibBandejaComponent<T>
+ * Este componente representa una bandeja reutilizable con tabla dinámica, formularios y navegación basada en datos.
+ * Se puede utilizar con cualquier tipo de datos que se especifique mediante el tipo genérico <T>.
+ * Implementa la interfaz OnInit para inicializar la lógica al montar el componente.
+ */
+interface TieneNumeroDeProcedimiento extends AcuseYResolucionesFolioTramite{
+  origin:string;
+  numeroDeProcedimiento: string;
+  departamento:string;
+}
+
 @Component({
   selector: 'lib-bandeja',
   standalone: true,
@@ -32,13 +49,7 @@ import tramiteDetailsData from '@libs/shared/theme/assets/json/tramiteList.json'
   styleUrl: './lib-bandeja.component.scss',
   encapsulation: ViewEncapsulation.None,
 })
-/*
- * Clase genérica LibBandejaComponent<T>
- * Este componente representa una bandeja reutilizable con tabla dinámica, formularios y navegación basada en datos.
- * Se puede utilizar con cualquier tipo de datos que se especifique mediante el tipo genérico <T>.
- * Implementa la interfaz OnInit para inicializar la lógica al montar el componente.
- */
-export class LibBandejaComponent<T> implements OnInit {
+export class LibBandejaComponent<T extends TieneNumeroDeProcedimiento> implements OnInit {
    /* Título mostrado en el encabezado de la bandeja */
   @Input() public titulo!: string;
    /* Indica si la bandeja debe mostrar el formulario dinámico */
@@ -48,17 +59,17 @@ export class LibBandejaComponent<T> implements OnInit {
   /* Configuración de columnas para la tabla */
   @Input() configuracionTabla: ConfiguracionColumna<T>[] = [];
   /* Datos que se muestran en la tabla */
-  @Input() configuracionTablaDatos: any[] = [];
+  @Input() configuracionTablaDatos: T[] = [];
    /* Datos que se usan en el formulario de la bandeja */
-  @Input() public bandejaSolicitudeDatos: any[] = [];
+  @Input() public bandejaSolicitudeDatos: ModeloDeFormaDinamica[] = [];
   /**
    * Propiedad de entrada que contiene un arreglo de objetos de datos a duplicar.
    */
-  @Input() public duplicarDatos: any[] = [];
+  @Input() public duplicarDatos: T[]= [];
   /**
    * EventEmitter que emite un evento cada vez que un valor cambia en el componente.
    */
-  @Output() obtenerNombreDelDepartamento: EventEmitter<{ campo: string; valor: any}> = new EventEmitter<{ campo: string; valor: any}>();
+  @Output() obtenerNombreDelDepartamento: EventEmitter<{ campo: string; valor: string}> = new EventEmitter<{ campo: string; valor: string}>();
   /**
    * Propiedad de entrada que contiene la información del departamento actualmente seleccionado.
    */
@@ -79,7 +90,7 @@ export class LibBandejaComponent<T> implements OnInit {
 /* Acciones disponibles en la tabla (editar, etc.) */
   public tablaAcciones: TablaAcciones[] = [TablaAcciones.EDITAR];
   /* Copia original de la configuración de la tabla */
-  public originalConfiguracionTabla: any[] = [];
+  public originalConfiguracionTabla: T[]= [];
    /* Lista de detalles de trámite desde JSON */
   public tramiteData: TramiteDetails[] = [];
   /* Controla si la sección de país de origen está colapsada o no */
@@ -133,8 +144,9 @@ export class LibBandejaComponent<T> implements OnInit {
    * Envía los datos del formulario. Marca el formulario como válido si no hay errores
    */
   public enviarDatos(): void {
-    const BANDEJA_SOLICITUDE_FORM_GROUP: null | any = this.dinamicasBandejaForma.get('bandejaSolicitudeFormGroup');
-    if(BANDEJA_SOLICITUDE_FORM_GROUP.get('solicitudId').valid) {
+    const BANDEJA_SOLICITUDE_FORM_GROUP = this.dinamicasBandejaForma.get('bandejaSolicitudeFormGroup');
+    const SOLICITUD_ID_CONTROL = BANDEJA_SOLICITUDE_FORM_GROUP?.get('solicitudId');
+    if (BANDEJA_SOLICITUDE_FORM_GROUP && SOLICITUD_ID_CONTROL && SOLICITUD_ID_CONTROL.valid) {
       this.configuracionTablaDatos = this.duplicarDatos;
       const SELECTED_PROCEDURE = this.configuracionTablaDatos.filter((item) => Number(item.numeroDeProcedimiento) === Number(this.seleccionadoDepartamento.numeroDeProcedimiento));
       this.configuracionTablaDatos = SELECTED_PROCEDURE;
@@ -150,7 +162,7 @@ export class LibBandejaComponent<T> implements OnInit {
    * Maneja el clic sobre una fila de la tabla.
    * Navega a la ruta correspondiente dependiendo del origen del trámite
    */
-  public onFilaClic(event: any): void {
+  public onFilaClic(event: T): void {
     const ROW_OBJETO = event;
     const PROCEDURE: unknown | number = Number(
       ROW_OBJETO.numeroDeProcedimiento
@@ -233,14 +245,14 @@ export class LibBandejaComponent<T> implements OnInit {
    *
    * @param event - Un objeto que contiene el campo seleccionado (`campo`) y su valor (`valor`).
    */
-  public obtenerDepartamento(event: { campo: string; valor: any }): void {
+  public obtenerDepartamento(event: { campo: string; valor: string }): void {
     this.obtenerNombreDelDepartamento.emit({ campo: event.campo, valor: event.valor });
     if(this.seleccionadoDepartamento.tieneDepartamento) {
       this.bandejaSolicitudeFormGroup.get('procedimiento')?.setValue('');
     }
   }
 
-  public obtenerProcedure(event: { campo: string; valor: any }): void {
+  public obtenerProcedure(event: { campo: string; valor: string }): void {
     this.obtenerNombreDelDepartamento.emit({ campo: event.campo, valor: event.valor });
   }
 

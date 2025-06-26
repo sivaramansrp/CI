@@ -15,6 +15,17 @@ import { TablaDinamicaComponent } from '../tabla-dinamica/tabla-dinamica.compone
 import { TablePaginationComponent } from '../table-pagination/table-pagination.component';
 import { TramiteDetails } from '../../../core/models/tramiteDetails';
 
+import { ModeloDeFormaDinamica } from '../../../core/models/shared/forms-model';
+
+interface TieneNumeroDeProcedimiento {
+  id:number;
+  numeroDeProcedimiento: string;
+  departamento:string
+  origin: string;
+  folioTramite: string;
+  tipoDeTramite: string;
+  estadoDeTramite: string;
+}
 @Component({
   selector: 'app-consulta-tramite',
   standalone: true,
@@ -23,7 +34,7 @@ import { TramiteDetails } from '../../../core/models/tramiteDetails';
   styleUrl: './consulta-tramite.component.scss',
 })
 
-export class ConsultaTramiteComponent<T> implements OnInit {
+export class ConsultaTramiteComponent<T extends TieneNumeroDeProcedimiento> implements OnInit {
   /** 
    * Formulario de búsqueda 
    */
@@ -51,17 +62,17 @@ export class ConsultaTramiteComponent<T> implements OnInit {
   /* Configuración de columnas para la tabla */
   @Input() configuracionTabla: ConfiguracionColumna<T>[] = [];
   /* Datos que se muestran en la tabla */
-  @Input() configuracionTablaDatos: any[] = [];
+  @Input() configuracionTablaDatos: T[] = [];
    /* Datos que se usan en el formulario de la bandeja */
-  @Input() public bandejaSolicitudeDatos: any[] = [];
+  @Input() public bandejaSolicitudeDatos: ModeloDeFormaDinamica[] = [];
   /**
    * Propiedad de entrada que contiene un arreglo de objetos de datos a duplicar.
    */
-  @Input() public duplicarDatos: any[] = [];
+  @Input() public duplicarDatos: T[] = [];
   /**
    * EventEmitter que emite un evento cada vez que un valor cambia en el componente.
    */
-  @Output() obtenerNombreDelDepartamento: EventEmitter<{ campo: string; valor: any}> = new EventEmitter<{ campo: string; valor: any}>();
+  @Output() obtenerNombreDelDepartamento: EventEmitter<{ campo: string; valor: string| boolean | undefined |number}> = new EventEmitter<{ campo: string; valor: string| boolean | undefined |number}>();
   /**
    * Propiedad de entrada que contiene la información del departamento actualmente seleccionado.
    */
@@ -83,7 +94,7 @@ export class ConsultaTramiteComponent<T> implements OnInit {
   /* Acciones disponibles en la tabla (editar, etc.) */
   public tablaAcciones: TablaAcciones[] = [TablaAcciones.EDITAR];
   /* Copia original de la configuración de la tabla */
-  public originalConfiguracionTabla: any[] = [];
+  public originalConfiguracionTabla: T[] = [];
    /* Lista de detalles de trámite desde JSON */
   public tramiteData: TramiteDetails[] = [];
   /* Controla si la sección de país de origen está colapsada o no */
@@ -217,7 +228,7 @@ export class ConsultaTramiteComponent<T> implements OnInit {
    * Maneja el clic sobre una fila de la tabla.
    * Navega a la ruta correspondiente dependiendo del origen del trámite
    */
-  public onFilaClic(event: any): void {
+  public onFilaClic(event:T): void {
     const ROW_OBJETO = event;
     const PROCEDURE: unknown | number = Number(
       ROW_OBJETO.numeroDeProcedimiento

@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { base64ToHex, encodeToISO88591Hex } from '@libs/shared/data-access-user/src/core/utils/utilerias';
-import { CadenaOriginalRequest } from '@libs/shared/data-access-user/src/core/models/shared/firma-electronica/request/cadena-original-request.model';
+
+import { CadenaOriginalGenerada, CadenaOriginalRequest } from '@libs/shared/data-access-user/src/core/models/shared/firma-electronica/request/cadena-original-request.model';
 
 import { CadenaOriginalService, DocumentoService, TramiteFolioService, TramiteFolioStore } from '@ng-mf/data-access-user';
 import { Subject, catchError, switchMap, takeUntil, tap, throwError } from 'rxjs';
@@ -9,7 +10,7 @@ import { Subject, catchError, switchMap, takeUntil, tap, throwError } from 'rxjs
 import { BaseResponse } from '../../../../core/models/5701/base-response.model';
 import { FirmaElectronicaService } from '@libs/shared/data-access-user/src/core/services/shared/firma-electronica/firma-electronica.service';
 
-import { FirmarRequest } from '@libs/shared/data-access-user/src/core/models/shared/firma-electronica/request/firmar-request.model';
+import { DocumentoRequeridoFirmar, FirmarRequest } from '@libs/shared/data-access-user/src/core/models/shared/firma-electronica/request/firmar-request.model';
 import { Router } from '@angular/router';
 import { Tramite5701Query } from '../../../../core/queries/tramite5701.query';
 import { Tramite5701Store } from '../../../../core/estados/tramites/tramite5701.store';
@@ -104,15 +105,19 @@ export class PasoTresComponent implements OnInit, OnDestroy {
    *  necesarios para generar la cadena original.
    */
   obtenerCadenaOriginal(): void {
-    this.cadenaOriginalService.generarCadena().subscribe({
+    this.cadenaOriginalService.generarCadena<CadenaOriginalRequest>().subscribe({
       next: (response) => {
-        this.datosCadena = response.datos;
-        this.firma.obtenerCadenaOriginal(this.datosCadena).subscribe({
-          next: (resp) => {
-            this.cadenaOriginal = resp.datos;
-          },
-          error: (err) => console.error('Error al generar cadena:', err)
-        });
+        if (response.datos) {
+          this.datosCadena = response.datos;
+          this.firma.obtenerCadenaOriginal<CadenaOriginalGenerada>(this.datosCadena).subscribe({
+            next: (resp) => {
+              this.cadenaOriginal = resp.datos?.cadenaOriginal;
+            },
+            error: (err) => console.error('Error al generar cadena:', err)
+          });
+        } else {
+          console.error('response.datos is undefined');
+        }
       },
       error: (err) => console.error('Error al cargar datos del trámite:', err)
     });
@@ -145,7 +150,7 @@ export class PasoTresComponent implements OnInit, OnDestroy {
     const FIRMAHEX = base64ToHex(firma);
     const ID_SOLICITUD = this.tramite5701Query.getValue().idSolicitud;
 
-    this.documentoService.obtenerDatosFirma().pipe(
+    this.documentoService.obtenerDatosFirma<FirmarRequest>().pipe(
       takeUntil(this.destroy$),
       switchMap(response => {
         const PAYLOAD: FirmarRequest = {
@@ -157,10 +162,10 @@ export class PasoTresComponent implements OnInit, OnDestroy {
           clave_rol: 'Solicitante',
           sello: FIRMAHEX,
           fecha_fin_vigencia: this.datosFirmaReales.fechaFin,
-          documentos_requeridos: response.datos.documentos_requeridos
+          documentos_requeridos: response.datos?.documentos_requeridos ?? []
         };
 
-        return this.firma.enviarFirma(PAYLOAD).pipe(
+        return this.firma.enviarFirma<DocumentoRequeridoFirmar>(PAYLOAD).pipe(
           tap((firmaResponse: BaseResponse<string>) => {
             if (firmaResponse.datos) {
               this.folio = firmaResponse.datos;
