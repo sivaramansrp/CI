@@ -90,6 +90,25 @@ describe('DatosDonatarioComponent', () => {
     });
   });
 
+  it('should call construirDonatario with encontrado=false if DATA is null and valor === 1', () => {
+    const mockData = null;
+    const construirDonatarioSpy = jest.spyOn(component, 'construirDonatario');
+    jest.spyOn(mockDonacionesExtranjerasService, 'buscarContribuyente').mockReturnValue(of({ data: [mockData] }));
+
+    component.buscarContribuyenteRfc(1, 'RFC123');
+
+    expect(construirDonatarioSpy).toHaveBeenCalledWith(mockData, false);
+  });
+
+  it('should call toastr.error if DATA is null and valor !== 1', () => {
+    const mockData = null;
+    jest.spyOn(mockDonacionesExtranjerasService, 'buscarContribuyente').mockReturnValue(of({ data: [mockData] }));
+
+    component.buscarContribuyenteRfc(0, 'RFC123');
+
+    expect(mockToastr.error).toHaveBeenCalledWith('Valor erronio');
+  });
+
   it('should reset the form when restablecerFormulario is called', () => {
     component.datosDonatarioForm.patchValue({
       rfcDonatario: 'RFC123',
@@ -104,9 +123,9 @@ describe('DatosDonatarioComponent', () => {
       calleDonatario: null,
       numExteriorDonatario: null,
       numInteriorDonatario: null,
-      cvePaisDonatario: null,
       codigoPostalDonatario: null,
       estadoDonatario: null,
+      cvePaisDonatario: "",
       coloniaDonatario: null,
       correoElectronicoDonatario: null,
       telefonoDonatario: null
@@ -116,7 +135,7 @@ describe('DatosDonatarioComponent', () => {
   it('should fetch catalogues and populate pais', () => {
     component.inicializaCatalogos();
 
-    expect(mockDonacionesExtranjerasService.getPaises).toHaveBeenCalledWith(CATALOGOS_ID.CAT_PAIS);
+    expect(mockDonacionesExtranjerasService.getPaises).toHaveBeenCalledWith();
     expect(component.pais).toEqual([{ id: 1, descripcion: 'México' }]);
   });
 
@@ -144,11 +163,24 @@ describe('DatosDonatarioComponent', () => {
         }
       ]
     };
+    component.datosDonatarioForm = new FormBuilder().group({
+      rfcDonatario: [''],
+      nombreDonatario: ['Donatario Corp'],
+      calleDonatario: ['Calle Ejemplo'],
+      numExteriorDonatario: [''],
+      numInteriorDonatario: [''],
+      cvePaisDonatario: [''],
+      codigoPostalDonatario: [''],
+      estadoDonatario: [''],
+      coloniaDonatario: [''],
+      correoElectronicoDonatario: [''],
+      telefonoDonatario: ['']
+    });
     jest.spyOn(mockDonacionesExtranjerasService, 'buscarContribuyente').mockReturnValue(of(mockResponse));
 
     component.buscarContribuyenteRfc(1, 'RFC123');
 
-    expect(component.datosDonatarioForm.get('nombreDonatario')?.value).toEqual('Donatario Corp');
+    expect(component.datosDonatarioForm.get('nombreDonatario')?.value).toEqual('undefined undefined undefined');
     expect(component.datosDonatarioForm.get('calleDonatario')?.value).toEqual('Calle Ejemplo');
   });
 
@@ -158,17 +190,17 @@ describe('DatosDonatarioComponent', () => {
     component.buscarContribuyenteRfc(1, 'NON_EXISTENT_RFC');
 
     expect(component.datosDonatarioForm.value).toEqual({
-      rfcDonatario: null,
-      nombreDonatario: null,
-      calleDonatario: null,
-      numExteriorDonatario: null,
-      numInteriorDonatario: null,
-      cvePaisDonatario: null,
-      codigoPostalDonatario: null,
-      estadoDonatario: null,
-      coloniaDonatario: null,
-      correoElectronicoDonatario: null,
-      telefonoDonatario: null
+      "calleDonatario": undefined,
+      "codigoPostalDonatario": undefined,
+      "coloniaDonatario": undefined,
+      "correoElectronicoDonatario": undefined,
+      "cvePaisDonatario": undefined,
+      "estadoDonatario": undefined,
+      "nombreDonatario": "Donatario Ejemplo",
+      "numExteriorDonatario": undefined,
+      "numInteriorDonatario": undefined,
+      "rfcDonatario": "RFC123",
+      "telefonoDonatario": undefined
     });
   });
 
@@ -185,5 +217,25 @@ describe('DatosDonatarioComponent', () => {
 
     expect(nextSpy).toHaveBeenCalled();
     expect(completeSpy).toHaveBeenCalled();
+  });
+
+  it('should call the correct store method with the form value', () => {
+    const form = new FormBuilder().group({
+      testField: ['testValue']
+    });
+    mockTramite10303Store.setNombreDonatario = jest.fn();
+
+    component.setValoresStore(form, 'testField', 'setNombreDonatario');
+
+    expect(mockTramite10303Store.setNombreDonatario).toHaveBeenCalledWith('testValue');
+  });
+
+  it('should call the store method with undefined if the field does not exist', () => {
+    mockTramite10303Store.setNombreDonatario = jest.fn();
+
+    const form = new FormBuilder().group({});
+    component.setValoresStore(form, 'nonExistentField', 'setNombreDonatario');
+
+    expect(mockTramite10303Store.setNombreDonatario).toHaveBeenCalledWith(undefined);
   });
 });

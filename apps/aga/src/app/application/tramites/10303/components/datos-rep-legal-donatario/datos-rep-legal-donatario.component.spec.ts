@@ -11,8 +11,8 @@ describe('DatosRepLegalDonatarioComponent', () => {
 
   beforeEach(() => {
     mockDonacionesExtranjerasService = {
-      getPaises: jest.fn(),
-      buscarContribuyente: jest.fn()
+      getPaises: jest.fn().mockReturnValue(of({ data: [] })),
+      buscarContribuyente: jest.fn().mockReturnValue(of({}))
     };
     mockTramite10303Store = {
       setCvePaisRepLegalDonatario: jest.fn()
@@ -21,7 +21,8 @@ describe('DatosRepLegalDonatarioComponent', () => {
       selectSeccionState$: of({ rfcRepLegalDonatario: 'XYZ123', nombreRepLegalDonatario: 'Jane Doe' })
     };
     mockToastr = {
-      error: jest.fn()
+      error: jest.fn(),
+      success: jest.fn()
     };
 
     component = new DatosRepLegalDonatarioComponent(
@@ -81,12 +82,24 @@ describe('DatosRepLegalDonatarioComponent', () => {
   });
 
   it('should handle contributor not found scenario', () => {
+    component.ngOnInit();
     mockDonacionesExtranjerasService.buscarContribuyente.mockReturnValue(of({ data: [null] }));
-    component.buscarContribuyenteRfc(2, 'XYZ123');
+    component.buscarContribuyenteRfc(1, 'XYZ123');
     expect(mockToastr.error).toHaveBeenCalledWith('Valor erronio');
   });
 
-  it('should patch form values when a contributor is found', () => {
+  it('should call all store setters when a contributor is found', () => {
+    mockTramite10303Store.setNombreRepLegalDonatario = jest.fn();
+    mockTramite10303Store.setCalleRepLegalDonatario = jest.fn();
+    mockTramite10303Store.setNumExteriorRepLegalDonatario = jest.fn();
+    mockTramite10303Store.setNumInteriorRepLegalDonatario = jest.fn();
+    mockTramite10303Store.setEstadoRepLegalDonatario = jest.fn();
+    mockTramite10303Store.setColoniaRepLegalDonatario = jest.fn();
+    mockTramite10303Store.setCodigoPostalRepLegalDonatario = jest.fn();
+    mockTramite10303Store.setCvePaisRepLegalDonatario = jest.fn();
+    mockTramite10303Store.setCorreoElectronicoRepLegalDonatario = jest.fn();
+    mockTramite10303Store.setTelefonoRepLegalDonatario = jest.fn();
+
     const mockContribuyente = {
       rfc: 'XYZ123',
       razonSocial: 'ABC Corp',
@@ -105,19 +118,93 @@ describe('DatosRepLegalDonatarioComponent', () => {
     };
 
     component.construirRLdonatario(mockContribuyente, true);
-    expect(component.datosRepLegalDonatarioForm.value).toEqual({
-      rfcRepLegalDonatario: 'XYZ123',
-      nombreRepLegalDonatario: 'Jane Doe ',
-      calleRepLegalDonatario: 'Park Avenue',
-      numExteriorRepLegalDonatario: '10',
-      numInteriorRepLegalDonatario: '2A',
-      cvePaisRepLegalDonatario: 'India',
-      codigoPostalRepLegalDonatario: '123456',
-      estadoRepLegalDonatario: 'Tamil Nadu',
-      coloniaRepLegalDonatario: 'Downtown',
-      correoElectronicoRepLegalDonatario: 'jane.doe@example.com',
-      telefonoRepLegalDonatario: '9876543210'
-    });
+
+    expect(mockTramite10303Store.setNombreRepLegalDonatario).toHaveBeenCalledWith('Jane Doe ');
+    expect(mockTramite10303Store.setCalleRepLegalDonatario).toHaveBeenCalledWith('Park Avenue');
+    expect(mockTramite10303Store.setNumExteriorRepLegalDonatario).toHaveBeenCalledWith('10');
+    expect(mockTramite10303Store.setNumInteriorRepLegalDonatario).toHaveBeenCalledWith('2A');
+    expect(mockTramite10303Store.setEstadoRepLegalDonatario).toHaveBeenCalledWith('Tamil Nadu');
+    expect(mockTramite10303Store.setColoniaRepLegalDonatario).toHaveBeenCalledWith('Downtown');
+    expect(mockTramite10303Store.setCodigoPostalRepLegalDonatario).toHaveBeenCalledWith('123456');
+    expect(mockTramite10303Store.setCvePaisRepLegalDonatario).toHaveBeenCalledWith('India');
+    expect(mockTramite10303Store.setCorreoElectronicoRepLegalDonatario).toHaveBeenCalledWith('jane.doe@example.com');
+    expect(mockTramite10303Store.setTelefonoRepLegalDonatario).toHaveBeenCalledWith('9876543210');
+  });
+
+  it('should not call store setters if contributor is not found', () => {
+    mockTramite10303Store.setNombreRepLegalDonatario = jest.fn();
+    mockTramite10303Store.setCalleRepLegalDonatario = jest.fn();
+    mockTramite10303Store.setNumExteriorRepLegalDonatario = jest.fn();
+    mockTramite10303Store.setNumInteriorRepLegalDonatario = jest.fn();
+    mockTramite10303Store.setEstadoRepLegalDonatario = jest.fn();
+    mockTramite10303Store.setColoniaRepLegalDonatario = jest.fn();
+    mockTramite10303Store.setCodigoPostalRepLegalDonatario = jest.fn();
+    mockTramite10303Store.setCvePaisRepLegalDonatario = jest.fn();
+    mockTramite10303Store.setCorreoElectronicoRepLegalDonatario = jest.fn();
+    mockTramite10303Store.setTelefonoRepLegalDonatario = jest.fn();
+
+    const resetSpy = jest.spyOn(component.datosRepLegalDonatarioForm, 'reset');
+    component.construirRLdonatario(null as any, false);
+
+    expect(resetSpy).toHaveBeenCalled();
+    expect(mockTramite10303Store.setNombreRepLegalDonatario).not.toHaveBeenCalled();
+    expect(mockTramite10303Store.setCalleRepLegalDonatario).not.toHaveBeenCalled();
+    expect(mockTramite10303Store.setNumExteriorRepLegalDonatario).not.toHaveBeenCalled();
+    expect(mockTramite10303Store.setNumInteriorRepLegalDonatario).not.toHaveBeenCalled();
+    expect(mockTramite10303Store.setEstadoRepLegalDonatario).not.toHaveBeenCalled();
+    expect(mockTramite10303Store.setColoniaRepLegalDonatario).not.toHaveBeenCalled();
+    expect(mockTramite10303Store.setCodigoPostalRepLegalDonatario).not.toHaveBeenCalled();
+    expect(mockTramite10303Store.setCvePaisRepLegalDonatario).not.toHaveBeenCalled();
+    expect(mockTramite10303Store.setCorreoElectronicoRepLegalDonatario).not.toHaveBeenCalled();
+    expect(mockTramite10303Store.setTelefonoRepLegalDonatario).not.toHaveBeenCalled();
+  });
+
+  it('should use razonSocial if RFC length is 12', () => {
+    mockTramite10303Store.setNombreRepLegalDonatario = jest.fn();
+    mockTramite10303Store.setCalleRepLegalDonatario = jest.fn();
+    mockTramite10303Store.setNumExteriorRepLegalDonatario = jest.fn();
+    mockTramite10303Store.setNumInteriorRepLegalDonatario = jest.fn();
+    mockTramite10303Store.setEstadoRepLegalDonatario = jest.fn();
+    mockTramite10303Store.setColoniaRepLegalDonatario = jest.fn();
+    mockTramite10303Store.setCodigoPostalRepLegalDonatario = jest.fn();
+    mockTramite10303Store.setCvePaisRepLegalDonatario = jest.fn();
+    mockTramite10303Store.setCorreoElectronicoRepLegalDonatario = jest.fn();
+    mockTramite10303Store.setTelefonoRepLegalDonatario = jest.fn();
+
+    const mockContribuyente = {
+      rfc: 'RFC123456789',
+      razonSocial: 'Empresa S.A.',
+      nombre: 'Nombre',
+      apellidoPaterno: 'Paterno',
+      apellidoMaterno: 'Materno',
+      calle: 'Calle',
+      numeroExterior: '1',
+      numeroInterior: '2',
+      estado: 'Estado',
+      colonia: 'Colonia',
+      codigoPostal: '00000',
+      pais: 'MX',
+      correoElectronico: 'correo@empresa.com',
+      telefono: '5555555555'
+    };
+
+    component.construirRLdonatario(mockContribuyente, true);
+
+    expect(mockTramite10303Store.setNombreRepLegalDonatario).toHaveBeenCalledWith('Empresa S.A.');
+  });
+
+  it('should call setValoresStore with correct arguments', () => {
+    mockTramite10303Store.setNombreRepLegalDonatario = jest.fn();
+    component.datosRepLegalDonatarioForm.patchValue({ nombreRepLegalDonatario: 'Test Name' });
+    component.setValoresStore(component.datosRepLegalDonatarioForm, 'nombreRepLegalDonatario', 'setNombreRepLegalDonatario');
+    expect(mockTramite10303Store.setNombreRepLegalDonatario).toHaveBeenCalledWith('Test Name');
+  });
+
+  it('should not throw if setValoresStore is called with a non-existing field', () => {
+    mockTramite10303Store.setNombreRepLegalDonatario = jest.fn();
+    expect(() => {
+      component.setValoresStore(component.datosRepLegalDonatarioForm, 'nonExistingField', 'setNombreRepLegalDonatario');
+    }).not.toThrow();
   });
 
   it('should reset form if contributor is not found', () => {

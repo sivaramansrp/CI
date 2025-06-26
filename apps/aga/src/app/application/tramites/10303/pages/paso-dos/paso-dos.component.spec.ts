@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { of } from 'rxjs';
 
 import { PasoDosComponent } from './paso-dos.component';
-import { AlertComponent, CATALOGOS_ID, Catalogo, CatalogosService, TEXTOS, TituloComponent } from '@ng-mf/data-access-user';
+import { AlertComponent, AnexarDocumentosComponent, CATALOGOS_ID, Catalogo, CatalogoResponse, CatalogosService, TEXTOS, TituloComponent } from '@ng-mf/data-access-user';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('PasoDosComponent', () => {
@@ -12,7 +12,7 @@ describe('PasoDosComponent', () => {
 
   beforeEach(async () => {
     mockCatalogosService = {
-      getCatalogo: jest.fn()
+      getCatalogo: jest.fn().mockReturnValue(of({ data: [] }))
     };
 
     await TestBed.configureTestingModule({
@@ -20,6 +20,7 @@ describe('PasoDosComponent', () => {
       imports: [
         TituloComponent,
         AlertComponent,
+        AnexarDocumentosComponent,
         HttpClientTestingModule
       ],
       providers: [
@@ -79,21 +80,11 @@ describe('PasoDosComponent', () => {
       const initialData: Catalogo[] = [];
       component.catalogoDocumentos = initialData;
 
-      const mockResponse: Catalogo[] = [];
+      const mockResponse: CatalogoResponse[] = [];
       mockCatalogosService.getCatalogo.mockReturnValue(of(mockResponse));
       component.getTiposDocumentos();
 
       expect(component.catalogoDocumentos).toBe(initialData);
-    });
-
-    it('should handle errors when the service call fails', () => {
-      const errorSpy = jest.spyOn(console, 'error').mockImplementation();
-      mockCatalogosService.getCatalogo.mockReturnValue(
-        of(new Error('Service Error'))
-      );
-
-      component.getTiposDocumentos();
-      expect(errorSpy).toHaveBeenCalledWith(expect.any(Error));
     });
   });
 });

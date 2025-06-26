@@ -7,18 +7,6 @@ import { RespuestaCatalogos } from 'libs/shared/data-access-user/src/core/models
 
 describe('DonacionesExtranjerasService', () => {
   let service: DonacionesExtranjerasService;
-
-  beforeEach(() => {
-    TestBed.configureTestingModule({});
-    service = TestBed.inject(DonacionesExtranjerasService);
-  });
-
-  it('should be created', () => {
-    expect(service).toBeTruthy();
-  });
-});
-describe('DonacionesExtranjerasService', () => {
-  let service: DonacionesExtranjerasService;
   let httpMock: HttpTestingController;
 
   beforeEach(() => {
@@ -65,7 +53,7 @@ describe('DonacionesExtranjerasService', () => {
   it('should fetch aduana', () => {
     const mockResponse: RespuestaCatalogos = { code:200, data: [], message: 'Success' };
 
-    service.getAduana('catalogo').subscribe((response) => {
+    service.getAduana().subscribe((response) => {
       expect(response).toEqual(mockResponse);
     });
 
@@ -77,7 +65,7 @@ describe('DonacionesExtranjerasService', () => {
   it('should fetch destino donacion', () => {
     const mockResponse: RespuestaCatalogos = { code:200, data: [], message: 'Success' };
 
-    service.getDestinoDonacion('catalogo').subscribe((response) => {
+    service.getDestinoDonacion().subscribe((response) => {
       expect(response).toEqual(mockResponse);
     });
 
@@ -89,7 +77,7 @@ describe('DonacionesExtranjerasService', () => {
   it('should fetch tipo de mercancia', () => {
     const mockResponse: RespuestaCatalogos = { code:200, data: [], message: 'Success' };
 
-    service.getTipoDeMercancia('catalogo').subscribe((response) => {
+    service.getTipoDeMercancia().subscribe((response) => {
       expect(response).toEqual(mockResponse);
     });
 
@@ -101,7 +89,7 @@ describe('DonacionesExtranjerasService', () => {
   it('should fetch unidad de medida', () => {
     const mockResponse: RespuestaCatalogos = { code:200, data: [], message: 'Success' };
 
-    service.getUnidadMedida('catalogo').subscribe((response) => {
+    service.getUnidadMedida().subscribe((response) => {
       expect(response).toEqual(mockResponse);
     });
 
@@ -113,7 +101,7 @@ describe('DonacionesExtranjerasService', () => {
   it('should fetch umt', () => {
     const mockResponse: RespuestaCatalogos = { code:200, data: [], message: 'Success' };
 
-    service.getUmt('catalogo').subscribe((response) => {
+    service.getUmt().subscribe((response) => {
       expect(response).toEqual(mockResponse);
     });
 
@@ -125,7 +113,7 @@ describe('DonacionesExtranjerasService', () => {
   it('should fetch procedencia otro', () => {
     const mockResponse: RespuestaCatalogos = { code:200, data: [], message: 'Success' };
 
-    service.getProcedenciaOtro('catalogo').subscribe((response) => {
+    service.getProcedenciaOtro().subscribe((response) => {
       expect(response).toEqual(mockResponse);
     });
 
@@ -137,7 +125,7 @@ describe('DonacionesExtranjerasService', () => {
   it('should fetch condicion mercancia', () => {
     const mockResponse: RespuestaCatalogos = { code:200, data: [], message: 'Success' };
 
-    service.getCondicionMercancia('catalogo').subscribe((response) => {
+    service.getCondicionMercancia().subscribe((response) => {
       expect(response).toEqual(mockResponse);
     });
 
@@ -149,7 +137,7 @@ describe('DonacionesExtranjerasService', () => {
   it('should fetch pais origen medicamento', () => {
     const mockResponse: RespuestaCatalogos = { code:200, data: [], message: 'Success' };
 
-    service.getPaisOrigenMedicamento('catalogo').subscribe((response) => {
+    service.getPaisOrigenMedicamento().subscribe((response) => {
       expect(response).toEqual(mockResponse);
     });
 
@@ -161,7 +149,7 @@ describe('DonacionesExtranjerasService', () => {
   it('should fetch pais procedencia medicamento', () => {
     const mockResponse: RespuestaCatalogos = { code:200, data: [], message: 'Success' };
 
-    service.getPaisProcedenciaMedicamento('catalogo').subscribe((response) => {
+    service.getPaisProcedenciaMedicamento().subscribe((response) => {
       expect(response).toEqual(mockResponse);
     });
 
@@ -173,7 +161,7 @@ describe('DonacionesExtranjerasService', () => {
   it('should fetch paises', () => {
     const mockResponse: RespuestaCatalogos = { code:200, data: [], message: 'Success' };
 
-    service.getPaises('catalogo').subscribe((response) => {
+    service.getPaises().subscribe((response) => {
       expect(response).toEqual(mockResponse);
     });
 
@@ -185,7 +173,7 @@ describe('DonacionesExtranjerasService', () => {
   it('should fetch documento residencia', () => {
     const mockResponse: RespuestaCatalogos = { code:200, data: [], message: 'Success' };
 
-    service.getDocumentoResidencia('catalogo').subscribe((response) => {
+    service.getDocumentoResidencia().subscribe((response) => {
       expect(response).toEqual(mockResponse);
     });
 

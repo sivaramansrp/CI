@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { BtnContinuarComponent, WizardComponent } from '@libs/shared/data-access-user/src';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { PantallasComponent } from '../../../301/pages/pantallas/pantallas.component';
+import { PantallasComponent } from './pantallas.component';
 
 describe('PantallasComponent', () => {
   let component: PantallasComponent;
@@ -40,5 +40,34 @@ describe('PantallasComponent', () => {
     component.getValorIndice({ accion: 'back', valor: 1 });
     expect(component.indice).toBe(1);
     expect(mockWizardComponent.atras).toHaveBeenCalled();
+  });
+
+  it('should not update indice if valor is out of range', () => {
+    const mockWizardComponent = {
+      siguiente: jest.fn(),
+      atras: jest.fn(),
+    };
+    component.wizardComponent = mockWizardComponent as unknown as WizardComponent;
+    const initialIndice = component.indice;
+
+    component.getValorIndice({ accion: 'cont', valor: 0 });
+    expect(component.indice).toBe(initialIndice);
+
+    component.getValorIndice({ accion: 'cont', valor: 999 });
+    expect(component.indice).toBe(initialIndice);
+  });
+
+  it('should call atras if accion is not "cont"', () => {
+    const mockWizardComponent = {
+      siguiente: jest.fn(),
+      atras: jest.fn(),
+    };
+    component.wizardComponent = mockWizardComponent as unknown as WizardComponent;
+    component.datosPasos = { busquedaPermisosComponent: { validarFormulario: () => true } } as any;
+
+    component.getValorIndice({ accion: 'back', valor: 2 });
+    expect(component.indice).toBe(2);
+    expect(mockWizardComponent.atras).toHaveBeenCalled();
+    expect(mockWizardComponent.siguiente).not.toHaveBeenCalled();
   });
 });
