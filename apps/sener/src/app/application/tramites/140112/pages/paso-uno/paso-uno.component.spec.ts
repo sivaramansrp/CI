@@ -18,6 +18,8 @@ class MockSolicitanteComponent {}
 })
 class MockDesistimientoSolicitudPermisoComponent {}
 
+import { provideHttpClient } from '@angular/common/http';
+
 describe('PasoUnoComponent', () => {
   let component: PasoUnoComponent;
   let fixture: ComponentFixture<PasoUnoComponent>;

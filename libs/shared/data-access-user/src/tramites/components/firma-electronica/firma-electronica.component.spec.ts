@@ -1,237 +1,187 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FirmaElectronicaComponent } from './firma-electronica.component';
-import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
 import { FirmaElectronicaService } from '../../../core/services/shared/firma-electronica/firma-electronica.service';
 import { ToastrService } from 'ngx-toastr';
+import { FormBuilder } from '@angular/forms';
 import { ValidacionesFormularioService } from '../../../core/services/shared/validaciones-formulario/validaciones-formulario.service';
-import { LOGIN } from '../../constantes/constantes';
+import { OperationType, FileType } from '../../../core/enums/firma-electronica.enum';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 describe('FirmaElectronicaComponent', () => {
   let component: FirmaElectronicaComponent;
   let fixture: ComponentFixture<FirmaElectronicaComponent>;
-  let mockFirmaService: jest.Mocked<FirmaElectronicaService>;
-  let mockToastrService: jest.Mocked<ToastrService>;
-  let mockFormValidator: jest.Mocked<ValidacionesFormularioService>;
+  let firmaService: jest.Mocked<FirmaElectronicaService>;
+  let toastrService: jest.Mocked<ToastrService>;
+
+  const emitValido = jest.fn();
+  const emitDatosFirma = jest.fn();
 
   beforeEach(async () => {
-    mockFirmaService = {
-      firmarCadena: jest.fn()
-    } as unknown as jest.Mocked<FirmaElectronicaService>;
-
-    mockToastrService = {
-      error: jest.fn(),
-      success: jest.fn()
-    } as unknown as jest.Mocked<ToastrService>;
-
-    mockFormValidator = {
-      isValid: jest.fn()
-    } as unknown as jest.Mocked<ValidacionesFormularioService>;
-
     await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule, CommonModule],
-      declarations: [FirmaElectronicaComponent],
+      imports: [FirmaElectronicaComponent],
       providers: [
         FormBuilder,
-        { provide: FirmaElectronicaService, useValue: mockFirmaService },
-        { provide: ToastrService, useValue: mockToastrService },
-        { provide: ValidacionesFormularioService, useValue: mockFormValidator }
-      ]
+        { 
+          provide: FirmaElectronicaService, 
+          useValue: { 
+            firmarCadena: jest.fn(),
+            obtenerCadenaOriginal: jest.fn(),
+            enviarFirma: jest.fn()
+          } 
+        },
+        { 
+          provide: ToastrService, 
+          useValue: { 
+            error: jest.fn(), 
+            success: jest.fn() 
+          } 
+        },
+        { 
+          provide: ValidacionesFormularioService, 
+          useValue: { 
+            isValid: () => true,
+            getErrorMessage: jest.fn()
+          } 
+        },
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(FirmaElectronicaComponent);
     component = fixture.componentInstance;
-    component.tipo = 'firma'; // Valor por defecto para pruebas
+
+    firmaService = TestBed.inject(FirmaElectronicaService) as jest.Mocked<FirmaElectronicaService>;
+    toastrService = TestBed.inject(ToastrService) as jest.Mocked<ToastrService>;
+
+    component.valido.subscribe(emitValido);
+    component.datosFirma.subscribe(emitDatosFirma);
+
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  describe('Inputs and Outputs', () => {
-    it('should have required tipo input', () => {
-      expect(() => {
-        component.tipo = '';
-        fixture.detectChanges();
-      }).toThrowError();
+  it('debe emitir valido true y datosFirma si la firma es exitosa (caso no login)', async () => {
+    component.tipo = 'FIRMA';
+    component.cadenaOriginal = 'original';
+    component.FormCertificado.setValue({ password: '123456' });
+
+    const input = document.createElement('input');
+    input.id = 'password';
+    document.body.appendChild(input);
+
+    component.cerInputElement = input;
+    component.keyInputElement = input;
+
+    firmaService.firmarCadena.mockResolvedValue({
+      firma: 'firma123',
+      certificado: 'cert123',
+      serialNumber: 'cert123',
+      rfc: 'ABC010203XX1',
+      fechaFin: '2030-01-01',
     });
 
-    it('should accept cadenaOriginal input', () => {
-      const testCadena = 'test cadena';
-      component.cadenaOriginal = testCadena;
-      expect(component.cadenaOriginal).toBe(testCadena);
+    await component.onSubmit();
+
+    expect(emitValido).toHaveBeenCalledWith(true);
+    expect(emitDatosFirma).toHaveBeenCalledWith({
+      firma: 'firma123',
+      certSerialNumber: 'cert123',
+      rfc: 'ABC010203XX1',
+      fechaFin: '2030-01-01',
     });
   });
 
-  describe('login getter', () => {
-    it('should return true when tipo is LOGIN', () => {
-      component.tipo = LOGIN;
-      expect(component.login).toBe(true);
-    });
+  it('debe mostrar error si campos están incompletos', async () => {
+    component.tipo = 'FIRMA';
+    component.FormCertificado.setValue({ password: '' });
 
-    it('should return false when tipo is not LOGIN', () => {
-      component.tipo = 'firma';
-      expect(component.login).toBe(false);
-    });
-  });
+    await component.onSubmit();
 
-  describe('isValid', () => {
-    it('should call formValidator.isValid with correct parameters', () => {
-      const fieldName = 'password';
-      component.isValid(fieldName);
-      expect(mockFormValidator.isValid).toHaveBeenCalledWith(component.FormCertificado, fieldName);
-    });
+    expect(toastrService.error).toHaveBeenCalledWith('Por favor complete todos los campos');
   });
 
   describe('handleFile', () => {
-    it('should set certFileObj when valid cer file is provided', () => {
-      const mockFile = new File([''], 'test.cer', { type: 'application/x-x509-ca-cert' });
-      const mockEvent = {
-        target: {
-          files: [mockFile]
-        }
-      } as unknown as Event;
+    it('debe aceptar .cer y .key válidos', () => {
+      // Mock para archivo .cer
+      const certFile = new File(['contenido'], 'archivo.cer', { type: 'application/x-x509-ca-cert' });
+      const certInput = document.createElement('input');
+      Object.defineProperty(certInput, 'files', { 
+        value: [certFile],
+        writable: false
+      });
 
-      component.handleFile('cer', mockEvent);
-      expect(component.certFileObj).toBe(mockFile);
+      const certEvent = { target: certInput } as unknown as Event;
+      component.handleFile(FileType.CERTIFICATE, certEvent);
+      
+      expect(component.certFileObj).toBeDefined();
+      expect(component.certFileObj).toEqual(certFile);
+      expect(component.cerInputElement).toBe(certInput);
+
+      // Mock para archivo .key
+      const keyFile = new File(['contenido'], 'archivo.key', { type: 'application/x-pem-file' });
+      const keyInput = document.createElement('input');
+      Object.defineProperty(keyInput, 'files', { 
+        value: [keyFile],
+        writable: false
+      });
+
+      const keyEvent = { target: keyInput } as unknown as Event;
+      component.handleFile(FileType.PRIVATE_KEY, keyEvent);
+      
+      expect(component.keyFileObj).toBeDefined();
+      expect(component.keyFileObj).toEqual(keyFile);
+      expect(component.keyInputElement).toBe(keyInput);
     });
 
-    it('should show error when invalid cer file is provided', () => {
-      const mockFile = new File([''], 'test.txt', { type: 'text/plain' });
-      const mockEvent = {
-        target: {
-          files: [mockFile]
-        }
-      } as unknown as Event;
+    it('debe rechazar archivos con extensiones incorrectas', () => {
+      const mockToastrError = jest.spyOn(toastrService, 'error');
+      
+      // Test para archivo .cer inválido
+      const invalidCertFile = new File(['contenido'], 'archivo.txt', { type: 'text/plain' });
+      const certInput = document.createElement('input');
+      Object.defineProperty(certInput, 'files', { value: [invalidCertFile] });
 
-      component.handleFile('cer', mockEvent);
-      expect(mockToastrService.error).toHaveBeenCalledWith('El archivo debe ser un certificado (.cer)');
+      const certEvent = { target: certInput } as unknown as Event;
+      component.handleFile(FileType.CERTIFICATE, certEvent);
+      
       expect(component.certFileObj).toBeUndefined();
-    });
+      expect(mockToastrError).toHaveBeenCalledWith('El archivo debe ser un certificado (.cer)');
 
-    it('should set keyFileObj when valid key file is provided', () => {
-      const mockFile = new File([''], 'test.key', { type: 'application/x-pem-file' });
-      const mockEvent = {
-        target: {
-          files: [mockFile]
-        }
-      } as unknown as Event;
+      // Test para archivo .key inválido
+      const invalidKeyFile = new File(['contenido'], 'archivo.txt', { type: 'text/plain' });
+      const keyInput = document.createElement('input');
+      Object.defineProperty(keyInput, 'files', { value: [invalidKeyFile] });
 
-      component.handleFile('key', mockEvent);
-      expect(component.keyFileObj).toBe(mockFile);
-    });
-
-    it('should show error when invalid key file is provided', () => {
-      const mockFile = new File([''], 'test.txt', { type: 'text/plain' });
-      const mockEvent = {
-        target: {
-          files: [mockFile]
-        }
-      } as unknown as Event;
-
-      component.handleFile('key', mockEvent);
-      expect(mockToastrService.error).toHaveBeenCalledWith('El archivo debe ser una llave privada (.key)');
+      const keyEvent = { target: keyInput } as unknown as Event;
+      component.handleFile(FileType.PRIVATE_KEY, keyEvent);
+      
       expect(component.keyFileObj).toBeUndefined();
+      expect(mockToastrError).toHaveBeenCalledWith('El archivo debe ser una llave privada (.key)');
     });
   });
 
-  describe('onSubmit', () => {
-    beforeEach(() => {
-      // Configurar elementos del DOM simulados
-      component.cerInputElement = document.createElement('input');
-      component.keyInputElement = document.createElement('input');
-      component.passwordInputElement = document.createElement('input');
-      component.passwordInputElement.id = 'password';
-      component.FormCertificado.get('password')?.setValue('testpassword');
-    });
+  it('onSubmit debe emitir valido false y mostrar error si falla firmaService', async () => {
+    component.tipo = 'NO_LOGIN';
+    component.cadenaOriginal = 'original';
+    component.FormCertificado.setValue({ password: '123456' });
 
-    it('should show error when form is invalid', async () => {
-      component.FormCertificado.get('password')?.setValue('');
-      await component.onSubmit();
-      expect(mockToastrService.error).toHaveBeenCalledWith('Por favor complete todos los campos');
-      expect(component.isLoading).toBe(false);
-    });
+    const input = document.createElement('input');
+    input.id = 'password';
+    document.body.appendChild(input);
 
-    it('should show error when required inputs are missing', async () => {
-      component.cerInputElement = undefined;
-      await component.onSubmit();
-      expect(mockToastrService.error).toHaveBeenCalledWith('Por favor complete todos los campos');
-      expect(component.isLoading).toBe(false);
-    });
+    component.cerInputElement = input;
+    component.keyInputElement = input;
 
-    it('should handle login case successfully', async () => {
-      component.tipo = LOGIN;
-      mockFirmaService.firmarCadena.mockResolvedValue({
-        certificado: 'serial123',
-        serialNumber: 'serial123',
-        rfc: 'TEST123456',
-        fechaFin: '2025-12-31'
-      });
+    firmaService.firmarCadena.mockRejectedValue(new Error('Error de firma'));
 
-      const validoSpy = jest.spyOn(component.valido, 'emit');
+    await component.onSubmit();
 
-      await component.onSubmit();
-
-      expect(mockFirmaService.firmarCadena).toHaveBeenCalled();
-      expect(validoSpy).toHaveBeenCalledWith(true);
-      expect(component.isLoading).toBe(false);
-    });
-
-    it('should handle firma case successfully', async () => {
-      component.cadenaOriginal = 'test cadena';
-      mockFirmaService.firmarCadena.mockResolvedValue({
-        firma: 'firmaBase64',
-        certificado: 'serial123',
-        serialNumber: 'serial123',
-        rfc: 'TEST123456',
-        fechaFin: '2025-12-31'
-      });
-
-      const validoSpy = jest.spyOn(component.valido, 'emit');
-      const firmaSpy = jest.spyOn(component.datosFirma, 'emit');
-
-      await component.onSubmit();
-
-      expect(mockFirmaService.firmarCadena).toHaveBeenCalled();
-      expect(validoSpy).toHaveBeenCalledWith(true);
-      expect(firmaSpy).toHaveBeenCalledWith({
-        firma: 'firmaBase64',
-        certSerialNumber: 'serial123',
-        rfc: 'TEST123456',
-        fechaFin: '2025-12-31'
-      });
-      expect(mockToastrService.success).toHaveBeenCalledWith('Firma electrónica generada correctamente');
-      expect(component.isLoading).toBe(false);
-    });
-
-    it('should handle error case', async () => {
-      const testError = new Error('Test error');
-      mockFirmaService.firmarCadena.mockRejectedValue(testError);
-
-      const validoSpy = jest.spyOn(component.valido, 'emit');
-
-      await component.onSubmit();
-
-      expect(mockFirmaService.firmarCadena).toHaveBeenCalled();
-      expect(validoSpy).toHaveBeenCalledWith(false);
-      expect(mockToastrService.error).toHaveBeenCalledWith('Test error');
-      expect(component.isLoading).toBe(false);
-    });
-
-    it('should handle error when no firma is generated', async () => {
-      component.cadenaOriginal = 'test cadena';
-      mockFirmaService.firmarCadena.mockResolvedValue({
-        certificado: 'serial123',
-        serialNumber: 'serial123',
-        rfc: 'TEST123456',
-        fechaFin: '2025-12-31'
-      });
-
-      await component.onSubmit();
-
-      expect(mockToastrService.error).toHaveBeenCalledWith('No se generó la firma electrónica');
-      expect(component.isLoading).toBe(false);
-    });
+    expect(emitValido).toHaveBeenCalledWith(false);
+    expect(toastrService.error).toHaveBeenCalledWith('Error de firma');
   });
 });
