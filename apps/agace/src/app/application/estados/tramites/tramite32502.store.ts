@@ -118,7 +118,17 @@ export class Tramite32502Store extends Store<Solicitud32502State> {
       cveFraccionArancelaria,
     }));
   }
-
+/**
+ * Método para actualizar la fecha de inicio en el estado de la solicitud.
+ * 
+ * @param {string} fechaInicio - Valor de la fecha de inicio que se desea establecer en el estado.
+ * 
+ * @description Este método actualiza la propiedad `fechaInicio` del estado de la solicitud con el valor proporcionado.
+ * 
+ * @example
+ * const store = new Tramite32502Store();
+ * store.setFechaInicio('2025-06-26');
+ */
   public setFechaInicio(fechaInicio: string) {
     this.update((state) => ({
       ...state,
