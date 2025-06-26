@@ -1,10 +1,9 @@
-import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
+import { APP_ROUTES } from '../app.routes';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { provideRouter } from '@angular/router';
-
+import { BrowserModule } from '@angular/platform-browser';
+import { NgModule } from '@angular/core';
 import { RemoteEntryComponent } from './entry.component';
-import { appRoutes } from '../app.routes';
+import { provideRouter } from '@angular/router';
 
 /**
  * Módulo de entrada remoto para la aplicación Cofepris.
@@ -22,7 +21,7 @@ import { appRoutes } from '../app.routes';
     RemoteEntryComponent
   ],
   providers: [
-    provideRouter(appRoutes),
+    provideRouter(APP_ROUTES),
   ],
   bootstrap: []
 })

@@ -31,8 +31,7 @@ describe('ManifiestosComponent', () => {
         telefono: '',
         avisoCheckbox: '',
         licenciaSanitaria: '',
-        // Add mock values for all other required properties of Solicitud260701State
-        // Ensure all 57+ properties are included here
+    
       } as Solicitud260701State),
     };
 
@@ -49,20 +48,20 @@ describe('ManifiestosComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('debería crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize the form with the correct default value', () => {
+  it('debería inicializar el formulario con el valor por defecto correcto', () => {
     expect(component.manifiestos.get('cumplimiento')?.value).toBe('sí');
   });
 
-  it('should update the selected radio value when cambiarRadio is called', () => {
+  it('debería actualizar el valor del radio seleccionado cuando se llama cambiarRadio', () => {
     component.cambiarRadio('no');
     expect(component.valorSeleccionado).toBe('no');
   });
 
-  it('should call setValoresStore with the correct arguments', () => {
+  it('debería llamar setValoresStore con los argumentos correctos', () => {
     const form = component.manifiestos;
     const campo = 'cumplimiento';
     const metodoNombre = 'setCumplimiento';
@@ -73,7 +72,7 @@ describe('ManifiestosComponent', () => {
     expect(tramite260701StoreMock.setCumplimiento).toHaveBeenCalledWith('no');
   });
 
-  it('should unsubscribe from observables on destroy', () => {
+  it('debería desuscribirse de los observables al destruir el componente', () => {
     const destroySpy = jest.spyOn(component['destroyNotifier$'], 'next');
     const completeSpy = jest.spyOn(component['destroyNotifier$'], 'complete');
 
