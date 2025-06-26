@@ -90,6 +90,18 @@ export function createInitialState(): Solicitud32502State {
  * Clase encargada de manejar y actualizar el estado de la solicitud 32502.
  */
 export class Tramite32502Store extends Store<Solicitud32502State> {
+  /**
+ * Método estático para establecer la regla de fracción arancelaria en el estado de la solicitud.
+ * 
+ * @param {string} arg0 - Valor de la regla de fracción arancelaria que se desea establecer.
+ * 
+ * @throws {Error} Este método no está implementado actualmente y lanzará un error si se intenta utilizar.
+ * 
+ * @example
+ * Tramite32502Store.setFraccionRegla('Regla123');
+ * 
+ * Nota: Este método debe ser implementado para actualizar correctamente el estado de la solicitud.
+ */
   static setFraccionRegla(arg0: string): void {
     throw new Error('Method not implemented.');
   }
