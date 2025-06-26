@@ -1,6 +1,18 @@
 import { FirmarSolicitudPasoDosComponent } from './firmar-solicitud-paso-dos.component';
 import { Router } from '@angular/router';
 
+jest.mock('@libs/shared/theme/assets/json/90201/acuse-tabla.json', () => ({
+  __esModule: true,
+  default: [
+    {
+      no: '1',
+      documento: 'Documento de prueba',
+      descargar: 'descargar.pdf',
+    },
+  ],
+}));
+
+
 describe('FirmarSolicitudPasoDosComponent', () => {
   let component: FirmarSolicitudPasoDosComponent;
   let routerMock: any;

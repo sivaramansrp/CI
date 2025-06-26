@@ -175,7 +175,7 @@ export function createInitialState(): Solicitud110203State {
 
         /** **Valor seleccionado dentro del proceso de solicitud**  
          *  Se asigna el primer valor disponible de `radioOpciones.radioOptions`. */
-        valorSeleccionado: radioOpciones.radioOptions[0].label,
+        valorSeleccionado: radioOpciones?.radioOptions[0].label,
 
         /** **Número de certificado asociado a la solicitud** */
         numeroDeCertificado: '',

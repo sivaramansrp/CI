@@ -6,7 +6,9 @@
 <div class="row mt-5">
     <div class="col-md-12">
         <app-tabla-dinamica [configuracionTabla]="configuracionParaPMEEncabezadoDeTabla"
-            [datos]="personaMoralExtranjeraTabla">
+            [datos]="personaMoralExtranjeraTabla"
+            [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX"
+            [disableSeleccionTablaCheckBox]="esFormularioSoloLectura">
         </app-tabla-dinamica>
     </div>
 </div>
@@ -14,14 +16,14 @@
 <div class="row">
     <div class="col-md-12">
         <div class="pull-right">
-            <button type="button" name="ModificarPME" class="btn btn-default">
+            <button type="button" name="ModificarPME" class="btn btn-default" [disabled]="esFormularioSoloLectura">
                 Modificar
             </button>
-            <button type="button" name="EliminarPME" class="btn btn-danger ms-2">
+            <button type="button" name="EliminarPME" class="btn btn-danger ms-2" [disabled]="esFormularioSoloLectura">
                 Eliminar
             </button>
             <button type="button" name="AgregarPME" class="btn btn-primary ms-2" data-bs-toggle="modal"
-                data-bs-target="#modalAgregarPME">
+                data-bs-target="#modalAgregarPME" [disabled]="esFormularioSoloLectura">
                 Agregar
             </button>
         </div>
@@ -43,7 +45,7 @@
                                     social*:</label>
                                 <input type="text" class="form-control" name="denominacionPME"
                                     formControlName="denominacionPME" maxlength="254" id="denominacionPME"
-                                    (change)="setValoresStore(personaMoralExtranjeraForm,'denominacionPME', 'setDenominacionPME')">
+                                    (change)="setValoresStore(personaMoralExtranjeraForm,'denominacionPME')">
                             </div>
                             <div class="col-md-4">
                                 <label class="form-label" for="correoPME">Correo electrónico*: <span
@@ -51,7 +53,7 @@
                                         data-bs-toggle="tooltip"></span></label>
                                 <input type="text" class="form-control" name="correoPME" formControlName="correoPME"
                                     maxlength="320" id="correoPME"
-                                    (change)="setValoresStore(personaMoralExtranjeraForm,'correoPME', 'setCorreoPME')">
+                                    (change)="setValoresStore(personaMoralExtranjeraForm,'correoPME')">
                             </div>
                         </div>
 
@@ -68,13 +70,13 @@
                                 <label for="codigoPostal">Código postal*:</label>
                                 <input type="text" class="form-control" name="codigoPostalPME" id="codigoPostalPME"
                                     formControlName="codigoPostalPME" maxlength="12"
-                                    (change)="setValoresStore(personaMoralExtranjeraForm,'codigoPostalPME', 'setCodigoPostalPME')">
+                                    (change)="setValoresStore(personaMoralExtranjeraForm,'codigoPostalPME')">
                             </div>
                             <div class="col-md-4 pt-7">
                                 <label for="ciudad">Ciudad*:</label>
                                 <input type="text" class="form-control" name="ciudadPME" id="ciudadPME"
                                     formControlName="ciudadPME" maxlength="120"
-                                    (change)="setValoresStore(personaMoralExtranjeraForm,'ciudadPME', 'setCiudadPME')">
+                                    (change)="setValoresStore(personaMoralExtranjeraForm,'ciudadPME')">
                             </div>
                         </div>
                         <div class="row pt-7">
@@ -82,13 +84,13 @@
                                 <label for="estado">Estado*:</label>
                                 <input type="text" class="form-control" name="estadoPME" id="entidadFederativaPME"
                                     formControlName="estadoPME" maxlength="200"
-                                    (change)="setValoresStore(personaMoralExtranjeraForm,'estadoPME', 'setEstadoPME')">
+                                    (change)="setValoresStore(personaMoralExtranjeraForm,'estadoPME')">
                             </div>
                             <div class="col-md-8">
                                 <label for="calle">Calle*:</label>
                                 <input type="text" class="form-control" name="callePME" id="callePME"
                                     formControlName="callePME" maxlength="100"
-                                    (change)="setValoresStore(personaMoralExtranjeraForm,'callePME', 'setCallePME')">
+                                    (change)="setValoresStore(personaMoralExtranjeraForm,'callePME')">
                             </div>
                         </div>
                         <div class="row pt-7">
@@ -96,13 +98,13 @@
                                 <label for="numeroExterior">Número exterior*:</label>
                                 <input type="text" class="form-control" name="numeroExteriorPME" id="numeroExteriorPME"
                                     formControlName="numeroExteriorPME" maxlength="55"
-                                    (change)="setValoresStore(personaMoralExtranjeraForm,'numeroExteriorPME', 'setNumeroExteriorPME')">
+                                    (change)="setValoresStore(personaMoralExtranjeraForm,'numeroExteriorPME')">
                             </div>
                             <div class="col-md-4">
                                 <label for="numeroInterior">Número interior:</label>
                                 <input type="text" class="form-control" name="numeroInteriorPME" id="numeroInteriorPME"
                                     formControlName="numeroInteriorPME" maxlength="55"
-                                    (change)="setValoresStore(personaMoralExtranjeraForm,'numeroInteriorPME', 'setNumeroInteriorPME')">
+                                    (change)="setValoresStore(personaMoralExtranjeraForm,'numeroInteriorPME')">
                             </div>
                         </div>
 
@@ -114,19 +116,19 @@
                                 <label for="nombre">Nombre(s)*:</label>
                                 <input type="text" class="form-control" name="nombreDG" id="nombreDG"
                                     formControlName="nombreDG" maxlength="28"
-                                    (change)="setValoresStore(personaMoralExtranjeraForm,'nombreDG', 'setNombreDG')">
+                                    (change)="setValoresStore(personaMoralExtranjeraForm,'nombreDG')">
                             </div>
                             <div class="col-md-4">
                                 <label for="apellidoPaterno">Primer apellido*:</label>
                                 <input type="text" class="form-control" name="apellidoPaternoDG" id="apellidoPaternoDG"
                                     formControlName="apellidoPaternoDG" maxlength="20"
-                                    (change)="setValoresStore(personaMoralExtranjeraForm,'apellidoPaternoDG', 'setApellidoPaternoDG')">
+                                    (change)="setValoresStore(personaMoralExtranjeraForm,'apellidoPaternoDG')">
                             </div>
                             <div class="col-md-4">
                                 <label for="apellidoMaterno">Segundo apellido:</label>
                                 <input type="text" class="form-control" name="apellidoMaternoDG" id="apellidoMaternoDG"
                                     formControlName="apellidoMaternoDG" maxlength="20"
-                                    (change)="setValoresStore(personaMoralExtranjeraForm,'apellidoMaternoDG', 'setApellidoMaternoDG')">
+                                    (change)="setValoresStore(personaMoralExtranjeraForm,'apellidoMaternoDG')">
                             </div>
                         </div>
                     </form>

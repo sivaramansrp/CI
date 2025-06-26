@@ -37,11 +37,11 @@ describe('DatosEmpresaComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should render child components', () => {
+  it('debe renderizar los componentes hijos', () => {
     const COMPILED = fixture.nativeElement;
     expect(COMPILED.querySelector('app-representacion-federal')).toBeTruthy();
     expect(COMPILED.querySelector('app-datos-de-la-solicitud')).toBeTruthy();

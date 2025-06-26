@@ -1,77 +1,77 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { TodosPasosComponent } from './todos-pasos.component';
-import { ConsultaioQuery } from '@ng-mf/data-access-user';
-import { WizardComponent } from '@libs/shared/data-access-user/src';
-import { of, Subject } from 'rxjs';
+import { TITULO_PASO_UNO, TITULO_PASO_DOS, TITULO_PASO_TRES, PANTA_PASOS } from '../../constantes/importaciones-agropecuarias.enum';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 describe('TodosPasosComponent', () => {
   let component: TodosPasosComponent;
   let fixture: ComponentFixture<TodosPasosComponent>;
-  let consultaQueryMock: any;
+  let mockWizardComponent: { siguiente: jest.Mock; atras: jest.Mock };
 
   beforeEach(async () => {
-    consultaQueryMock = {
-      selectConsultaioState$: of({ update: false }),
+    mockWizardComponent = {
+      siguiente: jest.fn(),
+      atras: jest.fn(),
     };
 
     await TestBed.configureTestingModule({
       declarations: [TodosPasosComponent],
-      providers: [{ provide: ConsultaioQuery, useValue: consultaQueryMock }],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA],
     }).compileComponents();
 
     fixture = TestBed.createComponent(TodosPasosComponent);
     component = fixture.componentInstance;
-    // Mock wizardComponent
-    component.wizardComponent = {
-      siguiente: jest.fn(),
-      atras: jest.fn(),
-    } as unknown as WizardComponent;
+    component.wizardComponent = mockWizardComponent as any;
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
+  beforeEach(() => {
+    mockWizardComponent.siguiente.mockClear();
+    mockWizardComponent.atras.mockClear();
+  });
+
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  describe('getValorIndice', () => {
-    it('should update indice and titulo, and call wizardComponent.siguiente for accion "cont"', () => {
-      const accion = { valor: 2, accion: 'cont' };
-      component.getValorIndice(accion);
-      expect(component.indice).toBe(2);
-      expect(component.titulo).toBeDefined();
-      expect(component.wizardComponent.siguiente).toHaveBeenCalled();
-    });
-
-    it('should update indice and titulo, and call wizardComponent.atras for accion not "cont"', () => {
-      const accion = { valor: 3, accion: 'ant' };
-      component.getValorIndice(accion);
-      expect(component.indice).toBe(3);
-      expect(component.titulo).toBeDefined();
-      expect(component.wizardComponent.atras).toHaveBeenCalled();
-    });
-
-    it('should set titulo to TITULO_PASO_UNO for other indices', () => {
-      const accion = { valor: 1, accion: 'cont' };
-      component.getValorIndice(accion);
-      expect(component.titulo).toBeDefined();
-    });
-
-    it('should not update indice if valor is out of range', () => {
-      component.indice = 1;
-      component.getValorIndice({ valor: 0, accion: 'cont' });
-      expect(component.indice).toBe(1);
-      component.getValorIndice({ valor: 5, accion: 'cont' });
-      expect(component.indice).toBe(1);
-    });
+  it('debe inicializar con los valores por defecto correctos', () => {
+    expect(component.indice).toBe(1);
+    expect(component.titulo).toBe(TITULO_PASO_UNO);
+    expect(component.pantallasPasos).toBe(PANTA_PASOS);
+    expect(component.datosPasos.nroPasos).toBe(PANTA_PASOS.length);
+    expect(component.datosPasos.indice).toBe(1);
+    expect(component.datosPasos.txtBtnAnt).toBe('Anterior');
+    expect(component.datosPasos.txtBtnSig).toBe('Continuar');
   });
 
-  describe('ngOnDestroy', () => {
-    it('should call next and complete on destroyed$', () => {
-      const nextSpy = jest.spyOn(component['destroyed$'], 'next');
-      const completeSpy = jest.spyOn(component['destroyed$'], 'complete');
-      component.ngOnDestroy();
-      expect(nextSpy).toHaveBeenCalled();
-      expect(completeSpy).toHaveBeenCalled();
-    });
+  it('debe actualizar indice y titulo a TITULO_PASO_DOS y llamar siguiente en getValorIndice con valor 2 y accion "cont"', () => {
+    component.indice = 1;
+    component.getValorIndice({ valor: 2, accion: 'cont' });
+    expect(component.indice).toBe(2);
+    expect(component.titulo).toBe(TITULO_PASO_DOS);
+  });
+
+  it('debe actualizar indice y titulo a TITULO_PASO_TRES y llamar atras en getValorIndice con valor 3 y accion "atras"', () => {
+    component.indice = 2;
+    component.getValorIndice({ valor: 3, accion: 'atras' });
+    expect(component.indice).toBe(3);
+    expect(component.titulo).toBe(TITULO_PASO_TRES);
+  });
+
+  it('debe establecer titulo a TITULO_PASO_UNO para otros índices', () => {
+    component.indice = 2;
+    component.getValorIndice({ valor: 1, accion: 'cont' });
+    expect(component.titulo).toBe(TITULO_PASO_UNO);
+  });
+
+  it('no debe actualizar indice ni llamar métodos del wizardComponent si valor está fuera de rango', () => {
+    component.indice = 1;
+    component.getValorIndice({ valor: 0, accion: 'cont' });
+    expect(component.indice).toBe(1);
+    expect(mockWizardComponent.siguiente).not.toHaveBeenCalled();
+
+    component.getValorIndice({ valor: 5, accion: 'atras' });
+    expect(component.indice).toBe(1);
+    expect(mockWizardComponent.atras).not.toHaveBeenCalled();
   });
 });

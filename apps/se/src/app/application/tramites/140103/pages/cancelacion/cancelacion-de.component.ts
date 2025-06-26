@@ -43,9 +43,13 @@ export class CancelacionDeComponent {
     if (e.valor > 0 && e.valor < 5) {
       this.indice = e.valor;
       if (e.accion === 'cont') {
-        this.wizardComponent.siguiente();
+        if (this.wizardComponent) {
+          this.wizardComponent.siguiente();
+        }
       } else {
-        this.wizardComponent.atras();
+        if (this.wizardComponent) {
+          this.wizardComponent.atras();
+        }
       }
     }
   }

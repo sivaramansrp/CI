@@ -539,6 +539,51 @@ export class AduaneroComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
+    /**
+   * Indica si se debe mostrar la tabla de subcontratación.
+   * 
+   * Retorna true si la opción seleccionada en el radio 'senaleSi' es 'Si'.
+   * Esto permite mostrar u ocultar dinámicamente la sección relacionada
+   * con trabajadores subcontratados en el formulario.
+   */
+  get showSubcontratacionTable(): boolean {
+    return this.preOperativeForm?.get('senaleSi')?.value === 'Si';
+  }
+  
+  /**
+   * Nombre del archivo seleccionado por el usuario.
+   * Se actualiza cada vez que el usuario selecciona un archivo en el input correspondiente.
+   */
+  public selectedFileName: string = '';
+
+  /**
+   * Maneja el evento de selección de archivo.
+   * 
+   * Este método se ejecuta cuando el usuario selecciona un archivo en el input de tipo file.
+   * Actualiza la propiedad `selectedFileName` con el nombre del archivo seleccionado.
+   * Si no se selecciona ningún archivo, la propiedad se establece como una cadena vacía.
+   * 
+   *  event Evento de cambio generado por el input de tipo file.
+   */
+  onFileSelected(event: Event): void {
+    const INPUT = event.target as HTMLInputElement;
+    if (INPUT.files && INPUT.files.length > 0) {
+      this.selectedFileName = INPUT.files[0].name;
+    } else {
+      this.selectedFileName = '';
+    }
+  }
+  /**
+   * Indica si se debe mostrar la sección relacionada con el campo 'senale'.
+   * 
+   * Retorna true si la opción seleccionada en el radio 'senale' es 'Si'.
+   * Esto permite mostrar u ocultar dinámicamente la sección correspondiente
+   * en el formulario.
+   */
+  get showsenale(): boolean {
+    return this.preOperativeForm?.get('senale')?.value === 'Si';
+  }
+
   /**
    * Abre el modal de modificación
    */
