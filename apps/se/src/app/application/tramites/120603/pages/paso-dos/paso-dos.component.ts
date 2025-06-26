@@ -1,5 +1,5 @@
 
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 
@@ -28,7 +28,15 @@ export class PasoDosComponent implements OnDestroy, OnInit {
    * @private
    */
   private destroyed$ = new Subject<void>();
+/**
+ * Evento que se emite para reenviar información al componente padre.
+ */
+@Output() reenviarEvento = new EventEmitter<void>();
 
+/**
+ * Evento que se emite para regresar a la sección de carga de documentos.
+ */
+@Output() regresarSeccionCargarDocumentoEvento = new EventEmitter<void>();
   /**
    * @property {any} TEXTOS
    * Conjunto de textos utilizados dentro del componente (centralizados en una constante).

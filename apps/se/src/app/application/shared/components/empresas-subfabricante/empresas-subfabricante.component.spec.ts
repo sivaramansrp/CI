@@ -18,14 +18,16 @@ import { Observable, of as observableOf, throwError } from 'rxjs';
 import { Component } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
-import { GestionarEmpresasSubfabricantesComponent } from './empresas-subfabricante.component';
+import { EmpresasSubfabricantesComponent } from './empresas-subfabricante.component';
+import { ElementRef } from '@angular/core';
+import { Modal } from 'bootstrap';
 
 @Injectable()
 class MockRouter {
   navigate() {}
 }
 
-describe('GestionarEmpresasSubfabricantesComponent', () => {
+describe('EmpresasSubfabricantesComponent', () => {
   let fixture;
   let component;
 
@@ -35,9 +37,9 @@ describe('GestionarEmpresasSubfabricantesComponent', () => {
       schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
       providers: [FormBuilder, { provide: Router, useClass: MockRouter }],
     })
-      .overrideComponent(GestionarEmpresasSubfabricantesComponent, {})
-      .compileComponents();
-    fixture = TestBed.createComponent(GestionarEmpresasSubfabricantesComponent);
+    .overrideComponent(EmpresasSubfabricantesComponent, {})
+    .compileComponents();
+    fixture = TestBed.createComponent(EmpresasSubfabricantesComponent);
     component = fixture.debugElement.componentInstance;
   });
 
@@ -175,4 +177,16 @@ describe('GestionarEmpresasSubfabricantesComponent', () => {
     component.complementarPlantas();
     expect(component.plantasPorComplementar.emit).toHaveBeenCalled();
   });
+
+  describe('GestionarEmpresasSubfabricantesComponent', () => {
+    it('should run #abrirDialogoComplementarPlanta() and show modal', () => {
+      const modalDiv = document.createElement('div');
+      document.body.appendChild(modalDiv);
+      component.modalElement = new ElementRef(modalDiv);
+      const showSpy = jest.spyOn(Modal.prototype, 'show').mockImplementation(() => {});
+      component.abrirDialogoComplementarPlanta();
+      expect(showSpy).toHaveBeenCalled();
+      showSpy.mockRestore();
+    });
+});
 });

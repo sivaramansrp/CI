@@ -1,14 +1,23 @@
-/* eslint-disable @typescript-eslint/naming-convention */
-/* eslint-disable sort-imports */
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReprestantanteComponent } from './represtantante.component';
-import { ReactiveFormsModule, FormsModule, FormBuilder } from '@angular/forms';
-import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
-import { By } from '@angular/platform-browser';
 
-fdescribe('ReprestantanteComponent', () => {
+jest.mock('@libs/shared/theme/assets/json/31601/represtantante-data.json', () => ({
+  __esModule: true,
+  default: {
+    resigtro: '123',
+    rfc: 'RFC123',
+    nombre: 'Juan',
+    apellidoPaterno: 'Pérez',
+    apellidoMaterno: 'García',
+    telefono: '555-1234',
+    correo: 'juan@example.com'
+  }
+}), { virtual: true });
+
+describe('ReprestantanteComponent', () => {
   let component: ReprestantanteComponent;
   let fixture: ComponentFixture<ReprestantanteComponent>;
 
@@ -26,78 +35,49 @@ fdescribe('ReprestantanteComponent', () => {
 
     fixture = TestBed.createComponent(ReprestantanteComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges(); // Trigger ngOnInit
+    fixture.detectChanges(); 
   });
 
-  it('should create the component', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize the form correctly', () => {
+  it('debe inicializar el formulario correctamente', () => {
     expect(component.represtantante).toBeDefined();
-    expect(
-      component.represtantante.get('datosImportadorExportador.resigtro')
-    ).toBeDefined();
-    expect(
-      component.represtantante.get('datosImportadorExportador.rfc')
-    ).toBeDefined();
-    expect(
-      component.represtantante.get('datosImportadorExportador.nombre')
-    ).toBeDefined();
-    expect(
-      component.represtantante.get('datosImportadorExportador.apellidoPaterno')
-    ).toBeDefined();
-    expect(
-      component.represtantante.get('datosImportadorExportador.apellidoMaterno')
-    ).toBeDefined();
-    expect(
-      component.represtantante.get('datosImportadorExportador.telefono')
-    ).toBeDefined();
-    expect(
-      component.represtantante.get('datosImportadorExportador.correo')
-    ).toBeDefined();
+    expect(component.represtantante.get('resigtro')).toBeDefined();
+    expect(component.represtantante.get('rfc')).toBeDefined();
+    expect(component.represtantante.get('nombre')).toBeDefined();
+    expect(component.represtantante.get('apellidoPaterno')).toBeDefined();
+    expect(component.represtantante.get('apellidoMaterno')).toBeDefined();
+    expect(component.represtantante.get('telefono')).toBeDefined();
+    expect(component.represtantante.get('correo')).toBeDefined();
   });
 
-  it('should disable specific form controls', () => {
-    const rfc = component.represtantante.get('datosImportadorExportador.rfc');
-    const nombre = component.represtantante.get(
-      'datosImportadorExportador.nombre'
-    );
-    const apellidoPaterno = component.represtantante.get(
-      'datosImportadorExportador.apellidoPaterno'
-    );
-    const apellidoMaterno = component.represtantante.get(
-      'datosImportadorExportador.apellidoMaterno'
-    );
+ it('debe deshabilitar controles específicos del formulario', () => {
+  component.esFormularioSoloLectura = true;
+  component.inicializarEstadoFormulario();
 
-    expect(rfc?.disabled).toBeTrue();
-    expect(nombre?.disabled).toBeTrue();
-    expect(apellidoPaterno?.disabled).toBeTrue();
-    expect(apellidoMaterno?.disabled).toBeTrue();
-  });
+  const rfc = component.represtantante.get('rfc');
+  const nombre = component.represtantante.get('nombre');
+  const apellidoPaterno = component.represtantante.get('apellidoPaterno');
+  const apellidoMaterno = component.represtantante.get('apellidoMaterno');
 
-  it('should patch form values correctly', () => {
-    const representativeData = component.representativeData;
+  expect(rfc?.disabled).toBe(true);
+  expect(nombre?.disabled).toBe(true);
+  expect(apellidoPaterno?.disabled).toBe(true);
+  expect(apellidoMaterno?.disabled).toBe(true);
+});
 
-    const resigtro = component.represtantante.get(
-      'datosImportadorExportador.resigtro'
-    );
-    const rfc = component.represtantante.get('datosImportadorExportador.rfc');
-    const nombre = component.represtantante.get(
-      'datosImportadorExportador.nombre'
-    );
-    const apellidoPaterno = component.represtantante.get(
-      'datosImportadorExportador.apellidoPaterno'
-    );
-    const apellidoMaterno = component.represtantante.get(
-      'datosImportadorExportador.apellidoMaterno'
-    );
-    const telefono = component.represtantante.get(
-      'datosImportadorExportador.telefono'
-    );
-    const correo = component.represtantante.get(
-      'datosImportadorExportador.correo'
-    );
+  it('debe asignar correctamente los valores al formulario', () => {
+    const representativeData = component.datosRepresentativos;
+
+    const resigtro = component.represtantante.get('resigtro');
+    const rfc = component.represtantante.get('rfc');
+    const nombre = component.represtantante.get('nombre');
+    const apellidoPaterno = component.represtantante.get('apellidoPaterno');
+    const apellidoMaterno = component.represtantante.get('apellidoMaterno');
+    const telefono = component.represtantante.get('telefono');
+    const correo = component.represtantante.get('correo');
 
     expect(resigtro?.value).toBe(representativeData.resigtro);
     expect(rfc?.value).toBe(representativeData.rfc);
@@ -107,27 +87,16 @@ fdescribe('ReprestantanteComponent', () => {
     expect(telefono?.value).toBe(representativeData.telefono);
     expect(correo?.value).toBe(representativeData.correo);
   });
+  
+it('debe llamar a ngOnInit y configurar el formulario correctamente', () => {
+  component.esFormularioSoloLectura = true;
+  const spyPatchValue = jest.spyOn(component, 'ngOnInit');
+  component.ngOnInit();
 
-  it('should call ngOnInit and set up the form correctly', () => {
-    // We are verifying that ngOnInit() was called and the patching and disabling happens
-    const spyPatchValue = spyOn(component, 'ngOnInit').and.callThrough();
-    component.ngOnInit();
-
-    // Verify that patching and disabling of form fields happened correctly
-    expect(spyPatchValue).toHaveBeenCalled();
-    expect(
-      component.represtantante.get('datosImportadorExportador.rfc')?.disabled
-    ).toBeTrue();
-    expect(
-      component.represtantante.get('datosImportadorExportador.nombre')?.disabled
-    ).toBeTrue();
-    expect(
-      component.represtantante.get('datosImportadorExportador.apellidoPaterno')
-        ?.disabled
-    ).toBeTrue();
-    expect(
-      component.represtantante.get('datosImportadorExportador.apellidoMaterno')
-        ?.disabled
-    ).toBeTrue();
-  });
+  expect(spyPatchValue).toHaveBeenCalled();
+  expect(component.represtantante.get('rfc')?.disabled).toBe(true);
+  expect(component.represtantante.get('nombre')?.disabled).toBe(true);
+  expect(component.represtantante.get('apellidoPaterno')?.disabled).toBe(true);
+  expect(component.represtantante.get('apellidoMaterno')?.disabled).toBe(true);
+});
 });

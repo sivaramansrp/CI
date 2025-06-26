@@ -1,6 +1,6 @@
+import { Component, EventEmitter, Output } from '@angular/core';
 import { AgregarProveedorComponent } from '../../../../shared/components/agregar-proveedor/agregar-proveedor.component';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
 import { Proveedor } from '../../../../shared/models/terceros-relacionados.model';
 import { Tramite240102Store } from '../../estados/tramite240102Store.store';
 
@@ -12,14 +12,26 @@ import { Tramite240102Store } from '../../estados/tramite240102Store.store';
   styleUrl: './agregar-proveedor-contenedora.component.scss',
 })
 export class AgregarProveedorContenedoraComponent {
+
+  /**
+   * @event cerrar
+   * @description Evento emitido para indicar que se debe cerrar el componente.
+   * @remarks
+   * Este evento no envía ningún valor, simplemente notifica a los componentes padres que se debe realizar la acción de cierre.
+   * 
+   * @eventType void
+   * Evento que se dispara para cerrar el componente actual.
+   */
+  @Output() cerrar = new EventEmitter<void>();
+
   /**
    * @constructor
-   * @description Constructor que inyecta el store `Tramite260214Store` para gestionar el estado del trámite.
+   * @description Constructor que inyecta el store `Tramite260102Store` para gestionar el estado del trámite.
    *
-   * @param tramite260214Store - Store que administra el estado del trámite 260214.
+   * @param tramite260102Store - Store que administra el estado del trámite 260102.
    */
   // eslint-disable-next-line no-empty-function
-  constructor(public tramite240101Store: Tramite240102Store) {}
+  constructor(public tramite240102Store: Tramite240102Store) {}
 
   /**
    * @method updateProveedorTablaDatos
@@ -29,6 +41,7 @@ export class AgregarProveedorContenedoraComponent {
    * @returns {void} Este método no retorna ningún valor.
    */
   updateProveedorTablaDatos(event: Proveedor[]): void {
-    this.tramite240101Store.updateProveedorTablaDatos(event);
+    this.tramite240102Store.updateProveedorTablaDatos(event);
+    this.cerrar.emit();
   }
 }

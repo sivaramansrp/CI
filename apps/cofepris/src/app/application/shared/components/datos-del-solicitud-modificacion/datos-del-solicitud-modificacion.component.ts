@@ -105,6 +105,11 @@ import { NUEVA_NOTIFICACION, PAIS_DE_PROCEDENCIA_LABEL } from '../../constantes/
 export class DatosDelSolicitudModificacionComponent
   implements OnInit, OnDestroy, AfterViewInit
 {
+/**
+ * @description
+ * Componente que gestiona la modificación de datos relacionados con una solicitud.
+ */
+  public DatosDelSolicitudModificacionComponent = DatosDelSolicitudModificacionComponent;
 
   /**
  * @input mostrarScianBotones
@@ -821,6 +826,10 @@ export class DatosDelSolicitudModificacionComponent
    * Guarda un nuevo dato SCIAN y lo agrega a la tabla.
    */
   guardarScian(): void {
+     if (this.scianForm.invalid) {
+    this.scianForm.markAllAsTouched();
+    return;
+  }
     if (this.scianForm.valid) {
       const SCIAN_DATA: ScianModel = {
         claveScian: this.scianForm.get('scian')?.value,
@@ -954,7 +963,7 @@ export class DatosDelSolicitudModificacionComponent
   /**
    * Método para crear el formulario.
    */
-  hasError(form: FormGroup, controlName: string, error: string) {
+  static hasError(form: FormGroup, controlName: string, error: string): boolean | undefined {
     return (
       form.get(controlName)?.touched && form.get(controlName)?.hasError(error)
     );

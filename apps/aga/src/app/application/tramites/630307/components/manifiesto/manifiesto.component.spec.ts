@@ -55,7 +55,10 @@ describe('ManifiestoComponent', () => {
 
     componente.setValorStore(componente.manifiestoFormulario, 'declaracion');
 
-    expect(storeMock.setTramite630307State).toHaveBeenCalledWith('declaracion', nuevoValor);
+    expect(storeMock.setTramite630307State).toHaveBeenCalledWith(
+      'declaracion',
+      nuevoValor
+    );
   });
 
   it('debería obtener el estado del store y establecer estadoSeleccionado', () => {
@@ -73,5 +76,33 @@ describe('ManifiestoComponent', () => {
 
     expect(destroyedSpy).toHaveBeenCalled();
     expect(completeSpy).toHaveBeenCalled();
+  });
+
+  it('debería deshabilitar el formulario si esFormularioSoloLectura es true', () => {
+    componente.esFormularioSoloLectura = true;
+    componente.manifiestoFormulario.enable();
+    componente.guardarDatosFormulario();
+    expect(componente.manifiestoFormulario.disabled).toBe(true);
+  });
+
+  it('debería habilitar el formulario si esFormularioSoloLectura es false', () => {
+    componente.esFormularioSoloLectura = false;
+    componente.manifiestoFormulario.disable();
+    componente.guardarDatosFormulario();
+    expect(componente.manifiestoFormulario.enabled).toBe(true);
+  });
+
+  it('debería llamar a guardarDatosFormulario si esFormularioSoloLectura es true', () => {
+    const guardarSpy = jest.spyOn(componente, 'guardarDatosFormulario');
+    componente.esFormularioSoloLectura = true;
+    componente.inicializarEstadoFormulario();
+    expect(guardarSpy).toHaveBeenCalled();
+  });
+
+  it('debería llamar a inizializarFormulario si esFormularioSoloLectura es false', () => {
+    const initSpy = jest.spyOn(componente, 'inizializarFormulario');
+    componente.esFormularioSoloLectura = false;
+    componente.inicializarEstadoFormulario();
+    expect(initSpy).toHaveBeenCalled();
   });
 });

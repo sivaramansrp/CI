@@ -84,22 +84,22 @@ export class DatosCertificado110203Component implements OnInit, OnDestroy {
   /**
    * Lista de mercancias obtenidas del catálogo.
    */
-  mercancias: Mercancia[] = mediocatalogo.mercancias;
+  mercancias: Mercancia[] = mediocatalogo?.mercancias;
 
   /**
    * Lista de tipos de datos obtenidos del catálogo.
    */
-  tipoDatos: Catalogo[] = mediocatalogo.tipo;
+  tipoDatos: Catalogo[] = mediocatalogo?.tipo;
 
   /**
    * Lista de opciones de comercialización obtenidas del catálogo.
    */
-  comercializacion: Catalogo[] = mediocatalogo.comercializacion;
+  comercializacion: Catalogo[] = mediocatalogo?.comercializacion;
 
   /**
    * Lista de medidas obtenidas del catálogo.
    */
-  medida: Catalogo[] = mediocatalogo.comercializacion;
+  medida: Catalogo[] = mediocatalogo?.comercializacion;
 
   /**
    * Configuración de las columnas para la tabla dinámica que muestra las mercancias.
@@ -179,11 +179,11 @@ export class DatosCertificado110203Component implements OnInit, OnDestroy {
       marca: ['', Validators.required],
       valor: ['', [Validators.required, Validators.pattern(REG_X.DECIMALES_DOS_LUGARES)]],
       cantidad: ['', [Validators.required,Validators.pattern(REGEX_RFC)]],
-      comercializacion: [this.solicitudState.comercializacion, Validators.required],
+      comercializacion: [this.solicitudState?.comercializacion, Validators.required],
       bruta: ['', [Validators.required, Validators.pattern(REG_X.DECIMALES_DOS_LUGARES)]],
-      medida: [this.solicitudState.medida, Validators.required],
+      medida: [this.solicitudState?.medida, Validators.required],
       factura: ['', Validators.required],
-      tipo: [this.solicitudState.tipo, Validators.required],
+      tipo: [this.solicitudState?.tipo, Validators.required],
       fecha: ['', Validators.required]
     });
      this.patchData();

@@ -1,8 +1,7 @@
 
+import { Solicitud260104State, Tramite260104StoreDos } from '../tramites/tramite260104.store';
 import { Injectable } from '@angular/core';
 import { Query } from '@datorama/akita';
-import { Solicitud260104State, Tramite260104StoreDos } from '../tramites/tramite260104.store';
-
 
 /**
  * Consulta para el estado de la solicitud 260104.
