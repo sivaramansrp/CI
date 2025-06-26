@@ -87,11 +87,11 @@ export class PasoUnoComponent implements OnInit, AfterViewInit, OnDestroy {
       .obtenerTramiteDatos().pipe(
         takeUntil(this.destroyNotifier$)
       )
-      // eslint-disable-next-line
-      .subscribe((resp: any) => {
-        if (resp) {
+
+      .subscribe((resp) => {
+        if (resp?.datosModificacion) {
           this.esDatosRespuesta = true;
-          this.solicitudService.actualizarEstadoFormulario(resp)
+          this.solicitudService.actualizarEstadoFormulario(resp.datosModificacion);
         }
       });
   }

@@ -14,8 +14,13 @@ export interface DatosModificacion {
   tipo: string;
   programa: string;
 }
+
+export interface Solicitud80301StateObj {
+  datosModificacion:Solicitud80301State
+}
+  
 /**
- * Representa el estado de la solicitud 80302.
+ * Representa el estado de la solicitud 80301.
  */
 export interface Solicitud80301State {
 
@@ -32,7 +37,7 @@ export interface Solicitud80301State {
   /**
    * Información relacionada con la modificación.
    */
-  datosModificacion: DatosModificacion;
+  datosModificacion: DatosModificacion ;
 
   /**
    * Lista de datos del contenedor.
@@ -158,32 +163,54 @@ export class Tramite80301Store extends Store<Solicitud80301State> {
     super(createInitialState());
   }
 
+  /**
+   * Establece el RFC en el estado de la tienda.
+   *
+   * @param rfc - El RFC que se desea asignar.
+   */
+  public setRfc(rfc: string): void {
+    this.update((state) => ({
+      ...state,
+      rfc
+    }));
+  }
 
+  /**
+   * Establece el valor federal en el estado de la tienda.
+   *
+   * @param federal - El valor federal que se desea asignar.
+   */
+  public setFederal(federal: string): void {
+    this.update((state) => ({
+      ...state,
+      federal
+    }));
+  }
 
-public setRfc(rfc: string): void {
-  this.update((state) => ({
-    ...state,
-    rfc
-  }));
-}
-public setFederal(federal: string): void {
-  this.update((state) => ({
-    ...state,
-    federal
-  }));
-}
-public setTipo(tipo: string): void {
-  this.update((state) => ({
-    ...state,
-    tipo
-  }));
-}
-public setPrograma(programa: string): void {
-  this.update((state) => ({
-    ...state,
-    programa
-  }));
-}
+  /**
+   * Establece el tipo en el estado de la tienda.
+   *
+   * @param tipo - El tipo que se desea asignar.
+   */
+  public setTipo(tipo: string): void {
+    this.update((state) => ({
+      ...state,
+      tipo
+    }));
+  }
+
+  /**
+   * Establece el programa en el estado de la tienda.
+   *
+   * @param programa - El programa que se desea asignar.
+   */
+  public setPrograma(programa: string): void {
+    this.update((state) => ({
+      ...state,
+      programa
+    }));
+  }
+
 
   /**
    * Guarda el tipo de solicitud en el estado.
@@ -209,30 +236,6 @@ public setPrograma(programa: string): void {
     }));
   }
 
-  /**
-   * Establece el valor del menú desplegable en el estado de la tienda.
-   *
-   * @param menuDesplegable - El nuevo valor para el menú desplegable.
-   */
-  public setMenuDesplegable(menuDesplegable: string): void {
-    this.update((state) => ({
-      ...state,
-      menuDesplegable,
-    }));
-  }
-
-  /**
-   * Establece el valor del menú desplegable de aduana en el estado de la tienda.
-   *
-   * @param aduanaMenuDesplegable - El nuevo valor para el menú desplegable de aduana.
-   *                                Este valor se actualizará en el estado de la tienda.
-   */
-  public setAduanaMenuDesplegable(aduanaMenuDesplegable: string): void {
-    this.update((state) => ({
-      ...state,
-      aduanaMenuDesplegable,
-    }));
-  }
 
   /**
    * Establece la fecha de ingreso en el estado de la tienda.
