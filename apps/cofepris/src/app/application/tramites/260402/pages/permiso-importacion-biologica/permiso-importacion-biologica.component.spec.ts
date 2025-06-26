@@ -19,15 +19,15 @@ describe('PermisoImportacionBiologicaComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('debería crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize indice to 1', () => {
+  it('debería inicializar el índice en 1', () => {
     expect(component.indice).toBe(1);
   });
 
-  it('should initialize pantallasPasos and datosPasos correctly', () => {
+  it('debería inicializar pantallasPasos y datosPasos correctamente', () => {
     expect(Array.isArray(component.pantallasPasos)).toBe(true);
     expect(component.datosPasos.nroPasos).toBe(component.pantallasPasos.length);
     expect(component.datosPasos.indice).toBe(component.indice);
@@ -46,7 +46,7 @@ describe('PermisoImportacionBiologicaComponent', () => {
       component.wizardComponent = wizardMock;
     });
 
-    it('should update indice and call wizardComponent.siguiente for accion "cont"', () => {
+    it('debería actualizar el índice y llamar a wizardComponent.siguiente si la acción es "cont"', () => {
       component.indice = 1;
       component.getValorIndice({ accion: 'cont', valor: 2 });
       expect(component.indice).toBe(2);
@@ -54,7 +54,7 @@ describe('PermisoImportacionBiologicaComponent', () => {
       expect(wizardMock.atras).not.toHaveBeenCalled();
     });
 
-    it('should update indice and call wizardComponent.atras for accion not "cont"', () => {
+    it('debería actualizar el índice y llamar a wizardComponent.atras si la acción no es "cont"', () => {
       component.indice = 3;
       component.getValorIndice({ accion: 'back', valor: 2 });
       expect(component.indice).toBe(2);
@@ -62,7 +62,7 @@ describe('PermisoImportacionBiologicaComponent', () => {
       expect(wizardMock.siguiente).not.toHaveBeenCalled();
     });
 
-    it('should not update indice or call wizard methods if valor is out of range', () => {
+    it('no debería actualizar el índice ni llamar métodos del wizard si el valor está fuera de rango', () => {
       component.indice = 1;
       component.getValorIndice({ accion: 'cont', valor: 0 });
       expect(component.indice).toBe(1);
