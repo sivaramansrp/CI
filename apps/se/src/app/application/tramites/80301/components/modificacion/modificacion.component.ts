@@ -122,46 +122,64 @@ export class ModificacionComponent implements OnInit, OnDestroy {
   }
 
 
+/**
+ * Inicializa el formulario de modificación con los datos del donante.
+ *
+ * Crea el formulario `modificacionForm` con los campos `rfc`, `federal`, `tipo` y `programa`,
+ * asignando valores predeterminados desde `derechoState?.datosModificacion` y aplicando
+ * validaciones necesarias. Luego, inicializa el estado del formulario llamando a
+ * `inicializarEstadoFormulario()`.
+ */
+donanteDomicilio(): void {
+  this.modificacionForm = this.fb.group({
+    rfc: [
+      this.derechoState?.datosModificacion.rfc,
+      [Validators.required, Validators.maxLength(20)]
+    ],
+    federal: [
+      this.derechoState?.datosModificacion.federal,
+      [Validators.maxLength(100)]
+    ],
+    tipo: [
+      this.derechoState?.datosModificacion.federal,
+      [Validators.maxLength(100)]
+    ],
+    programa: [
+      this.derechoState?.datosModificacion.federal,
+      [Validators.maxLength(100)]
+    ]
+  });
+  this.inicializarEstadoFormulario();
+}
 
-  donanteDomicilio(): void {
-    this.modificacionForm = this.fb.group({
-      rfc: [
-        this.derechoState?.datosModificacion.rfc,
-        [Validators.required, Validators.maxLength(20)]
-      ],
-
-      federal: [
-        this.derechoState?.datosModificacion.federal,
-        [Validators.maxLength(100)]
-      ],
-      tipo: [
-        this.derechoState?.datosModificacion.federal,
-        [Validators.maxLength(100)]
-      ],
-      programa: [
-        this.derechoState?.datosModificacion.federal,
-        [Validators.maxLength(100)]
-      ]
-    });
-    this.inicializarEstadoFormulario();
+/**
+ * Establece el estado inicial del formulario según el modo de visualización.
+ *
+ * Si el formulario está en modo solo lectura (`esFormularioSoloLectura`), desactiva los controles
+ * llamando a `guardarDatosDelFormulario()`. En caso contrario, desactiva campos específicos con `datosDeAvisoForm()`.
+ */
+inicializarEstadoFormulario(): void {
+  if (this.esFormularioSoloLectura) {
+    this.guardarDatosDelFormulario();
+  } else {
+    this.datosDeAvisoForm();
   }
+}
 
-
-  inicializarEstadoFormulario(): void {
-    if (this.esFormularioSoloLectura) {
-      this.guardarDatosDelFormulario();
-    } else {
-      this.datosDeAvisoForm()
-    }
+/**
+ * Activa o desactiva todo el formulario de modificación según el modo de lectura.
+ *
+ * Si el formulario está en modo solo lectura (`esFormularioSoloLectura`), se deshabilita por completo.
+ * De lo contrario, se habilita para permitir la edición.
+ */
+guardarDatosDelFormulario(): void {
+  if (this.esFormularioSoloLectura) {
+    this.modificacionForm.disable();
+  } else {
+    this.modificacionForm.enable();
   }
+}
 
-  guardarDatosDelFormulario(): void {
-    if (this.esFormularioSoloLectura) {
-      this.modificacionForm.disable();
-    } else {
-      this.modificacionForm.enable();
-    }
-  }
   /**
    * Inicializa el formulario reactivo con los valores actuales del estado.
    */
@@ -248,6 +266,13 @@ export class ModificacionComponent implements OnInit, OnDestroy {
     this.datosTabla[INDEX].desEstatus = this.datosTabla[INDEX].desEstatus === 'Baja' ? 'Activada' : 'Baja';
   }
 
+  /**
+ * Deshabilita campos del formulario si está en modo solo lectura.
+ * 
+ * Si el formulario está en modo de solo lectura (`esFormularioSoloLectura`)
+ * y existe el formulario de modificación (`modificacionForm`), se deshabilitan 
+ * los siguientes campos: RFC, federal, tipo y programa.
+ */
   datosDeAvisoForm(): void {
     if (this.esFormularioSoloLectura && this.modificacionForm) {
       this.modificacionForm.get('rfc')?.disable();
