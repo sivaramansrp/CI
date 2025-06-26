@@ -50,23 +50,23 @@ describe('Datos260402Component', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('debería crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize indice to 1', () => {
+  it('debería inicializar el índice en 1', () => {
     expect(component.indice).toBe(1);
   });
 
-  it('should set esDatosRespuesta to true if update is false', () => {
+  it('debería establecer esDatosRespuesta en true si update es false', () => {
     component.esDatosRespuesta = false;
     component.consultaState = { update: false } as any;
-    // Simulate ngOnInit subscription
+    // Simula la suscripción de ngOnInit
     component.ngOnInit();
     expect(component.esDatosRespuesta).toBe(true);
   });
 
-  it('should call guardarDatosFormulario if update is true', () => {
+  it('debería llamar a guardarDatosFormulario si update es true', () => {
     const guardarSpy = jest.spyOn(component, 'guardarDatosFormulario').mockImplementation();
     mockConsultaQuery.selectConsultaioState$ = of({ update: true });
     component.ngOnInit();
@@ -74,13 +74,13 @@ describe('Datos260402Component', () => {
     guardarSpy.mockRestore();
   });
 
-  it('should change indice when seleccionaTab is called', () => {
+  it('debería cambiar el índice cuando se llama a seleccionaTab', () => {
     component.indice = 1;
     component.seleccionaTab(3);
     expect(component.indice).toBe(3);
   });
 
-  it('guardarDatosFormulario should call service methods and update esDatosRespuesta', () => {
+  it('guardarDatosFormulario debería llamar a los métodos del servicio y actualizar esDatosRespuesta', () => {
     const registro = { foo: 'bar' };
     const permiso = { bar: 'baz' };
     mockSolocitud260402Service.getRegistroTomaMuestrasMercanciasData.mockReturnValue(of(registro));
@@ -92,7 +92,7 @@ describe('Datos260402Component', () => {
     expect(component.esDatosRespuesta).toBe(true);
   });
 
-  it('guardarDatosFormulario should not call actualizarEstadoFormulario if registro is falsy', () => {
+  it('guardarDatosFormulario no debería llamar a actualizarEstadoFormulario si registro es nulo', () => {
     mockSolocitud260402Service.getRegistroTomaMuestrasMercanciasData.mockReturnValue(of(null));
     mockSolocitud260402Service.getPagoDerechos.mockReturnValue(of({}));
     component.guardarDatosFormulario();
@@ -100,7 +100,7 @@ describe('Datos260402Component', () => {
     expect(mockSolocitud260402Service.actualizarPagoDerechosFormulario).toHaveBeenCalled();
   });
 
-  it('guardarDatosFormulario should not call actualizarPagoDerechosFormulario if permiso is falsy', () => {
+  it('guardarDatosFormulario no debería llamar a actualizarPagoDerechosFormulario si permiso es nulo', () => {
     mockSolocitud260402Service.getRegistroTomaMuestrasMercanciasData.mockReturnValue(of({}));
     mockSolocitud260402Service.getPagoDerechos.mockReturnValue(of(null));
     component.guardarDatosFormulario();
