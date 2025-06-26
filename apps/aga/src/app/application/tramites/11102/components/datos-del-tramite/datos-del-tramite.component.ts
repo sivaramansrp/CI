@@ -312,9 +312,16 @@ infoAlert: string = 'info-alert';
       .subscribe();
   }
  
-  /**
-   * Inicializa el formulario de donante y domicilio.
-   */
+/**
+ * Método que inicializa los formularios `tramiteForm` y `agregarMercanciasForm` 
+ * con los datos del estado de la solicitud (`solicitudState`).
+ * 
+ * - Establece los valores iniciales de los controles del formulario.
+ * - Aplica validadores de Angular para garantizar la validez de los datos ingresados.
+ * - Algunos campos se inicializan como deshabilitados para evitar su edición directa.
+ * - Se aplica formato específico a los campos como correo electrónico, teléfono, código postal, etc.
+ * - Al finalizar, se invoca `inicializarEstadoFormulario()` para configurar el estado general del formulario.
+ */
   donanteDomicilio(): void {
     this.tramiteForm = this.formBuilder.group({
       modificacionDonacionesImmex: this.formBuilder.group({
@@ -577,6 +584,11 @@ guardarDatosDelFormulario(): void {
   }
 }
  
+/**
+ * Método que configura el formulario en modo solo lectura si la propiedad `esFormularioSoloLectura` es verdadera.
+ * Se deshabilitan los campos del formulario `tramiteForm` y `agregarMercanciasForm` relacionados con el aviso de modificación de donaciones IMMEX.
+ * Esto se utiliza para evitar modificaciones en un formulario que solo debe visualizarse.
+ */
 datosDeAvisoForm(): void {
   if (this.esFormularioSoloLectura && this.tramiteForm && this.agregarMercanciasForm) {
     this.tramiteForm.get('modificacionDonacionesImmex.aduana')?.disable()

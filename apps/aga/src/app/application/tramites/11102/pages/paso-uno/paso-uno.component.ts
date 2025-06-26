@@ -139,8 +139,6 @@ export class PasoUnoComponent implements OnInit, OnDestroy,AfterViewInit {
       )
       .subscribe((resp:Solicitud11102StaObjResp) => {
         if (resp) {
-          //console.log(resp, typeof resp);
-          
           this.esDatosRespuesta = true; // Marca que hay datos de respuesta
           this.service11102.actualizarEstadoFormulario(resp.modificacionDonacionesImmex); // Actualiza el estado del formulario con la respuesta
         }
