@@ -257,13 +257,21 @@ export class Tramite11101Store extends Store<Tramitenacionales11101State> {
     super(createTramiteState());
   }
 
- public setNumeroderegistro(numeroderegistro: string): void {
+ /**
+ * Establece el número de registro.
+ * @param numeroderegistro - Número de registro a asignar al estado.
+ */
+public setNumeroderegistro(numeroderegistro: string): void {
     this.update((state) => ({
         ...state,
         numeroderegistro,
     }));
 }
 
+/**
+ * Establece el nombre, denominación o razón social.
+ * @param NobmreDenominationRazonSocial - Nombre, denominación o razón social a asignar al estado.
+ */
 public setNobmreDenominationRazonSocial(NobmreDenominationRazonSocial: string): void {
     this.update((state) => ({
         ...state,
@@ -271,6 +279,10 @@ public setNobmreDenominationRazonSocial(NobmreDenominationRazonSocial: string): 
     }));
 }
 
+/**
+ * Establece el RFC o Tax ID.
+ * @param rfctaxid - RFC o identificación fiscal a asignar al estado.
+ */
 public setRfctaxid(rfctaxid: string): void {
     this.update((state) => ({
         ...state,
@@ -278,6 +290,10 @@ public setRfctaxid(rfctaxid: string): void {
     }));
 }
 
+/**
+ * Establece el número de teléfono.
+ * @param Telefono - Teléfono a asignar al estado.
+ */
 public setTelefono(Telefono: string): void {
     this.update((state) => ({
         ...state,
@@ -285,6 +301,10 @@ public setTelefono(Telefono: string): void {
     }));
 }
 
+/**
+ * Establece el correo electrónico.
+ * @param correoelectronico - Correo electrónico a asignar al estado.
+ */
 public setCorreoelectronico(correoelectronico: string): void {
     this.update((state) => ({
         ...state,
@@ -292,6 +312,10 @@ public setCorreoelectronico(correoelectronico: string): void {
     }));
 }
 
+/**
+ * Establece la entidad federativa.
+ * @param entidadadfederativa - Entidad federativa a asignar al estado.
+ */
 public setEntidadadfederativa(entidadadfederativa: string): void {
     this.update((state) => ({
         ...state,
@@ -299,6 +323,10 @@ public setEntidadadfederativa(entidadadfederativa: string): void {
     }));
 }
 
+/**
+ * Establece la alcaldía o municipio.
+ * @param alcadilamunicipio - Alcaldía o municipio a asignar al estado.
+ */
 public setAlcadilamunicipio(alcadilamunicipio: string): void {
     this.update((state) => ({
         ...state,
@@ -306,6 +334,10 @@ public setAlcadilamunicipio(alcadilamunicipio: string): void {
     }));
 }
 
+/**
+ * Establece la colonia.
+ * @param colonia - Colonia a asignar al estado.
+ */
 public setColonia(colonia: string): void {
     this.update((state) => ({
         ...state,
@@ -313,6 +345,10 @@ public setColonia(colonia: string): void {
     }));
 }
 
+/**
+ * Establece el código postal.
+ * @param codigopostal - Código postal a asignar al estado.
+ */
 public setCodigopostal(codigopostal: string): void {
     this.update((state) => ({
         ...state,
@@ -320,6 +356,10 @@ public setCodigopostal(codigopostal: string): void {
     }));
 }
 
+/**
+ * Establece la calle.
+ * @param calle - Calle a asignar al estado.
+ */
 public setCalle(calle: string): void {
     this.update((state) => ({
         ...state,
@@ -327,6 +367,10 @@ public setCalle(calle: string): void {
     }));
 }
 
+/**
+ * Establece el número o letra exterior.
+ * @param numeroletraexterior - Número o letra exterior a asignar al estado.
+ */
 public setNumeroletraexterior(numeroletraexterior: string): void {
     this.update((state) => ({
         ...state,
@@ -334,6 +378,10 @@ public setNumeroletraexterior(numeroletraexterior: string): void {
     }));
 }
 
+/**
+ * Establece el número o letra interior.
+ * @param numeroletrainterior - Número o letra interior a asignar al estado.
+ */
 public setNumeroletrainterior(numeroletrainterior: string): void {
     this.update((state) => ({
         ...state,
@@ -341,6 +389,10 @@ public setNumeroletrainterior(numeroletrainterior: string): void {
     }));
 }
 
+/**
+ * Establece la calle entre la cual se encuentra.
+ * @param entrecalle - Calle entre la cual se encuentra el domicilio.
+ */
 public setEntrecalle(entrecalle: string): void {
     this.update((state) => ({
         ...state,
@@ -348,6 +400,10 @@ public setEntrecalle(entrecalle: string): void {
     }));
 }
 
+/**
+ * Establece la calle adicional (y calle).
+ * @param ycalle - Otra calle cercana al domicilio.
+ */
 public setYcalle(ycalle: string): void {
     this.update((state) => ({
         ...state,

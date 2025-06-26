@@ -14,9 +14,7 @@ import mockData from '@libs/shared/theme/assets/json/11101/solicitante-mockdata.
   imports: [TituloComponent, ReactiveFormsModule]
 })
 export class SolicitanteComponent implements OnInit {
-  // obtenerTipoPersona(MORAL_NACIONAL: number) {
-  //   throw new Error('Method not implemented.');
-  // }
+
   /**
    * Grupo de formulario para capturar los datos del solicitante.
    * @type {FormGroup}

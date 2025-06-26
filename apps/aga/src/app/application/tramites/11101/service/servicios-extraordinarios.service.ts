@@ -44,6 +44,10 @@ export class TramiteFolioService {
     this.store.setEntrecalle(DATOS.entrecalle);
     this.store.setYcalle(DATOS.ycalle);
   }
+  /**
+ * Obtiene los datos del trámite desde un archivo JSON local.
+ * @returns Observable con el estado del trámite nacional (Tramitenacionales11101State).
+ */
   public getDatosDeTrtamitelDoc(): Observable<Tramitenacionales11101State> {
     return this.http.get<Tramitenacionales11101State>(
       '/assets/json/11101/aviso-tramite-data.json'
