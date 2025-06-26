@@ -1,0 +1,182 @@
+import { Solicitud260401Service } from './service260401.service';
+import { HttpClient } from '@angular/common/http';
+import { of } from 'rxjs';
+import {
+  DatosDelSolicituteSeccionState,
+  DatosDelSolicituteSeccionStateStore
+} from '../../../shared/estados/stores/datos-del-solicitute-seccion.store';
+import {
+  PermisoImportacionBiologicaState,
+  PermisoImportacionBiologicaStore
+} from '../../../shared/estados/permiso-importacion-biologica.store';
+
+jest.mock('@angular/common/http');
+
+describe('Solicitud260401Service', () => {
+  let service: Solicitud260401Service;
+  let httpMock: jest.Mocked<HttpClient>;
+  let datosStoreMock: jest.Mocked<DatosDelSolicituteSeccionStateStore>;
+  let permisoStoreMock: jest.Mocked<PermisoImportacionBiologicaStore>;
+
+  beforeEach(() => {
+    httpMock = {
+      get: jest.fn()
+    } as any;
+
+    datosStoreMock = {
+      setEstablecimientoDenominacionRazonSocial: jest.fn(),
+      setEstablecimientoCorreoElectronico: jest.fn(),
+      setEstablecimientoDomicilioCodigoPostal: jest.fn(),
+      setEstablecimientoDomicilioEstado: jest.fn(),
+      setEstablecimientoMunicipioYAlcaldia: jest.fn(),
+      setEstablecimientoDomicilioLocalidad: jest.fn(),
+      setEstablecimientoDomicilioColonia: jest.fn(),
+      setEstablecimientoDomicilioCalle: jest.fn(),
+      setEstablecimientoDomicilioLada: jest.fn(),
+      setEstablecimientoDomicilioTelefono: jest.fn(),
+      setRfcDelProfesionalResponsable: jest.fn(),
+      setNombreDelProfesionalResponsable: jest.fn(),
+      setRepresentanteRfc: jest.fn(),
+      setRepresentanteNombre: jest.fn(),
+      setRepresentanteApellidos: jest.fn(),
+      setInformacionConfidencial: jest.fn(),
+      setAduanaDeSalida: jest.fn(),
+      setRegimenAlQueSeDestinaraLaMercancía: jest.fn(),
+      setNoDeLicenciaSanitariaObservaciones: jest.fn(),
+      setNoDeLicenciaSanitaria: jest.fn()
+    } as any;
+
+    permisoStoreMock = {
+      setClaveDeReferncia: jest.fn(),
+      setCadenaDeLaDependencia: jest.fn(),
+      setLlaveDePago: jest.fn(),
+      setFechaDePago: jest.fn(),
+      setImporteDePago: jest.fn(),
+      setBanco: jest.fn()
+    } as any;
+
+    service = new Solicitud260401Service(
+      httpMock,
+      datosStoreMock,
+      permisoStoreMock
+    );
+  });
+
+  it('should be created', () => {
+    expect(service).toBeTruthy();
+  });
+
+  describe('actualizarEstadoFormulario', () => {
+    it('should call all setters on tramite260401Store with correct values', () => {
+      const datos: DatosDelSolicituteSeccionState = {
+        establecimientoDenominacionRazonSocial: 'razon',
+        establecimientoCorreoElectronico: 'correo',
+        establecimientoDomicilioCodigoPostal: 'cp',
+        establecimientoDomicilioEstado: 'estado',
+        establecimientoMunicipioYAlcaldia: 'municipio',
+        establecimientoDomicilioLocalidad: 'localidad',
+        establecimientoDomicilioColonia: 'colonia',
+        establecimientoDomicilioCalle: 'calle',
+        establecimientoDomicilioLada: 'lada',
+        establecimientoDomicilioTelefono: 'telefono',
+        rfcDelProfesionalResponsable: 'rfc',
+        nombreDelProfesionalResponsable: 'nombre',
+        representanteRfc: 'reprfc',
+        representanteNombre: 'repnombre',
+        apellidoMaterno: 'materno',
+        apellidoPaterno: 'paterno',
+        informacionConfidencialRadio: true,
+        aduanaDeSalida: 'aduana',
+        regimenAlQueSeDestinaraLaMercancía: 'regimen',
+        noDeLicenciaSanitariaObservaciones: 'obs',
+        noDeLicenciaSanitaria: 'lic'
+      } as any;
+
+      service.actualizarEstadoFormulario(datos);
+
+      expect(datosStoreMock.setEstablecimientoDenominacionRazonSocial).toHaveBeenCalledWith('razon');
+      expect(datosStoreMock.setEstablecimientoCorreoElectronico).toHaveBeenCalledWith('correo');
+      expect(datosStoreMock.setEstablecimientoDomicilioCodigoPostal).toHaveBeenCalledWith('cp');
+      expect(datosStoreMock.setEstablecimientoDomicilioEstado).toHaveBeenCalledWith('estado');
+      expect(datosStoreMock.setEstablecimientoMunicipioYAlcaldia).toHaveBeenCalledWith('municipio');
+      expect(datosStoreMock.setEstablecimientoDomicilioLocalidad).toHaveBeenCalledWith('localidad');
+      expect(datosStoreMock.setEstablecimientoDomicilioColonia).toHaveBeenCalledWith('colonia');
+      expect(datosStoreMock.setEstablecimientoDomicilioCalle).toHaveBeenCalledWith('calle');
+      expect(datosStoreMock.setEstablecimientoDomicilioLada).toHaveBeenCalledWith('lada');
+      expect(datosStoreMock.setEstablecimientoDomicilioTelefono).toHaveBeenCalledWith('telefono');
+      expect(datosStoreMock.setRfcDelProfesionalResponsable).toHaveBeenCalledWith('rfc');
+      expect(datosStoreMock.setNombreDelProfesionalResponsable).toHaveBeenCalledWith('nombre');
+      expect(datosStoreMock.setRepresentanteRfc).toHaveBeenCalledWith('reprfc');
+      expect(datosStoreMock.setRepresentanteNombre).toHaveBeenCalledWith('repnombre');
+      expect(datosStoreMock.setRepresentanteApellidos).toHaveBeenCalledWith('materno', 'paterno');
+      expect(datosStoreMock.setInformacionConfidencial).toHaveBeenCalledWith(true);
+      expect(datosStoreMock.setAduanaDeSalida).toHaveBeenCalledWith('aduana');
+      expect(datosStoreMock.setRegimenAlQueSeDestinaraLaMercancía).toHaveBeenCalledWith('regimen');
+      expect(datosStoreMock.setNoDeLicenciaSanitariaObservaciones).toHaveBeenCalledWith('obs');
+      expect(datosStoreMock.setNoDeLicenciaSanitaria).toHaveBeenCalledWith('lic');
+    });
+  });
+
+  describe('actualizarPagoDerechosFormulario', () => {
+    it('should call all setters on tramite260401 with correct values and setBanco if setBanco exists', () => {
+      const datos: PermisoImportacionBiologicaState = {
+        setClaveDeReferncia: 'clave',
+        setCadenaDeLaDependencia: 'cadena',
+        setLlaveDePago: 'llave',
+        setFechaDePago: 'fecha',
+        setImporteDePago: 123,
+        setBanco: 'banco'
+      } as any;
+
+      service.actualizarPagoDerechosFormulario(datos);
+
+      expect(permisoStoreMock.setClaveDeReferncia).toHaveBeenCalledWith('clave');
+      expect(permisoStoreMock.setCadenaDeLaDependencia).toHaveBeenCalledWith('cadena');
+      expect(permisoStoreMock.setLlaveDePago).toHaveBeenCalledWith('llave');
+      expect(permisoStoreMock.setFechaDePago).toHaveBeenCalledWith('fecha');
+      expect(permisoStoreMock.setImporteDePago).toHaveBeenCalledWith(123);
+      expect(permisoStoreMock.setBanco).toHaveBeenCalledWith('banco');
+    });
+
+    it('should not call setBanco if setBanco is falsy', () => {
+      const datos: PermisoImportacionBiologicaState = {
+        setClaveDeReferncia: 'clave',
+        setCadenaDeLaDependencia: 'cadena',
+        setLlaveDePago: 'llave',
+        setFechaDePago: 'fecha',
+        setImporteDePago: 123,
+        setBanco: undefined
+      } as any;
+
+      service.actualizarPagoDerechosFormulario(datos);
+
+      expect(permisoStoreMock.setBanco).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('getRegistroTomaMuestrasMercanciasData', () => {
+    it('should call http.get with correct URL and return its observable', done => {
+      const mockResponse: DatosDelSolicituteSeccionState = { foo: 'bar' } as any;
+      httpMock.get.mockReturnValue(of(mockResponse));
+
+      service.getRegistroTomaMuestrasMercanciasData().subscribe(res => {
+        expect(res).toEqual(mockResponse);
+        expect(httpMock.get).toHaveBeenCalledWith('assets/json/260401/territorio-nacional-solicitud.json');
+        done();
+      });
+    });
+  });
+
+  describe('getPagoDerechos', () => {
+    it('should call http.get with correct URL and return its observable', done => {
+      const mockResponse: PermisoImportacionBiologicaState = { foo: 'bar' } as any;
+      httpMock.get.mockReturnValue(of(mockResponse));
+
+      service.getPagoDerechos().subscribe(res => {
+        expect(res).toEqual(mockResponse);
+        expect(httpMock.get).toHaveBeenCalledWith('assets/json/260401/pagoDerechos.json');
+        done();
+      });
+    });
+  });
+});
