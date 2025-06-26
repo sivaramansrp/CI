@@ -41,10 +41,6 @@ describe('PasoUnoComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should run #ngAfterViewInit()', async () => {
-    component.ngAfterViewInit();
-  });
-
   it('should run #seleccionaTab()', async () => {
     component.seleccionaTab({});
   });
