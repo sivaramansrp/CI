@@ -1219,6 +1219,15 @@
         "numeroDeProcedimiento": "260209"
     },
     {
+        "id": "11102",
+        "tipoDeTramite": "Datos generales del trámite",
+        "fecha": "2024-11-01",
+        "fechaActualizacion": "2024-11-07",
+        "diasTranscurridos": "4",
+        "departamento": "AGA",
+        "numeroDeProcedimiento": "11102"
+    },
+    {
         "id": "140104",
         "tipoDeTramite": "Datos generales del trámite",
         "fecha": "2024-11-01",
