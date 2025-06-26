@@ -1,4 +1,5 @@
 import { AgregarTransporteComponent, InputRadioComponent, NotificacionesComponent, TablaDinamicaComponent } from '@ng-mf/data-access-user';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { ToastrModule, ToastrService } from 'ngx-toastr';
 import { AgregarDestinatarioComponent } from './components/agregar-destinatario/agregar-destinatario.component';
 import { AlertComponent } from '@ng-mf/data-access-user';
@@ -12,7 +13,6 @@ import { InputCheckComponent } from '@ng-mf/data-access-user';
 import { InputFechaComponent } from '@ng-mf/data-access-user';
 import { InputHoraComponent } from '@ng-mf/data-access-user';
 import { NavComponent } from '@ng-mf/data-access-user';
-import { NgModule } from '@angular/core';
 import { PagoDeDerechoComponent } from './components/pago-de-derecho/pago-de-derecho.component';
 import { PantallasCapturaRoutingModule } from './pantallas-captura-routing.module';
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
@@ -72,6 +72,7 @@ import { WizardComponent } from '@ng-mf/data-access-user';
     SolicitudComponent
   ],
   providers: [ToastrService],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
   exports: [],
 })
 export class PantallasCapturaModule { }

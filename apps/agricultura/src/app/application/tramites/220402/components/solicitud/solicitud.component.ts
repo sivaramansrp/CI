@@ -166,7 +166,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * @param tramite220402Store Almacén de estado para el trámite 220402.
    */
   constructor(
-    private fb: FormBuilder,
+    public fb: FormBuilder,
     private validacionesService: ValidacionesFormularioService,
     private mediodetransporteService: MediodetransporteService,
     private solicitud220402Store: Solicitud220402Store,
@@ -277,7 +277,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   /**
      * Inicializa los catálogos necesarios para el formulario.
      */
-  private inicializaCatalogos(): void {
+  public inicializaCatalogos(): void {
     this.mediodetransporteService
       .getMedioDeTransporte()
       .pipe(takeUntil(this.destroyNotifier$))
