@@ -11,7 +11,6 @@ import { MENSAJE_ALERTA_TRATADOS } from '@ng-mf/data-access-user';
 import { PantallasSvcService } from '../../services/pantallas-svc.service';
 import { RegistroDeSolicitudesTabla } from '../../models/panallas110101.model';
 import { Solicitante110101Query } from '../../estados/queries/solicitante110101.query';
-import { TableComponent } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import tratadosTable from '@libs/shared/theme/assets/json/110101/tratados-table.json';
 
@@ -31,7 +30,6 @@ import tratadosTable from '@libs/shared/theme/assets/json/110101/tratados-table.
   imports: [
     TituloComponent,
     CommonModule,
-    TableComponent,
     AlertComponent,
     CatalogoSelectComponent,
     ReactiveFormsModule,
@@ -39,6 +37,21 @@ import tratadosTable from '@libs/shared/theme/assets/json/110101/tratados-table.
   ]
 })
 export class TratadosComponent implements OnInit, OnDestroy {
+  /**
+   * Array de filas seleccionadas en la tabla de tratados.
+   * 
+   * @property {RegistroDeSolicitudesTabla[]} selectedRows - Array que contiene las filas seleccionadas en la tabla.
+   */
+  selectedRows: RegistroDeSolicitudesTabla[] = [];
+  /*
+  * Indice de la fila seleccionada en la tabla de tratados.
+  */
+  selectedRowIndex: number | null = null;
+/**
+ * Indica si el componente está en modo de edición.
+ * Cuando es `true`, permite editar los tratados seleccionados.
+ */
+  isEditMode: boolean = false;
   /**
    * Formulario reactivo para gestionar los tratados.
    * 
@@ -259,18 +272,20 @@ agregarTratado(): void {
     this.formularioTratados.reset();
   }
 }
-selectedRowIndex: number | null = null;
-
-isEditMode: boolean = false;
+/**
+ * Modifica un tratado existente en la tabla.
+ * Este método se activa cuando se selecciona una fila en la tabla.
+ * Si hay una fila seleccionada, cambia el modo de edición a `true` y carga
+ */
 modificarTratado(): void {
   if (this.selectedRowIndex !== null && this.selectedRowIndex > -1) {
     this.isEditMode = true;
     const SELECTED = this.registroDeSolicitudesTablaDatos[this.selectedRowIndex];
-    // Find the IDs from the catalogs using the description values
+  
     const PAIS_ID = this.paisCatalogo.find(item => item.descripcion === SELECTED.pais)?.id ?? '';
     const TRATADO_ID = this.tratadoCatalogo.find(item => item.descripcion === SELECTED.tratado)?.id ?? '';
     const ORIGEN_ID = this.origenCatalogo.find(item => item.descripcion === SELECTED.origen)?.id ?? '';
-    // Patch the form with the found IDs
+   
     this.formularioTratados.patchValue({
       pais: PAIS_ID,
       tratado: TRATADO_ID,
@@ -354,22 +369,30 @@ talbleData: RegistroDeSolicitudesTabla = {
     this.destroy$.next();
     this.destroy$.complete();
   }
-selectedRows: RegistroDeSolicitudesTabla[] = [];
 
-onSeleccionChange(selected: RegistroDeSolicitudesTabla[]) {
+/**
+ * 
+ * @param selected - Array de registros seleccionados en la tabla.
+ * Este método maneja el cambio de selección en la tabla de tratados.
+ */
+onSeleccionChange(selected: RegistroDeSolicitudesTabla[]) :void{
   if (selected && selected.length === 1) {
     this.selectedRows = [selected[0]];
     this.selectedRowIndex = this.registroDeSolicitudesTablaDatos.findIndex(
       row => row === selected[0]
     );
-    // Do NOT patch the form here!
+  
   } else {
     this.selectedRows = [];
     this.selectedRowIndex = null;
     this.formularioTratados.reset();
   }
 }
-
+/**
+ * 
+ * @returns boolean
+ * Este método verifica si hay filas seleccionadas en la tabla de tratados.
+ */
 eliminarTratado(): void {
   if (this.selectedRows.length === 0) 
     {return}
