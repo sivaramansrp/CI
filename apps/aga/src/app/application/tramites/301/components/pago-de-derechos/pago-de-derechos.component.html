@@ -13,6 +13,7 @@
               type="text"
               maxlength="20"
               [ngClass]="{ 'required': isInvalid() }"
+              (input)="manejarEntradaMayusculas($event)"
               (change)="
                 setValoresStore(
                   FormSolicitud,
@@ -89,27 +90,32 @@
         </div>
       </div>
       <div class="row mt-5">
-        <p>
-        <strong>
-          A través del siguiente vinculo puedes ingresar a la página para
-          generar la línea de captura de la constancia que se solicita:
-        </strong>
-      </p>
-      <a [href]="generarLineaCapturaURL" target="_blank" [ngClass]="{ 'disabled-link': esFormularioSoloLectura }">Generar línea de captura</a>
+        <div class="col-md-12">
+          <p>
+            <strong>
+              A través del siguiente vinculo puedes ingresar a la página para
+              generar la línea de captura de la constancia que se solicita:
+            </strong>
+          </p>
+        </div>
+        <div class="col-md-6">
+          <a class="custom-link" [href]="generarLineaCapturaURL" target="_blank" [ngClass]="{ 'disabled-link': esFormularioSoloLectura }">Generar línea de captura</a>
+        </div>
       </div>
     </div>
   </form>
 </div>
 
 <div class="modal fade" #modalConfirmacionRef id="modalConfirmacion" tabindex="-1" aria-labelledby="modalConfirmacionLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-sm">
+    <div class="modal-dialog modal-sm">
       <div class="modal-content">
         <div class="modal-header">
+          <p></p>
         </div>
         <div class="modal-body">
           <p>No se puede agregar línea de captura, porque ya se encuentra agregada.</p>
           <div class="modal-footer custom-footer">
-            <button type="button" class="btn btn-default" data-bs-dismiss="modal" #closeModal>Acceptar</button>
+            <button type="button" class="btn btn-primary" data-bs-dismiss="modal" #closeModal>Aceptar</button>
           </div>
         </div>
       </div>
