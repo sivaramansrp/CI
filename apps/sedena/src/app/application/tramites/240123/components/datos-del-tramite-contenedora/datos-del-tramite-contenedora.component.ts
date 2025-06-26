@@ -1,16 +1,20 @@
+import { Component, Input, ViewChild } from '@angular/core';
 import { DatosDelTramiteFormState, MERCANCIA_ENCABEZADO_DE_TABLA } from '../../../../shared/models/datos-del-tramite.model';
 import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DatosDelTramiteComponent } from '../../../../shared/components/datos-del-tramite/datos-del-tramite.component';
+import { DatosMercanciaContenedoraComponent } from '../datos-mercancia-contenedora/datos-mercancia-contenedora.component';
 import { ID_PROCEDIMIENTO } from '../../constants/exportacion-sustancias-quimicas.enum';
 import { MercanciaDetalle } from '../../../../shared/models/datos-del-tramite.model';
+import { ModalComponent } from '../../../../shared/components/modal/modal.component';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { Subject } from 'rxjs';
 import { Tramite240123Query } from '../../estados/tramite240123Query.query';
 import { Tramite240123Store } from '../../estados/tramite240123Store.store';
+import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
 
 /**
@@ -21,12 +25,20 @@ import { takeUntil } from 'rxjs';
 @Component({
   selector: 'app-datos-del-tramite-contenedora',
   standalone: true,
-  imports: [CommonModule, DatosDelTramiteComponent],
+  imports: [CommonModule, DatosDelTramiteComponent, ModalComponent],
   templateUrl: './datos-del-tramite-contenedora.component.html',
   styleUrl: './datos-del-tramite-contenedora.component.scss',
 })
 export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
-  
+    @ViewChild('modal', { static: false }) modalComponent!: ModalComponent;
+   /**
+     * @property esFormularioSoloLectura
+     * @description Indica si el formulario es de solo lectura.
+     * @type {boolean}
+     */
+    @Input()
+    esFormularioSoloLectura: boolean = false;
+
   /**
    * @property
    * @name idProcedimiento
@@ -89,8 +101,18 @@ export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
   constructor(
     private tramiteQuery: Tramite240123Query,
     private tramiteStore: Tramite240123Store,
-    public activatedRoute: ActivatedRoute
-  ) {}
+    public activatedRoute: ActivatedRoute,
+    private consultaQuery: ConsultaioQuery,
+  ) {
+     this.consultaQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.unsubscribe$),
+      map((seccionState) => {
+        this.esFormularioSoloLectura = seccionState.readonly;
+      })
+    )
+    .subscribe();
+  }
 
   /**
    * Hook del ciclo de vida que se ejecuta al inicializar el componente.
@@ -139,4 +161,31 @@ export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
   updateDatosDelTramiteFormulario(event: DatosDelTramiteFormState): void {
     this.tramiteStore.updateDatosDelTramiteFormState(event);
   }
+  /**
+     * Abre el modal correspondiente según el nombre del evento recibido.
+     *
+     * Si el evento es `'Datosmercancia'`, se carga el componente `DatosMercanciaContenedoraComponent`
+     * dentro del modal y se le pasa una función de cierre como input.
+     *
+     * @method openModal
+     * @param {string} event - Nombre del evento que indica qué componente se debe mostrar en el modal.
+     * @returns {void}
+     */
+    openModal(event: string): void {
+      if (event === 'Datosmercancia') {
+        this.modalComponent.abrir(DatosMercanciaContenedoraComponent, {
+          cerrarModal: this.cerrarModal.bind(this),
+        });
+      }
+    }
+  
+    /**
+     * Cierra el modal dinámico actualmente abierto utilizando el método del componente modal.
+     *
+     * @method cerrarModal
+     * @returns {void}
+     */
+    cerrarModal(): void {
+      this.modalComponent.cerrar();
+    }
 }

@@ -2827,6 +2827,15 @@
     "numeroDeProcedimiento": "32505"
   },
   {
+      "id": 40201,
+      "tipoDeTramite": "Expedición de Certificados de Cupo Licitación pública",
+      "fecha": "2023-10-01",
+      "fechaActualizacion": "2023-10-05",
+      "diasTranscurridos": "4",
+      "departamento": "AGA",
+      "numeroDeProcedimiento": "40201"
+    },
+  {
     "id": 11105,
     "tipoDeTramite": "Solicitud de Permiso",
     "fecha": "2023-10-01",
@@ -2861,7 +2870,15 @@
     "diasTranscurridos": "4",
     "departamento": "AGA",
     "numeroDeProcedimiento": "6001"
+  },
+  {
+    "id":80301,
+    "tipoDeTramite": "Solicitud de Permiso",
+    "fecha": "2023-10-01",
+    "fechaActualizacion": "2023-10-05",
+    "diasTranscurridos": "4",
+    "departamento": "SE",
+    "numeroDeProcedimiento": "80301"
   }
-
 
 ]

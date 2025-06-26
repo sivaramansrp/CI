@@ -35,25 +35,25 @@ describe('EmpresaFronteraSolicitudComponent', () => {
     fixture = TestBed.createComponent(EmpresaFronteraSolicitudComponent);
     component = fixture.componentInstance;
 
-    // Simulate ViewChild assignment
+    // Simula la asignación de ViewChild
     component.wizardComponent = new MockWizardComponent() as unknown as WizardComponent;
 
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should have default indice as 1', () => {
+  it('debe tener el índice por defecto en 1', () => {
     expect(component.indice).toBe(1);
   });
 
-  it('should have pantallasPasos set to EMPRESA_FRONTERA', () => {
+  it('debe tener pantallasPasos igual a EMPRESA_FRONTERA', () => {
     expect(component.pantallasPasos).toBe(EMPRESA_FRONTERA);
   });
 
-  it('should call wizardComponent.siguiente when accion is cont', () => {
+  it('debe llamar a wizardComponent.siguiente cuando la acción es "cont"', () => {
     const mockEvent = { accion: 'cont', valor: 2 };
     const spy = jest.spyOn(component.wizardComponent, 'siguiente');
     component.getValorIndice(mockEvent);
@@ -61,7 +61,7 @@ describe('EmpresaFronteraSolicitudComponent', () => {
     expect(spy).toHaveBeenCalled();
   });
 
-  it('should call wizardComponent.atras when accion is not cont', () => {
+  it('debe llamar a wizardComponent.atras cuando la acción no es "cont"', () => {
     const mockEvent = { accion: 'back', valor: 2 };
     const spy = jest.spyOn(component.wizardComponent, 'atras');
     component.getValorIndice(mockEvent);
@@ -69,9 +69,9 @@ describe('EmpresaFronteraSolicitudComponent', () => {
     expect(spy).toHaveBeenCalled();
   });
 
-  it('should not update indice if value is out of range', () => {
+  it('no debe actualizar el índice si el valor está fuera de rango', () => {
     component.indice = 1;
     component.getValorIndice({ accion: 'cont', valor: 10 });
-    expect(component.indice).toBe(1); // unchanged
+    expect(component.indice).toBe(1); // sin cambios
   });
 });
