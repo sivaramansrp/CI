@@ -1,252 +1,116 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { of, Subject } from 'rxjs';
 import { DatosPorRegimenComponent } from './datos-por-regimen.component';
-import { TituloComponent } from '@libs/shared/data-access-user/src';
-import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
-import { TableComponent } from '@libs/shared/data-access-user/src';
-import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
-import { ServiciosPantallaService } from '@libs/shared/data-access-user/src/core/services/31601/servicios-pantalla.service';
 import { Tramite31601Store } from '../../../../estados/tramites/tramite31601.store';
 import { Tramite31601Query } from '../../../../estados/queries/tramite31601.query';
-import { TramiteAgaceStore } from '../../../../estados/tramites/tramitesagace.store';
-import { of, Subject } from 'rxjs';
-
-jest.mock('@libs/shared/theme/assets/json/31601/datos-por-regimen.json', () => ({
-  __esModule: true,
-  default: {
-    tableHeader: [
-      "Denominacion Social",
-      "RFC",
-      "Número de empleados",
-      "1er Bimestre",
-      "Número de empleados",
-      "2do Bimestre",
-      "Número de empleados",
-      "3er Bimestre"
-    ],
-    tableBody: []
-  }
-}), { virtual: true });
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 
 describe('DatosPorRegimenComponent', () => {
   let component: DatosPorRegimenComponent;
   let fixture: ComponentFixture<DatosPorRegimenComponent>;
-  let validacionesService: any;
-  let pantallaSvc: any;
-  let tramite31601Store: any;
-  let tramite31601QueryMock: any;
-  let tramiteAgaceStoreMock: any;
+  let tramite31601StoreMock: Partial<Tramite31601Store>;
+  let tramite31601QueryMock: Partial<Tramite31601Query>;
+  let consultaioQueryMock: Partial<ConsultaioQuery>;
 
   beforeEach(async () => {
-    validacionesService = {
-      isValid: jest.fn()
+    tramite31601StoreMock = {
+      setCancelacionProcedimiento: jest.fn(),
+      setCumpleLineamientos: jest.fn(),
     };
-    pantallaSvc = {
-      getBimestreUnoCatalogo: jest.fn(),
-      getBimestreDosCatalogo: jest.fn(),
-      getBimestreTresCatalogo: jest.fn()
-    };
-    tramite31601Store = {
-      setComboBimestresOne: jest.fn(),
-      setComboBimestresTwo: jest.fn(),
-      setComboBimestresThree: jest.fn()
-    };
+
     tramite31601QueryMock = {
       selectSolicitud$: of({
-        importaciones: '',
-        infraestructuraIndique: '',
-        ultimosMeses: '',
-        operacionesmeses: '',
-        valor: '',
-        transferencias: 0,
-        transferenciasVir: 0,
-        retornos: 0,
-        retornosSe: 0,
-        constancias: 0,
-        constanciasDe: 0,
-        total: '',
-        totals: '',
-        empleadosPropiosRegimen: '',
-        numeroEmpleadosUno: 1,
-        numeroEmpleadosDos: 1,
-        numeroEmpleadosTres: 1,
-        comboBimestresUno: '',
-        comboBimestresDos: '',
-        comboBimestresTres: '',
-        proveedorCumplimiento: '',
-        declaracionISR: '',
-        cancelacion: '',
-        cumplimientoReglas: '',
-        recintoFiscalizado: '',
-        recintoEstrategico: '',
-        cumplimientoLineamientos: '',
+        cancelacionProcedimiento: 'valorCancelacion',
+        cumpleLineamientos: 'valorLineamientos',
         nombreCompleto: '',
         tipoDePersonaMiembro: '',
         nombreMiembro: '',
         apellidoPaternoMiembro: '',
-        apellidoMaternoMiembro: '',
-        nombreDeLaEmpresaMiembro: '',
-        miembrosSeleccionados: [],
-        autorizacionIVAIEPS: '',
-        regimen_0: false,
-        regimen_1: false,
-        regimen_2: false,
-        regimen_3: false,
-        sectorProductivo: '',
-        servicio: '',
-        preOperativo: false,
-        indiqueSi: false,
-        senale: false,
-        empPropios: '',
-        bimestre: '',
-        senaleSi: false,
-        seMomento: false,
-        cumplir: false,
-        indique: false,
-        encuentra: false,
-        delMismo: false,
-        senaleMomento: false,
-        enCaso: false,
-        comboBimestresIDCSeleccione: '',
-        ingresar: false,
-        encuentraSus: false,
-        registrosQue: '',
-        registrosQue2: '',
-        momentoIngresar: false,
-        indiqueCuenta: false,
-        nombreDel: '',
-        lugarDeRadicacion: '',
-        contabilidad: false,
-        rmfRadio: false,
-        vinculacionRegistroCancelado: false,
-        proveedoresListadoSAT: false,
-        indiqueCheck: false,
-        resigtro: '',
-        telefono: '',
-        correo: '',
-        manifieste: '',
-        indiqueIva: '',
-        empleados: false,
-        infraestructura: false,
-        monto: false,
-        antiguedad: false,
-        tipoDe: '',
-        valorPesos: '',
-        descripcion: '',
-        haContado: '',
-        enCasoIva: '',
-        numeroOperacion: '',
-        banco: '',
-        llavePago: '',
-        squemaIntegral: '',
-        sidoModificadas: '',
-        ensucaracterde: '',
-        rfc: '',
-        obligadoaTributarenMexico: '',
-        nacionalidad: '',
-        registroFederaldeContribuyentes: '',
-        resigtroReprestantante: '',
-        rfcReprestantante: '',
-        nombreReprestante: '',
-        apellidoPaterno: '',
-        apellidoMaterno: '',
-        cuidad: '',
-        cargo: '',
-        telefonoReprestantante: '',
-        correoReprestantante: '',
-        suplente: '',
-        tipoDocumento: ''
-      })
+        // Add all other required properties with mock/default values
+        // Example:
+        // propiedad1: valor1,
+        // propiedad2: valor2,
+        // ...
+      } as any) // Use 'as any' if you want to avoid listing all properties for now, but ideally provide all required fields
     };
-    tramiteAgaceStoreMock = {
-      establecerComboBimestresUno: jest.fn(),
-      establecerComboBimestresDos: jest.fn(),
-      establecerComboBimestresTres: jest.fn()
+
+    consultaioQueryMock = {
+      selectConsultaioState$: of({
+        procedureId: '',
+        parameter: '',
+        department: '',
+        folioTramite: '',
+        user: null,
+        readonly: false,
+        loading: false,
+        error: null,
+        tipoDeTramite: '',
+        estadoDeTramite: '',
+        create: false,
+        update: false,
+        consultaioSolicitante: null,
+        // Add any other required properties with mock/default values
+      })
     };
 
     await TestBed.configureTestingModule({
-      declarations: [],
-      imports: [
-        ReactiveFormsModule,
-        DatosPorRegimenComponent,
-        TituloComponent,
-        CatalogoSelectComponent,
-        TableComponent,
-      ],
+      imports: [DatosPorRegimenComponent, ReactiveFormsModule],
       providers: [
-        { provide: ValidacionesFormularioService, useValue: validacionesService },
-        { provide: ServiciosPantallaService, useValue: pantallaSvc },
-        { provide: Tramite31601Store, useValue: tramite31601Store },
+        FormBuilder,
+        { provide: Tramite31601Store, useValue: tramite31601StoreMock },
         { provide: Tramite31601Query, useValue: tramite31601QueryMock },
-        { provide: TramiteAgaceStore, useValue: tramiteAgaceStoreMock }
-      ],
+        { provide: ConsultaioQuery, useValue: consultaioQueryMock }
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(DatosPorRegimenComponent);
     component = fixture.componentInstance;
-
-    pantallaSvc.getBimestreUnoCatalogo.mockReturnValue(
-      of({ code: 200, message: 'Success', data: [] })
-    );
-    pantallaSvc.getBimestreDosCatalogo.mockReturnValue(
-      of({ code: 200, message: 'Success', data: [] })
-    );
-    pantallaSvc.getBimestreTresCatalogo.mockReturnValue(
-      of({ code: 200, message: 'Success', data: [] })
-    );
-
     fixture.detectChanges();
   });
 
-  it('debe crear el componente', () => {
+  it('should create the component', () => {
     expect(component).toBeTruthy();
   });
 
-  it('debe inicializar el catálogo uno al iniciar', () => {
-    expect(pantallaSvc.getBimestreUnoCatalogo).toHaveBeenCalledTimes(1);
+  it('should initialize the form on ngOnInit', () => {
+    const crearRegimenFormSpy = jest.spyOn(component, 'crearRegimenForm');
+    component.ngOnInit();
+    expect(crearRegimenFormSpy).toHaveBeenCalled();
   });
 
-  it('debe inicializar el formulario al crear', () => {
-    expect(component.regimenForm).toBeDefined();
-  });
-
-  it('debe crear el formulario al inicializar', () => {
+  it('should create regimenForm with correct default values', () => {
     component.crearRegimenForm();
-    expect(component.regimenForm).toBeDefined();
+    expect(component.regimenForm.get('cancelacionProcedimiento')?.value).toBe('valorCancelacion');
+    expect(component.regimenForm.get('cumpleLineamientos')?.value).toBe('valorLineamientos');
   });
 
-  it('debe validar los campos del formulario', () => {
-    validacionesService.isValid.mockReturnValue(true);
-    expect(component.isValid('importaciones')).toBe(true);
-    expect(validacionesService.isValid).toHaveBeenCalledWith(
-      component.regimenForm,
-      'importaciones'
-    );
+  it('should disable form controls if esFormularioSoloLectura is true', () => {
+    component.esFormularioSoloLectura = true;
+    component.crearRegimenForm();
+    expect(component.regimenForm.get('cancelacionProcedimiento')?.disabled).toBe(true);
+    expect(component.regimenForm.get('cumpleLineamientos')?.disabled).toBe(true);
   });
 
-  it('debe manejar las selecciones de bimestres', () => {
-    component.regimenForm.get('comboBimestresUno')?.setValue('Bimestre 1');
-    component.bimestreUnoSeleccion();
-    expect(tramiteAgaceStoreMock.establecerComboBimestresUno).toHaveBeenCalledWith(
-      'Bimestre 1'
-    );
-
-    component.regimenForm.get('comboBimestresDos')?.setValue('Bimestre 2');
-    component.bimestreDosSeleccion();
-    expect(tramiteAgaceStoreMock.establecerComboBimestresDos).toHaveBeenCalledWith(
-      'Bimestre 2'
-    );
-
-    component.regimenForm.get('comboBimestresTres')?.setValue('Bimestre 3');
-    component.bimestreTresSeleccion();
-    expect(tramiteAgaceStoreMock.establecerComboBimestresTres).toHaveBeenCalledWith(
-      'Bimestre 3'
-    );
+  it('should enable form controls if esFormularioSoloLectura is false', () => {
+    component.esFormularioSoloLectura = false;
+    component.crearRegimenForm();
+    expect(component.regimenForm.get('cancelacionProcedimiento')?.enabled).toBe(true);
+    expect(component.regimenForm.get('cumpleLineamientos')?.enabled).toBe(true);
   });
 
-  it('debe abrir el modal e inicializar el formulario', () => {
-    component.abrirModal();
-    expect(component.modal).toBe('show');
-    expect(component.agregarForm).toBeDefined();
-      });
+  it('should call the correct store method in setValoresStore', () => {
+    component.crearRegimenForm();
+    component.regimenForm.get('cancelacionProcedimiento')?.setValue('nuevoValor');
+    component.setValoresStore('cancelacionProcedimiento', 'setCancelacionProcedimiento');
+    expect(tramite31601StoreMock.setCancelacionProcedimiento).toHaveBeenCalledWith('nuevoValor');
+  });
+
+  it('should clean up subscriptions on ngOnDestroy', () => {
+    const completeSpy = jest.spyOn((component as any).destroyNotifier$, 'complete');
+    const nextSpy = jest.spyOn((component as any).destroyNotifier$, 'next');
+    component.ngOnDestroy();
+    expect(nextSpy).toHaveBeenCalled();
+    expect(completeSpy).toHaveBeenCalled();
+  });
 });
