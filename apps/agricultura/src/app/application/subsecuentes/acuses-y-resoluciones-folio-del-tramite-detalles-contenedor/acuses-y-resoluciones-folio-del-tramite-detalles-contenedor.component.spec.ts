@@ -117,7 +117,7 @@ describe('AcusesYResolucionesFolioDelTramiteDetallesContenedorComponent', () => 
     expect(component.wizardComponent.siguiente).toHaveBeenCalled();
   });
   it('should set slectTramite when selectTramite is called', () => {
-    const mockTramite = 301;
+    const mockTramite = 220102;
 
     (component as any).LISTA_TRIMITES = [
       { tramite: mockTramite, listaComponentes: [] },
