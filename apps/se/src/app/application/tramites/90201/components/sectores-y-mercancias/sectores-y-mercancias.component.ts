@@ -64,6 +64,7 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
    * @type {Notificacion}
    */
   public nuevaNotificacion!: Notificacion;
+  public eliminarMercanciaNotificacion!: Notificacion;
   /**
    * Indica si un elemento está seleccionado.
    *
@@ -306,5 +307,26 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
       const INDEX = this.sectores.findIndex((sector: SectoresTabla) => sector.claveDel === this.seleccionadoDatos[0].claveDel && sector.sectores === this.seleccionadoDatos[0].sectores);
       this.sectores.splice(INDEX, 1);
     }
+  }
+
+  public eliminarMercancia(): void {
+    this.eliminarMercanciaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: 'Seleccione la fraccion que desea eliminar.',
+      cerrar: false,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
+  }
+
+  public mercancia(borrar: boolean): void {
+    if (borrar) {
+      this.sectoresForm.get('fraccion')?.setValue('');
+    }
+
   }
 }
