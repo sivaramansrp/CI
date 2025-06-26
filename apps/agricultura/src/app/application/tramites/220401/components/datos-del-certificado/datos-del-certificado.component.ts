@@ -20,6 +20,7 @@ import { AgregarArchivoComponent } from '@ng-mf/data-access-user';
 import { AgregarQuery } from '../../../../estados/queries/agregar.query';
 import { CatalogoResponse } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
+import { CombinacionRequeridaComponent } from '../combinacion-requerida/combinacion-requerida.component';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DatosGeneralesAnimalesComponent } from '../datos-generales-animales/datos-generales-animales.component';
 import { InputRadioComponent } from "@libs/shared/data-access-user/src/tramites/components/input-radio/input-radio.component";
@@ -47,7 +48,7 @@ import unidadRadioFields from '@libs/shared/theme/assets/json/220401/unidad.json
     InputRadioComponent,
     AgregarArchivoComponent,
     TableComponent,
-    CatalogoSelectComponent,DatosGeneralesAnimalesComponent
+    CatalogoSelectComponent,DatosGeneralesAnimalesComponent,CombinacionRequeridaComponent
   ],
 })
 export class DatosDelCertificadoComponent implements OnInit, OnDestroy {

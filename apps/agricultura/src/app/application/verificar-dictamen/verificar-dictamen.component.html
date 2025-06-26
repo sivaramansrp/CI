@@ -20,8 +20,8 @@
         </div>
     <br>
     <form [formGroup]="FormTramite" role="form" >
-        <div class="form-group">            
-            <div class="col-md-12 text-end">
+        <div class="form-group"  >            
+            <div class="col-md-12 text-end" style="padding-bottom: 10px">
                 <button type="button" class="btn btn-primary">Dar Vo. Bo.</button>
                 <button type="button" class="btn btn-default ms-3" (click)="observacion()">Observar</button>
             </div>            
@@ -31,7 +31,7 @@
                 <div  class="radio ">
                     <label class="radio-inline control-label">Sentido del dictamen:</label>
                     <label class="radio-inline">
-                    <input type="radio" name="radio-01" value="opcion-01"  checked="checked" disabled="disabled">Aceptado</label>
+                    <input type="radio" name="radio-01" value="opcion-01"  checked="checked" disabled="disabled"> Aceptado</label>
                     <label class="radio-inline">
                     <input type="radio" name="radio-01" value="opcion-02" disabled="disabled"> Rechazado
                     </label>
@@ -96,7 +96,7 @@
         </div>
         <br>
         <div class="form-group">
-            <div class="col-md-12 text-end">
+            <div class="col-md-12 text-end"  style="padding-bottom: 10px;">
                 <button type="button" class="btn btn-primary ms-3" (click)="observacion()">Vista Preliminar</button>
             </div>
         </div>
