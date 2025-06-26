@@ -58,11 +58,11 @@ describe('ExpedicionCertificadosFronteraComponent', () => {
     (component.wizardComponent as any).atras = atrasSpy;
   });
 
-  it('debería crear el componente', () => {
+  it('should create the component', () => {
     expect(component).toBeTruthy();
   });
 
-  it('debería inicializar con los valores predeterminados correctos', () => {
+  it('should initialize with correct default values', () => {
     expect(component.pantallasPasos).toEqual(EXPEDICION_CERTIFICADOS_FRONTERA);
     expect(component.avisoPrivacidadAlert).toBe(AVISO.Aviso);
     expect(component.indice).toBe(1);
@@ -74,7 +74,7 @@ describe('ExpedicionCertificadosFronteraComponent', () => {
     });
   });
 
-  it('debería llamar a wizardComponent.siguiente() cuando se llama a getValorIndice con accion "cont"', () => {
+  it('should call wizardComponent.siguiente() when getValorIndice is called with accion "cont"', () => {
     const mockEvent = { accion: 'cont', valor: 2 };
     component.getValorIndice(mockEvent);
 
@@ -83,7 +83,7 @@ describe('ExpedicionCertificadosFronteraComponent', () => {
     expect(atrasSpy).not.toHaveBeenCalled();
   });
 
-  it('debería llamar a wizardComponent.atras() cuando se llama a getValorIndice con accion "ant"', () => {
+  it('should call wizardComponent.atras() when getValorIndice is called with accion "ant"', () => {
     const mockEvent = { accion: 'ant', valor: 1 };
     component.getValorIndice(mockEvent);
 
@@ -92,7 +92,7 @@ describe('ExpedicionCertificadosFronteraComponent', () => {
     expect(siguienteSpy).not.toHaveBeenCalled();
   });
 
-  it('No debería cambiar indice o llamar a los métodos de wizardComponent si valor está fuera de rango', () => {
+  it('should not change indice or call wizardComponent methods if valor is out of range', () => {
     const mockEvent = { accion: 'cont', valor: 0 };
     component.getValorIndice(mockEvent);
 

@@ -33,40 +33,40 @@ describe('RepresentacionFederalComponent', () => {
     fixture.detectChanges();
   });
 
-  it('debería crear', () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it('debería establecer importacionstate desde selectImportacion$', () => {
+  it('should set importacionstate from selectImportacion$', () => {
     component.ngOnInit();
     expect(component.importacionstate).toEqual(mockImportacionState);
   });
 
-  it('debería llamar a setDynamicFieldValue con object.id si valor es un objeto con id', () => {
+  it('should call setDynamicFieldValue with object.id if valor is an object with id', () => {
     const event = { campo: 'entidad', valor: 'CDMX' };
     component.establecerCambioDeValor(event);
     expect(storeMock.setDynamicFieldValue).toHaveBeenCalledWith('entidad', 'CDMX');
   });
 
-  it('debería llamar a setDynamicFieldValue con valor primitivo si valor no es un objeto', () => {
+  it('should call setDynamicFieldValue with primitive value if valor is not object', () => {
     const event = { campo: 'nombre', valor: 'Juan' };
     component.establecerCambioDeValor(event);
     expect(storeMock.setDynamicFieldValue).toHaveBeenCalledWith('nombre', 'Juan');
   });
 
-  it('debería llamar a setDynamicFieldValue con objeto completo si valor es un objeto sin id', () => {
+  it('should call setDynamicFieldValue with full object if valor is object without id', () => {
     const event = { campo: 'custom', valor: 'sin ID' };
     component.establecerCambioDeValor(event);
     expect(storeMock.setDynamicFieldValue).toHaveBeenCalledWith('custom', 'sin ID');
   });
 
-  it('debería no lanzar error cuando event.valor es null', () => {
+  it('should not throw when event.valor is null', () => {
     const event = { campo: 'otro', valor: null };
     component.establecerCambioDeValor(event);
     expect(storeMock.setDynamicFieldValue).toHaveBeenCalledWith('otro', null);
   });
 
-  it('no debería lanzar error cuando event es undefined o null', () => {
+  it('should not throw when event is undefined or null', () => {
     expect(() => component.establecerCambioDeValor(null as any)).not.toThrow();
     expect(() => component.establecerCambioDeValor(undefined as any)).not.toThrow();
   });

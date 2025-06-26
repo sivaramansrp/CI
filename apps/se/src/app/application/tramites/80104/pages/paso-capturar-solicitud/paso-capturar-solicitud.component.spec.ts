@@ -39,22 +39,22 @@ describe('PasoCapturarSolicitudComponent', () => {
     fixture.detectChanges();
   });
 
-  it('debería crear', () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it('debería inicializar datosPasos correctamente', () => {
+  it('should initialize datosPasos correctly', () => {
     expect(component.datosPasos.nroPasos).toBe(component.pasos.length);
     expect(component.datosPasos.indice).toBe(1);
     expect(component.datosPasos.txtBtnAnt).toBe('Anterior');
     expect(component.datosPasos.txtBtnSig).toBe('Continuar');
   });
 
-  it('debería tener la clase infoAlert establecida en "alert-info"', () => {
+  it('should have infoAlert class set to "alert-info"', () => {
     expect(component.infoAlert).toBe('alert-info');
   });
 
-  it('debería limpiar destroy$ en ngOnDestroy', () => {
+  it('should clean up destroy$ on ngOnDestroy', () => {
     const destroy$Spy = jest.spyOn(component.destroyNotifier$, 'next');
     const completeSpy = jest.spyOn(component.destroyNotifier$, 'complete');
     component.ngOnDestroy();
@@ -62,7 +62,7 @@ describe('PasoCapturarSolicitudComponent', () => {
     expect(completeSpy).toHaveBeenCalled();
   });
 
-  it('no debería llamar a los métodos del wizardComponent si el valor está fuera de rango', () => {
+  it('should not call wizardComponent methods if valor is out of range', () => {
     const wizardMock = {
       siguiente: jest.fn(),
       atras: jest.fn(),

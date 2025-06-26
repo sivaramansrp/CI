@@ -81,28 +81,28 @@ TestBed.configureTestingModule({
     fixture.detectChanges();
   });
 
-  it('debería crear el componente', () => {
+  it('should create the component', () => {
     expect(component).toBeTruthy();
   });
 
-  it('debería obtener anoOficioDatos del servicio al inicializar', () => {
+  it('should fetch anoOficioDatos from the service on init', () => {
     expect(service.getAnoOficioDatos).toHaveBeenCalled();
     expect(component.anoOficioDatos).toEqual(mockAnoOficioDatos);
   });
 
-  it('debería obtener montoExpedirTabla del servicio al inicializar', () => {
+  it('should fetch montoExpedirTabla from the service on init', () => {
     expect(service.getMontoExpedirTabla).toHaveBeenCalled();
     expect(component.montoTablaDatos).toEqual(mockMontoExpedirTablaDatos.columns);
   });
 
-  it('debería llamar a setValoresStore y actualizar el store', () => {
+  it('should call setValoresStore and update the store', () => {
     const spy = jest.spyOn(store, 'setDynamicFieldValue');
     component.asignacionForm.get('anoDelOficio')?.setValue('2025');
     component.setValoresStore(component.asignacionForm, 'anoDelOficio', 'setDynamicFieldValue');
     expect(spy).toHaveBeenCalledWith('2025');
   });
 
-  it('debería agregar montoAExpedir a la tabla y actualizar totalAExpedir', () => {
+  it('should add montoAExpedir to the table and update totalAExpedir', () => {
     component.montoTablaFilaDatos = []; // reset
     component.asignacionForm.get('montoAExpedir')?.setValue('100');
     component.enviarMontoFormulario();
@@ -111,7 +111,7 @@ TestBed.configureTestingModule({
     expect(component.asignacionForm.get('totalAExpedir')?.value).toBe('0100');
   });
 
-  it('debería limpiar las suscripciones al destruir el componente', () => {
+  it('should clean up subscriptions on component destroy', () => {
     const spyNext = jest.spyOn(component['destroy$'], 'next');
     const spyComplete = jest.spyOn(component['destroy$'], 'complete');
     component.ngOnDestroy();
@@ -119,20 +119,20 @@ TestBed.configureTestingModule({
     expect(spyComplete).toHaveBeenCalled();
   });
 
-it('debería deshabilitar el formulario si esFormularioSoloLectura es true', () => {
+it('should disable the form if esFormularioSoloLectura is true', () => {
   component.esFormularioSoloLectura = true;
   component.inicializarEstadoFormulario();
   expect(component.asignacionForm.disabled).toBe(true);
 });
 
-it('debería habilitar el formulario si esFormularioSoloLectura es false', () => {
+it('should enable the form if esFormularioSoloLectura is false', () => {
   component.esFormularioSoloLectura = false;
   component.asignacionForm.disable();
   component.inicializarEstadoFormulario();
   expect(component.asignacionForm.enabled).toBe(true);
 });
 
-it('No debería fallar si asignacionForm es undefined en inicializarEstadoFormulario', () => {
+it('should not throw if asignacionForm is undefined in inicializarEstadoFormulario', () => {
   (component as any).asignacionForm = undefined;
   expect(() => component.inicializarEstadoFormulario()).not.toThrow();
 });

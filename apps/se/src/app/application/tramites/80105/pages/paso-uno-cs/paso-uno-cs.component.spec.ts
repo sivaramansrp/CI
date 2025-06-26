@@ -53,22 +53,22 @@ describe('PasoUnoCsComponent', () => {
     fixture.detectChanges();
   });
 
-  it('debe crear el componente', () => {
+  it('should create the component', () => {
     expect(component).toBeTruthy();
   });
 
-  it('debe asignar secciones en init', () => {
+  it('should assign sections on init', () => {
     // Expect store methods called during construction
     expect(seccionStoreMock.establecerSeccion).toHaveBeenCalled();
     expect(seccionStoreMock.establecerFormaValida).toHaveBeenCalled();
   });
 
-  it('debe establecer el índice cuando se llama a seleccionaTab', () => {
+  it('should set indice when seleccionaTab is called', () => {
     component.seleccionaTab(2);
     expect(component.indice).toBe(2);
   });
 
-  it('debe establecer esDatosRespuesta y llamar a los métodos del servicio si update es true', () => {
+  it('should set esDatosRespuesta and call service methods if update is true', () => {
     component.ngOnInit();
     expect(serviceMock.getRegistroTomaMuestrasMercanciasData).toHaveBeenCalled();
     expect(serviceMock.actualizarEstadoFormulario).toHaveBeenCalled();
@@ -83,7 +83,7 @@ describe('PasoUnoCsComponent', () => {
     expect(component.esDatosRespuesta).toBe(true);
   });
 
-  it('debe establecer esDatosRespuesta en true si update es false', () => {
+  it('should set esDatosRespuesta to true if update is false', () => {
     consultaQueryMock.selectConsultaioState$ = of({
       update: false,
       procedureId: null,
@@ -105,7 +105,7 @@ describe('PasoUnoCsComponent', () => {
     expect(component.esDatosRespuesta).toBe(true);
   });
 
-  it('debe limpiar destroyNotifier$ en ngOnDestroy', () => {
+  it('should clean up destroyNotifier$ on ngOnDestroy', () => {
     const nextSpy = jest.spyOn<any, any>(component['destroyNotifier$'], 'next');
     const completeSpy = jest.spyOn<any, any>(component['destroyNotifier$'], 'complete');
 

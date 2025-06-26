@@ -56,16 +56,16 @@ describe('UsoEspecificoDeLaMercanciaComponent', () => {
     fixture.detectChanges();
   });
 
-  it('debería crear', () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it('debería establecer importacionstate desde selectImportacion$', () => {
+  it('should set importacionstate from selectImportacion$', () => {
     component.ngOnInit();
     expect(component.importacionstate).toEqual(mockImportacionState);
   });
 
-  it('debería llamar a setDynamicFieldValue con valor primitivo si valor no es un objeto', () => {
+  it('should call setDynamicFieldValue with primitive value if valor is not object', () => {
     const event = { campo: 'nombre', valor: 'Juan' };
     component.establecerCambioDeValor(event);
     expect(storeMock.setDynamicFieldValue).toHaveBeenCalledWith(
@@ -74,20 +74,20 @@ describe('UsoEspecificoDeLaMercanciaComponent', () => {
     );
   });
 
-  it('debería no lanzar error cuando event.valor es null', () => {
+  it('should not throw when event.valor is null', () => {
     const event = { campo: 'otro', valor: null };
     component.establecerCambioDeValor(event);
     expect(storeMock.setDynamicFieldValue).toHaveBeenCalledWith('otro', null);
   });
 
-  it('no debería lanzar error cuando event es undefined o null', () => {
+  it('should not throw when event is undefined or null', () => {
     expect(() => component.establecerCambioDeValor(null as any)).not.toThrow();
     expect(() =>
       component.establecerCambioDeValor(undefined as any)
     ).not.toThrow();
   });
 
-  it('debería agregar el producto a datosTabla si no se ha agregado previamente', () => {
+  it('should push producto to datosTabla if not already added', () => {
     const producto = {
       id: 1,
       descripcion: 'Producto de prueba',
@@ -109,7 +109,7 @@ describe('UsoEspecificoDeLaMercanciaComponent', () => {
     expect(component.datosTabla).toContainEqual(producto);
   });
 
-  it('debería completar destroyNotifier$ en destroy', () => {
+  it('should complete destroyNotifier$ on destroy', () => {
     const completeSpy = jest.spyOn(
       (component as any).destroyNotifier$,
       'complete'
@@ -120,7 +120,7 @@ describe('UsoEspecificoDeLaMercanciaComponent', () => {
     expect(completeSpy).toHaveBeenCalled();
   });
 
-  it('debería retornar descripcion desde fraccionArancelariaArray', () => {
+  it('should return descripcion from fraccionArancelariaArray', () => {
     component.ninoFormGroup.get('uso_fraccion_arancelaria')?.setValue(1);
     component['fraccionArancelariaArray'] = [
       { id: 1, descripcion: 'Fracción 1' },
@@ -130,7 +130,7 @@ describe('UsoEspecificoDeLaMercanciaComponent', () => {
     expect(result).toBe('Fracción 1');
   });
 
-  it('debería agregar fila a datosTabla y reiniciar formulario cuando el formulario es válido', () => {
+  it('should add row to datosTabla and reset form when form is valid', () => {
   component.ninoFormGroup.addControl('uso_fraccion_arancelaria', new FormGroup({}));
   component.ninoFormGroup.addControl('uso_descripcion', new FormGroup({}));
   component.ninoFormGroup.patchValue({ uso_fraccion_arancelaria: 1, uso_descripcion: 'Descripción' });
@@ -148,7 +148,7 @@ describe('UsoEspecificoDeLaMercanciaComponent', () => {
   expect(component.ninoFormGroup.reset).toHaveBeenCalled();
 });
 
-it('debería retornar descripcion desde fraccionArancelariaArray', () => {
+it('should return descripcion from fraccionArancelariaArray', () => {
   component.ninoFormGroup.get('uso_fraccion_arancelaria')?.setValue(1);
   component['fraccionArancelariaArray'] = [
     { id: 1, descripcion: 'Fracción 1' },
@@ -159,7 +159,7 @@ it('debería retornar descripcion desde fraccionArancelariaArray', () => {
 });
 
 
-it('debería agregar fila a datosTabla y reiniciar formulario cuando el formulario es válido', () => {
+it('should add row to datosTabla and reset form when form is valid', () => {
   component.ninoFormGroup.addControl('uso_fraccion_arancelaria', new FormGroup({}));
   component.ninoFormGroup.addControl('uso_descripcion', new FormGroup({}));
   component.ninoFormGroup.patchValue({ uso_fraccion_arancelaria: 1, uso_descripcion: 'Descripción' });
@@ -178,7 +178,7 @@ it('debería agregar fila a datosTabla y reiniciar formulario cuando el formular
 });
 
 
-it('debería eliminar el elemento seleccionado de datosTabla', () => {
+it('should remove selected item from datosTabla', () => {
   component.datosTabla = [
     { id: 1, descripcion: 'desc1', fraccionArancelariaProsec: 'F1' },
     { id: 2, descripcion: 'desc2', fraccionArancelariaProsec: 'F2' },
@@ -192,7 +192,7 @@ it('debería eliminar el elemento seleccionado de datosTabla', () => {
   expect(storeMock.setDynamicFieldValue).toHaveBeenCalledWith('especifico', component.datosTabla);
 });
 
-it('debería actualizar seleccionadaId con el ID de la fila seleccionada', () => {
+it('should update seleccionadaId with selected row ID', () => {
   const selectedRow = [{ id: 7 }];
   component.listaDeFilaSeleccionada(selectedRow);
   expect((component as any).seleccionadaId).toBe(7);

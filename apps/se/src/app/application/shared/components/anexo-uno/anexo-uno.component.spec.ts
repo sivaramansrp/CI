@@ -61,25 +61,25 @@ describe('AnexoUnoComponent', () => {
     fixture.destroy();
   });
 
-  it('debe ejecutar #constructor()', async () => {
+  it('should run #constructor()', async () => {
     expect(component).toBeTruthy();
   });
 
-  it('Debería ejecutar #crearFormularioAnexoUno()', async () => {
+  it('should run #crearFormularioAnexoUno()', async () => {
     component.fb = component.fb || {};
     component.fb.group = jest.fn();
     component.crearFormularioAnexoUno();
     expect(component.fb.group).toHaveBeenCalled();
   });
 
-  it('Debería ejecutar #crearFormularioAnexoDos()', async () => {
+  it('should run #crearFormularioAnexoDos()', async () => {
     component.fb = component.fb || {};
     component.fb.group = jest.fn();
     component.crearFormularioAnexoDos();
     expect(component.fb.group).toHaveBeenCalled();
   });
 
-  it('Debería ejecutar #eliminarAnexoUno()', async () => {
+  it('should run #eliminarAnexoUno()', async () => {
     component.anexoUnoTablaLista = component.anexoUnoTablaLista || {};
     component.anexoUnoTablaLista = ['anexoUnoTablaLista'];
     component.obtenerAnexoUnoDevolverLaLlamada =
@@ -89,7 +89,7 @@ describe('AnexoUnoComponent', () => {
     expect(component.obtenerAnexoUnoDevolverLaLlamada.emit).toHaveBeenCalled();
   });
 
-  it('Debería ejecutar #eliminarAnexoDos()', async () => {
+  it('should run #eliminarAnexoDos()', async () => {
     component.anexoDosTablaLista = component.anexoDosTablaLista || {};
     component.anexoDosTablaLista = ['anexoDosTablaLista'];
     component.obtenerAnexoDosDevolverLaLlamada =
@@ -99,7 +99,7 @@ describe('AnexoUnoComponent', () => {
     expect(component.obtenerAnexoDosDevolverLaLlamada.emit).toHaveBeenCalled();
   });
 
-  it('Debería ejecutar #agregarAnexoUno()', async () => {
+  it('should run #agregarAnexoUno()', async () => {
     component.anexoUnoFormGroup = component.anexoUnoFormGroup || {};
     component.anexoUnoFormGroup.get = jest.fn().mockReturnValue({
       value: {},
@@ -117,7 +117,7 @@ describe('AnexoUnoComponent', () => {
     // expect(component.obtenerAnexoUnoDevolverLaLlamada.emit).toHaveBeenCalled();
   });
 
-  it('Debería ejecutar #agregarAnexoDos()', async () => {
+  it('should run #agregarAnexoDos()', async () => {
     component.anexoDosFormGroup = component.anexoDosFormGroup || {};
     component.anexoDosFormGroup.get = jest.fn().mockReturnValue({
       value: {},
@@ -133,7 +133,7 @@ describe('AnexoUnoComponent', () => {
     expect(component.anexoDosFormGroup.get).toHaveBeenCalled();
   });
 
-  it('Debería ejecutar #setRuta()', async () => {
+  it('should run #setRuta()', async () => {
     component.rutaLaFraccionDeComplemento =
       component.rutaLaFraccionDeComplemento || {};
     component.rutaLaFraccionDeComplemento.emit = jest.fn();
@@ -142,14 +142,14 @@ describe('AnexoUnoComponent', () => {
   });
 
   describe('#ngOnInit', () => {
-    it('Debería deshabilitar los formularios si formularioDeshabilitado es true', () => {
+    it('should disable forms if formularioDeshabilitado is true', () => {
       component.formularioDeshabilitado = true;
       component.ngOnInit();
       expect(component.anexoUnoFormGroup.disabled).toBe(true);
       expect(component.anexoDosFormGroup.disabled).toBe(true);
     });
 
-    it('Debería habilitar los formularios si formularioDeshabilitado es false', () => {
+    it('should not disable forms if formularioDeshabilitado is false', () => {
       component.formularioDeshabilitado = false;
       component.ngOnInit();
       expect(component.anexoUnoFormGroup.enabled).toBe(true);
@@ -157,7 +157,7 @@ describe('AnexoUnoComponent', () => {
     });
   });
 
-  it('Debería filtrar y emitir anexoUnoTablaLista en eliminarAnexoUno', () => {
+  it('should filter and emit anexoUnoTablaLista in eliminarAnexoUno', () => {
     const emitSpy = jest.spyOn(component.obtenerAnexoUnoDevolverLaLlamada, 'emit');
     component.anexoUnoTablaLista = [{ estatus: false }, { estatus: true }] as any;
     component.eliminarAnexoUno();
@@ -165,7 +165,7 @@ describe('AnexoUnoComponent', () => {
     expect(emitSpy).toHaveBeenCalledWith(component.anexoUnoTablaLista);
   });
 
-  it('Debería filtrar y emitir anexoDosTablaLista en eliminarAnexoDos', () => {
+  it('should filter and emit anexoDosTablaLista in eliminarAnexoDos', () => {
     const emitSpy = jest.spyOn(component.obtenerAnexoDosDevolverLaLlamada, 'emit');
     component.anexoDosTablaLista = [{ estatus: false }, { estatus: true }] as any;
     component.eliminarAnexoDos();
@@ -173,7 +173,7 @@ describe('AnexoUnoComponent', () => {
     expect(emitSpy).toHaveBeenCalledWith(component.anexoDosTablaLista);
   });
 
-  it('Debería agregar una entrada a anexoUnoTablaLista y emitirla', () => {
+  it('should add entry to anexoUnoTablaLista and emit it', () => {
     const emitSpy = jest.spyOn(component.obtenerAnexoUnoDevolverLaLlamada, 'emit');
     component.anexoUnoFormGroup.setValue({
       fraccionArancelaria: '0101',
@@ -186,7 +186,7 @@ describe('AnexoUnoComponent', () => {
     expect(component.anexoUnoFormGroup.value.fraccionArancelaria).toBeFalsy();
   });
 
-  it('Debería agregar la entrada a anexoDosTablaLista y emitirla', () => {
+  it('should add entry to anexoDosTablaLista and emit it', () => {
     const emitSpy = jest.spyOn(component.obtenerAnexoDosDevolverLaLlamada, 'emit');
     component.anexoDosFormGroup.setValue({
       fraccionArancelaria: '0102',
@@ -199,19 +199,19 @@ describe('AnexoUnoComponent', () => {
     expect(component.anexoDosFormGroup.value.fraccionArancelaria).toBeFalsy();
   });
 
-  it('debe establecer el elemento de importación seleccionado en setAnexoUnoLista', () => {
+  it('should set selected import item on setAnexoUnoLista', () => {
     const mockItem = { encabezadoFraccion: '0103' } as any;
     component.setAnexoUnoLista(mockItem);
     expect(component.datosImportacionSeleccionados).toEqual(mockItem);
   });
 
-  it('debe establecer el elemento de exportación seleccionado en setAnexoDosLista', () => {
+  it('should set selected export item on setAnexoDosLista', () => {
     const mockItem = { encabezadoFraccion: '0104' } as any;
     component.setAnexoDosLista(mockItem);
     expect(component.datosExportacionSeleccionados).toEqual(mockItem);
   });
 
-  it('Debería emitir rutaLaFraccionDeComplemento con la carga útil correcta en setRuta IMPORT', () => {
+  it('should emit rutaLaFraccionDeComplemento with correct payload on setRuta IMPORT', () => {
     const emitSpy = jest.spyOn(component.rutaLaFraccionDeComplemento, 'emit');
     const mockImport = { encabezadoFraccion: '0001' } as any;
     component.datosImportacionSeleccionados = mockImport;
@@ -223,7 +223,7 @@ describe('AnexoUnoComponent', () => {
     });
   });
 
-  it('Debería emitir rutaLaFraccionDeComplemento con la carga útil correcta en setRuta EXPORT', () => {
+  it('should emit rutaLaFraccionDeComplemento with correct payload on setRuta EXPORT', () => {
     const emitSpy = jest.spyOn(component.rutaLaFraccionDeComplemento, 'emit');
     const mockExport = { encabezadoFraccion: '0002' } as any;
     component.datosExportacionSeleccionados = mockExport;

@@ -37,22 +37,22 @@ describe('EmpresasControladasComponent', () => {
     fixture.detectChanges();
   });
 
-  it('debería crear', () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it('debería inicializar parentTablaConfig con encabezados correctos', () => {
+  it('should initialize parentTablaConfig with correct headers', () => {
     expect(component.parentTablaConfig.length).toBeGreaterThan(0);
     expect(component.parentTablaConfig[0].encabezado).toBe('Calle');
   });
 
-  it('debería inicializar estadosCatalogo desde controladas.json', () => {
+  it('should initialize estadosCatalogo from controladas.json', () => {
     expect(component.estadosCatalogo.length).toBeGreaterThan(0);
     expect(component.estadosCatalogo[0]).toHaveProperty('id');
     expect(component.estadosCatalogo[0]).toHaveProperty('descripcion');
   });
 
-  it('no debería actualizar estadosCatalogo si la respuesta es falsy', () => {
+  it('should not update estadosCatalogo if response is falsy', () => {
     component.estadosCatalogo = [{ id: 1, descripcion: 'Inicial' }];
     mockService.obtenerListaEstado.mockReturnValue(
       of({ code: 204, message: 'No Content', data: [] })
@@ -61,7 +61,7 @@ describe('EmpresasControladasComponent', () => {
     expect(component.estadosCatalogo).toEqual([]);
   });
 
-  it('debería actualizar estadosCatalogo desde obtenerListaEstado()', () => {
+  it('should update estadosCatalogo from obtenerListaEstado()', () => {
     const mockResponse = {
       code: 200,
       message: 'Success',
@@ -76,7 +76,7 @@ describe('EmpresasControladasComponent', () => {
     expect(component.estadosCatalogo).toEqual(mockResponse.data);
   });
 
-  it('debería limpiar destroyNotifier$ en ngOnDestroy', () => {
+  it('should clean up destroyNotifier$ on ngOnDestroy', () => {
     const nextSpy = jest.spyOn(component['destroyNotifier$'], 'next');
     const completeSpy = jest.spyOn(component['destroyNotifier$'], 'complete');
     component.ngOnDestroy();
@@ -84,7 +84,7 @@ describe('EmpresasControladasComponent', () => {
     expect(completeSpy).toHaveBeenCalled();
   });
 
-  it('no debería actualizar estadosCatalogo si response.data es un array vacío', () => {
+  it('should not update estadosCatalogo if response.data is empty array', () => {
   const original = [...component.estadosCatalogo];
   mockService.obtenerListaEstado.mockReturnValue(of({
     code: 200,
@@ -96,7 +96,7 @@ describe('EmpresasControladasComponent', () => {
 });
 
 
-it('debería retornar el valor correcto de las funciones clave en parentTablaConfig', () => {
+it('should return correct value from clave functions in parentTablaConfig', () => {
   const row = {
     calle: 'Av. Reforma',
     numeroExterior: '10',
@@ -127,7 +127,7 @@ it('debería retornar el valor correcto de las funciones clave en parentTablaCon
   ]);
 });
 
-it('debería manejar estadosCatalogo vacío después de una búsqueda válida', () => {
+it('should handle empty estadosCatalogo after valid fetch', () => {
   const mockResponse = {
     code: 200,
     message: 'Success',

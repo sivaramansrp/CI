@@ -28,11 +28,11 @@ describe('ImportacionDefinitivaService', () => {
     httpMock.verify();
   });
 
-  it('debe ser creado', () => {
+  it('should be created', () => {
     expect(service).toBeTruthy();
   });
 
-  it('debería obtener datos de importación definitiva desde un archivo JSON', () => {
+  it('should fetch importacion definitiva data from JSON file', () => {
     const mockResponse: ImportacionDefinitiva130103State = {
       datosEmpresa: { nombre: 'Empresa X' },
       especifico: [],
@@ -47,7 +47,7 @@ describe('ImportacionDefinitivaService', () => {
     req.flush(mockResponse);
   });
 
-  it('debería llamar a store.setDynamicFieldValue cuando se llama a actualizarEstadoFormulario', () => {
+  it('should call store.setDynamicFieldValue when actualizarEstadoFormulario is called', () => {
     service.actualizarEstadoFormulario('pais', 'México');
     expect(mockStore.setDynamicFieldValue).toHaveBeenCalledWith('pais', 'México');
   });

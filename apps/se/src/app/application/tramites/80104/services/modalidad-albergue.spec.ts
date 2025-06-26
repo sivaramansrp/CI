@@ -8,7 +8,7 @@ import {
   PlantasSubfabricanteResponse
 } from '../models/nuevo-programa-industrial.model';
 
-import { RespuestaCatalogos } from '@libs/shared/data-access-user/src/core/models/shared/catalogos.model';
+import { RespuestaCatalogos, Catalogo } from '@libs/shared/data-access-user/src/core/models/shared/catalogos.model';
 import { PlantasSubfabricante } from '../../../shared/models/empresas-subfabricanta.model';
 import { DatosComplimentos } from '../../../shared/models/complimentos.model';
 import { NuevoProgramaIndustrialService } from './modalidad-albergue.service';
@@ -31,12 +31,12 @@ describe('NuevoProgramaIndustrialService', () => {
     httpMock.verify();
   });
 
-  it('debería crear', () => {
+  it('should be created', () => {
     expect(service).toBeTruthy();
   });
 
   describe('getDatos', () => {
-    it('Debería retornar infoServicios de ampliacion-servicios.json', () => {
+    it('should return infoServicios from ampliacion-servicios.json', () => {
       const mockResponse: AmpliacionServiciosResponse = {
         code: 200,
         data: {
@@ -62,7 +62,7 @@ describe('NuevoProgramaIndustrialService', () => {
   });
 
   describe('obtenerIngresoSelectList', () => {
-    it('Debería retornar la lista de catalogo de ampliacion-IMMEX-dropdown.json', () => {
+    it('should return catalogo list from ampliacion-IMMEX-dropdown.json', () => {
       const mockResponse: CatalogoResponso = {
         code: 200,
         message: 'OK',
@@ -83,7 +83,7 @@ describe('NuevoProgramaIndustrialService', () => {
   });
 
   describe('obtenerListaEstado', () => {
-    it('debería retornar RespuestaCatalogos de estado-datos.json', () => {
+    it('should return RespuestaCatalogos from estado-datos.json', () => {
       const mockResponse: RespuestaCatalogos = {
         code: 200,
         message: 'OK',
@@ -103,7 +103,7 @@ describe('NuevoProgramaIndustrialService', () => {
     });
   });
 
-it('debería manejar el error cuando getDatos falla', () => {
+it('should handle error when getDatos fails', () => {
   const errorMsg = '404 Not Found';
 
   service.getDatos().subscribe({
@@ -117,7 +117,7 @@ it('debería manejar el error cuando getDatos falla', () => {
   req.flush(errorMsg, { status: 404, statusText: 'Not Found' });
 });
 
-it('debería manejar datos vacíos en obtenerIngresoSelectList', () => {
+it('should handle empty data in obtenerIngresoSelectList', () => {
   const mockResponse: CatalogoResponso = { code: 200, message: 'OK', data: [] };
 
   service.obtenerIngresoSelectList().subscribe(data => {
@@ -130,7 +130,7 @@ it('debería manejar datos vacíos en obtenerIngresoSelectList', () => {
 });
 
 describe('getSubfabricantesDisponibles', () => {
-    it('debería retornar la lista de subfabricantes de submanufactureras-disponibles-datos.json', () => {
+    it('should return list of subfabricantes from submanufactureras-disponibles-datos.json', () => {
       const mockResponse: PlantasSubfabricanteResponse = {
         code: 200,
         data: [
@@ -161,7 +161,7 @@ describe('getSubfabricantesDisponibles', () => {
     });
   });
 
-  it('debería retornar datos de complimentos', () => {
+  it('should return datos de complimentos', () => {
   const mockResponse: DatosComplimentos = {
     modalidad: 'Ampliación',
     programaPreOperativo: 'Sí',

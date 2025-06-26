@@ -37,13 +37,13 @@ describe('EmpresasTerciarizadaasComponent', () => {
     expect(component).toBeTruthy();
   });
 
-   it('Debería definir la configuración correcta de la tabla.', () => {
+   it('should define correct table configuration', () => {
     expect(component.parentTablaConfig.length).toBe(11);
     expect(component.parentTablaConfig[0].encabezado).toBe('Calle');
     expect(component.parentTablaConfig[10].encabezado).toBe('Razón social');
   });
 
-  it('Debería actualizar estadosCatalogo desde obtenerListaEstado()', () => {
+  it('should update estadosCatalogo from obtenerListaEstado()', () => {
     const mockResponse = {
       code: 200,
       message: 'Success',
@@ -58,7 +58,7 @@ describe('EmpresasTerciarizadaasComponent', () => {
     expect(component.estadosCatalogo).toEqual(mockResponse.data);
   });
 
-  it('no debería actualizar estadosCatalogo cuando el servicio devuelve null o undefined', () => {
+  it('should not update estadosCatalogo when service returns null or undefined', () => {
     serviceMock.obtenerListaEstado.mockReturnValue(of(null as any));
     component.estadosCatalogo = [{ id: 99, descripcion: 'Preexisting' }];
     component.obtenerListaEstado();
@@ -66,7 +66,7 @@ describe('EmpresasTerciarizadaasComponent', () => {
     expect(component.estadosCatalogo).toEqual([{ id: 99, descripcion: 'Preexisting' }]);
   });
 
-  it('debe limpiar destroyNotifier$ en ngOnDestroy', () => {
+  it('should clean up destroyNotifier$ on ngOnDestroy', () => {
     const nextSpy = jest.spyOn(component['destroyNotifier$'], 'next');
     const completeSpy = jest.spyOn(component['destroyNotifier$'], 'complete');
     component.ngOnDestroy();
@@ -74,7 +74,7 @@ describe('EmpresasTerciarizadaasComponent', () => {
     expect(completeSpy).toHaveBeenCalled();
   });
 
-  it('Debería manejar un array de datos vacío desde obtenerListaEstado()', () => {
+  it('should handle empty data array from obtenerListaEstado()', () => {
   const mockResponse = {
     code: 200,
     message: 'Success',
@@ -86,7 +86,7 @@ describe('EmpresasTerciarizadaasComponent', () => {
   expect(component.estadosCatalogo).toEqual([]);
 });
 
-it('Debería extraer los valores correctamente utilizando las claves de parentTablaConfig', () => {
+it('should extract values correctly using parentTablaConfig claves', () => {
   const mockItem = {
     calle: 'Av. Reforma',
     numeroExterior: '123',

@@ -49,25 +49,25 @@ describe('AgregarComplimentosComponent', () => {
     fixture.detectChanges();
   });
 
-  it('debe ser creado', () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it('debería exponer el observable tablaDatosComplimentos$ desde la consulta', (done) => {
+  it('should expose tablaDatosComplimentos$ observable from query', (done) => {
     component.tablaDatosComplimentos$.subscribe((val) => {
       expect(val).toEqual([]);
       done();
     });
   });
 
-  it('debería exponer el observable tablaDatosComplimentosExtranjera$ desde la consulta', (done) => {
+  it('should expose tablaDatosComplimentosExtranjera$ observable from query', (done) => {
     component.tablaDatosComplimentosExtranjera$.subscribe((val) => {
       expect(val).toEqual([]);
       done();
     });
   });
 
-  it('debería limpiar destroyNotifier$ en ngOnDestroy', () => {
+  it('should clean up destroyNotifier$ on ngOnDestroy', () => {
     const nextSpy = jest.spyOn(component['destroyNotifier$'], 'next');
     const completeSpy = jest.spyOn(component['destroyNotifier$'], 'complete');
     component.ngOnDestroy();
@@ -76,7 +76,7 @@ describe('AgregarComplimentosComponent', () => {
   });
 
   describe('AgregarComplimentosComponent - Methods', () => {
-    it('debería llamar a setDatosComplimentos cuando se llama a modifierComplimentos', () => {
+    it('should call setDatosComplimentos when modifierComplimentos is called', () => {
     const setSpy = jest.spyOn(component['store'], 'setDatosComplimentos');
 
     const mockData = {
@@ -101,7 +101,7 @@ describe('AgregarComplimentosComponent', () => {
     expect(setSpy).toHaveBeenCalledWith(mockData);
   });
 
-  it('debería llamar a agregarTablaDatosComplimentos si accionistasAgregados es llamado con RFC', () => {
+  it('should call agregarTablaDatosComplimentos if accionistasAgregados is called with RFC', () => {
     const spy = jest.spyOn(component['store'], 'agregarTablaDatosComplimentos');
 
     const accionista = { rfc: 'RFC123456ABC', nombre: 'Juan', porcentaje: '20' } as any;
@@ -111,7 +111,7 @@ describe('AgregarComplimentosComponent', () => {
   });
 
 
-  it('debería llamar a agregarTablaDatosComplimentosExtranjera si accionistasAgregados es llamado sin RFC', () => {
+  it('should call agregarTablaDatosComplimentosExtranjera if accionistasAgregados is called without RFC', () => {
   const spy = jest.spyOn(component['store'], 'agregarTablaDatosComplimentosExtranjera');
 
   const accionista = { rfc: '', nombre: 'María', porcentaje: '30' } as any;
@@ -121,7 +121,7 @@ describe('AgregarComplimentosComponent', () => {
 });
 
 
-  it('debería llamar a eliminarTablaDatosComplimentos cuando se llama a accionistasEliminados', () => {
+  it('should call eliminarTablaDatosComplimentos when accionistasEliminados is called', () => {
     const spy = jest.spyOn(component['store'], 'eliminarTablaDatosComplimentos');
 
     const accionistas = [
@@ -133,7 +133,7 @@ describe('AgregarComplimentosComponent', () => {
     expect(spy).toHaveBeenCalledWith(accionistas);
   });
 
-  it('debería llamar a eliminarTablaDatosComplimentosExtranjera cuando se llama a accionistasExtranjerosEliminado', () => {
+  it('should call eliminarTablaDatosComplimentosExtranjera when accionistasExtranjerosEliminado is called', () => {
     const spy = jest.spyOn(component['store'], 'eliminarTablaDatosComplimentosExtranjera');
 
     const extranjeros = [{ nombre: 'Extranjero1', porcentaje: '50' }] as any;

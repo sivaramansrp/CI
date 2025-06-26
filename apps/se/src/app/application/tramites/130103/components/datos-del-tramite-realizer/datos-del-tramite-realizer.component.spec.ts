@@ -42,11 +42,11 @@ describe('DatosDelTramiteRealizerComponent', () => {
     fixture.detectChanges();
   });
 
-  it('debería crear el componente', () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it('debería llamar a obtenerRegimenDestinara y obtenerRegimenClasificacion en ngOnInit', () => {
+  it('should call obtenerRegimenDestinara and obtenerRegimenClasificacion on ngOnInit', () => {
     const spy1 = jest.spyOn(component, 'obtenerRegimenDestinara');
     const spy2 = jest.spyOn(component, 'obtenerRegimenClasificacion');
     component.ngOnInit();
@@ -54,7 +54,7 @@ describe('DatosDelTramiteRealizerComponent', () => {
     expect(spy2).toHaveBeenCalled();
   });
 
-  it('debería poblar las opciones de régimen en obtenerRegimenDestinara', () => {
+  it('should populate regimen options in obtenerRegimenDestinara', () => {
     const response = {
       code: 200,
       data: [{ id: 1, descripcion: 'Regimen 1' }],
@@ -67,7 +67,7 @@ describe('DatosDelTramiteRealizerComponent', () => {
     ]);
   });
 
-  it('debería poblar las opciones de clasificación en obtenerRegimenClasificacion', () => {
+  it('should populate clasificacion options in obtenerRegimenClasificacion', () => {
     const response = {
       code: 200,
       data: [{ id: 2, descripcion: 'Clasificacion 1' }],
@@ -80,7 +80,7 @@ describe('DatosDelTramiteRealizerComponent', () => {
     ]);
   });
 
-  it('debería completar destroyNotifier$ en ngOnDestroy', () => {
+  it('should complete destroyNotifier$ on ngOnDestroy', () => {
     const completeSpy = jest.spyOn(component['destroyNotifier$'], 'complete');
     const nextSpy = jest.spyOn(component['destroyNotifier$'], 'next');
     component.ngOnDestroy();

@@ -25,11 +25,11 @@ describe('ConsultarCupoComponent', () => {
     fixture.detectChanges();
   });
 
-  it('debería crear', () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it('debería establecer "mostrar" en true para "descripcion" cuando fraccionArancelaria tiene un valor', () => {
+  it('should set "mostrar" to true for "descripcion" when fraccionArancelaria has a value', () => {
     component.forma = new FormGroup({
       ninoFormGroup: new FormGroup({
         fraccionArancelaria: new FormControl('12345')
@@ -44,7 +44,7 @@ describe('ConsultarCupoComponent', () => {
     expect(descripcionField?.mostrar).toBe(true);
   });
 
-  it('no debería cambiar "mostrar" si fraccionArancelaria está vacío', () => {
+  it('should not change "mostrar" if fraccionArancelaria is empty', () => {
     component.forma = new FormGroup({
       ninoFormGroup: new FormGroup({
         fraccionArancelaria: new FormControl('')
@@ -56,17 +56,17 @@ describe('ConsultarCupoComponent', () => {
     component.mostrarCampoDeDescripcion();
     expect(component.consultarCupoFormData[0].mostrar).toBe(false);
   });
-
-  it('debería llamar al store y al servicio con los valores correctos', () => {
+  
+  it('should call store and service with correct values', () => {
     const event = { campo: 'descripcion', valor: 'valor1' };
     const setDynamicFieldValueSpy = jest.spyOn(component['tramite120101Store'], 'setDynamicFieldValue');
     const setFormValueSpy = jest.spyOn(component['servicioDeFormularioService'], 'setFormValue');
     component.establecerCambioDeValor(event);
     expect(setDynamicFieldValueSpy).toHaveBeenCalledWith('descripcion', 'valor1');
     expect(setFormValueSpy).toHaveBeenCalledWith('consultarCupoForm', { descripcion: 'valor1' });
-  });
-
-  it('debería no hacer nada si el evento es nulo', () => {
+  });  
+  
+  it('should do nothing if event is null', () => {
     const setDynamicFieldValueSpy = jest.spyOn(component['tramite120101Store'], 'setDynamicFieldValue');
     const setFormValueSpy = jest.spyOn(component['servicioDeFormularioService'], 'setFormValue');
   
@@ -76,7 +76,7 @@ describe('ConsultarCupoComponent', () => {
     expect(setFormValueSpy).not.toHaveBeenCalled();
   });
 
-  it('no debería hacer nada si el evento es nulo', () => {
+  it('should do nothing if event is null', () => {
     const setDynamicFieldValueSpy = jest.spyOn(component['tramite120101Store'], 'setDynamicFieldValue');
     const setFormValueSpy = jest.spyOn(component['servicioDeFormularioService'], 'setFormValue');
     component.establecerCambioDeValor(null as any);
@@ -84,7 +84,7 @@ describe('ConsultarCupoComponent', () => {
     expect(setFormValueSpy).not.toHaveBeenCalled();
   });
 
-  it('no debería llamar al servicio ni actualizar el store si el formulario es inválido', () => {
+  it('should not call service or update store if form is invalid', () => {
     component.ninoFormGroup.setErrors({ invalid: true });
     const mostrarSpy = jest.spyOn(component, 'mostrarCampoDeDescripcion');
     const serviceSpy = jest.spyOn(component['solicitudDeRegistroTplService'], 'obtenerTablaDatos');
@@ -95,7 +95,7 @@ describe('ConsultarCupoComponent', () => {
     expect(storeSpy).not.toHaveBeenCalled();
   });
 
-  it('debería completar destroy$ al destruir', () => {
+  it('should complete destroy$ on destroy', () => {
     const completeSpy = jest.spyOn(component.destroy$, 'complete');
     const nextSpy = jest.spyOn(component.destroy$, 'next');
     component.ngOnDestroy();
@@ -103,7 +103,7 @@ describe('ConsultarCupoComponent', () => {
     expect(completeSpy).toHaveBeenCalled();
   });
 
-  it('debería obtener datos de países y actualizar las opciones del campo pais', fakeAsync(() => {
+  it('should fetch country data and update pais field options', fakeAsync(() => {
     const mockPaisData = [
       { id: 1, descripcion: 'Mexico' },
       { id: 2, descripcion: 'USA' },
@@ -123,7 +123,7 @@ describe('ConsultarCupoComponent', () => {
     ]);
   }));
 
-  it('debería obtener datos de clasificación y actualizar las opciones del campo clasificacion', fakeAsync(() => {
+  it('should fetch classification data and update clasificacion field options', fakeAsync(() => {
     const mockClasificacionData = [
       { id: 1, descripcion: 'Regimen 1' },
       { id: 2, descripcion: 'Regimen 2' },
@@ -142,8 +142,8 @@ describe('ConsultarCupoComponent', () => {
       { descripcion: 'Regimen 2', id: 2 },
     ]);
   }));
-
-  it('debería emitir el evento cuando se llama a controladorDeClicsArchivo', () => {
+  
+  it('should emit event when controladorDeClicsArchivo is called', () => {
   const spy = jest.spyOn(component.emitirFilaClicControlador, 'emit');
   const mockRow = {
     id: 1,
@@ -154,7 +154,7 @@ describe('ConsultarCupoComponent', () => {
   expect(spy).toHaveBeenCalledWith(mockRow);
 });
 
-  it('debería obtener datos de la tabla, actualizar cuerpoTabla y el store, y emitir la fila si es de solo lectura', fakeAsync(() => {
+  it('should fetch tabla data, update cuerpoTabla and store, and emit row if readonly', fakeAsync(() => {
   const mockTabla = [{
     id: 1,
     cveTratado: 'MX',
@@ -193,7 +193,7 @@ describe('ConsultarCupoComponent', () => {
   expect(emitSpy).toHaveBeenCalledWith(mockTabla[0]);
 }));
 
-it('debería suscribirse a selectSolicitudDeRegistroTpl$, actualizar cuerpoTabla y registrar el formulario en init', fakeAsync(() => {
+it('should subscribe to selectSolicitudDeRegistroTpl$, update cuerpoTabla and register form on init', fakeAsync(() => {
   const mockState = {
     cuerpoTabla: [
       { id: 1, categoriaTextilDescripcion: 'Textil A' } as InstrumentoCupoTPLForm

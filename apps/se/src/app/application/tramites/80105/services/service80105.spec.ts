@@ -118,11 +118,11 @@ describe('Solocitud80105Service', () => {
 
   afterEach(() => httpMock.verify());
 
-  it('debe ser creado', () => {
+  it('should be created', () => {
     expect(service).toBeTruthy();
   });
 
-  it('debe obtener getRegistroTomaMuestrasMercanciasData()', () => {
+  it('should fetch getRegistroTomaMuestrasMercanciasData()', () => {
     const mockData: Solicitud80104State = { rfc: 'RFC123', estado: '', disponibles: [], seleccionadas: [], fraccionArancelaria: '', descripcion: '', fraccionTres: '', descripcionTres: '', anexoDos: [], anexoTres: [] } as any;
     service.getRegistroTomaMuestrasMercanciasData().subscribe(data => {
       expect(data).toEqual(mockData);
@@ -132,7 +132,7 @@ describe('Solocitud80105Service', () => {
     req.flush(mockData);
   });
 
-  it('debe obtener getRegistroComplementosData()', () => {
+  it('should fetch getRegistroComplementosData()', () => {
     const mockData: ComplementosSeccionState = {} as any;
     service.getRegistroComplementosData().subscribe(data => {
       expect(data).toEqual(mockData);
@@ -141,7 +141,7 @@ describe('Solocitud80105Service', () => {
     req.flush(mockData);
   });
 
-  it('debe obtener getRegistroFederatoriosData()', () => {
+  it('should fetch getRegistroFederatoriosData()', () => {
     const mockData: FederatoriosState = {} as any;
     service.getRegistroFederatoriosData().subscribe(data => {
       expect(data).toEqual(mockData);
@@ -150,7 +150,7 @@ describe('Solocitud80105Service', () => {
     req.flush(mockData);
   });
 
-  it('debe obtener getRegistroComplementarData()', () => {
+  it('should fetch getRegistroComplementarData()', () => {
     const mockData: ComplementarState = { permanecera: 'Sí' } as any;
     service.getRegistroComplementarData().subscribe(data => {
       expect(data).toEqual(mockData);
@@ -159,7 +159,7 @@ describe('Solocitud80105Service', () => {
     req.flush(mockData);
   });
 
-  it('debe actualizar ComplementosSeccionStore con los datos proporcionados', () => {
+  it('should update ComplementosSeccionStore with provided data', () => {
     const mockComplementosStore = TestBed.inject(ComplementosSeccionStore);
     const spy = jest.spyOn(mockComplementosStore, 'setDynamicFieldValue');
 
@@ -175,7 +175,7 @@ describe('Solocitud80105Service', () => {
     expect(spy).toHaveBeenCalledWith('campo2', 'valor2');
     });
 
-    it('debe actualizar FederatoriosStore con los datos proporcionados', () => {
+    it('should update FederatoriosStore with provided data', () => {
     const mockFederatoriosStore = TestBed.inject(FederatoriosStore);
     const spy = jest.spyOn(mockFederatoriosStore, 'setDynamicFieldValue');
 
@@ -191,7 +191,7 @@ describe('Solocitud80105Service', () => {
     expect(spy).toHaveBeenCalledWith('clave2', 'valorB');
     });
 
-    it('debe actualizar ComplementarStore con los datos proporcionados', () => {
+    it('should update ComplementarStore with provided data', () => {
         const mockComplementarStore = TestBed.inject(ComplementarStore);
 
         const testData: ComplementarState = {
@@ -239,7 +239,7 @@ describe('Solocitud80105Service', () => {
         // Add more expects as needed
         });
 
-        it('debe actualizar Tramite80104Store con los datos proporcionados de Solicitud80104State', () => {
+        it('should update Tramite80104Store with provided Solicitud80104State data', () => {
   const tramiteStore = TestBed.inject(Tramite80104Store);
   const testData: Solicitud80104State = {
     rfc: 'RFC001',
@@ -268,7 +268,7 @@ describe('Solocitud80105Service', () => {
   expect(tramiteStore.setAnexoTres).toHaveBeenCalledWith([2]);
 });
 
-it('debe actualizar Tramite80101Store con los datos proporcionados de Tramite80101State', () => {
+it('should update Tramite80101Store with provided Tramite80101State data', () => {
   const tramiteStore = TestBed.inject(Tramite80101Store);
 
   const testData: Tramite80101State = {

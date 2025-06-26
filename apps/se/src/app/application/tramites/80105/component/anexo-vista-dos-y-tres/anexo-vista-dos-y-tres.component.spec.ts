@@ -93,7 +93,7 @@ describe('AnexoVistaDosYTresComponent', () => {
     anexoTresSubject.complete();
   });
 
-  it('Debería limpiar destroyNotifier$ en ngOnDestroy', () => {
+  it('should clean up destroyNotifier$ on ngOnDestroy', () => {
     const nextSpy = jest.spyOn(component['destroyNotifier$'], 'next');
     const completeSpy = jest.spyOn(component['destroyNotifier$'], 'complete');
     component.ngOnDestroy();
@@ -101,31 +101,31 @@ describe('AnexoVistaDosYTresComponent', () => {
     expect(completeSpy).toHaveBeenCalled();
   });
 
-  it('Debería inicializar anexoConfig con los valores correctos', () => {
+  it('should initialize anexoConfig with correct values', () => {
     expect(component.anexoConfig.anexoDosTablaSeleccionCheckbox).toBe(TablaSeleccion.CHECKBOX);
     expect(component.anexoConfig.anexoDosEncabezadoDeTabla).toBe(ANEXO_SERVICIO);
     expect(component.anexoConfig.anexoTresTablaSeleccionCheckbox).toBe(TablaSeleccion.CHECKBOX);
     expect(component.anexoConfig.anexoTresEncabezadoDeTabla).toBe(ANEXO_SERVICIO);
   });
 
-  it('Debería inicializar configuracionDosDatos con CONFIGURACION_DOS_DATOS', () => {
+  it('should initialize configuracionDosDatos with CONFIGURACION_DOS_DATOS', () => {
     expect(component.configuracionDosDatos).toBeDefined();
     expect(component.configuracionDosDatos.length).toBeGreaterThan(0);
   });
 
-  it('Debería tener listas de anexo iniciales vacías', () => {
-    expect(component.anexoDosTablaLista).toEqual([]);
-    expect(component.anexoTresTablaLista).toEqual([]);
-  });
+  it('should have empty initial anexo lists', () => {
+  expect(component.anexoDosTablaLista).toEqual([]);
+  expect(component.anexoTresTablaLista).toEqual([]);
+});
 
-it('Debería manejar undefined emitido desde anexoDosTableLista$', fakeAsync(() => {
+it('should handle undefined emitted from anexoDosTableLista$', fakeAsync(() => {
   fixture.detectChanges();
   anexoDosSubject.next(undefined as any);
   tick();
   expect(component.anexoDosTablaLista).toEqual([]);
 }));
 
-it('Debería manejar undefined emitido desde anexoTresTablaLista$', fakeAsync(() => {
+it('should handle undefined emitted from anexoTresTablaLista$', fakeAsync(() => {
   fixture.detectChanges();
   anexoTresSubject.next(undefined as any);
   tick();

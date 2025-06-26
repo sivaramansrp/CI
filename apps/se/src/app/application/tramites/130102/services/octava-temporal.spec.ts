@@ -52,11 +52,11 @@ describe('FormularioRegistroService (Jest)', () => {
     jest.clearAllMocks();
   });
 
-  it('debe ser creado', () => {
+  it('should be created', () => {
     expect(service).toBeTruthy();
   });
 
-  it('debería registrar y validar formularios correctamente', () => {
+  it('should register and validate forms correctly', () => {
     const form = new FormGroup({
       name: new FormControl('')
     });
@@ -69,7 +69,7 @@ describe('FormularioRegistroService (Jest)', () => {
     expect(isValid).toBe(false);
   });
 
-  it('debería obtener el JSON de entidades federativas', () => {
+  it('should fetch entidades federativas JSON', () => {
     service.getEntidadesFederativas().subscribe((data) => {
       expect(data.length).toBe(2);
     });
@@ -82,7 +82,7 @@ describe('FormularioRegistroService (Jest)', () => {
     ] as Catalogo[]);
   });
 
-  it('debería obtener los datos de solicitud', () => {
+  it('should fetch solicitud data', () => {
     const mockData = { fraccion: 'ABCD' } as Solicitud130102State;
 
     service.getSolicitudData().subscribe(data => {
@@ -94,7 +94,7 @@ describe('FormularioRegistroService (Jest)', () => {
     req.flush(mockData);
   });
 
-  it('debería llamar a los setters del store en actualizarEstadoFormulario', () => {
+  it('should call store setters on actualizarEstadoFormulario', () => {
     const mockState: Solicitud130102State = {
       criterioDictamen: 'a',
       fraccion: 'b',

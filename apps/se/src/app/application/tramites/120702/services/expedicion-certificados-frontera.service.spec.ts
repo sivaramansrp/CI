@@ -37,12 +37,12 @@ describe('ExpedicionCertificadosFronteraService', () => {
     httpMock.verify();
   });
 
-  it('debe ser creado', () => {
+  it('should be created', () => {
     expect(service).toBeTruthy();
   });
 
   describe('getAnoOficioDatos', () => {
-    it('debería retornar un array de Catalogo', () => {
+    it('should return an array of Catalogo', () => {
       const mockResponse: Catalogo[] = [
         { id: 1, descripcion: 'Año 2023' },
         { id: 2, descripcion: 'Año 2024' }
@@ -59,7 +59,7 @@ describe('ExpedicionCertificadosFronteraService', () => {
   });
 
   describe('getMontoExpedirTabla', () => {
-    it('debería retornar MontoExpedirTablaDatos', () => {
+    it('should return MontoExpedirTablaDatos', () => {
       const mockResponse: MontoExpedirTablaDatos = {
         columns: ['Monto']
       };
@@ -75,7 +75,7 @@ describe('ExpedicionCertificadosFronteraService', () => {
   });
 
   describe('getRegistroTomaMuestrasMercanciasData', () => {
-    it('debería retornar Solicitud120702State', () => {
+    it('should return Solicitud120702State', () => {
       const mockResponse: Solicitud120702State = {
         anoDelOficio: { id: 1, descripcion: '2023' },
         numeroOficio: 123,
@@ -103,7 +103,7 @@ describe('ExpedicionCertificadosFronteraService', () => {
   });
 
   describe('actualizarEstadoFormulario', () => {
-    it('debería llamar a los setters del store con el estado proporcionado', () => {
+    it('should call store setters with provided state', () => {
       const mockState: Solicitud120702State = {
         anoDelOficio: { id: 1, descripcion: '2023' },
         numeroOficio: 987,

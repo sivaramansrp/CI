@@ -75,14 +75,14 @@ describe('UsoEspicificoComponent', () => {
     jest.clearAllMocks();
   });
 
-  it('debe crear el componente', () => {
+  it('should create the component', () => {
     fixture = TestBed.createComponent(UsoEspicificoComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
     expect(component).toBeTruthy();
   });
 
-  it('debería llamar a setValoresStore y almacenar el valor', () => {
+  it('should call setValoresStore and store value', () => {
     consultaioSubject.next({ readonly: false });
     tramiteQuerySubject.next(solicitudMockState);
 
@@ -96,7 +96,7 @@ describe('UsoEspicificoComponent', () => {
   });
 
 
-  it('No debe validarse ningún espacio inicial', () => {
+  it('should validate no leading spaces', () => {
     const controlWithSpace = { value: '  Leading' } as any;
     const controlValid = { value: 'Valid' } as any;
 
@@ -104,7 +104,7 @@ describe('UsoEspicificoComponent', () => {
     expect(UsoEspicificoComponent['noLeadingSpacesValidator'](controlValid)).toBeNull();
   });
 
-  it('debería desuscribirse en destroy', () => {
+  it('should unsubscribe on destroy', () => {
     fixture = TestBed.createComponent(UsoEspicificoComponent);
     component = fixture.componentInstance;
     const nextSpy = jest.spyOn(component['destroyNotifier$'], 'next');
@@ -112,7 +112,7 @@ describe('UsoEspicificoComponent', () => {
  
   });
 
-  it('debería agregar un elemento a datosSocios y restablecer el formulario en agregar()', () => {
+  it('should add item to datosSocios and reset form on agregar()', () => {
     fixture = TestBed.createComponent(UsoEspicificoComponent);
     component = fixture.componentInstance;
     component.catalogos = [
@@ -131,7 +131,7 @@ describe('UsoEspicificoComponent', () => {
     expect(resetSpy).toHaveBeenCalled();
   });
 
-  it('debería actualizar el campo descripción con texto predefinido', () => {
+  it('should update descripción field with predefined text', () => {
     consultaioSubject.next({ readonly: false });
     tramiteQuerySubject.next(solicitudMockState);
     fixture = TestBed.createComponent(UsoEspicificoComponent);
@@ -141,7 +141,7 @@ describe('UsoEspicificoComponent', () => {
     expect(component.usoEspicificoForm.get('descripción')?.value).toContain('Descripción fraccion PROSEC');
   });
 
-  it('debería retornar la descripción correcta del catálogo', () => {
+  it('should return correct description from catalog', () => {
     fixture = TestBed.createComponent(UsoEspicificoComponent);
     component = fixture.componentInstance;
     component.catalogos = [{ id: 1, descripcion: 'Test Desc' }] as any;
@@ -153,7 +153,7 @@ describe('UsoEspicificoComponent', () => {
     expect(result).toBe('Test Desc');
   });
 
-  it('debería inicializar el formulario con los controles', () => {
+  it('should initialize the form with controls', () => {
     fixture = TestBed.createComponent(UsoEspicificoComponent);
     component = fixture.componentInstance;
     component.inicializarFormulario();
@@ -161,7 +161,7 @@ describe('UsoEspicificoComponent', () => {
     expect(component.usoEspicificoForm.contains('descripción')).toBe(true);
   });
 
-  it('debería aplicar validadores requeridos', () => {
+  it('should apply required validators', () => {
     fixture = TestBed.createComponent(UsoEspicificoComponent);
     component = fixture.componentInstance;
     component.inicializarFormulario();
@@ -173,7 +173,7 @@ describe('UsoEspicificoComponent', () => {
     expect(descripcion?.valid).toBe(false);
   });
 
-  it('debería agregar un elemento válido a datosSocios y restablecer el formulario', () => {
+  it('should add a valid item to datosSocios and reset the form', () => {
     fixture = TestBed.createComponent(UsoEspicificoComponent);
     component = fixture.componentInstance;
     component.catalogos = [{ id: 1, descripcion: 'Fracción A' }];
@@ -189,7 +189,7 @@ describe('UsoEspicificoComponent', () => {
   });
 
 
-  it('No se deben agregar entradas duplicadas de fraccionArancelariaProsec', () => {
+  it('should not add duplicate fraccionArancelariaProsec entries', () => {
     fixture = TestBed.createComponent(UsoEspicificoComponent);
     component = fixture.componentInstance;
     component.datosSocios = [{
@@ -205,7 +205,7 @@ describe('UsoEspicificoComponent', () => {
     expect(component.datosSocios.length).toBe(1);
   });
 
-  it('debería establecer el valor de descripción cuando se llama a obtenerRequisitosFraccionArancelariaEsquema', () => {
+  it('should set description value when obtenerRequisitosFraccionArancelariaEsquema is called', () => {
     fixture = TestBed.createComponent(UsoEspicificoComponent);
     component = fixture.componentInstance;
     component.inicializarFormulario();
@@ -217,7 +217,7 @@ describe('UsoEspicificoComponent', () => {
     );
   });
 
-  it('debería retornar la descripción correcta de la fracción arancelaria', () => {
+  it('should return the correct fracción arancelaria descripción', () => {
     fixture = TestBed.createComponent(UsoEspicificoComponent);
     component = fixture.componentInstance;
     component.catalogos = [
@@ -230,7 +230,7 @@ describe('UsoEspicificoComponent', () => {
     expect(result).toBe('Fracción 2');
   });
 
-it('debería deshabilitar el formulario si readonly es true en guardarDatosFormulario', () => {
+it('should disable form if readonly is true in guardarDatosFormulario', () => {
   fixture = TestBed.createComponent(UsoEspicificoComponent);
   component = fixture.componentInstance;
   component.consultaState = { readonly: true } as any;
@@ -241,7 +241,7 @@ it('debería deshabilitar el formulario si readonly es true en guardarDatosFormu
   expect(component.usoEspicificoForm.disabled).toBe(true);
 });
 
-it('debería habilitar el formulario si readonly es false en guardarDatosFormulario', () => {
+it('should enable form if readonly is false in guardarDatosFormulario', () => {
   fixture = TestBed.createComponent(UsoEspicificoComponent);
   component = fixture.componentInstance;
   component.consultaState = { readonly: false } as any;

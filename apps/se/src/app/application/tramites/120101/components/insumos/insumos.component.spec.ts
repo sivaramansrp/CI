@@ -57,11 +57,11 @@ describe('InsumosComponent', () => {
     fixture.detectChanges();
   });
 
-  it('debe crear el componente', () => {
+  it('should create the component', () => {
     expect(component).toBeTruthy();
   });
 
-  it('debería llamar a setDynamicFieldValue y setFormValue cuando se llama a establecerCambioDeValor', () => {
+  it('should call setDynamicFieldValue and setFormValue when establecerCambioDeValor is called', () => {
     const event = { campo: 'testCampo', valor: 'testValor' };
 
     component.establecerCambioDeValor(event);
@@ -72,7 +72,7 @@ describe('InsumosComponent', () => {
     });
   });
 
-  it('no debería hacer nada si establecerCambioDeValor se llama con null', () => {
+  it('should do nothing if establecerCambioDeValor is called with null', () => {
     const setDynamicFieldValueSpy = jest.spyOn(tramite120101StoreMock, 'setDynamicFieldValue');
     const setFormValueSpy = jest.spyOn(servicioDeFormularioServiceMock, 'setFormValue');
 
@@ -82,7 +82,7 @@ describe('InsumosComponent', () => {
     expect(setFormValueSpy).not.toHaveBeenCalled();
   });
 
-  it('debería limpiar las suscripciones en ngOnDestroy', () => {
+  it('should clean up subscriptions on ngOnDestroy', () => {
     const destroySpy = jest.spyOn(component['destroy$'], 'next');
     const completeSpy = jest.spyOn(component['destroy$'], 'complete');
 
@@ -92,7 +92,7 @@ describe('InsumosComponent', () => {
     expect(completeSpy).toHaveBeenCalled();
   });
 
-  it('debe actualizar tablaInsumos cuando se llama a obtenerDatosTablaInsumos', () => {
+  it('should update tablaInsumos when obtenerDatosTablaInsumos is called', () => {
     const insumos = [{ DescripcionDelInsumo: 'Test Insumo', FraccionArancelaria: '1234', PaisDeOrigen: 'MX' }];
     solicitudDeRegistroTplServiceMock.obtenerDatosTablaInsumos.mockReturnValue(of(insumos));
 
@@ -101,7 +101,7 @@ describe('InsumosComponent', () => {
     expect(component.tablaInsumos).toEqual(insumos);
   });
 
-  it('debería poblar opciones en insumosFormData para el campo descfraccion', () => {
+  it('should populate opciones in insumosFormData for descfraccion field', () => {
   const data = [{ id: 1, descripcion: 'Test Desc' }];
   solicitudDeRegistroTplServiceMock.obtenerDatosFraccionArancelaria.mockReturnValue(of(data));
 
@@ -115,7 +115,7 @@ describe('InsumosComponent', () => {
 
 
 
-it('debería poblar opciones en insumosFormData para el campo Pais', () => {
+it('should populate opciones in insumosFormData for Pais field', () => {
   const data = [{ id: 2, descripcion: 'Mexico' }];
   solicitudDeRegistroTplServiceMock.obtenerDatosEstados.mockReturnValue(of(data));
 
@@ -127,7 +127,7 @@ it('debería poblar opciones en insumosFormData para el campo Pais', () => {
   expect(targetField!.opciones).toEqual([{ id: 2, descripcion: 'Mexico' }]);
 });
 
-it('debería agregar un insumo y llamar a establecerTablaInsumos si el formulario es válido', () => {
+it('should add insumo and call establecerTablaInsumos if form is valid', () => {
   const establecerTablaSpy = jest.spyOn(solicitudDeRegistroTplServiceMock, 'establecerTablaInsumos');
 
   const mockGroup = new FormGroup({
