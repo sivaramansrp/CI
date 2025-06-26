@@ -54,11 +54,11 @@ describe('TerritorioNacionalSolicitudeComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('debe crearse', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize territorioPasos and datosPasos correctly', () => {
+  it('debe inicializar territorioPasos y datosPasos correctamente', () => {
     expect(component.territorioPasos).toBe(PASSOS_TERRITORIO);
     expect(component.datosPasos.nroPasos).toBe(PASSOS_TERRITORIO.length);
     expect(component.datosPasos.indice).toBe(1);
@@ -66,7 +66,7 @@ describe('TerritorioNacionalSolicitudeComponent', () => {
     expect(component.datosPasos.txtBtnSig).toBe('Continuar');
   });
 
-  it('should update indice and call wizardComponent.siguiente on getValorIndice with accion "cont"', () => {
+  it('debe actualizar el índice y llamar a wizardComponent.siguiente al ejecutar getValorIndice con acción "cont"', () => {
     // Assign a mock wizardComponent with jest.fn() methods
     component.wizardComponent = { siguiente: jest.fn(), atras: jest.fn() } as any;
     component.getValorIndice({ accion: 'cont', valor: 2 });
@@ -74,14 +74,14 @@ describe('TerritorioNacionalSolicitudeComponent', () => {
     expect(component.wizardComponent.siguiente).toHaveBeenCalled();
   });
 
-  it('should update indice and call wizardComponent.atras on getValorIndice with accion not "cont"', () => {
+  it('debe actualizar el índice y llamar a wizardComponent.atras al ejecutar getValorIndice con acción distinta de "cont"', () => {
     component.wizardComponent = { siguiente: jest.fn(), atras: jest.fn() } as any;
     component.getValorIndice({ accion: 'back', valor: 3 });
     expect(component.indice).toBe(3);
     expect(component.wizardComponent.atras).toHaveBeenCalled();
   });
 
-  it('should not update indice or call wizardComponent if valor is out of range', () => {
+  it('no debe actualizar el índice ni llamar a wizardComponent si el valor está fuera de rango', () => {
     component.wizardComponent = { siguiente: jest.fn(), atras: jest.fn() } as any;
     component.indice = 1;
     component.getValorIndice({ accion: 'cont', valor: 0 });
