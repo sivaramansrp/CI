@@ -62,12 +62,12 @@ describe('Solicitud260401Service', () => {
     );
   });
 
-  it('should be created', () => {
+  it('debe ser creado', () => {
     expect(service).toBeTruthy();
   });
 
   describe('actualizarEstadoFormulario', () => {
-    it('should call all setters on tramite260401Store with correct values', () => {
+    it('debe llamar a todos los setters en tramite260401Store con los valores correctos', () => {
       const datos: DatosDelSolicituteSeccionState = {
         establecimientoDenominacionRazonSocial: 'razon',
         establecimientoCorreoElectronico: 'correo',
@@ -118,7 +118,7 @@ describe('Solicitud260401Service', () => {
   });
 
   describe('actualizarPagoDerechosFormulario', () => {
-    it('should call all setters on tramite260401 with correct values and setBanco if setBanco exists', () => {
+    it('debe llamar a todos los setters en tramite260401 con los valores correctos y setBanco si existe', () => {
       const datos: PermisoImportacionBiologicaState = {
         setClaveDeReferncia: 'clave',
         setCadenaDeLaDependencia: 'cadena',
@@ -138,7 +138,7 @@ describe('Solicitud260401Service', () => {
       expect(permisoStoreMock.setBanco).toHaveBeenCalledWith('banco');
     });
 
-    it('should not call setBanco if setBanco is falsy', () => {
+    it('no debe llamar a setBanco si setBanco es falsy', () => {
       const datos: PermisoImportacionBiologicaState = {
         setClaveDeReferncia: 'clave',
         setCadenaDeLaDependencia: 'cadena',
@@ -155,7 +155,7 @@ describe('Solicitud260401Service', () => {
   });
 
   describe('getRegistroTomaMuestrasMercanciasData', () => {
-    it('should call http.get with correct URL and return its observable', done => {
+    it('debe llamar a http.get con la URL correcta y retornar su observable', done => {
       const mockResponse: DatosDelSolicituteSeccionState = { foo: 'bar' } as any;
       httpMock.get.mockReturnValue(of(mockResponse));
 
@@ -168,7 +168,7 @@ describe('Solicitud260401Service', () => {
   });
 
   describe('getPagoDerechos', () => {
-    it('should call http.get with correct URL and return its observable', done => {
+    it('debe llamar a http.get con la URL correcta y retornar su observable', done => {
       const mockResponse: PermisoImportacionBiologicaState = { foo: 'bar' } as any;
       httpMock.get.mockReturnValue(of(mockResponse));
 
