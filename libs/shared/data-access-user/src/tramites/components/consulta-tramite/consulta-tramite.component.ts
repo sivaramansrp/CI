@@ -9,7 +9,8 @@ import { Router } from '@angular/router';
 import { TramiteQuery } from '../../../core/queries/tramite.query';
 
 import { REG_X } from '../../constantes/regex.constants';
-import { SeleccionadoDepartamento } from '../../../core/models/shared/bandeja-de-tareas-pendientes.model';
+
+import { BandejaDeTareasPendientes, SeleccionadoDepartamento } from '../../../core/models/shared/bandeja-de-tareas-pendientes.model';
 import { TablaAcciones } from '../../../core/enums/tabla-seleccion.enum';
 import { TablaDinamicaComponent } from '../tabla-dinamica/tabla-dinamica.component';
 import { TablePaginationComponent } from '../table-pagination/table-pagination.component';
@@ -17,25 +18,10 @@ import { TramiteDetails } from '../../../core/models/tramiteDetails';
 
 import { ModeloDeFormaDinamica } from '../../../core/models/shared/forms-model';
 
+
 /**
  * Interfaz que representa un objeto con número de procedimiento y datos asociados a un trámite.
  */
-interface TieneNumeroDeProcedimiento {
-  /** Identificador único del trámite */
-  id: number;
-  /** Número de procedimiento asociado al trámite */
-  numeroDeProcedimiento: string;
-  /** Nombre del departamento relacionado */
-  departamento: string;
-  /** Origen del trámite */
-  origin: string;
-  /** Folio del trámite */
-  folioTramite: string;
-  /** Tipo de trámite */
-  tipoDeTramite: string;
-  /** Estado actual del trámite */
-  estadoDeTramite: string;
-}
 @Component({
   selector: 'app-consulta-tramite',
   standalone: true,
@@ -44,7 +30,7 @@ interface TieneNumeroDeProcedimiento {
   styleUrl: './consulta-tramite.component.scss',
 })
 
-export class ConsultaTramiteComponent<T extends TieneNumeroDeProcedimiento> implements OnInit {
+export class ConsultaTramiteComponent<T extends { id: string | number }> implements OnInit {
   /** 
    * Formulario de búsqueda 
    */
@@ -82,7 +68,7 @@ export class ConsultaTramiteComponent<T extends TieneNumeroDeProcedimiento> impl
   /**
    * EventEmitter que emite un evento cada vez que un valor cambia en el componente.
    */
-  @Output() obtenerNombreDelDepartamento: EventEmitter<{ campo: string; valor: string| boolean | undefined |number}> = new EventEmitter<{ campo: string; valor: string| boolean | undefined |number}>();
+  @Output() obtenerNombreDelDepartamento: EventEmitter<{ campo: string; valor: string}> = new EventEmitter<{ campo: string; valor: string}>();
   /**
    * Propiedad de entrada que contiene la información del departamento actualmente seleccionado.
    */
@@ -239,7 +225,7 @@ export class ConsultaTramiteComponent<T extends TieneNumeroDeProcedimiento> impl
    * Navega a la ruta correspondiente dependiendo del origen del trámite
    */
   public onFilaClic(event:T): void {
-    const ROW_OBJETO = event;
+    const ROW_OBJETO = event as unknown as BandejaDeTareasPendientes;
     const PROCEDURE: unknown | number = Number(
       ROW_OBJETO.numeroDeProcedimiento
     );
