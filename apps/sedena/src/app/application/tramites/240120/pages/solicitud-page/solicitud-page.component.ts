@@ -1,6 +1,6 @@
 import { AccionBoton, BtnContinuarComponent } from '@ng-mf/data-access-user';
+import { Component, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
 import { DatosPasos } from '@ng-mf/data-access-user';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { PASOS } from '../../constants/importacion-armas-municiones.enum';
@@ -8,7 +8,6 @@ import { PasoDosComponent } from '../paso-dos/paso-dos.component';
 import { PasoTresComponent } from '../paso-tres/paso-tres.component';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { TITULOMENSAJE } from '../../constants/importacion-armas-municiones.enum';
-import { ViewChild } from '@angular/core';
 import { WizardComponent } from '@ng-mf/data-access-user';
 
 /**

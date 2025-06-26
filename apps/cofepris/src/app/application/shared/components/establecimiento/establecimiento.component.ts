@@ -31,7 +31,7 @@ import {
 
 import { Modal } from 'bootstrap';
 
-import { map, Subject, takeUntil } from 'rxjs';
+import { Subject,map, takeUntil } from 'rxjs';
 
 import {
   Catalogo,
@@ -45,6 +45,7 @@ import {
 } from '@libs/shared/data-access-user/src';
 
 import { CROSLISTA_DE_PAISES } from '../../constantes/datos-solicitud.enum';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 
 import { DatosDeLaProductoModel } from '../../models/datos-de-la-solicitud.model';
 
@@ -60,7 +61,6 @@ import { DatosDelSolicituteSeccionStateStore } from '../../estados/stores/datos-
 import { DatosDelSolicituteSeccionQuery } from '../../estados/queries/datos-del-solicitute-seccion.query';
 
 import { DATOS_DE_LA_PRODUCTO_MODEL } from '../../constantes/aviso-de-funcionamiento.enum';
-import { ConsultaioQuery } from '@ng-mf/data-access-user';
 /**
  * Componente `EstablecimientoComponent`
  * Componente que gestiona los datos del establecimiento.
