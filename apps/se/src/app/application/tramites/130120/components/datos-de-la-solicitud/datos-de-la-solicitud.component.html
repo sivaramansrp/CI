@@ -2,7 +2,7 @@
   <form [formGroup]="formulario">
     <div class="form" formGroupName="datosRealizer">
       <ng-titulo [titulo]="'Datos del trámite a realizar'"></ng-titulo>
-      <div class="row align-items-center">
+      <div class="row align-items-end">
         <div class="col-md-8">
           <div class="form-group">
             <app-catalogo-select
@@ -42,7 +42,7 @@
       <ng-titulo [titulo]="'Datos de la mercancía'"></ng-titulo>
 
       <!-- Descripción de la mercancía -->
-      <div class="row align-items-center">
+      <div class="row align-items-end">
         <div class="col-md-8">
           <div class="form-group">
             <label class="form-label" [for]="configuracion[1].menu[0].props.campo">
@@ -68,7 +68,7 @@
       </div>
 
       <!-- Marca(s) comercial(es) y modelo(s) -->
-      <div class="row align-items-center espaciador-campo">
+      <div class="row align-items-end espaciador-campo">
         <div class="col-md-8">
           <div class="form-group">
             <label class="form-label" [for]="configuracion[1].menu[1].props.campo">
@@ -97,7 +97,7 @@
       </div>
 
       <!-- Tipo de aduana de entrada -->
-      <div class="row align-items-center espaciador-campo">
+      <div class="row align-items-end espaciador-campo">
         <div class="col-md-8">
           <div class="form-group">
             <app-catalogo-select
@@ -117,7 +117,7 @@
       </div>
 
       <!-- Fracción arancelaria -->
-      <div class="row align-items-center espaciador-campo">
+      <div class="row align-items-end espaciador-campo">
         <div class="col-md-8">
           <div class="form-group">
             <app-catalogo-select
@@ -137,7 +137,7 @@
       </div>
 
       <!-- NICO -->
-      <div class="row align-items-center espaciador-campo">
+      <div class="row align-items-end espaciador-campo">
         <div class="col-md-8">
           <div class="form-group">
             <app-catalogo-select
@@ -157,7 +157,7 @@
       </div>
 
       <!-- UMT & Numero de factura -->
-      <div class="row align-items-center espaciador-campo">
+      <div class="row align-items-end espaciador-campo">
         <div class="col-md-4">
           <div class="form-group">
             <app-catalogo-select
@@ -169,8 +169,9 @@
               name="umt"
               (change)="setValoresStore(formulario, 'datosMercanica', configuracion[1].menu[5].props.campo, 'setUmt')">
             </app-catalogo-select>
-            <div *ngIf="formulario.get('datosMercanica')?.get(configuracion[1].menu[5].props.campo)?.touched && formulario.get('datosMercanica')?.get(configuracion[1].menu[5].props.campo)?.invalid">
-              <small class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
+            <div class="contenedor-error">
+              <small *ngIf="formulario.get('datosMercanica')?.get(configuracion[1].menu[5].props.campo)?.touched && formulario.get('datosMercanica')?.get(configuracion[1].menu[5].props.campo)?.invalid"
+              class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
             </div>
           </div>
         </div>
@@ -192,17 +193,19 @@
               [disabled]="esFormularioSoloLectura"
               (change)="setValoresStore(formulario, 'datosMercanica', configuracion[1].menu[6].props.campo, 'setFacturaNumero')"
             />
-            <div *ngIf="formulario.get('datosMercanica')?.get(configuracion[1].menu[6].props.campo)?.touched && formulario.get('datosMercanica')?.get(configuracion[1].menu[6].props.campo)?.invalid">
-              <small *ngIf="formulario.get('datosMercanica')?.get(configuracion[1].menu[6].props.campo)?.errors?.['required']" class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
-              <small *ngIf="formulario.get('datosMercanica')?.get(configuracion[1].menu[6].props.campo)?.errors?.['maxlength']" class="text-danger espaciador-campo-pequeño">No puede exceder 50 caracteres.</small>
-              <small *ngIf="formulario.get('datosMercanica')?.get(configuracion[1].menu[6].props.campo)?.errors?.['pattern']" class="text-danger espaciador-campo-pequeño">Solo números permitidos.</small>
+            <div class="contenedor-error">
+              <span *ngIf="formulario.get('datosMercanica')?.get(configuracion[1].menu[6].props.campo)?.touched && formulario.get('datosMercanica')?.get(configuracion[1].menu[6].props.campo)?.invalid">
+                <small *ngIf="formulario.get('datosMercanica')?.get(configuracion[1].menu[6].props.campo)?.errors?.['required']" class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
+                <small *ngIf="formulario.get('datosMercanica')?.get(configuracion[1].menu[6].props.campo)?.errors?.['maxlength']" class="text-danger espaciador-campo-pequeño">No puede exceder 50 caracteres.</small>
+                <small *ngIf="formulario.get('datosMercanica')?.get(configuracion[1].menu[6].props.campo)?.errors?.['pattern']" class="text-danger espaciador-campo-pequeño">Solo números permitidos.</small>
+              </span>
             </div>
           </div>
         </div>
       </div>
 
       <!-- Fecha de factura & UMC -->
-      <div class="row align-items-center espaciador-campo">
+      <div class="row align-items-end espaciador-campo">
         <div class="col-md-4">
           <div class="form-group">
             <input-fecha
@@ -237,7 +240,7 @@
       <!-- BREAK_CONTENT -->
 
       <!-- Row 4 -->
-      <div class="row align-items-center espaciador-campo">
+      <div class="row align-items-end espaciador-campo">
         <!-- 9: Otro UMC -->
         <div class="col-md-4">
           <div class="form-group">
@@ -285,7 +288,7 @@
       <!-- BREAK_CONTENT -->
 
       <!-- Row 5 -->
-      <div class="row align-items-center espaciador-campo">
+      <div class="row align-items-end espaciador-campo">
         <!-- 11: Factor de conversión -->
         <div class="col-md-4">
           <div class="form-group ">
@@ -341,7 +344,7 @@
       <!-- BREAK_CONTENT -->
 
       <!-- Row 6 -->
-      <div class="row align-items-center">
+      <div class="row align-items-end">
         <!-- 13: Valor de la factura de la mercancía a importar en términos de la Moneda de Comercialización* -->
         <div class="col-md-8 espaciador-campo">
           <div class="form-group">
@@ -389,7 +392,7 @@
       <!-- BREAK_CONTENT -->
 
       <!-- Row 7 -->
-      <div class="row align-items-center espaciador-campo">
+      <div class="row align-items-end espaciador-campo">
         <!-- 15: Valor de la factura en USD de la mercancía a importar* -->
         <div class="col-md-4">
           <div class="form-group">
@@ -439,7 +442,7 @@
       <!-- BREAK_CONTENT -->
 
       <!-- Row 8 -->
-      <div class="row align-items-center espaciador-campo">
+      <div class="row align-items-end espaciador-campo">
         <!-- 17: País exportador -->
         <div class="col-md-4">
           <div class="form-group">
@@ -481,7 +484,7 @@
       <!-- BREAK_CONTENT -->
 
       <!-- Row 9 -->
-      <div class="row align-items-center espaciador-campo">
+      <div class="row align-items-end espaciador-campo">
         <!-- 19: Valor total de la factura in términos de la Moneda de Comercialización -->
         <div class="col-md-8">
           <div class="form-group">
@@ -535,7 +538,7 @@
     <!-- Grupo: Documento de salida del país de exportación -->
 <div class="form" formGroupName="datosExporta">
   <ng-titulo [titulo]="'Documento de salida del país de exportación'"></ng-titulo>
-  <div class="row align-items-center">
+  <div class="row align-items-end">
     <!-- Número de documento* -->
     <div class="col-md-4">
       <div class="form-group">
@@ -577,7 +580,7 @@
       </div>
     </div>
   </div>
-  <div class="row align-items-center espaciador-campo">
+  <div class="row align-items-end espaciador-campo">
     <!-- Descripción de la mercancía* -->
     <div class="col-md-8">
       <div class="form-group">
@@ -600,7 +603,7 @@
       </div>
     </div>
   </div>
-  <div class="row align-items-center espaciador-campo">
+  <div class="row align-items-end espaciador-campo">
     <!-- Código arancelario* -->
     <div class="col-md-4">
       <div class="form-group">
@@ -651,7 +654,7 @@
       </div>
     </div>
   </div>
-  <div class="row align-items-center espaciador-campo">
+  <div class="row align-items-end espaciador-campo">
     <!-- Valor en USD de la mercancía a importar* -->
     <div class="col-md-4">
       <div class="form-group">
@@ -706,7 +709,7 @@
     <!-- Grupo: Datos del productor -->
     <div class="form" formGroupName="datosProductor">
       <ng-titulo [titulo]="'Datos del productor'"></ng-titulo>
-      <div class="row align-items-center">
+      <div class="row align-items-end">
         <!-- Tipo de persona radio -->
         <div class="col-md-8">
           <div class="form-group">
@@ -728,14 +731,14 @@
 
       <!-- FÍSICA -->
       <div *ngIf="tipoPersonaProductor === 'Física'">
-        <div class="row align-items-center ">
+        <div class="row align-items-end ">
         <div class="col-md-8">
           <div class="form-group">
             <label class="form-label"><b>Datos personales</b></label>
           </div>
         </div>
       </div>
-        <div class="row align-items-center ">
+        <div class="row align-items-end ">
           <div class="col-md-8">
             <div class="form-group">
               <label class="form-label" [for]="configuracion[3].menu[1].props.campo">
@@ -758,7 +761,7 @@
             </div>
           </div>
         </div>
-        <div class="row align-items-center espaciador-campo">
+        <div class="row align-items-end espaciador-campo">
           <div class="col-md-8">
             <div class="form-group">
               <label class="form-label" [for]="configuracion[3].menu[2].props.campo">
@@ -781,7 +784,7 @@
             </div>
           </div>
         </div>
-        <div class="row align-items-center espaciador-campo">
+        <div class="row align-items-end espaciador-campo">
           <div class="col-md-8">
             <div class="form-group">
               <label class="form-label" [for]="configuracion[3].menu[3].props.campo">
@@ -804,7 +807,7 @@
             </div>
           </div>
         </div>
-        <div class="row align-items-center espaciador-campo">
+        <div class="row align-items-end espaciador-campo">
           <div class="col-md-8">
             <div class="form-group">
               <label class="form-label">
@@ -830,7 +833,7 @@
 
       <!-- MORAL -->
       <div *ngIf="tipoPersonaProductor === 'Moral'">
-        <div class="row align-items-center espaciador-campo">
+        <div class="row align-items-end espaciador-campo">
           <div class="col-md-8">
             <div class="form-group">
               <label class="form-label" [for]="configuracion[3].menu[4].props.campo">
@@ -853,7 +856,7 @@
             </div>
           </div>
         </div>
-        <div class="row align-items-center espaciador-campo">
+        <div class="row align-items-end espaciador-campo">
           <div class="col-md-8">
             <div class="form-group">
               <label class="form-label" [for]="configuracion[3].menu[5].props.campo">
@@ -879,7 +882,7 @@
 
       <!-- NINGUNO -->
       <div *ngIf="tipoPersonaProductor === 'Ninguno'">
-        <div class="row align-items-center espaciador-campo">
+        <div class="row align-items-end espaciador-campo">
           <div class="col-md-8">
             <div class="form-group">
               <label class="form-label">
@@ -904,7 +907,7 @@
     <!-- Grupo: Datos del exportador -->
     <div class="form" formGroupName="datosExportador">
       <ng-titulo [titulo]="'Datos del exportador'"></ng-titulo>
-      <div class="row align-items-center">
+      <div class="row align-items-end">
         <div class="col-md-8">
           <div class="form-group">
             <label class="form-label" [for]="configuracion[4].menu[0].props.campo">
@@ -913,7 +916,7 @@
             <b>
               <app-input-radio
               [radioOptions]="configuracion[4].menu[0].props.radioOptions"
-              [selectedValue]="tipoPersonaExportador"
+              [selectedValue]="formulario.get('datosExportador.persona_tipo')?.value"
               [isRequired]="true"
               (valueChange)="onTipoPersonaExportadorChange($event)"
               [layout]="'horizontal'">
@@ -923,7 +926,7 @@
         </div>
       </div>
 
-      <div class="row align-items-center ">
+      <div class="row align-items-end ">
         <div class="col-md-8">
           <div class="form-group">
             <label class="form-label"><b>Datos personales</b></label>
@@ -932,7 +935,7 @@
       </div>
       <!-- FÍSICA -->
       <div *ngIf="tipoPersonaExportador === 'Física'">
-        <div class="row align-items-center">
+        <div class="row align-items-end">
           <div class="col-md-8">
             <div class="form-group">
               <label class="form-label">
@@ -952,7 +955,7 @@
             </div>
           </div>
         </div>
-        <div class="row align-items-center espaciador-campo">
+        <div class="row align-items-end espaciador-campo">
           <div class="col-md-8">
             <div class="form-group">
               <label class="form-label">
@@ -972,10 +975,10 @@
             </div>
           </div>
         </div>
-        <div class="row align-items-center espaciador-campo">
+        <div class="row align-items-end espaciador-campo">
           <div class="col-md-8">
             <div class="form-group">
-              <label class="form-label" [for]="configuracion[4].menu[3].props.campo">
+              <label class="form-label">
                 {{ configuracion[4].menu[3].props.labelNombre }}
               </label>
               <input
@@ -992,7 +995,7 @@
             </div>
           </div>
         </div>
-        <div class="row align-items-center espaciador-campo">
+        <div class="row align-items-end espaciador-campo">
           <div class="col-md-8">
             <div class="form-group">
               <label class="form-label">
@@ -1011,7 +1014,7 @@
             </div>
           </div>
         </div>
-        <div class="row align-items-center espaciador-campo">
+        <div class="row align-items-end espaciador-campo">
           <div class="col-md-8">
             <div class="form-group">
               <label class="form-label" [for]="configuracion[4].menu[6].props.campo">
@@ -1034,7 +1037,7 @@
 
       <!-- MORAL -->
       <div *ngIf="tipoPersonaExportador === 'Moral'">
-        <div class="row align-items-center espaciador-campo">
+        <div class="row align-items-end espaciador-campo">
           <div class="col-md-8">
             <div class="form-group">
               <label class="form-label">
@@ -1054,7 +1057,7 @@
             </div>
           </div>
         </div>
-        <div class="row align-items-center espaciador-campo">
+        <div class="row align-items-end espaciador-campo">
           <div class="col-md-8">
             <div class="form-group">
               <label class="form-label">
@@ -1073,7 +1076,7 @@
             </div>
           </div>
         </div>
-        <div class="row align-items-center espaciador-campo">
+        <div class="row align-items-end espaciador-campo">
           <div class="col-md-8">
             <div class="form-group">
               <label class="form-label" [for]="configuracion[4].menu[6].props.campo">
@@ -1097,7 +1100,7 @@
 
     <div class="form" formGroupName="datosFederal">
       <ng-titulo [titulo]="'Representación federal'"></ng-titulo>
-      <div class="row align-items-center">
+      <div class="row align-items-end">
         <!-- Entidad federativa -->
         <div class="col-md-6">
           <div class="form-group">
@@ -1132,6 +1135,5 @@
         </div>
       </div>
     </div>
-
   </form>
 </div>

@@ -1,4 +1,23 @@
 /**
+ * Conjunto de constantes de configuración para los campos y catálogos del trámite de Permiso de Importación.
+ *
+ * Este archivo contiene los arreglos y objetos que definen la estructura, validaciones, catálogos y textos
+ * utilizados en los formularios del trámite, incluyendo datos del solicitante, domicilio fiscal, datos de la mercancía,
+ * exportador, productor, representación federal y textos de ayuda.
+ *
+ * @const
+ * @export
+ * @category Configuración
+ * @description
+ * Cada constante representa la configuración de un grupo de campos o catálogos para una sección específica del trámite.
+ * Incluye validaciones, tipos de entrada, opciones de catálogo y textos HTML para instrucciones.
+ *
+ * @ejemplo
+ * DATOS_GENERALES_SOLICITANTE, DOMICILIO_FISCAL_SOLICITANTE, DATOS_REALIZAR, DATOS_MERCANCIA, DATOS_EXPORTACION,
+ * DATOS_PRODUCTOR, DATOS_EXPORTADOR, DATOS_FEDERAL, TEXTOS_REQUISITOS, TEXTOS
+ */
+
+/**
  * Configuración de los campos para los datos generales del solicitante.
  */
 export const DATOS_GENERALES_SOLICITANTE = [
@@ -354,7 +373,7 @@ export const DATOS_MERCANCIA = [
         labelNombre: 'Valor de la factura de la mercancía a importar en términos de la Moneda de Comercialización*:',
         campo: 'valor_factura',
         class: 'col-md-8',
-        tipo_input: 'number',
+        tipo_input: 'text',
         validators: [
             'required',
             'pattern:^\\d{1,14}(\\.\\d{1,2})?$'
@@ -462,7 +481,7 @@ export const DATOS_MERCANCIA = [
         labelNombre: 'Valor total de la factura en términos de la Moneda de Comercialización*:',
         campo: 'valor_total_factura',
         class: 'col-md-8',
-        tipo_input: 'number',
+        tipo_input: 'text',
         validators: [
             'required',
             'pattern:^\\d{1,14}(\\.\\d{1,2})?$'
