@@ -7,6 +7,7 @@ import { Injectable } from '@angular/core';
 export interface TramiteFolioState {
   idTramite: string | null;
   firma: string | null;
+  idSolicitud: number | null; 
 }
 
 /**
@@ -17,6 +18,7 @@ export function createInitialFolioTramiteState(): TramiteFolioState {
   return {
     idTramite: null,
     firma: null,
+    idSolicitud: null,
   };
 }
 
@@ -34,13 +36,14 @@ export class TramiteFolioStore extends Store<TramiteFolioState> {
    *
    * @param idTramite
    */
-  public establecerTramite(idTramite: string, firma: string): void {
-    this.update((state) => ({
-      ...state,
-      idTramite,
-      firma,
-    }));
-  }
+ public establecerTramite(idTramite: string, firma: string, idSolicitud?: number): void {
+  this.update((state) => ({
+    ...state,
+    idTramite,
+    firma,
+    idSolicitud,
+  }));
+}
 
   /**
    * Limpia el estado del trámite

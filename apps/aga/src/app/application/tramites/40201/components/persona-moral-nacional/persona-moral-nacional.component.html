@@ -6,7 +6,9 @@
 <div class="row mt-5">
     <div class="col-md-12">
         <app-tabla-dinamica [configuracionTabla]="configuracionParaPMNEncabezadoDeTabla"
-            [datos]="personaMoralNacionalTabla">
+            [datos]="personaMoralNacionalTabla"
+            [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX"
+            [disableSeleccionTablaCheckBox]="esFormularioSoloLectura">
         </app-tabla-dinamica>
     </div>
 </div>
@@ -14,14 +16,14 @@
 <div class="row">
     <div class="col-md-12">
         <div class="pull-right">
-            <button type="button" name="ModificarPMN" class="btn btn-default">
+            <button type="button" name="ModificarPMN" class="btn btn-default" [disabled]="esFormularioSoloLectura">
                 Modificar
             </button>
-            <button type="button" name="EliminarPMN" class="btn btn-danger ms-2">
+            <button type="button" name="EliminarPMN" class="btn btn-danger ms-2" [disabled]="esFormularioSoloLectura">
                 Eliminar
             </button>
             <button type="button" name="AgregarPMN" class="btn btn-primary ms-2" data-bs-toggle="modal"
-                data-bs-target="#modalAgregarPMN">
+                data-bs-target="#modalAgregarPMN" [disabled]="esFormularioSoloLectura">
                 Agregar
             </button>
         </div>
@@ -46,7 +48,7 @@
                                         data-bs-toggle="tooltip"></span></label>
                                 <input type="text" class="form-control" size="30" id="buscaRfcPMN" maxlength="13"
                                     formControlName="buscarRfcPMN"
-                                    (change)="setValoresStore(personaMoralForm,'buscarRfcPMN', 'setBuscarRfcPMN')">
+                                    (change)="setValoresStore(personaMoralForm,'buscarRfcPMN')">
                             </div>
                             <div class="col-md-1 btn-mt">
                                 <button class="btn btn-primary" type="button" name="buscarPMN" id="buscarPMN"
@@ -59,14 +61,14 @@
                                 <label class="form-label" for="rfcPMN">RFC:</label>
                                 <input type="text" class="form-control" name="rfcPMN" formControlName="rfcPMN"
                                     id="rfcPMN" maxlength="13"
-                                    (change)="setValoresStore(personaMoralForm,'rfcPMN', 'setRfcPMN')">
+                                    (change)="setValoresStore(personaMoralForm,'rfcPMN')">
                             </div>
                             <div class="col-md-8">
                                 <label class="form-label" for="denominacionPMN">Nombre, denominación o razón
                                     social:</label>
                                 <input type="text" class="form-control" name="denominacionPMN"
                                     formControlName="denominacionPMN" maxlength="254" id="denominacionPMN"
-                                    (change)="setValoresStore(personaMoralForm,'denominacionPMN', 'setDenominacionPMN')">
+                                    (change)="setValoresStore(personaMoralForm,'denominacionPMN')">
                             </div>
                         </div>
 
@@ -77,7 +79,7 @@
                                         data-bs-toggle="tooltip"></span></label>
                                 <input type="text" name="correoPMN" id="correoPMN" class="form-control" maxlength="320"
                                     formControlName="correoPMN"
-                                    (change)="setValoresStore(personaMoralForm,'correoPMN', 'setCorreoPMN')">
+                                    (change)="setValoresStore(personaMoralForm,'correoPMN')">
                             </div>
                         </div>
 
@@ -94,30 +96,30 @@
                                 <label for="codigoPostal">Código postal:</label>
                                 <input type="text" class="form-control" name="codigoPostalPMN" id="codigoPostalPMN"
                                     formControlName="codigoPostalPMN" maxlength="12"
-                                    (change)="setValoresStore(personaMoralForm,'codigoPostalPMN', 'setCodigoPostalPMN')">
+                                    (change)="setValoresStore(personaMoralForm,'codigoPostalPMN')">
                             </div>
                             <div class="col-md-4">
                                 <app-catalogo-select [catalogo]="estado" [id]="'entidadFederativaPMN'"
                                     formControlName="estadoPMN" [label]="'Estado'" name="cveEstado"
-                                    (change)="estadoSeleccion()"></app-catalogo-select>
+                                    (change)="estadoSeleccion()" [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-md-4">
                                 <app-catalogo-select [catalogo]="municipio" formControlName="municipioPMN"
                                     [label]="'Municipio o alcaldía'" name="cveMunicipio"
-                                    (change)="municipioSeleccion()"></app-catalogo-select>
+                                    (change)="municipioSeleccion()" [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
                             </div>
                             <div class="col-md-4 pt-7">
                                 <label for="localidad">Localidad:</label>
                                 <input type="text" class="form-control" name="localidadPMN" id="localidadPMN"
                                     formControlName="localidadPMN" maxlength="120"
-                                    (change)="setValoresStore(personaMoralForm,'localidadPMN', 'setLocalidadPMN')">
+                                    (change)="setValoresStore(personaMoralForm,'localidadPMN')">
                             </div>
                             <div class="col-md-4">
                                 <app-catalogo-select [catalogo]="colonia" formControlName="coloniaPMN"
                                     [label]="'Colonia'" name="cveColonia"
-                                    (change)="coloniaSeleccion()"></app-catalogo-select>
+                                    (change)="coloniaSeleccion()" [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
                             </div>
                         </div>
                         <div class="row pt-7">
@@ -125,13 +127,13 @@
                                 <label for="calle">Calle:</label>
                                 <input type="text" class="form-control" name="callePMN" id="callePMN"
                                     formControlName="callePMN" maxlength="100"
-                                    (change)="setValoresStore(personaMoralForm,'callePMN', 'setCallePMN')">
+                                    (change)="setValoresStore(personaMoralForm,'callePMN')">
                             </div>
                             <div class="col-md-4">
                                 <label for="numeroExterior">Número exterior:</label>
                                 <input type="text" class="form-control" name="numeroExteriorPMN" id="numeroExteriorPMN"
                                     formControlName="numeroExteriorPMN" maxlength="55"
-                                    (change)="setValoresStore(personaMoralForm,'numeroExteriorPMN', 'setNumeroExteriorPMN')">
+                                    (change)="setValoresStore(personaMoralForm,'numeroExteriorPMN')">
                             </div>
                         </div>
                         <div class="row pt-7">
@@ -139,7 +141,7 @@
                                 <label for="numeroInterior">Número interior:</label>
                                 <input type="text" class="form-control" name="numeroInteriorPMN" id="numeroInteriorPMN"
                                     formControlName="numeroInteriorPMN" maxlength="55"
-                                    (change)="setValoresStore(personaMoralForm,'numeroInteriorPMN', 'setNumeroInteriorPMN')">
+                                    (change)="setValoresStore(personaMoralForm,'numeroInteriorPMN')">
                             </div>
                         </div>
 
@@ -151,21 +153,21 @@
                                 <label for="nombre">Nombre(s)*:</label>
                                 <input type="text" class="form-control" name="nombreDirectorGeneral"
                                     id="nombreDirectorGeneral" formControlName="nombreDirectorGeneral" maxlength="200"
-                                    (change)="setValoresStore(personaMoralForm,'nombreDirectorGeneral', 'setNombreDirectorGeneral')">
+                                    (change)="setValoresStore(personaMoralForm,'nombreDirectorGeneral')">
                             </div>
                             <div class="col-md-4">
                                 <label for="apellidoPaterno">Primer apellido*:</label>
                                 <input type="text" class="form-control" name="apellidoPaternoDirectorGeneral"
                                     id="apellidoPaternoDirectorGeneral" formControlName="apellidoPaternoDirectorGeneral"
                                     maxlength="200"
-                                    (change)="setValoresStore(personaMoralForm,'apellidoPaternoDirectorGeneral', 'setApellidoPaternoDirectorGeneral')">
+                                    (change)="setValoresStore(personaMoralForm,'apellidoPaternoDirectorGeneral')">
                             </div>
                             <div class="col-md-4">
                                 <label for="apellidoMaterno">Segundo apellido:</label>
                                 <input type="text" class="form-control" name="apellidoMaternoDirectorGeneral"
                                     id="apellidoMaternoDirectorGeneral" formControlName="apellidoMaternoDirectorGeneral"
                                     maxlength="200"
-                                    (change)="setValoresStore(personaMoralForm,'apellidoMaternoDirectorGeneral', 'setApellidoMaternoDirectorGeneral')">
+                                    (change)="setValoresStore(personaMoralForm,'apellidoMaternoDirectorGeneral')">
                             </div>
                         </div>
                     </form>

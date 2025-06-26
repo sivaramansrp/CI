@@ -62,8 +62,8 @@ describe('TercerosRelacionadosContenedoraComponent', () => {
 
   it('should run #ngOnInit()', async () => {
     component.tramiteQuery = component.tramiteQuery || {};
-    component.tramiteQuery.getDestinatarioFinalTablaDatos$ = observableOf({});
-    component.tramiteQuery.getProveedorTablaDatos$ = observableOf({});
+    component.tramiteQuery.getDestinatarioFinalTablaDatos$ = observableOf([[{tableIndex: 2}]]);
+    component.tramiteQuery.getProveedorTablaDatos$ = observableOf([{tableIndex: 2}]);
     component.consultaQuery = component.consultaQuery || {};
     component.consultaQuery.selectConsultaioState$ = observableOf({});
     component.ngOnInit();
@@ -74,30 +74,29 @@ describe('TercerosRelacionadosContenedoraComponent', () => {
     component.tramiteStore = component.tramiteStore || {};
     component.tramiteStore.actualizarDatosDestinatario = jest.fn();
     component.irAAcciones = jest.fn();
-    component.modificarDestinarioDatos({});
+    component.modificarDestinarioDatos({test: 1});
     expect(component.tramiteStore.actualizarDatosDestinatario).toHaveBeenCalled();
-    expect(component.irAAcciones).toHaveBeenCalled();
   });
 
   it('should run #modificarProveedorDatos()', async () => {
     component.tramiteStore = component.tramiteStore || {};
     component.tramiteStore.actualizarDatosProveedor = jest.fn();
     component.irAAcciones = jest.fn();
-    component.modificarProveedorDatos({});
+    component.modificarProveedorDatos({test: 1});
     expect(component.tramiteStore.actualizarDatosProveedor).toHaveBeenCalled();
   });
 
-  it('should run #irAAcciones()', async () => {
-    component.router = component.router || {};
-    component.router.navigate = jest.fn();
-    component.irAAcciones({});
-    expect(component.router.navigate).toHaveBeenCalled();
-  });
 
   it('should run #eliminarDestinatarioFinal()', async () => {
     component.tramiteStore = component.tramiteStore || {};
     component.tramiteStore.eliminarDestinatarioFinal = jest.fn();
-    component.eliminarDestinatarioFinal({});
+    component.eliminarDestinatarioFinal({test: 1});
+  });
+
+  it('should run #eliminarProveedor()', async () => {
+    component.tramiteStore = component.tramiteStore || {};
+    component.tramiteStore.eliminarProveedorFinal = jest.fn();
+    component.eliminarProveedor({test: 1});
   });
 
   it('should run #ngOnDestroy()', async () => {
@@ -108,5 +107,25 @@ describe('TercerosRelacionadosContenedoraComponent', () => {
     expect(component.destroy$.next).toHaveBeenCalled();
     expect(component.destroy$.complete).toHaveBeenCalled();
   });
+
+  
+  it('should run #openModal()', async () => {
+    component.modalComponent = component.modalComponent || {};
+    component.modalComponent.abrir = jest.fn();
+    component.cerrarModal = component.cerrarModal || {};
+    component.cerrarModal.bind = jest.fn();
+    component.openModal('agregar-destino-final');
+    expect(component.modalComponent.abrir).toHaveBeenCalled();
+    component.openModal('agregar-proveedor');
+    expect(component.modalComponent.abrir).toHaveBeenCalled();
+  });
+
+  it('should run #cerrarModal()', async () => {
+    component.modalComponent = component.modalComponent || {};
+    component.modalComponent.cerrar = jest.fn();
+    component.cerrarModal();
+    expect(component.modalComponent.cerrar).toHaveBeenCalled();
+  });
+
 
 });

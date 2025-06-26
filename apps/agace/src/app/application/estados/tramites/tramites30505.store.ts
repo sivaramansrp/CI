@@ -1,7 +1,8 @@
+import { AvisoAgente } from '../../core/models/30505/aviso-modificacion.model';
+import { FusionEscision } from '../../core/models/30505/aviso-modificacion.model';
 import { Injectable } from '@angular/core';
 import { Store } from '@datorama/akita';
 import { StoreConfig } from '@datorama/akita';
-import { AvisoAgente, FusionEscision } from '../../core/models/30505/aviso-modificacion.model';
 
 /**
  * Estado que representa los datos de la solicitud 30505.
@@ -554,7 +555,7 @@ export class Solicitud30505Store extends Store<Solicitud30505State> {
       * Establece el estado de tipoFigura.
       * @param tipoFigura - El valor de tipoFigura.
       */
-  public setTipoFigura(tipoFigura: string) {
+  public setTipoFigura(tipoFigura: string): void {
     this.update((state) => ({
       ...state,
       tipoFigura,
@@ -564,7 +565,7 @@ export class Solicitud30505Store extends Store<Solicitud30505State> {
    * Establece el estado de numPatenteModal.
    * @param numPatenteModal - El valor de numPatenteModal.
    */
-  public setNumPatenteModal(numPatenteModal: string) {
+  public setNumPatenteModal(numPatenteModal: string): void {
     this.update((state) => ({
       ...state,
       numPatenteModal,
@@ -574,7 +575,7 @@ export class Solicitud30505Store extends Store<Solicitud30505State> {
    * Establece el estado de obligFisc.
    * @param obligFisc - El valor de obligFisc.
    */
-  public setObligFisc(obligFisc: string) {
+  public setObligFisc(obligFisc: string): void {
     this.update((state) => ({
       ...state,
       obligFisc,
@@ -584,7 +585,7 @@ export class Solicitud30505Store extends Store<Solicitud30505State> {
    * Establece el estado de autPantente.
    * @param autPantente - El valor de autPantente.
    */
-  public setAutPantente(autPantente: string) {
+  public setAutPantente(autPantente: string): void {
     this.update((state) => ({
       ...state,
       autPantente,
@@ -594,7 +595,7 @@ export class Solicitud30505Store extends Store<Solicitud30505State> {
    * Establece el estado de patente2.
    * @param patente2 - El valor de patente2.
    */
-  public setPatente2(patente2: string) {
+  public setPatente2(patente2: string): void {
     this.update((state) => ({
       ...state,
       patente2,
@@ -604,7 +605,7 @@ export class Solicitud30505Store extends Store<Solicitud30505State> {
    * Establece el estado de razonAgencia.
    * @param razonAgencia - El valor de razonAgencia.
    */
-  public setRazonAgencia(razonAgencia: string) {
+  public setRazonAgencia(razonAgencia: string): void {
     this.update((state) => ({
       ...state,
       razonAgencia,

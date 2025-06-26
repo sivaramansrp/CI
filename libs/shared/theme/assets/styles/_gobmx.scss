@@ -140,9 +140,13 @@ hr {
   opacity: 1;
 }
 
-pre,
-textarea {
+pre {
   overflow: auto;
+}
+
+textarea {
+  resize: none;
+  overflow-y: scroll;
 }
 
 code,

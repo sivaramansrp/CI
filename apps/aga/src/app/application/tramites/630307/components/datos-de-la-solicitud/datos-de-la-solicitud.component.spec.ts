@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
+import { ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
 import { DatosDeLaSolicitudComponent } from './datos-de-la-solicitud.component';
 import { RetornoImportacionTemporalService } from '../../services/retorno-importacion-temporal.service';
 import { Tramite630307Store } from '../../estados/tramite630307.store';
@@ -47,7 +47,9 @@ describe('DatosDeLaSolicitudComponent', () => {
     componente = fixture.componentInstance;
 
     servicioMock.getAduanaDeIngreso.mockReturnValue(of(DATOS_ADUANA_MOCK));
-    servicioMock.getSeccionAduanera.mockReturnValue(of(DATOS_SECCION_ADUANERA_MOCK));
+    servicioMock.getSeccionAduanera.mockReturnValue(
+      of(DATOS_SECCION_ADUANERA_MOCK)
+    );
     servicioMock.getProrroga.mockReturnValue(of(DATOS_PRORROGA_MOCK));
 
     componente.formularioDatosSolicitud = [
@@ -89,11 +91,23 @@ describe('DatosDeLaSolicitudComponent', () => {
 
   it('debería inicializar el formulario y obtener datos en ngOnInit', () => {
     const obtenerValorStoreSpy = jest.spyOn(componente, 'getValorStore');
-    const inicializarFormularioSpy = jest.spyOn(componente, 'inizializarFormulario');
-    const obtenerAduanaDeIngresoSpy = jest.spyOn(componente, 'getAduanaDeIngreso');
-    const obtenerSeccionAduaneraSpy = jest.spyOn(componente, 'getSeccionAduanera');
+    const inicializarFormularioSpy = jest.spyOn(
+      componente,
+      'inizializarFormulario'
+    );
+    const obtenerAduanaDeIngresoSpy = jest.spyOn(
+      componente,
+      'getAduanaDeIngreso'
+    );
+    const obtenerSeccionAduaneraSpy = jest.spyOn(
+      componente,
+      'getSeccionAduanera'
+    );
     const obtenerProrrogaSpy = jest.spyOn(componente, 'getProrroga');
-    const cambiarCuentaProrrogaSpy = jest.spyOn(componente, 'cambiarCuentaProrroga');
+    const cambiarCuentaProrrogaSpy = jest.spyOn(
+      componente,
+      'cambiarCuentaProrroga'
+    );
 
     componente.ngOnInit();
 
@@ -116,17 +130,23 @@ describe('DatosDeLaSolicitudComponent', () => {
     componente.getAduanaDeIngreso();
 
     expect(servicioMock.getAduanaDeIngreso).toHaveBeenCalled();
-    const aduanaIngreso = componente.formularioDatosSolicitud.find((item) => item.id === 'cveAduana');
+    const aduanaIngreso = componente.formularioDatosSolicitud.find(
+      (item) => item.id === 'cveAduana'
+    );
     expect(aduanaIngreso?.opciones).toEqual(DATOS_ADUANA_MOCK);
   });
 
   it('debería obtener las opciones de Sección Aduanera', () => {
-    servicioMock.getSeccionAduanera.mockReturnValue(of(DATOS_SECCION_ADUANERA_MOCK));
+    servicioMock.getSeccionAduanera.mockReturnValue(
+      of(DATOS_SECCION_ADUANERA_MOCK)
+    );
 
     componente.getSeccionAduanera();
 
     expect(servicioMock.getSeccionAduanera).toHaveBeenCalled();
-    const seccionAduanera = componente.formularioDatosSolicitud.find((item) => item.id === 'cveSeccionAduanera');
+    const seccionAduanera = componente.formularioDatosSolicitud.find(
+      (item) => item.id === 'cveSeccionAduanera'
+    );
     expect(seccionAduanera?.opciones).toEqual(DATOS_SECCION_ADUANERA_MOCK);
   });
 
@@ -136,7 +156,9 @@ describe('DatosDeLaSolicitudComponent', () => {
     componente.getProrroga();
 
     expect(servicioMock.getProrroga).toHaveBeenCalled();
-    const prorroga = componente.formularioDatosSolicitud.find((item) => item.id === 'cuentaProrroga');
+    const prorroga = componente.formularioDatosSolicitud.find(
+      (item) => item.id === 'cuentaProrroga'
+    );
     expect(prorroga?.opciones).toEqual(DATOS_PRORROGA_MOCK);
   });
 
@@ -147,11 +169,17 @@ describe('DatosDeLaSolicitudComponent', () => {
 
   it('debería actualizar el store y llamar cambiarCuentaProrroga cuando establecerCambioDeValor es llamado', () => {
     const eventoMock = { campo: 'cuentaProrroga', valor: '1' };
-    const cambiarCuentaProrrogaSpy = jest.spyOn(componente, 'cambiarCuentaProrroga');
+    const cambiarCuentaProrrogaSpy = jest.spyOn(
+      componente,
+      'cambiarCuentaProrroga'
+    );
 
     componente.establecerCambioDeValor(eventoMock);
 
-    expect(storeMock.setTramite630307State).toHaveBeenCalledWith('cuentaProrroga', '1');
+    expect(storeMock.setTramite630307State).toHaveBeenCalledWith(
+      'cuentaProrroga',
+      '1'
+    );
     expect(cambiarCuentaProrrogaSpy).toHaveBeenCalled();
   });
 
@@ -173,5 +201,40 @@ describe('DatosDeLaSolicitudComponent', () => {
 
     expect(destroyedSpy).toHaveBeenCalled();
     expect(completeSpy).toHaveBeenCalled();
+  });
+
+  it('should disable the form if esFormularioSoloLectura is true', () => {
+    componente.datosImportacionTemporalFormulario = componente['fb'].group({});
+    componente.esFormularioSoloLectura = true;
+    componente.guardarDatosFormulario();
+    expect(componente.datosImportacionTemporalFormulario.disabled).toBe(true);
+  });
+
+  it('should enable the form if esFormularioSoloLectura is false', () => {
+    componente.datosImportacionTemporalFormulario = componente['fb'].group({});
+    componente.esFormularioSoloLectura = false;
+    componente.guardarDatosFormulario();
+    expect(componente.datosImportacionTemporalFormulario.enabled).toBe(true);
+  });
+
+  it('should call guardarDatosFormulario if esFormularioSoloLectura is true', () => {
+    const guardarSpy = jest.spyOn(componente, 'guardarDatosFormulario');
+    componente.esFormularioSoloLectura = true;
+    componente.inicializarEstadoFormulario();
+    expect(guardarSpy).toHaveBeenCalled();
+  });
+
+  it('should call inizializarFormulario if esFormularioSoloLectura is false', () => {
+    const initSpy = jest.spyOn(componente, 'inizializarFormulario');
+    componente.esFormularioSoloLectura = false;
+    componente.inicializarEstadoFormulario();
+    expect(initSpy).toHaveBeenCalled();
+  });
+  it('should initialize datosImportacionTemporalFormulario as a FormGroup', () => {
+    componente.inizializarFormulario();
+    expect(componente.datosImportacionTemporalFormulario).toBeDefined();
+    expect(
+      componente.datosImportacionTemporalFormulario instanceof FormGroup
+    ).toBe(true);
   });
 });

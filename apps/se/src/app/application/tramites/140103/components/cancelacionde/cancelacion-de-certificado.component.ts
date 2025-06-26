@@ -161,7 +161,7 @@ export class CancelacionDeCertificateComponent implements OnInit, OnDestroy {
    *
    * @type {Catalogo[]}
    */
-  public regimen: Catalogo[] = cancelcatalog.regimen;
+  public regimen: Catalogo[] = cancelcatalog?.regimen ?? [];
 
   /**
    * Lista de catálogos para el mecanismo de asignación, utilizado en el proceso de cancelación de certificados.
@@ -169,7 +169,7 @@ export class CancelacionDeCertificateComponent implements OnInit, OnDestroy {
    *
    * @type {Catalogo[]}
    */
-  public mecanismo: Catalogo[] = cancelcatalog.mecanismo;
+  public mecanismo: Catalogo[] = cancelcatalog?.mecanismo ?? [];
 
   /**
    * Lista de catálogos para los tratados relacionados con los productos o subproductos que se están gestionando
@@ -177,28 +177,28 @@ export class CancelacionDeCertificateComponent implements OnInit, OnDestroy {
    *
    * @type {Catalogo[]}
    */
-  public tratado: Catalogo[] = cancelcatalog.tratado;
+  public tratado: Catalogo[] = cancelcatalog?.tratado ?? [];
 
   /**
    * Lista de catálogos con los nombres de productos involucrados en el proceso de cancelación de certificados.
    *
    * @type {Catalogo[]}
    */
-  public producto: Catalogo[] = cancelcatalog.producto;
+  public producto: Catalogo[] = cancelcatalog?.producto ?? [];
 
   /**
    * Lista de catálogos con los nombres de subproductos que se gestionan durante el proceso de cancelación de certificados.
    *
    * @type {Catalogo[]}
    */
-  public subproducto: Catalogo[] = cancelcatalog.subproducto;
+  public subproducto: Catalogo[] = cancelcatalog?.subproducto ?? [];
 
   /**
    * Lista de catálogos para representar diferentes representaciones o categorías asociadas a los productos o subproductos.
    *
    * @type {Catalogo[]}
    */
-  public representacion: Catalogo[] = cancelcatalog.representacion;
+  public representacion: Catalogo[] = cancelcatalog?.representacion ?? [];
   public solicitudState!: Solicitud140103State;
   private destroyNotifier$: Subject<void> = new Subject();
 

@@ -286,8 +286,7 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
       next: (data) => {
         this.estadoSeleccionar = data as Catalogo[];
       },
-      error: (error: HttpErrorResponse) => {
-        console.error('Error al obtener los datos:', error);
+      error: () => {
         this.estadoSeleccionar = [];
       },
     });
@@ -302,8 +301,7 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
       next: (data) => {
         this.RepresentacionFederal = data as Catalogo[];
       },
-      error: (error: HttpErrorResponse) => {
-        console.error('Error al obtener los datos:', error);
+      error: () => {
         this.RepresentacionFederal = [];
       },
     });
@@ -320,8 +318,7 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
       next: (data) => {
         this.ActividadProductiva = data as Catalogo[];
       },
-      error: (error: HttpErrorResponse) => {
-        console.error('Error al obtener los datos:', error);
+      error: () => {
         this.ActividadProductiva = [];
       },
     });

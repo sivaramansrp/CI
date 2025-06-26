@@ -28,11 +28,11 @@ describe('PasoTresComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should call router.navigate when obtieneFirma is triggered with a valid signature', () => {
+  it('debe llamar a router.navigate cuando obtieneFirma es ejecutado con una firma válida', () => {
     const mockFirma = 'ValidSignature';
 
     component.obtieneFirma(mockFirma);
@@ -40,7 +40,7 @@ describe('PasoTresComponent', () => {
     expect(mockRouter.navigate).toHaveBeenCalledWith(['servicios-extraordinarios/acuse']);
   });
 
-  it('should not navigate if firma is empty', () => {
+  it('no debe navegar si la firma está vacía', () => {
     component.obtieneFirma('');
 
     expect(mockRouter.navigate).not.toHaveBeenCalled();

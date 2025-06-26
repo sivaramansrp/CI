@@ -71,12 +71,12 @@ export class DevolverComponent implements OnInit, OnDestroy {
    * Lista de facturas cargadas desde un archivo JSON, que contiene información relevante
    * sobre las facturas y su estado de devolución.
    */
-  facturas: Facturas[] = facturasdata.facturas;
+  facturas: Facturas[] = facturasdata?.facturas?? [];
 
   /**
    * Lista de facturas adicionales que se utilizan en el proceso de cancelación.
    */
-  facturase: Facturase[] = facturasdata.facturase;
+  facturase: Facturase[] = facturasdata?.facturase ?? [];
 
   /**
    * Configuración de las columnas para mostrar las facturas en una tabla dinámica.
