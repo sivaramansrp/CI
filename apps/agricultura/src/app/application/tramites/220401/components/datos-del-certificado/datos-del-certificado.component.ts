@@ -28,6 +28,11 @@ import { TableComponent } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import radioOptionsData from '@libs/shared/theme/assets/json/220401/tipo-de-certifico.json';
 import unidadRadioFields from '@libs/shared/theme/assets/json/220401/unidad.json';
+
+import { AlertComponent,Catalogo } from '@ng-mf/data-access-user';
+import { LOCALIDAD_COLONIA } from '../../constantes/certificados-licencias.enum';
+
+
 /**
  * Componente que gestiona los datos del certificado en la solicitud 220401.
  */
@@ -45,6 +50,7 @@ import unidadRadioFields from '@libs/shared/theme/assets/json/220401/unidad.json
     AgregarArchivoComponent,
     TableComponent,
     CatalogoSelectComponent,
+    AlertComponent
   ],
 })
 export class DatosDelCertificadoComponent implements OnInit, OnDestroy {
@@ -85,6 +91,25 @@ export class DatosDelCertificadoComponent implements OnInit, OnDestroy {
   /**
    * Constructor del componente, inyecta los servicios necesarios.
    */
+
+  /**
+   * Arreglo que contiene los elementos del catálogo relacionados con los países de origen disponibles.
+   * Se utiliza para cargar y gestionar los países de origen seleccionados en el formulario.
+   */
+    public paisOrigen!: Catalogo[];
+
+   /**
+   * Representa el tipo de alerta que se mostrará.
+   * El valor es típicamente una cadena que indica el estilo de alerta, como 'alert-warning'.
+   */
+  public infoAlert = 'alert-warning';
+
+  /**
+   * Una constante que contiene el valor de `LOCALIDAD_COLONIA`.
+   * Probablemente se utiliza para representar o almacenar información textual
+   * relacionada con una localidad o colonia específica en la aplicación.
+   */
+  public TEXTO = LOCALIDAD_COLONIA;
 
   constructor(private fb: FormBuilder,
     private agregar220401Store: Agregar220401Store,
@@ -164,6 +189,11 @@ this.inicializarCertificadoFormulario();
     this.datosdelForm = this.fb.group({
       tipoCertificado: ['', Validators.required],
       message: [{ value: '', disabled: true }],
+      numeroTotal:[''],
+      condiciones:['',Validators.required],
+      cantidadTotal:[''],
+      tipoEmbalaje:['']
+
     });
 
     this.formGroup1 = this.fb.group({});
@@ -203,6 +233,10 @@ this.inicializarCertificadoFormulario();
         certificada: [this.solicitudState?.certificada],
         tratamiento:[this.solicitudState?.tratamiento],
       })
+      
+      this._pantallas220401Service.getPaisOrigen().pipe(takeUntil(this.destroyNotifier$)).subscribe((data) => {
+      this.paisOrigen = data;
+    });
   }
 
   /**
@@ -345,13 +379,13 @@ this.inicializarCertificadoFormulario();
      * Columnas de la tabla de mercancías.
      */
     tableColumns = [
-      'No. partida',
-      'Fracción arancelaria',
-      'Descripción de la fracción',
-      'Unidad de medida de tarifa (UMT)',
-      'Cantidad (UMT)',
-      'Unidad de medida de comercialización (UMC)',
-      'Cantidad (UMC)',
+      'Tratamiento',
+      'Presentación',
+      'Marcas embarque',
+      'Fecha de caducidad',
+      'Fecha sacrificio inicio',
+      'Número de autorización CITES',
+      'Número de lote',
     ];
   
     /**
