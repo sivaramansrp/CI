@@ -46,6 +46,12 @@ export class ProductorIndirectoComponent implements OnInit, OnDestroy {
    * en el componente.
    */
   public configuracionTabla = PRODUCTOR_INDIRECTO;
+  /**
+   * Contiene la instancia de una nueva notificación que será creada o gestionada.
+   * 
+   * @type {Notificacion}
+   * @public
+   */
   public nuevaNotificacion!: Notificacion;
   /**
    * Un arreglo de objetos `ProductorIndirectoTabla` que representa los datos para la tabla de productor indirecto.
@@ -194,6 +200,11 @@ export class ProductorIndirectoComponent implements OnInit, OnDestroy {
     (this.tramite90201Store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
 
+  /**
+   * Muestra un mensaje de notificación basado en la acción de agregar o eliminar un productor indirecto.
+   * @param agregar - Si es `true`, muestra un mensaje indicando que solo se pueden agregar personas morales.
+   *                  Si es `false`, solicita al usuario seleccionar el productor indirecto que desea eliminar.
+   */
   public productor(agregar: boolean): void {
     this.nuevaNotificacion = {
       tipoNotificacion: 'alert',
