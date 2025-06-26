@@ -3,10 +3,14 @@
     <form [formGroup]="datisDelNombre" >
         <div class="row mt-4">
             <div class="col-md-4">
-                <app-catalogo-select [label]="'¿Desea consultar al representante por
-                RFC?'" [required]="true"
-                    [catalogo]="consultarPorRFC" formControlName="esConsultaRep" id="ddlRepresentante"
-                    (selectionChange)="establecerCambioDeValor({campo:'esConsultaRep',valor:$event});cambiarPropietario()"></app-catalogo-select>
+                <app-catalogo-select 
+                [label]="'¿Desea consultar al representante por RFC?'" 
+                [required]="true"
+                [catalogo]="consultarPorRFC" 
+                formControlName="esConsultaRep" 
+                id="ddlRepresentante" 
+                [isDisabled]="esFormularioSoloLectura"
+                (selectionChange)="establecerCambioDeValor({campo:'esConsultaRep',valor:$event});cambiarPropietario()"></app-catalogo-select>
             </div>
             
   @if(mostrarSolicitante)
@@ -24,7 +28,7 @@
   </div>
   <div class="row mt-5 mb-5">
       <div class="col-md-12 d-flex justify-content-end">
-          <button type="button" class="btn btn-primary" (click)="continuar()"> Continuar </button>
+          <button type="button" class="btn btn-primary" (click)="continuar()" [disabled]="esFormularioSoloLectura"> Continuar </button>
       </div>
   </div>
 
@@ -40,18 +44,19 @@
             <div class="col-md-4">
                 <app-catalogo-select [label]="'Tipo de representante'" [required]="true"
                     formControlName="datosRepresentante" [catalogo]="tipoDeRepresentanteOpciones" id="ddlTipoPersona_representante"
+                    [isDisabled]="esFormularioSoloLectura"
                     (selectionChange)="establecerCambioDeValor({campo:'datosRepresentante',valor:$event});cambiarTipoPropietario()"></app-catalogo-select>
             </div>
         </div>
      @if(mostrarFormularioPersonaExtranjera){
      <div class="row mt-4">
             <formas-dinamicas [forma]="datisDelNombre" [formularioDatos]="formularioDatosPropietarioNombre"
-                [estado]="estadoSeleccionado"
+                [estado]="estadoSeleccionado" [soloLectura]="esFormularioSoloLectura"
                 (emitirCambioDeValor)="establecerCambioDeValor($event)"></formas-dinamicas>
         </div>
     <div class="row mt-4">
             <formas-dinamicas [forma]="datisDelNombre" [formularioDatos]="formularioDatosPropietarioDireccion"
-                [estado]="estadoSeleccionado"
+                [estado]="estadoSeleccionado" [soloLectura]="esFormularioSoloLectura"
                 (emitirCambioDeValor)="establecerCambioDeValor($event)"></formas-dinamicas>
         </div>
         }
