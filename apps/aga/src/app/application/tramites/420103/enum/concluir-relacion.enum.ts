@@ -68,7 +68,7 @@ export const CONFIGURACION_FECHA_INICIAL: InputFecha = {
  * Configuración para el campo de fecha final.
  * Define las propiedades del campo, como el nombre de la etiqueta, si es requerido y si está habilitado.
  */
-export const CONFIGURACION_FECHA_FINAL: InputFecha = {
+export const CONFIGURACION_FECHA_FINAL = {
   /**
    * Nombre de la etiqueta del campo.
    */

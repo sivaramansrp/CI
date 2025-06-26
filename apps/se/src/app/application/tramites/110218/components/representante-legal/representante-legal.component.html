@@ -6,8 +6,9 @@
       <div class="row">
         <div class="col-md-12">
           <label class="form-label" for="nombredelRepresentante">Nombre del representante legal del exportador*:</label>
-          <input type="text" class="form-control bg-white" id="nombredelRepresentante"
+          <input type="text" class="form-control" id="nombredelRepresentante"
             placeholder="Ingrese el nombre del representante" formControlName="nombredelRepresentante"
+            [class.bg-white]="!datosdelexportador.get('nombredelRepresentante')?.disabled"
             [class.is-invalid]="datosdelexportador.get('nombredelRepresentante')?.touched && datosdelexportador.get('nombredelRepresentante')?.invalid" 
             (change)="setValorStore(datosdelexportador,'nombredelRepresentante')"/>
           <div class="invalid-feedback"
@@ -26,9 +27,10 @@
 
         <div class="col-md-4">
           <label class="form-label" for="cargo">Cargo*:</label>
-          <input type="text" class="form-control bg-white" id="cargo" placeholder="Ingrese el cargo"
+          <input type="text" class="form-control" id="cargo" placeholder="Ingrese el cargo"
             formControlName="cargo"
-            [class.is-invalid]="datosdelexportador.get('cargo')?.touched && datosdelexportador.get('cargo')?.invalid" 
+            [class.is-invalid]="datosdelexportador.get('cargo')?.touched && datosdelexportador.get('cargo')?.invalid"
+            [class.bg-white]="!datosdelexportador.get('cargo')?.disabled" 
             (change)="setValorStore(datosdelexportador,'cargo')"/>
           <div class="invalid-feedback"
             *ngIf="datosdelexportador.get('cargo')?.touched && datosdelexportador.get('cargo')?.invalid">
@@ -38,9 +40,10 @@
 
         <div class="col-md-4">
           <label class="form-label" for="telefonos">Teléfono*:</label>
-          <input type="text" class="form-control bg-white" id="telefonos" placeholder="Ingrese el telefono"
+          <input type="text" class="form-control" id="telefonos" placeholder="Ingrese el telefono"
             formControlName="telefonos"
             [class.is-invalid]="datosdelexportador.get('telefonos')?.touched && datosdelexportador.get('telefonos')?.invalid"
+            [class.bg-white]="!datosdelexportador.get('telefonos')?.disabled"
             (change)="setValorStore(datosdelexportador,'telefonos')" />
           <div class="invalid-feedback"
             *ngIf="datosdelexportador.get('telefonos')?.touched && datosdelexportador.get('telefonos')?.invalid">
@@ -51,9 +54,10 @@
 
         <div class="col-md-4">
           <label class="form-label" for="faxs">Fax*:</label>
-          <input type="text" class="form-control bg-white" id="faxs" placeholder="Ingrese el fax" formControlName="faxs"
+          <input type="text" class="form-control" id="faxs" placeholder="Ingrese el fax" formControlName="faxs"
             [class.is-invalid]="datosdelexportador.get('faxs')?.touched && datosdelexportador.get('faxs')?.invalid" 
-            (change)="setValorStore(datosdelexportador,'faxs')" />
+            (change)="setValorStore(datosdelexportador,'faxs')"
+            [class.bg-white]="!datosdelexportador.get('faxs')?.disabled" />
           <div class="invalid-feedback"
             *ngIf="datosdelexportador.get('faxs')?.touched && datosdelexportador.get('faxs')?.invalid">
             <small *ngIf="datosdelexportador.get('faxs')?.hasError('required')">Este campo es obligatorio.</small>
@@ -63,10 +67,11 @@
 
         <div class="col-md-4">
           <label class="form-label" for="correoElectronicos">Correo electrónico*:</label>
-          <input type="text" class="form-control bg-white" id="correoElectronicos"
+          <input type="text" class="form-control" id="correoElectronicos"
             placeholder="Ingrese su correo electrónico" formControlName="correoElectronicos"
             [class.is-invalid]="datosdelexportador.get('correoElectronicos')?.touched && datosdelexportador.get('correoElectronicos')?.invalid"
-            (change)="setValorStore(datosdelexportador,'correoElectronicos')" />
+            (change)="setValorStore(datosdelexportador,'correoElectronicos')" 
+            [class.bg-white]="!datosdelexportador.get('correoElectronicos')?.disabled"/>
           <div class="invalid-feedback"
             *ngIf="datosdelexportador.get('correoElectronicos')?.touched && datosdelexportador.get('correoElectronicos')?.invalid">
             <small *ngIf="datosdelexportador.get('correoElectronicos')?.hasError('required')">Este campo es

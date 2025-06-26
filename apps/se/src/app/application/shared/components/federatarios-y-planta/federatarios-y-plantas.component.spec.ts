@@ -18,7 +18,9 @@ import { Observable, of as observableOf, throwError } from 'rxjs';
 import { Component } from '@angular/core';
 import { FederatariosYPlantasComponent } from './federatarios-y-plantas.component';
 import { Router, ActivatedRoute } from '@angular/router';
-
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { ElementRef } from '@angular/core';
+import { Modal } from 'bootstrap';
 @Injectable()
 class MockRouter {
   navigate() {}
@@ -30,7 +32,7 @@ describe('FederatariosYPlantasComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [FormsModule, ReactiveFormsModule],
+      imports: [FormsModule, ReactiveFormsModule, HttpClientTestingModule],
       schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
       providers: [
         { provide: Router, useClass: MockRouter },
@@ -75,5 +77,108 @@ describe('FederatariosYPlantasComponent', () => {
     component.federatariosFormGroup.value = 'value';
     component.aggregarDatos();
     expect(component.datosFormaFedratario.emit).toHaveBeenCalled();
+  });
+
+  it('should initialize federatariosFormGroup', () => {
+    component.initFederatariosFormGroup();
+    expect(component.federatariosFormGroup.contains('nombre')).toBe(true);
+    expect(component.federatariosFormGroup.contains('estado')).toBe(true);
+  });
+
+  it('should initialize expresasFormGroup', () => {
+    component.initExpresasFormGroup();
+    expect(component.expresasFormGroup.contains('taxId')).toBe(true);
+    expect(component.expresasFormGroup.contains('pais')).toBe(true);
+  });
+
+  it('should navigate to given route on irAAcciones()', () => {
+  const router = TestBed.inject(Router);
+  const routerSpy = jest.spyOn(router, 'navigate');
+  const path = 'some-path';
+  component.irAAcciones(path);
+  expect(routerSpy).toHaveBeenCalledWith([path], {
+    relativeTo: TestBed.inject(ActivatedRoute),
+  });
+});
+
+
+  it('should emit federatario form data on aggregarDatos()', () => {
+    const emitSpy = jest.spyOn(component.datosFormaFedratario, 'emit');
+    component.federatariosFormGroup.setValue({
+      nombre: 'John',
+      fechaInicioInput: '',
+      primerApellido: '',
+      segundoApellido: '',
+      numeroDeActa: '',
+      numeroDeNotaria: '',
+      estado: '',
+      estadoOptions: '',
+    });
+    component.aggregarDatos();
+    expect(emitSpy).toHaveBeenCalledWith(component.federatariosFormGroup.value);
+  });
+
+  it('should push data into expresasDatos on aggregarExpresasDatos()', () => {
+    component.expresasFormGroup.setValue({
+      taxId: '123',
+      nombreDelEmpresa: 'Empresa S.A.',
+      pais: 'MX',
+      direccion: 'Calle 123',
+    });
+    component.aggregarExpresasDatos();
+    expect(component.expresasDatos.length).toBe(1);
+    expect(component.expresasDatos[0].taxId).toBe('123');
+  });
+
+  describe('Modal opening methods', () => {
+    it('should open complementarPlanta modal', () => {
+      const modalEl = document.createElement('div');
+      document.body.appendChild(modalEl);
+      component.modalElement = new ElementRef(modalEl);
+      const modalSpy = jest.spyOn(Modal.prototype, 'show').mockImplementation(() => {});
+      component.abrirDialogoComplementarPlanta();
+      expect(modalSpy).toHaveBeenCalled();
+      modalSpy.mockRestore();
+    });
+
+    it('should open montos modal', () => {
+      const modalEl = document.createElement('div');
+      document.body.appendChild(modalEl);
+      component.montos = new ElementRef(modalEl);
+      const modalSpy = jest.spyOn(Modal.prototype, 'show').mockImplementation(() => {});
+      component.abrirDialogoMontos();
+      expect(modalSpy).toHaveBeenCalled();
+      modalSpy.mockRestore();
+    });
+
+    it('should open empleadosAcciones modal', () => {
+      const modalEl = document.createElement('div');
+      document.body.appendChild(modalEl);
+      component.empleadosAcciones = new ElementRef(modalEl);
+      const modalSpy = jest.spyOn(Modal.prototype, 'show').mockImplementation(() => {});
+      component.abrirDialogoempleadosAcciones();
+      expect(modalSpy).toHaveBeenCalled();
+      modalSpy.mockRestore();
+    });
+
+    it('should open capacidadInstalada modal', () => {
+      const modalEl = document.createElement('div');
+      document.body.appendChild(modalEl);
+      component.capacidadInstalada = new ElementRef(modalEl);
+      const modalSpy = jest.spyOn(Modal.prototype, 'show').mockImplementation(() => {});
+      component.abrirDialogocapacidadInstalada();
+      expect(modalSpy).toHaveBeenCalled();
+      modalSpy.mockRestore();
+    });
+
+    it('should open cargaPorPrchivo modal', () => {
+      const modalEl = document.createElement('div');
+      document.body.appendChild(modalEl);
+      component.cargaPorPrchivo = new ElementRef(modalEl);
+      const modalSpy = jest.spyOn(Modal.prototype, 'show').mockImplementation(() => {});
+      component.abrirDialogocargaPorPrchivo();
+      expect(modalSpy).toHaveBeenCalled();
+      modalSpy.mockRestore();
+    });
   });
 });

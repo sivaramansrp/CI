@@ -19,7 +19,6 @@ import { NgModule } from '@angular/core';
 
 import { CapacidadInstaladaComponent } from '../../shared/components/capacidad-instalada/capacidad-instalada.component';
 import { ComplementarPlantaComponent } from '../../shared/components/complementar-planta/complementar-planta.component';
-import { FederatariosYPlantasComponent } from '../../shared/components/federatarios-y-plantas/federatarios-y-plantas.component';
 import { FederatariosYPlantasVistaComponent } from './component/federatarios-y-plantas-vista/federatarios-y-plantas-vista.component';
 import { MontosDeInversionComponent } from '../../shared/components/montos-de-inversion/montos-de-inversion.component';
 
@@ -36,6 +35,7 @@ import { AnexoTresComponent } from '../../shared/components/anexo-tres/anexo-tre
 import { AnexoUnoSeccionComponent } from '../../shared/components/anexo-uno-seccion/anexo-uno-seccion.component';
 import { EmpresasControladasComponent } from './component/empresas-controladas/empresas-controladas.component';
 
+import { FederatariosYPlantasComponent } from '../../shared/components/federatarios-y-planta/federatarios-y-plantas.component';
 import { ModalidadControlodoraRoutingModule } from './modalidad-controlodora-routing.module';
 
 @NgModule({
@@ -49,7 +49,7 @@ import { ModalidadControlodoraRoutingModule } from './modalidad-controlodora-rou
   ],
   imports: [
     CommonModule,
-   ModalidadControlodoraRoutingModule,
+    ModalidadControlodoraRoutingModule,
     AlertComponent,
     AnexarDocumentosComponent,
     BtnContinuarComponent,

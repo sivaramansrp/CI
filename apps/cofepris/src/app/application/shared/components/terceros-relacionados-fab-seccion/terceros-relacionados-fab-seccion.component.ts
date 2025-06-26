@@ -37,7 +37,7 @@ import { TramiteRelacionadaseStore } from '../../estados/stores/terceros-relacio
 }) 
 export class TercerosRelacionadosFabSeccionComponent implements OnInit, OnDestroy {
 
- public isFormGroupEmpty(formGroup: FormGroup): boolean {
+ static isFormGroupEmpty(formGroup: FormGroup): boolean {
   return Object.values(formGroup.value).every(
     value => value === null || value === undefined || value === ''
   );
@@ -936,7 +936,7 @@ public extranjero = false;
  */
 submitFabricanteForm() {
   if (this.agregarFabricanteFormGroup) {
-     if (this.isFormGroupEmpty(this.agregarFabricanteFormGroup)) {
+     if (TercerosRelacionadosFabSeccionComponent.isFormGroupEmpty(this.agregarFabricanteFormGroup)) {
     
       return;
     }
@@ -959,7 +959,7 @@ submitFabricanteForm() {
  */
 submitFacturadorForm(): void {
   if (this.agregarFacturadorFormGroup) {
-     if (this.isFormGroupEmpty(this.agregarFacturadorFormGroup)) {
+     if (TercerosRelacionadosFabSeccionComponent.isFormGroupEmpty(this.agregarFacturadorFormGroup)) {
       
       return;
     }
@@ -1062,7 +1062,7 @@ eliminarSeleccionadosFabricante() :void {
    */
 submitDestinatarioForm(): void {
   if (this.agregarDestinatarioFormGroup) {
-    if (this.isFormGroupEmpty(this.agregarDestinatarioFormGroup)) {
+    if (TercerosRelacionadosFabSeccionComponent.isFormGroupEmpty(this.agregarDestinatarioFormGroup)) {
       return;
     }
     const NEW_DESTINATARIO = this.agregarDestinatarioFormGroup.value;
@@ -1136,7 +1136,7 @@ onProveedorSeleccionados(selected: ProveedorModel[]) {
      */
    submitProveedorForm(): void {
   if (this.agregarProveedorFormGroup) {
- if (this.isFormGroupEmpty(this.agregarProveedorFormGroup)) {
+ if (TercerosRelacionadosFabSeccionComponent.isFormGroupEmpty(this.agregarProveedorFormGroup)) {
       return;
     }
     const NEW_PROVEEDOR = this.agregarProveedorFormGroup.value;

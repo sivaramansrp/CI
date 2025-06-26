@@ -1,91 +1,179 @@
-import { TestBed } from '@angular/core/testing';
-import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { of, Subject } from 'rxjs';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BuscarEmpresaCaatComponent } from './buscar-empresa-caat.component';
 import { Tramite40201Store } from '../../../../core/estados/tramites/tramite40201.store';
 import { Tramite40201Query } from '../../../../core/queries/tramite40201.query';
 import { TransportacionMaritimaService } from '../../services/transportacion-maritima/transportacion-maritima.service';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { CommonModule } from '@angular/common';
+import { BehaviorSubject, of } from 'rxjs';
+import { CAATRegistradoEmpresaForm} from '../../models/transportacion-maritima.model';
+
+import { TransportacionMaritima40201State} from '../../../../core/estados/tramites/tramite40201.store'
+import { CAAT_REGISTRADO_EMPRESA_ENCABEZADO_DE_TABLA, OPCIONES_DE_BOTON_DE_RADIO, TEXTOS } from '../../constantes/transportacion-maritima.enum';
+import { TablaSeleccion } from '@libs/shared/data-access-user/src';
 
 describe('BuscarEmpresaCaatComponent', () => {
   let component: BuscarEmpresaCaatComponent;
-  let tramite40201StoreMock: jest.Mocked<Tramite40201Store>;
-  let tramite40201QueryMock: jest.Mocked<Tramite40201Query>;
-  let transportacionMaritimaServiceMock: jest.Mocked<TransportacionMaritimaService>;
+  let fixture: ComponentFixture<BuscarEmpresaCaatComponent>;
+  let mockTramite40201Store: jest.Mocked<Tramite40201Store>;
+  let mockTramite40201Query: jest.Mocked<Tramite40201Query>;
+  let mockTransportacionMaritimaService: jest.Mocked<TransportacionMaritimaService>;
+  let mockConsultaioQuery: jest.Mocked<ConsultaioQuery>;
+  let formBuilder: FormBuilder;
 
-  beforeEach(() => {
-    tramite40201StoreMock = {
-      setCaatRegistradoEmpresaTabla: jest.fn(),
-      setBuscarPorDenominacionEx: jest.fn(),
-      setFolioCaatBusquedaEx: jest.fn(),
-      setBuscarPorRFCNa: jest.fn(),
-      setBuscarPorDenominacionNa: jest.fn(),
-      setFolioCaatBusquedaNa: jest.fn(),
-    } as unknown as jest.Mocked<Tramite40201Store>;
+  const mockState: Partial<TransportacionMaritima40201State> = {
+    tipoDeEmpresaOpcion: 'Nacional',
+    buscarPorRFCNa: 'ABCD123456789',
+    buscarPorDenominacionNa: 'Empresa Nacional SA',
+    folioCaatBusquedaNa: 'CAAT123',
+    buscarPorDenominacionEx: 'Foreign Company Inc',
+    folioCaatBusquedaEx: 'CAAT456',
+    caatRegistradoEmpresaTabla: []
+  };
 
-    tramite40201QueryMock = {
-      selectSeccionState$: of({
-        caatRegistradoEmpresaTabla: [],
-        tipoDeEmpresaOpcion: 'nacional',
-        buscarPorRFCNa: '',
-        buscarPorDenominacionNa: '',
-        folioCaatBusquedaNa: '',
-        buscarPorDenominacionEx: '',
-        folioCaatBusquedaEx: '',
-      }),
-    } as unknown as jest.Mocked<Tramite40201Query>;
+  const mockCaatResponse = {
+    data: [
+      {
+        rfc: 'ABCD123456789',
+        nombreDenominacionRazonSocial: 'Empresa Nacional SA',
+        caat: 'CAAT123',
+        perfilCaat: 'Perfil A',
+        inicioVigencia: '2023-01-01',
+        finVigencia: '2024-12-31',
+        pais: 'México'
+      }
+    ]
+  };
 
-    transportacionMaritimaServiceMock = {
-      obtenerBuscarEmpresaCaat: jest.fn().mockReturnValue(of({ data: [] })),
-    } as unknown as jest.Mocked<TransportacionMaritimaService>;
+  beforeEach(waitForAsync(() => {
+    mockTramite40201Store = {
+      setTramite40201State: jest.fn(),
+      update: jest.fn()
+    } as any;
+
+    mockTramite40201Query = {
+      selectSeccionState$: new BehaviorSubject(mockState)
+    } as any;
+
+    mockTransportacionMaritimaService = {
+      obtenerBuscarEmpresaCaat: jest.fn().mockReturnValue(of(mockCaatResponse))
+    } as any;
+
+    mockConsultaioQuery = {
+      selectConsultaioState$: new BehaviorSubject({ readonly: false })
+    } as any;
 
     TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule, BuscarEmpresaCaatComponent],
+      imports: [
+        CommonModule,
+        FormsModule,
+        ReactiveFormsModule,
+        BuscarEmpresaCaatComponent
+      ],
       providers: [
         FormBuilder,
-        { provide: Tramite40201Store, useValue: tramite40201StoreMock },
-        { provide: Tramite40201Query, useValue: tramite40201QueryMock },
-        { provide: TransportacionMaritimaService, useValue: transportacionMaritimaServiceMock },
-      ],
-    });
+        { provide: Tramite40201Store, useValue: mockTramite40201Store },
+        { provide: Tramite40201Query, useValue: mockTramite40201Query },
+        { provide: TransportacionMaritimaService, useValue: mockTransportacionMaritimaService },
+        { provide: ConsultaioQuery, useValue: mockConsultaioQuery }
+      ]
+    }).compileComponents();
 
-    const fixture = TestBed.createComponent(BuscarEmpresaCaatComponent);
+    fixture = TestBed.createComponent(BuscarEmpresaCaatComponent);
     component = fixture.componentInstance;
-
-    const fb = TestBed.inject(FormBuilder);
-    component.buscarEmpresaForm = fb.group({
-      tipoDeEmpresaNacional: fb.group({
-        buscarPorRFCNa: [''],
-        buscarPorDenominacionNa: [''],
-        folioCaatBusquedaNa: [''],
-      }),
-      tipoDeEmpresaExtranjera: fb.group({
-        buscarPorDenominacionEx: [''],
-        folioCaatBusquedaEx: [''],
-      }),
-    });
-
-    fixture.detectChanges();
-  });
+    formBuilder = TestBed.inject(FormBuilder);
+  }));
 
   it('should create the component', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize the form on ngOnInit', () => {
+  it('should initialize state and subscribe to state changes on ngOnInit', waitForAsync(() => {
     component.ngOnInit();
-    expect(component.buscarEmpresaForm).toBeDefined();
-    expect(component.tipoDeEmpresaNacional).toBeDefined();
-    expect(component.tipoDeEmpresaExtranjera).toBeDefined();
+    fixture.whenStable().then(() => {
+      expect(component.transportacionMaritimaState).toEqual(mockState);
+      expect(component.caatRegistradoEmpresaTabla).toEqual(mockState.caatRegistradoEmpresaTabla);
+    });
+  }));
+
+  it('should create the buscarEmpresaForm with correct controls', () => {
+    component.crearTipoDeEmpresaForm();
+    const form = component.buscarEmpresaForm;
+    expect(form).toBeDefined();
+    expect(form.get('tipoDeEmpresa.tipoDeEmpresaOpcion')).toBeDefined();
+    expect(form.get('tipoDeEmpresaNacional.buscarPorRFCNa')).toBeDefined();
+    expect(form.get('tipoDeEmpresaNacional.buscarPorDenominacionNa')).toBeDefined();
+    expect(form.get('tipoDeEmpresaNacional.folioCaatBusquedaNa')).toBeDefined();
+    expect(form.get('tipoDeEmpresaExtranjera.buscarPorDenominacionEx')).toBeDefined();
+    expect(form.get('tipoDeEmpresaExtranjera.folioCaatBusquedaEx')).toBeDefined();
   });
 
-  it('should reset form fields and store values on limpiarCampos', () => {
-    component.limpiarCampos();
-    expect(tramite40201StoreMock.setCaatRegistradoEmpresaTabla).toHaveBeenCalledWith([]);
-    expect(tramite40201StoreMock.setBuscarPorDenominacionEx).toHaveBeenCalledWith(null);
-    expect(tramite40201StoreMock.setFolioCaatBusquedaEx).toHaveBeenCalledWith(null);
-    expect(tramite40201StoreMock.setBuscarPorRFCNa).toHaveBeenCalledWith(null);
-    expect(tramite40201StoreMock.setBuscarPorDenominacionNa).toHaveBeenCalledWith(null);
-    expect(tramite40201StoreMock.setFolioCaatBusquedaNa).toHaveBeenCalledWith(null);
+  it('should initialize form with state values', () => {
+    component.transportacionMaritimaState = {
+      tipoDeEmpresaOpcion: 'Nacional',
+      buscarPorRFCNa: 'ABCD123456789',
+      buscarPorDenominacionNa: 'Empresa Nacional SA',
+      folioCaatBusquedaNa: 'CAAT123',
+      buscarPorDenominacionEx: 'Foreign Company Inc',
+      folioCaatBusquedaEx: 'CAAT456',
+      caatRegistradoEmpresaTabla: [],
+      buscarRfcPFN: '',
+      rfcPFN: '',
+      nombrePFN: '',
+      apellidoPaternoPFN: '',
+      apellidoMaternoPFN: '',
+      paisPFN: '',
+    } as TransportacionMaritima40201State;
+    component.crearTipoDeEmpresaForm();
+    const expectedFormValue = {
+      tipoDeEmpresa: {
+        tipoDeEmpresaOpcion: 'Nacional'
+      },
+      tipoDeEmpresaNacional: {
+        buscarPorRFCNa: 'ABCD123456789',
+        buscarPorDenominacionNa: 'Empresa Nacional SA',
+        folioCaatBusquedaNa: 'CAAT123'
+      },
+      tipoDeEmpresaExtranjera: {
+        buscarPorDenominacionEx: 'Foreign Company Inc',
+        folioCaatBusquedaEx: 'CAAT456'
+      }
+    };
+    expect(component.buscarEmpresaForm.value).toEqual(expectedFormValue);
+  });
+
+  it('should initialize form based on esFormularioSoloLectura', () => {
+    component.esFormularioSoloLectura = true;
+    jest.spyOn(component, 'guardarDatosFormulario');
+    component.inicializarEstadoFormulario();
+    expect(component.guardarDatosFormulario).toHaveBeenCalled();
+
+    component.esFormularioSoloLectura = false;
+    jest.spyOn(component, 'crearTipoDeEmpresaForm');
+    component.inicializarEstadoFormulario();
+    expect(component.crearTipoDeEmpresaForm).toHaveBeenCalled();
+  });
+
+  it('should disable form when esFormularioSoloLectura is true', () => {
+    component.crearTipoDeEmpresaForm();
+    component.esFormularioSoloLectura = true;
+    component.buscarEmpresaForm.enable(); 
+  });
+
+  it('should enable form when esFormularioSoloLectura is false', () => {
+    component.crearTipoDeEmpresaForm();
+    component.esFormularioSoloLectura = false;
+    component.buscarEmpresaForm.disable(); 
+  });
+
+  it('should update vista and store on enCambioDeValor', () => {
+    component.crearTipoDeEmpresaForm();
+    const valor = 'Extranjera';
+    component.enCambioDeValor(valor);
+    expect(component.vista).toBe(valor);
+    expect(component.tipoDeEmpresa.get('tipoDeEmpresaOpcion')?.value).toBe(valor);
+    expect(mockTramite40201Store.setTramite40201State).toHaveBeenCalledWith({ tipoDeEmpresaOpcion: valor });
   });
 
   it('should call limpiarCampos and obtenerBuscarEmpresaCaat on buscarEmpresa', () => {
@@ -96,65 +184,93 @@ describe('BuscarEmpresaCaatComponent', () => {
     expect(component.obtenerBuscarEmpresaCaat).toHaveBeenCalled();
   });
 
-  it('should set vista and call limpiarCampos on enCambioDeValor', () => {
-    jest.spyOn(component, 'limpiarCampos');
-    component.enCambioDeValor('extranjera');
-    expect(component.vista).toBe('extranjera');
-    expect(component.limpiarCampos).toHaveBeenCalled();
+  it('should clear form fields and reset store on limpiarCampos', () => {
+    component.crearTipoDeEmpresaForm();
+    component.limpiarCampos();
+    expect(component.tipoDeEmpresaNacional.value).toEqual({
+      buscarPorRFCNa: '',
+      buscarPorDenominacionNa: '',
+      folioCaatBusquedaNa: ''
+    });
+    expect(component.tipoDeEmpresaExtranjera.value).toEqual({
+      buscarPorDenominacionEx: '',
+      folioCaatBusquedaEx: ''
+    });
+    expect(mockTramite40201Store.setTramite40201State).toHaveBeenCalledWith({
+      caatRegistradoEmpresaTabla: [],
+      buscarPorDenominacionEx: '',
+      folioCaatBusquedaEx: '',
+      buscarPorRFCNa: '',
+      buscarPorDenominacionNa: '',
+      folioCaatBusquedaNa: ''
+    });
   });
 
-  it('should fetch CAAT data and update the table on obtenerBuscarEmpresaCaat', () => {
-    const mockData = [
-      {
-        rfc: 'RFC123',
-        nombreDenominacionRazonSocial: 'Empresa 1',
-        caat: 'CAAT123',
-        perfilCaat: 'Perfil 1',
-        inicioVigencia: '2025-01-01',
-        finVigencia: '2025-12-31',
-        pais: 'México',
-      },
-    ];
-    transportacionMaritimaServiceMock.obtenerBuscarEmpresaCaat.mockReturnValue(of({ code: 200, data: mockData, message: 'Success' }));
-
+  it('should fetch CAAT enterprises and update table on obtenerBuscarEmpresaCaat', waitForAsync(() => {
     component.obtenerBuscarEmpresaCaat();
+    fixture.whenStable().then(() => {
+      expect(mockTransportacionMaritimaService.obtenerBuscarEmpresaCaat).toHaveBeenCalled();
+      const expectedTable = [
+        {
+          rfc: 'ABCD123456789',
+          nombreDenominacionRazonSocial: 'Empresa Nacional SA',
+          caat: 'CAAT123',
+          perfilCaat: 'Perfil A',
+          inicioVigencia: '2023-01-01',
+          finVigencia: '2024-12-31',
+          pais: 'México'
+        }
+      ];
+      expect(component.caatRegistradoEmpresaTabla).toEqual(expectedTable);
+      expect(mockTramite40201Store.setTramite40201State).toHaveBeenCalledWith({
+        caatRegistradoEmpresaTabla: expectedTable
+      });
+    });
+  }));
 
-    expect(component.caatRegistradoEmpresaTabla).toEqual([
-      {
-        rfc: 'RFC123',
-        nombreDenominacionRazonSocial: 'Empresa 1',
-        caat: 'CAAT123',
-        perfilCaat: 'Perfil 1',
-        inicioVigencia: '2025-01-01',
-        finVigencia: '2025-12-31',
-        pais: 'México',
-      },
-    ]);
-    expect(tramite40201StoreMock.setCaatRegistradoEmpresaTabla).toHaveBeenCalledWith([
-      {
-        rfc: 'RFC123',
-        nombreDenominacionRazonSocial: 'Empresa 1',
-        caat: 'CAAT123',
-        perfilCaat: 'Perfil 1',
-        inicioVigencia: '2025-01-01',
-        finVigencia: '2025-12-31',
-        pais: 'México',
-      },
-    ]);
+  it('should set store values with setValoresStore', () => {
+    component.crearTipoDeEmpresaForm();
+    component.tipoDeEmpresa.patchValue({ tipoDeEmpresaOpcion: 'Nacional' });
+    component.setValoresStore(component.tipoDeEmpresa, 'tipoDeEmpresaOpcion');
+    expect(mockTramite40201Store.setTramite40201State).toHaveBeenCalledWith({ tipoDeEmpresaOpcion: 'Nacional' });
   });
 
-  it('should set values in the store using setValoresStore', () => {
-    const mockForm = component.tipoDeEmpresaNacional;
-    mockForm.get('buscarPorRFCNa')?.setValue('RFC123');
-    component.setValoresStore(mockForm, 'buscarPorRFCNa', 'setBuscarPorRFCNa');
-    expect(tramite40201StoreMock.setBuscarPorRFCNa).toHaveBeenCalledWith('RFC123');
-  });
-
-  it('should complete destruirNotificador$ on ngOnDestroy', () => {
+  it('should unsubscribe from observables on ngOnDestroy', () => {
     const nextSpy = jest.spyOn(component['destruirNotificador$'], 'next');
     const completeSpy = jest.spyOn(component['destruirNotificador$'], 'complete');
     component.ngOnDestroy();
     expect(nextSpy).toHaveBeenCalled();
     expect(completeSpy).toHaveBeenCalled();
+  });
+
+  it('should validate form fields', () => {
+    component.crearTipoDeEmpresaForm();
+    const form = component.buscarEmpresaForm;
+
+    form.patchValue({
+      tipoDeEmpresa: { tipoDeEmpresaOpcion: '' },
+      tipoDeEmpresaNacional: {
+        buscarPorRFCNa: 'A'.repeat(21),
+        buscarPorDenominacionNa: 'A'.repeat(51),
+        folioCaatBusquedaNa: 'A'.repeat(51)
+      },
+      tipoDeEmpresaExtranjera: {
+        buscarPorDenominacionEx: 'A'.repeat(51),
+        folioCaatBusquedaEx: 'A'.repeat(51)
+      }
+    });
+
+    expect(form.get('tipoDeEmpresaNacional.buscarPorRFCNa')?.hasError('maxlength')).toBeTruthy();
+    expect(form.get('tipoDeEmpresaNacional.buscarPorDenominacionNa')?.hasError('maxlength')).toBeTruthy();
+    expect(form.get('tipoDeEmpresaNacional.folioCaatBusquedaNa')?.hasError('maxlength')).toBeTruthy();
+    expect(form.get('tipoDeEmpresaExtranjera.buscarPorDenominacionEx')?.hasError('maxlength')).toBeTruthy();
+    expect(form.get('tipoDeEmpresaExtranjera.folioCaatBusquedaEx')?.hasError('maxlength')).toBeTruthy();
+  });
+
+  it('should have correct getters for form groups', () => {
+    component.crearTipoDeEmpresaForm();
+    expect(component.tipoDeEmpresa).toBe(component.buscarEmpresaForm.get('tipoDeEmpresa'));
+    expect(component.tipoDeEmpresaNacional).toBe(component.buscarEmpresaForm.get('tipoDeEmpresaNacional'));
+    expect(component.tipoDeEmpresaExtranjera).toBe(component.buscarEmpresaForm.get('tipoDeEmpresaExtranjera'));
   });
 });

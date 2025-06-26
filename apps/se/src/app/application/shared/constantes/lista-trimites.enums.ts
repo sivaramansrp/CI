@@ -1090,8 +1090,6 @@ export const LISTA_TRIMITES: AccuseComponentes[] = [
       },
     ]
   },
-
-  
   {
     tramite: 80105,
     listaComponentes: [
@@ -1102,6 +1100,19 @@ export const LISTA_TRIMITES: AccuseComponentes[] = [
             '../../tramites/80105/pages/paso-uno-cs/paso-uno-cs.component'  
           ).then((m) => m.PasoUnoCsComponent),
         componentName: 'PasoUnoCsComponent',
+      },
+    ],
+  },
+   {
+    tramite: 80301,
+    listaComponentes: [
+      {
+        id: 'solicitud',
+        componentPath: () =>
+          import(
+            '../../tramites/80301/pages/registro-modificacion-page/paso-uno/paso-uno.component'  
+          ).then((m) => m.PasoUnoComponent),
+        componentName: 'PasoUnoComponent',
       },
     ],
   },

@@ -1,98 +1,156 @@
-<div class="container">
-  <form [formGroup]="destinatarioForm" (ngSubmit)="validarDestinatarioFormulario()">
-    <ng-titulo titulo="Agregar destinatario (destino final)" />
-    <ng-container formGroupName="agregarDestinatario">
-      <div class="row mb-3">
-        <div class="col-md-12">
-          <label class="form-label" for="tipoPersona">Tipo persona*:</label>
-        </div>
-        <div class="col-md-12">
-          <input class="form-check-input me-2" type="radio" name="tipoPersona" formControlName="tipoPersona"
-            value="fisica" id="fisica"
-            (change)="setValoresStore(agregarDestinatario,'tipoPersona', 'setTipoPersona')" />
-          <label for="fisica">Física</label>
-        </div>
-        <div class="col-md-12">
-          <input class="form-check-input me-2" type="radio" name="tipoPersona" formControlName="tipoPersona"
-            value="moral" id="moral" (change)="setValoresStore(agregarDestinatario,'tipoPersona', 'setTipoPersona')" />
-          <label for="moral">Moral</label>
-        </div>
+<div class="row">
+  <ng-titulo titulo="Terceros relacionados" />
+  <ng-alert [CONTENIDO]="TEXTOS.ADJUNTAR"></ng-alert>
+  <h6>Destinatario (destino final)*</h6>
+  <app-tabla-dinamica [configuracionTabla]="configuracionTablaDatos" [datos]="destinatario"
+    [tipoSeleccionTabla]="checkbox" [disableSeleccionTablaCheckBox]="soloLectura"
+    (listaDeFilaSeleccionada)="seleccionarDatos($event)"></app-tabla-dinamica>
+  <nav aria-label="Page navigation example">
+    <ul class="pagination justify-content-center">
+      <li class="page-item"><a class="page-link">1</a></li>
+    </ul>
+  </nav>
+  <div class="col-md-12 mt-5 d-flex justify-content-end">
+    <button type="button" class="btn btn-primary ms-3" [disabled]="soloLectura"
+      (click)="tercerosAgregar()">Agregar</button>
+  </div>
+</div>
+<div class="modal fade" id="modalDomicilio" tabindex="-1" #modalDomicilio aria-labelledby="modalDomicilio"
+  aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-body">
+        <form class="form" [formGroup]="destinatarioForm">
+          <ng-titulo titulo="Agregar destinatario (destino final)" />
+          <ng-container formGroupName="agregarDestinatario">
+            <div class="row mb-3">
+              <div class="col-md-12">
+                <label class="form-label" for="tipoPersona">Tipo persona<span
+                    [ngClass]="isValid(agregarDestinatario,'tipoPersona') ? 'red-require ' : ''">*</span>:</label>
+              </div>
+              <div class="col-md-12">
+                <input class="form-check-input me-2" type="radio" name="tipoPersona" formControlName="tipoPersona"
+                  value="fisica" id="fisica"
+                  (change)="setValoresStore(agregarDestinatario,'tipoPersona', 'setTipoPersona');tipoPersonaCambiar()" />
+                <label for="fisica">Física</label>
+              </div>
+              <div class="col-md-12">
+                <input class="form-check-input me-2" type="radio" name="tipoPersona" formControlName="tipoPersona"
+                  value="moral" id="moral"
+                  (change)="setValoresStore(agregarDestinatario,'tipoPersona', 'setTipoPersona');tipoPersonaCambiar()" />
+                <label for="moral">Moral</label>
+              </div>
+              @if (destinatarioForm.get('agregarDestinatario.tipoPersona')?.hasError('required') &&
+              destinatarioForm.get('agregarDestinatario.tipoPersona')?.touched) {
+              <div class="mensaje-error">Este campo es obligatorio.</div>
+              }
+            </div>
+          </ng-container>
+          <ng-titulo titulo="Datos personales" />
+          <ng-container formGroupName="datosPersonales">
+            @if (selectedTipoPersona === 'fisica' || !selectedTipoPersona) {
+            <div class="row">
+              <div class="col-md-4 mb-3">
+                <label class="form-label" for="nombre">Nombre(s)<span
+                    [ngClass]="isValid(datosPersonales,'nombre') ? 'red-require ' : ''">*</span>:</label>
+                <input class="form-control" id="nombre" type="text" formControlName="nombre"
+                  [ngClass]="isValid(datosPersonales,'nombre') ? 'required' : ''"
+                  (change)="setValoresStore(datosPersonales,'nombre', 'setNombre')" />
+                @if (destinatarioForm.get('datosPersonales.nombre')?.hasError('required') &&
+                destinatarioForm.get('datosPersonales.nombre')?.touched) {
+                <div class="mensaje-error">Este campo es obligatorio.</div>
+                }
+              </div>
+              <div class="col-md-4 mb-3">
+                <label class="form-label" for="primerApellido">Primer apellido<span
+                    [ngClass]="isValid(datosPersonales,'primerApellido') ? 'red-require ' : ''">*</span>:</label>
+                <input class="form-control" id="primerApellido" type="text" formControlName="primerApellido"
+                  [ngClass]="isValid(datosPersonales,'primerApellido') ? 'required' : ''"
+                  (change)="setValoresStore(datosPersonales,'primerApellido', 'setPrimerApellido')" />
+                @if (destinatarioForm.get('datosPersonales.primerApellido')?.hasError('required') &&
+                destinatarioForm.get('datosPersonales.primerApellido')?.touched) {
+                <div class="mensaje-error">Este campo es obligatorio.</div>
+                }
+              </div>
+              <div class="col-md-4 mb-3">
+                <label class="form-label" for="segundoApellido">Segundo apellido:</label>
+                <input class="form-control" id="segundoApellido" type="text" formControlName="segundoApellido"
+                  [ngClass]="isValid(datosPersonales,'segundoApellido') ? 'required' : ''"
+                  (change)="setValoresStore(datosPersonales,'segundoApellido', 'setSegundoApellido')" />
+              </div>
+            </div>
+            } @if (selectedTipoPersona === 'moral' || !selectedTipoPersona) {
+            <div class="row">
+              <div class="col-md-8 mb-3">
+                <label class="form-label" for="denominación">Denominación/razón social<span
+                    [ngClass]="isValid(datosPersonales,'denominacion') ? 'red-require ' : ''">*</span>:</label>
+                <input class="form-control" id="denominacion" type="text" formControlName="denominacion"
+                  [ngClass]="isValid(datosPersonales,'denominacion') ? 'required' : ''"
+                  (change)="setValoresStore(datosPersonales,'denominacion', 'setDenominacion')" />
+                @if (destinatarioForm.get('datosPersonales.denominacion')?.hasError('required') &&
+                destinatarioForm.get('datosPersonales.denominacion')?.touched) {
+                <div class="mensaje-error">Este campo es obligatorio.</div>
+                }
+              </div>
+            </div>
+            }
+            <div class="row">
+              <div class="col-md-4 mb-3">
+                <app-catalogo-select [catalogo]="Opciones" formControlName="pais" [label]="'País'" [required]="true"
+                  (change)="setValoresStore(datosPersonales,'pais', 'setPais')"
+                  [isDisabled]="soloLectura"></app-catalogo-select>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-8 mb-3">
+                <label class="form-label" for="domicilio">Domicilio<span
+                    [ngClass]="isValid(datosPersonales,'domicilio') ? 'red-require ' : ''">*</span>:</label>
+                <textarea class="form-control" id="domicilio" rows="2" height="50"
+                  placeholder="Calle, No Ext, No Int, Ciudad, C.P." style="height: 100px" formControlName="domicilio"
+                  [ngClass]="isValid(datosPersonales,'domicilio') ? 'required' : ''"
+                  (change)="setValoresStore(datosPersonales,'domicilio', 'setDomicilio')"></textarea>
+                @if (destinatarioForm.get('datosPersonales.domicilio')?.hasError('required') &&
+                destinatarioForm.get('datosPersonales.domicilio')?.touched) {
+                <div class="mensaje-error">Este campo es obligatorio.</div>
+                }
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-1 mb-3">
+                <label class="form-label" for="lada">Lada:</label>
+                <input class="form-control" id="lada" type="number" formControlName="lada"
+                  [ngClass]="isValid(datosPersonales,'lada') ? 'required' : ''"
+                  (change)="setValoresStore(datosPersonales,'lada', 'setLada')" />
+              </div>
+              <div class="col-md-3 mb-3">
+                <label class="form-label" for="telefono">Teléfono:</label>
+                <input class="form-control" id="telefono" type="number" formControlName="telefono"
+                  [ngClass]="isValid(datosPersonales,'telefono') ? 'required' : ''"
+                  (change)="setValoresStore(datosPersonales,'telefono', 'setTelefono')" />
+              </div>
+              <div class="col-md-4 mb-3">
+                <label class="form-label" for="correoElectronico">Correo electrónico:
+                  <span tooltip="ejemplo@dominio.com">
+                    <i class="bi bi-question-circle-fill"></i>
+                  </span>
+                </label>
+                <div class="input-group">
+                  <input class="form-control" id="correoElectronico" type="email" formControlName="correoElectronico"
+                    [ngClass]="isValid(datosPersonales,'correoElectronico') ? 'required' : ''"
+                    (change)="setValoresStore(datosPersonales,'correoElectronico', 'setCorreoElectronico')" />
+                </div>
+              </div>
+            </div>
+          </ng-container>
+        </form>
       </div>
-    </ng-container>
-    <ng-titulo titulo="Datos personales" />
-    <ng-container formGroupName="datosPersonales">
-      @if (selectedTipoPersona === 'fisica') {
-      <div class="row">
-        <div class="col-md-4 mb-3">
-          <label class="form-label" for="nombre">Nombre(s)*:</label>
-          <input class="form-control" id="nombre" type="number" formControlName="nombre"
-            [ngClass]="isValid(datosPersonales,'nombre') ? 'required' : ''"
-            (change)="setValoresStore(datosPersonales,'nombre', 'setNombre')" />
-        </div>
-        <div class="col-md-4 mb-3">
-          <label class="form-label" for="primerApellido">Primer apellido*:</label>
-          <input class="form-control" id="primerApellido" type="text" formControlName="primerApellido"
-            [ngClass]="isValid(datosPersonales,'primerApellido') ? 'required' : ''"
-            (change)="setValoresStore(datosPersonales,'primerApellido', 'setPrimerApellido')" />
-        </div>
-        <div class="col-md-4 mb-3">
-          <label class="form-label" for="segundoApellido">Segundo apellido:</label>
-          <input class="form-control" id="segundoApellido" type="text" formControlName="segundoApellido"
-            [ngClass]="isValid(datosPersonales,'segundoApellido') ? 'required' : ''"
-            (change)="setValoresStore(datosPersonales,'segundoApellido', 'setSegundoApellido')" />
-        </div>
+      <div class="modal-footer custom-footer mt-4 justify-content-end">
+        <button type="button" class="btn btn-default" [disabled]="soloLectura" (click)="limpiar()">Limpiar</button>
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal" #closeDomicilio [disabled]="soloLectura">
+          Cancelar </button>
+        <button type="button" class="btn btn-primary" (click)="validarDestinatarioFormulario()"
+          [disabled]="soloLectura">Guardar</button>
       </div>
-      } @if (selectedTipoPersona === 'moral') {
-      <div class="row">
-        <div class="col-md-8 mb-3">
-          <label class="form-label" for="denominación">Denominación/razón social*:</label>
-          <input class="form-control" id="denominacion" type="text" formControlName="denominacion"
-            [ngClass]="isValid(datosPersonales,'denominacion') ? 'required' : ''"
-            (change)="setValoresStore(datosPersonales,'denominacion', 'setDenominacion')" />
-        </div>
-      </div>
-      }
-
-      <div class="row">
-        <div class="col-md-4 mb-3">
-          <app-catalogo-select [catalogo]="options" formControlName="pais" [label]="'Selecciona un país'"
-            [required]="true" (change)="setValoresStore(datosPersonales,'pais', 'setPais')"
-            [isDisabled]="soloLectura"></app-catalogo-select>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="col-md-8 mb-3">
-          <label class="form-label" for="domicilio">Domicilio*:</label>
-          <textarea class="form-control" id="domicilio" rows="2" height="50"
-            placeholder="Calle, No Ext, No Int, Ciudad, C.P." style="height: 100px" formControlName="domicilio"
-            [ngClass]="isValid(datosPersonales,'domicilio') ? 'required' : ''"
-            (change)="setValoresStore(datosPersonales,'domicilio', 'setDomicilio')"></textarea>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="col-md-1 mb-3">
-          <label class="form-label" for="lada">Lada:</label>
-          <input class="form-control" id="lada" type="number" formControlName="lada"
-            [ngClass]="isValid(datosPersonales,'lada') ? 'required' : ''"
-            (change)="setValoresStore(datosPersonales,'lada', 'setLada')" />
-        </div>
-        <div class="col-md-3 mb-3">
-          <label class="form-label" for="telefono">Teléfono:</label>
-          <input class="form-control" id="telefono" type="number" formControlName="telefono"
-            [ngClass]="isValid(datosPersonales,'telefono') ? 'required' : ''"
-            (change)="setValoresStore(datosPersonales,'telefono', 'setTelefono')" />
-        </div>
-        <div class="col-md-4 mb-3">
-          <label class="form-label" for="correoElectronico">Correo electrónico:</label>
-          <div class="input-group">
-            <input class="form-control" id="correoElectronico" type="email" formControlName="correoElectronico"
-              [ngClass]="isValid(datosPersonales,'correoElectronico') ? 'required' : ''"
-              (change)="setValoresStore(datosPersonales,'correoElectronico', 'setCorreoElectronico')" />
-          </div>
-        </div>
-      </div>
-    </ng-container>
-  </form>
+    </div>
+  </div>
 </div>

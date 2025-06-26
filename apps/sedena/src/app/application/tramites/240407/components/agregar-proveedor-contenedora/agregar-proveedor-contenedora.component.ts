@@ -1,6 +1,6 @@
+import { Component, EventEmitter, Output } from '@angular/core';
 import { AgregarProveedorComponent } from '../../../../shared/components/agregar-proveedor/agregar-proveedor.component';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
 import { Proveedor } from '../../../../shared/models/terceros-relacionados.model';
 import { Tramite240407Store } from '../../estados/tramite240407Store.store';
 
@@ -20,6 +20,7 @@ import { Tramite240407Store } from '../../estados/tramite240407Store.store';
   styleUrl: './agregar-proveedor-contenedora.component.scss',
 })
 export class AgregarProveedorContenedoraComponent {
+   @Output() cerrar = new EventEmitter<void>();
   /**
    * @constructor
    * @description

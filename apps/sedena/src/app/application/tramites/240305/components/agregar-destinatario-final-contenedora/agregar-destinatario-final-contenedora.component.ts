@@ -1,6 +1,6 @@
+import { Component, EventEmitter, Output } from '@angular/core';
 import { AgregarDestinatarioFinalComponent } from '../../../../shared/components/agregar-destinatario-final/agregar-destinatario-final.component';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
 import { DestinoFinal } from '../../../../shared/models/terceros-relacionados.model';
 import { Tramite240305Store } from '../../estados/tramite240305Store.store';
 
@@ -19,6 +19,14 @@ import { Tramite240305Store } from '../../estados/tramite240305Store.store';
   styleUrl: './agregar-destinatario-final-contenedora.component.scss',
 })
 export class AgregarDestinatarioFinalContenedoraComponent {
+
+    /**
+    * Evento que se emite para cerrar el modal de agregar destinatario final.
+    *
+    * @event cerrar
+    * @type {EventEmitter<void>}
+    */
+  @Output() cerrar = new EventEmitter<void>();
    /**
    * Constructor del componente.
    *

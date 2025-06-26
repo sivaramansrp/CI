@@ -1,6 +1,6 @@
 import { DocumentoResponse, DocumentosRequest } from '../../../models/shared/documentos-request.model';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, catchError, map, throwError } from 'rxjs';
+import { Observable, catchError, map, tap, throwError } from 'rxjs';
 import { BaseResponse } from '../../../models/5701/base-response.model';
 import { ENVIRONMENT } from '../../../../enviroments/enviroment';
 import { Injectable } from '@angular/core';
@@ -74,4 +74,18 @@ export class DocumentoService {
     );
   }
 
+  /**
+ * @description Obtiene los datos para el payload de firma desde un JSON local
+ * @returns Observable con los datos de documentos requeridos para la firma
+ */
+  obtenerDatosFirma(): Observable<BaseResponse> {
+    const ENDPOINT = 'assets/json/5701/documentos-firma.json';
+    return this.http.get<BaseResponse>(ENDPOINT).pipe(
+      tap(response => response),
+      catchError(() => {
+        const ERROR = new Error(`Error al obtener datos de firma: ${ENDPOINT}`);
+        return throwError(() => ERROR);
+      })
+    );
+  }
 }

@@ -11,6 +11,16 @@ export interface Tramite420103State {
    * RFC del contribuyente asociado al trámite.
    */
   rfc: string;
+
+  /**
+  /** Debe tener un formato válido (por ejemplo, YYYY-MM-DD).
+  */
+  fechaInicial: string;
+
+  /**
+   * Debe tener un formato válido (por ejemplo, YYYY-MM-DD).
+   */
+  fechaFinal: string;
 }
 
 /**
@@ -23,6 +33,14 @@ export function createTramiteState(): Tramite420103State {
      * Valor inicial del RFC.
      */
     rfc: '',
+    /**
+     * Fecha de expedición de la factura
+     */
+    fechaInicial: '',
+    /**
+     * Fecha de finalización de la factura
+     */
+    fechaFinal: '',
   };
 }
 
@@ -42,14 +60,14 @@ export class Tramite420103Store extends Store<Tramite420103State> {
   }
 
   /**
-   * Método para actualizar el RFC en el estado.
-   *
-   * @param rfc - Nuevo valor del RFC.
+   * Actualiza el estado de la solicitud con los valores proporcionados.
+   * Param valores Objeto parcial con los valores a actualizar.
    */
-  public setRFC(rfc: string): void {
+  public actualizarEstado(valores: Partial<Tramite420103State>): void {
     this.update((state) => ({
       ...state,
-      rfc,
+      ...valores,
     }));
   }
+
 }

@@ -214,10 +214,13 @@ export class EmpresasSubfabricantesComponent implements OnInit {
    * Establece el formulario de datos del subcontratista.
    * @param valor - Formulario reactivo con los datos del subcontratista.
    */
-  @Input()
-   set formularioDatosSubcontratista(valor: FormGroup) {
+@Input()
+set formularioDatosSubcontratista(valor: FormGroup) {
+  if (this._formularioDatosSubcontratista && valor) {
     this._formularioDatosSubcontratista.setValue(valor.value);
   }
+}
+
 
   /**
    * Obtiene el formulario de datos del subcontratista.
