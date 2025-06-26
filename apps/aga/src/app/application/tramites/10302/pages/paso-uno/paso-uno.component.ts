@@ -83,8 +83,6 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
   ngAfterViewInit(): void {
     this.persona = PERSONA_MORAL_NACIONAL;
     this.domicilioFiscal = DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL;
-    this.solicitante.obtenerTipoPersona(TIPO_PERSONA.MORAL_NACIONAL);
-    this.cdr.detectChanges();
   }
 
   /**

@@ -33,8 +33,16 @@ describe('PasoUnoComponent', () => {
     fixture.destroy();
   });
 
+  it('should run ngOnInit()', () => {
+    expect(() => component.ngOnInit()).not.toThrow();
+  });
+
   it('should run #constructor()', async () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should run #ngAfterViewInit()', async () => {
+    component.ngAfterViewInit();
   });
 
   it('should run #seleccionaTab()', async () => {

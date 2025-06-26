@@ -187,8 +187,8 @@ export class DatosTramiteComponent implements OnInit, OnDestroy {
    * @param validacionesService Servicio para manejar validaciones de formularios.
    */
   constructor(
-    private exencionImpuestoService: ExencionImpuestosService,
-    private store: Tramite10302Store,
+    public exencionImpuestoService: ExencionImpuestosService,
+    public store: Tramite10302Store,
     private query: Tramite10302Query,
     public fb: FormBuilder,
     private validacionesService: ValidacionesFormularioService,
