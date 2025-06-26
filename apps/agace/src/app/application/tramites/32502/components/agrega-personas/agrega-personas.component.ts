@@ -36,9 +36,9 @@ export class AgregaPersonasComponent {
    * Formulario para capturar los datos de una persona.
    */
   personaForm: FormGroup = this.fb.group({
-    nombre: [{value: this.tramite32502Store?.setNombre || "nombre", disabled: true }],
-    primerApellido: [{ value: this.tramite32502Store.setPrimerApellido, disabled: true }],
-    segundoApellido: [{ value: this.tramite32502Store.setSegundoApellido, disabled: true }],
+    nombre: [{value: this.solicitudState?.nombre, disabled: true }],
+    primerApellido: [{ value: this.solicitudState?.primerApellido, disabled: true }],
+    segundoApellido: [{ value: this.solicitudState?.segundoApellido, disabled: true }],
   });
 
   /**
