@@ -5,11 +5,11 @@
  * @component PasoDosComponent
  * @description
 */
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 
 import { CommonModule } from '@angular/common';
 
-import { AlertComponent, AnexarDocumentosComponent, Catalogo, TEXTOS, TituloComponent,CATALOGOS_ID, CatalogosService } from '@libs/shared/data-access-user/src';
+import { AlertComponent, AnexarDocumentosComponent, CATALOGOS_ID, Catalogo, CatalogosService,TEXTOS, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Subject, takeUntil } from 'rxjs';
 
 /**
@@ -28,7 +28,7 @@ import { Subject, takeUntil } from 'rxjs';
   ],
   templateUrl: './paso-dos.component.html', 
 })
-export class PasoDosComponent {
+export class PasoDosComponent implements OnInit, OnDestroy {
   /**
    * @prop {any} TEXTOS - Contiene constantes de texto utilizadas en la UI.
    */
@@ -80,7 +80,9 @@ export class PasoDosComponent {
               this.catalogoDocumentos = resp;
             }
           },
-          error: (_error): void => {},
+          error: (_error): void => {
+            return _error;
+          },
         });
     }
     /**

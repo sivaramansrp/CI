@@ -1,10 +1,14 @@
+import { ConsultaioQuery, ConsultaioState} from '@ng-mf/data-access-user';
 import { Component } from '@angular/core';
+import { DatosSolicitudService } from '../../services/datos-solicitud.service';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { Subject } from 'rxjs';
 import { Tramite240123Query } from '../../estados/tramite240123Query.query';
 import { Tramite240123Store } from '../../estados/tramite240123Store.store';
+import { map} from 'rxjs';
 import { takeUntil } from 'rxjs';
+
 
 /**
  * @title Paso Uno
@@ -17,6 +21,14 @@ import { takeUntil } from 'rxjs';
   styleUrl: './paso-uno.component.scss',
 })
 export class PasoUnoComponent implements OnDestroy, OnInit {
+   /**
+   * Esta variable se utiliza para almacenar el índice del subtítulo.
+   */
+  public consultaState!: ConsultaioState;
+
+  /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
+  public esDatosRespuesta: boolean = false;
+
   /**
    * @property indice
    * @description Indica el índice de la pestaña seleccionada dentro del paso del formulario.
@@ -39,9 +51,15 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
    * @param tramite240123Store Store para actualizar el estado del procedimiento.
    */
   constructor(
-    private tramite240101Query: Tramite240123Query,
-    private tramite240101Store: Tramite240123Store // eslint-disable-next-line no-empty-function
-  ) {}
+    private tramite240123Query: Tramite240123Query,
+    private tramite240123Store: Tramite240123Store,
+    private consultaQuery: ConsultaioQuery,
+    private datosSolicitudService : DatosSolicitudService
+  ) {
+      this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyNotifier$), map((seccionState) => {
+      this.consultaState = seccionState;
+    })).subscribe();
+  }
 
   /**
    * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
@@ -50,13 +68,32 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
    * @returns {void}
    */
   ngOnInit(): void {
-    this.tramite240101Query.getTabSeleccionado$
+    this.tramite240123Query.getTabSeleccionado$
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((tab) => {
         this.indice = tab;
       });
+        if (this.consultaState.update) {
+      this.guardarDatosFormulario();
+    } else {
+      this.esDatosRespuesta = true;
+    }
   }
-
+ /**
+   * Guarda los datos del formulario obtenidos del servicio.
+   */
+  guardarDatosFormulario(): void {
+    this.datosSolicitudService
+      .obtenerRegistroTomarMuestrasDatos().pipe(
+        takeUntil(this.destroyNotifier$)
+      )
+      .subscribe((resp) => {
+        if(resp) {
+          this.esDatosRespuesta = true;
+          this.datosSolicitudService.actualizarEstadoFormulario(resp);
+        }
+      });
+  }
   /**
    * Actualiza el índice de la pestaña seleccionada en el store.
    *
@@ -64,7 +101,7 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
    * @returns {void}
    */
   public seleccionaTab(i: number): void {
-    this.tramite240101Store.updateTabSeleccionado(i);
+    this.tramite240123Store.updateTabSeleccionado(i);
   }
 
   /**

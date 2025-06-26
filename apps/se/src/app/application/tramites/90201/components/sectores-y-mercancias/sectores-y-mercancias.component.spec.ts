@@ -49,8 +49,8 @@ describe('SectoresYMercanciasComponent', () => {
   });
 
   it('should disable form when esFormularioSoloLectura is true in guardarDatosFormulario', () => {
-    component.establecerFormSectores();
     component.esFormularioSoloLectura = true;
+    component.establecerFormSectores();
     expect(component.sectoresForm.disabled).toBe(true);
   });
 

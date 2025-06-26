@@ -160,4 +160,29 @@ export class Tramite240105Store extends Store<Tramite240105State> {
       merccancialTablaDatos: [...state.merccancialTablaDatos, ...newMercancia],
     }));
   }
+
+  /**
+   * Elimina una mercancía específica de la lista `merccancialTablaDatos` en el estado.
+   *
+   * @param datos Los detalles de la mercancía que se desea eliminar.
+   *
+   * @remarks
+   * Esta función actualiza el estado filtrando la mercancía que coincida exactamente con todos los campos de `datos`.
+   *
+   * @example
+   * eliminarMercancias({ id: 1, nombre: 'Producto A', cantidad: 10 });
+   */
+  eliminarMercancias(datos: MercanciaDetalle): void {
+    this.update(state => {
+      const MERCANCIAS_ACTUALIZADAS = state.merccancialTablaDatos.filter(ele =>
+        !Object.keys(datos).every(
+          key => datos[key as keyof MercanciaDetalle] === ele[key as keyof MercanciaDetalle]
+        )
+      );
+      return {
+        ...state,
+        merccancialTablaDatos: MERCANCIAS_ACTUALIZADAS,
+      };
+    });
+  }
 }

@@ -25,43 +25,43 @@ describe('ExpedicionCertificadoService', () => {
     service = new ExpedicionCertificadoService(httpMock, tramiteStoreMock);
   });
 
-  it('should call http.get for getEntidadFederativa', () => {
+  it('debe llamar a http.get para getEntidadFederativa', () => {
     httpMock.get.mockReturnValue(of([]));
     service.getEntidadFederativa().subscribe();
     expect(httpMock.get).toHaveBeenCalledWith('assets/json/120204/entidad-federativa.json');
   });
 
-  it('should call http.get for getRepresentacionFederal', () => {
+  it('debe llamar a http.get para getRepresentacionFederal', () => {
     httpMock.get.mockReturnValue(of([]));
     service.getRepresentacionFederal().subscribe();
     expect(httpMock.get).toHaveBeenCalledWith('assets/json/120204/representacion-federal.json');
   });
 
-  it('should call http.get for getDetallesDelalicitacion', () => {
+  it('debe llamar a http.get para getDetallesDelalicitacion', () => {
     httpMock.get.mockReturnValue(of({}));
     service.getDetallesDelalicitacion().subscribe();
     expect(httpMock.get).toHaveBeenCalledWith('assets/json/120204/detalles-licitacion.json');
   });
 
-  it('should call http.get for getDistribucionSaldo', () => {
+  it('debe llamar a http.get para getDistribucionSaldo', () => {
     httpMock.get.mockReturnValue(of({}));
     service.getDistribucionSaldo().subscribe();
     expect(httpMock.get).toHaveBeenCalledWith('assets/json/120204/distribucion-saldo.json');
   });
 
-  it('should call http.get for obtenerDatosTabla', () => {
+  it('debe llamar a http.get para obtenerDatosTabla', () => {
     httpMock.get.mockReturnValue(of({}));
     service.obtenerDatosTabla().subscribe();
     expect(httpMock.get).toHaveBeenCalledWith('assets/json/120204/datos-de-la-tabla.json');
   });
 
-  it('should call http.get for getExpedienteCertificado', () => {
+  it('debe llamar a http.get para getExpedienteCertificado', () => {
     httpMock.get.mockReturnValue(of({}));
     service.getExpedienteCertificado().subscribe();
     expect(httpMock.get).toHaveBeenCalledWith('assets/json/120204/expedicion-certificado.json');
   });
 
-  it('should call all tramiteStore setters in setDatosFormulario', () => {
+  it('debe llamar a todos los setters del store en setDatosFormulario', () => {
     const datos = {
       entidadFederativa: 'Entidad',
       representacionFederal: 'RepFed',

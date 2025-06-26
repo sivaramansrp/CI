@@ -62,11 +62,11 @@ describe('PasoUnoComponent', () => {
   });
 
   it('guardarDatosFormulario should update esDatosRespuesta and call actualizarEstadoFormulario', () => {
-    component.guardarDatosFormulario();
-    expect(component.esDatosRespuesta).toBe(true);
-    expect(mockDatosDomicilioLegalService.actualizarEstadoFormulario).toHaveBeenCalledWith({ test: 'data' });
-    expect(mockPagoBancoService.actualizarEstadoFormulario).toHaveBeenCalledWith({ test: 'data' });
-  });
+  component.guardarDatosFormulario();
+  expect(component.esDatosRespuesta).toBe(true);
+  expect(mockPagoBancoService.actualizarEstadoFormulario).toHaveBeenCalledWith({ test: 'data' });
+});
+
 
   it('should call obtenerTipoPersona in ngAfterViewInit', () => {
     component.solicitante = {

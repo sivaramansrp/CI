@@ -22,7 +22,7 @@ describe('FraccionComponent', () => {
       fraccion: '1234',
       cantidad: 5,
       factura: 100,
-      umt: 'Pieza',
+      umt: 1,
       especifico: 'Esp',
       justificacion: 'Just',
       observaciones: '',
@@ -60,16 +60,15 @@ describe('FraccionComponent', () => {
   });
 
   it('should initialize form on ngOnInit', () => {
-  const spy = jest.spyOn(component, 'inicializarCertificadoFormulario');
-  component.ngOnInit();
+    const spy = jest.spyOn(component, 'inicializarCertificadoFormulario');
+    component.ngOnInit();
 
-  const bloqueControl = component.fraccionForm.get('bloque');
-  bloqueControl?.setValue('some value'); // trigger valueChanges
+    const bloqueControl = component.fraccionForm.get('bloque');
+    bloqueControl?.setValue('some value');
 
-  expect(spy).toHaveBeenCalled();
-  expect(component.selectRangoDias).toEqual(["ESTADOS UNIDOS DE AMERICA CANADA"]);
-});
-
+    expect(spy).toHaveBeenCalled();
+    expect(component.selectRangoDias).toEqual(["ESTADOS UNIDOS DE AMERICA CANADA"]);
+  });
 
   it('should initialize the form with expected controls', () => {
     component.inicializarFormulario();
@@ -113,50 +112,80 @@ describe('FraccionComponent', () => {
   it('should set value to store using setValoresStore', () => {
     const fb = TestBed.inject(FormBuilder);
     const form = fb.group({ cantidad: [5] });
-    component.setValoresStore(form, 'cantidad', 'setCantidad');
+    component.setValoresStore(form, 'cantidad', 'updateCantidad' as keyof Tramite130106Store);
     expect(mockStore.updateCantidad).toHaveBeenCalledWith(5);
   });
 
-  it('should clean up on ngOnDestroy', () => {
-    const spy = jest.spyOn(component.destroyNotifier$, 'next');
-    component.ngOnDestroy();
-    expect(spy).toHaveBeenCalled();
-    expect(component.destroyNotifier$.closed).toBe(false);
+  it('should handle missing control gracefully in setValoresStore', () => {
+    const fb = TestBed.inject(FormBuilder);
+    const form = fb.group({});
+    expect(() => component.setValoresStore(form, 'missing', 'updateCantidad' as keyof Tramite130106Store)).not.toThrow();
   });
-  it('should move selected dates from fechasDatos to fechasSeleccionadas', () => {
-  // Setup fechasDatos with mock values
-  component.fechasDatos = ['20240601', '20240602', '20240603']; // available dates
-  component.fechasSeleccionadas = []; // initially empty
 
-  // Mock fecha form control value (selecting index 1 → '20240602')
-  component.fecha.setValue(['1']);
+  it('should clean up on ngOnDestroy', () => {
+    const nextSpy = jest.spyOn(component.destroyNotifier$, 'next');
+    const completeSpy = jest.spyOn(component.destroyNotifier$, 'complete');
+    component.ngOnDestroy();
+    expect(nextSpy).toHaveBeenCalled();
+    expect(completeSpy).toHaveBeenCalled();
+  });
 
-  // Call the method that includes this logic
-  component.agregar(''); // assuming the logic is inside agregar('')
+  it('should move selected date from fechasDatos to fechasSeleccionadas', () => {
+    component.fechasDatos = ['20240601', '20240602', '20240603'];
+    component.fechasSeleccionadas = [];
+    component.fecha.setValue(['1']); // selects '20240602'
+    component.agregar('');
+    expect(component.fechasSeleccionadas).toEqual(['20240602']);
+    expect(component.fechasDatos).toEqual(['20240601', '20240603']);
+  });
 
-  // Verify fechasSeleccionadas now includes '20240602'
-  expect(component.fechasSeleccionadas).toEqual(['20240602']);
+  it('should move selected date from fechasSeleccionadas to fechasDatos', () => {
+    component.fechasSeleccionadas = ['20240610', '20240611', '20240612'];
+    component.fechasDatos = [];
+    component.fechaSeleccionada.setValue(['0']); // selects '20240610'
+    component.quitar('');
+    expect(component.fechasDatos).toEqual(['20240610']);
+    expect(component.fechasSeleccionadas).toEqual(['20240611', '20240612']);
+  });
 
-  // Verify '20240602' was removed from fechasDatos
-  expect(component.fechasDatos).toEqual(['20240601', '20240603']);
-});
-it('should move selected dates from fechasSeleccionadas back to fechasDatos', () => {
-  // Initial mock setup
-  component.fechasSeleccionadas = ['20240610', '20240611', '20240612'];
-  component.fechasDatos = [];
+  it('should generate a new partida and patch form values', () => {
+    component.fraccionForm.patchValue({
+      cantidad: 10,
+      umt: 1,
+      fraccion: 1,
+      descripcion: 'Test desc',
+      UMT: 1, // Add this line if 'UMT' is required by generarPartidas
+    });
 
-  // Simulate selecting index 0 → '20240610'
-  component.fechaSeleccionada.setValue(['0']);
+    component.generarPartidas();
 
-  // Call the method containing the logic
-  component.quitar(''); // or whatever method includes the posted logic
+    expect(component.partidas.length).toBe(1);
+    expect(component.fraccionForm.get('cantidadTotal')?.value).toBe(10);
+    expect(component.fraccionForm.get('valorTotal')?.value).toBe(10);
+  });
 
-  // Check that '20240610' was moved back to fechasDatos
-  expect(component.fechasDatos).toEqual(['20240610']);
+  it('should disable cantidadTotal and valorTotal fields', () => {
+    component.updateformfied();
+    expect(component.fraccionForm.get('cantidadTotal')?.disabled).toBe(true);
+    expect(component.fraccionForm.get('valorTotal')?.disabled).toBe(true);
+  });
 
-  // Check that it was removed from fechasSeleccionadas
-  expect(component.fechasSeleccionadas).toEqual(['20240611', '20240612']);
-});
+  it('should call guardarDatosFormulario if solo lectura is true', () => {
+    component.esFormularioSoloLectura = true;
+    const spy = jest.spyOn(component, 'guardarDatosFormulario');
+    component.inicializarCertificadoFormulario();
+    expect(spy).toHaveBeenCalled();
+  });
 
+  it('should call inicializarFormulario if solo lectura is false', () => {
+    component.esFormularioSoloLectura = false;
+    const spy = jest.spyOn(component, 'inicializarFormulario');
+    component.inicializarCertificadoFormulario();
+    expect(spy).toHaveBeenCalled();
+  });
 
+  it('should mark "cantidad" control as invalid when value is non-numeric', () => {
+    component.fraccionForm.get('cantidad')?.setValue('abc');
+    expect(component.fraccionForm.get('cantidad')?.valid).toBe(false);
+  });
 });

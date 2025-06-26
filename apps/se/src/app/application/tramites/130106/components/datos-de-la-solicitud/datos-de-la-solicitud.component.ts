@@ -148,10 +148,10 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
  /* Configuraciones de catálogos utilizados en los selectores del formulario.  
    Cada entrada representa un conjunto de opciones cargado desde un archivo JSON. */
   configuracionesDropdown = [
-    { catalogos: SolicitudeDropdown.tramite}, // Configuración para el catálogo de trámites
-    { catalogos: SolicitudeDropdown.regimen}, // Configuración para el catálogo de regímenes
-    { catalogos: SolicitudeDropdown.arancelaria }, // Configuración para el catálogo de aranceles
-    { catalogos: SolicitudeDropdown.umt} // Configuración para el catálogo de UMT
+    { catalogos: SolicitudeDropdown?.tramite}, // Configuración para el catálogo de trámites
+    { catalogos: SolicitudeDropdown?.regimen}, // Configuración para el catálogo de regímenes
+    { catalogos: SolicitudeDropdown?.arancelaria }, // Configuración para el catálogo de aranceles
+    { catalogos: SolicitudeDropdown?.umt} // Configuración para el catálogo de UMT
   ];
   /**
    * Establece los valores en el store a partir del formulario.

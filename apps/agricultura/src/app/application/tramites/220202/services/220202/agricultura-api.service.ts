@@ -19,7 +19,7 @@ import {
   FinalEnviar,
   ListaDeDatosFinal,
   Movilizacion,
-  PagoForm
+  PagoDeDerechos,  
 } from '../../models/220202/fitosanitario.model';
 
 @Injectable({
@@ -74,9 +74,9 @@ export class AgriculturaApiService {
 
   /**
    * @description Actualiza los datos de pago en el store.
-   * @param {PagoForm} pagoDatos - Datos del formulario de pago.
+   * @param {PagoDeDerechos} pagoDatos - Datos del formulario de pago.
    */
-  updatePago(pagoDatos: PagoForm): void {
+  updatePago(pagoDatos: PagoDeDerechos): void {
     this.fitosanitarioStore.actualizarPago(pagoDatos);
   }
 
@@ -97,9 +97,9 @@ export class AgriculturaApiService {
 
   /**
    * @description Obtiene los datos del formulario de pago como observable.
-   * @returns {Observable<PagoForm>} Observable con los datos del formulario de pago.
+   * @returns {Observable<PagoDeDerechos>} Observable con los datos del formulario de pago.
    */
-  getPagoForma(): Observable<PagoForm> {
+  getPagoDeDerechosa(): Observable<PagoDeDerechos> {
     return this.fitosanitarioStore._select(state => state.pago); // Use _select for observable
   }
 

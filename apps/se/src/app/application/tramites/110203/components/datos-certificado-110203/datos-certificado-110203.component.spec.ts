@@ -1,101 +1,142 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ReactiveFormsModule, FormBuilder, FormsModule } from '@angular/forms';
-import { of } from 'rxjs';
 import { DatosCertificado110203Component } from './datos-certificado-110203.component';
 import { Tramite110203Store } from '../../../../estados/tramites/tramite110203.store';
 import { Tramite110203Query } from '../../../../estados/queries/tramite110203.query';
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { of, Subject } from 'rxjs';
+import { Solicitud110203State } from '../../../../estados/tramites/tramite110203.store';
+
+jest.mock('@libs/shared/theme/assets/json/110203/mediocatalogo.json', () => ({
+  __esModule: true,
+  default: {
+    mercancias: [
+      {
+        orden: 1,
+        arancelaria: '0101.21.00',
+        tecnico: 'Nombre técnico',
+        comercial: 'Nombre comercial',
+        ingles: 'English name',
+        registro: 'ABC123'
+      }
+    ],
+    tipo: [{ id: 1, nombre: 'Tipo A' }],
+    comercializacion: [{ id: 1, nombre: 'Venta' }]
+  }
+}));
 
 
 describe('DatosCertificado110203Component', () => {
   let component: DatosCertificado110203Component;
   let fixture: ComponentFixture<DatosCertificado110203Component>;
-  let tramite110203Store: Tramite110203Store;
+  let mockStore: jest.Mocked<Tramite110203Store>;
+  let mockQuery: jest.Mocked<Tramite110203Query>;
 
-
-  const mockSolicitudState = {
-    observaciones: 'Test observations',
-    precisa: true,
-    presenta: false,
+  const MOCK_STATE: Solicitud110203State = {
+    tratado: '',
+    bloque: '',
+    origen: '',
+    destino: '',
+    expedicion: '',
+    vencimiento: '',
+    nombre: '',
+    primer: '',
+    segundo: '',
+    fiscal: '',
+    razon: '',
+    calle: '',
+    letra: '',
+    ciudad: '',
+    correo: '',
+    fax: '',
+    telefono: '',
+    medio: '',
+    observaciones: 'Texto de prueba',
+    precisa: 'Sí',
+    presenta: 'Empresa S.A.',
+    valorSeleccionado: '',
+    numeroDeCertificado: '',
+    tratadoAcuerdo: '',
+    paisBloque: '',
+    medida: 'KG',
+    comercializacion: 'Venta',
+    tipo: 'Exportación'
   };
 
-  const tramite110203StoreMock = {
-    setObservaciones: jest.fn(),
-  
-  };
+beforeEach(async () => {
+  mockStore = new Tramite110203Store() as jest.Mocked<Tramite110203Store>;
+  mockQuery = new Tramite110203Query(mockStore) as jest.Mocked<Tramite110203Query>;
 
-  const tramite110203QueryMock = {
-    selectSolicitud$: of(mockSolicitudState),
-  };
+  mockQuery.selectSolicitud$ = of(MOCK_STATE) as any;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      declarations: [],
-      imports: [ReactiveFormsModule, FormsModule,DatosCertificado110203Component],
-      providers: [
-        FormBuilder,
-        { provide: Tramite110203Store, useValue: tramite110203StoreMock },
-        { provide: Tramite110203Query, useValue: tramite110203QueryMock },
-      ],
-    }).compileComponents();
-  });
+  await TestBed.configureTestingModule({
+    imports: [DatosCertificado110203Component, ReactiveFormsModule],
+    providers: [
+      FormBuilder,
+      { provide: Tramite110203Store, useValue: mockStore },
+      { provide: Tramite110203Query, useValue: mockQuery }
+    ]
+  }).compileComponents();
 
-  beforeEach(() => {
-    fixture = TestBed.createComponent(DatosCertificado110203Component);
-    component = fixture.componentInstance;
-    tramite110203Store = TestBed.inject(Tramite110203Store);
-    fixture.detectChanges(); 
-  });
+  fixture = TestBed.createComponent(DatosCertificado110203Component);
+  component = fixture.componentInstance;
+  fixture.detectChanges();
+});
+
+
 
   it('should create the component', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize the form with values from solicitudState', () => {
-    expect(component.certificadoForm).toBeTruthy();
-    expect(component.certificadoForm.controls['observaciones'].value).toBe('Test observations');
-    expect(component.certificadoForm.controls['precisa'].value).toBe(true);
-    expect(component.certificadoForm.controls['presenta'].value).toBe(false);
+  it('should load solicitudState from store and initialize forms', () => {
+    expect(component.solicitudState).toEqual(MOCK_STATE);
+    expect(component.certificadoForm.get('precisa')?.value).toBe('Sí');
+    expect(component.certificadoForm.get('presenta')?.value).toBe('Empresa S.A.');
   });
 
-  it('should open the modal and initialize the form correctly when abrirModal is called', () => {
+  it('should initialize certificadoForm and mercanciasForm in ngOnInit', () => {
+    expect(component.certificadoForm).toBeDefined();
+    expect(component.mercanciasForm).toBeDefined();
+    expect(component.mercanciasForm.get('medida')?.value).toBe('KG');
+    expect(component.mercanciasForm.get('comercializacion')?.value).toBe('Venta');
+  });
+
+  it('should patch values and disable specific controls in patchData()', () => {
+    component.getRegistroForm();
+    const form = component.mercanciasForm;
+
+    expect(form.get('comercial')?.value).toBe('Patitos de hule');
+    expect(form.get('ingles')?.disabled).toBe(true);
+    expect(form.get('cantidad')?.disabled).toBe(true);
+    expect(form.get('fecha')?.disabled).toBe(true);
+  });
+
+  it('should open modal and call getRegistroForm', () => {
+    const spy = jest.spyOn(component, 'getRegistroForm');
     component.abrirModal();
     expect(component.modal).toBe('show');
-    expect(component.mercanciasForm).toBeTruthy();
-    expect(component.mercanciasForm.get('comercial')?.value).toBe('Patitos de hule');
-    expect(component.mercanciasForm.get('ingles')?.value).toBe('rubber ducklings');
-    expect(component.mercanciasForm.get('cantidad')?.value).toBe('20000');
-    expect(component.mercanciasForm.get('fecha')?.value).toBe('18/02/2025');
+    expect(spy).toHaveBeenCalled();
   });
 
-  it('should disable certain form controls when getRegistroForm is called', () => {
-    component.getRegistroForm();
-    expect(component.mercanciasForm.get('comercial')?.disabled).toBe(true);
-    expect(component.mercanciasForm.get('ingles')?.disabled).toBe(true);
-    expect(component.mercanciasForm.get('cantidad')?.disabled).toBe(true);
-    expect(component.mercanciasForm.get('fecha')?.disabled).toBe(true);
+  it('should call store method in setValoresStore()', () => {
+    const mockSet = jest.fn();
+    mockStore.setComercializacion = mockSet as any;
+
+    const form = new FormBuilder().group({
+      comercializacion: ['valor de prueba']
+    });
+
+    component.setValoresStore(form, 'comercializacion', 'setComercializacion');
+    expect(mockSet).toHaveBeenCalledWith('valor de prueba');
   });
 
-  it('should call tramite110203Store.setObservaciones with correct value from the form', () => {
- 
-    component.certificadoForm.controls['observaciones'].setValue('Updated observations');
+  it('should call ngOnDestroy and complete destroyNotifier$', () => {
+    const nextSpy = jest.spyOn(component['destroyNotifier$'], 'next');
+    const completeSpy = jest.spyOn(component['destroyNotifier$'], 'complete');
 
-  
-    component.setValoresStore(component.certificadoForm, 'observaciones', 'setObservaciones');
-
-   
-    expect(tramite110203Store.setObservaciones).toHaveBeenCalledWith('Updated observations');
-  });
-
-  it('should initialize the form correctly when ngOnInit is called', () => {
-    component.ngOnInit();
-    expect(component.certificadoForm.get('observaciones')?.value).toBe('Test observations');
-    expect(component.certificadoForm.get('precisa')?.value).toBe(true);
-    expect(component.certificadoForm.get('presenta')?.value).toBe(false);
-  });
-
-  it('should clean up on ngOnDestroy', () => {
-    const destroyNotifierSpy = jest.spyOn(component['destroyNotifier$'], 'next');
     component.ngOnDestroy();
-    expect(destroyNotifierSpy).toHaveBeenCalled();
+
+    expect(nextSpy).toHaveBeenCalled();
+    expect(completeSpy).toHaveBeenCalled();
   });
 });
