@@ -8,28 +8,15 @@ import { Proveedor } from '../../../../shared/models/terceros-relacionados.model
 import { Tramite240122Store } from '../../estados/tramite240122Store.store';
 
 /**
- * @component
- * @name AgregarProveedorContenedoraComponent
- * @description Componente encargado de gestionar la funcionalidad relacionada con la adición de proveedores 
- * en el trámite 240122. Este componente es independiente y utiliza el `Tramite240122Store` para manejar 
- * el estado del trámite.
- * 
- * @selector app-agregar-proveedor-contenedora
- * @standalone true
- * @imports CommonModule, AgregarProveedorCustomComponent
- * @templateUrl ./agregar-proveedor-contenedora.component.html
- * @styleUrl ./agregar-proveedor-contenedora.component.scss
- * 
- * @property {number} idProcedimiento - Identificador único del procedimiento asociado al trámite 240122.
- * @remarks Este valor se utiliza para identificar el trámite 240122.
- * 
- * @constructor
- * @param {Tramite240122Store} tramite240122Store - Store que administra el estado del trámite 240122.
- * 
- * @method updateProveedorTablaDatos
- * @description Actualiza los datos de la tabla de proveedores en el store del trámite.
- * @param {Proveedor[]} event - Lista de proveedores que se actualizarán en el store.
- * @returns {void} Este método no retorna ningún valor.
+ * @component AgregarProveedorContenedoraComponent
+ * @description
+ * Componente contenedor encargado de gestionar la adición de proveedores en el flujo del trámite 240122.
+ * Se conecta con el store para actualizar los datos y emite un evento al cerrar.
+ *
+ * @example
+ * ```html
+ * <app-agregar-proveedor-contenedora (cerrar)="onCerrar()"></app-agregar-proveedor-contenedora>
+ * ```
  */
 @Component({
   selector: 'app-agregar-proveedor-contenedora',
@@ -39,89 +26,88 @@ import { Tramite240122Store } from '../../estados/tramite240122Store.store';
   styleUrl: './agregar-proveedor-contenedora.component.scss',
 })
 export class AgregarProveedorContenedoraComponent implements OnInit, OnDestroy {
-  /**
-   * @event cerrar
-   * @description Evento emitido para indicar que se debe cerrar el componente.
-   * @remarks
-   * Este evento no envía ningún valor, simplemente notifica a los componentes padres que se debe realizar la acción de cierre.
-   * 
-   * @eventType void
-   * @es
-   * Evento que se dispara para cerrar el componente actual.
-   */
-  @Output() cerrar = new EventEmitter<void>();
-  /**
-   * @property {number} idProcedimiento - Identificador único del procedimiento asociado al trámite 240122.
-   * @remarks Este valor se utiliza para identificar el trámite 240122.
-   */
-  public readonly idProcedimiento: number = NUMERO_TRAMITE.TRAMITE_240122;
-  /**
-   * Indica si el formulario debe mostrarse en modo solo lectura.
-   * 
-   * @remarks
-   * Cuando esta propiedad es `true`, los campos del formulario no serán editables.
-   * 
-   * @defaultValue false
-   * 
-   * @example
-   * // Para activar el modo solo lectura:
-   * this.esFormularioSoloLectura = true;
-   * 
-   * @es
-   * Indica si el formulario es solo de lectura.
-   */
-  public esFormularioSoloLectura: boolean = false;
-  /**
- * Subject para notificar la destrucción del componente.
- */
-  private destroyNotifier$: Subject<void> = new Subject();
-  /**
-   * @constructor
-   * @description Constructor que inyecta el store `Tramite240122Store` para gestionar el estado del trámite.
-   *
-   * @param {Tramite240122Store} tramite240122Store - Store que administra el estado del trámite 240122.
-   */
-  constructor(public tramite240122Store: Tramite240122Store, private readonly consultaioQuery: ConsultaioQuery) { }
 
   /**
-   * @inheritdoc
+   * @event cerrar
    * @description
-   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
-   * Suscribe al observable `selectConsultaioState$` para actualizar la propiedad
-   * `esFormularioSoloLectura` según el estado de la sección. La suscripción se
-   * cancela automáticamente cuando se emite un valor en `destroyNotifier$`.
-   *
-   * @memberof AgregarProveedorContenedoraComponent
+   * Evento emitido para notificar al componente padre que se debe cerrar esta vista.
+   * 
+   * @type {EventEmitter<void>}
+   */
+  @Output() cerrar = new EventEmitter<void>();
+
+  /**
+   * Identificador único del procedimiento del trámite.
+   * 
+   * @readonly
+   * @type {number}
+   */
+  public readonly idProcedimiento: number = NUMERO_TRAMITE.TRAMITE_240122;
+
+  /**
+   * Indica si el formulario debe estar en modo de solo lectura.
+   * 
+   * @default false
+   * @type {boolean}
+   */
+  public esFormularioSoloLectura: boolean = false;
+
+  /**
+   * Subject para cancelar suscripciones activas al destruir el componente.
+   * 
+   * @private
+   * @type {Subject<void>}
+   */
+  private destroyNotifier$: Subject<void> = new Subject();
+
+  /**
+   * @constructor
+   * @description
+   * Constructor que inyecta los servicios necesarios para actualizar estado y consultar datos globales.
+   * 
+   * @param tramite240122Store Store que administra el estado del trámite 240122.
+   * @param consultaioQuery Query para obtener el estado de lectura del formulario.
+   */
+  constructor(
+    public tramite240122Store: Tramite240122Store,
+    private readonly consultaioQuery: ConsultaioQuery
+  ) {}
+
+  /**
+   * @method ngOnInit
+   * @description
+   * Hook de inicialización del componente.
+   * Se suscribe al estado global de consulta para actualizar `esFormularioSoloLectura`.
    */
   ngOnInit(): void {
     this.consultaioQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),
-        map((seccionState) => {
+        map(seccionState => {
           this.esFormularioSoloLectura = seccionState.readonly;
         })
       )
-      .subscribe()
+      .subscribe();
   }
 
   /**
    * @method updateProveedorTablaDatos
-   * @description Actualiza los datos de la tabla de proveedores en el store del trámite.
-   *
-   * @param {Proveedor[]} event - Lista de proveedores que se actualizarán en el store.
-   * @returns {void} Este método no retorna ningún valor.
+   * @description
+   * Actualiza la lista de proveedores en el store del trámite y emite el evento `cerrar`.
+   * 
+   * @param event Lista de proveedores a guardar.
    */
   updateProveedorTablaDatos(event: Proveedor[]): void {
     this.tramite240122Store.updateProveedorTablaDatos(event);
     this.cerrar.emit();
   }
+
   /**
-* Hook del ciclo de vida que se ejecuta al destruir el componente.
-* Libera las suscripciones activas para evitar fugas de memoria.
-*
-* @method ngOnDestroy
-* @returns {void}
-*/
+   * @method ngOnDestroy
+   * @description
+   * Hook que se ejecuta justo antes de destruir el componente.
+   * Libera las suscripciones activas para evitar fugas de memoria.
+   */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
