@@ -19,7 +19,6 @@ import { CommonModule } from '@angular/common';
 
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { HttpErrorResponse } from '@angular/common/http';
 
 import { Subject, delay, map, takeUntil, tap } from 'rxjs';
 
@@ -201,14 +200,14 @@ export class Anexo1Component implements OnInit, OnDestroy, AfterViewInit {
    * @param {ConsultaioQuery} consultaQuery - Query para consultar el estado de la consulta.
    */
   constructor(
-    private fb: FormBuilder,
-    private permisoImmexDatosService: PermisoImmexDatosService,
-    private readonly nicoService: NicoService,
-    private immexRegistroQuery: ImmexRegistroQuery,
-    private immexRegistroStore: ImmexRegistroStore,
-    private seccionQuery: SeccionLibQuery,
-    private seccionStore: SeccionLibStore,
-    private readonly consultaQuery: ConsultaioQuery
+    public fb: FormBuilder,
+    public permisoImmexDatosService: PermisoImmexDatosService,
+    public readonly nicoService: NicoService,
+    public immexRegistroQuery: ImmexRegistroQuery,
+    public immexRegistroStore: ImmexRegistroStore,
+    public seccionQuery: SeccionLibQuery,
+    public seccionStore: SeccionLibStore,
+    public readonly consultaQuery: ConsultaioQuery
   ) {}
 
   /**
@@ -480,21 +479,7 @@ export class Anexo1Component implements OnInit, OnDestroy, AfterViewInit {
                   this.permisoImmexDatos[0].IMMEX_Columna_4,
               });
             }
-          } else {
-            console.error(
-              'La respuesta de la API no tiene el formato esperado:',
-              response
-            );
-            this.permisoImmexDatos = [];
-            this.fraccionDatos = [];
-            this.nicoDatos = [];
-          }
-        },
-        error: (error: HttpErrorResponse) => {
-          console.error('Error al obtener los datos:', error);
-          this.permisoImmexDatos = [];
-          this.fraccionDatos = [];
-          this.nicoDatos = [];
+          } 
         },
       });
 
