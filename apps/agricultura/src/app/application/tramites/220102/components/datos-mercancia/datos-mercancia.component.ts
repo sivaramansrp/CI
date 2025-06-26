@@ -156,13 +156,7 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy,AfterViewInit 
             })
           )
           .subscribe();
-    this.obtenerNombreComun();
-    this.obtenerNombreCientifico();
-    this.obtenerUso();
-    this.obtenerPaisProcedencia();
-    this.obtenerTipoProducto();
-    this.obtenerPaisOrigen();
-    this.obtenerUmc();
+    
   }
 
   /**
@@ -174,6 +168,13 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy,AfterViewInit 
    */
   ngOnInit(): void {
     this.crearFormulario();
+    this.obtenerNombreComun();
+    this.obtenerNombreCientifico();
+    this.obtenerUso();
+    this.obtenerPaisProcedencia();
+    this.obtenerTipoProducto();
+    this.obtenerPaisOrigen();
+    this.obtenerUmc();
     this.datosMercanciaService.obtenerDatos()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe(data => {
@@ -183,6 +184,7 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy,AfterViewInit 
           this.cuerpoTabla = [];
         }
       });
+
 
 
   }
