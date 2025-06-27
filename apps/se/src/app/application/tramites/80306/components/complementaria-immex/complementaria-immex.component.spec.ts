@@ -1,17 +1,16 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ComplementariaImmexComponent } from './complementaria-immex.component';
+import { TestBed } from '@angular/core/testing';
 
 describe('ComplementariaImmexComponent', () => {
-  let fixture: ComponentFixture<ComplementariaImmexComponent>;
-  let component: { ngOnDestroy: () => void; seleccionaTab: (arg0: {}) => void; };
+  let fixture;
+  let component!: ComplementariaImmexComponent;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule, ComplementariaImmexComponent ],
+      imports: [ FormsModule, ReactiveFormsModule ],
       declarations: [
-        
       ],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
       providers: [
@@ -24,18 +23,13 @@ describe('ComplementariaImmexComponent', () => {
     component = fixture.debugElement.componentInstance;
   });
 
-  afterEach(() => {
-    component.ngOnDestroy = function() {};
-    fixture.destroy();
-  });
-
-  it('should run #constructor()', async () => {
+  it('debería ejecutar #constructor()', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should run #seleccionaTab()', async () => {
+  it('debe ejecutar #seleccionaTab()', () => {
 
-    component.seleccionaTab({});
+    component.seleccionaTab(1);
 
   });
 
