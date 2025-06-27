@@ -25,11 +25,11 @@ describe('DatosParaMovilizacionComponent', () => {
     httpTestingController = TestBed.inject(HttpTestingController); // Inject the HttpTestingController
   });
 
-  xit('should create', () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  xit('should create formularioMovilizacion FormGroup on ngOnInit', () => {
+  it('should create formularioMovilizacion FormGroup on ngOnInit', () => {
     component.ngOnInit();
     expect(component.formularioMovilizacion).toBeDefined();
   });

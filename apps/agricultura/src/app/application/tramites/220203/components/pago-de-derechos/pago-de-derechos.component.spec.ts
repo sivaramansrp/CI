@@ -28,11 +28,11 @@ describe('PagoDeDerechosComponent', () => {
     httpTestingController = TestBed.inject(HttpTestingController); // Inject HttpTestingController
   });
 
-  xit('should create', () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  xit('should create formularioPago FormGroup on ngOnInit', () => {
+  it('should create formularioPago FormGroup on ngOnInit', () => {
     component.ngOnInit();
     expect(component.formularioPago).toBeDefined();
   });

@@ -2,7 +2,7 @@ import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
-import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, ConsultaioQuery, InputRadioComponent, TablaDinamicaComponent, TablaSeleccion, TableBodyData, TableComponent, TituloComponent } from '@ng-mf/data-access-user';
+import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, ConsultaioQuery, TablaDinamicaComponent, TablaSeleccion, TableBodyData, TableComponent, TituloComponent } from '@ng-mf/data-access-user';
 
 import { DatosMercancia220203 } from '../../models/220203/importacion-de-acuicultura.module';
 
@@ -48,7 +48,6 @@ interface FilaSolicitud {
   imports: [
     ReactiveFormsModule,
     TituloComponent,
-    InputRadioComponent,
     AlertComponent,
     TablaDinamicaComponent,
     CatalogoSelectComponent,
