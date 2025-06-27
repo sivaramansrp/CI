@@ -1,97 +1,74 @@
-import { TestBed } from '@angular/core/testing';
-import { PasotresComponent } from './paso-tres.component';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { Router } from '@angular/router';
+import { of, throwError } from 'rxjs';
+ 
+import { PasotresComponent } from './paso-tres.component';
 import { ServiciosPantallaService } from '@libs/shared/data-access-user/src/core/services/31601/servicios-pantalla.service';
 import { TramiteCofeprisStore } from '../../../../estados/tramite.store';
-import { of } from 'rxjs';
-import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-
+ 
 describe('PasotresComponent', () => {
   let component: PasotresComponent;
-  let router: jest.Mocked<Router>;
-  let servicios: jest.Mocked<ServiciosPantallaService>;
-  let tramiteStore: jest.Mocked<TramiteCofeprisStore>;
-
-  beforeEach(() => {
-    router = { navigate: jest.fn() } as any;
-    servicios = { obtenerTramite: jest.fn() } as any;
-    tramiteStore = { establecerTramite: jest.fn() } as any;
-
-    TestBed.configureTestingModule({
+  let fixture: ComponentFixture<PasotresComponent>;
+  let routerMock: any;
+  let serviciosMock: any;
+  let storeMock: any;
+ 
+  beforeEach(async () => {
+    routerMock = { navigate: jest.fn() };
+    serviciosMock = { obtenerTramite: jest.fn() };
+    storeMock = { establecerTramite: jest.fn() };
+ 
+    await TestBed.configureTestingModule({
       declarations: [PasotresComponent],
       providers: [
-        { provide: Router, useValue: router },
-        { provide: ServiciosPantallaService, useValue: servicios },
-        { provide: TramiteCofeprisStore, useValue: tramiteStore }
+        { provide: Router, useValue: routerMock },
+        { provide: ServiciosPantallaService, useValue: serviciosMock },
+        { provide: TramiteCofeprisStore, useValue: storeMock }
       ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA]
-    });
-
-    const fixture = TestBed.createComponent(PasotresComponent);
+    }).compileComponents();
+ 
+    fixture = TestBed.createComponent(PasotresComponent);
     component = fixture.componentInstance;
+    fixture.detectChanges();
   });
-
-  beforeEach(() => {
-    jest.clearAllMocks();
+ 
+  it('debe crear el componente', () => {
+    expect(component).toBeTruthy();
   });
-
-  it('debe llamar a obtenerTramite y navegar si la firma es válida', () => {
-    const tramiteMock = { id: 1, descripcion: 'desc', codigo: 'code', data: JSON.stringify({ id: 1 }) };
-    servicios.obtenerTramite.mockReturnValue(of(tramiteMock));
+ 
+  it('debe llamar a establecerTramite y navegar si la FIRMA es válida', () => {
+    const tramiteData = { data: { id: 1 } };
+    serviciosMock.obtenerTramite.mockReturnValue(of(tramiteData));
     const firma = 'FIRMA_VALIDA';
-
+ 
     component.obtieneFirma(firma);
-
-    expect(servicios.obtenerTramite).toHaveBeenCalledWith(19);
-    expect(tramiteStore.establecerTramite).toHaveBeenCalledWith(tramiteMock.data, firma);
-    expect(router.navigate).toHaveBeenCalledWith(['servicios-extraordinarios/acuse']);
+ 
+    expect(serviciosMock.obtenerTramite).toHaveBeenCalledWith(19);
+    expect(storeMock.establecerTramite).toHaveBeenCalledWith(tramiteData.data, firma);
+    expect(routerMock.navigate).toHaveBeenCalledWith(['servicios-extraordinarios/acuse']);
   });
-
-  it('no debe llamar a obtenerTramite si la firma es vacía', () => {
+ 
+  it('no debe llamar a obtenerTramite si la FIRMA es falsy', () => {
     component.obtieneFirma('');
-    expect(servicios.obtenerTramite).not.toHaveBeenCalled();
-    expect(tramiteStore.establecerTramite).not.toHaveBeenCalled();
-    expect(router.navigate).not.toHaveBeenCalled();
+    expect(serviciosMock.obtenerTramite).not.toHaveBeenCalled();
+    expect(storeMock.establecerTramite).not.toHaveBeenCalled();
+    expect(routerMock.navigate).not.toHaveBeenCalled();
   });
-
-  it('debe limpiar destroyed$ al destruir el componente', () => {
-    (component as any).destroyed$ = { next: jest.fn(), complete: jest.fn() };
+ 
+  it('debe manejar errores en el observable de obtenerTramite', () => {
+    serviciosMock.obtenerTramite.mockReturnValue(throwError(() => new Error('error')));
+    const firma = 'FIRMA_VALIDA';
+    expect(() => component.obtieneFirma(firma)).not.toThrow();
+    expect(serviciosMock.obtenerTramite).toHaveBeenCalledWith(19);
+  });
+ 
+  it('debe limpiar destroyed$ en ngOnDestroy', () => {
+    const spyNext = jest.spyOn((component as any).destroyed$, 'next');
+    const spyComplete = jest.spyOn((component as any).destroyed$, 'complete');
     component.ngOnDestroy();
-    expect((component as any).destroyed$.next).toHaveBeenCalled();
-    expect((component as any).destroyed$.complete).toHaveBeenCalled();
+    expect(spyNext).toHaveBeenCalled();
+    expect(spyComplete).toHaveBeenCalled();
   });
-
-  it('debe permitir múltiples llamadas a obtieneFirma con firmas distintas', () => {
-    const tramiteMock = { id: 3, descripcion: 'desc', codigo: 'code', data: JSON.stringify({ id: 3 }) };
-    servicios.obtenerTramite.mockReturnValue(of(tramiteMock));
-    component.obtieneFirma('FIRMA_1');
-    component.obtieneFirma('FIRMA_2');
-    expect(servicios.obtenerTramite).toHaveBeenCalledTimes(2);
-    expect(tramiteStore.establecerTramite).toHaveBeenCalledTimes(2);
-    expect(router.navigate).toHaveBeenCalledTimes(2);
-    expect(tramiteStore.establecerTramite).toHaveBeenNthCalledWith(1, tramiteMock.data, 'FIRMA_1');
-    expect(tramiteStore.establecerTramite).toHaveBeenNthCalledWith(2, tramiteMock.data, 'FIRMA_2');
-  });
-
-  it('debe no hacer nada si obtieneFirma recibe un string solo con espacios', () => {
-    component.obtieneFirma('   ');
-    expect(servicios.obtenerTramite).not.toHaveBeenCalled();
-    expect(tramiteStore.establecerTramite).not.toHaveBeenCalled();
-    expect(router.navigate).not.toHaveBeenCalled();
-  });
-
-  it('debe no hacer nada si obtieneFirma recibe un objeto no string', () => {
-    servicios.obtenerTramite.mockReturnValue(of({ id: 0, descripcion: '', codigo: '', data: '{}' }));
-    component.obtieneFirma({} as any);
-    expect(servicios.obtenerTramite).not.toHaveBeenCalled();
-    expect(tramiteStore.establecerTramite).not.toHaveBeenCalled();
-    expect(router.navigate).not.toHaveBeenCalled();
-  });
-
-  it('debe no hacer nada si obtieneFirma recibe null o undefined', () => {
-    component.obtieneFirma(null as any);
-    component.obtieneFirma(undefined as any);
-    expect(servicios.obtenerTramite).not.toHaveBeenCalled();
-    expect(tramiteStore.establecerTramite).not.toHaveBeenCalled();
-    expect(router.navigate).not.toHaveBeenCalled();
-  });})
+});

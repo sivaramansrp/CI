@@ -46,24 +46,23 @@ export class PasotresComponent implements OnDestroy{
   obtieneFirma(ev: string): void {
     const FIRMA: string = ev;
  
-    if (typeof FIRMA !== 'string' || !FIRMA.trim()) {
-      return;
+    if (FIRMA) {
+      // Obtiene el número de trámite y establece el trámite en el store
+      this.serviciosExtraordinariosServices
+        .obtenerTramite(19)
+        .pipe(
+          map((tramite) => {
+            this.TramiteCofeprisStore.establecerTramite(tramite.data, FIRMA);
+            // Redirige a la pantalla de acuse
+            this.router.navigate(['servicios-extraordinarios/acuse']);
+          }),
+          catchError((_error) => {
+            return _error;
+          }),
+          takeUntil(this.destroyed$) 
+        )
+        .subscribe();
     }
-    // Obtiene el número de trámite y establece el trámite en el store
-    this.serviciosExtraordinariosServices
-      .obtenerTramite(19)
-      .pipe(
-        map((tramite) => {
-          this.TramiteCofeprisStore.establecerTramite(tramite.data, FIRMA);
-          // Redirige a la pantalla de acuse
-          this.router.navigate(['servicios-extraordinarios/acuse']);
-        }),
-        catchError((_error) => {
-          return _error;
-        }),
-        takeUntil(this.destroyed$) 
-      )
-      .subscribe();
   }
   
   /**
@@ -75,3 +74,4 @@ export class PasotresComponent implements OnDestroy{
     this.destroyed$.complete();
   }
 }
+ 
