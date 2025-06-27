@@ -34,6 +34,7 @@
                 'tipoTransito'
               )
             "
+            [isDisabled]="esFormularioSoloLectura"
           ></app-catalogo-select>
           <div *ngIf="esInvalido('tipoTransito')" class="text-danger">
             <small

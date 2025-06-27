@@ -52,6 +52,10 @@ export class DireccionEmpresaComponent implements OnInit {
   @Input() titulo!: string;
 
   /**
+   * Nota sobre el capital social que se mostrará en el formulario.
+   */
+@Input() esFormularioSoloLectura: boolean = false;
+  /**
    * Constructor del componente.
    * @param grupoDeFormaRaiz - Directiva del grupo de formulario raíz.
    * @param tramite30401Store - Tienda para gestionar el estado del trámite 30401.

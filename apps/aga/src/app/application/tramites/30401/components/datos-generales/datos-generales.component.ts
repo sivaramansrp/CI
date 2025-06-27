@@ -56,7 +56,10 @@ export class DatosGeneralesComponent implements OnInit {
    * Título del componente.
    */
   @Input() titulo!: string;
-
+  /**
+   * Nota sobre el capital social que se mostrará en el formulario.
+   */
+@Input() esFormularioSoloLectura: boolean = false;
   /**
    * Constructor del componente.
    * @param grupoDeFormaRaiz - Directiva del grupo de formulario raíz.

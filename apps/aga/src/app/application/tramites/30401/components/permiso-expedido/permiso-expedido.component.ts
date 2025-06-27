@@ -47,6 +47,11 @@ export class permisoComponent implements OnInit {
   @Input() miRepresentadaNota!: string;
 
   /**
+   * Indica si el formulario es de solo lectura.
+   * Si es true, los campos del formulario no serán editables.
+   */
+@Input() esFormularioSoloLectura: boolean = false;
+  /**
    * Constructor del componente.
    * @param grupoDeFormaRaiz - Directiva que proporciona acceso al formulario raíz.
    * @param tramite30401Store - Servicio para gestionar el estado del trámite 30401.
