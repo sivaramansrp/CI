@@ -1,33 +1,74 @@
-import { Injectable } from '@angular/core';
+import { SolicitudService } from './solicitud.service';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { of } from 'rxjs';
 
-export interface Solicitud {
-  id?: number;
-  nombre: string;
-}
+describe('SolicitudService (Jest)', () => {
+  let service: SolicitudService;
+  let httpClientMock: jest.Mocked<HttpClient>;
 
-@Injectable({
-  providedIn: 'root'
-})
-export class SolicitudService {
-  private apiUrl = '/api/solicitudes';
+  beforeEach(() => {
+    httpClientMock = {
+      get: jest.fn(),
+    } as any;
+    service = new SolicitudService(httpClientMock);
+  });
 
-  constructor(private http: HttpClient) {}
+  it('debería ser creado', () => {
+    expect(service).toBeTruthy();
+  });
 
-  obtenerSolicitudes(): Observable<Solicitud[]> {
-    return this.http.get<Solicitud[]>(this.apiUrl);
-  }
+  it('debería llamar a getSolicitudes y devolver los datos esperados', (done) => {
+    const mockData = [{ id: 1, name: 'Solicitud1' }];
+    httpClientMock.get.mockReturnValue(of(mockData));
 
-  crearSolicitud(solicitud: Solicitud): Observable<Solicitud> {
-    return this.http.post<Solicitud>(this.apiUrl, solicitud);
-  }
+    service.getSolicitudes().subscribe(data => {
+      expect(data).toEqual(mockData);
+      expect(httpClientMock.get).toHaveBeenCalledWith('assets/json/260212/solicitud.json');
+      done();
+    });
+  });
 
-  actualizarSolicitud(solicitud: Solicitud): Observable<Solicitud> {
-    return this.http.put<Solicitud>(`${this.apiUrl}/${solicitud.id}`, solicitud);
-  }
+  it('debería llamar a getClave y devolver los datos esperados', (done) => {
+    const mockData = [{ clave: 'A1', descripcion: 'Clave A1' }];
+    httpClientMock.get.mockReturnValue(of(mockData));
 
-  eliminarSolicitud(id: number): Observable<null> {
-    return this.http.delete<null>(`${this.apiUrl}/${id}`);
-  }
-}
+    service.getClave().subscribe(data => {
+      expect(data).toEqual(mockData);
+      expect(httpClientMock.get).toHaveBeenCalledWith('assets/json/260212/clave.json');
+      done();
+    });
+  });
+
+  it('debería llamar a getOpcionesPublicacion y devolver los datos esperados', (done) => {
+    const mockData = [{ opcion: 'Publicar' }];
+    httpClientMock.get.mockReturnValue(of(mockData));
+
+    service.getOpcionesPublicacion().subscribe(data => {
+      expect(data).toEqual(mockData);
+      expect(httpClientMock.get).toHaveBeenCalledWith('/assets/json/260212/opciones-de-radio.json');
+      done();
+    });
+  });
+
+  it('debería llamar a getTestadoFisico y devolver los datos esperados', (done) => {
+    const mockData = [{ estado: 'Solido' }];
+    httpClientMock.get.mockReturnValue(of(mockData));
+
+    service.getTestadoFisico().subscribe(data => {
+      expect(data).toEqual(mockData);
+      expect(httpClientMock.get).toHaveBeenCalledWith('/assets/json/260212/estadoFisico.json');
+      done();
+    });
+  });
+
+  it('debería llamar a getClasificacionProducto y devolver los datos esperados', (done) => {
+    const mockData = [{ clasificacion: 'Tipo1' }];
+    httpClientMock.get.mockReturnValue(of(mockData));
+
+    service.getClasificacionProducto().subscribe(data => {
+      expect(data).toEqual(mockData);
+      expect(httpClientMock.get).toHaveBeenCalledWith('/assets/json/260212/clasificacionProducto.json');
+      done();
+    });
+  });
+});
