@@ -433,7 +433,7 @@ export class RegistroVehiculosComponent implements OnInit {
         ...this.registroVehiculosInfoList,
         NEW_VEHICULO,
       ];
-      this.tramite30401Store.establecerDatos({registroTablaDatos:[NEW_VEHICULO]});
+      this.tramite30401Store.establecerDatos({registroTablaDatos:this.registroVehiculosInfoList});
     } else {
       this.registroVehiculosInfoList = this.registroVehiculosInfoList.map(
         (item) =>

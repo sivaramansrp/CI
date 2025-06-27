@@ -329,7 +329,7 @@ export class VehiculosComponent implements OnInit {
       const OBJETO = { id: ID, marca: MARCA, modelo: MODELO, vin: VIN };
 
       this.vehiculosInfoList = [...this.vehiculosInfoList, OBJETO];
-      this.tramite30401Store.establecerDatos({vehiculosTablaDatos:[OBJETO]});
+      this.tramite30401Store.establecerDatos({vehiculosTablaDatos:this.vehiculosInfoList});
     } else {
       this.vehiculosInfoList = this.vehiculosInfoList.map((elemento) =>
         elemento.id === this.filaSeleccionadaVehiculos.id

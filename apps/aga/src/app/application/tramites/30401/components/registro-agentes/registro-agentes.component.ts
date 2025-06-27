@@ -329,7 +329,7 @@ export class RegistroAgentesComponent implements OnInit {
       };
 
       this.agentesInfoList = [...this.agentesInfoList, OBJETO];
-      this.tramite30401Store.establecerDatos({agentesTablaDatos:[OBJETO]});
+      this.tramite30401Store.establecerDatos({agentesTablaDatos:this.agentesInfoList});
     } else {
       this.agentesInfoList = this.agentesInfoList.map((elemento) =>
         elemento.id === this.filaSeleccionadaAgentes.id
