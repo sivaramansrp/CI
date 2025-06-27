@@ -3,22 +3,26 @@
  * Componente que gestiona los datos del tipo de propietario para el trámite 630303.
  * Permite inicializar formularios, obtener datos de catálogos y manejar el estado del formulario.
  */
-import { CommonModule } from '@angular/common';
-
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
 
-import { Catalogo, ModeloDeFormaDinamica } from '@libs/shared/data-access-user/src';
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
 
-import { CatalogoSelectComponent, SolicitanteComponent, TituloComponent } from '@ng-mf/data-access-user';
+import { SolicitanteComponent, TituloComponent } from '@ng-mf/data-access-user';
 
 import { FORMULARIO_DATOS_PROPIETARIO_DIRECCION } from '../../enum/retorno-importacion-temporal.enum';
 import { Tramite630303Query } from '../../estados/tramite630303.query';
 
 import { Tramite630303State, Tramite630303Store } from '../../estados/tramite630303.store';
 import { RetornoImportacionTemporalService } from '../../services/retorno-importacion-temporal.service';
+
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
+
+import { Catalogo, ModeloDeFormaDinamica } from '@ng-mf/data-access-user';
 /**
  * Componente que gestiona los datos del tipo de propietario para el trámite 630303.
  */
@@ -82,20 +86,68 @@ export class TipoPropietarioComponent implements OnInit, OnDestroy {
    */
   private destroyed$ = new Subject<void>();
 
+    /**
+   * Indica si el formulario está en modo solo lectura.
+   * Si es verdadero, los campos del formulario estarán deshabilitados para edición.
+   */
+  esFormularioSoloLectura!: boolean;
+
+  /**
+   * Estado actual de la solicitud.
+   */
+  public solicitudState!: Tramite630303State;
+
   /**
    * Constructor del componente.
+   * Inicializa las dependencias necesarias y establece el formulario reactivo base
+   * para la gestión de datos del tipo de propietario en el trámite de retorno
+   * de importación temporal.
    * 
-   * @param fb - Constructor de formularios reactivos.
-   * @param tramite630303Store - Store para manejar el estado del trámite.
-   * @param tramite630303Query - Query para consultar el estado del trámite.
-   * @param retornoImportacionTemporalService - Servicio para obtener datos de catálogos.
+   * @param fb - Constructor de formularios reactivos de Angular para crear y manejar formularios.
+   * @param tramite630303Store - Store para actualizar y mantener el estado del trámite 630303.
+   * @param tramite630303Query - Query para observar y consultar el estado del trámite 630303.
+   * @param retornoImportacionTemporalService - Servicio para obtener datos de catálogos relacionados con importación temporal.
+   * @param consultaioQuery - Query para obtener el estado de consulta y determinar el modo de solo lectura.
+   * 
+   * @description El constructor ejecuta inmediatamente la inicialización del formulario
+   * con valores predeterminados y validaciones necesarias para la gestión del tipo de propietario.
+   * 
+   * @memberof TipoPropietarioComponent
    */
   constructor(
     private fb: FormBuilder,
     private tramite630303Store: Tramite630303Store,
     private tramite630303Query: Tramite630303Query,
-    private retornoImportacionTemporalService: RetornoImportacionTemporalService
-  ) {}
+    private retornoImportacionTemporalService: RetornoImportacionTemporalService,
+     private consultaioQuery: ConsultaioQuery
+  ) {
+    this.inicializarFormulario()
+  }
+
+  /**
+   * Guarda los datos del formulario y ajusta el estado de solo lectura.
+   * Deshabilita o habilita los campos según corresponda.
+   */
+  guardarDatosFormulario(): void {
+    if (!this.tipoPropietarioFormulario) {
+      return;
+    }
+    
+    if (this.esFormularioSoloLectura) {
+      this.tipoPropietarioFormulario.disable();
+      this.formularioDatosPropietarioDireccion = this.formularioDatosPropietarioDireccion.map(campo => ({
+        ...campo,
+        desactivado: true
+      }));
+
+    } else if (!this.esFormularioSoloLectura) {
+      this.tipoPropietarioFormulario.enable();
+      this.formularioDatosPropietarioDireccion = this.formularioDatosPropietarioDireccion.map(campo => ({
+        ...campo,
+        desactivado: false
+      }));
+    } 
+  }
 
   /**
    * Método del ciclo de vida que se ejecuta al inicializar el componente.
@@ -103,18 +155,38 @@ export class TipoPropietarioComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.getValorStore();
-    this.inicializarFormulario();
     this.getPropietario();
     this.getTipoDePropietario();
+    this.inicializarFormulario();
+    this.obtenerEstadoValor();
     this.getPais();
     this.cambiarPropietario();
     this.cambiarTipoPropietario();
+  }
+
+   /**
+   * Se suscribe al observable del estado del trámite (`Tramite220103Query`)
+   * para obtener y almacenar el estado actual en `estadoSeleccionado`.
+   * La suscripción se gestiona con `takeUntil` para limpiarse automáticamente
+   * en `ngOnDestroy`.
+   */
+  obtenerEstadoValor(): void {
+   this.consultaioQuery.selectConsultaioState$
+    .pipe(takeUntil(this.destroyed$))
+    .subscribe((estadoConsulta) => {
+      this.esFormularioSoloLectura = estadoConsulta.readonly;
+      this.guardarDatosFormulario()
+    });
   }
 
   /**
    * Cambia la visibilidad de los campos según el tipo de propietario seleccionado.
    */
   cambiarTipoPropietario(): void {
+    if (!this.tipoPropietarioFormulario) {
+      return;
+    }
+    
     const TIPO_PROPIETARIO_VALOR = this.tipoPropietarioFormulario.get('tipoDePropietario')?.value;
     const NOMBRE_CAMPO = this.formularioDatosPropietarioDireccion.find((campo) => campo.id === 'nombre');
     const APELLIDO_PATERNO_CAMPO = this.formularioDatosPropietarioDireccion.find((campo) => campo.id === 'apellidoPaterno');
@@ -134,6 +206,10 @@ export class TipoPropietarioComponent implements OnInit, OnDestroy {
    * Cambia la visibilidad de los componentes según el propietario seleccionado.
    */
   cambiarPropietario(): void {
+    if (!this.tipoPropietarioFormulario) {
+      return;
+    }
+    
     this.mostrarTipoPropietario = this.tipoPropietarioFormulario.get('propietario')?.value === '2';
     this.mostrarSolicitante = this.tipoPropietarioFormulario.get('propietario')?.value === '1';
   }
@@ -203,6 +279,11 @@ export class TipoPropietarioComponent implements OnInit, OnDestroy {
    *  Evento que contiene el campo y el valor a actualizar.
    */
   establecerCambioDeValor($event: { campo: string; valor: unknown }): void {
+    // Verificar que el evento no sea null/undefined y tenga las propiedades requeridas
+    if (!$event || typeof $event !== 'object' || !$event.campo) {
+      return;
+    }
+
     if (typeof $event.valor === 'object' && $event.valor !== null && 'id' in $event.valor) {
       this.tramite630303Store.setTramite630303State($event.campo, String(($event.valor as { id: unknown }).id));
     } else {
