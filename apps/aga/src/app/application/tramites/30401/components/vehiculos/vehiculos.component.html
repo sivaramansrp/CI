@@ -5,16 +5,17 @@
     [configuracionTabla]="ParqueVehicular"
     [datos]="vehiculosInfoList"
     (listaDeFilaSeleccionada)="manejarFilaSeleccionada($event)"
+    [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
   >
   </app-tabla-dinamica>
 
   <div class="d-flex justify-content-end">
     <div class="d-flex flex-row flex-wrap gap-3">
-        <button class="btn btn-primary" (click)="cargaArchivo()">Carga por archivo</button>
+        <button class="btn btn-primary" (click)="cargaArchivo()" [disabled]="esFormularioSoloLectura">Carga por archivo</button>
         <button class="btn btn-primary" [ngClass]="{'btn-secondary': !enableEliminarBoton}"
-        (click)="confirmEliminarVehiculosItem()">Eliminar</button>
-        <button class="btn btn-primary" [ngClass]="{'btn-secondary': !enableEliminarBoton}" (click)="modificarItemVehiculos()">Modificar</button>
-        <button class="btn btn-primary" (click)="agregarDialogoDatos()">Agregar</button>
+        (click)="confirmEliminarVehiculosItem()" [disabled]="esFormularioSoloLectura">Eliminar</button>
+        <button class="btn btn-primary" [ngClass]="{'btn-secondary': !enableEliminarBoton}" (click)="modificarItemVehiculos()" [disabled]="esFormularioSoloLectura">Modificar</button>
+        <button class="btn btn-primary" (click)="agregarDialogoDatos()" [disabled]="esFormularioSoloLectura">Agregar</button>
     </div>
   </div>
 </div>

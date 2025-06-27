@@ -5,16 +5,17 @@
     [configuracionTabla]="ParqueAgentes"
     [datos]="agentesInfoList"
     (listaDeFilaSeleccionada)="manejarFilaSeleccionada($event)"
+    [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
   >
   </app-tabla-dinamica>
 
   <div class="d-flex justify-content-end">
     <div class="d-flex flex-row flex-wrap gap-3">
-        <button class="btn btn-primary" (click)="cargaArchivo()">Carga por archivo</button>
+        <button class="btn btn-primary" (click)="cargaArchivo()" [disabled]="esFormularioSoloLectura">Carga por archivo</button>
         <button class="btn btn-primary" [ngClass]="{'btn-secondary': !enableEliminarBoton}"
         [disabled]="!enableEliminarBoton" (click)="confirmEliminarAgentesItem()">Eliminar</button>
         <button class="btn btn-primary"  [disabled]="!enableModficarBoton" [ngClass]="{'btn-secondary': !enableEliminarBoton}" (click)="modificarItemAgentes()">Modificar</button>
-        <button class="btn btn-primary" (click)="agregarDialogoDatos()">Agregar</button>
+        <button class="btn btn-primary" (click)="agregarDialogoDatos()" [disabled]="esFormularioSoloLectura">Agregar</button>
     </div>
   </div>
 </div>

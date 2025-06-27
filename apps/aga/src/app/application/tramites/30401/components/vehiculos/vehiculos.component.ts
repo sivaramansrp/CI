@@ -11,12 +11,14 @@ import {
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NOTA, VEHICULOS_TABLA_DATOS } from '../../enums/registro-empresas-transporte.enum';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil} from 'rxjs';
 import { Tramite30401Store, Tramites30401State } from '../../estados/tramites30401.store';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { Modal } from 'bootstrap';
 import { Tramite30401Query } from '../../estados/tramites30401.query';
 import { VehiculosTabla } from '../../modelos/registro-empresas-transporte.model';
+
 
 /**
  * Componente VehiculosComponent para la gestión de vehículos dentro del sistema.
@@ -46,6 +48,11 @@ import { VehiculosTabla } from '../../modelos/registro-empresas-transporte.model
   styleUrl: './vehiculos.component.scss',
 })
 export class VehiculosComponent implements OnInit {
+    /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  esFormularioSoloLectura: boolean = false;
   /**
    * Define si el diálogo exitoso está habilitado.
    *
@@ -180,8 +187,17 @@ export class VehiculosComponent implements OnInit {
   constructor(
     public fb: FormBuilder,
     private tramite30401Store: Tramite30401Store,
-    private tramite30401Query: Tramite30401Query
+    private tramite30401Query: Tramite30401Query,
+    private consultaioQuery: ConsultaioQuery
   ) {
+      this.consultaioQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.destroyed$),
+      map((seccionState) => {
+       this.esFormularioSoloLectura = seccionState.readonly;
+      })
+    )
+    .subscribe();
     this.crearFormulario();
     this.inicializarFormularioArchivo();
   }
