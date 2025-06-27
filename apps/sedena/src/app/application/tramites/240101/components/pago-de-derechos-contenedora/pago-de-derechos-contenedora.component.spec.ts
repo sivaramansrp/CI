@@ -8,38 +8,44 @@ import { Observable, of as observableOf, throwError } from 'rxjs';
 
 import { Component } from '@angular/core';
 import { PagoDeDerechosContenedoraComponent } from './pago-de-derechos-contenedora.component';
+import { PagoDeDerechosComponent } from '../../../../shared/components/pago-de-derechos/pago-de-derechos.component';
 import { Tramite240101Query } from '../../estados/tramite240101Query.query';
 import { Tramite240101Store } from '../../estados/tramite240101Store.store';
-import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
-import { PagoDeDerechosComponent } from '../../../../shared/components/pago-de-derechos/pago-de-derechos.component';
+import { of, Subject } from 'rxjs';
+import { PagoDerechosFormState } from '../../../../shared/models/pago-de-derechos.model';
+import { CommonModule } from '@angular/common';
 import { DatosSolicitudService } from '../../../../shared/services/datos-solicitud.service';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-
-@Injectable()
-class MockTramite240101Query {}
-
-@Injectable()
-class MockTramite240101Store {}
 
 describe('PagoDeDerechosContenedoraComponent', () => {
-  let fixture;
-  let component;
+  let component: PagoDeDerechosContenedoraComponent;
+  let fixture: ComponentFixture<PagoDeDerechosContenedoraComponent>;
+  let tramiteQueryMock: any;
+  let tramiteStoreMock: any;
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule, PagoDeDerechosComponent, HttpClientTestingModule],
-      schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
+  const mockFormState: PagoDerechosFormState = {
+    // fill with minimal required mock properties
+    // e.g. field1: 'value', field2: 123
+  } as PagoDerechosFormState;
+
+  beforeEach(async () => {
+    tramiteQueryMock = {
+      getPagoDerechos$: of(mockFormState)
+    };
+    tramiteStoreMock = {
+      updatePagoDerechosFormState: jest.fn()
+    };
+
+    await TestBed.configureTestingModule({
+      imports: [CommonModule, PagoDeDerechosComponent, PagoDeDerechosContenedoraComponent],
+      declarations: [],
       providers: [
-        { provide: Tramite240101Query, useClass: MockTramite240101Query },
-        { provide: Tramite240101Store, useClass: MockTramite240101Store },
-        ConsultaioQuery,
-        DatosSolicitudService
+        { provide: Tramite240101Query, useValue: tramiteQueryMock },
+        { provide: Tramite240101Store, useValue: tramiteStoreMock },
+        { provide: DatosSolicitudService, useValue: {} }
       ]
-    }).overrideComponent(PagoDeDerechosContenedoraComponent, {
-
     }).compileComponents();
     fixture = TestBed.createComponent(PagoDeDerechosContenedoraComponent);
-    component = fixture.debugElement.componentInstance;
+    component = fixture.componentInstance;
   });
 
 
@@ -47,28 +53,57 @@ describe('PagoDeDerechosContenedoraComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should run #ngOnInit()', async () => {
-    component.tramiteQuery = component.tramiteQuery || {};
-    component.tramiteQuery.getPagoDerechos$ = observableOf({});
-    component.consultaQuery = component.consultaQuery || {};
-    component.consultaQuery.selectConsultaioState$ = observableOf({});
+  it('should subscribe to tramiteQuery.getPagoDerechos$ on init and set pagoDerechoFormState', () => {
     component.ngOnInit();
-
+    expect(component.pagoDerechoFormState).toEqual(mockFormState);
   });
 
-  it('should run #ngOnDestroy()', async () => {
-    component.unsubscribe$ = component.unsubscribe$ || {};
-    component.unsubscribe$.next = jest.fn();
-    component.unsubscribe$.complete = jest.fn();
+  it('should call tramiteStore.updatePagoDerechosFormState when updatePagoDerechos is called', () => {
+    const event = { ...mockFormState };
+    component.updatePagoDerechos(event);
+    expect(tramiteStoreMock.updatePagoDerechosFormState).toHaveBeenCalledWith(event);
+  });
+
+  it('should complete unsubscribe$ on destroy', async () => {
+    TestBed.resetTestingModule();
+    await TestBed.configureTestingModule({
+      imports: [CommonModule, PagoDeDerechosComponent, PagoDeDerechosContenedoraComponent],
+      declarations: [],
+      providers: [
+        { provide: Tramite240101Query, useValue: tramiteQueryMock },
+        { provide: Tramite240101Store, useValue: tramiteStoreMock },
+        { provide: DatosSolicitudService, useValue: {} }
+      ]
+    }).compileComponents();
+
+    fixture = TestBed.createComponent(PagoDeDerechosContenedoraComponent);
+    component = fixture.componentInstance;
+
+    const nextSpy = jest.spyOn((component as any).unsubscribe$, 'next');
+    const completeSpy = jest.spyOn((component as any).unsubscribe$, 'complete');
     component.ngOnDestroy();
-    expect(component.unsubscribe$.next).toHaveBeenCalled();
+    expect(nextSpy).toHaveBeenCalled();
+    expect(completeSpy).toHaveBeenCalled();
   });
 
-  it('should run #updatePagoDerechos()', async () => {
-    component.tramiteStore = component.tramiteStore || {};
-    component.tramiteStore.updatePagoDerechosFormState = jest.fn();
-    component.updatePagoDerechos({});
-    expect(component.tramiteStore.updatePagoDerechosFormState).toHaveBeenCalled();
-  });
+  it('should unsubscribe from observable on destroy', () => {
+    const subject = new Subject<PagoDerechosFormState>();
+    tramiteQueryMock.getPagoDerechos$ = subject.asObservable();
+    TestBed.resetTestingModule();
+    TestBed.configureTestingModule({
+      imports: [CommonModule, PagoDeDerechosComponent, PagoDeDerechosContenedoraComponent],
+      declarations: [],
+      providers: [
+        { provide: Tramite240101Query, useValue: tramiteQueryMock },
+        { provide: Tramite240101Store, useValue: tramiteStoreMock },
+        { provide: DatosSolicitudService, useValue: {} }
+      ]
+    }).compileComponents();
 
+    fixture = TestBed.createComponent(PagoDeDerechosContenedoraComponent);
+    component = fixture.componentInstance;
+    component.ngOnInit();
+    component.ngOnDestroy();
+    expect((component as any).unsubscribe$.isStopped).toBe(true);
+  });
 });

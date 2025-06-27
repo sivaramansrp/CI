@@ -32,7 +32,7 @@ interface AccionBoton {
 
 @Component({
   templateUrl: './solicitud-page.component.html',
-  styles: ``,
+  styleUrl: './solicitud-page.component.scss',
 })
 
 /**
@@ -127,6 +127,7 @@ export class SolicitudPageComponent implements OnInit, OnDestroy {
   getValorIndice(e: AccionBoton): void {
     if (e.valor > 0 && e.valor < 5) {
       this.indice = e.valor;
+      this.datosPasos.indice = this.indice;
       if (e.accion === 'cont') {
         this.wizardComponent.siguiente();
       } else {
@@ -148,6 +149,17 @@ export class SolicitudPageComponent implements OnInit, OnDestroy {
     }
     this.seccionStore.establecerSeccion(SECCIONES);
     this.seccionStore.establecerFormaValida(FORM_VALIDA);
+  }
+  /**
+   * Guarda los datos actuales y retrocede al paso anterior en el asistente.
+   * 
+   * Este método utiliza el método `getValorIndice` para establecer el índice del paso anterior
+   * en el asistente y navegar hacia él.
+   * 
+   * @param {void} _ev - Evento que dispara la acción de guardar (actualmente no utilizado).
+   */
+  guardar(_ev: void): void {
+    this.getValorIndice({ accion: 'ant', valor: 2 });
   }
   /**
    * @method ngOnDestroy

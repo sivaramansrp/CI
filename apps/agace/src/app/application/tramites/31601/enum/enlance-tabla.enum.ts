@@ -10,7 +10,7 @@ export interface EnlaceConfiguracionItem {
     estadoResidencia: string,
     telefono: string,
     correo: string,
-    suplente: boolean,
+    suplente: string,
 }
 
 /**
