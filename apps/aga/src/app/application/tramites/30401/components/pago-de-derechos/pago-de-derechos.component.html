@@ -50,6 +50,7 @@
             id="clave"
             formControlName="clave"
             (change)="setValoresStore(pagoDeDerechosForm, 'clave')"
+            [isDisabled]="esFormularioSoloLectura"
           >
           </app-catalogo-select>
 
@@ -132,6 +133,7 @@
           [required]="true"
           formControlName="manifiestoDeclaracion"
           (change)="setValoresStore(pagoDeDerechosForm, 'manifiestoDeclaracion')"
+          [isDisabled]="esFormularioSoloLectura"
       ></lib-input-check>
     </div>
 
