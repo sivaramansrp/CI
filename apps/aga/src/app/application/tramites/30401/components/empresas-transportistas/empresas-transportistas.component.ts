@@ -6,6 +6,7 @@ import { CROSLISTA_ENTRADA } from '../../enums/croslista.enums';
 import { CapitalSocialComponent } from '../capital-social/capital-social.component';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery} from '@ng-mf/data-access-user';
+import { CrosslistComponent } from '@libs/shared/data-access-user/src/tramites/components/crosslist/crosslist.component';
 import { DatosGeneralesComponent } from '../datos-generales/datos-generales.component';
 import { DireccionEmpresaComponent } from '../direccion-empresa/direccion-empresa.component';
 import { NOTA } from '../../enums/registro-empresas-transporte.enum';
@@ -13,7 +14,6 @@ import { RegistroEmpresasTransporteService } from '../../services/registro-empre
 import { Tramite30401Query } from '../../estados/tramites30401.query';
 import { Tramites30401State } from '../../estados/tramites30401.store';
 import { permisoComponent } from '../permiso-expedido/permiso-expedido.component';
-import { CrosslistComponent } from '@libs/shared/data-access-user/src/tramites/components/crosslist/crosslist.component';
 /**
  * @packageDocumentation
  * @module EmpresasTransportistasComponent

@@ -1,5 +1,5 @@
 import { Catalogo, CatalogoSelectComponent, TituloComponent } from '@libs/shared/data-access-user/src';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { FormGroup, FormGroupDirective, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Observable } from 'rxjs';
@@ -20,7 +20,7 @@ import { Tramite30401Store } from '../../estados/tramites30401.store';
   templateUrl: './direccion-empresa.component.html',
   styleUrl: './direccion-empresa.component.scss',
 })
-export class DireccionEmpresaComponent implements OnInit {
+export class DireccionEmpresaComponent implements OnInit, OnChanges {
   /**
    * Formulario inicializado para la dirección de la empresa.
    */
@@ -54,7 +54,7 @@ export class DireccionEmpresaComponent implements OnInit {
   /**
    * Nota sobre el capital social que se mostrará en el formulario.
    */
-@Input() esFormularioSoloLectura: boolean = false;
+  @Input() esFormularioSoloLectura: boolean = false;
   /**
    * Constructor del componente.
    * @param grupoDeFormaRaiz - Directiva del grupo de formulario raíz.
@@ -67,6 +67,26 @@ export class DireccionEmpresaComponent implements OnInit {
     // No se necesita lógica de inicialización adicional.
   }
 
+  /**
+   * Método del ciclo de vida que se ejecuta cuando cambian las propiedades de entrada del componente.
+   *
+   * Si la propiedad `esFormularioSoloLectura` cambia, habilita o deshabilita el formulario según su valor.
+   * Esto permite que el formulario se muestre en modo solo lectura o editable dinámicamente.
+   *
+   * @param changes - Objeto que contiene los cambios detectados en las propiedades de entrada.
+   */
+  ngOnChanges(changes: SimpleChanges): void {
+
+    // Verifica si el formulario ha cambiado y actualiza su estado
+    if (changes['esFormularioSoloLectura'] && this.inicializarFormulario) {
+      if (this.esFormularioSoloLectura) {
+        this.inicializarFormulario.disable();
+      } else {
+        this.inicializarFormulario.enable();
+      }
+    }
+  }
+  
   /**
    * Método de inicialización del componente.
    */
