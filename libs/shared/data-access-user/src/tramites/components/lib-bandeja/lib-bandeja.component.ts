@@ -1,4 +1,4 @@
-import { BandejaDeTareasPendientes, SeleccionadoDepartamento } from '../../../core/models/shared/bandeja-de-tareas-pendientes.model';
+import { BandejaDeTareasPendientes, SeleccionadoDepartamento, SeleccionadoTramite } from '../../../core/models/shared/bandeja-de-tareas-pendientes.model';
 import { Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
@@ -195,8 +195,10 @@ export class LibBandejaComponent<T> implements OnInit {
    * Navega a la ruta correspondiente dependiendo del origen del trámite
    */
   public onFilaClic(event: T): void {
-    const ROW_OBJETO = event as unknown as BandejaDeTareasPendientes;
-    const PROCEDURE: number = Number(ROW_OBJETO.numeroDeProcedimiento);
+    const ROW_OBJETO = event as unknown as SeleccionadoTramite;
+    const PROCEDURE: number = Number(
+      ROW_OBJETO.numeroDeProcedimiento
+    );
     const ORIGIN: string = ROW_OBJETO.origin; // Inicializar ORIGEN con un valor predeterminado
     this.tramiteData = tramiteDetailsData.filter(
       (v) => v.tramite === PROCEDURE
