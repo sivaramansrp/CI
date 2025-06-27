@@ -68,14 +68,14 @@ describe('DatosRepLegalDonatarioComponent', () => {
   });
 
   it('should reset the form', () => {
-    const resetSpy = jest.spyOn(component.datosRepLegalDonatarioForm, 'reset');
+    const RESET_SPY = jest.spyOn(component.datosRepLegalDonatarioForm, 'reset');
     component.restablecerFormulario();
-    expect(resetSpy).toHaveBeenCalled();
+    expect(RESET_SPY).toHaveBeenCalled();
   });
 
   it('should fetch contributor and update the form', () => {
-    const mockData = { data: [{ rfc: 'XYZ123', nombre: 'Jane', apellidoPaterno: 'Doe', apellidoMaterno: '', calle: 'Park Avenue', numeroExterior: '10' }] };
-    mockDonacionesExtranjerasService.buscarContribuyente.mockReturnValue(of(mockData));
+    const MOCK_DATA = { data: [{ rfc: 'XYZ123', nombre: 'Jane', apellidoPaterno: 'Doe', apellidoMaterno: '', calle: 'Park Avenue', numeroExterior: '10' }] };
+    mockDonacionesExtranjerasService.buscarContribuyente.mockReturnValue(of(MOCK_DATA));
 
     component.buscarContribuyenteRfc(2, 'XYZ123');
     expect(mockDonacionesExtranjerasService.buscarContribuyente).toHaveBeenCalledWith('XYZ123');
@@ -100,7 +100,7 @@ describe('DatosRepLegalDonatarioComponent', () => {
     mockTramite10303Store.setCorreoElectronicoRepLegalDonatario = jest.fn();
     mockTramite10303Store.setTelefonoRepLegalDonatario = jest.fn();
 
-    const mockContribuyente = {
+    const MOCK_CONTRIBUYENTE = {
       rfc: 'XYZ123',
       razonSocial: 'ABC Corp',
       nombre: 'Jane',
@@ -117,7 +117,7 @@ describe('DatosRepLegalDonatarioComponent', () => {
       telefono: '9876543210'
     };
 
-    component.construirRLdonatario(mockContribuyente, true);
+    component.construirRLdonatario(MOCK_CONTRIBUYENTE, true);
 
     expect(mockTramite10303Store.setNombreRepLegalDonatario).toHaveBeenCalledWith('Jane Doe ');
     expect(mockTramite10303Store.setCalleRepLegalDonatario).toHaveBeenCalledWith('Park Avenue');
@@ -143,10 +143,10 @@ describe('DatosRepLegalDonatarioComponent', () => {
     mockTramite10303Store.setCorreoElectronicoRepLegalDonatario = jest.fn();
     mockTramite10303Store.setTelefonoRepLegalDonatario = jest.fn();
 
-    const resetSpy = jest.spyOn(component.datosRepLegalDonatarioForm, 'reset');
+    const RESET_SPY = jest.spyOn(component.datosRepLegalDonatarioForm, 'reset');
     component.construirRLdonatario(null as any, false);
 
-    expect(resetSpy).toHaveBeenCalled();
+    expect(RESET_SPY).toHaveBeenCalled();
     expect(mockTramite10303Store.setNombreRepLegalDonatario).not.toHaveBeenCalled();
     expect(mockTramite10303Store.setCalleRepLegalDonatario).not.toHaveBeenCalled();
     expect(mockTramite10303Store.setNumExteriorRepLegalDonatario).not.toHaveBeenCalled();
@@ -171,7 +171,7 @@ describe('DatosRepLegalDonatarioComponent', () => {
     mockTramite10303Store.setCorreoElectronicoRepLegalDonatario = jest.fn();
     mockTramite10303Store.setTelefonoRepLegalDonatario = jest.fn();
 
-    const mockContribuyente = {
+    const MOCK_CONTRIBUYENTE = {
       rfc: 'RFC123456789',
       razonSocial: 'Empresa S.A.',
       nombre: 'Nombre',
@@ -188,7 +188,7 @@ describe('DatosRepLegalDonatarioComponent', () => {
       telefono: '5555555555'
     };
 
-    component.construirRLdonatario(mockContribuyente, true);
+    component.construirRLdonatario(MOCK_CONTRIBUYENTE, true);
 
     expect(mockTramite10303Store.setNombreRepLegalDonatario).toHaveBeenCalledWith('Empresa S.A.');
   });
@@ -208,17 +208,17 @@ describe('DatosRepLegalDonatarioComponent', () => {
   });
 
   it('should reset form if contributor is not found', () => {
-    const resetSpy = jest.spyOn(component.datosRepLegalDonatarioForm, 'reset');
+    const RESET_SPY = jest.spyOn(component.datosRepLegalDonatarioForm, 'reset');
     component.construirRLdonatario(null as any, false);
-    expect(resetSpy).toHaveBeenCalled();
+    expect(RESET_SPY).toHaveBeenCalled();
   });
 
   it('should clean up subscriptions on destroy', () => {
-    const destroySpy = jest.spyOn((component as any).destruirNotificador$, 'next');
-    const completeSpy = jest.spyOn((component as any).destruirNotificador$, 'complete');
+    const DESTROY_SPY = jest.spyOn((component as any).destruirNotificador$, 'next');
+    const COMPLETE_SPY = jest.spyOn((component as any).destruirNotificador$, 'complete');
 
     component.ngOnDestroy();
-    expect(destroySpy).toHaveBeenCalled();
-    expect(completeSpy).toHaveBeenCalled();
+    expect(DESTROY_SPY).toHaveBeenCalled();
+    expect(COMPLETE_SPY).toHaveBeenCalled();
   });
 });

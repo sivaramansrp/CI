@@ -92,14 +92,14 @@ describe('DatosPersonaOirRecibirComponent', () => {
       correoElectronico: 'correo@empresa.com',
       telefono: '5555555555'
     };
-    const mockResponse = { data: [MOCK_DATA] };
-    jest.spyOn(mockDonacionesExtranjerasService, 'buscarContribuyente').mockReturnValue(of(mockResponse));
-    const construirPOyRSpy = jest.spyOn(component, 'construirPOyR');
+    const MOCK_RESPONSE = { data: [MOCK_DATA] };
+    jest.spyOn(mockDonacionesExtranjerasService, 'buscarContribuyente').mockReturnValue(of(MOCK_RESPONSE));
+    const CONSTRUIR_POYR_SPY = jest.spyOn(component, 'construirPOyR');
 
     component.buscarContribuyenteRfc(4, 'RFC1234567890');
 
     expect(mockDonacionesExtranjerasService.buscarContribuyente).toHaveBeenCalledWith('RFC1234567890');
-    expect(construirPOyRSpy).toHaveBeenCalledWith(MOCK_DATA, true);
+    expect(CONSTRUIR_POYR_SPY).toHaveBeenCalledWith(MOCK_DATA, true);
   });
 
   it('should call toastr.error when DATA is not null and valor !== 4', () => {

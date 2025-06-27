@@ -72,16 +72,16 @@ describe('DatosRepLegalRecibirDonacionComponent', () => {
 
   it('should reset the form', () => {
     component.datosRepLegalRecibirDonacionForm = new FormBuilder().group({});
-    const resetSpy = jest.spyOn(
+    const RESET_SPY = jest.spyOn(
       component.datosRepLegalRecibirDonacionForm,
       'reset'
     );
     component.restablecerFormulario();
-    expect(resetSpy).toHaveBeenCalled();
+    expect(RESET_SPY).toHaveBeenCalled();
   });
 
   it('should fetch contributor and update form when found', () => {
-    const mockData = {
+    const MOCK_DATA = {
       data: [
         {
           rfc: 'ABC123',
@@ -101,7 +101,7 @@ describe('DatosRepLegalRecibirDonacionComponent', () => {
     };
 
     mockDonacionesExtranjerasService.buscarContribuyente.mockReturnValue(
-      of(mockData)
+      of(MOCK_DATA)
     );
 
     component.buscarContribuyenteRfc(3, 'ABC123');
@@ -133,7 +133,7 @@ describe('DatosRepLegalRecibirDonacionComponent', () => {
       telefonoRepLegalAutorizado: ['']
     });
 
-    const mockContributor = {
+    const MOCK_CONTRIBUTOR = {
       rfc: 'ABC123',
       nombre: 'Jane',
       apellidoPaterno: 'Smith',
@@ -149,7 +149,7 @@ describe('DatosRepLegalRecibirDonacionComponent', () => {
       telefono: '9876543210',
     };
 
-    component.construirRepLegalAutorizado(mockContributor, true);
+    component.construirRepLegalAutorizado(MOCK_CONTRIBUTOR, true);
     expect(component.datosRepLegalRecibirDonacionForm.value).toEqual({
       rfcRepLegalAutorizado: null,
       nombreRepLegalAutorizado: 'Jane Smith ',
@@ -168,26 +168,26 @@ describe('DatosRepLegalRecibirDonacionComponent', () => {
   it('should reset form if contributor is not found', () => {
     component.ngOnInit();
 
-    const resetSpy = jest.spyOn(
+    const RESET_SPY = jest.spyOn(
       component.datosRepLegalRecibirDonacionForm,
       'reset'
     );
     component.construirRepLegalAutorizado(null as any, false);
-    expect(resetSpy).toHaveBeenCalled();
+    expect(RESET_SPY).toHaveBeenCalled();
   });
 
   it('should clean up subscriptions on destroy', () => {
-    const destroySpy = jest.spyOn(
+    const DESTROY_SPY = jest.spyOn(
       (component as any).destruirNotificador$,
       'next'
     );
-    const completeSpy = jest.spyOn(
+    const COMPLETE_SPY = jest.spyOn(
       (component as any).destruirNotificador$,
       'complete'
     );
 
     component.ngOnDestroy();
-    expect(destroySpy).toHaveBeenCalled();
-    expect(completeSpy).toHaveBeenCalled();
+    expect(DESTROY_SPY).toHaveBeenCalled();
+    expect(COMPLETE_SPY).toHaveBeenCalled();
   });
 });

@@ -160,12 +160,12 @@ describe('RegistroDeDonacionComponent', () => {
     INPUT.type = 'file';
     document.body.appendChild(INPUT);
 
-    const realInput = document.getElementById('archivoMedicamentos') as HTMLInputElement;
-    const clickSpy = jest.spyOn(realInput, 'click');
+    const REAL_INPUT = document.getElementById('archivoMedicamentos') as HTMLInputElement;
+    const CLICK_SPY = jest.spyOn(REAL_INPUT, 'click');
 
     component.activarSeleccionArchivo();
 
-    expect(clickSpy).toHaveBeenCalled();
+    expect(CLICK_SPY).toHaveBeenCalled();
 
     document.body.removeChild(INPUT);
   });
@@ -178,8 +178,8 @@ describe('RegistroDeDonacionComponent', () => {
   });
 
   it('should set the value of the FormArray control based on checkbox event', () => {
-    const event = { target: { checked: true } } as unknown as Event;
-    component.onBasicoRequirimentoCheckboxCambiar(event, 1);
+    const EVENT = { target: { checked: true } } as unknown as Event;
+    component.onBasicoRequirimentoCheckboxCambiar(EVENT, 1);
     expect(component.seleccionadaBasicoRequerimiento.controls[1].value).toBe(true);
   });
 
@@ -191,8 +191,8 @@ describe('RegistroDeDonacionComponent', () => {
     })
     component.setValoresStore = jest.fn();
 
-    const event = { target: { checked: false } } as unknown as Event;
-    component.onBasicoRequirimentoCheckboxCambiar(event, 0);
+    const EVENT = { target: { checked: false } } as unknown as Event;
+    component.onBasicoRequirimentoCheckboxCambiar(EVENT, 0);
     expect(component.setValoresStore).toHaveBeenCalledWith(
       component.registroDonacionForm,
       'manifiesto.seleccionadaBasicoRequerimiento',
@@ -201,8 +201,8 @@ describe('RegistroDeDonacionComponent', () => {
   });
 
   it('should set the value of the FormArray control based on checkbox event', () => {
-    const event = { target: { checked: true } } as unknown as Event;
-    component.onManifiestoCheckboxCambiar(event, 1);
+    const EVENT = { target: { checked: true } } as unknown as Event;
+    component.onManifiestoCheckboxCambiar(EVENT, 1);
     expect(component.seleccionadaManifiesto.controls[1].value).toBe(true);
   });
 
@@ -215,8 +215,8 @@ describe('RegistroDeDonacionComponent', () => {
 
     component.setValoresStore = jest.fn();
 
-    const event = { target: { checked: false } } as unknown as Event;
-    component.onManifiestoCheckboxCambiar(event, 0);
+    const EVENT = { target: { checked: false } } as unknown as Event;
+    component.onManifiestoCheckboxCambiar(EVENT, 0);
     expect(component.setValoresStore).toHaveBeenCalledWith(
       component.registroDonacionForm,
       'manifiesto.seleccionadaManifiesto',
@@ -238,12 +238,12 @@ describe('RegistroDeDonacionComponent', () => {
       fechaCaducidad: ['']
     });
 
-    const mockValor = '2025-12-31';
-    const control = component.registroDonacionForm.get('fechaCaducidad');
-    const setValueSpy = jest.spyOn(control!, 'setValue');
+    const MOCK_VALOR = '2025-12-31';
+    const CONTROL = component.registroDonacionForm.get('fechaCaducidad');
+    const SET_VALUE_SPY = jest.spyOn(CONTROL!, 'setValue');
 
-    component.cambioFechaCaducidad(mockValor);
+    component.cambioFechaCaducidad(MOCK_VALOR);
 
-    expect(setValueSpy).toHaveBeenCalledWith(mockValor);
+    expect(SET_VALUE_SPY).toHaveBeenCalledWith(MOCK_VALOR);
   });
 });

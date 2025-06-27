@@ -48,11 +48,11 @@ fdescribe('PasoTresComponent', () => {
   });
 
   it('should handle error in obtieneFirma if obtenerTramite fails', () => {
-    const firma = 'valid-signature';
+    const FIRMA = 'valid-signature';
 
     (tramiteFolioServiceMock.obtenerTramite as jest.Mock).mockReturnValue(throwError(() => new Error('Test Error')));
 
-    component.obtieneFirma(firma);
+    component.obtieneFirma(FIRMA);
 
     expect(tramiteFolioServiceMock.obtenerTramite).toHaveBeenCalledWith(19);
     expect(tramiteStoreMock.establecerTramite).not.toHaveBeenCalled();

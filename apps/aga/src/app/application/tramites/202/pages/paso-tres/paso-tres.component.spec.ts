@@ -58,11 +58,11 @@ describe('PasoTresComponent', () => {
   });
 
   it('should handle error in obtieneFirma if obtenerTramite fails', () => {
-    const firma = 'valid-signature';
+    const FIRMA = 'valid-signature';
 
     (tramiteFolioServiceMock.obtenerTramite as jest.Mock).mockReturnValue(throwError(() => new Error('Test Error')));
 
-    component.obtieneFirma(firma);
+    component.obtieneFirma(FIRMA);
 
     expect(tramiteFolioServiceMock.obtenerTramite).toHaveBeenCalledWith(19);
     expect(tramiteStoreMock.establecerTramite).not.toHaveBeenCalled();
@@ -78,12 +78,12 @@ describe('PasoTresComponent', () => {
   });
 
   it('should unsubscribe destruirNotificador$ in ngOnDestroy', () => {
-    const nextSpy = jest.spyOn(component['destruirNotificador$'], 'next');
-    const completeSpy = jest.spyOn(component['destruirNotificador$'], 'complete');
+    const NEXT_SPY = jest.spyOn(component['destruirNotificador$'], 'next');
+    const COMPLETE_SPY = jest.spyOn(component['destruirNotificador$'], 'complete');
 
     component.ngOnDestroy();
 
-    expect(nextSpy).toHaveBeenCalledTimes(1);
-    expect(completeSpy).toHaveBeenCalledTimes(1);
+    expect(NEXT_SPY).toHaveBeenCalledTimes(1);
+    expect(COMPLETE_SPY).toHaveBeenCalledTimes(1);
   });
 });

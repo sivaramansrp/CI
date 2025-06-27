@@ -27,170 +27,170 @@ describe('DonacionesExtranjerasService', () => {
   });
 
   it('should fetch manifiestos', () => {
-    const mockResponse: ManifiestosRespuesta = { data: [] };
+    const MOCK_RESPONSE: ManifiestosRespuesta = { data: [] };
 
     service.getManifiestos().subscribe((response) => {
-      expect(response).toEqual(mockResponse);
+      expect(response).toEqual(MOCK_RESPONSE);
     });
 
-    const req = httpMock.expectOne('assets/json/10303/manifiestos.json');
-    expect(req.request.method).toBe('GET');
-    req.flush(mockResponse);
+    const REQ = httpMock.expectOne('assets/json/10303/manifiestos.json');
+    expect(REQ.request.method).toBe('GET');
+    REQ.flush(MOCK_RESPONSE);
   });
 
   it('should fetch basic requerimientos', () => {
-    const mockResponse: BasicRequerimientosRespuesta = { data: [] };
+    const MOCK_RESPONSE: BasicRequerimientosRespuesta = { data: [] };
 
     service.getBasicoRequerimientos().subscribe((response) => {
-      expect(response).toEqual(mockResponse);
+      expect(response).toEqual(MOCK_RESPONSE);
     });
 
-    const req = httpMock.expectOne('assets/json/10303/basic-requerimientos.json');
-    expect(req.request.method).toBe('GET');
-    req.flush(mockResponse);
+    const REQ = httpMock.expectOne('assets/json/10303/basic-requerimientos.json');
+    expect(REQ.request.method).toBe('GET');
+    REQ.flush(MOCK_RESPONSE);
   });
 
   it('should fetch aduana', () => {
-    const mockResponse: RespuestaCatalogos = { code:200, data: [], message: 'Success' };
+    const MOCK_RESPONSE: RespuestaCatalogos = { code:200, data: [], message: 'Success' };
 
     service.getAduana().subscribe((response) => {
-      expect(response).toEqual(mockResponse);
+      expect(response).toEqual(MOCK_RESPONSE);
     });
 
-    const req = httpMock.expectOne('assets/json/10303/aduana.json');
-    expect(req.request.method).toBe('GET');
-    req.flush(mockResponse);
+    const REQ = httpMock.expectOne('assets/json/10303/aduana.json');
+    expect(REQ.request.method).toBe('GET');
+    REQ.flush(MOCK_RESPONSE);
   });
 
   it('should fetch destino donacion', () => {
-    const mockResponse: RespuestaCatalogos = { code:200, data: [], message: 'Success' };
+    const MOCK_RESPONSE: RespuestaCatalogos = { code:200, data: [], message: 'Success' };
 
     service.getDestinoDonacion().subscribe((response) => {
-      expect(response).toEqual(mockResponse);
+      expect(response).toEqual(MOCK_RESPONSE);
     });
 
-    const req = httpMock.expectOne('assets/json/10303/destino-donacion.json');
-    expect(req.request.method).toBe('GET');
-    req.flush(mockResponse);
+    const REQ = httpMock.expectOne('assets/json/10303/destino-donacion.json');
+    expect(REQ.request.method).toBe('GET');
+    REQ.flush(MOCK_RESPONSE);
   });
 
   it('should fetch tipo de mercancia', () => {
-    const mockResponse: RespuestaCatalogos = { code:200, data: [], message: 'Success' };
+    const MOCK_RESPONSE: RespuestaCatalogos = { code:200, data: [], message: 'Success' };
 
     service.getTipoDeMercancia().subscribe((response) => {
-      expect(response).toEqual(mockResponse);
+      expect(response).toEqual(MOCK_RESPONSE);
     });
 
-    const req = httpMock.expectOne('assets/json/10303/tipo-de-mercancia.json');
-    expect(req.request.method).toBe('GET');
-    req.flush(mockResponse);
+    const REQ = httpMock.expectOne('assets/json/10303/tipo-de-mercancia.json');
+    expect(REQ.request.method).toBe('GET');
+    REQ.flush(MOCK_RESPONSE);
   });
 
   it('should fetch unidad de medida', () => {
-    const mockResponse: RespuestaCatalogos = { code:200, data: [], message: 'Success' };
+    const MOCK_RESPONSE: RespuestaCatalogos = { code:200, data: [], message: 'Success' };
 
     service.getUnidadMedida().subscribe((response) => {
-      expect(response).toEqual(mockResponse);
+      expect(response).toEqual(MOCK_RESPONSE);
     });
 
-    const req = httpMock.expectOne('assets/json/10303/umc.json');
-    expect(req.request.method).toBe('GET');
-    req.flush(mockResponse);
+    const REQ = httpMock.expectOne('assets/json/10303/umc.json');
+    expect(REQ.request.method).toBe('GET');
+    REQ.flush(MOCK_RESPONSE);
   });
 
   it('should fetch umt', () => {
-    const mockResponse: RespuestaCatalogos = { code:200, data: [], message: 'Success' };
+    const MOCK_RESPONSE: RespuestaCatalogos = { code:200, data: [], message: 'Success' };
 
     service.getUmt().subscribe((response) => {
-      expect(response).toEqual(mockResponse);
+      expect(response).toEqual(MOCK_RESPONSE);
     });
 
-    const req = httpMock.expectOne('assets/json/10303/umt.json');
-    expect(req.request.method).toBe('GET');
-    req.flush(mockResponse);
+    const REQ = httpMock.expectOne('assets/json/10303/umt.json');
+    expect(REQ.request.method).toBe('GET');
+    REQ.flush(MOCK_RESPONSE);
   });
 
   it('should fetch procedencia otro', () => {
-    const mockResponse: RespuestaCatalogos = { code:200, data: [], message: 'Success' };
+    const MOCK_RESPONSE: RespuestaCatalogos = { code:200, data: [], message: 'Success' };
 
     service.getProcedenciaOtro().subscribe((response) => {
-      expect(response).toEqual(mockResponse);
+      expect(response).toEqual(MOCK_RESPONSE);
     });
 
-    const req = httpMock.expectOne('assets/json/10303/procedencia-otro.json');
-    expect(req.request.method).toBe('GET');
-    req.flush(mockResponse);
+    const REQ = httpMock.expectOne('assets/json/10303/procedencia-otro.json');
+    expect(REQ.request.method).toBe('GET');
+    REQ.flush(MOCK_RESPONSE);
   });
 
   it('should fetch condicion mercancia', () => {
-    const mockResponse: RespuestaCatalogos = { code:200, data: [], message: 'Success' };
+    const MOCK_RESPONSE: RespuestaCatalogos = { code:200, data: [], message: 'Success' };
 
     service.getCondicionMercancia().subscribe((response) => {
-      expect(response).toEqual(mockResponse);
+      expect(response).toEqual(MOCK_RESPONSE);
     });
 
-    const req = httpMock.expectOne('assets/json/10303/condicion-mercancia.json');
-    expect(req.request.method).toBe('GET');
-    req.flush(mockResponse);
+    const REQ = httpMock.expectOne('assets/json/10303/condicion-mercancia.json');
+    expect(REQ.request.method).toBe('GET');
+    REQ.flush(MOCK_RESPONSE);
   });
 
   it('should fetch pais origen medicamento', () => {
-    const mockResponse: RespuestaCatalogos = { code:200, data: [], message: 'Success' };
+    const MOCK_RESPONSE: RespuestaCatalogos = { code:200, data: [], message: 'Success' };
 
     service.getPaisOrigenMedicamento().subscribe((response) => {
-      expect(response).toEqual(mockResponse);
+      expect(response).toEqual(MOCK_RESPONSE);
     });
 
-    const req = httpMock.expectOne('assets/json/10303/pais-origen-medicamento.json');
-    expect(req.request.method).toBe('GET');
-    req.flush(mockResponse);
+    const REQ = httpMock.expectOne('assets/json/10303/pais-origen-medicamento.json');
+    expect(REQ.request.method).toBe('GET');
+    REQ.flush(MOCK_RESPONSE);
   });
 
   it('should fetch pais procedencia medicamento', () => {
-    const mockResponse: RespuestaCatalogos = { code:200, data: [], message: 'Success' };
+    const MOCK_RESPONSE: RespuestaCatalogos = { code:200, data: [], message: 'Success' };
 
     service.getPaisProcedenciaMedicamento().subscribe((response) => {
-      expect(response).toEqual(mockResponse);
+      expect(response).toEqual(MOCK_RESPONSE);
     });
 
-    const req = httpMock.expectOne('assets/json/10303/pais-procedencia-medicamento.json');
-    expect(req.request.method).toBe('GET');
-    req.flush(mockResponse);
+    const REQ = httpMock.expectOne('assets/json/10303/pais-procedencia-medicamento.json');
+    expect(REQ.request.method).toBe('GET');
+    REQ.flush(MOCK_RESPONSE);
   });
 
   it('should fetch paises', () => {
-    const mockResponse: RespuestaCatalogos = { code:200, data: [], message: 'Success' };
+    const MOCK_RESPONSE: RespuestaCatalogos = { code:200, data: [], message: 'Success' };
 
     service.getPaises().subscribe((response) => {
-      expect(response).toEqual(mockResponse);
+      expect(response).toEqual(MOCK_RESPONSE);
     });
 
-    const req = httpMock.expectOne('assets/json/10303/paises.json');
-    expect(req.request.method).toBe('GET');
-    req.flush(mockResponse);
+    const REQ = httpMock.expectOne('assets/json/10303/paises.json');
+    expect(REQ.request.method).toBe('GET');
+    REQ.flush(MOCK_RESPONSE);
   });
 
   it('should fetch documento residencia', () => {
-    const mockResponse: RespuestaCatalogos = { code:200, data: [], message: 'Success' };
+    const MOCK_RESPONSE: RespuestaCatalogos = { code:200, data: [], message: 'Success' };
 
     service.getDocumentoResidencia().subscribe((response) => {
-      expect(response).toEqual(mockResponse);
+      expect(response).toEqual(MOCK_RESPONSE);
     });
 
-    const req = httpMock.expectOne('assets/json/10303/documento-residencia.json');
-    expect(req.request.method).toBe('GET');
-    req.flush(mockResponse);
+    const REQ = httpMock.expectOne('assets/json/10303/documento-residencia.json');
+    expect(REQ.request.method).toBe('GET');
+    REQ.flush(MOCK_RESPONSE);
   });
 
   it('should fetch contribuyente by RFC', () => {
-    const mockResponse: ContribuyenteRespuesta = { data: [] };
+    const MOCK_RESPONSE: ContribuyenteRespuesta = { data: [] };
 
     service.buscarContribuyente('XAXX010101000').subscribe((response) => {
-      expect(response).toEqual(mockResponse);
+      expect(response).toEqual(MOCK_RESPONSE);
     });
 
-    const req = httpMock.expectOne('assets/json/10303/donatario-datos.json');
-    expect(req.request.method).toBe('GET');
-    req.flush(mockResponse);
+    const REQ = httpMock.expectOne('assets/json/10303/donatario-datos.json');
+    expect(REQ.request.method).toBe('GET');
+    REQ.flush(MOCK_RESPONSE);
   });
 });
