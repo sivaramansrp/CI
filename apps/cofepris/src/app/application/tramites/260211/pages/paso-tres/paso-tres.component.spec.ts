@@ -26,18 +26,18 @@ describe('PasotresComponent', () => {
     );
   });
 
-  it('should create the component', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should not call obtenerTramite if firma is falsy', () => {
+  it('no debe llamar a obtenerTramite si firma es falsy', () => {
     component.obtieneFirma('');
     expect(serviciosExtraordinariosServicesMock.obtenerTramite).not.toHaveBeenCalled();
     expect(tramiteCofeprisStoreMock.establecerTramite).not.toHaveBeenCalled();
     expect(routerMock.navigate).not.toHaveBeenCalled();
   });
 
-  it('should call obtenerTramite and establecerTramite, then navigate on valid firma', () => {
+  it('debe llamar a obtenerTramite y establecerTramite, luego navegar si la firma es válida', () => {
     const tramiteData = { data: { id: 1 } };
     serviciosExtraordinariosServicesMock.obtenerTramite.mockReturnValue(of(tramiteData));
 
@@ -48,15 +48,18 @@ describe('PasotresComponent', () => {
     expect(routerMock.navigate).toHaveBeenCalledWith(['servicios-extraordinarios/acuse']);
   });
 
-  it('should handle error in obtenerTramite gracefully', () => {
+  it('debe manejar el error en obtenerTramite sin lanzar excepción', () => {
     serviciosExtraordinariosServicesMock.obtenerTramite.mockReturnValue(throwError(() => new Error('error')));
 
-    // Should not throw
+    // No debe lanzar error
     expect(() => component.obtieneFirma('valid-firma')).not.toThrow();
   });
 
-  it('should complete destroyed$ on ngOnDestroy', () => {
+  it('debe completar destroyed$ al llamar ngOnDestroy', () => {
     const nextSpy = jest.spyOn((component as any).destroyed$, 'next');
     const completeSpy = jest.spyOn((component as any).destroyed$, 'complete');
     component.ngOnDestroy();
-    expect(nextSpy).toHaveBeenCalled();})})
+    expect(nextSpy).toHaveBeenCalled();
+    expect(completeSpy).toHaveBeenCalled();
+  });
+});
