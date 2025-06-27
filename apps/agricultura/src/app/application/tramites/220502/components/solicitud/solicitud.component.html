@@ -1,6 +1,6 @@
 <div class="container">
     <form [formGroup]="form">
-      @if(!isSolicitud){
+      @if(isSolicitud){
       <!-- Solicitud Tabla -->
       <app-solicitud-datos [tablaHeadData]="hSolicitud" [tablaFilaDatos]="dSolicitud"></app-solicitud-datos>
       }

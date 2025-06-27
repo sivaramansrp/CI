@@ -108,7 +108,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         takeUntil(this.destroyed$),
         map((seccionState) => {
           this.formularioDeshabilitado = seccionState.readonly;
-          this.isSolicitud = seccionState.readonly;
+          this.isSolicitud = seccionState.create;
           this.inicializarEstadoFormulario();
         })
       )
