@@ -3442,7 +3442,6 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    * Validar si el rfc tiene encargo conferido
    */
   changeTipoOperacion(): void {
-    //Peticion
     this.setValoresStore(this.despacho, 'folioDDEX', 'setAutorizacionDDEX');
     const BODY: BodyValidarEncargoConferido = {
       rfc: this.datosImportadorExportador.get('RFCImpExp')?.value,
