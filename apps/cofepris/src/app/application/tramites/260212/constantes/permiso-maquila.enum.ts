@@ -60,9 +60,11 @@ export const PERSONA_OPCIONES_DE_BOTON_DE_RADIO = [
   {
       label: 'Física',
       value: '1',
+      hint: 'Física'
   },
   {
       label: 'Moral',
       value: '0',
+      hint: 'Moral'
   }
 ];

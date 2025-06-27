@@ -61,7 +61,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * 
    * Cuando es verdadero, el usuario no puede editar los campos del formulario.
    */
-  public esFormularioSoloLectura: boolean = true;
+  public esFormularioSoloLectura: boolean = false;
 
   /** Subject para destruir el componente */
   private destroy$ = new Subject<void>();

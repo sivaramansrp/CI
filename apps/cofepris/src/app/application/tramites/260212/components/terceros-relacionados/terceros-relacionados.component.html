@@ -110,17 +110,16 @@
           <div>
             <h6>Tipo persona*:</h6>
             <div class="mt-2">
-              <app-input-radio [radioOptions]="personaOpcionDeBotonDeRadio" [isRequired]="true" [layout]="'vertical'"
+              <app-input-radio [radioOptions]="personaOpcionDeBotonDeRadio" [isRequired]="true" [layout]="'vertical'" [showTooltip]="true"
                 formControlName="tipoPersona" (valueChange)="tipoPersonaChecked($event, 'Fabricante')"></app-input-radio>
             </div>
           </div>
         </div>
       </div>
-      <hr />
 
       <!-- Activar/desactivar campos del formulario según la selección del botón de radio -->
 
-      <div class="row">
+      <div class="p-4 row">
         @if (nacional && fisica || (!fisica && !moral)){
         <div class="row">
           <div class="col-md-4">
@@ -132,29 +131,30 @@
             </div>
           </div>
         </div>
-        <hr />
-        <h5>Datos personales</h5>
-        <div class="row d-flex datos-personales-form-container">
-          <div class="col-md-4">
-            <div class="form-group">
-              <label for="nombre" class="form-label">Nombre(s)*: </label>
-              <input type="text" id="nombre" formControlName="nombre" name="nombre" class="form-control" />
+        <div class="row p-4 mt-5">
+          <h5>Datos personales</h5>
+          <div class="row d-flex datos-personales-form-container">
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="nombre" class="form-label">Nombre(s)*: </label>
+                <input type="text" id="nombre" formControlName="nombre" name="nombre" class="form-control" />
+              </div>
             </div>
-          </div>
 
-          <div class="col-md-4">
-            <div class="form-group">
-              <label class="form-label" for="primerApellido">Primer apellido*:</label>
-              <input type="text" id="primerApellido" formControlName="primerApellido" name="primerApellido"
-                class="form-control" />
+            <div class="col-md-4">
+              <div class="form-group">
+                <label class="form-label" for="primerApellido">Primer apellido*:</label>
+                <input type="text" id="primerApellido" formControlName="primerApellido" name="primerApellido"
+                  class="form-control" />
+              </div>
             </div>
-          </div>
 
-          <div class="col-md-4">
-            <div class="form-group">
-              <label class="form-label" for="segundoApellido">Segundo apellido*:</label>
-              <input type="text" id="segundoApellido" formControlName="segundoApellido" name="segundoApellido"
-                class="form-control" />
+            <div class="col-md-4">
+              <div class="form-group">
+                <label class="form-label" for="segundoApellido">Segundo apellido:</label>
+                <input type="text" id="segundoApellido" formControlName="segundoApellido" name="segundoApellido"
+                  class="form-control" />
+              </div>
             </div>
           </div>
         </div>
@@ -164,10 +164,10 @@
         <div class="row">
           <div class="col-md-4">
             <div class="form-group">
-              <label for="curp" class="form-label">R.F.C*:<span class="bi bi-question-circle-fill fs-4 m-1"
-                  title="Title" ata-bs-toggle="tooltip"></span>
+              <label for="rfc" class="form-label">R.F.C*:<span class="bi bi-question-circle-fill fs-4 m-1"
+                  title="R.F.C" ata-bs-toggle="tooltip"></span>
               </label>
-              <input type="text" id="curp" formControlName="curp" class="form-control" name="curp" />
+              <input type="text" id="rfc" formControlName="rfc" class="form-control" name="rfc" />
             </div>
           </div>
         </div>
@@ -194,196 +194,201 @@
           </div>
         </div>
         }
-        <hr />
         @if (extranjero && fisica){
-        <h5>Datos personales</h5>
-        <div class="row d-flex datos-personales-form-container">
-          <div class="col-md-4">
-            <div class="form-group">
-              <label for="nombre" class="form-label">Nombre(s)*: </label>
-              <input type="text" id="nombre" formControlName="nombre" name="nombre" class="form-control" />
-            </div>
-          </div>
+          <div class="mt-5">
+            <h5>Datos personales</h5>
+            <div class="row d-flex datos-personales-form-container">
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="nombre" class="form-label">Nombre(s)*: </label>
+                  <input type="text" id="nombre" formControlName="nombre" name="nombre" class="form-control" />
+                </div>
+              </div>
 
-          <div class="col-md-4">
-            <div class="form-group">
-              <label class="form-label" for="primerApellido">Primer apellido*:</label>
-              <input type="text" id="primerApellido" formControlName="primerApellido" name="primerApellido"
-                class="form-control" />
-            </div>
-          </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label class="form-label" for="primerApellido">Primer apellido*:</label>
+                  <input type="text" id="primerApellido" formControlName="primerApellido" name="primerApellido"
+                    class="form-control" />
+                </div>
+              </div>
 
-          <div class="col-md-4">
-            <div class="form-group">
-              <label class="form-label" for="segundoApellido">Segundo apellido*:</label>
-              <input type="text" id="segundoApellido" formControlName="segundoApellido" name="segundoApellido"
-                class="form-control" />
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label class="form-label" for="segundoApellido">Segundo apellido:</label>
+                  <input type="text" id="segundoApellido" formControlName="segundoApellido" name="segundoApellido"
+                    class="form-control" />
+                </div>
+              </div>
             </div>
           </div>
-        </div>
         }
-        <hr />
-        <h5>Domicilio</h5>
-        <div class="row d-flex domicilio-form-container">
+        <div class="p-4 mt-6">
+          <h5>Domicilio</h5>
+          <div class="row p-2 d-flex domicilio-form-container">
 
-          @if(nacional){
-          <div>
-            <div class="col-md-4">
-              <div class="form-group">
-                <app-catalogo-select [catalogo]="paisDropdownData" [label]="'País'" [required]="true" for="pais"
-                  id="pais" formControlName="pais" name="pais"></app-catalogo-select>
+            @if(nacional){
+              <div class="row">
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <app-catalogo-select [catalogo]="paisDropdownData" [label]="'País'" [required]="true" for="pais"
+                      id="pais" formControlName="pais" name="pais" [isDisabled]="desactivarPaisCampo"></app-catalogo-select>
+                  </div>
+                </div>
+
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <app-catalogo-select [catalogo]="dropdownData" [label]="'Estado/localidad'" [required]="true"
+                      for="estadoLocalidad" id="estadoLocalidad" formControlName="estadoLocalidad"></app-catalogo-select>
+                  </div>
+                </div>
+
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <app-catalogo-select [catalogo]="municipioDropdownData" [label]="'Municipio/alcaldía'" [required]="true"
+                      for="municipioAlcaldia" id="municipioAlcaldia"
+                      formControlName="municipioAlcaldia"></app-catalogo-select>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="row">
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <app-catalogo-select [catalogo]="localidadDropdownData" [label]="'Localidad'" [required]="false"
+                      for="localidad" id="localidad" formControlName="localidad" name="localidad"></app-catalogo-select>
+                  </div>
+                </div>
+
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <app-catalogo-select [catalogo]="codigoPostalDropdownData" [label]="'Código postal o equivalente'"
+                      [required]="true" for="codigoPostaloEquivalente" id="codigoPostaloEquivalente"
+                      formControlName="codigoPostaloEquivalente"></app-catalogo-select>
+                  </div>
+                </div>
+
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <app-catalogo-select [catalogo]="coloniaDropdownData" [label]="'Colonia'" for="colonia" id="colonia"
+                      formControlName="colonia"></app-catalogo-select>
+                  </div>
+                </div>
+              </div>
+            }
+
+
+            @if(extranjero){
+              <div class="row">
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <app-catalogo-select [catalogo]="paisDropdownData" [label]="'País'" [required]="true" for="pais"
+                      id="pais" formControlName="pais" name="pais" [isDisabled]="desactivarPaisCampo"></app-catalogo-select>
+                  </div>
+                </div>
+
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label for="extranjeroEstado" class="form-label">Estado*: </label>
+                    <input type="text" id="extranjeroEstado" formControlName="extranjeroEstado" name="extranjeroEstado"
+                      class="form-control" />
+                  </div>
+                </div>
+
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label class="form-label" for="extranjeroCodigo">Código postal o equivalente:</label>
+                    <input type="text" id="extranjeroCodigo" name="extranjeroCodigo" class="form-control" />
+                  </div>
+                </div>
+              </div>
+              
+              <div class="row">
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label class="form-label" for="extranjeroColonia">Colonia o equivalente:</label>
+                    <input class="form-control" type="text" id="extranjeroColonia" name="extranjeroColonia" />
+                  </div>
+                </div>
+              </div>
+              
+            }
+            <div class="row">
+              <div class="col-md-8">
+                <div class="form-group">
+                  <label class="form-label" for="calle">Calle*:<span class="bi bi-question-circle-fill fs-4 m-1"
+                      title="Calle" ata-bs-toggle="tooltip"></span></label>
+                  <input type="text" class="form-control" id="calle" formControlName="calle" name="calle" />
+                </div>
+              </div>
+
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="numeroExterior" class="form-label">Número exterior*:
+                  </label>
+                  <input type="text" id="numeroExterior" formControlName="numeroExterior" class="form-control"
+                    name="numeroExterior" />
+                </div>
+              </div>
+            </div>
+            
+            <div class="row">
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label class="form-label" for="numeroInterior">Número interior:</label>
+                  <input class="form-control" type="text" id="numeroInterior" formControlName="numeroInterior"
+                    name="numeroInterior" />
+                </div>
+              </div>
+
+              <div class="col-md-1">
+                <div class="form-group">
+                  <label class="form-label" for="lada">Lada:</label>
+                  <input class="form-control" type="text" id="lada" formControlName="lada" name="lada" />
+                </div>
+              </div>
+
+              <div class="col-md-3">
+                <div class="form-group">
+                  <label class="form-label" for="telefono">Teléfono:</label>
+                  <input class="form-control" type="text" id="telefono" formControlName="telefono" name="telefono" />
+                </div>
+              </div>
+
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label class="form-label" for="correoElectronico">Correo electrónico:<span
+                      class="bi bi-question-circle-fill fs-4 m-1" title="Correo electrónico" ata-bs-toggle="tooltip"></span></label>
+                  <input class="form-control" type="text" id="correoElectronico" formControlName="correoElectronico"
+                    name="correoElectronico" />
+                </div>
               </div>
             </div>
 
-            <div class="col-md-4">
-              <div class="form-group">
-                <app-catalogo-select [catalogo]="dropdownData" [label]="'Estado/localidad'" [required]="true"
-                  for="estadoLocalidad" id="estadoLocalidad" formControlName="estadoLocalidad"></app-catalogo-select>
-              </div>
-            </div>
+            <!-- campos -->
+             <div class="row mt-5 align-items-center justify-content-between">
+                <div class="col-md-3 text-muted">
+                  <span>*Campos obligatorios</span>
+                </div>
 
-            <div class="col-md-4">
-              <div class="form-group">
-                <app-catalogo-select [catalogo]="municipioDropdownData" [label]="'Municipio/alcaldía'" [required]="true"
-                  for="municipioAlcaldia" id="municipioAlcaldia"
-                  formControlName="municipioAlcaldia"></app-catalogo-select>
-              </div>
-            </div>
-            <hr />
+                <div class="col-md-9 d-flex justify-content-end gap-1">
+                  <button type="button" class="btn btn-danger" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight"
+                    aria-controls="offcanvasRight" (click)="toggleDivFabricante()">
+                    Cancelar
+                  </button>
+                  <button type="button" class="btn btn-default" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight"
+                    aria-controls="offcanvasRight">
+                    Limpiar
+                  </button>
+                  <button type="button" class="btn btn-primary" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight"
+                    aria-controls="offcanvasRight" (click)="submitFabricanteForm()">
+                    Guardar
+                  </button>
+                </div>
 
-            <div class="col-md-4">
-              <div class="form-group">
-                <app-catalogo-select [catalogo]="localidadDropdownData" [label]="'Localidad'" [required]="false"
-                  for="localidad" id="localidad" formControlName="localidad" name="localidad"></app-catalogo-select>
-              </div>
-            </div>
+             </div>
 
-            <div class="col-md-4">
-              <div class="form-group">
-                <app-catalogo-select [catalogo]="codigoPostalDropdownData" [label]="'Código postal o equivalente'"
-                  [required]="true" for="codigoPostaloEquivalente" id="codigoPostaloEquivalente"
-                  formControlName="codigoPostaloEquivalente"></app-catalogo-select>
-              </div>
-            </div>
-
-            <div class="col-md-4">
-              <div class="form-group">
-                <app-catalogo-select [catalogo]="coloniaDropdownData" [label]="'Colonia'" for="colonia" id="colonia"
-                  formControlName="colonia"></app-catalogo-select>
-              </div>
-            </div>
-          </div>
-          }
-
-
-          @if(extranjero){
-          <div class="pl-0">
-            <div class="col-md-4">
-              <div class="form-group">
-                <app-catalogo-select [catalogo]="paisDropdownData" [label]="'País'" [required]="true" for="pais"
-                  id="pais" formControlName="pais" name="pais"></app-catalogo-select>
-              </div>
-            </div>
-
-            <div class="col-md-4">
-              <div class="form-group">
-                <label for="extranjeroEstado" class="form-label">Estado*: </label>
-                <input type="text" id="extranjeroEstado" formControlName="extranjeroEstado" name="extranjeroEstado"
-                  class="form-control" />
-              </div>
-            </div>
-
-            <div class="col-md-4">
-              <div class="form-group">
-                <label class="form-label" for="extranjeroCodigo">Código postal o equivalente:</label>
-                <input type="text" id="extranjeroCodigo" name="extranjeroCodigo" class="form-control" />
-              </div>
-            </div>
-
-          </div>
-          <div class="pl-0">
-            <div class="col-md-4">
-              <div class="form-group">
-                <label class="form-label" for="extranjeroColonia">Colonia o equivalente:</label>
-                <input class="form-control" type="text" id="extranjeroColonia" name="extranjeroColonia" />
-              </div>
-            </div>
-          </div>
-          }
-
-          <div class="mt-5 p-0">
-            <div class="col-md-8">
-              <div class="form-group">
-                <label class="form-label" for="calle">Calle*:<span class="bi bi-question-circle-fill fs-4 m-1"
-                    title="Title" ata-bs-toggle="tooltip"></span></label>
-                <input type="text" class="form-control" id="calle" formControlName="calle" name="calle" />
-              </div>
-            </div>
-
-            <div class="col-md-4">
-              <div class="form-group">
-                <label for="numeroExterior" class="form-label">Número exterior*:
-                </label>
-                <input type="text" id="numeroExterior" formControlName="numeroExterior" class="form-control"
-                  name="numeroExterior" />
-              </div>
-            </div>
-          </div>
-
-
-          <div class="col-md-4 mt-5">
-            <div class="form-group">
-              <label class="form-label" for="numeroInterior">Número interior:</label>
-              <input class="form-control" type="text" id="numeroInterior" formControlName="numeroInterior"
-                name="numeroInterior" />
-            </div>
-          </div>
-
-          <div class="col-md-1 mt-5">
-            <div class="form-group">
-              <label class="form-label" for="lada">Lada:</label>
-              <input class="form-control" type="text" id="lada" formControlName="lada" name="lada" />
-            </div>
-          </div>
-
-          <div class="col-md-3 mt-5">
-            <div class="form-group">
-              <label class="form-label" for="telefono">Teléfono:</label>
-              <input class="form-control" type="text" id="telefono" formControlName="telefono" name="telefono" />
-            </div>
-          </div>
-
-          <div class="col-md-4 mt-5">
-            <div class="form-group">
-              <label class="form-label" for="correoElectronico">Correo electrónico:<span
-                  class="bi bi-question-circle-fill fs-4 m-1" title="Title" ata-bs-toggle="tooltip"></span></label>
-              <input class="form-control" type="text" id="correoElectronico" formControlName="correoElectronico"
-                name="correoElectronico" />
-            </div>
-          </div>
-          <hr />
-
-          <!-- campos -->
-          <div class="col-md-3 text-muted text-vertical-align-button">
-            <span>*Campos obligatorios</span>
-          </div>
-
-          <!-- últimos tres botones -->
-          <div class="row">
-            <div class="col-md-12 d-flex justify-content-end gap-1">
-              <button type="button" class="btn btn-danger" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight"
-                aria-controls="offcanvasRight" (click)="toggleDivFabricante()">
-                Cancelar
-              </button>
-              <button type="button" class="btn btn-default" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight"
-                aria-controls="offcanvasRight">
-                Limpiar
-              </button>
-              <button type="button" class="btn btn-primary" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight"
-                aria-controls="offcanvasRight" (click)="submitFabricanteForm()">
-                Guardar
-              </button>
-            </div>
+            <!-- últimos tres botones -->
           </div>
         </div>
       </div>
