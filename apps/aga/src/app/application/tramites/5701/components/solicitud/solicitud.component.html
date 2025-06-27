@@ -327,7 +327,8 @@
           formControlName="fechaInicio"
           placeholder="dd/mm/yyyy"
           autofocus = "false"
-          (change)="changeFechaInicio()"
+          (change)="changeFechaInicio(); limpiarFechas()"
+          (blur)="limpiarFechas()"
           [ngClass]="isValid(datosServicio, 'fechaInicio') ? 'required' : ''"
           (keydown)="$event.preventDefault()"
         />
@@ -361,6 +362,7 @@
           id="fechaFinal"
           formControlName="fechaFinal"
           (change)="changeFechaFinal()"
+          (blur)="limpiarFechas()"
           [ngClass]="{'is-invalid' : isRequired(datosServicio, 'fechaFinal')}"
           (keydown)="$event.preventDefault()"
         />
@@ -522,7 +524,7 @@
           (change)="changeAduana()"
         >
           <option value="-1">Selecciona una opción...</option>
-          <option *ngFor="let aduana of aduanas" [value]="aduana.clave">
+          <option *ngFor="let aduana of aduanas" [title]="aduana.title" [value]="aduana.clave">
             {{ aduana.descripcion }}
           </option>
         </select>
@@ -544,6 +546,7 @@
           <option value="-1">Selecciona una opción...</option>
           <option
             *ngFor="let seccion of seccionAduanera"
+            [title]="seccion.title"
             [value]="seccion.clave"
           >
             {{ seccion.descripcion }}
@@ -564,6 +567,7 @@
           <option value="-1">Selecciona una opción...</option>
           <option
             *ngFor="let recinto of recintoCatalogo"
+            [title]="recinto.title" 
             [value]="recinto.id_recinto_fiscalizado"
           >
             {{ recinto.descripcion }}

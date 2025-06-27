@@ -884,6 +884,14 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
 
     const CATALOGO_ADUANAS$ = this.aduanaService.getListaAduanas().pipe(
       map((resp) => {
+        resp.datos.map((aduana: ICatalogo) => {
+          aduana.title = aduana.descripcion;
+          aduana.descripcion =
+            aduana.descripcion.length > 28
+              ? `${aduana.descripcion.substring(0, 28)}...`
+              : aduana.descripcion;
+          return aduana;
+        });
         this.aduanas = resp.datos;
       })
     );
@@ -2170,7 +2178,16 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
             this.desactivarSelectSeccionAduanera =
               response && response.datos?.length > 0;
             if (this.desactivarSelectSeccionAduanera) {
+              response.datos.map((seccion) => {
+                seccion.title = seccion.descripcion;
+                seccion.descripcion =
+                  seccion.descripcion.length > 28
+                    ? `${seccion.descripcion.substring(0, 28)}...`
+                    : seccion.descripcion;
+                return seccion;
+              });
               this.seccionAduanera = response?.datos;
+
               this.despacho.get('idSeccionDespacho')?.enable();
             } else {
               this.seccionAduanera = [
@@ -2191,6 +2208,14 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
               responseRecinto && responseRecinto.datos?.length > 0;
 
             if (this.desactivarSelectRecinto) {
+              responseRecinto.datos.map((recinto) => {
+                recinto.title = recinto.nombre;
+                recinto.descripcion =
+                  recinto.descripcion.length > 28
+                    ? `${recinto.descripcion.substring(0, 28)}...`
+                    : recinto.descripcion;
+                return recinto;
+              });
               this.recintoCatalogo = responseRecinto?.datos;
               this.despacho.get('nombreRecinto')?.enable();
             } else {
@@ -2562,6 +2587,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    * Método que maneja el evento de aceptar o no una accion del componente Notificación cuando este es un modal.
    */
   confirmacionModal(confirmar: boolean): void {
+    this.limpiarFechasHoras();
     switch (this.procesoModal) {
       case 'lda_dd':
         {
@@ -3460,5 +3486,16 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
         })
       )
       .subscribe();
+  }
+
+  limpiarFechas(): void {
+    console.log('Limpiando fechas...');
+
+    const FECHA = this.datosServicio.get('fechaFinal');
+
+    if (FECHA?.value === '') {
+      this.datosServicio.get('fechaFinal')?.markAsUntouched();
+      this.datosServicio.get('fechaFinal')?.markAsPristine();
+    }
   }
 }
