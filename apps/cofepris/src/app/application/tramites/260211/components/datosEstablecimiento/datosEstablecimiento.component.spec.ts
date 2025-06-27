@@ -23,7 +23,6 @@ describe('DatosEstablecimientoComponent', () => {
 
   it('debe inicializar el formulario con los valores por defecto', () => {
     expect(component.forma).toBeDefined();
-    // expect(component.forma.get('rfcDel')?.value).toBe(component.solicitudState?.rfcDel);
     expect(component.forma.get('denominacion')?.value).toBe(component.solicitudState?.denominacion);
     expect(component.forma.get('correo')?.value).toBe(component.solicitudState?.correo);
   });
