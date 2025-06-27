@@ -29,15 +29,15 @@ describe('PasoUnoComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('debería crear', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize with default values', () => {
+  it('debería inicializar con valores predeterminados', () => {
     expect(component.indice).toBe(1);
   });
 
-  it('should update indice and emit event when seleccionaTab is called', () => {
+  it('debería actualizar indice y emitir evento cuando seleccionaTab es llamado', () => {
     const spyEmit = jest.spyOn(component.pestanaCambiado, 'emit');
     const newIndex = 3;
     component.seleccionaTab(newIndex);
@@ -45,7 +45,7 @@ describe('PasoUnoComponent', () => {
     expect(spyEmit).toHaveBeenCalledWith(newIndex);
   });
 
-  it('should handle invalid indice gracefully', () => {
+  it('debería manejar indice inválido de manera elegante', () => {
     const spyEmit = jest.spyOn(component.pestanaCambiado, 'emit');
     const invalidIndex = NaN;
     component.seleccionaTab(invalidIndex);
@@ -53,7 +53,7 @@ describe('PasoUnoComponent', () => {
     expect(spyEmit).toHaveBeenCalledWith(invalidIndex);
   });
 
-  it('should emit the pestanaCambiado event with correct value', (done) => {
+  it('debería emitir el evento pestanaCambiado con el valor correcto', (done) => {
     const newIndex = 2;
     component.pestanaCambiado.subscribe((value) => {
       expect(value).toBe(newIndex);
@@ -62,13 +62,13 @@ describe('PasoUnoComponent', () => {
     component.seleccionaTab(newIndex);
   });
 
-  it('should set esDatosRespuesta true when consultaState.update is false', () => {
+  it('debería establecer esDatosRespuesta en true cuando consultaState.update es false', () => {
     component.consultaState = { update: false } as any;
     component.ngOnInit();
     expect(component.esDatosRespuesta).toBe(true);
   });
 
-  it('guardarDatosFormulario should update state and call actualizarEstadoFormulario for each key', () => {
+  it('guardarDatosFormulario debería actualizar el estado y llamar a actualizarEstadoFormulario para cada clave', () => {
     const mockData = {
       datosEmpresa: { nombre: 'Empresa' },
       especifico: ['valor']
@@ -81,7 +81,7 @@ describe('PasoUnoComponent', () => {
     expect(mockService.actualizarEstadoFormulario).toHaveBeenCalledWith('especifico', mockData.especifico);
   });
 
-  it('ngOnDestroy should complete destroyNotifier$', () => {
+  it('ngOnDestroy debería completar destroyNotifier$', () => {
     const nextSpy = jest.spyOn((component as any).destroyNotifier$, 'next');
     const completeSpy = jest.spyOn((component as any).destroyNotifier$, 'complete');
     component.ngOnDestroy();
