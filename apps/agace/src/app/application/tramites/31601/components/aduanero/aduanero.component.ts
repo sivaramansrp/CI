@@ -437,7 +437,15 @@ export class AduaneroComponent implements OnInit, AfterViewInit, OnDestroy {
       preOperativo: [this.solicitudState?.preOperativo, Validators.required],
       indiqueSi: [this.solicitudState?.indiqueSi, Validators.required],
       senale: [this.solicitudState?.senale, Validators.required],
-      empPropios: [this.solicitudState?.empPropios],
+      empPropios: [
+        this.solicitudState?.empPropios,
+        [
+          Validators.required,
+          Validators.min(1),
+          Validators.max(99999999),
+          Validators.maxLength(8),
+        ],
+      ],
       bimestre: [this.solicitudState?.bimestre],
       senaleSi: [this.solicitudState?.senaleSi, Validators.required],
       seMomento: [this.solicitudState?.seMomento, Validators.required],

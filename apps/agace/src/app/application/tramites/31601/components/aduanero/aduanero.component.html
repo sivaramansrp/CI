@@ -313,37 +313,40 @@
 
       <div class="row mb-5">
         <div class="col-md-1"></div>
-        <div class="col-md-5">
-          <div class="form-group">
-            <label for="empPropios" class="form-label"
-              >Número de empleados</label
-            >
-            <input
-              type="text"
-              class="form-control"
-              id="empPropios"
-              name="empPropios"
-              maxlength="8"
-              formControlName="empPropios"
-              (change)="
-                setValoresStore(preOperativeForm, 'empPropios', 'setEmpPropios')
-              "
-            />
+        <div class="col-md-10">
+          <div class="row">
+             <div class="col-md-6">
+                <div class="form-group">
+                  <label for="empPropios" class="form-label">Número de empleados</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="empPropios"
+                    name="empPropios"
+                    maxlength="8"
+                    formControlName="empPropios"
+                    (change)="setValoresStore(preOperativeForm,'empPropios', 'setEmpPropios')"
+                  />
+                </div>
+             </div>
+             <div class="col-md-6">
+                <app-catalogo-select
+                  [label]="'Bimestre'"
+                  [placeholder]="'Seleccione un valor'"
+                  [catalogo]="comboBimestresIDC"
+                  formControlName="bimestre"
+                  [isDisabled]="esFormularioSoloLectura ? true : false"
+                  (change)="setValoresStore(preOperativeForm,'bimestre', 'setBimestre')"
+                >
+                </app-catalogo-select>
+             </div>
           </div>
-        </div>
-        <div class="col-md-5">
-          <app-catalogo-select
-            [label]="'Bimestre'"
-            [placeholder]="'Seleccione un valor'"
-            [catalogo]="comboBimestresIDC"
-            formControlName="bimestre"
-            [isDisabled]="esFormularioSoloLectura ? true : false"
-            (change)="
-              setValoresStore(preOperativeForm, 'bimestre', 'setBimestre')
-            "
-          >
-          </app-catalogo-select>
-        </div>
+            <div *ngIf="
+              (preOperativeForm.get('empPropios')?.invalid && preOperativeForm.get('empPropios')?.touched) ||
+              (preOperativeForm.get('bimestre')?.invalid && preOperativeForm.get('bimestre')?.touched)" class="text-danger">
+              Se debe agregar los datos del número de empleados propios del último bimestre
+            </div>
+        </div>  
         <div class="col-md-1"></div>
       </div>
       
