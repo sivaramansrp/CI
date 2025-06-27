@@ -55,22 +55,22 @@ describe('FederatariosYPlantasComponent', () => {
     component = fixture.debugElement.componentInstance;
   });
 
-  it('should run #constructor()', async () => {
+  it('debe ejecutar #constructor()', async () => {
     expect(component).toBeTruthy();
   });
 
-  it('should run #initFederatariosFormGroup()', async () => {
+  it('debe ejecutar #initFederatariosFormGroup()', async () => {
     component.initFederatariosFormGroup();
   });
 
-  it('should run #irAAcciones()', async () => {
+  it('debe ejecutar #irAAcciones()', async () => {
     component.router = component.router || {};
     component.router.navigate = jest.fn();
     component.irAAcciones({});
     expect(component.router.navigate).toHaveBeenCalled();
   });
 
-  it('should run #aggregarDatos()', async () => {
+  it('debe ejecutar #aggregarDatos()', async () => {
     component.datosFormaFedratario = component.datosFormaFedratario || {};
     component.datosFormaFedratario.emit = jest.fn();
     component.federatariosFormGroup = component.federatariosFormGroup || {};
@@ -79,19 +79,19 @@ describe('FederatariosYPlantasComponent', () => {
     expect(component.datosFormaFedratario.emit).toHaveBeenCalled();
   });
 
-  it('should initialize federatariosFormGroup', () => {
+  it('debe inicializar federatariosFormGroup', () => {
     component.initFederatariosFormGroup();
     expect(component.federatariosFormGroup.contains('nombre')).toBe(true);
     expect(component.federatariosFormGroup.contains('estado')).toBe(true);
   });
 
-  it('should initialize expresasFormGroup', () => {
+  it('debe inicializar expresasFormGroup', () => {
     component.initExpresasFormGroup();
     expect(component.expresasFormGroup.contains('taxId')).toBe(true);
     expect(component.expresasFormGroup.contains('pais')).toBe(true);
   });
 
-  it('should navigate to given route on irAAcciones()', () => {
+  it('debe navegar a la ruta dada en irAAcciones()', () => {
   const router = TestBed.inject(Router);
   const routerSpy = jest.spyOn(router, 'navigate');
   const path = 'some-path';
@@ -102,7 +102,7 @@ describe('FederatariosYPlantasComponent', () => {
 });
 
 
-  it('should emit federatario form data on aggregarDatos()', () => {
+  it('debe emitir los datos del formulario de federatario en aggregarDatos()', () => {
     const emitSpy = jest.spyOn(component.datosFormaFedratario, 'emit');
     component.federatariosFormGroup.setValue({
       nombre: 'John',
@@ -118,7 +118,7 @@ describe('FederatariosYPlantasComponent', () => {
     expect(emitSpy).toHaveBeenCalledWith(component.federatariosFormGroup.value);
   });
 
-  it('should push data into expresasDatos on aggregarExpresasDatos()', () => {
+  it('debe agregar datos a expresasDatos en aggregarExpresasDatos()', () => {
     component.expresasFormGroup.setValue({
       taxId: '123',
       nombreDelEmpresa: 'Empresa S.A.',
@@ -130,8 +130,8 @@ describe('FederatariosYPlantasComponent', () => {
     expect(component.expresasDatos[0].taxId).toBe('123');
   });
 
-  describe('Modal opening methods', () => {
-    it('should open complementarPlanta modal', () => {
+  describe('Métodos de apertura modales', () => {
+    it('debe abrir el modal complementarPlanta', () => {
       const modalEl = document.createElement('div');
       document.body.appendChild(modalEl);
       component.modalElement = new ElementRef(modalEl);
@@ -141,7 +141,7 @@ describe('FederatariosYPlantasComponent', () => {
       modalSpy.mockRestore();
     });
 
-    it('should open montos modal', () => {
+    it('debe abrir el modal montos', () => {
       const modalEl = document.createElement('div');
       document.body.appendChild(modalEl);
       component.montos = new ElementRef(modalEl);
@@ -151,7 +151,7 @@ describe('FederatariosYPlantasComponent', () => {
       modalSpy.mockRestore();
     });
 
-    it('should open empleadosAcciones modal', () => {
+    it('debe abrir el modal empleadosAcciones', () => {
       const modalEl = document.createElement('div');
       document.body.appendChild(modalEl);
       component.empleadosAcciones = new ElementRef(modalEl);
@@ -161,7 +161,7 @@ describe('FederatariosYPlantasComponent', () => {
       modalSpy.mockRestore();
     });
 
-    it('should open capacidadInstalada modal', () => {
+    it('debe abrir el modal capacidadInstalada', () => {
       const modalEl = document.createElement('div');
       document.body.appendChild(modalEl);
       component.capacidadInstalada = new ElementRef(modalEl);
@@ -171,7 +171,7 @@ describe('FederatariosYPlantasComponent', () => {
       modalSpy.mockRestore();
     });
 
-    it('should open cargaPorPrchivo modal', () => {
+    it('debe abrir el modal cargaPorArchivo', () => {
       const modalEl = document.createElement('div');
       document.body.appendChild(modalEl);
       component.cargaPorPrchivo = new ElementRef(modalEl);
