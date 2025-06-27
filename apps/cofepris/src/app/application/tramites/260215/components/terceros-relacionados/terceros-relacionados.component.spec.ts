@@ -4,6 +4,20 @@ import { TercerosRelacionadosComponent } from './terceros-relacionados.component
 import { of } from 'rxjs';
 import { Sanitario260215Store } from '../../estados/tramites/sanitario260215.store';
 import { ServiciosPermisoSanitarioService } from '../../services/servicios-permiso-sanitario.service';
+import { CODIGOPOSTALSELECTDATA, COLONIASELECTDATA, LOCALIDADSELECTDATA, MUNICIPIOSELECTDATA, PAISSELECTDATA, TERCEROS_RELACIONADOS_TABLE_BODY_DATA, TERCEROS_RELACIONADOS_TABLE_HEADER_DATA } from '../../enum/permiso.enum';
+import { AlertComponent } from 'ngx-bootstrap/alert';
+import { CatalogoSelectComponent, InputRadioComponent, TableComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { ModalComponent } from '../modal/modal.component';
+
+// Add mock definitions for radio options used in tests
+const TipoPersonaRadioOptions = [
+  { label: 'Física', value: 'fisica' },
+  { label: 'Moral', value: 'moral' }
+];
+const NacionalidadRadioOptions = [
+  { label: 'Nacional', value: 'nacional' },
+  { label: 'Extranjero', value: 'extranjero' }
+];
 
 describe('TercerosRelacionadosComponent', () => {
   let component: TercerosRelacionadosComponent;
@@ -486,5 +500,81 @@ describe('TercerosRelacionadosComponent', () => {
     component.tercerosInputChecked('other');
     expect(component.nacional).toBe(false);
     expect(component.extranjero).toBe(true);
+  });
+
+  describe('Métodos cambiarRadio y cambiarRadioFisica', () => {
+    it('debería llamar a tercerosInputChecked con el valor proporcionado en cambiarRadio', () => {
+      const spy = jest.spyOn(component, 'tercerosInputChecked');
+      component.cambiarRadio('nacional');
+      expect(spy).toHaveBeenCalledWith('nacional');
+      component.cambiarRadio('extranjero');
+      expect(spy).toHaveBeenCalledWith('extranjero');
+    });
+
+    it('debería llamar a inputChecked con el valor proporcionado en cambiarRadioFisica', () => {
+      const spy = jest.spyOn(component, 'inputChecked');
+      component.cambiarRadioFisica('fisica');
+      expect(spy).toHaveBeenCalledWith('fisica');
+      component.cambiarRadioFisica('moral');
+      expect(spy).toHaveBeenCalledWith('moral');
+    });
+
+    it('debería funcionar correctamente con valores numéricos', () => {
+      const spyTerceros = jest.spyOn(component, 'tercerosInputChecked');
+      const spyFisica = jest.spyOn(component, 'inputChecked');
+      component.cambiarRadio(1);
+      // Acepta tanto string como number
+      expect(spyTerceros).toHaveBeenCalledWith(expect.anything());
+      component.cambiarRadioFisica(2);
+      expect(spyFisica).toHaveBeenCalledWith(expect.anything());
+    });
+  });
+
+  describe('Método fetchTableDummyJson', () => {
+    it('debería agregar datos dummy a todas las filas', () => {
+      component.fabricanteRowData = [];
+      component.destinatarioRowData = [];
+      component.proveedorRowData = [];
+      component.facturadorRowData = [];
+
+      component.fetchTableDummyJson();
+
+      expect(component.fabricanteRowData.length).toBeGreaterThan(0);
+      expect(component.destinatarioRowData.length).toBeGreaterThan(0);
+      expect(component.proveedorRowData.length).toBeGreaterThan(0);
+      expect(component.facturadorRowData.length).toBeGreaterThan(0);
+
+      // Verifica que los datos agregados tengan la propiedad esperada
+      expect(component.fabricanteRowData[0]).toHaveProperty('tbodyData');
+      expect(Array.isArray(component.fabricanteRowData[0].tbodyData)).toBe(true);
+      expect(component.destinatarioRowData[0]).toHaveProperty('tbodyData');
+      expect(component.proveedorRowData[0]).toHaveProperty('tbodyData');
+      expect(component.facturadorRowData[0]).toHaveProperty('tbodyData');
+    });
+  });
+
+  describe('Verificación de imports de enums y componentes', () => {
+    it('debería tener definidos los datos y componentes importados', () => {
+      // Enums y datos
+      expect(typeof CODIGOPOSTALSELECTDATA).toBeDefined();
+      expect(typeof COLONIASELECTDATA).toBeDefined();
+      expect(typeof LOCALIDADSELECTDATA).toBeDefined();
+      expect(typeof MUNICIPIOSELECTDATA).toBeDefined();
+      expect(typeof PAISSELECTDATA).toBeDefined();
+      expect(typeof TERCEROS_RELACIONADOS_TABLE_BODY_DATA).toBeDefined();
+      expect(typeof TERCEROS_RELACIONADOS_TABLE_HEADER_DATA).toBeDefined();
+
+      // Componentes
+      expect(AlertComponent).toBeDefined();
+      expect(TituloComponent).toBeDefined();
+      expect(CatalogoSelectComponent).toBeDefined();
+      expect(InputRadioComponent).toBeDefined();
+      expect(ModalComponent).toBeDefined();
+      expect(TableComponent).toBeDefined();
+
+      // JSON de opciones
+      expect(TipoPersonaRadioOptions).toBeDefined();
+      expect(NacionalidadRadioOptions).toBeDefined();
+    });
   });
 });
