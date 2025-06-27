@@ -5,12 +5,12 @@ import { AfterViewInit } from '@angular/core';
 import { AgregarMiembroDeLaEmpresaComponent } from '../agregar-miembro-de-la-empresa/agregar-miembro-de-la-empresa.component';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { BsModalService } from 'ngx-bootstrap/modal';
+import { CONTROL_INVENTARIOS_TABLA_CONFIGURACION } from '../../constantes/antecesor.enum';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { ConfiguracionColumna } from '@ng-mf/data-access-user';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
-import { CONTROL_INVENTARIOS_TABLA_CONFIGURACION } from '../../constantes/antecesor.enum';
 import { ElementRef } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
@@ -624,7 +624,6 @@ export class AduaneroComponent implements OnInit, AfterViewInit, OnDestroy {
    */
   openControlInventariosModal(): void {
     if (this.modalInstanceControlInventarios) {
-      // Clear form for new item
       this.preOperativeForm.patchValue({
         nombreDel: '',
         lugarDeRadicacion: '',
@@ -667,14 +666,14 @@ export class AduaneroComponent implements OnInit, AfterViewInit, OnDestroy {
       Boolean(this.preOperativeForm.get('lugarDeRadicacion')?.valid);
 
     if (this.camposObligatoriosRespondidosControlInventarios) {
-      const newItem: ControlInventariosItem = {
+      const NEW_ITEM: ControlInventariosItem = {
         id: (this.datosTablaControlInventarios.length + 1).toString(),
         nombreSistema: this.preOperativeForm.get('nombreDel')?.value,
         lugarRadicacion: this.preOperativeForm.get('lugarDeRadicacion')?.value,
         anexo24: this.preOperativeForm.get('indiqueCheck')?.value || false
       };
 
-      this.datosTablaControlInventarios.push(newItem);
+      this.datosTablaControlInventarios.push(NEW_ITEM);
       this.tramite31601Store.setControlInventariosTablaDatos(this.datosTablaControlInventarios);
       this.preOperativeForm.patchValue({
         nombreDel: '',
@@ -723,12 +722,12 @@ export class AduaneroComponent implements OnInit, AfterViewInit, OnDestroy {
         Boolean(this.preOperativeForm.get('lugarDeRadicacion')?.valid);
 
       if (this.camposObligatoriosRespondidosControlInventarios) {
-        const index = this.datosTablaControlInventarios.findIndex(
+        const INDEX = this.datosTablaControlInventarios.findIndex(
           item => item.id === this.filaSeleccionadaControlInventarios!.id
         );
 
-        if (index !== -1) {
-          this.datosTablaControlInventarios[index] = {
+        if (INDEX !== -1) {
+          this.datosTablaControlInventarios[INDEX] = {
             ...this.filaSeleccionadaControlInventarios,
             nombreSistema: this.preOperativeForm.get('nombreDel')?.value,
             lugarRadicacion: this.preOperativeForm.get('lugarDeRadicacion')?.value,
@@ -771,12 +770,12 @@ export class AduaneroComponent implements OnInit, AfterViewInit, OnDestroy {
    * Elimina los elementos seleccionados de la tabla de control inventarios.
    */
   eliminarControlInventariosItem(): void {
-    const idsToDelete = this.listaFilaSeleccionadaControlInventarios.map(
+    const IDS_ELIMINAR = this.listaFilaSeleccionadaControlInventarios.map(
       (item) => item.id
     );
 
     this.datosTablaControlInventarios = this.datosTablaControlInventarios.filter(
-      (item) => !idsToDelete.includes(item.id)
+      (item) => !IDS_ELIMINAR.includes(item.id)
     );
 
     this.listaFilaSeleccionadaControlInventarios = [];
