@@ -8,8 +8,31 @@ import { Observable, of as observableOf, throwError } from 'rxjs';
 
 import { Component } from '@angular/core';
 import { PasoUnoComponent } from './paso-uno.component';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { AcuicolaService } from '../../service/acuicola.service';
 
+@Injectable()
+class MockAcuicolaService {}
+
+@Directive({ selector: '[myCustom]' })
+class MyCustomDirective {
+  @Input() myCustom;
+}
+
+@Pipe({name: 'translate'})
+class TranslatePipe implements PipeTransform {
+  transform(value) { return value; }
+}
+
+@Pipe({name: 'phoneNumber'})
+class PhoneNumberPipe implements PipeTransform {
+  transform(value) { return value; }
+}
+
+@Pipe({name: 'safeHtml'})
+class SafeHtmlPipe implements PipeTransform {
+  transform(value) { return value; }
+}
 
 describe('PasoUnoComponent', () => {
   let fixture;
@@ -17,12 +40,15 @@ describe('PasoUnoComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [FormsModule, ReactiveFormsModule, PasoUnoComponent, HttpClientTestingModule],
+      imports: [ FormsModule, ReactiveFormsModule, PasoUnoComponent, ],
       declarations: [
+        TranslatePipe, PhoneNumberPipe, SafeHtmlPipe,
+        MyCustomDirective
       ],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
+      schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
       providers: [
-
+        ConsultaioQuery,
+        { provide: AcuicolaService, useClass: MockAcuicolaService }
       ]
     }).overrideComponent(PasoUnoComponent, {
 
@@ -34,11 +60,36 @@ describe('PasoUnoComponent', () => {
   it('should run #constructor()', async () => {
     expect(component).toBeTruthy();
   });
+  it('should run #ngOnInit()', async () => {
+    component.consultaQuery = component.consultaQuery || {};
+    component.consultaQuery.selectConsultaioState$ = observableOf({ update: true });
+    component.guardarDatosFormulario = jest.fn();
+    component.ngOnInit();
+    expect(component.guardarDatosFormulario).toHaveBeenCalled();
+  });
+
+  it('should run #guardarDatosFormulario()', async () => {
+    component.acuicolaService = component.acuicolaService || {};
+    component.acuicolaService.getServiciosData = jest.fn().mockReturnValue(observableOf({}));
+    component.acuicolaService.actualizarEstadoFormulario = jest.fn();
+    component.guardarDatosFormulario();
+    expect(component.acuicolaService.getServiciosData).toHaveBeenCalled();
+    expect(component.acuicolaService.actualizarEstadoFormulario).toHaveBeenCalled();
+  });
 
   it('should run #seleccionaTab()', async () => {
 
     component.seleccionaTab({});
 
+  });
+
+  it('should run #ngOnDestroy()', async () => {
+    component.destroyNotifier$ = component.destroyNotifier$ || {};
+    component.destroyNotifier$.next = jest.fn();
+    component.destroyNotifier$.complete = jest.fn();
+    component.ngOnDestroy();
+    expect(component.destroyNotifier$.next).toHaveBeenCalled();
+    expect(component.destroyNotifier$.complete).toHaveBeenCalled();
   });
 
 });

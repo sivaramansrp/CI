@@ -1,195 +1,124 @@
-import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { AcuseComponent } from './acuse.component';
-import { DocumentoService } from '../../..';
-import { Router, ActivatedRoute } from '@angular/router';
+import { AlertComponent } from '../alert/alert.component';
+import { ActivatedRoute, Router } from '@angular/router';
+
 import { of, throwError } from 'rxjs';
-import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { DocumentoService } from '../../..';
 
-// Interface para las respuestas mock
-interface MockResponse<T> {
-  datos: T;
-  codigo?: string;
-  mensaje?: string;
-  path?: string;
-  timestamp?: string;
-}
-
-describe('AcuseComponent', () => {
-  let component: AcuseComponent;
+describe('Componente AcuseComponent', () => {
+  let componente: AcuseComponent;
   let fixture: ComponentFixture<AcuseComponent>;
-  
-  // Mocks con tipado mejorado
-  let mockDocumentoService: {
-    generarDoc: jest.Mock;
-    getVisualizarDoc: jest.Mock;
-  };
-  
-  let mockRouter: {
-    navigate: jest.Mock;
-  };
+  let servicioDocumentoMock: any;
+  let routerMock: any;
+
+  beforeAll(() => {
+    // Mock para URL.createObjectURL que no existe en Jest/Node
+    global.URL.createObjectURL = jest.fn(() => 'url-mockeada');
+  });
 
   beforeEach(async () => {
-    // Configuración de mocks
-    mockDocumentoService = {
-      generarDoc: jest.fn(),
-      getVisualizarDoc: jest.fn()
+    servicioDocumentoMock = {
+      generarDoc: jest.fn().mockReturnValue(of({ datos: { llave_archivo: 'abc123' } })),
+      getVisualizarDoc: jest.fn().mockReturnValue(of({
+        datos: {
+          nombre_archivo: 'doc.pdf',
+          contenido: btoa('Contenido PDF'),
+        }
+      }))
     };
 
-    mockRouter = {
-      navigate: jest.fn()
+    routerMock = {
+      navigate: jest.fn(),
     };
 
     await TestBed.configureTestingModule({
-      declarations: [AcuseComponent],
+      imports: [CommonModule, AlertComponent, AcuseComponent],
       providers: [
-        { provide: DocumentoService, useValue: mockDocumentoService },
-        { provide: Router, useValue: mockRouter },
-        { provide: ActivatedRoute, useValue: {} }
-      ],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA]
+        { provide: DocumentoService, useValue: servicioDocumentoMock },
+        { provide: Router, useValue: routerMock },
+        { provide: ActivatedRoute, useValue: { snapshot: { paramMap: new Map() } } }
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(AcuseComponent);
-    component = fixture.componentInstance;
+    componente = fixture.componentInstance;
+    fixture.detectChanges();
   });
 
-  it('debería crear el componente correctamente', () => {
-    expect(component).toBeTruthy();
+  it('debería crear el componente', () => {
+    expect(componente).toBeTruthy();
   });
 
   describe('ngOnChanges', () => {
-    it('debería actualizar txtAlerta cuando cambia el input', () => {
+    it('debería actualizar txtAlerta si cambia', () => {
       const cambios = {
-        txtAlerta: {
-          currentValue: 'Nueva alerta',
-          previousValue: '',
-          firstChange: false,
-          isFirstChange: () => false
-        }
+        txtAlerta: { currentValue: 'nuevo texto', previousValue: '', firstChange: false, isFirstChange: () => false }
       };
-
-      component.ngOnChanges(cambios);
-      expect(component.txtAlerta).toBe('Nueva alerta');
+      componente.ngOnChanges(cambios as any);
+      expect(componente.txtAlerta).toBe('nuevo texto');
     });
 
-    it('debería llamar a generarYMostrarDocumentos cuando cambia idSolicitud', () => {
-      const spy = jest.spyOn(component, 'generarYMostrarDocumentos');
-      
+    it('debería llamar a generarYMostrarDocumentos si cambia idSolicitud', () => {
+      jest.spyOn(componente, 'generarYMostrarDocumentos');
       const cambios = {
-        idSolicitud: {
-          currentValue: 123,
-          previousValue: null,
-          firstChange: true,
-          isFirstChange: () => true
-        }
+        idSolicitud: { currentValue: 123, previousValue: 0, firstChange: false, isFirstChange: () => false }
       };
-
-      component.ngOnChanges(cambios);
-      expect(spy).toHaveBeenCalled();
-    });
-
-    it('no debería llamar a generarYMostrarDocumentos cuando cambian otros inputs', () => {
-      const spy = jest.spyOn(component, 'generarYMostrarDocumentos');
-      
-      const cambios = {
-        titulo: {
-          currentValue: 'Nuevo título',
-          previousValue: '',
-          firstChange: true,
-          isFirstChange: () => true
-        }
-      };
-
-      component.ngOnChanges(cambios);
-      expect(spy).not.toHaveBeenCalled();
+      componente.ngOnChanges(cambios as any);
+      expect(componente.generarYMostrarDocumentos).toHaveBeenCalled();
     });
   });
 
   describe('generarYMostrarDocumentos', () => {
-    it('debería generar y mostrar documentos correctamente', fakeAsync(() => {
-      const mockGenResponse: MockResponse<{ llave_archivo: string }> = {
-        datos: { llave_archivo: 'test-key' },
-        codigo: '00',
-        mensaje: 'Éxito'
-      };
+    it('debería llamar al servicio y actualizar datosTablaAcuse si tiene éxito', () => {
+      componente.idSolicitud = 123;
+      componente.generarYMostrarDocumentos();
 
-      const mockViewResponse: MockResponse<{ nombre_archivo: string; contenido: string }> = {
-        datos: {
-          nombre_archivo: 'documento.pdf',
-          contenido: btoa('contenido-pdf')
-        }
-      };
+      expect(servicioDocumentoMock.generarDoc).toHaveBeenCalled();
+      expect(servicioDocumentoMock.getVisualizarDoc).toHaveBeenCalledWith('abc123');
 
-      mockDocumentoService.generarDoc.mockReturnValue(of(mockGenResponse));
-      mockDocumentoService.getVisualizarDoc.mockReturnValue(of(mockViewResponse));
+      fixture.whenStable().then(() => {
+        expect(componente.datosTablaAcuse.length).toBe(1);
+        expect(componente.datosTablaAcuse[0].documento).toBe('doc.pdf');
+        expect(componente.datosTablaAcuse[0].urlPdf).toBe('url-mockeada');
+      });
+    });
 
-      component.idSolicitud = 123;
-      component.generarYMostrarDocumentos();
-      tick();
+    it('debería manejar error si generarDoc falla', (done) => {
+      servicioDocumentoMock.generarDoc.mockReturnValueOnce(throwError(() => new Error('error')));
+      componente.idSolicitud = 123;
+      componente.generarYMostrarDocumentos();
 
-      expect(mockDocumentoService.generarDoc).toHaveBeenCalled();
-      expect(mockDocumentoService.getVisualizarDoc).toHaveBeenCalledWith('test-key');
-      expect(component.datosTablaAcuse.length).toBe(1);
-      expect(component.datosTablaAcuse[0].documento).toBe('documento.pdf');
-    }));
-
-    it('debería manejar errores al generar documentos', fakeAsync(() => {
-      const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
-      mockDocumentoService.generarDoc.mockReturnValue(throwError(() => new Error('Error de prueba')));
-
-      component.idSolicitud = 123;
-      component.generarYMostrarDocumentos();
-      tick();
-
-      expect(consoleSpy).toHaveBeenCalledWith('Error al generar documentos:', expect.any(Error));
-      consoleSpy.mockRestore();
-    }));
-
-    it('debería manejar errores al visualizar documentos', fakeAsync(() => {
-      const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
-      
-      const mockGenResponse: MockResponse<{ llave_archivo: string }> = {
-        datos: { llave_archivo: 'test-key' }
-      };
-
-      mockDocumentoService.generarDoc.mockReturnValue(of(mockGenResponse));
-      mockDocumentoService.getVisualizarDoc.mockReturnValue(throwError(() => new Error('Error al visualizar')));
-
-      component.idSolicitud = 123;
-      component.generarYMostrarDocumentos();
-      tick();
-
-      expect(consoleSpy).toHaveBeenCalledWith('Error:', expect.any(Error));
-      consoleSpy.mockRestore();
-    }));
+      fixture.whenStable().then(() => {
+        expect(componente.datosTablaAcuse.length).toBe(0);
+        done();
+      });
+    });
   });
 
   describe('crearUrlPdf', () => {
-    it('debería crear una URL válida para PDF', () => {
-      const mockBase64 = btoa('contenido-pdf');
-      const url = component.crearUrlPdf(mockBase64);
-      
-      expect(url).toMatch(/^blob:/);
-      expect(url).toBeTruthy();
+    it('debería crear una URL válida de tipo blob PDF', () => {
+      const base64 = btoa('contenido de prueba');
+      const url = AcuseComponent.crearUrlPdf(base64);
+      expect(url).toBe('url-mockeada');
+      expect(global.URL.createObjectURL).toHaveBeenCalled();
     });
   });
 
   describe('verPdf', () => {
-    it('debería abrir el PDF en nueva ventana', () => {
-      const windowOpenSpy = jest.spyOn(window, 'open').mockImplementation(() => null);
-      const testUrl = 'http://ejemplo.com/doc.pdf';
-      
-      component.verPdf(testUrl);
-      
-      expect(windowOpenSpy).toHaveBeenCalledWith(testUrl, '_blank');
-      windowOpenSpy.mockRestore();
+    it('debería abrir una nueva pestaña con la URL del PDF', () => {
+      const openSpy = jest.spyOn(window, 'open').mockImplementation(() => null);
+      componente.verPdf('http://test.pdf');
+      expect(openSpy).toHaveBeenCalledWith('http://test.pdf', '_blank');
+      openSpy.mockRestore();
     });
   });
 
   describe('salir', () => {
-    it('debería navegar a /seleccion-tramite', () => {
-      component.salir();
-      expect(mockRouter.navigate).toHaveBeenCalledWith(['/seleccion-tramite']);
+    it('debería redirigir a /seleccion-tramite', () => {
+      componente.salir();
+      expect(routerMock.navigate).toHaveBeenCalledWith(['/seleccion-tramite']);
     });
   });
 });

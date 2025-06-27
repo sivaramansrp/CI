@@ -234,6 +234,7 @@ public esFormularioSoloLectura: boolean = false;
       this.guardarDatosFormulario();
     } else {
        this.formMercancias.enable();
+        this.formMercancias.get('arancelaria')?.disable();
     }
   }
 
@@ -245,6 +246,7 @@ public guardarDatosFormulario(): void {
     this.detalleData();
     if (this.esFormularioSoloLectura) {
       this.formMercancias.disable();
+      this.formMercancias.get('arancelaria')?.disable();
       if(this.producto.length === 0){
        const PRODUCTO_FORMDATA = {
        descripcion: catalogoDatos.descripcion[0]?.descripcion ?? '',
@@ -253,6 +255,7 @@ public guardarDatosFormulario(): void {
       }
     } else if (!this.esFormularioSoloLectura) {
       this.formMercancias.enable();
+      this.formMercancias.get('arancelaria')?.disable();
     } 
   }
 

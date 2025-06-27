@@ -27,9 +27,15 @@ describe('TipoPropietarioComponent', () => {
     };
 
     servicioMock = {
-      getPropietario: jest.fn().mockReturnValue(of([{ id: '1', descripcion: 'Persona' }])),
-      getTipoDePropietario: jest.fn().mockReturnValue(of([{ id: '1', descripcion: 'Física' }])),
-      getPais: jest.fn().mockReturnValue(of([{ id: 'MX', descripcion: 'México' }])),
+      getPropietario: jest
+        .fn()
+        .mockReturnValue(of([{ id: '1', descripcion: 'Persona' }])),
+      getTipoDePropietario: jest
+        .fn()
+        .mockReturnValue(of([{ id: '1', descripcion: 'Física' }])),
+      getPais: jest
+        .fn()
+        .mockReturnValue(of([{ id: 'MX', descripcion: 'México' }])),
     };
 
     await TestBed.configureTestingModule({
@@ -68,11 +74,17 @@ describe('TipoPropietarioComponent', () => {
   });
 
   it('debería actualizar la visibilidad de los campos en cambiarTipoPropietario()', () => {
-    componente.tipoPropietarioFormulario.get('tipoDePropietario')?.setValue('1');
-    componente.formularioDatosPropietarioNombre = structuredClone(FORMULARIO_DATOS_PROPIETARIO_NOMBRE);
+    componente.tipoPropietarioFormulario
+      .get('tipoDePropietario')
+      ?.setValue('1');
+    componente.formularioDatosPropietarioNombre = structuredClone(
+      FORMULARIO_DATOS_PROPIETARIO_NOMBRE
+    );
     componente.cambiarTipoPropietario();
 
-    const nombreCampo = componente.formularioDatosPropietarioNombre.find(c => c.id === 'nombre');
+    const nombreCampo = componente.formularioDatosPropietarioNombre.find(
+      (c) => c.id === 'nombre'
+    );
     expect(nombreCampo?.mostrar).toBe(true);
   });
 
@@ -85,17 +97,68 @@ describe('TipoPropietarioComponent', () => {
 
   it('debería establecer un valor en el store con establecerCambioDeValor (primitivo)', () => {
     componente.establecerCambioDeValor({ campo: 'propietario', valor: '1' });
-    expect(storeMock.setTramite630307State).toHaveBeenCalledWith('propietario', '1');
+    expect(storeMock.setTramite630307State).toHaveBeenCalledWith(
+      'propietario',
+      '1'
+    );
   });
 
   it('debería establecer un valor en el store con establecerCambioDeValor (objeto con id)', () => {
-    componente.establecerCambioDeValor({ campo: 'tipoDePropietario', valor: { id: 5 } });
-    expect(storeMock.setTramite630307State).toHaveBeenCalledWith('tipoDePropietario', '5');
+    componente.establecerCambioDeValor({
+      campo: 'tipoDePropietario',
+      valor: { id: 5 },
+    });
+    expect(storeMock.setTramite630307State).toHaveBeenCalledWith(
+      'tipoDePropietario',
+      '5'
+    );
   });
 
   it('debería completar destroyed$ al destruir el componente', () => {
     const completeSpy = jest.spyOn(componente['destroyed$'], 'complete');
     componente.ngOnDestroy();
     expect(completeSpy).toHaveBeenCalled();
+  });
+  it('debería deshabilitar el formulario si esFormularioSoloLectura es true', () => {
+    componente.esFormularioSoloLectura = true;
+    componente.tipoPropietarioFormulario.enable();
+    componente.guardarDatosFormulario();
+    expect(componente.tipoPropietarioFormulario.disabled).toBe(true);
+  });
+
+  it('debería habilitar el formulario si esFormularioSoloLectura es false', () => {
+    componente.esFormularioSoloLectura = false;
+    componente.tipoPropietarioFormulario.disable();
+    componente.guardarDatosFormulario();
+    expect(componente.tipoPropietarioFormulario.enabled).toBe(true);
+  });
+
+  it('debería llamar a guardarDatosFormulario si esFormularioSoloLectura es true', () => {
+    const guardarSpy = jest.spyOn(componente, 'guardarDatosFormulario');
+    componente.esFormularioSoloLectura = true;
+    componente.inicializarEstadoFormulario();
+    expect(guardarSpy).toHaveBeenCalled();
+  });
+
+  it('debería llamar a inicializarDatosIniciales si esFormularioSoloLectura es false', () => {
+    const initSpy = jest.spyOn(componente, 'inicializarDatosIniciales');
+    componente.esFormularioSoloLectura = false;
+    componente.inicializarEstadoFormulario();
+    expect(initSpy).toHaveBeenCalled();
+  });
+  it('debería llamar a los métodos de inicialización en inicializarDatosIniciales', () => {
+    const initFormSpy = jest.spyOn(componente, 'inicializarFormulario');
+    const getPropSpy = jest.spyOn(componente, 'getPropietario');
+    const getTipoSpy = jest.spyOn(componente, 'getTipoDePropietario');
+    const getPaisSpy = jest.spyOn(componente, 'getPais');
+    const cambiarPropSpy = jest.spyOn(componente, 'cambiarPropietario');
+    const cambiarTipoSpy = jest.spyOn(componente, 'cambiarTipoPropietario');
+    componente.inicializarDatosIniciales();
+    expect(initFormSpy).toHaveBeenCalled();
+    expect(getPropSpy).toHaveBeenCalled();
+    expect(getTipoSpy).toHaveBeenCalled();
+    expect(getPaisSpy).toHaveBeenCalled();
+    expect(cambiarPropSpy).toHaveBeenCalled();
+    expect(cambiarTipoSpy).toHaveBeenCalled();
   });
 });

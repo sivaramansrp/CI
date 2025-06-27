@@ -3,10 +3,11 @@
         <div class="row">
             <div class="col-md-4">
                 <div class="form-group">
-                    <app-catalogo-select  formControlName="medioDeTransporte" 
+                    <app-catalogo-select formControlName="medioDeTransporte" 
                     [catalogo]="medioDeTransporteOptions" 
                     [label]="'Medio de transporte'"
                     [required]="true"
+                    [isDisabled]="esFormularioSoloLectura"
                     (change)="setValoresStore(transporteForm,'medioDeTransporte')"></app-catalogo-select>
                 </div>
             </div>

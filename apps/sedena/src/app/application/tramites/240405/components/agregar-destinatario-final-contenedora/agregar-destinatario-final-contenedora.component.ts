@@ -1,6 +1,6 @@
+import { Component, EventEmitter, Output } from '@angular/core';
 import { AgregarDestinatarioFinalComponent } from '../../../../shared/components/agregar-destinatario-final/agregar-destinatario-final.component';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
 import { DestinoFinal } from '../../../../shared/models/terceros-relacionados.model';
 import { Tramite240405Store } from '../../../240405/estados/tramite240405Store.store';
 
@@ -19,6 +19,16 @@ import { Tramite240405Store } from '../../../240405/estados/tramite240405Store.s
   styleUrl: './agregar-destinatario-final-contenedora.component.scss',
 })
 export class AgregarDestinatarioFinalContenedoraComponent {
+  /**
+ * Evento de salida que se emite cuando el componente solicita cerrar su vista o flujo.
+ * 
+ * Puede ser escuchado por el componente padre para ejecutar acciones como ocultar un modal,
+ * cambiar de paso en un formulario, o realizar limpieza de datos.
+ * 
+ * @type {EventEmitter<void>}
+ * @memberof NombreDelComponente
+ */
+  @Output() cerrar = new EventEmitter<void>();
   /**
    * Constructor del componente.
    *
