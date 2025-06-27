@@ -14,7 +14,7 @@ describe('ManifiestosComponent', () => {
 
   /* ---- mock del servicio, AHORA con getPermisoData -------------------- */
   const sanitarioServiceStub = {
-    getPermisoData: jest.fn().mockReturnValue(of([])), // ← añadido
+    getPermisoData: jest.fn().mockReturnValue(of([])),
     guardar       : jest.fn(),
   };
 
@@ -22,7 +22,7 @@ describe('ManifiestosComponent', () => {
     await TestBed.configureTestingModule({
       imports: [
         HttpClientTestingModule,
-        ManifiestosComponent,                // standalone
+        ManifiestosComponent,            
       ],
       providers: [
         { provide: SanitarioService, useValue: sanitarioServiceStub },
