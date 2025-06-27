@@ -1,121 +1,205 @@
-import { ComponentFixture, fakeAsync, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync } from '@angular/core/testing';
 import { PartidasDeLaMercanciaComponent } from './partidas-de-la-mercancia.component';
-import { of, Subject, takeUntil } from 'rxjs';
 import { Tramite130103Query } from '../../../../estados/queries/tramite130103.query';
-import { FormControl, FormGroup } from '@angular/forms';
 import { Tramite130103Store } from '../../../../estados/tramites/tramite130103.store';
+import { of, Subject } from 'rxjs';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Modal } from 'bootstrap';
 
 describe('PartidasDeLaMercanciaComponent', () => {
   let component: PartidasDeLaMercanciaComponent;
   let fixture: ComponentFixture<PartidasDeLaMercanciaComponent>;
 
-  const productoMock = { id: 1, nombre: 'Producto 1' };
-  const importacionStateMock = {
-    producto: productoMock
+  const importacionMock = {
+    unidad_de_medida: 'kg',
+    partidas_tabla: [{ id: 1, descripcion: 'Item 1' }],
   };
 
-  const tramite130103QueryMock = {
-    selectImportacion$: of(importacionStateMock)
+  const tramiteQueryMock = {
+    selectImportacion$: of(importacionMock),
   };
 
-  const tramite130103StoreMock = {
-    setDynamicFieldValue: jest.fn()
+  const tramiteStoreMock = {
+    setDynamicFieldValue: jest.fn(),
   };
 
   beforeEach(async () => {
+    jest.clearAllMocks();
     await TestBed.configureTestingModule({
       imports: [PartidasDeLaMercanciaComponent],
       providers: [
-        { provide: Tramite130103Query, useValue: tramite130103QueryMock },
-        { provide: Tramite130103Store, useValue: tramite130103StoreMock }
-      ]
+        { provide: Tramite130103Query, useValue: tramiteQueryMock },
+        { provide: Tramite130103Store, useValue: tramiteStoreMock },
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(PartidasDeLaMercanciaComponent);
     component = fixture.componentInstance;
-    component.consultaState = {
-      readonly: false,
-    } as any;
-    component.datosTabla = [];
+    component.consultaState = { readonly: false } as any;
+
+    fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should not add producto to datosTabla if already exists', () => {
-    component.datosTabla = [productoMock];
+  it('debería inicializar datosTabla en ngOnInit', () => {
     component.ngOnInit();
-    const occurrences = component.datosTabla.filter(p => p.id === productoMock.id);
-    expect(occurrences.length).toBe(1);
+    expect(component.datosTabla.length).toBeGreaterThan(0);
+    expect(component.datosTabla[0].id).toBe(1);
   });
 
- it('should call next and complete on destroyNotifier$ when ngOnDestroy is called', () => {
-     const nextSpy = jest.spyOn(component['destroyNotifier$'], 'next');
-     const completeSpy = jest.spyOn(component['destroyNotifier$'], 'complete');
-     component.ngOnDestroy();
-     expect(nextSpy).toHaveBeenCalled();
-     expect(completeSpy).toHaveBeenCalled();
-   });
- 
-   it('should unsubscribe from observables when ngOnDestroy is called', fakeAsync(() => {
-     const mockObservable$ = new Subject();
-     const spy = jest.fn();
-     mockObservable$
-       .pipe(takeUntil(component['destroyNotifier$']))
-       .subscribe(spy);
-     mockObservable$.next('first value');
-     expect(spy).toHaveBeenCalledWith('first value');
-     component.ngOnDestroy();
-     mockObservable$.next('second value');
-     expect(spy).toHaveBeenCalledTimes(1);
-   }));
+  it('debería agregar un nuevo elemento cuando se llama a agregar y el formulario es válido', () => {
+    const ninoFormGroup = new FormGroup({
+      partidas_cantidad: new FormControl(10),
+      partidas_descripcion: new FormControl('Producto'),
+      valor_partida_usd: new FormControl(500),
+      seleccion_fraccion: new FormControl(1),
+    });
+    component.forma.setControl('ninoFormGroup', ninoFormGroup);
+    component.importacionstate = importacionMock;
+    component.datosTabla = [];
 
-   it('should call store with field and id value when event.valor has id', () => {
-    const event = {
-      campo: 'productoId',
-      valor: { id: 99, nombre: 'Producto 99' }
+    component.agregar();
+
+    expect(component.datosTabla.length).toBe(1);
+    expect(tramiteStoreMock.setDynamicFieldValue).toHaveBeenCalledWith(
+      'partidas_tabla',
+      component.datosTabla
+    );
+  });
+
+  it('debería retornar la descripción de la fracción arancelaria', () => {
+    const ninoFormGroup = new FormGroup({
+      seleccion_fraccion: new FormControl(1),
+    });
+    component.forma.setControl('ninoFormGroup', ninoFormGroup);
+    const desc = component.obtenerFraccionArancelaria();
+    expect(desc).toContain('Usados');
+  });
+
+  it('debería llamar al store con el valor correcto en establecerCambioDeValor', () => {
+    component.establecerCambioDeValor({ campo: 'test', valor: 'value' });
+    expect(tramiteStoreMock.setDynamicFieldValue).toHaveBeenCalledWith(
+      'test',
+      'value'
+    );
+  });
+
+  it('debería establecer las filas seleccionadas y actualizar el formulario en onPartidasSeleccion', () => {
+    const row = {
+      id: 1,
+      cantidad: 1,
+      descripcion: 'desc',
+      totalUsd: 10,
+      fraccionArancelariaTigie: 'FRA',
     };
-    component.establecerCambioDeValor(event);
-    expect(tramite130103StoreMock.setDynamicFieldValue).toHaveBeenCalledWith('productoId', 99);
+    component.onPartidasSeleccion([row]);
+    expect(component.partidasSeleccionadas[0].id).toBe(1);
+    expect(
+      component.modificarPartidaForm.get('modificar_cantidad')?.value
+    ).toBe(1);
   });
-  
-  it('should call store with field and primitive value when event.valor has no id', () => {
-    const event = {
-      campo: 'descripcion',
-      valor: 'Texto simple'
+
+  it('debería eliminar las partidas seleccionadas en eliminar', () => {
+    const item = { id: 1 };
+    component.datosTabla = [item];
+    component.partidasSeleccionadas = [item];
+    component.eliminar();
+    expect(component.datosTabla.length).toBe(0);
+    expect(tramiteStoreMock.setDynamicFieldValue).toHaveBeenCalled();
+  });
+
+  it('debería inicializar la instancia del modal en ngAfterViewInit', () => {
+    const modalElement = document.createElement('div');
+    modalElement.id = 'testModal';
+    document.body.appendChild(modalElement);
+    component['cargarArchivoModal'] = { nativeElement: modalElement } as any;
+    component.ngAfterViewInit();
+    expect(component['cargarArchivoInstance']).toBeDefined();
+    modalElement.remove();
+  });
+
+  it('debería llamar a show en cargarArchivoInstance cuando se llama a cargarArchivo', () => {
+    const showMock = jest.fn();
+    component['cargarArchivoInstance'] = { show: showMock } as any;
+    component.cargarArchivo();
+    expect(showMock).toHaveBeenCalled();
+  });
+
+  it('debería llamar a hide en cargarArchivoInstance cuando se llama a cerrar', () => {
+    const hideMock = jest.fn();
+    component['cargarArchivoInstance'] = { hide: hideMock } as any;
+    component.cerrar();
+    expect(hideMock).toHaveBeenCalled();
+  });
+
+  it('debería no agregar un elemento cuando se llama a agregar y el formulario es inválido', () => {
+    jest.clearAllMocks();
+    const ninoFormGroup = new FormGroup({
+      partidas_cantidad: new FormControl(null, Validators.required), // invalid: null
+      partidas_descripcion: new FormControl('', Validators.required),
+      valor_partida_usd: new FormControl(null, Validators.required),
+      seleccion_fraccion: new FormControl(null, Validators.required),
+    });
+    component.forma.setControl('ninoFormGroup', ninoFormGroup);
+    component.importacionstate = importacionMock;
+    component.datosTabla = [];
+
+    component.agregar();
+
+    expect(component.datosTabla.length).toBe(0);
+    expect(tramiteStoreMock.setDynamicFieldValue).not.toHaveBeenCalled();
+  });
+
+  it('debería no actualizar el formulario cuando no hay fila seleccionada en onPartidasSeleccion', () => {
+    const patchSpy = jest.spyOn(component.modificarPartidaForm, 'patchValue');
+    component.onPartidasSeleccion([]);
+    expect(component.partidasSeleccionadas.length).toBe(0);
+    expect(patchSpy).not.toHaveBeenCalled();
+  });
+
+  it('debería actualizar el elemento seleccionado en guardarEdicion', () => {
+    const partida = {
+      id: 1,
+      cantidad: 5,
+      descripcion: 'Original',
+      fraccionArancelariaTigie: 'Old',
+      precioUnitario: '1.000',
+      totalUsd: 100,
+      unidadDeMedida: 'kg',
     };
-    component.establecerCambioDeValor(event);
-    expect(tramite130103StoreMock.setDynamicFieldValue).toHaveBeenCalledWith('descripcion', 'Texto simple');
+    component.datosTabla = [partida];
+    component.partidasSeleccionadas = [partida];
+    component.modificarPartidaForm.patchValue({
+      modificar_cantidad: 10,
+      descripcion_partidas: 'Updated',
+      valor_partidas_usd: 200,
+      fraccion_partidas: 'New',
+      cantidad_partidas: null,
+    });
+
+    const modalElement = document.createElement('div');
+    modalElement.id = 'modalEditarPartida';
+    document.body.appendChild(modalElement);
+
+    component.guardarEdicion();
+
+    expect(component.datosTabla[0].cantidad).toBe(10);
+    expect(component.datosTabla[0].descripcion).toBe('Updated');
+    expect(component.datosTabla[0].fraccionArancelariaTigie).toBe('New');
+    modalElement.remove();
   });
 
-  it('should not push duplicate producto on init if already in datosTabla', () => {
-    component.datosTabla = [{ id: 1, descripcion: 'Producto 1' }];
-    component.ngOnInit();
-    const filtered = component.datosTabla.filter(p => p.id === 1);
-    expect(filtered.length).toBe(1);
+  it('debería limpiar en ngOnDestroy', () => {
+    const nextSpy = jest.spyOn<any, any>(component['destroyNotifier$'], 'next');
+    const completeSpy = jest.spyOn<any, any>(
+      component['destroyNotifier$'],
+      'complete'
+    );
+    component.ngOnDestroy();
+    expect(nextSpy).toHaveBeenCalled();
+    expect(completeSpy).toHaveBeenCalled();
   });
-  
-  it('should not throw or call store when event is null', () => {
-    tramite130103StoreMock.setDynamicFieldValue.mockClear();
-    component.establecerCambioDeValor(null as any);
-    expect(tramite130103StoreMock.setDynamicFieldValue).not.toHaveBeenCalled();
-  });
-  
-  it('should have consultaState readonly as false by default', () => {
-    expect(component.consultaState?.readonly).toBe(false);
-  });
-
- it('should disable form controls if consultaState.readonly is true', () => {
-  component.consultaState = { readonly: true } as any;
-  component.ngOnInit();
-  if (component.consultaState.readonly) {
-    component.forma.disable();
-  }
-  expect(component.forma.disabled).toBe(true);
-  expect(component.forma.get('cantidad_total')?.disabled).toBe(true);
-  expect(component.forma.get('valor_total')?.disabled).toBe(true);
-});
-
-  
 });

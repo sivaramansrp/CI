@@ -128,7 +128,7 @@ export class BandejaDeSolicitudesComponent implements OnInit,OnDestroy {
    * Actualiza la propiedad `numeroDeProcedimiento` del objeto de departamento seleccionado
    * con el valor proporcionado en el evento.
    */
-  public procedureNumero(evento: { campo: string; valor: any }): void {
+  public procedureNumero(evento: { campo: string; valor: string }): void {
     const NUMERO_DE_PROCEDIMIENTO = evento.valor;
     this.selectedDepartamentoObj.numeroDeProcedimiento = NUMERO_DE_PROCEDIMIENTO;
   }

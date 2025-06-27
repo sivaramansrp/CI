@@ -437,7 +437,7 @@
     "id": 63,
     "tramite": 130120,
     "linkDashboard": "/se/permiso-importacion/intro-permiso",
-    "linkDepartment": "/se/permiso-importacion/intro-permiso",
+    "linkDepartment": "/pago/permiso-importacion/intro-permiso",
     "department": "se"
   },
   {
@@ -583,8 +583,8 @@
   {
     "id": 84,
     "tramite": 231001,
-    "linkDashboard": "/aviso-de-materiales/datos",
-    "linkDepartment": "/aviso-de-materiales/datos",
+    "linkDashboard": "/semarnat/aviso-de-materiales/datos",
+    "linkDepartment": "/pago/aviso-de-materiales/datos",
     "department": "semarnat"
   },
   {

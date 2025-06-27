@@ -6,19 +6,23 @@
 
                 <div class="col-md-12">
                     <label class="form-label" for="lugar">Lugar *:</label>
-                    <input type="text" class="form-control bg-white" id="lugar" placeholder="Tamaulipas 15 cl: centro"
+                    <input type="text" class="form-control" id="lugar" placeholder="Tamaulipas 15 cl: centro"
                         formControlName="lugar"
+                        [class.bg-white]="!datosDelCertificado.get('lugar')?.disabled"
                         [class.is-invalid]="datosDelCertificado.get('lugar')?.touched && datosDelCertificado.get('lugar')?.invalid"
-                        (change)="setValorStore(datosDelCertificado,'lugar')">
+                        (change)="setValorStore(datosDelCertificado,'lugar')"
+                        >
                     <div class="invalid-feedback">Este campo es obligatorio.</div>
                 </div>
 
                 <div class="col-md-12">
                     <label class="form-label" for="observaciones">Observaciones:</label>
-                    <textarea class="form-control custom-textarea bg-white" id="observaciones"
+                    <textarea class="form-control custom-textarea" id="observaciones"
                         placeholder="OTRAS OBSERVACIONES" formControlName="observaciones"
+                        [class.bg-white]="!datosDelCertificado.get('observaciones')?.disabled"
                         [class.is-invalid]="datosDelCertificado.get('observaciones')?.touched && datosDelCertificado.get('observaciones')?.invalid"
-                        (change)="setValorStore(datosDelCertificado,'observaciones')">
+                        (change)="setValorStore(datosDelCertificado,'observaciones')"
+                        [disabled]="esSoloLectura">
                 </textarea>
                     <div class="invalid-feedback">Este campo es obligatorio.</div>
                 </div>
@@ -32,10 +36,13 @@
     [configuracionTabla]="arregloConfiguracionTabla"
     [datos]="datos || []"
     [tipoSeleccionTabla]="radioDeMesa"
-    (filaSeleccionada)="manejarFilaSeleccionada($event)">
+    (filaSeleccionada)="manejarFilaSeleccionada($event)"
+    [disableSeleccionTablaRadio]="esSoloLectura"
+    >
     </app-tabla-dinamica>
     <div class="col-md-12">
-        <button type="button" class="btn btn-primary col-auto pull-right float-end mt-3" (click)="enModificarFormulario()">
+        <button type="button" class="btn btn-primary col-auto pull-right float-end mt-3" (click)="enModificarFormulario()"
+        [disabled]="esSoloLectura">
             Modificar
         </button>
     </div>

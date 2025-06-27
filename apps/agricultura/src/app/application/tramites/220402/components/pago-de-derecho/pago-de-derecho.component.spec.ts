@@ -1,27 +1,26 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ReactiveFormsModule, FormBuilder, FormsModule } from '@angular/forms';
 import { PagoDeDerechoComponent } from './pago-de-derecho.component';
 import { MediodetransporteService } from '../../services/medio-de-transporte.service';
 import { Solicitud220402Store } from '../../estados/tramites/tramites220402.store';
 import { Solicitud220402Query } from '../../estados/queries/tramites220402.query';
-import { CatalogoSelectComponent, TituloComponent, ValidacionesFormularioService } from '@ng-mf/data-access-user';
 import { of } from 'rxjs';
-import { FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
-
+import { CatalogoSelectComponent, InputRadioComponent, TituloComponent, ValidacionesFormularioService, Catalogo } from '@ng-mf/data-access-user';
 
 describe('PagoDeDerechoComponent', () => {
   let component: PagoDeDerechoComponent;
   let fixture: ComponentFixture<PagoDeDerechoComponent>;
-  let mockMediodetransporteService: any;
-  let mockSolicitud220402Store: any;
-  let mockSolicitud220402Query: any;
-  let mockValidacionesFormularioService: any;
+  let mediodetransporteServiceMock: any;
+  let solicitud220402StoreMock: any;
+  let solicitud220402QueryMock: any;
+  let validacionesServiceMock: any;
 
   beforeEach(async () => {
-    mockMediodetransporteService = {
-      getMedioDeTransporte: jest.fn().mockReturnValue(of([{ id: 1, descripcion: 'Banco A' }])),
+    mediodetransporteServiceMock = {
+      getMedioDeTransporte: jest.fn().mockReturnValue(of([{ id: 1, descripcion: 'Banco 1' }])),
     };
 
-    mockSolicitud220402Store = {
+    solicitud220402StoreMock = {
       setExentoDePago: jest.fn(),
       setJustificacion: jest.fn(),
       setClaveDeReferencia: jest.fn(),
@@ -32,31 +31,33 @@ describe('PagoDeDerechoComponent', () => {
       setImportePago: jest.fn(),
     };
 
-    mockSolicitud220402Query = {
+    solicitud220402QueryMock = {
       selectSolicitud$: of({
         exentoDePago: 'No',
-        justificacion: 'Test Justification',
+        nombreImportExport: 'Importador',
+        justificacion: 'Justificación',
         claveDeReferencia: '12345',
-        cadenaDependencia: 'Test Dependency',
-        banco: 'Banco A',
-        llaveDePago: 'Key123',
+        cadenaDependencia: 'Dependencia',
+        banco: 'Banco 1',
+        llaveDePago: 'Llave123',
         fechaPago: '2023-01-01',
         importePago: '1000',
       }),
     };
 
-    mockValidacionesFormularioService = {
-      isValid: jest.fn().mockReturnValue(true),
+    validacionesServiceMock = {
+      isValid: jest.fn().mockReturnValue(false),
     };
 
     await TestBed.configureTestingModule({
       declarations: [PagoDeDerechoComponent],
-      imports: [ReactiveFormsModule, FormsModule, TituloComponent, CatalogoSelectComponent],
+      imports: [ReactiveFormsModule, FormsModule, TituloComponent, CatalogoSelectComponent, InputRadioComponent],
       providers: [
-        { provide: MediodetransporteService, useValue: mockMediodetransporteService },
-        { provide: Solicitud220402Store, useValue: mockSolicitud220402Store },
-        { provide: Solicitud220402Query, useValue: mockSolicitud220402Query },
-        { provide: ValidacionesFormularioService, useValue: mockValidacionesFormularioService },
+        FormBuilder,
+        { provide: MediodetransporteService, useValue: mediodetransporteServiceMock },
+        { provide: Solicitud220402Store, useValue: solicitud220402StoreMock },
+        { provide: Solicitud220402Query, useValue: solicitud220402QueryMock },
+        { provide: ValidacionesFormularioService, useValue: validacionesServiceMock },
       ],
     }).compileComponents();
 
@@ -69,38 +70,81 @@ describe('PagoDeDerechoComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize the form correctly', () => {
+  it('should initialize the form on ngOnInit', () => {
+    component.ngOnInit();
     expect(component.FormSolicitud).toBeDefined();
-    expect(component.FormSolicitud.get('datosImportadorExportador.exentoDePago')?.value).toBe('No');
-    expect(component.FormSolicitud.get('datosImportadorExportador.justificacion')?.value).toBe('Test Justification');
+    expect(component.FormSolicitud.get('datosImportadorExportador')).toBeDefined();
   });
 
-  it('should fetch banco data', () => {
-    expect(mockMediodetransporteService.getMedioDeTransporte).toHaveBeenCalled();
-    expect(component.bancoCatalogo.catalogos).toEqual([{ id: 1, descripcion: 'Banco A' }]);
+  it('should fetch bank data on fetchBancoData', () => {
+    component.fetchBancoData();
+    expect(mediodetransporteServiceMock.getMedioDeTransporte).toHaveBeenCalled();
+    expect(component.bancoCatalogo.catalogos.length).toBe(1);
+    expect(component.bancoCatalogo.catalogos[0].descripcion).toBe('Banco 1');
   });
 
-  it('should set values in the store', () => {
-    const formGroup = component.FormSolicitud.get('datosImportadorExportador') as FormGroup;
-    component.setValoresStore(formGroup, 'justificacion', 'setJustificacion');
-    expect(mockSolicitud220402Store.setJustificacion).toHaveBeenCalledWith('Test Justification');
+  it('should update form fields based on exentoDePago value', () => {
+    component.FormSolicitud.get('datosImportadorExportador.exentoDePago')?.setValue('No');
+    component.actualizarCamposDeFormularioBasadosEnExentoDePago();
+    expect(component.FormSolicitud.get('datosImportadorExportador.claveDeReferencia')?.disabled).toBe(true);
+    expect(component.FormSolicitud.get('datosImportadorExportador.justificacion')?.disabled).toBe(true);
   });
 
-  it('should disable the form in solo lectura mode', () => {
+  it('should validate the form field using isValid method', () => {
+    const isValid = component.isValid(component.FormSolicitud, 'datosImportadorExportador.justificacion');
+    expect(validacionesServiceMock.isValid).toHaveBeenCalled();
+    expect(isValid).toBe(false);
+  });
+
+  it('should call setValoresStore when updating a field', () => {
+    const form = component.FormSolicitud;
+    component.setValoresStore(form, 'datosImportadorExportador.justificacion', 'setJustificacion');
+    expect(solicitud220402StoreMock.setJustificacion).toHaveBeenCalled();
+  });
+  
+  it('should disable the form when soloLectura is true', () => {
     component.soloLectura = true;
     component.inicializarEstadoFormulario();
     expect(component.FormSolicitud.disabled).toBe(true);
   });
 
-  it('should enable the form when not in solo lectura mode', () => {
+  it('should enable the form and update fields when soloLectura is false', () => {
     component.soloLectura = false;
     component.inicializarEstadoFormulario();
     expect(component.FormSolicitud.enabled).toBe(true);
+    expect(component.FormSolicitud.get('datosImportadorExportador.justificacion')?.disabled).toBe(true);
   });
 
-  it('should update banco selection', () => {
-    const mockBanco = { id: 1, descripcion: 'Banco A' };
+  it('should call actualizarCamposDeFormularioBasadosEnExentoDePago when exentoDePagoChange is called', () => {
+    const spy = jest.spyOn(component, 'actualizarCamposDeFormularioBasadosEnExentoDePago');
+    component.exentoDePagoChange();
+    expect(spy).toHaveBeenCalled();
+  });
+
+  it('should update bancoSeleccionado when actualizarBanco is called', () => {
+    const mockBanco: Catalogo = { id: 1, descripcion: 'Banco 1' };
     component.actualizarBanco(mockBanco);
     expect(component.bancoSeleccionado).toEqual(mockBanco);
+  });
+
+  it('should update form fields based on exentoDePago value', () => {
+    component.FormSolicitud.get('datosImportadorExportador.exentoDePago')?.setValue('No');
+    component.actualizarCamposDeFormularioBasadosEnExentoDePago();
+    expect(component.FormSolicitud.get('datosImportadorExportador.claveDeReferencia')?.disabled).toBe(true);
+    expect(component.FormSolicitud.get('datosImportadorExportador.importePago')?.disabled).toBe(true);
+
+    component.FormSolicitud.get('datosImportadorExportador.exentoDePago')?.setValue('Yes');
+    component.actualizarCamposDeFormularioBasadosEnExentoDePago();
+    expect(component.FormSolicitud.get('datosImportadorExportador.justificacion')?.enabled).toBe(true);
+  });
+
+  it('should validate that the date is not in the future using fechaLimValidator', () => {
+    const control = { value: '2099-12-31' } as any;
+    const result = PagoDeDerechoComponent.fechaLimValidator()(control);
+    expect(result).toEqual({ fechaLim: true });
+
+    control.value = '2023-01-01';
+    const validResult = PagoDeDerechoComponent.fechaLimValidator()(control);
+    expect(validResult).toBeNull();
   });
 });

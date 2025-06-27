@@ -3,7 +3,7 @@ import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { Catalogo, CatalogoSelectComponent, InputFecha, InputFechaComponent, InputRadioComponent, Notificacion, NotificacionesComponent, Pedimento, TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ReplaySubject, Subject, map, takeUntil } from 'rxjs';
+import { ReplaySubject, map, takeUntil } from 'rxjs';
 import { Solicitud32508State, Tramite32508Store } from '../state/Tramite32508.store';
 import { AdaceService } from '../services/adace.service';
 import { CommonModule } from '@angular/common';
@@ -152,13 +152,8 @@ export class AvisoComponent implements OnInit, AfterViewInit, OnDestroy {
     private validacionesService: ValidacionesFormularioService,
     private consultaioQuery: ConsultaioQuery
   ) { }
-  ngAfterViewInit(): void {
-    this.avisoForm.get('tipoDictamen')?.value === '' ? 'disminucion' : this.avisoForm.get('tipoDictamen')?.value ;
-      this.setValoresStore( this.avisoForm, 'radioParcial', 'setRadioPartial' )
 
-  }
-
-  /**
+    /**
    * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
    * Configura el formulario, obtiene datos iniciales y suscribe al estado global.
    */
@@ -185,7 +180,12 @@ export class AvisoComponent implements OnInit, AfterViewInit, OnDestroy {
     this.obtenerDatosAnoPeriodo();
     this.obtenerDatosMesPeriodo();
   this.setValoresStore( this.avisoForm, 'radioParcial', 'setRadioPartial' )
+  }
 
+  ngAfterViewInit(): void {
+    if (this.avisoForm.get('tipoDictamen')?.value === '') {
+      this.avisoForm.get('tipoDictamen')?.setValue('disminucion');
+    }
   }
 
   /**

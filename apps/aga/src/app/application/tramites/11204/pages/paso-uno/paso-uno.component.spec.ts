@@ -1,7 +1,7 @@
-// @ts-nocheck
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { PasoUnoComponent } from './paso-uno.component';
+import { provideHttpClient } from '@angular/common/http';
 
 describe('PasoUnoComponent', () => {
   let fixture: ComponentFixture<PasoUnoComponent>;
@@ -10,7 +10,7 @@ describe('PasoUnoComponent', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [FormsModule, ReactiveFormsModule, PasoUnoComponent],
-      providers: []
+      providers: [provideHttpClient()]
     }).overrideComponent(PasoUnoComponent, {
 
     }).compileComponents();
@@ -27,7 +27,7 @@ describe('PasoUnoComponent', () => {
   });
 
   it('should run #seleccionaTab()', async () => {
-    component.seleccionaTab({});
+    component.seleccionaTab(1);
   });
 
 });

@@ -1,8 +1,7 @@
 import { FilaData, FilaData2, FilaTablaData } from '../models/fila-modal';
-
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
-import { TramitesAsociados } from '../models/destinatario.model';
 import { MercanciasInfo } from '../models/mercancia.model';
+import { TramitesAsociados } from '../models/destinatario.model';
 
 /**
  * Configuración de la tabla para destinatarios.

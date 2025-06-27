@@ -42,11 +42,13 @@ export class CancelacionesComponent {
   getValorIndice(e: AccionBoton) :void{
     if (e.valor > 0 && e.valor < 5) {
       this.indice = e.valor;
+      if(this.wizardComponent) {
       if (e.accion === 'cont') {
         this.wizardComponent.siguiente();
       } else {
         this.wizardComponent.atras();
       }
+    }
     }
   }
 }

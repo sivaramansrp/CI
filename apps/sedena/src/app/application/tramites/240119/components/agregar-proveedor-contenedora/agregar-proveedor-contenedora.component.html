@@ -1,4 +1,5 @@
 <app-agregar-proveedor-custom
-[formaDatos]="terechosDatos$ | async"
+  [formaDatos]="terechosDatos$ | async"
   (updateProveedorTablaDatos)="updateProveedorTablaDatos($event)"
+  (cancelarEventListener)="cerrar.emit()"
 ></app-agregar-proveedor-custom>

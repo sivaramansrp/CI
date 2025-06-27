@@ -42,19 +42,20 @@ describe('DatosDeLaMercanciaComponent', () => {
 
     fixture = TestBed.createComponent(DatosDeLaMercanciaComponent);
     component = fixture.componentInstance;
+    component.consultaState = { readonly: false } as any;
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize datosDelMercancia with DATOS_DE_LA_MERCANCIA', () => {
+  it('debe inicializar datosDelMercancia con DATOS_DE_LA_MERCANCIA', () => {
     expect(component.datosDelMercancia).toBeDefined();
     expect(Array.isArray(component.datosDelMercancia)).toBe(true);
   });
 
-  it('should call datosFraccion and datosUMT on ngOnInit', () => {
+  it('debe llamar a datosFraccion y datosUMT en ngOnInit', () => {
     const fraccionSpy = jest.spyOn(component, 'datosFraccion');
     const umtSpy = jest.spyOn(component, 'datosUMT');
     component.ngOnInit();
@@ -62,29 +63,29 @@ describe('DatosDeLaMercanciaComponent', () => {
     expect(umtSpy).toHaveBeenCalled();
   });
 
-  it('should set solicitudDeRegistroState on ngOnInit subscription', () => {
-    const mockState = { test: 'value' };
+  it('debe establecer solicitudDeRegistroState en la suscripción de ngOnInit', () => {
+    const mockState = { test: 'valor' };
     component['importacionesAgropecuariasQuery'].selectSolicitudDeRegistroTpl$ = of(mockState);
     component.ngOnInit();
     expect(component.solicitudDeRegistroState).toEqual(mockState);
   });
 
   describe('establecerCambioDeValor', () => {
-    it('should update store and form value with primitive', () => {
+    it('debe actualizar el store y el valor del formulario con un primitivo', () => {
       const event = { campo: 'campo1', valor: 'valor1' };
       component.establecerCambioDeValor(event);
       expect(importacionesAgropecuariasStoreMock.setDynamicFieldValue).toHaveBeenCalledWith('campo1', 'valor1');
       expect(servicioDeFormularioServiceMock.setFormValue).toHaveBeenCalledWith('datosMercanciaForm', { campo1: 'valor1' });
     });
 
-    it('should stringify object values', () => {
+    it('debe convertir a string los valores objeto', () => {
       const event = { campo: 'campo2', valor: { a: 1 } };
       component.establecerCambioDeValor(event);
       expect(importacionesAgropecuariasStoreMock.setDynamicFieldValue).toHaveBeenCalledWith('campo2', JSON.stringify({ a: 1 }));
       expect(servicioDeFormularioServiceMock.setFormValue).toHaveBeenCalledWith('datosMercanciaForm', { campo2: { a: 1 } });
     });
 
-    it('should do nothing if event is undefined', () => {
+    it('no debe hacer nada si el evento es undefined', () => {
       component.establecerCambioDeValor(undefined as any);
       expect(importacionesAgropecuariasStoreMock.setDynamicFieldValue).not.toHaveBeenCalled();
       expect(servicioDeFormularioServiceMock.setFormValue).not.toHaveBeenCalled();
@@ -92,7 +93,7 @@ describe('DatosDeLaMercanciaComponent', () => {
   });
 
   describe('datosFraccion', () => {
-    it('should update opciones for fraccion_arancelaria if not set', () => {
+    it('debe actualizar opciones para fraccion_arancelaria si no está definido', () => {
       const mockFraccion = [{ id: 1, descripcion: 'desc1' }];
       importacionesAgropecuariasServiceMock.datosDeLaSolicitud.mockReturnValueOnce(of({ fraccion: mockFraccion }));
       const field = component.datosDelMercancia.find((d: any) => d.campo === 'fraccion_arancelaria');
@@ -101,7 +102,7 @@ describe('DatosDeLaMercanciaComponent', () => {
       expect(field && field.opciones).toEqual([{ id: 1, descripcion: 'desc1' }]);
     });
 
-    it('should not update opciones if field already has opciones', () => {
+    it('no debe actualizar opciones si el campo ya tiene opciones', () => {
       const mockFraccion = [{ id: 1, descripcion: 'desc1' }];
       importacionesAgropecuariasServiceMock.datosDeLaSolicitud.mockReturnValueOnce(of({ fraccion: mockFraccion }));
       const field = component.datosDelMercancia.find((d: any) => d.campo === 'fraccion_arancelaria');
@@ -110,19 +111,17 @@ describe('DatosDeLaMercanciaComponent', () => {
       expect(field && field.opciones).toEqual([{ label: 'ya existe', value: '99' }]);
     });
 
-    it('should not update opciones if field is not found', () => {
-      // Remove the field
+    it('no debe actualizar opciones si no se encuentra el campo', () => {
       const index = component.datosDelMercancia.findIndex((d: any) => d.campo === 'fraccion_arancelaria');
       const backup = component.datosDelMercancia[index];
       (component.datosDelMercancia as any).splice(index, 1);
       expect(() => component.datosFraccion()).not.toThrow();
-      // Restore for other tests
       (component.datosDelMercancia as any).splice(index, 0, backup);
     });
   });
 
   describe('datosUMT', () => {
-    it('should update opciones for umt if not set', () => {
+    it('debe actualizar opciones para umt si no está definido', () => {
       const mockUMT = [{ id: 2, descripcion: 'desc2' }];
       importacionesAgropecuariasServiceMock.datosDeLaSolicitud.mockReturnValueOnce(of({ UMT: mockUMT }));
       const field = component.datosDelMercancia.find((d: any) => d.campo === 'umt');
@@ -131,7 +130,7 @@ describe('DatosDeLaMercanciaComponent', () => {
       expect(field && field.opciones).toEqual([{ id: 2, descripcion: 'desc2' }]);
     });
 
-    it('should not update opciones if field already has opciones', () => {
+    it('no debe actualizar opciones si el campo ya tiene opciones', () => {
       const mockUMT = [{ id: 2, descripcion: 'desc2' }];
       importacionesAgropecuariasServiceMock.datosDeLaSolicitud.mockReturnValueOnce(of({ UMT: mockUMT }));
       const field = component.datosDelMercancia.find((d: any) => d.campo === 'umt');
@@ -140,18 +139,16 @@ describe('DatosDeLaMercanciaComponent', () => {
       expect(field && field.opciones).toEqual([{ label: 'ya existe', value: '99' }]);
     });
 
-    it('should not update opciones if field is not found', () => {
-      // Remove the field
+    it('no debe actualizar opciones si no se encuentra el campo', () => {
       const index = component.datosDelMercancia.findIndex((d: any) => d.campo === 'umt');
       const backup = component.datosDelMercancia[index];
       (component.datosDelMercancia as any).splice(index, 1);
       expect(() => component.datosUMT()).not.toThrow();
-      // Restore for other tests
       (component.datosDelMercancia as any).splice(index, 0, backup);
     });
   });
 
-  it('should clean up subscriptions on ngOnDestroy', () => {
+  it('debe limpiar las suscripciones en ngOnDestroy', () => {
     const nextSpy = jest.spyOn(component['destroy$'], 'next');
     const completeSpy = jest.spyOn(component['destroy$'], 'complete');
     component.ngOnDestroy();

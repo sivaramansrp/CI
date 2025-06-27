@@ -7,7 +7,8 @@ import { ConsultaioQuery, ConsultaioState } from '@libs/shared/data-access-user/
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 class MockSolicitud120602Service {
-  getSomething = jest.fn(() => of([]));
+  getEmpresaSolicitudData = jest.fn(() => of([]));
+  actualizarEstadoFormulario = jest.fn();
 }
 
 describe('DatosComponent', () => {
@@ -18,30 +19,30 @@ describe('DatosComponent', () => {
   let mockConsultaioQuery: jest.Mocked<ConsultaioQuery>;
 
   const consultaStateUpdateTrue: ConsultaioState = {
-  update: true,
-  procedureId: '',
-  parameter: '',
-  department: '',
-  folioTramite: '',
-  tipoDeTramite: '',
-  estadoDeTramite: '',
-  readonly: false,
-  create: false,
-  consultaioSolicitante: null
-};
+    update: true,
+    procedureId: '',
+    parameter: '',
+    department: '',
+    folioTramite: '',
+    tipoDeTramite: '',
+    estadoDeTramite: '',
+    readonly: false,
+    create: false,
+    consultaioSolicitante: null
+  };
 
   const consultaStateUpdateFalse: ConsultaioState = {
-  update: false,
-  procedureId: '',
-  parameter: '',
-  department: '',
-  folioTramite: '',
-  tipoDeTramite: '',
-  estadoDeTramite: '',
-  readonly: false,
-  create: true,
-  consultaioSolicitante: null
-};
+    update: false,
+    procedureId: '',
+    parameter: '',
+    department: '',
+    folioTramite: '',
+    tipoDeTramite: '',
+    estadoDeTramite: '',
+    readonly: false,
+    create: true,
+    consultaioSolicitante: null
+  };
 
   beforeEach(async () => {
     mockSolicitudService = {
@@ -67,17 +68,17 @@ describe('DatosComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize consultaState and set esDatosRespuesta to true when update is false', () => {
+  it('debe inicializar consultaState y establecer esDatosRespuesta en true cuando update es false', () => {
     component.ngOnInit();
     expect(component.consultaState).toEqual(consultaStateUpdateFalse);
     expect(component.esDatosRespuesta).toBe(true);
   });
 
-  it('should call guardarDatosFormulario when update is true', () => {
+  it('debe llamar a guardarDatosFormulario cuando update es true', () => {
     mockConsultaioQuery.selectConsultaioState$ = of(consultaStateUpdateTrue);
     const guardarSpy = jest.spyOn(component, 'guardarDatosFormulario');
     component.ngOnInit();

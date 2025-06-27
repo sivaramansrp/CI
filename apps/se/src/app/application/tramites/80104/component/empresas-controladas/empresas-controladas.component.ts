@@ -69,7 +69,7 @@ export class EmpresasControladasComponent implements OnDestroy {
    * Lista de encabezados de la tabla de empresas terciarizadas.
    * @type {ConfiguracionColumna<DisponsibleFiscal>[]}
    */
-  estadosCatalogo: Catalogo[]=catalogo.estadosCatalogos;
+  estadosCatalogo: Catalogo[]=catalogo?.estadosCatalogos;
 
    /**
    * Obtiene la lista de estados desde el servicio y actualiza la propiedad estadoCatalogo.
