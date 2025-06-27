@@ -543,7 +543,6 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
 
   ngOnInit(): void {
     this.validaTipoPersona();
-    // Peticiones a las apis
     this.inicializaCatalogos();
 
     this.tramite5701Query.selectSolicitud$
@@ -565,6 +564,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
       .subscribe();
 
     this.crearFormSolicitud();
+
     this.datosImportadorExportador.get('tipoEmpresaCertificada')?.disable();
 
     this.FormSolicitud.statusChanges
@@ -2166,7 +2166,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
     };
 
     if (ADUANA) {
-      this.despacho.get('idSeccionDespacho')?.setValue(SIN_VALOR);
+      // this.despacho.get('idSeccionDespacho')?.setValue(SIN_VALOR);
       this.seccionAduanaService
         .getListaSeccionesAduanas(ADUANA)
         .pipe(
@@ -2183,20 +2183,13 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
                 return seccion;
               });
               this.seccionAduanera = response?.datos;
-
+              this.despacho.get('idSeccionDespacho')?.setValue(SIN_VALOR);
               this.despacho.get('idSeccionDespacho')?.enable();
             } else {
-              this.seccionAduanera = [
-                {
-                  clave: SIN_ITEMS,
-                  descripcion: 'No cuenta con sección aduanera',
-                },
-              ];
               this.despacho.get('idSeccionDespacho')?.enable();
-              this.despacho.get('idSeccionDespacho')?.setValue('-2');
+              this.despacho.get('idSeccionDespacho')?.setValue(SIN_ITEMS);
               this.despacho.get('idSeccionDespacho')?.disable();
             }
-
             return this.recintoService.getListaRecintos(ADUANA);
           }),
           tap((responseRecinto) => {
@@ -2213,16 +2206,10 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
                 return recinto;
               });
               this.recintoCatalogo = responseRecinto?.datos;
+              this.despacho.get('nombreRecinto')?.setValue(SIN_VALOR);
               this.despacho.get('nombreRecinto')?.enable();
             } else {
-              this.recintoCatalogo = [
-                {
-                  id_recinto_fiscalizado: SIN_ITEMS,
-                  nombre: 'No cuenta con recinto',
-                  descripcion: 'No cuenta con recinto',
-                },
-              ];
-
+              this.despacho.get('nombreRecinto')?.enable();
               this.despacho.get('nombreRecinto')?.setValue(SIN_ITEMS);
               this.despacho.get('nombreRecinto')?.disable();
             }
@@ -2230,13 +2217,13 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
           takeUntil(this.destroyNotifier$)
         )
         .subscribe();
-
-      this.setValoresStore(
-        this.despacho,
-        'idAduanaDespacho',
-        'setIdAduanaDespacho'
-      );
     }
+
+    this.tramite5701Store.update({
+      idAduanaDespacho: ADUANA,
+      idSeccionDespacho: this.despacho.get('idSeccionDespacho')?.value,
+      nombreRecinto: this.despacho.get('nombreRecinto')?.value,
+    });
   }
 
   /**
