@@ -157,3 +157,17 @@ export interface CadenaOriginalRequest {
    */
   fecha_firma: string;
 }
+/**
+ * Representa la cadena original generada y su firma digital opcional.
+ */
+export interface CadenaOriginalGenerada {
+  /**
+   * Cadena original generada a partir de los datos de la solicitud.
+   */
+  cadenaOriginal: string;
+
+  /**
+   * Firma digital de la cadena original (opcional).
+   */
+  firmaDigital?: string;
+}

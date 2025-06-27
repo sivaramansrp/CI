@@ -86,37 +86,37 @@ describe('AggregarComplimentosComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should set datosComplimentos from observable', () => {
+  it('debe establecer datosComplimentos desde el observable', () => {
     expect(component.datosComplimentos).toEqual(mockComplimentos);
   });
 
-  it('should call setDatosComplimentos when modifierComplimentos is called', () => {
+  it('debe llamar a setDatosComplimentos cuando se llama a modifierComplimentos', () => {
     component.modifierComplimentos(mockComplimentos);
     expect(store.setDatosComplimentos).toHaveBeenCalledWith(mockComplimentos);
   });
 
   describe('accionistasAgregados', () => {
-    it('should call aggargarTablaDatosComplimentos for accionista with RFC', () => {
+    it('debe llamar a aggargarTablaDatosComplimentos para accionista con RFC', () => {
       component.accionistasAgregados(mockAccionista);
       expect(store.aggregarTablaDatosComplimentos).toHaveBeenCalledWith(mockAccionista);
     });
 
-    it('should call aggargarTablaDatosComplimentosExtranjera for accionista without RFC', () => {
+    it('debe llamar a aggargarTablaDatosComplimentosExtranjera para accionista sin RFC', () => {
       component.accionistasAgregados(mockAccionistaExtranjero);
       expect(store.aggregarTablaDatosComplimentosExtranjera).toHaveBeenCalledWith(mockAccionistaExtranjero);
     });
 
-    it('should not call any store method if accionistasAgregados is called with null', () => {
+    it('no debe llamar a ningún método de la tienda si se llama a accionistasAgregados con null', () => {
       component.accionistasAgregados(null);
       expect(store.aggregarTablaDatosComplimentos).not.toHaveBeenCalled();
       expect(store.aggregarTablaDatosComplimentosExtranjera).not.toHaveBeenCalled();
     });
 
-    it('should not call any store method if accionistasAgregados is called with undefined', () => {
+    it('no debe llamar a ningún método de la tienda si se llama a accionistasAgregados con undefined', () => {
       component.accionistasAgregados(undefined);
       expect(store.aggregarTablaDatosComplimentos).not.toHaveBeenCalled();
       expect(store.aggregarTablaDatosComplimentosExtranjera).not.toHaveBeenCalled();
@@ -124,30 +124,30 @@ describe('AggregarComplimentosComponent', () => {
   });
 
   describe('accionistasEliminados', () => {
-    it('should call eliminarTablaDatosComplimentos with given data', () => {
+    it('debe llamar a eliminarTablaDatosComplimentos con los datos proporcionados', () => {
       component.accionistasEliminados([mockAccionista]);
       expect(store.eliminarTablaDatosComplimentos).toHaveBeenCalledWith([mockAccionista]);
     });
 
-    it('should handle empty array', () => {
+    it('debe manejar el array vacío', () => {
       component.accionistasEliminados([]);
       expect(store.eliminarTablaDatosComplimentos).toHaveBeenCalledWith([]);
     });
   });
 
   describe('accionistasExtranjerosEliminado', () => {
-    it('should call eliminarTablaDatosComplimentosExtranjera with given data', () => {
+    it('debe llamar a eliminarTablaDatosComplimentosExtranjera con los datos proporcionados', () => {
       component.accionistasExtranjerosEliminado([mockAccionistaExtranjero]);
       expect(store.eliminarTablaDatosComplimentosExtranjera).toHaveBeenCalledWith([mockAccionistaExtranjero]);
     });
 
-    it('should handle empty array', () => {
+    it('debe manejar el array vacío', () => {
       component.accionistasExtranjerosEliminado([]);
       expect(store.eliminarTablaDatosComplimentosExtranjera).toHaveBeenCalledWith([]);
     });
   });
 
-  it('should complete destroyNotifier$ when manually called', () => {
+  it('debe completar destroyNotifier$ cuando se llama manualmente', () => {
     const nextSpy = jest.spyOn(component['destroyNotifier$'], 'next');
     const completeSpy = jest.spyOn(component['destroyNotifier$'], 'complete');
     component['destroyNotifier$'].next();

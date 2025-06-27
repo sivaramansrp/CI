@@ -117,7 +117,8 @@ export class AcuseComponent implements OnChanges {
 
     this.documentosService.generarDoc(BODY).pipe(
       switchMap(response => {
-        const LLAVEARCHIVO = response.datos.llave_archivo;
+        const DATOS = response.datos as { llave_archivo: string };
+        const LLAVEARCHIVO = DATOS.llave_archivo;
         return this.documentosService.getVisualizarDoc(LLAVEARCHIVO);
       }),
       catchError(error => {

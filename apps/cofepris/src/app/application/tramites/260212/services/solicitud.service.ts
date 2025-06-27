@@ -2,8 +2,9 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { EstadoFisico, OpcionesPublicacion, SolicitudModel } from '../models/permiso-maquila.models';
+import { ClaveModel,EstadoFisico, OpcionesPublicacion, SolicitudModel } from '../models/permiso-maquila.models';
 import { CatalogoResponse } from '@libs/shared/data-access-user/src';
+
 
 
 
@@ -63,5 +64,13 @@ export class SolicitudService {
    getClasificacionProducto(){
     return this.http.get<[]>('/assets/json/260212/clasificacionProducto.json')
   }
+
+  /**
+   * Recupera los datos de SCIAN desde un archivo JSON local.
+   * @returns {Observable<ClaveModel[]>} Un observable con los datos de SCIAN.
+  */
+  getScianDatos(): Observable<ClaveModel[]> {
+    return this.http.get<ClaveModel[]>('assets/json/260402/scianDatos.json');
+   }
  
 }

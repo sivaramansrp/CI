@@ -7,11 +7,11 @@ import {
   CAMPO_VACIO,
   Catalogo,
   CatalogoPaises,
+  Catalogos,
   CrossListLable,
   DatosAgregarFormulario,
   FechasService,
   FormulariosService,
-  ICatalogo,
   InputHoraComponent,
   MENSAJE_ALERTA_NO_FECHAS,
   MSG_ALERTA_ELIMINAR_ELEMENTO,
@@ -216,12 +216,12 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
   /**
    * Catalogo de aduanas disponibles.
    */
-  aduanas!: ICatalogo[];
+  aduanas!: Catalogos[];
 
   /**
    * Catalogo de secciones aduaneras disponibles.
    */
-  seccionAduanera!: ICatalogo[];
+  seccionAduanera!: Catalogos[];
 
   /**
    * Catalogo de tipos de operación.
@@ -884,7 +884,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
 
     const CATALOGO_ADUANAS$ = this.aduanaService.getListaAduanas().pipe(
       map((resp) => {
-        resp.datos.map((aduana: ICatalogo) => {
+        resp.datos.map((aduana: Catalogos) => {
           aduana.title = aduana.descripcion;
           aduana.descripcion =
             aduana.descripcion.length > 28
