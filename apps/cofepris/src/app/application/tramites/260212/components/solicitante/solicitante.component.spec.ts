@@ -10,7 +10,7 @@ describe('SolicitanteComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [],
-      imports: [ReactiveFormsModule, CommonModule, TituloComponent,SolicitanteComponent],
+      imports: [ReactiveFormsModule, CommonModule, TituloComponent, SolicitanteComponent],
     }).compileComponents();
 
     const fixture = TestBed.createComponent(SolicitanteComponent);
@@ -21,11 +21,11 @@ describe('SolicitanteComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
+  it('debería crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
- it('should set default values for form controls correctly', () => {
+  it('debería establecer los valores predeterminados de los controles del formulario correctamente', () => {
     component.establecerValoresDeFormulario();
 
     expect(component.solicitudForm.get('rfc')?.value).toBe('AALM87326');
