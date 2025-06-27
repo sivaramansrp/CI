@@ -205,7 +205,6 @@ export class LibBandejaComponent<T extends Re > implements OnInit {
   public onFilaClic(event: T): void {
     const ROW_OBJETO = event as unknown as BandejaDeTareasPendientes;
     const PROCEDURE: number = Number(ROW_OBJETO.numeroDeProcedimiento);
-    ROW_OBJETO.origin = "FLUJO_FUNCIONARIO_EVALUAR";
     const ORIGIN: string = ROW_OBJETO.origin; // Inicializar ORIGEN con un valor predeterminado
     this.tramiteData = tramiteDetailsData.filter(
       (v) => v.tramite === PROCEDURE

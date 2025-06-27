@@ -11,6 +11,7 @@ export interface CatalogosResponse {
 export interface Catalogos {
     clave: string;
     descripcion: string;
+    title?: string; // Campo opcional para almacenar el título
 }
 
 /** Modelo para almacenar la respuesta de las apis de catálogos.

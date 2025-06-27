@@ -1,11 +1,24 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { base64ToHex, encodeToISO88591Hex } from '@libs/shared/data-access-user/src/core/utils/utilerias';
+import {
+  base64ToHex,
+  encodeToISO88591Hex,
+} from '@libs/shared/data-access-user/src/core/utils/utilerias';
+import { CadenaOriginalRequest } from '@libs/shared/data-access-user/src/core/models/shared/firma-electronica/request/cadena-original-request.model';
 
-import { CadenaOriginalGenerada, CadenaOriginalRequest } from '@libs/shared/data-access-user/src/core/models/shared/firma-electronica/request/cadena-original-request.model';
-
-import { CadenaOriginalService, DocumentoService, TramiteFolioService, TramiteFolioStore } from '@ng-mf/data-access-user';
-import { Subject, catchError, switchMap, takeUntil, tap, throwError } from 'rxjs';
-
+import {
+  CadenaOriginalService,
+  DocumentoService,
+  TramiteFolioService,
+  TramiteFolioStore,
+} from '@ng-mf/data-access-user';
+import {
+  Subject,
+  catchError,
+  switchMap,
+  takeUntil,
+  tap,
+  throwError,
+} from 'rxjs';
 
 import { BaseResponse } from '../../../../core/models/5701/base-response.model';
 import { FirmaElectronicaService } from '@libs/shared/data-access-user/src/core/services/shared/firma-electronica/firma-electronica.service';
@@ -15,21 +28,22 @@ import { Router } from '@angular/router';
 import { Tramite5701Query } from '../../../../core/queries/tramite5701.query';
 import { Tramite5701Store } from '../../../../core/estados/tramites/tramite5701.store';
 
-
-
+/**
+ * Componente que representa el paso tres del proceso de solicitud de documentos.
+ * Este componente se encarga de manejar la firma del documento y redirigir al usuario al
+ * acuse del trámite una vez que la firma ha sido obtenida.
+ */
 @Component({
   selector: 'paso-tres',
   templateUrl: './paso-tres.component.html',
   styleUrl: './paso-tres.component.scss',
 })
 export class PasoTresComponent implements OnInit, OnDestroy {
-
   /**
- * URL del servicio o endpoint al que se realizará la solicitud relacionada con la firma.
- * Puede ser utilizado para enviar la firma generada o para obtener la cadena original.
- */
+   * URL del servicio o endpoint al que se realizará la solicitud relacionada con la firma.
+   * Puede ser utilizado para enviar la firma generada o para obtener la cadena original.
+   */
   url: string = '';
-
 
   /**
    * Cadena original generada a partir de los datos del trámite.
@@ -71,11 +85,10 @@ export class PasoTresComponent implements OnInit, OnDestroy {
   };
 
   /**
-   * @description Constructor del componente PasoTresComponent.
-   * @param router - Inyecta el servicio Router para la navegación.
-   * @param tramiteFolioServices - Inyecta el servicio TramiteFolioService para obtener los datos del trámite.
-   * @param tramiteStore - Inyecta el store TramiteFolioStore para manejar el estado del trámite.
-   * @param firmaService - Inyecta el servicio DocumentosService para manejar la firma de documentos.
+   * Constructor del componente PasoTresComponent.
+   * router - Inyecta el servicio Router para la navegación.
+   * tramiteFolioServices - Inyecta el servicio TramiteFolioService para obtener los datos del trámite.
+   *  tramiteStore - Inyecta el store TramiteFolioStore para manejar el estado del trámite.
    */
   constructor(
     private router: Router,
@@ -85,8 +98,8 @@ export class PasoTresComponent implements OnInit, OnDestroy {
     private tramite5701Query: Tramite5701Query,
     private tramite5701Store: Tramite5701Store,
     private cadenaOriginalService: CadenaOriginalService,
-    private documentoService : DocumentoService
-  ) { }
+    private documentoService: DocumentoService
+  ) {}
 
   /**
    * Método de ciclo de vida de Angular que se llama una vez que el componente ha sido inicializado.
@@ -107,6 +120,13 @@ export class PasoTresComponent implements OnInit, OnDestroy {
   obtenerCadenaOriginal(): void {
     this.cadenaOriginalService.generarCadena<CadenaOriginalRequest>().subscribe({
       next: (response) => {
+        this.datosCadena = response.datos;
+        this.firma.obtenerCadenaOriginal(this.datosCadena).subscribe({
+          next: (resp) => {
+            this.cadenaOriginal = resp.datos;
+          },
+          error: (err) => console.error('Error al generar cadena:', err),
+        });
         if (response.datos) {
           this.datosCadena = response.datos;
           this.firma.obtenerCadenaOriginal<CadenaOriginalGenerada>(this.datosCadena).subscribe({
@@ -119,7 +139,7 @@ export class PasoTresComponent implements OnInit, OnDestroy {
           console.error('response.datos is undefined');
         }
       },
-      error: (err) => console.error('Error al cargar datos del trámite:', err)
+      error: (err) => console.error('Error al cargar datos del trámite:', err),
     });
   }
 
@@ -127,11 +147,15 @@ export class PasoTresComponent implements OnInit, OnDestroy {
    * Maneja el evento de firma y obtiene los datos de la firma.
    * @param datos - Objeto que contiene la firma, número de serie del certificado y RFC.
    */
-  datosFirma(datos: { firma: string; certSerialNumber: string; rfc: string, fechaFin: string }): void {
+  datosFirma(datos: {
+    firma: string;
+    certSerialNumber: string;
+    rfc: string;
+    fechaFin: string;
+  }): void {
     this.datosFirmaReales = datos;
     this.obtieneFirma(datos.firma);
   }
-
 
   /**
    * Envía la firma al servidor y maneja la respuesta.
@@ -140,7 +164,7 @@ export class PasoTresComponent implements OnInit, OnDestroy {
    * Al recibir una respuesta exitosa, guarda el trámite y redirige al acuse.
    * @param firma - Firma en base64 que se debe procesar.
    */
-   obtieneFirma(firma: string): void {
+  obtieneFirma(firma: string): void {
     if (!this.cadenaOriginal || !this.datosFirmaReales) {
       console.error('Faltan datos para completar la firma');
       return;
@@ -150,6 +174,22 @@ export class PasoTresComponent implements OnInit, OnDestroy {
     const FIRMAHEX = base64ToHex(firma);
     const ID_SOLICITUD = this.tramite5701Query.getValue().idSolicitud;
 
+    this.documentoService
+      .obtenerDatosFirma()
+      .pipe(
+        takeUntil(this.destroy$),
+        switchMap((response) => {
+          const PAYLOAD: FirmarRequest = {
+            id_solicitud: Number(ID_SOLICITUD),
+            cadena_original: CADENAHEX,
+            cert_serial_number: this.datosFirmaReales.certSerialNumber,
+            clave_usuario: this.datosFirmaReales.rfc,
+            fecha_firma: new Date().toISOString(),
+            clave_rol: 'Solicitante',
+            sello: FIRMAHEX,
+            fecha_fin_vigencia: this.datosFirmaReales.fechaFin,
+            documentos_requeridos: response.datos.documentos_requeridos,
+          };
     this.documentoService.obtenerDatosFirma<FirmarRequest>().pipe(
       takeUntil(this.destroy$),
       switchMap(response => {
@@ -165,6 +205,34 @@ export class PasoTresComponent implements OnInit, OnDestroy {
           documentos_requeridos: response.datos?.documentos_requeridos ?? []
         };
 
+          return this.firma.enviarFirma(PAYLOAD).pipe(
+            tap((firmaResponse: BaseResponse<string>) => {
+              if (firmaResponse.datos) {
+                this.folio = firmaResponse.datos;
+              }
+            }),
+            switchMap(() => this.tramiteFolioServices.obtenerTramite(19))
+          );
+        }),
+        tap((tramite) => {
+          this.tramiteStore.establecerTramite(
+            tramite.data,
+            firma,
+            ID_SOLICITUD ?? 0
+          );
+          this.tramiteStore.establecerTramite(
+            this.folio,
+            firma,
+            ID_SOLICITUD ?? 0
+          );
+          this.router.navigate([`${this.url}/acuse`]);
+        }),
+        catchError((error) => {
+          console.error('Error en el proceso de firma:', error);
+          return throwError(() => error);
+        })
+      )
+      .subscribe();
         return this.firma.enviarFirma<DocumentoRequeridoFirmar>(PAYLOAD).pipe(
           tap((firmaResponse: BaseResponse<string>) => {
             if (firmaResponse.datos) {
@@ -194,4 +262,3 @@ export class PasoTresComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 }
-
