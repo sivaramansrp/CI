@@ -32,11 +32,11 @@ describe('RepresentanteLegalComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
+  it('debería crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize the form with default values', () => {
+  it('debería inicializar el formulario con los valores predeterminados', () => {
     expect(component.personaForm).toBeDefined();
     expect(component.personaForm.controls['rfc'].value).toBe('');
     expect(component.personaForm.controls['nombre'].disabled).toBe(true);
