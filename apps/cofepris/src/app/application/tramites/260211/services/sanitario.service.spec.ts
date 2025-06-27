@@ -79,12 +79,12 @@ describe('SanitarioService', () => {
     httpMock.verify();
   });
 
-  it('should be created', () => {
+  it('debería ser creado', () => {
     expect(service).toBeTruthy();
   });
 
   describe('getSolicitudData', () => {
-    it('should return solicitud data from JSON file', () => {
+    it('debería retornar datos de solicitud desde archivo JSON', () => {
       const mockSolicitudData: Solicitud260211State = {
         rfcResponsableSanitario: 'RFC123456789',
         denominacion: 'Test Denominacion',
@@ -144,7 +144,7 @@ describe('SanitarioService', () => {
   });
 
   describe('getDatos', () => {
-    it('should return datos from JSON file', () => {
+    it('debería retornar datos desde archivo JSON', () => {
       const mockDatos = { data: 'test data' };
 
       service.getDatos().subscribe(data => {
@@ -156,7 +156,7 @@ describe('SanitarioService', () => {
       req.flush(mockDatos);
     });
 
-    it('should handle error when getting datos', () => {
+    it('debería manejar error al obtener datos', () => {
       const errorMessage = 'Network error';
 
       service.getDatos().subscribe({
@@ -174,7 +174,7 @@ describe('SanitarioService', () => {
   });
 
   describe('getProveedordata', () => {
-    it('should return proveedor data from JSON file', () => {
+    it('debería retornar datos de proveedor desde archivo JSON', () => {
       const mockProveedorData = { proveedor: 'test proveedor' };
 
       service.getProveedordata().subscribe(data => {
@@ -186,7 +186,7 @@ describe('SanitarioService', () => {
       req.flush(mockProveedorData);
     });
 
-    it('should handle error when getting proveedor data', () => {
+    it('debería manejar error al obtener datos de proveedor', () => {
       const errorMessage = 'Network error';
 
       service.getProveedordata().subscribe({
@@ -204,7 +204,7 @@ describe('SanitarioService', () => {
   });
 
   describe('getLocalidaddata', () => {
-    it('should return localidad data from JSON file', () => {
+    it('debería retornar datos de localidad desde archivo JSON', () => {
       const mockLocalidadData = { localidad: 'test localidad' };
 
       service.getLocalidaddata().subscribe(data => {
@@ -216,7 +216,7 @@ describe('SanitarioService', () => {
       req.flush(mockLocalidadData);
     });
 
-    it('should handle error when getting localidad data', () => {
+    it('debería manejar error al obtener datos de localidad', () => {
       const errorMessage = 'Network error';
 
       service.getLocalidaddata().subscribe({
@@ -234,7 +234,7 @@ describe('SanitarioService', () => {
   });
 
   describe('getData', () => {
-    it('should return catalogo data from JSON file', () => {
+    it('debería retornar datos de catálogo desde archivo JSON', () => {
       const mockCatalogos: Catalogo[] = [
         { id: 1, descripcion: 'Catalogo 1' },
         { id: 2, descripcion: 'Catalogo 2' }
@@ -252,7 +252,7 @@ describe('SanitarioService', () => {
   });
 
   describe('getPermisoData', () => {
-    it('should return permiso data from JSON file', () => {
+    it('debería retornar datos de permiso desde archivo JSON', () => {
       const mockPermisoData: ProductoResponse[] = [
         { label: 'Producto 1', value: 'producto1' },
         { label: 'Producto 2', value: 'producto2' }
@@ -270,7 +270,7 @@ describe('SanitarioService', () => {
   });
 
   describe('obtenerEstadoList', () => {
-    it('should return estados list from JSON file', () => {
+    it('debería retornar lista de estados desde archivo JSON', () => {
       const mockRespuestaCatalogos: RespuestaCatalogos = {
         code: 200,
         data: [
@@ -291,7 +291,7 @@ describe('SanitarioService', () => {
   });
 
   describe('obtenerTablaDatos', () => {
-    it('should return tabla datos from JSON file', () => {
+    it('debería retornar datos de tabla desde archivo JSON', () => {
       const mockRespuestaTabla: RespuestaTabla = {
         código: 200,
         datos: [
@@ -312,7 +312,7 @@ describe('SanitarioService', () => {
   });
 
   describe('obtenerMercanciasDatos', () => {
-    it('should return mercancias datos from JSON file', () => {
+    it('debería retornar datos de mercancías desde archivo JSON', () => {
       const mockMercanciasTabla: MercanciasTabla = {
         código: 200,
         datos: [
@@ -353,7 +353,7 @@ describe('SanitarioService', () => {
   });
 
   describe('actualizarEstadoFormulario', () => {
-    it('should update form state with provided data', () => {
+    it('debería actualizar el estado del formulario con los datos proporcionados', () => {
       const mockDatos: Solicitud260211State = {
         rfcResponsableSanitario: 'RFC123456789',
         denominacion: 'Test Denominacion',
@@ -404,7 +404,6 @@ describe('SanitarioService', () => {
 
       service.actualizarEstadoFormulario(mockDatos);
 
-      // Verify all store methods were called with correct parameters
       expect(tramite260211StoreMock.setRfcResponsableSanitario).toHaveBeenCalledWith(mockDatos.rfcResponsableSanitario);
       expect(tramite260211StoreMock.setDenominacion).toHaveBeenCalledWith(mockDatos.denominacion);
       expect(tramite260211StoreMock.setCorreo).toHaveBeenCalledWith(mockDatos.correo);
@@ -452,7 +451,7 @@ describe('SanitarioService', () => {
       expect(tramite260211StoreMock.setimporte).toHaveBeenCalledWith(mockDatos.importe);
     });
 
-    it('should handle partial data when updating form state', () => {
+    it('debería manejar datos parciales al actualizar el estado del formulario', () => {
       const mockPartialDatos: Partial<Solicitud260211State> = {
         rfcResponsableSanitario: 'RFC123456789',
         denominacion: 'Test Denominacion',
@@ -467,8 +466,8 @@ describe('SanitarioService', () => {
     });
   });
 
-  describe('Error Handling', () => {
-    it('should handle HTTP errors gracefully for all GET methods', () => {
+  describe('Manejo de Errores', () => {
+    it('debería manejar errores HTTP de manera elegante para todos los métodos GET', () => {
       const methods = [
         { method: 'getSolicitudData', url: 'assets/json/260211/solicitude_data.json' },
         { method: 'getDatos', url: 'assets/json/260211/derechos.json' },
