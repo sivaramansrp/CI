@@ -27,7 +27,7 @@ export class AppComponent implements OnInit {
   this.isLoggedIn$
     .pipe(distinctUntilChanged())
     .subscribe(async (loggedIn) => {
-      // Await a Promise that resolves after setTimeout
+  
       await new Promise<void>((resolve) => {
         setTimeout(() => {
           if (!loggedIn) {
