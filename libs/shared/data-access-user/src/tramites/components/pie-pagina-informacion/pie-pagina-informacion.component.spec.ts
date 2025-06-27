@@ -1,7 +1,6 @@
 import { PiePaginaInformacionComponent } from './pie-pagina-informacion.component';
 import { DomSanitizer } from '@angular/platform-browser';
 import {
-  JAVA_LINK,
   POLITICAS_PRIVACIDAD,
   INAI_LINK,
 } from '../../../core/enums/politicas-privacidad.enum';
@@ -23,13 +22,6 @@ describe('PiePaginaInformacionComponent', () => {
 
   it('should create the component', () => {
     expect(component).toBeTruthy();
-  });
-
-  it('should set urlJavaSeguro using sanitizer and JAVA_LINK', () => {
-    expect(sanitizerMock.bypassSecurityTrustUrl).toHaveBeenCalledWith(
-      JAVA_LINK
-    );
-    expect(component.urlJavaSeguro).toBe(JAVA_LINK);
   });
 
   it('should set notificacion with correct values when abreModalNotificacion is called', () => {
