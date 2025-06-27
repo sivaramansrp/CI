@@ -1,11 +1,11 @@
 import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
-import { TercerosRelacionadoesComponent } from './terceros-relacionados.component';
+import { TercerosRelacionadoesComponent } from './terceros-Relacionados.component';
 import { SanitarioService } from '../../services/sanitario.service';
 import { Tramite260212Store } from '../../../../estados/tramites/tramite260212.store';
 import { of } from 'rxjs';
 
-describe('TercerosRelacionadosComponent', () => {
+describe('TercerosRelacionadoesComponent', () => {
   let component: TercerosRelacionadoesComponent;
   let fixture: ComponentFixture<TercerosRelacionadoesComponent>;
   let tercerosMockService: any;
@@ -486,5 +486,37 @@ describe('TercerosRelacionadosComponent', () => {
     component.tercerosInputChecked('other');
     expect(component.nacional).toBe(false);
     expect(component.extranjero).toBe(true);
+  });
+
+  it('debe llamar a submitFabricanteForm y cambiar los flags', () => {
+    component.showTableDiv = false;
+    component.showFabricante = true;
+    component.submitFabricanteForm();
+    expect(component.showTableDiv).toBe(true);
+    expect(component.showFabricante).toBe(false);
+  });
+
+  it('debe llamar a submitDestinatarioForm y cambiar los flags', () => {
+    component.showTableDiv = false;
+    component.showDestinatario = true;
+    component.submitDestinatarioForm();
+    expect(component.showTableDiv).toBe(true);
+    expect(component.showDestinatario).toBe(false);
+  });
+
+  it('debe llamar a submitProveedorForm y cambiar los flags', () => {
+    component.showTableDiv = false;
+    component.showProveedor = true;
+    component.submitProveedorForm();
+    expect(component.showTableDiv).toBe(true);
+    expect(component.showProveedor).toBe(false);
+  });
+
+  it('debe llamar a submitFacturadorForm y cambiar los flags', () => {
+    component.showTableDiv = false;
+    component.showFacturador = true;
+    component.submitFacturadorForm();
+    expect(component.showTableDiv).toBe(true);
+    expect(component.showFacturador).toBe(false);
   });
 });
