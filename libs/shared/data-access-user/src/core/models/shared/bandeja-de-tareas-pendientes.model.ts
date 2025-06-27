@@ -15,6 +15,21 @@ export interface SeleccionadoDepartamento {
     numeroDeProcedimiento: string;
 }
 
+export interface SeleccionadoTramite {
+    id: number;
+    tipoDeTramite: string;
+    fecha: string;
+    fechaActualizacion: string;
+    diasTranscurridos: string;
+    departamento: string;
+    numeroDeProcedimiento: string;
+    folioTramite: string;
+    nombreDeLaTarea: string;
+    fechaDeAsignacion: string;
+    estadoDeTramite: string;
+    origin: string;
+}
+
 /**
  * Modelo que representa el cuerpo de la solicitud para la bandeja de tareas pendientes.
  * 

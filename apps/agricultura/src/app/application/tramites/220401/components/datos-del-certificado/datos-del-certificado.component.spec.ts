@@ -19,6 +19,7 @@ describe('DatosDelCertificadoComponent', () => {
     agregar220401StoreMock = {
       setDelegaciones: jest.fn(),
       setOtraPropiedad: jest.fn(),
+     
     };
 
     agregarQueryMock = {
@@ -33,6 +34,9 @@ describe('DatosDelCertificadoComponent', () => {
       getDelegacionesData: jest.fn().mockReturnValue(of([{ id: 1, descripcion: 'Opción 1' }])),
       getState: jest.fn().mockReturnValue(of({ delegacionesControl: 'valor1', delegacionesControl2: 'valor2', delegacionesControl3: 'valor3', delegacionesControl4: 'valor4' })),
       setState: jest.fn(),
+        // ✅ Add this line below to fix the pipe error:
+  getEspecieData: jest.fn().mockReturnValue(of([{ id: 1, descripcion: 'Especie 1' }])),
+       
     };
 
     consultaioQueryMock = {

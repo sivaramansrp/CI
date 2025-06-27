@@ -16,7 +16,6 @@ import { AutorizacionProsecRoutingModule } from './autorizacion-prosec-routing.m
 import { CommonModule } from '@angular/common';
 import { DomiciliosDePlantasComponent } from './components/domicilios-de-plantas/domicilios-de-plantas.component';
 import { NgModule } from '@angular/core';
-import { PasoCuatroComponent } from './pages/paso-cuatro/paso-cuatro.component';
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
@@ -31,7 +30,6 @@ import { SectoresYMercanciasComponent } from './components/sectores-y-mercancias
     ProsecComponent,
     PasoDosComponent,
     PasoTresComponent,
-    PasoCuatroComponent
   ],
   imports: [
     CommonModule,

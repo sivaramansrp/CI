@@ -4,10 +4,12 @@
  * @module SolicitanteasigncionserviceService
  */
 
-import { Observable,catchError, throwError } from 'rxjs';
-import { HttpCoreService } from '../shared/http/http.service';
-import { Injectable } from '@angular/core';
 import { Catalogo } from '../../models/shared/catalogos.model';
+import { Injectable } from '@angular/core';
+
+import { HttpCoreService } from '../shared/http/http.service';
+
+import { Observable } from 'rxjs';
 
 /**
  * Servicio para la gestión de asignaciones de solicitantes.
