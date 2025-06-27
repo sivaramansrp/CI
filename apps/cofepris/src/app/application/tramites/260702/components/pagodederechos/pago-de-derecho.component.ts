@@ -1,5 +1,4 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
-// Angular Core
+
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import {
   FormBuilder,
@@ -9,10 +8,10 @@ import {
 } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
-// RxJS
+
 import { ReplaySubject, map, takeUntil } from 'rxjs';
 
-// Shared/Internal Libraries - @libs
+
 import {
   Catalogo,
   CatalogoSelectComponent,
@@ -24,17 +23,14 @@ import {
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
 
-// Application Services
 import { RegistrarSolicitudMcpService } from '../../services/registrar-solicitud-mcp.service';
 
-// State Management
 import {
   Solicitud260702State,
   Solicitud260702Store,
 } from '../../estados/tramites260702.store';
 import { Solicitud260702Query } from '../../estados/tramites260702.query';
 
-// Application Constants
 import { BANCO_DATA } from '../../constants/catalogs.enum';
 
 /**
