@@ -318,7 +318,7 @@ this.inicializarCertificadoFormulario();
     },
     {
       catalogo: this.delegacionesJson,
-      label: 'Delegaciones estatales SAGARPA',
+      label: 'Establecimiento TIF',
       controlName: 'delegacionesControl2',
       required: true,
       catalogos: DatosDelCertificadoComponent.getCatalogos(),
@@ -326,7 +326,7 @@ this.inicializarCertificadoFormulario();
     },
     {
       catalogo: this.delegacionesJson,
-      label: 'Delegaciones estatales SAGARPA',
+      label: 'Oficina central',
       controlName: 'delegacionesControl3',
       required: true,
       catalogos: DatosDelCertificadoComponent.getCatalogos(),
@@ -334,7 +334,7 @@ this.inicializarCertificadoFormulario();
     },
     {
       catalogo: this.delegacionesJson,
-      label: 'Delegaciones estatales SAGARPA',
+      label: 'Distrito desarrollo rural(DDR)',
       controlName: 'delegacionesControl4',
       required: false,
       catalogos: DatosDelCertificadoComponent.getCatalogos(),
