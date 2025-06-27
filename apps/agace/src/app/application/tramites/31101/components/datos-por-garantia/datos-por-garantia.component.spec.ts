@@ -115,9 +115,6 @@ describe('DatosPorGarantiaComponent', () => {
   });
 
   it('should call conseguirNombreInstitucionCatalogo and set nombreInstitucionCatalogo', () => {
-    // expect(
-    //   component.conseguirNombreInstitucionCatalogo
-    // ).toHaveBeenCalled();
     expect(component.nombreInstitucionCatalogo).toBeDefined();
   });
 

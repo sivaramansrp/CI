@@ -251,7 +251,6 @@ describe('SolicitudComponent', () => {
     component.esFormularioSoloLectura = true;
     component.inicializarEstadoFormulario();
     expect(component.guardarDatosFormulario).toHaveBeenCalled();
-    // expect(component.inicializarFormulario).not.toHaveBeenCalled();
   });
 
   it('should call inicializarFormulario if esFormularioSoloLectura is false', () => {

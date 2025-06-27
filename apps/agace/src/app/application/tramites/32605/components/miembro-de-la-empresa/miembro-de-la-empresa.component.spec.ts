@@ -255,6 +255,7 @@ describe('MiembroDeLaEmpresaComponent', () => {
     component.actualizarMiembroNombreEmpresa(event);
     expect(spy).toHaveBeenCalledWith('Empresa S.A.');
   });
+  
   it('should emit eventoActualizarMiembro with correct values when aceptarModal is called', () => {
     component.enSuCaracterDeLista = {
       labelNombre: 'En su caracter de',
@@ -290,8 +291,6 @@ describe('MiembroDeLaEmpresaComponent', () => {
       ],
       isRequired: true,
     } as InputRadio;
-
-    // Set form values
     component.miembroEmpresaForm.get('miembroCaracterDe')?.setValue(1);
     component.miembroEmpresaForm.get('miembroNacionalidad')?.setValue(2);
     component.miembroEmpresaForm.get('miembroTipoPersonaMuestra')?.setValue(1);
@@ -301,13 +300,8 @@ describe('MiembroDeLaEmpresaComponent', () => {
     component.miembroEmpresaForm.get('miembroNombre')?.setValue('Juan');
     component.miembroEmpresaForm.get('miembroNombreEmpresa')?.setValue('Empresa S.A.');
     component.miembroEmpresaForm.get('miembroRegistroFederal')?.setValue('REG123');
-
     const spy = jest.spyOn(component.eventoActualizarMiembro, 'emit');
-
-    // Act
     component.aceptarModal();
-
-    // Assert
     expect(spy).toHaveBeenCalledWith({
       tipoPersonaMuestra: 'Física',
       nombreCompleto: 'John Doe',

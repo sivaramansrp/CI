@@ -66,15 +66,6 @@ describe('DatosComponent', () => {
     expect(component.esDatosRespuesta).toBe(true);
   });
 
-  // it('should call guardarDatosFormulario if consultaState.update is true', () => {
-  //   const guardarDatosFormularioSpy = jest.spyOn(component, 'guardarDatosFormulario');
-  //   const state = { update: true };
-
-  //   (mockConsultaioQuery.selectConsultaioState$ as Subject<ConsultaioState>).next(state);
-
-  //   expect(guardarDatosFormularioSpy).toHaveBeenCalled();
-  // });
-
   it('should set esDatosRespuesta to true and call actualizarEstadoFormulario on response', () => {
     const resp = { some: 'data' } as any;
     mockSolicitudService.guardarDatosFormulario.mockReturnValue(of(resp));
