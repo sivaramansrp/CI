@@ -12,7 +12,6 @@ describe('RepresentanteLegalComponent', () => {
   let component: RepresentanteLegalComponent;
   let fixture  : ComponentFixture<RepresentanteLegalComponent>;
 
-  // Mock para Tramite260211Store y Tramite260211Query
   const mockStore = {
     setRfc: jest.fn(),
     setNombre: jest.fn(),
