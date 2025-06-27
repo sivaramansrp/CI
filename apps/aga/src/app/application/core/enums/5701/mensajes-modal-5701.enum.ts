@@ -31,10 +31,10 @@ export const MSJ_ERROR_FECHA_DIA =
  * @description Mensaje de error cuando la fecha final es menor que la fecha inicial.
  */
 export const MSJ_ERROR_HORA_FINAL_MENOR_INICIAL =
-  'Hora inválida. La hora final no puede ser menor a la hora de incio.';
+  'Hora inválida. La hora final no puede ser menor o igual a la de incio.';
 
 export const MSJ_FECHA_DENTRO_DE_HORARIO_ADUANA =
-  'El horario que seleccionaste para llevar a cabo tu servicio extraordinario, se encuentra dentro del horario de operación de la aduana. Por favor verifica.';
+  'El horario que seleccionaste para llevar a cabo tu servicio extraordinario, se encuentra dentro del horario de operación de la aduana. Por favor verifica.';
 
 // #Mensajes del modal para el componente Persona Responsable del Despacho
 /**
