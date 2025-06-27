@@ -4,6 +4,7 @@ import { Injectable } from '@angular/core';
 import { MencioneConfiguracionItem } from '../../tramites/31601/enum/mencione-tabla.enum';
 
 import { Antecesor } from '../../tramites/31601/modelos/antecesor.modal';
+import { ControlInventariosItem } from '../../tramites/31601/models/models31601.model';
 
 
 /**
@@ -504,6 +505,11 @@ export interface Solicitud31601State {
      * Datos de la tabla de enlaces.
      */
     enlaceDatos: EnlaceConfiguracionItem[];
+
+    /**
+     * Datos de la tabla de control de inventarios.
+     */
+    controlInventariosDatos: ControlInventariosItem[];
 }
 /**
  * Función para crear el estado inicial de Solicitud31601.
@@ -1010,6 +1016,10 @@ export function createInitialState(): Solicitud31601State {
          */
         mencioneDatos: [],
 
+        /**
+         * Datos de la tabla de control de inventarios.
+         */
+        controlInventariosDatos: [],  
     };
 }
 
@@ -1028,6 +1038,17 @@ export function createInitialState(): Solicitud31601State {
 @StoreConfig({ name: 'tramite31601', resettable: true })
 
 export class Tramite31601Store extends Store<Solicitud31601State> {
+    /**
+     * Establece los datos de la tabla de control de inventarios.
+     * @param {ControlInventariosItem[]} datosTablaControlInventarios - Los datos de la tabla de control de inventarios.
+     */
+    setControlInventariosTablaDatos(datosTablaControlInventarios: ControlInventariosItem[]): void {
+        this.update((state) => ({
+            ...state,
+            controlInventariosDatos: datosTablaControlInventarios,
+        }));
+    }
+    
     /**
      * Establece los datos de la tabla de menciones.
      * @param {MencioneConfiguracionItem[]} datosTablaMencione - Los datos de la tabla de menciones.
