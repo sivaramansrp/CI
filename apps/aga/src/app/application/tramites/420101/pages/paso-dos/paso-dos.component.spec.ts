@@ -9,10 +9,10 @@ import { ToastrModule } from 'ngx-toastr';
 describe('PasoDosComponent', () => {
   let component: PasoDosComponent;
   let fixture: ComponentFixture<PasoDosComponent>;
-
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [FormsModule, ReactiveFormsModule, HttpClientTestingModule,PasoDosComponent, ToastrModule.forRoot()], 
+      declarations: [PasoDosComponent],
+      imports: [FormsModule, ReactiveFormsModule, HttpClientTestingModule, ToastrModule.forRoot()], 
       schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
       providers: []
     }).compileComponents(); 

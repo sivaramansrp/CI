@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { CommonModule } from '@angular/common';
 import { BandejaDeTareasPendientesComponent } from './bandeja-de-tareas-pendientes.component';
+import { provideHttpClient } from '@angular/common/http';
 
 describe('BandejaDeTareasPendientesComponent', () => {
   let component: BandejaDeTareasPendientesComponent;
@@ -23,8 +24,18 @@ describe('BandejaDeTareasPendientesComponent', () => {
     component = new BandejaDeTareasPendientesComponent(mockBandejaSvc, mockConsultaStore);
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
+  beforeEach(async () => {
+    mockService = {
+      getTareasPendientesTablaDatos: jest.fn()
+    } as unknown as jest.Mocked<BandejaDeSolicitudeService>;
+
+    await TestBed.configureTestingModule({
+      imports: [CommonModule, LibBandejaComponent, BandejaDeTareasPendientesComponent],
+      providers: [{ provide: BandejaDeSolicitudeService, useValue: mockService },provideHttpClient()]
+    }).compileComponents();
+
+    fixture = TestBed.createComponent(BandejaDeTareasPendientesComponent);
+    component = fixture.componentInstance;
   });
 
   it('should initialize variables with default values', () => {
@@ -78,61 +89,79 @@ describe('BandejaDeTareasPendientesComponent', () => {
     component.departamento({ campo: 'other', valor: null });
     expect(component.selectedDepartamentoObj.tieneDepartamento).toBe(false);
   });
+  
 
-  it('should filter tramiteDetailsData and set procedureNumero and update form options in getProcedimiento', () => {
-    // Patch the form to have a procedimiento field
-    component.bandejaDeTareasForma = [
-      { id: 'procedimiento', opciones: undefined } as any
-    ];
-    // Patch tramiteDetailsData
-    (component as any).procedureNumero = [];
-    const departamento = 'test';
-    // Mock tramiteDetailsData globally
-    (component as any).procedureNumero = [];
-    (component as any).procedureNumero = [
-      { id: 1, tramite: 100, department: 'test' },
-      { id: 2, tramite: 200, department: 'other' }
-    ];
-    // Simulate getProcedimiento logic
-    component.procedureNumero = [
-      { id: 1, tramite: 100, department: 'test' },
-      { id: 2, tramite: 200, department: 'other' }
-    ].filter((v) => v.department === departamento.toLocaleLowerCase());
-    const FILTERED_FIELD = component.bandejaDeTareasForma.find((datos: any) => datos.id === 'procedimiento');
-    if (FILTERED_FIELD) {
-      // FILTERED_FIELD.opciones = component.procedureNumero.map((item: any) => ({
-      //   descripcion: item.tramite,
-      //   id: item.id,
-      // }));
-    }
-    expect(component.procedureNumero.length).toBe(1);
-    //expect(FILTERED_FIELD.opciones).toEqual([{ descripcion: 100, id: 1 }]);
-  });
+it('should call getNombreDelDepartamento and set departamentoDatos and update form field options', () => {
+  const departamentoData = [
+    { ID_DEPENDENCIA: 1, ACRONIMO: 'DEP1' },
+    { ID_DEPENDENCIA: 2, ACRONIMO: 'DEP2' }
+  ];
+  const mockDepartamentoResponse = {
+    data: departamentoData
+  };
+  // Mock the service method
+  mockService.getDepartamento = jest.fn().mockReturnValue(of(mockDepartamentoResponse));
 
-  it('should complete destroyNotifier$ on ngOnDestroy', () => {
-    const completeSpy = jest.spyOn((component as any).destroyNotifier$, 'complete');
+  // Prepare the form field in the component
+  const departamentoField = {
+    id: 'departamento',
+    opciones: undefined
+  };
+  // @ts-ignore
+  component.bandejaDeTareasForma = [departamentoField];
+
+  component.getNombreDelDepartamento();
+
+  expect(mockService.getDepartamento).toHaveBeenCalled();
+  expect(component.departamentoDatos).toEqual(departamentoData);
+  expect(departamentoField.opciones).toEqual([
+    { descripcion: 'DEP1', id: 1 },
+    { descripcion: 'DEP2', id: 2 }
+  ]);
+});
+
+  it('should clean up destroyNotifier$ on ngOnDestroy', () => {
+    const nextSpy = jest.spyOn(component['destroyNotifier$'], 'next');
+    const completeSpy = jest.spyOn(component['destroyNotifier$'], 'complete');
+
     component.ngOnDestroy();
     expect(completeSpy).toHaveBeenCalled();
   });
 
-    it('should extract correct values using clave functions', () => {
-    const row: any = {
-      folioTramite: 'F123',
-      tipoDeTramite: 'Licencia',
-      nombreDeLaTarea: 'Revisión',
-      fechaDeAsignacion: '2024-06-01',
-      estadoDeTramite: 'Pendiente',
-      departamento: 'TI',
-      numeroDeProcedimiento: 'N456',
-      origin: 'Web'
+  it('should call obtieneTipoSolicitudes and set tipoSolicitud field options', () => {
+    const tipoSolicitudesData = [
+      { id: 10, descripcion: 'Tipo A' },
+      { id: 20, descripcion: 'Tipo B' }
+    ];
+    const mockTipoSolicitudesResponse = {
+      data: tipoSolicitudesData
     };
-    expect(component.dePendientesConfiguracionTabla[0].clave(row)).toBe('F123');
-    expect(component.dePendientesConfiguracionTabla[1].clave(row)).toBe('Licencia');
-    expect(component.dePendientesConfiguracionTabla[2].clave(row)).toBe('Revisión');
-    expect(component.dePendientesConfiguracionTabla[3].clave(row)).toBe('2024-06-01');
-    expect(component.dePendientesConfiguracionTabla[4].clave(row)).toBe('Pendiente');
-    expect(component.dePendientesConfiguracionTabla[5].clave(row)).toBe('TI');
-    expect(component.dePendientesConfiguracionTabla[6].clave(row)).toBe('N456');
-    expect(component.dePendientesConfiguracionTabla[7].clave(row)).toBe('Web');
+    // Mock the service method
+    mockService.getSolicitudesTablaDatos = jest.fn().mockReturnValue(of(mockTipoSolicitudesResponse));
+
+    // Prepare the form field in the component
+    const tipoSolicitudField = {
+      id: 'tipoSolicitud',
+      opciones: undefined
+    };
+    // @ts-ignore
+    component.bandejaDeTareasForma = [tipoSolicitudField];
+
+    component.obtieneTipoSolicitudes();
+
+    expect(mockService.getSolicitudesTablaDatos).toHaveBeenCalled();
+    expect(tipoSolicitudField.opciones).toEqual([
+      { descripcion: 'Tipo A', id: 10 },
+      { descripcion: 'Tipo B', id: 20 }
+    ]);
+  });
+
+  it('should handle service error gracefully', () => {
+    mockService.getTareasPendientesTablaDatos.mockReturnValue(throwError(() => new Error('API error')));
+
+    component.getBandejaDeTablaDatos();
+  
+    expect(mockService.getTareasPendientesTablaDatos).toHaveBeenCalled();
+    expect(component.dePendientesTablaDatos).toEqual([]);
   });
 });

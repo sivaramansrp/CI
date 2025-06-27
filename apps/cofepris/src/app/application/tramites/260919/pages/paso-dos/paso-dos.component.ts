@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { CATALOGOS_ID } from '@ng-mf/data-access-user';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { CatalogosService } from '@ng-mf/data-access-user';
@@ -42,7 +42,15 @@ export class PasoDosComponent implements OnInit, OnDestroy {
    * ReplaySubject para manejar la finalización de las suscripciones.
    */
   private destroyed$ = new ReplaySubject<void>(1);
+/**
+ * Evento que se emite para reenviar información al componente padre.
+ */
+@Output() reenviarEvento = new EventEmitter<void>();
 
+/**
+ * Evento que se emite para regresar a la sección de carga de documentos.
+ */
+@Output() regresarSeccionCargarDocumentoEvento = new EventEmitter<void>();
   /**
    * Constructor de PasoDosComponent.
    * @param catalogosServices Servicio para interactuar con los catálogos.

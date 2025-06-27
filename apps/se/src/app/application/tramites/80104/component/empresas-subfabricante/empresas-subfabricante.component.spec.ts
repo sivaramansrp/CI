@@ -54,16 +54,16 @@ describe('EmpresasSubfabricanteComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('debería crear', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize form with rfc and estado fields', () => {
+  it('debería inicializar el formulario con los campos rfc y estado', () => {
     expect(component.formularioDatosSubcontratista.contains('rfc')).toBeTruthy();
     expect(component.formularioDatosSubcontratista.contains('estado')).toBeTruthy();
   });
 
-  it('should call obtenerDatosDelAlmacen and obtenerListaEstado on ngOnInit', () => {
+  it('debería llamar a obtenerDatosDelAlmacen y obtenerListaEstado en ngOnInit', () => {
     const obtenerDatosSpy = jest.spyOn(component, 'obtenerDatosDelAlmacen');
     const obtenerListaSpy = jest.spyOn(component, 'obtenerListaEstado');
     component.ngOnInit();
@@ -71,27 +71,27 @@ describe('EmpresasSubfabricanteComponent', () => {
     expect(obtenerListaSpy).toHaveBeenCalled();
   });
 
-  it('should call service and update store when performing busqueda', () => {
+  it('debería llamar al servicio y actualizar el almacén al realizar la búsqueda', () => {
     component.formularioDatosSubcontratista.setValue({ rfc: 'ABC123', estado: '1' });
     component.realizarBusqueda();
     expect(mockService.getSubfabricantesDisponibles).toHaveBeenCalled();
   });
 
-  it('should store plantas to agregar', () => {
+  it('debería almacenar plantas para agregar', () => {
     const spy = jest.spyOn(component['store'], 'setPlantasSubfabricantesAgregar');
     const mockPlantas = [{ calle: 'X', numExterior: 1, numInterior: 2, codigoPostal: 1111, colonia: 'Centro' }];
     component.agregarPlantas(mockPlantas as any);
     expect(spy).toHaveBeenCalledWith(mockPlantas);
   });
 
-  it('should call eliminarPlantas on store', () => {
+  it('debería llamar a eliminarPlantas en el store', () => {
     const spy = jest.spyOn(component['store'], 'eliminarPlantas');
     const plantas = [{ calle: 'X', numExterior: 1, numInterior: 2, codigoPostal: 1111, colonia: 'Centro' }];
     component.eliminarPlantas(plantas as any);
     expect(spy).toHaveBeenCalledWith(plantas);
   });
 
-  it('should set plantas por completar and navigate on complementarPlantas()', () => {
+  it('debería establecer plantas por completar y navegar en complementarPlantas()', () => {
     const router = TestBed.inject(Router);
     const navigateSpy = jest.spyOn(router, 'navigate');
 
@@ -107,7 +107,7 @@ describe('EmpresasSubfabricanteComponent', () => {
     expect(navigateSpy).toHaveBeenCalled();
   });
 
-   it('should clean up destroy$ on ngOnDestroy', () => {
+   it('debería limpiar destroy$ en ngOnDestroy', () => {
     const destroy$Spy = jest.spyOn(component.destroyNotifier$, 'next');
     const completeSpy = jest.spyOn(component.destroyNotifier$, 'complete');
     component.ngOnDestroy();

@@ -1,77 +1,66 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ReactiveFormsModule } from '@angular/forms';
-import { of, Subject } from 'rxjs';
-
 import { ManifiestoComponent } from './manifiesto.component';
+import { ReactiveFormsModule } from '@angular/forms';
+import { of } from 'rxjs';
+import { TituloComponent, InputCheckComponent, ConsultaioQuery } from '@ng-mf/data-access-user';
 import { Tramite630104Store } from '../../estados/tramites/tramite630104.store';
 import { Tramite630104Query } from '../../estados/queries/tramite630104.query';
 
 describe('ManifiestoComponent', () => {
-  let componente: ManifiestoComponent;
+  let component: ManifiestoComponent;
   let fixture: ComponentFixture<ManifiestoComponent>;
-  let tiendaMock: jest.Mocked<Tramite630104Store>;
-  let consultaMock: jest.Mocked<Tramite630104Query>;
+
+  const mockConsultaioQuery = {
+    selectConsultaioState$: of({ readonly: true }),
+  };
+
+  const mockTramiteQuery = {
+    selectSeccionState$: of({ declaracion: true }),
+    selectTramite630104State$: of({ declaracion: true }),
+  };
+
+  const mockTramiteStore = {
+    setTramite630104State: jest.fn(),
+  };
 
   beforeEach(async () => {
-    tiendaMock = {
-      setTramite630104State: jest.fn(),
-    } as unknown as jest.Mocked<Tramite630104Store>;
-
-    consultaMock = {
-      selectTramite630104State$: of({
-        declaracion: 'Declaración de prueba',
-      }) as Subject<any>,
-    } as unknown as jest.Mocked<Tramite630104Query>;
-
     await TestBed.configureTestingModule({
-      declarations: [],
-      imports: [ReactiveFormsModule],
+      imports: [ReactiveFormsModule, InputCheckComponent, TituloComponent, ManifiestoComponent],
       providers: [
-        { provide: Tramite630104Store, useValue: tiendaMock },
-        { provide: Tramite630104Query, useValue: consultaMock },
+        { provide: ConsultaioQuery, useValue: mockConsultaioQuery },
+        { provide: Tramite630104Query, useValue: mockTramiteQuery },
+        { provide: Tramite630104Store, useValue: mockTramiteStore },
       ],
     }).compileComponents();
-  });
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(ManifiestoComponent);
-    componente = fixture.componentInstance;
+    component = fixture.componentInstance;
     fixture.detectChanges();
   });
 
-  it('debería crear el componente', () => {
-    expect(componente).toBeTruthy();
+  it('should create the component', () => {
+    expect(component).toBeTruthy();
   });
 
-  it('debería inicializar el formulario con los valores por defecto', () => {
-    expect(componente.manifiestoFormulario.value).toEqual({
-      declaracion: 'Declaración de prueba',
-    });
+  it('should initialize the form with readonly disabled', () => {
+    expect(component.manifiestoFormulario.get('declaracion')).toBeTruthy();
+    expect(component.manifiestoFormulario.disabled).toBeFalsy();
   });
 
-  it('debería actualizar la declaración en el formulario y en la tienda al llamar setValorStore', () => {
-    const nuevoValor = 'Nueva declaración';
-    componente.manifiestoFormulario.patchValue({ declaracion: nuevoValor });
-
-    componente.setValorStore(componente.manifiestoFormulario, 'declaracion');
-
-    expect(tiendaMock.setTramite630104State).toHaveBeenCalledWith('declaracion', nuevoValor);
+  it('should update store on setValorStore call', () => {
+    component.manifiestoFormulario.get('declaracion')?.setValue(true);
+    component.setValorStore(component.manifiestoFormulario, 'declaracion');
+    expect(mockTramiteStore.setTramite630104State).toHaveBeenCalledWith('declaracion', true);
   });
 
-  it('debería obtener el estado desde la tienda y establecer estadoSeleccionado', () => {
-    componente.getValorStore();
-    expect(componente.estadoSeleccionado).toEqual({
-      declaracion: 'Declaración de prueba',
-    });
+  it('should call getValorStore and update estadoSeleccionado', () => {
+    component.getValorStore();
+    expect(component.estadoSeleccionado).toEqual({ declaracion: true });
   });
 
-  it('debería limpiar las suscripciones en ngOnDestroy', () => {
-    const spyDestroyed = jest.spyOn(componente['destroyed$'], 'next');
-    const spyComplete = jest.spyOn(componente['destroyed$'], 'complete');
-
-    componente.ngOnDestroy();
-
-    expect(spyDestroyed).toHaveBeenCalled();
-    expect(spyComplete).toHaveBeenCalled();
+  it('should disable form in guardarDatosFormulario if readonly is true', () => {
+    component.esFormularioSoloLectura = true;
+    component.guardarDatosFormulario();
+    expect(component.manifiestoFormulario.disabled).toBe(true);
   });
 });

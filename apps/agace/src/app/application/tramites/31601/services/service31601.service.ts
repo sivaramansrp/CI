@@ -126,6 +126,19 @@ export class Solocitud31601Service {
     this.tramite31601Store.setDescripcion(DATOS.descripcion);
     this.tramite31601Store.setHaContado(DATOS.haContado);
     this.tramite31601Store.setEnCasoIva(DATOS.enCasoIva);
+    this.tramite31601Store.setEnlaceTablaDatos([{
+        id: '1',
+        rfc: DATOS.rfcReprestantante || '',
+        nombre: DATOS.nombreReprestante || '',
+        apellidoPaterno: DATOS.apellidoPaterno || '',
+        apellidoMaterno: DATOS.apellidoMaterno || '',
+        cargo: DATOS.cargo || '',
+        telefono: DATOS.telefonoReprestantante || '',
+        correo: DATOS.correoReprestantante || '',
+        suplente: DATOS.suplente || '',
+        estadoResidencia: DATOS.estadoResidencia || '',
+        registroFederal : DATOS.registroFederaldeContribuyentes || '',
+    }]);
   }
 
   /**

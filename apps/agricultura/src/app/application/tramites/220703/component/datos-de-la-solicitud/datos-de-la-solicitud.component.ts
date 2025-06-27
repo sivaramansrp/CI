@@ -16,6 +16,16 @@ import { TramiteState } from '../../estados/tramite220703.store';
 import { TramiteStore } from '../../estados/tramite220703.store';
 import { TramiteStoreQuery } from '../../estados/tramite220703.query';
 
+/**
+ * Configuración del campo de fecha de inspección.
+ * Define las propiedades para el componente de entrada de fecha, incluyendo
+ * el nombre de la etiqueta, si es requerido y si está habilitado.
+ * 
+ * @constant {Object} FECHA_INSPECCION
+ * @property {string} labelNombre - Texto que se muestra como etiqueta del campo
+ * @property {boolean} required - Indica si el campo es obligatorio
+ * @property {boolean} habilitado - Indica si el campo está habilitado para edición
+ */
 export const FECHA_INSPECCION = {
   labelNombre: 'Fecha de inspección',
   required: true,

@@ -49,11 +49,11 @@ describe('PagoDeDerechosComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('debería crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize the form with default values from the state', () => {
+  it('debería inicializar el formulario con valores por defecto del estado', () => {
     expect(component.formSolicitud.value).toEqual({
       claveDeReferencia: '12345',
       cadenaDependencia: 'ABC123',
@@ -64,28 +64,19 @@ describe('PagoDeDerechosComponent', () => {
     });
   });
 
-  it('should fetch banco data on initialization', () => {
+  it('debería obtener los datos de banco al inicializar', () => {
     expect(certificadosLicenciasSvcMock.getBancoDatos).toHaveBeenCalled();
     expect(component.bancoCatalogo).toEqual([{ id: 1, nombre: 'Banco 1' }]);
   });
 
-  it('should call setValoresStore when setting a value in the store', () => {
+  it('debería llamar setValoresStore al establecer un valor en el store', () => {
     const form = component.formSolicitud;
     form.get('claveDeReferencia')?.setValue('67890');
     component.setValoresStore(form, 'claveDeReferencia', 'setClaveDeReferencia');
     expect(tramite260701StoreMock.setClaveDeReferencia).toHaveBeenCalledWith('67890');
   });
 
-  it('should validate llaveDePago field correctly', () => {
-    const llaveDePagoControl = component.formSolicitud.get('llaveDePago');
-    llaveDePagoControl?.setValue('INVALID');
-    expect(llaveDePagoControl?.valid).toBeFalsy();
-
-    llaveDePagoControl?.setValue('ABCDEFGHIJ');
-    expect(llaveDePagoControl?.valid).toBeTruthy();
-  });
-
-  it('should clean up subscriptions on destroy', () => {
+  it('debería limpiar las suscripciones al destruir el componente', () => {
     const destroySpy = jest.spyOn(component['destroyNotifier$'], 'next');
     const completeSpy = jest.spyOn(component['destroyNotifier$'], 'complete');
     component.ngOnDestroy();

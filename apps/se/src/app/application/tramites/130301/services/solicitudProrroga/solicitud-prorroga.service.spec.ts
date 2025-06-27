@@ -28,11 +28,11 @@ describe('SolicitudProrrogaService', () => {
     httpMock.verify();
   });
 
-  it('should be created', () => {
+  it('debe crear el servicio', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should fetch form data for solicitud', () => {
+  it('debe obtener los datos del formulario de solicitud', () => {
     const mockResponse: RespuestaDatos = { data: 'mockData' } as unknown as RespuestaDatos;
 
     service.obtenerFormDatos().subscribe((response) => {
@@ -44,7 +44,7 @@ describe('SolicitudProrrogaService', () => {
     req.flush(mockResponse);
   });
 
-  it('should fetch form data for "Datos del Trámite"', () => {
+  it('debe obtener los datos del formulario de "Datos del Trámite"', () => {
     const mockResponse: RequestDatosDelTramite = { data: 'mockData' } as unknown as RequestDatosDelTramite;
 
     service.obtenerDelTramiteFormDatos().subscribe((response) => {
@@ -56,7 +56,7 @@ describe('SolicitudProrrogaService', () => {
     req.flush(mockResponse);
   });
 
-  it('should fetch table data for partidas', () => {
+  it('debe obtener los datos de la tabla de partidas', () => {
     const mockResponse: RespuestaTabla = { data: 'mockData' } as unknown as RespuestaTabla;
 
     service.obtenerTablaDatos().subscribe((response) => {
@@ -68,7 +68,7 @@ describe('SolicitudProrrogaService', () => {
     req.flush(mockResponse);
   });
 
-  it('should fetch form data for partidas', () => {
+  it('debe obtener los datos del formulario de partidas', () => {
     const mockResponse: RequestPartidasForma = { data: 'mockData' } as unknown as RequestPartidasForma;
 
     service.obtenerPartidasFormDatos().subscribe((response) => {
@@ -80,7 +80,7 @@ describe('SolicitudProrrogaService', () => {
     req.flush(mockResponse);
   });
 
-  it('should fetch form data for Certificado Kimberley', () => {
+  it('debe obtener los datos del formulario de Certificado Kimberley', () => {
     const mockResponse: RequestCertificadoKimberleyForma = { data: 'mockData' } as unknown as RequestCertificadoKimberleyForma;
 
     service.obtenerCertificadoKimberleyFormDatos().subscribe((response) => {
@@ -92,7 +92,7 @@ describe('SolicitudProrrogaService', () => {
     req.flush(mockResponse);
   });
 
-  it('should fetch state list', () => {
+  it('debe obtener la lista de estados', () => {
     const mockResponse: RespuestaCatalogos = { data: 'mockData' } as unknown as RespuestaCatalogos;
 
     service.obtenerEstadoList().subscribe((response) => {
@@ -104,7 +104,7 @@ describe('SolicitudProrrogaService', () => {
     req.flush(mockResponse);
   });
 
-  it('should fetch form data for prórrogas', () => {
+  it('debe obtener los datos del formulario de prórrogas', () => {
     const mockResponse: RequestProrrogasForma = { data: 'mockData' } as unknown as RequestProrrogasForma;
 
     service.obtenerProrrogasFormDatos().subscribe((response) => {

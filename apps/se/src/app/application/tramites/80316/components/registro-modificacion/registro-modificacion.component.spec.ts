@@ -16,7 +16,12 @@ class solicitudService {}
 
 describe('RegistroModificacionComponent', () => {
   let fixture: ComponentFixture<RegistroModificacionComponent>;
-  let component: { ngOnDestroy: () => void; lenarLaTabla: jest.Mock<any, any, any>; ngOnInit: () => void; destroyNotifier$: { next?: any; complete?: any; }; };
+  let component: {
+    valorDeAlternancia(): unknown;
+    router: any;
+    datosDelContenedor: any;
+    immerModificacionService: any; ngOnDestroy: () => void; lenarLaTabla: jest.Mock<any, any, any>; ngOnInit: () => void; destroyNotifier$: { next?: any; complete?: any; }; 
+};
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -58,4 +63,31 @@ describe('RegistroModificacionComponent', () => {
     expect(component.destroyNotifier$.next).toHaveBeenCalled();
     expect(component.destroyNotifier$.complete).toHaveBeenCalled();
   });
+  
+  it('should run valorDeAlternancia and navigate for "se"', () => {
+    component.router = {
+      url: '/se/immex-modificacion',
+      navigate: jest.fn(),
+    } as any;
+    component.valorDeAlternancia();
+    expect(
+      component.router.navigate
+    ).toHaveBeenCalledWith([
+      '/se/modificaciones-immex/solicitud',
+    ]);
+  });
+
+  it('should run valorDeAlternancia and navigate for "pago"', () => {
+    component.router = {
+      url: '/pago/immex-modificacion',
+      navigate: jest.fn(),
+    } as any;
+    component.valorDeAlternancia();
+    expect(
+      component.router.navigate
+    ).toHaveBeenCalledWith([
+      '/pago/modificaciones-immex/solicitud',
+    ]);
+  });
+
 });
