@@ -1,12 +1,13 @@
-import { catchError, map } from 'rxjs';
+import { catchError, map, Subject, takeUntil } from 'rxjs';
 import { Component, OnInit } from '@angular/core';
-import { ConfiguracionColumna,
-         InputFecha,
-         InputFechaComponent,
-         TablaAcciones,
-         TablaDinamicaComponent,
-         TablePaginationComponent
-       } from '@libs/shared/data-access-user/src';
+import {
+  ConfiguracionColumna,
+  InputFecha,
+  InputFechaComponent,
+  TablaAcciones,
+  TablaDinamicaComponent,
+  TablePaginationComponent
+} from '@libs/shared/data-access-user/src';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { CONFIGURACION_ENCABEZADO_SOLICITUDES } from '../../core/constantes/constantes-bandejas.constants';
@@ -60,6 +61,10 @@ export class BandejaSolicitudesComponent implements OnInit {
 
   /** Configuración de columnas de la tabla */
   public configurarTabla: ConfiguracionColumna<ListaSolicitudes>[] = CONFIGURACION_ENCABEZADO_SOLICITUDES;
+  /**
+     * Notificador para destruir las suscripciones.
+     */
+  private destroyNotifier$: Subject<void> = new Subject();
 
   constructor(
     private fb: FormBuilder,
@@ -76,7 +81,7 @@ export class BandejaSolicitudesComponent implements OnInit {
 
   /**
    * Inicialización del formulario de búsqueda 
-   */ 
+   */
   inicializaFormConsulta(): void {
     this.FormBusqueda = this.fb.group({
       idSolicitud: [''],
@@ -113,7 +118,7 @@ export class BandejaSolicitudesComponent implements OnInit {
     this.accionesServcios = [TablaAcciones.VER];
     this.tableroService.getListaSolicitudes()
       .pipe(
-        takeUntilDestroyed(),
+        takeUntil(this.destroyNotifier$),
         map((data) => {
           this.todasSolicitudesOriginales = data;
           this.todasSolicitudes = [...data];
@@ -135,7 +140,7 @@ export class BandejaSolicitudesComponent implements OnInit {
   }
 
   /** Ejecuta la búsqueda de solicitudes con los filtros del formulario */
-  buscarSolicitudes():void {
+  buscarSolicitudes(): void {
     /**
      * Se salta la regla de UPPER_CASE, ya que los valores que se recuperan en la constante 
      * son valores predefinidos como el formulario fueron declarados
