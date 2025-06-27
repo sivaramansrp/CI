@@ -663,7 +663,7 @@ export class CargaDocumentoComponent implements OnInit, OnChanges {
    * @param {any[]} archivosCargando - Lista de archivos a cargar.
    * @returns {Promise<void>} Promesa que se resuelve cuando la carga se completa.
    */
-  // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-explicit-any
+  // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-explicit-any, require-await
   async cargarArchivos(archivosCargando: any[]): Promise<void> {
     for (const ARCHIVO of archivosCargando) {
       // const DATA = await this.uploadFiles(ARCHIVO.archivo);  TODO: Descomentar cuando funcione el API de cargar documento
