@@ -37,9 +37,9 @@ export interface AccionBoton {
 }
 
 /**
- * Interfaz que representa los datos de una tabla modal.
  * 
  * @interface TablaDatosModal
+ * Interfaz que representa los datos de una tabla modal.
  * @property {number} id - Identificador único del registro.
  * @property {number} fraccionArancelaria - Código de fracción arancelaria asociado.
  * @property {string} nombreTecnico - Nombre técnico del producto.
@@ -91,17 +91,21 @@ export interface ProductorExportador {
   datos: HistoricoColumnas[];
 }
 
+
 /**
- * Interfaz que representa la tabla de mercancías.
- * 
- * @property fraccionArancelaria - La fracción arancelaria de la mercancía.
- * @property tipoFactura - El tipo de factura asociada a la mercancía.
- * @property cantidad - La cantidad de la mercancía.
- * @property unidadMedida - La unidad de medida utilizada para la mercancía.
- * @property nombreTecnico - El nombre técnico de la mercancía.
- * @property nombreComercial - El nombre comercial de la mercancía.
- * @property valorMercancia - El valor de la mercancía.
- * @property rfcProductor - El RFC del productor de la mercancía.
+ * @interface MercanciaTabla
+ * @description
+ * Interfaz que representa la estructura de una mercancía en la tabla de mercancías del trámite.
+ * Contiene los datos principales de cada mercancía registrada, como fracción arancelaria, tipo de factura, cantidad, unidad de medida, nombres y valores.
+ *
+ * @property {string} fraccionArancelaria - Fracción arancelaria de la mercancía.
+ * @property {string} tipoFactura - Tipo de factura asociada a la mercancía.
+ * @property {string} cantidad - Cantidad de la mercancía.
+ * @property {string} unidadMedida - Unidad de medida de la mercancía.
+ * @property {string} nombreTecnico - Nombre técnico de la mercancía.
+ * @property {string} nombreComercial - Nombre comercial de la mercancía.
+ * @property {string} valorMercancia - Valor de la mercancía.
+ * @property {string} rfcProductor - RFC del productor de la mercancía.
  */
 export interface MercanciaTabla {
   fraccionArancelaria: string;
