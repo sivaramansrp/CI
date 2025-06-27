@@ -34,14 +34,14 @@ export class OpinionesStates extends Store<SolicitudOpinionesState> {
     /**
      * Resetear valores
      */
-    resetStore() {
+    resetStore():void {
         this.reset();
     }
     /**
      * Guarda la lista de opiniones requeridos
      * @param opinionesSeleccionados 
      */
-    setSolicitudOpiniones(listaOpciones: { dependencia: string; justificacion: string }[]) {
+    setSolicitudOpiniones(listaOpciones: { dependencia: string; justificacion: string }[]) :void {
         this.update(state => ({ ...state, listaOpciones }));
     }
     /**

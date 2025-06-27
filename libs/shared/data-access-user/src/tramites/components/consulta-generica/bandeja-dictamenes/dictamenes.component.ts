@@ -85,10 +85,10 @@ export class DictamenesComponent implements OnInit, OnDestroy {
 
   /**
    * Abre la pestaña para mostrar el detalle del dictamen.
-   * @param {number} id - Es el Id del dictamen.
+   * @param {number} _id - Es el Id del dictamen.
    * @returns {void}
    */
-  static verDetalle(id: number): void {
+  static verDetalle(_id: number): void {
     // Lógica para abrir el detalle del dictamen
   }
 
