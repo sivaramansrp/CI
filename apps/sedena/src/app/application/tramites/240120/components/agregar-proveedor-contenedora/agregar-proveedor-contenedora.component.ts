@@ -1,10 +1,8 @@
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { AgregarProveedorCustomComponent } from '../../../../shared/components/agregar-proveedor-custom/agregar-proveedor-custom.component';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
 import { NUMERO_TRAMITE } from '../../../../shared/constants/datos-solicitud.enum';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
 import { Proveedor } from '../../../../shared/models/terceros-relacionados.model';
 import { Tramite240120Query } from '../../estados/tramite240120Query.query';
 import { Tramite240120Store } from '../../estados/tramite240120Store.store';
@@ -28,6 +26,17 @@ import { Tramite240120Store } from '../../estados/tramite240120Store.store';
 })
 export class AgregarProveedorContenedoraComponent implements OnInit, OnDestroy {
 
+ /**
+   * @event cerrar
+   * @description Evento emitido para indicar que se debe cerrar el componente.
+   * @remarks
+   * Este evento no envía ningún valor, simplemente notifica a los componentes padres que se debe realizar la acción de cierre.
+   * 
+   * @eventType void
+   * Evento que se dispara para cerrar el componente actual.
+   */
+  @Output() cerrar = new EventEmitter<void>();
+    
   /**
    * Identificador del procedimiento asociado al trámite.
    * @type {number}
@@ -65,6 +74,7 @@ export class AgregarProveedorContenedoraComponent implements OnInit, OnDestroy {
    */
   updateProveedorTablaDatos(event: Proveedor[]): void {
     this.tramite240120Store.updateProveedorTablaDatos(event);
+    this.cerrar.emit()
   }
 /**
    * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
