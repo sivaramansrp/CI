@@ -884,7 +884,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
 
     const CATALOGO_ADUANAS$ = this.aduanaService.getListaAduanas().pipe(
       map((resp) => {
-        resp.datos.map((aduana: ICatalogo) => {
+        resp.datos.map((aduana: Catalogos) => {
           aduana.title = aduana.descripcion;
           aduana.descripcion =
             aduana.descripcion.length > 28

@@ -3,7 +3,8 @@ import {
   base64ToHex,
   encodeToISO88591Hex,
 } from '@libs/shared/data-access-user/src/core/utils/utilerias';
-import { CadenaOriginalRequest } from '@libs/shared/data-access-user/src/core/models/shared/firma-electronica/request/cadena-original-request.model';
+
+import { CadenaOriginalGenerada, CadenaOriginalRequest } from '@libs/shared/data-access-user/src/core/models/shared/firma-electronica/request/cadena-original-request.model';
 
 import {
   CadenaOriginalService,
@@ -120,15 +121,14 @@ export class PasoTresComponent implements OnInit, OnDestroy {
   obtenerCadenaOriginal(): void {
     this.cadenaOriginalService.generarCadena<CadenaOriginalRequest>().subscribe({
       next: (response) => {
-        this.datosCadena = response.datos;
-        this.firma.obtenerCadenaOriginal(this.datosCadena).subscribe({
-          next: (resp) => {
-            this.cadenaOriginal = resp.datos;
-          },
-          error: (err) => console.error('Error al generar cadena:', err),
-        });
         if (response.datos) {
           this.datosCadena = response.datos;
+          this.firma.obtenerCadenaOriginal(this.datosCadena).subscribe({
+            next: (resp) => {
+              this.cadenaOriginal = typeof resp.datos === 'string' ? resp.datos : undefined;
+            },
+            error: (err) => console.error('Error al generar cadena:', err),
+          });
           this.firma.obtenerCadenaOriginal<CadenaOriginalGenerada>(this.datosCadena).subscribe({
             next: (resp) => {
               this.cadenaOriginal = resp.datos?.cadenaOriginal;
@@ -175,7 +175,7 @@ export class PasoTresComponent implements OnInit, OnDestroy {
     const ID_SOLICITUD = this.tramite5701Query.getValue().idSolicitud;
 
     this.documentoService
-      .obtenerDatosFirma()
+      .obtenerDatosFirma<FirmarRequest>()
       .pipe(
         takeUntil(this.destroy$),
         switchMap((response) => {
@@ -188,7 +188,7 @@ export class PasoTresComponent implements OnInit, OnDestroy {
             clave_rol: 'Solicitante',
             sello: FIRMAHEX,
             fecha_fin_vigencia: this.datosFirmaReales.fechaFin,
-            documentos_requeridos: response.datos.documentos_requeridos,
+            documentos_requeridos: response.datos?.documentos_requeridos ?? [],
           };
     this.documentoService.obtenerDatosFirma<FirmarRequest>().pipe(
       takeUntil(this.destroy$),
