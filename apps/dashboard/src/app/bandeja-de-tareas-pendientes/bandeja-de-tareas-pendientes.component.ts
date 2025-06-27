@@ -60,7 +60,7 @@ export class BandejaDeTareasPendientesComponent implements OnInit,OnDestroy {
     numeroDeProcedimiento: '',
     nombreDelDepartamento: '',
   };
-    /*
+  /*
    * Configuración de las columnas que se mostrarán en la tabla de tareas pendientes.
    */
   public dePendientesConfiguracionTabla: ConfiguracionColumna<BandejaDeTareasPendientes>[] = [
@@ -105,15 +105,15 @@ export class BandejaDeTareasPendientesComponent implements OnInit,OnDestroy {
         orden: 8,
       }
     ];
-    /*
+  /**
    * Datos que se mostrarán en la tabla de tareas pendientes.
    */
-    public dePendientesTablaDatos: BandejaDeTareasPendientes[] = [];
-    /**
-     * Almacena una copia de los datos de tareas pendientes para su uso dentro del componente.
-     */
-    public copiarDatos: BandejaDeTareasPendientes[] = [];
-     /*
+  public dePendientesTablaDatos: BandejaDeTareasPendientes[] = [];
+  /**
+   * Almacena una copia de los datos de tareas pendientes para su uso dentro del componente.
+   */
+  public copiarDatos: BandejaDeTareasPendientes[] = [];
+  /*
    * Estructura del formulario utilizado para la bandeja de tareas pendientes.
    */
     public bandejaDeTareasForma = BANDEJA_DE_TAREAS_PENDIENTES_FORMA;
@@ -124,13 +124,14 @@ export class BandejaDeTareasPendientesComponent implements OnInit,OnDestroy {
     constructor(private bandejaSvc: BandejaDeSolicitudeService, private consultaStore: ConsultaioStore) {
   
     }
- /*
+  /*
    * Hook de inicialización del componente.
    * Llama al método para obtener los datos de la tabla al cargar el componente.
    */
     ngOnInit(): void {
       this.getBandejaDeTablaDatos();
       this.getNombreDelDepartamento();
+      this.obtieneTipoSolicitudes();
     }
 /*
    * Método para obtener los datos de la tabla de tareas pendientes desde el servicio.
@@ -212,7 +213,38 @@ export class BandejaDeTareasPendientesComponent implements OnInit,OnDestroy {
             }));
         }
     }
- /*
+
+    /**
+     * Obtiene los tipos de solicitudes desde el servicio y actualiza las opciones del campo
+     * 'tipoSolicitud' en el formulario dinámico de la bandeja de tareas.
+     *
+     * Este método realiza una petición al servicio `bandejaSvc.getSolicitudesTablaDatos()`, 
+     * procesa la respuesta y asigna las opciones correspondientes al campo identificado 
+     * como 'tipoSolicitud' dentro del arreglo `bandejaDeTareasForma`, siempre y cuando 
+     * dicho campo exista y aún no tenga opciones definidas.
+     */
+    public obtieneTipoSolicitudes(): void {
+      this.bandejaSvc.getSolicitudesTablaDatos()
+        .pipe(takeUntil(this.destroyNotifier$))
+        .subscribe((response) => {
+          const API_RESPONSE = JSON.parse(JSON.stringify(response));
+          const DATOS = API_RESPONSE.data;
+          const CLASIFICACION_FIELD = this.bandejaDeTareasForma.find(
+            (datos: ModeloDeFormaDinamica) => datos.id === 'tipoSolicitud'
+          ) as ModeloDeFormaDinamica;
+          if (CLASIFICACION_FIELD) {
+            if (!CLASIFICACION_FIELD.opciones) {
+              CLASIFICACION_FIELD.opciones = DATOS.map(
+                (item: { id: number; descripcion: string }) => ({
+                  descripcion: item.descripcion,
+                  id: item.id,
+                })
+              );
+            }
+          }
+        });
+    }
+  /*
    * Hook de destrucción del componente.
    * Finaliza las suscripciones activas al destruir el componente para evitar fugas de memoria.
    */

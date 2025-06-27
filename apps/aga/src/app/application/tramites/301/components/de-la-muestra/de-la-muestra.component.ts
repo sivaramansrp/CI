@@ -244,6 +244,15 @@ export class DeLaMuestraComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Verifica si el control del formulario es inválido y ha sido tocado.
+   * @returns {boolean | null} `true` si el control es inválido y tocado, `null` si no existe el control.
+   */
+  esInvalido(): boolean | null {
+    const CAMPO = this.Informaciondela.get('datosImportadorExportador.folio');
+    return CAMPO ? CAMPO.invalid && CAMPO.touched : null;
+  }
+
+  /**
    * Método del ciclo de vida `ngOnDestroy()`.
    * Este método se ejecuta cuando el componente es destruido y realiza las siguientes acciones:
    *

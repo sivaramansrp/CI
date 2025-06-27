@@ -4,19 +4,20 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FECHA_PAGO, MAXLENGTH,PAGO } from '../../constantes/permiso-importacion-biologica.enum';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 
 import { CatalogoResponse, CatalogoSelectComponent, InputFecha, InputFechaComponent } from '@libs/shared/data-access-user/src';
+import { PermisoImportacionBiologicaState, PermisoImportacionBiologicaStore } from '../../estados/permiso-importacion-biologica.store';
+
 
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 
 import { PagoDeDerechosEntradaService } from '../../services/pago-de-derechos-entrada.service';
-import { PermisoImportacionBiologicaState, PermisoImportacionBiologicaStore } from '../../estados/permiso-importacion-biologica.store';
 
 import { PermisoImportacionBiologicaQuery } from '../../estados/permiso-importacion-biologica.query';
 
-import { map, Observable, Subject, takeUntil } from 'rxjs';
-import { FECHA_PAGO, PAGO , MAXLENGTH } from '../../constantes/permiso-importacion-biologica.enum';
+import { Observable,Subject,map, takeUntil } from 'rxjs';
 import { REQUIRED_BANCO } from '../../constantes/datos-solicitud.enum';
 
 import {ConsultaioQuery} from '@ng-mf/data-access-user'

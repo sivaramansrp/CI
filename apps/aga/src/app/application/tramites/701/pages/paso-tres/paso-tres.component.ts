@@ -15,7 +15,7 @@ import { Router } from '@angular/router';
   
 })
 export class PasoTresComponent {
-
+ 
   /**
    * Constructor del componente.
    * @param router Servicio de enrutamiento.

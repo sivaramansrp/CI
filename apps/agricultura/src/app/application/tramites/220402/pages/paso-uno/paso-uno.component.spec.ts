@@ -29,12 +29,11 @@ describe('PasoUnoComponent', () => {
 
     await TestBed.configureTestingModule({
       declarations: [PasoUnoComponent,
-        SolicitudComponent,
         AgregarDestinatarioComponent,
         PagoDeDerechoComponent,
         TransporteComponent
       ],
-      imports: [SolicitanteComponent],
+      imports: [SolicitanteComponent, SolicitudComponent],
       providers: [
         provideHttpClient(),
         { provide: CapturaSolicitudeService, useValue: mockCapturaSolicitudeService },

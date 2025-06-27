@@ -5,7 +5,7 @@ import { Component } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 
-import { CertificadoTecnicoJaponService } from '@libs/shared/data-access-user/src/core/services/110218/certificadoTecnicoJapon.service';
+import { CertificadoTecnicoJaponService } from '../../service/certificadoTecnicoJapon.service';
 
 import { EXPEDICION } from '../../constants/certificado-tecnico-japon.enum';
 import { VENCIMIENTO } from '../../constants/certificado-tecnico-japon.enum';
@@ -48,14 +48,21 @@ export class TratadosComponent implements OnInit, OnDestroy {
   constructor(private fb: FormBuilder, private service: CertificadoTecnicoJaponService) {
     this.detallesdeltransporte = this.crearFormularioDetallesDelTransporte();
   }
+
+  /**
+   * crearFormularioDetallesDelTransporte
+   * Crea y retorna un FormGroup con los campos necesarios para los detalles del transporte,
+   * todos los campos están deshabilitados por defecto y algunos tienen valores iniciales.
+   * @returns {FormGroup} Formulario reactivo con los campos de tratados y fechas.
+   */
   private crearFormularioDetallesDelTransporte(): FormGroup {
     return this.fb.group({
       tratadoAcuerdo: [{ value: '', disabled: true }],
       paisBloque: [{ value: '', disabled: true }],
       paisdeOrigen: [{ value: '', disabled: true }],
       paisDestino: [{ value: '', disabled: true }],
-      fechadeExpedicion: [{ value: '', disabled: true }],
-      fechadeVencimiento: [{ value: '', disabled: true }],
+      fechadeExpedicion: [{ value: '2025-01-01', disabled: true }],
+      fechadeVencimiento: [{ value: '2025-04-03', disabled: true }],
     });
   }
 
@@ -63,20 +70,41 @@ export class TratadosComponent implements OnInit, OnDestroy {
    * ngOnInit
    * Método de ciclo de vida de Angular que se ejecuta al inicializar el componente.
    */
+  /**
+   * destroyed$
+   * Subject utilizado para cancelar las suscripciones activas al destruir el componente.
+   */
   private destroyed$ = new Subject<void>();
+
+  /**
+   * ngOnInit
+   * Método de ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * Llama a obtenerDatosDeTabla para cargar los datos iniciales en el formulario.
+   */
   ngOnInit(): void {
     this.obtenerDatosDeTabla();
-   
   }
-  
+  /**
+   * fechaFinalInput
+   * Variable que almacena la configuración de la fecha de expedición.
+   */
   fechaFinalInput: InputFecha = EXPEDICION;
+
+  /**
+   * fechaFinalInputs
+   * Variable que almacena la configuración de la fecha de vencimiento.
+   */
   fechaFinalInputs: InputFecha = VENCIMIENTO;
+
+  /**
+   * cambioFechaFinal
+   * Método para actualizar la fecha de expedición de la factura en el formulario reactivo.
+   * @param nuevo_valor - Nuevo valor de la fecha de expedición.
+   */
   cambioFechaFinal(nuevo_valor: string): void {
     this.detallesdeltransporte.patchValue({
       fechaExpedicionFactura: nuevo_valor,
     });
-  
-
   }
   
   /**
@@ -97,8 +125,15 @@ export class TratadosComponent implements OnInit, OnDestroy {
       }
     );
   }
+
+  /**
+   * ngOnDestroy
+   * Método de ciclo de vida de Angular que se ejecuta al destruir el componente.
+   * Libera los recursos y cancela las suscripciones activas.
+   */
   ngOnDestroy(): void {
     this.destroyed$.next();
     this.destroyed$.complete();
   }
 }
+

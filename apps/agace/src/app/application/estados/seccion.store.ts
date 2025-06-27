@@ -1,5 +1,6 @@
-import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
+import { Store } from '@datorama/akita';
+import { StoreConfig } from '@datorama/akita';
 
 /**
  * Estado para almacenar la información de cada sección contenida dentro de un paso
@@ -33,7 +34,7 @@ export class SeccionAgaceStore extends Store<SeccionAgaceState> {
    * Guarda un elemento por cada sección que se encuentre
    * @param seccion validacion
    */
-  public establecerSeccion(seccion: boolean[]) {
+  public establecerSeccion(seccion: boolean[]): void {
     this.update(state => ({
       ...state,
       seccion,
@@ -44,7 +45,7 @@ export class SeccionAgaceStore extends Store<SeccionAgaceState> {
    * Agrega elementos por cada seccion indicando si el formulario es válido o no
    * @param formaValida 
    */
-  public establecerFormaValida(formaValida: boolean[]) {
+  public establecerFormaValida(formaValida: boolean[]): void {
     this.update(state => ({
       ...state,
       formaValida,
@@ -54,7 +55,7 @@ export class SeccionAgaceStore extends Store<SeccionAgaceState> {
   /**
    * Limpia los datos de la sección
    */
-  public limpiarSeccion() {
+  public limpiarSeccion(): void {
     this.reset();
   }
 }

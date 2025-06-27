@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 
 import { Catalogo } from '@libs/shared/data-access-user/src';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
-import { CertificadoTecnicoJaponService } from '@libs/shared/data-access-user/src/core/services/110218/certificadoTecnicoJapon.service';
+import { CertificadoTecnicoJaponService } from '../../service/certificadoTecnicoJapon.service';
 import { REGEX_NUMEROS_DECIMALES } from '@libs/shared/data-access-user/src';
 import { REG_X } from '@libs/shared/data-access-user/src';
 

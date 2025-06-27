@@ -1,22 +1,20 @@
-import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import {
-  AlertComponent,
-  BtnContinuarComponent,
-  ConsultaioQuery,
-  ConsultaioState,
-  FormularioDinamico,
-  SolicitanteComponent,
-  TituloComponent,
-} from '@ng-mf/data-access-user';
-import {
-  DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL,
-  PERSONA_MORAL_NACIONAL,
-} from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
-import { Subject, map, takeUntil } from 'rxjs';
+import { AfterViewInit, OnDestroy, OnInit } from '@angular/core';
+import { AlertComponent, ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
+import { BtnContinuarComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
+import { DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL } from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
+import { FormularioDinamico } from '@ng-mf/data-access-user';
+import { PERSONA_MORAL_NACIONAL } from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
+import { SolicitanteComponent } from '@ng-mf/data-access-user';
 import { SolicitudComponent } from '../../components/solicitud/solicitud.component';
 import { SolicitudService } from '../../services/solicitud.service';
+import { Subject } from 'rxjs';
+import { TituloComponent } from '@ng-mf/data-access-user';
 import { Tramite32201Store } from '../../estados/tramite32201.store';
+import { ViewChild } from '@angular/core';
+import { map } from 'rxjs';
+import { takeUntil } from 'rxjs';
 
 /**
  * Componente que representa la funcionalidad de la paso uno 32201.
@@ -80,7 +78,7 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
   esDatosRespuesta: boolean = false;
 
   constructor(private consultaioQuery: ConsultaioQuery, public tramite32201Store: Tramite32201Store,
-    private solicitudService: SolicitudService
+    public solicitudService: SolicitudService
   ) {
     // El constructor se utiliza para la inyección de dependencias.
   }

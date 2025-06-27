@@ -147,16 +147,16 @@ export class ConsultaTramiteComponent<T> implements OnInit {
   buscarTramite(): void {
     if (this.FormBuscaTramite.invalid) {
       this.FormBuscaTramite.markAllAsTouched();
-      this.tieneConfiguracionTablaDatos = false;
-      return;
+      this.tieneConfiguracionTablaDatos = true;
     }
-
     const IDTRAMITE = this.FormBuscaTramite.get('idTramite')?.value?.toString();
-    this.configuracionTablaDatos = this.duplicarDatos.filter(
-      item => item.id?.toString() === IDTRAMITE
-    );
-    this.tieneConfiguracionTablaDatos = this.configuracionTablaDatos.length > 0;
-    this.FormBuscaTramite.reset();
+    this.configuracionTablaDatos = this.duplicarDatos;
+    this.tieneConfiguracionTablaDatos = true;
+    if(IDTRAMITE !== '') {
+      this.configuracionTablaDatos = this.configuracionTablaDatos.filter(
+        item => item.id?.toString() === IDTRAMITE
+      );
+    }
   }
 
   /**

@@ -202,7 +202,7 @@ export class PartidasDeLaMercanciaComponent {
  * @returns {void}
  */
 
-  onModificarPartida() {
+  onModificarPartida(): void {
     if (this.partidasDelaMercanciaForm.valid) {
       const MODALELEMENT = this.modalModificarPartidaRef.nativeElement;
       const MODALINSTANCE = Modal.getOrCreateInstance(MODALELEMENT);

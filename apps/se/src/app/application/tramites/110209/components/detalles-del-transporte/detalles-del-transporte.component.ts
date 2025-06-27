@@ -49,6 +49,13 @@ export class DetallesDelTransporteComponent implements OnInit, OnDestroy {
    */
   private destroyed$ = new Subject<void>();
 
+   /**
+   * Indica si el formulario ha sido cargado correctamente con los datos del servicio.
+   * Se utiliza para mostrar u ocultar elementos en la interfaz según el estado de carga.
+   * @type {boolean}
+   */
+  formularioCargado: boolean = false;
+
   /**
    * Constructor del componente DetallesDelTransporteComponent.
    * 
@@ -82,6 +89,7 @@ export class DetallesDelTransporteComponent implements OnInit, OnDestroy {
       takeUntil(this.destroyed$)
     ).subscribe(
       (data) => {
+        this.formularioCargado = true;
         this.detallesDelTransporteForm.patchValue({
           tratado: data.tratado,
           paisOBloque: data.paisOBloque,

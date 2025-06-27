@@ -1,11 +1,8 @@
-/* eslint-disable @typescript-eslint/naming-convention */
-/* eslint-disable sort-imports */
 import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
-import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.component';
-import { RequirementoComponent } from './components/requiremento/requiremento.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
-// import { PantallasComponent } from '../pages/pantallas/pantallas.component';
+import { RouterModule } from '@angular/router';
+import { Routes } from '@angular/router';
+import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.component';
 
 const ROUTES: Routes = [
   {

@@ -1,7 +1,8 @@
+import { DatosSolicitudState, Tramite140218Store } from '../estados/store/tramite140218.store';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { DatosSolicitudState, Tramite140218Store } from '../estados/store/tramite140218.store';
+
 // Decorador Injectable para indicar que este servicio puede ser inyectado en otros componentes o servicios
 @Injectable({
   providedIn: 'root'

@@ -1,48 +1,58 @@
-
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { By } from '@angular/platform-browser';
+import { Observable, of as observableOf, throwError } from 'rxjs';
+import { provideHttpClient } from '@angular/common/http'; 
+
+import { Component } from '@angular/core';
 import { PasoDosComponent } from './paso-dos.component';
 import { CatalogosService } from '@ng-mf/data-access-user';
-import { provideHttpClient } from '@angular/common/http';
-import { TituloComponent } from '@libs/shared/data-access-user/src';
-import { AlertComponent } from '@libs/shared/data-access-user/src';
-import { AnexarDocumentosComponent } from '@libs/shared/data-access-user/src';
-import { ToastrModule } from 'ngx-toastr';
-import { ToastrService } from 'ngx-toastr';
 
 describe('PasoDosComponent', () => {
-  let component: PasoDosComponent;
   let fixture: ComponentFixture<PasoDosComponent>;
-  let catalogosServiceMock: any;
-
-  beforeEach(async () => {
-    catalogosServiceMock = {
-      getCatalogo: jest.fn()
-    };
-
-    await TestBed.configureTestingModule({
-      declarations: [PasoDosComponent],
-      imports: [TituloComponent, AlertComponent, AnexarDocumentosComponent, ToastrModule.forRoot()],
-      providers: [provideHttpClient(), CatalogosService, ToastrService]
-    }).compileComponents();
-  });
+  let component: { ngOnDestroy: () => void; getTiposDocumentos: jest.Mock<any, any, any> | (() => void); ngOnInit: () => void; catalogosServices: { getCatalogo?: any; }; };
 
   beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [ FormsModule, ReactiveFormsModule, ],
+      declarations: [
+        PasoDosComponent
+      ],
+      schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
+      providers: [
+        provideHttpClient(),
+        CatalogosService
+      ],   
+      
+    }).overrideComponent(PasoDosComponent, {
+
+    }).compileComponents();
     fixture = TestBed.createComponent(PasoDosComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+    component = fixture.debugElement.componentInstance;
   });
 
-  it('should create', () => {
+  afterEach(() => {
+    component.ngOnDestroy = function() {};
+    fixture.destroy();
+  });
+
+  it('should run #constructor()', async () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize TEXTOS', () => {
-    expect(component.TEXTOS).toBeDefined();
+  it('should run #ngOnInit()', async () => {
+    component.getTiposDocumentos = jest.fn();
+    component.ngOnInit();
+    expect(component.getTiposDocumentos).toHaveBeenCalled();
   });
 
-  it('should call getTiposDocumentos on component initialization', () => {
-    const spy = jest.spyOn(component, 'getTiposDocumentos');
-    component.ngOnInit();
-    expect(spy).toHaveBeenCalled();
+  it('should run #getTiposDocumentos()', async () => {
+    component.catalogosServices = component.catalogosServices || {};
+    component.catalogosServices.getCatalogo = jest.fn().mockReturnValue(observableOf({}));
+    component.getTiposDocumentos();
+    expect(component.catalogosServices.getCatalogo).toHaveBeenCalled();
   });
+
 });

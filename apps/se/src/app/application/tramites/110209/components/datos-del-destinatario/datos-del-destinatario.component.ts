@@ -2,14 +2,13 @@
  * Componente encargado de gestionar los datos del destinatario.
  */
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ConsultaioQuery, TituloComponent } from '@ng-mf/data-access-user';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { CommonModule } from '@angular/common';
-import { TituloComponent } from '@ng-mf/data-access-user';
-import { Tramite110209Query } from '../../estados/queries/tramite110209.query';
-import { Tramite110209Store } from '../../estados/stores/tramite110209.store';
-
 import { REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL,REGEX_SOLO_DIGITOS } from '@ng-mf/data-access-user';
 import { Subject, map, takeUntil } from 'rxjs';
+import { CommonModule } from '@angular/common';
+import { Tramite110209Query } from '../../estados/queries/tramite110209.query';
+import { Tramite110209Store } from '../../estados/stores/tramite110209.store';
 
 
 /**
@@ -40,6 +39,12 @@ export class DatosDelDestinatarioComponent implements OnInit, OnDestroy {
    * @type {Subject<void>}
    */
   private destroyed$ = new Subject<void>();
+  
+   /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  esFormularioSoloLectura: boolean = false;
 
   /**
    * Constructor del componente DetallesDelDestinatarioComponent.
@@ -51,8 +56,25 @@ export class DatosDelDestinatarioComponent implements OnInit, OnDestroy {
    * const form = new FormGroup();
    * @public
    */
-  constructor(private fb: FormBuilder, private tramite110209Store: Tramite110209Store, private tramite110209Query: Tramite110209Query) {
-    //
+  constructor(private fb: FormBuilder, private tramite110209Store: Tramite110209Store, private tramite110209Query: Tramite110209Query, private consultaQuery: ConsultaioQuery) {
+    this.crearFormulario();
+     /**
+    * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
+    *
+    * - Asigna el valor de solo lectura (`readonly`) a la propiedad `esFormularioSoloLectura`.
+    * - La suscripción se cancela automáticamente cuando `destroyed$` emite un valor (para evitar fugas de memoria).
+    * - Llama a `inicializarEstadoFormulario()` para aplicar configuraciones basadas en el estado recibido.
+    */
+    this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.actualizarEstadoCampos();
+        })
+      )
+      .subscribe();
+      
   }
 
   /**
@@ -73,8 +95,34 @@ export class DatosDelDestinatarioComponent implements OnInit, OnDestroy {
    * Crea el formulario del componente.
    */
   ngOnInit(): void {
-    this.crearFormulario();
     this.getValoresStore();
+  }
+
+  /**
+   * Habilita o deshabilita dinámicamente los campos del formulario
+   * según el estado de solo lectura del formulario.
+   *
+   * @returns void
+   * @description Si el formulario está en modo solo lectura, deshabilita ambos campos; de lo contrario, los habilita.
+   */
+  actualizarEstadoCampos(): void {
+    const CAMPOS = [
+      'nombre',
+      'primerApellido',
+      'segundoApellido',
+      'numeroDeRegistroFiscal',
+      'razonSocial'
+    ];
+    CAMPOS.forEach(campo => {
+      const CONTROL = this.datosDelDestinatarioForm.get(campo);
+      if (CONTROL) {
+        if (this.esFormularioSoloLectura) {
+          CONTROL.disable();
+        } else {
+          CONTROL.enable();
+        }
+      }
+    });
   }
 
   /**
