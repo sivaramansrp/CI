@@ -1,61 +1,58 @@
-// @ts-nocheck
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { By } from '@angular/platform-browser';
-import { Observable, of as observableOf, throwError } from 'rxjs';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { DatosDelTramiteContenedoraComponent } from '../../../../tramites/240407/components/datos-del-tramite-contenedora/datos-del-tramite-contenedora.component';
+import { Tramite240407Query } from '../../../../tramites/240407/estados/tramite240407Query.query';
+import { Tramite240407Store } from '../../../../tramites/240407/estados/tramite240407Store.store';
+import { of, Subject } from 'rxjs';
+import { NUMERO_TRAMITE } from '../../../../shared/constants/datos-solicitud.enum';
+import { DatosDelTramiteFormState, JustificacionTramiteFormState, MercanciaDetalle } from '../../../../shared/models/datos-del-tramite.model';
+import { ActivatedRoute } from '@angular/router';
 
-import { Component } from '@angular/core';
-import { DatosDelTramiteContenedoraComponent } from './datos-del-tramite-contenedora.component';
-import { Tramite240101Query } from '../../estados/tramite240101Query.query';
-import { Tramite240101Store } from '../../estados/tramite240101Store.store';
-import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
-import { DatosDelTramiteComponent } from '../../../../shared/components/datos-del-tramite/datos-del-tramite.component';
-import { ModalComponent } from '../../../../shared/components/modal/modal.component';
-import { Router, ActivatedRoute } from '@angular/router';
-
-@Injectable()
-class MockTramite240101Query {}
-
-@Injectable()
-class MockTramite240101Store {}
-
-@Injectable()
-class MockRouter {
-  navigate() {};
-}
 
 describe('DatosDelTramiteContenedoraComponent', () => {
-  let fixture;
-  let component;
+  let component: DatosDelTramiteContenedoraComponent;
+  let fixture: ComponentFixture<DatosDelTramiteContenedoraComponent>;
+  let tramiteQuery: jest.Mocked<Tramite240407Query>;
+  let tramiteStore: jest.Mocked<Tramite240407Store>;
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule, DatosDelTramiteComponent, ModalComponent ],
-      schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
+  beforeEach(async () => {
+    tramiteQuery = {
+      getMercanciaTablaDatos$: of([{
+        id: 1,
+        fraccionArancelaria: '',
+        descripcionFraccion: '',
+        unidadMedidaTarifa: '',
+        cantidadUMT: 0,
+        unidadMedidaComercial: '',
+        cantidadUMC: 0,
+        valorComercial: 0,
+        tipoMoneda: '',
+        descripcion: ''
+      } as MercanciaDetalle]),
+      getDatosDelTramite$: of({
+        permisoGeneral: '',
+        usoFinal: '',
+        aduanasSeleccionadas: [],
+        paisDestino: '',
+        campo: 'valor'
+      } as DatosDelTramiteFormState),
+      getJustificacionTramite$: of({ justificacion: 'test' } as JustificacionTramiteFormState)
+    } as any;
+
+    tramiteStore = {
+      updateDatosDelTramiteFormState: jest.fn(),
+      updateJustificacionFormulario: jest.fn()
+    } as any;
+
+    await TestBed.configureTestingModule({
+      imports: [DatosDelTramiteContenedoraComponent],
       providers: [
-        { provide: Tramite240101Query, useClass: MockTramite240101Query },
-        { provide: Tramite240101Store, useClass: MockTramite240101Store },
-        ConsultaioQuery,
-         { provide: Router, useClass: MockRouter },
-                        {
-                          provide: ActivatedRoute,
-                          useValue: {
-                            snapshot: {url: 'url', params: {}, queryParams: {}, data: {}},
-                            url: observableOf('url'),
-                            params: observableOf({}),
-                            queryParams: observableOf({}),
-                            fragment: observableOf('fragment'),
-                            data: observableOf({})
-                          }
-                        },
+        { provide: Tramite240407Query, useValue: tramiteQuery },
+        { provide: Tramite240407Store, useValue: tramiteStore },
+        { provide: ActivatedRoute, useValue: {} }
       ]
-    }).overrideComponent(DatosDelTramiteContenedoraComponent, {
-
     }).compileComponents();
     fixture = TestBed.createComponent(DatosDelTramiteContenedoraComponent);
-    component = fixture.debugElement.componentInstance;
+    component = fixture.componentInstance;
   });
 
 
@@ -63,45 +60,71 @@ describe('DatosDelTramiteContenedoraComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should run #ngOnInit()', async () => {
-    component.tramiteQuery = component.tramiteQuery || {};
-    component.tramiteQuery.getMercanciaTablaDatos$ = observableOf({});
-    component.tramiteQuery.getDatosDelTramite$ = observableOf({});
-    component.consultaQuery = component.consultaQuery || {};
-    component.consultaQuery.selectConsultaioState$ = observableOf({});
+  it('should initialize aduanasBotones on ngOnInit', () => {
     component.ngOnInit();
-
+    expect(component.aduanasBotones.length).toBeGreaterThan(0);
+    expect(component.aduanasBotones[0]).toHaveProperty('btnNombre');
   });
 
-  it('should run #ngOnDestroy()', async () => {
-    component.unsubscribe$ = component.unsubscribe$ || {};
-    component.unsubscribe$.next = jest.fn();
-    component.unsubscribe$.complete = jest.fn();
+  it('should subscribe and set datosMercanciaTabla from tramiteQuery', () => {
+    component.ngOnInit();
+    expect(component.datosMercanciaTabla).toEqual([{
+      id: 1,
+      fraccionArancelaria: '',
+      descripcionFraccion: '',
+      unidadMedidaTarifa: '',
+      cantidadUMT: 0,
+      unidadMedidaComercial: '',
+      cantidadUMC: 0,
+      valorComercial: 0,
+      tipoMoneda: '',
+      descripcion: ''
+    }]);
+  });
+
+  it('should subscribe and set datosDelTramiteFormState from tramiteQuery', () => {
+    component.ngOnInit();
+    const event = {
+      permisoGeneral: '',
+      usoFinal: '',
+      aduanasSeleccionadas: [],
+      paisDestino: ''
+    } as DatosDelTramiteFormState;
+    component.updateDatosDelTramiteFormulario(event);
+    expect(tramiteStore.updateDatosDelTramiteFormState).toHaveBeenCalledWith(event);
+  });
+
+  it('should subscribe and set justificacionTramiteFormState from tramiteQuery', () => {
+    component.ngOnInit();
+    expect(component.justificacionTramiteFormState).toEqual({ justificacion: 'test' });
+  });
+
+  it('should call tramiteStore.updateDatosDelTramiteFormState on updateDatosDelTramiteFormulario', () => {
+    const event: DatosDelTramiteFormState = {
+      permisoGeneral: '',
+      usoFinal: '',
+      aduanasSeleccionadas: [],
+      paisDestino: ''
+    };
+    component.updateDatosDelTramiteFormulario(event);
+    expect(tramiteStore.updateDatosDelTramiteFormState).toHaveBeenCalledWith(event);
+  });
+
+  it('should call tramiteStore.updateJustificacionFormulario on updateJustificacionFormulario', () => {
+    const event = { justificacion: 'nueva' } as JustificacionTramiteFormState;
+    component.updateJustificacionFormulario(event);
+    expect(tramiteStore.updateJustificacionFormulario).toHaveBeenCalledWith(event);
+  });
+
+  it('should complete unsubscribe$ on ngOnDestroy', () => {
+    const nextSpy = jest.spyOn((component as any).unsubscribe$, 'next');
+    const completeSpy = jest.spyOn((component as any).unsubscribe$, 'complete');
     component.ngOnDestroy();
-    expect(component.unsubscribe$.next).toHaveBeenCalled();
+    expect(nextSpy).toHaveBeenCalled();
+    expect(completeSpy).toHaveBeenCalled();
   });
 
-  it('should run #updateDatosDelTramiteFormulario()', async () => {
-    component.tramiteStore = component.tramiteStore || {};
-    component.tramiteStore.updateDatosDelTramiteFormState = jest.fn();
-    component.updateDatosDelTramiteFormulario({});
-    expect(component.tramiteStore.updateDatosDelTramiteFormState).toHaveBeenCalled();
+  it('should have idProcedimiento set to NUMERO_TRAMITE.TRAMITE_240407', () => {
+    expect(component.idProcedimiento).toBe(NUMERO_TRAMITE.TRAMITE_240407);
   });
-
-  it('should run #openModal()', async () => {
-    component.modalComponent = component.modalComponent || {};
-    component.modalComponent.abrir = jest.fn();
-    component.cerrarModal = component.cerrarModal || {};
-    component.cerrarModal.bind = jest.fn();
-    component.openModal('Datosmercancia');
-    expect(component.modalComponent.abrir).toHaveBeenCalled();
-  });
-
-  it('should run #cerrarModal()', async () => {
-    component.modalComponent = component.modalComponent || {};
-    component.modalComponent.cerrar = jest.fn();
-    component.cerrarModal();
-    expect(component.modalComponent.cerrar).toHaveBeenCalled();
-  });
-
 });

@@ -4,10 +4,13 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { PasoUnoComponent } from './paso-uno.component';
 import { SolicitanteComponent, TIPO_PERSONA } from '@ng-mf/data-access-user';
 import { By } from '@angular/platform-browser';
+import { AvisoService } from '../../services/aviso.service';
+import { Solicitud32502State } from '../../../../estados/tramites/tramite32502.store';
 
 describe('PasoUnoComponent', () => {
   let component: PasoUnoComponent;
   let fixture: ComponentFixture<PasoUnoComponent>;
+  let avisoServiceMock: jest.Mocked<AvisoService>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -18,6 +21,18 @@ describe('PasoUnoComponent', () => {
     fixture = TestBed.createComponent(PasoUnoComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
+    avisoServiceMock = {
+      obtenerDatosEstado: jest.fn(),
+      establecerDatosEstado: jest.fn(),
+    } as unknown as jest.Mocked<AvisoService>;
+
+    TestBed.configureTestingModule({
+      providers: [
+        PasoUnoComponent,
+        { provide: AvisoService, useValue: avisoServiceMock },
+      ],
+    });
+    component = TestBed.inject(PasoUnoComponent);
   });
 
   it('should create', () => {
@@ -48,5 +63,10 @@ describe('PasoUnoComponent', () => {
     fixture.detectChanges();
     const solicitudElement = fixture.debugElement.query(By.css('solicitud'));
     expect(solicitudElement).toBeTruthy();
+  });
+  it('should not call establecerDatosEstado when datos are null', () => {
+    component.obtenerDatosBandejaSolicitudes();
+    expect(component.datosRespuestaDisponibles).toBe(false);
+    expect(avisoServiceMock.establecerDatosEstado).not.toHaveBeenCalled();
   });
 });

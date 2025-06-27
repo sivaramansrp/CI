@@ -49,24 +49,24 @@ describe('PasoCapturarSolicitudComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('debería crear', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize datosPasos with correct values', () => {
+  it('Debería inicializar datosPasos con valores correctos', () => {
     expect(component.datosPasos.nroPasos).toBe(component.pasos.length);
     expect(component.datosPasos.indice).toBe(1);
     expect(component.datosPasos.txtBtnAnt).toBe('Anterior');
     expect(component.datosPasos.txtBtnSig).toBe('Continuar');
   });
 
-  it('should subscribe to FormaValida$ and call store setters', () => {
+  it('debe suscribirse a FormaValida$ y llamar a los setters de la tienda', () => {
     mockFormaValida$.next(true);
     expect(mockSeccion.establecerSeccion).toHaveBeenCalledWith([true]);
     expect(mockSeccion.establecerFormaValida).toHaveBeenCalledWith([true]);
   });
 
-  it('should clean up destroyNotifier$ on ngOnDestroy', () => {
+  it('debe limpiar destroyNotifier$ en ngOnDestroy', () => {
     const nextSpy = jest.spyOn(component['destroyNotifier$'], 'next');
     const completeSpy = jest.spyOn(component['destroyNotifier$'], 'complete');
     component.ngOnDestroy();
@@ -74,7 +74,7 @@ describe('PasoCapturarSolicitudComponent', () => {
     expect(completeSpy).toHaveBeenCalled();
   });
 
-  it('should not call wizardComponent methods if valor is out of range', () => {
+  it('no debe llamar a los métodos de wizardComponent si el valor está fuera de rango', () => {
     const wizardMock = {
       siguiente: jest.fn(),
       atras: jest.fn(),

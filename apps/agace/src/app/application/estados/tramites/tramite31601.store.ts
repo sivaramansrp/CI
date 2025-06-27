@@ -479,6 +479,10 @@ export interface Solicitud31601State {
      */
     cargo: string;
     /**
+     * El valor de estadoResidencia.
+     */
+    estadoResidencia : string;
+    /**
      * El valor de telefonoReprestantante.
      */
     telefonoReprestantante: string;
@@ -983,6 +987,11 @@ export function createInitialState(): Solicitud31601State {
          * El valor de cargo.
          */
         cargo: '',
+
+        /**
+         * El valor de estadoResidencia.
+         */
+        estadoResidencia : '',
 
         /**
          * El valor de telefonoReprestantante.

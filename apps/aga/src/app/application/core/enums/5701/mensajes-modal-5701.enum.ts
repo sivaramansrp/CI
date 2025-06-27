@@ -27,10 +27,14 @@ export const MSJ_ERROR_FECHA_SEMANA =
 export const MSJ_ERROR_FECHA_DIA =
   'La fecha no es válida para la solicitud seleccionada.';
 
-  /**
-   * @description Mensaje de error cuando la fecha final es menor que la fecha inicial.
-   */
-export const MSJ_ERROR_FECHA_FINAL_MENOR_INICIAL = 'Fecha inválida. La fecha final no puede ser menor a la fecha de incio.';
+/**
+ * @description Mensaje de error cuando la fecha final es menor que la fecha inicial.
+ */
+export const MSJ_ERROR_HORA_FINAL_MENOR_INICIAL =
+  'Hora inválida. La hora final no puede ser menor a la hora de incio.';
+
+export const MSJ_FECHA_DENTRO_DE_HORARIO_ADUANA =
+  'El horario que seleccionaste para llevar a cabo tu servicio extraordinario, se encuentra dentro del horario de operación de la aduana. Por favor verifica.';
 
 // #Mensajes del modal para el componente Persona Responsable del Despacho
 /**
@@ -206,3 +210,9 @@ export const MSJ_ERROR_RFC_AUTORIZACION_LDA =
  */
 export const MSJ_ERROR_FOLIO_DDEX =
   'EL RFC no está autorizado para realizr DD, favor de verificar.';
+
+/**
+ * Mensaje que indica que no tiene relación de encargo conferido
+ */
+export const MSJ_NO_RELACION_ENCARGO_CONFERIDO =
+  'No cuenta con relación de encargo conferido.';
