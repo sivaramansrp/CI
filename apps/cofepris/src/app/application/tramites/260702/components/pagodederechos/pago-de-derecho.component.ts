@@ -19,6 +19,8 @@ import {
   ConsultaioQuery,
   InputFecha,
   InputFechaComponent,
+  REGEX_REEMPLAZAR,
+  REGEX_SOLO_DIGITOS,
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
 
@@ -186,16 +188,16 @@ export class PagoDeDerechoComponent implements OnInit, OnDestroy {
       pagoDeDerechos: this.fb.group({
         clavedereferencia: [
           this.pagoDeDerechosState?.clavedereferencia,
-          Validators.required,
+          [Validators.required, Validators.pattern(REGEX_REEMPLAZAR)],
         ],
         cadenadeladependencia: [
           this.pagoDeDerechosState?.cadenadeladependencia,
-          Validators.required,
+         [Validators.pattern(REGEX_REEMPLAZAR)],
         ],
-        banco: [this.pagoDeDerechosState?.banco, Validators.required],
+        banco: [this.pagoDeDerechosState?.banco],
         llavedepago: [
           this.pagoDeDerechosState?.llavedepago,
-          Validators.required,
+         [Validators.pattern(REGEX_REEMPLAZAR)],
         ],
         fechadepago: [
           this.pagoDeDerechosState?.fechadepago,
@@ -203,7 +205,7 @@ export class PagoDeDerechoComponent implements OnInit, OnDestroy {
         ],
         importedepago: [
           this.pagoDeDerechosState?.importedepago,
-          Validators.required,
+          [Validators.pattern(REGEX_SOLO_DIGITOS)],
         ],
       }),
     });
