@@ -2,77 +2,47 @@ import { Component,EventEmitter,OnInit,Output } from '@angular/core';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { TituloComponent } from '@ng-mf/data-access-user';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+
 @Component({
-  selector: 'app-agregar-destinatoria',
-  templateUrl: './agregar-destinatoria.component.html',
-  styleUrl: './agregar-destinatoria.component.scss',
+  selector: 'app-agregar-importador',
   standalone: true,
-  imports: [TituloComponent, CatalogoSelectComponent,FormsModule,ReactiveFormsModule,CommonModule]
+  imports: [TituloComponent, CatalogoSelectComponent],
+  templateUrl: './agregar-importador.component.html',
+  styleUrl: './agregar-importador.component.scss'
 })
-export class AgregarDestinatoriaComponent implements OnInit {
-
-
-  destinatarioForm!: FormGroup;
+export class AgregarImportadorComponent implements OnInit{
   /**
    * @property pais
    * @type {Catalogo[]}
    * @description Arreglo que almacena los datos de los países.
    */
   public pais!: Catalogo[];
-  /**
+   /**
    * @property fisica
    * @type {boolean}
    * @description Indica si la persona es física.
    */
   public fisica: boolean = true;
-
-  /**
+    /**
    * @property moral
    * @type {boolean}
    * @description Indica si la persona es moral.
    */
   public moral: boolean = false;
 
-  /** 
+   /** 
    * Evento que se emite para cerrar el componente.
    */
   @Output() cerrar = new EventEmitter<void>();
-
-  /**
-   * @constructor
-   * @description Constructor de la clase AgregarDestinatoriaComponent.
-   */
-  constructor(private fb: FormBuilder) { 
-    //
-  }
-
-  /**
+  
+    /**
    * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
    * Llama al método `getPais()` para obtener la información de países necesaria para el componente.
    */
   ngOnInit(): void {
     this.getPais();
-      this.destinatarioForm = this.fb.group({
-      tipoPersona: ['fisica'],
-      nombre: [''],
-      primerApellido: [''],
-      segundoApellido: [''],
-      denominacion: [''],
-      pais: [''],
-      domicilio: [''],
-        lada: ['', [Validators.pattern('^[0-9]{4}$'), Validators.maxLength(4)]],
-      telefono: [''],
-      correoElectronico: ['', [Validators.email]],
-    });
   }
-
-  /**
-   * @description getPais se utiliza para obtener los datos de los paises
-   */
-
-  /**
+   /**
    * @descripcion getPais se utiliza para obtener los datos de los países.
    */
   public getPais(): void {
@@ -87,14 +57,12 @@ export class AgregarDestinatoriaComponent implements OnInit {
       }
     ];
   }
-
-
   /**
    * 
    * @param  checkBoxName, que acepta datos de tipo cadena
    * @description inputChecked se utiliza para verificar si el checkbox está seleccionado
    */
-  public entradaSeleccionada(checkBoxName: string): void {
+  public inputChecked(checkBoxName: string): void {
     if (checkBoxName === 'fisica') {
       this.fisica = true;
       this.moral = false;
@@ -104,10 +72,10 @@ export class AgregarDestinatoriaComponent implements OnInit {
     }
   }
 
-  /**
+   /**
    * Cierra el modal emitiendo el evento `cerrar`.
    */
-  public cerrarModal(): void {
+   public cerrarModal(): void {
     this.cerrar.emit();
   }
 }

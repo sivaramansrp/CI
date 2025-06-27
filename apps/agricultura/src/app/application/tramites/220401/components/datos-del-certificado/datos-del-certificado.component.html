@@ -4,8 +4,8 @@
     <ng-titulo titulo="Datos del trámite a realizar" />
     <div class="row">
       <div class="col-md-12">
-        <label for="Tipo_de_Certificado">Tipo de Certificado:</label>
-        <span class="require">*</span>
+        <label for="Tipo_de_Certificado">Tipo de Certificado</label>
+        <span class="require">*:</span>
       </div>
     </div>
     <app-input-radio [radioOptions]="radioOptions" [isRequired]="true" [selectedValue]="selectedValue"
@@ -14,8 +14,7 @@
     <div class="row mt-4">
       <div class="col-md-12">
         <label for="message" class="form-label">Tratamiento :</label>
-        <textarea id="message" formControlName="tratamiento" class="form-control mb-5" placeholder=""
-          readonly="true"></textarea>
+        <textarea id="message" formControlName="tratamiento" class="form-control mb-5" placeholder=""></textarea>
       </div>
     </div>
   </form>
