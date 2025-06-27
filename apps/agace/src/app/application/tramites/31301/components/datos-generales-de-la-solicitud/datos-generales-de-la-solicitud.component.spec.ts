@@ -559,7 +559,6 @@ describe('DatosGeneralesDeLaSolicitudComponent', () => {
         .mockReturnValue(of(mockRespuesta)),
     } as any;
 
-    // component.solicitud31301Store = createStoreSpy();
     component.conseguirDatosGeneralesDeLaSolicitudDatos();
 
     expect(
