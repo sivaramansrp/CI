@@ -36,12 +36,12 @@ describe('ProsecService', () => {
     httpMock.verify();
   });
 
-  it('should be created', () => {
+  it('debe ser creado', () => {
     expect(service).toBeTruthy();
   });
 
   describe('obtenerMenuDesplegable', () => {
-    it('should return Catalogo[] from response.data', () => {
+    it('debe retornar Catalogo[] de response.data', () => {
       const fileName = 'bancos.json';
       const mockResponse: RespuestaCatalogos = {
         code: 200,
@@ -63,7 +63,7 @@ describe('ProsecService', () => {
   });
 
   describe('obtenerTablaDatos', () => {
-    it('should return table data as Record<string, unknown>[]', () => {
+    it('debe retornar los datos de la tabla como Record<string, unknown>[]', () => {
       const fileName = 'tabla.json';
       const mockData = [
         { clave: 'A1', valor: 'Item 1' },
@@ -81,7 +81,7 @@ describe('ProsecService', () => {
   });
 
   describe('actualizarEstadoFormulario', () => {
-    it('should call all store setters with correct values', () => {
+    it('debe llamar a todos los setters del store con los valores correctos', () => {
       const mockState: ProsecState = {
         modalidad: 'modalidadA',
         Estado: 'EstadoB',
