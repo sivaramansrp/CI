@@ -29,21 +29,21 @@ describe('AnexoVistaUnoComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('debería crear', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize anexoUnoConfig correctly', () => {
+  it('debería inicializar anexoUnoConfig correctamente', () => {
     expect(component.anexoUnoConfig.anexoUnoTablaSeleccionRadio).toBe(TablaSeleccion.RADIO);
     expect(component.anexoUnoConfig.anexoUnoEncabezadoDeTabla).toBe(ANEXO_I_SERVICIO);
   });
 
-  it('should initialize anexoImportacionConfig correctly', () => {
+  it('debería inicializar anexoImportacionConfig correctamente', () => {
     expect(component.anexoImportacionConfig.anexoDosTablaSeleccionRadio).toBe(TablaSeleccion.RADIO);
     expect(component.anexoImportacionConfig.anexoDosEncabezadoDeTabla).toBe(ANEXO_IMPORTACION_SERVICIO);
   });
 
-  it('should update anexoUnoTablaLista on obtenerAnexoUnoDevolverLaLlamada', () => {
+  it('debería actualizar anexoUnoTablaLista en obtenerAnexoUnoDevolverLaLlamada', () => {
     const MOCK_EVENT: AnexoUnoEncabezado[] = [{
       encabezadoFraccion: 'sample',
       encabezadoFraccionArancelaria: 'sample',
@@ -59,7 +59,7 @@ describe('AnexoVistaUnoComponent', () => {
     expect(component.anexoUnoTablaLista).toEqual(MOCK_EVENT);
   });
 
-  it('should update anexoDosTablaLista on obtenerAnexoDosDevolverLaLlamada', () => {
+  it('debe actualizar anexoDosTablaLista en obtenerAnexoDosDevolverLaLlamada', () => {
     const mockEvent: AnexoDosEncabezado[] = [{
       encabezadoFraccion: '',
       encabezadoFraccionExportacion: '',

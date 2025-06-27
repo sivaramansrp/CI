@@ -52,27 +52,27 @@ describe('PasoUnoCsComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('debería crear', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should assign secciones and formas on init (via constructor)', () => {
+  it('debería asignar secciones y formas en init (a través del constructor)', () => {
     expect(mockSeccionStore.establecerSeccion).toHaveBeenCalled();
     expect(mockSeccionStore.establecerFormaValida).toHaveBeenCalled();
   });
 
-  it('should update indice when seleccionaTab is called', () => {
+  it('debería actualizar el índice cuando se llama a seleccionaTab', () => {
     component.seleccionaTab(3);
     expect(component.indice).toBe(3);
   });
 
-  it('should call guardarDatosFormulario if consultaState.update is true', () => {
+  it('debería llamar a guardarDatosFormulario si consultaState.update es true', () => {
     const spy = jest.spyOn(component, 'guardarDatosFormulario');
     component.ngOnInit();
     expect(spy).toHaveBeenCalled();
   });
 
-  it('should call all service update methods in guardarDatosFormulario', () => {
+  it('debería llamar a todos los métodos de actualización del servicio en guardarDatosFormulario', () => {
     component.guardarDatosFormulario();
 
     expect(mockService.actualizarEstadoFormulario).toHaveBeenCalled();

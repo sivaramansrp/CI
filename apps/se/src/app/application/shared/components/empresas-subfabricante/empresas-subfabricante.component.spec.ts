@@ -43,31 +43,31 @@ describe('EmpresasSubfabricantesComponent', () => {
     component = fixture.debugElement.componentInstance;
   });
 
-  it('should run #constructor()', async () => {
+  it('debe ejecutar #constructor()', async () => {
     expect(component).toBeTruthy();
   });
 
-  it('should run SetterDeclaration #estadoCatalogo', async () => {
+  it('debe ejecutar SetterDeclaration #estadoCatalogo', async () => {
     component.estadoCatalogo = {};
   });
 
-  it('should run SetterDeclaration #datosTablaSubfabricantesDisponibles', async () => {
+  it('debe ejecutar SetterDeclaration #datosTablaSubfabricantesDisponibles', async () => {
     component.datosTablaSubfabricantesDisponibles = {};
   });
 
-  it('should run SetterDeclaration #configuracionTablaDisponibles', async () => {
+  it('debe ejecutar SetterDeclaration #configuracionTablaDisponibles', async () => {
     component.configuracionTablaDisponibles = {};
   });
 
-  it('should run SetterDeclaration #configuracionTablaSeleccionadas', async () => {
+  it('debe ejecutar SetterDeclaration #configuracionTablaSeleccionadas', async () => {
     component.configuracionTablaSeleccionadas = {};
   });
 
-  it('should run SetterDeclaration #datosTablaSubfabricantesSeleccionadas', async () => {
+  it('debe ejecutar SetterDeclaration #datosTablaSubfabricantesSeleccionadas', async () => {
     component.datosTablaSubfabricantesSeleccionadas = {};
   });
 
-  it('should run SetterDeclaration #formularioDatosSubcontratista', async () => {
+  it('debe ejecutar SetterDeclaration #formularioDatosSubcontratista', async () => {
     component._formularioDatosSubcontratista =
       component._formularioDatosSubcontratista || {};
     component._formularioDatosSubcontratista.setValue = jest.fn();
@@ -79,38 +79,38 @@ describe('EmpresasSubfabricantesComponent', () => {
     ).toHaveBeenCalled();
   });
 
-  it('should run GetterDeclaration #estadoCatalogo', async () => {
+  it('debe ejecutar GetterDeclaration #estadoCatalogo', async () => {
     const estadoCatalogo = component.estadoCatalogo;
   });
 
-  it('should run GetterDeclaration #datosTablaSubfabricantesDisponibles', async () => {
+  it('debe ejecutar GetterDeclaration #datosTablaSubfabricantesDisponibles', async () => {
     const datosTablaSubfabricantesDisponibles =
       component.datosTablaSubfabricantesDisponibles;
   });
 
-  it('should run GetterDeclaration #configuracionTablaDisponibles', async () => {
+  it('debe ejecutar GetterDeclaration #configuracionTablaDisponibles', async () => {
     const configuracionTablaDisponibles =
       component.configuracionTablaDisponibles;
   });
 
-  it('should run GetterDeclaration #configuracionTablaSeleccionadas', async () => {
+  it('debe ejecutar GetterDeclaration #configuracionTablaSeleccionadas', async () => {
     const configuracionTablaSeleccionadas =
       component.configuracionTablaSeleccionadas;
   });
 
-  it('should run GetterDeclaration #datosTablaSubfabricantesSeleccionadas', async () => {
+  it('debe ejecutar GetterDeclaration #datosTablaSubfabricantesSeleccionadas', async () => {
     const datosTablaSubfabricantesSeleccionadas =
       component.datosTablaSubfabricantesSeleccionadas;
   });
 
-  it('should run #inicializarFormularioDatosSubcontratista()', async () => {
+  it('debe ejecutar #inicializarFormularioDatosSubcontratista()', async () => {
     component.fb = component.fb || {};
     component.fb.group = jest.fn();
     component.inicializarFormularioDatosSubcontratista();
     expect(component.fb.group).toHaveBeenCalled();
   });
 
-  it('should run #cambiarRFC()', async () => {
+  it('debe ejecutar #cambiarRFC()', async () => {
     component.alCambiarRFC = component.alCambiarRFC || {};
     component.alCambiarRFC.emit = jest.fn();
     component.formularioDatosSubcontratista =
@@ -123,7 +123,7 @@ describe('EmpresasSubfabricantesComponent', () => {
     // expect(component.formularioDatosSubcontratista.get).toHaveBeenCalled();
   });
 
-  it('should run #cambiarEstado()', async () => {
+  it('debe ejecutar #cambiarEstado()', async () => {
     component.formularioDatosSubcontratista =
       component.formularioDatosSubcontratista || {};
     component.formularioDatosSubcontratista.get = jest.fn().mockReturnValue({
@@ -136,33 +136,33 @@ describe('EmpresasSubfabricantesComponent', () => {
     // expect(component.alCambiarEstado.emit).toHaveBeenCalled();
   });
 
-  it('should run #onBuscar()', async () => {
+  it('debe ejecutar #onBuscar()', async () => {
     component.buscar = component.buscar || {};
     component.buscar.emit = jest.fn();
     component.onBuscar();
     expect(component.buscar.emit).toHaveBeenCalled();
   });
 
-  it('should run #onPlantasDisponiblesSeleccionadas()', async () => {
+  it('debe ejecutar #onPlantasDisponiblesSeleccionadas()', async () => {
     component.onPlantasDisponiblesSeleccionadas({
       length: {},
     });
   });
 
-  it('should run #agregarPlantas()', async () => {
+  it('debe ejecutar #agregarPlantas()', async () => {
     component.plantasPorAgrupar = component.plantasPorAgrupar || {};
     component.plantasPorAgrupar.emit = jest.fn();
     component.agregarPlantas();
     expect(component.plantasPorAgrupar.emit).toHaveBeenCalled();
   });
 
-  it('should run #onPlantasSeleccionadas()', async () => {
+  it('debe ejecutar #onPlantasSeleccionadas()', async () => {
     component.onPlantasSeleccionadas({
       length: {},
     });
   });
 
-  it('should run #eliminarPlantas()', async () => {
+  it('debe ejecutar #eliminarPlantas()', async () => {
     component.plantasSeleccionadas = [0];
     component.plantasPorEliminar = component.plantasPorEliminar || {};
     component.plantasPorEliminar.emit = jest.fn();
@@ -170,7 +170,7 @@ describe('EmpresasSubfabricantesComponent', () => {
     expect(component.plantasPorEliminar.emit).toHaveBeenCalled();
   });
 
-  it('should run #complementarPlantas()', async () => {
+  it('debe ejecutar #complementarPlantas()', async () => {
     component.plantasSeleccionadas = [0];
     component.plantasPorComplementar = component.plantasPorComplementar || {};
     component.plantasPorComplementar.emit = jest.fn();
@@ -179,7 +179,7 @@ describe('EmpresasSubfabricantesComponent', () => {
   });
 
   describe('GestionarEmpresasSubfabricantesComponent', () => {
-    it('should run #abrirDialogoComplementarPlanta() and show modal', () => {
+    it('debe ejecutar #abrirDialogoComplementarPlanta() y mostrar modal', () => {
       const modalDiv = document.createElement('div');
       document.body.appendChild(modalDiv);
       component.modalElement = new ElementRef(modalDiv);
