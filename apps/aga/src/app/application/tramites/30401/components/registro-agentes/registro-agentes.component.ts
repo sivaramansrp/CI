@@ -417,6 +417,7 @@ export class RegistroAgentesComponent implements OnInit {
     );
 
     this.listaFilaSeleccionadaAgentes = [];
+    this.filaSeleccionadaAgentes = {} as AgentesTabla;
     this.tramite30401Store.establecerDatos({agentesTablaDatos: this.agentesInfoList});
     this.cerrarEliminarConfirmationPopup();
   }

@@ -518,6 +518,7 @@ export class RegistroVehiculosComponent implements OnInit {
     );
 
     this.listaFilaSeleccionadaVehiculos = [];
+    this.filaSeleccionadaVehiculos = {} as RegistroVehiculos;
     this.tramite30401Store.establecerDatos(
       {registroTablaDatos: this.registroVehiculosInfoList}
     );

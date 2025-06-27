@@ -408,6 +408,7 @@ export class VehiculosComponent implements OnInit {
     );
 
     this.listaFilaSeleccionadaVehiculos = [];
+    this.filaSeleccionadaVehiculos = {} as VehiculosTabla;
     this.tramite30401Store.establecerDatos({vehiculosTablaDatos:this.vehiculosInfoList});
     this.cerrarEliminarConfirmationPopup();
   }
