@@ -32,16 +32,16 @@ describe('PasoDosComponent', () => {
     component = fixture.componentInstance;
   });
 
-  it('should create the component', () => {
+  it('debería crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize TEXTOS and infoAlert variables', () => {
+  it('debería inicializar las variables TEXTOS e infoAlert', () => {
     expect(component.TEXTOS).toBeDefined();
     expect(component.infoAlert).toBe('alert-info');
   });
 
-  it('should call getTiposDocumentos on ngOnInit', async () => {
+  it('debería llamar a getTiposDocumentos en ngOnInit', async () => {
     // Mock getCatalogo to return an observable to avoid undefined error
     (mockCatalogosService.getCatalogo as jest.Mock).mockReturnValue(of([]));
     const getTiposDocumentosSpy = jest.spyOn(component, 'getTiposDocumentos');
@@ -49,7 +49,7 @@ describe('PasoDosComponent', () => {
     expect(getTiposDocumentosSpy).toHaveBeenCalled();
   });
 
-  it('should populate catalogoDocumentos on successful getCatalogo call', async () => {
+  it('debería poblar catalogoDocumentos al obtener getCatalogo exitosamente', async () => {
     const mockCatalogo: Catalogo[] = [{ id: 1, descripcion: 'Documento 1' }];
     (mockCatalogosService.getCatalogo as jest.Mock).mockReturnValue(of(mockCatalogo));
 
@@ -59,7 +59,7 @@ describe('PasoDosComponent', () => {
     expect(component.catalogoDocumentos).toEqual(mockCatalogo);
   });
 
-  it('should handle error in getCatalogo call', async () => {
+  it('debería manejar el error en la llamada a getCatalogo', async () => {
     (mockCatalogosService.getCatalogo as jest.Mock).mockReturnValue(throwError(() => new Error('Error fetching catalog')));
 
     await component.getTiposDocumentos();
