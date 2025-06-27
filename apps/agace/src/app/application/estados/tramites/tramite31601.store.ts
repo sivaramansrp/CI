@@ -490,6 +490,10 @@ export interface Solicitud31601State {
    */
   suplente: string;
   /**
+   * El valor de estadoResidencia.
+   */
+  estadoResidencia: string;
+  /**
    * El valor de tipoDocumento.
    */
   tipoDocumento: string;
@@ -1006,6 +1010,12 @@ export function createInitialState(): Solicitud31601State {
      * El valor de suplente.
      */
     suplente: '',
+
+    /**
+     * El valor de estadoResidencia.
+     */
+    estadoResidencia: '',
+
     /**
      * El valor de tipoDocumento.
      */
@@ -2166,6 +2176,18 @@ export class Tramite31601Store extends Store<Solicitud31601State> {
       suplente,
     }));
   }
+
+  /**
+   * Establece el estado de estadoResidencia.
+   * @param estadoResidencia - El valor de estadoResidencia.
+   */
+  public setEstadoResidencia(estadoResidencia: string): void {
+    this.update((state) => ({
+      ...state,
+      estadoResidencia,
+    }));
+  }
+
   /**
    * Establece el estado de tipoDocumento.
    * @param tipoDocumento - El valor de tipoDocumento.
