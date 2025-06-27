@@ -253,4 +253,141 @@ describe('AvisoComponent', () => {
     expect(component.domicilioFormulario.enabled).toBe(true);
     expect(component.mercanciaFormulario.enabled).toBe(true);
   });
+
+  it('should update filaSeleccionadaLista when filaSeleccionada is called', () => {
+    const mockEvento: AvisoTabla[] = [{
+      id: 1,
+      rfc: "rfc",
+      nombreComercial: "nombreComercial",
+      entidadFederativa: "entidadFederativa",
+      alcaldioOMuncipio: "alcaldioOMuncipio",
+      colonia: "colonia"
+    }];
+    component.filaSeleccionada(mockEvento);
+    expect(component.filaSeleccionadaLista).toEqual(mockEvento);
+  });
+
+  it('should update filaSeleccionadaMercanciaLista when filaSeleccionadaMercancia is called', () => {
+    const mockEvento: MercanciaTabla[] = [{
+      id: 1,
+      claveFraccionArancelaria: "claveFraccionArancelaria",
+      nico: "nico",
+      cantidad: "cantidad",
+      claveUnidadMedida: "claveUnidadMedida",
+      valorUSD: "valorUSD",
+      descripcionMercancia: "descripcionMercancia",
+      descripcionProceso: "descripcionProceso",
+      numPedimentoExportacion: "numPedimentoExportacion",
+      numPedimentoImportacion: "numPedimentoImportacion",
+    }];
+    component.filaSeleccionadaMercancia(mockEvento);
+    expect(component.filaSeleccionadaMercanciaLista).toEqual(mockEvento);
+  });
+
+  it('should call cargarMercanciaTabla and close the modal when agregarMercancia is called', () => {
+    const cargarMercanciaTablaSpy = jest.spyOn(component, 'cargarMercanciaTabla');
+    component.closeMercancia = {
+      nativeElement: {
+        click: jest.fn(),
+      },
+    } as any;
+
+    component.agregarMercancia();
+
+    expect(cargarMercanciaTablaSpy).toHaveBeenCalled();
+    expect(component.closeMercancia.nativeElement.click).toHaveBeenCalled();
+  });
+
+  it('should call cargarAvisoTabla, close the modal, and open a notification when agregarDomicilio is called', () => {
+    const cargarAvisoTablaSpy = jest.spyOn(component, 'cargarAvisoTabla');
+    const abrirModalSpy = jest.spyOn(component, 'abrirModal');
+    component.closeDomicilio = {
+      nativeElement: {
+        click: jest.fn(),
+      },
+    } as any;
+
+    component.agregarDomicilio();
+
+    expect(cargarAvisoTablaSpy).toHaveBeenCalled();
+    expect(component.closeDomicilio.nativeElement.click).toHaveBeenCalled();
+    expect(abrirModalSpy).toHaveBeenCalled();
+  });
+
+  it('should sanitize input by removing non-alphanumeric characters', () => {
+    const mockEvent = {
+      target: { value: 'abc123!@#' } as HTMLInputElement,
+    } as unknown as Event;
+    const form = new FormBuilder().group({
+      testField: [''],
+    });
+    component.sanitizeAlphanumeric(form, 'testField', mockEvent);
+    expect(form.get('testField')?.value).toBe('abc123');
+  });
+
+  it('should sanitize input by removing non-alphanumeric characters except spaces', () => {
+    const mockEvent = {
+      target: { value: 'abc 123!@#' } as HTMLInputElement,
+    } as unknown as Event;
+
+    const form = new FormBuilder().group({
+      testField: [''],
+    });
+    component.sanitizeAlphanumericWithSpace(form, 'testField', mockEvent);
+    expect(form.get('testField')?.value).toBe('abc 123');
+  });
+
+  it('should sanitize input by removing non-numeric characters', () => {
+    const mockEvent = {
+      target: { value: '123abc!@#' } as HTMLInputElement,
+    } as unknown as Event;
+    const form = new FormBuilder().group({
+      testField: [''],
+    });
+    component.sanitizeNumeric(form, 'testField', mockEvent);
+    expect(form.get('testField')?.value).toBe('123');
+  });
+
+  it('should clear the file input and reset the archivoMasivo control', () => {
+    const mockFileInput = {
+      value: 'mockFile',
+    } as HTMLInputElement;
+
+    component.avisoFormulario = new FormBuilder().group({
+      archivoMasivo: ['mockFile'],
+    });
+    component.limpiar(mockFileInput);
+    expect(mockFileInput.value).toBe('');
+    expect(component.avisoFormulario.get('archivoMasivo')?.value).toBe('');
+  });
+
+  it('should set the selected file in the archivoMasivo control', () => {
+    const mockFile = new File(['content'], 'testFile.txt', { type: 'text/plain' });
+    const mockEvent = {
+      target: {
+        files: [mockFile],
+      },
+    } as unknown as Event;
+
+    component.avisoFormulario = new FormBuilder().group({
+      archivoMasivo: [null],
+    });
+    component.onArchivoMasivoSeleccionado(mockEvent);
+    expect(component.avisoFormulario.get('archivoMasivo')?.value).toBe(mockFile);
+  });
+
+  it('should not set the archivoMasivo control if no file is selected', () => {
+    const mockEvent = {
+      target: {
+        files: [],
+      },
+    } as unknown as Event;
+
+    component.avisoFormulario = new FormBuilder().group({
+      archivoMasivo: [null],
+    });
+    component.onArchivoMasivoSeleccionado(mockEvent);
+    expect(component.avisoFormulario.get('archivoMasivo')?.value).toBeNull();
+  });
+
 });
