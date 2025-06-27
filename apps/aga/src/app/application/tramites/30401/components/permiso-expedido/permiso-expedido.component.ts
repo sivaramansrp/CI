@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { FormGroup, FormGroupDirective, ReactiveFormsModule } from '@angular/forms';
 import { InputCheckComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
@@ -20,7 +20,7 @@ import { Tramite30401Store } from '../../estados/tramites30401.store';
   templateUrl: './permiso-expedido.component.html',
   styleUrl: './permiso-expedido.component.scss',
 })
-export class permisoComponent implements OnInit {
+export class permisoComponent implements OnInit, OnChanges {
   /**
    * Formulario inicializado para gestionar los datos del componente.
    */
@@ -64,6 +64,26 @@ export class permisoComponent implements OnInit {
     // No se necesita lógica de inicialización adicional.
   }
 
+    /**
+     * Método del ciclo de vida que se ejecuta cuando cambian las propiedades de entrada del componente.
+     *
+     * Si la propiedad `esFormularioSoloLectura` cambia, habilita o deshabilita el formulario según su valor.
+     * Esto permite que el formulario se muestre en modo solo lectura o editable dinámicamente.
+     *
+     * @param changes - Objeto que contiene los cambios detectados en las propiedades de entrada.
+     */
+    ngOnChanges(changes: SimpleChanges): void {
+  
+      // Verifica si el formulario ha cambiado y actualiza su estado
+      if (changes['esFormularioSoloLectura'] && this.inicializarFormulario) {
+        if (this.esFormularioSoloLectura) {
+          this.inicializarFormulario.disable();
+        } else {
+          this.inicializarFormulario.enable();
+        }
+      }
+    }
+    
   /**
    * Método de inicialización del componente.
    * Obtiene el grupo de formulario correspondiente del formulario raíz.
