@@ -13,15 +13,15 @@ describe('PasoduosComponent', () => {
     component = new PasoduosComponent(catalogosServiceMock);
   });
 
-  it('should create', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should have TEXTOS defined', () => {
+  it('debe tener TEXTOS definido', () => {
     expect(component.TEXTOS).toBe(TEXTOS);
   });
 
-  it('should populate catalogoDocumentos when getTiposDocumentos returns data', () => {
+  it('debe llenar catalogoDocumentos cuando getTiposDocumentos retorna datos', () => {
     const mockDocs = [{ id: 1, descripcion: 'Doc 1' }];
     catalogosServiceMock.getCatalogo.mockReturnValue(of(mockDocs));
     component.getTiposDocumentos();
@@ -29,19 +29,19 @@ describe('PasoduosComponent', () => {
     expect(component.catalogoDocumentos).toEqual(mockDocs);
   });
 
-  it('should not update catalogoDocumentos if response is empty', () => {
+  it('no debe actualizar catalogoDocumentos si la respuesta está vacía', () => {
     catalogosServiceMock.getCatalogo.mockReturnValue(of([]));
     component.catalogoDocumentos = [{ id: 1, descripcion: 'Doc 1' }];
     component.getTiposDocumentos();
     expect(component.catalogoDocumentos).toEqual([{ id: 1, descripcion: 'Doc 1' }]);
   });
 
-  it('should handle error in getTiposDocumentos gracefully', () => {
+  it('debe manejar el error en getTiposDocumentos sin lanzar excepción', () => {
     catalogosServiceMock.getCatalogo.mockReturnValue(throwError(() => new Error('error')));
     expect(() => component.getTiposDocumentos()).not.toThrow();
   });
 
-  it('should complete destroyed$ on ngOnDestroy', () => {
+  it('debe completar destroyed$ al llamar ngOnDestroy', () => {
     const nextSpy = jest.spyOn<any, any>(component['destroyed$'], 'next');
     const completeSpy = jest.spyOn<any, any>(component['destroyed$'], 'complete');
     component.ngOnDestroy();
