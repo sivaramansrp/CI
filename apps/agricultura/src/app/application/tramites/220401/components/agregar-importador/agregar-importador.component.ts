@@ -34,13 +34,7 @@ export class AgregarImportadorComponent implements OnInit{
    * Evento que se emite para cerrar el componente.
    */
   @Output() cerrar = new EventEmitter<void>();
-    /**
-   * @constructor
-   * @description Constructor de la clase AgregarDestinatoriaComponent.
-   */
-  constructor() { 
-    //
-  }
+  
     /**
    * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
    * Llama al método `getPais()` para obtener la información de países necesaria para el componente.
