@@ -8,6 +8,7 @@ import { Tramite32503Query } from '../../../../estados/queries/tramite32503.quer
 import { Modal } from 'bootstrap';
 import { AvisoTabla, MercanciaTabla } from "../../models/aviso-traslado.model";
 import { provideHttpClient } from '@angular/common/http';
+import { AvisoTrasladoService } from '../../services/aviso-traslado.service';
 
 
 
@@ -18,12 +19,22 @@ describe('AvisoComponent', () => {
   let tramiteQueryMock: any;
   let tablaDeDatos: AvisoTabla[];
   let tablaDeMercancia: MercanciaTabla[];
+  let avisoTrasladoServiceMock: any;
 
 
   beforeEach(async () => {
     tramiteStoreMock = {
       setAvisoFormularioTipoAviso: jest.fn(),
       setAvisoFormularioFechaTranslado: jest.fn(),
+    };
+    avisoTrasladoServiceMock = {
+      obtenerFraccionArancelaria: jest.fn().mockReturnValue(of({ datos: [{ id: 1, descripcion: 'Fracción 1' }] })),
+      obtenerUnidadMedida: jest.fn().mockReturnValue(of({ datos: [{ id: 1, descripcion: 'Unidad 1' }] })),
+      obtenerFederativa: jest.fn().mockReturnValue(of({ datos: [{ id: 1, descripcion: 'Entidad 1' }] })),
+      obtenerMunicipio: jest.fn().mockReturnValue(of({ datos: [{ id: 1, descripcion: 'Municipio 1' }] })),
+      obtenerColonias: jest.fn().mockReturnValue(of({ datos: [{ id: 1, descripcion: 'Colonia 1' }] })),
+      obtenerAvisoTabla: jest.fn().mockReturnValue(of({ datos: [{ id: 1, descripcion: 'Aviso 1' }] })),
+      obtenerMercanciaTabla: jest.fn().mockReturnValue(of({ datos: [{ id: 1, descripcion: 'Mercancía 1' }] })),
     };
 
     tramiteQueryMock = {
@@ -87,6 +98,7 @@ describe('AvisoComponent', () => {
         provideHttpClient(),
         { provide: Tramite32503Store, useValue: tramiteStoreMock },
         { provide: Tramite32503Query, useValue: tramiteQueryMock },
+        { provide: AvisoTrasladoService, useValue: avisoTrasladoServiceMock },
         FormBuilder,
       ],
     }).compileComponents();
@@ -178,5 +190,67 @@ describe('AvisoComponent', () => {
     component.ngOnDestroy();
     expect(nextSpy).toHaveBeenCalled();
     expect(completeSpy).toHaveBeenCalled();
+  });
+
+
+
+
+  it('should set values in the store using setValoresStore', () => {
+    const form = new FormBuilder().group({
+      testField: ['Test Value'],
+    });
+    component.setValoresStore(form, 'testField', 'setAvisoFormularioFechaTranslado');
+    expect(tramiteStoreMock.setAvisoFormularioFechaTranslado).toHaveBeenCalledWith('Test Value');
+  });
+
+  it('should load fracción arancelaria data using cargarFraccionArancelaria', () => {
+    component.cargarFraccionArancelaria();
+    expect(avisoTrasladoServiceMock.obtenerFraccionArancelaria).toHaveBeenCalled();
+    expect(component.fraccionArancelaria).toEqual([{ id: 1, descripcion: 'Fracción 1' }]);
+  });
+  it('should load unidad de medida data using cargarUnidadMedida', () => {
+    component.cargarUnidadMedida();
+    expect(avisoTrasladoServiceMock.obtenerUnidadMedida).toHaveBeenCalled();
+    expect(component.unidadMedida).toEqual([{ id: 1, descripcion: 'Unidad 1' }]);
+  });
+  it('should load entidad federativa data using cargarFederativa', () => {
+    component.cargarFederativa();
+    expect(avisoTrasladoServiceMock.obtenerFederativa).toHaveBeenCalled();
+    expect(component.entidadFederativa).toEqual([{ id: 1, descripcion: 'Entidad 1' }]);
+  });
+  it('should load municipio data using cargarMunicipio', () => {
+    component.cargarMunicipio();
+    expect(avisoTrasladoServiceMock.obtenerMunicipio).toHaveBeenCalled();
+    expect(component.delegacionMunicipio).toEqual([{ id: 1, descripcion: 'Municipio 1' }]);
+  });
+  it('should load colonias data using cargarColonias', () => {
+    component.cargarColonias();
+    expect(avisoTrasladoServiceMock.obtenerColonias).toHaveBeenCalled();
+    expect(component.colonia).toEqual([{ id: 1, descripcion: 'Colonia 1' }]);
+  });
+  it('should load aviso tabla data using cargarAvisoTabla', () => {
+    component.cargarAvisoTabla();
+    expect(avisoTrasladoServiceMock.obtenerAvisoTabla).toHaveBeenCalled();
+    expect(component.tablaDeDatos.datos).toEqual([{ id: 1, descripcion: 'Aviso 1' }]);
+  });
+  it('should load mercancia tabla data using cargarMercanciaTabla', () => {
+    component.cargarMercanciaTabla();
+    expect(avisoTrasladoServiceMock.obtenerMercanciaTabla).toHaveBeenCalled();
+    expect(component.tablaDeMercancia.datos).toEqual([{ id: 1, descripcion: 'Mercancía 1' }]);
+  });
+  it('should disable forms when soloLectura is true', () => {
+    component.soloLectura = true;
+    component.inicializarEstadoFormulario();
+    expect(component.avisoFormulario.disabled).toBe(true);
+    expect(component.domicilioFormulario.disabled).toBe(true);
+    expect(component.mercanciaFormulario.disabled).toBe(true);
+  });
+
+  it('should enable forms when soloLectura is false', () => {
+    component.soloLectura = false;
+    component.inicializarEstadoFormulario();
+    expect(component.avisoFormulario.enabled).toBe(true);
+    expect(component.domicilioFormulario.enabled).toBe(true);
+    expect(component.mercanciaFormulario.enabled).toBe(true);
   });
 });
