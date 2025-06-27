@@ -9,7 +9,6 @@ import { AlertComponent } from 'ngx-bootstrap/alert';
 import { CatalogoSelectComponent, InputRadioComponent, TableComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { ModalComponent } from '../modal/modal.component';
 
-// Add mock definitions for radio options used in tests
 const TipoPersonaRadioOptions = [
   { label: 'Física', value: 'fisica' },
   { label: 'Moral', value: 'moral' }
@@ -25,7 +24,6 @@ describe('TercerosRelacionadosComponent', () => {
   let tercerosMockService: any;
 
   beforeEach(async () => {
-
     tercerosMockService = {
       getData: jest.fn().mockReturnValue(
         of([
@@ -57,15 +55,15 @@ describe('TercerosRelacionadosComponent', () => {
     });
 
     
-  it('should create', () => {
+  it('debería crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should call getData on init', () => {
+  it('debería llamar a getData al inicializar', () => {
     expect(tercerosMockService.getData).toHaveBeenCalled();
   });
 
-  it('should initialize all form groups on init', () => {
+  it('debería inicializar todos los form groups al inicializar', () => {
     component.ngOnInit();
     expect(component.agregarFabricanteFormGroup).toBeDefined();
     expect(component.agregarDestinatarioFormGroup).toBeDefined();
@@ -73,54 +71,32 @@ describe('TercerosRelacionadosComponent', () => {
     expect(component.agregarFacturadorFormGroup).toBeDefined();
   });
 
-  it('should call initializeAgregarFabricanteFormGroup on init', () => {
-    // Spy on the method
+  it('debería llamar a initializeAgregarFabricanteFormGroup al inicializar', () => {
     const initializeSpy = jest.spyOn(component, 'initializeAgregarFabricanteFormGroup');
-  
-    // Call ngOnInit
     component.ngOnInit();
-  
-    // Verify that the method was called
     expect(initializeSpy).toHaveBeenCalled();
   });
 
-  it('should call initializeAgregarDestinatarioFormGroup on init', () => {
-    // Spy on the method
+  it('debería llamar a initializeAgregarDestinatarioFormGroup al inicializar', () => {
     const initializeSpy = jest.spyOn(component, 'initializeAgregarDestinatarioFormGroup');
-  
-    // Call ngOnInit
     component.ngOnInit();
-  
-    // Verify that the method was called
     expect(initializeSpy).toHaveBeenCalled();
   });
 
-  it('should call initializeAgregarProveedorFormGroup on init', () => {
-    // Spy on the method
+  it('debería llamar a initializeAgregarProveedorFormGroup al inicializar', () => {
     const initializeSpy = jest.spyOn(component, 'initializeAgregarProveedorFormGroup');
-  
-    // Call ngOnInit
     component.ngOnInit();
-  
-    // Verify that the method was called
     expect(initializeSpy).toHaveBeenCalled();
   });
 
-  it('should call initializeAgregarFacturadorFormGroup on init', () => {
-    // Spy on the method
+  it('debería llamar a initializeAgregarFacturadorFormGroup al inicializar', () => {
     const initializeSpy = jest.spyOn(component, 'initializeAgregarFacturadorFormGroup');
-  
-    // Call ngOnInit
     component.ngOnInit();
-  
-    // Verify that the method was called
     expect(initializeSpy).toHaveBeenCalled();
   });
 
-  // fabricante
-  it('should initialize agregarFabricanteFormGroup correctly', () => {
+  it('debería inicializar correctamente agregarFabricanteFormGroup', () => {
     component.initializeAgregarFabricanteFormGroup();
-
     const formGroup = component.agregarFabricanteFormGroup;
     expect(formGroup).toBeTruthy();
     expect(formGroup.get('rfc')?.disabled).toBeTruthy();
@@ -132,13 +108,11 @@ describe('TercerosRelacionadosComponent', () => {
     expect(formGroup.get('numeroExterior')?.validator).toBeDefined();
   });
 
-  it('should enable specific fields in agregarFabricanteFormGroup when tipoPersona value changes', () => {
+  it('debería habilitar campos específicos en agregarFabricanteFormGroup cuando cambia tipoPersona', () => {
     component.initializeAgregarFabricanteFormGroup();
-
     const formGroup = component.agregarFabricanteFormGroup;
-    formGroup.get('tipoPersona')?.setValue('someValue'); // Simulate a value change
+    formGroup.get('tipoPersona')?.setValue('someValue');
     fixture.detectChanges();
-
     expect(formGroup.get('rfc')?.enabled).toBeTruthy();
     expect(formGroup.get('curp')?.enabled).toBeTruthy();
     expect(formGroup.get('denominacionRazonSocial')?.enabled).toBeTruthy();
@@ -146,64 +120,50 @@ describe('TercerosRelacionadosComponent', () => {
     expect(formGroup.get('numeroExterior')?.enabled).toBeTruthy();
   });
 
-  it('should toggle showTableDiv and showFabricante', () => {
+  it('debería alternar showTableDiv y showFabricante', () => {
     component.showTableDiv = true;
     component.showFabricante = true;
-
     component.toggleDivFabricante();
-
     expect(component.showTableDiv).toBe(false);
     expect(component.showFabricante).toBe(false);
   });
 
-  it('should toggle showTableDiv and showFabricante again', () => {
+  it('debería alternar showTableDiv y showFabricante nuevamente', () => {
     component.showTableDiv = false;
     component.showFabricante = false;
-
     component.toggleDivFabricante();
-
     expect(component.showTableDiv).toBe(true);
     expect(component.showFabricante).toBe(true);
   });
 
-  it('should reset fisica and moral to false', () => {
+  it('debería reiniciar fisica y moral a false', () => {
     component.fisica = true;
     component.moral = true;
-
     component.toggleDivFabricante();
-
     expect(component.fisica).toBe(false);
     expect(component.moral).toBe(false);
   });
 
-  it('should toggle showTableDiv and showFabricante from true to false', () => {
+  it('debería alternar showTableDiv y showFabricante de true a false', () => {
     component.showTableDiv = true;
     component.showFabricante = true;
-
-    // Simulate the toggle logic
     component.showTableDiv = !component.showTableDiv;
     component.showFabricante = !component.showFabricante;
-
     expect(component.showTableDiv).toBe(false);
     expect(component.showFabricante).toBe(false);
   });
 
-  it('should toggle showTableDiv and showFabricante from false to true', () => {
+  it('debería alternar showTableDiv y showFabricante de false a true', () => {
     component.showTableDiv = false;
     component.showFabricante = false;
-
-    // Simulate the toggle logic
     component.showTableDiv = !component.showTableDiv;
     component.showFabricante = !component.showFabricante;
-
     expect(component.showTableDiv).toBe(true);
     expect(component.showFabricante).toBe(true);
   });
 
-  // destinatario
-  it('should initialize agregarDestinatarioFormGroup correctly', () => {
+  it('debería inicializar correctamente agregarDestinatarioFormGroup', () => {
     component.initializeAgregarDestinatarioFormGroup();
-
     const formGroup = component.agregarDestinatarioFormGroup;
     expect(formGroup).toBeTruthy();
     expect(formGroup.get('rfc')?.disabled).toBeTruthy();
@@ -214,13 +174,11 @@ describe('TercerosRelacionadosComponent', () => {
     expect(formGroup.get('calle')?.enabled).toBeTruthy();
   });
 
-  it('should enable specific fields in agregarDestinatarioFormGroup when tipoPersona value changes', () => {
+  it('debería habilitar campos específicos en agregarDestinatarioFormGroup cuando cambia tipoPersona', () => {
     component.initializeAgregarDestinatarioFormGroup();
-
     const formGroup = component.agregarDestinatarioFormGroup;
-    formGroup.get('tipoPersona')?.setValue('someValue'); // Simulate a value change
+    formGroup.get('tipoPersona')?.setValue('someValue');
     fixture.detectChanges();
-
     expect(formGroup.get('rfc')?.enabled).toBeTruthy();
     expect(formGroup.get('curp')?.enabled).toBeTruthy();
     expect(formGroup.get('denominacionRazonSocial')?.enabled).toBeTruthy();
@@ -228,64 +186,50 @@ describe('TercerosRelacionadosComponent', () => {
     expect(formGroup.get('numeroExterior')?.enabled).toBeTruthy();
   });
 
-  it('should toggle showTableDiv and showDestinatario', () => {
+  it('debería alternar showTableDiv y showDestinatario', () => {
     component.showTableDiv = true;
     component.showDestinatario = true;
-
     component.toggleDivDestinatario();
-
     expect(component.showTableDiv).toBe(false);
     expect(component.showDestinatario).toBe(false);
   });
 
-  it('should toggle showTableDiv and showDestinatario again', () => {
+  it('debería alternar showTableDiv y showDestinatario nuevamente', () => {
     component.showTableDiv = false;
     component.showDestinatario = false;
-
     component.toggleDivDestinatario();
-
     expect(component.showTableDiv).toBe(true);
     expect(component.showDestinatario).toBe(true);
   });
 
-  it('should reset fisica and moral to false', () => {
+  it('debería reiniciar fisica y moral a false en destinatario', () => {
     component.fisica = true;
     component.moral = true;
-
     component.toggleDivDestinatario();
-
     expect(component.fisica).toBe(false);
     expect(component.moral).toBe(false);
   });
 
-  it('should toggle showTableDiv and showDestinatario from true to false', () => {
+  it('debería alternar showTableDiv y showDestinatario de true a false', () => {
     component.showTableDiv = true;
     component.showDestinatario = true;
-
-    // Simulate the toggle logic
     component.showTableDiv = !component.showTableDiv;
     component.showDestinatario = !component.showDestinatario;
-
     expect(component.showTableDiv).toBe(false);
     expect(component.showDestinatario).toBe(false);
   });
 
-  it('should toggle showTableDiv and showDestinatario from false to true', () => {
+  it('debería alternar showTableDiv y showDestinatario de false a true', () => {
     component.showTableDiv = false;
     component.showDestinatario = false;
-
-    // Simulate the toggle logic
     component.showTableDiv = !component.showTableDiv;
     component.showDestinatario = !component.showDestinatario;
-
     expect(component.showTableDiv).toBe(true);
     expect(component.showDestinatario).toBe(true);
   });
 
-  // proveedor
-  it('should initialize agregarProveedorFormGroup correctly', () => {
+  it('debería inicializar correctamente agregarProveedorFormGroup', () => {
     component.initializeAgregarProveedorFormGroup();
-
     const formGroup = component.agregarProveedorFormGroup;
     expect(formGroup).toBeTruthy();
     expect(formGroup.get('nombre')?.disabled).toBeTruthy();
@@ -296,77 +240,61 @@ describe('TercerosRelacionadosComponent', () => {
     expect(formGroup.get('telefono')?.value).toBe('');
   });
 
-  it('should enable specific fields in agregarProveedorFormGroup when tipoPersona value changes', () => {
+  it('debería habilitar campos específicos en agregarProveedorFormGroup cuando cambia tipoPersona', () => {
     component.initializeAgregarProveedorFormGroup();
-
     const formGroup = component.agregarProveedorFormGroup;
-    formGroup.get('tipoPersona')?.setValue('someValue'); // Simulate a value change
+    formGroup.get('tipoPersona')?.setValue('someValue');
     fixture.detectChanges();
-
     expect(formGroup.get('nombre')?.enabled).toBeTruthy();
     expect(formGroup.get('segundoApellido')?.enabled).toBeTruthy();
     expect(formGroup.get('denominacionRazonSocial')?.enabled).toBeTruthy();
     expect(formGroup.get('calle')?.enabled).toBeTruthy();
   });
 
-  it('should toggle showTableDiv and showProveedor', () => {
+  it('debería alternar showTableDiv y showProveedor', () => {
     component.showTableDiv = true;
     component.showProveedor = true;
-
     component.toggleDivProveedor();
-
     expect(component.showTableDiv).toBe(false);
     expect(component.showProveedor).toBe(false);
   });
 
-  it('should toggle showTableDiv and showProveedor again', () => {
+  it('debería alternar showTableDiv y showProveedor nuevamente', () => {
     component.showTableDiv = false;
     component.showProveedor = false;
-
     component.toggleDivProveedor();
-
     expect(component.showTableDiv).toBe(true);
     expect(component.showProveedor).toBe(true);
   });
 
-  it('should reset fisica and moral to false', () => {
+  it('debería reiniciar fisica y moral a false en proveedor', () => {
     component.fisica = true;
     component.moral = true;
-
     component.toggleDivProveedor();
-
     expect(component.fisica).toBe(false);
     expect(component.moral).toBe(false);
   });
 
-  it('should toggle showTableDiv and showProveedor from true to false', () => {
+  it('debería alternar showTableDiv y showProveedor de true a false', () => {
     component.showTableDiv = true;
     component.showProveedor = true;
-
-    // Simulate the toggle logic
     component.showTableDiv = !component.showTableDiv;
     component.showProveedor = !component.showProveedor;
-
     expect(component.showTableDiv).toBe(false);
     expect(component.showProveedor).toBe(false);
   });
 
-  it('should toggle showTableDiv and showProveedor from false to true', () => {
+  it('debería alternar showTableDiv y showProveedor de false a true', () => {
     component.showTableDiv = false;
     component.showProveedor = false;
-
-    // Simulate the toggle logic
     component.showTableDiv = !component.showTableDiv;
     component.showProveedor = !component.showProveedor;
-
     expect(component.showTableDiv).toBe(true);
     expect(component.showProveedor).toBe(true);
   });
 
-  // Facturador
-  it('should initialize agregarFacturadorFormGroup correctly', () => {
+  it('debería inicializar correctamente agregarFacturadorFormGroup', () => {
     component.initializeAgregarFacturadorFormGroup();
-
     const formGroup = component.agregarFacturadorFormGroup;
     expect(formGroup).toBeDefined();
     expect(formGroup.get('tipoPersona')!.value).toBe('');
@@ -386,117 +314,99 @@ describe('TercerosRelacionadosComponent', () => {
     expect(formGroup.get('correoElectronico')!.value).toBe('');
   });
 
-  it('should enable specific fields in agregarFacturadorFormGroup when tipoPersona value changes', () => {
+  it('debería habilitar campos específicos en agregarFacturadorFormGroup cuando cambia tipoPersona', () => {
     component.initializeAgregarFacturadorFormGroup();
-
     const formGroup = component.agregarFacturadorFormGroup;
-    formGroup.get('tipoPersona')?.setValue('someValue'); // Simulate a value change
+    formGroup.get('tipoPersona')?.setValue('someValue');
     fixture.detectChanges();
-
     expect(formGroup.get('nombre')?.enabled).toBeTruthy();
     expect(formGroup.get('segundoApellido')?.enabled).toBeTruthy();
     expect(formGroup.get('denominacionRazonSocial')?.enabled).toBeTruthy();
     expect(formGroup.get('telefono')?.enabled).toBeTruthy();
     expect(formGroup.get('correoElectronico')?.enabled).toBeTruthy();
-    
   });
 
-  it('should toggle showTableDiv and showFacturador', () => {
+  it('debería alternar showTableDiv y showFacturador', () => {
     component.showTableDiv = true;
     component.showFacturador = true;
-
     component.toggleDivFacturador();
-
     expect(component.showTableDiv).toBe(false);
     expect(component.showFacturador).toBe(false);
   });
 
-  it('should toggle showTableDiv and showFacturador again', () => {
+  it('debería alternar showTableDiv y showFacturador nuevamente', () => {
     component.showTableDiv = false;
     component.showFacturador = false;
-
     component.toggleDivFacturador();
-
     expect(component.showTableDiv).toBe(true);
     expect(component.showFacturador).toBe(true);
   });
 
-  it('should reset fisica and moral to false', () => {
+  it('debería reiniciar fisica y moral a false en facturador', () => {
     component.fisica = true;
     component.moral = true;
-
     component.toggleDivFacturador();
-
     expect(component.fisica).toBe(false);
     expect(component.moral).toBe(false);
   });
 
-  it('should toggle showTableDiv and showFacturador from true to false', () => {
+  it('debería alternar showTableDiv y showFacturador de true a false', () => {
     component.showTableDiv = true;
     component.showFacturador = true;
-
-    // Simulate the toggle logic
     component.showTableDiv = !component.showTableDiv;
     component.showFacturador = !component.showFacturador;
-
     expect(component.showTableDiv).toBe(false);
     expect(component.showFacturador).toBe(false);
   });
 
-  it('should toggle showTableDiv and showFacturador from false to true', () => {
+  it('debería alternar showTableDiv y showFacturador de false a true', () => {
     component.showTableDiv = false;
     component.showFacturador = false;
-
-    // Simulate the toggle logic
     component.showTableDiv = !component.showTableDiv;
     component.showFacturador = !component.showFacturador;
-
     expect(component.showTableDiv).toBe(true);
     expect(component.showFacturador).toBe(true);
   });
 
-  it('should toggle showTableDiv and showFacturador', () => {
+  it('debería alternar showTableDiv y showFacturador al enviar el formulario', () => {
     component.showTableDiv = true;
     component.showFacturador = false;
-  
     component.submitFacturadorForm();
-  
     expect(component.showTableDiv).toBe(false);
     expect(component.showFacturador).toBe(true);
   });
 
-  //fisica, moral, nacional and extranjero
-  it('should set fisica to true and moral to false when checkbox is "fisica"', () => {
+  it('debería establecer fisica en true y moral en false cuando el checkbox es "fisica"', () => {
     component.inputChecked('fisica');
     expect(component.fisica).toBe(true);
     expect(component.moral).toBe(false);
   });
 
-  it('should set fisica to false and moral to true when checkbox is not "fisica"', () => {
+  it('debería establecer fisica en false y moral en true cuando el checkbox no es "fisica"', () => {
     component.inputChecked('moral');
     expect(component.fisica).toBe(false);
     expect(component.moral).toBe(true);
   });
 
-  it('should set fisica to false and moral to true for any other checkbox name', () => {
+  it('debería establecer fisica en false y moral en true para cualquier otro valor de checkbox', () => {
     component.inputChecked('other');
     expect(component.fisica).toBe(false);
     expect(component.moral).toBe(true);
   });
 
-  it('should set nacional to true and extranjero to false when checkbox is "nacional"', () => {
+  it('debería establecer nacional en true y extranjero en false cuando el checkbox es "nacional"', () => {
     component.tercerosInputChecked('nacional');
     expect(component.nacional).toBe(true);
     expect(component.extranjero).toBe(false);
   });
 
-  it('should set nacional to false and extranjero to true when checkbox is not "nacional"', () => {
+  it('debería establecer nacional en false y extranjero en true cuando el checkbox no es "nacional"', () => {
     component.tercerosInputChecked('extranjero');
     expect(component.nacional).toBe(false);
     expect(component.extranjero).toBe(true);
   });
 
-  it('should set nacional to false and extranjero to true for any other checkbox name', () => {
+  it('debería establecer nacional en false y extranjero en true para cualquier otro valor de checkbox', () => {
     component.tercerosInputChecked('other');
     expect(component.nacional).toBe(false);
     expect(component.extranjero).toBe(true);
@@ -523,7 +433,6 @@ describe('TercerosRelacionadosComponent', () => {
       const spyTerceros = jest.spyOn(component, 'tercerosInputChecked');
       const spyFisica = jest.spyOn(component, 'inputChecked');
       component.cambiarRadio(1);
-      // Acepta tanto string como number
       expect(spyTerceros).toHaveBeenCalledWith(expect.anything());
       component.cambiarRadioFisica(2);
       expect(spyFisica).toHaveBeenCalledWith(expect.anything());
@@ -544,7 +453,6 @@ describe('TercerosRelacionadosComponent', () => {
       expect(component.proveedorRowData.length).toBeGreaterThan(0);
       expect(component.facturadorRowData.length).toBeGreaterThan(0);
 
-      // Verifica que los datos agregados tengan la propiedad esperada
       expect(component.fabricanteRowData[0]).toHaveProperty('tbodyData');
       expect(Array.isArray(component.fabricanteRowData[0].tbodyData)).toBe(true);
       expect(component.destinatarioRowData[0]).toHaveProperty('tbodyData');
@@ -555,7 +463,6 @@ describe('TercerosRelacionadosComponent', () => {
 
   describe('Verificación de imports de enums y componentes', () => {
     it('debería tener definidos los datos y componentes importados', () => {
-      // Enums y datos
       expect(typeof CODIGOPOSTALSELECTDATA).toBeDefined();
       expect(typeof COLONIASELECTDATA).toBeDefined();
       expect(typeof LOCALIDADSELECTDATA).toBeDefined();
@@ -564,7 +471,6 @@ describe('TercerosRelacionadosComponent', () => {
       expect(typeof TERCEROS_RELACIONADOS_TABLE_BODY_DATA).toBeDefined();
       expect(typeof TERCEROS_RELACIONADOS_TABLE_HEADER_DATA).toBeDefined();
 
-      // Componentes
       expect(AlertComponent).toBeDefined();
       expect(TituloComponent).toBeDefined();
       expect(CatalogoSelectComponent).toBeDefined();
@@ -572,7 +478,6 @@ describe('TercerosRelacionadosComponent', () => {
       expect(ModalComponent).toBeDefined();
       expect(TableComponent).toBeDefined();
 
-      // JSON de opciones
       expect(TipoPersonaRadioOptions).toBeDefined();
       expect(NacionalidadRadioOptions).toBeDefined();
     });
