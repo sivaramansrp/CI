@@ -71,7 +71,9 @@
     <div class="row">
         <div class="col-md-8">
             <div class="form-group">
-                <label class="form-label" for="calle">Calle*:</label>
+                <label class="form-label" for="calle">Calle*: 
+                      <span class="bi bi-question-circle-fill fs-4 m-1" title="Title" data-bs-toggle="tooltip"></span>
+                </label>
                 <input
                     class="form-control"
                     id="calle"
@@ -131,7 +133,7 @@
             <div class="form-check">
                 <input class="form-check-input" type="checkbox" id="avisoCheckbox" formControlName="avisoCheckbox" (change)="onAvisoCheckboxChange($event,domicilio,'avisoCheckbox', 'setAvisoCheckbox')">
                 <label class="form-check-label" for="avisoCheckbox">
-                    <span>Aviso de funcionamiento:</span>
+                    <span>Aviso de funcionamiento:  <span class="bi bi-question-circle-fill fs-4 m-1" title="Title" data-bs-toggle="tooltip"></span></span>
                 </label>
             </div>
         </div>
@@ -178,7 +180,9 @@
     <div class="row">
         <div class="col-md-4">
             <div class="form-group">
-                <label class="form-label text-start" for="numeroPermiso">Número de Permiso de Importación expedido por la CNSNS:</label>
+                <label class="form-label text-start" for="numeroPermiso">Número de Permiso de Importación expedido por la CNSNS:
+                      <span class="bi bi-question-circle-fill fs-4 m-1" title="Title" data-bs-toggle="tooltip"></span>
+                </label>
                 <input
                     class="form-control"
                     id="numeroPermiso"
