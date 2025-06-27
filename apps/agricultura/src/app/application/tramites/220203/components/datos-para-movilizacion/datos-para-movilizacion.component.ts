@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
-import { AlertComponent, AnexarDocumentosComponent, BtnContinuarComponent, Catalogo, CatalogoSelectComponent, ConsultaioQuery, CrosslistComponent, FirmaElectronicaComponent, InputCheckComponent, InputFechaComponent, InputRadioComponent, SolicitanteComponent, TableComponent, TercerosComponent, TituloComponent } from '@ng-mf/data-access-user';
+import { Catalogo, CatalogoSelectComponent, ConsultaioQuery,TituloComponent } from '@ng-mf/data-access-user';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
@@ -18,18 +18,7 @@ import { ImportacionDeAcuiculturaService } from '../../services/220203/importaci
   standalone: true,
   imports: [
     TituloComponent,
-    InputRadioComponent,
-    InputCheckComponent,
-    InputFechaComponent,
     CatalogoSelectComponent,
-    CrosslistComponent,
-    BtnContinuarComponent,
-    AnexarDocumentosComponent,
-    TableComponent,
-    SolicitanteComponent,
-    TercerosComponent,
-    AlertComponent,
-    FirmaElectronicaComponent,
     ReactiveFormsModule,
     CommonModule
   ]
