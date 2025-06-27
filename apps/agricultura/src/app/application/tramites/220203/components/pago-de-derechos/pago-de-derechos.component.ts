@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
-import { AlertComponent, AnexarDocumentosComponent, BtnContinuarComponent, Catalogo, CatalogoSelectComponent, ConsultaioQuery, CrosslistComponent, InputCheckComponent, InputFecha, InputFechaComponent, InputRadioComponent, TableComponent, TituloComponent } from '@ng-mf/data-access-user';
+import { Catalogo, CatalogoSelectComponent, ConsultaioQuery, InputFecha, InputFechaComponent, InputRadioComponent, TituloComponent } from '@ng-mf/data-access-user';
 import { FECHA_SALIDA_ACUICULTURA, TIPO_RADIO } from '../../constantes/220203/importacion-de-acuicultura.enum';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FormularioPago, OpcionDeRadio } from '../../models/220203/importacion-de-acuicultura.module';
@@ -18,16 +18,10 @@ import { ImportacionDeAcuiculturaService } from '../../services/220203/importaci
   standalone: true,
   imports: [
     InputRadioComponent,
-    InputCheckComponent,
     InputFechaComponent,
     CatalogoSelectComponent,
-    CrosslistComponent,
-    BtnContinuarComponent,
-    AnexarDocumentosComponent,
-    TableComponent,
-    TituloComponent,
-    AlertComponent,
     ReactiveFormsModule,
+    TituloComponent,
     CommonModule
   ]
 })
@@ -70,7 +64,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy,AfterViewInit 
 
   fechaPagoDate: string = '15/03/2025';
 
-  private destroyNotifier$ = new Subject<void>();
+  public destroyNotifier$ = new Subject<void>();
   formularioPagoStore: FormularioPago = {} as FormularioPago;
 
   /**
@@ -138,7 +132,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy,AfterViewInit 
   /**
    * @description Crea el formulario de pago según el valor de `exentoPagoValor`.
    */
-  private crearFormularioPago(): void {
+  public crearFormularioPago(): void {
     const ESEXENTO = this.formularioPagoStore.exentoPago === 'Si';
     this.formularioPago = this.fb.group({
       exentoPago: [this.formularioPagoStore.exentoPago || 'Si', Validators.required],
@@ -179,7 +173,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy,AfterViewInit 
   /**
    * @description Obtiene la lista de bancos desde el servicio.
    */
-  private obtenerListaBanco(): void {
+  public obtenerListaBanco(): void {
     this.importacionAcuiculturaServicio.obtenerDetallesDelCatalogo('banco.json')
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((data) => {
@@ -206,7 +200,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy,AfterViewInit 
   /**
    * @description Obtiene la lista de justificaciones desde el servicio.
    */
-  private obtenerListaJustificacion(): void {
+  public obtenerListaJustificacion(): void {
     this.importacionAcuiculturaServicio.obtenerDetallesDelCatalogo('justificacion.json')
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe(() => {
