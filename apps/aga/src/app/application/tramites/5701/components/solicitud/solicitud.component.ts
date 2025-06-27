@@ -2174,7 +2174,6 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
     };
 
     if (ADUANA) {
-      // this.despacho.get('idSeccionDespacho')?.setValue(SIN_VALOR);
       this.seccionAduanaService
         .getListaSeccionesAduanas(ADUANA)
         .pipe(
