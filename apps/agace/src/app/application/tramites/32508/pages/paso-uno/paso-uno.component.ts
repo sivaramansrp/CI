@@ -1,12 +1,11 @@
-import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState, FormularioDinamico, TIPO_PERSONA } from '@ng-mf/data-access-user';
-import { DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL, PERSONA_MORAL_NACIONAL, } from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Solicitud32508State, Tramite32508Store } from '../../state/Tramite32508.store';
 import { Subject, map, takeUntil } from 'rxjs';
 import { AdaceService } from '../../services/adace.service';
 import { Router } from '@angular/router';
-import { SolicitanteComponent, } from '@libs/shared/data-access-user/src';
+
 /**
  * Componente que representa el primer paso del trámite.
  */
@@ -15,7 +14,7 @@ import { SolicitanteComponent, } from '@libs/shared/data-access-user/src';
   templateUrl: './paso-uno.component.html',
   styleUrl: './paso-uno.component.css',
 })
-export class PasoUnoComponent implements OnInit, AfterViewInit, OnDestroy {
+export class PasoUnoComponent implements OnInit, OnDestroy {
   constructor(
     private router: Router,
     private consultaioQuery: ConsultaioQuery,
@@ -25,11 +24,7 @@ export class PasoUnoComponent implements OnInit, AfterViewInit, OnDestroy {
     {
     // El constructor se utiliza para la inyección de dependencias.
     }
-  /**
- * Referencia al componente de solicitante.
- */
-  @ViewChild(SolicitanteComponent) solicitante!: SolicitanteComponent;
-
+ 
   /**
    * Tipo de persona seleccionada.
    */
@@ -149,16 +144,6 @@ export class PasoUnoComponent implements OnInit, AfterViewInit, OnDestroy {
           this.tramite32508Store.setSaldoPendienteCompensar(respuesta.datos.saldoPendienteCompensar);
         }
       });
-  }
-
-  /**
-   * Método que se ejecuta después de que las vistas del componente han sido inicializadas.
-   * Configura los formularios dinámicos y obtiene el tipo de persona.
-   */
-  ngAfterViewInit(): void {
-    this.persona = PERSONA_MORAL_NACIONAL;
-    this.domicilioFiscal = DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL;
-    this.solicitante.obtenerTipoPersona(TIPO_PERSONA.MORAL_NACIONAL);
   }
 
   /**
