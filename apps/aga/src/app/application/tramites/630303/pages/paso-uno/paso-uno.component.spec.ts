@@ -47,29 +47,29 @@ describe('PasoUnoComponent', () => {
     component = fixture.componentInstance;
   });
 
-  it('should create the component', () => {
+  it('debería crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should use takeUntil to avoid memory leaks', () => {
+  it('debería usar takeUntil para evitar fugas de memoria', () => {
     const destroySpy = jest.spyOn(component['destroyNotifier$'], 'next');
     component.ngOnInit();
     component.ngOnDestroy();
     expect(destroySpy).toHaveBeenCalled();
   });
 
-  it('should not throw if solicitante is undefined in ngAfterViewInit', () => {
+  it('no debería arrojar error si solicitante está indefinido en ngAfterViewInit', () => {
     component.solicitante = undefined as any;
     expect(() => component.ngAfterViewInit()).not.toThrow();
   });
 
-  it('should call ngOnDestroy manually and clean up subscriptions', () => {
+  it('debería llamar ngOnDestroy manualmente y limpiar suscripciones', () => {
     const destroySpy = jest.spyOn(component, 'ngOnDestroy');
     component.ngOnDestroy();
     expect(destroySpy).toHaveBeenCalled();
   });
 
-  it('should handle error in observable of consultaio', () => {
+  it('debería manejar errores en el observable de consultaio', () => {
     const errorQuery = {
       selectConsultaioState$: throwError(() => new Error('Test error'))
     };
@@ -82,7 +82,7 @@ describe('PasoUnoComponent', () => {
     expect(() => testComponent.ngOnInit()).not.toThrow();
   });
 
-  it('should call guardarDatosFormulario if update is true', () => {
+  it('debería llamar guardarDatosFormulario si update es true', () => {
     const stateWithUpdate = { ...initialConsultaioState, update: true };
     consultaioState$.next(stateWithUpdate);
 
@@ -93,7 +93,7 @@ describe('PasoUnoComponent', () => {
     expect(guardarSpy).toHaveBeenCalled();
   });
 
-  it('should set esDatosRespuesta = true if update is false', () => {
+  it('debería establecer esDatosRespuesta = true si update es false', () => {
     const stateWithoutUpdate = { ...initialConsultaioState, update: false };
     consultaioState$.next(stateWithoutUpdate);
 
