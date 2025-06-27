@@ -3485,8 +3485,6 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   limpiarFechas(): void {
-    console.log('Limpiando fechas...');
-
     const FECHA = this.datosServicio.get('fechaFinal');
 
     if (FECHA?.value === '') {
