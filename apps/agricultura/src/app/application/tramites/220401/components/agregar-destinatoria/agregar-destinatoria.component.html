@@ -1,4 +1,5 @@
 <div class="container">
+  <form [formGroup]="destinatarioForm">
   <ng-titulo titulo="Agregar destinatario (destino final)" />
 
   <div class="row mb-3">
@@ -6,11 +7,11 @@
       <label class="form-label" for="tipoPersona">Tipo persona*:</label>
     </div>
     <div class="col-md-12">
-      <input type="radio" id="fisica" name="tipoPersona" [checked]="fisica" (change)="inputChecked('fisica')">
+      <input type="radio" id="fisica" name="tipoPersona" formControlName="tipoPersona" [checked]="fisica" (change)="entradaSeleccionada('fisica')">
       <label for="fisica">Física</label>
     </div>
     <div class="col-md-12">
-      <input type="radio" id="moral" name="tipoPersona" [checked]="moral" (change)="inputChecked('moral')">
+      <input type="radio" id="moral" name="tipoPersona" [checked]="moral" (change)="entradaSeleccionada('moral')">
       <label for="moral">Moral</label>
     </div>
   </div>
@@ -20,15 +21,15 @@
   <div class="row">
     <div class="col-md-4 mb-3">
       <label class="form-label" for="nombre">Nombre(s)*:</label>
-      <input type="text" class="form-control" id="nombre">
+      <input type="text" class="form-control" id="nombre" formControlName="nombre">
     </div>
     <div class="col-md-4 mb-3">
       <label class="form-label" for="primerApellido">Primer apellido*:</label>
-      <input type="text" class="form-control" id="primerApellido">
+      <input type="text" class="form-control" id="primerApellido" formControlName="primerApellido">
     </div>
     <div class="col-md-4 mb-3">
       <label class="form-label" for="segundoApellido">Segundo apellido:</label>
-      <input type="text" class="form-control" id="segundoApellido">
+      <input type="text" class="form-control" id="segundoApellido" formControlName="segundoApellido" >
     </div>
   </div>
   }
@@ -37,14 +38,14 @@
   <div class="row">
     <div class="col-md-8 mb-3">
       <label class="form-label" for="denominación">Denominación/razón social*:</label>
-      <input type="text" class="form-control" id="denominacion">
+      <input type="text" class="form-control" id="denominacion" formControlName="denominacion">
     </div>
   </div>
   }
 
   <div class="row">
     <div class="col-md-4 mb-3">
-      <app-catalogo-select [catalogo]="pais" formControlName="pais" [label]="'País'" [required]="true" name="pais"
+      <app-catalogo-select [catalogo]="pais" formControlName="pais" [label]="'País'" [required]="true" name="pais"   formControlName="pais"
         ></app-catalogo-select>
     </div>
   </div>
@@ -53,27 +54,42 @@
     <div class="col-md-8 mb-3">
       <label class="form-label" for="domicilio">Domicilio*:</label>
       <textarea class="form-control" id="domicilio" rows="2" height="50"
-        placeholder="Calle, No Ext, No Int, Ciudad, C.P." style="height: 100px;"></textarea>
+        placeholder="Calle, No Ext, No Int, Ciudad, C.P." style="height: 100px;" formControlName="domicilio"></textarea>
     </div>
   </div>
 
   <div class="row">
     <div class="col-md-1 mb-3">
       <label class="form-label" for="lada">Lada:</label>
-      <input type="text" class="form-control" id="lada" maxlength="5">
+      <input type="text" class="form-control" id="lada" formControlName="lada"  maxlength="4"> 
     </div>
     <div class="col-md-3 mb-3">
       <label class="form-label" for="telefono">Teléfono:</label>
-      <input type="text" class="form-control" id="telefono">
+      <input type="text" class="form-control" id="telefono" formControlName="telefono">
     </div>
     <div class="col-md-4 mb-3">
-      <label class="form-label" for="correoElectronico">Correo electrónico:</label>
+      <label class="form-label" for="correoElectronico">Correo electrónico: <i class="bi bi-question-circle-fill mb-1"></i></label>
       <div class="input-group">
-        <input type="email" class="form-control" id="correoElectronico">
-        <span class="input-group-text"></span>
+        <input type="email" class="form-control" id="correoElectronico" formControlName="correoElectronico">
+        
+   
       </div>
+         @if (
+      destinatarioForm.controls['correoElectronico'].invalid &&
+      destinatarioForm.controls['correoElectronico'].touched
+    ) {
+      <div class="text-danger small">
+        @if (destinatarioForm.controls['correoElectronico'].errors?.['required']) {
+          <div>Este campo es obligatorio.</div>
+        }
+        @if (destinatarioForm.controls['correoElectronico'].errors?.['email']) {
+          <div>Por favor, escribe una dirección de correo válida.</div>
+        }
+      </div>
+    }
     </div>
   </div>
+  </form>
 
   <div class="container-fluid text-end mt-5">
     <button class="btn btn-default me-2">Limpiar</button>

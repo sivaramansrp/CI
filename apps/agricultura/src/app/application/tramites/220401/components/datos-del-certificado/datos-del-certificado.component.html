@@ -18,7 +18,7 @@
       </div>
     </div>
   </form>
-
+ <app-combinacion-requerida></app-combinacion-requerida>
   <form [formGroup]="formGroup1">
     <ng-titulo titulo="Unidad expedidora"></ng-titulo>
 
@@ -45,7 +45,8 @@
   <ng-table [disableSeleccionTablaCheckBox]="esFormularioSoloLectura? true : false" [commonTableHeader]="tableColumns"
     [commonTableBody]="mercanciasData"></ng-table>
   <div class="text-end">
-    <button class="btn btn-primary me-2" type="button" [disabled]="esFormularioSoloLectura? true : false">
+    <button class="btn btn-primary me-2" type="button" [disabled]="esFormularioSoloLectura? true : false" data-bs-toggle="modal"
+        data-bs-target="#modalAgregarMercancias" (click)="openModificarMercancias()">
       Carga por archivo
     </button>
     <button class="btn btn-primary" type="button" [disabled]="esFormularioSoloLectura? true : false">
@@ -105,4 +106,17 @@
     </div>
   </form>
   
+</div>
+<div
+  class="modal fade"
+  id="modalAgregarMercancias"
+  tabindex="-1"
+  aria-labelledby="modalAgregarMercanciasLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <app-datos-generales-animales></app-datos-generales-animales>
+    </div>
+  </div>
 </div>

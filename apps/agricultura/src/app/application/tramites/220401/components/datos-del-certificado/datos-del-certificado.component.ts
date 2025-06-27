@@ -1,7 +1,7 @@
 /**
  * Importaciones necesarias para el componente DatosDelCertificado.
  */
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 /**
  * Importaciones necesarias para el componente DatosDelCertificado.
@@ -20,8 +20,11 @@ import { AgregarArchivoComponent } from '@ng-mf/data-access-user';
 import { AgregarQuery } from '../../../../estados/queries/agregar.query';
 import { CatalogoResponse } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
+import { CombinacionRequeridaComponent } from '../combinacion-requerida/combinacion-requerida.component';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { DatosGeneralesAnimalesComponent } from '../datos-generales-animales/datos-generales-animales.component';
 import { InputRadioComponent } from "@libs/shared/data-access-user/src/tramites/components/input-radio/input-radio.component";
+import { Modal } from 'bootstrap';
 import { Pantallas220401Service } from '../pantallas220401.service';
 import { Solicitud220401State } from '../../../../estados/tramites/agregar220401.store';
 import { TableComponent } from '@ng-mf/data-access-user';
@@ -50,11 +53,14 @@ import { LOCALIDAD_COLONIA } from '../../constantes/certificados-licencias.enum'
     AgregarArchivoComponent,
     TableComponent,
     CatalogoSelectComponent,
-    AlertComponent
+    AlertComponent,DatosGeneralesAnimalesComponent,CombinacionRequeridaComponent
   ],
 })
 export class DatosDelCertificadoComponent implements OnInit, OnDestroy {
- 
+  /**
+   * Referencia al elemento del modal para agregar mercancías.
+   */
+  @ViewChild('modalAgregarMercancias') modalElement!: ElementRef;
   /** Formulario principal para la solicitud. */
   solicitudForm!:FormGroup;
  /** Opciones de radio importadas desde JSON. */
@@ -256,6 +262,15 @@ this.inicializarCertificadoFormulario();
       }
     });
   }
+    /**
+   * Abre el modal para modificar mercancías.
+   */
+  openModificarMercancias(): void {
+    if (this.modalElement) {
+      const MODAL_INSTANCE = new Modal(this.modalElement.nativeElement);
+      MODAL_INSTANCE.show();
+    }
+  }
 
       /**
    * Maneja los cambios en el valor seleccionado.
@@ -318,7 +333,7 @@ this.inicializarCertificadoFormulario();
     },
     {
       catalogo: this.delegacionesJson,
-      label: 'Establecimiento TIF',
+      label: 'OISA',
       controlName: 'delegacionesControl2',
       required: true,
       catalogos: DatosDelCertificadoComponent.getCatalogos(),
@@ -326,7 +341,7 @@ this.inicializarCertificadoFormulario();
     },
     {
       catalogo: this.delegacionesJson,
-      label: 'Oficina central',
+      label: 'Distrito desarrollo rural (DDR)',
       controlName: 'delegacionesControl3',
       required: true,
       catalogos: DatosDelCertificadoComponent.getCatalogos(),
@@ -334,7 +349,7 @@ this.inicializarCertificadoFormulario();
     },
     {
       catalogo: this.delegacionesJson,
-      label: 'Distrito desarrollo rural(DDR)',
+      label: 'Oficina central:',
       controlName: 'delegacionesControl4',
       required: false,
       catalogos: DatosDelCertificadoComponent.getCatalogos(),

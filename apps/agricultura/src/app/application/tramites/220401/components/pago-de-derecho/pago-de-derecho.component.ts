@@ -253,9 +253,7 @@ export class PagoDeDerechoComponent implements OnInit, OnDestroy {
       this.FormSolicitud.get('cadenaDependencia')?.reset();
       this.FormSolicitud.get('importePago')?.reset();
       
-      this.FormSolicitud.get('rfcImportExport')?.disable();
-      this.FormSolicitud.get('cadenaDependencia')?.disable();
-      this.FormSolicitud.get('importePago')?.disable();
+   
       this.FormSolicitud.get('fechaPago')?.disable();
       this.FormSolicitud.get('llaveDePago')?.disable();
     }
