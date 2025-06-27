@@ -1,52 +1,85 @@
-import { ChangeDetectorRef } from '@angular/core';
+/**
+ * @component
+ * @name InternaDatosGeneralesComponent
+ * @description
+ * Componente para manejar los datos generales internos del trámite 220701.
+ * Permite gestionar formularios y datos relacionados con los trámites, incluyendo lógica para la gestión de catálogos, validaciones, estado de la sección y comunicación con el store y servicios.
+ * Utiliza formularios reactivos y consume múltiples servicios para obtener catálogos y datos relacionados.
+ * Implementa la lógica de inicialización, carga de catálogos, manejo de estado y sincronización con el store de Akita.
+ * 
+ * @example
+ * <interna-datos-generales [esFormularioSoloLectura]="true"></interna-datos-generales>
+ */
+
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
-import { FormGroup } from '@angular/forms';
+
+import {
+  ChangeDetectorRef,
+  Component,
+  Input,
+  OnDestroy,
+  OnInit,
+} from '@angular/core';
+
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
-import { Validators } from '@angular/forms';
 
-import { Input } from '@angular/core';
-import { Subject } from 'rxjs';
-import { delay } from 'rxjs/operators';
-import { map } from 'rxjs/operators';
-import { takeUntil } from 'rxjs/operators';
-import { tap } from 'rxjs/operators';
+import { Subject, delay, map, takeUntil, tap } from 'rxjs';
 
-import { Catalogo } from '@libs/shared/data-access-user/src';
-import { CatalogosSelect } from '@libs/shared/data-access-user/src';
-import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
-import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
-import { SeccionLibQuery } from '@libs/shared/data-access-user/src';
-import { SeccionLibState } from '@libs/shared/data-access-user/src';
-import { SeccionLibStore } from '@libs/shared/data-access-user/src';
-import { TituloComponent } from '@libs/shared/data-access-user/src';
-import { ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
+import {
+  Catalogo,
+  CatalogosSelect,
+  ConfiguracionColumna,
+  ConsultaioQuery,
+  SeccionLibQuery,
+  SeccionLibState,
+  SeccionLibStore,
+  TituloComponent,
+  ValidacionesFormularioService,
+} from '@libs/shared/data-access-user/src';
 
-import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
-import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
+import {
+  CatalogoSelectComponent,
+  TablaDinamicaComponent,
+} from '@ng-mf/data-access-user';
 
-import { InternaDatosGeneralesInt } from '../../modelos/datos-de-interfaz.model';
-import { MERCANCIA_SERVICIO } from '../../modelos/datos-de-interfaz.model';
-import { mercanciaInfo } from '../../modelos/datos-de-interfaz.model';
+import {
+  InternaDatosGeneralesInt,
+  MERCANCIA_SERVICIO,
+  mercanciaInfo,
+} from '../../modelos/datos-de-interfaz.model';
 
 import { CatalogosService } from '../../servicios/catalogos.service';
 import { MercanciaDatosService } from '../../servicios/mercancia-datos.service';
 import { RevisionService } from '../../servicios/revision.service';
 
-import { TramiteState } from '../../estados/tramite220701.store';
-import { TramiteStore } from '../../estados/tramite220701.store';
-
+import {
+  TramiteState,
+  TramiteStore,
+} from '../../estados/tramite220701.store';
 import { TramiteStoreQuery } from '../../estados/tramite220701.query';
 
 /**
- * Componente para manejar los datos generales internos.
- * Este componente permite gestionar formularios y datos relacionados con los trámites.
- * Incluye lógica para la gestión de catálogos, validaciones, estado de la sección y comunicación con el store y servicios.
- * @author [Tu Nombre o Equipo]
+ * @component
+ * @name InternaDatosGeneralesComponent
+ * @description
+ * Componente para manejar los datos generales internos del trámite 220701.
+ * Permite gestionar formularios y datos relacionados con los trámites, incluyendo lógica para la gestión de catálogos, validaciones, estado de la sección y comunicación con el store y servicios.
+ * Utiliza formularios reactivos y consume múltiples servicios para obtener catálogos y datos relacionados.
+ * Implementa la lógica de inicialización, carga de catálogos, manejo de estado y sincronización con el store de Akita.
+ *
+ * - Gestiona la captura y visualización de datos generales del trámite.
+ * - Sincroniza el estado del formulario con el store.
+ * - Carga catálogos y datos auxiliares desde servicios.
+ * - Permite el modo solo lectura para revisión.
+ *
+ * @example
+ * <interna-datos-generales [esFormularioSoloLectura]="true"></interna-datos-generales>
  */
 @Component({
   selector: 'interna-datos-generales',

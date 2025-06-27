@@ -146,5 +146,19 @@ export const BANDEJA_SOLICITUDES_FORMAS = [
       valorPredeterminado: '',
       marginTop: 0
     },
-
+    {
+      id: 'tipoSolicitud',
+      labelNombre: 'Tipo de solicitud',
+      campo: 'tipoSolicitud',
+      clase: 'col-md-12',
+      tipoInput: 'select-catalogos',
+      desactivado: false,
+      soloLectura: false,
+      validadores: [
+        
+      ],
+      marcadorDePosicion: '',
+      valorPredeterminado: '',
+      marginTop: 0
+    },
   ];

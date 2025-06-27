@@ -90,5 +90,22 @@ describe('CancelacionDeSolicitudComponent', () => {
     // expect(component.destroyNotificationSubject$.complete).toHaveBeenCalled();
   });
 
+it('should run #busqueda() and call enviarMensaje with true', () => {
+  component.servicioDeMensajesService = component.servicioDeMensajesService || {};
+  component.servicioDeMensajesService.enviarMensaje = jest.fn();
+  const event = {} as Event;
+  component.busqueda(event);
+  expect(component.servicioDeMensajesService.enviarMensaje).toHaveBeenCalledWith(true);
+});
+
+it('should run #eliminarRegistro() and clear cuerpoTablaCancelacion and call actualizarDatosForma', () => {
+  component.cuerpoTablaCancelacion = [{ folioTramite: '123' }] as any;
+  component.servicioDeMensajesService = component.servicioDeMensajesService || {};
+  component.servicioDeMensajesService.actualizarDatosForma = jest.fn();
+  const event = {} as Event;
+  component.eliminarRegistro(event);
+  expect(component.cuerpoTablaCancelacion).toEqual([]);
+  expect(component.servicioDeMensajesService.actualizarDatosForma).toHaveBeenCalledWith([]);
+});
   
 });

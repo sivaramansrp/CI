@@ -8,17 +8,15 @@ import {
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-
-import { CommonModule } from '@angular/common';
-
-import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
-import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import {
   FABRICANTE_TABLA,
   OTROS_TABLA,
 } from '../../constantes/terceros-relacionados-fabricante.enum';
+import { Subject,map, takeUntil } from 'rxjs';
+import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
 import { TercerosRelacionadosFebService } from '../../services/tereceros-relacionados-feb.service';
-import { map, Subject, takeUntil } from 'rxjs';
 
 /**
  * TercerosRelacionadosComponent es responsable de manejar el primer paso del proceso.
@@ -189,11 +187,13 @@ export class TercerosRelacionadosFabricanteComponent implements OnInit, OnDestro
    *   - `clave`: Una función que obtiene el valor de la clave especificada de un objeto de datos.
    *   - `orden`: El orden de la columna, comenzando desde 1.
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any, class-methods-use-this
   generateConfiguracionTabla(datosArray: any): ConfiguracionColumna<any>[] {
     const FIELDS: Array<{ encabezado: string; clave: keyof Fabricante }> =
       datosArray;
     return FIELDS.map((field, index) => ({
       encabezado: field.encabezado,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       clave: (item: any) => item[field.clave],
       orden: index + 1,
     }));

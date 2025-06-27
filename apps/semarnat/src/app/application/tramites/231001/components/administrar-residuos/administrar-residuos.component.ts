@@ -1,10 +1,12 @@
-import { AdministrarResiduosService } from '@ng-mf/data-access-user';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { Subject } from 'rxjs';
+import { Subject, map } from 'rxjs';
+import { AdministrarResiduosService } from '../../services/administrar-residuos.service';
+import { Solicitud231001State } from '../../estados/tramites/tramite231001.store';
 import { TableComponent } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { takeUntil } from 'rxjs';
@@ -38,15 +40,41 @@ export class AdministrarResiduosComponent implements OnInit, OnDestroy {
    */
   formularioParaRecuentoTotal!: FormGroup;
 
+  /**
+   * Sujeto utilizado para gestionar la destrucción y limpieza de suscripciones en el componente.
+   * Se emite un valor cuando el componente se destruye, permitiendo cancelar observables y evitar fugas de memoria.
+   */
   private destroyed$ = new Subject<void>();
-  
+    /**
+ * Indica si el formulario está en modo solo lectura.
+ * Cuando se establece en `true`, todos los controles del formulario y elementos interactivos
+ * se deshabilitan, impidiendo que el usuario realice cambios. Esta propiedad normalmente se
+ * configura según el estado de la aplicación, por ejemplo, al visualizar una solicitud enviada
+ * o cuando el usuario no tiene permisos de edición.
+ */
+  esFormularioSoloLectura: boolean = false;
+    /**
+ * Estado actual de la sección del trámite 120501.
+ * Esta propiedad almacena los datos del estado de la sección, obtenidos generalmente
+ * desde el store o desde una consulta al backend. Se utiliza para inicializar y actualizar
+ * los formularios del componente con los valores correspondientes a la solicitud en curso.
+ */
+   private seccionState!: Solicitud231001State;
   /**
    * Constructor de la clase
-   * @param fb - FormBuilder para crear formularios reactivos
-   * @param service - Servicio para administrar residuos
+   * FormBuilder para crear formularios reactivos
+   * Servicio para administrar residuos
    */
-  constructor(private fb: FormBuilder, private service: AdministrarResiduosService) {
-    // constructor
+  constructor(private fb: FormBuilder, private service: AdministrarResiduosService,private consultaioQuery: ConsultaioQuery) {
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+           this.crearFormularioParaRecuentoTotal();
+        })
+      )
+      .subscribe();
   }
 
   /**
@@ -57,6 +85,10 @@ export class AdministrarResiduosComponent implements OnInit, OnDestroy {
     this.loadAdministrarResiduos();
   }
 
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta cuando el componente es destruido.
+   * Se utiliza para emitir y completar el observable `destroyed$`, permitiendo limpiar suscripciones y evitar fugas de memoria.
+   */
   ngOnDestroy(): void {
     this.destroyed$.next();
     this.destroyed$.complete();
@@ -102,4 +134,6 @@ export class AdministrarResiduosComponent implements OnInit, OnDestroy {
         this.actualizarRecuentoTotalDeFilas();
       });
   }
+
+  
 }

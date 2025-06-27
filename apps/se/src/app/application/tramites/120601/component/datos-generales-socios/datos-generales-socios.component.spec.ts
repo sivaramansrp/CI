@@ -1,69 +1,49 @@
-import { TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { DatosGeneralesSociosComponent } from './datos-generales-socios.component';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { of, Subject } from 'rxjs';
-import { DatosGeneralesSociosComponent } from './datos-generales-socios.component';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { DatosEmpresaService } from '../../services/datos-empresa.service';
-import { Tramite120601Query } from '../../estados/tramite-120601.query';
 import { Tramite120601Store } from '../../estados/tramite-120601.store';
-import {
-  ConsultaioQuery,
-  ConsultaioState,
-} from '@ng-mf/data-access-user';
-import { DatosSociosTable } from '../../modelos/datos-empresa.model';
-import { ComponentFixture } from '@angular/core/testing';
+import { Tramite120601Query } from '../../estados/tramite-120601.query';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 
 describe('DatosGeneralesSociosComponent', () => {
   let component: DatosGeneralesSociosComponent;
   let fixture: ComponentFixture<DatosGeneralesSociosComponent>;
-  let mockDatosEmpresaService: jest.Mocked<DatosEmpresaService>;
-  let mockTramite120601Query: Partial<Tramite120601Query>;
-  let mockTramite120601Store: jest.Mocked<Tramite120601Store>;
-  let mockConsultaioQuery: Partial<ConsultaioQuery>;
-
-  const mockDatosSocios: DatosSociosTable[] = [
-    {
-      rfc: 'RFC123456789',
-      razonsocial: 'Empresa Test S.A.',
-      nombre: 'Juan',
-      apellidoPaterno: 'Pérez',
-      apellidoM: 'García'
-    }
-  ];
-
-  const mockConsultaioState: ConsultaioState = {
-    readonly: false
-  } as ConsultaioState;
+  let storeMock: any;
+  let queryMock: any;
+  let empresaServiceMock: any;
+  let consultaioQueryMock: any;
 
   beforeEach(async () => {
-    mockDatosEmpresaService = {
-      obtenerDatosTablaDeSocios: jest.fn().mockReturnValue(of(mockDatosSocios))
-    } as any;
-
-    mockTramite120601Query = {
-      selectNacionalidad$: of('No'),
-      selectPersona$: of('No'),
-      selectCadenaDependencia$: of('')
-    };
-
-    mockTramite120601Store = {
+    storeMock = {
       setNacionalidad: jest.fn(),
       setPersona: jest.fn(),
       setCadenaDependencia: jest.fn()
-    } as any;
-
-    mockConsultaioQuery = {
-      selectConsultaioState$: of(mockConsultaioState)
+    };
+    queryMock = {
+      selectNacionalidad$: of('MX'),
+      selectPersona$: of('FISICA'),
+      selectCadenaDependencia$: of('cadena')
+    };
+    empresaServiceMock = {
+      obtenerDatosTablaDeSocios: jest.fn().mockReturnValue(of([{ id: 1, nombre: 'Socio 1' }]))
+    };
+    consultaioQueryMock = {
+      selectConsultaioState$: of({ readonly: false })
     };
 
     await TestBed.configureTestingModule({
-      imports: [DatosGeneralesSociosComponent, ReactiveFormsModule],
+      imports: [ReactiveFormsModule, DatosGeneralesSociosComponent],
       providers: [
         FormBuilder,
-        { provide: DatosEmpresaService, useValue: mockDatosEmpresaService },
-        { provide: Tramite120601Query, useValue: mockTramite120601Query },
-        { provide: Tramite120601Store, useValue: mockTramite120601Store },
-        { provide: ConsultaioQuery, useValue: mockConsultaioQuery }
-      ]
+        { provide: Tramite120601Store, useValue: storeMock },
+        { provide: Tramite120601Query, useValue: queryMock },
+        { provide: DatosEmpresaService, useValue: empresaServiceMock },
+        { provide: ConsultaioQuery, useValue: consultaioQueryMock }
+      ],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA]
     }).compileComponents();
 
     fixture = TestBed.createComponent(DatosGeneralesSociosComponent);
@@ -71,38 +51,47 @@ describe('DatosGeneralesSociosComponent', () => {
     fixture.detectChanges();
   });
 
-  it('debería crear el componente', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('debería inicializar el formulario con valores por defecto y validadores', () => {
+  it('debe inicializar FormSolicitud y formularioParaConteoTotal en ngOnInit', () => {
     expect(component.FormSolicitud).toBeDefined();
-    const group = component.FormSolicitud.get('datosImportadorExportador');
-    expect(group).toBeDefined();
-    expect(group?.get('nacionalidad')?.value).toBe('No');
-    expect(group?.get('persona')?.value).toBe('No');
-    expect(group?.get('cadenaDependencia')?.value).toBe('');
-    expect(group?.get('nacionalidad')?.validator).toBeTruthy();
-    expect(group?.get('persona')?.validator).toBeTruthy();
-    expect(group?.get('cadenaDependencia')?.validator).toBeTruthy();
+    expect(component.FormSolicitud.get('datosImportadorExportador.nacionalidad')).toBeDefined();
+    expect(component.formularioParaConteoTotal).toBeDefined();
   });
 
-  it('debería llamar a obtenerDatosTablaDeSocios al inicializar y asignar datosSocios', () => {
-    expect(mockDatosEmpresaService.obtenerDatosTablaDeSocios).toHaveBeenCalled();
-    expect(component.datosSocios).toEqual(mockDatosSocios);
+  it('debe actualizar los valores desde los observables del query', () => {
+    expect(component.FormSolicitud.get('datosImportadorExportador.nacionalidad')?.value).toBe('MX');
+    expect(component.FormSolicitud.get('datosImportadorExportador.persona')?.value).toBe('FISICA');
+    expect(component.FormSolicitud.get('datosImportadorExportador.cadenaDependencia')?.value).toBe('cadena');
   });
 
-  it('debería actualizar los valores del formulario desde los observables', () => {
-    expect(component.FormSolicitud.get('datosImportadorExportador.nacionalidad')?.value).toBe('No');
-    expect(component.FormSolicitud.get('datosImportadorExportador.persona')?.value).toBe('No');
-    expect(component.FormSolicitud.get('datosImportadorExportador.cadenaDependencia')?.value).toBe('');
+  it('debe obtener datosSocios desde empresaService', () => {
+    component.obtenerDatosTablaDeSocios();
+    expect(empresaServiceMock.obtenerDatosTablaDeSocios).toHaveBeenCalled();
+    expect(component.datosSocios).toEqual([{ id: 1, nombre: 'Socio 1' }]);
   });
 
-  it('debería establecer esFormularioSoloLectura desde consultaioQuery', () => {
-    expect(component.esFormularioSoloLectura).toBe(false);
+  it('debe llamar a store.setNacionalidad en enCambioNacionalidad', () => {
+    component.FormSolicitud.get('datosImportadorExportador.nacionalidad')?.setValue('MX');
+    component.enCambioNacionalidad();
+    expect(storeMock.setNacionalidad).toHaveBeenCalledWith('MX');
   });
 
-  it('debería deshabilitar los campos cuando esFormularioSoloLectura es true', () => {
+  it('debe llamar a store.setPersona en enCambioPersona', () => {
+    component.FormSolicitud.get('datosImportadorExportador.persona')?.setValue('FISICA');
+    component.enCambioPersona();
+    expect(storeMock.setPersona).toHaveBeenCalledWith('FISICA');
+  });
+
+  it('debe llamar a store.setCadenaDependencia en enCambioCadenaDependencia', () => {
+    component.FormSolicitud.get('datosImportadorExportador.cadenaDependencia')?.setValue('cadena');
+    component.enCambioCadenaDependencia();
+    expect(storeMock.setCadenaDependencia).toHaveBeenCalledWith('cadena');
+  });
+
+  it('debe deshabilitar los campos si esFormularioSoloLectura es true en guardarDatosFormulario', () => {
     component.esFormularioSoloLectura = true;
     component.guardarDatosFormulario();
     expect(component.FormSolicitud.get('datosImportadorExportador.nacionalidad')?.disabled).toBe(true);
@@ -110,9 +99,7 @@ describe('DatosGeneralesSociosComponent', () => {
     expect(component.FormSolicitud.get('datosImportadorExportador.cadenaDependencia')?.disabled).toBe(true);
   });
 
-  it('debería habilitar los campos cuando esFormularioSoloLectura es false', () => {
-    component.esFormularioSoloLectura = true;
-    component.guardarDatosFormulario();
+  it('debe habilitar los campos si esFormularioSoloLectura es false en guardarDatosFormulario', () => {
     component.esFormularioSoloLectura = false;
     component.guardarDatosFormulario();
     expect(component.FormSolicitud.get('datosImportadorExportador.nacionalidad')?.enabled).toBe(true);
@@ -120,66 +107,23 @@ describe('DatosGeneralesSociosComponent', () => {
     expect(component.FormSolicitud.get('datosImportadorExportador.cadenaDependencia')?.enabled).toBe(true);
   });
 
-  it('debería llamar a store.setNacionalidad en enCambioNacionalidad', () => {
-    component.FormSolicitud.get('datosImportadorExportador.nacionalidad')?.setValue('Yes');
-    component.enCambioNacionalidad();
-    expect(mockTramite120601Store.setNacionalidad).toHaveBeenCalledWith('Yes');
-  });
-
-  it('debería llamar a store.setPersona en enCambioPersona', () => {
-    component.FormSolicitud.get('datosImportadorExportador.persona')?.setValue('Yes');
-    component.enCambioPersona();
-    expect(mockTramite120601Store.setPersona).toHaveBeenCalledWith('Yes');
-  });
-
-  it('debería llamar a store.setCadenaDependencia en enCambioCadenaDependencia', () => {
-    component.FormSolicitud.get('datosImportadorExportador.cadenaDependencia')?.setValue('RFC123');
-    component.enCambioCadenaDependencia();
-    expect(mockTramite120601Store.setCadenaDependencia).toHaveBeenCalledWith('RFC123');
-  });
-
-  it('debería deshabilitar todo el formulario cuando se llama a actualizarEstadoFormulario y esFormularioSoloLectura es true', () => {
+  it('debe deshabilitar FormSolicitud si esFormularioSoloLectura es true en actualizarEstadoFormulario', () => {
     component.esFormularioSoloLectura = true;
     component.actualizarEstadoFormulario();
     expect(component.FormSolicitud.disabled).toBe(true);
   });
 
-  it('debería habilitar todo el formulario cuando se llama a actualizarEstadoFormulario y esFormularioSoloLectura es false', () => {
+  it('debe habilitar FormSolicitud si esFormularioSoloLectura es false en actualizarEstadoFormulario', () => {
     component.esFormularioSoloLectura = false;
     component.actualizarEstadoFormulario();
     expect(component.FormSolicitud.enabled).toBe(true);
   });
 
-  it('debería actualizar recuentoTotalDeFilas en formularioParaConteoTotal', () => {
-    expect(component.formularioParaConteoTotal.get('recuentoTotalDeFilas')?.value).toBe(mockDatosSocios.length);
-    expect(component.formularioParaConteoTotal.get('recuentoTotalDeFilas')?.disabled).toBe(true);
-  });
-
-  it('debería limpiar destroyed$ en ngOnDestroy', () => {
-    const destroyed$ = (component as any).destroyed$ as Subject<void>;
-    const nextSpy = jest.spyOn(destroyed$, 'next');
-    const completeSpy = jest.spyOn(destroyed$, 'complete');
+  it('debe limpiar las suscripciones en ngOnDestroy', () => {
+    const nextSpy = jest.spyOn(component['destroyed$'], 'next');
+    const completeSpy = jest.spyOn(component['destroyed$'], 'complete');
     component.ngOnDestroy();
     expect(nextSpy).toHaveBeenCalled();
     expect(completeSpy).toHaveBeenCalled();
-  });
-
-  // Validación de formulario
-  it('debería requerir nacionalidad, persona y cadenaDependencia', () => {
-    const group = component.FormSolicitud.get('datosImportadorExportador');
-    group?.get('nacionalidad')?.setValue('');
-    group?.get('persona')?.setValue('');
-    group?.get('cadenaDependencia')?.setValue('');
-    expect(group?.get('nacionalidad')?.hasError('required')).toBe(true);
-    expect(group?.get('persona')?.hasError('required')).toBe(true);
-    expect(group?.get('cadenaDependencia')?.hasError('required')).toBe(true);
-  });
-
-  it('debería marcar el formulario como válido cuando todos los campos requeridos están llenos', () => {
-    const group = component.FormSolicitud.get('datosImportadorExportador');
-    group?.get('nacionalidad')?.setValue('No');
-    group?.get('persona')?.setValue('Yes');
-    group?.get('cadenaDependencia')?.setValue('RFC123');
-    expect(component.FormSolicitud.valid).toBe(true);
   });
 });

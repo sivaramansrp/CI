@@ -290,37 +290,35 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit {
       PUEDE_MOSTRAR_LA_LISTA_CRUZADA_FOR_MERCANCIA.includes(
         this.idProcedimiento
       );
-
-    // Escuche los cambios en el campo fraccionArancelaria
-    this.datosMercancia
-      .get('fraccionArancelaria')
-      ?.valueChanges.subscribe((value) => {
-        if (value === '1') {
-          this.datosMercancia
-            .get('descFraccion')
-            ?.setValue(
-              'Azufre de cualquier clase, excepto el sublimado, el precipitado y el coloidal.'
-            );
-          this.datosMercancia.get('descFraccion')?.disable();
-          this.datosMercancia.get('umt')?.setValue('Kilogramo');
-          this.datosMercancia.get('umt')?.enable();
-        } else if (value === '2') {
-          this.datosMercancia
-            .get('descFraccion')
-            ?.setValue('Otra descripción para 25030003.');
-          this.datosMercancia.get('descFraccion')?.disable();
-          this.datosMercancia.get('umt')?.setValue('Tonelada');
-          this.datosMercancia.get('umt')?.enable();
-        } else {
-          this.datosMercancia.get('descFraccion')?.setValue(null);
-          this.datosMercancia.get('descFraccion')?.disable();
-          this.datosMercancia.get('umt')?.setValue(null);
-          this.datosMercancia.get('umt')?.disable();
-        }
-      });
     if (this.formaDatos) {
       this.datosMercancia.patchValue(this.formaDatos);
       this.datosMercancia.enable();
+    }
+  }
+
+  settextValue(value: number | undefined): void {
+    this.datosMercancia.get('fraccionArancelaria')?.setValue(value);
+    if (value === 1) {
+      this.datosMercancia
+        .get('descFraccion')
+        ?.setValue(
+          'Azufre de cualquier clase, excepto el sublimado, el precipitado y el coloidal.'
+        );
+      this.datosMercancia.get('descFraccion')?.disable();
+      this.datosMercancia.get('umt')?.setValue('Kilogramo');
+      this.datosMercancia.get('umt')?.enable();
+    } else if (value === 2) {
+      this.datosMercancia
+        .get('descFraccion')
+        ?.setValue('Otra descripción para 25030003.');
+      this.datosMercancia.get('descFraccion')?.disable();
+      this.datosMercancia.get('umt')?.setValue('Tonelada');
+      this.datosMercancia.get('umt')?.enable();
+    } else {
+      this.datosMercancia.get('descFraccion')?.setValue(null);
+      this.datosMercancia.get('descFraccion')?.disable();
+      this.datosMercancia.get('umt')?.setValue(null);
+      this.datosMercancia.get('umt')?.disable();
     }
   }
   /**

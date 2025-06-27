@@ -1,4 +1,8 @@
 <app-terceros-relacionados
   [destinatarioFinalTablaDatos]="destinatarioFinalTablaDatos"
   [proveedorTablaDatos]="proveedorTablaDatos"
+  [esFormularioSoloLectura]="esFormularioSoloLectura"
+  (openModal)="openModal($event)"
+  [idProcedimiento]="240311"
 ></app-terceros-relacionados>
+ <div><app-modal #modal></app-modal></div>

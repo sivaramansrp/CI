@@ -19,15 +19,15 @@ describe('DatosDeLaSolicitudComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('debe crearse', () => {
     expect(component).toBeTruthy();
   });
-  it('should initialize solicitudForm with default values', () => {
+  it('debe inicializar solicitudForm con valores por defecto', () => {
     expect(component.solicitudForm).toBeDefined();
     
   });
   
-  it('should toggle colapsable state', () => {
+  it('debe alternar el estado de colapsable', () => {
     expect(component.colapsable).toBeFalsy();
     component.mostrar_colapsable();
     expect(component.colapsable).toBe(true);
@@ -35,46 +35,52 @@ describe('DatosDeLaSolicitudComponent', () => {
     expect(component.colapsable).toBeFalsy();
   });
   
-  it('should call obtenerEstadoCatalogo and set estadoCatalogo', () => {
+  it('debe llamar a obtenerEstadoCatalogo y establecer estadoCatalogo', () => {
     const mockCatalogo = { estados: ['Estado1', 'Estado2'] } as any;
     jest.spyOn(component['permisoSanitarioProductosService'], 'obtenerEstadoCatalogo').mockReturnValue({
       pipe: jest.fn().mockReturnValue({
-        subscribe: jest.fn((callback) => callback(mockCatalogo)),
+        subscribe: jest.fn((callback) => {
+          if (typeof callback === 'function') {
+            callback(mockCatalogo);
+          } else if (callback && typeof callback.next === 'function') {
+            callback.next(mockCatalogo);
+          }
+        }),
       }),
     } as any);
-  
+
     component.obtenerEstadoCatalogo();
     expect(component.estadoCatalogo).toEqual(mockCatalogo);
   });
   
-  it('should enable razonSocial and correoElectronico fields', () => {
+  it('debe habilitar los campos razonSocial y correoElectronico', () => {
     component.habilitarCampos();
     expect(component.solicitudForm.get('razonSocial')?.enabled).toBe(true);
     expect(component.solicitudForm.get('correoElectronico')?.enabled).toBe(true);
   });
   
-  it('should update fechaCaducidad in formMercancias', () => {
+  it('debe actualizar fechaCaducidad en formMercancias', () => {
     const newDate = '2023-12-31';
     component.cambioFechaFinal(newDate);
     expect(component.formMercancias.get('fechaCaducidad')?.value).toBe(newDate);
   });
   
-  it('should update fechaFabricacion in formMercancias', () => {
+  it('debe actualizar fechaFabricacion en formMercancias', () => {
     const newDate = '2023-01-01';
     component.cambioFechaFabricacion(newDate);
     expect(component.formMercancias.get('fechaFabricacion')?.value).toBe(newDate);
   });
   
-  it('should call setValoresStore and update tramite260104Store', () => {
+  it('debe llamar a setValoresStore y actualizar tramite260104Store', () => {
     const mockStoreMethod = jest.fn();
-    component['tramite260104Store'] = { razonSocial: mockStoreMethod } as any;
+    component['tramite260104Store'] = { setRazonSocial: mockStoreMethod } as any; // <-- Cambia aquí
     const mockForm = new FormBuilder().group({ razonSocial: ['testValue'] });
-  
+
     component.setValoresStore(mockForm, 'razonSocial', 'setRazonSocial');
     expect(mockStoreMethod).toHaveBeenCalledWith('testValue');
   });
   
-  it('should destroy observables on ngOnDestroy', () => {
+  it('debe destruir los observables en ngOnDestroy', () => {
     const destroySpy = jest.spyOn(component['destroyNotifier$'], 'next');
     const completeSpy = jest.spyOn(component['destroyNotifier$'], 'complete');
   
@@ -82,21 +88,21 @@ describe('DatosDeLaSolicitudComponent', () => {
     expect(destroySpy).toHaveBeenCalled();
     expect(completeSpy).toHaveBeenCalled();
   });
-  it('should toggle colapsableDos state', () => {
+  it('debe alternar el estado de colapsableDos', () => {
     expect(component.colapsableDos).toBeFalsy();
     component.mostrar_colapsableDos();
     expect(component.colapsableDos).toBe(true);
     component.mostrar_colapsableDos();
     expect(component.colapsableDos).toBeFalsy();
   });
-  it('should toggle colapsableTres state', () => {
+  it('debe alternar el estado de colapsableTres', () => {
     expect(component.colapsableTres).toBeFalsy();
     component.mostrar_colapsableTres();
     expect(component.colapsableTres).toBe(true);
     component.mostrar_colapsableTres();
     expect(component.colapsableTres).toBeFalsy();
   });
-  it('should enable "Especifique" field and update tramite260104Store', () => {
+  it('debe habilitar el campo "Especifique" y actualizar tramite260104Store', () => {
     const mockStoreMethod = jest.fn();
     component['tramite260104Store'] = { setEspecifique: mockStoreMethod } as any;
   
@@ -107,7 +113,7 @@ describe('DatosDeLaSolicitudComponent', () => {
     expect(component.isHabilitarEspecifique).toBe(true);
     expect(mockStoreMethod).toHaveBeenCalledWith('testValue');
   });
-  it('should enable "EspecifiqueTipo" field and update tramite260104Store', () => {
+  it('debe habilitar el campo "EspecifiqueTipo" y actualizar tramite260104Store', () => {
     const mockStoreMethod = jest.fn();
     component['tramite260104Store'] = { setEspecifiqueTipo: mockStoreMethod } as any;
   
@@ -118,7 +124,7 @@ describe('DatosDeLaSolicitudComponent', () => {
     expect(component.isHabilitarEspecifiqueTipo).toBe(true);
     expect(mockStoreMethod).toHaveBeenCalledWith('testValue');
   });
-  it('should call obtenerTablaDatos and set nicoTablaDatos', () => {
+  it('debe llamar a obtenerTablaDatos y establecer nicoTablaDatos', () => {
     const mockData = { datos: [{ id: 1, name: 'Test Data' }] };
     jest.spyOn(component['permisoSanitarioProductosService'], 'obtenerTablaDatos').mockReturnValue({
       pipe: jest.fn().mockReturnValue({

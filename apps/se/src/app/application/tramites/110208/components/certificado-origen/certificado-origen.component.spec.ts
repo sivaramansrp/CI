@@ -17,6 +17,8 @@ describe('CertificadoOrigenComponent', () => {
     validarInicalmenteServiceMock = {
       obtenerEstadoList: jest.fn().mockReturnValue(of({ data: [{ id: 1, nombre: 'Estado1' }] })),
       obtenerTablaDatosCertificado: jest.fn().mockReturnValue(of({ data: [{ id: 1, nombre: 'Dato1' }] })),
+      obtenerTablaDatos: jest.fn().mockReturnValue(of({ data: [{ id: 1, nombre: 'Dato2' }] })), 
+      obtenerFormDatos: jest.fn().mockReturnValue(of({ data: [{ id: 1, nombre: 'FormDato1' }] })),
     } as unknown as jest.Mocked<ValidarInicalmenteService>;
 
     tramite110208StoreMock = {
@@ -48,75 +50,76 @@ describe('CertificadoOrigenComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize the form with default values', () => {
+  it('debe inicializar el formulario con valores por defecto', () => {
     expect(component.formCertificado.get('entidadFederativa')?.value).toBe('Test');
     expect(component.formCertificado.get('bloque')?.value).toBe('Test');
   });
 
-  it('should call obtenerEstadoList and populate estado', () => {
+  it('debe llamar a obtenerEstadoList y poblar estado', () => {
     component.obtenerEstadoList();
     expect(validarInicalmenteServiceMock.obtenerEstadoList).toHaveBeenCalled();
     expect(component.estado).toEqual([{ id: 1, nombre: 'Estado1' }]);
   });
 
-  it('should call obtenerTablaDatosCertificado and populate nicoTablaDatos', () => {
+  it('debe llamar a obtenerTablaDatosCertificado y poblar nicoTablaDatos', () => {
     component.obtenerTablaDatosCertificado();
     expect(validarInicalmenteServiceMock.obtenerTablaDatosCertificado).toHaveBeenCalled();
     expect(component.nicoTablaDatos).toEqual([{ id: 1, nombre: 'Dato1' }]);
   });
 
-  it('should update fechaFinal in the form and call setEntidadFederativa', () => {
+  it('debe actualizar fechaFinal en el formulario y llamar a setEntidadFederativa', () => {
     component.cambioFechaFinal('2023-12-31', component.formCertificado, 'fechaFinal', 'setEntidadFederativa');
     expect(component.formCertificado.get('fechaFinal')?.value).toBe('2023-12-31');
     expect(tramite110208StoreMock.setEntidadFederativa).toHaveBeenCalledWith('2023-12-31');
   });
 
-  it('should update fechaInicio in the form and call setBloque', () => {
+  it('debe actualizar fechaInicio en el formulario y llamar a setBloque', () => {
     component.cambioFechaInicio('2023-01-01', component.formCertificado, 'fechaInicio', 'setBloque');
     expect(component.formCertificado.get('fechaInicio')?.value).toBe('2023-01-01');
     expect(tramite110208StoreMock.setBloque).toHaveBeenCalledWith('2023-01-01');
   });
 
-  it('should set mostrarTercerOperador to true and call setEntidadFederativa', () => {
+  it('debe establecer mostrarTercerOperador en true y llamar a setEntidadFederativa', () => {
     component.tercerOperador(component.formCertificado, 'tercerOperador', 'setEntidadFederativa');
     expect(component.mostrarTercerOperador).toBe(true);
     expect(tramite110208StoreMock.setEntidadFederativa).toHaveBeenCalled();
   });
 
-  it('should clean up observables on ngOnDestroy', () => {
-    const destroySpy = jest.spyOn(component['destroyed$'], 'next');
-    const completeSpy = jest.spyOn(component['destroyed$'], 'complete');
+  it('debe limpiar los observables al destruir el componente', () => {
+    const destroySpy = jest.spyOn(component['destroyNotifier$'], 'next');
+    const completeSpy = jest.spyOn(component['destroyNotifier$'], 'complete');
     component.ngOnDestroy();
     expect(destroySpy).toHaveBeenCalled();
     expect(completeSpy).toHaveBeenCalled();
   });
-  it('should call the correct store method with the correct value', () => {
+
+  it('debe llamar al método correcto del store con el valor correcto', () => {
     const mockForm = new FormBuilder().group({
       testField: ['TestValue']
     });
-  
+
     component.setValoresStore(mockForm, 'testField', 'setEntidadFederativa');
     expect(tramite110208StoreMock.setEntidadFederativa).toHaveBeenCalledWith('TestValue');
   });
-  
-  it('should not call the store method if the form field value is null', () => {
+
+  it('no debe llamar al método del store si el valor del campo del formulario es null', () => {
     const mockForm = new FormBuilder().group({
       testField: [null]
     });
-  
+
     component.setValoresStore(mockForm, 'testField', 'setEntidadFederativa');
     expect(tramite110208StoreMock.setEntidadFederativa).not.toHaveBeenCalled();
   });
-  
-  it('should handle undefined form field gracefully', () => {
+
+  it('debe manejar correctamente un campo de formulario indefinido', () => {
     const mockForm = new FormBuilder().group({});
-  
+
     component.setValoresStore(mockForm, 'nonExistentField', 'setEntidadFederativa');
     expect(tramite110208StoreMock.setEntidadFederativa).not.toHaveBeenCalled();
   });
-  
+
 });

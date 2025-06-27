@@ -1,21 +1,23 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { SolicitudComponent } from './solicitud.component';
 
 describe('SolicitudComponent', () => {
-  let COMPONENTE: SolicitudComponent;
-  let FIXTURE: ComponentFixture<SolicitudComponent>;
+  let componente: SolicitudComponent;
+  let fixture: ComponentFixture<SolicitudComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [SolicitudComponent],
+      declarations: [SolicitudComponent],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA]
     }).compileComponents();
 
-    FIXTURE = TestBed.createComponent(SolicitudComponent);
-    COMPONENTE = FIXTURE.componentInstance;
-    FIXTURE.detectChanges();
+    fixture = TestBed.createComponent(SolicitudComponent);
+    componente = fixture.componentInstance;
+    fixture.detectChanges();
   });
 
-  it('DEBERÍA CREAR EL COMPONENTE', () => {
-    expect(COMPONENTE).toBeTruthy();
+  it('debería crear el componente', () => {
+    expect(componente).toBeTruthy();
   });
 });

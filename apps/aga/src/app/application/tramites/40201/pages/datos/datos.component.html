@@ -17,9 +17,13 @@
             <solicitante [tabindex]="1"></solicitante>
             }
             @case (2) {
-            <app-asignar-caat-maritimo [tabindex]="2"></app-asignar-caat-maritimo>
-            }
-            }
+                 
+            <app-asignar-caat-maritimo [tabindex]="2" [esDatosRespuesta]="esDatosRespuesta"
+            ></app-asignar-caat-maritimo>
+            
+        }
+    }
+            
         </ng-container>
     </div>
 </div>

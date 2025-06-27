@@ -3,6 +3,7 @@ import { PasoDosComponent } from './paso-dos.component';
 import { AlertComponent, AnexarDocumentosComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { ToastrModule } from 'ngx-toastr';
 import { HttpClientModule } from '@angular/common/http';
+import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
 
 describe('PasoDosComponent', () => {
   let component: PasoDosComponent;
@@ -10,7 +11,9 @@ describe('PasoDosComponent', () => {
 
  beforeEach(async () => {
      await TestBed.configureTestingModule({
-       imports: [PasoDosComponent,HttpClientModule,ToastrModule.forRoot()],
+      declarations: [PasoDosComponent],
+      imports: [HttpClientModule,ToastrModule.forRoot(), AlertComponent, AnexarDocumentosComponent, TituloComponent],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
      }).compileComponents();
 
      fixture = TestBed.createComponent(PasoDosComponent);
