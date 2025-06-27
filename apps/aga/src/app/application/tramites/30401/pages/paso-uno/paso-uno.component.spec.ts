@@ -1,3 +1,4 @@
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PasoUnoComponent } from './paso-uno.component';
 import { Subject, of } from 'rxjs';
 
@@ -18,7 +19,6 @@ describe('PasoUnoComponent', () => {
       mockRegistroService,
       mockConsultaQuery
     );
-    // Ensure consultaQuery is set for all tests
     component.consultaQuery = mockConsultaQuery;
   });
 
