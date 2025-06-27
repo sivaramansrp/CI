@@ -19,7 +19,6 @@ describe('DireccionEmpresaComponent', () => {
 
     TestBed.configureTestingModule({
       imports: [ReactiveFormsModule, DireccionEmpresaComponent],
-      // declarations: [DireccionEmpresaComponent],
       providers: [
         { provide: FormGroupDirective, useValue: formGroupDirective },
         { provide: Tramite30401Store, useValue: tramite30401Store },
@@ -30,11 +29,11 @@ describe('DireccionEmpresaComponent', () => {
     component = fixture.componentInstance;
   });
 
-  it('should create the component', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize the form group on ngOnInit', () => {
+  it('debe inicializar el grupo de formulario en ngOnInit', () => {
     const mockFormGroup = new FormGroup({});
     jest.spyOn(formGroupDirective.control, 'get').mockReturnValue(mockFormGroup);
 
@@ -45,7 +44,7 @@ describe('DireccionEmpresaComponent', () => {
     expect(component.inicializarFormulario).toBe(mockFormGroup);
   });
 
-  it('should call establecerDatos on setValoresStore', () => {
+  it('Debería llamar a establecerDatos en setValoresStore', () => {
     const mockFormGroup = new FormGroup({});
     jest.spyOn(mockFormGroup, 'get').mockReturnValue({ value: 'testValue' } as any);
 
@@ -54,15 +53,13 @@ describe('DireccionEmpresaComponent', () => {
     expect(tramite30401Store.establecerDatos).toHaveBeenCalledWith({ testField: 'testValue' });
   });
 
-  it('should return true if a control is invalid, touched, or dirty in esInvalido', () => {
-    // Mock the form group and its get method
+  it('Debe devolver verdadero si un control no es válido, está tocado o sucio en esInvalido', () => {
     const mockControl = {
       invalid: true,
       touched: true,
       dirty: false,
     };
 
-    // Ensure inicializarFormulario is properly initialized
     component.inicializarFormulario = new FormGroup({
       testControl: new FormControl(),
     });
@@ -73,15 +70,13 @@ describe('DireccionEmpresaComponent', () => {
     expect(result).toBe(true);
   });
 
-  it('should return false if a control is valid in esInvalido', () => {
-    // Mock the form group and its get method
+  it('Debe devolver falso si un control es válido en esInvalido', () => {
     const mockControl = {
       invalid: false,
       touched: false,
       dirty: false,
     };
 
-    // Ensure inicializarFormulario is properly initialized
     component.inicializarFormulario = new FormGroup({
       testControl: new FormControl(),
     });

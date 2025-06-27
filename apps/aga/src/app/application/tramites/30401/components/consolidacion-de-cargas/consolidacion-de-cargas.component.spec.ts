@@ -39,18 +39,18 @@ describe('ConsolidacionDeCargasComponent', () => {
     jest.clearAllMocks();
   });
 
-  it('should create the component', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize the form with default values from the store', () => {
+  it('debe inicializar el formulario con valores predeterminados de la tienda', () => {
     expect(component.forma.value).toEqual({
       consolidacionCargas: '',
       noConsolidadoET: '',
     });
   });
 
-  it('should call enPatchStoredFormData and subscribe to store data', () => {
+  it('debe llamar a enPatchStoredFormData y suscribirse para almacenar datos', () => {
     const spy = jest.spyOn(tramite30401QueryMock.selectTramite30401$ as any, 'subscribe');
     component.enPatchStoredFormData();
     expect(spy).toHaveBeenCalled();
@@ -59,7 +59,7 @@ describe('ConsolidacionDeCargasComponent', () => {
     });
   });
 
-  it('should call setValoresStore and update the store with form values', () => {
+  it('Debería llamar a setValoresStore y actualizar la tienda con los valores del formulario', () => {
     const form = component.forma;
     form.get('consolidacionCargas')?.setValue('');
     component.setValoresStore(form, 'consolidacionCargas');
@@ -68,22 +68,22 @@ describe('ConsolidacionDeCargasComponent', () => {
     });
   });
 
-  it('should not call setValoresStore if form is null', () => {
+  it('No se debe llamar a setValoresStore si el formulario es nulo', () => {
     component.setValoresStore(null, 'consolidacionCargas');
     expect(tramite30401StoreMock.establecerDatos).not.toHaveBeenCalled();
   });
 
-  it('should update esConsolidatedET to true when valor is "1"', () => {
+  it('Debería actualizar esConsolidatedET a verdadero cuando el valor sea "1"', () => {
     component.enCambioDeValor('1');
     expect(component.esConsolidatedET).toBe(true);
   });
 
-  it('should update esConsolidatedET to false when valor is not "1"', () => {
+  it('Debería actualizar esConsolidatedET a falso cuando el valor no sea "1"', () => {
     component.enCambioDeValor('0');
     expect(component.esConsolidatedET).toBe(false);
   });
 
-  it('should complete destroyed$ on ngOnDestroy', () => {
+  it('Debería completar la destrucción en ngOnDestroy', () => {
     const spy = jest.spyOn(component.destroyed$, 'next');
     const completeSpy = jest.spyOn(component.destroyed$, 'complete');
     component.ngOnDestroy();
@@ -91,7 +91,7 @@ describe('ConsolidacionDeCargasComponent', () => {
     expect(completeSpy).toHaveBeenCalled();
   });
 
-  it('should create the form with required validators', () => {
+  it('Debe crear el formulario con los validadores requeridos', () => {
     const form = component.forma;
     expect(form.get('consolidacionCargas')?.valid).toBe(false);
     expect(form.get('noConsolidadoET')?.valid).toBe(false);
