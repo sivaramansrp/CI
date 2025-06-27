@@ -28,6 +28,7 @@ import { FECHA } from '../../constantes/pago-de-derechos.enum';
   styleUrl: './pago-de-derechos.component.scss',
 })
 export class PagoDeDerechosComponent implements OnChanges {
+  //shared compoennt ahe ha
   /**
    * Formulario reactivo que captura los datos del pago de derechos.
    */
@@ -37,6 +38,16 @@ export class PagoDeDerechosComponent implements OnChanges {
    * Lista de bancos disponibles para seleccionar.
    */
   @Input() banco!: Catalogo[];
+
+  /**
+   * Fecha de pago seleccionada o ingresada.
+   */
+  @Input() fecPago!: Date | string;
+  
+  /**
+   * Indica si el formulario está deshabilitado.
+   * Si es true, el formulario no se puede editar.
+   */
 
   @Input() isDisabled: boolean = false;
 
@@ -63,9 +74,18 @@ export class PagoDeDerechosComponent implements OnChanges {
 
  
   ngOnChanges(changes: SimpleChanges): void {
+    console.log(this.formularioPagoDerechos)
       // Verifica si el formulario ha cambiado y actualiza su estado
       if (changes['isDisabled']) {
         if (this.isDisabled) {
+          //set kela pn nhi zale
+          //nhi he bghte
+        // this.fecPago = changes['fecPago'].currentValue;
+        // if(this.fecPago){
+        // this.formularioPagoDerechos.patchValue({
+        //           fecPago: this.fecPago
+        //   });
+        // }
         this.formularioPagoDerechos.disable();
         }else{
           this.formularioPagoDerechos.enable();
