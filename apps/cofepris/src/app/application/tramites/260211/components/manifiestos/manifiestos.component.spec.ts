@@ -34,7 +34,7 @@ describe('ManifiestosComponent', () => {
     fixture.detectChanges();                // dispara ngOnInit
   });
 
-  it('should create', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
     // Además verificamos que el método del servicio se haya llamado
     expect(sanitarioServiceStub.getPermisoData).toHaveBeenCalled();
