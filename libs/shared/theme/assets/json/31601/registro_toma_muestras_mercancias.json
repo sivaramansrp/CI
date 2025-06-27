@@ -44,6 +44,7 @@
       "apellidoPaterno": "apellidoPaterno",
       "apellidoMaterno": "apellidoMaterno",
       "cargo": "cargo",
+      "estadoResidencia": "Ciudad de México",
       "cuidad": "cuidad",
       "telefonoReprestantante": "telefonoReprestantante",
       "correoReprestantante": "correoReprestantante",
@@ -90,6 +91,5 @@
       "descripcion": "ad",
       "haContado": "Si",
       "enCasoIva": "Si"
-
 }
 

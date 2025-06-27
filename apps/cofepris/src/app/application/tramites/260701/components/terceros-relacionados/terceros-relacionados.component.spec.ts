@@ -2,28 +2,34 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { TercerosRelacionadosComponent } from './terceros-relacionados.component';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { CertificadosLicenciasService } from '../../services/certificados-licencias.service';
-import { of } from 'rxjs';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { of, Subject } from 'rxjs';
+
+const certificadosLicenciasSvcMock = {
+  getDestinatarioDatos: jest.fn().mockReturnValue(of([])),
+  getFabricanteDatos: jest.fn().mockReturnValue(of([])),
+};
+const consultaioQueryMock = {
+  selectConsultaioState$: of({ readonly: false }),
+};
+const modalServiceMock = {
+  show: jest.fn()
+};
 
 describe('TercerosRelacionadosComponent', () => {
   let component: TercerosRelacionadosComponent;
   let fixture: ComponentFixture<TercerosRelacionadosComponent>;
-  let certificadosLicenciasSvcMock: any;
-  let modalServiceMock: any;
 
   beforeEach(async () => {
-    certificadosLicenciasSvcMock = {
-      getDestinatarioDatos: jest.fn().mockReturnValue(of([])),
-      getFabricanteDatos: jest.fn().mockReturnValue(of([])),
-    };
-
-    modalServiceMock = {
-      show: jest.fn(),
-    };
+    certificadosLicenciasSvcMock.getDestinatarioDatos.mockClear();
+    certificadosLicenciasSvcMock.getFabricanteDatos.mockClear();
+    modalServiceMock.show.mockClear();
 
     await TestBed.configureTestingModule({
       imports: [TercerosRelacionadosComponent],
       providers: [
         { provide: CertificadosLicenciasService, useValue: certificadosLicenciasSvcMock },
+        { provide: ConsultaioQuery, useValue: consultaioQueryMock },
         { provide: BsModalService, useValue: modalServiceMock },
       ],
     }).compileComponents();
@@ -33,169 +39,144 @@ describe('TercerosRelacionadosComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('debe crearse', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize destinatarioDatos and fabricanteTablaDatos on ngOnInit', () => {
-    const destinatariosMock = [{ nombre: 'Test Destinatario' }];
-    const fabricantesMock = [{ nombre: 'Test Fabricante' }];
-
-    certificadosLicenciasSvcMock.getDestinatarioDatos.mockReturnValue(of(destinatariosMock));
-    certificadosLicenciasSvcMock.getFabricanteDatos.mockReturnValue(of(fabricantesMock));
-
-    component.ngOnInit();
-
-    expect(component.destinatarioDatos).toEqual(destinatariosMock);
-    expect(component.fabricanteTablaDatos).toEqual(fabricantesMock);
+  it('debe establecer destinatarioDatos y fabricanteTablaDatos al inicializar', () => {
+    expect(component.destinatarioDatos).toEqual([]);
+    expect(component.fabricanteTablaDatos).toEqual([]);
   });
 
-  it('should open a modal with the given template', () => {
-    const template = {} as any;
-    component.abrirModal(template);
-    expect(modalServiceMock.show).toHaveBeenCalledWith(template, { class: 'modal-sm' });
+  it('debe establecer esFormularioSoloLectura desde consultaioQuery', () => {
+    expect(component.esFormularioSoloLectura).toBe(false);
   });
 
-  it('should open a modal for managing fabricantes with the given title', () => {
-    const titulo = 'Test Title';
-    component.abrirFabricanteModal(titulo);
-    expect(modalServiceMock.show).toHaveBeenCalledWith(expect.any(Function), {
-      class: 'modal-xl',
-      initialState: { titulo },
-    });
+  it('debe establecer tieneFilaSeleccionada cuando se llama setTablaSeleccionDestinatario', () => {
+    component.setTablaSeleccionDestinatario([{ nombre: 'test' } as any]);
+    expect(component.tieneFilaSeleccionada).toBe(true);
+    component.setTablaSeleccionDestinatario([]);
+    expect(component.tieneFilaSeleccionada).toBe(false);
   });
 
-  it('should clean up resources on ngOnDestroy', () => {
-    const destroySpy = jest.spyOn(component['destroyNotifier$'], 'next');
-    const completeSpy = jest.spyOn(component['destroyNotifier$'], 'complete');
+  it('debe establecer tieneFilaSeleccionadaFabricante cuando se llama setTablaSeleccionFabricante', () => {
+    component.setTablaSeleccionFabricante([{ nombre: 'fab' } as any]);
+    expect(component.tieneFilaSeleccionadaFabricante).toBe(true);
+    component.setTablaSeleccionFabricante([]);
+    expect(component.tieneFilaSeleccionadaFabricante).toBe(false);
+  });
 
+  it('debe establecer nuevaNotificacion y elementoParaEliminar cuando se llama abrirModal', () => {
+    component.abrirModal(2);
+    expect(component.nuevaNotificacion).toBeDefined();
+    expect(component.elementoParaEliminar).toBe(2);
+  });
+
+  it('debe eliminar pedimento y actualizar tablas al llamar eliminarPedimento', () => {
+    component.pedimentos = [
+      { id: 1 } as any,
+      { id: 2 } as any,
+      { id: 3 } as any
+    ];
+    component.elementoParaEliminar = 1;
+    component.tieneFilaSeleccionada = true;
+    component.tieneFilaSeleccionadaFabricante = true;
+    component.destinatarioDatos = [{}, {}] as any;
+    component.fabricanteTablaDatos = [{}, {}] as any;
+    component.eliminarPedimento(true);
+    expect(component.pedimentos.length).toBe(2);
+    expect(component.destinatarioDatos.length).toBe(1);
+    expect(component.fabricanteTablaDatos.length).toBe(1);
+  });
+
+  it('no debe eliminar pedimento si borrar es false', () => {
+    component.pedimentos = [
+      { id: 1 } as any,
+      { id: 2 } as any,
+      { id: 3 } as any
+    ];
+    component.elementoParaEliminar = 1;
+    component.eliminarPedimento(false);
+    expect(component.pedimentos.length).toBe(3);
+  });
+
+  it('debe limpiar destroyNotifier$ en ngOnDestroy', () => {
+    const spy = jest.spyOn((component as any).destroyNotifier$, 'next');
     component.ngOnDestroy();
+    expect(spy).toHaveBeenCalled();
+  });
 
-    expect(destroySpy).toHaveBeenCalled();
+  it('debe eliminar solo destinatarioDatos si tieneFilaSeleccionada es true', () => {
+    component.pedimentos = [{}, {}] as any;
+    component.elementoParaEliminar = 0;
+    component.tieneFilaSeleccionada = true;
+    component.tieneFilaSeleccionadaFabricante = false;
+    component.destinatarioDatos = [{}, {}] as any;
+    component.fabricanteTablaDatos = [{}, {}] as any;
+    component.eliminarPedimento(true);
+    expect(component.destinatarioDatos.length).toBe(1);
+    expect(component.fabricanteTablaDatos.length).toBe(2);
+  });
+
+  it('debe eliminar solo fabricanteTablaDatos si tieneFilaSeleccionadaFabricante es true', () => {
+    component.pedimentos = [{}, {}] as any;
+    component.elementoParaEliminar = 0;
+    component.tieneFilaSeleccionada = false;
+    component.tieneFilaSeleccionadaFabricante = true;
+    component.destinatarioDatos = [{}, {}] as any;
+    component.fabricanteTablaDatos = [{}, {}] as any;
+    component.eliminarPedimento(true);
+    expect(component.destinatarioDatos.length).toBe(2);
+    expect(component.fabricanteTablaDatos.length).toBe(1);
+  });
+
+  it('no debe eliminar destinatarioDatos ni fabricanteTablaDatos si ninguno está seleccionado', () => {
+    component.pedimentos = [{}, {}] as any;
+    component.elementoParaEliminar = 0;
+    component.tieneFilaSeleccionada = false;
+    component.tieneFilaSeleccionadaFabricante = false;
+    component.destinatarioDatos = [{}, {}] as any;
+    component.fabricanteTablaDatos = [{}, {}] as any;
+    component.eliminarPedimento(true);
+    expect(component.destinatarioDatos.length).toBe(2);
+    expect(component.fabricanteTablaDatos.length).toBe(2);
+  });
+
+  it('debe establecer destinatarioDatos y fabricanteTablaDatos desde el servicio en ngOnInit', () => {
+    certificadosLicenciasSvcMock.getDestinatarioDatos.mockReturnValue(of([{ nombre: 'dest' }]));
+    certificadosLicenciasSvcMock.getFabricanteDatos.mockReturnValue(of([{ nombre: 'fab' }]));
+    component.ngOnInit();
+    expect(component.destinatarioDatos).toEqual([{ nombre: 'dest' }]);
+    expect(component.fabricanteTablaDatos).toEqual([{ nombre: 'fab' }]);
+  });
+
+  it('no debe fallar eliminarPedimento si los arrays están vacíos', () => {
+    component.pedimentos = [];
+    component.destinatarioDatos = [];
+    component.fabricanteTablaDatos = [];
+    component.elementoParaEliminar = 0;
+    component.tieneFilaSeleccionada = true;
+    component.tieneFilaSeleccionadaFabricante = true;
+    expect(() => component.eliminarPedimento(true)).not.toThrow();
+    expect(component.pedimentos.length).toBe(0);
+    expect(component.destinatarioDatos.length).toBe(0);
+    expect(component.fabricanteTablaDatos.length).toBe(0);
+  });
+
+  it('no debe eliminar nada si eliminarPedimento se llama con false y los arrays están vacíos', () => {
+    component.pedimentos = [];
+    component.destinatarioDatos = [];
+    component.fabricanteTablaDatos = [];
+    component.elementoParaEliminar = 0;
+    expect(() => component.eliminarPedimento(false)).not.toThrow();
+    expect(component.pedimentos.length).toBe(0);
+    expect(component.destinatarioDatos.length).toBe(0);
+    expect(component.fabricanteTablaDatos.length).toBe(0);
+  });
+
+  it('debe llamar ngOnDestroy y completar destroyNotifier$', () => {
+    const completeSpy = jest.spyOn((component as any).destroyNotifier$, 'complete');
+    component.ngOnDestroy();
     expect(completeSpy).toHaveBeenCalled();
   });
-});
-it('should update tieneFilaSeleccionada when setTablaSeleccionDestinatario is called', () => {
-  const mockRows:any = [{ 
-    nombre: 'Test Destinatario', 
-    rfc: 'RFC123456', 
-    curp: 'CURP123456', 
-    telefono: '1234567890', 
-    correoElectronico: 'test@example.com',
-    // Add other required properties here
-  }];
-  const fixture = TestBed.createComponent(TercerosRelacionadosComponent);
-  const component = fixture.componentInstance;
-
-  component.setTablaSeleccionDestinatario(mockRows);
-  expect(component.tieneFilaSeleccionada).toBe(true);
-
-  component.setTablaSeleccionDestinatario([]);
-  expect(component.tieneFilaSeleccionada).toBe(false);
-});
-
-it('should update tieneFilaSeleccionadaFabricante when setTablaSeleccionFabricante is called', () => {
-  const mockRows: any = [{ nombre: 'Test Fabricante' }];
-  const fixture = TestBed.createComponent(TercerosRelacionadosComponent);
-  const component = fixture.componentInstance;
-  component.setTablaSeleccionFabricante(mockRows);
-  expect(component.tieneFilaSeleccionadaFabricante).toBe(true);
-
-  component.setTablaSeleccionFabricante([]);
-  expect(component.tieneFilaSeleccionadaFabricante).toBe(false);
-});
-
-it('should remove the last entry from destinatarioDatos and fabricanteTablaDatos when eliminarDatos is called', () => {
-  const fixture = TestBed.createComponent(TercerosRelacionadosComponent);
-  const component = fixture.componentInstance;
-  component.destinatarioDatos = [{
-    nombre: 'Destinatario 1',
-    rfc: '',
-    curp: '',
-    telefono: '',
-    correoElectronico: '',
-    calle: '',
-    numeroExterior: '',
-    numeroInterior: '',
-    pais: '',
-    colonia: '',
-    municipio: '',
-    localidad: '',
-    entidadFederativa: '',
-    estado: '',
-    codigoPostal: '',
-    coloniaEquivalente: ''
-  }];
-  component.fabricanteTablaDatos = [{
-    nombre: 'Fabricante 1',
-    rfc: '',
-    curp: '',
-    telefono: '',
-    correoElectronico: '',
-    calle: '',
-    numeroExterior: '',
-    numeroInterior: '',
-    pais: '',
-    colonia: '',
-    municipio: '',
-    localidad: '',
-    entidadFederativa: '',
-    estado: '',
-    cp: ''
-  }];
-  component.tieneFilaSeleccionada = true;
-  component.tieneFilaSeleccionadaFabricante = true;
-
-  component.eliminarDatos();
-
-  expect(component.destinatarioDatos.length).toBe(0);
-  expect(component.fabricanteTablaDatos.length).toBe(0);
-  expect(component.modalRef?.hide).toHaveBeenCalled();
-});
-
-it('should not remove entries if no rows are selected when eliminarDatos is called', () => {
-  const fixture = TestBed.createComponent(TercerosRelacionadosComponent);
-  const component = fixture.componentInstance;
-  component.destinatarioDatos = [{
-    nombre: 'Destinatario 1',
-    rfc: '',
-    curp: '',
-    telefono: '',
-    correoElectronico: '',
-    calle: '',
-    numeroExterior: '',
-    numeroInterior: '',
-    pais: '',
-    colonia: '',
-    municipio: '',
-    localidad: '',
-    entidadFederativa: '',
-    estado: '',
-    codigoPostal: '',
-    coloniaEquivalente: ''
-  }];
-  component.fabricanteTablaDatos = [{
-    nombre: 'Fabricante 1',
-    rfc: '',
-    curp: '',
-    telefono: '',
-    correoElectronico: '',
-    calle: '',
-    numeroExterior: '',
-    numeroInterior: '',
-    pais: '',
-    colonia: '',
-    municipio: '',
-    localidad: '',
-    entidadFederativa: '',
-    estado: '',
-    cp: ''
-  }];
-  component.tieneFilaSeleccionada = false;
-  component.tieneFilaSeleccionadaFabricante = false;
-
-  component.eliminarDatos();
-
-  expect(component.destinatarioDatos.length).toBe(1);
-  expect(component.fabricanteTablaDatos.length).toBe(1);
 });
