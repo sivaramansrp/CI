@@ -1619,7 +1619,6 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
       return;
     }
 
-    // this.calcularRangoFechas();
     this.setValoresStore(this.datosServicio, 'fechaInicio', 'setFechaInicio');
   }
 
@@ -1630,7 +1629,6 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    * @returns {void} No retorna ningún valor.
    */
   changeFechaFinal(): void {
-    // this.datosServicio.updateValueAndValidity();
     this.fechaIntervaloValidator();
 
     const FECHA_FINAL = this.datosServicio.get('fechaFinal');
@@ -1725,8 +1723,6 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
         txtBtnCancelar: '',
       };
     }
-
-    // this.calcularRangoFechas();
   }
 
   /**
