@@ -208,7 +208,7 @@ export class AcusesYResolucionesFolioDelTramiteBusquedaComponent
    * Maneja el evento de clic en una fila de la tabla.
    * Navega a la URL del procedimiento.
    */
-  onFilaClic(event: any): void {
+  onFilaClic(event: AcuseYResolucionesFolioTramite): void {
     const ROW_OBJETO = event;
     const PROCEDURE: unknown | number = Number(
       ROW_OBJETO.numeroDeProcedimiento

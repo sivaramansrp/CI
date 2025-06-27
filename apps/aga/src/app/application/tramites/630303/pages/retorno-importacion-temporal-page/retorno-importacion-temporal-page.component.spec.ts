@@ -98,7 +98,6 @@ componente.wizardComponent = mockWizardComponent as any;
   });
 
  it('debería establecer el índice y llamar a siguiente() cuando la acción sea "cont" y el valor sea válido', () => {
-  // ✅ Define wizardComponent with spy methods
   componente.wizardComponent = {
     siguiente: jest.fn(),
     atras: jest.fn()
@@ -112,7 +111,6 @@ componente.wizardComponent = mockWizardComponent as any;
 
 
  it('debería establecer el índice y llamar a atras() cuando la acción no sea "cont" y el valor sea válido', () => {
-  // ✅ Fix: Define wizardComponent manually with spies
   componente.wizardComponent = {
     siguiente: jest.fn(),
     atras: jest.fn()
@@ -128,21 +126,14 @@ componente.wizardComponent = mockWizardComponent as any;
  it('debería ignorar valores inválidos (<1 o >4)', () => {
   const inicial = componente.indice;
 
-  // ✅ Manually assign the mock again just in case
   const mockWizard = {
     siguiente: jest.fn(),
     atras: jest.fn()
   };
   componente.wizardComponent = mockWizard as any;
-
-  // Trigger with invalid values
   componente.getValorIndice({ accion: 'cont', valor: -1 });
   componente.getValorIndice({ accion: 'cont', valor: 5 });
-
-  // Assert index unchanged
   expect(componente.indice).toBe(inicial);
-
-  // Assert navigation methods NOT called
   expect(componente.wizardComponent.siguiente).not.toHaveBeenCalled();
   expect(componente.wizardComponent.atras).not.toHaveBeenCalled();
 });

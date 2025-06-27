@@ -1,3 +1,10 @@
+/**
+ * @component PasoTresComponent
+ * @description Este componente es responsable de manejar el tercer paso del trámite.
+ * 
+ * @import { Component } from '@angular/core';
+ */
+
 import { Component } from '@angular/core';
 
 /**
@@ -13,9 +20,12 @@ import { Component } from '@angular/core';
  * @templateUrl ./paso-dos.component.html
  * @styleUrls ./paso-dos.component.scss --90101
  */
+
 @Component({
   selector: 'app-paso-dos',
   templateUrl: './paso-dos.component.html',
-  styleUrls: ['./paso-dos.component.scss'],
+  styleUrl: './paso-dos.component.scss'
 })
-export class PasoDosComponent {}
+export class PasoDosComponent {
+
+}
