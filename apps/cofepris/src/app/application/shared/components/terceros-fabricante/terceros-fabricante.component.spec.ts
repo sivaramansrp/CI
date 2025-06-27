@@ -1,4 +1,4 @@
-// Mock the JSON imports first, before any other imports
+
 jest.mock('@libs/shared/theme/assets/json/260501/fabricante-select-options-data.json', () => ({
   default: {
     paisSelectData: [
@@ -123,12 +123,12 @@ describe('TercerosRelacionadosComponent', () => {
     mockConsultaioQuery = TestBed.inject(ConsultaioQuery) as jest.Mocked<ConsultaioQuery>;
   });
 
-  describe('Component Initialization', () => {
-    it('should create', () => {
+  describe('Inicialización del Componente', () => {
+    it('debe crear el componente', () => {
       expect(component).toBeTruthy();
     });
 
-    it('should initialize with default values', () => {
+    it('debe inicializar con valores por defecto', () => {
       expect(component.showTableDiv).toBe(true);
       expect(component.showFabricante).toBe(false);
       expect(component.showFormulador).toBe(false);
@@ -144,13 +144,13 @@ describe('TercerosRelacionadosComponent', () => {
       expect(component.esFormularioSoloLectura).toBe(false);
     });
 
-    it('should initialize dropdown data from service on ngOnInit', () => {
+    it('debe inicializar datos de dropdown desde el servicio en ngOnInit', () => {
       component.ngOnInit();
       expect(mockTercerosFabricanteService.getData).toHaveBeenCalled();
       expect(component.dropdownData).toEqual(mockCatalogoData);
     });
 
-    it('should initialize all form groups on ngOnInit', () => {
+    it('debe inicializar todos los grupos de formulario en ngOnInit', () => {
       component.ngOnInit();
       expect(component.agregarFabricanteFormGroup).toBeDefined();
       expect(component.agregarFormuladorFormGroup).toBeDefined();
@@ -158,35 +158,8 @@ describe('TercerosRelacionadosComponent', () => {
     });
   });
 
-  // describe('getSortedTablas', () => {
-  //   it('should return visible tables sorted by order', () => {
-  //     component.tablaOrden = [
-  //       { nombre: 'Proveedor', orden: 3, esVisible: true },
-  //       { nombre: 'Fabricante', orden: 1, esVisible: true },
-  //       { nombre: 'Formulador', orden: 2, esVisible: false },
-  //       { nombre: 'Test', orden: 4, esVisible: true }
-  //     ];
-
-  //     const result = component.getSortedTablas();
-
-  //     expect(result).toHaveLength(2);
-  //     expect(result[0].nombre).toBe('Fabricante');
-  //     expect(result[1].nombre).toBe('Proveedor');
-  //   });
-
-  //   it('should return empty array when no visible tables', () => {
-  //     component.tablaOrden = [
-  //       { nombre: 'Fabricante', orden: 1, esVisible: false },
-  //       { nombre: 'Formulador', orden: 2, esVisible: false }
-  //     ];
-
-  //     const result = component.getSortedTablas();
-  //     expect(result).toHaveLength(0);
-  //   });
-  // });
-
-  describe('Selection Change Methods', () => {
-    it('should update showFabricanteButtons when onFabricanteSeleccionCambio is called', () => {
+  describe('Métodos de Cambio de Selección', () => {
+    it('debe actualizar showFabricanteButtons cuando se llama onFabricanteSeleccionCambio', () => {
       component.onFabricanteSeleccionCambio(true);
       expect(component.showFabricanteButtons).toBe(true);
 
@@ -194,7 +167,7 @@ describe('TercerosRelacionadosComponent', () => {
       expect(component.showFabricanteButtons).toBe(false);
     });
 
-    it('should update showFormuladorButtons when onFormuladorSeleccionCambio is called', () => {
+    it('debe actualizar showFormuladorButtons cuando se llama onFormuladorSeleccionCambio', () => {
       component.onFormuladorSeleccionCambio(true);
       expect(component.showFormuladorButtons).toBe(true);
 
@@ -202,7 +175,7 @@ describe('TercerosRelacionadosComponent', () => {
       expect(component.showFormuladorButtons).toBe(false);
     });
 
-    it('should update showProveedorButtons when onProveedorSeleccionCambio is called', () => {
+    it('debe actualizar showProveedorButtons cuando se llama onProveedorSeleccionCambio', () => {
       component.onProveedorSeleccionCambio(true);
       expect(component.showProveedorButtons).toBe(true);
 
@@ -211,12 +184,12 @@ describe('TercerosRelacionadosComponent', () => {
     });
   });
 
-  describe('Form Initialization', () => {
+  describe('Inicialización de Formulario', () => {
     beforeEach(() => {
       component.ngOnInit();
     });
 
-    it('should initialize fabricante form group with all required controls', () => {
+    it('debe inicializar el grupo de formulario de fabricante con todos los controles requeridos', () => {
       const form = component.agregarFabricanteFormGroup;
       expect(form.get('tercerosNacionalidad')).toBeDefined();
       expect(form.get('tipoPersona')).toBeDefined();
@@ -234,7 +207,7 @@ describe('TercerosRelacionadosComponent', () => {
       expect(form.get('numeroExterior')).toBeDefined();
     });
 
-    it('should initialize formulador form group with all required controls', () => {
+    it('debe inicializar el grupo de formulario de formulador con todos los controles requeridos', () => {
       const form = component.agregarFormuladorFormGroup;
       expect(form.get('tercerosNacionalidad')).toBeDefined();
       expect(form.get('tipoPersona')).toBeDefined();
@@ -246,7 +219,7 @@ describe('TercerosRelacionadosComponent', () => {
       expect(form.get('denominacionRazonSocial')).toBeDefined();
     });
 
-    it('should initialize proveedor form group with all required controls', () => {
+    it('debe inicializar el grupo de formulario de proveedor con todos los controles requeridos', () => {
       const form = component.agregarProveedorFormGroup;
       expect(form.get('tercerosNacionalidad')).toBeDefined();
       expect(form.get('tipoPersona')).toBeDefined();
@@ -259,43 +232,43 @@ describe('TercerosRelacionadosComponent', () => {
     });
   });
 
-  describe('Input Checked Methods', () => {
-    it('should set fisica to true and others to false when inputChecked is called with "fisica"', () => {
+  describe('Métodos de Input Checked', () => {
+    it('debe establecer fisica en true y otros en false cuando inputChecked se llama con "fisica"', () => {
       component.inputChecked('fisica');
       expect(component.fisica).toBe(true);
       expect(component.moral).toBe(false);
       expect(component.noContribuyente).toBe(false);
     });
 
-    it('should set moral to true and others to false when inputChecked is called with "moral"', () => {
+    it('debe establecer moral en true y otros en false cuando inputChecked se llama con "moral"', () => {
       component.inputChecked('moral');
       expect(component.fisica).toBe(false);
       expect(component.moral).toBe(true);
       expect(component.noContribuyente).toBe(false);
     });
 
-    it('should set noContribuyente to true and others to false when inputChecked is called with other value', () => {
+    it('debe establecer noContribuyente en true y otros en false cuando inputChecked se llama con otro valor', () => {
       component.inputChecked('other');
       expect(component.fisica).toBe(false);
       expect(component.moral).toBe(false);
       expect(component.noContribuyente).toBe(true);
     });
 
-    it('should set nacional to true when tercerosInputChecked is called with "nacional"', () => {
+    it('debe establecer nacional en true cuando tercerosInputChecked se llama con "nacional"', () => {
       component.tercerosInputChecked('nacional');
       expect(component.nacional).toBe(true);
       expect(component.extranjero).toBe(false);
     });
 
-    it('should set extranjero to true when tercerosInputChecked is called with other value', () => {
+    it('debe establecer extranjero en true cuando tercerosInputChecked se llama con otro valor', () => {
       component.tercerosInputChecked('extranjero');
       expect(component.nacional).toBe(false);
       expect(component.extranjero).toBe(true);
     });
   });
 
-  describe('Toggle Methods', () => {
-    it('should toggle visibility and reset persona flags when toggleDivFabricante is called', () => {
+  describe('Métodos de Toggle', () => {
+    it('debe alternar visibilidad y resetear flags de persona cuando se llama toggleDivFabricante', () => {
       component.showTableDiv = true;
       component.showFabricante = false;
       component.fisica = true;
@@ -309,7 +282,7 @@ describe('TercerosRelacionadosComponent', () => {
       expect(component.moral).toBe(false);
     });
 
-    it('should toggle visibility and reset persona flags when toggleDivFormulador is called', () => {
+    it('debe alternar visibilidad y resetear flags de persona cuando se llama toggleDivFormulador', () => {
       component.showTableDiv = true;
       component.showFormulador = false;
       component.fisica = true;
@@ -323,7 +296,7 @@ describe('TercerosRelacionadosComponent', () => {
       expect(component.moral).toBe(false);
     });
 
-    it('should toggle visibility and reset persona flags when toggleDivProveedor is called', () => {
+    it('debe alternar visibilidad y resetear flags de persona cuando se llama toggleDivProveedor', () => {
       component.showTableDiv = true;
       component.showProveedor = false;
       component.fisica = true;
@@ -338,12 +311,12 @@ describe('TercerosRelacionadosComponent', () => {
     });
   });
 
-  describe('Form Type Change Method', () => {
+  describe('Método de Cambio de Tipo de Formulario', () => {
     beforeEach(() => {
       component.ngOnInit();
     });
 
-    it('should enable form controls when tipoPersona has value', () => {
+    it('debe habilitar controles de formulario cuando tipoPersona tiene valor', () => {
       const form = component.agregarFabricanteFormGroup;
       form.get('tipoPersona')?.setValue('fisica');
 
@@ -356,7 +329,7 @@ describe('TercerosRelacionadosComponent', () => {
       expect(component.tipoPersonaSelection).toBe('fisica');
     });
 
-    it('should disable form controls when tipoPersona has no value', () => {
+    it('debe deshabilitar controles de formulario cuando tipoPersona no tiene valor', () => {
       const form = component.agregarFabricanteFormGroup;
       form.get('tipoPersona')?.setValue('');
 
@@ -369,7 +342,7 @@ describe('TercerosRelacionadosComponent', () => {
     });
   });
 
-  describe('Submit Form Methods', () => {
+  describe('Métodos de Envío de Formulario', () => {
     beforeEach(() => {
       component.ngOnInit();
       component.localidadDropdownData = [{ id: 1, descripcion: 'Test Localidad' }];
@@ -378,13 +351,12 @@ describe('TercerosRelacionadosComponent', () => {
       component.coloniaDropdownData = [{ id: 4, descripcion: 'Test Colonia' }];
     });
 
-    it('should submit fabricante form and add data to fabricanteRowData', () => {
+    it('debe enviar formulario de fabricante y agregar datos a fabricanteRowData', () => {
       const form = component.agregarFabricanteFormGroup;
       
-      // First toggle to show the fabricante form (simulates user clicking "Add Fabricante")
       component.toggleDivFabricante();
       
-      // Then set tipoPersona to enable the form controls
+      
       form.get('tipoPersona')?.setValue('moral');
       component.onTipoPersonaChange(form);
       
@@ -417,13 +389,11 @@ describe('TercerosRelacionadosComponent', () => {
       expect(component.showFabricante).toBe(false);
     });
 
-    it('should submit formulador form and add data to formuladorRowData', () => {
+    it('debe enviar formulario de formulador y agregar datos a formuladorRowData', () => {
       const form = component.agregarFormuladorFormGroup;
       
-      // First toggle to show the formulador form (simulates user clicking "Add Formulador")
       component.toggleDivFormulador();
       
-      // Then set tipoPersona to enable the form controls
       form.get('tipoPersona')?.setValue('moral');
       component.onTipoPersonaChange(form);
       
@@ -456,13 +426,11 @@ describe('TercerosRelacionadosComponent', () => {
       expect(component.showFormulador).toBe(false);
     });
 
-    it('should submit proveedor form and add data to proveedorRowData', () => {
+    it('debe enviar formulario de proveedor y agregar datos a proveedorRowData', () => {
       const form = component.agregarProveedorFormGroup;
       
-      // First toggle to show the proveedor form (simulates user clicking "Add Proveedor")
       component.toggleDivProveedor();
       
-      // Then set tipoPersona to enable the form controls
       form.get('tipoPersona')?.setValue('moral');
       component.onTipoPersonaChange(form);
       
@@ -496,21 +464,21 @@ describe('TercerosRelacionadosComponent', () => {
     });
   });
 
-  describe('Static Validators', () => {
+  describe('Validadores Estáticos', () => {
     describe('requiredPaisValidator', () => {
-      it('should return null for valid pais values', () => {
+      it('debe retornar null para valores de país válidos', () => {
         const control = new FormControl('Mexico');
         const result = TercerosRelacionadosComponent.requiredPaisValidator(control);
         expect(result).toBeNull();
       });
 
-      it('should return error for empty value', () => {
+      it('debe retornar error para valor vacío', () => {
         const control = new FormControl('');
         const result = TercerosRelacionadosComponent.requiredPaisValidator(control);
         expect(result).toEqual({ requiredPais: true });
       });
 
-      it('should return error for -1 value', () => {
+      it('debe retornar error para valor -1', () => {
         const control = new FormControl('-1');
         const result = TercerosRelacionadosComponent.requiredPaisValidator(control);
         expect(result).toEqual({ requiredPais: true });
@@ -518,19 +486,19 @@ describe('TercerosRelacionadosComponent', () => {
     });
 
     describe('rfcValidator', () => {
-      it('should return null for valid RFC fisica', () => {
+      it('debe retornar null para RFC física válido', () => {
         const control = new FormControl('AAAA800101AAA');
         const result = TercerosRelacionadosComponent.rfcValidator(control);
         expect(result).toBeNull();
       });
 
-      it('should return null for valid RFC moral', () => {
+      it('debe retornar null para RFC moral válido', () => {
         const control = new FormControl('AAA800101AAA');
         const result = TercerosRelacionadosComponent.rfcValidator(control);
         expect(result).toBeNull();
       });
 
-      it('should return error for invalid RFC', () => {
+      it('debe retornar error para RFC inválido', () => {
         const control = new FormControl('INVALID');
         const result = TercerosRelacionadosComponent.rfcValidator(control);
         expect(result).toEqual({ invalidRFC: true });
@@ -538,13 +506,13 @@ describe('TercerosRelacionadosComponent', () => {
     });
 
     describe('curpValidator', () => {
-      it('should return null for valid CURP', () => {
+      it('debe retornar null para CURP válido', () => {
         const control = new FormControl('AAAA800101HDFBBB01');
         const result = TercerosRelacionadosComponent.curpValidator(control);
         expect(result).toBeNull();
       });
 
-      it('should return error for invalid CURP', () => {
+      it('debe retornar error para CURP inválido', () => {
         const control = new FormControl('INVALID');
         const result = TercerosRelacionadosComponent.curpValidator(control);
         expect(result).toEqual({ invalidCURP: true });
@@ -552,13 +520,13 @@ describe('TercerosRelacionadosComponent', () => {
     });
 
     describe('telefonoValidator', () => {
-      it('should return null for valid telefono with only numbers', () => {
+      it('debe retornar null para teléfono válido con solo números', () => {
         const control = new FormControl('1234567890');
         const result = TercerosRelacionadosComponent.telefonoValidator(control);
         expect(result).toBeNull();
       });
 
-      it('should return error for telefono with letters', () => {
+      it('debe retornar error para teléfono con letras', () => {
         const control = new FormControl('123abc456');
         const result = TercerosRelacionadosComponent.telefonoValidator(control);
         expect(result).toEqual({ invalidTelefono: true });
@@ -566,22 +534,22 @@ describe('TercerosRelacionadosComponent', () => {
     });
   });
 
-  describe('Radio Change Methods', () => {
-    it('should call tercerosInputChecked when cambiarRadio is called', () => {
+  describe('Métodos de Cambio de Radio', () => {
+    it('debe llamar tercerosInputChecked cuando se llama cambiarRadio', () => {
       jest.spyOn(component, 'tercerosInputChecked');
       component.cambiarRadio('nacional');
       expect(component.tercerosInputChecked).toHaveBeenCalledWith('nacional');
     });
 
-    it('should call inputChecked when cambiarRadioFisica is called', () => {
+    it('debe llamar inputChecked cuando se llama cambiarRadioFisica', () => {
       jest.spyOn(component, 'inputChecked');
       component.cambiarRadioFisica('fisica');
       expect(component.inputChecked).toHaveBeenCalledWith('fisica');
     });
   });
 
-  describe('Utility Methods', () => {
-    it('should reset form when limpiar is called', () => {
+  describe('Métodos de Utilidad', () => {
+    it('debe resetear formulario cuando se llama limpiar', () => {
       component.ngOnInit();
       const form = component.agregarFabricanteFormGroup;
       form.get('rfc')?.setValue('TEST123');
@@ -591,7 +559,7 @@ describe('TercerosRelacionadosComponent', () => {
       expect(form.get('rfc')?.value).toBeNull();
     });
 
-    it('should fetch table dummy data', () => {
+    it('debe obtener datos dummy de tabla', () => {
       component.fetchTableDummyJson();
       expect(component.fabricanteRowData).toHaveLength(1);
       expect(component.proveedorRowData).toHaveLength(1);
@@ -599,8 +567,8 @@ describe('TercerosRelacionadosComponent', () => {
     });
   });
 
-  describe('Lifecycle Methods', () => {
-    it('should complete destroyNotifier$ on ngOnDestroy', () => {
+  describe('Métodos de Ciclo de Vida', () => {
+    it('debe completar destroyNotifier$ en ngOnDestroy', () => {
       const destroyNotifier$ = component['destroyNotifier$'];
       const nextSpy = jest.spyOn(destroyNotifier$, 'next');
       const completeSpy = jest.spyOn(destroyNotifier$, 'complete');
@@ -628,7 +596,7 @@ describe('TercerosRelacionadosComponent', () => {
           tipoDeTramite: '',
           estadoDeTramite: '',
           create: false,
-          consultaioSolicitante: {} as any // Provide a mock of type ConsultaioSolicitante
+          consultaioSolicitante: {} as any 
         })
       };
 
@@ -640,7 +608,6 @@ describe('TercerosRelacionadosComponent', () => {
         readonlyConsultaioQuerySpy as any
       );
 
-      // The subscription happens in the constructor, so esFormularioSoloLectura should be set immediately
       expect(newComponent.esFormularioSoloLectura).toBe(true);
     });
 
@@ -659,7 +626,7 @@ describe('TercerosRelacionadosComponent', () => {
           tipoDeTramite: '',
           estadoDeTramite: '',
           create: false,
-          consultaioSolicitante: {} as any // Provide a mock of type ConsultaioSolicitante
+          consultaioSolicitante: {} as any 
         })
       };
 
@@ -671,7 +638,6 @@ describe('TercerosRelacionadosComponent', () => {
         updateConsultaioQuerySpy as any
       );
 
-      // The subscription happens in the constructor, so esFormularioActualizacion should be set immediately
       expect(newComponent['esFormularioActualizacion']).toBe(true);
     });
   });
