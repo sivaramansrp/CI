@@ -3,8 +3,7 @@ import {
   base64ToHex,
   encodeToISO88591Hex,
 } from '@libs/shared/data-access-user/src/core/utils/utilerias';
-
-import { CadenaOriginalGenerada, CadenaOriginalRequest } from '@libs/shared/data-access-user/src/core/models/shared/firma-electronica/request/cadena-original-request.model';
+import { CadenaOriginalRequest } from '@libs/shared/data-access-user/src/core/models/shared/firma-electronica/request/cadena-original-request.model';
 
 import {
   CadenaOriginalService,
@@ -24,7 +23,7 @@ import {
 import { BaseResponse } from '../../../../core/models/5701/base-response.model';
 import { FirmaElectronicaService } from '@libs/shared/data-access-user/src/core/services/shared/firma-electronica/firma-electronica.service';
 
-import { DocumentoRequeridoFirmar, FirmarRequest } from '@libs/shared/data-access-user/src/core/models/shared/firma-electronica/request/firmar-request.model';
+import { FirmarRequest } from '@libs/shared/data-access-user/src/core/models/shared/firma-electronica/request/firmar-request.model';
 import { Router } from '@angular/router';
 import { Tramite5701Query } from '../../../../core/queries/tramite5701.query';
 import { Tramite5701Store } from '../../../../core/estados/tramites/tramite5701.store';
@@ -119,25 +118,15 @@ export class PasoTresComponent implements OnInit, OnDestroy {
    *  necesarios para generar la cadena original.
    */
   obtenerCadenaOriginal(): void {
-    this.cadenaOriginalService.generarCadena<CadenaOriginalRequest>().subscribe({
+    this.cadenaOriginalService.generarCadena().subscribe({
       next: (response) => {
-        if (response.datos) {
-          this.datosCadena = response.datos;
-          this.firma.obtenerCadenaOriginal(this.datosCadena).subscribe({
-            next: (resp) => {
-              this.cadenaOriginal = typeof resp.datos === 'string' ? resp.datos : undefined;
-            },
-            error: (err) => console.error('Error al generar cadena:', err),
-          });
-          this.firma.obtenerCadenaOriginal<CadenaOriginalGenerada>(this.datosCadena).subscribe({
-            next: (resp) => {
-              this.cadenaOriginal = resp.datos?.cadenaOriginal;
-            },
-            error: (err) => console.error('Error al generar cadena:', err)
-          });
-        } else {
-          console.error('response.datos is undefined');
-        }
+        this.datosCadena = response.datos as CadenaOriginalRequest;
+        this.firma.obtenerCadenaOriginal(this.datosCadena).subscribe({
+          next: (resp) => {
+            this.cadenaOriginal = typeof resp.datos === 'string' ? resp.datos : undefined;
+          },
+          error: (err) => console.error('Error al generar cadena:', err),
+        });
       },
       error: (err) => console.error('Error al cargar datos del trámite:', err),
     });
@@ -188,22 +177,8 @@ export class PasoTresComponent implements OnInit, OnDestroy {
             clave_rol: 'Solicitante',
             sello: FIRMAHEX,
             fecha_fin_vigencia: this.datosFirmaReales.fechaFin,
-            documentos_requeridos: response.datos?.documentos_requeridos ?? [],
+            documentos_requeridos: response.datos?.documentos_requeridos || [],
           };
-    this.documentoService.obtenerDatosFirma<FirmarRequest>().pipe(
-      takeUntil(this.destroy$),
-      switchMap(response => {
-        const PAYLOAD: FirmarRequest = {
-          id_solicitud: Number(ID_SOLICITUD),
-          cadena_original: CADENAHEX,
-          cert_serial_number: this.datosFirmaReales.certSerialNumber,
-          clave_usuario: this.datosFirmaReales.rfc,
-          fecha_firma: new Date().toISOString(),
-          clave_rol: 'Solicitante',
-          sello: FIRMAHEX,
-          fecha_fin_vigencia: this.datosFirmaReales.fechaFin,
-          documentos_requeridos: response.datos?.documentos_requeridos ?? []
-        };
 
           return this.firma.enviarFirma(PAYLOAD).pipe(
             tap((firmaResponse: BaseResponse<string>) => {
@@ -233,25 +208,6 @@ export class PasoTresComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-        return this.firma.enviarFirma<DocumentoRequeridoFirmar>(PAYLOAD).pipe(
-          tap((firmaResponse: BaseResponse<string>) => {
-            if (firmaResponse.datos) {
-              this.folio = firmaResponse.datos;
-            }
-          }),
-          switchMap(() => this.tramiteFolioServices.obtenerTramite(19))
-        );
-      }),
-      tap((tramite) => {
-        this.tramiteStore.establecerTramite(tramite.data, firma, ID_SOLICITUD ?? 0);
-        this.tramiteStore.establecerTramite(this.folio, firma, ID_SOLICITUD ?? 0);
-        this.router.navigate([`${this.url}/acuse`]);
-      }),
-      catchError((error) => {
-        console.error('Error en el proceso de firma:', error);
-        return throwError(() => error);
-      })
-    ).subscribe();
   }
 
   /** Método de ciclo de vida de Angular que se llama cuando el componente es destruido.
