@@ -36,11 +36,11 @@ describe('DomiciliosDePlantasComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('debe ser creado', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize form on ngOnInit', () => {
+  it('debe inicializar el formulario en ngOnInit', () => {
     component.ngOnInit();
     expect(component.forma).toBeDefined();
     expect(component.forma.controls['modalidad']).toBeDefined();
@@ -49,7 +49,7 @@ describe('DomiciliosDePlantasComponent', () => {
     expect(component.forma.controls['ActividadProductiva']).toBeDefined();
   });
 
-  it('should call obtenserListaEstado and set estadoSeleccionar', () => {
+  it('debe llamar a obtenserListaEstado y establecer estadoSeleccionar', () => {
     const MOCKDATA = [{ id: 1, nombre: 'Estado 1' }];
     prosecServiceMock.obtenerMenuDesplegable.mockReturnValue(of(MOCKDATA));
 
@@ -61,7 +61,7 @@ describe('DomiciliosDePlantasComponent', () => {
     expect(component.estadoSeleccionar).toEqual(MOCKDATA);
   });
 
-  it('should call obtenserListaFederal and set RepresentacionFederal', () => {
+  it('debe llamar a obtenserListaFederal y establecer RepresentacionFederal', () => {
     const MOCKDATA = [{ id: 1, nombre: 'Federal 1' }];
     prosecServiceMock.obtenerMenuDesplegable.mockReturnValue(of(MOCKDATA));
 
@@ -73,7 +73,7 @@ describe('DomiciliosDePlantasComponent', () => {
     expect(component.RepresentacionFederal).toEqual(MOCKDATA);
   });
 
-  it('should call obtenserListaActividad and set ActividadProductiva', () => {
+  it('debe llamar a obtenserListaActividad y establecer ActividadProductiva', () => {
     const MOCKDATA = [{ id: 1, nombre: 'Actividad 1' }];
     prosecServiceMock.obtenerMenuDesplegable.mockReturnValue(of(MOCKDATA));
 
@@ -85,7 +85,7 @@ describe('DomiciliosDePlantasComponent', () => {
     expect(component.ActividadProductiva).toEqual(MOCKDATA);
   });
 
-  it('should call obtenerLista and call obtenserListaFederal and obtenserListaActividad', () => {
+  it('debe llamar a obtenerLista y llamar a obtenserListaFederal y obtenserListaActividad', () => {
     jest.spyOn(component, 'obtenerListaFederal');
     jest.spyOn(component, 'obtenerListaActividad');
 
@@ -95,7 +95,7 @@ describe('DomiciliosDePlantasComponent', () => {
     expect(component.obtenerListaActividad).toHaveBeenCalled();
   });
 
-  it('should populate plantasDatos on valid response', () => {
+  it('debe poblar plantasDatos en respuesta válida', () => {
     const mockPlantas = [
       {
         calle: 'Calle 1',
@@ -111,13 +111,13 @@ describe('DomiciliosDePlantasComponent', () => {
     expect(component.plantasDatos).toEqual(mockPlantas);
   });
 
-  it('should set plantasDatos to empty array when response is missing plantasDatos', () => {
+  it('debe establecer plantasDatos como un array vacío cuando la respuesta no contiene plantasDatos', () => {
     prosecServiceMock.obtenerTablaDatos.mockReturnValue(of({}));
     component.recuperarDatos();
     expect(component.plantasDatos).toEqual([]);
   });
 
-  it('should initialize form with values from domiciliosState', () => {
+  it('debe inicializar el formulario con los valores de domiciliosState', () => {
     (component as any).domiciliosState = {
       modalidad: 'A',
       Estado: 'CDMX',
@@ -133,42 +133,42 @@ describe('DomiciliosDePlantasComponent', () => {
     });
   });
 
-  it('should disable form when esFormularioSoloLectura is true', () => {
+  it('debe deshabilitar el formulario cuando esFormularioSoloLectura es true', () => {
     component.forma = new FormBuilder().group({ Estado: [''] });
     component.esFormularioSoloLectura = true;
     component.guardarDatosFormulario();
     expect(component.forma.disabled).toBe(true);
   });
 
-  it('should enable form when esFormularioSoloLectura is false', () => {
+  it('debe habilitar el formulario cuando esFormularioSoloLectura es false', () => {
     component.forma = new FormBuilder().group({ Estado: [''] });
     component.esFormularioSoloLectura = false;
     component.guardarDatosFormulario();
     expect(component.forma.enabled).toBe(true);
   });
 
-  it('should enable form when esFormularioSoloLectura is false', () => {
+  it('debe habilitar el formulario cuando esFormularioSoloLectura es false', () => {
     component.forma = new FormBuilder().group({ Estado: [''] });
     component.esFormularioSoloLectura = false;
     component.guardarDatosFormulario();
     expect(component.forma.enabled).toBe(true);
   });
 
-  it('should call guardarDatosFormulario if esFormularioSoloLectura is true', () => {
+  it('debe llamar a guardarDatosFormulario si esFormularioSoloLectura es true', () => {
     component['esFormularioSoloLectura'] = true;
     const spy = jest.spyOn(component, 'guardarDatosFormulario');
     component.inicializarEstadoFormulario();
     expect(spy).toHaveBeenCalled();
   });
 
-  it('should call inicializarFormulario if esFormularioSoloLectura is false', () => {
+  it('debe llamar a inicializarFormulario si esFormularioSoloLectura es false', () => {
     component['esFormularioSoloLectura'] = false;
     const spy = jest.spyOn(component, 'inicializarFormulario');
     component.inicializarEstadoFormulario();
     expect(spy).toHaveBeenCalled();
   });
 
-  it('should set estadoSeleccionar to [] on error', () => {
+  it('debe establecer estadoSeleccionar como [] en caso de error', () => {
   prosecServiceMock.obtenerMenuDesplegable.mockImplementationOnce(() => {
     return throwError(() => new Error('fail'));
   });
@@ -179,7 +179,7 @@ describe('DomiciliosDePlantasComponent', () => {
   expect(component.estadoSeleccionar).toEqual([]);
 });
 
-it('should set RepresentacionFederal to [] on error', () => {
+it('debe establecer RepresentacionFederal como [] en caso de error', () => {
   prosecServiceMock.obtenerMenuDesplegable.mockImplementationOnce(() => {
     return throwError(() => new Error('fail'));
   });
@@ -190,7 +190,7 @@ it('should set RepresentacionFederal to [] on error', () => {
   expect(component.RepresentacionFederal).toEqual([]);
 });
 
-it('should set ActividadProductiva to [] on error', () => {
+it('debe establecer ActividadProductiva como [] en caso de error', () => {
   prosecServiceMock.obtenerMenuDesplegable.mockImplementationOnce(() => {
     return throwError(() => new Error('fail'));
   });
@@ -201,7 +201,7 @@ it('should set ActividadProductiva to [] on error', () => {
   expect(component.ActividadProductiva).toEqual([]);
 });
 
-  it('should clean up destroyNotifier$ on ngOnDestroy', () => {
+  it('debe limpiar destroyNotifier$ en ngOnDestroy', () => {
     const nextSpy = jest.spyOn(component['destroyNotifier$'], 'next');
     const completeSpy = jest.spyOn(component['destroyNotifier$'], 'complete');
     component.ngOnDestroy();
