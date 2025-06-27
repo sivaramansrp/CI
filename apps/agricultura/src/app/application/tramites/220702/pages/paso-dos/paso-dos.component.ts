@@ -3,7 +3,11 @@ import { AlertComponent, AnexarDocumentosComponent, TituloComponent } from '@ng-
 import { Component } from '@angular/core';
 import { TEXTOS_REQUISITOS } from '../../constantes/acuicola.enum';
 
-
+/**
+ * Componente que representa el segundo paso del trámite.
+ * @export
+ * @class PasoDosComponent
+ */
 @Component({
   selector: 'app-paso-dos',
   standalone: true,
@@ -13,11 +17,11 @@ import { TEXTOS_REQUISITOS } from '../../constantes/acuicola.enum';
     AnexarDocumentosComponent
   ],
   templateUrl: './paso-dos.component.html',
-  
 })
 export class PasoDosComponent {
   /**
-   * Obtener el valor de la instrucción e inicializar la variable
+   * Textos constantes utilizados en el componente.
+   * @property {any} TEXTOS
    */
   TEXTOS = TEXTOS_REQUISITOS;
 }
