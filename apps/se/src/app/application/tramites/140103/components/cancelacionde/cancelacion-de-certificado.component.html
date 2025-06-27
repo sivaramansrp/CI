@@ -8,7 +8,7 @@
 
           <app-catalogo-select [catalogo]="regimen" [label]="'Régimen aduanero:'" [required]="true" name="regimen"
             formControlName="regimen" [isDisabled]="esFormularioSoloLectura ? true : false"
-            (change)="setValoresStore(cancelacionForm,'regimen', 'setRegimen')">
+            (change)="setValoresStore(cancelacionForm,'regimen', 'setRegimen')" [placeholder]="'Seleccione un valor'">
           </app-catalogo-select>
 
         </div>
@@ -16,14 +16,14 @@
 
           <app-catalogo-select [catalogo]="mecanismo" [label]="'Mecanismo de asignación:'" [required]="true"
             name="regime" formControlName="mecanismo" [isDisabled]="esFormularioSoloLectura ? true : false"
-            (change)="setValoresStore(cancelacionForm,'mecanismo', 'setMecanismo')">
+            (change)="setValoresStore(cancelacionForm,'mecanismo', 'setMecanismo')" [placeholder]="'Seleccione un valor'">
           </app-catalogo-select>
         </div>
         <div class="col-md-4">
 
           <app-catalogo-select [catalogo]="tratado" [label]="'Tratado o bloqueo comercial:'" [required]="true"
             name="tratado" formControlName="tratado" [isDisabled]="esFormularioSoloLectura ? true : false"
-            (change)="setValoresStore(cancelacionForm,'tratado', 'setTratado')">
+            (change)="setValoresStore(cancelacionForm,'tratado', 'setTratado')" [placeholder]="'Seleccione un valor'">
           </app-catalogo-select>
         </div>
       </div>
@@ -32,21 +32,21 @@
 
           <app-catalogo-select [catalogo]="producto" [label]="'Nombre de producto:'" [required]="true" name="producto"
             formControlName="producto" [isDisabled]="esFormularioSoloLectura ? true : false"
-            (change)="setValoresStore(cancelacionForm,'producto', 'setProducto')">
+            (change)="setValoresStore(cancelacionForm,'producto', 'setProducto')" [placeholder]="'Seleccione un valor'">
           </app-catalogo-select>
         </div>
         <div class="col-md-4">
 
           <app-catalogo-select [catalogo]="subproducto" [label]="'Nombre del subproducto:'" [required]="true"
             name="subproducto" formControlName="subproducto" [isDisabled]="esFormularioSoloLectura ? true : false"
-            (change)="setValoresStore(cancelacionForm,'subproducto', 'setSubproducto')">
+            (change)="setValoresStore(cancelacionForm,'subproducto', 'setSubproducto')" [placeholder]="'Seleccione un valor'">
           </app-catalogo-select>
         </div>
         <div class="col-md-4">
 
           <app-catalogo-select [catalogo]="representacion" [label]="'Representación federal:'" [required]="true"
             name="representacion" formControlName="representacion" [isDisabled]="esFormularioSoloLectura ? true : false"
-            (change)="setValoresStore(cancelacionForm,'representacion', 'setRepresentacion')">
+            (change)="setValoresStore(cancelacionForm,'representacion', 'setRepresentacion')" [placeholder]="'Seleccione un valor'">
           </app-catalogo-select>
 
 
