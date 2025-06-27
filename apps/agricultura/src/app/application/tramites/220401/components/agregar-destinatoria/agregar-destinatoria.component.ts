@@ -89,7 +89,7 @@ export class AgregarDestinatoriaComponent implements OnInit {
    * @param  checkBoxName, que acepta datos de tipo cadena
    * @description inputChecked se utiliza para verificar si el checkbox está seleccionado
    */
-  public inputChecked(checkBoxName: string): void {
+  public entradaSeleccionada(checkBoxName: string): void {
     if (checkBoxName === 'fisica') {
       this.fisica = true;
       this.moral = false;

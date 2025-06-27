@@ -7,11 +7,11 @@
       <label class="form-label" for="tipoPersona">Tipo persona*:</label>
     </div>
     <div class="col-md-12">
-      <input type="radio" id="fisica" name="tipoPersona" formControlName="tipoPersona" [checked]="fisica" (change)="inputChecked('fisica')">
+      <input type="radio" id="fisica" name="tipoPersona" formControlName="tipoPersona" [checked]="fisica" (change)="entradaSeleccionada('fisica')">
       <label for="fisica">Física</label>
     </div>
     <div class="col-md-12">
-      <input type="radio" id="moral" name="tipoPersona" [checked]="moral" (change)="inputChecked('moral')">
+      <input type="radio" id="moral" name="tipoPersona" [checked]="moral" (change)="entradaSeleccionada('moral')">
       <label for="moral">Moral</label>
     </div>
   </div>
@@ -68,7 +68,7 @@
       <input type="text" class="form-control" id="telefono" formControlName="telefono">
     </div>
     <div class="col-md-4 mb-3">
-      <label class="form-label" for="correoElectronico">Correo electrónico: <i class="bi bi-question-circle-fill" style="margin-bottom: '5px'"></i></label>
+      <label class="form-label" for="correoElectronico">Correo electrónico: <i class="bi bi-question-circle-fill mb-1"></i></label>
       <div class="input-group">
         <input type="email" class="form-control" id="correoElectronico" formControlName="correoElectronico">
         
