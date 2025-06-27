@@ -31,7 +31,7 @@ export class FirmaElectronicaService {
  * @param body Objeto de tipo `FirmarRequest` que contiene los datos necesarios para firmar el trámite.
  * @returns Un `Observable` de tipo `BaseResponse` que contiene el resultado de la operación.
  */
-  enviarFirma<T>(body: FirmarRequest): Observable<BaseResponse<any>> {
+  enviarFirma<T>(body: FirmarRequest): Observable<BaseResponse<T>> {
     return this.http.post<BaseResponse<T>>(`${this.urlServer}/${API_ENVIAR_FIRMA}`, body);
   }
 

@@ -18,16 +18,22 @@ import tramiteDetailsData from '@libs/shared/theme/assets/json/tramiteList.json'
 import { ModeloDeFormaDinamica } from '../../../core/models/shared/forms-model';
 
 
-
+/**
+ * Interfaz base para los elementos de la bandeja.
+ * Define las propiedades mínimas requeridas para que un objeto sea considerado como registro de la bandeja.
+ */
+interface BandejaRegistroBase {
+  /** Número de procedimiento asociado al trámite */
+  numeroDeProcedimiento: string;
+  /** Nombre del departamento relacionado al trámite */
+  departamento: string;
+}
 /*
  * Componente LibBandejaComponent
  * Este componente es reutilizable para mostrar una bandeja dinámica con tabla, paginación y formularios.
  * Permite navegar a diferentes rutas dependiendo del origen del trámite y mostrar configuraciones dinámicas.
  */
-interface Re {
-  numeroDeProcedimiento: string;
-  departamento:string
-}
+
 
 @Component({
   selector: 'lib-bandeja',
@@ -52,7 +58,7 @@ interface Re {
  */
 
 
-export class LibBandejaComponent<T extends Re > implements OnInit {
+export class LibBandejaComponent<T extends BandejaRegistroBase> implements OnInit {
   /**
    *  Título mostrado en el encabezado de la bandeja 
    */

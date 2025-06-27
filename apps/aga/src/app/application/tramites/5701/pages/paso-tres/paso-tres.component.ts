@@ -180,7 +180,7 @@ export class PasoTresComponent implements OnInit, OnDestroy {
             documentos_requeridos: response.datos?.documentos_requeridos || [],
           };
 
-          return this.firma.enviarFirma(PAYLOAD).pipe(
+          return this.firma.enviarFirma<string>(PAYLOAD).pipe(
             tap((firmaResponse: BaseResponse<string>) => {
               if (firmaResponse.datos) {
                 this.folio = firmaResponse.datos;
