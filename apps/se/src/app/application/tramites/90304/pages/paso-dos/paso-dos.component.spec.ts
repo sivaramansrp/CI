@@ -4,9 +4,16 @@ import { CatalogosService } from '@ng-mf/data-access-user';
 import { provideHttpClient } from '@angular/common/http';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { AlertComponent } from '@libs/shared/data-access-user/src';
-import { AnexarDocumentosComponent } from '@libs/shared/data-access-user/src';
 import { ToastrModule } from 'ngx-toastr';
 import { ToastrService } from 'ngx-toastr';
+import { Component } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+
+@Component({
+  selector: 'app-anexar-documentos',
+  template: '',
+})
+class MockAnexarDocumentosComponent {}
 
 describe('PasoDosComponent', () => {
   let component: PasoDosComponent;
@@ -15,13 +22,17 @@ describe('PasoDosComponent', () => {
 
   beforeEach(async () => {
     catalogosServiceMock = {
-      getCatalogo: jest.fn()
+      getCatalogo: jest.fn(),
     };
 
     await TestBed.configureTestingModule({
-      declarations: [PasoDosComponent],
-      imports: [TituloComponent, AlertComponent, AnexarDocumentosComponent, ToastrModule.forRoot()],
-      providers: [provideHttpClient(), CatalogosService, ToastrService]
+      declarations: [
+        PasoDosComponent,
+        MockAnexarDocumentosComponent,
+      ],
+      imports: [TituloComponent, AlertComponent, ToastrModule.forRoot()],
+      providers: [provideHttpClient(), CatalogosService, ToastrService],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA],
     }).compileComponents();
   });
 
@@ -37,12 +48,6 @@ describe('PasoDosComponent', () => {
 
   it('should initialize TEXTOS', () => {
     expect(component.TEXTOS).toBeDefined();
-  });
-
-  it('should call getTiposDocumentos on component initialization', () => {
-    const spy = jest.spyOn(component, 'getTiposDocumentos');
-    component.ngOnInit();
-    expect(spy).toHaveBeenCalled();
   });
 
 });

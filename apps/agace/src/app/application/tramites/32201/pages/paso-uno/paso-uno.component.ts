@@ -78,7 +78,7 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
   esDatosRespuesta: boolean = false;
 
   constructor(private consultaioQuery: ConsultaioQuery, public tramite32201Store: Tramite32201Store,
-    private solicitudService: SolicitudService
+    public solicitudService: SolicitudService
   ) {
     // El constructor se utiliza para la inyección de dependencias.
   }

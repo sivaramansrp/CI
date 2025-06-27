@@ -43,8 +43,9 @@ class MockNgAlertComponent {
 }
 
 describe('RetornoImportacionTemporalComponent', () => {
-  let COMPONENTE: RetornoImportacionTemporalComponent;
-  let FIXTURE: ComponentFixture<RetornoImportacionTemporalComponent>;
+  let componente: RetornoImportacionTemporalComponent;
+  let fixture: ComponentFixture<RetornoImportacionTemporalComponent>;
+  let mockWizardComponent: MockWizardComponent;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -59,26 +60,28 @@ describe('RetornoImportacionTemporalComponent', () => {
       ]
     }).compileComponents();
 
-    FIXTURE = TestBed.createComponent(RetornoImportacionTemporalComponent);
-    COMPONENTE = FIXTURE.componentInstance;
+    fixture = TestBed.createComponent(RetornoImportacionTemporalComponent);
+    componente = fixture.componentInstance;
 
-    const WIZARD_DEBUG_EL = FIXTURE.debugElement.query(By.directive(MockWizardComponent));
-    COMPONENTE.wizardComponent = WIZARD_DEBUG_EL?.componentInstance;
+mockWizardComponent = new MockWizardComponent();
+mockWizardComponent.siguiente = jest.fn();
+mockWizardComponent.atras = jest.fn();
+componente.wizardComponent = mockWizardComponent as any;
 
-    FIXTURE.detectChanges();
+    fixture.detectChanges();
   });
 
   it('debería crear el componente', () => {
-    expect(COMPONENTE).toBeTruthy();
+    expect(componente).toBeTruthy();
   });
 
   it('debería inicializar pasos y pantallasPasos con PASOS_REGISTRO', () => {
-    expect(COMPONENTE.pasos).toEqual(PASOS_REGISTRO);
-    expect(COMPONENTE.pantallasPasos).toEqual(PASOS_REGISTRO);
+    expect(componente.pasos).toEqual(PASOS_REGISTRO);
+    expect(componente.pantallasPasos).toEqual(PASOS_REGISTRO);
   });
 
   it('debería inicializar datosPasos correctamente', () => {
-    expect(COMPONENTE.datosPasos).toEqual({
+    expect(componente.datosPasos).toEqual({
       nroPasos: PASOS_REGISTRO.length,
       indice: 1,
       txtBtnAnt: 'Anterior',
@@ -87,81 +90,119 @@ describe('RetornoImportacionTemporalComponent', () => {
   });
 
   it('debería tener el valor predeterminado de infoAlert como "alert-info"', () => {
-    expect(COMPONENTE.infoAlert).toBe('alert-info');
+    expect(componente.infoAlert).toBe('alert-info');
   });
 
   it('debería inicializar TEXTOS desde AVISO.Aviso', () => {
-    expect(COMPONENTE.TEXTOS).toBeDefined();
+    expect(componente.TEXTOS).toBeDefined();
   });
 
-  it('debería establecer el índice y llamar a siguiente() cuando la acción sea "cont" y el valor sea válido', () => {
-    COMPONENTE.getValorIndice({ accion: 'cont', valor: 2 });
-    expect(COMPONENTE.indice).toBe(2);
-    expect(COMPONENTE.wizardComponent.siguiente).toHaveBeenCalled();
-  });
+ it('debería establecer el índice y llamar a siguiente() cuando la acción sea "cont" y el valor sea válido', () => {
+  // ✅ Define wizardComponent with spy methods
+  componente.wizardComponent = {
+    siguiente: jest.fn(),
+    atras: jest.fn()
+  } as any;
 
-  it('debería establecer el índice y llamar a atras() cuando la acción no sea "cont" y el valor sea válido', () => {
-    COMPONENTE.getValorIndice({ accion: 'back', valor: 3 });
-    expect(COMPONENTE.indice).toBe(3);
-    expect(COMPONENTE.wizardComponent.atras).toHaveBeenCalled();
-  });
+  componente.getValorIndice({ accion: 'cont', valor: 2 });
 
-  it('debería ignorar valores inválidos (<1 o >4)', () => {
-    const INICIAL = COMPONENTE.indice;
-    COMPONENTE.getValorIndice({ accion: 'cont', valor: -1 });
-    COMPONENTE.getValorIndice({ accion: 'cont', valor: 5 });
-    expect(COMPONENTE.indice).toBe(INICIAL);
-    expect(COMPONENTE.wizardComponent.siguiente).not.toHaveBeenCalled();
-    expect(COMPONENTE.wizardComponent.atras).not.toHaveBeenCalled();
-  });
+  expect(componente.indice).toBe(2);
+  expect(componente.wizardComponent.siguiente).toHaveBeenCalled();
+});
+
+
+ it('debería establecer el índice y llamar a atras() cuando la acción no sea "cont" y el valor sea válido', () => {
+  // ✅ Fix: Define wizardComponent manually with spies
+  componente.wizardComponent = {
+    siguiente: jest.fn(),
+    atras: jest.fn()
+  } as any;
+
+  componente.getValorIndice({ accion: 'back', valor: 3 });
+
+  expect(componente.indice).toBe(3);
+  expect(componente.wizardComponent.atras).toHaveBeenCalled();
+});
+
+
+ it('debería ignorar valores inválidos (<1 o >4)', () => {
+  const inicial = componente.indice;
+
+  // ✅ Manually assign the mock again just in case
+  const mockWizard = {
+    siguiente: jest.fn(),
+    atras: jest.fn()
+  };
+  componente.wizardComponent = mockWizard as any;
+
+  // Trigger with invalid values
+  componente.getValorIndice({ accion: 'cont', valor: -1 });
+  componente.getValorIndice({ accion: 'cont', valor: 5 });
+
+  // Assert index unchanged
+  expect(componente.indice).toBe(inicial);
+
+  // Assert navigation methods NOT called
+  expect(componente.wizardComponent.siguiente).not.toHaveBeenCalled();
+  expect(componente.wizardComponent.atras).not.toHaveBeenCalled();
+});
+
 
   it('debería pasar pantallasPasos al input de app-wizard', () => {
-    const WIZARD = FIXTURE.debugElement.query(By.css('app-wizard'));
-    expect(WIZARD.componentInstance.listaPasos).toEqual(COMPONENTE.pantallasPasos);
+    const wizard = fixture.debugElement.query(By.css('app-wizard'));
+    expect(wizard.componentInstance.listaPasos).toEqual(componente.pantallasPasos);
   });
 
-  it('debería llamar a getValorIndice cuando btn-continuar emita un evento', () => {
-    jest.spyOn(COMPONENTE, 'getValorIndice');
-    const BTN = FIXTURE.debugElement.query(By.css('btn-continuar'));
-    BTN.componentInstance.continuarEvento.emit({ accion: 'cont', valor: 2 });
-    FIXTURE.detectChanges();
-    expect(COMPONENTE.getValorIndice).toHaveBeenCalledWith({ accion: 'cont', valor: 2 });
-  });
+ it('debería llamar a getValorIndice cuando btn-continuar emita un evento', () => {
+  componente.wizardComponent = {
+    siguiente: jest.fn(),
+    atras: jest.fn()
+  } as any;
+
+  jest.spyOn(componente, 'getValorIndice');
+
+  const btn = fixture.debugElement.query(By.css('btn-continuar'));
+  btn.componentInstance.continuarEvento.emit({ accion: 'cont', valor: 2 });
+  fixture.detectChanges();
+
+  expect(componente.getValorIndice).toHaveBeenCalledWith({ accion: 'cont', valor: 2 });
+});
+
 
   it('debería renderizar app-paso-uno cuando el índice sea 1', () => {
-    COMPONENTE.indice = 1;
-    FIXTURE.detectChanges();
-    const PASO = FIXTURE.debugElement.query(By.css('app-paso-uno'));
-    expect(PASO).toBeTruthy();
+    componente.indice = 1;
+    fixture.detectChanges();
+    const paso = fixture.debugElement.query(By.css('app-paso-uno'));
+    expect(paso).toBeTruthy();
   });
 
   it('debería renderizar app-paso-dos cuando el índice sea 2', () => {
-    COMPONENTE.indice = 2;
-    FIXTURE.detectChanges();
-    const PASO = FIXTURE.debugElement.query(By.css('app-paso-dos'));
-    expect(PASO).toBeTruthy();
+    componente.indice = 2;
+    fixture.detectChanges();
+    const paso = fixture.debugElement.query(By.css('app-paso-dos'));
+    expect(paso).toBeTruthy();
   });
 
   it('debería renderizar app-paso-tres cuando el índice sea 3', () => {
-    COMPONENTE.indice = 3;
-    FIXTURE.detectChanges();
-    const PASO = FIXTURE.debugElement.query(By.css('app-paso-tres'));
-    expect(PASO).toBeTruthy();
+    componente.indice = 3;
+    fixture.detectChanges();
+    const paso = fixture.debugElement.query(By.css('app-paso-tres'));
+    expect(paso).toBeTruthy();
   });
 
   it('debería renderizar ng-alert cuando el índice sea 1', () => {
-    COMPONENTE.indice = 1;
-    FIXTURE.detectChanges();
-    const ALERT = FIXTURE.debugElement.query(By.css('ng-alert'));
-    expect(ALERT).toBeTruthy();
-    expect(ALERT.componentInstance.CONTENIDO).toBe(COMPONENTE.TEXTOS);
-    expect(ALERT.componentInstance.CUSTOMECLASS).toBe(COMPONENTE.infoAlert);
+    componente.indice = 1;
+    fixture.detectChanges();
+    const alert = fixture.debugElement.query(By.css('ng-alert'));
+    expect(alert).toBeTruthy();
+    expect(alert.componentInstance.CONTENIDO).toBe(componente.TEXTOS);
+    expect(alert.componentInstance.CUSTOMECLASS).toBe(componente.infoAlert);
   });
 
   it('NO debería renderizar ng-alert cuando el índice no sea 1', () => {
-    COMPONENTE.indice = 2;
-    FIXTURE.detectChanges();
-    const ALERT = FIXTURE.debugElement.query(By.css('ng-alert'));
-    expect(ALERT).toBeFalsy();
+    componente.indice = 2;
+    fixture.detectChanges();
+    const alert = fixture.debugElement.query(By.css('ng-alert'));
+    expect(alert).toBeFalsy();
   });
 });

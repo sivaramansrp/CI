@@ -5,6 +5,11 @@
     margin-right: 10px;  /* Ajusta el valor según sea necesario */
   }
 
+  .disabled-link {
+    pointer-events: none;
+    color: gray;
+    cursor: not-allowed;
+  }
 .custom-link {
   color: inherit;
   text-decoration: none;

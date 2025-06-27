@@ -99,7 +99,7 @@
           </p>
         </div>
         <div class="col-md-6">
-          <a class="custom-link" [href]="generarLineaCapturaURL" target="_blank">Generar línea de captura</a>
+          <a class="custom-link" [href]="generarLineaCapturaURL" target="_blank" [ngClass]="{ 'disabled-link': esFormularioSoloLectura }">Generar línea de captura</a>
         </div>
       </div>
     </div>
