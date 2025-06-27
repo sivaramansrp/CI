@@ -51,7 +51,6 @@ describe('PasotresComponent', () => {
   it('debe manejar el error en obtenerTramite sin lanzar excepción', () => {
     serviciosExtraordinariosServicesMock.obtenerTramite.mockReturnValue(throwError(() => new Error('error')));
 
-    // No debe lanzar error
     expect(() => component.obtieneFirma('valid-firma')).not.toThrow();
   });
 
