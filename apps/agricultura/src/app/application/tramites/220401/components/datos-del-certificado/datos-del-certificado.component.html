@@ -41,8 +41,7 @@
 
 
 
-  <ng-titulo titulo="Datos Generales de la mercancia Animal"></ng-titulo>
-  <h6>Mercancias</h6>
+  <ng-titulo titulo="Datos Generales de la Mercancía Producto o Subproducto de Origen Animal"></ng-titulo>
 
   <ng-table [disableSeleccionTablaCheckBox]="esFormularioSoloLectura? true : false" [commonTableHeader]="tableColumns"
     [commonTableBody]="mercanciasData"></ng-table>
@@ -55,6 +54,47 @@
     </button>
   </div>
   <form [formGroup]="datosdelForm">
+    <div class="col-md-12" style="padding: 0px; padding-top: 10px;">
+   <ng-alert [CONTENIDO]="TEXTO.mensaje" [CUSTOMECLASS]="infoAlert"></ng-alert>
+    </div>
+   <div class="row">
+    <div class="col-md-4">
+      <label class="form-label" for="numeroTotal">Número total de bultos:</label>
+      <input type="text" class="form-control" id="numeroTotal" formControlName="numeroTotal">
+   </div>
+   <div class="col-md-4">
+      <app-catalogo-select
+                [catalogo]="paisOrigen"
+                [tooltipQuestionCircle]="false"
+                [label]="'Condiciones del transporte'"
+                [required]="true"
+                [placeholder]="'Seleccione un valor'"
+                [isDisabled]="esFormularioSoloLectura"
+                formControlName="condiciones"
+                (change)="setValoresStore(datosdelForm,'paisOrigen', 'setpaisOrigen')"
+              ></app-catalogo-select>
+   </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-4">
+      <label class="form-label" for="CantidadTotal">Cantidad total:<i
+              class="bi bi-question-circle-fill"></i></label>
+      <input type="text" class="form-control" id="CantidadTotal"  formControlName="cantidadTotal">
+   </div>
+   <div class="col-md-4">
+      <app-catalogo-select
+                [catalogo]="paisOrigen"
+                [tooltipQuestionCircle]="false"
+                [label]="'Tipo de embalaje'"
+                [required]="true"
+                [placeholder]="'Seleccione un valor'"
+                [isDisabled]="esFormularioSoloLectura"
+                formControlName="tipoEmbalaje"
+                (change)="setValoresStore(datosdelForm,'paisOrigen', 'setpaisOrigen')"
+              ></app-catalogo-select>
+   </div>
+  </div>
     <div class="mb-5">
       <label for="message" class="form-label">Tratamiento:</label>
       <textarea class="form-control" rows="5" formControlName="datoscertificado"
