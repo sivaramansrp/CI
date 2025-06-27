@@ -15,8 +15,6 @@ describe('DatosRetornoProrrogaComponent', () => {
   let mockTramite630303Store: jest.Mocked<Tramite630303Store>;
   let mockTramite630303Query: jest.Mocked<Tramite630303Query>;
   let mockConsultaioQuery: jest.Mocked<ConsultaioQuery>;
-  
-  // BehaviorSubjects para control de estado en las pruebas
   let subjectEstadoTramite: BehaviorSubject<any>;
   let subjectEstadoConsulta: BehaviorSubject<any>;
 
@@ -37,7 +35,6 @@ describe('DatosRetornoProrrogaComponent', () => {
   } as any;
 
   beforeEach(async () => {
-    // Inicializar BehaviorSubjects
     subjectEstadoTramite = new BehaviorSubject(datosTramiteSimulados);
     subjectEstadoConsulta = new BehaviorSubject(datosConsultaSimulados);
     
@@ -73,7 +70,6 @@ describe('DatosRetornoProrrogaComponent', () => {
   });
 
   afterEach(() => {
-    // Limpiar BehaviorSubjects
     if (subjectEstadoTramite && !subjectEstadoTramite.closed) {
       subjectEstadoTramite.complete();
     }
@@ -281,19 +277,11 @@ describe('DatosRetornoProrrogaComponent', () => {
     it('debería sincronizar correctamente formulario y estado', fakeAsync(() => {
       fixture.detectChanges();
       tick();
-
-      // Cambiar a solo lectura
       componente.esSoloLectura = true;
       componente.guardarDatosFormulario();
-
-      // Verificar que el formulario está deshabilitado
       expect(componente.datosImportacionRetornoProrrogaGeneralFormulario.disabled).toBe(true);
-
-      // Cambiar a modo editable
       componente.esSoloLectura = false;
       componente.guardarDatosFormulario();
-
-      // Verificar que el formulario está habilitado
       expect(componente.datosImportacionRetornoProrrogaGeneralFormulario.enabled).toBe(true);
     }));
   });
@@ -345,15 +333,9 @@ describe('DatosRetornoProrrogaComponent', () => {
     it('debería limpiar correctamente las suscripciones al destruir', fakeAsync(() => {
       fixture.detectChanges();
       tick();
-
-      // Simular destrucción del componente
       componente.ngOnDestroy();
-      
-      // Intentar emitir después de la destrucción
       subjectEstadoConsulta.next({ readonly: true });
       tick();
-
-      // El estado no debería cambiar después de la destrucción
       expect(componente.esSoloLectura).toBe(false);
     }));
   });
@@ -375,17 +357,13 @@ describe('DatosRetornoProrrogaComponent', () => {
     it('debería manejar múltiples llamadas a ngOnDestroy', () => {
       const spyNext = jest.spyOn((componente as any).destroyed$, 'next');
       const spyComplete = jest.spyOn((componente as any).destroyed$, 'complete');
-
       componente.ngOnDestroy();
-      componente.ngOnDestroy();
-
       expect(spyNext).toHaveBeenCalledTimes(2);
       expect(spyComplete).toHaveBeenCalledTimes(2);
     });
 
     it('debería manejar estado undefined sin errores', () => {
       componente.estadoSeleccionado = undefined as any;
-      
       expect(() => componente.getValorStore()).not.toThrow();
     });
   });
@@ -425,7 +403,6 @@ describe('DatosRetornoProrrogaComponent', () => {
       expect(Array.isArray(componente.formularioDatosProrroga)).toBe(true);
       expect(componente.formularioDatosProrroga.length).toBeGreaterThan(0);
       
-      // Verificar que mantiene la estructura esperada
       const elementosFormulario = componente.formularioDatosProrroga;
       elementosFormulario.forEach(elemento => {
         expect(elemento).toHaveProperty('id');

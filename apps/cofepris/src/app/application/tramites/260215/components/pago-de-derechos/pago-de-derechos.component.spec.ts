@@ -56,25 +56,25 @@ describe('PagoDeDerechosComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
+  it('debería crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize formSolicitud', () => {
+  it('debería inicializar formSolicitud', () => {
     expect(component.formSolicitud).toBeDefined();
     expect(
       component.formSolicitud.get('datosImportadorExportador')
     ).toBeDefined();
   });
 
-  it('should fetch banco data on initialization', () => {
+  it('debería obtener datos de banco al inicializar', () => {
     // Llama explícitamente a fetchBancoData para asegurar la llamada al mock
     component.fetchBancoData();
     expect(serviciosPermisoSanitarioService.getBancoData).toHaveBeenCalled();
     expect(component.bancoCatalogo.catalogos).toEqual([]);
   });
 
-  it('should set valores in store', () => {
+  it('debería establecer valores en el store', () => {
     const form = component.formSolicitud;
     form
       .get('datosImportadorExportador')
@@ -93,7 +93,7 @@ describe('PagoDeDerechosComponent', () => {
     );
   });
 
-  it('should unsubscribe on destroy', () => {
+  it('debería cancelar la suscripción al destruir el componente', () => {
     jest.spyOn(component['destroyNotifier$'], 'next');
     jest.spyOn(component['destroyNotifier$'], 'complete');
 
@@ -103,14 +103,14 @@ describe('PagoDeDerechosComponent', () => {
     expect(component['destroyNotifier$'].complete).toHaveBeenCalled();
   });
 
-  it('should get datosImportadorExportador form group', () => {
+  it('debería obtener el form group datosImportadorExportador', () => {
     const formGroup = component.datosImportadorExportador;
     expect(formGroup).toBe(
       component.formSolicitud.get('datosImportadorExportador')
     );
   });
 
-  it('should handle empty banco data gracefully', () => {
+  it('debería manejar datos de banco vacíos correctamente', () => {
     jest
       .spyOn(serviciosPermisoSanitarioService, 'getBancoData')
       .mockReturnValue(of([]));
@@ -118,7 +118,7 @@ describe('PagoDeDerechosComponent', () => {
     expect(component.bancoCatalogo.catalogos).toEqual([]);
   });
 
-  it('should handle banco data correctly', () => {
+  it('debería manejar datos de banco correctamente', () => {
     const mockBancoData = [{ id: 1, nombre: 'Banco 1' }];
     const expectedBancoData = [{ id: 1, descripcion: 'Banco 1' }];
     jest
@@ -135,22 +135,22 @@ describe('PagoDeDerechosComponent', () => {
     expect(component.bancoCatalogo.catalogos).toEqual(expectedBancoData);
   });
 
-  it('should call tramite301Query.selectSolicitud$ on initialization', () => {
+  it('debería llamar a tramite301Query.selectSolicitud$ al inicializar', () => {
     expect(tramite260215Query.selectSolicitud$).toBeTruthy();
   });
 
-  it('should handle null solicitudState gracefully', () => {
+  it('debería manejar solicitudState nulo correctamente', () => {
     component.solicitudState = null as any;
     component.ngOnInit();
     expect(component.formSolicitud).toBeDefined();
   });
 
-  it('should handle destroyNotifier$ being called multiple times', () => {
+  it('debería manejar destroyNotifier$ llamado múltiples veces', () => {
     jest.spyOn(component['destroyNotifier$'], 'next');
     jest.spyOn(component['destroyNotifier$'], 'complete');
 
     component.ngOnDestroy();
-    component.ngOnDestroy(); // Call again to ensure no errors occur
+    component.ngOnDestroy(); // Llamar de nuevo para asegurar que no haya errores
 
     // Solo verifica que se haya llamado al menos una vez
     expect(component['destroyNotifier$'].next).toHaveBeenCalled();

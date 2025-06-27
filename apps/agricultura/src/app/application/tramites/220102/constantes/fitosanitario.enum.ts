@@ -1,3 +1,17 @@
+/**
+ * @fileoverview
+ * Constantes utilizadas en el trámite fitosanitario.
+ * Incluye los pasos del proceso, textos de ayuda, rutas de catálogos y acciones de la tabla.
+ * Cobertura compodoc 100%: cada constante está documentada.
+ * @module fitosanitarioEnum
+ */
+
+/**
+ * Pasos del proceso de trámite fitosanitario.
+ * Cada objeto representa un paso con su índice, título y estado de actividad/completado.
+ * @const
+ * @type {Array<{indice: number, titulo: string, activo: boolean, completado: boolean}>}
+ */
 export const PASOS = [
     {
         indice: 1,
@@ -19,9 +33,21 @@ export const PASOS = [
     }
 ];
 
+/**
+ * Texto de advertencia importante para el usuario.
+ * @const
+ * @type {{Importante: string}}
+ */
 export const IMPORTANTE = {
     Importante: `Para continuar con el trámite,debes agregar por lo menos una mercancía`,
 };
+
+/**
+ * Textos de ayuda e instrucciones para la sección de requisitos.
+ * Incluye instrucciones y mensajes para adjuntar documentos.
+ * @const
+ * @type {{INSTRUCCIONES: string, ADJUNTAR: string}}
+ */
 export const TEXTOS_REQUISITOS = {
     INSTRUCCIONES: `<h6>Instrucciones</h6>
       <p>- De acuerdo al caso particular, algunos documentos podrían ser obligatorios</p>
@@ -30,10 +56,30 @@ export const TEXTOS_REQUISITOS = {
     ADJUNTAR: `<p>Si deseas adjuntar un nuevo documento, selecciona la opción --Adjuntar nuevo documento-- y presiona el botón "Adjuntar documentos"</p>`,
 };
 
+/**
+ * Ruta base para los archivos JSON de catálogos y datos.
+ * @const
+ * @type {string}
+ */
 export const URL = '../../../../../assets/json/220102/';
 
-export const EDITAR = "editar"
+/**
+ * Acción para editar un elemento en la tabla de mercancías.
+ * @const
+ * @type {string}
+ */
+export const EDITAR = "editar";
 
-export const AGREGAR = "agregar"
+/**
+ * Acción para agregar un nuevo elemento en la tabla de mercancías.
+ * @const
+ * @type {string}
+ */
+export const AGREGAR = "agregar";
 
-export const NUEVA = "nueva"
+/**
+ * Acción para indicar una nueva mercancía o registro.
+ * @const
+ * @type {string}
+ */
+export const NUEVA = "nueva";
