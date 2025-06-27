@@ -21,22 +21,22 @@
     <br>
     <form [formGroup]="FormTramite" role="form" >
         <div class="form-group">            
-            <div class="col-md-12 text-end">
-                <button type="button" class="btn btn-primary">Dar Vo. Bo.</button>
+            <div class="col-md-12 text-end pb-4">
+                <button type="button" class="btn btn-primary pb-15">Dar Vo. Bo.</button>
                 <button type="button" class="btn btn-default ms-3" (click)="observacion()">Observar</button>
             </div>            
         </div>
         <div class="card">
             <div class="card-body">
                 <div  class="radio ">
-                    <label class="radio-inline control-label">Sentido del dictamen:</label>
+                    <label class="radio-inline control-label"> <span class="span-style">*</span>Sentido del <span class="span-style">dictamen:</span></label>
                     <label class="radio-inline">
-                    <input type="radio" name="radio-01" value="opcion-01"  checked="checked" disabled="disabled">Aceptado</label>
+                    <input type="radio" name="radio-01" value="opcion-01"  checked="checked" disabled="disabled" class="mr-3 mr5">Aceptado</label>
                     <label class="radio-inline">
                     <input type="radio" name="radio-01" value="opcion-02" disabled="disabled"> Rechazado
                     </label>
                     <label class="radio-inline">
-                    <input type="radio" name="radio-01" value="opcion-03" disabled="disabled"> parcial
+                    <input type="radio" name="radio-01" value="opcion-03" disabled="disabled"> Parcial
                     </label>            
                 </div>                 
             </div>
