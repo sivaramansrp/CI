@@ -80,6 +80,7 @@ export class ConsolidacionDeCargasComponent implements OnDestroy {
   ) {
     this.enPatchStoredFormData();
     this.crearFormulario();
+    this.actualizarEstadoConsolidacionET();
     this.enCambioDeValor(this.seccionState?.consolidacionCargas);
   }
 
@@ -137,6 +138,16 @@ export class ConsolidacionDeCargasComponent implements OnDestroy {
    */
   enCambioDeValor(valor: string | number): void {
     this.esConsolidatedET = valor === '1' ? true : false;
+  }
+
+  /**
+   * Actualiza el estado de la propiedad `esConsolidatedET` según el valor de `consolidacionCargas` en el estado actual de la sección.
+   * Si `consolidacionCargas` es igual a `'1'`, `esConsolidatedET` se establece en `true`, de lo contrario en `false`.
+   *
+   * @returns {void}
+   */
+  actualizarEstadoConsolidacionET(): void {
+    this.esConsolidatedET = this.seccionState?.consolidacionCargas === '1';
   }
 
   /**

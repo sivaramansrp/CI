@@ -433,7 +433,7 @@ export class RegistroVehiculosComponent implements OnInit {
         ...this.registroVehiculosInfoList,
         NEW_VEHICULO,
       ];
-      this.tramite30401Store.setRegistroVehiculosDatos([NEW_VEHICULO]);
+      this.tramite30401Store.establecerDatos({registroTablaDatos:[NEW_VEHICULO]});
     } else {
       this.registroVehiculosInfoList = this.registroVehiculosInfoList.map(
         (item) =>
@@ -442,8 +442,9 @@ export class RegistroVehiculosComponent implements OnInit {
             : item
       );
 
-      this.tramite30401Store.setRegistroVehiculosDatos(
-        this.registroVehiculosInfoList
+      this.tramite30401Store.establecerDatos({
+        registroTablaDatos: this.registroVehiculosInfoList
+      }
       );
       this.filaSeleccionadaVehiculos = {} as RegistroVehiculos;
     }
@@ -500,8 +501,8 @@ export class RegistroVehiculosComponent implements OnInit {
     );
 
     this.listaFilaSeleccionadaVehiculos = [];
-    this.tramite30401Store.setRegistroVehiculosDatos(
-      this.registroVehiculosInfoList
+    this.tramite30401Store.establecerDatos(
+      {registroTablaDatos: this.registroVehiculosInfoList}
     );
     this.cerrarEliminarConfirmationPopup();
   }
