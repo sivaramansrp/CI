@@ -13,17 +13,17 @@ describe('PantallasComponent', () => {
     } as unknown as WizardComponent;
   });
 
-  it('should create the component', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize with default values', () => {
+  it('debe inicializar con los valores por defecto', () => {
     expect(component.indice).toBe(1);
     expect(component.datosPasos.indice).toBe(1);
     expect(component.datosPasos.nroPasos).toBe(component.pantallasPasos.length);
   });
 
-  it('should update indice and call wizardComponent.siguiente on "cont" action', () => {
+  it('debe actualizar el índice y llamar a wizardComponent.siguiente cuando la acción es "cont"', () => {
     const accion: AccionBoton = { valor: 2, accion: 'cont' };
     component.getValorIndice(accion);
     expect(component.indice).toBe(2);
@@ -31,7 +31,7 @@ describe('PantallasComponent', () => {
     expect(component.wizardComponent.siguiente).toHaveBeenCalled();
   });
 
-  it('should update indice and call wizardComponent.atras on other action', () => {
+  it('debe actualizar el índice y llamar a wizardComponent.atras cuando la acción es distinta de "cont"', () => {
     const accion: AccionBoton = { valor: 1, accion: 'back' };
     component.getValorIndice(accion);
     expect(component.indice).toBe(1);
@@ -39,7 +39,7 @@ describe('PantallasComponent', () => {
     expect(component.wizardComponent.atras).toHaveBeenCalled();
   });
 
-  it('should not update indice if valor is out of range (too low)', () => {
+  it('no debe actualizar el índice si el valor está fuera de rango (muy bajo)', () => {
     const accion: AccionBoton = { valor: 0, accion: 'cont' };
     component.getValorIndice(accion);
     expect(component.indice).toBe(1);
@@ -48,7 +48,7 @@ describe('PantallasComponent', () => {
     expect(component.wizardComponent.atras).not.toHaveBeenCalled();
   });
 
-  it('should not update indice if valor is out of range (too high)', () => {
+  it('no debe actualizar el índice si el valor está fuera de rango (muy alto)', () => {
     const accion: AccionBoton = { valor: 99, accion: 'cont' };
     component.getValorIndice(accion);
     expect(component.indice).toBe(1);
