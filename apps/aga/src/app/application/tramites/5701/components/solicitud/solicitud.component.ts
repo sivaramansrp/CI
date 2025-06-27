@@ -502,7 +502,15 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    */
   industriaAutomotriz!: CheckInputTextComponent;
 
+  /**
+   * Bandera para indicar si se debe resetear la fecha de inicio del servicio.
+   */
   resetearFechaInicioTouch = false;
+
+  /**
+   * Bandera para indicar si debe mostrar el select de tipo despacho.
+   */
+  mostarSelectTipoDespacho: boolean = false;
 
   constructor(
     private seccionQuery: SeccionLibQuery,
@@ -2761,6 +2769,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
       this.despacho.get('folioDDEX')?.updateValueAndValidity();
 
       this.despacho.get('tipoDespacho')?.setValue(SIN_VALORES);
+      this.mostarSelectTipoDespacho = false;
 
       this.desactivarSelects(true);
     } else {
@@ -2794,6 +2803,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
           .get('tipoOperacion')
           ?.setValue(TIPO_OPERACION_EXPORTACION);
       }
+      this.mostarSelectTipoDespacho = true;
     }
 
     this.cdRef.detectChanges(); // 🚀 Forzar actualización de la vista
