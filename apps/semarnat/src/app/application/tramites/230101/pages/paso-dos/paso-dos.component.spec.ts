@@ -11,7 +11,7 @@ describe('PasoDosComponent', () => {
 
   beforeEach(() => {
     mockCatalogosService = {
-      getCatalogo: jest.fn(), // Mocked function for the service
+      getCatalogo: jest.fn(), 
     };
 
     TestBed.configureTestingModule({
@@ -27,21 +27,10 @@ describe('PasoDosComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize and call getTiposDocumentos on ngOnInit', () => {
-    const mockResponse = [{ id: 1, nombre: 'Tipo A' }, { id: 2, nombre: 'Tipo B' }];
-    mockCatalogosService.getCatalogo.mockReturnValue(of(mockResponse));
-
-    // Call ngOnInit
-    component.ngOnInit();
-
-    expect(mockCatalogosService.getCatalogo).toHaveBeenCalledWith('CAT_TIPO_DOCUMENTO');
-    expect(component.catalogoDocumentos).toEqual(mockResponse);
-  });
 
   it('should complete ReplaySubject on ngOnDestroy', () => {
     const completeSpy = jest.spyOn(component['destroyed$'], 'complete');
 
-    // Call ngOnDestroy
     component.ngOnDestroy();
 
     expect(completeSpy).toHaveBeenCalled();

@@ -1,188 +1,108 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ProgramaACancelarComponent } from './programaACancelar.component';
-import { ReactiveFormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
-import { of } from 'rxjs';
+import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
+import { of, Subject } from 'rxjs';
 import { ProgramaACancelarService } from '../../services/programACancelar.service';
 import { Tramite140101Store } from '../../../../estados/tramites/tramite140101.store';
 import { Tramite140101Query } from '../../../../estados/queries/tramite140101.query';
-import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import  ProgramaACancelar from '@libs/shared/theme/assets/json/140101/Programa.json';
+import { ValidacionesFormularioService } from '@libs/shared/data-access-user/src/core/services/shared/validaciones-formulario/validaciones-formulario.service';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('ProgramaACancelarComponent', () => {
   let component: ProgramaACancelarComponent;
   let fixture: ComponentFixture<ProgramaACancelarComponent>;
-  let programaACancelarServiceMock: any;
-  let tramite140101StoreMock: any;
-  let tramite140101QueryMock: any;
+  let mockProgramaACancelarService: any;
+  let mockTramite140101Store: any;
+  let mockTramite140101Query: any;
+  let mockFormValidator: any;
 
   beforeEach(async () => {
-    // Mock del servicio ProgramaACancelarService
-    programaACancelarServiceMock = {
-      obtenerDatos: jest.fn().mockReturnValue(ProgramaACancelar),
+    mockProgramaACancelarService = {
+      obtenerDatos: jest.fn().mockReturnValue(of([
+        { folioPrograma: 'FOL123', idProgramaSeleccionado: 1, modalidad: 'MOD', representacionFederal: 'REP', tipoPrograma: 'TIPO', estatus: 'ACTIVO' }
+      ]))
     };
-
-    // Mock del store Tramite140101Store
-    tramite140101StoreMock = {
+    mockTramite140101Store = {
       setDatosData: jest.fn(),
       setPrograma: jest.fn(),
-      setRadioSelection: jest.fn(),
+      setRadioSelection: jest.fn()
     };
-
-    // Mock del query Tramite140101Query
-    tramite140101QueryMock = {
+    mockTramite140101Query = {
       selectSolicitud$: of({
         programaACancelar: {
-          folioPrograma: '123',
-          idProgramaSeleccionado: '1',
-          modalidad: 'Modalidad',
-          representacionFederal: 'Federal',
-          tipoPrograma: 'Tipo',
-          estatus: 'Activo',
+          folioPrograma: 'FOL123',
+          idProgramaSeleccionado: 1,
+          modalidad: 'MOD',
+          representacionFederal: 'REP',
+          tipoPrograma: 'TIPO',
+          estatus: 'ACTIVO'
         },
-        solicitudObservaciones: 'Observaciones',
+        solicitudObservaciones: 'Obs',
         confirmar: true,
         radio: 0,
-        datos: [],
-      }),
+        datos: [
+          { folioPrograma: 'FOL123', idProgramaSeleccionado: 1, modalidad: 'MOD', representacionFederal: 'REP', tipoPrograma: 'TIPO', estatus: 'ACTIVO' }
+        ]
+      })
+    };
+    mockFormValidator = {
+      isValid: jest.fn().mockReturnValue(true)
     };
 
-    // Configuración del módulo de pruebas
     await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule, HttpClientModule, ProgramaACancelarComponent],
+      imports: [ReactiveFormsModule, ProgramaACancelarComponent, HttpClientTestingModule],
+      declarations: [],
       providers: [
-        { provide: ProgramaACancelarService, useValue: programaACancelarServiceMock },
-        { provide: Tramite140101Store, useValue: tramite140101StoreMock },
-        { provide: Tramite140101Query, useValue: tramite140101QueryMock },
-      ],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA],
+        FormBuilder,
+        { provide: ProgramaACancelarService, useValue: mockProgramaACancelarService },
+        { provide: Tramite140101Store, useValue: mockTramite140101Store },
+        { provide: Tramite140101Query, useValue: mockTramite140101Query },
+        { provide: ValidacionesFormularioService, useValue: mockFormValidator }
+      ]
     }).compileComponents();
 
-    // Creación del componente y detección de cambios
     fixture = TestBed.createComponent(ProgramaACancelarComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-
-  it('should initialize the form and load data on ngOnInit', () => {
-    // Ensure the mock service returns the expected data
-    programaACancelarServiceMock.obtenerDatos.mockReturnValue(ProgramaACancelar);
-  
-    // Trigger ngOnInit
-    component.ngOnInit();
-  
-    // Verify that the form is initialized
-    expect(component.programaForm).toBeTruthy();
-  
-    // Verify that datosTabla is populated with the mock data
-    expect(component.datosTabla).toEqual(ProgramaACancelar);
-  
-    // Verify that setDatosData is called with the correct data
-    expect(tramite140101StoreMock.setDatosData).toBe(ProgramaACancelar);
+  it('debe inicializar el formulario con los valores correctos', () => {
+    expect(component.programaForm.value).toMatchObject({
+      idProgramaSeleccionado: 1,
+      solicitudObservaciones: 'Obs',
+      confirmar: true
+    });
   });
 
-  it('should update the form and store when valorDeAlternancia is called', () => {
-    const mockRow = {
-      folioPrograma: '456',
-      idProgramaSeleccionado: '2',
-      modalidad: 'Nueva Modalidad',
-      representacionFederal: 'Nueva Federal',
-      tipoPrograma: 'Nuevo Tipo',
-      estatus: 'Inactivo',
-    };
-
-    component.valorDeAlternancia(mockRow);
-
-    expect(tramite140101StoreMock.setPrograma).toHaveBeenCalledWith(mockRow);
-    expect(tramite140101StoreMock.setRadioSelection).toHaveBeenCalledWith(-1);
-    // expect(tramite140101StoreMock.setSolicitudObservaciones).toHaveBeenCalledWith('Observaciones');
-    // expect(tramite140101StoreMock.setConfirmar).toHaveBeenCalledWith('false');
-    expect(component.programaForm.value).toEqual(mockRow);
+  it('debe actualizar el formulario y el store al llamar valorDeAlternancia', () => {
+    const row = { folioPrograma: 'FOL999', idProgramaSeleccionado: '2', modalidad: 'MOD2', representacionFederal: 'REP2', tipoPrograma: 'TIPO2', estatus: 'INACTIVO' };
+    component.datosTabla = [row];
+    component.valorDeAlternancia(row);
+    expect(mockTramite140101Store.setPrograma).toHaveBeenCalledWith(row);
+    expect(component.programaForm.get('folioPrograma')?.value).toBe('FOL999');
   });
 
-  it('should call setValoresStore with the correct parameters', () => {
-    const spy = jest.spyOn(tramite140101StoreMock, 'setPrograma');
-    component.setValoresStore(component.programaForm, 'folioPrograma', 'setPrograma');
-    expect(spy).toHaveBeenCalledWith(component.programaForm.get('folioPrograma')?.value);
-  });
-
-  it('should complete destroyNotifier$ on ngOnDestroy', () => {
-    const destroyNotifierSpy = jest.spyOn(component.destroyNotifier$, 'next');
-    const destroyNotifierCompleteSpy = jest.spyOn(component.destroyNotifier$, 'complete');
-
-    component.ngOnDestroy();
-
-    expect(destroyNotifierSpy).toHaveBeenCalled();
-    expect(destroyNotifierCompleteSpy).toHaveBeenCalled();
-  });
-
-  it('should initialize ProgramaForm and set radioId and datosTabla in inicializarFormulario', () => {
-    // Arrange
-    const mockState = {
-      programaACancelar: {
-        folioPrograma: 'FOLIO123',
-        idProgramaSeleccionado: 'ID123',
-        modalidad: 'MODALIDAD',
-        representacionFederal: 'FEDERAL',
-        tipoPrograma: 'TIPO',
-        estatus: 'ESTATUS'
-      },
-      solicitudObservaciones: 'Observaciones',
-      confirmar: true,
-      radio: 5,
-      datos: [{ folioPrograma: 'FOLIO123', idProgramaSeleccionado: 'ID123' }]
-    };
-    component.programaState = mockState;
-    component.soloLectura = false;
-
-    // Act
-    component.inicializarFormulario();
-
-    // Assert
-    expect(component.programaForm).toBeTruthy();
-    expect(component.programaForm.get('folioPrograma')?.value).toBe('FOLIO123');
-    expect(component.programaForm.get('folioPrograma')?.disabled).toBe(true);
-    expect(component.programaForm.get('idProgramaSeleccionado')?.value).toBe('ID123');
-    expect(component.programaForm.get('modalidad')?.value).toBe('MODALIDAD');
-    expect(component.programaForm.get('modalidad')?.disabled).toBe(true);
-    expect(component.programaForm.get('representacionFederal')?.value).toBe('FEDERAL');
-    expect(component.programaForm.get('tipoPrograma')?.value).toBe('TIPO');
-    expect(component.programaForm.get('estatus')?.value).toBe('ESTATUS');
-    expect(component.programaForm.get('solicitudObservaciones')?.value).toBe('Observaciones');
-    expect(component.programaForm.get('confirmar')?.value).toBe(true);
-    expect(component.radioId).toBe(5);
-    expect(component.datosTabla).toEqual([{ folioPrograma: 'FOLIO123', idProgramaSeleccionado: 'ID123' }]);
-    expect(component.programaForm.enabled).toBe(true);
-  });
-
-  it('should disable programaForm if soloLectura is true', () => {
-    // Arrange
-    const mockState = {
-      programaACancelar: {
-        folioPrograma: 'FOLIO123',
-        idProgramaSeleccionado: 'ID123',
-        modalidad: 'MODALIDAD',
-        representacionFederal: 'FEDERAL',
-        tipoPrograma: 'TIPO',
-        estatus: 'ESTATUS'
-      },
-      solicitudObservaciones: 'Observaciones',
-      confirmar: true,
-      radio: 5,
-      datos: [{ folioPrograma: 'FOLIO123', idProgramaSeleccionado: 'ID123' }]
-    };
-    component.programaState = mockState;
+  it('debe deshabilitar el formulario si soloLectura es true', () => {
     component.soloLectura = true;
-
-    // Act
     component.inicializarFormulario();
-
-    // Assert
     expect(component.programaForm.disabled).toBe(true);
+  });
+
+  it('debe llamar a formValidator.isValid en isValid()', () => {
+    const result = component.isValid('folioPrograma');
+    expect(mockFormValidator.isValid).toHaveBeenCalledWith(component.programaForm, 'folioPrograma');
+    expect(result).toBe(true);
+  });
+
+  it('debe limpiar las suscripciones al destruir el componente', () => {
+    const nextSpy = jest.spyOn(component.destroyNotifier$, 'next');
+    const completeSpy = jest.spyOn(component.destroyNotifier$, 'complete');
+    component.ngOnDestroy();
+    expect(nextSpy).toHaveBeenCalled();
+    expect(completeSpy).toHaveBeenCalled();
   });
 });

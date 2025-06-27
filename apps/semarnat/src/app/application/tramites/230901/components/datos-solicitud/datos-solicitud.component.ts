@@ -6,11 +6,12 @@ import {
 import {
   Catalogo,
   ConfiguracionColumna,
+  ConsultaioQuery,
   CrossListLable,
   CrosslistComponent,
   REGEX_SEPARADO_POR_COMAS,
   TablaSeleccion,
-} from '@libs/shared/data-access-user/src';
+} from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import {
   CrosslistBoton,
@@ -25,7 +26,7 @@ import {
   Solicitud230901State,
   Tramite230901Store,
 } from '../../estados/store/tramite230901.store';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 import { AutorizacionesDeVidaSilvestreService } from '../../services/autorizaciones-de-vida-silvestre.service';
 import { Tramite230901Query } from '../../estados/query/tramite230901.query';
 
@@ -190,6 +191,12 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
   esOperacionDeActualizacion: boolean = false;
 
   /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  esFormularioSoloLectura: boolean = false;
+
+  /**
    * Constructor del componente.
    * autorizacionesDeVidaSilvestreService Servicio para manejar datos relacionados con autorizaciones de vida silvestre.
    * tramite230901Store Almacén de estado para el trámite 230901.
@@ -200,9 +207,17 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
     public autorizacionesDeVidaSilvestreService: AutorizacionesDeVidaSilvestreService,
     private tramite230901Store: Tramite230901Store,
     private tramite230901Query: Tramite230901Query,
-    private formBuilder: FormBuilder
-  ) {
-    // No se realiza ninguna acción aquí en el constructor.
+    private formBuilder: FormBuilder,
+    private consultaioQuery: ConsultaioQuery
+    ) {
+     this.consultaioQuery.selectConsultaioState$
+       .pipe(
+         takeUntil(this.notificadorDestruccion$),
+         map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+         })
+       )
+       .subscribe();
   }
 
   /**
@@ -225,6 +240,12 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
     this.crearFormularioSolicitud();
     this.manejarCambioTipoMovimiento();
     this.datosTablaMercancia = this.estadoSolicitud230901.mercanciaTablaDatos;
+
+    if(this.esFormularioSoloLectura) {
+      this.formularioSolicitud.disable();
+    } else {
+      this.formularioSolicitud.enable();
+    }
   }
 
   /**

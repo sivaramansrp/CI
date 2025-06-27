@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DestinoFinal } from '../../../../shared/models/terceros-relacionados.model';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
@@ -7,8 +8,8 @@ import { Proveedor } from '../../../../shared/models/terceros-relacionados.model
 import { Subject } from 'rxjs';
 import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-relacionados/terceros-relacionados.component';
 import { Tramite240411Query } from '../../estados/tramite240411Query.query';
-import { Tramite240411Store } from '../../estados/tramite240411Store.store';
 import { takeUntil } from 'rxjs';
+
 
 /**
  * @title Terceros Relacionados Contenedora
@@ -43,6 +44,12 @@ export class TercerosRelacionadosContenedoraComponent
    * @property {Proveedor[]} proveedorTablaDatos
    */
   proveedorTablaDatos: Proveedor[] = [];
+  
+  /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  esFormularioSoloLectura: boolean = false;
 
   /**
    * Constructor del componente.
@@ -53,8 +60,8 @@ export class TercerosRelacionadosContenedoraComponent
    * @returns {void}
    */
   constructor(
-    private tramiteStore: Tramite240411Store,
-    private tramiteQuery: Tramite240411Query 
+    private tramiteQuery: Tramite240411Query,
+    private consultaioQuery: ConsultaioQuery
   ) {
     // 
   }
@@ -78,6 +85,21 @@ export class TercerosRelacionadosContenedoraComponent
       .subscribe((data) => {
         this.proveedorTablaDatos = data;
       });
+      this.obtenerEstadoValor()
+  }
+
+  /**
+   * Se suscribe al observable del estado del trámite (`Tramite220103Query`)
+   * para obtener y almacenar el estado actual en `estadoSeleccionado`.
+   * La suscripción se gestiona con `takeUntil` para limpiarse automáticamente
+   * en `ngOnDestroy`.
+   */
+  obtenerEstadoValor(): void {
+   this.consultaioQuery.selectConsultaioState$
+    .pipe(takeUntil(this.unsubscribe$))
+    .subscribe((seccionState) => {
+      this.esFormularioSoloLectura = seccionState.readonly;
+    });
   }
   /**
    * Hook que se ejecuta al destruir el componente.

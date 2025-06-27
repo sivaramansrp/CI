@@ -1,10 +1,10 @@
 import { CADENA_PAGO_DEPENDENCIA, CLAVE_DE_REFERENCIA, FECHA, IMP_PAGO } from "../../enum/autorizaciones.enum";
 import { Component, OnDestroy, OnInit } from "@angular/core";
+import { ConsultaioQuery, InputFecha } from '@ng-mf/data-access-user';
 import { FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms";
 import { Solicitud230901State, Tramite230901Store } from "../../estados/store/tramite230901.store";
-import { Subject, takeUntil } from "rxjs";
+import { Subject, map, takeUntil } from "rxjs";
 import { AutorizacionesDeVidaSilvestreService } from "../../services/autorizaciones-de-vida-silvestre.service";
-import { InputFecha } from "@libs/shared/data-access-user/src";
 import { Tramite230901Query } from "../../estados/query/tramite230901.query";
 
 /**
@@ -56,6 +56,12 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   private notificadorDestruccion$: Subject<void> = new Subject();
 
   /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  esFormularioSoloLectura: boolean = false;
+
+  /**
    * Constructor del componente PagoDeDerechosComponent.
    * Inicializa los servicios y dependencias necesarias para gestionar el estado
    * y los datos relacionados con el pago de derechos.
@@ -64,9 +70,17 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     public servicioVidaSilvestre: AutorizacionesDeVidaSilvestreService,
     private tramite230901Store: Tramite230901Store,
     private tramite230901Query: Tramite230901Query,
-    private formBuilder: FormBuilder
-  ) {
-    // No se realiza ninguna acción aquí.
+    private formBuilder: FormBuilder,
+    private consultaioQuery: ConsultaioQuery
+    ) {
+     this.consultaioQuery.selectConsultaioState$
+       .pipe(
+         takeUntil(this.notificadorDestruccion$),
+         map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+         })
+       )
+       .subscribe();
   }
 
   /**
@@ -83,6 +97,12 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
       });
 
     this.crearformularioPagoDerechos();
+
+    if(this.esFormularioSoloLectura) {
+      this.formularioPagoDerechos.disable();
+    } else {
+      this.formularioPagoDerechos.enable();
+    }
   }
 
   /**

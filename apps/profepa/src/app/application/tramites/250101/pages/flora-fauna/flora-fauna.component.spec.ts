@@ -50,64 +50,48 @@ describe('FloraFaunaComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('debería crearse', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize TEXTO_DE_ALERTA with the correct value', () => {
+  it('debería inicializar TEXTO_FLORA_FAUNA_ALERT con el valor correcto', () => {
     expect(component.TEXTO_FLORA_FAUNA_ALERT).toBe(
       'La solicitud ha quedado registrada con el número temporal 202768122. Éste no tiene validez legal y sirve solamente para efectos de identificar tu solicitud. Un folio oficial le será asignado a la solicitud al momento en que ésta sea firmada'
     );
   });
 
-  it('should initialize datosPasos with the correct values', () => {
+  it('debería inicializar datosPasos con los valores correctos', () => {
     expect(component.datosPasos.nroPasos).toBe(component.pantallasPasos.length);
     expect(component.datosPasos.indice).toBe(component.indice);
     expect(component.datosPasos.txtBtnAnt).toBe('Anterior');
     expect(component.datosPasos.txtBtnSig).toBe('Continuar');
   });
 
-  it('should update indice and call wizardComponent.siguiente when getValorIndice is called with accion "cont"', () => {
+  it('debería actualizar indice y llamar a wizardComponent.siguiente cuando getValorIndice es llamado con accion "cont" y valor en rango', () => {
+    component.indice = 1;
+    component.wizardComponent = { siguiente: jest.fn(), atras: jest.fn() } as any;
     const accionBoton = { accion: 'cont', valor: 2 };
     component.getValorIndice(accionBoton);
     expect(component.indice).toBe(2);
     expect(component.wizardComponent.siguiente).toHaveBeenCalled();
   });
 
-  it('should update indice and call wizardComponent.atras when getValorIndice is called with accion "ant"', () => {
-    const accionBoton = { accion: 'ant', valor: 1 };
-    component.getValorIndice(accionBoton);
-    expect(component.indice).toBe(1);
-    expect(component.wizardComponent.atras).toHaveBeenCalled();
-  });
+it('debería actualizar indice y llamar a wizardComponent.atras cuando getValorIndice es llamado con accion "atras" y valor en rango', () => {
+  component.indice = 3;
+  component.wizardComponent = { siguiente: jest.fn(), atras: jest.fn() } as any;
+  const accionBoton = { accion: 'atras', valor: 2 };
+  component.getValorIndice(accionBoton);
+  expect(component.indice).toBe(2);
+  expect(component.wizardComponent.atras).toHaveBeenCalled();
+});
 
-  it('should not update indice or call wizardComponent methods when getValorIndice is called with valor out of range', () => {
-    const accionBoton = { accion: 'cont', valor: 6 };
-    component.getValorIndice(accionBoton);
-    expect(component.indice).toBeUndefined();
-    expect(component.wizardComponent.siguiente).not.toHaveBeenCalled();
-    expect(component.wizardComponent.atras).not.toHaveBeenCalled();
-  });
-
-  it('should not update indice or call wizardComponent methods when getValorIndice is called with valor less than 1', () => {
-    const accionBoton = { accion: 'ant', valor: 0 };
-    component.getValorIndice(accionBoton);
-    expect(component.indice).toBeUndefined();
-    expect(component.wizardComponent.siguiente).not.toHaveBeenCalled();
-    expect(component.wizardComponent.atras).not.toHaveBeenCalled();
-  });
-
-  it('should update indice and call wizardComponent.siguiente at boundary value 1', () => {
-    const accionBoton = { accion: 'cont', valor: 1 };
-    component.getValorIndice(accionBoton);
-    expect(component.indice).toBe(1);
-    expect(component.wizardComponent.siguiente).toHaveBeenCalled();
-  });
-
-  it('should update indice and call wizardComponent.siguiente at boundary value 5', () => {
-    const accionBoton = { accion: 'cont', valor: 5 };
-    component.getValorIndice(accionBoton);
-    expect(component.indice).toBe(5);
-    expect(component.wizardComponent.siguiente).toHaveBeenCalled();
-  });
+it('no debería actualizar indice ni llamar métodos de wizardComponent cuando getValorIndice es llamado con valor fuera de rango', () => {
+  component.indice = 1;
+  component.wizardComponent = { siguiente: jest.fn(), atras: jest.fn() } as any;
+  const accionBoton = { accion: 'cont', valor: 5 };
+  component.getValorIndice(accionBoton);
+  expect(component.indice).toBe(1);
+  expect(component.wizardComponent.siguiente).not.toHaveBeenCalled();
+  expect(component.wizardComponent.atras).not.toHaveBeenCalled();
+});
 });

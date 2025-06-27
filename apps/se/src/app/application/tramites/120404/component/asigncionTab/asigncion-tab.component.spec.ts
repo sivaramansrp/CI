@@ -36,35 +36,34 @@ describe('AsignciontabComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize form correctly', () => {
+  it('debe inicializar el formulario correctamente', () => {
     expect(component.asignacionForm).toBeDefined();
     expect(component.asignacionForm).toBeTruthy();
   });
 
-  it('should update store when setValoresStore is called', () => {
+  it('debe actualizar el store cuando se llama setValoresStore', () => {
     const spy = jest.spyOn(tramiteStore, 'establecerDatos');
     component.setValoresStore(component.asignacionForm, 'asignacionRadio');
     expect(spy).toHaveBeenCalled();
   });
 
-
-  it('should disable form if esFormularioSoloLectura is true', () => {
+  it('debe deshabilitar el formulario si esFormularioSoloLectura es verdadero', () => {
     component.esFormularioSoloLectura = true;
     component.guardarDatosFormulario();
     expect(component.asignacionForm.disabled).toBeTruthy();
   });
 
-  it('should enable form if esFormularioSoloLectura is false', () => {
+  it('debe habilitar el formulario si esFormularioSoloLectura es falso', () => {
     component.esFormularioSoloLectura = false;
     component.guardarDatosFormulario();
     expect(component.asignacionForm.enabled).toBeTruthy();
   });
 
-  it('should destroy observable subscriptions on component destroy', () => {
+  it('debe destruir las suscripciones de los observables al destruir el componente', () => {
     const spy = jest.spyOn(component.destroyed$, 'next');
     component.ngOnDestroy();
     expect(spy).toHaveBeenCalled();

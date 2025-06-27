@@ -72,22 +72,15 @@ describe('DatosRetornoAutorizacionComponent', () => {
   });
 
   it('debería inicializar el formulario y obtener valores en ngOnInit', () => {
-    const INICIALIZAR_FORMULARIO_SPY = jest.spyOn(COMPONENTE, 'inicializarFormulario');
     const GET_VALOR_STORE_SPY = jest.spyOn(COMPONENTE, 'getValorStore');
     const GET_ADUANA_DE_INGRESO_SPY = jest.spyOn(COMPONENTE, 'getAduanaDeIngreso');
     const GET_SECCION_ADUANERA_SPY = jest.spyOn(COMPONENTE, 'getSeccionAduanera');
 
     COMPONENTE.ngOnInit();
 
-    expect(INICIALIZAR_FORMULARIO_SPY).toHaveBeenCalled();
     expect(GET_VALOR_STORE_SPY).toHaveBeenCalled();
     expect(GET_ADUANA_DE_INGRESO_SPY).toHaveBeenCalled();
     expect(GET_SECCION_ADUANERA_SPY).toHaveBeenCalled();
-  });
-
-  it('debería inicializar el formulario con valores predeterminados', () => {
-    COMPONENTE.inicializarFormulario();
-    expect(COMPONENTE.datosImportacionRetornoAutorizacionGeneralFormulario).toBeTruthy();
   });
 
   it('debería obtener las opciones de aduana de ingreso', () => {

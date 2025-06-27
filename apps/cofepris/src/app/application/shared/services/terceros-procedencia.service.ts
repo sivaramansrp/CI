@@ -7,7 +7,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { Catalogo } from '@libs/shared/data-access-user/src';
+import { Catalogo, JSONResponse } from '@libs/shared/data-access-user/src';
 import { TableData } from '../models/permiso-importacion-biologica.models';
 
 
@@ -44,7 +44,7 @@ export class TercerosProcedenciaService {
    * @returns Un observable que emite los datos de la tabla en formato JSON.
    */
   getInformacioDeTabla(){
-    return this.http.get<any>('assets/json/260402/informacio-procedencia.json');
+    return this.http.get<JSONResponse>('assets/json/260402/informacio-procedencia.json');
   }
 
 /**
