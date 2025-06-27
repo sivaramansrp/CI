@@ -1,7 +1,9 @@
-import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
-import { Router, RouterModule } from '@angular/router';
+
 import { FooterComponent, HeaderComponent, UserService } from '@ng-mf/data-access-user';
+import { Router, RouterModule } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
+import { OnInit } from '@angular/core';
 import { distinctUntilChanged } from 'rxjs/operators';
 
 @Component({
@@ -22,17 +24,20 @@ export class AppComponent implements OnInit {
   constructor(private userService: UserService, private router: Router) {}
 
   ngOnInit() {
-    this.isLoggedIn$
-      .pipe(distinctUntilChanged())
-      .subscribe(async (loggedIn) => {
-        // Queue the navigation after initialNavigation blocking is completed
+  this.isLoggedIn$
+    .pipe(distinctUntilChanged())
+    .subscribe(async (loggedIn) => {
+      // Await a Promise that resolves after setTimeout
+      await new Promise<void>((resolve) => {
         setTimeout(() => {
           if (!loggedIn) {
             //this.router.navigateByUrl('login');
           } else {
             this.router.navigateByUrl('aga');
           }
+          resolve();
         });
       });
+    });
   }
 }
