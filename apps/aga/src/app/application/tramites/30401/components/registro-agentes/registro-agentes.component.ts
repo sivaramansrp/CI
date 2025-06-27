@@ -329,7 +329,7 @@ export class RegistroAgentesComponent implements OnInit {
       };
 
       this.agentesInfoList = [...this.agentesInfoList, OBJETO];
-      this.tramite30401Store.setAgentesTablaDatos([OBJETO]);
+      this.tramite30401Store.establecerDatos({agentesTablaDatos:[OBJETO]});
     } else {
       this.agentesInfoList = this.agentesInfoList.map((elemento) =>
         elemento.id === this.filaSeleccionadaAgentes.id
@@ -343,7 +343,7 @@ export class RegistroAgentesComponent implements OnInit {
           : elemento
       );
 
-      this.tramite30401Store.setAgentesTablaDatos(this.agentesInfoList);
+      this.tramite30401Store.establecerDatos({agentesTablaDatos:this.agentesInfoList});
       this.filaSeleccionadaAgentes = {} as AgentesTabla;
     }
   }
@@ -398,7 +398,7 @@ export class RegistroAgentesComponent implements OnInit {
     );
 
     this.listaFilaSeleccionadaAgentes = [];
-    this.tramite30401Store.setAgentesTablaDatos(this.agentesInfoList);
+    this.tramite30401Store.establecerDatos({agentesTablaDatos: this.agentesInfoList});
     this.cerrarEliminarConfirmationPopup();
   }
 
