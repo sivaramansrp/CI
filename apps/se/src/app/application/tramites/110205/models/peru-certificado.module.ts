@@ -1,21 +1,38 @@
+/**
+ * @interface ListaPasoWizard
+ * @description
+ * Interfaz que representa un paso dentro del asistente (wizard) del trámite.
+ * Define la estructura de cada paso, incluyendo su índice, título, y los estados de activo y completado.
+ *
+ * @property {number} indice - Índice del paso dentro del flujo del wizard.
+ * @property {string} titulo - Título descriptivo del paso.
+ * @property {boolean} activo - Indica si el paso está activo actualmente.
+ * @property {boolean} completado - Indica si el paso ha sido completado por el usuario.
+ */
 export interface ListaPasoWizard {
-  /** Index of the step */
+  /** Índice del paso dentro del wizard */
   indice: number;
-  /** Title of the step */
+  /** Título descriptivo del paso */
   titulo: string;
-  /** Indicates if the step is active */
+  /** Indica si el paso está activo actualmente */
   activo: boolean;
-  /** Indicates if the step is completed */
+  /** Indica si el paso ha sido completado */
   completado: boolean;
 }
 
 /**
- * Interface representing an action button.
+ * @interface AccionBoton
+ * @description
+ * Interfaz que representa un botón de acción dentro del flujo del trámite.
+ * Define la acción a ejecutar y el valor asociado a dicha acción, como el índice del paso al que se debe navegar.
+ *
+ * @property {string} accion - Acción que se debe realizar (por ejemplo, avanzar o retroceder en el wizard).
+ * @property {number} valor - Valor asociado a la acción, generalmente el índice del paso al que se debe navegar.
  */
 export interface AccionBoton {
-  /** Action to be performed */
+  /** Acción que se debe realizar */
   accion: string;
-  /** Value associated with the action */
+  /** Valor asociado a la acción */
   valor: number;
 }
 
@@ -61,8 +78,14 @@ export interface HistoricoColumnas {
   telefono: string;
   fax: string;
 }
+
 /**
- * Representa los datos del productor exportador.
+ * @interface ProductorExportador
+ * @description
+ * Interfaz que representa los datos del productor exportador.
+ * Contiene un arreglo de objetos `HistoricoColumnas` que almacena la información histórica de los productores exportadores registrados.
+ *
+ * @property {HistoricoColumnas[]} datos - Lista de registros históricos de productores exportadores.
  */
 export interface ProductorExportador {
   datos: HistoricoColumnas[];
@@ -91,9 +114,12 @@ export interface MercanciaTabla {
   rfcProductor: string;
 }
 /**
+ * @interface MercanciasHistorico
+ * @description
  * Interfaz que representa el histórico de mercancías.
- * 
- * @property datos - Lista de datos de tipo `MercanciaTabla` que contiene el histórico de mercancías.
+ * Contiene una lista de datos de tipo `MercanciaTabla` que almacena el historial de mercancías registradas en el trámite.
+ *
+ * @property {MercanciaTabla[]} datos - Lista de datos de tipo `MercanciaTabla` que contiene el histórico de mercancías.
  */
 export interface MercanciasHistorico {
   datos: MercanciaTabla[];
