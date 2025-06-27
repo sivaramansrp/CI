@@ -2,9 +2,9 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { HttpClientModule } from '@angular/common/http';
 import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { of as observableOf } from 'rxjs';
 import { PasoDosComponent } from './paso-dos.component';
 import { CatalogosService } from '@ng-mf/data-access-user';
+import { of as observableOf } from 'rxjs';
 
 describe('PasoDosComponent', () => {
   let fixture: ComponentFixture<PasoDosComponent>;

@@ -11,7 +11,7 @@ import { SolicitanteComponent } from './solicitante.component';
 import { SolicitanteService } from '@libs/shared/data-access-user/src/core/services/shared/solicitante/solicitante.service';
 import { FormBuilder } from '@angular/forms';
 import { FormulariosService } from '@libs/shared/data-access-user/src/core/services/shared/formularios/formularios.service';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { HttpClientModule } from '@angular/common/http';
 
 @Directive({ selector: '[myCustom]' })
 class MyCustomDirective {
@@ -39,7 +39,7 @@ describe('SolicitanteComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ SolicitanteComponent, FormsModule, ReactiveFormsModule, HttpClientTestingModule ],
+      imports: [ SolicitanteComponent, FormsModule, ReactiveFormsModule, HttpClientModule ],
       declarations: [
         TranslatePipe, PhoneNumberPipe, SafeHtmlPipe,
         MyCustomDirective
@@ -106,6 +106,34 @@ describe('SolicitanteComponent', () => {
     component.fb.group = jest.fn();
     component.crearFormulario();
     expect(component.fb.group).toHaveBeenCalled();
+  });
+
+  it('should run #inicializarFormGroup()', () => {
+    component.form = {
+      get: jest.fn().mockReturnValue({
+        addControl: jest.fn(),
+      }),
+    } as any;
+
+    component.fb = {
+      control: jest.fn(),
+    } as any;
+
+    const campoMock = [{
+      validators: ['required'],
+      campo: 'nombreCampo',
+      disabled: false,
+    }];
+
+    component.inicializarFormGroup(campoMock, 'grupoNombre');
+
+    expect(component.form.get).toHaveBeenCalledWith('grupoNombre');
+    expect(component.fb.control).toHaveBeenCalled();
+  });
+
+  it('should run #getValidators()', () => {
+    const validators = SolicitanteComponent.getValidators(['required', 'maxLength:10', 'pattern:^\\d+$']);
+    expect(validators.length).toBe(3);
   });
 
   it('should run #getDatosGenerales()', async () => {

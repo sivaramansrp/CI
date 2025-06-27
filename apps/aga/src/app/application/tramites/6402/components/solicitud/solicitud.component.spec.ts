@@ -2,7 +2,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormGroup, FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { Observable, of as observableOf, throwError } from 'rxjs';
 
@@ -14,6 +14,11 @@ import { Tramite6402Query } from '../../estados/tramite6402.query';
 import { AutorizacionImportacionService } from '../../services/autorizacion-importacion.service';
 import { ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { Modal } from 'bootstrap';
+
+jest.mock('bootstrap', () => ({
+  Modal: jest.fn()
+}));
 
 @Injectable()
 class MockTramite6402Store {}
@@ -46,7 +51,7 @@ class SafeHtmlPipe implements PipeTransform {
 
 describe('SolicitudComponent', () => {
   let fixture;
-  let component;
+  let component : SolicitudComponent;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -139,6 +144,131 @@ describe('SolicitudComponent', () => {
     expect(component.cargarTipoDeDestino).toHaveBeenCalled();
     expect(component.inicializarMercanciaFormulario).toHaveBeenCalled();
   });
+
+  it('should run #cambioImportacionTemporal()', () => {
+    const mockFechaControl = {
+      setValue: jest.fn(),
+      markAsUntouched: jest.fn(),
+    };
+
+    const mockDatosPedimentoGroup = new FormGroup({
+      fechaImportacionTemporal: new FormControl()
+    });
+    jest.spyOn(mockDatosPedimentoGroup, 'get').mockReturnValue(mockFechaControl as any);
+
+    component.solicitudFormulario = new FormGroup({
+      datosPedimento: mockDatosPedimentoGroup
+    });
+
+    component.store = {
+      setFechaImportacionTemporal: jest.fn()
+    } as any;
+
+    component.cambioImportacionTemporal('nuevoValor');
+
+    expect(mockDatosPedimentoGroup.get).toHaveBeenCalledWith('fechaImportacionTemporal');
+    expect(mockFechaControl.setValue).toHaveBeenCalledWith('nuevoValor');
+    expect(mockFechaControl.markAsUntouched).toHaveBeenCalled();
+    expect(component.store.setFechaImportacionTemporal).toHaveBeenCalledWith('nuevoValor');
+  });
+
+  it('should run #cambioVencimiento()', () => {
+    const mockFechaControl = {
+      setValue: jest.fn(),
+      markAsUntouched: jest.fn(),
+    };
+
+    const mockDatosPedimentoGroup = new FormGroup({
+      fechaVencimiento: new FormControl()
+    });
+    jest.spyOn(mockDatosPedimentoGroup, 'get').mockReturnValue(mockFechaControl as any);
+
+    component.solicitudFormulario = new FormGroup({
+      datosPedimento: mockDatosPedimentoGroup
+    });
+
+    component.store = {
+      setFechaVencimiento: jest.fn()
+    } as any;
+
+    component.cambioVencimiento('2025-06-26');
+
+    expect(mockDatosPedimentoGroup.get).toHaveBeenCalledWith('fechaVencimiento');
+    expect(mockFechaControl.setValue).toHaveBeenCalledWith('2025-06-26');
+    expect(mockFechaControl.markAsUntouched).toHaveBeenCalled();
+    expect(component.store.setFechaVencimiento).toHaveBeenCalledWith('2025-06-26');
+  });
+
+  it('should run #cambioFechaCartaPorte()', () => {
+    const mockFechaControl = {
+      setValue: jest.fn(),
+      markAsUntouched: jest.fn(),
+    };
+
+    const mockDatosPedimentoGroup = new FormGroup({
+      fechaCartaPorte: new FormControl()
+    });
+    jest.spyOn(mockDatosPedimentoGroup, 'get').mockReturnValue(mockFechaControl as any);
+
+    component.solicitudFormulario = new FormGroup({
+      datosPedimento: mockDatosPedimentoGroup
+    });
+
+    component.store = {
+      setFechaCartaPorte: jest.fn()
+    } as any;
+
+    component.cambioFechaCartaPorte('nuevoValor');
+
+    expect(mockDatosPedimentoGroup.get).toHaveBeenCalledWith('fechaCartaPorte');
+    expect(mockFechaControl.setValue).toHaveBeenCalledWith('nuevoValor');
+    expect(mockFechaControl.markAsUntouched).toHaveBeenCalled();
+    expect(component.store.setFechaCartaPorte).toHaveBeenCalledWith('nuevoValor');
+  });
+
+  it('should run #cambioFechaDestino()', () => {
+    const mockFechaControl = {
+      setValue: jest.fn(),
+      markAsUntouched: jest.fn()
+    };
+
+    const mockDatosPedimentoGroup = new FormGroup({
+      fechaDescruccionDestino: new FormControl()
+    });
+    jest.spyOn(mockDatosPedimentoGroup, 'get').mockReturnValue(mockFechaControl as any);
+
+    component.solicitudFormulario = new FormGroup({
+      datosPedimento: mockDatosPedimentoGroup
+    });
+
+    component.store = {
+      setFechaCartaPorte: jest.fn()
+    } as any;
+
+    component.cambioFechaDestino('nuevoValor');
+
+    expect(mockDatosPedimentoGroup.get).toHaveBeenCalledWith('fechaDescruccionDestino');
+    expect(mockFechaControl.setValue).toHaveBeenCalledWith('nuevoValor');
+    expect(mockFechaControl.markAsUntouched).toHaveBeenCalled();
+    expect(component.store.setFechaCartaPorte).toHaveBeenCalledWith('nuevoValor');
+  });
+
+  it('should run #setValoresStore()', () => {
+    const mockMetodo = jest.fn();
+
+    component.store = {
+      metodoNombre: mockMetodo
+    } as any;
+
+    const mockForm = new FormGroup({
+      campoEjemplo: new FormControl('valorEjemplo')
+    });
+
+    component.setValoresStore(mockForm, 'campoEjemplo', 'metodoNombre');
+
+    expect(mockMetodo).toHaveBeenCalledWith('valorEjemplo');
+  });
+
   it('should run #cargarAduaneras()', async () => {
     component.autorizacionImportacionService = component.autorizacionImportacionService || {};
     component.autorizacionImportacionService.obtenerAduaneras = jest.fn().mockReturnValue(observableOf({
@@ -231,6 +361,19 @@ describe('SolicitudComponent', () => {
     expect(component.inicializarEstadoFormulario).toHaveBeenCalled();
   });
 
+  it('should enable form when soloLectura is false', () => {
+    component.soloLectura = false;
+    component.solicitudFormulario = {
+      disable: jest.fn(),
+      enable: jest.fn()
+    } as any;
+
+    component.inicializarEstadoFormulario();
+
+    expect(component.solicitudFormulario.disable).not.toHaveBeenCalled();
+    expect(component.solicitudFormulario.enable).toHaveBeenCalled();
+  });
+
   it('should run #inicializarMercanciaFormulario()', async () => {
     component.fb = component.fb || {};
     component.fb.group = jest.fn();
@@ -251,6 +394,37 @@ describe('SolicitudComponent', () => {
 
     component.filaSeleccionada({});
 
+  });
+
+  it('should run #eliminarMercancia()', () => {
+    const includesMock = jest.fn().mockReturnValue(false); // Simula que no se elimina nada
+    component.filaSeleccionadaLista = {
+      includes: includesMock
+    } as any;
+
+    component.tablaDeDatos = {
+      datos: [null, {}, {}]
+    };
+
+    component.eliminarMercancia();
+
+    expect(includesMock).toHaveBeenCalled();
+  });
+
+  it('should run #abiertoMercancia()', () => {
+    const mockShow = jest.fn();
+    (Modal as jest.Mock).mockImplementation(() => ({
+      show: mockShow
+    }));
+
+    component.modalMercancia = {
+      nativeElement: document.createElement('div') // o un mock div
+    };
+
+    component.abiertoMercancia();
+
+    expect(Modal).toHaveBeenCalledWith(component.modalMercancia.nativeElement);
+    expect(mockShow).toHaveBeenCalled();
   });
 
   it('should run #cargarMercanciaTabla()', async () => {
@@ -280,6 +454,120 @@ describe('SolicitudComponent', () => {
 
     component.abrirModal();
 
+  });
+
+  it('should run #cambiarTipoDocumento()', async () => {
+    component.datosPedimento = component.datosPedimento || {};
+    component.datosPedimento.get = jest.fn().mockReturnValue({
+      enable: function() {},
+      disable: function() {},
+      setValue: function() {},
+      value: {}
+    });
+    component.cambiarTipoDocumento();
+    expect(component.datosPedimento.get).toHaveBeenCalled();
+  });
+
+  it('should run #cambiarCheckProrroga()', () => {
+    const mockEnable = jest.fn();
+    const mockDisable = jest.fn();
+    const mockSetValue = jest.fn();
+
+    const mockCheckProrrogaControl = new FormControl(true);
+    const mockFolioControl = {
+      enable: mockEnable,
+      disable: mockDisable,
+      setValue: mockSetValue,
+      value: ''
+    };
+
+    const mockDatosPedimento = new FormGroup({
+      checkProrroga: mockCheckProrrogaControl
+    });
+
+    jest.spyOn(mockDatosPedimento, 'get').mockImplementation((campo: string) => {
+      if (campo === 'checkProrroga') {
+        return mockCheckProrrogaControl;
+      }
+      if (campo === 'folioOficialProrroga') {
+        return mockFolioControl as any;
+      }
+      return null;
+    });
+
+    component.solicitudFormulario = new FormGroup({
+      datosPedimento: mockDatosPedimento
+    });
+
+    component.cambiarCheckProrroga();
+
+    expect(mockDatosPedimento.get).toHaveBeenCalledWith('checkProrroga');
+    expect(mockDatosPedimento.get).toHaveBeenCalledWith('folioOficialProrroga');
+
+    if (mockCheckProrrogaControl.value === true) {
+      expect(mockEnable).toHaveBeenCalled();
+    } else {
+      expect(mockSetValue).toHaveBeenCalledWith('');
+      expect(mockDisable).toHaveBeenCalled();
+    }
+  });
+
+ it('should disable and clear checkProrroga when cveTipoDocumento is "Folio VUCEM"', () => {
+    const mockCheckProrroga = {
+      enable: jest.fn(),
+      disable: jest.fn(),
+      setValue: jest.fn()
+    };
+
+    const mockDatosPedimento = new FormGroup({
+      cveTipoDocumento: new FormControl('Folio VUCEM'),
+      checkProrroga: new FormControl('')
+    });
+
+    jest.spyOn(mockDatosPedimento, 'get').mockImplementation((controlName: string) => {
+      if (controlName === 'cveTipoDocumento') return { value: 'Folio VUCEM' };
+      if (controlName === 'checkProrroga') return mockCheckProrroga as any;
+      return null;
+    });
+
+    component.solicitudFormulario = new FormGroup({
+      datosPedimento: mockDatosPedimento
+    });
+
+    component.cambiarMedioDeTransporte();
+
+    expect(mockCheckProrroga.setValue).toHaveBeenCalledWith('');
+    expect(mockCheckProrroga.disable).toHaveBeenCalled();
+    expect(mockCheckProrroga.enable).not.toHaveBeenCalled();
+  });
+
+  it('should enable checkProrroga when cveTipoDocumento is not "Folio VUCEM"', () => {
+    const mockCheckProrroga = {
+      enable: jest.fn(),
+      disable: jest.fn(),
+      setValue: jest.fn()
+    };
+
+    const mockDatosPedimento = new FormGroup({
+      cveTipoDocumento: new FormControl('Some other value'),
+      checkProrroga: new FormControl('')
+    });
+
+    jest.spyOn(mockDatosPedimento, 'get').mockImplementation((controlName: string) => {
+      if (controlName === 'cveTipoDocumento') return { value: 'Some other value' };
+      if (controlName === 'checkProrroga') return mockCheckProrroga as any;
+      return null;
+    });
+
+    component.solicitudFormulario = new FormGroup({
+      datosPedimento: mockDatosPedimento
+    });
+
+    component.cambiarMedioDeTransporte();
+
+    expect(mockCheckProrroga.enable).toHaveBeenCalled();
+    expect(mockCheckProrroga.setValue).not.toHaveBeenCalled();
+    expect(mockCheckProrroga.disable).not.toHaveBeenCalled();
   });
 
   it('should run #ngOnDestroy()', async () => {

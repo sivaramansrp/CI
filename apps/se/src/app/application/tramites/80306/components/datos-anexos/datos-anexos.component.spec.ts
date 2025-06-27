@@ -1,10 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DatosAnexosComponent } from './datos-anexos.component';
+import { ImmerModificacionService } from '../../service/immer-modificacion.service';
 import { of, throwError } from 'rxjs';
 import { Anexo } from '../../estados/models/plantas-consulta.model';
 import { ToastrModule, ToastrService } from 'ngx-toastr';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { ImmerModificacionService } from '../../service/immer-modificacion.service';
 
 describe('DatosAnexosComponent', () => {
   let component: DatosAnexosComponent;

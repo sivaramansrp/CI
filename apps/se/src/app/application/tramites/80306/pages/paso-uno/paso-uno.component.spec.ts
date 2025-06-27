@@ -44,7 +44,7 @@ describe('PasoUnoComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [  PasoUnoComponent, FormsModule, ReactiveFormsModule ],
+      imports: [ PasoUnoComponent, FormsModule, ReactiveFormsModule ],
       declarations: [
         TranslatePipe, PhoneNumberPipe, SafeHtmlPipe,
         MyCustomDirective
@@ -95,6 +95,18 @@ describe('PasoUnoComponent', () => {
     component.continuarEvento.emit = jest.fn();
     component.continuar();
     expect(component.continuarEvento.emit).toHaveBeenCalled();
+  });
+
+  it('should run #getValorIndice()', async () => {
+    component.wizardComponent = component.wizardComponent || {};
+    component.wizardComponent.siguiente = jest.fn();
+    component.wizardComponent.atras = jest.fn();
+    component.getValorIndice({
+      valor: {},
+      accion: {}
+    });
+    expect(component.wizardComponent.siguiente).toHaveBeenCalled();
+    expect(component.wizardComponent.atras).toHaveBeenCalled();
   });
 
 });

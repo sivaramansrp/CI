@@ -136,4 +136,29 @@ describe('ModificacionComponent', () => {
     expect(component.modificacionForm.get).toHaveBeenCalled();
   });
 
+ it('should run #setValoresStore()', async () => {
+     // Arrange
+     const mockForm = {
+       get: jest.fn().mockReturnValue({ value: 'mockValue' }),
+     } as unknown as FormGroup;
+ 
+     const mockCampo = 'mockCampo';
+     const mockMetodoNombre = 'setDatosModificacion'; // Use a valid method name
+ 
+     component.tramite80306Store =
+       new MockTramite80306Store() as unknown as Tramite80306Store;
+ 
+     // Act
+     component.setValoresStore(
+       mockForm,
+       mockCampo,
+       mockMetodoNombre as keyof Tramite80306Store
+     );
+ 
+     // Assert
+     expect(
+       component.tramite80306Store.setDatosModificacion
+     ).toHaveBeenCalledWith('mockValue');
+   });
+
 });

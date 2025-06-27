@@ -178,4 +178,62 @@ describe('AvisoDeRenovacionComponent', () => {
     expect(component.unicoStore.setValorSeleccionado).toHaveBeenCalled();
   });
 
+  it('should run #setValoresStore()', async () => {
+    const mockForm = {
+      get: jest.fn().mockReturnValue({ value: 'testValue' })
+    } as any;
+
+    const mockStore = {
+      setTestCampo: jest.fn()
+    };
+
+    component.unicoStore = mockStore as any;
+
+    // Dynamically add method to mockStore
+    mockStore['setTestCampo'] = jest.fn();
+
+    component.setValoresStore(mockForm, 'testCampo', 'setTestCampo' as any);
+
+    expect(mockForm.get).toHaveBeenCalledWith('testCampo');
+    expect(mockStore.setTestCampo).toHaveBeenCalledWith('testValue');
+  });
+
+   it('should disable form if soloLectura is true', () => {
+    component.soloLectura = true;
+    component.avisoForm = {
+      disable: jest.fn(),
+      enable: jest.fn()
+    } as any;
+
+    component.inicializarEstadoFormulario();
+
+    expect(component.avisoForm.disable).toHaveBeenCalled();
+    expect(component.avisoForm.enable).not.toHaveBeenCalled();
+  });
+
+   it('should enable form if soloLectura is false', () => {
+    component.soloLectura = false;
+    component.avisoForm = {
+      disable: jest.fn(),
+      enable: jest.fn()
+    } as any;
+
+    component.inicializarEstadoFormulario();
+
+    expect(component.avisoForm.enable).toHaveBeenCalled();
+    expect(component.avisoForm.disable).not.toHaveBeenCalled();
+  });
+
+   it('should convert numeric radio value to string and update store', () => {
+    const mockValue = 5;
+    component.unicoStore = {
+      setValorSeleccionado: jest.fn()
+    } as any;
+
+    component.cambiarRadio(mockValue);
+
+    expect(component.valorSeleccionado).toBe(5);
+    expect(component.unicoStore.setValorSeleccionado).toHaveBeenCalledWith(5);
+  });
+
 });

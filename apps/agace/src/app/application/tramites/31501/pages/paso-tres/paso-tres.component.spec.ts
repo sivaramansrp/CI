@@ -10,7 +10,7 @@ import { Component, TramiteStore } from '@angular/core';
 import { PasoTresComponent } from './paso-tres.component';
 import { Router } from '@angular/router';
 import { TramiteFolioService } from '@ng-mf/data-access-user';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { HttpClientModule } from '@angular/common/http';
 
 @Injectable()
 class MockRouter {
@@ -46,7 +46,7 @@ describe('PasoTresComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule, HttpClientTestingModule ],
+      imports: [ FormsModule, ReactiveFormsModule, HttpClientModule ],
       declarations: [
         PasoTresComponent,
         TranslatePipe, PhoneNumberPipe, SafeHtmlPipe,

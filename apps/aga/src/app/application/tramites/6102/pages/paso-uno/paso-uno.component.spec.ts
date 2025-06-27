@@ -72,13 +72,58 @@ describe('PasoUnoComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should run #ngOnInit()', async () => {
-    component.consultaioQuery = component.consultaioQuery || {};
-    component.consultaioQuery.selectConsultaioState$ = observableOf({ update: true });
-    component.fetchGetDatosConsulta = jest.fn();
-    component.ngOnInit();
-    expect(component.fetchGetDatosConsulta).toHaveBeenCalled();
-  });
+it('should run #ngOnInit()', async () => {
+  component.fetchGetDatosConsulta = jest.fn();
+
+  // Mock the consultaioQuery observable with `update: true`
+  component.consultaioQuery = {
+    selectConsultaioState$: observableOf({
+      update: true
+    })
+  } as any;
+
+  component.ngOnInit();
+
+  expect(component.fetchGetDatosConsulta).toHaveBeenCalled();
+});
+
+it('should run #fetchGetDatosConsulta()', async () => {
+  const mockResponse = {
+    success: true,
+    datos: {
+      tecnicaForm: {
+        contenedores: ['container1'],
+        aduana: { name: 'TestAduana' },
+        observaciones: 'Test observation'
+      }
+    }
+  };
+
+  // Mock the service method
+  component.juntaTecnicaRegistroService = {
+    getDatosConsulta: jest.fn().mockReturnValue(observableOf(mockResponse))
+  } as any;
+
+  // Mock the store with spies
+  component.solicitud6102Store = {
+    setContenedores: jest.fn(),
+    setAduana: jest.fn(),
+    setObservaciones: jest.fn()
+  } as any;
+
+  // Call the method
+  component.fetchGetDatosConsulta();
+
+  // Optional: wait if using Angular fixture
+  await fixture.whenStable?.();
+
+  // Assert that all expected methods were called
+  expect(component.juntaTecnicaRegistroService.getDatosConsulta).toHaveBeenCalled();
+  expect(component.solicitud6102Store.setContenedores).toHaveBeenCalledWith(['container1']);
+  expect(component.solicitud6102Store.setAduana).toHaveBeenCalledWith({ name: 'TestAduana' });
+  expect(component.solicitud6102Store.setObservaciones).toHaveBeenCalledWith('Test observation');
+});
+
 
   it('should run #ngAfterViewInit()', async () => {
 

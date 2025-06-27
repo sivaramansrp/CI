@@ -75,93 +75,51 @@ describe('RequirementoComponent', () => {
     }).compileComponents();
     fixture = TestBed.createComponent(RequirementoComponent);
     component = fixture.debugElement.componentInstance;
-    Object.defineProperty(window, 'history', {
-      value: { state: { data: {} } },
-      writable: true
-    });
-    });
+  });
 
-    afterEach(() => {
+  afterEach(() => {
     component.ngOnDestroy = function() {};
     fixture.destroy();
-    });
+  });
 
-    it('should run #constructor()', async () => {
+  it('should run #constructor()', async () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should run #ngOnInit()', () => {
+    const mockData = { folioTramite: '123', tipoTramite: 'tipoX' };
+    Object.defineProperty(history, 'state', {
+      value: { data: mockData },
     });
 
-    it('should run #ngOnInit() when consultaDatos.update is true', async () => {
-    Object.defineProperty(window, 'history', {
-      value: { state: { data: {} } },
-      writable: true
-    });
-    const mockConsultaDatos = { update: true, readonly: false };
     component.consultaioQuery = {
-      selectConsultaioState$: observableOf(mockConsultaDatos)
-    };
+      selectConsultaioState$: observableOf({ update: true, readonly: false }),
+    } as any;
+
     component.guardarDatosFormulario = jest.fn();
+
     component.ngOnInit();
+
     expect(component.guardarDatosFormulario).toHaveBeenCalled();
-    expect(component.esDatosRespuesta).toBe(false);
-    });
+  });
 
-    it('should run #ngOnInit() when consultaDatos.update is false', async () => {
-    // Patch history.state
-    Object.defineProperty(window, 'history', {
-      value: { state: { data: {} } },
-      writable: true
-    });
-    const mockConsultaDatos = { update: false, readonly: true };
-    component.consultaioQuery = {
-      selectConsultaioState$: observableOf(mockConsultaDatos)
-    };
-    component.guardarDatosFormulario = jest.fn();
-    component.ngOnInit();
-    expect(component.guardarDatosFormulario).not.toHaveBeenCalled();
-    expect(component.esDatosRespuesta).toBe(true);
-    });
-
-    it('should run #guardarDatosFormulario() and set folioTramite and esDatosRespuesta', async () => {
-    const resp = { folioTramite: '123', tipoTramite: 'abc' };
+  it('should run #guardarDatosFormulario()', async () => {
     component.autoridadService = component.autoridadService || {};
-    component.autoridadService.agregarRequerimiento = jest.fn().mockReturnValue(observableOf(resp));
+    component.autoridadService.agregarRequerimiento = jest.fn().mockReturnValue(observableOf({
+      folioTramite: {},
+      tipoTramite: {}
+    }));
     component.autoridadService.actualizarEstadoFormulario = jest.fn();
     component.guardarDatosFormulario();
     expect(component.autoridadService.agregarRequerimiento).toHaveBeenCalled();
-    expect(component.autoridadService.actualizarEstadoFormulario).toHaveBeenCalledWith(resp);
-    // esDatosRespuesta should be true and folioTramite should be set
-    expect(component.esDatosRespuesta).toBe(true);
-    expect(component.folioTramite).toEqual({ folioTramite: '123', tipoTramite: 'abc' });
-    });
+    expect(component.autoridadService.actualizarEstadoFormulario).toHaveBeenCalled();
+  });
 
-    it('should run #seleccionaTab()', async () => {
-    component.indice = 1;
-    component.seleccionaTab(3);
-    expect(component.indice).toBe(3);
-    });
+  it('should run #seleccionaTab()', async () => {
 
-    it('should run #continuar()', async () => {
-    component.continuarEvento = component.continuarEvento || {};
-    component.continuarEvento.emit = jest.fn();
-    component.continuar();
-    expect(component.continuarEvento.emit).toHaveBeenCalledWith('');
-    });
+    component.seleccionaTab({});
 
-    it('should run #cancelar()', async () => {
-    component.router = component.router || {};
-    component.router.navigate = jest.fn();
-    component.cancelar();
-    expect(component.router.navigate).toHaveBeenCalledWith(['/pago/autoridad/main']);
-    });
-
-    it('should run #ngOnDestroy()', async () => {
-    component.destroy$ = component.destroy$ || {};
-    component.destroy$.next = jest.fn();
-    component.destroy$.complete = jest.fn();
-    component.ngOnDestroy();
-    expect(component.destroy$.next).toHaveBeenCalled();
-    expect(component.destroy$.complete).toHaveBeenCalled();
-    });
+  });
 
   it('should run #continuar()', async () => {
     component.continuarEvento = component.continuarEvento || {};

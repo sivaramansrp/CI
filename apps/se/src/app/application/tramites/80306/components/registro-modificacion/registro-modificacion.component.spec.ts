@@ -47,6 +47,7 @@ describe('RegistroModificacionComponent', () => {
     TestBed.configureTestingModule({
       imports: [ RegistroModificacionComponent, FormsModule, ReactiveFormsModule ],
       declarations: [
+       
         TranslatePipe, PhoneNumberPipe, SafeHtmlPipe,
         MyCustomDirective
       ],

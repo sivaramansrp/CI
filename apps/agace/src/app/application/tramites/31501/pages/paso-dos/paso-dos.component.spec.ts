@@ -1,88 +1,115 @@
 // @ts-nocheck
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { Pipe, PipeTransform, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { By } from '@angular/platform-browser';
-import { Observable, of as observableOf, throwError } from 'rxjs';
+import { HttpClientModule } from '@angular/common/http';
+import { of as observableOf } from 'rxjs';
 
-import { Component } from '@angular/core';
 import { PasoDosComponent } from './paso-dos.component';
 import { CatalogosService } from '@ng-mf/data-access-user';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
 
+// ✅ Mock JSON import para documentos seleccionados
+jest.mock('@libs/shared/theme/assets/json/32502/document-list.json', () => ({
+  default: {
+    documentosSeleccionados: [{ id: 1, descripcion: 'Documento Mock' }]
+  }
+}));
+
+// ✅ Directiva ficticia para evitar errores de plantilla
 @Directive({ selector: '[myCustom]' })
 class MyCustomDirective {
-  @Input() myCustom;
+  @Input() myCustom: any;
 }
 
-@Pipe({name: 'translate'})
+// ✅ Pipes ficticios usados en el HTML del componente
+@Pipe({ name: 'translate' })
 class TranslatePipe implements PipeTransform {
-  transform(value) { return value; }
+  transform(value: any): any {
+    return value;
+  }
 }
 
-@Pipe({name: 'phoneNumber'})
+@Pipe({ name: 'phoneNumber' })
 class PhoneNumberPipe implements PipeTransform {
-  transform(value) { return value; }
+  transform(value: any): any {
+    return value;
+  }
 }
 
-@Pipe({name: 'safeHtml'})
+@Pipe({ name: 'safeHtml' })
 class SafeHtmlPipe implements PipeTransform {
-  transform(value) { return value; }
+  transform(value: any): any {
+    return value;
+  }
 }
 
 describe('PasoDosComponent', () => {
-  let fixture;
-  let component;
+  let fixture: ComponentFixture<PasoDosComponent>;
+  let component: PasoDosComponent;
+  let catalogosServiceMock: Partial<CatalogosService>;
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule, HttpClientTestingModule ],
+  beforeEach(async () => {
+    // ✅ Mockea el método getCatalogo para que devuelva un observable válido
+    catalogosServiceMock = {
+      getCatalogo: jest.fn().mockReturnValue(observableOf([
+        { id: 1, descripcion: 'Tipo A' },
+        { id: 2, descripcion: 'Tipo B' }
+      ]))
+    };
+
+    await TestBed.configureTestingModule({
+      imports: [FormsModule, ReactiveFormsModule, HttpClientModule],
       declarations: [
         PasoDosComponent,
-        TranslatePipe, PhoneNumberPipe, SafeHtmlPipe,
+        TranslatePipe,
+        PhoneNumberPipe,
+        SafeHtmlPipe,
         MyCustomDirective
       ],
-      schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
       providers: [
-        CatalogosService
+        { provide: CatalogosService, useValue: catalogosServiceMock }
       ]
-    }).overrideComponent(PasoDosComponent, {
-
     }).compileComponents();
+
     fixture = TestBed.createComponent(PasoDosComponent);
-    component = fixture.debugElement.componentInstance;
+    component = fixture.componentInstance;
+    fixture.detectChanges(); // 🔥 Aquí se llama automáticamente a ngOnInit
   });
 
   afterEach(() => {
-    component.ngOnDestroy = function() {};
+    component.ngOnDestroy();
     fixture.destroy();
   });
 
-  it('should run #constructor()', async () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should run #ngOnInit()', async () => {
-    component.getTiposDocumentos = jest.fn();
+  it('should call getTiposDocumentos on ngOnInit', () => {
+    const spy = jest.spyOn(component, 'getTiposDocumentos');
     component.ngOnInit();
-    expect(component.getTiposDocumentos).toHaveBeenCalled();
+    expect(spy).toHaveBeenCalled();
   });
 
-  it('should run #ngOnDestroy()', async () => {
-    component.destroy$ = component.destroy$ || {};
-    component.destroy$.next = jest.fn();
-    component.destroy$.complete = jest.fn();
+  it('should clean up destroy$ on ngOnDestroy', () => {
+    const nextSpy = jest.spyOn(component['destroy$'], 'next');
+    const completeSpy = jest.spyOn(component['destroy$'], 'complete');
     component.ngOnDestroy();
-    expect(component.destroy$.next).toHaveBeenCalled();
-    expect(component.destroy$.complete).toHaveBeenCalled();
+    expect(nextSpy).toHaveBeenCalled();
+    expect(completeSpy).toHaveBeenCalled();
   });
 
-  it('should run #getTiposDocumentos()', async () => {
-    component.catalogosServices = component.catalogosServices || {};
-    component.catalogosServices.getCatalogo = jest.fn().mockReturnValue(observableOf({}));
+  it('should set catalogoDocumentos from service response', () => {
+    const expectedCatalog = [
+      { id: 1, descripcion: 'Tipo A' },
+      { id: 2, descripcion: 'Tipo B' }
+    ];
     component.getTiposDocumentos();
-    expect(component.catalogosServices.getCatalogo).toHaveBeenCalled();
+    expect(component.catalogoDocumentos).toEqual(expectedCatalog);
   });
 
+  it('should initialize documentosSeleccionados from mock JSON', () => {
+    expect(component.documentosSeleccionados).toEqual([{ id: 1, descripcion: 'Documento Mock' }]);
+  });
 });
