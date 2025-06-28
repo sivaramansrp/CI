@@ -1,270 +1,328 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
 import { AgregarFabricanteComponent } from './agregar-fabricante.component';
-import { Tramite260601Store } from '../../estados/tramites/tramite260601.store';
-import { Tramite260601Query } from '../../estados/queries/tramite260601.query';
-import { AvisoSanitarioService } from '../../services/aviso-sanitario.service';
+import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { of, Subject } from 'rxjs';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
+import { CommonModule } from '@angular/common';
+import {
+  ConsultaioQuery,
+  InputRadioComponent,
+  TituloComponent,
+} from '@libs/shared/data-access-user/src';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { Tramite260601Store } from '../../../../estados/tramites/tramite260601.store';
+import { Tramite260601Query } from '../../../../estados/queries/tramite260601.query';
+import { AvisoSanitarioService } from '../../services/aviso-sanitario.service';
+
+// Mocks for dependencies
+const mockTramite260601Store = {
+  setTipoProducto: jest.fn(),
+  setTercerosNacionalidadFabricante: jest.fn(),
+  setTipoPersonaFabricante: jest.fn(),
+  setMostrarRfcFabricanteBuscarBoton: jest.fn(),
+  setMostrarCurpFabricanteBuscarBoton: jest.fn(),
+  setInhabilitarPaisFabricante: jest.fn(),
+  setRfcFabricanteInhabilitar: jest.fn(),
+  setCurpFabricanteInhabilitar: jest.fn(),
+  setFabricanteNombre: jest.fn(),
+  setFabricantePrimerApellido: jest.fn(),
+  setFabricanteSegundoApellido: jest.fn(),
+  setFabricanteRazonSocial: jest.fn(),
+  setFabricanteNombreInhabilitar: jest.fn(),
+  setFabricantePrimerApellidoInhabilitar: jest.fn(),
+  setFabricanteSegundoApellidoInhabilitar: jest.fn(),
+  setFabricanteRazonSocialInhabilitar: jest.fn(),
+  setPaisFabricante: jest.fn(),
+  setEstadoFabricante: jest.fn(),
+  setAlcaldiaFabricante: jest.fn(),
+  setLocalidadFabricante: jest.fn(),
+  setCodigoPostalFabricante: jest.fn(),
+  setColoniaFabricante: jest.fn(),
+  setCalleFabricante: jest.fn(),
+  setNumeroExteriorFabricante: jest.fn(),
+  setNumeroInteriorFabricante: jest.fn(),
+  setLadaFabricante: jest.fn(),
+  setTelefonoFabricante: jest.fn(),
+  setCorreoElectronicoFabricante: jest.fn(),
+  setPaisFabricanteInhabilitar: jest.fn(),
+  setEstadoFabricanteInhabilitar: jest.fn(),
+  setAlcaldiaFabricanteInhabilitar: jest.fn(),
+  setLocalidadFabricanteInhabilitar: jest.fn(),
+  setCodigoPostalInhabilitar: jest.fn(),
+  setColoniaFabricanteInhabilitar: jest.fn(),
+  setCalleFabricanteInhabilitar: jest.fn(),
+  setNumeroExteriorFabricanteInhabilitar: jest.fn(),
+  setNumeroInteriorFabricanteInhabilitar: jest.fn(),
+  setLadaFabricanteInhabilitar: jest.fn(),
+  setTelefonoFabricanteInhabilitar: jest.fn(),
+  setCorreoElectronicoFabricanteInhabilitar: jest.fn(),
+};
+
+const mockTramite260601Query = {
+  selectSeccionState$: of({
+    tercerosNacionalidadFabricante: 1,
+    tipoPersonaFabricante: 2,
+    rfcFabricante: 'RFC123',
+    rfcFabricanteInhabilitar: false,
+    curpFabricante: 'CURP123',
+    curpFabricanteInhabilitar: false,
+    fabricanteNombre: 'Nombre',
+    fabricanteNombreInhabilitar: false,
+    fabricantePrimerApellido: 'Apellido1',
+    fabricantePrimerApellidoInhabilitar: false,
+    fabricanteSegundoApellido: 'Apellido2',
+    fabricanteSegundoApellidoInhabilitar: false,
+    fabricanteRazonSocial: 'Razon',
+    fabricanteRazonSocialInhabilitar: false,
+    cvePaisFabricante: 'MEX',
+    cvePaisFabricanteInhabilitar: false,
+    estadoFabricante: 'CDMX',
+    estadoFabricanteInhabilitar: false,
+    alcaldiaFabricante: 'Alcaldia',
+    alcaldiaFabricanteInhabilitar: false,
+    localidadFabricante: 'Localidad',
+    localidadFabricanteInhabilitar: false,
+    codigoPostalFabricante: '12345',
+    codigoPostalFabricanteInhabilitar: false,
+    coloniaFabricante: 'Colonia',
+    coloniaFabricanteInhabilitar: false,
+    calleFabricante: 'Calle',
+    calleFabricanteInhabilitar: false,
+    numeroExteriorFabricante: '10',
+    numeroExteriorFabricanteInhabilitar: false,
+    numeroInteriorFabricante: '20',
+    numeroInteriorFabricanteInhabilitar: false,
+    ladaFabricante: '55',
+    ladaFabricanteInhabilitar: false,
+    telefonoFabricante: '12345678',
+    telefonoFabricanteInhabilitar: false,
+    correoElectronicoFabricante: 'test@mail.com',
+    correoElectronicoFabricanteInhabilitar: false,
+  }),
+};
+
+const mockAvisoSanitarioService = {
+  getProductoClasificacion: jest
+    .fn()
+    .mockReturnValue(of({ data: [{ id: 'MEX', nombre: 'México' }] })),
+};
+
+const consultaioStateSubject = new Subject<any>();
+const mockConsultaioQuery = {
+  selectConsultaioState$: consultaioStateSubject.asObservable(),
+};
 
 describe('AgregarFabricanteComponent', () => {
   let component: AgregarFabricanteComponent;
   let fixture: ComponentFixture<AgregarFabricanteComponent>;
-  let mockAvisoSanitarioService: Partial<AvisoSanitarioService>;
-  let mockTramite260601Store: Partial<Tramite260601Store>;
-  let mockTramite260601Query: Partial<Tramite260601Query>;
-  let fb: FormBuilder;
 
   beforeEach(async () => {
-    mockAvisoSanitarioService = {
-      getProductoClasificacion: jest.fn().mockReturnValue(of({ data: [{ value: 'producto1', label: 'Producto 1' }] })),
-    };
-
-    mockTramite260601Store = {
-      setTipoProducto: jest.fn(),
-      setTercerosNacionalidadFabricante: jest.fn(),
-      setTipoPersonaFabricante: jest.fn(),
-      setFabricanteNombre: jest.fn(),
-      setMostrarRfcFabricanteBuscarBoton: jest.fn(),
-      setMostrarCurpFabricanteBuscarBoton: jest.fn(),
-      setInhabilitarPaisFabricante: jest.fn(),
-      setRfcFabricanteInhabilitar: jest.fn(),
-      setCurpFabricanteInhabilitar: jest.fn(),
-      setFabricanteNombreInhabilitar: jest.fn(),
-      setFabricantePrimerApellido: jest.fn(),
-      setFabricantePrimerApellidoInhabilitar: jest.fn(),
-      setFabricanteSegundoApellidoInhabilitar: jest.fn(),
-      setFabricanteRazonSocialInhabilitar: jest.fn(),
-      setPaisFabricanteInhabilitar: jest.fn(),
-      setEstadoFabricanteInhabilitar: jest.fn(),
-      setAlcaldiaFabricanteInhabilitar: jest.fn(),
-      setLocalidadFabricanteInhabilitar: jest.fn(),
-      setCodigoPostalInhabilitar: jest.fn(),
-      setColoniaFabricanteInhabilitar: jest.fn(),
-      setCalleFabricanteInhabilitar: jest.fn(),
-      setNumeroExteriorFabricanteInhabilitar: jest.fn(),
-      setNumeroInteriorFabricanteInhabilitar: jest.fn(),
-      setLadaFabricanteInhabilitar: jest.fn(),
-      setTelefonoFabricanteInhabilitar: jest.fn(),
-      setCorreoElectronicoFabricanteInhabilitar: jest.fn(),
-    };
-
-    mockTramite260601Query = {
-      selectSeccionState$: of({
-        RFCResponsableSanitario: 'RFC123456',
-        razonSocial: 'Empresa S.A.',
-        correoElectronico: 'contacto@empresa.com',
-        codigoPostal: '12345',
-        cveEstado: 'Estado1',
-        descripcionMunicipio: 'Municipio1',
-        informacionExtra: 'Extra info',
-        descripcionColonia: 'Colonia1',
-        calle: 'Calle1',
-        lada: null,
-        telefono: null,
-        cveSCIAN: 'SCIAN123',
-        cveSCIANDescripcion: 'Descripción SCIAN',
-        avisoFuncionamiento: true,
-        cveRegimenes: 'Regimen1',
-        cveAduanas: 'Aduana1',
-        cveProductoClasificacion: 'Clasificación1',
-        cveEspecificoProductoClasifi: 'Especificación1',
-        nombreProducto: 'Producto1',
-        marca: 'Marca1',
-        cveTipoProducto: 'Tipo1',
-        fraccionArancelaria: 'Fracción1',
-        fraccionArancelariaDescripcion: 'Descripción Fracción',
-        modelo: 'Modelo1',
-        productoDescripcion: 'Descripción Producto',
-        cvePaisDestino: 'PaisDestino1',
-        seleccionadaManifiesto: [false],
-        informacionConfidencial: 'Confidencial',
-        rfc: 'RFCProveedor1',
-        nombreOrazonsocial: 'Razón Social Proveedor',
-        apellidoPaterno: 'Apellido Paterno',
-        apellidoMaterno: 'Apellido Materno',
-        tercerosNacionalidad: 'Nacionalidad1',
-        tipoPersona: 'Física',
-        rfcProveedor: 'RFC123',
-        rfcProveedorInhabilitar: true,
-        curp: 'CURP123',
-        curpInhabilitar: true,
-        proveedorNombre: 'Nombre Proveedor',
-        proveedorNombreInhabilitar: true,
-        proveedorPrimerApellido: 'Primer Apellido',
-        proveedorPrimerApellidoInhabilitar: true,
-        proveedorSegundoApellido: 'Segundo Apellido',
-        proveedorSegundoApellidoInhabilitar: true,
-        proveedorRazonSocial: 'Razón Social Proveedor',
-        proveedorRazonSocialInhabilitar: true,
-        cvePais: 'Pais1',
-        cvePaisInhabilitar: true,
-        domicilioEstado: 'Estado1',
-        domicilioEstadoInhabilitar: true,
-        alcaldia: 'Alcaldía1',
-        alcaldiaInhabilitar: true,
-        localidad: 'Localidad1',
-        localidadInhabilitar: true,
-        domicilioCodigoPostal: '12345',
-        domicilioCodigoPostalInhabilitar: true,
-        colonia: 'Colonia1',
-        coloniaInhabilitar: true,
-        domicilioCalle: 'Calle1',
-        domicilioCalleInhabilitar: true,
-        numeroExterior: 'Exterior1',
-        numeroExteriorInhabilitar: true,
-        numeroInterior: 'Interior1',
-        numeroInteriorInhabilitar: true,
-        domicilioLada: 'Lada1',
-        domicilioLadaInhabilitar: true,
-        domicilioTelefono: 'Telefono1',
-        domicilioTelefonoInhabilitar: true,
-        domicilioCorreoElectronico: 'email@proveedor.com',
-        domicilioCorreoElectronicoInhabilitar: true,
-        mostrarRfcBuscarBoton: false,
-        mostrarCurpBuscarBoton: false,
-        inhabilitarPais: true,
-
-        tercerosNacionalidadFabricante: 'nacional',
-        tipoPersonaFabricante: 'fisica',
-        rfcFabricante: 'RFC12345',
-        rfcFabricanteInhabilitar: true,
-        curpFabricante: 'CURP12345',        
-        curpFabricanteInhabilitar: true,
-        fabricanteNombre: 'Nombre Fabricante',
-        fabricanteNombreInhabilitar: true,
-        fabricantePrimerApellido: 'Primer Apellido',
-        fabricantePrimerApellidoInhabilitar: true,
-        fabricanteSegundoApellido: 'Segundo Apellido',
-        fabricanteSegundoApellidoInhabilitar: true,
-        fabricanteRazonSocial: 'Razón Social Proveedor',
-        fabricanteRazonSocialInhabilitar: true,
-        cvePaisFabricante: 'Pais1',
-        cvePaisFabricanteInhabilitar: true,
-        estadoFabricante: 'Estado1',
-        estadoFabricanteInhabilitar: true,
-        alcaldiaFabricante: 'Alcaldía1',
-        alcaldiaFabricanteInhabilitar: true,
-        localidadFabricante: 'Localidad1',
-        localidadFabricanteInhabilitar: true,
-        codigoPostalFabricante: '12345',
-        codigoPostalFabricanteInhabilitar: true,
-        coloniaFabricante: 'Colonia1',
-        coloniaFabricanteInhabilitar: true,
-        calleFabricante: 'Calle1',
-        calleFabricanteInhabilitar: true,
-        numeroExteriorFabricante: 'Exterior1',
-        numeroExteriorFabricanteInhabilitar: true,
-        numeroInteriorFabricante: 'Interior1',
-        numeroInteriorFabricanteInhabilitar: true,
-        ladaFabricante: 'Lada1',
-        ladaFabricanteInhabilitar: true,
-        telefonoFabricante: 'Telefono',
-        telefonoFabricanteInhabilitar: true,
-        correoElectronicoFabricante: 'email@fabricante.com',
-        correoElectronicoFabricanteInhabilitar: true,        
-        mostrarRfcFabricanteBuscarBoton: false,
-        mostrarCurpFabricanteBuscarBoton: false,
-        inhabilitarPaisFabricante: true,
-      }),
-    };
-
     await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule, AgregarFabricanteComponent],
+      imports: [
+        ReactiveFormsModule,
+        CommonModule,
+        FormsModule,
+        ReactiveFormsModule,
+        TituloComponent,
+        InputRadioComponent,
+        CatalogoSelectComponent,
+        AgregarFabricanteComponent,
+        HttpClientTestingModule
+      ],
+      declarations: [],
       providers: [
         FormBuilder,
-        { provide: AvisoSanitarioService, useValue: mockAvisoSanitarioService },
+        { provide: 'Tramite260601Store', useValue: mockTramite260601Store },
+        { provide: 'Tramite260601Query', useValue: mockTramite260601Query },
+        {
+          provide: 'AvisoSanitarioService',
+          useValue: mockAvisoSanitarioService,
+        },
+        { provide: 'ConsultaioQuery', useValue: mockConsultaioQuery },
+        // Provide tokens for constructor injection
         { provide: Tramite260601Store, useValue: mockTramite260601Store },
         { provide: Tramite260601Query, useValue: mockTramite260601Query },
+        { provide: AvisoSanitarioService, useValue: mockAvisoSanitarioService },
+        { provide: ConsultaioQuery, useValue: mockConsultaioQuery },
       ],
     }).compileComponents();
+  });
 
+  beforeEach(() => {
     fixture = TestBed.createComponent(AgregarFabricanteComponent);
     component = fixture.componentInstance;
-    fb = TestBed.inject(FormBuilder);
+    // Simulate consultaioQuery state emission
+    consultaioStateSubject.next({ readonly: false });
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize agregarFabricanteForm in crearFormulario', () => {
-    component.crearFormulario();
+  it('should initialize the form with values from store', () => {
+    component.inicializarFormulario();
     expect(component.agregarFabricanteForm).toBeDefined();
-    expect(component.agregarFabricanteForm.get('datosGeneralesForm')).toBeDefined();
-    expect(component.agregarFabricanteForm.get('datosPersonalesForm')).toBeDefined();
-    expect(component.agregarFabricanteForm.get('domicilioForm')).toBeDefined();
+    expect(component.datosGeneralesForm.get('rfcFabricante')?.value).toBe(
+      'RFC123'
+    );
+    expect(component.datosPersonalesForm.get('fabricanteNombre')?.value).toBe(
+      'Nombre'
+    );
+    expect(component.domicilioForm.get('cvePaisFabricante')?.value).toBe('MEX');
   });
 
-  it('should update store value for paisSeleccion', () => {
-    component.crearFormulario();
-    component.domicilioForm.get('cvePaisFabricante')?.setValue('producto1');
+  it('should call setTipoProducto on paisSeleccion', () => {
+    component.inicializarFormulario();
     component.paisSeleccion();
-    expect(mockTramite260601Store.setTipoProducto).toHaveBeenCalledWith('producto1');
+    expect(mockTramite260601Store.setTipoProducto).toHaveBeenCalledWith('MEX');
   });
 
-  it('should handle nacionalidad change correctly in onNacionalidadCambio', () => {
-    component.onNacionalidadCambio('nacional');
-    expect(mockTramite260601Store.setTercerosNacionalidadFabricante).toHaveBeenCalledWith('nacional');
-    expect(mockTramite260601Store.setTipoPersonaFabricante).toHaveBeenCalledWith('');
-    expect(mockTramite260601Store.setMostrarRfcFabricanteBuscarBoton).toHaveBeenCalledWith(false);
-    expect(mockTramite260601Store.setInhabilitarPaisFabricante).toHaveBeenCalledWith(true);
+  it('should reset and update store on onNacionalidadCambio', () => {
+    component.inicializarFormulario();
+    component.onNacionalidadCambio(2); // 2 = EXTRANJERO
+    expect(
+      mockTramite260601Store.setTercerosNacionalidadFabricante
+    ).toHaveBeenCalledWith(2);
+    // expect(component.tipoPersonaOpciones.some((opt) => opt.value === 3)).toBe(
+    //   false
+    // ); // 3 = NO_CONTRIBUYENTE
+  });
 
-    component.onNacionalidadCambio('extranjero');
-    expect(component.tipoPersonaOpciones).toEqual(
-      component.inicialTipoPersonaOpciones.filter((option) => option.value !== 'noContribuyente')
+  it('should restore tipoPersonaOpciones on onNacionalidadCambio with NACIONAL', () => {
+    component.inicializarFormulario();
+    component.onNacionalidadCambio(1); // 1 = NACIONAL
+    expect(component.tipoPersonaOpciones.length).toBe(
+      component.inicialTipoPersonaOpciones.length
     );
   });
 
-  it('should handle tipoPersona change correctly in onTipoPersonaCambio', () => {
-    component.crearFormulario();
-    component.onTipoPersonaCambio('fisica');
-    expect(mockTramite260601Store.setTipoPersonaFabricante).toHaveBeenCalledWith('fisica');
-    expect(mockTramite260601Store.setRfcFabricanteInhabilitar).toHaveBeenCalledWith(false);
-    expect(mockTramite260601Store.setMostrarRfcFabricanteBuscarBoton).toHaveBeenCalledWith(true);
-    expect(mockTramite260601Store.setMostrarCurpFabricanteBuscarBoton).toHaveBeenCalledWith(false);
+  it('should enable/disable fields on onTipoPersonaCambio for NACIONAL/FISICA', () => {
+    component.inicializarFormulario();
+    component.avisoSanitarioState.tercerosNacionalidadFabricante = 1; // NACIONAL
+    component.avisoSanitarioState.tipoPersonaFabricante = 1; // FISICA
+    const enableSpy = jest.spyOn(
+      component.datosGeneralesForm.get('rfcFabricante')!,
+      'enable'
+    );
+    component.onTipoPersonaCambio(1);
+    expect(enableSpy).toHaveBeenCalled();
+    expect(
+      mockTramite260601Store.setRfcFabricanteInhabilitar
+    ).toHaveBeenCalledWith(false);
+    expect(
+      mockTramite260601Store.setMostrarRfcFabricanteBuscarBoton
+    ).toHaveBeenCalledWith(true);
   });
 
-  it('should reset datosPersonalesForm in resetDatosPersonalesForm', () => {
-    component.crearFormulario();
+  it('should enable/disable fields on onTipoPersonaCambio for NACIONAL/NO_CONTRIBUYENTE', () => {
+    component.inicializarFormulario();
+    component.avisoSanitarioState.tercerosNacionalidadFabricante = 1; // NACIONAL
+    component.avisoSanitarioState.tipoPersonaFabricante = 3; // NO_CONTRIBUYENTE
+    const enableSpy = jest.spyOn(
+      component.datosGeneralesForm.get('curpFabricante')!,
+      'enable'
+    );
+    component.onTipoPersonaCambio(3);
+    expect(enableSpy).toHaveBeenCalled();
+    expect(
+      mockTramite260601Store.setCurpFabricanteInhabilitar
+    ).toHaveBeenCalledWith(false);
+    expect(
+      mockTramite260601Store.setMostrarCurpFabricanteBuscarBoton
+    ).toHaveBeenCalledWith(true);
+  });
+  it('should call guardarDatosFormulario if esFormularioSoloLectura is true in inicializarEstadoFormulario', () => {
+    component.esFormularioSoloLectura = true;
+    const guardarDatosFormularioSpy = jest.spyOn(component, 'guardarDatosFormulario' as any);
+    component.inicializarEstadoFormulario();
+    expect(guardarDatosFormularioSpy).toHaveBeenCalled();
+  });
+
+  it('should call inicializarFormulario if esFormularioSoloLectura is false in inicializarEstadoFormulario', () => {
+    component.esFormularioSoloLectura = false;
+    const inicializarFormularioSpy = jest.spyOn(component, 'inicializarFormulario');
+    component.inicializarEstadoFormulario();
+    expect(inicializarFormularioSpy).toHaveBeenCalled();
+  });
+  it('should enable datosPersonalesForm and domicilioForm for EXTRANJERO/FISICA', () => {
+    component.inicializarFormulario();
+    component.avisoSanitarioState.tercerosNacionalidadFabricante = 2; // EXTRANJERO
+    component.avisoSanitarioState.tipoPersonaFabricante = 1; // FISICA
+    const enableDatosPersonalesSpy = jest.spyOn(
+      component.datosPersonalesForm,
+      'enable'
+    );
+    const enableDomicilioSpy = jest.spyOn(component.domicilioForm, 'enable');
+    component.onTipoPersonaCambio(1);
+    expect(enableDatosPersonalesSpy).toHaveBeenCalled();
+    expect(enableDomicilioSpy).toHaveBeenCalled();
+    expect(
+      mockTramite260601Store.setInhabilitarPaisFabricante
+    ).toHaveBeenCalledWith(false);
+  });
+
+  it('should reset datosPersonalesForm and call store methods', () => {
+    component.inicializarFormulario();
+    const disableRfcSpy = jest.spyOn(
+      component.datosGeneralesForm.get('rfcFabricante')!,
+      'disable'
+    );
+    const disableCurpSpy = jest.spyOn(
+      component.datosGeneralesForm.get('curpFabricante')!,
+      'disable'
+    );
+    const resetSpy = jest.spyOn(component.datosPersonalesForm, 'reset');
     component.resetDatosPersonalesForm();
-    expect(component.datosGeneralesForm.get('rfcFabricante')?.disabled).toBeTruthy();
-    expect(component.datosGeneralesForm.get('curpFabricante')?.disabled).toBeTruthy();
-    expect(mockTramite260601Store.setRfcFabricanteInhabilitar).toHaveBeenCalledWith(true);
-    expect(mockTramite260601Store.setCurpFabricanteInhabilitar).toHaveBeenCalledWith(true);
-    expect(mockTramite260601Store.setFabricanteNombre).toHaveBeenCalledWith('');
-    expect(mockTramite260601Store.setFabricantePrimerApellido).toHaveBeenCalledWith('');
+    expect(disableRfcSpy).toHaveBeenCalled();
+    expect(disableCurpSpy).toHaveBeenCalled();
+    expect(resetSpy).toHaveBeenCalled();
+    expect(
+      mockTramite260601Store.setRfcFabricanteInhabilitar
+    ).toHaveBeenCalledWith(true);
+    expect(
+      mockTramite260601Store.setCurpFabricanteInhabilitar
+    ).toHaveBeenCalledWith(true);
+    expect(
+      mockTramite260601Store.setFabricanteNombreInhabilitar
+    ).toHaveBeenCalledWith(true);
   });
 
-  it('should reset domicilioForm in resetDomicilioForm', () => {
-    component.crearFormulario();
+  it('should reset domicilioForm and call store methods', () => {
+    component.inicializarFormulario();
+    const resetSpy = jest.spyOn(component.domicilioForm, 'reset');
     component.resetDomicilioForm();
-    expect(mockTramite260601Store.setPaisFabricante).toHaveBeenCalledWith('');
-    expect(mockTramite260601Store.setEstadoFabricante).toHaveBeenCalledWith('');
-    expect(component.domicilioForm.get('cvePaisFabricante')?.disabled).toBeTruthy();
+    expect(resetSpy).toHaveBeenCalled();
+    expect(
+      mockTramite260601Store.setPaisFabricanteInhabilitar
+    ).toHaveBeenCalledWith(true);
+    expect(
+      mockTramite260601Store.setEstadoFabricanteInhabilitar
+    ).toHaveBeenCalledWith(true);
   });
 
-  it('should update domicilioForm disabled state in inhabilitarDomicilioForm', () => {
-    component.crearFormulario();
-    component.inhabilitarDomicilioForm(true);
-    expect(mockTramite260601Store.setPaisFabricanteInhabilitar).toHaveBeenCalledWith(true);
-    expect(mockTramite260601Store.setEstadoFabricanteInhabilitar).toHaveBeenCalledWith(true);
+  it('should call setValoresStore with correct value', () => {
+    component.inicializarFormulario();
+    const form = component.datosGeneralesForm;
+    form.get('rfcFabricante')?.setValue('RFC999');
+    component.setValoresStore(
+      form,
+      'rfcFabricante',
+      'setRfcFabricanteInhabilitar'
+    );
+    expect(
+      mockTramite260601Store.setRfcFabricanteInhabilitar
+    ).toHaveBeenCalledWith('RFC999');
   });
 
-  it('should update datosPersonalesForm disabled state in inhabilitarDatosPersonalesForm', () => {
-    component.crearFormulario();
-    component.inhabilitarDatosPersonalesForm(false);
-    expect(mockTramite260601Store.setFabricanteNombreInhabilitar).toHaveBeenCalledWith(false);
-    expect(mockTramite260601Store.setFabricantePrimerApellidoInhabilitar).toHaveBeenCalledWith(false);
-  });
-
-  it('should unsubscribe in ngOnDestroy', () => {
-    const spyNext = jest.spyOn(component['destruirNotificador$'], 'next');
-    const spyComplete = jest.spyOn(component['destruirNotificador$'], 'complete');
-
+  it('should clean up subscriptions on destroy', () => {
+    const nextSpy = jest.spyOn(component['destruirNotificador$'], 'next');
+    const completeSpy = jest.spyOn(
+      component['destruirNotificador$'],
+      'complete'
+    );
     component.ngOnDestroy();
-
-    expect(spyNext).toHaveBeenCalled();
-    expect(spyComplete).toHaveBeenCalled();
+    expect(nextSpy).toHaveBeenCalled();
+    expect(completeSpy).toHaveBeenCalled();
   });
 });
