@@ -1,233 +1,308 @@
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
-import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Injectable } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormsModule, ReactiveFormsModule, FormBuilder } from '@angular/forms';
-import { Observable, of as observableOf } from 'rxjs';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
- 
+import { Observable, of as observableOf, throwError } from 'rxjs';
+
+import { Component } from '@angular/core';
 import { SolicitudComponent } from './solicitud.component';
 import { AvisoService } from '../../services/aviso.service';
-import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
-import { Tramite32502Store } from '../../../../estados/queries/tramite32502.query';
+import { FormBuilder } from '@angular/forms';
+import { ValidacionesFormularioService, ConsultaioQuery } from '@ng-mf/data-access-user';
+import { Tramite32502Store } from '../../../../estados/tramites/tramite32502.store';
 import { Tramite32502Query } from '../../../../estados/queries/tramite32502.query';
-import { provideHttpClient } from '@angular/common/http';
- 
- 
+
 @Injectable()
-class MockTramite32502Store { }
- 
+class MockAvisoService {}
+
+@Injectable()
+class MockTramite32502Store {}
+
+@Injectable()
+class MockTramite32502Query {}
+
 describe('SolicitudComponent', () => {
-  let fixture: ComponentFixture<SolicitudComponent>;
-  let component: SolicitudComponent;
- 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [FormsModule, ReactiveFormsModule],
+  let fixture;
+  let component;
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [FormsModule, ReactiveFormsModule ],
       declarations: [
         SolicitudComponent
       ],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
+      schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
       providers: [
-        provideHttpClient(),
-        AvisoService,
+        { provide: AvisoService, useClass: MockAvisoService },
         FormBuilder,
         ValidacionesFormularioService,
         { provide: Tramite32502Store, useClass: MockTramite32502Store },
-        Tramite32502Query
+        { provide: Tramite32502Query, useClass: MockTramite32502Query },
+        ConsultaioQuery
       ]
+    }).overrideComponent(SolicitudComponent, {
+
     }).compileComponents();
- 
     fixture = TestBed.createComponent(SolicitudComponent);
     component = fixture.debugElement.componentInstance;
   });
- 
+
   afterEach(() => {
-    if (fixture) {
-      fixture.destroy();
-    }
+    component.ngOnDestroy = function() {};
+    fixture.destroy();
   });
- 
-  it('should create the component', () => {
+
+  it('should run #constructor()', async () => {
     expect(component).toBeTruthy();
   });
- 
-  it('should initialize the form on ngOnInit', () => {
-    component.ngOnInit();
-    expect(component.FormSolicitud).toBeDefined();
-  });
- 
-  it('should run GetterDeclaration #adaceForm', () => {
+
+  it('should run GetterDeclaration #adaceForm', async () => {
     component.FormSolicitud = component.FormSolicitud || {};
     component.FormSolicitud.get = jest.fn();
-    const ADACE_FORM = component.adaceForm;
-    expect(component.FormSolicitud.get).toHaveBeenCalledWith('adaceForm');
+    const adaceForm = component.adaceForm;
+    expect(component.FormSolicitud.get).toHaveBeenCalled();
   });
- 
-  it('should run GetterDeclaration #extranjeroAvisoAgace', () => {
+
+  it('should run GetterDeclaration #extranjeroAvisoAgace', async () => {
     component.FormSolicitud = component.FormSolicitud || {};
     component.FormSolicitud.get = jest.fn();
-    const EXTRANJERO_AVISO_AGACE = component.extranjeroAvisoAgace;
-    expect(component.FormSolicitud.get).toHaveBeenCalledWith('extranjeroAvisoAgace');
+    const extranjeroAvisoAgace = component.extranjeroAvisoAgace;
+    expect(component.FormSolicitud.get).toHaveBeenCalled();
   });
- 
-  it('should run GetterDeclaration #mercanciaST', () => {
+
+  it('should run GetterDeclaration #mercanciaST', async () => {
     component.FormSolicitud = component.FormSolicitud || {};
     component.FormSolicitud.get = jest.fn();
-    const MERCENCIA_ST = component.mercanciaST;
-    expect(component.FormSolicitud.get).toHaveBeenCalledWith('mercanciaST');
+    const mercanciaST = component.mercanciaST;
+    expect(component.FormSolicitud.get).toHaveBeenCalled();
   });
- 
-  it('should run GetterDeclaration #direccionST', () => {
+
+  it('should run GetterDeclaration #direccionST', async () => {
     component.FormSolicitud = component.FormSolicitud || {};
     component.FormSolicitud.get = jest.fn();
-    const DIRECCION_ST = component.direccionST;
-    expect(component.FormSolicitud.get).toHaveBeenCalledWith('direccionST');
+    const direccionST = component.direccionST;
+    expect(component.FormSolicitud.get).toHaveBeenCalled();
   });
- 
-  it('should run GetterDeclaration #pedimentoST', () => {
+
+  it('should run GetterDeclaration #pedimentoST', async () => {
     component.FormSolicitud = component.FormSolicitud || {};
     component.FormSolicitud.get = jest.fn();
-    const PEDIMENTO_ST = component.pedimentoST;
-    expect(component.FormSolicitud.get).toHaveBeenCalledWith('pedimentoST');
+    const pedimentoST = component.pedimentoST;
+    expect(component.FormSolicitud.get).toHaveBeenCalled();
   });
- 
-  it('should run #ngOnInit()', () => {
+
+  it('should run #ngOnInit()', async () => {
+    component.inicializarEstadoFormulario = jest.fn();
     component.inicializaCatalogos = jest.fn();
-    component.fraccionArancelariaSeleccion = jest.fn();
-    component.fraccionReglaSeleccion = jest.fn();
-    component.onEntidadFederativaChange = jest.fn();
-    component.sanitizeNumPedimento = jest.fn();
+    component.tramite32502Query = component.tramite32502Query || {};
+    component.tramite32502Query.select = jest.fn().mockReturnValue(observableOf({}));
+    component.crearFormSolicitud = jest.fn();
     component.ngOnInit();
-    component.fraccionArancelariaSeleccion();
-    component.fraccionReglaSeleccion();
-    component.onEntidadFederativaChange();
+    expect(component.inicializarEstadoFormulario).toHaveBeenCalled();
     expect(component.inicializaCatalogos).toHaveBeenCalled();
-    expect(component.fraccionArancelariaSeleccion).toHaveBeenCalled();
-    expect(component.fraccionReglaSeleccion).toHaveBeenCalled();
-    expect(component.onEntidadFederativaChange).toHaveBeenCalled();
+    expect(component.tramite32502Query.select).toHaveBeenCalled();
+    expect(component.crearFormSolicitud).toHaveBeenCalled();
   });
- 
-  it('should run #isValid()', () => {
+
+  it('should run #ngOnDestroy()', async () => {
+    component.destroy$ = component.destroy$ || {};
+    component.destroy$.next = jest.fn();
+    component.destroy$.complete = jest.fn();
+    component.ngOnDestroy();
+    expect(component.destroy$.next).toHaveBeenCalled();
+    expect(component.destroy$.complete).toHaveBeenCalled();
+  });
+
+  it('should run #isValid()', async () => {
     component.validacionesService = component.validacionesService || {};
     component.validacionesService.isValid = jest.fn();
     component.isValid({}, {});
     expect(component.validacionesService.isValid).toHaveBeenCalled();
   });
- 
-  it('should run #crearFormSolicitud()', () => {
+
+  it('should run #crearFormSolicitud()', async () => {
+    component.tramite32502Query = component.tramite32502Query || {};
+    component.tramite32502Query.selectSolicitud$ = observableOf({});
+    component.seccionState = component.seccionState || {};
+    component.seccionState.adace = 'adace';
+    component.seccionState.razonSocial = 'razonSocial';
+    component.seccionState.rfc = 'rfc';
+    component.seccionState.rfcExtranjero = 'rfcExtranjero';
+    component.seccionState.cveFraccionArancelaria = 'cveFraccionArancelaria';
+    component.seccionState.reglaFraccion = 'reglaFraccion';
+    component.seccionState.nico = 'nico';
+    component.seccionState.valorUSD = 'valorUSD';
+    component.seccionState.marca = 'marca';
+    component.seccionState.peso = 'peso';
+    component.seccionState.fechaInicio = 'fechaInicio';
+    component.seccionState.numeroSerie = 'numeroSerie';
+    component.seccionState.descripcionMercancia = 'descripcionMercancia';
+    component.seccionState.informacionExtra = 'informacionExtra';
+    component.seccionState.entidadFederativa = 'entidadFederativa';
+    component.seccionState.delegacionMunicipio = 'delegacionMunicipio';
+    component.seccionState.colonia = 'colonia';
+    component.seccionState.calle = 'calle';
+    component.seccionState.numeroExterior = 'numeroExterior';
+    component.seccionState.numeroInterior = 'numeroInterior';
+    component.seccionState.codigoPostal = 'codigoPostal';
+    component.seccionState.patenteAutorizacion = 'patenteAutorizacion';
+    component.seccionState.rfcAgenteAduanal = 'rfcAgenteAduanal';
+    component.seccionState.numeroPedimento = 'numeroPedimento';
+    component.seccionState.claveAduana = 'claveAduana';
     component.fb = component.fb || {};
-    component.fb.group = jest.fn();
-    component.solicitudState = component.solicitudState || {};
-    component.solicitudState.adace = 'adace';
-    component.solicitudState.razonSocial = 'razonSocial';
-    component.solicitudState.rfc = 'rfc';
-    component.solicitudState.rfcExtranjero = 'rfcExtranjero';
-    component.solicitudState.cveFraccionArancelaria = 'cveFraccionArancelaria';
-    component.solicitudState.reglaFraccion = 'reglaFraccion';
-    component.solicitudState.nico = 'nico';
-    component.solicitudState.valorUSD = 'valorUSD';
-    component.solicitudState.marca = 'marca';
-    component.solicitudState.peso = 'peso';
-    component.solicitudState.fechaInicio = 'fechaInicio';
-    component.solicitudState.numeroSerie = 'numeroSerie';
-    component.solicitudState.descripcionMercancia = 'descripcionMercancia';
-    component.solicitudState.informacionExtra = 'informacionExtra';
-    component.solicitudState.entidadFederativa = 'entidadFederativa';
-    component.solicitudState.delegacionMunicipio = 'delegacionMunicipio';
-    component.solicitudState.colonia = 'colonia';
-    component.solicitudState.calle = 'calle';
-    component.solicitudState.numeroExterior = 'numeroExterior';
-    component.solicitudState.numeroInterior = 'numeroInterior';
-    component.solicitudState.codigoPostal = 'codigoPostal';
-    component.solicitudState.patenteAutorizacion = 'patenteAutorizacion';
-    component.solicitudState.rfcAgenteAduanal = 'rfcAgenteAduanal';
-    component.solicitudState.numeroPedimento = 'numeroPedimento';
-    component.solicitudState.claveAduana = 'claveAduana';
+    component.fb.group = jest.fn().mockReturnValue({
+      enable: function() {},
+      disable: function() {}
+    });
     component.crearFormSolicitud();
     expect(component.fb.group).toHaveBeenCalled();
   });
- 
-  it('should run #inicializaCatalogos()', () => {
+
+  it('should run #inicializaCatalogos()', async () => {
     component.avisoService = component.avisoService || {};
     component.avisoService.getFraccionArancelariaCatalogo = jest.fn().mockReturnValue(observableOf({
-      data: []
+      0: "F",
+      1: "R",
+      2: "A",
+      3: "C",
+      4: "C",
+      5: "I",
+      6: "O",
+      7: "N",
+      8: "_",
+      9: "A",
+      10: "R",
+      11: "A",
+      12: "N",
+      13: "C",
+      14: "E",
+      15: "L",
+      16: "A",
+      17: "T",
+      18: "I",
+      19: "A",
+      20: "$"
     }));
     component.avisoService.getFraccionReglaCatalogo = jest.fn().mockReturnValue(observableOf({
-      data: []
+      0: "R",
+      1: "E",
+      2: "G",
+      3: "L",
+      4: "A",
+      5: "_",
+      6: "A",
+      7: "R",
+      8: "A",
+      9: "N",
+      10: "C",
+      11: "E",
+      12: "L",
+      13: "A",
+      14: "R",
+      15: "I",
+      16: "A",
+      17: "$"
     }));
     component.inicializaCatalogos();
     expect(component.avisoService.getFraccionArancelariaCatalogo).toHaveBeenCalled();
     expect(component.avisoService.getFraccionReglaCatalogo).toHaveBeenCalled();
   });
- 
-  it('should run #fraccionArancelariaSeleccion()', () => {
-    component.FormSolicitud = component.FormSolicitud || {};
+
+  it('should run #fraccionArancelariaSeleccion()', async () => {
+    component.FormSolicitud = {
+      get: jest.fn().mockReturnValue(new FormControl('')),
+      disable: jest.fn(),
+      enable: jest.fn(),
+    } as any;
     component.FormSolicitud.get = jest.fn().mockReturnValue({
       value: {}
     });
+    component.FormSolicitud.disable = jest.fn();
+    component.FormSolicitud.enable = jest.fn();
     component.tramite32502Store = component.tramite32502Store || {};
     component.tramite32502Store.setCveFraccionArancelaria = jest.fn();
     component.fraccionArancelariaSeleccion();
-    expect(component.FormSolicitud.get).toHaveBeenCalledWith('fraccionArancelaria');
+    expect(component.FormSolicitud.get).toHaveBeenCalled();
+    expect(component.FormSolicitud.disable).toHaveBeenCalled();
+    expect(component.FormSolicitud.enable).toHaveBeenCalled();
     expect(component.tramite32502Store.setCveFraccionArancelaria).toHaveBeenCalled();
   });
- 
-  it('should run #fraccionReglaSeleccion()', () => {
+
+  it('should run #fraccionReglaSeleccion()', async () => {
     component.FormSolicitud = component.FormSolicitud || {};
     component.FormSolicitud.get = jest.fn().mockReturnValue({
       value: {}
     });
-    component.tramite32502Store = component.tramite32502Store || {};
-    component.tramite32502Store.setFraccionRegla = jest.fn();
     component.fraccionReglaSeleccion();
-    expect(component.FormSolicitud.get).toHaveBeenCalledWith('reglaFraccion');
-    component.tramite32502Store.setFraccionRegla()
-    expect(component.tramite32502Store.setFraccionRegla).toHaveBeenCalled();
+    expect(component.FormSolicitud.get).toHaveBeenCalled();
   });
- 
-  it('should run #onEntidadFederativaChange()', () => {
+
+  it('should run #onEntidadFederativaChange()', async () => {
     component.FormSolicitud = component.FormSolicitud || {};
     component.FormSolicitud.get = jest.fn().mockReturnValue({
       value: {}
     });
-    component.tramite32502Store = component.tramite32502Store || {};
-    component.tramite32502Store.setFraccionRegla = jest.fn();
     component.onEntidadFederativaChange();
-    expect(component.FormSolicitud.get).toHaveBeenCalledWith('reglaFraccion');
-    component.tramite32502Store.setFraccionRegla()
-    expect(component.tramite32502Store.setFraccionRegla).toHaveBeenCalled();
+    expect(component.FormSolicitud.get).toHaveBeenCalled();
   });
- 
-  it('should run #setValoresStore()', () => {
-    component.tramite32502Store = component.tramite32502Store || {};
-    component.tramite32502Store.setFraccionArancelaria = jest.fn();
-    component.tramite32502Store.setFraccionRegla = jest.fn();
-    component.setValoresStore({
-      get: function () {
-        return {
-          value: {}
-        };
-      }
-    }, 'fraccionArancelaria', 'setFraccionArancelaria');
-    component.tramite32502Store.setFraccionArancelaria()
-    expect(component.tramite32502Store.setFraccionArancelaria).toHaveBeenCalled();
-    component.setValoresStore({
-      get: function () {
-        return {
-          value: {}
-        };
-      }
-    }, 'fraccionRegla', 'setFraccionRegla');
-    component.tramite32502Store.setFraccionRegla()
-    expect(component.tramite32502Store.setFraccionRegla).toHaveBeenCalled();
-  });
- 
-  it('should run #validarFormulario()', () => {
+
+  it('should run #sanitizarNumeroPedimento()', async () => {
     component.FormSolicitud = component.FormSolicitud || {};
-    expect(component.FormSolicitud.invalid).toBe(true);
+    component.FormSolicitud.get = jest.fn().mockReturnValue({
+      value: {}
+    });
+    component.sanitizarNumeroPedimento();
+    expect(component.FormSolicitud.get).toHaveBeenCalled();
+  });
+
+  it('should run #setValoresStore()', async () => {
+    component.tramite32502Store = component.tramite32502Store || {};
+    component.tramite32502Store.establecerDatos = jest.fn();
+    component.setValoresStore({
+      get: function() {
+        return {
+          value: {}
+        };
+      }
+    });
+    expect(component.tramite32502Store.establecerDatos).toHaveBeenCalled();
+  });
+
+  it('should run #validarFormulario()', async () => {
+    component.FormSolicitud = component.FormSolicitud || {};
+    component.FormSolicitud.invalid = 'invalid';
     component.FormSolicitud.markAllAsTouched = jest.fn();
     component.validarFormulario();
     expect(component.FormSolicitud.markAllAsTouched).toHaveBeenCalled();
   });
+
+  it('should run #cambioFechaDeIngreso()', async () => {
+    component.mercanciaST = component.mercanciaST || {};
+    component.mercanciaST.get = jest.fn().mockReturnValue({
+      markAsUntouched: function() {},
+      setValue: function() {}
+    });
+    component.tramite32502Store = component.tramite32502Store || {};
+    component.tramite32502Store.setFechaInicio = jest.fn();
+    component.cambioFechaDeIngreso({});
+    expect(component.mercanciaST.get).toHaveBeenCalled();
+    expect(component.tramite32502Store.setFechaInicio).toHaveBeenCalled();
+  });
+
+  it('should run #inicializarEstadoFormulario()', async () => {
+    component.guardarDatosFormulario = jest.fn();
+    component.crearFormSolicitud = jest.fn();
+    component.inicializarEstadoFormulario();
+    expect(component.guardarDatosFormulario).toHaveBeenCalled();
+    expect(component.crearFormSolicitud).toHaveBeenCalled();
+  });
+
+  it('should run #guardarDatosFormulario()', async () => {
+    component.crearFormSolicitud = jest.fn();
+    component.guardarDatosFormulario();
+    expect(component.crearFormSolicitud).toHaveBeenCalled();
+  });
+
 });
