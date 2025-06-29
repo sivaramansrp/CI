@@ -132,7 +132,6 @@ describe('DatosDeLaSolicitudComponent', () => {
 
     fixture = TestBed.createComponent(DatosDeLaSolicitudComponent);
     component = fixture.componentInstance;
-    // Mock solicitudState for form creation
     component.solicitudState = {} as any;
     component.soloLectura = false;
     component.donanteDomicilio();
@@ -202,7 +201,6 @@ describe('DatosDeLaSolicitudComponent', () => {
   it('should open modal on agregarMercanciaGrid()', () => {
     component.modalElement = { nativeElement: document.createElement('div') } as any;
     component.agregarMercanciaGrid();
-    // No assertion needed, just ensure no error
   });
 
   it('should update esCheckboxSeleccionado on verificarSeleccionCheckbox()', () => {

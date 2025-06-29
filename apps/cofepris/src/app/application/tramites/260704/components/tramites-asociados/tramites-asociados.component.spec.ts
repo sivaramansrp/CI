@@ -35,7 +35,6 @@ describe('TramitesAsociadosComponent', () => {
 
     fixture = TestBed.createComponent(TramitesAsociadosComponent);
     component = fixture.componentInstance;
-    // Initialize the form before detectChanges
     const fb = TestBed.inject(FormBuilder);
     component.tramitesForm = fb.group({});
     fixture.detectChanges();

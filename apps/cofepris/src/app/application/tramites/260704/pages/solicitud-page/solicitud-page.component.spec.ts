@@ -16,7 +16,6 @@ describe('SolicitudPageComponent', () => {
 
     fixture = TestBed.createComponent(SolicitudPageComponent);
     component = fixture.componentInstance;
-    // Mock the wizardComponent with spies for siguiente and atras
     component.wizardComponent = {
       siguiente: jest.fn(),
       atras: jest.fn(),
@@ -36,7 +35,6 @@ describe('SolicitudPageComponent', () => {
 
  it('should set indice and call wizardComponent.siguiente on getValorIndice with accion "cont"', () => {
   component.indice = 1;
-  // Assign the mock just before calling the method
   component.wizardComponent = { siguiente: jest.fn(), atras: jest.fn() } as any;
   component.getValorIndice({ accion: 'cont', valor: 2 });
   expect(component.indice).toBe(2);

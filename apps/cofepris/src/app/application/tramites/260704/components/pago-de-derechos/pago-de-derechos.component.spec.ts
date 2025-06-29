@@ -66,7 +66,6 @@ describe('PagoDeDerechosComponent', () => {
 
     fixture = TestBed.createComponent(PagoDeDerechosComponent);
     component = fixture.componentInstance;
-    // Mock solicitudState for form creation
     component.solicitudState = {
       claveDeReferencia: 'ref',
       cadenaDependecia: 'dep',

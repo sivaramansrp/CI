@@ -144,24 +144,6 @@ describe('SolicitudComponent', () => {
     expect(component.inicializarFormulario).toHaveBeenCalled();
   });
 
-  // it('should disable/enable forms in guardarDatosFormulario', () => {
-  //   component.solicitudFormulario = new FormBuilder().group({});
-  //   component.mercanciaFormulario = new FormBuilder().group({});
-  //   component.soloLectura = true;
-  //   jest.spyOn(component.solicitudFormulario, 'disable');
-  //   jest.spyOn(component.mercanciaFormulario, 'disable');
-  //   component.guardarDatosFormulario();
-  //   expect(component.solicitudFormulario.disable).toHaveBeenCalled();
-  //   expect(component.mercanciaFormulario.disable).toHaveBeenCalled();
-
-  //   component.soloLectura = false;
-  //   jest.spyOn(component.solicitudFormulario, 'enable');
-  //   jest.spyOn(component.mercanciaFormulario, 'enable');
-  //   component.guardarDatosFormulario();
-  //   expect(component.solicitudFormulario.enable).toHaveBeenCalled();
-  //   expect(component.mercanciaFormulario.enable).toHaveBeenCalled();
-  // });
-
   it('should set value and call store in cambioImportacionTemporal', () => {
   component.solicitudFormulario = new FormBuilder().group({
     datosPedimento: new FormBuilder().group({
@@ -316,14 +298,6 @@ it('should set value and call store in cambioFechaCartaPorte', () => {
     expect(component.tablaDeDatos.datos).toEqual([]);
     expect(component.filaSeleccionadaLista).toEqual([]);
   });
-
-  // it('should open modal in abiertoMercancia', () => {
-  //   component.modalMercancia = { nativeElement: document.createElement('div') } as any;
-  //   const showSpy = jest.spyOn(window as any, 'Modal').mockImplementation(() => ({ show: jest.fn() }));
-  //   component.abiertoMercancia();
-  //   expect(showSpy).toHaveBeenCalled();
-  //   showSpy.mockRestore();
-  // });
 
   it('should load mercancia tabla in cargarMercanciaTabla', () => {
     component.cargarMercanciaTabla();

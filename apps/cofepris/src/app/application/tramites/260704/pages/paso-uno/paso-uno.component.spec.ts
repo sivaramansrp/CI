@@ -37,7 +37,6 @@ describe('PasoUnoComponent', () => {
 
     fixture = TestBed.createComponent(PasoUnoComponent);
     component = fixture.componentInstance;
-    // Set destroyed$ to the test instance for spying
     (component as any).destroyed$ = destroyed$;
     fixture.detectChanges();
   });
@@ -52,13 +51,6 @@ describe('PasoUnoComponent', () => {
     component.ngOnInit();
     expect(component.esDatosRespuesta).toBe(true);
   });
-
-  // it('should call guardarDatosFormularios if consultaState.update is true in ngOnInit', () => {
-  //   component.consultaState = { update: true } as any;
-  //   const spy = jest.spyOn(component, 'guardarDatosFormularios');
-  //   component.ngOnInit();
-  //   expect(spy).toHaveBeenCalled();
-  // });
 
   it('should set esDatosRespuesta and call actualizarEstadoFormulario in guardarDatosFormularios', () => {
     consultaServiceMock.getRegistroTomaMuestrasMercanciasData.mockReturnValue(of({ test: 'value' }));

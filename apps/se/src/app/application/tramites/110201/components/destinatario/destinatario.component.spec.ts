@@ -100,24 +100,6 @@ describe('DestinatarioComponent', () => {
     expect(component.donanteDomicilio).toHaveBeenCalled();
   });
 
-//  it('should call donanteDomicilio and enable/disable form in guardarDatosFormulario', () => {
-//   component.soloLectura = true;
-
-//   component.guardarDatosFormulario();
-
-//   const disableSpy = jest.spyOn(component.registroForm, 'disable');
-//   const enableSpy = jest.spyOn(component.registroForm, 'enable');
-
-//   component.guardarDatosFormulario();
-
-//   expect(disableSpy).toHaveBeenCalled();
-//   expect(enableSpy).not.toHaveBeenCalled();
-
-//   component.soloLectura = false;
-//   component.guardarDatosFormulario();
-//   expect(enableSpy).toHaveBeenCalled();
-// });
-
   it('should call validacionesService.isValid in isValid', () => {
     const form = new FormBuilder().group({ campo: [''] });
     expect(component.isValid(form, 'campo')).toBe(true);

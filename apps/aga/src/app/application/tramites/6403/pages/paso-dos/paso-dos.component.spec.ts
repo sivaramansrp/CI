@@ -45,13 +45,6 @@ describe('PasoDosComponent', () => {
     expect(component.catalogoDocumentos).toEqual([{ id: 1, nombre: 'Doc1' }]);
   });
 
-  // it('should not set catalogoDocumentos if response is empty in getTiposDocumentos', () => {
-  //   catalogosServiceMock.getCatalogo.mockReturnValueOnce(of([]));
-  //   component.catalogoDocumentos = [{ id: 1, descripcion: 'Doc1' }];
-  //   component.getTiposDocumentos();
-  //   expect(component.catalogoDocumentos).toEqual([{ id: 1, nombre: 'Doc1' }]);
-  // });
-
   it('should complete destroyed$ in ngOnDestroy', () => {
     const nextSpy = jest.spyOn(component.destroyed$, 'next');
     const completeSpy = jest.spyOn(component.destroyed$, 'complete');

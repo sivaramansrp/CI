@@ -31,7 +31,6 @@ describe('PasoDosComponent', () => {
     fixture = TestBed.createComponent(PasoDosComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
-    // component = new PasoDosComponent(mockCatalogosService as any);
   });
 
   it('should create the component', () => {

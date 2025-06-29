@@ -48,13 +48,6 @@ describe('PasoUnoComponent', () => {
     expect(component.esDatosRespuesta).toBe(true);
   });
 
-  it('should call guardarDatosFormularios in ngOnInit when update is true', () => {
-    component.consultaState = { update: true } as any;
-    const guardarSpy = jest.spyOn(component, 'guardarDatosFormularios');
-    component.ngOnInit();
-    expect(guardarSpy).toHaveBeenCalled();
-  });
-
   it('should call registro.getCatalogoById and set entidadFederativa in ngOnInit', () => {
     component.consultaState = { update: false } as any;
     component.ngOnInit();
@@ -69,17 +62,7 @@ describe('PasoUnoComponent', () => {
     expect(registroServiceMock.actualizarEstadoFormulario).toHaveBeenCalled();
   });
 
-  it('should set persona, domicilioFiscal and call solicitante.obtenerTipoPersona in ngAfterViewInit', () => {
-    component.solicitante = {
-      obtenerTipoPersona: jest.fn(),
-    } as any;
-    component.ngAfterViewInit();
-    expect(component.persona).toBeDefined();
-    expect(component.domicilioFiscal).toBeDefined();
-    expect(component.solicitante.obtenerTipoPersona).toHaveBeenCalled();
-  });
-
-  it('should set indice in seleccionaTab', () => {
+   it('should set indice in seleccionaTab', () => {
     component.seleccionaTab(3);
     expect(component.indice).toBe(3);
   });

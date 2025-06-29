@@ -81,25 +81,6 @@ describe('DatosCertificadoComponent', () => {
     expect(component.registroForm.markAllAsTouched).toHaveBeenCalled();
   });
 
-//  it('should call donanteDomicilio and enable/disable form in guardarDatosFormulario', () => {
-//   component.soloLectura = true;
-//   component.registroForm = new FormBuilder().group({
-//     validacionForm: new FormBuilder().group({})
-//   });
-//   const donanteSpy = jest.spyOn(component, 'donanteDomicilio');
-//   component.guardarDatosFormulario();
-//   expect(donanteSpy).toHaveBeenCalled();
-
-//   const disableSpy = jest.spyOn(component.registroForm, 'disable');
-//   component.guardarDatosFormulario();
-//   expect(disableSpy).toHaveBeenCalled();
-
-//   component.soloLectura = false;
-//   const enableSpy = jest.spyOn(component.registroForm, 'enable');
-//   component.guardarDatosFormulario();
-//   expect(enableSpy).toHaveBeenCalled();
-// });
-
   it('should call guardarDatosFormulario if soloLectura in inicializarEstadoFormulario', () => {
     component.soloLectura = true;
     jest.spyOn(component, 'guardarDatosFormulario');

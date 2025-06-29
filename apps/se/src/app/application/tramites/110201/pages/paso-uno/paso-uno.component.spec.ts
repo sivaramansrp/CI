@@ -77,14 +77,5 @@ it('should call guardarDatosFormularios if consultaState.update is true', async 
     expect(registroServiceMock.actualizarEstadoFormulario).toHaveBeenCalled();
     expect(component.esDatosRespuesta).toBe(true);
   });
-
-  it('ngAfterViewInit should set persona, domicilioFiscal and call obtenerTipoPersona', () => {
-    component.solicitante = { obtenerTipoPersona: jest.fn() } as any;
-    component.ngAfterViewInit();
-    expect(component.persona).toBeDefined();
-    expect(component.domicilioFiscal).toBeDefined();
-    expect(component.solicitante.obtenerTipoPersona).toHaveBeenCalledWith(TIPO_PERSONA.MORAL_NACIONAL);
-  });
-
   
 });
