@@ -1,4 +1,4 @@
-name: Validate Code
+name: Quality Lint and Test AGA
 
 on:
   pull_request:
@@ -18,316 +18,130 @@ on:
       - 'package.json'
       - 'nx.json'
       - '.eslintrc.json'
-  workflow_dispatch:
-    # Permitir ejecución manual con parámetros
-    inputs:
-      validateTarget:
-        description: 'Tipo de validación a ejecutar'
-        required: true
-        type: choice
-        options:
-          - all
-          - lint
-          - test
-          - build
-        default: 'all'
-
-env:
-  NODE_VERSION: '22.14.0'
-  NX_VERSION: '19.3.1'
 
 jobs:
-  lint:
-    name: Lint and Code Quality
+  build-deploy:
     runs-on: ubuntu-latest
-    # Solo ejecutar este job si la validación es 'all' o 'lint' y cuando es push a develop, staging o production, o un PR a estas ramas
-    if: (github.event_name == 'pull_request' && (github.base_ref == 'develop' || github.base_ref == 'staging' || github.base_ref == 'production')) || (github.event_name == 'push' && (github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/staging' || github.ref == 'refs/heads/production')) || github.event.inputs.validateTarget == 'all' || github.event.inputs.validateTarget == 'lint'
+    env:
+      NX_SKIP_POSTINSTALL: 1   # Evita la ejecución del postinstall de Nx
     steps:
+      # Obtiene el código de tu repositorio.
       - name: Checkout repository
         uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
 
+      #  Configura la versión de Node.js requerida (22.14.0).
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: ${{ env.NODE_VERSION }}
+          node-version: '22.14.0'
+          
+      - name: Instalar NX globalmente
+        run: npm install -g nx@19.3.1
+        
+      # Instala el módulo nativo requerido para Linux.
+      - name: Install native binding for Nx on Linux
+        run: npm install @nx/nx-linux-x64-gnu
+        
+      # Instala el binding nativo de SWC para Linux (necesario para la compilación)
+      - name: Install SWC native binding for Linux
+        run: npm install @swc/core-linux-x64-gnu
+        
 
-      - name: Cache Node.js modules
-        uses: actions/cache@v3
-        with:
-          path: |
-            ~/.npm
-            node_modules
-            apps/*/node_modules
-            libs/*/node_modules
-          key: ${{ runner.os }}-node-${{ hashFiles('package.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
-
-      # Optimización para instalar solo dependencias necesarias y acelerar el proceso
+      # 3. Instala las dependencias usando --force, tal como lo haces localmente.
       - name: Install dependencies
-        run: npm ci --no-audit --prefer-offline
-
-      - name: Install NX globally
         run: |
-          npm install -g nx@${{ env.NX_VERSION }}
-          npx nx --version
+          npm install --force
+        
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v1
 
-      - name: Reset NX cache
-        run: npx nx reset
+      - name:  Run lint on AGA
+        run: npx nx lint aga
 
-      - name: Detect changed projects
-        id: changed-projects
-        run: |
-          # Verificar si estamos en una rama permitida para push
-          if [ "${{ github.event_name }}" == "push" ]; then
-            if [[ "${{ github.ref }}" != "refs/heads/develop" && "${{ github.ref }}" != "refs/heads/staging" && "${{ github.ref }}" != "refs/heads/production" ]]; then
-              echo "::warning::Este workflow solo se ejecuta en push a develop, staging o production."
-              echo "affected_projects=" >> $GITHUB_OUTPUT
-              exit 0
-            fi
-            CHANGED_FILES=$(git diff --name-only HEAD~1 HEAD)
-          elif [ "${{ github.event_name }}" == "pull_request" ]; then
-            CHANGED_FILES=$(git diff --name-only origin/${{ github.base_ref }}...HEAD)
-          else
-            CHANGED_FILES=$(git diff --name-only HEAD~1 HEAD)
-          fi
-          
-          echo "Changed files:"
-          echo "$CHANGED_FILES"
-          
-          # Get affected projects
-          if [ -n "$CHANGED_FILES" ]; then
-            AFFECTED_OUTPUT=$(npx nx affected:apps --plain --files=$(echo "$CHANGED_FILES" | tr '\n' ',') 2>&1) || true
-            # Filter out NX error messages and get only valid project names
-            AFFECTED_PROJECTS=$(echo "$AFFECTED_OUTPUT" | grep -v "NX" | grep -v "Both project and target" | tr -d ' ' | grep -v "^$") || true
-          fi
-          
-          if [ -z "$AFFECTED_PROJECTS" ]; then
-            echo "No affected projects detected, running checks on all projects"
-            ALL_PROJECTS_OUTPUT=$(npx nx show projects --type=app --plain 2>&1) || true
-            # Filter out NX error messages
-            ALL_PROJECTS=$(echo "$ALL_PROJECTS_OUTPUT" | grep -v "NX" | grep -v "Both project and target" | tr -d ' ' | grep -v "^$") || true
-            
-            if [ -n "$ALL_PROJECTS" ]; then
-              AFFECTED_PROJECTS="$ALL_PROJECTS"
-            else
-              echo "::warning::Could not determine affected projects. Defaulting to dashboard app."
-              AFFECTED_PROJECTS="dashboard"
-            fi
-          fi
-          
-          echo "Affected projects: $AFFECTED_PROJECTS"
-          echo "affected_projects=$AFFECTED_PROJECTS" >> $GITHUB_OUTPUT
+      - name: Run tests on AGA
+        run: npx nx run aga:test
 
-      - name: Lint affected projects
-        run: |
-          LINT_FAILED=false
-          for PROJECT in ${{ steps.changed-projects.outputs.affected_projects }}; do
-            echo "Linting project: $PROJECT"
-            if ! npx nx lint $PROJECT --fix=false; then
-              echo "::warning::Linting failed for $PROJECT"
-              LINT_FAILED=true
-            fi
-          done
-          if [ "$LINT_FAILED" = "true" ]; then
-            echo "::warning::Linting issues were found. Please fix them before merging."
-          fi
+      - name:  Run lint on agace
+        run: npx nx lint agace
 
-      - name: Check TypeScript
-        run: |
-          TS_FAILED=false
-          for PROJECT in ${{ steps.changed-projects.outputs.affected_projects }}; do
-            echo "Type checking project: $PROJECT"
-            if ! npx nx build $PROJECT --configuration=development --target=typecheck; then
-              echo "::warning::Type checking failed for $PROJECT"
-              TS_FAILED=true
-            fi
-          done
-          if [ "$TS_FAILED" = "true" ]; then
-            echo "::warning::Type checking issues were found. Please fix them before merging."
-          fi
+      - name: Run tests on agace
+        run: npx nx run agace:test
 
-  test:
-    name: Unit Tests
-    runs-on: ubuntu-latest
-    # Solo ejecutar este job si la validación es 'all' o 'test' y cuando es push a develop, staging o production, o un PR a estas ramas
-    if: (github.event_name == 'pull_request' && (github.base_ref == 'develop' || github.base_ref == 'staging' || github.base_ref == 'production')) || (github.event_name == 'push' && (github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/staging' || github.ref == 'refs/heads/production')) || github.event.inputs.validateTarget == 'all' || github.event.inputs.validateTarget == 'test'
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
+      - name:  Run lint on agricultura
+        run: npx nx lint agricultura
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ env.NODE_VERSION }}
+      - name: Run tests on agricultura
+        run: npx nx run agricultura:test
 
-      - name: Cache Node.js modules
-        uses: actions/cache@v3
-        with:
-          path: |
-            ~/.npm
-            node_modules
-            apps/*/node_modules
-            libs/*/node_modules
-          key: ${{ runner.os }}-node-${{ hashFiles('package.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
+      - name:  Run lint on se
+        run: npx nx lint se
 
-      # Optimización para instalar solo dependencias necesarias y acelerar el proceso
-      - name: Install dependencies
-        run: npm ci --no-audit --prefer-offline
+      - name: Run tests on se
+        run: npx nx run se:test
 
-      - name: Install NX globally
-        run: |
-          npm install -g nx@${{ env.NX_VERSION }}
-          npx nx --version
+      - name:  Run lint on semarnat
+        run: npx nx lint semarnat
 
-      - name: Reset NX cache
-        run: npx nx reset
+      - name: Run tests on semarnat
+        run: npx nx run semarnat:test
 
-      - name: Detect changed projects
-        id: changed-projects
-        run: |
-          # Verificar si estamos en una rama permitida para push
-          if [ "${{ github.event_name }}" == "push" ]; then
-            if [[ "${{ github.ref }}" != "refs/heads/develop" && "${{ github.ref }}" != "refs/heads/staging" && "${{ github.ref }}" != "refs/heads/production" ]]; then
-              echo "::warning::Este workflow solo se ejecuta en push a develop, staging o production."
-              echo "affected_projects=" >> $GITHUB_OUTPUT
-              exit 0
-            fi
-            CHANGED_FILES=$(git diff --name-only HEAD~1 HEAD)
-          elif [ "${{ github.event_name }}" == "pull_request" ]; then
-            CHANGED_FILES=$(git diff --name-only origin/${{ github.base_ref }}...HEAD)
-          else
-            CHANGED_FILES=$(git diff --name-only HEAD~1 HEAD)
-          fi
-          
-          # Get affected projects
-          if [ -n "$CHANGED_FILES" ]; then
-            AFFECTED_OUTPUT=$(npx nx affected:apps --plain --files=$(echo "$CHANGED_FILES" | tr '\n' ',') 2>&1) || true
-            # Filter out NX error messages and get only valid project names
-            AFFECTED_PROJECTS=$(echo "$AFFECTED_OUTPUT" | grep -v "NX" | grep -v "Both project and target" | tr -d ' ' | grep -v "^$") || true
-          fi
-          
-          if [ -z "$AFFECTED_PROJECTS" ]; then
-            echo "No affected projects detected, running tests on all projects"
-            ALL_PROJECTS_OUTPUT=$(npx nx show projects --type=app --plain 2>&1) || true
-            # Filter out NX error messages
-            ALL_PROJECTS=$(echo "$ALL_PROJECTS_OUTPUT" | grep -v "NX" | grep -v "Both project and target" | tr -d ' ' | grep -v "^$") || true
-            
-            if [ -n "$ALL_PROJECTS" ]; then
-              AFFECTED_PROJECTS="$ALL_PROJECTS"
-            else
-              echo "::warning::Could not determine affected projects. Defaulting to dashboard app."
-              AFFECTED_PROJECTS="dashboard"
-            fi
-          fi
-          
-          echo "Affected projects: $AFFECTED_PROJECTS"
-          echo "affected_projects=$AFFECTED_PROJECTS" >> $GITHUB_OUTPUT
+      - name:  Run lint on cofepris
+        run: npx nx lint cofepris
 
-      - name: Run unit tests
-        run: |
-          TEST_FAILED=false
-          for PROJECT in ${{ steps.changed-projects.outputs.affected_projects }}; do
-            echo "Testing project: $PROJECT"
-            if ! npx nx test $PROJECT --passWithNoTests; then
-              echo "::warning::Tests failed for $PROJECT"
-              TEST_FAILED=true
-            fi
-          done
-          if [ "$TEST_FAILED" = "true" ]; then
-            echo "::warning::Some tests have failed. Please fix them before merging."
-          fi
+      - name: Run tests on cofepris
+        run: npx nx run cofepris:test
 
-  build-check:
-    name: Build Check
-    runs-on: ubuntu-latest
-    # Solo ejecutar este job si la validación es 'all' o 'build' y cuando es push a develop, staging o production, o un PR a estas ramas
-    if: (github.event_name == 'pull_request' && (github.base_ref == 'develop' || github.base_ref == 'staging' || github.base_ref == 'production')) || (github.event_name == 'push' && (github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/staging' || github.ref == 'refs/heads/production')) || github.event.inputs.validateTarget == 'all' || github.event.inputs.validateTarget == 'build'
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
+      - name:  Run lint on sener
+        run: npx nx lint sener
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ env.NODE_VERSION }}
+      - name: Run tests on sener
+        run: npx nx run sener:test
 
-      - name: Cache Node.js modules
-        uses: actions/cache@v3
-        with:
-          path: |
-            ~/.npm
-            node_modules
-            apps/*/node_modules
-            libs/*/node_modules
-          key: ${{ runner.os }}-node-${{ hashFiles('package.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
+      - name:  Run lint on amecafe
+        run: npx nx lint amecafe
 
-      # Optimización para instalar solo dependencias necesarias y acelerar el proceso
-      - name: Install dependencies
-        run: npm ci --no-audit --prefer-offline
+      - name: Run tests on amecafe
+        run: npx nx run amecafe:test
 
-      - name: Install NX globally
-        run: |
-          npm install -g nx@${{ env.NX_VERSION }}
-          npx nx --version
+      - name:  Run lint on inbal
+        run: npx nx lint inbal
 
-      - name: Reset NX cache
-        run: npx nx reset
+      - name: Run tests on inbal
+        run: npx nx run inbal:test
 
-      - name: Detect changed projects
-        id: changed-projects
-        run: |
-          # Verificar si estamos en una rama permitida para push
-          if [ "${{ github.event_name }}" == "push" ]; then
-            if [[ "${{ github.ref }}" != "refs/heads/develop" && "${{ github.ref }}" != "refs/heads/staging" && "${{ github.ref }}" != "refs/heads/production" ]]; then
-              echo "::warning::Este workflow solo se ejecuta en push a develop, staging o production."
-              echo "affected_projects=" >> $GITHUB_OUTPUT
-              exit 0
-            fi
-            CHANGED_FILES=$(git diff --name-only HEAD~1 HEAD)
-          elif [ "${{ github.event_name }}" == "pull_request" ]; then
-            CHANGED_FILES=$(git diff --name-only origin/${{ github.base_ref }}...HEAD)
-          else
-            CHANGED_FILES=$(git diff --name-only HEAD~1 HEAD)
-          fi
-          
-          # Get affected projects
-          if [ -n "$CHANGED_FILES" ]; then
-            AFFECTED_OUTPUT=$(npx nx affected:apps --plain --files=$(echo "$CHANGED_FILES" | tr '\n' ',') 2>&1) || true
-            # Filter out NX error messages and get only valid project names
-            AFFECTED_PROJECTS=$(echo "$AFFECTED_OUTPUT" | grep -v "NX" | grep -v "Both project and target" | tr -d ' ' | grep -v "^$") || true
-          fi
-          
-          if [ -z "$AFFECTED_PROJECTS" ]; then
-            echo "No affected projects detected, checking build for dashboard"
-            echo "::warning::No affected projects found. Defaulting to dashboard app for build verification."
-            AFFECTED_PROJECTS="dashboard"
-          fi
-          
-          echo "Affected projects: $AFFECTED_PROJECTS"
-          echo "affected_projects=$AFFECTED_PROJECTS" >> $GITHUB_OUTPUT
+      - name:  Run lint on sedena
+        run: npx nx lint sedena
 
-      - name: Check build
-        run: |
-          # Build at least one app to verify the build process
-          FIRST_PROJECT=$(echo ${{ steps.changed-projects.outputs.affected_projects }} | awk '{print $1}')
-          if [ -n "$FIRST_PROJECT" ]; then
-            echo "Checking build for project: $FIRST_PROJECT"
-            if ! npx nx build $FIRST_PROJECT --configuration=development; then
-              echo "::warning::Build failed for $FIRST_PROJECT"
-              echo "::warning::Build issues were found. Please fix them before merging."
-              exit 0
-            fi
-          else
-            echo "::warning::No projects to build. Cannot verify build process."
-          fi
+      - name: Run tests on sedena
+        run: npx nx run sedena:test
+
+      - name:  Run lint on profepa
+        run: npx nx lint profepa
+
+      - name: Run tests on profepa
+        run: npx nx run profepa:test
+
+      - name:  Run lint on inah
+        run: npx nx lint inah
+
+      - name: Run tests on inah
+        run: npx nx run inah:test
+
+      - name:  Run lint on crt
+        run: npx nx lint crt
+
+      - name: Run tests on crt
+        run: npx nx run crt:test
+
+      - name:  Run lint on stps
+        run: npx nx lint stps
+
+      - name: Run tests on stps
+        run: npx nx run stps:test
+
+      - name:  Run lint on bandejas
+        run: npx nx lint bandejas
+
+      - name: Run tests on bandejas
+        run: npx nx run bandejas:test
