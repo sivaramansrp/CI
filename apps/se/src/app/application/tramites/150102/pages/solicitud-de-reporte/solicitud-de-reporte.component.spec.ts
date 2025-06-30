@@ -1,21 +1,42 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SolicitudDeReporteComponent } from './solicitud-de-reporte.component';
-import { WizardComponent } from '@libs/shared/data-access-user/src';
+import { DatosComponent } from '../datos/datos.component';
+import { PasoTresComponent } from '../paso-tres/paso-tres.component';
+import {
+  BtnContinuarComponent,
+  WizardComponent,
+} from '@libs/shared/data-access-user/src';
+import { CommonModule } from '@angular/common';
 import { REPORTE_ANUAL_PASOS } from '../../enums/reporte-anual.enum';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { of } from 'rxjs';
 
 describe('SolicitudDeReporteComponent', () => {
   let component: SolicitudDeReporteComponent;
   let fixture: ComponentFixture<SolicitudDeReporteComponent>;
+  let wizardComponentSpy: jest.Mocked<WizardComponent>;
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      declarations: [SolicitudDeReporteComponent, WizardComponent],
-    }).compileComponents();
-  });
+    wizardComponentSpy = {
+      siguiente: jest.fn(() => of()),
+      atras: jest.fn(() => of()),
+    } as unknown as jest.Mocked<WizardComponent>;
 
-  beforeEach(() => {
+    await TestBed.configureTestingModule({
+      imports: [
+        SolicitudDeReporteComponent,
+        CommonModule,
+        WizardComponent,
+        DatosComponent,
+        PasoTresComponent,
+        BtnContinuarComponent,
+        HttpClientTestingModule,
+      ],
+    }).compileComponents();
+
     fixture = TestBed.createComponent(SolicitudDeReporteComponent);
     component = fixture.componentInstance;
+    component.wizardComponent = wizardComponentSpy;
     fixture.detectChanges();
   });
 
@@ -23,37 +44,58 @@ describe('SolicitudDeReporteComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should have initial indice as 1', () => {
+  it('should initialize indice to 1', () => {
     expect(component.indice).toBe(1);
   });
 
-  it('should have correct initial datosPasos', () => {
-    expect(component.datosPasos).toEqual({
-      nroPasos: REPORTE_ANUAL_PASOS.length,
-      indice: 1,
-      txtBtnAnt: 'Anterior',
-      txtBtnSig: 'Continuar',
-    });
+  it('should set pantallasPasos from REPORTE_ANUAL_PASOS', () => {
+    expect(component.pantallasPasos).toBe(REPORTE_ANUAL_PASOS);
   });
 
-  it('should update indice and call siguiente on wizardComponent when accion is cont', () => {
-    const wizardComponentSpy = jest.spyOn(component.wizardComponent, 'siguiente');
-    component.getValorIndice({ accion: 'cont', valor: 2 });
+  it('should call wizardComponent.siguiente and update indice when accion is "cont" and valor is valid', () => {
+    wizardComponentSpy.siguiente = jest.fn();
+    wizardComponentSpy.atras = jest.fn();
+    component.wizardComponent = wizardComponentSpy;
+    const accion = { accion: 'cont', valor: 2 };
+    component.getValorIndice(accion);
     expect(component.indice).toBe(2);
-    expect(wizardComponentSpy).toHaveBeenCalled();
+    expect(wizardComponentSpy.siguiente).toHaveBeenCalled();
+    expect(wizardComponentSpy.atras).not.toHaveBeenCalled();
   });
 
-  it('should update indice and call atras on wizardComponent when accion is not cont', () => {
-    const wizardComponentSpy = jest.spyOn(component.wizardComponent, 'atras');
-    component.getValorIndice({ accion: 'atras', valor: 2 });
-    expect(component.indice).toBe(2);
-    expect(wizardComponentSpy).toHaveBeenCalled();
+  it('should call wizardComponent.atras and update indice when accion is not "cont" and valor is valid', () => {
+    wizardComponentSpy.atras = jest.fn();
+    wizardComponentSpy.siguiente = jest.fn();
+    component.wizardComponent = wizardComponentSpy;
+    const accion = { accion: 'atras', valor: 3 };
+    component.getValorIndice(accion);
+    expect(component.indice).toBe(3);
+    expect(wizardComponentSpy.atras).toHaveBeenCalled();
+    expect(wizardComponentSpy.siguiente).not.toHaveBeenCalled();
   });
 
-  it('should not update indice if valor is out of range', () => {
-    component.getValorIndice({ accion: 'cont', valor: 0 });
+  it('should not update indice or call wizard methods if valor is out of range (too low)', () => {
+    const accion = { accion: 'cont', valor: 0 };
+    component.indice = 1;
+    component.getValorIndice(accion);
     expect(component.indice).toBe(1);
-    component.getValorIndice({ accion: 'cont', valor: 5 });
+    expect(wizardComponentSpy.siguiente).not.toHaveBeenCalled();
+    expect(wizardComponentSpy.atras).not.toHaveBeenCalled();
+  });
+
+  it('should not update indice or call wizard methods if valor is out of range (too high)', () => {
+    const accion = { accion: 'cont', valor: 5 };
+    component.indice = 1;
+    component.getValorIndice(accion);
     expect(component.indice).toBe(1);
+    expect(wizardComponentSpy.siguiente).not.toHaveBeenCalled();
+    expect(wizardComponentSpy.atras).not.toHaveBeenCalled();
+  });
+
+  it('should have datosPasos initialized correctly', () => {
+    expect(component.datosPasos.nroPasos).toBe(component.pantallasPasos.length);
+    expect(component.datosPasos.indice).toBe(component.indice);
+    expect(component.datosPasos.txtBtnAnt).toBe('Anterior');
+    expect(component.datosPasos.txtBtnSig).toBe('Continuar');
   });
 });

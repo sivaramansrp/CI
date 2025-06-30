@@ -1,6 +1,10 @@
+import { BtnContinuarComponent } from '@libs/shared/data-access-user/src';
+import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { DatosComponent } from '../datos/datos.component';
 import { DatosPasos } from '@libs/shared/data-access-user/src';
 import { ListaPasosWizard } from '@libs/shared/data-access-user/src';
+import { PasoTresComponent } from '../paso-tres/paso-tres.component';
 import { REPORTE_ANUAL_PASOS } from '../../enums/reporte-anual.enum';
 import { ViewChild } from '@angular/core';
 import { WizardComponent } from '@libs/shared/data-access-user/src';
@@ -29,6 +33,8 @@ interface AccionBoton {
  */
 @Component({
   selector: 'app-solicitud-de-reporte', // Selector del componente
+  standalone: true, // Indica que este componente no es independiente y depende de otros módulos
+  imports: [CommonModule, WizardComponent, DatosComponent, PasoTresComponent, BtnContinuarComponent], // Importa el componente Wizard para su uso en este componente
   templateUrl: './solicitud-de-reporte.component.html', // Ruta del archivo de plantilla HTML
   styleUrl: './solicitud-de-reporte.component.scss', // Ruta del archivo de estilos
 })
