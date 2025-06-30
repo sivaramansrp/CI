@@ -7,9 +7,10 @@
 
 import { Component, OnInit } from '@angular/core';
 import { Tramite260216State, Tramite260216Store } from '../../estados/tramite260216Store.store';
-import { map, takeUntil, Subject } from 'rxjs';
+import { map,takeUntil} from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { DatosMercanciaComponent } from '../../../../shared/components/datos-mercancia/datos-mercancia.component';
+import { Subject } from 'rxjs';
 import { TablaMercanciasDatos } from '../../../../shared/models/datos-solicitud.model';
 import { Tramite260216Query } from '../../estados/tramite260216Query.query';
 
