@@ -12,10 +12,10 @@
     </div>
   </div>
 </ng-container>
-<div formGroupName="Aduana">
+<form [formGroup]="aduanaFormulario">
   <div class="row">
     <div class="col-md-4">
-      <app-catalogo-select formControlName="Aduana" [label]="'Aduana'" [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
+      <app-catalogo-select formControlName="aduanas" [label]="'Aduana'" [isDisabled]="esFormularioSoloLectura" [catalogo]="aduanaData"></app-catalogo-select>
     </div>
   </div>
-</div>
+</form>
