@@ -260,6 +260,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @default false
    */
   soloLectura: boolean = false;
+  detalles: never[] | undefined;
 
   /**
    * Constructor del componente.
@@ -721,7 +722,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * Agrega un nuevo detalle a la lista de detalles.
    * Obtiene los datos del servicio y los agrega a la lista local y al store.
    */
-  agregarDetalle(): void {
+  agregarDetalle(detalle: DatosSolicitud): void {
     this.phytosanitaryReexportacionService
       .agregarDetalle()
       .pipe(takeUntil(this.destroyNotifier$))

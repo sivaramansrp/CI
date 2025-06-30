@@ -28,5 +28,17 @@ describe('AdaceService', () => {
       done();
     });
   });
+
+  it('obtenerDatosAno should call http.get with correct URL and return observable', (done) => {
+    const mockResponse = [{ id: 1, descripcion: '2024' }];
+    httpMock.get.mockReturnValue(of(mockResponse));
+
+    service.obtenerDatosAno().subscribe((result) => {
+      expect(httpMock.get).toHaveBeenCalledWith('assets/json/32508/ano.json');
+      expect(result).toEqual(mockResponse);
+      done();
+    });
+  });
+
 });
 
