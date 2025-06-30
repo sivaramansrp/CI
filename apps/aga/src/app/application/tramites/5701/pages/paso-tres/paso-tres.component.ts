@@ -201,6 +201,7 @@ export class PasoTresComponent implements OnInit, OnDestroy {
             ID_SOLICITUD ?? 0
           );
           this.router.navigate([`${this.url}/acuse`]);
+          this.tramite5701Store.limpiarSolicitud();
         }),
         catchError((error) => {
           console.error('Error en el proceso de firma:', error);
