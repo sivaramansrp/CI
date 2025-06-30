@@ -67,16 +67,13 @@ describe('TipoPropietarioComponent', () => {
   let mockRetornoImportacionTemporalService: jest.Mocked<RetornoImportacionTemporalService>;
   let mockConsultaioQuery: jest.Mocked<ConsultaioQuery>;
 
-  // BehaviorSubjects para simular observables reactivos
   let tramite630303StateSubject: BehaviorSubject<any>;
   let consultaioStateSubject: BehaviorSubject<any>;
 
   beforeEach(async () => {
-    // Inicializar BehaviorSubjects
     tramite630303StateSubject = new BehaviorSubject(mockTramite630303State);
     consultaioStateSubject = new BehaviorSubject(mockConsultaioState);
 
-    // Crear mocks de servicios
     mockTramite630303Query = {
       selectTramite630303State$: tramite630303StateSubject.asObservable()
     } as any;
@@ -116,7 +113,6 @@ describe('TipoPropietarioComponent', () => {
   });
 
   afterEach(() => {
-    // Limpiar subjects
     tramite630303StateSubject.complete();
     consultaioStateSubject.complete();
   });
@@ -133,7 +129,6 @@ describe('TipoPropietarioComponent', () => {
       expect(component.tipoPropietarioFormulario.get('propietario')).toBeTruthy();
       expect(component.tipoPropietarioFormulario.get('tipoDePropietario')).toBeTruthy();
       
-      // Verificar que los campos tengan validadores requeridos
       const propietarioControl = component.tipoPropietarioFormulario.get('propietario');
       const tipoPropietarioControl = component.tipoPropietarioFormulario.get('tipoDePropietario');
       
@@ -358,7 +353,6 @@ describe('TipoPropietarioComponent', () => {
     });
 
     it('debería manejar campos faltantes en formulario dinámico', () => {
-      // Simular formulario sin algunos campos
       component.formularioDatosPropietarioDireccion = [];
       component.tipoPropietarioFormulario.patchValue({ tipoDePropietario: '1' });
 
@@ -367,8 +361,6 @@ describe('TipoPropietarioComponent', () => {
   });
 
   describe('Gestión de Formulario en Modo Solo Lectura', () => {
-    // No llamar fixture.detectChanges() en beforeEach para estos tests
-    // que necesitan control específico del estado inicial
 
     it('debería deshabilitar formulario cuando esFormularioSoloLectura es true', () => {
       fixture.detectChanges();
@@ -378,7 +370,6 @@ describe('TipoPropietarioComponent', () => {
 
       expect(component.tipoPropietarioFormulario.disabled).toBe(true);
       
-      // Verificar que los campos dinámicos estén desactivados
       const camposDesactivados = component.formularioDatosPropietarioDireccion.every(campo => campo.desactivado === true);
       expect(camposDesactivados).toBe(true);
     });
@@ -391,7 +382,6 @@ describe('TipoPropietarioComponent', () => {
 
       expect(component.tipoPropietarioFormulario.enabled).toBe(true);
       
-      // Verificar que los campos dinámicos estén activados
       const camposActivados = component.formularioDatosPropietarioDireccion.every(campo => campo.desactivado === false);
       expect(camposActivados).toBe(true);
     });
@@ -487,7 +477,6 @@ describe('TipoPropietarioComponent', () => {
     it('debería manejar múltiples cambios de estado sin errores', () => {
       fixture.detectChanges();
 
-      // Simular múltiples cambios rápidos
       for (let i = 0; i < 10; i++) {
         tramite630303StateSubject.next({ propietario: i.toString() });
       }
@@ -498,7 +487,6 @@ describe('TipoPropietarioComponent', () => {
     it('debería manejar suscripciones concurrentes correctamente', () => {
       fixture.detectChanges();
 
-      // Verificar que todas las suscripciones se manejen correctamente
       expect(component.propietarioOpciones).toEqual(mockPropietarioOpciones);
       expect(component.tipoDePropietarioOpciones).toEqual(mockTipoPropietarioOpciones);
       expect(component.estadoSeleccionado).toEqual(mockTramite630303State);

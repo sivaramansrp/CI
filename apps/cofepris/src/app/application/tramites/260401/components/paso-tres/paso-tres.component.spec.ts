@@ -26,11 +26,11 @@ describe('PasoTresComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('debe crearse', () => {
     expect(component).toBeTruthy();
   });
 
-    it('should navigate to "servicios-extraordinarios/acuse" when FIRMA is valid', () => {
+  it('debe navegar a "servicios-extraordinarios/acuse" cuando la FIRMA es válida', () => {
     const navigateSpy = jest.spyOn(router, 'navigate');
     const mockFirma = 'VALID_SIGNATURE';
 
@@ -39,7 +39,7 @@ describe('PasoTresComponent', () => {
     expect(navigateSpy).toHaveBeenCalledWith(['servicios-extraordinarios/acuse']);
   });
 
-  it('should not navigate when FIRMA is empty', () => {
+  it('no debe navegar cuando la FIRMA está vacía', () => {
     const navigateSpy = jest.spyOn(router, 'navigate');
     const mockFirma = '';
 

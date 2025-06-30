@@ -88,11 +88,6 @@ export class PasoUnoComponent implements AfterViewInit, OnInit {
         }
       });
   }
-
-
-
-
-
   /**
    * Referencia al componente de Solicitante.
    *
