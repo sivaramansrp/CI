@@ -109,7 +109,6 @@ describe('SolicitudComponent', () => {
       getPaisesPorBloque: jest.fn().mockReturnValue(of(MOCK_CATALOGO)),
     };
 
-    // Assign mockSolicitudImportacionAmbulanciaService before using it in providers
     mockSolicitudImportacionAmbulanciaService = {
       getEntidadFederativa: jest.fn().mockReturnValue(of(MOCK_CATALOGO)),
       getRepresentacionFederal: jest.fn().mockReturnValue(of(MOCK_CATALOGO)),
