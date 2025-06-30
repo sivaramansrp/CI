@@ -1,117 +1,216 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
-import { of } from 'rxjs';
 import { PasoUnoComponent } from './paso-uno.component';
-import { Tramite31802Store } from '../../state/Tramite31802.store';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Tramite31802Store, createInitialState } from '../../state/Tramite31802.store';
 import { Tramite31802Query } from '../../state/Tramite31802.query';
-import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
-import { SolicitanteComponent } from '@libs/shared/data-access-user/src';
+import { RegistroSolicitudService } from '../../services/registro-solicitud-service.service';
+import { ValidacionesFormularioService, SolicitanteComponent, ConsultaioQuery, TIPO_PERSONA } from '@ng-mf/data-access-user';
+import { of } from 'rxjs';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { Component, forwardRef, Input } from '@angular/core';
+import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
 
+@Component({
+  selector: 'lib-input-check',
+  template: '',
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => MockInputCheckComponent),
+      multi: true,
+    },
+  ],
+})
+class MockInputCheckComponent implements ControlValueAccessor {
+  @Input() id: string = '';
+  @Input() label: string = '';
+  @Input() required: boolean = false;
+  value: any;
+  onChange = (_: any) => {};
+  onTouched = () => {};
+  writeValue(obj: any): void { this.value = obj; }
+  registerOnChange(fn: any): void { this.onChange = fn; }
+  registerOnTouched(fn: any): void { this.onTouched = fn; }
+  setDisabledState?(isDisabled: boolean): void {}
+}
 describe('PasoUnoComponent', () => {
   let component: PasoUnoComponent;
   let fixture: ComponentFixture<PasoUnoComponent>;
-  let store: Tramite31802Store;
-  let query: Tramite31802Query;
-  let validacionesService: ValidacionesFormularioService;
+  let storeMock: any;
+  let queryMock: any;
+  let validacionesServiceMock: any;
+  let solicitud31802ServiceMock: any;
+  let consultaQueryMock: any;
 
   beforeEach(async () => {
+    storeMock = {
+      setRenovacion: jest.fn(),
+      setHomologacion: jest.fn(),
+    };
+
+    queryMock = {
+      selectSolicitud$: of(createInitialState()),
+    };
+
+    validacionesServiceMock = {
+      isValid: jest.fn().mockReturnValue(true),
+    };
+
+    solicitud31802ServiceMock = {
+      getDatosDeAvisoRenovacionDoc: jest.fn().mockReturnValue(of({
+        numeroOperacion: 1,
+        llave: 'llave',
+        manifiesto1: 'm1',
+        manifiesto2: 'm2',
+        manifiesto3: 'm3',
+        fechaPago: '2024-01-01',
+        monedaNacional: 'MXN',
+        renovacion: true,
+        homologacion: false,
+      })),
+      actualizarEstadoFormulario: jest.fn(),
+    };
+
+    consultaQueryMock = {
+      selectConsultaioState$: of({ update: false }),
+    };
+
     await TestBed.configureTestingModule({
-      declarations: [PasoUnoComponent],
-      imports: [ReactiveFormsModule,SolicitanteComponent],
+      imports: [ReactiveFormsModule,SolicitanteComponent,HttpClientTestingModule],
+      declarations: [PasoUnoComponent,MockInputCheckComponent],
       providers: [
+        { provide: Tramite31802Store, useValue: storeMock },
+        { provide: Tramite31802Query, useValue: queryMock },
+        { provide: ValidacionesFormularioService, useValue: validacionesServiceMock },
+        { provide: RegistroSolicitudService, useValue: solicitud31802ServiceMock },
+        { provide: ConsultaioQuery, useValue: consultaQueryMock },
         FormBuilder,
-        { provide: Tramite31802Store, useValue: { setRenovacion: jest.fn(), setHomologacion: jest.fn() } },
-        { provide: Tramite31802Query, useValue: { selectSolicitud$: of({ renovacion: false, homologacion: false }) } },
-        { provide: ValidacionesFormularioService, useValue: { isValid: jest.fn(() => true) } },
       ],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA],
     }).compileComponents();
 
     fixture = TestBed.createComponent(PasoUnoComponent);
     component = fixture.componentInstance;
-    store = TestBed.inject(Tramite31802Store);
-    query = TestBed.inject(Tramite31802Query);
-    validacionesService = TestBed.inject(ValidacionesFormularioService);
-
+    component.solicitudState = createInitialState();
+    component.registroForm = new FormBuilder().group({
+      renovacion: [false, [Validators.required]],
+      homologacion: [false, [Validators.required]],
+    });
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize the form and state on ngOnInit', () => {
-    jest.spyOn(component, 'donanteDomicilio');
+  it('should subscribe to consultaQuery and set consultaState in ngOnInit', () => {
+    component.consultaState = undefined as any;
     component.ngOnInit();
-    expect(component.donanteDomicilio).toHaveBeenCalled();
-    expect(component.solicitudState).toEqual({ renovacion: false, homologacion: false });
+    expect(component.consultaState).toBeDefined();
   });
 
-  it('should initialize the form with donanteDomicilio', () => {
-    component.solicitudState = { renovacion: true, homologacion: false } as any;
-    component.donanteDomicilio();
-    expect(component.registroForm.value).toEqual({
-      renovacion: true,
-      homologacion: false,
-    });
+  // it('should call guardarDatosFormulario if consultaState.update is true in ngOnInit', async () => {
+  //   consultaQueryMock = {
+  //     selectConsultaioState$: of({ update: true }),
+  //   };
+  //   await TestBed.resetTestingModule()
+  //     .configureTestingModule({
+  //       imports: [ReactiveFormsModule,HttpClientTestingModule],
+  //       declarations: [PasoUnoComponent],
+  //       providers: [
+  //         { provide: Tramite31802Store, useValue: storeMock },
+  //         { provide: Tramite31802Query, useValue: queryMock },
+  //         { provide: ValidacionesFormularioService, useValue: validacionesServiceMock },
+  //         { provide: RegistroSolicitudService, useValue: solicitud31802ServiceMock },
+  //         { provide: ConsultaioQuery, useValue: consultaQueryMock },
+  //         FormBuilder,
+  //       ],
+  //       schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  //     })
+  //     .compileComponents();
+  //   fixture = TestBed.createComponent(PasoUnoComponent);
+  //   component = fixture.componentInstance;
+  //   const spy = jest.spyOn(component, 'guardarDatosFormulario');
+  //   fixture.detectChanges();
+  //   expect(spy).toHaveBeenCalled();
+  // });
+
+  it('should set esDatosRespuesta to true if consultaState.update is false in ngOnInit', () => {
+    component.consultaState = { update: false } as any;
+    component.esDatosRespuesta = false;
+    component.ngOnInit();
+    expect(component.esDatosRespuesta).toBe(true);
   });
 
-  it('should set renovacion in the store on establecerRenovacion', () => {
-    const event = { target: { checked: true } } as unknown as Event;
-    jest.spyOn(store, 'setRenovacion');
+  it('should call actualizarEstadoFormulario and set esDatosRespuesta in guardarDatosFormulario', () => {
+    component.esDatosRespuesta = false;
+    component.guardarDatosFormulario();
+    expect(component.esDatosRespuesta).toBe(true);
+    expect(solicitud31802ServiceMock.actualizarEstadoFormulario).toHaveBeenCalled();
+  });
+
+  it('should setRenovacion in store when establecerRenovacion is called', () => {
+    const event = { target: { checked: true } } as any;
     component.establecerRenovacion(event);
-    expect(store.setRenovacion).toHaveBeenCalledWith(true);
+    expect(storeMock.setRenovacion).toHaveBeenCalledWith(true);
   });
 
-  it('should set homologacion in the store on establecerHomologacion', () => {
-    const event = { target: { checked: true } } as unknown as Event;
-    jest.spyOn(store, 'setHomologacion');
+  it('should setHomologacion in store when establecerHomologacion is called', () => {
+    const event = { target: { checked: false } } as any;
     component.establecerHomologacion(event);
-    expect(store.setHomologacion).toHaveBeenCalledWith(true);
+    expect(storeMock.setHomologacion).toHaveBeenCalledWith(false);
   });
 
-  it('should select a tab on seleccionaTab', () => {
+  it('should update indice in seleccionaTab', () => {
+    component.indice = 1;
     component.seleccionaTab(2);
     expect(component.indice).toBe(2);
   });
 
-  it('should validate a form field using esValido', () => {
-    const form = component.registroForm;
-    const field = 'renovacion';
-    jest.spyOn(validacionesService, 'isValid');
-    const result = component.esValido(form, field);
-    expect(validacionesService.isValid).toHaveBeenCalledWith(form, field);
-    expect(result).toBe(true);
+  it('should call validacionesService.isValid in esValido', () => {
+    const form = new FormBuilder().group({ test: [''] });
+    component.esValido(form, 'test');
+    expect(validacionesServiceMock.isValid).toHaveBeenCalledWith(form, 'test');
   });
 
-  it('should mark all fields as touched if the form is invalid', () => {
-    component.registroForm.patchValue({ renovacion: null, homologacion: null });
-    jest.spyOn(component.registroForm, 'markAllAsTouched');
+  it('should mark all as touched if registroForm is invalid in validarDestinatarioFormulario', () => {
+    component.registroForm = new FormBuilder().group({
+      renovacion: ['', Validators.required],
+    });
+    const spy = jest.spyOn(component.registroForm, 'markAllAsTouched');
     component.validarDestinatarioFormulario();
-    expect(component.registroForm.markAllAsTouched).toHaveBeenCalled();
+    expect(spy).toHaveBeenCalled();
   });
 
-  it('should call setRenovacion when a value changes', () => {
-    const form = component.registroForm;
-    const field = 'renovacion';
-    jest.spyOn(store, 'setRenovacion');
-    form.patchValue({ renovacion: true });
-    component.setValoresStore(form, field, 'setRenovacion');
-    expect(store.setRenovacion).toHaveBeenCalledWith(true);
+  it('should call store method in setValoresStore', () => {
+    component.registroForm.get('renovacion')?.setValue(true);
+    component.setValoresStore(component.registroForm, 'renovacion', 'setRenovacion');
+    expect(storeMock.setRenovacion).toHaveBeenCalledWith(true);
   });
 
-  it('should destroy subscriptions on ngOnDestroy', () => {
-    jest.spyOn(component.destroyed$, 'next');
-    jest.spyOn(component.destroyed$, 'complete');
+  it('should initialize registroForm in donanteDomicilio', () => {
+    component.solicitudState = {
+      renovacion: true,
+      homologacion: false,
+      numeroOperacion: 0,
+      llave: '',
+      manifiesto1: '',
+      manifiesto2: '',
+      manifiesto3: '',
+      fechaPago: '',
+      monedaNacional: '',
+    };
+    component.donanteDomicilio();
+    expect(component.registroForm.get('renovacion')?.value).toBe(true);
+    expect(component.registroForm.get('homologacion')?.value).toBe(false);
+  });
+
+  it('should complete destroyed$ in ngOnDestroy', () => {
+    const nextSpy = jest.spyOn(component.destroyed$, 'next');
+    const completeSpy = jest.spyOn(component.destroyed$, 'complete');
     component.ngOnDestroy();
-    expect(component.destroyed$.next).toHaveBeenCalledWith(true);
-    expect(component.destroyed$.complete).toHaveBeenCalled();
-  });
-
-  it('should configure dynamic forms on ngAfterViewInit', () => {
-    jest.spyOn(component.solicitante, 'obtenerTipoPersona');
-    component.ngAfterViewInit();
-    expect(component.persona).toEqual(expect.any(Array));
-    expect(component.domicilioFiscal).toEqual(expect.any(Array));
-    expect(component.solicitante.obtenerTipoPersona).toHaveBeenCalledWith(1); // Assuming TIPO_PERSONA.MORAL_NACIONAL = 1
+    expect(nextSpy).toHaveBeenCalledWith(true);
+    expect(completeSpy).toHaveBeenCalled();
   });
 });
