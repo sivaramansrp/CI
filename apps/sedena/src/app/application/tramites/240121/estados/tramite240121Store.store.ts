@@ -8,26 +8,40 @@ import { Store } from '@datorama/akita';
 import { StoreConfig } from '@datorama/akita';
 
 /**
- * Interfaz que representa el estado completo del trámite 240121.
- *
- * @property {number} [tabSeleccionado] - Pestaña actualmente activa en el flujo.
- * @property {DestinoFinal[]} destinatarioFinalTablaDatos - Lista de destinatarios finales registrados.
- * @property {Proveedor[]} proveedorTablaDatos - Lista de proveedores registrados.
- * @property {PagoDerechosFormState} pagoDerechos - Información del formulario de pago de derechos.
- * @property {MercanciaDetalle[]} merccancialTablaDatos - Lista de mercancías registradas.
- * @property {DatosDelTramiteFormState} datosDelTramite - Información general del formulario de datos del trámite.
- * @property {DestinoFinal | null} [modificarDestinarioDatos] - Datos del destinatario que se están modificando.
- * @property {Proveedor | null} [modificarProveedorDatos] - Datos del proveedor que se están modificando.
+ * Representa el estado de la gestión para el trámite 240121.
  */
-
 export interface Tramite240121State {
+  /**
+   * Índice de la pestaña actualmente seleccionada en la interfaz, si aplica.
+   */
   tabSeleccionado?: number;
+  /**
+   * Lista de destinatarios finales mostrados en la tabla de datos.
+   */
   destinatarioFinalTablaDatos: DestinoFinal[];
+  /**
+   * Lista de proveedores mostrados en la tabla de datos.
+   */
   proveedorTablaDatos: Proveedor[];
+  /**
+   * Estado del formulario relacionado con el pago de derechos.
+   */
   pagoDerechos: PagoDerechosFormState;
+  /**
+   * Lista de detalles de mercancía mostrados en la tabla de datos.
+   */
   merccancialTablaDatos: MercanciaDetalle[];
+  /**
+   * Estado del formulario con los datos generales del trámite.
+   */
   datosDelTramite: DatosDelTramiteFormState;
+  /**
+   * Datos del destinatario final que se está modificando, o null si no hay ninguno.
+   */
   modificarDestinarioDatos?: DestinoFinal | null;
+  /**
+   * Datos del proveedor que se está modificando, o null si no hay ninguno.
+   */
   modificarProveedorDatos?: Proveedor | null;
 }
 
@@ -63,8 +77,11 @@ export function createInitialState(): Tramite240121State {
 }
 
 /**
- * Store que maneja el estado del trámite 240121.
- * Utiliza Akita para el control reactivo del estado.
+ * Store encargado de manejar el estado del trámite 240121.
+ * Utiliza la librería Akita para la gestión reactiva y centralizada del estado.
+ * 
+ * @decorator Injectable - Permite la inyección del store como servicio singleton.
+ * @decorator StoreConfig - Configura el nombre del store y habilita la función de reset.
  */
 @Injectable({
   providedIn: 'root',

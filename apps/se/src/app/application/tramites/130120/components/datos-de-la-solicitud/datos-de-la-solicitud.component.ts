@@ -486,10 +486,15 @@ tipoPersonaExportador: string = 'Física';
         ) {
           this.tipoPersonaProductor = storeValue.datosProductor.persona_tipo;
         }
+         if (
+          storeValue.datosExportador &&
+          storeValue.datosExportador.persona_tipo
+        ) {
+          this.tipoPersonaExportador = storeValue.datosExportador.persona_tipo;
+        }
       }
     });
 
-    // Listen for form changes and update the store
     this.formulario.valueChanges.pipe(
       takeUntil(this.destroyNotifier$)
     ).subscribe((formValue) => {
@@ -597,8 +602,6 @@ tipoPersonaExportador: string = 'Física';
    * @param evento Nueva fecha.
    */
   fechaCambiado(evento: string): void {
-    // Example: this.formulario.get('datosExporta.fecha_documento').setValue(evento);
-    // Make sure to mark as touched/dirty if needed
     this.formulario.patchValue({
         datosMercanica: { factura_fecha: evento },
       });
@@ -606,13 +609,11 @@ tipoPersonaExportador: string = 'Física';
     this.setFormGroupValidity();
   }
 
-    /**
+  /**
    * Maneja el cambio de la fecha del documento de exportación.
    * @param evento Nueva fecha.
    */
   fechaDocumento(evento: string): void {
-    // Example: this.formulario.get('datosExporta.fecha_documento').setValue(evento);
-    // Make sure to mark as touched/dirty if needed
     this.formulario.patchValue({
         datosExportador: { fecha_documento: evento },
       });
@@ -687,6 +688,10 @@ tipoPersonaExportador: string = 'Física';
         OTROUMCCONTROL.markAsDirty();
         OTROUMCCONTROL.markAsTouched();
       }
+    }
+    const FACTORINPUT = document.getElementById('factor_conversión') as HTMLInputElement | null;
+    if (FACTORINPUT) {
+      FACTORINPUT.readOnly = false;
     }
   }
 }

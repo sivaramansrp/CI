@@ -25,11 +25,7 @@ import { provideHttpClient } from '@angular/common/http';
 
 @NgModule({
   declarations: [
-    SolicitudDeReporteComponent,
-    ProgramasReporteAnnualComponent,
-    DatosDeReporteAnnualComponent,
-    DatosComponent,
-    PasoTresComponent,   
+     
   ],
   imports: [
     CommonModule,
@@ -48,6 +44,11 @@ import { provideHttpClient } from '@angular/common/http';
     AlertComponent,
     AcusePageComponent,
     BsDatepickerModule.forRoot(),
+    SolicitudDeReporteComponent,
+    ProgramasReporteAnnualComponent,
+    DatosDeReporteAnnualComponent,
+    DatosComponent,
+    PasoTresComponent,  
   ],
   providers: [provideHttpClient(), ToastrService],
 })

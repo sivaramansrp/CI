@@ -14,9 +14,9 @@ import { FormsModule } from '@angular/forms';
 
 import { TituloComponent } from '@ng-mf/data-access-user';
 
+import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { Agregar220401Store, Solicitud220401State } from '../../../../estados/tramites/agregar220401.store';
 import { AgregarQuery } from '../../../../estados/queries/agregar.query';
-
 /**
  * Componente que gestiona el formulario de pago de derechos de importación o exportación.
  * El formulario permite capturar información sobre la mercancía y el pago de derechos, y realiza 
@@ -118,6 +118,20 @@ export class PagoDeDerechoComponent implements OnInit, OnDestroy {
     .subscribe()
    }
 
+/**
+ * Validador que verifica si la fecha ingresada es futura.
+ */
+   static validadorDeFechaFutura(): ValidatorFn {
+  return (control: AbstractControl): ValidationErrors | null => {
+    if (!control.value) {return null;}
+    const SELECTED_DATE = new Date(control.value);
+    const TODAY = new Date();
+    SELECTED_DATE.setHours(0,0,0,0);
+    TODAY.setHours(0,0,0,0);
+    return SELECTED_DATE > TODAY ? { futureDate: true } : null;
+  };
+}
+
   /**
    * Hook de ciclo de vida de Angular que se ejecuta al inicializar el componente.
    * 
@@ -166,7 +180,10 @@ export class PagoDeDerechoComponent implements OnInit, OnDestroy {
         cadenaDependencia: ['', Validators.required],
         Banco:[this.solicitudState?.Banco],
         llaveDePago:[this.solicitudState?.llaveDePago],
-       fechaPago:[this.solicitudState?.fechaPago,[ Validators.required]],
+      fechaPago: [
+      this.solicitudState?.fechaPago,
+      [Validators.required, PagoDeDerechoComponent.validadorDeFechaFutura()]
+      ],
        importePago: ['', Validators.required],
       });
     
@@ -228,17 +245,15 @@ export class PagoDeDerechoComponent implements OnInit, OnDestroy {
       this.FormSolicitud.get('fechaPago')?.enable();
       this.FormSolicitud.get('llaveDePago')?.enable();
       
-      this.FormSolicitud.get('rfcImportExport')?.disable();
-      this.FormSolicitud.get('cadenaDependencia')?.disable();
-      this.FormSolicitud.get('importePago')?.disable();
+      this.FormSolicitud.get('rfcImportExport')?.enable();
+      this.FormSolicitud.get('cadenaDependencia')?.enable();
+      this.FormSolicitud.get('importePago')?.enable();
     } else {
       this.FormSolicitud.get('rfcImportExport')?.reset();
       this.FormSolicitud.get('cadenaDependencia')?.reset();
       this.FormSolicitud.get('importePago')?.reset();
       
-      this.FormSolicitud.get('rfcImportExport')?.disable();
-      this.FormSolicitud.get('cadenaDependencia')?.disable();
-      this.FormSolicitud.get('importePago')?.disable();
+   
       this.FormSolicitud.get('fechaPago')?.disable();
       this.FormSolicitud.get('llaveDePago')?.disable();
     }
@@ -295,6 +310,15 @@ export class PagoDeDerechoComponent implements OnInit, OnDestroy {
       // Aquí se puede agregar lógica para manejar el formulario inválido
     }
   }
+
+  /**
+ * Limpia el campo 'fechaPago' del formulario.
+ */
+borrarFechaPago(): void {
+  this.FormSolicitud.get('fechaPago')?.setValue('');
+  this.FormSolicitud.get('fechaPago')?.markAsPristine();
+  this.FormSolicitud.get('fechaPago')?.markAsUntouched();
+}
 
   /**
    * Hook de ciclo de vida de Angular que se ejecuta al destruir el componente.
