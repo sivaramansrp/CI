@@ -1,11 +1,13 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { VehiculosComponent } from './vehiculos.component';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { Tramite40101Store } from '../../estados/Tramite40101Store';
-import { Tramite40101Query } from '../../estados/tramite40101.query';
+
+import { Tramite40101Store } from '../../estado/tramite40101.store';
+import { Tramite40101Query } from '../../estado/tramite40101.query';
 import { modificarTerrestreService } from '../services/modificacar-terrestre.service';
-import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
+import { AgregarTransporteComponent, AlertComponent, BtnContinuarComponent, CatalogoSelectComponent, SelectPaisesComponent, TablaDinamicaComponent, TituloComponent, ValidacionesFormularioService } from '@ng-mf/data-access-user';
 import { of } from 'rxjs';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 
 describe('VehiculosComponent', () => {
   let component: VehiculosComponent;
@@ -34,7 +36,16 @@ describe('VehiculosComponent', () => {
     };
 
     await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule],
+      imports: [
+        AgregarTransporteComponent,
+        SelectPaisesComponent,
+        CatalogoSelectComponent,
+        TablaDinamicaComponent,
+        AlertComponent,
+        ReactiveFormsModule,
+        TituloComponent,
+        BtnContinuarComponent
+      ],
       declarations: [VehiculosComponent],
       providers: [
         FormBuilder,
@@ -42,6 +53,7 @@ describe('VehiculosComponent', () => {
         { provide: Tramite40101Query, useValue: mockQuery },
         { provide: modificarTerrestreService, useValue: mockService },
         { provide: ValidacionesFormularioService, useValue: mockValidaciones },
+        provideHttpClientTesting()
       ],
     }).compileComponents();
 
