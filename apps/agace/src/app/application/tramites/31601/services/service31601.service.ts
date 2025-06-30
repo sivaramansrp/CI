@@ -2,6 +2,7 @@ import { Solicitud31601State, Tramite31601Store } from '../../../estados/tramite
 import { ENVIRONMENT } from '../../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { MencioneConfiguracionItem } from '../enum/mencione-tabla.enum';
 import { Observable } from 'rxjs';
 
 /**
@@ -125,6 +126,19 @@ export class Solocitud31601Service {
     this.tramite31601Store.setDescripcion(DATOS.descripcion);
     this.tramite31601Store.setHaContado(DATOS.haContado);
     this.tramite31601Store.setEnCasoIva(DATOS.enCasoIva);
+    this.tramite31601Store.setEnlaceTablaDatos([{
+        id: '1',
+        rfc: DATOS.rfcReprestantante || '',
+        nombre: DATOS.nombreReprestante || '',
+        apellidoPaterno: DATOS.apellidoPaterno || '',
+        apellidoMaterno: DATOS.apellidoMaterno || '',
+        cargo: DATOS.cargo || '',
+        telefono: DATOS.telefonoReprestantante || '',
+        correo: DATOS.correoReprestantante || '',
+        suplente: DATOS.suplente || '',
+        estadoResidencia: DATOS.estadoResidencia || '',
+        registroFederal : DATOS.registroFederaldeContribuyentes || '',
+    }]);
   }
 
   /**
@@ -135,5 +149,13 @@ export class Solocitud31601Service {
    */
   getRegistroTomaMuestrasMercanciasData(): Observable<Solicitud31601State> {
     return this.http.get<Solicitud31601State>('assets/json/31601/registro_toma_muestras_mercancias.json');
+  }
+
+  /**
+   * Obtiene los datos de configuración de menciones desde un archivo JSON.
+   * Este archivo contiene una lista de menciones que se pueden utilizar en el trámite 31601.
+   * */
+  getMencioneDatos(): Observable<MencioneConfiguracionItem[]> {
+    return this.http.get<MencioneConfiguracionItem[]>('assets/json/31601/mencione.json');
   }
 }

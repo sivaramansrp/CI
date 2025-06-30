@@ -4,71 +4,171 @@
     <div class="row">
       <div class="col-md-4 mb-3">
         <label>Nombre(s):</label>
-        <input type="text" class="form-control" formControlName="nombre" (change)="setValoresStore(validacionForm, 'nombre', 'setNombre')" />
+        <input
+          type="text"
+          class="form-control"
+          formControlName="nombre" [disabled]="soloLectura"
+          (change)="setValoresStore(validacionForm, 'nombre', 'setNombre')"
+        />
       </div>
       <div class="col-md-4 mb-3">
         <label>Primer apellido:</label>
-        <input type="text" class="form-control" id="primerApellido" formControlName="apellidoPrimer" (click)="onClick()" (change)=" setValoresStore( validacionForm, 'apellidoPrimer', 'setApellidoPrimer' ) " />
+        <input
+          type="text"
+          class="form-control"
+          id="primerApellido"
+          formControlName="apellidoPrimer" [disabled]="soloLectura"
+          (click)="onClick()"
+          (change)=" setValoresStore(validacionForm,'apellidoPrimer','setApellidoPrimer')"/>
       </div>
       <div class="col-md-4 mb-3">
         <label>Segundo apellido:</label>
-        <input type="text" class="form-control" id="segundoApellido" formControlName="apellidoSegundo" (change)=" setValoresStore( validacionForm, 'apellidoSegundo', 'setApellidoSegundo' ) " />
+        <input
+          type="text"
+          class="form-control"
+          id="segundoApellido"
+          formControlName="apellidoSegundo" [disabled]="soloLectura"
+          (change)="setValoresStore( validacionForm, 'apellidoSegundo','setApellidoSegundo')"/>
       </div>
     </div>
     <div class="row">
       <div class="col-md-4 mb-3">
         <label>Número de registro fiscal*:</label>
-        <input type="text" class="form-control" id="denominacion" formControlName="numeroFiscal" (change)=" setValoresStore(validacionForm, 'numeroFiscal', 'setNumeroFiscal') " />
+        <input
+          type="text"
+          class="form-control"
+          id="denominacion"
+          formControlName="numeroFiscal" [disabled]="soloLectura"
+          (change)="
+            setValoresStore(validacionForm, 'numeroFiscal', 'setNumeroFiscal')
+          "
+        />
       </div>
       <div class="col-md-8 mb-3">
         <label>Razón social:</label>
-        <input type="text" class="form-control" [ngClass]="{ 'gray-class': registroForm.get('validacionForm.apellidoPrimer')?.value !== '' }" id="denominacion" [readonly]=" registroForm.get('validacionForm.apellidoPrimer')?.value !== '' " formControlName="razonSocial" (change)=" setValoresStore(validacionForm, 'razonSocial', 'setRazonSocial') " />
+        <input
+          type="text"
+          class="form-control"
+          [ngClass]="{'gray-class': registroForm.get('validacionForm.apellidoPrimer')?.value !== ''}"
+          id="denominacion"
+          [readonly]="registroForm.get('validacionForm.apellidoPrimer')?.value !== ''"
+          formControlName="razonSocial" [disabled]="soloLectura"
+          (change)="setValoresStore(validacionForm, 'razonSocial', 'setRazonSocial')"/>
       </div>
     </div>
     <ng-titulo titulo="Domicilio del destinatario" />
     <div class="row">
       <div class="col-md-8 mb-3">
         <label>Ciudad (población, estado o provincia)*:</label>
-        <input type="text" class="form-control" id="denominacion" formControlName="ciudad" (change)="setValoresStore(validacionForm, 'ciudad', 'setCiudad')" />
+        <input
+          type="text"
+          class="form-control"
+          id="denominacion"
+          formControlName="ciudad" [disabled]="soloLectura"
+          (change)="setValoresStore(validacionForm, 'ciudad', 'setCiudad')"
+        />
       </div>
     </div>
     <div class="row">
       <div class="col-md-4 mb-3">
         <label>Calle*:</label>
-        <input type="text" class="form-control" id="nombre" formControlName="calle" (change)="setValoresStore(validacionForm, 'calle', 'setCalle')" />
+        <input
+          type="text"
+          class="form-control"
+          id="nombre"
+          formControlName="calle" [disabled]="soloLectura"
+          (change)="setValoresStore(validacionForm, 'calle', 'setCalle')"
+        />
       </div>
       <div class="col-md-4 mb-3">
         <label>Número y/o letra*:</label>
-        <input type="text" class="form-control" id="primerApellido" formControlName="numeroLetra" (change)=" setValoresStore(validacionForm, 'numeroLetra', 'setNumeroLetra') " />
+        <input
+          type="text"
+          class="form-control"
+          id="primerApellido"
+          formControlName="numeroLetra" [disabled]="soloLectura"
+          (change)="
+            setValoresStore(validacionForm, 'numeroLetra', 'setNumeroLetra')
+          "
+        />
       </div>
       <div class="col-md-1 mb-3">
         <label>Lada:</label>
-        <input type="text" class="form-control" id="segundoApellido" formControlName="lada" (change)="setValoresStore(validacionForm, 'lada', 'setLada')" />
+        <input
+          type="text"
+          class="form-control"
+          id="segundoApellido"
+          formControlName="lada" [disabled]="soloLectura"
+          (change)="setValoresStore(validacionForm, 'lada', 'setLada')"
+        />
       </div>
       <div class="col-md-3 mb-3">
         <label>Teléfono:</label>
-        <input type="text" class="form-control" id="segundoApellido" formControlName="telefono" (change)="setValoresStore(validacionForm, 'telefono', 'setTelefono')" />
+        <input
+          type="text"
+          class="form-control"
+          id="segundoApellido"
+          formControlName="telefono" [disabled]="soloLectura"
+          (change)="setValoresStore(validacionForm, 'telefono', 'setTelefono')"
+        />
       </div>
     </div>
     <div class="row">
       <div class="col-md-4 mb-3">
         <label>Fax:</label>
-        <input type="text" class="form-control" id="nombre" formControlName="fax" (change)="setValoresStore(validacionForm, 'fax', 'setFax')" />
+        <input
+          type="text"
+          class="form-control"
+          id="nombre"
+          formControlName="fax" [disabled]="soloLectura"
+          (change)="setValoresStore(validacionForm, 'fax', 'setFax')"
+        />
       </div>
       <div class="col-md-4 mb-3">
-        <label>Correo electrónico*: </label>
-        <span style="margin-left: 5px;" class="bi bi-question-circle-fill" title="ejemplo@dominio.com" data-bs-toggle="tooltip"></span>
-        <input type="text" class="form-control" id="primerApellido" formControlName="correoElectronico" (change)=" setValoresStore( validacionForm, 'correoElectronico', 'setCorreoElectronico' ) " />
+        <label>Correo electrónico*:</label
+        ><span
+          class="bi bi-question-circle-fill"
+          title="ejemplo@dominio.com"
+          data-bs-toggle="tooltip"
+        ></span>
+        <input
+          type="text"
+          class="form-control"
+          id="primerApellido"
+          formControlName="correoElectronico" [disabled]="soloLectura"
+          (change)="
+            setValoresStore(
+              validacionForm,
+              'correoElectronico',
+              'setCorreoElectronico'
+            )
+          "
+        />
       </div>
     </div>
     <div class="row">
       <div class="col-md-8 mb-3">
-        <app-catalogo-select [catalogo]="options" [label]="'País destino'" [required]="true" formControlName="nacion" (change)="setValoresStore(validacionForm, 'nacion', 'setNacion')"></app-catalogo-select>
+        <app-catalogo-select
+          [catalogo]="options"
+          [label]="'País destino'"
+          [id]="'nacion'"
+          formControlName="nacion"
+          [required]="true" [isDisabled]="soloLectura"
+          (change)="setValoresStore(validacionForm, 'nacion', 'setNacion')"
+        ></app-catalogo-select>
       </div>
     </div>
     <ng-titulo titulo="Detalles del transporte" />
     <div class="col-md-8 mb-3">
-      <app-catalogo-select [catalogo]="options" [label]="'Medio de transporte'" [required]="false" formControlName="transporte" (change)=" setValoresStore(validacionForm, 'transporte', 'setTransporte') "></app-catalogo-select>
+      <input type="hidden" formControlName="transporte">
+      <app-catalogo-select
+        [catalogo]="option" [id]="'transporte'"
+        [label]="'Medio de transporte'" 
+        formControlName="transporte"
+        [required]="true" [isDisabled]="soloLectura"
+        (change)="setValoresStore(validacionForm, 'transporte', 'setTransporte')
+        "
+      ></app-catalogo-select>
     </div>
   </ng-container>
 </form>

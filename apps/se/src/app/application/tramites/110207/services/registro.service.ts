@@ -1,11 +1,10 @@
 import { ColumnasTabla, SeleccionadasTabla } from '../models/registro.model';
+import { ENVIRONMENT, JSONResponse } from '@ng-mf/data-access-user';
 import { Observable, catchError, throwError } from 'rxjs';
+import { Solicitud110207State, Tramite110207Store } from '../state/Tramite110207.store';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { JSONResponse } from '@ng-mf/data-access-user';
 import { RespuestaCatalogos } from '@libs/shared/data-access-user/src';
-import { inject } from '@angular/core';
-import { APPINJECT } from 'apps/se/src/app/app.inject';
 
 
 /**
@@ -15,34 +14,91 @@ import { APPINJECT } from 'apps/se/src/app/app.inject';
   providedIn: 'root',
 })
 export class RegistroService {
-  /**
-   * AppConfig es una inyección de dependencias que proporciona la configuración de la aplicación.
-   */
-  private readonly appConfig = inject(APPINJECT);
-
+  
   /**
    * URL base del servidor principal.
    */
-  urlServer = this.appConfig.URL_SERVER;
+  urlServer = ENVIRONMENT.URL_SERVER;
 
   /**
    * URL base del servidor de catálogos auxiliares.
    */
-  urlServerCatalogos = this.appConfig.URL_SERVER_JSON_AUXILIAR;
+  urlServerCatalogos = ENVIRONMENT.URL_SERVER_JSON_AUXILIAR;
 
   /**
    * Constructor del servicio.
    * @param http Cliente HTTP para realizar solicitudes al servidor.
    */
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private tramite110207Store: Tramite110207Store) {
     // El constructor se utiliza para la inyección de dependencias.
   }
-
+ /**
+     * Actualiza el estado global del formulario con los datos proporcionados.
+     * @param DATOS Objeto con los datos del formulario de tipo Solicitud110207State.
+     */
+  actualizarEstadoFormulario(DATOS: Solicitud110207State): void {
+    this.tramite110207Store.setTratado(DATOS.tratado);
+    this.tramite110207Store.setPais(DATOS.pais);
+    this.tramite110207Store.setFraccionArancelaria(DATOS.fraccionArancelaria);
+    this.tramite110207Store.setNumRegistro(DATOS.numeroRegistro);
+    this.tramite110207Store.setNomComercial(DATOS.nombreComercial);
+    this.tramite110207Store.setFechInicioB(DATOS.fechaInicial);
+    this.tramite110207Store.setFechFinB(DATOS.fechaFinal);
+    this.tramite110207Store.setArchivo(DATOS.archivo);
+    this.tramite110207Store.setObservaciones(DATOS.observaciones);
+    this.tramite110207Store.setPresica(DATOS.presica);
+    this.tramite110207Store.setPresenta(DATOS.presenta);
+    this.tramite110207Store.setIdioma(DATOS.idioma);
+    this.tramite110207Store.setEntidad(DATOS.entidad);
+    this.tramite110207Store.setRepresentacion(DATOS.representacion);
+    this.tramite110207Store.setNombre(DATOS.nombre);
+    this.tramite110207Store.setApellidoPrimer(DATOS.apellidoPrimer);
+    this.tramite110207Store.setApellidoSegundo(DATOS.apellidoSegundo);
+    this.tramite110207Store.setNumeroFiscal(DATOS.numeroFiscal);
+    this.tramite110207Store.setRazonSocial(DATOS.razonSocial);
+    this.tramite110207Store.setCiudad(DATOS.ciudad);
+    this.tramite110207Store.setCalle(DATOS.calle);
+    this.tramite110207Store.setNumeroLetra(DATOS.numeroLetra);
+    this.tramite110207Store.setLada(DATOS.lada);
+    this.tramite110207Store.setTelefono(DATOS.telefono);
+    this.tramite110207Store.setFax(DATOS.fax);
+    this.tramite110207Store.setCorreoElectronico(DATOS.correoElectronico);
+    this.tramite110207Store.setNacion(DATOS.nacion);
+    this.tramite110207Store.setTransporte(DATOS.transporte);
+    this.tramite110207Store.setfraccionMercanArancelaria(DATOS.fraccionMercanciaArancelaria);
+    this.tramite110207Store.setnombretecnico(DATOS.nombreTecnico);
+    this.tramite110207Store.setnomreeningles(DATOS.nombreEnIngles);
+    this.tramite110207Store.setcriterioparaconferir(DATOS.criterioParaConferir);
+    this.tramite110207Store.setmarca(DATOS.marca);
+    this.tramite110207Store.setcantidad(DATOS.cantidad);
+    this.tramite110207Store.setUMC(DATOS.umc);
+    this.tramite110207Store.setvalordelamercancia(DATOS.valorDelaMercancia);
+    this.tramite110207Store.setcomplementodeladescripcion(DATOS.complementoDelaDescripcion);
+    this.tramite110207Store.setmasabruta(DATOS.masaBruta);
+    this.tramite110207Store.setnombrecomercialdelamercancia(DATOS.nombreComercialDelaMercancia);
+    this.tramite110207Store.setUnidadMedida(DATOS.unidadMedida);
+    this.tramite110207Store.setTipoFactura(DATOS.tipoFactura);
+    this.tramite110207Store.setFecha(DATOS.fecha);
+    this.tramite110207Store.setNFactura(DATOS.numeroFactura);
+    this.tramite110207Store.setJustificacion(DATOS.justificacion);
+    this.tramite110207Store.setCheckbox(DATOS.casillaVerificacion);
+    this.tramite110207Store.setEstablecerSiCasilla(DATOS.siCasilla);
+    this.tramite110207Store.setRutaCompleta(DATOS.rutaCompleta);
+    this.tramite110207Store.setPuertoEmbarque(DATOS.puertoEmbarque);
+    this.tramite110207Store.setPuertoDesembarque(DATOS.puertoDesembarque);
+  }
+  /**
+     * Obtiene los datos del registro de toma de muestras de mercancías desde un archivo JSON.
+     * @returns Observable con los datos del formulario.
+     */
+  getRegistroTomaMuestrasMercanciasData(): Observable<Solicitud110207State> {
+    return this.http.get<Solicitud110207State>('assets/json/110207/registro_toma_muestras_mercancias.json');
+  }
   /**
    * Obtiene el catálogo de tratados.
    * @returns Observable con la respuesta del catálogo de tratados.
    */
-  getTratado() {
+  getTratado(): Observable<RespuestaCatalogos> {
     return this.http.get<RespuestaCatalogos>('assets/json/110207/tratado.json');
   }
 
@@ -50,7 +106,7 @@ export class RegistroService {
    * Obtiene el catálogo de países.
    * @returns Observable con la respuesta del catálogo de países.
    */
-  getPais() {
+  getPais(): Observable<RespuestaCatalogos> {
     return this.http.get<RespuestaCatalogos>('assets/json/110207/pais.json');
   }
 
@@ -58,7 +114,7 @@ export class RegistroService {
    * Obtiene el catálogo de idiomas.
    * @returns Observable con la respuesta del catálogo de idiomas.
    */
-  getIdioma() {
+  getIdioma(): Observable<RespuestaCatalogos> {
     return this.http.get<RespuestaCatalogos>('assets/json/110207/idioma.json');
   }
 
@@ -66,7 +122,7 @@ export class RegistroService {
    * Obtiene el catálogo de países de destino.
    * @returns Observable con la respuesta del catálogo de países de destino.
    */
-  getPaisDestino() {
+  getPaisDestino(): Observable<RespuestaCatalogos> {
     return this.http.get<RespuestaCatalogos>('assets/json/110207/pais.json');
   }
 
@@ -74,7 +130,7 @@ export class RegistroService {
    * Obtiene el catálogo de transportes.
    * @returns Observable con la respuesta del catálogo de transportes.
    */
-  getTransporte() {
+  getTransporte(): Observable<RespuestaCatalogos> {
     return this.http.get<RespuestaCatalogos>('assets/json/110207/pais.json');
   }
 
@@ -82,7 +138,7 @@ export class RegistroService {
    * Obtiene el catálogo de entidades.
    * @returns Observable con la respuesta del catálogo de entidades.
    */
-  getEntidad() {
+  getEntidad(): Observable<RespuestaCatalogos> {
     return this.http.get<RespuestaCatalogos>('assets/json/110207/entidad.json');
   }
 
@@ -90,7 +146,7 @@ export class RegistroService {
    * Obtiene el catálogo de representaciones.
    * @returns Observable con la respuesta del catálogo de representaciones.
    */
-  getRepresentacion() {
+  getRepresentacion(): Observable<RespuestaCatalogos> {
     return this.http.get<RespuestaCatalogos>('assets/json/110207/entidad.json');
   }
 
@@ -98,7 +154,7 @@ export class RegistroService {
    * Obtiene el catálogo de tipos de factura.
    * @returns Observable con la respuesta del catálogo de tipos de factura.
    */
-  getTipoFactura() {
+  getTipoFactura(): Observable<RespuestaCatalogos> {
     return this.http.get<RespuestaCatalogos>(
       'assets/json/110207/tipofactura.json'
     );
@@ -108,7 +164,7 @@ export class RegistroService {
    * Obtiene el catálogo de unidades de medida comercial (UMC).
    * @returns Observable con la respuesta del catálogo de UMC.
    */
-  getUMC() {
+  getUMC(): Observable<RespuestaCatalogos> {
     return this.http.get<RespuestaCatalogos>('assets/json/110207/umc.json');
   }
 
@@ -116,7 +172,7 @@ export class RegistroService {
    * Obtiene el catálogo de unidades de medida.
    * @returns Observable con la respuesta del catálogo de unidades de medida.
    */
-  getUnidadMedida() {
+  getUnidadMedida(): Observable<RespuestaCatalogos> {
     return this.http.get<RespuestaCatalogos>('assets/json/110207/umc.json');
   }
 
@@ -125,7 +181,7 @@ export class RegistroService {
    * @param id Identificador del catálogo.
    * @returns Observable con la respuesta del catálogo solicitado.
    */
-  getCatalogoById(id: number) {
+  getCatalogoById(id: number): Observable<JSONResponse> {
     return this.http.get<JSONResponse>(`${this.urlServerCatalogos}/${id}`);
   }
 

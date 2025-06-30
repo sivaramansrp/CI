@@ -1,7 +1,16 @@
-import { AccionBoton, DatosPasos, ListaPasosWizard, WizardComponent } from '@libs/shared/data-access-user/src';
-import { Component, OnDestroy, ViewChild } from '@angular/core';
-import { PANTA_PASOS, TITULO_PASO_DOS, TITULO_PASO_TRES, TITULO_PASO_UNO } from '../../services/comercio-exterior.enum';
+import { AccionBoton } from '@libs/shared/data-access-user/src';
+import { Component } from '@angular/core';
+import { DatosPasos } from '@libs/shared/data-access-user/src';
+import { ListaPasosWizard } from '@libs/shared/data-access-user/src';
+import { OnDestroy } from '@angular/core';
+import { PANTA_PASOS } from '../../services/comercio-exterior.enum';
 import { Subject } from 'rxjs';
+import { TITULO_PASO_DOS } from '../../services/comercio-exterior.enum';
+import { TITULO_PASO_TRES } from '../../services/comercio-exterior.enum';
+import { TITULO_PASO_UNO } from '../../services/comercio-exterior.enum';
+import { ViewChild } from '@angular/core';
+import { WizardComponent } from '@libs/shared/data-access-user/src';
+
 
 @Component({
   selector: 'app-todos-pasos',
@@ -68,7 +77,7 @@ export class TodospasosComponent implements OnDestroy {
    /**
    * Este método se utiliza para inicializar el componente.
    */
-   public getValorIndice(e: AccionBoton) {
+   public getValorIndice(e: AccionBoton) : void{
     if (e.valor > 0 && e.valor < 5) {
       this.indice = e.valor;
       if(this.indice === 2) {

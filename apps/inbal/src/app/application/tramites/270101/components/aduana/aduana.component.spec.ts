@@ -100,7 +100,9 @@ describe('AduanaComponent', () => {
     exportarIlustracionesService = TestBed.inject(
       ExportarIlustracionesService
     ) as any;
-
+    component.consultaState = {
+          readonly: false,
+        } as any;
     fixture.detectChanges();
   });
 
@@ -121,7 +123,7 @@ describe('AduanaComponent', () => {
     jest
       .spyOn(exportarIlustracionesService, 'getAduanaDeSalidaData')
       .mockReturnValue(of(mockData));
-    component.obtenerAduanaDeSalida();
+    component.obtenerAduanaDeSalida(() => {}); // Pass a dummy callback
     expect(component.aduanaData).toEqual(mockData);
   });
 

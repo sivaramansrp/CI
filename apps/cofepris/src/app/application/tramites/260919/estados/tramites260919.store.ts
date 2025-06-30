@@ -28,6 +28,8 @@ export interface Solicitud260919State {
   /** Tipo de persona (física o moral) */
   tipoPersona: string;
 
+  nacionalidad: string;
+
   /** Nombre de la persona o entidad */
   nombre: string;
 
@@ -157,19 +159,38 @@ export interface Solicitud260919State {
   /** Fracción arancelaria del producto */
   fraccionArancelaria: string;
 
-/** Denominación del nombre del producto. */
- denominacionNombre: string;
+  /** Denominación del nombre del producto. */
+  denominacionNombre: string;
 
-/** Estado físico del producto. */
-estadoFisico: string;
+  /** Estado físico del producto. */
+  estadoFisico: string;
 
-/** Presentación farmacéutica del producto. */
-presentacionFarmaceutica: string;
-/**
- * Indica el tipo de operación a realizar en el trámite.
- * Puede ser utilizado para diferenciar entre operaciones como alta, modificación o baja.
- */
-tipoOperacion: boolean,
+  /** Presentación farmacéutica del producto. */
+  presentacionFarmaceutica: string;
+  /**
+   * Indica el tipo de operación a realizar en el trámite.
+   * Puede ser utilizado para diferenciar entre operaciones como alta, modificación o baja.
+   */
+  tipoOperacion: string;
+  /** Número de registro sanitario */
+  numeroDeRegistoSanitario: string;
+  /** Presentación del producto */
+  presentacion: string;
+  /** Forma farmacéutica del producto */
+  formaFarmaceutica: string;
+  /** Número de registro sanitario del producto */
+  numeroDeRegistroSanitario: string;
+
+  /** CURP de la persona */
+  curp: string;
+  /** Clave del SCIAN */
+  claveScian: string;
+  /** Descripción del SCIAN */
+  descripcionDelScian: string;
+  // fechaPago: string,
+  cumplocon: boolean;
+  /** Opciones del radio de "Hacerlos" */
+  hacerlosRadioOptions: string;
 }
 
 /**
@@ -202,6 +223,8 @@ export function createInitialSolicitudState(): Solicitud260919State {
 
     /** Tipo de persona (física o moral) */
     tipoPersona: '',
+
+    nacionalidad: '',
 
     /** Nombre de la persona o entidad */
     nombre: '',
@@ -331,20 +354,42 @@ export function createInitialSolicitudState(): Solicitud260919State {
     /** Fracción arancelaria del producto */
     fraccionArancelaria: '',
 
-   /** Denominación del nombre del producto. */
-   denominacionNombre: '',
+    /** Denominación del nombre del producto. */
+    denominacionNombre: '',
 
-   /** Estado físico del producto. */
-   estadoFisico: '',
+    /** Estado físico del producto. */
+    estadoFisico: '',
 
-  /** Presentación farmacéutica del producto. */
-   presentacionFarmaceutica: '',
+    /** Presentación farmacéutica del producto. */
+    presentacionFarmaceutica: '',
 
-   /**
- * Valor inicial para el tipo de operación en el trámite.
- * Indica si la operación es de alta, modificación o baja.
- */
-  tipoOperacion: false,
+    /**
+     * Valor inicial para el tipo de operación en el trámite.
+     * Indica si la operación es de alta, modificación o baja.
+     */
+    tipoOperacion: '',
+
+    /** Número de registro sanitario */
+    numeroDeRegistoSanitario: '',
+    /** Presentación del producto */
+    presentacion: '',
+    /** Forma farmacéutica del producto */
+    formaFarmaceutica: '',
+    /** Número de registro sanitario del producto */
+    numeroDeRegistroSanitario: '',
+
+    /** CURP de la persona */
+    curp: '',
+    /** Clave del SCIAN */
+    claveScian: '',
+    /** Descripción del SCIAN */
+    descripcionDelScian: '',
+
+    /** Indica si se cumple con los requisitos del trámite */
+    cumplocon: true,
+
+    /** Opciones del radio de "Hacerlos" */
+    hacerlosRadioOptions: '',
   };
 }
 /**
@@ -645,7 +690,11 @@ export class Solicitud260919Store extends Store<Solicitud260919State> {
       avisoDeFuncionamiento,
     }));
   }
-  public setTipoOperacion(tipoOperacion: boolean): void {
+  /**
+   * Método para actualizar el tipo de operación en el estado.
+   * @param tipoOperacion Tipo de operación a establecer.
+   */
+  public setTipoOperacion(tipoOperacion: string): void {
     this.update((state) => ({
       ...state,
       tipoOperacion,
@@ -744,13 +793,14 @@ export class Solicitud260919Store extends Store<Solicitud260919State> {
    * Método para actualizar la configuración de columnas en el estado.
    * @param configuracionColumnasoli Configuración de columnas a establecer.
    */
-  public setConfiguracionColumnasoli(configuracionColumnasoli: FilaData[]): void {
+  public setConfiguracionColumnasoli(
+    configuracionColumnasoli: FilaData[]
+  ): void {
     this.update((state) => ({
       ...state,
       configuracionColumnasoli,
     }));
   }
-
 
   /**
    * Método para actualizar la clave de los lotes en el estado.
@@ -789,7 +839,9 @@ export class Solicitud260919Store extends Store<Solicitud260919State> {
    * Método para actualizar la descripción de la fracción arancelaria en el estado.
    * @param descripcionFraccionArancelaria Descripción de la fracción arancelaria a establecer.
    */
-  public setDescripcionFraccionArancelaria(descripcionFraccionArancelaria: string): void {
+  public setDescripcionFraccionArancelaria(
+    descripcionFraccionArancelaria: string
+  ): void {
     this.update((state) => ({
       ...state,
       descripcionFraccionArancelaria,
@@ -906,37 +958,140 @@ export class Solicitud260919Store extends Store<Solicitud260919State> {
     }));
   }
   /** Actualiza la denominación del nombre del producto en el estado. */
-public setDenominacionNombre(denominacionNombre: string): void {
-  this.update((state) => ({
-    ...state,
-    denominacionNombre,
-  }));
-}
+  public setDenominacionNombre(denominacionNombre: string): void {
+    this.update((state) => ({
+      ...state,
+      denominacionNombre,
+    }));
+  }
 
-/** Actualiza el estado físico del producto en el estado. */
-public setEstadoFisico(estadoFisico: string): void {
-  this.update((state) => ({
-    ...state,
-    estadoFisico,
-  }));
-}
+  /** Actualiza el estado físico del producto en el estado. */
+  public setEstadoFisico(estadoFisico: string): void {
+    this.update((state) => ({
+      ...state,
+      estadoFisico,
+    }));
+  }
 
-/** Actualiza la presentación farmacéutica del producto en el estado. */
-public setPresentacionFarmaceutica(presentacionFarmaceutica: string): void {
-  this.update((state) => ({
-    ...state,
-    presentacionFarmaceutica,
-  }));
-}
-/**
- * Actualiza el RFC del en el estado.
- * @param rfcDel RFC del a establecer.
- */
-public setRfcDel(rfcDel: string): void {
-  this.update((state) => ({
-    ...state,
-    rfcDel,
-  }));
-}
+  /** Actualiza la presentación farmacéutica del producto en el estado. */
+  public setPresentacionFarmaceutica(presentacionFarmaceutica: string): void {
+    this.update((state) => ({
+      ...state,
+      presentacionFarmaceutica,
+    }));
+  }
+  /**
+   * Actualiza el RFC del en el estado.
+   * @param rfcDel RFC del a establecer.
+   */
+  public setRfcDel(rfcDel: string): void {
+    this.update((state) => ({
+      ...state,
+      rfcDel,
+    }));
+  }
 
+  /**
+   * Actualiza el número de registro sanitario en el estado.
+   * @param numeroDeRegistoSanitario Número de registro sanitario a establecer.
+   */
+  public setNumeroDeRegistoSanitario(numeroDeRegistoSanitario: string): void {
+    this.update((state) => ({
+      ...state,
+      numeroDeRegistoSanitario,
+    }));
+  }
+
+  /**
+   * Actualiza la presentación del producto en el estado.
+   * @param presentacion Presentación a establecer.
+   */
+  public setPresentacion(presentacion: string): void {
+    this.update((state) => ({
+      ...state,
+      presentacion,
+    }));
+  }
+  /**
+   * Actualiza la forma farmacéutica del producto en el estado.
+   * @param formaFarmaceutica Forma farmacéutica a establecer.
+   */
+  public setFormaFarmaceutica(formaFarmaceutica: string): void {
+    this.update((state) => ({
+      ...state,
+      formaFarmaceutica,
+    }));
+  }
+  /**
+   * Actualiza el número de registro sanitario en el estado.
+   * @param numeroDeRegistroSanitario Número de registro sanitario a establecer.
+   */
+  public setNumeroDeRegistroSanitario(numeroDeRegistroSanitario: string): void {
+    this.update((state) => ({
+      ...state,
+      numeroDeRegistroSanitario,
+    }));
+  }
+  /**
+   * Actualiza el CURP en el estado.
+   * @param curp CURP a establecer.
+   */
+  public setClaveScian(claveScian: string): void {
+    this.update((state) => ({
+      ...state,
+      claveScian,
+    }));
+  }
+  /**
+   * Actualiza la descripción del SCIAN en el estado.
+   * @param descripcionDelScian Descripción del SCIAN a establecer.
+   */
+  public setDescripcionDelScian(descripcionDelScian: string): void {
+    this.update((state) => ({
+      ...state,
+      descripcionDelScian,
+    }));
+  }
+
+  /**
+   * Actualiza el cumplimiento en el estado.
+   * @param cumplocon Cumplimiento a establecer.
+   */
+  public setCumplocon(cumplocon: boolean): void {
+    this.update((state) => ({
+      ...state,
+      cumplocon,
+    }));
+  }
+  /**
+   * Actualiza las opciones del radio de "Hacerlos" en el estado.
+   * @param hacerlosRadioOptions Opciones del radio a establecer.
+   */
+  public setHacerlosRadioOptions(hacerlosRadioOptions: string): void {
+    this.update((state) => ({
+      ...state,
+      hacerlosRadioOptions,
+    }));
+  }
+  /**
+   * Actualiza la nacionalidad en el estado.
+   * @param nacionalidad Nacionalidad a establecer.
+   */
+  public setNacionalidad(nacionalidad: string): void {
+    this.update((state) => ({
+      ...state,
+      nacionalidad,
+    }));
+  }
+
+  /**
+   * Actualiza el CURP en el estado.
+   * @param curp CURP a establecer.
+   */
+  public setCurp(curp: string): void {
+    this.update((state) => ({
+      ...state,
+      curp,
+    }));
+  }
 }

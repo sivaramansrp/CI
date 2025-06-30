@@ -45,6 +45,7 @@
           [label]="'País emisor del certificado Kimberley:'"
           [required]="true"
           formControlName="tipoEmpresa"
+          [isDisabled]="esFormularioSoloLectura"
           (change)="setValoresStore(formularioEmpresa, 'tipoEmpresa')"
         ></app-catalogo-select>
         <div *ngIf="isInvalid('tipoEmpresa')" class="invalid-feedback">
@@ -100,6 +101,7 @@
           [label]="'País de origen:'"
           [required]="true"
           formControlName="paisOrigen"
+          [isDisabled]="esFormularioSoloLectura"
           (change)="setValoresStore(formularioEmpresa, 'paisOrigen') "
         ></app-catalogo-select>
         <div *ngIf="isInvalid('paisOrigen')" class="invalid-feedback">
@@ -328,10 +330,10 @@
         <div class="col-md-6 col-sm-6"></div>
         <div class="col-md-6 col-sm-6 text-end">
           <div class="btn-group">
-            <button class="btn btn-primary me-2" type="button">
+            <button class="btn btn-primary me-2" type="button" [disabled]="esFormularioSoloLectura">
               VistaPrevia
             </button>
-            <button class="btn btn-primary me-2" type="button">Guardar</button>
+            <button class="btn btn-primary me-2" type="button" [disabled]="esFormularioSoloLectura">Guardar</button>
           </div>
         </div>
       </div>

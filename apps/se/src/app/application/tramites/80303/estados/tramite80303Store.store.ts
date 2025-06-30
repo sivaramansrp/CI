@@ -12,35 +12,101 @@ import {
 import {
   Bitacora,
   EmpresaSubmanufacturera,
+  ModificacionDatos,
 } from '../models/modificacion-programa-immex-baja-submanufacturera.model';
 import { Injectable } from '@angular/core';
 import { Store } from '@datorama/akita';
 import { StoreConfig } from '@datorama/akita';
 
+
 /**
- * Interfaz que representa el estado completo del trámite 80303.
- *
- * @property {number} [tabSeleccionado] - Pestaña actualmente activa en el flujo.
- * @property {DestinoFinal[]} destinatarioFinalTablaDatos - Lista de destinatarios finales registrados.
- * @property {Proveedor[]} proveedorTablaDatos - Lista de proveedores registrados.
- * @property {PagoDerechosFormState} pagoDerechos - Información del formulario de pago de derechos.
- * @property {MercanciaDetalle[]} merccancialTablaDatos - Lista de mercancías registradas.
- * @property {DatosDelTramiteFormState} datosDelTramite - Información general del formulario de datos del trámite.
+ * Representa el estado de Tramite80303 en la aplicación.
+ * Este estado contiene información relacionada con diferentes tablas de datos y configuraciones específicas del trámite.
  */
 export interface Tramite80303State {
+  /**
+   * Identificador del tab actualmente seleccionado.
+   * @type {number | undefined}
+   */
   tabSeleccionado?: number;
+
+  /**
+   * Identificador del sub-tab actualmente seleccionado.
+   * @type {number | undefined}
+   */
   subTabSeleccionado?: number;
+
+  /**
+   * Datos de la tabla de anexos de exportación.
+   * @type {AnexoExportacion[]}
+   */
   anexoExportacionTablaDatos: AnexoExportacion[];
+
+  /**
+   * Datos de la tabla de anexos de importación.
+   * @type {AnexoImportacion[]}
+   */
   anexoImportacionTablaDatos: AnexoImportacion[];
+
+  /**
+   * Datos de la tabla de productos sensibles.
+   * @type {Sensible[]}
+   */
   sensiblesTablaDatos: Sensible[];
+
+  /**
+   * Datos de la tabla de accionistas.
+   * @type {DatosContribuyente[]}
+   */
   accionistasTablaDatos: DatosContribuyente[];
+
+  /**
+   * Datos de la tabla de federatarios.
+   * @type {Federatario[]}
+   */
   federatariosTablaDatos: Federatario[];
+
+  /**
+   * Datos de las plantas IMMEX que realizarán las operaciones.
+   * @type {FederatarioRealizaranLasOperaciones[]}
+   */
   plantasIMMEXDatos: FederatarioRealizaranLasOperaciones[];
+
+  /**
+   * Datos de la tabla de empresas submanufactureras.
+   * @type {DatosEmpresaSubmanufacturera[]}
+   */
   empresasSubmanufacturerasTablaDatos: DatosEmpresaSubmanufacturera[];
+
+  /**
+   * Datos de la tabla de plantas manufactureras.
+   * @type {DatosPlantaManufacturera[]}
+   */
   plantasManufacturerasTablaDatos: DatosPlantaManufacturera[];
+
+  /**
+   * Datos de la tabla de servicios IMMEX.
+   * @type {ServicioImmex[]}
+   */
   serviciosImmexTablaDatos: ServicioImmex[];
+
+  /**
+   * Datos de la tabla de bitácora.
+   * @type {Bitacora[]}
+   */
   bitacoraTablaDatos: Bitacora[];
+
+  /**
+   * Datos de la tabla de empresas submanufactureras.
+   * @type {EmpresaSubmanufacturera[]}
+   */
   submanufacturerasTablaDatos: EmpresaSubmanufacturera[];
+
+  /**
+   * Información relacionada con la modificación de datos.
+   * @type {ModificacionDatos}
+   */
+  modificacionDatos: ModificacionDatos;
 }
 
 /**
@@ -64,6 +130,12 @@ export function createInitialState(): Tramite80303State {
     serviciosImmexTablaDatos: [],
     bitacoraTablaDatos: [],
     submanufacturerasTablaDatos: [],
+    modificacionDatos: {
+      rfc: '',
+      representacionFederal: '',
+      tipoModificacion: '',
+      modificacionPrograma: '',
+    },
   };
 }
 

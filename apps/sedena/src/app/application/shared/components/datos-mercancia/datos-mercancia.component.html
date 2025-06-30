@@ -6,7 +6,7 @@
     <form [formGroup]="datosMercancia">
       <div class="row mb-3">
         <div class="col-12">
-          <label for="descripcion" class="form-label">Descripción * :</label>
+          <label for="descripcion" class="form-label">Descripción*:</label>
           <textarea
             id="descripcion"
             class="form-control"
@@ -37,6 +37,8 @@
             [catalogo]="fraccionesCatalogo"
             [label]="'Fracción arancelaria'"
             [required]="true"
+            [isDisabled]="esFormularioSoloLectura"
+            (selectionChange)="settextValue($event?.id)"
           ></app-catalogo-select>
           <div class="error-message">
             <small class="text-danger" *ngIf="datosMercancia.get('fraccionArancelaria')?.touched && datosMercancia.get('fraccionArancelaria')?.hasError('required')">
@@ -47,7 +49,7 @@
 
         <div class="col-md-6">
           <label for="descFraccion" class="form-label">
-            Descripción de la fracción arancelaria * :
+            Descripción de la fracción arancelaria*:
           </label>
           <span
           class="bi bi-question-circle-fill fs-4 m-1"
@@ -80,7 +82,7 @@
       <!-- Cantidad en UMT, UMT, Valor comercial -->
       <div class="row mb-3">
         <div class="col-md-4">
-          <label for="cantidadUMT" class="form-label">Cantidad en UMT * :</label>
+          <label for="cantidadUMT" class="form-label">Cantidad en UMT*:</label>
           <span
           class="bi bi-question-circle-fill fs-4 m-1"
           title="Cantidad en UMT"
@@ -108,7 +110,7 @@
         </div>
 
         <div class="col-md-4">
-          <label for="umt" class="form-label">UMT * :</label>
+          <label for="umt" class="form-label">UMT*:</label>
           <input
             id="umt"
             type="text"
@@ -132,7 +134,7 @@
 
         <div class="col-md-4">
           <label for="valorComercial" class="form-label">
-            Valor comercial * :
+            Valor comercial*:
           </label>
           <input
             id="valorComercial"
@@ -165,6 +167,8 @@
             [label]="'UMC'"
             [required]="true"
             [tooltipQuestionCircle]="true"
+            [isDisabled]="esFormularioSoloLectura"
+            (selectionChange)="datosMercancia.get('umc')?.setValue($event?.id)"
           ></app-catalogo-select>
           <div class="error-message">
             <small
@@ -186,6 +190,8 @@
             [catalogo]="monedaCatalogo"
             [label]="'Tipo moneda'"
             [required]="true"
+            [isDisabled]="esFormularioSoloLectura"
+            (selectionChange)="datosMercancia.get('tipoMoneda')?.setValue($event?.id)"
           ></app-catalogo-select>
           <div class="error-message">
             <small
@@ -211,6 +217,7 @@
             [label]="paisDeOriginLabel"
             [fechasSeleccionadas]="seleccionadasPaisDeOriginDatos"
             (fechasSeleccionadasChange)="paisDeOriginSeleccionadasChange($event)"
+            [isDisabled]="esFormularioSoloLectura"
           ></crosslist>
         </div>
       }
@@ -223,6 +230,7 @@
               name="modificarMercancias"
               class="btn btn-default"
               (click)="cancelar()"
+              [disabled]="esFormularioSoloLectura"
             >
               Cancelar
             </button>
@@ -231,14 +239,16 @@
               name="eliminarMercancias"
               class="btn btn-danger ms-2"
               (click)="limpiarFormulario()"
+              [disabled]="esFormularioSoloLectura"
             >
-              Limpar
+              Limpiar
             </button>
             <button
               type="button"
               name="agregarMercancias"
               class="btn btn-primary ms-2"
               (click)="guardar()"
+              [disabled]="esFormularioSoloLectura"
             >
               Guardar
             </button>

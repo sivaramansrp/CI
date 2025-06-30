@@ -9,7 +9,7 @@
         <th class="selection-expansion-column">
           <input class="cursor-pointer" type="checkbox" name="filaSeleccionada"
             (change)="seleccionarDeseleccionarTodos($event)" aria-label="Seleccionar/Deseleccionar todo"
-            [checked]="filasSeleccionadas.length === datos.length" />
+            [checked]="filasSeleccionadas.length === datos.length" [disabled]="disableSeleccionTablaCheckBox"/>
         </th>
         }
         @else if(tipoSeleccionTabla === TablaSeleccion.BUTTON) {
@@ -44,7 +44,7 @@
             <div class="d-flex align-items-center">
               <input class="cursor-pointer me-2" type="checkbox" name="filaSeleccionada" [value]="i"
                 (change)="cambiarEstadoCheckbox($event,i )" [checked]="filasSeleccionadas.includes(i)"
-                aria-label="Seleccionar" />
+                aria-label="Seleccionar" [disabled]="disableSeleccionTablaCheckBox"/>
               <button class="btn btn-sm expansion-btn" (click)="alternarExpandirFila(i, $event)">
                 <i class="bi" [ngClass]="estaFilaExpandida(i) ? 'bi-dash' : 'bi-plus'"></i>
               </button>

@@ -7,32 +7,25 @@
  * El estado seleccionado se gestiona utilizando Akita para asegurar la persistencia del estado.
  */
 
-import { CommonModule } from '@angular/common';
-
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import {
+  ConsultaioQuery,
+  TituloComponent,
+} from '@ng-mf/data-access-user';
 import {
   FormBuilder,
   FormGroup,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Observable } from 'rxjs';
-
-import {
-  CatalogoSelectComponent,
-  TituloComponent,
-} from '@ng-mf/data-access-user';
-import {
-  CatalogoResponse,
-} from '@ng-mf/data-access-user';
-
+import { Tramite90305State, Tramite90305Store } from '../../estados/tramite90305.store';
+import { map, takeUntil } from 'rxjs/operators';
+import { CatalogoResponse} from '@ng-mf/data-access-user';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
+import { CommonModule } from '@angular/common';
+import { ProsecModificacionServiceTsService } from '../../services/prosec-modificacion.service';
 import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
-
 import { Tramite90305Query } from '../../estados/tramite90305.query';
-import { Tramite90305Store } from '../../estados/tramite90305.store';
-
-import { ProsecModificacionServiceTsService } from '../../services/prosec-modificacion.service.ts.service';
 /**
  * compo docs
  * @selector app-consultad-domicilios-90305
@@ -50,16 +43,25 @@ import { ProsecModificacionServiceTsService } from '../../services/prosec-modifi
   templateUrl: './consultad-domicilios-90305.component.html',
   styleUrl: './consultad-domicilios-90305.component.scss',
 })
-export class ConsultadDomicilios90305Component implements OnInit, OnDestroy{
-    /** Subject para destruir el componente */
-    private destroy$ = new Subject<void>();
-  /** Observable para el estado seleccionado */
-  selectedEstado$: Observable<CatalogoResponse | null> =
-    this.tramite90305Query.selectedEstado$;
+export class ConsultadDomicilios90305Component implements OnInit, OnDestroy {
+ 
   /** Catálogo de estados cargado desde un archivo JSON */
   estadoJson: CatalogoResponse[] = [];
   /** Formulario reactivo para la consulta de domicilios */
   formConsulta!: FormGroup;
+
+  /** Catálogo de estados para mantener similitud con DeLaMuestraComponent */
+  public estadoCatalogo!: CatalogoResponse[];
+  /** Notificador de destrucción similar */
+  private destroyNotifier$: Subject<void> = new Subject();
+  /** Bandera de solo lectura (puedes adaptarla si tienes lógica para esto) */
+  public esFormularioSoloLectura: boolean = false;
+
+    /**
+   * Estado de la solicitud de la sección.
+   */
+  public solicitudState!: Tramite90305State;
+
   /**
    * Constructor
    * @param {FormBuilder} fb - Constructor de formularios reactivos
@@ -71,37 +73,103 @@ export class ConsultadDomicilios90305Component implements OnInit, OnDestroy{
     private fb: FormBuilder,
     private listaDomicilios: ProsecModificacionServiceTsService,
     private tramite90305Store: Tramite90305Store,
-    private tramite90305Query: Tramite90305Query
+    private tramite90305Query: Tramite90305Query,
+    private consultaioQuery: ConsultaioQuery,
   ) {
-    //constructor()
+    
+    this.consultaioQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState)=>{
+        this.esFormularioSoloLectura = seccionState.readonly; 
+        this.inicializarEstadoFormulario();
+      })
+    )
+    .subscribe()
   }
+
   /**
    * Método del ciclo de vida de Angular - inicializa el componente y configura el formulario
    */
   ngOnInit(): void {
+    // Inicializa el formulario reactivo con un control para el estado
     this.formConsulta = this.fb.group({
-      estadoControl: [{ disabled: false }, Validators.required],
-    });
-
-    this.selectedEstado$.subscribe((selectedEstado) => {
-      if (selectedEstado) {
-        this.formConsulta.get('estadoControl')?.setValue(selectedEstado);
-      }
+      estadoControl: [{ value: this.solicitudState?.selectedEstado,disabled: false }, Validators.required],
     });
 
     this.loadEstado();
+
+    
+    this.inicializarEstadoFormulario();
   }
+
+  /**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.
+   * Además, obtiene la información del catálogo de estados.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.inicializarFormulario();
+    }
+    this.getEstadoCatalogo();
+  }
+
+  /**
+   * Inicializa el formulario reactivo para capturar el estado seleccionado.
+   */
+    inicializarFormulario(): void {
+      this.tramite90305Query.selectSolicitud$
+        .pipe(
+          takeUntil(this.destroyNotifier$),
+          map((seccionState) => {
+            this.solicitudState = seccionState;
+          })
+        )
+        .subscribe();
+        
+    }
+
+  /**
+   * Carga datos y deshabilita el formulario si es solo lectura.
+   */
+  guardarDatosFormulario(): void {
+    this.inicializarFormulario();
+    this.formConsulta = this.fb.group({
+      estadoControl: [{ value: this.solicitudState?.selectedEstado,disabled: false }, Validators.required],
+    });
+    if (this.esFormularioSoloLectura) {
+      this.formConsulta.disable();
+    } else {
+      this.formConsulta.enable();
+    }
+  }
+
+  /**
+   * Carga el catálogo de estados desde el servicio.
+   */
+  getEstadoCatalogo(): void {
+    this.listaDomicilios
+      .getEstadoData()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((resp: CatalogoResponse[]) => {
+        this.estadoCatalogo = resp;
+      });
+  }
+
   /**
    * Carga los datos del catálogo de estados desde el servicio
    */
   loadEstado(): void {
     this.listaDomicilios
       .getEstadoData()
-      .pipe(takeUntil(this.destroy$))
+      .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((resp: CatalogoResponse[]) => {
         this.estadoJson = resp;
       });
   }
+
   /**
    * Obtiene el estado seleccionado del formulario y lo guarda en el store
    */
@@ -109,11 +177,12 @@ export class ConsultadDomicilios90305Component implements OnInit, OnDestroy{
     const SELECTED_ESTADO = this.formConsulta.get('estadoControl')?.value;
     this.tramite90305Store.setSelectedEstado(SELECTED_ESTADO);
   }
+
   /*
     * Método del ciclo de vida de Angular - destruye el componente
   */
   ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }

@@ -2,6 +2,7 @@ import {
   AlertComponent,
   CatalogoSelectComponent,
   CatalogosSelect,
+  ConsultaioQuery,
   CrosslistComponent,
   InputRadioComponent,
   TableComponent,
@@ -183,7 +184,20 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
     'Número de serie',
     'Uso específico de la mercancía',
   ];
-
+  tableData = [
+    {
+      "tbodyData": ["Ananas comosus", "P&iacute;na"]
+    }
+  ]
+  esFormularioSoloLectura: boolean = false;
+  /**
+   * Indica si el formulario es de solo lectura.
+   * 
+   */
+  formularioDeshabilitado: boolean = true;
+  isPais: boolean = false;
+  isDesplegableDepaises: boolean = false;
+  isAdunaMarcancia: boolean = false;
   /**
    * Botones de acción disponibles para gestionar las listas de fechas.
    */
@@ -191,22 +205,22 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
     {
       btnNombre: 'Agregar',
       class: 'btn-primary',
-      funcion: () => this.agregar(''),
+      funcion: (): void => this.agregar(''),
     },
     {
       btnNombre: 'Agregar todo',
       class: 'btn-default',
-      funcion: () => this.agregar(SELECCION.SELECT_ALL),
+      funcion: ():void => this.agregar(SELECCION.SELECT_ALL),
     },
     {
       btnNombre: 'Remover',
       class: 'btn-danger',
-      funcion: () => this.quitar(''),
+      funcion: ():void => this.quitar(''),
     },
     {
       btnNombre: 'Remover todo',
       class: 'btn-default',
-      funcion: () => this.quitar(SELECCION.SELECT_ALL),
+      funcion: ():void => this.quitar(SELECCION.SELECT_ALL),
     },
   ];
 
@@ -220,6 +234,7 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
    */
 
   constructor(
+    private consultaioQuery: ConsultaioQuery,
     private importarExportar: ImportadorExportadorService,
     private store: Tramite10301Store,
     private query: Tramite10301Query,
@@ -227,6 +242,15 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
     private validacionesService: ValidacionesFormularioService
   ) {
     // El constructor se utiliza para la inyección de dependencias.
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.datosDeltrimiteForm()
+        })
+      )
+      .subscribe()
   }
 
   /**
@@ -237,10 +261,16 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
       this.tramiteForm.markAllAsTouched();
     }
   }
+
+  /**
+  * Indica si el formulario está en modo solo lectura.
+  * Cuando es `true`, los campos del formulario no se pueden editar.
+  */
   /**
    * Método de inicialización del componente.
    */
   ngOnInit(): void {
+
     this.getAduanaIngresara();
     this.getAno();
     this.getCondicion();
@@ -254,7 +284,7 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-    this.donanteDomicilio();
+    this.inicializarEstadoFormulario();
 
     this.subscriptions.push(
       this.query.selectFechasSeleccionadas$.subscribe((fechas) => {
@@ -303,10 +333,22 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
     );
   }
   /**
+   * Inicializa el estado del formulario según si es de solo lectura o no.
+   * Si es de solo lectura, guarda los datos del formulario; de lo contrario, inicializa el formulario con los datos del donante y domicilio.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosDelFormulario();
+    } else {
+      this.donanteDomicilio();
+    }
+  }
+
+  /**
    * Agrega elementos a la lista de fechas según el tipo especificado.
    * @param {string} tipo - Tipo de acción a realizar.
    */
-  agregar(tipo: string) {
+  agregar(tipo: string): void {
     if (tipo === SELECCION.SELECT_ALL) {
       this.fechasSeleccionadas = [...this.selectRangoDias];
       this.fechasDatos = [];
@@ -329,7 +371,7 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
    * Elimina elementos de la lista de fechas según el tipo especificado.
    * @param {string} tipo - Tipo de acción a realizar.
    */
-  quitar(tipo: string = '') {
+  quitar(tipo: string = ''): void {
     if (tipo === SELECCION.SELECT_ALL) {
       this.fechasDatos = [...this.fechasSeleccionadas];
       this.fechasSeleccionadas = [];
@@ -359,7 +401,7 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
    * Cambia el valor seleccionado del radio.
    * @param value Valor seleccionado.
    */
-  cambiarRadio(value: string | number) {
+  cambiarRadio(value: string | number):void {
     this.valorSeleccionado = value as string;
     this.store.setValorSeleccionado(this.valorSeleccionado);
   }
@@ -406,6 +448,7 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
       });
   }
 
+
   getAduanaIngresara(): void {
     this.getAduanaIngresaraSubscription = this.importarExportar
       .getAduanaIngresara()
@@ -420,7 +463,7 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
   /**
    * Abre el popup.
    */
-  openPopup() {
+  openPopup():void{
     this.isPopupOpen = true;
     this.store.setIsPopupOpen(this.isPopupOpen);
   }
@@ -428,7 +471,7 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
   /**
    * Cierra el popup.
    */
-  closePopup() {
+  closePopup():void {
     this.isPopupOpen = false;
     this.isPopupClose = false;
     this.store.setIsPopupOpen(this.isPopupOpen);
@@ -438,7 +481,7 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
   /**
    * Muestra la siguiente tabla.
    */
-  nextTabla() {
+  nextTabla():void{
     this.showTabla = false;
     this.store.setShowTabla(this.showTabla);
   }
@@ -454,8 +497,15 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
     return this.validacionesService.isValid(form, field) || false;
   }
 
+  guardarDatosDelFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.tramiteForm.disable();
+    } else {
+      this.tramiteForm.enable();
+    }
+  }
   /**
-   * Establece los valores en el store de tramite5701.
+   * Establece los valores en el store de tramite10301.
    *
    * @param {FormGroup} form - El formulario del cual se obtiene el valor.
    * @param {string} campo - El nombre del campo del formulario cuyo valor se va a obtener.
@@ -469,6 +519,8 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
   ): void {
     const VALOR = form.get(campo)?.value;
     (this.store[metodoNombre] as (value: unknown) => void)(VALOR);
+     this.importadorExportador.get(campo)?.updateValueAndValidity();
+
   }
   /**
    * Obtiene el grupo de formulario de importador/exportador.
@@ -482,6 +534,7 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
    * Inicializa el formulario de donante y domicilio con los valores del estado de la solicitud.
    */
   donanteDomicilio(): void {
+
     this.tramiteForm = this.fb.group({
       importadorExportador: this.fb.group({
         aduana: [this.solicitudState?.aduana, [Validators.required]],
@@ -548,6 +601,32 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
         opcion: [this.solicitudState?.opcion],
       }),
     });
+
+    this.datosDeltrimiteForm()
+  }
+  /**
+   * datosDeltrimiteForm los campos del formulario si es de solo lectura.
+   * Si el formulario es de solo lectura, deshabilita los campos del formulario de importador/exportador.
+   */
+  datosDeltrimiteForm(): void {
+    if (this.esFormularioSoloLectura) {
+      this.importadorExportador?.get('aduana')?.disable();
+      this.importadorExportador?.get('nombre')?.disable();
+      this.importadorExportador?.get('calle')?.disable();
+      this.importadorExportador?.get('numeroExterior')?.disable();
+      this.importadorExportador?.get('numeroInterior')?.disable();
+      this.importadorExportador?.get('telefono')?.disable();
+      this.importadorExportador?.get('correoElectronico')?.disable();
+      this.importadorExportador?.get('pais')?.disable();
+      this.importadorExportador?.get('codigoPostal')?.disable();
+      this.importadorExportador?.get('estado')?.disable();
+      this.importadorExportador?.get('colonia')?.disable();
+      this.importadorExportador?.get('opcion')?.disable();
+      this.isDesplegableDepaises = true;
+      this.isAdunaMarcancia = true;
+      this.isPais = true;
+      this.formularioDeshabilitado = true;
+    }
   }
 
   /**

@@ -1,4 +1,4 @@
-import { Catalogo, CatalogoSelectComponent, InputRadioComponent, TipoPersona, TituloComponent } from '@ng-mf/data-access-user';
+import { Catalogo, CatalogoSelectComponent, ConsultaioQuery, InputRadioComponent, TipoPersona, TituloComponent } from '@ng-mf/data-access-user';
 import { CommonModule, Location } from '@angular/common';
 import {
   Component,
@@ -13,7 +13,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 import { Destinatario } from '../../models/terceros-relacionados.model';
 import { MaterialesPeligrososService } from '../../services/materiales-peligrosos.service';
 import { OPCIONES_DE_BOTON_DE_RADIO } from '../../constantes/materiales-peligrosos.enum';
@@ -39,6 +39,25 @@ import { Tramite230501Store } from '../../estados/stores/tramite230501Store.stor
   templateUrl: './destinatario-final.component.html',
   styleUrl: './destinatario-final.component.scss',
 })
+/**
+ * Componente que gestiona la información del destinatario final en un trámite.
+ * Permite agregar, actualizar y visualizar datos de destinatarios finales.
+ * También incluye funcionalidades para manejar el estado del formulario y sus validaciones.
+ * 
+ * @class DestinatarioFinalComponent
+ * @implements OnDestroy, OnInit
+ * 
+ * @description Este componente utiliza formularios reactivos para capturar información del destinatario final.
+ * Proporciona métodos para interactuar con el estado de la aplicación y servicios externos para cargar datos de catálogo.
+ * Además, implementa mecanismos para prevenir fugas de memoria mediante la desuscripción de observables.
+ * 
+ * @example
+ * ```typescript
+ * <app-destinatario-final></app-destinatario-final>
+ * ```
+ * 
+ * @author Muneeshwaran N
+ */
 export class DestinatarioFinalComponent implements OnDestroy, OnInit {
 
 
@@ -124,7 +143,11 @@ export class DestinatarioFinalComponent implements OnDestroy, OnInit {
    * Cuando es falso, el componente opera en modo de solo lectura.
    */
   public esElModoDeEdicion = false;
-
+  /**
+* Indica si el formulario está en modo solo lectura.
+* Cuando es `true`, los campos del formulario no se pueden editar.
+*/
+  esFormularioSoloLectura: boolean = false;
   /**
    * Crea el componente e inicializa el grupo de formulario.
    *
@@ -133,6 +156,7 @@ export class DestinatarioFinalComponent implements OnDestroy, OnInit {
    * @param {Tramite230501Query} tramiteQuery - Servicio para consultar el estado de "Tramite230501".
    * @param {Location} ubicaccion - Servicio de Angular para navegar hacia atrás en el historial.
    * @param {MaterialesPeligrososService} materialesPeligrososService - Servicio para obtener diferentes listas de datos.
+   * @param {ConsultaioQuery} consultaQuery - Servicio para consultar el estado de la consulta.
    */
   constructor(
     private fb: FormBuilder,
@@ -140,8 +164,8 @@ export class DestinatarioFinalComponent implements OnDestroy, OnInit {
     public materialesPeligrososService: MaterialesPeligrososService,
     public tramiteStore: Tramite230501Store,
     public tramiteQuery: Tramite230501Query,
+    public consultaQuery:ConsultaioQuery
   ) {
-    // No hacer nada
   }
 
   /**
@@ -233,6 +257,16 @@ export class DestinatarioFinalComponent implements OnDestroy, OnInit {
       .subscribe(modo => {
         this.esElModoDeEdicion = modo;
       });
+
+        this.consultaQuery.selectConsultaioState$
+            .pipe(
+              takeUntil(this.unsubscribe$),
+              map((seccionState) => {
+                this.esFormularioSoloLectura = seccionState.readonly;
+                this.inicializarEstadoFormulario();
+              })
+            )
+            .subscribe();
   }
 
   /**
@@ -370,6 +404,27 @@ export class DestinatarioFinalComponent implements OnDestroy, OnInit {
       correoElectronico: ['', [Validators.required, Validators.email]],
     });
   }
+
+
+    /**
+     * Inicializa el estado del formulario de destinatario final.
+     * 
+     * Este método se encarga de configurar el estado inicial del formulario 
+     * según las condiciones establecidas. Si el formulario para agregar un 
+     * destinatario final no está definido, se crea utilizando el método 
+     * `createrDestinatrioForm`. Además, si el formulario está configurado 
+     * como solo lectura, se deshabilita el control `agregarDestinatarioFinal`.
+     * 
+     * @returns {void} Este método no retorna ningún valor.
+     */
+     inicializarEstadoFormulario(): void {
+      if(!this.agregarDestinatarioFinal){
+        this.createrDestinatrioForm();
+      }
+      if (this.esFormularioSoloLectura) {
+          this.agregarDestinatarioFinal.disable();
+      }
+    }
 
   /**
    * Método del ciclo de vida de Angular que se llama justo antes de que el componente sea destruido.

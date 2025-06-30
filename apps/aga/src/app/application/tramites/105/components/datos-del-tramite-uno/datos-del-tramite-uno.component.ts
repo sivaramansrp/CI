@@ -1,20 +1,23 @@
-import { AlertComponent, CatalogoSelectComponent, CatalogosSelect,InputCheckComponent, InputRadioComponent, TableComponent, TituloComponent } from '@ng-mf/data-access-user';
+import { Catalogo, ConsultaioQuery, TableComponent, TituloComponent } from '@ng-mf/data-access-user';
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { FRACCIONES_TABLEDOS_TABLE_BODY_DATA, OPCIONES_DE_BOTON_DE_RADIO } from '../../constantes/datos-del-tramite.enum';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Solicitud105State, Tramite105Store, } from '../../estados/tramite105.store';
 import { Subject, Subscription, map, takeUntil } from 'rxjs';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { CommonModule } from '@angular/common';
+import { InputCheckComponent } from '@libs/shared/data-access-user/src/tramites/components/input-check/input-check.component';
+import { InputRadioComponent } from "@libs/shared/data-access-user/src/tramites/components/input-radio/input-radio.component";
 import { InvoCarService } from '../../services/invocar.service';
-import { OPCIONES_DE_BOTON_DE_RADIO } from '../../constantes/datos-del-tramite.enum';
 import { Tramite105Query } from '../../estados/tramite105.query';
-import mercanciaTable from 'libs/shared/theme/assets/json/105/mercancia-table.json';
+import mercanciaTable from '@libs/shared/theme/assets/json/105/mercancia-table.json';
 interface TableBodyData {
   tbodyData: string[];
 }
 @Component({
   selector: 'app-datos-del-tramite-uno',
   standalone: true,
-  imports: [CommonModule, AlertComponent,
+  imports: [CommonModule,
     InputRadioComponent,
     TableComponent,
     TituloComponent, CatalogoSelectComponent, ReactiveFormsModule, InputCheckComponent],
@@ -33,9 +36,38 @@ export class DatosDelTramiteUnoComponent implements OnInit, OnDestroy {
    * @param store - Almacén para gestionar el estado de la solicitud.
    * @param query - Consulta para obtener datos del estado de la solicitud.
    */
+
+  /**
+    * Indica si el formulario está en modo solo lectura.
+    * Cuando es `true`, los campos del formulario no se pueden editar.
+    */
+  esFormularioSoloLectura: boolean = false;
+  /**
+    * Indica si el formulario está en modo solo lectura.
+    * Cuando es `true`, los campos del formulario no se pueden editar.
+    */
+  esFormularioSoloLecturaActualizar: boolean = false;
   constructor(private fb: FormBuilder, private invoCarService: InvoCarService, private store: Tramite105Store,
-    private query: Tramite105Query,) {
-    // Se puede agregar lógica de inicialización aquí si es necesario
+    private query: Tramite105Query, private consultaioQuery: ConsultaioQuery) {
+    /**
+      * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
+      *
+      * - Asigna el valor de solo lectura (`readonly`) a la propiedad `esFormularioSoloLectura`.
+      * - Llama a `inicializarEstadoFormulario()` para aplicar configuraciones basadas en el estado recibido.
+      * - La suscripción se cancela automáticamente cuando `destroyNotifier$` emite un valor (para evitar fugas de memoria).
+      */
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.esFormularioSoloLecturaActualizar = seccionState.update;
+          if (seccionState.update) {
+            this.fetchTableDummyJson();
+          }
+        })
+      )
+      .subscribe();
   }
 
   /**
@@ -65,22 +97,23 @@ export class DatosDelTramiteUnoComponent implements OnInit, OnDestroy {
   /**
    * Catálogo de países.
    */
-  pais!: CatalogosSelect;
+  pais: Catalogo[] = [];
 
   /**
    * Catálogo de entidades federativas.
    */
-  entidadFederativa!: CatalogosSelect;
+  entidadFederativa: Catalogo[] = [];
+
 
   /**
    * Catálogo de municipios o delegaciones.
    */
-  municipioDelegacion!: CatalogosSelect;
+  municipioDelegacion: Catalogo[] = [];
 
   /**
    * Catálogo de colonias.
    */
-  colonia!: CatalogosSelect;
+  colonia: Catalogo[] = [];
 
   /**
    * Valor seleccionado del radio.
@@ -92,12 +125,12 @@ export class DatosDelTramiteUnoComponent implements OnInit, OnDestroy {
   /**
    * Catálogo de aduanas.
    */
-  aduana!: CatalogosSelect;
+  aduana: Catalogo[] = [];
 
   /**
    * Catálogo de fracciones arancelarias.
    */
-  fraccionArancelaria!: CatalogosSelect;
+  fraccionArancelaria: Catalogo[] = [];
 
   /**
    * Notificador para destruir observables al destruir el componente.
@@ -160,10 +193,10 @@ export class DatosDelTramiteUnoComponent implements OnInit, OnDestroy {
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.solicitudState = seccionState;
-          this.obtenerJsonData();
         })
       )
       .subscribe();
+      this.obtenerMercancia();
     this.crearDatosDelTramiteForm();
     this.getPais();
     this.getAduana();
@@ -171,53 +204,67 @@ export class DatosDelTramiteUnoComponent implements OnInit, OnDestroy {
     this.getMunicipioDelegacion();
     this.getColonia();
     this.getFraccionArancelariae();
-    this.obtenerMercancia();
     this.crearFormularioAgregar();
+    if (this.esFormularioSoloLecturaActualizar) {
+      this.crearDatosDelTramiteForm()
+      this.alternarControles(true);
+      this.esFormularioSoloLectura=false;
+      this.deshabilitarSeleccion=false;
+    }
+  }
+  /**
+     * Evalúa si se debe inicializar o cargar datos en el formulario.  
+     * Además, obtiene la información del catálogo de mercancía.
+     */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.inicializarFormulario();
+    }
   }
 
-  obtenerJsonData(): void {
-    this.query.selectSolicitud$.pipe(
-      takeUntil(this.destroyNotifier$)
-    ).subscribe((solicitudState) => {
-      this.pais = {
-        labelNombre: 'País',
-        required: false,
-        primerOpcion: 'Selecciona un valor',
-        catalogos: solicitudState.pais ?? [],
-      };
-      this.entidadFederativa = {
-        labelNombre: 'Entidad Federativa',
-        required: false,
-        primerOpcion: 'Selecciona un valor',
-        catalogos: solicitudState.entidadFederativa ?? [],
-      };
-      this.municipioDelegacion = {
-        labelNombre: 'Municipio o Delegación',
-        required: false,
-        primerOpcion: 'Selecciona un valor',
-        catalogos: solicitudState.municipioDelegacion ?? [],
-      };
-      this.colonia = {
-        labelNombre: 'Colonia',
-        required: false,
-        primerOpcion: 'Selecciona un valor',
-        catalogos: solicitudState.colonia ?? [],
-      };
-      this.aduana = {
-        labelNombre: 'Aduana',
-        required: false,
-        primerOpcion: 'Selecciona un valor',
-        catalogos: solicitudState.aduana ?? [],
-      };
-      this.fraccionArancelaria = {
-        labelNombre: 'Fracción arancelaria',
-        required: false,
-        primerOpcion: 'Selecciona un valor',
-        catalogos: solicitudState.fraccionarancelaria ?? [],
-      };
-    });
+  /**
+   * Inicializa el formulario reactivo para capturar el valor de 'registro'.
+   * Suscribe al estado almacenado en el store mediante el query `tramite301Query.selectSolicitud$`
+   * y lo asigna a la variable local `solicitudState`. Luego, crea el formulario
+   * con el valor inicial obtenido del store.
+   */
+
+  inicializarFormulario(): void {
+    this.query.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.solicitudState = seccionState;
+        })
+      )
+      .subscribe();
+    this.crearDatosDelTramiteForm();
   }
 
+  /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormulario(): void {
+    this.inicializarFormulario();
+    if (this.esFormularioSoloLectura) {
+      this.datosDelTramite.disable();
+    } else if (!this.esFormularioSoloLectura) {
+      this.datosDelTramite.enable();
+    }
+  }
+
+  /**
+   * Crea e inicializa el formulario reactivo `agregarForm` con los campos necesarios
+   * para agregar un nuevo trámite. Los campos incluyen:
+   * - `fraccionArancelaria`: Campo requerido para la fracción arancelaria.
+   * - `descripcion`: Campo requerido para la descripción.
+   * - `descripcionAdicional`: Campo opcional para información adicional.
+   *
+   * Utiliza el FormBuilder (`fb`) para construir el formulario y asigna las validaciones correspondientes.
+   */
   crearFormularioAgregar(): void {
     this.agregarForm = this.fb.group({
       fraccionArancelaria: [{ value: '' }, Validators.required],
@@ -292,7 +339,7 @@ export class DatosDelTramiteUnoComponent implements OnInit, OnDestroy {
       numeroInterior: [{ value: this.solicitudState?.numeroInterior, disabled: true }],
       ubicacionDescripcion: [{ value: this.solicitudState?.ubicacionDescripcion, disabled: true }],
       // Aduanas
-      aduana: [{ value: this.solicitudState?.aduana }, Validators.required],
+      aduana: [this.solicitudState?.aduana, Validators.required],
     });
 
   }
@@ -327,7 +374,7 @@ export class DatosDelTramiteUnoComponent implements OnInit, OnDestroy {
     'pais', 'codigoPostal', 'entidadFederativa', 'localidad', 'municipioDelegacion',
     'colonia', 'entidadFederativaDos', 'calle', 'numeroExterior', 'numeroInterior'
   ];
-  
+
   /**
    * Maneja el evento de cambio en un checkbox y asegura la exclusividad entre las opciones
    * 'domicilio' y 'ubicacion'.
@@ -345,10 +392,10 @@ export class DatosDelTramiteUnoComponent implements OnInit, OnDestroy {
   onCambioCheckbox(evento: Event, opcion: 'domicilio' | 'ubicacion'): void {
     const ELEMENTO_INPUT = evento.target as HTMLInputElement;
     const ESTA_SELECCIONADO = ELEMENTO_INPUT?.checked ?? false;
-  
+
     this.alternarControles(ESTA_SELECCIONADO);
     this.deshabilitarSeleccion = !ESTA_SELECCIONADO;
-  
+
     // Asegurar exclusividad entre las opciones
     if (opcion === 'domicilio') {
       this.datosDelTramite.get('ubicacion')?.setValue(false);
@@ -356,7 +403,7 @@ export class DatosDelTramiteUnoComponent implements OnInit, OnDestroy {
       this.datosDelTramite.get('domicilio')?.setValue(false);
     }
   }
-  
+
   /**
    * Alterna el estado de habilitación de un conjunto de controles en un formulario.
    *
@@ -382,8 +429,18 @@ export class DatosDelTramiteUnoComponent implements OnInit, OnDestroy {
    */
   public obtenerMercancia(): void {
     this.mercanciaHeaderData = this.getMercanciaTableData.mercanciaTable.tableHeader;
-    this.mercanciaBodyData = this.getMercanciaTableData.mercanciaTable.tableBody;
   }
+
+  /**
+   * Método para obtener datos de ejemplo para la tabla.
+   * Retorna un arreglo vacío de tipo TablaDatos.
+   *
+   * @returns Un arreglo vacío de TablaDatos.
+   */
+  fetchTableDummyJson(): void {
+    this.mercanciaBodyData.push(FRACCIONES_TABLEDOS_TABLE_BODY_DATA);
+  }
+
 
   /**
    * @method setValoresStore
@@ -434,7 +491,7 @@ export class DatosDelTramiteUnoComponent implements OnInit, OnDestroy {
       .subscribe((resp) => {
         if (resp.code === 200) {
           const RESPONSE = resp.data;
-          this.store.setPais(RESPONSE);
+          this.pais = RESPONSE;
         }
       });
   }
@@ -446,11 +503,11 @@ export class DatosDelTramiteUnoComponent implements OnInit, OnDestroy {
   getEntidadFederativa(): void {
     this.invoCarService.getEntidadFederativa().pipe(
       takeUntil(this.destroyNotifier$)).subscribe((resp) => {
-      if (resp.code === 200) {
-        const RESPONSE = resp.data;
-        this.store.setEntidadFederativa(RESPONSE);
-      }
-    });
+        if (resp.code === 200) {
+          const RESPONSE = resp.data;
+          this.entidadFederativa = RESPONSE;
+        }
+      });
   }
 
   /**
@@ -460,11 +517,11 @@ export class DatosDelTramiteUnoComponent implements OnInit, OnDestroy {
   getMunicipioDelegacion(): void {
     this.invoCarService.getMunicipioDelegacion().pipe(
       takeUntil(this.destroyNotifier$)).subscribe((resp) => {
-      if (resp.code === 200) {
-        const RESPONSE = resp.data;
-        this.store.setMunicipioDelegacion(RESPONSE);
-      }
-    });
+        if (resp.code === 200) {
+          const RESPONSE = resp.data;
+          this.municipioDelegacion = RESPONSE;
+        }
+      });
   }
 
   /**
@@ -474,11 +531,11 @@ export class DatosDelTramiteUnoComponent implements OnInit, OnDestroy {
   getColonia(): void {
     this.invoCarService.getColonia().pipe(
       takeUntil(this.destroyNotifier$)).subscribe((resp) => {
-      if (resp.code === 200) {
-        const RESPONSE = resp.data;
-        this.store.setColonia(RESPONSE);
-      }
-    });
+        if (resp.code === 200) {
+          const RESPONSE = resp.data;
+          this.colonia = RESPONSE;
+        }
+      });
   }
 
   /**
@@ -486,13 +543,13 @@ export class DatosDelTramiteUnoComponent implements OnInit, OnDestroy {
    * @description Obtiene el catálogo de aduanas desde el servicio y lo almacena en el store.
    */
   getAduana(): void {
-   this.invoCarService.getAduana().pipe(
+    this.invoCarService.getAduana().pipe(
       takeUntil(this.destroyNotifier$)).subscribe((resp) => {
-      if (resp.code === 200) {
-        const RESPONSE = resp.data;
-        this.store.setAduana(RESPONSE);
-      }
-    });
+        if (resp.code === 200) {
+          const RESPONSE = resp.data;
+          this.aduana = RESPONSE
+        }
+      });
   }
 
   /**
@@ -502,11 +559,12 @@ export class DatosDelTramiteUnoComponent implements OnInit, OnDestroy {
   getFraccionArancelariae(): void {
     this.invoCarService.getFraccionArancelariaOptions().pipe(
       takeUntil(this.destroyNotifier$)).subscribe((resp) => {
-      if (resp.code === 200) {
-        const RESPONSE = resp.data;
-        this.store.setFraccionarancelaria(RESPONSE);
-      }
-    });
+        if (resp.code === 200) {
+          const RESPONSE = resp.data;
+          this.fraccionArancelaria = RESPONSE;
+
+        }
+      });
   }
 
   /**

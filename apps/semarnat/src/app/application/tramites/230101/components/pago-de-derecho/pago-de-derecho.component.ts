@@ -1,5 +1,6 @@
 import { CapturaSolicitudeService } from '../../services/captura-solicitud.service';
-import { Catalogo } from '@ng-mf/data-access-user';
+
+import { Catalogo, ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { CatalogosSelect } from '@ng-mf/data-access-user';
 import { Component } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
@@ -88,7 +89,18 @@ export class PagoDeDerechoComponent implements OnInit, OnDestroy {
     primerOpcion: 'Selecciona un valor',
     catalogos: [],
   };
+ /**
+     * Indica si el formulario es de solo lectura.
+     */
+   esFormularioSoloLectura: boolean = false;
+  
+   /**
+    * Estado de los datos de consulta.
+    */
+   consultaDatos!: ConsultaioState;
 
+ /** Estado de la consulta que se obtiene del store. */
+ public consultaState!: ConsultaioState;
   /**
    * Constructor de la clase PagoDeDerechoComponent.
    * 
@@ -105,7 +117,8 @@ export class PagoDeDerechoComponent implements OnInit, OnDestroy {
     private solicitud230101Store: Solicitud230101Store,
     private solicitud230101Query: Solicitud230101Query,
     private validacionesService: ValidacionesFormularioService,
-    private mediodetransporteService: MediodetransporteService
+    private mediodetransporteService: MediodetransporteService,
+     private consultaioQuery: ConsultaioQuery
   ) {
     this.fetchBancoData();
   }
@@ -143,7 +156,7 @@ export class PagoDeDerechoComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.solicitud230101Query.selectSolicitud$
       .pipe(
-        takeUntil(this.destroyNotifier$),
+        takeUntil(this.destroyed$),
         map((seccionState) => {
           this.derechoState = seccionState;
         })
@@ -160,8 +173,32 @@ export class PagoDeDerechoComponent implements OnInit, OnDestroy {
         impPago: [{ value: this.derechoState?.impPago, disabled: true}, [Validators.required, Validators.maxLength(16)]]
       }),
     });
-
+    this.consultaioQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.destroyed$),
+      map((seccionState) => {
+        this.consultaDatos = seccionState;
+        this.esFormularioSoloLectura = this.consultaDatos.readonly;
+        this.inicializarEstadoFormulario();
+      })
+    )
+    .subscribe();
+    this.inicializarEstadoFormulario();
   }
+  /**
+   * Este método se utiliza para inicializar el estado del formulario.
+   * Si el formulario es de solo lectura, se deshabilita; de lo contrario, se habilita.
+   * 
+   * @returns {void}
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.FormSolicitud?.disable();
+    }
+    else {
+      this.FormSolicitud?.enable();
+    }
+}
 
   /**
    * Este método se utiliza para validar la forma del transporte. - 220401
@@ -218,8 +255,6 @@ export class PagoDeDerechoComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroyed$.next(true);
     this.destroyed$.complete();
-    this.destroyNotifier$.next();
-    this.destroyNotifier$.complete();
   }
 
 }

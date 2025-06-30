@@ -97,6 +97,16 @@ export class TercerosRelacionadosComponent implements OnInit{
 
   ocultarBotonModificar:boolean=false;
 
+  @Output() openModal = new EventEmitter<string>();
+
+  /**
+   * Indica si el formulario se encuentra en modo solo lectura.
+   * Cuando es verdadero, los campos del formulario no pueden ser editados.
+   * @property {boolean} esFormularioSoloLectura
+   * @default false
+   */
+  @Input() esFormularioSoloLectura: boolean = false;
+
   /**
    * Configuración de la tabla de destinatarios finales.
    * @property {any} destinoFinalTablaConfiguracion
@@ -138,9 +148,7 @@ export class TercerosRelacionadosComponent implements OnInit{
    * @returns {void}
    */
   irAAcciones(accionesPath: string): void {
-    this.router.navigate([accionesPath], {
-      relativeTo: this.activatedRoute,
-    });
+    this.openModal.emit(accionesPath)
   }
 
   /**

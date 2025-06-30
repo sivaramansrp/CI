@@ -5,22 +5,25 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { SolicitudSectoresYMercanciasState, TramiteSectoresYMercanciasStore } from '../../estados/stores/sectores-y-mercancias.store';
+import {
+  SolicitudSectoresYMercanciasState,
+  TramiteSectoresYMercanciasStore,
+} from '../../estados/stores/sectores-y-mercancias.store';
 import { Subject, map, merge, takeUntil } from 'rxjs';
-import { AlertComponent } from 'libs/shared/data-access-user/src/tramites/components/alert/alert.component';
-import { Catalogo } from 'libs/shared/data-access-user/src/core/models/shared/catalogos.model';
-import { CatalogoSelectComponent } from 'libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
+import { AlertComponent } from '@libs/shared/data-access-user/src/tramites/components/alert/alert.component';
+import { Catalogo } from '@libs/shared/data-access-user/src/core/models/shared/catalogos.model';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { CommonModule } from '@angular/common';
-import { ConfiguracionColumna } from 'libs/shared/data-access-user/src/core/models/shared/configuracion-columna.model';
-import { ExpansionDeProductoresService } from 'libs/shared/data-access-user/src/core/services/90201/expansion-de-productores.service';
-import { SectoresTabla } from 'libs/shared/data-access-user/src/core/models/90201/expansion-de-productores.model';
+import { ConfiguracionColumna } from '@libs/shared/data-access-user/src/core/models/shared/configuracion-columna.model';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { SECTORESY } from '@libs/shared/data-access-user/src';
-import { TablaDinamicaComponent } from 'libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
-import { TablaSeleccion } from 'libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
-import { TituloComponent } from 'libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
+import { SectoresMercanciasService } from '../../services/sectores-mercancias.service';
+import { SectoresTabla } from '@libs/shared/data-access-user/src/core/models/90201/expansion-de-productores.model';
+import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
+import { TablaSeleccion } from '@libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
+import { TituloComponent } from '@libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
 import { TramiteSectoresYMercanciasQuery } from '../../estados/queries/sectores-y-mercancias.query';
-import sectoresTabla from 'libs/shared/theme/assets/json/90201/sectores-tabla.json';
-
+import sectoresTabla from '@libs/shared/theme/assets/json/90201/sectores-tabla.json';
 /**
  * Componente SectoresYMercancias que se utiliza para mostrar y gestionar los SectoresYMercancias.
  *
@@ -115,18 +118,41 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
    */
   private destroyNotifier$: Subject<void> = new Subject();
 
+  /** Bandera de solo lectura (puedes adaptarla si tienes lógica para esto) */
+  public esFormularioSoloLectura: boolean = false;
+
+  /**
+   * Bandera para determinar si el formulario es de actualización.
+   * Inicialmente establecido en `false`.
+   *
+   * @description Esta bandera se utiliza para controlar la lógica de actualización del formulario.
+   */
+  private esFormularioActualizacion: boolean = false;
+
   /**
    * Constructor del componente SectoresYMercanciasComponent.
    *
-   * @param _expansionDesvc - Servicio para manejar la expansión de productores.
+   * @param servicio - Servicio para manejar la expansión de productores.
    * @param fb - Instancia de FormBuilder para crear formularios reactivos.
    */
   constructor(
-    private _expansionDesvc: ExpansionDeProductoresService,
+    private servicio: SectoresMercanciasService,
     private fb: FormBuilder,
     private tramiteSectoresYMercanciasStore: TramiteSectoresYMercanciasStore,
-    private tramiteSectoresYMercanciasQuery: TramiteSectoresYMercanciasQuery
-  ) {}
+    private tramiteSectoresYMercanciasQuery: TramiteSectoresYMercanciasQuery,
+    private consultaioQuery: ConsultaioQuery
+  ) {
+    // Inicializa el formulario.
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.esFormularioActualizacion = seccionState.update;
+        })
+      )
+      .subscribe();
+  }
 
   /**
    * Gancho de ciclo de vida que se llama después de que se inicializan las propiedades enlazadas a datos de una directiva.
@@ -143,6 +169,48 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
       .subscribe();
 
     this.inicializaCatalogos();
+    this.establecerFormSectores();
+
+    this.inicializarEstadoFormulario();
+  }
+
+  /**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.
+   * Además, obtiene la información del catálogo de estados.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.inicializarFormulario();
+    }
+  }
+
+  /**
+   * Carga datos y deshabilita el formulario si es solo lectura.
+   */
+  guardarDatosFormulario(): void {
+    this.inicializarFormulario();
+    if (this.esFormularioSoloLectura) {
+      this.sectoresForm.disable();
+    } else {
+      this.sectoresForm.enable();
+    }
+  }
+
+  /**
+   * Inicializa el formulario reactivo para capturar el estado seleccionado.
+   */
+  inicializarFormulario(): void {
+    this.tramiteSectoresYMercanciasQuery.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.solicitudState = seccionState;
+        })
+      )
+      .subscribe();
+
     this.establecerFormSectores();
   }
 
@@ -170,15 +238,13 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
    * @private
    */
   private inicializaCatalogos(): void {
-    const CATALOGO$ = this._expansionDesvc.getSectorCatalog().pipe(
+    const CATALOGO$ = this.servicio.getSectorCatalog().pipe(
       map((resp) => {
         this.sectorCatalogo = resp.data;
       })
     );
 
-    merge(CATALOGO$)
-    .pipe(takeUntil(this.destroyNotifier$))
-    .subscribe();
+    merge(CATALOGO$).pipe(takeUntil(this.destroyNotifier$)).subscribe();
   }
 
   /**
@@ -211,6 +277,10 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
     metodoNombre: keyof TramiteSectoresYMercanciasStore
   ): void {
     const VALOR = form.get(campo)?.value;
-    (this.tramiteSectoresYMercanciasStore[metodoNombre] as (value: string | undefined) => void)(VALOR);
+    (
+      this.tramiteSectoresYMercanciasStore[metodoNombre] as (
+        value: string | undefined
+      ) => void
+    )(VALOR);
   }
 }

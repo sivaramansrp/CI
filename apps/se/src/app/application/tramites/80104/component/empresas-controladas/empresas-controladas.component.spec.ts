@@ -1,21 +1,142 @@
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { EmpresasControladasComponent } from './empresas-controladas.component';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { EmpresasTerciarizadaasComponent } from './empresas-controladas.component';
+import { of } from 'rxjs';
+import { NuevoProgramaIndustrialService } from '../../services/modalidad-albergue.service';
+import { RespuestaCatalogos } from '@libs/shared/data-access-user/src';
 
-describe('EmpresasTerciarizadaasComponent', () => {
-  let component: EmpresasTerciarizadaasComponent;
-  let fixture: ComponentFixture<EmpresasTerciarizadaasComponent>;
+describe('EmpresasControladasComponent', () => {
+  let component: EmpresasControladasComponent;
+  let fixture: ComponentFixture<EmpresasControladasComponent>;
+  let mockService: jest.Mocked<NuevoProgramaIndustrialService>;
 
   beforeEach(async () => {
+    mockService = {
+      obtenerListaEstado: jest.fn().mockReturnValue(
+        of({
+          code: 200,
+          message: 'Success',
+          data: [
+            { id: 1, descripcion: 'Estado 1' },
+            { id: 2, descripcion: 'Estado 2' },
+          ],
+        })
+      ),
+    } as any;
+
     await TestBed.configureTestingModule({
-      imports: [EmpresasTerciarizadaasComponent],
+      imports: [EmpresasControladasComponent, HttpClientTestingModule],
+      providers: [
+        { provide: NuevoProgramaIndustrialService, useValue: mockService },
+      ],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(EmpresasTerciarizadaasComponent);
+    fixture = TestBed.createComponent(EmpresasControladasComponent);
     component = fixture.componentInstance;
+    component.estadosCatalogo = [{ id: 1, descripcion: 'Inicial' }];
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('debería crear', () => {
     expect(component).toBeTruthy();
   });
+
+  it('debería inicializar parentTablaConfig con encabezados correctos', () => {
+    expect(component.parentTablaConfig.length).toBeGreaterThan(0);
+    expect(component.parentTablaConfig[0].encabezado).toBe('Calle');
+  });
+
+  it('debería inicializar estadosCatalogo desde controladas.json', () => {
+    expect(component.estadosCatalogo.length).toBeGreaterThan(0);
+    expect(component.estadosCatalogo[0]).toHaveProperty('id');
+    expect(component.estadosCatalogo[0]).toHaveProperty('descripcion');
+  });
+
+  it('no debería actualizar estadosCatalogo si la respuesta es falsy', () => {
+    component.estadosCatalogo = [{ id: 1, descripcion: 'Inicial' }];
+    mockService.obtenerListaEstado.mockReturnValue(
+      of({ code: 204, message: 'No Content', data: [] })
+    );
+    component.obtenerListaEstado();
+    expect(component.estadosCatalogo).toEqual([]);
+  });
+
+  it('debería actualizar estadosCatalogo desde obtenerListaEstado()', () => {
+    const mockResponse = {
+      code: 200,
+      message: 'Success',
+      data: [
+        { id: 1, descripcion: 'Estado 1' },
+        { id: 2, descripcion: 'Estado 2' },
+      ],
+    };
+    mockService.obtenerListaEstado.mockReturnValue(of(mockResponse));
+    component.obtenerListaEstado();
+    expect(mockService.obtenerListaEstado).toHaveBeenCalled();
+    expect(component.estadosCatalogo).toEqual(mockResponse.data);
+  });
+
+  it('debería limpiar destroyNotifier$ en ngOnDestroy', () => {
+    const nextSpy = jest.spyOn(component['destroyNotifier$'], 'next');
+    const completeSpy = jest.spyOn(component['destroyNotifier$'], 'complete');
+    component.ngOnDestroy();
+    expect(nextSpy).toHaveBeenCalled();
+    expect(completeSpy).toHaveBeenCalled();
+  });
+
+  it('no debería actualizar estadosCatalogo si response.data es un array vacío', () => {
+  const original = [...component.estadosCatalogo];
+  mockService.obtenerListaEstado.mockReturnValue(of({
+    code: 200,
+    message: 'OK',
+    data: []
+  } as unknown as RespuestaCatalogos));
+  component.obtenerListaEstado();
+  expect(component.estadosCatalogo).toEqual([]);
+});
+
+
+it('debería retornar el valor correcto de las funciones clave en parentTablaConfig', () => {
+  const row = {
+    calle: 'Av. Reforma',
+    numeroExterior: '10',
+    numeroInterior: '',
+    codigoPostal: '12345',
+    colonia: 'Centro',
+    municipioDelegacion: 'Cuauhtémoc',
+    entidadFederativa: 'CDMX',
+    pais: 'México',
+    registroFederalContribuyentes: 'RFC123',
+    domicilioFiscalSolicitante: 'Sí',
+    razonSocial: 'Empresa SA de CV'
+  };
+
+  const keys = component.parentTablaConfig.map((col) => col.clave(row));
+  expect(keys).toEqual([
+    'Av. Reforma',
+    '10',
+    '',              // numeroInterior fallback
+    '12345',
+    'Centro',
+    'Cuauhtémoc',
+    'CDMX',
+    'México',
+    'RFC123',
+    'Sí',
+    'Empresa SA de CV',
+  ]);
+});
+
+it('debería manejar estadosCatalogo vacío después de una búsqueda válida', () => {
+  const mockResponse = {
+    code: 200,
+    message: 'Success',
+    data: [],
+  };
+  mockService.obtenerListaEstado.mockReturnValue(of(mockResponse));
+  component.obtenerListaEstado();
+  expect(component.estadosCatalogo).toEqual([]);
+});
+
+
 });

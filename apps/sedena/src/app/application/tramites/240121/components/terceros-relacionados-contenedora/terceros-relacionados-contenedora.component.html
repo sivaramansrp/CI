@@ -2,4 +2,7 @@
 [idProcedimiento]="idProcedimiento"
   [destinatarioFinalTablaDatos]="destinatarioFinalTablaDatos"
   [proveedorTablaDatos]="proveedorTablaDatos"
+  [esFormularioSoloLectura]="esFormularioSoloLectura"
+  (openModal)="openModal($event)"
 ></app-terceros-relacionados>
+ <div><app-modal #modal></app-modal></div>

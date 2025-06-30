@@ -1,4 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ConsultaioQuery, Notificacion, NotificacionesComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 
 import {
@@ -16,7 +17,6 @@ import {
 import { AlertComponent } from '@libs/shared/data-access-user/src/tramites/components/alert/alert.component';
 import { Catalogo } from '@libs/shared/data-access-user/src/core/models/shared/catalogos.model';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
-import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { ExpansionDeProductoresService } from '@libs/shared/data-access-user/src/core/services/90201/expansion-de-productores.service';
 
 import { SECTORESY } from '@libs/shared/data-access-user/src';
@@ -46,7 +46,8 @@ import { Tramite90201Query } from '../../../../estados/queries/tramite90201.quer
     CommonModule,
     ReactiveFormsModule,
     TablaDinamicaComponent,
-    TituloComponent
+    TituloComponent,
+    NotificacionesComponent
   ],
   templateUrl: './sectores-y-mercancias.component.html',
   styleUrl: './sectores-y-mercancias.component.scss',
@@ -57,6 +58,19 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
    * Este formulario se utiliza para gestionar y validar los datos de entrada relacionados con sectores y mercancías.
    */
   public sectoresForm!: FormGroup;
+    /**
+   * Representa una nueva notificación que será utilizada en el componente.
+   * 
+   * @type {Notificacion}
+   */
+  public nuevaNotificacion!: Notificacion;
+  /**
+   * Objeto de notificación utilizado para manejar la eliminación de una mercancía.
+   * Esta propiedad debe ser asignada con una instancia del tipo `Notificacion`,
+   * que encapsula los detalles y el estado de la notificación relacionada con
+   * la eliminación de una entrada de mercancía dentro del componente.
+   */
+  public eliminarMercanciaNotificacion!: Notificacion;
   /**
    * Indica si un elemento está seleccionado.
    *
@@ -123,6 +137,8 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
    * @type {Subscription}
    */
   private subscription: Subscription = new Subscription();
+
+  public seleccionadoDatos: SectoresTabla[] = [];
 
   /**
    * Constructor del componente SectoresYMercanciasComponent.
@@ -272,5 +288,79 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
   ): void {
     const VALOR = form.get(campo)?.value;
     (this.tramite90201Store[metodoNombre] as (value: unknown) => void)(VALOR);
+  }
+
+  /**
+   * Muestra una notificación de confirmación solicitando al usuario que confirme la eliminación
+   * del sector seleccionado. La notificación incluye botones personalizables para
+   * aceptar y cancelar, y está estilizada como una alerta de peligro.
+   * @returns void
+   */
+  public eliminarSector():void {
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: '¿Está seguro que desea eliminar el sector seleccionado?',
+      cerrar: false,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: 'Cancelar',
+    };
+  }
+
+  /**
+   * Maneja la selección de una fila en la tabla agregando los datos de la fila seleccionada al arreglo `seleccionadoDatos`.
+   * @param event - Los datos de la fila seleccionada de tipo `SectoresTabla`.
+   */
+  public seleccionDeFilaDeTabla(event: SectoresTabla): void {
+    this.seleccionadoDatos.push(event);
+  }
+
+  /**
+   * Elimina un "pedimento" (documento aduanal) seleccionado del arreglo `sectores` si la bandera `borrar` es verdadera.
+   *
+   * @param borrar - Bandera booleana que indica si se debe eliminar el pedimento seleccionado.
+   *
+   * El método busca el índice del elemento seleccionado en el arreglo `sectores` comparando las propiedades `claveDel` y `sectores`
+   * con el primer elemento del arreglo `seleccionadoDatos`. Si lo encuentra, elimina el elemento del arreglo.
+   */
+  public eliminarPedimento(borrar: boolean): void {
+    if (borrar) {
+      const INDEX = this.sectores.findIndex((sector: SectoresTabla) => sector.claveDel === this.seleccionadoDatos[0].claveDel && sector.sectores === this.seleccionadoDatos[0].sectores);
+      this.sectores.splice(INDEX, 1);
+    }
+  }
+
+  /**
+   * Muestra una notificación solicitando al usuario que seleccione la fracción que desea eliminar.
+   * Asigna a la propiedad `eliminarMercanciaNotificacion` una notificación de alerta de tipo 'danger',
+   * incluyendo un mensaje, título y texto de los botones. La notificación no puede ser cerrada por el usuario y
+   * desaparecerá automáticamente después de 2000 milisegundos.
+   */
+  public eliminarMercancia(): void {
+    this.eliminarMercanciaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: 'Seleccione la fraccion que desea eliminar.',
+      cerrar: false,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
+  }
+
+  /**
+   * Limpia el valor del control 'fraccion' en el formulario sectoresForm si la bandera `borrar` es verdadera.
+   *
+   * @param borrar - Una bandera booleana que indica si el campo 'fraccion' debe ser limpiado.
+   */
+  public mercancia(borrar: boolean): void {
+    if (borrar) {
+      this.sectoresForm.get('fraccion')?.setValue('');
+    }
   }
 }

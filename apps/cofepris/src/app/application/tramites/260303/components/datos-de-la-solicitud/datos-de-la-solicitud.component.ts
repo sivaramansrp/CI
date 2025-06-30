@@ -1,12 +1,14 @@
 import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, CrossListLable, CrosslistComponent, MANIFIESTOS, MercanciasDatos, ScianDatos, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
-import { Component, OnDestroy, OnInit, QueryList, TemplateRef, ViewChildren } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, QueryList, TemplateRef, ViewChildren } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Solicitud260303State, Tramite260303Store } from '../../../../estados/tramites/260303/tramite260303.store';
 import { Subject,map, takeUntil } from 'rxjs';
 import CROSLISTA_DE_PAISES from '@libs/shared/theme/assets/json/260303/croslista_de_paises.json';
 import { CertificadosLicenciasPermisosService } from '../../services/certificados-licencias-permisos.service';
 import { CommonModule } from '@angular/common';
+import { ConsultaioState } from '@ng-mf/data-access-user';
+import { EstadoCatalogResponse } from '../../models/certificados-licencias-permisos.model';
 import PAISES_DE_ORIGEN from '@libs/shared/theme/assets/json/260303/paises_de_origen.json';
 import { Tramite260303Query } from '../../../../estados/queries/260303/tramite260303.query';
 import USO_ESPECIFICO from '@libs/shared/theme/assets/json/260303/uso_especifico.json';
@@ -14,7 +16,6 @@ import USO_ESPECIFICO from '@libs/shared/theme/assets/json/260303/uso_especifico
  * DatosDeLaSolicitudComponent es responsable de manejar el primer paso del proceso.
  * para actualizar el componente actual que se está mostrando.
  */
-
 @Component({
   selector: 'app-datos-de-la-solicitud',
   standalone: true,
@@ -26,10 +27,18 @@ import USO_ESPECIFICO from '@libs/shared/theme/assets/json/260303/uso_especifico
     CrosslistComponent,
     AlertComponent
   ],
+  providers:[BsModalService],
   templateUrl: './datos-de-la-solicitud.component.html',
   styleUrl: './datos-de-la-solicitud.component.scss',
 })
 export class DatosDeLaSolicitudComponent implements OnInit,OnDestroy {
+
+      /**
+  * @property consultaState
+  * @description
+  * Estado actual de la consulta gestionado por el store `ConsultaioQuery`.
+  */
+  @Input() consultaState!: ConsultaioState;
 
   /**
    * Una referencia a la instancia del modal de Bootstrap.
@@ -133,17 +142,17 @@ export class DatosDeLaSolicitudComponent implements OnInit,OnDestroy {
     /**
    * Lista de países para la selección de origen.
    */
-    public crosListaDePaises = this.deepCopy(CROSLISTA_DE_PAISES);
+    public crosListaDePaises = DatosDeLaSolicitudComponent.deepCopy(CROSLISTA_DE_PAISES);
     /**
      * Una propiedad pública que contiene la lista de países de origen.
      * Se inicializa con la constante `PAISES_DE_ORIGEN`.
      */
-    public seleccionarPais = this.deepCopy(PAISES_DE_ORIGEN);
+    public seleccionarPais = DatosDeLaSolicitudComponent.deepCopy(PAISES_DE_ORIGEN);
     /**
      * Una propiedad pública que contiene las opciones de uso específico para la aplicación.
      * Se inicializa con la constante `USO_ESPECIFICO`.
      */
-    public seleccionarUsoEspecifico = this.deepCopy(USO_ESPECIFICO);
+    public seleccionarUsoEspecifico = DatosDeLaSolicitudComponent.deepCopy(USO_ESPECIFICO);
 
   /**
    * Lista de países para seleccionar el origen de la primera sección.
@@ -254,8 +263,6 @@ public TEXTOS = MANIFIESTOS;
  * Notificador para destruir los observables al finalizar.
  */
 private destroyNotifier$: Subject<void> = new Subject();
-
-
 /**
  * Constructor para el componente DatosDeLaSolicitudComponent.
  * 
@@ -272,7 +279,6 @@ constructor(
   private tramite260211Store: Tramite260303Store,
   private tramite260211Query: Tramite260303Query,
 ) {
-  //
 }
 
 /**
@@ -286,21 +292,33 @@ constructor(
  *   `crearElstablecimientoForm`, `crearRepresentanteLegalForm`, `cerrarSCIANForm` y `cerrarMercanciasForm`.
  */
 ngOnInit(): void {
-    this.tramite260211Query
-      .selectSolicitud$
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-        map((seccionState) => {
-          this.solicitudState = seccionState;
-        })
-      )
-      .subscribe();
+  this.inicializarFormulario();
   this.inicializarTablaYCatalogoDatos();
   this.crearElstablecimientoForm();
   this.crearRepresentanteLegalForm();
   this.cerrarSCIANForm();
   this.cerrarMercanciasForm();
+   this.deshabilitarFormularios();
 }
+
+  /**
+   * Inicializa el formulario suscribiéndose al observable selectSolicitud$ del store.
+   * Actualiza la propiedad solicitudState con el estado más reciente de la sección.
+   * 
+   * Este método se asegura de que la información del formulario esté sincronizada con el estado global.
+   */
+  inicializarFormulario(): void {
+    this.tramite260211Query
+      .selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          // Actualiza el estado local de la solicitud con los datos recibidos del store
+          this.solicitudState = seccionState;
+        })
+      )
+      .subscribe();
+  }
 
 /**
  * Inicializa la tabla de datos y los catálogos asociados invocando una serie de métodos.
@@ -338,9 +356,24 @@ public inicializarTablaYCatalogoDatos(): void {
    * @param obj - El objeto que se va a copiar profundamente. Por defecto es un objeto vacío.
    * @returns Una copia profunda del objeto proporcionado.
    */
-  public deepCopy(obj = {}) {
-    return JSON.parse(JSON.stringify(obj));
+
+/**
+ * Realiza una copia profunda de un objeto dado utilizando serialización y deserialización JSON.
+ * 
+ * @template T El tipo del objeto a copiar.
+ * @param obj El objeto que se desea copiar profundamente.
+ * @returns Una nueva instancia del objeto, completamente independiente del original.
+ * @remarks
+ * - Si el objeto es `undefined` o `null`, se retorna tal cual.
+ * - Esta función no copia correctamente objetos que contienen funciones, fechas, mapas, conjuntos, o propiedades no serializables por JSON.
+ */
+public static deepCopy<T>(obj: T): T {
+  if (obj === undefined || obj === null) {
+    return obj;
   }
+  return JSON.parse(JSON.stringify(obj));
+}
+
 
   /**
    * Inicializa y crea un grupo de formularios reactivo para "domicilioDeElstablecimientoForm".
@@ -524,7 +557,7 @@ public inicializarTablaYCatalogoDatos(): void {
    */
   public getEstadoCatalogDatos(): void {
     this.certificadosLicenciasSvc.getEstadoDatos().pipe(takeUntil(this.destroyNotifier$)).subscribe((response) => {
-      const DATOS = this.deepCopy(response);
+      const DATOS = DatosDeLaSolicitudComponent.deepCopy<EstadoCatalogResponse>(response);
       this.estadoCatalogo = DATOS.data;
     });
   }
@@ -539,7 +572,7 @@ public inicializarTablaYCatalogoDatos(): void {
    */
   public getscianTabla(): void {
     this.certificadosLicenciasSvc.getScianDatos().pipe(takeUntil(this.destroyNotifier$)).subscribe((response) => {
-      const DATOS = this.deepCopy(response);
+      const DATOS = DatosDeLaSolicitudComponent.deepCopy<ScianDatos[]>(response);
       this.scianTablaDatos = DATOS;
     });
   }
@@ -555,7 +588,7 @@ public inicializarTablaYCatalogoDatos(): void {
    */
   public getClaveCatalogDatos():void {
     this.certificadosLicenciasSvc.getClaveDatos().pipe(takeUntil(this.destroyNotifier$)).subscribe((response) => {
-      const DATOS = this.deepCopy(response);
+      const DATOS = DatosDeLaSolicitudComponent.deepCopy<EstadoCatalogResponse>(response);
       this.claveCatalogo = DATOS.data;
     });
   }
@@ -571,7 +604,7 @@ public inicializarTablaYCatalogoDatos(): void {
    */
   public getRegimenCatalogDatos():void {
     this.certificadosLicenciasSvc.getRegimenDatos().pipe(takeUntil(this.destroyNotifier$)).subscribe((response) => {
-      const DATOS = this.deepCopy(response);
+      const DATOS = DatosDeLaSolicitudComponent.deepCopy(response);
       this.regimenCatalogo = DATOS.data;
     });
   }
@@ -597,7 +630,7 @@ public inicializarTablaYCatalogoDatos(): void {
    */
   public getMercanciasTabla(): void {
     this.certificadosLicenciasSvc.getMercanciasDatos().pipe(takeUntil(this.destroyNotifier$)).subscribe((response) => {
-      const DATOS = this.deepCopy(response);
+      const DATOS = DatosDeLaSolicitudComponent.deepCopy(response);
       this.mercanciasTablaDatos = DATOS;
     });
   }
@@ -610,7 +643,7 @@ public inicializarTablaYCatalogoDatos(): void {
    */
   public getTipoDeProductoCatalogDatos(): void {
     this.certificadosLicenciasSvc.getTipoDeProductoDatos().pipe(takeUntil(this.destroyNotifier$)).subscribe((response) => {
-      const DATOS = this.deepCopy(response);
+      const DATOS = DatosDeLaSolicitudComponent.deepCopy(response);
       this.tipoDeProductoCatalogo = DATOS.data;
     });
   }
@@ -648,14 +681,15 @@ public inicializarTablaYCatalogoDatos(): void {
    * - "Restar selección": Elimina los elementos seleccionados de la lista cruzada.
    * - "Restar todos": Elimina todos los elementos de la lista cruzada.
    */
-  public getCrossListBtn() {
+  public getCrossListBtn(): { btnNombre: string; class: string; funcion: () => void }[] {
     return [
-      { btnNombre: 'Agregar todos', class: 'btn-primary', funcion: ():void => this.crossList.toArray()[0].agregar('t') },
-      { btnNombre: 'Agregar selección', class: 'btn-default', funcion: ():void => this.crossList.toArray()[0].agregar('') },
-      { btnNombre: 'Restar selección', class: 'btn-danger', funcion: ():void => this.crossList.toArray()[0].quitar('') },
-      { btnNombre: 'Restar todos', class: 'btn-default', funcion: ():void => this.crossList.toArray()[0].quitar('t') },
+      { btnNombre: 'Agregar todos', class: 'btn-primary', funcion: (): void => this.crossList.toArray()[0].agregar('t') },
+      { btnNombre: 'Agregar selección', class: 'btn-default', funcion: (): void => this.crossList.toArray()[0].agregar('') },
+      { btnNombre: 'Restar selección', class: 'btn-danger', funcion: (): void => this.crossList.toArray()[0].quitar('') },
+      { btnNombre: 'Restar todos', class: 'btn-default', funcion: (): void => this.crossList.toArray()[0].quitar('t') },
     ];
   }
+
 
   /**
    * Obtiene el catálogo de datos de países de procedencia desde el servicio y lo asigna a la propiedad `paisDeProcedenciaCatalogo`.
@@ -668,7 +702,7 @@ public inicializarTablaYCatalogoDatos(): void {
    */
   public getPaisDeProcedenciaCatalogoDatos(): void {
     this.certificadosLicenciasSvc.getPaisDeProcedenciaDatos().pipe(takeUntil(this.destroyNotifier$)).subscribe((response) => {
-      const DATOS = this.deepCopy(response);
+      const DATOS = DatosDeLaSolicitudComponent.deepCopy(response);
       this.paisDeProcedenciaCatalogo = DATOS.data;
     });
   }
@@ -700,6 +734,28 @@ public inicializarTablaYCatalogoDatos(): void {
       (this.tramite260211Store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
 
+    /**
+     * Habilita o deshabilita todos los formularios del componente según el estado de solo lectura.
+     * Si la propiedad `readonly` de `consultaState` es verdadera, todos los formularios se deshabilitan para evitar la edición.
+     * Si no, se habilitan para permitir la edición.
+     */
+    deshabilitarFormularios(): void {
+      if (this.consultaState?.readonly) {
+        // Deshabilita todos los formularios en modo solo lectura
+        this.denominacionForm.disable();
+        this.domicilioDeElstablecimientoForm.disable();
+        this.representanteLegalForm.disable();
+        this.scianForm.disable();
+        this.mercanciasForm.disable();
+      } else {
+        // Habilita todos los formularios para edición
+        this.denominacionForm.enable();
+        this.domicilioDeElstablecimientoForm.enable();
+        this.representanteLegalForm.enable();
+        this.scianForm.enable();
+        this.mercanciasForm.enable();
+      }
+    }
 
     /**
    * Método del ciclo de vida de Angular que se llama cuando el componente se destruye.

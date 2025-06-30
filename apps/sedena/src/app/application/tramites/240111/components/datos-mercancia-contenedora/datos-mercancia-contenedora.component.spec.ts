@@ -1,42 +1,63 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ActivatedRoute } from '@angular/router';
+// @ts-nocheck
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { By } from '@angular/platform-browser';
+import { Observable, of as observableOf, throwError } from 'rxjs';
+
+import { Component } from '@angular/core';
 import { DatosMercanciaContenedoraComponent } from './datos-mercancia-contenedora.component';
+import { Tramite240111Store } from '../../estados/tramite240111Store.store';
+import { Router, ActivatedRoute } from '@angular/router';
 import { DatosSolicitudService } from '../../../../shared/services/datos-solicitud.service';
-import { of } from 'rxjs';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+
+@Injectable()
+class MockTramite240111Store {
+  updateMercanciaTablaDatos(){}
+}
 
 describe('DatosMercanciaContenedoraComponent', () => {
-  let component: DatosMercanciaContenedoraComponent;
-  let fixture: ComponentFixture<DatosMercanciaContenedoraComponent>;
+  let fixture;
+  let component;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [DatosMercanciaContenedoraComponent],
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [ FormsModule, ReactiveFormsModule , HttpClientTestingModule],
+
+      schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
       providers: [
-        {
-          provide: ActivatedRoute,
-          useValue: {
-            params: of({}), // Mock params as an observable
-            queryParams: of({}), // Mock queryParams if needed
-            data: of({}), // Mock data as an observable
-          },
-        },
-        {
-          provide: DatosSolicitudService,
-          useValue: {
-            obtenerFraccionesCatalogo: jest.fn().mockReturnValue(of([])), // Mock the method to return an observable
-            obtenerUMCCatalogo: jest.fn().mockReturnValue(of([])), // Mock the method to return an observable
-            obtenerMonedaCatalogo: jest.fn().mockReturnValue(of([])), // Mock the method to return an observable
-          },
-        },
-      ],
-    }).compileComponents();
+        { provide: Tramite240111Store, useClass: MockTramite240111Store },
+        DatosSolicitudService,
+         {
+                          provide: ActivatedRoute,
+                          useValue: {
+                            snapshot: {url: 'url', params: {}, queryParams: {}, data: {}},
+                            url: observableOf('url'),
+                            params: observableOf({}),
+                            queryParams: observableOf({}),
+                            fragment: observableOf('fragment'),
+                            data: observableOf({})
+                          }
+                        }
+      ]
+    }).overrideComponent(DatosMercanciaContenedoraComponent, {
 
+    }).compileComponents();
     fixture = TestBed.createComponent(DatosMercanciaContenedoraComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+    component = fixture.debugElement.componentInstance;
   });
 
-  it('should create', () => {
+  it('should run #constructor()', async () => {
     expect(component).toBeTruthy();
   });
+
+  it('should run #updateMercanciaDetalle()', async () => {
+    component.tramiteStore = component.tramiteStore || {};
+    component.tramiteStore.updateMercanciaTablaDatos = jest.fn();
+    component.updateMercanciaDetalle({});
+    expect(component.tramiteStore.updateMercanciaTablaDatos).toHaveBeenCalled();
+  });
+
 });

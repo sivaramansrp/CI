@@ -12,7 +12,7 @@ export interface Solicitud120603State {
     /** Representación federal asociada a la solicitud */
     representacionFederal: string,
     /** Tipo de empresa (puede ser nulo) */
-    tipoEmpresa: string | null,
+    tipoEmpresa: string,
     /** Especificación adicional */
     especifique: string,
     /** Actividad económica preponderante */
@@ -50,7 +50,7 @@ export interface Solicitud120603State {
     /** Razón social de la empresa */
     razonSocial: string,
     /** País relacionado con los datos adicionales */
-    datosPais: string | null,
+    datosPais: string ,
     /** Código postal relacionado con los datos adicionales */
     datosCodigoPostal: string,
     /** Estado relacionado con los datos adicionales */

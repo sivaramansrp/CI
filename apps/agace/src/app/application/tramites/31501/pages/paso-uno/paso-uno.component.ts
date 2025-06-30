@@ -1,14 +1,33 @@
-import { ActivatedRoute,Router } from '@angular/router';
-import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna,InputRadioComponent,TEXTOS, TablaDinamicaComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup,FormsModule,ReactiveFormsModule, Validators } from '@angular/forms';
-import { Solicitud31501State, Tramite31501Store } from '../../../../estados/tramites/tramite31501.store';
-import { Subject, map, takeUntil } from 'rxjs';
-import { TramiteList,datosDeLaTabla } from '../../models/datos-tramite.model';
+import { ActivatedRoute } from '@angular/router';
+import { AlertComponent } from '@libs/shared/data-access-user/src';
 import { AutoridadService } from '../../services/autoridad.service';
 import { BsModalService } from 'ngx-bootstrap/modal';
+import { Catalogo } from '@libs/shared/data-access-user/src';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
+import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
+import { DatosDeLaTabla } from '../../models/datos-tramite.model';
+import { FormBuilder } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
+import { InputRadioComponent } from '@libs/shared/data-access-user/src';
+import { OnDestroy } from '@angular/core';
+import { OnInit } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
+import { Requerimiento } from '../../models/datos-tramite.model';
+import { Router } from '@angular/router';
+import { Solicitud31501State } from '../../../../estados/tramites/tramite31501.store';
+import { Subject } from 'rxjs';
+import { TEXTOS } from '@libs/shared/data-access-user/src';
+import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
 import { Tramite31501Query } from '../../../../estados/queries/tramite31501.query';
+import { Tramite31501Store } from '../../../../estados/tramites/tramite31501.store';
+import { TramiteList } from '../../models/datos-tramite.model';
+import { ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
+import { Validators } from '@angular/forms';
+import { map } from 'rxjs';
+import { takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-paso-uno',
@@ -91,7 +110,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    *
    * @type {ConfiguracionColumna<datosDeLaTabla>[]}
    */
-  public encabezadoDeTabla: ConfiguracionColumna<datosDeLaTabla>[] = [
+  public encabezadoDeTabla: ConfiguracionColumna<DatosDeLaTabla>[] = [
     { encabezado: '', clave: (artículo) => artículo.id, orden: 0 },
     {
       encabezado: 'Folio Tramite',
@@ -120,9 +139,9 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
   /**
    * Arreglo que almacena los datos de la tabla relacionados con los contenedores.
    *
-   * @type {datosDeLaTabla[]}
+   * @type {DatosDeLaTabla[]}
    */
-  public datosDelContenedor: datosDeLaTabla[] = [];
+  public datosDelContenedor: DatosDeLaTabla[] = [];
 
   /**
   * Opciones de radio.
@@ -270,7 +289,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
         this.datosDelContenedor.push(respuesta.datos);
         (
           this.tramite31501Store.setDelContenedor as (
-            valor: datosDeLaTabla[]
+            valor: DatosDeLaTabla[]
           ) => void
         )(this.datosDelContenedor);
         this.solicitudForm.patchValue({
@@ -321,9 +340,9 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    *
    * También registra en la consola el valor de `folioTramite` para fines de depuración.
    */
-  valorDeAlternancia(row: any): void {
+  valorDeAlternancia(row: Requerimiento): void {
     const CURRENT_URL = this.router.url;
-    if (row.folioTramite) {
+    if (row?.row?.folioTramite) {
       if(CURRENT_URL.includes('agace')){
         this.router.navigate(['/agace/autoridad/requiremento'], {
           state: { data: row },

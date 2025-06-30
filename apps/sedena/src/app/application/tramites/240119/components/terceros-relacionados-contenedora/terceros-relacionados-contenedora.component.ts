@@ -1,12 +1,19 @@
 import { ActivatedRoute, Router } from '@angular/router';
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { DestinoFinal, Proveedor } from '../../../../shared/models/terceros-relacionados.model';
-import { Subject, takeUntil } from 'rxjs';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import {
+  DestinoFinal,
+  Proveedor,
+} from '../../../../shared/models/terceros-relacionados.model';
+import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
+import { ModalComponent } from '../../../../shared/components/modal/modal.component';
 import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-relacionados/terceros-relacionados.component';
 import { Tramite240119Query } from '../../estados/tramite240119Query.query';
 import { Tramite240119Store } from '../../estados/tramite240119Store.store';
 
+import { AgregarDestinatarioFinalContenedoraComponent } from '../agregar-destinatario-final-contenedora/agregar-destinatario-final-contenedora.component';
+import { AgregarProveedorContenedoraComponent } from '../agregar-proveedor-contenedora/agregar-proveedor-contenedora.component';
 /**
  * @title Terceros Relacionados Contenedora
  * @description Componente contenedor encargado de suscribirse a los datos de destinatarios finales y proveedores del trámite.
@@ -16,12 +23,14 @@ import { Tramite240119Store } from '../../estados/tramite240119Store.store';
 @Component({
   selector: 'app-terceros-relacionados-contenedora',
   standalone: true,
-  imports: [CommonModule, TercerosRelacionadosComponent],
+  imports: [CommonModule, TercerosRelacionadosComponent, ModalComponent],
   templateUrl: './terceros-relacionados-contenedora.component.html',
   styleUrl: './terceros-relacionados-contenedora.component.scss',
 })
-export class TercerosRelacionadosContenedoraComponent implements OnInit, OnDestroy {
-
+export class TercerosRelacionadosContenedoraComponent
+  implements OnInit, OnDestroy
+{
+  @ViewChild('modal', { static: false }) modalComponent!: ModalComponent;
   /**
    * Observable para limpiar las suscripciones activas al destruir el componente.
    * @property {Subject<void>} destroy$
@@ -39,20 +48,31 @@ export class TercerosRelacionadosContenedoraComponent implements OnInit, OnDestr
    * @property {Proveedor[]} proveedorTablaDatos
    */
   proveedorTablaDatos: Proveedor[] = [];
-
+  /**
+   * Indica si el formulario debe mostrarse en modo solo lectura.
+   *
+   * @type {boolean}
+   * @memberof DatosDelTramiteContenedoraComponent
+   * @default false
+   */
+  esFormularioSoloLectura: boolean = false;
   /**
    * Constructor del componente.
    *
    * @method constructor
    * @param {Tramite240119Store} tramiteStore - Store de Akita que maneja el estado del trámite.
    * @param {Tramite240119Query} tramiteQuery - Query de Akita para obtener datos del trámite.
+   * @param {Router} router - Router de Angular para navegar entre rutas.
+   * @param {ActivatedRoute} activatedRoute - Ruta activa para navegar de forma relativa.
+   * @param {ConsultaioQuery} consultaQuery - Query para obtener el estado de la consulta.
    * @returns {void}
    */
   constructor(
     private tramiteStore: Tramite240119Store,
     private tramiteQuery: Tramite240119Query,
     private router: Router,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private consultaQuery: ConsultaioQuery
   ) {
     // No hacer nada
   }
@@ -76,12 +96,19 @@ export class TercerosRelacionadosContenedoraComponent implements OnInit, OnDestr
       .subscribe((data) => {
         this.proveedorTablaDatos = data;
       });
+    this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroy$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+        })
+      )
+      .subscribe();
   }
-
 
   /**
    * Modifica los datos del destinatario final y navega a la página para agregar un destino final.
-   * 
+   *
    * @param datos - Objeto de tipo `DestinoFinal` que contiene la información del destinatario final a actualizar.
    */
   modificarDestinarioDatos(datos: DestinoFinal): void {
@@ -101,11 +128,11 @@ export class TercerosRelacionadosContenedoraComponent implements OnInit, OnDestr
   }
 
   /**
- * Navega a una ruta relativa dentro del flujo actual.
- * @method irAAcciones
- * @param {string} accionesPath - Ruta relativa a la que se desea navegar.
- * @returns {void}
- */
+   * Navega a una ruta relativa dentro del flujo actual.
+   * @method irAAcciones
+   * @param {string} accionesPath - Ruta relativa a la que se desea navegar.
+   * @returns {void}
+   */
   irAAcciones(url: string): void {
     this.router.navigate([url], {
       relativeTo: this.activatedRoute,
@@ -113,35 +140,66 @@ export class TercerosRelacionadosContenedoraComponent implements OnInit, OnDestr
   }
 
   /**
-* @method eliminarDestinatarioFinal
-* @description Elimina el primer DestinoFinal final de la tabla de datos.
-* Si no hay DestinoFinal finales seleccionados, no realiza ninguna acción.
-*/
+   * @method eliminarDestinatarioFinal
+   * @description Elimina el primer DestinoFinal final de la tabla de datos.
+   * Si no hay DestinoFinal finales seleccionados, no realiza ninguna acción.
+   */
   eliminarDestinatarioFinal(datos: DestinoFinal): void {
     if (datos) {
       this.tramiteStore.eliminarDestinatarioFinal(datos);
     }
   }
   /**
- * @method eliminarProveedor
- * @description Elimina el primer Proveedor final de la tabla de datos.
- * Si no hay Proveedor finales seleccionados, no realiza ninguna acción.
- */
+   * @method eliminarProveedor
+   * @description Elimina el primer Proveedor final de la tabla de datos.
+   * Si no hay Proveedor finales seleccionados, no realiza ninguna acción.
+   */
   eliminarProveedor(datos: Proveedor): void {
     if (datos) {
       this.tramiteStore.eliminareliminarProveedorFinal(datos);
     }
   }
 
-    /**
+  /**
    * Hook del ciclo de vida que se ejecuta al destruir el componente.
    * Libera las suscripciones para evitar fugas de memoria.
    *
    * @method ngOnDestroy
    * @returns {void}
    */
-    ngOnDestroy(): void {
-      this.destroy$.next();
-      this.destroy$.complete();
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  /**
+   * Abre el modal correspondiente según el nombre del evento recibido.
+   *
+   * Si el evento es `'Datosmercancia'`, se carga el componente `DatosMercanciaContenedoraComponent`
+   * dentro del modal y se le pasa una función de cierre como input.
+   *
+   * @method openModal
+   * @param {string} event - Nombre del evento que indica qué componente se debe mostrar en el modal.
+   * @returns {void}
+   */
+  openModal(event: string): void {
+    if (event === 'agregar-destino-final') {
+      this.modalComponent.abrir(AgregarDestinatarioFinalContenedoraComponent, {
+        cerrarModal: this.cerrarModal.bind(this),
+      });
+    } else if (event === 'agregar-proveedor') {
+      this.modalComponent.abrir(AgregarProveedorContenedoraComponent, {
+        cerrarModal: this.cerrarModal.bind(this),
+      });
     }
+  }
+  /**
+   * Cierra el modal dinámico actualmente abierto utilizando el método del componente modal.
+   *
+   * @method cerrarModal
+   * @returns {void}
+   */
+  cerrarModal(): void {
+    this.modalComponent.cerrar();
+  }
 }

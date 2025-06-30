@@ -1,14 +1,15 @@
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Subject, map, takeUntil } from 'rxjs';
+import { AgregarDestinatarioFinalContenedoraComponent } from '../agregar-destinatario-final-contenedora/agregar-destinatario-final-contenedora.component';
+import { AgregarProveedorContenedoraComponent } from '../agregar-proveedor-contenedora/agregar-proveedor-contenedora.component';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 import { DestinoFinal } from '../../../../shared/models/terceros-relacionados.model';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
+import { ModalComponent } from '../../../../shared/components/modal/modal.component';
 import { Proveedor } from '../../../../shared/models/terceros-relacionados.model';
-import { Subject } from 'rxjs';
 import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-relacionados/terceros-relacionados.component';
 import { Tramite240101Query } from '../../estados/tramite240101Query.query';
-import { Tramite240101Store } from '../../estados/tramite240101Store.store';
-import { takeUntil } from 'rxjs';
+
 
 /**
  * @title Terceros Relacionados Contenedora
@@ -19,13 +20,21 @@ import { takeUntil } from 'rxjs';
 @Component({
   selector: 'app-terceros-relacionados-contenedora',
   standalone: true,
-  imports: [CommonModule, TercerosRelacionadosComponent],
+  imports: [CommonModule, TercerosRelacionadosComponent, ModalComponent],
   templateUrl: './terceros-relacionados-contenedora.component.html',
-  styleUrl: './terceros-relacionados-contenedora.component.css',
+  styleUrl: './terceros-relacionados-contenedora.component.scss',
 })
 export class TercerosRelacionadosContenedoraComponent
   implements OnInit, OnDestroy
 {
+  /**
+   * @description Referencia al componente ModalComponent dentro de la plantilla.
+   * Utiliza el decorador ViewChild para acceder a la instancia del modal y manipularlo desde el código TypeScript.   *  
+   * @see ModalComponent
+   * Referencia al componente modal para mostrar u ocultar diálogos modales en la interfaz de usuario.
+   */
+  @ViewChild('modal', { static: false }) modalComponent!: ModalComponent;
+
   /**
    * Observable para limpiar las suscripciones activas al destruir el componente.
    * @property {Subject<void>} destroy$
@@ -45,16 +54,26 @@ export class TercerosRelacionadosContenedoraComponent
   proveedorTablaDatos: Proveedor[] = [];
 
   /**
+   * Indica si el formulario debe mostrarse en modo solo lectura.
+   *
+   * @type {boolean}
+   * @memberof TercerosRelacionadosContenedoraComponent
+   * @default false
+   */
+  esFormularioSoloLectura: boolean = false;
+
+  /**
    * Constructor del componente.
    *
    * @method constructor
-   * @param {Tramite240101Store} tramiteStore - Store de Akita que maneja el estado del trámite.
    * @param {Tramite240101Query} tramiteQuery - Query de Akita para obtener datos del trámite.
+   * @param {ConsultaioQuery} consultaQuery - Servicio para realizar consultas adicionales relacionadas.
    * @returns {void}
    */
   constructor(
-    private tramiteStore: Tramite240101Store,
-    private tramiteQuery: Tramite240101Query // eslint-disable-next-line no-empty-function
+    private tramiteQuery: Tramite240101Query,
+    private consultaQuery: ConsultaioQuery
+     // eslint-disable-next-line no-empty-function
   ) {}
 
   /**
@@ -76,7 +95,47 @@ export class TercerosRelacionadosContenedoraComponent
       .subscribe((data) => {
         this.proveedorTablaDatos = data;
       });
+
+    this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.unsubscribe$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+        })
+      )
+      .subscribe();
   }
+  /**
+     * Abre el modal correspondiente según el nombre del evento recibido.
+     *
+     * Si el evento es `'Datosmercancia'`, se carga el componente `DatosMercanciaContenedoraComponent`
+     * dentro del modal y se le pasa una función de cierre como input.
+     *
+     * @method openModal
+     * @param {string} event - Nombre del evento que indica qué componente se debe mostrar en el modal.
+     * @returns {void}
+     */
+  openModal(event: string): void {
+    if (event === 'agregar-destino-final') {
+      this.modalComponent.abrir(AgregarDestinatarioFinalContenedoraComponent, {
+        cerrarModal: this.cerrarModal.bind(this),
+      });
+    } else if (event === 'agregar-proveedor') {
+      this.modalComponent.abrir(AgregarProveedorContenedoraComponent, {
+        cerrarModal: this.cerrarModal.bind(this),
+      });
+    }
+  }
+  /**
+   * Cierra el modal dinámico actualmente abierto utilizando el método del componente modal.
+   *
+   * @method cerrarModal
+   * @returns {void}
+   */
+  cerrarModal(): void {
+    this.modalComponent.cerrar();
+  }
+
   /**
    * Hook que se ejecuta al destruir el componente.
    * Envía un valor al Subject `unsubscribe$` y lo completa para liberar suscripciones.

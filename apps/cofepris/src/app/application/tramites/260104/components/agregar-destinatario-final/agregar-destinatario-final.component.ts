@@ -1,5 +1,5 @@
-import { Catalogo, InputRadioComponent, TipoPersona } from '@ng-mf/data-access-user';
-import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
+import { Catalogo, TipoPersona } from '@ng-mf/data-access-user';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { CommonModule } from '@angular/common';
 import { Location } from '@angular/common';
 
@@ -14,13 +14,14 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Subject, takeUntil } from 'rxjs';
-
+import { Subject, map, takeUntil } from 'rxjs';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DatosSolicitudService } from '../../../../shared/services/datos-solicitud.service';
 import { Destinatario } from '../../models/terceros-relacionados-destino.model';
+import { InputRadioComponent } from "@libs/shared/data-access-user/src/tramites/components/input-radio/input-radio.component";
+import { PERSONA_OPCIONES_DE_BOTON_DE_RADIO } from '../../../../shared/constantes/tereceros-relacionados-fab-seccion.enum';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { Tramite260104Store } from '../../estados/stores/tramite260104.store';
-import { PERSONA_OPCIONES_DE_BOTON_DE_RADIO } from '../../../../shared/constantes/tereceros-relacionados-fab-seccion.enum';
 
 
 
@@ -72,7 +73,11 @@ export class AgregarDestinatarioFinalComponent
    */
   public agregarDestinatarioFinal!: FormGroup;
 
-  
+    /**
+   * Determina si el formulario debe estar en modo solo lectura.
+   */
+    public esFormularioSoloLectura: boolean = false;
+
   /**
    * Arreglo que contiene los datos del catálogo de países.
    * Cada elemento del arreglo es de tipo `Catalogo`.
@@ -155,9 +160,18 @@ export class AgregarDestinatarioFinalComponent
     private fb: FormBuilder,
     private ubicaccion: Location,
     private datosSolicitudService: DatosSolicitudService,
-    private tramiteStore: Tramite260104Store
+    private tramiteStore: Tramite260104Store,
+    private consultaioQuery: ConsultaioQuery,
   ) {
-    //constructor necesario para el servicio
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.unsubscribe$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.crearAgregarFormularioAgregarDestinatarioFinal();
+        })
+      )
+      .subscribe();
   }
 
  
@@ -235,7 +249,6 @@ export class AgregarDestinatarioFinalComponent
    */
   ngOnInit(): void {
     this.cargarDatos();
-    this.crearAgregarFormularioAgregarDestinatarioFinal();
   }
 
  
@@ -387,6 +400,15 @@ export class AgregarDestinatarioFinalComponent
       descCodigoPostal: [''],
       descColonia: ['']
     });
+    if (this.esFormularioSoloLectura) {
+      Object.keys(this.agregarDestinatarioFinal.controls).forEach((key) => {
+        this.agregarDestinatarioFinal.get(key)?.disable();
+      });
+    } else {
+      Object.keys(this.agregarDestinatarioFinal.controls).forEach((key) => {
+        this.agregarDestinatarioFinal.get(key)?.enable();
+      });
+    }
   }
 
 

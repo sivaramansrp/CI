@@ -1,0 +1,11 @@
+{
+  "success": true,
+  "message": "",
+  "datos": {
+    "regimen_0": true,
+    "regimen_1": false,
+    "regimen_2": true,
+    "regimen_3": false,
+    "manifiesto": true
+  }
+}

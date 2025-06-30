@@ -60,7 +60,10 @@ export class DatosEmpresaComponent implements OnInit, OnDestroy {
    * Formulario reactivo para los datos de la empresa.
    */
   public formularioEmpresa!: FormGroup;
-
+  /**
+   * Referencia al store de Tramite120602 para gestionar el estado de la solicitud.
+   */
+  public dropDown: any = dropDown; 
   /**
    * Catálogo de opciones federales y estatales.
    */
@@ -234,7 +237,9 @@ export class DatosEmpresaComponent implements OnInit, OnDestroy {
     * Obtiene las opciones del catálogo federal y estatal.
     */
   obtenerFederalEstatal(): void {
-    this.federalEstatal = dropDown.listaDesplegable;
+    if(this.dropDown && this.dropDown.listaDesplegable){
+    this.federalEstatal = this.dropDown.listaDesplegable;
+    }
   }
 
   /**
@@ -325,7 +330,9 @@ export class DatosEmpresaComponent implements OnInit, OnDestroy {
    */
   setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite120602Store): void {
     const valor = form.get(campo)?.value;
+    if(valor){
     (this.tramite120602Store[metodoNombre] as (value: any) => void)(valor);
+    }
   }
 
   /**

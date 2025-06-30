@@ -1,15 +1,9 @@
+import { Component, ViewChild } from '@angular/core';
 import {
-  BtnContinuarComponent,
   DatosPasos,
 } from '@ng-mf/data-access-user';
-import { Component, ViewChild } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { PASOS } from '@ng-mf/data-access-user';
-import { PasoDosComponent } from '../paso-dos/paso-dos.component';
-import { PasoTresComponent } from '../paso-tres/paso-tres.component';
-import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { WizardComponent } from '@ng-mf/data-access-user';
 import { CertificadoDeOrigenComponent } from "../../components/certificado-de-origen/certificado-de-origen.component";
 
@@ -40,18 +34,10 @@ interface AccionBoton {
 @Component({
   templateUrl: './solicitud-page.component.html',
   styles: ``,
-  standalone: true,
-  imports: [
-    WizardComponent,
-    CommonModule,
-    BtnContinuarComponent,
-    FormsModule,
-    PasoDosComponent,
-    PasoTresComponent,
-    PasoUnoComponent,
-    ReactiveFormsModule
-  ],
-})
+ })
+/**
+ * Componente que representa la página de solicitud.
+ */
 export class SolicitudPageComponent {
   /**
    * Texto de alerta que se muestra a los terceros.
@@ -100,7 +86,7 @@ export class SolicitudPageComponent {
    * Obtiene el valor del índice de la acción del botón y controla la navegación del asistente.
    * @param e Acción del botón.
    */
-  getValorIndice(e: AccionBoton) {
+  getValorIndice(e: AccionBoton):void {
     if (e.valor > 0 && e.valor < 5) {
       this.indice = e.valor;
       if (e.accion === 'cont') {

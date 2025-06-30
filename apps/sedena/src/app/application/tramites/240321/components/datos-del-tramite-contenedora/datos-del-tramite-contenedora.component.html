@@ -5,4 +5,7 @@
   [datosDelTramiteFormState]="datosDelTramiteFormState"
   [justificacionTramiteFormState]="justificacionTramiteFormState"
   [idProcedimiento]="idProcedimiento"
+  [esFormularioSoloLectura]="esFormularioSoloLectura"
+  (openModal)="openModal($event)"
 ></app-datos-del-tramite>
+<div><app-modal #modal></app-modal></div>

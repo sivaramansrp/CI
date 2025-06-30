@@ -1,18 +1,18 @@
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { HEADERSDATASELECCIONADASTABLA, HISTORICOTABLECOLUMNS } from '../../models/registro.model';
 import { map, takeUntil } from 'rxjs';
 import { CertificadosOrigenService } from '../../../110223/services/certificado-origen.service';
 import { CommonModule } from '@angular/common';
-import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
 import { HistoricoColumnas } from '../../../110223/models/certificado-origen.model';
 import { Modal } from 'bootstrap';
 import { REGEX_SOLO_DIGITOS } from '@libs/shared/data-access-user/src';
-import { SeleccionadasTabla } from '../../models/registro.model';
+import { Solicitud110223State } from '../../../../estados/tramites/Tramite110223.store';
 import { Subject } from 'rxjs';
 import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
-import { Solicitud110223State } from '../../../../estados/tramites/Tramite110223.store';
 import { Tramite110223Query } from '../../../../estados/queries/tramite110223.query';
 import { Tramite110223Store } from '../../../../estados/tramites/Tramite110223.store';
 import { ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
@@ -44,14 +44,7 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
   /**
    * Configuración de las columnas de la tabla dinámica.
    */
-  tableColumns: ConfiguracionColumna<HistoricoColumnas>[] = [
-    { encabezado: 'Nombre del productor', clave: (elementos) => elementos.nombreProductor, orden: 1 },
-    { encabezado: 'Número de registro fiscal', clave: (elementos) => elementos.numeroRegistroFiscal, orden: 2 },
-    { encabezado: 'Dirección', clave: (elementos) => elementos.direccion, orden: 3 },
-    { encabezado: 'Correo Electrónico', clave: (elementos) => elementos.correoElectronico, orden: 4 },
-    { encabezado: 'Teléfono', clave: (elementos) => elementos.telefono, orden: 5 },
-    { encabezado: 'Fax', clave: (elementos) => elementos.fax, orden: 6 },
-  ];
+  tableColumns = HISTORICOTABLECOLUMNS;
 
   /**
    * Lista de productores disponibles para el exportador.
@@ -103,6 +96,16 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
    */
   agregarDatosProductorFormulario!: FormGroup;
 
+    /**
+   * Estado actual de la consulta.
+   */
+    consultaDatos!: ConsultaioState;
+
+    /**
+     * Indica si el formulario está en modo de solo lectura.
+     */
+    soloLectura: boolean = false;
+
   /**
    * Constructor del componente.
    *
@@ -117,7 +120,8 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
     private certificadosOrigenService: CertificadosOrigenService,
     public store: Tramite110223Store,
     public tramiteQuery: Tramite110223Query,
-    private validacionesService: ValidacionesFormularioService
+    private validacionesService: ValidacionesFormularioService,
+    private consultaioQuery: ConsultaioQuery
   ) {
     // El constructor se utiliza para la inyección de dependencias.
   }
@@ -137,6 +141,16 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
       .subscribe();
     this.initFormulario();
     this.initAgregarDatosProductorFormulario();
+    this.consultaioQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState) => {
+        this.consultaDatos = seccionState;
+        this.soloLectura = this.consultaDatos.readonly;
+        this.inicializarEstadoFormulario();
+      })
+    )
+    .subscribe();
   }
 
   /**
@@ -147,6 +161,7 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
       datosConfidencialesProductor: [this.tramiteState?.datosConfidencialesProductor, []],
       productorMismoExportador: [this.tramiteState?.productorMismoExportador, []],
     });
+    this.inicializarEstadoFormulario();
   }
 
   /**
@@ -167,7 +182,7 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
       .obtenerProductorPorExportador()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((respuesta) => {
-        this.productoresExportador = respuesta.datos;
+        this.productoresExportador = this.agregarProductoresExportador = respuesta.datos;
       });
   }
 
@@ -283,14 +298,17 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
   /**
    * Configuración de las columnas de la tabla de mercancías seleccionadas.
    */
-  public headersData: ConfiguracionColumna<SeleccionadasTabla>[] = [
-    { encabezado: 'Fracción arancelaria', clave: (ele: SeleccionadasTabla) => ele.fraccionArancelaria, orden: 1 },
-    { encabezado: 'Cantidad', clave: (ele: SeleccionadasTabla) => ele.cantidad, orden: 2 },
-    { encabezado: 'Unidad de medida', clave: (ele: SeleccionadasTabla) => ele.unidadMedida, orden: 3 },
-    { encabezado: 'Valor mercancía', clave: (ele: SeleccionadasTabla) => ele.valorMercancia, orden: 4 },
-    { encabezado: 'Tipo de factura', clave: (ele: SeleccionadasTabla) => ele.tipoFactura, orden: 5 },
-    { encabezado: 'Número factura', clave: (ele: SeleccionadasTabla) => ele.numFactura, orden: 6 },
-    { encabezado: 'Complemento descripción', clave: (ele: SeleccionadasTabla) => ele.complementoDescripcion, orden: 7 },
-    { encabezado: 'Fecha factura', clave: (ele: SeleccionadasTabla) => ele.fechaFactura, orden: 8 },
-  ];
+  public headersData = HEADERSDATASELECCIONADASTABLA;
+    /**
+   * Inicializa el estado del formulario (habilitado/deshabilitado) basado en el modo de solo lectura.
+   */
+    inicializarEstadoFormulario(): void {
+      if (this.soloLectura) {
+        this.formulario?.disable();
+        this.agregarDatosProductorFormulario?.disable();
+      } else {
+        this.formulario?.enable();
+        this.agregarDatosProductorFormulario?.enable();
+      }
+    }
 }

@@ -1,5 +1,5 @@
 import { Catalogo } from '@ng-mf/data-access-user';
-import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CatalogosSelect } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
@@ -8,7 +8,7 @@ import { DatosDeMercancias } from '../../models/solicitud-pantallas.model';
 import { FormControl } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { Input } from '@angular/core';
-import { InputRadioComponent } from '@ng-mf/data-access-user';
+import { InputRadioComponent } from '@libs/shared/data-access-user/src';
 import { OPCIONES_DE_BOTON_DE_RADIO } from '../../enums/solicitud-pantallas.enum';
 import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
@@ -37,7 +37,7 @@ import { takeUntil } from 'rxjs';
     TituloComponent,
     CatalogoSelectComponent,
     TableComponent,
-    InputRadioComponent
+    InputRadioComponent,
   ],
   viewProviders: [
     {
@@ -69,12 +69,27 @@ export class MedioTransporteComponent implements OnInit, OnDestroy, OnChanges {
   parentContainer = inject(ControlContainer);
 
   /** Getter para acceder al grupo de formularios principal */
-  get grupoFormularioPadre(): FormGroup{
+  get grupoFormularioPadre(): FormGroup {
     return this.parentContainer.control as FormGroup;
   }
+
+  /**
+   * Valor seleccionado para el campo "¿Es solicitud ferros?".
+   */
   esSolicitudFerrosValor!: string;
+
+  /**
+   * Opciones disponibles para el grupo de botones de radio.
+   *
+   * Estas opciones suelen representar valores como "Sí", "No", etc.
+   */
   opcionDeBotonDeRadio = OPCIONES_DE_BOTON_DE_RADIO;
 
+  /**
+   * Datos utilizados para renderizar la tabla.
+   *
+   * Contiene encabezados (`tableHeader`) y filas de contenido (`tableBody`).
+   */
   tableData = {
     tableBody: [],
     tableHeader: [],
@@ -86,18 +101,22 @@ export class MedioTransporteComponent implements OnInit, OnDestroy, OnChanges {
    */
   solicitud220502State: Solicitud220502State = {} as Solicitud220502State;
 
+  /**
+   * Subject para desuscribirse de los observables.
+   * @type {Subject<void>}
+   */
+  private destroyed$ = new Subject<void>();
 
   /**
-    * Subject para desuscribirse de los observables.
-    * @type {Subject<void>}
-    */
-  private destroyed$ = new Subject<void>();
+   * Indica si el formulario está deshabilitado.
+   */
+  @Input() formularioDeshabilitado!: boolean;
 
   constructor(
     public solicitud220502Query: Solicitud220502Query,
     public solicitud220502Store: Solicitud220502Store
-  ){
-    //
+  ) {
+    /** Inyectar el ControlContainer principal para administrar los controles de formulario */
   }
 
   /**
@@ -110,33 +129,51 @@ export class MedioTransporteComponent implements OnInit, OnDestroy, OnChanges {
       this.grupoFormularioPadre.addControl(
         this.claveDeControl,
         new FormGroup({
-          transporteIdMedio: new FormControl(this.solicitud220502State.transporteIdMedio, [Validators.required]),
-          identificacionTransporte: new FormControl(this.solicitud220502State.identificacionTransporte, [
-            Validators.maxLength(30),
-          ]),
-          esSolicitudFerros: new FormControl(this.solicitud220502State.esSolicitudFerros, [Validators.required]),
-          totalDeGuiasAmparadas: new FormControl(this.solicitud220502State.totalDeGuiasAmparadas, [
-            Validators.maxLength(50),
-          ]),
+          transporteIdMedio: new FormControl(
+            this.solicitud220502State.transporteIdMedio,
+            [Validators.required]
+          ),
+          identificacionTransporte: new FormControl(
+            this.solicitud220502State.identificacionTransporte,
+            [Validators.maxLength(30)]
+          ),
+          esSolicitudFerros: new FormControl(
+            this.solicitud220502State.esSolicitudFerros,
+            [Validators.required]
+          ),
+          totalDeGuiasAmparadas: new FormControl(
+            this.solicitud220502State.totalDeGuiasAmparadas,
+            [Validators.maxLength(50)]
+          ),
         })
       );
     }
 
-     this.solicitud220502Query.selectSolicitud$.pipe(
-            takeUntil(this.destroyed$),
-            map((res:Solicitud220502State)=>{
-              this.solicitud220502State = res;
-              const FORM_GROUP = this.grupoFormularioPadre.get(this.claveDeControl) as FormGroup;
-                if (FORM_GROUP) {
-                FORM_GROUP.patchValue({
-                  transporteIdMedio: this.solicitud220502State.transporteIdMedio,
-                  identificacionTransporte: this.solicitud220502State.identificacionTransporte,
-                  esSolicitudFerros: this.solicitud220502State.esSolicitudFerros,
-                  totalDeGuiasAmparadas: this.solicitud220502State.totalDeGuiasAmparadas
-                });
-              }
-            })
-          ).subscribe();
+    this.solicitud220502Query.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((res: Solicitud220502State) => {
+          this.solicitud220502State = res;
+          const FORM_GROUP = this.grupoFormularioPadre.get(
+            this.claveDeControl
+          ) as FormGroup;
+          if (FORM_GROUP) {
+            FORM_GROUP.patchValue({
+              transporteIdMedio: this.solicitud220502State.transporteIdMedio,
+              identificacionTransporte:
+                this.solicitud220502State.identificacionTransporte,
+              esSolicitudFerros: this.solicitud220502State.esSolicitudFerros,
+              totalDeGuiasAmparadas:
+                this.solicitud220502State.totalDeGuiasAmparadas,
+            });
+          }
+        })
+      )
+      .subscribe();
+
+    if (this.formularioDeshabilitado) {
+      this.grupoFormularioPadre.disable();
+    }
   }
 
   /**

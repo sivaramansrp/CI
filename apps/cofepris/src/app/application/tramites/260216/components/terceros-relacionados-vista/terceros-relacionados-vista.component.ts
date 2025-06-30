@@ -1,4 +1,4 @@
-import { Component, OnDestroy,OnInit } from '@angular/core';
+import { Component, Input, OnDestroy,OnInit } from '@angular/core';
 import {
   Destinatario,
   Fabricante,
@@ -26,6 +26,12 @@ import { Tramite260216Store } from '../../estados/tramite260216Store.store';
   styleUrl: './terceros-relacionados-vista.component.css',
 })
 export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
+
+  /**
+   * @property {boolean} formularioDeshabilitado - Indica si el formulario está deshabilitado.
+   */
+  @Input() formularioDeshabilitado: boolean = false;
+
   /**
    * @property {Fabricante[]} fabricanteTablaDatos
    * Datos de la tabla de fabricantes.

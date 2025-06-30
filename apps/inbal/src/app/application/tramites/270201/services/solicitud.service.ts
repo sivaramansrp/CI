@@ -1,4 +1,6 @@
+import { Tramite270201State, Tramite270201Store } from '../estados/tramites/tramite270201.store';
 import { Catalogo } from '@libs/shared/data-access-user/src';
+import { ENVIRONMENT } from '../../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ObraTablaDatos } from '../models/aviso-siglos.models'; 
@@ -15,13 +17,20 @@ import { Observable } from 'rxjs';
 })
 export class SolicitudService {
   /**
+   * AppConfig es una inyección de dependencias que proporciona la configuración de la aplicación.
+   */
+  urlServer = ENVIRONMENT.URL_SERVER;
+
+  /** URL base para obtener catálogos JSON auxiliares */
+  urlServerCatalogos = ENVIRONMENT.URL_SERVER_JSON_AUXILIAR;
+  /**
    * @constructor
    * @description
    * Inicializa el servicio con una instancia de HttpClient para realizar solicitudes HTTP.
    * @param {HttpClient} http - Cliente HTTP para realizar las solicitudes.
    */
-  constructor(private http: HttpClient) {
-    //
+  constructor(private http: HttpClient, private tramite270201Store: Tramite270201Store) {
+    // Lógica de inicialización si es necesario
   }
 
   /**
@@ -112,5 +121,59 @@ export class SolicitudService {
  */
   getObraDeArteTabla(): Observable<ObraTablaDatos> {
     return this.http.get<ObraTablaDatos>('assets/json/270201/obra-de-arte.json');
+  }
+
+  /**
+ * Actualiza el estado del formulario con los datos proporcionados.
+ *
+ * @param DATOS - Objeto que contiene el nuevo estado del trámite (Tramite270201State).
+ */
+  actualizarEstadoFormulario(DATOS: Tramite270201State): void {
+    if(DATOS.tipoDeOperacion){
+      this.tramite270201Store.setOperacion(DATOS.tipoDeOperacion);
+    }
+     if(DATOS.tipoDeMovimiento){
+      this.tramite270201Store.setMovimiento(DATOS.tipoDeMovimiento);
+    }
+    if(DATOS.motivo){
+      this.tramite270201Store.setMotivo(DATOS.motivo);
+    }
+    if(DATOS.pais){
+      this.tramite270201Store.setPais(DATOS.pais);
+    }
+    this.tramite270201Store.setCiudad(DATOS.ciudad);
+    if(DATOS.medioTransporte){
+      this.tramite270201Store.setTransporte(DATOS.medioTransporte);
+    }
+    if(DATOS.aduanaEntrada){
+      this.tramite270201Store.setAduana(DATOS.aduanaEntrada);
+    }
+    this.tramite270201Store.setAutor(DATOS.autor);
+    this.tramite270201Store.setTitulo(DATOS.titulo);
+    this.tramite270201Store.setTecnica(DATOS.tecnicaDeRealizacion);
+    this.tramite270201Store.setAlto(DATOS.alto);
+    this.tramite270201Store.setAncho(DATOS.ancho);
+    this.tramite270201Store.setProfundidad(DATOS.profundidad);
+    this.tramite270201Store.setDiametro(DATOS.diametro);
+    this.tramite270201Store.setVariables(DATOS.variables);
+    this.tramite270201Store.setAnoDeCreacion(DATOS.anoDeCreacion);
+    this.tramite270201Store.setAvaluo(DATOS.avaluo);
+    if(DATOS.moneda){
+      this.tramite270201Store.setMoneda(DATOS.moneda);
+    }
+    this.tramite270201Store.setPropietario(DATOS.propietario);
+    if(DATOS.fraccionArancelaria){
+      this.tramite270201Store.setFraccionArancelaria(DATOS.fraccionArancelaria);
+    }
+    this.tramite270201Store.setDescripcionArancelaria(DATOS.descripcionArancelaria);
+    this.tramite270201Store.setObraDeArte(DATOS.ObraDeArte);
+  }
+
+  /**
+ * Obtiene los datos del aviso de importación desde un archivo JSON local.
+ * @returns Observable con el estado del trámite 270201.
+ */
+  getRegistroTomaMuestrasMercanciasData(): Observable<Tramite270201State> {
+    return this.http.get<Tramite270201State>('assets/json/270201/aviso-de-importacion.json');
   }
 }

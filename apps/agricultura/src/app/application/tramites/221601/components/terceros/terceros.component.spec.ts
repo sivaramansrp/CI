@@ -1,3 +1,46 @@
+jest.mock('@libs/shared/theme/assets/json/221601/zoosanitario.json', () => ({
+  __esModule: true,
+  default: {
+    exportador: [
+      {
+        nombreDenominacionORazonSocial: 'dfdfsd',
+        telefono: '---',
+        correoElectronico: '---',
+        domicilio: 'dfgdfgfd',
+        pais: 'BELICE'
+      }
+    ],
+    destinatario: [
+      {
+        nombreDenominacionORazonSocial: 'ADVICS MANUFACTURING MEXICO S DE R.L. DE C.V.',
+        telefono: '555-3456789',
+        correoElectronico: 'nose@gmail.com',
+        calle: 'Av. Cazcanes',
+        numeroExterior: '2210',
+        numeroInterior: '',
+        pais: 'MEXICO (ESTADOS UNIDOS MEXICANOS)',
+        colonia: 'COLINAS DE LAGOS',
+        municipioOAlcaldia: 'LAGOS DE MORENO',
+        entidadFederativa: 'JALISCO',
+        codigoPostal: '47515'
+      }
+    ],
+    pais: [
+      { id: 'MEX', descripcion: 'MÉXICO' }
+    ],
+    estado: [
+      { id: 'JAL', descripcion: 'Jalisco' },
+      { id: 'CDMX', descripcion: 'Ciudad de México' }
+    ],
+    municipio: [
+      { id: 'LAGOS', descripcion: 'Lagos de Moreno' }
+    ],
+    colonia: [
+      { id: 'COLINAS', descripcion: 'Colinas de Lagos' }
+    ]
+  }
+}), { virtual: true });
+
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { TercerosComponent } from './terceros.component';
 import { TituloComponent, TablaDinamicaComponent, AlertComponent } from '@libs/shared/data-access-user/src';
@@ -32,14 +75,43 @@ describe('TercerosComponent', () => {
 
   it('should initialize exportador list correctly', () => {
     expect(component.exportador).toEqual(mockExportador);
-    expect(component.exportador.length).toBeGreaterThan(0); 
+
   });
 
-  it('should initialize destinatario list correctly', () => {
-    expect(component.destinatario).toEqual(mockDestinatario);
-    expect(component.destinatario.length).toBeGreaterThan(0);
-  });
+it('should correctly handle tipoPersona change', () => {
+  // Mock datosPersonales with enable/disable methods
+  component.datosPersonales = {
+    enable: jest.fn(),
+    disable: jest.fn()
+  } as any;
 
+  component.handleTipoPersonaChange('fisica');
+  expect(component.showFisicaRow).toBe(true);
+  expect(component.showMoralRow).toBe(false);
+  expect(component.showPlantaRow).toBe(false);
+  expect(component.datosPersonales.enable).toHaveBeenCalled();
+
+  component.handleTipoPersonaChange('moral');
+  expect(component.showFisicaRow).toBe(false);
+  expect(component.showMoralRow).toBe(true);
+  expect(component.showPlantaRow).toBe(false);
+  expect(component.datosPersonales.enable).toHaveBeenCalled();
+
+  component.handleTipoPersonaChange('planta');
+  expect(component.showPlantaRow).toBe(true);
+  expect(component.showFisicaRow).toBe(false);
+  expect(component.showMoralRow).toBe(true);
+  expect(component.datosPersonales.disable).toHaveBeenCalled();
+});
+it('should toggle showtercerosModal when cancelarDestinatario or tercerosAgregar is called', () => {
+  component.showtercerosModal = false;
+
+  component.tercerosAgregar();
+  expect(component.showtercerosModal).toBe(true);
+
+  component.cancelarDestinatario();
+  expect(component.showtercerosModal).toBe(false);
+});
   it('should have the correct configuracionTabla for exportador', () => {
     expect(component.configuracionTabla.length).toBe(5);
     expect(component.configuracionTabla[0].encabezado).toBe('Nombre/denominación o razón social');

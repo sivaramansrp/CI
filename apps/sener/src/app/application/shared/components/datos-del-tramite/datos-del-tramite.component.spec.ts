@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DatosDelTramiteComponent } from './datos-del-tramite.component';
-import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { EventEmitter } from '@angular/core';
+import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
+import { ProductoOpción } from '../../constantes/vehiculos-adaptados.enum';
 import { Catalogo } from '@ng-mf/data-access-user';
 
 describe('DatosDelTramiteComponent', () => {
@@ -19,7 +19,7 @@ describe('DatosDelTramiteComponent', () => {
     [{ id: 3, descripcion: 'Opción 3' }, { id: 4, descripcion: 'Opción 4' }],
   ];
 
-  const MOCK_SOLICITUD_OPCIONES = [
+  const MOCK_SOLICITUD_OPCIONES: ProductoOpción[] = [
     { label: 'Opción A', value: 'A' },
     { label: 'Opción B', value: 'B' },
   ];
@@ -33,7 +33,6 @@ describe('DatosDelTramiteComponent', () => {
     component = fixture.componentInstance;
     formBuilder = TestBed.inject(FormBuilder);
 
-    // Initialize the form
     component.form = formBuilder.group({
       campo1: ['', Validators.required],
       campo2: [''],
@@ -62,15 +61,17 @@ describe('DatosDelTramiteComponent', () => {
     expect(component.esInvalido(CONTROL_NAME)).toBe(false);
   });
 
-  it('debería emitir el evento setValoresStoreEvent al llamar a setValoresStore', () => {
-    jest.spyOn(component.setValoresStoreEvent, 'emit');
-    const MOCK_CAMPO = 'campo1';
-    component.setValoresStore(component.form, MOCK_CAMPO);
+  it('debería devolver false si el control no existe en esInvalido', () => {
+    expect(component.esInvalido('inexistente')).toBe(false);
+  });
 
-    expect(component.setValoresStoreEvent.emit).toHaveBeenCalledWith({
-      form: component.form,
-      campo: MOCK_CAMPO,
-    });
+  it('debería emitir el evento setValoresStoreEvent al llamar a setValoresStore', () => {
+    const spy = jest.spyOn(component.setValoresStoreEvent, 'emit');
+    const campo = 'campo1';
+
+    component.setValoresStore(component.form, campo);
+
+    expect(spy).toHaveBeenCalledWith({ form: component.form, campo });
   });
 
   it('debería inicializar correctamente los campos de entrada', () => {
@@ -85,7 +86,46 @@ describe('DatosDelTramiteComponent', () => {
     expect(component.solicitudOpciones).toEqual(MOCK_SOLICITUD_OPCIONES);
   });
 
-  it('debería devolver false si el control no existe en esInvalido', () => {
-    expect(component.esInvalido('controlInexistente')).toBe(false);
+  it('debería reiniciar el segundo campo y emitir evento cuando cambia el valor del primero', () => {
+    const campo1 = component.inputFields[0].controlName;
+    const campo2 = component.inputFields[1].controlName;
+
+    const spy = jest.spyOn(component.setValoresStoreEvent, 'emit');
+
+    const segundoControl = component.form.get(campo2);
+    segundoControl?.setValue('Valor inicial');
+    expect(segundoControl?.value).toBe('Valor inicial');
+
+    component.ngOnInit(); // subscribes to valueChanges
+    component.form.get(campo1)?.setValue('Nuevo valor');
+
+    expect(segundoControl?.value).toBe('');
+    expect(segundoControl?.pristine).toBe(true);
+    expect(segundoControl?.touched).toBe(false);
+    expect(spy).toHaveBeenCalledWith({
+      form: component.form,
+      campo: campo2,
+    });
   });
+
+  it('no debería ejecutar lógica si esFormularioSoloLectura es true', () => {
+  // Set read-only mode BEFORE component initializes
+  component.esFormularioSoloLectura = true;
+
+  // Important: ngOnInit() is called when fixture.detectChanges() runs
+  fixture.detectChanges();
+
+  const campo1 = component.inputFields[0].controlName;
+  const campo2 = component.inputFields[1].controlName;
+
+  const segundoControl = component.form.get(campo2);
+  segundoControl?.setValue('');
+
+  // Trigger value change on first control
+  component.form.get(campo1)?.setValue('Changed value');
+
+  // Since form is read-only, second control should NOT be reset
+  expect(segundoControl?.value).toBe('');
+});
+
 });

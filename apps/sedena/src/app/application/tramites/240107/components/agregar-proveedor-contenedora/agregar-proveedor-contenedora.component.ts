@@ -1,6 +1,7 @@
+import { Component, EventEmitter, Output } from '@angular/core';
 import { AgregarProveedorComponent } from '../../../../shared/components/agregar-proveedor/agregar-proveedor.component';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { ID_PROCEDIMIENTO } from '../../constantes/sustancias-quimicas.enum';
 import { Proveedor } from '../../../../shared/models/terceros-relacionados.model';
 import { Tramite240107Store } from '../../estados/tramite240107Store.store';
 
@@ -12,6 +13,21 @@ import { Tramite240107Store } from '../../estados/tramite240107Store.store';
   styleUrl: './agregar-proveedor-contenedora.component.scss',
 })
 export class AgregarProveedorContenedoraComponent {
+
+  /**
+   * Evento que se emite para notificar el cierre del componente.
+   * Los componentes padres pueden suscribirse a este evento para ejecutar acciones al cerrar.
+   *
+   * @type {EventEmitter<void>}
+   * @memberof AgregarDestinatarioFinalContenedoraComponent
+   */
+    @Output() cerrar = new EventEmitter<void>();
+
+     /**
+       * Identificador del procedimiento.
+       * @property {number} idProcedimiento
+       */
+      public readonly idProcedimiento = ID_PROCEDIMIENTO;
   /**
    * @constructor
    * @description Constructor que inyecta el store `Tramite260214Store` para gestionar el estado del trámite.

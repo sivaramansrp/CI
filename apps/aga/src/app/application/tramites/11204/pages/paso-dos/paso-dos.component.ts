@@ -1,5 +1,5 @@
-import { CATALOGOS_ID, TEXTOS, Catalogo, CatalogosService } from '@ng-mf/data-access-user';
-import { Component, OnInit } from '@angular/core';
+import { CATALOGOS_ID, Catalogo, CatalogosService, TEXTOS } from '@ng-mf/data-access-user';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 
 @Component({
@@ -33,10 +33,13 @@ export class PasoDosComponent implements OnInit {
    */
   documentosSeleccionados: Catalogo[] = [];
 
-    /**
-     * Sujeto para notificar la destrucción del componente.
-     */
-    public destroyNotifier$: Subject<void> = new Subject();
+  /**
+   * Sujeto para notificar la destrucción del componente.
+   */
+  public destroyNotifier$: Subject<void> = new Subject();
+
+  @Output() reenviarEvento = new EventEmitter<void>();
+  @Output() regresarSeccionCargarDocumentoEvento = new EventEmitter<void>();
 
   /**
    * Constructor del componente.

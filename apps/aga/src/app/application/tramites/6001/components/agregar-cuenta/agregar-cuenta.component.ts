@@ -1,18 +1,14 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable class-methods-use-this */
-/* eslint-disable @nx/enforce-module-boundaries */
-/* eslint-disable sort-imports */
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { TituloComponent } from "../../../../../../../../../libs/shared/data-access-user/src/tramites/components/titulo/titulo.component";
-import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
-import { Catalogo } from '@libs/shared/data-access-user/src/core/models/shared/catalogos.model';
-import { RegistroCuentasBancariasService } from '../../services/registro-cuentas-bancarias.service';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { REGEX_RFC } from '@libs/shared/data-access-user/src/tramites/constantes/regex.constants';
 import { AgregarCuenta6001State, Tramite6001Store } from '../../estados/tramite6001.store';
+import { Catalogo, RespuestaCatalogos } from '@libs/shared/data-access-user/src/core/models/shared/catalogos.model';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Subject, map, takeUntil } from 'rxjs';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
+import { CommonModule } from '@angular/common';
+import { REGEX_RFC } from '@libs/shared/data-access-user/src/tramites/constantes/regex.constants';
+import { RegistroCuentasBancariasService } from '../../services/registro-cuentas-bancarias.service';
+import { TituloComponent } from '@libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
 import { Tramite6001Query } from '../../estados/tramite6001.query';
-import { map, Subject, takeUntil } from 'rxjs';
 
 
 /**
@@ -124,7 +120,8 @@ export class AgregarCuentaComponent implements OnInit,OnDestroy {
    * @param obj - El objeto que se va a copiar profundamente. Por defecto es un objeto vacío.
    * @returns Una copia profunda del objeto proporcionado.
    */
-  public deepCopy(obj = {}) {
+  /*eslint class-methods-use-this: ["error", { "exceptMethods": ["deepCopy"] }] */
+  public deepCopy(obj = {}): RespuestaCatalogos {
     return JSON.parse(JSON.stringify(obj));
   }
 
@@ -228,7 +225,7 @@ export class AgregarCuentaComponent implements OnInit,OnDestroy {
 
   public setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite6001Store): void {
     const VALOR = form.get(campo)?.value;
-    (this.tramite6001Store[metodoNombre] as (value: any) => void)(VALOR);
+    (this.tramite6001Store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
 
   /**

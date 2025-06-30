@@ -22,7 +22,7 @@ import { DOMICILIO_TABLA_COLUMNAS } from '@ng-mf/data-access-user';
   templateUrl: './domicilio-tabla.component.html',
   styleUrl: './domicilio-tabla.component.scss',
 })
-export class DomicilioTablaComponent<T> implements OnInit, OnDestroy {
+export class DomicilioTablaComponent implements OnInit, OnDestroy {
 
   /**
    * Configuración de la tabla que se utilizará en el componente.

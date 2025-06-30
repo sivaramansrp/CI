@@ -12,7 +12,7 @@ describe('PasoDosComponent', () => {
     await TestBed.configureTestingModule({
       declarations: [PasoDosComponent],
       imports: [TituloComponent, AlertComponent],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA], // Add this line to ignore unrecognized elements
+      schemas: [CUSTOM_ELEMENTS_SCHEMA], 
     }).compileComponents();
 
     fixture = TestBed.createComponent(PasoDosComponent);

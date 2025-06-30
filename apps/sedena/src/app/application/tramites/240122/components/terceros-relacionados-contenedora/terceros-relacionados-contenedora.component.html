@@ -4,4 +4,7 @@
   (modificarDestinarioDatos)="modificarDestinarioDatos($event)"
   (modificarProveedorDatos)="modificarProveedorDatos($event)"
   [idProcedimiento]="idProcedimiento"
+  [esFormularioSoloLectura]="esFormularioSoloLectura"
+  (openModal)="openModal($event)"
 ></app-terceros-relacionados>
+ <div><app-modal #modal></app-modal></div>

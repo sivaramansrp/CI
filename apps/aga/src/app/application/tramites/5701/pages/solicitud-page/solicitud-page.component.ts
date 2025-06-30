@@ -1,8 +1,4 @@
 import {
-  CVE_UNIDAD_ADMIN,
-  TIPO_TRAMITE,
-} from '../../../../core/enums/5701/tramite5701.enum';
-import {
   Component,
   EventEmitter,
   OnInit,
@@ -21,7 +17,6 @@ import {
   TercerosQuery,
   TercerosState,
   TransporteDespacho,
-  WizardComponent,
 } from '@ng-mf/data-access-user';
 import {
   ListFechasSevex,
@@ -30,20 +25,45 @@ import {
   PersonaResponsableDespacho,
   SolicitudPayload,
 } from '../../../../core/models/5701/solicitud-payload.model';
-import { Subject, map, takeUntil } from 'rxjs';
+import {
+  MSG_REGISTRO_EXITOSO,
+  TIPO_TRAMITE,
+} from '../../../../core/enums/5701/tramite5701.enum';
+import { Observable, Subject, catchError, map, of, takeUntil, tap } from 'rxjs';
+import {
+  Solicitud5701State,
+  Tramite5701Store,
+} from '../../../../core/estados/tramites/tramite5701.store';
 import { GuardaSolicitudService } from '../../../../core/services/5701/guardar/guarda-solicitud.service';
-import { Solicitud5701State } from '../../../../core/estados/tramites/tramite5701.store';
 import { Tramite5701Query } from '../../../../core/queries/tramite5701.query';
+import { WizardComponent } from '@libs/shared/data-access-user/src';
 
+/**
+ * Interface que representa una acción de botón con su nombre y valor asociado.
+ *
+ */
 interface AccionBoton {
+  /**
+   * Nombre o identificador de la acción del botón.
+   */
   accion: string;
+  /**
+   * Valor numérico relacionado con la acción del botón.
+   */
   valor: number;
 }
 
+/**
+ * Componente Angular que representa la página de solicitud del trámite 5701.
+ */
 @Component({
   templateUrl: './solicitud-page.component.html',
   styleUrl: './solicitud-page.component.scss',
 })
+
+/**
+ * Clase que representa la página de solicitud del trámite 5701.
+ */
 export class SolicitudPageComponent implements OnInit {
   /**
    * Contiene la lista de pasos del wizard.
@@ -97,6 +117,12 @@ export class SolicitudPageComponent implements OnInit {
   @Output() regresarSeccionCargarDocumentoEvento = new EventEmitter<void>();
 
   /**
+   * Inicializa la variable de alertaNotificación con un objeto de tipo Notificacion.
+   * @type {Notificacion}
+   */
+  public alertaNotificacion!: Notificacion;
+
+  /**
    * Representa los datos de configuración para los pasos de un proceso.
    * @property nroPasos - Número total de pasos.
    * @property indice - Índice actual del paso.
@@ -122,15 +148,21 @@ export class SolicitudPageComponent implements OnInit {
   seccionCargarDocumentos: boolean = true;
 
   /**
-   * @descripcion Notificación para mostrar mensajes al usuario.
+   *Notificación para mostrar mensajes al usuario.
    */
   public nuevaNotificacion!: Notificacion;
+
+  /**
+   * Estado del tramite Folio
+   */
+  public folioTemporal: number = 0;
 
   constructor(
     private seccionQuery: SeccionLibQuery,
     private seccionStore: SeccionLibStore,
     private tramite5701Query: Tramite5701Query,
     private tercerosQuery: TercerosQuery,
+    private tramite5701Store: Tramite5701Store,
     private guardarSolicitudService: GuardaSolicitudService
   ) {}
 
@@ -175,7 +207,7 @@ export class SolicitudPageComponent implements OnInit {
   /**
    * Selecciona una pestaña específica y actualiza el índice actual.
    *
-   * @param i - El índice de la pestaña a seleccionar.
+   *  i - El índice de la pestaña a seleccionar.
    */
   seleccionaTab(i: number): void {
     this.indice = i;
@@ -184,7 +216,7 @@ export class SolicitudPageComponent implements OnInit {
   /**
    * Actualiza el valor del índice basado en la acción del botón y navega en el componente wizard.
    *
-   * @param e - Objeto de tipo `AccionBoton` que contiene el valor y la acción del botón.
+   *  e - Objeto de tipo `AccionBoton` que contiene el valor y la acción del botón.
    *
    * Si el valor del botón está entre 1 y 4, actualiza el índice con el valor del botón.
    * Si la acción es 'cont', avanza al siguiente paso del wizard.
@@ -193,21 +225,75 @@ export class SolicitudPageComponent implements OnInit {
   getValorIndice(e: AccionBoton): void {
     // Nos encontramos en el paso 1, se guarda parcialmente la información.
     if (this.indice === 1) {
-      this.enviaSolicitudRequest();
-    }
-    if (e.valor > 0 && e.valor < 5) {
-      this.indice = e.valor;
-      if (e.accion === 'cont') {
-        this.wizardComponent.siguiente();
-      } else {
-        this.wizardComponent.atras();
+      this.enviaSolicitudRequest()
+        .pipe(
+          takeUntil(this.destroyNotifier$),
+          tap((respuesta) => {
+            if (!respuesta) {
+              this.nuevaNotificacion = {
+                tipoNotificacion: 'toastr',
+                categoria: 'error',
+                modo: 'action',
+                titulo: '',
+                mensaje: 'Error al guardar la solicitud. Intente nuevamente.',
+                cerrar: false,
+                txtBtnAceptar: '',
+                txtBtnCancelar: '',
+              };
+              this.indice = 1;
+              this.wizardComponent.indiceActual = 1;
+              return;
+            }
+
+            if (e.valor > 0 && e.valor < 5) {
+              this.alertaNotificacion = {
+                tipoNotificacion: 'banner',
+                categoria: 'success',
+                modo: 'action',
+                titulo: '',
+                mensaje: MSG_REGISTRO_EXITOSO(this.folioTemporal.toString()),
+                cerrar: true,
+                txtBtnAceptar: '',
+                txtBtnCancelar: '',
+              };
+              this.indice = e.valor;
+              if (e.accion === 'cont') {
+                this.wizardComponent.siguiente();
+              } else {
+                this.wizardComponent.atras();
+              }
+            }
+          }),
+          catchError(() => {
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'toastr',
+              categoria: 'error',
+              modo: 'action',
+              titulo: '',
+              mensaje: 'Error al guardar la solicitud. Intente nuevamente.',
+              cerrar: false,
+              txtBtnAceptar: '',
+              txtBtnCancelar: '',
+            };
+            return of(false);
+          })
+        )
+        .subscribe();
+    } else {
+      if (e.valor > 0 && e.valor < 5) {
+        this.indice = e.valor;
+        if (e.accion === 'cont') {
+          this.wizardComponent.siguiente();
+        } else {
+          this.wizardComponent.atras();
+        }
       }
     }
   }
 
   /**
-   * @description Obtiene la lista de personas notificadas a partir del estado de terceros.
-   * @returns Una lista de objetos `ListPersonaNoti` que representan las personas notificadas.
+   * @ Obtiene la lista de personas notificadas a partir del estado de terceros.
+   * Una lista de objetos `ListPersonaNoti` que representan las personas notificadas.
    */
   obtenerPersonasNotificacion(): ListPersonaNoti[] {
     return this.tercerosState.terceros.map((persona, i) => {
@@ -220,8 +306,8 @@ export class SolicitudPageComponent implements OnInit {
   }
 
   /**
-   * @description Obtiene la lista de responsables de despacho a partir del estado de la solicitud.
-   * @returns Una lista de objetos `PersonaResponsableDespacho` que representan a los responsables de despacho.
+   * @ Obtiene la lista de responsables de despacho a partir del estado de la solicitud.
+   * Una lista de objetos `PersonaResponsableDespacho` que representan a los responsables de despacho.
    */
   obtenerResponsablesDespacho(): PersonaResponsableDespacho[] {
     return this.solicitudState.personasResponsablesDespacho.map((persona) => {
@@ -235,8 +321,8 @@ export class SolicitudPageComponent implements OnInit {
   }
 
   /**
-   * @description Obtiene una lista de pedimentos a partir del estado de la solicitud.
-   * @returns Una lista de objetos `Pedimento` que representan los pedimentos obtenidos del estado de la solicitud.
+   * @ Obtiene una lista de pedimentos a partir del estado de la solicitud.
+   * Una lista de objetos `Pedimento` que representan los pedimentos obtenidos del estado de la solicitud.
    */
   obtenerPedimentosLista(): Pedimento[] {
     return this.solicitudState.pedimentos.map((pedimento, i) => {
@@ -261,8 +347,8 @@ export class SolicitudPageComponent implements OnInit {
   }
 
   /**
-   * @description Obtiene una lista de transporte de arribo/salida a partir del estado de la solicitud.
-   * @returns Una lista de objetos `TransporteDespacho` que representan los transportes de despacho obtenidos del estado de la solicitud.
+   * @ Obtiene una lista de transporte de arribo/salida a partir del estado de la solicitud.
+   * Una lista de objetos `TransporteDespacho` que representan los transportes de despacho obtenidos del estado de la solicitud.
    */
   obtenerTransporteArriboSalida(): TransporteDespacho[] {
     const TIPO_TRANSPORTE_ARRIBO_SALIDA =
@@ -300,6 +386,7 @@ export class SolicitudPageComponent implements OnInit {
           }
         );
       case '4':
+        //Marítimo
         return this.solicitudState.transporteArriboDatos.map(
           (transporte: Partial<TransporteDespacho>) => {
             const RESULTADO: Partial<TransporteDespacho> = {
@@ -313,7 +400,8 @@ export class SolicitudPageComponent implements OnInit {
             return RESULTADO as TransporteDespacho;
           }
         );
-      case '5':
+      case '3':
+        //Aereo
         return this.solicitudState.transporteArriboDatos.map(
           (transporte: Partial<TransporteDespacho>) => {
             const RESULTADO: Partial<TransporteDespacho> = {
@@ -348,8 +436,8 @@ export class SolicitudPageComponent implements OnInit {
   }
 
   /**
-   * @description Obtiene una lista de transporte de despacho a partir del estado de la solicitud.
-   * @returns Una lista de objetos `TransporteDespacho` que representan los transportes de despacho obtenidos del estado de la solicitud.
+   * @ Obtiene una lista de transporte de despacho a partir del estado de la solicitud.
+   * Una lista de objetos `TransporteDespacho` que representan los transportes de despacho obtenidos del estado de la solicitud.
    */
   obtenerTransporteDespacho(): TransporteDespacho[] {
     const TIPO_TRANSPORTE_DESPACHO = this.solicitudState.tipoTransporte;
@@ -388,7 +476,7 @@ export class SolicitudPageComponent implements OnInit {
             return RESULTADO as TransporteDespacho;
           }
         );
-      case '3':
+      case '5':
         return this.solicitudState.transporte.map(
           (transporte: Partial<TransporteDespacho>) => {
             const RESULTADO: Partial<TransporteDespacho> = {
@@ -424,8 +512,8 @@ export class SolicitudPageComponent implements OnInit {
   }
 
   /**
-   * @description Obtiene una lista de fechas del servicio a partir del estado de la solicitud.
-   * @returns {ListFechasSevex[]} Una lista de fechas del servicio obtenidas del estado de la solicitud.
+   * @ Obtiene una lista de fechas del servicio a partir del estado de la solicitud.
+   * {ListFechasSevex[]} Una lista de fechas del servicio obtenidas del estado de la solicitud.
    */
   obtenerFechasSevex(): ListFechasSevex[] {
     return this.solicitudState.selectRangoDias.map((fecha) => {
@@ -439,13 +527,11 @@ export class SolicitudPageComponent implements OnInit {
   }
 
   /**
-   * @description Este método construye un objeto `SolicitudPayload` con los datos necesarios para enviar una solicitud
-   * del tramite 5701.
-   * @returns {void} No retorna ningún valor.   *
+   * @ Construye el payload de la solicitud para el trámite 5701
+   * {SolicitudPayload} Un objeto que representa la solicitud con todos los datos necesarios.
    */
-
-  private enviaSolicitudRequest(): void {
-    const CONSTRUYE_SOLICITUD_PAYLOAD: SolicitudPayload = {
+  construyeSolicitudPayload(): SolicitudPayload {
+    return {
       id_solicitud:
         this.solicitudState.idSolicitud === 0
           ? null
@@ -514,12 +600,12 @@ export class SolicitudPageComponent implements OnInit {
           cve_tipo_servicio: this.solicitudState.tipoSolicitud,
           desc_tipo_servicio: this.solicitudState.descripcionTipoSolicitud,
           numero_svex: '',
-          rni: 0,
+          rni: true,
           fecha_inicio_servicio: this.solicitudState.fechaInicio,
           fecha_fin_servicio: this.solicitudState.fechaFinal,
           hora_inicio_servicio: this.solicitudState.horaInicio,
           hora_fin_servicio: this.solicitudState.horaFinal,
-          patente: parseInt(this.solicitudState.patente.patente, 10),
+          patente: this.solicitudState.patente.patente,
           id_patentes_aduanales: 1,
         },
         lista_pagos: [
@@ -544,27 +630,35 @@ export class SolicitudPageComponent implements OnInit {
         list_fechas_sevex: this.obtenerFechasSevex(),
       },
     };
+  }
 
-    this.guardarSolicitudService
+  /**
+   * @ Este método construye un objeto `SolicitudPayload` con los datos necesarios para enviar una solicitud
+   * del tramite 5701.
+   * {void} No retorna ningún valor.   *
+   */
+
+  private enviaSolicitudRequest(): Observable<boolean> {
+    const CONSTRUYE_SOLICITUD_PAYLOAD: SolicitudPayload =
+      this.construyeSolicitudPayload();
+
+    return this.guardarSolicitudService
       .postSolicitud(CONSTRUYE_SOLICITUD_PAYLOAD)
       .pipe(
         map((response) => {
-          this.solicitudState.idSolicitud = response.datos.id_solicitud;
-          this.nuevaNotificacion = {
-            tipoNotificacion: 'toastr',
-            categoria: 'success',
-            modo: 'action',
-            titulo: '',
-            mensaje: `Solicitud guardada correctamente con ID: ${response.datos.id_solicitud}`,
-            cerrar: false,
-            txtBtnAceptar: '',
-            txtBtnCancelar: '',
-          };
-          return response;
+          if (response.datos.id_solicitud) {
+            this.solicitudState.idSolicitud = response.datos.id_solicitud;
+            this.folioTemporal = response.datos.id_solicitud;
+            this.tramite5701Store.setIdSolicitud(response.datos.id_solicitud);
+            return true;
+          }
+
+          return false;
         }),
+        catchError(() => of(false)),
+
         takeUntil(this.destroyNotifier$)
-      )
-      .subscribe();
+      );
   }
 
   /**
@@ -591,7 +685,7 @@ export class SolicitudPageComponent implements OnInit {
 
   /**
    * Emite un evento para cargar archivos.
-   * @returns {void} No retorna ningún valor.
+   * {void} No retorna ningún valor.
    */
   onClickCargaArchivos(): void {
     this.cargarArchivosEvento.emit();
@@ -600,7 +694,7 @@ export class SolicitudPageComponent implements OnInit {
   /**
    * Método para navegar a la sección anterior del wizard.
    * Actualiza el índice y el estado de los pasos.
-   * @returns {void} No retorna ningún valor.
+   * {void} No retorna ningún valor.
    */
   anterior(): void {
     this.wizardComponent.atras();
@@ -611,7 +705,7 @@ export class SolicitudPageComponent implements OnInit {
   /**
    * Método para navegar a la siguiente sección del wizard.
    * Realiza la validación de los documentos cargados y actualiza el índice y el estado de los pasos.
-   * @returns {void} No retorna ningún valor.
+   * {void} No retorna ningún valor.
    */
   siguiente(): void {
     // Aqui se hara la validacion de los documentos cargdados
@@ -623,8 +717,8 @@ export class SolicitudPageComponent implements OnInit {
   /**
    * Método para manejar el evento de carga de documentos.
    * Actualiza el estado del botón de carga de archivos.
-   * @param carga - Indica si la carga de documentos está activa o no.
-   * @returns {void} No retorna ningún valor.
+   *  carga - Indica si la carga de documentos está activa o no.
+   * {void} No retorna ningún valor.
    */
   manejaEventoCargaDocumentos(carga: boolean): void {
     this.activarBotonCargaArchivos = carga;
@@ -633,7 +727,7 @@ export class SolicitudPageComponent implements OnInit {
   /**
    * Método para manejar el evento de regreso a la sección de carga de documentos.
    * Emite un evento para regresar a la sección de carga de documentos.
-   * @returns {void} No retorna ningún valor.
+   * {void} No retorna ningún valor.
    */
   anteriorSeccionCargarDocumento(): void {
     this.regresarSeccionCargarDocumentoEvento.emit();
@@ -642,8 +736,8 @@ export class SolicitudPageComponent implements OnInit {
   /**
    * Método para manejar el evento de carga de documentos.
    * Actualiza el estado de la sección de carga de documentos.
-   * @param cargaRealizada - Indica si la carga de documentos se realizó correctamente.
-   * @returns {void} No retorna ningún valor.
+   *  cargaRealizada - Indica si la carga de documentos se realizó correctamente.
+   * {void} No retorna ningún valor.
    */
   cargaRealizada(cargaRealizada: boolean): void {
     this.seccionCargarDocumentos = cargaRealizada ? false : true;

@@ -21,11 +21,11 @@ describe('DatosDeLaComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('debería crearse', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize the form with default values', () => {
+  it('debería inicializar el formulario con valores predeterminados', () => {
     expect(component.forma).toBeDefined();
     expect(component.forma.get('rfcDel')?.value).toBe(
       component.solicitudState?.rfcDel
@@ -38,13 +38,13 @@ describe('DatosDeLaComponent', () => {
     );
   });
 
-  it('should toggle colapsable state', () => {
+  it('debería alternar el estado de colapsable', () => {
     const initialState = component.colapsable;
     component.mostrar_colapsable();
     expect(component.colapsable).toBe(!initialState);
   });
 
-  it('should enable all form controls when alternarControlesDeFormulario is called', () => {
+  it('debería habilitar todos los controles del formulario cuando se llama alternarControlesDeFormulario', () => {
     component.forma.disable();
     component.alternarControlesDeFormulario();
     Object.keys(component.forma.controls).forEach((controlName) => {
@@ -52,7 +52,7 @@ describe('DatosDeLaComponent', () => {
     });
   });
 
-  it('should set values in the store when setValoresStore is called', () => {
+  it('debería establecer valores en el store cuando se llama setValoresStore', () => {
     const mockStoreMethod = jest.fn();
     const mockForm = {
       get: jest.fn().mockReturnValue({ value: 'testValue' }),

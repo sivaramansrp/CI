@@ -1,14 +1,23 @@
-import { Catalogo, CatalogoSelectComponent, ConfiguracionColumna, InputRadioComponent, TablaDinamicaComponent, TablaSeleccion, TipoPersona, TituloComponent } from '@ng-mf/data-access-user';
+import { Catalogo, CatalogoSelectComponent, ConfiguracionColumna, ConsultaioQuery, InputRadioComponent, TablaDinamicaComponent, TablaSeleccion, TipoPersona, TituloComponent } from '@ng-mf/data-access-user';
 import { CommonModule, Location } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 import { USO_TABLA, Uso, UsoFinal } from '../../models/terceros-relacionados.model';
 import { MaterialesPeligrososService } from '../../services/materiales-peligrosos.service';
 import { OPCIONES_DE_BOTON_DE_RADIO } from '../../constantes/materiales-peligrosos.enum';
 import { Tramite230501Query } from '../../estados/queries/tramite230501Query.query';
 import { Tramite230501Store } from '../../estados/stores/tramite230501Store.store';
 
+/**
+ * Componente Angular para gestionar el uso final de materiales peligrosos.
+ * Permite a los usuarios ingresar información sobre el usuario final y el uso final de los materiales.
+ * Utiliza formularios reactivos para la captura de datos y se integra con servicios para obtener catálogos.
+ * 
+ * @remarks
+ * Este componente es parte del trámite 230501 y se encarga de manejar la sección de uso final,
+ * incluyendo la validación de formularios y la interacción con el store del trámite.
+ */
 @Component({
   selector: 'app-uso-final',
   standalone: true,
@@ -106,6 +115,11 @@ export class UsoFinalComponent implements OnDestroy, OnInit {
    * @command Opciones definidas en la constante OPCIONES_DE_BOTON_DE_RADIO.
    */
   public radioOpcions = OPCIONES_DE_BOTON_DE_RADIO;
+    /**
+* Indica si el formulario está en modo solo lectura.
+* Cuando es `true`, los campos del formulario no se pueden editar.
+*/
+  esFormularioSoloLectura: boolean = false;
 
   /**
    * Constructor que inicializa el formulario y servicios necesarios.
@@ -115,6 +129,7 @@ export class UsoFinalComponent implements OnDestroy, OnInit {
    * @param {Location} ubicaccion - Servicio para manejar la navegación (volver atrás).
    * @param {Tramite230501Store} tramiteStore - Store que administra el estado del trámite.
    * @param {Tramite230501Query} tramiteQuery - Servicio para consultar el estado actual del trámite.
+   * @param {ConsultaioQuery} consultaQuery - Servicio para consultar el estado de la sección de consulta.
    */
   constructor(
     private fb: FormBuilder,
@@ -122,6 +137,7 @@ export class UsoFinalComponent implements OnDestroy, OnInit {
     private ubicaccion: Location,
     private tramiteStore: Tramite230501Store,
     public tramiteQuery: Tramite230501Query,
+    public consultaQuery: ConsultaioQuery
   ) {
 
     //No hacer nada
@@ -157,6 +173,19 @@ export class UsoFinalComponent implements OnDestroy, OnInit {
     DENOMINACION_RAZON?.updateValueAndValidity();
   }
 
+  /**
+   * Inicializa el estado del formulario de uso final.
+   * Si el formulario no existe, lo crea. Si el formulario está en modo solo lectura, lo desactiva.
+   * @returns {void}
+   */
+  inicializarEstadoFormulario(): void {
+    if (!this.usoFinalForm) {
+      this.createUsoFinalForm();
+    }
+    if (this.esFormularioSoloLectura) {
+      this.usoFinalForm.disable();
+    }
+  }
 
   /**
    * Hook de inicialización del componente. Carga los catálogos necesarios.
@@ -188,6 +217,16 @@ export class UsoFinalComponent implements OnDestroy, OnInit {
       .subscribe(modo => {
         this.esElModoDeEdicion = modo;
       });
+      
+             this.consultaQuery.selectConsultaioState$
+                  .pipe(
+                    takeUntil(this.unsubscribe$),
+                    map((seccionState) => {
+                      this.esFormularioSoloLectura = seccionState.readonly;
+                      this.inicializarEstadoFormulario();
+                    })
+                  )
+                  .subscribe();
   }
 
   /**

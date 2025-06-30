@@ -1,18 +1,28 @@
+/**
+ * @component PeruDestinatarioComponent
+ * @description
+ * Componente responsable de manejar los datos de los formularios del destinatario y exportador
+ * dentro del trámite zoosanitario para Perú. Permite la sincronización con el estado global,
+ * incluyendo modo solo lectura, y guarda los valores ingresados en el store.
+ */
+
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { SeccionLibQuery, SeccionLibState } from '@libs/shared/data-access-user/src';
 import { Subject, map, takeUntil } from 'rxjs';
 import { Tramite110205State, Tramite110205Store } from '../../estados/tramite110205.store';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { Tramite110205Query } from '../../estados/tramite110205.query';
 
+/**
+ * @interface FormValues
+ * @description
+ * Interfaz que representa los valores del formulario de forma dinámica.
+ */
 interface FormValues {
   [key: string]: unknown;
 }
-/**
- * @descripcion
- * El componente `PeruDestinatarioComponent` es responsable de gestionar los datos y las interacciones
- * relacionadas con el formulario de destinatario en el módulo PERU.
- */
+
 @Component({
   selector: 'app-peru-destinatario',
   templateUrl: './peru-destinatario.component.html',
@@ -21,73 +31,81 @@ interface FormValues {
 export class PeruDestinatarioComponent implements OnInit, OnDestroy {
 
   /**
-   * @descripcion
-   * Valores actuales del formulario de destinatario.
+   * @property formDestinatarioValues
+   * @description Almacena los valores actuales del formulario de destinatario.
    */
   formDestinatarioValues!: FormValues;
 
   /**
-   * @descripcion
-   * Valores actuales del formulario de datos del destinatario.
+   * @property formDatosDelDestinatarioValues
+   * @description Almacena los valores del subformulario de datos del destinatario.
    */
   formDatosDelDestinatarioValues!: FormValues;
 
   /**
-   * @property {FormValues} formExportadorValues
-   * @description Almacena los valores del formulario relacionados con el exportador.
-   * @memberof PeruDestinatarioComponent
-   * @see FormValues
+   * @property formExportadorValues
+   * @description Almacena los valores del formulario de exportador.
    */
   formExportadorValues!: FormValues;
 
   /**
-   * @descripcion
-   * Notificador para gestionar la destrucción de suscripciones.
-   */
-  private destroyNotifier$: Subject<void> = new Subject();
-
-  /**
-   * @descripcion
-   * Estado actual del formulario de exportador.
-   */
-  private exportadoState!: Tramite110205State;
-
-  /**
-   * @descripcion
-   * Estado actual de la sección.
-   */
-  private seccionState!: SeccionLibState;
-
-  /**
-   * @ignore
-   * @description Indica si se debe ocultar el campo de LADA en el formulario.
-   * @type {boolean}
+   * @property ocultarLada
+   * @description Determina si el campo LADA debe ser visible.
    * @default true
    */
   ocultarLada: boolean = true;
 
   /**
-   * @property {boolean} ocultarFax
-   * @description Indica si el campo de fax debe estar oculto en la interfaz de usuario.
+   * @property ocultarFax
+   * @description Determina si el campo Fax debe ser visible.
    * @default true
-   * @memberof PeruDestinatarioComponent
    */
   ocultarFax: boolean = true;
 
   /**
-   * @descripcion
-   * Constructor que inicializa los servicios y dependencias requeridas.
-   * @param fb - Instancia de FormBuilder para gestionar formularios.
-   * @param store - Almacén para gestionar el estado del formulario de certificado.
-   * @param query - Consulta para obtener el estado del formulario.
-   * @param seccionStore - Almacén para gestionar el estado de la sección.
-   * @param seccionQuery - Consulta para obtener el estado de la sección.
+   * @property esFormularioSoloLectura
+   * @description Indica si el formulario está en modo solo lectura.
+   */
+  esFormularioSoloLectura: boolean = false;
+
+  /**
+   * @property destroyNotifier$
+   * @description Notificador utilizado para limpiar suscripciones al destruir el componente.
+   * @private
+   */
+  private destroyNotifier$: Subject<void> = new Subject();
+
+  /**
+   * @property exportadoState
+   * @description Estado actual del formulario exportador.
+   * @private
+   */
+  private exportadoState!: Tramite110205State;
+
+  /**
+   * @property seccionState
+   * @description Estado actual de la sección visual.
+   * @private
+   */
+  private seccionState!: SeccionLibState;
+
+  /**
+   * @constructor
+   * @description
+   * Constructor que inicializa servicios y suscripciones necesarias para sincronizar el estado del formulario.
+   * 
+   * @param fb FormBuilder para creación de formularios reactivos.
+   * @param store Store de la sección de trámite 110205.
+   * @param query Query de la sección de trámite 110205.
+   * @param seccionQuery Consulta del estado de la sección visual.
+   * @param consultaQuery Consulta del estado de solo lectura general.
    */
   constructor(
     private readonly fb: FormBuilder,
     private store: Tramite110205Store,
     private query: Tramite110205Query,
-    private seccionQuery: SeccionLibQuery
+    private seccionQuery: SeccionLibQuery,
+    private consultaQuery: ConsultaioQuery
   ) {
     this.query.selectFormDatosDelDestinatario$
       .pipe(takeUntil(this.destroyNotifier$))
@@ -100,17 +118,18 @@ export class PeruDestinatarioComponent implements OnInit, OnDestroy {
       .subscribe((estado) => {
         this.formDestinatarioValues = estado;
       });
+
     this.query.selectFormExportador$
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((estado) => {
         this.formExportadorValues = estado;
-    });
+      });
   }
 
   /**
-   * @descripcion
-   * Hook del ciclo de vida que se llama después de inicializar el componente.
-   * Obtiene los datos iniciales para el formulario.
+   * @method ngOnInit
+   * @description
+   * Hook de inicialización del componente. Establece suscripciones al estado del formulario y sección.
    */
   ngOnInit(): void {
     this.seccionQuery.selectSeccionState$
@@ -118,6 +137,15 @@ export class PeruDestinatarioComponent implements OnInit, OnDestroy {
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.seccionState = seccionState;
+        })
+      )
+      .subscribe();
+
+    this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
         })
       )
       .subscribe();
@@ -132,69 +160,76 @@ export class PeruDestinatarioComponent implements OnInit, OnDestroy {
       .subscribe();
   }
 
-
   /**
- * @descripcion
- * Actualiza el almacén con los datos del formulario de datos del destinatario.
- * @param event - Objeto que contiene el nombre del grupo de formulario, el campo, el valor y el nombre del estado del almacén.
- */
-setValoresStoreDatos(event: { formGroupName: string, campo: string, valor: undefined, storeStateName: string }): void {
-  const { campo: CAMPO, valor: VALOR } = event;
-  this.store.setFormDatosDelDestinatario({ [CAMPO]: VALOR });
-}
-
-  /**
-   * @descripcion
-   * Actualiza el almacén con los datos del formulario de exportador.
-   * @param event - Objeto que contiene el nombre del grupo de formulario, el campo, el valor y el nombre del estado del almacén.
+   * @method setValoresStoreDatos
+   * @description
+   * Actualiza el estado del store con los datos del formulario de datos del destinatario.
+   * @param event Evento con el campo y valor a actualizar.
    */
-  setValoresStoreExportador(event: { formGroupName: string, campo: string, valor: undefined, storeStateName: string }): void {
+  setValoresStoreDatos(event: { formGroupName: string; campo: string; valor: undefined; storeStateName: string }): void {
+    const { campo: CAMPO, valor: VALOR } = event;
+    this.store.setFormDatosDelDestinatario({ [CAMPO]: VALOR });
+  }
+
+  /**
+   * @method setValoresStoreExportador
+   * @description
+   * Actualiza el estado del store con los datos del formulario de exportador.
+   * @param event Evento con el campo y valor a actualizar.
+   */
+  setValoresStoreExportador(event: { formGroupName: string; campo: string; valor: undefined; storeStateName: string }): void {
     const { campo: CAMPO, valor: VALOR } = event;
     this.store.setFormExportador({ [CAMPO]: VALOR });
   }
 
-/**
- * @descripcion
- * Actualiza el almacén con los datos del formulario de destinatario.
- * @param event - Objeto que contiene el nombre del grupo de formulario, el campo, el valor y el nombre del estado del almacén.
- */
-setValoresStoreDe(event: { formGroupName: string, campo: string, valor: undefined, storeStateName: string }): void {
-  const { campo: CAMPO, valor: VALOR } = event;
-  this.store.setFormDestinatario({ [CAMPO]: VALOR });
-}
   /**
-   * @descripcion
-   * Actualiza el almacén con el estado de validación del formulario de destinatario.
-   * @param valida - El estado de validación del formulario.
+   * @method setValoresStoreDe
+   * @description
+   * Actualiza el estado del store con los datos del formulario de destinatario.
+   * @param event Evento con el campo y valor a actualizar.
+   */
+  setValoresStoreDe(event: { formGroupName: string; campo: string; valor: undefined; storeStateName: string }): void {
+    const { campo: CAMPO, valor: VALOR } = event;
+    this.store.setFormDestinatario({ [CAMPO]: VALOR });
+  }
+
+  /**
+   * @method setFormValida
+   * @description
+   * Marca como válido o inválido el formulario de destinatario en el store.
+   * @param valida Valor booleano indicando validez.
    */
   setFormValida(valida: boolean): void {
     this.store.setFormValida({ destinatrio: valida });
   }
 
   /**
-   * @descripcion
-   * Actualiza el almacén con el estado de validación del formulario de exportador.
-   * @param valida - El estado de validación del formulario.
+   * @method setFormValidaExportador
+   * @description
+   * Marca como válido o inválido el formulario de exportador en el store.
+   * @param valida Valor booleano indicando validez.
    */
   setFormValidaExportador(valida: boolean): void {
     this.store.setFormValida({ exportador: valida });
   }
 
   /**
-   * @descripcion
-   * Actualiza el almacén con el estado de validación de los datos del destinatario.
-   * @param valida - El estado de validación de los datos del destinatario.
+   * @method setFormValidaDestinatario
+   * @description
+   * Marca como válido o inválido el subformulario de datos del destinatario en el store.
+   * @param valida Valor booleano indicando validez.
    */
   setFormValidaDestinatario(valida: boolean): void {
     this.store.setFormValida({ datosDestinatario: valida });
   }
 
   /**
-   * @descripcion
-   * Actualiza el almacén con un valor específico del formulario.
-   * @param form - El formulario que contiene el valor.
-   * @param campo - El campo del formulario cuyo valor se actualizará.
-   * @param metodoNombre - El método del almacén que se llamará para actualizar el valor.
+   * @method setValoresStore
+   * @description
+   * Actualiza el store utilizando un método dinámico con el valor de un campo específico.
+   * @param form Formulario del cual se extraerá el valor.
+   * @param campo Nombre del campo a leer del formulario.
+   * @param metodoNombre Método del store que se invocará.
    */
   setValoresStore(
     form: FormGroup,
@@ -206,9 +241,9 @@ setValoresStoreDe(event: { formGroupName: string, campo: string, valor: undefine
   }
 
   /**
-   * @descripcion
-   * Hook del ciclo de vida que se llama cuando el componente se destruye.
-   * Limpia los recursos y suscripciones.
+   * @method ngOnDestroy
+   * @description
+   * Hook de destrucción del componente. Finaliza las suscripciones activas.
    */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();

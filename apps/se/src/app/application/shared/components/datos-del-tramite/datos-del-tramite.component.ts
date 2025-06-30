@@ -2,7 +2,7 @@ import {
   Catalogo,
   TituloComponent,
 } from '@ng-mf/data-access-user';
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { CommonModule } from '@angular/common';
@@ -25,7 +25,7 @@ import { ProductoOpción } from '../../constantes/vehiculos-adaptados.enum';
   templateUrl: './datos-del-tramite.component.html',
   styleUrl: './datos-del-tramite.component.scss',
 })
-export class DatosDelTramiteComponent implements OnInit{
+export class DatosDelTramiteComponent implements OnChanges{
   /**
   * @description Indica si el formulario debe mostrarse en modo solo lectura.
   */
@@ -86,16 +86,23 @@ export class DatosDelTramiteComponent implements OnInit{
   }
 
   /**
-  * Habilita o deshabilita el formulario según el modo de solo lectura.  
-  * Controla el estado del formulario al iniciar el componente.
-  */
-  ngOnInit(): void {
-    if (this.esFormularioSoloLectura) {
+     * Método del ciclo de vida que se ejecuta cuando cambian las propiedades de entrada del componente.
+     *
+     * Si la propiedad `esFormularioSoloLectura` cambia, habilita o deshabilita el formulario según su valor.
+     * Esto permite que el formulario se muestre en modo solo lectura o editable dinámicamente.
+     *
+     * @param changes - Objeto que contiene los cambios detectados en las propiedades de entrada.
+     */
+    ngOnChanges(changes: SimpleChanges): void {
+      // Verifica si el formulario ha cambiado y actualiza su estado
+      if (changes['esFormularioSoloLectura']) {
+        if (this.esFormularioSoloLectura) {
         this.form.disable();
     }else if (!this.esFormularioSoloLectura) {
        this.form.enable();
     }
-  }
+      }
+    }
   
   /**
    * @description Emite un evento para actualizar valores en el almacén.

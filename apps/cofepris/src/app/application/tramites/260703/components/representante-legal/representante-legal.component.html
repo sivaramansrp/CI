@@ -8,7 +8,7 @@
               placeholder="LEQI810131457" maxlength="13" (change)="setValoresStore('rfc')">
         </div>
         <div class="col-md-4 btn-buscar">
-            <button type="button" class="btn btn-primary" name="consultarIDC" id="consultarIDC"
+            <button type="button" class="btn btn-primary" name="consultarIDC" id="consultarIDC" [disabled]="esFormularioSoloLectura"
                 >Buscar</button>
         </div>
     </div>

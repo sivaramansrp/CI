@@ -38,8 +38,8 @@ describe('ProductorIndirectoComponent', () => {
   });
 
   it('should disable form when esFormularioSoloLectura is true in guardarDatosFormulario', () => {
-    component.inicializarProductorFormulario();
     component.esFormularioSoloLectura = true;
+    component.inicializarProductorFormulario();
     expect(component.formProductorIndirecto.disabled).toBe(true);
   });
 

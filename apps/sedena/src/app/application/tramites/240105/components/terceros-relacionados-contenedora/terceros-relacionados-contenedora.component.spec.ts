@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { TercerosRelacionadosContenedoraComponent } from './terceros-relacionados-contenedora.component';
 import { ActivatedRoute } from '@angular/router';
+import { ModalComponent } from '../../../../shared/components/modal/modal.component';
 
 describe('TercerosRelacionadosContenedoraComponent', () => {
   let component: TercerosRelacionadosContenedoraComponent;
@@ -8,7 +9,7 @@ describe('TercerosRelacionadosContenedoraComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [TercerosRelacionadosContenedoraComponent],
+      imports: [TercerosRelacionadosContenedoraComponent, ModalComponent],
       providers: [
         { provide: ActivatedRoute, useValue: {} },
       ],

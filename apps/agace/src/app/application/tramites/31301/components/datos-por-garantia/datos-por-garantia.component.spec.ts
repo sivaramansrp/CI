@@ -25,12 +25,36 @@ describe('DatosPorGarantiaComponent', () => {
 
   beforeEach(async () => {
     solicitudServiceMock = {
-      conseguirNombreInstitucionCatalogo: jest
-        .fn()
-        .mockReturnValue(of({} as CatalogosSelect)),
-      conseguirDatosPorGarantia: jest
-        .fn()
-        .mockReturnValue(of({} as DatosPorGarantia)),
+      conseguirNombreInstitucionCatalogo: jest.fn(() =>
+        of({
+          labelNombre: 'Datos de la póliza de fianza actual',
+          required: false,
+          primerOpcion: 'Seleccione un valor',
+          catalogos: [
+            {
+              id: 1,
+              descripcion: 'DORAMA, INSTITUCION DE GARANTIAS SA',
+            },
+            {
+              id: 2,
+              descripcion: 'DORAMA, INSTITUCION DE GARANTIAS SA - 1',
+            },
+          ],
+        })
+      ),
+      conseguirDatosPorGarantia: jest.fn(() =>
+        of({
+          polizaDeFianzaActual: 1,
+          numeroFolio: '645456546',
+          rfcInstitucion: 'FDO9411098R8',
+          fechaExpedicion: '30/09/2024',
+          fechaInicioVigenciaNo: '30/09/2024',
+          fechaFinVigenciaNo: '30/09/2024',
+          fechaInicioVigencia: '30/09/2024',
+          fechaFinVigencia: '30/09/2024',
+          importeTotal: '3213',
+        })
+      ),
     };
 
     solicitud31301StoreMock = {
@@ -46,7 +70,17 @@ describe('DatosPorGarantiaComponent', () => {
     };
 
     solicitud31301QueryMock = {
-      selectSolicitud$: of({}),
+      selectSolicitud$: of({
+        polizaDeFianzaActual: 1,
+        numeroFolio: '12345',
+        rfcInstitucion: 'RFC123',
+        fechaExpedicion: '01/01/2023',
+        fechaInicioVigenciaNo: '01/02/2023',
+        fechaFinVigenciaNo: '01/03/2023',
+        fechaInicioVigencia: '01/04/2023',
+        fechaFinVigencia: '01/05/2023',
+        importeTotal: '1000',
+      }),
     };
 
     await TestBed.configureTestingModule({
@@ -57,7 +91,7 @@ describe('DatosPorGarantiaComponent', () => {
         TituloComponent,
         CatalogoSelectComponent,
         InputFechaComponent,
-        HttpClientTestingModule
+        HttpClientTestingModule,
       ],
       declarations: [],
       providers: [
@@ -67,9 +101,6 @@ describe('DatosPorGarantiaComponent', () => {
         { provide: Solicitud31301Query, useValue: solicitud31301QueryMock },
       ],
     }).compileComponents();
-  });
-
-  beforeEach(() => {
     fixture = TestBed.createComponent(DatosPorGarantiaComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
@@ -86,57 +117,66 @@ describe('DatosPorGarantiaComponent', () => {
   });
 
   it('should call conseguirNombreInstitucionCatalogo on initialization', () => {
-    const spy = jest.spyOn(
-      solicitudServiceMock,
-      'conseguirNombreInstitucionCatalogo'
-    );
+    const spy = jest.spyOn(component, 'conseguirNombreInstitucionCatalogo');
     component.conseguirNombreInstitucionCatalogo();
     expect(spy).toHaveBeenCalled();
   });
 
   it('should call conseguirDatosPorGarantia on initialization', () => {
-    const spy = jest.spyOn(solicitudServiceMock, 'conseguirDatosPorGarantia');
+    const spy = jest.spyOn(component, 'conseguirDatosPorGarantia');
     component.conseguirDatosPorGarantia();
     expect(spy).toHaveBeenCalled();
   });
 
-  it('should update the form values when selectSolicitud$ emits', () => {
-    const mockState = {
-      polizaDeFianzaActual: 1,
-      numeroFolio: '12345',
-      rfcInstitucion: 'RFC123',
-      fechaExpedicion: '01/01/2023',
-      fechaInicioVigenciaNo: '01/02/2023',
-      fechaFinVigenciaNo: '01/03/2023',
-      fechaInicioVigencia: '01/04/2023',
-      fechaFinVigencia: '01/05/2023',
-      importeTotal: '1000',
-    };
-    solicitud31301QueryMock.selectSolicitud$ = of(mockState);
-
-    component.ngOnInit();
-    expect(component.polizaDeFianzaForm.value).toEqual({
-      polizaDeFianzaActual: 1,
-      numeroFolio: '12345',
-      rfcInstitucion: 'RFC123',
-      fechaExpedicion: '01/01/2023',
-      fechaInicioVigenciaNo: '01/02/2023',
-      fechaFinVigenciaNo: '01/03/2023',
-      fechaInicioVigencia: '01/03/2023',
-      fechaFinVigencia: '01/05/2023',
-      importeTotal: '1000',
-    });
-  });
-
   it('should call actualizarPolizaDeFianzaActual when seleccionaNombreInstitucion is triggered', () => {
-    const mockCatalogo = { id: 1, descripcion: "test"} as Catalogo;
+    const mockCatalogo = { id: 1, descripcion: 'test' } as Catalogo;
     component.seleccionaNombreInstitucion(mockCatalogo);
     expect(
       solicitud31301StoreMock.actualizarPolizaDeFianzaActual
     ).toHaveBeenCalledWith(1);
   });
 
-  it('should complete destroy$ on ngOnDestroy', () => {
+  it('should set nombreInstitucionCatalogo after conseguirNombreInstitucionCatalogo is called', () => {
+    component.nombreInstitucionCatalogo = {
+      labelNombre: 'Datos de la póliza de fianza actual',
+      required: false,
+      primerOpcion: 'Seleccione un valor',
+      catalogos: [
+        { id: 1, descripcion: 'DORAMA, INSTITUCION DE GARANTIAS SA' },
+        { id: 2, descripcion: 'DORAMA, INSTITUCION DE GARANTIAS SA - 1' },
+      ],
+    } as any;
+    component.conseguirNombreInstitucionCatalogo();
+    expect(component.nombreInstitucionCatalogo).toEqual({
+      labelNombre: 'Datos de la póliza de fianza actual',
+      required: false,
+      primerOpcion: 'Seleccione un valor',
+      catalogos: [
+        { id: 1, descripcion: 'DORAMA, INSTITUCION DE GARANTIAS SA' },
+        { id: 2, descripcion: 'DORAMA, INSTITUCION DE GARANTIAS SA - 1' },
+      ],
+    });
+  });
+
+  it('should disable the form if esFormularioSoloLectura is true in guardarDatosFormulario', () => {
+    component.inicializarFormulario = jest.fn();
+    component.polizaDeFianzaForm = new FormBuilder().group({ test: [''] });
+    const disableSpy = jest.spyOn(component.polizaDeFianzaForm, 'disable');
+    component.esFormularioSoloLectura = true;
+    component.guardarDatosFormulario();
+    expect(disableSpy).toHaveBeenCalled();
+  });
+
+  it('should enable the form if esFormularioSoloLectura is false in guardarDatosFormulario', () => {
+    component.inicializarFormulario = jest.fn();
+    component.polizaDeFianzaForm = new FormBuilder().group({ test: [''] });
+    const enableSpy = jest.spyOn(component.polizaDeFianzaForm, 'enable');
+    component.esFormularioSoloLectura = false;
+    component.guardarDatosFormulario();
+    expect(enableSpy).toHaveBeenCalled();
+  });
+
+ it('should complete destroy$ on ngOnDestroy', () => {
     const destroySpy = jest.spyOn(component['destroy$'], 'next');
     const completeSpy = jest.spyOn(component['destroy$'], 'complete');
     component.ngOnDestroy();

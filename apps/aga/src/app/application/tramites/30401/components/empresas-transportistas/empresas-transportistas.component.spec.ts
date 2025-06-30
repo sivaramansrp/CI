@@ -67,11 +67,11 @@ describe('EmpresasTransportistasComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize the form on ngOnInit', () => {
+  it('debe inicializar el formulario en ngOnInit', () => {
     component.ngOnInit();
     expect(component.empresasForm).toBeDefined();
     expect(component.empresasForm.get('numeroCaat')).toBeTruthy();
@@ -80,20 +80,20 @@ describe('EmpresasTransportistasComponent', () => {
     expect(component.empresasForm.get('permiso')).toBeTruthy();
   });
 
-  it('should call obtenerlistadescargable on ngOnInit', () => {
+  it('Debería llamar a obtenerlistadescargable en ngOnInit', () => {
     const spy = jest.spyOn(component, 'obtenerlistadescargable');
     component.ngOnInit();
     expect(spy).toHaveBeenCalled();
   });
 
-  it('should populate form with store data on enPatchStoredFormData', () => {
+  it('Debe completar el formulario con los datos de la tienda en enPatchStoredFormData', () => {
     component.enPatchStoredFormData();
     expect(component.seccionState).toBeDefined();
     expect(component.seccionState.tipoTransito).toBe('someValue');
   });
 
 
-  it('should return true for esInvalido if control is invalid, touched, or dirty', () => {
+  it('Debe devolver verdadero para esInvalido si el control no es válido, se tocó o está sucio', () => {
     component.ngOnInit();
     const control = component.empresasForm.get('domicilio.calle');
     control?.setValue('');
@@ -101,14 +101,14 @@ describe('EmpresasTransportistasComponent', () => {
     expect(component.esInvalido('domicilio.calle')).toBe(true);
   });
 
-  it('should return false for esInvalido if control is valid', () => {
+  it('Debe devolver falso para esInvalido si el control es válido', () => {
     component.ngOnInit();
     const control = component.empresasForm.get('domicilio.calle');
     control?.setValue('Valid Street');
     expect(component.esInvalido('domicilio.calle')).toBe(false);
   });
 
-  it('should complete destroyed$ on ngOnDestroy', () => {
+  it('Debería completar la destrucción en ngOnDestroy', () => {
     const spy = jest.spyOn(component.destroyed$, 'next');
     const completeSpy = jest.spyOn(component.destroyed$, 'complete');
     component.ngOnDestroy();

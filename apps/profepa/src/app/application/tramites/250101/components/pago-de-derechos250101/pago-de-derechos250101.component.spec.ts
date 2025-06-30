@@ -1,3 +1,23 @@
+jest.mock('@libs/shared/theme/assets/json/250101/banco.json', () => ({
+  __esModule: true,
+  default: {
+    banco: [
+      { id: 1, descripcion: 'Banco 1' },
+      { id: 2, descripcion: 'Banco 2' }
+    ],
+  }
+}), { virtual: true });
+jest.mock('@libs/shared/theme/assets/json/250101/pago-formdatos.json', () => ({
+  __esModule: true,
+  default: {
+    formData: {
+      clave: 'mockClave',
+      dependencia: 'mockDependencia',
+      importe: '1234',
+    }
+  }
+}), { virtual: true });
+
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormBuilder, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { of } from 'rxjs';
@@ -7,18 +27,6 @@ import { Tramite250101Query } from '../../estados/tramite250101.query';
 import { CatalogoSelectComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Tramite250101State } from '../../estados/tramite250101.store';
 
-// ✅ Mock the JSON imports
-jest.mock('@libs/shared/theme/assets/json/250101/banco.json', () => ({
-  banco: ['MockBank1', 'MockBank2'],
-}));
-
-jest.mock('@libs/shared/theme/assets/json/250101/pago-formdatos.json', () => ({
-  formData: {
-    clave: 'mockClave',
-    dependencia: 'mockDependencia',
-    importe: '1234',
-  },
-}));
 
 // ✅ Mock data for solicitud state
 const mockSolicitudState: Tramite250101State = {
@@ -105,11 +113,27 @@ describe('PagoDeDerechos250101Component', () => {
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
+  it('debería crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize form with values from store and set fixed values from JSON', () => {
+  it('debería inicializar el formulario con valores de solicitudState y establecer valores fijos desde pago.formData', () => {
+    const mockSolicitudState = {
+      clave: 'solClave',
+      dependencia: 'solDep',
+      banco: 'solBanco',
+      llave: 'solLlave',
+      fecha: '2024-01-01',
+      importe: '9999',
+      revisados: true
+    };
+    // @ts-ignore: acceso privado para prueba
+    component.solicitudState = mockSolicitudState;
+    // @ts-ignore: acceso privado para prueba
+    component['fb'] = new FormBuilder();
+
+    component['inicializarFormulario']();
+
     expect(component.pagoDerechosForm.controls['clave'].value).toBe('mockClave');
     expect(component.pagoDerechosForm.controls['dependencia'].value).toBe('mockDependencia');
     expect(component.pagoDerechosForm.controls['banco'].value).toBe('MockBank1');
@@ -119,59 +143,100 @@ describe('PagoDeDerechos250101Component', () => {
     expect(component.pagoDerechosForm.controls['revisados'].value).toBe('yes');
   });
 
-  it('should disable clave, dependencia and importe fields', () => {
+  it('debería deshabilitar los campos clave, dependencia e importe', () => {
     expect(component.pagoDerechosForm.controls['clave'].disabled).toBe(true);
     expect(component.pagoDerechosForm.controls['dependencia'].disabled).toBe(true);
     expect(component.pagoDerechosForm.controls['importe'].disabled).toBe(true);
   });
 
-  it('should call setClave store method when updating clave', () => {
+  it('debería llamar al método setClave del store al actualizar clave', () => {
     component.pagoDerechosForm.controls['clave'].setValue('newClave');
     component.setValoresStore(component.pagoDerechosForm, 'clave', 'setClave');
     expect(tramite250101Store.setClave).toHaveBeenCalledWith('newClave');
   });
 
-  it('should call setDependencia store method when updating dependencia', () => {
+  it('debería llamar al método setDependencia del store al actualizar dependencia', () => {
     component.pagoDerechosForm.controls['dependencia'].setValue('newDep');
     component.setValoresStore(component.pagoDerechosForm, 'dependencia', 'setDependencia');
     expect(tramite250101Store.setDependencia).toHaveBeenCalledWith('newDep');
   });
 
-  it('should call setBanco store method when updating banco', () => {
+  it('debería llamar al método setBanco del store al actualizar banco', () => {
     component.pagoDerechosForm.controls['banco'].setValue('OtherBank');
     component.setValoresStore(component.pagoDerechosForm, 'banco', 'setBanco');
     expect(tramite250101Store.setBanco).toHaveBeenCalledWith('OtherBank');
   });
 
-  it('should call setLlave store method when updating llave', () => {
+  it('debería llamar al método setLlave del store al actualizar llave', () => {
     component.pagoDerechosForm.controls['llave'].setValue('1111');
     component.setValoresStore(component.pagoDerechosForm, 'llave', 'setLlave');
     expect(tramite250101Store.setLlave).toHaveBeenCalledWith('1111');
   });
 
-  it('should call setFecha store method when updating fecha', () => {
+  it('debería llamar al método setFecha del store al actualizar fecha', () => {
     component.pagoDerechosForm.controls['fecha'].setValue('2025-05-01');
     component.setValoresStore(component.pagoDerechosForm, 'fecha', 'setFecha');
     expect(tramite250101Store.setFecha).toHaveBeenCalledWith('2025-05-01');
   });
 
-  it('should call setImporte store method when updating importe', () => {
+  it('debería llamar al método setImporte del store al actualizar importe', () => {
     component.pagoDerechosForm.controls['importe'].setValue('5678');
     component.setValoresStore(component.pagoDerechosForm, 'importe', 'setImporte');
     expect(tramite250101Store.setImporte).toHaveBeenCalledWith('5678');
   });
 
-  it('should call setRevisados store method when updating revisados', () => {
+  it('debería llamar al método setRevisados del store al actualizar revisados', () => {
     component.pagoDerechosForm.controls['revisados'].setValue(false);
     component.setValoresStore(component.pagoDerechosForm, 'revisados', 'setRevisados');
     expect(tramite250101Store.setRevisados).toHaveBeenCalledWith(false);
   });
 
-  it('should clean up subscriptions on destroy', () => {
+  it('debería limpiar las suscripciones al destruir el componente', () => {
     const destroySpy = jest.spyOn(component['destroyNotifier$'], 'next');
     const completeSpy = jest.spyOn(component['destroyNotifier$'], 'complete');
     component.ngOnDestroy();
     expect(destroySpy).toHaveBeenCalled();
     expect(completeSpy).toHaveBeenCalled();
+  });
+
+  
+  it('debería retornar inmediatamente si pagoDerechosForm es undefined', () => {
+    component.pagoDerechosForm = undefined as any;
+    expect(() => component.inicializarEstadoFormulario()).not.toThrow();
+  });
+
+ it('debería llamar a guardarDatosFormulario si esFormularioSoloLectura es true', () => {
+  component.pagoDerechosForm = component['fb'].group({
+    clave: [''],
+    dependencia: [''],
+    banco: [''],
+    llave: [''],
+    fecha: [''],
+    importe: [''],
+    revisados: ['']
+  });
+  component.esFormularioSoloLectura = true;
+  const spy = jest.spyOn(component, 'guardarDatosFormulario');
+  component.inicializarEstadoFormulario();
+  expect(spy).toHaveBeenCalled();
+});
+
+  it('debería habilitar el formulario y deshabilitar controles específicos si esFormularioSoloLectura es falso', () => {
+    component.pagoDerechosForm = component['fb'].group({
+      clave: [''],
+      dependencia: [''],
+      banco: [''],
+      llave: [''],
+      fecha: [''],
+      importe: [''],
+      revisados: ['']
+    });
+    component.esFormularioSoloLectura = false;
+    component.pagoDerechosForm.disable();
+    component.inicializarEstadoFormulario();
+    expect(component.pagoDerechosForm.enabled).toBe(true);
+    expect(component.pagoDerechosForm.get('clave')?.disabled).toBe(true);
+    expect(component.pagoDerechosForm.get('dependencia')?.disabled).toBe(true);
+    expect(component.pagoDerechosForm.get('importe')?.disabled).toBe(true);
   });
 });

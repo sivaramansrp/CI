@@ -1,7 +1,6 @@
 import { Store, StoreConfig } from '@datorama/akita';
-
 import { Injectable } from '@angular/core';
-import { Catalogo } from '@libs/shared/data-access-user/src';
+import { PagoDeDerechosTabla } from '../../../tramites/301/models/301.models';
 
 /**
  * Creacion del estado inicial para la interfaz de tramite 301
@@ -91,6 +90,12 @@ export interface Solicitud301State {
    * @type {string}
    */
   registro: string;
+
+  /**
+     * pagoDerechosTabla
+     * @type {PagoDeDerechosTabla[]}
+     */
+    pagoDerechosTabla: PagoDeDerechosTabla[];
 }
 
 export function createInitialState(): Solicitud301State {
@@ -178,6 +183,13 @@ export function createInitialState(): Solicitud301State {
      * @type {string}
      */
     registro: '',
+
+    /**
+     * pagoDerechosTabla
+     * @type {PagoDeDerechosTabla[]}
+     */
+    pagoDerechosTabla: []
+
   };
 }
 
@@ -198,7 +210,7 @@ export class Tramite301Store extends Store<Solicitud301State> {
    * Guarda la línea en el estado.
    * @param linea
    */
-  public setLinea(linea: string) {
+  public setLinea(linea: string): void {
     this.update((state) => ({
       ...state,
       linea,
@@ -209,7 +221,7 @@ export class Tramite301Store extends Store<Solicitud301State> {
    * Guarda el tipo de solicitud en el estado.
    * @param lineaCheckbox
    */
-  public setLineaCheckbox(lineaCheckbox: string) {
+  public setLineaCheckbox(lineaCheckbox: string): void {
     this.update((state) => ({
       ...state,
       lineaCheckbox,
@@ -220,7 +232,7 @@ export class Tramite301Store extends Store<Solicitud301State> {
    * Guarda el nombre químico en el estado.
    * @param nombreQuimico
    */
-  public setNombreQuimico(nombreQuimico: string) {
+  public setNombreQuimico(nombreQuimico: string): void {
     this.update((state) => ({
       ...state,
       nombreQuimico,
@@ -231,7 +243,7 @@ export class Tramite301Store extends Store<Solicitud301State> {
    * Guarda el nombre comercial en el estado.
    * @param nombreComercial
    */
-  public setNombreComercial(nombreComercial: string) {
+  public setNombreComercial(nombreComercial: string): void {
     this.update((state) => ({
       ...state,
       nombreComercial,
@@ -242,7 +254,7 @@ export class Tramite301Store extends Store<Solicitud301State> {
    * Guarda el número CAS en el estado.
    * @param numeroCAS
    */
-  public setNumeroCAS(numeroCAS: string) {
+  public setNumeroCAS(numeroCAS: string): void {
     this.update((state) => ({
       ...state,
       numeroCAS,
@@ -253,7 +265,7 @@ export class Tramite301Store extends Store<Solicitud301State> {
    * Guarda el acondicionamiento en el estado.
    * @param acondicionamiento
    */
-  public setAcondicionamiento(acondicionamiento: string) {
+  public setAcondicionamiento(acondicionamiento: string): void {
     this.update((state) => ({
       ...state,
       acondicionamiento,
@@ -264,7 +276,7 @@ export class Tramite301Store extends Store<Solicitud301State> {
    * Guarda el estado físico en el estado.
    * @param estadoFisico
    */
-  public setEstadoFisico(estadoFisico: string) {
+  public setEstadoFisico(estadoFisico: string): void {
     this.update((state) => ({
       ...state,
       estadoFisico,
@@ -275,7 +287,7 @@ export class Tramite301Store extends Store<Solicitud301State> {
    * Guarda la fracción arancelaria en el estado.
    * @param fraccionArancelaria
    */
-  public setFraccionArancelaria(fraccionArancelaria: string) {
+  public setFraccionArancelaria(fraccionArancelaria: string): void {
     this.update((state) => ({
       ...state,
       fraccionArancelaria,
@@ -286,7 +298,7 @@ export class Tramite301Store extends Store<Solicitud301State> {
    * Guarda la descripción de la fracción arancelaria en el estado.
    * @param descripcionFraccion
    */
-  public setNico(nico: string) {
+  public setNico(nico: string): void {
     this.update((state) => ({
       ...state,
       nico,
@@ -297,7 +309,7 @@ export class Tramite301Store extends Store<Solicitud301State> {
    * Guarda el nico en el estado.
    * @param nico
    */
-  public setMercancia(mercancia: string) {
+  public setMercancia(mercancia: string): void {
     this.update((state) => ({
       ...state,
       mercancia,
@@ -308,7 +320,7 @@ export class Tramite301Store extends Store<Solicitud301State> {
    * Guarda la descripción del nico en el estado.
    * @param descripcionNico
    */
-  public setFolio(folio: string) {
+  public setFolio(folio: string): void {
     this.update((state) => ({
       ...state,
       folio,
@@ -319,7 +331,7 @@ export class Tramite301Store extends Store<Solicitud301State> {
    * Guarda el folio en el estado.
    * @param folio
    */
-  public setRegistro(registro: string) {
+  public setRegistro(registro: string): void {
     this.update((state) => ({
       ...state,
       registro,
@@ -330,7 +342,7 @@ export class Tramite301Store extends Store<Solicitud301State> {
    * Guarda el registro en el estado.
    * @param registro
    */
-  public setDescripcionFraccion(descripcionFraccion: string) {
+  public setDescripcionFraccion(descripcionFraccion: string): void {
     this.update((state) => ({
       ...state,
       descripcionFraccion,
@@ -341,7 +353,7 @@ export class Tramite301Store extends Store<Solicitud301State> {
    * Guarda la descripción de la fracción arancelaria en el estado.
    * @param descripcion
    */
-  public setDescripcionNico(descripcionNico: string) {
+  public setDescripcionNico(descripcionNico: string): void {
     this.update((state) => ({
       ...state,
       descripcionNico,
@@ -351,7 +363,18 @@ export class Tramite301Store extends Store<Solicitud301State> {
   /**
    * Limpia los datos de la solicitud
    */
-  public limpiarSolicitud() {
+  public limpiarSolicitud(): void {
     this.reset();
+  }
+
+  /**
+   * Guarda la línea en el estado.
+   * @param linea
+   */
+  public setPagoDerechosTabla(fieldName: string, value: PagoDeDerechosTabla[]): void {
+    this.update((state) => ({
+      ...state,
+      [fieldName]: value,
+    }));
   }
 }

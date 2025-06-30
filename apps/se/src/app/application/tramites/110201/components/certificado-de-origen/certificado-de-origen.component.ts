@@ -4,6 +4,8 @@ import {
   CatalogoSelectComponent,
   CatalogosSelect,
   ConfiguracionColumna,
+  ConsultaioQuery,
+  ConsultaioState,
   InputFecha,
   TablaDinamicaComponent,
   TablaSeleccion,
@@ -27,11 +29,11 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { ReplaySubject, Subject, map, takeUntil } from 'rxjs';
 import {
   Solicitud110201State,
   Tramite110201Store,
 } from '../../state/Tramite110201.store';
-import { ReplaySubject, Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { InputFechaComponent } from '@libs/shared/data-access-user/src/tramites/components/input-fecha/input-fecha.component';
 import { RegistroService } from '../../services/registro.service';
@@ -63,6 +65,15 @@ const TERCEROS_TEXTO_DE_ALERTA =
   styleUrl: './certificado-de-origen.component.css',
 })
 export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
+   /**
+   * Subject para destruir notificador.
+   */
+  consultaDatos!: ConsultaioState;
+   /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  soloLectura: boolean = false;
   /**
     * Evento para comunicar datos al componente padre.
     */
@@ -358,17 +369,27 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
   constructor(
     private registroService: RegistroService,
     public fb: FormBuilder,
-    private store: Tramite110201Store,
+    public store: Tramite110201Store,
     private query: Tramite110201Query,
-    private validacionesService: ValidacionesFormularioService
+    private validacionesService: ValidacionesFormularioService,
+    private consultaioQuery: ConsultaioQuery
   ) {
-    // El constructor se utiliza para la inyección de dependencias.
+   this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.consultaDatos = seccionState;
+          this.soloLectura = this.consultaDatos.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe()
   }
   /**
    * Maneja el evento de clic para habilitar el formulario de edición.
    * @param row Fila seleccionada.
    */
-  manejarClic(row: unknown) {
+  manejarClic(_row: unknown): void {
     this.esFormulario = true;
   }
   /**
@@ -402,6 +423,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
     this.getUnidadMedida();
     this.getTipoFactura();
     this.getSolicitudesTabla();
+    this.inicializarEstadoFormulario();
 
     this.query.selectSolicitud$
       .pipe(
@@ -414,9 +436,58 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
     this.donanteDomicilio();
   }
   /**
-   * Actualiza la fecha de la factura en el formulario reactivo y en el estado de la tienda.
-   * @param nuevo_fechaFin Nueva fecha de la factura seleccionada.
+   * Evalúa si se debe inicializar o cargar datos en el formulario.
+   * Además, obtiene la información del catálogo de mercancía.
    */
+  inicializarEstadoFormulario(): void {
+    if (this.soloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.donanteDomicilio();
+    }
+  }
+
+  /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormulario(): void {
+    this.donanteDomicilio();
+    if (this.soloLectura) {
+      this.registroForm.disable();
+    } else {
+      this.registroForm.enable();
+    }
+  }
+/**
+ * Actualiza la fecha inicial en el formulario reactivo y en el estado de la tienda.
+ * @param nuevo_fechaIncial Nueva fecha inicial seleccionada.
+ */
+  cambioFechaInicial(nuevo_fechaIncial: string): void {
+    this.registroForm.patchValue({
+      validacionForm: {
+        fechaInicial: nuevo_fechaIncial,
+      },
+    });
+    this.setValoresStore(this.validacionForm, 'fechaInicial', 'setFechInicioB');
+  }
+/**
+ * Actualiza la fecha final en el formulario reactivo y en el estado de la tienda.
+ * @param nuevo_fechaFinal Nueva fecha final seleccionada.
+ */
+  cambioFechaFinal(nuevo_fechaFinal: string): void {
+    this.registroForm.patchValue({
+      validacionForm: {
+        fechaFinal: nuevo_fechaFinal,
+      },
+    });
+
+    this.setValoresStore(this.validacionForm, 'fechaFinal', 'setFechFinB');
+  }
+/**
+ * Actualiza la fecha de la factura en el formulario reactivo y en el estado de la tienda.
+ * @param nuevo_fechaFin Nueva fecha de la factura seleccionada.
+ */
   cambioFechaFactura(nuevo_fechaFin: string): void {
     this.mercanciaForm.patchValue({
       validacionMercanciaForm: {
@@ -431,8 +502,8 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
    * Si el valor está presente, establece `hayMercanciasDisponibles` en `true`; de lo contrario, lo establece en `false`.
    * Además, actualiza los catálogos necesarios llamando a los métodos `getTratado`, `getPais`, `getUMC`, `getUnidadMedida` y `getTipoFactura`.
    */
-  buscarMercancias() {
-    if (this.registroForm.get('validacionForm.tratado')?.value == 0) {
+  buscarMercancias():void {
+    if (this.registroForm.get('validacionForm.tratado')?.value === 0) {
       this.hayMercanciasDisponibles = false;
     } else {
       this.hayMercanciasDisponibles = true;
@@ -446,7 +517,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
   /**
    * Agrega una mercancía al formulario.
    */
-  agregar() {
+  agregar():void {
     this.getTratado();
     this.getPais();
     this.getUMC();
@@ -481,7 +552,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
   /**
    * Modifica una mercancía existente.
    */
-  modificar() {
+  modificar():void {
     this.esFormulario = true;
     this.esMercanciaEnEdicion = false;
 
@@ -503,7 +574,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
    * Activa el formulario para cargar un archivo.
    * Cambia el estado de la variable `cargarArchivo` a `true` para mostrar el formulario de carga de archivos.
    */
-  cargaArchivo() {
+  cargaArchivo():void {
     this.cargarArchivo = true;
     this.dataEvent.emit(false);
   }
@@ -511,7 +582,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
    * Muestra errores en el formulario y desactiva la carga de archivos.
    * Cambia el estado de las variables `mostrarErrores` a `true` y `cargarArchivo` a `false`.
    */
-  darError() {
+  darError():void {
     this.mostrarErrores = true;
     this.cargarArchivo = false;
   }
@@ -593,8 +664,9 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
    * Si no se selecciona ningún archivo, asigna el mensaje "No se eligió ningún archivo".
    * @param event Evento que contiene la información del archivo seleccionado.
    */
-  alSeleccionarArchivo(event: any) {
-    const FILE = event.target.files[0];
+  alSeleccionarArchivo(event: Event):void {
+    const INPUT = event.target as HTMLInputElement;
+    const FILE = INPUT.files && INPUT.files[0];
     this.nombreArchivo = FILE ? FILE.name : 'No se eligió ningún archivo';
   }
   /**

@@ -1,13 +1,15 @@
 <div class="container">
     <form [formGroup]="form">
+      @if(isSolicitud){
       <!-- Solicitud Tabla -->
       <app-solicitud-datos [tablaHeadData]="hSolicitud" [tablaFilaDatos]="dSolicitud"></app-solicitud-datos>
+      }
       <!-- Datose del tramite a realizar -->
-      <app-datos-del-tramite-a-realizar claveDeControl="datoseDelTramiteRealizar"></app-datos-del-tramite-a-realizar>
+      <app-datos-del-tramite-a-realizar claveDeControl="datoseDelTramiteRealizar" [formularioDeshabilitado]="formularioDeshabilitado"></app-datos-del-tramite-a-realizar>
       <!-- Responsable inspeccion en punto -->
-      <app-responsable-inspeccion-en-punto claveDeControl="responsableInspeccionEnPunto"></app-responsable-inspeccion-en-punto>
+      <app-responsable-inspeccion-en-punto claveDeControl="responsableInspeccionEnPunto" [formularioDeshabilitado]="formularioDeshabilitado"></app-responsable-inspeccion-en-punto>
         <!-- app-medio-transporte -->
-      <app-medio-transporte claveDeControl="mediotransporte" [hMercanciaTabla]="hMercanciaTabla" [dMercanciaBody]="dMercanciaBody" [mediodetransporte]="mediodetransporte"></app-medio-transporte>
+      <app-medio-transporte claveDeControl="mediotransporte" [hMercanciaTabla]="hMercanciaTabla" [dMercanciaBody]="dMercanciaBody" [mediodetransporte]="mediodetransporte" [formularioDeshabilitado]="formularioDeshabilitado"></app-medio-transporte>
       <!-- Cantidad de carros de ferrocarril -->
       <app-carros-de-ferrocarril [tablaHeadData]="hCarroFerrocarril" [tablaFilaDatos]="dCarrosDeFerrocarril"></app-carros-de-ferrocarril>
       <!-- Historial inspeccion fisica -->

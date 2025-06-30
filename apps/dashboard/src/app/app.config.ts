@@ -1,14 +1,13 @@
-
+import { APPINJECT } from './app.inject';
 import { ApplicationConfig } from '@angular/core';
 import { BsModalService } from 'ngx-bootstrap/modal'; // Agrega esto
+import { ENVIRONMENT } from './environments/environment';
 import { appRoutes } from './app.routes';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideHttpClient } from '@angular/common/http';
 import { provideRouter } from '@angular/router';
 import { provideToastr } from 'ngx-toastr';
-import { ENVIRONMENT } from './environments/environment';
 
-import { APPINJECT } from './app.inject';
 
 /**
  * Esta es la configuración principal de la aplicación Agace.

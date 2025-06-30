@@ -1,21 +1,27 @@
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
-
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-
-import { AlertComponent, AnexarDocumentosComponent, BtnContinuarComponent, Catalogo, CatalogoSelectComponent, ConsultaioQuery, CrosslistComponent, FirmaElectronicaComponent, InputCheckComponent, InputFecha, InputFechaComponent, InputRadioComponent, TableComponent, TituloComponent } from '@ng-mf/data-access-user';
-
+import { Catalogo, CatalogoSelectComponent, ConsultaioQuery, InputFecha, InputFechaComponent, InputRadioComponent, TituloComponent } from '@ng-mf/data-access-user';
 import { FECHA_SALIDA_ACUICULTURA, TIPO_RADIO } from '../../constantes/220203/importacion-de-acuicultura.enum';
-
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FormularioPago, OpcionDeRadio } from '../../models/220203/importacion-de-acuicultura.module';
-
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-
 import { ImportacionDeAcuiculturaService } from '../../services/220203/importacion-de-acuicultura.service';
 
+/**
+ * @fileoverview
+ * Componente para el pago de derechos en la importación de acuicultura.
+ * Permite capturar, validar y actualizar la información relacionada al pago, incluyendo exención, justificación, banco y fecha.
+ * Cobertura compodoc 100%: cada propiedad, método y constructor está documentado.
+ * @module PagoDeDerechosComponent
+ */
 
 /**
- * @description Componente para el pago de derechos en la importación de acuicultura.
+ * Componente para el pago de derechos en la importación de acuicultura.
+ * Permite capturar, validar y actualizar la información relacionada al pago, incluyendo exención, justificación, banco y fecha.
+ * @component PagoDeDerechosComponent
+ * @selector app-pago-de-derechos
+ * @templateUrl ./pago-de-derechos.component.html
+ * @styleUrls ./pago-de-derechos.component.scss
  */
 @Component({
   selector: 'app-pago-de-derechos',
@@ -24,71 +30,79 @@ import { ImportacionDeAcuiculturaService } from '../../services/220203/importaci
   standalone: true,
   imports: [
     InputRadioComponent,
-    InputCheckComponent,
     InputFechaComponent,
     CatalogoSelectComponent,
-    CrosslistComponent,
-    BtnContinuarComponent,
-    AnexarDocumentosComponent,
-    TableComponent,
-    TituloComponent,
-    AlertComponent,
     ReactiveFormsModule,
+    TituloComponent,
     CommonModule
   ]
 })
-export class PagoDeDerechosComponent implements OnInit, OnDestroy,AfterViewInit {
+export class PagoDeDerechosComponent implements OnInit, OnDestroy, AfterViewInit {
   /**
-   * @description Formulario para el pago de derechos.
+   * Formulario para el pago de derechos.
    * @type {FormGroup}
    */
   formularioPago!: FormGroup;
 
   /**
-   * @description Opciones de radio para la exención de pago.
+   * Opciones de radio para la exención de pago.
    * @type {OpcionDeRadio[]}
    */
   exentoPagoRadio: OpcionDeRadio[] = TIPO_RADIO;
 
   /**
-   * @description Valor seleccionado para la exención de pago.
+   * Valor seleccionado para la exención de pago.
    * @type {string}
    */
   exentoPagoValor: string = 'Si';
 
   /**
-   * @description Catálogo de justificaciones para la exención de pago.
+   * Catálogo de justificaciones para la exención de pago.
    * @type {Catalogo[]}
    */
   justificacionCatalogo: Catalogo[] = [];
 
   /**
-   * @description Catálogo de bancos para el pago.
+   * Catálogo de bancos para el pago.
    * @type {Catalogo[]}
    */
   bancoCatalogo: Catalogo[] = [];
 
   /**
-   * @description Configuración para el input de fecha de salida.
+   * Configuración para el input de fecha de salida.
    * @type {InputFecha}
    */
   fechaFinalInput: InputFecha = FECHA_SALIDA_ACUICULTURA;
 
+  /**
+   * Fecha de pago seleccionada.
+   * @type {string}
+   */
   fechaPagoDate: string = '15/03/2025';
 
-  private destroyNotifier$ = new Subject<void>();
+  /**
+   * Subject para controlar la destrucción de suscripciones.
+   * @type {Subject<void>}
+   */
+  public destroyNotifier$ = new Subject<void>();
+
+  /**
+   * Estado actual del formulario de pago almacenado.
+   * @type {FormularioPago}
+   */
   formularioPagoStore: FormularioPago = {} as FormularioPago;
 
   /**
-   * @description Indica si el formulario está en modo solo lectura.
+   * Indica si el formulario está en modo solo lectura.
    * @type {boolean}
    */
   esFormularioSoloLectura: boolean = false;
 
   /**
-   * @description Constructor que inicializa el servicio de formularios y el servicio de importación de acuicultura.
+   * Constructor que inicializa el servicio de formularios y el servicio de importación de acuicultura.
    * @param {FormBuilder} fb FormBuilder para la creación de formularios reactivos.
-   * @param {ImportacionDeAcuiculturasService} importacionAcuiculturasServicio Servicio para obtener datos de importación.
+   * @param {ImportacionDeAcuiculturaService} importacionAcuiculturaServicio Servicio para obtener datos de importación.
+   * @param {ConsultaioQuery} consultaQuery Servicio para consultar el estado de solo lectura.
    */
   constructor(
     private readonly fb: FormBuilder,
@@ -98,23 +112,32 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy,AfterViewInit 
     this.importacionAcuiculturaServicio.obtenerDatos().pipe(takeUntil(this.destroyNotifier$)).subscribe((datos) => {
       this.formularioPagoStore = datos.formularioPago
     })
-
   }
 
   /**
-   * @description Método de inicialización del componente.
+   * Método de inicialización del componente.
+   * Crea el formulario, obtiene catálogos y configura valores iniciales.
+   * @method ngOnInit
+   * @returns {void}
    */
   ngOnInit(): void {
     this.crearFormularioPago();
     this.obtenerListaJustificacion();
     this.obtenerListaBanco();
   }
+
+  /**
+   * Método del ciclo de vida que se ejecuta después de inicializar la vista.
+   * Suscribe a cambios en el formulario y al estado de solo lectura.
+   * @method ngAfterViewInit
+   * @returns {void}
+   */
   ngAfterViewInit(): void {
-     this.formularioPago.valueChanges
+    this.formularioPago.valueChanges
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe(
         () => {
-          this.verificarEstadoDelBoton(); // Se puede implementar este método para manejar cambios en el estado del botón.
+          this.verificarEstadoDelBoton();
         },
         (error) => {
           console.error('Error durante los cambios de estado del formulario:', error);
@@ -125,26 +148,32 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy,AfterViewInit 
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
-          this.esFormularioSoloLectura = seccionState.readonly; 
-        this.inicializarEstadoFormulario();
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
         }
       )
     ).subscribe();
   }
 
+  /**
+   * Inicializa el estado del formulario según el modo solo lectura.
+   * @method inicializarEstadoFormulario
+   * @returns {void}
+   */
   inicializarEstadoFormulario(): void {
-    if(this.esFormularioSoloLectura) {
+    if (this.esFormularioSoloLectura) {
       this.formularioPago.disable();
-    }
-    else {
+    } else {
       this.formularioPago.enable();
     }
-
   }
+
   /**
-   * @description Crea el formulario de pago según el valor de `exentoPagoValor`.
+   * Crea el formulario de pago según el valor de `exentoPagoValor`.
+   * @method crearFormularioPago
+   * @returns {void}
    */
-  private crearFormularioPago(): void {
+  public crearFormularioPago(): void {
     const ESEXENTO = this.formularioPagoStore.exentoPago === 'Si';
     this.formularioPago = this.fb.group({
       exentoPago: [this.formularioPagoStore.exentoPago || 'Si', Validators.required],
@@ -159,9 +188,11 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy,AfterViewInit 
   }
 
   /**
-   * @description Cambia el valor de un campo del formulario.
+   * Cambia el valor de un campo del formulario.
+   * @method cambioValorRadio
    * @param {string} nombreControl Nombre del campo del formulario.
    * @param {string} valor Nuevo valor a asignar.
+   * @returns {void}
    */
   cambioValorRadio(nombreControl: string, valor: string): void {
     this.formularioPago.patchValue({
@@ -172,8 +203,10 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy,AfterViewInit 
   }
 
   /**
-   * @description Actualiza la fecha de pago en el formulario.
+   * Actualiza la fecha de pago en el formulario.
+   * @method cambioFechaFinal
    * @param {string} nuevoValor Nueva fecha de pago.
+   * @returns {void}
    */
   cambioFechaFinal(nuevoValor: string): void {
     this.formularioPago.patchValue({
@@ -183,9 +216,11 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy,AfterViewInit 
   }
 
   /**
-   * @description Obtiene la lista de bancos desde el servicio.
+   * Obtiene la lista de bancos desde el servicio.
+   * @method obtenerListaBanco
+   * @returns {void}
    */
-  private obtenerListaBanco(): void {
+  public obtenerListaBanco(): void {
     this.importacionAcuiculturaServicio.obtenerDetallesDelCatalogo('banco.json')
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((data) => {
@@ -197,9 +232,11 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy,AfterViewInit 
   }
 
   /**
-   * @description Verifica si el formulario es válido y actualiza el estado del botón.
+   * Verifica si el formulario es válido y actualiza el estado del botón.
+   * @method verificarEstadoDelBoton
+   * @returns {void}
    */
-  verificarEstadoDelBoton() {
+  verificarEstadoDelBoton(): void {
     const DATOS = {
       pagoDeformaValida: false,
     }
@@ -210,12 +247,14 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy,AfterViewInit 
   }
 
   /**
-   * @description Obtiene la lista de justificaciones desde el servicio.
+   * Obtiene la lista de justificaciones desde el servicio.
+   * @method obtenerListaJustificacion
+   * @returns {void}
    */
-  private obtenerListaJustificacion(): void {
+  public obtenerListaJustificacion(): void {
     this.importacionAcuiculturaServicio.obtenerDetallesDelCatalogo('justificacion.json')
       .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((data) => {
+      .subscribe(() => {
         // this.justificacionCatalogo = data.data as Catalogo[];
       }, (error) => {
         console.error(error);
@@ -223,32 +262,26 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy,AfterViewInit 
   }
 
   /**
-   * @description Actualiza el valor de un campo en el formulario y lo guarda en el servicio de importación de acuicultura.
-   * @param {FormGroup} form El formulario con el campo que se está actualizando.
-   * @param {string} campo El nombre del campo que se actualizará.
+   * Actualiza el valor de un campo en el formulario y lo guarda en el servicio de importación de acuicultura.
+   * @method setValoresStore
+   * @returns {void}
    */
-  /**
- * @description Actualiza el valor de un campo en el formulario y lo guarda en el servicio de importación de acuicultura.
- * @param {FormGroup} formulario El formulario con el campo que se está actualizando.
- * @param {string} campo El nombre del campo que se actualizará.
- */
-  setValoresStore(
-    formulario: FormGroup,
-    campo: string,
-  ): void {
+  setValoresStore(): void {
     this.actualizarValorAleatorio();
     const VALOR = this.formularioPago.value;
     (this.importacionAcuiculturaServicio.actualizarFormularioPago as (value: FormularioPago) => void)(VALOR);
   }
 
   /**
-   * @description Actualiza ciertos valores en el formulario basados en condiciones.
-   * @remarks Si se cumple una condición, se actualizan los valores del formulario.
+   * Actualiza ciertos valores en el formulario basados en condiciones.
+   * Si la justificación no está vacía y el campo exentoPago es 'Si', actualiza varios campos.
+   * Si el banco no está vacío y el campo exentoPago es 'No', actualiza otros campos.
+   * @method actualizarValorAleatorio
+   * @returns {void}
    */
   actualizarValorAleatorio(): void {
     const HOY = PagoDeDerechosComponent.formatearFecha(new Date());
 
-    // Si la justificación no está vacía y el campo exentoPago es 'Si'
     if (this.formularioPago.value.justificacion !== '' && this.formularioPagoStore.exentoPago === 'Si') {
       this.formularioPago.patchValue({
         claveReferencia: 'valor',
@@ -259,8 +292,6 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy,AfterViewInit 
       });
       this.fechaPagoDate = HOY;
     }
-
-    // Si el banco no está vacío y el campo exentoPago es 'No'
     else if (this.formularioPago.value.banco !== '' && this.formularioPagoStore.exentoPago === 'No') {
       this.formularioPago.patchValue({
         justificacion: '170',
@@ -270,27 +301,30 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy,AfterViewInit 
         llavePago: 'valor',
         importePago: 'valor',
       });
-
     }
     this.fechaPagoDate = HOY;
   }
 
   /**
-   * @description Formatea la fecha en el formato 'dd/mm/yyyy'.
+   * Formatea la fecha en el formato 'dd/mm/yyyy'.
+   * @method formatearFecha
+   * @static
    * @param {Date} fecha La fecha a formatear.
    * @returns {string} La fecha formateada como un string.
    */
   static formatearFecha(fecha: Date): string {
-    const DIA = fecha.getDate().toString().padStart(2, '0'); // Asegura que el día tenga 2 dígitos
-    const MES = (fecha.getMonth() + 1).toString().padStart(2, '0'); // Asegura que el mes tenga 2 dígitos
+    const DIA = fecha.getDate().toString().padStart(2, '0');
+    const MES = (fecha.getMonth() + 1).toString().padStart(2, '0');
     const ANO = fecha.getFullYear();
 
     return `${DIA}/${MES}/${ANO}`;
   }
 
-
   /**
-   * @description Método que se ejecuta cuando el componente es destruido.
+   * Método que se ejecuta cuando el componente es destruido.
+   * Libera recursos y cancela las suscripciones.
+   * @method ngOnDestroy
+   * @returns {void}
    */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();

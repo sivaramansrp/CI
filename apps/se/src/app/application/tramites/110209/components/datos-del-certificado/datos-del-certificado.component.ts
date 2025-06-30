@@ -3,21 +3,19 @@
  * Este componente maneja el formulario de datos del certificado.
  */
 
-import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
-
 import { CONFIGURACION_MERCANCIAS, Mercancias } from '../../constantes/certificado-sgp.enum';
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import { ConsultaioQuery, TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
+import { CommonModule } from '@angular/common';
 import { MercanciasService } from '../../services/mercancias/mercancias.service';
-import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
+import { REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL } from '@ng-mf/data-access-user';
+import { Router } from '@angular/router';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
 import { TituloComponent } from "@ng-mf/data-access-user";
 import { Tramite110209Query } from '../../estados/queries/tramite110209.query';
 import { Tramite110209Store } from '../../estados/stores/tramite110209.store';
-
-import { REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL } from '@ng-mf/data-access-user';
 
 
 /**
@@ -76,6 +74,11 @@ export class DatosDelCertificadoComponent implements OnInit, OnDestroy {
    */
   @Output() modificarEventCertificado: EventEmitter<boolean> = new EventEmitter<boolean>(false);
 
+   /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  esFormularioSoloLectura: boolean = false;
 
   /**
    * Constructor del componente.
@@ -87,10 +90,30 @@ export class DatosDelCertificadoComponent implements OnInit, OnDestroy {
    */
   constructor(private fb: FormBuilder, private service: MercanciasService, 
     private tramite110209Store: Tramite110209Store, 
-    private tramite110209Query: Tramite110209Query ,private router: Router) {
+    private tramite110209Query: Tramite110209Query ,private router: Router,
+    private consultaQuery: ConsultaioQuery
+  ) {
     this.datosDelCertificadoForm = this.fb.group({
       observaciones: ['',Validators.pattern(REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL)]
     });
+
+     /**
+ * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
+    *
+    * - Asigna el valor de solo lectura (`readonly`) a la propiedad `esFormularioSoloLectura`.
+    * - Llama a `inicializarEstadoFormulario()` para aplicar configuraciones basadas en el estado recibido.
+    * - La suscripción se cancela automáticamente cuando `destroyed$` emite un valor (para evitar fugas de memoria).
+    */
+    this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.actualizarEstadoCampos();
+        })
+      )
+      .subscribe();
+
   }
 
   /**
@@ -100,6 +123,27 @@ export class DatosDelCertificadoComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.getMercancias();
     this.getValoresStore();
+  }
+
+  /**
+   * Habilita o deshabilita dinámicamente los campos del formulario
+   * según el estado de solo lectura del formulario.
+   *
+   * @returns void
+   * @description Si el formulario está en modo solo lectura, deshabilita ambos campos; de lo contrario, los habilita.
+   */
+  actualizarEstadoCampos(): void {
+    const CAMPOS = ['observaciones'];
+    CAMPOS.forEach(campo => {
+      const CONTROL = this.datosDelCertificadoForm.get(campo);
+      if (CONTROL) {
+        if (this.esFormularioSoloLectura) {
+          CONTROL.disable();
+        } else {
+          CONTROL.enable();
+        }
+      }
+    });
   }
 
   /**
