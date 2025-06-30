@@ -93,9 +93,9 @@ export class SolicitudPageComponent {
       );
 
       if (e.accion === 'cont') {
-        this.wizardComponent.siguiente();
+        this.wizardComponent?.siguiente();
       } else {
-        this.wizardComponent.atras();
+        this.wizardComponent?.atras();
       }
     }
   }
