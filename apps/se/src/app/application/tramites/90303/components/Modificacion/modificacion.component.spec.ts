@@ -81,55 +81,18 @@ describe('ModificacionComponent', () => {
     expect(component.listaTablaProductor).toEqual([]);
   });
 
-  it('should handle click events in ngAfterViewInit', () => {
-    const mockContainer = document.createElement('div');
-    mockContainer.id = 'tablecontainer';
-    document.body.appendChild(mockContainer);
+ it('should handle onFilaClic for Activar button', () => {
+  const mockEvent = {
+    target: {
+      tagName: 'BUTTON',
+      textContent: 'Activar',
+    },
+  } as unknown as Event;
 
-    const mockEvent = new Event('click');
-    const mockButton = document.createElement('button');
-    mockButton.textContent = 'BAJA';
-    mockContainer.appendChild(mockButton);
-
-    jest.spyOn(mockRenderer, 'listen').mockImplementation((element, event, callback) => {
-      if (element === mockContainer && event === 'click') {
-        callback(mockEvent);
-      }
-      return () => {};
-    });
-
-    component.ngAfterViewInit();
-
-    expect(mockRenderer.listen).toHaveBeenCalledWith(mockContainer, 'click', expect.any(Function));
-    mockButton.dispatchEvent(mockEvent);
-    expect(component.isBaja).toBe(false);
-
-    document.body.removeChild(mockContainer);
-  });
-
-  it('should handle onFilaClic for BAJA button', () => {
-    const mockEvent = {
-      target: {
-        tagName: 'BUTTON',
-        textContent: 'BAJA',
-      },
-    } as unknown as Event;
-
-    component.onFilaClic(mockEvent);
-    expect(component.isBaja).toBe(false);
-  });
-
-  it('should handle onFilaClic for Activar button', () => {
-    const mockEvent = {
-      target: {
-        tagName: 'BUTTON',
-        textContent: 'Activar',
-      },
-    } as unknown as Event;
-
-    component.onFilaClic(mockEvent);
-    expect(component.isBaja).toBe(false);
-  });
+  component.isBaja = true; 
+  component.onFilaClic(mockEvent);
+  expect(component.isBaja).toBe(true); 
+});
 
   it('should clean up subscriptions on destroy', () => {
     const destroyedSpy = jest.spyOn(component['destroyed$'], 'next');

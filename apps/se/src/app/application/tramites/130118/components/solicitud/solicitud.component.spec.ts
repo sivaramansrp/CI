@@ -3,10 +3,11 @@ import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { of } from 'rxjs';
 
 import { SolicitudComponent } from './solicitud.component';
-import { CatalogoSelectComponent, PeximService, ValidacionesFormularioService } from '@ng-mf/data-access-user';
+import { CatalogoSelectComponent, ValidacionesFormularioService } from '@ng-mf/data-access-user';
 import { Solicitud130118State, Tramite130118Store } from '../../estados/tramites/tramite130118.store';
 import { CommonModule } from '@angular/common';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { PeximService } from '../../service/pexim.service';
 import { Tramite130118Query } from '../../estados/queries/tramite130118.query';
 
 describe('SolicitudComponent', () => {

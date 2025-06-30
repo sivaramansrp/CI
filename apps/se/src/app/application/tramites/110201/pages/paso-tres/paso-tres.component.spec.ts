@@ -77,7 +77,6 @@ describe('PasoTresComponent', () => {
         throwError(() => new Error('Service Error'))
       );
       const firma = 'mockFirma';
-      // Should not throw
       expect(() => component.obtieneFirma(firma)).not.toThrow();
       expect(mockTramiteFolioService.obtenerTramite).toHaveBeenCalledWith(19);
     });
