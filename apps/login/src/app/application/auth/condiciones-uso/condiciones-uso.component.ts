@@ -62,7 +62,7 @@ export class CondicionesUsoComponent implements OnInit {
    * Si el usuario acepta, navega a la ruta correspondiente.
    * Si no, muestra una notificación de alerta.
    */
-  aceptar() {
+  aceptar(): void {
     if (this.form.value.aceptado) {
       this.router.navigate(['login/acepta-condiciones']);
     } else {
@@ -84,7 +84,7 @@ export class CondicionesUsoComponent implements OnInit {
    * Acción para continuar sin aceptar condiciones.
    * Registra la no aceptación y redirige a la bandeja de tareas.
    */
-  continuar() {
+  continuar(): void {
     this.regitroCondicion.registroCondicionesUso(this.aceptaCondiciones = false);
     window.location.href = '/bandeja-de-tareas-pendientes';
   }
@@ -93,7 +93,7 @@ export class CondicionesUsoComponent implements OnInit {
    * Acción al no aceptar las condiciones.
    * Redirige al usuario al logout o a la pantalla de login.
    */
-  noAceptar() {
+  noAceptar(): void {
     this.router.navigateByUrl('/logout'); // o a login, o cerrar sesión
   }
 
