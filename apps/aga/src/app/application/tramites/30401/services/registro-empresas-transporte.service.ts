@@ -1,3 +1,4 @@
+import { Tramite30401Store, Tramites30401State } from '../estados/tramites30401.store';
 import { Catalogo } from '@libs/shared/data-access-user/src';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
@@ -19,7 +20,10 @@ export class RegistroEmpresasTransporteService {
    * 
    * @param httpClient - Cliente HTTP inyectado para realizar solicitudes HTTP.
    */
-  constructor(private http: HttpClient) {
+  constructor(
+    private http: HttpClient,
+    private tramite30401Store: Tramite30401Store,
+  ) {
        // Si es necesario, se puede agregar aquí la lógica de inicialización
   }
 
@@ -115,5 +119,24 @@ coloniaList(): Observable<Catalogo[]> {
     return this.http.get<Catalogo[]>(`assets/json/30401/tipode-transito-list.json`);
   }
   
+
+  /**
+   * Actualiza el estado del formulario en el store global.
+   *
+   * @param datos - Objeto de tipo Tramites30401State con los datos a establecer en el store.
+   * @returns {void}
+   */
+  actualizarEstadoFormulario(datos: Tramites30401State): void {
+      this.tramite30401Store.establecerDatos(datos);
+  }
+
+  /**
+   * Obtiene los datos de toma de muestras de mercancías desde un archivo JSON local.
+   *
+   * @returns {Observable<Tramites30401State>} Un observable que emite los datos del trámite 30401.
+   */
+  getRegistroTomaMuestrasMercanciasData(): Observable<Tramites30401State> {
+    return this.http.get<Tramites30401State>('assets/json/30401/empresas-transportistas-datos.json');
+  }
 
 }
