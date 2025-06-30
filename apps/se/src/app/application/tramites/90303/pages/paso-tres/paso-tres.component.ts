@@ -52,28 +52,25 @@ export class PasoTresComponent implements OnDestroy {
    * Maneja el evento para obtener la firma y realiza acciones adicionales.
    * @param ev - La cadena de texto que representa la firma obtenida.
    */
-  obtieneFirma(ev: string): void {
-    const FIRMA: string = ev;
-    if (FIRMA) {
-      // Obtiene el número de trámite
-      this.serviciosExtraordinariosServices
-        .obtenerTramite(19)
-        .pipe(
-          takeUntil(this.destroyed$),
-          map((tramite) => {
-            // Establece el trámite en el almacén con la firma obtenida
-            this.tramiteStore.establecerTramite(tramite.data, FIRMA);
-            // Navega al acuse de pago
-            this.router.navigate(['/pago/catalogos/acuse']);
-          }),
-          catchError((_error) => {
-            // Manejo de errores
-            return _error;
-          })
-        )
-        .subscribe();
-    }
+ obtieneFirma(ev: string): void {
+  const FIRMA: string = ev;
+  if (FIRMA) {
+    this.serviciosExtraordinariosServices
+      .obtenerTramite(19)
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((tramite) => {
+          this.tramiteStore.establecerTramite(tramite.data, FIRMA);
+          this.router.navigate(['/pago/catalogos/acuse']);
+        }),
+        catchError((error) => {
+          console.error(error);
+          return [];
+        })
+      )
+      .subscribe();
   }
+}
 
   /**
    * Método de limpieza que se ejecuta cuando el componente se destruye.

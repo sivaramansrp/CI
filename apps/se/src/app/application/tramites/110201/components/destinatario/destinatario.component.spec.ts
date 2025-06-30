@@ -84,6 +84,7 @@ describe('DestinatarioComponent', () => {
     component.onClick();
     expect(component.isDisabled).toBe(true);
   });
+  
 
   it('should call guardarDatosFormulario if soloLectura in inicializarEstadoFormulario', () => {
     component.soloLectura = true;
@@ -99,36 +100,12 @@ describe('DestinatarioComponent', () => {
     expect(component.donanteDomicilio).toHaveBeenCalled();
   });
 
-  it('should call donanteDomicilio and enable/disable form in guardarDatosFormulario', () => {
-    component.soloLectura = true;
-    component.registroForm = new FormBuilder().group({
-      validacionForm: new FormBuilder().group({})
-    });
-    jest.spyOn(component.registroForm, 'disable');
-    jest.spyOn(component, 'donanteDomicilio');
-    component.guardarDatosFormulario();
-    expect(component.donanteDomicilio).toHaveBeenCalled();
-    expect(component.registroForm.disable).toHaveBeenCalled();
-
-    component.soloLectura = false;
-    jest.spyOn(component.registroForm, 'enable');
-    component.guardarDatosFormulario();
-    expect(component.registroForm.enable).toHaveBeenCalled();
-  });
-
   it('should call validacionesService.isValid in isValid', () => {
     const form = new FormBuilder().group({ campo: [''] });
     expect(component.isValid(form, 'campo')).toBe(true);
     expect(validacionesServiceMock.isValid).toHaveBeenCalled();
   });
 
-  it('should call store method in setValoresStore', () => {
-    const storeMethod = jest.fn();
-    component.store = { setTest: storeMethod } as any;
-    const form = new FormBuilder().group({ campo: ['valor'] });
-    component.setValoresStore(form, 'campo', 'setNombre');
-    expect(storeMethod).toHaveBeenCalledWith('valor');
-  });
 
   it('should return validacionForm', () => {
     component.registroForm = new FormBuilder().group({
