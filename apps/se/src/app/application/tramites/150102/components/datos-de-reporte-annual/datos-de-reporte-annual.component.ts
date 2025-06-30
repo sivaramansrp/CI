@@ -1,4 +1,5 @@
 import { BienesProducidos } from '../../models/programas-reporte.model';
+import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { ConfiguracionAporteColumna } from '@libs/shared/data-access-user/src';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
@@ -7,13 +8,17 @@ import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
 import { Solicitud150102Query } from '../../estados/solicitud150102.query';
 import { Solicitud150102State } from '../../estados/solicitud150102.store';
 import { Solicitud150102Store } from '../../estados/solicitud150102.store';
 import { SolicitudService } from '../../services/solicitud.service';
 import { Subject } from 'rxjs';
 import { TablaCampoSeleccion } from '@libs/shared/data-access-user/src';
+import { TablaConEntradaComponent } from '@libs/shared/data-access-user/src';
+import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src';
+import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { Validators } from '@angular/forms';
 import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
@@ -24,6 +29,14 @@ import { takeUntil } from 'rxjs';
  */
 @Component({
   selector: 'app-datos-de-reporte-annual',
+  standalone: true,
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    TituloComponent,
+    TablaConEntradaComponent,
+    TablaDinamicaComponent,
+  ],
   templateUrl: './datos-de-reporte-annual.component.html',
   styleUrl: './datos-de-reporte-annual.component.scss',
 })
@@ -186,8 +199,6 @@ export class DatosDeReporteAnnualComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-
-    this.obtenerProducidosDatos();
   }
 
   /**
@@ -195,6 +206,7 @@ export class DatosDeReporteAnnualComponent implements OnInit, OnDestroy {
    * Configura el formulario reactivo y sincroniza datos con el estado actual.
    */
   ngOnInit(): void {
+    this.obtenerProducidosDatos();
     this.inicializarEstadoFormulario();
   }
 

@@ -39,7 +39,8 @@ import { Subject, takeUntil, tap } from 'rxjs';
 import { Catalogo } from '../../../core/models/shared/catalogos.model';
 import { CatalogoSelectComponent } from '../catalogo-select/catalogo-select.component';
 import { CommonModule } from '@angular/common';
-import { ICatalogo } from '../../../core/models/shared/catalogo.model';
+
+import { Catalogos } from '../../../core/models/shared/catalogo.model';
 import { InputCheckComponent } from '../input-check/input-check.component';
 import { InputHoraComponent } from '../input-hora/input-hora.component';
 import { Modal } from 'bootstrap';
@@ -54,6 +55,7 @@ import { BooleanoSiNoPipe } from '../../pipes/booleanoSiNo/booleano-si-no.pipe';
 import { TIPO_TRANSPORTE } from '../../constantes/agregar-transporte.enum';
 import { TablaDinamicaComponent } from '../tabla-dinamica/tabla-dinamica.component';
 import { TablaSeleccion } from '../../../core/enums/tabla-seleccion.enum';
+
 import { ConfiguracionColumna } from '../../../core/models/shared/configuracion-columna.model';
 
 @Component({
@@ -209,7 +211,7 @@ export class AgregarTransporteComponent implements OnChanges, OnInit {
    */
   formaSeleccionada!: string;
 
-  public tipoEquipoCatalogo: ICatalogo[] = [];
+  public tipoEquipoCatalogo: Catalogos[] = [];
 
   /**
    * Control para las observaciones.

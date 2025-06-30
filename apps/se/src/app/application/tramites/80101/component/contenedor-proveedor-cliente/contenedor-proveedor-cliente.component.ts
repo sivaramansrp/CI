@@ -3,6 +3,14 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { ProveedorClienteComponent } from '../../../../shared/components/proveedor-cliente/proveedor-cliente.component';
 
+/**
+ * Componente Angular para el contenedor de proveedor y cliente del trámite 80101.
+ * Este componente se encarga de gestionar y mostrar la información relacionada
+ * con los proveedores y clientes asociados al trámite.
+ * 
+ * @remarks
+ * Este componente es autónomo y utiliza el módulo `CommonModule` y el componente `ProveedorClienteComponent`.
+ */
 @Component({
   selector: 'app-contenedor-proveedor-cliente',
   standalone: true,

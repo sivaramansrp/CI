@@ -4,6 +4,14 @@ import { Router } from '@angular/router';
 import { TramiteFolioService } from '@ng-mf/data-access-user';
 import { TramiteStore } from '../../../../estados/tramite.store';
 
+/**
+ * Decorador de componente de Angular que define las propiedades esenciales del componente.
+ * Este decorador se utiliza para configurar el selector, la plantilla y los estilos del componente.
+ * 
+ * @selector 'app-paso-tres' - Define el nombre del selector que se utiliza para instanciar este componente en una plantilla HTML.
+ * @templateUrl './paso-tres.component.html' - Especifica la ruta del archivo HTML que contiene la estructura de la vista del componente.
+ * @styleUrl './paso-tres.component.scss' - Indica la ruta del archivo SCSS que contiene los estilos específicos para este componente.
+ */
 @Component({
   selector: 'app-paso-tres',
   templateUrl: './paso-tres.component.html',

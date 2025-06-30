@@ -1,53 +1,74 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ModificacionPermisoImportacionComponent } from './modificacion-permiso-importacion.component';
-import { AccionBoton, WizardComponent } from '@libs/shared/data-access-user/src';
-import { of } from 'rxjs';
-import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-
+import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { InjectionToken } from '@angular/core';
+const TOAST_CONFIG = new InjectionToken<any>('ToastConfig');
 describe('ModificacionPermisoImportacionComponent', () => {
   let component: ModificacionPermisoImportacionComponent;
   let fixture: ComponentFixture<ModificacionPermisoImportacionComponent>;
 
-  let wizardComponent: WizardComponent;
+  class MockWizardComponent {
+    siguiente = jest.fn();
+    atras = jest.fn();
+  }
 
-  beforeEach(async (): Promise<void> => {
-    await TestBed.configureTestingModule({
-      declarations: [ModificacionPermisoImportacionComponent],
-      imports: [WizardComponent],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    }).compileComponents();
+  beforeEach(async () => {
+   await TestBed.configureTestingModule({
+    declarations: [ModificacionPermisoImportacionComponent],
+    providers:[{ provide: TOAST_CONFIG, useValue: {} }],
+    schemas: [NO_ERRORS_SCHEMA] // <-- Agrega esta línea
+  }).compileComponents();
 
-    fixture = TestBed.createComponent(ModificacionPermisoImportacionComponent);
-    component = fixture.componentInstance;
-    wizardComponent = fixture.debugElement.children[0].componentInstance;
-
-    fixture.detectChanges();
+  fixture = TestBed.createComponent(ModificacionPermisoImportacionComponent);
+  component = fixture.componentInstance;
+  // Mock del ViewChild
+  component['wizardComponent'] = new MockWizardComponent() as any;
+  fixture.detectChanges();
   });
 
-  it('debería crear el componente', (): void => {
+  it('debería crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('debería inicializar correctamente las propiedades del componente', (): void => {
-    expect(component.pasos.length).toBeGreaterThan(0);
+  it('debería tener la propiedad pantallasPasos definida y ser un array', () => {
+    expect(component.pantallasPasos).toBeDefined();
+    expect(Array.isArray(component.pantallasPasos)).toBe(true);
+  });
+
+  it('debería tener la propiedad indice inicializada en 1', () => {
     expect(component.indice).toBe(1);
-    expect(component.datosPasos).toEqual({
-      nroPasos: component.pasos.length,
-      indice: component.indice,
-      txtBtnAnt: 'Anterior',
-      txtBtnSig: 'Continuar',
-    });
   });
 
-  it('debería actualizar el índice al hacer clic en el botón siguiente', (): void => {
-    const mockAccionBoton: AccionBoton = { accion: 'cont', valor: 2 };
-    wizardComponent.siguiente = jest.fn(() => {}); // Mock the siguiente method
-    const spySiguiente = jest.spyOn(wizardComponent, 'siguiente');
-
-    component.getValorIndice(mockAccionBoton);
-    wizardComponent.siguiente(); // Explicitly call the mocked method
-
-    expect(component.indice).toBe(2);
-    expect(spySiguiente).toHaveBeenCalled();
+  it('debería tener la propiedad datosPasos correctamente inicializada', () => {
+    expect(component.datosPasos.nroPasos).toBe(component.pantallasPasos.length);
+    expect(component.datosPasos.indice).toBe(component.indice);
+    expect(component.datosPasos.txtBtnAnt).toBe('Anterior');
+    expect(component.datosPasos.txtBtnSig).toBe('Continuar');
   });
+
+ it('debería actualizar el índice y llamar a siguiente() cuando la acción es "cont" y el valor es válido', () => {
+  // Reasigna el mock antes de cada uso
+  component['wizardComponent'] = new MockWizardComponent() as any;
+  component.getValorIndice({ accion: 'cont', valor: 2 });
+  expect(component.indice).toBe(2);
+  expect(component['wizardComponent'].siguiente).toHaveBeenCalled();
+  expect(component['wizardComponent'].atras).not.toHaveBeenCalled();
+});
+
+  it('debería actualizar el índice y llamar a atras() cuando la acción NO es "cont" y el valor es válido', () => {
+    component['wizardComponent'] = new MockWizardComponent() as any
+    component.getValorIndice({ accion: 'volver', valor: 3 });
+    expect(component.indice).toBe(3);
+    expect(component['wizardComponent'].atras).toHaveBeenCalled();
+    expect(component['wizardComponent'].siguiente).not.toHaveBeenCalled();
+  });
+
+  it('no debería actualizar el índice ni llamar métodos del wizard si el valor es menor o igual a 0', () => {
+    component['wizardComponent'] = new MockWizardComponent() as any
+    component.getValorIndice({ accion: 'cont', valor: 0 });
+    expect(component.indice).toBe(1); // No cambia
+    expect(component['wizardComponent'].siguiente).not.toHaveBeenCalled();
+    expect(component['wizardComponent'].atras).not.toHaveBeenCalled();
+  });
+
 });

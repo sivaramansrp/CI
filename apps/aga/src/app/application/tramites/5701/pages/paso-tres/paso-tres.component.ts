@@ -120,10 +120,10 @@ export class PasoTresComponent implements OnInit, OnDestroy {
   obtenerCadenaOriginal(): void {
     this.cadenaOriginalService.generarCadena().subscribe({
       next: (response) => {
-        this.datosCadena = response.datos;
+        this.datosCadena = response.datos as CadenaOriginalRequest;
         this.firma.obtenerCadenaOriginal(this.datosCadena).subscribe({
           next: (resp) => {
-            this.cadenaOriginal = resp.datos;
+            this.cadenaOriginal = typeof resp.datos === 'string' ? resp.datos : undefined;
           },
           error: (err) => console.error('Error al generar cadena:', err),
         });
@@ -164,7 +164,7 @@ export class PasoTresComponent implements OnInit, OnDestroy {
     const ID_SOLICITUD = this.tramite5701Query.getValue().idSolicitud;
 
     this.documentoService
-      .obtenerDatosFirma()
+      .obtenerDatosFirma<FirmarRequest>()
       .pipe(
         takeUntil(this.destroy$),
         switchMap((response) => {
@@ -177,10 +177,10 @@ export class PasoTresComponent implements OnInit, OnDestroy {
             clave_rol: 'Solicitante',
             sello: FIRMAHEX,
             fecha_fin_vigencia: this.datosFirmaReales.fechaFin,
-            documentos_requeridos: response.datos.documentos_requeridos,
+            documentos_requeridos: response.datos?.documentos_requeridos || [],
           };
 
-          return this.firma.enviarFirma(PAYLOAD).pipe(
+          return this.firma.enviarFirma<string>(PAYLOAD).pipe(
             tap((firmaResponse: BaseResponse<string>) => {
               if (firmaResponse.datos) {
                 this.folio = firmaResponse.datos;
