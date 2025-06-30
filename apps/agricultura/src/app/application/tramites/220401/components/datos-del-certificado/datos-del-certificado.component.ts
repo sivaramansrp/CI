@@ -1,7 +1,7 @@
 /**
  * Importaciones necesarias para el componente DatosDelCertificado.
  */
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 /**
  * Importaciones necesarias para el componente DatosDelCertificado.
@@ -20,14 +20,22 @@ import { AgregarArchivoComponent } from '@ng-mf/data-access-user';
 import { AgregarQuery } from '../../../../estados/queries/agregar.query';
 import { CatalogoResponse } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
+import { CombinacionRequeridaComponent } from '../combinacion-requerida/combinacion-requerida.component';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { DatosGeneralesAnimalesComponent } from '../datos-generales-animales/datos-generales-animales.component';
 import { InputRadioComponent } from "@libs/shared/data-access-user/src/tramites/components/input-radio/input-radio.component";
+import { Modal } from 'bootstrap';
 import { Pantallas220401Service } from '../pantallas220401.service';
 import { Solicitud220401State } from '../../../../estados/tramites/agregar220401.store';
 import { TableComponent } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import radioOptionsData from '@libs/shared/theme/assets/json/220401/tipo-de-certifico.json';
 import unidadRadioFields from '@libs/shared/theme/assets/json/220401/unidad.json';
+
+import { AlertComponent,Catalogo } from '@ng-mf/data-access-user';
+import { LOCALIDAD_COLONIA } from '../../constantes/certificados-licencias.enum';
+
+
 /**
  * Componente que gestiona los datos del certificado en la solicitud 220401.
  */
@@ -45,10 +53,14 @@ import unidadRadioFields from '@libs/shared/theme/assets/json/220401/unidad.json
     AgregarArchivoComponent,
     TableComponent,
     CatalogoSelectComponent,
+    AlertComponent,DatosGeneralesAnimalesComponent,CombinacionRequeridaComponent
   ],
 })
 export class DatosDelCertificadoComponent implements OnInit, OnDestroy {
- 
+  /**
+   * Referencia al elemento del modal para agregar mercancías.
+   */
+  @ViewChild('modalAgregarMercancias') modalElement!: ElementRef;
   /** Formulario principal para la solicitud. */
   solicitudForm!:FormGroup;
  /** Opciones de radio importadas desde JSON. */
@@ -85,6 +97,25 @@ export class DatosDelCertificadoComponent implements OnInit, OnDestroy {
   /**
    * Constructor del componente, inyecta los servicios necesarios.
    */
+
+  /**
+   * Arreglo que contiene los elementos del catálogo relacionados con los países de origen disponibles.
+   * Se utiliza para cargar y gestionar los países de origen seleccionados en el formulario.
+   */
+    public paisOrigen!: Catalogo[];
+
+   /**
+   * Representa el tipo de alerta que se mostrará.
+   * El valor es típicamente una cadena que indica el estilo de alerta, como 'alert-warning'.
+   */
+  public infoAlert = 'alert-warning';
+
+  /**
+   * Una constante que contiene el valor de `LOCALIDAD_COLONIA`.
+   * Probablemente se utiliza para representar o almacenar información textual
+   * relacionada con una localidad o colonia específica en la aplicación.
+   */
+  public TEXTO = LOCALIDAD_COLONIA;
 
   constructor(private fb: FormBuilder,
     private agregar220401Store: Agregar220401Store,
@@ -164,6 +195,11 @@ this.inicializarCertificadoFormulario();
     this.datosdelForm = this.fb.group({
       tipoCertificado: ['', Validators.required],
       message: [{ value: '', disabled: true }],
+      numeroTotal:[''],
+      condiciones:['',Validators.required],
+      cantidadTotal:[''],
+      tipoEmbalaje:['']
+
     });
 
     this.formGroup1 = this.fb.group({});
@@ -203,6 +239,10 @@ this.inicializarCertificadoFormulario();
         certificada: [this.solicitudState?.certificada],
         tratamiento:[this.solicitudState?.tratamiento],
       })
+      
+      this._pantallas220401Service.getPaisOrigen().pipe(takeUntil(this.destroyNotifier$)).subscribe((data) => {
+      this.paisOrigen = data;
+    });
   }
 
   /**
@@ -221,6 +261,15 @@ this.inicializarCertificadoFormulario();
         DROP_DOWN.setValue("1");
       }
     });
+  }
+    /**
+   * Abre el modal para modificar mercancías.
+   */
+  openModificarMercancias(): void {
+    if (this.modalElement) {
+      const MODAL_INSTANCE = new Modal(this.modalElement.nativeElement);
+      MODAL_INSTANCE.show();
+    }
   }
 
       /**
@@ -284,7 +333,7 @@ this.inicializarCertificadoFormulario();
     },
     {
       catalogo: this.delegacionesJson,
-      label: 'Delegaciones estatales SAGARPA',
+      label: 'OISA',
       controlName: 'delegacionesControl2',
       required: true,
       catalogos: DatosDelCertificadoComponent.getCatalogos(),
@@ -292,7 +341,7 @@ this.inicializarCertificadoFormulario();
     },
     {
       catalogo: this.delegacionesJson,
-      label: 'Delegaciones estatales SAGARPA',
+      label: 'Distrito desarrollo rural (DDR)',
       controlName: 'delegacionesControl3',
       required: true,
       catalogos: DatosDelCertificadoComponent.getCatalogos(),
@@ -300,7 +349,7 @@ this.inicializarCertificadoFormulario();
     },
     {
       catalogo: this.delegacionesJson,
-      label: 'Delegaciones estatales SAGARPA',
+      label: 'Oficina central:',
       controlName: 'delegacionesControl4',
       required: false,
       catalogos: DatosDelCertificadoComponent.getCatalogos(),
@@ -345,13 +394,13 @@ this.inicializarCertificadoFormulario();
      * Columnas de la tabla de mercancías.
      */
     tableColumns = [
-      'No. partida',
-      'Fracción arancelaria',
-      'Descripción de la fracción',
-      'Unidad de medida de tarifa (UMT)',
-      'Cantidad (UMT)',
-      'Unidad de medida de comercialización (UMC)',
-      'Cantidad (UMC)',
+      'Tratamiento',
+      'Presentación',
+      'Marcas embarque',
+      'Fecha de caducidad',
+      'Fecha sacrificio inicio',
+      'Número de autorización CITES',
+      'Número de lote',
     ];
   
     /**

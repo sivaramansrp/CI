@@ -1,5 +1,16 @@
 /**
+ * Modelo de datos y estado para el trámite de Permiso de Importación.
+ *
+ * Este archivo define las interfaces que representan la estructura de los datos agrupados
+ * utilizados en el formulario del trámite, así como la función para crear el estado inicial.
+ *
+ * @category Modelos
+ * @export
+ */
+
+/**
  * Interfaz que representa el estado completo de los datos agrupados del trámite.
+ * Incluye todos los grupos de información requeridos en el formulario.
  */
 export interface DatosGrupos {
     datosRealizer: DatosRealizer,
@@ -93,8 +104,9 @@ export interface DatosFederal {
 
 /**
  * Función para crear el estado inicial de los datos agrupados del trámite.
- * @param params Parámetros opcionales para inicializar el estado.
- * @returns Estado inicial de DatosGrupos.
+ *
+ * @param params Parámetros opcionales para inicializar el estado con valores personalizados.
+ * @returns {DatosGrupos} Estado inicial de los datos agrupados del trámite.
  */
 export function createDatosGruposState(params: Partial<DatosGrupos> = {}): DatosGrupos {
   return {

@@ -96,5 +96,6 @@ export class AgregarDestinatarioFinalContenedoraComponent {
    */
   updateDestinatarioFinalTablaDatos(event: DestinoFinal[]): void {
     this.tramiteStore.updateDestinatarioFinalTablaDatos(event);
+    this.cerrar.emit();
   }
 }

@@ -1,5 +1,4 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
-// Angular Core
+
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import {
   FormBuilder,
@@ -9,30 +8,29 @@ import {
 } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
-// RxJS
+
 import { ReplaySubject, map, takeUntil } from 'rxjs';
 
-// Shared/Internal Libraries - @libs
+
 import {
   Catalogo,
   CatalogoSelectComponent,
   ConsultaioQuery,
   InputFecha,
   InputFechaComponent,
+  REGEX_REEMPLAZAR,
+  REGEX_SOLO_DIGITOS,
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
 
-// Application Services
 import { RegistrarSolicitudMcpService } from '../../services/registrar-solicitud-mcp.service';
 
-// State Management
 import {
   Solicitud260702State,
   Solicitud260702Store,
 } from '../../estados/tramites260702.store';
 import { Solicitud260702Query } from '../../estados/tramites260702.query';
 
-// Application Constants
 import { BANCO_DATA } from '../../constants/catalogs.enum';
 
 /**
@@ -186,16 +184,16 @@ export class PagoDeDerechoComponent implements OnInit, OnDestroy {
       pagoDeDerechos: this.fb.group({
         clavedereferencia: [
           this.pagoDeDerechosState?.clavedereferencia,
-          Validators.required,
+          [Validators.required, Validators.pattern(REGEX_REEMPLAZAR)],
         ],
         cadenadeladependencia: [
           this.pagoDeDerechosState?.cadenadeladependencia,
-          Validators.required,
+         [Validators.pattern(REGEX_REEMPLAZAR)],
         ],
-        banco: [this.pagoDeDerechosState?.banco, Validators.required],
+        banco: [this.pagoDeDerechosState?.banco],
         llavedepago: [
           this.pagoDeDerechosState?.llavedepago,
-          Validators.required,
+         [Validators.pattern(REGEX_REEMPLAZAR)],
         ],
         fechadepago: [
           this.pagoDeDerechosState?.fechadepago,
@@ -203,7 +201,7 @@ export class PagoDeDerechoComponent implements OnInit, OnDestroy {
         ],
         importedepago: [
           this.pagoDeDerechosState?.importedepago,
-          Validators.required,
+          [Validators.pattern(REGEX_SOLO_DIGITOS)],
         ],
       }),
     });

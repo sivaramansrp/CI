@@ -62,7 +62,7 @@ export class RegistrarOpinionComponent {
    * Agrega un archivo al arreglo de archivos seleccionados y muestra los botones de acción.
    * @param archivo Archivo seleccionado por el usuario.
    */
-  agregarArchivo(archivo: File) {
+  agregarArchivo(archivo: File) :void{
     this.archivos.push(archivo);
     this.mostrarBotones = true;
   }
@@ -70,14 +70,14 @@ export class RegistrarOpinionComponent {
   /**
    * Cambia el estado de abrirModal a true para mostrar el modal de carga de documentos.
    */
-  mostrarModalDocumentos() {
+  mostrarModalDocumentos() :void{
     this.abrirModal = true;
   }
 
   /**
    * Navega a la ruta de firma electrónica para continuar el proceso.
    */
-  guardarFormar() {
+  guardarFormar() :void{
     this.router.navigate(['funcionario/firma-electronica']);
   }
 }

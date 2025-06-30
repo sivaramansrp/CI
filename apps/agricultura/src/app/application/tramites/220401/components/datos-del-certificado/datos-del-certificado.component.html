@@ -5,7 +5,7 @@
     <div class="row">
       <div class="col-md-12">
         <label for="Tipo_de_Certificado">Tipo de Certificado</label>
-        <span class="require">*</span>
+        <span class="require">*:</span>
       </div>
     </div>
     <app-input-radio [radioOptions]="radioOptions" [isRequired]="true" [selectedValue]="selectedValue"
@@ -14,12 +14,11 @@
     <div class="row mt-4">
       <div class="col-md-12">
         <label for="message" class="form-label">Tratamiento :</label>
-        <textarea id="message" formControlName="tratamiento" class="form-control mb-5" placeholder=""
-          readonly="true"></textarea>
+        <textarea id="message" formControlName="tratamiento" class="form-control mb-5" placeholder=""></textarea>
       </div>
     </div>
   </form>
-
+ <app-combinacion-requerida></app-combinacion-requerida>
   <form [formGroup]="formGroup1">
     <ng-titulo titulo="Unidad expedidora"></ng-titulo>
 
@@ -41,13 +40,13 @@
 
 
 
-  <ng-titulo titulo="Datos Generales de la mercancia Animal"></ng-titulo>
-  <h6>Mercancias</h6>
+  <ng-titulo titulo="Datos Generales de la Mercancía Producto o Subproducto de Origen Animal"></ng-titulo>
 
   <ng-table [disableSeleccionTablaCheckBox]="esFormularioSoloLectura? true : false" [commonTableHeader]="tableColumns"
     [commonTableBody]="mercanciasData"></ng-table>
   <div class="text-end">
-    <button class="btn btn-primary me-2" type="button" [disabled]="esFormularioSoloLectura? true : false">
+    <button class="btn btn-primary me-2" type="button" [disabled]="esFormularioSoloLectura? true : false" data-bs-toggle="modal"
+        data-bs-target="#modalAgregarMercancias" (click)="openModificarMercancias()">
       Carga por archivo
     </button>
     <button class="btn btn-primary" type="button" [disabled]="esFormularioSoloLectura? true : false">
@@ -55,6 +54,47 @@
     </button>
   </div>
   <form [formGroup]="datosdelForm">
+    <div class="col-md-12" style="padding: 0px; padding-top: 10px;">
+   <ng-alert [CONTENIDO]="TEXTO.mensaje" [CUSTOMECLASS]="infoAlert"></ng-alert>
+    </div>
+   <div class="row">
+    <div class="col-md-4">
+      <label class="form-label" for="numeroTotal">Número total de bultos:</label>
+      <input type="text" class="form-control" id="numeroTotal" formControlName="numeroTotal">
+   </div>
+   <div class="col-md-4">
+      <app-catalogo-select
+                [catalogo]="paisOrigen"
+                [tooltipQuestionCircle]="false"
+                [label]="'Condiciones del transporte'"
+                [required]="true"
+                [placeholder]="'Seleccione un valor'"
+                [isDisabled]="esFormularioSoloLectura"
+                formControlName="condiciones"
+                (change)="setValoresStore(datosdelForm,'paisOrigen', 'setpaisOrigen')"
+              ></app-catalogo-select>
+   </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-4">
+      <label class="form-label" for="CantidadTotal">Cantidad total:<i
+              class="bi bi-question-circle-fill"></i></label>
+      <input type="text" class="form-control" id="CantidadTotal"  formControlName="cantidadTotal">
+   </div>
+   <div class="col-md-4">
+      <app-catalogo-select
+                [catalogo]="paisOrigen"
+                [tooltipQuestionCircle]="false"
+                [label]="'Tipo de embalaje'"
+                [required]="true"
+                [placeholder]="'Seleccione un valor'"
+                [isDisabled]="esFormularioSoloLectura"
+                formControlName="tipoEmbalaje"
+                (change)="setValoresStore(datosdelForm,'paisOrigen', 'setpaisOrigen')"
+              ></app-catalogo-select>
+   </div>
+  </div>
     <div class="mb-5">
       <label for="message" class="form-label">Tratamiento:</label>
       <textarea class="form-control" rows="5" formControlName="datoscertificado"
@@ -66,4 +106,17 @@
     </div>
   </form>
   
+</div>
+<div
+  class="modal fade"
+  id="modalAgregarMercancias"
+  tabindex="-1"
+  aria-labelledby="modalAgregarMercanciasLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <app-datos-generales-animales></app-datos-generales-animales>
+    </div>
+  </div>
 </div>
