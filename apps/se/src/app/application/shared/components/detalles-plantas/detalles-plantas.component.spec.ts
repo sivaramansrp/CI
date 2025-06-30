@@ -22,36 +22,36 @@ describe('DetallesPlantasComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize the form in constructor', () => {
+  it('debe inicializar el formulario en el constructor', () => {
     expect(component.formularioDatosPlantas).toBeDefined();
     expect(component.formularioDatosPlantas.get('permaneceMercancia')).toBeTruthy();
     expect(component.formularioDatosPlantas.get('fechaOpinion')?.disabled).toBe(true);
   });
 
-  it('should run inicializarFormularioDatosPlantas() and disable fechaOpinion', () => {
+  it('debe ejecutar inicializarFormularioDatosPlantas() y deshabilitar fechaOpinion', () => {
     component.inicializarFormularioDatosPlantas();
     expect(component.formularioDatosPlantas.get('permaneceMercancia')).toBeTruthy();
     expect(component.formularioDatosPlantas.get('fechaOpinion')?.disabled).toBe(true);
   });
 
-  it('should emit when regresarPlantas() is called', () => {
+  it('debe emitir cuando se llame a regresarPlantas()', () => {
     const emitSpy = jest.spyOn(component.alRegresarPlantas, 'emit');
     component.regresarPlantas();
     expect(emitSpy).toHaveBeenCalled();
   });
 
-  it('should patch value in cambiarPermaneceMerCancia()', () => {
+  it('debe actualizar el valor en cambiarPermaneceMercancia()', () => {
     const patchSpy = jest.spyOn(component.formularioDatosPlantas, 'patchValue');
     const mockCatalogo = { id: 5, descripcion: 'Sí' };
     component.cambiarPermaneceMerCancia(mockCatalogo);
     expect(patchSpy).toHaveBeenCalledWith({ permaneceMercancia: 5 });
   });
 
-  it('should patch value in cambiartipoContribuyente()', () => {
+  it('Debería parchear el valor en cambiartipoContribuyente()', () => {
     const patchSpy = jest.spyOn(component.formularioDatosPlantas, 'patchValue');
     const mockCatalogo = { id: 2, descripcion: 'Moral' };
     component.cambiartipoContribuyente(mockCatalogo);

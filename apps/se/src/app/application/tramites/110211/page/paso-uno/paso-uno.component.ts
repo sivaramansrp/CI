@@ -87,9 +87,14 @@ ngOnInit():void {
     }
 }
 
-  /**
-   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
-   * Luego reinicializa el formulario con los valores actualizados desde el store.
+    /**
+   * @method guardarDatosFormulario
+   * @description
+   * Carga los datos del formulario desde un archivo JSON utilizando el servicio `CamCertificadoService`.
+   * Si la respuesta es válida, actualiza el estado del formulario en el store y marca la bandera `esDatosRespuesta` como verdadera.
+   * Utiliza `takeUntil` para evitar fugas de memoria al destruir el componente.
+   * 
+   * @returns {void}
    */
   guardarDatosFormulario(): void {
     this.camCertificadoService.obtenerTodosDatosCamCertificado('cam-certificado.json').pipe(
@@ -97,8 +102,8 @@ ngOnInit():void {
       )
       .subscribe((resp) => {
         if(resp){
-        this.esDatosRespuesta = true;
-       this.camCertificadoService.actualizarEstadoFormulario(resp as CamState);
+          this.esDatosRespuesta = true;
+          this.camCertificadoService.actualizarEstadoFormulario(resp as CamState);
         }
       });
   }

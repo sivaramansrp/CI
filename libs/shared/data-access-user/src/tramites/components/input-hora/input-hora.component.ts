@@ -13,7 +13,8 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Subject, takeUntil, tap, timer } from 'rxjs';
+import { Subject } from 'rxjs';
+
 import { CommonModule } from '@angular/common';
 import { HORA_PATTERN } from '../../constantes/regex.constants';
 import { HoraFormatoDirective } from '../../directives/hora-formato/hora-formato.directive';

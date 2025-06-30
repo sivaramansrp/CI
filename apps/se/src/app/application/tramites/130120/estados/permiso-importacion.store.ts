@@ -2,10 +2,36 @@ import { DatosGrupos, createDatosGruposState } from '../models/permiso-importaci
 import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
 
+/**
+ * @Injectable
+ * Marca esta clase como inyectable y disponible en el inyector raíz de Angular.
+ * Esto permite que el store sea utilizado en cualquier parte de la aplicación.
+ */
 @Injectable({
     providedIn: 'root',
 })
+
+/**
+ * @StoreConfig
+ * Configuración del store de Akita.
+ * 
+ * @param name Nombre del store: 'seccion'.
+ * @param resettable Indica si el store puede ser reseteado a su estado inicial: true.
+ */
 @StoreConfig({ name: 'seccion', resettable: true })
+
+/**
+ * Store principal para gestionar el estado del trámite de Permiso de Importación.
+ *
+ * Extiende de la clase Store de Akita y administra el estado reactivo de los datos agrupados del formulario,
+ * permitiendo actualizar, limpiar y modificar secciones específicas del permiso de importación.
+ *
+ * Proporciona métodos para actualizar campos individuales o grupos de datos, así como para resetear el estado.
+ *
+ * @export
+ * @class PermisoImportacionStore
+ * @extends {Store<DatosGrupos>}
+ */
 export class PermisoImportacionStore extends Store<DatosGrupos> {
     /**
      * Inicializa el store con el estado inicial de los datos de grupos.
