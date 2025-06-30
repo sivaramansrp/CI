@@ -14,6 +14,7 @@ import * as uuid from 'uuid';
 import { AMBIENTES, PerfilUsuario } from '@ng-mf/data-access-user';
 import { Component, OnInit } from '@angular/core';
 import { Rol } from '@ng-mf/data-access-user';
+import { Router } from '@angular/router';
 import { TipoPersona } from '@ng-mf/data-access-user';
 import { UsuarioStore } from '@libs/shared/data-access-user/src/core/estados/usuario.store';
 
@@ -35,12 +36,18 @@ export class AuthPageComponent implements OnInit {
     public ruta: string = '';
 
     /**
+     * variable para validar el primer acceso de un usuario
+     */
+    primerAcceso: boolean = false;
+
+    /**
      * Constructor.
      * @param usuarioStore Servicio para gestionar el estado del usuario autenticado.
      */
     constructor(
         private usuarioStore: UsuarioStore,
-    ) {}
+        private router: Router,
+    ) { }
 
     /**
      * Inicializa el componente y determina el ambiente de ejecución.
@@ -66,7 +73,7 @@ export class AuthPageComponent implements OnInit {
      * Si el login es exitoso, establece un usuario de prueba y redirige a la selección de trámite.
      * @param login Indica si el login fue exitoso.
      */
-    validarEFirma(login: boolean) {
+    validarEFirma(login: boolean,) {
         if (login) {
             const ROLES: Rol[] = [{ idRol: 1, codigoRol: '', nombre: '', descripcion: '' }];
             const PERFIL_USUARIO: PerfilUsuario = {
@@ -79,8 +86,12 @@ export class AuthPageComponent implements OnInit {
                 tipoPersona: TipoPersona.FISICA
             }
             this.usuarioStore.establecerUsuario('LEQI', PERFIL_USUARIO, ROLES, '');
-
-            window.location.href = '/bandeja-de-tareas-pendientes';
+            if (!this.primerAcceso) {
+                window.location.href = '/bandeja-de-tareas-pendientes';
+            }
+            else {
+                this.router.navigate(['login/condiciones-uso']);
+            }
         }
     }
 }
