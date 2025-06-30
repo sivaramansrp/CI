@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { CondicionesUsoService, CondicionesUsoState } from '../../../estados/condiciones-uso.store';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Notificacion, NotificacionesComponent } from '@libs/shared/data-access-user/src';
@@ -14,7 +14,7 @@ import { Router } from '@angular/router';
   templateUrl: './condiciones-uso.component.html',
   styleUrl: './condiciones-uso.component.scss',
 })
-export class CondicionesUsoComponent implements OnInit {
+export class CondicionesUsoComponent implements OnInit, OnDestroy {
   /** Estado actual de aceptación de condiciones */
   public aceptaCondicion!: CondicionesUsoState;
   /** Notificación a mostrar al usuario */
@@ -47,6 +47,14 @@ export class CondicionesUsoComponent implements OnInit {
       )
       .subscribe();
     this.aceptaCondiciones = this.aceptaCondicion.aceptaCondiciones;
+  }
+
+   /**
+   * Libera recursos y cancela suscripciones al destruir el componente.
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 
   /** Formulario reactivo para aceptar condiciones */
