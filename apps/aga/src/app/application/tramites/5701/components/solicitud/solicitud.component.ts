@@ -142,6 +142,7 @@ import patentes from 'libs/shared/theme/assets/json/5701/patentes.json';
 import rfcs from 'libs/shared/theme/assets/json/5701/rfcs.json';
 
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+
 import {
   CONFIRMAR_ELIMINAR_SOLICITUD,
   MSG_ADUANA_PEDIMENTO,
@@ -171,11 +172,11 @@ import { BodyValidaHorario } from '../../../../core/models/5701/ValidaHorario.mo
 import { BodyValidarEncargoConferido } from '../../../../core/models/5701/encargo-conferido.models';
 import { CheckInputTextComponent } from '../../../../shared/components/check-input-text/check-input-text.component';
 import { EncargoConferidoService } from '../../../../core/services/5701/encargo-conferido.service';
+import { GuardaSolicitudService } from '../../../../core/services/5701/guardar/guarda-solicitud.service';
+import { Router } from '@angular/router';
 import { SIN_VALOR_SELECT } from '@libs/shared/data-access-user/src/core/enums/transporte-componente.enum';
 import { ValidaDespachoService } from '../../../../core/services/5701/valida-despacho.service';
 import { ValidaHorarioService } from '../../../../core/services/5701/valida-horario.service';
-import { GuardaSolicitudService } from '../../../../core/services/5701/guardar/guarda-solicitud.service';
-import { Router } from '@angular/router';
 @Component({
   selector: 'app-solicitud',
   templateUrl: './solicitud.component.html',
