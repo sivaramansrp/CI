@@ -1,5 +1,8 @@
 <ng-titulo titulo="Manifiestos y declaraciones"></ng-titulo>
-<ng-alert [CONTENIDO]="mensaje"></ng-alert>
+ <div class="alert alert-info manifest-box">
+        <input class="form-check-input" type="checkbox" id="datosManifiestos">
+        <p class="spaced-word">{{ MANIFIESTOS_ALERT}}</p>
+      </div>
 <form [formGroup]="manifiestos">
     <div class="form mt-5">
  <div class="form-group">
