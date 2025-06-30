@@ -27,12 +27,7 @@ describe('DatosPorRegimenComponent', () => {
         tipoDePersonaMiembro: '',
         nombreMiembro: '',
         apellidoPaternoMiembro: '',
-        // Add all other required properties with mock/default values
-        // Example:
-        // propiedad1: valor1,
-        // propiedad2: valor2,
-        // ...
-      } as any) // Use 'as any' if you want to avoid listing all properties for now, but ideally provide all required fields
+      } as any)
     };
 
     consultaioQueryMock = {
@@ -50,7 +45,6 @@ describe('DatosPorRegimenComponent', () => {
         create: false,
         update: false,
         consultaioSolicitante: null,
-        // Add any other required properties with mock/default values
       })
     };
 

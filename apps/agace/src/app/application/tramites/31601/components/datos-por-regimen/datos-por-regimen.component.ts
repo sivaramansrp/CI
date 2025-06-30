@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ConsultaioQuery, InputRadioComponent, TableComponent, TablePaginationComponent, TituloComponent, ValidacionesFormularioService } from '@ng-mf/data-access-user';
+import { ConsultaioQuery, InputRadioComponent, TableComponent, TablePaginationComponent, TituloComponent } from '@ng-mf/data-access-user';
 import {
   FormBuilder,
   FormGroup,
@@ -10,10 +10,8 @@ import { Solicitud31601State, Tramite31601Store } from '../../../../estados/tram
 import { Subject, map, takeUntil } from 'rxjs';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { CommonModule } from '@angular/common';
-import { RadioBotons } from '../../modelos/radioBotons.model';
-import { ServiciosPantallaService } from '@libs/shared/data-access-user/src/core/services/31601/servicios-pantalla.service';
+import { RadioBotons } from '../../modelos/radio-buttons.model';
 import { Tramite31601Query } from '../../../../estados/queries/tramite31601.query';
-import { TramiteAgaceStore } from '../../../../estados/tramites/tramitesagace.store';
 
 /**
  * Componente DatosPorRegimen que se utiliza para mostrar y gestionar los DatosPorRegimen.
