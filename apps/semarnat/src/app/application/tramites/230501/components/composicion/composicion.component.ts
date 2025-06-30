@@ -6,6 +6,18 @@ import { ComposicionMaterial } from '../../models/materiales-peligrosos.model';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { Tramite230501Store } from '../../estados/stores/tramite230501Store.store';
 
+/**
+ * Decorador de componente de Angular que define las propiedades y configuración del componente `ComposicionComponent`.
+ * 
+ * Este componente es autónomo y utiliza los módulos `CommonModule` y `ReactiveFormsModule` como dependencias.
+ * 
+ * Propiedades del decorador:
+ * - `selector`: Define el nombre del selector que se utilizará para instanciar este componente en una plantilla HTML.
+ * - `standalone`: Indica que el componente es independiente y no requiere ser declarado en un módulo.
+ * - `imports`: Lista de módulos necesarios para el funcionamiento del componente.
+ * - `templateUrl`: Ruta al archivo HTML que define la estructura visual del componente.
+ * - `styleUrl`: Ruta al archivo SCSS que contiene los estilos específicos del componente.
+ */
 @Component({
   selector: 'app-composicion',
   standalone: true,
@@ -41,8 +53,52 @@ export class ComposicionComponent implements OnInit, OnDestroy {
    * - `porcentajeConcentracion`: Campo obligatorio para especificar el porcentaje de concentración, 
    *   con un valor mínimo de 0 y un máximo de 100.
    */
-  constructor(private fb: FormBuilder, private ubicaccion: Location, private tramite230501Store: Tramite230501Store, private consultaQuery: ConsultaioQuery) {
+  constructor(private fb: FormBuilder, 
+    private ubicaccion: Location, 
+    private tramite230501Store: Tramite230501Store, 
+    private consultaQuery: ConsultaioQuery) {
   }
+  
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * 
+   * En este método, se suscribe al estado de consulta utilizando un observable 
+   * `selectConsultaioState$` de la consultaQuery. La suscripción se realiza con 
+   * la ayuda de operadores como `takeUntil` para gestionar la destrucción del 
+   * componente y `map` para transformar el estado recibido.
+   * 
+   * Dentro del operador `map`, se realiza lo siguiente:
+   * - Se establece la propiedad `esFormularioSoloLectura` según el estado de 
+   *   la sección (`seccionState.readonly`).
+   * - Se llama al método `inicializarEstadoFormulario` para configurar el estado 
+   *   inicial del formulario.
+   * 
+   * La suscripción se completa sin devolver ningún valor observable al componente.
+   * 
+   * @returns void
+   */
+  ngOnInit(): void {
+    this.consultaQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState) => {
+        this.esFormularioSoloLectura = seccionState.readonly;
+        this.inicializarEstadoFormulario();
+      })
+    )
+    .subscribe();
+  }
+
+  /**
+   * Crea y configura el formulario reactivo para la composición.
+   * 
+   * Este método inicializa un formulario utilizando `FormBuilder` con dos controles:
+   * - `componenteMaterial`: Campo obligatorio que representa el material del componente.
+   * - `porcentajeConcentracion`: Campo obligatorio que representa el porcentaje de concentración,
+   *   con validaciones que aseguran que el valor esté entre 0 y 100.
+   * 
+   * @returns {void} No devuelve ningún valor.
+   */
   createComposicionForm(): void {
     this.composicionForm = this.fb.group({
       componenteMaterial: ['', Validators.required],
@@ -50,20 +106,17 @@ export class ComposicionComponent implements OnInit, OnDestroy {
     });
   }
 
-  ngOnInit(): void {
-    this.consultaQuery.selectConsultaioState$
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-       map((seccionState) => {
-          this.esFormularioSoloLectura = seccionState.readonly;
-          this.inicializarEstadoFormulario();
-        })
-      )
-      .subscribe();
-  }
-       /**
-   * Evalúa si se debe inicializar o cargar datos en el formulario.
-   */
+
+    /**
+     * Inicializa el estado del formulario de composición.
+     * 
+     * Este método verifica si el formulario `composicionForm` ha sido creado. 
+     * Si no existe, lo inicializa llamando al método `createComposicionForm`.
+     * Además, si el formulario está configurado como de solo lectura 
+     * (`esFormularioSoloLectura`), deshabilita todos los controles del formulario.
+     * 
+     * @returns {void} No retorna ningún valor.
+     */
      inicializarEstadoFormulario(): void {
       if(!this.composicionForm){
         this.createComposicionForm();

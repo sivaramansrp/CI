@@ -5,6 +5,14 @@ import { CommonModule } from '@angular/common';
 import { ComplementarFraccionComponent } from '../../../../shared/components/complementar-fraccion/complementar-fraccion.component';
 import { Component } from '@angular/core';
 
+/**
+ * Componente Angular para la vista de complementar fracción del trámite 80101.
+ * Este componente se encarga de mostrar y gestionar los datos complementarios
+ * relacionados con la fracción del trámite.
+ * 
+ * @remarks
+ * Este componente es autónomo y utiliza el módulo `CommonModule` y el componente `ComplementarFraccionComponent`.
+ */
 @Component({
   selector: 'app-complementar-fraccion-vista',
   standalone: true,
