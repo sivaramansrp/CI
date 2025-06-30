@@ -10,6 +10,8 @@ import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { PasoDosComponent } from '../paso-dos/paso-dos.component';
 import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
 import { provideHttpClient } from '@angular/common/http';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { ToastrModule, ToastrService } from 'ngx-toastr';
 
 describe('SolicitantePageComponent', () => {
   let component: SolicitantePageComponent;
@@ -23,15 +25,16 @@ describe('SolicitantePageComponent', () => {
         WizardComponent,
         AlertComponent,
         BtnContinuarComponent,
-      ],
-      declarations: [
         SolicitantePageComponent,
         PasoUnoComponent,
         PasoUnoComponent,
         PasoDosComponent,
+        HttpClientTestingModule,
+        ToastrModule.forRoot(),
       ],
+      declarations: [],
       schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
-      providers: [provideHttpClient()],
+      providers: [provideHttpClient(), ToastrService],
     }).compileComponents();
 
     fixture = TestBed.createComponent(SolicitantePageComponent);
