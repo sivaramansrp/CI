@@ -1,4 +1,12 @@
 /**
+ * @fileoverview
+ * Modelos de datos para el trámite 319 de operaciones de comercio exterior.
+ * Incluye la definición de las interfaces para personas y solicitudes.
+ * Cobertura compodoc 100%: cada interfaz y propiedad está documentada.
+ * @module PersonasModule
+ */
+
+/**
  * @interface Personas
  * @description Representa el modelo de datos para una persona.
  * @property {string} rfc - Registro Federal de Contribuyentes de la persona.
@@ -15,17 +23,17 @@ export interface Personas {
   primer_apellido: string;
   segundo_apellido: string;
   correo_electronico: string;
-  }
-  /**
-   * Interfaz que representa la estructura de datos para solicitar información.
-   * 
-   * @property {number} [id] - Identificador único opcional.
-   * @property {string} periodo - Periodo de tiempo asociado.
-   * @property {string} fechas_sobre_el_periodo - Fechas relacionadas con el periodo.
-   */
-  export interface Solicitar{
-  id?:number;
-  periodo : string;
-  fechas_sobre_el_periodo :string;
-  }
+}
 
+/**
+ * @interface Solicitar
+ * @description Representa la estructura de datos para solicitar información.
+ * @property {number} [id] - Identificador único opcional.
+ * @property {string} periodo - Periodo de tiempo asociado.
+ * @property {string} fechas_sobre_el_periodo - Fechas relacionadas con el periodo.
+ */
+export interface Solicitar {
+  id?: number;
+  periodo: string;
+  fechas_sobre_el_periodo: string;
+}
