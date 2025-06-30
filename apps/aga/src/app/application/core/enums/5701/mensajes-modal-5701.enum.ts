@@ -36,7 +36,10 @@ export const MSJ_ERROR_HORA_FINAL_MENOR_INICIAL =
 export const MSJ_FECHA_DENTRO_DE_HORARIO_ADUANA =
   'El horario que seleccionaste para llevar a cabo tu servicio extraordinario, se encuentra dentro del horario de operación de la aduana. Por favor verifica.';
 
-// #Mensajes del modal para el componente Persona Responsable del Despacho
+/**
+ * #Mensajes del modal para el componente Persona Responsable del Despacho
+ */
+
 /**
  * @description Mensaje de error cuando se hace una busqueda con un gafete que no existe.
  */

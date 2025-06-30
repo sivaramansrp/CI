@@ -2805,7 +2805,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
       this.mostarSelectTipoDespacho = true;
     }
 
-    this.cdRef.detectChanges(); // 🚀 Forzar actualización de la vista
+    this.cdRef.detectChanges(); 
 
     this.setValoresStore(
       this.despacho,
