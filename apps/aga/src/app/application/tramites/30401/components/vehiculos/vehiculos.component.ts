@@ -398,19 +398,21 @@ export class VehiculosComponent implements OnInit {
    * Filtra y elimina los elementos seleccionados de la tabla de mercancías.
    * Actualiza el estado del almacén y cierra el popup de confirmación de eliminación.
    */
-  eliminarVehiculosItem(): void {
-    const IDS_TO_DELETE = this.listaFilaSeleccionadaVehiculos.map(
-      (item) => item.id
-    );
+  eliminarVehiculosItem(evento:boolean): void {
+    if(evento === true) {
+      const IDS_TO_DELETE = this.listaFilaSeleccionadaVehiculos.map(
+        (item) => item.id
+      );
 
-    this.vehiculosInfoList = this.vehiculosInfoList.filter(
-      (item) => !IDS_TO_DELETE.includes(item.id)
-    );
+      this.vehiculosInfoList = this.vehiculosInfoList.filter(
+        (item) => !IDS_TO_DELETE.includes(item.id)
+      );
 
-    this.listaFilaSeleccionadaVehiculos = [];
-    this.filaSeleccionadaVehiculos = {} as VehiculosTabla;
-    this.tramite30401Store.establecerDatos({vehiculosTablaDatos:this.vehiculosInfoList});
-    this.cerrarEliminarConfirmationPopup();
+      this.listaFilaSeleccionadaVehiculos = [];
+      this.filaSeleccionadaVehiculos = {} as VehiculosTabla;
+      this.tramite30401Store.establecerDatos({vehiculosTablaDatos:this.vehiculosInfoList});
+      this.cerrarEliminarConfirmationPopup();
+    }
   }
 
   /**

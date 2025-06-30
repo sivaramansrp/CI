@@ -145,7 +145,7 @@
   <lib-notificaciones 
   *ngIf="confirmEliminarPopupAbierto"
   [notificacionInput]="nuevaNotificacion" 
-  (confirmacionModal)="eliminarVehiculosItem()">
+  (confirmacionModal)="eliminarVehiculosItem($event)">
 </lib-notificaciones>
 
 <lib-notificaciones 

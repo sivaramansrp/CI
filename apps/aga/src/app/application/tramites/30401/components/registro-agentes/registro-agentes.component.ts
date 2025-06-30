@@ -407,19 +407,21 @@ export class RegistroAgentesComponent implements OnInit {
    * Filtra y elimina los elementos seleccionados de la tabla de mercancías.
    * Actualiza el estado del almacén y cierra el popup de confirmación de eliminación.
    */
-  eliminarAgentesItem(): void {
-    const IDS_TO_DELETE = this.listaFilaSeleccionadaAgentes.map(
-      (item) => item.id
-    );
+  eliminarAgentesItem(evento:boolean): void {
+    if(evento === true) {
+      const IDS_TO_DELETE = this.listaFilaSeleccionadaAgentes.map(
+        (item) => item.id
+      );
 
-    this.agentesInfoList = this.agentesInfoList.filter(
-      (item) => !IDS_TO_DELETE.includes(item.id)
-    );
+      this.agentesInfoList = this.agentesInfoList.filter(
+        (item) => !IDS_TO_DELETE.includes(item.id)
+      );
 
-    this.listaFilaSeleccionadaAgentes = [];
-    this.filaSeleccionadaAgentes = {} as AgentesTabla;
-    this.tramite30401Store.establecerDatos({agentesTablaDatos: this.agentesInfoList});
-    this.cerrarEliminarConfirmationPopup();
+      this.listaFilaSeleccionadaAgentes = [];
+      this.filaSeleccionadaAgentes = {} as AgentesTabla;
+      this.tramite30401Store.establecerDatos({agentesTablaDatos: this.agentesInfoList});
+      this.cerrarEliminarConfirmationPopup();
+    }
   }
 
   /**
