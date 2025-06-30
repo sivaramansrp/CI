@@ -119,7 +119,6 @@ describe('SolicitudComponent', () => {
     });
     jest.spyOn(component, 'validarDestinatarioFormulario');
     component.enviarFormulario();
-    // expect(component.validarDestinatarioFormulario).toHaveBeenCalled();
   });
 
   it('should not call validarDestinatarioFormulario if registroForm is valid in enviarFormulario', () => {
@@ -134,7 +133,6 @@ describe('SolicitudComponent', () => {
     });
     jest.spyOn(component, 'validarDestinatarioFormulario');
     component.enviarFormulario();
-    // expect(component.validarDestinatarioFormulario).not.toHaveBeenCalled();
   });
 
   it('should call validacionesService.isValid in esValido', () => {
@@ -151,7 +149,6 @@ describe('SolicitudComponent', () => {
     });
     const spy = jest.spyOn(component.registroForm, 'markAllAsTouched');
     component.validarDestinatarioFormulario();
-    // expect(spy).toHaveBeenCalled();
   });
 
   it('should disable registroForm if esFormularioSoloLectura is true in guardarDatosDelFormulario', () => {

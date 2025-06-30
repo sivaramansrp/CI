@@ -110,32 +110,6 @@ describe('PasoUnoComponent', () => {
     expect(component.consultaState).toBeDefined();
   });
 
-  // it('should call guardarDatosFormulario if consultaState.update is true in ngOnInit', async () => {
-  //   consultaQueryMock = {
-  //     selectConsultaioState$: of({ update: true }),
-  //   };
-  //   await TestBed.resetTestingModule()
-  //     .configureTestingModule({
-  //       imports: [ReactiveFormsModule,HttpClientTestingModule],
-  //       declarations: [PasoUnoComponent],
-  //       providers: [
-  //         { provide: Tramite31802Store, useValue: storeMock },
-  //         { provide: Tramite31802Query, useValue: queryMock },
-  //         { provide: ValidacionesFormularioService, useValue: validacionesServiceMock },
-  //         { provide: RegistroSolicitudService, useValue: solicitud31802ServiceMock },
-  //         { provide: ConsultaioQuery, useValue: consultaQueryMock },
-  //         FormBuilder,
-  //       ],
-  //       schemas: [CUSTOM_ELEMENTS_SCHEMA],
-  //     })
-  //     .compileComponents();
-  //   fixture = TestBed.createComponent(PasoUnoComponent);
-  //   component = fixture.componentInstance;
-  //   const spy = jest.spyOn(component, 'guardarDatosFormulario');
-  //   fixture.detectChanges();
-  //   expect(spy).toHaveBeenCalled();
-  // });
-
   it('should set esDatosRespuesta to true if consultaState.update is false in ngOnInit', () => {
     component.consultaState = { update: false } as any;
     component.esDatosRespuesta = false;
