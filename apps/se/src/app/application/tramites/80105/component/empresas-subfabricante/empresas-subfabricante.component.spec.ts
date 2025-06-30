@@ -20,11 +20,11 @@ describe('EmpresasSubfabricanteComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should call obtenerDatosDelAlmacen and obtenerListaEstado on ngOnInit', () => {
+  it('debe llamar a obtenerDatosDelAlmacen y obtenerListaEstado en ngOnInit', () => {
     const obtenerDatosSpy = jest.spyOn(component, 'obtenerDatosDelAlmacen');
     const obtenerListaSpy = jest.spyOn(component, 'obtenerListaEstado');
     component.ngOnInit();
@@ -32,7 +32,7 @@ describe('EmpresasSubfabricanteComponent', () => {
     expect(obtenerListaSpy).toHaveBeenCalled();
   });
 
-   it('should clean up destroy$ on ngOnDestroy', () => {
+   it('debe limpiar destroy$ en ngOnDestroy', () => {
     const destroy$Spy = jest.spyOn(component.destroyNotifier$, 'next');
     const completeSpy = jest.spyOn(component.destroyNotifier$, 'complete');
     component.ngOnDestroy();
@@ -40,7 +40,7 @@ describe('EmpresasSubfabricanteComponent', () => {
     expect(completeSpy).toHaveBeenCalled();
   });
 
-  it('should initialize the subcontratista form with default empty values and required validators', () => {
+  it('debe inicializar el formulario de subcontratista con valores vacíos por defecto y validadores requeridos', () => {
   expect(component.formularioDatosSubcontratista).toBeDefined();
   const form = component.formularioDatosSubcontratista;
   expect(form.get('rfc')?.value).toBe('');
@@ -50,7 +50,7 @@ describe('EmpresasSubfabricanteComponent', () => {
   expect(form.valid).toBe(false);
 });
 
-it('should patch estado in form and update store on enEstadoSeleccionado', () => {
+it('debe actualizar el estado en el formulario y la tienda en enEstadoSeleccionado', () => {
   const patchSpy = jest.spyOn(component.formularioDatosSubcontratista, 'patchValue');
   const storeSpy = jest.spyOn(component['store'], 'setDatosSubcontratista');
   const mockEstado = { id: 1, descripcion: 'Estado Test' };
@@ -62,27 +62,27 @@ it('should patch estado in form and update store on enEstadoSeleccionado', () =>
 });
 
 
-it('should call store.setDatosSubcontratista with provided data in alCambiarRFC', () => {
+it('debe llamar a store.setDatosSubcontratista con los datos proporcionados en alCambiarRFC', () => {
   const storeSpy = jest.spyOn(component['store'], 'setDatosSubcontratista');
   const mockData = { rfc: 'RFC123', estado: '1' };
   component.alCambiarRFC(mockData);
   expect(storeSpy).toHaveBeenCalledWith(mockData);
 });
 
-it('should update datosDelSubfabricanteSeleccionado if event has length', () => {
+it('debe actualizar datosDelSubfabricanteSeleccionado si el evento tiene longitud', () => {
   const mockData = [{ calle: 'A', codigoPostal: 12345, colonia: 'X', numExterior: 1, numInterior: 1 }];
   component.obtenerRegistroSeleccionado(mockData);
   expect(component.datosDelSubfabricanteSeleccionado).toEqual(mockData);
 });
 
-it('should NOT call obtenerSubfabricantesDisponibles when rfc or estado is empty', () => {
+it('no debe llamar a obtenerSubfabricantesDisponibles cuando rfc o estado están vacíos', () => {
   const spy = jest.spyOn(component, 'obtenerSubfabricantesDisponibles');
   component.formularioDatosSubcontratista.setValue({ rfc: '', estado: '' });
   component.realizarBusqueda();
   expect(spy).not.toHaveBeenCalled();
 });
 
-it('should call store.setPlantasSubfabricantesAgregar in agregarPlantas', () => {
+it('debe llamar a store.setPlantasSubfabricantesAgregar en agregarPlantas', () => {
   const spy = jest.spyOn(component['store'], 'setPlantasSubfabricantesAgregar');
   const plantas = [{ calle: 'A', codigoPostal: 12345, colonia: 'X', numExterior: 1, numInterior: 1 }];
   component.agregarPlantas(plantas);
@@ -90,7 +90,7 @@ it('should call store.setPlantasSubfabricantesAgregar in agregarPlantas', () => 
 });
 
 
-it('should call obtenerSubfabricantesDisponibles only when form has rfc and estado', () => {
+it('debe llamar a obtenerSubfabricantesDisponibles solo cuando el formulario tiene rfc y estado', () => {
   const spy = jest.spyOn(component, 'obtenerSubfabricantesDisponibles');
   component.formularioDatosSubcontratista.setValue({ rfc: 'RFC123', estado: '1' });
   component.realizarBusqueda();

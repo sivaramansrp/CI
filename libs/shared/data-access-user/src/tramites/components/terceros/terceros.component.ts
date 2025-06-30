@@ -16,7 +16,6 @@ import {
 } from '@angular/forms';
 import {
   MSG_CAMPOS_VACIOS,
-  MSG_ELIMINA_PERSONA,
   MSG_SELECCIONA_REGISTRO,
   MSG_SUCCESS,
   MSG_TERCERO_EXISTE,
@@ -41,6 +40,7 @@ import { TercerosQuery } from '../../../core/queries/terceros.query';
 import { TituloComponent } from '../titulo/titulo.component';
 import { UppercaseDirective } from '../../directives/Uppercase/uppercase.directive';
 import { ValidacionesFormularioService } from '../../../core/services/shared/validaciones-formulario/validaciones-formulario.service';
+
 import { MSG_ELIMINA_ELEMENTO, TEXTO_CERRAR } from '../../../core/enums/mensajes-modal-comunes.enum';
 
 @Component({

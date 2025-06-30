@@ -135,7 +135,6 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
    * @param $event - Evento que contiene el campo y el valor a actualizar.
    */
   establecerCambioDeValor($event: { campo: string; valor: unknown }): void {
-    // Verificar que el evento no sea null/undefined y tenga las propiedades requeridas
     if (!$event || typeof $event !== 'object' || !$event.campo) {
       return;
     }

@@ -61,13 +61,21 @@
     @switch (indice) { @case (1) {
     <solicitante></solicitante>
     } @case (2) {
+      @if(esDatosRespuesta){
     <app-empresas-transportistas></app-empresas-transportistas>
-    } @case (3) { 
+      }
+    } @case (3) {
+      @if(esDatosRespuesta){
       <app-vehiculos></app-vehiculos>
+      }
     } @case (4) {
+      @if(esDatosRespuesta){
       <app-pago-de-derechos></app-pago-de-derechos>
-    } @case (5) { 
+      }
+    } @case (5) {
+      @if(esDatosRespuesta){
       <app-consolidacion-de-cargas></app-consolidacion-de-cargas>
+      }
     } 
   }
   </ng-container>

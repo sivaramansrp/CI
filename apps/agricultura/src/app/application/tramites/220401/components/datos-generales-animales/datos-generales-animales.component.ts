@@ -77,7 +77,7 @@ export class DatosGeneralesAnimalesComponent implements OnInit, OnDestroy {
       takeUntil(this.destroyNotifier$),
       map((seccionState)=>{
         this.esFormularioSoloLectura = seccionState.readonly; 
-        
+        this.inicializarGeneralesFormulario();
       })
     )
     .subscribe()

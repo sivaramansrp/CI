@@ -34,11 +34,11 @@ describe('ComplimentosComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should emit complimentosDatos and formaValida on valueChanges', (done) => {
+  it('debería emitir complimentosDatos y formaValida en valueChanges', (done) => {
     const spyEmitDatos = jest.spyOn(component.complimentosDatos, 'emit');
     const spyEmitValida = jest.spyOn(component.formaValida, 'emit');
 
@@ -53,7 +53,7 @@ describe('ComplimentosComponent', () => {
     }, 150);
   });
 
-  it('should call agregarAccionistas and emit accionistasAgregados', () => {
+  it('Debería llamar a agregarAccionistas y emitir accionistasAgregados', () => {
     const spyEmit = jest.spyOn(component.accionistasAgregados, 'emit');
     component.formaComplimentos.get('formaSocioAccionistas.formaDatos')?.patchValue({
       taxId: 'TAX123',
@@ -67,21 +67,21 @@ describe('ComplimentosComponent', () => {
     expect(spyEmit).toHaveBeenCalledWith(expect.objectContaining({ taxId: 'TAX123' }));
   });
 
-  it('should emit accionistasEliminados when eliminarAccionistas called', () => {
+  it('Debería emitir accionistasEliminados cuando se llame a eliminarAccionistas', () => {
     const spyEmit = jest.spyOn(component.accionistasEliminados, 'emit');
     component.empresaAccionistasSeleccionados = [{ rfc: 'RFC001' } as any];
     component.eliminarAccionistas();
     expect(spyEmit).toHaveBeenCalledWith(component.empresaAccionistasSeleccionados);
   });
 
-  it('should emit accionistasExtranjerosEliminado when eliminarAccionistasExtranjeros called', () => {
+  it('Debería emitir accionistasExtranjerosEliminado cuando se llame a eliminarAccionistasExtranjeros', () => {
     const spyEmit = jest.spyOn(component.accionistasExtranjerosEliminado, 'emit');
     component.accionistasExtranjerosSeleccionados = [{ rfc: 'EXT001' } as any];
     component.eliminarAccionistasExtrenjeros();
     expect(spyEmit).toHaveBeenCalledWith(component.accionistasExtranjerosSeleccionados);
   });
 
-  it('should modify the form based on handleModificarForma logic', () => {
+  it('Debe modificar el formulario según la lógica de handleModificarForma', () => {
     component.formaComplimentos.get('formaSocioAccionistas')?.patchValue({
       nationalidadMaxicana: 'true',
     });
@@ -90,7 +90,7 @@ describe('ComplimentosComponent', () => {
     expect(spy).toHaveBeenCalledWith(expect.any(Number), expect.any(Array));
   });
 
-  it('should complete destroyNotifier$ on ngOnDestroy', () => {
+  it('Debería completar destroyNotifier$ en ngOnDestroy', () => {
     const nextSpy = jest.spyOn((component as any).destroyNotifier$, 'next');
     const completeSpy = jest.spyOn((component as any).destroyNotifier$, 'complete');
     component.ngOnDestroy();

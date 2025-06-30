@@ -91,9 +91,7 @@ describe('RegistroPageComponent', () => {
       valor: {},
       accion: {}
     });
-    // expect(component.wizardComponent.siguiente).toHaveBeenCalled();
-    // expect(component.wizardComponent.atras).toHaveBeenCalled();
-  });
+    });
 
   
 
@@ -102,8 +100,6 @@ describe('RegistroPageComponent', () => {
     component.destroyNotifier$.next = jest.fn();
     component.destroyNotifier$.complete = jest.fn();
     component.ngOnDestroy();
-    // expect(component.destroyNotifier$.next).toHaveBeenCalled();
-    // expect(component.destroyNotifier$.complete).toHaveBeenCalled();
-  });
+     });
 
 });

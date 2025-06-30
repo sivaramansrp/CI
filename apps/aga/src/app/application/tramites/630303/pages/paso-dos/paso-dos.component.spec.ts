@@ -9,7 +9,7 @@ describe('PasoDosComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [PasoDosComponent],
-      schemas: [NO_ERRORS_SCHEMA], // Ignore any unknown components used in the template
+      schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
 
     FIXTURE = TestBed.createComponent(PasoDosComponent);

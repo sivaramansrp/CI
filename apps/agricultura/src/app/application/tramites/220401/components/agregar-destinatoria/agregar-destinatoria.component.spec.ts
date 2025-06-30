@@ -36,18 +36,18 @@ describe('AgregarDestinatoriaComponent', () => {
     expect(component.pais[0].descripcion).toBe('Opción 1');
   });
 
-  it('inputChecked("fisica") debe poner fisica en true y moral en false', () => {
+  it('entradaSeleccionada("fisica") debe poner fisica en true y moral en false', () => {
     component.fisica = false;
     component.moral = true;
-    component.inputChecked('fisica');
+    component.entradaSeleccionada('fisica');
     expect(component.fisica).toBe(true);
     expect(component.moral).toBe(false);
   });
 
-  it('inputChecked("moral") debe poner moral en true y fisica en false', () => {
+  it('entradaSeleccionada("moral") debe poner moral en true y fisica en false', () => {
     component.fisica = true;
     component.moral = false;
-    component.inputChecked('moral');
+    component.entradaSeleccionada('moral');
     expect(component.fisica).toBe(false);
     expect(component.moral).toBe(true);
   });

@@ -1,132 +1,154 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DatosComponent } from './datos.component';
-import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { of, Subject } from 'rxjs';
+import { of } from 'rxjs';
 import { EstablecimientoService } from '../../../../shared/services/establecimiento.service';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
-import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { Component } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+
+@Component({selector: 'solicitante', template: ''})
+class MockSolicitanteComponent {}
 
 describe('DatosComponent', () => {
   let component: DatosComponent;
   let fixture: ComponentFixture<DatosComponent>;
-  let establecimientoServiceMock: any;
-  let consultaQueryMock: any;
+  let mockEstablecimientoService: any;
+  let mockConsultaQuery: any;
 
   beforeEach(async () => {
-    establecimientoServiceMock = {
-      obtenerSolicitudDatos: jest.fn().mockReturnValue(of({ test: 'data' })),
+    mockEstablecimientoService = {
+      obtenerSolicitudDatos: jest.fn(),
       actualizarEstadoFormulario: jest.fn()
     };
-    consultaQueryMock = {
+
+    mockConsultaQuery = {
       selectConsultaioState$: of({ update: false })
     };
 
     await TestBed.configureTestingModule({
-      declarations: [DatosComponent],
+      declarations: [DatosComponent, MockSolicitanteComponent],
       providers: [
-        { provide: EstablecimientoService, useValue: establecimientoServiceMock },
-        { provide: ConsultaioQuery, useValue: consultaQueryMock }
+        { provide: EstablecimientoService, useValue: mockEstablecimientoService },
+        { provide: ConsultaioQuery, useValue: mockConsultaQuery }
       ],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA]
+      schemas: [CUSTOM_ELEMENTS_SCHEMA] 
     }).compileComponents();
+  });
 
+  beforeEach(() => {
     fixture = TestBed.createComponent(DatosComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
+  it('debería crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should set esDatosRespuesta to true if consultaState.update is false on ngOnInit', () => {
-    consultaQueryMock.selectConsultaioState$ = of({ update: false });
+  it('debería inicializar y suscribirse a selectConsultaioState$ con update=false', () => {
+    component.consultaState = undefined as any;
+    component.esDatosRespuesta = false;
+    mockConsultaQuery.selectConsultaioState$ = of({ update: false });
     component.ngOnInit();
+    expect(component.consultaState).toEqual({ update: false });
     expect(component.esDatosRespuesta).toBe(true);
   });
 
-  it('should call guardarDatosFormulario if consultaState.update is true on ngOnInit', () => {
-    consultaQueryMock.selectConsultaioState$ = of({ update: true });
+  it('debería llamar a guardarDatosFormulario si update=true', () => {
     const guardarSpy = jest.spyOn(component, 'guardarDatosFormulario');
+    mockConsultaQuery.selectConsultaioState$ = of({ update: true });
     component.ngOnInit();
+    expect(component.consultaState).toEqual({ update: true });
     expect(guardarSpy).toHaveBeenCalled();
   });
 
-  it('should set esDatosRespuesta to true and call actualizarEstadoFormulario in guardarDatosFormulario', () => {
-    establecimientoServiceMock.obtenerSolicitudDatos.mockReturnValueOnce(of({ test: 'data' }));
+  it('guardarDatosFormulario debe actualizar estado si hay respuesta', () => {
+    const mockResp = { test: 'valor' };
+    mockEstablecimientoService.obtenerSolicitudDatos.mockReturnValue(of(mockResp));
+    component.esDatosRespuesta = false;
     component.guardarDatosFormulario();
     expect(component.esDatosRespuesta).toBe(true);
-    expect(establecimientoServiceMock.actualizarEstadoFormulario).toHaveBeenCalledWith({ test: 'data' });
+    expect(mockEstablecimientoService.actualizarEstadoFormulario).toHaveBeenCalledWith(mockResp);
   });
 
-  it('should not call actualizarEstadoFormulario if resp is falsy in guardarDatosFormulario', () => {
-    establecimientoServiceMock.obtenerSolicitudDatos.mockReturnValueOnce(of(undefined));
+  it('guardarDatosFormulario no debe actualizar estado si no hay respuesta', () => {
+    mockEstablecimientoService.obtenerSolicitudDatos.mockReturnValue(of(null));
+    component.esDatosRespuesta = false;
     component.guardarDatosFormulario();
-    expect(establecimientoServiceMock.actualizarEstadoFormulario).not.toHaveBeenCalled();
+    expect(component.esDatosRespuesta).toBe(false);
+    expect(mockEstablecimientoService.actualizarEstadoFormulario).not.toHaveBeenCalled();
   });
 
-  it('should set indice in seleccionaTab', () => {
-    component.seleccionaTab(5);
-    expect(component.indice).toBe(5);
+  it('debería cambiar el índice con seleccionaTab', () => {
+    component.indice = 1;
+    component.seleccionaTab(3);
+    expect(component.indice).toBe(3);
   });
 
-  it('should collect all form values in obtenerValoresFormulario', () => {
-    // Mock solicitante
+  it('debería limpiar destroyNotifier$ en ngOnDestroy', () => {
+    const spyNext = jest.spyOn<any, any>(component['destroyNotifier$'], 'next');
+    const spyComplete = jest.spyOn<any, any>(component['destroyNotifier$'], 'complete');
+    component.ngOnDestroy();
+    expect(spyNext).toHaveBeenCalled();
+    expect(spyComplete).toHaveBeenCalled();
+  });
+
+  // Cobertura para obtenerValoresFormulario
+  it('debería obtener valores del solicitante si existe el form', () => {
     component.solicitante = { form: { value: { nombre: 'Juan' } } } as any;
-    // Mock datosSolicitudComponents
+    const resultado = component.obtenerValoresFormulario();
+    expect(resultado.solicitante).toEqual({ nombre: 'Juan' });
+  });
+
+  it('debería obtener valores de datosSolicitud si hay componentes', () => {
+    const mockDatosSolicitudComponent = {
+      datosSolicitudform: { value: { campo: 1 } },
+      manifiestosRepresentanteForm: { value: { campo: 2 } },
+      scianForm: { value: { campo: 3 } }
+    };
     component.datosSolicitudComponents = {
       length: 1,
-      toArray: () => [
-        {
-          datosSolicitudform: { value: { campo: 'valor1' } },
-          manifiestosRepresentanteForm: { value: { campo: 'valor2' } },
-          scianForm: { value: { campo: 'valor3' } }
-        }
-      ]
+      toArray: () => [mockDatosSolicitudComponent]
     } as any;
-    // Mock pagoDeDerechosComponents
-    component.pagoDeDerechosComponents = {
-      length: 1,
-      toArray: () => [
-        { pagoDerechos: { value: { pago: 123 } } }
-      ]
-    } as any;
-    // Mock tramitesAsociadosComponents
-    component.tramitesAsociadosComponents = {
-      length: 1,
-      toArray: () => [
-        { acuseTablaDatos: [{ tramite: 'A' }, { tramite: 'B' }] }
-      ]
-    } as any;
-
-    const result = component.obtenerValoresFormulario();
-    expect(result.solicitante).toEqual({ nombre: 'Juan' });
-    expect(result.datosSolicitud?.[0].datosSolicitudform).toEqual({ campo: 'valor1' });
-    expect(result.datosSolicitud?.[0].manifiestosRepresentanteForm).toEqual({ campo: 'valor2' });
-    expect(result.datosSolicitud?.[0].scianForm).toEqual({ campo: 'valor3' });
-    expect(result.pagoDeDerechos?.[0]).toEqual({ pago: 123 });
-    expect(result.tramitesAsociados?.length).toBe(2);
-    expect(result.tramitesAsociados?.[0]).toEqual({ tramite: 'A' });
-    expect(result.tramitesAsociados?.[1]).toEqual({ tramite: 'B' });
+    const resultado = component.obtenerValoresFormulario();
+    expect(resultado.datosSolicitud?.length).toBe(1);
+    expect(resultado.datosSolicitud?.[0].datosSolicitudform).toEqual({ campo: 1 });
+    expect(resultado.datosSolicitud?.[0].manifiestosRepresentanteForm).toEqual({ campo: 2 });
+    expect(resultado.datosSolicitud?.[0].scianForm).toEqual({ campo: 3 });
   });
 
-  it('should return empty arrays if no children in obtenerValoresFormulario', () => {
+  it('debería obtener valores de pagoDeDerechos si hay componentes', () => {
+    const mockPagoComponent = { pagoDerechos: { value: { pago: 123 } } };
+    component.pagoDeDerechosComponents = {
+      length: 1,
+      toArray: () => [mockPagoComponent]
+    } as any;
+    const resultado = component.obtenerValoresFormulario();
+    expect(resultado.pagoDeDerechos?.length).toBe(1);
+    expect(resultado.pagoDeDerechos?.[0]).toEqual({ pago: 123 });
+  });
+
+  it('debería obtener valores de tramitesAsociados si hay componentes', () => {
+    const mockTramiteComponent = { acuseTablaDatos: [{ tramite: 1 }, { tramite: 2 }] };
+    component.tramitesAsociadosComponents = {
+      length: 1,
+      toArray: () => [mockTramiteComponent]
+    } as any;
+    const resultado = component.obtenerValoresFormulario();
+    expect(resultado.tramitesAsociados?.length).toBe(2);
+    expect(resultado.tramitesAsociados?.[0]).toEqual({ tramite: 1 });
+    expect(resultado.tramitesAsociados?.[1]).toEqual({ tramite: 2 });
+  });
+
+  it('debería retornar objeto vacío si no hay nada en obtenerValoresFormulario', () => {
     component.solicitante = undefined as any;
     component.datosSolicitudComponents = { length: 0, toArray: () => [] } as any;
     component.pagoDeDerechosComponents = { length: 0, toArray: () => [] } as any;
     component.tramitesAsociadosComponents = { length: 0, toArray: () => [] } as any;
-    const result = component.obtenerValoresFormulario();
-    expect(result.solicitante).toBeUndefined();
-    expect(result.datosSolicitud).toEqual([]);
-    expect(result.pagoDeDerechos).toEqual([]);
-    expect(result.tramitesAsociados).toEqual([]);
-  });
-
-  it('should clean up subscriptions on ngOnDestroy', () => {
-    const nextSpy = jest.spyOn(component['destroyNotifier$'], 'next');
-    const completeSpy = jest.spyOn(component['destroyNotifier$'], 'complete');
-    component.ngOnDestroy();
-    expect(nextSpy).toHaveBeenCalled();
-    expect(completeSpy).toHaveBeenCalled();
+    const resultado = component.obtenerValoresFormulario();
+    expect(resultado.solicitante).toBeUndefined();
+    expect(resultado.datosSolicitud).toEqual([]);
+    expect(resultado.pagoDeDerechos).toEqual([]);
+    expect(resultado.tramitesAsociados).toEqual([]);
   });
 });
