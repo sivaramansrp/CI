@@ -2,7 +2,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, FormControl } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { Observable, of as observableOf, throwError } from 'rxjs';
 
@@ -210,27 +210,29 @@ describe('SolicitudComponent', () => {
     expect(component.avisoService.getFraccionReglaCatalogo).toHaveBeenCalled();
   });
 
-  it('should run #fraccionArancelariaSeleccion()', async () => {
-    component.FormSolicitud = {
-      get: jest.fn().mockReturnValue(new FormControl('')),
-      disable: jest.fn(),
-      enable: jest.fn(),
-    } as any;
-    component.FormSolicitud.get = jest.fn().mockReturnValue({
-      value: {}
-    });
-    component.FormSolicitud.disable = jest.fn();
-    component.FormSolicitud.enable = jest.fn();
-    component.tramite32502Store = component.tramite32502Store || {};
-    component.tramite32502Store.setCveFraccionArancelaria = jest.fn();
-    component.fraccionArancelariaSeleccion();
-    expect(component.FormSolicitud.get).toHaveBeenCalled();
-    expect(component.FormSolicitud.disable).toHaveBeenCalled();
-    expect(component.FormSolicitud.enable).toHaveBeenCalled();
-    expect(component.tramite32502Store.setCveFraccionArancelaria).toHaveBeenCalled();
-  });
+ it('should call disable when esFormularioSoloLectura is true', () => {
+  component.esFormularioSoloLectura = true;
+
+  component.FormSolicitud = {
+    get: jest.fn().mockReturnValue({ value: '123' }),
+    disable: jest.fn(),
+    enable: jest.fn(),
+  } as any;
+
+  component.tramite32502Store = {
+    setCveFraccionArancelaria: jest.fn()
+  } as any;
+
+  component.fraccionArancelariaSeleccion();
+
+  expect(component.FormSolicitud.get).toHaveBeenCalledWith('fraccionArancelaria');
+  expect(component.FormSolicitud.disable).toHaveBeenCalled();
+  expect(component.FormSolicitud.enable).not.toHaveBeenCalled();
+  expect(component.tramite32502Store.setCveFraccionArancelaria).toHaveBeenCalledWith('123');
+});
 
   it('should run #fraccionReglaSeleccion()', async () => {
+    jest.spyOn(Tramite32502Store, 'setFraccionRegla').mockImplementation(() => {});
     component.FormSolicitud = component.FormSolicitud || {};
     component.FormSolicitud.get = jest.fn().mockReturnValue({
       value: {}
