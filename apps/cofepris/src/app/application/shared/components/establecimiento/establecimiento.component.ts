@@ -31,7 +31,7 @@ import {
 
 import { Modal } from 'bootstrap';
 
-import { map, Subject, takeUntil } from 'rxjs';
+import { Subject,map, takeUntil } from 'rxjs';
 
 import {
   Catalogo,
@@ -45,6 +45,7 @@ import {
 } from '@libs/shared/data-access-user/src';
 
 import { CROSLISTA_DE_PAISES } from '../../constantes/datos-solicitud.enum';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 
 import { DatosDeLaProductoModel } from '../../models/datos-de-la-solicitud.model';
 
@@ -60,7 +61,6 @@ import { DatosDelSolicituteSeccionStateStore } from '../../estados/stores/datos-
 import { DatosDelSolicituteSeccionQuery } from '../../estados/queries/datos-del-solicitute-seccion.query';
 
 import { DATOS_DE_LA_PRODUCTO_MODEL } from '../../constantes/aviso-de-funcionamiento.enum';
-import { ConsultaioQuery } from '@ng-mf/data-access-user';
 /**
  * Componente `EstablecimientoComponent`
  * Componente que gestiona los datos del establecimiento.
@@ -267,7 +267,12 @@ export class EstablecimientoComponent implements OnInit, OnDestroy, AfterViewIni
       almacenamientoEnvasePrimario: [''],
       presentacionaFrmaceutica: ['', Validators.required],
     });
-this.inicializarEstadoFormulario();
+    this.estadoActualizacion();
+    this.inicializarEstadoFormulario();
+    this.establecimientoService.getDatosDelProducto().pipe(takeUntil(this.destroy$))
+      .subscribe((response: DatosDeLaProductoModel[]) => {
+        this.establecimientoData= response;
+     });
   }
 
     /**
@@ -277,9 +282,7 @@ this.inicializarEstadoFormulario();
     inicializarEstadoFormulario(): void {
       if (this.esFormularioSoloLectura) {
         this.guardarDatosFormulario();
-      } else {
-        this.estadoActualizacion();
-      }
+      } 
     }
 
     /**
@@ -287,7 +290,6 @@ this.inicializarEstadoFormulario();
      * Si no está en modo solo lectura, habilita el formulario.
      */
     guardarDatosFormulario(): void {
-      this.estadoActualizacion();
       if (this.esFormularioSoloLectura) {
         this.datosMercanciaForm?.disable();
       } else {

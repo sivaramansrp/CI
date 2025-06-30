@@ -4,24 +4,18 @@
  * Permite inicializar formularios, obtener datos de catálogos y manejar el estado del formulario.
  */
 
-import { CommonModule } from '@angular/common';
-
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ConsultaioQuery, ModeloDeFormaDinamica } from '@ng-mf/data-access-user';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { ModeloDeFormaDinamica } from '@ng-mf/data-access-user';
-
-import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
-
 import { Subject, takeUntil } from 'rxjs';
-
+import { Tramite630303State, Tramite630303Store } from '../../estados/tramite630303.store';
+import { CommonModule } from '@angular/common';
 import { DatosRetornoAutorizacionComponent } from '../datos-retorno-autorizacion/datos-retorno-autorizacion.component';
 import { DatosRetornoProrrogaComponent } from '../datos-retorno-prorroga/datos-retorno-prorroga.component';
-
 import { FORMULARIO_DATOS_SOLICITUD } from '../../enum/retorno-importacion-temporal.enum';
+import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
 import { RetornoImportacionTemporalService } from '../../services/retorno-importacion-temporal.service';
 import { Tramite630303Query } from '../../estados/tramite630303.query';
-
-import { Tramite630303State, Tramite630303Store } from '../../estados/tramite630303.store';
 
 /**
  * Componente que gestiona los datos de la solicitud para el trámite 630303.
@@ -39,6 +33,15 @@ import { Tramite630303State, Tramite630303Store } from '../../estados/tramite630
   styleUrl: './datos-de-la-solicitud.component.scss',
 })
 export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
+
+  /**
+   * Indica si el formulario debe estar en modo de solo lectura.
+   * Cuando es true, todos los campos del formulario se deshabilitan para prevenir modificaciones.
+   * El valor se obtiene del estado de consulta y se aplica automáticamente al formulario.
+   * @type {boolean}
+   * @memberof DatosDeLaSolicitudComponent
+   */
+  esSoloLectura!: boolean;
 
   /**
    * Indica si se deben mostrar los datos de prórroga.
@@ -65,27 +68,51 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   estadoSeleccionado!: Tramite630303State;
 
+   /**
+   * Estado de la solicitud actual.
+   * {Tramite630303State}
+   */
+  public solicitudState!: Tramite630303State;
+
   /**
    * Constructor del componente.
+   * Inicializa las dependencias necesarias y crea el formulario reactivo base.
    * 
-   * @param fb Constructor de formularios reactivos.
-   * @param retornoImportacionTemporalService Servicio para obtener datos de catálogos.
-   * @param tramite630303Store Store para actualizar el estado del trámite.
-   * @param tramite630303Query Query para observar el estado del trámite.
+   * @param formBuilder - Constructor de formularios reactivos de Angular para crear y manejar formularios.
+   * @param retornoImportacionTemporalService - Servicio para obtener datos de catálogos relacionados con importación temporal.
+   * @param tramite630303Store - Store para actualizar y mantener el estado del trámite 630303.
+   * @param tramite630303Query - Query para observar y consultar el estado del trámite 630303.
+   * @param consultaioQuery - Query para obtener el estado de consulta y determinar el modo de solo lectura.
+   * @memberof DatosDeLaSolicitudComponent
    */
   constructor(
-    private fb: FormBuilder,
+    private formBuilder: FormBuilder,
     private retornoImportacionTemporalService: RetornoImportacionTemporalService,
     private tramite630303Store: Tramite630303Store,
-    private tramite630303Query: Tramite630303Query
-  ) { }
+    private tramite630303Query: Tramite630303Query,
+    private consultaioQuery: ConsultaioQuery
+  ) {
+    this.datosImportacionTemporalFormulario = this.formBuilder.group({});
+   }
+
+   /**
+   * Guarda los datos del formulario y ajusta el estado de solo lectura.
+   * {void}
+   */
+  guardarDatosFormulario(): void {
+    if (this.esSoloLectura) {
+      this.datosImportacionTemporalFormulario.disable();
+    } else {
+      this.datosImportacionTemporalFormulario.enable();
+    }
+  }
 
   /**
    * Ciclo de vida: Inicializa el formulario y carga datos de catálogos al iniciar el componente.
    */
   ngOnInit(): void {
     this.getValorStore();
-    this.inizializarFormulario();
+    this.obtenerEstadoValor();
     this.getAduanaDeIngreso();
     this.getSeccionAduanera();
     this.getProrroga();
@@ -93,11 +120,26 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Inicializa el formulario reactivo vacío (campos dinámicos se agregan aparte).
+   * Obtiene y observa el estado de consulta para determinar el modo de solo lectura.
+   * Se suscribe al observable del estado de consulta y actualiza la propiedad esSoloLectura
+   * según el valor de la propiedad readonly del estado. Automáticamente aplica los cambios
+   * al formulario mediante el método guardarDatosFormulario.
+   * 
+   * @description Este método establece la reactividad del componente al estado de consulta,
+   * permitiendo que el formulario se adapte dinámicamente entre modo edición y solo lectura.
+   * @returns {void}
+   * @memberof DatosDeLaSolicitudComponent
+   * @private
    */
-  inizializarFormulario(): void {
-    this.datosImportacionTemporalFormulario = this.fb.group({});
-  }
+ obtenerEstadoValor(): void {
+  this.consultaioQuery.selectConsultaioState$
+    .pipe(takeUntil(this.destroyed$))
+    .subscribe((estadoConsulta) => {
+      this.esSoloLectura = estadoConsulta.readonly;
+      this.guardarDatosFormulario();
+    });
+}
+
 
   /**
    * Obtiene las opciones de Aduanas de Ingreso y las asigna al formulario dinámico.

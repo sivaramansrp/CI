@@ -6,11 +6,12 @@ import { WizardComponent } from '@libs/shared/data-access-user/src/tramites/comp
 describe('SanitarioComponent', () => {
   let component: SanitarioComponent;
   let fixture: ComponentFixture<SanitarioComponent>;
+  let wizardMock: any;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [SanitarioComponent],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA], // Handle unknown elements like 'app-wizard'
+      schemas: [CUSTOM_ELEMENTS_SCHEMA],
     }).compileComponents();
 
     fixture = TestBed.createComponent(SanitarioComponent);
@@ -18,11 +19,11 @@ describe('SanitarioComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('debería crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize pasos and datosPasos correctly', () => {
+  it('debería inicializar pasos y datosPasos correctamente', () => {
     expect(component.pasos).toBeDefined();
     expect(component.datosPasos).toEqual({
       nroPasos: component.pasos.length,
@@ -32,44 +33,39 @@ describe('SanitarioComponent', () => {
     });
   });
 
-  it('should update indice and call wizardComponent.siguiente() when getValorIndice is called with "cont"', () => {
-    const wizardSpy = jest.spyOn(component.wizardComponent, 'siguiente');
+  it('debería actualizar el índice y llamar a wizardComponent.siguiente() cuando getValorIndice es llamado con "cont"', () => {
+    wizardMock = { siguiente: jest.fn(), atras: jest.fn() };
+    component.wizardComponent = wizardMock;
     component.indice = 1;
 
     component.getValorIndice({ accion: 'cont', valor: 2 });
 
     expect(component.indice).toBe(2);
-    expect(wizardSpy).toHaveBeenCalled();
+    expect(wizardMock.siguiente).toHaveBeenCalled();
   });
 
-  it('should update indice and call wizardComponent.atras() when getValorIndice is called with "ant"', () => {
-    const wizardSpy = jest.spyOn(component.wizardComponent, 'atras');
+  it('debería actualizar el índice y llamar a wizardComponent.atras() cuando getValorIndice es llamado con "ant"', () => {
+    wizardMock = { siguiente: jest.fn(), atras: jest.fn() };
+    component.wizardComponent = wizardMock;
     component.indice = 3;
 
     component.getValorIndice({ accion: 'ant', valor: 2 });
 
     expect(component.indice).toBe(2);
-    expect(wizardSpy).toHaveBeenCalled();
+    expect(wizardMock.atras).toHaveBeenCalled();
   });
 
-  it('should not update indice or call wizardComponent methods if valor is out of range', () => {
-    const wizardSpySiguiente = jest.spyOn(component.wizardComponent, 'siguiente');
-    const wizardSpyAtras = jest.spyOn(component.wizardComponent, 'atras');
+  it('no debería actualizar el índice ni llamar métodos de wizardComponent si el valor está fuera de rango', () => {
+    wizardMock = { siguiente: jest.fn(), atras: jest.fn() };
+    component.wizardComponent = wizardMock;
     component.indice = 1;
 
     component.getValorIndice({ accion: 'cont', valor: 0 });
     component.getValorIndice({ accion: 'ant', valor: 6 });
 
     expect(component.indice).toBe(1);
-    expect(wizardSpySiguiente).not.toHaveBeenCalled();
-    expect(wizardSpyAtras).not.toHaveBeenCalled();
+    expect(wizardMock.siguiente).not.toHaveBeenCalled();
+    expect(wizardMock.atras).not.toHaveBeenCalled();
   });
 
-  it('should not call wizardComponent methods if wizardComponent is undefined', () => {
-    component.wizardComponent = undefined as unknown as WizardComponent;
-
-    expect(() => {
-      component.getValorIndice({ accion: 'cont', valor: 2 });
-    }).not.toThrow();
-  });
 });

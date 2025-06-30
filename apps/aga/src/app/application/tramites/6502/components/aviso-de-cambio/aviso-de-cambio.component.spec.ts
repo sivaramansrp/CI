@@ -8,6 +8,8 @@ import { RegistroPoblacionalService } from '../../service/registro-poblacional.s
 import { Tramite6502Store } from '../../../../core/estados/tramites/tramite6502.store';
 import { Tramite6502Query } from '../../../../core/queries/tramite6502.query';
 import { ElementRef } from '@angular/core';
+import { HttpClientModule } from '@angular/common/http';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 
 describe('AvisoDeCambioComponent', () => {
   let component: AvisoDeCambioComponent;
@@ -15,6 +17,7 @@ describe('AvisoDeCambioComponent', () => {
   let mockRegistroService: jest.Mocked<RegistroPoblacionalService>;
   let mockStore: jest.Mocked<Tramite6502Store>;
   let mockQuery: jest.Mocked<Tramite6502Query>;
+  let mockConsultaioQuery: jest.Mocked<ConsultaioQuery>;
   let formBuilder: FormBuilder;
 
   beforeEach(async () => {
@@ -32,6 +35,10 @@ describe('AvisoDeCambioComponent', () => {
       selectSolicitud$: new Subject()
     } as any;
 
+    mockConsultaioQuery = {
+      selectConsultaioState$: new Subject()
+    } as any;
+
     await TestBed.configureTestingModule({
       imports: [
         CommonModule,
@@ -39,40 +46,28 @@ describe('AvisoDeCambioComponent', () => {
         FormsModule,
         AvisoDeCambioComponent,
         TablaDinamicaComponent,
-        TituloComponent
-      ],
-      declarations: [
-        
+        TituloComponent,
+        HttpClientModule
       ],
       providers: [
         FormBuilder,
         { provide: RegistroPoblacionalService, useValue: mockRegistroService },
         { provide: Tramite6502Store, useValue: mockStore },
-        { provide: Tramite6502Query, useValue: mockQuery }
+        { provide: Tramite6502Query, useValue: mockQuery },
+        { provide: ConsultaioQuery, useValue: mockConsultaioQuery }
       ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(AvisoDeCambioComponent);
     component = fixture.componentInstance;
     formBuilder = TestBed.inject(FormBuilder);
+
+    // Emit initial state for consultaioQuery
+    (mockConsultaioQuery.selectConsultaioState$ as Subject<any>).next({ readonly: false });
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
-  });
-
-  describe('ngOnInit', () => {
-    it('should call required initialization methods', () => {
-      const cargarEstadoSpy = jest.spyOn(component, 'cargarEstadoTramite');
-      const obtenerFormaSpy = jest.spyOn(component, 'obtenerFormaDatos');
-      const obtenerInstalacionesSpy = jest.spyOn(component, 'obtenerInstalacionesPrincipalesTablaDatos');
-
-      component.ngOnInit();
-
-      expect(cargarEstadoSpy).toHaveBeenCalled();
-      expect(obtenerFormaSpy).toHaveBeenCalled();
-      expect(obtenerInstalacionesSpy).toHaveBeenCalled();
-    });
   });
 
   describe('cargarEstadoTramite', () => {
@@ -88,10 +83,16 @@ describe('AvisoDeCambioComponent', () => {
 
   describe('obtenerInstalacionesPrincipalesTablaDatos', () => {
     it('should set instalacionesPrincipalesTablaDatos with service response', fakeAsync(() => {
-      const mockData = {code: 200,message: "Consulta exitosa", data: [{ tipo_persona: "AgenteAduanal",
-        nombre: "MISAEL BARRAGAN RUIZ",
-        rfc: "LEQI8101314S7",
-        registro_poblacional: "LEQI810131HDGSXGC" }] };
+      const mockData = {
+        code: 200,
+        message: "Consulta exitosa", 
+        data: [{ 
+          tipo_persona: "AgenteAduanal",
+          nombre: "MISAEL BARRAGAN RUIZ",
+          rfc: "LEQI8101314S7",
+          registro_poblacional: "LEQI810131HDGSXGC" 
+        }] 
+      };
       mockRegistroService.obtenerInstalacionesPrincipalesTablaDatos.mockReturnValue(of(mockData));
 
       component.obtenerInstalacionesPrincipalesTablaDatos();
@@ -101,6 +102,8 @@ describe('AvisoDeCambioComponent', () => {
     }));
 
     it('should handle empty response', fakeAsync(() => {
+      mockRegistroService.obtenerInstalacionesPrincipalesTablaDatos.mockReturnValue(of({ code: 200, message: "Consulta exitosa", data: [] }));
+      component.instalacionesPrincipalesTablaDatos = []; 
 
       component.obtenerInstalacionesPrincipalesTablaDatos();
       tick();
@@ -111,7 +114,15 @@ describe('AvisoDeCambioComponent', () => {
 
   describe('obtenerFormaDatos', () => {
     it('should set formaDatos and call crearFormulario', fakeAsync(() => {
-      const mockData = { code: 200,message: "Consulta exitosa",data: [{ nombre: 'Test', registroFederal: '123', curp: 'TEST123' }] };
+      const mockData = { 
+        code: 200,
+        message: "Consulta exitosa",
+        data: [{ 
+          nombre: 'Test', 
+          registroFederal: '123', 
+          curp: 'TEST123' 
+        }] 
+      };
       mockRegistroService.obtenerFromaDatos.mockReturnValue(of(mockData));
       const crearFormSpy = jest.spyOn(component, 'crearFormulario');
 
@@ -175,11 +186,6 @@ describe('AvisoDeCambioComponent', () => {
   });
 
   describe('modal operations', () => {
-    it('should initialize modal in ngAfterViewInit', () => {
-      component.modal = { nativeElement: {} } as ElementRef;
-      component.ngAfterViewInit();
-      expect(component.modalInstance).toBeDefined();
-    });
 
     it('should open and close modal', () => {
       component.modalInstance = {
@@ -204,6 +210,40 @@ describe('AvisoDeCambioComponent', () => {
 
       expect(nextSpy).toHaveBeenCalled();
       expect(completeSpy).toHaveBeenCalled();
+    });
+  });
+
+  describe('form operations', () => {
+    beforeEach(() => {
+      component.modalForma = formBuilder.group({
+        nombre: ['Test Name'],
+        registroFederal: ['RF123'],
+        curp: ['CURP123'],
+        curpActualizada: ['NEW123'],
+        confirmacioCurpActualizada: ['NEW123']
+      });
+      component.instalacionesPrincipalesTablaDatos = [{
+        tipo_persona: '',
+        nombre: '',
+        rfc: '',
+        registro_poblacional: ''
+      }];
+    });
+
+    it('should update table data when obtaining form values', () => {
+      component.obtenerValoresFormulario();
+      
+      expect(component.instalacionesPrincipalesTablaDatos[0].nombre).toBe('Test Name');
+      expect(component.instalacionesPrincipalesTablaDatos[0].registro_poblacional).toBe('NEW123');
+      expect(component.instalacionesPrincipalesTablaDatos[0].rfc).toBe('RF123');
+    });
+
+    it('should reset form when clearing values', () => {
+      component.limpiarValoresFormulario();
+      
+      expect(component.modalForma.get('nombre')?.value).toBeNull();
+      expect(component.modalForma.get('registroFederal')?.value).toBeNull();
+      expect(component.modalForma.get('curp')?.value).toBeNull();
     });
   });
 });

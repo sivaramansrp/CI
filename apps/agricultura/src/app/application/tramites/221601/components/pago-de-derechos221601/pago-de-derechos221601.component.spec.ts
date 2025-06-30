@@ -1,3 +1,17 @@
+jest.mock('@libs/shared/theme/assets/json/221601/zoosanitario.json', () => ({
+  __esModule: true,
+  default: {
+    banco: [
+      { id: 1, descripcion: 'Banco 1' },
+      { id: 2, descripcion: 'Banco 2' }
+    ],
+    formData: {
+      claves: '454000554',
+      dependencia: '0001840470CAIM',
+      importe: '1281'
+    }
+  }
+}), { virtual: true });
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormBuilder, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { of } from 'rxjs';
@@ -58,6 +72,7 @@ describe('PagoDeDerechos221601Component', () => {
   let tramite221601Query: Tramite221601Query;
 
   const tramite221601StoreMock = {
+     update: jest.fn(),
     setClaves: jest.fn(),
     setDependencia: jest.fn(),
     setBanco: jest.fn(),

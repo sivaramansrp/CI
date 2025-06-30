@@ -186,7 +186,7 @@
     "tramite": 80202,
     "linkDashboard": "/se/immex-ampliacion-sensibles/solicitud",
     "linkDepartment": "/pago/immex-ampliacion-sensibles/solicitud",
-    "department": "agace"
+    "department": "se"
   },
   {
     "id": 28,
@@ -352,8 +352,8 @@
   {
     "id": 51,
     "tramite": 120201,
-    "linkDashboard": "/se/expedicion-certificados-asignacion-directa-fisica/fisica",
-    "linkDepartment": "/pago/expedicion-certificados-asignacion-directa-fisica/fisica",
+    "linkDashboard": "/se/cupos/persona-fisica",
+    "linkDepartment": "/pago/cupos/persona-fisica",
     "department": "se"
   },
   {
@@ -437,7 +437,7 @@
     "id": 63,
     "tramite": 130120,
     "linkDashboard": "/se/permiso-importacion/intro-permiso",
-    "linkDepartment": "/se/permiso-importacion/intro-permiso",
+    "linkDepartment": "/pago/permiso-importacion/intro-permiso",
     "department": "se"
   },
   {
@@ -583,8 +583,8 @@
   {
     "id": 84,
     "tramite": 231001,
-    "linkDashboard": "/aviso-de-materiales/datos",
-    "linkDepartment": "/aviso-de-materiales/datos",
+    "linkDashboard": "/semarnat/aviso-de-materiales/datos",
+    "linkDepartment": "/pago/aviso-de-materiales/datos",
     "department": "semarnat"
   },
   {
@@ -738,7 +738,7 @@
     "id": 106,
     "tramite": 140104,
     "linkDashboard": "/se/cancelacion-de-certificados-de-cupo/solicitante",
-    "linkDepartment": "/se/cancelacion-de-certificados-de-cupo/solicitante",
+    "linkDepartment": "/pago/cancelacion-de-certificados-de-cupo/solicitante",
     "department": "se"
   },
   {
@@ -835,8 +835,8 @@
   {
     "id": 120,
     "tramite": 120202,
-    "linkDashboard": "/se/expedicion-certificados-asignacion-directa-moral/moral",
-    "linkDepartment": "/pago/expedicion-certificados-asignacion-directa-moral/moral",
+    "linkDashboard": "/se/expedicion-certificado-asignacion/persona-moral",
+    "linkDepartment": "/pago/expedicion-certificado-asignacion/persona-moral",
     "department": "se"
   },
   {
@@ -3117,7 +3117,7 @@
   {
     "id": 448,
     "tramite": 32516,
-    "linkDashboard": "/agace/acta-de-hechos/solicituds",
+    "linkDashboard": "/agace/acta-de-hechos/solicitud",
     "linkDepartment": "/pago/acta-de-hechos/solicitud",
     "department": "agace"
   },

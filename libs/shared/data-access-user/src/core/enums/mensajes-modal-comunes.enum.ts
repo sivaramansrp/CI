@@ -30,6 +30,11 @@ export const TEXTO_ACEPTAR = 'Aceptar';
 export const TEXTO_CANCELAR = 'Cancelar';
 
 /**
+ * @description Texto 'Cancelar' para el botón de cancelación en el modal de aviso
+ */
+export const TEXTO_CERRAR = 'Cerrar';
+
+/**
  * @description Mensaje de alerta al intentar eliminar un elemento de la tabla
  */
 export const MSG_ALERTA_ELIMINAR_ELEMENTO =
@@ -45,3 +50,13 @@ export const MSG_SELECCIONA_REGISTRO = 'Selecciona un registro.';
  * @description Mensaje de modificación exitosa de un elemento en la tabla.
  */
 export const MSG_MODIFICA_ELEMENTO = 'Registro modificado correctamente.';
+
+/**
+ * @description Sin titulo para el modal.
+ */
+export const SIN_TITULO_MODAL = '';
+
+/**
+ * @description Campo vacío.
+ */
+export const CAMPO_VACIO = '';

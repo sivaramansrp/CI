@@ -1,9 +1,11 @@
 import {
+  BodyValidarRFCAutorizacionDDEX,
   BodyValidarRFCAutorizacionLDA,
+  ValidacionDDEXAutorizacionResponse,
   ValidacionLDAAutorizacionResponse,
 } from '../../models/5701/validaciones-depacho.model';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Observable, catchError, throwError } from 'rxjs';
+import { Observable, catchError, map, throwError } from 'rxjs';
 import { API_POST_VALIDA_LDA } from '../../../constantes/5701/api-constants';
 import { ENVIRONMENT } from '@libs/shared/data-access-user/src';
 import { Injectable } from '@angular/core';
@@ -41,5 +43,28 @@ export class ValidaDespachoService {
           return throwError(() => new Error(MENSAJE_ERROR));
         })
       );
+  }
+
+  /**
+   * @description
+   * Método para validar si el RFC está autorizado para operar en DDEX.
+   * @param bodyValidarRFCAutorizacionLda Objeto que contiene el RFC a validar.
+   * @return Observable<ValidacionDDEXAutorizacionResponse> Respuesta del servicio con la validación del RFC.
+   */
+  validaRFCAutorizacionDDEX(
+    bodyValidarRFCAutorizacionDdex: BodyValidarRFCAutorizacionDDEX
+  ): Observable<ValidacionDDEXAutorizacionResponse> {
+    const ENDPOINT = 'assets/json/5701/validar-despacho-ddx.json';
+    return this.http.get<ValidacionDDEXAutorizacionResponse>(ENDPOINT).pipe(
+      map((response) => {
+        return response;
+      }),
+      catchError(() => {
+        const ERROR = new Error(
+          `Ocurrió un error al devolver la información ${ENDPOINT} `
+        );
+        return throwError(() => ERROR);
+      })
+    );
   }
 }

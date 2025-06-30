@@ -24,7 +24,7 @@ import {
 } from '@angular/forms';
 import { Modal } from 'bootstrap';
 
-import { map, Subject, takeUntil } from 'rxjs';
+import { Subject,map, takeUntil } from 'rxjs';
 
 import {
   ConfiguracionColumna,
@@ -204,6 +204,14 @@ export class PropietarioComponent implements AfterViewInit, OnInit, OnDestroy {
       tercerosSegundoApellido: [''],
       tercerosPrimerApellido: ['', Validators.required],
     });
+
+     this.establecimientoService.getPropietario()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((response: PropietarioModel[]) => {
+        this.propietarioData= response;
+     });
+
+     this.inicializarFormulario();
   }
 
   /**
@@ -212,8 +220,6 @@ export class PropietarioComponent implements AfterViewInit, OnInit, OnDestroy {
   inicializarEstadoFormulario(): void {
     if (this.esFormularioSoloLectura) {
       this.guardarDatosFormulario();
-    } else{
-       this.inicializarFormulario();
     }
   }
 
@@ -221,7 +227,6 @@ export class PropietarioComponent implements AfterViewInit, OnInit, OnDestroy {
      * Guarda los datos del formulario y ajusta el estado de solo lectura.
      */
     guardarDatosFormulario(): void {
-      this.inicializarFormulario();
       if (this.esFormularioSoloLectura) {
         this.propietarioradioForm?.disable();
       } else {

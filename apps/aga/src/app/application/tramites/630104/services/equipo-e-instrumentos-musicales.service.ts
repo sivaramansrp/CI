@@ -1,3 +1,4 @@
+import { Tramite630104State, Tramite630104Store } from '../estados/tramites/tramite630104.store';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
@@ -17,7 +18,7 @@ export class EquipoEInstrumentosMusicalesService {
    * 
    * @param {HttpClient} http Servicio HttpClient para realizar solicitudes HTTP.
    */
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private tramite630104Store:Tramite630104Store) {
     //
   }
 
@@ -84,4 +85,21 @@ export class EquipoEInstrumentosMusicalesService {
   getPais(): Observable<Catalogo[]> {
     return this.http.get<Catalogo[]>('/assets/json/630104/pais.json');
   }
+
+  /**
+  * Actualiza el estado del formulario en el store.
+  * @param DATOS Estado actualizado del trámite.
+  */
+  actualizarEstadoFormulario(DATOS: Tramite630104State): void {
+    this.tramite630104Store.actualizarEstado(DATOS);
+  }
+
+  /**
+  * Obtiene los datos de la solicitud.
+  * @returns Observable con los datos de la solicitud.
+  */
+  getDatosDeLaSolicitud(): Observable<Tramite630104State> {
+    return this.http.get<Tramite630104State>('assets/json/630104/datos-de-la-solicitud.json');
+  }
+
 }

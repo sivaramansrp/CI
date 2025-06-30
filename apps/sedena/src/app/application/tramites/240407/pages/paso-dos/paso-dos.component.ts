@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component,EventEmitter, Output} from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 
@@ -22,6 +22,27 @@ import { TEXTOS_REQUISITOS } from '../../constants/solicitud-prorroga-aviso-impo
   styleUrl: './paso-dos.component.scss',
 })
 export class PasoDosComponent implements OnInit, OnDestroy {
+/**
+ * Evento de salida que se emite cuando el usuario solicita reenviar la información o reiniciar el proceso relacionado.
+ *
+ * Puede ser utilizado por el componente padre para ejecutar acciones como reinicializar formularios,
+ * volver a consultar datos o repetir un flujo de validación.
+ *
+ * @type {EventEmitter<void>}
+ * @memberof NombreDelComponente
+ */
+
+   @Output() reenviarEvento = new EventEmitter<void>();
+   /**
+ * Evento de salida que se emite cuando el usuario desea regresar a la sección de carga de documentos.
+ *
+ * Permite al componente padre detectar esta intención y redirigir al usuario
+ * al paso correspondiente para cargar archivos o revisar documentos previamente enviados.
+ *
+ * @type {EventEmitter<void>}
+ * @memberof NombreDelComponente
+ */
+ @Output() regresarSeccionCargarDocumentoEvento = new EventEmitter<void>()
   /**
    * property TEXTOS
    * description Contains static text literals used in this step of the form.

@@ -10,17 +10,20 @@ import {
   FECHA_DE_PAGO,
   PagoDerechosFormState,
 } from '../../models/terceros-relacionados.model';
+import { PagoDerechosState,PagoDerechosStore } from '../../estados/stores/pago-de-derechos.store';
+import { Subject,map } from 'rxjs';
 import { BANCO } from '../../constantes/datos-solicitud.enum';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { InputFecha } from '@ng-mf/data-access-user';
 import { InputFechaComponent } from '@ng-mf/data-access-user';
 import { OnInit } from '@angular/core';
+import { PagoDerechosQuery } from '../../estados/queries/pago-derechos.query';
 import { ReactiveFormsModule } from '@angular/forms';
-import { Subject } from 'rxjs';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { Validators } from '@angular/forms';
 import { takeUntil } from 'rxjs';
@@ -63,7 +66,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   /**
    * @property {boolean} formularioDeshabilitado - Indica si el formulario está deshabilitado.
    */
-  @Input() formularioDeshabilitado: boolean = false;
+   @Input() public formularioDeshabilitado: boolean = false;
 
   /**
    * @property {EventEmitter<PagoDerechosFormState>} updatePagoDerechos
@@ -118,7 +121,17 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    */
   public bancoRequerido = true;
 
+  /**
+   * Indica si la fecha ingresada es válida (no es futura).
+   * @type {boolean}
+   */
   public esFechaValida: boolean = true;
+
+  /**
+   * Estado actual de la solicitud, obtenido del store.
+   * @type {PagoDerechosState}
+   */
+  public solicitudState!: PagoDerechosState;
 
   /**
    * @constructor
@@ -130,10 +143,23 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    */
   constructor(
     private fb: FormBuilder,
-    private datosSolicitudService: DatosSolicitudService
+    private datosSolicitudService: DatosSolicitudService,
+    private pagoDerechosStore: PagoDerechosStore,
+    private pagoDerechosQuery: PagoDerechosQuery,
+      private consultaioQuery: ConsultaioQuery
   ) {
     this.cargarDatos();
     this.getBancoDatos();
+
+        // Inicializa el formulario.
+    this.consultaioQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.unsubscribe$),
+      map((seccionState)=>{
+        this.formularioDeshabilitado = seccionState.readonly;
+      })
+    )
+    .subscribe()
   }
 
   /**
@@ -143,20 +169,28 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * con esos valores y suscribe a cambios para mantener el estado sincronizado.
    */
   ngOnInit(): void {
+     this.pagoDerechosQuery.selectSolicitud$
+            .pipe(
+              takeUntil(this.unsubscribe$),
+              map((seccionState) => {
+                this.solicitudState = seccionState;
+              })
+            )
+            .subscribe();
     this.mostrarBanco = BANCO.includes(this.idProcedimiento) ? true : false;
     this.pagoDerechosForm = this.fb.group({
       claveReferencia: [
-        this.pagoDerechoFormState?.claveReferencia || '',
+        this.solicitudState?.claveReferencia || '',
         [Validators.required, Validators.maxLength(9)],
       ],
       cadenaDependencia: [
-        this.pagoDerechoFormState?.cadenaDependencia || '',
+        this.solicitudState?.cadenaDependencia || '',
         [Validators.required, Validators.maxLength(14)],
       ],
-      estado: [this.pagoDerechoFormState?.estado || '', Validators.required],
-      banco: [this.pagoDerechoFormState?.banco || '', Validators.required],
+      estado: [this.solicitudState?.estado || '', Validators.required],
+      banco: [this.solicitudState?.banco || '', Validators.required],
       llavePago: [
-        this.pagoDerechoFormState?.llavePago || '',
+        this.solicitudState?.llavePago || '',
         [
           Validators.required,
            Validators.pattern(REGEX_LLAVE_DE_PAGO_DE_DERECHO),
@@ -165,11 +199,11 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
         ],
       ],
       fechaPago: [
-        this.pagoDerechoFormState?.fechaPago || '',
+        this.solicitudState?.fechaPago || '',
         Validators.required,
       ],
       importePago: [
-        this.pagoDerechoFormState?.importePago || '',
+        this.solicitudState?.importePago || '',
         [
           Validators.required,
           Validators.pattern(REGEX_PATRON_DECIMAL_2),
@@ -215,7 +249,8 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
       .subscribe((data) => {
         this.bancoDatos = data;
         this.pagoDerechosForm.patchValue({
-          banco: this.pagoDerechoFormState?.banco || '',
+          banco: this.solicitudState?.banco || '',
+          estado: this.solicitudState?.estado || '',
         });
       });
   }
@@ -236,6 +271,11 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    */
   onFechaCambiada(fecha: string): void {
     this.pagoDerechosForm.patchValue({ fechaPago: fecha });
+    this.setValoresStore(
+      this.pagoDerechosForm,
+      'fechaPago',
+      'setFechaPago'
+    );
   }
 
   /**
@@ -300,6 +340,23 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     FECHA_ENTRADA.setHours(0, 0, 0, 0);
     this.esFechaValida = FECHA_ENTRADA <= HOY;
   }
+
+    /**
+     * Método para actualizar el banco seleccionado.
+     * @param e {Catalogo} Banco seleccionado.
+     */
+    setValoresStore(
+      form: FormGroup,
+      campo: string,
+      metodoNombre: keyof PagoDerechosStore
+    ): void {
+      const VALOR = form.get(campo)?.value;
+      (
+        this.pagoDerechosStore[metodoNombre] as (
+          value: string | number | null
+        ) => void
+      )(VALOR);
+    }
 
   /**
    * Método que se ejecuta al destruir el componente.

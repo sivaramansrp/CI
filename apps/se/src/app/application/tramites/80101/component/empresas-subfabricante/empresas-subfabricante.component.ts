@@ -22,6 +22,16 @@ import { Tramite80101Query } from '../../estados/tramite80101.query';
 import { Tramite80101Store } from '../../estados/tramite80101.store';
 import { takeUntil } from 'rxjs';
 
+/**
+ * Componente Angular para gestionar las empresas subfabricantes en el trámite 80101.
+ * Este componente permite la visualización, adición y eliminación de subfabricantes
+ * asociados a un trámite específico, proporcionando una interfaz para interactuar
+ * con los datos de subcontratistas y sus plantas disponibles.
+ *
+ * @remarks
+ * Este componente utiliza formularios reactivos para la gestión de datos y se integra
+ * con servicios para obtener información relacionada con las empresas subfabricantes.
+ */
 @Component({
   selector: 'app-empresas-subfabricante',
   standalone: true,

@@ -1,5 +1,5 @@
 import { AlertComponent, TituloComponent } from "@libs/shared/data-access-user/src";
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { AnexarDocumentosComponent } from '@ng-mf/data-access-user';
 import { CATALOGOS_ID } from '@ng-mf/data-access-user';
@@ -63,6 +63,17 @@ export class PasoDosComponent implements OnInit, OnDestroy {
    * el componente se destruye.
    */
   private destroy$: Subject<void> = new Subject<void>();
+  /**
+   * Propaga al componente <anexar-documentos> el evento para disparar el metodo confirmUpload en <anexar-documentos>.
+   */
+  @Output() reenviarEvento = new EventEmitter<void>();
+  /**
+ * Evento para regresar a la sección de carga de documentos.
+ * 
+ * Este evento se emite cuando se requiere regresar a la sección de carga de documentos.
+ * Es utilizado para notificar a componentes padres sobre esta acción.
+ */
+  @Output() regresarSeccionCargarDocumentoEvento = new EventEmitter<void>();
 
   /**
    * Constructor del componente.

@@ -1,10 +1,21 @@
+import { Component, EventEmitter, Output } from '@angular/core';
 import { AgregarProveedorCustomComponent } from "../../../../shared/components/agregar-proveedor-custom/agregar-proveedor-custom.component";
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
 import { ID_PROCEDIMIENTO } from '../../constantes/exportacion-armas-explosivo.enum';
 import { Proveedor } from '../../../../shared/models/terceros-relacionados.model';
 import { Tramite240121Store } from '../../estados/tramite240121Store.store';
 
+/**
+ * @component AgregarProveedorContenedoraComponent
+ * @description
+ * Componente contenedor que gestiona la adición de proveedores dentro del flujo del trámite 240121.
+ * Interactúa con el store para actualizar los datos y emite un evento para cerrar el componente después de guardar.
+ *
+ * @example
+ * ```html
+ * <app-agregar-proveedor-contenedora (cerrar)="onCerrar()"></app-agregar-proveedor-contenedora>
+ * ```
+ */
 @Component({
   selector: 'app-agregar-proveedor-contenedora',
   standalone: true,
@@ -14,36 +25,38 @@ import { Tramite240121Store } from '../../estados/tramite240121Store.store';
 })
 export class AgregarProveedorContenedoraComponent {
   /**
-   * Identificador del procedimiento.
-   * @property {number} idProcedimiento
+   * Evento emitido para indicar que se debe cerrar el componente.
+   * 
+   * @event cerrar
+   * @type {EventEmitter<void>}
+   * @description Notifica al componente padre que debe cerrarse este contenedor.
    */
+  @Output() cerrar = new EventEmitter<void>();
+
   /**
+   * Identificador único del procedimiento asociado.
+   *
    * @readonly
    * @type {number}
-   * @description Identificador único del procedimiento asociado.
-   * Este valor es constante y se utiliza para referenciar el procedimiento actual.
    */
   public readonly idProcedimiento = ID_PROCEDIMIENTO;
 
   /**
-   * @constructor
-   * @description Constructor que inyecta el store `Tramite260214Store` para gestionar el estado del trámite.
+   * Constructor del componente.
    *
-   * @param tramite260214Store - Store que administra el estado del trámite 260214.
+   * @param tramite240121Store - Instancia del store que gestiona el estado del trámite 240121.
    */
- 
-  constructor(public tramite240121Store: Tramite240121Store) {
-    // Se puede agregar aquí la lógica del constructor si es necesario
-  }
+  constructor(public tramite240121Store: Tramite240121Store) {}
 
   /**
-   * @method updateProveedorTablaDatos
-   * @description Actualiza los datos de la tabla de proveedores en el store del trámite.
+   * Actualiza los datos de la tabla de proveedores en el store del trámite.
+   * Luego emite el evento `cerrar` para indicar que la operación ha concluido.
    *
-   * @param {Proveedor[]} event - Lista de proveedores que se actualizarán en el store.
-   * @returns {void} Este método no retorna ningún valor.
+   * @param {Proveedor[]} event - Lista de proveedores a agregar o actualizar.
+   * @returns {void}
    */
   updateProveedorTablaDatos(event: Proveedor[]): void {
     this.tramite240121Store.updateProveedorTablaDatos(event);
+    this.cerrar.emit();
   }
 }

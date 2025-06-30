@@ -19,7 +19,7 @@ import { MANIFIESTOS_ALERT } from '../../constantes/permiso-importacion-biologic
 
 import { TercerosProcedenciaService } from '../../services/terceros-procedencia.service';
 
-import { map, Subject, takeUntil } from 'rxjs';
+import { Subject,map, takeUntil } from 'rxjs';
 
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 /**
@@ -106,7 +106,11 @@ export class TercerosRelacionadosProcedenciaComponent implements OnInit {
    */
   ngOnInit(): void {
     this.tercerosProcedenciaService.getInformacioDeTabla().pipe(takeUntil(this.destroy$)).subscribe((data) => {
-      this.fabricanteHeaderData = data.columns
+      const API_DATOS = JSON.parse(JSON.stringify(data));
+      this.fabricanteHeaderData = API_DATOS.columns
+    });
+     this.tercerosProcedenciaService.getFabricanteDatos().pipe(takeUntil(this.destroy$)).subscribe((data) => {
+      this.fabricanteRowData = data;
     });
   }
 

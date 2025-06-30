@@ -2,7 +2,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Subject, Subscription } from 'rxjs';
-import { distinctUntilChanged, take, takeUntil } from 'rxjs/operators';
+import { distinctUntilChanged, takeUntil } from 'rxjs/operators';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { Tramite110210Query } from '../../estados/queries/tramite110210.query';
 import { Tramite110210Store } from '../../estados/store/tramite110210.store';

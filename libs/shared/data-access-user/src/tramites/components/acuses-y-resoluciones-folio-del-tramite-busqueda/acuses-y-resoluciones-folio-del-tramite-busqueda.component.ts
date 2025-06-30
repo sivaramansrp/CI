@@ -162,6 +162,11 @@ export class AcusesYResolucionesFolioDelTramiteBusquedaComponent
       orden: 1,
     },
     {
+      encabezado: 'Número de procedimiento',
+      clave: (artículo) => artículo.numeroDeProcedimiento,
+      orden: 0
+    },
+    {
       encabezado: 'Tipo de trámite',
       clave: (artículo) => artículo.tipoDeTramite,
       orden: 2,
@@ -203,7 +208,7 @@ export class AcusesYResolucionesFolioDelTramiteBusquedaComponent
    * Maneja el evento de clic en una fila de la tabla.
    * Navega a la URL del procedimiento.
    */
-  onFilaClic(event: any): void {
+  onFilaClic(event: AcuseYResolucionesFolioTramite): void {
     const ROW_OBJETO = event;
     const PROCEDURE: unknown | number = Number(
       ROW_OBJETO.numeroDeProcedimiento

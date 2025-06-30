@@ -1,29 +1,57 @@
+// Angular Core
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-relacionados/terceros-relacionados.component';
-import { TEXTOS, TIPO_PERSONA_RADIO_OPTIONS } from '../../constants/constantes.enum';
-import { AlertComponent, Notificacion, NotificacionesComponent, Pedimento } from '@libs/shared/data-access-user/src';
-import { TituloComponent } from '@libs/shared/data-access-user/src';
-import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
-import { TablaSeleccion } from '@libs/shared/data-access-user/src';
-import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
-import { Destinatario } from '../../models/destinatario.model';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { Catalogo, CatalogosSelect } from '@ng-mf/data-access-user';
-import { ReplaySubject } from 'rxjs';
+
+// Third-party libraries
 import { map, takeUntil } from 'rxjs/operators';
-import { ReactiveFormsModule } from '@angular/forms';
-import { RegistrarSolicitudMcpService } from '../../services/registrar-solicitud-mcp.service';
-import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { Modal } from 'bootstrap';
-import { Solicitud260702Query } from '../../estados/tramites260702.query';
+import { ReplaySubject } from 'rxjs';
+
+// Shared/Internal Libraries - @libs
+import {
+  AlertComponent,
+  CatalogoSelectComponent,
+  ConsultaioQuery,
+  Notificacion,
+  NotificacionesComponent,
+  Pedimento,
+  TablaDinamicaComponent,
+  TablaSeleccion,
+  TituloComponent,
+} from '@libs/shared/data-access-user/src';
+
+// Shared/Internal Libraries - @ng-mf
+import { Catalogo, CatalogosSelect } from '@ng-mf/data-access-user';
+
+// Components
+import { InputRadioComponent } from '@libs/shared/data-access-user/src';
+import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-relacionados/terceros-relacionados.component';
+
+// Constants
+import {
+  TEXTOS,
+  TIPO_PERSONA_RADIO_OPTIONS,
+} from '../../constants/constantes.enum';
+import { DESTINATARIO_CONFIGURACION_TABLA } from '../../constants/column-config.enum';
+
+// Models
+import { Destinatario } from '../../models/destinatario.model';
+
+// Services
+import { RegistrarSolicitudMcpService } from '../../services/registrar-solicitud-mcp.service';
+
+// State Management
 import {
   Solicitud260702State,
   Solicitud260702Store,
 } from '../../estados/tramites260702.store';
-import{ InputRadioComponent} from '@libs/shared/data-access-user/src';
-import { DESTINATARIO_CONFIGURACION_TABLA } from '../../constants/column-config.enum';
-
+import { Solicitud260702Query } from '../../estados/tramites260702.query';
 
 /**
  * Componente para gestionar los terceros relacionados en el trámite.
@@ -40,7 +68,7 @@ import { DESTINATARIO_CONFIGURACION_TABLA } from '../../constants/column-config.
     ReactiveFormsModule,
     CatalogoSelectComponent,
     NotificacionesComponent,
-    InputRadioComponent
+    InputRadioComponent,
   ],
   templateUrl: './terceros-relacionados.component.html',
   styleUrl: './terceros-relacionados.component.scss',
@@ -59,7 +87,7 @@ export class TercerosrelacionadosComponent implements OnInit, OnDestroy {
   selectedRows: Set<number> = new Set();
 
   /** Fila seleccionada actualmente */
-  selectedRow: any = null;
+  selectedRow: Destinatario | null = null;
 
   /** Estado del destinatario que se está agregando */
   agregarDestinatarioState!: Solicitud260702State;
@@ -80,40 +108,44 @@ export class TercerosrelacionadosComponent implements OnInit, OnDestroy {
     primerOpcion: 'Selecciona un medio de transporte',
     catalogos: [],
   };
-  
+
   /**
    * Variable para almacenar el tipo de persona seleccionada (por ejemplo, 'fisica' o 'moral').
    */
   tipoPersonaSeleccionada: string = '';
 
-
-    /**
+  /**
    * Variable para almacenar el tipo de público.
    */
-    tipoDePublicos: string = '';
-   /**
+  tipoDePublicos: string = '';
+  /**
    * Opciones de radio para seleccionar el tipo de persona.
    */
-   tipoPersonaRadioOptions = TIPO_PERSONA_RADIO_OPTIONS;
-/** 
- * Notificación actual que se mostrará en el componente.
- */
-public nuevaNotificacion!: Notificacion;
+  tipoPersonaRadioOptions = TIPO_PERSONA_RADIO_OPTIONS;
+  /**
+   * Notificación actual que se mostrará en el componente.
+   */
+  public nuevaNotificacion!: Notificacion;
 
-/** 
- * Índice del elemento que se eliminará de la lista.
- */
-elementoParaEliminar!: number;
+  /**
+   * Índice del elemento que se eliminará de la lista.
+   */
+  elementoParaEliminar!: number;
 
-/** 
- * Lista de pedimentos gestionados en el componente.
- */
-pedimentos: Array<Pedimento> = [];
+  /**
+   * Lista de pedimentos gestionados en el componente.
+   */
+  pedimentos: Array<Pedimento> = [];
   /** Datos de la tabla de destinatarios */
   tableData: Destinatario[] = [];
 
-   /** Configuración de las columnas de la tabla */
-   destinatarioConfiguracionTabla = DESTINATARIO_CONFIGURACION_TABLA;
+  /** Configuración de las columnas de la tabla */
+  destinatarioConfiguracionTabla = DESTINATARIO_CONFIGURACION_TABLA;
+  /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  esFormularioSoloLectura: boolean = false;
 
   /**
    * Constructor del componente.
@@ -126,8 +158,25 @@ pedimentos: Array<Pedimento> = [];
     private fb: FormBuilder,
     private registrarsolicitudmcp: RegistrarSolicitudMcpService,
     private solicitud260702Store: Solicitud260702Store,
-    private solicitud260702Query: Solicitud260702Query
+    private solicitud260702Query: Solicitud260702Query,
+    private consultaioQuery: ConsultaioQuery
   ) {
+    /**
+     * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
+     *
+     * - Asigna el valor de solo lectura (`readonly`) a la propiedad `esFormularioSoloLectura`.
+     * - Llama a `inicializarEstadoFormulario()` para aplicar configuraciones basadas en el estado recibido.
+     * - La suscripción se cancela automáticamente cuando `destroyNotifier$` emite un valor (para evitar fugas de memoria).
+     */
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
     this.crearFormTransporte();
   }
 
@@ -186,10 +235,33 @@ pedimentos: Array<Pedimento> = [];
    * Método que se ejecuta al inicializar el componente.
    */
   ngOnInit(): void {
+    this.inicializarEstadoFormulario();
+  }
+
+  /**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.
+   * Además, obtiene la información del catálogo de mercancía.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.inicializarFormulario();
+    }
+  }
+
+  /**
+   * Inicializa el formulario reactivo para capturar el valor de 'registro'.
+   * Suscribe al estado almacenado en el store mediante el query `tramite301Query.selectSolicitud$`
+   * y lo asigna a la variable local `solicitudState`. Luego, crea el formulario
+   * con el valor inicial obtenido del store.
+   */
+
+  inicializarFormulario(): void {
     this.solicitud260702Query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyed$),
-        map((seccionState: any) => {
+        map((seccionState: Solicitud260702State) => {
           this.agregarDestinatarioState = seccionState;
         })
       )
@@ -197,23 +269,38 @@ pedimentos: Array<Pedimento> = [];
     this.crearFormTransporte();
     this.getPaisData();
   }
-/**
- * Elimina un pedimento de la lista.
- * @param borrar Indica si se debe proceder con la eliminación.
- */
+
+  /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormulario(): void {
+    this.inicializarFormulario();
+    if (this.esFormularioSoloLectura) {
+      this.destinatarioForm.disable();
+    } else if (!this.esFormularioSoloLectura) {
+      this.destinatarioForm.enable();
+    } else {
+      // No se requiere ninguna acción en el formulario
+    }
+  }
+
+  /**
+   * Elimina un pedimento de la lista.
+   * @param borrar Indica si se debe proceder con la eliminación.
+   */
   eliminarPedimento(borrar: boolean): void {
     if (borrar) {
       this.pedimentos.splice(this.elementoParaEliminar, 1);
       this.eliminarMercancias(); // Call the deletion logic
       this.abrirModal(0, true);
-
     }
   }
-/**
- * Abre un modal para mostrar una notificación.
- * @param i Índice del elemento seleccionado (por defecto 0).
- * @param isDeleted Indica si se debe mostrar la notificación de éxito tras la eliminación.
- */
+  /**
+   * Abre un modal para mostrar una notificación.
+   * @param i Índice del elemento seleccionado (por defecto 0).
+   * @param isDeleted Indica si se debe mostrar la notificación de éxito tras la eliminación.
+   */
   abrirModal(i: number = 0, isDeleted: boolean = false): void {
     if (isDeleted) {
       this.nuevaNotificacion = {
@@ -227,7 +314,6 @@ pedimentos: Array<Pedimento> = [];
         txtBtnAceptar: 'Aceptar',
         txtBtnCancelar: '',
       };
-      
     } else if (this.selectedRows && this.selectedRows.size > 0) {
       this.nuevaNotificacion = {
         tipoNotificacion: 'alert',
@@ -243,11 +329,11 @@ pedimentos: Array<Pedimento> = [];
       this.elementoParaEliminar = i;
     }
   }
- 
+
   /**
    * Obtiene los datos del catálogo de países.
    */
-  getPaisData() {
+  getPaisData(): void {
     this.registrarsolicitudmcp
       .getPaisData()
       .pipe(takeUntil(this.destroyed$))
@@ -259,7 +345,7 @@ pedimentos: Array<Pedimento> = [];
   /**
    * Getter para obtener el tipo de persona seleccionado.
    */
-  get selectedTipoPersona() {
+  get selectedTipoPersona(): string | undefined {
     return this.agregarDestinatario.get('tipoPersona')?.value;
   }
 
@@ -273,15 +359,16 @@ pedimentos: Array<Pedimento> = [];
   /**
    * Guarda los datos del formulario en la tabla.
    */
-  onGuardar() {
-    const formData = this.destinatarioForm.value;
-    if (formData.agregarDestinatario) {
-      const destinatario = {
-        ...formData.agregarDestinatario,
-        ...formData.datosPersonales, // Combina objetos anidados en una estructura plana
-        pais: this.getPaisName(formData.datosPersonales.pais), // Mapea el id de `pais` a su descripción
+  onGuardar(): void {
+    const FORM_DATA = this.destinatarioForm.value;
+    if (FORM_DATA.agregarDestinatario) {
+      const DESTINATARIO = {
+        id: this.tableData.length + 1, 
+        ...FORM_DATA.agregarDestinatario,
+        ...FORM_DATA.datosPersonales, 
+        pais: this.getPaisName(FORM_DATA.datosPersonales.pais),
       };
-      this.tableData.push(destinatario);
+      this.tableData.push(DESTINATARIO);
     }
     this.destinatarioForm.reset();
   }
@@ -292,10 +379,10 @@ pedimentos: Array<Pedimento> = [];
    * @returns Nombre del país o 'N/A' si no se encuentra.
    */
   private getPaisName(paisId: string): string {
-    const pais = this.paisData.catalogos.find(
+    const PAIS_ENCONTRADO = this.paisData.catalogos.find(
       (catalogo) => catalogo.id === Number(paisId)
     );
-    return pais ? pais.descripcion : 'N/A';
+    return PAIS_ENCONTRADO ? PAIS_ENCONTRADO.descripcion : 'N/A';
   }
 
   /**
@@ -308,48 +395,48 @@ pedimentos: Array<Pedimento> = [];
   }
 
   /**
-   * Elimina las mercancías seleccionadas de la tabla.
-   */
-  eliminarMercancias(): void {
-    if (this.selectedRows.size > 0) {
-      this.tableData = this.tableData.filter(
-        (row) => !this.selectedRows.has(row.id)
-      );
-
-      this.selectedRows.clear();
-    }
+ * Elimina la mercancía seleccionada de la tabla.
+ */
+eliminarMercancias(): void {
+  if (this.selectedRows.size === 1) {
+    const SELECTED_ID = Array.from(this.selectedRows)[0];
+    this.tableData = this.tableData.filter((row) => row.id !== SELECTED_ID);
+    this.selectedRows.clear();
+  } else {
+    console.warn('Debe seleccionar exactamente una fila para eliminar.');
   }
+}
 
   /**
    * Abre el formulario para modificar las mercancías seleccionadas.
    */
   openModificarMercancias(): void {
     if (this.selectedRows.size === 1) {
-      const selectedId = Array.from(this.selectedRows)[0];
-      const selectedRowData = this.tableData.find(
-        (row) => row.id === selectedId
+      const SELECTED_ID = Array.from(this.selectedRows)[0];
+      const SELECTED_ROW_DATA = this.tableData.find(
+        (row) => row.id === SELECTED_ID
       );
 
-      if (selectedRowData) {
+      if (SELECTED_ROW_DATA) {
         this.destinatarioForm.patchValue({
           agregarDestinatario: {
-            tipoPersona: selectedRowData.tipoPersona,
+            tipoPersona: SELECTED_ROW_DATA.tipoPersona,
           },
           datosPersonales: {
-            nombre: selectedRowData.nombre,
-            primerApellido: selectedRowData.primerApellido,
-            segundoApellido: selectedRowData.segundoApellido,
-            denominacion: selectedRowData.denominacion,
-            pais: selectedRowData.pais,
-            domicilio: selectedRowData.domicilio,
-            estado: selectedRowData.estado,
-            codigopostal: selectedRowData.codigopostal,
-            calle: selectedRowData.calle,
-            numeroExterior: selectedRowData.numeroExterior,
-            numeroInterior: selectedRowData.numeroInterior,
-            lada: selectedRowData.lada,
-            telefono: selectedRowData.telefono,
-            correoElectronico: selectedRowData.correoElectronico,
+            nombre: SELECTED_ROW_DATA.nombre,
+            primerApellido: SELECTED_ROW_DATA.primerApellido,
+            segundoApellido: SELECTED_ROW_DATA.segundoApellido,
+            denominacion: SELECTED_ROW_DATA.denominacion,
+            pais: SELECTED_ROW_DATA.pais,
+            domicilio: SELECTED_ROW_DATA.domicilio,
+            estado: SELECTED_ROW_DATA.estado,
+            codigopostal: SELECTED_ROW_DATA.codigopostal,
+            calle: SELECTED_ROW_DATA.calle,
+            numeroExterior: SELECTED_ROW_DATA.numeroExterior,
+            numeroInterior: SELECTED_ROW_DATA.numeroInterior,
+            lada: SELECTED_ROW_DATA.lada,
+            telefono: SELECTED_ROW_DATA.telefono,
+            correoElectronico: SELECTED_ROW_DATA.correoElectronico,
           },
         });
 
@@ -382,10 +469,10 @@ pedimentos: Array<Pedimento> = [];
    */
   onConfirmarEliminacion(): void {
     this.eliminarMercancias();
-    const modalElement = document.getElementById('datoseliminadosModal');
-    if (modalElement) {
-      const datosEliminadosModal = new Modal(modalElement);
-      datosEliminadosModal.show();
+    const MODAL_ELEMENT = document.getElementById('datoseliminadosModal');
+    if (MODAL_ELEMENT) {
+      const DATOS_ELIMINADOS_MODAL = new Modal(MODAL_ELEMENT);
+      DATOS_ELIMINADOS_MODAL.show();
     }
     this.abrirModal();
   }
@@ -393,18 +480,17 @@ pedimentos: Array<Pedimento> = [];
   /**
    * Limpia los datos del formulario.
    */
-  limpiarFormulario() {
+  limpiarFormulario(): void {
     this.destinatarioForm.reset();
-    
   }
 
   /**
- * Maneja la acción de eliminación de las filas seleccionadas.
- * Si hay filas seleccionadas, abre un modal para confirmar la eliminación.
- */
+   * Maneja la acción de eliminación de las filas seleccionadas.
+   * Si hay filas seleccionadas, abre un modal para confirmar la eliminación.
+   */
   onDeleted(): void {
     if (this.selectedRows.size > 0) {
-      this.abrirModal(); 
+      this.abrirModal();
     }
   }
 
@@ -420,7 +506,7 @@ pedimentos: Array<Pedimento> = [];
     metodoNombre: keyof Solicitud260702Store
   ): void {
     const VALOR = form.get(campo)?.value;
-    (this.solicitud260702Store[metodoNombre] as (value: any) => void)(VALOR);
+    (this.solicitud260702Store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
 
   /**

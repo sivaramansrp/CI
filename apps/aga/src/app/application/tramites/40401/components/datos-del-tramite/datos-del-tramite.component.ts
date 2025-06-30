@@ -15,6 +15,7 @@ import { Subject, map, takeUntil } from 'rxjs';
 import {Tramite40401State,Tramite40401Store,} from '../../../../core/estados/tramites/tramite40401.store';
 import { CatalogoLista } from '../../models/certi-registro.model';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DATOS_ALERT } from '../../enum/datos-del-tramite.enum';
 import { RegistroCaatAereoService } from '../../services/RegistroCaatAereoController.service';
 import { Tramite40401Query } from '../../../../core/queries/tramite40401.query';
@@ -61,6 +62,11 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
    * Estado actual de la solicitud del trámite.
    */
   public solicitudState!: Tramite40401State;
+  
+  /**
+   * Indica si el formulario es de solo lectura.
+   */
+  readonly: boolean = false;
 
   /**
    * Constructor del componente.
@@ -76,7 +82,9 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
     private registroCaatAereoService: RegistroCaatAereoService,
     public store: Tramite40401Store,
     public tramiteQuery: Tramite40401Query,
-    private validacionesService: ValidacionesFormularioService
+    private validacionesService: ValidacionesFormularioService,
+    private consultaQuery: ConsultaioQuery,
+    
   ) {
     // Constructor vacío
   }
@@ -95,8 +103,22 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-      this.initializeForm();
-      this.cargarCAATAereo();
+
+    this.initializeForm();
+    this.cargarCAATAereo();
+
+    this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$), 
+        map((seccionState) => {
+          // seccionState.update = true; // Asegura que se actualice el estado 
+          if( seccionState.readonly ) {
+            this.readonly = seccionState.readonly;
+            this.datosDelTramiteForm.disable();
+          }
+        })
+      )
+      .subscribe();
   }
 
   /**
@@ -170,6 +192,11 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
     return this.validacionesService.isValid(form, field);
   }
 
+  /**
+   * Limpia el formulario de datos del trámite.
+   * Este método resetea el formulario a su estado inicial y actualiza los valores en el store
+   * para los campos 'pais', 'codigo' y 'transportacion'.
+   */
   limpiar(): void {
    this.datosDelTramiteForm.reset();
     this.setValoresStore(this.datosDelTramiteForm, 'pais', 'setPais');

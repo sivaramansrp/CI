@@ -7,15 +7,20 @@ import {
   Servicio,
 } from '../models/nuevo-programa-industrial.model';
 import { Observable, map } from 'rxjs';
-import { DatosComplimentos } from '../../../shared/models/complimentos.model';
-import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { PlantasSubfabricante } from '../../../shared/models/empresas-subfabricanta.model';
 import {
   Tramite80101State,
   Tramite80101Store,
 } from '../estados/tramite80101.store';
+import { DatosComplimentos } from '../../../shared/models/complimentos.model';
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { PlantasSubfabricante } from '../../../shared/models/empresas-subfabricanta.model';
 
+/**
+ * Servicio para gestionar las operaciones relacionadas con el programa industrial.
+ * Este servicio proporciona métodos para obtener datos desde archivos JSON locales,
+ * actualizar el estado del formulario y realizar otras operaciones relacionadas con el programa industrial.
+ */
 @Injectable({
   providedIn: 'root',
 })

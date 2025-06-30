@@ -389,7 +389,7 @@
         <app-tabla-dinamica [configuracionTabla]="configuracionTabla" [datos]="personaparas" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
           [tipoSeleccionTabla]="tipoSeleccionTabla.CHECKBOX" >
         </app-tabla-dinamica>
-        <div *ngIf="hasError(scianForm, 'scian', 'required')" class="text-danger mt-1">
+        <div *ngIf="DatosDelSolicitudModificacionComponent.hasError(scianForm, 'scian', 'required')" class="text-danger mt-1">
           La clave S.C.I.A.N. es obligatoria.
         </div>
       </div>
@@ -512,7 +512,7 @@
     </div>
 
     <app-manifiestos-representante-seccion
-      [showRepresentanteLegal]="hideRepresentanteLegal"  [formularioDeshabilitado]="esFormularioSoloLectura"></app-manifiestos-representante-seccion>
+      [showRepresentanteLegal]="hideRepresentanteLegal"></app-manifiestos-representante-seccion>
   </form>
   @if (nuevaNotificacion) {
 <section>

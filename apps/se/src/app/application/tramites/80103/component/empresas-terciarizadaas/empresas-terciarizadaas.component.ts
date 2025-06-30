@@ -15,7 +15,6 @@ import { NuevoProgramaIndustrialService } from '../../services/modalidad-albergu
   * @export
   * @class EmpresasTerciarizadaasComponent
   */
-
 @Component({
   selector: 'app-empresas-terciarizadaas',
   standalone: true,
@@ -83,8 +82,6 @@ export class EmpresasTerciarizadaasComponent implements OnDestroy {
           }
         });
     }
-
-
     /**
    * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
    * Limpia las suscripciones y actualiza los BehaviorSubject para ocultar las tablas.

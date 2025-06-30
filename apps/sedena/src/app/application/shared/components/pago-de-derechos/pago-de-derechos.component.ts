@@ -2,7 +2,8 @@ import { CAMPO_OBLIGATORIO_DERECHOS } from '../../constants/datos-solicitud.enum
 import { Catalogo } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+
+import { Component, OnChanges, SimpleChanges } from '@angular/core';
 import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
 import { EventEmitter } from '@angular/core';
@@ -44,7 +45,7 @@ import { takeUntil } from 'rxjs';
   templateUrl: './pago-de-derechos.component.html',
   styleUrl: './pago-de-derechos.component.scss',
 })
-export class PagoDeDerechosComponent implements OnInit, OnDestroy {
+export class PagoDeDerechosComponent implements OnInit, OnDestroy, OnChanges {
   /**
    * @method eliminarMercancia
    * @description Emits an event to delete one or more merchandise items.
@@ -64,13 +65,12 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   @Output() public updatePagoDerechos: EventEmitter<PagoDerechosFormState> =
     new EventEmitter<PagoDerechosFormState>();
 
-    /**
+  /**
    * @property idProcedimiento
    * @description Identificador del procedimiento asociado a este componente.
    * @type {number}
    */
   @Input() idProcedimiento!: number;
-
 
   /**
    * Indica si el formulario se encuentra en modo solo lectura.
@@ -120,7 +120,6 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    *
    * @param fb - FormBuilder para construir el formulario reactivo.
    * @param datosSolicitudService - Servicio para obtener catálogos desde el backend.
-   * @param tramiteStore - Store que administra el estado del trámite actual.
    * @param {ConsultaioQuery} consultaioQuery - Servicio para consultar el estado de la aplicación.
    */
   constructor(
@@ -128,7 +127,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     private datosSolicitudService: DatosSolicitudService,
     private consultaioQuery: ConsultaioQuery
   ) {
-        this.consultaioQuery.selectConsultaioState$
+    this.consultaioQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState: { readonly: boolean }) => {
@@ -137,6 +136,23 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
+  }
+  /**
+   * @method ngOnChanges
+   * @description Hook que se ejecuta cuando cambian las propiedades de entrada del componente.
+   * Si cambia el valor de 'esFormularioSoloLectura' y el formulario ya está inicializado,
+   * habilita o deshabilita el formulario según corresponda.
+   *
+   * @param {SimpleChanges} changes - Objeto que contiene los cambios de las propiedades de entrada.
+   */
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['esFormularioSoloLectura'] && this.pagoDerechosForm) {
+      if (this.esFormularioSoloLectura) {
+        this.pagoDerechosForm.disable();
+      } else {
+        this.pagoDerechosForm.enable();
+      }
+    }
   }
   /**
    * Evalúa si se debe inicializar o cargar datos en el formulario.
@@ -150,7 +166,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     }
   }
 
-    /**
+  /**
    * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
    * Luego reinicializa el formulario con los valores actualizados desde el store.
    */
@@ -160,7 +176,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
       this.pagoDerechosForm.disable();
     } else if (!this.esFormularioSoloLectura) {
       this.pagoDerechosForm.enable();
-    } 
+    }
   }
 
   /**
@@ -196,7 +212,6 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     this.pagoDerechosForm.valueChanges.subscribe((valores) => {
       this.updatePagoDerechos.emit(valores);
     });
-
   }
   /**
    * @method ngOnInit
@@ -207,7 +222,9 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.crearFormaulario();
     this.cargarDatos();
-    this.campoObligatorio = CAMPO_OBLIGATORIO_DERECHOS.includes(this.idProcedimiento)
+    this.campoObligatorio = CAMPO_OBLIGATORIO_DERECHOS.includes(
+      this.idProcedimiento
+    );
 
     if (this.esFormularioSoloLectura) {
       this.pagoDerechosForm.disable();
@@ -256,22 +273,24 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
 
-    /**
- * @method onImportePagoInput
- * @description
- * Maneja el evento de entrada del campo "importePago" para asegurar que solo se permitan caracteres numéricos
- * y que la longitud máxima sea de 22 dígitos. Si el usuario ingresa un carácter no numérico, este será eliminado.
- * Además, si la longitud supera los 22 caracteres, el valor se recorta automáticamente.
- * El valor limpio se actualiza en el control reactivo sin emitir un nuevo evento de cambio.
- *
- * @param {Event} event - El evento de entrada generado por el campo de texto.
- * 
- * @returns {void} No retorna ningún valor.
- */
+  /**
+   * @method onImportePagoInput
+   * @description
+   * Maneja el evento de entrada del campo "importePago" para asegurar que solo se permitan caracteres numéricos
+   * y que la longitud máxima sea de 22 dígitos. Si el usuario ingresa un carácter no numérico, este será eliminado.
+   * Además, si la longitud supera los 22 caracteres, el valor se recorta automáticamente.
+   * El valor limpio se actualiza en el control reactivo sin emitir un nuevo evento de cambio.
+   *
+   * @param {Event} event - El evento de entrada generado por el campo de texto.
+   *
+   * @returns {void} No retorna ningún valor.
+   */
   onImportePagoInput(event: Event): void {
     const INPUT = event.target as HTMLInputElement;
     INPUT.value = INPUT.value.replace(REGEX_NUMEROS, '').slice(0, 22);
-    this.pagoDerechosForm.get('importePago')?.setValue(INPUT.value, { emitEvent: false });
+    this.pagoDerechosForm
+      .get('importePago')
+      ?.setValue(INPUT.value, { emitEvent: false });
   }
   ngOnDestroy(): void {
     this.destroyNotifier$.next();

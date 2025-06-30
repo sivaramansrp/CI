@@ -20,6 +20,37 @@ import { CommonModule } from '@angular/common';
 import { ModificacionProgramaImmexBajaSubmanufactureraService } from '../../services/modificacion-programa-immex-baja-submanufacturera.service';
 import { Tramite80303Query } from '../../estados/tramite80303Query.query';
 
+/**
+ * Componente Angular que representa la pestaña "Anexo Uno" dentro de la aplicación.
+ * 
+ * Este componente es autónomo y utiliza módulos comunes de Angular, así como componentes personalizados
+ * como `TituloComponent` y `TablaDinamicaComponent`. Su propósito principal es gestionar y mostrar
+ * información relacionada con los anexos de exportación, importación y datos sensibles en tablas dinámicas.
+ * 
+ * Propiedades principales:
+ * - `tablaSeleccion`: Define el tipo de selección de la tabla.
+ * - `configuracionAnexoExportacionTabla`: Configuración de columnas para la tabla de exportación de anexos.
+ * - `anexoExportacionTablaDatos`: Datos de exportación relacionados con el anexo.
+ * - `anexoExportacionTablaSeleccionada`: Elementos seleccionados en la tabla de exportación.
+ * - `configuracionAnexoImportacionTabla`: Configuración de columnas para la tabla de importación de anexos.
+ * - `anexoImportacionTablaDatos`: Datos de importación relacionados con el anexo.
+ * - `anexoImportacionTablaSeleccionada`: Elementos seleccionados en la tabla de importación.
+ * - `configuracionSensiblesTabla`: Configuración de columnas para la tabla de datos sensibles.
+ * - `sensiblesTablaDatos`: Datos sensibles relacionados con el anexo.
+ * - `sensiblesTablaSeleccionada`: Elementos seleccionados en la tabla de datos sensibles.
+ * 
+ * Funcionalidades principales:
+ * - Obtención de datos desde URLs específicas utilizando el servicio `ModificacionProgramaImmexBajaSubmanufactureraService`.
+ * - Gestión de estados del trámite mediante el servicio `Tramite80303Query`.
+ * - Limpieza de suscripciones activas al destruir el componente para evitar fugas de memoria.
+ * 
+ * Decorador `@Component`:
+ * - `selector`: Define el nombre del selector del componente.
+ * - `standalone`: Indica que el componente es autónomo.
+ * - `imports`: Lista de módulos y componentes importados.
+ * - `templateUrl`: Ruta del archivo HTML que define la plantilla del componente.
+ * - `styleUrl`: Ruta del archivo SCSS que define los estilos del componente.
+ */
 @Component({
   selector: 'app-anexo-uno-pestana',
   standalone: true,

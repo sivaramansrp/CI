@@ -1,8 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ConfiguracionColumna, ConsultaioQuery, ConsultaioState, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@ng-mf/data-access-user';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { Observable, Subject, map, takeUntil } from 'rxjs';
 import { Solicitud80302State, Tramite80302Store } from '../../../../estados/tramites/tramite80302.store';
+import { Subject, map, takeUntil } from 'rxjs';
 import { CONFIGURACION_MODIFICACION } from '../../constantes/modificacion.enum';
 import { CommonModule } from '@angular/common';
 import { DatosDelModificacion } from '../../estados/models/datos-tramite.model';
@@ -195,7 +195,7 @@ export class ModificacionComponent implements OnInit, OnDestroy {
    * ```
    */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  valorDeAlternancia(event: any){ 
+  valorDeAlternancia(event: any):void { 
     const ROW = event.row;
     const INDEX = this.datosTabla.findIndex((x) => x.id === ROW.id);
     this.datosTabla[INDEX].desEstatus = this.datosTabla[INDEX].desEstatus === 'Baja' ? 'Activada' : 'Baja';

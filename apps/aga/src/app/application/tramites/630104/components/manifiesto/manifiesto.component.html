@@ -10,6 +10,7 @@
                             [required]="true"
                             [isDisabled]="false"
                             formControlName="declaracion"
+                            [isDisabled]="esFormularioSoloLectura"
                             (change)="setValorStore(manifiestoFormulario, 'declaracion')">
                         </lib-input-check>
                         </div>

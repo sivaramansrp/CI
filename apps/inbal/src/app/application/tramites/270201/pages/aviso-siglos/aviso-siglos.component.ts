@@ -1,7 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
+import { DatosPasos, ListaPasosWizard, WizardComponent } from '@libs/shared/data-access-user/src';
+import { AVISO } from '@libs/shared/data-access-user/src';
 import { AVISO_SIGLOS } from '../../constantes/aviso-siglos.enum';
-
-import { DatosPasos, ListaPasosWizard, WizardComponent } from '@ng-mf/data-access-user';
 
 /**
  * Interfaz que define una acción de botón.
@@ -41,6 +41,11 @@ export class AvisoSiglosComponent {
    */
   indice = 1;
 
+  /**
+   * Mensaje relacionado con el aviso de privacidad simplificado.
+   */
+  public avisoPrivacidadAlert: string = AVISO.Aviso;
+  
   /**
    * Datos de los pasos del wizard.
    */

@@ -1,5 +1,5 @@
 import { Catalogo, CatalogoSelectComponent, FECHA_FINAL_VIGENCIA, FECHA_FINAL_VIGENCIA_DEL_CUPO, FECHA_INICIO_VIGENCIA, FECHA_INICIO_VIGENCIA_DEL_CUPO, InputFecha, InputFechaComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
-import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, map, merge, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
@@ -7,6 +7,7 @@ import { CommonModule } from '@angular/common';
 import { ExpedicionCertificadosAsignacion120202State, Tramite120202Store } from '../../../estados/tramites/tramite120202.store';
 import { ExpedirMonto, NumeroOficioAsignacionDetalleRespquesta } from '../../../tramites/120202/models/expedicion-certificados-asignacion.model';
 import { CONFIGURACION_PARA_ENCABEZADO_DE_EXPEDIR_MONTO_TABLA } from '../../../tramites/120202/constantes/expedicion-certificados-asignacion-constantes.enum';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { ExpedicionCertificadosAsignacionService } from '../../../tramites/120202/services/expedicion-certificados-asignacion/expedicion-certificados-asignacion.service';
 import { Tramite120202Query } from '../../../estados/queries/tramite120202.query';
 
@@ -27,7 +28,7 @@ import { Tramite120202Query } from '../../../estados/queries/tramite120202.query
   templateUrl: './expedicion-certificados-asignacion-directa.component.html',
   styleUrl: './expedicion-certificados-asignacion-directa.component.scss',
 })
-export class ExpedicionCertificadosAsignacionDirectaComponent implements OnInit, OnDestroy {
+export class ExpedicionCertificadosAsignacionDirectaComponent implements OnDestroy {
   /**
    * Formulario para la expedición de certificados de asignación.
    */
@@ -92,6 +93,12 @@ export class ExpedicionCertificadosAsignacionDirectaComponent implements OnInit,
   @Output() mostrarError: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   /**
+   * @property {boolean} formularioDeshabilitado
+   * @description Indica si el formulario está deshabilitado (solo lectura).
+   */
+  formularioDeshabilitado: boolean = false;
+
+  /**
    * Estado de la expedición de certificados de asignación.
    */
   public expedicionCertificadoAsignacionState!: ExpedicionCertificadosAsignacion120202State;
@@ -106,21 +113,26 @@ export class ExpedicionCertificadosAsignacionDirectaComponent implements OnInit,
    * @param fb - FormBuilder para crear formularios reactivos.
    * @param tramite120202Store - Store para gestionar el estado de la aplicación.
    * @param tramite120202Query - Query para consultar el estado de la aplicación.
+   * @param consultaioQuery - Query para consultar el estado de la consulta.
    * @param expedicionCertificadosAsignacionService - Servicio para gestionar la expedición de certificados de asignación.
    */
   constructor(
     private fb: FormBuilder,
     private tramite120202Store: Tramite120202Store,
     private tramite120202Query: Tramite120202Query,
+    private consultaioQuery: ConsultaioQuery,
     private expedicionCertificadosAsignacionService: ExpedicionCertificadosAsignacionService
   ) {
-    // El constructor se utiliza para la inyección de dependencias       
-  }
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destruirNotificador$),
+        map((seccionState) => {
+          this.formularioDeshabilitado = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
 
-  /**
-   * Método que se ejecuta al inicializar el componente.
-   */
-  ngOnInit(): void {
     this.inicializaCatalogos();
 
     this.tramite120202Query.selectSeccionState$
@@ -138,6 +150,21 @@ export class ExpedicionCertificadosAsignacionDirectaComponent implements OnInit,
     this.crearExpedicionCertificadosAsignacionForm();
 
     this.aniosAutorizacionSeleccion();
+  }
+
+  /**
+   * @method inicializarEstadoFormulario
+   * @description Inicializa el estado del formulario `expedicionCertificadosAsignacionForm` basado en si el formulario está deshabilitado o no.
+   * Si el formulario está deshabilitado, se deshabilita el campo `expedicionCertificadosAsignacionForm`.
+   * Si no está deshabilitado, se habilita el campo `expedicionCertificadosAsignacionForm`.
+   * @returns {void}
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.formularioDeshabilitado) {
+      this.expedicionCertificadosAsignacionForm.disable();
+    } else if (!this.formularioDeshabilitado) {
+      this.expedicionCertificadosAsignacionForm.enable();
+    }
   }
 
   /**
@@ -236,6 +263,8 @@ export class ExpedicionCertificadosAsignacionDirectaComponent implements OnInit,
         ]
       })
     });
+
+    this.inicializarEstadoFormulario();
   }
 
   /**
@@ -380,7 +409,6 @@ export class ExpedicionCertificadosAsignacionDirectaComponent implements OnInit,
   buscar(cveAniosAutorizacion: string, numFolioAsignacionAux: string): void {
     if (cveAniosAutorizacion === '-1' || numFolioAsignacionAux.length <= 0 || numFolioAsignacionAux === null) {
       this.mostrarError.emit(true);
-      return;
     } else {
       this.mostrarError.emit(false);
       this.asignacionOficioNumeroForm.reset({ cveAniosAutorizacion: '-1', numFolioAsignacionAux: '' });

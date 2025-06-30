@@ -3,6 +3,25 @@ export default {
   preset: '../../jest.preset.js',
   setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
   coverageDirectory: '../../coverage/apps/cofepris',
+  collectCoverageFrom: [
+    'src/app/application/**/*.ts',
+  ],
+  testMatch: [
+    '<rootDir>/src/app/application/**/*.spec.ts',
+  ],
+  coverageThreshold: {
+    global: {
+      statements: 80,
+    },
+    'apps/cofepris/src/app/application/**/*.ts': {
+      statements: 80,
+    },
+  },
+  coverageReporters: ['text-summary', 'html'],
+  coveragePathIgnorePatterns: [
+    'src/app/application/.*\\.(module|store|query|enums?|enum|model|constants?|constantes|interfaces?)\\.ts$',
+    'src/app/application/seleccion-tramite/.*\\.ts$',
+  ],
   transform: {
     '^.+\\.(ts|mjs|js|html)$': [
       'jest-preset-angular',

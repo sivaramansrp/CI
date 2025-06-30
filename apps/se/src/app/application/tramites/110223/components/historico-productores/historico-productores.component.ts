@@ -1,18 +1,18 @@
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { HEADERSDATASELECCIONADASTABLA, HISTORICOTABLECOLUMNS } from '../../models/registro.model';
 import { map, takeUntil } from 'rxjs';
 import { CertificadosOrigenService } from '../../../110223/services/certificado-origen.service';
 import { CommonModule } from '@angular/common';
-import { ConfiguracionColumna, ConsultaioQuery, ConsultaioState } from '@libs/shared/data-access-user/src';
 import { HistoricoColumnas } from '../../../110223/models/certificado-origen.model';
 import { Modal } from 'bootstrap';
 import { REGEX_SOLO_DIGITOS } from '@libs/shared/data-access-user/src';
-import { headersDataSeleccionadasTabla, historicoTableColumns, SeleccionadasTabla } from '../../models/registro.model';
+import { Solicitud110223State } from '../../../../estados/tramites/Tramite110223.store';
 import { Subject } from 'rxjs';
 import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
-import { Solicitud110223State } from '../../../../estados/tramites/Tramite110223.store';
 import { Tramite110223Query } from '../../../../estados/queries/tramite110223.query';
 import { Tramite110223Store } from '../../../../estados/tramites/Tramite110223.store';
 import { ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
@@ -44,7 +44,7 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
   /**
    * Configuración de las columnas de la tabla dinámica.
    */
-  tableColumns = historicoTableColumns;
+  tableColumns = HISTORICOTABLECOLUMNS;
 
   /**
    * Lista de productores disponibles para el exportador.
@@ -298,7 +298,7 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
   /**
    * Configuración de las columnas de la tabla de mercancías seleccionadas.
    */
-  public headersData = headersDataSeleccionadasTabla;
+  public headersData = HEADERSDATASELECCIONADASTABLA;
     /**
    * Inicializa el estado del formulario (habilitado/deshabilitado) basado en el modo de solo lectura.
    */

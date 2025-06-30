@@ -6,6 +6,12 @@ describe('SolicitudComponent', () => {
   let component: SolicitudComponent;
   let fixture: ComponentFixture<SolicitudComponent>;
 
+  // Mock básico para consultaState
+  const mockConsultaState = {
+    readonly: false,
+    // Agrega aquí otras propiedades que tus componentes hijos puedan requerir
+  };
+
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [SolicitudComponent, HttpClientModule]
@@ -13,10 +19,12 @@ describe('SolicitudComponent', () => {
 
     fixture = TestBed.createComponent(SolicitudComponent);
     component = fixture.componentInstance;
+    // Asigna el mock al input antes de detectar cambios
+    component.consultaState = mockConsultaState as any;
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 });

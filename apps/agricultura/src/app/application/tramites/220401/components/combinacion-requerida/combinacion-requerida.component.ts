@@ -1,4 +1,4 @@
-import { Agregar220401Store, solicitud220401State } from '../../../../estados/tramites/agregar220401.store';
+import { Agregar220401Store, Solicitud220401State } from '../../../../estados/tramites/agregar220401.store';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
@@ -6,7 +6,7 @@ import { Subject, map, takeUntil } from 'rxjs';
 import { AgregarQuery } from '../../../../estados/queries/agregar.query';
 
 import { Catalogo, ConsultaioQuery } from '@ng-mf/data-access-user';
-import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { CommonModule } from '@angular/common';
 import { Pantallas220401Service } from '../pantallas220401.service';
 import { TercerosRelacionadosComponent } from '../terceros-relacionados/terceros-relacionados.component';
@@ -112,7 +112,7 @@ export class CombinacionRequeridaComponent implements OnInit, OnDestroy {
    * Contiene la información relevante relacionada con el estado actual de la solicitud
    * y se utiliza para gestionar y mostrar los datos en el componente.
    */
-  public solicitudState!: solicitud220401State;
+  public solicitudState!: Solicitud220401State;
 
   /**
    * Indica si el formulario está en modo solo lectura.
@@ -137,14 +137,12 @@ export class CombinacionRequeridaComponent implements OnInit, OnDestroy {
     private _pantallas220401Service: Pantallas220401Service,
     private consultaioQuery: ConsultaioQuery,
   ) {
-    this.crearFormCombinacion();
     this.consultaioQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.esFormularioSoloLectura = seccionState.readonly;
-          this.esFormularioSoloLectura = true;
-          
+          this.crearFormCombinacion();
         })
       )
       .subscribe()

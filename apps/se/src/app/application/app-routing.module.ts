@@ -1,7 +1,5 @@
 import { RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
-
-import { ComplementarPlantaComponent } from './shared/components/complementar-planta/complementar-planta.component';
 import { SeleccionTramiteComponent } from './seleccion-tramite/seleccion-tramite.component';
 const ROUTES: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'seleccion-tramite' },
@@ -332,7 +330,7 @@ const ROUTES: Routes = [
       ),
   },
   {
-    path: 'expedicion-certificados-asignacion-directa-fisica',
+    path: 'cupos',
     loadChildren: () =>
       import('./tramites/120201/cupos.module').then((m) => m.CuposModule),
   },
@@ -461,7 +459,7 @@ const ROUTES: Routes = [
       ),
   },
   {
-    path: 'expedicion-certificados-asignacion-directa-moral',
+    path: 'expedicion-certificado-asignacion',
     loadChildren: () =>
       import('./tramites/120202/expedicion-certificado-asignacion.module').then(
         (m) => m.ExpedicionCertificadoAsignacionModule

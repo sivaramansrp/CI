@@ -9,12 +9,19 @@ import { Router } from '@angular/router';
 import { TramiteQuery } from '../../../core/queries/tramite.query';
 
 import { REG_X } from '../../constantes/regex.constants';
-import { SeleccionadoDepartamento } from '../../../core/models/shared/bandeja-de-tareas-pendientes.model';
+
+import { BandejaDeTareasPendientes, SeleccionadoDepartamento } from '../../../core/models/shared/bandeja-de-tareas-pendientes.model';
 import { TablaAcciones } from '../../../core/enums/tabla-seleccion.enum';
 import { TablaDinamicaComponent } from '../tabla-dinamica/tabla-dinamica.component';
 import { TablePaginationComponent } from '../table-pagination/table-pagination.component';
 import { TramiteDetails } from '../../../core/models/tramiteDetails';
 
+import { ModeloDeFormaDinamica } from '../../../core/models/shared/forms-model';
+
+
+/**
+ * Interfaz que representa un objeto con número de procedimiento y datos asociados a un trámite.
+ */
 @Component({
   selector: 'app-consulta-tramite',
   standalone: true,
@@ -23,7 +30,7 @@ import { TramiteDetails } from '../../../core/models/tramiteDetails';
   styleUrl: './consulta-tramite.component.scss',
 })
 
-export class ConsultaTramiteComponent<T> implements OnInit {
+export class ConsultaTramiteComponent<T extends { id: string | number }> implements OnInit {
   /** 
    * Formulario de búsqueda 
    */
@@ -51,17 +58,17 @@ export class ConsultaTramiteComponent<T> implements OnInit {
   /* Configuración de columnas para la tabla */
   @Input() configuracionTabla: ConfiguracionColumna<T>[] = [];
   /* Datos que se muestran en la tabla */
-  @Input() configuracionTablaDatos: any[] = [];
+  @Input() configuracionTablaDatos: T[] = [];
    /* Datos que se usan en el formulario de la bandeja */
-  @Input() public bandejaSolicitudeDatos: any[] = [];
+  @Input() public bandejaSolicitudeDatos: ModeloDeFormaDinamica[] = [];
   /**
    * Propiedad de entrada que contiene un arreglo de objetos de datos a duplicar.
    */
-  @Input() public duplicarDatos: any[] = [];
+  @Input() public duplicarDatos: T[] = [];
   /**
    * EventEmitter que emite un evento cada vez que un valor cambia en el componente.
    */
-  @Output() obtenerNombreDelDepartamento: EventEmitter<{ campo: string; valor: any}> = new EventEmitter<{ campo: string; valor: any}>();
+  @Output() obtenerNombreDelDepartamento: EventEmitter<{ campo: string; valor: string}> = new EventEmitter<{ campo: string; valor: string}>();
   /**
    * Propiedad de entrada que contiene la información del departamento actualmente seleccionado.
    */
@@ -83,7 +90,7 @@ export class ConsultaTramiteComponent<T> implements OnInit {
   /* Acciones disponibles en la tabla (editar, etc.) */
   public tablaAcciones: TablaAcciones[] = [TablaAcciones.EDITAR];
   /* Copia original de la configuración de la tabla */
-  public originalConfiguracionTabla: any[] = [];
+  public originalConfiguracionTabla: T[] = [];
    /* Lista de detalles de trámite desde JSON */
   public tramiteData: TramiteDetails[] = [];
   /* Controla si la sección de país de origen está colapsada o no */
@@ -147,16 +154,16 @@ export class ConsultaTramiteComponent<T> implements OnInit {
   buscarTramite(): void {
     if (this.FormBuscaTramite.invalid) {
       this.FormBuscaTramite.markAllAsTouched();
-      this.tieneConfiguracionTablaDatos = false;
-      return;
+      this.tieneConfiguracionTablaDatos = true;
     }
-
     const IDTRAMITE = this.FormBuscaTramite.get('idTramite')?.value?.toString();
-    this.configuracionTablaDatos = this.duplicarDatos.filter(
-      item => item.id?.toString() === IDTRAMITE
-    );
-    this.tieneConfiguracionTablaDatos = this.configuracionTablaDatos.length > 0;
-    this.FormBuscaTramite.reset();
+    this.configuracionTablaDatos = this.duplicarDatos;
+    this.tieneConfiguracionTablaDatos = true;
+    if(IDTRAMITE !== '') {
+      this.configuracionTablaDatos = this.configuracionTablaDatos.filter(
+        item => item.id?.toString() === IDTRAMITE
+      );
+    }
   }
 
   /**
@@ -217,8 +224,8 @@ export class ConsultaTramiteComponent<T> implements OnInit {
    * Maneja el clic sobre una fila de la tabla.
    * Navega a la ruta correspondiente dependiendo del origen del trámite
    */
-  public onFilaClic(event: any): void {
-    const ROW_OBJETO = event;
+  public onFilaClic(event:T): void {
+    const ROW_OBJETO = event as unknown as BandejaDeTareasPendientes;
     const PROCEDURE: unknown | number = Number(
       ROW_OBJETO.numeroDeProcedimiento
     );
@@ -232,7 +239,7 @@ export class ConsultaTramiteComponent<T> implements OnInit {
       ROW_OBJETO.folioTramite,
       ROW_OBJETO.tipoDeTramite,
       ROW_OBJETO.estadoDeTramite,
-      !this.tieneBandeja ? false : true,
+      true,
       false,
       true
     );

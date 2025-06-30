@@ -1,8 +1,8 @@
-import { Catalogo, REGEX_CARACTERES_NO_PERMITIDOS, REGEX_NUMERO_DECIMAL_ENTERO, REGEX_TEXTO_PREFIJO, REG_X } from '@ng-mf/data-access-user';
+import { Catalogo,ConsultaioQuery, REGEX_CARACTERES_NO_PERMITIDOS, REGEX_NUMERO_DECIMAL_ENTERO, REGEX_TEXTO_PREFIJO, REG_X } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { DATOS_INPUT_FIELDS, MERCANCIA_INPUT_VALUES } from '../../../../shared/constantes/valores-constantes.enum';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 import { TITULO_ORIGEN } from '../../../../shared/constantes/pais-titulo.enum';
 
 import { Tramite130108State, Tramite130108Store } from '../../estados/tramites/tramites130108.store';
@@ -31,13 +31,21 @@ import solicitudeSelectVal from '@libs/shared/theme/assets/json/130108/solicitud
 
 import nicoCatalogoVal from '@libs/shared/theme/assets/json/130108/nico.json';
 
+// Para el selector del componente, agregar:
+/**
+ * @selector app-solicitud
+ * @description Selector del componente de solicitud para exportación de minerales de hierro
+ */
+
+// Para las propiedades del decorador @Component, agregar:
+/**
+ * @template ./solicitud.component.html
+ * @description Plantilla HTML del componente de solicitud
+ */
 
 /**
- * Componente de Solicitud para gestionar la solicitud de exportación de minerales de hierro.
- * Este componente permite la creación, edición y visualización de la solicitud.
- * 
- * @example
- * <app-solicitud></app-solicitud>
+ * @styleUrl ./solicitud.component.scss
+ * @description Estilos SCSS específicos del componente de solicitud
  */
 @Component({
   selector: 'app-solicitud',
@@ -272,6 +280,12 @@ tituloParte = TITULO_ORIGEN;
  */
   public seccionState!: Tramite130108State;
 
+      /**
+  * Indica si el formulario está en modo solo lectura.
+  * Cuando es `true`, los campos del formulario no se pueden editar.
+  */
+  esFormularioSoloLectura: boolean = false;
+
   /**
    * Constructor de la clase.
    * @param {FormBuilder} fb - Servicio para construir formularios reactivos.
@@ -285,9 +299,18 @@ tituloParte = TITULO_ORIGEN;
     private http: HttpClient,
     private tramite130108Store: Tramite130108Store,
     private tramite130108Query: Tramite130108Query,
-    private exportacionMineralesDeHierroService: ExportacionMineralesDeHierroService
+    private exportacionMineralesDeHierroService: ExportacionMineralesDeHierroService,
+     private consultaioQuery: ConsultaioQuery,
   ) {
-    // Constructor vacío, solo se inyectan los servicios
+    this.consultaioQuery.selectConsultaioState$
+        .pipe(
+          takeUntil(this.destroyed$),
+          map((seccionState)=>{
+            this.esFormularioSoloLectura = seccionState.readonly; 
+            this.inicializarEstadoFormulario();
+          })
+        )
+        .subscribe()
   }
 
   /**
@@ -309,14 +332,59 @@ tituloParte = TITULO_ORIGEN;
    * @returns void
    */
   ngOnInit(): void {
-    this.configuracionFormularioSuscripciones();
-    this.inicializarFormularios();
+    this.inicializarEstadoFormulario();
     this.opcionesDeBusqueda();
     this.formularioTotalCount();
     this.fetchEntidadFederativa();
     this.fetchRepresentacionFederal();
     this.listaDePaisesDisponibles();
 
+  }
+
+  
+  /**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.  
+   * Además, obtiene la información del catálogo de mercancía.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.inicializarFormularios();
+    }  
+  }
+
+
+  /**
+ * @method
+ * @name guardarDatosFormulario
+ * @description
+ * Inicializa los formularios y obtiene los datos de la tabla. 
+ * Dependiendo del modo de solo lectura (`esFormularioSoloLectura`), 
+ * deshabilita o habilita todos los formularios del componente.
+ * Si el formulario está en modo solo lectura, todos los formularios se deshabilitan para evitar modificaciones.
+ * Si no está en modo solo lectura, todos los formularios se habilitan para permitir la edición.
+ * 
+ * @returns {void}
+ */  
+  guardarDatosFormulario(): void {
+      this.inicializarFormularios();
+      this.obtenerTablaDatos();
+      if (this.esFormularioSoloLectura) {
+        this.formDelTramite.disable();
+        this.mercanciaForm.disable();
+        this.partidasDelaMercanciaForm.disable();
+        this.paisForm.disable();
+        this.frmRepresentacionForm.disable();
+        this.manifestoForm.disable();
+      } else {
+        this.formDelTramite.enable();
+        this.mercanciaForm.enable();
+        this.partidasDelaMercanciaForm.enable();
+        this.paisForm.enable();
+        this.frmRepresentacionForm.enable();
+        this.manifestoForm.enable();
+      } 
   }
 
   /**
@@ -326,6 +394,7 @@ tituloParte = TITULO_ORIGEN;
   * antes de ser enviados.
   */
   inicializarFormularios(): void {
+      this.configuracionFormularioSuscripciones();
 
     // Formulario principal del trámite, contiene los campos de solicitud, régimen y clasificación
     this.formDelTramite = this.fb.group({
@@ -390,7 +459,8 @@ tituloParte = TITULO_ORIGEN;
       ],
 
       /**
-       * Valor de la factura en USD relacionada con la mercancía.
+   
+      * Valor de la factura en USD relacionada con la mercancía.
        * Es obligatorio, debe ser un número decimal con hasta dos lugares después del punto y un valor mínimo de 0.01.
        */
       valorFacturaUSD: [
@@ -553,6 +623,7 @@ tituloParte = TITULO_ORIGEN;
 
   }
 
+  
   /**
    * @description
    * Método que inicializa el formulario utilizado para mostrar la cantidad total y el valor total en USD.
@@ -654,26 +725,6 @@ tituloParte = TITULO_ORIGEN;
       });
   }
  
-
-  /**
- * Método encargado de manejar la fila seleccionada en una tabla.
- * Si hay filas seleccionadas, se guarda la primera fila en la propiedad `filaSeleccionada`.
- * Si no hay filas seleccionadas, se establece como un arreglo vacío.
- * Luego, si existe una fila seleccionada, se actualiza el estado de la tienda `tramite130108Store` 
- * con los valores de la fila seleccionada mediante el método `storeTableValues`.
- * 
- * @param {PartidasDeLaMercanciaModelo[]} filasSeleccionadas - Arreglo de filas seleccionadas en la tabla.
- * @returns {void}
- */
-  manejarlaFilaSeleccionada(filasSeleccionadas: PartidasDeLaMercanciaModelo[]): void {
-    this.filaSeleccionada = filasSeleccionadas.length
-      ? filasSeleccionadas
-      : [];
-    if (this.filaSeleccionada) {
-      this.tramite130108Store.storeTableValues(this.filaSeleccionada);
-    }
-
-  }
   /**
 * Método para obtener los datos de la tabla dinámica.
 * Este método realiza una solicitud al servicio `ImportacionDeVehiculosService` para obtener los datos
@@ -831,22 +882,6 @@ tituloParte = TITULO_ORIGEN;
 
 
   /**
-  * Método que se encarga de navegar a la página de modificación de partida.
-  * Si hay una fila seleccionada, muestra la tabla de valores y guarda los valores
-  * de la fila seleccionada en el estado del store correspondiente.
-  */
-  /**
-   * navegarParaModificarPartida
-   * Navega para modificar una partida específica y actualiza el estado global.
-   */
-  navegarParaModificarPartida(): void {
-    if (this.filaSeleccionada) {
-      this.tramite130108Store.setMostrarTabla(true);
-      this.tramite130108Store.storeTableValues(this.filaSeleccionada);
-    }
-  }
-
-  /**
    * Método que realiza la consulta al servicio de exportación de minerales
    * de hierro para obtener los datos del estado de la entidad federativa.
    * Luego, asigna los datos obtenidos a la propiedad `estado` de la clase.
@@ -929,7 +964,7 @@ tituloParte = TITULO_ORIGEN;
     // Llamada al servicio para obtener los países por bloque
     this.exportacionMineralesDeHierroService
       .getPaisesPorBloque(_bloqueId)
-      .pipe(takeUntil(this.destroyed$)) // Se asegura de que la suscripción se cancele correctamente
+      .pipe(takeUntil(this.destroyed$))
       .subscribe((data) => {
         // Asigna los países obtenidos a la propiedad paisesPorBloque
         this.paisesPorBloque = data;
@@ -978,16 +1013,20 @@ tituloParte = TITULO_ORIGEN;
     return disabled;
   }
 
-  /**
-  * Se ejecuta cuando el componente o servicio es destruido.
-  * 
-  * Este método es parte del ciclo de vida de un componente de Angular. Se utiliza para liberar recursos y evitar
-  * fugas de memoria, cancelando observables o tareas que ya no son necesarias una vez que el componente ha sido destruido.
-  * En este caso, se emite un valor a través de `destroyed$` y se completa el observable, lo que indica que el 
-  * componente ya no necesita estar suscrito o escuchar cambios.
-  * 
-  * @returns {void}
-  */
+ /**
+ * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
+ * Se encarga de limpiar las suscripciones activas para evitar fugas de memoria.
+ * Emite un valor en el Subject `destroyed$` y lo completa para notificar a todos
+ * los observables suscritos que deben cancelar sus suscripciones.
+ * 
+ * @method ngOnDestroy
+ * @implements {OnDestroy}
+ * @returns {void}
+ * 
+ * @example
+ * // Este método se ejecuta automáticamente cuando Angular destruye el componente
+ * // No es necesario llamarlo manualmente
+ */
   ngOnDestroy(): void {
     // Emite un valor indicando que el componente ha sido destruido
     this.destroyed$.next();

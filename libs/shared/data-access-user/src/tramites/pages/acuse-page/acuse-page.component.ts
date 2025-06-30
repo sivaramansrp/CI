@@ -52,6 +52,9 @@ export class AcusePageComponent implements OnInit {
    */
   url!: string;
 
+
+  idSolicitud!: number;
+
   constructor(
     private tramiteQueries: TramiteFolioQueries,
     private router: Router
@@ -69,5 +72,7 @@ export class AcusePageComponent implements OnInit {
 
     this.folio = this.tramiteQueries.getTramite();
     this.txtAlerta = TXT_ALERTA_ACUSE(this.folio);
+
+     this.idSolicitud = this.tramiteQueries.getIdSolicitud();
   }
 }

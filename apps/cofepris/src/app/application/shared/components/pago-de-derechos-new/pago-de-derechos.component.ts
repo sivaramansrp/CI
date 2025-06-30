@@ -5,7 +5,7 @@ import {
   InputFechaComponent,
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { FECHA } from '../../constantes/pago-de-derechos.enum';
@@ -27,7 +27,7 @@ import { FECHA } from '../../constantes/pago-de-derechos.enum';
   templateUrl: './pago-de-derechos.component.html',
   styleUrl: './pago-de-derechos.component.scss',
 })
-export class PagoDeDerechosComponent {
+export class PagoDeDerechosComponent implements OnChanges {
   /**
    * Formulario reactivo que captura los datos del pago de derechos.
    */
@@ -61,6 +61,17 @@ export class PagoDeDerechosComponent {
     //
   }
 
+ 
+  ngOnChanges(changes: SimpleChanges): void {
+      // Verifica si el formulario ha cambiado y actualiza su estado
+      if (changes['isDisabled']) {
+        if (this.isDisabled) {
+        this.formularioPagoDerechos.disable();
+        }else{
+          this.formularioPagoDerechos.enable();
+        }
+      }
+    }
   /**
    * Capitaliza el valor ingresado en un campo y lo guarda en el store.
    * campo - Nombre del campo del formulario.

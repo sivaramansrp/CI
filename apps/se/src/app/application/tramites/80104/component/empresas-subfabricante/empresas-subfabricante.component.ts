@@ -34,11 +34,12 @@ import { NuevoProgramaIndustrialService } from '../../services/modalidad-albergu
 import { SUBFABRICANTE_DISPONIBLES_PLANTAS_TABLA_CONFIGURACION } from '../../../../shared/constantes/plantas-subfabricante-disponibles.enum';
 import { SUBFABRICANTE_SELECCIONADAS_PLANTAS_TABLA_CONFIGURACION } from '../../../../shared/constantes/plantas-subfabricante-disponibles.enum';
 import { Subject } from 'rxjs';
-import { Tramite80101Query } from '../../estados/tramite80101.query';
-import { Tramite80101Store } from '../../estados/tramite80101.store';
+
 import { takeUntil } from 'rxjs';
 
 import { EmpresasSubfabricantesComponent } from '../../../../shared/components/empresas-subfabricante/empresas-subfabricante.component';
+import { Tramite80101Query } from '../../../80103/estados/tramite80101.query';
+import { Tramite80101Store } from '../../../80103/estados/tramite80101.store';
 /*
   * Componente para gestionar la sección de empresas subfabricantes en el trámite 80103.
   *
@@ -124,7 +125,7 @@ export class EmpresasSubfabricanteComponent implements OnDestroy, OnInit {
   *
   * @property {Subject<void>} destroyNotifier$
   */
-  private destroyNotifier$: Subject<void> = new Subject();
+  public destroyNotifier$: Subject<void> = new Subject();
 /*
   * Datos de la tabla de subfabricantes disponibles.*/
   configuracionTablaDisponibles: ConfiguracionColumna<PlantasSubfabricante>[] = SUBFABRICANTE_DISPONIBLES_PLANTAS_TABLA_CONFIGURACION;

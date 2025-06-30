@@ -6,8 +6,9 @@ import {
   Proveedor,
   TercerosRelacionadosDatos,
 } from '../../../../shared/models/terceros-relacionados.model';
-import { Observable, Subject} from 'rxjs';
+import { Observable, Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-relacionados/terceros-relacionados.component';
 import { Tramite260208Query } from '../../estados/tramite260208Query.query';
 import { Tramite260208Store } from '../../estados/tramite260208Store.store';
@@ -58,6 +59,12 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
      */
     private destroy$ = new Subject<void>();
 
+      /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  public esFormularioSoloLectura: boolean = false; 
+
      /**
       * Observable de datos de terceros relacionados.
       * @type {Observable<TercerosRelacionadosDatos>}
@@ -73,9 +80,17 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
    */
   constructor(
     private tramiteStore: Tramite260208Store,
-    private tramiteQuery: Tramite260208Query
+    private tramiteQuery: Tramite260208Query,
+    private consultaQuery: ConsultaioQuery
   ) {
-        // No se necesita lógica de inicialización adicional.
+      this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroy$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+        })
+      )
+      .subscribe();
   }
 
   /**

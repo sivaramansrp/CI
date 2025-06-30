@@ -1,3 +1,9 @@
+import { Destinatario } from '../models/destinatario.model';
+import { Fabricante } from '../models/fabricante.model';
+import { Facturador } from '../models/facturador.model';
+import { Mercancia } from '../models/mercancia.model';
+import { Proveedor } from '../models/proveedor.model';
+import { SCIAN } from '../models/SCIAN.model';
 import { TableData } from '@libs/shared/data-access-user/src';
 
 /**
@@ -125,3 +131,108 @@ export interface Solicitud {
   /** Apellido materno del solicitante. */
   apellidoMeterno: string;
 }
+
+/**
+ * @interface
+ * @name RespuestaConsulta
+ * @description
+ * Interfaz que representa la respuesta de una consulta.
+ */
+export interface RespuestaConsulta {
+  /**
+   * Indica si la consulta fue exitosa.
+   */
+  success: boolean;
+
+  /**
+   * Datos resultantes de la consulta.
+   */
+  datos: ConsultaDatos;
+
+  /**
+   * Mensaje de la respuesta.
+   */
+  message: string;
+}
+
+/**
+ * @interface
+ * @name ConsultaDatos
+ * @description
+ * Contiene los datos obtenidos de una consulta.
+ */
+export interface ConsultaDatos {
+    tipoOperacion: string | number;
+    observaciones: string;
+    rfcSanitario: string;
+    razonSocial: string;
+    correoElectronico: string;
+    codigoPostal: string;
+    estado: number;
+    municipio: string;
+    localidad: string;
+    colonia: string;
+    calle: string;
+    lada: number;
+    telefono: number;
+    claveSCIAN: number;
+    claveSCIANDesc: number;
+    avisoDeFuncionamiento: boolean;
+    licenciaSanitaria: string;
+    liveFreshFrozen: boolean;
+    regimen: number;
+    aduana: number;
+    hacerlos: string | number;
+    rfc: string;
+    legalRazonSocial: string;
+    apellidoPaterno: string;
+    apellidoMeterno: string;
+    mercanciasDatos: Mercancia[];
+    SCIANDatos: SCIAN[];
+    manifesto: boolean;
+    clasificaionProductos: string;
+    especificarProducto: number;
+    nombreProductoEspecifico: string;
+    distintiva: string;
+    cientifico: string;
+    tipoProducto: number;
+    farmaceutica: number;
+    fisico: number;
+    fraccionArancelaria: string;
+    descripcionFraccionArancelaria: string;
+    cantidadUMT: string;
+    umt: string;
+    cantidadUMC: string;
+    umc: number;
+    presentacionFarmaceutica: string;
+    registroSanitario: number;
+    fechaCaducidad: string;
+    tipoPersona: string | number;
+    modificarRFC: string;
+    denominacion: string;
+    domicilioPais: number;
+    domicilioEstado: number;
+    domicilioMunicipio: number;
+    domicilioLocalidad: number;
+    domicilioCodigo: number;
+    domicilioColonia: number;
+    domiciliCalle: string;
+    domiciliNumeroExterior: string;
+    domiciliNumeroInterior: string;
+    domiciliLada: string;
+    domiciliTelefono: string;
+    domiciliCorreoElectronioco: string;
+    destinatarioDatos: Destinatario[];
+    fabricanteDatos: Fabricante[];
+    proveedorDatos: Proveedor[];
+    facturadorDatos: Facturador[];
+    claveDeReferencia: string;
+    cadenaDeDependencia: string;
+    banco: number;
+    liaveDePago: string;
+    fechaDePago: string;
+    importeDePago: string;
+    folioDeDesistimiento: string;
+    folioOriginal: string;
+  }
+  
