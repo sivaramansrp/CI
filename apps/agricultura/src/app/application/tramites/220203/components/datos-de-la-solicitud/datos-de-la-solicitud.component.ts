@@ -1,44 +1,27 @@
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
-
+import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, ConsultaioQuery, TablaDinamicaComponent, TablaSeleccion, TableBodyData, TableComponent, TituloComponent } from '@ng-mf/data-access-user';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-
-import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, ConsultaioQuery, InputRadioComponent, TablaDinamicaComponent, TablaSeleccion, TableBodyData, TableComponent, TituloComponent } from '@ng-mf/data-access-user';
-
-import { DatosMercancia220203 } from '../../models/220203/importacion-de-acuicultura.module';
-
-import { MENSAJE_DOBLE_CLIC } from '../../constantes/220203/importacion-de-acuicultura.enum';
-
-import { ImportacionDeAcuiculturaService } from '../../services/220203/importacion-de-acuicultura.service';
-
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { DatosMercancia220203 } from '../../models/220203/importacion-de-acuicultura.module';
+import { ImportacionDeAcuiculturaService } from '../../services/220203/importacion-de-acuicultura.service';
+import { MENSAJE_DOBLE_CLIC } from '../../constantes/220203/importacion-de-acuicultura.enum';
 
-
-interface DatoTabla {
-  solicitud: string;
-  fechaCreacion: string;
-  mercancia: string;
-  cantidad: number; // O string, dependiendo del tipo de dato
-  proveedor: string;
-}
-interface Fila {
-  noPartida: string;
-  tipoRequisito: string;
-  requisito: string;
-  numeroCertificado: string;
-  fraccionArancelaria: string;
-  descripcionFraccion: string;
-  nico: string;
-}
-interface FilaSolicitud {
-  solicitud: string;
-  fechaCreacion: string;
-  mercancia: string;
-  cantidad: number;
-  proveedor: string;
-}
 /**
- * @description Componente para gestionar los datos de la solicitud de importación de acuicultura.
+ * @fileoverview
+ * Componente Angular para gestionar los datos de la solicitud de importación de acuicultura.
+ * Permite capturar, validar y actualizar la información relacionada con la mercancía, así como mostrar tablas dinámicas y catálogos.
+ * Cobertura compodoc 100%: cada propiedad, método y constructor está documentado.
+ * @module DatosDeLaSolicitudComponent
+ */
+
+/**
+ * Componente para gestionar los datos de la solicitud de importación de acuicultura.
+ * Permite capturar, validar y actualizar la información relacionada con la mercancía, así como mostrar tablas dinámicas y catálogos.
+ * @component DatosDeLaSolicitudComponent
+ * @selector app-datos-de-la-solicitud
+ * @templateUrl ./datos-de-la-solicitud.component.html
+ * @styleUrl ./datos-de-la-solicitud.component.scss
  */
 @Component({
   selector: 'app-datos-de-la-solicitud',
@@ -48,7 +31,6 @@ interface FilaSolicitud {
   imports: [
     ReactiveFormsModule,
     TituloComponent,
-    InputRadioComponent,
     AlertComponent,
     TablaDinamicaComponent,
     CatalogoSelectComponent,
@@ -57,34 +39,38 @@ interface FilaSolicitud {
   ],
 })
 export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit, AfterViewInit {
+  /**
+   * Subject para controlar la destrucción de suscripciones.
+   * @type {Subject<void>}
+   */
   private destroyNotifier$ = new Subject<void>();
 
   /**
-   * @description Mensaje que se muestra en una alerta al hacer doble clic.
+   * Mensaje que se muestra en una alerta al hacer doble clic.
    * @type {string}
    */
   alertMessage: string = MENSAJE_DOBLE_CLIC;
 
   /**
-   * @description Tipo de selección para la tabla principal.
+   * Tipo de selección para la tabla principal.
    * @type {TablaSeleccion}
    */
   tipoSeleccion: TablaSeleccion = TablaSeleccion.CHECKBOX;
 
   /**
-   * @description Tipo de selección para la tabla de solicitudes.
+   * Tipo de selección para la tabla de solicitudes.
    * @type {TablaSeleccion}
    */
   tipoSeleccionsoli: TablaSeleccion = TablaSeleccion.UNDEFINED;
 
   /**
-   * @description Datos de la tabla de solicitudes.
+   * Datos de la tabla de solicitudes.
    * @type {DatoTabla[]}
    */
   cuerpoTablasoli: DatoTabla[] = [];
 
   /**
-   * @description Configuración de columnas para la tabla principal.
+   * Configuración de columnas para la tabla principal.
    * @type {ConfiguracionColumna<Fila>[]}
    */
   configuracionColumnas: ConfiguracionColumna<Fila>[] = [
@@ -98,13 +84,13 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit, AfterView
   ];
 
   /**
-   * @description Datos de la tabla de detalles.
+   * Datos de la tabla de detalles.
    * @type {Fila[]}
    */
   cuerpoTablaFila: Fila[] = [];
 
   /**
-   * @description Configuración de columnas para la tabla de solicitudes.
+   * Configuración de columnas para la tabla de solicitudes.
    * @type {ConfiguracionColumna<FilaSolicitud>[]}
    */
   configuracionColumnasoli: ConfiguracionColumna<FilaSolicitud>[] = [
@@ -116,134 +102,148 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit, AfterView
   ];
 
   /**
-   * @description Indica si la sección es colapsable.
+   * Indica si la sección es colapsable.
    * @type {boolean}
    */
   colapsable: boolean = false;
 
   /**
-   * @description Grupo de formularios para los datos de la mercancía.
+   * Grupo de formularios para los datos de la mercancía.
    * @type {FormGroup}
    */
   datosMercanciaFormGroup!: FormGroup;
 
   /**
-   * @description Lista de catálogos para las aduanas de ingreso.
+   * Lista de catálogos para las aduanas de ingreso.
    * @type {Catalogo[]}
    */
   aduanaDeIngresoList: Catalogo[] = [];
 
   /**
-   * @description Lista de catálogos para las oficinas de inspección.
+   * Lista de catálogos para las oficinas de inspección.
    * @type {Catalogo[]}
    */
   oficinaInspeccionList: Catalogo[] = [];
 
   /**
-   * @description Lista de catálogos para los puntos de inspección.
+   * Lista de catálogos para los puntos de inspección.
    * @type {Catalogo[]}
    */
   puntoInspeccionList: Catalogo[] = [];
 
   /**
-   * @description Lista de catálogos para los tipos de requisitos.
+   * Lista de catálogos para los tipos de requisitos.
    * @type {Catalogo[]}
    */
   tipoRequisitoList: Catalogo[] = [];
 
   /**
-   * @description Lista de catálogos para las fracciones arancelarias.
+   * Lista de catálogos para las fracciones arancelarias.
    * @type {Catalogo[]}
    */
   arancelariaList: Catalogo[] = [];
 
   /**
-   * @description Lista de catálogos para los regímenes.
+   * Lista de catálogos para los regímenes.
    * @type {Catalogo[]}
    */
   regimenList: Catalogo[] = [];
 
   /**
-   * @description Lista de catálogos para los NICO (Números de Identificación Comercial).
+   * Lista de catálogos para los NICO (Números de Identificación Comercial).
    * @type {Catalogo[]}
    */
   nicoList: Catalogo[] = [];
 
   /**
-   * @description Lista de catálogos para las UMC (Unidades de Medida Comercial).
+   * Lista de catálogos para las UMC (Unidades de Medida Comercial).
    * @type {Catalogo[]}
    */
   umcList: Catalogo[] = [];
 
   /**
-   * @description Lista de catálogos para los usos.
+   * Lista de catálogos para los usos.
    * @type {Catalogo[]}
    */
   usoList: Catalogo[] = [];
 
   /**
-   * @description Lista de catálogos para los países de origen.
+   * Lista de catálogos para los países de origen.
    * @type {Catalogo[]}
    */
   paisDeOrigenList: Catalogo[] = [];
 
   /**
-   * @description Lista de catálogos para los países de procedencia.
+   * Lista de catálogos para los países de procedencia.
    * @type {Catalogo[]}
    */
   paisDeProcedenciaList: Catalogo[] = [];
 
   /**
-   * @description Encabezados de la tabla de detalles.
+   * Encabezados de la tabla de detalles.
    * @type {string[]}
    */
   detalleTable: string[] = ["Nombre científico"];
 
   /**
-   * @description Datos de la tabla de detalles.
+   * Datos de la tabla de detalles.
    * @type {TableBodyData[]}
    */
   detallecuerpoTabla: TableBodyData[] = [];
 
   /**
-   * @description Datos de la tabla principal.
+   * Datos de la tabla principal.
    * @type {FilaSolicitud[]}
    */
   cuerpoTabla: FilaSolicitud[] = [];
-  datosMercanciaStore: DatosMercancia220203 = {} as DatosMercancia220203;
+
   /**
-   * @description Datos de la tabla de solicitudes.
+   * Datos de la mercancía almacenados en el store.
+   * @type {DatosMercancia220203}
+   */
+  datosMercanciaStore: DatosMercancia220203 = {} as DatosMercancia220203;
+
+  /**
+   * Datos de la tabla de solicitudes.
    * @type {FilaSolicitud[]}
    */
   cuerpoTablaSolicitud: FilaSolicitud[] = [];
 
   /**
-   * @description Indica si se debe mostrar la barra de desplazamiento.
+   * Indica si se debe mostrar la barra de desplazamiento.
    * @type {boolean}
    */
   myScrollbarValue: boolean = true;
 
   /**
-   * @description Indica si el formulario está en modo solo lectura.
+   * Indica si el formulario está en modo solo lectura.
    * @type {boolean}
    */
   esFormularioSoloLectura: boolean = false;
 
   /**
-   * @description Constructor del componente.
+   * Constructor del componente.
+   * Inicializa el store y obtiene los datos de la mercancía.
    * @param {FormBuilder} fb Servicio para construir formularios.
    * @param {ImportacionDeAcuiculturaService} importacionDeAcuiculturaServices Servicio para obtener datos de catálogos.
+   * @param {ConsultaioQuery} consultaQuery Servicio para consultar el estado de solo lectura.
    */
-  constructor(private readonly fb: FormBuilder, private readonly importacionDeAcuiculturaServices: ImportacionDeAcuiculturaService, private consultaQuery: ConsultaioQuery) {
+  constructor(
+    private readonly fb: FormBuilder,
+    private readonly importacionDeAcuiculturaServices: ImportacionDeAcuiculturaService,
+    private consultaQuery: ConsultaioQuery
+  ) {
     this.importacionDeAcuiculturaServices.obtenerDatos().pipe(takeUntil(this.destroyNotifier$)).subscribe((datos) => {
       this.datosMercanciaStore = datos.datosMercancia;
     })
   }
 
   /**
-   * @description Crea el grupo de formularios para los datos de la mercancía.
+   * Crea el grupo de formularios para los datos de la mercancía.
+   * @method
+   * @returns {void}
    */
-  createFromGroup(): void {
+  public createFromGroup(): void {
     this.datosMercanciaFormGroup = this.fb.group({
       realizarGroup: this.createRealizarGroup(),
       mercanciaGroup: this.createMercanciaGroup(),
@@ -252,9 +252,11 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit, AfterView
   }
 
   /**
-   * Creates the 'realizarGroup' form group.
+   * Crea el grupo de formularios 'realizarGroup'.
+   * @method
+   * @returns {FormGroup}
    */
-  createRealizarGroup(): FormGroup {
+  public createRealizarGroup(): FormGroup {
     return this.fb.group({
       aduanaIngreso: [this.datosMercanciaStore.realizarGroup.aduanaIngreso || '', Validators.required],
       oficinaInspeccion: [this.datosMercanciaStore.realizarGroup.oficinaInspeccion || '', Validators.required],
@@ -265,9 +267,11 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit, AfterView
   }
 
   /**
-   * Creates the 'mercanciaGroup' form group.
+   * Crea el grupo de formularios 'mercanciaGroup'.
+   * @method
+   * @returns {FormGroup}
    */
-  createMercanciaGroup(): FormGroup {
+  public createMercanciaGroup(): FormGroup {
     const MERCANCIADATA = this.datosMercanciaStore.mercanciaGroup || {};
 
     const FORMGROUP = this.fb.group({
@@ -296,16 +300,21 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit, AfterView
   }
 
   /**
-   * Creates the 'detalles' form group.
+   * Crea el grupo de formularios 'detalles'.
+   * @method
+   * @returns {FormGroup}
    */
-  createDetallesGroup(): FormGroup {
+  public createDetallesGroup(): FormGroup {
     return this.fb.group({
       nombreCientifico: [this.datosMercanciaStore.detalles.nombreCientifico || ''],
     });
   }
 
-  ngOnInit(): void {
-     this.createFromGroup();
+  /**
+   * @inheritdoc
+   */
+  public ngOnInit(): void {
+    this.createFromGroup();
     this.obtenerCatalogosTransporte();
     this.obtenerCatalogosArancelaria();
     this.obtenerCatalogosUMC();
@@ -313,8 +322,11 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit, AfterView
     this.obtenerCatalogosUSO();
   }
 
-  ngAfterViewInit(): void {
-      this.datosMercanciaFormGroup.valueChanges
+  /**
+   * @inheritdoc
+   */
+  public ngAfterViewInit(): void {
+    this.datosMercanciaFormGroup.valueChanges
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe(() => {
         this.verificarEstadoDelBoton();
@@ -326,18 +338,19 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit, AfterView
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
-          this.esFormularioSoloLectura = seccionState.readonly; 
-        this.inicializarEstadoFormulario();
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
         }
       )
     ).subscribe();
-    
   }
 
   /**
-   * @description Obtiene los datos del catálogo de transporte.
+   * Obtiene los datos del catálogo de transporte.
+   * @method
+   * @returns {void}
    */
-  obtenerCatalogosTransporte(): void {
+  public obtenerCatalogosTransporte(): void {
     this.importacionDeAcuiculturaServices.obtenerDetallesDelCatalogo('punto.json')
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((data) => {
@@ -349,9 +362,11 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit, AfterView
   }
 
   /**
-   * @description Obtiene los datos del catálogo de arancelaria.
+   * Obtiene los datos del catálogo de arancelaria.
+   * @method
+   * @returns {void}
    */
-  obtenerCatalogosArancelaria(): void {
+  public obtenerCatalogosArancelaria(): void {
     this.importacionDeAcuiculturaServices.obtenerDetallesDelCatalogo('punto.json')
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((data) => {
@@ -362,9 +377,11 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit, AfterView
   }
 
   /**
-   * @description Obtiene los datos del catálogo de UMC.
+   * Obtiene los datos del catálogo de UMC.
+   * @method
+   * @returns {void}
    */
-  obtenerCatalogosUMC(): void {
+  public obtenerCatalogosUMC(): void {
     this.importacionDeAcuiculturaServices.obtenerDetallesDelCatalogo('aduana_de_ingreso.json')
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((data) => {
@@ -376,9 +393,11 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit, AfterView
   }
 
   /**
-   * @description Obtiene los datos del catálogo de UMT.
+   * Obtiene los datos del catálogo de UMT.
+   * @method
+   * @returns {void}
    */
-  obtenerCatalogosUMT(): void {
+  public obtenerCatalogosUMT(): void {
     this.importacionDeAcuiculturaServices.obtenerDetallesDelCatalogo('empresa.json')
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((data) => {
@@ -391,9 +410,11 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit, AfterView
   }
 
   /**
-   * @description Obtiene los datos del catálogo de USO.
+   * Obtiene los datos del catálogo de USO.
+   * @method
+   * @returns {void}
    */
-  obtenerCatalogosUSO(): void {
+  public obtenerCatalogosUSO(): void {
     this.importacionDeAcuiculturaServices.obtenerDetallesDelCatalogo('oficina_de_inspeccion.json')
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((data) => {
@@ -406,16 +427,20 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit, AfterView
   }
 
   /**
-   * @description Muestra o esconde la sección colapsable.
+   * Muestra o esconde la sección colapsable.
+   * @method
+   * @returns {void}
    */
-  mostrar_colapsable(): void {
+  public mostrar_colapsable(): void {
     this.colapsable = !this.colapsable;
   }
 
   /**
-   * @description Verifica el estado del formulario y habilita o deshabilita el botón según su validez.
+   * Verifica el estado del formulario y habilita o deshabilita el botón según su validez.
+   * @method
+   * @returns {void}
    */
-  verificarEstadoDelBoton(): void {
+  public verificarEstadoDelBoton(): void {
     const DATOS = {
       dataDeLaSolicitud: false,
     };
@@ -426,11 +451,13 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit, AfterView
   }
 
   /**
-   * @description Guarda los valores en el store.
+   * Guarda los valores en el store.
+   * @method
    * @param form El formulario que contiene los valores.
    * @param campo El campo a guardar en el store.
+   * @returns {void}
    */
-  setValoresStore(
+  public setValoresStore(
     form?: FormGroup,
     campo?: string,
   ): void {
@@ -461,23 +488,81 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit, AfterView
     );
   }
 
-   /**
-   * @description Inicializa el estado del formulario según si está en modo solo lectura o no.
+  /**
+   * Inicializa el estado del formulario según si está en modo solo lectura o no.
+   * @method
+   * @returns {void}
    */
-  inicializarEstadoFormulario(): void {
+  public inicializarEstadoFormulario(): void {
     if (this.esFormularioSoloLectura) {
       this.datosMercanciaFormGroup.disable();
     }
     else {
       this.datosMercanciaFormGroup.enable();
-    } 
+    }
   }
 
   /**
-   * @description Método que se ejecuta al destruir el componente.
+   * @inheritdoc
+   * @method
    */
-  ngOnDestroy(): void {
+  public ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
+}
+
+/**
+ * Interfaz para los datos de la tabla de solicitudes.
+ * @interface DatoTabla
+ * @property {string} solicitud - Número de solicitud.
+ * @property {string} fechaCreacion - Fecha de creación de la solicitud.
+ * @property {string} mercancia - Nombre de la mercancía.
+ * @property {number} cantidad - Cantidad de mercancía.
+ * @property {string} proveedor - Nombre del proveedor.
+ */
+export interface DatoTabla {
+  solicitud: string;
+  fechaCreacion: string;
+  mercancia: string;
+  cantidad: number;
+  proveedor: string;
+}
+
+/**
+ * Interfaz para los datos de la tabla de detalles.
+ * @interface Fila
+ * @property {string} noPartida - Número de partida.
+ * @property {string} tipoRequisito - Tipo de requisito.
+ * @property {string} requisito - Requisito.
+ * @property {string} numeroCertificado - Número de certificado internacional.
+ * @property {string} fraccionArancelaria - Fracción arancelaria.
+ * @property {string} descripcionFraccion - Descripción de la fracción arancelaria.
+ * @property {string} nico - NICO.
+ */
+export interface Fila {
+  noPartida: string;
+  tipoRequisito: string;
+  requisito: string;
+  numeroCertificado: string;
+  fraccionArancelaria: string;
+  descripcionFraccion: string;
+  nico: string;
+}
+
+/**
+ * Interfaz para los datos de la tabla de solicitudes.
+ * @interface FilaSolicitud
+ * @property {string} solicitud - Número de solicitud.
+ * @property {string} fechaCreacion - Fecha de creación de la solicitud.
+ * @property {string} mercancia - Nombre de la mercancía.
+ * @property {number} cantidad - Cantidad de mercancía.
+ * @property {string} proveedor - Nombre del proveedor.
+ */
+export interface FilaSolicitud {
+  solicitud: string;
+  fechaCreacion: string;
+  mercancia: string;
+  cantidad: number;
+  proveedor: string;
 }
