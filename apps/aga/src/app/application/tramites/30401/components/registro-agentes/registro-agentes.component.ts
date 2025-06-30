@@ -6,8 +6,11 @@ import { Subject, takeUntil } from 'rxjs';
 import { Tramite30401Store, Tramites30401State } from '../../estados/tramites30401.store';
 import { AgentesTabla } from '../../modelos/registro-empresas-transporte.model';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { Modal } from 'bootstrap';
 import { Tramite30401Query } from '../../estados/tramites30401.query';
+import { map } from 'rxjs';
+
 
 /**
  * Componente RegistroAgentesComponent para la gestión del registro de agentes en el sistema.
@@ -37,6 +40,12 @@ import { Tramite30401Query } from '../../estados/tramites30401.query';
   styleUrl: './registro-agentes.component.css',
 })
 export class RegistroAgentesComponent implements OnInit {
+     /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  esFormularioSoloLectura: boolean = false;
+  
   /**
    * Define si el diálogo exitoso está habilitado.
    *
@@ -172,8 +181,18 @@ export class RegistroAgentesComponent implements OnInit {
   constructor(
     public fb: FormBuilder,
     private tramite30401Store: Tramite30401Store,
-    private tramite30401Query: Tramite30401Query
+    private tramite30401Query: Tramite30401Query,
+    private consultaioQuery: ConsultaioQuery
   ) {
+     this.consultaioQuery.selectConsultaioState$
+            .pipe(
+              takeUntil(this.destroyed$),
+              map((seccionState) => {
+               this.esFormularioSoloLectura = seccionState.readonly;
+    
+              })
+            )
+            .subscribe();
     this.crearFormulario();
     this.inicializarFormularioArchivo();
   }
@@ -329,7 +348,7 @@ export class RegistroAgentesComponent implements OnInit {
       };
 
       this.agentesInfoList = [...this.agentesInfoList, OBJETO];
-      this.tramite30401Store.setAgentesTablaDatos([OBJETO]);
+      this.tramite30401Store.establecerDatos({agentesTablaDatos:this.agentesInfoList});
     } else {
       this.agentesInfoList = this.agentesInfoList.map((elemento) =>
         elemento.id === this.filaSeleccionadaAgentes.id
@@ -343,7 +362,7 @@ export class RegistroAgentesComponent implements OnInit {
           : elemento
       );
 
-      this.tramite30401Store.setAgentesTablaDatos(this.agentesInfoList);
+      this.tramite30401Store.establecerDatos({agentesTablaDatos:this.agentesInfoList});
       this.filaSeleccionadaAgentes = {} as AgentesTabla;
     }
   }
@@ -388,18 +407,21 @@ export class RegistroAgentesComponent implements OnInit {
    * Filtra y elimina los elementos seleccionados de la tabla de mercancías.
    * Actualiza el estado del almacén y cierra el popup de confirmación de eliminación.
    */
-  eliminarAgentesItem(): void {
-    const IDS_TO_DELETE = this.listaFilaSeleccionadaAgentes.map(
-      (item) => item.id
-    );
+  eliminarAgentesItem(evento:boolean): void {
+    if(evento === true) {
+      const IDS_TO_DELETE = this.listaFilaSeleccionadaAgentes.map(
+        (item) => item.id
+      );
 
-    this.agentesInfoList = this.agentesInfoList.filter(
-      (item) => !IDS_TO_DELETE.includes(item.id)
-    );
+      this.agentesInfoList = this.agentesInfoList.filter(
+        (item) => !IDS_TO_DELETE.includes(item.id)
+      );
 
-    this.listaFilaSeleccionadaAgentes = [];
-    this.tramite30401Store.setAgentesTablaDatos(this.agentesInfoList);
-    this.cerrarEliminarConfirmationPopup();
+      this.listaFilaSeleccionadaAgentes = [];
+      this.filaSeleccionadaAgentes = {} as AgentesTabla;
+      this.tramite30401Store.establecerDatos({agentesTablaDatos: this.agentesInfoList});
+      this.cerrarEliminarConfirmationPopup();
+    }
   }
 
   /**

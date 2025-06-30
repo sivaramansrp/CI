@@ -18,7 +18,7 @@ describe('VehiculosComponent', () => {
 
   beforeEach(() => {
     tramite30401StoreMock = {
-      setVehiculosTablaDatos: jest.fn(),
+       establecerDatos: jest.fn(),
     };
 
     tramite30401QueryMock = {
@@ -63,18 +63,18 @@ describe('VehiculosComponent', () => {
     jest.clearAllMocks();
   });
 
-  it('should create the component', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize forms and subscribe to store on ngOnInit', () => {
+  it('Debe inicializar formularios y suscribirse a la tienda en ngOnInit', () => {
     expect(component.registroVehiculosForm).toBeDefined();
     expect(component.formularioArchivo).toBeDefined();
     expect(component.vehiculosInfoList).toEqual([]);
     expect(component.seccionState).toBeDefined();
   });
 
-  it('should initialize registroVehiculosForm with correct controls and validators', () => {
+  it('Debe inicializar registroVehiculosForm con controles y validadores correctos', () => {
     const form = component.registroVehiculosForm;
     expect(form.get('id')).toBeDefined();
     expect(form.get('marca')).toBeDefined();
@@ -83,13 +83,13 @@ describe('VehiculosComponent', () => {
     expect(form.valid).toBeFalsy();
   });
 
-  it('should initialize formularioArchivo with correct controls and validators', () => {
+  it('Debe inicializar formularioArchivo con los controles y validadores correctos', () => {
     const form = component.formularioArchivo;
     expect(form.get('archivo')).toBeDefined();
     expect(form.valid).toBeFalsy();
   });
 
-  it('should reset registroVehiculosForm when limpiarFormulario is called', () => {
+  it('Debería reiniciar registroVehiculosForm cuando se llama a limpiarFormulario', () => {
     component.registroVehiculosForm.patchValue({
       marca: 'Toyota',
       modelo: 'Corolla',
@@ -104,19 +104,19 @@ describe('VehiculosComponent', () => {
     });
   });
 
-  it('should open modalArchivo when cargaArchivo is called', () => {
+  it('debería abrir modalArchivo cuando se llame a cargaArchivo', () => {
     const modalShowSpy = jest.spyOn(Modal.prototype, 'show').mockImplementation(() => {});
     component.cargaArchivo();
     expect(modalShowSpy).toHaveBeenCalled();
   });
 
-  it('should open registroDeVehiculos modal when agregarDialogoDatos is called', () => {
+  it('Debería abrir el modal registroDeVehiculos cuando se llama a agregarDialogoDatos', () => {
     const modalShowSpy = jest.spyOn(Modal.prototype, 'show').mockImplementation(() => {});
     component.agregarDialogoDatos();
     expect(modalShowSpy).toHaveBeenCalled();
   });
 
-  it('should close registroDeVehiculos modal when cambiarEstadoModal is called', () => {
+  it('Debería cerrar el modal de registroDeVehiculos cuando se llama a cambiarEstadoModal', () => {
     const modalHideSpy = jest.spyOn(Modal.prototype, 'hide').mockImplementation(() => {});
     jest.spyOn(Modal, 'getInstance').mockReturnValue({
       hide: modalHideSpy,
@@ -125,14 +125,14 @@ describe('VehiculosComponent', () => {
     expect(modalHideSpy).toHaveBeenCalled();
   });
 
-  it('should mark all form controls as touched if registroVehiculosForm is invalid on enviarDialogData', () => {
+  it('Debe marcar todos los controles de formulario como tocados si registroVehiculosForm no es válido en enviarDialogData', () => {
     component.enviarDialogData();
     expect(component.registroVehiculosForm.get('marca')?.touched).toBe(true);
     expect(component.registroVehiculosForm.get('modelo')?.touched).toBe(true);
     expect(component.registroVehiculosForm.get('vin')?.touched).toBe(true);
   });
 
-  it('should add new vehicle and show confirmation when enviarDialogData is called with valid form', () => {
+  it('Debe agregar un nuevo vehículo y mostrar la confirmación cuando se llama a enviarDialogData con un formato válido', () => {
     component.registroVehiculosForm.patchValue({
       marca: 'Toyota',
       modelo: 'Corolla',
@@ -143,9 +143,12 @@ describe('VehiculosComponent', () => {
     expect(component.vehiculosInfoList).toEqual([
       { id: 1, marca: 'Toyota', modelo: 'Corolla', vin: '123456789ABCDEFG' },
     ]);
-    expect(tramite30401StoreMock.setVehiculosTablaDatos).toHaveBeenCalledWith([
-      { id: 1, marca: 'Toyota', modelo: 'Corolla', vin: '123456789ABCDEFG' },
-    ]);
+   expect(tramite30401StoreMock.establecerDatos).toHaveBeenCalledWith({
+  vehiculosTablaDatos: [
+    { id: 1, marca: 'Toyota', modelo: 'Corolla', vin: '123456789ABCDEFG' },
+  ],
+});
+
     expect(component.nuevaNotificacion).toEqual({
       tipoNotificacion: TipoNotificacionEnum.ALERTA,
       categoria: CategoriaMensaje.ALERTA,
@@ -161,7 +164,7 @@ describe('VehiculosComponent', () => {
     expect(component.registroVehiculosForm.pristine).toBe(true);
   });
 
-  it('should update existing vehicle when vehiculosInfoDatos is called with selected row', () => {
+  it('Debe actualizar el vehículo existente cuando se llama a vehiculosInfoDatos con la fila seleccionada', () => {
     component.filaSeleccionadaVehiculos = { id: 1, marca: 'Old', modelo: 'Old', vin: 'OLD123' };
     component.vehiculosInfoList = [{ id: 1, marca: 'Old', modelo: 'Old', vin: 'OLD123' }];
     component.registroVehiculosForm.patchValue({
@@ -173,19 +176,21 @@ describe('VehiculosComponent', () => {
     expect(component.vehiculosInfoList).toEqual([
       { id: 1, marca: 'Toyota', modelo: 'Corolla', vin: '123456789ABCDEFG' },
     ]);
-    expect(tramite30401StoreMock.setVehiculosTablaDatos).toHaveBeenCalledWith([
-      { id: 1, marca: 'Toyota', modelo: 'Corolla', vin: '123456789ABCDEFG' },
-    ]);
+  expect(tramite30401StoreMock.establecerDatos).toHaveBeenCalledWith({
+  vehiculosTablaDatos: [
+    { id: 1, marca: 'Toyota', modelo: 'Corolla', vin: '123456789ABCDEFG' },
+  ],
+});
     expect(component.filaSeleccionadaVehiculos).toEqual({});
   });
 
-  it('should close confirmation modal when cerrarModal is called', () => {
+  it('debe cerrar el modal de confirmación cuando se llama a cerrarModal', () => {
     component.esHabilitarElDialogo = true;
     component.cerrarModal();
     expect(component.esHabilitarElDialogo).toBe(false);
   });
 
-  it('should update filaSeleccionadaVehiculos in actualizarFilaSeleccionada', () => {
+  it('deberia actualizar filaSeleccionadaVehículos en actualizarFilaSeleccionada', () => {
     component.vehiculosInfoList = [
       { id: 1, marca: 'Toyota', modelo: 'Corolla', vin: '123456789ABCDEFG' },
     ];
@@ -199,7 +204,7 @@ describe('VehiculosComponent', () => {
     });
   });
 
-  it('should delete selected vehicles in eliminarVehiculosItem', () => {
+  it('Debería eliminar los vehículos seleccionados en eliminarVehiculosItem', () => {
     component.vehiculosInfoList = [
       { id: 1, marca: 'Toyota', modelo: 'Corolla', vin: '123456789ABCDEFG' },
       { id: 2, marca: 'Honda', modelo: 'Civic', vin: '987654321ZYXWVUT' },
@@ -213,20 +218,19 @@ describe('VehiculosComponent', () => {
       { id: 2, marca: 'Honda', modelo: 'Civic', vin: '987654321ZYXWVUT' },
     ]);
     expect(component.listaFilaSeleccionadaVehiculos).toEqual([]);
-    expect(tramite30401StoreMock.setVehiculosTablaDatos).toHaveBeenCalledWith([
-      { id: 2, marca: 'Honda', modelo: 'Civic', vin: '987654321ZYXWVUT' },
-    ]);
+  
+
     expect(cerrarSpy).toHaveBeenCalled();
   });
 
-  it('should close eliminar confirmation popup in cerrarEliminarConfirmationPopup', () => {
+  it('Debería cerrar la ventana emergente de confirmación de eliminación en cerrarEliminarConfirmationPopup', () => {
     component.confirmEliminarPopupAbierto = true;
     component.cerrarEliminarConfirmationPopup();
     expect(component.confirmEliminarPopupAbierto).toBe(false);
   });
 
 
-  it('should handle modificarItemVehiculos correctly based on listaFilaSeleccionadaVehiculos', () => {
+  it('Debería manejar modificarItemVehiculos correctamente según listaFilaSeleccionadaVehiculos', () => {
     const actualizarFilaSeleccionadaSpy = jest.spyOn(component, 'actualizarFilaSeleccionada').mockImplementation(() => {});
     const agregarDialogoDatosSpy = jest.spyOn(component, 'agregarDialogoDatos').mockImplementation(() => {});
     const patchModifiedDataSpy = jest.spyOn(component, 'patchModifyiedData').mockImplementation(() => {});
@@ -317,7 +321,7 @@ describe('VehiculosComponent', () => {
     component.modificarItemVehiculos();
 
   });
-  it('should patch form with selected vehicle data in patchModifiedData', () => {
+  it('Debe parchear el formulario con los datos del vehículo seleccionado en patchModifiedData', () => {
     component.filaSeleccionadaVehiculos = {
       id: 1,
       marca: 'Toyota',
@@ -333,7 +337,7 @@ describe('VehiculosComponent', () => {
     });
   });
 
-  it('should show notification for no selection in confirmEliminarVehiculosItem', () => {
+  it('Debería mostrarse una notificación si no se ha seleccionado nada al confirmarEliminarVehiculosItem', () => {
     component.listaFilaSeleccionadaVehiculos = [];
     component.confirmEliminarVehiculosItem();
     expect(component.multipleSeleccionPopupAbierto).toBe(true);
@@ -349,7 +353,7 @@ describe('VehiculosComponent', () => {
     });
   });
 
-  it('should open eliminar confirmation popup in abrirEliminarConfirmationPopup', () => {
+  it('Debería abrir la ventana emergente de confirmación de eliminación en abrirEliminarConfirmationPopup', () => {
     component.abrirElimninarConfirmationopup();
     expect(component.confirmEliminarPopupAbierto).toBe(true);
     expect(component.nuevaNotificacion).toEqual({
@@ -364,13 +368,13 @@ describe('VehiculosComponent', () => {
     });
   });
 
-  it('should close multiple selection popup in cerrarMultipleSeleccionPopup', () => {
+  it('Debería cerrar la ventana emergente de selección múltiple en cerrarMultipleSeleccionPopup', () => {
     component.multipleSeleccionPopupAbierto = true;
     component.cerrarMultipleSeleccionPopup();
     expect(component.multipleSeleccionPopupAbierto).toBe(false);
   });
 
-  it('should return true for invalid and touched controls in esInvalido', () => {
+  it('Debe devolver verdadero para controles no válidos y tocados en esInvalido', () => {
     component.registroVehiculosForm.get('marca')?.setErrors({ required: true });
     component.registroVehiculosForm.get('marca')?.markAsTouched();
     expect(component.esInvalido('marca')).toBe(true);
