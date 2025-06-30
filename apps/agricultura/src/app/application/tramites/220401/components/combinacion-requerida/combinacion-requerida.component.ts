@@ -137,12 +137,12 @@ export class CombinacionRequeridaComponent implements OnInit, OnDestroy {
     private _pantallas220401Service: Pantallas220401Service,
     private consultaioQuery: ConsultaioQuery,
   ) {
-    this.crearFormCombinacion();
     this.consultaioQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.esFormularioSoloLectura = seccionState.readonly;
+          this.crearFormCombinacion();
         })
       )
       .subscribe()

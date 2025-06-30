@@ -1,4 +1,6 @@
 import { Antecesor } from "../modelos/antecesor.modal";
+import { ConfiguracionColumna } from "@libs/shared/data-access-user/src";
+import { ControlInventariosItem } from "../models/models31601.model";
 
 // Configuración de las columnas para mostrar información de los antecesores
 export const CONFIGURACION_ANTECESORES = [
@@ -42,3 +44,25 @@ export const CONFIGURACION_ANTECESORES = [
         orden: 7,
     },
 ];
+
+/** 
+ * Configuración de las columnas para la tabla de control de inventarios.
+ * Esta configuración define cómo se mostrarán las columnas en la tabla de control de inventarios.
+ */
+export const CONTROL_INVENTARIOS_TABLA_CONFIGURACION: ConfiguracionColumna<ControlInventariosItem>[] = [
+    {
+      encabezado: 'Nombre del sistema o datos para su identificación',
+      clave: (item: ControlInventariosItem) => item.nombreSistema,
+      orden: 1,
+    },
+    {
+      encabezado: 'Lugar de radicación',
+      clave: (item: ControlInventariosItem) => item.lugarRadicacion,
+      orden: 2,
+    },
+    {
+      encabezado: 'Anexo 24',
+      clave: (item: ControlInventariosItem) => item.anexo24 ? '☑' : '☐',
+      orden: 3,
+    }
+  ];

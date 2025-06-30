@@ -1,20 +1,26 @@
-const { ModuleFederationPlugin } = require('webpack').container;
-const mf = require('@angular-architects/module-federation/webpack');
-const path = require('path');
-const share = mf.share;
+import { container } from 'webpack';
+/**
+ * @fileoverview
+ * This file is used to configure Module Federation for the Dashboard application.  
+ */
+import * as MF from '@angular-architects/module-federation/webpack';
+import * as PATH from 'path';
 
-const sharedMappings = new mf.SharedMappings();
-sharedMappings.register(path.join(__dirname, '../../tsconfig.base.json'), [
+// eslint-disable-next-line @typescript-eslint/naming-convention
+const { ModuleFederationPlugin } = container;
+const SHARE = MF.share;
+
+const SHARED_MAPPINGS = new MF.SharedMappings();
+SHARED_MAPPINGS.register(PATH.join(__dirname, '../../tsconfig.base.json'), [
   /* mapped paths to share */
 ]);
-
 // Determinar dinámicamente la publicPath
-function getPublicPath() {
+function getPublicPath():string {
   if (process.env.NODE_ENV === 'production') {
     return 'https://front.v30.ultrasist.net/';
-  } else {
-    return '/';
   }
+    return '/';
+  
   
 }
 
@@ -33,7 +39,7 @@ module.exports = {
   },
   resolve: {
     alias: {
-      ...sharedMappings.getAliases()
+      ...SHARED_MAPPINGS.getAliases()
     }
   },
   plugins: [
@@ -41,7 +47,7 @@ module.exports = {
       name: 'dashboard',
       // Agregar filename para asegurar que el punto de entrada remoto sea constante
       filename: 'remoteAppEntry.js',
-      shared: share({ 
+      shared: SHARE({ 
         '@angular/core': { singleton: true, strictVersion: true, requiredVersion: 'auto' },
         '@angular/common': { singleton: true, strictVersion: true, requiredVersion: 'auto' },
         '@angular/common/http': { singleton: true, strictVersion: true, requiredVersion: 'auto' },
@@ -57,10 +63,10 @@ module.exports = {
             requiredVersion: false,
             "import": "libs/shared/data-access-user/src/index.ts",
         },
-        ...sharedMappings.getDescriptors()
+        ...SHARED_MAPPINGS.getDescriptors()
       })
     }),
-    sharedMappings.getPlugin()
+    SHARED_MAPPINGS.getPlugin()
   ],
   watchOptions: {
     ignored: 'node_modules'
