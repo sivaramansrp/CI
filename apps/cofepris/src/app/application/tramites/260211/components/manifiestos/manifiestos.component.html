@@ -1,8 +1,11 @@
 <ng-titulo titulo="Manifiestos y declaraciones"></ng-titulo>
- <div class="alert alert-info manifest-box">
-        <input class="form-check-input" type="checkbox" id="datosManifiestos">
-        <p class="spaced-word">{{ MANIFIESTOS_ALERT}}</p>
-      </div>
+  <div class="form-check bg-light p-0">
+  <div class="alert alert-info content-with-checkbox py-6">
+    <input type="checkbox" id="mensaje" formcontrolName="mensaje" [checked]="esFormularioSoloLectura" [disabled]="esFormularioSoloLectura"/>
+    <span class="fw-bold align-middle"> *</span>
+    <div>{{ MANIFIESTOS_ALERT }} </div>
+  </div>
+</div>
 <form [formGroup]="manifiestos">
     <div class="form mt-5">
  <div class="form-group">

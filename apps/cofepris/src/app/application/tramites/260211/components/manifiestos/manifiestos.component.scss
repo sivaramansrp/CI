@@ -11,3 +11,17 @@
   align-items: center; 
   gap: 5px;
 }
+
+.content-with-checkbox {
+    display: flex;
+    text-align: justify;
+    gap: 5px;
+    padding-left: 15px;
+    flex-direction: row;
+    align-items: center;
+  }
+   
+  .align-middle {
+    vertical-align: middle !important;
+    margin-right: 30px;
+  }

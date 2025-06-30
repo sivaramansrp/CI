@@ -35,19 +35,11 @@ export const FECHA_DE_PAGO = {
  * Esta constante puede ser utilizada en componentes o vistas donde se requiera mostrar
  * esta alerta como parte de un formulario o proceso de declaración.
  */
-export const ALERTA_DE_MANIFESTO_Y_DECLARACIONES = `<div class="row align-items-center justify-content-start py-2" style="background-color: #d9edf7;">
-  <div class="col-auto d-flex align-items-start pt-1">
-    <input class="form-check-input mt-1 me-3" type="checkbox" value="" id="manifiestosCasillaDeVerificacion">
-    <label class="form-check-label ms-2" for="manifiestosCasillaDeVerificacion" (click)="manifestoSellecionado()"> *</label>
-  </div>
+export const ALERTA_DE_MANIFESTO_Y_DECLARACIONES = `
  
-  <div class="col" style="margin-left: 59px;">
-    <p class="mb-0">
       Cumplo con los requisitos y normatividad aplicable, sin que me eximan de que la autoridad sanitaria verifique su
       cumplimiento, esto sin perjuicio de las sanciones en que puedo incurrir por falsedad de declaraciones dadas a una
       autoridad. Asimismo acepto que la notificación de este trámite, sea a través de la Ventanilla Única de Comercio
       Exterior por los mecanismos de la misma.
-    </p>
-  </div>
-</div>
+   
 `;

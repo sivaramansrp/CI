@@ -297,7 +297,7 @@
                         <input type="text" id="denominacionDistintiva" formControlName="denominacionDistintiva" class="form-control" (change)="setValoresStore(formMercancias,'denominacionDistintiva', 'setDenominacionDistintiva')">
                     </div>
                     <div class="form-group">
-                        <label for="denominacionComun">Denominación común, nombre común o nombre científico*:</label>
+                        <label for="denominacionComun">Denominación o nombre científico*:</label>
                         <input type="text" id="denominacionComun" formControlName="denominacionComun" class="form-control" (change)="setValoresStore(formMercancias,'denominacionComun', 'setDenominacionComun')">
                     </div>
                     <div class="form-group">
@@ -324,10 +324,12 @@
                     </div>
                     <div class="form-group">
                         <label for="fraccionArancelaria">Fracción arancelaria*:</label>
+                        <span class="bi bi-question-circle-fill fs-4 m-1" title="Title" data-bs-toggle="tooltip"></span>
                         <input type="text" id="fraccionArancelaria" formControlName="fraccionArancelaria" class="form-control" (change)="setValoresStore(formMercancias,'fraccionArancelaria', 'setFraccionArancelaria')">
                     </div>
                     <div class="form-group">
-                        <label for="descripcionFraccion">Descripción de la fracción*:</label>
+                        <label for="descripcionFraccion">Descripción de la fracción arancelaria*:</label>
+                        <span class="bi bi-question-circle-fill fs-4 m-1" title="Title" data-bs-toggle="tooltip"></span>
                         <input type="text" id="descripcionFraccion" formControlName="descripcionFraccion" class="form-control" (change)="setValoresStore(formMercancias,'descripcionFraccion', 'setDescripcionFraccion')">
                     </div>
                     <div class="form-group">
@@ -336,6 +338,7 @@
                     </div>
                     <div class="form-group">
                         <label for="UMT">UMT*:</label>
+                        <span class="bi bi-question-circle-fill fs-4 m-1" title="Title" data-bs-toggle="tooltip"></span>
                         <input type="text" id="UMT" formControlName="UMT" class="form-control" (change)="setValoresStore(formMercancias,'UMT', 'setUMT')">
                     </div>
                     <div class="form-group">
@@ -351,6 +354,7 @@
                             name="UMC"
                              [isDisabled]="esFormularioSoloLectura ? true : false"
                             (change)="setValoresStore(formMercancias,'UMC', 'setUMC')"
+                            
                         ></app-catalogo-select>
                     </div>
                     <div class="form-group">
@@ -373,7 +377,7 @@
                               (click)="mostrar_colapsable()"
                               tabindex="0"
                             >
-                              <p class="panel-title">País de orígen</p>
+                              <p class="panel-title">País de procedencia</p>
                               <button type="button" class="collpase-button collapsed"></button>
                             </div>
                             @if(colapsable){
@@ -399,7 +403,7 @@
                               (click)="mostrar_colapsableDos()"
                               tabindex="0"
                             >
-                              <p class="panel-title">País de procedencia</p>
+                              <p class="panel-title">Uso específico</p>
                               <button type="button" class="collpase-button collapsed"></button>
                             </div>
                             @if(colapsableDos){
@@ -425,7 +429,7 @@
                               (click)="mostrar_colapsableTres()"
                               tabindex="0"
                             >
-                              <p class="panel-title">Uso específico</p>
+                              <p class="panel-title">Uso específico *</p>
                               <button type="button" class="collpase-button collapsed"></button>
                             </div>
                             @if(colapsableTres){
