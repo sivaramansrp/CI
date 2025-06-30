@@ -1,4 +1,7 @@
-import { DetalleMercancia, DetalleMercanciaEstupefacientes } from '../models/detalle-mercancia.model';
+import {
+  DetalleMercancia,
+  DetalleMercanciaEstupefacientes,
+} from '../models/detalle-mercancia.model';
 import {
   TablaMercanciaClaveConfig,
   TablaMercanciasDatos,
@@ -6,18 +9,16 @@ import {
   TablaScianConfig,
 } from '../models/datos-solicitud.model';
 
-
-
 /**
  * @const OPCION_TABLA
  * @description Configuración de las opciones de la tabla utilizada en la aplicación.
  * Contiene los encabezados, claves y el orden de las columnas de la tabla.
- * 
+ *
  * @property {string} encabezado - El nombre del encabezado de la columna.
  * @property {(ele: TablaOpcionConfig) => string} clave - Función que retorna el valor correspondiente
  * a la clave de la columna basada en el objeto `TablaOpcionConfig`.
  * @property {number} orden - El orden en el que se debe mostrar la columna en la tabla.
- * 
+ *
  */
 export const OPCION_TABLA = [
   {
@@ -46,7 +47,7 @@ export const OPCION_TABLA = [
  * @const SCIAN_TABLA
  * @description Configuración de la tabla utilizada para mostrar información relacionada con el S.C.I.A.N.
  * Contiene los encabezados, claves y el orden de las columnas de la tabla.
- * 
+ *
  * @property {string} encabezado - El nombre del encabezado de la columna.
  * @property {(ele: TablaScianConfig) => string} clave - Función que retorna el valor correspondiente
  * a la clave de la columna basada en el objeto `TablaScianConfig`.
@@ -69,7 +70,7 @@ export const SCIAN_TABLA = [
  * @const DATOS_MERCANCIA_CLAVE_TABLA
  * @description Configuración de la tabla utilizada para mostrar información relacionada con la clave de mercancía.
  * Contiene los encabezados, claves y el orden de las columnas de la tabla.
- * 
+ *
  * @property {string} encabezado - El nombre del encabezado de la columna.
  * @property {(ele: TablaMercanciaClaveConfig) => string} clave - Función que retorna el valor correspondiente
  * a la clave de la columna basada en el objeto `TablaMercanciaClaveConfig`.
@@ -97,7 +98,7 @@ export const DATOS_MERCANCIA_CLAVE_TABLA = [
  * @const SCIAN_TABLA_DATA
  * @description Datos de ejemplo para la tabla S.C.I.A.N.
  * Contiene una lista de objetos que representan las claves y descripciones del S.C.I.A.N.
- * 
+ *
  * @property {string} clave - Clave del S.C.I.A.N.
  * @property {string} descripcion - Descripción del S.C.I.A.N.
  */
@@ -106,14 +107,13 @@ export const SCIAN_TABLA_DATA: TablaScianConfig[] = [
   { clave: '002', descripcion: 'Descripción 2' },
 ];
 
-
 /**
  * @const ALERTA_OPCIONS
  * @description
  * Este constante contiene una plantilla HTML que representa un mensaje de alerta.
  * El mensaje informa al usuario que al dar doble clic en una solicitud, los datos
  * de dicha solicitud se copiarán en la solicitud actual.
- * 
+ *
  * @uso
  * Esta constante puede ser utilizada en componentes o vistas donde se requiera
  * mostrar esta alerta como parte de un flujo de trabajo relacionado con solicitudes.
@@ -126,33 +126,34 @@ export const ALERTA_OPCIONS = `<p>Al dar doble-clic en una Solicitud, se copiar�
  * Este constante contiene una plantilla HTML que representa un mensaje de alerta
  * relacionado con manifiestos y declaraciones. Incluye un checkbox para la selección
  * del manifiesto y un párrafo que describe los requisitos y normatividad aplicable.
- * 
+ *
  * @detalle
  * - El checkbox permite al usuario confirmar que cumple con los requisitos y normatividad aplicable.
  * - El párrafo informa al usuario sobre las posibles verificaciones de la autoridad sanitaria
  *   y las sanciones por falsedad de declaraciones.
  * - También se menciona que la notificación del trámite se realizará a través de la Ventanilla
  *   Única de Comercio Exterior.
- * 
+ *
  * @uso
  * Esta constante puede ser utilizada en componentes o vistas donde se requiera mostrar
  * esta alerta como parte de un formulario o proceso de declaración.
  */
-export const ALERTA_DE_MANIFESTO_Y_DECLARACIONES = `<div class="row">
-    <div class="col-md-1 mt-4">
-        <div class="form-check mt-4">
-            <input class="form-check-input" type="checkbox" value="" id="manifiestosCasillaDeVerificacion">
-            <label class="form-check-label" for="manifiestosCasillaDeVerificacion" (click)="manifestoSellecionado()">*
-            </label>
-        </div>
-    </div>
-    <div class="col-md-11">
-        <p>Cumplo con los requisitos y normatividad aplicable, sin que me eximan de que la autoridad sanitaria verifique su
-            cumplimiento, esto sin perjuicio de las sanciones en que puedo incurrir por falsedad de declaraciones dadas a una
-            autoridad. Asimismo acepto que la notificación de este tramite, sea a través de la Ventanilla Única de Comercio
-            Exterior por los mecanismos de la misma.</p>
-    </div>
-</div>`;
+export const ALERTA_DE_MANIFESTO_Y_DECLARACIONES = `<div class="row align-items-center justify-content-start py-2" style="background-color: #d9edf7;">
+  <div class="col-auto d-flex align-items-start pt-1">
+    <input class="form-check-input mt-1 me-3" type="checkbox" value="" id="manifiestosCasillaDeVerificacion">
+    <label class="form-check-label ms-2" for="manifiestosCasillaDeVerificacion" (click)="manifestoSellecionado()"> *</label>
+  </div>
+ 
+  <div class="col" style="margin-left: 59px;">
+    <p class="mb-0">
+      Cumplo con los requisitos y normatividad aplicable, sin que me eximan de que la autoridad sanitaria verifique su
+      cumplimiento, esto sin perjuicio de las sanciones en que puedo incurrir por falsedad de declaraciones dadas a una
+      autoridad. Asimismo acepto que la notificación de este trámite, sea a través de la Ventanilla Única de Comercio
+      Exterior por los mecanismos de la misma.
+    </p>
+  </div>
+</div>
+`;
 
 /**
  * Represents a constant array `PRODUCTO_TABLA` that defines the structure of a product table.
@@ -179,18 +180,20 @@ export const PRODUCTO_TABLA = [
   },
   {
     encabezado: 'Denominación específica del producto',
-    clave: (ele: TablaMercanciasDatos): string |undefined =>
+    clave: (ele: TablaMercanciasDatos): string | undefined =>
       ele.denominacionEspecificaProducto, // Reemplaza 'ele.denominacionEspecificaProducto' con la clave correcta
     orden: 3,
   },
   {
     encabezado: 'Denominación distintiva',
-    clave: (ele: TablaMercanciasDatos): string |undefined => ele.denominacionDistintiva, // Reemplaza 'ele.denominacionDistintiva' con la clave correcta
+    clave: (ele: TablaMercanciasDatos): string | undefined =>
+      ele.denominacionDistintiva, // Reemplaza 'ele.denominacionDistintiva' con la clave correcta
     orden: 4,
   },
   {
     encabezado: 'Denominación común, nombre común o nombre científico',
-    clave: (ele: TablaMercanciasDatos): string |undefined => ele.denominacionComun, // Reemplaza 'ele.denominacionComun' con la clave correcta
+    clave: (ele: TablaMercanciasDatos): string | undefined =>
+      ele.denominacionComun, // Reemplaza 'ele.denominacionComun' con la clave correcta
     orden: 5,
   },
   {
@@ -210,12 +213,13 @@ export const PRODUCTO_TABLA = [
   },
   {
     encabezado: 'Descripción de la fracción',
-    clave: (ele: TablaMercanciasDatos): string |undefined => ele.descripcionFraccion, // Reemplaza 'ele.descripcionFraccion' con la clave correcta
+    clave: (ele: TablaMercanciasDatos): string | undefined =>
+      ele.descripcionFraccion, // Reemplaza 'ele.descripcionFraccion' con la clave correcta
     orden: 9,
   },
   {
     encabezado: 'Unidad de medida de comercialización (UMC)',
-    clave: (ele: TablaMercanciasDatos): string |undefined=>
+    clave: (ele: TablaMercanciasDatos): string | undefined =>
       ele.unidadMedidaComercializacion, // Reemplaza 'ele.unidadMedidaComercializacion' con la clave correcta
     orden: 10,
   },
@@ -268,7 +272,7 @@ export const PRODUCTO_TABLA = [
 
 /**
  * Constante que representa los datos de la tabla de mercancías para productos.
- * 
+ *
  * @const
  * @type {TablaMercanciasDatos[]}
  * @description Contiene un arreglo con la información inicial de un producto, incluyendo su clasificación, denominación, forma farmacéutica, estado físico, fracción arancelaria, unidad de medida, cantidad, presentación, número de registro sanitario, país de origen, país de procedencia, tipo de producto y uso específico.
@@ -300,12 +304,11 @@ export const PRODUCTO_TABLA_DATA: TablaMercanciasDatos[] = [
 /** "t" se utiliza para continuar el botón que se usa globalmente para el procedimiento 230401 */
 export const CONTINUAR: string = 't';
 
-
 /**
  * @const CROSLISTA_DE_PAISES
- * @description Lista de países representados como cadenas de texto. 
+ * @description Lista de países representados como cadenas de texto.
  * Esta constante contiene nombres de países con sus respectivas denominaciones oficiales.
- * 
+ *
  * @type {string[]}
  */
 export const CROSLISTA_DE_PAISES: string[] = [
@@ -331,16 +334,21 @@ export const CROSLISTA_DE_PAISES: string[] = [
   'BHUTAN (KINGDOM OF)',
 ];
 
-export const CROSLISTA_DE_FORMAS_FARMACEUTICAS: string[] = [
-  
-    "AEROSOL",
-    "CAPSULAS",
-    "COMPRIMIDOS",
-    "CREMA",
-    "EMULSIÓN"
-  
-]
+/**
+ * @const CROSLISTA_DE_FORMAS_FARMACEUTICAS
+ * @description Lista de países representados como cadenas de texto.
+ * Esta constante contiene nombres de países con sus respectivas denominaciones oficiales.
+ *
+ * @type {string[]}
+ */
 
+export const CROSLISTA_DE_FORMAS_FARMACEUTICAS: string[] = [
+  'AEROSOL',
+  'CAPSULAS',
+  'COMPRIMIDOS',
+  'CREMA',
+  'EMULSIÓN',
+];
 
 /**
  * @const TABLA_OPCION_DATA
@@ -372,32 +380,30 @@ export const TABLA_OPCION_DATA: TablaOpcionConfig[] = [
 
 /**
  * @const PROCEDIMIENTOS_NO_PARA_ELEMENTO_COLAPSABLE
- * @description Lista de identificadores de procedimientos que no deben ser utilizados 
+ * @description Lista de identificadores de procedimientos que no deben ser utilizados
  *              para elementos colapsables en la aplicación.
  * @type {number[]}
-*/
+ */
 export const PROCEDIMIENTOS_NO_PARA_ELEMENTO_COLAPSABLE = [
-  260214, 260216, 260205, 260217, 260218, 260102,260301, 260208,260207, 260209,260201, 
-  260219,260302, 260304 , 260103
+  260206, 260214, 260216, 260205, 260217, 260218, 260102, 260301, 260208,
+  260207, 260209, 260201, 260219, 260302, 260304, 260103,
 ];
 
 /**
  * @const PROCEDIMIENTOS_NO_PARA_ELEMENTO_TABLA
- * @description Lista de identificadores de procedimientos que no deben ser utilizados 
+ * @description Lista de identificadores de procedimientos que no deben ser utilizados
  *              para elementos de tabla en la aplicación.
  * @type {number[]}
-*/
+ */
 export const OCULTAR_PROVEEDOR = [260102];
-
 
 /**
  * @const OCULTAR_FACTURADOR
  * @description Lista de identificadores de procedimientos para los cuales el elemento "Facturador" debe ser ocultado en la aplicación.
- * 
+ *
  * @type {number[]}
  */
 export const OCULTAR_FACTURADOR = [260102];
-
 
 /**
  * @const PROCEDIMIENTOS_PARA_NO_CONTRIBUYENTE
@@ -411,7 +417,7 @@ export const PROCEDIMIENTOS_PARA_NO_CONTRIBUYENTE = [260216, 260208, 260209];
 /**
  * @const PROCEDIMIENTOS_NO_PARA_ELEMENTO_CORREO_ELECTRONIC
  * @description Lista de identificadores de procedimientos para los cuales el elemento "Correo Electrónico" no debe ser utilizado en la aplicación.
- * 
+ *
  * @type {number[]}
  * @example
  * // Ejemplo de uso:
@@ -419,13 +425,14 @@ export const PROCEDIMIENTOS_PARA_NO_CONTRIBUYENTE = [260216, 260208, 260209];
  *   // Lógica para ocultar o deshabilitar el elemento "Correo Electrónico"
  * }
  */
-export const PROCEDIMIENTOS_NO_PARA_ELEMENTO_CORREO_ELECTRONIC = [260102, 260301,260302, 260304];
-
+export const PROCEDIMIENTOS_NO_PARA_ELEMENTO_CORREO_ELECTRONIC = [
+  260102, 260301, 260302, 260304,
+];
 
 /**
  * @const PROCEDIMIENTOS_NO_PARA_ELEMENTO_RFC_DEL_SANITARIO
  * @description Lista de identificadores de procedimientos para los cuales el elemento "RFC del Sanitario" no debe ser utilizado en la aplicación.
- * 
+ *
  * @type {number[]}
  * @example
  * // Ejemplo de uso:
@@ -433,8 +440,9 @@ export const PROCEDIMIENTOS_NO_PARA_ELEMENTO_CORREO_ELECTRONIC = [260102, 260301
  *   // Lógica para ocultar o deshabilitar el elemento "RFC del Sanitario"
  * }
  */
-export const PROCEDIMIENTOS_NO_PARA_ELEMENTO_RFC_DEL_SANITARIO = [260301, 260208,260302,260304,260103];
-
+export const PROCEDIMIENTOS_NO_PARA_ELEMENTO_RFC_DEL_SANITARIO = [
+  260301, 260208, 260302, 260304, 260103,
+];
 
 /**
  * @const PROCEDIMIENTOS_NO_PARA_ELEMENTO_CALLE
@@ -446,13 +454,12 @@ export const PROCEDIMIENTOS_NO_PARA_ELEMENTO_RFC_DEL_SANITARIO = [260301, 260208
  *   // Lógica para manejar procedimientos no aplicables
  * }
  */
-export const PROCEDIMIENTOS_NO_PARA_ELEMENTO_CALLE = [260301,260302, 260304]
-
+export const PROCEDIMIENTOS_NO_PARA_ELEMENTO_CALLE = [260301, 260302, 260304];
 
 /**
  * @const PROCEDIMIENTOS_NO_PARA_ELEMENTO_REGIMEN_Y_ADUNADEENTRADAS
  * @description Lista de identificadores de procedimientos para los cuales los elementos "Régimen" y "Aduana de Entradas" no deben ser utilizados en la aplicación.
- * 
+ *
  * @type {number[]}
  * @example
  * // Ejemplo de uso:
@@ -460,7 +467,9 @@ export const PROCEDIMIENTOS_NO_PARA_ELEMENTO_CALLE = [260301,260302, 260304]
  *   // Lógica para ocultar o deshabilitar los elementos "Régimen" y "Aduana de Entradas"
  * }
  */
-export const PROCEDIMIENTOS_NO_PARA_ELEMENTO_REGIMEN_Y_ADUNADEENTRADAS = [260301,260302, 260304,260103];
+export const PROCEDIMIENTOS_NO_PARA_ELEMENTO_REGIMEN_Y_ADUNADEENTRADAS = [
+  260301, 260302, 260304, 260103,
+];
 
 /**
  * @const PROCEDIMIENTOS_PARA_DESHABILITAR_MUNICIPIO_ALCALDIA
@@ -473,12 +482,12 @@ export const PROCEDIMIENTOS_NO_PARA_ELEMENTO_REGIMEN_Y_ADUNADEENTRADAS = [260301
  *   deshabilitarCampoMunicipio();
  * }
  */
-export const PROCEDIMIENTOS_PARA_DESHABILITAR_MUNICIPIO_ALCALDIA=[260301]
+export const PROCEDIMIENTOS_PARA_DESHABILITAR_MUNICIPIO_ALCALDIA = [260301];
 
 /**
  * @const PROCEDIMIENTOS_PARA_CORREO_ELECTRONICO_EN_MISMA_FILA
  * @description Lista de identificadores de procedimientos para los cuales el elemento "Correo Electrónico" debe estar en la misma fila en la aplicación.
- * 
+ *
  * @type {number[]}
  * @example
  * // Ejemplo de uso:
@@ -486,7 +495,9 @@ export const PROCEDIMIENTOS_PARA_DESHABILITAR_MUNICIPIO_ALCALDIA=[260301]
  *   // Lógica para mostrar el elemento "Correo Electrónico" en la misma fila
  * }
  */
-export const PROCEDIMIENTOS_PARA_CORREO_ELECTRONICO_EN_MISMA_FILA = [260208,260103];
+export const PROCEDIMIENTOS_PARA_CORREO_ELECTRONICO_EN_MISMA_FILA = [
+  260208, 260103,
+];
 
 /**
  * @const REPRESENTANTE_LEGAL
@@ -498,7 +509,7 @@ export const REPRESENTANTE_LEGAL = [260208];
 /**
  * @const BANCO
  * @description Lista de identificadores de procedimientos relacionados con el banco.
- * 
+ *
  * @type {number[]}
  * @example
  * // Ejemplo de uso:
@@ -506,7 +517,9 @@ export const REPRESENTANTE_LEGAL = [260208];
  *   // Lógica para manejar procedimientos relacionados con el banco
  * }
  */
-export const BANCO = [260208, 260209, 260207, 260201, 260219,260302, 260304,260103];
+export const BANCO = [
+  260208, 260209, 260207, 260201, 260219, 260302, 260304, 260103,
+];
 
 export const REQUIRED_BANCO = [260902];
 
@@ -517,7 +530,6 @@ export const REQUIRED_BANCO = [260902];
  * @type {number[]}
  */
 export const DATOS_MERCANCIA_CAMPO = [260208, 260209];
-
 
 /**
  * @const PROCEDIMIENTOS_PARA_DESHABILITAR_APELLIDO_MATERNO
@@ -530,8 +542,9 @@ export const DATOS_MERCANCIA_CAMPO = [260208, 260209];
  *   deshabilitarCampoApellidoMaterno();
  * }
  */
-export const PROCEDIMIENTOS_PARA_DESHABILITAR_APELLIDO_MATERNO=[260301,260207,260201,260302, 260304,260103]
-
+export const PROCEDIMIENTOS_PARA_DESHABILITAR_APELLIDO_MATERNO = [
+  260301, 260207, 260201, 260302, 260304, 260103,
+];
 
 /**
  * @const PROCEDIMIENTOS_PARA_DESHABILITAR_APELLIDO_PATERNO
@@ -543,11 +556,13 @@ export const PROCEDIMIENTOS_PARA_DESHABILITAR_APELLIDO_MATERNO=[260301,260207,26
  *   // Lógica para deshabilitar el campo de apellido paterno
  * }
  */
-export const PROCEDIMIENTOS_PARA_DESHABILITAR_APELLIDO_PATERNO=[260301,260207,260201,260302, 260304,260103]
+export const PROCEDIMIENTOS_PARA_DESHABILITAR_APELLIDO_PATERNO = [
+  260301, 260207, 260201, 260302, 260304, 260103,
+];
 
 /**
  * @const PROCEDIMIENTOS_PARA_DESHABILITAR_NOMBRE_RAZON_SOCIAL
- * @description Lista de códigos de procedimientos específicos que requieren deshabilitar el campo de 
+ * @description Lista de códigos de procedimientos específicos que requieren deshabilitar el campo de
  * nombre o razón social en el formulario de solicitud.
  * @type {number[]}
  * @example
@@ -556,7 +571,9 @@ export const PROCEDIMIENTOS_PARA_DESHABILITAR_APELLIDO_PATERNO=[260301,260207,26
  *   deshabilitarCampoNombreRazonSocial();
  * }
  */
-export const PROCEDIMIENTOS_PARA_DESHABILITAR_NOMBRE_RAZON_SOCIAL=[260301,260207,260201,260302, 260304,260103]
+export const PROCEDIMIENTOS_PARA_DESHABILITAR_NOMBRE_RAZON_SOCIAL = [
+  260301, 260207, 260201, 260302, 260304, 260103,
+];
 
 /**
  * @const PROCEDIMIENTOS_PARA_COLONIA_O_EQUIVALENTE
@@ -564,7 +581,9 @@ export const PROCEDIMIENTOS_PARA_DESHABILITAR_NOMBRE_RAZON_SOCIAL=[260301,260207
  *              relacionados con colonias o equivalentes en el sistema.
  * @type {number[]}
  */
-export const PROCEDIMIENTOS_PARA_COLONIA_O_EQUIVALENTE=[260207,260208, 260209, 260219]
+export const PROCEDIMIENTOS_PARA_COLONIA_O_EQUIVALENTE = [
+  260207, 260208, 260209, 260219,
+];
 
 /**
  * @enum {number}
@@ -582,7 +601,7 @@ export enum NUMERO_TRAMITE {
 /**
  * @const DETALLE_MERCANCIA_TABLA
  * @description Constante que define la configuración de la tabla para mostrar los detalles de mercancía.
- * Cada objeto dentro del arreglo representa una columna de la tabla con su encabezado, 
+ * Cada objeto dentro del arreglo representa una columna de la tabla con su encabezado,
  * clave para acceder al valor correspondiente y el orden en el que se mostrará.
  *
  * @property {string} encabezado - El título de la columna que se mostrará en la tabla.
@@ -617,9 +636,9 @@ export const DETALLE_MERCANCIA_TABLA = [
  * @const DETALLE_MERCANCIA_TABLA_ESTUPEFACIENTES
  * @description Define una tabla de detalles para mercancías relacionadas con estupefacientes.
  * Cada objeto en la tabla representa una columna con su encabezado, clave de acceso y orden.
- * 
+ *
  * @property {string} encabezado - El título de la columna que se mostrará en la tabla.
- * @property {Function} clave - Una función que toma un objeto de tipo `DetalleMercanciaEstupefacientes` 
+ * @property {Function} clave - Una función que toma un objeto de tipo `DetalleMercanciaEstupefacientes`
  * y devuelve el valor correspondiente para esa columna.
  * @property {number} orden - El orden en el que se mostrará la columna en la tabla.
  * .
@@ -632,20 +651,22 @@ export const DETALLE_MERCANCIA_TABLA_ESTUPEFACIENTES = [
   },
   {
     encabezado: 'Número de piezas',
-    clave: (ele: DetalleMercanciaEstupefacientes): string => ele.numeroDePiezasAFabricar,
+    clave: (ele: DetalleMercanciaEstupefacientes): string =>
+      ele.numeroDePiezasAFabricar,
     orden: 2,
   },
   {
     encabezado: 'Descripción del número de piezas a fabricar',
-    clave: (ele: DetalleMercanciaEstupefacientes): string => ele.descripcionNumeroDePiezas,
+    clave: (ele: DetalleMercanciaEstupefacientes): string =>
+      ele.descripcionNumeroDePiezas,
     orden: 3,
   },
   {
     encabezado: 'Registro Sanitario',
-    clave: (ele: DetalleMercanciaEstupefacientes): string => ele.numeroRegistroSanitario,
+    clave: (ele: DetalleMercanciaEstupefacientes): string =>
+      ele.numeroRegistroSanitario,
     orden: 4,
   },
- 
 ];
 
 /**
@@ -661,10 +682,11 @@ export const STR_NACIONAL = 'Nacional';
  * @type {string}
  * @description Constante que representa el valor deshabilitado para la descripción de la fracción.
  * Este valor se utiliza para identificar fracciones específicas que no pueden ser modificadas.
- * 
+ *
  * @usage Utilizada en formularios o tablas donde se requiera mostrar una descripción fija para una fracción.
  */
-export const DESCRIPCION_FRACCION_DESHABILITADO_VALOR = "Algodón absorbente o gasas, con sustancias medicinales";
+export const DESCRIPCION_FRACCION_DESHABILITADO_VALOR =
+  'Algodón absorbente o gasas, con sustancias medicinales';
 
 /**
  * @const UMT_DESHABILITADO_VALOR
@@ -672,4 +694,32 @@ export const DESCRIPCION_FRACCION_DESHABILITADO_VALOR = "Algodón absorbente o g
  * @type {string}
  * @valor "Kilogramo"
  */
-export const UMT_DESHABILITADO_VALOR="Kilogramo";
+export const UMT_DESHABILITADO_VALOR = 'Kilogramo';
+
+/** Mensaje mostrado cuando no hay fila seleccionada. */
+export const MENSAJE_SIN_FILA_SELECCIONADA = 'Seleciona un registro';
+
+/**
+ * @description
+ *  Identificadores de notificación.
+ */
+export const MOSTRAR_NOTIFICACION = [260219,260302,260304, 260206, 260201,260103];
+
+/**
+ * Enumera los tipos de actualización que se pueden realizar.
+ * 
+ * - `AGREGAR`: Representa la acción de agregar un nuevo elemento.
+ * - `ELIMINAR`: Representa la acción de eliminar un elemento existente.
+ */
+export enum TIPO_ACTUALIZACION {
+  AGREGAR = 'Agregar',
+  ELIMINAR ='Eliminar',
+}
+
+/**
+ * Constante que representa el identificador para productos especiales.
+ * 
+ * @remarks
+ * Utilice esta constante para identificar solicitudes relacionadas con productos de tipo especial.
+ */
+export const TIPO_PRODUCTO_ESPECIAL = '3'

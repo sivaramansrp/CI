@@ -3,9 +3,10 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { JSONResponse } from '@libs/shared/data-access-user/src/core/models/shared/catalogos.model';
-import { enviroment } from '@libs/shared/data-access-user/src/enviroments/enviroment';
+import { ENVIRONMENT } from '@libs/shared/data-access-user/src/enviroments/enviroment';
 import { BehaviorSubject, catchError, Observable, throwError } from 'rxjs';
 import { DatosGenerales, RegistroDeSolicitudesTabla } from '../models/registro-cuentas-bancarias.model';
+import { AgregarCuenta6001State, Tramite6001Store } from '../estados/tramite6001.store';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +17,7 @@ export class RegistroCuentasBancariasService {
    * URL del servidor utilizado para servicios auxiliares JSON.
    * Esta URL se obtiene de la configuración del entorno.
    */
-  urlServer = enviroment.URL_SERVER_JSON_AUXILIAR;
+  urlServer = ENVIRONMENT.URL_SERVER_JSON_AUXILIAR;
 
   /**
    * Un BehaviorSubject que contiene la fuente del componente actual como una cadena.
@@ -35,7 +36,10 @@ export class RegistroCuentasBancariasService {
    * 
    * @param http - La instancia de HttpClient utilizada para realizar solicitudes HTTP.
    */
-  constructor(private http: HttpClient) {
+  constructor(
+    private http: HttpClient,
+    private tramite6001Store: Tramite6001Store
+  ) {
     //
    }
 
@@ -90,7 +94,7 @@ export class RegistroCuentasBancariasService {
    *
    * @param component - El nombre del componente al que se desea cambiar.
    */
-  public cambiarComponente(component: string) {
+  public cambiarComponente(component: string): void {
     this.componentSource.next(component);
   }
 
@@ -168,5 +172,37 @@ export class RegistroCuentasBancariasService {
         return throwError(() => error);
       })
     );
+  }
+
+  /**
+   * Recupera los datos del formulario para el proceso "Agregar Cuenta 6001" realizando una solicitud HTTP GET
+   * a un archivo JSON local. Retorna un observable que emite el estado de los datos del formulario.
+   * @returns {Observable<AgregarCuenta6001State>} Un observable que emite el estado de los datos del formulario.
+   * @throws Emite un observable de error si la solicitud HTTP falla.
+   */
+  public getConsultaFormularioDatos(): Observable<AgregarCuenta6001State> {
+     return this.http.get<AgregarCuenta6001State>('assets/json/6001/consulta-datos.json').pipe(
+        catchError((error) => {
+          return throwError(() => error);
+        })
+      );
+  }
+
+  /**
+   * Actualiza el estado del formulario en el tramite6001Store con los datos de cuenta proporcionados.
+   * @param DATOS - Un objeto de tipo `AgregarCuenta6001State` que contiene la información actualizada de la cuenta,
+   * incluyendo titular de la cuenta, tipo de persona, RFC, número de cuenta, país donde radica,
+   * institución, estado, sucursal y número de plaza.
+   */
+  public actualizarEstadoFormulario(DATOS: AgregarCuenta6001State): void {
+    this.tramite6001Store.setTitularDeLaCuenta(DATOS.titularDeLaCuenta);
+    this.tramite6001Store.setTipoDePersona(DATOS.tipoDePersona);
+    this.tramite6001Store.setRfc(DATOS.rfc);
+    this.tramite6001Store.setNumeroDeCuenta(DATOS.numeroDeCuenta);
+    this.tramite6001Store.setPaisDondeRadica(DATOS.paisDondeRadica);
+    this.tramite6001Store.setInstitucion(DATOS.institucion);
+    this.tramite6001Store.setEstado(DATOS.estado);
+    this.tramite6001Store.setSucursal(DATOS.sucursal);
+    this.tramite6001Store.setNumeroDePlaza(DATOS.numeroDePlaza);
   }
 }

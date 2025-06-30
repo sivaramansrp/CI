@@ -4,6 +4,8 @@ import {
   CatalogoSelectComponent,
   CatalogosSelect,
   ConfiguracionColumna,
+  ConsultaioQuery,
+  ConsultaioState,
   DatosPasos,
   InputFecha,
   ListaPasosWizard,
@@ -12,10 +14,10 @@ import {
   TituloComponent,
   ValidacionesFormularioService,
 } from '@libs/shared/data-access-user/src';
-import { ColumnasTabla, FECHA_FINAL, FECHAI_NICIAL } from '../../models/certificado.model';
+import {ColumnasTabla,FECHAI_NICIAL, FECHA_FINAL } from '../../models/certificado.model';
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ReplaySubject, map, takeUntil } from 'rxjs';
+import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ReplaySubject,map, takeUntil } from 'rxjs';
 import { Solicitud110219State, Tramite110219Store } from '../../estados/Tramite110219.store';
 import { AlertComponent } from '@libs/shared/data-access-user/src/tramites/components/alert/alert.component';
 import { CertificadoService } from '../../services/certificado.service';
@@ -48,6 +50,16 @@ const TERCEROS_TEXTO_DE_ALERTA = 'Certificados Disponibles';
   styleUrl: './cancelacion-de-certificado.component.css',
 })
 export class CancelacionDeCertificadoComponent implements OnInit, OnDestroy {
+  /**
+   * Subject para destruir notificador.
+   */
+  consultaDatos!: ConsultaioState;
+   /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  soloLectura: boolean = false;
+
   /** Formulario para la cancelación de certificados. */
   cancelacionForm!: FormGroup;
 
@@ -137,16 +149,35 @@ export class CancelacionDeCertificadoComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private validacionesService: ValidacionesFormularioService,
     private store: Tramite110219Store,
-    private query: Tramite110219Query
+    private query: Tramite110219Query,
+     private consultaioQuery: ConsultaioQuery
   ) {
-    // El constructor se utiliza para la inyección de dependencias.
+     this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState) => {
+          this.consultaDatos = seccionState;
+          this.soloLectura = this.consultaDatos.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe()
   }
 
   /** Inicializa el componente. */
   ngOnInit(): void {
+this.cancelacionForm = new FormGroup({
+   numeroCertificado:new FormControl(this.solicitudState?.numeroCertificado, [Validators.required]),
+        tratado: new FormControl(this.solicitudState?.tratado, [Validators.required]),
+        pais: new FormControl(this.solicitudState?.pais, [Validators.required]),
+        fechaInicial: new FormControl(this.solicitudState?.fechaInicial, [Validators.required]),
+        fechaFinal: new FormControl(this.solicitudState?.fechaFinal, [Validators.required]),
+});
+
     this.getTratadoData();
     this.getPaisdata();
     this.getSolicitudesTabla();
+     this.inicializarEstadoFormulario();
 
     this.query.selectSolicitud$
       .pipe(
@@ -158,7 +189,30 @@ export class CancelacionDeCertificadoComponent implements OnInit, OnDestroy {
       .subscribe();
     this.donanteDomicilio();
   }
+/**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.
+   * Además, obtiene la información del catálogo de mercancía.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.soloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.donanteDomicilio();
+    }
+  }
 
+  /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormulario(): void {
+    this.donanteDomicilio();
+    if (this.soloLectura) {
+      this.cancelacionForm.disable();
+    } else {
+      this.cancelacionForm.enable();
+    }
+  }
   /** Encabezados de la tabla de certificados disponibles. */
   public headers: ConfiguracionColumna<ColumnasTabla>[] = [
     { encabezado: 'Número de certificado', clave: (ele: ColumnasTabla) => ele.numeroCertificado, orden: 1 },

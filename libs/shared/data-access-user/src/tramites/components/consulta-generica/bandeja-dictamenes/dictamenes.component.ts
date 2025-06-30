@@ -41,6 +41,11 @@ export class DictamenesComponent implements OnInit, OnDestroy {
   datosTablaDictamen: BodyTablaDictamenes[] = [];
 
   /**
+   * Método para abrir el detalle del dictamen.
+   */
+  public verDetalle = DictamenesComponent.verDetalle;
+
+  /**
    * Constructor de la clase DictamenesComponent.
    * @param folioQuery Consulta del folio desde el store.
    * @param dictamenService Servicio para obtener los dictámenes.
@@ -80,10 +85,10 @@ export class DictamenesComponent implements OnInit, OnDestroy {
 
   /**
    * Abre la pestaña para mostrar el detalle del dictamen.
-   * @param {number} id - Es el Id del dictamen.
+   * @param {number} _id - Es el Id del dictamen.
    * @returns {void}
    */
-  verDetalle(id: number): void {
+  static verDetalle(_id: number): void {
     // Lógica para abrir el detalle del dictamen
   }
 

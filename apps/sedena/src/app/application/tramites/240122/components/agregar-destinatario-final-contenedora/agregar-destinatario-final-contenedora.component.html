@@ -2,4 +2,6 @@
   (updateDestinatarioFinalTablaDatos)="updateDestinatarioFinalTablaDatos($event)"
   [formaDatos]="terechosDatos$ | async"
   [idProcedimiento]="idProcedimiento"
+  (cancelarEventListener)="cerrar.emit()"
+  [esFormularioSoloLectura]="esFormularioSoloLectura"
 ></app-agregar-destinatario-custom>

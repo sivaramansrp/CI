@@ -1,6 +1,6 @@
 import { API_GET_VALIDA_LINEA_PAGO, LINEA_PAGO_QUERY } from "../../../../constantes/5701/api-constants";
-import { CatalogosResponse, enviroment } from "@libs/shared/data-access-user/src";
-import { catchError, map, Observable, throwError } from "rxjs";
+import { CatalogosResponse, ENVIRONMENT } from "@libs/shared/data-access-user/src";
+import { Observable, catchError, map, throwError } from "rxjs";
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 
@@ -14,7 +14,7 @@ export class ValidaLineaPagoService {
   constructor(
     private http: HttpClient
   ) {
-    this.host = `${enviroment.API_HOST}/api/`;
+    this.host = `${ENVIRONMENT.API_HOST}/api/`;
   }
 
   /**

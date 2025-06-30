@@ -1,12 +1,16 @@
-import { AlertComponent, TituloComponent } from "@libs/shared/data-access-user/src";
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Subject, takeUntil } from 'rxjs';
+import { AlertComponent } from "@libs/shared/data-access-user/src";
 import { AnexarDocumentosComponent } from '@ng-mf/data-access-user';
 import { CATALOGOS_ID } from '@ng-mf/data-access-user';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { CatalogosService } from '@ng-mf/data-access-user';
 import { CommonModule } from "@angular/common";
+import { Component } from '@angular/core';
+import { OnDestroy } from '@angular/core';
+import { OnInit } from '@angular/core';
+import { Subject } from 'rxjs';
 import { TEXTOS } from '@ng-mf/data-access-user';
+import { TituloComponent } from "@libs/shared/data-access-user/src";
+import { takeUntil } from 'rxjs';
 
 /**
  * Componente que representa el paso dos del formulario o proceso.

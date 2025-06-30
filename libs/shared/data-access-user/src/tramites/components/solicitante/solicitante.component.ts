@@ -1,6 +1,5 @@
 import { CATALOGOS_ID, TIPO_PERSONA } from '../../constantes/constantes';
 import { Component, Input,OnDestroy, OnInit,forwardRef } from '@angular/core';
-import { ConsultaioState } from '@ng-mf/data-access-user';
 import {
   DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_EXTRANJERA,
   DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL,
@@ -19,7 +18,11 @@ import {
 } from '@angular/forms';
 import { Subject, map, takeUntil, tap } from 'rxjs';
 import { CommonModule } from '@angular/common';
+// Se agregan las siguientes líneas para resolver errores de eslint.
+// eslint-disable-next-line @nx/enforce-module-boundaries
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
+// eslint-disable-next-line @nx/enforce-module-boundaries
+import { ConsultaioState } from '@ng-mf/data-access-user';
 import { FormularioDinamico } from '../../../core/models/shared/forms-model';
 import { FormulariosService } from '../../../core/services/shared/formularios/formularios.service';
 import { SolicitanteService } from '../../../core/services/shared/solicitante/solicitante.service';

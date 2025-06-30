@@ -1,63 +1,74 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { Router } from '@angular/router';
 import { of, throwError } from 'rxjs';
+ 
 import { PasotresComponent } from './paso-tres.component';
-import { ServiciosPantallaService } from 'libs/shared/data-access-user/src/core/services/31601/servicios-pantalla.service';
+import { ServiciosPantallaService } from '@libs/shared/data-access-user/src/core/services/31601/servicios-pantalla.service';
 import { TramiteCofeprisStore } from '../../../../estados/tramite.store';
-
+ 
 describe('PasotresComponent', () => {
   let component: PasotresComponent;
   let fixture: ComponentFixture<PasotresComponent>;
-  let mockRouter: jest.Mocked<Router>;
-  let mockServiciosPantallaService: jest.Mocked<ServiciosPantallaService>;
-  let mockTramiteCofeprisStore: jest.Mocked<TramiteCofeprisStore>;
-
+  let routerMock: any;
+  let serviciosMock: any;
+  let storeMock: any;
+ 
   beforeEach(async () => {
-    mockRouter = {
-      navigate: jest.fn(),
-    } as unknown as jest.Mocked<Router>;
-
-    mockServiciosPantallaService = {
-      obtenerTramite: jest.fn(),
-    } as unknown as jest.Mocked<ServiciosPantallaService>;
-
-    mockTramiteCofeprisStore = {
-      establecerTramite: jest.fn(),
-    } as unknown as jest.Mocked<TramiteCofeprisStore>;
-
+    routerMock = { navigate: jest.fn() };
+    serviciosMock = { obtenerTramite: jest.fn() };
+    storeMock = { establecerTramite: jest.fn() };
+ 
     await TestBed.configureTestingModule({
       declarations: [PasotresComponent],
       providers: [
-        { provide: Router, useValue: mockRouter },
-        { provide: ServiciosPantallaService, useValue: mockServiciosPantallaService },
-        { provide: TramiteCofeprisStore, useValue: mockTramiteCofeprisStore },
+        { provide: Router, useValue: routerMock },
+        { provide: ServiciosPantallaService, useValue: serviciosMock },
+        { provide: TramiteCofeprisStore, useValue: storeMock }
       ],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA]
     }).compileComponents();
-
+ 
     fixture = TestBed.createComponent(PasotresComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
-
-  it('should create', () => {
+ 
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
-
-  it('should not call obtenerTramite if firma is empty', () => {
-    component.obtieneFirma('');
-
-    expect(mockServiciosPantallaService.obtenerTramite).not.toHaveBeenCalled();
-    expect(mockTramiteCofeprisStore.establecerTramite).not.toHaveBeenCalled();
-    expect(mockRouter.navigate).not.toHaveBeenCalled();
+ 
+  it('debe llamar a establecerTramite y navegar si la FIRMA es válida', () => {
+    const tramiteData = { data: { id: 1 } };
+    serviciosMock.obtenerTramite.mockReturnValue(of(tramiteData));
+    const firma = 'FIRMA_VALIDA';
+ 
+    component.obtieneFirma(firma);
+ 
+    expect(serviciosMock.obtenerTramite).toHaveBeenCalledWith(19);
+    expect(storeMock.establecerTramite).toHaveBeenCalledWith(tramiteData.data, firma);
+    expect(routerMock.navigate).toHaveBeenCalledWith(['servicios-extraordinarios/acuse']);
   });
-
-  it('should handle error from obtenerTramite gracefully', () => {
-    mockServiciosPantallaService.obtenerTramite.mockReturnValue(throwError(() => new Error('Error fetching tramite')));
-
-    component.obtieneFirma('valid-firma');
-
-    expect(mockServiciosPantallaService.obtenerTramite).toHaveBeenCalledWith(19);
-    expect(mockTramiteCofeprisStore.establecerTramite).not.toHaveBeenCalled();
-    expect(mockRouter.navigate).not.toHaveBeenCalled();
+ 
+  it('no debe llamar a obtenerTramite si la FIRMA es falsy', () => {
+    component.obtieneFirma('');
+    expect(serviciosMock.obtenerTramite).not.toHaveBeenCalled();
+    expect(storeMock.establecerTramite).not.toHaveBeenCalled();
+    expect(routerMock.navigate).not.toHaveBeenCalled();
+  });
+ 
+  it('debe manejar errores en el observable de obtenerTramite', () => {
+    serviciosMock.obtenerTramite.mockReturnValue(throwError(() => new Error('error')));
+    const firma = 'FIRMA_VALIDA';
+    expect(() => component.obtieneFirma(firma)).not.toThrow();
+    expect(serviciosMock.obtenerTramite).toHaveBeenCalledWith(19);
+  });
+ 
+  it('debe limpiar destroyed$ en ngOnDestroy', () => {
+    const spyNext = jest.spyOn((component as any).destroyed$, 'next');
+    const spyComplete = jest.spyOn((component as any).destroyed$, 'complete');
+    component.ngOnDestroy();
+    expect(spyNext).toHaveBeenCalled();
+    expect(spyComplete).toHaveBeenCalled();
   });
 });

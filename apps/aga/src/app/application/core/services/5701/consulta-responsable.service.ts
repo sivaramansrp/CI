@@ -1,6 +1,6 @@
 import { API_GET_CONSULTA_RESPONSABLE, NUMERO_GAFETE_QUERY, TIPO_GAFETE_QUERY } from '../../../constantes/5701/api-constants';
-import { catchError, map, Observable, throwError } from 'rxjs';
-import { enviroment } from '@libs/shared/data-access-user/src';
+import { Observable, catchError, map, throwError } from 'rxjs';
+import { ENVIRONMENT } from '@libs/shared/data-access-user/src';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ResponsableGafeteResponse } from '../../models/5701/gafete-responsable.model';
@@ -16,7 +16,7 @@ export class ConsultaResponsableService {
   constructor(
     private http: HttpClient
   ) {
-    this.host = `${enviroment.API_HOST}/api/`;
+    this.host = `${ENVIRONMENT.API_HOST}/api/`;
   }
 
   /**

@@ -1,8 +1,10 @@
-import { AfterViewInit, ChangeDetectorRef, Component,EventEmitter,Output, ViewChild} from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState, FormularioDinamico, SolicitanteComponent, TIPO_PERSONA } from '@ng-mf/data-access-user';
 import { DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL, PERSONA_MORAL_NACIONAL } from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
-import { FormularioDinamico, SolicitanteComponent, TIPO_PERSONA } from '@ng-mf/data-access-user';
+import { ReplaySubject, map, takeUntil } from 'rxjs';
 import { CancelacionDeCertificadoComponent } from '../../components/cancelacion-de-certificado/cancelacion-de-certificado.component';
 import { CertificadoDeOrigenComponent } from '../../components/certificado-de origen/certificado-de-origen.component';
+import { CertificadoService } from '../../services/certificado.service';
 import { CommonModule } from '@angular/common';
 
 /**
@@ -13,9 +15,9 @@ import { CommonModule } from '@angular/common';
   templateUrl: './paso-uno.component.html',
   styleUrl: './paso-uno.component.scss',
   standalone: true,
-  imports: [CommonModule, SolicitanteComponent, CancelacionDeCertificadoComponent, CertificadoDeOrigenComponent],
+  imports: [CommonModule, SolicitanteComponent, CancelacionDeCertificadoComponent,CertificadoDeOrigenComponent],
 })
-export class PasoUnoComponent implements AfterViewInit {
+export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
 
   isNumeroDe! : boolean;
 
@@ -55,6 +57,10 @@ export class PasoUnoComponent implements AfterViewInit {
   isCertificado!:boolean;
 
   /**
+   * Indica si los datos de respuesta están disponibles.
+   */
+  private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
+  /**
    * Evento para emitir datos al componente padre.
    */
   @Output() eventoDatosHijo: EventEmitter<number> = new EventEmitter<number>();
@@ -66,13 +72,60 @@ export class PasoUnoComponent implements AfterViewInit {
 
 
   /**
+     * Estado de la consulta, utilizado para manejar el estado de la aplicación.
+     */
+  public consultaState!: ConsultaioState;
+  /**
+   * Indica si los datos de respuesta están disponibles.
+   * Se utiliza para determinar si se deben mostrar los datos del formulario o no.
+   */
+  public esDatosRespuesta: boolean = false;
+  /**
    * Constructor del componente.
    * Se utiliza para la inyección de dependencias.
    * 
    * @param cdr Servicio para detectar cambios manualmente.
    */
-  constructor(private cdr: ChangeDetectorRef) {
+  constructor(private cdr: ChangeDetectorRef,
+    private consultaQuery: ConsultaioQuery,
+    private certificadoService: CertificadoService,) {
     // El constructor se utiliza para la inyección de dependencias.
+  }
+ 
+ 
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * Aquí se pueden realizar tareas de configuración inicial, pero en este caso lanza un error indicando que no está implementado.
+   */
+  ngOnInit(): void {
+    this.consultaQuery.selectConsultaioState$.pipe(
+      takeUntil(this.destroyed$),
+      map((seccionState) => {
+        this.consultaState = seccionState;
+      })
+    ).subscribe();
+    if (this.consultaState.update) {
+      this.guardarDatosFormularios();
+    } else {
+      this.esDatosRespuesta = true;
+    }
+
+  }
+  /**
+     * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+     * Luego reinicializa el formulario con los valores actualizados desde el store.
+     */
+  guardarDatosFormularios(): void {
+    this.certificadoService
+      .getRegistroTomaMuestrasMercanciasData().pipe(
+        takeUntil(this.destroyed$)
+      )
+      .subscribe((resp) => {
+        if (resp) {
+          this.esDatosRespuesta = true;
+          this.certificadoService.actualizarEstadoFormulario(resp);
+        }
+      });
   }
 
   /**
@@ -133,4 +186,13 @@ export class PasoUnoComponent implements AfterViewInit {
   certificadoEnable(event:boolean){
      this.isCertificado = event;
   }
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta cuando el componente es destruido.
+   * Aquí se pueden realizar tareas de limpieza, pero en este caso lanza un error indicando que no está implementado.
+   */
+  ngOnDestroy(): void {
+    this.destroyed$.next(true);
+    this.destroyed$.complete();
+  }
+
 }

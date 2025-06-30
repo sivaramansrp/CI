@@ -7,18 +7,20 @@
     [configuracionTabla]="configuracionTablaDatosProducto"
     [datos]="establecimientoData"
     [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX"
+    [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
   ></app-tabla-dinamica>
 
   <div class="row">
     <div class="col-md-12 d-flex justify-content-end mt-5">
       <div class="btn-group">
-        <button class="btn btn-default" type="button">Modificar</button>
-        <button class="btn btn-default" type="button">Eliminar</button>
+        <button class="btn btn-default" type="button" [disabled]="esFormularioSoloLectura ? true : false">Modificar</button>
+        <button class="btn btn-default" type="button" [disabled]="esFormularioSoloLectura ? true : false">Eliminar</button>
         <button
           type="button"
           class="btn btn-primary ms-2"
          
           (click)="openDatosMercanciaModal()"
+          [disabled]="esFormularioSoloLectura ? true : false"
         >
           Agregar
         </button>

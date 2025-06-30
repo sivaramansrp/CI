@@ -57,10 +57,12 @@ export class BuscarCertificadoDeOrigenComponent implements OnInit, OnDestroy {
    */
   constructor(private fb: FormBuilder, private service: BuscarCertificadoDeOrigenService, private tramite110210Store: Tramite110210Store, private tramite110210Query: Tramite110210Query) {
     this.buscarCertificadoDeOrigenFrom = this.fb.group({
+      paisBloqueClave: [''],
+      tratadoAcuerdoClave: [''],
       cveRegistroProductor: ['', [Validators.required, Validators.maxLength(12)]],
       solicitud: this.fb.group({
         idSolicitud: [null],
-        idSolicitudProductor: [''],
+        idSolicitudProductor: ['']
       }),
     });
   }
@@ -90,7 +92,7 @@ export class BuscarCertificadoDeOrigenComponent implements OnInit, OnDestroy {
     this.service.getPaisBloque().pipe(
       takeUntil(this.destroyed$)
     ).subscribe(
-      (data) => {
+      (data: Catalogo[]) => {
         this.paisBloque = data;
       }
     );

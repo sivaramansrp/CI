@@ -45,7 +45,7 @@
     <div class="row mb-3">
         <div class="col-md-8">
             <app-catalogo-select [catalogo]="estado" [label]="'País destino'"
-                [required]="true" name="paisDestino" formControlName="paisDestino" (change)="setValoresStore(domicilioDestinatario,'paisDestino', 'setPaisDestino')"
+                [required]="true" name="paisDestino" formControlName="paisDestino" (change)="setValoresStore(domicilioDestinatario,'paisDestino', 'setPaisDestino')" [isDisabled]="esFormularioSoloLectura ? true : false"
                 ></app-catalogo-select>
         </div>
     </div>

@@ -12,11 +12,12 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { Validators } from '@angular/forms';
 
 import { Catalogo } from '@libs/shared/data-access-user/src';
-import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 
-import { CertificadoTecnicoJaponService } from '@libs/shared/data-access-user/src/core/services/110218/certificadoTecnicoJapon.service';
+import {ConsultaioQuery } from "@ng-mf/data-access-user";
+
+import { CertificadoTecnicoJaponService } from '../../service/certificadoTecnicoJapon.service';
 
 import { TablaSeleccion } from '@libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
 
@@ -39,11 +40,16 @@ import { CompliMentaria } from '../../models/certificado-tecnico-japon.enum';
 @Component({
   selector: 'app-datos-certificado',
   standalone: true,
-  imports: [CommonModule, TituloComponent, ReactiveFormsModule, TablaDinamicaComponent, CatalogoSelectComponent],
+  imports: [CommonModule, TituloComponent, ReactiveFormsModule, TablaDinamicaComponent],
   templateUrl: './datos-certificado.component.html',
   styleUrl: './datos-certificado.component.scss',
 })
 export class DatosCertificadoComponent implements OnInit, OnDestroy {
+  /**
+   * Indica si el formulario está en modo solo lectura.
+   * Si es verdadero, el usuario no puede editar los campos del formulario.
+   */
+  esSoloLectura!: boolean;
   /**
    * Formulario para los datos del certificado.
    * Contiene campos como lugar y observaciones.
@@ -125,7 +131,8 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
     public formBuilder: FormBuilder,
     private service: CertificadoTecnicoJaponService,
     private tramite110218Store: Tramite110218Store,
-    private tramite110218Query: Tramite110218Query
+    private tramite110218Query: Tramite110218Query,
+    private consultaQuery: ConsultaioQuery,
   ) {}
 
   /**
@@ -154,9 +161,28 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
    * y configura el formulario.
    */
   ngOnInit(): void {
+
     this.obtenerDatosDeTabla();
     this.getValorStore();
     this.inicializarFormulario();
+     this.consultaQuery.selectConsultaioState$
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((estadoConsulta) => {
+        this.esSoloLectura = estadoConsulta.readonly;
+        this.habilitarDeshabilitarFormulario();
+      });
+  }
+  /**
+   * Habilita o deshabilita el formulario según el modo de solo lectura.
+   * Si `esSoloLectura` es verdadero, deshabilita el formulario para evitar ediciones.
+   * Si es falso, habilita el formulario para permitir modificaciones.
+   */
+  habilitarDeshabilitarFormulario(): void {
+    if (this.esSoloLectura) {
+      this.datosDelCertificado.disable();
+    } else {
+      this.datosDelCertificado.enable();
+    }
   }
 
   /**

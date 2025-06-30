@@ -1,7 +1,7 @@
 import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { ConfiguracionColumna } from '@ng-mf/data-access-user';
+import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
 import { Modal } from 'bootstrap';
 import { PARTIDASDELAMERCANCIA_TABLA } from '../../constantes/partidas-de-la-mercancia.enum';
 
@@ -49,6 +49,15 @@ export class PartidasDeLaMercanciaComponent {
   @Input() partidasDelaMercanciaForm!: FormGroup;
 
   /**
+   * @description Indica si el formulario debe mostrarse en modo solo lectura.
+   * Cuando es `true`, todos los campos y acciones estarán deshabilitados y no podrán ser editados por el usuario.
+   * Este valor se recibe como entrada desde el componente padre.
+   * @type {boolean}
+   * @default false
+   */
+  @Input() esFormularioSoloLectura: boolean = false;
+
+  /**
    * @property {FormGroup} formForTotalCount
    * @description Formulario reactivo para capturar los totales de las partidas.
    */
@@ -83,12 +92,7 @@ export class PartidasDeLaMercanciaComponent {
   @Input() formularioEnviado = false;
 
 
-  /**
-   * @event filaSeleccionadaChange
-   * @description Evento que emite las filas seleccionadas en la tabla dinámica.
-   */
-  @Output() filaSeleccionadaChange = new EventEmitter<PartidasDeLaMercanciaModelo[]>();
-
+ 
   /**
    * @event validarYEnviarFormularioEvent
    * @description Evento que se emite cuando se valida y envía el formulario.
@@ -103,12 +107,7 @@ export class PartidasDeLaMercanciaComponent {
  */
   @Output() eliminarTablaEvent = new EventEmitter<void>();
 
-  /**
-   * @event navegarParaModificarPartidaEvent
-   * @description Evento que se emite para navegar y modificar una partida específica.
-   */
-  @Output() navegarParaModificarPartidaEvent = new EventEmitter<void>();
-
+ 
   /**
    * @event setValoresStoreEvent
    * @description
@@ -144,14 +143,6 @@ export class PartidasDeLaMercanciaComponent {
     return CONTROL ? CONTROL.invalid && (CONTROL.touched || CONTROL.dirty) : false;
   }
 
-  /**
-   * @method handleListaDeFilaSeleccionada
-   * @description Maneja las filas seleccionadas en la tabla dinámica y emite un evento.
-   * @param {any[]} filasSeleccionadas Lista de filas seleccionadas.
-   */
-  handleListaDeFilaSeleccionada(event: PartidasDeLaMercanciaModelo[]): void {
-    this.filaSeleccionadaChange.emit(event);
-  }
 
   /**
    * @method validarYEnviarFormulario
@@ -178,7 +169,6 @@ export class PartidasDeLaMercanciaComponent {
    * @description Navega para modificar una partida específica, emitiendo un evento.
    */
   navegarParaModificarPartida(): void {
-    this.navegarParaModificarPartidaEvent.emit();
     const MODALELEMENT = this.modalModificarPartidaRef.nativeElement;
     const MODALINSTANCE = new Modal(MODALELEMENT);
     MODALINSTANCE.show();
@@ -212,7 +202,7 @@ export class PartidasDeLaMercanciaComponent {
  * @returns {void}
  */
 
-  onModificarPartida() {
+  onModificarPartida(): void {
     if (this.partidasDelaMercanciaForm.valid) {
       const MODALELEMENT = this.modalModificarPartidaRef.nativeElement;
       const MODALINSTANCE = Modal.getOrCreateInstance(MODALELEMENT);

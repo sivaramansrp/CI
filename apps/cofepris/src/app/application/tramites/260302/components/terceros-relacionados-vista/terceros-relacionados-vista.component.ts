@@ -2,6 +2,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import {
   AlertComponent,
   ConfiguracionColumna,
+  Notificacion,
+  NotificacionesComponent,
   TablaDinamicaComponent,
   TablaSeleccion,
   TituloComponent,
@@ -14,19 +16,23 @@ import {
 } from '../../constants/exporticon-estupefacientes.enum';
 import {
   Destinatario,
-  Facturador,
   MENSAJE_TABLA_OBLIGATORIA,
 } from '../../../../shared/models/terceros-relacionados.model';
-import { Observable, Subject } from 'rxjs';
+import {
+  MENSAJE_SIN_FILA_SELECCIONADA,
+  TIPO_ACTUALIZACION,
+} from '../../../../shared/constantes/datos-solicitud.enum';
+import { Observable, Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { Otros } from '../../models/exporticon-estupefacientes.model';
 import { Tramite260302Query } from '../../estados/tramite260302Query.query';
-
+import { Tramite260302Store } from '../../estados/tramite260302Store.store';
 
 /**
  * @component TercerosRelacionadosVistaComponent
  * @description Componente de solo lectura que muestra las tablas de terceros relacionados
- * (fabricantes, destinatarios finales, proveedores y facturadores).
+ * (fabricantes, destinatarios finales, proveedores y Destinatarioes).
  * Consume observables del store para renderizar los datos en la vista mediante el componente
  */
 @Component({
@@ -37,11 +43,21 @@ import { Tramite260302Query } from '../../estados/tramite260302Query.query';
     TablaDinamicaComponent,
     AlertComponent,
     TituloComponent,
+    NotificacionesComponent,
   ],
   templateUrl: './terceros-relacionados-vista.component.html',
   styleUrl: './terceros-relacionados-vista.component.scss',
 })
 export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
+
+   /**
+   * que indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, el formulario no permite modificaciones por parte del usuario.
+   *
+   * @type {boolean}
+   */
+   esFormularioSoloLectura!: boolean;
+
   /**
    * @property {number} idProcedimiento
    * Identificador único del procedimiento asociado a la solicitud.
@@ -62,16 +78,18 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
   MENSAJE_TABLA_OBLIGATORIA = MENSAJE_TABLA_OBLIGATORIA;
 
   /**
-   * @property {ConfiguracionColumna<Facturador>[]} configuracionTablaDestinatario
-   * Configuración de columnas para la tabla de facturadores.
+   * @property {ConfiguracionColumna<Destinatario>[]} configuracionTablaDestinatario
+   * Configuración de columnas para la tabla de Destinatarioes.
    */
-  configuracionTablaDestinatario: ConfiguracionColumna<Facturador>[] = DESTINATARIO_ENCABEZADO_DE_TABLA;
+  configuracionTablaDestinatario: ConfiguracionColumna<Destinatario>[] =
+    DESTINATARIO_ENCABEZADO_DE_TABLA;
 
-    /**
-   * @property {ConfiguracionColumna<Facturador>[]} configuracionTablaDestinatario
-   * Configuración de columnas para la tabla de facturadores.
+  /**
+   * @property {ConfiguracionColumna<Destinatario>[]} configuracionTablaDestinatario
+   * Configuración de columnas para la tabla de Destinatarioes.
    */
-    configuracionTablaOtros: ConfiguracionColumna<Otros>[] =OTROS_ENCABEZADO_DE_TABLA;
+  configuracionTablaOtros: ConfiguracionColumna<Otros>[] =
+    OTROS_ENCABEZADO_DE_TABLA;
 
   /**
    * @property {TablaSeleccion} tipoSeleccionTabla
@@ -86,19 +104,18 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
   public habilitarProveedor = true;
 
   /**
-   * Indica si el formulario del facturador debe estar habilitado.
-   * @input habilitarFacturador - Valor booleano que habilita o deshabilita la sección del facturador.
+   * Indica si el formulario del Destinatario debe estar habilitado.
+   * @input habilitarDestinatario - Valor booleano que habilita o deshabilita la sección del Destinatario.
    */
-  public habilitarFacturador = true;
+  public habilitarDestinatario = true;
   /**
    * @property {Destinatario[]}destinatarioTablaDatos
    * Datos de la tabla de fabricantes.
    */
- destinatarioTablaDatos$!: Observable<Destinatario[]>;
-
+  destinatarioTablaDatos$!: Observable<Destinatario[]>;
 
   /**
-   * @property {Facturador[]} facturadorTablaDatos
+   * @property {Destinatario[]} DestinatarioTablaDatos
    * Datos de la tabla de Otros.
    */
   otrasTablaDatos$!: Observable<Otros[]>;
@@ -117,6 +134,27 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
   tipoTablaDatos = TIPO_TABLA_DATOS;
 
   /**
+   * @property {Destinatario[]} seleccionadaOtros
+   * Almacena la fila seleccionada de la tabla de Otros.
+   */
+  public seleccionadaDestinatario!: Destinatario[];
+
+  /**
+   * @property {Otros[]} seleccionadaOtros
+   * Almacena la fila seleccionada de la tabla de Otros.
+   */
+  public seleccionadaOtros!: Otros[];
+
+  /** Nueva notificación relacionada con el RFC. */
+  public seleccionarFilaNotificacion!: Notificacion;
+
+  /**
+   * Controla la visibilidad del modal de alerta.
+   * @property {boolean} mostrarAlerta
+   */
+  public mostrarAlerta: boolean = false;
+
+  /**
    * @constructor
    * Inyecta los servicios necesarios para consultar y actualizar el estado del trámite.
    *
@@ -126,9 +164,20 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
   constructor(
     private tramiteQuery: Tramite260302Query,
     private router: Router,
-    private activatedROute: ActivatedRoute
+    private activatedROute: ActivatedRoute,
+    private tramiteStore: Tramite260302Store,
+    private consultaQuery: ConsultaioQuery
+
   ) {
-    //
+    this.consultaQuery.selectConsultaioState$
+               .pipe(
+                 takeUntil(this.destroy$),
+               )
+               .subscribe((seccionState) => {
+                 if(!seccionState.create && seccionState.procedureId === '260302') {
+                   this.esFormularioSoloLectura = seccionState.readonly;
+                 } 
+               });
   }
 
   /**
@@ -140,6 +189,18 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
     this.destinatarioTablaDatos$ = this.tramiteQuery.getdestinatarioTablaDatos$;
 
     this.otrasTablaDatos$ = this.tramiteQuery.getOtrasTablaDatos$;
+
+    this.seleccionarFilaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: MENSAJE_SIN_FILA_SELECCIONADA,
+      cerrar: true,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
   }
 
   /**
@@ -161,6 +222,64 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
     this.router.navigate(['..', 'agregar-otros'], {
       relativeTo: this.activatedROute,
     });
+  }
+
+  modificarDestinatario(): void {
+    if (!this.seleccionadaDestinatario) {
+      this.mostrarAlerta = true;
+      return;
+    }
+    this.tramiteStore.updateSeleccionadoDestinatarioDatos(
+      this.seleccionadaDestinatario
+    );
+    this.navigate(TIPO_TABLA_DATOS.DESTINATARIO);
+  }
+
+  eliminarDestinatario(): void {
+    if (!this.seleccionadaDestinatario) {
+      this.mostrarAlerta = true;
+      return;
+    }
+    this.tramiteStore.updateDestinatarioTablaDatos(
+      this.seleccionadaDestinatario,
+      TIPO_ACTUALIZACION.ELIMINAR
+    );
+  }
+
+  /**
+   * Método que se ejecuta cuando se selecciona una fila en la tabla de destinatarios.
+   * Actualiza el estado del store con la fila seleccionada.
+   *
+   * @param filaSeleccionada - Array de objetos Destinatario seleccionados.
+   */
+  onFilaDestinatarioSeleccionada(filaSeleccionada: Destinatario[]): void {
+    this.tramiteStore.updateDestinatarioTablaDatos(filaSeleccionada);
+  }
+
+  /**
+   * Método que se ejecuta cuando se selecciona una fila en la tabla de otros.
+   * Actualiza el estado del store con la fila seleccionada.
+   *
+   * @param filaSeleccionada - Array de objetos Otros seleccionados.
+   */
+  modificarOtros(): void {
+    if (!this.seleccionadaOtros) {
+      this.mostrarAlerta = true;
+      return;
+    }
+    this.tramiteStore.updateSeleccionadoOtrosDatos(this.seleccionadaOtros);
+    this.navigateOtros();
+  }
+
+  eliminarOtros(): void {
+    if (!this.seleccionadaOtros) {
+      this.mostrarAlerta = true;
+      return;
+    }
+    this.tramiteStore.updateOtrosTablaDatos(
+      this.seleccionadaOtros,
+      TIPO_ACTUALIZACION.ELIMINAR
+    );
   }
 
   /**

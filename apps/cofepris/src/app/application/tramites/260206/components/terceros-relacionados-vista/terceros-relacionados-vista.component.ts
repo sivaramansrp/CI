@@ -7,9 +7,12 @@ import {
 } from '../../../../shared/models/terceros-relacionados.model';
 import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { TIPO_ACTUALIZACION } from '../../../../shared/constantes/datos-solicitud.enum';
 import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-relacionados/terceros-relacionados.component';
 import { Tramite260206Query } from '../../estados/queries/tramite260206Query.query';
 import { Tramite260206Store } from '../../estados/stores/tramite260206Store.store';
+
 /**
  * @component TercerosRelacionadosVistaComponent
  * @description Componente de solo lectura que muestra las tablas de terceros relacionados
@@ -25,6 +28,15 @@ import { Tramite260206Store } from '../../estados/stores/tramite260206Store.stor
   styleUrl: './terceros-relacionados-vista.component.scss',
 })
 export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
+
+  /**
+   * que indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, el formulario no permite modificaciones por parte del usuario.
+   *
+   * @type {boolean}
+   */
+  esFormularioSoloLectura!: boolean; 
+
   /**
    * @property {Fabricante[]} fabricanteTablaDatos
    * Datos de la tabla de fabricantes.
@@ -65,8 +77,19 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
    */
   constructor(
     private tramiteStore: Tramite260206Store,
-    private tramiteQuery: Tramite260206Query
-  ) { }
+    private tramiteQuery: Tramite260206Query,
+    private consultaQuery: ConsultaioQuery
+  ) { 
+    this.consultaQuery.selectConsultaioState$
+        .pipe(
+          takeUntil(this.destroy$),
+        )
+        .subscribe((seccionState) => {
+          if(!seccionState.create && seccionState.procedureId === '260206') {
+            this.esFormularioSoloLectura = seccionState.readonly;
+          } 
+        });
+  }
 
   /**
    * @method ngOnInit
@@ -137,6 +160,97 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
    */
   addFacturadores(newFacturadores: Facturador[]): void {
     this.tramiteStore.updateFacturadorTablaDatos(newFacturadores);
+  }
+
+
+  /**
+   * @method fabricanteEventoModificar
+   * @description Actualiza la tabla de fabricantes en el store con el fabricante seleccionado.
+   *
+   * @param {Fabricante} seleccionadaFabricante - Objeto fabricante seleccionado.
+   * @returns {void}
+   */
+  fabricanteEventoModificar(seleccionadaFabricante: Fabricante[]): void {
+    this.tramiteStore.updateSeleccionadoTablaFabricanteDatos(seleccionadaFabricante);
+  }
+
+  /**
+   * @method destinatarioEventoModificar
+   * @description Actualiza la tabla de destinatarios finales en el store con el destinatario seleccionado.
+   *
+   * @param {Destinatario} seleccionadaDestinatario - Objeto destinatario seleccionado.
+   * @returns {void}
+   */
+  destinatarioEventoModificar(seleccionadaDestinatario: Destinatario[]): void {
+    this.tramiteStore.updateSeleccionadoTablaDestinatarioDatos(
+      seleccionadaDestinatario,
+    );
+  }
+
+  /**
+   * @method proveedorEventoModificar
+   * @description Actualiza la tabla de proveedores en el store con el proveedor seleccionado.
+   *
+   * @param {Proveedor} seleccionadaProveedor - Objeto proveedor seleccionado.
+   * @returns {void}
+   */
+  proveedorEventoModificar(seleccionadaProveedor: Proveedor[]): void {
+    this.tramiteStore.updateSeleccionadoTablaProveedorDatos(seleccionadaProveedor);
+  }
+
+  /**
+   * @method facturadorEventoModificar
+   * @description Actualiza la tabla de facturadores en el store con el facturador seleccionado.
+   *
+   * @param {Facturador} seleccionadaFacturador - Objeto facturador seleccionado.
+   * @returns {void}
+   */
+  facturadorEventoModificar(seleccionadaFacturador: Facturador[]): void {
+    this.tramiteStore.updateSeleccionadoTablaFacturadorDatos(seleccionadaFacturador);
+  }
+
+  /**
+ * @method eliminarFabricante
+ * @description Elimina los fabricantes recibidos como parámetro y actualiza la tabla de fabricantes en el store.
+ *
+ * @param {Fabricante[]} fabricante - Lista de fabricantes actualizada después de la eliminación.
+ * @returns {void}
+ */
+  eliminarFabricante(fabricante:Fabricante[]):void{
+      this.tramiteStore.updateFabricanteTablaDatos(fabricante,TIPO_ACTUALIZACION.ELIMINAR);
+  }
+
+  /**
+   * @method eliminarDestinatario
+   * @description Elimina los destinatarios recibidos como parámetro y actualiza la tabla de destinatarios finales en el store.
+   *
+   * @param {Destinatario[]} destinatario - Lista de destinatarios actualizada después de la eliminación.
+   * @returns {void}
+   */
+  eliminarDestinatario(destinatario:Destinatario[]):void{
+      this.tramiteStore.updateDestinatarioFinalTablaDatos(destinatario,TIPO_ACTUALIZACION.ELIMINAR);
+  }
+
+  /**
+   * @method eliminarProveedor
+   * @description Elimina los proveedores recibidos como parámetro y actualiza la tabla de proveedores en el store.
+   *
+   * @param {Proveedor[]} proveedor - Lista de proveedores actualizada después de la eliminación.
+   * @returns {void}
+   */
+  eliminarProveedor(proveedor:Proveedor[]):void{
+      this.tramiteStore.updateProveedorTablaDatos(proveedor,TIPO_ACTUALIZACION.ELIMINAR);
+  }
+
+  /**
+   * @method eliminarFacturador
+   * @description Elimina los facturadores recibidos como parámetro y actualiza la tabla de facturadores en el store.
+   *
+   * @param {Facturador[]} facturador - Lista de facturadores actualizada después de la eliminación.
+   * @returns {void}
+   */
+  eliminarFacturador(facturador:Facturador[]):void{
+      this.tramiteStore.updateFacturadorTablaDatos(facturador,TIPO_ACTUALIZACION.ELIMINAR);
   }
 
   /**

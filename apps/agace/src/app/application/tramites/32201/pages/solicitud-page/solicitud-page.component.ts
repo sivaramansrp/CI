@@ -1,26 +1,20 @@
+import { AVISO } from '@ng-mf/data-access-user';
+import { AlertComponent } from '@ng-mf/data-access-user';
+import { BtnContinuarComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
-import { Component, ViewChild } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import {
-  AlertComponent,
-  AVISO,
-  BtnContinuarComponent,
-  DatosPasos,
-  ListaPasosWizard,
-  PASOS,
-  SolicitanteComponent,
-  WizardComponent,
-} from '@ng-mf/data-access-user';
+import { Component } from '@angular/core';
+import { DatosPasos } from '@ng-mf/data-access-user';
+import { FormsModule } from '@angular/forms';
+import { ListaPasosWizard } from '@ng-mf/data-access-user';
+import { PASOS } from '@ng-mf/data-access-user';
 import { PasoDosComponent } from '../paso-dos/paso-dos.component';
 import { PasoTresComponent } from '../paso-tres/paso-tres.component';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
-
-/**
- * Texto de alerta para terceros.
- * Este texto se muestra al usuario cuando se registra una solicitud.
- */
-const TERCEROS_TEXTO_DE_ALERTA =
-  'La solicitud ha quedado registrada con el número temporal 202757598 Éste no tiene validez legal y sirve solamente para efectos de identificar tu solicitud. Un folio oficial le será asignado a la solicitud al momento en que ésta sea firmada.';
+import { ReactiveFormsModule } from '@angular/forms';
+import { SOLICITUD_32201_ENUM } from '../../constantes/anexo';
+import { SolicitanteComponent } from '@ng-mf/data-access-user';
+import { ViewChild } from '@angular/core';
+import { WizardComponent } from '@ng-mf/data-access-user';
 
 /**
  * Interfaz que define la estructura de una acción de botón.
@@ -60,9 +54,9 @@ interface AccionBoton {
 })
 export class SolicitudPageComponent {
   /**
-   * Texto de alerta que se muestra al usuario.
+   * Asigna el aviso de privacidad simplificado al atributo `TEXTOS`.
    */
-  TEXTO_DE_ALERTA: string = TERCEROS_TEXTO_DE_ALERTA;
+  TEXTO_DE_ALERTA = SOLICITUD_32201_ENUM.TEXTO_DE_ALERTA;
 
   /**
    * Lista de pasos del asistente.
@@ -121,7 +115,7 @@ export class SolicitudPageComponent {
   /**
    * Obtiene el valor del índice de la acción del botón.
    * Actualiza el índice del paso actual y navega al siguiente o al anterior paso según la acción.
-   * 
+   *
    * @param e Acción del botón, que incluye el índice y la acción a realizar.
    */
   getValorIndice(e: AccionBoton): void {

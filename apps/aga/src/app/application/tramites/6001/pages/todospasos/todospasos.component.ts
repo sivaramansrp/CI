@@ -1,7 +1,7 @@
 /* eslint-disable sort-imports */
 /* eslint-disable @nx/enforce-module-boundaries */
 import { Component, ViewChild } from '@angular/core';
-import { DatosPasos, ListaPasosWizard, Todospasos, WizardComponent } from '@ng-mf/data-access-user';
+import { DatosPasos, ListaPasosWizard, TODOS_PASOS, WizardComponent } from '@libs/shared/data-access-user/src';
 import { PANTA_PASOS } from '../../services/registro-cuentas-bancarias.enum';
 import { AccionBoton } from 'libs/shared/data-access-user/src/core/models/31601/servicios-pantallas.model';
 
@@ -31,7 +31,7 @@ export class TodospasosComponent {
  * Una propiedad pública que contiene la referencia al objeto `Todospasos`.
  * Esta propiedad se utiliza para acceder a varios textos o constantes definidos en el objeto `Todospasos`.
  */
- public TEXTOS = Todospasos;
+ public TEXTOS = TODOS_PASOS;
 
 
    /**
@@ -67,7 +67,7 @@ export class TodospasosComponent {
    /**
    * Este método se utiliza para inicializar el componente.
    */
-   public getValorIndice(e: AccionBoton) {
+   public getValorIndice(e: AccionBoton): void {
     if (e.valor > 0 && e.valor < 5) {
       this.indice = e.valor;
       if (e.accion === 'cont') {

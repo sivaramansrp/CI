@@ -17,6 +17,7 @@ import {
 import { AlertComponent } from 'ngx-bootstrap/alert';
 import { CommonModule } from '@angular/common';
 import { DomSanitizer } from '@angular/platform-browser';
+import { FormGroup } from '@angular/forms';
 import { PreviewDocumentoComponent } from '../preview-documento/preview-documento.component';
 import { ToastrService } from 'ngx-toastr';
 
@@ -71,9 +72,25 @@ export interface Notificacion {
    */
   txtBtnCancelar: string;
 
+  /**
+   * @description Variable de entrada para definir el tamaño del modal.
+   */
   tamanioModal?: string;
 
+  /**
+   * @description Variable de entrada para definir la ruta del documento a mostrar en el modal.
+   */
   ruta?: string;
+
+  /**
+   * @description Variable de entrada para definir la alineación del botón de cerrar.
+   */
+  alineacionBtonoCerrar?: string;
+
+  /**
+   * @description Variable de entrada para definir la alineacion del texto.
+   */
+  alineacionTexto?: string;
 }
 
 /**
@@ -101,6 +118,7 @@ export enum CategoriaMensaje {
   selector: 'lib-notificaciones',
   standalone: true,
   imports: [CommonModule, AlertComponent, ModalModule],
+  providers: [BsModalService],
   templateUrl: './notificaciones.component.html',
   styleUrl: './notificaciones.component.scss',
 })
@@ -111,6 +129,8 @@ export class NotificacionesComponent implements OnChanges {
    */
   @Input()
   public notificacionInput!: Notificacion;
+
+  @Input() forma: FormGroup | undefined;
 
   /**
    * Evento que emite un valor booleano para confirmar una acción.
@@ -236,7 +256,6 @@ export class NotificacionesComponent implements OnChanges {
   declinarAccion(): void {
     this.confirmacionModal.emit(false);
     this.modal?.hide();
-    this.confirmacionModal.emit(false);
   }
 
   /**

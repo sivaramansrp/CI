@@ -32,6 +32,10 @@ import { TituloComponent } from '@libs/shared/data-access-user/src/tramites/comp
 })
 export class PaisProcendenciaComponent implements OnChanges {
 /**
+ * @description Indica si el formulario debe mostrarse en modo solo lectura.
+*/
+@Input() esFormularioSoloLectura!: boolean;
+/**
  * Referencia al componente CrosslistComponent.
  * @type {CrosslistComponent}
  */
@@ -182,7 +186,16 @@ ngOnChanges(changes: SimpleChanges): void {
       (pais: Catalogo) => pais.descripcion
     );
   }
+
+  if (changes['esFormularioSoloLectura']) {
+    if (this.esFormularioSoloLectura) {
+          this.paisForm.disable();
+      }else if (!this.esFormularioSoloLectura) {
+        this.paisForm.enable();
+      }
+  }
 }
+
 /**
  * Maneja el cambio de bloque seleccionado.
  * @param {Event} event - El evento de cambio.

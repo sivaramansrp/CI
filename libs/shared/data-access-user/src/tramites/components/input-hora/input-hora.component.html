@@ -1,8 +1,24 @@
 <div [formGroup]="forma">
-  <label class="form-label" [for]="inputId">{{ label }}@if(required){*} :</label>
-  <input class="form-control" type="text" name="hora" [id]="inputId" formControlName="hora" placeholder="HH:mm (24 hrs)"
-    HoraFormato [ngClass]="isValid ? 'required' : ''" (change)="handleChange($event)" />
-  <div *ngIf="isValid" class="mensaje-error">
-    Hora no válida
+  <label class="form-label" [for]="inputId"
+    >{{ label }}@if(required){*} :</label
+  >
+  <input
+    class="form-control"
+    type="text"
+    name="hora"
+    [id]="inputId"
+    formControlName="hora"
+    placeholder="HH:mm (24 hrs)"
+    HoraFormato
+    maxlength="5"
+    [ngClass]="isValid ? 'required' : ''"
+    (change)="handleChange($event)"
+  />
+  <div *ngIf="getTipoError('pattern')" class="mensaje-error">
+    La hora indicada no es válida.
+  </div>
+
+  <div *ngIf="getTipoError('required')" class="mensaje-error">
+    Este campo es obligatorio.
   </div>
 </div>

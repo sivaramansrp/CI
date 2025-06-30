@@ -4,11 +4,12 @@
  * Permite al usuario agregar, editar, eliminar y visualizar datos en una tabla.
  */
 import { CommonModule } from '@angular/common';
+
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { map, ReplaySubject, Subject, takeUntil } from 'rxjs';
+import { ReplaySubject,map, takeUntil } from 'rxjs';
 
-import { AcuseComponent, TablaSeleccion } from '@libs/shared/data-access-user/src';
+import { AcuseComponent, ConsultaioQuery, ConsultaioState, InputFecha, InputFechaComponent, TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { Catalogo, CatalogosSelect, ConfiguracionColumna, TituloComponent } from '@libs/shared/data-access-user/src';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -17,13 +18,14 @@ import { TableComponent } from '@libs/shared/data-access-user/src';
 import { DatosDeLaSolicitudComponent } from '../datos-de-la-solicitud/datos-de-la-solicitud.component';
 import { RegistrarSolicitudService } from '../../services/registrar-solicitud.service';
 import { Solicitud290201Query } from '../../../../estados/queries/tramites290201.query';
+
 import { Solicitud290201State, Solicitud290201Store } from '../../../../estados/tramites/tramites290201.store';
 import { FilaData } from '../../models/fila-model';
 import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
 @Component({
   selector: 'app-datos-del-cafe',
   standalone: true,
-  imports: [CommonModule, TituloComponent, ReactiveFormsModule, CatalogoSelectComponent, TableComponent, AcuseComponent, DatosDeLaSolicitudComponent,TablaDinamicaComponent],
+  imports: [CommonModule, TituloComponent, ReactiveFormsModule, CatalogoSelectComponent, TableComponent, AcuseComponent, DatosDeLaSolicitudComponent,TablaDinamicaComponent,InputFechaComponent],
   templateUrl: './datos-del-cafe.component.html',
   styleUrl: './datos-del-cafe.component.css',
 })
@@ -32,8 +34,6 @@ export class DatosDelCafeComponent implements OnDestroy, OnInit {
    * Observable para gestionar la destrucción del componente y evitar fugas de memoria.
    */
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
-
-
 
   /**
    * Datos que se muestran en la tabla.
@@ -150,6 +150,19 @@ export class DatosDelCafeComponent implements OnDestroy, OnInit {
    */
   selectedRows: Set<number> = new Set();
 
+ /**
+ * @property {ConsultaioState} consultaDatos
+ * @description Representa el estado de la consulta actual.
+ */
+
+consultaDatos!: ConsultaioState;
+    /**
+     * @property {boolean} soloLectura
+     * @description Indica si el formulario o los campos están en modo de solo lectura.
+     * @default false
+     */
+    esFormularioSoloLectura: boolean = false;
+
   /**
    * Constructor del componente.
    * @param registrarsolicitud Servicio para obtener datos de los catálogos.
@@ -162,7 +175,9 @@ export class DatosDelCafeComponent implements OnDestroy, OnInit {
     private fb: FormBuilder,
     private solicitud290201Store: Solicitud290201Store,
     private solicitud290201Query: Solicitud290201Query,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private consultaioQuery: ConsultaioQuery,
+    
   ) {
     this.getEnvasadoenData();
     this.getUtilicoCafeComoData();
@@ -174,6 +189,10 @@ export class DatosDelCafeComponent implements OnDestroy, OnInit {
     this.getPaisDeTransbordoData();
     this.getMediaDeTransporte();
   }
+  /**
+   * Tipo de selección para la tabla de mercancías.
+   * Utiliza `TablaSeleccion.CHECKBOX` para permitir la selección múltiple.
+   */
   tipoSeleccionsoliMercancias: TablaSeleccion = TablaSeleccion.CHECKBOX;
 
   /**
@@ -272,12 +291,29 @@ export class DatosDelCafeComponent implements OnDestroy, OnInit {
       orden: 18,
     },
   ];
+  /**
+   * Configuración de las columnas de la tabla `configuracionColumnasoli`.
+   */
+  fechaexportacion: InputFecha = {
+    labelNombre: 'Fecha de pago*:',
+    required: false,
+    habilitado: true,
+  };
 
-
+  /**
+   * Método para cambiar la fecha final del formulario.
+   * @param nuevo_valor Nuevo valor de la fecha de exportación.
+   */
+  cambioFechaFinal(nuevo_valor: string): void {
+    this.datosDelTramiteRealizar.patchValue({
+      fechaexportacion: nuevo_valor,
+    });
+    this.solicitud290201Store.setFechaexportacion(nuevo_valor);
+  }
   /**
    * Crea el formulario reactivo con los campos necesarios y sus validaciones.
    */
-  createForm() {
+  createForm(): void {
     this.dataCafeForm = this.fb.group({
       datosDelTramiteRealizar: this.fb.group({
         envasadoen: [this.dataCafeState?.envasadoen, Validators.required],
@@ -314,14 +350,26 @@ export class DatosDelCafeComponent implements OnDestroy, OnInit {
         }),
       )
       .subscribe();
-
+      
     this.createForm();
-  }
 
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState) => {
+          this.consultaDatos = seccionState;
+          this.esFormularioSoloLectura = this.consultaDatos.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
+      this.inicializarEstadoFormulario();
+  }
+ 
   /**
    * Obtiene los datos del catálogo "Envasado".
    */
-  getEnvasadoenData() {
+  getEnvasadoenData():void {
     this.registrarsolicitud.getEnvasadoenData()
       .pipe(takeUntil(this.destroyed$))
       .subscribe((data) => {
@@ -329,7 +377,10 @@ export class DatosDelCafeComponent implements OnDestroy, OnInit {
       });
   }
 
-  getUtilicoCafeComoData() {
+  /**
+   * Obtiene los datos del catálogo "¿Utilizó café como materia prima importada?".
+   */
+  getUtilicoCafeComoData(): void {
     this.registrarsolicitud.getUtilicoCafeComoData()
       .pipe(takeUntil(this.destroyed$))
       .subscribe((data) => {
@@ -337,7 +388,11 @@ export class DatosDelCafeComponent implements OnDestroy, OnInit {
       });
   }
 
-  getPaisDeImportacionData() {
+  /**
+   * Obtiene los datos del catálogo "País de importación".
+   */
+
+  getPaisDeImportacionData(): void {
     this.registrarsolicitud.getPaisDeImportacionData()
       .pipe(takeUntil(this.destroyed$))
       .subscribe((data) => {
@@ -345,7 +400,10 @@ export class DatosDelCafeComponent implements OnDestroy, OnInit {
       });
   }
 
-  getFraccionArancelariaData() {
+  /**
+   * Obtiene los datos del catálogo "Fracción arancelaria".
+   */
+  getFraccionArancelariaData(): void {
     this.registrarsolicitud.getFraccionArancelariaData()
       .pipe(takeUntil(this.destroyed$))
       .subscribe((data) => {
@@ -353,7 +411,10 @@ export class DatosDelCafeComponent implements OnDestroy, OnInit {
       });
   }
 
-  getUnidadDeMedidaData() {
+  /**
+   * Obtiene los datos del catálogo "Unidad de medida".
+   */
+  getUnidadDeMedidaData(): void {
     this.registrarsolicitud.getUnidadDeMedidaData()
       .pipe(takeUntil(this.destroyed$))
       .subscribe((data) => {
@@ -361,7 +422,10 @@ export class DatosDelCafeComponent implements OnDestroy, OnInit {
       });
   }
 
-  getDollarData() {
+  /**
+   * Obtiene los datos del catálogo "Dólar".
+   */
+  getDollarData(): void {
     this.registrarsolicitud.getDollarData()
       .pipe(takeUntil(this.destroyed$))
       .subscribe((data) => {
@@ -369,7 +433,10 @@ export class DatosDelCafeComponent implements OnDestroy, OnInit {
       });
   }
 
-  getElcafeData() {
+  /**
+   * Obtiene los datos del catálogo "¿El café tiene características especiales?".
+   */
+  getElcafeData(): void {
     this.registrarsolicitud.getUtilicoCafeComoData()
       .pipe(takeUntil(this.destroyed$))
       .subscribe((data) => {
@@ -377,7 +444,10 @@ export class DatosDelCafeComponent implements OnDestroy, OnInit {
       });
   }
 
-  getPaisDeTransbordoData() {
+  /**
+   * Obtiene los datos del catálogo "País de transbordo".
+   */
+  getPaisDeTransbordoData(): void {
     this.registrarsolicitud.getPaisDeImportacionData()
       .pipe(takeUntil(this.destroyed$))
       .subscribe((data) => {
@@ -385,7 +455,10 @@ export class DatosDelCafeComponent implements OnDestroy, OnInit {
       });
   }
 
-  getMediaDeTransporte() {
+  /**
+   * Obtiene los datos del catálogo "Medio de transporte".
+   */
+  getMediaDeTransporte(): void {
     this.registrarsolicitud.getMediaDeTransporte()
       .pipe(takeUntil(this.destroyed$))
       .subscribe((data) => {
@@ -396,61 +469,61 @@ export class DatosDelCafeComponent implements OnDestroy, OnInit {
  * Este método se ejecuta al enviar el formulario. Su propósito es procesar los datos ingresados
  * en el formulario, transformarlos según los catálogos correspondientes y agregarlos a la tabla de datos.
  */
-  onSubmit() {
+  onSubmit(): void {
     this.esFormularioVisible = false;
 
-    const formData = { ...this.dataCafeForm.value };
+    const FORM_DATA = { ...this.dataCafeForm.value };
 
-    formData.datosDelTramiteRealizar.envasadoen = this.envasadoenData.catalogos.find(
-      (item: Catalogo) => String(item.id) === String(formData.datosDelTramiteRealizar.envasadoen),
+    FORM_DATA.datosDelTramiteRealizar.envasadoen = this.envasadoenData.catalogos.find(
+      (item: Catalogo) => String(item.id) === String(FORM_DATA.datosDelTramiteRealizar.envasadoen),
     )?.descripcion;
 
-    formData.datosDelTramiteRealizar.utilizoCafeComo = this.utilizoCafeComoData.catalogos.find(
-      (item: Catalogo) => String(item.id) === String(formData.datosDelTramiteRealizar.utilizoCafeComo),
+    FORM_DATA.datosDelTramiteRealizar.utilizoCafeComo = this.utilizoCafeComoData.catalogos.find(
+      (item: Catalogo) => String(item.id) === String(FORM_DATA.datosDelTramiteRealizar.utilizoCafeComo),
     )?.descripcion;
 
-    formData.datosDelTramiteRealizar.paisdeimportacion = this.paisdeimportacionData.catalogos.find(
-      (item: Catalogo) => String(item.id) === String(formData.datosDelTramiteRealizar.paisdeimportacion),
+    FORM_DATA.datosDelTramiteRealizar.paisdeimportacion = this.paisdeimportacionData.catalogos.find(
+      (item: Catalogo) => String(item.id) === String(FORM_DATA.datosDelTramiteRealizar.paisdeimportacion),
     )?.descripcion;
 
-    formData.datosDelTramiteRealizar.fraccionarancelaria = this.fraccionarancelariaData.catalogos.find(
-      (item: Catalogo) => String(item.id) === String(formData.datosDelTramiteRealizar.fraccionarancelaria),
+    FORM_DATA.datosDelTramiteRealizar.fraccionarancelaria = this.fraccionarancelariaData.catalogos.find(
+      (item: Catalogo) => String(item.id) === String(FORM_DATA.datosDelTramiteRealizar.fraccionarancelaria),
     )?.descripcion;
 
-    formData.datosDelTramiteRealizar.unidaddemedida = this.unidaddemedidaData.catalogos.find(
-      (item: Catalogo) => String(item.id) === String(formData.datosDelTramiteRealizar.unidaddemedida),
+    FORM_DATA.datosDelTramiteRealizar.unidaddemedida = this.unidaddemedidaData.catalogos.find(
+      (item: Catalogo) => String(item.id) === String(FORM_DATA.datosDelTramiteRealizar.unidaddemedida),
     )?.descripcion;
 
-    formData.datosDelTramiteRealizar.dolar = this.dolarData.catalogos.find(
-      (item: Catalogo) => String(item.id) === String(formData.datosDelTramiteRealizar.dolar),
+    FORM_DATA.datosDelTramiteRealizar.dolar = this.dolarData.catalogos.find(
+      (item: Catalogo) => String(item.id) === String(FORM_DATA.datosDelTramiteRealizar.dolar),
     )?.descripcion;
 
-    formData.datosDelTramiteRealizar.elcafe = this.elcafeData.catalogos.find(
-      (item: Catalogo) => String(item.id) === String(formData.datosDelTramiteRealizar.elcafe),
+    FORM_DATA.datosDelTramiteRealizar.elcafe = this.elcafeData.catalogos.find(
+      (item: Catalogo) => String(item.id) === String(FORM_DATA.datosDelTramiteRealizar.elcafe),
     )?.descripcion;
 
-    formData.datosDelTramiteRealizar.paisdetransbordo = this.paisdetransbordoData.catalogos.find(
-      (item: Catalogo) => String(item.id) === String(formData.datosDelTramiteRealizar.paisdetransbordo),
+    FORM_DATA.datosDelTramiteRealizar.paisdetransbordo = this.paisdetransbordoData.catalogos.find(
+      (item: Catalogo) => String(item.id) === String(FORM_DATA.datosDelTramiteRealizar.paisdetransbordo),
     )?.descripcion;
 
-    formData.datosDelTramiteRealizar.mediodetransporte = this.mediodetransporteData.catalogos.find(
-      (item: Catalogo) => String(item.id) === String(formData.datosDelTramiteRealizar.mediodetransporte),
+    FORM_DATA.datosDelTramiteRealizar.mediodetransporte = this.mediodetransporteData.catalogos.find(
+      (item: Catalogo) => String(item.id) === String(FORM_DATA.datosDelTramiteRealizar.mediodetransporte),
     )?.descripcion;
 
-    this.tableData.push(formData);
+    this.tableData.push(FORM_DATA);
     
   }
 
 /**
  * Este método se utiliza para mostrar el formulario al usuario.
  */
-  onAgregar() {
+  onAgregar(): void {
     this.esFormularioVisible = true;
   }
   /**
    * Este método se ejecuta cuando el usuario selecciona una fila de la tabla. Su propósito es
  */
-  onRowClick(rowData: any) {
+  onRowClick(rowData: FilaData): void {
     this.dataCafeForm.patchValue({
       envasadoen: this.envasadoenData.catalogos.find(
         (item: Catalogo) => item.descripcion === rowData.datosDelTramiteRealizar.envasadoen,
@@ -508,6 +581,17 @@ export class DatosDelCafeComponent implements OnDestroy, OnInit {
   }
 
   /**
+   * Este método se utiliza para inicializar el estado del formulario según si es de solo lectura o no.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.dataCafeForm?.disable();
+    }
+    else {
+      this.dataCafeForm?.enable();
+    }
+}
+  /**
    * Este método se utiliza para actualizar un valor específico en el store de la solicitud.
    * @param form 
    * @param campo 
@@ -515,7 +599,7 @@ export class DatosDelCafeComponent implements OnDestroy, OnInit {
    */
   setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Solicitud290201Store): void {
     const VALOR = form.get(campo)?.value;
-    (this.solicitud290201Store[metodoNombre] as (value: any) => void)(VALOR);
+    (this.solicitud290201Store[metodoNombre] as (value: string | number | boolean | null) => void)(VALOR);
   }
 /**
  * Este método forma parte del ciclo de vida de los componentes en Angular y se ejecuta

@@ -4,7 +4,7 @@
         <div class="row mt-4">
             <div class="col-md-4">
                 <app-catalogo-select [label]="'Propietario'" [required]="true" [tooltipQuestionCircle]="true"
-                    [catalogo]="propietarioOpciones" formControlName="propietario"
+                    [catalogo]="propietarioOpciones" formControlName="propietario" [isDisabled]="esFormularioSoloLectura"
                     (selectionChange)="establecerCambioDeValor({campo:'propietario',valor:$event});cambiarPropietario()"></app-catalogo-select>
             </div>
         </div>
@@ -12,19 +12,19 @@
         <div class="row mt-4">
             <div class="col-md-4">
                 <app-catalogo-select [label]="'Tipo de propietario'" [required]="true"
-                    formControlName="tipoDePropietario" [catalogo]="tipoDePropietarioOpciones"
+                    formControlName="tipoDePropietario" [catalogo]="tipoDePropietarioOpciones" [isDisabled]="esFormularioSoloLectura"
                     (selectionChange)="establecerCambioDeValor({campo:'tipoDePropietario',valor:$event});cambiarTipoPropietario()"></app-catalogo-select>
             </div>
         </div>
      @if(mostrarFormularioPersonaExtranjera){
      <div class="row mt-4">
             <formas-dinamicas [forma]="tipoPropietarioFormulario" [formularioDatos]="formularioDatosPropietarioNombre"
-                [estado]="estadoSeleccionado"
+                [estado]="estadoSeleccionado" [soloLectura]="esFormularioSoloLectura"
                 (emitirCambioDeValor)="establecerCambioDeValor($event)"></formas-dinamicas>
         </div>
     <div class="row mt-4">
             <formas-dinamicas [forma]="tipoPropietarioFormulario" [formularioDatos]="formularioDatosPropietarioDireccion"
-                [estado]="estadoSeleccionado"
+                [estado]="estadoSeleccionado" [soloLectura]="esFormularioSoloLectura"
                 (emitirCambioDeValor)="establecerCambioDeValor($event)"></formas-dinamicas>
         </div>
         }
@@ -33,6 +33,6 @@
 </form>
 </div>
    @if(mostrarSolicitante)
-   {
+   { 
     <solicitante></solicitante>
-  } 
+ } 

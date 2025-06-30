@@ -1,26 +1,11 @@
-import {
-  CatalogoSelectComponent,
-  TablaDinamicaComponent, 
-  TituloComponent,
-  UppercaseDirective 
-  } from '@ng-mf/data-access-user';
-
-  import {
-    FormBuilder,
-    FormGroup,
-    FormsModule,
-    ReactiveFormsModule,
-  } from '@angular/forms';
-import{OnDestroy, OnInit } from '@angular/core';
-import {map,takeUntil}from 'rxjs/operators';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ConsultaioQuery, TituloComponent } from '@libs/shared/data-access-user/src';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { Component} from '@angular/core';
-import { Subject } from 'rxjs';
-import { Subscription } from 'rxjs';
-import {Tramite240321Query} from '../../estados/tramite240321Query.query'
+import { Tramite240321Query } from '../../estados/tramite240321Query.query';
 import { Tramite240321State } from '../../estados/tramite240321Store.store';
-import { Tramite240321Store } from '../../estados/tramite240321Store.store'; 
-
+import { Tramite240321Store } from '../../estados/tramite240321Store.store';
 
 @Component({
   selector: 'app-folio',
@@ -28,10 +13,7 @@ import { Tramite240321Store } from '../../estados/tramite240321Store.store';
   imports: [
     ReactiveFormsModule,
     CommonModule,
-    UppercaseDirective,
-    CatalogoSelectComponent,
     FormsModule,
-    TablaDinamicaComponent,
     TituloComponent,
   ],
   templateUrl: './folio.component.html',
@@ -55,8 +37,16 @@ export class FolioComponent implements OnInit, OnDestroy {
    * @property {Subject<void>} destroyNotifier$
    * Subject utilizado para limpiar las suscripciones activas al destruir el componente.
    */
-  
+
   private destroyNotifier$: Subject<void> = new Subject();
+  /**
+* Indica si el formulario debe mostrarse en modo solo lectura.
+*
+* @type {boolean}
+* @memberof AgregarDestinatarioFinalContenedoraComponent
+* @see https://compodoc.app/
+*/
+  esFormularioSoloLectura: boolean = false;
 
   /**
    * Constructor del componente.
@@ -64,32 +54,45 @@ export class FolioComponent implements OnInit, OnDestroy {
    * @param {FormBuilder} fb - Constructor de formularios reactivos.
    * @param {Tramite240321Store} tramiteStore - Store que gestiona el estado del trámite.
    * @param {Tramite240321Query} tramiteQuery - Query para acceder a los datos del trámite.
+   * @param {ConsultaioQuery} consultaioQuery - Query para acceder al estado de la consulta.
+   * @returns {void}
    */
-  
+
   constructor(
     private fb: FormBuilder,
-    private tramiteStore:Tramite240321Store,
-    private tramiteQuery:Tramite240321Query,
-  ) {
-   
-    
-  }
+    private tramiteStore: Tramite240321Store,
+    private tramiteQuery: Tramite240321Query,
+    private readonly consultaioQuery: ConsultaioQuery
+  ) { }
 
   /**
    * Método de inicialización del componente.
    * @method ngOnInit
    */
-  ngOnInit():void {
-  
+  ngOnInit(): void {
+
     this.inicializarFormularioInfoRegistro();
     this.initializeFormFromStore();
-    
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          if (this.esFormularioSoloLectura) {
+            this.formularioInfoRegistro.disable();
+          } else {
+            this.formularioInfoRegistro.enable();
+          }
+        })
+      )
+      .subscribe();
+
   }
   /**
    * Inicializa el formulario con los valores del store.
    * @method initializeFormFromStore
    */
-  
+
   initializeFormFromStore(): void {
     this.tramiteQuery.getFolio$.pipe(
       takeUntil(this.destroyNotifier$),
@@ -99,24 +102,20 @@ export class FolioComponent implements OnInit, OnDestroy {
         });
       })
     ).subscribe();
-     
+
   }
-  
-  
 
   /**
    * Inicializa el formulario de información de registro.
    * @method inicializarFormularioInfoRegistro
    */
-  
+
   inicializarFormularioInfoRegistro(): void {
     this.formularioInfoRegistro = this.fb.group({
-     
       folio: [{ value: '', disabled: true }],
-    
-  })
-}
-      
+    })
+  }
+
   /*
    * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
    * Limpia las suscripciones.
@@ -125,10 +124,6 @@ export class FolioComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
-  
-  }
 
-  
- 
-  
+  }
 }

@@ -106,7 +106,7 @@ export class EmpresasSubfabricanteComponent implements OnDestroy, OnInit {
   *
   * @property {Subject<void>} destroyNotifier$
   */
-  private destroyNotifier$: Subject<void> = new Subject();
+  public destroyNotifier$: Subject<void> = new Subject();
 
   configuracionTablaDisponibles: ConfiguracionColumna<PlantasSubfabricante>[] = SUBFABRICANTE_DISPONIBLES_PLANTAS_TABLA_CONFIGURACION;
   configuracionTablaSeleccionadas: ConfiguracionColumna<PlantasSubfabricante>[] = SUBFABRICANTE_SELECCIONADAS_PLANTAS_TABLA_CONFIGURACION

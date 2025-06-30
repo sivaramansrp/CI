@@ -1,10 +1,10 @@
-<div class="container">
+<div class="container-fluid px-0">
   <ng-titulo titulo="Datos de la solicitud" />
   <form [formGroup]="formSolicitud">
     <div class="row">
       <div class="col-md-4">
         <app-catalogo-select [catalogo]="permisoCitesService.tipodeMovimiento" formControlName="tipodeMovimiento"
-          [label]="'Tipo de movimiento'" [required]="true" name="tipodeMovimiento"
+          [label]="'Tipo de movimiento'" [required]="true" [isDisabled]="esFormularioSoloLectura" name="tipodeMovimiento"
           (change)="cambiarTipoDeMovimiento()"></app-catalogo-select>
       </div>
     </div>
@@ -14,8 +14,8 @@
     <div class="row">
       <div class="col-md-4">
         <app-catalogo-select [catalogo]="permisoCitesService.tipoRegimen" formControlName="tipoRegimen"
-          [label]="'Tipo de régimen'" [required]="true" name="tipoRegimen"
-          (change)="onTipoRegimenChange()"></app-catalogo-select>
+          [label]="'Tipo de régimen'" [required]="true" name="tipoRegimen" [isDisabled]="esFormularioSoloLectura"
+          (change)="setValoresStore(formSolicitud, 'tipoRegimen')"></app-catalogo-select>
       </div>
     </div>
     <ng-titulo [titulo]="
@@ -29,7 +29,7 @@
         @if(solicitud230902State.tipodeMovimiento==="1"){
         <h5>Aduana des entrades (Maximo 3 aduanas)</h5>
         }
-        <crosslist [fechas]="listaOriginalAduanas" [fechasSeleccionadas]="listaSeleccionadaAduanas"
+        <crosslist [fechas]="listaOriginalAduanas" [isDisabled]="esFormularioSoloLectura" [fechasSeleccionadas]="listaSeleccionadaAduanas"
           [botones]="aduanasBotons" [label]="aquandasLabel"></crosslist>
       </div>
     </div>
@@ -38,11 +38,12 @@
       <div class="col-md-6">
         <label for="mercancia">Mercancía*:</label>
       </div>
-      <div class="table-container">
+      <div class="container table-container">
         <app-tabla-dinamica
         [configuracionTabla]="configuracionTabla"
         [datos]="tablaDatos"
         [tipoSeleccionTabla]="tablaSeleccion"
+        [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
         (listaDeFilaSeleccionada)="hadleFilaSeleccionada($event)"
       ></app-tabla-dinamica>
       </div>
@@ -52,13 +53,14 @@
           <li class="page-item"><a class="page-link" href="#">1</a></li>
         </ul>
       </nav>
-      <div class="row" style="padding-bottom: 20px; text-align: right">
+      <div class="row pb-4 text-end">
         <div>
-          <button type="button" class="btn btn-default me-2" [disabled]="!enableModficarBoton" (click)="modficarMercanciaItem()">Modficar</button>
-          <button type="button" class="btn btn-danger me-2" [disabled]="!enableEliminarBoton" (click)="confirmEliminarMercanciaItem()">Eliminar</button>
+          <button type="button" class="btn btn-default me-2" [disabled]="esFormularioSoloLectura || !enableModficarBoton" (click)="modficarMercanciaItem()">Modficar</button>
+          <button type="button" class="btn btn-danger me-2" [disabled]="esFormularioSoloLectura || !enableEliminarBoton" (click)="confirmEliminarMercanciaItem()">Eliminar</button>
           <button
             type="button"
             class="btn btn-primary me-2"
+            [disabled]="esFormularioSoloLectura"
             (click)="mostrarformMercanciaModal()"
           >
             Agregar
@@ -79,7 +81,7 @@
     <ng-titulo titulo="Finalidad del movimiento" />
     <div class="row mt-3">
       <div class="col-md-12 mt-3">
-        <crosslist [fechas]="listaOriginalMovimiento" [fechasSeleccionadas]="listSeleccionadaMovimiento"
+        <crosslist [fechas]="listaOriginalMovimiento" [isDisabled]="esFormularioSoloLectura" [fechasSeleccionadas]="listSeleccionadaMovimiento"
           [botones]="movimientoBotons" [label]="movimientoLabel"></crosslist>
       </div>
     </div>
@@ -97,7 +99,7 @@
                 [catalogo]="
                 permisoCitesService.fraccionArancelaria
                 "
-                name="fraccionArancelaria"
+                name="fraccionArancelaria" [isDisabled]="esFormularioSoloLectura"
                 formControlName="fraccionArancelaria"
                 (selectionChange)="manejarCambioFraccionArancelaria($event)"
                 [label]="'Fracción arancelaria'"

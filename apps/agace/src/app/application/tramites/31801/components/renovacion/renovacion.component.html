@@ -33,20 +33,19 @@
     </div>
     <div class="row mt-100">
         <div class="col-md-4">
-            <input-fecha [datos]="fechaPagoInput" name="fechaPago" (valorCambiado)="cambioFechaPago($event)"
-                [setFecha]="renovacionForm.get('fechaPago')?.value"></input-fecha>
+            <input-fecha [datos]="fechaPagoInput" name="fechaPago" (valorCambiado)="cambioFechaPago($event)" [isDisabled]="esFormularioSoloLectura" [setFecha]="renovacionForm.get('fechaPago')?.value"></input-fecha>
         </div>
         <div class="col-md-4">
             <label class="form-label">Monto en moneda nacional*:</label>
             <input type="text" class="form-control" formControlName="monedaNacional"
-                (change)="setValoresStore(renovacionForm, 'monedaNacional', 'setMonedaNacional')" />
+                (change)="setValorStore(renovacionForm, 'monedaNacional')" />
         </div>
     </div>
     <div class="row mt-2 mb-5">
         <div class="col-md-4">
             <label class="form-label">Número de operación bancaria*:</label>
             <input type="text" class="form-control" formControlName="numeroOperacion"
-                (change)="setValoresStore(renovacionForm, 'numeroOperacion', 'setNumeroOperacion')" />
+                (change)="setValorStore(renovacionForm, 'numeroOperacion')" />
             @if(renovacionForm.controls['numeroOperacion'].invalid &&
             renovacionForm.controls['numeroOperacion'].touched) {
             <div class="d-grid">
@@ -62,7 +61,7 @@
         <div class="col-md-4">
             <label class="form-label">Llave de pago*:</label>
             <input type="text" class="form-control" formControlName="llavePago"
-                (change)="setValoresStore(renovacionForm, 'llavePago', 'setLlavePago')" />
+                (change)="setValorStore(renovacionForm, 'llavePago')" />
         </div>
     </div>
     @for (manifiesto of manifiestos; let i = $index; track i) {

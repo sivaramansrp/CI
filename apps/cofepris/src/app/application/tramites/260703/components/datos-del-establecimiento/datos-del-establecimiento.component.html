@@ -7,6 +7,7 @@
       class="btn btn-primary"
       name="seleccionarEstablecimiento"
       id="btnEstablecimiento"
+      [disabled]="esFormularioSoloLectura"
     >
       Seleccionar establecimiento
     </button>
@@ -14,7 +15,7 @@
   <div class="row mt-5">
     <div class="col-md-8">
       <label for="razonSocial" class="form-label"
-        >Denominación o razón social*:</label
+        >Denominación o razón social *:</label
       >
       <input
         type="text"
@@ -43,7 +44,7 @@
     </div>
     <div class="col-md-4">
       <label for="correoElectronico" class="form-label"
-        >Correo electrónico:
+        >Correo electrónico *:
         <span
           class="bi bi-question-circle-fill"
           title="ejemplo@dominio.com"

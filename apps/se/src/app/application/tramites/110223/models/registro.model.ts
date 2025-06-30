@@ -1,3 +1,6 @@
+import { ConfiguracionColumna } from "@libs/shared/data-access-user/src";
+import { HistoricoColumnas } from "./certificado-origen.model";
+
 /**
  * Interfaz que define la estructura de las columnas de la tabla.
  * 
@@ -105,3 +108,270 @@ export const DESPACHO_LDA = {
   required: false,
   alfanumerico: true,
 };
+
+/**
+ * Representa la respuesta de una consulta realizada en el trámite.
+ */
+export interface RespuestaConsulta {
+  /**
+   * Indica si la consulta fue exitosa.
+   */
+  success: boolean;
+
+  /**
+   * Contiene los datos obtenidos de la consulta.
+   */
+  datos: ConsultaDatos;
+
+  /**
+   * Mensaje asociado a la respuesta de la consulta.
+   */
+  message: string;
+}
+
+/**
+ * Contiene los datos obtenidos de una consulta.
+ */
+export interface ConsultaDatos {
+  /**
+   * Indica si hay un tercer operador involucrado.
+   */
+  tercerOperador: boolean;
+
+  /**
+   * Tratado aplicable a la consulta.
+   */
+  tratado: string;
+
+  /**
+   * País relacionado con la consulta.
+   */
+  pais: string;
+
+  /**
+   * Fracción arancelaria de la mercancía.
+   */
+  fraccionArancelaria: string;
+
+  /**
+   * Número de registro del producto.
+   */
+  numeroRegistro: string;
+
+  /**
+   * Nombre comercial del producto.
+   */
+  nombreComercial: string;
+
+  /**
+   * Fecha inicial del periodo consultado.
+   */
+  fechaInicial: string;
+
+  /**
+   * Fecha final del periodo consultado.
+   */
+  fechaFinal: string;
+
+  /**
+   * Archivo asociado a la consulta.
+   */
+  archivo: string;
+
+  /**
+   * Fracción arancelaria específica de la mercancía.
+   */
+  fraccionMercanciaArancelaria: string;
+
+  /**
+   * Nombre técnico del producto.
+   */
+  nombreTecnico: string;
+
+  /**
+   * Nombre comercial de la mercancía.
+   */
+  nombreComercialDelaMercancia: string;
+
+  /**
+   * Criterio aplicado para determinar el origen preferencial.
+   */
+  criterioParaPreferencial: string;
+
+  /**
+   * Valor del contenido regional.
+   */
+  valorContenidoRegional: string;
+
+  /**
+   * Otras instancias involucradas.
+   */
+  otrasInstancias: string;
+
+  /**
+   * Cantidad de mercancía.
+   */
+  cantidad: string;
+
+  /**
+   * Unidad de medida de la cantidad (UMC).
+   */
+  umc: string;
+
+  /**
+   * Valor monetario de la mercancía.
+   */
+  valorDelaMercancia: string;
+
+  /**
+   * Descripción complementaria de la mercancía.
+   */
+  complementoDelaDescripcion: string;
+
+  /**
+   * Tipo de factura asociada.
+   */
+  tipoFactura: string;
+
+  /**
+   * Fecha relevante asociada.
+   */
+  fecha: string;
+
+  /**
+   * Número de la factura.
+   */
+  numeroFactura: string;
+
+  /**
+   * Número de serie del documento.
+   */
+  numeroSerie: string;
+
+  /**
+   * Observaciones adicionales.
+   */
+  observaciones: string;
+
+  /**
+   * Entidad relacionada.
+   */
+  entidad: string;
+
+  /**
+   * Tipo de representación.
+   */
+  representacion: string;
+
+  /**
+   * Estado de la casilla de verificación.
+   */
+  casillaVerificacion: boolean;
+
+  /**
+   * Justificación proporcionada.
+   */
+  justificacion: string;
+
+  /**
+   * Nombre del productor o exportador.
+   */
+  nombre: string;
+
+  /**
+   * Número fiscal asociado.
+   */
+  numeroFiscal: string;
+
+  /**
+   * Ciudad de origen/destino.
+   */
+  ciudad: string;
+
+  /**
+   * Calle de la dirección.
+   */
+  calle: string;
+
+  /**
+   * Número y letra de la dirección.
+   */
+  numeroLetra: string;
+
+  /**
+   * Número de registro fiscal.
+   */
+  numeroDeRegistroFiscal: string;
+
+  /**
+   * Número de teléfono de contacto.
+   */
+  telefono: string;
+
+  /**
+   * Número de fax.
+   */
+  fax: string;
+
+  /**
+   * Correo electrónico de contacto.
+   */
+  correoElectronico: string;
+
+  /**
+   * Nacionalidad asociada.
+   */
+  nacion: string;
+
+  /**
+   * Indica si los datos del productor son confidenciales.
+   */
+  datosConfidencialesProductor: boolean;
+
+  /**
+   * Indica si el productor es el mismo que el exportador.
+   */
+  productorMismoExportador: boolean;
+
+  /**
+   * Número de registro fiscal (alternativo).
+   */
+  numeroRegistroFiscal: string;
+
+  /**
+   * Fax adicional para el productor.
+   */
+  agregarDatosProductorFax: string;
+}
+
+/**
+ * Columnas para la tabla del historial de certificados.
+ * 
+ * @constant HISTORICOTABLECOLUMNS
+ * @type {ConfiguracionColumna<HistoricoColumnas>[]}
+ */
+export const HISTORICOTABLECOLUMNS: ConfiguracionColumna<HistoricoColumnas>[] = [
+  { encabezado: 'Nombre del productor', clave: (elementos) => elementos.nombreProductor, orden: 1 },
+  { encabezado: 'Número de registro fiscal', clave: (elementos) => elementos.numeroRegistroFiscal, orden: 2 },
+  { encabezado: 'Dirección', clave: (elementos) => elementos.direccion, orden: 3 },
+  { encabezado: 'Correo Electrónico', clave: (elementos) => elementos.correoElectronico, orden: 4 },
+  { encabezado: 'Teléfono', clave: (elementos) => elementos.telefono, orden: 5 },
+  { encabezado: 'Fax', clave: (elementos) => elementos.fax, orden: 6 },
+];
+
+/**
+ * Columnas para la tabla de elementos seleccionados.
+ * 
+ * @constant HEADERSDATASELECCIONADASTABLA
+ * @type {ConfiguracionColumna<SeleccionadasTabla>[]}
+ */
+export const HEADERSDATASELECCIONADASTABLA: ConfiguracionColumna<SeleccionadasTabla>[] = [
+  { encabezado: 'Fracción arancelaria', clave: (ele: SeleccionadasTabla) => ele.fraccionArancelaria, orden: 1 },
+  { encabezado: 'Cantidad', clave: (ele: SeleccionadasTabla) => ele.cantidad, orden: 2 },
+  { encabezado: 'Unidad de medida', clave: (ele: SeleccionadasTabla) => ele.unidadMedida, orden: 3 },
+  { encabezado: 'Valor mercancía', clave: (ele: SeleccionadasTabla) => ele.valorMercancia, orden: 4 },
+  { encabezado: 'Tipo de factura', clave: (ele: SeleccionadasTabla) => ele.tipoFactura, orden: 5 },
+  { encabezado: 'Número factura', clave: (ele: SeleccionadasTabla) => ele.numFactura, orden: 6 },
+  { encabezado: 'Complemento descripción', clave: (ele: SeleccionadasTabla) => ele.complementoDescripcion, orden: 7 },
+  { encabezado: 'Fecha factura', clave: (ele: SeleccionadasTabla) => ele.fechaFactura, orden: 8 },
+];

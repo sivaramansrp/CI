@@ -19,7 +19,9 @@ describe('SolicitarRequerimientoComponent', () => {
   beforeEach(async () => {
     autoridadServiceMock = {
       obtenerTramiteLista: jest.fn().mockReturnValue(of({ catalogos: [] })),
-      agregarSolicitud: jest.fn().mockReturnValue(of({ success: true, datos: {} })),
+      agregarSolicitud: jest
+        .fn()
+        .mockReturnValue(of({ success: true, datos: {} })),
       agregarRequerimientoOpcions: jest.fn().mockReturnValue(of([])),
     };
 
@@ -37,13 +39,21 @@ describe('SolicitarRequerimientoComponent', () => {
     };
 
     await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule, FormsModule, RouterTestingModule, SolicitarRequerimientoComponent],
+      imports: [
+        ReactiveFormsModule,
+        FormsModule,
+        RouterTestingModule,
+        SolicitarRequerimientoComponent,
+      ],
       declarations: [],
       providers: [
         { provide: AutoridadService, useValue: autoridadServiceMock },
         { provide: Tramite32401Store, useValue: tramite32401StoreMock },
         { provide: Tramite32401Query, useValue: tramite32401QueryMock },
-        { provide: ValidacionesFormularioService, useValue: validacionesServiceMock },
+        {
+          provide: ValidacionesFormularioService,
+          useValue: validacionesServiceMock,
+        },
       ],
     }).compileComponents();
 
@@ -87,7 +97,10 @@ describe('SolicitarRequerimientoComponent', () => {
 
   it('should validate form fields using isValid', () => {
     const isValid = component.isValid(component.solicitarForm, 'tipoBusqueda');
-    expect(validacionesServiceMock.isValid).toHaveBeenCalledWith(component.solicitarForm, 'tipoBusqueda');
+    expect(validacionesServiceMock.isValid).toHaveBeenCalledWith(
+      component.solicitarForm,
+      'tipoBusqueda'
+    );
     expect(isValid).toBe(true);
   });
 
@@ -116,15 +129,42 @@ describe('SolicitarRequerimientoComponent', () => {
 
   it('should navigate to a new route on valorDeAlternancia', () => {
     const routerSpy = jest.spyOn(component['router'], 'navigate');
-    component.valorDeAlternancia({ folioTramite: '123', tipoTramite: ''});
-    expect(routerSpy).toHaveBeenCalledWith(['agace/manifiesto-aereo/requiremento'], {
-      state: { data: { folioTramite: '123',  tipoTramite: '' } },
+    component.valorDeAlternancia({
+      column: '123',
+      row: {
+        estadoDelTramite: '',
+        folioTramite: '',
+        id: 1,
+        razonSocial: '',
+        rfc: '',
+        tipoTramite: '',
+      },
     });
+    expect(routerSpy).toHaveBeenCalledWith(
+      ['agace/manifiesto-aereo/requiremento'],
+      {
+        state: {
+          data: {
+            column: '123',
+            row: {
+              estadoDelTramite: '',
+              folioTramite: '',
+              id: 1,
+              razonSocial: '',
+              rfc: '',
+              tipoTramite: '',
+            },
+          },
+        },
+      }
+    );
   });
 
   it('should call agregarRequerimientoOpcions and populate requerimientoOpcions', () => {
     const mockRequerimientoOpcions = [{ value: 1, label: 'Option 1' }];
-    jest.spyOn(autoridadServiceMock, 'agregarRequerimientoOpcions').mockReturnValue(of(mockRequerimientoOpcions));
+    jest
+      .spyOn(autoridadServiceMock, 'agregarRequerimientoOpcions')
+      .mockReturnValue(of(mockRequerimientoOpcions));
 
     component.agregarRequerimientoOpcions();
 

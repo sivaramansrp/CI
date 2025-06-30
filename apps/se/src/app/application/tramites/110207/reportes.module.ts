@@ -11,7 +11,6 @@ import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 import { ReportesRoutingModule } from './reportes-routing.module';
 import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.component';
 
-
 @NgModule({
   declarations: [
     PasoDosComponent,
@@ -36,6 +35,6 @@ import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.co
     BtnContinuarComponent,
     SolicitanteComponent
   ],
-  schemas: [NO_ERRORS_SCHEMA],
+  schemas: [NO_ERRORS_SCHEMA], 
 })
 export class ReportesModule { }

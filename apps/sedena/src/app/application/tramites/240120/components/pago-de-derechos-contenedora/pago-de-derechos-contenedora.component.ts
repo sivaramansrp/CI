@@ -1,13 +1,12 @@
+import { Component, OnDestroy,OnInit } from '@angular/core';
+import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
+import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
+import { ID_PROCEDIMIENTO } from '../../constants/importacion-armas-municiones.enum';
 import { PagoDeDerechosComponent } from '../../../../shared/components/pago-de-derechos/pago-de-derechos.component';
 import { PagoDerechosFormState } from '../../../../shared/models/pago-de-derechos.model';
-import { Subject } from 'rxjs';
 import { Tramite240120Query } from '../../estados/tramite240120Query.query';
 import { Tramite240120Store } from '../../estados/tramite240120Store.store';
-import { takeUntil } from 'rxjs';
 /**
  * @title Pago de Derechos Contenedora
  * @description Componente contenedor que se encarga de enlazar el estado de pago de derechos con el formulario correspondiente.
@@ -33,20 +32,39 @@ export class PagoDeDerechosContenedoraComponent implements OnInit, OnDestroy {
    * @property {Subject<void>} destroy$
    */
   private destroy$ = new Subject<void>();
-
+  /**
+* Indica si el formulario debe mostrarse en modo solo lectura.
+*
+* @type {boolean}
+* @default false
+*/
+  esFormularioSoloLectura: boolean = false;
+  /**
+   * Identificador único del procedimiento asociado al componente.
+   * 
+   * @constant
+   * @type {number}
+   * @readonly
+   * 
+   * @remarks
+   * Este valor se utiliza para identificar el procedimiento actual en el contexto
+   * de la aplicación.
+   */
+  public readonly idProcedimiento: number = ID_PROCEDIMIENTO;
   /**
    * Constructor del componente.
    *
    * @method constructor
    * @param {Tramite240120Query} tramiteQuery - Query para obtener el estado actual del pago de derechos.
    * @param {Tramite240120Store} tramiteStore - Store que administra el estado del pago de derechos.
+   * @param {ConsultaioQuery} consultaQuery - Query para obtener el estado de la consulta.
    * @returns {void}
    */
   constructor(
     private tramiteQuery: Tramite240120Query,
-    private tramiteStore: Tramite240120Store
-  ) // eslint-disable-next-line no-empty-function
-  {}
+    private tramiteStore: Tramite240120Store,
+    private consultaQuery: ConsultaioQuery,
+  ) { }
 
   /**
    * Hook del ciclo de vida que se ejecuta al inicializar el componente.
@@ -61,6 +79,14 @@ export class PagoDeDerechosContenedoraComponent implements OnInit, OnDestroy {
       .subscribe((data) => {
         this.pagoDerechoFormState = data;
       });
+    this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroy$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+        })
+      )
+      .subscribe();
   }
 
   /**

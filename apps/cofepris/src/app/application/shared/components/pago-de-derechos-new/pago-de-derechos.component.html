@@ -6,13 +6,14 @@
         <div class="col-md-4">
           <div class="form-group">
             <label class="control-label" for="claveDeReferencia"
-              >Clave de referencia</label
+              >Clave de referencia:</label
             >
             <input
               id="claveDeReferencia"
               type="text"
               class="form-control"
               formControlName="claveDeReferencia"
+              maxlength="9"
               (input)="
                 capitalizarYGuardar(
                   'claveDeReferencia',
@@ -26,13 +27,14 @@
         <div class="col-md-4">
           <div class="form-group">
             <label class="control-label" for="cadenaPagoDependencia"
-              >Cadena de la dependencia</label
+              >Cadena de la dependencia:</label
             >
             <input
               id="cadenaPagoDependencia"
               type="text"
               class="form-control"
               formControlName="cadenaPagoDependencia"
+              maxlength="14"
               (input)="
                 capitalizarYGuardar(
                   'cadenaPagoDependencia',
@@ -67,6 +69,7 @@
               [catalogo]="banco"
               [label]="'Banco'"
               (change)="setValoresStore(formularioPagoDerechos, 'bancoClave')"
+              [isDisabled]="isDisabled"
             ></app-catalogo-select>
           </div>
         </div>
@@ -76,13 +79,14 @@
         <div class="col-md-4">
           <div class="form-group">
             <label class="control-label" for="llaveDePago"
-              >Llave de pago*:</label
+              >Llave de pago:</label
             >
             <input
               class="form-control"
               id="llaveDePago"
               type="text"
               formControlName="llaveDePago"
+              maxlength="30"
               (input)="
                 capitalizarYGuardar('llaveDePago', 'setLlaveDePago', $event)
               "
@@ -94,17 +98,18 @@
             [setFecha]="formularioPagoDerechos.get('fecPago')?.value"
             [datos]="configuracionFechaFinal"
             (valorCambiado)="setValoresStore(formularioPagoDerechos, 'fecPago')"
-          >
-          </input-fecha>
+            [isDisabled]="isDisabled"
+          />
         </div>
         <div class="col-md-4">
           <div class="form-group">
-            <label class="control-label" for="impPago">Importe de pago</label>
+            <label class="control-label" for="impPago">Importe de pago:</label>
             <input
               class="form-control"
               id="impPago"
-              type="number"
+              type="text"
               formControlName="impPago"
+              maxlength="16"
               (change)="setValoresStore(formularioPagoDerechos, 'impPago')"
             />
           </div>
@@ -113,7 +118,14 @@
 
       <div class="row mt-3 justify-content-end">
         <div class="col-md-4 d-flex justify-content-end">
-          <button class="btn btn-danger">Borrar datos del pago</button>
+            <button 
+            class="btn btn-danger" 
+            (click)="formularioPagoDerechos.reset()"
+            type="button"
+            [disabled]="isDisabled"
+            >
+            Borrar datos del pago
+            </button>
         </div>
       </div>
     </div>

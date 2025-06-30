@@ -1,0 +1,176 @@
+<div  *ngIf ="!estadoChecker">
+    <div class="row">
+        <div class="col-md-12">        
+            <ng-titulo titulo="Datos del trámite" />
+        </div>
+    </div>
+    <div class="row" >
+<div class="col-md-12">
+    <ng-alert [CONTENIDO]="importante"></ng-alert>
+</div>        
+    </div>
+    <div class="row">
+    <div class="col-md-12">
+        <label for="mercancia">Mercancías*:</label>
+      </div>
+      <div class="col-md-12">
+        <app-tabla-dinamica
+        [tipoSeleccionTabla]="tipoSeleccionarParaTabla"
+        [configuracionTabla]="configuracionParaEncabezadoDeTabla"
+        [datos]="cuerpoTabla"
+        (listaDeFilaSeleccionada)="onListaDeFilaSeleccionada($event)"
+        [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
+      >
+      </app-tabla-dinamica>
+      </div>
+    </div>
+</div>
+<form [formGroup]="formMercancia">
+<div  *ngIf ="estadoChecker">
+    <div class="row">
+        <div class="col-md-12">        
+            <ng-titulo titulo="Datos mercancia" />
+        </div>
+    </div>
+    <div class="row">
+                <div class="col-md-6">
+                    <app-catalogo-select
+                      [catalogo]="catalogoNombreComun"
+                      formControlName="nombreComun"
+                      [label]="'Nombre común'"
+                      [required]="true"
+                      name="nombreComun"
+                      [isDisabled]="esFormularioSoloLectura"
+                    ></app-catalogo-select>
+                  </div>
+                  <div class="col-md-6">
+                    <app-catalogo-select
+                      [catalogo]="catalogoNombreCientifico"
+                      formControlName="nombreCientifico"
+                      [label]="'Nombre científico'"
+                      [required]="true"
+                      name="nombreCientifico"
+                      [isDisabled]="esFormularioSoloLectura"
+                    ></app-catalogo-select>
+                  </div>
+     </div>
+     <div class="row">
+        <div class="col-md-6">
+            <app-catalogo-select
+            [catalogo]="catalogoUso"
+            formControlName="uso"
+            [label]="'Uso'"
+            [required]="true"
+            name="uso"
+            [isDisabled]="esFormularioSoloLectura"
+          ></app-catalogo-select>
+        </div>
+     </div>
+     <div class="row">
+        <div class="col-md-6">
+            <app-catalogo-select
+            [catalogo]="catalogoPaisOrigen"
+            formControlName="paisOrigen"
+            [label]="'País de origen'"
+            [required]="true"
+            name="paisOrigen"
+              [isDisabled]="esFormularioSoloLectura"
+          ></app-catalogo-select>
+        </div>
+        <div class="col-md-6">
+            <app-catalogo-select
+            [catalogo]="catalogoPaisProcedencia"
+            formControlName="paisProcedencia"
+            [label]="'País de procedencia'"
+            [required]="true"
+            name="paisProcedencia"
+              [isDisabled]="esFormularioSoloLectura"
+          ></app-catalogo-select>
+        </div>
+     </div>
+     <div class="row">
+        <div class="col-md-6">
+            <app-catalogo-select
+            [catalogo]="catalogoTipoProducto"
+            formControlName="tipoProducto"
+            [label]="'Tipo de producto'"
+            [required]="true"
+            name="tipoProducto"
+              [isDisabled]="esFormularioSoloLectura"
+          ></app-catalogo-select>
+        </div>
+     </div>
+     <div class="row">
+        <div class="col-md-6">
+            <label for="fraccionArancelaria">Fracción arancelaria *:</label>
+            <input type="text" id="fraccionArancelaria" class="form-control" formControlName="fraccionArancelaria" (change)="establecerValoresStore( 'fraccionArancelaria')"/>
+        </div>
+        <div class="col-md-6">
+            <label for="descripcionFraccionArancelaria">Descripción de la fracción arancelaria*:</label>
+            <input type="text" id="descripcionFraccionArancelaria" class="form-control" formControlName="descripcionFraccionArancelaria" [readOnly]="true"/>
+        </div>
+     </div>
+     <div class="row">
+        <div class="col-md-4">
+            <label for="cantidadUMT">Cantidad UMT :</label>
+            <input type="text" id="cantidadUMT" class="form-control" formControlName="cantidadUMT"/>
+        </div>
+        <div class="col-md-4">
+            <label for="descripcionFraccionArancelaria">UMT:</label>
+            <input type="text" id="umt" class="form-control" formControlName="umt" [readOnly]="true">
+        </div>
+     </div>
+     <div class="row">
+        <div class="col-md-4 mt-2">
+            <label for="cantidadUMC">Cantidad UMC*:</label>
+            <input type="text" id="cantidadUMC" class="form-control" formControlName="cantidadUMC"/>
+        </div>
+        <div class="col-md-4">
+            <app-catalogo-select
+            [catalogo]="catalogoUmc"
+            formControlName="umc"
+            [label]="'UMC'"
+            [required]="true"
+            name="umc"
+              [isDisabled]="esFormularioSoloLectura"
+          ></app-catalogo-select>
+        </div>
+     </div>
+     <div class="row">
+        <div class="col-md-12 mt-2">
+            <label class="control-label" for="descripcion">Descripción*:</label>
+            <textarea
+              class="form-control"
+              rows="12"
+              formControlName="descripcion"
+              name="descripcion"
+            ></textarea>
+          </div>   
+        </div>
+
+</div>
+</form>
+<div class="row mt-2" style="padding-bottom: 20px; text-align: right">
+  <div *ngIf="estadoChecker">
+    <button type="button" class="btn btn-default btn-space me-2"  (click)="limpiarDatosFormulario()">
+      Limpiar
+    </button>
+    <button type="button" class="btn btn-default btn-space me-2" (click)="almacenarDatoEnTabla('close')">
+      Cancelar
+    </button>
+    <button type="button" class="btn btn-primary btn-space " [disabled]="!formMercancia.valid" (click)="almacenarDatoEnTabla(formMercancia.value.id !== null ? 'editar':'agregar')">
+      Agregar
+    </button>
+  </div>
+  <div *ngIf="!estadoChecker">
+    <button type="button" class="btn btn-default btn-space me-2"  *ngIf="cuerpoTabla.length !==  0" [disabled]="!(listaDeTablasSeleccionadas.length === 1)" (click)="seleccionarParaModificacion()">
+      Modificar
+    </button>
+    <button type="button" class="btn btn-default btn-space me-2" *ngIf="cuerpoTabla.length !== 0 " [disabled]="!(listaDeTablasSeleccionadas.length === 1)" (click)="eliminarElementoSeleccionado()">
+      Eliminar
+    </button>
+    <button type="button" class="btn btn-primary btn-space " (click)="almacenarDatoEnTabla('nueva')" >
+      Agregar
+    </button>
+  </div>
+  </div>

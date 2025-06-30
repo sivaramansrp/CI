@@ -99,3 +99,32 @@ export const TRAMITE = '{numeroTramite}';
  * @see http://api-vucem-1069277193.us-east-1.elb.amazonaws.com/api/tramite/5701/documentos?especifico=false
 */
 export const API_GET_DOCUMENTOS_OBLIGATORIOS = `tramite/{numeroTramite}/documentos` 
+
+/**
+ * API para recuperar el catálogo de paises
+ * @see http://api-vucem-1069277193.us-east-1.elb.amazonaws.com/api/catalogo/swagger-ui/index.html#/Pa%C3%ADs/consulta-paises-activos
+ */
+export const API_GET_PAISES = 'catalogo/paises';
+
+/**
+ * API para generar la cadena original de un trámite.
+ * @see http://api-vucem-1069277193.us-east-1.elb.amazonaws.com/api/tramite-flujo/swagger-ui/index.html#/Cadena/generar
+ */
+export const API_GENERAR_CADENA_ORIGINAL = 'api/tramite/solicitud/genera-cadena-original';
+
+/**
+ * API para enviar una firma electrónica.
+ * @see http://api-vucem-1069277193.us-east-1.elb.amazonaws.com/api/firma/swagger-ui/index.html#/Firma/firmar
+ */
+export const API_ENVIAR_FIRMA = 'api/tramite/firmar';
+
+
+
+
+/**
+ * API para recuperar las tareas por usuario.
+ * @see http://api-vucem-1069277193.us-east-1.elb.amazonaws.com/api/bandeja-tarea/swagger-ui/index.html#/Bandeja%20tarea/consultar-tareas-servicio
+ */
+export const API_GET_BANDEJATAREA = 'bandeja-tarea/usuario/tarea';
+
+

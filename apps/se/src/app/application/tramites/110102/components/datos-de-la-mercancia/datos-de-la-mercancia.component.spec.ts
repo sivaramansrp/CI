@@ -1,45 +1,66 @@
-import { CommonModule } from '@angular/common';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
 import { DatosDeLaMercanciaComponent } from './datos-de-la-mercancia.component';
-import { Tramite110102Store } from '../../estados/store/tramite110102.store';
-import { Tramite110102Query } from '../../estados/queries/tramite110102.query';
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { of } from 'rxjs';
+import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
+
+class MockTramite110102Store {
+  establecerDatos = jest.fn();
+}
+class MockConsultaioQuery {
+  selectConsultaioState$ = of({ readonly: false });
+}
+class MockTramite110102Query {
+  selectTramite110102$ = of({
+    cveRegistroProductor: '1234567890',
+    solicitud: { idSolicitud: null, idSolicitudProductor: '' }
+  });
+}
 
 describe('DatosDeLaMercanciaComponent', () => {
   let component: DatosDeLaMercanciaComponent;
   let fixture: ComponentFixture<DatosDeLaMercanciaComponent>;
-  let storeMock: any;
-  let queryMock: any;
+  let mockStore: MockTramite110102Store;
+  let mockConsultaQuery: MockConsultaioQuery;
+  let mockTramiteQuery: MockTramite110102Query;
 
   beforeEach(async () => {
-    storeMock = {
-      setCveRegistroProductor: jest.fn()
-    };
-
-    queryMock = {
-      selectTramite110102$: of({
-        cveRegistroProductor: '123456'
-      })
-    };
+    mockStore = new MockTramite110102Store();
+    mockConsultaQuery = new MockConsultaioQuery();
+    mockTramiteQuery = new MockTramite110102Query();
 
     await TestBed.configureTestingModule({
-      imports: [
-        DatosDeLaMercanciaComponent,
-        ReactiveFormsModule,
-        CommonModule
-      ],
+      imports: [ReactiveFormsModule, DatosDeLaMercanciaComponent],
       providers: [
         FormBuilder,
-        { provide: Tramite110102Store, useValue: storeMock },
-        { provide: Tramite110102Query, useValue: queryMock }
-      ]
-    }).compileComponents();
+        { provide: 'Tramite110102Store', useValue: mockStore },
+        { provide: 'ConsultaioQuery', useValue: mockConsultaQuery },
+        { provide: 'Tramite110102Query', useValue: mockTramiteQuery }
+      ],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA]
+    })
+      .overrideComponent(DatosDeLaMercanciaComponent, {
+        set: {
+          providers: [
+            { provide: FormBuilder, useClass: FormBuilder },
+            { provide: 'Tramite110102Store', useValue: mockStore },
+            { provide: 'ConsultaioQuery', useValue: mockConsultaQuery },
+            { provide: 'Tramite110102Query', useValue: mockTramiteQuery }
+          ]
+        }
+      })
+      .compileComponents();
   });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(DatosDeLaMercanciaComponent);
     component = fixture.componentInstance;
+
+    // Patch the injected services
+    (component as any).tramiteStore = mockStore;
+    (component as any).consultaQuery = mockConsultaQuery;
+    (component as any).tramiteQuery = mockTramiteQuery;
+
     fixture.detectChanges();
   });
 
@@ -47,69 +68,69 @@ describe('DatosDeLaMercanciaComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('debe inicializar el formulario con valores por defecto', () => {
-    expect(component.datosDeLamercanciaFrom).toBeDefined();
-    expect(component.datosDeLamercanciaFrom.get('cveRegistroProductor')?.value).toBe('123456');
-    expect(component.datosDeLamercanciaFrom.get('solicitud.idSolicitud')?.value).toBeNull();
-    expect(component.datosDeLamercanciaFrom.get('solicitud.idSolicitudProductor')?.value).toBe('');
+  it('debe inicializar el formulario con valores del estado', () => {
+    expect(component.formularioDatosMercancia).toBeDefined();
+    expect(component.formularioDatosMercancia.get('cveRegistroProductor')?.value).toBe('1234567890');
   });
 
-  it('debe establecer valores en el store al llamar setValoresStore', () => {
-    component.datosDeLamercanciaFrom.get('cveRegistroProductor')?.setValue('654321');
-    component.setValoresStore(component.datosDeLamercanciaFrom, 'cveRegistroProductor', 'setCveRegistroProductor');
-    expect(storeMock.setCveRegistroProductor).toHaveBeenCalledWith('654321');
+  it('debe marcar el control como inválido si está vacío y tocado', () => {
+    const control = component.formularioDatosMercancia.get('cveRegistroProductor');
+    control?.setValue('');
+    control?.markAsTouched();
+    fixture.detectChanges();
+    expect(component.esControlInvalido('cveRegistroProductor')).toBe(true);
   });
 
-  it('debe obtener valores del store y asignarlos al formulario', () => {
-    component.getValoresStore();
-    expect(component.datosDeLamercanciaFrom.get('cveRegistroProductor')?.value).toBe('123456');
+  it('debe llamar a establecerDatos en el store al cambiar el valor', () => {
+    const control = component.formularioDatosMercancia.get('cveRegistroProductor');
+    control?.setValue('9876543210');
+    component.establecerValoresEnEstado(component.formularioDatosMercancia, 'cveRegistroProductor');
+    expect(mockStore.establecerDatos).toHaveBeenCalledWith({ cveRegistroProductor: '9876543210' });
   });
 
-  it('debe retornar true si un control es inválido', () => {
-    const CONTROL_NAME = 'cveRegistroProductor';
-    component.datosDeLamercanciaFrom.get(CONTROL_NAME)?.markAsTouched();
-    component.datosDeLamercanciaFrom.get(CONTROL_NAME)?.setValue('');
-    expect(component.esInvalido(CONTROL_NAME)).toBe(true);
+  it('debe deshabilitar el formulario si esSoloLectura es true', () => {
+    component.esSoloLectura = true;
+    component.habilitarDeshabilitarFormulario();
+    expect(component.formularioDatosMercancia.disabled).toBe(true);
   });
 
-  it('debe retornar false si un control es válido', () => {
-    const CONTROL_NAME = 'cveRegistroProductor';
-    component.datosDeLamercanciaFrom.get(CONTROL_NAME)?.markAsTouched();
-    component.datosDeLamercanciaFrom.get(CONTROL_NAME)?.setValue('123456');
-    expect(component.esInvalido(CONTROL_NAME)).toBe(false);
+  it('debe habilitar el formulario si esSoloLectura es false', () => {
+    component.esSoloLectura = false;
+    component.habilitarDeshabilitarFormulario();
+    expect(component.formularioDatosMercancia.enabled).toBe(true);
   });
 
-  it('debe habilitar cveRegistroProductor si idSolicitud es null', () => {
-    component.datosDeLamercanciaFrom.get('solicitud.idSolicitud')?.setValue(null);
-    component.actualizaGridComercializadoresProductos();
-    expect(component.datosDeLamercanciaFrom.get('cveRegistroProductor')?.enabled).toBe(true);
+  it('debe mostrar notificación si el patrón es inválido al buscar', () => {
+    const control = component.formularioDatosMercancia.get('cveRegistroProductor');
+    control?.setValue('abc'); 
+    control?.markAsDirty();
+    control?.setErrors({ pattern: true });
+    component.actualizarGridComercializadores();
+    expect(component.alertaNotificacion).toBeDefined();
+    expect(component.alertaNotificacion.mensaje).toContain('Debe introducir la clave de registro');
   });
 
-  it('debe deshabilitar cveRegistroProductor si idSolicitud no es null', () => {
-    component.datosDeLamercanciaFrom.get('solicitud.idSolicitud')?.setValue(1);
-    component.actualizaGridComercializadoresProductos();
-    expect(component.datosDeLamercanciaFrom.get('cveRegistroProductor')?.disabled).toBe(true);
+  it('debe mostrar notificación si el número de registro no es 254023028961', () => {
+    const control = component.formularioDatosMercancia.get('cveRegistroProductor');
+    control?.setValue('1234567890');
+    control?.setErrors(null);
+    component.actualizarGridComercializadores();
+    expect(component.alertaNotificacion).toBeDefined();
+    expect(component.alertaNotificacion.mensaje).toContain('El número de registro proporcionado no existe');
   });
 
-  it('debe mostrar la notificación correcta si cveRegistroProductor tiene un error de patrón', () => {
-    component.datosDeLamercanciaFrom.get('cveRegistroProductor')?.setValue('invalid');
-    component.actualizaGridComercializadoresProductos();
-    expect(component.nuevaAlertaNotificacion.mensaje).toBe('Debe introducir la clave de registro.');
+  it('no debe mostrar notificación si el campo está vacío', () => {
+    const control = component.formularioDatosMercancia.get('cveRegistroProductor');
+    control?.setValue('');
+    component.actualizarGridComercializadores();
+    expect(component.alertaNotificacion).toBeUndefined();
   });
 
-  it('debe mostrar la notificación correcta si cveRegistroProductor no coincide con el valor esperado', () => {
-    component.datosDeLamercanciaFrom.get('cveRegistroProductor')?.setValue('999999');
-    component.actualizaGridComercializadoresProductos();
-    expect(component.nuevaAlertaNotificacion.mensaje).toBe(
-      'El número de registro proporcionado no existe, no se encuentra vigente o no tiene dado de alta el RFC del comercializador. Favor de verificar.'
-    );
-  });
-
-  it('debe completar el subject destroyed$ al destruir el componente', () => {
-    const NEXT_SPY = jest.spyOn(component['destroyed$'], 'next');
-    const COMPLETE_SPY = jest.spyOn(component['destroyed$'], 'complete');
+  it('debe limpiar las suscripciones al destruir el componente', () => {
+    const spyNext = jest.spyOn((component as any).destruido$, 'next');
+    const spyComplete = jest.spyOn((component as any).destruido$, 'complete');
     component.ngOnDestroy();
-    expect(NEXT_SPY).toHaveBeenCalled();
-    expect(COMPLETE_SPY).toHaveBeenCalled();
+    expect(spyNext).toHaveBeenCalled();
+    expect(spyComplete).toHaveBeenCalled();
   });
 });

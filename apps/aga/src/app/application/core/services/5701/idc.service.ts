@@ -1,6 +1,6 @@
 import { API_GET_RFC_IDC, RFC_QUERY } from '../../../constantes/5701/api-constants';
-import { catchError, map, Observable, throwError } from 'rxjs';
-import { enviroment } from '@libs/shared/data-access-user/src';
+import { Observable, catchError, map, throwError } from 'rxjs';
+import { ENVIRONMENT } from '@libs/shared/data-access-user/src';
 import { HttpClient } from '@angular/common/http';
 import { IdcResponse } from '../../models/5701/idc.model';
 import { Injectable } from '@angular/core';
@@ -15,7 +15,7 @@ export class IdcService {
   constructor(
     private http: HttpClient
   ) {
-    this.host = `${enviroment.API_HOST}/api/`;
+    this.host = `${ENVIRONMENT.API_HOST}/api/`;
   }
 
   /**

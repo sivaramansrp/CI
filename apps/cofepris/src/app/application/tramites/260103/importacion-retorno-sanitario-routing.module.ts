@@ -25,8 +25,17 @@ const ROUTES: Routes = [
     path: 'agregar-datos-generales/:tipo',
     component: DatosGeneralesComponent
   },
+    {
+
+    path: 'agregar-datos-generales/:tipo/:id',
+    component: DatosGeneralesComponent
+  },
   {
     path: 'agregar-fabricante',
+    component: FabricanteDatosComponent
+  },
+    {
+    path: 'agregar-fabricante/:id',
     component: FabricanteDatosComponent
   },
   {

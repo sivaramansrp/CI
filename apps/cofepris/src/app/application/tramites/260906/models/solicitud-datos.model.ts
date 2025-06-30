@@ -1,6 +1,5 @@
-/**
- * Importación de la interfaz TableData desde la librería compartida.
- */
+import { Catalogo, CatalogoResponse } from '@libs/shared/data-access-user/src';
+import { TablaDatos } from '@libs/shared/data-access-user/src/core/models/260906/detos.model';
 import { TableData } from '@libs/shared/data-access-user/src';
 
 /**
@@ -77,104 +76,25 @@ export interface DatosDeSolicitud {
  * Interfaz que define los datos generales de una solicitud.
  */
 export interface Solicitud {
-  /**
-   * Razón social de la empresa o persona.
-   */
   razonSocial: string;
-
-  /**
-   * Correo electrónico de contacto.
-   */
   correoElectronico: string;
-
-  /**
-   * Código postal de la dirección.
-   */
   codigoPostal: string;
-
-  /**
-   * Identificador del estado (entidad federativa).
-   */
   estado: number;
-
-  /**
-   * Nombre del municipio.
-   */
   municipio: string;
-
-  /**
-   * Nombre de la localidad.
-   */
   localidad: string;
-
-  /**
-   * Nombre de la colonia.
-   */
   colonia: string;
-
-  /**
-   * Nombre de la calle.
-   */
   calle: string;
-
-  /**
-   * Lada telefónica.
-   */
   lada: number;
-
-  /**
-   * Número de teléfono de contacto.
-   */
   telefono: number;
-
-  /**
-   * Aviso de funcionamiento relacionado con la solicitud.
-   */
   avisoDeFuncionamiento: string;
-
-  /**
-   * Licencia sanitaria asociada.
-   */
   licenciaSanitaria: string;
-
-  /**
-   * Información sobre productos frescos o congelados.
-   */
   liveFreshFrozen: string;
-
-  /**
-   * Régimen fiscal de la empresa o persona.
-   */
   regimen: number;
-
-  /**
-   * Identificador de la aduana asociada.
-   */
   aduana: number;
-
-  /**
-   * Identificador o valor relacionado con los radio buttons.
-   */
   hacerlos: string | number;
-
-  /**
-   * Registro Federal de Contribuyentes (RFC).
-   */
   rfc: string;
-
-  /**
-   * Razón social legal de la empresa o persona.
-   */
   legalRazonSocial: string;
-
-  /**
-   * Apellido paterno del solicitante.
-   */
   apellidoPaterno: string;
-
-  /**
-   * Apellido materno del solicitante.
-   */
   apellidoMeterno: string;
 }
 
@@ -195,5 +115,114 @@ export const FECHA_DE_PAGO = {
   /**
    * Indica si el campo está habilitado.
    */
-  habilitado: true,
+  habilitado: true
 };
+
+/**
+ * @interface
+ * @name RespuestaConsulta
+ * @description
+ * Interfaz que representa la respuesta de una consulta.
+ */
+export interface RespuestaConsulta {
+  /**
+   * Indica si la consulta fue exitosa.
+   */
+  success: boolean;
+
+  /**
+   * Datos resultantes de la consulta.
+   */
+  datos: ConsultaDatos;
+
+  /**
+   * Mensaje de la respuesta.
+   */
+  message: string;
+}
+
+/**
+ * @interface
+ * @name ConsultaDatos
+ * @description
+ * Contiene los datos obtenidos de una consulta.
+ */
+export interface ConsultaDatos {
+  referencia: string;
+  cadenaDependencia: string;
+  banco: string;
+  llave: string;
+  tipoFetch: string;
+  importe: string;
+  selectedEstado: CatalogoResponse;
+  setClave: CatalogoResponse;
+  setDescripcion: CatalogoResponse;
+  setDespecificarClasificacion: Catalogo;
+  Fabricante: TablaDatos[];
+  Destinatario: TablaDatos[];
+  Proveedor: TablaDatos[];
+  Facturador: TablaDatos[];
+  tercerosNacionalidad: string;
+  tipoPersona: string;
+  rfc: string;
+  curp: string;
+  nombre: string;
+  primerApellido: string;
+  segundoApellido: string;
+  denominacionRazonSocial: string;
+  pais: string;
+  estadoLocalidad: string;
+  municipioAlcaldia: string;
+  localidad: string;
+  entidadFederativa: string;
+  codigoPostaloEquivalente: string;
+  colonia: string;
+  coloniaoEquivalente: string;
+  calle: string;
+  numeroExterior: string;
+  numeroInterior: string;
+  lada: string;
+  telefono: string;
+  correoElectronico: string;
+  extranjeroCodigo: string;
+  extranjeroEstado: string;
+  extranjeroColonia: string;
+  estado: string;
+  rfcResponsableSanitario: string;
+  denominacion: string;
+  correo: string;
+  tipoOperacionJustificacion: string;
+  codigoPostal: string;
+  muncipio: string;
+  claveScianModal: string;
+  claveDescripcionModal: string;
+  avisoCheckbox: boolean;
+  licenciaSanitaria: string;
+  regimen: string;
+  aduanasEntradas: string;
+  numeroPermiso: string;
+  tiempoPrograma: number;
+  clasificacion: string;
+  especificarClasificacionProducto: string;
+  denominacionEspecifica: string;
+  denominacionDistintiva: string;
+  denominacionComun: string;
+  tipoDeProducto: string;
+  formaFarmaceutica: string;
+  estadoFisico: string;
+  fraccionArancelaria: string;
+  descripcionFraccion: string;
+  cantidadUMT: string;
+  UMT: string;
+  cantidadUMC: string;
+  UMC: string;
+  presentacion: string;
+  numeroRegistro: string;
+  fechaCaducidad: string;
+  cumplimiento: string;
+  apellidoPaterno: string;
+  apellidoMaterno: string;
+  tipoOperacion: string | number;
+  informacionConfidencial: string | number;
+  manifesto: boolean;
+}

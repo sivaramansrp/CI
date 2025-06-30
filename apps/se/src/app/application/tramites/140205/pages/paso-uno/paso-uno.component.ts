@@ -1,14 +1,15 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState, SolicitanteComponent } from '@ng-mf/data-access-user';
+import { CancelacionCertificadosComponent } from '../../components/cancelacion-certificados/cancelacion-certificados.component';
+import { CancelacionCertificadosService } from '../../services/cancelacionCertificados.service';
 import { CommonModule } from '@angular/common';
-import { SolicitanteComponent } from '@ng-mf/data-access-user';
+import { DatosEmpresaComponent } from '../../components/datos-empresa/datos-empresa.component';
 import { Subject } from 'rxjs';
 import { Tramite140205Query } from '../../../../estados/queries/tramite140205.query';
 import { Tramite140205State } from '../../../../estados/tramites/tramite140205.store';
 import { Tramite140205Store } from '../../../../estados/tramites/tramite140205.store';
 import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
-import { DatosEmpresaComponent } from '../../components/datos-empresa/datos-empresa.component';
-import { CancelacionCertificadosComponent } from '../../components/cancelacion-certificados/cancelacion-certificados.component';
 
 /**
  * Componente para gestionar el paso uno del trámite.
@@ -25,6 +26,19 @@ import { CancelacionCertificadosComponent } from '../../components/cancelacion-c
   imports: [CommonModule,DatosEmpresaComponent,CancelacionCertificadosComponent]
 })
 export class PasoUnoComponent implements OnInit, OnDestroy {
+
+  /**
+   * @property {ConsultaioState} consultaDatos
+   * @description Estado actual de la consulta, que contiene información relacionada con el trámite y el solicitante.
+   */
+  consultaDatos!: ConsultaioState;
+
+  /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  esDatosRespuesta: boolean = false;
+
   /**
    * Referencia al componente `SolicitanteComponent`.
    * 
@@ -55,6 +69,12 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    */
   destroyNotifier$: Subject<void> = new Subject();
 
+
+    /**
+   * @property {Tramite140205State} solicitudState
+   * @description Estado actual de la solicitud.
+   */
+  public solicitudState!: Tramite140205State;
   /**
    * Constructor del componente.
    * 
@@ -63,7 +83,9 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    */
   constructor(
     public store: Tramite140205Store,
-    public tramiteQuery: Tramite140205Query
+    public tramiteQuery: Tramite140205Query,
+     private cancelacionCertificadosService: CancelacionCertificadosService,
+     private consultaioQuery: ConsultaioQuery
   ) { }
 
   /**
@@ -82,6 +104,45 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
       )
       .subscribe();
     this.indice = this.tramiteState.pestanaActiva;
+
+   
+
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.consultaDatos = seccionState;
+        })
+      )
+      .subscribe();
+   
+    if (this.consultaDatos.update) {
+      this.fetchGetDatosConsulta();
+    } else {
+      this.esDatosRespuesta = true;
+    }
+    this.indice = this.tramiteState.pestanaActiva;
+  }
+
+   /**
+   * Método para obtener los datos de consulta del servicio.
+   *  Este método realiza una llamada al servicio `CertificadosOrigenService`
+   *  para obtener los datos necesarios para la consulta del certificado de origen.
+   *  @returns {void}
+   *  @memberof PasoUnoComponent
+   * */
+   public fetchGetDatosConsulta(): void {
+    this.cancelacionCertificadosService
+      .getDatosConsulta()
+      .pipe(takeUntil(this.destroyNotifier$)).subscribe((respuesta) => {
+        if (respuesta.success) {
+          this.esDatosRespuesta = true;
+       this.store.setGrupoEmpresa(respuesta.datos.GrupoEmpresa);
+       this.store.setGrupoFolio(respuesta.datos.GrupoFolio);
+       this.store.setGrupoCupo(respuesta.datos.GrupoCupo);
+        this.store.setGrupoDatalleCupo(respuesta.datos.GrupoDatalleCupo);
+        }
+      });
   }
 
   /**

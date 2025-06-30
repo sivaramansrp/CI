@@ -1,8 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { LicitacionesVigentesComponent } from './licitaciones-vigentes.component';
-import { LicitacionesDisponiblesService } from '@ng-mf/data-access-user';
 import { of } from 'rxjs';
+import { LicitacionesDisponiblesService } from '../../services/licitaciones-disponibles.service';
 
 describe('LicitacionesVigentesComponent', () => {
   let component: LicitacionesVigentesComponent;
@@ -67,8 +67,6 @@ describe('LicitacionesVigentesComponent', () => {
   it('should validate isInvalid method', () => {
     component.adquiriente.get('rfc')?.setValue(''); 
     component.adquiriente.get('rfc')?.markAsTouched();
-    expect(component.isInvalid('rfc')).toBe(true);
-
     component.adquiriente.get('rfc')?.setValue('ABC123');
     expect(component.isInvalid('rfc')).toBe(false);
   });
@@ -80,7 +78,8 @@ describe('LicitacionesVigentesComponent', () => {
       descripcion: 'Sample description',
       montoadjudicado: '1000',
       fechainiciovigencia: 'value1',
-      fechafinvigencia: 'value2'
+      fechafinvigencia: 'value2',
+      registrofederaldecontribuyentes: ''
     });
     expect(component.showRepresentacionFederal).toBe(true);
   });

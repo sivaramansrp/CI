@@ -5,7 +5,8 @@ import { Directive, HostListener } from '@angular/core';
   standalone: true,
 })
 export class SoloNumerosDirective {
-
+  
+  // eslint-disable-next-line class-methods-use-this
   @HostListener('keydown', ['$event'])
   onKeyDown(event: KeyboardEvent): void {
     const TECLAPERMITIDA = [

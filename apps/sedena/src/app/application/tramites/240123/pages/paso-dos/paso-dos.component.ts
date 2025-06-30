@@ -1,15 +1,12 @@
-import { Component } from '@angular/core';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
-
+import { Component, EventEmitter,Output } from '@angular/core';
 import { CATALOGOS_ID } from '@ng-mf/data-access-user';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { CatalogosService } from '@ng-mf/data-access-user';
-
+import { OnDestroy } from '@angular/core';
+import { OnInit } from '@angular/core';
 import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs';
-
 import { TEXTOS_REQUISITOS } from '../../constants/exportacion-sustancias-quimicas.enum';
+import { takeUntil } from 'rxjs';
 
 /**
  * @component PasoDosComponent
@@ -22,7 +19,29 @@ import { TEXTOS_REQUISITOS } from '../../constants/exportacion-sustancias-quimic
   styleUrl: './paso-dos.component.scss',
 })
 export class PasoDosComponent implements OnInit, OnDestroy {
-  /**
+/**
+ * Evento que se emite para solicitar el reenvío de información o acción relacionada en el paso dos del trámite.
+ *
+ * @event reenviarEvento
+ * @type {EventEmitter<void>}
+ * @memberof PasoDosComponent
+ * @description
+ * Este evento notifica al componente padre que se debe realizar una acción de reenvío, como reenviar documentos o información.
+ */
+@Output() reenviarEvento = new EventEmitter<void>();
+
+/**
+ * Evento que se emite para regresar a la sección de carga de documentos.
+ *
+ * @event regresarSeccionCargarDocumentoEvento
+ * @type {EventEmitter<void>}
+ * @memberof PasoDosComponent
+ * @description
+ * Este evento notifica al componente padre que el usuario desea regresar a la sección de carga de documentos.
+ */
+@Output() regresarSeccionCargarDocumentoEvento = new EventEmitter<void>();
+
+/**
    * @property TEXTOS
    * @description Contiene los textos literales estáticos utilizados en este paso del formulario.
    * @type {typeof TEXTOS_REQUISITOS}

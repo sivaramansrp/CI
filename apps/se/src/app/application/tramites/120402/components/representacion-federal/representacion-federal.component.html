@@ -3,26 +3,32 @@
       <div class="row mb-3">
         <ng-titulo titulo="Representación federal"></ng-titulo>
         <div class="col-md-4">
-          <app-catalogo-select 
-            [catalogo]="entidad" 
-            [label]="'Entidad Federativa*'"
-            name="entidad" 
+          <app-catalogo-select
+            [catalogo]="entidad"
+            [label]="'Entidad Federativa'"
+            [required]="true"
+            name="entidad"
+            [isDisabled]="esFormularioSoloLectura" 
+            [required]="true"
             formControlName="entidad"
-            (change)="getEntidad()"
+            (selectionChange)="setValorStore(representacionForm, 'entidad')"
             >
           </app-catalogo-select>
         </div>
         <div class="col-md-4">
-          <app-catalogo-select 
-            [catalogo]="representacion" 
-            [label]="'Representación federal'" 
+          <app-catalogo-select
+            [catalogo]="representacion"
+            [label]="'Representación federal'"
             [required]="true"
-            name="representacion" 
+            name="representacion"
+            [isDisabled]="esFormularioSoloLectura" 
+            [required]="true"
             formControlName="representacion"
-            (change)="getRepresentacion()"
+           (selectionChange)="setValorStore(representacionForm, 'representacion')"
            >
           </app-catalogo-select>
         </div>
       </div>
     </form>
   </div>
+ 

@@ -3,4 +3,8 @@
   (updateDatosDelTramiteFormulario)="updateDatosDelTramiteFormulario($event)"
   [datosDelTramiteFormState]="datosDelTramiteFormState"
   [idProcedimiento]="idProcedimiento"
+  [esFormularioSoloLectura]="esFormularioSoloLectura"
+  (openModal)="openModal($event)"
+  (cancelarEventListener)="cerrar.emit()"
 ></app-datos-del-tramite>
+<div><app-modal #modal></app-modal></div>

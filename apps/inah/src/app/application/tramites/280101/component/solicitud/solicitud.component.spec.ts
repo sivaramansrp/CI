@@ -66,34 +66,29 @@ SolicitudComponent,
     expect(component).toBeTruthy();
   });
 
-  it('should initialize the form and fetch aduana data on ngOnInit', () => {
-    expect(component.SolicitudForm).toBeDefined();
-    expect(component.aduana).toEqual([{ id: 1, descripcion: 'Aduana 1' }]);
-    expect(component.SolicitudForm.value).toEqual({
-      modalidadOpcion: '1',
-      exposicionOpcion: 'true',
-      nombre: 'Test Name',
-      aduana: null,
-      aduanaEntrada: null,
-      descripcionClobGenerica: 'Test Description',
-      cantMonumentos: '5',
-    });
+   it('should initialize the form and fetch aduana data on ngOnInit', () => {
+    const getAduanaSpy = jest.spyOn(component, 'getAduana');
+    const establecerValoresFormularioSpy = jest.spyOn(component, 'establecerValoresFormulario');
+    component.ngOnInit();
+    expect(getAduanaSpy).toHaveBeenCalled();
+    expect(establecerValoresFormularioSpy).toHaveBeenCalled();
+    expect(component.solicitudForm).toBeDefined();
   });
 
   it('should disable the nombre field if exposicionOpcion is "false"', () => {
-    component.SolicitudForm.patchValue({ exposicionOpcion: 'false' });
-    component.establecerValoresFormulario(); // Ensure this method updates the form state
-    fixture.detectChanges(); // Trigger change detection to apply updates
-    expect(component.SolicitudForm.get('nombre')?.disabled).toBeTruthy(); // Verify the field is disabled
+    component.solicitudForm.patchValue({ exposicionOpcion: 'false' });
+    component.setValoresStore(component.solicitudForm, 'exposicionOpcion', 'setExposicionOpcion');
+    fixture.detectChanges();
+    expect(component.solicitudForm.get('nombre')?.disabled).toBe(true);
   });
 
   it('should enable the nombre field if exposicionOpcion is "true"', () => {
-    component.setValoresStore(component.SolicitudForm, 'exposicionOpcion', 'setExposicionOpcion');
-    expect(component.SolicitudForm.get('nombre')?.enabled).toBeTruthy();
+    component.setValoresStore(component.solicitudForm, 'exposicionOpcion', 'setExposicionOpcion');
+    expect(component.solicitudForm.get('nombre')?.enabled).toBeTruthy();
   });
 
   it('should call the correct store method when setValoresStore is invoked', () => {
-    const form = component.SolicitudForm;
+    const form = component.solicitudForm;
     component.setValoresStore(form, 'modalidadOpcion', 'setModalidad');
     expect(storeMock.setModalidad).toHaveBeenCalledWith('1');
 

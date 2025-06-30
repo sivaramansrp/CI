@@ -4,7 +4,8 @@ import {
   TablaSeleccion,
 } from '@libs/shared/data-access-user/src';
 import { Destinatario, Fabricante } from '../../model/solicitud-permiso.model';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { SolicitudPermisoService } from '../../services/solicitud-permiso.service';
 
 /**
@@ -32,7 +33,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
       clave: (item: Destinatario) => item.nombre,
       orden: 1,
     },
-    { encabezado: 'RFC', clave: (item: Destinatario) => item.rfc, orden: 2 },
+    { encabezado: 'R.F.C', clave: (item: Destinatario) => item.rfc, orden: 2 },
     { encabezado: 'CURP', clave: (item: Destinatario) => item.curp, orden: 3 },
     {
       encabezado: 'Teléfono',
@@ -108,7 +109,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
       clave: (item: Fabricante) => item.nombre,
       orden: 1,
     },
-    { encabezado: 'RFC', clave: (item: Fabricante) => item.rfc, orden: 2 },
+    { encabezado: 'R.F.C', clave: (item: Fabricante) => item.rfc, orden: 2 },
     { encabezado: 'CURP', clave: (item: Fabricante) => item.curp, orden: 3 },
     {
       encabezado: 'Teléfono',
@@ -177,11 +178,25 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
   private notificadorDestruccion$: Subject<void> = new Subject();
 
   /**
+  * Indica si el formulario está en modo solo lectura.
+  * Cuando es `true`, los campos del formulario no se pueden editar.
+  */
+   esFormularioSoloLectura: boolean = false; 
+
+  /**
    * Constructor del componente.
    * solicitudPermisoService Servicio para obtener los datos de destinatarios y fabricantes.
    */
-  constructor(private solicitudPermisoService: SolicitudPermisoService) {
-    //
+  constructor(private solicitudPermisoService: SolicitudPermisoService, private consultaioQuery: ConsultaioQuery) {
+      this.consultaioQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.notificadorDestruccion$),
+      map((seccionState) => {
+       this.esFormularioSoloLectura = seccionState.readonly;
+       
+      })
+    )
+    .subscribe()
   }
 
   /**

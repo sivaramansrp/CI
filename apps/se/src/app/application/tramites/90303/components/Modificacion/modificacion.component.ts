@@ -1,15 +1,19 @@
 import { AfterViewInit, Component, OnDestroy, OnInit, Renderer2 } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { LISTA_DE_SECTORS, LISTA_DE_SECTORS_BAJA } from '../../constantes/constantes90303.enum';
 import { ListaTabla, ListaTablaBaja } from '../../models/registro.model';
 import { Mercancias, PlantasTabla, ProductorIndirecto, SectorTabla } from '../../../../shared/models/complementaria.model';
-import { ReplaySubject, takeUntil } from 'rxjs';
-import { TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@ng-mf/data-access-user';
+import { ReplaySubject, map, takeUntil } from 'rxjs';
+import { Solicitud90303State, Tramite90303Store } from '../../state/Tramite90303.store';
+import { TablaDinamicaComponent, TablaSeleccion, TituloComponent, ValidacionesFormularioService } from '@ng-mf/data-access-user';
 import { CatalogosService } from '../../service/catalogos.service';
 import { CommonModule } from '@angular/common';
 import { PlantasComponent } from "../../../../shared/components/plantas/plantas.component";
 import { ProducirMercanciasComponent } from '../../../../shared/components/producir-mercancias/producir-mercancias.component';
 import { ProductorIndirectoComponent } from '../../../../shared/components/productor-indirecto/productor-indirecto.component';
 import { SectorComponent } from "../../../../shared/components/sector/sector.component";
+import { Tramite90303Query } from '../../state/Tramite90303.query';
 
 /**
  * Componente para gestionar la modificación de datos en el trámite 90303.
@@ -18,11 +22,25 @@ import { SectorComponent } from "../../../../shared/components/sector/sector.com
 @Component({
   selector: 'app-modificacion',
   standalone: true,
-  imports: [CommonModule, TablaDinamicaComponent, TituloComponent, PlantasComponent, SectorComponent, ProducirMercanciasComponent, ProductorIndirectoComponent],
+  imports: [CommonModule, TablaDinamicaComponent, TituloComponent, PlantasComponent, SectorComponent, ProducirMercanciasComponent, ProductorIndirectoComponent,ReactiveFormsModule],
   templateUrl: './modificacion.component.html',
   styleUrl: './modificacion.component.css',
 })
 export class ModificacionComponent implements OnInit, OnDestroy, AfterViewInit {
+   /**
+     * Formulario de modificación
+     * @type {FormGroup}
+     */
+    modificacionForm!: FormGroup;
+  /**
+   * Subject para destruir notificador.
+   */
+  consultaDatos!: ConsultaioState;
+   /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  soloLectura: boolean = false;
   /**
    * ReplaySubject utilizado para gestionar la destrucción de observables.
    * Se emite un valor cuando el componente se destruye para cancelar las suscripciones activas.
@@ -82,14 +100,34 @@ export class ModificacionComponent implements OnInit, OnDestroy, AfterViewInit {
   /**
    * Referencia a una función para encontrar elementos cercanos en el DOM.
    */
-  findClose: any;
+  findClose!: (element: HTMLElement) => HTMLElement | null;
+  /**
+     * Estado actual de la solicitud.
+     */
+    public solicitudState!: Solicitud90303State;
 
   /**
    * Constructor del componente.
    * @param catalogo Servicio utilizado para obtener los datos de las tablas.
    * @param renderer Servicio para manipular el DOM.
    */
-  constructor(private catalogo: CatalogosService, private renderer: Renderer2) { }
+  constructor(private catalogo: CatalogosService, private renderer: Renderer2,
+     private consultaioQuery: ConsultaioQuery,public fb: FormBuilder,
+      public store: Tramite90303Store,
+      private query: Tramite90303Query,
+      private validacionesService: ValidacionesFormularioService,
+  ) { 
+     this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState) => {
+          this.consultaDatos = seccionState;
+          this.soloLectura = this.consultaDatos.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe()
+  }
 
   /**
    * Método del ciclo de vida que se ejecuta después de que la vista se ha inicializado.
@@ -117,14 +155,42 @@ export class ModificacionComponent implements OnInit, OnDestroy, AfterViewInit {
    * Llama a los métodos para obtener los datos de las tablas.
    */
   ngOnInit(): void {
-    this.obtenerTablaLista();
+ this.modificacionForm = this.fb.group({
+    registroFederalContribuyentes: [{ value: '', disabled: true }, []],
+    representacionFederal: [{ value: '', disabled: true }, []],
+    tipoModificacion: [{ value: '', disabled: true }, []],
+    modificacionPrograma: [{ value: '', disabled: true }, []],
+  });
+
+     this.obtenerTablaLista();
     this.obtenerTablaPlantas();
     this.obtenerTablaSector();
     this.obtenerTablaMercancia();
     this.obtenerTablaProductor();
     this.obtenerTablaListaBaja();
+    this.inicializarEstadoFormulario();
+    
+     this.query.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState) => {
+          this.solicitudState = seccionState;
+        })
+      )
+      .subscribe();
+    this.donanteDomicilio();
   }
-
+/**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.
+   * Además, obtiene la información del catálogo de mercancía.
+   */
+  inicializarEstadoFormulario(): void {
+     if (this.soloLectura) {
+      this.modificacionForm.disable();
+    } else {
+      this.modificacionForm.enable();
+    }
+  }
   /**
    * Obtiene los datos de la tabla de sectores activos desde el servicio.
    */
@@ -203,7 +269,6 @@ export class ModificacionComponent implements OnInit, OnDestroy, AfterViewInit {
    */
   onFilaClic(event: Event): void {
     const TARGET = event.target as HTMLInputElement;
-
     if (TARGET.tagName === 'BUTTON' && TARGET.textContent?.trim() === 'BAJA') {
       this.isBaja = false;
       TARGET.textContent = 'Activar';
@@ -211,6 +276,52 @@ export class ModificacionComponent implements OnInit, OnDestroy, AfterViewInit {
     TARGET.textContent = 'Activar';
   }
 
+   /**
+   * Valida el formulario del destinatario.
+   * Marca todos los campos como tocados si el formulario es inválido.
+   */
+  validarDestinatarioFormulario(): void {
+    if (this.modificacionForm.invalid) {
+      this.modificacionForm.markAllAsTouched();
+    }
+  }
+
+  /**
+   * Verifica si un campo del formulario es válido.
+   * @param form Formulario reactivo.
+   * @param field Nombre del campo a validar.
+   * @returns `true` si el campo es válido, de lo contrario `false`.
+   */
+  isValid(form: FormGroup, field: string): boolean {
+    return this.validacionesService.isValid(form, field) || false;
+  }
+   /**
+     * Establece valores en el estado de la tienda.
+     * @param form Formulario reactivo.
+     * @param campo Nombre del campo del formulario.
+     * @param metodoNombre Método de la tienda para actualizar el estado.
+     */
+    setValoresStore(
+      form: FormGroup,
+      campo: string,
+      metodoNombre: keyof Tramite90303Store
+    ): void {
+      const VALOR = form.get(campo)?.value;
+      (this.store[metodoNombre] as (value: unknown) => void)(VALOR);
+    }
+   
+  /**
+   * Configura el formulario de modificación con los datos del donante y lo deshabilita.
+   * Utiliza los valores del estado de la solicitud para inicializar el formulario.
+   */
+donanteDomicilio(): void {
+    this.modificacionForm = this.fb.group({
+       registroFederalContribuyentes: [{ value: this.solicitudState?.registroFederalContribuyentes, disabled: true }, [Validators.required]],
+  representacionFederal: [{ value: this.solicitudState?.representacionFederal, disabled: true }, [Validators.required]],
+  tipoModificacion: [{ value: this.solicitudState?.tipoModificacion, disabled: true }, [Validators.required]],
+  modificacionPrograma: [{ value: this.solicitudState?.modificacionPrograma, disabled: true }, [Validators.required]],
+  });
+  }
   /**
    * Método del ciclo de vida que se ejecuta al destruir el componente.
    * Emite un valor en `destroyed$` para cancelar las suscripciones activas.

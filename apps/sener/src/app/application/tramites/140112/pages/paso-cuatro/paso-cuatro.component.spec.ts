@@ -1,6 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { PasoCuatroComponent } from './paso-cuatro.component';
+import { ToastrModule } from 'ngx-toastr';
+import { ToastrService } from 'ngx-toastr';
 
 describe('PasoCuatroComponent', () => {
   let component: PasoCuatroComponent;
@@ -8,7 +10,9 @@ describe('PasoCuatroComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [PasoCuatroComponent]
+      declarations: [],
+      imports: [ToastrModule.forRoot(), PasoCuatroComponent],
+      providers: [ToastrService],
     })
     .compileComponents();
     

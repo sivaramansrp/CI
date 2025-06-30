@@ -4,6 +4,21 @@ export default {
   preset: '../../jest.preset.js',
   setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
   coverageDirectory: '../../coverage/apps/stps',
+  collectCoverageFrom: ['src/app/application/**/*.ts'],
+  testMatch: ['<rootDir>/src/app/application/**/*.spec.ts'],
+  coverageThreshold: {
+    global: {
+      statements: 80,
+    },
+    'apps/stps/src/app/application/**/*.ts': {
+      statements: 80,
+    },
+  },
+  coverageReporters: ['text-summary', 'html'],
+  coveragePathIgnorePatterns: [
+    'src/app/application/.*\\.(module|store|query|enums?|enum|model|constants?|constantes|interfaces?)\\.ts$',
+    'src/app/application/seleccion-tramite/.*\\.ts$',
+  ],
   transform: {
     '^.+\\.(ts|mjs|js|html)$': [
       'jest-preset-angular',
@@ -13,7 +28,7 @@ export default {
       },
     ],
   },
-  transformIgnorePatterns: ['node_modules/(?!.*\\.mjs$)'],
+  transformIgnorePatterns: [],
   snapshotSerializers: [
     'jest-preset-angular/build/serializers/no-ng-attributes',
     'jest-preset-angular/build/serializers/ng-snapshot',

@@ -1,24 +1,74 @@
 import * as formData from '@libs/shared/theme/assets/json/140105/datos-del-formulario.json';
-import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
+import { Subject, map, takeUntil } from 'rxjs';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { ServicioDeMensajesService } from '../../services/servicio-de-mensajes.service';
 import { Validators } from '@angular/forms';
+
+
 @Component({
   selector: 'app-busqueda-folio',
   templateUrl: './busqueda-folio.component.html',
   styleUrl: './busqueda-folio.component.scss',
 })
-export class BusquedaFolioComponent {
+/**
+ * @component BusquedaFolioComponent
+ * @description
+ * Componente encargado de gestionar la búsqueda de trámites por folio y la visualización de los detalles del permiso correspondiente.
+ * Permite realizar búsquedas, mostrar detalles en modo solo lectura, agregar datos y cancelar acciones relacionadas con la consulta de trámites.
+ * Utiliza formularios reactivos para la validación y presentación de datos, y se comunica con servicios para el manejo de mensajes y estados.
+ *
+ * @example
+ * <app-busqueda-folio></app-busqueda-folio>
+ *
+ * @see ServicioDeMensajesService
+ * @see FormBuilder
+ * @see ConsultaioQuery
+ */
+export class BusquedaFolioComponent implements OnDestroy {
   public busquedaForm!: FormGroup;
   public detalleDelPermisoForm!: FormGroup;
   public detalleDelPermiso: boolean = false;
+   /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  esFormularioSoloLectura: boolean = false;
 
-  constructor(private servicioDeMensajesService: ServicioDeMensajesService, private fb: FormBuilder) {
+    /**
+   * Notificador para destruir las suscripciones al destruir el componente.
+   */
+  public destroyNotifier$: Subject<void> = new Subject();
+
+  constructor(private servicioDeMensajesService: ServicioDeMensajesService, private fb: FormBuilder,
+    private consultaQuery: ConsultaioQuery,
+  ) {
     this.establecerBusquedaForm();
     this.estableDetalleDelPermisoForm();
+    this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
   }
+
+    
+    /**
+     * Inicializa el estado del formulario de detalles del permiso.
+     * Si el formulario de detalles no está inicializado, lo establece.
+     */
+    inicializarEstadoFormulario(): void {
+      if (!this.detalleDelPermisoForm) {
+        this.estableDetalleDelPermisoForm();
+      }
+    }
+
 
   /**
    * Método que se ejecuta al realizar una búsqueda.
@@ -28,7 +78,7 @@ export class BusquedaFolioComponent {
    * @param event Evento que desencadena la búsqueda.
    */
 
-  public buscar(event: Event): void {
+  public buscar(_event: Event): void {
     if (this.busquedaForm.invalid) {
       this.busquedaForm.markAllAsTouched();
       // alert('El formulario contiene errores. Por favor, corrígelos antes de continuar.');
@@ -46,7 +96,7 @@ export class BusquedaFolioComponent {
    * @param event Evento que desencadena la acción de agregar.
    */
 
-  public agregar(event: Event): void {
+  public agregar(_event: Event): void {
     this.servicioDeMensajesService.enviarMensaje(false);
     this.servicioDeMensajesService.establecerDatosDePermiso(true);
   }
@@ -58,7 +108,7 @@ export class BusquedaFolioComponent {
    * @param event Evento que desencadena la acción de cancelar.
    */
 
-  public detalleCancelar(event: Event): void {
+  public detalleCancelar(_event: Event): void {
     this.detalleDelPermiso = false;
   }
 
@@ -69,7 +119,7 @@ export class BusquedaFolioComponent {
    * @param event Evento que desencadena la cancelación de la acción.
    */
 
-  public cancelar(event: Event): void {
+  public cancelar(_event: Event): void {
     this.servicioDeMensajesService.enviarMensaje(false);
   }
 
@@ -113,6 +163,13 @@ export class BusquedaFolioComponent {
    */
   public establecerFormularioDeDetallesDe(): void {
     this.detalleDelPermisoForm.patchValue(formData);
+  }
+
+    // Método que se ejecuta cuando se destruye el componente
+  ngOnDestroy(): void {
+    // Liberamos los recursos y notificamos a todos los observadores
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 
 }

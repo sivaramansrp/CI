@@ -96,10 +96,10 @@ const ROUTES: Routes = [
       ),
   },
   {
-    path: 'transportista-terrestre',
+    path: 'transportista-renovacion',
     loadChildren: () =>
-      import('./tramites/40102/transportista-terrestre.module').then(
-        (m) => m.TransportistaTerrestreModule
+      import('./tramites/40102/transportista-renovacion.module').then(
+        (m) => m.TransportistaRenovacionModule
       ),
   },
   {
@@ -381,10 +381,10 @@ const ROUTES: Routes = [
       ),
   },
   {
-    path: 'concluir-relacion',
+    path: 'concluir-relacion-de',
     loadChildren: () =>
-      import('./tramites/420102/concluir-relacion.module').then(
-        (m) => m.ConcluirRelacionModule
+      import('./tramites/420102/concluir-relacion-de.module').then(
+        (m) => m.ConcluirRelacionDeModule
       ),
   },
   {
@@ -393,12 +393,6 @@ const ROUTES: Routes = [
       import('./tramites/5601/solicitud-despacho-exportacion.module').then(
         (m) => m.SolicitudDespachoExportacionModule
       ),
-  },
-  {
-     path: 'aviso-de-modificacion',
-    loadChildren: () => 
-      import('./tramites/30505/aviso-de-modificacion.module').then(
-        (m) => m.AvisoDeModificacionModule)
   },
   {
     path: 'renovacion-iva-ieps/mod-a',
@@ -448,6 +442,28 @@ const ROUTES: Routes = [
       ).then(
         (m) => m.AcusesYResolucionesFolioDelTramiteDetallesContenedorComponent
       ),
+  },
+  {
+    path: 'retorno-importacion-temporal',
+    loadChildren: () =>
+      import('./tramites/630303/retorno-importacion-temporal.module').then(
+        (m) => m.RetornoImportacionTemporalModule
+      ),
+  },
+  {
+    path: 'verificar-dictamen',
+    loadComponent: () =>
+      import('./verificar-dictamen/verificar-dictamen.component').then((m) => m.VerificarDictamenComponent),
+  },
+  {
+    path: 'detalle-v-dictamen',
+    loadComponent: () =>
+      import('./detalle-v-dictamen/detalle-v-dictamen.component').then((m) => m.DetalleVDictamenComponent),
+  },
+  {
+    path: 'datos-generales-tramite',
+    loadComponent: () =>
+      import('./datos-generales-tramite/datos-generales-tramite.component').then((m) => m.DatosGeneralesTramiteComponent),
   },
 ];
 

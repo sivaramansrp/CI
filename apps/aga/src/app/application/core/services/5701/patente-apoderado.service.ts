@@ -1,7 +1,7 @@
 import { API_GET_PATENTE_APODERADO, RFC_QUERY } from '../../../constantes/5701/api-constants';
-import { catchError, map, Observable, throwError } from 'rxjs';
-import { enviroment } from '@libs/shared/data-access-user/src';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable, catchError, map, throwError } from 'rxjs';
+import { ENVIRONMENT } from '@libs/shared/data-access-user/src';
 import { Injectable } from '@angular/core';
 import { PatenteApoderadoResponse } from '../../models/5701/Patente.model';
 
@@ -15,7 +15,7 @@ export class PatenteApoderadoService {
   constructor(
     private http: HttpClient
   ) {
-    this.host = `${enviroment.API_HOST}/api/`;
+    this.host = `${ENVIRONMENT.API_HOST}/api/`;
   }
 
   /**
@@ -32,7 +32,15 @@ export class PatenteApoderadoService {
   getListaPatentesApoderado(rfcApoderado: string): Observable<PatenteApoderadoResponse> {
     const ENDPOINT = `${this.host}`+API_GET_PATENTE_APODERADO.replace(RFC_QUERY, rfcApoderado);
 
-    return this.http.get<PatenteApoderadoResponse>(ENDPOINT).pipe(
+    const HEADER = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Expose-Headers': 'Authorization',
+      })
+    };
+
+    return this.http.get<PatenteApoderadoResponse>(ENDPOINT, HEADER).pipe(
       map((response) => {
         return response;
       }), 

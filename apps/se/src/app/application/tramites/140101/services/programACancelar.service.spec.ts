@@ -2,14 +2,27 @@ import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { ProgramaACancelarService } from './programACancelar.service';
 import { ProgramaACancelar } from '../../../shared/models/programa-cancelar.model';
+import { Tramite140101Store } from '../../../estados/tramites/tramite140101.store';
+
 describe('ProgramaACancelarService', () => {
   let service: ProgramaACancelarService;
   let httpMock: HttpTestingController;
+  let tramiteStoreMock: any;
 
   beforeEach(() => {
+    tramiteStoreMock = {
+      setConfirmar: jest.fn(),
+      setSolicitudObservaciones: jest.fn(),
+      setPrograma: jest.fn(),
+      setRadioSelection: jest.fn(),
+    };
+
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],
-      providers: [ProgramaACancelarService],
+      providers: [
+        { provide: Tramite140101Store, useValue: tramiteStoreMock },
+        ProgramaACancelarService,
+      ]
     });
 
     service = TestBed.inject(ProgramaACancelarService);
@@ -17,14 +30,14 @@ describe('ProgramaACancelarService', () => {
   });
 
   afterEach(() => {
-    httpMock.verify(); // Verifies that no unmatched requests are outstanding
+    httpMock.verify(); // Verifica que no haya solicitudes pendientes
   });
 
-  it('should be created', () => {
+  it('debe crear el servicio', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should fetch programaACancelar data', () => {
+  it('debe obtener los datos de programaACancelar', () => {
     const mockData: ProgramaACancelar = {
       folioPrograma: '12345',
       idProgramaSeleccionado: '67890',
@@ -40,14 +53,14 @@ describe('ProgramaACancelarService', () => {
 
     const req = httpMock.expectOne('assets/json/140101/Programa.json');
     expect(req.request.method).toBe('GET');
-    req.flush(mockData); // Simulate the response
+    req.flush(mockData); // Simula la respuesta
   });
 
-  it('should handle error in getDatos', () => {
+  it('debe manejar error en obtenerDatos (404)', () => {
     const mockError = { status: 404, statusText: 'Not Found' };
 
     service.obtenerDatos().subscribe(
-      () => fail('Expected an error, not data'),
+      () => fail('Se esperaba un error, no datos'),
       (error) => {
         expect(error).toEqual(mockError);
       }
@@ -58,11 +71,11 @@ describe('ProgramaACancelarService', () => {
     req.flush(null, mockError);
   });
 
-  it('should handle error in getDatos', () => {
+  it('debe manejar error en obtenerDatos (500)', () => {
     const mockError = { status: 500, statusText: 'Internal Server Error' };
 
     service.obtenerDatos().subscribe(
-      () => fail('Expected an error, not data'),
+      () => fail('Se esperaba un error, no datos'),
       (error) => {
         expect(error).toEqual(mockError);
       }
@@ -73,11 +86,11 @@ describe('ProgramaACancelarService', () => {
     req.flush(null, mockError);
   });
 
-  it('should handle error in getDatos', () => {
+  it('debe manejar error en obtenerDatos (403)', () => {
     const mockError = { status: 403, statusText: 'Forbidden' };
 
     service.obtenerDatos().subscribe(
-      () => fail('Expected an error, not data'),
+      () => fail('Se esperaba un error, no datos'),
       (error) => {
         expect(error).toEqual(mockError);
       }
@@ -88,11 +101,11 @@ describe('ProgramaACancelarService', () => {
     req.flush(null, mockError);
   });
 
-  it('should handle error in getDatos', () => {
+  it('debe manejar error en obtenerDatos (400)', () => {
     const mockError = { status: 400, statusText: 'Bad Request' };
 
     service.obtenerDatos().subscribe(
-      () => fail('Expected an error, not data'),
+      () => fail('Se esperaba un error, no datos'),
       (error) => {
         expect(error).toEqual(mockError);
       }
@@ -101,5 +114,36 @@ describe('ProgramaACancelarService', () => {
     const req = httpMock.expectOne('assets/json/140101/Programa.json');
     expect(req.request.method).toBe('GET');
     req.flush(null, mockError);
+  });
+
+  it('debe obtener getProgramaDatos y retornar Programa140101State', () => {
+    const mockResponse = {
+      programaACancelar: {},
+      solicitudObservaciones: '',
+      confirmar: false,
+      radio: 0,
+      datos: [],
+    };
+    service.getProgramaDatos().subscribe((data) => {
+      expect(data).toEqual(mockResponse);
+    });
+    const req = httpMock.expectOne('assets/json/140101/programa-cancelar.json');
+    expect(req.request.method).toBe('GET');
+    req.flush(mockResponse);
+  });
+
+  it('debe llamar a los métodos del store con los valores correctos en setDatosFormulario', () => {
+    const datos = {
+      confirmar: true,
+      solicitudObservaciones: 'Obs',
+      programaACancelar: { folioPrograma: '123' },
+      radio: 2
+    };
+    service.setDatosFormulario(datos as any);
+
+    expect(tramiteStoreMock.setConfirmar).toHaveBeenCalledWith(true);
+    expect(tramiteStoreMock.setSolicitudObservaciones).toHaveBeenCalledWith('Obs');
+    expect(tramiteStoreMock.setPrograma).toHaveBeenCalledWith({ folioPrograma: '123' });
+    expect(tramiteStoreMock.setRadioSelection).toHaveBeenCalledWith(2);
   });
 });

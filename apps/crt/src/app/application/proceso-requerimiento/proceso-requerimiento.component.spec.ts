@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ProcesoRequerimientoComponent } from './proceso-requerimiento.component';
 import { Router } from '@angular/router';
-import { of, Subject } from 'rxjs';
+import { of } from 'rxjs';
 import { CatalogosService } from '@ng-mf/data-access-user';
 import { AtenderRequerimientoService } from '@ng-mf/data-access-user';
 import { ConsultaioStore, ConsultaioQuery, TramiteFolioQueries } from '@ng-mf/data-access-user';
@@ -194,3 +194,5 @@ it('should handle getTiposDocumentos with descripcion', () => {
     expect(spy2).toHaveBeenCalled();
   });
 });
+
+window.scrollTo = jest.fn();

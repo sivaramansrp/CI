@@ -1,13 +1,16 @@
+import { AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { CamState, camCertificadoStore } from '../../estados/cam-certificado.store';
-import { Catalogo, InputFecha, SeccionLibQuery, SeccionLibState, SeccionLibStore } from '@libs/shared/data-access-user/src';
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Catalogo, SeccionLibQuery, SeccionLibState, SeccionLibStore } from '@ng-mf/data-access-user';
+import {CatalogoSelectComponent, InputFecha, InputFechaComponent} from '@libs/shared/data-access-user/src'
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, delay, map, of, takeUntil } from 'rxjs';
 import { CamCertificadoService } from '../../services/cam-certificado.service';
+import { CommonModule } from '@angular/common';
 import { FECHA } from '../../constantes/cam-certificado.module';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Mercancia } from '../../../../shared/models/modificacion.enum';
 import { camCertificadoQuery } from '../../estados/cam-certificado.query';
+
 
 /**
  * @descripcion
@@ -17,9 +20,11 @@ import { camCertificadoQuery } from '../../estados/cam-certificado.query';
 @Component({
   selector: 'app-mercancia',
   templateUrl: './mercancia.component.html',
-  styleUrl: './mercancia.component.css',
+  styleUrl: './mercancia.component.scss',
+  standalone:true,
+  imports:[CommonModule,ReactiveFormsModule,CatalogoSelectComponent, InputFechaComponent],
 })
-export class MercanciaComponent implements OnInit, OnDestroy {
+export class MercanciaComponent implements OnInit, OnDestroy,AfterViewInit {
   /**
    * @descripcion
    * Indica si se debe mostrar la alerta.
@@ -49,6 +54,13 @@ export class MercanciaComponent implements OnInit, OnDestroy {
    * Evento que se emite al guardar los datos del formulario.
    */
   @Output() guardarClicado = new EventEmitter();
+
+
+    /**
+   * Indica si el formulario debe mostrarse solo en modo de lectura.
+   * @type {boolean}
+   */
+  @Input() esFormularioSoloLectura!: boolean;
 
   /**
    * @descripcion
@@ -145,7 +157,29 @@ export class MercanciaComponent implements OnInit, OnDestroy {
     this.facturasOpcion();
     this.initActionFormBuild();
   }
-
+/**
+ * @inheritdoc
+ * 
+ * Angular lifecycle hook that is called after the component's view has been fully initialized.
+ * 
+ * If the form is in read-only mode (`esFormularioSoloLectura`) and the form instance (`mercanciaForm`) exists,
+ * the form will be disabled to prevent user interaction. Otherwise, the form will be enabled.
+ * 
+ * @see https://angular.io/api/core/AfterViewInit
+ * 
+ * @copodoc
+ * Método del ciclo de vida de Angular que se ejecuta después de que la vista del componente ha sido inicializada.
+ * Si el formulario está en modo solo lectura y existe la instancia del formulario, este se deshabilita para evitar
+ * la interacción del usuario. En caso contrario, el formulario se habilita.
+ */
+ngAfterViewInit(): void {
+ if (this.esFormularioSoloLectura && this.mercanciaForm){
+      this.mercanciaForm.disable();
+ }
+ else{
+  this.mercanciaForm.enable();
+ }
+}
   /**
    * @descripcion
    * Inicializa el formulario de mercancías con los valores actuales del estado.
@@ -194,8 +228,7 @@ export class MercanciaComponent implements OnInit, OnDestroy {
       next: (data) => {
         this.umc = data as Catalogo[];
       },
-      error: (error: HttpErrorResponse) => {
-        console.error('Error al obtener los datos:', error);
+      error: (_error: HttpErrorResponse) => {
         this.umc = [];
       },
     });
@@ -212,8 +245,7 @@ export class MercanciaComponent implements OnInit, OnDestroy {
       next: (data) => {
         this.factura = data as Catalogo[];
       },
-      error: (error: HttpErrorResponse) => {
-        console.error('Error al obtener los datos:', error);
+      error: (_error: HttpErrorResponse) => {
         this.factura = [];
       },
     });

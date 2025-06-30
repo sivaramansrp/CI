@@ -1,32 +1,28 @@
+import {
+  ConfiguracionColumna,
+  CrossListLable,
+} from '@libs/shared/data-access-user/src';
+import { LineaCaptura } from '../../models/5701/linea-captura.model';
+
+/**
+ * @description Constantes para el manejo de los campos de fecha de inicio y fecha final
+ * en la aplicación.
+ */
 export const FECHA_INICIO = {
   labelNombre: 'Fecha inicio',
   required: true,
   habilitado: true,
 };
 
+/**
+ * @description Constantes para el manejo de los campos de fecha de inicio y fecha final
+ * en la aplicación.
+ */
 export const FECHA_FINAL = {
   labelNombre: 'Fecha final',
   required: true,
   habilitado: true,
 };
-
-// Mensajes de error en el modal
-export const MSG_CAMBIO_TIPO_SOLICITUD = ''
-export const TITULO_MODAL = 'Aviso';
-export const ERR_CAMPOS_OBLIGATORIOS = 'Debes capturar todos los datos marcados como obligatorios.';
-export const ERR_INPUT_BUSQUEDA_VACIO = 'No has proporcionado información que es requerida.';
-export const ERR_BUSQUEDA_GAFETE_SIN_RESULTADOS = 'No se encontraron datos con el número de gafete, intenta de nuevo o agrega los datos restantes.';
-export const ADV_MAXIMO_PERSONAS = 'Solo puede agregar hasta 5 personas.';
-export const MSG_ELIMINA_ELEMENTO = 'Datos eliminados correctamente.';
-export const ADV_LIMPIA_CAMPOS = 'Los datos capturados serán borrados, estás de acuerdo (SI/NO)?';
-export const MSG_DATOS_GUARDADOS = 'Datos guardados correctamente.';
-
-export const MSG_NRO_PEDIMENTO = 'Necesita agregar un número de pedimento';
-export const MSG_ADUANA_PEDIMENTO = 'Necesita seleccionar una aduana de despacho y agregar un número de pedimento';
-export const ERR_VALIDACION_PEDIMENTO = 'No se pudo validar el pedimento, favor de capturar los datos de pedimento faltante y anexar documento.';
-
-export const TITULO_MODAL_ERROR = 'Aviso';
-export const MSJ_ERROR_FECHA = 'Fecha inválida. La fecha final no puede ser menor a la fecha de inicio.'
 
 /**
  * @description Constantes para el manejo de las etiquetas de los inputs de la autorización LDA y DDEX
@@ -56,12 +52,7 @@ export const FUNCION_STORE_DD = 'setAutorizacionDDEX';
  * @description Constantes para el manejo del tipo de vehiculos en la seccion --
 
 */
-export const VEHICULO = [
-  'Carretero',
-  'Ferroviario',
-  'Peatonal',
-  'Otro'
-]
+export const VEHICULO = ['Carretero', 'Ferroviario', 'Peatonal', 'Otro'];
 
 /**
  * @description Constantes para el manejo del tipo de transporte en la seccion --
@@ -71,8 +62,8 @@ export const TRANSPORTE = [
   'Ferroviario',
   'Aéreo',
   'Marítimo',
-  'Otro'
-]
+  'Otro',
+];
 
 /**
  * Constante para el endpoint de la API de la consulta de las patentes en data dummy
@@ -96,11 +87,116 @@ export const EMPRESAS_CERTIFICADAS = [
   {
     label: 'I.V.A e I.E.P.S Certificación AAA',
     value: 'aaa',
-  }
-]
+  },
+];
 
+/**
+ * @description Constante para el manejo del tipo de tramite 5701
+ */
 export const TIPO_TRAMITE: number = 5701;
 
-// TODO: Se va a eliminar este valor, cuando el backend actualice el endpoint del guardado y ya no sea necesario enviar este valor
-export const CVE_UNIDAD_ADMIN = 'CV1';
+/**
+ * @description Constante para el manejo del valor sin valor en el select.
+ */
+export const SIN_VALOR = -1;
 
+/**
+ * @description Constante para el manejo del valor del select cuando no hay valores.
+ */
+export const SIN_VALORES = '-1';
+
+/**
+ * @description Constante para el manejo del valor del select cuando no hay valores.
+ */
+export const SIN_ITEMS = '-2';
+
+export const CONFIGURACION_ENCABEZADO_TABLA_PAGOS: ConfiguracionColumna<LineaCaptura>[] =
+  [
+    /**
+     * Encabezado de la columna que muestra el nombre de la persona.
+     * - Encabezado: "Nombre".
+     * - Clave: Obtiene el valor de `nombre` de la fila.
+     * - Orden: 1.
+     */
+    {
+      encabezado: 'Línea de captura',
+      clave: (fila) => fila.lineaCaptura,
+      orden: 1,
+    },
+
+    /**
+     * Encabezado de la columna que muestra el correo electrónico de la persona.
+     * - Encabezado: "Correo".
+     * - Clave: Obtiene el valor de `correo` de la fila.
+     * - Orden: 2.
+     */
+    { encabezado: 'Monto', clave: (fila) => fila.monto, orden: 2 },
+  ];
+
+/**
+ * @description Constante estauts pagado
+ */
+export const ESTATUS_PAGADO = 'Pagado';
+
+/**
+ * @description Mensaje del registro exitoso de la solicitud
+ *@param {string} numeroSolicitud - El número de la solicitud registrada.
+ */
+
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+export const MSG_REGISTRO_EXITOSO = (numeroSolicitud: string) =>
+  `<p>La solicitud ha quedado resgitrada con el número temporal ${numeroSolicitud}. Este no tiene válidez legal y sirve solamente para efectos de identificar tu solicitud. Un folio oficial le será asignado al momento en que ésta sea firmada.</p>`;
+
+/**
+ * @description Almacena el valor de un dia = 1
+ */
+export const UN_DIA = 1;
+
+/**
+ * @description Etiquetas para el crosslist de fechas
+ */
+export const LABEL_CROSSLIST: CrossListLable = {
+  tituluDeLaIzquierda: 'Fechas dentro del periodo',
+  derecha: 'Fechas seleccionadas para el servicio extraordinario',
+};
+
+/**
+ * @description Campos requetridos
+ */
+export const CAMPOS_OBLIGATORIOS = 'Este campo es obligatorio';
+
+/**
+ *  @description RFC no válido
+ */
+export const ERR_RFC_NO_VALIDO = 'El RFC no es válido';
+
+/**
+ * @description Constante para la sección aduanera
+ */
+export const SECCION_ADUANERA = 'seccionAduanera';
+
+/**
+ * @description Constante para el recinto fiscalizado
+ */
+export const RECINTO_FISCALIZADO = 'recintoFiscalizado';
+
+/**
+ *@descrption Constante para el RFC del solicitante, este se va a eliminar, cuando se implemente el store del inicio de sesion
+ */
+export const RFC_SOLICITANTE = 'DODM930823EG4';
+
+/**
+ * @desccription Valor del select DDEX
+ */
+export const TIPO_DESPACHO_DDEX = 3;
+
+/**
+ * @description Valor select Tipo Operacion Exportacion
+ */
+export const TIPO_OPERACION_EXPORTACION = 2;
+
+/**
+ * @desdcription Link para generar la línea de captura
+ */
+export const URL_GENERAR_LINEA_CAPTURA =
+  'https://pccem.mat.sat.gob.mx/PTSC/cet/FmpceContr/faces/resources/pages/pagos/formularioMultiplePago.jsf ';

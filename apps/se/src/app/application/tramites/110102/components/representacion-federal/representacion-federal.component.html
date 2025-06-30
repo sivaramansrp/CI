@@ -1,44 +1,44 @@
-<div class="container">
-    <ng-titulo [titulo]="'Representación federal'"></ng-titulo>
-    <form [formGroup]="formularioRepresentacionFederalForm">
+<form [formGroup]="formularioRepresentacionFederal">
+    <div class="form">
+        <ng-titulo [titulo]="'Representación federal'"></ng-titulo>
         <div class="row">
             <div class="col-md-4">
-                <app-catalogo-select (change)="onEntidadFederativaChange($event)" [catalogo]="entidadesFrontera"
+                <app-catalogo-select (change)="alCambiarEntidadFederativa($event)" [catalogo]="entidadesFederativas"
                     [label]="'Entidad federativa'" [required]="true"
-                    formControlName="solicitudEntidadFederativaEntidadClave"></app-catalogo-select>
+                    [isDisabled]="esSoloLectura"
+                    formControlName="claveEntidadFederativa"></app-catalogo-select>
             </div>
             <div class="col-md-4">
-                <app-catalogo-select [catalogo]="representacionFederalOptions" [label]="'Representación federal'"
-                    [required]="true" formControlName="unidadAdministrativaClave"
-                    (change)="setValoresStore(formularioRepresentacionFederalForm,'unidadAdministrativaClave','setUnidadAdministrativaClave')">
+                <app-catalogo-select [catalogo]="opcionesRepresentacionFederal" [label]="'Representación federal'"
+                    [required]="true" formControlName="claveUnidadAdministrativa"
+                    [isDisabled]="esSoloLectura"
+                    (change)="establecerValoresEnEstado(formularioRepresentacionFederal,'claveUnidadAdministrativa')">
                 </app-catalogo-select>
             </div>
 
         </div>
-    </form>
-</div>
-<div class="container">
-    <ng-titulo [titulo]="'Protesto de Decir Verdad'"></ng-titulo>
-    <form [formGroup]="formularioRepresentacionFederalForm">
-    <div class="row ">
-        <div class="col-md-12">
-            <div class="alert alert-info  d-flex align-items-start">
-                <div>
-                    <input type="checkbox" id="protestoDecirVerdad" class="form-check-input me-3"
-                        formControlName="protestoDecirVerdad"
-                        (change)="setValoresStore(formularioRepresentacionFederalForm,'protestoDecirVerdad','setProtestoDecirVerdad')" />
-                </div>
-                <div class="text-justify">
-                    <p>El/la solicitante acepta presentar la información y documentación soporte que
-                        requiera la autoridad por medio de la VUCEM relacionada con el presente trámite,
-                        apercibido de que, en caso de no desahogar el requerimiento, se desechará el
-                        trámite. Asimismo, el solicitante declara que conoce las penas y sanciones en que se
-                        incurre al declarar falsamente ante la autoridad administrativa en ejercicio de sus
-                        funciones.</p>
-                </div>
+    </div>
+    <div class="form">
+        <ng-titulo [titulo]="'Protesto de Decir Verdad'"></ng-titulo>
+        <div class="row ">
+            <div class="col-md-12">
+                <div class="alert alert-info  d-flex align-items-start">
+                    <div>
+                        <input type="checkbox" id="protestoDecirVerdad" class="form-check-input me-3"
+                            formControlName="protestoDecirVerdad"
+                            (change)="establecerValoresEnEstado(formularioRepresentacionFederal,'protestoDecirVerdad')" />
+                    </div>
+                    <div class="text-justify">
+                        <p>El/la solicitante acepta presentar la información y documentación soporte que
+                            requiera la autoridad por medio de la VUCEM relacionada con el presente trámite,
+                            apercibido de que, en caso de no desahogar el requerimiento, se desechará el
+                            trámite. Asimismo, el solicitante declara que conoce las penas y sanciones en que se
+                            incurre al declarar falsamente ante la autoridad administrativa en ejercicio de sus
+                            funciones.</p>
+                    </div>
 
+                </div>
             </div>
         </div>
     </div>
 </form>
-</div>

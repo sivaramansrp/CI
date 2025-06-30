@@ -9,15 +9,32 @@ import { Injectable } from '@angular/core';
 export interface Solicitante110101State {
   /** RFC del solicitante. */
   rfc: string;
-  
-  /** Denominación o razón social del solicitante. */
+  /** denominacion del solicitante. */
   denominacion: string;
-  
-  /** Actividad económica principal del solicitante. */
+  /** Actividad económica del solicitante. */
   actividadEconomica: string;
-  
-  /** Correo electrónico de contacto del solicitante. */
+  /** Correo electrónico del solicitante. */
   correoElectronico: string;
+  /** País del solicitante. */
+  pais: string;
+  /** Denominación o razón social del solicitante. */
+  tratado: string;
+  /** Actividad económica principal del solicitante. */
+  origen: string;
+  /** nombreComercial del solicitante. */
+  nombreComercial: string;
+  /** Nombre en inglés del solicitante. */
+  nombreIngles: string;
+  /** Fracción arancelaria del producto o servicio. */
+  fraccionArancelaria: string;
+  /** Descripción del producto o servicio. */
+  descripcion: string;
+  /** Valor de la transacción en moneda local. */
+  valorTransaccion: string;
+  /** Entidad a la que pertenece el solicitante. */
+  entidad: string;
+  /** Representación legal o administrativa del solicitante. */
+  representacion: string;
 }
 
 
@@ -31,17 +48,20 @@ export interface Solicitante110101State {
  */
 export function createSolicitanteInitialState(): Solicitante110101State {
   return {
-    /** RFC del solicitante, inicialmente vacío. */
     rfc: '',
-
-    /** Denominación o razón social del solicitante, inicialmente vacío. */
     denominacion: '',
-
-    /** Actividad económica principal del solicitante, inicialmente vacío. */
     actividadEconomica: '',
-
-    /** Correo electrónico de contacto del solicitante, inicialmente vacío. */
-    correoElectronico: ''
+    correoElectronico: '',
+    pais: '',
+    tratado: '',
+    origen: '',
+    nombreComercial: '',
+    nombreIngles: '',
+    fraccionArancelaria: '',
+    descripcion: '',
+    valorTransaccion: '',
+    entidad: '',
+    representacion: ''
   };
 }
 
@@ -66,63 +86,160 @@ export class Tramite110101Store extends Store<Solicitante110101State> {
     super(createSolicitanteInitialState());
   }
 
-
   /**
-   * Establece el valor del RFC en el estado de la tienda.
-   * 
-   * @param rfc - El RFC a actualizar en el estado.
+   * Actualiza el estado con el RFC especificado.
+   * @param rfc - El RFC a establecer en el estado.
    */
-  public setRfc(rfc: string): void {
+  public setRfc(rfc: string):void {
     this.update((state) => ({
       ...state,
       rfc,
     }));
   }
 
-
   /**
-   * Establece el valor de la denominación en el estado de la tienda.
-   * 
-   * @param denominacion - El valor de la denominación a actualizar en el estado.
+   * Actualiza el estado con la denominación especificada.
+   * @param denominacion - La denominación a establecer en el estado.
    */
-  public setDenominacion(denominacion: string): void {
+  public setDenominacion(denominacion: string):void {
     this.update((state) => ({
       ...state,
       denominacion,
     }));
   }
 
-
   /**
-   * Establece el valor de la actividad económica en el estado de la tienda.
-   * 
-   * @param actividadEconomica - El valor de la actividad económica a actualizar en el estado.
+   * Actualiza el estado con la actividad económica especificada.
+   * @param actividadEconomica - La actividad económica a establecer en el estado.
    */
-  public setActividadEconomica(actividadEconomica: string): void {
+
+  public setActividadEconomica(actividadEconomica: string):void {
     this.update((state) => ({
       ...state,
       actividadEconomica,
-    }));
+    })); 
   }
 
-
   /**
-   * Establece el valor del correo electrónico en el estado de la tienda.
-   * 
-   * @param correoElectronico - El correo electrónico a actualizar en el estado.
-   */
-  public setCorreoElectronico(correoElectronico: string): void {
+   * Actualiza el estado con el correo electrónico especificado.
+   * @param correoElectronico - El correo electrónico a establecer en el estado.
+   */ 
+  public setCorreoElectronico(correoElectronico: string):void {
     this.update((state) => ({
       ...state,
       correoElectronico,
     }));
   }
 
+  /**
+   * Actualiza el estado con el país especificado.
+   * @param pais - El país a establecer en el estado.
+   */
+  public setPais(pais: string):void {
+    this.update((state) => ({
+      ...state,
+      pais,
+    }));
+  }
 
   /**
-   * Limpiar los datos del solicitante
+   * Actualiza el estado con el país especificado.
+   * @param tratado - El país a establecer en el estado.
    */
-  public limpiarSolicitante():void{
-    this.reset();
+  public setTratado(tratado: string):void {
+    this.update((state) => ({
+      ...state,
+      tratado,
+    }));
   }
+
+  /**
+   * Actualiza el estado con el país especificado.
+   * @param origen - El país a establecer en el estado.
+   */
+  public setOrigen(origen: string):void {
+    this.update((state) => ({
+      ...state,
+      origen,
+    }));
+  }
+
+  /**
+   * Actualiza el estado con el país especificado.
+   * @param nombreComercial - El país a establecer en el estado.
+   */
+  public setNombreComercial(nombreComercial: string):void {
+    this.update((state) => ({
+      ...state,
+      nombreComercial,
+    }));
+  }
+
+  /**
+   * Actualiza el estado con el país especificado.
+   * @param nombreIngles - El país a establecer en el estado.
+   */
+  public setNombreIngles(nombreIngles: string):void {
+    this.update((state) => ({
+      ...state,
+      nombreIngles,
+    }));
+  }
+
+  /**
+   * Actualiza el estado con el país especificado.
+   * @param fraccionArancelaria - El país a establecer en el estado.
+   */
+  public setFraccionArancelaria(fraccionArancelaria: string):void {
+    this.update((state) => ({
+      ...state,
+      fraccionArancelaria,
+    }));
+  }
+
+  /**
+   * Actualiza el estado con el país especificado.
+   * @param descripcion - El país a establecer en el estado.
+   */
+  public setDescripcion(descripcion: string):void {
+    this.update((state) => ({
+      ...state,
+      descripcion,
+    }));
+  }
+
+  /**
+   * Actualiza el estado con el país especificado.
+   * @param valorTransaccion - El país a establecer en el estado.
+   */
+  public setValorTransaccion(valorTransaccion: string):void {
+    this.update((state) => ({
+      ...state,
+      valorTransaccion,
+    }));
+  }
+
+  /**
+   * Actualiza el estado con el país especificado.
+   * @param entidad - El país a establecer en el estado.
+   */
+  public setEntidad(entidad: string):void {
+    this.update((state) => ({
+      ...state,
+      entidad,
+    }));
+  }
+
+  /**
+   * Actualiza el estado con el país especificado.
+   * @param representacion - El país a establecer en el estado.
+   */
+  public setRepresentacion(representacion: string):void {
+    this.update((state) => ({
+      ...state,
+      representacion,
+    }));
+  }
+
+
 }

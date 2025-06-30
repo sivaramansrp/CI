@@ -1,10 +1,7 @@
-/* eslint-disable sort-imports */
 import { Component, ViewChild } from '@angular/core';
-import { PANTAPASOS } from '@ng-mf/data-access-user';
-import { ListaPasosWizard } from '@ng-mf/data-access-user';
+import {DatosPasos, ListaPasosWizard, WizardComponent} from '@libs/shared/data-access-user/src'
+import { PANTAPASOS } from '../../services/pantallas-svc.enum';
 import { PASOS } from '@ng-mf/data-access-user';
-import { WizardComponent } from '@ng-mf/data-access-user';
-import { DatosPasos } from '@ng-mf/data-access-user';
 
 /**
  * **Interfaz que representa una acción de un botón en la interfaz**  
@@ -90,7 +87,7 @@ export class PantallasComponent {
    * - `txtBtnSig`: Texto para el botón de navegación hacia adelante ('Continuar').  
    */
   datosPasos: DatosPasos = {
-    nroPasos: this.pasos.length, // Total de pasos en el asistente.
+    nroPasos: this.pantallasPasos.length, // Total de pasos en el asistente.
     indice: this.indice, // Paso actual del asistente.
     txtBtnAnt: 'Anterior', // Texto del botón de retroceso.
     txtBtnSig: 'Continuar', // Texto del botón de avance.

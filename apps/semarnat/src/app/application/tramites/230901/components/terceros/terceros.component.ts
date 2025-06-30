@@ -1,12 +1,13 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   ConfiguracionColumna,
+  ConsultaioQuery,
   TablaSeleccion,
-} from '@libs/shared/data-access-user/src';
+} from '@ng-mf/data-access-user';
 import { DESTINATARIO_TABLA_CONFIGURACION, DESTINATARIO_TABLE_ENTRY, DestinatarioConfiguracionItem } from '../../enum/destinatario-tabla.enum';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Solicitud230901State, Tramite230901Store } from '../../estados/store/tramite230901.store';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 import { AutorizacionesDeVidaSilvestreService } from '../../services/autorizaciones-de-vida-silvestre.service';
 import { Tramite230901Query } from '../../estados/query/tramite230901.query';
 
@@ -70,6 +71,12 @@ export class TercerosComponent implements OnInit, OnDestroy {
   botonModificarHabilitado: boolean = false;
 
   /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  esFormularioSoloLectura: boolean = false;
+
+  /**
    * Constructor del componente TercerosComponent.
    * Inicializa los servicios y dependencias necesarias para gestionar el estado
    * y los datos relacionados con terceros.
@@ -78,9 +85,17 @@ export class TercerosComponent implements OnInit, OnDestroy {
     public autorizacionesDeVidaSilvestreService: AutorizacionesDeVidaSilvestreService,
     private tramite230901Store: Tramite230901Store,
     private tramite230901Query: Tramite230901Query,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private consultaioQuery: ConsultaioQuery
   ) {
-    // No se realiza ninguna acción aquí.
+  this.consultaioQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.notificadorDestruccion$),
+      map((seccionState) => {
+       this.esFormularioSoloLectura = seccionState.readonly;
+      })
+    )
+    .subscribe();
   }
 
   /**
@@ -98,6 +113,12 @@ export class TercerosComponent implements OnInit, OnDestroy {
 
     this.crearFormularioDestinatario();
     this.manejarCambioEntidadFederativa();
+
+    if(this.esFormularioSoloLectura) {
+      this.formularioDestinatario.disable();
+    } else {
+      this.formularioDestinatario.enable();
+    }
   }
 
   /**
@@ -121,8 +142,8 @@ export class TercerosComponent implements OnInit, OnDestroy {
   manejarCambioEntidadFederativa(): void {
     const ENTIDAD_FEDERATIVA = this.formularioDestinatario.get('entidadFederativa')?.value;
     if (ENTIDAD_FEDERATIVA && this.datosTabla.length === 0) {
-      this.tramite230901Store.setEntidadFederativa(ENTIDAD_FEDERATIVA);
-      this.datosTabla.push(DESTINATARIO_TABLE_ENTRY);
+    this.tramite230901Store.establecerDatos({ entidadFederativa: ENTIDAD_FEDERATIVA });
+    this.datosTabla.push(DESTINATARIO_TABLE_ENTRY);
     }
   }
 

@@ -1,30 +1,18 @@
 import { Store, StoreConfig } from '@datorama/akita';
+import { DatosDelContenedor } from '../models/datos-tramite.model';
 import { Injectable } from '@angular/core';
+
 
 /**
  * Interfaz que representa el estado de la solicitud 11204.
  * Utilizamos esta interfaz para definir la estructura del estado de la solicitud.
  */
 export interface Solicitud11204State {
-  /**
-   * Menu desplegable.
-   */
-  menuDesplegable: string;
-
-  /**
-   * RFC.
-   */
-  rfc: string;
-
-  /**
-   * Denominación.
-   */
-  denominacion: string;
 
   /**
    * Datos del contenedor.
    */
-  datosDelContenedor: [];
+  datosDelContenedor: DatosDelContenedor[];
   
   /**
    * Datos del contenedor.
@@ -77,11 +65,6 @@ export interface Solicitud11204State {
   aduanaMenuDesplegable: string;
 
   /**
-   * Fecha de ingreso.
-   */
-  fechaDeIngreso: string;
-
-  /**
    * Archivo seleccionado.
    */
   archivoSeleccionado: string;
@@ -93,9 +76,6 @@ export interface Solicitud11204State {
  */
 export function createInitialState(): Solicitud11204State {
   return {
-    menuDesplegable: '',
-    rfc: '',
-    denominacion: '',
     datosDelContenedor: [],
     datosDelCsvArchivo: [],
     tipoBusqueda: '',
@@ -107,7 +87,6 @@ export function createInitialState(): Solicitud11204State {
     fechaIngreso: '',
     vigencia: '',
     aduanaMenuDesplegable: '',
-    fechaDeIngreso: '',
     archivoSeleccionado: ''
   };
 }
@@ -136,17 +115,6 @@ export class Tramite11204Store extends Store<Solicitud11204State> {
   }
 
   /**
-   * Establece la fecha de ingreso.
-   * @param fechaDeIngreso Fecha de ingreso.
-   */
-  public setFechaDeIngreso(fechaDeIngreso: string): void {
-    this.update((state) => ({
-      ...state,
-      fechaDeIngreso,
-    }));
-  }
-
-  /**
    * Establece la vigencia.
    * @param Vigencia Vigencia.
    */
@@ -158,32 +126,10 @@ export class Tramite11204Store extends Store<Solicitud11204State> {
   }
 
   /**
-   * Establece el RFC.
-   * @param rfc RFC.
-   */
-  public setRfc(rfc: string): void {
-    this.update((state) => ({
-      ...state,
-      rfc,
-    }));
-  }
-
-  /**
-   * Establece la denominación.
-   * @param denominacion Denominación.
-   */
-  public setDenominacion(denominacion: string): void {
-    this.update((state) => ({
-      ...state,
-      denominacion,
-    }));
-  }
-
-  /**
    * Establece los datos del contenedor.
    * @param datosDelContenedor Datos del contenedor.
    */
-  public setDelContenedor(datosDelContenedor: []): void {
+  public setDelContenedor(datosDelContenedor: DatosDelContenedor[]): void {
     this.update((state) => ({
       ...state,
       datosDelContenedor,

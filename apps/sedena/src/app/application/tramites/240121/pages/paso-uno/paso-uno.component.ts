@@ -1,81 +1,129 @@
-import { ActivatedRoute } from '@angular/router';
-import { Component } from '@angular/core';
-import { EventEmitter } from '@angular/core';
-import { OnDestroy } from '@angular/core';
-import { OnInit} from '@angular/core';
-import { Output } from '@angular/core';
-import { SeccionLibStore } from '@libs/shared/data-access-user/src';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
+import { Subject, map, takeUntil } from 'rxjs';
+import { ID_PROCEDIMIENTO } from '../../constantes/exportacion-armas-explosivo.enum';
+import { PermisoOrdinarioExportacionExplosivoService } from '../../services/permiso-ordinario-exportacion-explosivo.service';
+import { Tramite240121Query } from '../../estados/tramite240121Query.query';
+import { Tramite240121Store } from '../../estados/tramite240121Store.store';
 
 /**
- * Componente para el asistente de solicitud.
- * Este componente gestiona la navegación entre los pasos del formulario de solicitud.
  * @component PasoUnoComponent
- * @selector app-paso-uno
- * @templateUrl ./paso-uno.component.html
- * @styleUrls ./paso-uno.component.scss
+ * @description
+ * Componente encargado de mostrar y gestionar la información correspondiente al paso uno del flujo del trámite
+ * de exportación de explosivos. Administra el estado del formulario, controla las pestañas activas y
+ * sincroniza los datos con el store y servicios relacionados.
  */
 @Component({
   selector: 'paso-uno',
   templateUrl: './paso-uno.component.html',
-  styleUrl: './paso-uno.component.scss'
+  styleUrl: './paso-uno.component.scss',
 })
 export class PasoUnoComponent implements OnInit, OnDestroy {
-  private destroyNotifier$ = new Subject<void>();
-
   /**
-   * Índice de la pestaña seleccionada.
-   * @property {number} indice - Índice de la pestaña actualmente seleccionada.
-   * @default 1
+   * Índice de la pestaña seleccionada en el paso del formulario.
+   * @type {number | undefined}
    */
   public indice: number | undefined = 1;
+
   /**
-   * Initializes the component with required query and store for state management.
+   * Observable de notificación para cancelar suscripciones activas al destruir el componente.
+   * @private
+   * @type {Subject<void>}
+   */
+  private destroyNotifier$: Subject<void> = new Subject();
+
+  /**
+   * Estado de la sección de consulta proveniente del store global.
+   * @type {ConsultaioState}
+   */
+  public consultaState!: ConsultaioState;
+
+  /**
+   * Indica si los datos del formulario han sido obtenidos exitosamente y pueden mostrarse.
+   * @type {boolean}
+   */
+  public esDatosRespuesta: boolean = false;
+
+  /**
+   * Constructor que inyecta dependencias necesarias para la gestión de estado, consulta y servicios de negocio.
    *
-   * @param Tramite260210Query Query to access procedure state.
-   * @param tramite260214Store Store to update procedure state.
+   * @param tramite240121Query Query para acceder al estado del trámite.
+   * @param tramite240121Store Store para modificar el estado del trámite.
+   * @param consultaQuery Query para acceder al estado de la sección de consulta.
+   * @param permisoOrdinarioExportacionExplosivoService Servicio para manejar la lógica de permisos de exportación de explosivos.
    */
   constructor(
-    private route: ActivatedRoute, private seccionStore: SeccionLibStore,
-  ) {
-// Se puede agregar aquí la lógica del constructor si es necesario
-  }
+    private tramite240121Query: Tramite240121Query,
+    private tramite240121Store: Tramite240121Store,
+    public consultaQuery: ConsultaioQuery,
+    public permisoOrdinarioExportacionExplosivoService: PermisoOrdinarioExportacionExplosivoService
+  ) {}
 
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * Se suscribe a los observables del store para obtener el índice de pestaña seleccionado
+   * y los datos de consulta. Si se requiere actualización, invoca la carga de datos del formulario.
+   */
   ngOnInit(): void {
-    this.route.queryParams
+    this.tramite240121Query.getTabSeleccionado$
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((tab) => {
-        this.indice = Number(tab['indice'] || 1);
+        this.indice = tab;
+      });
+
+    this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.consultaState = seccionState;
+        })
+      )
+      .subscribe();
+
+    if (
+      this.consultaState &&
+      this.consultaState.procedureId === ID_PROCEDIMIENTO.toString() &&
+      this.consultaState.update
+    ) {
+      this.guardarDatosFormulario();
+    } else {
+      this.esDatosRespuesta = true;
+    }
+  }
+
+  /**
+   * Carga datos desde el backend a través del servicio y actualiza el store con la respuesta.
+   * Marca el estado como listo para mostrar.
+   *
+   * @method guardarDatosFormulario
+   */
+  guardarDatosFormulario(): void {
+    this.permisoOrdinarioExportacionExplosivoService
+      .obtenerRegistroTomarMuestrasDatos()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((resp) => {
+        if (resp) {
+          this.esDatosRespuesta = true;
+          this.permisoOrdinarioExportacionExplosivoService.actualizarEstadoFormulario(resp);
+        }
       });
   }
 
-  ngOnDestroy(): void {
-    this.destroyNotifier$.next();
-    this.destroyNotifier$.complete();
+  /**
+   * Actualiza el índice de la pestaña seleccionada en el store.
+   *
+   * @param i Índice de la pestaña seleccionada.
+   */
+  public seleccionaTab(i: number): void {
+    this.tramite240121Store.updateTabSeleccionado(i);
   }
 
   /**
-   * Lista de secciones del formulario.
-   * @property {Array<{ index: number; title: string; component: string; }>} seccionesDeLaSolicitud
-   * - Lista de pasos dentro del formulario con sus respectivos componentes.
+   * Método del ciclo de vida que se ejecuta justo antes de que el componente sea destruido.
+   * Cancela las suscripciones activas para prevenir fugas de memoria.
    */
-
-
-  /**
-   * Evento emitido al cambiar de pestaña.
-   * @event tabChanged
-   * @type {EventEmitter<number>}
-   */
-  @Output() tabChanged = new EventEmitter<number>();
-
-  /**
-   * Cambia el índice de la pestaña seleccionada.
-   * @method seleccionaTab
-   * @param {number} i - El índice de la pestaña a seleccionar.
-   */
-  seleccionaTab(i: number): void {
-    this.indice = i;
-    this.tabChanged.emit(i);
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }

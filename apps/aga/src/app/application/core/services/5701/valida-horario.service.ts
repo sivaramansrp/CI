@@ -1,7 +1,7 @@
 import { BodyValidaHorario, ValidaHorario } from '../../models/5701/ValidaHorario.model';
-import { catchError, Observable, throwError } from 'rxjs';
+import { Observable, catchError, throwError } from 'rxjs';
 import { API_VALIDA_HORARIO } from '../../../constantes/5701/api-constants';
-import { enviroment } from '@libs/shared/data-access-user/src';
+import { ENVIRONMENT } from '@libs/shared/data-access-user/src';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
@@ -15,7 +15,7 @@ export class ValidaHorarioService {
   constructor(
     private http: HttpClient
   ) {
-    this.host = `${enviroment.API_HOST}/api/`;
+    this.host = `${ENVIRONMENT.API_HOST}/api/`;
   }
 
   /**

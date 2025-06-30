@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { CatalogoSelectComponent, TablaDinamicaComponent, TituloComponent, CatalogoResponse } from '@ng-mf/data-access-user';
+import { CatalogoResponse, CatalogoSelectComponent, ConsultaioQuery, TablaDinamicaComponent, TituloComponent } from '@ng-mf/data-access-user';
 
 import { AlertComponent } from '@ng-mf/data-access-user';
 import { ConfiguracionColumna } from '@ng-mf/data-access-user';
@@ -19,7 +19,7 @@ import { MercanciasTableFormComponent } from '../mercancias-tabla-form/mercancia
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RepresentanteLegalComponent } from '../representante-legal/representante-legal.component';
 
-import { Observable, Subject, takeUntil } from 'rxjs';
+import { Observable, Subject, map, takeUntil } from 'rxjs';
 import { Tramite260212Store } from '../../estados/tramite260212.store';
 
 import { Tramite260212Query } from '../../estados/tramite260212.query';
@@ -27,6 +27,13 @@ import { Tramite260212Query } from '../../estados/tramite260212.query';
 /**
  * Componente DatosDeLaSolicitud
  * Este componente gestiona los datos y formularios de la solicitud en el flujo de trabajo.
+ */
+/**
+ * @var {boolean} esFormularioSoloLectura
+ * @description
+ * Indica si el formulario debe mostrarse en modo solo lectura.
+ * Cuando es verdadero, los campos del formulario estarán deshabilitados y no podrán ser editados por el usuario.
+ * Este valor se actualiza dinámicamente según el estado de la sección consultada.
  */
 @Component({
   selector: 'app-datos-de-la-solicitud',
@@ -47,11 +54,19 @@ import { Tramite260212Query } from '../../estados/tramite260212.query';
   styleUrl: './datos-de-la-solicitud.component.scss',
 })
 export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
+  /**
+   * @desc Indica si el formulario debe mostrarse solo en modo de lectura.
+   * @type {boolean}
+   * @public
+   * 
+   * Cuando es verdadero, el usuario no puede editar los campos del formulario.
+   */
+  public esFormularioSoloLectura: boolean = true;
 
   /** Subject para destruir el componente */
   private destroy$ = new Subject<void>();
   /** Observable para el estado seleccionado */
-  selectedEstado$: Observable<CatalogoResponse | null> =
+  selectedEstado$: Observable<string> =
     this.tramite260212Query.selectedEstado$;
   /** Catálogo de estados cargado desde un archivo JSON */
 
@@ -65,8 +80,8 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   colonia$ = this.tramite260212Query.selectedColonia$
   calle$ = this.tramite260212Query.selectedCalle$
   lada$ = this.tramite260212Query.selectedLada$
-  telefono$ =this.tramite260212Query.SelectedTelefono$
-  codigoPostal$=this.tramite260212Query.SelectedCodigoPostal$
+  telefono$ = this.tramite260212Query.SelectedTelefono$
+  codigoPostal$ = this.tramite260212Query.SelectedCodigoPostal$
 
   /** Formulario principal de datos del establecimiento */
   datosEstablecimientoForm!: FormGroup;
@@ -142,12 +157,14 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   constructor(private solicitudService: SolicitudService, private fb: FormBuilder,
     private tramite260212Store: Tramite260212Store,
-    private tramite260212Query: Tramite260212Query
+    private tramite260212Query: Tramite260212Query,
+    private consultaioQuery: ConsultaioQuery
   ) {
-    // La lógica de inicialización se puede agregar aquí si es necesario.
+
   }
 
-  /**
+
+ /**
  * Método del ciclo de vida Angular que se ejecuta al inicializar el componente.
  * - Inicializa el formulario de datos del establecimiento.
  * - Obtiene las solicitudes desde el servicio y las almacena en `solicitudData`.
@@ -155,14 +172,68 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
  * - Actualiza el campo `estado` del formulario con el estado seleccionado desde el observable.
  */
   ngOnInit(): void {
-    this.fomInitialize()
-    this.solicitudService.getSolicitudes().subscribe((data) => {
-      this.solicitudData = data;
-    });
+    this.fomInitialize();
+    this.inicializarEstadoFormulario();
+     this.solicitudService.getScianDatos().pipe(takeUntil(this.destroy$))
+          .subscribe((response: ClaveModel[]) => {
+            this.claveScianDatas = response;
+          });
+  }
 
-    this.solicitudService.getClave().subscribe((data) => {
-      this.estado = data;
-    })
+  /**
+   * Inicializa el estado del formulario según el modo de solo lectura.
+   * Si está en modo solo lectura, deshabilita el formulario; si no, lo habilita y actualiza los valores.
+   * @returns {void}
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      // Solo llamar a guardarDatosFormulario si el formulario ya está inicializado
+      if (this.datosEstablecimientoForm) {
+        this.guardarDatosFormulario();
+      }
+    } else {
+      this.actualizarEstado();
+    }
+  }
+
+  /**
+   * Guarda los datos del formulario y actualiza su estado.
+   * Si el formulario está en modo solo lectura, lo deshabilita; de lo contrario, lo habilita.
+   * @returns {void}
+   */
+  guardarDatosFormulario(): void {
+    this.actualizarEstado();
+    // Solo intentar deshabilitar si el formulario ya está inicializado
+    if (this.datosEstablecimientoForm) {
+      if (this.esFormularioSoloLectura) {
+        this.datosEstablecimientoForm.disable();
+      } else if (!this.esFormularioSoloLectura) {
+        this.datosEstablecimientoForm.enable();
+      }
+    }
+  }
+
+  /**
+   * @method actualizarEstado
+   * @description
+   * Actualiza los valores del formulario `datosEstablecimientoForm` con los datos provenientes de varios observables y servicios.
+   * Obtiene la información de la solicitud y la clave del estado, y suscribe a diferentes observables para actualizar los campos correspondientes del formulario.
+   * Utiliza el operador `takeUntil` para gestionar la destrucción de las suscripciones y evitar fugas de memoria.
+   *
+   * @returns {void}
+   */
+  actualizarEstado(): void {
+    this.solicitudService.getSolicitudes()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((data): void => {
+        this.solicitudData = data
+      });
+
+    this.solicitudService.getClave()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((data): void => {
+        this.estado = data
+      });
 
     this.selectedEstado$.subscribe((selectedEstado) => {
       if (selectedEstado) {
@@ -222,6 +293,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     });
   }
 
+
   /**
  * Configuración de la tabla para mostrar las claves S.C.I.A.N.
  * - Define las columnas y los datos que se muestran en la tabla.
@@ -251,49 +323,58 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       lada: ['', [Validators.required]],
       telefono: ['', [Validators.required]],
     });
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroy$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+
+        })
+      )
+      .subscribe()
   }
 
   /**
- * Alterna el estado de la variable `plegable`.
- * Cambia entre mostrar y ocultar una sección plegable.
- */
-
-  mostrarPlegable():void {
+   * Alterna el estado plegable de la sección de opciones de pre-llenado.
+   * Cambia la variable `plegable` para mostrar u ocultar la sección.
+   * @returns {void}
+   */
+  mostrarPlegable(): void {
     this.plegable = !this.plegable;
   }
 
   /**
- * Muestra el formulario para S.C.I.A.N.
- * Establece la variable `mostrarFormularioScian` en true.
- */
-
-  toggleScianFormulario():void {
+   * Muestra el formulario para agregar una clave S.C.I.A.N.
+   * Cambia la variable `mostrarFormularioScian` a true.
+   * @returns {void}
+   */
+  toggleScianFormulario(): void {
     this.mostrarFormularioScian = true
   }
   /**
-   * Oculta el formulario para S.C.I.A.N.
-   * Establece la variable `mostrarFormularioScian` en false.
+   * Oculta el formulario de clave S.C.I.A.N.
+   * Cambia la variable `mostrarFormularioScian` a false.
+   * @returns {void}
    */
-
-  cerrarScianFormulario():void {
+  cerrarScianFormulario(): void {
     this.mostrarFormularioScian = false;
   }
 
   /**
- * Muestra el formulario para las mercancías.
- * Establece la variable `mostrarFormularioMercancias` en true.
- */
-
-  openMercanciasForm():void {
+   * Muestra el formulario para agregar mercancías.
+   * Cambia la variable `mostrarFormularioMercancias` a true.
+   * @returns {void}
+   */
+  openMercanciasForm(): void {
     this.mostrarFormularioMercancias = true;
   }
 
   /**
- * Oculta el formulario para las mercancías.
- * Establece la variable `mostrarFormularioMercancias` en false.
- */
-
-  closeMercanciasForm():void {
+   * Oculta el formulario de mercancías.
+   * Cambia la variable `mostrarFormularioMercancias` a false.
+   * @returns {void}
+   */
+  closeMercanciasForm(): void {
     this.mostrarFormularioMercancias = false;
   }
 
@@ -353,7 +434,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
      * Obtiene el correoElectronico seleccionado del formulario y lo guarda en el store
      */
   updateCorreoElectronico(): void {
-    const CORREO= this.datosEstablecimientoForm.get('correoElectronico')?.value;
+    const CORREO = this.datosEstablecimientoForm.get('correoElectronico')?.value;
     this.tramite260212Store.setCorreoElectronico(CORREO);
   }
   /**
@@ -378,25 +459,57 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     this.tramite260212Store.setColonia(COLONIA);
   }
 
+  /**
+   * Actualiza el campo 'calle' en el store a partir del valor del formulario.
+   * @returns {void}
+   */
   updateCalle(): void {
     const CALLE = this.datosEstablecimientoForm.get('calle')?.value;
     this.tramite260212Store.setCalle(CALLE);
   }
 
+  /**
+   * Actualiza el campo 'lada' en el store a partir del valor del formulario.
+   * @returns {void}
+   */
   updateLada(): void {
     const LADA = this.datosEstablecimientoForm.get('lada')?.value;
     this.tramite260212Store.setLada(LADA);
   }
 
-  updateTelefono():void{
+  /**
+   * Actualiza el campo 'telefono' en el store a partir del valor del formulario.
+   * @returns {void}
+   */
+  updateTelefono(): void {
     const TELEFONO = this.datosEstablecimientoForm.get('telefono')?.value;
     this.tramite260212Store.setTelefono(TELEFONO);
   }
 
-  updateCodigoPostal():void{
+  /**
+   * Actualiza el campo 'codigoPostal' en el store a partir del valor del formulario.
+   * @returns {void}
+   */
+  updateCodigoPostal(): void {
     const CODIGO_POSTAL = this.datosEstablecimientoForm.get('codigoPostal')?.value;
     this.tramite260212Store.setCodigoPostal(CODIGO_POSTAL);
   }
+  /**
+   * Opciones de publicación para la solicitud.
+   */
+  losDatos: unknown[] = [];
+
+  /**
+   * Obtiene las opciones de publicación de la solicitud.
+   */
+  obtenerOpcionesSolicitud(): void {
+    this.solicitudService.getOpcionesPublicacion()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((data): void => {
+        this.losDatos = data
+      });
+  }
+
   /*
   * Método del ciclo de vida de Angular - destruye el componente
 */

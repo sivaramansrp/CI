@@ -1,10 +1,10 @@
 import { CADENA_PAGO_DEPENDENCIA, CLAVE_DE_REFERENCIA, FECHA, IMP_PAGO } from "../../enum/autorizaciones.enum";
 import { Component, OnDestroy, OnInit } from "@angular/core";
+import { ConsultaioQuery, InputFecha } from '@ng-mf/data-access-user';
 import { FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms";
 import { Solicitud230901State, Tramite230901Store } from "../../estados/store/tramite230901.store";
-import { Subject, takeUntil } from "rxjs";
+import { Subject, map, takeUntil } from "rxjs";
 import { AutorizacionesDeVidaSilvestreService } from "../../services/autorizaciones-de-vida-silvestre.service";
-import { InputFecha } from "@libs/shared/data-access-user/src";
 import { Tramite230901Query } from "../../estados/query/tramite230901.query";
 
 /**
@@ -56,6 +56,12 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   private notificadorDestruccion$: Subject<void> = new Subject();
 
   /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  esFormularioSoloLectura: boolean = false;
+
+  /**
    * Constructor del componente PagoDeDerechosComponent.
    * Inicializa los servicios y dependencias necesarias para gestionar el estado
    * y los datos relacionados con el pago de derechos.
@@ -64,9 +70,17 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     public servicioVidaSilvestre: AutorizacionesDeVidaSilvestreService,
     private tramite230901Store: Tramite230901Store,
     private tramite230901Query: Tramite230901Query,
-    private formBuilder: FormBuilder
-  ) {
-    // No se realiza ninguna acción aquí.
+    private formBuilder: FormBuilder,
+    private consultaioQuery: ConsultaioQuery
+    ) {
+     this.consultaioQuery.selectConsultaioState$
+       .pipe(
+         takeUntil(this.notificadorDestruccion$),
+         map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+         })
+       )
+       .subscribe();
   }
 
   /**
@@ -83,6 +97,12 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
       });
 
     this.crearformularioPagoDerechos();
+
+    if(this.esFormularioSoloLectura) {
+      this.formularioPagoDerechos.disable();
+    } else {
+      this.formularioPagoDerechos.enable();
+    }
   }
 
   /**
@@ -91,11 +111,10 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * están deshabilitados porque no deben ser editados por el usuario.
    */
   crearformularioPagoDerechos(): void {
-
     this.formularioPagoDerechos = this.formBuilder.group({
       claveDeReferencia: new FormControl(this.referenciaClave),
       cadenaPagoDependencia: new FormControl(this.dependenciaCadenaPago),
-      banco: new FormControl(this.estadoSolicitud230901.bancoseleccionado, Validators.required),
+      banco: new FormControl(this.estadoSolicitud230901.banco, Validators.required),
       llaveDePago: new FormControl(this.estadoSolicitud230901.llaveDePago, Validators.required),
       fecPago: new FormControl(this.estadoSolicitud230901.fecPago, Validators.required),
       impPago: new FormControl(this.impPago),
@@ -107,36 +126,38 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Maneja la selección del banco en el formulario.
-   * Actualiza el estado del almacén con el banco seleccionado.
-   */
-  manejarSeleccionBanco(): void {
-    this.tramite230901Store.setbancoseleccionado(
-      this.formularioPagoDerechos.get('banco')?.value
-    );
-  }
-
-  /**
    * Maneja los cambios en el campo "Llave de Pago".
    * Actualiza el estado del almacén con la llave de pago proporcionada.
    */
   manejarCambioLlavePago(): void {
-    const CAPITALIZED_VALUE = this.formularioPagoDerechos.get('llaveDePago')?.value.toUpperCase();
+    const CAPITALIZED_VALUE = this.formularioPagoDerechos
+      .get('llaveDePago')
+      ?.value.toUpperCase();
     this.formularioPagoDerechos.get('llaveDePago')?.setValue(CAPITALIZED_VALUE);
-    this.tramite230901Store.setLlaveDePago(
-      CAPITALIZED_VALUE
-    );
   }
 
   /**
    * Maneja los cambios en el campo "Fecha de Pago".
-   * Actualiza el estado del almacén con la fecha de pago proporcionada.  
+   * Actualiza el estado del almacén con la fecha de pago proporcionada.
    */
   cambioFechaFinal(nuevo_valor: string): void {
     this.formularioPagoDerechos.patchValue({
       fecPago: nuevo_valor,
     });
     this.tramite230901Store.setfecPago(nuevo_valor);
+  }
+
+  /**
+   * Método setValoresStore
+   * Descripción: Actualiza un valor específico en el store utilizando el método correspondiente.
+   * Parámetros:
+   *   - form: Formulario reactivo que contiene los datos.
+   *   - campo: Nombre del campo cuyo valor se actualizará en el store.
+   *   - metodoNombre: Nombre del método del store que se utilizará para actualizar el valor.
+   */
+  setValoresStore(form: FormGroup, campo: string): void {
+    const VALOR = form.get(campo)?.value;
+    this.tramite230901Store.establecerDatos({ [campo]: VALOR });
   }
 
   /**

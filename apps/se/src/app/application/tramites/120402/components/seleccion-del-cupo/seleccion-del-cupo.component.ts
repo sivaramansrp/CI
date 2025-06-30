@@ -1,31 +1,46 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { NgIf } from '@angular/common';
+import { AlertComponent, TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
+import { CLASE_TEXTO_CENTRADO, CONFIGURACION_COLUMNAS_CUPO_CONST, NOTA } from '../../constantes/definiciones.enum';
+import {
+  Catalogo,
+  CategoriaMensaje,
+  ConfiguracionColumna,
+  Notificacion,
+  NotificacionesComponent,
+  SeleccionDelCupoService,
+  TablaAcciones,
+  TipoNotificacionEnum,
+  TituloComponent,
+} from '@ng-mf/data-access-user';
 
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
+
+import { CommonModule, NgIf } from '@angular/common';
+
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+
+import { Component, OnDestroy, OnInit } from '@angular/core';
+
+import {DatoCupo, EventoAccionTabla, FilaCupo, RespuestaDataArray, RespuestaTratado } from '../../model/seleccion-del-cupo-interfaces';
 import {
   FormBuilder,
   FormGroup,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { Subject, map, takeUntil } from 'rxjs';
 
-import {
-  Catalogo,
-  CatalogoSelectComponent,
-  TituloComponent,
-} from '@ng-mf/data-access-user';
+import { Tramite120402State, Tramite120402Store } from '../../estados/tramite120402.store';
+import { CantidadSolicitadaComponent } from '../cantidad-solicitada/cantidad-solicitada.component';
+import { DescripcionDelCupoComponent } from '../descripcion-del-cupo/descripcion-del-cupo.component';
+import { Tramite120402Query } from '../../estados/tramite120402.query';
 
-import { SeleccionDelCupoService } from '@ng-mf/data-access-user';
 
-import { Observable, Subject } from 'rxjs';
-import { takeUntil } from 'rxjs';
 
-import { Tramite120402Query } from '../../estados/queries/tramite120402.query';
-import { Tramite120402Store } from '../../estados/tramites/tramite120402.store';
 
 /**
- * Componente para la selección del cupo en el sistema.
- * Permite seleccionar régimen aduanero, tratado comercial, producto y subproducto.
+ * Componente para la selección del cupo dentro del trámite 120402.
+ * Permite al usuario seleccionar el régimen, tratado, producto y subproducto,
+ * así como visualizar información relacionada con cupos y su descripción.
  */
 @Component({
   selector: 'app-seleccion-del-cupo',
@@ -36,219 +51,287 @@ import { Tramite120402Store } from '../../estados/tramites/tramite120402.store';
     CatalogoSelectComponent,
     TituloComponent,
     NgIf,
+    TablaDinamicaComponent,
+    AlertComponent,
+    NotificacionesComponent,
+    DescripcionDelCupoComponent,
+    CantidadSolicitadaComponent,
   ],
   templateUrl: './seleccion-del-cupo.component.html',
   styleUrls: ['./seleccion-del-cupo.component.scss'],
 })
-
-/**
- * Componente para la selección del cupo en el sistema.
- * Permite seleccionar régimen aduanero, tratado comercial, producto y subproducto.
- */
 export class SeleccionDelCupoComponent implements OnInit, OnDestroy {
-  /**
-   * Formulario reactivo para la selección del cupo.
-   */
+
+  /** Indica si el formulario debe estar en modo de solo lectura */
+  esFormularioSoloLectura: boolean = false;
+
+  /** Notificador para la destrucción de observables */
+  private destroyNotifier$: Subject<void> = new Subject();
+
+  /** Estado actual del formulario */
+  estadoSeleccionado!: Tramite120402State;
+
+  /** Estado de la solicitud del trámite */
+  public solicitudState!: Tramite120402State;
+
+  /** Lista de mercancías disponibles */
+  public mercancia!: Catalogo[];
+
+  /** Enumeración de acciones disponibles en la tabla */
+  accionesEnum = TablaAcciones;
+
+  /** Controla si se muestra el componente de descripción del cupo */
+  mostrarDescripcionCupo = false;
+
+  /** Indica si el modal de notificación está abierto */
+  modalAbierto = false;
+
+  /** Mensaje de confirmación usado en notificaciones */
+  MENSAJE_CONFIRMACION: string = NOTA.CAMPO_OBLIGATORIO_NO_ENCONTRADO;
+
+  /** Configuración de columnas para la tabla de cupos */
+  configuracionColumnasCupo: ConfiguracionColumna<FilaCupo>[] = CONFIGURACION_COLUMNAS_CUPO_CONST;
+
+  /** Título para la alerta modal */
+  tituloAlerta: string = NOTA.TITULO_ALERTA;
+
+  /** Clase para centrar el texto en la alerta */
+  infoAlerta: string = CLASE_TEXTO_CENTRADO;
+
+  /** Datos que se mostrarán en la tabla de cupos */
+  datosTablaCupo: FilaCupo[] = [];
+
+  /** Objeto de notificación que se muestra en el modal */
+  nuevaNotificacion!: Notificacion;
+
+  /** Formulario reactivo del componente */
   seleccionForm!: FormGroup;
 
-  /**
-   * Lista de opciones para el campo de régimen aduanero.
-   */
+  /** Catálogo de opciones para el régimen */
   regimen: Catalogo[] = [];
 
-  /**
-   * Lista de opciones para el campo de tratado o bloque comercial.
-   */
+  /** Catálogo de tratados disponibles */
   tratado: Catalogo[] = [];
 
-  /**
-   * Lista de opciones para el campo de nombre de producto.
-   */
+  /** Catálogo de productos disponibles */
   producto: Catalogo[] = [];
 
-  /**
-   * Lista de opciones para el campo de nombre de subproducto.
-   */
+  /** Catálogo de subproductos disponibles */
   subproducto: Catalogo[] = [];
 
-  /**
-   * Datos de la selección del cupo obtenidos desde el servicio.
-   */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  seleccionDelCupo: any;
+  /** Cupo seleccionado o lista de cupos seleccionados */
+  seleccionDelCupo: DatoCupo | DatoCupo[] = [];
 
-  /**
-   * Observable para manejar la destrucción del componente y evitar fugas de memoria.
-   */
-  private destroyed$ = new Subject<void>();
-
-  regimen$: Observable<Catalogo | null> = this.tramite120402Query.regimen$;
-  tratado$: Observable<Catalogo | null> = this.tramite120402Query.tratado$;
-  producto$: Observable<Catalogo | null> = this.tramite120402Query.producto$;
-  subproducto$: Observable<Catalogo | null> =
-    this.tramite120402Query.subproducto$;
+  // /** Sujeto para cancelar subscripciones */
+  // private destroyed$ = new Subject<void>();
 
   /**
    * Constructor del componente.
-   * @param fb - Servicio de FormBuilder para manejar formularios reactivos.
-   * @param service - Servicio para obtener la selección del cupo desde el backend.
+   * Inicializa el estado del formulario según si es de solo lectura.
    */
   constructor(
     private fb: FormBuilder,
     private service: SeleccionDelCupoService,
     private tramite120402Store: Tramite120402Store,
-    private tramite120402Query: Tramite120402Query
+    private tramite120402Query: Tramite120402Query,
+    private consultaioQuery: ConsultaioQuery
   ) {
-    // Constructor
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
   }
 
   /**
-   * Método de ciclo de vida de Angular: Se ejecuta cuando el componente es inicializado.
-   * Inicializa el formulario y carga los datos de la selección del cupo.
+   * Inicializa el estado del formulario dependiendo si está en modo de solo lectura.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.initializeForm();
+    }
+  }
+
+  /**
+   * Guarda y bloquea o habilita el formulario dependiendo del modo de solo lectura.
+   */
+  guardarDatosFormulario(): void {
+    this.initializeForm();
+    if (this.esFormularioSoloLectura) {
+      this.seleccionForm.disable();
+    } else if (!this.esFormularioSoloLectura) {
+      this.seleccionForm.enable();
+    }
+  }
+
+  /**
+   * Ciclo de vida: se ejecuta al inicializar el componente.
    */
   ngOnInit(): void {
-    this.initializeForm();
-    this.loadSeleccionDelCupo();
+    this.inicializarEstadoFormulario();
     this.loadRegimen();
     this.loadTratado();
     this.loadProducto();
-
-    this.regimen$.subscribe((regimen) => {
-      if (regimen) {
-        this.seleccionForm.get('regimen')?.setValue(regimen);
-      }
-    });
-
-    this.tratado$.subscribe((tratado) => {
-      if (tratado) {
-        this.seleccionForm.get('tratado')?.setValue(tratado);
-      }
-    });
-
-    this.producto$.subscribe((producto) => {
-      if (producto) {
-        this.seleccionForm.get('producto')?.setValue(producto);
-      }
-    });
-
-    this.subproducto$.subscribe((subproducto) => {
-      if (subproducto) {
-        this.seleccionForm.get('subproducto')?.setValue(subproducto);
-      }
-    });
   }
 
   /**
-   * Método de ciclo de vida de Angular: Se ejecuta cuando el componente es destruido.
-   * Libera recursos y evita fugas de memoria.
+   * Ciclo de vida: se ejecuta al destruir el componente.
    */
   ngOnDestroy(): void {
-    this.destroyed$.next();
-    this.destroyed$.complete();
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 
   /**
-   * Inicializa el formulario de selección del cupo con validaciones requeridas.
+   * Inicializa el formulario reactivo y sus valores por defecto desde el store.
    */
   private initializeForm(): void {
+
+      this.tramite120402Query.selectSolicitud$
+        .pipe(
+          takeUntil(this.destroyNotifier$),
+          map((seccionState) => {
+            this.solicitudState = seccionState;
+          })
+        )
+        .subscribe();
     this.seleccionForm = this.fb.group({
-      regimen: ['', Validators.required],
-      tratado: ['', Validators.required],
-      producto: ['', Validators.required],
-      subproducto: ['', Validators.required],
+      regimen: [this.solicitudState?.regimen, Validators.required],
+      tratado: [this.solicitudState?.tratado, Validators.required],
+      producto: [this.solicitudState.producto, Validators.required],
+      subproducto: [this.solicitudState.subproducto, Validators.required],
     });
   }
 
   /**
-   * Maneja el cambio en el campo de régimen aduanero.
-   * @param event - Evento de cambio.
+   * Carga el catálogo de regímenes desde el servicio.
    */
   loadRegimen(): void {
     this.service
       .getRegimen()
-      .pipe(takeUntil(this.destroyed$))
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      .subscribe((data: any) => {
-        this.regimen = data.data;
-      });
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data => {
+        const RESPUESTA = data as RespuestaDataArray;
+        this.regimen = RESPUESTA.data;
+      }));
   }
 
   /**
-   * Maneja el cambio en el campo de tratado o bloque comercial.
-   * @param event - Evento de cambio.
+   * Carga el catálogo de tratados desde el servicio.
    */
   loadTratado(): void {
     this.service
       .getTratado()
-      .pipe(takeUntil(this.destroyed$))
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      .subscribe((data: any) => {
-        this.tratado = data.tratado;
-      });
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data => {
+        this.tratado = (data as RespuestaTratado).tratado;
+      }));
   }
 
   /**
-   * Maneja el cambio en el campo de nombre del producto.
-   * @param event - Evento de cambio.
+   * Carga los productos y subproductos desde el servicio.
    */
   loadProducto(): void {
     this.service
       .getProducto()
-      .pipe(takeUntil(this.destroyed$))
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      .subscribe((data: any) => {
-        this.producto = data.data;
-        this.subproducto = data.data;
-      });
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data => {
+        const RESPUESTA = data as RespuestaDataArray;
+        this.producto = RESPUESTA.data;
+        this.subproducto = RESPUESTA.data;
+      }));
   }
 
   /**
-   * Maneja el cambio en el campo de nombre del subproducto.
-   * @param event - Evento de cambio.
-   */
-
-  /**
-   * Carga los datos de la selección del cupo desde el servicio.
-   * Los datos obtenidos se asignan a la variable `seleccionDelCupo`.
+   * Carga los datos del cupo seleccionado desde el servicio y los adapta a la tabla.
    */
   loadSeleccionDelCupo(): void {
     this.service
       .getSeleccionDelCupo()
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe((data) => {
-        this.seleccionDelCupo = data;
-      });
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((datos => {
+        const MAPEAR_FILA = (fila: DatoCupo): FilaCupo => ({
+          descripcion: fila.description,
+          tipoAsignacion: fila.assignmentType,
+          fracciones: Array.isArray(fila.codes)
+            ? fila.codes.map((c: string) => c.trim())
+            : fila.codes,
+          tipoCupo: fila.quota,
+        });
+
+        const DATOS_CUPO = datos as DatoCupo | DatoCupo[];
+
+        if (Array.isArray(DATOS_CUPO)) {
+          this.datosTablaCupo = DATOS_CUPO.map(MAPEAR_FILA);
+        } else {
+          this.datosTablaCupo = [MAPEAR_FILA(DATOS_CUPO)];
+        }
+        this.seleccionDelCupo = DATOS_CUPO;
+      }));
   }
 
   /**
-   * Obtiene el valor seleccionado del campo de régimen aduanero y lo establece en el store.
+   * Cierra el modal de notificación.
    */
-  getRegimen(): void {
-    const SELECTED_REGIMEN = this.seleccionForm.get('regimen')?.value;
-    this.tramite120402Store.setRegimen(SELECTED_REGIMEN);
+  cerrarModal(): void {
+    this.modalAbierto = false;
   }
 
   /**
-   * Obtiene el valor seleccionado del campo de tratado comercial y lo establece en el store.
+   * Maneja la acción de una fila de la tabla de cupos.
+   * @param evento Evento que contiene la fila y columna seleccionadas.
    */
-  getTratado(): void {
-    const SELECTED_TRATADO = this.seleccionForm.get('tratado')?.value;
-    this.tramite120402Store.setTratado(SELECTED_TRATADO);
+  onAccionCupo(evento: EventoAccionTabla): void {
+    if (this.esFormularioSoloLectura) {
+
+      return;
+    }
+    this.tramite120402Store.setTramite120402State({ cupoSeleccionado: evento.row });
+    this.mostrarDescripcionCupo = true;
   }
 
   /**
-   * Obtiene el valor seleccionado del campo de producto y lo establece en el store.
+   * Ejecuta la lógica al presionar el botón de "Buscar".
+   * Verifica campos requeridos y muestra notificación si es necesario.
    */
-  obtenerValorProducto(): void {
-    const SELECTED_PRODUCTO = this.seleccionForm.get('producto')?.value;
-    this.tramite120402Store.setProducto(SELECTED_PRODUCTO);
+  manejarBuscar(): void {
+    const VALOR_REGIMEN = this.seleccionForm.get('regimen')?.value;
+    const VALOR_ENTIDAD = this.tramite120402Query.getValue().entidad;
+    const VALOR_REPRESENTACION = this.tramite120402Query.getValue().representacion;
+
+    if (!VALOR_REGIMEN || !VALOR_ENTIDAD || !VALOR_REPRESENTACION) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: TipoNotificacionEnum.ALERTA,
+        categoria: CategoriaMensaje.ALERTA,
+        modo: 'modal',
+        titulo: '',
+        mensaje: this.MENSAJE_CONFIRMACION,
+        cerrar: false,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+      this.modalAbierto = true;
+    } else {
+      this.loadSeleccionDelCupo();
+    }
   }
 
   /**
-   * Obtiene el valor seleccionado del campo de subproducto y lo establece en el store.
+   * Actualiza el valor en el store según el valor actual de un control del formulario.
+   * @param FormGroup Formulario reactivo
+   * @param control Nombre del control a actualizar
    */
-  getSubproducto(): void {
-    const SELECTED_SUBPRODUCTO = this.seleccionForm.get('subproducto')?.value;
-    this.tramite120402Store.setSubproducto(SELECTED_SUBPRODUCTO);
+  setValorStore(FormGroup: FormGroup, control: string): void {
+    const VALOR = FormGroup.get(control)?.value;
+    this.tramite120402Store.setTramite120402State({
+      [control]: VALOR
+    });
   }
 }
+

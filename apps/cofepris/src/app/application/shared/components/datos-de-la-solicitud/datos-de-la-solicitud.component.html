@@ -23,6 +23,7 @@
                 [configuracionTabla]="opcionConfig.configuracionTabla"
                 [datos]="opcionConfig.datos"
                 (listaDeFilaSeleccionada)="opcionLista = $event"
+                [disableSeleccionTablaCheckBox]="formularioDeshabilitado"
               ></app-tabla-dinamica>
             </div>
           </div>
@@ -37,13 +38,8 @@
   <div class="row">
     <div class="col-md-12">
       <div class="pull-right ml-2">
-        <button
-          type="button"
-          class="btn btn-primary"
-          data-bs-toggle="offcanvas"
-          data-bs-target="#offcanvasRight"
-          aria-controls="offcanvasRight"
-        >
+        <button type="button" class="btn btn-primary" (click)="abrirModal()"
+          [disabled]="formularioDeshabilitado">
           Seleccionar establecimiento
         </button>
       </div>
@@ -58,7 +54,9 @@
           <label class="form-label" for="rfcSanitario"
             >RFC del responsable sanitario</label
           >
-          <span class="form-label" *ngIf="esCampoRequerido('rfcSanitario')">*</span>
+          <span class="form-label" *ngIf="esCampoRequerido('rfcSanitario')"
+            >*</span
+          >
           <span class="form-label mx-1">:</span>
           <input
             class="form-control"
@@ -69,6 +67,12 @@
               isValid(datosSolicitudForm, 'rfcSanitario') ? 'required' : ''
             "
           />
+          <div
+            *ngIf="datosSolicitudForm.get('rfcSanitario')?.touched && datosSolicitudForm.get('rfcSanitario')?.errors?.['pattern']"
+            class="mensaje-error"
+          >
+            El RFC no tiene un formato válido.
+          </div>
         </div>
       </div>
       }
@@ -77,22 +81,29 @@
         [class.col-md-8]="mostrarCorreoElectronicoenMismaFila"
       >
         <div class="form-group">
-          <label class="form-label" for="denominacionRazon"
+          <label class="form-label municipio-label" for="denominacionRazon"
             >Denominación o razón social</label
           >
-          <span class="form-label" *ngIf="esCampoRequerido('denominacionRazon')"
+          <span class="form-label municipio-label" *ngIf="esCampoRequerido('denominacionRazon')"
             >*</span
           >
-          <span class="form-label">:</span>
+          <span class="form-label municipio-labe"> :</span>
           <input
             class="form-control"
             id="denominacionRazon"
             type="text"
             formControlName="denominacionRazon"
+            maxlength="120"
             [ngClass]="
               isValid(datosSolicitudForm, 'denominacionRazon') ? 'required' : ''
             "
           />
+          <div
+            class="mensaje-error"
+            *ngIf="datosSolicitudForm.get('denominacionRazon')?.errors?.['required'] && datosSolicitudForm.get('denominacionRazon')?.touched"
+          >
+            Este campo es obligatorio.
+          </div>
         </div>
       </div>
 
@@ -101,7 +112,10 @@
       </div>
     </div>
 
-    <div *ngIf="mostrarCorreoElectronico && !mostrarCorreoElectronicoenMismaFila" class="row mt-5">
+    <div
+      *ngIf="mostrarCorreoElectronico && !mostrarCorreoElectronicoenMismaFila"
+      class="row mt-5"
+    >
       <div class="col-md-4">
         <ng-container *ngTemplateOutlet="campoCorreoElectronico"></ng-container>
       </div>
@@ -112,16 +126,29 @@
     <div class="row">
       <div class="col-md-4">
         <div class="form-group">
-          <label class="form-label" for="codigoPostal">Código postal*:</label>
+          <label class="form-label" for="codigoPostal">Código postal * :</label>
           <input
             class="form-control"
             id="codigoPostal"
             type="text"
+            maxlength="12"
             formControlName="codigoPostal"
             [ngClass]="
               isValid(datosSolicitudForm, 'codigoPostal') ? 'required' : ''
             "
           />
+          <div
+            class="mensaje-error"
+            *ngIf="datosSolicitudForm.get('codigoPostal')?.errors?.['required'] && datosSolicitudForm.get('codigoPostal')?.touched"
+          >
+            Este campo es obligatorio.
+          </div>
+          <div
+            class="mensaje-error"
+            *ngIf="datosSolicitudForm.get('codigoPostal')?.errors?.['pattern']"
+          >
+            por favor escribe un número entero valido
+          </div>
         </div>
       </div>
       <div class="col-md-4">
@@ -132,24 +159,34 @@
             [label]="'Estado'"
             [required]="true"
             name="estado"
+            [placeholder]="'Selecciona un valor'"
             (selectionChange)="cambioDeEstado($event)"
+            [isDisabled]="formularioDeshabilitado"
           ></app-catalogo-select>
         </div>
       </div>
       <div class="col-md-4">
         <div class="form-group">
-          <label class="form-label" for="municipioAlcaldia"
-            >{{ etiquetaMunicipio }}*:</label
+          <label class="form-label municipio-label" for="municipioAlcaldia"
+            >{{ etiquetaMunicipio }} * :</label
           >
           <input
             class="form-control"
             id="municipioAlcaldia"
             type="text"
+            maxlength="120"
             formControlName="municipioAlcaldia"
             [ngClass]="
               isValid(datosSolicitudForm, 'municipioAlcaldia') ? 'required' : ''
             "
           />
+          <div
+            class="mensaje-error"
+            *ngIf="datosSolicitudForm.get('municipioAlcaldia')?.errors?.['required'] 
+              && datosSolicitudForm.get('municipioAlcaldia')?.touched"
+          >
+            Este campo es obligatorio.
+          </div>
         </div>
       </div>
     </div>
@@ -159,32 +196,48 @@
         <div class="form-group">
           <label class="form-label" for="localidad">Localidad</label>
           <span class="form-label" *ngIf="esCampoRequerido('localidad')"
-            >*</span
+            > *</span
           >
-          <span class="form-label">:</span>
+          <span class="form-label"> :</span>
           <input
             class="form-control"
             id="localidad"
             type="text"
+            maxlength="120"
             formControlName="localidad"
             [ngClass]="
               isValid(datosSolicitudForm, 'localidad') ? 'required' : ''
             "
           />
+          <div
+            class="mensaje-error"
+            *ngIf="datosSolicitudForm.get('localidad')?.errors?.['required'] 
+              && datosSolicitudForm.get('localidad')?.touched"
+          >
+            Este campo es obligatorio.
+          </div>
         </div>
       </div>
       <div class="col-md-4">
         <div class="form-group">
           <label class="form-label" for="colonia">Colonia</label>
-          <span class="form-label" *ngIf="esCampoRequerido('colonia')">*</span>
-          <span class="form-label">:</span>
+          <span class="form-label" *ngIf="esCampoRequerido('colonia')"> *</span>
+          <span class="form-label"> :</span>
           <input
             class="form-control"
             id="colonia"
             type="text"
+            maxlength="120"
             formControlName="colonia"
             [ngClass]="isValid(datosSolicitudForm, 'colonia') ? 'required' : ''"
           />
+          <div
+            class="mensaje-error"
+            *ngIf="datosSolicitudForm.get('colonia')?.errors?.['required'] 
+              && datosSolicitudForm.get('colonia')?.touched"
+          >
+            Este campo es obligatorio.
+          </div>
         </div>
       </div>
 
@@ -194,7 +247,7 @@
       >
         <div class="form-group">
           <label class="form-label" for="calleYNumero"
-            >Calle y número*:
+            >Calle y número * :
             <span
               class="bi bi-question-circle-fill"
               title="Calle y número"
@@ -205,11 +258,19 @@
             class="form-control"
             id="calleYNumero"
             type="text"
+            maxlength="100"
             formControlName="calleYNumero"
             [ngClass]="
               isValid(datosSolicitudForm, 'calleYNumero') ? 'required' : ''
             "
           />
+          <div
+            class="mensaje-error"
+            *ngIf="datosSolicitudForm.get('calleYNumero')?.errors?.['required'] 
+              && datosSolicitudForm.get('calleYNumero')?.touched"
+          >
+            Este campo es obligatorio.
+          </div>
         </div>
       </div>
     </div>
@@ -218,10 +279,10 @@
       @if(mostrarRFCCalle){
       <div class="col-md-8">
         <div class="form-group">
-          <label class="form-label" for="calle">Calle*:</label>
+          <label class="form-label" for="calle">Calle *:</label>
           <span
             class="bi bi-question-circle-fill"
-            title="Calle"
+            title="Domicilio, calle, numero interior, numero exterior, lote"
             data-bs-toggle="tooltip"
           ></span>
           <input
@@ -231,6 +292,13 @@
             formControlName="calle"
             [ngClass]="isValid(datosSolicitudForm, 'calle') ? 'required' : ''"
           />
+          <div
+            class="mensaje-error"
+            *ngIf="datosSolicitudForm.get('calle')?.errors?.['required'] 
+            && datosSolicitudForm.get('calle')?.touched"
+          >
+            Este campo es obligatorio.
+          </div>
         </div>
       </div>
       }
@@ -243,11 +311,11 @@
       >
         <div class="form-group">
           <label class="form-label" for="correoElectronico"
-            >Correo electrónico*:</label
+            >Correo electrónico * : </label
           >
           <span
             class="bi bi-question-circle-fill"
-            title="Correo electrónico"
+            title="ejemplo@dominio.com"
             data-bs-toggle="tooltip"
           ></span>
           <input
@@ -259,6 +327,15 @@
               isValid(datosSolicitudForm, 'correoElectronico') ? 'required' : ''
             "
           />
+          <small
+            class="mensaje-error"
+            *ngIf="
+              esCampoRequerido('correoElectronico') &&
+              datosSolicitudForm.get('correoElectronico')?.touched
+            "
+          >
+            Este campo es obligatorio.
+          </small>
         </div>
       </div>
       <div
@@ -278,6 +355,19 @@
               isValid(datosSolicitudForm, 'rfcSanitario') ? 'required' : ''
             "
           />
+          <div
+            class="mensaje-error"
+            *ngIf="datosSolicitudForm.get('rfcSanitario')?.errors?.['required'] 
+            && datosSolicitudForm.get('rfcSanitario')?.touched"
+          >
+            Este campo es obligatorio.
+          </div>
+          <div
+            *ngIf="datosSolicitudForm.get('rfcSanitario')?.touched && datosSolicitudForm.get('rfcSanitario')?.errors?.['pattern']"
+            class="mensaje-error"
+          >
+            El RFC no tiene un formato válido.
+          </div>
         </div>
       </div>
       <div class="col-md-1">
@@ -286,24 +376,46 @@
           <input
             class="form-control"
             id="lada"
-            type="number"
+            type="text"
             formControlName="lada"
-            [ngClass]="isValid(datosSolicitudForm, 'lada') ? 'required' : ''"
+            maxlength="5"
           />
         </div>
+        <div *ngIf="datosSolicitudForm.get('lada')?.touched">
+          <div
+            *ngIf="datosSolicitudForm.get('lada')?.errors?.['pattern']"
+            class="mensaje-error"
+          >
+            Por favor, escribe un número entero válido
+          </div>
+        </div>
       </div>
+
       <div class="col-md-3">
         <div class="form-group">
-          <label class="form-label" for="telefono">Teléfono*:</label>
+          <label class="form-label" for="telefono">Teléfono * :</label>
           <input
             class="form-control"
             id="telefono"
-            type="number"
+            type="text"
             formControlName="telefono"
+            maxlength="30"
             [ngClass]="
               isValid(datosSolicitudForm, 'telefono') ? 'required' : ''
             "
           />
+          <div
+            class="mensaje-error"
+            *ngIf="datosSolicitudForm.get('telefono')?.errors?.['required'] && datosSolicitudForm.get('telefono')?.touched"
+          >
+            Este campo es obligatorio.
+          </div>
+          <div
+            *ngIf="datosSolicitudForm.get('telefono')?.errors?.['pattern']"
+            class="mensaje-error"
+          >
+            El teléfono debe contener solo números.
+          </div>
         </div>
       </div>
     </div>
@@ -312,9 +424,11 @@
     <div class="row mt-5">
       <div class="col-md-3 my-3">
         <div class="form-group">
-          <label class="form-label" for="telefono">S.C.I.A.N</label>
-          <span class="form-label" *ngIf="esCampoRequerido('scian')">*</span>
-          <span class="form-label">:</span>
+          <label class="form-label municipio-label" for="telefono">S. C. I. A. N </label>
+          <span class="form-label" *ngIf="esCampoRequerido('scian')"
+            > *</span
+          >
+          <span class="form-label"> :</span>
         </div>
       </div>
       <app-tabla-dinamica
@@ -322,16 +436,19 @@
         [configuracionTabla]="scianConfig.configuracionTabla"
         [datos]="scianConfig.datos"
         (listaDeFilaSeleccionada)="scianLista = $event"
+        [disableSeleccionTablaCheckBox]="formularioDeshabilitado"
       ></app-tabla-dinamica>
     </div>
     <div class="row">
       <div class="col-md-12">
         <div class="pull-right ml-2">
           <button
+            *ngIf="scianConfig.datos.length > 0"
             type="button"
             name="eliminarScian"
             class="btn btn-danger ms-2"
-            (click)="eliminarScian()"
+            (click)="eliminarModal()"
+          [disabled]="formularioDeshabilitado"
           >
             Eliminar
           </button>
@@ -342,6 +459,7 @@
             data-bs-toggle="modal"
             data-bs-target="#modalAgregarScain"
             (click)="agregarScian()"
+          [disabled]="formularioDeshabilitado"
           >
             Agregar
           </button>
@@ -361,17 +479,19 @@
             formControlName="aviso"
           />
           <label class="form-check-label" for="aviso"
-            >Aviso de funcionamiento:
+            >Aviso de funcionamiento
+            <span *ngIf="!datosSolicitudForm.value.aviso">*</span>
           </label>
         </div>
       </div>
       <div class="col-md-4">
         <label class="form-label mx-1" for="licenciaSanitaria"
-          >No. de licencia sanitaria:</label
+          >No. de licencia sanitaria
+          <span *ngIf="!datosSolicitudForm.value.aviso">*</span> :</label
         >
         <span
           class="bi bi-question-circle-fill"
-          title="Aeropuerto Internacional Ciudad de México"
+          title="Número de la autorización indicado en el  documento emitido por la autoridad sanitaria competente"
           data-bs-toggle="tooltip"
         ></span>
         <input
@@ -379,10 +499,22 @@
           id="licenciaSanitaria"
           type="text"
           formControlName="licenciaSanitaria"
-          [ngClass]="
-            isValid(datosSolicitudForm, 'licenciaSanitaria') ? 'required' : ''
-          "
+          (change)="cambioLicenciaSanitaria($event)"
+          [ngClass]="{
+            required:
+              datosSolicitudForm.get('licenciaSanitaria')?.touched &&
+              datosSolicitudForm.get('licenciaSanitaria')?.hasError('required')
+          }"
         />
+        <small
+          class="text-danger"
+          *ngIf="
+            datosSolicitudForm.get('licenciaSanitaria')?.touched &&
+            datosSolicitudForm.get('licenciaSanitaria')?.hasError('required')
+          "
+        >
+          Este campo es obligatorio.
+        </small>
       </div>
     </div>
 
@@ -393,22 +525,25 @@
             [catalogo]="regimenDatos"
             formControlName="regimen"
             [label]="'Régimen'"
+            [placeholder]="'Selecciona un valor'"
             [tooltipQuestionCircle]="true"
+            [questionCircleTooltip]="'Régimen al que se destinará la mercancía'"
             [required]="true"
             name="regimen"
+            [isDisabled]="formularioDeshabilitado"
           ></app-catalogo-select>
         </div>
       </div>
-      <div
-        class="col-md-8" *ngIf="mostrarRegimenYAdunasDeEntradasDatos"
-      >
+      <div class="col-md-8" *ngIf="mostrarRegimenYAdunasDeEntradasDatos">
         <div class="form-group form-check">
           <app-catalogo-select
             [catalogo]="adunasDeEntradasDatos"
             formControlName="adunasDeEntradas"
             [label]="'Aduanas de entradas'"
+            [placeholder]="'Selecciona un valor'"
             [required]="true"
             name="adunasDeEntradas"
+            [isDisabled]="formularioDeshabilitado"
           ></app-catalogo-select>
         </div>
       </div>
@@ -422,8 +557,10 @@
             [catalogo]="regimenLaMercanciaDatos"
             formControlName="regimenLaMercancia"
             [label]="'Régimen al que se destinará la mercancía'"
+            [placeholder]="'Selecciona un valor'"
             [required]="true"
             name="regimenLaMercancia"
+            [isDisabled]="formularioDeshabilitado"
           ></app-catalogo-select>
         </div>
       </div>
@@ -437,8 +574,10 @@
             [catalogo]="aduanaDatos"
             formControlName="aduana"
             [label]="'Aduana'"
+            [placeholder]="'Selecciona un valor'"
             [required]="true"
             name="aduanaDatos"
+            [isDisabled]="formularioDeshabilitado"
           ></app-catalogo-select>
         </div>
       </div>
@@ -467,12 +606,13 @@
     </div>
     } @if (tablaMercanciasConfig) {
     <div class="row mt-5">
-      <h5 class="mt-3">Mercancías*:</h5>
+      <h5 class="mt-3">Mercancías * :</h5>
       <app-tabla-dinamica
         [tipoSeleccionTabla]="tablaMercanciasConfig.tipoSeleccionTabla"
         [configuracionTabla]="tablaMercanciasConfig.configuracionTabla"
         [datos]="tablaMercanciasConfig.datos"
         (listaDeFilaSeleccionada)="tablaMercanciasLista = $event"
+        [disableSeleccionTablaCheckBox]="formularioDeshabilitado"
       ></app-tabla-dinamica>
     </div>
 
@@ -485,15 +625,17 @@
             name="modificarMercancias"
             class="btn btn-default"
             (click)="modificarDatos()"
+          [disabled]="formularioDeshabilitado"
           >
             Modificar
           </button>
           <button
+            *ngIf="tablaMercanciasConfig.datos.length > 0"
             type="button"
             name="eliminarMercancias"
             class="btn btn-danger ms-2"
             (click)="eliminarMercancias()"
-            [disabled]="!this.tablaMercanciasLista.length"
+          [disabled]="formularioDeshabilitado"
           >
             Eliminar
           </button>
@@ -505,6 +647,7 @@
             data-bs-toggle="modal"
             data-bs-target="#modalAgregarMercancias"
             (click)="agregarMercancias()"
+          [disabled]="formularioDeshabilitado"
           >
             Agregar
           </button>
@@ -520,8 +663,10 @@
             [catalogo]="aduanaDatos"
             formControlName="aduana"
             [label]="'Aduana'"
+            [placeholder]="'Selecciona un valor'"
             [required]="true"
             name="aduanaDatos"
+            [isDisabled]="formularioDeshabilitado"
           ></app-catalogo-select>
         </div>
       </div>
@@ -544,7 +689,7 @@
       <div class="col-md-12">
         <label class="form-label"
           >Los datos o anexos pueden contener información confidencial ¿Está de
-          acuerdo en hacerlos públicos?*:</label
+          acuerdo en hacerlos públicos? * :</label
         >
         <div class="row">
           <div class="col-md-1">
@@ -583,7 +728,7 @@
     <div class="row">
       <div class="col-md-4">
         <div class="form-group">
-          <label class="form-label" for="representanteRfc">RFC*:</label>
+          <label class="form-label" for="representanteRfc">RFC * :</label>
           <input
             class="form-control"
             id="representanteRfc"
@@ -594,13 +739,20 @@
             "
           />
         </div>
+        <div
+          class="mensaje-error"
+          *ngIf="datosSolicitudForm.get('representanteRfc')?.errors?.['required'] && datosSolicitudForm.get('representanteRfc')?.touched"
+        >
+          Este campo es obligatorio.
+        </div>
       </div>
       <div class="col-md-2 mt-5">
         <button
           type="button"
           name="representanteRfcBuscar"
-          class="btn btn-default"
+          class="btn btn-primary"
           (click)="buscarRepresentanteRfc()"
+          [disabled]="formularioDeshabilitado"
         >
           Buscar
         </button>
@@ -610,7 +762,7 @@
       <div class="col-md-4">
         <div class="form-group">
           <label class="form-label" for="representanteNombre"
-            >Nombre o Razón Social*:</label
+            >Nombre o Razón Social * :</label
           >
           <input
             class="form-control"
@@ -623,12 +775,18 @@
                 : ''
             "
           />
+          <div
+            class="mensaje-error"
+            *ngIf="datosSolicitudForm.get('representanteNombre')?.errors?.['required'] && datosSolicitudForm.get('representanteNombre')?.touched"
+          >
+            Este campo es obligatorio.
+          </div>
         </div>
       </div>
       <div class="col-md-4">
         <div class="form-group">
           <label class="form-label" for="apellidoPaterno"
-            >Apellido paterno*:</label
+            >Apellido paterno * :</label
           >
           <input
             class="form-control"
@@ -639,6 +797,12 @@
               isValid(datosSolicitudForm, 'apellidoPaterno') ? 'required' : ''
             "
           />
+          <div
+            class="mensaje-error"
+            *ngIf="datosSolicitudForm.get('apellidoPaterno')?.errors?.['required'] && datosSolicitudForm.get('apellidoPaterno')?.touched"
+          >
+            Este campo es obligatorio.
+          </div>
         </div>
       </div>
       <div class="col-md-4">
@@ -651,9 +815,6 @@
             id="apellidoMaterno"
             type="text"
             formControlName="apellidoMaterno"
-            [ngClass]="
-              isValid(datosSolicitudForm, 'apellidoMaterno') ? 'required' : ''
-            "
           />
         </div>
       </div>
@@ -664,11 +825,13 @@
         <label class="form-label" for="correoElectronico"
           >Correo electrónico</label
         >
-        <span class="form-label" *ngIf="esCampoRequerido('correoElectronico')">*</span>
-        <span class="form-label mx-1">:</span>
+        <span class="form-label municipio-label" *ngIf="esCampoRequerido('correoElectronico')"
+          > </span
+        >
+        <span class="form-label mx-1"> :</span>
         <span
           class="bi bi-question-circle-fill"
-          title="Correo electrónico"
+          title="ejemplo@dominio.com"
           data-bs-toggle="tooltip"
         ></span>
         <input
@@ -678,12 +841,54 @@
           formControlName="correoElectronico"
           (change)="cambireCorreoElectronico()"
           [ngClass]="
-            isValid(datosSolicitudForm, 'correoElectronico') ? 'required' : ''
+            isValid(datosSolicitudForm, 'correoElectronico') &&
+            esCampoRequerido('correoElectronico')
+              ? 'required'
+              : ''
           "
         />
+        <small
+          class="mensaje-error"
+          *ngIf="esCampoRequerido('correoElectronico') && datosSolicitudForm.get('correoElectronico')?.errors?.['required'] &&
+          datosSolicitudForm.get('correoElectronico')?.touched"
+        >
+          Este campo es obligatorio.</small
+        >
       </div>
     </ng-template>
   </form>
 </div>
 
-
+@if(mostrarAlerta){
+<section>
+  <lib-notificaciones
+    [notificacionInput]="seleccionarFilaNotificacion"
+    (confirmacionModal)="mostrarAlerta = false"
+  >
+  </lib-notificaciones>
+</section>
+} @if (nuevaNotificacion && mostrarNotificacion) {
+<section>
+  <lib-notificaciones
+    [notificacionInput]="nuevaNotificacion"
+    (confirmacionModal)="eliminarPedimento($event)"
+  >
+  </lib-notificaciones>
+</section>
+} @if (mostrarRfcAlerta) {
+<section>
+  <lib-notificaciones
+    [notificacionInput]="nuevaRfcNotificacion"
+    (confirmacionModal)="mostrarRfcAlerta = false"
+  >
+  </lib-notificaciones>
+</section>
+} @if (nuevaNotificacionEliminar && nuevaNotificacionEliminar.cerrar) {
+<section>
+  <lib-notificaciones
+    [notificacionInput]="nuevaNotificacionEliminar"
+    (confirmacionModal)="getEliminarScianModal($event)"
+  >
+  </lib-notificaciones>
+</section>
+}

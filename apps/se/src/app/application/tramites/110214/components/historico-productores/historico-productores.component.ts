@@ -1,5 +1,5 @@
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { ConfiguracionColumna, Notificacion, NotificacionesComponent } from '@libs/shared/data-access-user/src';
+import { ConfiguracionColumna, ConsultaioQuery, ConsultaioState, Notificacion, NotificacionesComponent } from '@ng-mf/data-access-user';
 import { SELECCIONADAS_ENCABEZADOS, TABLE_COLUMNS } from '../../constants/validar-inicialmente-certificado.enum';
 import { CommonModule } from '@angular/common';
 import { FormBuilder } from '@angular/forms';
@@ -131,6 +131,17 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
  */
   public nuevaNotificacion!: Notificacion;
   /**
+   * @property {ConsultaioState} consultaDatos
+   * @description Estado actual de la consulta, que contiene información relacionada con el trámite y el solicitante.
+   */
+  consultaDatos!: ConsultaioState;
+  /**
+   * @property {boolean} soloLectura
+   * @description Indica si el formulario o los campos están en modo de solo lectura.
+   * @default false
+   */
+  soloLectura: boolean = false;
+  /**
    * Constructor del componente.
    * 
    * @param {FormBuilder} fb - Constructor para crear formularios reactivos.
@@ -144,7 +155,8 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
     private validarInicialmenteCertificadoService: ValidarInicialmenteCertificadoService,
     public store: Tramite110214Store,
     public tramiteQuery: Tramite110214Query,
-    private validacionesService: ValidacionesFormularioService
+    private validacionesService: ValidacionesFormularioService,
+    private consultaioQuery: ConsultaioQuery,
   ) { }
 
   /**
@@ -153,8 +165,6 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
    * Carga los datos iniciales, configura los formularios y suscribe al estado del trámite.
    */
   ngOnInit(): void {
-    this.cargarProductorPorExportador();
-    this.cargarMercanciasSeleccionadas()
     this.tramiteQuery.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -163,6 +173,18 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.consultaDatos = seccionState;
+          this.soloLectura = this.consultaDatos.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
+    this.productoresExportador = this.tramiteState.productoresExportador ?? [];
+    this.mercanciaSeleccionadasTablaDatos = this.tramiteState.historicoMercanciaSeleccionadasTablaDatos ?? [];
     this.initFormulario();
     this.initAgregarDatosProductorFormulario();
   }
@@ -175,6 +197,7 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
       datosConfidencialesProductor: [this.tramiteState?.datosConfidencialesProductor, []],
       productorMismoExportador: [this.tramiteState?.productorMismoExportador, []],
     });
+    this.inicializarEstadoFormulario();
   }
 
   /**
@@ -184,8 +207,17 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
     this.agregarDatosProductorFormulario = this.fb.group({
       numeroRegistroFiscal: [this.tramiteState?.agregarDatosProductorFormulario?.numeroRegistroFiscal, [Validators.required]],
     });
+    this.inicializarEstadoFormulario();
   }
-
+  inicializarEstadoFormulario(): void {
+    if (this.soloLectura) {
+      this.formulario?.disable();
+      this.agregarDatosProductorFormulario?.disable();
+    } else {
+      this.formulario?.enable();
+      this.agregarDatosProductorFormulario?.enable();
+    }
+  }
   /**
    * Carga la lista de productores disponibles para el exportador desde el servicio.
    */
@@ -281,7 +313,8 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
     this.agregarDatosProductorFormulario.markAllAsTouched();
     if (this.agregarDatosProductorFormulario.valid) {
       this.cerrarModal();
-      this.abrirModal('El servicio de IDC está en unestado inválido.')
+      this.cargarProductorPorExportador();
+      this.abrirModal('El servicio de IDC está en unestado inválido.');
     }
   }
   /**

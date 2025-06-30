@@ -41,6 +41,7 @@
         formControlName="banco"
         [required]="bancoCatalogo.required"
         (selectionChange)="setBanco($event)"
+        [isDisabled]="esFormularioSoloLectura"
       >
       </app-catalogo-select>
     </div>
@@ -61,7 +62,7 @@
       <input-fecha
         [datos]="fechaPago"
         [setFecha]="pagoDeDerechosForm.get('fechaDePago')?.value"
-        (valorCambiado)="seleccionarFechaInicio($event)"
+        (valorCambiado)="seleccionarFechaInicio($event)" [isDisabled]="esFormularioSoloLectura"
       ></input-fecha>
     </div>
 

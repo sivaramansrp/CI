@@ -1,11 +1,11 @@
 import { Component, ViewChild } from '@angular/core';
-import { REGISTRO_TRANSPORTISTA } from '../../constantes/registro-transportista.enum';
-
 import {
   DatosPasos,
   ListaPasosWizard,
-  WizardComponent,
 } from '@ng-mf/data-access-user';
+import { REGISTRO_TRANSPORTISTA } from '../../constantes/registro-transportista.enum';
+import { WizardComponent } from '@libs/shared/data-access-user/src';
+
 
 /**
  * ## FIRMAR_TEXTO_DE_ALERTA
@@ -118,9 +118,9 @@ export class RegistroTransportistaComponent {
     if (e.valor > 0 && e.valor < 5) {
       this.indice = e.valor;
       if (e.accion === 'cont') {
-        this.wizardComponent.siguiente();
+        this.wizardComponent?.siguiente();
       } else {
-        this.wizardComponent.atras();
+        this.wizardComponent?.atras();
       }
     }
   }

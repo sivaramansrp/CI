@@ -9,12 +9,13 @@
   ></ng-alert>
 
   <div class="row">
-    <h6>Destinatario (Destino final)*:</h6>
+    <h6>Destinatario (Destino final) *:</h6>
     <app-tabla-dinamica
       [tipoSeleccionTabla]="tipoSeleccionTabla"
       [datos]="datosTablaDestinatario"
       [configuracionTabla]="configuiracionTablaDestinatario"
       (listaDeFilaSeleccionada)="manejarFilaSeleccionadaDestinatario($event)"
+       [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
     ></app-tabla-dinamica>
   </div>
 
@@ -23,24 +24,25 @@
   >
     <div class="d-flex gap-4 justify-content-end" *ngIf="destinatarioTablaSeleccion">
       <div>
-        <button type="button" class="btn btn-danger">Eliminar</button>
+        <button type="button" class="btn btn-danger" [disabled]="esFormularioSoloLectura">Eliminar</button>
       </div>
       <div>
-        <button type="button" class="btn btn-default">Modificar</button>
+        <button type="button" class="btn btn-default" [disabled]="esFormularioSoloLectura">Modificar</button>
       </div>
     </div>
     <div>
-      <button type="button" class="btn btn-primary">Agregar</button>
+      <button type="button" class="btn btn-primary" [disabled]="esFormularioSoloLectura">Agregar</button>
     </div>
   </div>
 
   <div class="row">
-    <h6>Fabricante*:</h6>
+    <h6>Fabricante *:</h6>
     <app-tabla-dinamica
       [tipoSeleccionTabla]="tipoSeleccionTabla"
       [datos]="datosTablaFabricante"
       [configuracionTabla]="configuiracionTablaFabricante"
       (listaDeFilaSeleccionada)="manejarFilaSeleccionadaFabricante($event)"
+      [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
     ></app-tabla-dinamica>
   </div>
 
@@ -49,14 +51,14 @@
   >
     <div class="d-flex gap-4 justify-content-end" *ngIf="fabricanteTablaSeleccion">
       <div>
-        <button type="button" class="btn btn-danger">Eliminar</button>
+        <button type="button" class="btn btn-danger" [disabled]="esFormularioSoloLectura">Eliminar</button>
       </div>
       <div>
-        <button type="button" class="btn btn-default">Modificar</button>
+        <button type="button" class="btn btn-default" [disabled]="esFormularioSoloLectura">Modificar</button>
       </div>
     </div>
     <div>
-      <button type="button" class="btn btn-primary">Agregar</button>
+      <button type="button" class="btn btn-primary" [disabled]="esFormularioSoloLectura">Agregar</button>
     </div>
   </div>
 </div>

@@ -9,7 +9,7 @@ import {
   Output,
   SimpleChanges,
 } from '@angular/core';
-import { TableData} from '../../../core/models/shared/components.model';
+import { TableBodyData, TableData } from '../../../core/models/shared/components.model';
 
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -36,13 +36,18 @@ export class TableComponent implements OnInit, OnChanges {
    * @description
    * commonTableBody se utiliza para obtener datos del cuerpo de la tabla de la componente
    */
-  @Input() commonTableBody: any = [];
-
+  @Input() commonTableBody: TableBodyData[] = [];
   /**
   * @description
   * Si no se pasa ningún valor desde el componente padre, tomará el valor predeterminado como verdadero
   */
   @Output() seleccionCambio = new EventEmitter<boolean>();
+
+  /**
+   * @description
+   * Si es verdadero, deshabilita el checkbox de selección de la tabla.
+   */
+  @Input() disableSeleccionTablaCheckBox: boolean = false;
   /**
    * @description
    * tableData se utiliza para obtener datos de la tabla de la componente
@@ -90,12 +95,13 @@ export class TableComponent implements OnInit, OnChanges {
    * @param data - Arreglo de elementos a los que se desea asegurar la propiedad `selected`.
    * @returns Un nuevo arreglo con los elementos actualizados.
    */
-  private agregarSeleccion(data: any[]): any[] {
+  private agregarSeleccion(data: TableBodyData[]): TableBodyData[] {
     if (!this.tableData) {
       this.tableData = { tableHeader: [], tableBody: [] };
     }
-
-    return data?.map(item => ({ ...item, selected: item.selected ?? false })) || [];
+    return (data || [])
+      .filter(item => item !== undefined && item !== null)
+      .map(item => ({ ...item, selected: item.selected ?? false }));
   }
   /**
  * Verifica si todos los elementos del cuerpo de la tabla están seleccionados.
@@ -103,8 +109,12 @@ export class TableComponent implements OnInit, OnChanges {
  * @returns `true` si todos los elementos tienen `selected` en `true` y hay al menos uno, de lo contrario `false`.
  */
   todasSeleccionadas(): boolean {
-    return this.tableData.tableBody?.length > 0 && this.tableData.tableBody.every(item => item.selected);
-  }
+  return (
+    Array.isArray(this.tableData.tableBody) &&
+    this.tableData.tableBody.length > 0 &&
+    this.tableData.tableBody.every(item => item && item.selected)
+  );
+}
 
   /**
  * Marca o desmarca todos los elementos del cuerpo de la tabla según el estado del checkbox general.
@@ -112,12 +122,11 @@ export class TableComponent implements OnInit, OnChanges {
  * @param event Evento del checkbox que indica si se deben seleccionar o deseleccionar todos los elementos.
  */
   alternarSeleccionTodo(event: Event): void {
-    const CHECKED = (event.target as HTMLInputElement).checked;
-    this.tableData.tableBody = this.tableData.tableBody.map(item => ({
-      ...item,
-      selected: CHECKED,
-    }));
-    this.seleccionCambio.emit(CHECKED);
-  }
+  const CHECKED = (event.target as HTMLInputElement).checked;
+  this.tableData.tableBody = (this.tableData.tableBody || []).map(item =>
+    item ? { ...item, selected: CHECKED } : item
+  );
+  this.seleccionCambio.emit(CHECKED);
+}
  
 }

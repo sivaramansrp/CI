@@ -1,85 +1,120 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DetosDelTramiteComponent } from './datos-del-tramite.component';
-
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { CatalogoSelectComponent } from '../../../../shared/components/catalogo-select/catalogo-select.component';
-import { InputRadioComponent } from '../../../../shared/components/input-radio/input-radio.component';
-import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
+import { of, Subject } from 'rxjs';
+import { TituloComponent } from 'libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
+import { InputRadioComponent } from '@libs/shared/data-access-user/src/tramites/components/input-radio/input-radio.component';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
+import { Tramite130102Store } from '../../../../estados/tramites/tramite130102.store';
+import { Tramite130102Query } from '../../../../estados/queries/tramite130102.query';
+import { FormularioRegistroService } from '../../services/octava-temporal.service';
+import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
+import { ProductoResponse } from 'libs/shared/data-access-user/src/core/services/130102/octava-temporal.enum';
+import { Catalogo } from 'libs/shared/data-access-user/src/core/models/shared/catalogos.model';
 
 describe('DetosDelTramiteComponent', () => {
   let component: DetosDelTramiteComponent;
   let fixture: ComponentFixture<DetosDelTramiteComponent>;
-  let httpMock: HttpTestingController;
+
+  const mockStore = {
+    setSolicitud: jest.fn(),
+    setTipoDocumento: jest.fn(),
+    setFraccion: jest.fn(),
+  };
+
+  const mockQuery = {
+    selectSolicitud$: of({ fraccion: '1234' }),
+  };
+
+  const mockConsultaioQuery = {
+    selectConsultaioState$: of({ readonly: false }),
+  };
+
+  const mockFormularioRegistroService = {
+    registrarFormulario: jest.fn(),
+  };
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
-        ReactiveFormsModule,
-        HttpClientTestingModule,
         DetosDelTramiteComponent,
-        CatalogoSelectComponent,
-        InputRadioComponent,
-        TituloComponent
+        HttpClientTestingModule,
+        ReactiveFormsModule,
       ],
-      
-      providers: [FormBuilder]
+      providers: [
+        FormBuilder,
+        { provide: Tramite130102Store, useValue: mockStore },
+        { provide: Tramite130102Query, useValue: mockQuery },
+        { provide: FormularioRegistroService, useValue: mockFormularioRegistroService },
+        { provide: ConsultaioQuery, useValue: mockConsultaioQuery },
+      ],
     }).compileComponents();
-  });
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(DetosDelTramiteComponent);
     component = fixture.componentInstance;
-    httpMock = TestBed.inject(HttpTestingController);
     fixture.detectChanges();
-  
-    // ✅ Mock the API request expected on component initialization
-    const req = httpMock.expectOne('/assets/json/130102/solicitude-options.json');
-    req.flush({ options: [], defaultSelect: '' }); // Send an empty mock response
   });
-  
 
-  afterEach(() => {
-    httpMock.match('/assets/json/130102/solicitude-options.json').forEach(req => req.flush({ options: [], defaultSelect: '' }));
-    httpMock.verify(); // ✅ Ensure no open requests
-  });
-  
   it('should create component', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize the form on ngOnInit', () => {
-    component.ngOnInit();
+  it('should initialize form with expected controls', () => {
     expect(component.formDelTramite).toBeDefined();
-    expect(component.formDelTramite.controls['solicitud']).toBeDefined();
-    expect(component.formDelTramite.controls['tipoDocumento']).toBeDefined();
-    expect(component.formDelTramite.controls['fraccion']).toBeDefined();
+    expect(component.formDelTramite.get('solicitud')).toBeTruthy();
+    expect(component.formDelTramite.get('tipoDocumento')).toBeTruthy();
+    expect(component.formDelTramite.get('fraccion')).toBeTruthy();
   });
 
-  it('should fetch solicitude options and update component state', () => {
-    const mockResponse = {
-      options: [{ value: '1', label: 'Test Data' }],
-      defaultSelect: '1'
-    };
-
-    component.fetchSolicitudeOptions();
-
-    const req = httpMock.expectOne('/assets/json/130102/solicitude-options.json');
-    expect(req.request.method).toBe('GET');
-    req.flush(mockResponse);
-
-    expect(component.solicitude).toEqual(mockResponse.options);
-    expect(component.defaultSelect).toEqual(mockResponse.defaultSelect);
+  it('should call registrarFormulario on ngOnInit', () => {
+    jest.spyOn(component as any, 'fetchSolicitudeOptions').mockImplementation();
+    component.ngOnInit();
+    expect(mockFormularioRegistroService.registrarFormulario).toHaveBeenCalledWith('formDelTramite', component.formDelTramite);
   });
 
-  it('should update selectedValue when onValueChange is called', () => {
-    component.onValueChange('TestValue');
-    expect(component.selectedValue).toEqual('TestValue');
+  it('should handle readonly form properly', () => {
+    component.esFormularioSoloLectura = true;
+    component.inicializarEstadoFormulario();
+    expect(component.formDelTramite.disabled).toBeTruthy();
   });
 
-  it('should set selectedValue to "Nuevo" when tipoTransporte is called', () => {
+  it('should handle editable form properly', () => {
+    component.esFormularioSoloLectura = false;
+    component.inicializarEstadoFormulario();
+    expect(component.formDelTramite.enabled).toBeTruthy();
+  });
+
+  it('should fetch solicitude options from JSON', () => {
+  const mockResponse: ProductoResponse = {
+    options: [{ label: 'Option 1', value: '1' }],
+    defaultSelect: '1',
+  };
+  const http = {
+    get: jest.fn().mockReturnValue(of(mockResponse))
+  };
+  (component as any)['http'] = http;
+  component.fetchSolicitudeOptions();
+  expect(component.solicitude).toEqual(mockResponse.options);
+  expect(component.defaultSelect).toEqual('1');
+});
+
+
+  it('should update selected value on value change', () => {
+    component.onValueChange('Nuevo');
+    expect(component.selectedValue).toBe('Nuevo');
+  });
+
+  it('should call tipoTransporte and set selectedValue to Nuevo', () => {
     component.tipoTransporte();
-    expect(component.selectedValue).toEqual('Nuevo');
+    expect(component.selectedValue).toBe('Nuevo');
+  });
+
+  it('should cleanup on destroy', () => {
+    const completeSpy = jest.spyOn(component['destroyNotifier$'], 'complete');
+    const nextSpy = jest.spyOn(component['destroyNotifier$'], 'next');
+    component.ngOnDestroy();
+    expect(nextSpy).toHaveBeenCalled();
+    expect(completeSpy).toHaveBeenCalled();
   });
 });

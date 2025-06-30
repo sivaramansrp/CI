@@ -1,8 +1,8 @@
+import { Component, Input } from '@angular/core';
 import { ANEXO_SERVICIO } from '../../../../shared/constantes/anexo-dos-y-tres.enum';
 import { AnexoDosYTresComponent } from '../../../../shared/components/anexo-dos-y-tres.component/anexo-dos-y-tres.component';
 import { AnexoEncabezado } from '../../../../shared/models/nuevo-programa-industrial.model';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { Subject } from 'rxjs';
@@ -19,6 +19,10 @@ import { takeUntil } from 'rxjs';
   styleUrl: './anexo-vista-dos-y-tres.component.scss',
 })
 export class AnexoVistaDosYTresComponent implements OnInit, OnDestroy {
+  /**
+   * @property {boolean} formularioDeshabilitado - Indica si el formulario está deshabilitado.Add commentMore actions
+   */
+  @Input() formularioDeshabilitado: boolean = false;
   /**
    * Lista de encabezados del anexo dos.
    * @type {AnexoEncabezado[]}
@@ -56,11 +60,12 @@ export class AnexoVistaDosYTresComponent implements OnInit, OnDestroy {
 
   /**
    * Constructor de la clase AnexoVistaDosYTresComponent.
-   * 
+   *
    * @param query - Servicio de consulta para Tramite80101.
    * @param store - Almacén de estado para Tramite80101.
    */
-  constructor(private query: Tramite80101Query,
+  constructor(
+    private query: Tramite80101Query,
     private store: Tramite80101Store
   ) {
     //constructor vacío
@@ -68,14 +73,14 @@ export class AnexoVistaDosYTresComponent implements OnInit, OnDestroy {
 
   /**
    * Método de ciclo de vida de Angular que se ejecuta al inicializar el componente.
-   * 
-   * Este método suscribe a dos observables (`anexoDosTableLista$` y `anexoTresTablaLista$`) 
-   * para obtener las listas de datos correspondientes a los anexos dos y tres. 
-   * Los datos se asignan a las propiedades `anexoDosTablaLista` y `anexoTresTablaLista` 
+   *
+   * Este método suscribe a dos observables (`anexoDosTableLista$` y `anexoTresTablaLista$`)
+   * para obtener las listas de datos correspondientes a los anexos dos y tres.
+   * Los datos se asignan a las propiedades `anexoDosTablaLista` y `anexoTresTablaLista`
    * respectivamente, siempre que las listas no estén vacías.
-   * 
-   * Además, utiliza el operador `takeUntil` para gestionar la suscripción y 
-   * garantizar que se complete cuando el observable `destroyNotifier$` emita un valor, 
+   *
+   * Además, utiliza el operador `takeUntil` para gestionar la suscripción y
+   * garantizar que se complete cuando el observable `destroyNotifier$` emita un valor,
    * evitando así posibles fugas de memoria.
    */
   ngOnInit(): void {
@@ -87,7 +92,7 @@ export class AnexoVistaDosYTresComponent implements OnInit, OnDestroy {
         }
       });
 
-      this.query.anexoTresTablaLista$
+    this.query.anexoTresTablaLista$
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((anexoTresTablaLista) => {
         if (anexoTresTablaLista.length > 0) {
@@ -116,14 +121,13 @@ export class AnexoVistaDosYTresComponent implements OnInit, OnDestroy {
     this.store.setAnnexoTresTableLista(this.anexoTresTablaLista);
   }
 
-    /**
-     * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
-     * Limpia las suscripciones y actualiza los BehaviorSubject para ocultar las tablas.
-     * @method ngOnDestroy
-     */
-    ngOnDestroy(): void {
-      this.destroyNotifier$.next();
-      this.destroyNotifier$.complete();
-    }
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
+   * Limpia las suscripciones y actualiza los BehaviorSubject para ocultar las tablas.
+   * @method ngOnDestroy
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
+  }
 }
-

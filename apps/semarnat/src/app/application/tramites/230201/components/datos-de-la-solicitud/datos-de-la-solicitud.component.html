@@ -10,6 +10,7 @@
               [label]="'Aduana de salida'"
               formControlName="aduana"
               [required]="true"
+              [isDisabled]="soloLectura"
               (change)="aduanaSeleccion()"
               name="aduana"
             >
@@ -35,6 +36,7 @@
           [fechas]="selectEntidades"
           [label]="entidadesLabel"
           [fechasSeleccionadas]="solicitudState.fechasSeleccionadas"
+          [isDisabled]="soloLectura"
           (fechasSeleccionadasChange)="onEntidadesSeleccionadasChange($event)"
         ></crosslist>
 
@@ -43,8 +45,9 @@
             <app-catalogo-select
               [catalogo]="descripcionProducto"
               [label]="'Descripción del producto'"
-              fromControlName="descripcionProducto"
+              formControlName="descripcionProducto"
               [required]="true"
+              [isDisabled]="soloLectura"
               (change)="descripcionProductoSeleccion()"
               name="descripcionProducto"
             >
@@ -62,18 +65,20 @@
               [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX"
               [configuracionTabla]="encabezadoDeTabla"
               [datos]="datosSolicitud"
+              [disableSeleccionTablaCheckBox]="soloLectura"
               (listaDeFilaSeleccionada)="onSelectedRowsChange($event)"
             ></app-tabla-dinamica>
           </div>
         </div>
         <div class="col-md-12 mt-5 d-flex justify-content-end">
-          <button type="button" class="btn btn-default" (click)="modificar()">Modificar</button>
-          <button type="button" class="btn btn-danger ms-3" (click)="eliminar()">Eliminar</button>
+          <button type="button" class="btn btn-default" [disabled]="soloLectura" (click)="modificar()">Modificar</button>
+          <button type="button" class="btn btn-danger ms-3" [disabled]="soloLectura" (click)="eliminar()">Eliminar</button>
           <button
             type="button"
             class="btn btn-primary ms-3"
             data-bs-toggle="modal"
             data-bs-target="#modalAgregarMercancias"
+            [disabled]="soloLectura"
           >
             Agregar
           </button>
@@ -85,6 +90,7 @@
               [label]="'Unidad de medida'"
               formControlName="unidadDeMedida"
               [required]="true"
+              [isDisabled]="soloLectura"
               (change)="unidadDeMedidaSeleccion()"
               name="unidadDeMedida"
             >
@@ -101,6 +107,7 @@
               formControlName="lungarDeEntrada"
               id="lungarDeEntrada"
               [required]="true"
+              
               (change)="setValoresStore(exportacionForm, 'lungarDeEntrada', 'setLungarDeEntrada')"
             />
           </div>
@@ -113,6 +120,7 @@
               formControlName="destinoDeImportador"
               id="destinoDeImportador"
               [required]="true"
+              
             />
           </div>
         </div>
@@ -124,6 +132,7 @@
               [label]="'Medio de transporte'"
               formControlName="medioDeTransporte"
               [required]="true"
+              [isDisabled]="soloLectura"
               (change)="medioDeTransporteSeleccion()"
               name="medioDeTransporte"
             >
@@ -138,6 +147,7 @@
               formControlName="numeroYDescripcion"
               id="numeroYDescripcion"
               [required]="true"
+              
               (change)="setValoresStore(exportacionForm, 'numeroYDescripcion', 'setNumeroYDescripcion')"
             />
           </div>
@@ -153,6 +163,7 @@
               formControlName="codigoPostal"
               id="codigoPostal"
               [required]="true"
+              
               (change)="setValoresStore(exportacionForm, 'codigoPostal', 'setCodigoPostal')"
             />
           </div>
@@ -162,6 +173,7 @@
               [label]="'Estado'"
               formControlName="estado"
               [required]="true"
+              [isDisabled]="soloLectura"
               (change)="estadoSeleccion()"
               name="estado"
             >
@@ -176,6 +188,7 @@
               formControlName="calle"
               id="calle"
               [required]="true"
+              
               (change)="setValoresStore(exportacionForm, 'calle', 'setCalle')"
             />
           </div>
@@ -190,6 +203,7 @@
               formControlName="colonia"
               id="colonia"
               [required]="true"
+              
               (change)="setValoresStore(exportacionForm, 'colonia', 'setColonia')"
             />
           </div>
@@ -202,6 +216,7 @@
               formControlName="numeroExterior"
               id="numeroExterior"
               [required]="true"
+              
               (change)="setValoresStore(exportacionForm, 'numeroExterior', 'setNumeroExterior')"
             />
           </div>
@@ -214,6 +229,7 @@
               formControlName="numeroInterior"
               id="numeroInterior"
               [required]="true"
+              
               (change)="setValoresStore(exportacionForm, 'numeroInterior', 'setNumeroInterior')"
             />
           </div>
@@ -245,6 +261,7 @@
                   [label]="'Fracción arancelaria'"
                   formControlName="fraccionArancelaria"
                   [required]="true"
+                  [isDisabled]="soloLectura"
                   (change)="fraccionArancelariaSeleccion()"
                   name="fraccionArancelaria"
                 ></app-catalogo-select>
@@ -258,6 +275,7 @@
                   formControlName="descripcionfraccionArancelaria"
                   id="descripcionfraccionArancelaria"
                   [required]="true"
+                  
                   (change)="
                     setValoresStore(
                       datosMercancia,
@@ -278,6 +296,7 @@
                   formControlName="cantidad"
                   id="cantidad"
                   [required]="true"
+                  
                   (change)="setValoresStore(datosMercancia, 'cantidad', 'setCantidad')"
                 />
               </div>
@@ -307,6 +326,7 @@
                     formControlName="genero"
                     [label]="'Género'"
                     [required]="true"
+                    [isDisabled]="soloLectura"
                     name="genero"
                   ></app-catalogo-select>
                 </div>
@@ -318,6 +338,7 @@
                     formControlName="especie"
                     [label]="'Especie'"
                     [required]="true"
+                    [isDisabled]="soloLectura"
                     name="especie"
                   ></app-catalogo-select>
                 </div>
@@ -329,6 +350,7 @@
                     formControlName="nombreComun"
                     [label]="'Nombre común'"
                     [required]="true"
+                    [isDisabled]="soloLectura"
                     name="nombreComun"
                   ></app-catalogo-select>
                 </div>
@@ -338,6 +360,7 @@
               <button
                 type="button"
                 class="btn btn-default"
+                [disabled]="soloLectura"
                 (click)="eliminarDetalle()"
               >
                 Eliminar detalle
@@ -345,6 +368,7 @@
               <button
                 type="button"
                 class="btn btn-primary"
+                [disabled]="soloLectura"
                 (click)="agregarDetalle()"
               >
                 Agregar dettalle
@@ -358,16 +382,18 @@
                 [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX"
                 [configuracionTabla]="encabezadoDeTablaDetalle"
                 [datos]="datosDetalle"
+                [disableSeleccionTablaCheckBox]="soloLectura"
                 (listaDeFilaSeleccionada)="onSelectedRows($event)"
               ></app-tabla-dinamica>
             </div>
             <div class="col-md-12 mt-5 d-flex justify-content-end">
-              <button type="button" class="btn btn-default">Limpiar</button>
-              <button type="button" class="btn btn-danger ms-3" data-bs-dismiss="modal" #closeModal>
+              <button type="button" [disabled]="soloLectura" class="btn btn-default">Limpiar</button>
+              <button type="button" [disabled]="soloLectura" class="btn btn-danger ms-3" data-bs-dismiss="modal" #closeModal>
                 Cancelar
               </button>
               <button
                 type="button"
+                [disabled]="soloLectura"
                 class="btn btn-primary ms-3"
                 (click)="agregarSolicitud()"
               >

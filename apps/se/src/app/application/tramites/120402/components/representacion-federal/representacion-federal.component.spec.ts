@@ -1,131 +1,194 @@
-// @ts-nocheck
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { By } from '@angular/platform-browser';
-import { Observable, of as observableOf, throwError } from 'rxjs';
-
-import { Component } from '@angular/core';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RepresentacionFederalComponent } from './representacion-federal.component';
-import { FormBuilder } from '@angular/forms';
-import { RepresentacionFederalService } from '@ng-mf/data-access-user';
-import { Tramite120402Store } from '../../estados/tramites/tramite120402.store';
-import { Tramite120402Query } from '../../estados/queries/tramite120402.query';
-import { HttpClientModule } from '@angular/common/http';
-
-@Injectable()
-class MockTramite120402Store {}
-
-@Injectable()
-class MockTramite120402Query {
-  entidad$ = {};
-  representacion$ = {};
-}
+import { of, Subject } from 'rxjs';
 
 describe('RepresentacionFederalComponent', () => {
-  let fixture;
-  let component;
+  let component: RepresentacionFederalComponent;
+  let mockService: any;
+  let mockStore: any;
+  let mockQuery: any;
+  let mockConsultaioQuery: any;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule, RepresentacionFederalComponent , HttpClientModule],
-      declarations: [],
-      schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
-      providers: [
-        FormBuilder,
-        RepresentacionFederalService,
-        { provide: Tramite120402Store, useClass: MockTramite120402Store },
-        { provide: Tramite120402Query, useClass: MockTramite120402Query }
-      ]
-    }).overrideComponent(RepresentacionFederalComponent, {
+    mockService = {
+      getEntidad: jest.fn().mockReturnValue(of([{ id: 1, nombre: 'Entidad 1' }])),
+      getRepresentacion: jest.fn().mockReturnValue(of([
+        { id: 1, nombre: 'Rep 1', relacionadaUmtId: 1 },
+        { id: 2, nombre: 'Rep 2', relacionadaUmtId: 2 }
+      ])),
+    };
+    mockStore = {
+      setTramite120402State: jest.fn(),
+    };
+    mockQuery = {
+      selectSolicitud$: of({}),
+    };
+    mockConsultaioQuery = {
+      selectConsultaioState$: of({ readonly: false }),
+    };
 
-    }).compileComponents();
-    fixture = TestBed.createComponent(RepresentacionFederalComponent);
-    component = fixture.debugElement.componentInstance;
+    component = new RepresentacionFederalComponent(
+      new FormBuilder(),
+      mockService,
+      mockStore,
+      mockQuery,
+      mockConsultaioQuery
+    );
+    component['destroyed$'] = new Subject<void>();
+    component['destroyNotifier$'] = new Subject<void>();
   });
 
-  it('should run #constructor()', async () => {
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it('should create the component', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should run #ngOnInit()', async () => {
-    component.initializeForm = jest.fn();
-    component.loadEntidad = jest.fn();
-    component.loadRepresentacion = jest.fn();
-    component.entidad$ = component.entidad$ || {};
-    component.entidad$.subscribe = jest.fn().mockReturnValue([
-      null
-    ]);
-    component.representacionForm = component.representacionForm || {};
-    component.representacionForm.get = jest.fn().mockReturnValue({
-      setValue: function() {}
+  describe('ngOnInit', () => {
+    it('should initialize form, load entidad and representacion, and call inicializarEstadoFormulario', () => {
+      const spyInit = jest.spyOn(component, 'inicializarEstadoFormulario');
+      component.ngOnInit();
+      expect(component.representacionForm).toBeDefined();
+      expect(mockService.getEntidad).toHaveBeenCalled();
+      expect(mockService.getRepresentacion).toHaveBeenCalled();
+      expect(spyInit).toHaveBeenCalled();
     });
-    component.representacion$ = component.representacion$ || {};
-    component.representacion$.subscribe = jest.fn().mockReturnValue([
-      null
-    ]);
-    component.ngOnInit();
-    // expect(component.initializeForm).toHaveBeenCalled();
-    // expect(component.loadEntidad).toHaveBeenCalled();
-    // expect(component.loadRepresentacion).toHaveBeenCalled();
-    // expect(component.entidad$.subscribe).toHaveBeenCalled();
-    // expect(component.representacionForm.get).toHaveBeenCalled();
-    // expect(component.representacion$.subscribe).toHaveBeenCalled();
-  });
 
-  it('should run #ngOnDestroy()', async () => {
-    component.destroyed$ = component.destroyed$ || {};
-    component.destroyed$.next = jest.fn();
-    component.destroyed$.complete = jest.fn();
-    component.ngOnDestroy();
-    // expect(component.destroyed$.next).toHaveBeenCalled();
-    // expect(component.destroyed$.complete).toHaveBeenCalled();
-  });
-
-  it('should run #initializeForm()', async () => {
-    component.fb = component.fb || {};
-    component.fb.group = jest.fn();
-    component.initializeForm();
-    // expect(component.fb.group).toHaveBeenCalled();
-  });
-
-  it('should run #loadEntidad()', async () => {
-    component.service = component.service || {};
-    component.service.getEntidad = jest.fn().mockReturnValue(observableOf({}));
-    component.loadEntidad();
-    // expect(component.service.getEntidad).toHaveBeenCalled();
-  });
-
-  it('should run #loadRepresentacion()', async () => {
-    component.service = component.service || {};
-    component.service.getEntidad = jest.fn().mockReturnValue(observableOf({}));
-    component.loadRepresentacion();
-    // expect(component.service.getEntidad).toHaveBeenCalled();
-  });
-
-  it('should run #getEntidad()', async () => {
-    component.representacionForm = component.representacionForm || {};
-    component.representacionForm.get = jest.fn().mockReturnValue({
-      value: {}
+    it('should subscribe to entidad valueChanges and reset representacion', () => {
+      component.ngOnInit();
+      component.representacionForm.get('entidad')?.setValue('1');
+      expect(component.representacionForm.get('representacion')?.value).toBe('');
     });
-    component.tramite120402Store = component.tramite120402Store || {};
-    component.tramite120402Store.setEntidad = jest.fn();
-    component.getEntidad();
-    // expect(component.representacionForm.get).toHaveBeenCalled();
-    // expect(component.tramite120402Store.setEntidad).toHaveBeenCalled();
   });
 
-  it('should run #getRepresentacion()', async () => {
-    component.representacionForm = component.representacionForm || {};
-    component.representacionForm.get = jest.fn().mockReturnValue({
-      value: {}
+  describe('ngOnDestroy', () => {
+    it('should complete destroyed$', () => {
+      const spy = jest.spyOn(component['destroyed$'], 'complete');
+      component.ngOnDestroy();
+      expect(spy).toHaveBeenCalled();
     });
-    component.tramite120402Store = component.tramite120402Store || {};
-    component.tramite120402Store.setRepresentacion = jest.fn();
-    component.getRepresentacion();
-    // expect(component.representacionForm.get).toHaveBeenCalled();
-    // expect(component.tramite120402Store.setRepresentacion).toHaveBeenCalled();
   });
 
+  describe('initializeForm', () => {
+    it('should initialize the form with required controls', () => {
+      component['initializeForm']();
+      expect(component.representacionForm.contains('entidad')).toBe(true);
+      expect(component.representacionForm.contains('representacion')).toBe(true);
+    });
+  });
+
+  describe('loadEntidad', () => {
+    it('should load entidad from service', () => {
+      component.loadEntidad();
+      expect(mockService.getEntidad).toHaveBeenCalled();
+    });
+  });
+
+  describe('loadRepresentacion', () => {
+    it('should load representacion and update options', () => {
+      const spy = jest.spyOn(component, 'updateRepresentacionOptions');
+      component.representacionForm = new FormBuilder().group({ entidad: [''] });
+      component.loadRepresentacion();
+      expect(mockService.getRepresentacion).toHaveBeenCalled();
+      expect(spy).toHaveBeenCalled();
+    });
+  });
+
+  describe('updateRepresentacionOptions', () => {
+    beforeEach(() => {
+      component.allRepresentaciones = [
+        { id: 1, descripcion: 'Rep 1', relacionadaUmtId: 1 },
+        { id: 2, descripcion: 'Rep 2', relacionadaUmtId: 2 }
+      ];
+    });
+
+    it('should filter representacion by selectedEntidad', () => {
+      component.updateRepresentacionOptions('1' as any);
+      expect(component.representacion.length).toBe(1);
+    });
+
+    it('should set representacion to empty if no entidad', () => {
+      component.updateRepresentacionOptions(null);
+      expect(component.representacion).toEqual([]);
+    });
+  });
+
+  describe('setValoresStore', () => {
+    it('should call the store method with form value', () => {
+      const form = new FormBuilder().group({ test: ['value'] });
+      mockStore['setTramite120402State'] = jest.fn();
+      component.setValoresStore(form, 'test', 'setTramite120402State');
+      expect(mockStore.setTramite120402State).toHaveBeenCalledWith('value');
+    });
+  });
+
+  describe('esInvalido', () => {
+    it('should return true if control is invalid and touched', () => {
+      component.representacionForm = new FormBuilder().group({
+        test: ['', Validators.required]
+      });
+      const control = component.representacionForm.get('test');
+      control?.markAsTouched();
+      expect(component.esInvalido('test')).toBe(true);
+    });
+
+    it('should return false if control is valid', () => {
+      component.representacionForm = new FormBuilder().group({
+        test: ['ok', Validators.required]
+      });
+      expect(component.esInvalido('test')).toBe(false);
+    });
+
+    it('should return false if control does not exist', () => {
+      component.representacionForm = new FormBuilder().group({});
+      expect(component.esInvalido('nope')).toBe(false);
+    });
+  });
+
+  describe('setValorStore', () => {
+    it('should update store with control value', () => {
+      const form = new FormBuilder().group({ test: ['value'] });
+      component.setValorStore(form, 'test');
+      expect(mockStore.setTramite120402State).toHaveBeenCalledWith({ test: 'value' });
+    });
+  });
+
+  describe('inicializarEstadoFormulario', () => {
+    it('should call guardarDatosFormulario if esFormularioSoloLectura is true', () => {
+      component.esFormularioSoloLectura = true;
+      const spy = jest.spyOn(component, 'guardarDatosFormulario');
+      component.inicializarEstadoFormulario();
+      expect(spy).toHaveBeenCalled();
+    });
+
+    it('should call initializeForm if esFormularioSoloLectura is false', () => {
+      component.esFormularioSoloLectura = false;
+      const spy = jest.spyOn(component as any, 'initializeForm');
+      component.inicializarEstadoFormulario();
+      expect(spy).toHaveBeenCalled();
+    });
+  });
+
+  describe('guardarDatosFormulario', () => {
+    beforeEach(() => {
+      component.representacionForm = new FormBuilder().group({
+        entidad: [''],
+        representacion: ['']
+      });
+    });
+
+    it('should disable form if esFormularioSoloLectura is true', () => {
+      component.esFormularioSoloLectura = true;
+      component.guardarDatosFormulario();
+      expect(component.representacionForm.disabled).toBe(true);
+    });
+
+    it('should enable form if esFormularioSoloLectura is false', () => {
+      component.esFormularioSoloLectura = false;
+      component.guardarDatosFormulario();
+      expect(component.representacionForm.enabled).toBe(true);
+    });
+  });
 });

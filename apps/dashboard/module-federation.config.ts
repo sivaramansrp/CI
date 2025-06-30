@@ -1,8 +1,8 @@
 import { ModuleFederationConfig } from '@nx/webpack';
 
-const config: ModuleFederationConfig = {
+const CONFIG: ModuleFederationConfig = {
   name: 'dashboard',
   remotes: [],
 };
 
-export default config;
+export default CONFIG;

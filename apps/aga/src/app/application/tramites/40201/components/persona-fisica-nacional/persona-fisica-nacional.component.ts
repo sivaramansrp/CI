@@ -1,14 +1,16 @@
+import { AlertComponent, Catalogo, CatalogoSelectComponent, TablaDinamicaComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { CONFIGURACION_PARA_ENCABEZADO_DE_TABLA, TEXTOS } from '../../constantes/transportacion-maritima.enum';
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, map, merge, takeUntil } from 'rxjs';
-import { CommonModule } from '@angular/common';
-
-import { AlertComponent, Catalogo, CatalogoSelectComponent, TablaDinamicaComponent, TituloComponent } from '@libs/shared/data-access-user/src';
-import { CONFIGURACION_PARA_ENCABEZADO_DE_TABLA, TEXTOS } from '../../constantes/transportacion-maritima.enum';
 import { Tramite40201Store, TransportacionMaritima40201State } from '../../../../core/estados/tramites/tramite40201.store';
+import { CommonModule } from '@angular/common';
+import { ConsultaioQuery} from '@ng-mf/data-access-user';
 import { PersonaFisicaNacionalForm } from '../../models/transportacion-maritima.model';
+import { TablaSeleccion } from '@ng-mf/data-access-user';
 import { Tramite40201Query } from '../../../../core/queries/tramite40201.query';
 import { TransportacionMaritimaService } from '../../services/transportacion-maritima/transportacion-maritima.service';
+
 
 /**
  * Componente para gestionar la información de personas físicas nacionales.
@@ -95,6 +97,17 @@ export class PersonaFisicaNacionalComponent implements OnInit, OnDestroy {
   private destruirNotificador$: Subject<void> = new Subject();
 
   /**
+   * Tabla de selección para mostrar los datos de personas físicas nacionales.
+   */
+  TablaSeleccion = TablaSeleccion;
+
+  /**
+   * Indica si el formulario es de solo lectura.
+   * @type {boolean}
+   * @description Esta propiedad se utiliza para determinar si el formulario debe ser editable o no.
+   */
+  esFormularioSoloLectura: boolean = false;
+  /**
    * Constructor del componente.
    * @param fb FormBuilder para crear formularios reactivos. 
    * @param tramite40201Store Store para gestionar el estado del trámite 40201.
@@ -106,8 +119,17 @@ export class PersonaFisicaNacionalComponent implements OnInit, OnDestroy {
     private tramite40201Store: Tramite40201Store,
     private tramite40201Query: Tramite40201Query,
     private transportacionMaritimaService: TransportacionMaritimaService,
+    private consultaioQuery: ConsultaioQuery
   ) {
-    // El constructor se utiliza para la inyección de dependencias
+     this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destruirNotificador$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
   }
 
   /**
@@ -122,12 +144,11 @@ export class PersonaFisicaNacionalComponent implements OnInit, OnDestroy {
         map((seccionState) => {
           this.transportacionMaritimaState = seccionState;
           this.personaFisicaNacionalTabla = seccionState.personaFisicaNacionalTabla || [];
+          this.inicializarEstadoFormulario();
         })
       )
       .subscribe();
 
-    // Inicializar el formulario principal
-    this.crearAgregarPFNForm();
 
     this.paisSeleccion();
     this.estadoSeleccion();
@@ -139,83 +160,109 @@ export class PersonaFisicaNacionalComponent implements OnInit, OnDestroy {
    * Crea el formulario reactivo para gestionar la información de personas físicas nacionales.
    */
   crearAgregarPFNForm(): void {
+     const STATE = this.transportacionMaritimaState || {} as TransportacionMaritima40201State
     this.personaFisicaForm = this.fb.group({
       buscarRfcPFN: [
-        this.transportacionMaritimaState.buscarRfcPFN,
+        STATE.buscarRfcPFN,
         [
           Validators.required,
           Validators.maxLength(15)
         ]
       ],
       rfcPFN: [
-        { value: this.transportacionMaritimaState.rfcPFN, disabled: true },
+        { value: STATE.rfcPFN, disabled: true },
         [
           Validators.maxLength(13)
         ]
       ],
       nombrePFN: [
-        { value: this.transportacionMaritimaState.nombrePFN, disabled: true },
+        { value: STATE.nombrePFN, disabled: true },
         [
           Validators.maxLength(200)
         ]
       ],
       apellidoPaternoPFN: [
-        { value: this.transportacionMaritimaState.apellidoPaternoPFN, disabled: true },
+        { value: STATE.apellidoPaternoPFN, disabled: true },
         [
           Validators.maxLength(200)
         ]
       ],
       apellidoMaternoPFN: [
-        { value: this.transportacionMaritimaState.apellidoMaternoPFN, disabled: true },
+        { value: STATE.apellidoMaternoPFN, disabled: true },
         [
           Validators.maxLength(200)
         ]
       ],
       paisPFN: [
-        this.transportacionMaritimaState.paisPFN,
+        STATE.paisPFN,
       ],
       codigoPostalPFN: [
-        { value: this.transportacionMaritimaState.codigoPostalPFN, disabled: true },
+        { value: STATE.codigoPostalPFN, disabled: true },
         [
           Validators.maxLength(12)
         ]
       ],
       estadoPFN: [
-        this.transportacionMaritimaState.estadoPFN,
+        STATE.estadoPFN,
       ],
       municipioPFN: [
-        this.transportacionMaritimaState.municipioPFN,
+        STATE.municipioPFN,
       ],
       localidadPFN: [
-        { value: this.transportacionMaritimaState.localidadPFN, disabled: true },
+        { value: STATE.localidadPFN, disabled: true },
         [
           Validators.maxLength(120)
         ]
       ],
       coloniaPFN: [
-        this.transportacionMaritimaState.coloniaPFN,
+        STATE.coloniaPFN,
       ],
       callePFN: [
-        { value: this.transportacionMaritimaState.callePFN, disabled: true },
+        { value: STATE.callePFN, disabled: true },
         [
           Validators.maxLength(100)
         ]
       ],
       numeroExteriorPFN: [
-        { value: this.transportacionMaritimaState.numeroExteriorPFN, disabled: true },
+        { value: STATE.numeroExteriorPFN, disabled: true },
         [
           Validators.maxLength(55)
         ]
       ],
       numeroInteriorPFN: [
-        { value: this.transportacionMaritimaState.numeroInteriorPFN, disabled: true },
+        { value: STATE.numeroInteriorPFN, disabled: true },
         [
           Validators.maxLength(55)
         ]
       ]
     });
   }
-
+  
+  /**
+   * Inicializa el estado del formulario.
+   * Si el formulario es de solo lectura, guarda los datos del formulario.
+   * Si no, crea el formulario reactivo.
+   */
+ inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.crearAgregarPFNForm();
+    }
+  }
+/**
+   * Guarda los datos del formulario y habilita o deshabilita el formulario según el estado de solo lectura.
+   * @returns {void}
+   * @description Este método se utiliza para guardar los datos del formulario y habilitar o deshabilitar el formulario según el estado de solo lectura.
+   */
+  guardarDatosFormulario(): void {
+    this.crearAgregarPFNForm();
+    if (this.esFormularioSoloLectura) {
+      this.personaFisicaForm.disable();
+    } else{
+      this.personaFisicaForm.enable();
+    } 
+}
   /**
    * Inicializa los catálogos necesarios para el formulario.
    */
@@ -269,7 +316,7 @@ export class PersonaFisicaNacionalComponent implements OnInit, OnDestroy {
    */
   paisSeleccion(): void {
     const PAIS = this.personaFisicaForm.get('paisPFN')?.value;
-    this.tramite40201Store.setPaisPFN(PAIS);
+    this.tramite40201Store.setTramite40201State({ paisPFE: PAIS });
   }
 
   /**
@@ -279,7 +326,7 @@ export class PersonaFisicaNacionalComponent implements OnInit, OnDestroy {
    */
   estadoSeleccion(): void {
     const ESTADO = this.personaFisicaForm.get('estadoPFN')?.value;
-    this.tramite40201Store.setEstadoPFN(ESTADO);
+    this.tramite40201Store.setTramite40201State({ estadoPFN: ESTADO });
   }
 
   /**
@@ -289,7 +336,7 @@ export class PersonaFisicaNacionalComponent implements OnInit, OnDestroy {
    */
   municipioSeleccion(): void {
     const MUNICIPIO = this.personaFisicaForm.get('municipioPFN')?.value;
-    this.tramite40201Store.setMunicipioPFN(MUNICIPIO);
+    this.tramite40201Store.setTramite40201State({ municipioPFN: MUNICIPIO });
   }
 
   /**
@@ -299,7 +346,7 @@ export class PersonaFisicaNacionalComponent implements OnInit, OnDestroy {
    */
   coloniaSeleccion(): void {
     const COLONIA = this.personaFisicaForm.get('coloniaPFN')?.value;
-    this.tramite40201Store.setColoniaPFN(COLONIA);
+    this.tramite40201Store.setTramite40201State({ coloniaPFN: COLONIA });
   }
 
   /**
@@ -364,33 +411,22 @@ export class PersonaFisicaNacionalComponent implements OnInit, OnDestroy {
       domicilioPFN: `${personaFisicaFormDatos.callePFN} ${personaFisicaFormDatos.numeroExteriorPFN} ${COLONIA} ${ESTADO} ${MUNICIPIO} ${PAIS} ${personaFisicaFormDatos.codigoPostalPFN}`.trim(),
     });
     this.personaFisicaNacionalTabla = NUEVO_CUERPO_TABLA;
-    this.tramite40201Store.setPersonaFisicaNacionalTabla(this.personaFisicaNacionalTabla);
+    this.tramite40201Store.setTramite40201State({ personaFisicaNacionalTabla: NUEVO_CUERPO_TABLA });
+
     this.limpiarDatosPFN();
     this.cerrarModal();
   }
 
   /**
-   * Actualiza el estado del formulario y lo almacena en el store.
+   * Actualiza el estado del formulario en el store.
    * @returns {void}
-   * @description Este método se ejecuta para actualizar el estado del formulario y almacenar los valores en el store.
+   * @description Este método se ejecuta para actualizar el estado del formulario en el store de tramite40201.
    */
-  actualizarFormularioState(): void {
-    this.setValoresStore(this.personaFisicaForm, 'buscarRfcPFN', 'setBuscarRfcPFN');
-    this.setValoresStore(this.personaFisicaForm, 'rfcPFN', 'setRfcPFN');
-    this.setValoresStore(this.personaFisicaForm, 'nombrePFN', 'setNombrePFN');
-    this.setValoresStore(this.personaFisicaForm, 'apellidoPaternoPFN', 'setApellidoPaternoPFN');
-    this.setValoresStore(this.personaFisicaForm, 'apellidoMaternoPFN', 'setApellidoMaternoPFN');
-    this.setValoresStore(this.personaFisicaForm, 'codigoPostalPFN', 'setCodigoPostalPFN');
-    this.setValoresStore(this.personaFisicaForm, 'localidadPFN', 'setLocalidadPFN');
-    this.setValoresStore(this.personaFisicaForm, 'callePFN', 'setCallePFN');
-    this.setValoresStore(this.personaFisicaForm, 'numeroExteriorPFN', 'setNumeroExteriorPFN');
-    this.setValoresStore(this.personaFisicaForm, 'numeroInteriorPFN', 'setNumeroInteriorPFN');
-    this.setValoresStore(this.personaFisicaForm, 'coloniaPFN', 'setColoniaPFN');
-    this.setValoresStore(this.personaFisicaForm, 'estadoPFN', 'setEstadoPFN');
-    this.setValoresStore(this.personaFisicaForm, 'municipioPFN', 'setMunicipioPFN');
-    this.setValoresStore(this.personaFisicaForm, 'paisPFN', 'setPaisPFN');
-  }
 
+actualizarFormularioState(): void {
+  const VALUES = this.personaFisicaForm.value;
+  this.tramite40201Store.setTramite40201State(VALUES);
+}
   /**
    * Limpia los datos del formulario de persona física nacional.
    * @returns {void}
@@ -420,10 +456,10 @@ export class PersonaFisicaNacionalComponent implements OnInit, OnDestroy {
    * @param {string} metodoNombre - El nombre del método en el store que se va a invocar con el valor del campo.
    * @returns {void}
    */
-  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite40201Store): void {
-    const VALOR = form.get(campo)?.value;
-    (this.tramite40201Store[metodoNombre] as (value: unknown) => void)(VALOR);
-  }
+   setValoresStore(form: FormGroup, campo: keyof TransportacionMaritima40201State): void {
+  const VALOR = form.get(campo)?.value;
+  this.tramite40201Store.setTramite40201State({ [campo]: VALOR });
+}
 
   /**
    * Se ejecuta al destruir el componente.

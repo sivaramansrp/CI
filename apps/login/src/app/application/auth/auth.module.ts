@@ -4,22 +4,23 @@ import { ToastrModule, ToastrService } from 'ngx-toastr';
 import { AuthRoutingModule } from './auth-routing.module';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
-
+import { provideHttpClient } from '@angular/common/http';
 
 @NgModule({
   declarations: [
   ],
   imports: [
-   CommonModule,
-   AuthRoutingModule,
+    CommonModule,
+    AuthRoutingModule,
     forwardRef(() => CatalogoSelectComponent),
     forwardRef(() => FirmaPageComponent),
     ToastrModule.forRoot(),
     HttpClientModule,
     TituloComponent,
-],
-providers: [
-  ToastrService
-]
+  ],
+  providers: [
+    ToastrService,
+    provideHttpClient()
+  ]
 })
 export class AppLoginModule { }
