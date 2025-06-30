@@ -9,7 +9,7 @@ import { MENSAJE_DOBLE_CLIC } from '../../constantes/220203/importacion-de-acuic
 
 /**
  * @fileoverview
- * Componente para gestionar los datos de la solicitud de importación de acuicultura.
+ * Componente Angular para gestionar los datos de la solicitud de importación de acuicultura.
  * Permite capturar, validar y actualizar la información relacionada con la mercancía, así como mostrar tablas dinámicas y catálogos.
  * Cobertura compodoc 100%: cada propiedad, método y constructor está documentado.
  * @module DatosDeLaSolicitudComponent
@@ -240,10 +240,10 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit, AfterView
 
   /**
    * Crea el grupo de formularios para los datos de la mercancía.
-   * @method createFromGroup
+   * @method
    * @returns {void}
    */
-  createFromGroup(): void {
+  public createFromGroup(): void {
     this.datosMercanciaFormGroup = this.fb.group({
       realizarGroup: this.createRealizarGroup(),
       mercanciaGroup: this.createMercanciaGroup(),
@@ -253,10 +253,10 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit, AfterView
 
   /**
    * Crea el grupo de formularios 'realizarGroup'.
-   * @method createRealizarGroup
+   * @method
    * @returns {FormGroup}
    */
-  createRealizarGroup(): FormGroup {
+  public createRealizarGroup(): FormGroup {
     return this.fb.group({
       aduanaIngreso: [this.datosMercanciaStore.realizarGroup.aduanaIngreso || '', Validators.required],
       oficinaInspeccion: [this.datosMercanciaStore.realizarGroup.oficinaInspeccion || '', Validators.required],
@@ -268,10 +268,10 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit, AfterView
 
   /**
    * Crea el grupo de formularios 'mercanciaGroup'.
-   * @method createMercanciaGroup
+   * @method
    * @returns {FormGroup}
    */
-  createMercanciaGroup(): FormGroup {
+  public createMercanciaGroup(): FormGroup {
     const MERCANCIADATA = this.datosMercanciaStore.mercanciaGroup || {};
 
     const FORMGROUP = this.fb.group({
@@ -301,22 +301,19 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit, AfterView
 
   /**
    * Crea el grupo de formularios 'detalles'.
-   * @method createDetallesGroup
+   * @method
    * @returns {FormGroup}
    */
-  createDetallesGroup(): FormGroup {
+  public createDetallesGroup(): FormGroup {
     return this.fb.group({
       nombreCientifico: [this.datosMercanciaStore.detalles.nombreCientifico || ''],
     });
   }
 
   /**
-   * Método del ciclo de vida que se ejecuta al inicializar el componente.
-   * Inicializa el formulario y obtiene los catálogos necesarios.
-   * @method ngOnInit
-   * @returns {void}
+   * @inheritdoc
    */
-  ngOnInit(): void {
+  public ngOnInit(): void {
     this.createFromGroup();
     this.obtenerCatalogosTransporte();
     this.obtenerCatalogosArancelaria();
@@ -326,12 +323,9 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit, AfterView
   }
 
   /**
-   * Método del ciclo de vida que se ejecuta después de inicializar la vista.
-   * Suscribe a cambios en el formulario y al estado de solo lectura.
-   * @method ngAfterViewInit
-   * @returns {void}
+   * @inheritdoc
    */
-  ngAfterViewInit(): void {
+  public ngAfterViewInit(): void {
     this.datosMercanciaFormGroup.valueChanges
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe(() => {
@@ -353,10 +347,10 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit, AfterView
 
   /**
    * Obtiene los datos del catálogo de transporte.
-   * @method obtenerCatalogosTransporte
+   * @method
    * @returns {void}
    */
-  obtenerCatalogosTransporte(): void {
+  public obtenerCatalogosTransporte(): void {
     this.importacionDeAcuiculturaServices.obtenerDetallesDelCatalogo('punto.json')
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((data) => {
@@ -369,10 +363,10 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit, AfterView
 
   /**
    * Obtiene los datos del catálogo de arancelaria.
-   * @method obtenerCatalogosArancelaria
+   * @method
    * @returns {void}
    */
-  obtenerCatalogosArancelaria(): void {
+  public obtenerCatalogosArancelaria(): void {
     this.importacionDeAcuiculturaServices.obtenerDetallesDelCatalogo('punto.json')
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((data) => {
@@ -384,10 +378,10 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit, AfterView
 
   /**
    * Obtiene los datos del catálogo de UMC.
-   * @method obtenerCatalogosUMC
+   * @method
    * @returns {void}
    */
-  obtenerCatalogosUMC(): void {
+  public obtenerCatalogosUMC(): void {
     this.importacionDeAcuiculturaServices.obtenerDetallesDelCatalogo('aduana_de_ingreso.json')
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((data) => {
@@ -400,10 +394,10 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit, AfterView
 
   /**
    * Obtiene los datos del catálogo de UMT.
-   * @method obtenerCatalogosUMT
+   * @method
    * @returns {void}
    */
-  obtenerCatalogosUMT(): void {
+  public obtenerCatalogosUMT(): void {
     this.importacionDeAcuiculturaServices.obtenerDetallesDelCatalogo('empresa.json')
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((data) => {
@@ -417,10 +411,10 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit, AfterView
 
   /**
    * Obtiene los datos del catálogo de USO.
-   * @method obtenerCatalogosUSO
+   * @method
    * @returns {void}
    */
-  obtenerCatalogosUSO(): void {
+  public obtenerCatalogosUSO(): void {
     this.importacionDeAcuiculturaServices.obtenerDetallesDelCatalogo('oficina_de_inspeccion.json')
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((data) => {
@@ -434,19 +428,19 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit, AfterView
 
   /**
    * Muestra o esconde la sección colapsable.
-   * @method mostrar_colapsable
+   * @method
    * @returns {void}
    */
-  mostrar_colapsable(): void {
+  public mostrar_colapsable(): void {
     this.colapsable = !this.colapsable;
   }
 
   /**
    * Verifica el estado del formulario y habilita o deshabilita el botón según su validez.
-   * @method verificarEstadoDelBoton
+   * @method
    * @returns {void}
    */
-  verificarEstadoDelBoton(): void {
+  public verificarEstadoDelBoton(): void {
     const DATOS = {
       dataDeLaSolicitud: false,
     };
@@ -458,12 +452,12 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit, AfterView
 
   /**
    * Guarda los valores en el store.
-   * @method setValoresStore
+   * @method
    * @param form El formulario que contiene los valores.
    * @param campo El campo a guardar en el store.
    * @returns {void}
    */
-  setValoresStore(
+  public setValoresStore(
     form?: FormGroup,
     campo?: string,
   ): void {
@@ -496,10 +490,10 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit, AfterView
 
   /**
    * Inicializa el estado del formulario según si está en modo solo lectura o no.
-   * @method inicializarEstadoFormulario
+   * @method
    * @returns {void}
    */
-  inicializarEstadoFormulario(): void {
+  public inicializarEstadoFormulario(): void {
     if (this.esFormularioSoloLectura) {
       this.datosMercanciaFormGroup.disable();
     }
@@ -509,12 +503,10 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit, AfterView
   }
 
   /**
-   * Método que se ejecuta al destruir el componente.
-   * Libera recursos y cancela las suscripciones.
-   * @method ngOnDestroy
-   * @returns {void}
+   * @inheritdoc
+   * @method
    */
-  ngOnDestroy(): void {
+  public ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
@@ -523,13 +515,13 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit, AfterView
 /**
  * Interfaz para los datos de la tabla de solicitudes.
  * @interface DatoTabla
- * @property {string} solicitud
- * @property {string} fechaCreacion
- * @property {string} mercancia
- * @property {number} cantidad
- * @property {string} proveedor
+ * @property {string} solicitud - Número de solicitud.
+ * @property {string} fechaCreacion - Fecha de creación de la solicitud.
+ * @property {string} mercancia - Nombre de la mercancía.
+ * @property {number} cantidad - Cantidad de mercancía.
+ * @property {string} proveedor - Nombre del proveedor.
  */
-interface DatoTabla {
+export interface DatoTabla {
   solicitud: string;
   fechaCreacion: string;
   mercancia: string;
@@ -540,15 +532,15 @@ interface DatoTabla {
 /**
  * Interfaz para los datos de la tabla de detalles.
  * @interface Fila
- * @property {string} noPartida
- * @property {string} tipoRequisito
- * @property {string} requisito
- * @property {string} numeroCertificado
- * @property {string} fraccionArancelaria
- * @property {string} descripcionFraccion
- * @property {string} nico
+ * @property {string} noPartida - Número de partida.
+ * @property {string} tipoRequisito - Tipo de requisito.
+ * @property {string} requisito - Requisito.
+ * @property {string} numeroCertificado - Número de certificado internacional.
+ * @property {string} fraccionArancelaria - Fracción arancelaria.
+ * @property {string} descripcionFraccion - Descripción de la fracción arancelaria.
+ * @property {string} nico - NICO.
  */
-interface Fila {
+export interface Fila {
   noPartida: string;
   tipoRequisito: string;
   requisito: string;
@@ -561,13 +553,13 @@ interface Fila {
 /**
  * Interfaz para los datos de la tabla de solicitudes.
  * @interface FilaSolicitud
- * @property {string} solicitud
- * @property {string} fechaCreacion
- * @property {string} mercancia
- * @property {number} cantidad
- * @property {string} proveedor
+ * @property {string} solicitud - Número de solicitud.
+ * @property {string} fechaCreacion - Fecha de creación de la solicitud.
+ * @property {string} mercancia - Nombre de la mercancía.
+ * @property {number} cantidad - Cantidad de mercancía.
+ * @property {string} proveedor - Nombre del proveedor.
  */
-interface FilaSolicitud {
+export interface FilaSolicitud {
   solicitud: string;
   fechaCreacion: string;
   mercancia: string;

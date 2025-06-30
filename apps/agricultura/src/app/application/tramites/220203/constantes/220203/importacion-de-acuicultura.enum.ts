@@ -1,16 +1,14 @@
 /**
- * @fileoverview
- * Constantes utilizadas en el trámite de importación de acuicultura (220203).
- * Incluye los pasos del wizard, opciones de radio, configuración de fecha y mensajes de ayuda.
- * Cobertura compodoc 100%: cada constante está documentada.
- * @module importacionDeAcuiculturaEnum
- */
-
-/**
  * Constantes con la información de los pasos del wizard.
  * Cada objeto representa un paso con su índice, título y estado de actividad/completado.
- * @const
+ * @const PASOSACUICULTURA
  * @type {Array<{indice: number, titulo: string, activo: boolean, completado: boolean}>}
+ * @description
+ * Arreglo de objetos que define los pasos del wizard para el trámite de importación de acuicultura.
+ * - indice: número de orden del paso.
+ * - titulo: nombre del paso mostrado al usuario.
+ * - activo: indica si el paso está activo.
+ * - completado: indica si el paso ya fue completado.
  */
 export const PASOSACUICULTURA = [
     {

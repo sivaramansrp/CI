@@ -282,7 +282,7 @@ export function createDatosState(params: Partial<Acuicultura> = {}): Acuicultura
                 nombreCientifico: ''
             },
         },
-        tercerosRelacionados: params.tercerosRelacionados || [] ,
+        tercerosRelacionados: params.tercerosRelacionados || [],
         formaValida: params?.formaValida || {
             pagoDeformaValida: false,
             dataParaMovilizacion: false,
