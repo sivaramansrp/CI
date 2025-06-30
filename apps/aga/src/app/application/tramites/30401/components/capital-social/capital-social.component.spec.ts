@@ -31,11 +31,11 @@ describe('CapitalSocialComponent', () => {
     component = fixture.componentInstance;
   });
 
-  it('should create the component', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize the form group on ngOnInit', () => {
+  it('debe inicializar el grupo de formulario en ngOnInit', () => {
     const mockFormGroup = new FormGroup({});
     mockFormGroupDirective?.control?.addControl('testGroup', mockFormGroup);
     component.grupoDeFormulario = 'testGroup';
@@ -45,7 +45,7 @@ describe('CapitalSocialComponent', () => {
     expect(component.inicializarFormulario).toBe(mockFormGroup);
   });
 
-  it('should call establecerDatos on setValoresStore', () => {
+  it('Debería llamar a establecerDatos en setValoresStore', () => {
     const mockFormGroup = new FormGroup({});
     const mockField = 'testField';
     const mockValue = 'testValue';
@@ -56,7 +56,7 @@ describe('CapitalSocialComponent', () => {
     expect(mockTramite30401Store.establecerDatos).toHaveBeenCalledWith({ [mockField]: mockValue });
   });
 
-  it('should return true if a control is invalid and touched or dirty in esInvalido', () => {
+  it('Debe devolver verdadero si un control no es válido y está tocado o sucio en esInvalido', () => {
     const mockFormGroup = new FormGroup({});
     const mockControlName = 'testControl';
 
@@ -72,7 +72,7 @@ describe('CapitalSocialComponent', () => {
     expect(result).toBe(true);
   });
 
-  it('should return false if a control is valid or not touched/dirty in esInvalido', () => {
+  it('Debe devolver falso si un control es válido o no está tocado/sucio en esInvalido', () => {
     const mockFormGroup = new FormGroup({});
     const mockControlName = 'testControl';
 
@@ -86,7 +86,7 @@ describe('CapitalSocialComponent', () => {
     expect(result).toBe(false);
   });
 
-  it('should handle missing control in esInvalido gracefully', () => {
+  it('Debería manejar con elegancia el control faltante en esInvalido', () => {
     const mockFormGroup = new FormGroup({});
     component.inicializarFormulario = mockFormGroup;
 
@@ -95,7 +95,7 @@ describe('CapitalSocialComponent', () => {
     expect(result).toBe(false);
   });
 
-  it('should not call establecerDatos if control value is null in setValoresStore', () => {
+  it('No se debe llamar a establecerDatos si el valor del control es nulo en setValoresStore', () => {
     const mockFormGroup = new FormGroup({});
     const mockField = 'testField';
 
@@ -105,13 +105,13 @@ describe('CapitalSocialComponent', () => {
     expect(mockTramite30401Store.establecerDatos).not.toHaveBeenCalled();
   });
 
-  it('should handle null form group in setValoresStore gracefully', () => {
+  it('Debería manejar el grupo de formato nulo en setValoresStore con elegancia', () => {
     component.setValoresStore(null as any, 'testField');
 
     expect(mockTramite30401Store.establecerDatos).not.toHaveBeenCalled();
   });
 
-  it('should handle null form group in setValoresStore gracefully', () => {
+  it('Debería manejar el grupo de formato nulo en setValoresStore con elegancia', () => {
     component.setValoresStore(null, 'testField');
 
     expect(mockTramite30401Store.establecerDatos).not.toHaveBeenCalled();

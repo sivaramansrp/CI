@@ -8,12 +8,26 @@ import { Observable, of as observableOf, throwError } from 'rxjs';
 
 import { Component } from '@angular/core';
 import { SolicitudPageComponent } from './solicitud-page.component';
-import { SolicitanteComponent } from '@libs/shared/data-access-user/src';
-import { ModificacionComponent } from '../../components/modificacion/modificacion.component';
-import { BitacoraComponent } from '../../components/bitacora/bitacora.component';
-import { AnexoUnoPestanaComponent } from '../../components/anexo-uno-pestana/anexo-uno-pestana.component';
-import { ComplementariaComponent } from '../../components/complementaria/complementaria.component';
-import { MontoYFactorComponent } from '../../components/monto-y-factor/monto-y-factor.component';
+
+@Directive({ selector: '[myCustom]' })
+class MyCustomDirective {
+  @Input() myCustom;
+}
+
+@Pipe({name: 'translate'})
+class TranslatePipe implements PipeTransform {
+  transform(value) { return value; }
+}
+
+@Pipe({name: 'phoneNumber'})
+class PhoneNumberPipe implements PipeTransform {
+  transform(value) { return value; }
+}
+
+@Pipe({name: 'safeHtml'})
+class SafeHtmlPipe implements PipeTransform {
+  transform(value) { return value; }
+}
 
 describe('SolicitudPageComponent', () => {
   let fixture;
@@ -21,14 +35,11 @@ describe('SolicitudPageComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule, SolicitanteComponent,
-        ModificacionComponent,
-        BitacoraComponent,
-        AnexoUnoPestanaComponent,
-        ComplementariaComponent,
-        MontoYFactorComponent],
+      imports: [ FormsModule, ReactiveFormsModule ],
       declarations: [
-        SolicitudPageComponent
+        SolicitudPageComponent,
+        TranslatePipe, PhoneNumberPipe, SafeHtmlPipe,
+        MyCustomDirective
       ],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
       providers: [
@@ -41,11 +52,6 @@ describe('SolicitudPageComponent', () => {
     component = fixture.debugElement.componentInstance;
   });
 
-  afterEach(() => {
-    component.ngOnDestroy = function() {};
-    fixture.destroy();
-  });
-
   it('should run #constructor()', async () => {
     expect(component).toBeTruthy();
   });
@@ -56,5 +62,32 @@ describe('SolicitudPageComponent', () => {
 
   });
 
+  it('should run #getValorIndice() siguiente', async () => {
+    component.wizardComponent = component.wizardComponent || {};
+    component.wizardComponent.siguiente = jest.fn();
+    component.wizardComponent.atras = jest.fn();
+    component.getValorIndice({
+      valor: 2,
+      accion: 'cont'
+    });
+    expect(component.wizardComponent.siguiente).toHaveBeenCalled();
+  });
+
+   it('should run #getValorIndice() atras', async () => {
+    component.wizardComponent = component.wizardComponent || {};
+    component.wizardComponent.siguiente = jest.fn();
+    component.wizardComponent.atras = jest.fn();
+    component.getValorIndice({
+      valor: 2,
+      accion: 'other'
+    });
+    expect(component.wizardComponent.atras).toHaveBeenCalled();
+  });
+
+  it('should run #obtenerNombreDelTítulo()', async () => {
+
+    SolicitudPageComponent.obtenerNombreDelTítulo(1);
+
+  });
 
 });

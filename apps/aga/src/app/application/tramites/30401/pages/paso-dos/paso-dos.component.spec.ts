@@ -8,6 +8,7 @@ import { Observable, of as observableOf, throwError } from 'rxjs';
 
 import { Component } from '@angular/core';
 import { PasoDosComponent } from './paso-dos.component';
+import { HttpClientModule } from '@angular/common/http';
 
 @Directive({ selector: '[myCustom]' })
 class MyCustomDirective {
@@ -35,7 +36,7 @@ describe('PasoDosComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [FormsModule, ReactiveFormsModule],
+      imports: [FormsModule, ReactiveFormsModule,HttpClientModule],
       declarations: [
         PasoDosComponent,
         TranslatePipe, PhoneNumberPipe, SafeHtmlPipe,
@@ -57,7 +58,7 @@ describe('PasoDosComponent', () => {
     fixture.destroy();
   });
 
-  it('should run #constructor()', async () => {
+  it('debería ejecutar #constructor()', async () => {
     expect(component).toBeTruthy();
   });
 

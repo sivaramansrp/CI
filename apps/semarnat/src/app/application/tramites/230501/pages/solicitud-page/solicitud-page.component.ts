@@ -70,6 +70,25 @@ export class SolicitudPageComponent {
    * @type {Subject<void>}
    */
   destroyNotifier$: Subject<void> = new Subject();
+
+
+  /**
+   * Constructor de la clase `SolicitudPageComponent`.
+   * 
+   * Este constructor inicializa las dependencias necesarias para el componente y configura
+   * una suscripción al observable `FormaValida$` del servicio `Tramite230501Query`.
+   * 
+   * @param seccionStore - Servicio `SeccionLibStore` utilizado para gestionar el estado de las secciones.
+   * @param tramiteQuery - Servicio `Tramite230501Query` utilizado para consultar y observar el estado de la forma.
+   * 
+   * La suscripción al observable `FormaValida$` realiza las siguientes acciones:
+   * - Escucha los cambios en la validez del formulario.
+   * - Utiliza el método `establecerSeccion` del servicio `SeccionLibStore` para actualizar el estado de la sección.
+   * - Utiliza el método `establecerFormaValida` del servicio `SeccionLibStore` para actualizar la validez del formulario.
+   * 
+   * La suscripción se gestiona utilizando el operador `takeUntil` para garantizar que se cancele
+   * cuando el componente sea destruido, evitando fugas de memoria.
+   */
   constructor(private seccionStore: SeccionLibStore, private tramiteQuery: Tramite230501Query,
   ) {
     this.tramiteQuery.FormaValida$.pipe(
