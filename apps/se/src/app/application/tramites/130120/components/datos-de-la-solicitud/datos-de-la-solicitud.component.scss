@@ -1,5 +1,8 @@
 .espaciador-campo {
-    padding-top: 5rem;
+    padding-top: 3rem;
+}
+.espaciador-campo-pequeño {
+    padding-top: 1rem;
 }
 .text-danger {
     padding-top: 1rem;
@@ -12,4 +15,8 @@
 }
 .text-area-size {
     height: 20%;
+}
+.contenedor-error {
+    min-height: 2.5rem;
+    display: block;
 }

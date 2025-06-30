@@ -4,11 +4,13 @@ import { Injectable } from '@angular/core';
 import { MencioneConfiguracionItem } from '../../tramites/31601/enum/mencione-tabla.enum';
 
 import { Antecesor } from '../../tramites/31601/modelos/antecesor.modal';
+import { ControlInventariosItem } from '../../tramites/31601/models/models31601.model';
 
 /**
  * Interfaz que representa el estado de Solicitud31601.
  */
 export interface Solicitud31601State {
+<<<<<<< HEAD
   /**
    * El nombre completo del miembro.
    */
@@ -516,6 +518,520 @@ export interface Solicitud31601State {
    * El valor de cumpleLineamientos.
    */
   cumpleLineamientos: string;
+=======
+    /**
+     * El nombre completo del miembro.
+     */
+    nombreCompleto: string;
+    /**
+     * El tipo de persona del miembro.
+     */
+    tipoDePersonaMiembro: string;
+
+    /**
+     * El nombre del miembro.
+     */
+    nombreMiembro: string;
+
+    /**
+     * El apellido paterno del miembro.
+     */
+    apellidoPaternoMiembro: string;
+
+    /**
+     * El apellido materno del miembro.
+     */
+    apellidoMaternoMiembro: string;
+
+    /**
+     * El nombre de la empresa del miembro.
+     */
+    nombreDeLaEmpresaMiembro: string;
+
+    /**
+     * Lista de miembros seleccionados.
+     */
+    miembrosSeleccionados: Antecesor[];
+    /**
+     * El valor de autorizacionIVAIEPS.
+     */
+    autorizacionIVAIEPS: string;
+
+    /**
+     * El valor de regimen_0.
+     */
+    regimen_0: boolean;
+
+    /**
+     * El valor de regimen_1.
+     */
+    regimen_1: boolean;
+
+    /**
+     * El valor de regimen_2.
+     */
+    regimen_2: boolean;
+
+    /**
+     * El valor de regimen_3.
+     */
+    regimen_3: boolean;
+
+    /**
+     * El valor de sectorProductivo.
+     */
+    sectorProductivo: string;
+
+    /**
+     * El valor de servicio.
+     */
+    servicio: string;
+
+    /**
+     * El valor de preOperativo.
+     */
+    preOperativo: boolean;
+
+    /**
+     * El valor de indiqueSi.
+     */
+    indiqueSi: boolean;
+
+    /**
+     * El valor de senale.
+     */
+    senale: boolean;
+
+    /**
+     * El valor de empPropios.
+     */
+    empPropios: string;
+
+    /**
+     * El valor de bimestre.
+     */
+    bimestre: string;
+
+    /**
+     * El valor de senaleSi.
+     */
+    senaleSi: boolean;
+
+    /**
+     * El valor de seMomento.
+     */
+    seMomento: boolean;
+
+    /**
+     * El valor de cumplir.
+     */
+    cumplir: boolean;
+
+    /**
+     * El valor de indique.
+     */
+    indique: boolean;
+
+    /**
+     * El valor de encuentra.
+     */
+    encuentra: boolean;
+
+    /**
+     * El valor de delMismo.
+     */
+    delMismo: boolean;
+
+    /**
+     * El valor de senaleMomento.
+     */
+    senaleMomento: boolean;
+
+    /**
+     * El valor de enCaso.
+     */
+    enCaso: boolean;
+
+    /**
+     * El valor de comboBimestresIDCSeleccione.
+     */
+    comboBimestresIDCSeleccione: string;
+
+    /**
+     * El valor de ingresar.
+     */
+    ingresar: boolean;
+
+    /**
+     * El valor de encuentraSus.
+     */
+    encuentraSus: boolean;
+
+    /**
+     * El valor de registrosQue.
+     */
+    registrosQue: string;
+
+    /**
+     * El valor de registrosQue2.
+     */
+    registrosQue2: string;
+
+    /**
+     * El valor de momentoIngresar.
+     */
+    momentoIngresar: boolean;
+
+    /**
+     * El valor de indiqueCuenta.
+     */
+    indiqueCuenta: boolean;
+
+    /**
+     * El valor de nombreDel.
+     */
+    nombreDel: string;
+
+    /**
+     * El valor de lugarDeRadicacion.
+     */
+    lugarDeRadicacion: string;
+
+    /**
+     * El valor de contabilidad.
+     */
+    contabilidad: boolean;
+
+    /**
+     * El valor de rmfRadio.
+     */
+    rmfRadio: boolean;
+
+    /**
+     * El valor de vinculacionRegistroCancelado.
+     */
+    vinculacionRegistroCancelado: boolean;
+
+    /**
+     * El valor de proveedoresListadoSAT.
+     */
+    proveedoresListadoSAT: boolean;
+
+    /**
+     * El valor de indiqueCheck.
+     */
+    indiqueCheck: boolean;
+
+    /**
+     * El valor de resigtro.
+     */
+    resigtro: string;
+
+    /**
+     * El valor de telefono.
+     */
+    telefono: string;
+
+    /**
+     * El valor de correo.
+     */
+    correo: string;
+
+    /**
+     * El valor de manifieste.
+     */
+    manifieste: string;
+
+    /**
+     * El valor de indiqueIva.
+     */
+    indiqueIva: string;
+
+    /**
+     * El valor de empleados.
+     */
+    empleados: boolean;
+
+    /**
+     * El valor de infraestructura.
+     */
+    infraestructura: boolean;
+
+    /**
+     * El valor de monto.
+     */
+    monto: boolean;
+
+    /**
+     * El valor de antiguedad.
+     */
+    antiguedad: boolean;
+
+    /**
+     * El valor de tipoDe.
+     */
+    tipoDe: string;
+
+    /**
+     * El valor de valorPesos.
+     */
+    valorPesos: string;
+
+    /**
+     * El valor de descripcion.
+     */
+    descripcion: string;
+
+    /**
+     * El valor de haContado.
+     */
+    haContado: string;
+
+    /**
+     * El valor de enCasoIva.
+     */
+    enCasoIva: string;
+
+    /**
+     * El valor de numeroOperacion.
+     */
+    numeroOperacion: string;
+
+    /**
+     * El valor de banco.
+     */
+    banco: string;
+
+    /**
+     * El valor de llavePago.
+     */
+    llavePago: string;
+
+    /**
+     * El valor de importaciones.
+     */
+    importaciones: string;
+
+    /**
+     * El valor de infraestructuraIndique.
+     */
+    infraestructuraIndique: string;
+
+    /**
+     * El valor de ultimosMeses.
+     */
+    ultimosMeses: string;
+
+    /**
+     * El valor de operacionesmeses.
+     */
+    operacionesmeses: string;
+
+    /**
+     * El valor de valor.
+     */
+    valor: string;
+
+    /**
+     * El valor de transferencias.
+     */
+    transferencias: number;
+
+    /**
+     * El valor de transferenciasVir.
+     */
+    transferenciasVir: number;
+
+    /**
+     * El valor de retornos.
+     */
+    retornos: number;
+
+    /**
+     * El valor de retornosSe.
+     */
+    retornosSe: number;
+
+    /**
+     * El valor de constancias.
+     */
+    constancias: number;
+
+    /**
+     * El valor de constanciasDe.
+     */
+    constanciasDe: number;
+
+    /**
+     * El valor de empleadosPropiosRegimen.
+     */
+    empleadosPropiosRegimen: string;
+
+    /**
+     * El valor de numeroEmpleadosUno.
+     */
+    numeroEmpleadosUno: number;
+
+    /**
+     * El valor de numeroEmpleadosDos.
+     */
+    numeroEmpleadosDos: number;
+
+    /**
+     * El valor de numeroEmpleadosTres.
+     */
+    numeroEmpleadosTres: number;
+
+    /**
+     * El valor de comboBimestresUno.
+     */
+    comboBimestresUno: string;
+
+    /**
+     * El valor de comboBimestresDos.
+     */
+    comboBimestresDos: string;
+
+    /**
+     * El valor de comboBimestresTres.
+     */
+    comboBimestresTres: string;
+
+    /**
+     * El valor de proveedorCumplimiento.
+     */
+    proveedorCumplimiento: string;
+
+    /**
+     * El valor de declaracionISR.
+     */
+    declaracionISR: string;
+
+    /**
+     * El valor de cancelacion.
+     */
+    cancelacion: string;
+
+    /**
+     * El valor de cumplimientoReglas.
+     */
+    cumplimientoReglas: string;
+
+    /**
+     * El valor de recintoFiscalizado.
+     */
+    recintoFiscalizado: string;
+
+    /**
+     * El valor de recintoEstrategico.
+     */
+    recintoEstrategico: string;
+
+    /**
+     * El valor de cumplimientoLineamientos.
+     */
+    cumplimientoLineamientos: string;
+    /**
+     * El valor de squemaIntegral.
+     */
+    squemaIntegral: string;
+    /**
+     * El valor de sidoModificadas.
+     */
+    sidoModificadas: string;
+    /**
+     * El valor de ensucaracterde.
+     */
+    ensucaracterde: string;
+    /**
+     * El valor de rfc.
+     */
+    rfc: string;
+    /**
+     * El valor de obligadoaTributarenMéxico.
+     */
+    obligadoaTributarenMexico: string;
+    /**
+     * El valor de nacionalidad.
+     */
+    nacionalidad: string;
+    /**
+     * El valor de registroFederaldeContribuyentes.
+     */
+    registroFederaldeContribuyentes: string;
+    /**
+     * El valor de resigtroReprestantante.
+     */
+    resigtroReprestantante: string;
+    /**
+     * El valor de rfcReprestantante.
+     */
+    rfcReprestantante: string;
+    /**
+     * El valor de nombreReprestante.
+     */
+    nombreReprestante: string;
+    /**
+     * El valor de apellidoPaterno.
+     */
+    apellidoPaterno: string;
+    /**
+     * El valor de apellidoMaterno.
+     */
+    apellidoMaterno: string;
+    /**
+     * El valor de cuidad.
+     */
+    cuidad: string;
+    /**
+     * El valor de cargo.
+     */
+    cargo: string;
+    /**
+     * El valor de estadoResidencia.
+     */
+    estadoResidencia : string;
+    /**
+     * El valor de telefonoReprestantante.
+     */
+    telefonoReprestantante: string;
+    /**
+     * El valor de correoReprestantante.
+     */
+    correoReprestantante: string;
+    /**
+     * El valor de suplente.
+     */
+    suplente: string;
+    /**
+     * El valor de tipoDocumento.
+     */
+    tipoDocumento: string;
+
+    /**
+     * Datos de la tabla de menciones.
+     */
+    mencioneDatos: MencioneConfiguracionItem[];
+
+    /**
+     * Datos de la tabla de enlaces.
+     */
+    enlaceDatos: EnlaceConfiguracionItem[];
+
+    /**
+     * Datos de la tabla de control de inventarios.
+     */
+    controlInventariosDatos: ControlInventariosItem[];
+
+     /**
+     * El valor de cancelacionProcedimiento.
+     */
+    cancelacionProcedimiento: string,
+    /**
+     * El valor de cumpleLineamientos.
+     */
+    cumpleLineamientos: string,
+    
 }
 /**
  * Función para crear el estado inicial de Solicitud31601.
@@ -2220,4 +2736,1141 @@ export class Tramite31601Store extends Store<Solicitud31601State> {
       cumpleLineamientos,
     }));
   }
+=======
+    /**
+     * Establece los datos de la tabla de control de inventarios.
+     * @param {ControlInventariosItem[]} datosTablaControlInventarios - Los datos de la tabla de control de inventarios.
+     */
+    setControlInventariosTablaDatos(datosTablaControlInventarios: ControlInventariosItem[]): void {
+        this.update((state) => ({
+            ...state,
+            controlInventariosDatos: datosTablaControlInventarios,
+        }));
+    }
+    
+    /**
+     * Establece los datos de la tabla de menciones.
+     * @param {MencioneConfiguracionItem[]} datosTablaMencione - Los datos de la tabla de menciones.
+     */
+    setMencioneTablaDatos(datosTablaMencione: MencioneConfiguracionItem[]):void {
+        this.update((state) => ({
+            ...state,
+            mencioneDatos: datosTablaMencione,
+        }));
+    }
+
+    /**
+     * Establece los datos de la tabla de enlaces.
+     * @param {EnlaceConfiguracionItem[]} datosTablaEnlace - Los datos de la tabla de enlaces.
+     */
+    setEnlaceTablaDatos(datosTablaEnlace: EnlaceConfiguracionItem[]):void {
+        this.update((state) => ({
+            ...state,
+            enlaceDatos: datosTablaEnlace,
+        }));
+    }
+
+    /**
+     * Crea una instancia de Tramite31601Store.
+     * Inicializa la tienda con el estado inicial.
+     */
+    constructor() {
+        super(createInitialState());
+    }
+
+    public agregarMiembrodelaempresaTable(miembro: Antecesor): void {
+        this.update((state) => ({
+            ...state,
+            miembrosSeleccionados: [...state.miembrosSeleccionados, miembro],
+        }));
+    }
+    public eliminarMiembrodelaempresaTable(miembro: Antecesor): void {
+        this.update((state) => ({
+            ...state,
+            miembrosSeleccionados: state.miembrosSeleccionados.filter(m => m !== miembro),
+        }));
+    }
+
+    /**
+     * Establece el estado de tipoDePersonaMiembro.
+     * @param tipoDePersonaMiembro - El valor de tipoDePersonaMiembro.
+     */
+    public setTipoDePersonaMiembro(tipoDePersonaMiembro: string): void {
+        this.update((state) => ({
+            ...state,
+            tipoDePersonaMiembro,
+        }));
+    }
+
+    /**
+     * Establece el estado de nombreMiembro.
+     * @param nombreMiembro - El valor de nombreMiembro.
+     */
+    public setNombreMiembro(nombreMiembro: string): void {
+        this.update((state) => ({
+            ...state,
+            nombreMiembro,
+        }));
+    }
+
+    /**
+     * Establece el estado de apellidoPaternoMiembro.
+     * @param apellidoPaternoMiembro - El valor de apellidoPaternoMiembro.
+     */
+    public setApellidoPaternoMiembro(apellidoPaternoMiembro: string): void {
+        this.update((state) => ({
+            ...state,
+            apellidoPaternoMiembro,
+        }));
+    }
+
+    /**
+     * Establece el estado de apellidoMaternoMiembro.
+     * @param apellidoMaternoMiembro - El valor de apellidoMaternoMiembro.
+     */
+    public setApellidoMaternoMiembro(apellidoMaternoMiembro: string): void {
+        this.update((state) => ({
+            ...state,
+            apellidoMaternoMiembro,
+        }));
+    }
+
+    /**
+     * Establece el estado de nombreDeLaEmpresaMiembro.
+     * @param nombreDeLaEmpresaMiembro - El valor de nombreDeLaEmpresaMiembro.
+     */
+    public setNombreDeLaEmpresaMiembro(nombreDeLaEmpresaMiembro: string): void {
+        this.update((state) => ({
+            ...state,
+            nombreDeLaEmpresaMiembro,
+        }));
+    }
+
+    /**
+     * Establece el estado de autorizacionIVAIEPS.
+     * @param autorizacionIVAIEPS - El valor de autorizacionIVAIEPS.
+     */
+    public setAutorizacionIVAIEPS(autorizacionIVAIEPS: string): void {
+        this.update((state) => ({
+            ...state,
+            autorizacionIVAIEPS,
+        }));
+    }
+
+    /**
+     * Establece el estado de regimen_0.
+     * @param regimen_0 - El valor de regimen_0.
+     */
+    public setRegimen_0(regimen_0: boolean): void {
+        this.update((state) => ({
+            ...state,
+            regimen_0,
+        }));
+    }
+
+    /**
+     * Establece el estado de regimen_1.
+     * @param regimen_1 - El valor de regimen_1.
+     */
+    public setRegimen_1(regimen_1: boolean): void {
+        this.update((state) => ({
+            ...state,
+            regimen_1,
+        }));
+    }
+
+    /**
+     * Establece el estado de regimen_2.
+     * @param regimen_2 - El valor de regimen_2.
+     */
+    public setRegimen_2(regimen_2: boolean): void {
+        this.update((state) => ({
+            ...state,
+            regimen_2,
+        }));
+    }
+
+    /**
+     * Establece el estado de regimen_3.
+     * @param regimen_3 - El valor de regimen_3.
+     */
+    public setRegimen_3(regimen_3: boolean): void {
+        this.update((state) => ({
+            ...state,
+            regimen_3,
+        }));
+    }
+
+    /**
+     * Establece el estado de sectorProductivo.
+     * @param sectorProductivo - El valor de sectorProductivo.
+     */
+    public setSectorProductivo(sectorProductivo: string): void {
+        this.update((state) => ({
+            ...state,
+            sectorProductivo,
+        }));
+    }
+
+    /**
+     * Establece el estado de servicio.
+     * @param servicio - El valor de servicio.
+     */
+    public setServicio(servicio: string): void {
+        this.update((state) => ({
+            ...state,
+            servicio,
+        }));
+    }
+
+    /**
+     * Establece el estado de preOperativo.
+     * @param preOperativo - El valor de preOperativo.
+     */
+    public setPreOperativo(preOperativo: boolean): void {
+        this.update((state) => ({
+            ...state,
+            preOperativo,
+        }));
+    }
+
+    /**
+     * Establece el estado de indiqueSi.
+     * @param indiqueSi - El valor de indiqueSi.
+     */
+    public setIndiqueSi(indiqueSi: boolean): void {
+        this.update((state) => ({
+            ...state,
+            indiqueSi,
+        }));
+    }
+
+    /**
+     * Establece el estado de senale.
+     * @param senale - El valor de senale.
+     */
+    public setSenale(senale: boolean): void {
+        this.update((state) => ({
+            ...state,
+            senale,
+        }));
+    }
+
+    /**
+     * Establece el estado de empPropios.
+     * @param empPropios - El valor de empPropios.
+     */
+    public setEmpPropios(empPropios: string): void {
+        this.update((state) => ({
+            ...state,
+            empPropios,
+        }));
+    }
+
+    /**
+     * Establece el estado de bimestre.
+     * @param bimestre - El valor de bimestre.
+     */
+    public setBimestre(bimestre: string): void {
+        this.update((state) => ({
+            ...state,
+            bimestre,
+        }));
+    }
+
+    /**
+     * Establece el estado de senaleSi.
+     * @param senaleSi - El valor de senaleSi.
+     */
+    public setSenaleSi(senaleSi: boolean): void {
+        this.update((state) => ({
+            ...state,
+            senaleSi,
+        }));
+    }
+
+    /**
+     * Establece el estado de seMomento.
+     * @param seMomento - El valor de seMomento.
+     */
+    public setSeMomento(seMomento: boolean): void{
+        this.update((state) => ({
+            ...state,
+            seMomento,
+        }));
+    }
+
+    /**
+     * Establece el estado de cumplir.
+     * @param cumplir - El valor de cumplir.
+     */
+    public setCumplir(cumplir: boolean): void {
+        this.update((state) => ({
+            ...state,
+            cumplir,
+        }));
+    }
+
+    /**
+     * Establece el estado de indique.
+     * @param indique - El valor de indique.
+     */
+    public setIndique(indique: boolean): void {
+        this.update((state) => ({
+            ...state,
+            indique,
+        }));
+    }
+
+    /**
+     * Establece el estado de encuentra.
+     * @param encuentra - El valor de encuentra.
+     */
+    public setEncuentra(encuentra: boolean): void {
+        this.update((state) => ({
+            ...state,
+            encuentra,
+        }));
+    }
+
+    /**
+     * Establece el estado de delMismo.
+     * @param delMismo - El valor de delMismo.
+     */
+    public setDelMismo(delMismo: boolean): void {
+        this.update((state) => ({
+            ...state,
+            delMismo,
+        }));
+    }
+
+    /**
+     * Establece el estado de senaleMomento.
+     * @param senaleMomento - El valor de senaleMomento.
+     */
+    public setSenaleMomento(senaleMomento: boolean): void {
+        this.update((state) => ({
+            ...state,
+            senaleMomento,
+        }));
+    }
+
+    /**
+     * Establece el estado de enCaso.
+     * @param enCaso - El valor de enCaso.
+     */
+    public setEnCaso(enCaso: boolean): void {
+        this.update((state) => ({
+            ...state,
+            enCaso,
+        }));
+    }
+
+    /**
+     * Establece el estado de comboBimestresIDCSeleccione.
+     * @param comboBimestresIDCSeleccione - El valor de comboBimestresIDCSeleccione.
+     */
+    public setComboBimestresIDCSeleccione(comboBimestresIDCSeleccione: string): void {
+        this.update((state) => ({
+            ...state,
+            comboBimestresIDCSeleccione,
+        }));
+    }
+
+    /**
+     * Establece el estado de ingresar.
+     * @param ingresar - El valor de ingresar.
+     */
+    public setIngresar(ingresar: boolean): void {
+        this.update((state) => ({
+            ...state,
+            ingresar,
+        }));
+    }
+
+    /**
+     * Establece el estado de encuentraSus.
+     * @param encuentraSus - El valor de encuentraSus.
+     */
+    public setEncuentraSus(encuentraSus: boolean): void {
+        this.update((state) => ({
+            ...state,
+            encuentraSus,
+        }));
+    }
+
+    /**
+     * Establece el estado de registrosQue.
+     * @param registrosQue - El valor de registrosQue.
+     */
+    public setRegistrosQue(registrosQue: string): void {
+        this.update((state) => ({
+            ...state,
+            registrosQue,
+        }));
+    }
+
+    /**
+     * Establece el estado de registrosQue2.
+     * @param registrosQue2 - El valor de registrosQue2.
+     */
+    public setRegistrosQue2(registrosQue2: string): void {
+        this.update((state) => ({
+            ...state,
+            registrosQue2,
+        }));
+    }
+
+    /**
+     * Establece el estado de momentoIngresar.
+     * @param momentoIngresar - El valor de momentoIngresar.
+     */
+    public setMomentoIngresar(momentoIngresar: boolean): void {
+        this.update((state) => ({
+            ...state,
+            momentoIngresar,
+        }));
+    }
+
+    /**
+     * Establece el estado de indiqueCuenta.
+     * @param indiqueCuenta - El valor de indiqueCuenta.
+     */
+    public setIndiqueCuenta(indiqueCuenta: boolean): void {
+        this.update((state) => ({
+            ...state,
+            indiqueCuenta,
+        }));
+    }
+
+    /**
+     * Establece el estado de nombreDel.
+     * @param nombreDel - El valor de nombreDel.
+     */
+    public setNombreDel(nombreDel: string): void {
+        this.update((state) => ({
+            ...state,
+            nombreDel,
+        }));
+    }
+
+    /**
+     * Establece el estado de lugarDeRadicacion.
+     * @param lugarDeRadicacion - El valor de lugarDeRadicacion.
+     */
+    public setLugarDeRadicacion(lugarDeRadicacion: string): void {
+        this.update((state) => ({
+            ...state,
+            lugarDeRadicacion,
+        }));
+    }
+
+    /**
+     * Establece el estado de contabilidad.
+     * @param contabilidad - El valor de contabilidad.
+     */
+    public setContabilidad(contabilidad: boolean): void {
+        this.update((state) => ({
+            ...state,
+            contabilidad,
+        }));
+    }
+
+    /**
+     * Establece el estado de rmfRadio.
+     * @param rmfRadio - El valor de rmfRadio.
+     */
+    public setRmfRadio(rmfRadio: boolean): void {
+        this.update((state) => ({
+            ...state,
+            rmfRadio,
+        }));
+    }
+
+    /**
+     * Establece el estado de vinculacionRegistroCancelado.
+     * @param vinculacionRegistroCancelado - El valor de vinculacionRegistroCancelado.
+     */
+    public setVinculacionRegistroCancelado(vinculacionRegistroCancelado: boolean): void {
+        this.update((state) => ({
+            ...state,
+            vinculacionRegistroCancelado,
+        }));
+    }
+
+    /**
+     * Establece el estado de proveedoresListadoSAT.
+     * @param proveedoresListadoSAT - El valor de proveedoresListadoSAT.
+     */
+    public setProveedoresListadoSAT(proveedoresListadoSAT: boolean): void {
+        this.update((state) => ({
+            ...state,
+            proveedoresListadoSAT,
+        }));
+    }
+
+    /**
+     * Establece el estado de indiqueCheck.
+     * @param indiqueCheck - El valor de indiqueCheck.
+     */
+    public setIndiqueCheck(indiqueCheck: boolean): void {
+        this.update((state) => ({
+            ...state,
+            indiqueCheck,
+        }));
+    }
+
+    /**
+     * Establece el estado de resigtro.
+     * @param resigtro - El valor de resigtro.
+     */
+    public setResigtro(resigtro: string): void {
+        this.update((state) => ({
+            ...state,
+            resigtro,
+        }));
+    }
+
+    /**
+     * Establece el estado de telefono.
+     * @param telefono - El valor de telefono.
+     */
+    public setTelefono(telefono: string): void {
+        this.update((state) => ({
+            ...state,
+            telefono,
+        }));
+    }
+
+    /**
+     * Establece el estado de correo.
+     * @param correo - El valor de correo.
+     */
+    public setCorreo(correo: string): void {
+        this.update((state) => ({
+            ...state,
+            correo,
+        }));
+    }
+
+    /**
+     * Establece el estado de manifieste.
+     * @param manifieste - El valor de manifieste.
+     */
+    public setManifieste(manifieste: string): void {
+        this.update((state) => ({
+            ...state,
+            manifieste,
+        }));
+    }
+
+    /**
+     * Establece el estado de indiqueIva.
+     * @param indiqueIva - El valor de indiqueIva.
+     */
+    public setIndiqueIva(indiqueIva: string): void {
+        this.update((state) => ({
+            ...state,
+            indiqueIva,
+        }));
+    }
+
+    /**
+     * Establece el estado de empleados.
+     * @param empleados - El valor de empleados.
+     */
+    public setEmpleados(empleados: boolean): void {
+        this.update((state) => ({
+            ...state,
+            empleados,
+        }));
+    }
+
+    /**
+     * Establece el estado de infraestructura.
+     * @param infraestructura - El valor de infraestructura.
+     */
+    public setInfraestructura(infraestructura: boolean): void {
+        this.update((state) => ({
+            ...state,
+            infraestructura,
+        }));
+    }
+
+    /**
+     * Establece el estado de monto.
+     * @param monto - El valor de monto.
+     */
+    public setMonto(monto: boolean): void {
+        this.update((state) => ({
+            ...state,
+            monto,
+        }));
+    }
+
+    /**
+     * Establece el estado de antiguedad.
+     * @param antiguedad - El valor de antiguedad.
+     */
+    public setAntiguedad(antiguedad: boolean): void {
+        this.update((state) => ({
+            ...state,
+            antiguedad,
+        }));
+    }
+
+    /**
+     * Establece el estado de tipoDe.
+     * @param tipoDe - El valor de tipoDe.
+     */
+    public setTipoDe(tipoDe: string): void {
+        this.update((state) => ({
+            ...state,
+            tipoDe,
+        }));
+    }
+
+    /**
+     * Establece el estado de valorPesos.
+     * @param valorPesos - El valor de valorPesos.
+     */
+    public setValorPesos(valorPesos: string): void {
+        this.update((state) => ({
+            ...state,
+            valorPesos,
+        }));
+    }
+
+    /**
+     * Establece el estado de descripcion.
+     * @param descripcion - El valor de descripcion.
+     */
+    public setDescripcion(descripcion: string): void {
+        this.update((state) => ({
+            ...state,
+            descripcion,
+        }));
+    }
+
+    /**
+     * Establece el estado de haContado.
+     * @param haContado - El valor de haContado.
+     */
+    public setHaContado(haContado: string): void {
+        this.update((state) => ({
+            ...state,
+            haContado,
+        }));
+    }
+
+    /**
+     * Establece el estado de enCasoIva.
+     * @param enCasoIva - El valor de enCasoIva.
+     */
+    public setEnCasoIva(enCasoIva: string): void {
+        this.update((state) => ({
+            ...state,
+            enCasoIva,
+        }));
+    }
+
+    /**
+     * Establece el estado de numeroOperacion.
+     * @param numeroOperacion - El valor de numeroOperacion.
+     */
+    public setNumeroOperacion(numeroOperacion: string): void {
+        this.update((state) => ({
+            ...state,
+            numeroOperacion,
+        }));
+    }
+
+    /**
+     * Establece el estado de banco.
+     * @param banco - El valor de banco.
+     */
+    public setBanco(banco: string): void {
+        this.update((state) => ({
+            ...state,
+            banco,
+        }));
+    }
+
+    /**
+     * Establece el estado de llavePago.
+     * @param llavePago - El valor de llavePago.
+     */
+    public setLlavePago(llavePago: string): void {
+        this.update((state) => ({
+            ...state,
+            llavePago,
+        }));
+    }
+
+    /**
+     * Establece el estado de importaciones.
+     * @param importaciones - El valor de importaciones.
+     */
+    public setImportaciones(importaciones: string): void {
+        this.update((state) => ({
+            ...state,
+            importaciones,
+        }));
+    }
+
+    /**
+     * Establece el estado de infraestructuraIndique.
+     * @param infraestructuraIndique - El valor de infraestructuraIndique.
+     */
+    public setInfraestructuraIndique(infraestructuraIndique: string): void {
+        this.update((state) => ({
+            ...state,
+            infraestructuraIndique,
+        }));
+    }
+
+    /**
+     * Establece el estado de ultimosMeses.
+     * @param ultimosMeses - El valor de ultimosMeses.
+     */
+    public setUltimosMeses(ultimosMeses: string): void {
+        this.update((state) => ({
+            ...state,
+            ultimosMeses,
+        }));
+    }
+
+    /**
+     * Establece el estado de operacionesmeses.
+     * @param operacionesmeses - El valor de operacionesmeses.
+     */
+    public setOperacionesmeses(operacionesmeses: string): void {
+        this.update((state) => ({
+            ...state,
+            operacionesmeses,
+        }));
+    }
+
+    /**
+     * Establece el estado de valor.
+     * @param valor - El valor de valor.
+     */
+    public setValor(valor: string): void {
+        this.update((state) => ({
+            ...state,
+            valor,
+        }));
+    }
+
+    /**
+     * Establece el estado de transferencias.
+     * @param transferencias - El valor de transferencias.
+     */
+    public setTransferencias(transferencias: number): void {
+        this.update((state) => ({
+            ...state,
+            transferencias,
+        }));
+    }
+
+    /**
+     * Establece el estado de transferenciasVir.
+     * @param transferenciasVir - El valor de transferenciasVir.
+     */
+    public setTransferenciasVir(transferenciasVir: number): void {
+        this.update((state) => ({
+            ...state,
+            transferenciasVir,
+        }));
+    }
+
+    /**
+     * Establece el estado de retornos.
+     * @param retornos - El valor de retornos.
+     */
+    public setRetornos(retornos: number): void {
+        this.update((state) => ({
+            ...state,
+            retornos,
+        }));
+    }
+
+    /**
+     * Establece el estado de retornosSe.
+     * @param retornosSe - El valor de retornosSe.
+     */
+    public setRetornosSe(retornosSe: number): void {
+        this.update((state) => ({
+            ...state,
+            retornosSe,
+        }));
+    }
+
+    /**
+     * Establece el estado de constancias.
+     * @param constancias - El valor de constancias.
+     */
+    public setConstancias(constancias: number): void {
+        this.update((state) => ({
+            ...state,
+            constancias,
+        }));
+    }
+
+    /**
+     * Establece el estado de constanciasDe.
+     * @param constanciasDe - El valor de constanciasDe.
+     */
+    public setConstanciasDe(constanciasDe: number): void {
+        this.update((state) => ({
+            ...state,
+            constanciasDe,
+        }));
+    }
+
+    /**
+     * Establece el estado de empleadosPropiosRegimen.
+     * @param empleadosPropiosRegimen - El valor de empleadosPropiosRegimen.
+     */
+    public setEmpleadosPropiosRegimen(empleadosPropiosRegimen: string): void {
+        this.update((state) => ({
+            ...state,
+            empleadosPropiosRegimen,
+        }));
+    }
+
+    /**
+ * Establece el estado de numeroEmpleadosUno.
+ * @param numeroEmpleadosUno - El valor de numeroEmpleadosUno.
+ */
+    public setNumeroEmpleadosUno(numeroEmpleadosUno: number): void {
+        this.update((state) => ({
+            ...state,
+            numeroEmpleadosUno,
+        }));
+    }
+
+    /**
+     * Establece el estado de numeroEmpleadosDos.
+     * @param numeroEmpleadosDos - El valor de numeroEmpleadosDos.
+     */
+    public setNumeroEmpleadosDos(numeroEmpleadosDos: number): void {
+        this.update((state) => ({
+            ...state,
+            numeroEmpleadosDos,
+        }));
+    }
+
+    /**
+     * Establece el estado de numeroEmpleadosTres.
+     * @param numeroEmpleadosTres - El valor de numeroEmpleadosTres.
+     */
+    public setNumeroEmpleadosTres(numeroEmpleadosTres: number): void {
+        this.update((state) => ({
+            ...state,
+            numeroEmpleadosTres,
+        }));
+    }
+
+    /**
+     * Establece el estado de comboBimestresUno.
+     * @param comboBimestresUno - El valor de comboBimestresUno.
+     */
+    public setComboBimestresUno(comboBimestresUno: string): void {
+        this.update((state) => ({
+            ...state,
+            comboBimestresUno,
+        }));
+    }
+
+    /**
+     * Establece el estado de comboBimestresDos.
+     * @param comboBimestresDos - El valor de comboBimestresDos.
+     */
+    public setComboBimestresDos(comboBimestresDos: string): void {
+        this.update((state) => ({
+            ...state,
+            comboBimestresDos,
+        }));
+    }
+
+    /**
+     * Establece el estado de comboBimestresTres.
+     * @param comboBimestresTres - El valor de comboBimestresTres.
+     */
+    public setComboBimestresTres(comboBimestresTres: string): void {
+        this.update((state) => ({
+            ...state,
+            comboBimestresTres,
+        }));
+    }
+
+    /**
+     * Establece el estado de proveedorCumplimiento.
+     * @param proveedorCumplimiento - El valor de proveedorCumplimiento.
+     */
+    public setProveedorCumplimiento(proveedorCumplimiento: string): void {
+        this.update((state) => ({
+            ...state,
+            proveedorCumplimiento,
+        }));
+    }
+
+    /**
+     * Establece el estado de declaracionISR.
+     * @param declaracionISR - El valor de declaracionISR.
+     */
+    public setDeclaracionISR(declaracionISR: string): void {
+        this.update((state) => ({
+            ...state,
+            declaracionISR,
+        }));
+    }
+
+    /**
+     * Establece el estado de cancelacion.
+     * @param cancelacion - El valor de cancelacion.
+     */
+    public setCancelacion(cancelacion: string): void {
+        this.update((state) => ({
+            ...state,
+            cancelacion,
+        }));
+    }
+
+    /**
+     * Establece el estado de cumplimientoReglas.
+     * @param cumplimientoReglas - El valor de cumplimientoReglas.
+     */
+    public setCumplimientoReglas(cumplimientoReglas: string): void {
+        this.update((state) => ({
+            ...state,
+            cumplimientoReglas,
+        }));
+    }
+
+    /**
+     * Establece el estado de recintoFiscalizado.
+     * @param recintoFiscalizado - El valor de recintoFiscalizado.
+     */
+    public setRecintoFiscalizado(recintoFiscalizado: string): void {
+        this.update((state) => ({
+            ...state,
+            recintoFiscalizado,
+        }));
+    }
+
+    /**
+     * Establece el estado de recintoEstrategico.
+     * @param recintoEstrategico - El valor de recintoEstrategico.
+     */
+    public setRecintoEstrategico(recintoEstrategico: string): void {
+        this.update((state) => ({
+            ...state,
+            recintoEstrategico,
+        }));
+    }
+
+    /**
+     * Establece el estado de cumplimientoLineamientos.
+     * @param cumplimientoLineamientos - El valor de cumplimientoLineamientos.
+     */
+    public setCumplimientoLineamientos(cumplimientoLineamientos: string): void {
+        this.update((state) => ({
+            ...state,
+            cumplimientoLineamientos,
+        }));
+    }
+
+    /**
+     * Establece el estado de squemaIntegral.
+     * @param squemaIntegral - El valor de squemaIntegral.
+     */
+    public setSquemaIntegral(squemaIntegral: string): void {
+        this.update((state) => ({
+            ...state,
+            squemaIntegral,
+        }));
+    }
+
+    /**
+     * Establece el estado de sidoModificadas.
+     * @param sidoModificadas - El valor de sidoModificadas.
+     */
+    public setSidoModificadas(sidoModificadas: string): void {
+        this.update((state) => ({
+            ...state,
+            sidoModificadas,
+        }));
+    }
+    /**
+     * Establece el estado de ensucaracterde.
+     * @param ensucaracterde - El valor de ensucaracterde.
+     */
+    public setEnsucaracterde(ensucaracterde: string): void {
+        this.update((state) => ({
+            ...state,
+            ensucaracterde,
+        }));
+    }
+    /**
+     * Establece el estado de rfc.
+     * @param rfc - El valor de rfc.
+     */
+    public setRfc(rfc: string): void {
+        this.update((state) => ({
+            ...state,
+            rfc,
+        }));
+    }
+    /**
+     * Establece el estado de obligadoaTributarenMéxico.
+     * @param obligadoaTributarenMéxico - El valor de obligadoaTributarenMéxico.
+     */
+    public setObligadoaTributarenMexico(obligadoaTributarenMexico: string): void {
+        this.update((state) => ({
+            ...state,
+            obligadoaTributarenMexico,
+        }));
+    }
+
+    /**
+     * Establece el estado de nacionalidad.
+     * @param nacionalidad - El valor de nacionalidad.
+     */
+    public setNacionalidad(nacionalidad: string): void {
+        this.update((state) => ({
+            ...state,
+            nacionalidad,
+        }));
+    }
+
+    /**
+     * Establece el estado de registroFederaldeContribuyentes.
+     * @param registroFederaldeContribuyentes - El valor de registroFederaldeContribuyentes.
+     */
+    public setRegistroFederaldeContribuyentes(registroFederaldeContribuyentes: string): void {
+        this.update((state) => ({
+            ...state,
+            registroFederaldeContribuyentes,
+        }));
+    }
+    /**
+     * Establece el estado de resigtroReprestantante.
+     * @param resigtroReprestantante - El valor de resigtroReprestantante.
+     */
+    public setResigtroReprestantante(resigtroReprestantante: string): void {
+        this.update((state) => ({
+            ...state,
+            resigtroReprestantante,
+        }));
+    }
+
+    /**
+     * Establece el estado de rfcReprestantante.
+     * @param rfcReprestantante - El valor de rfcReprestantante.
+     */
+    public setRfcReprestantante(rfcReprestantante: string): void {
+        this.update((state) => ({
+            ...state,
+            rfcReprestantante,
+        }));
+    }
+
+    /**
+     * Establece el estado de nombreReprestante.
+     * @param nombreReprestante - El valor de nombreReprestante.
+     */
+    public setNombreReprestante(nombreReprestante: string): void {
+        this.update((state) => ({
+            ...state,
+            nombreReprestante,
+        }));
+    }
+    /**
+     * Establece el estado de apellidoPaterno.
+     * @param apellidoPaterno - El valor de apellidoPaterno.
+     */
+    public setApellidoPaterno(apellidoPaterno: string): void {
+        this.update((state) => ({
+            ...state,
+            apellidoPaterno,
+        }));
+    }
+
+    /**
+     * Establece el estado de apellidoMaterno.
+     * @param apellidoMaterno - El valor de apellidoMaterno.
+     */
+    public setApellidoMaterno(apellidoMaterno: string): void {
+        this.update((state) => ({
+            ...state,
+            apellidoMaterno,
+        }));
+    }
+
+    /**
+     * Establece el estado de cuidad.
+     * @param cuidad - El valor de cuidad.
+     */
+    public setCuidad(cuidad: string): void {
+        this.update((state) => ({
+            ...state,
+            cuidad,
+        }));
+    }
+
+    /**
+     * Establece el estado de cargo.
+     * @param cargo - El valor de cargo.
+     */
+    public setCargo(cargo: string): void {
+        this.update((state) => ({
+            ...state,
+            cargo,
+        }));
+    }
+
+    /**
+     * Establece el estado de telefonoReprestantante.
+     * @param telefonoReprestantante - El valor de telefonoReprestantante.
+     */
+    public setTelefonoReprestantante(telefonoReprestantante: string): void {
+        this.update((state) => ({
+            ...state,
+            telefonoReprestantante,
+        }));
+    }
+
+    /**
+     * Establece el estado de correoReprestantante.
+     * @param correoReprestantante - El valor de correoReprestantante.
+     */
+    public setCorreoReprestantante(correoReprestantante: string): void {
+        this.update((state) => ({
+            ...state,
+            correoReprestantante,
+        }));
+    }
+
+    /**
+     * Establece el estado de suplente.
+     * @param suplente - El valor de suplente.
+     */
+    public setSuplente(suplente: string): void {
+        this.update((state) => ({
+            ...state,
+            suplente,
+        }));
+    }
+    /**
+     * Establece el estado de tipoDocumento.
+     * @param tipoDocumento - El valor de tipoDocumento.
+     */
+    public setTipoDocumento(tipoDocumento: string): void {
+        this.update((state) => ({
+            ...state,
+            tipoDocumento,
+        }));
+    }
 }

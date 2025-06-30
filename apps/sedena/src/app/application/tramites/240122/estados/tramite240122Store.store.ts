@@ -7,25 +7,43 @@ import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
 
 
-
 /**
- * Interfaz que representa el estado completo del trámite 240122.
- *
- * @property {number} [tabSeleccionado] - Pestaña actualmente activa en el flujo.
- * @property {DestinoFinal[]} destinatarioFinalTablaDatos - Lista de destinatarios finales registrados.
- * @property {Proveedor[]} proveedorTablaDatos - Lista de proveedores registrados.
- * @property {MercanciaDetalle[]} merccancialTablaDatos - Lista de mercancías registradas.
- * @property {DatosDelTramiteFormState} datosDelTramite - Información general del formulario de datos del trámite.
- * @property {DestinoFinal | null} modificarDestinarioDatos - Datos del destinatario final a modificar.
- * @property {Proveedor | null} modificarProveedorDatos - Datos del proveedor a modificar.
+ * Representa el estado de la gestión para el trámite 240122.
  */
 export interface Tramite240122State {
+ /**
+   * Índice de la pestaña actualmente seleccionada en la interfaz, si aplica.
+   */
   tabSeleccionado?: number;
+  /**
+   * Lista de destinatarios finales mostrados en la tabla de datos.
+   */
   destinatarioFinalTablaDatos: DestinoFinal[];
+  /**
+   * Lista de proveedores mostrados en la tabla de datos.
+   */
   proveedorTablaDatos: Proveedor[];
+  /**
+   * Estado del formulario relacionado con el pago de derechos.
+   */
+  /**
+   * Lista de detalles de mercancía mostrados en la tabla de datos.
+   */
   merccancialTablaDatos: MercanciaDetalle[];
+  /**
+   * Estado del formulario con los datos generales del trámite.
+   */
+   /**
+   * Estado del formulario con los datos generales del trámite.
+   */
   datosDelTramite: DatosDelTramiteFormState;
+  /**
+   * Datos del destinatario final que se está modificando, o null si no hay ninguno.
+   */
   modificarDestinarioDatos?: DestinoFinal | null;
+  /**
+   * Datos del proveedor que se está modificando, o null si no hay ninguno.
+   */
   modificarProveedorDatos?: Proveedor | null;
 }
 

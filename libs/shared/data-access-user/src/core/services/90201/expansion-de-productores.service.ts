@@ -68,8 +68,8 @@ export class ExpansionDeProductoresService {
      *
      * @returns Un observable que emite los datos obtenidos del archivo 'assets/json/90201/informica.json'.
      */
-    getRegistroExpansionDeProductoresData(): Observable<any> {
-    return this.http.get<any>('assets/json/90201/informica.json');
+    getRegistroExpansionDeProductoresData(): Observable<{actividadProductiva:string,representacionFederal:string ,rfc:string,fraccion:string,sector:string}> {
+    return this.http.get<{actividadProductiva:string,representacionFederal:string ,rfc:string,fraccion:string,sector:string}>('assets/json/90201/informica.json');
   }
 
 }

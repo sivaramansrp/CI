@@ -15,11 +15,11 @@ describe('ServicioDeFormularioService', () => {
     fb = TestBed.inject(FormBuilder);
   });
 
-  it('should be created', () => {
+  it('debería crear', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should register a form if not already registered', () => {
+  it('debería registrar un formulario si no está registrado', () => {
     const form = fb.group({
       nombre: new FormControl(''),
     });
@@ -29,7 +29,7 @@ describe('ServicioDeFormularioService', () => {
     expect(result).toBe(form);
   });
 
-  it('should not overwrite existing form when registering again', () => {
+  it('no debería sobrescribir el formulario existente al registrarse nuevamente', () => {
     const form1 = fb.group({ field1: ['A'] });
     const form2 = fb.group({ field2: ['B'] });
 
@@ -41,12 +41,12 @@ describe('ServicioDeFormularioService', () => {
     expect(result).not.toBe(form2);
   });
 
-  it('should return undefined if form not found', () => {
+  it('debería devolver undefined si el formulario no se encuentra', () => {
     const result = service.getForm('nonexistentForm');
     expect(result).toBeUndefined();
   });
 
-  it('should patch value of form if it exists', () => {
+  it('debería patch el valor del formulario si existe', () => {
     const form = fb.group({ name: [''] });
     service.registerForm('patchForm', form);
     service.setFormValue('patchForm', { name: 'John' });
@@ -55,7 +55,7 @@ describe('ServicioDeFormularioService', () => {
     expect(result?.value.name).toBe('John');
   });
 
-  it('should return form value if form exists', () => {
+  it('debería devolver el valor del formulario si existe', () => {
     const form = fb.group({ name: ['Jane'] });
     service.registerForm('valueForm', form);
 
@@ -63,12 +63,12 @@ describe('ServicioDeFormularioService', () => {
     expect(result).toEqual({ name: 'Jane' });
   });
 
-  it('should return undefined form value if form does not exist', () => {
+  it('debería devolver undefined si el formulario no existe', () => {
     const result = service.getFormValue('missingForm');
     expect(result).toBeUndefined();
   });
 
-  it('should reset the form', () => {
+  it('debería resetear el formulario', () => {
     const form = fb.group({ age: ['30'] });
     service.registerForm('resetForm', form);
 
@@ -76,7 +76,7 @@ describe('ServicioDeFormularioService', () => {
     expect(form.value.age).toBeNull(); // reset clears the value
   });
 
-  it('should validate form correctly', () => {
+  it('debería validar el formulario correctamente', () => {
     const form = fb.group({ email: ['', Validators.required] });
     service.registerForm('validForm', form);
 
@@ -86,11 +86,11 @@ describe('ServicioDeFormularioService', () => {
     expect(service.isFormValid('validForm')).toBe(true);
   });
 
-  it('should return undefined validity if form not found', () => {
+  it('debería devolver undefined si el formulario no se encuentra', () => {
     expect(service.isFormValid('unknownForm')).toBeUndefined();
   });
 
-  it('should remove control if exists in form', () => {
+  it('debería eliminar el control si existe en el formulario', () => {
     const form = fb.group({
       control1: ['value1'],
       control2: ['value2'],
@@ -103,11 +103,11 @@ describe('ServicioDeFormularioService', () => {
     expect(form.contains('control2')).toBe(true);
   });
 
-  it('should not fail when removing a control from a non-existing form', () => {
+  it('No debería fallar al eliminar un control de un formulario inexistente', () => {
     expect(() => service.removeControl('noForm', 'controlX')).not.toThrow();
   });
 
-  it('should not fail when removing a non-existing control', () => {
+  it('No debería fallar al eliminar un control inexistente', () => {
     const form = fb.group({ control1: ['value'] });
     service.registerForm('edgeForm', form);
     expect(() => service.removeControl('edgeForm', 'nonexistent')).not.toThrow();
