@@ -6,6 +6,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { Observable, of as observableOf, throwError } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
+import { DatosSolicitudService } from '../../../../shared/services/datos-solicitud.service';
+
 
 import { Component } from '@angular/core';
 import { DatosMercanciaContenedoraComponent } from './datos-mercancia-contenedora.component';
@@ -13,6 +15,10 @@ import { Tramite240107Store } from '../../estados/tramite240107Store.store';
 
 @Injectable()
 class MockTramite240107Store {}
+
+@Injectable()
+class MockDatosSolicitudService {}
+
 
 @Directive({ selector: '[myCustom]' })
 class MyCustomDirective {
@@ -48,8 +54,8 @@ describe('DatosMercanciaContenedoraComponent', () => {
       providers: [
       { provide: Tramite240107Store, useClass: MockTramite240107Store },
       { provide: ActivatedRoute, useValue: { snapshot: { params: {} } } },
-      { provide: 'DatosSolicitudService', useValue: { getData: jest.fn(), saveData: jest.fn() } }
-      ]
+      { provide: DatosSolicitudService, useClass: MockDatosSolicitudService },
+    ]
     }).overrideComponent(DatosMercanciaContenedoraComponent, {
 
     }).compileComponents();
