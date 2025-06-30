@@ -78,26 +78,55 @@ describe('TercerosRelacionadosComponent', () => {
   it('should call getDestinatario and populate data', () => {
     component.getDestinatario();
     expect(component.destinatarioHeaderData.length).toBeGreaterThan(0);
-    expect(component.destinatarioBodyData.length).toBe(0); // as per mock
+    expect(component.destinatarioBodyData.length).toBe(0); 
   });
 
   it('should call getImportador and populate data', () => {
     component.getImportador();
     expect(component.importadorHeaderData.length).toBeGreaterThan(0);
-    expect(component.importadorBodyData.length).toBe(0); // as per mock
+    expect(component.importadorBodyData.length).toBe(0); 
   });
 
-  it('should set hasAgregar to true when agregar is called with "Agregar"', () => {
-    component.hasAgregar = false;
-    component.agregar('Agregar');
-    expect(component.hasAgregar).toBe(true);
-  });
+it('should toggle showTableDiv and showAgregarDestinatario when toggleAgregarDestinatario is called', () => {
+  component.showTableDiv = true;
+  component.showAgregarDestinatario = false;
+  component.toggleAgregarDestinatario();
+  expect(component.showTableDiv).toBe(false);
+  expect(component.showAgregarDestinatario).toBe(true);
 
-  it('should not change hasAgregar when agregar is called with different value', () => {
-    component.hasAgregar = false;
-    component.agregar('NoAgregar');
-    expect(component.hasAgregar).toBe(false);
-  });
+  component.toggleAgregarDestinatario();
+  expect(component.showTableDiv).toBe(true);
+  expect(component.showAgregarDestinatario).toBe(false);
+});
+
+
+it('should toggle showTableDiv and showAgregarImportador when toggleAgregarImportador is called', () => {
+  component.showTableDiv = true;
+  component.showAgregarImportador = false;
+  component.toggleAgregarImportador();
+  expect(component.showTableDiv).toBe(false);
+  expect(component.showAgregarImportador).toBe(true);
+
+  component.toggleAgregarImportador();
+  expect(component.showTableDiv).toBe(true);
+  expect(component.showAgregarImportador).toBe(false);
+});
+
+it('should set showAgregarDestinatario to false and showTableDiv to true when cerrarAgregarDestinatario is called', () => {
+  component.showAgregarDestinatario = true;
+  component.showTableDiv = false;
+  component.cerrarAgregarDestinatario();
+  expect(component.showAgregarDestinatario).toBe(false);
+  expect(component.showTableDiv).toBe(true);
+});
+
+it('should set showAgregarImportador to false and showTableDiv to true when cerrarAgregarImportador is called', () => {
+  component.showAgregarImportador = true;
+  component.showTableDiv = false;
+  component.cerrarAgregarImportador();
+  expect(component.showAgregarImportador).toBe(false);
+  expect(component.showTableDiv).toBe(true);
+});
 
   it('should clean up destroyNotifier$ on ngOnDestroy', () => {
     const nextSpy = jest.spyOn(destroyNotifier$, 'next');

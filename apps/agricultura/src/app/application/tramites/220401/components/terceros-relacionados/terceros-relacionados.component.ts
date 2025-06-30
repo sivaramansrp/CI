@@ -15,17 +15,19 @@ import destinatarioTable from '../../../../../../../../../libs/shared/theme/asse
 import importardorTable from '../../../../../../../../../libs/shared/theme/assets/json/220401/importador-table.json'
 
 import { AlertComponent } from '@ng-mf/data-access-user';
+import { CommonModule } from '@angular/common';
 
 import { Subject,map,takeUntil } from 'rxjs';
 import { AgregarDestinatoriaComponent } from '../agregar-destinatoria/agregar-destinatoria.component';
-
+import { AgregarImportadorComponent } from '../agregar-importador/agregar-importador.component';
+import { ModalComponent } from '../modal/modal.component';
 
 @Component({
   selector: 'app-terceros-relacionados',
   templateUrl: './terceros-relacionados.component.html',
   styleUrl: './terceros-relacionados.component.scss',
    standalone: true,
-  imports: [TituloComponent,TableComponent,AlertComponent,AgregarDestinatoriaComponent],
+  imports: [TituloComponent,TableComponent,AlertComponent,AgregarDestinatoriaComponent,CommonModule,AgregarImportadorComponent,ModalComponent],
 })
 export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
 
@@ -42,6 +44,9 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
   public TEXTOS = MENSAJEDEALERTA;
   public hasAgregar:boolean = false;
   public infoAlert = 'alert-info';
+  public showTableDiv:boolean = true;
+  public showAgregarDestinatario:boolean = false;
+  public showAgregarImportador:boolean = false;
 private destroyNotifier$: Subject<void> = new Subject();
 esFormularioSoloLectura: boolean = false;
   // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -95,17 +100,40 @@ esFormularioSoloLectura: boolean = false;
   }
 
   /**
-   * 
-   * @param  agregar, que acepta datos de tipo cadena
-   * @description agregar se utiliza para agregar un nuevo estable
-   */
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-  public agregar(agregar:string) {
-    if(agregar === 'Agregar'){
-      this.hasAgregar = true;
-    }
+ * Alterna la visibilidad de la tabla y del formulario para agregar un destinatario.
+ */
+   toggleAgregarDestinatario():void {
+    this.showTableDiv = !this.showTableDiv;
+    this.showAgregarDestinatario = !this.showAgregarDestinatario;
   }
 
+  /**
+ * Alterna la visibilidad de la tabla y del formulario para agregar un importador.
+ */
+  toggleAgregarImportador():void {
+    this.showTableDiv = !this.showTableDiv;
+    this.showAgregarImportador = !this.showAgregarImportador;
+  }
+
+  /**
+ * Cierra el formulario para agregar un destinatario y muestra la tabla.
+ */
+  cerrarAgregarDestinatario(): void {
+    this.showAgregarDestinatario = false;
+    this.showTableDiv = true;
+  }
+
+  /**
+ * Cierra el formulario para agregar un importador y muestra la tabla.
+ */
+  cerrarAgregarImportador(): void {
+    this.showAgregarImportador = false;
+    this.showTableDiv = true;
+  }
+
+  /**
+ * Limpia las suscripciones al destruir el componente para evitar fugas de memoria.
+ */
     ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();

@@ -1,3 +1,21 @@
+/**
+ * Componente contenedor encargado de gestionar y mostrar los datos del trámite,
+ * incluyendo la tabla de mercancías y el estado del formulario asociado.
+ * 
+ * @component
+ * 
+ * @remarks
+ * Este componente utiliza servicios de estado (Akita) para obtener y actualizar
+ * la información del trámite, y maneja la apertura de modales para la edición
+ * de datos de mercancía.
+ * 
+ * @example
+ * ```html
+ * <app-datos-del-tramite-contenedora
+ *   [formularioDeshabilitado]="true"
+ * ></app-datos-del-tramite-contenedora>
+ * ```
+ */
 import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { DatosDelTramiteFormState, MercanciaDetalle } from '../../../../shared/models/datos-del-tramite.model';
 import { Subject, takeUntil } from 'rxjs';
@@ -8,90 +26,82 @@ import { ModalComponent } from '../../../../shared/components/modal/modal.compon
 import { Tramite240112Query } from '../../estados/tramite240112Query.query';
 import { Tramite240112Store } from '../../estados/tramite240112Store.store';
 
-
 @Component({
+  /**
+   * Selector para utilizar el componente en plantillas HTML.
+   * 
+   * @example
+   * <app-datos-del-tramite-contenedora></app-datos-del-tramite-contenedora>
+   */
   selector: 'app-datos-del-tramite-contenedora',
+
+  /**
+   * Archivo HTML que define la estructura visual del componente.
+   */
   templateUrl: './datos-del-tramite-contenedora.component.html',
+
+  /**
+   * Archivo SCSS que contiene los estilos del componente.
+   */
   styleUrl: './datos-del-tramite-contenedora.component.scss',
+
+  /**
+   * Componentes independientes importados para usar en la plantilla.
+   */
   standalone: true,
-  imports: [DatosDelTramiteComponent, ModalComponent]
+  imports: [DatosDelTramiteComponent, ModalComponent],
 })
 export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
   /**
-    * @description Referencia al componente ModalComponent dentro de la plantilla.
-    * Utiliza el decorador ViewChild para acceder a la instancia del modal y manipularlo desde el código TypeScript.
-    * @example
-    * // Para abrir el modal:
-    * this.modalComponent.open();
-    * 
-    * @see ModalComponent
-    * 
-    * @es
-    * Referencia al componente modal para mostrar u ocultar diálogos modales en la interfaz de usuario.
-    */
+   * Referencia al componente ModalComponent en la plantilla.
+   * Permite controlar la apertura y cierre del modal dinámico.
+   * 
+   * @example
+   * this.modalComponent.abrir(...);
+   * this.modalComponent.cerrar();
+   */
   @ViewChild('modal', { static: false }) modalComponent!: ModalComponent;
+
   /**
-   * @input
-   * @description
-   * Indica si el formulario debe estar deshabilitado. Cuando es `true`, los controles del formulario estarán inactivos y no permitirán la edición por parte del usuario.
-   * @type {boolean}
+   * Indica si el formulario debe estar deshabilitado (solo lectura).
+   * Cuando es `true`, los controles estarán inactivos y no podrán editarse.
    */
   @Input() formularioDeshabilitado: boolean = false;
 
   /**
-   * Datos de la tabla de mercancías que se muestran en el formulario.
-   * @property {MercanciaDetalle[]} datosMercanciaTabla
+   * Datos de la tabla de mercancías mostrados en el formulario.
    */
   public datosMercanciaTabla: MercanciaDetalle[] = [];
 
   /**
    * Estado actual del formulario de datos del trámite.
-   * @property {DatosDelTramiteFormState} datosDelTramiteFormState
    */
   public datosDelTramiteFormState!: DatosDelTramiteFormState;
 
   /**
-   * Observable adicional para limpieza de suscripciones.
-   * @property {Subject<void>} destroy$
+   * Subject para notificar la destrucción y cancelar suscripciones.
    */
   private destroy$ = new Subject<void>();
 
   /**
-   * @readonly
-   * @description
-   * Identificador único del procedimiento actual.
-   * 
-   * @remarks
-   * Esta propiedad almacena el valor constante de `ID_PROCEDIMIENTO` que representa el procedimiento en curso.
-   * 
-   * @example
-   * // Acceso al identificador del procedimiento
-   * console.log(this.idProcedimiento);
-   * 
-   * @comando
-   * Utilice esta propiedad para obtener el ID del procedimiento asociado al trámite.
+   * Identificador del procedimiento actual (constante).
    */
   public readonly idProcedimiento = ID_PROCEDIMIENTO;
 
   /**
-   * Constructor del componente.
-   *
-   * @method constructor
-   * @param {Tramite240111Query} tramiteQuery - Query de Akita para obtener el estado actual del trámite.
-   * @param {Tramite240111Store} tramiteStore - Store de Akita para actualizar el estado del trámite.
-   * @returns {void}
+   * Constructor que inyecta los servicios para manejar estado y consultas del trámite.
+   * 
+   * @param tramiteQuery - Query para obtener el estado actual del trámite.
+   * @param tramiteStore - Store para actualizar el estado del trámite.
    */
   constructor(
     private tramiteQuery: Tramite240112Query,
     private tramiteStore: Tramite240112Store
-  ) { }
+  ) {}
 
   /**
-   * Hook del ciclo de vida que se ejecuta al inicializar el componente.
-   * Suscribe a los observables del estado para mostrar los datos en la vista.
-   *
-   * @method ngOnInit
-   * @returns {void}
+   * Hook de Angular que se ejecuta al inicializar el componente.
+   * Se suscribe a los observables para obtener datos de la mercancía y estado del formulario.
    */
   ngOnInit(): void {
     this.tramiteQuery.getMercanciaTablaDatos$
@@ -108,11 +118,8 @@ export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Hook del ciclo de vida que se ejecuta al destruir el componente.
-   * Libera las suscripciones activas para evitar fugas de memoria.
-   *
-   * @method ngOnDestroy
-   * @returns {void}
+   * Hook de Angular que se ejecuta al destruir el componente.
+   * Se utiliza para limpiar suscripciones y evitar fugas de memoria.
    */
   ngOnDestroy(): void {
     this.destroy$.next();
@@ -121,25 +128,20 @@ export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
 
   /**
    * Actualiza el estado del formulario de datos del trámite en el store.
-   *
-   * @method updateDatosDelTramiteFormulario
-   * @param {DatosDelTramiteFormState} event - Estado actualizado del formulario.
-   * @returns {void}
+   * 
+   * @param event - Estado actualizado del formulario de datos del trámite.
    */
   updateDatosDelTramiteFormulario(event: DatosDelTramiteFormState): void {
     this.tramiteStore.updateDatosDelTramiteFormState(event);
   }
 
   /**
-    * Abre el modal correspondiente según el nombre del evento recibido.
-    *
-    * Si el evento es `'Datosmercancia'`, se carga el componente `DatosMercanciaContenedoraComponent`
-    * dentro del modal y se le pasa una función de cierre como input.
-    *
-    * @method openModal
-    * @param {string} event - Nombre del evento que indica qué componente se debe mostrar en el modal.
-    * @returns {void}
-    */
+   * Abre el modal correspondiente basado en el evento recibido.
+   * Actualmente, si el evento es 'Datosmercancia', abre el modal con el componente
+   * DatosMercanciaContenedoraComponent y le pasa una función para cerrar el modal.
+   * 
+   * @param event - Nombre del evento que indica qué modal abrir.
+   */
   openModal(event: string): void {
     if (event === 'Datosmercancia') {
       this.modalComponent.abrir(DatosMercanciaContenedoraComponent, {
@@ -149,10 +151,7 @@ export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Cierra el modal dinámico actualmente abierto utilizando el método del componente modal.
-   *
-   * @method cerrarModal
-   * @returns {void}
+   * Cierra el modal dinámico actualmente abierto.
    */
   cerrarModal(): void {
     this.modalComponent.cerrar();

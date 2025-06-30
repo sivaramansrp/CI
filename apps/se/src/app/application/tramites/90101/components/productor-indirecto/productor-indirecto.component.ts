@@ -13,13 +13,20 @@ import { AutorizacionProsecStore, ProsecState } from '../../estados/autorizacion
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { ConfiguracionColumna, ConsultaioQuery, TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { Subject, map, takeUntil } from 'rxjs';
+import { Subject, delay, map, takeUntil, tap } from 'rxjs';
 import { AUtorizacionProsecQuery } from '../../queries/autorizacion-prosec.query';
 import { CommonModule } from '@angular/common';
 import { FilaProductos } from '../../models/prosec.module';
 import { ProsecService } from '../../services/prosec.service';
 import { TablaSeleccion } from '@ng-mf/data-access-user';
 
+/**
+ * @component ProductorIndirectoComponent
+ * @description
+ * Este componente es responsable de manejar los datos del productor indirecto.
+ * Permite capturar, mostrar y validar la información relacionada a través de un formulario reactivo y una tabla dinámica.
+ * Utiliza un servicio para obtener los datos desde archivos JSON y actualiza el estado mediante un store Akita.
+ */
 
 @Component({
   selector: 'app-productor-indirecto',
@@ -137,6 +144,19 @@ export class ProductorIndirectoComponent implements OnInit, OnDestroy {
       .subscribe();
     this.initActionFormBuild();
     this.recuperarDatos();
+
+    this.productorIndirecto.statusChanges
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        delay(10),
+        tap((_value) => {
+          if (this.productorIndirecto.valid) {
+            this.AutorizacionProsecStore.setProductorFromValida(true);
+            this.ProsecService.formValida()
+          }
+        })
+      )
+      .subscribe();
 
     if(this.formularioDeshabilitado) {
       this.inicializarEstadoFormulario();

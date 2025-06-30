@@ -1,8 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { FormBuilder ,FormGroup , ReactiveFormsModule} from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { TituloComponent } from '@ng-mf/data-access-user';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { Component } from '@angular/core';
 import { ConfirmarNotificacionService } from '../services/confirmar-notificacion.service';
+import { OnInit } from '@angular/core';
+import { TituloComponent } from '@ng-mf/data-access-user';
+
 
 @Component({
   selector: 'app-notificacion-acto-administrativo',

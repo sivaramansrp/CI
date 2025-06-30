@@ -92,7 +92,7 @@ export const SEMANA_D = [
 ];
 
 export const MENSAJEDEALERTA = {
-  ADJUNTAR: `<p>Las tablas con asterisco son obligatorias y debes agregar por lo menos un registro</p>`,
+  ADJUNTAR: `<p style="text-align: center;">Las tablas con asterisco son obligatorias y debes agregar por lo menos un registro</p>`,
 };
 
 export const MENSAJE_ALERTA_TRATADOS = {
