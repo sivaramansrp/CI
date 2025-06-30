@@ -30,20 +30,40 @@ import {
   TIPO_TRAMITE,
 } from '../../../../core/enums/5701/tramite5701.enum';
 import { Observable, Subject, catchError, map, of, takeUntil, tap } from 'rxjs';
-import { Solicitud5701State, Tramite5701Store } from '../../../../core/estados/tramites/tramite5701.store';
+import {
+  Solicitud5701State,
+  Tramite5701Store,
+} from '../../../../core/estados/tramites/tramite5701.store';
 import { GuardaSolicitudService } from '../../../../core/services/5701/guardar/guarda-solicitud.service';
 import { Tramite5701Query } from '../../../../core/queries/tramite5701.query';
 import { WizardComponent } from '@libs/shared/data-access-user/src';
 
+/**
+ * Interface que representa una acción de botón con su nombre y valor asociado.
+ *
+ */
 interface AccionBoton {
+  /**
+   * Nombre o identificador de la acción del botón.
+   */
   accion: string;
+  /**
+   * Valor numérico relacionado con la acción del botón.
+   */
   valor: number;
 }
 
+/**
+ * Componente Angular que representa la página de solicitud del trámite 5701.
+ */
 @Component({
   templateUrl: './solicitud-page.component.html',
   styleUrl: './solicitud-page.component.scss',
 })
+
+/**
+ * Clase que representa la página de solicitud del trámite 5701.
+ */
 export class SolicitudPageComponent implements OnInit {
   /**
    * Contiene la lista de pasos del wizard.
@@ -128,7 +148,7 @@ export class SolicitudPageComponent implements OnInit {
   seccionCargarDocumentos: boolean = true;
 
   /**
-   * @descripcion Notificación para mostrar mensajes al usuario.
+   *Notificación para mostrar mensajes al usuario.
    */
   public nuevaNotificacion!: Notificacion;
 
@@ -187,7 +207,7 @@ export class SolicitudPageComponent implements OnInit {
   /**
    * Selecciona una pestaña específica y actualiza el índice actual.
    *
-   * @param i - El índice de la pestaña a seleccionar.
+   *  i - El índice de la pestaña a seleccionar.
    */
   seleccionaTab(i: number): void {
     this.indice = i;
@@ -196,7 +216,7 @@ export class SolicitudPageComponent implements OnInit {
   /**
    * Actualiza el valor del índice basado en la acción del botón y navega en el componente wizard.
    *
-   * @param e - Objeto de tipo `AccionBoton` que contiene el valor y la acción del botón.
+   *  e - Objeto de tipo `AccionBoton` que contiene el valor y la acción del botón.
    *
    * Si el valor del botón está entre 1 y 4, actualiza el índice con el valor del botón.
    * Si la acción es 'cont', avanza al siguiente paso del wizard.
@@ -272,8 +292,8 @@ export class SolicitudPageComponent implements OnInit {
   }
 
   /**
-   * @description Obtiene la lista de personas notificadas a partir del estado de terceros.
-   * @returns Una lista de objetos `ListPersonaNoti` que representan las personas notificadas.
+   * @ Obtiene la lista de personas notificadas a partir del estado de terceros.
+   * Una lista de objetos `ListPersonaNoti` que representan las personas notificadas.
    */
   obtenerPersonasNotificacion(): ListPersonaNoti[] {
     return this.tercerosState.terceros.map((persona, i) => {
@@ -286,8 +306,8 @@ export class SolicitudPageComponent implements OnInit {
   }
 
   /**
-   * @description Obtiene la lista de responsables de despacho a partir del estado de la solicitud.
-   * @returns Una lista de objetos `PersonaResponsableDespacho` que representan a los responsables de despacho.
+   * @ Obtiene la lista de responsables de despacho a partir del estado de la solicitud.
+   * Una lista de objetos `PersonaResponsableDespacho` que representan a los responsables de despacho.
    */
   obtenerResponsablesDespacho(): PersonaResponsableDespacho[] {
     return this.solicitudState.personasResponsablesDespacho.map((persona) => {
@@ -301,8 +321,8 @@ export class SolicitudPageComponent implements OnInit {
   }
 
   /**
-   * @description Obtiene una lista de pedimentos a partir del estado de la solicitud.
-   * @returns Una lista de objetos `Pedimento` que representan los pedimentos obtenidos del estado de la solicitud.
+   * @ Obtiene una lista de pedimentos a partir del estado de la solicitud.
+   * Una lista de objetos `Pedimento` que representan los pedimentos obtenidos del estado de la solicitud.
    */
   obtenerPedimentosLista(): Pedimento[] {
     return this.solicitudState.pedimentos.map((pedimento, i) => {
@@ -327,8 +347,8 @@ export class SolicitudPageComponent implements OnInit {
   }
 
   /**
-   * @description Obtiene una lista de transporte de arribo/salida a partir del estado de la solicitud.
-   * @returns Una lista de objetos `TransporteDespacho` que representan los transportes de despacho obtenidos del estado de la solicitud.
+   * @ Obtiene una lista de transporte de arribo/salida a partir del estado de la solicitud.
+   * Una lista de objetos `TransporteDespacho` que representan los transportes de despacho obtenidos del estado de la solicitud.
    */
   obtenerTransporteArriboSalida(): TransporteDespacho[] {
     const TIPO_TRANSPORTE_ARRIBO_SALIDA =
@@ -386,8 +406,7 @@ export class SolicitudPageComponent implements OnInit {
           (transporte: Partial<TransporteDespacho>) => {
             const RESULTADO: Partial<TransporteDespacho> = {
               tipo_transporte: TIPO_TRANSPORTE_ARRIBO_SALIDA,
-              arribo_pendiente_aereo:
-                transporte.arribo_pendiente_aereo,
+              arribo_pendiente_aereo: transporte.arribo_pendiente_aereo,
               guia_master_aereo: transporte.guia_master_aereo || '',
               guia_house_aereo: transporte.guia_house_aereo || '',
               fecha_arribo_aereo: transporte.fecha_arribo_aereo || '',
@@ -417,8 +436,8 @@ export class SolicitudPageComponent implements OnInit {
   }
 
   /**
-   * @description Obtiene una lista de transporte de despacho a partir del estado de la solicitud.
-   * @returns Una lista de objetos `TransporteDespacho` que representan los transportes de despacho obtenidos del estado de la solicitud.
+   * @ Obtiene una lista de transporte de despacho a partir del estado de la solicitud.
+   * Una lista de objetos `TransporteDespacho` que representan los transportes de despacho obtenidos del estado de la solicitud.
    */
   obtenerTransporteDespacho(): TransporteDespacho[] {
     const TIPO_TRANSPORTE_DESPACHO = this.solicitudState.tipoTransporte;
@@ -493,8 +512,8 @@ export class SolicitudPageComponent implements OnInit {
   }
 
   /**
-   * @description Obtiene una lista de fechas del servicio a partir del estado de la solicitud.
-   * @returns {ListFechasSevex[]} Una lista de fechas del servicio obtenidas del estado de la solicitud.
+   * @ Obtiene una lista de fechas del servicio a partir del estado de la solicitud.
+   * {ListFechasSevex[]} Una lista de fechas del servicio obtenidas del estado de la solicitud.
    */
   obtenerFechasSevex(): ListFechasSevex[] {
     return this.solicitudState.selectRangoDias.map((fecha) => {
@@ -508,8 +527,8 @@ export class SolicitudPageComponent implements OnInit {
   }
 
   /**
-   * @description Construye el payload de la solicitud para el trámite 5701
-   * @returns {SolicitudPayload} Un objeto que representa la solicitud con todos los datos necesarios.
+   * @ Construye el payload de la solicitud para el trámite 5701
+   * {SolicitudPayload} Un objeto que representa la solicitud con todos los datos necesarios.
    */
   construyeSolicitudPayload(): SolicitudPayload {
     return {
@@ -614,9 +633,9 @@ export class SolicitudPageComponent implements OnInit {
   }
 
   /**
-   * @description Este método construye un objeto `SolicitudPayload` con los datos necesarios para enviar una solicitud
+   * @ Este método construye un objeto `SolicitudPayload` con los datos necesarios para enviar una solicitud
    * del tramite 5701.
-   * @returns {void} No retorna ningún valor.   *
+   * {void} No retorna ningún valor.   *
    */
 
   private enviaSolicitudRequest(): Observable<boolean> {
@@ -666,7 +685,7 @@ export class SolicitudPageComponent implements OnInit {
 
   /**
    * Emite un evento para cargar archivos.
-   * @returns {void} No retorna ningún valor.
+   * {void} No retorna ningún valor.
    */
   onClickCargaArchivos(): void {
     this.cargarArchivosEvento.emit();
@@ -675,7 +694,7 @@ export class SolicitudPageComponent implements OnInit {
   /**
    * Método para navegar a la sección anterior del wizard.
    * Actualiza el índice y el estado de los pasos.
-   * @returns {void} No retorna ningún valor.
+   * {void} No retorna ningún valor.
    */
   anterior(): void {
     this.wizardComponent.atras();
@@ -686,7 +705,7 @@ export class SolicitudPageComponent implements OnInit {
   /**
    * Método para navegar a la siguiente sección del wizard.
    * Realiza la validación de los documentos cargados y actualiza el índice y el estado de los pasos.
-   * @returns {void} No retorna ningún valor.
+   * {void} No retorna ningún valor.
    */
   siguiente(): void {
     // Aqui se hara la validacion de los documentos cargdados
@@ -698,8 +717,8 @@ export class SolicitudPageComponent implements OnInit {
   /**
    * Método para manejar el evento de carga de documentos.
    * Actualiza el estado del botón de carga de archivos.
-   * @param carga - Indica si la carga de documentos está activa o no.
-   * @returns {void} No retorna ningún valor.
+   *  carga - Indica si la carga de documentos está activa o no.
+   * {void} No retorna ningún valor.
    */
   manejaEventoCargaDocumentos(carga: boolean): void {
     this.activarBotonCargaArchivos = carga;
@@ -708,7 +727,7 @@ export class SolicitudPageComponent implements OnInit {
   /**
    * Método para manejar el evento de regreso a la sección de carga de documentos.
    * Emite un evento para regresar a la sección de carga de documentos.
-   * @returns {void} No retorna ningún valor.
+   * {void} No retorna ningún valor.
    */
   anteriorSeccionCargarDocumento(): void {
     this.regresarSeccionCargarDocumentoEvento.emit();
@@ -717,8 +736,8 @@ export class SolicitudPageComponent implements OnInit {
   /**
    * Método para manejar el evento de carga de documentos.
    * Actualiza el estado de la sección de carga de documentos.
-   * @param cargaRealizada - Indica si la carga de documentos se realizó correctamente.
-   * @returns {void} No retorna ningún valor.
+   *  cargaRealizada - Indica si la carga de documentos se realizó correctamente.
+   * {void} No retorna ningún valor.
    */
   cargaRealizada(cargaRealizada: boolean): void {
     this.seccionCargarDocumentos = cargaRealizada ? false : true;

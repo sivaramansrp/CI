@@ -31,7 +31,11 @@ export class TercerosRelacionadosContenedoraComponent
   implements OnInit, OnDestroy
 {
 
-   @ViewChild('modal', { static: false }) modalComponent!: ModalComponent;
+  /**
+   * Referencia al componente Modal para abrir y cerrar modales dinámicamente.
+   * @type {ModalComponent}
+   */
+  @ViewChild('modal', { static: false }) modalComponent!: ModalComponent;
   /**
    * Identificador del procedimiento.
    * @property {number} idProcedimiento

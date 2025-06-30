@@ -29,11 +29,11 @@ describe('NuevoProgramaIndustrialService', () => {
     httpMock.verify();
   });
 
-  it('should be created', () => {
+  it('debe ser creado', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should fetch ingreso select list from ampliacion-IMMEX-dropdown.json', () => {
+  it('debe obtener la lista de selección de ingresos desde ampliacion-IMMEX-dropdown.json', () => {
     const mockCatalogos: Catalogo[] = [
       { id: 1, descripcion: 'Opción A' },
       { id: 2, descripcion: 'Opción B' },
@@ -48,7 +48,7 @@ describe('NuevoProgramaIndustrialService', () => {
     req.flush({ data: mockCatalogos });
   });
 
-  it('should fetch lista estado from estado-datos.json', () => {
+  it('debe obtener la lista de estado desde estado-datos.json', () => {
     const mockEstado: RespuestaCatalogos = {
       code: 200,
       data: [
@@ -67,7 +67,7 @@ describe('NuevoProgramaIndustrialService', () => {
     req.flush(mockEstado);
   });
 
-  it('should fetch subfabricantes disponibles', () => {
+  it('debe obtener subfabricantes disponibles', () => {
     const mockSubfabricantes: PlantasSubfabricante[] = [
       {
         calle: 'Insurgentes',
@@ -87,7 +87,7 @@ describe('NuevoProgramaIndustrialService', () => {
     req.flush({ data: mockSubfabricantes });
   });
 
-  it('should fetch datos complimentos from datos-complimentos.json', () => {
+  it('debe obtener datos de complimentos desde datos-complimentos.json', () => {
     const mockComplimentos: DatosComplimentos = {
       modalidad: 'Nueva',
       programaPreOperativo: 'Sí',
@@ -133,7 +133,7 @@ describe('NuevoProgramaIndustrialService', () => {
     req.flush(mockComplimentos);
   });
 
-  it('should fetch estados catalogo from empresas.json', () => {
+  it('debe obtener el catálogo de estados desde empresas.json', () => {
   const mockCatalogo: Catalogo = { id: 1, descripcion: 'Estado de México' };
 
   service.getEstadosCatalogo().subscribe((data) => {
@@ -145,7 +145,7 @@ describe('NuevoProgramaIndustrialService', () => {
   req.flush(mockCatalogo);
 });
 
-it('should handle HTTP error for obtenerIngresoSelectList gracefully', () => {
+it('debe manejar el error HTTP para obtenerIngresoSelectList de manera adecuada', () => {
   const errorMessage = '404 Not Found';
 
   service.obtenerIngresoSelectList().subscribe({

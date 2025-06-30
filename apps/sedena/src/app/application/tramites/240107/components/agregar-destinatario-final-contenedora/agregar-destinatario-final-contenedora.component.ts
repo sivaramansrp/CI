@@ -20,7 +20,14 @@ import { Tramite240107Store } from '../../estados/tramite240107Store.store';
 })
 export class AgregarDestinatarioFinalContenedoraComponent {
 
-   @Output() cerrar = new EventEmitter<void>();
+  /**
+   * Evento que se emite para notificar el cierre del componente.
+   * Los componentes padres pueden suscribirse a este evento para ejecutar acciones al cerrar.
+   *
+   * @type {EventEmitter<void>}
+   * @memberof AgregarDestinatarioFinalContenedoraComponent
+   */
+  @Output() cerrar = new EventEmitter<void>();
  
   /**
    * Identificador del procedimiento.

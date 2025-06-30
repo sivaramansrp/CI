@@ -1,7 +1,11 @@
 import { Component, EventEmitter, Output } from '@angular/core';
-import { DestinoFinal, Proveedor } from '../../../../shared/models/terceros-relacionados.model';
+import {
+  DestinoFinal,
+  Proveedor,
+} from '../../../../shared/models/terceros-relacionados.model';
 import { AgregarProveedorComponent } from '../../../../shared/components/agregar-proveedor/agregar-proveedor.component';
 import { CommonModule } from '@angular/common';
+import { ID_PROCEDIMIENTO } from '../../constants/importacion-sustancias-quimicas.enum';
 import { Observable } from 'rxjs';
 import { Tramite240106Query } from '../../estados/tramite240106Query.query';
 import { Tramite240106Store } from '../../estados/tramite240106Store.store';
@@ -24,8 +28,21 @@ import { Tramite240106Store } from '../../estados/tramite240106Store.store';
   styleUrl: './agregar-proveedor-contenedora.component.scss',
 })
 export class AgregarProveedorContenedoraComponent {
+  /**
+   * Evento emitido cuando se solicita cerrar el componente.
+   *
+   * @type {EventEmitter<void>}
+   * @memberof AgregarProveedorContenedoraComponent
+   */
+  @Output() cerrar = new EventEmitter<void>();
 
-    @Output() cerrar = new EventEmitter<void>();
+  /**
+   * @property {boolean} estaOculto - Indica si el elemento está oculto o visible.
+   * @remarks Este valor determina la visibilidad del componente en la interfaz de usuario.
+   * @command Cambiar el valor de esta propiedad para alternar la visibilidad.
+   */
+  
+    public readonly idProcedimiento = ID_PROCEDIMIENTO;
   /**
    * Observable que emite información sobre el destino final, proveedor o un valor nulo/indefinido.
    *
@@ -35,7 +52,9 @@ export class AgregarProveedorContenedoraComponent {
    * Este observable se utiliza para gestionar los datos relacionados con los derechos
    * y destinatarios finales en el contexto de la aplicación.
    */
-  public terechosDatos$!: Observable<DestinoFinal | Proveedor | null | undefined>;
+  public terechosDatos$!: Observable<
+    DestinoFinal | Proveedor | null | undefined
+  >;
 
   /**
    * Constructor del componente.

@@ -27,7 +27,10 @@ import { takeUntil } from 'rxjs';
   styleUrl: './datos-del-tramite-contenedora.component.css',
 })
 export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
-
+  /**
+   * Referencia al componente Modal para manipular su apertura y cierre.
+   * @viewChild modalComponent
+   */
   @ViewChild('modal', { static: false }) modalComponent!: ModalComponent;
 
   /**

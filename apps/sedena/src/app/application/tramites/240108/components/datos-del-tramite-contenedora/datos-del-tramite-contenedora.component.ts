@@ -3,9 +3,9 @@ import { CommonModule } from '@angular/common';
 import { DatosDelTramiteComponent } from '../../../../shared/components/datos-del-tramite/datos-del-tramite.component';
 import { DatosDelTramiteFormState } from '../../../../shared/models/datos-del-tramite.model';
 import { DatosMercanciaContenedoraComponent } from '../datos-mercancia-contenedora/datos-mercancia-contenedora.component';
+import { ID_PROCEDIMIENTO } from '../../constants/importacion-armas-explosivo.enum';
 import { MercanciaDetalle } from '../../../../shared/models/datos-del-tramite.model';
 import { ModalComponent } from '../../../../shared/components/modal/modal.component';
-import { NUMERO_TRAMITE } from '../../../../shared/constants/datos-solicitud.enum';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { Subject } from 'rxjs';
@@ -30,14 +30,11 @@ export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
 
    @ViewChild('modal', { static: false }) modalComponent!: ModalComponent;
 
-  /**
-   * Identificador del procedimiento asociado al trámite.
-   * 
-   * Se obtiene desde la constante `NUMERO_TRAMITE.TRAMITE_240108`.
-   *
-   * @type {number}
-   */
-  idProcedimiento = NUMERO_TRAMITE.TRAMITE_240108;
+     /**
+      * Identificador del procedimiento.
+      * @property {number} idProcedimiento
+      */
+     public readonly idProcedimiento = ID_PROCEDIMIENTO;
   
   /**
    * Observable para limpiar suscripciones activas al destruir el componente.

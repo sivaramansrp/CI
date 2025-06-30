@@ -3,6 +3,7 @@ import { AgregarDestinatarioFinalContenedoraComponent } from '../agregar-destina
 import { AgregarProveedorContenedoraComponent } from '../agregar-proveedor-contenedora/agregar-proveedor-contenedora.component';
 import { CommonModule } from '@angular/common';
 import { DestinoFinal } from '../../../../shared/models/terceros-relacionados.model';
+import { ID_PROCEDIMIENTO } from '../../constants/importacion-armas-municiones.enum';
 import { ModalComponent } from '../../../../shared/components/modal/modal.component';
 import { OnInit } from '@angular/core';
 import { Proveedor } from '../../../../shared/models/terceros-relacionados.model';
@@ -27,7 +28,22 @@ import { takeUntil } from 'rxjs';
 })
 export class TercerosRelacionadosContenedoraComponent implements OnInit {
 
+  /**
+   * Componente contenedor para la gestión de terceros relacionados en el trámite 240111.
+   * Se encarga de suscribirse a los datos de destinatarios finales y proveedores,
+   * y de abrir los modales correspondientes para agregar nuevos registros.
+   *
+   * @component
+   * @example
+   * <app-terceros-relacionados-contenedora></app-terceros-relacionados-contenedora>
+   */
    @ViewChild('modal', { static: false }) modalComponent!: ModalComponent;
+
+   /**
+   * @property {string} idProcedimiento
+   * @description Identificador del procedimiento asociado al trámite.
+   */
+  public readonly idProcedimiento = ID_PROCEDIMIENTO;
   /**
    * Observable para limpiar las suscripciones activas al destruir el componente.
    * @property {Subject<void>} destroy$

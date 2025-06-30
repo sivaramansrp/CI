@@ -4,6 +4,7 @@ import { AgregarDestinatarioFinalContenedoraComponent } from '../agregar-destina
 import { AgregarProveedorContenedoraComponent } from '../agregar-proveedor-contenedora/agregar-proveedor-contenedora.component';
 import { CommonModule } from '@angular/common';
 import { DestinoFinal } from '../../../../shared/models/terceros-relacionados.model';
+import { ID_PROCEDIMIENTO } from '../../constants/importacion-armas-explosivo.enum';
 import { ModalComponent } from '../../../../shared/components/modal/modal.component';
 import { OnInit } from '@angular/core';
 import { Proveedor } from '../../../../shared/models/terceros-relacionados.model';
@@ -27,7 +28,17 @@ import { takeUntil } from 'rxjs';
   styleUrl: './terceros-relacionados-contenedora.component.scss',
 })
 export class TercerosRelacionadosContenedoraComponent implements OnInit, OnDestroy {
-   @ViewChild('modal', { static: false }) modalComponent!: ModalComponent;
+
+  /**
+   * Referencia al componente modal para abrir y cerrar diálogos.
+   * @type {ModalComponent}
+   */
+  @ViewChild('modal', { static: false }) modalComponent!: ModalComponent;   
+     /**
+      * Identificador del procedimiento.
+      * @property {number} idProcedimiento
+      */
+     public readonly idProcedimiento = ID_PROCEDIMIENTO;
   /**
    * Observable para limpiar las suscripciones activas al destruir el componente.
    * @property {Subject<void>} destroy$

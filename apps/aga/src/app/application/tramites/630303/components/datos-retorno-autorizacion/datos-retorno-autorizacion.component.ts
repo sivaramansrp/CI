@@ -4,21 +4,17 @@
  * Permite inicializar formularios, obtener datos de catálogos y manejar el estado del formulario.
  */
 
-import { CommonModule } from '@angular/common';
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ConsultaioQuery, ModeloDeFormaDinamica } from '@ng-mf/data-access-user';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
-
-import { ModeloDeFormaDinamica } from '@libs/shared/data-access-user/src';
-
-import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
-
-import { FORMULARIO_DATOS_AUTORIZACION } from '../../enum/retorno-importacion-temporal.enum';
-import { Tramite630303Query } from '../../estados/tramite630303.query';
-
 import { Tramite630303State, Tramite630303Store } from '../../estados/tramite630303.store';
+import { CommonModule } from '@angular/common';
+import { FORMULARIO_DATOS_AUTORIZACION } from '../../enum/retorno-importacion-temporal.enum';
+import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
 import { RetornoImportacionTemporalService } from '../../services/retorno-importacion-temporal.service';
+import { Tramite630303Query } from '../../estados/tramite630303.query';
 /**
  * Componente que gestiona los datos de retorno de autorización para el trámite 630303.
  * Permite inicializar formularios, obtener datos de catálogos y manejar el estado del formulario.
@@ -34,6 +30,11 @@ import { RetornoImportacionTemporalService } from '../../services/retorno-import
   styleUrl: './datos-retorno-autorizacion.component.scss',
 })
 export class DatosRetornoAutorizacionComponent implements OnInit, OnDestroy {
+
+  /**
+   * Indica si el formulario está en modo solo lectura.
+   */
+  esSoloLectura!: boolean;
   /**
    * Formulario dinámico para gestionar los datos de autorización.
    */
@@ -54,20 +55,49 @@ export class DatosRetornoAutorizacionComponent implements OnInit, OnDestroy {
    */
   private destroyed$ = new Subject<void>();
 
+   /**
+   * Estado actual de la solicitud.
+   */
+  public solicitudState!: Tramite630303State;
+
   /**
    * Constructor del componente.
+   * Inicializa las dependencias necesarias y crea el formulario reactivo base para 
+   * la gestión de datos de retorno de autorización.
    * 
-   * @param fb - Constructor de formularios reactivos.
-   * @param retornoImportacionTemporalService - Servicio para obtener datos de catálogos.
-   * @param tramite630303Store - Store para manejar el estado del trámite.
-   * @param tramite630303Query - Query para consultar el estado del trámite.
+   * @param fb - Constructor de formularios reactivos de Angular para crear y manejar formularios.
+   * @param retornoImportacionTemporalService - Servicio para obtener datos de catálogos relacionados con importación temporal.
+   * @param tramite630303Store - Store para actualizar y mantener el estado del trámite 630303.
+   * @param tramite630303Query - Query para observar y consultar el estado del trámite 630303.
+   * @param consultaioQuery - Query para obtener el estado de consulta y determinar el modo de solo lectura.
+   * @memberof DatosRetornoAutorizacionComponent
    */
   constructor(
     private fb: FormBuilder,
     private retornoImportacionTemporalService: RetornoImportacionTemporalService,
     private tramite630303Store: Tramite630303Store,
-    private tramite630303Query: Tramite630303Query
-  ) {}
+    private tramite630303Query: Tramite630303Query,
+    private consultaioQuery: ConsultaioQuery,
+  ) {
+     this.datosImportacionRetornoAutorizacionGeneralFormulario = this.fb.group({
+    });
+  }
+
+  /**
+   * Guarda los datos del formulario y ajusta el estado de solo lectura.
+   * Deshabilita o habilita los campos según corresponda.
+   */
+  guardarDatosFormulario(): void {
+    if (!this.datosImportacionRetornoAutorizacionGeneralFormulario) {
+      return;
+    }
+    
+    if (this.esSoloLectura) {
+      this.datosImportacionRetornoAutorizacionGeneralFormulario.disable();
+    } else {
+      this.datosImportacionRetornoAutorizacionGeneralFormulario.enable();
+    }
+  }
 
   /**
    * Método del ciclo de vida que se ejecuta al inicializar el componente.
@@ -75,16 +105,30 @@ export class DatosRetornoAutorizacionComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.getValorStore();
-    this.inicializarFormulario();
+    this.obtenerEstadoValor();
     this.getAduanaDeIngreso();
     this.getSeccionAduanera();
   }
 
   /**
-   * Inicializa el formulario reactivo con valores predeterminados y validaciones.
+   * Obtiene y observa el estado de consulta para determinar el modo de solo lectura del formulario.
+   * Se suscribe al observable del estado de consulta y actualiza la propiedad esSoloLectura
+   * según el valor de la propiedad readonly del estado. Automáticamente aplica los cambios
+   * al formulario de datos de retorno de autorización mediante el método guardarDatosFormulario.
+   * 
+   * @description Este método establece la reactividad del componente al estado de consulta,
+   * permitiendo que el formulario de autorización se adapte dinámicamente entre modo edición 
+   * y solo lectura según las condiciones del trámite de retorno de importación temporal.
+   * @returns {void}
+   * @memberof DatosRetornoAutorizacionComponent
+   * @private
    */
-  inicializarFormulario(): void {
-    this.datosImportacionRetornoAutorizacionGeneralFormulario = this.fb.group({
+  obtenerEstadoValor(): void {
+   this.consultaioQuery.selectConsultaioState$
+    .pipe(takeUntil(this.destroyed$))
+    .subscribe((estadoConsulta) => {
+      this.esSoloLectura = estadoConsulta.readonly;
+      this.guardarDatosFormulario()
     });
   }
 
@@ -122,6 +166,10 @@ export class DatosRetornoAutorizacionComponent implements OnInit, OnDestroy {
    * @param $event - Evento que contiene el campo y el valor a actualizar.
    */
   establecerCambioDeValor($event: { campo: string; valor: unknown }): void {
+    if (!$event || typeof $event !== 'object' || !$event.campo) {
+      return;
+    }
+
     if (typeof $event.valor === 'object' && $event.valor !== null && 'id' in $event.valor) {
       this.tramite630303Store.setTramite630303State($event.campo, ($event.valor as { id: unknown }).id);
     } else {

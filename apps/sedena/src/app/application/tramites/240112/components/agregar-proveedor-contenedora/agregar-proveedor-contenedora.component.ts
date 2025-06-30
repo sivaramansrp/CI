@@ -4,64 +4,65 @@ import { ID_PROCEDIMIENTO } from '../../constants/agregar-destinatario.enum';
 import { Proveedor } from '../../../../shared/models/terceros-relacionados.model';
 import { Tramite240112Store } from '../../estados/tramite240112Store.store';
 
-
 /**
  * Componente contenedor para agregar proveedores en el trámite 240112.
  *
+ * @component
+ *
  * @remarks
- * Este componente actúa como contenedor para el componente `AgregarProveedorComponent`, gestionando la interacción con el store `Tramite240112Store` y emitiendo eventos para cerrar el componente.
+ * Este componente actúa como contenedor para el componente `AgregarProveedorComponent`, gestionando la
+ * interacción con el store `Tramite240112Store` y emitiendo eventos para cerrar el componente.
  *
  * @example
  * ```html
  * <app-agregar-proveedor-contenedora (cerrar)="onCerrar()"></app-agregar-proveedor-contenedora>
  * ```
- *
- * @event cerrar - Evento emitido para indicar que se debe cerrar el componente.
- * @property {string} idProcedimiento - Identificador del procedimiento asociado al trámite.
- * @constructor Inyecta el store `Tramite240112Store` para gestionar el estado del trámite.
- * @method updateProveedorTablaDatos - Actualiza los datos de la tabla de proveedores en el store del trámite.
  */
 @Component({
   selector: 'app-agregar-proveedor-contenedora',
   templateUrl: './agregar-proveedor-contenedora.component.html',
   styleUrl: './agregar-proveedor-contenedora.component.scss',
   standalone: true,
-  imports: [ AgregarProveedorComponent]
+  imports: [AgregarProveedorComponent]
 })
 export class AgregarProveedorContenedoraComponent {
   /**
-   * @event cerrar
-   * @description Evento emitido para indicar que se debe cerrar el componente.
-   * @remarks
-   * Este evento no envía ningún valor, simplemente notifica a los componentes padres que se debe realizar la acción de cierre.
+   * Evento emitido para indicar que se debe cerrar el componente.
    * 
-   * @eventType void
-   * @es
-   * Evento que se dispara para cerrar el componente actual.
+   * @event cerrar
+   * @type {EventEmitter<void>}
+   * @remarks
+   * Este evento no envía ningún dato, simplemente notifica al componente padre que debe cerrarse el modal o contenedor.
    */
   @Output() cerrar = new EventEmitter<void>();
-    /**
-     * @property {string} idProcedimiento
-     * @description Identificador del procedimiento asociado al trámite.
-     */
-    public readonly idProcedimiento = ID_PROCEDIMIENTO;
-    /**
-     * @constructor
-     * @description Constructor que inyecta el store `Tramite260214Store` para gestionar el estado del trámite.
-     *
-     * @param tramite240112Store - Store que administra el estado del trámite 260214.
-     */
-    // eslint-disable-next-line no-empty-function
-    constructor(public tramite240112Store: Tramite240112Store) {}
-  
-    /**
-     * @method updateProveedorTablaDatos
-     * @description Actualiza los datos de la tabla de proveedores en el store del trámite.
-     *
-     * @param {Proveedor[]} event - Lista de proveedores que se actualizarán en el store.
-     * @returns {void} Este método no retorna ningún valor.
-     */
-    updateProveedorTablaDatos(event: Proveedor[]): void {
-      this.tramite240112Store.updateProveedorTablaDatos(event);
-    }
+
+  /**
+   * Identificador del procedimiento asociado al trámite.
+   * 
+   * @readonly
+   */
+  public readonly idProcedimiento = ID_PROCEDIMIENTO;
+
+  /**
+   * Constructor que inyecta el store para gestionar el estado del trámite 240112.
+   *
+   * @param tramite240112Store - Store que administra el estado del trámite.
+   */
+  constructor(public tramite240112Store: Tramite240112Store) {}
+
+  /**
+   * Actualiza los datos de la tabla de proveedores en el store del trámite.
+   *
+   * @param event - Lista actualizada de proveedores que se guardará en el store.
+   *
+   * @returns void
+   *
+   * @remarks
+   * Al actualizar el store, este método también emite el evento `cerrar` para notificar
+   * que se debe cerrar el componente.
+   */
+  updateProveedorTablaDatos(event: Proveedor[]): void {
+    this.tramite240112Store.updateProveedorTablaDatos(event);
+    this.cerrar.emit();
+  }
 }

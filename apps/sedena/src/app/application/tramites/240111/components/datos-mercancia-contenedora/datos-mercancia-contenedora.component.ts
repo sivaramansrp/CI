@@ -20,6 +20,10 @@ import { Tramite240111Store } from '../../estados/tramite240111Store.store';
 })
 export class DatosMercanciaContenedoraComponent {
 
+  /**
+   * @output cerrar
+   * Evento emitido cuando se solicita cerrar el componente.
+   */
    @Output() cerrar = new EventEmitter<void>();
 
   /**

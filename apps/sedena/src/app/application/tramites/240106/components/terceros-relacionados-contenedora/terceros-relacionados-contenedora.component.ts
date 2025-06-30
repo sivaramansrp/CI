@@ -5,7 +5,9 @@ import { AgregarDestinatarioFinalContenedoraComponent } from '../../../240106/co
 import { AgregarProveedorContenedoraComponent } from '../../../240106/components/agregar-proveedor-contenedora/agregar-proveedor-contenedora.component';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
+
 import { DestinoFinal } from '../../../../shared/models/terceros-relacionados.model';
+import { ID_PROCEDIMIENTO } from '../../constants/importacion-sustancias-quimicas.enum';
 import { ModalComponent } from '../../../../shared/components/modal/modal.component';
 import { OnInit } from '@angular/core';
 import { Proveedor } from '../../../../shared/models/terceros-relacionados.model';
@@ -31,7 +33,24 @@ export class TercerosRelacionadosContenedoraComponent
   implements OnInit, OnDestroy
 {
   
-   @ViewChild('modal', { static: false }) modalComponent!: ModalComponent;
+  /**
+   * Referencia al componente Modal utilizado para mostrar formularios dinámicos.
+   * 
+   * @type {ModalComponent}
+   * @memberof TercerosRelacionadosContenedoraComponent
+   */
+  @ViewChild('modal', { static: false }) modalComponent!: ModalComponent;
+
+   
+  /**
+   * Identificador del procedimiento asociado al trámite.
+   * Este valor se utiliza para enlazar el componente con el procedimiento correspondiente definido en la enumeración.
+   *
+   * @type {number}
+   * @readonly
+   * @memberof TercerosRelacionadosContenedoraComponent
+   */
+  public readonly idProcedimiento = ID_PROCEDIMIENTO;
   /**
    * Observable para limpiar las suscripciones activas al destruir el componente.
    * @property {Subject<void>} destroy$

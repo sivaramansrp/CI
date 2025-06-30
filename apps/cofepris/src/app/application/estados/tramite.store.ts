@@ -1,5 +1,5 @@
-import { Injectable } from '@angular/core';
 import { Store, StoreConfig } from '@datorama/akita';
+import { Injectable } from '@angular/core';
 
 /**
  * Estado para el número de trámite

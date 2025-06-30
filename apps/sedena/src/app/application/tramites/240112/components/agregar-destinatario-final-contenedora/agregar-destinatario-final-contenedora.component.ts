@@ -55,7 +55,6 @@ export class AgregarDestinatarioFinalContenedoraComponent {
      * @param {Tramite240111Store} tramiteStore - Store que administra el estado del trámite.
      * @returns {void}
      */
-    // eslint-disable-next-line no-empty-function
     constructor(public tramiteStore: Tramite240112Store) {}
   
     /**
@@ -67,5 +66,6 @@ export class AgregarDestinatarioFinalContenedoraComponent {
      */
     updateDestinatarioFinalTablaDatos(event: DestinoFinal[]): void {
       this.tramiteStore.updateDestinatarioFinalTablaDatos(event);
+       this.cerrar.emit();
     }
 }

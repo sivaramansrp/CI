@@ -2,6 +2,7 @@ import { Component, EventEmitter, Output } from '@angular/core';
 import { DestinoFinal, Proveedor } from '../../../../shared/models/terceros-relacionados.model';
 import { AgregarDestinatarioFinalComponent } from '../../../../shared/components/agregar-destinatario-final/agregar-destinatario-final.component';
 import { CommonModule } from '@angular/common';
+import { ID_PROCEDIMIENTO } from '../../constants/importacion-armas-explosivo.enum';
 import { Observable } from 'rxjs';
 import { Tramite240108Query } from '../../estados/tramite240108Query.query';
 import { Tramite240108Store } from '../../estados/tramite240108Store.store';
@@ -20,9 +21,20 @@ import { Tramite240108Store } from '../../estados/tramite240108Store.store';
   styleUrl: './agregar-destinatario-final-contenedora.component.scss',
 })
 export class AgregarDestinatarioFinalContenedoraComponent {
+
+  /**
+   * Evento que se emite para notificar el cierre del componente.
+   * Los componentes padres pueden suscribirse a este evento para ejecutar acciones al cerrar.
+   *
+   * @type {EventEmitter<void>}
+   * @memberof AgregarDestinatarioFinalContenedoraComponent
+   */
   @Output() cerrar = new EventEmitter<void>();
-
-
+    /**
+     * Identificador del procedimiento.
+     * @property {number} idProcedimiento
+     */
+    public readonly idProcedimiento = ID_PROCEDIMIENTO;
   /**
    * Observable que emite los datos del tercero (destinatario o proveedor),
    * que pueden ser `DestinoFinal`, `Proveedor`, `null` o `undefined`.

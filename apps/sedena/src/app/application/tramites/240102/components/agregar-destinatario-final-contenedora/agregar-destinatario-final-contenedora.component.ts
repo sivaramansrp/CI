@@ -1,6 +1,6 @@
+import { Component, EventEmitter, Output } from '@angular/core';
 import { AgregarDestinatarioFinalComponent } from '../../../../shared/components/agregar-destinatario-final/agregar-destinatario-final.component';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
 import { DestinoFinal } from '../../../../shared/models/terceros-relacionados.model';
 import { Tramite240102Store } from '../../estados/tramite240102Store.store';
 
@@ -18,6 +18,19 @@ import { Tramite240102Store } from '../../estados/tramite240102Store.store';
   styleUrl: './agregar-destinatario-final-contenedora.component.scss',
 })
 export class AgregarDestinatarioFinalContenedoraComponent {
+
+  /**
+   * @event cerrar
+   * @description Evento emitido para indicar que se debe cerrar el componente.
+   * @remarks
+   * Este evento no envía ningún valor, simplemente notifica a los componentes padres que se debe realizar la acción de cierre.
+   * 
+   * @eventType void
+   * @es
+   * Evento que se dispara para cerrar el componente actual.
+   */
+  @Output() cerrar = new EventEmitter<void>();
+  
   /**
    * Constructor del componente.
    *

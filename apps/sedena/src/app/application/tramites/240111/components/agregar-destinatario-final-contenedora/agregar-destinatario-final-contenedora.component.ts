@@ -21,8 +21,16 @@ import { Tramite240111Store } from '../../estados/tramite240111Store.store';
 })
 export class AgregarDestinatarioFinalContenedoraComponent {
 
+  /**
+   * Evento emitido cuando se solicita cerrar el componente.
+   * @event cerrar
+   */
   @Output() cerrar = new EventEmitter<void>();
 
+  /**
+   * Identificador del procedimiento.
+   * @property {number} idProcedimiento
+   */
   public readonly idProcedimiento = ID_PROCEDIMIENTO;
   /**
    * Constructor del componente.

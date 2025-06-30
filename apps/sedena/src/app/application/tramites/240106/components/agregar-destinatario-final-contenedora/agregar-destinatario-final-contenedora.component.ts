@@ -36,7 +36,8 @@ export class AgregarDestinatarioFinalContenedoraComponent {
    * @remarks Este valor determina la visibilidad del componente en la interfaz de usuario.
    * @command Cambiar el valor de esta propiedad para alternar la visibilidad.
    */
-  public readonly idProcedimiento: number = ID_PROCEDIMIENTO;
+  
+  public readonly idProcedimiento = ID_PROCEDIMIENTO;
 
   /**
    * Observable que emite información sobre el destino final, proveedor o un valor nulo/indefinido.

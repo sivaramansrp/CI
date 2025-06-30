@@ -32,8 +32,25 @@ import { takeUntil } from 'rxjs';
 })
 export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
 
+  /**
+   * Componente contenedor para los datos del trámite.
+   * Gestiona el formulario reactivo y la interacción con el store y query de Akita.
+   * Permite abrir modales para la gestión de mercancías y expone eventos de cierre.
+   *
+   * @export
+   * @class DatosDelTramiteContenedoraComponent
+   * @implements {OnInit}
+   * @implements {OnDestroy}
+   */
   @ViewChild('modal', { static: false }) modalComponent!: ModalComponent;
   
+  /**
+   * Evento que se emite para notificar el cierre del componente.
+   * Los componentes padres pueden suscribirse a este evento para ejecutar acciones al cerrar.
+   *
+   * @type {EventEmitter<void>}
+   * @memberof AgregarDestinatarioFinalContenedoraComponent
+   */
   @Output() cerrar = new EventEmitter<void>();
   /**
    * Formulario reactivo para la combinación de datos.

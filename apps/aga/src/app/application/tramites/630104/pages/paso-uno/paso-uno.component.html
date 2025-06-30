@@ -17,8 +17,10 @@
       <solicitante [tabindex]="1"></solicitante>
       }
       @case (2) {
+      @if(esDatosRespuesta){
       <app-solicitud-tab-components [tabindex]="2"></app-solicitud-tab-components>
       }
+     }
       }
     </ng-container>
   </div>

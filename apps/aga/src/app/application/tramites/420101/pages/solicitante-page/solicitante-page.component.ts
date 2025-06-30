@@ -1,10 +1,7 @@
-import { AccionBoton, BtnContinuarComponent, DatosPasos, ListaPasosWizard, WizardComponent } from '@ng-mf/data-access-user';
-import { CommonModule } from '@angular/common';
+import { AccionBoton, DatosPasos, ListaPasosWizard, WizardComponent } from '@ng-mf/data-access-user';
 import { Component } from '@angular/core';
 
 import { PASOS, TITULO_MENSAJE } from '../../constants/proveedores.enum';
-import { PasoDosComponent } from '../paso-dos/paso-dos.component';
-import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { ViewChild } from '@angular/core';
 
 /**
@@ -17,14 +14,6 @@ import { ViewChild } from '@angular/core';
   selector: 'app-solicitante-page',
   templateUrl: './solicitante-page.component.html',
   styleUrl: './solicitante-page.component.scss',
-  standalone: true,
-  imports: [
-    CommonModule,
-    WizardComponent,
-    PasoUnoComponent,
-    PasoDosComponent,
-    BtnContinuarComponent
-  ]
 })
 export class SolicitantePageComponent {
 

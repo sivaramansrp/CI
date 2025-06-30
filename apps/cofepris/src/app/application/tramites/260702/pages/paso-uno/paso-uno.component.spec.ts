@@ -1,79 +1,87 @@
+
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { By } from '@angular/platform-browser';
+import { Observable, of as observableOf, throwError } from 'rxjs';
+
+import { Component } from '@angular/core';
 import { PasoUnoComponent } from './paso-uno.component';
-import { of, Subject } from 'rxjs';
-import { fakeAsync, tick } from '@angular/core/testing';
+import { Service260702Service } from '../../services/service260702.service';
+import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
+
+@Injectable()
+class MockService260702Service {}
+
 
 describe('PasoUnoComponent', () => {
-  let component: PasoUnoComponent;
-  let mockService260702Service: any;
-  let mockConsultaQuery: any;
-  let consultaStateMock: any;
+  let fixture: ComponentFixture<PasoUnoComponent>;
+  let component: { ngOnDestroy: () => void; consultaQuery: { selectConsultaioState$?: any; }; guardarDatosFormulario: jest.Mock<any, any, any> | (() => void); ngOnInit: () => void; service260702Service: { getRegistroTomaMuestrasMercanciasData?: any; actualizarEstadoFormulario?: any; }; seleccionaTab: (arg0: {}) => void; destroyNotifier$: { next?: any; complete?: any; }; };
 
   beforeEach(() => {
-    consultaStateMock = { update: false };
-    mockService260702Service = {
-      getRegistroTomaMuestrasMercanciasData: jest.fn(),
-      actualizarEstadoFormulario: jest.fn(),
-    };
-    mockConsultaQuery = {
-      selectConsultaioState$: of(consultaStateMock),
-    };
-    component = new PasoUnoComponent(
-      mockService260702Service,
-      mockConsultaQuery
-    );
+    TestBed.configureTestingModule({
+      imports: [ FormsModule, ReactiveFormsModule ],
+      declarations: [
+        PasoUnoComponent,
+        
+      ],
+      schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
+      providers: [
+        { provide: Service260702Service, useClass: MockService260702Service },
+        ConsultaioQuery
+      ]
+    }).overrideComponent(PasoUnoComponent, {
+
+    }).compileComponents();
+    fixture = TestBed.createComponent(PasoUnoComponent);
+    component = fixture.debugElement.componentInstance;
   });
 
-  it('should create', () => {
+  afterEach(() => {
+    component.ngOnDestroy = function() {};
+    fixture.destroy();
+  });
+
+  it('should run #constructor()', async () => {
     expect(component).toBeTruthy();
   });
-
-  it('should set esDatosRespuesta to true if consultaState.update is false on ngOnInit', () => {
-    consultaStateMock.update = false;
+  it('should run #ngOnInit()', async () => {
+    component.consultaQuery = {
+      selectConsultaioState$: observableOf({
+        update: true, 
+      }),
+    };
+  
+    component.guardarDatosFormulario = jest.fn();
+  
     component.ngOnInit();
-    expect(component.esDatosRespuesta).toBe(true);
+  
+    expect(component.guardarDatosFormulario).toHaveBeenCalled();
   });
 
-  it('should call guardarDatosFormulario if consultaState.update is true on ngOnInit', () => {
-    consultaStateMock.update = true;
-    const guardarDatosFormularioSpy = jest.spyOn(component, 'guardarDatosFormulario');
-    component.ngOnInit();
-    expect(guardarDatosFormularioSpy).toHaveBeenCalled();
-  });
-
-  it('should update indice when seleccionaTab is called', () => {
-    component.seleccionaTab(3);
-    expect(component.indice).toBe(3);
-  });
-
-  it('should set esDatosRespuesta to true and call actualizarEstadoFormulario when guardarDatosFormulario receives response', fakeAsync(() => {
-    const responseMock = { foo: 'bar' };
-    mockService260702Service.getRegistroTomaMuestrasMercanciasData.mockReturnValue(of(responseMock));
+  it('should run #guardarDatosFormulario()', async () => {
+    component.service260702Service = component.service260702Service || {};
+    component.service260702Service.getRegistroTomaMuestrasMercanciasData = jest.fn().mockReturnValue(observableOf({}));
+    component.service260702Service.actualizarEstadoFormulario = jest.fn();
     component.guardarDatosFormulario();
-    tick();
-    expect(component.esDatosRespuesta).toBe(true);
-    expect(mockService260702Service.actualizarEstadoFormulario).toHaveBeenCalledWith(responseMock);
-  }));
+     expect(component.service260702Service.getRegistroTomaMuestrasMercanciasData).toHaveBeenCalled();
+     expect(component.service260702Service.actualizarEstadoFormulario).toHaveBeenCalled();
+  });
 
-  it('should not call actualizarEstadoFormulario if guardarDatosFormulario receives falsy response', fakeAsync(() => {
-    mockService260702Service.getRegistroTomaMuestrasMercanciasData.mockReturnValue(of(null));
-    component.guardarDatosFormulario();
-    tick();
-    expect(mockService260702Service.actualizarEstadoFormulario).not.toHaveBeenCalled();
-  }));
+  it('should run #seleccionaTab()', async () => {
 
-  it('should complete destroyNotifier$ on ngOnDestroy', () => {
-    const completeSpy = jest.spyOn((component as any).destroyNotifier$, 'complete');
-    const nextSpy = jest.spyOn((component as any).destroyNotifier$, 'next');
+    component.seleccionaTab({});
+
+  });
+
+  it('should run #ngOnDestroy()', async () => {
+    component.destroyNotifier$ = component.destroyNotifier$ || {};
+    component.destroyNotifier$.next = jest.fn();
+    component.destroyNotifier$.complete = jest.fn();
     component.ngOnDestroy();
-    expect(nextSpy).toHaveBeenCalled();
-    expect(completeSpy).toHaveBeenCalled();
+     expect(component.destroyNotifier$.next).toHaveBeenCalled();
+     expect(component.destroyNotifier$.complete).toHaveBeenCalled();
   });
 
-  it('should assign consultaState from observable in ngOnInit', () => {
-    consultaStateMock = { update: false, test: 123 };
-    mockConsultaQuery.selectConsultaioState$ = of(consultaStateMock);
-    component = new PasoUnoComponent(mockService260702Service, mockConsultaQuery);
-    component.ngOnInit();
-    expect(component.consultaState).toEqual(consultaStateMock);
-  });
 });

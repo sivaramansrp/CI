@@ -1,64 +1,27 @@
-// @ts-nocheck
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { By } from '@angular/platform-browser';
-import { Observable, of as observableOf, throwError } from 'rxjs';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { Component } from '@angular/core';
 import { PasoTresComponent } from './paso-tres.component';
+import { AlertComponent, AnexarDocumentosComponent, FirmaElectronicaComponent, TablaDinamicaComponent, TituloComponent } from '@ng-mf/data-access-user';
 import { ToastrModule } from 'ngx-toastr';
-
-@Directive({ selector: '[myCustom]' })
-class MyCustomDirective {
-  @Input() myCustom;
-}
-
-@Pipe({ name: 'translate' })
-class TranslatePipe implements PipeTransform {
-  transform(value) { return value; }
-}
-
-@Pipe({ name: 'phoneNumber' })
-class PhoneNumberPipe implements PipeTransform {
-  transform(value) { return value; }
-}
-
-@Pipe({ name: 'safeHtml' })
-class SafeHtmlPipe implements PipeTransform {
-  transform(value) { return value; }
-}
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('PasoTresComponent', () => {
-  let fixture;
-  let component;
+  let component: PasoTresComponent;
+  let fixture: ComponentFixture<PasoTresComponent>;
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [FormsModule, ReactiveFormsModule,PasoTresComponent, ToastrModule.forRoot()],
-      declarations: [
-        TranslatePipe, PhoneNumberPipe, SafeHtmlPipe,
-        MyCustomDirective
-      ],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
-      providers: [
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      declarations: [],
+      imports: [TituloComponent, HttpClientTestingModule, AlertComponent, TablaDinamicaComponent, AnexarDocumentosComponent, ToastrModule.forRoot(), FirmaElectronicaComponent,PasoTresComponent]
+    })
+      .compileComponents();
 
-      ]
-    }).overrideComponent(PasoTresComponent, {
-
-    }).compileComponents();
     fixture = TestBed.createComponent(PasoTresComponent);
-    component = fixture.debugElement.componentInstance;
+    component = fixture.componentInstance;
+    fixture.detectChanges();
   });
 
-  afterEach(() => {
-    component.ngOnDestroy = function () { };
-    fixture.destroy();
-  });
-
-  it('should run #constructor()', async () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
-
 });
