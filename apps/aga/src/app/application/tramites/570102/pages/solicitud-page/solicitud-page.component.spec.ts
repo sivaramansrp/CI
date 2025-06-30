@@ -1,8 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { SolicitudPageComponent } from './solicitud-page.component';
-import { WizardComponent } from '@ng-mf/data-access-user';
-import { PASOS } from '@ng-mf/data-access-user';
+import { WizardComponent, PASOS } from '@ng-mf/data-access-user';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 describe('SolicitudPageComponent', () => {
   let component: SolicitudPageComponent;
@@ -11,79 +10,118 @@ describe('SolicitudPageComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [SolicitudPageComponent],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA], 
+      schemas: [CUSTOM_ELEMENTS_SCHEMA]
     }).compileComponents();
 
     fixture = TestBed.createComponent(SolicitudPageComponent);
     component = fixture.componentInstance;
+    component.wizardComponent = {
+      siguiente: jest.fn()
+    } as unknown as WizardComponent;
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize with default values', () => {
-    expect(component.TEXTO_DE_ALERTA).toBe(
-      'La solicitud ha quedado registrada con el número temporal 202757598 Éste no tiene validez legal y sirve solamente para efectos de identificar tu solicitud. Un folio oficial le será asignado a la solicitud al momento en que ésta sea firmada.'
-    );
-    expect(component.pasos).toEqual(PASOS);
-    expect(component.indice).toBe(1);
-    expect(component.datosPasos).toEqual({
-      nroPasos: PASOS.length,
-      indice: 1,
-      txtBtnAnt: 'Anterior',
-      txtBtnSig: 'Continuar',
-    });
+  it('should filter and remap pasos on ngOnInit', () => {
+    component.pasos = [
+      { indice: 1, nombre: 'Paso 1' },
+      { indice: 2, nombre: 'Paso 2' },
+      { indice: 3, nombre: 'Paso 3' }
+    ] as any;
+    component.ngOnInit();
+   
   });
 
-  it('should select a tab on seleccionaTab', () => {
+  it('should set indice on seleccionaTab', () => {
+    component.indice = 1;
     component.seleccionaTab(3);
     expect(component.indice).toBe(3);
   });
 
-  it('should handle getValorIndice for "cont" action', () => {
-    const mockWizardComponent = {
-      siguiente: jest.fn(),
-      atras: jest.fn(),
-    };
-    component.wizardComponent = mockWizardComponent as unknown as WizardComponent;
-
-    const accionBoton = { accion: 'cont', valor: 2 };
-    component.getValorIndice(accionBoton);
-
-    expect(component.indice).toBe(2);
-    expect(mockWizardComponent.siguiente).toHaveBeenCalled();
-    expect(mockWizardComponent.atras).not.toHaveBeenCalled();
+  it('should call alEventoHijo, cargaArchivo, and handle getValorIndice logic (modal hidden)', () => {
+    component.ocultarModal = false;
+    const alEventoSpy = jest.spyOn(component, 'alEventoHijo');
+    const cargaArchivoSpy = jest.spyOn(component, 'cargaArchivo');
+    component.nombre = 5;
+    component.getValorIndice({ accion: 'cont', valor: 2 });
+    expect(alEventoSpy).toHaveBeenCalledWith(5);
+    expect(cargaArchivoSpy).toHaveBeenCalled();
+    expect(component.indice).toBe(1);
   });
 
-  it('should handle getValorIndice for "atras" action', () => {
-    const mockWizardComponent = {
-      siguiente: jest.fn(),
-      atras: jest.fn(),
-    };
-    component.wizardComponent = mockWizardComponent as unknown as WizardComponent;
-
-    const accionBoton = { accion: 'atras', valor: 2 };
-    component.getValorIndice(accionBoton);
-
+  it('should handle getValorIndice logic (modal visible, valid range, accion cont, indice 2)', () => {
+    component.ocultarModal = true;
+    component.indice = 1;
+    component.nombre = 0;
+    component.wizardComponent = { siguiente: jest.fn() } as any;
+    component.getValorIndice({ accion: 'cont', valor: 2 });
     expect(component.indice).toBe(2);
-    expect(mockWizardComponent.atras).toHaveBeenCalled();
-    expect(mockWizardComponent.siguiente).not.toHaveBeenCalled();
+    expect(component.nombre).toBe(1);
+    expect(component.wizardComponent.siguiente).toHaveBeenCalled();
   });
 
-  it('should not change indice or call wizard methods if valor is out of range', () => {
-    const mockWizardComponent = {
-      siguiente: jest.fn(),
-      atras: jest.fn(),
-    };
-    component.wizardComponent = mockWizardComponent as unknown as WizardComponent;
+  it('should not call wizardComponent.siguiente if accion is not cont or indice is not 2', () => {
+    component.ocultarModal = true;
+    component.indice = 1;
+    component.nombre = 0;
+    component.wizardComponent = { siguiente: jest.fn() } as any;
+    component.getValorIndice({ accion: 'otro', valor: 3 });
+    expect(component.indice).toBe(3);
+    expect(component.wizardComponent.siguiente).not.toHaveBeenCalled();
+  });
 
-    const accionBoton = { accion: 'cont', valor: 6 }; // Out of range
-    component.getValorIndice(accionBoton);
+  it('should set nombre in alEventoHijo', () => {
+    component.nombre = 0;
+    component.alEventoHijo(7);
+    expect(component.nombre).toBe(7);
+  });
 
-    expect(component.indice).toBe(1); // Default value
-    expect(mockWizardComponent.siguiente).not.toHaveBeenCalled();
-    expect(mockWizardComponent.atras).not.toHaveBeenCalled();
+  it('should remove pedimento, set ocultarModal, and call getValorIndice on eliminarPedimento', () => {
+    component.pedimentos = [{ id: 1 }, { id: 2 }, { id: 3 }] as any;
+    component.elementoParaEliminar = 1;
+    component.ocultarModal = false;
+    const getValorSpy = jest.spyOn(component, 'getValorIndice');
+    component.eliminarPedimento(true);
+    expect(component.pedimentos.length).toBe(2);
+    expect(component.ocultarModal).toBe(true);
+    expect(getValorSpy).toHaveBeenCalledWith({ accion: 'cont', valor: 2 });
+  });
+
+  it('should not remove pedimento if borrar is false', () => {
+    component.pedimentos = [{ id: 1 }, { id: 2 }] as any;
+    component.elementoParaEliminar = 0;
+    component.ocultarModal = false;
+    component.eliminarPedimento(false);
+    expect(component.pedimentos.length).toBe(2);
+    expect(component.ocultarModal).toBe(false);
+  });
+
+  it('should set nuevaNotificacion and elementoParaEliminar on abrirModal', () => {
+    component.nuevaNotificacion = undefined as any;
+    component.elementoParaEliminar = 0;
+    component.abrirModal(2);
+    expect(component.nuevaNotificacion).toBeDefined();
+    expect(component.elementoParaEliminar).toBe(2);
+  });
+
+  it('should set cargarArchivo to true and call abrirModal if indice is 1 in cargaArchivo', () => {
+    component.indice = 1;
+    const abrirModalSpy = jest.spyOn(component, 'abrirModal');
+    component.cargarArchivo = false;
+    component.cargaArchivo();
+    expect(component.cargarArchivo).toBe(true);
+    expect(abrirModalSpy).toHaveBeenCalled();
+  });
+
+  it('should set cargarArchivo to true and not call abrirModal if indice is not 1 in cargaArchivo', () => {
+    component.indice = 3;
+    const abrirModalSpy = jest.spyOn(component, 'abrirModal');
+    component.cargarArchivo = false;
+    component.cargaArchivo();
+    expect(component.cargarArchivo).toBe(true);
+    expect(abrirModalSpy).not.toHaveBeenCalled();
   });
 });

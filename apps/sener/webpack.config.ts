@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
+/* eslint-disable @typescript-eslint/naming-convention */
 // import { withModuleFederation } from '@nx/angular/module-federation';
 // import config from './module-federation.config';
 

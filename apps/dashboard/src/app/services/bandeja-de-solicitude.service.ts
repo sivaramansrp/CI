@@ -1,13 +1,13 @@
-import { Observable,catchError, throwError } from 'rxjs';
+
+import { Observable, catchError, throwError } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { JSONResponse } from '@libs/shared/data-access-user/src';
-
 @Injectable({
   providedIn: 'root'
 })
 export class BandejaDeSolicitudeService {
-
+  
   constructor(private http: HttpClient) { }
   /**
   * Recupera los datos del estado desde un archivo JSON local.
@@ -53,5 +53,16 @@ export class BandejaDeSolicitudeService {
         return throwError(() => error);
       })
     );
-  } 
+  }
+  
+  /**
+   * Recupera la información del catalogo de tipo trámite desde un archivo JSON local.
+   */
+  public getSolicitudesTablaDatos(): Observable<JSONResponse> {
+    return this.http.get<JSONResponse>('assets/json/bandeja-de-tareas-pendientes/tipo-Solicitud-catalogo-datos.json').pipe(
+      catchError((error) => {
+        return throwError(() => error);
+      })
+    );
+  }
 }

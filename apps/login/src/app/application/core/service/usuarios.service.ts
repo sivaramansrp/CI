@@ -174,4 +174,21 @@ export class UsuariosService {
         );
     }
 
+    /**
+ * Simula el guardado de la aceptación de condiciones de uso.
+ * Envía los datos de firma y aceptación a un endpoint simulado y retorna un booleano.
+ * 
+ * @param firma Cadena con la firma electrónica del usuario.
+ * @param aceptoCondiciones Booleano que indica si el usuario aceptó las condiciones de uso.
+ * @returns Observable<boolean> indicando si la operación fue exitosa.
+ */
+    aceptaCondicionesUso(firma: string, aceptoCondiciones: boolean): Observable<boolean> {
+        return this.http.get<{ success: boolean }>(
+            'assets/json/login/guardar-condiciones-uso.json'
+        ).pipe(
+            map(response => response.success)
+        );
+    }
+
+
 }

@@ -671,7 +671,7 @@ export class Tramite31616PerfilesMensajeriaStore extends Store<Solicitud31616Per
    * Establece el estado de describaProcedimiento.
    * @param describaProcedimiento - El valor de describaProcedimiento.
    */
-  public setDescribaProcedimiento(describaProcedimiento: string) {
+  public setDescribaProcedimiento(describaProcedimiento: string): void {
     this.update((state) => ({
       ...state,
       describaProcedimiento,
@@ -681,7 +681,7 @@ export class Tramite31616PerfilesMensajeriaStore extends Store<Solicitud31616Per
    * Establece el estado de indiqueLosCriterios.
    * @param indiqueLosCriterios - El valor de indiqueLosCriterios.
    */
-  public setIndiqueLosCriterios(indiqueLosCriterios: string) {
+  public setIndiqueLosCriterios(indiqueLosCriterios: string): void {
     this.update((state) => ({
       ...state,
       indiqueLosCriterios,
@@ -691,7 +691,7 @@ export class Tramite31616PerfilesMensajeriaStore extends Store<Solicitud31616Per
    * Establece el estado de indiqueLosMetodos.
    * @param indiqueLosMetodos - El valor de indiqueLosMetodos.
    */
-  public setIndiqueLosMetodos(indiqueLosMetodos: string) {
+  public setIndiqueLosMetodos(indiqueLosMetodos: string): void {
     this.update((state) => ({
       ...state,
       indiqueLosMetodos,
@@ -701,7 +701,7 @@ export class Tramite31616PerfilesMensajeriaStore extends Store<Solicitud31616Per
    * Establece el estado de describaLosIndicadores.
    * @param describaLosIndicadores - El valor de describaLosIndicadores.
    */
-  public setDescribaLosIndicadores(describaLosIndicadores: string) {
+  public setDescribaLosIndicadores(describaLosIndicadores: string): void {
     this.update((state) => ({
       ...state,
       describaLosIndicadores,
@@ -711,7 +711,7 @@ export class Tramite31616PerfilesMensajeriaStore extends Store<Solicitud31616Per
    * Establece el estado de comercioExterior.
    * @param comercioExterior - El valor de comercioExterior.
    */
-  public setComercioExterior(comercioExterior: string) {
+  public setComercioExterior(comercioExterior: string): void{
     this.update((state) => ({
       ...state,
       comercioExterior,
@@ -721,7 +721,7 @@ export class Tramite31616PerfilesMensajeriaStore extends Store<Solicitud31616Per
    * Establece el estado de candadosSeguridad.
    * @param candadosSeguridad - El valor de candadosSeguridad.
    */
-  public setCandadosSeguridad(candadosSeguridad: string) {
+  public setCandadosSeguridad(candadosSeguridad: string): void {
     this.update((state) => ({
       ...state,
       candadosSeguridad,
@@ -731,7 +731,7 @@ export class Tramite31616PerfilesMensajeriaStore extends Store<Solicitud31616Per
    * Establece el estado de proveedorExterno.
    * @param proveedorExterno - El valor de proveedorExterno.
    */
-  public setProveedorExterno(proveedorExterno: string) {
+  public setProveedorExterno(proveedorExterno: string): void {
     this.update((state) => ({
       ...state,
       proveedorExterno,
@@ -741,7 +741,7 @@ export class Tramite31616PerfilesMensajeriaStore extends Store<Solicitud31616Per
    * Establece el estado de susceptibleContaminacion.
    * @param susceptibleContaminacion - El valor de susceptibleContaminacion.
    */
-  public setSusceptibleContaminacion(susceptibleContaminacion: string) {
+  public setSusceptibleContaminacion(susceptibleContaminacion: string): void {
     this.update((state) => ({
       ...state,
       susceptibleContaminacion,
@@ -751,7 +751,7 @@ export class Tramite31616PerfilesMensajeriaStore extends Store<Solicitud31616Per
    * Establece el estado de encuentrenVacios.
    * @param encuentrenVacios - El valor de encuentrenVacios.
    */
-  public setEncuentrenVacios(encuentrenVacios: string) {
+  public setEncuentrenVacios(encuentrenVacios: string): void {
     this.update((state) => ({
       ...state,
       encuentrenVacios,
@@ -761,7 +761,7 @@ export class Tramite31616PerfilesMensajeriaStore extends Store<Solicitud31616Per
    * Establece el estado de semirremolquesVacios.
    * @param semirremolquesVacios - El valor de semirremolquesVacios.
    */
-  public setSemirremolquesVacios(semirremolquesVacios: string) {
+  public setSemirremolquesVacios(semirremolquesVacios: string): void {
     this.update((state) => ({
       ...state,
       semirremolquesVacios,
@@ -771,7 +771,7 @@ export class Tramite31616PerfilesMensajeriaStore extends Store<Solicitud31616Per
    * Establece el estado de utilizarCandado.
    * @param utilizarCandado - El valor de utilizarCandado.
    */
-  public setUtilizarCandado(utilizarCandado: string) {
+  public setUtilizarCandado(utilizarCandado: string): void {
     this.update((state) => ({
       ...state,
       utilizarCandado,
@@ -781,7 +781,7 @@ export class Tramite31616PerfilesMensajeriaStore extends Store<Solicitud31616Per
    * Establece el estado de seguridadMismas.
    * @param seguridadMismas - El valor de seguridadMismas.
    */
-  public setSeguridadMismas(seguridadMismas: string) {
+  public setSeguridadMismas(seguridadMismas: string): void {
     this.update((state) => ({
       ...state,
       seguridadMismas,
@@ -791,7 +791,7 @@ export class Tramite31616PerfilesMensajeriaStore extends Store<Solicitud31616Per
    * Establece el estado de describaContratacion.
    * @param describaContratacion - El valor de describaContratacion.
    */
-  public setDescribaContratacion(describaContratacion: string) {
+  public setDescribaContratacion(describaContratacion: string): void {
     this.update((state) => ({
       ...state,
       describaContratacion,
@@ -801,7 +801,7 @@ export class Tramite31616PerfilesMensajeriaStore extends Store<Solicitud31616Per
    * Establece el estado de documentacionExigida.
    * @param documentacionExigida - El valor de documentacionExigida.
    */
-  public setDocumentacionExigida(documentacionExigida: string) {
+  public setDocumentacionExigida(documentacionExigida: string): void {
     this.update((state) => ({
       ...state,
       documentacionExigida,
@@ -811,7 +811,7 @@ export class Tramite31616PerfilesMensajeriaStore extends Store<Solicitud31616Per
    * Establece el estado de examenesSolicitados.
    * @param examenesSolicitados - El valor de examenesSolicitados.
    */
-  public setExamenesSolicitados(examenesSolicitados: string) {
+  public setExamenesSolicitados(examenesSolicitados: string): void {
     this.update((state) => ({
       ...state,
       examenesSolicitados,
@@ -821,7 +821,7 @@ export class Tramite31616PerfilesMensajeriaStore extends Store<Solicitud31616Per
    * Establece el estado de conformeAnalisis.
    * @param conformeAnalisis - El valor de conformeAnalisis.
    */
-  public setConformeAnalisis(conformeAnalisis: string) {
+  public setConformeAnalisis(conformeAnalisis: string): void {
     this.update((state) => ({
       ...state,
       conformeAnalisis,
@@ -831,7 +831,7 @@ export class Tramite31616PerfilesMensajeriaStore extends Store<Solicitud31616Per
    * Establece el estado de periodicidad.
    * @param periodicidad - El valor de periodicidad.
    */
-  public setPeriodicidad(periodicidad: string) {
+  public setPeriodicidad(periodicidad: string): void {
     this.update((state) => ({
       ...state,
       periodicidad,
@@ -841,7 +841,7 @@ export class Tramite31616PerfilesMensajeriaStore extends Store<Solicitud31616Per
    * Establece el estado de confidencialidad.
    * @param confidencialidad - El valor de confidencialidad.
    */
-  public setConfidencialidad(confidencialidad: string) {
+  public setConfidencialidad(confidencialidad: string): void {
     this.update((state) => ({
       ...state,
       confidencialidad,
@@ -851,7 +851,7 @@ export class Tramite31616PerfilesMensajeriaStore extends Store<Solicitud31616Per
    * Establece el estado de contratacionPersonal.
    * @param contratacionPersonal - El valor de contratacionPersonal.
    */
-  public setContratacionPersonal(contratacionPersonal: string) {
+  public setContratacionPersonal(contratacionPersonal: string): void {
     this.update((state) => ({
       ...state,
       contratacionPersonal,
@@ -863,7 +863,7 @@ export class Tramite31616PerfilesMensajeriaStore extends Store<Solicitud31616Per
    */
   public setDescribaProcedimientoPersonal(
     describaProcedimientoPersonal: string
-  ) {
+  ): void {
     this.update((state) => ({
       ...state,
       describaProcedimientoPersonal,
@@ -873,7 +873,7 @@ export class Tramite31616PerfilesMensajeriaStore extends Store<Solicitud31616Per
    * Establece el estado de seguimientoProcedimiento.
    * @param seguimientoProcedimiento - El valor de seguimientoProcedimiento.
    */
-  public setSeguimientoProcedimiento(seguimientoProcedimiento: string) {
+  public setSeguimientoProcedimiento(seguimientoProcedimiento: string): void {
     this.update((state) => ({
       ...state,
       seguimientoProcedimiento,
@@ -883,7 +883,7 @@ export class Tramite31616PerfilesMensajeriaStore extends Store<Solicitud31616Per
    * Establece el estado de identificaciones.
    * @param identificaciones - El valor de identificaciones.
    */
-  public setIdentificaciones(identificaciones: string) {
+  public setIdentificaciones(identificaciones: string): void {
     this.update((state) => ({
       ...state,
       identificaciones,
@@ -893,7 +893,7 @@ export class Tramite31616PerfilesMensajeriaStore extends Store<Solicitud31616Per
    * Establece el estado de sistemasInformaticos.
    * @param sistemasInformaticos - El valor de sistemasInformaticos.
    */
-  public setSistemasInformaticos(sistemasInformaticos: string) {
+  public setSistemasInformaticos(sistemasInformaticos: string): void {
     this.update((state) => ({
       ...state,
       sistemasInformaticos,
@@ -903,7 +903,7 @@ export class Tramite31616PerfilesMensajeriaStore extends Store<Solicitud31616Per
    * Establece el estado de proveedoresServicios.
    * @param proveedoresServicios - El valor de proveedoresServicios.
    */
-  public setProveedoresServicios(proveedoresServicios: string) {
+  public setProveedoresServicios(proveedoresServicios: string): void {
     this.update((state) => ({
       ...state,
       proveedoresServicios,
@@ -913,7 +913,7 @@ export class Tramite31616PerfilesMensajeriaStore extends Store<Solicitud31616Per
    * Establece el estado de administracionPersonal.
    * @param administracionPersonal - El valor de administracionPersonal.
    */
-  public setAdministracionPersonal(administracionPersonal: string) {
+  public setAdministracionPersonal(administracionPersonal: string): void {
     this.update((state) => ({
       ...state,
       administracionPersonal,
@@ -923,7 +923,7 @@ export class Tramite31616PerfilesMensajeriaStore extends Store<Solicitud31616Per
    * Establece el estado de expliqueBrevemente.
    * @param expliqueBrevemente - El valor de expliqueBrevemente.
    */
-  public setExpliqueBrevemente(expliqueBrevemente: string) {
+  public setExpliqueBrevemente(expliqueBrevemente: string): void {
     this.update((state) => ({
       ...state,
       expliqueBrevemente,
@@ -933,7 +933,7 @@ export class Tramite31616PerfilesMensajeriaStore extends Store<Solicitud31616Per
    * Establece el estado de encuentranFuera.
    * @param encuentranFuera - El valor de encuentranFuera.
    */
-  public setEncuentranFuera(encuentranFuera: string) {
+  public setEncuentranFuera(encuentranFuera: string): void {
     this.update((state) => ({
       ...state,
       encuentranFuera,
@@ -943,7 +943,7 @@ export class Tramite31616PerfilesMensajeriaStore extends Store<Solicitud31616Per
    * Establece el estado de actualizacionesSeguridad.
    * @param actualizacionesSeguridad - El valor de actualizacionesSeguridad.
    */
-  public setActualizacionesSeguridad(actualizacionesSeguridad: string) {
+  public setActualizacionesSeguridad(actualizacionesSeguridad: string): void {
     this.update((state) => ({
       ...state,
       actualizacionesSeguridad,
@@ -953,7 +953,7 @@ export class Tramite31616PerfilesMensajeriaStore extends Store<Solicitud31616Per
    * Establece el estado de accesoLosMismos.
    * @param accesoLosMismos - El valor de accesoLosMismos.
    */
-  public setAccesoLosMismos(accesoLosMismos: string) {
+  public setAccesoLosMismos(accesoLosMismos: string): void{
     this.update((state) => ({
       ...state,
       accesoLosMismos,
@@ -963,7 +963,7 @@ export class Tramite31616PerfilesMensajeriaStore extends Store<Solicitud31616Per
    * Establece el estado de continuidadNegocio.
    * @param continuidadNegocio - El valor de continuidadNegocio.
    */
-  public setContinuidadNegocio(continuidadNegocio: string) {
+  public setContinuidadNegocio(continuidadNegocio: string): void {
     this.update((state) => ({
       ...state,
       continuidadNegocio,
@@ -973,7 +973,7 @@ export class Tramite31616PerfilesMensajeriaStore extends Store<Solicitud31616Per
    * Establece el estado de semanaCorresponda.
    * @param semanaCorresponda - El valor de semanaCorresponda.
    */
-  public setSemanaCorresponda(semanaCorresponda: string) {
+  public setSemanaCorresponda(semanaCorresponda: string): void {
     this.update((state) => ({
       ...state,
       semanaCorresponda,
@@ -983,7 +983,7 @@ export class Tramite31616PerfilesMensajeriaStore extends Store<Solicitud31616Per
    * Establece el estado de recuperarInformacion.
    * @param recuperarInformacion - El valor de recuperarInformacion.
    */
-  public setRecuperarInformacion(recuperarInformacion: string) {
+  public setRecuperarInformacion(recuperarInformacion: string): void {
     this.update((state) => ({
       ...state,
       recuperarInformacion,
@@ -993,7 +993,7 @@ export class Tramite31616PerfilesMensajeriaStore extends Store<Solicitud31616Per
    * Establece el estado de informacionArchivada.
    * @param informacionArchivada - El valor de informacionArchivada.
    */
-  public setInformacionArchivada(informacionArchivada: string) {
+  public setInformacionArchivada(informacionArchivada: string): void {
     this.update((state) => ({
       ...state,
       informacionArchivada,
@@ -1003,7 +1003,7 @@ export class Tramite31616PerfilesMensajeriaStore extends Store<Solicitud31616Per
    * Establece el estado de procesoDatos.
    * @param procesoDatos - El valor de procesoDatos.
    */
-  public setProcesoDatos(procesoDatos: string) {
+  public setProcesoDatos(procesoDatos: string): void {
     this.update((state) => ({
       ...state,
       procesoDatos,
@@ -1013,7 +1013,7 @@ export class Tramite31616PerfilesMensajeriaStore extends Store<Solicitud31616Per
    * Establece el estado de copiasSeguridad.
    * @param copiasSeguridad - El valor de copiasSeguridad.
    */
-  public setCopiasSeguridad(copiasSeguridad: string) {
+  public setCopiasSeguridad(copiasSeguridad: string): void {
     this.update((state) => ({
       ...state,
       copiasSeguridad,
@@ -1023,7 +1023,7 @@ export class Tramite31616PerfilesMensajeriaStore extends Store<Solicitud31616Per
    * Establece el estado de proteccionDeLaInformacion.
    * @param proteccionDeLaInformacion - El valor de proteccionDeLaInformacion.
    */
-  public setProteccionDeLaInformacion(proteccionDeLaInformacion: string) {
+  public setProteccionDeLaInformacion(proteccionDeLaInformacion: string): void {
     this.update((state) => ({
       ...state,
       proteccionDeLaInformacion,
@@ -1033,7 +1033,7 @@ export class Tramite31616PerfilesMensajeriaStore extends Store<Solicitud31616Per
    * Establece el estado de perdidaDeLaInformacion.
    * @param perdidaDeLaInformacion - El valor de perdidaDeLaInformacion.
    */
-  public setPerdidaDeLaInformacion(perdidaDeLaInformacion: string) {
+  public setPerdidaDeLaInformacion(perdidaDeLaInformacion: string): void {
     this.update((state) => ({
       ...state,
       perdidaDeLaInformacion,
@@ -1043,7 +1043,7 @@ export class Tramite31616PerfilesMensajeriaStore extends Store<Solicitud31616Per
    * Establece el estado de controlanSistemas.
    * @param controlanSistemas - El valor de controlanSistemas.
    */
-  public setControlanSistemas(controlanSistemas: string) {
+  public setControlanSistemas(controlanSistemas: string): void {
     this.update((state) => ({
       ...state,
       controlanSistemas,
@@ -1053,7 +1053,7 @@ export class Tramite31616PerfilesMensajeriaStore extends Store<Solicitud31616Per
    * Establece el estado de accionesDelResto.
    * @param accionesDelResto - El valor de accionesDelResto.
    */
-  public setAccionesDelResto(accionesDelResto: string) {
+  public setAccionesDelResto(accionesDelResto: string): void {
     this.update((state) => ({
       ...state,
       accionesDelResto,
@@ -1063,7 +1063,7 @@ export class Tramite31616PerfilesMensajeriaStore extends Store<Solicitud31616Per
    * Establece el estado de sistemasConfidenciales.
    * @param sistemasConfidenciales - El valor de sistemasConfidenciales.
    */
-  public setSistemasConfidenciales(sistemasConfidenciales: string) {
+  public setSistemasConfidenciales(sistemasConfidenciales: string): void {
     this.update((state) => ({
       ...state,
       sistemasConfidenciales,
@@ -1073,7 +1073,7 @@ export class Tramite31616PerfilesMensajeriaStore extends Store<Solicitud31616Per
    * Establece el estado de proporcionaEsasContrasenas.
    * @param proporcionaEsasContrasenas - El valor de proporcionaEsasContrasenas.
    */
-  public setProporcionaEsasContrasenas(proporcionaEsasContrasenas: string) {
+  public setProporcionaEsasContrasenas(proporcionaEsasContrasenas: string): void {
     this.update((state) => ({
       ...state,
       proporcionaEsasContrasenas,
@@ -1083,7 +1083,7 @@ export class Tramite31616PerfilesMensajeriaStore extends Store<Solicitud31616Per
    * Establece el estado de actualizacionesPeriodicas.
    * @param actualizacionesPeriodicas - El valor de actualizacionesPeriodicas.
    */
-  public setActualizacionesPeriodicas(actualizacionesPeriodicas: string) {
+  public setActualizacionesPeriodicas(actualizacionesPeriodicas: string): void {
     this.update((state) => ({
       ...state,
       actualizacionesPeriodicas,
@@ -1093,7 +1093,7 @@ export class Tramite31616PerfilesMensajeriaStore extends Store<Solicitud31616Per
    * Establece el estado de falsificadosLicencias.
    * @param falsificadosLicencias - El valor de falsificadosLicencias.
    */
-  public setFalsificadosLicencias(falsificadosLicencias: string) {
+  public setFalsificadosLicencias(falsificadosLicencias: string): void {
     this.update((state) => ({
       ...state,
       falsificadosLicencias,
@@ -1103,7 +1103,7 @@ export class Tramite31616PerfilesMensajeriaStore extends Store<Solicitud31616Per
    * Establece el estado de procesoDeImportacion.
    * @param procesoDeImportacion - El valor de procesoDeImportacion.
    */
-  public setProcesoDeImportacion(procesoDeImportacion: string) {
+  public setProcesoDeImportacion(procesoDeImportacion: string): void {
     this.update((state) => ({
       ...state,
       procesoDeImportacion,
@@ -1113,7 +1113,7 @@ export class Tramite31616PerfilesMensajeriaStore extends Store<Solicitud31616Per
    * Establece el estado de telecomunicaciones.
    * @param telecomunicaciones - El valor de telecomunicaciones.
    */
-  public setTelecomunicaciones(telecomunicaciones: string) {
+  public setTelecomunicaciones(telecomunicaciones: string): void {
     this.update((state) => ({
       ...state,
       telecomunicaciones,
@@ -1123,7 +1123,7 @@ export class Tramite31616PerfilesMensajeriaStore extends Store<Solicitud31616Per
    * Establece el estado de sistemaComprometido.
    * @param sistemaComprometido - El valor de sistemaComprometido.
    */
-  public setSistemaComprometido(sistemaComprometido: string) {
+  public setSistemaComprometido(sistemaComprometido: string): void {
     this.update((state) => ({
       ...state,
       sistemaComprometido,
@@ -1133,7 +1133,7 @@ export class Tramite31616PerfilesMensajeriaStore extends Store<Solicitud31616Per
    * Establece el estado de seguridadDeLaTecnologia.
    * @param seguridadDeLaTecnologia - El valor de seguridadDeLaTecnologia.
    */
-  public setSeguridadDeLaTecnologia(seguridadDeLaTecnologia: string) {
+  public setSeguridadDeLaTecnologia(seguridadDeLaTecnologia: string): void {
     this.update((state) => ({
       ...state,
       seguridadDeLaTecnologia,
@@ -1143,7 +1143,7 @@ export class Tramite31616PerfilesMensajeriaStore extends Store<Solicitud31616Per
    * Establece el estado de mediosTransporte.
    * @param mediosTransporte - El valor de mediosTransporte.
    */
-  public setMediosTransporte(mediosTransporte: string) {
+  public setMediosTransporte(mediosTransporte: string): void {
     this.update((state) => ({
       ...state,
       mediosTransporte,
@@ -1153,7 +1153,7 @@ export class Tramite31616PerfilesMensajeriaStore extends Store<Solicitud31616Per
    * Establece el estado de estaDifusion.
    * @param estaDifusion - El valor de estaDifusion.
    */
-  public setEstaDifusion(estaDifusion: string) {
+  public setEstaDifusion(estaDifusion: string): void {
     this.update((state) => ({
       ...state,
       estaDifusion,
@@ -1163,7 +1163,7 @@ export class Tramite31616PerfilesMensajeriaStore extends Store<Solicitud31616Per
    * Establece el estado de enunciativaLimitativa.
    * @param enunciativaLimitativa - El valor de enunciativaLimitativa.
    */
-  public setEnunciativaLimitativa(enunciativaLimitativa: string) {
+  public setEnunciativaLimitativa(enunciativaLimitativa: string): void {
     this.update((state) => ({
       ...state,
       enunciativaLimitativa,
@@ -1173,7 +1173,7 @@ export class Tramite31616PerfilesMensajeriaStore extends Store<Solicitud31616Per
    * Establece el estado de procedimientosEmpresa.
    * @param procedimientosEmpresa - El valor de procedimientosEmpresa.
    */
-  public setProcedimientosEmpresa(procedimientosEmpresa: string) {
+  public setProcedimientosEmpresa(procedimientosEmpresa: string): void {
     this.update((state) => ({
       ...state,
       procedimientosEmpresa,
@@ -1183,7 +1183,7 @@ export class Tramite31616PerfilesMensajeriaStore extends Store<Solicitud31616Per
    * Establece el estado de mediosDeTransporte.
    * @param mediosDeTransporte - El valor de mediosDeTransporte.
    */
-  public setMediosDeTransporte(mediosDeTransporte: string) {
+  public setMediosDeTransporte(mediosDeTransporte: string): void {
     this.update((state) => ({
       ...state,
       mediosDeTransporte,
@@ -1193,7 +1193,7 @@ export class Tramite31616PerfilesMensajeriaStore extends Store<Solicitud31616Per
    * Establece el estado de relacionadosSeguridad.
    * @param relacionadosSeguridad - El valor de relacionadosSeguridad.
    */
-  public setRelacionadosSeguridad(relacionadosSeguridad: string) {
+  public setRelacionadosSeguridad(relacionadosSeguridad: string): void {
     this.update((state) => ({
       ...state,
       relacionadosSeguridad,
@@ -1203,7 +1203,7 @@ export class Tramite31616PerfilesMensajeriaStore extends Store<Solicitud31616Per
    * Establece el estado de reportarIncidentes.
    * @param reportarIncidentes - El valor de reportarIncidentes.
    */
-  public setReportarIncidentes(reportarIncidentes: string) {
+  public setReportarIncidentes(reportarIncidentes: string): void {
     this.update((state) => ({
       ...state,
       reportarIncidentes,
@@ -1213,7 +1213,7 @@ export class Tramite31616PerfilesMensajeriaStore extends Store<Solicitud31616Per
    * Establece el estado de actividadesSospechosas.
    * @param actividadesSospechosas - El valor de actividadesSospechosas.
    */
-  public setActividadesSospechosas(actividadesSospechosas: string) {
+  public setActividadesSospechosas(actividadesSospechosas: string): void {
     this.update((state) => ({
       ...state,
       actividadesSospechosas,
@@ -1223,7 +1223,7 @@ export class Tramite31616PerfilesMensajeriaStore extends Store<Solicitud31616Per
    * Establece el estado de brevementeSonsiste.
    * @param brevementeSonsiste - El valor de brevementeSonsiste.
    */
-  public setBrevementeSonsiste(brevementeSonsiste: string) {
+  public setBrevementeSonsiste(brevementeSonsiste: string): void {
     this.update((state) => ({
       ...state,
       brevementeSonsiste,
@@ -1233,7 +1233,7 @@ export class Tramite31616PerfilesMensajeriaStore extends Store<Solicitud31616Per
    * Establece el estado de incidenteSeguridad.
    * @param incidenteSeguridad - El valor de incidenteSeguridad.
    */
-  public setIncidenteSeguridad(incidenteSeguridad: string) {
+  public setIncidenteSeguridad(incidenteSeguridad: string): void {
     this.update((state) => ({
       ...state,
       incidenteSeguridad,
@@ -1243,7 +1243,7 @@ export class Tramite31616PerfilesMensajeriaStore extends Store<Solicitud31616Per
    * Establece el estado de caboInvestigacion.
    * @param caboInvestigacion - El valor de caboInvestigacion.
    */
-  public setCaboInvestigacion(caboInvestigacion: string) {
+  public setCaboInvestigacion(caboInvestigacion: string): void {
     this.update((state) => ({
       ...state,
       caboInvestigacion,
@@ -1253,7 +1253,7 @@ export class Tramite31616PerfilesMensajeriaStore extends Store<Solicitud31616Per
    * Establece el estado de operacionCaboInvestigacion.
    * @param operacionCaboInvestigacion - El valor de operacionCaboInvestigacion.
    */
-  public setOperacionCaboInvestigacion(operacionCaboInvestigacion: string) {
+  public setOperacionCaboInvestigacion(operacionCaboInvestigacion: string): void {
     this.update((state) => ({
       ...state,
       operacionCaboInvestigacion,
@@ -1265,7 +1265,7 @@ export class Tramite31616PerfilesMensajeriaStore extends Store<Solicitud31616Per
    *
    * @param domicilio - Dirección o lugar de residencia del usuario o entidad.
    */
-  public setDomicilio(domicilio: string) {
+  public setDomicilio(domicilio: string): void {
     this.update((state) => ({
       ...state,
       domicilio,
@@ -1277,7 +1277,7 @@ export class Tramite31616PerfilesMensajeriaStore extends Store<Solicitud31616Per
    *
    * @param antiguedad - Cantidad de tiempo (en años, meses, etc.) que ha transcurrido desde cierto evento, como la creación de la empresa.
    */
-  public setAntiguedad(antiguedad: number) {
+  public setAntiguedad(antiguedad: number): void {
     this.update((state) => ({
       ...state,
       antiguedad,
@@ -1289,7 +1289,7 @@ export class Tramite31616PerfilesMensajeriaStore extends Store<Solicitud31616Per
    *
    * @param productos - Número total de productos disponibles o registrados.
    */
-  public setProductos(productos: number) {
+  public setProductos(productos: number): void {
     this.update((state) => ({
       ...state,
       productos,
@@ -1301,7 +1301,7 @@ export class Tramite31616PerfilesMensajeriaStore extends Store<Solicitud31616Per
    *
    * @param embarquesExp - Total de embarques realizados con fines de exportación.
    */
-  public setEmbarquesExp(embarquesExp: number) {
+  public setEmbarquesExp(embarquesExp: number): void {
     this.update((state) => ({
       ...state,
       embarquesExp,
@@ -1313,7 +1313,7 @@ export class Tramite31616PerfilesMensajeriaStore extends Store<Solicitud31616Per
    *
    * @param embarquesImp - Total de embarques recibidos con fines de importación.
    */
-  public setEmbarquesImp(embarquesImp: number) {
+  public setEmbarquesImp(embarquesImp: number): void {
     this.update((state) => ({
       ...state,
       embarquesImp,
@@ -1325,7 +1325,7 @@ export class Tramite31616PerfilesMensajeriaStore extends Store<Solicitud31616Per
    *
    * @param empleados - Cantidad total de empleados que forman parte de la entidad.
    */
-  public setEmpleados(empleados: number) {
+  public setEmpleados(empleados: number): void {
     this.update((state) => ({
       ...state,
       empleados,
@@ -1337,7 +1337,7 @@ export class Tramite31616PerfilesMensajeriaStore extends Store<Solicitud31616Per
    *
    * @param superficie - Medida del área o espacio físico (por ejemplo, en metros cuadrados) de las instalaciones.
    */
-  public setSuperficie(superficie: number) {
+  public setSuperficie(superficie: number): void {
     this.update((state) => ({
       ...state,
       superficie,
@@ -1349,7 +1349,7 @@ export class Tramite31616PerfilesMensajeriaStore extends Store<Solicitud31616Per
    *
    * @param nombre - Nombre oficial o registrado de la entidad o empresa.
    */
-  public setNombre(nombre: string) {
+  public setNombre(nombre: string): void {
     this.update((state) => ({
       ...state,
       nombre,
@@ -1361,7 +1361,7 @@ export class Tramite31616PerfilesMensajeriaStore extends Store<Solicitud31616Per
    *
    * @param categoria - Clasificación o tipo al que pertenece la entidad (por ejemplo, microempresa, pyme, gran empresa).
    */
-  public setCategoria(categoria: string) {
+  public setCategoria(categoria: string): void {
     this.update((state) => ({
       ...state,
       categoria,
@@ -1373,7 +1373,7 @@ export class Tramite31616PerfilesMensajeriaStore extends Store<Solicitud31616Per
    *
    * @param vigencia - Período o duración de validez de la entidad o registro.
    */
-  public setVigencia(vigencia: string) {
+  public setVigencia(vigencia: string): void {
     this.update((state) => ({
       ...state,
       vigencia,
@@ -1385,7 +1385,7 @@ export class Tramite31616PerfilesMensajeriaStore extends Store<Solicitud31616Per
    *
    * @param nombre2 - Segundo nombre o nombre alternativo relacionado con la entidad.
    */
-  public setNombre2(nombre2: string) {
+  public setNombre2(nombre2: string): void {
     this.update((state) => ({
       ...state,
       nombre2,
@@ -1397,7 +1397,7 @@ export class Tramite31616PerfilesMensajeriaStore extends Store<Solicitud31616Per
    *
    * @param categoria2 - Segunda clasificación o tipo adicional asociado a la entidad.
    */
-  public setCategoria2(categoria2: string) {
+  public setCategoria2(categoria2: string): void {
     this.update((state) => ({
       ...state,
       categoria2,
@@ -1409,7 +1409,7 @@ export class Tramite31616PerfilesMensajeriaStore extends Store<Solicitud31616Per
    *
    * @param vigencia2 - Segundo período o duración alternativa de validez de la entidad o registro.
    */
-  public setVigenciaDos(vigencia2: string) {
+  public setVigenciaDos(vigencia2: string): void {
     this.update((state) => ({
       ...state,
       vigencia2,
@@ -1421,7 +1421,7 @@ export class Tramite31616PerfilesMensajeriaStore extends Store<Solicitud31616Per
    *
    * @param nombre3 - Tercer nombre o nombre adicional relacionado con la entidad.
    */
-  public setNombre3(nombre3: string) {
+  public setNombre3(nombre3: string): void {
     this.update((state) => ({
       ...state,
       nombre3,
@@ -1433,7 +1433,7 @@ export class Tramite31616PerfilesMensajeriaStore extends Store<Solicitud31616Per
    *
    * @param categoria3 - Tercera clasificación o tipo adicional relacionado con la entidad.
    */
-  public setCategoria3(categoria3: string) {
+  public setCategoria3(categoria3: string): void {
     this.update((state) => ({
       ...state,
       categoria3,
@@ -1445,7 +1445,7 @@ export class Tramite31616PerfilesMensajeriaStore extends Store<Solicitud31616Per
    *
    * @param vigencia3 - Tercer período o duración alternativa de validez de la entidad o registro.
    */
-  public setVigenciaTres(vigencia3: string) {
+  public setVigenciaTres(vigencia3: string): void {
     this.update((state) => ({
       ...state,
       vigencia3,

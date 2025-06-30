@@ -1,176 +1,140 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { PagoDeDerechoComponent } from './pago-de-derecho.component';
-import { FormBuilder, ReactiveFormsModule, FormsModule } from '@angular/forms';
-import { Agregar220401Store } from '../../../../estados/tramites/agregar220401.store';
-import { AgregarQuery } from '../../../../estados/queries/agregar.query';
-import { ConsultaioQuery } from '@ng-mf/data-access-user';
-import { of } from 'rxjs';
+jest.mock(
+  'libs/shared/theme/assets/json/220401/establecimiento-table.json',
+  () => ({
+    __esModule: true,
+    default: {
+      tableHeader: ['Column A', 'Column B'],
+      tableBody: [{ tbodyData: ['Data A1', 'Data B1'] }]
+    }
+  })
+);
 
-describe('PagoDeDerechoComponent', () => {
-  let component: PagoDeDerechoComponent;
-  let fixture: ComponentFixture<PagoDeDerechoComponent>;
-  let agregar220401StoreMock: any;
-  let agregarQueryMock: any;
-  let consultaioQueryMock: any;
+jest.mock(
+  'libs/shared/theme/assets/json/220401/destinatario-table.json',
+  () => ({
+    __esModule: true,
+    default: {
+      tableHeader: ['Column X', 'Column Y'],
+      tableBody: []
+    }
+  })
+);
+
+jest.mock(
+  'libs/shared/theme/assets/json/220401/importador-table.json',
+  () => ({
+    __esModule: true,
+    default: {
+      tableHeader: ['Column M', 'Column N'],
+      tableBody: []
+    }
+  })
+);
+
+
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { TercerosRelacionadosComponent } from './terceros-relacionados.component';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { of, Subject } from 'rxjs';
+
+
+describe('TercerosRelacionadosComponent', () => {
+  let component: TercerosRelacionadosComponent;
+  let fixture: ComponentFixture<TercerosRelacionadosComponent>;
+  let destroyNotifier$: Subject<void>;
+
+  const mockConsultaioQuery = {
+    selectConsultaioState$: of({ readonly: true })
+  };
 
   beforeEach(async () => {
-    agregar220401StoreMock = {
-      setJustificacion: jest.fn(),
-      setBanco: jest.fn(),
-      setExentoDePago: jest.fn(),
-      setNombreImportExport: jest.fn(),
-      setRfcImportExport: jest.fn(),
-      setCadenaDependencia: jest.fn(),
-      setLlaveDePago: jest.fn(),
-      setFechaPago: jest.fn(),
-      setImportePago: jest.fn(),
-    };
-
-    agregarQueryMock = {
-      selectSolicitud$: of({
-        exentoDePago: 'No',
-        Justificacion: 'Si',
-        Banco: 'Si',
-        llaveDePago: '123',
-        fechaPago: '2024-01-01',
-      }),
-    };
-
-    consultaioQueryMock = {
-      selectConsultaioState$: of({ readonly: false }),
-    };
-
     await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule, FormsModule],
-      declarations: [PagoDeDerechoComponent],
-      providers: [
-        FormBuilder,
-        { provide: Agregar220401Store, useValue: agregar220401StoreMock },
-        { provide: AgregarQuery, useValue: agregarQueryMock },
-        { provide: ConsultaioQuery, useValue: consultaioQueryMock },
-      ],
+      imports: [TercerosRelacionadosComponent],
+      providers: [{ provide: ConsultaioQuery, useValue: mockConsultaioQuery }]
     }).compileComponents();
+  });
 
-    fixture = TestBed.createComponent(PagoDeDerechoComponent);
+  beforeEach(() => {
+    fixture = TestBed.createComponent(TercerosRelacionadosComponent);
     component = fixture.componentInstance;
+    destroyNotifier$ = (component as any).destroyNotifier$;
     fixture.detectChanges();
   });
 
-  it('debe crearse correctamente', () => {
+  it('should create the component', () => {
     expect(component).toBeTruthy();
   });
 
-  it('ngOnInit debe llamar inicializarDerechoFormulario', () => {
-    const spy = jest.spyOn(component, 'inicializarDerechoFormulario');
-    component.ngOnInit();
-    expect(spy).toHaveBeenCalled();
+  it('should initialize readonly state from query', () => {
+    expect(component.esFormularioSoloLectura).toBe(false);
   });
 
-  it('inicializarDerechoFormulario debe llamar guardarDatosFormulario si es solo lectura', () => {
-    const spy = jest.spyOn(component, 'guardarDatosFormulario');
-    component.esFormularioSoloLectura = true;
-    component.inicializarDerechoFormulario();
-    expect(spy).toHaveBeenCalled();
+  it('should call getEstablecimiento and populate data', () => {
+    component.getEstablecimiento();
+    expect(component.establecimientoHeaderData.length).toBeGreaterThan(0);
+    expect(component.establecimientoBodyData.length).toBeGreaterThan(0);
   });
 
-  it('inicializarDerechoFormulario debe llamar inicializarFormulario si no es solo lectura', () => {
-    const spy = jest.spyOn(component, 'inicializarFormulario');
-    component.esFormularioSoloLectura = false;
-    component.inicializarDerechoFormulario();
-    expect(spy).toHaveBeenCalled();
+  it('should call getDestinatario and populate data', () => {
+    component.getDestinatario();
+    expect(component.destinatarioHeaderData.length).toBeGreaterThan(0);
+    expect(component.destinatarioBodyData.length).toBe(0); 
   });
 
-  it('guardarDatosFormulario debe deshabilitar el formulario si es solo lectura', () => {
-    component.esFormularioSoloLectura = true;
-    component.inicializarFormulario();
-    component.guardarDatosFormulario();
-    expect(component.FormSolicitud.disabled).toBe(true);
+  it('should call getImportador and populate data', () => {
+    component.getImportador();
+    expect(component.importadorHeaderData.length).toBeGreaterThan(0);
+    expect(component.importadorBodyData.length).toBe(0); 
   });
 
-  it('guardarDatosFormulario debe habilitar el formulario si no es solo lectura', () => {
-    component.esFormularioSoloLectura = false;
-    component.inicializarFormulario();
-    component.guardarDatosFormulario();
-    expect(component.FormSolicitud.enabled).toBe(true);
-  });
+it('should toggle showTableDiv and showAgregarDestinatario when toggleAgregarDestinatario is called', () => {
+  component.showTableDiv = true;
+  component.showAgregarDestinatario = false;
+  component.toggleAgregarDestinatario();
+  expect(component.showTableDiv).toBe(false);
+  expect(component.showAgregarDestinatario).toBe(true);
 
-  it('inicializarFormulario debe crear el formulario con los valores del store', () => {
-    component.inicializarFormulario();
-    expect(component.FormSolicitud).toBeDefined();
-    expect(component.FormSolicitud.get('exentoDePago')?.value).toBe('No');
-    expect(component.FormSolicitud.get('Justificacion')?.value).toBe('Si');
-    expect(component.FormSolicitud.get('Banco')?.value).toBe('Si');
-    expect(component.FormSolicitud.get('llaveDePago')?.value).toBe('123');
-    expect(component.FormSolicitud.get('fechaPago')?.value).toBe('2024-01-01');
-  });
+  component.toggleAgregarDestinatario();
+  expect(component.showTableDiv).toBe(true);
+  expect(component.showAgregarDestinatario).toBe(false);
+});
 
-  it('updateFormFieldsBasedOnExentoDePago con valor "No" debe setear y deshabilitar campos', () => {
-    component.inicializarFormulario();
-    component.updateFormFieldsBasedOnExentoDePago('No');
-    expect(component.FormSolicitud.get('rfcImportExport')?.value).toBe('454000554');
-    expect(component.FormSolicitud.get('cadenaDependencia')?.value).toBe('0001012A0000EX');
-    expect(component.FormSolicitud.get('importePago')?.value).toBe('594.0');
-    expect(component.FormSolicitud.get('rfcImportExport')?.disabled).toBe(true);
-    expect(component.FormSolicitud.get('cadenaDependencia')?.disabled).toBe(true);
-    expect(component.FormSolicitud.get('importePago')?.disabled).toBe(true);
-    expect(component.FormSolicitud.get('fechaPago')?.enabled).toBe(true);
-    expect(component.FormSolicitud.get('llaveDePago')?.enabled).toBe(true);
-  });
 
-  it('updateFormFieldsBasedOnExentoDePago con valor distinto de "No" debe resetear y deshabilitar campos', () => {
-    component.inicializarFormulario();
-    component.updateFormFieldsBasedOnExentoDePago('Si');
-    expect(component.FormSolicitud.get('rfcImportExport')?.value).toBeNull();
-    expect(component.FormSolicitud.get('cadenaDependencia')?.value).toBeNull();
-    expect(component.FormSolicitud.get('importePago')?.value).toBeNull();
-    expect(component.FormSolicitud.get('rfcImportExport')?.disabled).toBe(true);
-    expect(component.FormSolicitud.get('cadenaDependencia')?.disabled).toBe(true);
-    expect(component.FormSolicitud.get('importePago')?.disabled).toBe(true);
-    expect(component.FormSolicitud.get('fechaPago')?.disabled).toBe(true);
-    expect(component.FormSolicitud.get('llaveDePago')?.disabled).toBe(true);
-  });
+it('should toggle showTableDiv and showAgregarImportador when toggleAgregarImportador is called', () => {
+  component.showTableDiv = true;
+  component.showAgregarImportador = false;
+  component.toggleAgregarImportador();
+  expect(component.showTableDiv).toBe(false);
+  expect(component.showAgregarImportador).toBe(true);
 
-  it('setValoresStore debe llamar al método correspondiente del store', () => {
-    component.inicializarFormulario();
-    component.FormSolicitud.get('Justificacion')?.setValue('Si');
-    component.setValoresStore(component.FormSolicitud, 'Justificacion', 'setJustificacion');
-    expect(agregar220401StoreMock.setJustificacion).toHaveBeenCalledWith('Si');
-  });
+  component.toggleAgregarImportador();
+  expect(component.showTableDiv).toBe(true);
+  expect(component.showAgregarImportador).toBe(false);
+});
 
-  it('getJustificacion debe asignar las opciones correctamente', () => {
-    component.getJustificacion();
-    expect(component.Justificacion).toEqual([
-      { id: 1, descripcion: 'Si' },
-      { id: 2, descripcion: 'No' },
-    ]);
-  });
+it('should set showAgregarDestinatario to false and showTableDiv to true when cerrarAgregarDestinatario is called', () => {
+  component.showAgregarDestinatario = true;
+  component.showTableDiv = false;
+  component.cerrarAgregarDestinatario();
+  expect(component.showAgregarDestinatario).toBe(false);
+  expect(component.showTableDiv).toBe(true);
+});
 
-  it('getBanco debe asignar las opciones correctamente', () => {
-    component.getBanco();
-    expect(component.Banco).toEqual([
-      { id: 1, descripcion: 'Si' },
-      { id: 2, descripcion: 'No' },
-    ]);
-  });
+it('should set showAgregarImportador to false and showTableDiv to true when cerrarAgregarImportador is called', () => {
+  component.showAgregarImportador = true;
+  component.showTableDiv = false;
+  component.cerrarAgregarImportador();
+  expect(component.showAgregarImportador).toBe(false);
+  expect(component.showTableDiv).toBe(true);
+});
 
-  it('validarFormulario no hace nada si el formulario es válido', () => {
-    component.inicializarFormulario();
-    component.FormSolicitud.get('Justificacion')?.setValue('Si');
-    component.FormSolicitud.get('nombreImportExport')?.setValue('Nombre');
-    component.FormSolicitud.get('rfcImportExport')?.setValue('RFC');
-    component.FormSolicitud.get('cadenaDependencia')?.setValue('Cadena');
-    component.FormSolicitud.get('fechaPago')?.setValue('2024-01-01');
-    component.FormSolicitud.get('importePago')?.setValue('100');
-    expect(component.FormSolicitud.valid).toBe(true);
-    component.validarFormulario();
-    // No hay expect porque no hay lógica adicional, solo se cubre la rama
-  });
+  it('should clean up destroyNotifier$ on ngOnDestroy', () => {
+    const nextSpy = jest.spyOn(destroyNotifier$, 'next');
+    const completeSpy = jest.spyOn(destroyNotifier$, 'complete');
 
-  it('ngOnDestroy debe limpiar el subject destroyNotifier$', () => {
-    const spyNext = jest.spyOn((component as any).destroyNotifier$, 'next');
-    const spyComplete = jest.spyOn((component as any).destroyNotifier$, 'complete');
     component.ngOnDestroy();
-    expect(spyNext).toHaveBeenCalled();
-    expect(spyComplete).toHaveBeenCalled();
+
+    expect(nextSpy).toHaveBeenCalled();
+    expect(completeSpy).toHaveBeenCalled();
   });
 });

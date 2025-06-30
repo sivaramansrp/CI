@@ -17,6 +17,7 @@ import {
 import { AlertComponent } from 'ngx-bootstrap/alert';
 import { CommonModule } from '@angular/common';
 import { DomSanitizer } from '@angular/platform-browser';
+import { FormGroup } from '@angular/forms';
 import { PreviewDocumentoComponent } from '../preview-documento/preview-documento.component';
 import { ToastrService } from 'ngx-toastr';
 
@@ -128,6 +129,8 @@ export class NotificacionesComponent implements OnChanges {
    */
   @Input()
   public notificacionInput!: Notificacion;
+
+  @Input() forma: FormGroup | undefined;
 
   /**
    * Evento que emite un valor booleano para confirmar una acción.

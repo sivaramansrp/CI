@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { TestBed } from '@angular/core/testing';
 import { ToastrModule } from 'ngx-toastr';
 import { ToastrService } from 'ngx-toastr';
+import { FirmaElectronicaComponent } from '@ng-mf/data-access-user';
 
 fdescribe('PasoTresComponent', () => {
   let component: PasoTresComponent;
@@ -11,9 +12,9 @@ fdescribe('PasoTresComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [],
+      declarations: [PasoTresComponent],
       imports: [
-        PasoTresComponent,
+        FirmaElectronicaComponent,
         HttpClientTestingModule,
         ToastrModule.forRoot(),
       ],

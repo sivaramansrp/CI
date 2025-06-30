@@ -143,7 +143,7 @@
             title="Doble click para editar"
             (dblclick)="editarCelda(rowIndex)"
           >
-            {{ row.numero ? row.numero : 'Sin número' }}
+            {{ row.numero || '\u00A0\u00A0\u00A0\u00A0\u00A0' }}
           </span>
           }
         </ng-template>
@@ -168,7 +168,7 @@
             title="Doble click para editar"
             (dblclick)="editarCelda(rowIndex)"
           >
-            {{ row.comprobanteValor ? row.comprobanteValor : 'Sin dato' }}
+            {{ row.comprobanteValor || '\u00A0\u00A0\u00A0\u00A0\u00A0' }}
           </span>
           }
           {{ row.comprobanteValor }}
@@ -184,7 +184,7 @@
   </div>
 </div>
 
-<div class="row mt-3" *ngIf="pedimentos.length > 0">
+<div class="row mt-3">
   <div class="col-md-12 d-flex justify-content-end">
     <button
       type="button"

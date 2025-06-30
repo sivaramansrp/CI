@@ -31,23 +31,23 @@ export class FraccionComponent implements OnInit, OnDestroy {
 /**
    * Lista de fracciones obtenidas del archivo JSON.
    */  
-  public fraccion: Catalogo[] = fraccions.fraccion;
+  public fraccion: Catalogo[] = fraccions?.fraccion;
   /**
    * Lista de unidades de medida obtenidas del archivo JSON.
    */
-  public umt: Catalogo[] = fraccions.UMT;
+  public umt: Catalogo[] = fraccions?.UMT;
  /**
    * Lista de bloques obtenidos del archivo JSON.
    */
-   public bloque: Catalogo[] = fraccions.bloque;
+   public bloque: Catalogo[] = fraccions?.bloque;
   /**
    * Lista de entidades obtenidas del archivo JSON.
    */
-  public entidad: Catalogo[] = fraccions.entidad;
+  public entidad: Catalogo[] = fraccions?.entidad;
  /**
    * Lista de representaciones obtenidas del archivo JSON.
    */ 
-  public representacion: Catalogo[] = fraccions.representacion;
+  public representacion: Catalogo[] = fraccions?.representacion;
  /**
    * Estado de la solicitud 130106.
    */ 
@@ -292,8 +292,8 @@ export class FraccionComponent implements OnInit, OnDestroy {
     const FORMDATA = this.fraccionForm.value; // Obtiene los datos del formulario
     const NEWPARTIDA: Partidas = {
       cantidad: FORMDATA.cantidad, // Asigna la cantidad
-      unidad: fraccions.UMT.find(item => item.id === Number(FORMDATA.umt))?.descripcion, // Asigna la unidad
-      fraccion: fraccions.fraccion.find(item => item.id === Number(FORMDATA.fraccion))?.descripcion, // Asigna la fracción arancelaria
+      unidad: fraccions?.UMT.find(item => item.id === Number(FORMDATA?.umt))?.descripcion, // Asigna la unidad
+      fraccion: fraccions?.fraccion.find(item => item.id === Number(FORMDATA?.fraccion))?.descripcion, // Asigna la fracción arancelaria
       descripcion: FORMDATA.descripcion, // Asigna la descripción
       precio: 1.000, // Precio fijo
       total: FORMDATA.cantidad // Total calculado con la cantidad

@@ -1,9 +1,19 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
+import { Subject, map, takeUntil } from 'rxjs';
+import { NuevoProgramaIndustrialService } from '../../services/nuevo-programa-industrial.service';
 import { SECCIONES_TRAMITE_80101 } from '../../constantes/nuevo-programa.enum';
 import { SeccionLibStore } from '@libs/shared/data-access-user/src/core/estados/seccion.store';
-import { map, Subject, takeUntil } from 'rxjs';
-import { NuevoProgramaIndustrialService } from '../../services/nuevo-programa-industrial.service';
+
+/**
+ * Componente Angular para gestionar el primer paso del proceso de autorización de un nuevo programa industrial.
+ * Este componente se encarga de mostrar y gestionar las secciones del formulario, así como de manejar el estado
+ * de la consulta relacionada con el trámite 80101.
+ *
+ * @remarks
+ * Este componente utiliza el servicio `NuevoProgramaIndustrialService` para obtener datos y actualizar el estado del formulario.
+ * También utiliza `SeccionLibStore` para gestionar las secciones del formulario y su validez.
+ */
 @Component({
   selector: 'app-paso-uno-cs',
   templateUrl: './paso-uno-cs.component.html',

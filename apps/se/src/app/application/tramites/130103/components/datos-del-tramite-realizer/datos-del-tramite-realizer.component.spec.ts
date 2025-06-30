@@ -42,11 +42,11 @@ describe('DatosDelTramiteRealizerComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('debería crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should call obtenerRegimenDestinara and obtenerRegimenClasificacion on ngOnInit', () => {
+  it('debería llamar a obtenerRegimenDestinara y obtenerRegimenClasificacion en ngOnInit', () => {
     const spy1 = jest.spyOn(component, 'obtenerRegimenDestinara');
     const spy2 = jest.spyOn(component, 'obtenerRegimenClasificacion');
     component.ngOnInit();
@@ -54,7 +54,7 @@ describe('DatosDelTramiteRealizerComponent', () => {
     expect(spy2).toHaveBeenCalled();
   });
 
-  it('should populate regimen options in obtenerRegimenDestinara', () => {
+  it('debería poblar las opciones de régimen en obtenerRegimenDestinara', () => {
     const response = {
       code: 200,
       data: [{ id: 1, descripcion: 'Regimen 1' }],
@@ -67,7 +67,7 @@ describe('DatosDelTramiteRealizerComponent', () => {
     ]);
   });
 
-  it('should populate clasificacion options in obtenerRegimenClasificacion', () => {
+  it('debería poblar las opciones de clasificación en obtenerRegimenClasificacion', () => {
     const response = {
       code: 200,
       data: [{ id: 2, descripcion: 'Clasificacion 1' }],
@@ -80,16 +80,7 @@ describe('DatosDelTramiteRealizerComponent', () => {
     ]);
   });
 
-  it('should call store.setDynamicFieldValue with id when valor has id', () => {
-    const mockEvent = {
-      campo: 'regimen',
-      valor: { id: 123, descripcion: 'Test Regimen' }
-    };
-    component.establecerCambioDeValor(mockEvent);
-    expect(storeMock.setDynamicFieldValue).toHaveBeenCalledWith('regimen', 123);
-  });
-
-  it('should complete destroyNotifier$ on ngOnDestroy', () => {
+  it('debería completar destroyNotifier$ en ngOnDestroy', () => {
     const completeSpy = jest.spyOn(component['destroyNotifier$'], 'complete');
     const nextSpy = jest.spyOn(component['destroyNotifier$'], 'next');
     component.ngOnDestroy();

@@ -1,12 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
 
-import { ConsultaioQuery, ConsultaioState, SolicitanteComponent } from '@ng-mf/data-access-user';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ConsultaioQuery, ConsultaioState} from '@ng-mf/data-access-user';
 import { map } from 'rxjs';
 import { takeUntil} from 'rxjs';
 
-import { RegistrarDeProveedoresComponent } from '../../components/registrar-de-proveedores/registrar-de-proveedores.component';
 import { RegistrarProveedoresService } from '../../service/registrar-proveedores.service';
 import { Subject} from 'rxjs';
 import { Tramite420101Query } from '../../estados/tramite420101Query.query';
@@ -22,8 +19,6 @@ import { Tramite420101Store } from '../../estados/tramite420101Store.store';
   selector: 'app-paso-uno',
   templateUrl: './paso-uno.component.html',
   styleUrl: './paso-uno.component.scss',
-  standalone: true,
-  imports: [FormsModule, ReactiveFormsModule, CommonModule, SolicitanteComponent, RegistrarDeProveedoresComponent ]
 })
 export class PasoUnoComponent implements OnDestroy, OnInit {
 

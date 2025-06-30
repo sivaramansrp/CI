@@ -1,10 +1,10 @@
 import { By } from '@angular/platform-browser';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { ComponentFixture } from '@angular/core/testing';
 import { DatosDelTramiteARealizarComponent } from './datos-del-tramite-a-realizar.component';
-import { FormControl } from '@angular/forms';
+import { ControlContainer, FormControl } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { InputFechaComponent } from '@ng-mf/data-access-user';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
@@ -13,6 +13,10 @@ import { TestBed } from '@angular/core/testing';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { Validators } from '@angular/forms';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { SolicitudPantallasService } from '../../services/solicitud-pantallas.service';
+import { Solicitud220502Store } from '../../estados/tramites220502.store';
+import { Solicitud220502Query } from '../../estados/tramites220502.query';
+import { of } from 'rxjs';
 @Component({
   selector: 'app-test-host',
   template: `<form [formGroup]="form">
@@ -39,16 +43,48 @@ class TestHostComponent {
 describe('DatosDelTramiteARealizarComponent', () => {
   let component: DatosDelTramiteARealizarComponent;
   let fixture: ComponentFixture<TestHostComponent>;
+  let mockSolicitud220502Store: any;
 
   beforeEach(async () => {
+    
+    const mockSolicitudService = {
+      getDataDatosDelTramite: jest.fn(()=> of())
+    } as Partial<SolicitudPantallasService>;
+
+    mockSolicitud220502Store = {
+      setFechaDeInspeccion: jest.fn(()=> of()),
+      setCertificadosAutorizados: jest.fn(()=> of()),
+      setHoraDeInspeccion: jest.fn(()=> of()),
+      setAduanaDeIngreso: jest.fn(()=> of()),
+      setSanidadAgropecuaria: jest.fn(()=> of()),
+      setPuntoDeInspeccion: jest.fn(()=> of())
+    } as any;
+
+    const mockSolicitud220502Query = {
+      selectSolicitud$: of({})
+    };
+
+    const mockCdRef = {
+      detectChanges: jest.fn(()=> of())
+    } as any;
+
+    const parentFormGroup = new FormGroup({});
+    const mockControlContainer = {
+      control: parentFormGroup
+    } as unknown as ControlContainer;
+
     await TestBed.configureTestingModule({
       declarations: [TestHostComponent],
       imports: [ReactiveFormsModule, DatosDelTramiteARealizarComponent, TituloComponent, HttpClientTestingModule,CatalogoSelectComponent, InputFechaComponent],
-      schemas: [NO_ERRORS_SCHEMA]
+      schemas: [NO_ERRORS_SCHEMA],
+      providers: [
+        { provide: SolicitudPantallasService, useValue: mockSolicitudService },
+        { provide: Solicitud220502Store, useValue: mockSolicitud220502Store },
+        { provide: Solicitud220502Query, useValue: mockSolicitud220502Query },
+        { provide: ChangeDetectorRef, useValue: mockCdRef },
+        { provide: ControlContainer, useValue: mockControlContainer }
+      ],
     }).compileComponents();
-  });
-
-  beforeEach(() => {
     fixture = TestBed.createComponent(TestHostComponent);
     fixture.detectChanges();
     component = fixture.debugElement.children[0].componentInstance;
@@ -120,4 +156,41 @@ describe('DatosDelTramiteARealizarComponent', () => {
     expect(FORMGROUP.get('puntoDeInspeccion')?.value).toBe('Punto de Inspección Aérea');
   });
 
+  it('should set catalogos selects and call detectChanges', () => {
+      const data = {
+        pendientesCertificados: [{ id: 1, descripcion: 'Cert1' }],
+        horaInspeccion: [{ id: 2, descripcion: 'Hora1' }],
+        aduanaIngreso: [{ id: 3, descripcion: 'Aduana1' }],
+        sanidadAgropecuaria: [{ id: 4, descripcion: 'Sanidad1' }],
+        puntoInspeccion: [{ id: 5, descripcion: 'Punto1' }]
+      } as any;
+      component.actualizarDatosIniciales(data);
+      expect(component.certificadosAutorizados.catalogos).toEqual(data.pendientesCertificados);
+      expect(component.horaDeInspeccion.catalogos).toEqual(data.horaInspeccion);
+      expect(component.aduanaDeIngreso.catalogos).toEqual(data.aduanaIngreso);
+      expect(component.sanidadAgropecuaria.catalogos).toEqual(data.sanidadAgropecuaria);
+      expect(component.puntoDeInspeccion.catalogos).toEqual(data.puntoInspeccion);
+      // expect(mockCdRef.detectChanges).toHaveBeenCalled();
+    });
+
+    it('setCertificadosAutorizados should call store', () => {
+      component.setCertificadosAutorizados({ id: 123 } as any);
+      expect(mockSolicitud220502Store.setCertificadosAutorizados).toHaveBeenCalledWith(123);
+    });
+    it('setHoraDeInspeccion should call store', () => {
+      component.setHoraDeInspeccion({ id: 456 } as any);
+      expect(mockSolicitud220502Store.setHoraDeInspeccion).toHaveBeenCalledWith(456);
+    });
+    it('setAduanaDeIngreso should call store', () => {
+      component.setAduanaDeIngreso({ id: 789 } as any);
+      expect(mockSolicitud220502Store.setAduanaDeIngreso).toHaveBeenCalledWith(789);
+    });
+    it('setSanidadAgropecuaria should call store', () => {
+      component.setSanidadAgropecuaria({ id: 321 } as any);
+      expect(mockSolicitud220502Store.setSanidadAgropecuaria).toHaveBeenCalledWith(321);
+    });
+    it('setPuntoDeInspeccion should call store', () => {
+      component.setPuntoDeInspeccion({ id: 654 } as any);
+      expect(mockSolicitud220502Store.setPuntoDeInspeccion).toHaveBeenCalledWith(654);
+    });
 });

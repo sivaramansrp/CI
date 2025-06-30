@@ -1,10 +1,17 @@
+/**
+ * Componente utilizado en el trámite 260214 para gestionar la navegación entre los pasos de un wizard.
+ *
+ * Este archivo contiene la definición del componente `ContenedorDePasosComponent`, que permite avanzar o retroceder
+ * entre los pasos del wizard y actualiza el título del paso actual. También interactúa con los componentes de cada paso
+ * para gestionar su funcionalidad específica.
+ */
+
 import {
   AccionBoton,
   DatosPasos,
   ListaPasosWizard,
 } from '@ng-mf/data-access-user';
 import { Component, ViewChild } from '@angular/core';
-
 import { PASOS, TITULOMENSAJE } from '../../constants/medicos-uso.enum';
 import { BtnContinuarComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
@@ -14,9 +21,31 @@ import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { WizardComponent } from '@ng-mf/data-access-user';
 
 /**
- * @component ContenedorDePasosComponent
- * @description Componente contenedor que gestiona la navegación entre los pasos de un wizard.
+ * @component
+ * @name ContenedorDePasosComponent
+ * @description
+ * Componente contenedor que gestiona la navegación entre los pasos de un wizard.
  * Permite avanzar o retroceder entre los pasos y actualiza el título del paso actual.
+ *
+ * @selector app-contenedor-de-pasos
+ * Define el selector del componente que se utiliza en las plantillas HTML para instanciar este componente.
+ *
+ * @standalone true
+ * Indica que este componente es independiente y no requiere un módulo Angular para ser utilizado.
+ *
+ * @templateUrl ./contenedor-de-pasos.component.html
+ * Especifica la ubicación del archivo de plantilla HTML asociado con este componente.
+ *
+ * @styleUrl ./contenedor-de-paso.component.scss
+ * Especifica la ubicación del archivo de estilos CSS asociado con este componente.
+ *
+ * @imports
+ * - CommonModule: Proporciona directivas comunes de Angular como `ngIf` y `ngFor`.
+ * - WizardComponent: Componente para gestionar la navegación entre pasos.
+ * - PasoUnoComponent: Componente para gestionar la funcionalidad del paso uno.
+ * - PasoDosComponent: Componente para gestionar la funcionalidad del paso dos.
+ * - PasoTresComponent: Componente para gestionar la funcionalidad del paso tres.
+ * - BtnContinuarComponent: Componente para mostrar los botones de navegación.
  */
 @Component({
   selector: 'app-contenedor-de-pasos',
@@ -35,31 +64,31 @@ import { WizardComponent } from '@ng-mf/data-access-user';
 export class ContenedorDePasosComponent {
   /**
    * @property {string | null} tituloMensaje
-   * @description Título del paso actual en el wizard.
+   * Título del paso actual en el wizard.
    */
   tituloMensaje: string | null = TITULOMENSAJE;
 
   /**
    * @property {ListaPasosWizard[]} pasos
-   * @description Lista de pasos del wizard.
+   * Lista de pasos del wizard.
    */
   pasos: ListaPasosWizard[] = PASOS;
 
   /**
    * @property {number} indice
-   * @description Índice del paso actual en el wizard.
+   * Índice del paso actual en el wizard.
    */
   indice: number = 1;
 
   /**
    * @property {WizardComponent} wizardComponent
-   * @description Referencia al componente del wizard para controlar la navegación entre pasos.
+   * Referencia al componente del wizard para controlar la navegación entre pasos.
    */
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
 
   /**
    * @property {DatosPasos} datosPasos
-   * @description Configuración de los datos del wizard, como el número de pasos y los textos de los botones.
+   * Configuración de los datos del wizard, como el número de pasos y los textos de los botones.
    */
   datosPasos: DatosPasos = {
     nroPasos: this.pasos.length,
@@ -70,7 +99,7 @@ export class ContenedorDePasosComponent {
 
   /**
    * @method seleccionaTab
-   * @description Cambia el índice del paso actual al valor proporcionado.
+   * Cambia el índice del paso actual al valor proporcionado.
    *
    * @param {number} i - Índice del paso seleccionado.
    */
@@ -80,7 +109,7 @@ export class ContenedorDePasosComponent {
 
   /**
    * @method getValorIndice
-   * @description Actualiza el índice del paso actual y controla la navegación en el wizard.
+   * Actualiza el índice del paso actual y controla la navegación en el wizard.
    *
    * @param {AccionBoton} e - Acción realizada en el botón (continuar o retroceder) y el índice del paso.
    */
@@ -101,7 +130,7 @@ export class ContenedorDePasosComponent {
 
   /**
    * @method obtenerNombreDelTítulo
-   * @description Obtiene el título correspondiente al paso actual.
+   * Obtiene el título correspondiente al paso actual.
    *
    * @param {number} valor - Índice del paso actual.
    * @returns {string} Título del paso.

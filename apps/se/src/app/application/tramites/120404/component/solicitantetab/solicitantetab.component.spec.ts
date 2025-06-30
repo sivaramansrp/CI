@@ -37,18 +37,18 @@ describe('SolicitantetabComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
+  it('debería crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize the form correctly', () => {
+  it('debería inicializar el formulario correctamente', () => {
     component.ngOnInit();
     expect(component.formasignacion).toBeDefined();
     expect(component.formasignacion.get('especie')).toBeDefined();
     expect(component.formasignacion.get('disponible')).toBeDefined();
   });
 
-  it('should load asignacion data on init', () => {
+  it('debería cargar los datos de asignación al inicializar', () => {
     jest.spyOn(service, 'getSolicitante'); 
     component.ngOnInit();
 

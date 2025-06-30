@@ -41,6 +41,7 @@
               [catalogo]="this.servicioVidaSilvestre.bancos"
               [label]="'Banco'"
               [required]="true"
+              [isDisabled]="esFormularioSoloLectura"
               (change)="setValoresStore(formularioPagoDerechos,'banco')"
             ></app-catalogo-select>
           </div>
@@ -62,7 +63,7 @@
           </div>
         </div>
         <div class="col-md-4">
-          <input-fecha [setFecha]="formularioPagoDerechos.get('fecPago')?.value" [datos]="configuracionFechaFinal"
+          <input-fecha [setFecha]="formularioPagoDerechos.get('fecPago')?.value" [datos]="configuracionFechaFinal" [isDisabled]="esFormularioSoloLectura"
             (valorCambiado)="cambioFechaFinal($event)"
             [class.is-invalid]="formularioPagoDerechos.get('fecPago')?.touched && formularioPagoDerechos.get('fecPago')?.invalid">
           </input-fecha>

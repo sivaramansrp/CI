@@ -26,29 +26,122 @@ export interface Catalogo {
  */
 export interface Solicitud230202State {
   numeroDeCertificado: Catalogo[] | null;
+  /**
+   * Lista de oficinas de aduanas.
+   */
   aduana: Catalogo[] | null;
+  /**
+   * Lista de fechas seleccionadas.
+   * Se utiliza para almacenar las fechas que el usuario ha seleccionado.
+   */
   fechasSeleccionadas: string[];
+  /**
+   * Lista de países.
+   */
   pais: Catalogo[] | null;
+  
+  /**
+   * Lista de estados o entidades.
+   */
   entidades: Catalogo[] | null;
+  /**
+   * Descripción del producto.
+   */
   descripcionProducto: Catalogo[] | null;
+
+  /**
+   * Detalles de la solicitud.
+   */
   datosSolicitud: DatosSolicitud[];
+
+  /**
+   * Información detallada de la solicitud.
+   */
   datosDetalle: DatosDetalle[];
+
+  /**
+   * Fracción arancelaria asociada al producto.
+   */
   fraccionArancelaria: string;
+
+  /**
+   * Descripción de la fracción arancelaria.
+   */
   descripcionFraccionArancelaria: string;
+
+  /**
+   * Cantidad del producto.
+   */
   cantidad: string;
+
+  /**
+   * Cantidad del producto en palabras.
+   */
   cantidadLetra: string;
+
+  /**
+   * Lista de géneros asociados al producto.
+   */
   genero: Catalogo[] | null;
+
+  /**
+   * Lista de especies asociadas al producto.
+   */
   especie: Catalogo[] | null;
+
+  /**
+   * Lista de nombres comunes del producto.
+   */
   nombreComun: Catalogo[] | null;
+
+  /**
+   * Lista de unidades de medida.
+   */
   unidadDeMedida: Catalogo[] | null;
+
+  /**
+   * Lugar de entrada.
+   */
   lungarDeEntrada: string;
+
+  /**
+   * Lista de medios de transporte.
+   */
   medioDeTransporte: Catalogo[] | null;
+
+  /**
+   * Número y descripción del producto.
+   */
   numeroYDescripcion: string;
+
+  /**
+   * Código postal de la dirección.
+   */
   codigoPostal: string;
+
+  /**
+   * Lista de estados.
+   */
   estado: Catalogo[] | null;
+
+  /**
+   * Dirección de la calle.
+   */
   calle: string;
+
+  /**
+   * Número exterior de la dirección.
+   */
   numeroExterior: string;
+
+  /**
+   * Número interior de la dirección.
+   */
   numeroInterior: string;
+
+  /**
+   * Colonia o barrio de la dirección.
+   */
   colonia: string;
 
 

@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
+import { ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
 import { DatosMercanciaComponent } from './datos-mercancia.component';
 import { Tramite630307Store } from '../../estados/tramite630307.store';
 import { Tramite630307Query } from '../../estados/tramite630307.query';
@@ -42,7 +42,10 @@ describe('DatosMercanciaComponent', () => {
   });
 
   it('debería inicializar el formulario en ngOnInit', () => {
-    const inicializarFormularioSpy = jest.spyOn(componente, 'inicializarFormulario');
+    const inicializarFormularioSpy = jest.spyOn(
+      componente,
+      'inicializarFormulario'
+    );
     const obtenerValorStoreSpy = jest.spyOn(componente, 'getValorStore');
 
     componente.ngOnInit();
@@ -66,7 +69,10 @@ describe('DatosMercanciaComponent', () => {
 
     componente.establecerCambioDeValor(eventoMock);
 
-    expect(storeMock.setTramite630307State).toHaveBeenCalledWith('campoPrueba', 'valorPrueba');
+    expect(storeMock.setTramite630307State).toHaveBeenCalledWith(
+      'campoPrueba',
+      'valorPrueba'
+    );
   });
 
   it('debería limpiar las suscripciones al destruir el componente', () => {
@@ -77,5 +83,27 @@ describe('DatosMercanciaComponent', () => {
 
     expect(destroyedSpy).toHaveBeenCalled();
     expect(completeSpy).toHaveBeenCalled();
+  });
+
+  it('should initialize datosImportacionTemporalFormulario as a FormGroup', () => {
+    componente.inicializarFormulario();
+    expect(componente.datosImportacionTemporalFormulario).toBeDefined();
+    expect(
+      componente.datosImportacionTemporalFormulario instanceof FormGroup
+    ).toBe(true);
+  });
+
+  it('should call guardarDatosFormulario if esFormularioSoloLectura is true', () => {
+    const guardarSpy = jest.spyOn(componente, 'guardarDatosFormulario');
+    componente.esFormularioSoloLectura = true;
+    componente.inicializarEstadoFormulario();
+    expect(guardarSpy).toHaveBeenCalled();
+  });
+
+  it('should call inicializarFormulario if esFormularioSoloLectura is false', () => {
+    const initSpy = jest.spyOn(componente, 'inicializarFormulario');
+    componente.esFormularioSoloLectura = false;
+    componente.inicializarEstadoFormulario();
+    expect(initSpy).toHaveBeenCalled();
   });
 });

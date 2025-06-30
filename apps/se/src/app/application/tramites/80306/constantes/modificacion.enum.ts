@@ -50,17 +50,17 @@ export const PASOS = [
 export const CONFIGURACION_MODIFICACION = [
     {
       encabezado: 'Estatus',
-      clave: (ele: DatosDelModificacion) => ele.desEstatus,
+      clave: (ele: DatosDelModificacion):string | undefined => ele.desEstatus,
       orden: 1,
     },
     {
       encabezado: 'Descripción del servicio',
-      clave: (ele: DatosDelModificacion) => ele.descripcion,
+      clave: (ele: DatosDelModificacion):string | undefined => ele.descripcion,
       orden: 1,
     },
     {
       encabezado: 'Tipo de servicio',
-      clave: (ele: DatosDelModificacion) => ele.tipoDeServicio,
+      clave: (ele: DatosDelModificacion):string | undefined => ele.tipoDeServicio,
       orden: 1,
     }
 ];
@@ -360,22 +360,22 @@ export const CONFIGURACION_OPERACIONES = [
 export const CONFIGURACION_SERVICIOS = [
     {
       encabezado: 'Estatus',
-      clave: (ele: DatosDelServicios) => ele.desEstatus,
+      clave: (ele: DatosDelServicios):string | undefined => ele.desEstatus,
       orden: 4,
     },
     {
       encabezado: 'Testado',
-      clave: (ele: DatosDelServicios) => ele.testado,
+      clave: (ele: DatosDelServicios):string | undefined => ele.testado,
       orden: 3,
     },
     {
       encabezado: 'Descripción del servicio',
-      clave: (ele: DatosDelServicios) => ele.descripcion,
+      clave: (ele: DatosDelServicios):string | undefined => ele.descripcion,
       orden: 1,
     },
     {
       encabezado: 'Tipo de servicio',
-      clave: (ele: DatosDelServicios) => ele.tipoDeServicio,
+      clave: (ele: DatosDelServicios):string | undefined => ele.tipoDeServicio,
       orden: 2,
     }
 ];

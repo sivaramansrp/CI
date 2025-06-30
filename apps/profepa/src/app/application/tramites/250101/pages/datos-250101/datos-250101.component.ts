@@ -19,7 +19,7 @@ export class Datos250101Component implements OnInit, OnDestroy {
 
     /** Propiedad que almacena el estado actual de la consulta IO.  
  * Se inicializa posteriormente con datos del store o de un observable. */
-    public consultaState!:ConsultaioState;
+  private consultaState!:ConsultaioState;
 
   /**
    * Índice actual del tab seleccionado.

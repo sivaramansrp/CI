@@ -2,14 +2,11 @@
 /**
  * ModificacionPermisoSanitarioLaSaludComponent
  */
+import { AVISO,AccionBoton, DatosPasos, ListaPasosWizard, WizardComponent } from '@libs/shared/data-access-user/src';
+import { CompleteForm, PagoDeDerechos, SolicitanteData, TercerosRelacionados, Tramite } from '../../models/mod-permiso.model';
 import { Component, ViewChild } from '@angular/core';
-
-import { AccionBoton, AVISO, DatosPasos, ListaPasosWizard, WizardComponent } from '@libs/shared/data-access-user/src';
-
 import {MODIFICACION_PERMISO_DATA, MODIFICACION_PERMISO_ENUM } from '../../constantes/mod-permiso.enum';
 import { PasoUnoPagesComponent } from '../paso-uno-pages/paso-uno-pages.component';
-
-import { CompleteForm, PagoDeDerechos, SolicitanteData, TercerosRelacionados, Tramite } from '../../models/mod-permiso.model';
 /**
  * Component 
  */

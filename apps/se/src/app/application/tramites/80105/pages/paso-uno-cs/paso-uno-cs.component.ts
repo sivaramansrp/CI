@@ -1,16 +1,38 @@
-import { Component } from '@angular/core';
-import { SECCIONES_TRAMITE_230401 } from '../../constantes/nuevo-programa.enum';
+import { CONFIGURACION_DOS_DATOS,SECCIONES_TRAMITE_230401 } from '../../constantes/nuevo-programa.enum';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState} from '@ng-mf/data-access-user';
+import { Subject, takeUntil } from 'rxjs';
+import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
+import { FraccionArancelariaDescripcion } from '../../../../shared/models/empresas.model';
 import { SeccionLibStore } from '@libs/shared/data-access-user/src/core/estados/seccion.store';
-
+import { Solocitud80105Service } from '../../services/service80105.service';
 @Component({
   selector: 'app-paso-uno-cs',
   templateUrl: './paso-uno-cs.component.html',
 })
-export class PasoUnoCsComponent {
+export class PasoUnoCsComponent implements OnInit, OnDestroy {
+
+/** Bandera que indica si los datos de respuesta están disponibles o han sido cargados.  
+ *  Se utiliza para controlar la lógica de visualización o validación en el componente. */
+   public esDatosRespuesta: boolean = false;
+   /** Almacena el estado actual de la consulta relacionada con el trámite.  
+ *  Contiene información necesaria para mostrar o procesar datos en el componente. */
+   public consultaState!:ConsultaioState;
+   /** Notificador utilizado para cancelar suscripciones al destruir el componente.  
+ *  Ayuda a prevenir fugas de memoria en flujos observables. */
+   private destroyNotifier$: Subject<void> = new Subject();
+  /*
+  * Almacena la configuración de las pestañas del primer paso.
+  */
+   configuracionDosDatos: ConfiguracionColumna<FraccionArancelariaDescripcion>[] =CONFIGURACION_DOS_DATOS
+
+
+
   indice: number = 1;
 
 
-  constructor(private seccionStore: SeccionLibStore){
+  constructor(private seccionStore: SeccionLibStore, private solocitud80105Service: Solocitud80105Service,
+      private consultaQuery: ConsultaioQuery){
     this.asignarSecciones();
   }
 
@@ -39,5 +61,85 @@ export class PasoUnoCsComponent {
     }
     this.seccionStore.establecerSeccion(SECCIONES);
     this.seccionStore.establecerFormaValida(FORMA_VALIDA);
+  }
+ /** Inicializa el componente suscribiéndose al estado de consulta.  a
+ *  Ejecuta lógica según si se requiere actualización o solo visualización. */
+      ngOnInit(): void {
+     this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$))
+        .subscribe((seccionState) => {
+          this.consultaState = seccionState
+          if (this.consultaState.update) {
+             this.guardarDatosFormulario();
+             } else {
+              this.esDatosRespuesta = true;
+            }
+        });        
+  }
+
+  /** Obtiene los datos del formulario desde un JSON simulado y actualiza el store.  
+ *  Marca la bandera de respuesta si la información es válida. */
+     guardarDatosFormulario(): void {
+    this.solocitud80105Service
+      .getRegistroTomaMuestrasMercanciasData().pipe(
+        takeUntil(this.destroyNotifier$)
+      )
+      .subscribe((resp) => {
+        if(resp){
+        this.esDatosRespuesta = true;
+        this.solocitud80105Service.actualizarEstadoFormulario(resp);
+        }
+      });
+          this.solocitud80105Service
+      .getRegistroTomaMuestrasMercanciasDatas().pipe(
+        takeUntil(this.destroyNotifier$)
+      )
+      .subscribe((resp) => {
+        if(resp){
+        this.esDatosRespuesta = true;
+        this.solocitud80105Service.actualizarEstadoFormularios(resp);
+        }
+      });
+          this.solocitud80105Service
+      .getRegistroComplementosData().pipe(
+        takeUntil(this.destroyNotifier$)
+      )
+      .subscribe((resp) => {
+        if(resp){
+        this.esDatosRespuesta = true;
+        this.solocitud80105Service.actualizarComplementos(resp);
+        }
+      });
+      this.solocitud80105Service
+      .getRegistroFederatoriosData().pipe(
+        takeUntil(this.destroyNotifier$)
+      )
+      .subscribe((resp) => {
+        if(resp){
+        this.esDatosRespuesta = true;
+        this.solocitud80105Service.actualizarFederatorios(resp);
+        }
+      });
+        this.solocitud80105Service
+      .getRegistroComplementarData().pipe(
+        takeUntil(this.destroyNotifier$)
+      )
+      .subscribe((resp) => {
+        if(resp){
+        this.esDatosRespuesta = true;
+        this.solocitud80105Service.actualizarComplementar(resp);
+        }
+      });
+  }
+ /**
+   * Método del ciclo de vida `ngOnDestroy()`.
+   * Este método se ejecuta cuando el componente es destruido y realiza las siguientes acciones:
+   *
+   * @memberof PagoDeDerechosComponent
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }

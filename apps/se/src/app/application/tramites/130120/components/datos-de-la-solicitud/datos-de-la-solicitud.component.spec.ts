@@ -1,166 +1,323 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormBuilder, ReactiveFormsModule, FormGroup, Validators } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Injectable } from '@angular/core';
+import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
+import { of as observableOf, Subject } from 'rxjs';
+
 import { DatosDeLaSolicitudComponent } from './datos-de-la-solicitud.component';
-import { CatalogosService } from '@ng-mf/data-access-user';
-import { TituloComponent } from '@ng-mf/data-access-user';
-import { InputFechaComponent } from '@ng-mf/data-access-user';
-import { InputRadioComponent } from '@ng-mf/data-access-user';
-import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
-import { InputConfig, InputTypes, Props } from '@ng-mf/data-access-user';
-import { of } from 'rxjs';
+import { CatalogosService, SeccionLibStore, SeccionLibQuery, ConsultaioQuery } from '@ng-mf/data-access-user';
+import { PermisoImportacionStore } from '../../estados/permiso-importacion.store';
+import { Tramite130120Query } from '../../estados/permiso-importacion.query';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
-const tipoDePersonaProductorOptions = [
-  { value: 'option1', label: 'Option 1' },
-  { value: 'option2', label: 'Option 2' }
-];
+@Injectable()
+class MockPermisoImportacionStore {
+  actualizarDatosGrupos = jest.fn();
+  setFacturaFecha = jest.fn();
+  setFecha_documento = jest.fn();
+  setPersona_tipo = jest.fn();
+  setDenominación_razón_social = jest.fn();
+  setPersonales_nombre = jest.fn();
+  setPrimer_apellido = jest.fn();
+  setSegundo_apellido = jest.fn();
+  setExportadorPersona_tipo = jest.fn();
+  setExportadorDenominación_razón_social = jest.fn();
+  setExportadorPersonales_nombre = jest.fn();
+  setExportadorPrimer_apellido = jest.fn();
+  setExportadorSegundo_apellido = jest.fn();
+}
 
-const tipoDePersonaExportadorOptions = [
-  { value: 'option1', label: 'Option 1' },
-  { value: 'option2', label: 'Option 2' }
-];
+@Injectable()
+class MockTramite130120Query {
+  select = jest.fn().mockReturnValue(observableOf({
+    datosProductor: { persona_tipo: '' },
+    datosExportador: { persona_tipo: '' }
+  }));
+}
+
+@Injectable()
+class MockSeccionLibStore {
+  establecerSeccion = jest.fn();
+  establecerFormaValida = jest.fn();
+}
+
+@Injectable()
+class MockSeccionLibQuery {
+  selectSeccionState$ = observableOf({});
+}
+
+@Injectable()
+class MockCatalogosService {
+  getCatalogo = jest.fn().mockReturnValue(observableOf([]));
+}
+
+@Injectable()
+class MockConsultaioQuery {
+  selectConsultaioState$ = observableOf({});
+}
 
 describe('DatosDeLaSolicitudComponent', () => {
-  let component: DatosDeLaSolicitudComponent;
   let fixture: ComponentFixture<DatosDeLaSolicitudComponent>;
-  let _catalogosService: CatalogosService;
-  let formBuilder: FormBuilder;
+  let component: DatosDeLaSolicitudComponent;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [
-        CommonModule,
-        ReactiveFormsModule,
-        TituloComponent,
-        InputFechaComponent,
-        InputRadioComponent,
-        CatalogoSelectComponent,
-        DatosDeLaSolicitudComponent // Import the standalone component here
-      ],
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [FormsModule, ReactiveFormsModule, DatosDeLaSolicitudComponent, HttpClientTestingModule],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
       providers: [
         FormBuilder,
-        {
-          provide: CatalogosService,
-          useValue: {
-            getCatalogo: jest.fn().mockReturnValue(of([]))
-          }
-        }
+        { provide: CatalogosService, useClass: MockCatalogosService },
+        { provide: SeccionLibStore, useClass: MockSeccionLibStore },
+        { provide: SeccionLibQuery, useClass: MockSeccionLibQuery },
+        { provide: PermisoImportacionStore, useClass: MockPermisoImportacionStore },
+        { provide: Tramite130120Query, useClass: MockTramite130120Query },
+        { provide: ConsultaioQuery, useClass: MockConsultaioQuery }
       ]
     }).compileComponents();
-
     fixture = TestBed.createComponent(DatosDeLaSolicitudComponent);
-    component = fixture.componentInstance;
-    _catalogosService = TestBed.inject(CatalogosService);
-    formBuilder = TestBed.inject(FormBuilder);
-    fixture.detectChanges();
+    component = fixture.debugElement.componentInstance;
   });
 
-  it('should create', () => {
+  afterEach(() => {
+    if (component.destroyNotifier$) {
+      component.destroyNotifier$.next();
+      component.destroyNotifier$.complete();
+    }
+    fixture.destroy();
+  });
+
+  it('should run #constructor()', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize form', () => {
+  it('should run #ngOnInit()', () => {
+    component.configuracion = [
+      { title: '', formGroupName: '', menu: [] },
+      { title: '', formGroupName: '', menu: [] },
+      { title: '', formGroupName: '', menu: [] },
+      {
+        title: '',
+        formGroupName: '',
+        menu: [
+          {
+            inputType: '',
+            class: '',
+            props: {
+              labelNombre: '',
+              campo: '',
+              disabled: false,
+              required: true,
+              validators: [],
+              catalogos: [],
+              radioOptions: [],
+              radioSelectedValue: '',
+              placeholder: '',
+              primerOpcion: '',
+              jsonDataFileName: '', 
+              habilitado: true
+            }
+          }
+        ]
+      },
+      {
+        title: '',
+        formGroupName: '',
+        menu: [
+          {
+            inputType: '',
+            class: '',
+            props: {
+              labelNombre: '',
+              campo: '',
+              disabled: false,
+              required: true,
+              validators: [],
+              catalogos: [],
+              radioOptions: [],
+              radioSelectedValue: '',
+              placeholder: '',
+              primerOpcion: '',
+              jsonDataFileName: '',
+              habilitado: true
+            }
+          }
+        ]
+      }
+    ];
+    component.inicializarFormGroup = jest.fn();
+    component.formulario = new FormGroup({});
+    jest.spyOn(component.formulario, 'get').mockReturnValue({
+      valid: true,
+      value: {},
+      setValue: jest.fn(),
+      markAsDirty: jest.fn(),
+      markAsTouched: jest.fn(),
+    } as any);
+    component.formulario.patchValue = jest.fn();
+    Object.defineProperty(component.formulario, 'valueChanges', { get: () => observableOf({}) });
+    component.setFormGroupValidity = jest.fn();
     component.ngOnInit();
-    expect(component.formulario).toBeDefined();
+    expect(component.inicializarFormGroup).toHaveBeenCalled();
   });
 
-  it('should set valoresSeleccionadosRadio', () => {
-    const mockValues = { key: 'value' };
-    component.valoresSeleccionadosRadio = mockValues;
-    expect(component.valoresSeleccionadosRadio).toEqual(mockValues);
-  });
-
-  it('should create formulario with FormBuilder', () => {
-    component.ngOnInit();
-    expect(component.formulario instanceof FormGroup).toBe(true);
-  });
-
-  it('should have correct input types and props', () => {
-    const inputTypes = component.configuracion[0].menu;
-    expect(inputTypes).toBeDefined();
-    expect(inputTypes.length).toBeGreaterThan(0);
-    inputTypes.forEach(input => {
-      expect(input.inputType).toBeDefined();
-      expect(input.props).toBeDefined();
-      expect(input.class).toBe('col-md-8');
-    });
-  });
-
-  it('should call ngOnInit and initialize formulario', () => {
-    jest.spyOn(component, 'ngOnInit');
-    component.ngOnInit();
-    expect(component.ngOnInit).toHaveBeenCalled();
-    expect(component.formulario).toBeDefined();
-  });
-
-  it('should call crearFormulario', () => {
-    jest.spyOn(component, 'crearFormulario');
+  it('should run #crearFormulario()', () => {
+    component.fb = new FormBuilder();
     component.crearFormulario();
-    expect(component.crearFormulario).toHaveBeenCalled();
+    expect(component.formulario).toBeDefined();
   });
 
-  it('should call getCatalogo from CatalogosService', () => {
-    component.ngOnInit();
-    expect(_catalogosService.getCatalogo).toHaveBeenCalled();
+  it('should run #inicializarFormGroup()', () => {
+    component.formulario = new FormBuilder().group({
+      test: new FormBuilder().group({})
+    });
+    component.fb = new FormBuilder();
+    component.obtenerValoresCatalogo = jest.fn();
+    component.inicializarFormGroup([
+      {
+        props: {
+          labelNombre: '',
+          campo: 'campo1',
+          disabled: false,
+          required: true,
+          validators: [],
+          catalogos: [],
+          radioOptions: [],
+          radioSelectedValue: '',
+          placeholder: '',
+          primerOpcion: '',
+          jsonDataFileName: '',
+          habilitado: true
+        },
+        inputType: '',
+        class: ''
+      }
+    ], 'test', 0);
+    expect(component.obtenerValoresCatalogo).not.toHaveBeenCalled();
   });
 
-  it('should update form values', () => {
-    component.ngOnInit();
-    component.formulario.addControl('Código postal:', formBuilder.control(''));
-    component.formulario.patchValue({ 'Código postal:': '130120' });
-    expect(component.formulario.get('Código postal:')?.value).toBe('130120');
+  it('should run #obtenerValoresCatalogo()', () => {
+    component.catalogosServicios = new MockCatalogosService() as any;
+    component.configuracion = [
+      {
+        title: '',
+        formGroupName: '',
+        menu: [
+          {
+            inputType: '',
+            class: '',
+            props: {
+              labelNombre: '',
+              campo: '',
+              disabled: false,
+              required: true,
+              validators: [],
+              catalogos: [],
+              radioOptions: [],
+              radioSelectedValue: '',
+              placeholder: '',
+              primerOpcion: '',
+              jsonDataFileName: '',
+              habilitado: true
+            }
+          }
+        ]
+      }
+    ];
+    component.obtenerValoresCatalogo(0, 0, '');
+    expect(component.catalogosServicios.getCatalogo).toHaveBeenCalled();
   });
 
-  it('should validate form fields', () => {
-    component.ngOnInit();
-    component.formulario.addControl('Código postal:', formBuilder.control('', Validators.required));
-    const someField = component.formulario.get('Código postal:');
-    someField?.setValue('');
-    expect(someField?.valid).toBeFalsy();
-    someField?.setValue('130120');
-    expect(someField?.valid).toBeTruthy();
-  });
-
-  it('should generate validators correctly', () => {
-    const validators = DatosDeLaSolicitudComponent.getValidators(['required', 'maxLength:10', 'pattern:[a-zA-Z]']);
+  it('should run #getValidators()', () => {
+    const validators = DatosDeLaSolicitudComponent.getValidators(['required', 'maxLength:10', 'pattern:^\\d+$']);
     expect(validators.length).toBe(3);
   });
 
-  it('should handle date change', () => {
-    jest.spyOn(component, 'fechaCambiado');
-    component.fechaCambiado('2023-01-01');
-    expect(component.fechaCambiado).toHaveBeenCalledWith('2023-01-01');
+  it('should run #fechaCambiado()', () => {
+    component.formulario = new FormBuilder().group({});
+    component.formulario.patchValue = jest.fn();
+    component.permisoImportacionStore = new MockPermisoImportacionStore() as any;
+    component.setFormGroupValidity = jest.fn();
+    component.fechaCambiado('');
+    expect(component.formulario.patchValue).toHaveBeenCalled();
+    expect(component.permisoImportacionStore.setFacturaFecha).toHaveBeenCalled();
   });
 
-  it('should handle catalog selection', () => {
-    jest.spyOn(component, 'seleccionCatalogo');
-    const event = { target: { value: 'someValue' } } as unknown as Event;
-    component.seleccionCatalogo('someControl', event);
-    expect(component.seleccionCatalogo).toHaveBeenCalledWith('someControl', event);
+  it('should run #fechaDocumento()', () => {
+    component.formulario = new FormBuilder().group({});
+    component.formulario.patchValue = jest.fn();
+    component.permisoImportacionStore = new MockPermisoImportacionStore() as any;
+    component.setFormGroupValidity = jest.fn();
+    component.fechaDocumento('');
+    expect(component.formulario.patchValue).toHaveBeenCalled();
+    expect(component.permisoImportacionStore.setFecha_documento).toHaveBeenCalled();
   });
 
-  it('should handle radio value change', () => {
-    jest.spyOn(component, 'cambioValorRadio');
-    component.cambioValorRadio('radioKey', 'radioValue');
-    expect(component.cambioValorRadio).toHaveBeenCalledWith('radioKey', 'radioValue');
+  it('should run #seleccionCatalogo()', () => {
+    component.formulario = new FormBuilder().group({});
+    const mockControl = {
+      setValue: jest.fn(),
+      markAsDirty: jest.fn(),
+      markAsTouched: jest.fn()
+    };
+    jest.spyOn(component.formulario, 'get').mockReturnValue(mockControl as any);
+    Object.defineProperty(component.formulario, 'value', { get: () => 'value' });
+    component.permisoImportacionStore = new MockPermisoImportacionStore() as any;
+    component.setFormGroupValidity = jest.fn();
+    component.seleccionCatalogo('test', 'event' as any);
+    expect(mockControl.setValue).toHaveBeenCalled();
+    expect(mockControl.markAsDirty).toHaveBeenCalled();
+    expect(mockControl.markAsTouched).toHaveBeenCalled();
+    expect(component.permisoImportacionStore.actualizarDatosGrupos).toHaveBeenCalled();
   });
 
-  it('should fetch catalog values and update configuration', () => {
-    jest.spyOn(component, 'obtenerValoresCatalogo');
-    component.obtenerValoresCatalogo(0, 0, 'someKey');
-    expect(component.obtenerValoresCatalogo).toHaveBeenCalledWith(0, 0, 'someKey');
+  it('should run #setValoresStore()', () => {
+    component.store = new MockPermisoImportacionStore() as any;
+    component.setFormGroupValidity = jest.fn();
+    component.permisoImportacionStore = new MockPermisoImportacionStore() as any;
+    component.formulario = new FormBuilder().group({});
+    component.formulario.patchValue({});
+    const mockControl = {
+      value: '',
+      markAsDirty: jest.fn(),
+      markAsTouched: jest.fn()
+    };
+    const mockForm = {
+      get: jest.fn().mockReturnValue(mockControl)
+    } as any;
+    component.setValoresStore(mockForm, '', '', 'actualizarDatosGrupos' as any);
+    expect(mockControl.markAsDirty).toHaveBeenCalled();
+    expect(mockControl.markAsTouched).toHaveBeenCalled();
+    expect(component.permisoImportacionStore.actualizarDatosGrupos).toHaveBeenCalled();
   });
 
-  it('should initialize form group correctly', () => {
-    component.ngOnInit();
-    component.formulario = formBuilder.group({});
-    component.formulario.addControl('datosRealizar', formBuilder.group({}));
-    component.inicializarFormGroup(component.configuracion[0].menu, 'datosRealizar', 0);
-    const group = component.formulario.get('datosRealizar') as FormGroup;
-    expect(group).toBeDefined();
-    expect(group.get('régimen')).toBeDefined();
-    expect(group.get('régimen')?.valid).toBeFalsy();
-    group.get('régimen')?.setValue('testValue');
-    expect(group.get('régimen')?.valid).toBeTruthy();
+  it('should run #setFormGroupValidity()', () => {
+    component.formulario = new FormBuilder().group({
+      datosRealizer: new FormBuilder().group({}),
+      datosMercanica: new FormBuilder().group({}),
+      datosExporta: new FormBuilder().group({}),
+      datosProductor: new FormBuilder().group({}),
+      datosExportador: new FormBuilder().group({}),
+      datosFederal: new FormBuilder().group({})
+    });
+    jest.spyOn(component.formulario, 'get').mockReturnValue({
+      valid: true,
+      value: {},
+      setValue: jest.fn(),
+      markAsDirty: jest.fn(),
+      markAsTouched: jest.fn(),
+    } as any);
+    component.seccionStore = new MockSeccionLibStore() as any;
+    component.setFormGroupValidity();
+    expect(component.seccionStore.establecerSeccion).toHaveBeenCalled();
+    expect(component.seccionStore.establecerFormaValida).toHaveBeenCalled();
+  });
+
+
+  it('should run #ngOnDestroy()', () => {
+    component.destroyNotifier$ = new Subject();
+    jest.spyOn(component.destroyNotifier$, 'next');
+    jest.spyOn(component.destroyNotifier$, 'complete');
+    component.ngOnDestroy();
+    expect(component.destroyNotifier$.next).toHaveBeenCalled();
+    expect(component.destroyNotifier$.complete).toHaveBeenCalled();
   });
 });

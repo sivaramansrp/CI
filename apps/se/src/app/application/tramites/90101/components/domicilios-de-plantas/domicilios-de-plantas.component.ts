@@ -28,7 +28,12 @@ import { SeccionLibStore } from '@ng-mf/data-access-user';
 import { TEXTO } from '../../constantes/prosec.module';
 import { TablaSeleccion } from '@ng-mf/data-access-user';
 
-
+/**
+ * @class DomiciliosDePlantasComponent
+ * @description
+ * Componente que permite la gestión de domicilios de plantas como parte del formulario PROSEC.
+ * Maneja formularios, selección de catálogos y carga dinámica de información desde archivos JSON.
+ */
 @Component({
   selector: 'app-domicilios-de-plantas',
   templateUrl: './domicilios-de-plantas.component.html',
@@ -38,6 +43,14 @@ import { TablaSeleccion } from '@ng-mf/data-access-user';
 })
 export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
 
+    /**
+   * @input
+   * @property {boolean} formularioDeshabilitado
+   * @description
+   * Indica si el formulario debe estar deshabilitado (modo solo lectura).
+   * Cuando es `true`, todos los controles del formulario estarán deshabilitados y no permitirán edición.
+   * Este valor puede ser establecido desde el componente padre.
+   */
   @Input() formularioDeshabilitado: boolean = false;
 
   /**
@@ -81,23 +94,23 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
    * @descripcion
    * Subject utilizado como notificador para destruir suscripciones y evitar fugas de memoria.
    * Se utiliza junto con el operador `takeUntil` para cancelar las suscripciones al destruir el componente.
-   * @private
+   * @public
    */
-  private destroyNotifier$: Subject<void> = new Subject();
+  public destroyNotifier$: Subject<void> = new Subject();
 
   /**
    * @descripcion
    * Estado actual de los domicilios, obtenido del store de Prosec.
-   * @private
+   * @public
    */
-  private domiciliosState!: ProsecState;
+  public domiciliosState!: ProsecState;
 
   /**
    * @descripcion
    * Estado actual de la sección, obtenido del store de la sección.
-   * @private
+   * @public
    */
-  private seccionState!: SeccionLibState;
+  public seccionState!: SeccionLibState;
 
   /**
    * @descripcion
@@ -152,13 +165,13 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
    * @param {ConsultaioQuery} consultaQuery - Query para operaciones de consulta adicionales.
    */
   constructor(
-    private readonly fb: FormBuilder, 
-    private ProsecService: ProsecService, 
-    private AutorizacionProsecStore: AutorizacionProsecStore,
-    private AUtorizacionProsecQuery: AUtorizacionProsecQuery,
-    private seccionStore: SeccionLibStore,
-    private seccionQuery: SeccionLibQuery,
-    private consultaQuery: ConsultaioQuery
+    public fb: FormBuilder, 
+    public ProsecService: ProsecService, 
+    public AutorizacionProsecStore: AutorizacionProsecStore,
+    public AUtorizacionProsecQuery: AUtorizacionProsecQuery,
+    public seccionStore: SeccionLibStore,
+    public seccionQuery: SeccionLibQuery,
+    public consultaQuery: ConsultaioQuery
   ) {
     // Constructor logic can be added here if needed
   }
@@ -204,7 +217,8 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
             delay(10),
             tap((_value) => {
               if (this.forma.valid) {
-                this.AutorizacionProsecStore.setFormaValida([{ id: 1, descripcion: "Valida" }])
+                this.AutorizacionProsecStore.setDomiciliosFormaValida(true);
+                this.ProsecService.formValida()
               }
             })
           )
@@ -212,14 +226,6 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
 
     if(this.formularioDeshabilitado){
       this.inicializarEstadoFormulario();
-    }
-
-    if(this.domiciliosState.formaValida[0].descripcion === 'AllValida'){
-      this.seccionStore.establecerSeccion([true]);
-      this.seccionStore.establecerFormaValida([true])
-    }
-    else{
-      this.seccionStore.establecerFormaValida([false]);
     }
   }
 
@@ -292,9 +298,14 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
     })
   }
 
-  /**
-   * @method obtenserListaEstado
-   * @description Obtiene la lista de estados desde el servicio.
+    /**
+   * @method obtenerListaEstado
+   * @description
+   * Obtiene la lista de estados desde el servicio llamando al archivo `estado.json`.
+   * Si la petición es exitosa, asigna los datos recibidos a la propiedad `estadoSeleccionar`.
+   * En caso de error, muestra el error en consola y asigna un arreglo vacío.
+   * 
+   * @returns {void}
    */
   obtenerListaEstado(): void {
     this.ProsecService.obtenerMenuDesplegable('estado.json').subscribe({
@@ -305,13 +316,17 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
         console.error('Error al obtener los datos:', error);
         this.estadoSeleccionar = [];
       }
-    }
-  );
+    });
   }
 
   /**
-   * @method obtenserListaFederal
-   * @description Obtiene la lista de representación federal desde el servicio.
+   * @method obtenerListaFederal
+   * @description
+   * Obtiene la lista de representación federal desde el servicio llamando al archivo `federal.json`.
+   * Si la petición es exitosa, asigna los datos recibidos a la propiedad `RepresentacionFederal`.
+   * En caso de error, muestra el error en consola y asigna un arreglo vacío.
+   * 
+   * @returns {void}
    */
   obtenerListaFederal(): void {
     this.ProsecService.obtenerMenuDesplegable('federal.json').subscribe({
@@ -325,9 +340,14 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
     });
   }
 
-  /**
-   * @method obtenserListaActividad
-   * @description Obtiene la lista de actividad productiva desde el servicio.
+    /**
+   * @method obtenerListaActividad
+   * @description
+   * Obtiene la lista de actividades productivas desde el servicio llamando al archivo `actividad_productiva.json`.
+   * Si la petición es exitosa, asigna los datos recibidos a la propiedad `ActividadProductiva`.
+   * En caso de error, muestra el error en consola y asigna un arreglo vacío.
+   * 
+   * @returns {void}
    */
   obtenerListaActividad(): void {
     this.ProsecService.obtenerMenuDesplegable('actividad_productiva.json').subscribe({
@@ -341,11 +361,16 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
     });
   }
 
-   /**
-   * @method obtenserLista
-   * @description Obtiene las listas de datos de estados, representación federal y actividad productiva.
+  /**
+   * @method obtenerLista
+   * @description
+   * Obtiene todas las listas necesarias para el formulario de domicilios de plantas.
+   * Llama a los métodos para obtener la lista de estados, representación federal, actividad productiva y los datos de plantas.
+   * Este método centraliza la carga de catálogos y datos requeridos para el correcto funcionamiento del formulario.
+   * 
+   * @returns {void}
    */
-   obtenerLista() {
+  obtenerLista(): void {
     this.obtenerListaEstado();
     this.obtenerListaFederal();
     this.obtenerListaActividad();
@@ -394,6 +419,7 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * @method recuperarDatos
    * @description Recupera los datos de las plantas desde un archivo JSON utilizando el servicio ProsecService.
    * Llama al método `obtenerTablaDatos` con el nombre del archivo y suscribe a la respuesta.
    * Si la respuesta es un arreglo, asigna los datos a la propiedad `plantasDatos`.
@@ -412,6 +438,7 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * @method ngOnDestroy
    * @inheritdoc
    * @description
    * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.

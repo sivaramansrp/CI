@@ -1,8 +1,10 @@
 import { RouterModule, Routes } from '@angular/router';
+import { AceptaAccionesUsoComponent } from './acepta-acciones-uso/acepta-acciones-uso.component';
 import { AuthPageComponent } from './auth-page/auth-page.component';
 import { CambioContrasenaComponent } from './cambio-contrasena/cambio-contrasena.component';
 import { ConsultaAccionistaExtranjeroFisicaComponent } from './consulta-accionista-extranjero-fisica/consulta-accionista-extranjero-fisica.component';
 import { ConsultaAccionistaExtranjeroMoralComponent } from './consulta-accionista-extranjero-moral/consulta-accionista-extranjero-moral.component';
+import { CondicionesUsoComponent } from './condiciones-uso/condiciones-uso.component';
 import { ConsultaCapturistaPrivadoComponent } from './consulta-capturista-privado/consulta-capturista-privado.component';
 import { ConsultaPersonaNotificacionesComponent } from './consulta-persona-notificaciones/consulta-persona-notificaciones.component';
 import { ConsultaSocioAccionistaComponent } from './consulta-socio-accionista/consulta-socio-accionista.component';
@@ -72,6 +74,14 @@ export const ROUTES_AUTH: Routes = [
   {
     path: 'mantenimiento-cuenta',
     component: MantenimientoCuentaComponent
+  },
+  {
+    path: 'condiciones-uso',
+    component: CondicionesUsoComponent
+  },
+  {
+    path: 'acepta-condiciones',
+    component: AceptaAccionesUsoComponent
   },
 
 ];

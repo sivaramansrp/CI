@@ -1,10 +1,12 @@
-import { BANDEJA_DE_TAREAS_PENDIENTES_FORMA, BandejaDeTareasPendientes, ConfiguracionColumna, ConsultaioStore, LibBandejaComponent, ModeloDeFormaDinamica } from '@libs/shared/data-access-user/src';
+import { BANDEJA_DE_TAREAS_PENDIENTES_FORMA , BandejaDeTareasPendientes, ConfiguracionColumna, ConsultaioStore, LibBandejaComponent, ModeloDeFormaDinamica } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Departamento, TramiteItem } from '../models/confirmar-notificacion.model';
 import { Subject, takeUntil } from 'rxjs';
 import { BandejaDeSolicitudeService } from '../services/bandeja-de-solicitude.service';
 import { CommonModule } from '@angular/common';
 import { SeleccionadoDepartamento } from '@libs/shared/data-access-user/src/core/models/shared/bandeja-de-tareas-pendientes.model';
 import tramiteDetailsData from '@libs/shared/theme/assets/json/tramiteList.json';
+
 
 
 /* 
@@ -38,7 +40,7 @@ export class BandejaDeTareasPendientesComponent implements OnInit,OnDestroy {
    * Cada elemento del arreglo representa un departamento y su información asociada.
    * La estructura de cada elemento es de tipo `any`, por lo que puede contener cualquier forma de datos de departamento.
    */
-  public departamentoDatos: Array<any> = [];
+  public departamentoDatos: Departamento[] = [];
   /**
    * Almacena una lista de números de procedimiento.
    *
@@ -47,7 +49,7 @@ export class BandejaDeTareasPendientesComponent implements OnInit,OnDestroy {
    * El tipo está definido como `Array<any>`, lo que permite almacenar cualquier tipo de valor.
    * Considere especificar un tipo más preciso para una mejor seguridad de tipos.
    */
-  public procedureNumero: Array<any> = [];
+ public procedureNumero: TramiteItem[] = [];
   /**
    * Representa el objeto del departamento actualmente seleccionado.
    * 
@@ -60,7 +62,7 @@ export class BandejaDeTareasPendientesComponent implements OnInit,OnDestroy {
     numeroDeProcedimiento: '',
     nombreDelDepartamento: '',
   };
-    /*
+  /*
    * Configuración de las columnas que se mostrarán en la tabla de tareas pendientes.
    */
   public dePendientesConfiguracionTabla: ConfiguracionColumna<BandejaDeTareasPendientes>[] = [
@@ -105,15 +107,15 @@ export class BandejaDeTareasPendientesComponent implements OnInit,OnDestroy {
         orden: 8,
       }
     ];
-    /*
+  /**
    * Datos que se mostrarán en la tabla de tareas pendientes.
    */
-    public dePendientesTablaDatos: BandejaDeTareasPendientes[] = [];
-    /**
-     * Almacena una copia de los datos de tareas pendientes para su uso dentro del componente.
-     */
-    public copiarDatos: BandejaDeTareasPendientes[] = [];
-     /*
+  public dePendientesTablaDatos: BandejaDeTareasPendientes[] = [];
+  /**
+   * Almacena una copia de los datos de tareas pendientes para su uso dentro del componente.
+   */
+  public copiarDatos: BandejaDeTareasPendientes[] = [];
+  /*
    * Estructura del formulario utilizado para la bandeja de tareas pendientes.
    */
     public bandejaDeTareasForma = BANDEJA_DE_TAREAS_PENDIENTES_FORMA;
@@ -124,13 +126,14 @@ export class BandejaDeTareasPendientesComponent implements OnInit,OnDestroy {
     constructor(private bandejaSvc: BandejaDeSolicitudeService, private consultaStore: ConsultaioStore) {
   
     }
- /*
+  /*
    * Hook de inicialización del componente.
    * Llama al método para obtener los datos de la tabla al cargar el componente.
    */
     ngOnInit(): void {
       this.getBandejaDeTablaDatos();
       this.getNombreDelDepartamento();
+      this.obtieneTipoSolicitudes();
     }
 /*
    * Método para obtener los datos de la tabla de tareas pendientes desde el servicio.
@@ -176,7 +179,7 @@ export class BandejaDeTareasPendientesComponent implements OnInit,OnDestroy {
      *   - Si `campo` es `'procedimiento'`, actualiza el objeto de departamento seleccionado con el número de procedimiento seleccionado.
      *   - Para cualquier otro valor, reinicia el estado de selección del departamento.
      */
-    public departamento(event: { campo: string; valor: any }): void {
+    public departamento(event: { campo: string; valor: string }): void {
       if(event.campo === 'departamento') {
         this.selectedDepartamentoObj.tieneDepartamento = true;
         const SELECTED_DEPARTAMENTO = this.departamentoDatos.filter((item) => item.ID_DEPENDENCIA === Number(event.valor));
@@ -187,7 +190,7 @@ export class BandejaDeTareasPendientesComponent implements OnInit,OnDestroy {
       } else if(event.campo === 'procedimiento') {
         this.selectedDepartamentoObj.tieneDepartamento = false;
         const SELECTED_PROCEDURE = this.procedureNumero.filter((item) => item.id === Number(event.valor));
-        this.selectedDepartamentoObj.numeroDeProcedimiento = SELECTED_PROCEDURE[0].tramite;
+       this.selectedDepartamentoObj.numeroDeProcedimiento = String( SELECTED_PROCEDURE[0].tramite);
       } else {
           this.selectedDepartamentoObj.tieneDepartamento = false;
       }
@@ -212,7 +215,38 @@ export class BandejaDeTareasPendientesComponent implements OnInit,OnDestroy {
             }));
         }
     }
- /*
+
+    /**
+     * Obtiene los tipos de solicitudes desde el servicio y actualiza las opciones del campo
+     * 'tipoSolicitud' en el formulario dinámico de la bandeja de tareas.
+     *
+     * Este método realiza una petición al servicio `bandejaSvc.getSolicitudesTablaDatos()`, 
+     * procesa la respuesta y asigna las opciones correspondientes al campo identificado 
+     * como 'tipoSolicitud' dentro del arreglo `bandejaDeTareasForma`, siempre y cuando 
+     * dicho campo exista y aún no tenga opciones definidas.
+     */
+    public obtieneTipoSolicitudes(): void {
+      this.bandejaSvc.getSolicitudesTablaDatos()
+        .pipe(takeUntil(this.destroyNotifier$))
+        .subscribe((response) => {
+          const API_RESPONSE = JSON.parse(JSON.stringify(response));
+          const DATOS = API_RESPONSE.data;
+          const CLASIFICACION_FIELD = this.bandejaDeTareasForma.find(
+            (datos: ModeloDeFormaDinamica) => datos.id === 'tipoSolicitud'
+          ) as ModeloDeFormaDinamica;
+          if (CLASIFICACION_FIELD) {
+            if (!CLASIFICACION_FIELD.opciones) {
+              CLASIFICACION_FIELD.opciones = DATOS.map(
+                (item: { id: number; descripcion: string }) => ({
+                  descripcion: item.descripcion,
+                  id: item.id,
+                })
+              );
+            }
+          }
+        });
+    }
+  /*
    * Hook de destrucción del componente.
    * Finaliza las suscripciones activas al destruir el componente para evitar fugas de memoria.
    */
