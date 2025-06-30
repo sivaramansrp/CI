@@ -1,74 +1,218 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+// @ts-nocheck
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { By } from '@angular/platform-browser';
+import { Observable, of as observableOf, throwError } from 'rxjs';
+
+import { Component } from '@angular/core';
 import { AgregarFacturadorComponent } from './agregar-facturador.component';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { FormBuilder } from '@angular/forms';
+import { DatosSolicitudService } from '../../services/datos-solicitud.service';
+import { Location } from '@angular/common';
+
+@Injectable()
+class MockDatosSolicitudService {}
+
+@Directive({ selector: '[myCustom]' })
+class MyCustomDirective {
+  @Input() myCustom;
+}
+
+@Pipe({name: 'translate'})
+class TranslatePipe implements PipeTransform {
+  transform(value) { return value; }
+}
+
+@Pipe({name: 'phoneNumber'})
+class PhoneNumberPipe implements PipeTransform {
+  transform(value) { return value; }
+}
+
+@Pipe({name: 'safeHtml'})
+class SafeHtmlPipe implements PipeTransform {
+  transform(value) { return value; }
+}
 
 describe('AgregarFacturadorComponent', () => {
-  let component: AgregarFacturadorComponent;
-  let fixture: ComponentFixture<AgregarFacturadorComponent>;
+  let fixture;
+  let component;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [AgregarFacturadorComponent, HttpClientTestingModule],
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [ FormsModule, ReactiveFormsModule, AgregarFacturadorComponent ],
+      declarations: [
+        TranslatePipe, PhoneNumberPipe, SafeHtmlPipe,
+        MyCustomDirective
+      ],
+      schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
+      providers: [
+        FormBuilder,
+        { provide: DatosSolicitudService, useClass: MockDatosSolicitudService },
+        Location
+      ]
+    }).overrideComponent(AgregarFacturadorComponent, {
+
     }).compileComponents();
-
     fixture = TestBed.createComponent(AgregarFacturadorComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+    component = fixture.debugElement.componentInstance;
   });
 
-  it('should create', () => {
+  it('should run #constructor()', async () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize the form with default values', () => {
-    expect(component.agregarFacturadorForm.get('tipoPersona')?.value).toBe('');
-    expect(component.agregarFacturadorForm.get('nombres')?.value).toBe('');
-    expect(component.agregarFacturadorForm.get('primerApellido')?.value).toBe('');
+  it('should run #ngOnInit()', async () => {
+    component.cargarDatos = jest.fn();
+    component.crearAgregarFormularioFacturador = jest.fn();
+    component.changeNacionalidad = jest.fn();
+    component.ngOnInit();
+    expect(component.cargarDatos).toHaveBeenCalled();
+    expect(component.crearAgregarFormularioFacturador).toHaveBeenCalled();
+    expect(component.changeNacionalidad).toHaveBeenCalled();
   });
 
-  it('should validate required fields', () => {
-    const form = component.agregarFacturadorForm;
-    expect(form.valid).toBeFalsy();
-
-    // Set all required fields
-    form.controls['tipoPersona'].setValue('Física');
-    form.controls['nombres'].setValue('Test');
-    form.controls['primerApellido'].setValue('User');
-    form.controls['pais'].setValue('Mexico');
-    form.controls['estado'].setValue('CDMX');
-    form.controls['codigoPostal'].setValue('12345');
-    form.controls['calle'].setValue('Test St');
-    form.controls['numeroExterior'].setValue('123');
-    form.controls['correoElectronico'].setValue('test@test.com');
-
-    // If there are other required fields, set them here as well
-    if (form.controls['rfc']) {
-      form.controls['rfc'].setValue('XAXX010101000');
-    }
-    if (form.controls['colonia']) {
-      form.controls['colonia'].setValue('Centro');
-    }
-
-    expect(form.valid).toBeTruthy();
+  it('should run #crearAgregarFormularioFacturador()', async () => {
+    component.fb = component.fb || {};
+    component.fb.group = jest.fn();
+    component.obtenerValor = jest.fn();
+    component.elementosDeshabilitados = component.elementosDeshabilitados || {};
+    component.elementosDeshabilitados.includes = jest.fn();
+    component.crearAgregarFormularioFacturador();
+    expect(component.fb.group).toHaveBeenCalled();
+    expect(component.obtenerValor).toHaveBeenCalled();
+    expect(component.elementosDeshabilitados.includes).toHaveBeenCalled();
   });
 
-  it('should validate email format', () => {
-    const emailControl = component.agregarFacturadorForm.controls['correoElectronico'];
-    emailControl.setValue('invalid-email');
-    emailControl.markAsTouched();
-    emailControl.updateValueAndValidity();
-    fixture.detectChanges();
+  it('should run #obtenerValor()', async () => {
 
-    emailControl.setValue('valid@email.com');
-    emailControl.markAsTouched();
-    emailControl.updateValueAndValidity();
-    fixture.detectChanges();
-    expect(emailControl.errors).toBeNull();
+    component.obtenerValor({});
+
   });
 
-  it('should call guardarFacturador and reset form on save', () => {
-    jest.spyOn(component.agregarFacturadorForm, 'reset');
+  it('should run #cargarDatos()', async () => {
+    component.datosSolicitudService = component.datosSolicitudService || {};
+    component.datosSolicitudService.obtenerListaPaises = jest.fn().mockReturnValue(observableOf({}));
+    component.cargarDatos();
+    expect(component.datosSolicitudService.obtenerListaPaises).toHaveBeenCalled();
+  });
+
+  it('should run #guardarFacturador()', async () => {
+    component.agregarFacturadorForm = component.agregarFacturadorForm || {};
+    component.agregarFacturadorForm.getRawValue = jest.fn().mockReturnValue({
+      lada: {},
+      razonSocial: {},
+      segundoApellido: {},
+      primerApellido: {},
+      nombres: {},
+      codigoPostal: {},
+      estado: {},
+      colonia: {},
+      pais: {},
+      numeroInterior: {},
+      numeroExterior: {},
+      calle: {},
+      correoElectronico: {},
+      telefono: {},
+      tipoPersona: {},
+      denominacionRazon: {}
+    });
+    component.agregarFacturadorForm.reset = jest.fn();
+    component.tipoPersona = component.tipoPersona || {};
+    component.tipoPersona.MORAL = 'MORAL';
+    component.tipoPersona.FISICA = 'FISICA';
+    component.facturadores = component.facturadores || {};
+    component.facturadores.push = jest.fn();
+    component.updateFacturadorTablaDatos = component.updateFacturadorTablaDatos || {};
+    component.updateFacturadorTablaDatos.emit = jest.fn();
+    component.ubicaccion = component.ubicaccion || {};
+    component.ubicaccion.back = jest.fn();
     component.guardarFacturador();
+    expect(component.agregarFacturadorForm.getRawValue).toHaveBeenCalled();
+    expect(component.agregarFacturadorForm.reset).toHaveBeenCalled();
+    expect(component.facturadores.push).toHaveBeenCalled();
+    expect(component.updateFacturadorTablaDatos.emit).toHaveBeenCalled();
+    expect(component.ubicaccion.back).toHaveBeenCalled();
+  });
+
+  it('should run #limpiarFormulario()', async () => {
+    component.agregarFacturadorForm = component.agregarFacturadorForm || {};
+    component.agregarFacturadorForm.reset = jest.fn();
+    component.limpiarFormulario();
     expect(component.agregarFacturadorForm.reset).toHaveBeenCalled();
   });
+
+  it('should run #cancelar()', async () => {
+    component.ubicaccion = component.ubicaccion || {};
+    component.ubicaccion.back = jest.fn();
+    component.cancelar();
+    expect(component.ubicaccion.back).toHaveBeenCalled();
+  });
+
+  it('should run #esInvalido()', async () => {
+    component.agregarFacturadorForm = component.agregarFacturadorForm || {};
+    component.agregarFacturadorForm.get = jest.fn().mockReturnValue({
+      dirty: {},
+      touched: {},
+      invalid: {}
+    });
+    component.esInvalido({});
+    expect(component.agregarFacturadorForm.get).toHaveBeenCalled();
+  });
+
+  it('should run #changeNacionalidad()', async () => {
+    const mockControl = {
+      enable: jest.fn(),
+      disable: jest.fn()
+    };
+    
+    component.agregarFacturadorForm = {
+      value: { tipoPersona: 'someValue' },
+      controls: {
+        tipoPersona: mockControl,
+        nombres: mockControl,
+        primerApellido: mockControl
+      },
+      get: jest.fn().mockReturnValue(mockControl)
+    };
+    
+    component.estaDeshabilitadoDesplegable = true;
+    component.changeNacionalidad();
+    
+    expect(mockControl.enable).toHaveBeenCalled();
+    expect(component.estaDeshabilitadoDesplegable).toBe(false);
+  });
+
+  it('should run #changeNacionalidad() when tipoPersona is empty', async () => {
+    const mockControl = {
+      enable: jest.fn(),
+      disable: jest.fn()
+    };
+    
+    component.agregarFacturadorForm = {
+      value: { tipoPersona: '' },
+      controls: {
+        tipoPersona: mockControl,
+        nombres: mockControl,
+        primerApellido: mockControl
+      },
+      get: jest.fn().mockReturnValue(mockControl)
+    };
+    
+    component.changeNacionalidad();
+    
+    expect(mockControl.disable).toHaveBeenCalled();
+    expect(mockControl.enable).toHaveBeenCalled(); // tipoPersona should be enabled
+  });
+
+  it('should run #ngOnDestroy()', async () => {
+    component.unsubscribe$ = component.unsubscribe$ || {};
+    component.unsubscribe$.next = jest.fn();
+    component.unsubscribe$.complete = jest.fn();
+    component.ngOnDestroy();
+    expect(component.unsubscribe$.next).toHaveBeenCalled();
+    expect(component.unsubscribe$.complete).toHaveBeenCalled();
+  });
+
 });

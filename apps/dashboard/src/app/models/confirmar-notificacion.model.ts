@@ -33,3 +33,33 @@ export interface Documento {
   /** Descripción o nombre del documento. */
   documento: string;
 }
+/**
+ * @interface DocumentoResponse
+ * @description
+ * Representa la respuesta de una solicitud de documentos, conteniendo un arreglo de documentos.
+ */
+export interface Departamento {
+  ID_DEPENDENCIA: number;
+  NOMBRE: string;
+  ACRONIMO: string;
+}
+/**
+ *  @interface DocumentoResponse
+ *  @description
+ * Representa la respuesta de una solicitud de documentos, conteniendo un arreglo de documentos.
+ */
+export interface DepartamentoResponse {
+  data: Departamento[];
+}
+/**
+ * @interface TramiteItem
+ * @description
+ * Representa un elemento de trámite con su ID, número de trámite, enlaces a dashboard y departamento, y el nombre del departamento.
+ */
+export interface TramiteItem {
+  id: number;
+  tramite: number;
+  linkDashboard: string;
+  linkDepartment: string;
+  department: string;
+}

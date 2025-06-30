@@ -1,10 +1,12 @@
-import { BANDEJA_DE_TAREAS_PENDIENTES_FORMA, BandejaDeTareasPendientes, ConfiguracionColumna, ConsultaioStore, LibBandejaComponent, ModeloDeFormaDinamica } from '@libs/shared/data-access-user/src';
+import { BANDEJA_DE_TAREAS_PENDIENTES_FORMA , BandejaDeTareasPendientes, ConfiguracionColumna, ConsultaioStore, LibBandejaComponent, ModeloDeFormaDinamica } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Departamento, TramiteItem } from '../models/confirmar-notificacion.model';
 import { Subject, takeUntil } from 'rxjs';
 import { BandejaDeSolicitudeService } from '../services/bandeja-de-solicitude.service';
 import { CommonModule } from '@angular/common';
 import { SeleccionadoDepartamento } from '@libs/shared/data-access-user/src/core/models/shared/bandeja-de-tareas-pendientes.model';
 import tramiteDetailsData from '@libs/shared/theme/assets/json/tramiteList.json';
+
 
 
 /* 
@@ -38,7 +40,7 @@ export class BandejaDeTareasPendientesComponent implements OnInit,OnDestroy {
    * Cada elemento del arreglo representa un departamento y su información asociada.
    * La estructura de cada elemento es de tipo `any`, por lo que puede contener cualquier forma de datos de departamento.
    */
-  public departamentoDatos: Array<any> = [];
+  public departamentoDatos: Departamento[] = [];
   /**
    * Almacena una lista de números de procedimiento.
    *
@@ -47,7 +49,7 @@ export class BandejaDeTareasPendientesComponent implements OnInit,OnDestroy {
    * El tipo está definido como `Array<any>`, lo que permite almacenar cualquier tipo de valor.
    * Considere especificar un tipo más preciso para una mejor seguridad de tipos.
    */
-  public procedureNumero: Array<any> = [];
+ public procedureNumero: TramiteItem[] = [];
   /**
    * Representa el objeto del departamento actualmente seleccionado.
    * 
@@ -177,7 +179,7 @@ export class BandejaDeTareasPendientesComponent implements OnInit,OnDestroy {
      *   - Si `campo` es `'procedimiento'`, actualiza el objeto de departamento seleccionado con el número de procedimiento seleccionado.
      *   - Para cualquier otro valor, reinicia el estado de selección del departamento.
      */
-    public departamento(event: { campo: string; valor: any }): void {
+    public departamento(event: { campo: string; valor: string }): void {
       if(event.campo === 'departamento') {
         this.selectedDepartamentoObj.tieneDepartamento = true;
         const SELECTED_DEPARTAMENTO = this.departamentoDatos.filter((item) => item.ID_DEPENDENCIA === Number(event.valor));
@@ -188,7 +190,7 @@ export class BandejaDeTareasPendientesComponent implements OnInit,OnDestroy {
       } else if(event.campo === 'procedimiento') {
         this.selectedDepartamentoObj.tieneDepartamento = false;
         const SELECTED_PROCEDURE = this.procedureNumero.filter((item) => item.id === Number(event.valor));
-        this.selectedDepartamentoObj.numeroDeProcedimiento = SELECTED_PROCEDURE[0].tramite;
+       this.selectedDepartamentoObj.numeroDeProcedimiento = String( SELECTED_PROCEDURE[0].tramite);
       } else {
           this.selectedDepartamentoObj.tieneDepartamento = false;
       }
