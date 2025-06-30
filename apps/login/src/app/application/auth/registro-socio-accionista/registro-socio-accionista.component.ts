@@ -119,12 +119,12 @@ export class RegistroSocioAccionistaComponent implements OnInit, OnDestroy {
   }
 
   /** Getter para el campo tipoNacionalidad del formulario */
-  get tipoNacionalidad() {
+  get tipoNacionalidad(): void | string {
     return this.FormSocioAccionista.get('tipoNacionalidad')?.value;
   }
 
   /** Getter para el campo personaNacional del formulario */
-  get personaNacional() {
+  get personaNacional(): void | string {
     return this.FormSocioAccionista.get('personaNacional')?.value;
   }
 
@@ -145,7 +145,7 @@ export class RegistroSocioAccionistaComponent implements OnInit, OnDestroy {
   /**
    * Lógica para agregar un socio accionista nacional o extranjero según tipo.
    */
-  agregarSocioAccionista() {
+  agregarSocioAccionista(): void {
     const NACIONALIDAD = this.tipoNacionalidad;
     const PERSONA = this.personaNacional;
     if (NACIONALIDAD === 'si') {
@@ -259,7 +259,7 @@ export class RegistroSocioAccionistaComponent implements OnInit, OnDestroy {
   /**
    * Elimina subscripciones al destruir el componente.
    */
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
@@ -267,7 +267,7 @@ export class RegistroSocioAccionistaComponent implements OnInit, OnDestroy {
   /**
    * Aplica reglas de validación dinámica a los campos del formulario según el tipo de persona y nacionalidad.
    */
-  actualizarValidaciones() {
+  actualizarValidaciones(): void {
     const NACIONALIDAD = this.tipoNacionalidad;
     const PERSONA = this.personaNacional;
     const RFC = this.FormSocioAccionista.get('rfc');
@@ -312,7 +312,7 @@ export class RegistroSocioAccionistaComponent implements OnInit, OnDestroy {
   /**
    * Navega hacia la vista de firma electrónica.
    */
-  enviarFirma() {
+  enviarFirma(): void {
     if (this.listaSociosAccionistasExtranjeros.length > 0) {
       this.router.navigate(['login/firma-electronica']);
     }
@@ -334,7 +334,7 @@ export class RegistroSocioAccionistaComponent implements OnInit, OnDestroy {
   /**
    * Elimina los elementos seleccionados en ambas listas (nacional y extranjero).
    */
-  eliminarSeleccionados() {
+  eliminarSeleccionados(): void {
     this.socioAccionistaSeleccionado.forEach((socio) => {
       const INDEX = this.listaSociosAccionistas.indexOf(socio);
       if (INDEX > -1) {
