@@ -33,9 +33,9 @@ export class SolicitanteComponent implements OnInit, OnDestroy {
   // eslint-disable-next-line no-empty-function
   constructor(
     public fb: FormBuilder,
-    private solicitudStore: Solicitud11202Store,
+    public solicitudStore: Solicitud11202Store,
     private solicitudQuery: Solicitud11202Query
-  ) {}
+  ) { }
 
   /**
    * Método que se ejecuta al inicializar el componente.
@@ -84,18 +84,18 @@ export class SolicitanteComponent implements OnInit, OnDestroy {
     });
   }
 
-    /**
-   * Establece los valores en el store de tramite5701.
-   *
-   * @param {FormGroup} form - El formulario del cual se obtiene el valor.
-   * @param {string} campo - El nombre del campo del formulario cuyo valor se va a obtener.
-   * @param {string} metodoNombre - El nombre del método en el store que se va a invocar con el valor del campo.
-   * @returns {void}
-   */
-    setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Solicitud11202Store): void {
-      const VALOR = form.get(campo)?.value;
-      (this.solicitudStore[metodoNombre] as (value: unknown) => void)(VALOR);
-    }
+  /**
+ * Establece los valores en el store de tramite5701.
+ *
+ * @param {FormGroup} form - El formulario del cual se obtiene el valor.
+ * @param {string} campo - El nombre del campo del formulario cuyo valor se va a obtener.
+ * @param {string} metodoNombre - El nombre del método en el store que se va a invocar con el valor del campo.
+ * @returns {void}
+ */
+  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Solicitud11202Store): void {
+    const VALOR = form.get(campo)?.value;
+    (this.solicitudStore[metodoNombre] as (value: unknown) => void)(VALOR);
+  }
 
   /**
    * Obtiene el grupo de formulario 'datosGenerales' del formulario principal 'FormSolicitud'.
