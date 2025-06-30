@@ -13,7 +13,8 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Subject, takeUntil, tap, timer } from 'rxjs';
+import { Subject } from 'rxjs';
+
 import { CommonModule } from '@angular/common';
 import { HORA_PATTERN } from '../../constantes/regex.constants';
 import { HoraFormatoDirective } from '../../directives/hora-formato/hora-formato.directive';
@@ -48,10 +49,6 @@ export class InputHoraComponent implements OnChanges, ControlValueAccessor {
    */
   @Input() required!: boolean;
 
-  /**
-   * @decription Identificador para poner el input como unmarked.
-   */
-  @Input() unmarked: boolean = false;
 
   /**
    * Formulario reactivo que contiene el control 'hora'.
@@ -166,23 +163,5 @@ export class InputHoraComponent implements OnChanges, ControlValueAccessor {
       this.forma.get('hora')?.hasError(errorType) &&
       this.forma.get('hora')?.touched
     );
-  }
-
-  /**
-   * @description Resetea el campo 'hora' del formulario a su estado inicial.
-   * @returns {void}
-   */
-  resetVisual(): void {
-    timer(10)
-      .pipe(
-        tap(() => {
-          const CONTROL = this.forma.get('hora');
-          CONTROL?.setValue(null);
-          CONTROL?.markAsUntouched();
-          CONTROL?.markAsPristine();
-        }),
-        takeUntil(this.destroyNotifier$)
-      )
-      .subscribe();
   }
 }

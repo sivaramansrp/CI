@@ -66,45 +66,45 @@ describe('PasoUnoComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
+  it('debería crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should have a default value of indice as 1', () => {
+  it('debería tener un valor predeterminado de indice como 1', () => {
     expect(component.indice).toBe(1);
   });
 
-  it('should update indice when seleccionaTab is called', () => {
+  it('debería actualizar el indice cuando se llama a seleccionaTab', () => {
     component.seleccionaTab(3);
     expect(component.indice).toBe(3);
   });
 
-  it('should validate the tab index using the mock service', () => {
-    const isValid = mockSolicitanteService.validateTab(3); 
-    expect(isValid).toBe(true); 
-  
-    const isInvalid = mockSolicitanteService.validateTab(6); 
-    expect(isInvalid).toBe(false); 
+  it('debería validar el índice de la pestaña utilizando el servicio simulado', () => {
+    const isValid = mockSolicitanteService.validateTab(3);
+    expect(isValid).toBe(true);
+
+    const isInvalid = mockSolicitanteService.validateTab(6);
+    expect(isInvalid).toBe(false);
   });
 
-  it('should handle negative values in seleccionaTab', () => {
+  it('debería manejar valores negativos en seleccionaTab', () => {
     component.seleccionaTab(-1);
     expect(component.indice).toBe(-1);
   });
 
-  it('should handle zero in seleccionaTab', () => {
+  it('debería manejar cero en seleccionaTab', () => {
     component.seleccionaTab(0);
     expect(component.indice).toBe(0);
   });
 
-  it('should call actualizarEstadoFormulario and set esDatosRespuesta = true in guardarDatosFormulario()', () => {
+  it('debería llamar a actualizarEstadoFormulario y establecer esDatosRespuesta = true en guardarDatosFormulario()', () => {
     component['guardarDatosFormulario']();
     expect(expedicionService.getRegistroTomaMuestrasMercanciasData).toHaveBeenCalled();
     expect(expedicionService.actualizarEstadoFormulario).toHaveBeenCalledWith(mockRegistroResponse);
     expect(component.esDatosRespuesta).toBe(true);
   });
 
-  it('should call destroyNotifier$ on ngOnDestroy()', () => {
+  it('debería llamar a destroyNotifier$ en ngOnDestroy()', () => {
     const nextSpy = jest.spyOn(component['destroyNotifier$'], 'next');
     const completeSpy = jest.spyOn(component['destroyNotifier$'], 'complete');
 

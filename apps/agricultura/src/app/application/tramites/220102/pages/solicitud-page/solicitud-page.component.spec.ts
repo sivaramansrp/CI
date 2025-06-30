@@ -1,77 +1,66 @@
-// @ts-nocheck
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { By } from '@angular/platform-browser';
-import { Observable, of as observableOf, throwError } from 'rxjs';
-
-import { Component } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SolicitudPageComponent } from './solicitud-page.component';
 import { SeccionLibStore } from '@ng-mf/data-access-user';
-
-@Directive({ selector: '[myCustom]' })
-class MyCustomDirective {
-  @Input() myCustom;
-}
-
-@Pipe({ name: 'translate' })
-class TranslatePipe implements PipeTransform {
-  transform(value) { return value; }
-}
-
-@Pipe({ name: 'phoneNumber' })
-class PhoneNumberPipe implements PipeTransform {
-  transform(value) { return value; }
-}
-
-@Pipe({ name: 'safeHtml' })
-class SafeHtmlPipe implements PipeTransform {
-  transform(value) { return value; }
-}
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
+import { WizardComponent } from '@ng-mf/data-access-user';
+import { Component, ViewChild } from '@angular/core';
 
 describe('SolicitudPageComponent', () => {
-  let fixture;
-  let component;
+  let component: SolicitudPageComponent;
+  let fixture: ComponentFixture<SolicitudPageComponent>;
+  let mockSeccionStore: any;
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({
+  beforeEach(async () => {
+    mockSeccionStore = {
+      establecerFormaValida: jest.fn(),
+      establecerSeccion: jest.fn()
+    };
+
+    await TestBed.configureTestingModule({
+      declarations: [SolicitudPageComponent],
       imports: [FormsModule, ReactiveFormsModule],
-      declarations: [
-        SolicitudPageComponent,
-        TranslatePipe, PhoneNumberPipe, SafeHtmlPipe,
-        MyCustomDirective
-      ],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
-      providers: [
-        SeccionLibStore
-      ]
-    }).overrideComponent(SolicitudPageComponent, {
-
+      providers: [{ provide: SeccionLibStore, useValue: mockSeccionStore }],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA]
     }).compileComponents();
+
     fixture = TestBed.createComponent(SolicitudPageComponent);
-    component = fixture.debugElement.componentInstance;
+    component = fixture.componentInstance;
+    fixture.detectChanges();
   });
 
-  afterEach(() => {
-    component.ngOnDestroy = function () { };
-    fixture.destroy();
-  });
-
-  it('should run #constructor()', async () => {
+  it('should create component and call constructor logic', () => {
     expect(component).toBeTruthy();
+    expect(mockSeccionStore.establecerFormaValida).toHaveBeenCalledWith([false]);
+    expect(mockSeccionStore.establecerSeccion).toHaveBeenCalledWith([true]);
   });
 
-  it('should run #getValorIndice()', async () => {
-    component.wizardComponent = component.wizardComponent || {};
-    component.wizardComponent.siguiente = jest.fn();
-    component.wizardComponent.atras = jest.fn();
-    component.getValorIndice({
-      valor: {},
-      accion: {}
-    });
-    // expect(component.wizardComponent.siguiente).toHaveBeenCalled();
-    // expect(component.wizardComponent.atras).toHaveBeenCalled();
+  it('should call wizardComponent.siguiente() if accion is "cont"', () => {
+    const siguienteSpy = jest.fn();
+    component.wizardComponent = { siguiente: siguienteSpy, atras: jest.fn() } as any;
+
+    component.getValorIndice({ valor: 2, accion: 'cont' });
+    expect(component.indice).toBe(2);
+    expect(siguienteSpy).toHaveBeenCalled();
   });
 
+  it('should call wizardComponent.atras() if accion is not "cont"', () => {
+    const atrasSpy = jest.fn();
+    component.wizardComponent = { siguiente: jest.fn(), atras: atrasSpy } as any;
+
+    component.getValorIndice({ valor: 3, accion: 'atras' });
+    expect(component.indice).toBe(3);
+    expect(atrasSpy).toHaveBeenCalled();
+  });
+
+  it('should not call wizardComponent if valor is out of bounds', () => {
+    const siguienteSpy = jest.fn();
+    const atrasSpy = jest.fn();
+    component.wizardComponent = { siguiente: siguienteSpy, atras: atrasSpy } as any;
+
+    component.getValorIndice({ valor: 6, accion: 'cont' }); // outside valid range (1-4)
+    expect(component.indice).toBe(1); // should remain unchanged
+    expect(siguienteSpy).not.toHaveBeenCalled();
+    expect(atrasSpy).not.toHaveBeenCalled();
+  });
 });

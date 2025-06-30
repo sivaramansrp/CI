@@ -22,6 +22,8 @@ import {
   Notificacion,
   NotificacionesComponent,
   Pedimento,
+  REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL,
+  REGEX_SOLO_DIGITOS,
   TablaSeleccion,
 } from '@libs/shared/data-access-user/src';
 import {
@@ -224,6 +226,13 @@ export class DatosdelasolicitudComponent implements OnInit, OnDestroy {
    */
   esFormularioSoloLectura: boolean = false;
 
+  /** 
+ * RFC del solicitante.
+ * Este campo almacena el Registro Federal de Contribuyentes (RFC) del solicitante.
+ * Ejemplo: 'MAVL621207C95'.
+ */
+  rfc: string = 'MAVL621207C95';
+
   /**
    * Constructor del componente.
    *
@@ -363,7 +372,7 @@ export class DatosdelasolicitudComponent implements OnInit, OnDestroy {
       ],
       descripcionFraccionArancelaria: [
         this.dataDeLaSolicitudState?.descripcionFraccionArancelaria,
-        Validators.required,
+       Validators.maxLength(200),
       ],
       cantidadUMT: [
         this.dataDeLaSolicitudState?.cantidadUMT,
@@ -402,19 +411,23 @@ export class DatosdelasolicitudComponent implements OnInit, OnDestroy {
       datosDelTramiteRealizar: this.fb.group({
         justification: [
           this.dataDeLaSolicitudState?.justification,
-          Validators.required,
+          [Validators.maxLength(2000)],
         ],
         denominacion: [
           this.dataDeLaSolicitudState?.denominacion,
-          Validators.required,
+         [Validators.maxLength(100)],
         ],
         correoElectronico: [
           this.dataDeLaSolicitudState?.correoElectronico,
-          Validators.required,
+          [Validators.email, Validators.maxLength(100)],
         ],
         codigopostal: [
           this.dataDeLaSolicitudState?.codigopostal,
-          Validators.required,
+         [
+            Validators.required,
+            Validators.maxLength(12),
+             Validators.pattern(REGEX_SOLO_DIGITOS),
+          ],
         ],
         estado: [this.dataDeLaSolicitudState?.estado, Validators.required],
         municipoyalcaldia: [
@@ -423,12 +436,25 @@ export class DatosdelasolicitudComponent implements OnInit, OnDestroy {
         ],
         localidad: [
           this.dataDeLaSolicitudState?.localidad,
-          Validators.required,
+         [
+            Validators.required,
+            Validators.maxLength(120),
+            Validators.pattern(REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL),
+          ],
         ],
-        colonia: [this.dataDeLaSolicitudState?.colonia, Validators.required],
-        calle: [this.dataDeLaSolicitudState?.calle, Validators.required],
-        lada: [this.dataDeLaSolicitudState?.lada, Validators.required],
-        telefono: [this.dataDeLaSolicitudState?.telefono, Validators.required],
+        colonia: [this.dataDeLaSolicitudState?.colonia, [Validators.maxLength(120)]],
+        calle: [this.dataDeLaSolicitudState?.calle,[Validators.maxLength(100)]],
+        lada: [this.dataDeLaSolicitudState?.lada,[
+                    Validators.required,
+                    Validators.minLength(5),
+                    Validators.maxLength(5),
+                    Validators.pattern(REGEX_SOLO_DIGITOS),
+                  ],],
+        telefono: [this.dataDeLaSolicitudState?.telefono, [
+                    Validators.required,
+                    Validators.maxLength(30),
+                    Validators.pattern(REGEX_SOLO_DIGITOS),
+                  ],],
         avisoDeFuncionamiento: [
           this.dataDeLaSolicitudState?.avisoDeFuncionamiento,
           Validators.required,
@@ -438,11 +464,10 @@ export class DatosdelasolicitudComponent implements OnInit, OnDestroy {
           Validators.required,
         ],
         regimenalque: [
-          this.dataDeLaSolicitudState?.regimenalque,
-          Validators.required,
+          this.dataDeLaSolicitudState?.regimenalque
         ],
         aduana: [this.dataDeLaSolicitudState?.aduana, Validators.required],
-        rfc: [this.dataDeLaSolicitudState?.rfc, Validators.required],
+        rfc: [this.dataDeLaSolicitudState?.rfc || this.rfc, Validators.required],
         legalRazonSocial: [
           this.dataDeLaSolicitudState?.legalRazonSocial,
           Validators.required,
@@ -486,6 +511,14 @@ export class DatosdelasolicitudComponent implements OnInit, OnDestroy {
    */
   eliminarPedimento(borrar: boolean): void {
     if (borrar) {
+      this.tableData = this.tableData.filter((row) => {
+        const ROW_ID =
+          row.id || (row.claveScianG && row.claveScianG.claveScian);
+        return !this.filasSeleccionadas.has(Number(ROW_ID));
+      });
+
+      // Borrar la selección y la notificación
+      this.filasSeleccionadas.clear();
       this.pedimentos.splice(this.elementoParaEliminar, 1);
       this.nuevaNotificacion = null; // Limpia la notificación
     }
@@ -556,8 +589,8 @@ export class DatosdelasolicitudComponent implements OnInit, OnDestroy {
   createclaveScianForm(): void {
     this.clavaScianForm = this.fb.group({
       claveScianG: this.fb.group({
-        claveScian: ['', Validators.required],
-        descripcionDelScian: ['', Validators.required],
+        claveScian: ['',],
+        descripcionDelScian: [''],
       }),
     });
   }
@@ -802,9 +835,12 @@ export class DatosdelasolicitudComponent implements OnInit, OnDestroy {
     this.listaClaveTabla = this.listaClaveTabla.filter(
       (row) => !this.filasSeleccionadas.has(Number(row.claveDeLosLotes))
     );
+
+    
     this.filasSeleccionadas.clear();
     this.dataDeLaSolicitudForm.reset();
     this.abrirModal();
+    
   }
   /** Limpia el formulario de clave SCIAN */
   onLimpiar(): void {
@@ -824,15 +860,21 @@ export class DatosdelasolicitudComponent implements OnInit, OnDestroy {
    */
   onDelete(): void {
     if (!this.filasSeleccionadas || this.filasSeleccionadas.size === 0) {
-      console.warn('No rows selected for deletion.');
-      return;
+      const MODAL_ELEMENT = document.getElementById('seleccionaRegistroModal');
+      if (MODAL_ELEMENT) {
+        const MODAL_INSTANCE = new Modal(MODAL_ELEMENT);
+        MODAL_INSTANCE.show();
+      }
+    } else {
+      const MODAL_ELEMENT = document.getElementById('confirmarEliminarModal');
+      if (MODAL_ELEMENT) {
+        const MODAL_INSTANCE = new Modal(MODAL_ELEMENT);
+        MODAL_INSTANCE.show();
+      }
     }
-
-    this.tableData = this.tableData.filter((row) => {
-      const ROW_ID = row.id || (row.claveScianG && row.claveScianG.claveScian);
-      return !this.filasSeleccionadas.has(Number(ROW_ID));
-    });
-    this.filasSeleccionadas.clear();
+    this.clavaScianForm.reset();
+    this.abrirModal();
+    
   }
 
   /** Cancela la acción de agregar clave SCIAN */
@@ -933,7 +975,7 @@ export class DatosdelasolicitudComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.ediciondeindicedefila = ROW_INDEX; // Set the index of the row being edited
+    this.ediciondeindicedefila = ROW_INDEX; 
 
     const SELECTED_ROW = this.listaClaveTabla[ROW_INDEX];
 
