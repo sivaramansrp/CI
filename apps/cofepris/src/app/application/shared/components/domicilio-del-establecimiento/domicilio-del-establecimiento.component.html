@@ -10,7 +10,7 @@
                 </div>
             </div>
             <div class="col-md-4">
-                <app-catalogo-select [label]="'Estado*:'" [placeholder]="'Seleccione un valor'" [catalogo]="datosEstado"
+                <app-catalogo-select [label]="'Estado*'" [placeholder]="'Seleccione un valor'" [catalogo]="datosEstado"
                     formControlName="estado" (change)="setValoresStore(domicilioForm,'estado', 'setEstado')"[isDisabled]="esFormularioSoloLectura">
                 </app-catalogo-select>
             </div>
@@ -91,7 +91,8 @@
             <div class="col-md-4">
             <div class="form-group">
             <label class="form-label" for="noLicenciaSanitaria">No. de licencia sanitaria*:<i
-            class="bi bi-question-circle-fill"></i></label>
+            class="bi bi-question-circle-fill"   title="Número de la autorización
+indicado en el documento emitido por la autoridad sanitaria competente" ata-bs-toggle="tooltip"></i></label>
             <input class="form-control" id="noLicenciaSanitaria" formControlName="noLicenciaSanitaria"
             placeholder="" type="text" (change)="setValoresStore(domicilioForm,'noLicenciaSanitaria', 'setNoLicenciaSanitaria')"/>
             </div>
@@ -100,13 +101,13 @@
         <div class="row">
             <div class="col-md-4">
             <div class="form-group btn-space">
-                <app-catalogo-select [label]="'Régimen al que se destinará*:'" [placeholder]="'Seleccione un valor'"
+                <app-catalogo-select [label]="'Régimen al que se destinará*'" [placeholder]="'Seleccione un valor'"
                 [catalogo]="datosEstado" formControlName="regimenDestinado" (change)="setValoresStore(domicilioForm,'regimenDestinado', 'setRegimenDestinado')" [isDisabled]="esFormularioSoloLectura">
                 </app-catalogo-select>
             </div>
             </div>
             <div class="col-md-8">
-            <div class="form-group"> <app-catalogo-select [label]="'Aduana*:'" [placeholder]="'Seleccione un valor'"
+            <div class="form-group"> <app-catalogo-select [label]="'Aduana*'" [placeholder]="'Seleccione un valor'"
                 [catalogo]="datosEstado" formControlName="aduana" (change)="setValoresStore(domicilioForm,'aduana', 'setAduana')" [isDisabled]="esFormularioSoloLectura">
                 </app-catalogo-select>
             </div>
