@@ -1,7 +1,8 @@
+import { Component, EventEmitter, Output } from '@angular/core';
 import { DestinoFinal, Proveedor } from '../../../../shared/models/terceros-relacionados.model';
 import { AgregarProveedorComponent } from '../../../../shared/components/agregar-proveedor/agregar-proveedor.component';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { ID_PROCEDIMIENTO } from '../../constants/importacion-armas-explosivo.enum';
 import { Observable } from 'rxjs';
 import { Tramite240108Query } from '../../estados/tramite240108Query.query';
 import { Tramite240108Store } from '../../estados/tramite240108Store.store';
@@ -14,6 +15,21 @@ import { Tramite240108Store } from '../../estados/tramite240108Store.store';
   styleUrl: './agregar-proveedor-contenedora.component.scss',
 })
 export class AgregarProveedorContenedoraComponent {
+
+  /**
+   * Evento que se emite para notificar el cierre del componente.
+   * Los componentes padres pueden suscribirse a este evento para ejecutar acciones al cerrar.
+   *
+   * @type {EventEmitter<void>}
+   */
+
+  @Output() cerrar = new EventEmitter<void>();
+
+    /**
+     * Identificador del procedimiento.
+     * @property {number} idProcedimiento
+     */
+    public readonly idProcedimiento = ID_PROCEDIMIENTO;
 
     /**
      * Observable que emite los datos del tercero (destinatario o proveedor),

@@ -4,6 +4,7 @@ import { SolicitanteComponent } from '@libs/shared/data-access-user/src';
 import { DatosDelTramiteContenedoraComponent } from '../../components/datos-del-tramite-contenedora/datos-del-tramite-contenedora.component';
 import { TercerosRelacionadosContenedoraComponent } from '../../components/terceros-relacionados-contenedora/terceros-relacionados-contenedora.component';
 import { HttpClientModule } from '@angular/common/http';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('PasoUnoComponent', () => {
   let component: PasoUnoComponent;
@@ -13,7 +14,7 @@ describe('PasoUnoComponent', () => {
     await TestBed.configureTestingModule({
       imports: [ SolicitanteComponent, DatosDelTramiteContenedoraComponent,
         TercerosRelacionadosContenedoraComponent, 
-        HttpClientModule
+        HttpClientModule,HttpClientTestingModule
       ],
       declarations: [PasoUnoComponent],
     }).compileComponents();
