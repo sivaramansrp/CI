@@ -10,7 +10,7 @@ import { Component } from '@angular/core';
 /**
  * @fileoverview Componente para mostrar el subtítulo y la sección de firma electrónica en el paso tres del asistente.
  * Este componente integra el formulario de firma electrónica para finalizar el trámite.
- * @module PasoTresComponent
+ * @module PasoDosComponent
  */
 
 /**

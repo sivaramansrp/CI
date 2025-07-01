@@ -3,6 +3,7 @@ import { FirmaElectronicaComponent } from '@ng-mf/data-access-user';
 
 import { PasoFirmarSolicitudComponent } from './paso-firmar-solicitud.component';
 import { ToastrModule } from 'ngx-toastr';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('PasoFirmarSolicitudComponent', () => {
   let component: PasoFirmarSolicitudComponent;
@@ -11,7 +12,7 @@ describe('PasoFirmarSolicitudComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [PasoFirmarSolicitudComponent],
-      imports: [ FirmaElectronicaComponent,ToastrModule.forRoot() ],
+      imports: [ FirmaElectronicaComponent,ToastrModule.forRoot(), HttpClientTestingModule ],
      providers: [
         { provide: 'ToastConfig', useValue: {} }
       ],

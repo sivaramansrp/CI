@@ -5,8 +5,10 @@ import { TEXTOS_REQUISITOS } from '../../constants/solicitud-de-prorroga-importa
 
 /**
  * @component PasoDosComponent
- * @description Componente responsable de gestionar el paso dos del procedimiento.
- * Maneja los requisitos de documentos, recupera datos de catálogos y administra las selecciones del usuario.
+ * @description
+ * Componente correspondiente al segundo paso del flujo de un trámite,
+ * destinado a la gestión y anexado de documentos requeridos.
+ * Consulta el catálogo de tipos de documentos disponibles mediante un servicio.
  */
 @Component({
   selector: 'app-paso-dos',
@@ -14,62 +16,63 @@ import { TEXTOS_REQUISITOS } from '../../constants/solicitud-de-prorroga-importa
   styleUrl: './paso-dos.component.scss',
 })
 export class PasoDosComponent implements OnInit, OnDestroy {
+  
   /**
-   * @property TEXTOS
-   * @description Contiene textos estáticos utilizados en este paso del formulario.
+   * Textos estáticos que se utilizan en la interfaz de este paso.
+   * 
    * @type {typeof TEXTOS_REQUISITOS}
    */
   public TEXTOS = TEXTOS_REQUISITOS;
 
   /**
-   * @property tiposDocumentos
-   * @description Espacio reservado localmente para los tipos de documentos utilizados en este paso.
+   * Tipos de documentos definidos por el catálogo (local).
+   * 
    * @type {Catalogo[]}
    */
   public tiposDocumentos: Catalogo[] = [];
 
   /**
-   * @property infoAlert
-   * @description Tipo de alerta de Bootstrap utilizada para mensajes informativos.
+   * Clase CSS de alerta informativa (usualmente de Bootstrap).
+   * 
+   * @default 'alert-info'
    * @type {string}
    */
   public infoAlert = 'alert-info';
 
   /**
-   * @property catalogoDocumentos
-   * @description Contiene el catálogo de tipos de documentos recuperado de la API.
+   * Catálogo de documentos obtenidos desde la API.
+   * 
    * @type {Catalogo[]}
    */
   public catalogoDocumentos: Catalogo[] = [];
 
   /**
-   * @property documentosSeleccionados
-   * @description Lista de documentos seleccionados por el usuario.
+   * Documentos que el usuario ha seleccionado en este paso.
+   * 
    * @type {Catalogo[]}
    */
   public documentosSeleccionados: Catalogo[] = [];
 
   /**
-   * @property destroyNotifier$
-   * @description Notificador utilizado para cancelar suscripciones activas cuando el componente se destruye.
-   * Previene fugas de memoria.
+   * Notificador para cancelar las suscripciones activas al destruir el componente.
+   * 
+   * @private
    * @type {Subject<void>}
    */
-  private destroyNotifier$: Subject<void> = new Subject();
+  private destroyNotifier$: Subject<void> = new Subject<void>();
 
   /**
-   * @constructor
+   * Constructor que inyecta el servicio de catálogos.
+   * 
    * @param catalogosServices Servicio para recuperar datos de catálogos necesarios en el formulario.
    */
-  constructor(private catalogosServices: CatalogosService) {
-    // Las dependencias se inyectan aquí. No se necesita lógica de inicialización.
-  }
+  constructor(private catalogosServices: CatalogosService) {}
 
   /**
    * @method ngOnInit
-   * @description Hook del ciclo de vida de Angular que se activa al inicializar el componente.
-   * Inicia la recuperación de los tipos de documentos.
-   * @returns {void}
+   * @description
+   * Hook de ciclo de vida de Angular. Se ejecuta al inicializar el componente.
+   * Inicia la carga de los tipos de documentos requeridos.
    */
   ngOnInit(): void {
     this.getTiposDocumentos();
@@ -77,16 +80,16 @@ export class PasoDosComponent implements OnInit, OnDestroy {
 
   /**
    * @method getTiposDocumentos
-   * @description Recupera el catálogo de tipos de documentos para el procedimiento.
-   * Actualiza la lista `catalogoDocumentos` si la recuperación es exitosa.
-   * @returns {void}
+   * @description
+   * Recupera el catálogo de tipos de documentos necesarios para este paso.
+   * El resultado se almacena en `catalogoDocumentos`.
    */
   public getTiposDocumentos(): void {
     this.catalogosServices
       .getCatalogo(CATALOGOS_ID.CAT_TIPO_DOCUMENTO)
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe({
-        next: (resp): void => {
+        next: (resp: Catalogo[]): void => {
           if (resp.length > 0) {
             this.catalogoDocumentos = resp;
           }
@@ -96,9 +99,9 @@ export class PasoDosComponent implements OnInit, OnDestroy {
 
   /**
    * @method ngOnDestroy
-   * @description Hook del ciclo de vida de Angular que se activa justo antes de destruir el componente.
-   * Limpia las suscripciones activas para evitar fugas de memoria.
-   * @returns {void}
+   * @description
+   * Hook de ciclo de vida de Angular que se ejecuta justo antes de destruir el componente.
+   * Cancela las suscripciones activas para evitar fugas de memoria.
    */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();

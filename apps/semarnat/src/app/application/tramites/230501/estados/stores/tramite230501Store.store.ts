@@ -4,80 +4,192 @@ import { Store, StoreConfig } from '@datorama/akita';
 import { BehaviorSubject } from 'rxjs';
 import { Injectable } from '@angular/core';
 
+
 /**
+ * Representa el estado del trámite 230501, incluyendo información sobre el pago de derechos,
+ * datos de solicitud, opciones colapsables, y diversas tablas relacionadas con el material peligroso.
+ * También incluye indicadores de modo edición y validaciones de formulario.
+ *
  * @interface Tramite230501State
- * @description Define el estado para el trámite 230501, incluyendo datos de tablas, formularios y configuraciones.
+ *
+ * @property {PagoDerechosState} pagoDerechosState - Estado que contiene los datos relacionados con el pago de derechos del trámite.
+ * @property {DatosSolicitudFormType} datosSolicitudFormType - Contiene los datos capturados en el formulario principal de solicitud.
+ * @property {boolean} opcionesColapsableState - Determina si el panel de opciones colapsables se encuentra abierto o cerrado.
+ * @property {TablaNumeroCasType[]} numeroCasTablaDatos - Lista de datos relacionados con los números CAS (Chemical Abstracts Service).
+ * @property {ComposicionMaterial[]} composicionTablaDatos - Lista que representa la composición química del material peligroso.
+ * @property {Destinatario[]} destinatarioFinalTablaDatos - Lista de destinatarios finales del material peligroso.
+ * @property {boolean} esDestinatarioFinalElModoDeEdicion - Indica si el formulario de destinatario final está en modo edición.
+ * @property {UsoFinal[]} usuarioTablaDatos - Lista de usuarios finales del material peligroso.
+ * @property {boolean} esUsuarioElModoDeEdicion - Indica si el formulario de usuario final está en modo edición.
+ * @property {Uso[]} usoTablaDatos - Lista de usos específicos asignados al material peligroso.
+ * @property {Representante[]} representanteLegalTablaDatos - Lista de representantes legales involucrados en el trámite.
+ * @property {boolean} esRepresentanteLegalElModoDeEdicion - Indica si el formulario de representante legal está en modo edición.
+ * @property {{ [key: string]: boolean }} formaValida - Mapa de validaciones que indica el estado de validez de diferentes secciones del formulario.
+ *   Las claves representan las secciones y los valores son booleanos que indican si esa sección es válida.
+ *   Ejemplos de claves: `destinatarioFinal`, `representanteLegal`, `UsuarioFinal`, `composicionForm`, `datosSolicitudForm`, `pagoDeDerechos`, `formularioTotal`.
  */
 export interface Tramite230501State {
   /**
    * @property pagoDerechosState
    * @description Estado que contiene los datos relacionados con el pago de derechos del trámite.
+   * @example
+   * ```typescript
+   * const pagoDerechosState = {
+   *   clave: '123',
+   *   dependencia: 'Secretaría de Hacienda',
+   *   banco: 'Banco Nacional',
+   *   llavePago: 'ABC123',
+   *   fecha: '2023-01-01',
+   *   importePago: '1000'
+   * };
+   * ```
    */
   pagoDerechosState: PagoDerechosState;
 
   /**
    * @property datosSolicitudFormType
    * @description Contiene los datos capturados en el formulario principal de solicitud.
+   * @example
+   * ```typescript
+   * const datosSolicitudFormType = {
+   *   tratadoRotterdam: true,
+   *   listadoNacional: false,
+   *   fraccionArancelaria: '1234.56.78',
+   *   descripcionFraccion: 'Descripción de la fracción',
+   *   convenioMinamata: true,
+   *   numeroCas: '123-45-6',
+   *   descripcionNoArancelaria: 'Descripción no arancelaria',
+   *   nombreQuimico: 'Cloruro de sodio',
+   *   nombreComun: 'Sal',
+   *   nombreComercial: 'Sal refinada',
+   *   estadoFisico: 'Sólido',
+   *   cantidad: 100,
+   *   cantidadLetra: 'Cien',
+   *   unidadMedida: 'kg',
+   *   licenciaSanitaria: 'Licencia123',
+   *   usoEspecifico: 'Uso industrial',
+   *   fechaExportacion: '2023-01-01',
+   *   modoCantidad: true
+   * };
+   * ```
    */
   datosSolicitudFormType: DatosSolicitudFormType;
 
   /**
    * @property opcionesColapsableState
    * @description Determina si el panel de opciones colapsables se encuentra abierto o cerrado.
+   * @example
+   * ```typescript
+   * const opcionesColapsableState = true;
+   * ```
    */
   opcionesColapsableState: boolean;
 
   /**
    * @property numeroCasTablaDatos
    * @description Lista de datos relacionados con los números CAS (Chemical Abstracts Service).
+   * @example
+   * ```typescript
+   * const numeroCasTablaDatos = [
+   *   { numeroCas: '123-45-6', descripcion: 'Sustancia química A' },
+   *   { numeroCas: '789-01-2', descripcion: 'Sustancia química B' }
+   * ];
+   * ```
    */
   numeroCasTablaDatos: TablaNumeroCasType[];
 
   /**
    * @property composicionTablaDatos
    * @description Lista que representa la composición química del material peligroso.
+   * @example
+   * ```typescript
+   * const composicionTablaDatos = [
+   *   { componente: 'Cloruro de sodio', porcentaje: 50 },
+   *   { componente: 'Agua', porcentaje: 50 }
+   * ];
+   * ```
    */
   composicionTablaDatos: ComposicionMaterial[];
 
   /**
    * @property destinatarioFinalTablaDatos
    * @description Lista de destinatarios finales del material peligroso.
+   * @example
+   * ```typescript
+   * const destinatarioFinalTablaDatos = [
+   *   { nombre: 'Juan Pérez', telefono: '1234567890' },
+   *   { nombre: 'María López', telefono: '0987654321' }
+   * ];
+   * ```
    */
   destinatarioFinalTablaDatos: Destinatario[];
 
   /**
    * @property esDestinatarioFinalElModoDeEdicion
    * @description Indica si el formulario de destinatario final está en modo edición.
+   * @example
+   * ```typescript
+   * const esDestinatarioFinalElModoDeEdicion = true;
+   * ```
    */
   esDestinatarioFinalElModoDeEdicion: boolean;
 
   /**
    * @property usuarioTablaDatos
    * @description Lista de usuarios finales del material peligroso.
+   * @example
+   * ```typescript
+   * const usuarioTablaDatos = [
+   *   { nombre: 'Empresa A', telefono: '1234567890' },
+   *   { nombre: 'Empresa B', telefono: '0987654321' }
+   * ];
+   * ```
    */
   usuarioTablaDatos: UsoFinal[];
 
   /**
    * @property esUsuarioElModoDeEdicion
    * @description Indica si el formulario de usuario final está en modo edición.
+   * @example
+   * ```typescript
+   * const esUsuarioElModoDeEdicion = false;
+   * ```
    */
   esUsuarioElModoDeEdicion: boolean;
 
   /**
    * @property usoTablaDatos
    * @description Lista de usos específicos asignados al material peligroso.
+   * @example
+   * ```typescript
+   * const usoTablaDatos = [
+   *   { uso: 'Industrial' },
+   *   { uso: 'Agrícola' }
+   * ];
+   * ```
    */
   usoTablaDatos: Uso[];
 
   /**
    * @property representanteLegalTablaDatos
    * @description Lista de representantes legales involucrados en el trámite.
+   * @example
+   * ```typescript
+   * const representanteLegalTablaDatos = [
+   *   { nombre: 'Abogado A', telefono: '1234567890' },
+   *   { nombre: 'Abogado B', telefono: '0987654321' }
+   * ];
+   * ```
    */
   representanteLegalTablaDatos: Representante[];
 
   /**
    * @property esRepresentanteLegalElModoDeEdicion
    * @description Indica si el formulario de representante legal está en modo edición.
+   * @example
+   * ```typescript
+   * const esRepresentanteLegalElModoDeEdicion = true;
+   * ```
    */
   esRepresentanteLegalElModoDeEdicion: boolean;
 
@@ -86,14 +198,77 @@ export interface Tramite230501State {
    * @description Mapa de validaciones que indica el estado de validez de diferentes secciones del formulario.
    * Las claves representan las secciones y los valores son booleanos que indican si esa sección es válida.
    * Ejemplos de claves: `destinatarioFinal`, `representanteLegal`, `UsuarioFinal`, `composicionForm`, `datosSolicitudForm`, `pagoDeDerechos`, `formularioTotal`.
+   * @example
+   * ```typescript
+   * const formaValida = {
+   *   destinatarioFinal: true,
+   *   representanteLegal: false,
+   *   UsuarioFinal: true,
+   *   composicionForm: false,
+   *   datosSolicitudForm: true,
+   *   pagoDeDerechos: true,
+   *   formularioTotal: false
+   * };
+   * ```
    */
   formaValida: { [key: string]: boolean };
 }
 
+
 /**
- * @function createInitialState
- * @description Crea y devuelve el estado inicial para el trámite 230501.
- * @returns {Tramite230501State} El estado inicial del trámite.
+ * Crea el estado inicial para el trámite 230501.
+ * 
+ * Este método devuelve un objeto que representa el estado inicial de la aplicación 
+ * para el trámite específico. Incluye propiedades relacionadas con el estado de 
+ * colapsabilidad, datos de tablas, modos de edición, formularios y validaciones.
+ * 
+ * @returns {Tramite230501State} El estado inicial del trámite 230501.
+ * 
+ * Propiedades del estado inicial:
+ * - `opcionesColapsableState`: Indica si las opciones colapsables están activadas o desactivadas.
+ * - `destinatarioFinalTablaDatos`: Lista de datos del destinatario final.
+ * - `esDestinatarioFinalElModoDeEdicion`: Indica si el destinatario final está en modo de edición.
+ * - `usuarioTablaDatos`: Lista de datos del usuario.
+ * - `esUsuarioElModoDeEdicion`: Indica si el usuario está en modo de edición.
+ * - `usoTablaDatos`: Lista de datos relacionados con el uso.
+ * - `representanteLegalTablaDatos`: Lista de datos del representante legal.
+ * - `esRepresentanteLegalElModoDeEdicion`: Indica si el representante legal está en modo de edición.
+ * - `datosSolicitudFormType`: Objeto que contiene los datos del formulario de solicitud, como:
+ *   - `tratadoRotterdam`: Indica si el tratado de Rotterdam aplica.
+ *   - `listadoNacional`: Indica si está en el listado nacional.
+ *   - `fraccionArancelaria`: Fracción arancelaria del producto.
+ *   - `descripcionFraccion`: Descripción de la fracción arancelaria.
+ *   - `convenioMinamata`: Indica si aplica el convenio de Minamata.
+ *   - `numeroCas`: Número CAS del producto químico.
+ *   - `descripcionNoArancelaria`: Descripción no arancelaria del producto.
+ *   - `nombreQuimico`: Nombre químico del producto.
+ *   - `nombreComun`: Nombre común del producto.
+ *   - `nombreComercial`: Nombre comercial del producto.
+ *   - `estadoFisico`: Estado físico del producto.
+ *   - `cantidad`: Cantidad del producto.
+ *   - `cantidadLetra`: Cantidad en formato de texto.
+ *   - `unidadMedida`: Unidad de medida del producto.
+ *   - `licenciaSanitaria`: Licencia sanitaria asociada.
+ *   - `usoEspecifico`: Uso específico del producto.
+ *   - `fechaExportacion`: Fecha de exportación del producto.
+ *   - `modoCantidad`: Indica si el modo cantidad está activado.
+ * - `numeroCasTablaDatos`: Lista de datos relacionados con el número CAS.
+ * - `composicionTablaDatos`: Lista de datos relacionados con la composición.
+ * - `pagoDerechosState`: Objeto que contiene los datos del pago de derechos, como:
+ *   - `clave`: Clave del pago.
+ *   - `dependencia`: Dependencia asociada al pago.
+ *   - `banco`: Banco donde se realizó el pago.
+ *   - `llavePago`: Llave única del pago.
+ *   - `fecha`: Fecha del pago.
+ *   - `importePago`: Importe del pago realizado.
+ * - `formaValida`: Objeto que indica la validez de diferentes secciones del formulario, como:
+ *   - `destinatarioFinal`: Validez del destinatario final.
+ *   - `representanteLegal`: Validez del representante legal.
+ *   - `UsuarioFinal`: Validez del usuario final.
+ *   - `composicionForm`: Validez del formulario de composición.
+ *   - `datosSolicitudForm`: Validez del formulario de datos de solicitud.
+ *   - `pagoDeDerechos`: Validez del pago de derechos.
+ *   - `formularioTotal`: Validez total del formulario.
  */
 export function createInitialState(): Tramite230501State {
   return {
@@ -147,6 +322,26 @@ export function createInitialState(): Tramite230501State {
   };
 }
 
+/**
+ * Clase que representa el almacén de estado para el trámite 230501.
+ * 
+ * Esta clase utiliza Akita para gestionar el estado de la aplicación relacionado con el trámite 230501.
+ * Proporciona métodos para actualizar y manipular el estado, así como para emitir valores reactivos
+ * mediante `BehaviorSubject`.
+ * 
+ * @remarks
+ * Los métodos de esta clase permiten realizar operaciones como agregar, actualizar y eliminar datos
+ * relacionados con destinatarios, representantes legales, usuarios finales y usos finales.
+ * También incluye métodos para gestionar el estado de validación de formularios y actualizar
+ * propiedades específicas del estado.
+ * 
+ * @example
+ * ```typescript
+ * const store = new Tramite230501Store();
+ * store.setPagoDerechosStateProperty('monto', '1000');
+ * store.addDestinatarioFinalTablaDatos([{ nombre: 'Juan', telefono: '1234567890' }]);
+ * ```
+ */
 @Injectable({
   providedIn: 'root',
 })
@@ -178,7 +373,19 @@ export class Tramite230501Store extends Store<Tramite230501State> {
    */
   public usuarioSujeto = new BehaviorSubject<UsoFinal>({} as UsoFinal);
 
-
+  /**
+   * Constructor de la clase `Tramite230501Store`.
+   * 
+   * Este constructor inicializa el store utilizando el estado inicial
+   * proporcionado por la función `createInitialState`. La función `super`
+   * llama al constructor de la clase base para establecer el estado inicial
+   * del store.
+   * 
+   * @remarks
+   * Este método es esencial para configurar el estado inicial del store
+   * y garantizar que la aplicación comience con los valores predeterminados
+   * necesarios para su funcionamiento.
+   */
   constructor() {
     super(createInitialState()); // Inicializa el store con el estado inicial
   }
