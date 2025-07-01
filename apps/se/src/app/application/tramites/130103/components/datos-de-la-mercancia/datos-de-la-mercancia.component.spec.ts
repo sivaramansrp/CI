@@ -18,6 +18,9 @@ describe('DatosDeLaMercanciaComponent', () => {
     fixture = TestBed.createComponent(DatosDeLaMercanciaComponent);
     component = fixture.componentInstance;
     serviceMock = TestBed.inject(ImportacionDefinitivaService);
+    component.consultaState = {
+      readonly: false,
+    } as any;
     fixture.detectChanges();
   });
 

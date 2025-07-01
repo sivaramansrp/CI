@@ -1,109 +1,101 @@
+
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MedicamentosDonacionComponent } from './medicamentos-donacion.component';
-import { WizardComponent } from '@libs/shared/data-access-user/src';
-import { PasoUnoPagesComponent } from '../paso-uno-pages/paso-uno-pages.component';
-import { AccionBoton } from '@libs/shared/data-access-user/src';
+import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+
+@Component({
+  selector: 'app-wizard',
+  template: ''
+})
+class MockWizardComponent {
+  siguiente = jest.fn();
+  atras = jest.fn();
+}
 
 describe('MedicamentosDonacionComponent', () => {
-  let component: MedicamentosDonacionComponent;
+  let componente: MedicamentosDonacionComponent;
   let fixture: ComponentFixture<MedicamentosDonacionComponent>;
+
+  // Mock para PasoUnoPagesComponent
+  const mockPasoUnoComponent = {
+    collectFormValues: jest.fn().mockReturnValue({
+      solicitante: { nombre: 'Juan' },
+      datosSolicitud: [{ campo: 'valor' }],
+      tercerosRelacionados: [],
+      pagoDeDerechos: [],
+      tramitesAsociados: []
+    })
+  };
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [
-        MedicamentosDonacionComponent,
-        WizardComponent,
-        PasoUnoPagesComponent,
-      ],
+      declarations: [MedicamentosDonacionComponent, MockWizardComponent],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA],
     }).compileComponents();
 
     fixture = TestBed.createComponent(MedicamentosDonacionComponent);
-    component = fixture.componentInstance;
-
-    // Provide mock instances
-    component.pasoUnoComponent = jasmine.createSpyObj<PasoUnoPagesComponent>('PasoUnoPagesComponent', ['collectFormValues']);
-    component.wizardComponent = jasmine.createSpyObj<WizardComponent>('WizardComponent', ['siguiente', 'atras']);
-
+    componente = fixture.componentInstance;
     fixture.detectChanges();
+
+    // Mock de wizardComponent
+    componente.wizardComponent = {
+      siguiente: jest.fn(),
+      atras: jest.fn(),
+    } as unknown as any;
+
+    // Mock de pasoUnoComponent
+    componente.pasoUnoComponent = mockPasoUnoComponent as any;
   });
 
-  it('should create the component', () => {
-    expect(component).toBeTruthy();
+  afterEach(() => {
+    jest.clearAllMocks();
   });
 
-  it('should initialize default values', () => {
-    expect(component.infoAlert).toBe('alert-info');
-    expect(component.indice).toBe(1);
-    expect(component.datosPasos.txtBtnAnt).toBe('Anterior');
-    expect(component.datosPasos.txtBtnSig).toBe('Continuar');
+  it('debería crear el componente', () => {
+    expect(componente).toBeTruthy();
   });
 
-  it('should update payload and call wizard.siguiente on accion "cont"', () => {
-    const mockFormValues = {
-      solicitante: { nombre: 'Test' },
-      datosSolicitud: [],
+  it('debería llamar wizardComponent.siguiente y actualizar payload si acción es "cont" y valor válido', () => {
+    const EVENTO = { valor: 2, accion: 'cont' };
+    componente.getValorIndice(EVENTO);
+    expect(componente.indice).toBe(2);
+    expect(componente.wizardComponent.siguiente).toHaveBeenCalled();
+    expect(componente.wizardComponent.atras).not.toHaveBeenCalled();
+    expect(componente.payload.solicitante).toEqual({ nombre: 'Juan' });
+  });
+
+  it('debería llamar wizardComponent.atras si acción no es "cont" y valor válido', () => {
+    const EVENTO = { valor: 3, accion: 'back' };
+    componente.getValorIndice(EVENTO);
+    expect(componente.indice).toBe(3);
+    expect(componente.wizardComponent.atras).toHaveBeenCalled();
+    expect(componente.wizardComponent.siguiente).not.toHaveBeenCalled();
+  });
+
+  it('no debería cambiar el índice ni llamar métodos si valor es inválido', () => {
+    const EVENTO = { valor: 0, accion: 'cont' };
+    const INDICE_INICIAL = componente.indice;
+    componente.getValorIndice(EVENTO);
+    expect(componente.indice).toBe(INDICE_INICIAL);
+    expect(componente.wizardComponent.siguiente).not.toHaveBeenCalled();
+    expect(componente.wizardComponent.atras).not.toHaveBeenCalled();
+  });
+
+  it('debería recopilar los valores del paso uno en collectAllFormValues', () => {
+    const resultado = componente.collectAllFormValues();
+    expect(resultado.pasoUno).toEqual({
+      solicitante: { nombre: 'Juan' },
+      datosSolicitud: [{ campo: 'valor' }],
       tercerosRelacionados: [],
       pagoDeDerechos: [],
-      tramitesAsociados: [],
-    };
-    (component.pasoUnoComponent.collectFormValues as jasmine.Spy).and.returnValue(mockFormValues);
-
-    const action: AccionBoton = { accion: 'cont', valor: 2 };
-
-    component.getValorIndice(action);
-
-    expect(component.payload).toEqual(mockFormValues);
-    expect(component.indice).toBe(2);
-    expect(component.wizardComponent.siguiente).toHaveBeenCalled();
+      tramitesAsociados: []
+    });
+    expect(mockPasoUnoComponent.collectFormValues).toHaveBeenCalled();
   });
 
-  it('should call wizard.atras on non-"cont" action', () => {
-    const action: AccionBoton = { accion: 'back', valor: 3 };
-    (component.pasoUnoComponent.collectFormValues as jasmine.Spy).and.returnValue({});
-
-    component.getValorIndice(action);
-
-    expect(component.indice).toBe(3);
-    expect(component.wizardComponent.atras).toHaveBeenCalled();
-  });
-
-  it('should ignore out-of-range valor', () => {
-    const action: AccionBoton = { accion: 'cont', valor: 10 };
-    component.getValorIndice(action);
-    expect(component.indice).toBe(1); // still the default
-    expect(component.wizardComponent.siguiente).not.toHaveBeenCalled();
-  });
-
-  it('should log error when pasoUnoComponent is undefined', () => {
-    spyOn(console, 'error');
-    component.pasoUnoComponent = undefined as any;
-
-    const action: AccionBoton = { accion: 'cont', valor: 2 };
-    component.getValorIndice(action);
-
-    expect(console.error).toHaveBeenCalledWith('PasoUnoPagesComponent is not initialized.');
-  });
-
-  it('should return collected values from collectAllFormValues()', () => {
-    const mockFormValues = {
-      solicitante: { nombre: 'Test' },
-      datosSolicitud: [],
-      tercerosRelacionados: [],
-      pagoDeDerechos: [],
-      tramitesAsociados: [],
-    };
-    (component.pasoUnoComponent.collectFormValues as jasmine.Spy).and.returnValue(mockFormValues);
-
-    const result = component.collectAllFormValues();
-
-    expect(result.pasoUno).toEqual(mockFormValues);
-  });
-
-  it('should return empty object if pasoUnoComponent is not initialized in collectAllFormValues()', () => {
-    component.pasoUnoComponent = undefined as any;
-
-    const result = component.collectAllFormValues();
-
-    expect(result).toEqual({});
+  it('debería retornar objeto vacío en collectAllFormValues si pasoUnoComponent no existe', () => {
+    componente.pasoUnoComponent = undefined as any;
+    const resultado = componente.collectAllFormValues();
+    expect(resultado).toEqual({});
   });
 });

@@ -13,19 +13,8 @@ import { DatosDelTramiteContenedoraComponent } from './components/datos-del-tram
 import { PagoDeDerechosContenedoraComponent } from './components/pago-de-derechos-contenedora/pago-de-derechos-contenedora.component';
 import { TercerosRelacionadosContenedoraComponent } from './components/terceros-relacionados-contenedora/terceros-relacionados-contenedora.component';
 
-import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
-import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
-import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
-import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.component';
-
 import { PermisoExtraordinarioImportacionArmamentoFisicasMoralesRoutingModule } from './permiso-extraordinario-importacion-armamento-fisicas-morales-routing.module';
 @NgModule({
-  declarations: [
-    PasoUnoComponent,
-    PasoDosComponent,
-    PasoTresComponent,
-    SolicitudPageComponent,
-  ],
   imports: [
     CommonModule,
     PermisoExtraordinarioImportacionArmamentoFisicasMoralesRoutingModule,
@@ -39,12 +28,6 @@ import { PermisoExtraordinarioImportacionArmamentoFisicasMoralesRoutingModule } 
     FirmaElectronicaComponent,
     WizardComponent,
     BtnContinuarComponent,
-  ],
-  exports: [
-    PasoUnoComponent,
-    PasoDosComponent,
-    PasoTresComponent,
-    SolicitudPageComponent,
   ],
 })
 export class PermisoExtraordinarioImportacionArmamentoFisicasMoralesModule {}

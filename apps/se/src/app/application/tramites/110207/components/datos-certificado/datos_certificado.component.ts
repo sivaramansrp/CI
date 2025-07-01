@@ -2,6 +2,7 @@ import {
   Catalogo,
   CatalogoSelectComponent,
   CatalogosSelect,
+  ConsultaioQuery,
   TituloComponent,
   ValidacionesFormularioService,
 } from '@ng-mf/data-access-user';
@@ -12,12 +13,13 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { ReplaySubject, Subject, map, takeUntil } from 'rxjs';
+import { ReplaySubject, map, takeUntil } from 'rxjs';
 import {
   Solicitud110207State,
   Tramite110207Store,
 } from '../../state/Tramite110207.store';
 import { CommonModule } from '@angular/common';
+import {ConsultaioState} from '@ng-mf/data-access-user';
 import { RegistroService } from '../../services/registro.service';
 import { Tramite110207Query } from '../../state/Tramite110207.query';
 
@@ -37,6 +39,15 @@ import { Tramite110207Query } from '../../state/Tramite110207.query';
   styleUrl: './datos_certificado.component.css',
 })
 export class DatosCertificadoComponent implements OnInit, OnDestroy {
+  /**
+     * Subject para destruir notificador.
+     */
+    consultaDatos!: ConsultaioState;
+     /**
+     * Indica si el formulario está en modo solo lectura.
+     * Cuando es `true`, los campos del formulario no se pueden editar.
+     */
+    soloLectura: boolean = false;
  
   /**
    * Formulario reactivo para los datos del certificado.
@@ -111,11 +122,22 @@ optionsRepresentacion!: Catalogo[];
   constructor(
     private registroService: RegistroService,
     public fb: FormBuilder,
-    private store: Tramite110207Store,
+    public store: Tramite110207Store,
     private query: Tramite110207Query,
-    private validacionesService: ValidacionesFormularioService
+    private validacionesService: ValidacionesFormularioService,
+    private consultaioQuery: ConsultaioQuery
   ) {
-    // El constructor se utiliza para la inyección de dependencias.
+    
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState) => {
+          this.consultaDatos = seccionState;
+          this.soloLectura = this.consultaDatos.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
   }
 
   /**
@@ -136,6 +158,7 @@ optionsRepresentacion!: Catalogo[];
     this.getIdioma();
     this.getEntidad();
     this.getRepresentacion();
+    this.inicializarEstadoFormulario();
 
     this.query.selectSolicitud$.pipe(takeUntil(this.destroyed$),
         map((seccionState) => {
@@ -152,9 +175,31 @@ optionsRepresentacion!: Catalogo[];
       this.isJustificacion = false;
     }
 
-   
+  }
+/**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.
+   * Además, obtiene la información del catálogo de mercancía.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.soloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.donanteDomicilio();
+    }
   }
 
+  /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormulario(): void {
+    this.donanteDomicilio();
+    if (this.soloLectura) {
+      this.registroForm.disable();
+    } else {
+      this.registroForm.enable();
+    }
+  }
   /**
    * Obtiene el catálogo de idiomas desde el servicio.
    */

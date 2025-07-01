@@ -512,9 +512,9 @@ export class AmpliacionServiciosComponent implements OnInit, OnDestroy {
     this.inicializarFormularioInfoRegistro();
     if (this.esFormularioSoloLectura) {
       this.campoDeshabilitar=true;
-    } else 
+    } else {
       this.campoDeshabilitar=false;
-    
+    }
 
 }
 

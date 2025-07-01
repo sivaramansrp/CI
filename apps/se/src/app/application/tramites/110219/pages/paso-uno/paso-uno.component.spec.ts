@@ -1,101 +1,102 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PasoUnoComponent } from './paso-uno.component';
-import { SolicitanteComponent } from '@ng-mf/data-access-user';
-import { CancelacionDeCertificadoComponent } from '../../components/cancelacion-de-certificado/cancelacion-de-certificado.component';
-import { CertificadoDeOrigenComponent } from '../../components/certificado-de origen/certificado-de-origen.component';
-import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef } from '@angular/core';
-import { provideHttpClient } from '@angular/common/http';
-import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { CertificadoService } from '../../services/certificado.service';
+import { ConsultaioQuery, TIPO_PERSONA, SolicitanteComponent } from '@ng-mf/data-access-user';
+import { ChangeDetectorRef, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
+import { of, ReplaySubject } from 'rxjs';
 
 describe('PasoUnoComponent', () => {
   let component: PasoUnoComponent;
   let fixture: ComponentFixture<PasoUnoComponent>;
-  let cdrSpy: jest.SpyInstance;
+  let certificadoServiceMock: any;
+  let consultaioQueryMock: any;
+  let cdrMock: any;
 
   beforeEach(async () => {
+    certificadoServiceMock = {
+      getRegistroTomaMuestrasMercanciasData: jest.fn().mockReturnValue(of({})),
+      actualizarEstadoFormulario: jest.fn()
+    };
+    consultaioQueryMock = {
+      selectConsultaioState$: of({ update: false })
+    };
+    cdrMock = { detectChanges: jest.fn() };
+
     await TestBed.configureTestingModule({
-      declarations: [],
-      imports: [
-        CommonModule,
-        SolicitanteComponent,
-        CancelacionDeCertificadoComponent,
-        CertificadoDeOrigenComponent,PasoUnoComponent
+      declarations: [PasoUnoComponent],
+      providers: [
+        { provide: CertificadoService, useValue: certificadoServiceMock },
+        { provide: ConsultaioQuery, useValue: consultaioQueryMock },
+        { provide: ChangeDetectorRef, useValue: cdrMock }
       ],
-      providers: [ChangeDetectorRef, provideHttpClient(),
-              provideHttpClientTesting(),],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA]
     }).compileComponents();
 
     fixture = TestBed.createComponent(PasoUnoComponent);
     component = fixture.componentInstance;
-
-    // Initialize the spy for ChangeDetectorRef.detectChanges
-    cdrSpy = jest.spyOn(component['cdr'], 'detectChanges');
     fixture.detectChanges();
   });
-  it('should run #ngAfterViewInit()', async () => {
-    component.solicitante = component.solicitante || {};
-    component.solicitante.obtenerTipoPersona = jest.fn();
-    component.ngAfterViewInit();
-    expect(component.solicitante.obtenerTipoPersona).toHaveBeenCalled();
-  });
-
 
   it('should create the component', () => {
     expect(component).toBeTruthy();
   });
 
-  describe('ngAfterViewInit', () => {
-    it('should initialize persona and domicilioFiscal and call detectChanges', () => {
-      const solicitanteSpy = jest.spyOn(component.solicitante, 'obtenerTipoPersona');
-      component.ngAfterViewInit();
-
-      expect(component.persona).toEqual(expect.any(Array));
-      expect(component.domicilioFiscal).toEqual(expect.any(Array));
-      expect(solicitanteSpy).toHaveBeenCalledWith(1); // Assuming `TIPO_PERSONA.MORAL_NACIONAL` is 1
-      expect(cdrSpy).toHaveBeenCalled();
-    });
+  it('should set esDatosRespuesta to true if consultaState.update is false in ngOnInit', () => {
+    component.consultaState = { update: false } as any;
+    component.ngOnInit();
+    expect(component.esDatosRespuesta).toBe(true);
   });
 
-  describe('seleccionaTab', () => {
-    it('should update the indice and emit the event', () => {
-      const miEventoSpy = jest.spyOn(component.miEvento, 'emit');
-      component.seleccionaTab(2);
-
-      expect(component.indice).toBe(2);
-      expect(miEventoSpy).toHaveBeenCalledWith(2);
-    });
+  it('should call guardarDatosFormularios if consultaState.update is true in ngOnInit', () => {
+    component.consultaState = { update: true } as any;
+    jest.spyOn(component, 'guardarDatosFormularios');
+    component.ngOnInit();
+    expect(component.guardarDatosFormularios).toHaveBeenCalled();
   });
 
-  describe('emitirCancelacion', () => {
-    it('should emit the event and update the indice', () => {
-      const eventoDatosHijoSpy = jest.spyOn(component.eventoDatosHijo, 'emit');
-      const seleccionaTabSpy = jest.spyOn(component, 'seleccionaTab');
-
-      component.emitirCancelacion(3);
-
-      expect(eventoDatosHijoSpy).toHaveBeenCalledWith(3);
-      expect(component.indice).toBe(3);
-      expect(seleccionaTabSpy).toHaveBeenCalledWith(3);
-    });
+  it('should set esDatosRespuesta and call actualizarEstadoFormulario in guardarDatosFormularios', () => {
+    const resp = { test: 'value' };
+    certificadoServiceMock.getRegistroTomaMuestrasMercanciasData.mockReturnValue(of(resp));
+    component.esDatosRespuesta = false;
+    component.guardarDatosFormularios();
+    expect(component.esDatosRespuesta).toBe(true);
+    expect(certificadoServiceMock.actualizarEstadoFormulario).toHaveBeenCalledWith(resp);
   });
 
-  it('should run #ngAfterViewInit()', async () => {
-    component.solicitante = component.solicitante || {};
-    component.solicitante.obtenerTipoPersona = jest.fn();
+  it('should set persona, domicilioFiscal and call obtenerTipoPersona in ngAfterViewInit', (done) => {
+    component.solicitante = { obtenerTipoPersona: jest.fn() } as any;
     component.ngAfterViewInit();
-    expect(component.solicitante.obtenerTipoPersona).toHaveBeenCalled();
+    setTimeout(() => {
+      expect(component.persona).toBeDefined();
+      expect(component.domicilioFiscal).toBeDefined();
+      expect(component.solicitante.obtenerTipoPersona).toHaveBeenCalledWith(TIPO_PERSONA.MORAL_NACIONAL);
+      expect(cdrMock.detectChanges).toHaveBeenCalled();
+      done();
+    }, 10);
   });
 
-
-
-  it('should run #emitirCancelacion()', async () => {
-    component.eventoDatosHijo = component.eventoDatosHijo || {};
-    component.eventoDatosHijo.emit = jest.fn();
-    component.seleccionaTab = jest.fn();
-    component.emitirCancelacion(3);
-    expect(component.eventoDatosHijo.emit).toHaveBeenCalled();
-    expect(component.seleccionaTab).toHaveBeenCalled();
+  it('should set indice and emit miEvento in seleccionaTab', () => {
+    const emitSpy = jest.spyOn(component.miEvento, 'emit');
+    component.indice = 1;
+    component.seleccionaTab(2);
+    expect(component.indice).toBe(2);
+    expect(emitSpy).toHaveBeenCalledWith(2);
   });
 
+  it('should emit eventoDatosHijo and call seleccionaTab in emitirCancelacion', () => {
+    const emitSpy = jest.spyOn(component.eventoDatosHijo, 'emit');
+    const tabSpy = jest.spyOn(component, 'seleccionaTab');
+    component.emitirCancelacion(5);
+    expect(emitSpy).toHaveBeenCalledWith(5);
+    expect(component.indice).toBe(3);
+    expect(tabSpy).toHaveBeenCalledWith(3);
+  });
+
+  it('should complete destroyed$ on ngOnDestroy', () => {
+    const nextSpy = jest.spyOn(component['destroyed$'], 'next');
+    const completeSpy = jest.spyOn(component['destroyed$'], 'complete');
+    component.ngOnDestroy();
+    expect(nextSpy).toHaveBeenCalledWith(true);
+    expect(completeSpy).toHaveBeenCalled();
+  });
 });

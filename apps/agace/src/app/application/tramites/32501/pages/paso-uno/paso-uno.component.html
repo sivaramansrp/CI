@@ -29,8 +29,10 @@
       @switch (indice) { @case (1) {
       <solicitante></solicitante>
       } @case (2) {
+        @if (datosRespuestaDisponibles) {
       <app-datos-solicitud></app-datos-solicitud>
       } }
+    }
     </ng-container>
   </div>
 </div>

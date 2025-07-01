@@ -56,4 +56,9 @@ export interface PermisosCancelar {
      * Fracción arancelaria asociada al permiso.
      */
     fraccionArancelaria: string;
+
+   /**
+    * Descripción genérica del permiso, almacenada como CLOB.
+    */
+    descripcionClobGenerica1?: string;
 }

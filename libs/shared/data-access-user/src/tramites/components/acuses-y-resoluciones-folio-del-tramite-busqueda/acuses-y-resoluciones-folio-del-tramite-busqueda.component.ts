@@ -9,6 +9,7 @@ import { ConfiguracionColumna } from '../../../core/models/shared/configuracion-
 import { ConsultaioStore } from '../../../core/estados/consulta.store';
 import { InputFecha } from '../../../core/models/shared/components.model';
 import { InputFechaComponent } from '../input-fecha/input-fecha.component';
+import { TablaAcciones } from '../../../core/enums/tabla-seleccion.enum';
 import { TablaDinamicaComponent } from '../tabla-dinamica/tabla-dinamica.component';
 import { ToastrService } from 'ngx-toastr';
 import { TramiteDetails } from '../../../core/models/tramiteDetails';
@@ -94,7 +95,8 @@ export class AcusesYResolucionesFolioDelTramiteBusquedaComponent
    * Ruta para la navegación.
    */
   public ruta: string = '';
-
+  /* Acciones disponibles en la tabla (editar, etc.) */
+  public tablaAcciones: TablaAcciones[] = [TablaAcciones.EDITAR];
   /**
    * Constructor de la clase.
    * @param formBuilder Servicio para construir formularios reactivos.
@@ -160,6 +162,11 @@ export class AcusesYResolucionesFolioDelTramiteBusquedaComponent
       orden: 1,
     },
     {
+      encabezado: 'Número de procedimiento',
+      clave: (artículo) => artículo.numeroDeProcedimiento,
+      orden: 0
+    },
+    {
       encabezado: 'Tipo de trámite',
       clave: (artículo) => artículo.tipoDeTramite,
       orden: 2,
@@ -201,7 +208,7 @@ export class AcusesYResolucionesFolioDelTramiteBusquedaComponent
    * Maneja el evento de clic en una fila de la tabla.
    * Navega a la URL del procedimiento.
    */
-  onFilaClic(event: any): void {
+  onFilaClic(event: AcuseYResolucionesFolioTramite): void {
     const ROW_OBJETO = event;
     const PROCEDURE: unknown | number = Number(
       ROW_OBJETO.numeroDeProcedimiento

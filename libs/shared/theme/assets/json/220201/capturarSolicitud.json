@@ -1,0 +1,49 @@
+{
+  "datosDeLaSolicitud": {
+    "tipoMercancia": "yes",
+    "aduanaIngreso": "1",
+    "oficinaInspeccion":"1",
+    "puntoInspeccion": "1",
+    "claveUCON": "UCON123456",
+    "establecimientoTIF": "1",
+    "nombreVeterinario": "3",
+    "numeroGuia": "GUIA987654321",
+    "certificacion": "Certificación ZS-2025",
+    "regimen": "1",
+    "datosDeMercancia": "50 reses, raza Angus, procedentes de Texas"
+  },
+  "datosParaMovilizacionNacional": {
+    "coordenadas": "25.6866,-100.3161",
+    "nombre": "1",
+    "medio": "1",
+    "transporte": "Camión tipo jaula",
+    "punto": "1"
+  },
+  "pagoDeDerechos": {
+    "exentoPago": "no",
+    "justificacion": "1",
+    "claveReferencia": "REF-20250523-ZS",
+    "cadenaDependencia": "SAGARPA-MOVIL-2025",
+    "banco": "1",
+    "llavePago": "LLP-77889900",
+    "importePago": "1500.00"
+  },
+  "tercerosRelacionados":[
+         {
+    "nombre": "Carlos Rodríguez",
+    "correo": "carlos.rodriguez@example.com"
+  },
+  {
+    "nombre": "Ana Martínez",
+    "correo": "ana.martinez@example.com"
+  },
+  {
+    "nombre": "Luis Fernández",
+    "correo": "luis.fernandez@example.com"
+  }
+  ],
+   "validarEnvio": {
+      "dataParaMovilizacion": true,
+      "dataDeLaSolicitud": true
+    }
+}

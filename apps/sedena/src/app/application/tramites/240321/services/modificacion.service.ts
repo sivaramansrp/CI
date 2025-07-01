@@ -1,18 +1,18 @@
-/**
- * @fileoverview This file defines the `ModificacionService`, which provides methods to fetch data 
- * related to "DestinoFinal" and "Proveedor" entities from JSON files. The service uses Angular's 
- * `HttpClient` to perform HTTP requests and returns the data as observables.
- */
-
-import { DestinoFinalRespuesta, ProveedorRespuesta } from "../models/modificacion.model";
+import { DestinoFinalRespuesta, ProveedorRespuesta } from '../models/modificacion.model';
 import { Observable, map } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Tramite240321State } from '../estados/tramite240321Store.store';
 
 /**
  * @class ModificacionService
- * @description Service to handle data retrieval for "DestinoFinal" and "Proveedor" entities.
- * This service fetches data from local JSON files and provides it as observables.
+ * @description
+ * Servicio encargado de obtener datos locales (mock JSON) para las entidades:
+ * - `DestinoFinal`
+ * - `Proveedor`
+ * - `Tramite240321State`
+ *
+ * Los datos se recuperan desde archivos JSON alojados en `assets/json/240321/`.
  */
 @Injectable({
   providedIn: 'root',
@@ -20,33 +20,59 @@ import { Injectable } from '@angular/core';
 export class ModificacionService {
   /**
    * @private
-   * @property {string} apiUrl - Base URL for accessing the JSON files containing the data.
+   * @description
+   * Ruta base donde se almacenan los archivos mock en formato JSON para este servicio.
+   *
+   * @type {string}
    */
   private apiUrl = 'assets/json/240321/';
 
   /**
    * @constructor
-   * @param {HttpClient} http - Angular's HTTP client for making HTTP requests.
+   * @description Inyecta `HttpClient` para realizar peticiones HTTP.
+   * @param http - Cliente HTTP de Angular.
    */
   constructor(private http: HttpClient) {}
 
   /**
    * @method getDestinatariosFinales
-   * @description Fetches the list of "DestinoFinal" entities from a JSON file.
-   * @returns {Observable<DestinoFinalRespuesta>} Observable emitting the response containing "DestinoFinal" data.
+   * @description
+   * Obtiene un listado de destinatarios finales desde un archivo JSON local.
+   *
+   * @returns Observable que emite un objeto de tipo `DestinoFinalRespuesta`.
+   *
+   * @example
+   * this.modificacionService.getDestinatariosFinales().subscribe(res => console.log(res));
    */
   getDestinatariosFinales(): Observable<DestinoFinalRespuesta> {
-    return this.http.get<DestinoFinalRespuesta>(`${this.apiUrl}destino-final.json`)
+    return this.http
+      .get<DestinoFinalRespuesta>(`${this.apiUrl}destino-final.json`)
       .pipe(map((res) => res));
   }
 
   /**
    * @method getProveedores
-   * @description Fetches the list of "Proveedor" entities from a JSON file.
-   * @returns {Observable<ProveedorRespuesta>} Observable emitting the response containing "Proveedor" data.
+   * @description
+   * Recupera el listado de proveedores desde un archivo JSON simulado.
+   *
+   * @returns Observable que emite un objeto `ProveedorRespuesta`.
    */
   getProveedores(): Observable<ProveedorRespuesta> {
-    return this.http.get<ProveedorRespuesta>(`${this.apiUrl}proveedor.json`)
+    return this.http
+      .get<ProveedorRespuesta>(`${this.apiUrl}proveedor.json`)
+      .pipe(map((res) => res));
+  }
+
+  /**
+   * @method getTrimateState240321
+   * @description
+   * Obtiene el estado inicial simulado del trámite `240321` desde un archivo JSON.
+   *
+   * @returns Observable que emite un objeto `Tramite240321State`.
+   */
+  getTrimateState240321(): Observable<Tramite240321State> {
+    return this.http
+      .get<Tramite240321State>(`${this.apiUrl}tramateState240321.json`)
       .pipe(map((res) => res));
   }
 }

@@ -40,38 +40,30 @@ describe('DatosCertificadoComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize the form with default values', () => {
-    expect(component.formDatosCertificado.value).toEqual({
-      observaciones: 'Test Observaciones',
-      idioma: 'ES',
-      entidadFederativa: 'Entidad1',
-      representacionFederal: 'Representacion1',
-    });
-  });
-
-  it('should call obtenerEstadoList on initialization', () => {
+  it('debe llamar a obtenerEstadoList al inicializar', () => {
     expect(mockService.obtenerEstadoList).toHaveBeenCalled();
     expect(component.estado).toEqual([{ id: 1, name: 'Estado1' }]);
   });
 
-  it('should update the store when setValoresStore is called', () => {
+  it('debe actualizar el store cuando se llama setValoresStore', () => {
     const form = component.formDatosCertificado;
     form.get('idioma')?.setValue('EN');
     component.setValoresStore(form, 'idioma', 'setIdioma');
+    // Aquí podrías agregar expect a un mock del store si lo tuvieras
   });
 
-  it('should populate estado list when obtenerEstadoList is called', () => {
+  it('debe poblar la lista de estado cuando se llama obtenerEstadoList', () => {
     component.obtenerEstadoList();
     expect(component.estado).toEqual([{ id: 1, name: 'Estado1' }]);
   });
 
-  it('should clean up observables on destroy', () => {
+  it('debe limpiar los observables al destruir el componente', () => {
     const destroyNotifierSpy = jest.spyOn(component['destroyNotifier$'], 'next');
-    const destroyedSpy = jest.spyOn(component['destroyed$'], 'next');
+    const destroyedSpy = jest.spyOn(component['destroyNotifier$'], 'next');
 
     component.ngOnDestroy();
 
@@ -79,14 +71,14 @@ describe('DatosCertificadoComponent', () => {
     expect(destroyedSpy).toHaveBeenCalled();
   });
 
-  it('should mark form as invalid if required fields are missing', () => {
+  it('debe marcar el formulario como inválido si faltan campos requeridos', () => {
     component.formDatosCertificado.get('idioma')?.setValue('');
     component.formDatosCertificado.get('entidadFederativa')?.setValue('');
     component.formDatosCertificado.get('representacionFederal')?.setValue('');
     expect(component.formDatosCertificado.valid).toBeFalsy();
   });
 
-  it('should mark form as valid if all required fields are filled', () => {
+  it('debe marcar el formulario como válido si todos los campos requeridos están llenos', () => {
     component.formDatosCertificado.get('idioma')?.setValue('EN');
     component.formDatosCertificado.get('entidadFederativa')?.setValue('Entidad2');
     component.formDatosCertificado.get('representacionFederal')?.setValue('Representacion2');

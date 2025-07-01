@@ -1,6 +1,8 @@
 import { Catalogo, RespuestaCatalogos } from '@libs/shared/data-access-user/src';
+import { Solicitud230901State, Tramite230901Store } from '../estados/store/tramite230901.store';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 
 /**
  * Servicio para gestionar los datos relacionados con autorizaciones de vida silvestre.
@@ -75,7 +77,7 @@ export class AutorizacionesDeVidaSilvestreService {
    * Constructor del servicio.
    * {HttpClient} http - Cliente HTTP para realizar solicitudes.
    */
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private tramite230901Store: Tramite230901Store) {
     // No se realiza ninguna acción aquí.
   }
 
@@ -136,5 +138,21 @@ export class AutorizacionesDeVidaSilvestreService {
         (self[variable] as Catalogo[]) = resp?.code === 200 && resp.data ? resp.data : [];
       });
     }
+  }
+
+  /**
+  * Obtiene los datos de la solicitud de autorizaciones de vida silvestre.
+  * @returns Observable con los datos de la solicitud.
+  */
+  getAutorizacionesDeVidaSilvestre(): Observable<Solicitud230901State> {
+    return this.http.get<Solicitud230901State>('assets/json/230901/autorizacionesDeVidaSilvestre.json');
+  }
+
+  /**
+  * Actualiza el estado del formulario en el store.
+  * @param DATOS Estado actualizado del trámite.
+  */
+  actualizarEstadoFormulario(DATOS: Solicitud230901State): void {
+    this.tramite230901Store.establecerDatos(DATOS);
   }
 }

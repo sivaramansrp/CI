@@ -2,5 +2,7 @@
   (updateDestinatarioFinalTablaDatos)="
     updateDestinatarioFinalTablaDatos($event)
   "
-  [formaDatos]="tramiteQuery.obtenerTercerosDatos$ | async"
+  [formaDatos]="terechosDatos$ | async"
+  [idProcedimiento]="idProcedimiento"
+  (cancelarEventListener)="cerrar.emit()"
 ></app-agregar-destinatario-final>

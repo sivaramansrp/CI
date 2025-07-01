@@ -90,3 +90,54 @@ export interface ColumnasTabla {
   headerFormaPago: string;
   headerMontoDTA: string;
 }
+
+
+/**
+ * Representa los datos generales del solicitante.
+ */
+export interface DatosSolicitante {
+  rfc: string;
+  denominacion: string;
+  actividadEconomica: string;
+  correoElectronico: string;
+  pais: string;
+  codigoPostal: string;
+  entidadFederativa: string;
+  municipio: string;
+  localidad: string;
+  colonia: string;
+  calle: string;
+  nExt: string;
+  nInt: string;
+  lada: string;
+  telefono: string;
+  adace: string;
+}
+
+/**
+ * @interface RespuestaConsulta
+ * @description Representa la respuesta de la API para una consulta.
+ * 
+ * @property {boolean} success - Indica si la operación fue exitosa.
+ * @property {ConsultaDatos} datos - Datos de la consulta.
+ * @property {string} message - Mensaje de la respuesta.
+ */
+export interface RespuestaConsulta {
+  success: boolean;
+  datos: ConsultaDatos;
+  message: string;
+}
+
+/**
+ * @interface RespuestaCatalogos
+ *  @description Representa la respuesta de una consulta a un catálogo.
+ *  @property {boolean} success - Indica si la consulta fue exitosa.
+ *  @property {CatalogoLista} datos - Datos del catálogo consultado.
+ *   @property {string} message - Mensaje de la respuesta.
+ */ 
+export interface ConsultaDatos {
+  adace: string;
+  pais: string;
+  anio: string;
+
+}

@@ -1,149 +1,158 @@
-import { TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DatosDeLaMercanciaComponent } from './datos-mercancia.component';
 import { ImportacionesAgropecuariasService } from '../../services/importaciones-agropecuarias.service';
 import { ImportacionesAgropecuariasStore } from '../../estados/importaciones-agropecuarias.store';
 import { ImportacionesAgropecuariasQuery } from '../../estados/importaciones-agropecuarias.query';
 import { ServicioDeFormularioService } from '../../services/formulario-validacion.service';
-import { of, Subject, throwError } from 'rxjs';
+import { of } from 'rxjs';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 describe('DatosDeLaMercanciaComponent', () => {
   let component: DatosDeLaMercanciaComponent;
-  let importacionesServiceMock: jest.Mocked<ImportacionesAgropecuariasService>;
-  let importacionesStoreMock: jest.Mocked<ImportacionesAgropecuariasStore>;
-  let importacionesQueryMock: jest.Mocked<ImportacionesAgropecuariasQuery>;
-  let formularioServiceMock: jest.Mocked<ServicioDeFormularioService>;
+  let fixture: ComponentFixture<DatosDeLaMercanciaComponent>;
+  let importacionesAgropecuariasServiceMock: any;
+  let importacionesAgropecuariasStoreMock: any;
+  let importacionesAgropecuariasQueryMock: any;
+  let servicioDeFormularioServiceMock: any;
 
-  
-  beforeEach(() => {
-    importacionesServiceMock = {
-      datosDeLaSolicitud: jest.fn(),
-    } as unknown as jest.Mocked<ImportacionesAgropecuariasService>;
+  beforeEach(async () => {
+    importacionesAgropecuariasServiceMock = {
+      datosDeLaSolicitud: jest.fn().mockReturnValue(of({ fraccion: [], UMT: [] }))
+    };
+    importacionesAgropecuariasStoreMock = {
+      setDynamicFieldValue: jest.fn()
+    };
+    importacionesAgropecuariasQueryMock = {
+      selectSolicitudDeRegistroTpl$: of({})
+    };
+    servicioDeFormularioServiceMock = {
+      setFormValue: jest.fn()
+    };
 
-    importacionesStoreMock = {
-      setDynamicFieldValue: jest.fn(),
-    } as unknown as jest.Mocked<ImportacionesAgropecuariasStore>;
-
-    importacionesQueryMock = {
-      selectSolicitudDeRegistroTpl$: of({}),
-    } as unknown as jest.Mocked<ImportacionesAgropecuariasQuery>;
-
-    formularioServiceMock = {
-      setFormValue: jest.fn(),
-    } as unknown as jest.Mocked<ServicioDeFormularioService>;
-
-    TestBed.configureTestingModule({
+    await TestBed.configureTestingModule({
+      imports: [DatosDeLaMercanciaComponent],
       providers: [
-        DatosDeLaMercanciaComponent,
-        { provide: ImportacionesAgropecuariasService, useValue: importacionesServiceMock },
-        { provide: ImportacionesAgropecuariasStore, useValue: importacionesStoreMock },
-        { provide: ImportacionesAgropecuariasQuery, useValue: importacionesQueryMock },
-        { provide: ServicioDeFormularioService, useValue: formularioServiceMock },
+        { provide: ImportacionesAgropecuariasService, useValue: importacionesAgropecuariasServiceMock },
+        { provide: ImportacionesAgropecuariasStore, useValue: importacionesAgropecuariasStoreMock },
+        { provide: ImportacionesAgropecuariasQuery, useValue: importacionesAgropecuariasQueryMock },
+        { provide: ServicioDeFormularioService, useValue: servicioDeFormularioServiceMock }
       ],
-    });
+      schemas: [CUSTOM_ELEMENTS_SCHEMA]
+    }).compileComponents();
 
-    component = TestBed.inject(DatosDeLaMercanciaComponent);
+    fixture = TestBed.createComponent(DatosDeLaMercanciaComponent);
+    component = fixture.componentInstance;
+    component.consultaState = { readonly: false } as any;
+    fixture.detectChanges();
   });
 
-  it('should create the component', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize solicitudDeRegistroState on ngOnInit', () => {
-    const mockState = { key: 'value' };
-    importacionesQueryMock.selectSolicitudDeRegistroTpl$ = of(mockState);
+  it('debe inicializar datosDelMercancia con DATOS_DE_LA_MERCANCIA', () => {
+    expect(component.datosDelMercancia).toBeDefined();
+    expect(Array.isArray(component.datosDelMercancia)).toBe(true);
+  });
 
+  it('debe llamar a datosFraccion y datosUMT en ngOnInit', () => {
+    const fraccionSpy = jest.spyOn(component, 'datosFraccion');
+    const umtSpy = jest.spyOn(component, 'datosUMT');
     component.ngOnInit();
+    expect(fraccionSpy).toHaveBeenCalled();
+    expect(umtSpy).toHaveBeenCalled();
+  });
 
+  it('debe establecer solicitudDeRegistroState en la suscripción de ngOnInit', () => {
+    const mockState = { test: 'valor' };
+    component['importacionesAgropecuariasQuery'].selectSolicitudDeRegistroTpl$ = of(mockState);
+    component.ngOnInit();
     expect(component.solicitudDeRegistroState).toEqual(mockState);
   });
 
-  it('should call datosFraccion and update FRACCION_FIELD options', () => {
-    const mockFraccionData = [
-      { id: 1, descripcion: 'Fracción 1' },
-      { id: 2, descripcion: 'Fracción 2' },
-    ];
- 
-    component.datosFraccion();
+  describe('establecerCambioDeValor', () => {
+    it('debe actualizar el store y el valor del formulario con un primitivo', () => {
+      const event = { campo: 'campo1', valor: 'valor1' };
+      component.establecerCambioDeValor(event);
+      expect(importacionesAgropecuariasStoreMock.setDynamicFieldValue).toHaveBeenCalledWith('campo1', 'valor1');
+      expect(servicioDeFormularioServiceMock.setFormValue).toHaveBeenCalledWith('datosMercanciaForm', { campo1: 'valor1' });
+    });
 
-    expect(importacionesServiceMock.datosDeLaSolicitud).toHaveBeenCalled();
-    const FRACCION_FIELD = component.datosDelMercancia.find((datos) => datos.campo === 'fraccion_arancelaria');
-    expect(FRACCION_FIELD?.opciones).toEqual([
-      { descripcion: 'Fracción 1', id: 1 },
-      { descripcion: 'Fracción 2', id: 2 },
-    ]);
+    it('debe convertir a string los valores objeto', () => {
+      const event = { campo: 'campo2', valor: { a: 1 } };
+      component.establecerCambioDeValor(event);
+      expect(importacionesAgropecuariasStoreMock.setDynamicFieldValue).toHaveBeenCalledWith('campo2', JSON.stringify({ a: 1 }));
+      expect(servicioDeFormularioServiceMock.setFormValue).toHaveBeenCalledWith('datosMercanciaForm', { campo2: { a: 1 } });
+    });
+
+    it('no debe hacer nada si el evento es undefined', () => {
+      component.establecerCambioDeValor(undefined as any);
+      expect(importacionesAgropecuariasStoreMock.setDynamicFieldValue).not.toHaveBeenCalled();
+      expect(servicioDeFormularioServiceMock.setFormValue).not.toHaveBeenCalled();
+    });
   });
 
-  it('should handle errors in datosFraccion', () => {
-    importacionesServiceMock.datosDeLaSolicitud.mockReturnValue(throwError(() => new Error('Error fetching data')));
+  describe('datosFraccion', () => {
+    it('debe actualizar opciones para fraccion_arancelaria si no está definido', () => {
+      const mockFraccion = [{ id: 1, descripcion: 'desc1' }];
+      importacionesAgropecuariasServiceMock.datosDeLaSolicitud.mockReturnValueOnce(of({ fraccion: mockFraccion }));
+      const field = component.datosDelMercancia.find((d: any) => d.campo === 'fraccion_arancelaria');
+      if (field) field.opciones = undefined;
+      component.datosFraccion();
+      expect(field && field.opciones).toEqual([{ id: 1, descripcion: 'desc1' }]);
+    });
 
-    component.datosFraccion();
+    it('no debe actualizar opciones si el campo ya tiene opciones', () => {
+      const mockFraccion = [{ id: 1, descripcion: 'desc1' }];
+      importacionesAgropecuariasServiceMock.datosDeLaSolicitud.mockReturnValueOnce(of({ fraccion: mockFraccion }));
+      const field = component.datosDelMercancia.find((d: any) => d.campo === 'fraccion_arancelaria');
+      if (field) field.opciones = [{ label: 'ya existe', value: '99' }];
+      component.datosFraccion();
+      expect(field && field.opciones).toEqual([{ label: 'ya existe', value: '99' }]);
+    });
 
-    const FRACCION_FIELD = component.datosDelMercancia.find((datos) => datos.campo === 'fraccion_arancelaria');
-    expect(FRACCION_FIELD?.opciones).toBeUndefined();
+    it('no debe actualizar opciones si no se encuentra el campo', () => {
+      const index = component.datosDelMercancia.findIndex((d: any) => d.campo === 'fraccion_arancelaria');
+      const backup = component.datosDelMercancia[index];
+      (component.datosDelMercancia as any).splice(index, 1);
+      expect(() => component.datosFraccion()).not.toThrow();
+      (component.datosDelMercancia as any).splice(index, 0, backup);
+    });
   });
 
-  it('should call datosUMT and update UMT_FIELD options', () => {
-    const mockUMTData = [
-      { id: 1, descripcion: 'UMT 1' },
-      { id: 2, descripcion: 'UMT 2' },
-    ];
-   
-    component.datosUMT();
+  describe('datosUMT', () => {
+    it('debe actualizar opciones para umt si no está definido', () => {
+      const mockUMT = [{ id: 2, descripcion: 'desc2' }];
+      importacionesAgropecuariasServiceMock.datosDeLaSolicitud.mockReturnValueOnce(of({ UMT: mockUMT }));
+      const field = component.datosDelMercancia.find((d: any) => d.campo === 'umt');
+      if (field) field.opciones = undefined;
+      component.datosUMT();
+      expect(field && field.opciones).toEqual([{ id: 2, descripcion: 'desc2' }]);
+    });
 
-    expect(importacionesServiceMock.datosDeLaSolicitud).toHaveBeenCalled();
-    const UMT_FIELD = component.datosDelMercancia.find((datos) => datos.campo === 'umt');
-    expect(UMT_FIELD?.opciones).toEqual([
-      { descripcion: 'UMT 1', id: 1 },
-      { descripcion: 'UMT 2', id: 2 },
-    ]);
+    it('no debe actualizar opciones si el campo ya tiene opciones', () => {
+      const mockUMT = [{ id: 2, descripcion: 'desc2' }];
+      importacionesAgropecuariasServiceMock.datosDeLaSolicitud.mockReturnValueOnce(of({ UMT: mockUMT }));
+      const field = component.datosDelMercancia.find((d: any) => d.campo === 'umt');
+      if (field) field.opciones = [{ label: 'ya existe', value: '99' }];
+      component.datosUMT();
+      expect(field && field.opciones).toEqual([{ label: 'ya existe', value: '99' }]);
+    });
+
+    it('no debe actualizar opciones si no se encuentra el campo', () => {
+      const index = component.datosDelMercancia.findIndex((d: any) => d.campo === 'umt');
+      const backup = component.datosDelMercancia[index];
+      (component.datosDelMercancia as any).splice(index, 1);
+      expect(() => component.datosUMT()).not.toThrow();
+      (component.datosDelMercancia as any).splice(index, 0, backup);
+    });
   });
 
-  it('should handle errors in datosUMT', () => {
-    importacionesServiceMock.datosDeLaSolicitud.mockReturnValue(throwError(() => new Error('Error fetching data')));
-
-    component.datosUMT();
-
-    const UMT_FIELD = component.datosDelMercancia.find((datos) => datos.campo === 'umt');
-    expect(UMT_FIELD?.opciones).toBeUndefined();
-  });
-
-  it('should call establecerCambioDeValor and update store and form', () => {
-    const mockEvent = { campo: 'campo1', valor: 'valor1' };
-
-    component.establecerCambioDeValor(mockEvent);
-
-    expect(importacionesStoreMock.setDynamicFieldValue).toHaveBeenCalledWith('campo1', 'valor1');
-    expect(formularioServiceMock.setFormValue).toHaveBeenCalledWith('datosMercanciaForm', { campo1: 'valor1' });
-  });
-
-  it('should handle null or undefined values in establecerCambioDeValor', () => {
-    component.establecerCambioDeValor({ campo: '', valor: '' });
-    expect(importacionesStoreMock.setDynamicFieldValue).not.toHaveBeenCalled();
-    expect(formularioServiceMock.setFormValue).not.toHaveBeenCalled();
-
-    component.establecerCambioDeValor({ campo: '', valor: '' });
-    expect(importacionesStoreMock.setDynamicFieldValue).not.toHaveBeenCalled();
-    expect(formularioServiceMock.setFormValue).not.toHaveBeenCalled();
-  });
-
-  it('should complete destroy$ on ngOnDestroy', () => {
-    const destroySpy = jest.spyOn(component['destroy$'], 'next');
+  it('debe limpiar las suscripciones en ngOnDestroy', () => {
+    const nextSpy = jest.spyOn(component['destroy$'], 'next');
     const completeSpy = jest.spyOn(component['destroy$'], 'complete');
-
     component.ngOnDestroy();
-
-    expect(destroySpy).toHaveBeenCalled();
+    expect(nextSpy).toHaveBeenCalled();
     expect(completeSpy).toHaveBeenCalled();
-  });
-
-  it('should handle multiple calls to ngOnDestroy', () => {
-    const destroySpy = jest.spyOn(component['destroy$'], 'next');
-    const completeSpy = jest.spyOn(component['destroy$'], 'complete');
-
-    component.ngOnDestroy();
-    component.ngOnDestroy();
-
-    expect(destroySpy).toHaveBeenCalledTimes(2);
-    expect(completeSpy).toHaveBeenCalledTimes(2);
   });
 });

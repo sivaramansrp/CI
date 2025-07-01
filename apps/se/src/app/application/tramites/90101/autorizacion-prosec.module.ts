@@ -11,11 +11,11 @@ import {
   TituloComponent,
   WizardComponent
  } from '@ng-mf/data-access-user';
+ import { ToastrModule, ToastrService } from 'ngx-toastr';
 import { AutorizacionProsecRoutingModule } from './autorizacion-prosec-routing.module';
 import { CommonModule } from '@angular/common';
 import { DomiciliosDePlantasComponent } from './components/domicilios-de-plantas/domicilios-de-plantas.component';
 import { NgModule } from '@angular/core';
-import { PasoCuatroComponent } from './pages/paso-cuatro/paso-cuatro.component';
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
@@ -24,18 +24,12 @@ import { ProsecComponent } from './pages/prosec/prosec.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { SectoresYMercanciasComponent } from './components/sectores-y-mercancias/sectores-y-mercancias.component';
-import { ToastrModule, ToastrService } from 'ngx-toastr';
 
 @NgModule({
   declarations: [
     ProsecComponent,
-    PasoUnoComponent,
-    DomiciliosDePlantasComponent,
-    SectoresYMercanciasComponent,
-    ProductorIndirectoComponent,
     PasoDosComponent,
     PasoTresComponent,
-    PasoCuatroComponent
   ],
   imports: [
     CommonModule,
@@ -53,6 +47,10 @@ import { ToastrModule, ToastrService } from 'ngx-toastr';
     AnexarDocumentosComponent,
     FirmaElectronicaComponent,
     TablaDinamicaComponent,
+    PasoUnoComponent,
+    DomiciliosDePlantasComponent,
+    SectoresYMercanciasComponent,
+    ProductorIndirectoComponent,
     ToastrModule.forRoot()
   ],
   providers: [

@@ -7,6 +7,7 @@ import { map, takeUntil } from 'rxjs';
 import { AcuicolaService } from '../../service/acuicola.service';
 import { CommonModule } from '@angular/common';
 import { ConfiguracionColumna } from '../../modelos/configuracio-columna.model';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { SeccionLibQuery } from '@libs/shared/data-access-user/src';
 import { SeccionLibStore } from '@libs/shared/data-access-user/src';
 import { Subject } from 'rxjs';
@@ -15,6 +16,16 @@ import { TramiteState } from '../../estados/tramite220703.store';
 import { TramiteStore } from '../../estados/tramite220703.store';
 import { TramiteStoreQuery } from '../../estados/tramite220703.query';
 
+/**
+ * Configuración del campo de fecha de inspección.
+ * Define las propiedades para el componente de entrada de fecha, incluyendo
+ * el nombre de la etiqueta, si es requerido y si está habilitado.
+ * 
+ * @constant {Object} FECHA_INSPECCION
+ * @property {string} labelNombre - Texto que se muestra como etiqueta del campo
+ * @property {boolean} required - Indica si el campo es obligatorio
+ * @property {boolean} habilitado - Indica si el campo está habilitado para edición
+ */
 export const FECHA_INSPECCION = {
   labelNombre: 'Fecha de inspección',
   required: true,
@@ -177,6 +188,18 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   private seccion!: SeccionLibState;
 
   /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  esFormularioSoloLectura: boolean = false;
+
+  /**
+   * Indica si el campo debe ser deshabilitado.
+   * @property {boolean} campoDeshabilitar
+   */
+  campoDeshabilitar: boolean = false;
+
+  /**
    * Constructor del componente.
    * @constructor
    * @param {FormBuilder} fb - Servicio para construir formularios reactivos.
@@ -185,6 +208,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @param {TramiteStore} tramiteStore - Store para gestionar el estado del trámite.
    * @param {SeccionLibQuery} seccionQuery - Query para acceder al estado de la sección.
    * @param {SeccionLibStore} seccionStore - Store para gestionar el estado de la sección.
+   * @param {ConsultaioQuery} consultaioQuery - Query para acceder al estado de la consulta actual.
    */
   constructor(
     private readonly fb: FormBuilder,
@@ -192,9 +216,17 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     private tramiteStoreQuery: TramiteStoreQuery,
     private tramiteStore: TramiteStore,
     private seccionQuery: SeccionLibQuery,
-    private seccionStore: SeccionLibStore
+    private seccionStore: SeccionLibStore,
+    private readonly consultaioQuery: ConsultaioQuery
   ) {
-    // No se necesita lógica de inicialización adicional.
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      ).subscribe();
   }
 
   /**
@@ -204,7 +236,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   ngOnInit(): void {
-    this.iniciarFormulario();
+    this.inicializarEstadoFormulario();
     this.getHoraDeInspeccion();
     this.cargarDatos();
     this.getAduanaDeIngreso();
@@ -221,10 +253,19 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
         this.tramiteState = datos;
         this.datosDeLaSolicitudForm.patchValue({
           fechaInspeccionInput: datos.fechaInspeccionInput,
-          aduanaDeIngreso: datos.aduanaDeIngreso,
-          tipoContenedor: datos.tipoContenedor,
-          identificacionTransporte: datos.identificacionTransporte,
           justificacion: datos.justificacion,
+          certificadosAutorizados: datos.certificadosAutorizados,
+          horaDeInspeccion: datos.horaDeInspeccion,
+          aduanaDeIngreso: datos.aduanaDeIngreso,
+          oficinaDeInspeccion: datos.oficinaDeInspeccion,
+          puntoDeInspeccion: datos.puntoDeInspeccion,
+          nombreInspector: datos.nombreInspector,
+          primerApellido: datos.primerApellido,
+          segundoApellido: datos.segundoApellido,
+          cantidadContenedores: datos.cantidadContenedores,
+          tipoContenedor: datos.tipoContenedor,
+          medioDeTransporte: datos.medioDeTransporte,
+          identificacionTransporte: datos.identificacionTransporte,
           esSolicitudFerros: datos.esSolicitudFerros
         });
       })
@@ -240,21 +281,50 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   iniciarFormulario(): void {
     this.datosDeLaSolicitudForm = this.fb.group({
       justificacion: [{ value: this.tramiteState.justificacion }, Validators.required],
-      certificadosAutorizados: [{ value: '', disabled: true }, Validators.required],
+      certificadosAutorizados: [{ value: this.tramiteState.certificadosAutorizados, disabled: true }, Validators.required],
       fechaInspeccionInput: [{ value: this.tramiteState.fechaInspeccionInput }, Validators.required],
-      horaDeInspeccion: ['', Validators.required],
+      horaDeInspeccion: [{ value: this.tramiteState.horaDeInspeccion }, Validators.required],
       aduanaDeIngreso: [{ value: this.tramiteState.aduanaDeIngreso }, Validators.required],
-      oficinaDeInspeccion: ['', Validators.required],
-      puntoDeInspeccion: ['', Validators.required],
-      nombreInspector: [{ value: 'QA', disabled: true }, Validators.required],
-      primerApellido: [{ value: '', disabled: true }, Validators.required],
-      segundoApellido: [{ value: '', disabled: true }, Validators.required],
-      cantidadContenedores: [{ value: '', disabled: true }, Validators.required],
+      oficinaDeInspeccion: [{ value: this.tramiteState.oficinaDeInspeccion }, Validators.required],
+      puntoDeInspeccion: [{ value: this.tramiteState.puntoDeInspeccion }, Validators.required],
+      nombreInspector: [{ value: this.tramiteState.nombreInspector, disabled: true }, Validators.required],
+      primerApellido: [{ value: this.tramiteState.primerApellido, disabled: true }, Validators.required],
+      segundoApellido: [{ value: this.tramiteState.segundoApellido, disabled: true }, Validators.required],
+      cantidadContenedores: [{ value: this.tramiteState.cantidadContenedores, disabled: true }, Validators.required],
       tipoContenedor: [{ value: this.tramiteState.tipoContenedor }, Validators.required],
-      medioDeTransporte: ['', Validators.required],
+      medioDeTransporte: [{ value: this.tramiteState.medioDeTransporte }, Validators.required],
       identificacionTransporte: [{ value: this.tramiteState.identificacionTransporte }, Validators.required],
       esSolicitudFerros: [{ value: this.tramiteState.esSolicitudFerros }, Validators.required]
     });
+  }
+
+  /**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.  
+   * Además, obtiene la información del catálogo de mercancía.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.iniciarFormulario();
+    }
+  }
+
+  /**
+   * Guarda los datos del formulario y actualiza el estado del componente.
+   * Si el formulario está en modo solo lectura, deshabilita los campos.
+   * @method guardarDatosFormulario
+   * @returns {void} Este método no retorna ningún valor.
+   */
+  guardarDatosFormulario(): void {
+    this.iniciarFormulario();
+    if (this.esFormularioSoloLectura) {
+      this.campoDeshabilitar = true;
+      this.datosDeLaSolicitudForm.disable();
+    } else {
+      this.campoDeshabilitar = false;
+      this.datosDeLaSolicitudForm.enable();
+    }
   }
 
   /**
@@ -283,6 +353,24 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   cambioAduanaDeIngreso(event: Catalogo): void {
     this.tramiteStore.setAduanaDeIngreso(event.id);
+  }
+
+  /**
+   * Maneja el cambio de la fecha de inicio y actualiza el store correspondiente.
+   * @param {string} nuevo_valor - Nueva fecha de inicio seleccionada.
+   * @returns {void}
+   */
+  cambioFechaInicio(nuevo_valor: string): void {
+    this.tramiteStore.setFechaDeInspeccion(nuevo_valor);
+  }
+
+  /**
+   * Maneja el cambio del punto de inspección seleccionado y actualiza el store.
+   * @param {Catalogo} event - Objeto de tipo Catalogo que contiene el ID del punto de inspección.
+   * @returns {void}
+   */
+  cambioPuntoDeInspeccion(event: Catalogo): void {
+    this.tramiteStore.setPuntoDeInspeccion(event.id);
   }
 
   /**
@@ -348,6 +436,20 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroyNotifier$)).subscribe((data) => {
         this.mercanciaDatos = data;
       })
+  }
+
+  /**
+   * Cambia la fecha de inicio de la inspección en el formulario.
+   * @method cambiarFechaInicio
+   * @param {string} nuevo_valor - Nueva fecha de inicio a establecer.
+   * @returns {void}
+   */
+  public cambiarFechaInicio(nuevo_valor: string): void {
+    this.datosDeLaSolicitudForm.patchValue({
+      fechaInspeccionInput: nuevo_valor,
+    });
+    this.datosDeLaSolicitudForm.get('fechaInspeccionInput')?.setValue(nuevo_valor);
+    this.datosDeLaSolicitudForm.get('fechaInspeccionInput')?.markAsUntouched();
   }
 
   /**

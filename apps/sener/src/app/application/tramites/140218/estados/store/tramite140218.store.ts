@@ -8,7 +8,7 @@ import { Injectable } from '@angular/core';
  * @param regimen - El nuevo valor de régimen que se asignará al estado.
  */
 export interface DatosSolicitudState {
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 /**
@@ -45,7 +45,7 @@ export class Tramite140218Store extends Store<DatosSolicitudState> {
    * @param fieldName - El nombre del campo que se actualizará en el estado.
    * @param value - El nuevo valor que se asignará al campo especificado.
    */
-  public setDynamicFieldValue(fieldName: string, value: any): void {
+  public setDynamicFieldValue(fieldName: string, value: unknown): void {
     this.update((state) => ({
       ...state,
       [fieldName]: value,

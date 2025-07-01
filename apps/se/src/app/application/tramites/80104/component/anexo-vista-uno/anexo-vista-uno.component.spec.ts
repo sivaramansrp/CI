@@ -4,6 +4,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { ANEXO_I_SERVICIO, ANEXO_IMPORTACION_SERVICIO } from '../../../../shared/constantes/anexo-dos-y-tres.enum';
 import { AnexoDosEncabezado, AnexoUnoEncabezado } from '../../../../shared/models/nuevo-programa-industrial.model';
+import {  NO_ERRORS_SCHEMA } from '@angular/core';
+import { AnexoUnoComponent } from '../../../../shared/components/anexo-uno/anexo-uno.component';
 
 describe('AnexoVistaUnoComponent', () => {
   let component: AnexoVistaUnoComponent;
@@ -12,34 +14,36 @@ describe('AnexoVistaUnoComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AnexoVistaUnoComponent],
+      imports: [AnexoVistaUnoComponent, AnexoUnoComponent],
       providers: [
         { provide: ActivatedRoute, useValue: {} },
         { provide: Router, useValue: { navigate: jest.fn() } },
       ],
+      schemas: [NO_ERRORS_SCHEMA]
     }).compileComponents();
 
     fixture = TestBed.createComponent(AnexoVistaUnoComponent);
     component = fixture.componentInstance;
     router = TestBed.inject(Router);
+
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('debería crear', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize anexoUnoConfig correctly', () => {
+  it('debería inicializar anexoUnoConfig correctamente', () => {
     expect(component.anexoUnoConfig.anexoUnoTablaSeleccionRadio).toBe(TablaSeleccion.RADIO);
     expect(component.anexoUnoConfig.anexoUnoEncabezadoDeTabla).toBe(ANEXO_I_SERVICIO);
   });
 
-  it('should initialize anexoImportacionConfig correctly', () => {
+  it('debería inicializar anexoImportacionConfig correctamente', () => {
     expect(component.anexoImportacionConfig.anexoDosTablaSeleccionRadio).toBe(TablaSeleccion.RADIO);
     expect(component.anexoImportacionConfig.anexoDosEncabezadoDeTabla).toBe(ANEXO_IMPORTACION_SERVICIO);
   });
 
-  it('should update anexoUnoTablaLista on obtenerAnexoUnoDevolverLaLlamada', () => {
+  it('debería actualizar anexoUnoTablaLista en obtenerAnexoUnoDevolverLaLlamada', () => {
     const MOCK_EVENT: AnexoUnoEncabezado[] = [{
       encabezadoFraccion: 'sample',
       encabezadoFraccionArancelaria: 'sample',
@@ -55,7 +59,7 @@ describe('AnexoVistaUnoComponent', () => {
     expect(component.anexoUnoTablaLista).toEqual(MOCK_EVENT);
   });
 
-  it('should update anexoDosTablaLista on obtenerAnexoDosDevolverLaLlamada', () => {
+  it('debe actualizar anexoDosTablaLista en obtenerAnexoDosDevolverLaLlamada', () => {
     const mockEvent: AnexoDosEncabezado[] = [{
       encabezadoFraccion: '',
       encabezadoFraccionExportacion: '',

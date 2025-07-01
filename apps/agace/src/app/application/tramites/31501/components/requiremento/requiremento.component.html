@@ -1,7 +1,7 @@
 <div class="container">
-    <div class="row">
+    <div class="row" *ngIf="!soloLectura">
         <label>Folio Tramite: <span class="font-weight-normal">{{ folioTramite.folioTramite }}</span></label>
-        <label>Folio Tramite: <span>{{ folioTramite.tipoTramite }}</span></label>
+        <label>Tipo de solicitud: <span>{{ folioTramite.tipoTramite }}</span></label>
         <div class="row">
             <div class="col-md-12">
                 <div class="form-group pull-right">
@@ -24,8 +24,10 @@
         </ul>
         <ng-container>
             @switch (indice) { @case (1) {
+            @if(esDatosRespuesta){
             <app-capturar-requerimiento></app-capturar-requerimiento>
             }}
-        </ng-container>
+            }
+            </ng-container>
     </div>
 </div>

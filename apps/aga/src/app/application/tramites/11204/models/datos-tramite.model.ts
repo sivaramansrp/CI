@@ -90,7 +90,7 @@ export interface DatosDelContenedor {
  * Interfaz que representa los datos de un csv.
  * Utilizamos esta interfaz para definir la estructura de los datos detallados de un contenedor.
  */
-export interface datosDelCsvArchivo {
+export interface DatosDelCsvArchivo {
   /**
    * Identificador del contenedor.
    */
@@ -220,4 +220,25 @@ export interface RespuestaAduanas {
    * Mensaje de la respuesta.
    */
   message: string;
+}
+
+export interface RespuestaConsulta {
+  success: boolean;
+  datos: ConsultaDatos;
+  message: string;
+}
+
+export interface ConsultaDatos {
+  tipoBusqueda: string;
+  aduana: string;
+  fechaIngreso: string;
+  vigencia: string;
+  inicialesContenedor: string;
+  numeroContenedor: string;
+  digitoDeControl: string;
+  contenedores: string;
+  aduanaMenuDesplegable: string;
+  estado: string;
+  existe: string;
+  datosDelContenedor: DatosDelContenedor[];
 }

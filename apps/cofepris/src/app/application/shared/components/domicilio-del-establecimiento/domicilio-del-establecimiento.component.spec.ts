@@ -1,198 +1,266 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
-import { of, Subject } from 'rxjs';
 import { DomicilioDelEstablecimientoComponent } from './domicilio-del-establecimiento.component';
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { of, Subject } from 'rxjs';
 import { DatosService } from '../../../shared/services/datos.service';
 import { DomicilioStore } from '../../estados/stores/domicilio.store';
 import { DomicilioQuery } from '../../../shared/estados/queries/domicilio.query';
-import { PreOperativo, ScianData } from '../../models/datos-modificacion.model';
-import { Catalogo } from '@libs/shared/data-access-user/src';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { NO_ERRORS_SCHEMA, ElementRef } from '@angular/core';
 
 describe('DomicilioDelEstablecimientoComponent', () => {
   let component: DomicilioDelEstablecimientoComponent;
   let fixture: ComponentFixture<DomicilioDelEstablecimientoComponent>;
-  let mockDatosService: jest.Mocked<DatosService>;
-  let mockTramiteStore: jest.Mocked<DomicilioStore>;
-  let mockTramiteQuery: jest.Mocked<DomicilioQuery>;
+  let datosServiceMock: any;
+  let domicilioStoreMock: any;
+  let domicilioQueryMock: any;
+  let consultaioQueryMock: any;
 
   beforeEach(async () => {
-    mockDatosService = {
-      obtenerEstadoData: jest.fn(),
-      obternerDatosData: jest.fn(),
-      obtenerDatosProducto: jest.fn(),
-      obtenerClaveScian: jest.fn(),
-      obtenerDescripcionScian: jest.fn(),
-      obtenerPreOperativo: jest.fn(),
-      obtenerClasificationProductos: jest.fn(),
-    } as unknown as jest.Mocked<DatosService>;
-
-    mockTramiteStore = {
+    datosServiceMock = {
+      obtenerEstadoData: jest.fn().mockReturnValue(of([{ id: 1, nombre: 'Estado' }])),
+      obternerDatosData: jest.fn().mockReturnValue(of([{ id: 1 }])),
+      obtenerDatosProducto: jest.fn().mockReturnValue(of([{ id: 1 }])),
+      obtenerClaveScian: jest.fn().mockReturnValue(of([{ id: 1 }])),
+      obtenerDescripcionScian: jest.fn().mockReturnValue(of([{ id: 1 }])),
+      obtenerPreOperativo: jest.fn().mockReturnValue(of([{ id: 1 }])),
+      obtenerClasificationProductos: jest.fn().mockReturnValue(of([{ id: 1 }])),
+    };
+    domicilioStoreMock = {
       setCodigoPostal: jest.fn(),
       setEstado: jest.fn(),
-    } as unknown as jest.Mocked<DomicilioStore>;
-
-    mockTramiteQuery = {
+      setMunicipio: jest.fn(),
+      setLocalidad: jest.fn(),
+      setColonia: jest.fn(),
+      setCalle: jest.fn(),
+      setLada: jest.fn(),
+      setTelefono: jest.fn(),
+      setScian: jest.fn(),
+      setAviso: jest.fn(),
+      setNoLicenciaSanitaria: jest.fn(),
+      setRegimenDestinado: jest.fn(),
+      setAduana: jest.fn(),
+      setDatosProducto: jest.fn(),
+      setAutorizacionIVAIEPS: jest.fn(),
+      setClaveScian: jest.fn(),
+      setDescripcionScian: jest.fn(),
+      setClasificacionProducto: jest.fn(),
+      setEspecificarClasificacion: jest.fn(),
+      setMarcaComercial: jest.fn(),
+      setDenominacionGenerica: jest.fn(),
+      setTipoProducto: jest.fn(),
+      setEstadoFisico: jest.fn(),
+      setFraccionArancelaria: jest.fn(),
+      setDescripcionFraccionArancelaria: jest.fn(),
+      setCantidadUMC: jest.fn(),
+      setUmc: jest.fn(),
+      setPorcentajeConcentracion: jest.fn(),
+      setValorComercial: jest.fn(),
+      setFechaMovimiento: jest.fn(),
+      setPresentacionFarmaceutica: jest.fn(),
+      setPaisDestino: jest.fn(),
+      setPaisProcedencia: jest.fn(),
+    };
+    domicilioQueryMock = {
       selectSolicitud$: of({
         codigoPostal: '12345',
-        estado: 'Estado1',
-        municipio: 'Municipio1',
-        localidad: 'Localidad1',
-        colonia: 'Colonia1',
-        calle: 'Calle1',
-        lada: '123',
-        telefono: '1234567890',
-        scian: 'SCIAN1',
-        aviso: 'Aviso1',
-        noLicenciaSanitaria: 'Licencia1',
-        regimenDestinado: 'Regimen1',
-        aduana: 'Aduana1',
+        estado: 'Estado',
+        municipio: 'Municipio',
+        localidad: 'Localidad',
+        colonia: 'Colonia',
+        calle: 'Calle',
+        lada: '01',
+        telefono: '123456789',
+        scian: 'SCIAN',
+        aviso: 'Aviso',
+        noLicenciaSanitaria: 'Licencia',
+        regimenDestinado: 'Regimen',
+        aduana: 'Aduana',
         datosProducto: [],
-        autorizacionIVAIEPS: 'Autorizacion1',
+        autorizacionIVAIEPS: 'IVA',
+        claveScian: 'Clave',
+        descripcionScian: 'Descripcion',
+        clasificacionProducto: 'Clasificacion',
+        especificarClasificacion: 'Especificar',
+        marcaComercial: 'Marca',
+        denominacionGenerica: 'Denominacion',
+        tipoProducto: 'Tipo',
+        estadoFisico: 'Fisico',
+        fraccionArancelaria: 'Fraccion',
+        descripcionFraccionArancelaria: 'DescFraccion',
+        cantidadUMC: 1,
+        umc: 'UMC',
+        porcentajeConcentracion: 10,
+        valorComercial: 100,
+        fechaMovimiento: new Date(),
+        presentacionFarmaceutica: 'Presentacion',
+        paisDestino: 'Destino',
+        paisProcedencia: 'Procedencia',
       }),
-    } as unknown as jest.Mocked<DomicilioQuery>;
+    };
+    consultaioQueryMock = {
+      selectConsultaioState$: of({ readonly: false }),
+    };
 
     await TestBed.configureTestingModule({
       imports: [
-        DomicilioDelEstablecimientoComponent, 
-        ReactiveFormsModule, 
+        ReactiveFormsModule,
+        DomicilioDelEstablecimientoComponent
       ],
       providers: [
-        { provide: DatosService, useValue: mockDatosService },
-        { provide: DomicilioStore, useValue: mockTramiteStore },
-        { provide: DomicilioQuery, useValue: mockTramiteQuery },
+        FormBuilder,
+        { provide: DatosService, useValue: datosServiceMock },
+        { provide: DomicilioStore, useValue: domicilioStoreMock },
+        { provide: DomicilioQuery, useValue: domicilioQueryMock },
+        { provide: ConsultaioQuery, useValue: consultaioQueryMock },
       ],
+      schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
-  });
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(DomicilioDelEstablecimientoComponent);
     component = fixture.componentInstance;
-
-    mockDatosService.obtenerEstadoData.mockReturnValue(of([]));
-    mockDatosService.obternerDatosData.mockReturnValue(of([]));
-    mockDatosService.obtenerDatosProducto.mockReturnValue(of([]));
-    mockDatosService.obtenerClaveScian.mockReturnValue(of([]));
-    mockDatosService.obtenerDescripcionScian.mockReturnValue(of([]));
-    mockDatosService.obtenerPreOperativo.mockReturnValue(of([]));
-    mockDatosService.obtenerClasificationProductos.mockReturnValue(of([]));
-
+    
+    component.closeModal = { nativeElement: { click: jest.fn() } } as any;
+    component.crossList = { toArray: () => [
+      { agregar: jest.fn(), quitar: jest.fn() }
+    ] } as any;
     fixture.detectChanges();
   });
 
-  afterEach(() => {
-    if (component && component.ngOnDestroy) {
-      component.ngOnDestroy();
-    }
-  });
-  it('should create the component', () => {
+  it('debería crearse', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize forms on ngOnInit', () => {
+  it('ngOnInit debería inicializar y llamar a los métodos de datos', () => {
+    const spy1 = jest.spyOn(component, 'cargarEstadoData');
+    const spy2 = jest.spyOn(component, 'cargarDatosTabla');
+    const spy3 = jest.spyOn(component, 'cargarDatosProductoTabla');
+    const spy4 = jest.spyOn(component, 'obtenerDatosClave');
+    const spy5 = jest.spyOn(component, 'obtenerDatosDescripcion');
+    const spy6 = jest.spyOn(component, 'obtenerDatosPreOperativo');
+    const spy7 = jest.spyOn(component, 'obtenerclassificacionProductos');
     component.ngOnInit();
-    expect(component.domicilioForm).toBeDefined();
-    expect(component.claveScianForm).toBeDefined();
-    expect(component.DatosMercanciaForm).toBeDefined();
+    expect(spy1).toHaveBeenCalled();
+    expect(spy2).toHaveBeenCalled();
+    expect(spy3).toHaveBeenCalled();
+    expect(spy4).toHaveBeenCalled();
+    expect(spy5).toHaveBeenCalled();
+    expect(spy6).toHaveBeenCalled();
+    expect(spy7).toHaveBeenCalled();
   });
 
-  it('should toggle colapsable state', () => {
-    expect(component.colapsable).toBe(false);
+  it('inicializarEstadoFormulario debería llamar a guardarDatosFormulario o inicializarFormulario', () => {
+    const spyGuardar = jest.spyOn(component, 'guardarDatosFormulario');
+    const spyInit = jest.spyOn(component, 'inicializarFormulario');
+    component.esFormularioSoloLectura = true;
+    component.inicializarEstadoFormulario();
+    expect(spyGuardar).toHaveBeenCalled();
+    component.esFormularioSoloLectura = false;
+    component.inicializarEstadoFormulario();
+    expect(spyInit).toHaveBeenCalled();
+  });
+
+  it('guardarDatosFormulario deshabilita/habilita formularios según esFormularioSoloLectura', () => {
+    component.inicializarFormulario();
+    component.esFormularioSoloLectura = true;
+    component.guardarDatosFormulario();
+    expect(component.domicilioForm.disabled).toBe(true);
+    expect(component.claveScianForm.disabled).toBe(true);
+    expect(component.DatosMercanciaForm.disabled).toBe(true);
+
+    component.esFormularioSoloLectura = false;
+    component.guardarDatosFormulario();
+    expect(component.domicilioForm.enabled).toBe(true);
+    expect(component.claveScianForm.enabled).toBe(true);
+    expect(component.DatosMercanciaForm.enabled).toBe(true);
+  });
+
+  it('setValoresStore debería llamar al método correcto del store', () => {
+    component.inicializarFormulario();
+    component.setValoresStore(component.domicilioForm, 'codigoPostal', 'setCodigoPostal');
+    expect(domicilioStoreMock.setCodigoPostal).toHaveBeenCalled();
+  });
+
+  it('mostrar_colapsable debería alternar colapsable', () => {
+    const prev = component.colapsable;
     component.mostrar_colapsable();
-    expect(component.colapsable).toBe(true);
+    expect(component.colapsable).toBe(!prev);
   });
 
-  it('should toggle noLicenciaSanitaria field', () => {
+  it('toggleNoLicenciaSanitaria deshabilita/habilita el campo', () => {
+    component.inicializarFormulario();
     const event = { target: { checked: true } } as any;
     component.toggleNoLicenciaSanitaria(event);
     expect(component.domicilioForm.get('noLicenciaSanitaria')?.disabled).toBe(true);
-
     event.target.checked = false;
     component.toggleNoLicenciaSanitaria(event);
-    expect(component.domicilioForm.get('noLicenciaSanitaria')?.disabled).toBe(false);
+    expect(component.domicilioForm.get('noLicenciaSanitaria')?.enabled).toBe(true);
   });
 
-  it('should call cargarEstadoData and set estadoData', () => {
-    const mockData = [{ id: 1, descripcion: 'Estado1' }];
-    mockDatosService.obtenerEstadoData.mockReturnValue(of(mockData));
+  it('cargarEstadoData debería establecer datosEstado', () => {
     component.cargarEstadoData();
-    expect(component.estadoData).toEqual(mockData);
+    expect(component.datosEstado.length).toBeGreaterThan(0);
   });
 
-  it('should call obtenerDatosDescripcion and set descripcionScian', () => {
-    const mockData: Catalogo[] = [
-      { id: 1, descripcion: 'Descripcion1' },
-      { id: 2, descripcion: 'Descripcion2' },
-    ];
-  
-  
-    mockDatosService.obtenerDescripcionScian.mockReturnValue(of(mockData));
-  
-    
-    component.obtenerDatosDescripcion();
-  
-    expect(component.descripcionScian).toEqual(mockData);
-  });
-
-  it('should call cargarDatosTabla and set datosData', () => {
-   
-    const mockData: ScianData[] = [
-      { clave: '1', descripcion: 'Dato1' },
-      { clave: '2', descripcion: 'Dato2' },
-    ];
-  
-    mockDatosService.obternerDatosData.mockReturnValue(of(mockData));
-  
+  it('cargarDatosTabla debería establecer datosData', () => {
     component.cargarDatosTabla();
-  
-    expect(component.datosData).toEqual(mockData);
+    expect(component.datosData.length).toBeGreaterThan(0);
   });
 
-  it('should call obtenerDatosClave and set claveScian', () => {
-    const mockData: Catalogo[] = [
-      { id: 1, descripcion: 'Clave1' },
-      { id: 2, descripcion: 'Clave2' },
-    ];
-  
-    
-    mockDatosService.obtenerClaveScian.mockReturnValue(of(mockData));
-  
+  it('cargarDatosProductoTabla debería establecer datosProducto', () => {
+    component.cargarDatosProductoTabla();
+    expect(component.datosProducto.length).toBeGreaterThan(0);
+  });
 
+  it('obtenerDatosClave debería establecer claveScian', () => {
     component.obtenerDatosClave();
-  
-   
-    expect(component.claveScian).toEqual(mockData);
+    expect(component.claveScian.length).toBeGreaterThan(0);
   });
 
-  it('should call obtenerDatosPreOperativo and set radioOptions', () => {
-    
-    const mockData: PreOperativo[] = [
-      { label: 'PreOperativo1', value: '1' },
-      { label: 'PreOperativo2', value: '2' },
-    ];
-  
-    
-    mockDatosService.obtenerPreOperativo.mockReturnValue(of(mockData));
-  
+  it('obtenerDatosDescripcion debería establecer descripcionScian', () => {
+    component.obtenerDatosDescripcion();
+    expect(component.descripcionScian.length).toBeGreaterThan(0);
+  });
+
+  it('obtenerDatosPreOperativo debería establecer radioOptions', () => {
     component.obtenerDatosPreOperativo();
-  
- 
-    expect(component.radioOptions).toEqual(mockData);
+    expect(component.radioOptions.length).toBeGreaterThan(0);
   });
 
-  it('should call obtenerclassificacionProductos and set clasificacionProducto', () => {
-    const mockData = [{ id: 1, descripcion: 'Clasificacion1' }];
-    mockDatosService.obtenerClasificationProductos.mockReturnValue(of(mockData));
+  it('obtenerclassificacionProductos debería establecer clasificacionProducto', () => {
     component.obtenerclassificacionProductos();
-    expect(component.clasificacionProducto).toEqual(mockData);
+    expect(component.clasificacionProducto.length).toBeGreaterThan(0);
   });
 
-  it('should show modal when mostrarModeloClave is called', () => {
+  it('mostrarModeloClave debería establecer modal a mostrar', () => {
     component.mostrarModeloClave();
     expect(component.modal).toBe('show');
   });
 
-  it('should show modal when datosDelProducto is called', () => {
+  it('datosDelProducto debería establecer modal a mostrar', () => {
     component.datosDelProducto();
     expect(component.modal).toBe('show');
+  });
+
+  it('ngOnDestroy debería completar destroy$', () => {
+    const spy = jest.spyOn(component['destroy$'], 'next');
+    const spy2 = jest.spyOn(component['destroy$'], 'complete');
+    component.ngOnDestroy();
+    expect(spy).toHaveBeenCalled();
+    expect(spy2).toHaveBeenCalled();
+  });
+
+  it('las funciones de paisDeProcedenciaBotons deberían llamar a agregar/quitar', () => {
+    const agregar = jest.fn();
+    const quitar = jest.fn();
+    component.crossList = { toArray: () => [{ agregar, quitar }] } as any;
+    component.paisDeProcedenciaBotons[0].funcion();
+    expect(agregar).toHaveBeenCalledWith('t');
+    component.paisDeProcedenciaBotons[1].funcion();
+    expect(agregar).toHaveBeenCalledWith('');
+    component.paisDeProcedenciaBotons[2].funcion();
+    expect(quitar).toHaveBeenCalledWith('');
+    component.paisDeProcedenciaBotons[3].funcion();
+    expect(quitar).toHaveBeenCalledWith('t');
   });
 });

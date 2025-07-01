@@ -2,7 +2,8 @@ import {
   Catalogo,
   ConfiguracionColumna,
 } from '@libs/shared/data-access-user/src';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import {
   FormBuilder,
   FormControl,
@@ -14,8 +15,10 @@ import { DatosProcedureQuery } from '../../../../estados/queries/tramites261101.
 import { DatosProcedureState } from '../../../../estados/tramites/tramites261101.store';
 import { DatosProcedureStore } from '../../../../estados/tramites/tramites261101.store';
 import { DatosSolicitudService } from '../../../261101/services/datoSolicitude.service';
+import { SolicitanteComponent } from '@ng-mf/data-access-user';
 import { Subject } from 'rxjs';
 import { TramiteAsociados } from '../../../../shared/models/tramite-asociados.model';
+import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
 
 
@@ -26,7 +29,7 @@ import { takeUntil } from 'rxjs';
   selector: 'app-paso-uno',
   templateUrl: './paso-uno.component.html',
 })
-export class PasoUnoComponent implements OnInit, OnDestroy {
+export class PasoUnoComponent implements OnInit,OnDestroy {
   /**
    * El índice de la pestaña actualmente seleccionada.
    */
@@ -65,18 +68,44 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    */
   private notificadorDestruccion$: Subject<void> = new Subject();
 
+      /** 
+   * Estado de consulta que almacena la información del estado actual del proceso.
+   * Este estado se actualiza a través de un observable y se utiliza para determinar
+   * el flujo de la lógica del componente.
+   */
+      public consultaState!:ConsultaioState;
+        /**
+     * Referencia al componente SolicitanteComponent para acceder a sus métodos y propiedades.
+     */
+    @ViewChild(SolicitanteComponent) solicitante!: SolicitanteComponent;
+  
+    /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
+    public esDatosRespuesta: boolean = false;
+      /**
+  * Indica si el formulario está en modo solo lectura.
+  * Cuando es `true`, los campos del formulario no se pueden editar.
+  */
+  esFormularioSoloLectura: boolean = false; 
   /**
    * Constructor del componente.
    * Inicializa los servicios y dependencias necesarias.
    */
   constructor(
     private formBuilder: FormBuilder,
- private datosSolicitudService: DatosSolicitudService,
+    private datosSolicitudService: DatosSolicitudService,
     private store: DatosProcedureStore,
-    private query: DatosProcedureQuery
-  ) {
-    //no hacer nada
-  }
+    private query: DatosProcedureQuery,
+    private consultaQuery: ConsultaioQuery,
+  ) { 
+        this.consultaQuery.selectConsultaioState$
+        .pipe(
+          takeUntil(this.notificadorDestruccion$),
+          map((seccionState: { readonly: boolean })=>{
+            this.esFormularioSoloLectura = seccionState.readonly; 
+          })
+        )
+        .subscribe();
+   }
 
   /**
    * Método del ciclo de vida que se ejecuta al inicializar el componente.
@@ -97,6 +126,19 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
       });
 
     this.datosSolicitudService.inicializaPagoDeDerechosDatosCatalogos();
+      this.consultaQuery.selectConsultaioState$
+        .pipe(
+          takeUntil(this.notificadorDestruccion$),
+          map((seccionState) => {
+            this.consultaState = seccionState;
+          })
+        )
+        .subscribe();
+      if (this.consultaState.update) {
+        this.guardarDatosFormulario();
+      } else {
+        this.esDatosRespuesta = true;
+      }
   }
 
   /**
@@ -156,9 +198,26 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
     this.indice = i;
   }
 
-  /**
-   * Método del ciclo de vida que se ejecuta al destruir el componente.
-   * Limpia las suscripciones para evitar fugas de memoria.
+    /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+    guardarDatosFormulario(): void {
+      this.datosSolicitudService
+        .getRegistroPasoUnoData().pipe(
+          takeUntil(this.notificadorDestruccion$)
+        )
+        .subscribe((resp) => {                
+          if(resp){
+          this.esDatosRespuesta = true;
+          this.datosSolicitudService.actualizarEstadoFormulario(resp);
+          } 
+       });
+      }
+      /**
+   * Método que se ejecuta al destruir el componente.
+   * Notifica a los observables suscritos que deben finalizar mediante el `destroyNotifier$`.
+   * Esto asegura que no haya fugas de memoria al eliminar las suscripciones activas.
    */
   ngOnDestroy(): void {
     this.notificadorDestruccion$.next();

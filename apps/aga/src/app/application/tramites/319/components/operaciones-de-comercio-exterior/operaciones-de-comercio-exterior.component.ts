@@ -1,16 +1,11 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-
-import { AbstractControl, FormBuilder, FormGroup, ValidatorFn, Validators } from '@angular/forms';
-
-import { Catalogo, ConfiguracionColumna, Notificacion, REGEX_FECHA_MES_ANO, SeccionLibStore, TablaSeleccion } from '@ng-mf/data-access-user';
-
-import { Subject, takeUntil } from 'rxjs';
-
-import { OperacionService } from '../../services/operacion.service';
-
+import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
+import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
+import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, ConsultaioQuery, Notificacion, NotificacionesComponent, REGEX_FECHA_MES_ANO, SeccionLibStore, SharedModule, TablaDinamicaComponent, TablaSeleccion, TituloComponent, } from '@libs/shared/data-access-user/src';
+import { CONFIGURACION_PERSONAS_COLUMNAS, CONFIGURACION_SOLICITAR_COLUMNAS, INFO_ALERT, TEXTOS } from '../../constantes/operaciones-de-comercio-exterior.enum';
 import { Personas, Solicitar } from '../../models/personas.module';
-
-import {CONFIGURACION_PERSONAS_COLUMNAS, CONFIGURACION_SOLICITAR_COLUMNAS, INFO_ALERT, TEXTOS } from '../../constantes/operaciones-de-comercio-exterior.enum';
+import { Subject,map,takeUntil } from 'rxjs';
+import { CommonModule } from '@angular/common';
+import { OperacionService } from '../../services/operacion.service';
 import { Tramite319Query } from '../../estados/tramite319Query.query';
 import { Tramite319Store } from '../../estados/tramite319Store.store';
 
@@ -58,8 +53,10 @@ export function validadorDeMesyAno(): ValidatorFn {
   selector: 'app-operaciones-de-comercio-exterior',
   templateUrl: './operaciones-de-comercio-exterior.component.html',
   styleUrl: './operaciones-de-comercio-exterior.component.scss',
+  standalone:true,
+  imports:[CommonModule, SharedModule,TablaDinamicaComponent,CatalogoSelectComponent,AlertComponent,TituloComponent,ReactiveFormsModule,NotificacionesComponent]
 })
-export class OperacionesDeComercioExteriorComponent implements OnInit, OnDestroy {
+export class OperacionesDeComercioExteriorComponent implements OnInit, OnDestroy,AfterViewInit {
   /**
    * @propiedad {FormGroup} miformulario - Formulario reactivo utilizado para gestionar las operaciones.
    */
@@ -161,6 +158,14 @@ export class OperacionesDeComercioExteriorComponent implements OnInit, OnDestroy
    * @access Public
    */
   public nuevaAlertaNotificacion!: Notificacion;  
+
+  /**
+   * @property {boolean} esFormularioSoloLectura
+   * @description Indica si el formulario es de solo lectura.
+   * @default false
+   */
+  esFormularioSoloLectura: boolean = false;
+  
   /**
    * @constructor
    * @param {FormBuilder} fb - Servicio para construir formularios reactivos.
@@ -168,7 +173,7 @@ export class OperacionesDeComercioExteriorComponent implements OnInit, OnDestroy
    * @descripcion Inicializa el componente y obtiene la lista de operaciones al crearlo.
    */
   constructor(private readonly fb: FormBuilder, private readonly operacionService: OperacionService,private readonly tramite319Query: Tramite319Query,private tramite319Store: Tramite319Store,
-     private seccionStore: SeccionLibStore
+     private seccionStore: SeccionLibStore, private readonly consultaioQuery: ConsultaioQuery
   ) {
     this.getOperacionList();
     this.getPersonasTablaData();
@@ -181,11 +186,41 @@ export class OperacionesDeComercioExteriorComponent implements OnInit, OnDestroy
    * Configura el formulario reactivo.
    */
   ngOnInit(): void {
+     this.consultaioQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState)=>{
+        this.esFormularioSoloLectura = seccionState.readonly; 
+      })
+    )
+    .subscribe()
     this.miformulario = this.fb.group({
       operacion: [ this.tramite319Query.operacion||'', Validators.required],
     });
     this.cuerpoSolicitarTablaFila = this.tramite319Query.datos.length > 0 ? this.tramite319Query.datos : [];
   }
+/**
+ * @method ngAfterViewInit
+ * @description
+ * Método del ciclo de vida de Angular que se ejecuta después de que la vista del componente ha sido inicializada completamente.
+ * 
+ * En este caso, se utiliza para habilitar o deshabilitar el formulario (`miformulario`) dependiendo del estado de la propiedad `esFormularioSoloLectura`.
+ * 
+ * Si `esFormularioSoloLectura` es verdadero, el formulario se deshabilita para evitar la edición.
+ * De lo contrario, se habilita para permitir la interacción del usuario.
+ * 
+ * @example
+ * <form [formGroup]="miformulario">
+ *   <!-- campos del formulario -->
+ * </form>
+ */
+ngAfterViewInit(): void {
+  if (this.esFormularioSoloLectura) {
+    this.miformulario.disable();
+  } else {
+    this.miformulario.enable();
+  }
+}
 
   /**
    * @metodo getOperacionList

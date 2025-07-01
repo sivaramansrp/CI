@@ -1,360 +1,341 @@
-import { Catalogo, ConfiguracionColumna } from '@libs/shared/data-access-user/src';
-import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
-import { CatalogosSelect } from '@libs/shared/data-access-user/src';
-import { CatalogosService } from '../../servicios/catalogos.service';
-import { ChangeDetectorRef } from '@angular/core';
+/**
+ * @component
+ * @name InternaDatosGeneralesComponent
+ * @description
+ * Componente para manejar los datos generales internos del trámite 220701.
+ * Permite gestionar formularios y datos relacionados con los trámites, incluyendo lógica para la gestión de catálogos, validaciones, estado de la sección y comunicación con el store y servicios.
+ * Utiliza formularios reactivos y consume múltiples servicios para obtener catálogos y datos relacionados.
+ * Implementa la lógica de inicialización, carga de catálogos, manejo de estado y sincronización con el store de Akita.
+ * 
+ * @example
+ * <interna-datos-generales [esFormularioSoloLectura]="true"></interna-datos-generales>
+ */
+
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { FormBuilder } from "@angular/forms";
-import { FormGroup } from "@angular/forms";
-import { HttpClient } from "@angular/common/http";
-import { InternaDatosGeneralesInt } from '../../modelos/datos-de-interfaz.model';
-import { MERCANCIA_SERVICIO } from '../../modelos/datos-de-interfaz.model';
+
+import {
+  ChangeDetectorRef,
+  Component,
+  Input,
+  OnDestroy,
+  OnInit,
+} from '@angular/core';
+
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
+
+import { Subject, delay, map, takeUntil, tap } from 'rxjs';
+
+import {
+  Catalogo,
+  CatalogosSelect,
+  ConfiguracionColumna,
+  ConsultaioQuery,
+  SeccionLibQuery,
+  SeccionLibState,
+  SeccionLibStore,
+  TituloComponent,
+  ValidacionesFormularioService,
+} from '@libs/shared/data-access-user/src';
+
+import {
+  CatalogoSelectComponent,
+  TablaDinamicaComponent,
+} from '@ng-mf/data-access-user';
+
+import {
+  InternaDatosGeneralesInt,
+  MERCANCIA_SERVICIO,
+  mercanciaInfo,
+} from '../../modelos/datos-de-interfaz.model';
+
+import { CatalogosService } from '../../servicios/catalogos.service';
 import { MercanciaDatosService } from '../../servicios/mercancia-datos.service';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
 import { RevisionService } from '../../servicios/revision.service';
-import { SeccionLibQuery } from '@libs/shared/data-access-user/src';
-import { SeccionLibState } from '@libs/shared/data-access-user/src';
-import { SeccionLibStore } from '@libs/shared/data-access-user/src';
-import { Subject } from 'rxjs';
-import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
-import { TituloComponent } from '@libs/shared/data-access-user/src';
-import { TramiteState } from '../../estados/tramite220701.store';
-import { TramiteStore } from '../../estados/tramite220701.store';
+
+import {
+  TramiteState,
+  TramiteStore,
+} from '../../estados/tramite220701.store';
 import { TramiteStoreQuery } from '../../estados/tramite220701.query';
-import { ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
-import { Validators } from "@angular/forms";
-import { delay } from 'rxjs/operators';
-import { map } from 'rxjs/operators';
-import { mercanciaInfo } from '../../modelos/datos-de-interfaz.model';
-import { takeUntil } from 'rxjs/operators';
-import { tap } from 'rxjs/operators';
 
 /**
- * Componente para manejar los datos generales internos.
- * Este componente permite gestionar formularios y datos relacionados con los trámites.
+ * @component
+ * @name InternaDatosGeneralesComponent
+ * @description
+ * Componente para manejar los datos generales internos del trámite 220701.
+ * Permite gestionar formularios y datos relacionados con los trámites, incluyendo lógica para la gestión de catálogos, validaciones, estado de la sección y comunicación con el store y servicios.
+ * Utiliza formularios reactivos y consume múltiples servicios para obtener catálogos y datos relacionados.
+ * Implementa la lógica de inicialización, carga de catálogos, manejo de estado y sincronización con el store de Akita.
+ *
+ * - Gestiona la captura y visualización de datos generales del trámite.
+ * - Sincroniza el estado del formulario con el store.
+ * - Carga catálogos y datos auxiliares desde servicios.
+ * - Permite el modo solo lectura para revisión.
+ *
+ * @example
+ * <interna-datos-generales [esFormularioSoloLectura]="true"></interna-datos-generales>
  */
 @Component({
   selector: 'interna-datos-generales',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, TituloComponent, CatalogoSelectComponent, TablaDinamicaComponent,],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    TituloComponent,
+    CatalogoSelectComponent,
+    TablaDinamicaComponent,
+  ],
   templateUrl: './interna-datos-generales.component.html',
-  styleUrl: './interna-datos-generales.component.scss'
+  styleUrl: './interna-datos-generales.component.scss',
 })
 export class InternaDatosGeneralesComponent implements OnInit, OnDestroy {
-    /**
-     * Grupo de formularios principal.
-     * Contiene la estructura del formulario principal del componente.
-     * @type {FormGroup}
-     */
-    forma!: FormGroup;
-  
-    /**
-   * Estado de los datos generales internos.
-   * Contiene la información manejada dentro del componente.
-   * @type {InternaDatosGeneralesInt}
-   */
-   internaDatosGeneralesState!: InternaDatosGeneralesInt;
-    
   /**
-   * Grupo de formularios anidado para los datos de la solicitud.
-   * Maneja la información específica de la solicitud dentro del formulario principal.
-   * @type {FormGroup}
+   * Formulario principal del componente.
+   * Contiene los campos y validaciones necesarias para los datos generales.
+   */
+  forma!: FormGroup;
+
+  /**
+   * Estado interno relacionado con los datos generales.
+   * Contiene la información manejada dentro del componente.
+   */
+  internaDatosGeneralesState!: InternaDatosGeneralesInt;
+
+  /**
+   * Formulario con los datos de la solicitud.
+   * Permite capturar y validar la información de la solicitud.
    */
   datosDelaSolicitud!: FormGroup;
 
   /**
-   * Selección de empresa transportista.
-   * Contiene opciones disponibles para la selección de empresas transportistas.
-   * @type {CatalogosSelect}
+   * Catálogo seleccionado para la empresa transportista.
+   * Contiene las opciones disponibles para seleccionar una empresa.
    */
   empresaTransportista!: CatalogosSelect;
-  
+
   /**
-   * Formulario para la movilización de mercancías.
-   * Contiene los campos y validaciones relacionadas con la movilización.
-   * @type {FormGroup}
+   * Formulario relacionado con la movilización de mercancía.
+   * Permite capturar y validar los datos de movilización.
    */
-    movilizacionForm!: FormGroup;
+  movilizacionForm!: FormGroup;
+
   /**
-   * Dirección actual de rotación.
-   * Indica la dirección de rotación actual.
-   * @type {number | null}
+   * Dirección actual del flujo de navegación (1 = siguiente, -1 = anterior).
    */
   currentDirection: number | null = 1;
+
   /**
-   * Datos del dropdown.
-   * Contiene las opciones disponibles para el menú desplegable.
-   * @type {any[]}
+   * Datos cargados para los menús desplegables.
+   * Utilizados para alimentar los selectores del formulario.
    */
   dropdownData = [];
+
   /**
-   * Selección de aduana de ingreso.
-   * Contiene las opciones disponibles para la selección de aduanas de ingreso.
-   * @type {CatalogosSelect}
+   * Catálogo seleccionado de la aduana de ingreso.
    */
-    aduanaIngreso!: CatalogosSelect;
+  aduanaIngreso!: CatalogosSelect;
+
   /**
-   * Configuración para el select de aduana de ingreso.
-   * Contiene los datos de configuración para el menú desplegable de aduanas de ingreso.
-   * @type {Catalogo[]}
+   * Lista de opciones de aduana de ingreso.
    */
   aduanaDeIngreso: Catalogo[] = [];
 
-    /**
-   * Configuración para el select de sanidad agropecuaria.
-   * Contiene los datos de configuración para el menú desplegable de sanidad agropecuaria.
-   * @type {Catalogo[]}
-   */
-    sanidadAgropecuaria: Catalogo[] = [];
   /**
-   * Configuración para el select de punto de inspección.
-   * Contiene los datos de configuración para el menú desplegable de puntos de inspección.
-   * @type {Catalogo[]}
+   * Lista de opciones de sanidad agropecuaria.
+   */
+  sanidadAgropecuaria: Catalogo[] = [];
+
+  /**
+   * Lista de puntos de inspección.
    */
   puntoInspeccion: Catalogo[] = [];
+
   /**
-   * Selección de punto de verificación.
-   * Contiene las opciones disponibles para la selección de puntos de verificación.
-   * @type {CatalogosSelect}
+   * Punto de verificación seleccionado.
    */
   puntoVerificacion!: CatalogosSelect;
-    /**
-   * Selección de oficina de inspección.
-   * Contiene las opciones disponibles para la selección de oficinas de inspección.
-   * @type {CatalogosSelect}
-   */
-    oficianaInspeccion!: CatalogosSelect;
+
   /**
-   * Selección de establecimiento.
-   * Contiene las opciones disponibles para la selección de establecimientos.
-   * @type {CatalogosSelect}
+   * Oficina de inspección seleccionada.
+   */
+  oficianaInspeccion!: CatalogosSelect;
+
+  /**
+   * Establecimiento seleccionado.
    */
   establecimiento!: CatalogosSelect;
 
   /**
-   * Selección de régimen al que se destinarán.
-   * Contiene las opciones disponibles para la selección de regímenes.
-   * @type {CatalogosSelect}
+   * Régimen al que se destinarán los productos.
    */
   regimenDestinaran!: CatalogosSelect;
 
   /**
-   * Selección de movilización nacional.
-   * Contiene las opciones disponibles para la selección de movilización nacional.
-   * @type {CatalogosSelect}
+   * Tipo de movilización nacional seleccionada.
    */
   movilizacionNacional!: CatalogosSelect;
 
   /**
-   * Configuración para el select de establecimiento TIF.
-   * Contiene los datos de configuración para el menú desplegable de establecimientos TIF.
-   * @type {Catalogo[]}
+   * Lista de establecimientos TIF disponibles.
    */
   establecimientoTIF: Catalogo[] = [];
 
   /**
-   * Configuración para el select de veterinario.
-   * Contiene los datos de configuración para el menú desplegable de veterinarios.
-   * @type {Catalogo[]}
+   * Lista de veterinarios disponibles.
    */
   veterinario: Catalogo[] = [];
-  /**
-   * Identificador único.
-   * @type {number | undefined}
-   */
-  id?: number;
-  /**
-   * Descripción del elemento.
-   * @type {string}
-   */
-  descripcion: string = '';
-  /**
-   * Tamaño del elemento.
-   * @type {string | undefined}
-   */
-  tam?: string;
-  /**
-   * DPI del elemento.
-   * @type {string | undefined}
-   */
-  dpi?: string
 
   /**
-   * Configuración para el select de régimen.
-   * Contiene los datos de configuración para el menú desplegable de regímenes.
-   * @type {Catalogo[]}
+   * Identificador único del registro (opcional).
+   */
+  id?: number;
+
+  /**
+   * Descripción asociada al registro.
+   */
+  descripcion: string = '';
+
+  /**
+   * Tamaño del objeto o campo (opcional).
+   */
+  tam?: string;
+
+  /**
+   * Documento Personal de Identificación (DPI) (opcional).
+   */
+  dpi?: string;
+
+  /**
+   * Lista de opciones de régimen.
    */
   regimen: Catalogo[] = [];
+
   /**
-   * Valor seleccionado por defecto.
-   * Indica si se ha realizado una selección en el formulario.
-   * @type {string}
+   * Valor seleccionado por el usuario (por defecto 'no').
    */
   seleccionadoValor: string = 'no';
 
   /**
-   * Configuración de las columnas de la tabla para servicios de mercancía.
-   * Define la estructura y propiedades de las columnas.
-   * @type {ConfiguracionColumna<mercanciaInfo>[]}
-   */ 
-      mercanciaTabla: ConfiguracionColumna<mercanciaInfo>[] = MERCANCIA_SERVICIO;
+   * Configuración de columnas para la tabla de mercancías.
+   */
+  mercanciaTabla: ConfiguracionColumna<mercanciaInfo>[] = MERCANCIA_SERVICIO;
 
   /**
-   * Datos de los servicios de mercancía.
-   * Contiene la información mostrada en la tabla de mercancía.
-   * @type {mercanciaInfo[]}
+   * Datos cargados para la tabla de mercancías.
    */
   mercanciaTablaDatos: mercanciaInfo[] = [];
 
   /**
-   * Datos obtenidos de la API para mercancía.
-   * Contiene información relacionada con los permisos de importación y exportación bajo el programa IMMEX.
-   * @type {any[]}
+   * Datos de mercancía obtenidos desde la API.
    */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    mercanciaApiDatos: any[] = [];
-   
-/**
- * Subject para manejar la desuscripción de observables.
- * Utilizado para evitar fugas de memoria.
- * @type {Subject<void>}
- */
-  private unsubscribe$ = new Subject<void>();
+  mercanciaApiDatos: mercanciaInfo[] = [];
+
   /**
-   * Estado de la sección actual.
-   * Contiene información sobre el estado de la sección.
-   * @type {SeccionLibState}
+   * Indica si el formulario debe mostrarse solo en modo de lectura.
+   * @type {boolean}
+   */
+  @Input() esFormularioSoloLectura!: boolean;
+
+  /**
+   * Notificador para destruir suscripciones al destruir el componente.
+   * Se usa en combinación con `takeUntil`.
+   */
+  private destroyNotifier$ = new Subject<void>();
+
+  /**
+   * Estado actual de la sección gestionada por Akita.
    */
   private seccion!: SeccionLibState;
-  /**
-   * Constructor del componente.
-   * Inicializa servicios y dependencias necesarias para el funcionamiento del componente.
-   * @constructor
-   * @param {FormBuilder} fb - Servicio para la creación de formularios.
-   * @param {RevisionService} revisionService - Servicio para la gestión de revisiones.
-   * @param {ValidacionesFormularioService} validacionesService - Servicio para validaciones de formularios.
-   * @param {MercanciaDatosService} mercanciaDatosService - Servicio para obtener datos de mercancía.
-   * @param {HttpClient} httpServicios - Cliente HTTP para realizar solicitudes.
-   * @param {ChangeDetectorRef} cdr - Servicio para detectar cambios en la vista.
-   * @param {TramiteStoreQuery} tramiteStoreQuery - Query para obtener el estado del trámite.
-   * @param {TramiteStore} tramiteStore - Store para manejar el estado del trámite.
-   * @param {SeccionLibQuery} seccionQuery - Query para obtener el estado de la sección.
-   * @param {SeccionLibStore} seccionStore - Store para manejar el estado de la sección.
-   */
-    constructor(
-      private readonly fb: FormBuilder,
-      private revisionService: RevisionService,
-      private validacionesService: ValidacionesFormularioService,
-      private mercanciaDatosService: MercanciaDatosService,
-      private catalogosService: CatalogosService, // Inyecta el nuevo servicio
-      private httpServicios: HttpClient,
-      private cdr: ChangeDetectorRef,
-      private tramiteStoreQuery: TramiteStoreQuery, 
-      private tramiteStore: TramiteStore, 
-      private seccionQuery: SeccionLibQuery, 
-      private seccionStore: SeccionLibStore, 
-    ) { 
-        /**
-   * Inicializa y configura los formularios del componente.
-   * - Llama a `crearFormulario` para establecer la estructura del formulario principal.
-   * - Llama a `initActionFormBuild` para configurar acciones adicionales en los formularios.
-   * - Configura `movilizacionForm` con validaciones y valores por defecto.
-   */
-    this.crearFormulario();
-    this.initActionFormBuild();
-    /**
-   * Formulario para la movilización.
-   * Contiene los siguientes campos:
-   * - `coordenadas`: Campo deshabilitado para coordenadas.
-   * - `nombre`: Campo obligatorio para el nombre.
-   * - `medio`: Selección del medio de transporte (por defecto, 'Aéreo').
-   * - `transporte`: Campo deshabilitado con valor predefinido '020202'.
-   * - `punto`: Campo obligatorio para el punto de referencia.
-   */
-      this.movilizacionForm = this.fb.group({
-        coordenadas: [{ value: '', disabled: true }],
-        nombre: ['', Validators.required],
-        medio: ['Aereo', Validators.required],
-        transporte: [{ value: '020202', disabled: true }],
-        punto: ['', [Validators.required]],
-      });
-      
-  }
-   
-
-    /**
-   * Crea el grupo de formularios principal.
-   * @method crearFormulario
-   */
-    crearFormulario(): void {
-      this.forma = this.fb.group({
-        datosDelaSolicitud: this.fb.group({}),
-      });
-    }
-
-    /**
-   * @returns {void}
-   */
-  initActionFormBuild(): void {
-    this.datosDelaSolicitud = this.fb.group({
-      aduanaIngreso: ['', Validators.required],
-      oficinaInspeccion: ['', Validators.required],
-      puntoInspeccion: ['', Validators.required],
-      claveControlUnico: ['', [Validators.required]],
-      establecimientoTIF: ['', Validators.required],
-      regimen: ['', Validators.required],
-      folioControlUnico: [{ value: '1502200200120240301000015', disabled: true }],
-    });
-
-    this.forma.setControl('datosDelaSolicitud', this.datosDelaSolicitud);
-  }
 
   /**
-   * Índice actual de la fila.
-   * @type {number}
+   * Índice actual del paso o pestaña activa.
    */
   currentIndex = 0;
 
   /**
-   * Rota la fila en la dirección especificada.
-   * @param {number} direction - La dirección de rotación.
-   * @returns {void}
+   * Constructor del componente.
+   * Inicializa los servicios e inyecta las dependencias necesarias.
+   *
+   * @param fb Servicio para construir formularios reactivos.
+   * @param revisionService Servicio para revisar y validar datos del trámite.
+   * @param validacionesService Servicio para aplicar validaciones personalizadas.
+   * @param mercanciaDatosService Servicio para gestionar datos relacionados con mercancías.
+   * @param catalogosService Servicio para consultar catálogos.
+   * @param httpServicios Cliente HTTP para realizar peticiones.
+   * @param cdr ChangeDetectorRef para controlar el ciclo de detección de cambios.
+   * @param tramiteStoreQuery Query de estado del trámite (Akita).
+   * @param tramiteStore Store del estado del trámite (Akita).
+   * @param seccionQuery Query de la sección actual (Akita).
+   * @param seccionStore Store de la sección actual (Akita).
+   * @param consultaioQuery Query para consultar datos de IO.
    */
+  constructor(
+    private readonly fb: FormBuilder,
+    private revisionService: RevisionService,
+    private validacionesService: ValidacionesFormularioService,
+    private mercanciaDatosService: MercanciaDatosService,
+    private catalogosService: CatalogosService,
+    private httpServicios: HttpClient,
+    private cdr: ChangeDetectorRef,
+    private tramiteStoreQuery: TramiteStoreQuery,
+    private tramiteStore: TramiteStore,
+    private seccionQuery: SeccionLibQuery,
+    private seccionStore: SeccionLibStore,
+    private consultaioQuery: ConsultaioQuery
+  ) {
+    // Lógica constructora
+  }
 
   /**
-   * Verifica si un campo del formulario es válido.
-   * @param {FormGroup} form - El formulario.
-   * @param {string} field - El campo a verificar.
-   * @returns {boolean} - Verdadero si el campo es válido, falso en caso contrario.
-   */
-  esValido(form: FormGroup, field: string): boolean {
-    return this.validacionesService.isValid(form, field) === true;
-  }
-  /**
-   * Inicializa el componente.
-   * @method ngOnInit
+   * Ciclo de vida `OnInit` del componente.
+   *
+   * Inicializa el formulario principal y carga datos necesarios para su funcionamiento.
+   * Realiza las siguientes acciones:
+   *
+   * - Crea la estructura inicial del formulario con `crearFormulario()`.
+   * - Desactiva campos específicos mediante `disableFormControls()`.
+   * - Carga catálogos y opciones desplegables a través de varios métodos (`getOficianaInspeccion`, `getEstablecimiento`, etc.).
+   * - Se suscribe al estado del store `TramiteStoreQuery` para recuperar y aplicar datos previos al formulario.
+   * - Se suscribe a los cambios del estado del formulario (`statusChanges`) para guardar automáticamente los datos en el store.
+   * - Llama al método `obtenerDatos()` para cargar datos adicionales (dependiendo del negocio).
+   * - Se suscribe al estado de sección desde `SeccionQuery` y guarda el estado actual.
+   *
+   * Las suscripciones se cancelan automáticamente mediante el `destroyNotifier$` al destruir el componente.
+   *
+   * @returns {void}
+   * @memberof InternaDatosGeneralesComponent
    */
   ngOnInit(): void {
-       this.tramiteStoreQuery.selectSolicitudTramite$.pipe(
-        takeUntil(this.unsubscribe$),
+    this.esFormularioSoloLectura = this.consultaioQuery.getValue().readonly;
+    this.inicializarFormulario();
+    /**
+     * Se suscribe al estado de `ConsultaioQuery` para obtener si el formulario debe estar en modo de solo lectura.
+     * También inicializa el estado del formulario cada vez que cambia el estado.
+     *
+     * Esta suscripción se cancela automáticamente al destruir el componente mediante `takeUntil`.
+     */
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
         map((seccionState) => {
-          this.internaDatosGeneralesState = seccionState.InternaDatosGeneralesState;
+          this.esFormularioSoloLectura = seccionState.readonly;
+          if (this.esFormularioSoloLectura) {
+            this.forma.disable();
+            this.movilizacionForm.disable();
+          } else {
+            this.forma.enable();
+            this.movilizacionForm.enable();
+          }
         })
-      ).subscribe();
-    this.datosDelaSolicitud = this.fb.group({
-      aduanaIngreso: ['', Validators.required],
-      oficinaInspeccion: ['', Validators.required],
-      puntoInspeccion: ['', Validators.required],
-      claveUCON: [{ value: '', disabled: true }],
-      establecimientoTIF: ['', Validators.required],
-      regimen: ['', Validators.required],
-      foliodel: [{ value: '1502200200120240301000015', disabled: true }],
-    });
-    this.disableFormControls();
-    this.forma.setControl('datosDelaSolicitud', this.datosDelaSolicitud);
+      )
+      .subscribe();
+
     this.getOficianaInspeccion();
     this.getEstablecimiento();
     this.getRegimenDestinaran();
@@ -363,331 +344,498 @@ export class InternaDatosGeneralesComponent implements OnInit, OnDestroy {
     this.getEmpresaTransportista();
     this.obtenerListasDesplegables();
 
+    /**
+     * Suscripción al estado del trámite para actualizar los formularios y el store.
+     *
+     * - Se suscribe a los cambios en el estado del trámite (`selectSolicitudTramite$`).
+     * - Cuando hay cambios, actualiza el estado interno y aplica los valores a los formularios principales.
+     * - Si el formulario está en modo solo lectura, deshabilita los controles después de aplicar los valores.
+     * - También se suscribe a los cambios de estado de ambos formularios (`forma` y `movilizacionForm`), y guarda automáticamente el estado actualizado en el store.
+     * - Todas las suscripciones se cancelan automáticamente al destruir el componente mediante `takeUntil(this.destroyNotifier$)`.
+     * - Finalmente, se suscribe al estado de la sección para mantener sincronizado el estado local.
+     */
     this.tramiteStoreQuery.selectSolicitudTramite$
       .pipe(
-        takeUntil(this.unsubscribe$),
+        takeUntil(this.destroyNotifier$),
         map((seccionState: TramiteState) => {
           if (seccionState) {
-            this.internaDatosGeneralesState = seccionState?.InternaDatosGeneralesState;
-            this.forma.patchValue(this.internaDatosGeneralesState);
+            this.internaDatosGeneralesState =
+              seccionState?.InternaDatosGeneralesState;
+            this.forma.patchValue({
+              datosDelaSolicitud: this.internaDatosGeneralesState,
+            });
+            this.movilizacionForm.patchValue(this.internaDatosGeneralesState);
+            
+            if (this.esFormularioSoloLectura) {
+              this.forma.disable();
+              this.movilizacionForm.disable();
+            }
           }
         })
-      ).subscribe();
+      )
+      .subscribe();
 
-        this.forma.statusChanges
-        .pipe(
-          takeUntil(this.unsubscribe$),
-          delay(10),
-          tap(() => {
-            const ACTIVE_STATE = { ...this.forma.value };
-            this.tramiteStore.setInternaDatosGeneralesTramite(ACTIVE_STATE); 
-          })
-        )
-        .subscribe();
+    this.forma.statusChanges
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        delay(10),
+        tap(() => {
+          const ACTIVE_STATE = { ...this.forma.value };
+          this.tramiteStore.setInternaDatosGeneralesTramite(ACTIVE_STATE);
+        })
+      )
+      .subscribe();
 
-      this.obtenerDatos(); 
-  
-      this.seccionQuery.selectSeccionState$
-        .pipe(
-          takeUntil(this.unsubscribe$),
-          map((seccionState) => {
-            this.seccion = seccionState;
-          })
-        )
-        .subscribe();
+    this.movilizacionForm.statusChanges
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        delay(10),
+        tap(() => {
+          const ACTIVE_STATE = { ...this.movilizacionForm.value };
+          this.tramiteStore.setInternaDatosGeneralesTramite(ACTIVE_STATE);
+        })
+      )
+      .subscribe();
+
+    this.obtenerDatos();
+
+    this.seccionQuery.selectSeccionState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.seccion = seccionState;
+        })
+      )
+      .subscribe();
   }
 
+  /**
+   * Inicializa el estado del formulario dependiendo del modo de acceso.
+   *
+   * Si el formulario está en modo solo lectura (`esFormularioSoloLectura`), guarda los datos actuales del formulario.
+   * En caso contrario, inicializa el formulario para su edición.
+   *
+   * @returns {void}
+   * @memberof InternaDatosGeneralesComponent
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.forma.disable();
+      this.movilizacionForm.disable();
+    } else {
+      this.forma.enable();
+      this.movilizacionForm.enable();
+    }
+  }
+  /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormulario(): void {
+    this.inicializarFormulario();
+    if (this.esFormularioSoloLectura) {
+      this.forma.disable();
+      this.movilizacionForm.disable();
+    } else if (!this.esFormularioSoloLectura) {
+      this.forma.enable();
+      this.movilizacionForm.enable();
+    } else {
+      // No se requiere ninguna acción en el formulario
+    }
+  }
+  /**
+   * Inicializa los formularios `forma` y `movilizacionForm`, y sus estructuras de control.
+   *
+   * También se suscribe al estado del store de trámite para obtener los datos actuales
+   * del estado `InternaDatosGeneralesState`.
+   *
+   * @returns {void}
+   * @memberof InternaDatosGeneralesComponent
+   */
+  inicializarFormulario(): void {
+    this.forma = this.fb.group({
+      datosDelaSolicitud: this.fb.group({
+        aduanaIngreso: [Validators.required],
+        oficinaInspeccion: ['', Validators.required],
+        puntoInspeccion: ['', Validators.required],
+        claveControlUnico: [{ value: '', disabled: true }, Validators.required],
+        establecimientoTIFs: ['', Validators.required],
+        nombreVeterinario: ['', Validators.required],
+        regimen: ['', Validators.required],
+        folioControlUnico: [''],
+        numeroGuia: [''],
+        tipoMercancia: [''],
+      }),
+    });
 
+    this.movilizacionForm = this.fb.group({
+      coordenadas: [''],
+      movilizacionNacional: [''],
+      identTransporte: [''],
+      puntoVerificacion: [''],
+      empresaTransportista: [''],
+    });
+
+    // Disable forms if flag is set
+    if (this.esFormularioSoloLectura) {
+      this.forma.disable();
+      this.movilizacionForm.disable();
+    }
+  }
+
+  /**
+   * Crea e inicializa el formulario principal `forma` con su estructura básica.
+   *
+   * En este caso, se define un único grupo anidado llamado `datosDelaSolicitud`.
+   *
+   * @returns {void}
+   * @memberof InternaDatosGeneralesComponent
+   */
+  crearFormulario(): void {
+    this.forma = this.fb.group({
+      datosDelaSolicitud: this.fb.group({}),
+    });
+  }
+
+  /**
+   * Verifica si un campo específico dentro de un formulario es válido.
+   *
+   * Utiliza el servicio `ValidacionesFormularioService` para determinar si el campo cumple con las validaciones definidas.
+   *
+   * @param {FormGroup} form El formulario que contiene el campo a validar.
+   * @param {string} field El nombre del campo dentro del formulario a verificar.
+   * @returns {boolean} Retorna `true` si el campo es válido, `false` en caso contrario.
+   * @memberof InternaDatosGeneralesComponent
+   */
+  esValido(form: FormGroup, field: string): boolean {
+    return this.validacionesService.isValid(form, field) === true;
+  }
+
+  /**
+   * Obtiene los datos de mercancía desde el servicio `MercanciaDatosService`.
+   *
+   * Se suscribe al observable retornado por `getDatos()`, asignando la respuesta
+   * al arreglo `mercanciaTablaDatos` si la respuesta tiene el formato esperado.
+   *
+   * En caso de error o respuesta inesperada, se registra un error en la consola.
+   * Se usa `takeUntil` con `destroyNotifier$` para cancelar la suscripción al destruir el componente.
+   *
+   * @returns {void}
+   * @memberof InternaDatosGeneralesComponent
+   */
   obtenerDatos(): void {
-    this.mercanciaDatosService.getDatos()
-    .pipe(takeUntil(this.unsubscribe$))
+    this.mercanciaDatosService
+      .getDatos()
+      .pipe(takeUntil(this.destroyNotifier$))
       .subscribe({
         next: (response: { mercanciaApiDatos: mercanciaInfo[] }) => {
           if (response && Array.isArray(response.mercanciaApiDatos)) {
             this.mercanciaTablaDatos = response.mercanciaApiDatos;
             this.cdr.detectChanges();
-            } else {
-              console.error('La respuesta de la API no tiene el formato esperado:', response);
-            }
-          },
-          error: (error) => {
-            console.error('Error al obtener datos:', error);
           }
+        }
       });
   }
-  /**
-   * @method obtenerListasDesplegables
-   * @description Obtiene y carga las listas desplegables necesarias para el formulario.
-   * - Llama a métodos específicos para recuperar datos de:
-   *   - Ingreso (`obtenerIngresoSelectList`)
-   *   - Sanidad agropecuaria (`obtenerSanidadAgropecuariaList`)
-   *   - Puntos de inspección (`obtenerPuntoInspeccionList`)
-   *   - Establecimientos (`obtenerEstablecimientoList`)
-   *   - Veterinarios (`obtenerVeterinarioList`)
-   *   - Régimen (`obtenerRegimenList`)
-   */
-    obtenerListasDesplegables(): void {
-      this.obtenerIngresoSelectList();
-      this.obtenerSanidadAgropecuariaList();
-      this.obtenerPuntoInspeccionList();
-      this.obtenerEstablecimientoList();
-      this.obtenerVeterinarioList();
-      this.obtenerRegimenList();
-    }
 
   /**
-   * Obtiene la lista para el select de aduana de ingreso.
-   * @method obtenerIngresoSelectList
+   * Ejecuta la carga de las listas desplegables necesarias para el formulario.
+   *
+   * Este método agrupa y llama a otros métodos que obtienen datos
+   * para diferentes selectores del formulario, como aduana de ingreso,
+   * sanidad agropecuaria, puntos de inspección, establecimientos,
+   * veterinarios y regímenes.
+   *
+   * @returns {void}
+   * @memberof InternaDatosGeneralesComponent
    */
-    obtenerIngresoSelectList(): void {
-      this.catalogosService.obtenerAduanaDeIngreso()
-      .pipe(takeUntil(this.unsubscribe$))
+  obtenerListasDesplegables(): void {
+    this.obtenerIngresoSelectList();
+    this.obtenerSanidadAgropecuariaList();
+    this.obtenerPuntoInspeccionList();
+    this.obtenerEstablecimientoList();
+    this.obtenerVeterinarioList();
+    this.obtenerRegimenList();
+  }
+
+  /**
+   * Obtiene la lista de aduanas de ingreso desde el servicio de catálogos
+   * y asigna los datos a la propiedad `aduanaDeIngreso`.
+   *
+   * @returns {void}
+   * @memberof InternaDatosGeneralesComponent
+   */
+  obtenerIngresoSelectList(): void {
+    this.catalogosService
+      .obtenerAduanaDeIngreso()
+      .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((data): void => {
         const DATOS = data?.data;
         this.aduanaDeIngreso = DATOS;
       });
-    }
+  }
 
-      /**
-   * Obtiene la lista para el select de sanidad agropecuaria.
-   * @method obtenerSanidadAgropecuariaList
+  /**
+   * Obtiene la lista de sanidad agropecuaria desde el servicio de catálogos
+   * y asigna los datos a la propiedad `sanidadAgropecuaria`.
+   *
+   * @returns {void}
+   * @memberof InternaDatosGeneralesComponent
    */
   obtenerSanidadAgropecuariaList(): void {
-    this.catalogosService.obtenerSanidadAgropecuaria()
-    .pipe(takeUntil(this.unsubscribe$))
-    .subscribe((data): void => {
-      const DATOS = data?.data;
-      this.sanidadAgropecuaria = DATOS;
-    });
+    this.catalogosService
+      .obtenerSanidadAgropecuaria()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data): void => {
+        const DATOS = data?.data;
+        this.sanidadAgropecuaria = DATOS;
+      });
   }
 
   /**
-   * Obtiene la lista para el select de punto de inspección.
-   * @method obtenerPuntoInspeccionList
+   * Obtiene la lista de puntos de inspección desde el servicio de catálogos
+   * y asigna los datos a la propiedad `puntoInspeccion`.
+   *
+   * @returns {void}
+   * @memberof InternaDatosGeneralesComponent
    */
   obtenerPuntoInspeccionList(): void {
-    this.catalogosService.obtenerPuntoInspeccion()
-    .pipe(takeUntil(this.unsubscribe$))
-    .subscribe((data): void => {
-      const DATOS = data?.data;
-      this.puntoInspeccion = DATOS;
-    });
+    this.catalogosService
+      .obtenerPuntoInspeccion()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data): void => {
+        const DATOS = data?.data;
+        this.puntoInspeccion = DATOS;
+      });
   }
 
   /**
-   * Obtiene la lista para el select de establecimiento.
-   * @method obtenerEstablecimientoList
+   * Obtiene la lista de establecimientos TIF desde el servicio de catálogos
+   * y asigna los datos a la propiedad `establecimientoTIF`.
+   *
+   * @returns {void}
+   * @memberof InternaDatosGeneralesComponent
    */
   obtenerEstablecimientoList(): void {
-    this.catalogosService.obtenerEstablecimiento()
-    .pipe(takeUntil(this.unsubscribe$))
-    .subscribe((data): void => {
-      const DATOS = data?.data;
-      this.establecimientoTIF = DATOS;
-    });
+    this.catalogosService
+      .obtenerEstablecimiento()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data): void => {
+        const DATOS = data?.data;
+        this.establecimientoTIF = DATOS;
+      });
   }
 
   /**
-   * Obtiene la lista para el select de veterinario.
-   * @method obtenerVeterinarioList
+   * Obtiene la lista de veterinarios desde el servicio de catálogos
+   * y asigna los datos a la propiedad `veterinario`.
+   *
+   * @returns {void}
+   * @memberof InternaDatosGeneralesComponent
    */
-
   obtenerVeterinarioList(): void {
-    this.catalogosService.obtenerVeterinario()
-    .pipe(takeUntil(this.unsubscribe$))
-    .subscribe((data): void => {
-      const DATOS = data?.data;
-      this.veterinario = DATOS;
-    });
+    this.catalogosService
+      .obtenerVeterinario()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data): void => {
+        const DATOS = data?.data;
+        this.veterinario = DATOS;
+      });
   }
 
   /**
-   * Obtiene la lista para el select de régimen.
-   * @method obtenerRegimenList
+   * Obtiene la lista de regímenes desde el servicio de catálogos
+   * y asigna los datos a la propiedad `regimen`.
+   *
+   * @returns {void}
+   * @memberof InternaDatosGeneralesComponent
    */
   obtenerRegimenList(): void {
-    this.catalogosService.obtenerRegimen()
-    .pipe(takeUntil(this.unsubscribe$))
-    .subscribe((data): void => {
-      const DATOS = data?.data;
-      this.regimen = DATOS;
-    });
+    this.catalogosService
+      .obtenerRegimen()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data): void => {
+        const DATOS = data?.data;
+        this.regimen = DATOS;
+      });
   }
-      /**
-   * Obtiene la aduana de ingreso.
-   * Este método llama al servicio de revisión para obtener la aduana de ingreso.
+
+  /**
+   * Obtiene la aduana de ingreso desde el servicio de revisión
+   * y asigna la configuración al control `aduanaIngreso`.
+   *
    * @returns {void}
+   * @memberof InternaDatosGeneralesComponent
    */
   getAduanaIngreso(): void {
-    this.revisionService.getAduanaIngreso()
-    .pipe(takeUntil(this.unsubscribe$))
-    .subscribe((resp) => {
-      if (resp.code === 200) {
-        const RESPONSE = resp.data;
-
-        this.aduanaIngreso = {
-          labelNombre: 'Aduana de ingreso',
-          required: false,
-          primerOpcion: 'Selecciona un valor',
-          catalogos: RESPONSE,
-        };
-      }
-    });
+    this.revisionService
+      .getAduanaIngreso()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((resp) => {
+        if (resp.code === 200) {
+          const RESPONSE = resp.data;
+          this.aduanaIngreso = {
+            labelNombre: 'Aduana de ingreso',
+            required: false,
+            primerOpcion: 'Selecciona un valor',
+            catalogos: RESPONSE,
+          };
+        }
+      });
   }
 
   /**
-   * Obtiene la oficina de inspección.
-   * Este método llama al servicio de revisión para obtener la oficina de inspección.
+   * Obtiene la oficina de inspección desde el servicio de revisión
+   * y asigna la configuración al control `oficianaInspeccion`.
+   *
    * @returns {void}
+   * @memberof InternaDatosGeneralesComponent
    */
   getOficianaInspeccion(): void {
-    this.revisionService.getOficianaInspeccion()
-    .pipe(takeUntil(this.unsubscribe$))
-    .subscribe((resp) => {
-      if (resp.code === 200) {
-        const RESPONSE = resp.data;
-
-        this.oficianaInspeccion = {
-          labelNombre: 'Oficina de Inspección de Sanidad Agropecuaria',
-          required: false,
-          primerOpcion: 'Selecciona un valor',
-          catalogos: RESPONSE,
-        };
-      }
-    });
+    this.revisionService
+      .getOficianaInspeccion()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((resp) => {
+        if (resp.code === 200) {
+          const RESPONSE = resp.data;
+          this.oficianaInspeccion = {
+            labelNombre: 'Oficina de Inspección de Sanidad Agropecuaria',
+            required: false,
+            primerOpcion: 'Selecciona un valor',
+            catalogos: RESPONSE,
+          };
+        }
+      });
   }
 
   /**
-   * Obtiene el punto de inspección.
-   * Este método llama al servicio de revisión para obtener el punto de inspección.
+   * Obtiene los establecimientos desde el servicio de revisión
+   * y asigna la configuración al control `establecimiento`.
+   *
    * @returns {void}
-   */
-
-
-  /**
-   * Obtiene el establecimiento.
-   * Este método llama al servicio de revisión para obtener el establecimiento.
-   * @returns {void}
+   * @memberof InternaDatosGeneralesComponent
    */
   getEstablecimiento(): void {
-    this.revisionService.getEstablecimiento()
-    .pipe(takeUntil(this.unsubscribe$))
-    .subscribe((resp) => {
-      if (resp.code === 200) {
-        const RESPONSE = resp.data;
-
-        this.establecimiento = {
-          labelNombre: 'Establecimiento TIF',
-          required: false,
-          primerOpcion: 'Selecciona un valor',
-          catalogos: RESPONSE,
-        };
-      }
-    });
+    this.revisionService
+      .getEstablecimiento()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((resp) => {
+        if (resp.code === 200) {
+          const RESPONSE = resp.data;
+          this.establecimiento = {
+            labelNombre: 'Establecimiento TIF',
+            required: false,
+            primerOpcion: 'Selecciona un valor',
+            catalogos: RESPONSE,
+          };
+        }
+      });
   }
+
   /**
-   * Obtiene el régimen al que se destinarán las mercancías.
-   * Este método llama al servicio de revisión para obtener el régimen.
+   * Obtiene los regímenes a los que se destinarán las mercancías desde el servicio de revisión
+   * y asigna la configuración al control `regimenDestinaran`.
+   *
    * @returns {void}
+   * @memberof InternaDatosGeneralesComponent
    */
   getRegimenDestinaran(): void {
-    this.revisionService.getRegimenDestinaran()
-    .pipe(takeUntil(this.unsubscribe$))
-    .subscribe((resp) => {
-      if (resp.code === 200) {
-        const RESPONSE = resp.data;
-
-        this.regimenDestinaran = {
-          labelNombre: 'Régimen al que se destinarán las mercancías',
-          required: false,
-          primerOpcion: 'Selecciona un valor',
-          catalogos: RESPONSE,
-        };
-      }
-    });
+    this.revisionService
+      .getRegimenDestinaran()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((resp) => {
+        if (resp.code === 200) {
+          const RESPONSE = resp.data;
+          this.regimenDestinaran = {
+            labelNombre: 'Régimen al que se destinarán las mercancías',
+            required: false,
+            primerOpcion: 'Selecciona un valor',
+            catalogos: RESPONSE,
+          };
+        }
+      });
   }
 
   /**
-   * Obtiene la movilización nacional.
-   * Este método llama al servicio de revisión para obtener la movilización nacional.
+   * Obtiene las opciones de movilización nacional desde el servicio de revisión
+   * y asigna la configuración al control `movilizacionNacional`.
+   *
    * @returns {void}
+   * @memberof InternaDatosGeneralesComponent
    */
   getMovilizacionNacional(): void {
-    this.revisionService.getMovilizacionNacional()
-    .pipe(takeUntil(this.unsubscribe$))
-    .subscribe((resp) => {
-      if (resp.code === 200) {
-        const RESPONSE = resp.data;
-
-        this.movilizacionNacional = {
-          labelNombre: 'Movilización Nacional',
-          required: false,
-          primerOpcion: 'Aéreo',
-          catalogos: RESPONSE,
-        };
-      }
-    });
+    this.revisionService
+      .getMovilizacionNacional()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((resp) => {
+        if (resp.code === 200) {
+          const RESPONSE = resp.data;
+          this.movilizacionNacional = {
+            labelNombre: 'Movilización Nacional',
+            required: false,
+            primerOpcion: 'Aéreo',
+            catalogos: RESPONSE,
+          };
+        }
+      });
   }
 
   /**
-   * Obtiene el punto de verificación.
-   * Este método llama al servicio de revisión para obtener el punto de verificación.
+   * Obtiene los puntos de verificación federales desde el servicio de revisión
+   * y asigna la configuración al control `puntoVerificacion`.
+   *
    * @returns {void}
+   * @memberof InternaDatosGeneralesComponent
    */
   getPuntoVerificacion(): void {
-    this.revisionService.getPuntoVerificacion()
-    .pipe(takeUntil(this.unsubscribe$))
-    .subscribe((resp) => {
-      if (resp.code === 200) {
-        const RESPONSE = resp.data;
-
-        this.puntoVerificacion = {
-          labelNombre: 'Punto de verificación federal',
-          required: false,
-          primerOpcion: 'REGIÓN NORTE, LA CONCHA, SIN.',
-          catalogos: RESPONSE,
-        };
-      }
-    });
+    this.revisionService
+      .getPuntoVerificacion()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((resp) => {
+        if (resp.code === 200) {
+          const RESPONSE = resp.data;
+          this.puntoVerificacion = {
+            labelNombre: 'Punto de verificación federal',
+            required: false,
+            primerOpcion: 'REGIÓN NORTE, LA CONCHA, SIN.',
+            catalogos: RESPONSE,
+          };
+        }
+      });
   }
+
   /**
-   * Obtiene la empresa transportista.
-   * Este método llama al servicio de revisión para obtener la empresa transportista.
+   * Obtiene la lista de empresas transportistas desde el servicio de revisión
+   * y asigna la configuración al control `empresaTransportista`.
+   *
    * @returns {void}
+   * @memberof InternaDatosGeneralesComponent
    */
   getEmpresaTransportista(): void {
-    this.revisionService.getEmpresaTransportista()
-    .pipe(takeUntil(this.unsubscribe$))
-    .subscribe((resp) => {
-      if (resp.code === 200) {
-        const RESPONSE = resp.data;
-
-        this.empresaTransportista = {
-          labelNombre: 'Nombre de la empresa transportista',
-          required: false,
-          primerOpcion: 'testabc',
-          catalogos: RESPONSE,
-        };
-      }
-    });
+    this.revisionService
+      .getEmpresaTransportista()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((resp) => {
+        if (resp.code === 200) {
+          const RESPONSE = resp.data;
+          this.empresaTransportista = {
+            labelNombre: 'Nombre de la empresa transportista',
+            required: false,
+            primerOpcion: '',
+            catalogos: RESPONSE,
+          };
+        }
+      });
   }
 
-    /**
-   * @method disableFormControls
-   * @description Deshabilita controles específicos del formulario.
-   * - En este caso, deshabilita el control `folioControlUnico` si existe en el formulario `forma`.
+  /**
+   * Método del ciclo de vida para limpiar las suscripciones
+   * y evitar fugas de memoria al destruir el componente.
+   *
+   * @returns {void}
+   * @memberof InternaDatosGeneralesComponent
    */
-  disableFormControls(): void {
-    this.forma.get('folioControlUnico')?.disable();
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
-
-    /**
-   * @method ngOnDestroy
-   * @description Maneja la limpieza de recursos antes de destruir el componente.
-   * - Completa y libera `unsubscribe$` para detener suscripciones activas.
-   */
-    ngOnDestroy(): void {
-      this.unsubscribe$.next();
-      this.unsubscribe$.complete();
-    }
 }

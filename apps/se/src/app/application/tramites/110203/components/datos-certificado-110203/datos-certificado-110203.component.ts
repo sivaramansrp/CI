@@ -84,22 +84,22 @@ export class DatosCertificado110203Component implements OnInit, OnDestroy {
   /**
    * Lista de mercancias obtenidas del catálogo.
    */
-  mercancias: Mercancia[] = mediocatalogo.mercancias;
+  mercancias: Mercancia[] = mediocatalogo?.mercancias;
 
   /**
    * Lista de tipos de datos obtenidos del catálogo.
    */
-  tipoDatos: Catalogo[] = mediocatalogo.tipo;
+  tipoDatos: Catalogo[] = mediocatalogo?.tipo;
 
   /**
    * Lista de opciones de comercialización obtenidas del catálogo.
    */
-  comercializacion: Catalogo[] = mediocatalogo.comercializacion;
+  comercializacion: Catalogo[] = mediocatalogo?.comercializacion;
 
   /**
    * Lista de medidas obtenidas del catálogo.
    */
-  medida: Catalogo[] = mediocatalogo.comercializacion;
+  medida: Catalogo[] = mediocatalogo?.comercializacion;
 
   /**
    * Configuración de las columnas para la tabla dinámica que muestra las mercancias.
@@ -160,7 +160,7 @@ export class DatosCertificado110203Component implements OnInit, OnDestroy {
   /**
    * Método que abre el modal y carga el formulario con los datos predefinidos del representante.
    */
-  public abrirModal() {
+  public abrirModal(): void {
     this.modal = 'show'; // Muestra el modal
     this.getRegistroForm(); // Carga los datos en el formulario
   }
@@ -179,16 +179,21 @@ export class DatosCertificado110203Component implements OnInit, OnDestroy {
       marca: ['', Validators.required],
       valor: ['', [Validators.required, Validators.pattern(REG_X.DECIMALES_DOS_LUGARES)]],
       cantidad: ['', [Validators.required,Validators.pattern(REGEX_RFC)]],
-      comercializacion: ['', Validators.required],
+      comercializacion: [this.solicitudState?.comercializacion, Validators.required],
       bruta: ['', [Validators.required, Validators.pattern(REG_X.DECIMALES_DOS_LUGARES)]],
-      medida: ['', Validators.required],
+      medida: [this.solicitudState?.medida, Validators.required],
       factura: ['', Validators.required],
-      tipo: ['', Validators.required],
+      tipo: [this.solicitudState?.tipo, Validators.required],
       fecha: ['', Validators.required]
     });
      this.patchData();
   
   }
+   /**
+   * Asigna valores predeterminados al formulario de mercancías.
+   * Este método utiliza `patchValue` para completar algunos campos del formulario con datos de ejemplo,
+   * lo cual es útil para pruebas o para precargar información existente en un flujo de edición.
+   */
   patchData():void {
     this.mercanciasForm.patchValue({
       comercial: 'Patitos de hule',
@@ -201,7 +206,11 @@ export class DatosCertificado110203Component implements OnInit, OnDestroy {
       factura: '23',
       fecha: '18/02/2025',
     });
-
+   /**
+   * Desactiva campos específicos del formulario de mercancías.
+   * Los campos deshabilitados no pueden ser modificados por el usuario y no se incluirán al enviar el formulario.
+   * En este caso, se deshabilitan los campos: comercial, inglés, cantidad y fecha.
+   */
     this.mercanciasForm.get('comercial')?.disable();
     this.mercanciasForm.get('ingles')?.disable();
     this.mercanciasForm.get('cantidad')?.disable();
@@ -214,31 +223,7 @@ export class DatosCertificado110203Component implements OnInit, OnDestroy {
    * Inicializa el formulario reactivo y carga los datos necesarios para el certificado y las mercancias.
    */
   ngOnInit(): void {
-    this.inicializarFormulario();
- 
-    this.mercanciasForm = this.fb.group({
-      comercial: ['', Validators.required],
-      ingles: ['', Validators.required],
-      complemento: [''],
-      marca: ['', Validators.required],
-      valor: ['', [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/)]],
-      cantidad: ['', [Validators.required, Validators.pattern(/^\d+$/)]],
-      comercializacion: ['', Validators.required],
-      bruta: ['', [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/)]],
-      medida: ['', Validators.required],
-      factura: ['', Validators.required],
-      tipo: ['', Validators.required],
-      fecha: ['', Validators.required]
-    });
-  }
-
-  /**
-   * Inicializa el formulario reactivo con los valores actuales del estado de la solicitud.
-   * 
-   * Carga los datos del certificado, como observaciones, precisa, y presenta desde el estado de la solicitud.
-   */
-  private inicializarFormulario(): void {
-    this.tramite110203Query.selectSolicitud$
+     this.tramite110203Query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
@@ -246,11 +231,48 @@ export class DatosCertificado110203Component implements OnInit, OnDestroy {
         })
       )
       .subscribe();
+       /**
+   * Inicializa el formulario reactivo del componente con sus valores y validaciones correspondientes.
+   * Este método configura los controles del formulario y sus validadores iniciales.
+   */
+    this.inicializarFormulario();
+   }
 
+  /**
+   * Inicializa el formulario reactivo con los valores actuales del estado de la solicitud.
+   * 
+   * Carga los datos del certificado, como observaciones, precisa, y presenta desde el estado de la solicitud.
+   */
+  private inicializarFormulario(): void {  
+/** 
+ * Crea el formulario reactivo para el certificado.
+ * Contiene los campos: observaciones, descripción precisa de la solicitud (precisa) y quién presenta la solicitud (presenta).
+ */
     this.certificadoForm = this.fb.group({
       observaciones: [this.solicitudState.observaciones],
       precisa: [this.solicitudState.precisa,Validators.required],
       presenta: [this.solicitudState.presenta],
+    });
+    /**
+ * Crea el formulario reactivo correspondiente a los datos del certificado.
+ * Incluye los siguientes campos:
+ * - observaciones: Comentarios adicionales del solicitante.
+ * - precisa: Descripción detallada de la solicitud (obligatorio).
+ * - presenta: Persona o entidad que presenta la solicitud.
+ */
+      this.mercanciasForm = this.fb.group({
+      comercial: ['', Validators.required],
+      ingles: ['', Validators.required],
+      complemento: [''],
+      marca: ['', Validators.required],
+      valor: ['', [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/)]],
+      cantidad: ['', [Validators.required, Validators.pattern(/^\d+$/)]],
+      comercializacion: [this.solicitudState.comercializacion, Validators.required],
+      bruta: ['', [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/)]],
+      medida: [this.solicitudState.medida, Validators.required],
+      factura: ['', Validators.required],
+      tipo: [this.solicitudState.tipo, Validators.required],
+      fecha: ['', Validators.required]
     });
   }
 

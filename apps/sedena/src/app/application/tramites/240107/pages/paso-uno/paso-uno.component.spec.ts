@@ -18,29 +18,8 @@ import { ActivatedRoute } from '@angular/router';
 import { Observable, of as observableOf, throwError } from 'rxjs';
 
 import { SeccionLibStore } from '@libs/shared/data-access-user/src';
-
 import { PasoUnoComponent } from './paso-uno.component';
-
-
-@Directive({ selector: '[myCustom]' })
-class MyCustomDirective {
-  @Input() myCustom;
-}
-
-@Pipe({name: 'translate'})
-class TranslatePipe implements PipeTransform {
-  transform(value) { return value; }
-}
-
-@Pipe({name: 'phoneNumber'})
-class PhoneNumberPipe implements PipeTransform {
-  transform(value) { return value; }
-}
-
-@Pipe({name: 'safeHtml'})
-class SafeHtmlPipe implements PipeTransform {
-  transform(value) { return value; }
-}
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('PasoUnoComponent', () => {
   let fixture;
@@ -48,12 +27,8 @@ describe('PasoUnoComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule ],
-      declarations: [
-        PasoUnoComponent,
-        TranslatePipe, PhoneNumberPipe, SafeHtmlPipe,
-        MyCustomDirective
-      ],
+      imports: [ FormsModule, ReactiveFormsModule ,HttpClientTestingModule],
+      declarations: [PasoUnoComponent,],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
       providers: [
         {
@@ -67,7 +42,7 @@ describe('PasoUnoComponent', () => {
             data: observableOf({})
           }
         },
-        SeccionLibStore
+        SeccionLibStore,
       ]
     }).overrideComponent(PasoUnoComponent, {
 
@@ -77,8 +52,12 @@ describe('PasoUnoComponent', () => {
   });
 
   afterEach(() => {
-    component.ngOnDestroy = function() {};
-    fixture.destroy();
+    if (component) {
+      component.ngOnDestroy = () => {}; 
+    }
+    if (fixture) {
+      fixture.destroy();
+    }
   });
 
   it('should run #constructor()', async () => {

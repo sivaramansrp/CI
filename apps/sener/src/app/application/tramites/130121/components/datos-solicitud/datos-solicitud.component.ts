@@ -1,10 +1,10 @@
 
 
-import { Catalogo, REGEX_CARACTERES_NO_PERMITIDOS, REGEX_NUMERO_DECIMAL_ENTERO, REGEX_TEXTO_PREFIJO, REG_X } from '@ng-mf/data-access-user';
+import { Catalogo, ConsultaioQuery, REGEX_CARACTERES_NO_PERMITIDOS, REGEX_NUMERO_DECIMAL_ENTERO, REGEX_TEXTO_PREFIJO, REG_X } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { DATOS_INPUT_FIELDS, MERCANCIA_INPUT_VALUES } from '../../../../shared/constantes/valores-constantes.enum';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 import { Tramite130121State, Tramite130121Store } from '../../estados/tramites/tramites130121.store';
 
 import { PARTIDASDELAMERCANCIA_TABLA } from '../../../../shared/constantes/partidas-de-la-mercancia.enum';
@@ -75,6 +75,12 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
    * @type {FormGroup} Formulario utilizado para representar los datos de la mercancía.
    */
   frmRepresentacionForm!: FormGroup;
+
+   /**
+   * Formulario reactivo para capturar el estado del manifiesto de aceptación (checkbox).
+   * Este formulario se utiliza para almacenar y gestionar el valor del checkbox de aceptación en el store.
+   */
+  manifestoForm!: FormGroup;
 
   /**
    * tableHeaderData
@@ -248,9 +254,16 @@ tituloParte = TITULO_ORIGEN;
  * // Ejemplo de uso:
  * this.seccionState.solicitud; // Accede a la solicitud actual del estado
  * 
- * @type {Tramite130108State}
+ * @type {Tramite130121State}
  */
   public seccionState!: Tramite130121State;
+
+   /**
+  * Indica si el formulario está en modo solo lectura.
+  * Cuando es `true`, los campos del formulario no se pueden editar.
+  */
+  esFormularioSoloLectura: boolean = false; 
+
   /**
    * Constructor de la clase.
    * @param {FormBuilder} fb - Servicio para construir formularios reactivos.
@@ -264,9 +277,19 @@ tituloParte = TITULO_ORIGEN;
     private http: HttpClient,
     private tramite130121Store: Tramite130121Store,
     private tramite130121Query: Tramite130121Query,
-    private permisodehidrocarburosService: PermisoDeHidrocarburosService
+    private permisodehidrocarburosService: PermisoDeHidrocarburosService,
+    private consultaioQuery: ConsultaioQuery,
+
   ) {
-    // Constructor vacío, solo se inyectan los servicios
+     this.consultaioQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.destroyed$),
+      map((seccionState)=>{
+        this.esFormularioSoloLectura = seccionState.readonly; 
+        this.inicializarEstadoFormulario();
+      })
+    )
+    .subscribe()
   }
 
   /**
@@ -289,21 +312,25 @@ tituloParte = TITULO_ORIGEN;
   */
 
   ngOnInit(): void {
-    this.configuracionFormularioSuscripciones();
-    this.inicializarFormularios();
+    this.inicializarEstadoFormulario();
     this.opcionesDeBusqueda();
     this.formularioTotalCount();
     this.fetchEntidadFederativa();
     this.fetchRepresentacionFederal();
     this.listaDePaisesDisponibles();
-
-    // Se suscribe a 'mostrarTabla$' y actualiza el valor de 'mostrarTabla' cuando el estado cambia.
-    this.tramite130121Query.mostrarTabla$
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe((mostrarTabla) => {
-        this.mostrarTabla = mostrarTabla;
-      });
     
+  }
+
+  /**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.  
+   * Además, obtiene la información del catálogo de mercancía.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.inicializarFormularios();
+    }  
   }
 
   /**
@@ -313,6 +340,9 @@ tituloParte = TITULO_ORIGEN;
    * antes de ser enviados.
    */
   inicializarFormularios(): void {
+
+    this.configuracionFormularioSuscripciones();
+
 
     // Formulario principal del trámite, contiene los campos de solicitud, régimen y clasificación
     this.formDelTramite = this.fb.group({
@@ -497,6 +527,58 @@ tituloParte = TITULO_ORIGEN;
        */
       representacion: [this.seccionState?.representacion, Validators.required],
     });
+
+     /**
+     * @description Inicializa el formulario reactivo para el manifiesto de aceptación.
+     * Este formulario contiene el control 'manifesto', que representa el estado del checkbox de aceptación.
+     * El valor por defecto es 'false'.
+     * @type {FormGroup}
+     */
+    this.manifestoForm = this.fb.group({
+      
+      /**
+       * @description Estado del checkbox del manifiesto de aceptación.
+       * Valor booleano que indica si el usuario ha aceptado el manifiesto.
+       * Se utiliza para almacenar y gestionar el valor en el formulario reactivo y en el store.
+       * @type {boolean}
+       * @default false
+       */
+      manifesto: [this.seccionState?.manifesto], 
+    });
+  }
+
+  /**
+ * @method
+ * @name guardarDatosFormulario
+ * @description
+ * Inicializa los formularios y obtiene los datos de la tabla. 
+ * Dependiendo del modo de solo lectura (`esFormularioSoloLectura`), 
+ * deshabilita o habilita todos los formularios del componente.
+ * Si el formulario está en modo solo lectura, todos los formularios se deshabilitan para evitar modificaciones.
+ * Si no está en modo solo lectura, todos los formularios se habilitan para permitir la edición.
+ * 
+ * @returns {void}
+ */
+  guardarDatosFormulario(): void {
+      this.inicializarFormularios();
+      this.obtenerTablaDatos();
+      if (this.esFormularioSoloLectura) {
+        this.formDelTramite.disable();
+        this.mercanciaForm.disable();
+        this.partidasDelaMercanciaForm.disable();
+        this.paisForm.disable();
+        this.frmRepresentacionForm.disable();
+        this.manifestoForm.disable();
+      } else if (!this.esFormularioSoloLectura) {
+        this.formDelTramite.enable();
+        this.mercanciaForm.enable();
+        this.partidasDelaMercanciaForm.enable();
+        this.paisForm.enable();
+        this.frmRepresentacionForm.enable();
+        this.manifestoForm.enable();
+      } else {
+        // No se requiere ninguna acción en el formulario
+      }
   }
 
   /**
@@ -509,7 +591,6 @@ tituloParte = TITULO_ORIGEN;
 * - Actualización del estado global del store cada vez que los formularios se modifican.
 */
   configuracionFormularioSuscripciones(): void {
-
     this.tramite130121Query.selectSolicitud$
           .pipe(takeUntil(this.destroyed$))
           .subscribe((state: Tramite130121State) => {
@@ -629,24 +710,6 @@ tituloParte = TITULO_ORIGEN;
   }
 
 
-  /**
- * Método encargado de manejar la fila seleccionada en una tabla.
- * Si hay filas seleccionadas, se guarda la primera fila en la propiedad `filaSeleccionada`.
- * Si no hay filas seleccionadas, se establece como un arreglo vacío.
- * Luego, si existe una fila seleccionada, se actualiza el estado de la tienda `tramite130121Store` 
- * con los valores de la fila seleccionada mediante el método `storeTableValues`.
- * 
- * @param {PartidasDeLaMercanciaModelo[]} filasSeleccionadas - Arreglo de filas seleccionadas en la tabla.
- * @returns {void}
- */
-  manejarlaFilaSeleccionada(filasSeleccionadas: PartidasDeLaMercanciaModelo[]): void {
-    this.filaSeleccionada = filasSeleccionadas.length
-      ? filasSeleccionadas
-      : [];
-    if (this.filaSeleccionada) {
-      this.tramite130121Store.storeTableValues(this.filaSeleccionada);
-    }
-  }
   /**
  * Método para obtener los datos de la tabla dinámica.
  * Este método realiza una solicitud al servicio `ImportacionDeVehiculosService` para obtener los datos
@@ -802,22 +865,6 @@ handleStoreUpdate(event: { form: FormGroup; campo: string; metodoNombre: string 
     }
   }
 
-  /**
- * Método encargado de navegar a la página de modificación de partida.
- * Si existe una fila seleccionada, se muestra la tabla y se almacenan los valores de la fila seleccionada 
- * en el estado del store correspondiente mediante el método `storeTableValues`.
- * 
- * @returns {void}
- */
-  navegarParaModificarPartida(): void {
-    // Verificamos si existe una fila seleccionada
-    if (this.filaSeleccionada) {
-      // Si la fila está seleccionada, se muestra la tabla
-      this.tramite130121Store.setMostrarTabla(true);
-      // Almacenamos los valores de la fila seleccionada en el store
-      this.tramite130121Store.storeTableValues(this.filaSeleccionada);
-    }
-  }
 
   /**
    * Método que realiza la consulta al servicio de exportación de minerales
@@ -899,14 +946,11 @@ handleStoreUpdate(event: { form: FormGroup; campo: string; metodoNombre: string 
   * @param _bloqueId Identificador del bloque para obtener los países correspondientes.
   */
   fetchPaisesPorBloque(_bloqueId: number): void {
-    // Llamada al servicio para obtener los países por bloque
     this.permisodehidrocarburosService
       .getPaisesPorBloque(_bloqueId)
-      .pipe(takeUntil(this.destroyed$)) // Se asegura de que la suscripción se cancele correctamente
+      .pipe(takeUntil(this.destroyed$))
       .subscribe((data: Catalogo[]) => {
-        // Asigna los países obtenidos a la propiedad paisesPorBloque
         this.paisesPorBloque = data;
-        // Mapea las descripciones de los países y las asigna a selectRangoDias
         this.selectRangoDias = this.paisesPorBloque.map(
           (pais: Catalogo) => pais.descripcion
         );

@@ -1,14 +1,20 @@
-import { AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
+import { ConsultaioState } from '@libs/shared/data-access-user/src';
 import { DatosGeneralesDeLaSolicitudComponent } from '../../components/datos-generales-de-la-solicitud/datos-generales-de-la-solicitud.component';
 import { DatosPorGarantiaComponent } from '../../components/datos-por-garantia/datos-por-garantia.component';
 import { ModificacionDeDenominacionORazorsSocialComponent } from '../../components/modificacion-de-denominacion-o-razors-social/modificacion-de-denominacion-o-razors-social.component';
+import { OnDestroy } from '@angular/core';
+import { OnInit } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { SolicitanteComponent } from '@libs/shared/data-access-user/src';
-import { TIPO_PERSONA } from '@libs/shared/data-access-user/src';
+import { Solicitud31301State } from '../../estados/solicitud31301.store';
+import { SolicitudService } from '../../services/solicitud.service';
+import { Subject } from 'rxjs';
 import { TercerosRelacionadosComponent } from '../../components/terceros-relacionados/terceros-relacionados.component';
-import { ViewChild } from '@angular/core';
+import { map } from 'rxjs';
+import { takeUntil } from 'rxjs';
 
 /**
  * Componente que representa el primer paso de un trámite.
@@ -29,20 +35,69 @@ import { ViewChild } from '@angular/core';
   templateUrl: './paso-uno.component.html',
   styleUrls: ['./paso-uno.component.scss'],
 })
-export class PasoUnoComponent implements AfterViewInit {
-   /**
-   * Referencia al componente SolicitanteComponent para acceder a sus métodos y propiedades.
+export class PasoUnoComponent implements OnInit, OnDestroy {
+  /**
+   * Notificador para destruir las suscripciones y evitar fugas de memoria.
+   * Este `Subject` se utiliza para cancelar las suscripciones activas cuando
+   * el componente se destruye.
    */
-   @ViewChild(SolicitanteComponent) solicitante!: SolicitanteComponent;
+  destroyNotifier$: Subject<void> = new Subject();
 
-   /**
-    * Se ejecuta después de que la vista ha sido inicializada.
-    * Llama al método `obtenerTipoPersona` del componente SolicitanteComponent
-    * para establecer el tipo de persona como MORAL_NACIONAL.
-    */
-   ngAfterViewInit(): void {
-     this.solicitante.obtenerTipoPersona(TIPO_PERSONA.MORAL_NACIONAL);
-   }
+  /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
+  public esDatosRespuesta: boolean = false;
+
+  /** Estado de la consulta que se obtiene del store. */
+  public consultaState!: ConsultaioState;
+
+  /**
+   * Constructor del componente.
+   *
+   * @param consultaQuery Inyección del servicio de consulta del estado de la sección.
+   * @param solicitudService Servicio para manejar la lógica relacionada con la solicitud.
+   */
+  constructor(
+    private consultaQuery: ConsultaioQuery,
+    public solicitudService: SolicitudService
+  ) {}
+
+  /**
+   * Ciclo de vida `ngOnInit`.
+   *
+   * - Se suscribe al estado de `consultaQuery` para obtener el estado actual de la sección.
+   * - Si el estado indica una actualización (`update`), se ejecuta `guardarDatosFormulario`.
+   * - En caso contrario, se establece `esDatosRespuesta` en `true`.
+   */
+  ngOnInit(): void {
+    this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.consultaState = seccionState;
+        })
+      )
+      .subscribe();
+    if (this.consultaState.update) {
+      this.guardarDatosFormulario();
+    } else {
+      this.esDatosRespuesta = true;
+    }
+  }
+
+  /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormulario(): void {
+    this.solicitudService
+      .guardarDatosFormulario()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((resp: Solicitud31301State) => {
+        if (resp) {
+          this.esDatosRespuesta = true;
+          this.solicitudService.actualizarEstadoFormulario(resp);
+        }
+      });
+  }
 
   /**
    * Índice utilizado para identificar la pestaña activa dentro del paso.
@@ -67,7 +122,7 @@ export class PasoUnoComponent implements AfterViewInit {
   /**
    * Maneja el cambio de tipo de endoso y habilita o deshabilita la pestaña de modificación
    * dependiendo del valor seleccionado.
-   * 
+   *
    * @param evento - El tipo de endoso seleccionado (puede ser string o número).
    */
   tipoDeEndosoChanges(evento: string | number): void {
@@ -76,5 +131,15 @@ export class PasoUnoComponent implements AfterViewInit {
     } else {
       this.isEnableModificacionTab = false;
     }
+  }
+
+  /**
+   * Método que se ejecuta al destruir el componente.
+   * Este método emite un valor al `destroyNotifier$` y lo completa para cancelar
+   * todas las suscripciones activas y evitar fugas de memoria.
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }

@@ -1,5 +1,31 @@
 
-
+jest.mock('@libs/shared/theme/assets/json/221602/realizar.json', () => ({
+  __esModule: true,
+  default: {
+    regimen: [
+      { id: 1, descripcion: 'Temporal' },
+      { id: 2, descripcion: 'Definitivo' }
+    ],
+    veterinario: [
+      { id: 1, descripcion: 'Vet A' },
+      { id: 2, descripcion: 'Vet B' }
+    ],
+    establecimiento: [
+      { id: 1, descripcion: 'Est A' },
+      { id: 2, descripcion: 'Est B' }
+    ],
+    mercancias: [
+      { nombre: 'Producto A', cantidad: 10 },
+      { nombre: 'Producto B', cantidad: 5 }
+    ],
+    formData: {
+      aduana: 'QUERETARO, QRO.',
+      oficina: 'Querétaro',
+      punto: 'Querétaro Oficina de Inspección',
+      capturaMercancia: 'Sí'
+    }
+  }
+}), { virtual: true });
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule, FormsModule, FormBuilder } from '@angular/forms';
 import { of } from 'rxjs';

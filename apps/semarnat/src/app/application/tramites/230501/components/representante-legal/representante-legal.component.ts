@@ -1,8 +1,8 @@
-import { Catalogo, CatalogoSelectComponent, InputRadioComponent, TipoPersona, TituloComponent } from '@ng-mf/data-access-user';
+import { Catalogo, CatalogoSelectComponent, ConsultaioQuery, InputRadioComponent, TipoPersona, TituloComponent } from '@ng-mf/data-access-user';
 import { CommonModule, Location } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 import { MaterialesPeligrososService } from '../../services/materiales-peligrosos.service';
 import { OPCIONES_DE_BOTON_DE_RADIO } from '../../constantes/materiales-peligrosos.enum';
 import { Representante } from '../../models/terceros-relacionados.model';
@@ -79,6 +79,11 @@ export class RepresentanteLegalComponent implements OnDestroy, OnInit {
    * Cuando es falso, el componente opera en modo de solo lectura.
    */
   public esElModoDeEdicion = false;
+    /**
+* Indica si el formulario está en modo solo lectura.
+* Cuando es `true`, los campos del formulario no se pueden editar.
+*/
+  esFormularioSoloLectura: boolean = false;
 
   /**
    * @constructor
@@ -90,6 +95,7 @@ export class RepresentanteLegalComponent implements OnDestroy, OnInit {
    * @param tramiteStore - Store que administra el estado del trámite actual.
    * @param tramiteQuery - Servicio para consultar el estado del trámite.
    * @param ubicaccion - Servicio de Angular para navegación de retroceso.
+   * @param consultaQuery - Consulta para obtener el estado de la sección de consulta.
    */
   constructor(
     private fb: FormBuilder,
@@ -97,6 +103,7 @@ export class RepresentanteLegalComponent implements OnDestroy, OnInit {
     private ubicaccion: Location,
     private tramiteStore: Tramite230501Store,
     public tramiteQuery: Tramite230501Query,
+    private consultaQuery:ConsultaioQuery
   ) {
     //No hacer nada
   }
@@ -153,6 +160,16 @@ export class RepresentanteLegalComponent implements OnDestroy, OnInit {
       .subscribe(modo => {
         this.esElModoDeEdicion = modo;
       });
+
+       this.consultaQuery.selectConsultaioState$
+            .pipe(
+              takeUntil(this.unsubscribe$),
+              map((seccionState) => {
+                this.esFormularioSoloLectura = seccionState.readonly;
+                this.inicializarEstadoFormulario();
+              })
+            )
+            .subscribe();
   }
 
   /**
@@ -169,10 +186,24 @@ export class RepresentanteLegalComponent implements OnDestroy, OnInit {
       });
   }
 
+
   /**
-   * @method guardarRepresentante
-   * @description Toma los datos del formulario, crea un objeto `Representante` con estos datos,
-   * lo agrega al arreglo `representantes`, actualiza el store del trámite y luego limpia el formulario y regresa a la vista anterior.
+   * Guarda un nuevo representante legal en la lista de representantes y realiza las acciones correspondientes
+   * según el modo de edición actual. Este método valida el formulario, crea un objeto de tipo `Representante`,
+   * y lo agrega a la lista de representantes. Además, actualiza o agrega el representante legal dependiendo
+   * del estado de edición y reinicia el formulario al finalizar.
+   *
+   * @remarks
+   * - Si el formulario es válido, se procede a guardar el representante.
+   * - En modo de edición, se actualiza el representante existente.
+   * - En modo de creación, se agrega un nuevo representante a la lista.
+   * - Al finalizar, se reinicia el formulario y se navega hacia atrás en la ubicación actual.
+   *
+   * @example
+   * // Ejemplo de uso:
+   * guardarRepresentante();
+   *
+   * @returns {void} Este método no retorna ningún valor.
    */
   guardarRepresentante(): void {
     const NUEVO_REPRESENTANTE: Representante = {
@@ -286,6 +317,26 @@ export class RepresentanteLegalComponent implements OnDestroy, OnInit {
       telefono: ['', Validators.required],
       correoElectronico: ['', [Validators.required, Validators.email]],
     });
+  }
+
+  
+  /**
+   * Inicializa el estado del formulario de representante legal.
+   * 
+   * Este método verifica si el formulario `representanteLegalForm` ha sido creado.
+   * Si no existe, se invoca el método `createRepresentForm` para inicializarlo.
+   * Además, si el formulario está configurado como de solo lectura (`esFormularioSoloLectura`),
+   * se deshabilita para evitar modificaciones.
+   * 
+   * @returns {void} No retorna ningún valor.
+   */
+  inicializarEstadoFormulario(): void {
+    if (!this.representanteLegalForm) {
+      this.createRepresentForm();
+    }
+    if (this.esFormularioSoloLectura) {
+      this.representanteLegalForm.disable();
+    }
   }
 
   /**

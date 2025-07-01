@@ -23,6 +23,7 @@
                 [configuracionTabla]="opcionConfig.configuracionTabla"
                 [datos]="opcionConfig.datos"
                 (listaDeFilaSeleccionada)="opcionLista = $event"
+                [disableSeleccionTablaCheckBox]="formularioDeshabilitado"
               ></app-tabla-dinamica>
             </div>
           </div>
@@ -37,7 +38,8 @@
   <div class="row">
     <div class="col-md-12">
       <div class="pull-right ml-2">
-        <button type="button" class="btn btn-primary" (click)="abrirModal()">
+        <button type="button" class="btn btn-primary" (click)="abrirModal()"
+          [disabled]="formularioDeshabilitado">
           Seleccionar establecimiento
         </button>
       </div>
@@ -159,6 +161,7 @@
             name="estado"
             [placeholder]="'Selecciona un valor'"
             (selectionChange)="cambioDeEstado($event)"
+            [isDisabled]="formularioDeshabilitado"
           ></app-catalogo-select>
         </div>
       </div>
@@ -433,6 +436,7 @@
         [configuracionTabla]="scianConfig.configuracionTabla"
         [datos]="scianConfig.datos"
         (listaDeFilaSeleccionada)="scianLista = $event"
+        [disableSeleccionTablaCheckBox]="formularioDeshabilitado"
       ></app-tabla-dinamica>
     </div>
     <div class="row">
@@ -444,6 +448,7 @@
             name="eliminarScian"
             class="btn btn-danger ms-2"
             (click)="eliminarModal()"
+          [disabled]="formularioDeshabilitado"
           >
             Eliminar
           </button>
@@ -454,6 +459,7 @@
             data-bs-toggle="modal"
             data-bs-target="#modalAgregarScain"
             (click)="agregarScian()"
+          [disabled]="formularioDeshabilitado"
           >
             Agregar
           </button>
@@ -524,6 +530,7 @@
             [questionCircleTooltip]="'Régimen al que se destinará la mercancía'"
             [required]="true"
             name="regimen"
+            [isDisabled]="formularioDeshabilitado"
           ></app-catalogo-select>
         </div>
       </div>
@@ -536,6 +543,7 @@
             [placeholder]="'Selecciona un valor'"
             [required]="true"
             name="adunasDeEntradas"
+            [isDisabled]="formularioDeshabilitado"
           ></app-catalogo-select>
         </div>
       </div>
@@ -552,6 +560,7 @@
             [placeholder]="'Selecciona un valor'"
             [required]="true"
             name="regimenLaMercancia"
+            [isDisabled]="formularioDeshabilitado"
           ></app-catalogo-select>
         </div>
       </div>
@@ -568,6 +577,7 @@
             [placeholder]="'Selecciona un valor'"
             [required]="true"
             name="aduanaDatos"
+            [isDisabled]="formularioDeshabilitado"
           ></app-catalogo-select>
         </div>
       </div>
@@ -602,6 +612,7 @@
         [configuracionTabla]="tablaMercanciasConfig.configuracionTabla"
         [datos]="tablaMercanciasConfig.datos"
         (listaDeFilaSeleccionada)="tablaMercanciasLista = $event"
+        [disableSeleccionTablaCheckBox]="formularioDeshabilitado"
       ></app-tabla-dinamica>
     </div>
 
@@ -614,6 +625,7 @@
             name="modificarMercancias"
             class="btn btn-default"
             (click)="modificarDatos()"
+          [disabled]="formularioDeshabilitado"
           >
             Modificar
           </button>
@@ -623,6 +635,7 @@
             name="eliminarMercancias"
             class="btn btn-danger ms-2"
             (click)="eliminarMercancias()"
+          [disabled]="formularioDeshabilitado"
           >
             Eliminar
           </button>
@@ -634,6 +647,7 @@
             data-bs-toggle="modal"
             data-bs-target="#modalAgregarMercancias"
             (click)="agregarMercancias()"
+          [disabled]="formularioDeshabilitado"
           >
             Agregar
           </button>
@@ -652,6 +666,7 @@
             [placeholder]="'Selecciona un valor'"
             [required]="true"
             name="aduanaDatos"
+            [isDisabled]="formularioDeshabilitado"
           ></app-catalogo-select>
         </div>
       </div>
@@ -737,6 +752,7 @@
           name="representanteRfcBuscar"
           class="btn btn-primary"
           (click)="buscarRepresentanteRfc()"
+          [disabled]="formularioDeshabilitado"
         >
           Buscar
         </button>

@@ -1,8 +1,7 @@
+import { Component, Input } from '@angular/core';
 import { AlertComponent } from '@libs/shared/data-access-user/src';
-import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-
 import { BuscarEmpresaCaatComponent } from '../buscar-empresa-caat/buscar-empresa-caat.component';
+import { CommonModule } from '@angular/common';
 import { EMPRESA_MARITIMA_REQUERIDA } from '../../constantes/transportacion-maritima.enum';
 import { PersonaFisicaExtranjeraComponent } from '../persona-fisica-extranjera/persona-fisica-extranjera.component';
 import { PersonaFisicaNacionalComponent } from '../persona-fisica-nacional/persona-fisica-nacional.component';
@@ -53,4 +52,12 @@ export class AsignarCaatMaritimoComponent {
   seleccionaTab(i: number): void {
     this.indice = i;
   }
+
+  /**
+   * Indica si los datos de respuesta del servidor se están utilizando para actualizar el formulario.
+   * 
+   * @default false
+   */
+  @Input() esDatosRespuesta: boolean = false;
+ 
 }

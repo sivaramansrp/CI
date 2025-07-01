@@ -1,6 +1,6 @@
 
         <formas-dinamicas [formularioTitulo]="'Datos de la solicitud'" [forma]="datosImportacionTemporalFormulario"
-            [formularioDatos]="formularioDatosSolicitud" [estado]="estadoSeleccionado"
+            [formularioDatos]="formularioDatosSolicitud" [estado]="estadoSeleccionado" [soloLectura]="esSoloLectura"
             (emitirCambioDeValor)="establecerCambioDeValor($event)"></formas-dinamicas>
 
 @if(showDatosRetornoProrroga){

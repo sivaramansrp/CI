@@ -1,89 +1,289 @@
 /**
- * Interface representing a step in the wizard.
+ * @interface LISTAPASOWIZARD
+ * @description
+ * Interfaz que representa un paso en el asistente (wizard) del trámite PROSEC.
+ * Cada objeto de esta interfaz define la información necesaria para mostrar y controlar el estado de un paso dentro del flujo del wizard.
  */
 export interface LISTAPASOWIZARD {
-  /** Index of the step */
+  /**
+   * @property {number} indice
+   * @description
+   * Índice del paso dentro del wizard. Determina el orden de aparición del paso.
+   */
   indice: number;
-  /** Title of the step */
+
+  /**
+   * @property {string} titulo
+   * @description
+   * Título del paso que se muestra al usuario en la interfaz del wizard.
+   */
   titulo: string;
-  /** Indicates if the step is active */
+
+  /**
+   * @property {boolean} activo
+   * @description
+   * Indica si el paso está activo actualmente en el flujo del wizard.
+   */
   activo: boolean;
-  /** Indicates if the step is completed */
+
+  /**
+   * @property {boolean} completado
+   * @description
+   * Indica si el paso ha sido completado por el usuario.
+   */
   completado: boolean;
 }
 
 /**
- * Interface representing an action button.
+ * @interface ACCIONBOTON
+ * @description
+ * Interfaz que representa un botón de acción utilizado en el flujo del wizard del trámite PROSEC.
+ * Define la acción a ejecutar y el valor asociado a dicha acción, como el índice del paso al que se debe navegar.
  */
 export interface ACCIONBOTON {
-  /** Action to be performed */
+  /**
+   * @property {string} accion
+   * @description
+   * Acción que se debe realizar (por ejemplo, avanzar o retroceder en el wizard).
+   */
   accion: string;
-  /** Value associated with the action */
+
+  /**
+   * @property {number} valor
+   * @description
+   * Valor asociado a la acción, generalmente el índice del paso al que se debe navegar.
+   */
   valor: number;
 }
 
 /**
- * Interface representing a plant.
+ * @interface Plantas
+ * @description
+ * Interfaz que representa una planta registrada en el trámite PROSEC.
+ * Contiene la información básica de la planta, como modalidad, estado, representación federal y actividad productiva.
  */
 export interface Plantas {
-  /** Modality of the plant */
+  /**
+   * @property {string} modalidad
+   * @description
+   * Modalidad de la planta.
+   */
   modalidad: string;
-  /** State where the plant is located */
+
+  /**
+   * @property {string} Estado
+   * @description
+   * Estado donde se encuentra la planta.
+   */
   Estado: string;
-  /** Federal representation of the plant */
+
+  /**
+   * @property {string} RepresentacionFederal
+   * @description
+   * Representación federal de la planta.
+   */
   RepresentacionFederal: string;
-  /** Productive activity of the plant */
+
+  /**
+   * @property {string} ActividadProductiva
+   * @description
+   * Actividad productiva de la planta.
+   */
   ActividadProductiva: string;
 }
 
+/**
+ * @interface FilaPlantas
+ * @description
+ * Interfaz que representa una fila de datos de una planta en el trámite PROSEC.
+ * Incluye la información detallada de la ubicación de la planta, como calle, número, código postal, colonia y municipio o alcaldía.
+ */
 export interface FilaPlantas {
+  /**
+   * @property {string} calle
+   * @description
+   * Calle de la planta.
+   */
   calle: string;
+
+  /**
+   * @property {string} numeroExterior
+   * @description
+   * Número exterior de la planta.
+   */
   numeroExterior: string;
+
+  /**
+   * @property {string} numeroInterior
+   * @description
+   * Número interior de la planta.
+   */
   numeroInterior: string;
+
+  /**
+   * @property {number} codigoPostal
+   * @description
+   * Código postal de la planta.
+   */
   codigoPostal: number;
+
+  /**
+   * @property {string} colonia
+   * @description
+   * Colonia de la planta.
+   */
   colonia: string;
+
+  /**
+   * @property {string} municipioOAlcaldia
+   * @description
+   * Municipio o alcaldía de la planta.
+   */
   municipioOAlcaldia: string;
 }
 
+/**
+ * @interface FilaProductos
+ * @description
+ * Interfaz que representa una fila de datos de productos en el trámite PROSEC.
+ * Incluye información relevante del contribuyente, como el RFC, la razón social y el correo electrónico.
+ */
 export interface FilaProductos {
+  /**
+   * @property {string} contribuyentes
+   * @description
+   * Registro federal de contribuyentes.
+   */
   contribuyentes: string;
+
+  /**
+   * @property {string} razonSocial
+   * @description
+   * Denominación o razón social.
+   */
   razonSocial: string;
+
+  /**
+   * @property {string} Correo
+   * @description
+   * Correo electrónico del contribuyente.
+   */
   Correo: string;
 }
 
+/**
+ * @interface FilaSectors
+ * @description
+ * Interfaz que representa una fila de sectores económicos en el trámite PROSEC.
+ * Incluye el nombre del sector y su clave correspondiente.
+ */
 export interface FilaSectors {
+  /**
+   * @property {string} sectorLista
+   * @description
+   * Nombre del sector listado.
+   */
   sectorLista: string;
+
+  /**
+   * @property {string} sectorClave
+   * @description
+   * Clave del sector económico.
+   */
   sectorClave: string;
 }
 
 /**
- * Interface representing sectors and goods.
+ * @interface SectoresYMercancias
+ * @description
+ * Interfaz que representa los sectores y sus mercancías asociadas en el trámite PROSEC.
+ * Incluye el nombre del sector y la fracción arancelaria correspondiente a la mercancía.
  */
 export interface SectoresYMercancias {
-  /** Sector of the goods */
+  /**
+   * @property {string} sector
+   * @description
+   * Nombre del sector correspondiente.
+   */
   sector: string;
-  /** Tariff fraction of the goods */
+
+  /**
+   * @property {string} Fraccion_arancelaria
+   * @description
+   * Fracción arancelaria asignada a la mercancía.
+   */
   Fraccion_arancelaria: string;
 }
 
 /**
- * Interface representing the final data list.
+ * @interface ListaDeDatosFinal
+ * @description
+ * Interfaz que representa la lista final consolidada de datos del trámite PROSEC.
+ * Incluye la colección de plantas registradas y la lista de sectores y mercancías seleccionadas por el usuario.
  */
 export interface ListaDeDatosFinal {
-  /** List of plants */
+  /**
+   * @property {Plantas[]} plantas
+   * @description
+   * Lista de plantas registradas.
+   */
   plantas: Plantas[];
-  /** List of sectors and goods */
+
+  /**
+   * @property {SectoresYMercancias[]} sectoresYMercancias
+   * @description
+   * Lista de sectores y mercancías seleccionadas.
+   */
   sectoresYMercancias: SectoresYMercancias[];
 }
 
 /**
- * Function to create the state of the data.
- * @param params Partial parameters to initialize the state
- * @returns The initialized state
+ * @function createDatosState
+ * @method
+ * @name createDatosState
+ * @description
+ * Genera el estado inicial de los datos del formulario para el trámite PROSEC.
+ * Esta función es utilizada para inicializar el estado global o local de los datos relacionados con plantas
+ * y sectores/mercancías. Si se proporcionan valores en el objeto `params`, estos se utilizan para establecer
+ * el estado inicial; de lo contrario, se asignan arreglos vacíos por defecto.
+ *
+ * @param {Partial<ListaDeDatosFinal>} params - Objeto opcional con propiedades `plantas` y `sectoresYMercancias`.
+ * Si no se proporciona, se inicializan con arreglos vacíos.
+ *
+ * @returns {ListaDeDatosFinal} El estado completamente inicializado de tipo `ListaDeDatosFinal`.
+ * Este objeto contiene las listas de plantas y sectores/mercancías listas para usarse.
+ *
+ * @example
+ * const estado = createDatosState({ plantas: [{ id: 1, nombre: 'Planta 1' }] });
+ * console.log(estado.plantas); // [{ id: 1, nombre: 'Planta 1' }]
  */
 export function createDatosState(params: Partial<ListaDeDatosFinal> = {}): ListaDeDatosFinal {
   return {
     plantas: params.plantas || [],
     sectoresYMercancias: params.sectoresYMercancias || [],
   };
+}
+
+/**
+ * @interface PlantasDatosResponse
+ * @description
+ * Interfaz que representa la respuesta del servicio para datos de plantas en el trámite PROSEC.
+ * Permite recibir un arreglo de filas con la información de las plantas y propiedades adicionales opcionales.
+ */
+export interface PlantasDatosResponse {
+  /**
+   * @property {FilaPlantas[]} plantasDatos
+   * @description
+   * Arreglo de filas de información de plantas.
+   * Cada elemento contiene los datos detallados de una planta registrada.
+   */
+  plantasDatos: FilaPlantas[];
+
+  /**
+   * @property {unknown} [key]
+   * @description
+   * Propiedades adicionales opcionales contenidas en la respuesta.
+   * Permite extender la respuesta con información extra según sea necesario.
+   */
+  [key: string]: unknown;
 }

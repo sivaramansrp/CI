@@ -2,6 +2,9 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PasoDosComponent } from './paso-dos.component';
 import { CatalogosService } from '@libs/shared/data-access-user/src';
 import { of, throwError } from 'rxjs';
+import { AlertComponent,AnexarDocumentosComponent,TituloComponent } from '@libs/shared/data-access-user/src';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+
 
 describe('PasoDosComponent', () => {
   let component: PasoDosComponent;
@@ -9,9 +12,12 @@ describe('PasoDosComponent', () => {
   let mockCatalogosService: any;
 
   beforeEach(async () => {
-    mockCatalogosService = jasmine.createSpyObj('CatalogosService', ['getCatalogo']);
+   const mockCatalogosService = {
+  getCatalogo: jest.fn().mockReturnValue(of([]))
+};
 
     await TestBed.configureTestingModule({
+      imports: [TituloComponent,AlertComponent,AnexarDocumentosComponent,HttpClientTestingModule],
       declarations: [PasoDosComponent],
       providers: [{ provide: CatalogosService, useValue: mockCatalogosService }],
     }).compileComponents();

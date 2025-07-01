@@ -1,13 +1,24 @@
-import { CONFIGURACION_IVAEIEPS_DOS, PAGO_DE_DERECHOS, PERMISO_A_DESISTIR_DOS, PERMISO_A_DESISTIR_TRES } from '../../constantes/ivaeieps.enum';
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { Solicitud31603State, Tramite31603Store } from '../../estados/stores/tramite31603.store';
-import { Subject,map, takeUntil } from 'rxjs';
+import {CONFIGURACION_IVAEIEPS_DOS} from '../../constantes/ivaeieps.enum';
 import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
+import { FormBuilder } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
+import { Input } from '@angular/core';
 import { ModeloDeFormaDinamica } from '@libs/shared/data-access-user/src';
+import { OnDestroy } from '@angular/core';
+import { OnInit } from '@angular/core';
+import {PAGO_DE_DERECHOS} from '../../constantes/ivaeieps.enum';
+import {PERMISO_A_DESISTIR_DOS} from '../../constantes/ivaeieps.enum';
+import { PERMISO_A_DESISTIR_TRES } from '../../constantes/ivaeieps.enum';
+import { ReactiveFormsModule } from '@angular/forms';
 import { RegistrosDeComercioExteriorService } from '../../services/registros-de-comercio-exterior.service';
+import { Solicitud31603State } from '../../estados/stores/tramite31603.store';
+import { Subject } from 'rxjs';
 import { Tramite31603Query } from '../../estados/queries/tramite31603.query';
+import { Tramite31603Store } from '../../estados/stores/tramite31603.store';
+import { map } from 'rxjs';
+import { takeUntil } from 'rxjs';
 
 /**
  * Componente `IvaeiepsDosComponent` que gestiona la funcionalidad relacionada con el proceso de IVA e IEPS.
@@ -31,6 +42,12 @@ import { Tramite31603Query } from '../../estados/queries/tramite31603.query';
 })
 export class IvaeiepsDosComponent implements OnInit,OnDestroy {
 
+    /**
+     * Indica si el formulario debe mostrarse en modo solo lectura.
+     * Cuando se establece en `true`, todos los campos del formulario son no editables.
+     * Por defecto es `false`, permitiendo que los campos del formulario sean editables.
+     */
+    @Input() esFormularioSoloLectura: boolean = false;
     /**
      * Una instancia de FormGroup que representa la estructura del formulario `delGrupo`.
      * 
@@ -153,8 +170,8 @@ export class IvaeiepsDosComponent implements OnInit,OnDestroy {
      */
     public crearPorcentajeMontoForm(): void {
       this.porcentajeMontoForm = this.fb.group({
-        porcentaje: [''],
-        monto: ['']
+        porcentaje: ['hgcgfcgh gcg'],
+        monto: ['vhgvchghch']
       });
     }
   
@@ -238,12 +255,12 @@ export class IvaeiepsDosComponent implements OnInit,OnDestroy {
      * Si el `valor` es un objeto con una propiedad `id`, se extrae el `id` y se utiliza para actualizar el campo.
      * De lo contrario, se utiliza el `valor` directamente para actualizar el campo.
      */
-    public establecerCambioDeValor(event: { campo: string; valor: any }): void {
+    public establecerCambioDeValor(event: { campo: string; valor: unknown }): void {
       if (event && typeof event.valor === 'object' && event.valor !== null && 'id' in event.valor) {
         const VALOR = event.valor.id;
-        this.tramite31603Store.setDynamicFieldValue(event.campo, VALOR);
+        this.tramite31603Store.setDynamicFieldValue(event.campo, VALOR as string | number | boolean);
       } else if (event) {
-        this.tramite31603Store.setDynamicFieldValue(event.campo, event.valor);
+        this.tramite31603Store.setDynamicFieldValue(event.campo, event.valor as string | number | boolean);
       }
     }
   

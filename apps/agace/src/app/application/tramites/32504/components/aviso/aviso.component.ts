@@ -1,25 +1,60 @@
-import { BotonAccionesTipos, InputTypes } from '@ng-mf/data-access-user';
-import { CARGO_TIPO, DATOS_EMPRESA } from '../../constants/aviso.enum';
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
-import { FormaValidators, InputConfig, MenuConfig, Props } from '@ng-mf/data-access-user';
+import { ANIO_CONFIG } from '../../constants/aviso.enum';
 import { AvisoDatosService } from '../../services/aviso-datos.service';
+import { BotonAccionesTipos } from '@ng-mf/data-access-user';
+import { CARGO_TIPO} from '../../constants/aviso.enum';
 import { CargaMasivaComponent } from '../carga-masiva/carga-masiva.component';
 import { CatalogoSelectComponent } from "@ng-mf/data-access-user";
 import { CatalogosService } from '@ng-mf/data-access-user';
 import { ColumnasTabla } from '../../models/aviso.model';
 import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
+import { ConsultaioQuery} from '@ng-mf/data-access-user';
+import { DATOS_EMPRESA} from '../../constants/aviso.enum';
+import { FormBuilder } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
+import { FormaValidators} from '@ng-mf/data-access-user';
 import { FormularioDinamico } from '@ng-mf/data-access-user';
+import { InputConfig } from '@ng-mf/data-access-user';
 import { InputFechaComponent } from "@ng-mf/data-access-user";
 import { InputRadioComponent } from "@ng-mf/data-access-user";
+import { InputTypes} from '@ng-mf/data-access-user';
 import { LabelValueDatos } from '@ng-mf/data-access-user';
+import { MES_CONFIG} from '../../constants/aviso.enum';
 import { ManualAvisoComponent } from '../manual-aviso/manual-aviso.component';
+import { MenuConfig } from '@ng-mf/data-access-user';
+import { OnInit } from '@angular/core';
+import { Props } from '@ng-mf/data-access-user';
+import { ReactiveFormsModule } from '@angular/forms';
+import { Subject } from 'rxjs';
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { TablaSeleccion } from '@ng-mf/data-access-user';
 import { TituloComponent } from "@ng-mf/data-access-user";
+import { Tramite32504Query } from '../../estados/tramite32504.query';
 import { Tramite32504Store } from '../../estados/tramite32504.store';
+import { ValidatorFn } from '@angular/forms';
+import { Validators } from '@angular/forms';
 import { map } from 'rxjs';
+import { takeUntil } from 'rxjs';
 
+/**
+ * @component
+ * @name AvisoComponent
+ * @description Componente principal para la gestión del aviso en el trámite 32504. Permite capturar, mostrar y modificar los datos de la empresa, tipo de carga y datos manuales, así como gestionar la visualización y edición de una tabla dinámica de destinatarios.
+ *
+ * @property {InputConfig[]} configuracion - Configuración de los grupos y campos del formulario dinámico.
+ * @property {FormularioDinamico[]} fiscal - Arreglo para la gestión de formularios dinámicos fiscales.
+ * @property {FormGroup} formulario - Formulario reactivo principal del componente.
+ * @property {Object} tableData - Configuración y datos de la tabla dinámica de destinatarios.
+ * @property {boolean} esManualAsivoAgregarClicked - Indica si se ha hecho clic en el botón para agregar manualmente un aviso.
+ * @property {typeof BotonAccionesTipos} botonAccionesTipos - Enumeración de los tipos de acciones de los botones.
+ * @property {typeof TablaSeleccion} TablaSeleccion - Enumeración para la selección de filas en la tabla.
+ * @property {any} evento - Objeto para almacenar eventos de interacción.
+ * @property {typeof InputTypes} inputTypes - Enumeración de los tipos de input disponibles.
+ * @property {Object} cargaTipo - Tipos de carga disponibles (manual o masiva).
+ * @property {boolean} esFormularioSoloLectura - Indica si el formulario está en modo solo lectura.
+ * @property {Subject<void>} destroyNotifier$ - Notificador para destruir suscripciones activas y evitar fugas de memoria.
+ *
+ **/
 @Component({
   selector: 'app-aviso',
   templateUrl: './aviso.component.html',
@@ -114,35 +149,95 @@ export class AvisoComponent implements OnInit {
     CARGA_MASIVA: 'carga_masiva',
   };
 
+  esFormularioSoloLectura: boolean = false;
+
+  /**
+   * @private
+   * @description
+   * Notificador utilizado para destruir las suscripciones activas cuando el componente se destruye,
+   * evitando así fugas de memoria.
+   *
+   * @type {Subject<void>}
+   * @memberof AvisoComponent
+   */
+  private destroyNotifier$: Subject<void> = new Subject();
+
+
+/**
+   * @constructor
+ * @description Inicializa el componente, inyecta los servicios necesarios y crea el formulario principal.
+ * @param {FormBuilder} fb - Servicio para la creación de formularios reactivos.
+ * @param {CatalogosService} catalogosServicios - Servicio para obtener catálogos.
+ * @param {Tramite32504Store} store - Store para la gestión del estado del trámite.
+ * @param {AvisoDatosService} avisoDatosService - Servicio para obtener datos del aviso.
+ * @param {ConsultaioQuery} consultaQuery - Query para consultar el estado de consulta.
+ * @param {Tramite32504Query} query - Query para consultar el estado del trámite.
+   */
   constructor(
     private fb: FormBuilder,
     private catalogosServicios: CatalogosService,
     private store: Tramite32504Store,
     private avisoDatosService: AvisoDatosService,
+    private consultaQuery: ConsultaioQuery,
+    private query: Tramite32504Query,
   ) {
     this.crearFormulario();
   }
 
+/** 
+ * * @method ngOnInit
+ * @description Inicializa los grupos del formulario y suscribe el estado de solo lectura para habilitar o deshabilitar el formulario según corresponda.
+ * */
   ngOnInit(): void {
     this.configuracion.forEach((eachConfig: InputConfig, groupIndex: number) => {
       this.inicializarFormGroup(eachConfig.menu, eachConfig.formGroupName, groupIndex);
     });
+
+    this.consultaQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState) => {
+        this.esFormularioSoloLectura = seccionState.readonly;
+        this.inicializarEstadoFormulario();
+      })
+    )
+    .subscribe();
   }
 
-    /**
-     * Inicializa un grupo de formularios con controles basados en la configuración proporcionada.
-     * @param configuracion - La configuración para los controles del formulario.
-     * @param nombreGrupo - El nombre del grupo de formularios.
-     * @param indiceGrupo - El índice del grupo en la matriz de configuración.
-     */
+  /**
+  * @method inicializarEstadoFormulario
+  * @description Inicializa el estado del formulario según el modo de solo lectura. Si el formulario está en modo solo lectura, deshabilita todos los campos; de lo contrario, los habilita para su edición.
+  * @returns {void}
+  *
+  */
+  inicializarEstadoFormulario(): void {
+    if(!this.formulario){
+        this.configuracion.forEach((eachConfig: InputConfig, groupIndex: number) => {
+        this.inicializarFormGroup(eachConfig.menu, eachConfig.formGroupName, groupIndex);
+
+      });     
+    }
+    if (this.esFormularioSoloLectura) {
+        this.formulario.disable();
+    } else {
+      this.formulario.enable();
+    }
+  }
+
+  /**
+   * Inicializa un grupo de formularios con controles basados en la configuración proporcionada.
+   * @param configuracion - La configuración para los controles del formulario.
+   * @param nombreGrupo - El nombre del grupo de formularios.
+   * @param indiceGrupo - El índice del grupo en la matriz de configuración.
+   */
   inicializarFormGroup(
     configuracion: MenuConfig[],
     nombreGrupo: string,
-    indiceGrupo: number,
+    _indiceGrupo: number,
   ): void {
     const GRUPO = this.formulario.get(nombreGrupo) as FormGroup;
-    configuracion.forEach((campo: MenuConfig, menuIndex: number) => {
-      const VALIDATORS = campo.props.validators ? AvisoComponent.obtenerValidadores(campo.props.validators) : [Validators.required];
+    configuracion.forEach((campo: MenuConfig, _menuIndex: number) => {
+      const VALIDATORS = campo.props?.validators ? AvisoComponent.obtenerValidadores(campo.props.validators) : [Validators.required];
       const CONTROL_NAME = campo.props.campo ? campo.props.campo : campo.props.labelNombre;
       GRUPO.addControl(
         CONTROL_NAME,
@@ -151,12 +246,24 @@ export class AvisoComponent implements OnInit {
       if (campo.inputType === InputTypes.SELECT) {
         // Utilice la siguiente línea una vez que la API funcione bien para obtener los valores del catálogo
         // this.obtenerValoresCatalogo(indiceGrupo, menuIndex, CONTROL_NAME);
+        if (campo.props.campo === 'mesCorrespondeAviso') {
+          campo.props.catalogos = MES_CONFIG;
+        } 
+        if (campo.props.campo === 'anoCorrespondeAviso') {
+          campo.props.catalogos = ANIO_CONFIG;
+        }
       }
       if (campo.inputType === InputTypes.RADIO) {
         this.getRadioData(campo.props.jsonDataFileName, (data) => {
           this.configuracion[1].menu[0].props.radioOptions = data;
           this.configuracion[1].menu[0].props.radioSelectedValue = data[0].value;
         });
+      }
+    });
+    this.query.selectformulario$.pipe(takeUntil(this.destroyNotifier$)).subscribe((datos) => {
+      if (datos) {
+        this.formulario.patchValue(datos);
+        this.formulario.get('cargaTipo')?.disable();
       }
     });
   }
@@ -193,7 +300,11 @@ export class AvisoComponent implements OnInit {
   }
 
   /**
-   * Crea el formulario principal e inicializa los subgrupos.
+  * Crea el formulario principal e inicializa los subgrupos.
+  *  @method crearFormulario
+  * @description Crea el formulario principal e inicializa los subgrupos.
+  * @returns {void}
+  *
    */
   crearFormulario(): void {
     this.formulario = this.fb.group({
@@ -272,8 +383,25 @@ export class AvisoComponent implements OnInit {
     }
   }
 
+  /**
+  *  @method onSubmit
+  * @description Envía los datos del formulario al store para su almacenamiento.
+  * @returns {void}
+   */
   onSubmit(): void {
     this.store.setDatosEmpresa(this.formulario.value.datosEmpresa);
     this.store.setCargaTipo(this.formulario.value.cargaTipo);
+  }
+
+  /**
+   * @description Actualiza los datos almacenados en el store.
+   * @method setValoresStore
+   * @param {FormGroup} form - El formulario a obtener los valores.
+   * @param {string} campo - El nombre del campo del formulario a obtener.
+   */
+  setValoresStore(
+  ): void {
+    const VALOR = this.formulario.value;
+    this.store.setEstadoGeneral(VALOR);
   }
 }

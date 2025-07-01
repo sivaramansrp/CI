@@ -75,7 +75,7 @@ describe('AgregarMercanciaComponent', () => {
   it('should emit cancelarEvento when cerrarModal is called', () => {
     const cancelarEventoSpy = jest.spyOn(component.cancelarEvento, 'emit');
     component.cerrarModal(true);
-    expect(cancelarEventoSpy).toHaveBeenCalledWith(false);
+    expect(cancelarEventoSpy).toHaveBeenCalledWith(true);
   });
 
   it('should unsubscribe from observables on ngOnDestroy', () => {

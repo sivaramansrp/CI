@@ -1,5 +1,9 @@
-<app-agregar-destinatario-final
+<app-agregar-destinatario-custom
+  [idProcedimiento]="idProcedimiento"
+  [formaDatos]="destinatarioFinalDatos"
+  (actualizaExistenteEnDestinatarioDatos)="
+    actualizaExistenteEnDestinatarioDatos($event)"
   (updateDestinatarioFinalTablaDatos)="
-    updateDestinatarioFinalTablaDatos($event)
-  "
-></app-agregar-destinatario-final>
+    updateDestinatarioFinalTablaDatos($event)"
+    (cancelarEventListener)="cerrar.emit()">
+</app-agregar-destinatario-custom>

@@ -2,39 +2,50 @@
  * @component ConstanciaDelRegistroComponent
  * @description Este componente es responsable de manejar el formulario del certificado de registro.
  * Incluye un formulario para capturar los datos del certificado de registro y funcionalidades adicionales.
- * 
+ *
  * @import { Component } from '@angular/core';
  * @import { FormBuilder, FormGroup, Validators } from '@angular/forms';
  */
-import { Component, EventEmitter, Output } from '@angular/core';
-import { ConstanciaTramiteConfiguracion } from '@libs/shared/data-access-user/src/core/models/shared/acuse-y-resoluciones-folio-tramite.model';
-import { OnInit } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+} from '@angular/core';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 
-import { FormBuilder } from '@angular/forms';
-import { FormGroup } from '@angular/forms';
-import { ReactiveFormsModule } from '@angular/forms';
-import { VALIDO } from '../../constantes/elegibilidad-de-textiles.enums';
-import { Validators } from '@angular/forms';
+import { Subject, map, takeUntil } from 'rxjs';
 
 import radioOptionsData from '@libs/shared/theme/assets/json/120301/mostrar.json';
 
-import { Catalogo, CatalogoSelectComponent, ConfiguracionColumna, InputRadioComponent, TablaDinamicaComponent } from '@ng-mf/data-access-user';
-import { SeccionLibQuery } from '@ng-mf/data-access-user';
-import { SeccionLibState } from '@ng-mf/data-access-user';
-import { SeccionLibStore } from '@ng-mf/data-access-user';
-import { TituloComponent } from '@ng-mf/data-access-user';
+import { ConstanciaTramiteConfiguracion } from '@libs/shared/data-access-user/src/core/models/shared/acuse-y-resoluciones-folio-tramite.model';
 
-import { Subject } from 'rxjs';
-import { map } from 'rxjs';
-import { takeUntil } from 'rxjs';
+import {
+  Catalogo,
+  CatalogoSelectComponent,
+  ConfiguracionColumna,
+  SeccionLibQuery,
+  SeccionLibState,
+  SeccionLibStore,
+  TablaDinamicaComponent,
+  TituloComponent,
+} from '@ng-mf/data-access-user';
+import { InputRadioComponent } from "@libs/shared/data-access-user/src/tramites/components/input-radio/input-radio.component";
+import { VALIDO } from '../../constantes/elegibilidad-de-textiles.enums';
 
-import { ElegibilidadDeTextilesStore } from '../../estados/elegibilidad-de-textiles.store';
-import { TextilesState } from '../../estados/elegibilidad-de-textiles.store';
+import {
+  ElegibilidadDeTextilesStore,
+  TextilesState,
+} from '../../estados/elegibilidad-de-textiles.store';
 
 import { ElegibilidadDeTextilesQuery } from '../../queries/elegibilidad-de-textiles.query';
-
 import { ElegibilidadTextilesService } from '../../services/elegibilidad-textiles/elegibilidad-textiles.service';
-
 
 /**
  * @component ConstanciaDelRegistroComponent
@@ -51,10 +62,15 @@ import { ElegibilidadTextilesService } from '../../services/elegibilidad-textile
     ReactiveFormsModule,
     InputRadioComponent,
     TablaDinamicaComponent,
-    CatalogoSelectComponent
-  ]
+    CatalogoSelectComponent,
+  ],
 })
 export class ConstanciaDelRegistroComponent implements OnInit {
+  /**
+   * @property {boolean} formularioDeshabilitado - Indica si el formulario está deshabilitado.
+   */
+  @Input()
+  formularioDeshabilitado: boolean = false;
   /**
    * @property {FormGroup} fitosanitarioForm - El grupo de formularios para capturar los datos del certificado de registro.
    */
@@ -114,9 +130,9 @@ export class ConstanciaDelRegistroComponent implements OnInit {
 
   /**
    * Arreglo que almacena la configuración de la tabla de datos para constancias de trámite.
-   * 
+   *
    * @property {ConfiguracionColumna<ConstanciaTramiteConfiguracion>[]} configuracionTabla - Configuración de la tabla de datos.
-   * 
+   *
    */
   public configuracionTablaDatos: ConstanciaTramiteConfiguracion[] = [];
 
@@ -157,46 +173,46 @@ export class ConstanciaDelRegistroComponent implements OnInit {
     // Lógica del constructor si es necesario
   }
 
-    /**
-     * Configuración de las columnas de la tabla.
-     */
-    configuracionTabla: ConfiguracionColumna<ConstanciaTramiteConfiguracion>[] = [
-      {
-        encabezado: 'Numero de constancia de registro',
-        clave: (artículo) => artículo.numeroDeConstancia,
-        orden: 1,
-      },
-      {
-        encabezado: 'Fracción arancelaria',
-        clave: (artículo) => artículo.fraccionArancelaria,
-        orden: 2,
-      },
-      {
-        encabezado: 'Clasificación del regimen',
-        clave: (artículo) => artículo.clasificacionDelRegimen,
-        orden: 3,
-      },
-      {
-        encabezado: 'País destino/origen',
-        clave: (artículo) => artículo.paisDestino,
-        orden: 4,
-      },
-      {
-        encabezado: 'Descripción de la categoría textil',
-        clave: (artículo) => artículo.categoriaTextil,
-        orden: 5,
-      },
-      {
-        encabezado: 'Fecha inicio vigencia',
-        clave: (artículo) => artículo.fechaInicioVigencia,
-        orden: 6,
-      },
-      {
-        encabezado: 'Fecha fin vigencia',
-        clave: (artículo) => artículo.fechaFinVigencia,
-        orden: 7,
-      },
-    ];
+  /**
+   * Configuración de las columnas de la tabla.
+   */
+  configuracionTabla: ConfiguracionColumna<ConstanciaTramiteConfiguracion>[] = [
+    {
+      encabezado: 'Numero de constancia de registro',
+      clave: (artículo) => artículo.numeroDeConstancia,
+      orden: 1,
+    },
+    {
+      encabezado: 'Fracción arancelaria',
+      clave: (artículo) => artículo.fraccionArancelaria,
+      orden: 2,
+    },
+    {
+      encabezado: 'Clasificación del regimen',
+      clave: (artículo) => artículo.clasificacionDelRegimen,
+      orden: 3,
+    },
+    {
+      encabezado: 'País destino/origen',
+      clave: (artículo) => artículo.paisDestino,
+      orden: 4,
+    },
+    {
+      encabezado: 'Descripción de la categoría textil',
+      clave: (artículo) => artículo.categoriaTextil,
+      orden: 5,
+    },
+    {
+      encabezado: 'Fecha inicio vigencia',
+      clave: (artículo) => artículo.fechaInicioVigencia,
+      orden: 6,
+    },
+    {
+      encabezado: 'Fecha fin vigencia',
+      clave: (artículo) => artículo.fechaFinVigencia,
+      orden: 7,
+    },
+  ];
 
   /**
    * @method ngOnInit
@@ -221,8 +237,7 @@ export class ConstanciaDelRegistroComponent implements OnInit {
       )
       .subscribe();
 
-    this.ElegibilidadTextilesService
-      .obtenerListaPaises()
+    this.ElegibilidadTextilesService.obtenerListaPaises()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((data) => {
         this.paisesDatos = data;
@@ -242,6 +257,10 @@ export class ConstanciaDelRegistroComponent implements OnInit {
     } else {
       this.seccionStore.establecerFormaValida([false]);
     }
+
+    if (this.formularioDeshabilitado) {
+      this.fitosanitarioForm.disable();
+    }
   }
 
   /**
@@ -250,9 +269,19 @@ export class ConstanciaDelRegistroComponent implements OnInit {
    */
   initActionFormBuild(): void {
     this.fitosanitarioForm = this.fb.group({
-      flexRadioRegistro: [this.constanciaState.flexRadioRegistro ? this.constanciaState.flexRadioRegistro : 'Todos'],
-      anoDeLaConstancia: [this.constanciaState.anoDeLaConstancia, Validators.required],
-      numeroDeLaConstancia: [this.constanciaState.numeroDeLaConstancia, Validators.required],
+      flexRadioRegistro: [
+        this.constanciaState.flexRadioRegistro
+          ? this.constanciaState.flexRadioRegistro
+          : 'Todos',
+      ],
+      anoDeLaConstancia: [
+        this.constanciaState.anoDeLaConstancia,
+        Validators.required,
+      ],
+      numeroDeLaConstancia: [
+        this.constanciaState.numeroDeLaConstancia,
+        Validators.required,
+      ],
       estado: [this.constanciaState.estado],
       representacionFederal: [this.constanciaState.representacionFederal],
       fraccionArancelaria: [this.constanciaState.fraccionArancelaria],
@@ -262,18 +291,32 @@ export class ConstanciaDelRegistroComponent implements OnInit {
       mecanismo: [this.constanciaState.mecanismo],
       typoCategoria: [this.constanciaState.typoCategoria],
       typoRegimen: [this.constanciaState.typoRegimen],
-      descripcionCategoriaTextil: [this.constanciaState.descripcionCategoriaTextil],
+      descripcionCategoriaTextil: [
+        this.constanciaState.descripcionCategoriaTextil,
+      ],
       PaisDestino: [this.constanciaState.PaisDestino],
-      unidadMedidaCategoriaTextil: [this.constanciaState.unidadMedidaCategoriaTextil],
-      factorConversionCategoriaTextil: [this.constanciaState.factorConversionCategoriaTextil],
+      unidadMedidaCategoriaTextil: [
+        this.constanciaState.unidadMedidaCategoriaTextil,
+      ],
+      factorConversionCategoriaTextil: [
+        this.constanciaState.factorConversionCategoriaTextil,
+      ],
       fechaInicioVigencia: [this.constanciaState.fechaInicioVigencia],
       fechaFinVigencia: [this.constanciaState.fechaFinVigencia],
     });
-    this.configuracionTablaDatos = this.constanciaState.datosTablaConstanciaDelRegistro;
+    this.configuracionTablaDatos =
+      this.constanciaState.datosTablaConstanciaDelRegistro;
     this.guardarBandera = this.constanciaState.guardarBandera;
-    if (this.configuracionTablaDatos.length > 0 && this.constanciaState.guardarBandera) {
+    if (
+      this.configuracionTablaDatos.length > 0 &&
+      this.constanciaState.guardarBandera
+    ) {
       Object.keys(this.fitosanitarioForm.controls).forEach((key) => {
-        if (key !== 'anoDeLaConstancia' && key !== 'numeroDeLaConstancia' && key !== 'flexRadioRegistro') {
+        if (
+          key !== 'anoDeLaConstancia' &&
+          key !== 'numeroDeLaConstancia' &&
+          key !== 'flexRadioRegistro'
+        ) {
           this.fitosanitarioForm.get(key)?.disable();
         }
       });
@@ -302,7 +345,9 @@ export class ConstanciaDelRegistroComponent implements OnInit {
     metodoNombre: keyof ElegibilidadDeTextilesStore
   ): void {
     const VALOR = form.get(campo)?.value;
-    (this.ElegibilidadDeTextilesStore[metodoNombre] as (value: string) => void)(VALOR);
+    (this.ElegibilidadDeTextilesStore[metodoNombre] as (value: string) => void)(
+      VALOR
+    );
   }
 
   /**
@@ -315,11 +360,16 @@ export class ConstanciaDelRegistroComponent implements OnInit {
     if (!fila) {
       return;
     }
-    const ANO_DE_LA_CONSTANCIA = this.fitosanitarioForm.get('anoDeLaConstancia')?.value;
-    const NUMERO_DE_LA_CONSTANCIA = this.fitosanitarioForm.get('numeroDeLaConstancia')?.value;
+    const ANO_DE_LA_CONSTANCIA =
+      this.fitosanitarioForm.get('anoDeLaConstancia')?.value;
+    const NUMERO_DE_LA_CONSTANCIA = this.fitosanitarioForm.get(
+      'numeroDeLaConstancia'
+    )?.value;
     const FORM_VALUES = {
       anoDeLaConstancia: ANO_DE_LA_CONSTANCIA ? ANO_DE_LA_CONSTANCIA : '',
-      numeroDeLaConstancia: NUMERO_DE_LA_CONSTANCIA ? NUMERO_DE_LA_CONSTANCIA :'', 
+      numeroDeLaConstancia: NUMERO_DE_LA_CONSTANCIA
+        ? NUMERO_DE_LA_CONSTANCIA
+        : '',
       estado: fila.estado || '',
       representacionFederal: fila.representacionFederal || '',
       fraccionArancelaria: fila.fraccionArancelaria || '',
@@ -332,7 +382,8 @@ export class ConstanciaDelRegistroComponent implements OnInit {
       descripcionCategoriaTextil: fila.descripcionCategoriaTextil || '',
       PaisDestino: fila.PaisDestino || '',
       unidadMedidaCategoriaTextil: fila.unidadMedidaCategoriaTextil || '',
-      factorConversionCategoriaTextil: fila.factorConversionCategoriaTextil || '',
+      factorConversionCategoriaTextil:
+        fila.factorConversionCategoriaTextil || '',
       fechaInicioVigencia: fila.fechaInicioVigencia || '',
       fechaFinVigencia: fila.fechaFinVigencia || '',
     };
@@ -371,12 +422,17 @@ export class ConstanciaDelRegistroComponent implements OnInit {
       return;
     }
     this.recuperarDatosAsociadas();
-    const ANO_DE_LA_CONSTANCIA = this.fitosanitarioForm.get('anoDeLaConstancia')?.value;
-    const NUMERO_DE_LA_CONSTANCIA = this.fitosanitarioForm.get('numeroDeLaConstancia')?.value;
+    const ANO_DE_LA_CONSTANCIA =
+      this.fitosanitarioForm.get('anoDeLaConstancia')?.value;
+    const NUMERO_DE_LA_CONSTANCIA = this.fitosanitarioForm.get(
+      'numeroDeLaConstancia'
+    )?.value;
     const FORM_VALUES = {
-    anoDeLaConstancia: ANO_DE_LA_CONSTANCIA ? ANO_DE_LA_CONSTANCIA : '',
-    numeroDeLaConstancia: NUMERO_DE_LA_CONSTANCIA ? NUMERO_DE_LA_CONSTANCIA :'',
-    }
+      anoDeLaConstancia: ANO_DE_LA_CONSTANCIA ? ANO_DE_LA_CONSTANCIA : '',
+      numeroDeLaConstancia: NUMERO_DE_LA_CONSTANCIA
+        ? NUMERO_DE_LA_CONSTANCIA
+        : '',
+    };
     this.ElegibilidadDeTextilesStore.update((state) => ({
       ...state,
       ...FORM_VALUES,
@@ -385,14 +441,14 @@ export class ConstanciaDelRegistroComponent implements OnInit {
 
   /**
    * Emite un evento para mostrar las pestañas (tabs) en la interfaz de usuario.
-   * 
+   *
    * @returns {void} No retorna ningún valor.
    * @event mostrarTabs
    */
   guardarEvaluate(): void {
-      this.mostrarTabs.emit(true);    
+    this.mostrarTabs.emit(true);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
-
 
   /**
    * Recupera los datos asociados para la tabla de constancia del registro.
@@ -406,19 +462,22 @@ export class ConstanciaDelRegistroComponent implements OnInit {
    * @returns {void} No retorna ningún valor.
    */
   recuperarDatosAsociadas(): void {
-    this.ElegibilidadTextilesService.obtenerTablaDatos<ConstanciaTramiteConfiguracion>('constancia-del-registro-tabla-asociados.json')
+    this.ElegibilidadTextilesService.obtenerTablaDatos<ConstanciaTramiteConfiguracion>(
+      'constancia-del-registro-tabla-asociados.json'
+    )
       .pipe(
         takeUntil(this.destroyNotifier$),
-        map((response) => this.filtrarDatos(response as ConstanciaTramiteConfiguracion[]))
+        map((response) =>
+          this.filtrarDatos(response as ConstanciaTramiteConfiguracion[])
+        )
       )
       .subscribe({
         next: (filteredData) => {
           this.configuracionTablaDatos = filteredData;
-          this.ElegibilidadDeTextilesStore.setdatosTablaConstanciaDelRegistro(filteredData);
+          this.ElegibilidadDeTextilesStore.setdatosTablaConstanciaDelRegistro(
+            filteredData
+          );
         },
-        error: (error) => {
-          console.error('Error al obtener los datos:', error);
-        }
       });
   }
 
@@ -430,17 +489,26 @@ export class ConstanciaDelRegistroComponent implements OnInit {
    * @returns {ConstanciaTramiteConfiguracion[]} Datos filtrados.
    */
   filtrarDatos(
-      datos: ConstanciaTramiteConfiguracion[]
-      ): ConstanciaTramiteConfiguracion[] {
-      const ANO_DE_LA_CONSTANCIA = this.fitosanitarioForm.get('anoDeLaConstancia')?.value;
-      const NUMERO_CONSTANCIA = this.fitosanitarioForm.get('numeroDeLaConstancia')?.value;
+    datos: ConstanciaTramiteConfiguracion[]
+  ): ConstanciaTramiteConfiguracion[] {
+    const ANO_DE_LA_CONSTANCIA =
+      this.fitosanitarioForm.get('anoDeLaConstancia')?.value;
+    const NUMERO_CONSTANCIA = this.fitosanitarioForm.get(
+      'numeroDeLaConstancia'
+    )?.value;
 
-      return datos.filter((ITEM) => {
-        const ANO_ITEM = new Date(ITEM.fechaInicioVigencia.split('/').reverse().join('/')).getFullYear();
-        const FILTRO_ANO = ANO_DE_LA_CONSTANCIA ? ANO_ITEM === Number(ANO_DE_LA_CONSTANCIA) : true;
-        const FILTRO_NUMERO = NUMERO_CONSTANCIA ? ITEM.numeroDeConstancia === NUMERO_CONSTANCIA : true;
+    return datos.filter((ITEM) => {
+      const ANO_ITEM = new Date(
+        ITEM.fechaInicioVigencia.split('/').reverse().join('/')
+      ).getFullYear();
+      const FILTRO_ANO = ANO_DE_LA_CONSTANCIA
+        ? ANO_ITEM === Number(ANO_DE_LA_CONSTANCIA)
+        : true;
+      const FILTRO_NUMERO = NUMERO_CONSTANCIA
+        ? ITEM.numeroDeConstancia === NUMERO_CONSTANCIA
+        : true;
 
-        return FILTRO_ANO && FILTRO_NUMERO;
-      });
-    }
+      return FILTRO_ANO && FILTRO_NUMERO;
+    });
+  }
 }

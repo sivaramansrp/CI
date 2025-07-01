@@ -10,7 +10,7 @@ import { ReplaySubject, Subject,map, takeUntil } from 'rxjs';
 
 import { Catalogo } from '@ng-mf/data-access-user';
 
-import { Agregar220401Store, solicitud220401State } from '../../../../estados/tramites/agregar220401.store';
+import { Agregar220401Store, Solicitud220401State } from '../../../../estados/tramites/agregar220401.store';
 import { AgregarQuery } from '../../../../estados/queries/agregar.query';
 
 /**
@@ -40,7 +40,7 @@ export class TransporteComponent implements OnDestroy, OnInit {
   /**
    * Estado actual de la solicitud 220401.
    */
-  public solicitudState!: solicitud220401State;
+  public solicitudState!: Solicitud220401State;
   /**
    * Indica si el formulario es de solo lectura.
    */

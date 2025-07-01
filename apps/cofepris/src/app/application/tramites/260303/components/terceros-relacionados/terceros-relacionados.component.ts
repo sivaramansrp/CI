@@ -1,14 +1,15 @@
 
 import { AlertComponent, ConfiguracionColumna, Fabricante, LASTABLA, Otros, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { BsModalRef, BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FABRICANTE_TABLA, OTROS_TABLA } from '../../services/certificados-licencias-permisos.enum';
 import { Subject, takeUntil } from 'rxjs';
 import { CertificadosLicenciasPermisosService } from '../../services/certificados-licencias-permisos.service';
 import { CommonModule } from '@angular/common';
+import { ConsultaioState } from '@ng-mf/data-access-user';
 import { FabricanteModalComponent } from '../fabricante-modal/fabricante-modal.component';
 import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
-
+type AllowedValue = string | number | boolean | undefined;
 /**
  * TercerosRelacionadosComponent es responsable de manejar el primer paso del proceso.
  * para actualizar el componente actual que se está mostrando.
@@ -17,10 +18,18 @@ import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src/tramit
   selector: 'app-terceros-relacionados',
   standalone: true,
   imports: [CommonModule, TituloComponent, AlertComponent, TablaDinamicaComponent],
+  providers:[BsModalService],
   templateUrl: './terceros-relacionados.component.html',
   styleUrl: './terceros-relacionados.component.scss',
 })
 export class TercerosRelacionadosComponent implements OnInit,OnDestroy {
+
+  /**
+* @property consultaState
+* @description
+* Estado actual de la consulta gestionado por el store `ConsultaioQuery`.
+*/
+  @Input() consultaState!: ConsultaioState;
 
   /**
    * Una referencia a la instancia del modal de Bootstrap.
@@ -82,11 +91,11 @@ export class TercerosRelacionadosComponent implements OnInit,OnDestroy {
   public configuracionOtros = OTROS_TABLA;
 
   /** Configuración de la tabla de sectores */
-  public configuracionTabla: ConfiguracionColumna<Fabricante>[] = this.generateConfiguracionTabla(this.configuracionFabricante);
-  public configuracionFacturadorTabla: ConfiguracionColumna<Fabricante>[] = this.generateConfiguracionTabla(this.configuracionFabricante);
-  public configuracionProveedorTabla: ConfiguracionColumna<Fabricante>[] = this.generateConfiguracionTabla(this.configuracionFabricante);
-  public configuracionCertificadoAnaliticoTabla: ConfiguracionColumna<Fabricante>[] = this.generateConfiguracionTabla(this.configuracionFabricante);
-  public configuracionOtrosTabla: ConfiguracionColumna<Otros>[] = this.generateConfiguracionTabla(this.configuracionOtros);
+  public configuracionTabla: ConfiguracionColumna<Fabricante>[] = TercerosRelacionadosComponent.generateConfiguracionTabla(this.configuracionFabricante);
+  public configuracionFacturadorTabla: ConfiguracionColumna<Fabricante>[] = TercerosRelacionadosComponent.generateConfiguracionTabla(this.configuracionFabricante);
+  public configuracionProveedorTabla: ConfiguracionColumna<Fabricante>[] = TercerosRelacionadosComponent.generateConfiguracionTabla(this.configuracionFabricante);
+  public configuracionCertificadoAnaliticoTabla: ConfiguracionColumna<Fabricante>[] = TercerosRelacionadosComponent.generateConfiguracionTabla(this.configuracionFabricante);
+  public configuracionOtrosTabla: ConfiguracionColumna<Otros>[] = TercerosRelacionadosComponent.generateConfiguracionTabla(this.configuracionOtros);
 
   /**
    * Notificador para destruir observables activos.
@@ -136,9 +145,9 @@ export class TercerosRelacionadosComponent implements OnInit,OnDestroy {
    * @param obj - El objeto que se va a copiar profundamente. Por defecto es un objeto vacío.
    * @returns Una copia profunda del objeto proporcionado.
    */
-    public deepCopy(obj = {}) {
-      return JSON.parse(JSON.stringify(obj));
-    }
+  public static deepCopy<T>(obj: T): T {
+    return JSON.parse(JSON.stringify(obj));
+  }
 
   /**
    * Recupera los datos para la tabla de fabricantes realizando una llamada al servicio.
@@ -149,7 +158,7 @@ export class TercerosRelacionadosComponent implements OnInit,OnDestroy {
    */
   public getFabricanteTablaDatos(): void {
     this.certificadosLicenciasSvc.getFabricanteDatos().pipe(takeUntil(this.destroyed$)).subscribe((response) => {
-      const DATA = this.deepCopy(response);
+      const DATA = TercerosRelacionadosComponent.deepCopy<Fabricante[]>(response);
       this.fabricanteTablaDatos = DATA;
     });
   }
@@ -165,7 +174,7 @@ export class TercerosRelacionadosComponent implements OnInit,OnDestroy {
    */
   public getFacturadorTablaDatos(): void {
     this.certificadosLicenciasSvc.getFacturadorDatos().pipe(takeUntil(this.destroyed$)).subscribe((response) => {
-      const DATA = this.deepCopy(response);
+      const DATA = TercerosRelacionadosComponent.deepCopy<Fabricante[]>(response);
       this.facturadorTablaDatos = DATA;
     });
   }
@@ -181,7 +190,7 @@ export class TercerosRelacionadosComponent implements OnInit,OnDestroy {
    */
   public getProveedorTablaDatos(): void {
     this.certificadosLicenciasSvc.getProveedorDatos().pipe(takeUntil(this.destroyed$)).subscribe((response) => {
-      const DATA = this.deepCopy(response);
+      const DATA = TercerosRelacionadosComponent.deepCopy<Fabricante[]>(response);
       this.proveedorTablaDatos = DATA;
     });
   }
@@ -196,7 +205,7 @@ export class TercerosRelacionadosComponent implements OnInit,OnDestroy {
    */
   public getCertificadoAnaliticoTablaDatos(): void {
     this.certificadosLicenciasSvc.getCertificadoDatos().pipe(takeUntil(this.destroyed$)).subscribe((response) => {
-      const DATA = this.deepCopy(response);
+      const DATA = TercerosRelacionadosComponent.deepCopy<Fabricante[]>(response);
       this.certificadoAnaliticoTablaDatos = DATA;
     });
   }
@@ -211,34 +220,31 @@ export class TercerosRelacionadosComponent implements OnInit,OnDestroy {
    */
   public getOtrosTablaDatos(): void {
     this.certificadosLicenciasSvc.getOtrosDatos().pipe(takeUntil(this.destroyed$)).subscribe((response) => {
-      const DATA = this.deepCopy(response);
+      const DATA = TercerosRelacionadosComponent.deepCopy<Otros[]>(response);
       this.otrosTablaDatos = DATA;
     });
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  /**
-   * Genera un arreglo de configuración para una tabla basado en el arreglo de datos proporcionado.
-   *
-   * @template T - El tipo de los objetos en la tabla.
-   * @param datosArray - Un arreglo de objetos que contiene la configuración de las columnas de la tabla.
-   * Cada objeto debe tener las siguientes propiedades:
-   *   - `encabezado`: El texto del encabezado para la columna.
-   *   - `clave`: La clave de la propiedad en el objeto de datos que se mostrará en la columna.
-   * @returns Un arreglo de configuraciones de columnas, donde cada configuración incluye:
-   *   - `encabezado`: El texto del encabezado para la columna.
-   *   - `clave`: Una función que obtiene el valor de la clave especificada de un objeto de datos.
-   *   - `orden`: El orden de la columna, comenzando desde 1.
-   */
-  private generateConfiguracionTabla(datosArray: any): ConfiguracionColumna<any>[] {
-    const FIELDS: Array<{ encabezado: string, clave: keyof Fabricante }> = datosArray;
-    return FIELDS.map((field, index) => ({
-      encabezado: field.encabezado,
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      clave: (item: any) => item[field.clave],
-      orden: index + 1
-    }));
-  }
+
+/**
+ * Genera la configuración de columnas para una tabla dinámica.
+ * 
+ * @template T - El tipo de los datos que se mostrarán en la tabla.
+ * @param datosArray - Un arreglo de objetos que contiene el encabezado y la clave de cada columna.
+ * @returns Un arreglo de configuraciones de columna para la tabla.
+ */
+private static generateConfiguracionTabla<T>(
+  datosArray: Array<{ encabezado: string; clave: keyof T }>
+): ConfiguracionColumna<T>[] {
+  return datosArray.map((field, index) => ({
+    // Título de la columna que se mostrará en la tabla
+    encabezado: field.encabezado,
+    // Función que extrae el valor de la clave correspondiente del objeto de datos
+    clave: (item: T): AllowedValue => item[field.clave] as AllowedValue,
+    // Orden de la columna en la tabla
+    orden: index + 1,
+  }));
+}
 
   /**
    * Abre un cuadro de diálogo modal para gestionar un "Fabricante".

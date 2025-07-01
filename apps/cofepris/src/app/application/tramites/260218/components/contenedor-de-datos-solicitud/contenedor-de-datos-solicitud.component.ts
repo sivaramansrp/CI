@@ -4,6 +4,7 @@ import { OPCION_TABLA, PRODUCTO_TABLA, SCIAN_TABLA } from '../../../../shared/co
 import { Subject, map, takeUntil } from 'rxjs';
 import { Tramite260218State, Tramite260218Store } from '../../estados/tramite260218Store.store';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DatosDeLaSolicitudComponent } from '../../../../shared/components/datos-de-la-solicitud/datos-de-la-solicitud.component';
 import { ID_PROCEDIMIENTO } from '../../constants/pasos.enum';
 import { Tramite260218Query } from '../../estados/tramite260218Query.query';
@@ -54,14 +55,37 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
   // Datos seleccionados de la tabla SCIAN
   public seleccionadoScianDatos: TablaScianConfig[] = [];
 
+  /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+   public esFormularioSoloLectura: boolean = false; 
+
   // Datos seleccionados de la tabla de mercancías
   public seleccionadoTablaMercanciasDatos: TablaMercanciasDatos[] = [];
   idProcedimiento: number = ID_PROCEDIMIENTO // Indica si la sección está oculta o visible
+
+  /**
+   * Constructor del componente `ContenedorDeDatosSolicitudComponent`.
+   * Inyecta las dependencias necesarias: `Tramite260218Query`, `Tramite260218Store` y `ConsultaioQuery`.
+   * 
+   * @param tramite260218Query - Consulta para obtener el estado del trámite 260218.
+   * @param tramite260218Store - Store para manejar el estado del trámite 260218.
+   * @param consultaQuery - Consulta para obtener datos de usuario.
+   */
   constructor(
     private tramite260218Query: Tramite260218Query,
-    private tramite260218Store: Tramite260218Store
+    private tramite260218Store: Tramite260218Store,
+    private consultaQuery: ConsultaioQuery
   ) { 
-        // no realizar ninguna acción
+      this.consultaQuery.selectConsultaioState$
+        .pipe(
+          takeUntil(this.destroyNotifier$),
+          map((seccionState) => {
+            this.esFormularioSoloLectura = seccionState.readonly;
+          })
+        )
+        .subscribe();
   }
 
   /**

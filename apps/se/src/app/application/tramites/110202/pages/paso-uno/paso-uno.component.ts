@@ -1,7 +1,9 @@
-import { AfterViewInit, ChangeDetectorRef, Component, ViewChild } from '@angular/core';
-import { AlertComponent, FormularioDinamico, PAGO_DE_DERECHOS, SolicitanteComponent, TIPO_PERSONA } from '@ng-mf/data-access-user';
+import { AfterViewInit, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AlertComponent, ConsultaioQuery, ConsultaioState, FormularioDinamico, PAGO_DE_DERECHOS, SolicitanteComponent, TIPO_PERSONA } from '@ng-mf/data-access-user';
 import { DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL, PERSONA_MORAL_NACIONAL } from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
+import { Subject, map, takeUntil } from 'rxjs';
 import { CertificadoOrigenComponent } from '../../components/certificado-origen/certificado-origen.component';
+import { CertificadoValidacionService } from '../../services/certificado-validacion.service';
 import { CommonModule } from '@angular/common';
 import { DatosCertificadoComponent } from '../../components/datos-certificado/datos-certificado.component';
 import { DestinatarioDeComponent } from '../../components/destinatario-de/destinatario-de.component';
@@ -21,7 +23,7 @@ import { DestinatarioDeComponent } from '../../components/destinatario-de/destin
   styleUrl: './paso-uno.component.scss'
 })
 
-export class PasoUnoComponent implements AfterViewInit {
+export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
 
   // Decorador ViewChild para acceder a la instancia del componente SolicitanteComponent
   @ViewChild(SolicitanteComponent) solicitante!: SolicitanteComponent;
@@ -49,8 +51,19 @@ export class PasoUnoComponent implements AfterViewInit {
    * Esta constante se usa para almacenar textos y valores relacionados con el pago de derechos.
    */
   TEXTOS = PAGO_DE_DERECHOS;
+ /**
+   * Esta variable se utiliza para almacenar el índice del subtítulo.
+   */
+  public consultaState!: ConsultaioState;
 
-  constructor(private cdr: ChangeDetectorRef) {
+  /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
+  public esDatosRespuesta: boolean = false;
+
+  /** Subject para notificar la destrucción del componente. */
+  private destroyNotifier$: Subject<void> = new Subject();
+
+  constructor(private cdr: ChangeDetectorRef,private consultaQuery: ConsultaioQuery,
+    public certificadoValidacionService: CertificadoValidacionService) {
     // Constructor no realiza ninguna acción en este caso
   }
 
@@ -80,5 +93,60 @@ export class PasoUnoComponent implements AfterViewInit {
     // Establece el índice de la pestaña seleccionada
     this.indice = indice;
   }
+  /**
+   * @inheritdoc
+   * 
+   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * Suscribe al observable del estado de consulta, actualiza el estado local y 
+   * realiza acciones según si hay una actualización pendiente.
+   * 
+   * @remarks
+   * - Si existe un estado de consulta y requiere actualización, guarda los datos del formulario.
+   * - Si no, establece la bandera de datos de respuesta como verdadera.
+   * 
+   * @override
+   */
+  ngOnInit(): void {
+    this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyNotifier$), map((seccionState) => {
+      this.consultaState = seccionState;
+    })).subscribe();
+    if (this.consultaState && this.consultaState.procedureId === '110202' &&
+      this.consultaState.update) {
+      this.guardarDatosFormulario();
+    } else {
+      this.esDatosRespuesta = true;
+    }
 
+  }
+  /**
+* Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+* Luego reinicializa el formulario con los valores actualizados desde el store.
+*/
+  guardarDatosFormulario(): void {
+    this.certificadoValidacionService
+      .getRegistroTomaMuestrasMercanciasData().pipe(
+        takeUntil(this.destroyNotifier$)
+      )
+      .subscribe((resp) => {
+        if (resp) {
+          this.esDatosRespuesta = true;
+          this.certificadoValidacionService.actualizarEstadoFormulario(resp);
+        }
+      });
+  }
+  /**
+   * @method ngOnDestroy
+   * @description Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
+   * Utiliza el Subject `destroyNotifier$` para notificar la destrucción y completar las suscripciones.
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
+  }
+
+  /**
+   * @method seleccionaTab
+   * @description Selecciona una pestaña y actualiza el índice.
+   * @param {number} i - El índice de la pestaña seleccionada.
+   */
 }

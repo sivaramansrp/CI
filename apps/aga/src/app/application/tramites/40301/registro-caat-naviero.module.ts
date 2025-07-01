@@ -1,6 +1,5 @@
 import { BtnContinuarComponent } from '@ng-mf/data-access-user';
 import { CapturarComponent } from './components/capturar/capturar.component';
-import { CapturarService } from './services/capturar.service';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { CrosslistComponent } from '@ng-mf/data-access-user';
@@ -16,7 +15,6 @@ import { RouterModule } from '@angular/router';
 import { SelectPaisesComponent } from '@ng-mf/data-access-user';
 import { ServiciosExtraordinariosService } from './services/servicios-extraordinarios.service';
 import { SolicitanteComponent } from '@ng-mf/data-access-user';
-import { Solicitud40301Store } from './estados/tramite40301.store';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { ToastrModule } from 'ngx-toastr';
 import { ToastrService } from 'ngx-toastr';
@@ -49,9 +47,7 @@ import { forwardRef } from '@angular/core';
   exports: [],
   providers: [
     ToastrService,
-    ServiciosExtraordinariosService,
-    CapturarService,
-    Solicitud40301Store
+    ServiciosExtraordinariosService
   ]
 })
 export class RegistroCaatNavieroModule {}

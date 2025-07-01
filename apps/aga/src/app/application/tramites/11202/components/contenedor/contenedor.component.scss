@@ -1,21 +1,19 @@
 .form-control {
-    height: 35px;
-    background-color: #80808024;
-    font-size: 15px;
-    font-weight: 500;
-  }
-  
+  height: 35px;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.form-label {
+  font-size: 16px;
+}
+.solicitante-datos {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+@media (min-width: 320px) and (max-width: 370px) {
   .form-label {
-    font-size: 16px;
+    text-align: unset !important;
   }
-  .solicitante-datos {
-    font-size: 16px;
-    font-weight: 700;
-  }
-  
-  @media (min-width: 320px) and (max-width: 370px) {
-    .form-label {
-      text-align: unset !important;
-    }
-  }
-  
+}

@@ -1,10 +1,16 @@
 import { ActivatedRoute, Router } from '@angular/router';
+import { Component, OnDestroy, ViewChild } from '@angular/core';
+import { Subject,map} from 'rxjs';
+import { AgregarDestinatarioFinalContenedoraComponent } from '../../../240106/components/agregar-destinatario-final-contenedora/agregar-destinatario-final-contenedora.component';
+import { AgregarProveedorContenedoraComponent } from '../../../240106/components/agregar-proveedor-contenedora/agregar-proveedor-contenedora.component';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
+
 import { DestinoFinal } from '../../../../shared/models/terceros-relacionados.model';
+import { ID_PROCEDIMIENTO } from '../../constants/importacion-sustancias-quimicas.enum';
+import { ModalComponent } from '../../../../shared/components/modal/modal.component';
 import { OnInit } from '@angular/core';
 import { Proveedor } from '../../../../shared/models/terceros-relacionados.model';
-import { Subject } from 'rxjs';
 import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-relacionados/terceros-relacionados.component';
 import { Tramite240106Query } from '../../estados/tramite240106Query.query';
 import { Tramite240106Store } from '../../estados/tramite240106Store.store';
@@ -19,13 +25,32 @@ import { takeUntil } from 'rxjs';
 @Component({
   selector: 'app-terceros-relacionados-contenedora',
   standalone: true,
-  imports: [CommonModule, TercerosRelacionadosComponent],
+  imports: [CommonModule, TercerosRelacionadosComponent, ModalComponent],
   templateUrl: './terceros-relacionados-contenedora.component.html',
   styleUrl: './terceros-relacionados-contenedora.component.scss',
 })
 export class TercerosRelacionadosContenedoraComponent
-  implements OnInit
+  implements OnInit, OnDestroy
 {
+  
+  /**
+   * Referencia al componente Modal utilizado para mostrar formularios dinámicos.
+   * 
+   * @type {ModalComponent}
+   * @memberof TercerosRelacionadosContenedoraComponent
+   */
+  @ViewChild('modal', { static: false }) modalComponent!: ModalComponent;
+
+   
+  /**
+   * Identificador del procedimiento asociado al trámite.
+   * Este valor se utiliza para enlazar el componente con el procedimiento correspondiente definido en la enumeración.
+   *
+   * @type {number}
+   * @readonly
+   * @memberof TercerosRelacionadosContenedoraComponent
+   */
+  public readonly idProcedimiento = ID_PROCEDIMIENTO;
   /**
    * Observable para limpiar las suscripciones activas al destruir el componente.
    * @property {Subject<void>} destroy$
@@ -44,20 +69,30 @@ export class TercerosRelacionadosContenedoraComponent
    */
   proveedorTablaDatos: Proveedor[] = [];
 
+    /**
+    * Indica si el formulario debe mostrarse en modo solo lectura.
+    *
+    * @type {boolean}
+    * @memberof DatosDelTramiteContenedoraComponent
+    * @default false
+    */
+  esFormularioSoloLectura: boolean = false;
+
   /**
    * Constructor del componente.
    *
    * @method constructor
    * @param {Tramite240106Store} tramiteStore - Store de Akita que maneja el estado del trámite.
    * @param {Tramite240106Query} tramiteQuery - Query de Akita para obtener datos del trámite.
+   * @param {ConsultaioQuery} consultaQuery - Query para obtener el estado de la consulta.
    * @returns {void}
    */
   constructor(
     private tramiteStore: Tramite240106Store,
     private tramiteQuery: Tramite240106Query,
     private router: Router,
-    private activatedRoute: ActivatedRoute
-     // eslint-disable-next-line no-empty-function
+    private activatedRoute: ActivatedRoute,
+    private consultaQuery: ConsultaioQuery
   ) {}
 
   
@@ -80,13 +115,32 @@ export class TercerosRelacionadosContenedoraComponent
       .subscribe((data) => {
         this.proveedorTablaDatos = data;
       });
+     this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.unsubscribe$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+        })
+      )
+      .subscribe();
   }
   
+   /**
+   * Modifica los datos del destinatario final y navega a la página para agregar un destino final.
+   * 
+   * @param datos - Objeto de tipo `DestinoFinal` que contiene la información del destinatario final a actualizar.
+   */
   modificarDestinarioDatos(datos: DestinoFinal): void {
     this.tramiteStore.actualizarDatosDestinatario(datos);
     this.irAAcciones('../agregar-destino-final');
   }
 
+  /**
+   * Modifica los datos de un proveedor y actualiza el estado correspondiente en el store.
+   * Además, redirige al usuario a la página para agregar un proveedor.
+   *
+   * @param datos - Objeto de tipo `Proveedor` que contiene la información actualizada del proveedor.
+   */
   modificarProveedorDatos(datos: Proveedor): void {
     this.tramiteStore.actualizarDatosProveedor(datos);
     this.irAAcciones('../agregar-proveedor');
@@ -124,4 +178,48 @@ irAAcciones(url: string): void {
     relativeTo: this.activatedRoute,
   });
 }
+
+ /**
+ * Hook del ciclo de vida que se ejecuta al destruir el componente.
+ * Libera las suscripciones para evitar fugas de memoria.
+ *
+ * @method ngOnDestroy
+ * @returns {void}
+ */
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
+  }
+
+   /**
+   * Abre el modal correspondiente según el nombre del evento recibido.
+   *
+   * Si el evento es `'Datosmercancia'`, se carga el componente `DatosMercanciaContenedoraComponent`
+   * dentro del modal y se le pasa una función de cierre como input.
+   *
+   * @method openModal
+   * @param {string} event - Nombre del evento que indica qué componente se debe mostrar en el modal.
+   * @returns {void}
+   */
+  openModal(event: string): void {
+    if (event === 'agregar-destino-final') {
+      this.modalComponent.abrir(AgregarDestinatarioFinalContenedoraComponent, {
+        cerrarModal: this.cerrarModal.bind(this),
+      });
+    } else if (event === 'agregar-proveedor') {
+      this.modalComponent.abrir(AgregarProveedorContenedoraComponent, {
+        cerrarModal: this.cerrarModal.bind(this),
+      });
+    }
+  }
+  /**
+   * Cierra el modal dinámico actualmente abierto utilizando el método del componente modal.
+   *
+   * @method cerrarModal
+   * @returns {void}
+   */
+  cerrarModal(): void {
+    this.modalComponent.cerrar();
+  }
+
 }

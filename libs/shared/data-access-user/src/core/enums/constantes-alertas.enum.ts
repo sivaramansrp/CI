@@ -74,10 +74,10 @@ export const MESES = [
 export const SEMANA = [
   'Lunes',
   'Martes',
-  'Miercoles',
+  'Miércoles',
   'Jueves',
   'Viernes',
-  'Sabado',
+  'Sábado',
   'Domingo',
 ];
 
@@ -85,14 +85,14 @@ export const SEMANA_D = [
   'Domingo',
   'Lunes',
   'Martes',
-  'Miercoles',
+  'Miércoles',
   'Jueves',
   'Viernes',
-  'Sabado',
+  'Sábado',
 ];
 
 export const MENSAJEDEALERTA = {
-  ADJUNTAR: `<p>Las tablas con asterisco son obligatorias y debes agregar por lo menos un registro</p>`,
+  ADJUNTAR: `<p style="text-align: center;">Las tablas con asterisco son obligatorias y debes agregar por lo menos un registro</p>`,
 };
 
 export const MENSAJE_ALERTA_TRATADOS = {
@@ -111,8 +111,8 @@ export const ELVALORALERTA = {
 };
 
 export const PROTESTA = {
-  ADJUNTAR: `<input class="form-check-input" type="checkbox" id="protesta">
-  <p>El/la que suscribe manifiesto(a) bajo protesta de decir verdad, que la información declarada en el presente trámite de REGISTRO ÚNICO DE PRODUCTOS ELEGIBLES PARA PREFERENCIAS Y CONCESIONES ARANCELARIAS es copia fiel, íntegra e inalterada de la información y documentación soporte que obra en poder del (de la) solicitante.</p>`,
+  ADJUNTAR: `
+  El/la que suscribe manifiesto(a) bajo protesta de decir verdad, que la información declarada en el presente trámite de REGISTRO ÚNICO DE PRODUCTOS ELEGIBLES PARA PREFERENCIAS Y CONCESIONES ARANCELARIAS es copia fiel, íntegra e inalterada de la información y documentación soporte que obra en poder del (de la) solicitante.`,
 };
 export const FECHA_SALIDA = {
   labelNombre: 'Fecha de expedición de certificado de molino o de calidad',
@@ -166,7 +166,7 @@ export const ACUSE_SERVICIOS_EXTRAORDINARIOS = {
   ],
 };
 export const IMPORTANTE = {
-  Importante: `<p><strong>Importante:</strong>Si existe duda respecto del producto a registrar o al pago correspondiente, por favor comunicate a los teléfonos 0155 5128 2544 y 0155 5128 2595</p>`,
+  Importante: `<p><strong>Importante: </strong>Si existe duda respecto del producto a registrar o al pago correspondiente, favor de comunicarse a los teléfonos 55 5128 2544, 55 5128 2595 y 55 5128 2553</p>`,
 };
 
 export const ALERTA_DE_MATERIAL = {
@@ -319,3 +319,43 @@ export const PRECAUCION = '<strong>¡Precaución!</strong> Lorem ipsum dolor sit
    * 
    */
   export const REGEX_FECHA_MES_ANO = /^(0[1-9]|1[0-2])\/\d{4}$/;
+
+/**
+ * @const FECHA_INICIO_VIGENCIA
+ * @description Objeto que define la configuración de la fecha de inicio de vigencia.
+ */
+export const FECHA_INICIO_VIGENCIA = {
+  labelNombre: 'Fecha inicio:',
+  required: false,
+  habilitado: false,
+};
+
+/**
+ * @const FECHA_FINAL_VIGENCIA
+ * @description Objeto que define la configuración de la fecha final de vigencia.
+ */
+export const FECHA_FINAL_VIGENCIA = {
+  labelNombre: 'Fecha fin:',
+  required: false,
+  habilitado: false,
+};
+
+/**
+ * @const FECHA_INICIO_VIGENCIA_DEL_CUPO
+ * @description Objeto que define la configuración de la fecha de inicio de vigencia del cupo.
+ */
+export const FECHA_INICIO_VIGENCIA_DEL_CUPO = {
+  labelNombre: 'Fecha inicio vigencia del cupo:',
+  required: false,
+  habilitado: false,
+};
+
+/**
+ * @const FECHA_FINAL_VIGENCIA_DEL_CUPO
+ * @description Objeto que define la configuración de la fecha final de vigencia del cupo.
+ */
+export const FECHA_FINAL_VIGENCIA_DEL_CUPO = {
+  labelNombre: 'Fecha fin vigencia del cupo:',
+  required: false,
+  habilitado: false,
+};

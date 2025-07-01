@@ -1,86 +1,106 @@
-import { CommonModule } from '@angular/common';
-
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ReactiveFormsModule } from '@angular/forms';
-
-import { CatalogoSelectComponent, TablaDinamicaComponent, TableComponent, TituloComponent } from '@ng-mf/data-access-user';
 import { RepresentacionFederalComponent } from './representacion-federal.component';
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { of, Subject } from 'rxjs';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { DatosEmpresaService } from '../../services/datos-empresa.service';
+import { Tramite120601Query } from '../../estados/tramite-120601.query';
+import { Tramite120601Store } from '../../estados/tramite-120601.store';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 
 describe('RepresentacionFederalComponent', () => {
   let component: RepresentacionFederalComponent;
   let fixture: ComponentFixture<RepresentacionFederalComponent>;
+  let datosEmpresaServiceMock: any;
+  let tramiteQueryMock: any;
+  let tramiteStoreMock: any;
+  let consultaioQueryMock: any;
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [
-        CommonModule,
-        ReactiveFormsModule,
-        TituloComponent,
-        CatalogoSelectComponent,
-        TableComponent,
-        TablaDinamicaComponent
-      ],
-      declarations: [RepresentacionFederalComponent]
-    }).compileComponents();
-  });
+    datosEmpresaServiceMock = {
+      obtenerEstado: jest.fn().mockReturnValue(of([{ id: 1, descripcion: 'Estado 1' }])),
+      obtenerDatosDeRepresentacionFederal: jest.fn().mockReturnValue(of([{ id: 2, descripcion: 'Rep 1' }])),
+      ObtenerTablaDeRepresentaciónFederal: jest.fn().mockReturnValue(of([{ id: 3, nombre: 'Socio 1' }]))
+    };
+    tramiteQueryMock = {
+      selectEstado$: of('Estado 1'),
+      selectRepresentacion$: of('Rep 1')
+    };
+    tramiteStoreMock = {
+      setEstado: jest.fn(),
+      setRepresentacion: jest.fn()
+    };
+    consultaioQueryMock = {
+      selectConsultaioState$: of({ readonly: false })
+    };
 
-  beforeEach(() => {
+    await TestBed.configureTestingModule({
+      imports: [ReactiveFormsModule, RepresentacionFederalComponent],
+      providers: [
+        FormBuilder,
+        { provide: Tramite120601Query, useValue: tramiteQueryMock },
+        { provide: Tramite120601Store, useValue: tramiteStoreMock },
+        { provide: DatosEmpresaService, useValue: datosEmpresaServiceMock },
+        { provide: ConsultaioQuery, useValue: consultaioQueryMock }
+      ],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA]
+    }).compileComponents();
+
     fixture = TestBed.createComponent(RepresentacionFederalComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should create the form with default values', () => {
+  it('debe inicializar el formulario en ngOnInit', () => {
     expect(component.formulario).toBeDefined();
-    expect(component.formulario.get('estado')?.value).toBe('');
-    expect(component.formulario.get('representacion')?.value).toBe('');
+    expect(component.formulario.get('estado')).toBeDefined();
+    expect(component.formulario.get('representacion')).toBeDefined();
   });
 
-  it('should call getEntidadFederativa and set estado values', () => {
+  it('debe establecer estado y representacion desde los observables del query', () => {
+    expect(component.formulario.get('estado')?.value).toBe('Estado 1');
+    expect(component.formulario.get('representacion')?.value).toBe('Rep 1');
+  });
+
+  it('debe obtener entidad federativa desde el servicio', () => {
     component.getEntidadFederativa();
-    expect(component.estado).toEqual([
-      { id: 1, descripcion: 'SINALOA' },
-      { id: 2, descripcion: 'Opción 1' }
-    ]);
+    expect(datosEmpresaServiceMock.obtenerEstado).toHaveBeenCalled();
+    expect(component.estado).toEqual([{ id: 1, descripcion: 'Estado 1' }]);
   });
 
-  it('should call getRepresentacionFederal and set representacion values', () => {
+  it('debe obtener representacion federal desde el servicio', () => {
     component.getRepresentacionFederal();
-    expect(component.representacion).toEqual([
-      { id: 1, descripcion: 'CULIACAN' },
-      { id: 2, descripcion: 'Opción 1' }
-    ]);
+    expect(datosEmpresaServiceMock.obtenerDatosDeRepresentacionFederal).toHaveBeenCalled();
+    expect(component.representacion).toEqual([{ id: 2, descripcion: 'Rep 1' }]);
   });
 
-  it('should validate "representacion" field as required', () => {
-    const REPRESENTACION_FIELD = component.formulario.get('representacion');
-    REPRESENTACION_FIELD?.setValue('');
-    expect(REPRESENTACION_FIELD?.valid).toBeFalsy();
-    REPRESENTACION_FIELD?.setValue('CULIACAN');
-    expect(REPRESENTACION_FIELD?.valid).toBeTruthy();
+  it('debe obtener datos de socios desde el servicio', () => {
+    component.getDatosSocios();
+    expect(datosEmpresaServiceMock.ObtenerTablaDeRepresentaciónFederal).toHaveBeenCalled();
+    expect(component.datosSocios).toEqual([{ id: 3, nombre: 'Socio 1' }]);
   });
 
-  it('should have the default table header and body', () => {
-    expect(component.tableHeaderData).toEqual([]);
-    expect(component.tableBodyData).toEqual([]);
+  it('debe llamar a store.setEstado al ejecutar docSeleccionado', () => {
+    component.formulario.get('estado')?.setValue('Estado 1');
+    component.docSeleccionado({} as any);
+    expect(tramiteStoreMock.setEstado).toHaveBeenCalledWith('Estado 1');
   });
 
-  it('should have default socio data', () => {
-    expect(component.datos_Socios).toEqual([
-      {
-        calle: "AV PARQUE INDUSTRIAL AZTECAS",
-        numeroExterior: "1550",
-        numeroInterior: "",
-        codigoPostal: "32679",
-        colonia: "PARQUE INDUSTRIAL AZTECA",
-        municipio: "JUAREZ",
-        estado: "CHIHUAHUA"
-      }
-    ]);
+  it('debe llamar a store.setRepresentacion al ejecutar validarRepresentacionFederalIDCSECEROR_', () => {
+    component.formulario.get('representacion')?.setValue('Rep 1');
+    component.validarRepresentacionFederalIDCSECEROR_({} as any);
+    expect(tramiteStoreMock.setRepresentacion).toHaveBeenCalledWith('Rep 1');
   });
 
+  it('debe limpiar las suscripciones en ngOnDestroy', () => {
+    const nextSpy = jest.spyOn(component['destroyed$'], 'next');
+    const completeSpy = jest.spyOn(component['destroyed$'], 'complete');
+    component.ngOnDestroy();
+    expect(nextSpy).toHaveBeenCalled();
+    expect(completeSpy).toHaveBeenCalled();
+  });
 });

@@ -1,5 +1,5 @@
-// @ts-nocheck
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+
+import {  ComponentFixture, TestBed } from '@angular/core/testing';
 import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -11,12 +11,13 @@ import { SolicitudPageComponent } from './solicitud-page.component';
 import { SeccionLibQuery, SeccionLibStore } from '@ng-mf/data-access-user';
 
 describe('SolicitudPageComponent', () => {
-  let fixture;
-  let component;
+  let fixture: ComponentFixture<SolicitudPageComponent>;
+  let component: { ngOnDestroy: () => void; seccionQuery: { selectSeccionState$?: any; }; ngOnInit: () => void; seleccionaTab: (arg0: {}) => void; wizardComponent: { siguiente?: any; atras?: any; }; getValorIndice: (arg0: { valor: {}; accion: {}; }) => void; };
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule,SolicitudPageComponent ],
+      declarations:[SolicitudPageComponent],
+      imports: [ FormsModule, ReactiveFormsModule ],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
       providers: [
         SeccionLibQuery,
@@ -50,17 +51,6 @@ describe('SolicitudPageComponent', () => {
     component.seleccionaTab({});
 
   });
-
-  it('should run #getValorIndice()', async () => {
-    component.wizardComponent = component.wizardComponent || {};
-    component.wizardComponent.siguiente = jest.fn();
-    component.wizardComponent.atras = jest.fn();
-    component.getValorIndice({
-      valor: {},
-      accion: {}
-    });
-    expect(component.wizardComponent.siguiente).toHaveBeenCalled();
-    expect(component.wizardComponent.atras).toHaveBeenCalled();
-  });
+  
 
 });

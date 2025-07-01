@@ -1,15 +1,27 @@
-import { CONFIGURACION_DATOS, DEPOSITO_FISCAL, ELABORACION, IMPORTACION_TEMPORAL, RECINTO_FISCALIZADO } from '../../constantes/datos-por-regimen.enum';
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { Solicitud31603State, Tramite31603Store } from '../../estados/stores/tramite31603.store';
-import { Subject,map, takeUntil } from 'rxjs';
+import { CONFIGURACION_DATOS } from '../../constantes/datos-por-regimen.enum';
 import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
 import { ConceptosComponent } from '../conceptos/conceptos.component';
+import { ConsultaioState } from '@ng-mf/data-access-user';
+import { DEPOSITO_FISCAL } from '../../constantes/datos-por-regimen.enum';
+import { ELABORACION } from '../../constantes/datos-por-regimen.enum';
+import { FormBuilder } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
+import { IMPORTACION_TEMPORAL } from '../../constantes/datos-por-regimen.enum';
+import { Input } from '@angular/core';
 import { InputRadioComponent } from '@libs/shared/data-access-user/src';
+import { OnDestroy } from '@angular/core';
+import { OnInit } from '@angular/core';
+import { RECINTO_FISCALIZADO } from '../../constantes/datos-por-regimen.enum';
+import { ReactiveFormsModule } from '@angular/forms';
+import { Solicitud31603State } from '../../estados/stores/tramite31603.store';
+import { Subject } from 'rxjs';
 import { Tramite31603Query } from '../../estados/queries/tramite31603.query';
+import { Tramite31603Store } from '../../estados/stores/tramite31603.store';
+import { map } from 'rxjs';
 import radio_si_no from '@libs/shared/theme/assets/json/31601/radio_si_no.json';
-
+import { takeUntil } from 'rxjs';
 
 /**
  * Este componente es responsable de gestionar y mostrar los datos relacionados con los diferentes regímenes
@@ -24,13 +36,18 @@ import radio_si_no from '@libs/shared/theme/assets/json/31601/radio_si_no.json';
     ReactiveFormsModule,
     FormasDinamicasComponent,
     InputRadioComponent,
-    ConceptosComponent
+    ConceptosComponent,
   ],
   templateUrl: './datos-por-regimen.component.html',
   styleUrl: './datos-por-regimen.component.scss',
 })
 export class DatosPorRegimenComponent implements OnInit, OnDestroy {
-
+  /**
+   * @property consultaState
+   * @description
+   * Estado actual de la consulta gestionado por el store `ConsultaioQuery`.
+   */
+  @Input() consultaState!: ConsultaioState;
   /**
    * Un subject utilizado para notificar y completar cualquier suscripción activa cuando el componente es destruido.
    * Esto ayuda a prevenir fugas de memoria al garantizar que todas las suscripciones vinculadas a este notifier
@@ -57,7 +74,7 @@ export class DatosPorRegimenComponent implements OnInit, OnDestroy {
    * Representa un grupo de formulario reactivo para gestionar los datos relacionados con la sección "indique si".
    */
   public indiqueSiForma: FormGroup = new FormGroup({
-    importacionTemporalFormGroup: new FormGroup({})
+    importacionTemporalFormGroup: new FormGroup({}),
   });
   /**
    * Representa el grupo de formulario principal para la funcionalidad de "Depósito Fiscal".
@@ -65,23 +82,23 @@ export class DatosPorRegimenComponent implements OnInit, OnDestroy {
    * controles específicos relacionados con "Depósito Fiscal".
    */
   public depositoFiscalForma: FormGroup = new FormGroup({
-    depositoFiscalFormGroup: new FormGroup({})
+    depositoFiscalFormGroup: new FormGroup({}),
   });
   /**
    * Representa la estructura del grupo de formularios para el formulario "elaboracionForma".
    * Este grupo de formularios contiene un grupo de formularios anidado llamado "elaboracionFormGroup".
    */
   public elaboracionForma: FormGroup = new FormGroup({
-    elaboracionFormGroup: new FormGroup({})
+    elaboracionFormGroup: new FormGroup({}),
   });
   /**
    * Representa una estructura de grupo de formularios para gestionar datos relacionados con "recinto".
-   * 
+   *
    * @property recintoFiscalizadoFormGroup - Un grupo de formularios anidado destinado a manejar
    * controles y validaciones específicas para "recinto fiscalizado".
    */
   public recintoForma: FormGroup = new FormGroup({
-    recintoFiscalizadoFormGroup: new FormGroup({})
+    recintoFiscalizadoFormGroup: new FormGroup({}),
   });
   /**
    * Representa los datos del formulario para indicar si se realiza una acción específica.
@@ -121,7 +138,7 @@ export class DatosPorRegimenComponent implements OnInit, OnDestroy {
 
   /**
    * Constructor del componente DatosPorRegimenComponent.
-   * 
+   *
    * @param fb - Una instancia de FormBuilder utilizada para crear y gestionar formularios reactivos.
    * @param tramite31603Store - Un servicio de store para gestionar el estado del Trámite 31602.
    * @param tramite31603Query - Un servicio de consulta para recuperar datos relacionados con el Trámite 31602.
@@ -136,16 +153,21 @@ export class DatosPorRegimenComponent implements OnInit, OnDestroy {
 
   /**
    * Gancho del ciclo de vida que se llama después de que Angular ha inicializado todas las propiedades enlazadas a datos de una directiva.
-   * 
+   *
    * En esta implementación:
    * - Se suscribe al observable `selectSolicitud$` de `tramite31602Query` para actualizar la propiedad `solicitudState`.
    *   La suscripción se desuscribe automáticamente cuando `destroyNotifier$` emite un valor, evitando fugas de memoria.
    * - Inicializa el formulario de importaciones llamando al método `cerarImportacionesForm`.
    */
   ngOnInit(): void {
-    this.tramite31603Query.selectSolicitud$.pipe(takeUntil(this.destroyNotifier$),map((seccionState) => {
-        this.solicitudState = seccionState;
-      })).subscribe();
+    this.tramite31603Query.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.solicitudState = seccionState;
+        })
+      )
+      .subscribe();
     this.cerarImportacionesForm();
   }
 
@@ -156,7 +178,17 @@ export class DatosPorRegimenComponent implements OnInit, OnDestroy {
    */
   public cerarImportacionesForm(): void {
     this.importacionesForm = this.fb.group({
-      importaciones: ['']
+      importaciones: [''],
+    });
+    Promise.resolve().then(() => {
+      if (this.consultaState.readonly) {
+        this.importacionesForm.get('importaciones')?.disable();
+      } else {
+        this.importacionesForm.get('importaciones')?.enable();
+      }
+      if (this.consultaState.readonly || this.consultaState.update) {
+        this.valorSeleccionado = 'Si';
+      }
     });
   }
 
@@ -213,15 +245,19 @@ export class DatosPorRegimenComponent implements OnInit, OnDestroy {
    *     se extrae el `id` y se utiliza como el valor; de lo contrario, se utiliza el valor en sí.
    * Actualiza el `tramite31602Store` con el nuevo valor para el campo especificado.
    */
-  public establecerCambioDeValor(event: { campo: string; valor: any }): void {
-    if (event && typeof event.valor === 'object' && event.valor !== null && 'id' in event.valor) {
+  public establecerCambioDeValor(event: { campo: string; valor: unknown }): void {
+    if (
+      event &&
+      typeof event.valor === 'object' &&
+      event.valor !== null &&
+      'id' in event.valor
+    ) {
       const VALOR = event.valor.id;
-      this.tramite31603Store.setDynamicFieldValue(event.campo, VALOR);
+      this.tramite31603Store.setDynamicFieldValue(event.campo, VALOR as string | number | boolean);
     } else if (event) {
-      this.tramite31603Store.setDynamicFieldValue(event.campo, event.valor);
+      this.tramite31603Store.setDynamicFieldValue(event.campo, event.valor as string | number | boolean);
     }
   }
-
 
   /**
    * Gancho del ciclo de vida que se llama cuando el componente es destruido.
@@ -232,6 +268,4 @@ export class DatosPorRegimenComponent implements OnInit, OnDestroy {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
-
-
 }

@@ -41,11 +41,13 @@
       @switch (indice) { @case (1) {
       <solicitante [tabindex]="1"></solicitante>
       } @case (2) {
-      <app-ampliacion-servicios [tabindex]="2"></app-ampliacion-servicios>
-      } 
+        @if(esDatosRespuesta){
+      <app-ampliacion-servicios [tabindex]="2" [esFormularioSoloLectura]="esFormularioSoloLectura"></app-ampliacion-servicios>
+      } }
       @case (3) {
-        <app-ampliacion-3rs [tabindex]="3"></app-ampliacion-3rs>
-        }
+        @if(esDatosRespuesta){
+        <app-ampliacion-3rs [tabindex]="3" [esFormularioSoloLectura]="esFormularioSoloLectura"></app-ampliacion-3rs>
+        }}
     }
     </ng-container>
   </div>

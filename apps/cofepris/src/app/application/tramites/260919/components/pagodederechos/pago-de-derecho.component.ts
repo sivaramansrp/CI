@@ -1,4 +1,3 @@
-
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -13,8 +12,15 @@ import { ImportarDeRemediosHerbalsService } from '../../services/importar-de-rem
 import { Solicitud260919Query } from '../../estados/tramites260919.query';
 
 import { Catalogo, InputFecha, TituloComponent } from '@libs/shared/data-access-user/src';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { InputFechaComponent } from '@libs/shared/data-access-user/src';
+
+import {
+  REGEX_REEMPLAZAR,
+  REGEX_SOLO_DIGITOS,
+} from '@libs/shared/data-access-user/src/tramites/constantes/regex.constants';
+
 /**
  * Componente para gestionar el pago de derechos en el trámite.
  */
@@ -38,6 +44,14 @@ export class PagoDeDerechoComponent implements OnInit, OnDestroy {
 /** Datos del catálogo de bancos. */
 public bancoData = BANCO_DATA;
 
+  /** Estado de la consulta que se obtiene del store. */
+  public consultaState!: ConsultaioState;
+
+  /** Consulta de estado para la solicitud */
+  consultaDatos!: ConsultaioState;
+  /** Indica si el formulario es de solo lectura */
+esFormularioSoloLectura: boolean = false;
+
   /**
  * Configuración para el campo de selección de la fecha de pago.
  */
@@ -60,7 +74,8 @@ public bancoData = BANCO_DATA;
     private fb: FormBuilder,
     private cdr: ChangeDetectorRef,
     private solicitud260919Store: Solicitud260919Store,
-    private solicitud260919Query: Solicitud260919Query
+    private solicitud260919Query: Solicitud260919Query,
+    private consultaioQuery: ConsultaioQuery
   ) {}
 
   /**
@@ -78,6 +93,17 @@ public bancoData = BANCO_DATA;
 
     this.crearFormulario();
     this.getBancoData();
+     this.consultaioQuery.selectConsultaioState$
+        .pipe(
+          takeUntil(this.destroyed$),
+          map((seccionState) => {
+            this.consultaDatos = seccionState;
+            this.esFormularioSoloLectura = this.consultaDatos.readonly;
+            this.inicializarEstadoFormulario();
+          })
+        )
+        .subscribe();
+        this.inicializarEstadoFormulario();
   }
 
   /**
@@ -98,12 +124,24 @@ public bancoData = BANCO_DATA;
   crearFormulario(): void {
     this.pagoDeDerechosForm = this.fb.group({
       pagoDeDerechos: this.fb.group({
-        clavedereferencia: [this.pagoDeDerechosState?.clavedereferencia, Validators.required],
-        cadenadeladependencia: [this.pagoDeDerechosState?.cadenadeladependencia, Validators.required],
-        banco: [this.pagoDeDerechosState?.banco, Validators.required],
-        llavedepago: [this.pagoDeDerechosState?.llavedepago, Validators.required],
-        fechadepago: [this.pagoDeDerechosState?.fechadepago, Validators.required],
-        importedepago: [this.pagoDeDerechosState?.importedepago, Validators.required],
+        clavedereferencia: [
+          this.pagoDeDerechosState?.clavedereferencia,
+          [Validators.required, Validators.pattern(REGEX_REEMPLAZAR)],
+        ],
+        cadenadeladependencia: [
+          this.pagoDeDerechosState?.cadenadeladependencia,
+          [Validators.pattern(REGEX_REEMPLAZAR)],
+        ],
+        banco: [this.pagoDeDerechosState?.banco],
+        llavedepago: [
+          this.pagoDeDerechosState?.llavedepago,
+          [Validators.pattern(REGEX_REEMPLAZAR)],
+        ],
+        fechadepago: [this.pagoDeDerechosState?.fechadepago],
+        importedepago: [
+          this.pagoDeDerechosState?.importedepago,
+          [Validators.pattern(REGEX_SOLO_DIGITOS)],
+        ],
       }),
     });
   }
@@ -112,17 +150,18 @@ public bancoData = BANCO_DATA;
  * Actualiza la fecha de pago en el store con el evento recibido.
  * @param evento Fecha seleccionada en formato de cadena.
  */
-seleccionarFechaInicio(evento: string): void {
+ seleccionarFechaInicio(evento: string): void {
   this.solicitud260919Store.setFechadePago(evento);
 }
-
   /**
    * Limpia los datos del formulario.
    */
   clearForm(): void {
-    const BANCO_VALUE = this.pagoDeDerechos.get('banco')?.value; // Preservar el valor del banco
     this.pagoDeDerechosForm.reset(); // Restablecer el formulario
-    this.pagoDeDerechos.get('banco')?.setValue(BANCO_VALUE); // Restaurar el valor del banco
+    this.pagoDeDerechosForm.get('pagoDeDerechos.fechadepago')?.setValue(null);
+    this.pagoDeDerechosForm.get('pagoDeDerechos.fechadepago')?.markAsPristine();
+    this.pagoDeDerechosForm.get('pagoDeDerechos.fechadepago')?.markAsUntouched();
+  this.solicitud260919Store.setFechadePago('');
   }
 
   /**
@@ -131,6 +170,20 @@ seleccionarFechaInicio(evento: string): void {
   get pagoDeDerechos(): FormGroup {
     return this.pagoDeDerechosForm.get('pagoDeDerechos') as FormGroup;
   }
+
+  /**
+ * Método para inicializar el estado del formulario.
+ * Si el formulario es de solo lectura, lo deshabilita.
+ * De lo contrario, lo habilita.
+ */
+inicializarEstadoFormulario(): void {
+  if (this.esFormularioSoloLectura) {
+    this.pagoDeDerechosForm?.disable();
+  }
+  else {
+    this.pagoDeDerechosForm?.enable();
+  }
+}
 
   /**
    * Establece valores en el store a partir del formulario.

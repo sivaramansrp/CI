@@ -1,14 +1,12 @@
+import { AfterViewInit, Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import { Subject, map, takeUntil } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { AgregarProveedorCustomComponent } from '../../../../shared/components/agregar-proveedor-custom/agregar-proveedor-custom.component';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
+import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 import { Proveedor } from '../../../../shared/models/terceros-relacionados.model';
-import { Subject } from 'rxjs';
 import { Tramite240321Query } from '../../estados/tramite240321Query.query';
 import { Tramite240321Store } from '../../estados/tramite240321Store.store';
-import { takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-agregar-proveedor-contenedora',
@@ -17,7 +15,18 @@ import { takeUntil } from 'rxjs';
   templateUrl: './agregar-proveedor-contenedora.component.html',
   styleUrl: './agregar-proveedor-contenedora.component.scss',
 })
-export class AgregarProveedorContenedoraComponent implements OnInit, OnDestroy {
+export class AgregarProveedorContenedoraComponent implements OnInit, OnDestroy,AfterViewInit {
+    /**
+   * @event cerrar
+   * @description Evento emitido para indicar que se debe cerrar el componente.
+   * @remarks
+   * Este evento no envía ningún valor, simplemente notifica a los componentes padres que se debe realizar la acción de cierre.
+   * 
+   * @eventType void
+   * @es
+   * Evento que se dispara para cerrar el componente actual.
+   */
+  @Output() cerrar = new EventEmitter<void>();
   /**
        * Subject utilizado para gestionar la desuscripción de observables.
        * Se completa en `ngOnDestroy()` para prevenir fugas de memoria.
@@ -35,14 +44,30 @@ export class AgregarProveedorContenedoraComponent implements OnInit, OnDestroy {
    * Índice del proveedor seleccionado.
    * @property {string} proveedorIndice
    */
-
   proveedorIndice: string = '';
+
+  /**
+   * Indica si el formulario debe mostrarse en modo solo lectura.
+   *
+   * @type {boolean}
+   * @memberof AgregarDestinatarioFinalContenedoraComponent
+   * @see https://compodoc.app/
+   */
+  esFormularioSoloLectura:boolean=false;
   
+  /**
+   * Constructor del componente.
+   *
+   * @method constructor
+   * @param {Tramite240321Store} tramite240321Store - Store que administra el estado del trámite.
+   * @param {ActivatedRoute} route - Servicio de Angular para acceder a los parámetros de la ruta.
+   * @param {Tramite240321Query} tramiteQuery - Query para obtener datos del store del trámite.
+   * @param {ConsultaioQuery} consultaioQuery - Query para obtener el estado de la sección de consulta.
+   * @returns {void}
+   */
   constructor(public tramite240321Store: Tramite240321Store,private route: ActivatedRoute,
-    private tramiteQuery: Tramite240321Query
-  ) {
-    // 
-  }
+    private tramiteQuery: Tramite240321Query,private readonly consultaioQuery:ConsultaioQuery
+  ) {}
 
   /**
    * @method updateProveedorTablaDatos
@@ -53,6 +78,7 @@ export class AgregarProveedorContenedoraComponent implements OnInit, OnDestroy {
    */
   updateProveedorTablaDatos(event: Proveedor[]): void {
     this.tramite240321Store.updateProveedorTablaDatos(event);
+      this.cerrar.emit();
   }
   /**
    * @method actualizaExistenteEnProveedorDatos
@@ -85,6 +111,30 @@ export class AgregarProveedorContenedoraComponent implements OnInit, OnDestroy {
           });
        
     }
+     /**
+       * @inheritdoc
+       * @description
+       * Método del ciclo de vida de Angular que se ejecuta después de que la vista del componente ha sido inicializada.
+       * 
+       * Suscribe al observable `selectConsultaioState$` para escuchar cambios en el estado de la sección y actualizar
+       * la propiedad `esFormularioSoloLectura` según el valor de `readonly` en el estado.
+       * 
+       * La suscripción se mantiene activa hasta que se emite un valor en `unsubscribe$`, lo que previene fugas de memoria.
+       * 
+       * @see https://angular.io/api/core/AfterViewInit
+       * 
+       * @memberof AgregarDestinatarioFinalContenedoraComponent
+       */
+      ngAfterViewInit(): void {
+       this.consultaioQuery.selectConsultaioState$
+                        .pipe(
+                          takeUntil(this.unsubscribe$),
+                          map((seccionState)=>{
+                            this.esFormularioSoloLectura = seccionState.readonly; 
+                          })
+                        )
+                        .subscribe();
+      }
     /**
      * Hook del ciclo de vida que se ejecuta al destruir el componente.
      * Libera las suscripciones activas para evitar fugas de memoria.

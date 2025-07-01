@@ -5,25 +5,24 @@
                 <a data-toggle="tab" tabindex="0" (keyup)="seleccionaTab(1)" (click)="seleccionaTab(1)">Solicitante</a>
             </li>
             <li [ngClass]="indice === 2 ? 'active' : ''">
-                <a data-toggle="tab" tabindex="0" (keyup)="seleccionaTab(1)" (click)="seleccionaTab(2)">Cancellation de Certificados de Cupo</a>
+                <a data-toggle="tab" tabindex="0" (keyup)="seleccionaTab(1)" (click)="seleccionaTab(2)">Cancelación de Certificados de Cupo</a>
             </li>
-          
+
         </ul>
         <ng-container>
             @switch (indice) {
             @case (1) {
-        
-<app-140103solicitante></app-140103solicitante>
+
+            <app-140103solicitante></app-140103solicitante>
             }
             @case (2) {
-           
-           <app-cancelacion-de-certificado></app-cancelacion-de-certificado>
-           
-           <app-detalle></app-detalle>
-           <app-oficio></app-oficio>
-           <app-devolver></app-devolver>
+            @if(esDatosRespuesta){
+            <app-cancelacion-de-certificado></app-cancelacion-de-certificado>
+            <app-detalle></app-detalle>
+            <app-oficio></app-oficio>
+            <app-devolver></app-devolver>
             }
-          
+            }
             }
         </ng-container>
     </div>

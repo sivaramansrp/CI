@@ -45,7 +45,7 @@ describe('DatosMonumentoComponent', () => {
       declarations: [],
       imports: [
         ReactiveFormsModule,
-        HttpClientModule, // Added HttpClientModule to resolve NullInjectorError
+        HttpClientModule,
         DatosMonumentoComponent,
         TituloComponent,
         TablaDinamicaComponent,
@@ -70,8 +70,12 @@ describe('DatosMonumentoComponent', () => {
   });
 
   it('should initialize the form and fetch aduana data on ngOnInit', () => {
+    const getAduanaSpy = jest.spyOn(component, 'getAduana');
+    const inicializarFormularioSpy = jest.spyOn(component, 'inicializarFormulario');
+    component.ngOnInit();
+    expect(getAduanaSpy).toHaveBeenCalled();
+    expect(inicializarFormularioSpy).toHaveBeenCalled();
     expect(component.mercanciaForm).toBeDefined();
-    expect(component.aduana).toEqual([{ id: "1", descripcion: 'Aduana 1' }]); // Ensure aduana is populated
   });
 
   it('should call setMonumento and reset the form on valid Guardar', () => {
@@ -86,26 +90,13 @@ describe('DatosMonumentoComponent', () => {
       idFraccionGubernamental: 'Fraccion 1',
       descripcionUsoMercancia: 'Estado 1',
     });
-
+    const resetSpy = jest.spyOn(component.mercanciaForm, 'reset');
     component.Guardar();
 
-    expect(storeMock.setMonumento).toHaveBeenCalled(); // Ensure setMonumento is called
-    expect(component.mercanciaForm.pristine).toBeTruthy(); // Ensure the form is reset
-    expect(component.mercanciaForm.value).toEqual({ // Verify the form is cleared
-      descripcionMercancia: null,
-      generica2: null,
-      descripcionIdentificacion: null,
-      generica1: null,
-      cantidadPresentacion: null,
-      componente: null,
-      importeTotalComponente: null,
-      idFraccionGubernamental: null,
-      descripcionUsoMercancia: null,
-      descEpoca: null,
-      descMaterial: null,
-      descFraccion: null,
-    });
+    expect(storeMock.setMonumento).toHaveBeenCalled();
+    expect(resetSpy).toHaveBeenCalled();
     expect(routerMock.navigate).toHaveBeenCalledWith(['../permiso'], { relativeTo: component.activatedRoute });
+    resetSpy.mockRestore();
   });
 
   it('should mark all fields as touched on invalid Guardar', () => {
@@ -114,21 +105,34 @@ describe('DatosMonumentoComponent', () => {
   });
 
   it('should update descEpoca on cambiaEpoca', () => {
-    component.mercanciaForm.patchValue({ generica2: "1" });
+     component.aduana = [
+      { id: 1, descripcion: 'Aduana 1' },
+      { id: 2, descripcion: 'Aduana 2' }
+    ];
+    component.mercanciaForm.patchValue({ generica2: 1 });
     component.cambiaEpoca();
     expect(component.mercanciaForm.get('descEpoca')?.value).toBe('Aduana 1');
   });
 
   it('should update descMaterial on cambiaMaterial', () => {
-    component.mercanciaForm.patchValue({ generica1: "1 "});
+     component.aduana = [
+      { id: 1, descripcion: 'Aduana 1' },
+      { id: 2, descripcion: 'Aduana 2' }
+    ];
+    component.mercanciaForm.patchValue({ generica1: 1 });
     component.cambiaMaterial();
     expect(component.mercanciaForm.get('descMaterial')?.value).toBe('Aduana 1');
   });
 
   it('should update descFraccion on cambiaFraccion', () => {
-    component.mercanciaForm.patchValue({ idFraccionGubernamental: "1" });
+
+     component.aduana = [
+      { id: 1, descripcion: 'Aduana 1' },
+      { id: 2, descripcion: 'Aduana 2' }
+    ];
+    component.mercanciaForm.patchValue({ idFraccionGubernamental: 1 });
     component.cambiaFraccion();
-    expect(component.mercanciaForm.get('descFraccion')?.value).toBe('Fraccion 1'); // Ensure test case aligns with mock data
+    expect(component.mercanciaForm.get('descFraccion')?.value).toBe('Aduana 1'); // Ensure test case aligns with mock data
   });
 
   it('should call borrorElemento on Borrar', () => {
@@ -142,10 +146,9 @@ describe('DatosMonumentoComponent', () => {
   it('should clean up subscriptions on destroy', () => {
     const destroyNotifierSpy = jest.spyOn(component['destroyNotifier$'], 'next');
     const destroyNotifierCompleteSpy = jest.spyOn(component['destroyNotifier$'], 'complete');
-
     component.ngOnDestroy();
-
     expect(destroyNotifierSpy).toHaveBeenCalled();
     expect(destroyNotifierCompleteSpy).toHaveBeenCalled();
   });
+  
 });

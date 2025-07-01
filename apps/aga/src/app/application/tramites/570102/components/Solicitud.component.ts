@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { BtnContinuarComponent, ConsultaioQuery, ConsultaioState, DatosPasos, ListaPasosWizard, PASOS, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { BtnContinuarComponent, DatosPasos, ListaPasosWizard, Notificacion, NotificacionesComponent, PASOS, Pedimento, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
 import { ReplaySubject, map, takeUntil } from 'rxjs';
 import { Solicitud570102State, Tramite570102Store } from '../state/Tramite570102.store';
 import { CommonModule } from '@angular/common';
@@ -54,6 +54,15 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   };
 
   /**
+   * Subject para destruir notificador.
+   */
+  consultaDatos!: ConsultaioState;
+   /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  soloLectura: boolean = false;
+  /**
    * Observable para gestionar la destrucción del componente y evitar fugas de memoria.
    */
   public destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
@@ -77,11 +86,21 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    */
   constructor(
     public fb: FormBuilder,
-    private store: Tramite570102Store,
+    public store: Tramite570102Store,
     private query: Tramite570102Query,
-    private validacionesService: ValidacionesFormularioService
+    private validacionesService: ValidacionesFormularioService,
+     private consultaioQuery: ConsultaioQuery
   ) {
-    // El constructor se utiliza para la inyección de dependencias.
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState) => {
+          this.consultaDatos = seccionState;
+          this.soloLectura = this.consultaDatos.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe()
   }
 
   /**
@@ -102,8 +121,30 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       )
       .subscribe();
     this.donanteDomicilio();
+
+    this.inicializarEstadoFormulario();
   }
 
+  /**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.
+   * Además, obtiene la información del catálogo de mercancía.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.soloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.donanteDomicilio();
+    }
+  }
+
+  /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormulario(): void {
+    this.donanteDomicilio();
+   
+  }
   /**
    * Valida el formulario y marca todos los campos como tocados si es inválido.
    */
@@ -143,7 +184,8 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    */
   donanteDomicilio(): void {
     this.solicitudForm = this.fb.group({
-      motivoDelDes: [this.solicitudState?.motivoDelDes, [Validators.required]],
+       folio: [{ value: this.solicitudState?.folio, disabled: this.soloLectura }, [Validators.required]],
+  motivoDelDes: [{ value: this.solicitudState?.motivoDelDes, disabled: this.soloLectura }, [Validators.required]],
     });
   }
 

@@ -1,7 +1,7 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, map } from 'rxjs';
 import { Capturista } from '../models/capturista.model';
 import { ConsultaRegistro } from '../models/consuta-registro.model';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
 /**
@@ -27,12 +27,14 @@ export class UsuariosService {
      * @param curp CURP del usuario (opcional).
      * @returns Observable con los datos del registro consultado.
      */
-    consultaDatosPorRFCoCURP(rfc?: string): Observable<ConsultaRegistro> {
-        let params = new HttpParams();
-        if (rfc) {
-            params = params.set('rfc', rfc);
-        }
-        return this.http.get<ConsultaRegistro>(`/assets/json/login/consulta-registro.json`, { params });
+    consultaNotificadores(rfc: string): Observable<ConsultaRegistro | undefined> {
+        return this.http.get<ConsultaRegistro[]>(`/assets/json/login/consulta-notificadores.json`).pipe(
+            map((capturistas) => {
+                return capturistas.find(c =>
+                    (rfc ? c.rfc === rfc : true)
+                );
+            })
+        );
     }
 
     /**
@@ -54,5 +56,22 @@ export class UsuariosService {
             })
         );
     }
+
+    /**
+ * Simula el guardado de la aceptación de condiciones de uso.
+ * Envía los datos de firma y aceptación a un endpoint simulado y retorna un booleano.
+ * 
+ * @param firma Cadena con la firma electrónica del usuario.
+ * @param aceptoCondiciones Booleano que indica si el usuario aceptó las condiciones de uso.
+ * @returns Observable<boolean> indicando si la operación fue exitosa.
+ */
+    aceptaCondicionesUso(firma: string, aceptoCondiciones: boolean): Observable<boolean> {
+        return this.http.get<{ success: boolean }>(
+            'assets/json/login/guardar-condiciones-uso.json'
+        ).pipe(
+            map(response => response.success)
+        );
+    }
+
 
 }

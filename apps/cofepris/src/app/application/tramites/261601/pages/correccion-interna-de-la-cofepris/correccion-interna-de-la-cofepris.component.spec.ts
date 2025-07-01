@@ -1,5 +1,5 @@
-// @ts-nocheck
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+
+import {  ComponentFixture, TestBed } from '@angular/core/testing';
 import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -9,14 +9,9 @@ import { Observable, of as observableOf, throwError } from 'rxjs';
 import { Component } from '@angular/core';
 import { CorreccionInternaDeLaCofeprisComponent } from './correccion-interna-de-la-cofepris.component';
 
-@Directive({ selector: '[myCustom]' })
-class MyCustomDirective {}
-
-
-
 describe('CorreccionInternaDeLaCofeprisComponent', () => {
-  let fixture;
-  let component;
+  let fixture: ComponentFixture<CorreccionInternaDeLaCofeprisComponent>;
+  let component: { ngOnDestroy: () => void; wizardComponent: { siguiente?: any; atras?: any; }; getValorIndice: (arg0: { valor: {}; accion: {}; }) => void; };
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -45,14 +40,23 @@ describe('CorreccionInternaDeLaCofeprisComponent', () => {
   });
 
   it('should run #getValorIndice()', async () => {
-    component.wizardComponent = component.wizardComponent || {};
-    component.wizardComponent.siguiente = jest.fn();
-    component.wizardComponent.atras = jest.fn();
+    component.wizardComponent = {
+      siguiente: jest.fn(),
+      atras: jest.fn(),
+    };
+  
     component.getValorIndice({
-      valor: {},
-      accion: {}
+      valor: 2, 
+      accion: 'cont', 
     });
+  
     expect(component.wizardComponent.siguiente).toHaveBeenCalled();
+  
+    component.getValorIndice({
+      valor: 1, 
+      accion: 'atras', 
+    });
+  
     expect(component.wizardComponent.atras).toHaveBeenCalled();
   });
 

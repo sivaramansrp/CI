@@ -25,11 +25,17 @@
       </li>
     </ul>
     <ng-container>
-      @switch (indice) { @case (1) {
-      <solicitante [tabindex]="1"></solicitante>
-      } @case (2) {
-      <app-registrar-de-proveedores></app-registrar-de-proveedores>
-      } }
+      @switch (indice) {
+        @case (1) {
+          @if(esDatosRespuesta) {
+            <solicitante [tabindex]="1"></solicitante>
+          }
+        } @case (2) {
+          @if(esDatosRespuesta) {
+            <app-registrar-de-proveedores></app-registrar-de-proveedores>
+          }
+        }
+      }
     </ng-container>
   </div>
 </div>

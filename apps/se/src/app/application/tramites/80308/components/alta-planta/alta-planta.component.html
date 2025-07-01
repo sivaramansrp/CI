@@ -10,6 +10,7 @@
           [required]="true"
           name="estado"
           formControlName="entidadFederativa"
+          [isDisabled]="esFormularioSoloLectura"
           (selectionChange)="tipoEstadoSeleccion($event)"
         ></app-catalogo-select>
       </form>

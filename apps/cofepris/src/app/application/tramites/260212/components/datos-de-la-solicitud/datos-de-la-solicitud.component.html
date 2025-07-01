@@ -147,8 +147,8 @@
           <button class="btn btn-primary" (click)="openMercanciasForm()" [disabled]="esFormularioSoloLectura">
             Agregar
           </button>
-          <button class="btn btn-default ms-2">Modificar</button>
-          <button class="btn btn-default ms-2">Eliminar</button>
+          <button class="btn btn-default ms-2" [disabled]="esFormularioSoloLectura">Modificar</button>
+          <button class="btn btn-default ms-2" [disabled]="esFormularioSoloLectura">Eliminar</button>
         </div>
 
       </div>

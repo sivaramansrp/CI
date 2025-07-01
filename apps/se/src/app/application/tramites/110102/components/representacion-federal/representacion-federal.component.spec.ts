@@ -1,4 +1,4 @@
-import { TestBed } from '@angular/core/testing';
+import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { RepresentacionFederalComponent } from './representacion-federal.component';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { RepresentacionfederalService } from '@ng-mf/data-access-user';
@@ -8,24 +8,28 @@ import { of } from 'rxjs';
 
 describe('RepresentacionFederalComponent', () => {
   let component: RepresentacionFederalComponent;
+  let fixture: ComponentFixture<RepresentacionFederalComponent>;
   let mockService: any;
   let mockStore: any;
   let mockQuery: any;
 
   beforeEach(async () => {
     mockService = {
-      getEntidadFederativa: jest.fn().mockReturnValue(of([{ id: '01', nombre: 'Entidad 1' }])),
-      getRepresentacionfederal: jest.fn().mockReturnValue(of([{ id: 'RF1', nombre: 'Representación 1' }]))
+      getEntidadFederativa: jest.fn().mockReturnValue(of([{ id: 1, descripcion: 'Entidad 1' }])),
+      getRepresentacionfederal: jest.fn().mockReturnValue(of([{ id: 1, descripcion: 'Representación 1' }]))
     };
     mockStore = { establecerDatos: jest.fn() };
-    mockQuery = { selectTramite110102$: of({
-      solicitudEntidadFederativaEntidadClave: '01',
-      unidadAdministrativaClave: 'RF1',
-      protestoDecirVerdad: true
-    }) };
+    mockQuery = {
+      selectTramite110102$: of({
+        claveEntidadFederativa: '01',
+        claveUnidadAdministrativa: 'RF1',
+        protestoDecirVerdad: true
+      })
+    };
 
     await TestBed.configureTestingModule({
       imports: [ReactiveFormsModule,RepresentacionFederalComponent],
+      declarations: [],
       providers: [
         FormBuilder,
         { provide: RepresentacionfederalService, useValue: mockService },
@@ -34,68 +38,68 @@ describe('RepresentacionFederalComponent', () => {
       ]
     }).compileComponents();
 
-    const FIXTURE = TestBed.createComponent(RepresentacionFederalComponent);
-    component = FIXTURE.componentInstance;
-    FIXTURE.detectChanges();
+    fixture = TestBed.createComponent(RepresentacionFederalComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
   });
 
   it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('ngOnInit debe cargar entidades de frontera y valores del store', () => {
-    const SPY_ENTIDADES = jest.spyOn(component, 'cargarEntidadesFrontera');
-    const SPY_VALORES = jest.spyOn(component, 'getValorsStore');
+  it('ngOnInit debe inicializar el formulario y cargar entidades federativas', () => {
+    const SPY_CARGAR_ENTIDADES = jest.spyOn(component, 'cargarEntidadesFederativas');
+    const SPY_OBTENER_VALORES = jest.spyOn(component, 'obtenerValoresDelEstado');
     component.ngOnInit();
-    expect(SPY_ENTIDADES).toHaveBeenCalled();
-    expect(SPY_VALORES).toHaveBeenCalled();
+    expect(SPY_CARGAR_ENTIDADES).toHaveBeenCalled();
+    expect(SPY_OBTENER_VALORES).toHaveBeenCalled();
   });
 
-  it('cargarEntidadesFrontera debe llenar entidadesFrontera', () => {
-    component.cargarEntidadesFrontera();
-    expect(component.entidadesFrontera).toEqual([{ id: '01', nombre: 'Entidad 1' }]);
+  it('cargarEntidadesFederativas debe llenar entidadesFederativas', () => {
+    component.cargarEntidadesFederativas();
+    expect(component.entidadesFederativas).toEqual([{ id: 1, descripcion: 'Entidad 1' }]);
   });
 
-  it('onEntidadFederativaChange debe llamar a recuperarRepresentacionFederalSE y setValoresStore si valor es distinto de -1', () => {
-    const SPY_RECUPERAR = jest.spyOn(component, 'recuperarRepresentacionFederalSE');
-    const SPY_SET_VALORES = jest.spyOn(component, 'setValoresStore');
-    component.onEntidadFederativaChange({ id: '01' });
-    expect(SPY_RECUPERAR).toHaveBeenCalledWith('01');
-    expect(SPY_SET_VALORES).toHaveBeenCalledWith(component.formularioRepresentacionFederalForm, 'solicitudEntidadFederativaEntidadClave');
+  it('alCambiarEntidadFederativa debe llamar a obtenerRepresentacionFederal y establecerValoresEnEstado si el valor no es -1', () => {
+    const SPY_OBTENER = jest.spyOn(component, 'obtenerRepresentacionFederal');
+    const SPY_ESTABLECER = jest.spyOn(component, 'establecerValoresEnEstado');
+    component.alCambiarEntidadFederativa({ target: { value: '01' } } as any);
+    expect(SPY_OBTENER).toHaveBeenCalledWith('01');
+    expect(SPY_ESTABLECER).toHaveBeenCalledWith(component.formularioRepresentacionFederal, 'claveEntidadFederativa');
   });
 
-  it('onEntidadFederativaChange debe limpiar representacionFederalOptions si valor es -1', () => {
-    component.representacionFederalOptions = [{ id: 1, descripcion: 'Representación 1' }];
-    component.onEntidadFederativaChange('-1');
-    expect(component.representacionFederalOptions).toEqual([]);
+  it('alCambiarEntidadFederativa debe limpiar opcionesRepresentacionFederal si el valor es -1', () => {
+    component.opcionesRepresentacionFederal = [{ id: 1, descripcion: 'Representación 1' }];
+    component.alCambiarEntidadFederativa({ target: { value: '-1' } } as any);
+    expect(component.opcionesRepresentacionFederal).toEqual([]);
   });
 
-  it('recuperarRepresentacionFederalSE debe llenar representacionFederalOptions', () => {
-    component.recuperarRepresentacionFederalSE('01');
-    expect(component.representacionFederalOptions).toEqual([{ id: 'RF1', nombre: 'Representación 1' }]);
+  it('obtenerRepresentacionFederal debe llenar opcionesRepresentacionFederal', () => {
+    component.obtenerRepresentacionFederal('01');
+    expect(component.opcionesRepresentacionFederal).toEqual([{ id: 1, descripcion: 'Representación 1' }]);
   });
 
-  it('setValoresStore debe llamar a establecerDatos en el store', () => {
-    component.formularioRepresentacionFederalForm.get('solicitudEntidadFederativaEntidadClave')?.setValue('01');
-    component.setValoresStore(component.formularioRepresentacionFederalForm, 'solicitudEntidadFederativaEntidadClave');
-    expect(mockStore.establecerDatos).toHaveBeenCalledWith({ solicitudEntidadFederativaEntidadClave: '01' });
+  it('establecerValoresEnEstado debe llamar a establecerDatos en el store', () => {
+    component.formularioRepresentacionFederal.get('claveEntidadFederativa')?.setValue('01');
+    component.establecerValoresEnEstado(component.formularioRepresentacionFederal, 'claveEntidadFederativa');
+    expect(mockStore.establecerDatos).toHaveBeenCalledWith({ claveEntidadFederativa: '01' });
   });
 
-  it('getValorsStore debe actualizar el formulario con valores del store', () => {
-    component.formularioRepresentacionFederalForm.patchValue({
-      solicitudEntidadFederativaEntidadClave: '',
-      unidadAdministrativaClave: '',
+  it('obtenerValoresDelEstado debe actualizar el formulario con valores del store', () => {
+    component.formularioRepresentacionFederal.patchValue({
+      claveEntidadFederativa: '',
+      claveUnidadAdministrativa: '',
       protestoDecirVerdad: false
     });
-    component.getValorsStore();
-    expect(component.formularioRepresentacionFederalForm.get('solicitudEntidadFederativaEntidadClave')?.value).toBe('01');
-    expect(component.formularioRepresentacionFederalForm.get('unidadAdministrativaClave')?.value).toBe('RF1');
-    expect(component.formularioRepresentacionFederalForm.get('protestoDecirVerdad')?.value).toBe(true);
+    component.obtenerValoresDelEstado();
+    expect(component.formularioRepresentacionFederal.get('claveEntidadFederativa')?.value).toBe('01');
+    expect(component.formularioRepresentacionFederal.get('claveUnidadAdministrativa')?.value).toBe('RF1');
+    expect(component.formularioRepresentacionFederal.get('protestoDecirVerdad')?.value).toBe(true);
   });
 
-  it('ngOnDestroy debe completar el subject destroyed$', () => {
-    const SPY_NEXT = jest.spyOn((component as any).destroyed$, 'next');
-    const SPY_COMPLETE = jest.spyOn((component as any).destroyed$, 'complete');
+  it('ngOnDestroy debe completar el subject destruido$', () => {
+    const SPY_NEXT = jest.spyOn((component as any).destruido$, 'next');
+    const SPY_COMPLETE = jest.spyOn((component as any).destruido$, 'complete');
     component.ngOnDestroy();
     expect(SPY_NEXT).toHaveBeenCalled();
     expect(SPY_COMPLETE).toHaveBeenCalled();

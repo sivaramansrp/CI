@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DatosComponent } from './datos.component';
-import { PASOS } from '../../../../shared/constantes/aviso.enum';
-import { WizardComponent } from '../../../../shared/components/wizard/wizard.component';
+import { PASOS, WizardComponent } from '@libs/shared/data-access-user/src';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 
 describe('DatosComponent', () => {
   let component: DatosComponent;
@@ -11,6 +11,7 @@ describe('DatosComponent', () => {
     await TestBed.configureTestingModule({
       declarations: [DatosComponent],
       imports: [WizardComponent],
+      schemas: [NO_ERRORS_SCHEMA]
     }).compileComponents();
 
     fixture = TestBed.createComponent(DatosComponent);
@@ -40,13 +41,13 @@ describe('DatosComponent', () => {
   });
 
   it('should call wizardComponent methods', () => {
-    spyOn(component.wizardComponent, 'siguiente');
-    spyOn(component.wizardComponent, 'atras');
+    const siguienteSpy = jest.spyOn(component.wizardComponent, 'siguiente');
+    const atrasSpy = jest.spyOn(component.wizardComponent, 'atras');
 
     component.wizardComponent.siguiente();
-    expect(component.wizardComponent.siguiente).toHaveBeenCalled();
+    expect(siguienteSpy).toHaveBeenCalled();
 
     component.wizardComponent.atras();
-    expect(component.wizardComponent.atras).toHaveBeenCalled();
+    expect(atrasSpy).toHaveBeenCalled();
   });
 });

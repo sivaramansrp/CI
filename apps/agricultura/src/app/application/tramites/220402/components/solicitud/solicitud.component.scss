@@ -34,3 +34,43 @@
   font-size: medium;
 }
 
+.collpase-button:disabled {
+  opacity: 0.5;
+}
+
+.rango-de-fechas-label {
+  padding-top: 7px;
+}
+
+#rangoDeFechas {
+  margin-top: 10px;
+}
+
+.red-require {
+  color: #CE0923;
+  font-weight: bold;
+}
+
+.modal-dialog {
+  max-width: 1100px !important;
+}
+
+.pagination {
+  display: table;
+  margin: 0 auto;
+}
+
+::ng-deep {
+  .reexportacion {
+    .modal-footer {
+      justify-content: right;
+    }
+  }
+
+  .tipo-certificado {
+    form>div:first-of-type {
+      display: flex;
+      justify-content: space-between;
+    }
+  }
+}

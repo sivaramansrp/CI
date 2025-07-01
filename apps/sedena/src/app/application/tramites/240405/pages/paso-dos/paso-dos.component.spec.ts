@@ -10,7 +10,8 @@ describe('PasoDosComponent', () => {
 
  beforeEach(async () => {
      await TestBed.configureTestingModule({
-       imports: [PasoDosComponent,HttpClientModule,ToastrModule.forRoot()],
+      declarations: [PasoDosComponent],
+       imports: [HttpClientModule,TituloComponent,AlertComponent,AnexarDocumentosComponent,ToastrModule.forRoot()],
      }).compileComponents();
  
      fixture = TestBed.createComponent(PasoDosComponent);

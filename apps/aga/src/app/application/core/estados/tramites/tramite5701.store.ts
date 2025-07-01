@@ -4,6 +4,7 @@ import {
 } from '../../models/5701/tramite5701.model';
 import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
+import { LineaCaptura } from '../../models/5701/linea-captura.model';
 import { Patente } from '../../models/5701/Patente.model';
 import { TransporteDespacho } from '@ng-mf/data-access-user';
 
@@ -13,6 +14,7 @@ import { TransporteDespacho } from '@ng-mf/data-access-user';
  */
 export interface Solicitud5701State {
   idSolicitud: number | null;
+  folioFirma: string;
   tipoSolicitud: number;
   descripcionTipoSolicitud: string;
 
@@ -97,6 +99,7 @@ export interface Solicitud5701State {
   montoPagar: string;
   lineaCaptura: string;
   monto: string;
+  lineasCaptura: LineaCaptura[];
   isMontoAceptable: boolean;
   rangoFechas: boolean;
   selectRangoDias: string[];
@@ -113,6 +116,7 @@ export interface Terceros5701State {
 export function createInitialState(): Solicitud5701State {
   return {
     idSolicitud: 0,
+    folioFirma: '',
     descripcionTipoSolicitud: '',
     tipoSolicitud: -1,
     RFCImportadorExportador: '',
@@ -176,6 +180,7 @@ export function createInitialState(): Solicitud5701State {
     montoPagar: '',
     lineaCaptura: '',
     monto: '',
+    lineasCaptura: [],
     isMontoAceptable: false,
     rangoFechas: false,
     selectRangoDias: [],
@@ -212,6 +217,17 @@ export class Tramite5701Store extends Store<Solicitud5701State> {
     this.update((state) => ({
       ...state,
       tipoSolicitud,
+    }));
+  }
+
+  /**
+ * Guarda el folio de la firma en el estado.
+ * @param folioFirma - El folio de la firma que se va a guardar.
+ */
+  public setFolioFirma(folioFirma: string): void {
+    this.update((state) => ({
+      ...state,
+      folioFirma,
     }));
   }
 
@@ -979,6 +995,18 @@ export class Tramite5701Store extends Store<Solicitud5701State> {
     this.update((state) => ({
       ...state,
       isMontoAceptable,
+    }));
+  }
+
+  /**
+   * Guarda las lineas de captura en el estado.
+   */
+  public setLineasCaptura(lineasCaptura: LineaCaptura[]): void {
+    this.update((state) => ({
+      ...state,
+      lineasCaptura: Array.isArray(lineasCaptura)
+        ? lineasCaptura
+        : [lineasCaptura],
     }));
   }
 

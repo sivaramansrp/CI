@@ -1,16 +1,16 @@
 import { ActivatedRoute, Router } from '@angular/router';
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { DestinoFinal, Proveedor } from '../../../../shared/models/terceros-relacionados.model';
+import { Subject, map, takeUntil } from 'rxjs';
+import { AgregarDestinatarioFinalContenedoraComponent } from '../agregar-destinatario-final-contenedora/agregar-destinatario-final-contenedora.component';
+import { AgregarProveedorContenedoraComponent } from '../agregar-proveedor-contenedora/agregar-proveedor-contenedora.component';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { DestinoFinal } from '../../../../shared/models/terceros-relacionados.model';
+import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
+import { ModalComponent } from '../../../../shared/components/modal/modal.component';
 import { NUMERO_TRAMITE } from '../../../../shared/constants/datos-solicitud.enum';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
-import { Proveedor } from '../../../../shared/models/terceros-relacionados.model';
-import { Subject } from 'rxjs';
 import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-relacionados/terceros-relacionados.component';
 import { Tramite240122Query } from '../../estados/tramite240122Query.query';
 import { Tramite240122Store } from '../../estados/tramite240122Store.store';
-import { takeUntil } from 'rxjs';
 
 /**
  * @component
@@ -31,12 +31,24 @@ import { takeUntil } from 'rxjs';
 @Component({
   selector: 'app-terceros-relacionados-contenedora',
   standalone: true,
-  imports: [CommonModule, TercerosRelacionadosComponent],
+  imports: [CommonModule, TercerosRelacionadosComponent, ModalComponent],
   templateUrl: './terceros-relacionados-contenedora.component.html',
   styleUrl: './terceros-relacionados-contenedora.component.scss',
 })
-export class TercerosRelacionadosContenedoraComponent implements OnInit, OnDestroy {
-
+export class TercerosRelacionadosContenedoraComponent implements OnInit, OnDestroy, AfterViewInit {
+  /**
+* @description Referencia al componente ModalComponent dentro de la plantilla.
+* Utiliza el decorador ViewChild para acceder a la instancia del modal y manipularlo desde el código TypeScript.
+* @example
+* // Para abrir el modal:
+* this.modalComponent.open();
+* 
+* @see ModalComponent
+* 
+* @es
+* Referencia al componente modal para mostrar u ocultar diálogos modales en la interfaz de usuario.
+*/
+  @ViewChild('modal', { static: false }) modalComponent!: ModalComponent;
   /**
    * Identificador del procedimiento asignado al trámite específico.
    * 
@@ -75,6 +87,19 @@ export class TercerosRelacionadosContenedoraComponent implements OnInit, OnDestr
   prefillProveedorData: boolean = true;
 
   /**
+   * Indica si el formulario debe mostrarse en modo solo lectura.
+   * 
+   * @remarks
+   * Cuando esta propiedad es `true`, los campos del formulario no serán editables.
+   * 
+   * @defaultValue false
+   * 
+   * @es
+   * Indica si el formulario está en modo solo lectura.
+   */
+  public esFormularioSoloLectura: boolean = false;
+
+  /**
    * Constructor del componente.
    *
    * @method constructor
@@ -88,8 +113,9 @@ export class TercerosRelacionadosContenedoraComponent implements OnInit, OnDestr
     private tramiteQuery: Tramite240122Query,
     private tramiteStore: Tramite240122Store,
     private router: Router,
-    private activatedRoute: ActivatedRoute
-  ) {}
+    private activatedRoute: ActivatedRoute,
+    private readonly consultaioQuery: ConsultaioQuery
+  ) { }
 
   /**
    * Hook del ciclo de vida que se ejecuta al inicializar el componente.
@@ -110,6 +136,30 @@ export class TercerosRelacionadosContenedoraComponent implements OnInit, OnDestr
       .subscribe((data) => {
         this.proveedorTablaDatos = data;
       });
+  }
+
+  /**
+   * @inheritdoc
+   * @description
+   * Método del ciclo de vida de Angular que se ejecuta después de que la vista del componente ha sido inicializada.
+   * 
+   * Suscribe al observable `selectConsultaioState$` para escuchar cambios en el estado de la sección y actualizar
+   * la propiedad `esFormularioSoloLectura` según el valor de `readonly` en el estado.
+   * 
+   * La suscripción se mantiene activa hasta que se emite un valor en `destroy$`, lo que previene fugas de memoria.
+   * 
+   * @see https://angular.io/api/core/AfterViewInit
+   */
+  ngAfterViewInit(): void {
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroy$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+        })
+      )
+      .subscribe();
+
   }
 
   /**
@@ -158,5 +208,35 @@ export class TercerosRelacionadosContenedoraComponent implements OnInit, OnDestr
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+  }
+  /**
+      * Abre el modal correspondiente según el nombre del evento recibido.
+      *
+      * Si el evento es `'Datosmercancia'`, se carga el componente `DatosMercanciaContenedoraComponent`
+      * dentro del modal y se le pasa una función de cierre como input.
+      *
+      * @method openModal
+      * @param {string} event - Nombre del evento que indica qué componente se debe mostrar en el modal.
+      * @returns {void}
+      */
+  openModal(event: string): void {
+    if (event === 'agregar-destino-final') {
+      this.modalComponent.abrir(AgregarDestinatarioFinalContenedoraComponent, {
+        cerrarModal: this.cerrarModal.bind(this),
+      });
+    } else if (event === 'agregar-proveedor') {
+      this.modalComponent.abrir(AgregarProveedorContenedoraComponent, {
+        cerrarModal: this.cerrarModal.bind(this),
+      });
+    }
+  }
+  /**
+   * Cierra el modal dinámico actualmente abierto utilizando el método del componente modal.
+   *
+   * @method cerrarModal
+   * @returns {void}
+   */
+  cerrarModal(): void {
+    this.modalComponent.cerrar();
   }
 }

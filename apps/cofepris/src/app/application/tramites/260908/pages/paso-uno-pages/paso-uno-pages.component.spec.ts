@@ -1,138 +1,154 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { Component, CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
-import { ModificacionPermisoMedsUsoComponent } from '../modificacion-permiso-meds-uso/modificacion-permiso-meds-uso.component';
-import { AccionBoton } from '@libs/shared/data-access-user/src';
+import { PasoUnoPagesComponent } from './paso-uno-pages.component';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { ModificacionPermisoMeds } from '../../services/modificacion-permiso-meds.service';
+import { of, Subject } from 'rxjs';
 
-// Mock components
-@Component({
-  selector: 'app-paso-uno-pages',
-  template: ''
-})
-class MockPasoUnoPagesComponent {
-  collectFormValues = jest.fn().mockReturnValue({ solicitante: { nombre: 'Juan' } });
-}
 
-@Component({
-  selector: 'app-wizard',
-  template: ''
-})
-class MockWizardComponent {
-  siguiente = jest.fn();
-  atras = jest.fn();
-}
+// Mock para TIPO_PERSONA
+const TIPO_PERSONA = { MORAL_NACIONAL: 'MORAL_NACIONAL' };
 
-// Create a test module for the component
-@NgModule({
-  declarations: [
-    ModificacionPermisoMedsUsoComponent,
-    MockPasoUnoPagesComponent,
-    MockWizardComponent,
-  ],
-  exports: [ModificacionPermisoMedsUsoComponent],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA], // Add this line
-})
-class TestModule {}
-
-describe('ModificacionPermisoMedsUsoComponent', () => {
-  let component: ModificacionPermisoMedsUsoComponent;
-  let fixture: ComponentFixture<ModificacionPermisoMedsUsoComponent>;
+describe('PasoUnoComponent', () => {
+  let component: PasoUnoPagesComponent;
+  let fixture: ComponentFixture<PasoUnoPagesComponent>;
+  let consultaQueryMock: any;
+  let servicioMock: any;
 
   beforeEach(async () => {
+    consultaQueryMock = {
+      selectConsultaioState$: of({ update: false })
+    };
+    servicioMock = {
+      getRegistroTomaMuestrasMercanciasData: jest.fn().mockReturnValue(of({ registro: true })),
+      getPagoDerechos: jest.fn().mockReturnValue(of({ permiso: true })),
+      actualizarEstadoFormulario: jest.fn(),
+      actualizarPagoDerechosFormulario: jest.fn()
+    };
+
     await TestBed.configureTestingModule({
-      imports: [TestModule], // Import the test module
+      declarations: [PasoUnoPagesComponent],
+      imports: [ require('@angular/common/http/testing').HttpClientTestingModule],
+      providers: [
+        { provide: ConsultaioQuery, useValue: consultaQueryMock },
+        { provide: ModificacionPermisoMeds, useValue: servicioMock }
+      ],
+      schemas: [NO_ERRORS_SCHEMA]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(ModificacionPermisoMedsUsoComponent);
+    fixture = TestBed.createComponent(PasoUnoPagesComponent);
     component = fixture.componentInstance;
-
-    fixture.detectChanges();
-
-    // Set mock instances manually for ViewChild usage
-    component.pasoUnoComponent = new MockPasoUnoPagesComponent() as any;
-    component.wizardComponent = new MockWizardComponent() as any;
+    // Mock global para TIPO_PERSONA si es necesario
+    (globalThis as any).TIPO_PERSONA = TIPO_PERSONA;
   });
 
-  it('should create', () => {
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it('debería crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should have initial values', () => {
-    expect(component.indice).toBe(1);
-    expect(component.payload).toEqual({});
-    expect(component.datosPasos.nroPasos).toBe(component.pantallasPasos.length);
-    expect(component.datosPasos.indice).toBe(component.indice);
-    expect(component.datosPasos.txtBtnAnt).toBe('Anterior');
-    expect(component.datosPasos.txtBtnSig).toBe('Continuar');
-    expect(component.infoAlert).toBe('alert-info');
+  it('debería inicializar y suscribirse a selectConsultaioState$ con update=false', () => {
+    component.consultaState = undefined as any;
+    component.esDatosRespuesta = false;
+    consultaQueryMock.selectConsultaioState$ = of({ update: false });
+    component.ngOnInit();
+    expect(component.consultaState).toEqual({ update: false });
+    expect(component.esDatosRespuesta).toBe(true);
   });
 
-  it('should collect form values and go to next step when action is "cont"', () => {
-    const accion: AccionBoton = { accion: 'cont', valor: 2 };
-    component.getValorIndice(accion);
-
-    expect(component.payload).toEqual({ solicitante: { nombre: 'Juan' } });
-    expect(component.indice).toBe(2);
-    component.datosPasos.indice = component.indice; // Ensure datosPasos.indice is updated
-    expect(component.datosPasos.indice).toBe(2);
-    expect(component.wizardComponent.siguiente).toHaveBeenCalled();
+  it('debería llamar guardarDatosFormulario si update=true', () => {
+    const spy = jest.spyOn(component, 'guardarDatosFormulario').mockImplementation();
+    consultaQueryMock.selectConsultaioState$ = of({ update: true });
+    component.ngOnInit();
+    expect(spy).toHaveBeenCalled();
+    spy.mockRestore();
   });
 
-  it('should collect form values and go to previous step when action is not "cont"', () => {
-    const accion: AccionBoton = { accion: 'back', valor: 3 };
-    component.getValorIndice(accion);
-
-    expect(component.payload).toEqual({ solicitante: { nombre: 'Juan' } });
-    expect(component.indice).toBe(accion.valor); // Ensure indice matches the action's valor
-    component.datosPasos.indice = accion.valor; // Explicitly update datosPasos.indice
-    expect(component.datosPasos.indice).toBe(accion.valor); // Ensure datosPasos.indice matches
-    expect(component.wizardComponent.atras).toHaveBeenCalled();
+  it('guardarDatosFormulario no debe actualizar si no hay datos', (done) => {
+    servicioMock.getRegistroTomaMuestrasMercanciasData.mockReturnValue(of(null));
+    servicioMock.getPagoDerechos.mockReturnValue(of(null));
+    const actualizarEstadoSpy = jest.spyOn(servicioMock, 'actualizarEstadoFormulario');
+    const actualizarPagoSpy = jest.spyOn(servicioMock, 'actualizarPagoDerechosFormulario');
+    component.guardarDatosFormulario();
+    setTimeout(() => {
+      expect(actualizarEstadoSpy).not.toHaveBeenCalled();
+      expect(actualizarPagoSpy).not.toHaveBeenCalled();
+      done();
+    }, 0);
   });
 
-  it('should NOT change step if valor is outside valid range (low)', () => {
-    const accion: AccionBoton = { accion: 'cont', valor: 0 };
-    component.getValorIndice(accion);
-
-    expect(component.indice).toBe(1); // unchanged
-    expect(component.datosPasos.indice).toBe(1);
-    expect(component.wizardComponent.siguiente).not.toHaveBeenCalled();
+  it('debería cambiar el índice con seleccionaTab', () => {
+    component.indice = 1;
+    component.seleccionaTab(3);
+    expect(component.indice).toBe(3);
   });
 
-  it('should NOT change step if valor is outside valid range (high)', () => {
-    const accion: AccionBoton = { accion: 'cont', valor: 5 };
-    component.getValorIndice(accion);
-
-    expect(component.indice).toBe(1); // unchanged
-    expect(component.datosPasos.indice).toBe(1);
-    expect(component.wizardComponent.siguiente).not.toHaveBeenCalled();
+  it('debería limpiar destroyNotifier$ en ngOnDestroy', () => {
+    const spyNext = jest.spyOn((component as any).destroyNotifier$, 'next');
+    const spyComplete = jest.spyOn((component as any).destroyNotifier$, 'complete');
+    component.ngOnDestroy();
+    expect(spyNext).toHaveBeenCalled();
+    expect(spyComplete).toHaveBeenCalled();
   });
+  
+it('guardarDatosFormulario debe actualizar estado y pago si hay datos', (done) => {
+  servicioMock.getRegistroTomaMuestrasMercanciasData.mockReturnValue(of({ registro: true }));
+  servicioMock.getPagoDerechos.mockReturnValue(of({ permiso: true }));
+  const actualizarEstadoSpy = jest.spyOn(servicioMock, 'actualizarEstadoFormulario');
+  const actualizarPagoSpy = jest.spyOn(servicioMock, 'actualizarPagoDerechosFormulario');
+  component.guardarDatosFormulario();
+  setTimeout(() => {
+    expect(actualizarEstadoSpy).toHaveBeenCalledWith({ registro: true });
+    expect(actualizarPagoSpy).toHaveBeenCalledWith({ permiso: true });
+    expect(component.esDatosRespuesta).toBe(true);
+    done();
+  }, 0);
+});
 
-  it('should log error if pasoUnoComponent is not initialized', () => {
-    console.error = jest.fn();
-    component.pasoUnoComponent = undefined as any;
+it('collectFormValues debe recopilar y actualizar todos los datos del formulario', () => {
+  // Mocks de componentes hijos y sus valores
+  component.solicitanteComponent = { form: { value: { nombre: 'Juan' } } } as any;
+  component.datosSolicitudComponents = [{ 
+    domicilioEstablecimiento: { value: 'domicilio' },
+    solicitudEstablecimientoForm: { value: 'solicitud' },
+    scianForm: { value: 'scian' },
+    formMercancias: { value: 'mercancias' }
+  }] as any;
+  component.tercerosRelacionadosComponents = [{
+    agregarFacturadorFormGroup: { value: 'facturador' },
+    agregarFabricanteFormGroup: { value: 'fabricante' },
+    agregarDestinatarioFormGroup: { value: 'destinatario' },
+    agregarProveedorFormGroup: { value: 'proveedor' }
+  }] as any;
+  component.pagoDeDerechosComponents = [{ pagoDerechos: { value: 'pago' } }] as any;
+  component.tramitesAsociadosComponents = [{
+    acuseTablaDatos: [{
+      id: 1,
+      folioTramite: 'folio',
+      tipoTramite: 'tipo',
+      estatus: 'estatus',
+      fechaAltaDeRegistro: 'fecha'
+    }]
+  }] as any;
 
-    const accion: AccionBoton = { accion: 'cont', valor: 2 };
-    component.getValorIndice(accion);
+  const formDataServiceSpy = jest.spyOn(component['formDataService'], 'updateFormData');
 
-    expect(console.error).toHaveBeenCalledWith('PasoUnoPagesComponent is not initialized.');
-    expect(component.indice).toBe(2);
-    component.datosPasos.indice = component.indice; // Ensure datosPasos.indice is updated
-    expect(component.datosPasos.indice).toBe(2);
-    expect(component.wizardComponent.siguiente).toHaveBeenCalled();
-  });
+  const result = component.collectFormValues();
 
-  it('should handle collectFormValues returning undefined', () => {
-    const mockPaso = new MockPasoUnoPagesComponent();
-    (mockPaso.collectFormValues as jest.Mock).mockReturnValue(undefined);
+  expect(result.solicitante).toEqual({ nombre: 'Juan' });
+  expect(result.datosSolicitud).toHaveLength(1);
+  expect(result.tercerosRelacionados).toHaveLength(1);
+  expect(result.pagoDeDerechos).toHaveLength(1);
+  expect(result.tramitesAsociados).toHaveLength(1);
 
-    component.pasoUnoComponent = mockPaso as any;
-
-    const accion: AccionBoton = { accion: 'cont', valor: 2 };
-    component.getValorIndice(accion);
-
-    expect(component.payload).toBeUndefined();
-    expect(component.indice).toBe(2);
-    component.datosPasos.indice = component.indice; // Ensure datosPasos.indice is updated
-    expect(component.datosPasos.indice).toBe(2);
-    expect(component.wizardComponent.siguiente).toHaveBeenCalled();
-  });
+  // Verifica que updateFormData se llamó para cada sección
+  expect(formDataServiceSpy).toHaveBeenCalledWith('solicitanteData', { nombre: 'Juan' });
+  expect(formDataServiceSpy).toHaveBeenCalledWith('completeForm', expect.any(Array));
+  expect(formDataServiceSpy).toHaveBeenCalledWith('tercerosRelacionados', expect.any(Array));
+  expect(formDataServiceSpy).toHaveBeenCalledWith('pagoDeDerechos', expect.any(Array));
+  expect(formDataServiceSpy).toHaveBeenCalledWith('tramitesAsociados', expect.any(Array));
+});
 });

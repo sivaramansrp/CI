@@ -1,30 +1,44 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PasoUnoComponent } from './paso-uno.component';
-import { SolicitanteComponent, SolicitanteService } from '@libs/shared/data-access-user/src';
-import { provideHttpClient } from '@angular/common/http';
-import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { of, Subject } from 'rxjs';
 
 describe('PasoUnoComponent', () => {
   let component: PasoUnoComponent;
-  let fixture: ComponentFixture<PasoUnoComponent>;
+  let consultaQueryMock: any;
+  let consultaStoreMock: any;
+  let solicitudServiceMock: any;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      declarations: [PasoUnoComponent],
-      imports: [SolicitanteComponent],
-      providers: [
-        SolicitanteService,
-        provideHttpClient(),
-        provideHttpClientTesting(),
-      ],
-    }).compileComponents();
-
-    fixture = TestBed.createComponent(PasoUnoComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+  beforeEach(() => {
+    consultaQueryMock = {
+      selectConsultaioState$: of({ update: true, readonly: false })
+    };
+    consultaStoreMock = {
+      establecerConsultaio: jest.fn()
+    };
+    solicitudServiceMock = {
+      getCertiRegistroDatos: jest.fn().mockReturnValue(of({ foo: 'bar' })),
+      actualizarEstadoFormulario: jest.fn()
+    };
+    component = new PasoUnoComponent(
+      consultaQueryMock,
+      consultaStoreMock
+    );
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
+  it('should set indice on seleccionaTab', () => {
+    component.seleccionaTab(2);
+    expect(component.indice).toBe(2);
+  });
+
+  it('should call guardarDatosFormulario if consultaState.update is true on ngOnInit', () => {
+    const guardarSpy = jest.spyOn(component, 'guardarDatosFormulario');
+    component.consultaState = { update: true, readonly: false } as any;
+    component.ngOnInit();
+    expect(guardarSpy).toHaveBeenCalled();
+  });
+
+  it('should complete destroyNotifier$ on ngOnDestroy', () => {
+    const completeSpy = jest.spyOn(component['destroyNotifier$'], 'complete');
+    component.ngOnDestroy();
+    expect(completeSpy).toHaveBeenCalled();
   });
 });
