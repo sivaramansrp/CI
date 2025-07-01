@@ -4,7 +4,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Subject,map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { OperacionService } from '../../services/operacion.service';
-import { OperacionesDeComercioExteriorComponent } from '../../components/operaciones-de-comercio-exterior/operaciones-de-comercio-exterior.component';
+import { OperacionesDeComercioExterioComponent } from '../../components/operaciones-de-comercio-exterior/operaciones-de-comercio-exterior.component';
 
 @Component({
   selector: 'app-paso-uno',
@@ -15,7 +15,7 @@ import { OperacionesDeComercioExteriorComponent } from '../../components/operaci
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    OperacionesDeComercioExteriorComponent,
+    OperacionesDeComercioExterioComponent,
     SolicitanteComponent
   ]
 })
