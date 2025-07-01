@@ -3,7 +3,7 @@ name: Quality Lint and Test
 on:
   pull_request:
     # Solo ejecutar cuando los PRs van hacia ramas principales
-    branches: [ "develop", "staging", "production" ]
+    branches: [  "staging", "production" ]
     paths:
       - 'apps/**'
       - 'libs/**'
@@ -11,7 +11,7 @@ on:
       - 'nx.json'
       - '.eslintrc.json'
   push:
-    branches: [ "develop", "staging", "production" ]
+    branches: [ "staging", "production" ]
     paths:
       - 'apps/**'
       - 'libs/**'
