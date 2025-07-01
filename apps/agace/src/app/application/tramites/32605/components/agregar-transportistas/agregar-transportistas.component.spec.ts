@@ -139,6 +139,62 @@ describe('AgregarTransportistasComponent', () => {
       solicitud32605StoreMock.actualizarTransportistaCaat
     ).toHaveBeenCalledWith('CAAT');
   });
+  
+  it('should call actualizarTransportistaRFCModifTrans on input change', () => {
+    const event = { target: { value: 'RFCMODIF123' } } as unknown as Event;
+    component.actualizarTransportistaRFCModifTrans(event);
+    expect(
+      solicitud32605StoreMock.actualizarTransportistaRFCModifTrans
+    ).toHaveBeenCalledWith('RFCMODIF123');
+  });
+
+  it('should call actualizarTransportistaRazonSocial on input change', () => {
+    const event = { target: { value: 'Nueva Razon Social' } } as unknown as Event;
+    component.actualizarTransportistaRazonSocial(event);
+    expect(
+      solicitud32605StoreMock.actualizarTransportistaRazonSocial
+    ).toHaveBeenCalledWith('Nueva Razon Social');
+  });
+
+  it('should call actualizarTransportistaDomicilio on input change', () => {
+    const event = { target: { value: 'Nuevo Domicilio' } } as unknown as Event;
+    component.actualizarTransportistaDomicilio(event);
+    expect(
+      solicitud32605StoreMock.actualizarTransportistaDomicilio
+    ).toHaveBeenCalledWith('Nuevo Domicilio');
+  });
+
+  it('should call actualizarTransportistaCaat on input change', () => {
+    const event = { target: { value: 'CAAT123' } } as unknown as Event;
+    component.actualizarTransportistaCaat(event);
+    expect(
+      solicitud32605StoreMock.actualizarTransportistaCaat
+    ).toHaveBeenCalledWith('CAAT123');
+  });
+
+  it('noEsValido should return true if control is invalid and touched', () => {
+    component.transportistaCertificacionForm.get('transportistaRFC')?.setErrors({ required: true });
+    component.transportistaCertificacionForm.get('transportistaRFC')?.markAsTouched();
+    expect(component.noEsValido('transportistaRFC')).toBe(true);
+  });
+
+  it('noEsValido should return false if control is valid', () => {
+    component.transportistaCertificacionForm.get('transportistaRFC')?.setValue('RFC123');
+    component.transportistaCertificacionForm.get('transportistaRFC')?.markAsTouched();
+    expect(component.noEsValido('transportistaRFC')).toBe(false);
+  });
+
+  it('noEsValido should return undefined if control does not exist', () => {
+    expect(component.noEsValido('noExiste')).toBeUndefined();
+  });
+
+  it('selectBuscarTransportista should not call conseguirTransportistasLista if RFC is empty', () => {
+    jest.spyOn(component, 'conseguirTransportistasLista');
+    component.transportistaCertificacionForm.get('transportistaRFC')?.setValue('');
+    component.selectBuscarTransportista();
+    expect(component.conseguirTransportistasLista).not.toHaveBeenCalled();
+  });
+
 
   it('should clean up subscriptions on ngOnDestroy', () => {
     const destroySpy = jest.spyOn(component['destroy$'], 'next');

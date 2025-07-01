@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { FormGroup, FormGroupDirective, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
@@ -16,7 +16,7 @@ import { Tramite30401Store } from '../../estados/tramites30401.store';
   templateUrl: './capital-social.component.html',
   styleUrl: './capital-social.component.scss',
 })
-export class CapitalSocialComponent implements OnInit {
+export class CapitalSocialComponent implements OnInit, OnChanges {
   /**
    * Formulario inicializado para gestionar los datos del componente.
    */
@@ -33,6 +33,11 @@ export class CapitalSocialComponent implements OnInit {
   @Input() titulo!: string;
 
   /**
+   * Nota sobre el capital social que se mostrará en el formulario.
+   */
+  @Input() esFormularioSoloLectura: boolean = false;
+
+  /**
    * Constructor del componente.
    * @param grupoDeFormaRaiz - Directiva que proporciona acceso al formulario raíz.
    * @param tramite30401Store - Servicio para gestionar el estado del trámite 30401.
@@ -42,6 +47,26 @@ export class CapitalSocialComponent implements OnInit {
     private tramite30401Store: Tramite30401Store
   ) {
     // No se necesita lógica de inicialización adicional.
+  }
+
+  /**
+   * Método del ciclo de vida que se ejecuta cuando cambian las propiedades de entrada del componente.
+   *
+   * Si la propiedad `esFormularioSoloLectura` cambia, habilita o deshabilita el formulario según su valor.
+   * Esto permite que el formulario se muestre en modo solo lectura o editable dinámicamente.
+   *
+   * @param changes - Objeto que contiene los cambios detectados en las propiedades de entrada.
+   */
+  ngOnChanges(changes: SimpleChanges): void {
+
+    // Verifica si el formulario ha cambiado y actualiza su estado
+    if (changes['esFormularioSoloLectura'] && this.inicializarFormulario) {
+      if (this.esFormularioSoloLectura) {
+        this.inicializarFormulario.disable();
+      } else {
+        this.inicializarFormulario.enable();
+      }
+    }
   }
 
   /**

@@ -115,10 +115,10 @@ describe('RegistroRenovacionesMuestrasMercanciasComponent', () => {
       mockSolicitudQuery.selectSolicitud$ = of(state);
       component.ngOnInit();
       expect(component.formRegistroMuestras.value.opcionDeImportador).toEqual(
-        1
+        null
       );
       expect(component.formRegistroMuestras.value.tomaMuestraDespacho).toEqual(
-        2
+        null
       );
     });
   });

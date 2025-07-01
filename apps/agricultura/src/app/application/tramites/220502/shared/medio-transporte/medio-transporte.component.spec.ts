@@ -222,6 +222,63 @@ describe('MedioTransporteComponent', () => {
     ]);
   });
 
+  it('should call setTransporteIdMedio on store when setTransporteIdMedio is called', () => {
+    component.solicitud220502Store = {
+      setTransporteIdMedio: jest.fn(),
+      setIdentificacionTransporte: jest.fn(),
+      setTotalDeGuiasAmparadas: jest.fn(),
+      setEsSolicitudFerros: jest.fn(),
+    } as any;
+
+    const catalogo = { id: 123, descripcion: 'desc' };
+    component.setTransporteIdMedio(catalogo as any);
+    expect(component.solicitud220502Store.setTransporteIdMedio).toHaveBeenCalledWith(123);
+  });
+
+  it('should call setIdentificacionTransporte on store with input value', () => {
+    component.solicitud220502Store = {
+      setTransporteIdMedio: jest.fn(),
+      setIdentificacionTransporte: jest.fn(),
+      setTotalDeGuiasAmparadas: jest.fn(),
+      setEsSolicitudFerros: jest.fn(),
+    } as any;
+
+    const mockEvent = {
+      target: { value: 'ABC123' }
+    } as unknown as Event;
+
+    component.setIdentificacionTransporte(mockEvent);
+    expect(component.solicitud220502Store.setIdentificacionTransporte).toHaveBeenCalledWith('ABC123');
+  });
+
+  it('should call setTotalDeGuiasAmparadas on store with input value', () => {
+    component.solicitud220502Store = {
+      setTransporteIdMedio: jest.fn(),
+      setIdentificacionTransporte: jest.fn(),
+      setTotalDeGuiasAmparadas: jest.fn(),
+      setEsSolicitudFerros: jest.fn(),
+    } as any;
+
+    const mockEvent = {
+      target: { value: '999' }
+    } as unknown as Event;
+
+    component.setTotalDeGuiasAmparadas(mockEvent);
+    expect(component.solicitud220502Store.setTotalDeGuiasAmparadas).toHaveBeenCalledWith('999');
+  });
+
+  it('should call setEsSolicitudFerros on store when enCambioDeValor is called', () => {
+    component.solicitud220502Store = {
+      setTransporteIdMedio: jest.fn(),
+      setIdentificacionTransporte: jest.fn(),
+      setTotalDeGuiasAmparadas: jest.fn(),
+      setEsSolicitudFerros: jest.fn(),
+    } as any;
+
+    component.enCambioDeValor('SÍ');
+    expect(component.solicitud220502Store.setEsSolicitudFerros).toHaveBeenCalledWith('SÍ');
+  });
+
   it('should not update tableData if changes are empty', () => {
     const CHANGES: SimpleChanges = {};
 
