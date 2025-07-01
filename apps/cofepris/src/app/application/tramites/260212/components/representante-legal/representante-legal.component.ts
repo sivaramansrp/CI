@@ -157,6 +157,24 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
       this.losDatos = data;
     });
   }
+
+  buscar(): void {
+    if (!this.personaForm.get('rfc')?.value) {
+      this.personaForm.get('rfc')?.markAllAsTouched();
+    } else {
+      this.solicitudService.ObtenerReprestantanteData()
+      .pipe(
+        takeUntil(this.destroy$)
+      ).subscribe((response) => {
+        this.personaForm.patchValue({
+          nombre: response.nombre,
+          primerApellido: response.apellidoPaterno,
+          segundoApellido: response.apellidoMaterno
+        });
+      });
+    }
+  }
+
   /**
    * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
    * Libera recursos y cancela suscripciones.

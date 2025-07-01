@@ -28,7 +28,7 @@ export const PERMISO_MAQUILA = [
  * Contiene información sobre el comportamiento al dar doble clic en una solicitud.
  */
 export const DATOS_ALERT = {
-  DATOS_SOLICITUD: `<p>Al dar doble-clic en una Solicitud, se copiarán sus datos en esta Solicitud.<p>`,
+  DATOS_SOLICITUD: `<p class="text-center">Al dar doble-clic en una Solicitud, se copiarán sus datos en esta Solicitud.<p>`,
 };
 
 /**
@@ -40,8 +40,8 @@ export const MANIFIESTOS_ALERT = {
 };
 
 export const FECHA_DE_PAGO = {
-  labelNombre: 'Fecha de pago',
-  required: true,
+  labelNombre: 'Fecha de pago:',
+  required: false,
   habilitado: false,
 };
 

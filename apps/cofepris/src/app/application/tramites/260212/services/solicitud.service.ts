@@ -1,9 +1,10 @@
+import { Observable, catchError, throwError } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
 
-import { EstadoFisico, OpcionesPublicacion, SolicitudModel } from '../models/permiso-maquila.models';
-import { CatalogoResponse } from '@libs/shared/data-access-user/src';
+import { Catalogo, CatalogoResponse } from '@libs/shared/data-access-user/src';
+import { OpcionesPublicacion, SolicitudModel } from '../models/permiso-maquila.models';
+import { ReprestantanteData } from '../../260605/models/aduaneras-informaciones.model';
 
 
 
@@ -49,8 +50,8 @@ export class SolicitudService {
    * Obtiene el estado físico desde un recurso externo.
    * @returns Un Observable que emite un arreglo de objetos de tipo EstadoFisico.
    */
-  getTestadoFisico(): Observable<EstadoFisico[]> {
-    return this.http.get<EstadoFisico[]>('/assets/json/260212/estadoFisico.json')
+  getTestadoFisico(): Observable<Catalogo[]> {
+    return this.http.get<Catalogo[]>('/assets/json/260212/estadoFisico.json')
   }
 
   /**
@@ -63,5 +64,25 @@ export class SolicitudService {
    getClasificacionProducto(){
     return this.http.get<[]>('/assets/json/260212/clasificacionProducto.json')
   }
+
+  /**
+     * Recupera los DATOS del representante desde un archivo JSON local.
+     *
+     * Este método envía una solicitud HTTP GET para recuperar los DATOS del archivo JSON especificado.
+     * Se espera que los DATOS sean del tipo `ReprestantanteData`.
+     *
+     * @returns {Observable<ReprestantanteData>} Un observable que emite los DATOS del representante obtenidos.
+     * @throws Lanzará un error si la solicitud HTTP falla.
+     * @memberof ModificatNoticeService
+     */
+    public ObtenerReprestantanteData(): Observable<ReprestantanteData> {
+      return this.http
+        .get<ReprestantanteData>('assets/json/260605/represtantante.json')
+        .pipe(
+          catchError((error) => {
+            return throwError(() => error);
+          })
+        );
+    }
  
 }

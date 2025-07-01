@@ -67,6 +67,11 @@ export class ClaveScianComponent implements OnInit, OnDestroy {
   @Output() cancel = new EventEmitter<void>();
 
   /**
+   * EventEmitter to emit a cancel action. This can be handled by parent components.
+   */
+  @Output() agregarDatos = new EventEmitter<{clave: string, descripcion: string}>();
+
+  /**
    * Array to store the list of "clave" options fetched from the service.
    */
   clave: CatalogoResponse[] = [];
@@ -177,6 +182,29 @@ export class ClaveScianComponent implements OnInit, OnDestroy {
   getMunicipios(): void {
     const SELECTED_CLAVE = this.claveForm.get('clave')?.value;
     this.tramite260212Store.setClave(SELECTED_CLAVE);
+  }
+
+  agregar(): void {
+    if (this.claveForm.valid) {
+      const FORMA_DATOS = { clave: ClaveScianComponent.obtenerDescripcion(this.clave, this.claveForm.value.clave), descripcion:  ClaveScianComponent.obtenerDescripcion(this.clave, this.claveForm.value.descripcion)};
+      this.agregarDatos.emit(FORMA_DATOS);
+      this.cancelar();
+    }
+  }
+
+  limpiar(): void {
+    this.claveForm.reset();
+  }
+
+  /**
+ * @method obtenerDescripcion
+ * @description
+ * Obtiene la descripción de la fracción arancelaria seleccionada en el formulario dinámico.
+ * @returns {string} Descripción de la fracción arancelaria seleccionada o una cadena vacía si no existe.
+ */
+  public static obtenerDescripcion(array: CatalogoResponse[], id: string): string {
+    const DESCRIPCION = array.find((ele: CatalogoResponse) => Number(ele.id) === Number(id))?.descripcion;
+    return DESCRIPCION ?? '';
   }
 
   /**
