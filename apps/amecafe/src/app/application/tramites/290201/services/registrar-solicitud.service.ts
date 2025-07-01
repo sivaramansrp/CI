@@ -207,4 +207,8 @@ export class RegistrarSolicitudService {
  getConsultaData(): Observable<Solicitud290201State> {
   return this.http.get<Solicitud290201State>('assets/json/290201/consulta.json');
 }
+
+getDestinatarioData(): Observable<Solicitud290201State> {
+  return this.http.get<Solicitud290201State>('assets/json/290201/destinatariodata.json');
+}
 }

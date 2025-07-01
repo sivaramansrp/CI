@@ -10,7 +10,6 @@ import { ReactiveFormsModule } from '@angular/forms';
 import {
   Catalogo,
   CatalogosSelect,
-  ConfiguracionColumna,
   ConsultaioQuery,
   ConsultaioState,
   TablaSeleccion,
@@ -27,6 +26,10 @@ import {
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 
 import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
+
+import { Modal } from 'bootstrap';
+
+import { CONFIGURACION_COLUMNAS_SOLI_2 } from '../../constants/tabla-enum';
 /**
  * Componente: TercerosRelacionadosComponent
  * Descripción: Componente para gestionar los datos de terceros relacionados en el trámite 290201.
@@ -64,8 +67,7 @@ export class TercerosRelacionadosComponent implements OnInit,OnDestroy {
   /**
    * Bandera para mostrar u ocultar el formulario.
    */
-  esFormularioVisible = true;
-
+  esFormularioVisible = false; 
   /**
    * Estado actual del trámite obtenido del store.
    */
@@ -75,7 +77,6 @@ export class TercerosRelacionadosComponent implements OnInit,OnDestroy {
    * Datos de la tabla, incluyendo encabezados y cuerpo.
    */
   tableData: FilaData2[] = [];
-
   /**
    * Datos del catálogo de países.
    */
@@ -85,7 +86,6 @@ export class TercerosRelacionadosComponent implements OnInit,OnDestroy {
     primerOpcion: 'Selecciona un medio de transporte',
     catalogos: [],
   };
-
   /**
    * Tipo de persona seleccionada.
    */
@@ -100,7 +100,6 @@ export class TercerosRelacionadosComponent implements OnInit,OnDestroy {
    * Estado para verificar si los datos de respuesta están disponibles.
    */
   public esDatosRespuesta: boolean = false;
-
 
   /**
    * Método para manejar el cambio de selección de tipo de persona.
@@ -142,48 +141,14 @@ export class TercerosRelacionadosComponent implements OnInit,OnDestroy {
     
   ) {
     this.getPaisData();
+
   }
 
   /**
    * Configuración de la tabla para mostrar los datos de los destinatarios.
    */
-  configuracionColumnasoli: ConfiguracionColumna<FilaData2>[] = [
-    {
-      encabezado: 'Tipo persona',
-      clave: (fila) => fila.datosDelTramiteRealizar.tipoPersona,
-      orden: 1,
-    },
-    {
-      encabezado: 'Denominación/razón social',
-      clave: (fila) => fila.datosDelTramiteRealizar.denominacion,
-      orden: 2,
-    },
-    {
-      encabezado: 'Domicilio',
-      clave: (fila) => fila.datosDelTramiteRealizar.domicilio,
-      orden: 3,
-    },
-    {
-      encabezado: 'País',
-      clave: (fila) => fila.datosDelTramiteRealizar.pais,
-      orden: 4,
-    },
-    {
-      encabezado: 'Código postal',
-      clave: (fila) => fila.datosDelTramiteRealizar.codigopostal,
-      orden: 5,
-    },
-    {
-      encabezado: 'Teléfono',
-      clave: (fila) => fila.datosDelTramiteRealizar.telefono,
-      orden: 6,
-    },
-    {
-      encabezado: 'Correo electrónico',
-      clave: (fila) => fila.datosDelTramiteRealizar.correoelectronico,
-      orden: 7,
-    },
-  ];
+  configuracionColumnasoli = CONFIGURACION_COLUMNAS_SOLI_2;
+
 
   /**
    * Método de inicialización del componente.
@@ -198,7 +163,7 @@ export class TercerosRelacionadosComponent implements OnInit,OnDestroy {
       )
       .subscribe();
      
-
+      this.getDestinatarioData();
     this.createForm();
 
     this.consultaioQuery.selectConsultaioState$
@@ -232,15 +197,16 @@ export class TercerosRelacionadosComponent implements OnInit,OnDestroy {
         pais: [this.destinatarioState?.pais, [Validators.required]],
         codigopostal: [
           this.destinatarioState?.codigopostal,
-          [Validators.required],
-        ],
-        telefono: [this.destinatarioState?.telefono, [Validators.required]],
+          [Validators.required, Validators.maxLength(5), Validators.pattern('^[0-9]+$')]],
+        telefono: [this.destinatarioState?.telefono, [Validators.required, Validators.pattern('^[0-9]+$')]],
         correoelectronico: [
           this.destinatarioState?.correoelectronico,
-          [Validators.required],
-        ],
+          [Validators.required, Validators.email]],
+        
       }),
     });
+   
+
   }
 
   /**
@@ -267,40 +233,52 @@ export class TercerosRelacionadosComponent implements OnInit,OnDestroy {
         this.isPaisdatoscargados = true;
       });
   }
+  /**
+   * Método para obtener los datos del destinatario.
+   * Utiliza el servicio `registrarsolicitud` para obtener los datos y los asigna a `tableData`.
+   */
+  getDestinatarioData(): void {
+    this.registrarsolicitud
+      .getDestinatarioData()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((data) => {
+        this.tableData = data as unknown as FilaData2[];
+      });
+  }
 
   /**
    * Método para manejar el envío del formulario.
    */
   enEnviar(): void {
     const FORM_DATA = this.destinatarioForm.value;
-
+  
     if (!FORM_DATA || Object.keys(FORM_DATA).length === 0) {
-      console.error('Los datos del formulario son nulos o están vacíos');
+      console.error('Form data is empty');
       return;
     }
-
+  
     const PAIS_DATA_VALUE = this.paisData.catalogos.find(
       (item: Catalogo) =>
         String(item.id) === String(FORM_DATA.datosDelTramiteRealizar.pais)
     )?.descripcion;
-
+  
     FORM_DATA.datosDelTramiteRealizar.pais = PAIS_DATA_VALUE;
-
+  
     if (this.selectedRow) {
-      const INDEX = this.newDestinatarioData.indexOf(this.selectedRow);
+      const INDEX = this.tableData.indexOf(this.selectedRow);
       if (INDEX !== -1) {
-          this.newDestinatarioData[INDEX] = { ...FORM_DATA };
+        this.tableData[INDEX] = { ...FORM_DATA }; 
       }
     } else {
-      this.newDestinatarioData.push({ ...FORM_DATA });
+      this.tableData.push({ ...FORM_DATA }); 
     }
-    this.tableData = [...this.newDestinatarioData];
-    this.changeDetectorRef.markForCheck();
-    this.destinatarioForm.reset();
-    this.esFormularioVisible = false;
-    this.selectedRow = null;
+  
+    this.tableData = [...this.tableData]; 
+    this.changeDetectorRef.markForCheck(); 
+    this.destinatarioForm.reset(); 
+    this.esFormularioVisible = false; 
+    this.selectedRow = null; 
   }
-
   /**
    * Método para limpiar el formulario.
    */
@@ -327,17 +305,16 @@ export class TercerosRelacionadosComponent implements OnInit,OnDestroy {
    * Método para modificar los datos de una fila seleccionada.
    */
   enModificar(): void {
+       const MODAL_ELEMENT = document.getElementById('destinatarioModalLabel');
+       if (MODAL_ELEMENT) {
+         const MODAL_INSTANCE = new Modal(MODAL_ELEMENT); 
+         MODAL_INSTANCE.show();
+       }
+       
     if (!this.isPaisdatoscargados) {
       console.warn('Los datos del catálogo de países aún no están cargados');
       return;
     }
-    /**
-     * Método para modificar los datos de una fila seleccionada.
-     * @param item Fila seleccionada.
-     * @param event Evento del checkbox.
-     * @returns void
-     */
-
     if (this.selectedRow) {
       const PAIS_ID = this.paisData.catalogos.find(
         (item: Catalogo) =>
@@ -348,7 +325,7 @@ export class TercerosRelacionadosComponent implements OnInit,OnDestroy {
           tipoPersona: this.selectedRow.datosDelTramiteRealizar.tipoPersona,
           denominacion: this.selectedRow.datosDelTramiteRealizar.denominacion,
           domicilio: this.selectedRow.datosDelTramiteRealizar.domicilio,
-          pais: PAIS_ID || '', // Use the `PAIS_ID` or an empty string if not found
+          pais: PAIS_ID || '', 
           codigopostal: this.selectedRow.datosDelTramiteRealizar.codigopostal,
           telefono: this.selectedRow.datosDelTramiteRealizar.telefono,
           correoelectronico:

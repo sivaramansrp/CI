@@ -63,7 +63,7 @@ export class DatosTramiteComponent implements OnDestroy, OnInit {
   public tiposData: CatalogosSelect = {
     labelNombre: 'Tipos',
     required: true,
-    primerOpcion: 'Selecciona un medio de transporte',
+    primerOpcion: 'Seleccione una opción',
     catalogos: [],
   };
 
@@ -71,7 +71,7 @@ export class DatosTramiteComponent implements OnDestroy, OnInit {
   public formasdelcafeData: CatalogosSelect = {
     labelNombre: 'Formas del café',
     required: true,
-    primerOpcion: 'Selecciona un medio de transporte',
+    primerOpcion: 'Seleccione una opción',
     catalogos: [],
   };
 
@@ -79,7 +79,7 @@ export class DatosTramiteComponent implements OnDestroy, OnInit {
   public calidadData: CatalogosSelect = {
     labelNombre: 'Calidad',
     required: true,
-    primerOpcion: 'Selecciona un medio de transporte',
+    primerOpcion: 'Seleccione una opción',
     catalogos: [],
   };
 
@@ -87,7 +87,7 @@ export class DatosTramiteComponent implements OnDestroy, OnInit {
   public procesosData: CatalogosSelect = {
     labelNombre: 'Procesos',
     required: true,
-    primerOpcion: 'Selecciona un medio de transporte',
+    primerOpcion: 'Seleccione una opción',
     catalogos: [],
   };
 
@@ -95,7 +95,7 @@ export class DatosTramiteComponent implements OnDestroy, OnInit {
   public certificationsData: CatalogosSelect = {
     labelNombre: 'Certificaciones',
     required: true,
-    primerOpcion: 'Selecciona un medio de transporte',
+    primerOpcion: 'Seleccione una opción',
     catalogos: [],
   };
 
@@ -103,7 +103,7 @@ export class DatosTramiteComponent implements OnDestroy, OnInit {
   public adunadesalidaData: CatalogosSelect = {
     labelNombre: 'Aduana de salida',
     required: true,
-    primerOpcion: 'Selecciona un medio de transporte',
+    primerOpcion: 'Seleccione una opción',
     catalogos: [],
   };
 
@@ -111,7 +111,7 @@ export class DatosTramiteComponent implements OnDestroy, OnInit {
   public paisdestinoData: CatalogosSelect = {
     labelNombre: 'País destino',
     required: true,
-    primerOpcion: 'Selecciona un medio de transporte',
+    primerOpcion: 'Seleccione una opción',
     catalogos: [],
   };
 
@@ -119,7 +119,7 @@ export class DatosTramiteComponent implements OnDestroy, OnInit {
   public entidaddeprocedenciaData: CatalogosSelect = {
     labelNombre: 'Entidad de procedencia',
     required: true,
-    primerOpcion: 'Selecciona un medio de transporte',
+    primerOpcion: 'Seleccione una opción',
     catalogos: [],
   };
 
@@ -127,7 +127,7 @@ export class DatosTramiteComponent implements OnDestroy, OnInit {
   public ciclocafetaleroData: CatalogosSelect = {
     labelNombre: 'Ciclo cafetalero',
     required: true,
-    primerOpcion: 'Selecciona un medio de transporte',
+    primerOpcion: 'Seleccione una opción',
     catalogos: [],
   };
 
@@ -139,7 +139,7 @@ export class DatosTramiteComponent implements OnDestroy, OnInit {
   public certificacionsData: CatalogosSelect = {
     labelNombre: 'Certificacion',
     required: true,
-    primerOpcion: 'Selecciona un medio de transporte',
+    primerOpcion: 'Seleccione una opción',
     catalogos: [],
   };
 
