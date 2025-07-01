@@ -101,6 +101,7 @@ import {
   map,
   merge,
   switchMap,
+  take,
   takeUntil,
   tap,
   throwError,
@@ -2155,7 +2156,7 @@ export class SolicitudComponent
       this.mostrarRangoFechas = true;
     }
 
-    //Verifica si la tabla de lineas de captura tiene datos y los agrega al formulario.
+    /** Verifica si la tabla de lineas de captura tiene datos y los agrega al formulario. */
     if (this.solicitudState.lineasCaptura.length > 0) {
       this.datosTablaPagos = [...this.solicitudState.lineasCaptura];
 
@@ -2178,13 +2179,29 @@ export class SolicitudComponent
         ? true
         : false;
 
+    const ADUANA = this.solicitudState.idAduanaDespacho;
     const RECINTO_FISCALIZADO = parseInt(this.solicitudState.nombreRecinto, 10);
     const SECCION_ADUANERA = parseInt(
       this.solicitudState.idSeccionDespacho,
       10
     );
-    
-    if (RECINTO_FISCALIZADO > 0) {      
+
+    this.obtenerSeccionRecinto(ADUANA)
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        tap(
+          (response: {
+            seccionAduanera: Catalogos[];
+            recintoCatalogo: Recinto[];
+          }) => {
+            this.seccionAduanera = response.seccionAduanera;
+            this.recintoCatalogo = response.recintoCatalogo;
+          }
+        )
+      )
+      .subscribe();
+
+    if (RECINTO_FISCALIZADO > 0) {
       this.despacho
         .get('nombreRecinto')
         ?.setValue(this.solicitudState.nombreRecinto.toString());
@@ -2236,7 +2253,11 @@ export class SolicitudComponent
               this.despacho.get('idSeccionDespacho')?.disable();
             }
 
-            this.setValoresStore(this.despacho, 'idSeccionDespacho', 'setIdSeccionDespacho');
+            this.setValoresStore(
+              this.despacho,
+              'idSeccionDespacho',
+              'setIdSeccionDespacho'
+            );
             return this.recintoService.getListaRecintos(ADUANA);
           }),
           tap((responseRecinto) => {
@@ -2621,7 +2642,6 @@ export class SolicitudComponent
    * Método que maneja el evento de aceptar o no una accion del componente Notificación cuando este es un modal.
    */
   confirmacionModal(confirmar: boolean): void {
-    this.limpiarFechasHoras();
     switch (this.procesoModal) {
       case 'lda_dd':
         {
@@ -3109,11 +3129,6 @@ export class SolicitudComponent
               return EMPTY;
             }
             this.tramite5701Store.setBlnSocioComercial(response.datos);
-            this.setValoresStore(
-              this.datosImportadorExportador,
-              'idSocioComercial',
-              'setIdSocioComercial'
-            );
             return response;
           }),
           catchError((_error) => {
@@ -3131,6 +3146,12 @@ export class SolicitudComponent
           })
         )
         .subscribe();
+
+      this.setValoresStore(
+        this.datosImportadorExportador,
+        'idSocioComercial',
+        'setIdSocioComercial'
+      );
     }
   }
 
@@ -3482,7 +3503,7 @@ export class SolicitudComponent
    * Validar si el rfc tiene encargo conferido
    */
   changeTipoOperacion(): void {
-    this.setValoresStore(this.despacho, 'folioDDEX', 'setAutorizacionDDEX');
+    this.setValoresStore(this.despacho, 'tipoOperacion', 'setTipoOperacion');
     const BODY: BodyValidarEncargoConferido = {
       rfc: this.datosImportadorExportador.get('RFCImpExp')?.value,
       tipoOperacion: this.despacho.get('tipoOperacion')?.value,
@@ -3523,6 +3544,10 @@ export class SolicitudComponent
       .subscribe();
   }
 
+  /**
+   * Limpia las fechas del formulario de datos del servicio.
+   * Si la fecha final está vacía, se marca como no tocada y príst
+   */
   limpiarFechas(): void {
     const FECHA = this.datosServicio.get('fechaFinal');
 
@@ -3530,5 +3555,46 @@ export class SolicitudComponent
       this.datosServicio.get('fechaFinal')?.markAsUntouched();
       this.datosServicio.get('fechaFinal')?.markAsPristine();
     }
+  }
+
+  /**
+   * Obtiene las secciones aduaneras y recintos catalogados para una aduana específica.
+   */
+  obtenerSeccionRecinto(aduana: string): Observable<{
+    seccionAduanera: Catalogos[];
+    recintoCatalogo: Recinto[];
+  }> {
+    return this.seccionAduanaService.getListaSeccionesAduanas(aduana).pipe(
+      map((response) => {
+        const SECCION_ADUANERA = response.datos.map((seccion) => ({
+          ...seccion,
+          title: seccion.descripcion,
+          descripcion:
+            seccion.descripcion.length > 28
+              ? `${seccion.descripcion.substring(0, 28)}...`
+              : seccion.descripcion,
+        }));
+        return SECCION_ADUANERA;
+      }),
+      switchMap((SECCION_ADUANERA) =>
+        this.recintoService.getListaRecintos(aduana).pipe(
+          map((responseRecinto) => {
+            const RECINTO_CATALOGO = responseRecinto.datos.map((recinto) => ({
+              ...recinto,
+              title: recinto.nombre,
+              descripcion:
+                recinto.descripcion.length > 28
+                  ? `${recinto.descripcion.substring(0, 28)}...`
+                  : recinto.descripcion,
+            }));
+
+            return {
+              seccionAduanera: SECCION_ADUANERA,
+              recintoCatalogo: RECINTO_CATALOGO,
+            };
+          })
+        )
+      )
+    );
   }
 }
