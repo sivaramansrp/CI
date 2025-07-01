@@ -9,6 +9,21 @@ import { TercerosRelacionadosVistaComponent } from '../../components/terceros-re
 import { Tramite260203Query } from '../../estados/queries/tramite260203Query.query';
 import { Tramite260203Store } from '../../estados/stores/tramite260203Store.store';
 
+/**
+ * Decorador que define un componente en Angular.
+ * 
+ * Este componente representa la primera etapa de un trámite específico (260203) 
+ * y utiliza varias dependencias y módulos para su funcionamiento. 
+ * Se define como un componente independiente (`standalone`) y utiliza un selector 
+ * específico para ser referenciado en otras partes de la aplicación.
+ * 
+ * Propiedades del decorador:
+ * - `selector`: Define el nombre del selector que se utilizará para instanciar este componente.
+ * - `standalone`: Indica que el componente es independiente y no requiere un módulo para ser utilizado.
+ * - `imports`: Lista de módulos y componentes que se importan para ser utilizados dentro de este componente.
+ * - `templateUrl`: Ruta del archivo HTML que define la estructura visual del componente.
+ * - `styleUrl`: Ruta del archivo SCSS que contiene los estilos específicos del componente.
+ */
 @Component({
   selector: 'app-paso-uno',
   standalone: true,

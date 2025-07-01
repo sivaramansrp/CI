@@ -6,6 +6,32 @@ import { PagoDeDerechosComponent } from '../../../../shared/components/pago-de-d
 import { PagoDerechosFormState } from '../../../../shared/models/terceros-relacionados.model';
 import { Tramite260204Store } from '../../estados/stores/tramite260204Store.store';
 
+/**
+ * Decorador `@Component` que define el componente `PagoDeDerechosContenedoraComponent`.
+ * 
+ * Este componente es responsable de encapsular la lógica y la presentación del formulario
+ * de pago de derechos, proporcionando una interfaz para interactuar con el estado del trámite
+ * y determinar si el formulario está en modo solo lectura.
+ * 
+ * Propiedades del decorador:
+ * 
+ * - `selector`: Define el nombre del selector que se utiliza para instanciar este componente
+ *   en una plantilla HTML. En este caso, el selector es `app-pago-de-derechos-contenedora`.
+ * 
+ * - `standalone`: Indica que este componente es independiente y no requiere ser declarado
+ *   dentro de un módulo Angular. Esto permite que sea utilizado directamente en cualquier
+ *   parte de la aplicación.
+ * 
+ * - `imports`: Lista de módulos y componentes que este componente necesita para funcionar.
+ *   Incluye `CommonModule` para funcionalidades comunes de Angular y `PagoDeDerechosComponent`
+ *   como un componente hijo que se utiliza dentro de este componente.
+ * 
+ * - `templateUrl`: Ruta al archivo HTML que define la estructura y el diseño del componente.
+ *   En este caso, el archivo es `./pago-de-derechos-contenedora.component.html`.
+ * 
+ * - `styleUrl`: Ruta al archivo SCSS que contiene los estilos específicos para este componente.
+ *   En este caso, el archivo es `./pago-de-derechos-contenedora.component.scss`.
+ */
 @Component({
   selector: 'app-pago-de-derechos-contenedora',
   standalone: true,
