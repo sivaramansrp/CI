@@ -9,7 +9,14 @@ import { ViewChild } from '@angular/core';
 import { WizardComponent } from '@libs/shared/data-access-user/src/tramites/components/wizard/wizard.component';
 
 interface AccionBoton {
+  /**
+   * La acción que se realizará.
+   */
   accion: string;
+
+  /**
+   * El valor asociado a la acción.
+   */
   valor: number;
 }
 @Component({

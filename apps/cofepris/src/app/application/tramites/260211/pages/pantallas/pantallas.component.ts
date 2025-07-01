@@ -1,5 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
-import { DatosPasos, ListaPasosWizard } from '@libs/shared/data-access-user/src';
+
+import { AVISO, DatosPasos, ListaPasosWizard } from '@libs/shared/data-access-user/src';
 import { AccionBoton } from '@libs/shared/data-access-user/src/core/models/31601/servicios-pantallas.model';
 import { PANTA_PASOS } from '@libs/shared/data-access-user/src/core/services/31601/servicios-pantallas.enum';
 import { WizardComponent } from '@ng-mf/data-access-user';
@@ -15,6 +16,19 @@ import { WizardComponent } from '@ng-mf/data-access-user';
   templateUrl: './pantallas.component.html',
 })
 export class PantallasComponent {
+
+    /**
+   * 
+   * Una cadena que representa la clase CSS para una alerta de información.
+   * Esta clase se utiliza para aplicar estilo a los mensajes de información en el componente.
+   */
+  public infoAlert = 'alert-info';
+
+  /**
+   * Asigna el aviso de privacidad simplificado al atributo `TEXTOS`.
+   */
+  TEXTOS = AVISO.Aviso;
+
   /**
    * Lista de pasos del wizard.
    * @type {ListaPasosWizard[]}
