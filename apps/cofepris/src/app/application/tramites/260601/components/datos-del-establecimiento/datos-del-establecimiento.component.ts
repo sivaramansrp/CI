@@ -65,7 +65,6 @@ import scianTable from '@libs/shared/theme/assets/json/260601/scian-table.json';
   templateUrl: './datos-del-establecimiento.component.html',
   styleUrl: './datos-del-establecimiento.component.css',
 })
-/*eslint class-methods-use-this: ["error", { "exceptMethods": ["enCambioDeValor", "abrirDialogoAgregarDatosSCIAN", "agregarAgente", "limpiarDatosSCIAN", "agregarDatosSCIAN"] }] */
 export class DatosDelEstablecimientoComponent implements OnInit, OnDestroy {
   /**
    * Formulario principal para los datos del establecimiento.
@@ -555,10 +554,6 @@ export class DatosDelEstablecimientoComponent implements OnInit, OnDestroy {
     );
   }
 
-
-
-
-  
   /**
    * Método para abrir dialogo mercancías.
    *
