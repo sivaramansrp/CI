@@ -80,12 +80,6 @@ export class ManifiestosComponent implements OnInit, OnDestroy {
   ];
 
   /**
-   * Subject para limpiar subscripciones y prevenir memory leaks.
-   * @private
-   */
-  private destroy$ = new Subject<void>();
-
-  /**
    * Subject para notificar la destrucción del componente.
    */
   private destroyNotifier$: Subject<void> = new Subject();
@@ -187,8 +181,8 @@ export class ManifiestosComponent implements OnInit, OnDestroy {
    * @public
    */
   public ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 
   /**
@@ -206,7 +200,7 @@ export class ManifiestosComponent implements OnInit, OnDestroy {
    */
   obtenerDatosFormulario(): void {
     this.query.selectProrroga$
-      ?.pipe(takeUntil(this.destroy$))
+      ?.pipe(takeUntil(this.destroyNotifier$))
       .subscribe((data: DatosProcedureState) => {
         this.seccionState = data;
         this.declaracionEstaMarcado = Boolean(this.seccionState?.aduanas);

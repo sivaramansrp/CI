@@ -9,7 +9,7 @@ import { DatosSolicitudService } from '../../services/datoSolicitude.service'
 import { Domicilio } from '../../modelos/domicilio-establecimientos.model';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
-import { InputCheckComponent } from '@ng-mf/data-access-user';
+import { InputCheckComponent } from '@libs/shared/data-access-user/src/tramites/components/input-check/input-check.component';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -44,9 +44,6 @@ export class DomicilioEstablecimientosComponent implements OnInit, OnDestroy {
 
   /** Array para almacenar la respuesta de permisos cancelar */
   Domicilios: Domicilio[] = [];
-
-  /** Subject para notificar la destrucción del componente */
-  private destroy$ = new Subject<void>();
 
   /**
    * Configuración de columnas para la tabla de datos SCIAN.
@@ -211,8 +208,8 @@ this.inicializarEstadoFormulario();
 * Gancho de ciclo de vida OnDestroy
 */
   ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
   /**
    * Validar campo del formulario
@@ -229,7 +226,7 @@ this.inicializarEstadoFormulario();
   loadScian(): void {
     this.datosSolicitudService
       .obternerDatosData()
-      .pipe(takeUntil(this.destroy$))
+      .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((resp) => {
         this.datosData = resp;
       });
@@ -238,7 +235,7 @@ this.inicializarEstadoFormulario();
     * Carga los datos del catálogo loadStorData.
     */
   loadStorData(): void {
-    this.query.selectProrroga$?.pipe(takeUntil(this.destroy$))
+    this.query.selectProrroga$?.pipe(takeUntil(this.destroyNotifier$))
       .subscribe((data: DatosProcedureState) => {
         this.seccionState = data;
       });
