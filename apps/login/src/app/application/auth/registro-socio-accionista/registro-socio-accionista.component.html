@@ -3,60 +3,55 @@
         <div class="row">
             <div class="col-12">
                 <h2 class="fw-bold my-5 titulo-tasks">Registro de socios y Accionistas</h2>
-                <hr class="red">
+                <hr class="red" />
             </div>
         </div>
+
         <form [formGroup]="FormSocioAccionista" class="formulario">
+            <!-- Nacionalidad -->
             <div class="row mb-4 justify-content-center text-center align-items-center">
-                <!-- Columna 1: Título -->
                 <div class="col-md-5">
                     <label class="form-label text-title mb-0">¿Nacionalidad mexicana?</label>
                 </div>
-
-                <!-- Columna 2: Opción Sí -->
                 <div class="col-md-3">
                     <div class="form-check d-flex justify-content-center">
                         <input type="radio" id="nacSi" class="form-check-input" formControlName="tipoNacionalidad"
-                            value="si" />
+                            [value]="Nacionalidad.Nacional" />
                         <label for="nacSi" class="form-check-label ms-2">Sí</label>
                     </div>
                 </div>
-
-                <!-- Columna 3: Opción No -->
                 <div class="col-md-3">
                     <div class="form-check d-flex justify-content-center">
                         <input type="radio" id="nacNo" class="form-check-input" formControlName="tipoNacionalidad"
-                            value="no" />
+                            [value]="Nacionalidad.Extranjero" />
                         <label for="nacNo" class="form-check-label ms-2">No</label>
                     </div>
                 </div>
             </div>
+
+            <!-- Tipo de persona -->
             <div class="row mb-4 justify-content-center text-center align-items-center">
-                <!-- Columna 1: Título -->
                 <div class="col-md-5">
                     <label class="form-label text-title mb-0">Tipo de persona:</label>
                 </div>
-
-                <!-- Columna 2: Persona Física -->
                 <div class="col-md-3">
                     <div class="form-check d-flex justify-content-center">
                         <input type="radio" id="fisica" class="form-check-input" formControlName="personaNacional"
-                            value="fisica" />
+                            [value]="TipoPersona.Fisica" />
                         <label for="fisica" class="form-check-label ms-2">Persona Física</label>
                     </div>
                 </div>
-
-                <!-- Columna 3: Persona Moral -->
                 <div class="col-md-3">
                     <div class="form-check d-flex justify-content-center">
                         <input type="radio" id="moral" class="form-check-input" formControlName="personaNacional"
-                            value="moral" />
+                            [value]="TipoPersona.Moral" />
                         <label for="moral" class="form-check-label ms-2">Persona Moral</label>
                     </div>
                 </div>
             </div>
-            <!-- RFC (visible cuando tipoNacionalidad = si) -->
-            <div class="row" *ngIf="tipoNacionalidad === 'si'">
+
+            <!-- RFC (si es nacional) -->
+            <div class="row" *ngIf="tipoNacionalidad === Nacionalidad.Nacional">
                 <div class="col-md-4">
                     <label for="rfc" class="form-label text-title">Registro Federal de Contribuyentes*:</label>
                     <input type="text" id="rfc" formControlName="rfc" class="form-control font-weight-titulo text-title"
@@ -64,12 +59,13 @@
                     <div *ngIf="FormSocioAccionista.get('rfc')?.hasError('rfcInvalido') && FormSocioAccionista.get('rfc')?.touched"
                         class="text-danger">
                         El RFC debe tener entre 12 y 13 caracteres, y no debe contener espacios.
+                    </div>
                 </div>
             </div>
-            </div>
 
-            <!-- Persona Física extranjera -->
-            <div class="row" *ngIf="tipoNacionalidad === 'no' && personaNacional === 'fisica'">
+            <!-- Persona física extranjera -->
+            <div class="row"
+                *ngIf="tipoNacionalidad === Nacionalidad.Extranjero && personaNacional === TipoPersona.Fisica">
                 <div class="col-md-4">
                     <label for="nombre" class="form-label text-title">Nombre*:</label>
                     <input type="text" id="nombre" formControlName="nombre"
@@ -85,7 +81,8 @@
                         name="pais"></app-catalogo-select>
                 </div>
             </div>
-            <div class="row" *ngIf="tipoNacionalidad === 'no' && personaNacional === 'fisica'">
+            <div class="row"
+                *ngIf="tipoNacionalidad === Nacionalidad.Extranjero && personaNacional === TipoPersona.Fisica">
                 <div class="col-md-4">
                     <label for="codigoPostal" class="form-label text-title">Código postal*:</label>
                     <input type="text" id="codigoPostal" formControlName="codigoPostal"
@@ -98,8 +95,9 @@
                 </div>
             </div>
 
-            <!-- Persona Moral extranjera -->
-            <div class="row" *ngIf="tipoNacionalidad === 'no' && personaNacional === 'moral'">
+            <!-- Persona moral extranjera -->
+            <div class="row"
+                *ngIf="tipoNacionalidad === Nacionalidad.Extranjero && personaNacional === TipoPersona.Moral">
                 <div class="col-md-6">
                     <label for="razonSocial" class="form-label text-title">Denominación o razón social*:</label>
                     <input type="text" id="razonSocial" formControlName="razonSocial"
@@ -110,7 +108,8 @@
                         name="pais"></app-catalogo-select>
                 </div>
             </div>
-            <div class="row" *ngIf="tipoNacionalidad === 'no' && personaNacional === 'moral'">
+            <div class="row"
+                *ngIf="tipoNacionalidad === Nacionalidad.Extranjero && personaNacional === TipoPersona.Moral">
                 <div class="col-md-6">
                     <label for="codigoPostal" class="form-label text-title">Código postal*:</label>
                     <input type="text" id="codigoPostal" formControlName="codigoPostal"
@@ -123,30 +122,37 @@
                 </div>
             </div>
         </form>
+
         <div class="row">
             <div class="d-flex justify-content-lg-end h1">
                 <button type="submit" class="btn btn-primary me-2" [disabled]="FormSocioAccionista.invalid"
-                    (click)="agregarSocioAccionista()">Agregar</button>
+                    (click)="agregarSocioAccionista()">
+                    Agregar
+                </button>
             </div>
         </div>
+
+        <!-- Tabla socios nacionales -->
         <div class="row mt-4">
             <label class="text-title">Socios y Accionistas</label>
             <div class="table-responsive">
                 <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccion.CHECKBOX"
                     [configuracionTabla]="encabezadoDeTablaAccionista" [datos]="listaSociosAccionistas"
-                    (listaDeFilaSeleccionada)="socioAccionistaSeleccionado = $event">
-                </app-tabla-dinamica>
+                    (listaDeFilaSeleccionada)="socioAccionistaSeleccionado = $event"></app-tabla-dinamica>
             </div>
         </div>
+
+        <!-- Tabla socios extranjeros -->
         <div class="row mt-4">
             <label class="text-title">Socios y Accionistas Extranjeros</label>
             <div class="table-responsive">
                 <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccion.CHECKBOX"
-                    [configuracionTabla]="encabezadoDeTablaAccionistaExtranjero" [datos]="listaSociosAccionistasExtranjeros"
-                    (listaDeFilaSeleccionada)="socioAccionistaExtranjerosSeleccionado = $event">
-                </app-tabla-dinamica>
+                    [configuracionTabla]="encabezadoDeTablaAccionistaExtranjero"
+                    [datos]="listaSociosAccionistasExtranjeros"
+                    (listaDeFilaSeleccionada)="socioAccionistaExtranjerosSeleccionado = $event"></app-tabla-dinamica>
             </div>
         </div>
+
         <div *ngIf="visualizarTabla" class="row">
             <div class="d-flex justify-content-lg-end h1">
                 <button class="btn btn-primary ms-2" type="button" (click)="enviarFirma()">Firmar</button>
@@ -155,9 +161,10 @@
         </div>
     </div>
 </div>
+
+<!-- Notificación -->
 @if (nuevaNotificacion) {
 <section>
-    <lib-notificaciones [notificacionInput]="nuevaNotificacion">
-    </lib-notificaciones>
+    <lib-notificaciones [notificacionInput]="nuevaNotificacion"></lib-notificaciones>
 </section>
 }

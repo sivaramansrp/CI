@@ -8,8 +8,10 @@ import { AccionistaDatosQuery } from '../../../queries/accionista.query';
 import { CommonModule } from '@angular/common';
 import { ConsultaSocioExtranjero } from '../../core/models/consulta-socio-extranjero.model';
 import { ConsultaSocioNacional } from '../../core/models/consulta-socio-nacional.model';
+import { Nacionalidad } from '../../core/enums/nacionalidad.enum';
 import { OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { TipoPersona } from '../../core/enums/tipo-persona.enum';
 import { UsuariosService } from '../../core/service/usuarios.service';
 import data from '@libs/shared/theme/assets/json/login/cat-pais.json';
 
@@ -74,6 +76,12 @@ export class RegistroSocioAccionistaComponent implements OnInit, OnDestroy {
   /** Notificación para mostrar mensajes al usuario.*/
   public nuevaNotificacion!: Notificacion;
 
+  /** Enums para nacionalidad */
+  public Nacionalidad = Nacionalidad;
+
+  /** Enums para tipo de persona */
+  public TipoPersona = TipoPersona;
+
   constructor(
     private fb: FormBuilder,
     private router: Router,
@@ -82,8 +90,8 @@ export class RegistroSocioAccionistaComponent implements OnInit, OnDestroy {
     private accionistaStore: AccionistaStoreService
   ) {
     this.FormSocioAccionista = this.fb.group({
-      tipoNacionalidad: ['si'], // Inicializado como "sí"
-      personaNacional: ['fisica'], // Inicializado como "Persona Física"
+      tipoNacionalidad: [Nacionalidad.Nacional], /** Inicializado como "sí" */
+      personaNacional: [TipoPersona.Fisica],/** Inicializado como "Persona Física" */
       rfc: ['', [RegistroSocioAccionistaComponent.validadorRFC]],
       nombre: [''],
       apellidoPaterno: [''],
@@ -119,7 +127,7 @@ export class RegistroSocioAccionistaComponent implements OnInit, OnDestroy {
   }
 
   /** Getter para el campo tipoNacionalidad del formulario */
-  get tipoNacionalidad(): void | string {
+  get tipoNacionalidad(): Nacionalidad {
     return this.FormSocioAccionista.get('tipoNacionalidad')?.value;
   }
 
@@ -148,7 +156,7 @@ export class RegistroSocioAccionistaComponent implements OnInit, OnDestroy {
   agregarSocioAccionista(): void {
     const NACIONALIDAD = this.tipoNacionalidad;
     const PERSONA = this.personaNacional;
-    if (NACIONALIDAD === 'si') {
+    if (NACIONALIDAD === Nacionalidad.Nacional) {
       const RFC = this.FormSocioAccionista.get('rfc')?.value;
       this.usuariosService.consultaSocioNacional(RFC)
         .pipe(
@@ -181,7 +189,7 @@ export class RegistroSocioAccionistaComponent implements OnInit, OnDestroy {
         .subscribe();
     }
     else {
-      if (PERSONA === 'fisica') {
+      if (PERSONA === TipoPersona.Fisica) {
         const NOMBRE = this.FormSocioAccionista.get('nombre')?.value;
         const APELLIDOPATERNO = this.FormSocioAccionista.get('apellidoPaterno')?.value;
         const PAIS = this.FormSocioAccionista.get('pais')?.value;
@@ -216,8 +224,7 @@ export class RegistroSocioAccionistaComponent implements OnInit, OnDestroy {
             takeUntil(this.destroyNotifier$)
           )
           .subscribe();
-      }
-      else if (PERSONA === 'moral') {
+      } else if (PERSONA === TipoPersona.Moral) {
         const RAZONSOCIAL = this.FormSocioAccionista.get('razonSocial')?.value;
         const PAIS = this.FormSocioAccionista.get('pais')?.value;
         const CODIGOPOSTAL = this.FormSocioAccionista.get('codigoPostal')?.value;
@@ -286,17 +293,17 @@ export class RegistroSocioAccionistaComponent implements OnInit, OnDestroy {
     ESTADO?.clearValidators();
     RAZONSOCIAL?.clearValidators();
 
-    if (NACIONALIDAD === 'si') {
+    if (NACIONALIDAD === Nacionalidad.Nacional) {
       RFC?.setValidators([RegistroSocioAccionistaComponent.validadorRFC, Validators.required]);
     } else {
       PAIS?.setValidators([Validators.required]);
       CODIGOPOSTAL?.setValidators([Validators.required]);
       ESTADO?.setValidators([Validators.required]);
 
-      if (PERSONA === 'fisica') {
+      if (PERSONA === TipoPersona.Fisica) {
         NOMBRE?.setValidators([Validators.required]);
         APELLIDOPATERNO?.setValidators([Validators.required]);
-      } else if (PERSONA === 'moral') {
+      } else if (PERSONA === TipoPersona.Moral) {
         RAZONSOCIAL?.setValidators([Validators.required]);
       }
     }
