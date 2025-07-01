@@ -1,15 +1,15 @@
 import { AlertComponent } from '@ng-mf/data-access-user';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { Catalogo } from '@ng-mf/data-access-user';
-import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CatalogosSelect } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
-import { IMPORTANTE } from '@ng-mf/data-access-user';
 import { ImportanteCatalogoSeleccion } from '../../models/registro-muestras-mercancias.model';
+import { MERCHANDISE_IMPORTANTE } from '@ng-mf/data-access-user';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -61,7 +61,7 @@ export class RegistroRenovacionesMuestrasMercanciasComponent
   /**
    * Constante que contiene los textos importantes.
    */
-  TEXTOS = IMPORTANTE;
+  TEXTOS = MERCHANDISE_IMPORTANTE;
   /**
    * Variable que contiene las opciones del importador.
    */
@@ -168,7 +168,7 @@ export class RegistroRenovacionesMuestrasMercanciasComponent
    * @returns {void}
    */
   ngOnInit(): void {
-    this.inicializarEstadoFormulario()
+    this.inicializarEstadoFormulario();
   }
 
   /**
@@ -368,6 +368,35 @@ export class RegistroRenovacionesMuestrasMercanciasComponent
    */
 
   inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario(); // Llama al método para cargar los datos del formulario
+    } else {
+      this.inicializarFormulario();
+    }
+  }
+
+  /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormulario(): void {
+    this.inicializarFormulario();
+    if (this.esFormularioSoloLectura) {
+      this.formRegistroMuestras.disable();
+    } else if (!this.esFormularioSoloLectura) {
+      this.formRegistroMuestras.enable();
+    } else {
+      // No se requiere ninguna acción en el formulario
+    }
+  }
+
+  /**
+   * Inicializa el formulario `miembroEmpresaForm` con los datos del estado actual `solicitud32605State`.
+   *
+   * Este formulario recopila información detallada sobre un miembro de la empresa, como su nombre,
+   * nacionalidad, RFC, tipo de persona y relación con la empresa.
+   */
+  inicializarFormulario(): void {
     this.formRegistroMuestras = this.fb.group({
       opcionDeImportador: [this.solicitud30901State.opcionDeImportador],
       tomaMuestraDespacho: [this.solicitud30901State.tomaMuestraDespacho],
@@ -407,6 +436,34 @@ export class RegistroRenovacionesMuestrasMercanciasComponent
         { value: this.solicitud30901State.descClobGenerica, disabled: true },
       ],
     });
+
+    // Se suscribe al observable para obtener el registro de muestras de la tienda.Add commentMore actions
+    this.solicitud30901Query.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((response: Solicitud30901State) => {
+          this.solicitud30901State = response;
+
+          this.formRegistroMuestras.patchValue({
+            opcionDeImportador: this.solicitud30901State.opcionDeImportador,
+            tomaMuestraDespacho: this.solicitud30901State.tomaMuestraDespacho,
+            descMotivoFaltaMuestra:
+              this.solicitud30901State.descMotivoFaltaMuestra,
+            comboFraccionConcatenada:
+              this.solicitud30901State.comboFraccionConcatenada,
+            fraccionConcatenada: this.solicitud30901State.fraccionConcatenada,
+            fracciondescripcion: this.solicitud30901State.fracciondescripcion,
+            comboNicos: this.solicitud30901State.comboNicos,
+            nicoDescripcion: this.solicitud30901State.nicoDescripcion,
+            nombreQuimico: this.solicitud30901State.nombreQuimico,
+            nombreComercial: this.solicitud30901State.nombreComercial,
+            numeroCAS: this.solicitud30901State.numeroCAS,
+            ideGenerica: this.solicitud30901State.ideGenerica,
+            descClobGenerica: this.solicitud30901State.descClobGenerica,
+          });
+        })
+      )
+      .subscribe();
   }
 
   /**
