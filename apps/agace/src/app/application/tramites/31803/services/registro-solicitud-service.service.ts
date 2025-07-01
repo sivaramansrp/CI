@@ -3,7 +3,6 @@ import { Solicitud31803State, Tramite31803Store } from '../state/Tramite31803.st
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-// Define or import the SolicitudDatosResponse interface
 export interface SolicitudDatosResponse {
   numeroOperacion: string;
   banco: string ;
