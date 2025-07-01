@@ -79,6 +79,7 @@ export class ManifiestosComponent implements OnInit, OnDestroy {
     { label: 'Si', value: 'Si' },
   ];
 
+ 
   /**
    * Subject para notificar la destrucción del componente.
    */
@@ -89,7 +90,6 @@ export class ManifiestosComponent implements OnInit, OnDestroy {
   * Cuando es `true`, los campos del formulario no se pueden editar.
   */
   esFormularioSoloLectura: boolean = false;
-  /**
   /**
    * Constructor del componente.
    * @param fb FormBuilder para construir formularios reactivos.
@@ -103,13 +103,13 @@ export class ManifiestosComponent implements OnInit, OnDestroy {
     private consultaioQuery: ConsultaioQuery
   ) {
     this.consultaioQuery.selectConsultaioState$
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-        map((seccionState: { readonly: boolean }) => {
-          this.esFormularioSoloLectura = seccionState.readonly;
-        })
-      )
-      .subscribe()
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState: { readonly: boolean }) => {
+        this.esFormularioSoloLectura = seccionState.readonly;
+      })
+    )
+    .subscribe()
   }
 
   /**
@@ -118,51 +118,51 @@ export class ManifiestosComponent implements OnInit, OnDestroy {
    */
   public ngOnInit(): void {
     this.manifiestosText = MANIFIESTOS_DECLARACION.MANIFIESTOS;
-    this.inicializarEstadoFormulario();
+    this.obtenerDatosFormulario();
   }
 
-  /**
-   * Inicializa el formulario reactivo `Aduana` con los valores del estado actual.
-   * 
-   * Este método configura un grupo de controles de formulario con los siguientes campos:
-   * - `aduanas`: Campo que representa las aduanas, inicializado con el valor de `seccionState?.aduanas` o una cadena vacía.
-   * - `informacionConfidencial`: Campo que representa la información confidencial, inicializado con el valor de `seccionState?.informacionConfidencial` o una cadena vacía.
-   * - `Si`: Campo adicional inicializado con una cadena vacía.
-   * 
-   * Todos los campos están habilitados por defecto.
-   * 
-   * @returns {void}
-   */
-  public mercanciasData(): void {
-    this.query.selectProrroga$
-    .pipe(
-      takeUntil(this.destroyNotifier$),
-      map((seccionState) => {
-        this.seccionState = seccionState;
-      })
-    )
-    .subscribe()
-    this.Aduana = this.fb.group({
-      aduanas: [
-        {
-          value: this.seccionState?.aduanas || '',
-          disabled: false,
-        },
-      ],
-      informacionConfidencial: [
-        {
-          value: this.seccionState?.informacionConfidencial || '',
-          disabled: false,
-        },
-      ],
-      Si: [{ value: '', disabled: false }],
-    });
-    if (this.esFormularioSoloLectura) {
-      this.Aduana.disable();
-    } else {
-      this.Aduana.enable();
-    }
+/**
+ * Inicializa el formulario reactivo `Aduana` con los valores del estado actual.
+ * 
+ * Este método configura un grupo de controles de formulario con los siguientes campos:
+ * - `aduanas`: Campo que representa las aduanas, inicializado con el valor de `seccionState?.aduanas` o una cadena vacía.
+ * - `informacionConfidencial`: Campo que representa la información confidencial, inicializado con el valor de `seccionState?.informacionConfidencial` o una cadena vacía.
+ * - `Si`: Campo adicional inicializado con una cadena vacía.
+ * 
+ * Todos los campos están habilitados por defecto.
+ * 
+ * @returns {void}
+ */
+public mercanciasData(): void {
+  this.query.selectProrroga$
+  .pipe(
+    takeUntil(this.destroyNotifier$),
+    map((seccionState) => {
+      this.seccionState = seccionState;
+    })
+  )
+  .subscribe()
+  this.Aduana = this.fb.group({
+    aduanas: [
+      {
+        value: this.seccionState?.aduanas || '',
+        disabled: false,
+      },
+    ],
+    informacionConfidencial: [
+      {
+        value: this.seccionState?.informacionConfidencial || '',
+        disabled: false,
+      },
+    ],
+    Si: [{ value: '', disabled: false }],
+  });
+  if (this.esFormularioSoloLectura) {
+    this.Aduana.disable();
+  } else {
+    this.Aduana.enable();
   }
+}
 
   /**
    * Establece un valor en la tienda a partir de un campo del formulario.
@@ -175,29 +175,19 @@ export class ManifiestosComponent implements OnInit, OnDestroy {
     this.store.establecerDatos({ [campo]: VALOR });
   }
 
-  /**
-   * Hook de destrucción del componente.
-   * Finaliza las subscripciones.
-   * @public
-   */
-  public ngOnDestroy(): void {
-    this.destroyNotifier$.next();
-    this.destroyNotifier$.complete();
-  }
-
-  /**
-   * Obtiene los datos del formulario desde el estado almacenado y los configura en el componente.
-   * 
-   * Este método realiza las siguientes acciones:
-   * - Se suscribe al observable `selectProrroga$` para obtener los datos del estado actual.
-   * - Asigna los datos obtenidos a la propiedad `seccionState`.
-   * - Determina si la declaración está marcada basándose en el valor de `aduanas`.
-   * - Llama al método `mercanciasData` para inicializar el formulario reactivo `Aduana` con los datos obtenidos.
-   * 
-   * La suscripción se gestiona con `takeUntil` para evitar fugas de memoria al destruir el componente.
-   * 
-   * @returns {void}
-   */
+/**
+ * Obtiene los datos del formulario desde el estado almacenado y los configura en el componente.
+ * 
+ * Este método realiza las siguientes acciones:
+ * - Se suscribe al observable `selectProrroga$` para obtener los datos del estado actual.
+ * - Asigna los datos obtenidos a la propiedad `seccionState`.
+ * - Determina si la declaración está marcada basándose en el valor de `aduanas`.
+ * - Llama al método `mercanciasData` para inicializar el formulario reactivo `Aduana` con los datos obtenidos.
+ * 
+ * La suscripción se gestiona con `takeUntil` para evitar fugas de memoria al destruir el componente.
+ * 
+ * @returns {void}
+ */
   obtenerDatosFormulario(): void {
     this.query.selectProrroga$
       ?.pipe(takeUntil(this.destroyNotifier$))
@@ -207,7 +197,8 @@ export class ManifiestosComponent implements OnInit, OnDestroy {
         this.mercanciasData();
       });
   }
-/**
+
+  /**
  * Inicializa el estado del formulario.
  * 
  * Este método realiza las siguientes acciones:
@@ -234,5 +225,14 @@ export class ManifiestosComponent implements OnInit, OnDestroy {
       this.obtenerDatosFormulario();
       this.mercanciasData();
     }
+  }
+  /**
+   * Hook de destrucción del componente.
+   * Finaliza las subscripciones.
+   * @public
+   */
+  public ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }

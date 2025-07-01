@@ -1,14 +1,15 @@
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { CONFIGURACIONCOLUMNA } from '../../enum/mercancias.enum';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
-import { DatosProcedureQuery } from '../../../../estados/queries/tramites261101.query';
-import { DatosProcedureState } from '../../../../estados/tramites/tramites261101.store';
+import { DatosProcedureQuery } from '../../../../estados/queries/tramites261103.query';
+import { DatosProcedureState } from '../../../../estados/tramites/tramites261103.store';
 import { DatosSolicitudService } from '../../services/datoSolicitude.service';
 import { Domicilio } from '../../modelos/domicilio-establecimientos.model';
+import { FormGroup } from '@angular/forms';
 import { Mercancias } from '../../modelos/mercancias.model';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
@@ -45,47 +46,48 @@ export class MercanciasComponent implements OnInit, OnDestroy {
    * 
    * Esta propiedad contiene una lista de objetos `Domicilio` que representan
    * la información de las aduanas disponibles. Los datos se cargan desde un
-   * archivo JSON a través del servicio `ModificacionPermisoImportacionMedicamentosService`
+   * archivo JSON a través del servicio `DatosSolicitudService`
    * en el método `mercanciasData()`.
    */
   aduanaData: Domicilio[] = [];
-  /**
-   * Configuración de las columnas de la tabla para mostrar los trámites asociados.
-   */
-  configuracionTabla: ConfiguracionColumna<Mercancias>[] =
-    CONFIGURACIONCOLUMNA;
-  /**
-* Estado de la sección que contiene los datos del procedimiento.
-* 
-* Esta propiedad almacena el estado actual de los datos relacionados con el procedimiento.
-* Se inicializa a través de un observable en el método `obtenerDatosFormulario`, 
-* que suscribe a los cambios en el estado y actualiza esta propiedad con los datos más recientes.
-* 
-* Tipo: `DatosProcedureState`
-* 
-* @private
-*/
+
+
+      /**
+       * Configuración de las columnas de la tabla para mostrar los trámites asociados.
+       */
+      configuracionTabla: ConfiguracionColumna<Mercancias>[] =
+        CONFIGURACIONCOLUMNA;
+    /**
+ * Estado de la sección que contiene los datos del procedimiento.
+ * 
+ * Esta propiedad almacena el estado actual de los datos relacionados con el procedimiento.
+ * Se inicializa a través de un observable en el método `obtenerDatosFormulario`, 
+ * que suscribe a los cambios en el estado y actualiza esta propiedad con los datos más recientes.
+ * 
+ * Tipo: `DatosProcedureState`
+ * 
+ * @private
+ */
   private seccionState!: DatosProcedureState;
 
-  /**
-   * Subject para notificar la destrucción del componente.
-   */
-  private destroyNotifier$: Subject<void> = new Subject();
+/**
+ * Subject para notificar la destrucción del componente.
+ */
+private destroyNotifier$: Subject<void> = new Subject();
 
-  /**
-  * Indica si el formulario está en modo solo lectura.
-  * Cuando es `true`, los campos del formulario no se pueden editar.
-  */
-  esFormularioSoloLectura: boolean = false;
-  /**
-
+/**
+* Indica si el formulario está en modo solo lectura.
+* Cuando es `true`, los campos del formulario no se pueden editar.
+*/
+esFormularioSoloLectura: boolean = false;
   /**
    * Constructor para SolicitanteComponent.
    * 
    * @param fb - Una instancia de FormBuilder utilizada para crear y gestionar formularios.
    */
-  constructor(
-     private fb: FormBuilder,
+  
+  constructor( 
+    private fb: FormBuilder,
     private datosSolicitudService: DatosSolicitudService,
     private query: DatosProcedureQuery, private consultaioQuery: ConsultaioQuery
   ) {
@@ -149,7 +151,6 @@ export class MercanciasComponent implements OnInit, OnDestroy {
     }
   }
   
-
   /**
    * Gancho de ciclo de vida que se llama después de que se inicializan las propiedades enlazadas a datos de una directiva.
    * Inicializa el componente configurando los valores del formulario.
@@ -162,7 +163,6 @@ export class MercanciasComponent implements OnInit, OnDestroy {
     this.inicializarEstadoFormulario();
   }
 
- 
    /**
  * Método para crear y configurar el formulario reactivo `aduanaFormulario`.
  * 

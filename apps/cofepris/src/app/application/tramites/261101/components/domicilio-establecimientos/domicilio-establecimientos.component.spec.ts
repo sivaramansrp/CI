@@ -52,7 +52,7 @@ describe('DomicilioEstablecimientosComponent', () => {
       providers: [
         { provide: DatosProcedureQuery, useValue: mockQuery },
         { provide: DatosProcedureStore, useValue: mockStore },
-        { provide: ModificacionPermisoImportacionMedicamentosService, useValue: mockService },
+        { provide: DatosSolicitudService, useValue: mockService },
         { provide: ConsultaioQuery, useValue: mockConsultaioQuery },
       ],
     }).compileComponents();
