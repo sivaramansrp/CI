@@ -58,7 +58,8 @@ export interface Catalogo {
   relacionadaUmtId?: number;
   /** Identificador relacionado con acotación opcional. */
   relacionadaAcotacionId?: number;
-  title?: string; // Título opcional para el catálogo, utilizado en algunos contextos.
+  /** Decripcion del titulo del select, cuando se requiera. */
+  title?: string; 
 }
 
 /**
