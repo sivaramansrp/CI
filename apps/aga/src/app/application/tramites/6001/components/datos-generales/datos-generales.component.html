@@ -52,9 +52,10 @@
                 </thead>
                 <tbody>
                     @for (datos of sociedadDatos; let i = $index; track i) {
-                    <tr>
+                    <tr [ngClass]="{'selected-row': selectedRowIndex === i}" (click)="selectedRowIndex = i">
                         <td>{{datos?.id}}</td>
                         <td>{{datos?.descripcion}}</td>
+
                     </tr>
                     }
                 </tbody>

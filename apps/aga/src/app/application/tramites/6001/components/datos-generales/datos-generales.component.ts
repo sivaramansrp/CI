@@ -62,6 +62,7 @@ export class DatosGeneralesComponent implements OnInit {
    */
     public confirmarNotificacion!: Notificacion;
     public sociedadNotificacion!: Notificacion;
+    public selectedRowIndex: number | null = null;
 
 
     /**
