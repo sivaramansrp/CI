@@ -172,7 +172,6 @@ export class ServiciosPermisoSanitarioService {
     this.tramite260215Store.setLicenciaSanitaria(datos.licenciaSanitaria);
     this.tramite260215Store.setRegimen(datos.regimen);
     this.tramite260215Store.setAduanasEntradas(datos.aduanasEntradas);
-    this.tramite260215Store.setNumeroPermiso(datos.numeroPermiso);
     this.tramite260215Store.setClasificacion(datos.clasificacion);
     this.tramite260215Store.setEspecificar(datos.especificar);
     this.tramite260215Store.setDenominacionEspecifica(datos.denominacionEspecifica);

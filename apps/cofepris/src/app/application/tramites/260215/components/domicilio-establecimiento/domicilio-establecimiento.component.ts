@@ -208,7 +208,6 @@ export class DomicilioComponent implements OnInit, OnDestroy {
       ],
       regimen: [this.solicitudState?.regimen],
       aduanasEntradas: [this.solicitudState?.aduanasEntradas],
-      numeroPermiso: [this.solicitudState?.numeroPermiso],
     });
 
     this.formAgente = this.fb.group({
