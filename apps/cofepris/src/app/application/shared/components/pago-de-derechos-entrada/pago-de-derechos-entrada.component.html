@@ -36,10 +36,8 @@
       </div>
 
       <div class="col-md-4 mt-5">
-        <div class="input-group">
           <input-fecha [setFecha]="pagoDerechos.get('fechaDePago')?.value" [datos]="fechaFinalInput"
             (valorCambiado)="cambioFechaDePago($event)" [isDisabled]="esFormularioSoloLectura ? true : false"></input-fecha>
-        </div>
       </div>
 
       <div class="col-md-4 mt-5">

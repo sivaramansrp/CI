@@ -360,6 +360,7 @@ export class PropietarioComponent implements AfterViewInit, OnInit, OnDestroy {
    * Limpia todos los campos del formulario.
    */
   limpiarFormulario(): void {
+    this.propietarioradioForm.reset();
     this.formTercerosDatos.reset();
   }
 
