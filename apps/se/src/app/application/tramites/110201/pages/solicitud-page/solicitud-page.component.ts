@@ -5,7 +5,6 @@ import {
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { PASOS } from '@ng-mf/data-access-user';
 import { WizardComponent } from '@ng-mf/data-access-user';
-import { CertificadoDeOrigenComponent } from "../../components/certificado-de-origen/certificado-de-origen.component";
 
 /**
  * Texto de alerta para terceros.

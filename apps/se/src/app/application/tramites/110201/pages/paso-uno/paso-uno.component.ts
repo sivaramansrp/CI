@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit} from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output} from '@angular/core';
 import { ConsultaioQuery, ConsultaioState, FormularioDinamico } from '@ng-mf/data-access-user';
 import { Subject, map, takeUntil } from 'rxjs';
 import { RegistroService } from '../../services/registro.service';
@@ -13,6 +13,10 @@ import { RegistroService } from '../../services/registro.service';
   styles: ``,
   })
 export class PasoUnoComponent implements OnInit,OnDestroy {
+   /**
+   * Evento para comunicar al componente padre si se está cargando un archivo.
+   */
+  @Output() archivo = new EventEmitter<boolean>();
   /**
    * Catálogo de entidades federativas.
    */
@@ -104,6 +108,13 @@ export class PasoUnoComponent implements OnInit,OnDestroy {
    */
   seleccionaTab(i: number): void {
     this.indice = i;
+  }
+   /**
+   * Emite un evento al componente padre indicando si se está cargando un archivo.
+   * @param data Valor booleano que indica el estado de carga de archivo.
+   */
+  cargaArchivo(data: boolean): void {
+    this.archivo.emit(data);
   }
   /**
    * Método que se ejecuta al destruir el componente.
