@@ -9,6 +9,14 @@ import { ProyectoImmexComponent } from '../../../../shared/components/proyecto-i
 import { ProyectoImmexEncabezado } from '../../../../shared/models/nuevo-programa-industrial.model';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src';
 
+/**
+ * Componente Angular para la vista del proyecto IMMEX.
+ * Este componente se encarga de mostrar y gestionar los datos relacionados
+ * con el proyecto IMMEX, incluyendo la configuración de la tabla y los documentos asociados.
+ * 
+ * @remarks
+ * Este componente es autónomo y utiliza el módulo `CommonModule` y el componente `ProyectoImmexComponent`.
+ */
 @Component({
   selector: 'app-proyecto-immex-vista',
   standalone: true,
