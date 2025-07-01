@@ -76,6 +76,7 @@ import {
   VEHICULO,
 } from '../../../../core/enums/5701/tramite5701.enum';
 import {
+  AfterViewInit,
   ChangeDetectorRef,
   Component,
   Input,
@@ -174,7 +175,9 @@ import { ValidaHorarioService } from '../../../../core/services/5701/valida-hora
   templateUrl: './solicitud.component.html',
   styleUrl: './solicitud.component.scss',
 })
-export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
+export class SolicitudComponent
+  implements OnInit, OnChanges, OnDestroy, AfterViewInit
+{
   /**
    * Índice de tabulación para el control de enfoque en la interfaz.
    * @required
@@ -585,15 +588,17 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
       )
       .subscribe();
 
+    this.verificarDatosExistentesStore();
     // Aqui se busca el nro de patente o autorizacion
     //
     this.obtenerPatente();
 
     this.calcularMontoTotal();
-    this.verificarDatosExistentesStore();
     this.linkGeneraLineaCapturaSeguro =
       this.domSanitizer.bypassSecurityTrustUrl(URL_GENERAR_LINEA_CAPTURA);
   }
+
+  ngAfterViewInit(): void {}
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['folioSolicitud'] && changes['folioSolicitud'].currentValue) {
@@ -1334,6 +1339,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
               : idcResponse.datos?.razon_social;
             if (NOMBRE) {
               this.datosImportadorExportador.get('nombre')?.setValue(NOMBRE);
+              this.tramite5701Store.setNombre(NOMBRE);
               this.getCertificaciones(RFC_IMP_EXP);
             } else {
               this.nuevaNotificacion = {
@@ -2079,14 +2085,26 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    * @returns {void} No retorna ningún valor.
    */
   verificarDatosExistentesStore(): void {
-    // Verifica si existe tipo de solicitud
+    if (this.solicitudState.nombre) {
+      this.datosImportadorExportador
+        .get('nombre')
+        ?.enable({ emitEvent: false });
+      this.datosImportadorExportador
+        .get('nombre')
+        ?.setValue(this.solicitudState.nombre);
+      this.datosImportadorExportador
+        .get('nombre')
+        ?.disable({ emitEvent: false });
+    }
+    /** Verifica si existe tipo de solicitud */
     if (this.solicitudState.tipoSolicitud !== SIN_VALOR) {
       this.tipoSolicitudSeleccionada = parseInt(
         this.FormSolicitud.get('tipoSolicitud')?.value,
         10
       );
     }
-    //Verifica si programa fomento esta habilitado y si tiene valor.
+
+    /** Verifica si programa fomento esta habilitado y si tiene valor. */
     if (this.solicitudState.programa) {
       const DATOS_PROGRAMA: DatosCheckInputText = {
         checkbox: this.solicitudState.programa,
@@ -2095,7 +2113,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
       this.checkPrograma(DATOS_PROGRAMA);
     }
 
-    // Verifica si el check de IMMEX esta habilitado y si tiene valor.
+    /** Verifica si el check de IMMEX esta habilitado y si tiene valor. */
     if (this.solicitudState.checkIMMEX) {
       const DATOS_IMMEX: DatosCheckInputText = {
         checkbox: this.solicitudState.checkIMMEX,
@@ -2104,7 +2122,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
       this.checkImmex(DATOS_IMMEX);
     }
 
-    // Verifica si el check de industria automotriz esta habilitado y si tiene valor.
+    /** Verifica si el check de industria automotriz esta habilitado y si tiene valor. */
     if (this.solicitudState.industriaAutomotriz) {
       const DATOS_AUTOMOTRIZ: DatosCheckInputText = {
         checkbox: this.solicitudState.industriaAutomotriz,
@@ -2113,7 +2131,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
       this.checkAutomotriz(DATOS_AUTOMOTRIZ);
     }
 
-    // Verifica que si los campos con check e input estan seleccionados y tienen valor.
+    /** Verifica que si los campos con check e input estan seleccionados y tienen valor. */
     this.verificaDatosCheckInput(
       'socioComercial',
       'idSocioComercial',
@@ -2159,6 +2177,26 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
       this.selectRangoDias.length > 0
         ? true
         : false;
+
+    const RECINTO_FISCALIZADO = parseInt(this.solicitudState.nombreRecinto, 10);
+    const SECCION_ADUANERA = parseInt(
+      this.solicitudState.idSeccionDespacho,
+      10
+    );
+
+    if (RECINTO_FISCALIZADO > 0) {
+      this.despacho
+        .get('nombreRecinto')
+        ?.setValue(this.solicitudState.nombreRecinto.toString());
+      this.despacho.get('nombreRecinto')?.enable();
+    }
+
+    if (SECCION_ADUANERA > 0) {
+      this.despacho
+        .get('idSeccionDespacho')
+        ?.setValue(this.solicitudState.idSeccionDespacho.toString());
+      this.despacho.get('idSeccionDespacho')?.enable();
+    }
   }
 
   /**
@@ -2805,7 +2843,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
       this.mostarSelectTipoDespacho = true;
     }
 
-    this.cdRef.detectChanges(); 
+    this.cdRef.detectChanges();
 
     this.setValoresStore(
       this.despacho,
