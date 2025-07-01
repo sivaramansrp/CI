@@ -1,13 +1,11 @@
-import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core'; // Importa los decoradores y utilidades principales de Angular
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core'; // Importa los decoradores y utilidades principales de Angular
 import { ConsultaioQuery, ConsultaioState, FormularioDinamico } from '@ng-mf/data-access-user'; // Importa interfaces y servicios personalizados
-import { DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL, PERSONA_MORAL_NACIONAL } from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum'; // Importa constantes para el formulario
 import { FormsModule, ReactiveFormsModule } from '@angular/forms'; // Importa módulos de formularios de Angular
 import { Subject, map, takeUntil } from 'rxjs'; // Importa utilidades de RxJS para manejo de observables
 import { CommonModule } from '@angular/common'; // Importa CommonModule para directivas comunes de Angular
 import { DatosDelTramiteComponent } from '../../components/datos-del-tramite/datos-del-tramite.component'; // Importa el componente de datos del trámite
 import { SolicitanteComponent } from '@ng-mf/data-access-user'; // Importa el componente de solicitante
 import { Solicitud10301Service } from '../../services/solicitud10301.service'; // Importa el servicio de solicitud
-import { TIPO_PERSONA } from '@ng-mf/data-access-user'; // Importa constantes de tipo de persona
 
 /**
  * Componente que representa el paso uno del trámite.
@@ -18,7 +16,7 @@ import { TIPO_PERSONA } from '@ng-mf/data-access-user'; // Importa constantes de
   standalone: true, // Indica que es un componente standalone
   imports: [SolicitanteComponent, CommonModule, DatosDelTramiteComponent, FormsModule, ReactiveFormsModule] // Importa módulos y componentes necesarios
 })
-export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
+export class PasoUnoComponent implements OnInit, OnDestroy {
   /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
   public esDatosRespuesta: boolean = false; // Indica si hay datos de respuesta del servidor
 
@@ -84,15 +82,6 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
           this.solicitud10301Service.actualizarEstadoFormulario(resp); // Actualiza el estado del formulario con la respuesta
         }
       });
-  }
-
-  /**
-   * Método que se ejecuta después de que la vista ha sido inicializada.
-   */
-  ngAfterViewInit(): void {
-    this.persona = PERSONA_MORAL_NACIONAL; // Asigna los datos de persona moral nacional
-    this.domicilioFiscal = DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL; // Asigna los datos de domicilio fiscal
-    this.solicitante.obtenerTipoPersona(TIPO_PERSONA.MORAL_NACIONAL); // Llama al método para obtener el tipo de persona en el componente hijo
   }
 
   /**
