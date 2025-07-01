@@ -12,9 +12,17 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable} from 'rxjs';
 
+/**
+ * @descripcion
+ * Decorador que marca la clase como un servicio inyectable y la registra en el inyector raíz de Angular.
+ * Esto permite que el servicio esté disponible en toda la aplicación sin necesidad de declararlo en los providers de un módulo específico.
+ * 
+ * @see https://angular.io/api/core/Injectable
+ */
 @Injectable({
   providedIn: 'root'
 })
+
 export class AvisoDeMercanciaService {
   /**
    * Constructor del servicio AvisoDeMercanciaService.
@@ -30,6 +38,7 @@ export class AvisoDeMercanciaService {
   ) {}
 
   /**
+   * @method getAcuiculturaData
    * Obtiene los datos del formulario de certificados de origen desde un archivo JSON local.
    * @returns {Observable<DestruccionState>} Observable con el estado del trámite.
    */
@@ -38,6 +47,7 @@ export class AvisoDeMercanciaService {
   }
 
   /**
+   * @method actualizarEstadoFormulario
    * Actualiza el estado completo del formulario en el store de acuicultura.
    * Cada campo del objeto recibido es asignado al store correspondiente.
    * 

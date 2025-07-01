@@ -4,6 +4,20 @@ import { ScianTablaComponent } from '../../../../shared/components/scian-tabla/s
 import { TablaScianConfig } from '../../../../shared/models/datos-solicitud.model';
 import { Tramite260203Store } from '../../estados/stores/tramite260203Store.store';
 
+/**
+ * Decorador `@Component` que define los metadatos para el componente `ScianTablaContenedoraComponent`.
+ * 
+ * Este componente es autónomo (`standalone`) y utiliza los módulos `CommonModule` y `ScianTablaComponent` 
+ * como dependencias importadas. La plantilla HTML y los estilos del componente están definidos en 
+ * los archivos `scian-tabla-contenedora.component.html` y `scian-tabla-contenedora.component.scss`, respectivamente.
+ * 
+ * Propiedades:
+ * - `selector`: Define el nombre del selector que se utiliza para instanciar este componente en una plantilla HTML.
+ * - `standalone`: Indica que este componente no depende de un módulo Angular para ser utilizado.
+ * - `imports`: Lista de módulos y componentes que este componente utiliza como dependencias.
+ * - `templateUrl`: Ruta al archivo que contiene la plantilla HTML del componente.
+ * - `styleUrl`: Ruta al archivo que contiene los estilos CSS del componente.
+ */
 @Component({
   selector: 'app-scian-tabla-contenedora',
   standalone: true,
@@ -12,8 +26,29 @@ import { Tramite260203Store } from '../../estados/stores/tramite260203Store.stor
   styleUrl: './scian-tabla-contenedora.component.scss',
 })
 export class ScianTablaContenedoraComponent {
+
+  /**
+   * Constructor de la clase `ScianTablaContenedoraComponent`.
+   * 
+   * Este constructor inicializa una instancia de la clase y realiza la inyección de dependencias
+   * necesarias para el funcionamiento del componente. En este caso, se inyecta el servicio 
+   * `Tramite260203Store`, que se utiliza para gestionar el estado relacionado con los trámites 
+   * específicos de la aplicación.
+   * 
+   * @param tramite260203Store - Servicio de tipo `Tramite260203Store` que proporciona acceso 
+   * al estado y las acciones relacionadas con los trámites de la aplicación.
+   */
   constructor(private tramite260203Store: Tramite260203Store){}
 
+  /**
+   * Representa la configuración seleccionada de la tabla SCIAN.
+   * 
+   * Esta propiedad almacena un objeto de tipo `TablaScianConfig` que contiene 
+   * la información de la selección actual realizada en la tabla SCIAN. 
+   * Es utilizada para gestionar y manipular los datos seleccionados en el componente.
+   * 
+   * @type {TablaScianConfig}
+   */
   public scianSeleccionado!: TablaScianConfig;
 
   /**
