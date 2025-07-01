@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable class-methods-use-this */
 import {
   BtnContinuarComponent,
   Catalogo,
@@ -51,68 +53,119 @@ const TERCEROS_TEXTO_DE_ALERTA = 'Certificados Disponibles';
 })
 export class CancelacionDeCertificadoComponent implements OnInit, OnDestroy {
   /**
-   * Subject para destruir notificador.
+   * Estado de consulta de datos (readonly, etc).
    */
   consultaDatos!: ConsultaioState;
-   /**
+
+  /**
    * Indica si el formulario está en modo solo lectura.
    * Cuando es `true`, los campos del formulario no se pueden editar.
    */
   soloLectura: boolean = false;
 
-  /** Formulario para la cancelación de certificados. */
+  /**
+   * Formulario reactivo para la cancelación de certificados.
+   */
   cancelacionForm!: FormGroup;
 
-  /** Sujeto para manejar la destrucción del componente. */
+  /**
+   * Sujeto para manejar la destrucción del componente y evitar fugas de memoria.
+   */
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
-  /** Datos de la tabla de certificados disponibles. */
+  /**
+   * Datos de la tabla de certificados disponibles.
+   */
   public certificadoDisponsiblesTablaDatos: ColumnasTabla[] = [];
 
-  /** Evento para emitir datos al componente padre. */
+  /**
+   * Evento para emitir datos al componente padre.
+   */
   @Output() dataEvent = new EventEmitter<number>();
 
+  /**
+   * Evento para indicar si el número de certificado es válido.
+   */
   @Output() isNumeroCertificado = new EventEmitter<boolean>();
+
+  /**
+   * Evento para indicar si el patrón del número de certificado es válido.
+   */
   @Output() isNumeroCertificadoPattern = new EventEmitter<boolean>();
 
+  /**
+   * Evento para habilitar el certificado de origen.
+   */
   @Output() certificadoOriginEnable = new EventEmitter<boolean>();
 
-
-  /** Texto de alerta para mostrar en el componente. */
+  /**
+   * Texto de alerta para mostrar en el componente.
+   */
   TEXTO_DE_ALERTA: string = TERCEROS_TEXTO_DE_ALERTA;
 
-  /** Fecha inicial para el formulario. */
+  /**
+   * Fecha inicial para el formulario.
+   */
   fechaInicialInput: InputFecha = FECHAI_NICIAL;
 
-  /** Fecha final para el formulario. */
+  /**
+   * Fecha final para el formulario.
+   */
   fechaFinalInput: InputFecha = FECHA_FINAL;
 
-  /** Estado de la solicitud actual. */
+  /**
+   * Estado de la solicitud actual.
+   */
   public solicitudState!: Solicitud110219State;
 
-  /** Lista de pasos del asistente. */
+  /**
+   * Lista de pasos del asistente (wizard).
+   */
   pasos: ListaPasosWizard[] = PASOS;
 
-  /** Selección de la tabla. */
+  /**
+   * Enumeración para la selección de la tabla.
+   */
   TablaSeleccion = TablaSeleccion;
-  /** Indica si se deben mostrar errores en el formulario. */
+
+  /**
+   * Indica si se deben mostrar errores en el formulario.
+   */
   mostrarErrores: boolean = true;
-  /** Indica si se está buscando un certificado. */
+
+  /**
+   * Indica si se está buscando un certificado.
+   */
   estaBuscando: boolean = true;
 
+  /**
+   * Indica si el certificado de origen está habilitado.
+   */
   isCertificadoOriginEnable: boolean = false;
-  /** Catálogo de tratados. */
+
+  /**
+   * Catálogo de tratados.
+   */
   tratado!: CatalogosSelect;
 
-  /** Catálogo de países. */
+  /**
+   * Catálogo de países.
+   */
   pais!: CatalogosSelect;
 
-  /** Índice del paso actual. */
+  /**
+   * Índice del paso actual.
+   */
   indice: number = 1;
-  /** Mensaje de error a mostrar. */
+
+  /**
+   * Mensaje de error a mostrar.
+   */
   mensajeError: string = '';
 
-  /** Datos de los pasos del asistente. */
+  /**
+   * Datos de los pasos del asistente.
+   */
   datosPasos: DatosPasos = {
     nroPasos: this.pasos.length,
     indice: this.indice,
@@ -120,21 +173,36 @@ export class CancelacionDeCertificadoComponent implements OnInit, OnDestroy {
     txtBtnSig: 'Continuar',
   };
 
-  /** Configuración del catálogo de tratados. */
+  /**
+   * Configuración del catálogo de tratados.
+   */
   public tratadoCatalogo: CatalogosSelect = {
     labelNombre: 'Tratado / Acuerdo:',
     required: false,
-    primerOpcion: 'Selecciona un valor',
+    primerOpcion: 'Selecciona un VALOR',
     catalogos: [],
   };
 
-  /** Configuración del catálogo de países. */
+  /**
+   * Configuración del catálogo de países.
+   */
   public paisCatalogo: CatalogosSelect = {
     labelNombre: 'País / Bloque:',
     required: false,
-    primerOpcion: 'Selecciona un valor',
+    primerOpcion: 'Selecciona un VALOR',
     catalogos: [],
   };
+
+  /**
+   * Encabezados de la tabla de certificados disponibles.
+   */
+  public headers: ConfiguracionColumna<ColumnasTabla>[] = [
+    { encabezado: 'Número de certificado', clave: (ele: ColumnasTabla) => ele.numeroCertificado, orden: 1 },
+    { encabezado: 'Pais/Bloque', clave: (ele: ColumnasTabla) => ele.pais, orden: 2 },
+    { encabezado: 'Tratado / Acuerdo', clave: (ele: ColumnasTabla) => ele.tratado, orden: 3 },
+    { encabezado: 'Fecha expedición', clave: (ele: ColumnasTabla) => ele.fechaExpedicion, orden: 4 },
+    { encabezado: 'Fecha vencimíento', clave: (ele: ColumnasTabla) => ele.fechaVencimiento, orden: 5 },
+  ];
 
   /**
    * Constructor del componente.
@@ -143,6 +211,7 @@ export class CancelacionDeCertificadoComponent implements OnInit, OnDestroy {
    * @param validacionesService Servicio para validar formularios.
    * @param store Almacén de datos del trámite.
    * @param query Consulta de datos del trámite.
+   * @param consultaioQuery Consulta de estado de sección.
    */
   constructor(
     private certificadoService: CertificadoService,
@@ -150,9 +219,9 @@ export class CancelacionDeCertificadoComponent implements OnInit, OnDestroy {
     private validacionesService: ValidacionesFormularioService,
     private store: Tramite110219Store,
     private query: Tramite110219Query,
-     private consultaioQuery: ConsultaioQuery
+    private consultaioQuery: ConsultaioQuery
   ) {
-     this.consultaioQuery.selectConsultaioState$
+    this.consultaioQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyed$),
         map((seccionState) => {
@@ -164,20 +233,22 @@ export class CancelacionDeCertificadoComponent implements OnInit, OnDestroy {
       .subscribe()
   }
 
-  /** Inicializa el componente. */
+  /**
+   * Inicializa el componente, el formulario y carga catálogos y datos de la tabla.
+   */
   ngOnInit(): void {
-this.cancelacionForm = new FormGroup({
-   numeroCertificado:new FormControl(this.solicitudState?.numeroCertificado, [Validators.required]),
-        tratado: new FormControl(this.solicitudState?.tratado, [Validators.required]),
-        pais: new FormControl(this.solicitudState?.pais, [Validators.required]),
-        fechaInicial: new FormControl(this.solicitudState?.fechaInicial, [Validators.required]),
-        fechaFinal: new FormControl(this.solicitudState?.fechaFinal, [Validators.required]),
-});
+    this.cancelacionForm = new FormGroup({
+      numeroCertificado: new FormControl(this.solicitudState?.numeroCertificado, [Validators.required]),
+      tratado: new FormControl(this.solicitudState?.tratado, [Validators.required]),
+      pais: new FormControl(this.solicitudState?.pais, [Validators.required]),
+      fechaInicial: new FormControl(this.solicitudState?.fechaInicial, [Validators.required]),
+      fechaFinal: new FormControl(this.solicitudState?.fechaFinal, [Validators.required]),
+    });
 
     this.getTratadoData();
     this.getPaisdata();
     this.getSolicitudesTabla();
-     this.inicializarEstadoFormulario();
+    this.inicializarEstadoFormulario();
 
     this.query.selectSolicitud$
       .pipe(
@@ -189,7 +260,8 @@ this.cancelacionForm = new FormGroup({
       .subscribe();
     this.donanteDomicilio();
   }
-/**
+
+  /**
    * Evalúa si se debe inicializar o cargar datos en el formulario.
    * Además, obtiene la información del catálogo de mercancía.
    */
@@ -213,14 +285,6 @@ this.cancelacionForm = new FormGroup({
       this.cancelacionForm.enable();
     }
   }
-  /** Encabezados de la tabla de certificados disponibles. */
-  public headers: ConfiguracionColumna<ColumnasTabla>[] = [
-    { encabezado: 'Número de certificado', clave: (ele: ColumnasTabla) => ele.numeroCertificado, orden: 1 },
-    { encabezado: 'Pais/Bloque', clave: (ele: ColumnasTabla) => ele.pais, orden: 2 },
-    { encabezado: 'Tratado / Acuerdo', clave: (ele: ColumnasTabla) => ele.tratado, orden: 3 },
-    { encabezado: 'Fecha expedición', clave: (ele: ColumnasTabla) => ele.fechaExpedicion, orden: 4 },
-    { encabezado: 'Fecha vencimíento', clave: (ele: ColumnasTabla) => ele.fechaVencimiento, orden: 5 },
-  ];
 
   /**
    * Cambia la fecha inicial en el formulario.
@@ -249,44 +313,45 @@ this.cancelacionForm = new FormGroup({
     this.setValoresStore(this.validacionForm, 'fechaFinal', 'setFechaFinal');
   }
 
-  /** Valida el formulario del destinatario. */
+  /**
+   * Valida el formulario del destinatario. Marca todos los campos como tocados si es inválido.
+   */
   validarDestinatarioFormulario(): void {
     if (this.cancelacionForm.invalid) {
       this.cancelacionForm.markAllAsTouched();
     }
   }
 
-  /** Activa el estado de búsqueda. */
+  /**
+   * Activa el estado de búsqueda y emite eventos relacionados con el número de certificado.
+   */
   alBuscarClic(): void {
-
-    const control = this.cancelacionForm.get('validacionForm.numeroCertificado')?.value;
-    if (!control) {
+    const CONTROL = this.cancelacionForm.get('validacionForm.numeroCertificado')?.value;
+    if (!CONTROL) {
       this.estaBuscando = true;
       this.isNumeroCertificado.emit(this.estaBuscando);
-
-    } else if(control){
+    } else if (CONTROL) {
       this.estaBuscando = false;
       this.certificadoDisponsiblesTablaDatos[0].numeroCertificado = (this.cancelacionForm.get('validacionForm.numeroCertificado')?.value);
       this.isNumeroCertificado.emit(this.estaBuscando);
-    }   
+    }
 
-    if (control.invalid) {
+    if (CONTROL.invalid) {
       this.mensajeError = '1.(Número de certificado) es un campo requerido';
     }
 
-    const certificadoExiste = this.buscarCertificado(control.value);
+    const CERTIFICADO_EXISTE = this.buscarCertificado(CONTROL.value);
 
-    if (!certificadoExiste) {
+    if (!CERTIFICADO_EXISTE) {
       this.mensajeError = 'El certificado de origen no existe';
     }
 
-    
-    if((this.cancelacionForm.get('validacionForm.numeroCertificado')?.hasError('pattern')) && !(this.cancelacionForm.get('validacionForm.numeroCertificado')?.hasError('required'))){
-         this.mostrarErrores = true;
-         this.isNumeroCertificadoPattern.emit(this.mostrarErrores);
+    if ((this.cancelacionForm.get('validacionForm.numeroCertificado')?.hasError('pattern')) && !(this.cancelacionForm.get('validacionForm.numeroCertificado')?.hasError('required'))) {
+      this.mostrarErrores = true;
+      this.isNumeroCertificadoPattern.emit(this.mostrarErrores);
     } else {
       this.mostrarErrores = false;
-         this.isNumeroCertificadoPattern.emit(this.mostrarErrores);
+      this.isNumeroCertificadoPattern.emit(this.mostrarErrores);
     }
 
     this.mensajeError = '';
@@ -294,14 +359,16 @@ this.cancelacionForm = new FormGroup({
 
   /**
    * Busca un certificado en la tabla de certificados disponibles.
-   * @param numeroCertificado Número de certificado a buscar.
+   * @param numero Número de certificado a buscar.
    * @returns `true` si el certificado existe, de lo contrario `false`.
    */
   buscarCertificado(numero: string): boolean {
     return false;
   }
 
-  /** Obtiene los datos del catálogo de tratados. */
+  /**
+   * Obtiene los datos del catálogo de tratados.
+   */
   getTratadoData(): void {
     this.certificadoService
       .getTratadoData()
@@ -311,7 +378,9 @@ this.cancelacionForm = new FormGroup({
       });
   }
 
-  /** Obtiene los datos del catálogo de países. */
+  /**
+   * Obtiene los datos del catálogo de países.
+   */
   getPaisdata(): void {
     this.certificadoService
       .getTratadoData()
@@ -321,7 +390,9 @@ this.cancelacionForm = new FormGroup({
       });
   }
 
-  /** Obtiene los datos de la tabla de solicitudes. */
+  /**
+   * Obtiene los datos de la tabla de solicitudes.
+   */
   public getSolicitudesTabla(): void {
     this.certificadoService.getSolicitudesTabla().pipe(takeUntil(this.destroyed$)).subscribe((data) => {
       this.certificadoDisponsiblesTablaDatos = data;
@@ -353,12 +424,16 @@ this.cancelacionForm = new FormGroup({
     (this.store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
 
-  /** Obtiene el formulario de validación. */
+  /**
+   * Obtiene el formulario de validación anidado.
+   */
   get validacionForm(): FormGroup {
     return this.cancelacionForm.get('validacionForm') as FormGroup;
   }
 
-  /** Inicializa el formulario con los datos del estado de la solicitud. */
+  /**
+   * Inicializa el formulario con los datos del estado de la solicitud.
+   */
   donanteDomicilio(): void {
     this.cancelacionForm = this.fb.group({
       validacionForm: this.fb.group({
@@ -371,54 +446,64 @@ this.cancelacionForm = new FormGroup({
     });
   }
 
-  /** Emite un evento al hacer clic en un botón. */
+  /**
+   * Emite un evento al hacer clic en un botón.
+   */
   emitirEventoClick(): void {
     this.dataEvent.emit(3);
   }
 
-  get numeroCertificado()  {
-    this.cancelacionForm.get('validacionForm.numeroCertificado');
-
-    return
-
+  /**
+   * Getter para el número de certificado.
+   */
+  get numeroCertificado(): any {
+    return this.cancelacionForm.get('validacionForm.numeroCertificado')?.value;
   }
 
-
+  /**
+   * Maneja el evento de doble clic en la tabla de certificados.
+   * @param evt Evento de mouse.
+   */
   onTablaDblClick(evt: MouseEvent): void {
     // 1️⃣ ¿Dónde hizo dblclick? Busca el <td>
-    const td = (evt.target as HTMLElement).closest('td');
-    if (!td) { return; }
+    const TD = (evt.target as HTMLElement).closest('td');
+    if (!TD) { return; }
 
     // 2️⃣ ¿En qué columna? Compara el índice del <td> con tu headers[]
-    const tr = td.parentElement;
-    if (!tr) { return; }
-    const clickedColIndex = Array.from(tr.children).indexOf(td);
-    const targetColIndex = this.headers .findIndex(h => h.encabezado === 'Número de certificado');
+    const TR = TD.parentElement;
+    if (!TR) { return; }
+    const CLICKED_COL_INDEX = Array.from(TR.children).indexOf(TD);
+    const TARGET_COL_INDEX = this.headers.findIndex(h => h.encabezado === 'Número de certificado');
 
-    if (clickedColIndex !== targetColIndex) {
+    if (CLICKED_COL_INDEX !== TARGET_COL_INDEX) {
       // no es la columna “Certificado”
       return;
     }
 
-    // 3️⃣ Extrae el valor mostrado en la celda y busca el objeto
-    const valor = td.textContent ? td.textContent.trim() : '';
-    const match = this.certificadoDisponsiblesTablaDatos
-      .find(item => String(item.numeroCertificado) === valor);
+    // 3️⃣ Extrae el VALOR mostrado en la celda y busca el objeto
+    const VALOR = TD.textContent ? TD.textContent.trim() : '';
+    const MATCH = this.certificadoDisponsiblesTablaDatos
+      .find(item => String(item.numeroCertificado) === VALOR);
 
-    if (match) {
+    if (MATCH) {
       this.isCertificadoOriginEnable = true;
       this.certificadoOriginEnable.emit(this.isCertificadoOriginEnable);
-      this.handleCertificadoDblClick(match);
+      this.handleCertificadoDblClick(MATCH);
     }
   }
 
- private handleCertificadoDblClick(cert: ColumnasTabla) {
+  /**
+   * Maneja la lógica al hacer doble clic sobre un certificado.
+   * @param cert Certificado seleccionado.
+   */
+  private handleCertificadoDblClick(cert: ColumnasTabla) {
     // Aquí tu lógica: navegar, abrir modal, etc.
-    console.log('DblClick en certificado:', cert);
     // p.ej. this.router.navigate(['/detalle', cert.numeroCertificado]);
   }
 
-  /** Limpia los recursos al destruir el componente. */
+  /**
+   * Limpia los recursos al destruir el componente.
+   */
   ngOnDestroy(): void {
     this.destroyed$.next(true);
     this.destroyed$.complete();

@@ -1,12 +1,13 @@
-import { AlertComponent, BtnContinuarComponent, ConfiguracionColumna, DatosPasos, PASOS, ListaPasosWizard, InputFecha, InputFechaComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent, ValidacionesFormularioService, ConsultaioState, ConsultaioQuery } from '@libs/shared/data-access-user/src';
+import { AlertComponent, BtnContinuarComponent, ConfiguracionColumna, ConsultaioQuery, ConsultaioState, DatosPasos, InputFecha, InputFechaComponent, ListaPasosWizard, PASOS, TablaDinamicaComponent, TablaSeleccion, TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
-import { FECHA_VENCIMIENTO, FECHA_EXPEDICION, MercanciaCertificado, ProductoresAsociados } from '../../models/certificado.model';
+import { FECHA_EXPEDICION, FECHA_VENCIMIENTO, MercanciaCertificado, ProductoresAsociados } from '../../models/certificado.model';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ReplaySubject, map, takeUntil } from 'rxjs';
 import { Solicitud110219State, Tramite110219Store } from '../../estados/Tramite110219.store';
 import { CertificadoService } from '../../services/certificado.service';
 import { CommonModule } from '@angular/common';
 import { Tramite110219Query } from '../../estados/Tramite110219.query';
+
 /** 
  * Texto de alerta que se muestra para la tabla de mercancías del certificado.
  */
@@ -29,50 +30,79 @@ const TEXTO_DE_ALERTA_PRODUCTORES = 'Productores asociados';
 })
 export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
   /**
-   * Subject para destruir notificador.
+   * Estado de consulta de datos (readonly, etc).
    */
   consultaDatos!: ConsultaioState;
+
   /**
-  * Indica si el formulario está en modo solo lectura.
-  * Cuando es `true`, los campos del formulario no se pueden editar.
-  */
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
   soloLectura: boolean = false;
 
-  /** Formulario para la cancelación de certificados. */
+  /**
+   * Formulario reactivo para el certificado de origen.
+   */
   cancelacionForm!: FormGroup;
 
+  /**
+   * Evento para emitir datos al componente padre al continuar.
+   */
   @Output() dataEventContinuar = new EventEmitter<number>();
+
+  /**
+   * Evento para indicar si los datos al continuar son válidos.
+   */
   @Output() isDataEventContinuar = new EventEmitter<boolean>();
 
-
-  /** Sujeto para manejar la destrucción del componente. */
+  /**
+   * Sujeto para manejar la destrucción del componente y evitar fugas de memoria.
+   */
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
-  /** Datos de la tabla de mercancías del certificado. */
+  /**
+   * Datos de la tabla de mercancías del certificado.
+   */
   public mercanciaCertificadoTablaDatos: MercanciaCertificado[] = [];
 
-  /** Datos de la tabla de productores asociados. */
+  /**
+   * Datos de la tabla de productores asociados.
+   */
   public productoresAsociadosTablaDatos: ProductoresAsociados[] = [];
 
-  /** Texto de alerta para mercancías. */
+  /**
+   * Texto de alerta para mercancías.
+   */
   TEXTO_DE_ALERTA_MERCANCIAS = TEXTO_DE_ALERTA_MERCANCIAS;
 
-  /** Texto de alerta para productores. */
+  /**
+   * Texto de alerta para productores.
+   */
   TEXTO_DE_ALERTA_PRODUCTORES = TEXTO_DE_ALERTA_PRODUCTORES;
 
-  /** Fecha inicial para el formulario. */
+  /**
+   * Fecha inicial para el formulario.
+   */
   fechaInicialInput: InputFecha = FECHA_EXPEDICION;
 
-  /** Fecha final para el formulario. */
+  /**
+   * Fecha final para el formulario.
+   */
   fechaFinalInput: InputFecha = FECHA_VENCIMIENTO;
 
-  /** Estado de la solicitud actual. */
+  /**
+   * Estado de la solicitud actual.
+   */
   public solicitudState!: Solicitud110219State;
 
-  /** Selección de la tabla. */
+  /**
+   * Enumeración para la selección de la tabla.
+   */
   TablaSeleccion = TablaSeleccion;
 
-  /** Encabezados de la tabla de mercancías. */
+  /**
+   * Encabezados de la tabla de mercancías.
+   */
   public encabezadosMercancias: ConfiguracionColumna<MercanciaCertificado>[] = [
     { encabezado: 'Número de Orden', clave: (ele: MercanciaCertificado) => ele.numeroOrden, orden: 1 },
     { encabezado: 'Fracción Arancelaria', clave: (ele: MercanciaCertificado) => ele.fraccionArancelaria, orden: 2 },
@@ -85,15 +115,17 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
     { encabezado: 'Norma', clave: (ele: MercanciaCertificado) => ele.norma, orden: 9 },
     { encabezado: 'Cantidad a Exportar', clave: (ele: MercanciaCertificado) => ele.cantidadExportar, orden: 10 },
     { encabezado: 'Unidad de medida de comercialización (Cantidad a Exportar)', clave: (ele: MercanciaCertificado) => ele.unidad, orden: 11 },
-    { encabezado: 'Masa bruta', clave: (ele: MercanciaCertificado) => ele.masaBruta, orden: 11 },
-    { encabezado: 'Unidad de medida de comercialización (Masa bruta)', clave: (ele: MercanciaCertificado) => ele.comercializacion, orden: 11 },
-    { encabezado: 'Valor de la mercancía', clave: (ele: MercanciaCertificado) => ele.valorMercancia, orden: 11 },
-    { encabezado: 'Número de factura', clave: (ele: MercanciaCertificado) => ele.numeroFactura, orden: 11 },
-    { encabezado: 'Fecha de factura', clave: (ele: MercanciaCertificado) => ele.fechaFactura, orden: 11 },
-    { encabezado: 'Número de Registro de Productos', clave: (ele: MercanciaCertificado) => ele.registroProductos, orden: 11 },
+    { encabezado: 'Masa bruta', clave: (ele: MercanciaCertificado) => ele.masaBruta, orden: 12 },
+    { encabezado: 'Unidad de medida de comercialización (Masa bruta)', clave: (ele: MercanciaCertificado) => ele.comercializacion, orden: 13 },
+    { encabezado: 'Valor de la mercancía', clave: (ele: MercanciaCertificado) => ele.valorMercancia, orden: 14 },
+    { encabezado: 'Número de factura', clave: (ele: MercanciaCertificado) => ele.numeroFactura, orden: 15 },
+    { encabezado: 'Fecha de factura', clave: (ele: MercanciaCertificado) => ele.fechaFactura, orden: 16 },
+    { encabezado: 'Número de Registro de Productos', clave: (ele: MercanciaCertificado) => ele.registroProductos, orden: 17 },
   ];
 
-  /** Encabezados de la tabla de productores asociados. */
+  /**
+   * Encabezados de la tabla de productores asociados.
+   */
   public encabezadosProductores: ConfiguracionColumna<ProductoresAsociados>[] = [
     { encabezado: 'Nombre del productor', clave: (ele: ProductoresAsociados) => ele.nombreProductor, orden: 1 },
     { encabezado: 'Número de registro fiscal', clave: (ele: ProductoresAsociados) => ele.numeroRegistroFiscal, orden: 2 },
@@ -103,19 +135,25 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
     { encabezado: 'Fax', clave: (ele: ProductoresAsociados) => ele.fax, orden: 6 },
   ];
 
-  /** Lista de pasos del asistente. */
+  /**
+   * Lista de pasos del asistente.
+   */
   pasos: ListaPasosWizard[] = PASOS;
 
+  /**
+   * Índice del paso actual.
+   */
   indice: number = 1;
 
-  /** Datos de los pasos del asistente. */
+  /**
+   * Datos de los pasos del asistente.
+   */
   datosPasos: DatosPasos = {
     nroPasos: this.pasos.length,
     indice: this.indice,
     txtBtnAnt: 'Anterior',
     txtBtnSig: 'Continuar',
   };
-
 
   /**
    * Constructor del componente.
@@ -124,9 +162,8 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
    * @param validacionesService Servicio para validar formularios.
    * @param store Almacén de datos del trámite.
    * @param query Consulta de datos del trámite.
+   * @param consultaioQuery Consulta de estado de sección.
    */
-
-
   constructor(
     private certificadoService: CertificadoService,
     private fb: FormBuilder,
@@ -147,9 +184,10 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
       .subscribe()
   }
 
-  /** Inicializa el componente. */
+  /**
+   * Inicializa el componente y el formulario, y carga los datos de la tabla de mercancías.
+   */
   ngOnInit(): void {
-
     this.cancelacionForm = new FormGroup({
       motivoCancelacion: new FormControl('', Validators.required),
       fechaExpedicion: new FormControl(this.solicitudState?.fechaExpedicion, Validators.required),
@@ -171,9 +209,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
       correoElectronico: new FormControl(this.solicitudState?.correoElectronico, [Validators.required, Validators.email]),
     });
     this.getMercanciaCertificadoTabla();
-
     this.inicializarEstadoFormulario();
-
     this.query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyed$),
@@ -183,12 +219,12 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
       )
       .subscribe();
     this.donanteDomicilio();
-
   }
+
   /**
-     * Evalúa si se debe inicializar o cargar datos en el formulario.
-     * Además, obtiene la información del catálogo de mercancía.
-     */
+   * Evalúa si se debe inicializar o cargar datos en el formulario.
+   * Además, obtiene la información del catálogo de mercancía.
+   */
   inicializarEstadoFormulario(): void {
     if (this.soloLectura) {
       this.guardarDatosFormulario();
@@ -209,14 +245,19 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
       this.cancelacionForm.enable();
     }
   }
-  /** Valida el formulario del destinatario. */
+
+  /**
+   * Valida el formulario del destinatario. Marca todos los campos como tocados si es inválido.
+   */
   validarDestinatarioFormulario(): void {
     if (this.cancelacionForm.invalid) {
       this.cancelacionForm.markAllAsTouched();
     }
   }
 
-  /** Obtiene los datos de la tabla de mercancías del certificado. */
+  /**
+   * Obtiene los datos de la tabla de mercancías del certificado.
+   */
   public getMercanciaCertificadoTabla(): void {
     this.certificadoService.getMercanciaCertificadoTabla().pipe(takeUntil(this.destroyed$)).subscribe((data) => {
       this.mercanciaCertificadoTablaDatos = data;
@@ -248,12 +289,16 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
     (this.store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
 
-  /** Obtiene el formulario de validación. */
+  /**
+   * Obtiene el formulario de validación anidado.
+   */
   get validacionForm(): FormGroup {
     return this.cancelacionForm.get('validacionForm') as FormGroup;
   }
 
-  /** Inicializa el formulario con los datos del estado de la solicitud. */
+  /**
+   * Inicializa el formulario con los datos del estado de la solicitud.
+   */
   donanteDomicilio(): void {
     this.cancelacionForm = this.fb.group({
       validacionForm: this.fb.group({
@@ -284,7 +329,9 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
     }
   }
 
-  /** Emite un evento al hacer clic en un botón. */
+  /**
+   * Emite un evento al hacer clic en un botón.
+   */
   emitirEventoClick(): void {
     if (!(this.cancelacionForm.get('validacionForm.motivoCancelacion')?.hasError('required'))) {
       this.datosPasos;
@@ -297,7 +344,9 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
     }
   }
 
-  /** Limpia los recursos al destruir el componente. */
+  /**
+   * Limpia los recursos al destruir el componente.
+   */
   ngOnDestroy(): void {
     this.destroyed$.next(true);
     this.destroyed$.complete();
