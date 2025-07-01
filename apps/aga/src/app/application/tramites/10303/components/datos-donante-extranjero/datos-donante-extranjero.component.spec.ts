@@ -70,8 +70,8 @@ describe('DatosDonanteExtranjeroComponent', () => {
   it('should call getPaises and getDocumentoResidencia methods on ngOnInit', () => {
     component.ngOnInit();
 
-    expect(donacionesExtranjerasService.getPaises).toHaveBeenCalledWith(CATALOGOS_ID.CAT_PAIS);
-    expect(donacionesExtranjerasService.getDocumentoResidencia).toHaveBeenCalledWith(CATALOGOS_ID.CAT_DOCUMENTO_RESIDENCIA);
+    expect(donacionesExtranjerasService.getPaises).toHaveBeenCalledWith();
+    expect(donacionesExtranjerasService.getDocumentoResidencia).toHaveBeenCalledWith();
   });
 
   it('should map the correct data for pais and documento residencia after ngOnInit', () => {

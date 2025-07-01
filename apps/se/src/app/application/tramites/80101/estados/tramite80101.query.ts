@@ -2,6 +2,15 @@ import { Tramite80101State, Tramite80101Store } from './tramite80101.store';
 import { Injectable } from '@angular/core';
 import { Query } from '@datorama/akita';
 
+
+/**
+ * Decorador que indica que el servicio debe ser proporcionado en el nivel raíz de la aplicación.
+ * 
+ * Al usar `{ providedIn: 'root' }`, Angular asegura que el servicio sea un singleton y esté disponible
+ * en toda la aplicación sin necesidad de declararlo explícitamente en un módulo específico.
+ * 
+ * Esto mejora la eficiencia y simplifica la gestión de dependencias en la aplicación.
+ */
 @Injectable({ providedIn: 'root' })
 /**
  * Clase que extiende de Query para manejar el estado de Tramite80101.

@@ -6,16 +6,40 @@ import { SolicitanteComponent, SolicitanteService } from '@libs/shared/data-acce
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { RenovacionComponent } from '../../components/renovacion/renovacion.component';
+import { RenovacionService } from '../../services/renovacion/renovacion.service';
+import { of } from 'rxjs';
 
 describe('DatosComponent', () => {
   let component: DatosComponent;
   let fixture: ComponentFixture<DatosComponent>;
+  let renovacionService: any;
 
   beforeEach(async () => {
+    const MOCK_RESPONSE = {
+      "numeroOficio": "OF-12345",
+      "fechaInicialInput": "2024-06-01",
+      "fechaFinalInput": "2024-06-30",
+      "fechaPago": "2024-06-15",
+      "monedaNacional": 1,
+      "numeroOperacion": "OP-98765",
+      "llavePago": "LLAVE-001",
+      "seleccionadaManifiesto": [true, true]
+    };
+
+    renovacionService = {
+      getRegistroTomaMuestrasMercanciasData: jest.fn().mockReturnValue(of(MOCK_RESPONSE)),
+      obtenerRenovacionDatos: jest.fn().mockReturnValue(of({})),
+      actualizarEstadoFormulario: jest.fn().mockReturnValue(of({})),
+      getManifiestos: jest.fn().mockReturnValue(of({})),
+      obtenerDocumentosSeleccionados: jest.fn().mockReturnValue(of({}))
+    } as unknown as RenovacionService;
+
     await TestBed.configureTestingModule({
       declarations: [DatosComponent],
-      imports: [ CommonModule, SolicitanteComponent, HttpClientModule, RenovacionComponent],
-      providers: [SolicitanteService, HttpClientTestingModule, HttpClient],
+      imports: [CommonModule, SolicitanteComponent, HttpClientModule, RenovacionComponent],
+      providers: [SolicitanteService, HttpClientTestingModule, HttpClient,
+        { provide: RenovacionService, useValue: renovacionService }
+      ],
       schemas: [NO_ERRORS_SCHEMA]
     }).compileComponents();
 
@@ -71,5 +95,12 @@ describe('DatosComponent', () => {
     TAB_ELEMENT.dispatchEvent(EVENT);
     component.seleccionaTab(1);
     expect(component.indice).toBe(1);
+  });
+
+  it('should update esDatosRespuesta and call store when guardarDatosFormulario is called', () => {
+    component.guardarDatosFormulario();
+
+    expect(renovacionService.getRegistroTomaMuestrasMercanciasData).toHaveBeenCalled();
+    expect(component.esDatosRespuesta).toBe(true);
   });
 });

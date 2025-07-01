@@ -57,7 +57,7 @@ describe('PasoTresComponent', () => {
     fixture.destroy();
   });
 
-  it('should run #constructor()', async () => {
+  it('debe ejecutar #constructor()', async () => {
     expect(component).toBeTruthy();
   });
 

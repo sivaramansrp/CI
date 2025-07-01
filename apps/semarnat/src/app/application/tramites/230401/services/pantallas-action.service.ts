@@ -19,28 +19,137 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
+/**
+ * Decorador `@Injectable` que define un servicio como una clase que puede ser inyectada en otros componentes o servicios.
+ * 
+ * Este servicio está configurado con el proveedor `root`, lo que significa que se crea una única instancia compartida en toda la aplicación.
+ * 
+ * @remarks
+ * Este servicio está diseñado para gestionar las acciones relacionadas con las pantallas del trámite 230401. Proporciona métodos para inicializar y manejar los datos de los catálogos necesarios en el proceso del trámite, así como para actualizar el estado del formulario y obtener datos específicos desde archivos JSON.
+ * 
+ * @author Muneez
+ */
 @Injectable({
   providedIn: 'root'
 })
+/**
+ * Servicio para gestionar las acciones relacionadas con las pantallas del trámite 230401.
+ * 
+ * Este servicio proporciona métodos para inicializar y manejar los datos de los catálogos 
+ * necesarios en el proceso del trámite, así como para actualizar el estado del formulario 
+ * y obtener datos específicos desde archivos JSON.
+ * 
+ * @author Muneez
+ * @remarks
+ * Los métodos de este servicio están diseñados para interactuar con servicios HTTP y 
+ * manejar el estado global del trámite mediante el store correspondiente.
+ */
 export class PantallasActionService {
-  // Las siguientes variables se utilizan en el componente paso uno datos solicitud
-  tiposSolicitud: Catalogo[] = [];
-  noDePermisocoferprise: Catalogo[] = [];
-  fraccionArancelaria: Catalogo[] = [];
-  numeroCas: Catalogo[] = [];
-  clasificacion: Catalogo[] = [];
-  estadoFisico: Catalogo[] = [];
-  datosObjecto: Catalogo[] = [];
-  unidadDeMedida: Catalogo[] = [];
- 
-  // Las siguientes variables se utilizan en el componente pago de derechos
-  listoBanco: Catalogo[] = [];
+/**
+ * Catálogo de tipos de solicitud disponibles para selección.
+ * 
+ * Se utiliza para mostrar las distintas opciones de tipo de trámite
+ * que el usuario puede elegir al iniciar una solicitud.
+ *
+ * @type {Catalogo[]}
+ */
+tiposSolicitud: Catalogo[] = [];
 
-  constructor(public httpServicios: HttpClient,
-    public tramite230401Store: Tramite230401Store
-  ) {
-        // do nothing.
-  }
+/**
+ * Catálogo de números de permiso Cofepris disponibles.
+ * 
+ * Proporciona una lista de identificadores válidos emitidos por Cofepris
+ * para seleccionar dentro del formulario de solicitud.
+ *
+ * @type {Catalogo[]}
+ */
+noDePermisocoferprise: Catalogo[] = [];
+
+/**
+ * Catálogo de fracciones arancelarias.
+ * 
+ * Este catálogo permite seleccionar la fracción arancelaria correspondiente
+ * a la mercancía para efectos de clasificación aduanera.
+ *
+ * @type {Catalogo[]}
+ */
+fraccionArancelaria: Catalogo[] = [];
+
+/**
+ * Catálogo de números CAS disponibles.
+ * 
+ * El número CAS (Chemical Abstracts Service) permite identificar de forma única
+ * sustancias químicas incluidas en la solicitud.
+ *
+ * @type {Catalogo[]}
+ */
+numeroCas: Catalogo[] = [];
+
+/**
+ * Catálogo de clasificaciones posibles para la mercancía.
+ * 
+ * Se utiliza para seleccionar la clasificación regulatoria, química u otra
+ * aplicable al producto.
+ *
+ * @type {Catalogo[]}
+ */
+clasificacion: Catalogo[] = [];
+
+/**
+ * Catálogo de estados físicos de la sustancia o mercancía.
+ * 
+ * Permite seleccionar si el producto es sólido, líquido, gaseoso, etc.,
+ * información importante para la gestión del trámite.
+ *
+ * @type {Catalogo[]}
+ */
+estadoFisico: Catalogo[] = [];
+
+/**
+ * Catálogo de objetos o finalidades de uso.
+ * 
+ * Define el propósito específico del producto dentro del trámite (por ejemplo,
+ * industrial, agrícola, farmacéutico, etc.).
+ *
+ * @type {Catalogo[]}
+ */
+datosObjecto: Catalogo[] = [];
+
+/**
+ * Catálogo de unidades de medida.
+ * 
+ * Define las unidades en las que se reportan las cantidades (litros, kilogramos, etc.).
+ * Fundamental para la precisión del trámite.
+ *
+ * @type {Catalogo[]}
+ */
+unidadDeMedida: Catalogo[] = [];
+
+/**
+ * Catálogo adicional para opciones del banco u otras entidades relacionadas.
+ * 
+ * Su uso específico puede estar relacionado con validaciones complementarias o
+ * referencias de instituciones financieras.
+ *
+ * @type {Catalogo[]}
+ */
+listoBanco: Catalogo[] = [];
+
+/**
+ * Constructor principal del componente.
+ * 
+ * Inyecta servicios necesarios como el cliente HTTP para llamadas a API y el store
+ * del trámite 230401 para el manejo del estado global.
+ *
+ * @param {HttpClient} httpServicios - Cliente HTTP para consumo de servicios externos
+ * @param {Tramite230401Store} tramite230401Store - Store con el estado de la solicitud
+ */
+constructor(
+  public httpServicios: HttpClient,
+  public tramite230401Store: Tramite230401Store
+) {
+}
+
 
 
   /**

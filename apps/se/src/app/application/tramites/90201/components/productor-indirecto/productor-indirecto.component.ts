@@ -10,7 +10,7 @@ import {
   Tramite90201Store,
 } from '../../../../estados/tramites/tramite90201.store';
 
-import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { ConsultaioQuery, Notificacion, NotificacionesComponent } from '@ng-mf/data-access-user';
 import { PRODUCTOR_INDIRECTO } from '@libs/shared/data-access-user/src/core/enums/90201/productor-indirecto-tabla.enum';
 
 import { ProductorIndirectoTabla } from '@libs/shared/data-access-user/src/core/models/90201/expansion-de-productores.model';
@@ -31,7 +31,7 @@ import { Tramite90201Query } from '../../../../estados/queries/tramite90201.quer
 @Component({
   selector: 'app-productor-indirecto',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, TituloComponent, TablaDinamicaComponent],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, TituloComponent, TablaDinamicaComponent,NotificacionesComponent],
   templateUrl: './productor-indirecto.component.html',
   styleUrl: './productor-indirecto.component.scss',
 })
@@ -46,6 +46,13 @@ export class ProductorIndirectoComponent implements OnInit, OnDestroy {
    * en el componente.
    */
   public configuracionTabla = PRODUCTOR_INDIRECTO;
+  /**
+   * Contiene la instancia de una nueva notificación que será creada o gestionada.
+   * 
+   * @type {Notificacion}
+   * @public
+   */
+  public nuevaNotificacion!: Notificacion;
   /**
    * Un arreglo de objetos `ProductorIndirectoTabla` que representa los datos para la tabla de productor indirecto.
    * Se inicializa con los valores de `ProductorTabla`.
@@ -191,6 +198,25 @@ export class ProductorIndirectoComponent implements OnInit, OnDestroy {
   setValoresStore(campo: string, metodoNombre: keyof Tramite90201Store): void {
     const VALOR = this.rfc;
     (this.tramite90201Store[metodoNombre] as (value: unknown) => void)(VALOR);
+  }
+
+  /**
+   * Muestra un mensaje de notificación basado en la acción de agregar o eliminar un productor indirecto.
+   * @param agregar - Si es `true`, muestra un mensaje indicando que solo se pueden agregar personas morales.
+   *                  Si es `false`, solicita al usuario seleccionar el productor indirecto que desea eliminar.
+   */
+  public productor(agregar: boolean): void {
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: agregar ? 'Sólo puede ingresar personas morales' : 'Seleccione el productor indirecto que desea eliminar.',
+      cerrar: false,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
   }
 
   /**

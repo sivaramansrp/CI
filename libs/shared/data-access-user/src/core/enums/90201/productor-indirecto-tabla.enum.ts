@@ -34,13 +34,13 @@ export const DOMICILIOS_PLANTAS: ConfiguracionColumna<DomiciliosDePlantasTabla>[
    * @property {number} orden - Orden en el que se muestra la columna.
    */
   export const PRODUCTOR_INDIRECTO: ConfiguracionColumna<ProductorIndirectoTabla>[] = [
-    { encabezado: 'registro', clave: (item: ProductorIndirectoTabla) => item.registro, orden: 1 },
+    { encabezado: 'Registro federal de contribuyentes', clave: (item: ProductorIndirectoTabla) => item.registro, orden: 1 },
     {
-      encabezado: 'denominacion',
+      encabezado: 'Denominación o razón social',
       clave: (item: ProductorIndirectoTabla) => item.denominacion,
       orden: 2,
     },
-    { encabezado: 'correo', clave: (item: ProductorIndirectoTabla) => item.correo, orden: 3 },
+    { encabezado: 'Correo', clave: (item: ProductorIndirectoTabla) => item.correo, orden: 3 },
   ];
 
 
