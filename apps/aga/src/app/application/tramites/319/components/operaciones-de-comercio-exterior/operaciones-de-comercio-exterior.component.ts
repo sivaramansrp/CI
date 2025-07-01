@@ -66,7 +66,7 @@ export class OperacionesDeComercioExterioComponent implements OnInit, OnDestroy,
    * Sujeto utilizado para manejar la destrucción de suscripciones.
    * @type {Subject<void>}
    */
-  private destroyNotifier$: Subject<void> = new Subject();
+  public destroyNotifier$: Subject<void> = new Subject();
 
   /**
    * Tipo de selección para la tabla de personas.
@@ -171,12 +171,12 @@ export class OperacionesDeComercioExterioComponent implements OnInit, OnDestroy,
    * @param {ConsultaioQuery} consultaioQuery - Query para el estado de solo lectura.
    */
   constructor(
-    private readonly fb: FormBuilder,
-    private readonly operacionService: OperacionService,
-    private readonly tramite319Query: Tramite319Query,
-    private tramite319Store: Tramite319Store,
-    private seccionStore: SeccionLibStore,
-    private readonly consultaioQuery: ConsultaioQuery
+    public readonly fb: FormBuilder,
+    public readonly operacionService: OperacionService,
+    public readonly tramite319Query: Tramite319Query,
+    public tramite319Store: Tramite319Store,
+    public seccionStore: SeccionLibStore,
+    public readonly consultaioQuery: ConsultaioQuery
   ) {
     this.getOperacionList();
     this.getPersonasTablaData();
