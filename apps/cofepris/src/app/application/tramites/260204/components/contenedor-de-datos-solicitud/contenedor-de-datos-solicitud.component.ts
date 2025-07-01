@@ -9,6 +9,17 @@ import { DatosDeLaSolicitudComponent } from '../../../../shared/components/datos
 import { Subject } from 'rxjs';
 import { Tramite260204Query } from '../../estados/queries/tramite260204Query.query';
 
+/**
+ * Decorador de componente de Angular que define las propiedades y configuraciones del componente `ContenedorDeDatosSolicitudComponent`.
+ * 
+ * Este componente es independiente (`standalone`) y utiliza los módulos `CommonModule` y `DatosDeLaSolicitudComponent` como dependencias.
+ * 
+ * @selector `app-contenedor-de-datos-solicitud` - Selector utilizado para instanciar este componente en una plantilla HTML.
+ * @standalone `true` - Indica que este componente es independiente y no requiere un módulo específico para ser utilizado.
+ * @imports `[CommonModule, DatosDeLaSolicitudComponent]` - Lista de módulos y componentes importados que se utilizan dentro de este componente.
+ * @templateUrl `./contenedor-de-datos-solicitud.component.html` - Ruta del archivo HTML que define la estructura visual del componente.
+ * @styleUrl `./contenedor-de-datos-solicitud.component.scss` - Ruta del archivo SCSS que contiene los estilos específicos del componente.
+ */
 @Component({
   selector: 'app-contenedor-de-datos-solicitud',
   standalone: true,
@@ -117,11 +128,39 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy{
    * gestionar y manipular los datos seleccionados en el contexto de la solicitud.
    */
   public seleccionadoTablaMercanciasDatos: TablaMercanciasDatos[] = [];
-  constructor(private tramite260204Query: Tramite260204Query,
-    private tramite260204Store: Tramite260204Store,
-    private consultaQuery: ConsultaioQuery
+
+
+  /**
+   * Constructor de la clase ContenedorDeDatosSolicitudComponent.
+   * 
+   * Este constructor inicializa las dependencias necesarias para el componente.
+   * 
+   * @param tramite260204Query - Servicio para realizar consultas relacionadas con el trámite 260204.
+   * @param tramite260204Store - Almacén para gestionar el estado del trámite 260204.
+   * @param consultaQuery - Servicio para realizar consultas adicionales relacionadas con la aplicación.
+   */
+  constructor(public tramite260204Query: Tramite260204Query,
+    public tramite260204Store: Tramite260204Store,
+    public consultaQuery: ConsultaioQuery
   ) { }
 
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * 
+   * Este método realiza las siguientes acciones:
+   * 
+   * 1. Suscribe al estado del trámite (`tramite260204Query.selectTramiteState$`) y actualiza las configuraciones
+   *    de datos del componente (`opcionConfig`, `scianConfig`, `tablaMercanciasConfig`) basándose en el estado
+   *    del trámite recibido. La suscripción se completa automáticamente cuando el observable `destroyNotifier$` emite un valor.
+   * 
+   * 2. Configura la propiedad `esFormularioSoloLectura` como un observable que determina si el formulario debe
+   *    estar en modo solo lectura. Esto se basa en el estado de consulta (`consultaQuery.selectConsultaioState$`),
+   *    verificando si el trámite no está en modo creación (`create`) y si el `procedureId` corresponde a '260204'.
+   *    En caso de cumplir estas condiciones, se asigna el valor de `readonly` del estado de consulta; de lo contrario,
+   *    se asigna `false`.
+   * 
+   * @returns void
+   */
   ngOnInit(): void {
     this.tramite260204Query.selectTramiteState$
     .pipe(

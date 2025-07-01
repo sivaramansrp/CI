@@ -79,11 +79,7 @@ export class ManifiestosComponent implements OnInit, OnDestroy {
     { label: 'Si', value: 'Si' },
   ];
 
-  /**
-   * Subject para limpiar subscripciones y prevenir memory leaks.
-   * @private
-   */
-  private destroy$ = new Subject<void>();
+ 
   /**
    * Subject para notificar la destrucción del componente.
    */
@@ -180,16 +176,6 @@ public mercanciasData(): void {
     this.store.establecerDatos({ [campo]: VALOR });
   }
 
-  /**
-   * Hook de destrucción del componente.
-   * Finaliza las subscripciones.
-   * @public
-   */
-  public ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
-  }
-
 /**
  * Obtiene los datos del formulario desde el estado almacenado y los configura en el componente.
  * 
@@ -205,7 +191,7 @@ public mercanciasData(): void {
  */
   obtenerDatosFormulario(): void {
     this.query.selectProrroga$
-      ?.pipe(takeUntil(this.destroy$))
+      ?.pipe(takeUntil(this.destroyNotifier$))
       .subscribe((data: DatosProcedureState) => {
         this.seccionState = data;
         this.declaracionEstaMarcado = Boolean(this.seccionState?.aduanas);
@@ -240,5 +226,14 @@ public mercanciasData(): void {
       this.obtenerDatosFormulario();
       this.mercanciasData();
     }
+  }
+  /**
+   * Hook de destrucción del componente.
+   * Finaliza las subscripciones.
+   * @public
+   */
+  public ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }

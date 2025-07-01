@@ -1,64 +1,64 @@
-// @ts-nocheck
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { By } from '@angular/platform-browser';
-import { Observable, of as observableOf, throwError } from 'rxjs';
-import { provideToastr, ToastrService } from 'ngx-toastr';
-
-import { Component } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PasoDosComponent } from './paso-dos.component';
 import { CatalogosService } from '@ng-mf/data-access-user';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { of, ReplaySubject } from 'rxjs';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 describe('PasoDosComponent', () => {
-  let fixture;
-  let component;
-
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule, HttpClientTestingModule ],
-
-      schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
+  let component: PasoDosComponent;
+  let fixture: ComponentFixture<PasoDosComponent>;
+  let catalogosServiceMock: any;
+ 
+  beforeEach(async () => {
+    catalogosServiceMock = {
+      getCatalogo: jest.fn().mockReturnValue(of([]))
+    };
+    await TestBed.configureTestingModule({
+      declarations: [PasoDosComponent],
       providers: [
-        CatalogosService,
-        provideToastr({
-          positionClass: 'toast-top-right',
-        }),
-        ToastrService
-      ]
-    }).overrideComponent(PasoDosComponent, {
-
+        { provide: CatalogosService, useValue: catalogosServiceMock }
+      ],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA]
     }).compileComponents();
+
     fixture = TestBed.createComponent(PasoDosComponent);
-    component = fixture.debugElement.componentInstance;
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+     component = new PasoDosComponent(catalogosServiceMock);
+    component.destroyed$ = new ReplaySubject<boolean>(1);
   });
 
-
-  it('should run #constructor()', async () => {
+  it('should create the component', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should run #ngOnInit()', async () => {
-    component.getTiposDocumentos = jest.fn();
+  it('should call getTiposDocumentos in ngOnInit', () => {
+    const spy = jest.spyOn(component, 'getTiposDocumentos');
     component.ngOnInit();
-    expect(component.getTiposDocumentos).toHaveBeenCalled();
+    expect(spy).toHaveBeenCalled();
   });
 
-  it('should run #getTiposDocumentos()', async () => {
-    component.catalogosServices = component.catalogosServices || {};
-    component.catalogosServices.getCatalogo = jest.fn().mockReturnValue(observableOf({}));
+  it('should set catalogoDocumentos if response has data in getTiposDocumentos', () => {
+    const mockDocs = [{ id: 1, descripcion: 'Doc1' }];
+    catalogosServiceMock.getCatalogo.mockReturnValue(of(mockDocs));
     component.getTiposDocumentos();
-    expect(component.catalogosServices.getCatalogo).toHaveBeenCalled();
+    expect(component.catalogoDocumentos).toEqual(mockDocs);
   });
 
-  it('should run #ngOnDestroy()', async () => {
-    component.destroyed$ = component.destroyed$ || {};
-    component.destroyed$.next = jest.fn();
-    component.destroyed$.complete = jest.fn();
+  it('should not set catalogoDocumentos if response is empty in getTiposDocumentos', () => {
+    catalogosServiceMock.getCatalogo.mockReturnValue(of([]));
+    component.catalogoDocumentos = [{ id: 1, descripcion: 'Doc1' }];
+    component.getTiposDocumentos();
+    expect(component.catalogoDocumentos).toEqual([{ id: 1, descripcion: 'Doc1' }]);
+  });
+
+ it('should complete destroyed$ in ngOnDestroy', () => {
+    const nextSpy = jest.spyOn(component.destroyed$, 'next');
+    const completeSpy = jest.spyOn(component.destroyed$, 'complete');
+
     component.ngOnDestroy();
-    expect(component.destroyed$.next).toHaveBeenCalled();
-  });
 
+    expect(nextSpy).toHaveBeenCalledWith(true);
+    expect(completeSpy).toHaveBeenCalled();
+  });
 });

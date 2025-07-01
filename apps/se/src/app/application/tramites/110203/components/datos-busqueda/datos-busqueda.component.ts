@@ -271,7 +271,7 @@ export class DatosBusquedaComponent implements OnInit, OnDestroy {
    */
   private createFormDatosBusqueda(): void {
     this.datosBusquedaFormulario = this.fb.group({
-      numeroDeCertificado: [''],
+      numeroDeCertificado: ['', [Validators.maxLength(20)]],
       tratadoAcuerdo: [''],
       paisBloque: ['']
     });
@@ -307,6 +307,9 @@ export class DatosBusquedaComponent implements OnInit, OnDestroy {
    * Método para realizar la búsqueda y mostrar la tabla de resultados.
    */
   public buscar(): void {
+     if (!this.datosBusquedaFormulario.valid) {
+    return;
+  }
     this.verTabla = true; // Mostrar la tabla
   }
 

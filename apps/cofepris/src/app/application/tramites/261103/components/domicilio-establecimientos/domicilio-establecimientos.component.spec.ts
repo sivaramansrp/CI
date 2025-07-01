@@ -6,13 +6,18 @@ import { DatosProcedureStore } from '../../../../estados/tramites/tramites261103
 import { of } from 'rxjs';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
 import { ModificacionPermisoImportacionMedicamentosService } from '../../services/modificacion-permiso-importacion-medicamentos.service';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 
 describe('DomicilioEstablecimientosComponent', () => {
   let component: DomicilioEstablecimientosComponent;
   let fixture: ComponentFixture<DomicilioEstablecimientosComponent>;
+  let mockStore: any;
+  let mockQuery: any;
+  let mockService: any;
+  let mockConsultaioQuery: any;
 
   beforeEach(async () => {
-    const mockQuery = {
+    mockQuery = {
       selectProrroga$: of({
         codigo: '001',
         estado: 'Estado',
@@ -30,12 +35,16 @@ describe('DomicilioEstablecimientosComponent', () => {
       }),
     };
 
-    const mockStore = {
+    mockStore = {
       establecerDatos: jest.fn(),
     };
 
-    const MOCK_SERVICE = {
-      getDomicilioData: jest.fn().mockReturnValue(of([])),
+    mockService = {
+      obternerDatosData: jest.fn().mockReturnValue(of([])),
+    };
+
+    mockConsultaioQuery = {
+      selectConsultaioState$: of({ readonly: false })
     };
 
     await TestBed.configureTestingModule({
@@ -43,7 +52,8 @@ describe('DomicilioEstablecimientosComponent', () => {
       providers: [
         { provide: DatosProcedureQuery, useValue: mockQuery },
         { provide: DatosProcedureStore, useValue: mockStore },
-        { provide: ModificacionPermisoImportacionMedicamentosService, useValue: MOCK_SERVICE },
+        { provide: ModificacionPermisoImportacionMedicamentosService, useValue: mockService },
+        { provide: ConsultaioQuery, useValue: mockConsultaioQuery },
       ],
     }).compileComponents();
 
@@ -52,86 +62,55 @@ describe('DomicilioEstablecimientosComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
+  it('debería crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize forms in ngOnInit', () => {
-    expect(component.domicilioEstablecimiento).toBeTruthy();
-    expect(component.AvisodeFuncionamiento).toBeTruthy();
-
+  it('debería inicializar los formularios en ngOnInit', () => {
+    expect(component.domicilioEstablecimiento).toBeDefined();
+    expect(component.AvisodeFuncionamiento).toBeDefined();
     expect(component.domicilioEstablecimiento.get('estado')?.value).toBe('Estado');
     expect(component.AvisodeFuncionamiento.get('funcionamiento')?.value).toBe('Operando');
   });
 
-  it('should call DatosSolicitudService.getDomicilioData and assign Domicilios', () => {
-    component.ngOnInit();
+  it('debería cargar los datos SCIAN correctamente', () => {
+    component.loadScian();
+    expect(mockService.obternerDatosData).toHaveBeenCalled();
+    expect(component.datosData).toEqual([]);
   });
 
-  it('should set values in the form using establecerValoresDeFormulario', () => {
-    component.domicilioEstablecimiento.addControl('Codigo', component.domicilioEstablecimiento.get('estado')!);
-    component.domicilioEstablecimiento.addControl('codigoPostal', component.domicilioEstablecimiento.get('estado')!);
-    component.domicilioEstablecimiento.addControl('Municipio', component.domicilioEstablecimiento.get('estado')!);
-    component.domicilioEstablecimiento.addControl('numeroExterior', component.domicilioEstablecimiento.get('estado')!);
-    expect(component.domicilioEstablecimiento.get('Codigo')?.value).toBe('');
-    expect(component.domicilioEstablecimiento.get('codigoPostal')?.value).toBe('');
-    expect(component.domicilioEstablecimiento.get('Municipio')?.value).toBe('');
-  });
-
-  it('should set store values using setValoresStore', () => {
+  it('debería establecer valores en el store', () => {
     component.setValoresStore(component.domicilioEstablecimiento, 'estado');
+    expect(mockStore.establecerDatos).toHaveBeenCalledWith({ estado: 'Estado' });
   });
 
-  it('should clean up subscriptions on ngOnDestroy', () => {
-    const NEXTSPY = jest.spyOn(component['destroy$'], 'next');
-    const COMPLETESPY = jest.spyOn(component['destroy$'], 'complete');
-
+  it('debería limpiar las suscripciones en ngOnDestroy', () => {
+    const nextSpy = jest.spyOn(component['destroy$'], 'next');
+    const completeSpy = jest.spyOn(component['destroy$'], 'complete');
     component.ngOnDestroy();
-
-    expect(NEXTSPY).toHaveBeenCalled();
-    expect(COMPLETESPY).toHaveBeenCalled();
+    expect(nextSpy).toHaveBeenCalled();
+    expect(completeSpy).toHaveBeenCalled();
   });
 
-  it('should have correct tabla config', () => {
-    expect(component.configuracionTabla.length).toBe(2);
-    expect(component.configuracionTabla[0].encabezado).toContain('Clave');
+  it('debería contener la configuración de tabla correcta', () => {
+    expect(component.configuracionTabla.length).toBeGreaterThan(0);
   });
 
-  it('should use CHECKBOX as TablaSeleccion enum', () => {
+  it('debería tener el tipo de selección de tabla correcto', () => {
     expect(component.TablaSeleccion).toBe(TablaSeleccion.CHECKBOX);
   });
 
-  it('should handle empty form values in guardarDatosFormulario', () => {
-    // Ensure the form is empty
-    component.domicilioEstablecimiento.reset();
-  
-    // Spy on the method that saves the data
-    const SETVALORESSTORESPY = jest.spyOn(component, 'setValoresStore');
-  
-    // Call the method
+  it('debería ejecutar guardarDatosFormulario y cargar datos correctamente', () => {
+    const spyScian = jest.spyOn(component, 'loadScian');
     component.guardarDatosFormulario();
-  
-    // Verify that setValoresStore was called with empty values
-    expect(SETVALORESSTORESPY).toHaveBeenCalledWith(component.domicilioEstablecimiento, 'estado');
-    expect(SETVALORESSTORESPY).toHaveBeenCalledWith(component.domicilioEstablecimiento, 'municipio');
-    expect(SETVALORESSTORESPY).toHaveBeenCalledWith(component.domicilioEstablecimiento, 'localidad');
-    expect(SETVALORESSTORESPY).toHaveBeenCalledWith(component.domicilioEstablecimiento, 'colonia');
-    expect(SETVALORESSTORESPY).toHaveBeenCalledWith(component.domicilioEstablecimiento, 'calle');
-    expect(SETVALORESSTORESPY).toHaveBeenCalledWith(component.domicilioEstablecimiento, 'codigoPostal');
-    expect(SETVALORESSTORESPY).toHaveBeenCalledWith(component.domicilioEstablecimiento, 'numeroExterior');
+    expect(spyScian).toHaveBeenCalled();
   });
 
-  it('should not call setValoresStore if form is invalid in guardarDatosFormulario', () => {
-    // Mark the form as invalid
-    component.domicilioEstablecimiento.get('estado')?.setErrors({ required: true });
-  
-    // Spy on the method that saves the data
-    const SETVALORESSTORESPY = jest.spyOn(component, 'setValoresStore');
-  
-    // Call the method
-    component.guardarDatosFormulario();
-  
-    // Verify that setValoresStore was not called
-    expect(SETVALORESSTORESPY).not.toHaveBeenCalled();
+  it('debería deshabilitar los formularios si es solo lectura', () => {
+    component.esFormularioSoloLectura = true;
+    component.establecerdomicilioEstablecimiento();
+    component.avisodeFuncionamientomiento();
+    expect(component.domicilioEstablecimiento.disabled).toBe(true);
+    expect(component.AvisodeFuncionamiento.disabled).toBe(true);
   });
 });

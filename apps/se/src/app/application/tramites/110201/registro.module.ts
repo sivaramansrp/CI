@@ -27,14 +27,14 @@ import { ToastrService } from 'ngx-toastr';
   declarations: [PasoDosComponent,
     PasoTresComponent,
     PasoUnoComponent,
-    SolicitudPageComponent
+    SolicitudPageComponent, AnexarDocumentosComponent,
+
   ],
   imports: [
     CommonModule,
     RegistroRoutingModule,
     CatalogoSelectComponent,
     AlertComponent,
-    AnexarDocumentosComponent,
     TituloComponent,
     FirmaElectronicaComponent,
     SolicitanteComponent,
