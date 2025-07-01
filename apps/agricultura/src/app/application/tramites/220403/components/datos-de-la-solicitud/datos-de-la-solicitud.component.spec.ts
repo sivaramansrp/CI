@@ -1,14 +1,21 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
-import { CommonModule, isPlatformBrowser } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { By } from '@angular/platform-browser';
-import { Observable, of as observableOf, throwError } from 'rxjs';
+import { CUSTOM_ELEMENTS_SCHEMA, Injectable, NO_ERRORS_SCHEMA } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { of as observableOf } from 'rxjs';
 
-import { Component } from '@angular/core';
 import { DatosDeLaSolicitudComponent } from './datos-de-la-solicitud.component';
-import { FormBuilder } from '@angular/forms';
-import { CatalogosService, SeccionLibStore, SeccionLibQuery, TituloComponent, AlertComponent, TablaDinamicaComponent, InputRadioComponent, InputFechaComponent, CatalogoSelectComponent } from '@ng-mf/data-access-user';
+import {
+  CatalogosService,
+  SeccionLibStore,
+  SeccionLibQuery,
+  TituloComponent,
+  AlertComponent,
+  TablaDinamicaComponent,
+  InputRadioComponent,
+  InputFechaComponent,
+  CatalogoSelectComponent,
+} from '@ng-mf/data-access-user';
 import { ExportaccionAcuicolaService } from '../../services/exportaccion-acuicola.service';
 import { Tramite220403Query } from '../../estados/tramite220403.query';
 import { Tramite220403Store } from '../../estados/tramite220403.store';
@@ -17,29 +24,50 @@ import { HttpClientModule } from '@angular/common/http';
 @Injectable()
 class MockExportaccionAcuicolaService {
   getDatos() {
-    return observableOf({});
+    return observableOf([]);
   }
 
   obtenerMenuDesplegable() {
-    return observableOf({});
+    return observableOf([]);
   }
+
+  actualizarFormaValida() {}
 }
 
 @Injectable()
-class MockTramite220403Query {}
+class MockTramite220403Query {
+  setDatosRealizar$ = observableOf({});
+  setCombinacionRequerida$ = observableOf({});
+}
 
 @Injectable()
-class MockTramite220403Store {}
-
+class MockTramite220403Store {
+  setDatosRealizar() {}
+  setCombinacionRequerida() {}
+  setDatosRealizarValidada() {}
+  setCombinacionRequeridaValidada() {}
+}
 
 describe('DatosDeLaSolicitudComponent', () => {
   let fixture: ComponentFixture<DatosDeLaSolicitudComponent>;
-  let component: { ngOnDestroy: () => void; configuracion: string[] | { menu: { 0: { props: { radioOptions: {}; radioSelectedValue: {}; }; }; }; }[]; inicializarFormGroup: jest.Mock<any, any, any> | ((arg0: ({ inputType: {}; props: { validators: {}; campo: {}; disabled: {}; jsonDataFileName: {}; }; value: {}; } | { inputType?: undefined; props?: undefined; value?: undefined; })[], arg1: {}, arg2: {}) => void); seccionQuery: { selectSeccionState$?: any; }; tramite220403Query: { setDatosRealizar$?: any; setCombinacionRequerida$?: any; }; formulario: { get?: any; statusChanges?: any; }; tramite220403store: { setDatosRealizar?: any; setCombinacionRequerida?: any; setDatosRealizarValidada?: any; setCombinacionRequeridaValidada?: any; }; exportaccionAcuicolaServcios: { actualizarFormaValida?: any; getDatos?: any; obtenerMenuDesplegable?: any; }; seccionStore: { establecerSeccion?: any; establecerFormaValida?: any; }; ngOnInit: () => void; fb: { group?: any; control?: any; }; crearFormulario: () => void; obtenerValoresCatalogo: jest.Mock<any, any, any> | ((arg0: {}, arg1: {}, arg2: {}) => void); getRadioData: jest.Mock<any, any, any> | ((arg0: {}, arg1: {}) => void); getValidators: (arg0: {}[]) => void; fechaCambiado: (arg0: {}) => void; seleccionCatalogo: (arg0: {}, arg1: {}) => void; cambioValorRadio: (arg0: {}, arg1: {}, arg2: {}, arg3: {}) => void; destroyNotifier$: { next?: any; complete?: any; }; mostrar_colapsable: () => void; };
+  let component: DatosDeLaSolicitudComponent;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [DatosDeLaSolicitudComponent, TituloComponent, AlertComponent, TablaDinamicaComponent, InputRadioComponent, InputFechaComponent, CatalogoSelectComponent, FormsModule, ReactiveFormsModule, CommonModule, HttpClientModule ],
-      schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
+      imports: [
+        DatosDeLaSolicitudComponent,
+        TituloComponent,
+        AlertComponent,
+        TablaDinamicaComponent,
+        InputRadioComponent,
+        InputFechaComponent,
+        CatalogoSelectComponent,
+        FormsModule,
+        ReactiveFormsModule,
+        CommonModule,
+        HttpClientModule
+      ],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
       providers: [
         FormBuilder,
         CatalogosService,
@@ -49,149 +77,47 @@ describe('DatosDeLaSolicitudComponent', () => {
         SeccionLibStore,
         SeccionLibQuery
       ]
-    }).overrideComponent(DatosDeLaSolicitudComponent, {
-
     }).compileComponents();
+
     fixture = TestBed.createComponent(DatosDeLaSolicitudComponent);
-    component = fixture.debugElement.componentInstance;
+    component = fixture.componentInstance;
   });
 
   afterEach(() => {
-    component.ngOnDestroy = function() {};
+    component.ngOnDestroy();
     fixture.destroy();
   });
 
-  it('should run #constructor()', async () => {
+  it('should create the component', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should run #ngOnInit()', async () => {
-    component.configuracion = component.configuracion || {};
-    component.configuracion = ['configuracion'];
-    component.inicializarFormGroup = jest.fn();
-    component.seccionQuery = component.seccionQuery || {};
-    component.seccionQuery.selectSeccionState$ = observableOf({});
-    component.tramite220403Query = component.tramite220403Query || {};
-    component.tramite220403Query.setDatosRealizar$ = observableOf({});
-    component.tramite220403Query.setCombinacionRequerida$ = observableOf({});
-    component.formulario = component.formulario || {};
-    component.formulario.get = jest.fn().mockReturnValue({
-      valid: {},
-      value: {},
-      patchValue: function() {}
-    });
-    component.formulario.statusChanges = observableOf({});
-    component.tramite220403store = component.tramite220403store || {};
-    component.tramite220403store.setDatosRealizar = jest.fn();
-    component.tramite220403store.setCombinacionRequerida = jest.fn();
-    component.tramite220403store.setDatosRealizarValidada = jest.fn();
-    component.tramite220403store.setCombinacionRequeridaValidada = jest.fn();
-    component.exportaccionAcuicolaServcios = component.exportaccionAcuicolaServcios || {};
-    component.exportaccionAcuicolaServcios.actualizarFormaValida = jest.fn();
-    component.seccionStore = component.seccionStore || {};
-    component.seccionStore.establecerSeccion = jest.fn();
-    component.seccionStore.establecerFormaValida = jest.fn();
-    component.ngOnInit();
+  it('should disable the form when esFormularioSoloLectura is true', () => {
+    component.formulario = new FormBuilder().group({ test: [''] });
+    component.esFormularioSoloLectura = true;
+    const disableSpy = jest.spyOn(component.formulario, 'disable');
+    component.inicializarEstadoFormulario();
+    expect(disableSpy).toHaveBeenCalled();
   });
 
-  it('should run #crearFormulario()', async () => {
-    component.fb = component.fb || {};
-    component.fb.group = jest.fn();
-    component.crearFormulario();
+  it('should update radioSelectedValue in cambioValorRadio', () => {
+    component.configuracion = [
+      {
+        menu: [
+          { props: { radioSelectedValue: '' } }
+        ]
+      } as any
+    ];
+    component.cambioValorRadio('clave', 0, 0, 'nuevoValor');
+    expect(component.configuracion[0].menu[0].props.radioSelectedValue).toBe('nuevoValor');
   });
 
-  it('should run #inicializarFormGroup()', async () => {
-    component.formulario = component.formulario || {};
-    component.formulario.get = jest.fn().mockReturnValue({
-      addControl: function() {}
-    });
-    component.fb = component.fb || {};
-    component.fb.control = jest.fn();
-    component.obtenerValoresCatalogo = jest.fn();
-    component.getRadioData = jest.fn();
-    component.configuracion = component.configuracion || {};
-    component.configuracion[0] = {
-      menu: {
-        0: {
-          props: {
-            radioOptions: {},
-            radioSelectedValue: {}
-          }
-        }
-      }
-    };
-    component.inicializarFormGroup([{
-      inputType: {},
-      props: {
-        validators: [],
-        campo: {},
-        disabled: {},
-        jsonDataFileName: {}
-      },
-      value: {}
-    }, {
-      inputType: {},
-      props: {
-        validators: [],
-        campo: {},
-        disabled: {},
-        jsonDataFileName: {}
-      },
-      value: {}
-    }], {}, {});
+  it('should return correct validators from getValidators', () => {
+    const validators = DatosDeLaSolicitudComponent.getValidators([
+      'required',
+      'maxLength:10',
+      'pattern:^[a-zA-Z]+$'
+    ]);
+    expect(validators.length).toBe(3);
   });
-
-  it('should run #getRadioData()', async () => {
-    component.exportaccionAcuicolaServcios = component.exportaccionAcuicolaServcios || {};
-    component.exportaccionAcuicolaServcios.getDatos = jest.fn().mockReturnValue(observableOf({}));
-    component.getRadioData({}, {});
-  });
-
-  it('should run #obtenerValoresCatalogo()', async () => {
-    component.exportaccionAcuicolaServcios = component.exportaccionAcuicolaServcios || {};
-    component.exportaccionAcuicolaServcios.obtenerMenuDesplegable = jest.fn().mockReturnValue(observableOf({}));
-    component.configuracion = component.configuracion || {};
-    if (Array.isArray(component.configuracion) && typeof component.configuracion[0] !== 'string') {
-      component.configuracion[0] = {
-        ...component.configuracion[0],
-        menu: {
-          0: {
-            props: {
-              radioOptions: {},
-              radioSelectedValue: {}
-            }
-          }
-        }
-      };
-    }
-    component.obtenerValoresCatalogo({}, {}, {});
-  });
-
-  it('should run #fechaCambiado()', async () => {
-
-    component.fechaCambiado({});
-
-  });
-
-  it('should run #seleccionCatalogo()', async () => {
-    component.formulario = component.formulario || {};
-    component.formulario.get = jest.fn().mockReturnValue({
-      setValue: function() {}
-    });
-    component.seleccionCatalogo({}, {});
-  });
-
-  it('should run #ngOnDestroy()', async () => {
-    component.destroyNotifier$ = component.destroyNotifier$ || {};
-    component.destroyNotifier$.next = jest.fn();
-    component.destroyNotifier$.complete = jest.fn();
-    component.ngOnDestroy();
-  });
-
-  it('should run #mostrar_colapsable()', async () => {
-
-    component.mostrar_colapsable();
-
-  });
-
 });
