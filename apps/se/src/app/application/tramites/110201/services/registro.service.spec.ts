@@ -219,4 +219,14 @@ describe('RegistroService', () => {
     service.getRegistroTomaMuestrasMercanciasData().subscribe();
     expect(httpMock.get).toHaveBeenCalledWith('assets/json/110201/registro_toma_muestras_mercancias.json');
   });
+
+  it('should handle error in getRegistroTomaMuestrasMercanciasData', () => {
+  httpMock.get.mockReturnValue(throwError(() => new Error('fail')));
+  service.getRegistroTomaMuestrasMercanciasData().subscribe({
+    error: (err) => {
+      expect(err).toBeInstanceOf(Error);
+      expect(err.message).toBe('fail');
+    }
+  });
+});
 });

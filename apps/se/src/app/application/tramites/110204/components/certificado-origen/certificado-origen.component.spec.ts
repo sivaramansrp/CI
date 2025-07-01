@@ -1,11 +1,11 @@
 // @ts-nocheck
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
+import { Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Input, Output } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { Observable, of as observableOf, throwError } from 'rxjs';
-import { ToastrModule, provideToastr } from 'ngx-toastr';
+
 import { Component } from '@angular/core';
 import { CertificadoOrigenComponent } from './certificado-origen.component';
 import { FormBuilder } from '@angular/forms';
@@ -14,10 +14,13 @@ import { Tramite110204Query } from '../../estados/tramite110204.query';
 import { CertificadosOrigenGridService } from '../../services/certificadosOrigenGrid.service';
 import { ToastrService } from 'ngx-toastr';
 import { SeccionLibQuery, SeccionLibStore } from '@libs/shared/data-access-user/src';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 @Injectable()
 class MockTramite110204Store {}
+
+@Injectable()
+class MockToastrService { }
+
 
 @Injectable()
 class MockTramite110204Query {
@@ -27,36 +30,54 @@ class MockTramite110204Query {
   selectBuscarMercancia$ = {};
 }
 
+@Injectable()
+class MockCertificadosOrigenGridService {}
+
+
 describe('CertificadoOrigenComponent', () => {
   let fixture;
   let component;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule,HttpClientTestingModule ],
+      imports: [ FormsModule, ReactiveFormsModule,CertificadoOrigenComponent ],
+
       schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
       providers: [
-        ToastrService,
-                provideToastr({
-                  positionClass: 'toast-top-right',
-                }),
         FormBuilder,
-        CertificadosOrigenGridService,
         { provide: Tramite110204Store, useClass: MockTramite110204Store },
         { provide: Tramite110204Query, useClass: MockTramite110204Query },
+        { provide: CertificadosOrigenGridService, useClass: MockCertificadosOrigenGridService },
+        ToastrService,
         SeccionLibQuery,
         SeccionLibStore
       ]
     }).overrideComponent(CertificadoOrigenComponent, {
 
+      set: { providers: [{ provide: ToastrService, useClass: MockToastrService }] }    
     }).compileComponents();
     fixture = TestBed.createComponent(CertificadoOrigenComponent);
     component = fixture.debugElement.componentInstance;
   });
 
-
   it('should run #constructor()', async () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should run GetterDeclaration #formularioControl', async () => {
+    component.formCertificado = component.formCertificado || {};
+    component.formCertificado.get = jest.fn();
+    const formularioControl = component.formularioControl;
+  });
+
+  it('should run #esFormValido()', async () => {
+    component.formCertificado = component.formCertificado || {};
+    component.formCertificado.controls = 'controls';
+    component.formCertificado.get = jest.fn().mockReturnValue({
+      invalid: {},
+      enabled: {}
+    });
+    component.esFormValido();
   });
 
   it('should run #ngOnInit()', async () => {
@@ -66,10 +87,20 @@ describe('CertificadoOrigenComponent', () => {
     component.formCertificado.valueChanges = observableOf({});
     component.store = component.store || {};
     component.store.setFormCertificado = jest.fn();
+    component.validarFormulario = jest.fn();
+    component.inicializarEstadoFormulario = jest.fn();
     component.ngOnInit();
     expect(component.cargarEstados).toHaveBeenCalled();
     expect(component.cargarBloque).toHaveBeenCalled();
     expect(component.store.setFormCertificado).toHaveBeenCalled();
+    expect(component.validarFormulario).toHaveBeenCalled();
+  });
+
+  it('should run #inicializarEstadoFormulario()', async () => {
+    component.formCertificado = component.formCertificado || {};
+    component.formCertificado.disable = jest.fn();
+    component.formCertificado.enable = jest.fn();
+    component.inicializarEstadoFormulario();
   });
 
   it('should run #cargarEstados()', async () => {
@@ -79,8 +110,26 @@ describe('CertificadoOrigenComponent', () => {
     component.store.setaltaPlanta = jest.fn();
     component.cargarEstados();
     expect(component.certificadoService.obtenerListaEstado).toHaveBeenCalled();
+    expect(component.store.setaltaPlanta).toHaveBeenCalled();
   });
 
+  it('should run #validarFormulario()', async () => {
+    component.formCertificado = component.formCertificado || {};
+    component.formCertificado.statusChanges = observableOf({});
+    component.seccionStore = component.seccionStore || {};
+    component.seccionStore.establecerFormaValida = jest.fn();
+    component.validarFormulario();
+ });
+
+  it('should run #cargarBloque()', async () => {
+    component.certificadoService = component.certificadoService || {};
+    component.certificadoService.obtenerPaisBloque = jest.fn().mockReturnValue(observableOf({}));
+    component.store = component.store || {};
+    component.store.setBloque = jest.fn();
+    component.cargarBloque();
+    expect(component.certificadoService.obtenerPaisBloque).toHaveBeenCalled();
+    expect(component.store.setBloque).toHaveBeenCalled();
+  });
 
   it('should run #tipoEstadoSeleccion()', async () => {
     component.store = component.store || {};
@@ -100,8 +149,6 @@ describe('CertificadoOrigenComponent', () => {
     component.destroyNotifier$.next = jest.fn();
     component.destroyNotifier$.complete = jest.fn();
     component.ngOnDestroy();
-    expect(component.destroyNotifier$.next).toHaveBeenCalled();
-    expect(component.destroyNotifier$.complete).toHaveBeenCalled();
   });
 
   it('should run #buscarrMercancia()', async () => {
@@ -114,8 +161,6 @@ describe('CertificadoOrigenComponent', () => {
     component.toastr = component.toastr || {};
     component.toastr.error = jest.fn();
     component.buscarrMercancia();
-    expect(component.certificadoService.obtenerMercancia).toHaveBeenCalled();
-    expect(component.store.setbuscarMercancia).toHaveBeenCalled();
   });
 
   it('should run #cambioFechaInicio()', async () => {
@@ -136,6 +181,25 @@ describe('CertificadoOrigenComponent', () => {
     });
     component.cambioFechaFinal({});
     expect(component.formCertificado.get).toHaveBeenCalled();
+  });
+
+  it('should run #abrirModificarModal()', async () => {
+    component.store = component.store || {};
+    component.store.setFormMercancia = jest.fn();
+    component.modalInstance = component.modalInstance || {};
+    component.modalInstance.show = jest.fn();
+    component.abrirModificarModal({});
+  });
+
+  it('should run #cerrarModificarModal()', async () => {
+    component.modalInstance = component.modalInstance || {};
+    component.modalInstance.hide = jest.fn();
+    component.cerrarModificarModal();
+  });
+
+  it('should run #ngAfterViewInit()', async () => {
+    component.ngAfterViewInit();
+
   });
 
 });

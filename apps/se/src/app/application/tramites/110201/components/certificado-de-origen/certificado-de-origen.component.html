@@ -14,7 +14,6 @@
               [required]="true"
               id="tratado"
               formControlName="tratado"
-              [isDisabled]="soloLectura"
               (change)="
                 setValoresStore(validacionForm, 'tratado', 'setTratado')
               "
@@ -27,7 +26,6 @@
               [required]="true"
               id="pais"
               formControlName="pais"
-              [isDisabled]="soloLectura"
               (change)="setValoresStore(validacionForm, 'pais', 'setPais')"
             ></app-catalogo-select>
           </div>
@@ -40,7 +38,6 @@
               required="true"
               class="form-control"
               formControlName="fraccionArancelaria"
-              [disabled]="soloLectura"
               (change)="
                 setValoresStore(
                   validacionForm,
@@ -57,7 +54,6 @@
               required="true"
               class="form-control"
               formControlName="numeroRegistro"
-              [disabled]="soloLectura"
               (change)="
                 setValoresStore(
                   validacionForm,
@@ -74,7 +70,6 @@
               required="true"
               class="form-control"
               formControlName="nombreComercial"
-              [disabled]="soloLectura"
               (change)="
                 setValoresStore(
                   validacionForm,
@@ -94,14 +89,14 @@
               [setFecha]="
                 registroForm.get('validacionForm.fechaInicial')?.value
               "
-              [datos]="fechaInicialInput" [isDisabled]="soloLectura"
+              [datos]="fechaInicialInput" 
               (valorCambiado)="cambioFechaInicial($event)"
             ></input-fecha>
           </div>
           <div class="col-md-4">
             <input-fecha
               [setFecha]="registroForm.get('validacionForm.fechaFinal')?.value"
-              [datos]="fechaFinalInput" [isDisabled]="soloLectura"
+              [datos]="fechaFinalInput" 
               (valorCambiado)="cambioFechaFinal($event)"
             ></input-fecha>
           </div>
@@ -110,7 +105,7 @@
           <button
             type="button"
             class="btn btn-primary ms-3"
-            (click)="buscarMercancias()" [disabled]="soloLectura"
+            (click)="buscarMercancias()" 
           >
             Buscar mercancías
           </button>
@@ -149,7 +144,7 @@
         <button
           type="button"
           class="btn btn-primary ms-3"
-          (click)="cargaArchivo()" [disabled]="soloLectura"
+          (click)="cargaArchivo()" 
         >
           Carga por archivo
         </button>
@@ -178,13 +173,13 @@
             <div class="pull-right">
               <button
                 type="button"
-                class="btn btn-default" [disabled]="soloLectura"
+                class="btn btn-default" 
                 (click)="cerrarAdjuntarArchivoMercancias()"
               >
                 Cerrar
               </button>
               <button
-                type="submit" [disabled]="soloLectura"
+                type="submit" 
                 class="btn btn-primary"
                 (click)="darError()"
               >
@@ -224,11 +219,11 @@
           class="col-md-12 mt-5 d-flex justify-content-end"
           *ngIf="esMercanciaEnEdicion"
         >
-          <button type="button" class="btn btn-default ms-3" [disabled]="soloLectura">Eliminar</button>
+          <button type="button" class="btn btn-default ms-3" >Eliminar</button>
           <button
             type="button"
             class="btn btn-primary ms-3"
-            (click)="modificar()" [disabled]="soloLectura"
+            (click)="modificar()" 
           >
             Modificar
           </button>
@@ -267,7 +262,7 @@
             type="text"
             required="true"
             class="form-control grisColor"
-            readonly [disabled]="soloLectura"
+            readonly 
             formControlName="fraccionMercanciaArancelaria"
             (change)="
               setValoresStore(
@@ -285,7 +280,7 @@
           <input
             type="text"
             required="true"
-            class="form-control grisColor" [disabled]="soloLectura"
+            class="form-control grisColor" 
             formControlName="nombreComercialDelaMercancia"
             readonly
             (change)="
@@ -305,7 +300,7 @@
             type="text"
             required="true"
             class="form-control grisColor"
-            formControlName="nombreTecnico" [disabled]="soloLectura"
+            formControlName="nombreTecnico" 
             readonly
             (change)="
               setValoresStore(
@@ -324,7 +319,7 @@
             type="text"
             required="true"
             class="form-control grisColor"
-            formControlName="nombreEnIngles" [disabled]="soloLectura"
+            formControlName="nombreEnIngles"
             readonly
             (change)="
               setValoresStore(
@@ -341,7 +336,7 @@
             type="text"
             required="true"
             class="form-control grisColor"
-            formControlName="criterioParaConferir" [disabled]="soloLectura"
+            formControlName="criterioParaConferir"
             readonly
             (change)="
               setValoresStore(
@@ -360,7 +355,7 @@
             type="text"
             required="true"
             class="form-control"
-            formControlName="marca" [disabled]="soloLectura"
+            formControlName="marca" 
             (change)="
               setValoresStore(validacionMercanciaForm, 'marca', 'setmarca')
             "
@@ -372,7 +367,7 @@
             type="number"
             required="true"
             class="form-control"
-            formControlName="cantidad" [disabled]="soloLectura"
+            formControlName="cantidad"
             (change)="
               setValoresStore(
                 validacionMercanciaForm,
@@ -394,7 +389,7 @@
             [required]="true"
             [tooltipQuestionCircle]="true"
             id="umc"
-            formControlName="umc" [isDisabled]="soloLectura"
+            formControlName="umc"
             (change)="setValoresStore(validacionMercanciaForm, 'umc', 'setUMC')"
           ></app-catalogo-select>
         </div>
@@ -405,7 +400,7 @@
           <input
             type="text"
             required="true"
-            class="form-control" [disabled]="soloLectura"
+            class="form-control" 
             formControlName="valorDelaMercancia"
             (change)="
               setValoresStore(
@@ -420,7 +415,7 @@
           <label>Complemento de la descripción*:</label>
           <textarea
             cols="80"
-            rows="3" [disabled]="soloLectura"
+            rows="3" 
             formControlName="complementoDelaDescripcion"
             (change)="
               setValoresStore(
@@ -438,7 +433,7 @@
           <input
             type="text"
             required="true"
-            class="form-control" [disabled]="soloLectura"
+            class="form-control" 
             formControlName="masaBruta"
             (change)="
               setValoresStore(
@@ -454,7 +449,7 @@
             [catalogo]="optionsUnidadMedida"
             [label]="'Unidad de medida de la masa bruta'"
             [required]="true"
-            id="unidadMedida" [isDisabled]="soloLectura"
+            id="unidadMedida" 
             formControlName="unidadMedida"
             (change)="
               setValoresStore(
@@ -480,7 +475,7 @@
             type="text"
             required="true"
             class="form-control"
-            formControlName="numeroFactura" [disabled]="soloLectura"
+            formControlName="numeroFactura" 
             (change)="
               setValoresStore(
                 validacionMercanciaForm,
@@ -496,7 +491,7 @@
             [label]="'Tipo de factura'"
             [required]="true"
             id="tipoFactura"
-            formControlName="tipoFactura" [isDisabled]="soloLectura"
+            formControlName="tipoFactura" 
             (change)="
               setValoresStore(
                 validacionMercanciaForm,
@@ -508,8 +503,8 @@
         </div>
       </div>
       <div class="col-md-12 mt-5 d-flex justify-content-end">
-        <button type="button" class="btn btn-default ms-3" [disabled]="soloLectura">Cancelar</button>
-        <button type="button" class="btn btn-primary ms-3" (click)="agregar()" [disabled]="soloLectura">
+        <button type="button" class="btn btn-default ms-3" >Cancelar</button>
+        <button type="button" class="btn btn-primary ms-3" (click)="agregar()">
           Agregar
         </button>
       </div>

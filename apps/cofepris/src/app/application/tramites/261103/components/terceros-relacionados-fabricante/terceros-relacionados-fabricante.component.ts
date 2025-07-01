@@ -4,14 +4,18 @@ import {
   Fabricante,
   LASTABLA,
   Otros,
-  TablaSeleccion,
-  TituloComponent,
+  TablaSeleccion
 } from '@libs/shared/data-access-user/src';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { ConsultaioQuery } from "@ng-mf/data-access-user";
+import { DatosProcedureQuery } from '../../../../estados/queries/tramites261103.query';
+import { DatosProcedureState } from '../../../../estados/tramites/tramites261103.store';
 import { FABRICANTE_TABLA } from '../../../../shared/constantes/terceros-relacionados-fabricante.enum';
 import { OTROS_TABLA } from '../../../../shared/constantes/terceros-relacionados-fabricante.enum';
 import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
+
 
 
 /**
@@ -23,19 +27,35 @@ import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src/tramit
   standalone: true,
   imports: [
     CommonModule,
-    TituloComponent,
     AlertComponent,
     TablaDinamicaComponent,
   ],
   templateUrl: './terceros-relacionados-fabricante.component.html',
   styleUrl: './terceros-relacionados-fabricante.component.scss',
 })
-export class TercerosRelacionadosFabricanteComponent {
+export class TercerosRelacionadosFabricanteComponent implements OnInit, OnDestroy{
+  /**
+  * Estado seleccionado del trámite 261103
+  * Contiene los datos actuales del trámite seleccionados desde el store.
+  */ 
+  estadoSeleccionado!: DatosProcedureState;
+
+  /**
+   * Notificador para destruir observables activos.
+   */
+  private destroyed$ = new Subject<void>();
+
+  /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  esFormularioSoloLectura: boolean = false;
   /**
    * Un arreglo que contiene los datos de los fabricantes (Fabricante).
    * Esto se utiliza para gestionar y mostrar información relacionada con los fabricantes
    * en el contexto de la aplicación.
    */
+   
   public fabricanteTablaDatos: Fabricante[] = [];
 
   /**
@@ -119,6 +139,32 @@ export class TercerosRelacionadosFabricanteComponent {
   public configuracionOtrosTabla: ConfiguracionColumna<Otros>[] =
     TercerosRelacionadosFabricanteComponent.generateConfiguracionTabla(this.configuracionOtros);
 
+    constructor(
+      private datosProcedureQuery : DatosProcedureQuery,
+      private consultaioQuery: ConsultaioQuery) {
+      this.consultaioQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.destroyed$),
+      map((seccionState) => {
+        this.esFormularioSoloLectura = seccionState.readonly;
+      })
+    )
+    .subscribe();
+    }
+
+    /**
+   * Método del ciclo de vida que se ejecuta al inicializar el componente.
+   * Inicializa el formulario y obtiene datos de catálogos.
+   */
+  ngOnInit(): void {
+    this.datosProcedureQuery.selectSeccionState$
+    .pipe(takeUntil(this.destroyed$))
+    .subscribe((estado: DatosProcedureState) => {
+      this.estadoSeleccionado = estado;
+    });
+  }
+
+
   /**
    * Genera un arreglo de configuración para una tabla basado en el arreglo de datos proporcionado.
    *
@@ -141,4 +187,14 @@ export class TercerosRelacionadosFabricanteComponent {
       orden: index + 1,
     }));
   }
+
+  /**
+  * Método del ciclo de vida de Angular que se llama cuando el componente se destruye.
+  * Este método completa el observable destroyNotifier$ para cancelar las suscripciones activas.
+  */
+  ngOnDestroy(): void {
+    this.destroyed$.next();
+    this.destroyed$.complete();
+  }
+  
 }

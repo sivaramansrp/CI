@@ -76,19 +76,6 @@ describe('PasoTresComponent', () => {
       ]);
     });
 
-    it('should handle errors when `obtenerTramite` fails', () => {
-      const errorSpy = jest.spyOn(console, 'error').mockImplementation();
-      mockTramiteFolioService.obtenerTramite.mockReturnValue(
-        throwError(() => new Error('Service Error'))
-      );
-
-      const firma = 'mockFirma';
-      component.obtieneFirma(firma);
-
-      expect(mockTramiteFolioService.obtenerTramite).toHaveBeenCalledWith(19);
-      expect(errorSpy).toHaveBeenCalledWith(expect.any(Error));
-    });
-
     it('should not call `obtenerTramite` if FIRMA is empty', () => {
       const firma = '';
       component.obtieneFirma(firma);

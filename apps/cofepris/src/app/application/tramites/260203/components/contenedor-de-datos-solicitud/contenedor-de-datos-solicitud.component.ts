@@ -21,6 +21,19 @@ import { DatosDeLaSolicitudComponent } from '../../../../shared/components/datos
 import { Subject } from 'rxjs';
 import { Tramite260203Query } from '../../estados/queries/tramite260203Query.query';
 
+/**
+ * Decorador de componente de Angular que define las propiedades y configuraciones
+ * del componente `ContenedorDeDatosSolicitudComponent`.
+ *
+ * Este componente es parte del módulo de trámites y se utiliza para gestionar
+ * la visualización y manipulación de datos relacionados con la solicitud del trámite 260203.
+ *
+ * @selector `app-contenedor-de-datos-solicitud` - Selector utilizado para instanciar este componente en una plantilla HTML.
+ * @standalone `true` - Indica que este componente es independiente y no requiere un módulo específico para ser utilizado.
+ * @imports `[CommonModule, DatosDeLaSolicitudComponent]` - Módulos y componentes importados que son necesarios para el funcionamiento de este componente.
+ * @templateUrl `./contenedor-de-datos-solicitud.component.html` - Ruta del archivo HTML que define la estructura visual del componente.
+ * @styleUrl `./contenedor-de-datos-solicitud.component.scss` - Ruta del archivo SCSS que contiene los estilos específicos del componente.
+ */
 @Component({
   selector: 'app-contenedor-de-datos-solicitud',
   standalone: true,

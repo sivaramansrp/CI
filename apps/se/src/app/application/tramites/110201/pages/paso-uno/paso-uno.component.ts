@@ -21,7 +21,7 @@ export class PasoUnoComponent implements OnInit,OnDestroy {
    * Catálogo de entidades federativas.
    */
   entidadFederativa!: { data: string } | null;
-   /**
+  /**
    * Tipo de persona seleccionada.
    */
   tipoPersona!: number;
@@ -43,7 +43,7 @@ export class PasoUnoComponent implements OnInit,OnDestroy {
  /**
    * Subject para notificar la destrucción del componente y cancelar suscripciones.
    */
-  private destroyNotifier$: Subject<void> = new Subject();
+  public destroyNotifier$: Subject<void> = new Subject();
 
   /**
    * Estado de la consulta obtenido desde el store.
@@ -67,23 +67,26 @@ export class PasoUnoComponent implements OnInit,OnDestroy {
    * Obtiene el catálogo de entidades federativas y lo procesa.
    */
   ngOnInit(): void {
-    this.consultaQuery.selectConsultaioState$.pipe(
-      takeUntil(this.destroyNotifier$),
-      map((seccionState) => {
-        this.consultaState = seccionState;
-      })
-    ).subscribe();
-    if (this.consultaState.update) {
-      this.guardarDatosFormularios();
-    } else {
-      this.esDatosRespuesta = true;
-    }
-
     this.registro.getCatalogoById(21).subscribe((resp) => {
       this.entidadFederativa = resp;
       const DATA = JSON.parse(this.entidadFederativa.data);
       this.entidadFederativa = DATA?.domicilioFiscal?.entidadFederativa;
     });
+
+     this.consultaQuery.selectConsultaioState$.pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState) => {
+        this.consultaState = seccionState;
+      })
+    ).subscribe();
+
+    Promise.resolve().then(() => {
+    if (this.consultaState.update) {
+      this.guardarDatosFormularios();
+    } else {
+      this.esDatosRespuesta = true;
+    }
+  });
   }
 /**
    * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
@@ -101,7 +104,6 @@ export class PasoUnoComponent implements OnInit,OnDestroy {
         }
       });
   }
- 
   /**
    * Selecciona una pestaña del asistente.
    * @param i Índice de la pestaña a seleccionar.

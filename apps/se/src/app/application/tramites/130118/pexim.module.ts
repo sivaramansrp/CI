@@ -4,7 +4,7 @@ import { RouterModule } from '@angular/router';
 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
-import { AlertComponent, AnexarDocumentosComponent, BtnContinuarComponent, CatalogoSelectComponent, CrosslistComponent, FirmaElectronicaComponent, InputCheckComponent, InputFechaComponent, InputHoraComponent, SelectPaisesComponent, SharedModule, SolicitanteComponent, TituloComponent, WizardComponent } from '@ng-mf/data-access-user';
+import { AlertComponent, BtnContinuarComponent, CatalogoSelectComponent, CrosslistComponent, FirmaElectronicaComponent, InputCheckComponent, InputFechaComponent, InputHoraComponent, SelectPaisesComponent, SharedModule, SolicitanteComponent, TituloComponent, WizardComponent } from '@ng-mf/data-access-user';
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
@@ -20,6 +20,7 @@ import { ToastrService } from 'ngx-toastr';
     PasoTresComponent,
     SolicitudPageComponent,
     SolicitudComponent,
+    
   ],
   imports: [
     CommonModule,
@@ -38,7 +39,7 @@ import { ToastrService } from 'ngx-toastr';
     TituloComponent,
     SelectPaisesComponent,
     FirmaElectronicaComponent,
-    AnexarDocumentosComponent,
+    
     AlertComponent,
     CatalogoSelectComponent
   ],

@@ -11,11 +11,16 @@
  * // Inyección en un componente
  * constructor(private permisoImmexDatosService: PermisoImmexDatosService) {}
  */
-import { ImmexRegistroState, ImmexRegistroStore } from '../../estados/tramites/tramite80203.store';
-import { ImmexTablaJson, immexRegistroform } from '../../modelos/immex-registro-de-solicitud-modality.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+
+import {
+  ImmexRegistroState,
+  ImmexRegistroStore,
+} from '../../estados/tramites/tramite80203.store';
+import { immexRegistroform } from '../../modelos/immex-registro-de-solicitud-modality.model';
+
 
 @Injectable({
   providedIn: 'root'

@@ -7,7 +7,7 @@
         <input
           type="text"
           class="form-control"
-          formControlName="nombre" [disabled]="soloLectura"
+          formControlName="nombre" 
           (change)="setValoresStore(validacionForm, 'nombre', 'setNombre')"
         />
       </div>
@@ -17,7 +17,7 @@
           type="text"
           class="form-control"
           id="primerApellido"
-          formControlName="apellidoPrimer" [disabled]="soloLectura"
+          formControlName="apellidoPrimer"
           (click)="onClick()"
           (change)=" setValoresStore(validacionForm,'apellidoPrimer','setApellidoPrimer')"/>
       </div>
@@ -27,7 +27,7 @@
           type="text"
           class="form-control"
           id="segundoApellido"
-          formControlName="apellidoSegundo" [disabled]="soloLectura"
+          formControlName="apellidoSegundo"
           (change)="setValoresStore( validacionForm, 'apellidoSegundo','setApellidoSegundo')"/>
       </div>
     </div>
@@ -38,7 +38,7 @@
           type="text"
           class="form-control"
           id="denominacion"
-          formControlName="numeroFiscal" [disabled]="soloLectura"
+          formControlName="numeroFiscal" 
           (change)="
             setValoresStore(validacionForm, 'numeroFiscal', 'setNumeroFiscal')
           "
@@ -52,7 +52,7 @@
           [ngClass]="{'gray-class': registroForm.get('validacionForm.apellidoPrimer')?.value !== ''}"
           id="denominacion"
           [readonly]="registroForm.get('validacionForm.apellidoPrimer')?.value !== ''"
-          formControlName="razonSocial" [disabled]="soloLectura"
+          formControlName="razonSocial" 
           (change)="setValoresStore(validacionForm, 'razonSocial', 'setRazonSocial')"/>
       </div>
     </div>
@@ -64,7 +64,7 @@
           type="text"
           class="form-control"
           id="denominacion"
-          formControlName="ciudad" [disabled]="soloLectura"
+          formControlName="ciudad" 
           (change)="setValoresStore(validacionForm, 'ciudad', 'setCiudad')"
         />
       </div>
@@ -76,7 +76,7 @@
           type="text"
           class="form-control"
           id="nombre"
-          formControlName="calle" [disabled]="soloLectura"
+          formControlName="calle" 
           (change)="setValoresStore(validacionForm, 'calle', 'setCalle')"
         />
       </div>
@@ -86,7 +86,7 @@
           type="text"
           class="form-control"
           id="primerApellido"
-          formControlName="numeroLetra" [disabled]="soloLectura"
+          formControlName="numeroLetra" 
           (change)="
             setValoresStore(validacionForm, 'numeroLetra', 'setNumeroLetra')
           "
@@ -98,7 +98,7 @@
           type="text"
           class="form-control"
           id="segundoApellido"
-          formControlName="lada" [disabled]="soloLectura"
+          formControlName="lada"
           (change)="setValoresStore(validacionForm, 'lada', 'setLada')"
         />
       </div>
@@ -108,7 +108,7 @@
           type="text"
           class="form-control"
           id="segundoApellido"
-          formControlName="telefono" [disabled]="soloLectura"
+          formControlName="telefono" 
           (change)="setValoresStore(validacionForm, 'telefono', 'setTelefono')"
         />
       </div>
@@ -120,7 +120,7 @@
           type="text"
           class="form-control"
           id="nombre"
-          formControlName="fax" [disabled]="soloLectura"
+          formControlName="fax" 
           (change)="setValoresStore(validacionForm, 'fax', 'setFax')"
         />
       </div>
@@ -135,7 +135,7 @@
           type="text"
           class="form-control"
           id="primerApellido"
-          formControlName="correoElectronico" [disabled]="soloLectura"
+          formControlName="correoElectronico"
           (change)="
             setValoresStore(
               validacionForm,
@@ -153,7 +153,7 @@
           [label]="'País destino'"
           [id]="'nacion'"
           formControlName="nacion"
-          [required]="true" [isDisabled]="soloLectura"
+          [required]="true" 
           (change)="setValoresStore(validacionForm, 'nacion', 'setNacion')"
         ></app-catalogo-select>
       </div>
@@ -165,7 +165,7 @@
         [catalogo]="option" [id]="'transporte'"
         [label]="'Medio de transporte'" 
         formControlName="transporte"
-        [required]="true" [isDisabled]="soloLectura"
+        [required]="true"
         (change)="setValoresStore(validacionForm, 'transporte', 'setTransporte')
         "
       ></app-catalogo-select>

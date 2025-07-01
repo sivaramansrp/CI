@@ -6,11 +6,16 @@ import { Tramite260205Store } from '../../estados/stores/tramite260205.store';
 
 /**
  * @component AgregarFacturadorContenedoraComponent
- * @description Componente contenedor que utiliza el componente `AgregarFacturadorComponent` 
- * para gestionar la funcionalidad relacionada con los facturadores. 
- * Este componente interactúa con el estado del trámite a través del store `Tramite260205Store`.
+ * @description Componente que actúa como contenedor para la funcionalidad de agregar facturadores. 
+ * Este componente utiliza el store `Tramite260205Store` para gestionar el estado del trámite 
+ * y delega la funcionalidad de actualización de datos de facturadores.
+ *
+ * @selector app-agregar-facturador-contenedora
+ * @standalone true
+ * @imports CommonModule, AgregarFacturadorComponent
+ * @templateUrl ./agregar-facturador-contenedora.component.html
+ * @styleUrl ./agregar-facturador-contenedora.component.scss
  */
-
 @Component({
   selector: 'app-agregar-facturador-contenedora',
   standalone: true,

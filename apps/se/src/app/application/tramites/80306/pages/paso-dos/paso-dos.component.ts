@@ -45,12 +45,6 @@ export class PasoDosComponent implements OnInit, OnDestroy {
    */
   catalogoDocumentos: Catalogo[] = [];
 
-  /**
-   * Lista de documentos seleccionados por el usuario.
-   * Esta propiedad almacena los documentos que han sido marcados
-   * como seleccionados en el flujo actual de la aplicación.
-   */
-  documentosSeleccionados = documentList.documentosSeleccionados;
 
   /**
    * @private
