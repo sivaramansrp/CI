@@ -23,7 +23,8 @@ describe('MedioTransporteComponent', () => {
       setMostrarAgregarMercancia: jest.fn(),
       setEsSolicitudFerros: jest.fn(),
       setIdentificacionTransporte: jest.fn(),
-      setTotalGuias: jest.fn()
+      setTotalGuias: jest.fn(),
+      setMercanciaTablaDatos: jest.fn()
     };
 
     queryMock = {
@@ -32,7 +33,8 @@ describe('MedioTransporteComponent', () => {
         identificacionTransporte: 'ABC123',
         esSolicitudFerros: '1',
         totalGuias: '5',
-        mostrarAgregarMercancia: true
+        mostrarAgregarMercancia: true,
+        mercanciaTablaDatos: []
       })
     };    
 

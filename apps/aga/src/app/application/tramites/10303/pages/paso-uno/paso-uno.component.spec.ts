@@ -14,7 +14,7 @@ describe('PasoUnoComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({ 
       declarations: [PasoUnoComponent],
-      imports: [CommonModule, SolicitanteComponent, AlertComponent],
+      imports: [CommonModule, SolicitanteComponent, AlertComponent, HttpClientTestingModule],
       providers: [SolicitanteService, HttpClientTestingModule, HttpClient],
       schemas: [NO_ERRORS_SCHEMA]
     }).compileComponents();

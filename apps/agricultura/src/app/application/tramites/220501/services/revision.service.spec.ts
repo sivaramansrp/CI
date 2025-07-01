@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { RevisionService } from './revision.service';
 import { RespuestaCatalogos } from '@libs/shared/data-access-user/src';
-import { PagoDeDerechos } from '../models/pago-de-derechos.model';
+import { Exportador, PagoDeDerechos } from '../models/pago-de-derechos.model';
 import { Solicitud220501State } from '../estados/tramites220501.store';
 import { Movilizacion } from '../models/datos-generales.model';
 
@@ -238,6 +238,7 @@ describe('RevisionService', () => {
       saldoPendiente: '',
       saldoACapturar: '',
       mostrarSeccion: true,
+      mercanciaTablaDatos: [],
       mercanciaTablaDatos: []
     };
 
@@ -266,5 +267,39 @@ describe('RevisionService', () => {
     const req = httpMock.expectOne('assets/json/220501/movilizacion.json');
     expect(req.request.method).toBe('GET');
     req.flush(mockResponse);
+  });
+
+  it('should return exportador data successfully', () => {
+    const MOCK_RESPONSE: Exportador[] = [
+      {
+        "nombre": "Miriam Lopez solis",
+        "telefono": "52-2298456543",
+        "correoElectronico": "miriam@gmail.com",
+        "domoicilio": "este es un domicilio address",
+        "pais": "ANGOLA(REPUBLIC DE)"
+      }
+    ]
+    service.obtenerTablaExportador().subscribe((data) => {
+      expect(data).toEqual(MOCK_RESPONSE);
+    });
+
+    const req = httpMock.expectOne('assets/json/220501/exportador-tabla.json');
+    expect(req.request.method).toBe('GET');
+    req.flush(MOCK_RESPONSE);
+  });
+
+  it('should handle HTTP error correctly', () => {
+    const mockError = { status: 500, statusText: 'Internal Server Error' };
+
+    service.obtenerTablaExportador().subscribe({
+      next: () => fail('Expected error, but got success response'),
+      error: (error) => {
+        expect(error.status).toBe(500);
+        expect(error.statusText).toBe('Internal Server Error');
+      }
+    });
+
+    const req = httpMock.expectOne('assets/json/220501/exportador-tabla.json');
+    req.flush({}, mockError);
   });
 });
