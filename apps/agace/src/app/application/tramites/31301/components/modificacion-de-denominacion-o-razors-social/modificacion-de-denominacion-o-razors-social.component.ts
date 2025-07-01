@@ -61,8 +61,8 @@ export class ModificacionDeDenominacionORazorsSocialComponent
    * @param solicitud31301Query Query para observar cambios del estado
    */
   constructor(
-    private fb: FormBuilder,
-    private solicitudService: SolicitudService,
+    public fb: FormBuilder,
+    public solicitudService: SolicitudService,
     public solicitud31301Store: Solicitud31301Store,
     public solicitud31301Query: Solicitud31301Query,
     public consultaioQuery: ConsultaioQuery

@@ -23,12 +23,12 @@ describe('permisoComponent', () => {
     component.grupoDeFormulario = 'testGroup';
   });
 
-  it('should initialize the form group on ngOnInit', () => {
+  it('debe inicializar el grupo de formulario en ngOnInit', () => {
     component.ngOnInit();
     expect(component.inicializarFormulario).toBe(mockFormGroupDirective.control.get('testGroup'));
   });
 
-  it('should call establecerDatos on setValoresStore with correct data', () => {
+  it('Debería llamar a establecerDatos en setValoresStore con datos correctos', () => {
     const testForm = new FormGroup({
       testField: new FormControl('testValue'),
     });
@@ -37,7 +37,7 @@ describe('permisoComponent', () => {
     expect(mockTramite30401Store.establecerDatos).toHaveBeenCalledWith({ testField: 'testValue' });
   });
 
-  it('should return true if the control is invalid and touched or dirty in esInvalido', () => {
+  it('Debe devolver verdadero si el control no es válido y está tocado o sucio en esInvalido', () => {
     const testControl = new FormControl('', { validators: () => ({ required: true }) });
     testControl.markAsTouched();
     component.inicializarFormulario = new FormGroup({
@@ -47,7 +47,7 @@ describe('permisoComponent', () => {
     expect(component.esInvalido('testField')).toBe(true);
   });
 
-  it('should return false if the control is valid in esInvalido', () => {
+  it('debe devolver falso si el control es válido en esInvalido', () => {
     const testControl = new FormControl('validValue');
     component.inicializarFormulario = new FormGroup({
       testField: testControl,
@@ -56,7 +56,7 @@ describe('permisoComponent', () => {
     expect(component.esInvalido('testField')).toBe(false);
   });
 
-  it('should return false if the control does not exist in esInvalido', () => {
+  it('Debe devolver falso si el control no existe en esInvalido', () => {
     component.inicializarFormulario = new FormGroup({});
     expect(component.esInvalido('nonExistentField')).toBe(false);
   });

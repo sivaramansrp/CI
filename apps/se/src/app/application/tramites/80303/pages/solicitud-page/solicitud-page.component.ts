@@ -9,6 +9,25 @@ import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { ViewChild } from '@angular/core';
 import { WizardComponent } from '@ng-mf/data-access-user';
 
+/**
+ * @decorador @Component
+ * @description Decorador que define los metadatos del componente Angular.
+ * Este componente representa la página de solicitud dentro de la aplicación.
+ * 
+ * @property selector
+ * Define el nombre del selector que se utiliza para instanciar este componente
+ * en las plantillas HTML. En este caso, el selector es `app-solicitud-page`.
+ * 
+ * @property templateUrl
+ * Especifica la ruta del archivo HTML que contiene la plantilla asociada
+ * al componente. En este caso, la plantilla se encuentra en 
+ * `./solicitud-page.component.html`.
+ * 
+ * @property styleUrl
+ * Define la ruta del archivo SCSS que contiene los estilos específicos
+ * para este componente. En este caso, los estilos se encuentran en 
+ * `./solicitud-page.component.scss`.
+ */
 @Component({
   selector: 'app-solicitud-page',
   templateUrl: './solicitud-page.component.html',
