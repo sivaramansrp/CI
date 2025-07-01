@@ -2183,8 +2183,8 @@ export class SolicitudComponent
       this.solicitudState.idSeccionDespacho,
       10
     );
-
-    if (RECINTO_FISCALIZADO > 0) {
+    
+    if (RECINTO_FISCALIZADO > 0) {      
       this.despacho
         .get('nombreRecinto')
         ?.setValue(this.solicitudState.nombreRecinto.toString());
@@ -2235,6 +2235,8 @@ export class SolicitudComponent
               this.despacho.get('idSeccionDespacho')?.setValue(SIN_ITEMS);
               this.despacho.get('idSeccionDespacho')?.disable();
             }
+
+            this.setValoresStore(this.despacho, 'idSeccionDespacho', 'setIdSeccionDespacho');
             return this.recintoService.getListaRecintos(ADUANA);
           }),
           tap((responseRecinto) => {
@@ -2258,6 +2260,12 @@ export class SolicitudComponent
               this.despacho.get('nombreRecinto')?.setValue(SIN_ITEMS);
               this.despacho.get('nombreRecinto')?.disable();
             }
+
+            this.setValoresStore(
+              this.despacho,
+              'nombreRecinto ',
+              'setNombreRecinto'
+            );
           }),
           takeUntil(this.destroyNotifier$)
         )
@@ -2266,8 +2274,6 @@ export class SolicitudComponent
 
     this.tramite5701Store.update({
       idAduanaDespacho: ADUANA,
-      idSeccionDespacho: this.despacho.get('idSeccionDespacho')?.value,
-      nombreRecinto: this.despacho.get('nombreRecinto')?.value,
     });
   }
 
