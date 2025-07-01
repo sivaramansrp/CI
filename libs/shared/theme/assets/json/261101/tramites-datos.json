@@ -24,8 +24,8 @@
       "aduanas": "1",
       "claveDeReferencia": "ideGenerica1",
       "cadenaPagoDependencia": "ideGenerica1",
-      "bancoClave": "",
-      "llaveDePago": "",
-      "fecPago": "ideGenerica1",
-      "impPago": ""
+      "bancoClave": "2",
+      "llaveDePago": "Valor de la llave de pago",
+      "fecPago": "2023-01-01", 
+      "impPago": "valor frictionado"
   }
