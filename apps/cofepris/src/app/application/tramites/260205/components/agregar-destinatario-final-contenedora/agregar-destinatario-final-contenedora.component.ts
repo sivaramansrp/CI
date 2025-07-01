@@ -4,13 +4,23 @@ import { Component } from '@angular/core';
 import { Destinatario } from '../../../../shared/models/terceros-relacionados.model';
 import { Tramite260205Store } from '../../estados/stores/tramite260205.store';
 
+
 /**
  * @component AgregarDestinatarioFinalContenedoraComponent
- * @description Componente contenedor que utiliza el componente `AgregarDestinatarioFinalComponent` 
- * para gestionar la funcionalidad relacionada con los destinatarios finales. 
- * Este componente interactúa con el estado del trámite a través del store `Tramite260205Store`.
+ * @description Componente que actúa como contenedor para la funcionalidad de agregar destinatarios finales 
+ * en el trámite 260205. Este componente utiliza el store `Tramite260205Store` para gestionar el estado 
+ * del trámite y actualizar los datos relacionados con los destinatarios finales.
+ * 
+ * @selector app-agregar-destinatario-final-contenedora
+ * @standalone true
+ * @imports 
+ * - CommonModule: Módulo común de Angular que proporciona directivas y servicios básicos.
+ * - AgregarDestinatarioFinalComponent: Componente hijo que contiene la lógica específica para agregar 
+ * destinatarios finales.
+ * 
+ * @templateUrl ./agregar-destinatario-final-contenedora.component.html
+ * @styleUrl ./agregar-destinatario-final-contenedora.component.scss
  */
-
 @Component({
   selector: 'app-agregar-destinatario-final-contenedora',
   standalone: true,
@@ -35,7 +45,6 @@ export class AgregarDestinatarioFinalContenedoraComponent {
    * @param {Destinatario[]} event - Lista de destinatarios finales que se actualizarán en el store.
    * @returns {void} Este método no retorna ningún valor.
    */
-
   updateDestinatarioFinalTablaDatos(event: Destinatario[]): void {
     this.tramiteStore.updateDestinatarioFinalTablaDatos(event);
   }

@@ -1,76 +1,32 @@
 <div class="row">
   <div class="informacion">
     <p>
-      Av. Hidalgo No. 77, Col. Guerrero, Deleg. Cuauhtémoc, C.P. 06300,
-      México, D.F.
+      Av. Hidalgo No. 77, Col. Guerrero, Deleg. Cuauhtémoc, C.P. 06300, México,
+      D.F.
     </p>
     <p>
-      Call Center: 800 2863133 desde Mexico & +1 844 549 7885 desde USA y
-      Canada
+      Call Center: 800 2863133 desde México & +1 844 549 7885 desde USA y Canadá
     </p>
     <p>
-      Ventanilla Digital Mexicana de Comercio Exterior · Derechos Reservados
-      © 2011· Políticas de Privacidad
+      Ventanilla Digital Mexicana de Comercio Exterior · Derechos Reservados ©
+      2011
+      <a class="link" (click)="abreModalNotificacion()"
+        > Políticas de Privacidad</a
+      >
     </p>
-    <p>Configuración de JAVA</p>
+    <p>
+      <a class="link" (click)="verPDF()" target="_blank"
+        >Configuración de JAVA</a
+      >
+    </p>
   </div>
 </div>
-<footer class="footer">
-  <div class="container">
-    <div class="row">
-      <div class="col-md-3">
-        <a href="#">
-          <img
-            src="assets/img/LOGOS_gobmx/logo_blanco.svg"
-            alt="Gobierno de México"
-            width="80%"
-            class="d-inline-block align-text-top"
-          />
-        </a>
-      </div>
-      <div class="col-md-3">
-        <h5>Enlaces</h5>
-        <ul>
-          <li>Participa</li>
-          <li>Publicaciones Oficiales</li>
-          <li>Marco Jurídico</li>
-          <li>Plataforma Nacional de Transparencia</li>
-          <li>Alerta</li>
-          <li>Denuncia</li>
-        </ul>
-      </div>
-      <div class="col-md-3">
-        <h5>¿Qué es gob.mx?</h5>
-        <div>
-          <p>
-            Es el portal único de trámites, información y participación
-            ciudadana. <a>Leer más</a>
-          </p>
 
-          <ul>
-            <li>Portal de datos abiertos</li>
-            <li>Declaración de accesabilidad</li>
-            <li>Aviso de privacidad integral</li>
-            <li>Aviso de privacidad simplificado</li>
-            <li>Términos y Condiciones</li>
-            <li>Política de seguridad</li>
-            <li>Mapa de sitio</li>
-          </ul>
-        </div>
-      </div>
-      <div class="col-md-3">
-        <h6>Denuncia contra servidores públicos</h6>
-        <h5>Síguenos en</h5>
-        <i class="bi bi-facebook"></i>
-        <i class="bi bi-twitter-x"></i>
-        <i class="bi bi-instagram"></i>
-        <i class="bi bi-youtube"></i>
-        @if (version) {
-        <div class="version mt-4">
-          <span class="fs-5 text-light">App Version: v{{ version }}</span>
-        </div>
-        }
-      </div>
-    </div>
+@if(notificacion) {
+<div class="row">
+  <div class="col-md-12">
+    <lib-notificaciones [notificacionInput]="notificacion"></lib-notificaciones>
   </div>
-</footer>
+</div>
+
+}

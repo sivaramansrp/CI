@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
-import { Subject, map, takeUntil } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 import { FloraFaunaService } from '../../services/flora-fauna.service';
 /**
  * Componente que maneja los datos del trámite 250101.
@@ -19,7 +19,7 @@ export class Datos250101Component implements OnInit, OnDestroy {
 
     /** Propiedad que almacena el estado actual de la consulta IO.  
  * Se inicializa posteriormente con datos del store o de un observable. */
-    public consultaState!:ConsultaioState;
+  private consultaState!:ConsultaioState;
 
   /**
    * Índice actual del tab seleccionado.

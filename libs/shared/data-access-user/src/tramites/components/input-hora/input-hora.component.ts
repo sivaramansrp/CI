@@ -13,6 +13,8 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { Subject } from 'rxjs';
+
 import { CommonModule } from '@angular/common';
 import { HORA_PATTERN } from '../../constantes/regex.constants';
 import { HoraFormatoDirective } from '../../directives/hora-formato/hora-formato.directive';
@@ -47,6 +49,7 @@ export class InputHoraComponent implements OnChanges, ControlValueAccessor {
    */
   @Input() required!: boolean;
 
+
   /**
    * Formulario reactivo que contiene el control 'hora'.
    */
@@ -56,6 +59,12 @@ export class InputHoraComponent implements OnChanges, ControlValueAccessor {
    * Valor del input 'hora'.
    */
   value: string = '';
+
+  /**
+   * Notificador para gestionar la destrucción de suscripciones y evitar fugas de memoria.
+   * @private
+   */
+  private destroyNotifier$: Subject<void> = new Subject();
 
   // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-empty-function
   private onChange: (value: string) => void = () => {};
@@ -110,6 +119,11 @@ export class InputHoraComponent implements OnChanges, ControlValueAccessor {
    */
   writeValue(value: string): void {
     this.forma.controls['hora'].setValue(value);
+
+    if (!value) {
+      this.forma.controls['hora'].markAsUntouched();
+      this.forma.controls['hora'].markAsPristine();
+    }
   }
 
   /**

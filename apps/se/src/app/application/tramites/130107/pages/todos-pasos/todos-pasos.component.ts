@@ -99,11 +99,13 @@ export class TodosPasosComponent {
       } else {
         this.titulo = TITULO_PASO_UNO;
       }
+      if (this.wizardComponent) {
       if (e.accion === 'cont') {
         this.wizardComponent.siguiente();
       } else {
         this.wizardComponent.atras();
       }
+    }
     }
   }
 }

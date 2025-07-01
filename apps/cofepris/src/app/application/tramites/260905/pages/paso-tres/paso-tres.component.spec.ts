@@ -1,45 +1,33 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PasoTresComponent } from './paso-tres.component';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-
 import { Router } from '@angular/router';
-import { FirmaElectronicaComponent } from '@libs/shared/data-access-user/src';
-import { CommonModule } from '@angular/common';
-import { ToastrModule } from 'ngx-toastr';
 
 describe('PasoTresComponent', () => {
   let component: PasoTresComponent;
-  let fixture: ComponentFixture<PasoTresComponent>;
-  let router: Router;
-  let navigateSpy: jest.SpyInstance;
+  let mockRouter: jest.Mocked<Router>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [PasoTresComponent,HttpClientTestingModule,CommonModule, FirmaElectronicaComponent, ToastrModule.forRoot()],
-    }).compileComponents();
+  beforeEach(() => {
+    // Creamos un mock del servicio Router
+    mockRouter = {
+      navigate: jest.fn()
+    } as unknown as jest.Mocked<Router>;
 
-    fixture = TestBed.createComponent(PasoTresComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-    router = TestBed.inject(Router);
-    navigateSpy = jest.spyOn(router, 'navigate');
+    // Creamos una instancia del componente con el Router simulado
+    component = new PasoTresComponent(mockRouter);
   });
 
-    it('should navigate to "servicios-extraordinarios/acuse" when FIRMA is valid', () => {
-    const navigateSpy = jest.spyOn(router, 'navigate');
-    const mockFirma = 'VALID_SIGNATURE';
+  it('debería navegar a la página de acuse si se recibe una firma válida', () => {
+    const firmaValida = 'firma123';
 
-    component.obtieneFirma(mockFirma);
+    component.obtieneFirma(firmaValida);
 
-    expect(navigateSpy).toHaveBeenCalledWith(['servicios-extraordinarios/acuse']);
+    expect(mockRouter.navigate).toHaveBeenCalledWith(['servicios-extraordinarios/acuse']);
   });
 
-  it('should not navigate when FIRMA is empty', () => {
-    const navigateSpy = jest.spyOn(router, 'navigate');
-    const mockFirma = '';
+  it('no debería navegar si la firma está vacía', () => {
+    const firmaInvalida = '';
 
-    component.obtieneFirma(mockFirma);
+    component.obtieneFirma(firmaInvalida);
 
-    expect(navigateSpy).not.toHaveBeenCalled();
+    expect(mockRouter.navigate).not.toHaveBeenCalled();
   });
 });

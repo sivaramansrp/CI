@@ -3,67 +3,115 @@ import {
 } from '../models/configuracion-columna.model';
 
 /**
- * Paso del proceso de captura y firma de solicitud.
- * Define los pasos del proceso en una lista.
+ * Arreglo constante que define los pasos del proceso para la gestión de permisos.
+ * Cada objeto representa un paso específico con su índice, título, y los estados de activo y completado.
+ *
+ * @property {number} indice - El número de orden del paso dentro del proceso.
+ * @property {string} titulo - El nombre descriptivo del paso.
+ * @property {boolean} activo - Indica si el paso está actualmente activo para el usuario.
+ * @property {boolean} completado - Indica si el paso ya ha sido completado.
+ *
+ * Ejemplo de uso:
+ * - Para mostrar el flujo de pasos en un formulario de solicitud.
+ * - Para controlar la navegación entre pasos según el estado de cada uno.
  */
 export const PASOS = [
-  {
-    indice: 1, // Índice del paso
-    titulo: 'Capturar solicitud', // Título del paso
-    activo: true, // Indica si el paso está activo
-    completado: true, // Indica si el paso ha sido completado
-  },
-  {
-    indice: 2, // Índice del paso
-    titulo: 'Firmar solicitud', // Título del paso
-    activo: false, // Indica si el paso está activo
-    completado: false, // Indica si el paso ha sido completado
-  },
+    {
+        indice: 1,
+        titulo: 'Capturar solicitud',
+        activo: true,
+        completado: true,
+    },
+    {
+        indice: 2,
+        titulo: 'Anexar requisitos',
+        activo: false,
+        completado: false,
+    },
+    {
+        indice: 3,
+        titulo: 'Firmar solicitud',
+        activo: false,
+        completado: false,
+    }
 ];
 
 /**
- * Enum para representar los tipos de selección en las tablas.
- * Permite especificar si se utilizará un checkbox, un radio, o si no está definido.
+ * @enum {TablaSeleccion}
+ * @description
+ * Enumeración que define los tipos de selección posibles en una tabla. Se utiliza para decidir cómo los usuarios seleccionan filas (checkbox, radio, ninguno).
+ *
+ * @property {string} CHECKBOX - Representa la selección múltiple con casillas de verificación.
+ * @property {string} RADIO - Representa la selección única usando botones de opción.
+ * @property {string} UNDEFINED - Indica que no se ha definido ningún tipo de selección.
+ *
+ * @example
+ * if (tipoSeleccion === TablaSeleccion.CHECKBOX) { ... }
  */
 export enum TablaSeleccion {
-  CHECKBOX = 'CHECKBOX', // Representa la selección con checkbox
-  RADIO = 'RADIO', // Representa la selección con radio
-  UNDEFINED = 'undefined', // Indica que la selección no está definida
+  CHECKBOX = 'CHECKBOX',
+  RADIO = 'RADIO',
+  UNDEFINED = 'undefined',
 }
 
+
+
 /**
- * Configuración para los campos de mercancía.
- * Define los encabezados, claves y el orden para mostrar los datos relacionados con las mercancías.
+ * Arreglo de configuración para la visualización de columnas relacionadas con objetos de tipo `Mercancia` en una tabla.
+ *
+ * Cada objeto dentro del arreglo representa una columna y contiene:
+ * - `encabezado`: El título visible de la columna.
+ * - `clave`: Función que recibe un objeto `Mercancia` y retorna el valor a mostrar en la columna.
+ * - `orden`: La posición de la columna en la tabla.
+ *
+ * Las columnas configuradas incluyen:
+ * - Fracción arancelaria
+ * - Nombre técnico
+ * - Nombre comercial
+ * - Número de registro de productos
+ * - Fecha expedición
+ * - Fecha vencimiento
  */
 export const CONFIGURACION_MERCANCIA = [
   {
-    encabezado: 'Fracción arancelaria', // Título de la columna
-    clave: (ele: Mercancia): string | undefined => ele.fraccionArancelaria, // Función que devuelve la fracción Naladi
-    orden: 1, // Orden en que se mostrará la columna
+    /** Título visible: Fracción arancelaria */
+    encabezado: 'Fracción arancelaria',
+
+    /** Función que retorna la fracción arancelaria del objeto `Mercancia` */
+    clave: (ele: Mercancia): string | undefined => ele.fraccionArancelaria,
+
+    /** Posición de esta columna en la tabla */
+    orden: 1,
   },
   {
-    encabezado: 'Nombre técnico', // Título de la columna
-    clave: (ele: Mercancia): string | undefined => ele.nombreTecnico, // Función que devuelve la fracción Naladi SA93
-    orden: 2, // Orden en que se mostrará la columna
+    /** Título visible: Nombre técnico */
+    encabezado: 'Nombre técnico',
+    clave: (ele: Mercancia): string | undefined => ele.nombreTecnico,
+    orden: 2,
   },
   {
-    encabezado: 'Nombre comercial', // Título de la columna
-    clave: (ele: Mercancia): string | undefined => ele.nombreComercial, // Función que devuelve la fracción Naladi SA96
-    orden: 3, // Orden en que se mostrará la columna
+    /** Título visible: Nombre comercial */
+    encabezado: 'Nombre comercial',
+    clave: (ele: Mercancia): string | undefined => ele.nombreComercial,
+    orden: 3,
   },
   {
-    encabezado: 'Número de registro de productos', // Título de la columna
-    clave: (ele: Mercancia): string | undefined => ele.numeroDeRegistrodeProductos, // Función que devuelve la fracción Naladi SA02
-    orden: 4, // Orden en que se mostrará la columna
+    /** Título visible: Número de registro de productos */
+    encabezado: 'Número de registro de productos',
+    clave: (ele: Mercancia): string | undefined => ele.numeroDeRegistrodeProductos,
+    orden: 4,
   },
   {
-    encabezado: 'Fecha expedición', // Título de la columna
-    clave: (ele: Mercancia): string | undefined => ele.fechaExpedicion, // Función que devuelve el nombre técnico de la mercancía
-    orden: 5, // Orden en que se mostrará la columna
+    /** Título visible: Fecha expedición */
+    encabezado: 'Fecha expedición',
+    clave: (ele: Mercancia): string | undefined => ele.fechaExpedicion,
+    orden: 5,
   },
   {
-    encabezado: 'Fecha vencimiento', // Título de la columna
-    clave: (ele: Mercancia): string | undefined => ele.fechaVencimiento, // Función que devuelve el nombre comercial de la mercancía
-    orden: 5, // Orden en que se mostrará la columna
+    /** Título visible: Fecha vencimiento */
+    encabezado: 'Fecha vencimiento',
+    clave: (ele: Mercancia): string | undefined => ele.fechaVencimiento,
+    orden: 6, // ✔️ Corregido para evitar conflicto con la columna anterior.
   }
 ];
+

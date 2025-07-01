@@ -27,6 +27,15 @@ export const MSJ_ERROR_FECHA_SEMANA =
 export const MSJ_ERROR_FECHA_DIA =
   'La fecha no es válida para la solicitud seleccionada.';
 
+/**
+ * @description Mensaje de error cuando la fecha final es menor que la fecha inicial.
+ */
+export const MSJ_ERROR_HORA_FINAL_MENOR_INICIAL =
+  'Hora inválida. La hora final no puede ser menor a la hora de incio.';
+
+export const MSJ_FECHA_DENTRO_DE_HORARIO_ADUANA =
+  'El horario que seleccionaste para llevar a cabo tu servicio extraordinario, se encuentra dentro del horario de operación de la aduana. Por favor verifica.';
+
 // #Mensajes del modal para el componente Persona Responsable del Despacho
 /**
  * @description Mensaje de error cuando se hace una busqueda con un gafete que no existe.
@@ -102,9 +111,11 @@ export const MSG_PEDIMENTO_EXISTE_YA_PAGADO =
 export const MSG_PEDIMENTO_EXISTE_PREVIO =
   'Error, verificar que exista como previo';
 
+/**
+ * @description Mensaje de error cuando no hay pedimentos en la tabla.
+ */
+export const MSG_ERROR_NO_PEDIMENTOS = 'No se encontró información.';
 
-
-  
 // #Secion Linea de captura
 /**
  * @description Mensaje de error cuando no se han llenado los campos obligatorios.
@@ -141,6 +152,11 @@ export const MSJ_LINEA_CAPTURA_USADA =
 export const MSJ_LINEA_CAPTURA_NO_PAGADA =
   'La línea de captura no ha sido pagada, favor de verificar.';
 
+/**
+ * @description Mensaje de error cuando la línea de captura ya ha sido agregada a la tabla.
+ */
+export const MSJ_LINEA_CAPTURA_DUPLICADA =
+  'La línea de captura ingresada ya se registró en esta solicitud, favor de verificar.';
 /**
  * @description Mensaje de avertencia cuando se va a cambiar de tipo de solicitud y el formulario tiene datos capturados.
  */
@@ -194,3 +210,9 @@ export const MSJ_ERROR_RFC_AUTORIZACION_LDA =
  */
 export const MSJ_ERROR_FOLIO_DDEX =
   'EL RFC no está autorizado para realizr DD, favor de verificar.';
+
+/**
+ * Mensaje que indica que no tiene relación de encargo conferido
+ */
+export const MSJ_NO_RELACION_ENCARGO_CONFERIDO =
+  'No cuenta con relación de encargo conferido.';

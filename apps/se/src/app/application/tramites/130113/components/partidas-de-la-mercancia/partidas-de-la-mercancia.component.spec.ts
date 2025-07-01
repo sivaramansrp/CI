@@ -7,7 +7,7 @@ import { Tramite130113Store } from '../../estados/tramites/tramites130113.store'
 import { of } from 'rxjs';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { ImportacionEquipoAnticontaminanteService } from '../../services/importacion-equipo-anticontaminante-.service';
+import { ImportacionEquipoAnticontaminanteService } from '../../services/importacion-equipo-anticontaminante.service';
 
 describe('SolicitudComponent', () => {
   let component: SolicitudComponent;

@@ -5,9 +5,9 @@ import { ToastrService } from 'ngx-toastr';
 
 import { DonacionesExtranjerasService } from '../../services/donaciones-extranjeras/donaciones-extranjeras.service';
 
-import { CATALOGOS_ID, Catalogo } from '@ng-mf/data-access-user';
 import { Contribuyente, ContribuyenteRespuesta } from '../../models/donaciones-extranjeras.model';
 import { RegistroDeDonacion10303State, Tramite10303Store } from '../../estados/tramites/tramite10303.store';
+import { Catalogo } from '@ng-mf/data-access-user';
 import { Tramite10303Query } from '../../estados/queries/tramite10303.query';
 
 /**
@@ -113,7 +113,7 @@ export class DatosRepLegalRecibirDonacionComponent implements OnInit, OnDestroy 
    */
   inicializaCatalogos(): void {
     const PAIS$ = this.donacionesExtranjerasService
-      .getPaises(CATALOGOS_ID.CAT_PAIS)
+      .getPaises()
       .pipe(
         map((resp) => {
           this.pais = resp.data;

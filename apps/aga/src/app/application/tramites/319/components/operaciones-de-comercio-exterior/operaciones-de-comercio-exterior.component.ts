@@ -1,185 +1,183 @@
-import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
-
 import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
-
-import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, ConsultaioQuery, Notificacion, NotificacionesComponent, REGEX_FECHA_MES_ANO, SeccionLibStore, SharedModule, TablaDinamicaComponent, TablaSeleccion, TituloComponent, } from 'libs/shared/data-access-user/src';
-
-import {Subject,map,takeUntil } from 'rxjs';
-
-import { OperacionService } from '../../services/operacion.service';
-
+import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
+import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, ConsultaioQuery, Notificacion, NotificacionesComponent, REGEX_FECHA_MES_ANO, SeccionLibStore, SharedModule, TablaDinamicaComponent, TablaSeleccion, TituloComponent, } from '@libs/shared/data-access-user/src';
+import { CONFIGURACION_PERSONAS_COLUMNAS, CONFIGURACION_SOLICITAR_COLUMNAS, INFO_ALERT, TEXTOS } from '../../constantes/operaciones-de-comercio-exterior.enum';
 import { Personas, Solicitar } from '../../models/personas.module';
-
-import {CONFIGURACION_PERSONAS_COLUMNAS, CONFIGURACION_SOLICITAR_COLUMNAS, INFO_ALERT, TEXTOS } from '../../constantes/operaciones-de-comercio-exterior.enum';
+import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { OperacionService } from '../../services/operacion.service';
 import { Tramite319Query } from '../../estados/tramite319Query.query';
 import { Tramite319Store } from '../../estados/tramite319Store.store';
 
 /**
- * @description
- * Validador personalizado para verificar si un valor cumple con el formato de mes y año (MM/YYYY).
- * Este validador se puede usar en formularios para asegurarse de que el valor ingresado sea válido.
- * Si el valor está vacío, se delega la validación a `Validators.required`.
- * Si el valor no coincide con el formato esperado, devuelve un error con la clave `invalidMonthYear`.
- *
- * @returns {ValidatorFn} Una función de validación que verifica el formato de mes y año.
- *
- * @example
- * ```typescript
- * const control = new FormControl('12/2023', monthYearValidator());
- * console.log(control.errors); // null (válido)
- *
- * const invalidControl = new FormControl('13/2023', monthYearValidator());
- * console.log(invalidControl.errors); // { invalidMonthYear: true } (inválido)
- * ```
+ * @fileoverview
+ * Componente para la gestión de operaciones de comercio exterior en el trámite 319.
+ * Este componente maneja la lógica y la presentación del formulario de operaciones,
+ * incluyendo la inicialización, la obtención de datos y la gestión de los controles del formulario.
+ * @module OperacionesDeComercioExteriorComponent
  */
-export function validadorDeMesyAno(): ValidatorFn {
-  return (control: AbstractControl) => {
-    const VALUE = control.value;
-    if (!VALUE) {
-      return null; 
-    }
-    const REGEX = REGEX_FECHA_MES_ANO; 
-    return REGEX.test(VALUE) ? null : { invalidMonthYear: true };
-  };
-}
+
+
+
 /**
- * @componente
- * @nombre OperacionesDeComercioExteriorComponent
- * @descripcion Componente encargado de gestionar las operaciones de comercio exterior.
- * Proporciona un formulario para seleccionar una operación y obtiene una lista de opciones
- * de países desde un servicio.
- * 
- * @implementa OnInit, OnDestroy
- * 
- * @ejemplo
- * <app-operaciones-de-comercio-exterior></app-operaciones-de-comercio-exterior>
+ * Componente para el formulario de operaciones de comercio exterior.
+ * @class OperacionesDeComercioExterioComponent
+ * @implements {OnInit, OnDestroy, AfterViewInit}
  */
 @Component({
   selector: 'app-operaciones-de-comercio-exterior',
   templateUrl: './operaciones-de-comercio-exterior.component.html',
   styleUrl: './operaciones-de-comercio-exterior.component.scss',
-  standalone:true,
-  imports:[CommonModule, SharedModule,TablaDinamicaComponent,CatalogoSelectComponent,AlertComponent,TituloComponent,ReactiveFormsModule,NotificacionesComponent]
+  standalone: true,
+  imports: [
+    CommonModule,
+    SharedModule,
+    TablaDinamicaComponent,
+    CatalogoSelectComponent,
+    AlertComponent,
+    TituloComponent,
+    ReactiveFormsModule,
+    NotificacionesComponent
+  ]
 })
-export class OperacionesDeComercioExteriorComponent implements OnInit, OnDestroy,AfterViewInit {
+export class OperacionesDeComercioExterioComponent implements OnInit, OnDestroy, AfterViewInit {
   /**
-   * @propiedad {FormGroup} miformulario - Formulario reactivo utilizado para gestionar las operaciones.
+   * Formulario principal para operaciones.
+   * @property {FormGroup} miformulario
    */
-  miformulario!: FormGroup;
+  public miformulario!: FormGroup;
 
   /**
-   * @propiedad {FormGroup} periodoForm - Formulario reactivo utilizado para gestionar los periodos.
+   * Formulario para la gestión de periodos.
+   * @property {FormGroup} periodoForm
    */
-  periodoForm!: FormGroup;
+  public periodoForm!: FormGroup;
 
   /**
-   * @propiedad {Catalogo[]} optionsPaisList - Lista de opciones de países obtenida desde el servicio.
+   * Lista de países para el select.
+   * @property {Catalogo[]} optionsPaisList
    */
-  optionsPaisList: Catalogo[] = [];
+  public optionsPaisList: Catalogo[] = [];
 
   /**
-   * @propiedad {Catalogo[]} periodoList - Lista de periodos obtenida desde el servicio.
+   * Lista de periodos para el select.
+   * @property {Catalogo[]} periodoList
    */
-  periodoList: Catalogo[] = [];
+  public periodoList: Catalogo[] = [];
 
   /**
-   * @propiedad {Subject<void>} destroyNotifier$ - Sujeto utilizado para manejar la destrucción de suscripciones.
+   * Sujeto para destruir suscripciones.
+   * @property {Subject<void>} destroyNotifier$
    */
-  private destroyNotifier$: Subject<void> = new Subject();
+  public destroyNotifier$: Subject<void> = new Subject();
 
   /**
-   * @propiedad {TablaSeleccion} tipoPersonasSeleccion - Tipo de selección para la tabla de personas.
+   * Tipo de selección para la tabla de personas.
+   * @property {TablaSeleccion} tipoPersonasSeleccion
    */
-  tipoPersonasSeleccion: TablaSeleccion = TablaSeleccion.UNDEFINED;
+  public tipoPersonasSeleccion: TablaSeleccion = TablaSeleccion.UNDEFINED;
 
   /**
-   * @propiedad {ConfiguracionColumna<Personas>[]} configuracionPersonasColumnas - Configuración de columnas para la tabla de personas.
+   * Configuración de columnas para la tabla de personas.
+   * @property {ConfiguracionColumna<Personas>[]} configuracionPersonasColumnas
    */
-  configuracionPersonasColumnas: ConfiguracionColumna<Personas>[] = CONFIGURACION_PERSONAS_COLUMNAS;
+  public configuracionPersonasColumnas: ConfiguracionColumna<Personas>[] = CONFIGURACION_PERSONAS_COLUMNAS;
 
   /**
-   * @propiedad {TablaSeleccion} tipoSolicitarSeleccion - Tipo de selección para la tabla de solicitudes.
+   * Tipo de selección para la tabla de solicitudes.
+   * @property {TablaSeleccion} tipoSolicitarSeleccion
    */
-  tipoSolicitarSeleccion: TablaSeleccion = TablaSeleccion.CHECKBOX;
+  public tipoSolicitarSeleccion: TablaSeleccion = TablaSeleccion.CHECKBOX;
 
   /**
-   * @propiedad {ConfiguracionColumna<Solicitar>[]} configuracionSolicitarColumnas - Configuración de columnas para la tabla de solicitudes.
+   * Configuración de columnas para la tabla de solicitudes.
+   * @property {ConfiguracionColumna<Solicitar>[]} configuracionSolicitarColumnas
    */
-  configuracionSolicitarColumnas: ConfiguracionColumna<Solicitar>[] =CONFIGURACION_SOLICITAR_COLUMNAS;
+  public configuracionSolicitarColumnas: ConfiguracionColumna<Solicitar>[] = CONFIGURACION_SOLICITAR_COLUMNAS;
 
   /**
-   * @propiedad {string[]} acciones - Lista de acciones disponibles.
+   * Lista de acciones disponibles.
+   * @property {string[]} acciones
    */
-  acciones: string[] = [];
+  public acciones: string[] = [];
 
   /**
-   * @propiedad {Personas[]} cuerpoPersonasTablaFila - Datos de la tabla de personas.
+   * Datos de la tabla de personas.
+   * @property {Personas[]} cuerpoPersonasTablaFila
    */
-  cuerpoPersonasTablaFila: Personas[] = [];
+  public cuerpoPersonasTablaFila: Personas[] = [];
 
   /**
-   * @propiedad {Solicitar[]} cuerpoSolicitarTablaFila - Datos de la tabla de solicitudes.
+   * Datos de la tabla de solicitudes.
+   * @property {Solicitar[]} cuerpoSolicitarTablaFila
    */
-  cuerpoSolicitarTablaFila: Solicitar[] = [];
+  public cuerpoSolicitarTablaFila: Solicitar[] = [];
 
   /**
-   * @propiedad {boolean} periodoView - Indica si se muestra el formulario de periodo.
+   * Indica si se muestra el formulario de periodo.
+   * @property {boolean} periodoView
    */
-  periodoView: boolean = false;
+  public periodoView: boolean = false;
 
   /**
-   * @propiedad {Solicitar[]} listaDeTablasSeleccionadas - Lista de tablas seleccionadas.
+   * Lista de solicitudes seleccionadas.
+   * @property {Solicitar[]} listaDeTablasSeleccionadas
    */
-  listaDeTablasSeleccionadas: Solicitar[] = [];
+  public listaDeTablasSeleccionadas: Solicitar[] = [];
 
   /**
-   * @propiedad {string} textos - Texto utilizado para mostrar mensajes en la alerta.
+   * Texto para mostrar en la alerta.
+   * @property {string} textos
    */
-  textos: string = '';
+  public textos: string = '';
 
   /**
-   * @propiedad {string} infoAlerta - Información utilizada para mostrar en la alerta.
+   * Información de alerta.
+   * @property {string} infoAlerta
    */
-  infoAlerta: string = INFO_ALERT;
+  public infoAlerta: string = INFO_ALERT;
 
   /**
-   * @propiedad {boolean} vistaAlerta - Indica si se muestra la alerta.
+   * Indica si se muestra la alerta.
+   * @property {boolean} vistaAlerta
    */
-  vistaAlerta: boolean = false;
-
+  public vistaAlerta: boolean = false;
 
   /**
-   * @description Indica si el modal emergente está visible o no.
-   * @type {boolean}
-   * @default false
-   * @memberof OperacionesDeComercioExteriorComponent
+   * Indica si el modal emergente está visible.
+   * @property {boolean} modalEmergente
    */
-  modalEmergente:boolean=false;
+  public modalEmergente: boolean = false;
 
   /**
+   * Nueva notificación para mostrar en el componente.
    * @property {Notificacion} nuevaAlertaNotificacion
-   * @description Propiedad que representa una nueva alerta de notificación.
-   * @remarks Esta propiedad se utiliza para manejar las notificaciones en el componente.
-   * @access Public
    */
-  public nuevaAlertaNotificacion!: Notificacion;  
+  public nuevaAlertaNotificacion!: Notificacion;
 
   /**
+   * Indica si el formulario es de solo lectura.
    * @property {boolean} esFormularioSoloLectura
-   * @description Indica si el formulario es de solo lectura.
-   * @default false
    */
-  esFormularioSoloLectura: boolean = false;
-  
+  public esFormularioSoloLectura: boolean = false;
+
   /**
+   * Constructor del componente.
    * @constructor
-   * @param {FormBuilder} fb - Servicio para construir formularios reactivos.
-   * @param {OperacionService} operacionService - Servicio para obtener datos relacionados con operaciones.
-   * @descripcion Inicializa el componente y obtiene la lista de operaciones al crearlo.
+   * @param {FormBuilder} fb - Servicio para la creación de formularios.
+   * @param {OperacionService} operacionService - Servicio para operaciones.
+   * @param {Tramite319Query} tramite319Query - Query para el estado del trámite.
+   * @param {Tramite319Store} tramite319Store - Store para el trámite.
+   * @param {SeccionLibStore} seccionStore - Store para la sección.
+   * @param {ConsultaioQuery} consultaioQuery - Query para el estado de solo lectura.
    */
-  constructor(private readonly fb: FormBuilder, private readonly operacionService: OperacionService,private readonly tramite319Query: Tramite319Query,private tramite319Store: Tramite319Store,
-     private seccionStore: SeccionLibStore, private readonly consultaioQuery: ConsultaioQuery
+  constructor(
+    public readonly fb: FormBuilder,
+    public readonly operacionService: OperacionService,
+    public readonly tramite319Query: Tramite319Query,
+    public tramite319Store: Tramite319Store,
+    public seccionStore: SeccionLibStore,
+    public readonly consultaioQuery: ConsultaioQuery
   ) {
     this.getOperacionList();
     this.getPersonasTablaData();
@@ -187,86 +185,74 @@ export class OperacionesDeComercioExteriorComponent implements OnInit, OnDestroy
   }
 
   /**
-   * @metodo ngOnInit
-   * @descripcion Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
-   * Configura el formulario reactivo.
+   * Inicializa el componente.
+   * @method ngOnInit
    */
-  ngOnInit(): void {
-     this.consultaioQuery.selectConsultaioState$
-    .pipe(
-      takeUntil(this.destroyNotifier$),
-      map((seccionState)=>{
-        this.esFormularioSoloLectura = seccionState.readonly; 
-      })
-    )
-    .subscribe()
+  public ngOnInit(): void {
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+        })
+      )
+      .subscribe();
     this.miformulario = this.fb.group({
-      operacion: [ this.tramite319Query.operacion||'', Validators.required],
+      operacion: [this.tramite319Query.operacion || '', Validators.required],
     });
     this.cuerpoSolicitarTablaFila = this.tramite319Query.datos.length > 0 ? this.tramite319Query.datos : [];
   }
-/**
- * @method ngAfterViewInit
- * @description
- * Método del ciclo de vida de Angular que se ejecuta después de que la vista del componente ha sido inicializada completamente.
- * 
- * En este caso, se utiliza para habilitar o deshabilitar el formulario (`miformulario`) dependiendo del estado de la propiedad `esFormularioSoloLectura`.
- * 
- * Si `esFormularioSoloLectura` es verdadero, el formulario se deshabilita para evitar la edición.
- * De lo contrario, se habilita para permitir la interacción del usuario.
- * 
- * @example
- * <form [formGroup]="miformulario">
- *   <!-- campos del formulario -->
- * </form>
- */
-ngAfterViewInit(): void {
-  if (this.esFormularioSoloLectura) {
-    this.miformulario.disable();
-  } else {
-    this.miformulario.enable();
-  }
-}
 
   /**
-   * @metodo getOperacionList
-   * @descripcion Obtiene la lista de opciones de países desde el servicio `OperacionService`.
-   * Suscribe a los datos y los asigna a la propiedad `optionsPaisList`.
+   * Habilita o deshabilita el formulario según el estado de solo lectura.
+   * @method ngAfterViewInit
    */
-  getOperacionList(): void {
+  public ngAfterViewInit(): void {
+    if (this.esFormularioSoloLectura) {
+      this.miformulario.disable();
+    } else {
+      this.miformulario.enable();
+    }
+  }
+
+  /**
+   * Obtiene la lista de países desde el servicio.
+   * @method getOperacionList
+   */
+  public getOperacionList(): void {
     this.operacionService.obtenerSelectorList('optionsPais.json').pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
       this.optionsPaisList = data;
     });
   }
 
   /**
-   * @metodo getperiodoList
-   * @descripcion Obtiene la lista de periodos desde el servicio `OperacionService`.
+   * Obtiene la lista de periodos desde el servicio.
+   * @method getperiodoList
    */
-  getperiodoList(): void {
+  public getperiodoList(): void {
     this.operacionService.obtenerSelectorList('periodo.json').pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
       this.periodoList = data;
     });
   }
 
   /**
-   * @metodo getPersonasTablaData
-   * @descripcion Obtiene los datos de la tabla de personas desde el servicio `OperacionService`.
+   * Obtiene los datos de la tabla de personas desde el servicio.
+   * @method getPersonasTablaData
    */
-  getPersonasTablaData(): void {
+  public getPersonasTablaData(): void {
     this.operacionService.obtenerTablerList('personas.json').pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
       this.cuerpoPersonasTablaFila = data;
     });
   }
 
   /**
-   * @metodo abrirModuloPersonasNotificaciones
-   * @descripcion Abre el módulo de notificaciones para gestionar periodos.
+   * Abre el módulo de notificaciones para gestionar periodos.
+   * @method abrirModuloPersonasNotificaciones
    * @param {boolean} status - Estado para mostrar u ocultar el formulario de periodo.
    */
-  abrirModuloPersonasNotificaciones(status: boolean): void {
+  public abrirModuloPersonasNotificaciones(status: boolean): void {
     this.periodoView = status;
-    this.modalEmergente=!status;
+    this.modalEmergente = !status;
     if (status) {
       this.periodoForm = this.fb.group({
         periodo: ['', Validators.required],
@@ -277,98 +263,83 @@ ngAfterViewInit(): void {
   }
 
   /**
-   * @metodo agregarPersona
-   * @descripcion Agrega una nueva persona a la tabla de solicitudes.
+   * Agrega una nueva persona a la tabla de solicitudes si el formulario de periodo es válido.
+   * Si no es válido, muestra una alerta con el mensaje correspondiente.
+   * @method agregarPersona
    */
-  agregarPersona(): void {
+  public agregarPersona(): void {
     if (this.periodoForm.valid) {
-    this.cuerpoSolicitarTablaFila.push({
-      id: this.cuerpoSolicitarTablaFila.length > 0
-        ? (this.cuerpoSolicitarTablaFila[this.cuerpoSolicitarTablaFila.length - 1]?.id ?? 0) + 1
-        : 1,
-      periodo: this.periodoForm.value.periodo,
-      fechas_sobre_el_periodo: this.periodoForm.value.periodoInicial + ' al ' + this.periodoForm.value.periodoFinal,
-    });
-    this.modalEmergente=true;
-    this.abrirAlertaSeleccionModal();
-    this.seccionStore.establecerFormaValida([true]);
-    this.seccionStore.establecerSeccion([true]);
-
-  }
-else{
-  this.vistaAlerta=true;
-  this.textos=TEXTOS + this.periodoForm.value.periodoInicial + ' al ' + this.periodoForm.value.periodoFinal;
-}
-  }
-
-
-    /**
-   * Elimina un elemento de la tabla de pedimento, si se confirma la acción.
-   * @param borrar Indica si se debe proceder con la eliminación.
-   * @returns {void}
-   */
-    eliminarPedimento(borrar: boolean): void {
-      if(borrar){
-        this.periodoForm.reset();
-        this.tramite319Store.actualizarDatosForma(this.cuerpoSolicitarTablaFila);
-     this.periodoView = false;
-    this.vistaAlerta = false;
-   
-      }
+      this.cuerpoSolicitarTablaFila.push({
+        id: this.cuerpoSolicitarTablaFila.length > 0
+          ? (this.cuerpoSolicitarTablaFila[this.cuerpoSolicitarTablaFila.length - 1]?.id ?? 0) + 1
+          : 1,
+        periodo: this.periodoForm.value.periodo,
+        fechas_sobre_el_periodo: this.periodoForm.value.periodoInicial + ' al ' + this.periodoForm.value.periodoFinal,
+      });
+      this.modalEmergente = true;
+      this.abrirAlertaSeleccionModal();
+      this.seccionStore.establecerFormaValida([true]);
+      this.seccionStore.establecerSeccion([true]);
+    } else {
+      this.vistaAlerta = true;
+      this.textos = TEXTOS + this.periodoForm.value.periodoInicial + ' al ' + this.periodoForm.value.periodoFinal;
     }
+  }
 
   /**
-   * @metodo onListaDeFilaSeleccionada
-   * @descripcion Método que recibe las filas seleccionadas de la tabla y las almacena en la propiedad `listaDeTablasSeleccionadas`.
+   * Elimina un elemento de la tabla de pedimento si se confirma la acción.
+   * @method eliminarPedimento
+   * @param {boolean} borrar - Indica si se debe proceder con la eliminación.
+   */
+  public eliminarPedimento(borrar: boolean): void {
+    if (borrar) {
+      this.periodoForm.reset();
+      this.tramite319Store.actualizarDatosForma(this.cuerpoSolicitarTablaFila);
+      this.periodoView = false;
+      this.vistaAlerta = false;
+    }
+  }
+
+  /**
+   * Recibe las filas seleccionadas de la tabla y las almacena en la propiedad `listaDeTablasSeleccionadas`.
+   * @method onListaDeFilaSeleccionada
    * @param {Solicitar[]} filasSeleccionadas - Lista de las filas seleccionadas en la tabla.
    */
-  onListaDeFilaSeleccionada(filasSeleccionadas: Solicitar[]): void {
+  public onListaDeFilaSeleccionada(filasSeleccionadas: Solicitar[]): void {
     this.listaDeTablasSeleccionadas = filasSeleccionadas as Solicitar[];
   }
 
   /**
-   * @metodo eliminarPeriodoPorId
-   * @descripcion Elimina los periodos seleccionados de la tabla de solicitudes.
+   * Elimina los periodos seleccionados de la tabla de solicitudes.
+   * @method eliminarPeriodoPorId
    */
-  eliminarPeriodoPorId(): void {
-    this.cuerpoSolicitarTablaFila = this.cuerpoSolicitarTablaFila?.filter(item => 
+  public eliminarPeriodoPorId(): void {
+    this.cuerpoSolicitarTablaFila = this.cuerpoSolicitarTablaFila?.filter(item =>
       this.listaDeTablasSeleccionadas?.some(seleccionado => seleccionado?.id === item?.id) === false
     ) ?? [];
-  if(this.cuerpoSolicitarTablaFila?.length === 0){
-    this.seccionStore.establecerFormaValida([false]);
-    this.seccionStore.establecerSeccion([true]);
-  }
-  else{
-    this.seccionStore.establecerFormaValida([true]);
-    this.seccionStore.establecerSeccion([true]);
-  }
+    if (this.cuerpoSolicitarTablaFila?.length === 0) {
+      this.seccionStore.establecerFormaValida([false]);
+      this.seccionStore.establecerSeccion([true]);
+    } else {
+      this.seccionStore.establecerFormaValida([true]);
+      this.seccionStore.establecerSeccion([true]);
+    }
     this.periodoView = false;
-  }
-  /**
-   * @method actualizarOperacionDesdeSeleccion
-   * @description Actualiza la operación seleccionada desde el formulario actual y la envía al store de trámite 319.
-   * 
-   * @compodoc
-   * Este método toma el valor de la operación desde el formulario asociado y lo utiliza para actualizar 
-   * el estado en el store correspondiente. Si no se encuentra un valor válido, se utiliza una cadena vacía por defecto.
-   * 
-   * @returns {void} Este método no retorna ningún valor.
-   */
-  actualizarOperacionDesdeSeleccion() :void{
-      this.tramite319Store.actualizarOperacion(this.miformulario?.value?.operacion|| '')
   }
 
   /**
-   * @description Abre una alerta modal de selección con un mensaje predefinido.
-   * La alerta es de tipo "peligro" y requiere que el usuario seleccione un elemento.
-   * 
-   * @componente OperacionesDeComercioExteriorComponent
-   * @uso Este método se utiliza para mostrar una notificación de alerta
-   * cuando no se ha seleccionado un elemento en una operación.
-   * 
-   * @returns {void} No retorna ningún valor.
+   * Actualiza la operación seleccionada desde el formulario actual y la envía al store de trámite 319.
+   * @method actualizarOperacionDesdeSeleccion
    */
-  abrirAlertaSeleccionModal(): void {
+  public actualizarOperacionDesdeSeleccion(): void {
+    this.tramite319Store.actualizarOperacion(this.miformulario?.value?.operacion || '');
+  }
+
+  /**
+   * Abre una alerta modal de selección con un mensaje predefinido.
+   * @method abrirAlertaSeleccionModal
+   */
+  public abrirAlertaSeleccionModal(): void {
     this.nuevaAlertaNotificacion = {
       tipoNotificacion: 'alert',
       categoria: 'danger',
@@ -381,13 +352,39 @@ else{
       txtBtnCancelar: '',
     }
   }
+
   /**
-   * @metodo ngOnDestroy
-   * @descripcion Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
+   * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
    * Completa el `Subject` para evitar fugas de memoria en las suscripciones.
+   * @method ngOnDestroy
    */
-  ngOnDestroy(): void {
+  public ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
+}
+/**
+ * Validador personalizado para verificar si un valor cumple con el formato de mes y año (MM/YYYY).
+ * Este validador se puede usar en formularios para asegurarse de que el valor ingresado sea válido.
+ * Si el valor está vacío, se delega la validación a `Validators.required`.
+ * Si el valor no coincide con el formato esperado, devuelve un error con la clave `invalidMonthYear`.
+ *
+ * @returns {ValidatorFn} Una función de validación que verifica el formato de mes y año.
+ *
+ * @example
+ * const control = new FormControl('12/2023', validadorDeMesyAno());
+ * console.log(control.errors); // null (válido)
+ *
+ * const invalidControl = new FormControl('13/2023', validadorDeMesyAno());
+ * console.log(invalidControl.errors); // { invalidMonthYear: true } (inválido)
+ */
+export function validadorDeMesyAno(): ValidatorFn {
+  return (control: AbstractControl) => {
+    const VALUE = control.value;
+    if (!VALUE) {
+      return null;
+    }
+    const REGEX = REGEX_FECHA_MES_ANO;
+    return REGEX.test(VALUE) ? null : { invalidMonthYear: true };
+  };
 }

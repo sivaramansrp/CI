@@ -1,83 +1,81 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormBuilder, FormGroup ,FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { CatalogoSelectComponent } from 'libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
-import { CommonModule } from '@angular/common';
 import { DetalleComponent } from './detalle.component';
-import { TablaDinamicaComponent } from 'libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
-import { TituloComponent } from 'libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
+import { FormBuilder, ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { of, Subject } from 'rxjs';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 
 describe('DetalleComponent', () => {
   let component: DetalleComponent;
   let fixture: ComponentFixture<DetalleComponent>;
+  let consultaioQueryMock: any;
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [
-        CommonModule,
-        TituloComponent,
-        TablaDinamicaComponent,
-        CatalogoSelectComponent,
-        FormsModule,
-        ReactiveFormsModule,
-        DetalleComponent
-      ],
-      declarations: [],
-      providers: [FormBuilder]
-    }).compileComponents();
-  });
+    consultaioQueryMock = {
+      selectConsultaioState$: of({ readonly: false }),
+    };
 
-  beforeEach(() => {
+    await TestBed.configureTestingModule({
+      imports: [DetalleComponent, ReactiveFormsModule, FormsModule],
+      providers: [
+        FormBuilder,
+        { provide: ConsultaioQuery, useValue: consultaioQueryMock },
+      ],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    }).compileComponents();
+
     fixture = TestBed.createComponent(DetalleComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize the form group on ngOnInit', () => {
-    component.ngOnInit();
-
-    expect(component.DetalleForm).toBeTruthy();
-    expect(component.DetalleForm instanceof FormGroup).toBe(true); // Jest matcher
-    expect(component.DetalleForm.get('DetalleData')).toBeTruthy();
-    expect(component.DetalleForm.get('DetalleData.regimen')).toBeTruthy();
-  });
-
-  it('should disable the form after getFormData is called', () => {
+  it('debe deshabilitar el formulario y establecer valores por defecto en getFormData', () => {
     component.getFormData();
-    expect(component.DetalleForm.disabled).toBe(true); // Corrected to use toBe(true) for Jest
+    expect(component.detalleForm.disabled).toBe(true);
+    const detalleData = component.detalleForm.get('DetalleData');
+    expect(detalleData?.get('regimen')?.value).toBe('EXPORTACION');
+    expect(detalleData?.get('descripcion')?.value).toBe('TELAS Y BIENES TEXTILES SIMPLE');
+    expect(detalleData?.get('unidad')?.value).toBe('Kilogramo');
+    expect(detalleData?.get('mecanismo')?.value).toBe('Primero en tiempo primero en dere');
+    expect(detalleData?.get('tratado')?.value).toBe('Tratado entre México, Estados Unid');
+    expect(detalleData?.get('fracciones')?.value).toBe('6302530020, 6103230055, 6103432015, 6302100020, 6201407511');
+    expect(detalleData?.get('paises')?.value).toBe('ESTADOS UNIDOS DE AMERICA');
+    expect(detalleData?.get('observaciones')?.value).toBe('observaciones');
+    expect(detalleData?.get('fundamentos')?.value).toBe('Fundamento de la vigencia del UPO');
+    expect(detalleData?.get('inicio')?.value).toBe('2024-01-01');
+    expect(detalleData?.get('fecha')?.value).toBe('2024-12-31');
   });
 
-  it('should set the correct values for the form fields after getFormData is called', () => {
-    component.getFormData();
-
-    const FORM_VALUE = component.DetalleForm.value;
-
-    expect(FORM_VALUE.DetalleData.regimen).toBe('EXPORTACION');
-    expect(FORM_VALUE.DetalleData.descripcion).toBe('TELAS Y BIENES TEXTILES SIMPLE');
-    expect(FORM_VALUE.DetalleData.unidad).toBe('Kilogramo');
-    expect(FORM_VALUE.DetalleData.mecanismo).toBe('Primero en tiempo primero en dere');
-    expect(FORM_VALUE.DetalleData.tratado).toBe('Tratado entre México, Estados Unid');
-    expect(FORM_VALUE.DetalleData.fracciones).toBe('6302530020, 6103230055, 6103432015, 6302100020, 6201407511');
-    expect(FORM_VALUE.DetalleData.paises).toBe('ESTADOS UNIDOS DE AMERICA');
-    expect(FORM_VALUE.DetalleData.observaciones).toBe('observaciones');
-    expect(FORM_VALUE.DetalleData.fundamentos).toBe('fundamento de la vigencia del upo');
-    expect(FORM_VALUE.DetalleData.inicio).toBe('2024-01-01');
-    expect(FORM_VALUE.DetalleData.fecha).toBe('2024-12-31');
+  it('debe deshabilitar el formulario si esFormularioSoloLectura es true en guardarDatosFormulario', () => {
+    component.esFormularioSoloLectura = true;
+    component.detalleForm.enable();
+    component.guardarDatosFormulario();
+    expect(component.detalleForm.disabled).toBe(true);
   });
 
-  it('should set the correct form values using setValue()', () => {
-    const REGIMEN_CONTROL = component.DetalleForm.get('DetalleData.regimen');
-    REGIMEN_CONTROL?.setValue('IMPORTACION');
-    expect(REGIMEN_CONTROL?.value).toBe('IMPORTACION');
+  it('debe habilitar el formulario si esFormularioSoloLectura es false en guardarDatosFormulario', () => {
+    component.esFormularioSoloLectura = false;
+    component.detalleForm.disable();
+    component.guardarDatosFormulario();
+    expect(component.detalleForm.enabled).toBe(true);
   });
 
-  it('should keep the form disabled after calling getFormData', () => {
-    component.getFormData();
-    const REGIMEN_CONTROL = component.DetalleForm.get('DetalleData.regimen');
-    expect(REGIMEN_CONTROL?.disabled).toBe(true); // Corrected to use toBe(true) for Jest
+  it('debe llamar a guardarDatosFormulario si detalleForm existe y esFormularioSoloLectura es true en inicializarEstadoFormulario', () => {
+    component.esFormularioSoloLectura = true;
+    const spy = jest.spyOn(component, 'guardarDatosFormulario');
+    component.inicializarEstadoFormulario();
+    expect(spy).toHaveBeenCalled();
   });
 
+  it('debe limpiar las suscripciones en ngOnDestroy', () => {
+    const nextSpy = jest.spyOn<any, any>(component['destroyNotifier$'], 'next');
+    const completeSpy = jest.spyOn<any, any>(component['destroyNotifier$'], 'complete');
+    component.ngOnDestroy();
+    expect(nextSpy).toHaveBeenCalled();
+    expect(completeSpy).toHaveBeenCalled();
+  });
 });

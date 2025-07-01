@@ -1,44 +1,94 @@
-import { AcuicolaService } from '../../servicios/acuicola.service';
-import { AlertComponent } from '@libs/shared/data-access-user/src';
-import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
-import { CatalogosSelect } from '@libs/shared/data-access-user/src';
-import { ChangeDetectorRef } from '@angular/core';
+/**
+ * @fileoverview
+ * Componente Angular para la gestión de los datos de la solicitud en el trámite 220701.
+ * Este componente utiliza formularios reactivos y consume múltiples servicios para obtener catálogos y datos relacionados con la solicitud.
+ * Implementa la lógica de inicialización, carga de catálogos, manejo de estado y sincronización con el store de Akita.
+ * 
+ * @module DatosDeLaSolicitudComponent
+ * @author
+ * @description
+ * - Permite la captura y visualización de los datos de la solicitud.
+ * - Sincroniza el estado del formulario con el store.
+ * - Gestiona la visualización en modo solo lectura.
+ * - Carga catálogos y datos auxiliares desde servicios.
+ * - Utiliza Akita para la gestión de estado.
+ */
+import {
+  ChangeDetectorRef,
+  Component,
+  Input,
+  OnDestroy,
+  OnInit,
+} from '@angular/core';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
-import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
-import { DatosDeLaSolicitudInt } from '../../modelos/datos-de-interfaz.model';
-import { DatosDelTramite } from '../../modelos/acuicola.model';
-import { EXPEDICION_FACTURA_FECHA } from '../../constantes/inspeccion-fisica-zoosanitario.enums';
-import { FormBuilder } from '@angular/forms';
-import { FormGroup } from '@angular/forms';
-import { INSTRUCCION_DOBLE_CLIC } from '../../constantes/inspeccion-fisica-zoosanitario.enums';
-import { Input } from '@angular/core';
-import { InputFecha } from '@libs/shared/data-access-user/src';
-import { InputFechaComponent } from '@libs/shared/data-access-user/src';
-import { MEDIO_SERVICIO } from '../../modelos/datos-de-interfaz.model';
+
+import { Subject, delay, map, takeUntil, tap } from 'rxjs';
+
+import {
+  AlertComponent,
+  CatalogoSelectComponent,
+  CatalogosSelect,
+  ConfiguracionColumna,
+  ConsultaioQuery,
+  InputFecha,
+  InputFechaComponent,
+  SeccionLibQuery,
+  SeccionLibState,
+  SeccionLibStore,
+  TituloComponent,
+} from '@libs/shared/data-access-user/src';
+
+import {
+  TablaDinamicaComponent,
+  TablaSeleccion,
+} from '@ng-mf/data-access-user';
+
+import {
+  EXPEDICION_FACTURA_FECHA,
+  INSTRUCCION_DOBLE_CLIC,
+} from '../../constantes/inspeccion-fisica-zoosanitario.enums';
+
+import {
+  DatosDelTramite,
+  ResponsableInspección,
+} from '../../modelos/acuicola.model';
+
+import {
+  DatosDeLaSolicitudInt,
+  MEDIO_SERVICIO,
+  medioInfo,
+} from '../../modelos/datos-de-interfaz.model';
+
+import { AcuicolaService } from '../../servicios/acuicola.service';
 import { MedioDeTransporteService } from '../../servicios/medio-de-transporte';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
-import { ResponsableInspección } from '../../modelos/acuicola.model';
-import { SeccionLibQuery } from '@libs/shared/data-access-user/src';
-import { SeccionLibState } from '@libs/shared/data-access-user/src';
-import { SeccionLibStore } from '@libs/shared/data-access-user/src';
-import { Subject } from 'rxjs';
-import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
-import { TablaSeleccion } from '@ng-mf/data-access-user';
-import { TituloComponent } from '@libs/shared/data-access-user/src';
+
 import { TramiteState } from '../../estados/tramite220701.store';
 import { TramiteStore } from '../../estados/tramite220701.store';
 import { TramiteStoreQuery } from '../../estados/tramite220701.query';
-import { delay } from 'rxjs/operators';
-import { map } from 'rxjs/operators';
-import { takeUntil } from 'rxjs/operators';
-import { tap } from 'rxjs/operators';
 
-import { Validators } from '@angular/forms';
-import { medioInfo } from '../../modelos/datos-de-interfaz.model';
+/**
+ * @component
+ * @name DatosDeLaSolicitudComponent
+ * @description
+ * Componente Angular para la gestión de los datos de la solicitud en el trámite 220701.
+ * Permite la captura y visualización de los datos de la solicitud, sincroniza el estado del formulario con el store y gestiona la visualización en modo solo lectura.
+ * Carga catálogos y datos auxiliares desde servicios y utiliza Akita para la gestión de estado.
+ *
+ * - Gestiona la captura y visualización de los datos de la solicitud.
+ * - Sincroniza el estado del formulario con el store.
+ * - Permite el modo solo lectura para revisión.
+ * - Carga catálogos y datos auxiliares desde servicios.
+ * - Utiliza Akita para la gestión de estado.
+ *
+ * @example
+ * <datos-de-la-solicitud [esFormularioSoloLectura]="true"></datos-de-la-solicitud>
+ */
 @Component({
   selector: 'datos-de-la-solicitud',
   standalone: true,
@@ -58,6 +108,9 @@ import { medioInfo } from '../../modelos/datos-de-interfaz.model';
 /**
  * Componente que maneja los datos de la solicitud en el formulario.
  * Implementa `OnInit` y `OnDestroy` para la inicialización y limpieza de recursos.
+ * 
+ * @example
+ * <datos-de-la-solicitud [esFormularioSoloLectura]="true"></datos-de-la-solicitud>
  */
 export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   /**

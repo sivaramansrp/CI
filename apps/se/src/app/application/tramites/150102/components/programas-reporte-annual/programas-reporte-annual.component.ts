@@ -1,4 +1,6 @@
 import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
+import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
 import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
@@ -9,13 +11,16 @@ import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { Output } from '@angular/core';
 import { ProgramasReporte } from '../../models/programas-reporte.model';
+import { ReactiveFormsModule } from '@angular/forms';
 import { ReporteFechas } from '../../models/programas-reporte.model';
 import { Solicitud150102Query } from '../../estados/solicitud150102.query';
 import { Solicitud150102State } from '../../estados/solicitud150102.store';
 import { Solicitud150102Store } from '../../estados/solicitud150102.store';
 import { SolicitudService } from '../../services/solicitud.service';
 import { Subject } from 'rxjs';
+import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src';
+import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
 
@@ -26,6 +31,14 @@ import { takeUntil } from 'rxjs';
  */
 @Component({
   selector: 'app-programas-reporte-annual',
+  standalone: true,
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    TituloComponent,
+    BsDatepickerModule,
+    TablaDinamicaComponent,
+  ],
   templateUrl: './programas-reporte-annual.component.html',
   styleUrl: './programas-reporte-annual.component.scss',
 })

@@ -27,7 +27,7 @@
             <div class="col-md-4">
               <div class="form-group">
                 <label class="form-label" for="fechdeEmbarque">Fecha de Embarque:</label>
-                <input class="form-control" id="fechdeEmbarque" placeholder="" type="text"
+                <input class="form-control" id="fechdeEmbarque" placeholder=""  type="date"
                   formControlName="fechdeEmbarque" [ngClass]="isValid(transporteForm, 'fechdeEmbarque') ? 'required' : ''"  (change)="setValoresStore(transporteForm,'fechdeEmbarque','setfetchdeEmbarque')">
               </div>
             </div>
@@ -45,8 +45,8 @@
             </div>
             <div class="col-md-4">
               <div class="btn-group">
-                <button class="btn btn-primary me-2" type="button">Guardar</button>
-                <button class="btn btn-danger" type="button">Continuar</button>
+                <button class="btn btn-primary me-2" type="button" [disabled]="esFormularioSoloLectura? true : false">Guardar</button>
+                <button class="btn btn-danger" type="button" [disabled]="esFormularioSoloLectura? true : false">Continuar</button>
               </div>
             </div>
           </div>   

@@ -89,7 +89,8 @@
           <app-tabla-dinamica
             [configuracionTabla]="configuracionTabla"
             [datos]="datosData"
-            [tipoSeleccionTabla]="tipoSeleccionTabla.CHECKBOX">
+            [tipoSeleccionTabla]="tipoSeleccionTabla.CHECKBOX"
+            [disableSeleccionTablaCheckBox]="esFormularioSoloLectura">
           </app-tabla-dinamica>
         </div>
       </div>
@@ -100,8 +101,8 @@
     </div>
     <div class="table-container mt-5">
         <div class="col-md-12 mt-5 d-flex justify-content-end">
-            <button type="button" class="btn btn-danger ms-3">Eliminar</button>
-            <button type="button" class="btn btn-primary ms-3"> Agregar </button>
+            <button type="button" class="btn btn-danger ms-3" [disabled]="esFormularioSoloLectura">Eliminar</button>
+            <button type="button" class="btn btn-primary ms-3" [disabled]="esFormularioSoloLectura"> Agregar </button>
         </div>
     </div>
 </ng-container>
@@ -111,7 +112,8 @@
     <div class="col-md-3">
         <lib-input-check [id]="'funciona'" [label]="'Aviso de funcionamiento'" [required]="false"
         formControlName="funcionamiento"
-        (change)="setValoresStore(domicilioEstablecimiento,'funcionamiento')"></lib-input-check>
+        (change)="setValoresStore(domicilioEstablecimiento,'funcionamiento')"
+        [isDisabled]="esFormularioSoloLectura"></lib-input-check>
     </div>
     <div class="col-md-4">
         <div class="form-group">

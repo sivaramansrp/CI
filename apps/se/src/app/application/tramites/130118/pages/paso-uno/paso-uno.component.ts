@@ -1,10 +1,11 @@
-import { AfterViewInit, ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { AfterViewInit, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL, PERSONA_MORAL_NACIONAL } from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
 import { FormularioDinamico, SolicitanteComponent, TIPO_PERSONA } from '@ng-mf/data-access-user';
-import { SolicitudComponent } from '../../components/solicitud/solicitud.component';
-import { map, Subject, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 import { PeximService } from '../../service/pexim.service';
+import { SolicitudComponent } from '../../components/solicitud/solicitud.component';
 
 /**
  * Componente para gestionar el paso uno del trámite 130118.
@@ -14,7 +15,7 @@ import { PeximService } from '../../service/pexim.service';
   templateUrl: './paso-uno.component.html',
   styleUrl: './paso-uno.component.scss'
 })
-export class PasoUnoComponent implements AfterViewInit, OnInit {
+export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
 
   /**
    * Referencia al componente SolicitanteComponent.
@@ -51,7 +52,7 @@ export class PasoUnoComponent implements AfterViewInit, OnInit {
   /**
    * Subject para notificar la destrucción del componente y cancelar suscripciones.
    */
-  private destroyNotifier$: Subject<void> = new Subject();
+  public destroyNotifier$: Subject<void> = new Subject();
 
   /**
    * Estado de la consulta obtenido desde el store.
@@ -62,6 +63,8 @@ export class PasoUnoComponent implements AfterViewInit, OnInit {
    * Indica si existen datos de respuesta del servidor para actualizar el formulario.
    */
   public esDatosRespuesta: boolean = false;
+  
+  cargaArchivosEvento = new Subject<any>();
 
   /**
    * Constructor del componente.

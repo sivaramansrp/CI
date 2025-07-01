@@ -77,18 +77,30 @@
           </div>
         </div>
   
-        <div class="row mt-3">
-          <div class="col-md-6">
-            <label for="manual" class="m-3">Manual</label>
-            <input type="radio" name="check" id="manual" (change)="setManual(true)" />
-            <label for="carga" class="m-3">Carga masiva</label>
-            <input type="radio" name="check" id="carga" (change)="setManual(false)" />
-          </div>
-        </div>
+<div class="row mt-3">
+  <div class="col-md-6">
+    <label for="manual" class="m-3">Manual</label>
+    <input
+      type="radio"
+      name="check"
+      id="manual"
+      (change)="setManual(true)"
+      [disabled]="!esFormularioSoloLectura"
+    />
+    <label for="carga" class="m-3">Carga masiva</label>
+    <input
+      type="radio"
+      name="check"
+      id="carga"
+      (change)="setManual(false)"
+      [disabled]="!esFormularioSoloLectura"
+    />
+  </div>
+</div>
       </form>
     </div>
   
-    <ng-container *ngIf="isManualSelected">
+    <ng-container *ngIf="esFormularioSoloLectura">
       <app-mercancia></app-mercancia>
     </ng-container>
   </div>

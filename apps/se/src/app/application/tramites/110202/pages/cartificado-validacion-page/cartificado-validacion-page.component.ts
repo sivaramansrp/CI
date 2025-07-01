@@ -6,6 +6,9 @@ import { PasoDosComponent } from '../paso-dos/paso-dos.component';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { Tramite110202Query } from '../../estados/tramite110202.query';
 
+/**
+ * Interfaz que define la estructura de una acción de botón.
+ */
 interface AccionBoton {
   /**
    * La acción que se realizará.

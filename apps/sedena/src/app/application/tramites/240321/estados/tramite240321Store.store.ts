@@ -8,25 +8,41 @@ import { Store } from '@datorama/akita';
 import { StoreConfig } from '@datorama/akita';
 
 /**
- * Interfaz que representa el estado completo del trámite 240321.
- *
- * @property {number} [tabSeleccionado] - Pestaña actualmente activa en el flujo.
- * @property {DestinoFinal[]} destinatarioFinalTablaDatos - Lista de destinatarios finales registrados.
- * @property {Proveedor[]} proveedorTablaDatos - Lista de proveedores registrados.
- * @property {PagoDerechosFormState} pagoDerechos - Información del formulario de pago de derechos.
- * @property {MercanciaDetalle[]} merccancialTablaDatos - Lista de mercancías registradas.
- * @property {DatosDelTramiteFormState} datosDelTramite - Información general del formulario de datos del trámite.
- *  @property {JustificacionTramiteFormState} justificacionTramiteFormState - Información del formulario de justificación del trámite.
-*/
+ * Representa el estado de la gestión para el trámite 240321.
+ */
 export interface Tramite240321State {
+  /**
+   * Índice de la pestaña actualmente seleccionada en la interfaz, si aplica.
+   */
   tabSeleccionado?: number;
+  /**
+   * Lista de destinatarios finales mostrados en la tabla de datos.
+   */
   destinatarioFinalTablaDatos: DestinoFinal[];
+  /**
+   * Lista de proveedores mostrados en la tabla de datos.
+   */
   proveedorTablaDatos: Proveedor[];
+  /**
+   * Estado del formulario relacionado con el pago de derechos.
+   */
   pagoDerechos: PagoDerechosFormState;
+  /**
+   * Lista de detalles de mercancía mostrados en la tabla de datos.
+   */
   merccancialTablaDatos: MercanciaDetalle[];
+    /**
+   * Estado del formulario con los datos generales del trámite.
+   */
   datosDelTramite: DatosDelTramiteFormState;
+  /**
+   * Estado del formulario de justificación del trámite.
+   */
   justificacionTramiteFormState: JustificacionTramiteFormState;
-  folio:string;
+  /**
+   * Folio asociado al estado del trámite.
+   */
+  folio: string;
 }
 
 /**
@@ -214,12 +230,26 @@ export class Tramite240321Store extends Store<Tramite240321State> {
    * @returns {void}
    */
 
+  /**
+   * Actualiza el valor del folio en el estado de la tienda.
+   *
+   * @param folio - El nuevo valor de folio a establecer.
+   * @remarks
+   * Utilice este método para cambiar el folio asociado al estado actual.
+   */
   public updateFolio(folio:string): void {
     this.update((state) => ({
       ...state,
       folio: folio,
     }));
   }
+  /**
+   * Actualiza el estado del store con los valores proporcionados en el nuevo estado.
+   * 
+   * @param state - El nuevo estado parcial que se fusionará con el estado actual.
+   * @remarks
+   * Utiliza la función `update` para combinar el estado actual con el nuevo estado.
+   */
   public updateState(state: Tramite240321State): void {
     this.update((currentState) => ({
       ...currentState,

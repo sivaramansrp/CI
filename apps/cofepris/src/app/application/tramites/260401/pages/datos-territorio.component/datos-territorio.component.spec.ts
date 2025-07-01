@@ -1,75 +1,121 @@
-import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DatosTerritorioComponent } from './datos-territorio.component';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { SolicitanteComponent } from '@libs/shared/data-access-user/src';
-import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
+import { Solicitud260401Service } from '../../services/service260401.service';
 import { of, Subject } from 'rxjs';
+import { SolicitanteComponent, TIPO_PERSONA } from '@libs/shared/data-access-user/src';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 
 describe('DatosTerritorioComponent', () => {
   let component: DatosTerritorioComponent;
   let fixture: ComponentFixture<DatosTerritorioComponent>;
+  let consultaQueryMock: any;
   let solicitud260401ServiceMock: any;
-
+  let solicitanteComponentMock: any;
 
   beforeEach(async () => {
+    consultaQueryMock = {
+      selectConsultaioState$: of({ update: true })
+    };
 
     solicitud260401ServiceMock = {
-      getRegistroTomaMuestrasMercanciasData: jest.fn(),
-      getPagoDerechos: jest.fn(),
+      getRegistroTomaMuestrasMercanciasData: jest.fn().mockReturnValue(of('registroData')),
+      getPagoDerechos: jest.fn().mockReturnValue(of('permisoData')),
       actualizarEstadoFormulario: jest.fn(),
-      actualizarPagoDerechosFormulario: jest.fn(),
+      actualizarPagoDerechosFormulario: jest.fn()
+    };
+
+    solicitanteComponentMock = {
+      obtenerTipoPersona: jest.fn()
     };
 
     await TestBed.configureTestingModule({
       declarations: [DatosTerritorioComponent],
-      imports: [HttpClientTestingModule, SolicitanteComponent],
-       providers: [
-        { provide: 'Solicitud260401Service', useValue: solicitud260401ServiceMock }
+      providers: [
+        { provide: ConsultaioQuery, useValue: consultaQueryMock },
+        { provide: Solicitud260401Service, useValue: solicitud260401ServiceMock }
       ],
-      schemas: [NO_ERRORS_SCHEMA] 
+      schemas: [NO_ERRORS_SCHEMA]
     }).compileComponents();
 
     fixture = TestBed.createComponent(DatosTerritorioComponent);
     component = fixture.componentInstance;
-    (component as any).destroyNotifier$ = new Subject<void>();
-    fixture.detectChanges();
+    // Mock @ViewChild
+    component.solicitante = solicitanteComponentMock;
   });
 
-   afterEach(() => {
-    (component as any).destroyNotifier$.complete();
+  afterEach(() => {
+    jest.clearAllMocks();
   });
 
-  it('should create', () => {
+  it('debe crearse', () => {
     expect(component).toBeTruthy();
   });
 
-    it('should have "indice" initialized to 1', () => {
-    expect(component.indice).toBe(1);
+  describe('ngOnInit', () => {
+    it('debe llamar a guardarDatosFormulario si consultaState.update es verdadero', () => {
+      const guardarDatosFormularioSpy = jest.spyOn(component, 'guardarDatosFormulario');
+      consultaQueryMock.selectConsultaioState$ = of({ update: true });
+      component.ngOnInit();
+      expect(guardarDatosFormularioSpy).toHaveBeenCalled();
+    });
+
+    it('debe establecer esDatosRespuesta en true si consultaState.update es falso', () => {
+      consultaQueryMock.selectConsultaioState$ = of({ update: false });
+      component.ngOnInit();
+      expect(component.esDatosRespuesta).toBe(true);
+    });
   });
 
-  it('should change "indice" when seleccionaTab is called', () => {
-    component.seleccionaTab(2);
-    expect(component.indice).toBe(2);
+  describe('guardarDatosFormulario', () => {
+    it('debe llamar a actualizarEstadoFormulario y actualizarPagoDerechosFormulario', (done) => {
+      (component as any).solicitud260401Service = solicitud260401ServiceMock;
+      component.solicitante = solicitanteComponentMock;
+      component.guardarDatosFormulario();
+      setTimeout(() => {
+        expect(solicitud260401ServiceMock.actualizarEstadoFormulario).toHaveBeenCalledWith('registroData');
+        expect(solicitud260401ServiceMock.actualizarPagoDerechosFormulario).toHaveBeenCalledWith('permisoData');
+        expect(component.esDatosRespuesta).toBe(true);
+        done();
+      }, 0);
+    });
 
-    component.seleccionaTab(5);
-    expect(component.indice).toBe(5);
+    it('no debe llamar a actualizarEstadoFormulario si registro es falsy', (done) => {
+      solicitud260401ServiceMock.getRegistroTomaMuestrasMercanciasData.mockReturnValue(of(null));
+      solicitud260401ServiceMock.getPagoDerechos.mockReturnValue(of('permisoData'));
+      component.guardarDatosFormulario();
+      setTimeout(() => {
+        expect(solicitud260401ServiceMock.actualizarEstadoFormulario).not.toHaveBeenCalled();
+        expect(solicitud260401ServiceMock.actualizarPagoDerechosFormulario).toHaveBeenCalledWith('permisoData');
+        done();
+      }, 0);
+    });
+
+    it('no debe llamar a actualizarPagoDerechosFormulario si permiso es falsy', (done) => {
+      solicitud260401ServiceMock.getRegistroTomaMuestrasMercanciasData.mockReturnValue(of('registroData'));
+      solicitud260401ServiceMock.getPagoDerechos.mockReturnValue(of(null));
+      component.guardarDatosFormulario();
+      setTimeout(() => {
+        expect(solicitud260401ServiceMock.actualizarEstadoFormulario).toHaveBeenCalledWith('registroData');
+        expect(solicitud260401ServiceMock.actualizarPagoDerechosFormulario).not.toHaveBeenCalled();
+        done();
+      }, 0);
+    });
   });
 
-  it('should call actualizarEstadoFormulario and actualizarPagoDerechosFormulario with correct data', fakeAsync(() => {
-    const registroMock = { foo: 'bar' };
-    const permisoMock = { baz: 'qux' };
-    solicitud260401ServiceMock.getRegistroTomaMuestrasMercanciasData.mockReturnValue(of(registroMock));
-    solicitud260401ServiceMock.getPagoDerechos.mockReturnValue(of(permisoMock));
+  describe('ngAfterViewInit', () => {
+    it('debe llamar a solicitante.obtenerTipoPersona con MORAL_NACIONAL', () => {
+      component.solicitante = solicitanteComponentMock;
+      component.ngAfterViewInit();
+      expect(solicitanteComponentMock.obtenerTipoPersona).toHaveBeenCalledWith(TIPO_PERSONA.MORAL_NACIONAL);
+    });
+  });
 
-    component.guardarDatosFormulario();
-    tick();
-    fixture.detectChanges();
-    fixture.detectChanges();
-
-
-    expect(solicitud260401ServiceMock.actualizarEstadoFormulario).toHaveBeenCalledWith(registroMock);
-    expect(solicitud260401ServiceMock.actualizarPagoDerechosFormulario).toHaveBeenCalledWith(permisoMock);
-    expect(component.esDatosRespuesta).toBe(true);
-  }));
-
+  describe('seleccionaTab', () => {
+    it('debe actualizar el índice', () => {
+      component.indice = 1;
+      component.seleccionaTab(3);
+      expect(component.indice).toBe(3);
+    });
+  });
 });

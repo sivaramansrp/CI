@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { AL_DAR, AlertComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 
@@ -209,7 +208,7 @@ constructor(
     metodoNombre: keyof Tramite260211Store
   ): void {
     const VALOR = form.get(campo)?.value;
-    (this.tramite260211Store[metodoNombre] as (value: any) => void)(VALOR);
+    (this.tramite260211Store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
  
   /**

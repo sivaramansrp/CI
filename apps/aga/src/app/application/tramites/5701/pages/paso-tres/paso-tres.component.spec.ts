@@ -1,157 +1,207 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PasoTresComponent } from './paso-tres.component';
 import { Router } from '@angular/router';
-import {
-  TramiteFolioService,
-  TramiteFolioStore,
-} from '@ng-mf/data-access-user';
-import { DocumentosService } from '../../../../core/services/5701/documentos/documentos.service';
+import { TramiteFolioService } from '@ng-mf/data-access-user';
+import { TramiteFolioStore } from '@ng-mf/data-access-user';
+import { FirmaElectronicaService } from '@libs/shared/data-access-user/src/core/services/shared/firma-electronica/firma-electronica.service';
+import { Tramite5701Query } from '../../../../core/queries/tramite5701.query';
+import { Tramite5701Store } from '../../../../core/estados/tramites/tramite5701.store';
+import { CadenaOriginalService } from '@ng-mf/data-access-user';
+import { DocumentoService } from '@ng-mf/data-access-user';
 import { of, throwError } from 'rxjs';
-import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 describe('PasoTresComponent', () => {
   let component: PasoTresComponent;
-  let fixture: ComponentFixture<PasoTresComponent>;
+  let mockRouter: jest.Mocked<any>;
+  let mockTramiteFolioService: jest.Mocked<any>;
+  let mockTramiteStore: jest.Mocked<any>;
+  let mockFirmaService: jest.Mocked<any>;
+  let mockTramite5701Query: jest.Mocked<any>;
+  let mockTramite5701Store: jest.Mocked<any>;
+  let mockCadenaOriginalService: jest.Mocked<any>;
+  let mockDocumentoService: jest.Mocked<any>;
 
-  // Creamos mocks para cada uno de los servicios obligatorios.
-  let routerMock: Partial<Router>;
-  let tramiteFolioServiceMock: Partial<TramiteFolioService>;
-  let tramiteStoreMock: Partial<TramiteFolioStore>;
-  let documentosServiceMock: Partial<DocumentosService>;
-
-  beforeEach(async () => {
-    // Configuramos el Router con una URL ficticia.
-    routerMock = {
-      url: '/base/path/other',
-      navigate: jest.fn(),
+  beforeEach(() => {
+    // Crear mocks de todos los servicios
+    mockRouter = {
+      url: '/tramites/5701/paso3',
+      navigate: jest.fn((commands) => {
+        const fullPath = Array.isArray(commands) ? commands.join('/') : commands;
+        return Promise.resolve(true);
+      }),
+      createUrlTree: jest.fn((commands) => ({
+        toString: () => {
+          const baseUrl = '/tramites/5701';
+          const path = Array.isArray(commands) ? commands.join('/') : commands;
+          return `${baseUrl}/${path}`;
+        }
+      }))
     };
 
-    // Simulamos el servicio de trámite. En este ejemplo:
-    // - obtenerTramite devuelve un objeto con una propiedad data.
-    // - generarFolio devuelve un objeto que contiene la propiedad datos.
-    tramiteFolioServiceMock = {
-      obtenerTramite: jest.fn().mockReturnValue(of({ data: 'tramiteData' })),
-      generarFolio: jest.fn().mockReturnValue(of({ datos: 'folioGenerado' })),
+    mockTramiteFolioService = {
+      obtenerTramite: jest.fn().mockReturnValue(of({ data: 'tramiteData' }))
     };
 
-    // Simulamos el store para el trámite.
-    tramiteStoreMock = {
-      establecerTramite: jest.fn(),
+    mockTramiteStore = {
+      establecerTramite: jest.fn()
     };
 
-    // Simulamos el servicio para la firma.
-    documentosServiceMock = {
-      enviarFirma: jest.fn().mockReturnValue(of({ datos: 'testFolioFirma' })),
+    mockFirmaService = {
+      obtenerCadenaOriginal: jest.fn(),
+      enviarFirma: jest.fn().mockReturnValue(of({ datos: 'folio123' }))
     };
 
-    await TestBed.configureTestingModule({
-      declarations: [PasoTresComponent],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA],
-      providers: [
-        { provide: Router, useValue: routerMock },
-        { provide: TramiteFolioService, useValue: tramiteFolioServiceMock },
-        { provide: TramiteFolioStore, useValue: tramiteStoreMock },
-        { provide: DocumentosService, useValue: documentosServiceMock },
-      ],
-    }).compileComponents();
-
-    fixture = TestBed.createComponent(PasoTresComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
-
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
-
-  it('should set url in ngOnInit based on router.url', () => {
-    // La lógica en ngOnInit:
-    //  - Toma router.url ("/base/path/other")
-    //  - .split('/') -> ["", "base", "path", "other"]
-    //  - slice(0, 3) -> ["", "base", "path"]
-    //  - join('/') -> "/base/path"
-    expect(component.url).toBe('/base/path');
-  });
-
-  it('should process obtieneFirma correctly and navigate to acuse', () => {
-    // Configuramos id_solicitud en localStorage
-    localStorage.setItem('id_solicitud', '123');
-
-    // Para asegurar un valor predecible en el número aleatorio, forzamos Math.random.
-    // Math.random() se utiliza para obtener: floor(value*90)+10.
-    // Si forzamos Math.random() a devolver 0.5,
-    // => Math.floor(0.5 * 90) = 45; 45 + 10 = 55.
-    const randomSpy = jest.spyOn(Math, 'random').mockReturnValue(0.5);
-
-    // Llamamos al método con un valor de firma (por ejemplo, "testFirma").
-    component.obtieneFirma('testFirma');
-
-    // Verificamos que documentosService.enviarFirma fue llamado
-    // con un payload que contenga:
-    //  - id_solicitud: 123 (Number) y
-    //  - los datos de la firma simulada (almacenados internamente en el componente).
-    const expectedPayload = {
-      id_solicitud: 123,
-      ...component['datosFirmaSimulada'], // Accedemos al private property mediante bracket notation.
+    mockTramite5701Query = {
+      getValue: jest.fn().mockReturnValue({ idSolicitud: '123' })
     };
-    expect(documentosServiceMock.enviarFirma).toHaveBeenCalledWith(
-      expectedPayload
+
+    mockTramite5701Store = {
+      // Agregar métodos si es necesario
+    };
+
+    mockCadenaOriginalService = {
+      generarCadena: jest.fn().mockReturnValue(of({ datos: 'datosCadena' }))
+    };
+
+    mockDocumentoService = {
+      obtenerDatosFirma: jest.fn().mockReturnValue(of({
+        datos: { documentos_requeridos: ['doc1', 'doc2'] }
+      }))
+    };
+
+    // Crear una instancia del componente con los mocks
+    component = new PasoTresComponent(
+      mockRouter as unknown as Router,
+      mockTramiteFolioService as unknown as TramiteFolioService,
+      mockTramiteStore as unknown as TramiteFolioStore,
+      mockFirmaService as unknown as FirmaElectronicaService,
+      mockTramite5701Query as unknown as Tramite5701Query,
+      mockTramite5701Store as unknown as Tramite5701Store,
+      mockCadenaOriginalService as unknown as CadenaOriginalService,
+      mockDocumentoService as unknown as DocumentoService
     );
-
-    // Luego se actualiza localStorage con el folio obtenido de la respuesta.
-    expect(localStorage.getItem('folioFirma')).toBe('testFolioFirma');
-
-    // Se espera que obtenerTramite se invoque con el id 19.
-    expect(tramiteFolioServiceMock.obtenerTramite).toHaveBeenCalledWith(19);
-
-    // Se espera que generarFolio se invoque.
-    expect(tramiteFolioServiceMock.generarFolio).toHaveBeenCalled();
-
-    // En el primer switchMap, se establece el trámite usando los datos del trámite.
-    expect(tramiteStoreMock.establecerTramite).toHaveBeenCalledWith(
-      'tramiteData',
-      'testFirma'
-    );
-
-    // Luego, en el segundo switchMap, se genera el folio completo.
-    // Con el mock del random, se espera que "folioGenerado" se concatene con "55".
-    expect(tramiteStoreMock.establecerTramite).toHaveBeenCalledWith(
-      'folioGenerado55',
-      'testFirma'
-    );
-
-    // Finalmente, se redirige a la URL de acuse.
-    // Dado que component.url se estableció en "/base/path", se espera que navegue a "/base/path/acuse".
-    expect(routerMock.navigate).toHaveBeenCalledWith(['/base/path/acuse']);
-
-    randomSpy.mockRestore();
   });
 
-  it('should not call enviarFirma if firma is empty', () => {
-    // No se debe proceder si se pasa una firma vacía.
-    component.obtieneFirma('');
-    expect(documentosServiceMock.enviarFirma).not.toHaveBeenCalled();
+  afterEach(() => {
+    jest.clearAllMocks();
   });
 
-  it('should catch and propagate error from enviarFirma', () => {
-    // Forzamos que enviarFirma retorne un error.
-    documentosServiceMock.enviarFirma = jest
-      .fn()
-      .mockReturnValue(throwError(() => new Error('Error en firma')));
-    // Spy del console.error para verificar que se registre el error.
-    const consoleErrorSpy = jest
-      .spyOn(console, 'error')
-      .mockImplementation(() => {});
+  describe('ngOnInit', () => {
+    it('debería establecer correctamente la URL y llamar a generarCadena', () => {
+      component.ngOnInit();
+      expect(component.url).toBe('/tramites/5701');
+      expect(mockCadenaOriginalService.generarCadena).toHaveBeenCalled();
+    });
+  });
 
-    localStorage.setItem('id_solicitud', '123');
-    component.obtieneFirma('testFirma');
+  describe('obtenerCadenaOriginal', () => {
+    it('debería establecer datosCadena y cadenaOriginal si la respuesta es exitosa', () => {
+      mockFirmaService.obtenerCadenaOriginal.mockReturnValue(of({ datos: 'cadenaOriginal' }));
 
-    // Debido a que se utiliza catchError en el pipe, se espera que se imprima el error.
-    expect(consoleErrorSpy).toHaveBeenCalledWith(
-      'Error en el proceso de firma:',
-      expect.any(Error)
-    );
+      component.obtenerCadenaOriginal();
 
-    consoleErrorSpy.mockRestore();
+      expect(mockCadenaOriginalService.generarCadena).toHaveBeenCalled();
+      expect(mockFirmaService.obtenerCadenaOriginal).toHaveBeenCalledWith('datosCadena');
+      expect(component.datosCadena).toBe('datosCadena');
+      expect(component.cadenaOriginal).toBe('cadenaOriginal');
+    });
+
+    it('debería manejar errores al generar la cadena', () => {
+      const consoleSpy = jest.spyOn(console, 'error');
+      mockCadenaOriginalService.generarCadena.mockReturnValue(throwError(() => new Error('Error')));
+
+      component.obtenerCadenaOriginal();
+
+      expect(consoleSpy).toHaveBeenCalledWith('Error al cargar datos del trámite:', expect.any(Error));
+    });
+
+    it('debería manejar errores al obtener la cadena original', () => {
+      const consoleSpy = jest.spyOn(console, 'error');
+      mockFirmaService.obtenerCadenaOriginal.mockReturnValue(throwError(() => new Error('Error')));
+
+      component.obtenerCadenaOriginal();
+
+      expect(consoleSpy).toHaveBeenCalledWith('Error al generar cadena:', expect.any(Error));
+    });
+  });
+
+  describe('datosFirma', () => {
+    it('debería asignar datosFirmaReales y llamar a obtieneFirma', () => {
+      const mockDatos = {
+        firma: 'firma123',
+        certSerialNumber: 'cert123',
+        rfc: 'RFC123',
+        fechaFin: '2023-12-31'
+      };
+
+      jest.spyOn(component, 'obtieneFirma');
+
+      component.datosFirma(mockDatos);
+
+      expect(component.datosFirmaReales).toEqual(mockDatos);
+      expect(component.obtieneFirma).toHaveBeenCalledWith('firma123');
+    });
+  });
+
+  describe('obtieneFirma', () => {
+    beforeEach(() => {
+      component.cadenaOriginal = 'cadenaOriginal';
+      component.datosFirmaReales = {
+        firma: 'firma123',
+        certSerialNumber: 'cert123',
+        rfc: 'RFC123',
+        fechaFin: '2023-12-31'
+      };
+    });
+
+    it('debería completar correctamente el proceso de firma', () => {
+      component.obtieneFirma('firma123');
+
+      expect(mockDocumentoService.obtenerDatosFirma).toHaveBeenCalled();
+      expect(mockFirmaService.enviarFirma).toHaveBeenCalledWith(expect.objectContaining({
+        id_solicitud: 123,
+        cadena_original: expect.any(String),
+        cert_serial_number: 'cert123',
+        clave_usuario: 'RFC123',
+        clave_rol: 'Solicitante',
+        sello: expect.any(String),
+        fecha_fin_vigencia: '2023-12-31',
+        documentos_requeridos: ['doc1', 'doc2']
+      }));
+      expect(mockTramiteFolioService.obtenerTramite).toHaveBeenCalledWith(19);
+      expect(mockTramiteStore.establecerTramite).toHaveBeenCalledTimes(2);
+      expect(mockRouter.navigate).toHaveBeenCalledWith([`${component.url}/acuse`]);
+      expect(component.folio).toBe('folio123');
+    });
+
+    it('no debería continuar si faltan cadenaOriginal o datosFirmaReales', () => {
+      const consoleSpy = jest.spyOn(console, 'error');
+
+      component.cadenaOriginal = undefined;
+      component.obtieneFirma('firma123');
+
+      expect(consoleSpy).toHaveBeenCalledWith('Faltan datos para completar la firma');
+      expect(mockDocumentoService.obtenerDatosFirma).not.toHaveBeenCalled();
+    });
+
+    it('debería manejar errores en el proceso de firma', () => {
+      const consoleSpy = jest.spyOn(console, 'error');
+      mockDocumentoService.obtenerDatosFirma.mockReturnValue(throwError(() => new Error('Test Error')));
+
+      component.obtieneFirma('firma123');
+
+      expect(consoleSpy).toHaveBeenCalledWith('Error en el proceso de firma:', expect.any(Error));
+    });
+  });
+
+  describe('ngOnDestroy', () => {
+    it('debería completar el subject destroy$', () => {
+      const nextSpy = jest.spyOn(component['destroy$'], 'next');
+      const completeSpy = jest.spyOn(component['destroy$'], 'complete');
+
+      component.ngOnDestroy();
+
+      expect(nextSpy).toHaveBeenCalled();
+      expect(completeSpy).toHaveBeenCalled();
+    });
   });
 });

@@ -1,5 +1,3 @@
-import exp from "constants";
-
 /**
  * @constant
  * @name CROSLISTA_DE_PAISES
@@ -122,6 +120,7 @@ export const NUMERO_TRAMITE = {
   TRAMITE_240123: 240123,
   TRAMITE_240321: 240321,
   TRAMITE_240118: 240118,
+  TRAMITE_240105: 240105
 }
 
 /**

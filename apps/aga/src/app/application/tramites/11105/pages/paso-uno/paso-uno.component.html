@@ -45,12 +45,18 @@
         [datos]="datosPasos"
         (continuarEvento)="getValorIndice($event)"
       ></btn-continuar>
-      } @case (2) {
+      } @case (2) 
+      {@if(esDatosRespuesta)
+        {
       <app-datos-generales-de-la-solicitud (continuarEvento)="continuar()"
       ></app-datos-generales-de-la-solicitud>
+        }
       } @case (3) {
+        @if(esDatosRespuesta)
+        {
       <app-desistimiento (continuarEvento)="continuar()"> </app-desistimiento>
-      } }
+      }
+       } }
     </ng-container>
   </div>
 </div>

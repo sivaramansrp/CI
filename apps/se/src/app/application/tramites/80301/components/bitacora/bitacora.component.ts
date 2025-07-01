@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { Bitacora } from '../../models/plantas-consulta.model';
 import { CONFIGURACION_BITACORA_TABLA } from '../../constantes/modificacion.enum';
@@ -10,7 +10,7 @@ import { ToastrService } from 'ngx-toastr';
   selector: 'app-bitacora',
   templateUrl: './bitacora.component.html',
 })
-export class BitacoraComponent implements OnInit, OnDestroy {
+export class BitacoraComponent implements OnDestroy {
   /**
    * Subject utilizado para notificar cuando se debe completar y limpiar las suscripciones activas.
    * Esto evita fugas de memoria al completar las suscripciones cuando el componente es destruido.
@@ -37,25 +37,18 @@ export class BitacoraComponent implements OnInit, OnDestroy {
   constructor(
     public modificionService: ModificacionSolicitudeService,
     public toastr: ToastrService
-  ) {}
-
-  /**
-   * Método que se ejecuta cuando el componente es inicializado.
-   * Realiza una llamada al servicio para obtener los datos de la bitácora y los almacena en la propiedad `datos`.
-   * Si ocurre un error durante la llamada, muestra un mensaje de error al usuario.
-   */
-  ngOnInit(): void {
-    this.modificionService
-      .obtenerBitacora()
-      .pipe(takeUntil(this.destroyNotifier$)) // Se cancela la suscripción cuando el componente es destruido.
-      .subscribe(
-        (data: Bitacora[]) => {
-          this.datos = [...data]; // Se almacena la respuesta de la bitácora en la variable `datos`.
-        },
-        () => {
-          this.toastr.error('Error al cargar los estados'); // Si ocurre un error, se muestra un mensaje de error.
-        }
-      );
+  ) {
+       this.modificionService
+          .obtenerBitacora()
+          .pipe(takeUntil(this.destroyNotifier$)) // Se cancela la suscripción cuando se destruye el componente.
+          .subscribe(
+            (data: Bitacora[]) => {
+              this.datos = [...data]; // Almacena los datos de la bitácora en la variable `datos`.
+            },
+            () => {
+              this.toastr.error('Error al cargar los estados'); // Manejo de errores.
+            }
+          );
   }
 
   /**

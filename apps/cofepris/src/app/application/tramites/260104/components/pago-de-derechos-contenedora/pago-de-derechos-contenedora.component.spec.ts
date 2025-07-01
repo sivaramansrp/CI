@@ -32,16 +32,24 @@ describe('PagoDeDerechosContenedoraComponent', () => {
     tramiteStore = TestBed.inject(Tramite260104Store);
   });
 
-  it('should create', () => {
+  it('debe crearse', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize pagoDerechos from tramiteStore', () => {
+  it('debe inicializar pagoDerechos desde tramiteStore', () => {
     expect(tramiteStore.getValue).toHaveBeenCalled();
-    expect(component.pagoDerechos).toEqual({ field1: 'value1', field2: 'value2' });
+    expect(component.pagoDerechos).toEqual({
+      claveReferencia: 'test',
+      cadenaDependencia: 'test',
+      estado: 'test',
+      llavePago: 'test',
+      fechaPago: 'test',
+      importePago: 'test',
+      banco:'test'
+    });
   });
 
-  it('should call updatePagoDerechos on tramiteStore when updatePagoDerechos is called', () => {
+  it('debe llamar a updatePagoDerechos en tramiteStore cuando se llama updatePagoDerechos', () => {
     const newPagoDerechos: PagoDerechosFormState = {claveReferencia: 'test',
       cadenaDependencia: 'test',
       estado: 'test',

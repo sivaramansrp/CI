@@ -39,6 +39,25 @@ import { Tramite230501Store } from '../../estados/stores/tramite230501Store.stor
   templateUrl: './destinatario-final.component.html',
   styleUrl: './destinatario-final.component.scss',
 })
+/**
+ * Componente que gestiona la información del destinatario final en un trámite.
+ * Permite agregar, actualizar y visualizar datos de destinatarios finales.
+ * También incluye funcionalidades para manejar el estado del formulario y sus validaciones.
+ * 
+ * @class DestinatarioFinalComponent
+ * @implements OnDestroy, OnInit
+ * 
+ * @description Este componente utiliza formularios reactivos para capturar información del destinatario final.
+ * Proporciona métodos para interactuar con el estado de la aplicación y servicios externos para cargar datos de catálogo.
+ * Además, implementa mecanismos para prevenir fugas de memoria mediante la desuscripción de observables.
+ * 
+ * @example
+ * ```typescript
+ * <app-destinatario-final></app-destinatario-final>
+ * ```
+ * 
+ * @author Muneeshwaran N
+ */
 export class DestinatarioFinalComponent implements OnDestroy, OnInit {
 
 
@@ -147,7 +166,6 @@ export class DestinatarioFinalComponent implements OnDestroy, OnInit {
     public tramiteQuery: Tramite230501Query,
     public consultaQuery:ConsultaioQuery
   ) {
-    // No hacer nada
   }
 
   /**
@@ -386,9 +404,19 @@ export class DestinatarioFinalComponent implements OnDestroy, OnInit {
       correoElectronico: ['', [Validators.required, Validators.email]],
     });
   }
-         /**
-   * Evalúa si se debe inicializar o cargar datos en el formulario.
-   */
+
+
+    /**
+     * Inicializa el estado del formulario de destinatario final.
+     * 
+     * Este método se encarga de configurar el estado inicial del formulario 
+     * según las condiciones establecidas. Si el formulario para agregar un 
+     * destinatario final no está definido, se crea utilizando el método 
+     * `createrDestinatrioForm`. Además, si el formulario está configurado 
+     * como solo lectura, se deshabilita el control `agregarDestinatarioFinal`.
+     * 
+     * @returns {void} Este método no retorna ningún valor.
+     */
      inicializarEstadoFormulario(): void {
       if(!this.agregarDestinatarioFinal){
         this.createrDestinatrioForm();

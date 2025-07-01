@@ -137,6 +137,7 @@
               'entidadFederativa'
             )
           "
+           [isDisabled]="esFormularioSoloLectura"
         ></app-catalogo-select>
 
         <div *ngIf="esInvalido('entidadFederativa')" class="text-danger">
@@ -170,6 +171,7 @@
               'delegacionMunicipio'
             )
           "
+           [isDisabled]="esFormularioSoloLectura"
         ></app-catalogo-select>
 
         <div *ngIf="esInvalido('delegacionMunicipio')" class="text-danger">
@@ -197,6 +199,7 @@
           (change)="
             setValoresStore(inicializarFormulario, 'colonia')
           "
+           [isDisabled]="esFormularioSoloLectura"
         ></app-catalogo-select>
 
         <div *ngIf="esInvalido('colonia')" class="text-danger">

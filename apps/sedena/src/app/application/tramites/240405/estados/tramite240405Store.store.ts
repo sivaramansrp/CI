@@ -166,4 +166,17 @@ export class Tramite240405Store extends Store<Tramite240405State> {
       merccancialTablaDatos: [...state.merccancialTablaDatos, ...newMercancia],
     }));
   }
+   /**
+   * Cambia la pestaña actualmente seleccionada.
+   *
+   * @method updateTabSeleccionado
+   * @param {number} tabSeleccionado - Índice de la nueva pestaña seleccionada.
+   * @returns {void}
+   */
+  public updateTabSeleccionado(tabSeleccionado: number): void {
+    this.update((state) => ({
+      ...state,
+      tabSeleccionado: tabSeleccionado,
+    }));
+  }
 }

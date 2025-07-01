@@ -1,5 +1,4 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { SolicitanteComponent, TercerosComponent } from '@libs/shared/data-access-user/src';
 import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user'
@@ -7,6 +6,7 @@ import { DatosDeLaSolicitudComponent } from '../../components/datos-de-la-solici
 import { ExportaccionAcuicolaService } from '../../services/exportaccion-acuicola.service';
 import { PagoDeDerechosComponent } from '../../components/pago-de-derechos/pago-de-derechos.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { SolicitanteComponent } from '@libs/shared/data-access-user/src';
 import { TercerospageComponent } from '../../components/tercerospage/tercerospage.component';
 import { TransporteComponent } from '../../components/transporte/transporte.component';
 
@@ -21,11 +21,14 @@ import { TransporteComponent } from '../../components/transporte/transporte.comp
 })
 export class PasoUnoComponent implements OnInit, OnDestroy {
   /**
-     * @property {number} indice - El índice de la pestaña seleccionada.
+     * @property {number} indice 
+     * @description
+     * El índice de la pestaña seleccionada.
      */
     indice: number = 1;
 
     /**
+     * @property {boolean} esDatosRespuesta
    * @descripcion
    * Subject utilizado para notificar y completar las suscripciones activas al destruir el componente,
    * evitando fugas de memoria.
@@ -35,6 +38,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
   private destroyNotifier$ = new Subject<void>();
 
   /**
+   * @property {boolean} formularioDeshabilitado
    * @descripcion
    * Indica si el formulario debe estar deshabilitado (solo lectura).
    * Cuando es verdadero, los controles del formulario estarán deshabilitados y no se podrán editar.
@@ -83,6 +87,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * @method guardarDatosFormulario
    * @descripcion
    * Obtiene los datos de acuicultura y actualiza el estado del formulario.
    * 

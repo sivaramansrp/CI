@@ -85,15 +85,18 @@
           <input
             class="form-control"
             id="rfc"
-            placeholder="RFC"
+            placeholder=""
             type="text"
             formControlName="RFCImpExp"
             maxlength="13"
-            [ngClass]="
-              isValid(datosImportadorExportador, 'RFCImpExp') ? 'required' : ''
-            "
+            [ngClass]="{
+              'is-invalid':
+                isRequired(datosImportadorExportador, 'RFCImpExp') ||
+                isErrorPattern(datosImportadorExportador, 'RFCImpExp')
+            }"
             libUppercase
             (blur)="validaRfc()"
+            (input)="cambiosInput('RFCImpExp', datosImportadorExportador)"
           />
 
           <div
@@ -118,7 +121,7 @@
             class="form-control"
             id="nombre"
             formControlName="nombre"
-            placeholder="Nombre"
+            placeholder=""
             type="text"
             appUppercase
           />
@@ -162,6 +165,7 @@
       <div class="row">
         <div class="col-md-4">
           <lib-check-input-text
+            #programaFomento
             [checkboxValor]="solicitudState.programa"
             [textoValor]="solicitudState.descripcionProgramaFomento"
             [idCheckbox]="'programa'"
@@ -171,17 +175,19 @@
             [reverse]="true"
             [hidden]="false"
             [maxLengthValidacion]="300"
+            [tipo]="'visible'"
             (checkboxChange)="checkPrograma($event)"
           ></lib-check-input-text>
         </div>
 
         <div class="col-md-4">
           <lib-check-input-text
+            #programaImmex
             [checkboxValor]="solicitudState.checkIMMEX"
             [textoValor]="solicitudState.descripcionImmex"
             [idCheckbox]="'checkIMMEX'"
             [idInputTexto]="'desImmex'"
-            [label]="'Immex (Número/aaaa):'"
+            [label]="'IMMEX (Número/aaaa):'"
             [required]="false"
             [reverse]="true"
             [hidden]="false"
@@ -192,11 +198,12 @@
 
         <div class="col-md-4">
           <lib-check-input-text
+            #industriaAutomotriz
             [checkboxValor]="solicitudState.industriaAutomotriz"
             [textoValor]="solicitudState.descripcionIndustrialAutomotriz"
             [idCheckbox]="'industriaAutomotriz'"
             [idInputTexto]="'desIndustrialAutomotriz'"
-            [label]="'Industria Automotriz:'"
+            [label]="'Industria automotriz:'"
             [required]="false"
             [reverse]="true"
             [hidden]="false"
@@ -240,6 +247,7 @@
             [id]="'certificacionOEA'"
             [label]="'Operador económico autorizado'"
             [required]="false"
+            [isDisabled]="certificacionOEADisabled"
             formControlName="certificacionOEA"
             (change)="
               setValoresStore(
@@ -254,6 +262,7 @@
             [id]="'revision'"
             [label]="'Revisión en origen'"
             [required]="false"
+            [isDisabled]="revisionDisabled"
             formControlName="revision"
             (change)="
               setValoresStore(
@@ -317,8 +326,10 @@
           id="fechaInicio"
           formControlName="fechaInicio"
           placeholder="dd/mm/yyyy"
+          autofocus = "false"
+          (change)="changeFechaInicio(); limpiarFechas()"
+          (blur)="limpiarFechas()"
           [ngClass]="isValid(datosServicio, 'fechaInicio') ? 'required' : ''"
-          (change)="changeFechaInicio()"
           (keydown)="$event.preventDefault()"
         />
         <div
@@ -331,13 +342,12 @@
 
       <div class="col-md-4">
         <input-hora
+          #horaInicio
           formControlName="horaInicio"
           [label]="'Hora inicio'"
           [required]="true"
           [inputId]="'horaInicio'"
-          (change)="
-            setValoresStore(datosServicio, 'horaInicio', 'setHoraInicio')
-          "
+          (change)="changeHoraInicio()"
         ></input-hora>
       </div>
     </div>
@@ -351,8 +361,9 @@
           name="fechaFinal"
           id="fechaFinal"
           formControlName="fechaFinal"
-          [ngClass]="isValid(datosServicio, 'fechaFinal') ? 'required' : ''"
           (change)="changeFechaFinal()"
+          (blur)="limpiarFechas()"
+          [ngClass]="{'is-invalid' : isRequired(datosServicio, 'fechaFinal')}"
           (keydown)="$event.preventDefault()"
         />
         <div
@@ -365,6 +376,7 @@
 
       <div class="col-md-4">
         <input-hora
+          #horaFinal
           formControlName="horaFinal"
           [label]="'Hora Final'"
           [required]="true"
@@ -386,7 +398,8 @@
               </h4>
               <button
                 type="button"
-                class="collpase-button collapsed"
+                class="collpase-button"
+                [ngClass]="colapsable ? '' : 'collapsed'"
                 title="Colapsable"
               ></button>
             </div>
@@ -456,6 +469,7 @@
             class="form-control"
             formControlName="rfcDespachoLDA"
             placeholder=""
+            (input)="cambiosInput('rfcDespachoLDA', despacho)"
             (blur)="changeRfcAutorizacionLDA()"
             maxlength="13"
             [ngClass]="isValid(despacho, 'rfcDespachoLDA') ? 'required' : ''"
@@ -479,6 +493,8 @@
             formControlName="folioDDEX"
             placeholder=""
             (blur)="changeFolioDDEX()"
+            (input)="cambiosInput('folioDDEX', despacho)"
+            maxlength="16"
             [ngClass]="isValid(despacho, 'folioDDEX') ? 'required' : ''"
           />
 
@@ -500,17 +516,15 @@
 
     <div class="row">
       <div class="col-md-4">
-        <div>
-          <label for="">Aduana:</label>
-          <span>*</span>
-        </div>
+        <label class="form-label" for="">Aduana:</label>
+        <span>*</span>
         <select
-          class="form-control"
+          class="form-control form-select"
           formControlName="idAduanaDespacho"
           (change)="changeAduana()"
         >
           <option value="-1">Selecciona una opción...</option>
-          <option *ngFor="let aduana of aduanas" [value]="aduana.clave">
+          <option *ngFor="let aduana of aduanas" [title]="aduana.title" [value]="aduana.clave">
             {{ aduana.descripcion }}
           </option>
         </select>
@@ -522,11 +536,9 @@
         </div>
       </div>
       <div class="col-md-4">
-        <div>
-          <label for="">Sección aduanera:</label>
-        </div>
+        <label class="form-label" for="">Sección aduanera:</label>
         <select
-          class="form-control"
+          class="form-control form-select"
           formControlName="idSeccionDespacho"
           (change)="changeSeccionAduanera()"
           [required]="false"
@@ -534,6 +546,7 @@
           <option value="-1">Selecciona una opción...</option>
           <option
             *ngFor="let seccion of seccionAduanera"
+            [title]="seccion.title"
             [value]="seccion.clave"
           >
             {{ seccion.descripcion }}
@@ -544,11 +557,9 @@
     <div class="row">
       @if (!despachoSeleccionado) {
       <div class="col-md-4">
-        <div>
-          <label for="">Nombre del recinto:</label>
-        </div>
+        <label class="form-label" for="">Nombre del recinto:</label>
         <select
-          class="form-control"
+          class="form-control form-select"
           formControlName="nombreRecinto"
           (change)="changeRecinto()"
           [required]="false"
@@ -556,6 +567,7 @@
           <option value="-1">Selecciona una opción...</option>
           <option
             *ngFor="let recinto of recintoCatalogo"
+            [title]="recinto.title" 
             [value]="recinto.id_recinto_fiscalizado"
           >
             {{ recinto.descripcion }}
@@ -588,7 +600,7 @@
           [hiddenPrimerOption]="false"
           [disabledPrimerOption]="false"
           (change)="
-            setValoresStore(despacho, 'tipoOperacion', 'setTipoOperacion')
+            changeTipoOperacion()
           "
         ></app-catalogo-select>
       </div>
@@ -614,6 +626,7 @@
           [required]="false"
           [reverse]="true"
           formControlName="relacionSociedad"
+          [isDisabled]="!activarRelacionSociedad"
           (change)="
             setValoresStore(despacho, 'relacionSociedad', 'setRelacionSociedad')
           "
@@ -625,6 +638,7 @@
           [required]="false"
           [reverse]="true"
           formControlName="encargoConferido"
+          [isDisabled]="!activarEncargoConferido"
           (change)="
             setValoresStore(despacho, 'encargoConferido', 'setEncargoConferido')
           "
@@ -661,6 +675,7 @@
     [validacion]="validacionPedimento"
     [datosNroPedimento]="datosPedimentoComponente"
     [tablaPedimento]="solicitudState.pedimentos"
+    [numeroPatente]="solicitudState.patente.patente"
     (validaCampos)="validaCampoPedimento()"
     (datosTablaPedimento)="changeAgregarPedimento($event)"
   ></c-pedimento>
@@ -818,6 +833,7 @@
           formControlName="monto"
           maxlength="12"
           (change)="setValoresStore(pagoCaptura, 'monto', 'setMonto')"
+          libSoloNumeros
         />
       </div>
     </div>
@@ -849,7 +865,11 @@
         A través del siguiente vinculo puedes ingresar a la página para generar
         la línea de captura de la constancia que se solicita:
       </p>
-      <p>Generar línea de captura</p>
+      <p>
+        <a class="link" [href]="linkGeneraLineaCapturaSeguro" target="_blank"
+          >Generar línea de captura</a
+        >
+      </p>
     </div>
 
     <div class="row">
@@ -862,6 +882,11 @@
           (listaDeFilaSeleccionada)="lineaCapturaSeleccionados = $event"
         >
         </app-tabla-dinamica>
+        <div class="row">
+          <div class="col-md-12 d-flex justify-content-center">
+            <app-table-pagination></app-table-pagination>
+          </div>
+        </div>
       </div>
       <div class="col-md-2"></div>
     </div>
@@ -869,10 +894,19 @@
   }
 </form>
 
+<div class="row mt-5" *ngIf="editarSolicitud">
+  <div class="col-md12">
+    <button type="button" class="btn btn-danger">
+      Eliminar Solicitud Pendiente
+    </button>
+  </div>
+</div>
+
 @if(nuevaNotificacion) {
 <section>
   <lib-notificaciones
     [notificacionInput]="nuevaNotificacion"
+    [forma] = 'datosServicio'
     (confirmacionModal)="confirmacionModal($event)"
   >
   </lib-notificaciones>

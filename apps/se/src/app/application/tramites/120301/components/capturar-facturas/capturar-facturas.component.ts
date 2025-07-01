@@ -1,40 +1,43 @@
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+
 import { HttpClient } from '@angular/common/http';
-import { HttpErrorResponse } from '@angular/common/http';
 
-import { Component, Input } from '@angular/core';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
+import { Subject, delay, map, takeUntil, tap } from 'rxjs';
 
-import { FormBuilder } from '@angular/forms';
-import { FormGroup } from '@angular/forms';
-import { ReactiveFormsModule } from '@angular/forms';
-import { Validators } from '@angular/forms';
-
-import { Catalogo } from '@ng-mf/data-access-user';
-import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
-import { ConfiguracionColumna } from '@ng-mf/data-access-user';
-import { InputFecha } from '@ng-mf/data-access-user';
-import { InputFechaComponent } from '@ng-mf/data-access-user';
-import { SeccionLibQuery } from '@ng-mf/data-access-user';
-import { SeccionLibState } from '@ng-mf/data-access-user';
-import { SeccionLibStore } from '@ng-mf/data-access-user';
-import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
-import { TablaSeleccion } from '@ng-mf/data-access-user';
-import { TituloComponent } from '@ng-mf/data-access-user';
-
-import { Subject } from 'rxjs';
-import { delay } from 'rxjs';
-import { map } from 'rxjs';
-import { takeUntil } from 'rxjs';
-import { tap } from 'rxjs';
+import {
+  Catalogo,
+  CatalogoSelectComponent,
+  ConfiguracionColumna,
+  InputFecha,
+  InputFechaComponent,
+  SeccionLibQuery,
+  SeccionLibState,
+  SeccionLibStore,
+  TablaDinamicaComponent,
+  TablaSeleccion,
+  TituloComponent,
+} from '@ng-mf/data-access-user';
 
 import {
   EXPEDICION_FACTURA_FECHA,
   VALIDO,
 } from '../../constantes/elegibilidad-de-textiles.enums';
 
-import { ElegibilidadDeTextilesStore } from '../../estados/elegibilidad-de-textiles.store';
-import { TextilesState } from '../../estados/elegibilidad-de-textiles.store';
+import {
+  REGEX_PATRON_DECIMAL_2,
+  REGEX_SOLO_DIGITOS,
+} from '@libs/shared/data-access-user/src/tramites/constantes/regex.constants';
+
+import {
+  ElegibilidadDeTextilesStore,
+  TextilesState,
+} from '../../estados/elegibilidad-de-textiles.store';
 
 import { CapturarColumns } from '../../models/elegibilidad-de-textiles.model';
 
@@ -42,8 +45,6 @@ import { ElegibilidadDeTextilesQuery } from '../../queries/elegibilidad-de-texti
 
 import { ElegibilidadTextilesService } from '../../services/elegibilidad-textiles/elegibilidad-textiles.service';
 
-import { REGEX_PATRON_DECIMAL_2 } from '@libs/shared/data-access-user/src/tramites/constantes/regex.constants';
-import { REGEX_SOLO_DIGITOS } from '@libs/shared/data-access-user/src/tramites/constantes/regex.constants';
 
 /**
  * @component CapturarFacturasComponent
@@ -81,17 +82,20 @@ export class CapturarFacturasComponent implements OnInit, OnDestroy {
   selectRangoDias: string[] = [];
 
   /**
-   * @property {boolean} colapsable - Booleano para controlar el estado colapsable.
+   * @property {boolean} colapsable - Booleano para controlar el estado colapsable de la interfaz.
+   * Permite mostrar u ocultar secciones de la interfaz de usuario.
    */
   colapsable: boolean = false;
 
   /**
    * @property {FormGroup} ConstanciaDelRegistro - El grupo de formularios para datos de la constancia de registro.
+   * Contiene los controles del formulario relacionados con la constancia del registro.
    */
   ConstanciaDelRegistro!: FormGroup;
 
   /**
-   * @property {Array} facturas - Array de datos de facturas para mostrar en la tabla.
+   * @property {CapturarColumns[]} facturas - Array de datos de facturas para mostrar en la tabla.
+   * Contiene la información de todas las facturas capturadas que se visualizan en la tabla dinámica.
    */
   facturas: CapturarColumns[] = [];
 
@@ -112,13 +116,16 @@ export class CapturarFacturasComponent implements OnInit, OnDestroy {
   private seccionState!: SeccionLibState;
 
   /**
-   * @property {*} TablaSeleccion - Referencia a la enumeración o constante `TablaSeleccion`
+   * @property {TablaSeleccion} TablaSeleccion - Referencia a la enumeración o constante `TablaSeleccion`
    * para su uso en la plantilla o lógica del componente.
+   * Utilizada para configurar opciones de selección en las tablas dinámicas.
    */
   TablaSeleccion = TablaSeleccion;
 
   /**
-   * @property {string[]} tableColumns - Array de encabezados de columnas de la tabla.
+   * @property {ConfiguracionColumna<CapturarColumns>[]} tableColumns - Array de configuración de columnas de la tabla.
+   * Define la estructura, encabezados y orden de las columnas que se mostrarán en la tabla de facturas.
+   * Cada elemento especifica el encabezado, la clave de acceso a los datos y el orden de visualización.
    */
   tableColumns: ConfiguracionColumna<CapturarColumns>[] = [
     {
@@ -165,7 +172,16 @@ export class CapturarFacturasComponent implements OnInit, OnDestroy {
 
   /**
    * @constructor
-   * @description Constructor del componente. Inicializa los servicios necesarios.
+   * @description Constructor del componente. Inicializa los servicios necesarios para el funcionamiento del componente.
+   * Se inyectan todas las dependencias requeridas para el manejo de formularios, peticiones HTTP,
+   * gestión de estado y consultas de datos relacionados con la elegibilidad de textiles.
+   * @param {ElegibilidadTextilesService} ElegibilidadTextilesService - Servicio para manejar la lógica de elegibilidad de textiles.
+   * @param {HttpClient} httpServicios - Cliente HTTP de Angular para realizar peticiones HTTP.
+   * @param {FormBuilder} fb - Constructor de formularios reactivos de Angular para crear y gestionar formularios.
+   * @param {ElegibilidadDeTextilesStore} ElegibilidadDeTextilesStore - Store para gestionar el estado de elegibilidad de textiles.
+   * @param {ElegibilidadDeTextilesQuery} ElegibilidadDeTextilesQuery - Query para recuperar el estado de elegibilidad de textiles.
+   * @param {SeccionLibStore} seccionStore - Store para gestionar el estado relacionado con secciones.
+   * @param {SeccionLibQuery} seccionQuery - Query para recuperar el estado relacionado con secciones.
    */
   constructor(
     private ElegibilidadTextilesService: ElegibilidadTextilesService,
@@ -182,6 +198,10 @@ export class CapturarFacturasComponent implements OnInit, OnDestroy {
   /**
    * @method ngOnInit
    * @description Método que se ejecuta al inicializar el componente.
+   * Configura las suscripciones a los observables del estado, inicializa el formulario,
+   * obtiene las listas desplegables, recupera los datos de las facturas y establece
+   * la validación del formulario. También maneja el estado de habilitación/deshabilitación del formulario.
+   * @returns {void} No retorna ningún valor.
    */
   ngOnInit(): void {
     this.seccionQuery.selectSeccionState$
@@ -238,6 +258,11 @@ export class CapturarFacturasComponent implements OnInit, OnDestroy {
   /**
    * @method initActionFormBuild
    * @description Inicializa el formulario reactivo para capturar los datos de las facturas.
+   * Crea todos los controles del formulario con sus validadores correspondientes,
+   * incluyendo campos para número de factura, cantidad total, unidad de medida,
+   * valor en dólares, información del proveedor y datos de dirección.
+   * Los valores iniciales se obtienen del estado actual almacenado.
+   * @returns {void} No retorna ningún valor.
    */
   initActionFormBuild(): void {
     this.facturaForm = this.fb.group({
@@ -269,15 +294,24 @@ export class CapturarFacturasComponent implements OnInit, OnDestroy {
   }
   /**
    * @property {Catalogo[]} unidadDeMedida - Configuración para el select de unidad de medida.
+   * Array que contiene las opciones disponibles para el campo de unidad de medida en el formulario.
+   * Se carga dinámicamente desde el servicio al inicializar el componente.
    */
   unidadDeMedida: Catalogo[] = [];
+  
   /**
-   * @property {InputFecha} fechaInicioInputs - Configuración para el input de fecha de pago.
+   * @property {InputFecha} fechaInicioInputs - Configuración para el input de fecha de expedición de la factura.
+   * Contiene la configuración específica para el campo de fecha, incluyendo formato,
+   * validaciones y restricciones de fechas permitidas.
    */
   fechaInicioInputs: InputFecha = EXPEDICION_FACTURA_FECHA;
+  
   /**
    * @method obtenerListasDesplegables
    * @description Obtiene las listas desplegables necesarias para el formulario.
+   * Método coordinador que ejecuta la carga de todos los catálogos y listas
+   * requeridas para poblar los campos de selección del formulario.
+   * @returns {void} No retorna ningún valor.
    */
   obtenerListasDesplegables(): void {
     this.obtenerIngresoSelectList();
@@ -286,6 +320,12 @@ export class CapturarFacturasComponent implements OnInit, OnDestroy {
   /**
    * @method setValoresStore
    * @description Establece los valores en el store de textiles.
+   * Método utilitario que extrae el valor de un campo específico del formulario
+   * y lo almacena en el store utilizando el método especificado.
+   * @param {FormGroup} form - El formulario del cual extraer el valor.
+   * @param {string} campo - El nombre del campo del formulario a extraer.
+   * @param {keyof ElegibilidadDeTextilesStore} metodoNombre - El nombre del método del store a ejecutar.
+   * @returns {void} No retorna ningún valor.
    */
   setValoresStore(
     form: FormGroup,
@@ -301,6 +341,10 @@ export class CapturarFacturasComponent implements OnInit, OnDestroy {
   /**
    * @method obtenerIngresoSelectList
    * @description Obtiene la lista para el select de unidad de medida.
+   * Realiza una petición HTTP al servicio para cargar las opciones disponibles
+   * del catálogo de unidades de medida y las asigna a la propiedad correspondiente.
+   * La suscripción se maneja con takeUntil para evitar fugas de memoria.
+   * @returns {void} No retorna ningún valor.
    */
   obtenerIngresoSelectList(): void {
     this.ElegibilidadTextilesService.obtenerMenuDesplegable(
@@ -311,15 +355,16 @@ export class CapturarFacturasComponent implements OnInit, OnDestroy {
         next: (data) => {
           this.unidadDeMedida = data as Catalogo[];
         },
-        error: (error: HttpErrorResponse) => {
-          console.error('Error al obtener los datos:', error);
-        },
       });
   }
 
   /**
    * @method recuperarDatos
    * @description Obtiene los datos de las facturas desde el servicio.
+   * Realiza una petición HTTP para cargar los datos de las facturas desde un archivo JSON
+   * y los asigna a la propiedad facturas para su visualización en la tabla.
+   * Incluye validación para asegurar que la respuesta sea un array válido.
+   * @returns {void} No retorna ningún valor.
    */
   recuperarDatos(): void {
     this.ElegibilidadTextilesService.obtenerTablaDatos<CapturarColumns>(
@@ -332,15 +377,16 @@ export class CapturarFacturasComponent implements OnInit, OnDestroy {
             this.facturas = response as CapturarColumns[];
           }
         },
-        error: (error) => {
-          console.error('Error al obtener los datos:', error);
-        },
       });
   }
 
   /**
    * @method ngOnDestroy
    * @description Método que se ejecuta cuando el componente es destruido.
+   * Implementa la limpieza necesaria para evitar fugas de memoria cancelando
+   * todas las suscripciones activas mediante el subject destroyNotifier$.
+   * Es una implementación estándar del patrón de limpieza en Angular.
+   * @returns {void} No retorna ningún valor.
    */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();

@@ -61,6 +61,7 @@
                         [label]="'Estado'"
                         [required]="true"
                         (change)="setValoresStore(datosDelTramiteRealizar,'estado', 'setEstado')"
+                        [isDisabled]="esFormularioSoloLectura"
                       ></app-catalogo-select>
                     </div>
                 </div>
@@ -123,6 +124,13 @@
             type="submit" (click)="onAgregar()">Agregar</button>
         </div>
     </div>
+    @if (nuevaNotificacion) {
+      <section>
+      <lib-notificaciones 
+      [notificacionInput]="nuevaNotificacion" (confirmacionModal)="eliminarPedimento($event)">
+      </lib-notificaciones>
+      </section>
+      }
     <div *ngIf="showClavaScianForm">
       <ng-titulo titulo="Clave S.C.I.A.N" />
   <form [formGroup]="clavaScianForm" (ngSubmit)="onSubmit()">
@@ -136,6 +144,7 @@
                       [catalogo]="claveScianData.catalogos"
                       [label]="'Clave S.C.I.A.N'"
                       [required]="true"
+                      [isDisabled]="esFormularioSoloLectura"
                       
                     ></app-catalogo-select>
                   </div>
@@ -150,6 +159,7 @@
                       [catalogo]="descripcionDelScianData.catalogos"
                       [label]="'Descripcion del S.C.I.A.N'"
                       [required]="true"
+                      [isDisabled]="esFormularioSoloLectura"
                     ></app-catalogo-select>
                   </div>
                </div>
@@ -194,6 +204,7 @@
             [catalogo]="regimenalqueData.catalogos" 
             [label]="'Régimen al que se destinarán la mercancías'" 
             [required]="true"
+            [isDisabled]="esFormularioSoloLectura"
             (change)="setValoresStore(datosDelTramiteRealizar,'regimenalque', 'setRegimenalque')"></app-catalogo-select>
         </div>
         <div class="col-md-4">
@@ -203,13 +214,14 @@
             [catalogo]="aduanaData.catalogos" 
             [label]="'Aduana'" 
             [required]="false"
+            [isDisabled]="esFormularioSoloLectura"
             (change)="setValoresStore(datosDelTramiteRealizar,'aduana', 'setAduana')">
         </app-catalogo-select>
         </div>
       </div>
     </ng-container>
       <div class="col-md-12 mt-4">
-        <label class="form-label mb-5" for="">mercancías*:</label>
+        <label class="form-label mb-5" for="">Mercancías*:</label>
         <app-tabla-dinamica 
          [tipoSeleccionTabla]="tipoSeleccionsoliMercancias"
           [configuracionTabla]="mercanciasDatos"
@@ -233,6 +245,7 @@
                   [catalogo]="delProducto.catalogos" 
                   [label]="'Clasificación del producto'" 
                   [required]="true"
+                  [isDisabled]="esFormularioSoloLectura"
                   (change)="setValoresStore(datosDelTramiteRealizar,'clasificaionProductos', 'setClasificaionProductos')"
                   ></app-catalogo-select>
                 </div>
@@ -245,6 +258,7 @@
                   [catalogo]="especificarData.catalogos" 
                   [label]="'Especificar clasificación del producto'"
                    [required]="true"
+                   [isDisabled]="esFormularioSoloLectura"
                    (change)="setValoresStore(datosDelTramiteRealizar,'especificarProducto', 'setEspecificarProducto')"></app-catalogo-select>
                 </div>
               </div>
@@ -270,6 +284,7 @@
                   [catalogo]="tipoProductoData.catalogos"
                    [label]="'Tipo de producto'" 
                    [required]="true"
+                   [isDisabled]="esFormularioSoloLectura"
                    (change)="setValoresStore(datosDelTramiteRealizar,'tipoProducto', 'setTipoProducto')"></app-catalogo-select>
                 </div>
               </div>
@@ -333,7 +348,7 @@
                 <div class="panel-group ficha-collapse" id="accordion">
                   <div class="panel panel-default">
                     <div class="panel-heading" (click)="paisOrigenColapsable()" tabindex="0">
-                      <h4 class="panel-title">País de origen</h4>
+                      <h4 class="panel-title">País de procedencia</h4>
                       <button type="button" class="collpase-button collapsed"></button>
                     </div>
                     @if(paisOrigen){

@@ -9,7 +9,14 @@ import { ViewChild } from '@angular/core';
 import { WizardComponent } from '@libs/shared/data-access-user/src/tramites/components/wizard/wizard.component';
 
 interface AccionBoton {
+  /**
+   * La acción que se realizará.
+   */
   accion: string;
+
+  /**
+   * El valor asociado a la acción.
+   */
   valor: number;
 }
 @Component({
@@ -92,7 +99,7 @@ export class IntroPermisoComponent implements OnInit, OnDestroy{
    * @description Lifecycle method executed when the component initializes.
    * Subscribes to the message service to update the search display state.
    */
-  ngOnInit() {
+  ngOnInit(): void {
     this.servicioDeMensajesService.mensaje$.subscribe((mensaje) => {
       this.mostrarBusqueda = mensaje;
     });
@@ -101,7 +108,7 @@ export class IntroPermisoComponent implements OnInit, OnDestroy{
    * @description Lifecycle method executed when the component is destroyed.
    * Resets the search display state to false.
    */
-  ngOnDestroy() {
+  ngOnDestroy(): void {
       this.mostrarBusqueda = false;
   }
   /**
@@ -117,7 +124,7 @@ export class IntroPermisoComponent implements OnInit, OnDestroy{
    *
    * @returns {void}
    */
-  getValorIndice(e: AccionBoton) {
+  getValorIndice(e: AccionBoton): void {
     if (e.valor > 0 && e.valor < 5) {
       this.indice = e.valor;
       if (e.accion === 'cont') {

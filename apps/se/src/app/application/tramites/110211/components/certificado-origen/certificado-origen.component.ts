@@ -182,7 +182,7 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
  * Actualiza el almacén con los datos del formulario de certificado.
  * @param event - Objeto que contiene el nombre del grupo de formulario, el campo, el valor y el nombre del estado del almacén.
  */
-setValoresStore(event: { formGroupName: string, campo: string, valor: undefined, storeStateName: string }): void {
+setValoresStore(event: { formGroupName: string, campo: string, valor: string | number | boolean | object | null | undefined, storeStateName: string }): void {
   const { campo: CAMPO, valor: VALOR } = event;
   this.store.setFormCertificadoGenric({ [CAMPO]: VALOR });
 }
@@ -200,7 +200,7 @@ setValoresStore(event: { formGroupName: string, campo: string, valor: undefined,
       next: (data) => {
         this.estado = data as Catalogo[];
       },
-      error: (error: HttpErrorResponse) => {
+      error: (_error: HttpErrorResponse) => {
         this.estado = [];
       },
     });
@@ -219,7 +219,7 @@ setValoresStore(event: { formGroupName: string, campo: string, valor: undefined,
       next: (data) => {
         this.pais = data as Catalogo[];
       },
-      error: (error: HttpErrorResponse) => {
+      error: (_error: HttpErrorResponse) => {
         this.pais = [];
       },
     });
@@ -243,7 +243,7 @@ setValoresStore(event: { formGroupName: string, campo: string, valor: undefined,
           this.disponiblesDatos = [];
         }
       },
-      error: (error: HttpErrorResponse) => {
+      error: (_error: HttpErrorResponse) => {
         this.disponiblesDatos = [];
       },
     });

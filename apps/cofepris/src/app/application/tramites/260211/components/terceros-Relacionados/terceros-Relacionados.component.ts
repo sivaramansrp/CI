@@ -5,10 +5,7 @@ import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 
 import { Catalogo } from '@libs/shared/data-access-user/src';
-
-
-
-  import { SanitarioService } from '../../services/sanitario.service';
+import { SanitarioService } from '../../services/sanitario.service';
 
 import { TablaDatos } from '@libs/shared/data-access-user/src/core/models/260211/detos.model';
 
@@ -26,9 +23,9 @@ import { TableComponent } from '@ng-mf/data-access-user';
 
 import { ModalComponent } from '../model/modal.component';
 
-import nacionalidadRedio from 'libs/shared/theme/assets/json/260211/nacionalidadRedio.json';
+import nacionalidadRedio from '@libs/shared/theme/assets/json/260211/nacionalidadRedio.json';
 
-import tipoPersonaoptions from 'libs/shared/theme/assets/json/260211/tipoPersonaoptions.json';
+import tipoPersonaoptions from '@libs/shared/theme/assets/json/260211/tipoPersonaoptions.json';
 
 import {Subject, map,takeUntil } from 'rxjs';
 
@@ -872,9 +869,8 @@ export class TercerosRelacionadoesComponent implements OnInit , OnDestroy{
       'CDMX',
       'CDMX',
       'CDMX',
-      '07000',
-      'Colonia Destino'
-    ]
+      '07000'
+      ]
   }];
 
   /**
@@ -900,9 +896,8 @@ export class TercerosRelacionadoesComponent implements OnInit , OnDestroy{
       'CDMX',
       'CDMX',
       'CDMX',
-      '06500',
-      'Zona Industrial'
-    ]
+      '06500'
+      ]
   }];
 
   /**
@@ -929,9 +924,8 @@ export class TercerosRelacionadoesComponent implements OnInit , OnDestroy{
       'CDMX',
       'CDMX',
       'CDMX',
-      '08000',
-      'Colonia Facturador'
-    ]
+      '08000'
+      ]
   },
   ];
 

@@ -10,8 +10,15 @@ import { Injectable } from '@angular/core';
 import { RespuestaCatalogos } from '@ng-mf/data-access-user';
 import { Tramites80207Store } from '../estados/tramite80207.store';
 
-
-@Injectable()
+/**
+ * Decorador que marca una clase como un servicio que puede ser inyectado en otros componentes o servicios.
+ * Este servicio está registrado en el inyector raíz.
+ * @export
+ * @class Injectable
+ */
+@Injectable({
+  providedIn: 'root',
+})
 /**
  * @fileoverview Servicio para la gestión de datos de submanufactureras.
  * Este servicio maneja la obtención de datos relacionados con las submanufactureras,
@@ -35,9 +42,8 @@ export class SubfabricanteService {
     return (
       this.http
         .get<InfoRegistro>('assets/json/80207/submanufacturer-datos.json')
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        .pipe(map((response: any) => response.data.infoRegistro))
-    );
+        .pipe(map((res) => res)));
+   
   }
 
   /**
@@ -62,9 +68,7 @@ export class SubfabricanteService {
         .get<SubfabricanteDireccionModelo[]>(
           'assets/json/80207/submanufactureras-disponibles-datos.json'
         )
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        .pipe(map((response: any) => response.data))
-    );
+        .pipe(map((res) => res)));
   }
 
   /**

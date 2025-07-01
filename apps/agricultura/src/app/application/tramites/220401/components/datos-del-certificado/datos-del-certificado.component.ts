@@ -1,7 +1,7 @@
 /**
  * Importaciones necesarias para el componente DatosDelCertificado.
  */
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 /**
  * Importaciones necesarias para el componente DatosDelCertificado.
@@ -14,26 +14,27 @@ import {
   Validators,
 } from '@angular/forms';
 /** Importación de componentes reutilizables y modelos. */
-import {
-  CatalogoResponse,
-  CatalogoSelectComponent,
-  ConsultaioQuery,
-  InputRadioComponent,
-} from '@ng-mf/data-access-user';
-import { TituloComponent } from '@ng-mf/data-access-user';
-
-import radioOptionsData from 'libs/shared/theme/assets/json/220401/tipo-de-certifico.json';
-
-import { AgregarArchivoComponent } from '@ng-mf/data-access-user';
-import { TableComponent } from '@ng-mf/data-access-user';
-
-import { Agregar220401Store, solicitud220401State } from '../../../../estados/tramites/agregar220401.store';
-import { AgregarQuery } from '../../../../estados/queries/agregar.query';
-import unidadRadioFields from 'libs/shared/theme/assets/json/220401/unidad.json';
-
 import { Subject, map, takeUntil } from 'rxjs';
-
+import { Agregar220401Store } from '../../../../estados/tramites/agregar220401.store';
+import { AgregarArchivoComponent } from '@ng-mf/data-access-user';
+import { AgregarQuery } from '../../../../estados/queries/agregar.query';
+import { CatalogoResponse } from '@ng-mf/data-access-user';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
+import { CombinacionRequeridaComponent } from '../combinacion-requerida/combinacion-requerida.component';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { DatosGeneralesAnimalesComponent } from '../datos-generales-animales/datos-generales-animales.component';
+import { InputRadioComponent } from "@libs/shared/data-access-user/src/tramites/components/input-radio/input-radio.component";
+import { Modal } from 'bootstrap';
 import { Pantallas220401Service } from '../pantallas220401.service';
+import { Solicitud220401State } from '../../../../estados/tramites/agregar220401.store';
+import { TableComponent } from '@ng-mf/data-access-user';
+import { TituloComponent } from '@ng-mf/data-access-user';
+import radioOptionsData from '@libs/shared/theme/assets/json/220401/tipo-de-certifico.json';
+import unidadRadioFields from '@libs/shared/theme/assets/json/220401/unidad.json';
+
+import { AlertComponent,Catalogo } from '@ng-mf/data-access-user';
+import { LOCALIDAD_COLONIA } from '../../constantes/certificados-licencias.enum';
+
 
 /**
  * Componente que gestiona los datos del certificado en la solicitud 220401.
@@ -52,10 +53,14 @@ import { Pantallas220401Service } from '../pantallas220401.service';
     AgregarArchivoComponent,
     TableComponent,
     CatalogoSelectComponent,
+    AlertComponent,DatosGeneralesAnimalesComponent,CombinacionRequeridaComponent
   ],
 })
 export class DatosDelCertificadoComponent implements OnInit, OnDestroy {
- 
+  /**
+   * Referencia al elemento del modal para agregar mercancías.
+   */
+  @ViewChild('modalAgregarMercancias') modalElement!: ElementRef;
   /** Formulario principal para la solicitud. */
   solicitudForm!:FormGroup;
  /** Opciones de radio importadas desde JSON. */
@@ -63,7 +68,7 @@ export class DatosDelCertificadoComponent implements OnInit, OnDestroy {
   /**
    * Valor seleccionado en el componente de radio.
    */
-  selectedValue: string = 'Nuevo';
+  selectedValue: string = 'Producto..';
  /** Valor seleccionado en el componente de radio. */
   defaultSelect: string | number = 'oficina central';
   /** Notificador para destruir las suscripciones al salir del componente. */
@@ -77,7 +82,7 @@ export class DatosDelCertificadoComponent implements OnInit, OnDestroy {
   /**
    * Estado de la solicitud 220401.
    */
-  public solicitudState!: solicitud220401State;
+  public solicitudState!: Solicitud220401State;
   /**
    * Arreglo para almacenar el catálogo de estados.
    */
@@ -93,7 +98,25 @@ export class DatosDelCertificadoComponent implements OnInit, OnDestroy {
    * Constructor del componente, inyecta los servicios necesarios.
    */
 
-  // eslint-disable-next-line no-empty-function
+  /**
+   * Arreglo que contiene los elementos del catálogo relacionados con los países de origen disponibles.
+   * Se utiliza para cargar y gestionar los países de origen seleccionados en el formulario.
+   */
+    public paisOrigen!: Catalogo[];
+
+   /**
+   * Representa el tipo de alerta que se mostrará.
+   * El valor es típicamente una cadena que indica el estilo de alerta, como 'alert-warning'.
+   */
+  public infoAlert = 'alert-warning';
+
+  /**
+   * Una constante que contiene el valor de `LOCALIDAD_COLONIA`.
+   * Probablemente se utiliza para representar o almacenar información textual
+   * relacionada con una localidad o colonia específica en la aplicación.
+   */
+  public TEXTO = LOCALIDAD_COLONIA;
+
   constructor(private fb: FormBuilder,
     private agregar220401Store: Agregar220401Store,
     private agregarQuery: AgregarQuery, 
@@ -106,7 +129,11 @@ export class DatosDelCertificadoComponent implements OnInit, OnDestroy {
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.esFormularioSoloLectura = seccionState.readonly;
-          
+          if(seccionState.readonly || seccionState.update){
+             this.inicializarFormulario();
+             this.setCatalogosDatos();
+
+          }
         })
       )
       .subscribe()
@@ -164,10 +191,15 @@ this.inicializarCertificadoFormulario();
    * - Sincroniza los valores de los controles de `formGroup1` con el estado almacenado en el servicio `_pantallas220401Service`.
    * - Actualiza el formulario `datosdelForm` con los datos actuales de la solicitud.
    */
-  inicializarFormulario(){
+  inicializarFormulario():void{
     this.datosdelForm = this.fb.group({
       tipoCertificado: ['', Validators.required],
       message: [{ value: '', disabled: true }],
+      numeroTotal:[''],
+      condiciones:['',Validators.required],
+      cantidadTotal:[''],
+      tipoEmbalaje:['']
+
     });
 
     this.formGroup1 = this.fb.group({});
@@ -205,13 +237,46 @@ this.inicializarCertificadoFormulario();
       this.datosdelForm= this.fb.group({
         datoscertificado:[this.solicitudState?.datoscertificado],
         certificada: [this.solicitudState?.certificada],
+        tratamiento:[this.solicitudState?.tratamiento],
       })
+      
+      this._pantallas220401Service.getPaisOrigen().pipe(takeUntil(this.destroyNotifier$)).subscribe((data) => {
+      this.paisOrigen = data;
+    });
   }
+
+  /**
+   * Establece el valor predeterminado "1" para cada control de formulario especificado en la configuración de catálogos.
+   * 
+   * Itera sobre la lista `catalogConfigs` y, para cada configuración, busca el control correspondiente en `formGroup1`
+   * utilizando el nombre del control (`controlName`). Si el control existe, se le asigna el valor "1".
+   * 
+   * @remarks
+   * Este método se utiliza para inicializar los controles de selección (dropdown) con un valor por defecto.
+   */
+  setCatalogosDatos(): void {
+    this.catalogConfigs.forEach((config) => {
+      const DROP_DOWN = this.formGroup1.get(config.controlName);
+      if (DROP_DOWN) {
+        DROP_DOWN.setValue("1");
+      }
+    });
+  }
+    /**
+   * Abre el modal para modificar mercancías.
+   */
+  openModificarMercancias(): void {
+    if (this.modalElement) {
+      const MODAL_INSTANCE = new Modal(this.modalElement.nativeElement);
+      MODAL_INSTANCE.show();
+    }
+  }
+
       /**
    * Maneja los cambios en el valor seleccionado.
    */
   
-   onValueChange(value: string | number) {
+   onValueChange(value: string | number):void {
         this.selectedValue = value.toString();
       }
   
@@ -268,7 +333,7 @@ this.inicializarCertificadoFormulario();
     },
     {
       catalogo: this.delegacionesJson,
-      label: 'Delegaciones estatales SAGARPA',
+      label: 'OISA',
       controlName: 'delegacionesControl2',
       required: true,
       catalogos: DatosDelCertificadoComponent.getCatalogos(),
@@ -276,7 +341,7 @@ this.inicializarCertificadoFormulario();
     },
     {
       catalogo: this.delegacionesJson,
-      label: 'Delegaciones estatales SAGARPA',
+      label: 'Distrito desarrollo rural (DDR)',
       controlName: 'delegacionesControl3',
       required: true,
       catalogos: DatosDelCertificadoComponent.getCatalogos(),
@@ -284,7 +349,7 @@ this.inicializarCertificadoFormulario();
     },
     {
       catalogo: this.delegacionesJson,
-      label: 'Delegaciones estatales SAGARPA',
+      label: 'Oficina central:',
       controlName: 'delegacionesControl4',
       required: false,
       catalogos: DatosDelCertificadoComponent.getCatalogos(),
@@ -301,7 +366,7 @@ this.inicializarCertificadoFormulario();
    *
    * @comdoc
    */
-  getDelegaciones() {
+  getDelegaciones():void {
     const SELECTED_DELEGCIONES = this.catalogConfigs.map((config) => ({
       controlName: config.controlName,
       value: this.formGroup1.get(config.controlName)?.value,
@@ -321,14 +386,7 @@ this.inicializarCertificadoFormulario();
     this.destroyNotifier$.complete();
   
   }
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any, no-empty-function, @typescript-eslint/no-unused-vars, @typescript-eslint/no-empty-function, class-methods-use-this, @typescript-eslint/explicit-function-return-type
-    seleccionar(e:any){}
-    
-    // eslint-disable-next-line @typescript-eslint/no-empty-function, class-methods-use-this, no-empty-function, @typescript-eslint/explicit-function-return-type
-    cargarArchivo() {}
-    // eslint-disable-next-line @typescript-eslint/no-empty-function, class-methods-use-this, @typescript-eslint/explicit-function-return-type, no-empty-function
-    agregar() {}
-  
+
    
     
     /**
@@ -336,13 +394,13 @@ this.inicializarCertificadoFormulario();
      * Columnas de la tabla de mercancías.
      */
     tableColumns = [
-      'No. partida',
-      'Fracción arancelaria',
-      'Descripción de la fracción',
-      'Unidad de medida de tarifa (UMT)',
-      'Cantidad (UMT)',
-      'Unidad de medida de comercialización (UMC)',
-      'Cantidad (UMC)',
+      'Tratamiento',
+      'Presentación',
+      'Marcas embarque',
+      'Fecha de caducidad',
+      'Fecha sacrificio inicio',
+      'Número de autorización CITES',
+      'Número de lote',
     ];
   
     /**

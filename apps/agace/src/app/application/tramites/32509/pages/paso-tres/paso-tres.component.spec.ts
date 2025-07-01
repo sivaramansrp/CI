@@ -2,6 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PasoTresComponent } from './paso-tres.component';
 import { FirmaElectronicaComponent } from '@libs/shared/data-access-user/src';
 import { ToastrModule, ToastrService } from 'ngx-toastr';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('PasoTresComponent', () => {
   let component: PasoTresComponent;
@@ -9,7 +10,7 @@ describe('PasoTresComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [FirmaElectronicaComponent, ToastrModule.forRoot()],
+      imports: [FirmaElectronicaComponent, HttpClientTestingModule,ToastrModule.forRoot()],
       declarations: [PasoTresComponent],
     }).compileComponents();
 

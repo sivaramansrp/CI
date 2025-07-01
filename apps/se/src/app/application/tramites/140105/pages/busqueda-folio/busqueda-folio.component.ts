@@ -1,53 +1,81 @@
 import * as formData from '@libs/shared/theme/assets/json/140105/datos-del-formulario.json';
 import { Component, OnDestroy } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
-import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
-import { FormBuilder } from '@angular/forms';
-import { FormGroup } from '@angular/forms';
 import { ServicioDeMensajesService } from '../../services/servicio-de-mensajes.service';
-import { Validators } from '@angular/forms';
 
-
+/**
+ * @component BusquedaFolioComponent
+ * @description
+ * Componente encargado de gestionar la búsqueda de trámites por folio y la visualización
+ * del detalle del permiso correspondiente.
+ * 
+ * Utiliza formularios reactivos para realizar validaciones, presentar datos y manejar el estado del formulario.
+ * Además, se comunica con servicios para el control de mensajes y sincronización del estado de la aplicación.
+ * 
+ * Este componente permite:
+ * - Buscar un trámite mediante su número de folio.
+ * - Visualizar los datos del permiso en modo solo lectura.
+ * - Agregar o cancelar acciones relacionadas al permiso consultado.
+ *
+ * @example
+ * ```html
+ * <app-busqueda-folio></app-busqueda-folio>
+ * ```
+ */
 @Component({
   selector: 'app-busqueda-folio',
   templateUrl: './busqueda-folio.component.html',
   styleUrl: './busqueda-folio.component.scss',
 })
-/**
- * @component BusquedaFolioComponent
- * @description
- * Componente encargado de gestionar la búsqueda de trámites por folio y la visualización de los detalles del permiso correspondiente.
- * Permite realizar búsquedas, mostrar detalles en modo solo lectura, agregar datos y cancelar acciones relacionadas con la consulta de trámites.
- * Utiliza formularios reactivos para la validación y presentación de datos, y se comunica con servicios para el manejo de mensajes y estados.
- *
- * @example
- * <app-busqueda-folio></app-busqueda-folio>
- *
- * @see ServicioDeMensajesService
- * @see FormBuilder
- * @see ConsultaioQuery
- */
 export class BusquedaFolioComponent implements OnDestroy {
-  public busquedaForm!: FormGroup;
-  public detalleDelPermisoForm!: FormGroup;
-  public detalleDelPermiso: boolean = false;
-   /**
-   * Indica si el formulario está en modo solo lectura.
-   * Cuando es `true`, los campos del formulario no se pueden editar.
-   */
-  esFormularioSoloLectura: boolean = false;
 
-    /**
-   * Notificador para destruir las suscripciones al destruir el componente.
+  /**
+   * Formulario utilizado para capturar el número de folio del trámite.
+   * Este formulario incluye validaciones requeridas y de patrón numérico.
+   */
+  public busquedaForm!: FormGroup;
+
+  /**
+   * Formulario que contiene los datos del detalle del permiso consultado.
+   * Todos los campos están deshabilitados porque se presentan en modo solo lectura.
+   */
+  public detalleDelPermisoForm!: FormGroup;
+
+  /**
+   * Bandera que indica si se debe mostrar el formulario con el detalle del permiso.
+   */
+  public detalleDelPermiso: boolean = false;
+
+  /**
+   * Indica si el formulario debe mostrarse en modo solo lectura.
+   * Este estado se obtiene desde el estado global de la aplicación.
+   */
+  public esFormularioSoloLectura: boolean = false;
+
+  /**
+   * Sujeto utilizado para cancelar suscripciones activas al momento de destruir el componente.
+   * Esto evita fugas de memoria en la aplicación.
    */
   public destroyNotifier$: Subject<void> = new Subject();
 
-  constructor(private servicioDeMensajesService: ServicioDeMensajesService, private fb: FormBuilder,
+  /**
+   * Constructor del componente.
+   * Inicializa los formularios y suscriptores que observan cambios en el estado global.
+   *
+   * @param servicioDeMensajesService Servicio que maneja el envío de mensajes entre componentes.
+   * @param fb Instancia de FormBuilder para construir formularios reactivos.
+   * @param consultaQuery Query de estado para obtener información de readonly u otros flags globales.
+   */
+  constructor(
+    private servicioDeMensajesService: ServicioDeMensajesService,
+    private fb: FormBuilder,
     private consultaQuery: ConsultaioQuery,
   ) {
     this.establecerBusquedaForm();
     this.estableDetalleDelPermisoForm();
+
     this.consultaQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -59,30 +87,25 @@ export class BusquedaFolioComponent implements OnDestroy {
       .subscribe();
   }
 
-    
-    /**
-     * Inicializa el estado del formulario de detalles del permiso.
-     * Si el formulario de detalles no está inicializado, lo establece.
-     */
-    inicializarEstadoFormulario(): void {
-      if (!this.detalleDelPermisoForm) {
-        this.estableDetalleDelPermisoForm();
-      }
+  /**
+   * Inicializa el formulario de detalle del permiso si aún no ha sido creado.
+   */
+  inicializarEstadoFormulario(): void {
+    if (!this.detalleDelPermisoForm) {
+      this.estableDetalleDelPermisoForm();
     }
-
+  }
 
   /**
-   * Método que se ejecuta al realizar una búsqueda.
-   * Valida si el formulario de búsqueda es válido. Si es inválido, marca todos los campos como tocados.
-   * Si el formulario es válido, muestra el detalle del permiso y establece los datos correspondientes.
-   * 
-   * @param event Evento que desencadena la búsqueda.
+   * Ejecuta la lógica para buscar un trámite por folio.
+   * Si el formulario es inválido, se marcan todos los campos como tocados para mostrar errores.
+   * Si es válido, se muestra el detalle del permiso y se cargan los datos correspondientes.
+   *
+   * @param _event Evento de tipo `Event` (no utilizado directamente).
    */
-
-  public buscar(event: Event): void {
+  public buscar(_event: Event): void {
     if (this.busquedaForm.invalid) {
       this.busquedaForm.markAllAsTouched();
-      // alert('El formulario contiene errores. Por favor, corrígelos antes de continuar.');
       return;
     }
 
@@ -90,54 +113,47 @@ export class BusquedaFolioComponent implements OnDestroy {
     this.establecerFormularioDeDetallesDe();
   }
 
-   /**
-   * Método que se ejecuta al agregar datos.
-   * Envía un mensaje indicando que los datos del permiso han sido establecidos.
-   * 
-   * @param event Evento que desencadena la acción de agregar.
+  /**
+   * Envía una señal de que se han agregado los datos del permiso consultado.
+   *
+   * @param _event Evento de tipo `Event` (no utilizado directamente).
    */
-
-  public agregar(event: Event): void {
+  public agregar(_event: Event): void {
     this.servicioDeMensajesService.enviarMensaje(false);
     this.servicioDeMensajesService.establecerDatosDePermiso(true);
   }
 
   /**
-   * Método que se ejecuta al cancelar la visualización del detalle del permiso.
-   * Establece la variable detalleDelPermiso a false, ocultando el detalle.
-   * 
-   * @param event Evento que desencadena la acción de cancelar.
+   * Cancela la visualización del detalle del permiso y oculta el formulario.
+   *
+   * @param _event Evento de tipo `Event` (no utilizado directamente).
    */
-
-  public detalleCancelar(event: Event): void {
+  public detalleCancelar(_event: Event): void {
     this.detalleDelPermiso = false;
   }
 
   /**
-   * Método que se ejecuta al cancelar la acción de búsqueda.
-   * Envía un mensaje para indicar que se ha cancelado la búsqueda.
-   * 
-   * @param event Evento que desencadena la cancelación de la acción.
+   * Cancela la búsqueda actual y notifica a través del servicio de mensajes.
+   *
+   * @param _event Evento de tipo `Event` (no utilizado directamente).
    */
-
-  public cancelar(event: Event): void {
+  public cancelar(_event: Event): void {
     this.servicioDeMensajesService.enviarMensaje(false);
   }
 
   /**
-   * Método para establecer el formulario de búsqueda con su validación.
-   * Inicializa el formulario de búsqueda con un campo 'tramite' que es obligatorio 
-   * y solo acepta números.
+   * Inicializa el formulario de búsqueda de trámites.
+   * Contiene el campo `tramite` con validaciones de requerido y solo números.
    */
   public establecerBusquedaForm(): void {
     this.busquedaForm = this.fb.group({
-      tramite: ['', [Validators.compose([Validators.required, Validators.pattern('^[0-9]+$')])]]
+      tramite: ['', [Validators.required, Validators.pattern('^[0-9]+$')]]
     });
   }
 
-   /**
-   * Método para establecer el formulario del detalle del permiso.
-   * Inicializa los campos del formulario como deshabilitados y vacíos.
+  /**
+   * Inicializa el formulario del detalle del permiso con campos deshabilitados.
+   * Este formulario solo sirve para visualizar los datos y no permite edición.
    */
   public estableDetalleDelPermisoForm(): void {
     this.detalleDelPermisoForm = this.fb.group({
@@ -158,19 +174,20 @@ export class BusquedaFolioComponent implements OnDestroy {
     });
   }
 
-   /**
-   * Método para establecer los valores en el formulario de detalles de permiso.
-   * Se utiliza para actualizar el formulario con los datos correspondientes al detalle de la solicitud.
+  /**
+   * Establece los valores del formulario de detalles a partir del JSON importado.
+   * Esta información simula una respuesta cargada para propósitos de presentación.
    */
   public establecerFormularioDeDetallesDe(): void {
     this.detalleDelPermisoForm.patchValue(formData);
   }
 
-    // Método que se ejecuta cuando se destruye el componente
+  /**
+   * Método que se ejecuta al destruir el componente.
+   * Cancela todas las suscripciones activas para evitar fugas de memoria.
+   */
   ngOnDestroy(): void {
-    // Liberamos los recursos y notificamos a todos los observadores
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
-
 }

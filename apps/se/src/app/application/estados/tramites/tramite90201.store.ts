@@ -63,7 +63,7 @@ export class Tramite90201Store extends Store<Solicitud90201State> {
    *
    * @param fraccion - La nueva fracción arancelaria que se establecerá en el estado.
    */
-  public setFraccion(fraccion: string) {
+  public setFraccion(fraccion: string):void {
     this.update((state) => ({
       ...state,
       fraccion,
@@ -75,7 +75,7 @@ export class Tramite90201Store extends Store<Solicitud90201State> {
    *
    * @param sector - El nuevo sector que se establecerá en el estado.
    */
-  public setSector(sector: string) {
+  public setSector(sector: string):void {
     this.update((state) => ({
       ...state,
       sector,
@@ -87,7 +87,7 @@ export class Tramite90201Store extends Store<Solicitud90201State> {
    *
    * @param rfc - El nuevo RFC que se establecerá en el estado.
    */
-  public setRfc(rfc: string) {
+  public setRfc(rfc: string):void {
     this.update((state) => ({
       ...state,
       rfc,
@@ -99,7 +99,7 @@ export class Tramite90201Store extends Store<Solicitud90201State> {
    *
    * @param representacionFederal - El nuevo valor de la representación federal que se establecerá en el estado.
    */
-  public setRepresentacionFederal(representacionFederal: string) {
+  public setRepresentacionFederal(representacionFederal: string):void {
     this.update((state) => ({ 
       ...state,
       representacionFederal,
@@ -111,7 +111,7 @@ export class Tramite90201Store extends Store<Solicitud90201State> {
    *
    * @param actividadProductiva - La actividad productiva que se va a establecer en el estado.
    */
-  public setActividadProductiva(actividadProductiva: string) {
+  public setActividadProductiva(actividadProductiva: string):void {
     this.update((state) => ({
       ...state,
       actividadProductiva,
@@ -122,7 +122,7 @@ export class Tramite90201Store extends Store<Solicitud90201State> {
    * Limpia la solicitud actual restableciendo el estado a sus valores iniciales.
    * Utiliza el método `reset()` para reiniciar todos los campos relacionados con la solicitud.
    */
-  public limpiarSolicitud() {
+  public limpiarSolicitud():void {
     this.reset();
   }
 }

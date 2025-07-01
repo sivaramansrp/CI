@@ -1,11 +1,13 @@
 import { RouterModule, Routes } from '@angular/router';
+import { AceptaAccionesUsoComponent } from './acepta-acciones-uso/acepta-acciones-uso.component';
 import { AuthPageComponent } from './auth-page/auth-page.component';
 import { CambioContrasenaComponent } from './cambio-contrasena/cambio-contrasena.component';
+import { CondicionesUsoComponent } from './condiciones-uso/condiciones-uso.component';
 import { ConsultaCapturistaPrivadoComponent } from './consulta-capturista-privado/consulta-capturista-privado.component';
 import { ConsultaPersonaNotificacionesComponent } from './consulta-persona-notificaciones/consulta-persona-notificaciones.component';
 import { FirmaPageComponent } from '@libs/shared/data-access-user/src';
-import { MenuUsuarioComponent } from './menu-usuario/menu-usuario.component';
 import { MantenimientoCuentaComponent } from './mantenimiento-cuenta/mantenimiento-cuenta.component';
+import { MenuUsuarioComponent } from './menu-usuario/menu-usuario.component';
 import { ModificarCorreoElectronicoComponent } from './modificar-correo-electronico/modificar-correo-electronico.component';
 import { NgModule } from '@angular/core';
 import { RegistroCapturistaPrivadoComponent } from './registro-capturista-privado/registro-capturista-privado.component';
@@ -46,7 +48,7 @@ export const ROUTES_AUTH: Routes = [
     component: ModificarCorreoElectronicoComponent
   },
   {
-    path:'menu-usuario',
+    path: 'menu-usuario',
     component: MenuUsuarioComponent
   },
   {
@@ -56,6 +58,14 @@ export const ROUTES_AUTH: Routes = [
   {
     path: 'mantenimiento-cuenta',
     component: MantenimientoCuentaComponent
+  },
+  {
+    path: 'condiciones-uso',
+    component: CondicionesUsoComponent
+  },
+  {
+    path: 'acepta-condiciones',
+    component: AceptaAccionesUsoComponent
   },
 
 ];

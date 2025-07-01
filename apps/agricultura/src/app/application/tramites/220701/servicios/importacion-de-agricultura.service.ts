@@ -51,9 +51,8 @@ export class ImportacionDeAcuiculturaService {
    * @returns Observable con el estado completo.
    * 
    */
-  /* eslint-disable @typescript-eslint/no-explicit-any */
   public obtenerDatos(): Observable<Agricultura> {
-    return this.agriculturaStore._select((state: any) => state); // Devuelve el estado completo
+    return this.agriculturaStore._select((state: Agricultura) => state); // Devuelve el estado completo
   }
   /**
   * Actualizar el formulario de pago en el store.
@@ -107,7 +106,7 @@ export class ImportacionDeAcuiculturaService {
    * y verifica si todos los valores son verdaderos.
    */
   public obtenerTodosLosStatus(): Observable<boolean> {
-    return this.agriculturaStore._select((state: { formaValida: any; }) => state.formaValida).pipe(
+    return this.agriculturaStore._select((state: { formaValida: EnviarDatos }) => state.formaValida).pipe(
       map((formaValida: EnviarDatos) => {
         return Object.values(formaValida).every(value => value === true);
       })

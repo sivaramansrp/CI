@@ -30,23 +30,6 @@ export const PASOS = [
     },
   ];
 
-  /**
-* Secciones a mostrar dentro de cada Paso de acuerdo al trámite
-*/
-export const SECCIONES_TRAMITE_260206 = {
-    PASO_1: {
-      VALIDACION_SECCION_1: false,
-      VALIDACION_SECCION_2: true,
-      VALIDACION_SECCION_3: false,
-      VALIDACION_SECCION_4: false,
-    },
-    PASO_2: {
-      VALIDACION_SECCION: true,
-    },
-    PASO_3: {
-      requiereValidacion: true,
-    },
-  };
 
   /**
    * Representa una tabla de configuración para materiales peligrosos con información específica
@@ -124,22 +107,28 @@ export const FECHA_FACTURA = {
   habilitado: true,
 };
 
+
 /**
- * @constant
- * @description Lista de claves que representan los datos específicos relacionados con materiales peligrosos.
- * Cada clave en esta lista corresponde a un atributo que debe ser proporcionado o manejado
- * en el contexto de la aplicación para tramitar información sobre materiales peligrosos.
+ * Constante que define los datos específicos válidos para el control de materiales peligrosos.
  * 
- * Claves incluidas:
- * - `nombreComun`: Nombre común del material.
- * - `nombreComercial`: Nombre comercial del material.
- * - `estadoFisico`: Estado físico del material (sólido, líquido, gas, etc.).
- * - `cantidad`: Cantidad del material.
+ * Esta lista contiene los nombres de las propiedades que deben ser verificadas y validadas
+ * en el contexto de los trámites relacionados con materiales peligrosos. Cada elemento de 
+ * la lista representa un atributo específico que es requerido para el manejo adecuado de 
+ * estos materiales.
+ * 
+ * Propiedades incluidas:
+ * - `nombreComun`: Nombre común del material peligroso.
+ * - `nombreComercial`: Nombre comercial del material peligroso.
+ * - `estadoFisico`: Estado físico del material (sólido, líquido, gaseoso, etc.).
+ * - `cantidad`: Cantidad del material peligroso.
  * - `unidadMedida`: Unidad de medida utilizada para la cantidad.
  * - `licenciaSanitaria`: Información sobre la licencia sanitaria asociada.
- * - `usoEspecifico`: Uso específico del material.
- * - `fechaExportacion`: Fecha de exportación del material.
- * - `modoCantidad`: Modo en que se mide o calcula la cantidad.
+ * - `usoEspecifico`: Uso específico del material peligroso.
+ * - `fechaExportacion`: Fecha en la que se exportará el material.
+ * - `modoCantidad`: Modo en el que se especifica la cantidad del material.
+ * 
+ * Esta constante es utilizada para garantizar que los datos proporcionados cumplan con los 
+ * requisitos necesarios para el control y manejo seguro de materiales peligrosos.
  */
 export const DATOS_ESPECIFICOS_VALIDO_CONTROL = [
   'nombreComun',
@@ -167,16 +156,18 @@ export const INFO_GENERAL_VALIDO_CONTROL = [
   'numeroCas',
   ];
 
+
   /**
-   * @constant OPCIONES_DE_BOTON_DE_RADIO
+   * Representa las opciones disponibles para un botón de radio en el formulario.
    * 
-   * @description
-   * Contiene las opciones para un botón de radio, representadas como un arreglo de objetos.
-   * Cada objeto incluye una etiqueta (`label`) y un valor (`value`).
+   * Este arreglo contiene objetos que definen las etiquetas y valores asociados 
+   * a las opciones del botón de radio. Las opciones disponibles son:
    * 
-   * @comando
-   * Utilizar esta constante para inicializar o configurar componentes de botones de radio
-   * en la interfaz de usuario.
+   * - "Fisica": Representa una entidad física.
+   * - "Moral": Representa una entidad moral.
+   * 
+   * @const OPCIONES_DE_BOTON_DE_RADIO
+   * @type {Array<{label: string, value: string}>}
    */
   export const OPCIONES_DE_BOTON_DE_RADIO = [
     {
@@ -188,6 +179,20 @@ export const INFO_GENERAL_VALIDO_CONTROL = [
       value: 'Moral',
     }
   ];
+
+/**
+ * Representa las opciones disponibles para un botón de radio en el contenedor.
+ * 
+ * Cada opción está definida por un objeto que contiene:
+ * - `label`: El texto que se mostrará al usuario para identificar la opción.
+ * - `value`: El valor asociado a la opción, que puede ser utilizado en la lógica de la aplicación.
+ * 
+ * Opciones disponibles:
+ * - `Numérico`: Representa una opción basada en valores numéricos.
+ * - `Rangos`: Representa una opción basada en rangos de valores.
+ * 
+ * Este arreglo es útil para configurar dinámicamente botones de radio en la interfaz de usuario.
+ */
 export const OPCIONES_DE_BOTON_DE_RADIO_CONTENEDOR = [
   {
     label: 'Numérico',

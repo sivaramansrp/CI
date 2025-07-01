@@ -10,6 +10,12 @@ import { Tramite230501State, Tramite230501Store } from '../../estados/stores/tra
 import { CommonModule } from '@angular/common';
 import { MaterialesPeligrososService } from '../../services/materiales-peligrosos.service';
 import { Tramite230501Query } from '../../estados/queries/tramite230501Query.query';
+
+/**
+ * Importa los módulos necesarios para el componente, incluyendo Angular Core, Reactive Forms,
+ * y componentes personalizados como CatalogoSelectComponent, TablaDinamicaComponent, InputFechaComponent,
+ * InputCheckComponent e InputRadioComponent.
+ */
 @Component({
   selector: 'app-contenedor-de-datos-solicitud',
   standalone: true,
@@ -178,7 +184,6 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
     this.materialesPeligrososService.obtenerRespuestaPorUrl(this, 'listaDeNumeroCas', '/230501/numeroCas.json');
     this.materialesPeligrososService.obtenerRespuestaPorUrl(this, 'listaDeEstadoFisico', '/230501/estadoFisico.json');
     this.materialesPeligrososService.obtenerRespuestaPorUrl(this, 'listaDeUnidadMedida', '/230501/unidadDeMedida.json'); 
-     
   }
 
 
@@ -217,9 +222,24 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
     this.pestanaValidar();
 
   }
+
+
   /**
-* Evalúa si se debe inicializar o cargar datos en el formulario.
-*/
+   * Inicializa el estado del formulario de datos de solicitud.
+   * 
+   * Este método verifica si el formulario `datosSolicitudForm` ha sido creado. 
+   * Si no existe, se llama al método `crearDatosSolicitudForm` para inicializarlo.
+   * Además, si el formulario está configurado como de solo lectura (`esFormularioSoloLectura`),
+   * se deshabilita para evitar modificaciones.
+   * 
+   * Uso:
+   * - Este método debe ser llamado para garantizar que el formulario esté correctamente
+   *   inicializado antes de interactuar con él.
+   * 
+   * Condiciones:
+   * - Si `datosSolicitudForm` no está definido, se crea un nuevo formulario.
+   * - Si `esFormularioSoloLectura` es verdadero, el formulario se deshabilita.
+   */
   inicializarEstadoFormulario(): void {
     if (!this.datosSolicitudForm) {
       this.crearDatosSolicitudForm();
@@ -228,6 +248,7 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
       this.datosSolicitudForm.disable();
     }
   }
+  
   /**
 * Establece el estado de validación del formulario de destinatario.
 * 

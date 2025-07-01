@@ -2,7 +2,6 @@ import {
   Chofer40103Store,
   Choferesnacionales40103State,
 } from './chofer40103.store';
-import { Chofer } from '../models/registro-muestras-mercancias.model';
 import { Injectable } from '@angular/core';
 import { Query } from '@datorama/akita';
 

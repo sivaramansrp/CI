@@ -8,7 +8,7 @@ import { TituloComponent } from '@ng-mf/data-access-user';
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
-import { ProsecModificacionServiceTsService } from '../../services/prosec-modificacion.service.ts.service';
+import { ProsecModificacionServiceTsService } from '../../services/prosec-modificacion.service';
 
 describe('Mercancias90305Component', () => {
   let component: Mercancias90305Component;
@@ -41,15 +41,15 @@ describe('Mercancias90305Component', () => {
   });
 
   it('should initialize and call loadMercancias on ngOnInit', () => {
-    spyOn(component, 'loadMercancias').and.callThrough();
+    const spy = jest.spyOn(component, 'loadMercancias');
     component.ngOnInit();
-    expect(component.loadMercancias).toHaveBeenCalled();
+    expect(spy).toHaveBeenCalled();
   });
 
   it('should load mercancias and update mercanciasProd', () => {
-    spyOn(mockService, 'getMercancias').and.callThrough();
+    const spy = jest.spyOn(mockService, 'getMercancias');
     component.loadMercancias();
-    expect(mockService.getMercancias).toHaveBeenCalled();
+    expect(spy).toHaveBeenCalled();
     expect(component.mercanciasProd.length).toBe(1);
     expect(component.mercanciasProd[0].fraccionArancelaria).toBe('1234.56.78');
   });

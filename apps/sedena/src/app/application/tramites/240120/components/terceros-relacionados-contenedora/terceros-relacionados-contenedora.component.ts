@@ -1,12 +1,13 @@
 import { ActivatedRoute, Router } from '@angular/router';
+import { Component,OnDestroy,OnInit, ViewChild } from '@angular/core';
 import { Subject, map,takeUntil } from 'rxjs';
+import { AgregarDestinatarioFinalContenedoraComponent } from '../agregar-destinatario-final-contenedora/agregar-destinatario-final-contenedora.component';
+import { AgregarProveedorContenedoraComponent } from '../agregar-proveedor-contenedora/agregar-proveedor-contenedora.component';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
 import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 import { DestinoFinal } from '../../../../shared/models/terceros-relacionados.model';
+import { ModalComponent } from '../../../../shared/components/modal/modal.component';
 import { NUMERO_TRAMITE } from '../../../../shared/constants/datos-solicitud.enum';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
 import { Proveedor } from '../../../../shared/models/terceros-relacionados.model';
 import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-relacionados/terceros-relacionados.component';
 import { Tramite240120Query } from '../../estados/tramite240120Query.query';
@@ -28,11 +29,27 @@ import { Tramite240120Store } from '../../estados/tramite240120Store.store';
 @Component({
   selector: 'app-terceros-relacionados-contenedora',
   standalone: true,
-  imports: [CommonModule, TercerosRelacionadosComponent],
+  imports: [CommonModule, TercerosRelacionadosComponent, ModalComponent],
   templateUrl: './terceros-relacionados-contenedora.component.html',
   styleUrl: './terceros-relacionados-contenedora.component.scss',
 })
 export class TercerosRelacionadosContenedoraComponent implements OnInit, OnDestroy {
+
+
+  /**
+   * @description Referencia al componente ModalComponent dentro de la plantilla.
+   * Utiliza el decorador ViewChild para acceder a la instancia del modal y manipularlo desde el código TypeScript.
+   * @example
+   * // Para abrir el modal:
+   * this.modalComponent.open();
+   * 
+   * @see ModalComponent
+   * 
+   * @es
+   * Referencia al componente modal para mostrar u ocultar diálogos modales en la interfaz de usuario.
+   */
+  @ViewChild('modal', { static: false }) modalComponent!: ModalComponent;
+    
   /**
    * Observable para limpiar las suscripciones activas al destruir el componente.
    * @property {Subject<void>} destroy$
@@ -143,7 +160,6 @@ export class TercerosRelacionadosContenedoraComponent implements OnInit, OnDestr
    */
   modificarDestinarioDatos(datos: DestinoFinal): void {
     this.tramiteStore.actualizarDatosDestinatario(datos);
-    this.irAAcciones();
   }
 
   /**
@@ -152,26 +168,9 @@ export class TercerosRelacionadosContenedoraComponent implements OnInit, OnDestr
    */
   modificarProveedorDatos(datos: Proveedor): void {
     this.tramiteStore.actualizarDatosProveedor(datos);
-    this.irAAccionesProveedor();
   }
 
-  /**
-   * Navega a la pantalla de agregar destino final.
-   */
-  irAAcciones(): void {
-    this.router.navigate(['../agregar-destino-final'], {
-      relativeTo: this.activatedRoute,
-    });
-  }
 
-  /**
-   * Navega a la pantalla de agregar proveedor.
-   */
-  irAAccionesProveedor(): void {
-    this.router.navigate(['../agregar-proveedor'], {
-      relativeTo: this.activatedRoute,
-    });
-  }
 
   /**
    * Elimina un destinatario final del store.
@@ -204,4 +203,35 @@ export class TercerosRelacionadosContenedoraComponent implements OnInit, OnDestr
     this.destroy$.next();
     this.destroy$.complete();
   }
+
+   /**
+    * Abre el modal correspondiente según el nombre del evento recibido.
+    *
+    * Si el evento es `'Datosmercancia'`, se carga el componente `DatosMercanciaContenedoraComponent`
+    * dentro del modal y se le pasa una función de cierre como input.
+    *
+    * @method openModal
+    * @param {string} event - Nombre del evento que indica qué componente se debe mostrar en el modal.
+    * @returns {void}
+    */
+   openModal(event: string): void {
+    if (event === 'agregar-destino-final') {
+      this.modalComponent.abrir(AgregarDestinatarioFinalContenedoraComponent, {
+        cerrarModal: this.cerrarModal.bind(this),
+      });
+    } else if (event === 'agregar-proveedor') {
+      this.modalComponent.abrir(AgregarProveedorContenedoraComponent, {
+        cerrarModal: this.cerrarModal.bind(this),
+      });
+    }
+  }
+  /**
+   * Cierra el modal dinámico actualmente abierto utilizando el método del componente modal.
+   *
+   * @method cerrarModal
+   * @returns {void}
+   */
+  cerrarModal(): void {
+    this.modalComponent.cerrar();
+  }  
 }
