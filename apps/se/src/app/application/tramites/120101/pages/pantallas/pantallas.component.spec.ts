@@ -74,11 +74,11 @@ describe('PantallasComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('debería crear', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize component properties correctly', () => {
+  it('debería inicializar las propiedades del componente correctamente', () => {
     expect(component.pantallasPasos).toEqual(CUPOS_PASOS);
     expect(component.indice).toBe(1);
     expect(component.datosPasos.nroPasos).toBe(component.pantallasPasos.length);
@@ -87,13 +87,13 @@ describe('PantallasComponent', () => {
     expect(component.datosPasos.txtBtnSig).toBe('Continuar');
   });
 
-  it('should return true if all forms are valid in verificarLaValidezDelFormulario', () => {
+  it('debería devolver true si todos los formularios son válidos en verificarLaValidezDelFormulario', () => {
     mockServicioDeFormularioService.isFormValid.mockReturnValue(true);
     const result = component.verificarLaValidezDelFormulario();
     expect(result).toBe(true);
   });
 
-  it('should return false if any form is invalid in verificarLaValidezDelFormulario', () => {
+  it('debería devolver false si algún formulario es inválido en verificarLaValidezDelFormulario', () => {
     mockServicioDeFormularioService.isFormValid
       .mockReturnValueOnce(true)
       .mockReturnValueOnce(false)
@@ -102,7 +102,7 @@ describe('PantallasComponent', () => {
     expect(result).toBe(false);
   });
 
-  it('should return false if any form validity is undefined', () => {
+  it('debería devolver false si alguna validez de formulario es indefinida', () => {
     jest.spyOn(component['servicioDeFormularioService'], 'isFormValid').mockImplementation((formName: string) => {
       return formName === 'representacionFederalForm' ? undefined : true;
     });
@@ -110,12 +110,12 @@ describe('PantallasComponent', () => {
     expect(result).toBe(false);
   });
 
-  it('should update subpestanaSeleccionada when event is a truthy number', () => {
+  it('debería actualizar subpestanaSeleccionada cuando el evento es un número verdadero', () => {
     component.pestanaCambiado(2);
     expect(component.subpestanaSeleccionada).toBe(2);
   });
 
-  it('should not update subpestanaSeleccionada when event is 0 or undefined', () => {
+  it('no debería actualizar subpestanaSeleccionada cuando el evento es 0 o indefinido', () => {
     component.subpestanaSeleccionada = 5;
     component.pestanaCambiado(0);
     expect(component.subpestanaSeleccionada).toBe(5);
@@ -123,7 +123,7 @@ describe('PantallasComponent', () => {
     expect(component.subpestanaSeleccionada).toBe(5);
   });
 
-  it('should show alert and set form valid when special form condition met', () => {
+  it('debería mostrar alerta y establecer formulario válido cuando se cumple condición especial de formulario', () => {
     component.subpestanaSeleccionada = 2;
     Object.defineProperty(component, 'esConsultarCupoFormValid', { value: true });
     Object.defineProperty(component, 'esBienFinalFormValid', { value: true });
@@ -137,7 +137,7 @@ describe('PantallasComponent', () => {
     expect(mockWizardComponent.siguiente).not.toHaveBeenCalled();
   });
 
-  it('should set mostrarAplicacionRegistradaAlerta to false when no conditions match', () => {
+  it('debería establecer mostrarAplicacionRegistradaAlerta en false cuando no se cumplen condiciones', () => {
     component.subpestanaSeleccionada = 1;
     Object.defineProperty(component, 'esConsultarCupoFormValid', { value: false });
     Object.defineProperty(component, 'esBienFinalFormValid', { value: false });
@@ -150,7 +150,7 @@ describe('PantallasComponent', () => {
     expect(mockWizardComponent.siguiente).not.toHaveBeenCalled();
   });
 
-  it('should continue to next step when form is valid', () => {
+  it('debería continuar al siguiente paso cuando el formulario es válido', () => {
     component.consultaState = { readonly: false } as any;
     component.esFormaValido = true;
     component.indice = 2;
@@ -165,7 +165,7 @@ describe('PantallasComponent', () => {
     expect(siguienteSpy).toHaveBeenCalled();
   });
 
-  it('should not go back if accion is ant and form is invalid', () => {
+  it('no debería retroceder si la acción es ant y el formulario es inválido', () => {
     component.consultaState = { readonly: false } as any;
     component.esFormaValido = false;
     Object.assign(component.wizardComponent, { atras: jest.fn() });
@@ -174,7 +174,7 @@ describe('PantallasComponent', () => {
     expect(component.wizardComponent.atras).not.toHaveBeenCalled();
   });
 
-  it('should move forward if readonly is true and accion is cont', () => {
+  it('debería avanzar si readonly es true y la acción es cont', () => {
     component.consultaState = { readonly: true } as any;
     Object.assign(component.wizardComponent, { siguiente: jest.fn() });
     const accionBoton: AccionBoton = { valor: 2, accion: 'cont' };
@@ -183,7 +183,7 @@ describe('PantallasComponent', () => {
     expect(component.wizardComponent.siguiente).toHaveBeenCalled();
   });
 
-  it('should go back if readonly is true and accion is ant', () => {
+  it('debería retroceder si readonly es true y la acción es ant', () => {
     component.consultaState = { readonly: true } as any;
     Object.assign(component.wizardComponent, { atras: jest.fn() });
     const accionBoton: AccionBoton = { valor: 3, accion: 'ant' };
@@ -192,7 +192,7 @@ describe('PantallasComponent', () => {
     expect(component.wizardComponent.atras).toHaveBeenCalled();
   });
 
-  it('should set pestanaDosFormularioValido to true if consultaState.readonly is true on init', () => {
+  it('debería establecer pestanaDosFormularioValido en true si consultaState.readonly es true en init', () => {
   const mockState = { readonly: true } as ConsultaioState;
   mockConsultaioQuery.selectConsultaioState$ = of(mockState);
   component.ngOnInit();
@@ -200,7 +200,7 @@ describe('PantallasComponent', () => {
   expect(component.pestanaDosFormularioValido).toBe(true);
 });
 
-it('should not set pestanaDosFormularioValido if consultaState.readonly is false on init', () => {
+it('no debería establecer pestanaDosFormularioValido si consultaState.readonly es false en init', () => {
   const mockState = { readonly: false } as ConsultaioState;
   mockConsultaioQuery.selectConsultaioState$ = of(mockState);
   component.ngOnInit();
@@ -208,7 +208,7 @@ it('should not set pestanaDosFormularioValido if consultaState.readonly is false
   expect(component.pestanaDosFormularioValido).toBe(false);
 });
 
-it('should return false if any of the forms are undefined in verificarLaValidezDelFormulario', () => {
+it('debería devolver false si alguno de los formularios es indefinido en verificarLaValidezDelFormulario', () => {
   jest.spyOn(mockServicioDeFormularioService, 'isFormValid').mockImplementation((form) => {
     if (form === 'insumosForm') return undefined;
     return true;
@@ -216,7 +216,7 @@ it('should return false if any of the forms are undefined in verificarLaValidezD
   expect(component.verificarLaValidezDelFormulario()).toBe(false);
 });
 
-  it('should not update subpestanaSeleccionada if event is 0 or undefined', () => {
+  it('no debería actualizar subpestanaSeleccionada si el evento es 0 o indefinido', () => {
     component.subpestanaSeleccionada = 2;
     component.pestanaCambiado(0);
     expect(component.subpestanaSeleccionada).toBe(2);
@@ -225,7 +225,7 @@ it('should return false if any of the forms are undefined in verificarLaValidezD
     expect(component.subpestanaSeleccionada).toBe(2);
   });
 
-  it('should hide alert if esFormaValido is false and subpestanaSeleccionada is not 2', () => {
+  it('debería ocultar alerta si esFormaValido es false y subpestanaSeleccionada no es 2', () => {
     component.subpestanaSeleccionada = 1;
     component.esFormaValido = false;
     const accion: AccionBoton = { valor: 2, accion: 'cont' };
@@ -233,7 +233,7 @@ it('should return false if any of the forms are undefined in verificarLaValidezD
     expect(component.mostrarAplicacionRegistradaAlerta).toBe(false);
   });
 
-  it('should complete destroyNotifier$ on ngOnDestroy', () => {
+  it('debería completar destroyNotifier$ en ngOnDestroy', () => {
     const completeSpy = jest.spyOn(component['destroyNotifier$'], 'complete');
     const nextSpy = jest.spyOn(component['destroyNotifier$'], 'next');
     component.ngOnDestroy();

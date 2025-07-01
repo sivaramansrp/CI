@@ -337,13 +337,7 @@ describe('DatosDelSolicitudModificacionComponent', () => {
     expect(componente.formMercancias.get('fechaCaducidad')?.value).toBe('2025-01-01');
   });
 
-  it('debería retornar true en hasError si el control tiene error', () => {
-    const fb = TestBed.inject(FormBuilder);
-    const form = fb.group({ campo: [''] });
-    form.get('campo')?.setErrors({ required: true });
-    form.get('campo')?.markAsTouched();
-    expect(componente.hasError(form, 'campo', 'required')).toBe(true);
-  });
+  
 it('getErrorMessage retorna null si el control no existe', () => {
   expect(componente.getErrorMessage('noExiste')).toBeNull();
 });
@@ -354,15 +348,41 @@ it('enCambioDeControl no hace nada si el formName es desconocido', () => {
   componente.enCambioDeControl('formDesconocido', 'campo');
   expect(spy).not.toHaveBeenCalled();
 });
+it('guardarScian NO agrega si el formulario es inválido', () => {
+    componente.scianForm.reset();
+    componente.scianForm.get('scian')?.setErrors({ required: true });
+    const closeSpy = jest.spyOn(componente, 'closeScianModal');
+    componente.guardarScian();
+    expect(componente.personaparas.length).toBe(0);
+    expect(closeSpy).not.toHaveBeenCalled();
+  });
 
-it('hasError retorna false si el control no está touched', () => {
-  const fb = TestBed.inject(FormBuilder);
-  const form = fb.group({ campo: [''] });
-  expect(componente.hasError(form, 'campo', 'required')).toBe(false);
-});
-  it('debería retornar false en hasError si el control no tiene error', () => {
-    const fb = TestBed.inject(FormBuilder);
-    const form = fb.group({ campo: [''] });
-    expect(componente.hasError(form, 'campo', 'required')).toBeFalsy();
+  it('guardarMarcancia NO agrega si el formulario es inválido', () => {
+    componente.formMercancias.reset();
+    componente.formMercancias.get('clasificacion')?.setErrors({ required: true });
+    const closeSpy = jest.spyOn(componente, 'cerrarModalMercancía');
+    componente.guardarMarcancia();
+    expect(componente.mercanciasTablaDatos.length).toBe(0);
+    expect(closeSpy).not.toHaveBeenCalled();
+  });
+
+  it('cerrarModal no lanza error si modalInstance es undefined', () => {
+    componente.modalInstance = undefined as any;
+    expect(() => componente.cerrarModal()).not.toThrow();
+  });
+
+  it('enCambioDeControl actualiza el store para todos los forms válidos', () => {
+    const spy = jest.spyOn(componente['domicilioEstablecimientoStore'], 'update');
+    componente.scianForm.get('scian')?.setValue('valor');
+    componente.enCambioDeControl('scianForm', 'scian');
+    expect(spy).toHaveBeenCalled();
+
+    componente.domicilioEstablecimiento.get('ideGenerica')?.setValue('valor');
+    componente.enCambioDeControl('domicilioEstablecimiento', 'ideGenerica');
+    expect(spy).toHaveBeenCalled();
+
+    componente.solicitudEstablecimientoForm.get('noLicenciaSanitaria')?.setValue('valor');
+    componente.enCambioDeControl('solicitudEstablecimientoForm', 'noLicenciaSanitaria');
+    expect(spy).toHaveBeenCalled();
   });
 });

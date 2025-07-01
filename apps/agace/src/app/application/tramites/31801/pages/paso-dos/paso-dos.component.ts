@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 
 import { CATALOGOS_ID, Catalogo, CatalogosService, TEXTOS } from '@ng-mf/data-access-user';
@@ -13,6 +13,22 @@ import { RenovacionService } from '../../services/renovacion/renovacion.service'
   styles: ``,
 })
 export class PasoDosComponent implements OnInit, OnDestroy {
+  /**
+   * Evento emitido para reenviar el evento de solicitud de documentos.
+   * Este evento se utiliza para notificar al componente padre que se debe reenviar la solicitud
+   * de documentos requeridos.
+   * @type {EventEmitter<void>}
+   */
+  @Output() reenviarEvento = new EventEmitter<void>();
+
+  /**
+   * Evento emitido para regresar a la sección de cargar documento.
+   * Este evento se utiliza para notificar al componente padre que se debe regresar a la sección
+   * de cargar documento.
+   * @type {EventEmitter<void>}
+   */
+  @Output() regresarSeccionCargarDocumentoEvento = new EventEmitter<void>()
+  
   /**
    * Textos utilizados en el componente.
    */

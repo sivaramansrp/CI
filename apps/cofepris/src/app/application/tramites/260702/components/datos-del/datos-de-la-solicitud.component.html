@@ -124,6 +124,13 @@
             type="submit" (click)="onAgregar()">Agregar</button>
         </div>
     </div>
+    @if (nuevaNotificacion) {
+      <section>
+      <lib-notificaciones 
+      [notificacionInput]="nuevaNotificacion" (confirmacionModal)="eliminarPedimento($event)">
+      </lib-notificaciones>
+      </section>
+      }
     <div *ngIf="showClavaScianForm">
       <ng-titulo titulo="Clave S.C.I.A.N" />
   <form [formGroup]="clavaScianForm" (ngSubmit)="onSubmit()">
@@ -214,7 +221,7 @@
       </div>
     </ng-container>
       <div class="col-md-12 mt-4">
-        <label class="form-label mb-5" for="">mercancías*:</label>
+        <label class="form-label mb-5" for="">Mercancías*:</label>
         <app-tabla-dinamica 
          [tipoSeleccionTabla]="tipoSeleccionsoliMercancias"
           [configuracionTabla]="mercanciasDatos"
@@ -341,7 +348,7 @@
                 <div class="panel-group ficha-collapse" id="accordion">
                   <div class="panel panel-default">
                     <div class="panel-heading" (click)="paisOrigenColapsable()" tabindex="0">
-                      <h4 class="panel-title">País de origen</h4>
+                      <h4 class="panel-title">País de procedencia</h4>
                       <button type="button" class="collpase-button collapsed"></button>
                     </div>
                     @if(paisOrigen){

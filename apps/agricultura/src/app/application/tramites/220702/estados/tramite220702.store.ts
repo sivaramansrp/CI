@@ -9,51 +9,238 @@ import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
 
 /**
- * @interface TramiteState
- * @description
  * Representa el estado de la modalidad de cambio.
+ * @export
+ * @interface TramiteState
  */
 export interface TramiteState {
-    SolicitudState: DatosDeLaSolicitudInt;
-    InternaDatosGeneralesState: InternaDatosGeneralesInt;
-    claveDeReferencia: string;
-    cadenaDependencia: string;
-    banco: number;
-    llaveDePago: string;
-    fechaInicio: string;
-    importeDePago: string;
-    claveDeReferenciaRevision: string;
-    cadenaDependenciaRevision: string;
-    bancoRevision: string;
-    llaveDePagoRevision: string;
-    fechaPagoDeDerechosRevision: string;
-    importeDePagoRevision: string;
-    justificacion: string;
-    certificadosAutorizados: string;   
-    horaDeInspeccion: string;
-    aduanaDeIngreso: number;
-    oficinaDeInspeccion: string;
-    puntoDeInspeccion: string;
-    valorSeleccionado: string | null;
-    nombreInspector: string;
-    primerApellido: string;
-    segundoApellido: string;
-    cantidadContenedores: number;
-    tipoContenedor: number;
-    medioDeTransporte: string;
-    identificacionTransporte: string;
-    esSolicitudFerros: string;
-    claveDeReferenciaDerechos:string;
-    cadenaDependenciaDerechos:string;
-    bancoDerechos:string;
-    llaveDePagoDerechos:string;
-    fechaDePago:string;
-    importeDePagoDerechos:string;
-    exentoDePago:string;
-    fechaDeInspeccion:string;
-    fechaPagoDeDerechos:string;
-   
+  /**
+   * Estado de la solicitud.
+   * @property {DatosDeLaSolicitudInt} SolicitudState
+   */
+  SolicitudState: DatosDeLaSolicitudInt;
 
+  /**
+   * Estado de los datos generales internos.
+   * @property {InternaDatosGeneralesInt} InternaDatosGeneralesState
+   */
+  InternaDatosGeneralesState: InternaDatosGeneralesInt;
+
+  /**
+   * Clave de referencia del trámite.
+   * @property {string} claveDeReferencia
+   */
+  claveDeReferencia: string;
+
+  /**
+   * Cadena de dependencia asociada al trámite.
+   * @property {string} cadenaDependencia
+   */
+  cadenaDependencia: string;
+
+  /**
+   * Banco asociado al trámite.
+   * @property {number} banco
+   */
+  banco: number;
+
+  /**
+   * Llave de pago del trámite.
+   * @property {string} llaveDePago
+   */
+  llaveDePago: string;
+
+  /**
+   * Fecha de inicio del trámite.
+   * @property {string} fechaInicio
+   */
+  fechaInicio: string;
+
+  /**
+   * Importe del pago del trámite.
+   * @property {string} importeDePago
+   */
+  importeDePago: string;
+
+  /**
+   * Clave de referencia para la revisión.
+   * @property {string} claveDeReferenciaRevision
+   */
+  claveDeReferenciaRevision: string;
+
+  /**
+   * Cadena de dependencia para la revisión.
+   * @property {string} cadenaDependenciaRevision
+   */
+  cadenaDependenciaRevision: string;
+
+  /**
+   * Banco asociado a la revisión.
+   * @property {string} bancoRevision
+   */
+  bancoRevision: string;
+
+  /**
+   * Llave de pago para la revisión.
+   * @property {string} llaveDePagoRevision
+   */
+  llaveDePagoRevision: string;
+
+  /**
+   * Fecha de pago de derechos para la revisión.
+   * @property {string} fechaPagoDeDerechosRevision
+   */
+  fechaPagoDeDerechosRevision: string;
+
+  /**
+   * Importe del pago de derechos para la revisión.
+   * @property {string} importeDePagoRevision
+   */
+  importeDePagoRevision: string;
+
+  /**
+   * Justificación del trámite.
+   * @property {string} justificacion
+   */
+  justificacion: string;
+
+  /**
+   * Certificados autorizados relacionados con el trámite.
+   * @property {string} certificadosAutorizados
+   */
+  certificadosAutorizados: string;
+
+  /**
+   * Hora de inspección del trámite.
+   * @property {string} horaDeInspeccion
+   */
+  horaDeInspeccion: string;
+
+  /**
+   * Identificador de la aduana de ingreso.
+   * @property {number} aduanaDeIngreso
+   */
+  aduanaDeIngreso: number;
+
+  /**
+   * Nombre de la oficina de inspección.
+   * @property {string} oficinaDeInspeccion
+   */
+  oficinaDeInspeccion: string;
+
+  /**
+   * Punto de inspección asociado al trámite.
+   * @property {string} puntoDeInspeccion
+   */
+  puntoDeInspeccion: string;
+
+  /**
+   * Valor seleccionado en el trámite.
+   * @property {string | null} valorSeleccionado
+   */
+  valorSeleccionado: string | null;
+
+  /**
+   * Nombre del inspector asignado.
+   * @property {string} nombreInspector
+   */
+  nombreInspector: string;
+
+  /**
+   * Primer apellido del inspector.
+   * @property {string} primerApellido
+   */
+  primerApellido: string;
+
+  /**
+   * Segundo apellido del inspector.
+   * @property {string} segundoApellido
+   */
+  segundoApellido: string;
+
+  /**
+   * Cantidad de contenedores involucrados.
+   * @property {number} cantidadContenedores
+   */
+  cantidadContenedores: number;
+
+  /**
+   * Tipo de contenedor utilizado.
+   * @property {number} tipoContenedor
+   */
+  tipoContenedor: number;
+
+  /**
+   * Medio de transporte utilizado.
+   * @property {string} medioDeTransporte
+   */
+  medioDeTransporte: string;
+
+  /**
+   * Identificación del transporte.
+   * @property {string} identificacionTransporte
+   */
+  identificacionTransporte: string;
+
+  /**
+   * Indica si la solicitud está relacionada con transporte ferroviario.
+   * @property {string} esSolicitudFerros
+   */
+  esSolicitudFerros: string;
+
+  /**
+   * Clave de referencia para los derechos.
+   * @property {string} claveDeReferenciaDerechos
+   */
+  claveDeReferenciaDerechos: string;
+
+  /**
+   * Cadena de dependencia para los derechos.
+   * @property {string} cadenaDependenciaDerechos
+   */
+  cadenaDependenciaDerechos: string;
+
+  /**
+   * Banco asociado a los derechos.
+   * @property {string} bancoDerechos
+   */
+  bancoDerechos: string;
+
+  /**
+   * Llave de pago para los derechos.
+   * @property {string} llaveDePagoDerechos
+   */
+  llaveDePagoDerechos: string;
+
+  /**
+   * Fecha de pago.
+   * @property {string} fechaDePago
+   */
+  fechaDePago: string;
+
+  /**
+   * Importe del pago de derechos.
+   * @property {string} importeDePagoDerechos
+   */
+  importeDePagoDerechos: string;
+
+  /**
+   * Indica si el trámite está exento de pago.
+   * @property {string} exentoDePago
+   */
+  exentoDePago: string;
+
+  /**
+   * Fecha de inspección del trámite.
+   * @property {string} fechaDeInspeccion
+   */
+  fechaDeInspeccion: string;
+
+  /**
+   * Fecha de pago de derechos.
+   * @property {string} fechaPagoDeDerechos
+   */
+  fechaPagoDeDerechos: string;
 }
 
 /**
@@ -64,6 +251,10 @@ export interface TramiteState {
  */
 export function createInitialState(): TramiteState {
     return {
+        /**
+         * Estado de la solicitud.
+         * @property {DatosDeLaSolicitudInt} SolicitudState
+         */
         SolicitudState: {
             justificacion: '',
             certificadosAutorizados: '',
@@ -82,12 +273,16 @@ export function createInitialState(): TramiteState {
             esSolicitudFerros: '',
             banco: '',
             regimenAlQueDestina: '',
-            nombreDeLaEmpresaTransportista:'',
-            puntoDeVerificacion:'',
-            identificacionDelTransporte:'',
+            nombreDeLaEmpresaTransportista: '',
+            puntoDeVerificacion: '',
+            identificacionDelTransporte: '',
             datosParaMovilizacion: '',
             oficinaDeInspeccion: '',
         },
+        /**
+         * Estado de los datos generales internos.
+         * @property {InternaDatosGeneralesInt} InternaDatosGeneralesState
+         */
         InternaDatosGeneralesState: {
             folioDelTramite: 0,
             aduanaIngreso: '',
@@ -109,43 +304,186 @@ export function createInitialState(): TramiteState {
             puntoDeVerificacion: '',
             regimenAlQueDestina: ''
         },
+        /**
+         * Clave de referencia del trámite.
+         * @property {string} claveDeReferencia
+         */
         claveDeReferencia: '',
+        /**
+         * Cadena de dependencia asociada al trámite.
+         * @property {string} cadenaDependencia
+         */
         cadenaDependencia: '',
+        /**
+         * Banco asociado al trámite.
+         * @property {number} banco
+         */
         banco: 0,
+        /**
+         * Llave de pago del trámite.
+         * @property {string} llaveDePago
+         */
         llaveDePago: '',
+        /**
+         * Fecha de inicio del trámite.
+         * @property {string} fechaInicio
+         */
         fechaInicio: '',
+        /**
+         * Importe del pago del trámite.
+         * @property {string} importeDePago
+         */
         importeDePago: '',
+        /**
+         * Clave de referencia para la revisión.
+         * @property {string} claveDeReferenciaRevision
+         */
         claveDeReferenciaRevision: '',
+        /**
+         * Cadena de dependencia para la revisión.
+         * @property {string} cadenaDependenciaRevision
+         */
         cadenaDependenciaRevision: '',
+        /**
+         * Banco asociado a la revisión.
+         * @property {string} bancoRevision
+         */
         bancoRevision: '',
+        /**
+         * Llave de pago para la revisión.
+         * @property {string} llaveDePagoRevision
+         */
         llaveDePagoRevision: '',
+        /**
+         * Fecha de pago de derechos para la revisión.
+         * @property {string} fechaPagoDeDerechosRevision
+         */
         fechaPagoDeDerechosRevision: '',
+        /**
+         * Importe del pago de derechos para la revisión.
+         * @property {string} importeDePagoRevision
+         */
         importeDePagoRevision: '',
+        /**
+         * Justificación del trámite.
+         * @property {string} justificacion
+         */
         justificacion: '',
+        /**
+         * Certificados autorizados relacionados con el trámite.
+         * @property {string} certificadosAutorizados
+         */
         certificadosAutorizados: '',
+        /**
+         * Hora de inspección del trámite.
+         * @property {string} horaDeInspeccion
+         */
         horaDeInspeccion: '',
+        /**
+         * Identificador de la aduana de ingreso.
+         * @property {number} aduanaDeIngreso
+         */
         aduanaDeIngreso: 0,
+        /**
+         * Nombre de la oficina de inspección.
+         * @property {string} oficinaDeInspeccion
+         */
         oficinaDeInspeccion: '',
+        /**
+         * Punto de inspección asociado al trámite.
+         * @property {string} puntoDeInspeccion
+         */
         puntoDeInspeccion: '',
+        /**
+         * Nombre del inspector asignado.
+         * @property {string} nombreInspector
+         */
         nombreInspector: '',
+        /**
+         * Primer apellido del inspector.
+         * @property {string} primerApellido
+         */
         primerApellido: '',
+        /**
+         * Segundo apellido del inspector.
+         * @property {string} segundoApellido
+         */
         segundoApellido: '',
+        /**
+         * Cantidad de contenedores involucrados.
+         * @property {number} cantidadContenedores
+         */
         cantidadContenedores: 0,
+        /**
+         * Tipo de contenedor utilizado.
+         * @property {number} tipoContenedor
+         */
         tipoContenedor: 0,
+        /**
+         * Medio de transporte utilizado.
+         * @property {string} medioDeTransporte
+         */
         medioDeTransporte: '',
+        /**
+         * Identificación del transporte.
+         * @property {string} identificacionTransporte
+         */
         identificacionTransporte: '',
+        /**
+         * Indica si la solicitud está relacionada con transporte ferroviario.
+         * @property {string} esSolicitudFerros
+         */
         esSolicitudFerros: '',
+        /**
+         * Valor seleccionado en el trámite.
+         * @property {string | null} valorSeleccionado
+         */
         valorSeleccionado: null,
-        claveDeReferenciaDerechos:'',
-        cadenaDependenciaDerechos:'',
-        bancoDerechos:'',
-        llaveDePagoDerechos:'',
-        fechaDePago:'',
-        importeDePagoDerechos:'',
-        exentoDePago:'',
-        fechaDeInspeccion:'',
-        fechaPagoDeDerechos:'',
-
+        /**
+         * Clave de referencia para los derechos.
+         * @property {string} claveDeReferenciaDerechos
+         */
+        claveDeReferenciaDerechos: '',
+        /**
+         * Cadena de dependencia para los derechos.
+         * @property {string} cadenaDependenciaDerechos
+         */
+        cadenaDependenciaDerechos: '',
+        /**
+         * Banco asociado a los derechos.
+         * @property {string} bancoDerechos
+         */
+        bancoDerechos: '',
+        /**
+         * Llave de pago para los derechos.
+         * @property {string} llaveDePagoDerechos
+         */
+        llaveDePagoDerechos: '',
+        /**
+         * Fecha de pago.
+         * @property {string} fechaDePago
+         */
+        fechaDePago: '',
+        /**
+         * Importe del pago de derechos.
+         * @property {string} importeDePagoDerechos
+         */
+        importeDePagoDerechos: '',
+        /**
+         * Indica si el trámite está exento de pago.
+         * @property {string} exentoDePago
+         */
+        exentoDePago: '',
+        /**
+         * Fecha de inspección del trámite.
+         * @property {string} fechaDeInspeccion
+         */
+        fechaDeInspeccion: '',
+        /**
+         * Fecha de pago de derechos.
+         * @property {string} fechaPagoDeDerechos
+         */
+        fechaPagoDeDerechos: '',
     };
 }
 

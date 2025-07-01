@@ -6,6 +6,8 @@ import { TramiteFolioService } from '@ng-mf/data-access-user';
 import { FirmaElectronicaComponent } from '@libs/shared/data-access-user/src';
 import { ToastrModule } from 'ngx-toastr';
 import { ToastrService } from 'ngx-toastr';
+import { FirmaElectronicaService } from '@libs/shared/data-access-user/src/core/services/shared/firma-electronica/firma-electronica.service';
+import { HttpClient } from '@angular/common/http';
 
 describe('PasoTresComponent', () => {
   let component: PasoTresComponent;
@@ -22,13 +24,19 @@ describe('PasoTresComponent', () => {
       obtenerTramite: jest.fn(),
     };
 
+    const firmaElectronicaServiceMock = {
+      someMethod: jest.fn(), 
+    };
+
     await TestBed.configureTestingModule({
       declarations: [PasoTresComponent],
       imports: [FirmaElectronicaComponent, ToastrModule.forRoot()],
       providers: [
         { provide: Router, useValue: routerMock },
         { provide: TramiteFolioService, useValue: serviciosExtraordinariosServiceMock },
-        ToastrService
+        { provide: FirmaElectronicaService, useValue: firmaElectronicaServiceMock },
+        { provide: HttpClient, useValue: {} },
+        ToastrService,
       ],
     }).compileComponents();
 

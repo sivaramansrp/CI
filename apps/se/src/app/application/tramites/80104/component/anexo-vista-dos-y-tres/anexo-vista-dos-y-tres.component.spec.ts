@@ -72,7 +72,7 @@ describe('AnexoVistaDosYTresComponent', () => {
     component = fixture.debugElement.componentInstance;
   });
 
-  it('should clean up destroyNotifier$ on ngOnDestroy', () => {
+  it('Debería limpiar destroyNotifier$ en ngOnDestroy', () => {
     const nextSpy = jest.spyOn(component['destroyNotifier$'], 'next');
     const completeSpy = jest.spyOn(component['destroyNotifier$'], 'complete');
     component.ngOnDestroy();
@@ -80,33 +80,33 @@ describe('AnexoVistaDosYTresComponent', () => {
     expect(completeSpy).toHaveBeenCalled();
   });
 
-  it('should initialize anexoConfig with correct values', () => {
+  it('Debería inicializar anexoConfig con valores correctos', () => {
     expect(component.anexoConfig.anexoDosTablaSeleccionCheckbox).toBe(TablaSeleccion.CHECKBOX);
     expect(component.anexoConfig.anexoDosEncabezadoDeTabla).toBe(ANEXO_SERVICIO);
     expect(component.anexoConfig.anexoTresTablaSeleccionCheckbox).toBe(TablaSeleccion.CHECKBOX);
     expect(component.anexoConfig.anexoTresEncabezadoDeTabla).toBe(ANEXO_SERVICIO);
   });
 
-    it('should set anexoDosTablaLista on init if data exists', () => {
+    it('Debería establecer anexoDosTablaLista en init si existen datos', () => {
     fixture.detectChanges(); 
     expect(component.anexoDosTablaLista.length).toBe(1);
     expect(component.anexoDosTablaLista[0].encabezadoFraccion).toBe('0101.21.01');
   });
 
-  it('should set anexoTresTablaLista on init if data exists', () => {
+  it('Debería establecer anexoTresTablaLista en init si existen datos', () => {
     fixture.detectChanges(); 
     expect(component.anexoTresTablaLista.length).toBe(1);
     expect(component.anexoTresTablaLista[0].encabezadoFraccion).toBe('0202.31.01');
   });
 
-  it('should call store.setAnnexoDosTableLista on obtenerAnexoDosDevolverLaLlamada()', () => {
+  it('Debería llamar a store.setAnnexoDosTableLista en obtenerAnexoDosDevolverLaLlamada()', () => {
     const event: AnexoEncabezado[] = [{ encabezadoFraccion: '', encabezadoDescripcion: '', estatus: false }];
     component.obtenerAnexoDosDevolverLaLlamada(event);
     expect(component.anexoDosTablaLista).toEqual(event);
     expect(mockStore.setAnnexoDosTableLista).toHaveBeenCalledWith(event);
   });
 
-  it('should call store.setAnnexoTresTableLista on obtenerAnexoTresDevolverLaLlamada()', () => {
+  it('Debería llamar a store.setAnnexoTresTableLista en obtenerAnexoTresDevolverLaLlamada()', () => {
     const event: AnexoEncabezado[] = [{ encabezadoFraccion: '', encabezadoDescripcion: '', estatus: false }];
     component.obtenerAnexoTresDevolverLaLlamada(event);
     expect(component.anexoTresTablaLista).toEqual(event);

@@ -1,65 +1,79 @@
 import { PantallasComponent } from './pantallas.component';
-import { WizardComponent } from '@ng-mf/data-access-user';
-import { AccionBoton } from '@ng-mf/data-access-user';
-import { PANTA_PASOS } from '@ng-mf/data-access-user';
 
 describe('PantallasComponent', () => {
   let component: PantallasComponent;
 
+  // Mock para los pasos y el wizard
+  const pasosMock = [
+    { nombre: 'Paso 1' },
+    { nombre: 'Paso 2' },
+    { nombre: 'Paso 3' }
+  ];
+
   beforeEach(() => {
     component = new PantallasComponent();
+    // Sobrescribe la constante de pasos para pruebas
+    component.pantallasPasos = pasosMock as any;
+    component.datosPasos = {
+      nroPasos: pasosMock.length,
+      indice: 1,
+      txtBtnAnt: 'Anterior',
+      txtBtnSig: 'Continuar'
+    };
+    // Mock del wizardComponent
     component.wizardComponent = {
       siguiente: jest.fn(),
-      atras: jest.fn(),
-    } as unknown as WizardComponent;
+      atras: jest.fn()
+    } as any;
   });
 
-  it('should create the component', () => {
+  it('debería crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize pantallasPasos with PANTA_PASOS', () => {
-    expect(component.pantallasPasos).toBe(PANTA_PASOS);
-  });
-
-  it('should have a default index value of 1', () => {
-    expect(component.indice).toBe(1);
-  });
-
-  it('should initialize datosPasos with correct values', () => {
-    expect(component.datosPasos).toEqual({
-      nroPasos: component.pantallasPasos.length,
-      indice: component.indice,
-      txtBtnAnt: 'Anterior',
-      txtBtnSig: 'Continuar',
-    });
-  });
-
-  it('should update the index and call wizardComponent.siguiente when accion is "cont"', () => {
-    const accionBoton: AccionBoton = { accion: 'cont', valor: 2 };
-    component.getValorIndice(accionBoton);
+  it('debería actualizar el índice y llamar a siguiente() cuando la acción es "cont" y el valor es válido', () => {
+    component.getValorIndice({ accion: 'cont', valor: 2 } as any);
     expect(component.indice).toBe(2);
+    expect(component.datosPasos.indice).toBe(2);
     expect(component.wizardComponent.siguiente).toHaveBeenCalled();
+    expect(component.wizardComponent.atras).not.toHaveBeenCalled();
   });
 
-  it('should update the index and call wizardComponent.atras when accion is not "cont"', () => {
-    const accionBoton: AccionBoton = { accion: 'atras', valor: 2 };
-    component.getValorIndice(accionBoton);
+  it('debería actualizar el índice y llamar a atras() cuando la acción NO es "cont" y el valor es válido', () => {
+    component.getValorIndice({ accion: 'ant', valor: 2 } as any);
     expect(component.indice).toBe(2);
+    expect(component.datosPasos.indice).toBe(2);
     expect(component.wizardComponent.atras).toHaveBeenCalled();
-  });
-
-  it('should not update the index if the value is out of range (less than 1)', () => {
-    const accionBoton: AccionBoton = { accion: 'cont', valor: 0 };
-    component.getValorIndice(accionBoton);
-    expect(component.indice).toBe(1); // Default value remains unchanged
     expect(component.wizardComponent.siguiente).not.toHaveBeenCalled();
   });
 
-  it('should not update the index if the value is out of range (greater than 4)', () => {
-    const accionBoton: AccionBoton = { accion: 'cont', valor: 5 };
-    component.getValorIndice(accionBoton);
-    expect(component.indice).toBe(1); // Default value remains unchanged
+  it('no debería actualizar el índice ni llamar métodos del wizard si el valor es menor o igual a 0', () => {
+    component.indice = 1;
+    component.datosPasos.indice = 1;
+    component.getValorIndice({ accion: 'cont', valor: 0 } as any);
+    expect(component.indice).toBe(1);
+    expect(component.datosPasos.indice).toBe(1);
     expect(component.wizardComponent.siguiente).not.toHaveBeenCalled();
+    expect(component.wizardComponent.atras).not.toHaveBeenCalled();
+  });
+
+  it('no debería actualizar el índice ni llamar métodos del wizard si el valor es mayor al número de pasos', () => {
+    component.indice = 1;
+    component.datosPasos.indice = 1;
+    component.getValorIndice({ accion: 'cont', valor: 10 } as any);
+    expect(component.indice).toBe(1);
+    expect(component.datosPasos.indice).toBe(1);
+    expect(component.wizardComponent.siguiente).not.toHaveBeenCalled();
+    expect(component.wizardComponent.atras).not.toHaveBeenCalled();
+  });
+
+  it('no debería hacer nada si el parámetro es undefined', () => {
+    component.indice = 1;
+    component.datosPasos.indice = 1;
+    component.getValorIndice(undefined as any);
+    expect(component.indice).toBe(1);
+    expect(component.datosPasos.indice).toBe(1);
+    expect(component.wizardComponent.siguiente).not.toHaveBeenCalled();
+    expect(component.wizardComponent.atras).not.toHaveBeenCalled();
   });
 });

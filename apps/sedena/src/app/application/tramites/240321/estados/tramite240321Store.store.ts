@@ -8,25 +8,41 @@ import { Store } from '@datorama/akita';
 import { StoreConfig } from '@datorama/akita';
 
 /**
- * Interfaz que representa el estado completo del trámite 240321.
- *
- * @property {number} [tabSeleccionado] - Pestaña actualmente activa en el flujo.
- * @property {DestinoFinal[]} destinatarioFinalTablaDatos - Lista de destinatarios finales registrados.
- * @property {Proveedor[]} proveedorTablaDatos - Lista de proveedores registrados.
- * @property {PagoDerechosFormState} pagoDerechos - Información del formulario de pago de derechos.
- * @property {MercanciaDetalle[]} merccancialTablaDatos - Lista de mercancías registradas.
- * @property {DatosDelTramiteFormState} datosDelTramite - Información general del formulario de datos del trámite.
- *  @property {JustificacionTramiteFormState} justificacionTramiteFormState - Información del formulario de justificación del trámite.
-*/
+ * Representa el estado de la gestión para el trámite 240321.
+ */
 export interface Tramite240321State {
+  /**
+   * Índice de la pestaña actualmente seleccionada en la interfaz, si aplica.
+   */
   tabSeleccionado?: number;
+  /**
+   * Lista de destinatarios finales mostrados en la tabla de datos.
+   */
   destinatarioFinalTablaDatos: DestinoFinal[];
+  /**
+   * Lista de proveedores mostrados en la tabla de datos.
+   */
   proveedorTablaDatos: Proveedor[];
+  /**
+   * Estado del formulario relacionado con el pago de derechos.
+   */
   pagoDerechos: PagoDerechosFormState;
+  /**
+   * Lista de detalles de mercancía mostrados en la tabla de datos.
+   */
   merccancialTablaDatos: MercanciaDetalle[];
+    /**
+   * Estado del formulario con los datos generales del trámite.
+   */
   datosDelTramite: DatosDelTramiteFormState;
+  /**
+   * Estado del formulario de justificación del trámite.
+   */
   justificacionTramiteFormState: JustificacionTramiteFormState;
-  folio:string;
+  /**
+   * Folio asociado al estado del trámite.
+   */
+  folio: string;
 }
 
 /**

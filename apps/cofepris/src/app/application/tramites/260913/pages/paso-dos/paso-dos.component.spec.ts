@@ -1,18 +1,34 @@
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PasoDosComponent } from './paso-dos.component';
-import { TEXTOS } from '@libs/shared/data-access-user/src';
+import { CommonModule } from '@angular/common';
+import { AlertComponent, AnexarDocumentosComponent, TEXTOS, TituloComponent } from '@libs/shared/data-access-user/src';
 
 describe('PasoDosComponent', () => {
   let component: PasoDosComponent;
+  let fixture: ComponentFixture<PasoDosComponent>;
 
-  beforeEach(() => {
-    component = new PasoDosComponent();
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      declarations:[PasoDosComponent],
+      imports: [
+        CommonModule,
+        TituloComponent,
+        AnexarDocumentosComponent,
+        AlertComponent,
+        require('@angular/common/http/testing').HttpClientTestingModule
+      ]
+    }).compileComponents();
+
+    fixture = TestBed.createComponent(PasoDosComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
   });
 
-  it('should create the component', () => {
+  it('debería crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize TEXTOS with the shared TEXTOS constant', () => {
+  it('debería tener la propiedad TEXTOS definida y ser igual a la constante importada', () => {
     expect(component.TEXTOS).toBe(TEXTOS);
   });
 });
