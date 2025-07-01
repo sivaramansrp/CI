@@ -134,11 +134,9 @@ solicitud220502State: Solicitud220502State = {} as Solicitud220502State;
     this.cargarDatosIniciales(); // Cargar datos del catálogo inicial
 
     if (this.formularioDeshabilitado) {
-      this.grupoFormularioPadre.disable();
-    }
-
-    if (this.formularioDeshabilitado) {
-      this.grupoFormularioPadre.disable();
+      this.grupoFormularioPadre?.disable();
+    } else {
+      this.grupoFormularioPadre?.enable();
     }
   }
   /**

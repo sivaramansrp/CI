@@ -70,7 +70,7 @@ describe('MedioTransporteComponent', () => {
     const catalogoSpy = jest.spyOn<any, any>(component, 'inicializaCatalogos');
     const mercanciaSpy = jest.spyOn(component, 'obtenerMercancia');
 
-    component.ngOnInit();
+    component.inicializarFormulario();
 
     expect(catalogoSpy).toHaveBeenCalled();
     expect(mercanciaSpy).toHaveBeenCalled();

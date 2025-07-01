@@ -236,7 +236,9 @@ describe('RevisionService', () => {
       unidaddeMedidaDeUMT: '',
       cantidadTotalUMT: '',
       saldoPendiente: '',
-      saldoACapturar: ''
+      saldoACapturar: '',
+      mostrarSeccion: true,
+      mercanciaTablaDatos: []
     };
 
     service.getDatosDelaSolicitud().subscribe((response) => {
