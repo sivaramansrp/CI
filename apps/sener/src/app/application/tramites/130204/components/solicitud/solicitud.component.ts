@@ -1,8 +1,8 @@
-import { Catalogo, REGEX_NUMERO_DECIMAL_ENTERO, REGEX_TEXTO_PREFIJO, REG_X } from '@ng-mf/data-access-user';
+import { Catalogo, ConsultaioQuery, REGEX_CARACTERES_NO_PERMITIDOS, REGEX_NUMERO_DECIMAL_ENTERO, REGEX_TEXTO_PREFIJO, REG_X } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { DATOS_INPUT_FIELDS, MERCANCIA_INPUT_VALUES } from '../../../../shared/constantes/valores-constantes.enum';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 import { Tramite130204State, Tramite130204Store } from '../../estados/tramites/tramites130204.store';
 
 import { ConfiguracionColumna } from '@ng-mf/data-access-user';
@@ -80,6 +80,12 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    */
   frmRepresentacionForm!: FormGroup;
 
+   /**
+   * Formulario reactivo para capturar el estado del manifiesto de aceptación (checkbox).
+   * Este formulario se utiliza para almacenar y gestionar el valor del checkbox de aceptación en el store.
+   */
+  manifestoForm!: FormGroup;
+
   /**
    * Datos de configuración para los encabezados de la tabla.
    * @type {ConfiguracionColumna<string>[]} Arreglo que contiene la configuración de las columnas para la tabla.
@@ -98,6 +104,17 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * @type {boolean} Indica si la tabla se debe mostrar o no.
    */
   mostrarTabla = false;
+
+  
+  /**
+ * Indica si el formulario ha sido enviado.
+ * Esta bandera se utiliza para mostrar mensajes de validación o controlar el flujo
+ * después de que el usuario intenta enviar el formulario.
+ * 
+ * @type {boolean}
+ * @default false
+ */
+  formularioEnviado = false;
 
   /**
    * Checkbox de selección de la tabla.
@@ -248,6 +265,13 @@ tituloParte = TITULO_DESTINO;
  */
   public seccionState!: Tramite130204State;
 
+  
+   /**
+  * Indica si el formulario está en modo solo lectura.
+  * Cuando es `true`, los campos del formulario no se pueden editar.
+  */
+  esFormularioSoloLectura: boolean = false; 
+
   /**
    * Constructor de la clase.
    * @param {FormBuilder} fb - Servicio para construir formularios reactivos.
@@ -261,9 +285,19 @@ tituloParte = TITULO_DESTINO;
     private http: HttpClient,
     private tramite130204Store: Tramite130204Store,
     private tramite130204Query: Tramite130204Query,
-    private exportacionHidrocarburosService: ExportacionHidrocarburosService
+    private exportacionHidrocarburosService: ExportacionHidrocarburosService,
+    private consultaioQuery: ConsultaioQuery,
+
   ) {
-    // Constructor vacío, solo se inyectan los servicios
+     this.consultaioQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.destroyed$),
+      map((seccionState)=>{
+        this.esFormularioSoloLectura = seccionState.readonly; 
+        this.inicializarEstadoFormulario();
+      })
+    )
+    .subscribe()
   }
 
   /**
@@ -285,15 +319,25 @@ tituloParte = TITULO_DESTINO;
    * @returns void
    */
   ngOnInit(): void {
-    this.configuracionFormularioSuscripciones();
-    this.inicializarFormularios();
+    this.inicializarEstadoFormulario();
     this.opcionesDeBusqueda();
     this.formularioTotalCount();
-    this.obtenerTablaDatos();
     this.fetchEntidadFederativa();
     this.fetchRepresentacionFederal();
     this.listaDePaisesDisponibles();
 
+  }
+
+    /**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.  
+   * Además, obtiene la información del catálogo de mercancía.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.inicializarFormularios();
+    }  
   }
 
   /**
@@ -341,7 +385,7 @@ tituloParte = TITULO_DESTINO;
         this.seccionState?.descripcion,
         [
           Validators.required,
-          Validators.maxLength(500),
+          Validators.pattern(REGEX_CARACTERES_NO_PERMITIDOS),
         ],
       ],
 
@@ -359,7 +403,8 @@ tituloParte = TITULO_DESTINO;
         this.seccionState?.cantidad,
         [
           Validators.required,
-          Validators.pattern(REG_X.SOLO_NUMEROS),
+          Validators.pattern(REG_X.ENTERO_12_DECIMAL_2),
+          Validators.pattern(REG_X.SOLO_NUMEROS_Y_PUNTO),
           Validators.min(1),
         ],
       ],
@@ -372,11 +417,12 @@ tituloParte = TITULO_DESTINO;
         this.seccionState?.valorFacturaUSD?.toString() ?? '',
         [
           Validators.required,
-          Validators.pattern(REG_X.DECIMALES_DOS_LUGARES),
+          Validators.pattern(REG_X.ENTERO_12_DECIMAL_2),
+          Validators.pattern(REG_X.SOLO_NUMEROS_Y_PUNTO),
           Validators.min(0.01),
         ],
       ],
-
+      
       /**
        * Campo que captura la unidad de medida de la mercancía.
        * Es un campo obligatorio.
@@ -424,7 +470,7 @@ tituloParte = TITULO_DESTINO;
        */
       descripcionModificar: [
         this.seccionState?.descripcionModificar,
-        [Validators.required, Validators.maxLength(255)],
+        [Validators.required, Validators.maxLength(1000)],
       ],
 
       /**
@@ -474,7 +520,7 @@ tituloParte = TITULO_DESTINO;
        * Entidad que representa al solicitante en el trámite.
        * Es un campo obligatorio.
        */
-      entidad: [this.seccionState?.entidad, Validators.required],
+      entidad: [this.seccionState?.entidad],
 
       /**
        * Representación legal o nombre del representante.
@@ -482,8 +528,57 @@ tituloParte = TITULO_DESTINO;
        */
       representacion: [this.seccionState?.representacion, Validators.required],
     });
+     /**
+     * @description Inicializa el formulario reactivo para el manifiesto de aceptación.
+     * Este formulario contiene el control 'manifesto', que representa el estado del checkbox de aceptación.
+     * El valor por defecto es 'false'.
+     * @type {FormGroup}
+     */
+    this.manifestoForm = this.fb.group({
+      
+      /**
+       * @description Estado del checkbox del manifiesto de aceptación.
+       * Valor booleano que indica si el usuario ha aceptado el manifiesto.
+       * Se utiliza para almacenar y gestionar el valor en el formulario reactivo y en el store.
+       * @type {boolean}
+       * @default false
+       */
+      manifesto: [this.seccionState?.manifesto], 
+    });
   }
 
+  /**
+ * @description
+ * Inicializa los formularios y obtiene los datos de la tabla. 
+ * Dependiendo del modo de solo lectura (`esFormularioSoloLectura`), 
+ * habilita o deshabilita todos los formularios del componente.
+ * 
+ * - Si el formulario está en modo solo lectura, deshabilita todos los formularios para evitar modificaciones.
+ * - Si no está en modo solo lectura, habilita todos los formularios para permitir la edición.
+ * 
+ * Este método se utiliza para asegurar que el estado de los formularios coincida con el modo de visualización actual.
+ * 
+ * @returns {void}
+ */
+    guardarDatosFormulario(): void {
+      this.inicializarFormularios();
+      this.obtenerTablaDatos();
+      if (this.esFormularioSoloLectura) {
+        this.formDelTramite.disable();
+        this.mercanciaForm.disable();
+        this.partidasDelaMercanciaForm.disable();
+        this.paisForm.disable();
+        this.frmRepresentacionForm.disable();
+        this.manifestoForm.disable();
+      } else {
+        this.formDelTramite.enable();
+        this.mercanciaForm.enable();
+        this.partidasDelaMercanciaForm.enable();
+        this.paisForm.enable();
+        this.frmRepresentacionForm.enable();
+        this.manifestoForm.enable();
+      }
+  }
 
   /**
   * Método para configurar las suscripciones de los formularios, actualizando sus valores
@@ -611,26 +706,6 @@ tituloParte = TITULO_DESTINO;
       });
   }
 
-
-  /**
- * Método encargado de manejar la fila seleccionada en una tabla.
- * Si hay filas seleccionadas, se guarda la primera fila en la propiedad `filaSeleccionada`.
- * Si no hay filas seleccionadas, se establece como un arreglo vacío.
- * Luego, si existe una fila seleccionada, se actualiza el estado de la tienda `tramite130204Store` 
- * con los valores de la fila seleccionada mediante el método `storeTableValues`.
- * 
- * @param {PartidasDeLaMercanciaModelo[]} filasSeleccionadas - Arreglo de filas seleccionadas en la tabla.
- * @returns {void}
- */
-  manejarlaFilaSeleccionada(filasSeleccionadas: PartidasDeLaMercanciaModelo[]): void {
-    this.filaSeleccionada = filasSeleccionadas.length
-      ? filasSeleccionadas
-      : [];
-    if (this.filaSeleccionada) {
-      this.tramite130204Store.storeTableValues(this.filaSeleccionada);
-    }
-
-  }
   /**
 * Método para obtener los datos de la tabla dinámica.
 * Este método realiza una solicitud al servicio `ImportacionDeVehiculosService` para obtener los datos
@@ -650,6 +725,19 @@ tituloParte = TITULO_DESTINO;
       });
     });
   }
+
+  /**
+ * Elimina todos los datos del cuerpo de la tabla dinámica.
+ * Este método se ejecuta cuando el usuario hace clic en el botón de eliminar,
+ * limpiando el arreglo `tableBodyData` y, por lo tanto, eliminando todas las filas mostradas en la tabla.
+ *
+ * @example
+ * this.alClicEnEliminar();
+ */
+  alClicEnEliminar(): void {
+  this.tableBodyData = [];
+  }
+
   /**
    * @description
    * Método encargado de manejar las actualizaciones del store basadas en eventos del formulario.
@@ -678,20 +766,22 @@ tituloParte = TITULO_DESTINO;
         (frac) => frac.id === SELECTED_FRACCION
       );
 
-      if (FRACTION_OBJ) {
-        if (FRACTION_OBJ.relacionadaUmtId) {
-          event.form.patchValue({ umt: FRACTION_OBJ.relacionadaUmtId });
-          this.setValoresStore(event.form, 'umt');
-        } 
-      const ACOT_OPT = this.acotacionCatalogo.find(a => a.id === FRACTION_OBJ.relacionadaAcotacionId);
-      if (ACOT_OPT) {
-        event.form.patchValue({ acotacion: ACOT_OPT.descripcion });
-        this.setValoresStore(event.form, 'acotacion');
-      }
-      }
-      else {
-        console.warn('No se encontró el objeto fracción para el ID seleccionado.');
-      }
+    if (FRACTION_OBJ) {
+  if (FRACTION_OBJ.relacionadaUmtId) {
+    event.form.patchValue({ umt: FRACTION_OBJ.relacionadaUmtId });
+    this.setValoresStore(event.form, 'umt');
+  }
+  const ACOT_OPT = Array.isArray(this.acotacionCatalogo)
+    ? this.acotacionCatalogo.find(a => a.id === FRACTION_OBJ.relacionadaAcotacionId)
+    : undefined;
+  if (ACOT_OPT) {
+    event.form.patchValue({ acotacion: ACOT_OPT.descripcion });       
+    this.setValoresStore(event.form, 'acotacion');
+  }
+}
+ else {
+  console.warn('No se encontró el objeto fracción para el ID seleccionado.');
+}
     }
     else if (event.metodoNombre === 'setNico') {
 
@@ -726,6 +816,15 @@ tituloParte = TITULO_DESTINO;
  * @returns {void}
  */
   validarYEnviarFormulario(): void {
+        /**
+ * Marca el formulario como enviado.
+ * Esta bandera se utiliza para activar la visualización de mensajes de validación
+ * o controlar el flujo después de que el usuario intenta enviar el formulario.
+ *
+ * @example
+ * this.formularioEnviado = true;
+ */
+  this.formularioEnviado = true;
     /**
      * @description
      * Verifica si el formulario es inválido. En caso de serlo, marca todos los campos como tocados 
@@ -753,23 +852,16 @@ tituloParte = TITULO_DESTINO;
        * @default true
        */
       this.mostrarTabla = true;
-    }
-  }
-
-
-  /**
-  * Método que se encarga de navegar a la página de modificación de partida.
-  * Si hay una fila seleccionada, muestra la tabla de valores y guarda los valores
-  * de la fila seleccionada en el estado del store correspondiente.
-  */
-  /**
-   * navegarParaModificarPartida
-   * Navega para modificar una partida específica y actualiza el estado global.
-   */
-  navegarParaModificarPartida(): void {
-    if (this.filaSeleccionada) {
-      this.tramite130204Store.setMostrarTabla(true);
-      this.tramite130204Store.storeTableValues(this.filaSeleccionada);
+      
+      /**
+ * Llama al método encargado de obtener los datos de la tabla dinámica.
+ * Este método actualiza la propiedad `tableBodyData` y los totales en el formulario correspondiente
+ * con los datos obtenidos del servicio de exportación de petrolíferos.
+ *
+ * @example
+ * this.obtenerTablaDatos();
+ */
+      this.obtenerTablaDatos();
     }
   }
 

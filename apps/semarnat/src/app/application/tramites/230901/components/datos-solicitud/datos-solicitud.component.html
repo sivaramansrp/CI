@@ -9,6 +9,7 @@
           [label]="'Tipo de movimiento'"
           [required]="true"
           name="tipodemovimiento"
+          [isDisabled]="esFormularioSoloLectura"
           (change)="manejarCambioTipoMovimiento()"
         ></app-catalogo-select>
       </div>
@@ -20,11 +21,12 @@
       <div class="col-md-4">
         <app-catalogo-select
           [catalogo]="autorizacionesDeVidaSilvestreService.tiposDeRegimen"
-          formControlName="tipoderegimen"
+          formControlName="tipoDeRegimen"
           [label]="'Tipo de régimen'"
           [required]="true"
-          name="tipoderegimen"
-          (change)="manejarCambioTipoRegimen()"
+          name="tipoDeRegimen"
+          [isDisabled]="esFormularioSoloLectura"
+          (change)="setValoresStore(formularioSolicitud, 'tipoDeRegimen')"
         ></app-catalogo-select>
       </div>
     </div>
@@ -46,6 +48,7 @@
           [fechasSeleccionadas]="listaSeleccionadaAduanas"
           [botones]="botonesAduanas"
           [label]="etiquetaAduanas"
+          [isDisabled]="esFormularioSoloLectura"
         ></crosslist>
       </div>
     </div>
@@ -59,6 +62,7 @@
           [configuracionTabla]="configuracionTablaMercancia"
           [datos]="datosTablaMercancia"
           [tipoSeleccionTabla]="tipoSeleccionTabla"
+          [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
           (listaDeFilaSeleccionada)="manejarFilaSeleccionada($event)"
         ></app-tabla-dinamica>
       </div>
@@ -73,15 +77,16 @@
           <button
             type="button"
             class="btn btn-default me-2"
-            [disabled]="!enableModficarBoton"
+            [disabled]="!enableModficarBoton || esFormularioSoloLectura"
             (click)="modificarItemMercancia()"
           >
             Modificar
           </button>
-          <button type="button" class="btn me-2" [ngClass]="{'btn-default': !enableEliminarBoton, 'btn-danger': enableEliminarBoton}" [disabled]="!enableEliminarBoton" (click)="confirmEliminarMercanciaItem()" >Eliminar</button>
+          <button type="button" class="btn me-2" [ngClass]="{'btn-default': !enableEliminarBoton, 'btn-danger': enableEliminarBoton}" [disabled]="!enableEliminarBoton || esFormularioSoloLectura" (click)="confirmEliminarMercanciaItem()" >Eliminar</button>
           <button
             type="button"
             class="btn btn-primary me-2"
+            [disabled]="esFormularioSoloLectura"
             (click)="mostrarFormularioMercanciaModal()"
           >
             Agregar
@@ -99,6 +104,7 @@
           [fechasSeleccionadas]="listSeleccionadaMovimientos"
           [botones]="botonesMovimientos"
           [label]="etiquetaMovimientos"
+          [isDisabled]="esFormularioSoloLectura"
         ></crosslist>
       </div>
     </div>
@@ -121,6 +127,7 @@
             <button
               type="button"
               class="btn btn-primary"
+              [disabled]="esFormularioSoloLectura"
               (click)="cerrarMultipleSeleccionPopup()"
             >
               Aceptar
@@ -148,10 +155,12 @@
           <div class="modal-footer">
             <button type="button"
             class="btn btn-primary"
+            [disabled]="esFormularioSoloLectura"
             (click)="cerrarEliminarConfirmationPopup()">Cancelar</button>
             <button
               type="button"
               class="btn btn-primary"
+              [disabled]="esFormularioSoloLectura"
               (click)="eliminarMercanciaItem()"
             >
               Aceptar

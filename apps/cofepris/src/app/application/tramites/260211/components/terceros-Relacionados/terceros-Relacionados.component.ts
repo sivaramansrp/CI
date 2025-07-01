@@ -1,14 +1,13 @@
-import { Component } from '@angular/core';
+import { AbstractControl, FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 
-import { AbstractControl, FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { Catalogo } from '@libs/shared/data-access-user/src';
-
-import { CODIGOPOSTALSELECTDATA, COLONIASELECTDATA, LOCALIDADSELECTDATA,MUNICIPIOSELECTDATA,PAISSELECTDATA,
-  TERCEROS_RELACIONADOS_TABLE_HEADER_DATA } from '../../../../../../../../../libs/shared/data-access-user/src/core/enums/260211/permiso.enum';
 import { SanitarioService } from '../../services/sanitario.service';
-import { tablaDatos } from '@libs/shared/data-access-user/src/core/models/260211/detos.model';
+
+import { TablaDatos } from '@libs/shared/data-access-user/src/core/models/260211/detos.model';
 
 import { AlertComponent } from '@libs/shared/data-access-user/src';
 
@@ -17,14 +16,20 @@ import { Sanitario260215Store } from '../../../../estados/tramites/sanitario.sto
 
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 
-// eslint-disable-next-line sort-imports
-import { TituloComponent , InputRadioComponent} from '@libs/shared/data-access-user/src';
+
+import {InputRadioComponent , TituloComponent } from '@libs/shared/data-access-user/src';
 
 import { TableComponent } from '@ng-mf/data-access-user';
 
 import { ModalComponent } from '../model/modal.component';
-import nacionalidadRedio from 'libs/shared/theme/assets/json/260211/nacionalidadRedio.json';
-import tipoPersonaoptions from 'libs/shared/theme/assets/json/260211/tipoPersonaoptions.json';
+
+import nacionalidadRedio from '@libs/shared/theme/assets/json/260211/nacionalidadRedio.json';
+
+import tipoPersonaoptions from '@libs/shared/theme/assets/json/260211/tipoPersonaoptions.json';
+
+import {Subject, map,takeUntil } from 'rxjs';
+
+import { CODIGOPOSTALSELECTDATA, COLONIASELECTDATA, LOCALIDADSELECTDATA, MUNICIPIOSELECTDATA, PAISSELECTDATA, TERCEROS_RELACIONADOS_TABLE_HEADER_DATA } from '@libs/shared/data-access-user/src/core/enums/260906/permiso.enum';
 
 
  
@@ -39,8 +44,18 @@ const TERCEROS_TEXTO_DE_ALERTA =
   styleUrl: './terceros-Relacionados.component.scss',
  
 })
-export class TercerosRelacionadoesComponent {
-
+export class TercerosRelacionadoesComponent implements OnInit , OnDestroy{
+    /**
+     * Notificador para destruir observables y evitar memory leaks.
+     * @private
+     * @type {Subject<void>}
+     */
+    private destroyNotifier$: Subject<void> = new Subject();
+/**
+  * Indica si el formulario está en modo solo lectura.
+  * Cuando es `true`, los campos del formulario no se pueden editar.
+  */
+ public esFormularioSoloLectura: boolean = false; 
   /**
    * Indicador de visibilidad para la sección de la tabla.
    * Inicialmente visible (`true`).
@@ -220,9 +235,26 @@ export class TercerosRelacionadoesComponent {
   constructor(
     private fb: FormBuilder,
     private Sanitario260215Store:Sanitario260215Store,
-    private service: SanitarioService
+    private service: SanitarioService,
+     private consultaioQuery: ConsultaioQuery
   ) {
-    // Inicializa el store del trámite 260215.
+     /**
+         * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
+         *
+         * - Asigna el valor de solo lectura (`readonly`) a la propiedad `esFormularioSoloLectura`.
+         * - Llama a `inicializarEstadoFormulario()` para aplicar configuraciones basadas en el estado recibido.
+         * - La suscripción se cancela automáticamente cuando `destroyNotifier$` emite un valor (para evitar fugas de memoria).
+         */
+        this.consultaioQuery.selectConsultaioState$
+        .pipe(
+          takeUntil(this.destroyNotifier$),
+          map((seccionState)=>{
+            this.esFormularioSoloLectura = seccionState.readonly; 
+           
+            this.inicializarEstadoFormulario();
+          })
+        )
+        .subscribe();
   }
 
   /**
@@ -230,6 +262,8 @@ export class TercerosRelacionadoesComponent {
    * Obtiene los datos para los selectores desde el servicio y inicializa los formularios.
    */
   ngOnInit(): void {
+      this.inicializarEstadoFormulario();
+       
     /**
      * Obtiene los datos para los selectores desde el servicio de terceros.
      * Actualiza la propiedad `dropdownData` con los datos obtenidos.
@@ -246,12 +280,52 @@ export class TercerosRelacionadoesComponent {
     this.initializeAgregarProveedorFormGroup();
     this.initializeAgregarFacturadorFormGroup();
   }
+/**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.  
+   * Además, obtiene la información del catálogo de mercancía.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.inicializarFormulario();
+    }  
+    
+  }
+/**
+ * Inicializa el formulario con los grupos de formularios para agregar fabricantes, destinatarios, proveedores y facturadores.
+ */
+ inicializarFormulario(): void {
+    this.initializeAgregarFabricanteFormGroup();
+    this.initializeAgregarDestinatarioFormGroup();
+    this.initializeAgregarProveedorFormGroup();
+    this.initializeAgregarFacturadorFormGroup();
+ 
+}
 
+    /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormulario(): void {
+     this.inicializarFormulario();
+      if (this.esFormularioSoloLectura) {
+        this.agregarFacturadorFormGroup.disable();
+      this.agregarFabricanteFormGroup.disable();
+      this.agregarDestinatarioFormGroup.disable();
+      this.agregarFacturadorFormGroup.disable();
+      } else if (!this.esFormularioSoloLectura) {
+       this.agregarFacturadorFormGroup.enable();
+      this.agregarFabricanteFormGroup.enable();
+      this.agregarDestinatarioFormGroup.enable();
+      this.agregarFacturadorFormGroup.enable();
+      } 
+  }
   /**
    * Inicializa el formulario para agregar un fabricante.
    * Configura los campos del formulario con validaciones y comportamientos específicos.
    */
-  initializeAgregarFabricanteFormGroup() {
+  initializeAgregarFabricanteFormGroup() :void{
     /**
      * Crea el formulario reactivos para agregar un fabricante.
      * Cada campo tiene sus propias validaciones.
@@ -716,9 +790,14 @@ export class TercerosRelacionadoesComponent {
    * @description Estos encabezados definen las columnas que se mostrarán en la tabla de facturadores.
    */
   facturadorHeaderData = TERCEROS_RELACIONADOS_TABLE_HEADER_DATA;
-
+/**
+   * Indicador para determinar si se ha seleccionado una persona nacional.
+   * Inicialmente establecido en `false`.
+   */
   public nacional = false;
-
+/**
+ * Indicador para determinar si se ha seleccionado una persona extranjera.
+ */
   public extranjero = false;
 
   /**
@@ -743,7 +822,29 @@ export class TercerosRelacionadoesComponent {
    *
    * @description Este arreglo almacena las filas que se mostrarán en la tabla de fabricantes.
    */
-  fabricanteRowData: tablaDatos[] = [];
+  fabricanteRowData: TablaDatos[] = [
+  {
+    tbodyData: [
+      'Laboratorios S.A.',
+      'LAB123456789',
+      'CURP123456HDFRRL01',
+      '55-12345678',
+      'contacto@laboratorios.com',
+      'Calle 1',
+      '100',
+      '2',
+      'México',
+      'Centro',
+      'CDMX',
+      'CDMX',
+      'CDMX',
+      'CDMX',
+      'CDMX',
+      '06000'
+    ]
+  }
+  
+];
 
   /**
    * Datos de las filas para la tabla de destinatarios.
@@ -751,7 +852,27 @@ export class TercerosRelacionadoesComponent {
    *
    * @description Este arreglo almacena las filas que se mostrarán en la tabla de destinatarios.
    */
-  destinatarioRowData: tablaDatos[] = [];
+  destinatarioRowData: TablaDatos[] = [ {
+    tbodyData: [
+      'Empresa Destino S.A.',
+      'DES123456789',
+      'CURPDESTINO01',
+      '55-98765432',
+      'contacto@destino.com',
+      'Calle Destino',
+      '500',
+      '10',
+      'México',
+      'Colonia Centro',
+      'CDMX',
+      'CDMX',
+      'CDMX',
+      'CDMX',
+      'CDMX',
+      '07000',
+      'Colonia Destino'
+    ]
+  }];
 
   /**
    * Datos de las filas para la tabla de proveedores.
@@ -759,7 +880,27 @@ export class TercerosRelacionadoesComponent {
    *
    * @description Este arreglo almacena las filas que se mostrarán en la tabla de proveedores.
    */
-  proveedorRowData: tablaDatos[] = [];
+  proveedorRowData: TablaDatos[] = [ {
+    tbodyData: [
+      'Proveedor Global S.A.',
+      'PRO123456789',
+      'CURPPROV001',
+      '55-11223344',
+      'contacto@proveedor.com',
+      'Av. Comercio',
+      '150',
+      '10',
+      'México',
+      'Colonia Industrial',
+      'CDMX',
+      'CDMX',
+      'CDMX',
+      'CDMX',
+      'CDMX',
+      '06500',
+      'Zona Industrial'
+    ]
+  }];
 
   /**
    * Datos de las filas para la tabla de facturadores.
@@ -767,7 +908,29 @@ export class TercerosRelacionadoesComponent {
    *
    * @description Este arreglo almacena las filas que se mostrarán en la tabla de facturadores.
    */
-  facturadorRowData: tablaDatos[] = [];
+  facturadorRowData: TablaDatos[] = [
+     {
+    tbodyData: [
+      'Facturador Uno S.A.',
+      'FAC123456789',
+      'CURPFACT001',
+      '55-99887766',
+      'facturas@uno.com',
+      'Calle Factura',
+      '400',
+      '12',
+      'México',
+      'Colonia Centro',
+      'CDMX',
+      'CDMX',
+      'CDMX',
+      'CDMX',
+      'CDMX',
+      '08000',
+      'Colonia Facturador'
+    ]
+  },
+  ];
 
   /**
    * Maneja el cambio en los checkboxes para seleccionar el tipo de persona.
@@ -784,7 +947,10 @@ export class TercerosRelacionadoesComponent {
       this.moral = true;
     }
   }
-
+/**
+ *    
+ * @param checkBoxName 
+ */
   public tercerosInputChecked(checkBoxName: string) {
     if (checkBoxName === 'nacional') {
       this.nacional = true;
@@ -1322,6 +1488,15 @@ export class TercerosRelacionadoesComponent {
   static telefonoValidator(control: AbstractControl): ValidationErrors | null {
     const PATTERN = /^([0-9A-Za-z\-() ])*$/;
     return PATTERN.test(control.value) ? null : { invalidTelefono: true };
+  }
+  /**
+   * Método del ciclo de vida de Angular que se llama cuando el componente se destruye.
+   * Este método completa el observable `destroyNotifier$` para cancelar las suscripciones activas.
+   * @returns {void}
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }
 

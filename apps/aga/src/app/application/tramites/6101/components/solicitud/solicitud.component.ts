@@ -1,11 +1,13 @@
 import { Catalogo } from '@libs/shared/data-access-user/src';
 import { CatalogosSelect } from '@libs/shared/data-access-user/src';
 import { Component } from '@angular/core';
+import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 import { DivideFraccion } from '../../models/solicitud.model';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
+import { REGEX_IMPORTE_PAGO } from '@libs/shared/data-access-user/src';
 import { REGEX_NUMEROS } from '@libs/shared/data-access-user/src';
 import { Solicitud6101Query } from '../../estados/solicitud6101.query';
 import { Solicitud6101State } from '../../estados/solicitud6101.store';
@@ -53,6 +55,12 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   solicitud6101State: Solicitud6101State = {} as Solicitud6101State;
 
   /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  esFormularioSoloLectura: boolean = false;
+
+  /**
    * Constructor con inyecciones de dependencias
    * @param fb - FormBuilder para crear el formulario
    * @param solicitudService - Servicio para obtener catálogos
@@ -63,8 +71,25 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     public solicitudService: SolicitudService,
     public solicitud6101Store: Solicitud6101Store,
-    public solicitud6101Query: Solicitud6101Query
+    public solicitud6101Query: Solicitud6101Query,
+    public consultaioQuery: ConsultaioQuery
   ) {
+    /**
+     * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
+     *
+     * - Asigna el valor de solo lectura (`readonly`) a la propiedad `esFormularioSoloLectura`.
+     * - Llama a `inicializarEstadoFormulario()` para aplicar configuraciones basadas en el estado recibido.
+     * - La suscripción se cancela automáticamente cuando `destroyNotifier$` emite un valor (para evitar fugas de memoria).
+     */
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
     this.conseguirSolicitudCatologo();
   }
 
@@ -73,6 +98,42 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * Configura el formulario y se suscribe a cambios en el estado.
    */
   ngOnInit(): void {
+    this.inicializarEstadoFormulario();
+  }
+
+  /**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario(); // Llama al método para cargar los datos del formulario
+    } else {
+      this.inicializarFormulario();
+    }
+  }
+
+  /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormulario(): void {
+    this.inicializarFormulario();
+    if (this.esFormularioSoloLectura) {
+      this.solicitudForm.disable();
+    } else if (!this.esFormularioSoloLectura) {
+      this.solicitudForm.enable();
+    } else {
+      // No se requiere ninguna acción en el formulario
+    }
+  }
+
+  /**
+   * Inicializa el formulario `miembroEmpresaForm` con los datos del estado actual `solicitud32605State`.
+   *
+   * Este formulario recopila información detallada sobre un miembro de la empresa, como su nombre,
+   * nacionalidad, RFC, tipo de persona y relación con la empresa.
+   */
+  inicializarFormulario(): void {
     this.solicitudForm = this.fb.group({
       aduanaAux: [this.solicitud6101State.aduanaAux, [Validators.required]],
       juntaTecnicaDerivada: [
@@ -82,15 +143,27 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       numeroPedimento: [this.solicitud6101State.numeroPedimento],
       nombreComercialMercancia: [
         this.solicitud6101State.nombreComercialMercancia,
-        [Validators.required],
+        [
+          Validators.required,
+          Validators.maxLength(450),
+          Validators.pattern(REGEX_IMPORTE_PAGO),
+        ],
       ],
       descDetalladaMercancia: [
         this.solicitud6101State.descDetalladaMercancia,
-        [Validators.required],
+        [
+          Validators.required,
+          Validators.maxLength(4000),
+          Validators.pattern(REGEX_IMPORTE_PAGO),
+        ],
       ],
       fraccionI: [
         this.solicitud6101State.fraccionI,
-        [Validators.required, Validators.maxLength(10)],
+        [
+          Validators.required,
+          Validators.minLength(8),
+          Validators.maxLength(10),
+        ],
       ],
       capitulo: [{ value: this.solicitud6101State.capitulo, disabled: true }],
       partida: [{ value: this.solicitud6101State.partida, disabled: true }],
@@ -102,7 +175,11 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       ],
       fraccionII: [
         this.solicitud6101State.fraccionII,
-        [Validators.required, Validators.maxLength(10)],
+        [
+          Validators.required,
+          Validators.maxLength(10),
+          Validators.minLength(8),
+        ],
       ],
       capituloII: [
         { value: this.solicitud6101State.capituloII, disabled: true },
@@ -116,7 +193,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       ],
       fraccionIII: [
         this.solicitud6101State.fraccionIII,
-        [Validators.maxLength(10)],
+        [Validators.maxLength(10), Validators.minLength(8)],
       ],
       capituloIII: [
         { value: this.solicitud6101State.capituloIII, disabled: true },
@@ -143,7 +220,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       )
       .subscribe();
   }
-
   /**
    * Método que obtiene los catálogos desde el servicio
    */

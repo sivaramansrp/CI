@@ -2,11 +2,16 @@ import {
   ALERTA_DE_MATERIAL,
   Catalogo,
   CatalogoPaises,
+  ConsultaioQuery,
   CrossListLable,
+  MaxDigitsValidator,
+  REGEX_SOLO_DIGITOS,
   SeccionLibQuery,
-  ValidacionesFormularioService,
+  TablaSeleccion,
+  ValidacionesFormularioService
 } from '@ng-mf/data-access-user';
 import {
+  CONFIGURACION_SUSTANCIAS_SENSIBLES,
   CONTINUAR,
   CROSLISTA_DE_PAISES,
   LISTA_DE_ENTRADA_PERSONALIZADA,
@@ -33,36 +38,186 @@ import { SeccionLibState } from '@libs/shared/data-access-user/src/core/estados/
 import { SeccionLibStore } from '@libs/shared/data-access-user/src/core/estados/seccion.store';
 import { Solicitud230401Query } from '../../estados/queries/solicitud230401.query';
 import { Subject } from 'rxjs';
-
+import { SustanciaSensible } from '../../models/tramies230401.model';
 @Component({
   selector: 'app-datos-solicitud',
   templateUrl: './datos-solicitud.component.html',
   styleUrl: './datos-solicitud.component.scss',
 })
 export class DatosSolicitudComponent implements OnInit, OnDestroy {
-  FormSolicitud!: FormGroup;
-  tipoSolicitudSeleccionada!: number;
-  paisesOrigen!: CatalogoPaises[];
-  paisesProcedencia!: CatalogoPaises[];
-  aduanas!: Catalogo[];
-  seccionAduanera!: Catalogo[];
-  tipoOperacion!: Catalogo[];
 
-  public crosListaDePaises = CROSLISTA_DE_PAISES;
-  private destroyNotifier$: Subject<void> = new Subject();
-  public solicitudState!: Solicitud230401State;
-  public paisDeProcedenciaLabel: CrossListLable = {
-    tituluDeLaIzquierda: 'País de procedencia',
-    derecha: 'País(es) seleccionados',
-  };
-  public paisDelProductoLabel: CrossListLable = {
-    tituluDeLaIzquierda: 'País donde se elabora el producto',
-    derecha: 'País(es) seleccionado(s)',
-  };
-  public aduanasDeEntradaLabel: CrossListLable = {
-    tituluDeLaIzquierda: 'Aduanas de entrada disponibles',
-    derecha: 'Aduanas de entrada seleccionadas',
-  };
+  /**
+   * Representa el formulario reactivo utilizado para capturar y validar los datos de la solicitud.
+   * 
+   * @type {FormGroup}
+   * @remarks
+   * Esta propiedad almacena la instancia del formulario principal de la solicitud,
+   * permitiendo el manejo de controles, validaciones y estados del formulario en el componente.
+   */
+  FormSolicitud!: FormGroup;
+  
+  /**
+   * Representa el identificador numérico del tipo de solicitud seleccionada por el usuario.
+   * 
+   * Este valor se utiliza para determinar el flujo o comportamiento específico
+   * de la aplicación según el tipo de trámite que el usuario elija.
+   * 
+   * @type {number}
+   */
+  tipoSolicitudSeleccionada!: number;
+  
+/**
+ * Lista de países de origen seleccionados por el usuario.
+ * 
+ * Esta información se utiliza para identificar el/los país(es) desde el cual se origina el producto,
+ * y puede ser usada para fines de análisis, validación o cumplimiento normativo.
+ *
+ * @type {CatalogoPaises[]}
+ */
+paisesOrigen!: CatalogoPaises[];
+
+/**
+ * Lista de países de procedencia seleccionados por el usuario.
+ * 
+ * Se refiere al país o países desde donde se transporta el producto antes de llegar al destino final.
+ * Esta información es esencial para el análisis de rutas y cumplimiento de regulaciones internacionales.
+ *
+ * @type {CatalogoPaises[]}
+ */
+paisesProcedencia!: CatalogoPaises[];
+
+/**
+ * Lista de aduanas disponibles para la selección por el usuario.
+ * 
+ * Las aduanas representan los puntos de entrada al país, y su selección puede afectar el proceso de importación
+ * o exportación. Estas opciones son cargadas desde un catálogo general.
+ *
+ * @type {Catalogo[]}
+ */
+aduanas!: Catalogo[];
+
+/**
+ * Lista de secciones aduaneras disponibles asociadas a las aduanas.
+ * 
+ * Las secciones aduaneras permiten una mayor granularidad en la selección de puntos específicos de revisión
+ * o entrada, y están relacionadas jerárquicamente con las aduanas.
+ *
+ * @type {Catalogo[]}
+ */
+seccionAduanera!: Catalogo[];
+
+/**
+ * Lista de tipos de operación disponibles para el trámite.
+ * 
+ * Los tipos de operación pueden incluir importación, exportación, tránsito, entre otros.
+ * Determinan el tipo de procedimiento que se llevará a cabo en la solicitud.
+ *
+ * @type {Catalogo[]}
+ */
+tipoOperacion!: Catalogo[];
+
+/**
+ * Constante que contiene una lista cruzada de países, utilizada para mostrar selecciones en interfaces dinámicas.
+ * 
+ * Sirve como referencia visual para que el usuario seleccione países de una lista doble.
+ */
+public crosListaDePaises = CROSLISTA_DE_PAISES;
+
+/**
+ * Notificador utilizado para liberar suscripciones activas cuando el componente se destruye.
+ * 
+ * Previene fugas de memoria en el manejo de observables dentro del ciclo de vida del componente.
+ *
+ * @type {Subject<void>}
+ */
+private destroyNotifier$: Subject<void> = new Subject();
+
+/**
+ * Estado actual de la solicitud, contiene toda la información del formulario y su contexto.
+ * 
+ * Se utiliza para mantener la coherencia y el seguimiento del proceso de llenado del trámite.
+ *
+ * @type {Solicitud230401State}
+ */
+public solicitudState!: Solicitud230401State;
+
+/**
+ * Etiqueta configurada para la selección cruzada del país de procedencia.
+ * 
+ * Contiene los títulos personalizados para mostrar en los componentes de selección múltiple
+ * relacionados con la procedencia del producto.
+ *
+ * @type {CrossListLable}
+ */
+public paisDeProcedenciaLabel: CrossListLable = {
+  tituluDeLaIzquierda: 'País de procedencia',
+  derecha: 'País(es) seleccionados *:',
+  showUnoTitulo: false,
+  showDosTitulo: false
+};
+
+/**
+ * Etiqueta configurada para la selección cruzada del país donde se elabora el producto.
+ * 
+ * Se muestra en los formularios donde se requiere que el usuario indique
+ * el país de elaboración del producto.
+ *
+ * @type {CrossListLable}
+ */
+public paisDelProductoLabel: CrossListLable = {
+  tituluDeLaIzquierda: 'País donde se elabora el producto',
+  derecha: 'País(es) seleccionado(s) *:',
+  showUnoTitulo: false,
+  showDosTitulo: false
+};
+
+/**
+ * Etiqueta configurada para la selección cruzada de aduanas de entrada.
+ * 
+ * Define los textos que se muestran en la UI para ayudar al usuario
+ * a seleccionar correctamente las aduanas por donde ingresará el producto.
+ *
+ * @type {CrossListLable}
+ */
+public aduanasDeEntradaLabel: CrossListLable = {
+  tituluDeLaIzquierda: 'Aduanas de entrada disponibles',
+  derecha: 'Aduanas de entrada seleccionadas *:',
+  showUnoTitulo: false,
+  showDosTitulo: false
+};
+
+
+  /**
+   * Define el tipo de selección que se utilizará en la tabla.
+   * En este caso, se utiliza un tipo de selección basado en casillas de verificación (CHECKBOX).
+   */
+  public tablaSeleccion = TablaSeleccion.CHECKBOX;
+
+  /**
+   * Configuración de la tabla de sustancias sensibles.
+   * 
+   * Esta propiedad almacena la configuración utilizada para mostrar y gestionar
+   * la tabla de sustancias sensibles en el componente. La configuración se define
+   * en la constante `CONFIGURACION_SUSTANCIAS_SENSIBLES`.
+   */
+  public configuracionSustanciasTabla = CONFIGURACION_SUSTANCIAS_SENSIBLES;
+
+  /**
+   * Arreglo que almacena los datos de sustancias sensibles.
+   * 
+   * Este arreglo contiene objetos de tipo `SustanciaSensible` que representan
+   * las sustancias sensibles asociadas a la solicitud. Se utiliza para gestionar
+   * y mostrar la información relevante en la tabla de datos correspondiente.
+   */
+  public sustanciasSensiblesTablaDatos: SustanciaSensible[] = [];
+
+  /**
+   * Lista de sustancias sensibles seleccionadas por el usuario.
+   * Esta propiedad almacena un arreglo de objetos del tipo `SustanciaSensible`,
+   * que representan las sustancias que han sido marcadas como seleccionadas
+   * en el contexto de la aplicación.
+   */
+  public sustanciasSensiblesSeleccionadas: SustanciaSensible[] = [];
 
   /**
    * Lista de fechas paisDeProcedenciaSeleccionadas.
@@ -225,26 +380,66 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
       funcion: () => this.quitarTres(CONTINUAR),
     },
   ];
+  /**
+   * Estado de la solicitud de la sección 230401.
+   */
   private seccion!: SeccionLibState;
 
-  constructor(public pantallasActionService:PantallasActionService,
-    public validacionesService:ValidacionesFormularioService,
-    public tramite230401Store:Tramite230401Store,public fb:FormBuilder,
-  public solicitud230401Query: Solicitud230401Query,
-    private seccionQuery: SeccionLibQuery,private seccionStore: SeccionLibStore) {
-    // do nothing
+  /**
+ * Indica si el formulario está en modo solo lectura.
+ * Cuando es `true`, los campos del formulario no se pueden editar.
+ */
+  esFormularioSoloLectura: boolean = false;
+
+  /**
+   * Constructor de la clase DatosSolicitudComponent.
+   * 
+   * @param pantallasActionService - Servicio para manejar acciones relacionadas con las pantallas.
+   * @param validacionesService - Servicio para realizar validaciones en los formularios.
+   * @param tramite230401Store - Almacén para gestionar el estado del trámite 230401.
+   * @param fb - Constructor para crear instancias de formularios reactivos.
+   * @param solicitud230401Query - Consulta para obtener datos relacionados con la solicitud 230401.
+   * @param consultaQuery - Consulta para manejar datos relacionados con consultas generales.
+   * @param seccionQuery - Consulta para manejar datos relacionados con secciones.
+   * @param seccionStore - Almacén para gestionar el estado de las secciones.
+   * 
+   * Este constructor inicializa los datos de catálogos necesarios para el paso uno
+   * utilizando el servicio `pantallasActionService`.
+   */
+  constructor(public pantallasActionService: PantallasActionService,
+    public validacionesService: ValidacionesFormularioService,
+    public tramite230401Store: Tramite230401Store,
+    public fb: FormBuilder,
+    public solicitud230401Query: Solicitud230401Query,
+    private consultaQuery: ConsultaioQuery,
+    private seccionQuery: SeccionLibQuery,
+    private seccionStore: SeccionLibStore) {
+    this.pantallasActionService.inicializaPasoUnoDatosCatalogos();
   }
 
   ngOnInit(): void {
+
     this.solicitud230401Query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.solicitudState = seccionState;
+          this.sustanciasSensiblesTablaDatos = seccionState.sustanciasSensiblesTablaDatos;
         })
       ).subscribe();
-    this.pantallasActionService.inicializaPasoUnoDatosCatalogos();
-    this.creatFormSolicitud();
+
+      this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          if(!seccionState.create && seccionState.procedureId === '230401') {
+            this.esFormularioSoloLectura = seccionState.readonly;
+          }
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
+
     this.seccionQuery.selectSeccionState$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -274,6 +469,28 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
       .subscribe();
   }
 
+
+    /**
+     * Inicializa el estado del formulario `FormSolicitud`.
+     *
+     * - Si el formulario no ha sido creado, lo inicializa llamando a `creatFormSolicitud()`.
+     * - Si el formulario está configurado como solo lectura (`esFormularioSoloLectura`), lo deshabilita para evitar modificaciones.
+     * - Si no está en modo solo lectura, habilita el formulario para permitir la edición.
+     *
+     * @remarks
+     * Este método debe llamarse durante la inicialización del componente para asegurar que el formulario tenga el estado correcto según el contexto de uso.
+     */
+     inicializarEstadoFormulario(): void {
+      if(!this.FormSolicitud){
+        this.creatFormSolicitud();
+      }
+      if (this.esFormularioSoloLectura) {
+          this.FormSolicitud?.disable();
+      } else {
+        this.FormSolicitud?.enable();
+      }
+    }
+    
   /**
    * Verifica si el formulario es válido.
    * 
@@ -286,8 +503,10 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
    *                    `false` si al menos uno de los controles habilitados es inválido.
    */
   esFormValido(): boolean {
-    
-    for (const NOMBRE_DEL_CONTROL in this.FormSolicitud.controls) {
+    for(const NOMBRE_DEL_CONTROL in this.FormSolicitud.controls) {
+      if(!NOMBRE_DEL_CONTROL){
+        continue;
+      }
       const CONTROL = this.FormSolicitud.get(NOMBRE_DEL_CONTROL);
       if (CONTROL && CONTROL.enabled && CONTROL.invalid) {
         return false;
@@ -363,7 +582,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
       this.paisDelProductoSeleccionadas = [...this.listaPaisDelProducto];
       this.paisDelProductoDatos = [];
     } else {
-      const FECHAVALOR = this.paisDelProductoFecha.value.map(Number);
+      const FECHAVALOR = this.paisDelProductoFecha.value?.map(Number);
       this.paisDelProductoSeleccionadas.push(
         this.paisDelProductoDatos[FECHAVALOR]
       );
@@ -381,7 +600,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
       this.paisDelProductoSeleccionadas = [];
     } else {
       const FECHAVALOR =
-        this.paisDeProcedenciaFechaSeleccionada.value.map(Number);
+        this.paisDeProcedenciaFechaSeleccionada.value?.map(Number);
       this.paisDelProductoDatos.push(
         this.paisDelProductoSeleccionadas[FECHAVALOR]
       );
@@ -432,14 +651,11 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
    * @param {string} metodoNombre - El nombre del método en el store que se va a pantallas con el valor del campo.
    * @returns {void}
    */
-  setValoresStore(form: FormGroup, campo: string, metodoNombre: string): void {
+  setValoresStore(form: FormGroup, campo: string): void {
     const VALRO = form.get(campo)?.value;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (this.tramite230401Store as any)[metodoNombre](VALRO);
-        if (campo === 'cantidad' && VALRO !== null && VALRO !== undefined) {
+    if (campo === 'cantidad' && VALRO !== null && VALRO !== undefined) {
       const NUMERO_ACTIVO = Number(VALRO);
-      const VALOR_FORMATEDO = String.fromCharCode(NUMERO_ACTIVO);
-      this.tramite230401Store.setCantidadLetra(VALOR_FORMATEDO);
+      this.tramite230401Store.setCantidad(NUMERO_ACTIVO);
     }
   }
 
@@ -457,11 +673,19 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
       10
     );
     const TIPO_SOLICITUD = this.FormSolicitud.get('tipoSolicitud')?.value;
-    this.tramite230401Store.setTipoSolicitud(TIPO_SOLICITUD);
+    if (TIPO_SOLICITUD) {
+      this.tramite230401Store.setTipoSolicitud(TIPO_SOLICITUD);
+    }
   }
 
+
   /**
-   * Selecciona el número de permiso de coferprise y actualiza el estado correspondiente.
+   * Maneja la selección del número de permiso coferprise en el formulario.
+   *
+   * Obtiene el valor actual del campo 'noDePermisocoferprise' desde el formulario
+   * `FormSolicitud` y lo establece en el store `tramite230401Store` mediante el método
+   * `setNoDePermisocoferprise`. Este método se utiliza para mantener sincronizado el valor
+   * del permiso coferprise seleccionado entre el formulario y el estado global de la aplicación.
    */
   noDePermisocoferpriseSeleccion(): void {
     const NO_DE_PERMISOCOFERPRISE = this.FormSolicitud.get(
@@ -470,18 +694,43 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
     this.tramite230401Store.setNoDePermisocoferprise(NO_DE_PERMISOCOFERPRISE);
   }
 
+
   /**
-   * Selecciona la fracción arancelaria y actualiza el estado correspondiente.
+   * Maneja la selección de la fracción arancelaria en el formulario.
+   *
+   * Obtiene el valor actual del campo 'fraccionArancelaria' del formulario,
+   * construye una descripción basada en ese valor y actualiza el campo
+   * 'descripcionDeLaFraccion' en el formulario. Además, actualiza el estado
+   * global del store con la nueva descripción y la fracción arancelaria seleccionada.
+   *
+   * @remarks
+   * Este método se utiliza cuando el usuario selecciona o modifica la fracción arancelaria,
+   * asegurando que la descripción correspondiente se actualice automáticamente tanto en el
+   * formulario como en el store de la aplicación.
    */
   fraccionArancelariaSeleccion(): void {
     const FRACCION_ARANCELARIA = this.FormSolicitud.get(
       'fraccionArancelaria'
     )?.value;
+    const DESCRIPCION_DE_LA_FRACCION = `Descripción de la fracción arancelaria ${this.FormSolicitud.get('fraccionArancelaria')?.value}`;
+    this.FormSolicitud.patchValue({
+      descripcionDeLaFraccion: DESCRIPCION_DE_LA_FRACCION,
+    })
+    this.tramite230401Store.setDescripcionDeLaFraccion(DESCRIPCION_DE_LA_FRACCION);
     this.tramite230401Store.setFraccionArancelaria(FRACCION_ARANCELARIA);
   }
 
+  
+
   /**
-   * Selecciona la autorización y actualiza el estado correspondiente.
+   * Selecciona la autorización ingresada en el formulario y la almacena en el estado global.
+   *
+   * Obtiene el valor actual del campo 'autorizacion' del formulario `FormSolicitud`
+   * y lo envía al store `tramite230401Store` mediante el método `setAutorizacion`.
+   *
+   * @remarks
+   * Este método se utiliza para actualizar el estado de la autorización seleccionada
+   * por el usuario en el flujo del trámite 230401.
    */
   seleccioneAutorizacion(): void {
     const AUTORIZACION = this.FormSolicitud.get('autorizacion')?.value;
@@ -489,133 +738,273 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Selecciona el número CAS y actualiza el estado correspondiente.
+   * Actualiza los campos relacionados con el número CAS en el formulario y en el store.
+   *
+   * Este método obtiene el valor actual del campo 'numeroCas' del formulario,
+   * genera las descripciones correspondientes para los campos 'descripcionNoArancelaria'
+   * y 'nombreQuimico', y actualiza dichos campos en el formulario. Además, sincroniza
+   * estos valores en el store correspondiente para mantener la consistencia de los datos.
+   *
+   * @remarks
+   * - El valor de 'numeroCas' se utiliza para construir los textos de los campos dependientes.
+   * - Los métodos del store se llaman para actualizar el estado global de la aplicación.
+   *
+   * @returns {void} No retorna ningún valor.
    */
   numeroCasSeleccione(): void {
     const NUMERO_CAS = this.FormSolicitud.get('numeroCas')?.value;
+    const DESCRIPCION_NO_ARANCELARIA = `Descripción no arancelaria ${this.FormSolicitud.get('numeroCas')?.value}`;
+    const NOMBRE_QUIMICO = `Nombre químico ${this.FormSolicitud.get('numeroCas')?.value}`;
+    this.FormSolicitud.patchValue({
+      descripcionNoArancelaria: DESCRIPCION_NO_ARANCELARIA,
+      nombreQuimico: NOMBRE_QUIMICO,
+    })
+    this.tramite230401Store.setDescripcionNoArancelaria(DESCRIPCION_NO_ARANCELARIA);
+    this.tramite230401Store.setNombreQuimico(NOMBRE_QUIMICO);
     this.tramite230401Store.setNumeroCas(NUMERO_CAS);
   }
 
+
   /**
-   * Selecciona la clasificación y actualiza el estado correspondiente.
+   * Maneja el evento de selección de clasificación en el formulario de solicitud.
+   *
+   * Obtiene el valor actual del campo 'clasificacion' del formulario `FormSolicitud`
+   * y lo establece en el store `tramite230401Store` mediante el método `setClasificacion`.
+   *
+   * @remarks
+   * Este método se utiliza para actualizar el estado global de la clasificación seleccionada
+   * cada vez que el usuario realiza un cambio en el campo correspondiente del formulario.
    */
   clasificacionSeleccione(): void {
     const CLASIFICACION = this.FormSolicitud.get('clasificacion')?.value;
     this.tramite230401Store.setClasificacion(CLASIFICACION);
   }
 
+
   /**
-   * Selecciona el estado físico y actualiza el estado correspondiente.
+   * Maneja la selección del estado físico en el formulario de solicitud.
+   *
+   * Obtiene el valor actual del campo 'estadoFisico' del formulario y lo establece
+   * en el store correspondiente a través del método `setEstadoFisico` del store `tramite230401Store`.
+   *
+   * @remarks
+   * Este método se utiliza para sincronizar el valor seleccionado en el formulario
+   * con el estado global de la aplicación, asegurando que cualquier cambio en la selección
+   * se refleje correctamente en el store.
    */
   estadoFisicoSeleccione(): void {
     const ESTADO_FISICO = this.FormSolicitud.get('estadoFisico')?.value;
     this.tramite230401Store.setEstadoFisico(ESTADO_FISICO);
   }
 
-  /**
-   * Selecciona los datos del objeto y actualiza el estado correspondiente.
-   */
-  datosObjectoSeleccione(): void {
-    const DAT_OS_OBJECTO = this.FormSolicitud.get('datosObjecto')?.value;
-    this.tramite230401Store.setDatosObjecto(DAT_OS_OBJECTO);
-  }
+
+/**
+ * Extrae el valor del grupo de controles 'datosObjecto' del formulario principal
+ * y lo envía al estado global a través del store.
+ * 
+ * Este método se utiliza para mantener sincronizados los datos ingresados por el usuario
+ * con el estado de la solicitud en el store correspondiente, asegurando persistencia y reactividad.
+ *
+ * @returns {void}
+ */
+datosObjectoSeleccione(): void {
+  const DAT_OS_OBJECTO = this.FormSolicitud.get('datosObjecto')?.value;
+  this.tramite230401Store.setDatosObjecto(DAT_OS_OBJECTO);
+}
+
+
 
   /**
-   * Selecciona la unidad de medida y actualiza el estado correspondiente.
+   * Método que maneja la selección de la unidad de medida en el formulario de solicitud.
+   * Obtiene el valor actual del campo 'unidadDeMedida' del formulario y lo establece 
+   * en el estado de la tienda correspondiente al trámite 230401.
+   *
+   * @returns {void} No devuelve ningún valor.
    */
   unidadDeMedidaSeleccione(): void {
     const UNIDAD_DE_MEDIDA = this.FormSolicitud.get('unidadDeMedida')?.value;
     this.tramite230401Store.setUnidadDeMedida(UNIDAD_DE_MEDIDA);
   }
 
+
+/**
+ * Crea y configura el formulario principal de la solicitud.
+ * 
+ * Este formulario agrupa todos los controles necesarios para capturar los datos requeridos
+ * en el trámite 230401, utilizando validaciones específicas para garantizar la integridad
+ * de los datos ingresados por el usuario.
+ * 
+ * Algunos campos se inicializan como deshabilitados debido a que su contenido es solo de lectura
+ * y proviene del estado actual de la solicitud. Las validaciones incluyen requisitos como longitud
+ * máxima, valores obligatorios y patrones definidos.
+ *
+ * @returns {void}
+ */
+creatFormSolicitud(): void {
+  this.FormSolicitud = this.fb.group({
+    tipoSolicitud: [
+      this.solicitudState?.tipoSolicitud,
+      [Validators.required],
+    ],
+    autorizacion: [this.solicitudState?.autorizada],
+    noDePermisocoferprise: [
+      this.solicitudState?.noDePermisocoferprise,
+      [Validators.required],
+    ],
+    nombreComercial: [
+      { value: this.solicitudState?.nombreComercial, disabled: true },
+    ],
+    cantidadAutorizada: [
+      { value: this.solicitudState?.cantidadAutorizada, disabled: true },
+    ],
+    fraccionArancelaria: [
+      this.solicitudState?.fraccionArancelaria,
+      [Validators.required],
+    ],
+    descripcionDeLaFraccion: [
+      { value: this.solicitudState?.descripcionDeLaFraccion, disabled: true },
+    ],
+    descripcionNoArancelaria: [
+      {
+        value: this.solicitudState?.descripcionNoArancelaria,
+        disabled: true,
+      },
+    ],
+    nombreQuimico: [
+      { value: this.solicitudState?.nombreQuimico, disabled: true },
+    ],
+    numeroCas: [this.solicitudState?.numeroCas, [Validators.required]],
+    nombreDeLaMercancia: [
+      this.solicitudState?.nombreDeLaMercancia,
+      [Validators.maxLength(50)],
+    ],
+    unNumero: [
+      this.solicitudState?.unNumero,
+      [Validators.required, Validators.maxLength(50), Validators.pattern(REGEX_SOLO_DIGITOS)],
+    ],
+    datosNombreComercial: [
+      this.solicitudState?.datosNombreComercial,
+      [Validators.maxLength(50)],
+    ],
+    datosNumeroComun: [
+      this.solicitudState?.datosNumeroComun,
+      [Validators.maxLength(50)],
+    ],
+    datosPorcentaje: [
+      this.solicitudState?.datosPorcentaje,
+      [Validators.required, Validators.maxLength(100)],
+    ],
+    datosComponentes: [
+      this.solicitudState?.datosComponentes,
+      [Validators.required, Validators.maxLength(250)],
+    ],
+    clasificacion: [
+      this.solicitudState?.clasificacion,
+      [Validators.required],
+    ],
+    estadoFisico: [this.solicitudState?.estadoFisico, [Validators.required]],
+    datosObjecto: [this.solicitudState?.datosObjecto, [Validators.required]],
+    especifique: [
+      this.solicitudState?.especifique,
+      [Validators.maxLength(200)],
+    ],
+    especifiqueDos: [
+      this.solicitudState?.especifiqueDos,
+      [Validators.maxLength(250)],
+    ],
+    cantidad: [
+      this.solicitudState?.cantidad,
+      [Validators.required, Validators.min(1), Validators.max(999999999999.999), MaxDigitsValidator()],
+    ],
+    cantidadLetra: [
+      { value: this.solicitudState?.cantidadLetra, disabled: true },
+    ],
+    unidadDeMedida: [
+      this.solicitudState?.unidadDeMedida,
+      [Validators.required],
+    ],
+  });
+}
+
   /**
-   * Crea el formulario de solicitud.
-   * @return {void} No retorna ningún valor.
+   * Agrega una sustancia sensible a la lista de datos en la tabla.
+   * 
+   * Este método crea un objeto `SustanciaSensible` con los valores del formulario
+   * y lo agrega a la lista de sustancias sensibles. Si el número CAS ya existe en
+   * la lista, se actualiza el elemento existente. Luego, se actualiza el estado
+   * del store `tramite230401Store` con la nueva lista de sustancias sensibles.
+   * 
+   * @returns {void} Este método no retorna ningún valor.
    */
-  creatFormSolicitud(): void {
-    this.FormSolicitud = this.fb.group({
-      tipoSolicitud: [
-        this.solicitudState?.tipoSolicitud,
-        [Validators.required],
-      ],
-      autorizacion: [this.solicitudState?.autorizada],
-      noDePermisocoferprise: [
-        this.solicitudState?.noDePermisocoferprise,
-        [Validators.required],
-      ],
-      nombreComercial: [
-        { value: this.solicitudState?.nombreComercial, disabled: true },
-      ],
-      cantidadAutorizada: [
-        { value: this.solicitudState?.cantidadAutorizada, disabled: true },
-      ],
-      fraccionArancelaria: [
-        this.solicitudState?.fraccionArancelaria,
-        [Validators.required],
-      ],
-      descripcionDeLaFraccion: [
-        { value: this.solicitudState?.descripcionDeLaFraccion, disabled: true },
-      ],
-      descripcionNoArancelaria: [
-        {
-          value: this.solicitudState?.descripcionNoArancelaria,
-          disabled: true,
-        },
-      ],
-      nombreQuimico: [
-        { value: this.solicitudState?.nombreQuimico, disabled: true },
-      ],
-      numeroCas: [this.solicitudState?.numeroCas, [Validators.required]],
-      nombreDeLaMercancia: [
-        this.solicitudState?.nombreDeLaMercancia,
-        [Validators.maxLength(50)],
-      ],
-      unNumero: [
-        this.solicitudState?.unNumero,
-        [Validators.required, Validators.min(1), Validators.max(10000)],
-      ],
-      datosNombreComercial: [
-        this.solicitudState?.datosNombreComercial,
-        [Validators.maxLength(50)],
-      ],
-      datosNumeroComun: [
-        this.solicitudState?.datosNumeroComun,
-        [Validators.maxLength(50)],
-      ],
-      datosPorcentaje: [
-        this.solicitudState?.datosPorcentaje,
-        [Validators.required, Validators.min(1), Validators.max(10000)],
-      ],
-      datosComponentes: [
-        this.solicitudState?.datosComponentes,
-        [Validators.maxLength(50)],
-      ],
-      clasificacion: [
-        this.solicitudState?.clasificacion,
-        [Validators.required],
-      ],
-      estadoFisico: [this.solicitudState?.estadoFisico, [Validators.required]],
-      datosObjecto: [this.solicitudState?.datosObjecto, [Validators.required]],
-      especifique: [
-        this.solicitudState?.especifique,
-        [Validators.maxLength(50)],
-      ],
-      especifiqueDos: [
-        this.solicitudState?.especifiqueDos,
-        [Validators.maxLength(50)],
-      ],
-      cantidad: [
-        this.solicitudState?.cantidad,
-        [Validators.required, Validators.min(1), Validators.max(10000)],
-      ],
-      cantidadLetra: [
-        { value: this.solicitudState?.cantidadLetra, disabled: true },
-      ],
-      unidadDeMedida: [
-        this.solicitudState?.unidadDeMedida,
-        [Validators.required],
-      ],
+  agregarListaDeNumeros(): void {
+    const SUSTANCIA_SENSIBLE: SustanciaSensible = {
+      numeroCAS: this.FormSolicitud.get('numeroCas')?.value,
+      cas: '',
+      descripcionNoArancelaria: `Descripción no arancelaria ${this.FormSolicitud.get('numeroCas')?.value}`,
+      nombreQuimico: `Nombre químico ${this.FormSolicitud.get('numeroCas')?.value}`,
+    };
+    const EXISTING_INDEX = this.sustanciasSensiblesTablaDatos.findIndex(
+      (item) => item.numeroCAS === SUSTANCIA_SENSIBLE.numeroCAS
+    );
+    const UPDATED_SUSTANCIAS_SENSIBLES_TABLA_DATOS = [...this.sustanciasSensiblesTablaDatos];
+    if (EXISTING_INDEX !== -1) {
+      UPDATED_SUSTANCIAS_SENSIBLES_TABLA_DATOS.splice(EXISTING_INDEX, 1, SUSTANCIA_SENSIBLE);
+    } else {
+      UPDATED_SUSTANCIAS_SENSIBLES_TABLA_DATOS.push(SUSTANCIA_SENSIBLE);
+    }
+    this.tramite230401Store.setSustanciasSensiblesTablaDatos(UPDATED_SUSTANCIAS_SENSIBLES_TABLA_DATOS);
+  }
+
+  /**
+   * Elimina una sustancia sensible de la lista de datos en la tabla.
+   * 
+   * Este método filtra la lista de sustancias sensibles en la tabla, eliminando
+   * aquellas que coinciden con los números CAS seleccionados. Luego, actualiza el
+   * estado del store `tramite230401Store` con la lista filtrada y limpia la lista
+   * de sustancias sensibles seleccionadas.
+   * 
+   * @returns {void} Este método no retorna ningún valor.
+   */
+  eliminarListaDeNumeros(): void {
+    if (this.sustanciasSensiblesSeleccionadas.length === 0) {
+      return;
+    }
+    const LISTA_FILTRADA = this.sustanciasSensiblesTablaDatos.filter((elemento) => {
+      return !this.sustanciasSensiblesSeleccionadas.some((elementoSeleccionado) => elementoSeleccionado.numeroCAS === elemento.numeroCAS);
     });
+    if (LISTA_FILTRADA) {
+      this.tramite230401Store.update((state) => ({
+        ...state,
+        sustanciasSensiblesTablaDatos: LISTA_FILTRADA,
+      }));
+      this.sustanciasSensiblesSeleccionadas = [];
+    }
+  }
+
+  /**
+   * Modifica los valores del formulario "FormSolicitud" con los datos
+   * seleccionados de la lista "sustanciasSensiblesSeleccionadas".
+   * 
+   * Si la lista "sustanciasSensiblesSeleccionadas" está vacía, no realiza
+   * ninguna acción y retorna inmediatamente.
+   * 
+   * Los campos actualizados en el formulario incluyen:
+   * - `numeroCas`: Número CAS de la sustancia seleccionada.
+   * - `cas`: Código CAS de la sustancia seleccionada.
+   * - `descripcionNoArancelaria`: Descripción no arancelaria de la sustancia seleccionada.
+   * - `nombreQuimico`: Nombre químico de la sustancia seleccionada.
+   */
+  modificarListaDeNumeros(): void {
+    if (this.sustanciasSensiblesSeleccionadas.length === 0) {
+      return;
+    }
+    const DATOS_SELECCIONADOS = this.sustanciasSensiblesSeleccionadas[0];
+    this.FormSolicitud.patchValue({
+      numeroCas: DATOS_SELECCIONADOS.numeroCAS,
+      cas: DATOS_SELECCIONADOS.cas,
+      descripcionNoArancelaria: DATOS_SELECCIONADOS.descripcionNoArancelaria,
+      nombreQuimico: DATOS_SELECCIONADOS.nombreQuimico,
+    })
   }
 
   /**

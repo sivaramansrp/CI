@@ -1,37 +1,20 @@
-import { AfterViewInit, Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { AfterViewInit, OnDestroy, OnInit } from '@angular/core';
+import { AlertComponent, ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
+import { BtnContinuarComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
-import {
-  AlertComponent,
-  BtnContinuarComponent,
-  DatosPasos,
-  FormularioDinamico,
-  ListaPasosWizard,
-  PASOS,
-  SolicitanteComponent,
-  TituloComponent,
-  WizardComponent,
-} from '@ng-mf/data-access-user';
-import {
-  DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL,
-  PERSONA_MORAL_NACIONAL,
-} from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
+import { Component } from '@angular/core';
+import { DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL } from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
+import { FormularioDinamico } from '@ng-mf/data-access-user';
+import { PERSONA_MORAL_NACIONAL } from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
+import { SolicitanteComponent } from '@ng-mf/data-access-user';
 import { SolicitudComponent } from '../../components/solicitud/solicitud.component';
-
-/**
- * Interfaz que representa una AccionBoton.
- * Utilizamos esta interfaz para definir la estructura de los datos de una AccionBoton.
- */
-interface AccionBoton {
-  /**
-   * La acción que se realizará (por ejemplo, "cont" para continuar o "atras" para retroceder).
-   */
-  accion: string;
-
-  /**
-   * El valor asociado a la acción (por ejemplo, el índice del paso).
-   */
-  valor: number;
-}
+import { SolicitudService } from '../../services/solicitud.service';
+import { Subject } from 'rxjs';
+import { TituloComponent } from '@ng-mf/data-access-user';
+import { Tramite32201Store } from '../../estados/tramite32201.store';
+import { ViewChild } from '@angular/core';
+import { map } from 'rxjs';
+import { takeUntil } from 'rxjs';
 
 /**
  * Componente que representa la funcionalidad de la paso uno 32201.
@@ -50,7 +33,7 @@ interface AccionBoton {
     SolicitudComponent,
   ],
 })
-export class PasoUnoComponent implements AfterViewInit {
+export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
   /**
    * Referencia al componente Solicitante.
    */
@@ -77,39 +60,66 @@ export class PasoUnoComponent implements AfterViewInit {
   indice: number = 1;
 
   /**
-   * Evento de salida que emite cuando se hace clic en el botón continuar.
+   * @property {Subject<void>} destroyNotifier$
+   * @description Subject utilizado para notificar y completar las suscripciones activas al destruir el componente, evitando fugas de memoria.
    */
-  @Output() continuarEvento = new EventEmitter<string>();
+  public destroyNotifier$: Subject<void> = new Subject();
 
   /**
-   * Bandera de validación.
+   * @property {ConsultaioState} consultaDatos
+   * @description Estado actual de la consulta, que contiene información relacionada con el trámite y el solicitante.
    */
-  validacion: boolean = false;
+  consultaDatos!: ConsultaioState;
 
   /**
-   * Arreglo que contiene los pasos del wizard.
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
    */
-  pasos: ListaPasosWizard[] = PASOS;
+  esDatosRespuesta: boolean = false;
+
+  constructor(private consultaioQuery: ConsultaioQuery, public tramite32201Store: Tramite32201Store,
+    public solicitudService: SolicitudService
+  ) {
+    // El constructor se utiliza para la inyección de dependencias.
+  }
+
+  ngOnInit(): void {
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.consultaDatos = seccionState;
+        })
+      )
+      .subscribe();
+    if (this.consultaDatos.update) {
+      this.fetchGetDatosConsulta();
+    } else {
+      this.esDatosRespuesta = true;
+    }
+  }
 
   /**
-   * Datos del número de pedimento.
-   */
-  @Input() datosNroPedimento!: unknown;
-
-  /**
-   * Referencia al componente Wizard.
-   */
-  @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
-
-  /**
-   * Datos de los pasos del wizard.
-   */
-  datosPasos: DatosPasos = {
-    nroPasos: this.pasos.length,
-    indice: this.indice,
-    txtBtnAnt: 'Anterior',
-    txtBtnSig: 'Continuar',
-  };
+ * @method fetchGetDatosConsulta
+ * @description Método para obtener los datos de consulta desde el servicio `DatosTramiteService` y actualizar el estado del store `tramite32508Store`.
+ * 
+ * Este método realiza una solicitud HTTP para obtener los datos de consulta y, si la respuesta es exitosa, actualiza múltiples propiedades del store con los datos recibidos.
+ * Utiliza el operador `takeUntil` para cancelar la suscripción cuando el componente se destruye, evitando fugas de memoria.
+ * 
+ * @returns {void}
+ */
+  public fetchGetDatosConsulta(): void {
+    this.solicitudService
+      .getDatosConsulta()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((respuesta) => {
+        if (respuesta.success) {
+          this.tramite32201Store.setRegimen_0(respuesta.datos.regimen_0);
+          this.tramite32201Store.setRegimen_2(respuesta.datos.regimen_2);
+          this.tramite32201Store.setManifiesto(respuesta.datos.manifiesto);
+        }
+      });
+  }
 
   /**
    * Gancho de ciclo de vida angular que se llama después de que la vista del componente se haya inicializado por completo.
@@ -128,24 +138,12 @@ export class PasoUnoComponent implements AfterViewInit {
   }
 
   /**
-   * Emite el evento continuar.
+   * Método que se ejecuta al destruir el componente.
+   * Se utiliza para limpiar las suscripciones.
    */
-  continuar(): void {
-    this.continuarEvento.emit('');
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 
-  /**
-   * Obtiene el valor del índice y navega en el wizard.
-   * @param e El evento de acción del botón.
-   */
-  getValorIndice(e: AccionBoton): void {
-    if (e.valor > 0 && e.valor < 5) {
-      this.indice = e.valor;
-      if (e.accion === 'cont') {
-        this.wizardComponent.siguiente();
-      } else {
-        this.wizardComponent.atras();
-      }
-    }
-  }
 }

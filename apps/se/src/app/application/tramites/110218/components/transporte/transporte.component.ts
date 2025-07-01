@@ -12,8 +12,7 @@ import { Validators } from '@angular/forms';
 
 import { REG_X } from '@ng-mf/data-access-user';
 
-import { TituloComponent } from '@ng-mf/data-access-user';
-
+import { ConsultaioQuery,TituloComponent } from '@ng-mf/data-access-user';
 import { Tramite110218Query } from '../../estados/queries/tramite110218.query';
 import { Tramite110218Store } from '../../estados/tramites/tramite110218.store';
 
@@ -35,6 +34,12 @@ import { takeUntil } from 'rxjs';
   styleUrl: './transporte.component.scss',
 })
 export class TransporteComponent implements OnInit, OnDestroy {
+  /**
+   * Indica si el formulario está en modo solo lectura.
+   * Si es verdadero, los campos del formulario estarán deshabilitados para evitar modificaciones.
+   */
+  esSoloLectura!: boolean;
+
   /**
    * Formulario para los detalles del transporte.
    * Contiene los campos relacionados con los puertos, embarcaciones y vuelos.
@@ -62,7 +67,8 @@ export class TransporteComponent implements OnInit, OnDestroy {
   constructor(
     public formBuilder: FormBuilder,
     private tramite110218Store: Tramite110218Store,
-    private tramite110218Query: Tramite110218Query
+    private tramite110218Query: Tramite110218Query,
+    private consultaQuery: ConsultaioQuery
   ) {}
 
   /**
@@ -109,7 +115,7 @@ export class TransporteComponent implements OnInit, OnDestroy {
        */
       numerodeVuelo: [
         this.estadoSeleccionado?.numerodeVuelo,
-        [Validators.required, Validators.pattern(REG_X.SOLO_NUMEROS)],
+        [Validators.required, Validators.pattern(REG_X.SOLO_NUMEROS), Validators.maxLength(15)],
       ],
     });
   }
@@ -121,6 +127,24 @@ export class TransporteComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.getValorStore();
     this.inicializarFormulario();
+    this.consultaQuery.selectConsultaioState$
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((estadoConsulta) => {
+        this.esSoloLectura = estadoConsulta.readonly;
+        this.habilitarDeshabilitarFormulario();
+      });
+  }
+  /**
+   * Habilita o deshabilita el formulario de detalles de transporte según el modo de solo lectura.
+   * Si `esSoloLectura` es verdadero, deshabilita todos los controles del formulario para evitar modificaciones.
+   * Si es falso, habilita los controles para permitir la edición.
+   */
+  habilitarDeshabilitarFormulario(): void {
+    if (this.esSoloLectura) {
+      this.detallestransporte.disable();
+    } else {
+      this.detallestransporte.enable();
+    }
   }
 
   /**

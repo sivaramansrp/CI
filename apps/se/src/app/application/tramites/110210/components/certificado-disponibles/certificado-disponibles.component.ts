@@ -7,7 +7,7 @@ import { CommonModule } from '@angular/common';
 
 import { Subject, takeUntil } from 'rxjs';
 
-import { CERTIFICADO_DISPONIBLES_COLUMNAS, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@ng-mf/data-access-user';
+import { CERTIFICADO_DISPONIBLES_COLUMNAS, CertificadoDisponibles, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@ng-mf/data-access-user';
 
 import { CertificadoDisponiblesService } from '@ng-mf/data-access-user';
 
@@ -39,8 +39,7 @@ export class CertificadoDisponiblesComponent implements OnInit, OnDestroy {
    * Datos que se mostrarán en la tabla.
    * @type {any}
    */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  public datosTabla!:any;
+  public datosTabla!: CertificadoDisponibles[];
 
   /**
    * Subject para manejar la desuscripción cuando el componente se destruye.
@@ -65,7 +64,7 @@ export class CertificadoDisponiblesComponent implements OnInit, OnDestroy {
     this.service.getData().pipe(
       takeUntil(this.destroyed$)
     ).subscribe(
-      (data: string[]) => {
+      (data: CertificadoDisponibles[]) => {
         this.datosTabla = data;
       }
     );

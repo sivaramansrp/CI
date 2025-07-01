@@ -3,7 +3,8 @@ import {
   Destinatario,
   RespuestaCatalogos,
 } from '@libs/shared/data-access-user/src';
-import { Fabricante, ManifiestosRespuesta } from '../model/solicitud-permiso.model';
+import { Fabricante, ManifiestosRespuesta, Mercancia } from '../model/solicitud-permiso.model';
+import { SolicitudPermisoState, Tramite260703Store } from '../estados/store/tramite260703.store';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -24,11 +25,24 @@ export class SolicitudPermisoService {
   banco!: Catalogo[];
 
   /**
+   * Arreglo que contiene los elementos del catálogo relacionados con el régimen.
+   * Este catálogo se utiliza para definir las opciones disponibles en el contexto
+   * de los trámites de solicitud de permiso.
+   */
+  regimen!: Catalogo[];
+
+  /**
+   * Representa un catálogo de aduanas utilizado en el sistema.
+   * Este atributo almacena una lista de objetos del tipo `Catalogo`.
+   */
+  aduana!: Catalogo[];
+
+  /**
    * Constructor del servicio.
    * Inicializa el cliente HTTP para realizar solicitudes.
    * http Cliente HTTP para realizar solicitudes.
    */
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private tramite260703Store: Tramite260703Store) {}
 
   /**
    * Obtiene los trámites asociados desde un archivo JSON.
@@ -85,6 +99,32 @@ export class SolicitudPermisoService {
   }
 
   /**
+   * Obtiene los datos de mercancías desde un archivo JSON local.
+   * Realiza una solicitud HTTP GET para recuperar un arreglo de objetos de tipo Mercancia.
+   * 
+   * Un Observable que emite un arreglo de objetos Mercancia.
+   */
+  obtenerMercanciaData(): Observable<Mercancia[]> {
+    return this.http.get<Mercancia[]>(
+      'assets/json/260703/mercancia.json'
+    );
+  }
+
+  /**
+   * Método que realiza la obtención de datos de catálogos relacionados con domicilio.
+   * Este método llama a `obtenerRespuestaPorUrl` para obtener los datos de los catálogos
+   * de aduana y régimen desde las rutas especificadas.
+   *
+   * 
+   * obtenerDomicilioCatalogo
+   * {void} Este método no retorna ningún valor.
+   */
+  obtenerDomicilioCatalogo(): void {
+    this.obtenerRespuestaPorUrl(this, 'aduana', '/260703/aduana.json');
+    this.obtenerRespuestaPorUrl(this, 'regimen', '/260703/regimen.json');
+  }
+
+  /**
    * Obtiene una respuesta desde una URL y asigna los datos a una variable.
    * self El objeto que contiene la variable donde se almacenarán los datos de la respuesta.
    * variable El nombre de la variable donde se almacenarán los datos de la respuesta.
@@ -107,5 +147,48 @@ export class SolicitudPermisoService {
             resp?.code === 200 && resp.data ? resp.data : [];
         });
     }
+  }
+
+  /**
+   * Actualiza el estado del store con todos los datos de la empresa.
+   * @param datos Objeto de tipo SolicitudPermisoState con los datos a almacenar.
+   */
+  actualizarEstadoFormulario(datos: SolicitudPermisoState): void {
+    if (!datos) { return; }
+
+    this.tramite260703Store.actualizarEstado({
+      claveDeReferencia: datos.claveDeReferencia,
+      cadenaPagoDependencia: datos.cadenaPagoDependencia,
+      bancoClave: datos.bancoClave,
+      llaveDePago: datos.llaveDePago,
+      fecPago: datos.fecPago,
+      impPago: datos.impPago,
+    });
+
+    if (datos.preOperativFormState) {
+      this.tramite260703Store.actualizarEstadoFormularioPreOperativo(datos.preOperativFormState);
+    }
+    if (datos.datosDelEstablecimientoFormState) {
+      this.tramite260703Store.actualizarDatosDelFormularioDelEstablecimiento(datos.datosDelEstablecimientoFormState);
+    }
+    if (datos.manifiestosFormState) {
+      this.tramite260703Store.actualizarEstadoFormularioManifiestos(datos.manifiestosFormState);
+    }
+    if (datos.representanteLegalFormState) {
+      this.tramite260703Store.actualizarEstadoFormularioRepresentanteLegal(datos.representanteLegalFormState);
+    }
+    if (datos.domicilloDelEstablecimientoFormState) {
+      this.tramite260703Store.actualizarEstadoFormularioDomicilioDelEstablecimiento(datos.domicilloDelEstablecimientoFormState);
+    }
+  }
+
+
+   /**
+   * Obtiene los datos de la empresa desde un archivo JSON.
+   * 
+   * @returns {Observable<SolicitudPermisoState>} Observable que emite los datos de la empresa.
+   */
+  getRegistroTomaMuestrasMercanciasData(): Observable<SolicitudPermisoState> {
+    return this.http.get<SolicitudPermisoState>('assets/json/260703/previoporDatos.json');
   }
 }

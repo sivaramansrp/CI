@@ -1,17 +1,18 @@
 import { Catalogo, ModeloDeFormaDinamica } from '@libs/shared/data-access-user/src';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { ImportacionesAgropecuariasState,ImportacionesAgropecuariasStore } from '../../estados/importaciones-agropecuarias.store';
+import { ImportacionesAgropecuariasState, ImportacionesAgropecuariasStore } from '../../estados/importaciones-agropecuarias.store';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { ConsultaioState } from '@ng-mf/data-access-user';
 import { DATOS_DEL_TRAMITE } from '../../constantes/datos-de-la-solicitud.enum';
-import { DatosDeLaMercanciaComponent } from '../Datos-de-la-mercancia/Datos-de-la-mercancia.component';
+import { DatosDeLaMercanciaComponent } from '../datos-mercancia/datos-mercancia.component';
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
 import { ImportacionesAgropecuariasQuery } from '../../estados/importaciones-agropecuarias.query';
 import { ImportacionesAgropecuariasService } from '../../services/importaciones-agropecuarias.service';
-import { PaisProcedenciaComponent } from '../Pais-procedencia/Pais-procedencia.component';
-import { PartidasDeLaMercanciaComponent } from '../Partidas-de-la-mercancia/Partidas-de-la-mercancia.component';
-import { RepresentacionFederalComponent } from '../Representacion-federal/Representacion-federal.component';
+import { PaisProcedenciaComponent } from '../procedencia/procedencia.component';
+import { PartidasDeLaMercanciaComponent } from '../partidas-mercancia/partidas-mercancia.component';
+import { RepresentacionFederalComponent } from '../entidad-federal/entidad-federal.component';
 import { ServicioDeFormularioService } from '../../services/formulario-validacion.service';
 
 /**
@@ -40,6 +41,12 @@ import { ServicioDeFormularioService } from '../../services/formulario-validacio
   styleUrl: './datos-de-la-solicitud.component.scss',
 })
 export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
+  /**
+   *
+   * Estado actual de la consulta gestionado por el store `ConsultaioQuery`.
+   */
+  @Input() consultaState!: ConsultaioState;
+
   /**
    * @property destroy$
    * @description
@@ -106,7 +113,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     private importacionesAgropecuariasStore: ImportacionesAgropecuariasStore,
     private importacionesAgropecuariasQuery: ImportacionesAgropecuariasQuery,
     private servicioDeFormularioService: ServicioDeFormularioService
-  ) {}
+  ) { }
 
   /**
    * @method ngOnInit

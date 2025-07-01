@@ -7,10 +7,11 @@
             <div class="col-8">
                 <app-catalogo-select 
                [label]="'Fracción arancelaria PROSEC (Especificar la fracción arancelaria del producto en el que se utilizará la mercancía a importar)'" 
-                (change)="obtenerRequisitosFraccionArancelariaEsquema();setValoresStore(usoEspicificoForm,'fraccionArancelariaProsec', 'setFraccionArancelariaProsec')" 
+                (change)="obtenerRequisitosFraccionArancelariaEsquema(); setValoresStore(usoEspicificoForm,'fraccionArancelariaProsec', 'setFraccionArancelariaProsec')" 
                 formControlName="fraccionArancelariaProsec"
                 [catalogo]="catalogos"
-               [required]="true"></app-catalogo-select>
+               [required]="true"
+                 [isDisabled]="consultaState.readonly ? true : false"></app-catalogo-select>
                @if (usoEspicificoForm.controls['fraccionArancelariaProsec'].invalid && usoEspicificoForm.controls['fraccionArancelariaProsec'].touched) {
                 <div class="text-danger">
                   @if (usoEspicificoForm.controls['fraccionArancelariaProsec'].errors?.['required']) {
@@ -46,7 +47,7 @@
          
         
             <div class="container text-end mt-5">
-                <button class="btn btn-primary">Agregar</button>
+                <button class="btn btn-primary" (click)="agregar()" [disabled]="consultaState.readonly">Agregar</button>
             </div>
         
     </form>
@@ -56,9 +57,17 @@
 <div class="container mt-5">
     <div class="row mt-5">
         <h6>Fracciones arancelarias uso especifico</h6>
-        <ng-table [commonTableHeader]="tableColumns" [commonTableBody]="tableData"></ng-table>
+      
+             <app-tabla-dinamica
+          [configuracionTabla]="configuracionTabla"
+          [datos]="datosSocios"
+          [tipoSeleccionTabla]="tablaSeleccion.CHECKBOX"
+          [disableSeleccionTablaCheckBox]="consultaState.readonly"
+          [desactivarEmitirEvento]="!consultaState.readonly"
+        
+        ></app-tabla-dinamica>
     </div>
     <div class="container text-end mt-5">
-        <button class="btn btn-danger">Eliminar seleccionado</button>
+        <button class="btn btn-danger" [disabled]="consultaState.readonly">Eliminar seleccionado</button>
     </div>
 </div>

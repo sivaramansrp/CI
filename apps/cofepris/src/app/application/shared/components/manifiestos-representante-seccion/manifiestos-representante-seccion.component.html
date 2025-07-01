@@ -8,6 +8,7 @@
             formControlName="manifests"
             type="checkbox"
             id="manifiesto"
+            [disabled]="formularioDeshabilitado ? true : false"
           />
           <span class="fw-bold align-middle"> *</span>
           <div>{{ manifiestosText }} </div>
@@ -42,6 +43,7 @@
           class="form-control"
           id="representanteRfc"
           type="text"
+          maxlength="13"
           formControlName="representanteRfc"
           (change)="onControlChange('representanteRfc')"
          
@@ -55,8 +57,9 @@
       <button
         type="button"
         name="representanteRfcBuscar"
-        class="btn btn-default"
+        class="btn btn-primary"
         (click)="buscarRepresentanteRfc()"
+        [disabled]="formularioDeshabilitado ? true : false"
       >
         Buscar
       </button>

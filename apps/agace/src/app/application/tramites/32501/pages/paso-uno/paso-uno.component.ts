@@ -1,24 +1,31 @@
-import { AfterViewInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL } from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
+import { DatosSolicitudComponent } from '../../components/datos-solicitud/datos-solicitud.component';
 import { FormularioDinamico } from '@ng-mf/data-access-user';
-import { PERSONA_MORAL_NACIONAL } from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
 import { SolicitanteComponent } from '@ng-mf/data-access-user';
-import { TIPO_PERSONA } from '@ng-mf/data-access-user';
-import { ViewChild } from '@angular/core';
+
+import { OnDestroy, OnInit, ViewChild } from '@angular/core';
+
+import { ConsultaioQuery,ConsultaioState } from '@ng-mf/data-access-user';
+import { Subject, takeUntil } from 'rxjs';
+
+import { MercanciasDesmontadasOSinMontarService } from '../../services/mercancias-desmontadas-o-sin-montar.service';
+import { Solicitud32501State } from '../../estados/solicitud32501.store';
 
 /**
  * Componente correspondiente al paso uno del proceso.
  */
 @Component({
   selector: 'paso-uno',
+  standalone: true,
+  imports: [CommonModule, SolicitanteComponent, DatosSolicitudComponent],
   templateUrl: './paso-uno.component.html',
-  styleUrl: './paso-uno.component.scss'
+  styleUrl: './paso-uno.component.scss',
 })
 /**
  * Componente correspondiente al paso uno del proceso.
  */
-export class PasoUnoComponent implements AfterViewInit {
+export class PasoUnoComponent implements OnInit, OnDestroy {
   /** Referencia al componente de solicitante */
   @ViewChild(SolicitanteComponent) solicitante!: SolicitanteComponent;
 
@@ -35,22 +42,78 @@ export class PasoUnoComponent implements AfterViewInit {
   indice: number = 1;
 
   /**
-   * Método que se ejecuta después de que la vista ha sido inicializada.
-   */
-  ngAfterViewInit(): void {
-    // Asigna los datos correspondientes a persona y domicilio fiscal
-    this.persona = PERSONA_MORAL_NACIONAL;
-    this.domicilioFiscal = DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL;
-
-    // Obtiene el tipo de persona seleccionado
-    this.solicitante.obtenerTipoPersona(TIPO_PERSONA.MORAL_NACIONAL);
-  }
-
-  /**
    * Cambia el índice de la pestaña seleccionada.
    * @param i Índice de la nueva pestaña seleccionada.
    */
   seleccionaTab(i: number): void {
     this.indice = i;
+  }
+  /**
+  * Indica si los datos de respuesta del servidor están disponibles.
+  */
+  public datosRespuestaDisponibles: boolean = false;
+
+  /**
+/**
+ * Subject para notificar la destrucción del componente y desuscribirse de observables.
+ */
+  private notificadorDestruccion$: Subject<void> = new Subject();
+
+  /**
+   * Estado actual de la consulta.
+   */
+  public estadoConsulta!: ConsultaioState;
+
+  /**
+   * Índice de la pestaña actualmente seleccionada.
+   * Inicializado a 1 por defecto.
+   */
+
+  /**
+   * Constructor del componente.
+   * @param servicio Servicio para obtener datos de la solicitud.
+   * @param consultaQuery Consulta para obtener el estado de la consulta.
+   */
+  constructor(
+    private servicio: MercanciasDesmontadasOSinMontarService,
+    private consultaQuery: ConsultaioQuery
+  ) { }
+  /**
+   * Hook del ciclo de vida que se llama al inicializar el componente.
+   * Realiza la suscripción al estado de la consulta y obtiene los datos de la bandeja de solicitudes si es necesario.
+   */
+     ngOnInit(): void {
+    this.consultaQuery.selectConsultaioState$
+      .pipe(takeUntil(this.notificadorDestruccion$))
+      .subscribe((estadoSeccion) => {
+        this.estadoConsulta = estadoSeccion;
+      });
+
+    if (this.estadoConsulta.update) {
+      this.obtenerDatosBandejaSolicitudes();
+    } else {
+      this.datosRespuestaDisponibles = true;
+    }
+  }
+
+  /**
+   * Obtiene los datos de la bandeja de solicitudes desde el servidor.
+   */
+  obtenerDatosBandejaSolicitudes(): void {
+    this.servicio.obtenerDatosEstado()
+      .pipe(takeUntil(this.notificadorDestruccion$))
+      .subscribe((datos: Solicitud32501State) => {
+        if (datos) {
+          this.datosRespuestaDisponibles = true;
+          this.servicio.establecerDatosEstado(datos);
+        }
+      });
+  }
+  /**
+   * Hook del ciclo de vida que se llama cuando el componente es destruido.
+   */
+  ngOnDestroy(): void {
+    this.notificadorDestruccion$.next();
+    this.notificadorDestruccion$.complete();
   }
 }

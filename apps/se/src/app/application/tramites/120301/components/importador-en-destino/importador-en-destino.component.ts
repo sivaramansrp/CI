@@ -2,42 +2,44 @@
  * @component ImportadorEnDestinoComponent
  * @description Este componente es responsable de manejar el formulario del importador en destino.
  * Incluye un formulario para capturar los datos del importador y funcionalidades adicionales.
- * 
+ *
  * @import { Component } from '@angular/core';
  * @import { FormGroup } from '@angular/forms';
  */
 
 import { HttpClient } from '@angular/common/http';
 
-import { Component } from '@angular/core';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
+import {
+  Component,
+  Input,
+  OnDestroy,
+  OnInit,
+} from '@angular/core';
 
-import { FormBuilder } from '@angular/forms';
-import { FormGroup } from '@angular/forms';
-import { Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
 
-import { 
-  Catalogo, 
-  SeccionLibQuery, 
-  SeccionLibState, 
-  SeccionLibStore 
+import { Subject, delay, map, takeUntil, tap } from 'rxjs';
+
+import {
+  Catalogo,
+  SeccionLibQuery,
+  SeccionLibState,
+  SeccionLibStore,
 } from '@ng-mf/data-access-user';
 
-import { Subject } from 'rxjs';
-import { delay } from 'rxjs';
-import { map } from 'rxjs';
-import { takeUntil } from 'rxjs';
-import { tap } from 'rxjs';
+import { REG_X } from '@libs/shared/data-access-user/src/tramites/constantes/regex.constants';
 
-import { ElegibilidadDeTextilesStore } from '../../estados/elegibilidad-de-textiles.store';
-import { TextilesState } from '../../estados/elegibilidad-de-textiles.store';
-
+import {
+  ElegibilidadDeTextilesStore,
+  TextilesState,
+} from '../../estados/elegibilidad-de-textiles.store';
 import { ElegibilidadDeTextilesQuery } from '../../queries/elegibilidad-de-textiles.query';
-
 import { ElegibilidadTextilesService } from '../../services/elegibilidad-textiles/elegibilidad-textiles.service';
 
-import { REG_X} from '@libs/shared/data-access-user/src/tramites/constantes/regex.constants';
 
 /**
  * @component ImportadorEnDestinoComponent
@@ -47,9 +49,16 @@ import { REG_X} from '@libs/shared/data-access-user/src/tramites/constantes/rege
 @Component({
   selector: 'app-importador-en-destino',
   templateUrl: './importador-en-destino.component.html',
-  styleUrl: './importador-en-destino.component.scss'
+  styleUrl: './importador-en-destino.component.scss',
 })
 export class ImportadorEnDestinoComponent implements OnInit, OnDestroy {
+  /**
+   * @property {boolean} formularioDeshabilitado - Indica si el formulario debe estar deshabilitado.
+   * Puede ser configurado externamente a través del binding de entrada.
+   */
+  @Input()
+  formularioDeshabilitado: boolean = false;
+
   /**
    * @property {FormGroup} importadorForm - El grupo de formularios para capturar los datos del importador.
    */
@@ -147,6 +156,10 @@ export class ImportadorEnDestinoComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
+
+    if (this.formularioDeshabilitado) {
+      this.importadorForm.disable();
+    }
   }
 
   /**

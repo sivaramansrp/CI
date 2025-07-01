@@ -1,7 +1,7 @@
 <ng-titulo titulo="Detalle del cupo" />
 
 <div>
-    <form [formGroup]="DetalleForm" >
+    <form [formGroup]="detalleForm" >
         <div formGroupName="DetalleData">
     
     <div class="row"  style="padding-bottom: 20px;" >
@@ -81,13 +81,13 @@
                                 <div class="col-md-4">
                                     <div class="form-group">
                                       <label class="form-label" for="inicio">  Fecha de inicio de vigencia:</label>
-                                      <input class="form-control" id="inicio" formControlName="inicio"  type="date" placeholder="Selecciona una fecha">
+                                      <input class="form-control" id="inicio" formControlName="inicio"  type="text" placeholder="Selecciona una fecha">
                                     </div>
                                   </div>
                                   <div class="col-md-4">
                                     <div class="form-group">
                                       <label class="form-label" for="fecha">  Fecha de fin de vigencia:</label>
-                                      <input class="form-control" id="fecha" formControlName="fecha"  type="date" placeholder="Selecciona una fecha">
+                                      <input class="form-control" id="fecha" formControlName="fecha"  type="text" placeholder="Selecciona una fecha">
                                     </div>
                                   </div>
                                   </div>   

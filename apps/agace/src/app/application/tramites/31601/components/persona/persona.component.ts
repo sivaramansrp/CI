@@ -1,20 +1,19 @@
-/* eslint-disable no-empty-function */
-/* eslint-disable @typescript-eslint/naming-convention */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable sort-imports */
-/* eslint-disable @nx/enforce-module-boundaries */
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
+import { ConfiguracionColumna } from '@libs/shared/data-access-user/src/core/models/shared/configuracion-columna.model';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { FormsModule } from '@angular/forms';
-import { TituloComponent } from '@ng-mf/data-access-user';
-import { map, Subscription } from 'rxjs';
-
-import { Personas } from 'libs/shared/data-access-user/src/core/models/31601/servicios-pantallas.model';
-import { ServiciosPantallaService } from 'libs/shared/data-access-user/src/core/services/31601/servicios-pantalla.service';
-
+import { HttpClient } from '@angular/common/http';
+import { OnDestroy } from '@angular/core';
+import { OnInit } from '@angular/core';
+import { Personas } from '@libs/shared/data-access-user/src/core/models/31601/servicios-pantallas.model';
+import { ServiciosPantallaService } from '@libs/shared/data-access-user/src/core/services/31601/servicios-pantalla.service';
+import { Subject } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
-import { ConfiguracionColumna } from 'libs/shared/data-access-user/src/core/models/shared/configuracion-columna.model';
+import { TituloComponent } from '@ng-mf/data-access-user';
+import { map } from 'rxjs';
+import { takeUntil } from 'rxjs';
 
 /**
  * Componente `PersonaComponent`.
@@ -51,6 +50,16 @@ import { ConfiguracionColumna } from 'libs/shared/data-access-user/src/core/mode
 })
 export class PersonaComponent implements OnInit, OnDestroy {
   /**
+  * Indica si el formulario está en modo solo lectura.
+  * Cuando es `true`, los campos del formulario no se pueden editar.
+  */
+  esFormularioSoloLectura: boolean = false; 
+   /**
+     * Notificador para destruir las suscripciones.
+     */
+    private destroyNotifier$: Subject<void> = new Subject();
+    
+  /**
    * Array que contiene los datos de las personas cargadas desde el archivo JSON.
    * @type {Personas[]}
    */
@@ -58,20 +67,20 @@ export class PersonaComponent implements OnInit, OnDestroy {
 
   /**
    * Configuración de las columnas para la tabla dinámica.
-   * @type {ConfiguracionColumna<any>[]}
+   * @type {ConfiguracionColumna<unknown>[]}
    */
-  configuracionTabla: ConfiguracionColumna<any>[] = [
-    { encabezado: 'RFC', clave: (item: any) => item.RFC, orden: 1 },
-    { encabezado: 'CURP', clave: (item: any) => item.CURP, orden: 2 },
-    { encabezado: 'Nombre', clave: (item: any) => item.Nombre, orden: 3 },
+  configuracionTabla: ConfiguracionColumna<Personas>[] = [
+    { encabezado: 'RFC', clave: (item: Personas) => item.rfc, orden: 1 },
+    { encabezado: 'CURP', clave: (item: Personas) => item.curp, orden: 2 },
+    { encabezado: 'Nombre', clave: (item: Personas) => item.nombre, orden: 3 },
     {
       encabezado: 'Apellido Paterno',
-      clave: (item: any) => item.Apellido_paterno,
+      clave: (item: Personas) => item.apellidoPaterno,
       orden: 4,
     },
     {
       encabezado: 'Apellido Materno',
-      clave: (item: any) => item.Apellido_materno,
+      clave: (item: Personas) => item.apellidoMaterno,
       orden: 5,
     },
   ];
@@ -103,8 +112,19 @@ export class PersonaComponent implements OnInit, OnDestroy {
    */
   constructor(
     public http: HttpClient,
-    private pantallaSvc: ServiciosPantallaService
-  ) {}
+    private pantallaSvc: ServiciosPantallaService,
+    private consultaioQuery: ConsultaioQuery
+  ) {
+     this.consultaioQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState)=>{
+        this.esFormularioSoloLectura = seccionState.readonly; 
+        this.loadPersonas();
+      })
+    )
+    .subscribe()
+  }
 
   /**
    * Método que se ejecuta cuando el componente se inicializa.
@@ -127,7 +147,7 @@ export class PersonaComponent implements OnInit, OnDestroy {
    */
   loadPersonas(): void {
     // Realiza la solicitud HTTP para obtener los datos de personas desde el archivo JSON
-    const personaParas$ = this.pantallaSvc
+    const PERSONAPARAS$ = this.pantallaSvc
       .getPersonapara() // Llama al servicio para obtener el array de personas
       .pipe(
         map((resp) => {
@@ -137,7 +157,7 @@ export class PersonaComponent implements OnInit, OnDestroy {
       );
 
     // Suscribe al observable para que la asignación de los datos se ejecute
-    this.personaParasSubscription = personaParas$.subscribe();
+    this.personaParasSubscription = PERSONAPARAS$.subscribe(); 
   }
 
   /**
@@ -147,8 +167,12 @@ export class PersonaComponent implements OnInit, OnDestroy {
    */
   ngOnDestroy(): void {
     // Desuscribirse cuando el componente se destruya
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
+
     if (this.personaParasSubscription) {
       this.personaParasSubscription.unsubscribe();
     }
+
   }
 }

@@ -31,12 +31,14 @@ import {
   Validators,
 } from '@angular/forms';
 
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
+
 import {
   Catalogo,
-  CatalogoSelectComponent,
+  ConsultaioQuery,
   TituloComponent,
 } from '@ng-mf/data-access-user';
-import { Observable, Subject, takeUntil } from 'rxjs';
+import { Observable,Subject,map,takeUntil } from 'rxjs';
 import { AsignacionDirectaCupoPersonasFisicasPrimeraVezService } from '../../services/asignacion-directa-cupo-personas-fisicas-primera-vez.service';
 import { Tramite120401Query } from '../../estados/queries/tramite120401.query';
 import { Tramite120401Store } from '../../estados/tramites/tramite120401.store';
@@ -104,6 +106,12 @@ export class RepresentacionFederalComponent implements OnInit, OnDestroy {
    */
   entidad$: Observable<Catalogo | null> = this.tramite120401Query.entidad$;
 
+   /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  esFormularioSoloLectura: boolean = false;
+
   /**
    * Observable que emite un objeto de tipo `Catalogo` o `null`,
    * representando la información de la representación federal asociada.
@@ -125,9 +133,10 @@ export class RepresentacionFederalComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private service: AsignacionDirectaCupoPersonasFisicasPrimeraVezService,
     private tramite120401Store: Tramite120401Store,
-    private tramite120401Query: Tramite120401Query
+    private tramite120401Query: Tramite120401Query,
+    private consultaQuery: ConsultaioQuery,
   ) {
-    // Constructor
+   
   }
 
   /**
@@ -183,15 +192,31 @@ export class RepresentacionFederalComponent implements OnInit, OnDestroy {
           });
         }
       });
+
+      this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
   }
 
-  /**
-   * Método de ciclo de vida de Angular que se ejecuta al destruir el componente.
+  
+        /**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.
    */
-  ngOnDestroy(): void {
-    this.destroyed$.next();
-    this.destroyed$.complete();
-  }
+     inicializarEstadoFormulario(): void {
+      if(!this.representacionForm){
+        this.initializeForm();
+      }
+      if (this.esFormularioSoloLectura) {
+          this.representacionForm.disable();
+      }
+    }
+ 
 
   /**
    * @method initializeForm
@@ -262,4 +287,14 @@ export class RepresentacionFederalComponent implements OnInit, OnDestroy {
       this.representacionForm.get('representacion')?.value;
     this.tramite120401Store.setRepresentacion(SELECTED_REPRESENTACION);
   }
+
+  
+  /**
+   * Método de ciclo de vida de Angular que se ejecuta al destruir el componente.
+   */
+  ngOnDestroy(): void {
+    this.destroyed$.next();
+    this.destroyed$.complete();
+  }
+
 }

@@ -1,52 +1,51 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ReactiveFormsModule } from '@angular/forms';
-import { of, Subject } from 'rxjs';
-
 import { MercanciasSeleccionadasFormComponent } from './mercancias-seleccionadas-form.component';
-import { CertificadoTecnicoJaponService } from '@libs/shared/data-access-user/src/core/services/110218/certificadoTecnicoJapon.service';
-import { Tramite110218Store } from '../../estados/tramites/tramite110218.store';
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { CertificadoTecnicoJaponService } from '../../service/certificadoTecnicoJapon.service';
 import { Tramite110218Query } from '../../estados/queries/tramite110218.query';
-import { Catalogo } from '@libs/shared/data-access-user/src';
+import { Tramite110218Store } from '../../estados/tramites/tramite110218.store';
+import { Router } from '@angular/router';
+import { of, Subject } from 'rxjs';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 
 describe('MercanciasSeleccionadasFormComponent', () => {
   let component: MercanciasSeleccionadasFormComponent;
   let fixture: ComponentFixture<MercanciasSeleccionadasFormComponent>;
-  let serviceMock: jest.Mocked<CertificadoTecnicoJaponService>;
-  let storeMock: jest.Mocked<Tramite110218Store>;
-  let queryMock: jest.Mocked<Tramite110218Query>;
-  let destroyed$: Subject<void>;
+  let mockService: any;
+  let mockQuery: any;
+  let mockStore: any;
+  let mockRouter: any;
 
   beforeEach(async () => {
-    serviceMock = {
-      getUnidadMedida: jest.fn(),
-      getTipodeFctura: jest.fn(),
-    } as unknown as jest.Mocked<CertificadoTecnicoJaponService>;
-
-    storeMock = {
-      setTramite110218State: jest.fn(),
-    } as unknown as jest.Mocked<Tramite110218Store>;
-
-    queryMock = {
+    mockService = {
+      getUnidadMedida: jest.fn().mockReturnValue(of([{ id: 1, descripcion: 'Unidad' }])),
+      getTipodeFctura: jest.fn().mockReturnValue(of([{ id: 2, descripcion: 'Factura' }]))
+    };
+    mockQuery = {
       selectTramite110218State$: of({
-        complementoDelaDescripcion: 'Descripción de prueba',
-        marca: 'Marca de prueba',
-        valorMercancia: '100.50',
-        unidaddeMedidadeComercializacion: { id: 1, descripcion: 'Unidad' },
-        numerodeFactura: '12345',
-        tipodeFactura: { id: 2, descripcion: 'Factura' },
-      }),
-    } as unknown as jest.Mocked<Tramite110218Query>;
-
-    destroyed$ = new Subject<void>();
+        complementoDelaDescripcion: 'desc',
+        marca: 'marca',
+        valorMercancia: 100,
+        unidaddeMedidadeComercializacion: 1,
+        numerodeFactura: '123',
+        tipodeFactura: 2
+      })
+    };
+    mockStore = {
+      setTramite110218State: jest.fn()
+    };
+    mockRouter = { navigate: jest.fn() };
 
     await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule],
-      declarations: [MercanciasSeleccionadasFormComponent],
+      imports: [MercanciasSeleccionadasFormComponent, ReactiveFormsModule],
       providers: [
-        { provide: CertificadoTecnicoJaponService, useValue: serviceMock },
-        { provide: Tramite110218Store, useValue: storeMock },
-        { provide: Tramite110218Query, useValue: queryMock },
+        FormBuilder,
+        { provide: CertificadoTecnicoJaponService, useValue: mockService },
+        { provide: Tramite110218Query, useValue: mockQuery },
+        { provide: Tramite110218Store, useValue: mockStore },
+        { provide: Router, useValue: mockRouter }
       ],
+      schemas: [NO_ERRORS_SCHEMA]
     }).compileComponents();
 
     fixture = TestBed.createComponent(MercanciasSeleccionadasFormComponent);
@@ -54,96 +53,76 @@ describe('MercanciasSeleccionadasFormComponent', () => {
     fixture.detectChanges();
   });
 
-  afterEach(() => {
-    destroyed$.next();
-    destroyed$.complete();
-  });
-
   it('debería crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('debería inicializar el formulario con valores predeterminados', () => {
-    component.inicializarFormulario();
-    expect(component.modifydatosdelcertificado.value).toEqual({
-      nombreComercial: '',
-      nombreIngles: '',
-      complementoDelaDescripcion: 'Descripción de prueba',
-      marca: 'Marca de prueba',
-      valorMercancia: '100.50',
-      cantidad: '',
-      unidaddeMedidadeComercializacion: { id: 1, descripcion: 'Unidad' },
-      numerodeFactura: '12345',
-      tipodeFactura: { id: 2, descripcion: 'Factura' },
-      fechadelaFactura: '',
-    });
-  });
-
-  it('debería obtener los datos de la unidad de medida desde el servicio', () => {
-    const unidadMock: Catalogo[] = [{ id: 1, descripcion: 'Unidad 1' }];
-    serviceMock.getUnidadMedida.mockReturnValue(of(unidadMock));
-
+  it('debería inicializar unidaddeMedidadeComercializacionOptions al llamar unidadMedidaData', () => {
     component.unidadMedidaData();
-
-    expect(serviceMock.getUnidadMedida).toHaveBeenCalled();
-    expect(component.unidaddeMedidadeComercializacionOptions).toEqual(unidadMock);
+    expect(mockService.getUnidadMedida).toHaveBeenCalled();
+    expect(component.unidaddeMedidadeComercializacionOptions).toEqual([{ id: 1, descripcion: 'Unidad' }]);
   });
 
-  it('debería obtener los datos del tipo de factura desde el servicio', () => {
-    const facturaMock: Catalogo[] = [{ id: 2, descripcion: 'Factura 1' }];
-    serviceMock.getTipodeFctura.mockReturnValue(of(facturaMock));
-
+  it('debería inicializar tipodeFacturaOptions al llamar tipoDeFactura', () => {
     component.tipoDeFactura();
-
-    expect(serviceMock.getTipodeFctura).toHaveBeenCalled();
-    expect(component.tipodeFacturaOptions).toEqual(facturaMock);
+    expect(mockService.getTipodeFctura).toHaveBeenCalled();
+    expect(component.tipodeFacturaOptions).toEqual([{ id: 2, descripcion: 'Factura' }]);
   });
 
-  it('debería establecer los valores de la tabla en el formulario', () => {
-    component.receivedData = [
-      { nombreComercial: 'Producto 1', nombreIngles: 'Product 1' },
-    ];
-
+  it('debería actualizar los valores del formulario en tableDataValues si receivedData existe', () => {
+    component.inicializarFormulario();
+    component.receivedData = [{ nombreComercial: 'Com', nombreIngles: 'Ing' }];
     component.tableDataValues();
-
-    expect(component.modifydatosdelcertificado.get('nombreComercial')?.value).toEqual('Producto 1');
-    expect(component.modifydatosdelcertificado.get('nombreIngles')?.value).toEqual('Product 1');
-    expect(component.modifydatosdelcertificado.get('cantidad')?.value).toEqual('100');
-    expect(component.modifydatosdelcertificado.get('fechadelaFactura')?.value).toEqual('2024-11-13');
+    expect(component.modifydatosdelcertificado.get('nombreComercial')?.value).toBe('Com');
+    expect(component.modifydatosdelcertificado.get('nombreIngles')?.value).toBe('Ing');
+    expect(component.modifydatosdelcertificado.get('cantidad')?.value).toBe('100');
+    expect(component.modifydatosdelcertificado.get('fechadelaFactura')?.value).toBe('2024-11-13');
   });
 
-  it('debería actualizar un valor en el store', () => {
-    component.modifydatosdelcertificado = component.formBuilder.group({
-      complementoDelaDescripcion: ['Nueva Descripción'],
-    });
-
-    component.setValorStore(component.modifydatosdelcertificado, 'complementoDelaDescripcion');
-
-    expect(storeMock.setTramite110218State).toHaveBeenCalledWith({
-      complementoDelaDescripcion: 'Nueva Descripción',
-    });
+  it('debería emitir true en modificarSuccess', () => {
+    const spy = jest.spyOn(component.modificarÉxitoBtn, 'emit');
+    component.modificarSuccess();
+    expect(spy).toHaveBeenCalledWith(true);
   });
 
-  it('debería obtener el estado actual del trámite desde el store', () => {
+  it('debería actualizar el store con setValorStore', () => {
+    component.inicializarFormulario();
+    component.modifydatosdelcertificado.get('marca')?.setValue('NuevaMarca');
+    component.setValorStore(component.modifydatosdelcertificado, 'marca');
+    expect(mockStore.setTramite110218State).toHaveBeenCalledWith({ marca: 'NuevaMarca' });
+  });
+
+  it('debería actualizar estadoSeleccionado al llamar getValorStore', () => {
     component.getValorStore();
-
-    expect(component.estadoSeleccionado).toEqual({
-      complementoDelaDescripcion: 'Descripción de prueba',
-      marca: 'Marca de prueba',
-      valorMercancia: '100.50',
-      unidaddeMedidadeComercializacion: { id: 1, descripcion: 'Unidad' },
-      numerodeFactura: '12345',
-      tipodeFactura: { id: 2, descripcion: 'Factura' },
-    });
+    expect(component.estadoSeleccionado).toEqual(expect.objectContaining({
+      complementoDelaDescripcion: 'desc',
+      marca: 'marca'
+    }));
   });
 
-  it('debería limpiar las suscripciones al destruir el componente', () => {
-    const destroyedSpy = jest.spyOn(destroyed$, 'next');
-    const completeSpy = jest.spyOn(destroyed$, 'complete');
-
+  it('debería limpiar destroyed$ en ngOnDestroy', () => {
+    const nextSpy = jest.spyOn((component as any).destroyed$, 'next');
+    const completeSpy = jest.spyOn((component as any).destroyed$, 'complete');
     component.ngOnDestroy();
-
-    expect(destroyedSpy).toHaveBeenCalled();
+    expect(nextSpy).toHaveBeenCalled();
     expect(completeSpy).toHaveBeenCalled();
+  });
+
+  it('debería inicializar el formulario con los valores por defecto correctos', () => {
+    component.estadoSeleccionado = {
+      complementoDelaDescripcion: 'desc',
+      marca: 'marca',
+      valorMercancia: 100,
+      unidaddeMedidadeComercializacion: 1,
+      numerodeFactura: '123',
+      tipodeFactura: 2
+    } as any;
+    component.inicializarFormulario();
+    expect(component.modifydatosdelcertificado.get('complementoDelaDescripcion')?.value).toBe('desc');
+    expect(component.modifydatosdelcertificado.get('marca')?.value).toBe('marca');
+    expect(component.modifydatosdelcertificado.get('valorMercancia')?.value).toBe(100);
+    expect(component.modifydatosdelcertificado.get('unidaddeMedidadeComercializacion')?.value).toBe(1);
+    expect(component.modifydatosdelcertificado.get('numerodeFactura')?.value).toBe('123');
+    expect(component.modifydatosdelcertificado.get('tipodeFactura')?.value).toBe(2);
   });
 });

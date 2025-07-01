@@ -1,11 +1,38 @@
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  Component,
+  ElementRef,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
+import {
+  FormArray,
+  FormBuilder,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { Observable, Subject, map, merge, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 
-import { AvisoSanitarioState, Tramite260601Store } from '../../../../estados/tramites/tramite260601.store';
-import { CATALOGOS_ID, OPCIONES_DE_BOTON_DE_RADIO } from '../../constantes/aviso-enum';
-import { CatalogoSelectComponent, InputCheckComponent, InputRadioComponent, TableComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import {
+  AvisoSanitarioState,
+  Tramite260601Store,
+} from '../../../../estados/tramites/tramite260601.store';
+import {
+  CATALOGOS_ID,
+  OPCIONES_DE_BOTON_DE_RADIO,
+} from '../../constantes/aviso-enum';
+import {
+  CatalogoSelectComponent,
+  ConsultaioQuery,
+  InputCheckComponent,
+  InputRadioComponent,
+  TableBodyData,
+  TableComponent,
+  TituloComponent,
+} from '@libs/shared/data-access-user/src';
 import { Manifiestos, ManifiestosRespuesta } from '../../models/aviso-model';
 import { AvisoSanitarioService } from '../../services/aviso-sanitario.service';
 import { Catalogo } from '@ng-mf/data-access-user';
@@ -32,7 +59,7 @@ import scianTable from '@libs/shared/theme/assets/json/260601/scian-table.json';
     InputCheckComponent,
     DatosMercanciaComponent,
     InputRadioComponent,
-    RepresentanteLegalComponent
+    RepresentanteLegalComponent,
   ],
   providers: [AvisoSanitarioService],
   templateUrl: './datos-del-establecimiento.component.html',
@@ -103,7 +130,7 @@ export class DatosDelEstablecimientoComponent implements OnInit, OnDestroy {
   /**
    * Cuerpo de datos de la tabla SCIAN.
    */
-  public scianBodyData: unknown = null;
+  public scianBodyData: TableBodyData[] = [];
 
   /**
    * Cabeceras de la tabla de productos.
@@ -113,7 +140,7 @@ export class DatosDelEstablecimientoComponent implements OnInit, OnDestroy {
   /**
    * Cuerpo de datos de la tabla de productos.
    */
-  public productoBodyData: unknown = null;
+  public productoBodyData: TableBodyData[] = [];
 
   /**
    * Datos de la tabla SCIAN desde un archivo JSON.
@@ -146,36 +173,81 @@ export class DatosDelEstablecimientoComponent implements OnInit, OnDestroy {
   habilitarEstado: boolean = true;
 
   /**
-    * Lista de manifiestos obtenidos desde el servicio.
-    */
+   * Lista de manifiestos obtenidos desde el servicio.
+   */
   manifiestos: Manifiestos[] = [];
 
   /**
    * Opciones de botón de radio.
    */
   opcionDeBotonDeRadio = OPCIONES_DE_BOTON_DE_RADIO;
+  /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  esFormularioSoloLectura: boolean = false;
 
   /**
    * Constructor del componente. Utilizado para inyectar servicios necesarios.
-   * 
+   *
    * @param fb FormBuilder para construir formularios reactivos.
    * @param avisoSanitarioService Servicio para gestionar datos del aviso sanitario.
    * @param tramite260601Store Store para manejar el estado del trámite.
    * @param tramite260601Query Query para observar cambios en el estado del trámite.
+   * @param consultaioQuery Query para observar cambios en el estado de la consulta.
    */
   constructor(
     private fb: FormBuilder,
     private avisoSanitarioService: AvisoSanitarioService,
     private tramite260601Store: Tramite260601Store,
-    private tramite260601Query: Tramite260601Query
+    private tramite260601Query: Tramite260601Query,
+    private consultaioQuery: ConsultaioQuery
   ) {
-    // El constructor se utiliza para la inyección de dependencias.    
+    /**
+     * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
+     *
+     * - Asigna el valor de solo lectura (`readonly`) a la propiedad `esFormularioSoloLectura`.
+     * - Llama a `inicializarEstadoFormulario()` para aplicar configuraciones basadas en el estado recibido.
+     * - La suscripción se cancela automáticamente cuando `destruirNotificador$` emite un valor (para evitar fugas de memoria).
+     */
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destruirNotificador$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = !seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
   }
 
   /**
    * Método de inicialización que configura formularios, catálogos y suscripciones.
    */
   ngOnInit(): void {
+    this.inicializarEstadoFormulario();
+  }
+
+  /**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.
+   * Además, obtiene la información del catálogo de mercancía.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.inicializarFormulario();
+    }
+  }
+
+  /**
+   * Inicializa el formulario reactivo para capturar el valor de 'registro'.
+   * Suscribe al estado almacenado en el store mediante el query `tramite301Query.selectSolicitud$`
+   * y lo asigna a la variable local `solicitudState`. Luego, crea el formulario
+   * con el valor inicial obtenido del store.
+   */
+
+  inicializarFormulario(): void {
     this.inicializaCatalogos();
 
     this.obtenerManifiestos();
@@ -202,107 +274,108 @@ export class DatosDelEstablecimientoComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormulario(): void {
+    this.inicializarFormulario();
+    if (this.esFormularioSoloLectura) {
+      this.datosDelEstablecimientoForm.disable();
+      this.domicilloDelEstablecimientoForm.disable();
+      this.scianForm.disable();
+      this.manifiestosForm.disable();
+    } else if (!this.esFormularioSoloLectura) {
+      this.datosDelEstablecimientoForm.enable();
+      this.domicilloDelEstablecimientoForm.enable();
+      this.scianForm.enable();
+      this.manifiestosForm.enable();
+    } else {
+      // No se requiere ninguna acción en el formulario
+    }
+  }
+
+  /**
    * Crea y configura los formularios principales y sus validaciones.
    */
   crearFormulario(): void {
     this.datosDelEstablecimientoForm = this.fb.group({
       RFCResponsableSanitario: [
-        { value: this.avisoSanitarioState?.RFCResponsableSanitario, disabled: true }
+        {
+          value: this.avisoSanitarioState?.RFCResponsableSanitario,
+          disabled: true,
+        },
       ],
       razonSocial: [
         { value: this.avisoSanitarioState?.razonSocial, disabled: true },
-        Validators.required
+        Validators.required,
       ],
       correoElectronico: [
         { value: this.avisoSanitarioState?.correoElectronico, disabled: true },
-        [
-          Validators.maxLength(320)
-        ]
-      ]
+        [Validators.maxLength(320)],
+      ],
     });
     this.domicilloDelEstablecimientoForm = this.fb.group({
       codigoPostal: [
         { value: this.avisoSanitarioState?.codigoPostal, disabled: true },
-        [
-          Validators.required,
-          Validators.maxLength(12)
-        ]
+        [Validators.required, Validators.maxLength(12)],
       ],
       cveEstado: [
-        { value: this.avisoSanitarioState?.cveEstado, disabled: true }
+        { value: this.avisoSanitarioState?.cveEstado, disabled: true },
       ],
       descripcionMunicipio: [
-        { value: this.avisoSanitarioState?.descripcionMunicipio, disabled: true },
-        [
-          Validators.required,
-          Validators.maxLength(120)
-        ]
+        {
+          value: this.avisoSanitarioState?.descripcionMunicipio,
+          disabled: true,
+        },
+        [Validators.required, Validators.maxLength(120)],
       ],
       informacionExtra: [
         { value: this.avisoSanitarioState?.informacionExtra, disabled: true },
-        [
-          Validators.required,
-          Validators.maxLength(120)
-        ]
+        [Validators.required, Validators.maxLength(120)],
       ],
       descripcionColonia: [
         { value: this.avisoSanitarioState?.descripcionColonia, disabled: true },
-        [
-          Validators.required,
-          Validators.maxLength(120)
-        ]
+        [Validators.required, Validators.maxLength(120)],
       ],
       calle: [
         { value: this.avisoSanitarioState?.calle, disabled: true },
-        [
-          Validators.required,
-          Validators.maxLength(90)
-        ]
+        [Validators.required, Validators.maxLength(90)],
       ],
-      lada: [
-        { value: this.avisoSanitarioState?.lada, disabled: true }
-      ],
+      lada: [{ value: this.avisoSanitarioState?.lada, disabled: true }],
       telefono: [
         { value: this.avisoSanitarioState?.telefono, disabled: true },
-        [
-          Validators.required,
-          Validators.maxLength(30)
-        ]
+        [Validators.required, Validators.maxLength(30)],
       ],
-      avisoFuncionamiento: [
-        this.avisoSanitarioState?.avisoFuncionamiento
-      ],
+      avisoFuncionamiento: [this.avisoSanitarioState?.avisoFuncionamiento],
       cveRegimenes: [
         this.avisoSanitarioState?.cveRegimenes,
-        [Validators.required]
+        [Validators.required],
       ],
-      cveAduanas: [
-        this.avisoSanitarioState?.cveAduanas,
-        [Validators.required]
-      ]
+      cveAduanas: [this.avisoSanitarioState?.cveAduanas, [Validators.required]],
     });
     this.scianForm = this.fb.group({
-      cveSCIAN: [
-        this.avisoSanitarioState?.cveSCIAN,
-        [Validators.required]
-      ],
+      cveSCIAN: [this.avisoSanitarioState?.cveSCIAN, [Validators.required]],
       cveSCIANDescripcion: [
-        { value: this.avisoSanitarioState?.cveSCIANDescripcion, disabled: true }
+        {
+          value: this.avisoSanitarioState?.cveSCIANDescripcion,
+          disabled: true,
+        },
       ],
     });
     this.manifiestosForm = this.fb.group({
-      seleccionadaManifiesto:
-        this.fb.array(this.avisoSanitarioState?.seleccionadaManifiesto),
+      seleccionadaManifiesto: this.fb.array(
+        this.avisoSanitarioState?.seleccionadaManifiesto
+      ),
       informacionConfidencial: [
         this.avisoSanitarioState?.informacionConfidencial,
-        Validators.required
-      ]
+        Validators.required,
+      ],
     });
   }
 
   /**
    * Obtiene el FormArray correspondiente a 'seleccionadaManifiesto' dentro del formulario de registro de donación.
-   * 
+   *
    * @returns {FormArray} El FormArray de 'seleccionadaManifiesto'.
    */
   get seleccionadaManifiesto(): FormArray {
@@ -353,13 +426,7 @@ export class DatosDelEstablecimientoComponent implements OnInit, OnDestroy {
         })
       );
 
-    merge(
-      ESTADO$,
-      CLAVE_SCIAN$,
-      DESCRIPCION_SCIAN$,
-      REGIMENES$,
-      ADUANAS$
-    )
+    merge(ESTADO$, CLAVE_SCIAN$, DESCRIPCION_SCIAN$, REGIMENES$, ADUANAS$)
       .pipe(takeUntil(this.destruirNotificador$))
       .subscribe();
   }
@@ -377,15 +444,18 @@ export class DatosDelEstablecimientoComponent implements OnInit, OnDestroy {
    */
   claveScianSeleccion(): void {
     const CLAVE_SCIAN = this.scianForm.get('cveSCIAN')?.value;
-    this.avisoSanitarioService.getDescripcionScian()
+    this.avisoSanitarioService
+      .getDescripcionScian()
       .pipe(takeUntil(this.destruirNotificador$))
       .subscribe({
         next: (result) => {
           const SCIAN_DESCRIPCION = result.data[0].descripcion;
-          this.scianForm.get('cveSCIANDescripcion')?.setValue(SCIAN_DESCRIPCION);
+          this.scianForm
+            .get('cveSCIANDescripcion')
+            ?.setValue(SCIAN_DESCRIPCION);
           this.tramite260601Store.setDescripcionScian(SCIAN_DESCRIPCION);
-        }
-      })
+        },
+      });
     this.tramite260601Store.setClaveScian(CLAVE_SCIAN);
   }
 
@@ -401,7 +471,8 @@ export class DatosDelEstablecimientoComponent implements OnInit, OnDestroy {
    * Maneja la selección del régimen fiscal y lo actualiza en el store.
    */
   regimenesSeleccion(): void {
-    const REGIMENES = this.domicilloDelEstablecimientoForm.get('cveRegimenes')?.value;
+    const REGIMENES =
+      this.domicilloDelEstablecimientoForm.get('cveRegimenes')?.value;
     this.tramite260601Store.setCveRegimenes(REGIMENES);
   }
 
@@ -409,7 +480,8 @@ export class DatosDelEstablecimientoComponent implements OnInit, OnDestroy {
    * Maneja la selección de la aduana y lo actualiza en el store.
    */
   aduanaSeleccion(): void {
-    const ADUANAS = this.domicilloDelEstablecimientoForm.get('cveAduanas')?.value;
+    const ADUANAS =
+      this.domicilloDelEstablecimientoForm.get('cveAduanas')?.value;
     this.tramite260601Store.setCveAduanas(ADUANAS);
   }
 
@@ -455,27 +527,32 @@ export class DatosDelEstablecimientoComponent implements OnInit, OnDestroy {
    * Inicializa `manifiestosSeleccionados` con valores `false`.
    */
   obtenerManifiestos(): void {
-    this.avisoSanitarioService.getManifiestos()
+    this.avisoSanitarioService
+      .getManifiestos()
       .pipe(takeUntil(this.destruirNotificador$))
       .subscribe({
         next: (result: ManifiestosRespuesta) => {
           this.manifiestos = result?.data;
-        }
+        },
       });
   }
 
   /**
    * Cambia el estado de la casilla de verificación según el índice.
-   * 
+   *
    * @param event - El evento que se dispara al cambiar el estado del checkbox.
    * @param {number} index - Índice de la casilla de verificación.
-   * 
+   *
    * @returns {void}
    */
   onManifiestoCheckboxCambiar(event: Event, index: number): void {
     const VALOR_ENTRADA = event.target as HTMLInputElement;
     this.seleccionadaManifiesto.controls[index].setValue(VALOR_ENTRADA.checked);
-    this.setValoresStore(this.manifiestosForm, 'seleccionadaManifiesto', 'setSeleccionadaManifiesto');
+    this.setValoresStore(
+      this.manifiestosForm,
+      'seleccionadaManifiesto',
+      'setSeleccionadaManifiesto'
+    );
   }
 
   /**
@@ -515,7 +592,7 @@ export class DatosDelEstablecimientoComponent implements OnInit, OnDestroy {
 
   /**
    * Método para abrir dialogo mercancías.
-   * 
+   *
    * @returns {void}
    */
   agregarMercanciaGrid2606(): void {
@@ -527,7 +604,7 @@ export class DatosDelEstablecimientoComponent implements OnInit, OnDestroy {
 
   /**
    * Cierra el modal.
-   * 
+   *
    * @returns {void}
    */
   cerrarModal(): void {
@@ -537,14 +614,18 @@ export class DatosDelEstablecimientoComponent implements OnInit, OnDestroy {
   }
 
   /**
-    * Establece los valores en el store de tramite260601.
-    *
-    * @param {FormGroup} form - El formulario del cual se obtiene el valor.
-    * @param {string} campo - El nombre del campo del formulario cuyo valor se va a obtener.
-    * @param {string} metodoNombre - El nombre del método en el store que se va a invocar con el valor del campo.
-    * @returns {void}
-    */
-  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite260601Store): void {
+   * Establece los valores en el store de tramite260601.
+   *
+   * @param {FormGroup} form - El formulario del cual se obtiene el valor.
+   * @param {string} campo - El nombre del campo del formulario cuyo valor se va a obtener.
+   * @param {string} metodoNombre - El nombre del método en el store que se va a invocar con el valor del campo.
+   * @returns {void}
+   */
+  setValoresStore(
+    form: FormGroup,
+    campo: string,
+    metodoNombre: keyof Tramite260601Store
+  ): void {
     const VALOR = form.get(campo)?.value;
     (this.tramite260601Store[metodoNombre] as (value: unknown) => void)(VALOR);
   }

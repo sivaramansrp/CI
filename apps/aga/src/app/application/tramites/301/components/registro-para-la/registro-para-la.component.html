@@ -1,28 +1,26 @@
 <div class="container table-container">
   <ng-titulo titulo="Importante" />
-  <form [formGroup]="registroParaLaForm">
+  <form *ngIf="registroParaLaForm" [formGroup]="registroParaLaForm">
     <ng-alert [CONTENIDO]="TEXTOS.Importante"></ng-alert>
 
     <div class="row" style="padding-bottom: 20px; text-align: right">
       <div>
-        <button type="button" class="btn btn-primary btn-space">Iniciar</button>
+        <button type="button" class="btn btn-primary btn-space" (click)="iniciar()" [disabled]="consultaState.readonly">Iniciar</button>
       </div>
     </div>
-
-    <app-catalogo-select
+    @if (mostrarCampo) {
+      <app-catalogo-select
       [catalogo]="registroOptions"
       formControlName="registro"
       [label]="
         '¿Se han realizado previamente importaciones o exportaciones del producto a registrar?'
       "
+      [isDisabled]="consultaState.readonly"
       [required]="true"
       name="registro"
       (change)="setValoresStore(registroParaLaForm, 'registro', 'setRegistro')"
     ></app-catalogo-select>
+    }
   </form>
 </div>
 
-<div>
-  <btn-continuar [datos]="datosPasos"></btn-continuar>
-</div>
-<ng-alert [CONTENIDO]="ADVERTENCIA.Aviso"></ng-alert>

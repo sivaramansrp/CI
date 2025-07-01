@@ -2,14 +2,11 @@
 /**
  * ModificacionPermisoSanitarioLaSaludComponent
  */
+import { AVISO,AccionBoton, DatosPasos, ListaPasosWizard, WizardComponent } from '@libs/shared/data-access-user/src';
+import { CompleteForm, PagoDeDerechos, SolicitanteData, TercerosRelacionados, Tramite } from '../../models/mod-permiso.model';
 import { Component, ViewChild } from '@angular/core';
-
-import { AccionBoton, AVISO, DatosPasos, ListaPasosWizard, WizardComponent } from '@libs/shared/data-access-user/src';
-
 import {MODIFICACION_PERMISO_DATA, MODIFICACION_PERMISO_ENUM } from '../../constantes/mod-permiso.enum';
 import { PasoUnoPagesComponent } from '../paso-uno-pages/paso-uno-pages.component';
-
-import { CompleteForm, PagoDeDerechos, SolicitanteData, TercerosRelacionados, Tramite } from '../../models/mod-permiso.model';
 /**
  * Component 
  */
@@ -134,10 +131,8 @@ export class ModificacionPermisoSanitarioLaSaludComponent {
     if (this.pasoUnoComponent) {
       // Call collectFormValues() from PasoUnoPagesComponent
       this.payload = this.pasoUnoComponent.collectFormValues();
-      console.log('Payload', this.payload);
-    } else {
-      console.error('PasoUnoPagesComponent is not initialized.');
-    }
+      
+    } 
   
     if (e.valor > 0 && e.valor < 5) {
       this.indice = e.valor;

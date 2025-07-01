@@ -1,13 +1,12 @@
-<div class="container">
+<form [formGroup]="datosDelCertificadoForm">
     <ng-titulo [titulo]="'Datos del certificado'"></ng-titulo>
-    <form [formGroup]="datosDelCertificadoForm">
         <div class="row">
             <div class="col-md-12">
                 <div class="form-group">
                     <label for="observaciones" class="form-label">Observaciones :</label>
                     <textarea class="form-control" id="observaciones" formControlName="observaciones"
                         placeholder="pruebas"
-                        (change)="setValoresStore(datosDelCertificadoForm,'observaciones','setObservaciones')"></textarea>
+                        (change)="setValoresStore(datosDelCertificadoForm,'observaciones')"></textarea>
                         <div *ngIf="datosDelCertificadoForm.get('observaciones')?.touched && datosDelCertificadoForm.get('observaciones')?.invalid">
                             <small *ngIf="datosDelCertificadoForm.get('observaciones')?.errors?.['pattern']" class="text-danger">Por favor, corrija la observaciones.</small>
                           </div>
@@ -15,16 +14,17 @@
             </div>
         </div>
     </form>
+    <div class="form">
     <div class="row mt-4">
         <div class="col-md-12">
             <label for="mercancíasSeleccionadas" class="form-label">Mercancías seleccionadas</label>
             <div>
-                <app-tabla-dinamica [configuracionTabla]="configuracionTabla" [datos]="datosTabla"
+                <app-tabla-dinamica [configuracionTabla]="configuracionTabla" [datos]="datosTabla" [disableSeleccionTablaRadio]="esFormularioSoloLectura"
                     [tipoSeleccionTabla]="seleccionTabla" (filaSeleccionada)="getMercanciasSeleccionadas($event)" ></app-tabla-dinamica>
             </div>
         </div>
         <div class="d-flex justify-content-end mt-4 p-5">
-            <button class="btn btn-primary ml-auto" (click)="navegar()">Modificar</button>
+            <button class="btn btn-primary ml-auto" (click)="navegar()" [disabled]="esFormularioSoloLectura">Modificar</button>
         </div>
 
     </div>

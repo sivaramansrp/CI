@@ -5,16 +5,17 @@
     [configuracionTabla]="ParqueVehicular"
     [datos]="vehiculosInfoList"
     (listaDeFilaSeleccionada)="manejarFilaSeleccionada($event)"
+    [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
   >
   </app-tabla-dinamica>
 
   <div class="d-flex justify-content-end">
     <div class="d-flex flex-row flex-wrap gap-3">
-        <button class="btn btn-primary" (click)="cargaArchivo()">Carga por archivo</button>
+        <button class="btn btn-primary" (click)="cargaArchivo()" [disabled]="esFormularioSoloLectura">Carga por archivo</button>
         <button class="btn btn-primary" [ngClass]="{'btn-secondary': !enableEliminarBoton}"
-        [disabled]="!enableEliminarBoton" (click)="confirmEliminarVehiculosItem()">Eliminar</button>
-        <button class="btn btn-primary"  [disabled]="!enableModficarBoton" [ngClass]="{'btn-secondary': !enableEliminarBoton}" (click)="modificarItemVehiculos()">Modificar</button>
-        <button class="btn btn-primary" (click)="agregarDialogoDatos()">Agregar</button>
+        (click)="confirmEliminarVehiculosItem()" [disabled]="esFormularioSoloLectura">Eliminar</button>
+        <button class="btn btn-primary" [ngClass]="{'btn-secondary': !enableEliminarBoton}" (click)="modificarItemVehiculos()" [disabled]="esFormularioSoloLectura">Modificar</button>
+        <button class="btn btn-primary" (click)="agregarDialogoDatos()" [disabled]="esFormularioSoloLectura">Agregar</button>
     </div>
   </div>
 </div>
@@ -86,6 +87,9 @@
                     <small *ngIf="registroVehiculosForm.controls['vin'].hasError('required')">
                       El VIN es requerido.
                     </small>
+                    <small *ngIf="registroVehiculosForm.controls['vin'].hasError('pattern')">
+                      No cumple con el formato esperado.
+                    </small>
                   </div>
                 </div>
               </div>
@@ -141,7 +145,7 @@
   <lib-notificaciones 
   *ngIf="confirmEliminarPopupAbierto"
   [notificacionInput]="nuevaNotificacion" 
-  (confirmacionModal)="eliminarVehiculosItem()">
+  (confirmacionModal)="eliminarVehiculosItem($event)">
 </lib-notificaciones>
 
 <lib-notificaciones 

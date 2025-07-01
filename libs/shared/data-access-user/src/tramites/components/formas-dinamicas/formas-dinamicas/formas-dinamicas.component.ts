@@ -110,6 +110,17 @@ export class FormasDinamicasComponent implements ControlValueAccessor, OnInit {
   @Input() estado!: {[key: string]: unknown};
 
   /**
+  * @input soloLectura
+  * @type {boolean}
+  * @memberof FormasDinamicasComponent
+  * @description
+  * Indica si el formulario debe mostrarse en modo solo lectura.
+  * Si es `true`, los campos del formulario estarán deshabilitados para edición.
+  * Por defecto es `false`.
+  */
+  @Input() soloLectura: boolean = false;
+
+  /**
   * compo doc
   * @output emitirEventoDeClic
   * @type {EventEmitter<ModeloDeFormaDinamica>}
@@ -266,8 +277,9 @@ export class FormasDinamicasComponent implements ControlValueAccessor, OnInit {
   
       if (!this.forma?.contains(campo.campo)) {
         const VALIDADORES = FormasDinamicasComponent.obtenerValidadores(campo.validadores ?? []);
+        const DESACTIVADO = this.establecerDesactivar(campo.desactivado);
         FORMGROUP[campo.campo] = this.fb.control(
-          { value: this.estado && this.estado[campo.campo] ? this.estado[campo.campo] : campo.valorPredeterminado, disabled: campo.desactivado },
+          { value: this.estado && this.estado[campo.campo] ? this.estado[campo.campo] : campo.valorPredeterminado, disabled: DESACTIVADO },
           { validators: VALIDADORES }
         );
       }
@@ -317,6 +329,20 @@ export class FormasDinamicasComponent implements ControlValueAccessor, OnInit {
       }
     });
     return VALIDATORS;
+  }
+
+  /**
+ * @method establecerDesactivar
+ * @description
+ * Determina si un campo del formulario debe estar deshabilitado.
+ * @param {boolean} desactivado - Indica si el campo debe estar deshabilitado por configuración individual.
+ * @returns {boolean} `true` si el campo debe estar deshabilitado, `false` en caso contrario.
+ */
+  public establecerDesactivar(desactivado: boolean): boolean {
+    if (desactivado || this.soloLectura) {
+      return true;
+    }
+    return false;
   }
 
   /**
@@ -384,7 +410,7 @@ export class FormasDinamicasComponent implements ControlValueAccessor, OnInit {
   * // Emitirá: { campo: 'nombreCampo', valor: 'nuevo valor' }
   */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-public eventoDeCambioDeValor(event: any, campo: string): void {
+public eventoDeCambioDeValor(event: any, campo: string, tipo?: string): void {
   let VALOR;
 
   if (event?.target) {
@@ -399,8 +425,12 @@ public eventoDeCambioDeValor(event: any, campo: string): void {
     VALOR = event; // Para componentes personalizados o valores directos
   }
 
+  if (tipo === 'date') {
+    this.forma.get(campo)?.setValue(event);
+  }
+
   if (campo) {
-    this.emitirCambioDeValor.emit({ campo, valor: VALOR });
+    this.emitirCambioDeValor.emit({ campo: campo, valor: VALOR });
   }
 }
 
@@ -517,6 +547,50 @@ registerOnChange(fn: (value: Record<string, unknown>) => void): void {
     }
     return { labelNombre: '', required: false, habilitado: false };
   }
+
+  /**
+  * @method enCheckboxMultipleCambiar
+  * @description
+  * Este método se utiliza para manejar los cambios en los campos de tipo checkbox múltiple en un formulario dinámico.
+  * 
+  * Funcionalidad:
+  * - Obtiene el control del formulario asociado al campo especificado.
+  * - Si el control no existe, termina la ejecución.
+  * - Verifica si el checkbox fue marcado o desmarcado.
+  * - Si fue marcado, agrega el valor al arreglo de valores actuales.
+  * - Si fue desmarcado, elimina el valor del arreglo de valores actuales.
+  * - Actualiza el valor del control del formulario con el nuevo arreglo de valores.
+  * - Emite un evento con el nuevo valor del campo.
+  * 
+  * @param {Event} event - El evento de cambio generado por el checkbox.
+  * @param {string} campo - El nombre del campo del formulario asociado al checkbox.
+  * @param {string} value - El valor del checkbox que se está modificando.
+  * 
+  * @example
+  * // Cuando se marca un checkbox:
+  * this.enCheckboxMultipleCambiar(event, 'intereses', 'deporte');
+  * // El valor 'deporte' se agrega al arreglo de valores del campo 'intereses'.
+  */
+  public enCheckboxMultipleCambiar(event: Event, campo: string, value: string): void {
+    const CONTROL = this.forma.get(campo);
+    if (!CONTROL) {
+      return;
+    }
+    let valoresActuales: string[] = CONTROL.value || [];
+  
+    if ((event.target as HTMLInputElement).checked) {
+      if (!valoresActuales.includes(value)) {
+        valoresActuales = [...valoresActuales, value];
+      }
+    } else {
+      valoresActuales = valoresActuales.filter(v => v !== value);
+    }
+  
+    CONTROL.setValue(valoresActuales);
+    this.eventoDeCambioDeValor(valoresActuales, campo);
+  }
+  
+  
 
   /**
    * compo doc

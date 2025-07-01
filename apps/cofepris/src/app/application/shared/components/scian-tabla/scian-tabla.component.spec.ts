@@ -1,72 +1,127 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+// @ts-nocheck
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { By } from '@angular/platform-browser';
+import { Observable, of as observableOf, throwError } from 'rxjs';
+
+import { Component } from '@angular/core';
 import { ScianTablaComponent } from './scian-tabla.component';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder } from '@angular/forms';
 import { Location } from '@angular/common';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 
-  describe('ScianTablaComponent', () => {
-    let component: ScianTablaComponent;
-    let fixture: ComponentFixture<ScianTablaComponent>;
-    let mockDatosSolicitudService: jest.Mocked<DatosSolicitudService>;
-    let mockLocation: jest.Mocked<Location>;
+@Injectable()
+class MockDatosSolicitudService {
+  obtenerRespuestaPorUrl = function() {};
+}
 
-    beforeEach(async () => {
-      
+@Directive({ selector: '[myCustom]' })
+class MyCustomDirective {
+  @Input() myCustom;
+}
 
-      await TestBed.configureTestingModule({
-        imports: [ScianTablaComponent, ReactiveFormsModule, HttpClientTestingModule],
-       
-      }).compileComponents();
+@Pipe({name: 'translate'})
+class TranslatePipe implements PipeTransform {
+  transform(value) { return value; }
+}
 
-      fixture = TestBed.createComponent(ScianTablaComponent);
-      component = fixture.componentInstance;
-      fixture.detectChanges();
-    });
+@Pipe({name: 'phoneNumber'})
+class PhoneNumberPipe implements PipeTransform {
+  transform(value) { return value; }
+}
 
-    it('should create', () => {
-      expect(component).toBeTruthy();
-    });
+@Pipe({name: 'safeHtml'})
+class SafeHtmlPipe implements PipeTransform {
+  transform(value) { return value; }
+}
 
-    it('should initialize the form on ngOnInit', () => {
-      expect(component.scianForm).toBeDefined();
-      expect(component.scianForm.get('clave')).toBeTruthy();
-      expect(component.scianForm.get('scianNino')).toBeTruthy();
-    });
+describe('ScianTablaComponent', () => {
+  let fixture;
+  let component;
 
-    it('should filter scianNinoLista and update the form when claveSelecionada is called', () => {
-      const mockCatalogo = { id: 1, descripcion: 'Test Description' };
-      component.scianLista = [mockCatalogo];
-      component.claveSelecionada(mockCatalogo);
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [ FormsModule, ReactiveFormsModule, HttpClientTestingModule, ScianTablaComponent],
+      declarations: [
+        TranslatePipe, PhoneNumberPipe, SafeHtmlPipe,
+        MyCustomDirective
+      ],
+      schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
+      providers: [
+        FormBuilder,
+        Location,
+        { provide: DatosSolicitudService, useClass: MockDatosSolicitudService }
+      ]
+    }).overrideComponent(ScianTablaComponent, {
 
-      expect(component.scianNinoLista).toEqual([mockCatalogo]);
-      expect(component.scianForm.get('scianNino')?.value).toBe('Test Description Descripción for Test');
-    });
+      set: { providers: [{ provide: DatosSolicitudService, useClass: MockDatosSolicitudService }] }    
+    }).compileComponents();
+    fixture = TestBed.createComponent(ScianTablaComponent);
+    component = fixture.debugElement.componentInstance;
+  });
 
-    it('should emit scianSeleccionado and navigate back when agregarScian is called', () => {
-      const mockCatalogo = { id: 1, descripcion: 'Test Description' };
-      component.scianNinoLista = [mockCatalogo];
-      component.scianForm.patchValue({ scianNino: 'Test Description Descripción for Test' });
+  it('should run #constructor()', async () => {
+    expect(component).toBeTruthy();
+  });
 
-      const emitSpy = jest.spyOn(component.scianSeleccionado, 'emit');
-      component.agregarScian();
+  it('should run #ngOnInit()', async () => {
+    component.fb = component.fb || {};
+    component.fb.group = jest.fn();
+    component.ngOnInit();
+    expect(component.fb.group).toHaveBeenCalled();
+  });
 
-      expect(emitSpy).toHaveBeenCalledWith({
-        clave: 'Test Description',
-        descripcion: 'Test Description Descripción for Test',
-      });
-    });
-
-    it('should reset the form when limpiarScian is called', () => {
-      component.scianForm.patchValue({ clave: 'test', scianNino: 'test' });
-      component.limpiarScian();
-
-      expect(component.scianForm.get('clave')?.value).toBeNull();
-      expect(component.scianForm.get('scianNino')?.value).toBeNull();
-    });
-
-    it('should navigate back when cancelar is called', () => {
-      component.cancelar();
+  it('should run #claveSelecionada()', async () => {
+    const mockEvent = { id: 1, descripcion: 'Test SCIAN' };
+    component.scianLista = [
+      { id: 1, descripcion: 'Test SCIAN' },
+      { id: 2, descripcion: 'Another SCIAN' }
+    ];
+    component.scianForm = component.scianForm || {};
+    component.scianForm.patchValue = jest.fn();
+    component.claveSelecionada(mockEvent);
+    expect(component.scianForm.patchValue).toHaveBeenCalledWith({
+      scianNino: 1
     });
   });
 
+  it('should run #agregarScian()', async () => {
+    component.scianForm = component.scianForm || {};
+    component.scianForm.invalid = false; // Set form as valid
+    component.scianForm.get = jest.fn().mockReturnValue({
+      value: 'test-value'
+    });
+    component.scianNinoLista = [
+      { id: 1, descripcion: 'Test SCIAN Description' }
+    ];
+    component.scianSeleccionado = component.scianSeleccionado || {};
+    component.scianSeleccionado.emit = jest.fn();
+    component.ubicaccion = component.ubicaccion || {};
+    component.ubicaccion.back = jest.fn();
+    component.agregarScian();
+    expect(component.scianForm.get).toHaveBeenCalledWith('scianNino');
+    expect(component.scianSeleccionado.emit).toHaveBeenCalledWith({
+      clave: 'Test SCIAN Description',
+      descripcion: 'test-value'
+    });
+    expect(component.ubicaccion.back).toHaveBeenCalled();
+  });
+
+  it('should run #limpiarScian()', async () => {
+    component.scianForm = component.scianForm || {};
+    component.scianForm.reset = jest.fn();
+    component.limpiarScian();
+    expect(component.scianForm.reset).toHaveBeenCalled();
+  });
+
+  it('should run #cancelar()', async () => {
+    component.ubicaccion = component.ubicaccion || {};
+    component.ubicaccion.back = jest.fn();
+    component.cancelar();
+    expect(component.ubicaccion.back).toHaveBeenCalled();
+  });
+
+});

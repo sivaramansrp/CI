@@ -1,79 +1,91 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormBuilder,FormGroup,FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { DevolverComponent } from './devolver.component';
-import { TablaDinamicaComponent } from 'libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
-import { TituloComponent } from 'libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
-
+import { FormBuilder, ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { of, Subject } from 'rxjs';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { Tramite140103Store } from '../../../../estados/tramites/tramite140103.store';
+import { Tramite140103Query } from '../../../../estados/queries/tramite140103.query';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 
 describe('DevolverComponent', () => {
   let component: DevolverComponent;
   let fixture: ComponentFixture<DevolverComponent>;
+  let tramite140103StoreMock: any;
+  let tramite140103QueryMock: any;
+  let consultaioQueryMock: any;
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [
-        TituloComponent,
-        TablaDinamicaComponent,
-        FormsModule,
-        ReactiveFormsModule,
-        DevolverComponent
-      ],
-      declarations: [],
-      providers: [FormBuilder]
-    }).compileComponents();
-  });
+    tramite140103StoreMock = {
+      setRegimen: jest.fn(),
+      setMecanismo: jest.fn(),
+      setTratado: jest.fn(),
+      setProducto: jest.fn(),
+      setSubproducto: jest.fn(),
+      setRepresentacion: jest.fn(),
+    };
+    tramite140103QueryMock = {
+      selectSolicitud$: of({
+        cantidad: 5,
+      }),
+    };
+    consultaioQueryMock = {
+      selectConsultaioState$: of({ readonly: false }),
+    };
 
-  beforeEach(() => {
+    await TestBed.configureTestingModule({
+      imports: [DevolverComponent, ReactiveFormsModule, FormsModule],
+      providers: [
+        FormBuilder,
+        { provide: Tramite140103Store, useValue: tramite140103StoreMock },
+        { provide: Tramite140103Query, useValue: tramite140103QueryMock },
+        { provide: ConsultaioQuery, useValue: consultaioQueryMock },
+      ],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    }).compileComponents();
+
     fixture = TestBed.createComponent(DevolverComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize facturas and facturase arrays with data from the JSON', () => {
-    expect(component.facturas).toBeDefined();
-    expect(component.facturas.length).toBeGreaterThan(0);
+  it('debe deshabilitar el formulario si esFormularioSoloLectura es true en guardarDatosFormulario', () => {
+    component.esFormularioSoloLectura = true;
+    component.devolverForm.enable();
+    component.guardarDatosFormulario();
+    expect(component.devolverForm.disabled).toBe(true);
   });
 
-  it('should initialize the form with the correct controls', () => {
-    expect(component.DevolverForm).toBeTruthy();
-    expect(component.DevolverForm instanceof FormGroup).toBe(true);
-    expect(component.DevolverForm.get('DevolverData')).toBeTruthy();
-    expect(component.DevolverForm.get('DevolverData.folio')).toBeTruthy();
-    expect(component.DevolverForm.get('DevolverData.cantidad')).toBeTruthy();
-    expect(component.DevolverForm.get('DevolverData.cantidad')?.hasValidator(Validators.required)).toBe(true);
+  it('debe habilitar el formulario si esFormularioSoloLectura es false en guardarDatosFormulario', () => {
+    component.esFormularioSoloLectura = false;
+    component.devolverForm.disable();
+    component.guardarDatosFormulario();
+    expect(component.devolverForm.enabled).toBe(true);
   });
 
-  it('should disable form controls after calling updateformfied()', () => {
-    component.updateformfied();
-
-    const FOLIOCONTROL = component.DevolverForm.get('DevolverData.folio');
-    const DISPONSIBLECONTROL = component.DevolverForm.get('DevolverData.disponible');
-    const TOTALCONTROL = component.DevolverForm.get('DevolverData.total');
-    const CUADRADOS_CONTROL = component.DevolverForm.get('DevolverData.cuadrados');
-
-    expect(FOLIOCONTROL?.disabled).toBe(true);
-    expect(DISPONSIBLECONTROL?.disabled).toBe(true);
-    expect(TOTALCONTROL?.disabled).toBe(true);
-    expect(CUADRADOS_CONTROL?.disabled).toBe(true);
+  it('debe llamar a guardarDatosFormulario si devolverForm existe y esFormularioSoloLectura es true en inicializarEstadoFormulario', () => {
+    component.esFormularioSoloLectura = true;
+    const spy = jest.spyOn(component, 'guardarDatosFormulario');
+    component.inicializarEstadoFormulario();
+    expect(spy).toHaveBeenCalled();
   });
 
-  it('should set form values correctly in updateformfied()', () => {
-    component.updateformfied();
-
-    const FOLIOCONTROL = component.DevolverForm.get('DevolverData.folio');
-    const DISPONSIBLECONTROL = component.DevolverForm.get('DevolverData.disponible');
-    const TOTALCONTROL = component.DevolverForm.get('DevolverData.total');
-    const CUADRADOS_CONTROL = component.DevolverForm.get('DevolverData.cuadrados');
-
-    expect(FOLIOCONTROL?.value).toBe('4MX216520');
-    expect(DISPONSIBLECONTROL?.value).toBe('12');
-    expect(TOTALCONTROL?.value).toBe('12');
-    expect(CUADRADOS_CONTROL?.value).toBe('133');
+  it('debe llamar al método correcto del store en setValoresStore', () => {
+    const form = component.devolverForm;
+    form.get('cantidad')?.setValue(10);
+    component.setValoresStore(form, 'cantidad', 'setRegimen');
+    expect(tramite140103StoreMock.setRegimen).toHaveBeenCalledWith(10);
   });
 
- 
+  it('debe limpiar las suscripciones en ngOnDestroy', () => {
+    const nextSpy = jest.spyOn<any, any>(component['destroyNotifier$'], 'next');
+    const completeSpy = jest.spyOn<any, any>(component['destroyNotifier$'], 'complete');
+    component.ngOnDestroy();
+    expect(nextSpy).toHaveBeenCalled();
+    expect(completeSpy).toHaveBeenCalled();
+  });
 });
+

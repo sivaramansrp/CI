@@ -1,32 +1,13 @@
-import {
-  CatalogoSelectComponent,
-  REGEX_IMPORTE_PAGO,
-  REGEX_NUMEROS,
-  REGEX_NUMEROS_USD,
-  REGEX_REEMPLAZAR,
-  REGEX_ALFANUMERICO_CON_ESPACIOS_REEMPLAZAR,
-  TablaDinamicaComponent,
-  TablaSeleccion,
-  TituloComponent,
-  ValidacionesFormularioService,
-} from '@libs/shared/data-access-user/src';
+import { AvisoTabla,AvisoTablaDatos,Catalogo,CatalogoLista } from '../../models/aviso-traslado.model';
+import { RADIO_OPCIONS, TABLA_DE_DATOS_AVISO } from '../../constants/avios-procesos.enum';
+
+import { CatalogoSelectComponent, ConsultaioQuery, ConsultaioState, REGEX_IMPORTE_PAGO, REGEX_NUMEROS,REGEX_NUMEROS_USD, REGEX_REEMPLAZAR, TablaDinamicaComponent, TablaSeleccion, TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
 import { InputRadioComponent } from '@libs/shared/data-access-user/src';
-import {
-  AvisoTabla,
-  AvisoTablaDatos,
-  Catalogo,
-  CatalogoLista,
- 
-} from '../../models/aviso-traslado.model';
-import {
-  
-  RADIO_OPCIONS,
-  TABLA_DE_DATOS_AVISO,
-} from '../../constants/avios-procesos.enum';
 
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { ElementRef } from '@angular/core';
+import { EntregaActaService } from '../../services/entrega-acta.service';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { Modal } from 'bootstrap';
@@ -34,6 +15,7 @@ import { Notificacion } from '@libs/shared/data-access-user/src';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
+import { ReplaySubject } from 'rxjs';
 import { Subject } from 'rxjs';
 import { Tramite32507Query } from '../../../../estados/queries/tramite32507.query';
 import { Tramite32507State } from '../../../../estados/tramites/tramite32507.store';
@@ -42,7 +24,7 @@ import { Validators } from '@angular/forms';
 import { ViewChild } from '@angular/core';
 import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
-import { EntregaActaService } from '../../services/entrega-acta.service';
+
 /**
  * @component
  * @name AvisoComponent
@@ -64,6 +46,24 @@ import { EntregaActaService } from '../../services/entrega-acta.service';
   standalone: true,
 })
 export class AvisoComponent implements OnInit, OnDestroy {
+  /**
+   * Subject para destruir notificador.
+   */
+  consultaDatos!: ConsultaioState;
+  /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  soloLectura: boolean = false;
+
+  /**
+   * @property {ReplaySubject<boolean>} destroyed$
+   *  @description Sujeto que emite un valor cuando el componente se destruye.
+   * Se utiliza para limpiar las suscripciones y evitar fugas de memoria.
+   *  @type {ReplaySubject<boolean>}
+   */
+  private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
+
   /**
    * @property {Array} radioOpcions
    * @description Opciones de radio para seleccionar "Sí" o "No".
@@ -160,12 +160,13 @@ export class AvisoComponent implements OnInit, OnDestroy {
    */
   @ViewChild('closeMercancia') public closeMercancia!: ElementRef;
 
- 
   /**
    * @property {FormGroup} mercanciaFormulario
    * @description Formulario reactivo que contiene los datos relacionados con la mercancía.
    */
   mercanciaFormulario!: FormGroup;
+
+  avisoComponent: typeof AvisoComponent = AvisoComponent;
   /**
    * @property {Catalogo[]} fraccionArancelaria
    * @description Lista de fracciones arancelarias cargadas desde un catálogo.
@@ -190,11 +191,12 @@ export class AvisoComponent implements OnInit, OnDestroy {
    * @description Constructor del componente. Se utiliza para la inyección de dependencias.
    */
   constructor(
-    public fb: FormBuilder,
+    private fb: FormBuilder,
     public store: Tramite32507Store,
     public tramiteQuery: Tramite32507Query,
     public entregaActaService: EntregaActaService,
-    private validacionesService: ValidacionesFormularioService
+    private validacionesService: ValidacionesFormularioService,
+    private consultaioQuery: ConsultaioQuery
   ) {
     // El constructor se utiliza para la inyección de dependencias.
   }
@@ -214,6 +216,31 @@ export class AvisoComponent implements OnInit, OnDestroy {
     this.inicializarFormulario();
     this.cargarLevantaActa();
     this.cargarUnidadMedida();
+
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState) => {
+          this.consultaDatos = seccionState;
+          this.soloLectura = this.consultaDatos.readonly;
+          this.inicializarAvisoFormulario();
+        })
+      )
+      .subscribe();
+  }
+
+  /**
+   * @method ngOnDestroy
+   * @description Método que se ejecuta al destruir el componente.
+   * Se utiliza para limpiar las suscripciones y evitar fugas de memoria.
+   */
+  inicializarAvisoFormulario(): void {
+    if (this.soloLectura) {
+      this.avisoFormulario.disable();
+      this.agregarMercancia();
+    } else {
+      this.avisoFormulario.enable();
+    }
   }
 
   /**
@@ -229,8 +256,6 @@ export class AvisoComponent implements OnInit, OnDestroy {
     (this.store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
 
- 
-
   /**
    * @method inicializarFormulario
    * @description Método para inicializar los formularios reactivos del componente.
@@ -239,7 +264,7 @@ export class AvisoComponent implements OnInit, OnDestroy {
     this.avisoFormulario = this.fb.group({
       adaceFormulario: this.fb.group({
         adace: [
-          { value: this.tramiteState?.avisoFormulario?.adace, disabled: true },
+          this.tramiteState?.avisoFormulario?.adace,
           [Validators.required],
         ],
       }),
@@ -289,6 +314,7 @@ export class AvisoComponent implements OnInit, OnDestroy {
         ],
       }),
     });
+    this.inicializarAvisoFormulario();
   }
 
   /**
@@ -321,6 +347,16 @@ export class AvisoComponent implements OnInit, OnDestroy {
    */
   get datosAdace(): FormGroup {
     return this.avisoFormulario.get('datosAdace') as FormGroup;
+  }
+
+  /**
+   * @method abrirModalMercancia
+   * @description Método para abrir el modal de mercancía.
+   */
+  static sanitizeAlphanumeric(form: FormGroup, control: string, event: Event): void {
+    const INPUT = event?.target as HTMLInputElement;
+    const REEMPLAZAR = INPUT?.value.replace(REGEX_REEMPLAZAR, '');
+    form.get(control)?.setValue(REEMPLAZAR, { emitEvent: false });
   }
 
   /**
@@ -382,43 +418,6 @@ export class AvisoComponent implements OnInit, OnDestroy {
       (ele) => !this.filaSeleccionadaLista.includes(ele)
     );
     this.filaSeleccionadaLista = [];
-  }
-
-  /**
-   * @method abrirModalMercancia
-   * @description Método para abrir el modal de mercancía.
-   */
-  sanitizeAlphanumeric(form: FormGroup, control: string, event: Event): void {
-    const INPUT = event?.target as HTMLInputElement;
-    const REEMPLAZAR = INPUT?.value.replace(REGEX_REEMPLAZAR, '');
-    form.get(control)?.setValue(REEMPLAZAR, { emitEvent: false });
-  }
-
-  /**
-   * @method sanitizeAlphanumericWithSpace
-   * @description Método para sanitizar un campo de formulario, permitiendo solo caracteres alfanuméricos y espacios.
-   */
-  sanitizeAlphanumericWithSpace(
-    form: FormGroup,
-    control: string,
-    event: Event
-  ): void {
-    const INPUT = event?.target as HTMLInputElement;
-    const REEMPLAZAR = INPUT?.value.replace(
-      REGEX_ALFANUMERICO_CON_ESPACIOS_REEMPLAZAR,
-      ''
-    );
-    form.get(control)?.setValue(REEMPLAZAR, { emitEvent: false });
-  }
-
-  /**
-   * @method sanitizeNumeric
-   * @description Método para sanitizar un campo de formulario, permitiendo solo números.
-   */
-  sanitizeNumeric(form: FormGroup, control: string, event: Event): void {
-    const INPUT = event?.target as HTMLInputElement;
-    const REEMPLAZAR = INPUT?.value.replace(REGEX_NUMEROS, '');
-    form.get(control)?.setValue(REEMPLAZAR, { emitEvent: false });
   }
 
   /**

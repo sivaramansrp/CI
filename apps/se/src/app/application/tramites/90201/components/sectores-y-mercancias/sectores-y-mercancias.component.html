@@ -6,27 +6,26 @@
         <app-catalogo-select
           [catalogo]="sectorCatalogo"
           formControlName="sector"
+          [isDisabled]="esFormularioSoloLectura"
           [label]="'Sector'"
           name="sector"
           (change)="
             sectorSeleccion();
-            setValoresStore(sectoresForm, 'sector', 'setSector')
-          "
-        >
+            setValoresStore(sectoresForm, 'sector', 'setSector')">
         </app-catalogo-select>
       </div>
     </div>
     <div class="row mb-3 mt-3">
       <div class="d-flex justify-content-end">
-        <button class="btn btn-danger me-3" type="button">
+        <button class="btn btn-danger me-3" type="button" [disabled]="esFormularioSoloLectura" (click)="eliminarSector()">
           Eliminar sector
         </button>
-        <button type="button" class="btn btn-primary">Agregar sector</button>
+        <button type="button" class="btn btn-primary" [disabled]="esFormularioSoloLectura">Agregar sector</button>
       </div>
     </div>
     <div class="row">
       <div class="col-md-12">
-        <h5>Solicitud PROSEC sector plural":</h5>
+        <h5>Solicitud PROSEC sector plural*:</h5>
       </div>
     </div>
     <div class="row">
@@ -34,6 +33,8 @@
         [configuracionTabla]="configuracionTabla"
         [datos]="sectores"
         [tipoSeleccionTabla]="radio"
+        [disableSeleccionTablaRadio]="esFormularioSoloLectura"
+        (filaSeleccionada)="seleccionDeFilaDeTabla($event)"
       >
       </app-tabla-dinamica>
     </div>
@@ -50,14 +51,30 @@
           id="fraccion"
           formControlName="fraccion"
           placeholder="Ingresa una fracción"
+          maxlength="8"
           (change)="setValoresStore(sectoresForm, 'fraccion', 'setFraccion')"
         />
       </div>
 
       <div class="d-flex justify-content-end">
-        <button class="btn btn-danger me-2">Eliminar</button>
-        <button class="btn btn-primary">Agregar</button>
+        <button class="btn btn-danger me-2" [disabled]="esFormularioSoloLectura" (click)="eliminarMercancia()">Eliminar</button>
+        <button class="btn btn-primary" [disabled]="esFormularioSoloLectura">Agregar</button>
       </div>
     </div>
   </form>
 </div>
+
+@if(eliminarMercanciaNotificacion) {
+  <section>
+    <lib-notificaciones [notificacionInput]="eliminarMercanciaNotificacion"
+        (confirmacionModal)="mercancia($event)">
+    </lib-notificaciones>
+  </section>
+}
+@if (nuevaNotificacion) { 
+  <section>
+    <lib-notificaciones [notificacionInput]="nuevaNotificacion"
+        (confirmacionModal)="eliminarPedimento($event)">
+    </lib-notificaciones>
+  </section> 
+}

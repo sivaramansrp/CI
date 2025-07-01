@@ -1,6 +1,7 @@
 import {
   CatalogoSelectComponent,
   InputRadioComponent,
+  REG_X,
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
@@ -30,6 +31,15 @@ export class DatosDeLaMercanciaComponent {
    * @description El grupo de formulario reactivo para capturar los detalles.
    */
   @Input() form!: FormGroup;
+
+    /**
+   * @description Indica si el formulario debe mostrarse en modo solo lectura.
+   * Cuando es `true`, todos los campos del formulario estarán deshabilitados y no podrán ser editados por el usuario.
+   * Este valor se recibe como entrada desde el componente padre.
+   * @type {boolean}
+   * @default false
+   */
+  @Input() esFormularioSoloLectura: boolean = false;
 
   /**
    * @description Valores de entrada para configurar los campos del formulario.
@@ -84,6 +94,17 @@ export class DatosDeLaMercanciaComponent {
       ? CONTROL.invalid && (CONTROL.touched || CONTROL.dirty)
       : false;
   }
+
+/**
+ * Checks if the value of the specified control is a valid integer or decimal number.
+ * Uses REG_X.NUMERO_DECIMAL_OPCIONAL for validation.
+ * @param controlName The name of the control to validate.
+ * @returns {boolean} True if the value is a valid number, false otherwise.
+ */
+esValorNumerico(controlName: string): boolean {
+  const VALUE = this.form?.controls[controlName]?.value;
+  return typeof VALUE === 'string' && REG_X.NUMERO_DECIMAL_OPCIONAL.test(VALUE);
+}
 
   /**
    * @method setValoresStore

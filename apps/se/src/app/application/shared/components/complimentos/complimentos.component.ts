@@ -1,13 +1,15 @@
+/**
+ * Importaciones necesarias para el componente de empresas.
+ * Incluye servicios, modelos, componentes compartidos y decoradores de Angular.
+ */
 import {
   CATALOGOS_ID,
   Catalogo,
-  CatalogoSelectComponent,
   CatalogosService,
-  SelectPaisesComponent,
   TablaDinamicaComponent,
   TablaSeleccion,
   TituloComponent,
-} from '@ng-mf/data-access-user';
+} from '@libs/shared/data-access-user/src';
 import {
   Component,
   EventEmitter,
@@ -37,11 +39,19 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Subject, Subscription, delay, takeUntil } from 'rxjs';
+import { Subject, Subscription, delay, map, takeUntil } from 'rxjs';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { CommonModule } from '@angular/common';
 import { ComplimentosService } from '../../services/complimentos.service';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DatosCatalago } from '../../../tramites/80102/models/autorizacion-programa-nuevo.model';
+import { SelectPaisesComponent } from '@libs/shared/data-access-user/src/tramites/components/select-paises/select-paises.component';
 
+/**
+ * Componente Complimentos.
+ * Responsable de mostrar y gestionar los datos relacionados a los complimentos.
+ * Utiliza módulos comunes, formularios reactivos y componentes compartidos.
+ */
 @Component({
   selector: 'app-complimentos',
   standalone: true,
@@ -57,7 +67,17 @@ import { DatosCatalago } from '../../../tramites/80102/models/autorizacion-progr
   templateUrl: './complimentos.component.html',
   styleUrl: './complimentos.component.scss',
 })
+/**
+ * Clase ComplimentosComponent.
+ * Gestiona la lógica del componente Complimentos, incluyendo inicialización y limpieza.
+ */
 export class ComplimentosComponent implements OnInit, OnDestroy {
+
+  /**
+   * @property {boolean} formularioDeshabilitado - Indica si el formulario está deshabilitado.
+   */
+  @Input() formularioDeshabilitado: boolean = false;
+
   /**
    * @type {FormGroup}
    * @description Grupo de formularios para los complementos.
@@ -197,9 +217,10 @@ export class ComplimentosComponent implements OnInit, OnDestroy {
    *
    * @property {Subject<void>} destroyNotifier$
    */
-
   private destroyNotifier$: Subject<void> = new Subject();
-
+  /** Indica si el formulario debe mostrarse en modo solo lectura.  
+ *  Controla la habilitación o deshabilitación de los campos. */
+  esFormularioSoloLectura: boolean = false;
   /**
    * Constructor para inicializar el formulario de datos del subcontratista.
    * @param {FormBuilder} fb - FormBuilder para la creación del formulario reactivo.
@@ -209,8 +230,62 @@ export class ComplimentosComponent implements OnInit, OnDestroy {
   constructor(
     private fb: FormBuilder,
     private catalogosServices: CatalogosService,
-    private complimentosService: ComplimentosService
+    private complimentosService: ComplimentosService,
+     private consultaioQuery: ConsultaioQuery,
   ) {
+    
+       this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+           this.formularioDeshabilitado = seccionState.readonly;
+      
+              this.inicializarCertificadoFormulario(); 
+        })
+      )
+      .subscribe();
+    }
+   
+ /**
+   * Método para inicializar el formulario reactivo con los datos de la solicitud.
+   * 
+   * Este método configura los campos del formulario con los valores actuales del estado de la solicitud
+   * y aplica las validaciones necesarias. También deshabilita ciertos campos y establece valores predeterminados.
+   */
+  inicializarCertificadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+     this.inicializarFormulario();
+    }  
+  }
+    /**
+   * @comdoc
+   * Guarda los datos del formulario de combinación requerida.
+   * 
+   * Inicializa el formulario y ajusta su estado de habilitación según si es de solo lectura.
+   * - Si el formulario es de solo lectura, lo deshabilita.
+   * - Si no es de solo lectura, lo habilita.
+   * - Si no aplica ninguna de las condiciones anteriores, no realiza ninguna acción adicional.
+   */
+  guardarDatosFormulario(): void {
+      this.inicializarFormulario();
+      if (this.esFormularioSoloLectura) {
+        
+this.formaComplimentos.disable();
+      } else {
+         
+          this.formaComplimentos.enable();    
+      }
+  }
+  /**
+   * Inicializa el formulario reactivo con los valores actuales de la solicitud.
+   * 
+   * Configura el formulario para gestionar los campos relacionados con el pago de derechos, como clave, 
+   * dependencia, banco, llave, fecha e importe. También asigna valores predeterminados a algunos campos.
+   */
+  private inicializarFormulario(): void {
     this.formaComplimentos = this.fb.group({
       modalidad: [{ value: '', disabled: true }],
       programaPreOperativo: [false],
@@ -255,6 +330,7 @@ export class ComplimentosComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   ngOnInit(): void {
+     this.inicializarCertificadoFormulario();
     this.getCatalogoPaises();
     this.getCatalogoEstado();
 
@@ -268,6 +344,10 @@ export class ComplimentosComponent implements OnInit, OnDestroy {
 
     if (this.datosFormaComplimentos) {
       this.formaComplimentos.patchValue(this.datosFormaComplimentos);
+    }
+
+    if(this.formularioDeshabilitado ) {
+      this.formaComplimentos.disable();
     }
   }
 

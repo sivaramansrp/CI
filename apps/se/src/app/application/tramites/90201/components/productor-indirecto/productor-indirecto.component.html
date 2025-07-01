@@ -1,27 +1,32 @@
 <div class="container mt-4">
   <ng-titulo titulo="Productor indirecto" />
+  <form [formGroup]="formProductorIndirecto">
   <div class="row mb-3">
     <div class="col-md-12">
-      <label for="rfc" class="form-label fw-bold"
-        >Registro federal de contribuyentes*:</label
-      >
+      <label for="rfc" class="form-label fw-bold">Registro federal de contribuyentes*:</label>
       <input
         type="text"
         class="form-control w-50"
         id="rfc"
-        [(ngModel)]="rfc"
-        placeholder="Ingresa el RFC"
+        formControlName="rfc"
         maxlength="13"
         (change)="setValoresStore('rfc', 'setRfc')"
       />
     </div>
+    
   </div>
 
   <div class="d-flex justify-content-end">
-    <button class="btn btn-danger me-3">Eliminar productor</button>
-    <button class="btn btn-primary">Agregar productor</button>
+    <button class="btn btn-danger me-3" [disabled]="esFormularioSoloLectura" (click)="productor(false)">Eliminar productor</button>
+    <button class="btn btn-primary" [disabled]="esFormularioSoloLectura" (click)="productor(true)">Agregar productor</button>
   </div>
-
+  @if (nuevaNotificacion) { 
+  <section>
+    <lib-notificaciones [notificacionInput]="nuevaNotificacion">
+    </lib-notificaciones>
+  </section> 
+}
+  </form>
   <h5 class="mt-4">Solicitud Prosec Productor Indirecto Tabla:</h5>
 
   <div class="table-container">
@@ -29,6 +34,7 @@
       [configuracionTabla]="configuracionTabla"
       [datos]="tablaDatos"
       [tipoSeleccionTabla]="checkbox"
+      [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
     >
     </app-tabla-dinamica>
     <nav aria-label="Page navigation example">

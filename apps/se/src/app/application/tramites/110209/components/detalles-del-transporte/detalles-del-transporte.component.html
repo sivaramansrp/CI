@@ -1,8 +1,6 @@
-<div class="container">
+<form [formGroup]="detallesDelTransporteForm">
     <ng-titulo [titulo]="'Detalles del transporte'"></ng-titulo>
-    <form [formGroup]="detallesDelTransporteForm">
         <div class="row">
-
             <div class="col-md-4">
                 <div class="form-group">
                     <label class="form-label width-unset" for="tratado">Tratado / Acuerdo :</label>
@@ -34,17 +32,16 @@
                 </div>
             </div>
 
-            <div class="col-md-4">
+            <div class="col-md-4" *ngIf="formularioCargado">
                 <div class="form-group">
                     <input-fecha [setFecha]="detallesDelTransporteForm.get('fechaDeExpedicion')?.value" [datos]="fechaDeExpedicionInput"></input-fecha>
                 </div>
             </div>
 
-            <div class="col-md-4">
+            <div class="col-md-4" *ngIf="formularioCargado">
                 <div class="form-group">
                     <input-fecha [setFecha]="detallesDelTransporteForm.get('fechaDeVencimiento')?.value" [datos]="fechaDeVencimientoInput"></input-fecha>
                 </div>
             </div>
         </div>
     </form>
-</div>

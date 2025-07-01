@@ -11,6 +11,8 @@ import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 
 import { EstablecimientoService } from '../../services/establecimiento.service';
 
+import { DatosDelSolicituteSeccionState,DatosDelSolicituteSeccionStateStore } from '../../estados/stores/datos-del-solicitute-seccion.store';
+
 import {
   FormBuilder,
   FormGroup,
@@ -18,7 +20,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject,map, takeUntil } from 'rxjs';
 
 import {
   InputRadioComponent,
@@ -29,10 +31,9 @@ import {
 import { MANIFIESTOS_DECLARACION } from '../../constantes/aviso-de-funcionamiento.enum';
 
 import { DatosDelSolicituteSeccionQuery } from '../../estados/queries/datos-del-solicitute-seccion.query';
-import { DatosDelSolicituteSeccionStateStore } from '../../estados/stores/datos-del-solicitute-seccion.store';
 
 import { Manifiestistos, PropietarioTipoPersona } from '../../models/datos-de-la-solicitud.model';
-
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 @Component({
   selector: 'app-manifiestos-representante-seccion',
   standalone: true,
@@ -71,6 +72,16 @@ export class ManifiestosRepresentanteSeccionComponent
   manifiestosRepresentanteForm!: FormGroup;
 
   /**
+   * Indica si el formulario debe estar deshabilitado.
+   */
+ formularioDeshabilitado: boolean = false;
+
+  
+ /**
+  * Estado de la solicitud de la sección .
+  */
+      public solicitudState!: DatosDelSolicituteSeccionState;
+  /**
    * Constructor del componente.
    * @param fb FormBuilder para inicializar formularios reactivos.
    * @param representanteStore Store para gestionar el estado del representante.
@@ -80,9 +91,19 @@ export class ManifiestosRepresentanteSeccionComponent
     private fb: FormBuilder,
     private representanteStore: DatosDelSolicituteSeccionStateStore,
     private representanteQuery: DatosDelSolicituteSeccionQuery,
-    private establecimientoService :EstablecimientoService
+    private establecimientoService :EstablecimientoService,
+     private consultaioQuery: ConsultaioQuery,
   ) {
     // Inicializa el formulario y carga los datos iniciales.
+           this.consultaioQuery.selectConsultaioState$
+            .pipe(
+              takeUntil(this.destroy$),
+              map((seccionState)=>{
+                this.formularioDeshabilitado = seccionState.readonly; 
+                this.inicializarEstadoFormulario();
+              })
+            )
+            .subscribe()
   }
 
   /**
@@ -91,32 +112,10 @@ export class ManifiestosRepresentanteSeccionComponent
    */
   ngOnInit(): void {
     this.manifiestosText = MANIFIESTOS_DECLARACION.MANIFIESTOS;
-
-    this.manifiestosRepresentanteForm = this.fb.group({
-      representanteRfc: ['', Validators.required],
-      manifests: ['', Validators.required],
-      informacionConfidencialRadio: ['', Validators.required],
-      representanteNombre: ['', Validators.required],
-      apellidoPaterno: ['', Validators.required],
-      apellidoMaterno: [''],
-    });
-
-    // Cargar el estado inicial en el formulario
-    this.representanteQuery
-      .select()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((state) => {
-        this.manifiestosRepresentanteForm.patchValue(state, {
-          emitEvent: false,
-        });
-      });
-
-    
-
-      this.establecimientoService
+    this.establecimientoService
       .getInformacionConfidencialRadioOptions()
       .pipe(takeUntil(this.destroy$))
-      .subscribe((data: PropietarioTipoPersona[]) => {
+      ?.subscribe((data: PropietarioTipoPersona[]) => {
         this.informacionConfidencialRadioOption = data; // Bind the fetched data
        
       });
@@ -184,6 +183,59 @@ export class ManifiestosRepresentanteSeccionComponent
         });
     }
   }
+
+  /**
+   * Inicializa el formulario reactivo para los datos del representante.
+   * Define los controles y sus validaciones.
+   * Además, carga el estado inicial del store en el formulario.
+   */
+  inicializarFormulario(): void {
+    this.manifiestosRepresentanteForm = this.fb.group({
+      representanteRfc: ['', Validators.required],
+      manifests: [true, Validators.required],
+      informacionConfidencialRadio: ['', Validators.required],
+      representanteNombre: ['', Validators.required],
+      apellidoPaterno: ['', Validators.required],
+      apellidoMaterno: [''],
+    });
+
+    // Carga el estado inicial en el formulario desde el store
+    this.representanteQuery
+      .select()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((state) => {
+        this.manifiestosRepresentanteForm.patchValue(state, {
+          emitEvent: false,
+        });
+      });
+  }
+
+    /**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.  
+   * Además, obtiene la información del catálogo de mercancía.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.formularioDeshabilitado) {
+      this.guardarDatosFormulario();
+    } else {
+      this.inicializarFormulario();
+    }  
+  }
+
+  
+  /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormulario(): void {
+      this.inicializarFormulario();
+      if (this.formularioDeshabilitado) {
+        this.manifiestosRepresentanteForm.disable();
+      } else {
+        this.manifiestosRepresentanteForm.enable();
+      }
+  }
+
 
   /**
    * Ciclo de vida `OnDestroy`.

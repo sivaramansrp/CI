@@ -68,7 +68,57 @@ const ROUTES: Routes = [
       import('./tramites/130302/permiso-importacion-petroleo.module').then(
         (m) => m.PermisoImportacionPetroleoModule
       ),
-  }
+  },
+  {
+    path: 'evaluar',
+    loadComponent: () =>
+      import('./evaluar/evaluar.component').then((m) => m.EvaluarComponent),
+  },
+  {
+    path: 'autorizar',
+    loadComponent: () =>
+      import('./autorizar/autorizar.component').then(
+        (m) => m.AutorizarComponent
+      ),
+  },
+  {
+    path: 'proceso-requerimiento',
+      loadComponent: () =>
+        import('./proceso-requerimiento/proceso-requerimiento.component').then(
+          (m) => m.ProcesoRequerimientoComponent
+        ),
+    },
+  {
+    path: 'renuncia-de-permiso',
+    loadChildren: () =>
+      import('./tramites/140218/renuncia-de-permiso.module').then(
+        (m) => m.RenunciaDePermisoModule
+      ),
+  },
+  {
+    path: 'verificar-dictamen',
+    loadComponent: () =>
+      import('./verificar-dictamen/verificar-dictamen.component').then((m) => m.VerificarDictamenComponent),
+  },
+  {
+    path: 'detalle-v-dictamen',
+    loadComponent: () =>
+      import('./detalle-v-dictamen/detalle-v-dictamen.component').then((m) => m.DetalleVDictamenComponent),
+  },
+  {
+    path: 'datos-generales-tramite',
+    loadComponent: () =>
+      import('./datos-generales-tramite/datos-generales-tramite.component').then((m) => m.DatosGeneralesTramiteComponent),
+  },
+  {
+    path: 'subsecuentes',
+    loadComponent: () =>
+      import(
+        './subsecuentes/acuses-y-resoluciones-folio-del-tramite-detalles-contenedor/acuses-y-resoluciones-folio-del-tramite-detalles-contenedor.component'
+      ).then(
+        (m) => m.AcusesYResolucionesFolioDelTramiteDetallesContenedorComponent
+      ),
+  },
 ];
 
 @NgModule({

@@ -196,6 +196,13 @@ export class DomicilioStore extends Store<DomicilioState> {
     super(createInitialState());
   }
 
+    public setrRfc(rfc: string): void {
+    this.update((state) => ({
+      ...state,
+      rfc,
+    }));
+  }
+
   /**
    * Actualiza el estado con la denominación.
    * @param denominacion La denominación a establecer.

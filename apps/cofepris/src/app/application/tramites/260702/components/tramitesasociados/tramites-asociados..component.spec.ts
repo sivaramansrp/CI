@@ -1,5 +1,5 @@
-// @ts-nocheck
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -9,29 +9,22 @@ import { Observable, of as observableOf, throwError } from 'rxjs';
 import { Component } from '@angular/core';
 import { TramitesAsociadosComponent } from './tramites-asociados.component';
 import { RegistrarSolicitudMcpService } from '../../services/registrar-solicitud-mcp.service';
-import { Router } from '@angular/router';
 
-class MockRegistrarSolicitudMcpService {
-  getTramitesAsociados() {
-    return observableOf([]); // Mocked response
-  }
-}
+@Injectable()
+class MockRegistrarSolicitudMcpService {}
 
-class MockRouter {
-  navigate = jest.fn();
-}
+
 
 describe('TramitesAsociadosComponent', () => {
-  let fixture;
-  let component;
+  let fixture: ComponentFixture<TramitesAsociadosComponent>;
+  let component: { ngOnDestroy: () => void; getTramitesAsociados: jest.Mock<any, any, any> | (() => void); ngOnInit: () => void; registrarsolicitudmcp: { getTramitesAsociados?: any; }; abrirModal: jest.Mock<any, any, any> | (() => void); mostrarModal: () => void; ocultarModal: () => void; pedimentos: { splice?: any; }; eliminarPedimento: (arg0: {}) => void; destroyed$: { next?: any; complete?: any; }; };
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [ FormsModule, ReactiveFormsModule,TramitesAsociadosComponent ],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
       providers: [
-        { provide: RegistrarSolicitudMcpService, useClass: MockRegistrarSolicitudMcpService },
-        { provide: Router, useClass: MockRouter }
+        { provide: RegistrarSolicitudMcpService, useClass: MockRegistrarSolicitudMcpService }
       ]
     }).overrideComponent(TramitesAsociadosComponent, {
 
@@ -41,6 +34,7 @@ describe('TramitesAsociadosComponent', () => {
   });
 
   afterEach(() => {
+    component.ngOnDestroy = function() {};
     fixture.destroy();
   });
 
@@ -51,25 +45,38 @@ describe('TramitesAsociadosComponent', () => {
   it('should run #ngOnInit()', async () => {
     component.getTramitesAsociados = jest.fn();
     component.ngOnInit();
-    expect(component.getTramitesAsociados).toHaveBeenCalled();
+     expect(component.getTramitesAsociados).toHaveBeenCalled();
   });
 
   it('should run #getTramitesAsociados()', async () => {
     component.registrarsolicitudmcp = component.registrarsolicitudmcp || {};
     component.registrarsolicitudmcp.getTramitesAsociados = jest.fn().mockReturnValue(observableOf({}));
     component.getTramitesAsociados();
-    expect(component.registrarsolicitudmcp.getTramitesAsociados).toHaveBeenCalled();
+     expect(component.registrarsolicitudmcp.getTramitesAsociados).toHaveBeenCalled();
   });
 
-  it('should run #showModal()', async () => {
+  it('should run #mostrarModal()', async () => {
+    component.abrirModal = jest.fn();
+    component.mostrarModal();
+     expect(component.abrirModal).toHaveBeenCalled();
+  });
 
-    component.showModal();
+  it('should run #ocultarModal()', async () => {
+
+    component.ocultarModal();
 
   });
 
-  it('should run #hideModal()', async () => {
+  it('should run #eliminarPedimento()', async () => {
+    component.pedimentos = component.pedimentos || {};
+    component.pedimentos.splice = jest.fn();
+    component.eliminarPedimento({});
+     expect(component.pedimentos.splice).toHaveBeenCalled();
+  });
 
-    component.hideModal();
+  it('should run #abrirModal()', async () => {
+
+    component.abrirModal();
 
   });
 
@@ -78,8 +85,8 @@ describe('TramitesAsociadosComponent', () => {
     component.destroyed$.next = jest.fn();
     component.destroyed$.complete = jest.fn();
     component.ngOnDestroy();
-    expect(component.destroyed$.next).toHaveBeenCalled();
-    expect(component.destroyed$.complete).toHaveBeenCalled();
+     expect(component.destroyed$.next).toHaveBeenCalled();
+     expect(component.destroyed$.complete).toHaveBeenCalled();
   });
 
 });

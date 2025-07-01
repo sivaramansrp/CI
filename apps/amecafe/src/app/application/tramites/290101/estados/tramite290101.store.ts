@@ -7,6 +7,7 @@
  */
 import { Store, StoreConfig } from '@datorama/akita';
 import { DatosSolicitudFormaInt, BeneficiosFormaInt, BodegasFormaInt, CafExportFormaInt } from '../modelos/datos-de-interfaz.model';
+import {RegionesInfo, BeneficiosInfo, BodegasInfo, CafeExporacionInfo} from '../modelos/cafe-exportadores.model';
 import { RegionFormaInt } from '../modelos/datos-de-interfaz.model'
 import { Injectable } from '@angular/core';
 
@@ -27,6 +28,30 @@ export interface TramiteState {
      * @type {RegionFormaInt}
      */
     RegionFormatState: RegionFormaInt;
+    /**
+     * Estado de la tabla de regiones.
+     * @type {RegionesInfo[]}
+     */
+
+    regionesTabla: RegionesInfo[];
+    /**
+     * Estado de la tabla de beneficios.
+     * @type {BeneficiosInfo[]}
+     */
+
+    
+    beneficiosTabla: BeneficiosInfo[];
+    /**
+     * Estado de la tabla de bodegas.
+     * @type {BodegasInfo[]}
+     */
+    bodegasTabla: BodegasInfo[];
+    /**
+     * Estado de la tabla de café de exportadores.
+     * @type {CafeExporacionInfo[]}
+     */
+    cafeExportacionTabla: CafeExporacionInfo[];
+
 
     /**
      * Estado del formulario de beneficios.
@@ -95,7 +120,11 @@ export function createInitialState(): TramiteState {
             descripcionMercancia: '',
             clasificacion: '',
             porcentajeConcentracion: 0
-        }
+        },
+        regionesTabla: [],
+        beneficiosTabla: [],
+        bodegasTabla: [],
+        cafeExportacionTabla: []
     };
 }
 
@@ -177,6 +206,80 @@ export class TramiteStore extends Store<TramiteState> {
         this.update((state) => ({
             ...state,
             CafeExportFormState,
+        }));
+    }
+    /**
+     * @method setRegionesTabla
+     * @description
+     * Actualiza el estado de `regionesTabla` con nuevos valores.
+     * @param {RegionesInfo[]} regionesTabla - Datos de la tabla de regiones.
+     */
+    public setRegionesTabla(regionesTabla: RegionesInfo[]): void {
+        this.update((state) => ({
+            ...state,
+            regionesTabla: [...state.regionesTabla, ...regionesTabla],
+        }));
+    }
+    
+    /**
+     * @method setBeneficiosTabla
+     * @description
+     * Actualiza el estado de `beneficiosTabla` con nuevos valores.
+     * @param {BeneficiosInfo[]} beneficiosTabla - Datos de la tabla de beneficios.
+     */
+   
+    public setBeneficiosTabla(beneficiosTabla: BeneficiosInfo[]): void {
+        this.update((state) => ({
+            ...state,
+            beneficiosTabla: [...state.beneficiosTabla, ...beneficiosTabla],
+        }));
+    }
+    /**
+     * @method setBodegasTabla
+     * @description
+     * Actualiza el estado de `bodegasTabla` con nuevos valores.
+     * @param {BodegasInfo[]} bodegasTabla - Datos de la tabla de bodegas.
+     */
+    public setBodegasTabla(bodegasTabla: BodegasInfo[]): void {
+        this.update((state) => ({
+            ...state,
+            bodegasTabla: [...state.bodegasTabla, ...bodegasTabla],
+        }));}
+
+    /**
+     * @method setCafeExportacionTabla
+     * @description
+     * Actualiza el estado de `cafeExportacionTabla` con nuevos valores.
+     * @param {CafeExporacionInfo[]} cafeExportacionTabla - Datos de la tabla de café de exportadores.
+     * */
+    public setCafeExportacionTabla(cafeExportacionTabla: CafeExporacionInfo[]): void {
+        this.update((state) => ({
+            ...state,
+            cafeExportacionTabla: [...state.cafeExportacionTabla, ...cafeExportacionTabla],
+        }));
+    }
+    public updateRegionesTabla(regionesTabla: RegionesInfo[]): void {
+        this.update((state) => ({
+            ...state,
+            regionesTabla,
+        }));
+    }
+    public updateBeneficiosTabla(beneficiosTabla: BeneficiosInfo[]): void {
+        this.update((state) => ({
+            ...state,
+            beneficiosTabla,
+        }));
+    }
+    public updateBodegasTabla(bodegasTabla: BodegasInfo[]): void {
+        this.update((state) => ({
+            ...state,
+            bodegasTabla,
+        }));
+    }
+    public updateCafeExportacionTabla(cafeExportacionTabla: CafeExporacionInfo[]): void {
+        this.update((state) => ({
+            ...state,
+            cafeExportacionTabla,
         }));
     }
 }

@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core'; // Importa las clases base para componentes de Angular.
+import { Component, Input, OnDestroy, OnInit } from '@angular/core'; // Importa las clases base para componentes de Angular.
 import { CommonModule } from '@angular/common'; // Importa funcionalidades comunes de Angular.
 
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms'; // Importa clases para formularios reactivos.
@@ -47,7 +47,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   /**
    * Formulario reactivo para gestionar los datos de la solicitud.
    */
-  SolicitudForm!: FormGroup;
+  solicitudForm!: FormGroup;
 
   /**
    * Opciones de radio para la modalidad.
@@ -72,12 +72,20 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   /**
    * Estado de la solicitud 280101.
    */
-  public solicitudState!: Solicitud280101State;
+  private solicitudState!: Solicitud280101State;
 
   /**
    * Subject para manejar la destrucción del componente y evitar fugas de memoria.
    */
   private destroyNotifier$: Subject<void> = new Subject();
+
+  /**
+   * Indica si el componente debe estar en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no serán editables.
+   * 
+   * @default false
+   */
+  @Input() soloLectura: boolean = false;
 
   /**
    * Constructor del componente.
@@ -88,7 +96,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    */
   constructor(
     private fb: FormBuilder,
-    public service: PermisoDeExportacionService,
+    private service: PermisoDeExportacionService,
     private store: Tramite280101Store,
     private query: Tramite280101Query
   ) {}
@@ -115,7 +123,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * Establece los valores iniciales del formulario `SolicitudForm` utilizando el estado de la solicitud.
    */
   establecerValoresFormulario(): void {
-    this.SolicitudForm = this.fb.group({
+    this.solicitudForm = this.fb.group({
       modalidadOpcion: [this.solicitudState?.modalidadOpcion, [Validators.required]], // Campo obligatorio para la modalidad.
       exposicionOpcion: [this.solicitudState?.exposicionOpcion, [Validators.required]], // Campo obligatorio para la exposición.
       nombre: [this.solicitudState?.nombre, [Validators.required]], // Campo obligatorio para el nombre.
@@ -125,8 +133,11 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       cantMonumentos: [this.solicitudState?.cantMonumentos, [Validators.required]], // Campo obligatorio para la cantidad de monumentos.
     });
 
-    if (this.SolicitudForm.get('exposicionOpcion')?.value === "false") {
-      this.SolicitudForm.get('nombre')?.disable(); // Deshabilita el campo de nombre si la opción de exposición es "false".
+    if (this.solicitudForm.get('exposicionOpcion')?.value === "false") {
+      this.solicitudForm.get('nombre')?.disable(); // Deshabilita el campo de nombre si la opción de exposición es "false".
+    }
+    if(this.soloLectura) {
+      this.solicitudForm.disable(); // Deshabilita todo el formulario si está en modo solo lectura.
     }
   }
 
@@ -144,8 +155,11 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     const VALOR = form.get(campo)?.value; // Obtiene el valor del campo.
     (this.store[metodoNombre] as (value: unknown) => void)(VALOR); // Actualiza el store con el valor.
     if (campo === "exposicionOpcion" && VALOR === "true") {
-      this.SolicitudForm.get('nombre')?.enable(); // Habilita el campo de nombre si la opción de exposición es "true".
+      this.solicitudForm.get('nombre')?.enable(); // Habilita el campo de nombre si la opción de exposición es "true".
     }
+    else if (campo === "exposicionOpcion" && VALOR === "false") {
+    this.solicitudForm.get('nombre')?.disable();
+}
   }
 
   /**

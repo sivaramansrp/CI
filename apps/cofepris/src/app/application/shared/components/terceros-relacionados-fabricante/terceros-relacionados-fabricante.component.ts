@@ -7,16 +7,16 @@ import {
   TablaSeleccion,
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
-import { Component, Input } from '@angular/core';
-
-import { CommonModule } from '@angular/common';
-
-import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
-
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import {
   FABRICANTE_TABLA,
   OTROS_TABLA,
 } from '../../constantes/terceros-relacionados-fabricante.enum';
+import { Subject,map, takeUntil } from 'rxjs';
+import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
+import { TercerosRelacionadosFebService } from '../../services/tereceros-relacionados-feb.service';
 
 /**
  * TercerosRelacionadosComponent es responsable de manejar el primer paso del proceso.
@@ -34,7 +34,7 @@ import {
   templateUrl: './terceros-relacionados-fabricante.component.html',
   styleUrl: './terceros-relacionados-fabricante.component.scss',
 })
-export class TercerosRelacionadosFabricanteComponent {
+export class TercerosRelacionadosFabricanteComponent implements OnInit, OnDestroy{
   @Input() programTitle: boolean = false;
   /**
    * Un arreglo que contiene los datos de los fabricantes (Fabricante).
@@ -80,6 +80,56 @@ export class TercerosRelacionadosFabricanteComponent {
    * definida en otra parte de la aplicación.
    */
   public TEXTOS = LASTABLA;
+   /**
+    * Subject utilizado para destruir las suscripciones y evitar fugas de memoria.
+    */
+      private destroy$ = new Subject<void>();
+
+        /**
+   * Indica si el formulario está en modo solo lectura.
+   */
+  esFormularioSoloLectura: boolean = false;
+
+  /**
+   * Constructor del componente.
+   * @param tercerosService Servicio para obtener los datos de fabricantes y otros relacionados.
+   */
+  constructor(private tercerosService: TercerosRelacionadosFebService, private consultaioQuery: ConsultaioQuery){
+        this.consultaioQuery.selectConsultaioState$
+            .pipe(
+              takeUntil(this.destroy$),
+              map((seccionState)=>{
+                this.esFormularioSoloLectura = seccionState.readonly; 
+              })
+            )
+            .subscribe()
+  }
+
+  /**
+   * @inheritdoc
+   * 
+   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * Realiza las siguientes acciones:
+   * - Solicita los datos de la tabla de fabricantes a través del servicio `tercerosService`
+   *   y los asigna a la variable `fabricanteTablaDatos` al recibir la respuesta.
+   * - Solicita los datos de la tabla de otros a través del servicio `tercerosService`
+   *   y los asigna a la variable `otrosTablaDatos` al recibir la respuesta.
+   * Ambas suscripciones se gestionan utilizando `takeUntil` para evitar fugas de memoria
+   * cuando el componente se destruye.
+   */
+  ngOnInit(): void {
+    this.tercerosService.getFabricanteTabla()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((response: Fabricante[]) => {
+        this.fabricanteTablaDatos= response;
+     });
+
+    this.tercerosService.getOtrosTabla()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((response: Otros[]) => {
+        this.otrosTablaDatos=response;
+     });
+  }
 
   /**
    * Configuración de la tabla para los fabricantes relacionados.
@@ -123,9 +173,7 @@ export class TercerosRelacionadosFabricanteComponent {
    */
   public configuracionOtrosTabla: ConfiguracionColumna<Otros>[] =
     this.generateConfiguracionTabla(this.configuracionOtros);
-
-  /* eslint-disable @typescript-eslint/no-explicit-any */
-  /* eslint-disable class-methods-use-this */
+    
   /**
    * Genera un arreglo de configuración para una tabla basado en el arreglo de datos proporcionado.
    *
@@ -139,13 +187,25 @@ export class TercerosRelacionadosFabricanteComponent {
    *   - `clave`: Una función que obtiene el valor de la clave especificada de un objeto de datos.
    *   - `orden`: El orden de la columna, comenzando desde 1.
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any, class-methods-use-this
   generateConfiguracionTabla(datosArray: any): ConfiguracionColumna<any>[] {
     const FIELDS: Array<{ encabezado: string; clave: keyof Fabricante }> =
       datosArray;
     return FIELDS.map((field, index) => ({
       encabezado: field.encabezado,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       clave: (item: any) => item[field.clave],
       orden: index + 1,
     }));
   }
+
+    /**
+   * Ciclo de vida `OnDestroy`.
+   * Limpia las suscripciones para evitar fugas de memoria.
+   */
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+  
 }

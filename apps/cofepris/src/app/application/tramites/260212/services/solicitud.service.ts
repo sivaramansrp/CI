@@ -2,8 +2,12 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { OpcionesPublicacion, SolicitudModel } from '../models/permiso-maquila.models';
+import { ClaveModel,EstadoFisico, OpcionesPublicacion, SolicitudModel } from '../models/permiso-maquila.models';
 import { CatalogoResponse } from '@libs/shared/data-access-user/src';
+
+
+
+
 
 @Injectable({
   providedIn: 'root'
@@ -37,25 +41,36 @@ export class SolicitudService {
    * Obtiene las opciones de publicación desde un recurso externo.
    * @returns Un Observable que emite un arreglo de objetos de tipo OpcionesPublicacion.
    */
-  getOpcionesPublicacion(){
+  getOpcionesPublicacion(): Observable<OpcionesPublicacion[]> {
     return this.http.get<OpcionesPublicacion[]>('/assets/json/260212/opciones-de-radio.json')
   }
 
   /**
-   * Obtiene la clasificación del producto desde un recurso externo.
-   * @returns Un Observable que emite un arreglo de objetos.
+  /**
+   * Obtiene el estado físico desde un recurso externo.
+   * @returns Un Observable que emite un arreglo de objetos de tipo EstadoFisico.
    */
-  getClasificacionProducto(){
+  getTestadoFisico(): Observable<EstadoFisico[]> {
+    return this.http.get<EstadoFisico[]>('/assets/json/260212/estadoFisico.json')
+  }
+
+  /**
+   * @method getClasificacionProducto
+   * @description
+   * Obtiene la clasificación de productos realizando una petición HTTP GET al archivo JSON local.
+   * 
+   * @returns Observable<[]> Un observable que emite la lista de clasificaciones de productos.
+   */
+   getClasificacionProducto(){
     return this.http.get<[]>('/assets/json/260212/clasificacionProducto.json')
   }
 
   /**
-   * Obtiene el estado físico desde un recurso externo.
-   * @returns Un Observable que emite un arreglo de objetos.
-   */
-  getTestadoFisico(){
-    return this.http.get<[]>('/assets/json/260212/estadoFisico.json')
-  }
-  
-
+   * Recupera los datos de SCIAN desde un archivo JSON local.
+   * @returns {Observable<ClaveModel[]>} Un observable con los datos de SCIAN.
+  */
+  getScianDatos(): Observable<ClaveModel[]> {
+    return this.http.get<ClaveModel[]>('assets/json/260402/scianDatos.json');
+   }
+ 
 }

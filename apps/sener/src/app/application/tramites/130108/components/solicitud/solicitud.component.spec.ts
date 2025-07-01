@@ -6,6 +6,9 @@ import { ExportacionMineralesDeHierroService } from '../../services/exportacion-
 import { Tramite130108Store } from '../../estados/tramites/tramites130108.store';
 import { Tramite130108Query } from '../../estados/queries/tramite130108.query';
 import { PaisDeOrigenComponent } from '../../../../shared/components/pais-de-origen/pais-de-origen.component';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { DatosDelTramiteComponent } from '../../../../shared/components/datos-del-tramite/datos-del-tramite.component';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 describe('SolicitudComponent', () => {
   let component: SolicitudComponent;
@@ -35,17 +38,22 @@ describe('SolicitudComponent', () => {
     tramiteQueryMock = {
       selectSolicitud$: of({}),
       mostrarTabla$: of(false),
+      selectConsultaioState$: of({ readonly: false })
     };
 
     await TestBed.configureTestingModule({
-      declarations: [SolicitudComponent, PaisDeOrigenComponent],
-      imports: [ReactiveFormsModule],
+      declarations: [SolicitudComponent],
+      imports: [ReactiveFormsModule,
+         PaisDeOrigenComponent,
+         HttpClientTestingModule,
+         DatosDelTramiteComponent],
       providers: [
         FormBuilder,
         { provide: ExportacionMineralesDeHierroService, useValue: exportacionServiceMock },
         { provide: Tramite130108Store, useValue: tramiteStoreMock },
         { provide: Tramite130108Query, useValue: tramiteQueryMock },
       ],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA] 
     }).compileComponents();
   });
 
@@ -142,4 +150,5 @@ describe('SolicitudComponent', () => {
     expect(spyNext).toHaveBeenCalled();
     expect(spyComplete).toHaveBeenCalled();
   });
+  
 });

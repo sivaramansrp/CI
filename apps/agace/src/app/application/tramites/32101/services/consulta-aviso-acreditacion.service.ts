@@ -1,5 +1,5 @@
-import { DatosDeLaTabla, RespuestaContenedor, RespuestaTramite } from '../models/datos-tramite.model';
-import { Observable, Subject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { DatosDeLaTabla, RespuestaConsulta, RespuestaTramite } from '../models/datos-tramite.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
@@ -15,7 +15,7 @@ export class ConsultaAvisoAcreditacionService {
    * la información de la fila seleccionada. Puede ser utilizado para 
    * notificar a otros componentes o servicios sobre cambios en la selección.
    */
-  public selectedRowSource = new Subject<DatosDeLaTabla>();
+  public selectedRowSource = new BehaviorSubject<DatosDeLaTabla[]>([]);
 
 
   /**
@@ -48,10 +48,8 @@ export class ConsultaAvisoAcreditacionService {
      * @param tabla - El nombre de la tabla cuyo contenido se desea obtener.
      * @returns Un observable que emite un objeto de tipo `RespuestaContenedor` con los datos de la tabla.
      */
-    getDatosDeTabla(tabla: string): Observable<RespuestaContenedor> {
-    return this.http.get<RespuestaContenedor>(
-      `assets/json/32101/${tabla}.json`
-    );
+  getDatosDeTabla(): DatosDeLaTabla[] {
+    return this.selectedRowSource.getValue();
   }
 
   /**
@@ -59,7 +57,15 @@ export class ConsultaAvisoAcreditacionService {
    * 
    * @param row - La fila de datos de la tabla que se va a establecer como seleccionada.
    */
-  setUpdatedRow(row: DatosDeLaTabla): void {
+  setUpdatedRow(row: DatosDeLaTabla[]): void {
     this.selectedRowSource.next(row);
+  }
+
+    /**
+ * Obtiene los datos para la consulta del trámite.
+ * @returns {Observable<RespuestaConsulta>} Observable con los datos de consulta.
+ */
+  getDatosConsulta(): Observable<RespuestaConsulta> {
+    return this.http.get<RespuestaConsulta>('assets/json/32101/consulta_32101.json');
   }
 }

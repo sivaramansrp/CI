@@ -6,7 +6,8 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { Catalogo } from '@libs/shared/data-access-user/src';
+import { Catalogo, RespuestaCatalogos } from '@libs/shared/data-access-user/src';
+import { Tramite630103State, Tramite630103Store } from '../estados/tramite630103.store';
 /**
  * Servicio que gestiona las solicitudes relacionadas con el trámite 630103.
  * Proporciona métodos para obtener datos desde archivos JSON locales, como aduanas, prórrogas, propietarios y tipos de propietarios.
@@ -20,7 +21,7 @@ export class AutorizacionImportacionTemporalService {
    * 
    * @param {HttpClient} http - Cliente HTTP para realizar solicitudes.
    */
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private tramite630103Store: Tramite630103Store,) {}
 
   /**
    * Obtiene la lista de secciones aduaneras desde un archivo JSON local.
@@ -63,5 +64,19 @@ export class AutorizacionImportacionTemporalService {
 
   getPais(): Observable<Catalogo[]> {
     return this.http.get<Catalogo[]>('/assets/json/630103/pais.json');
+  }
+  
+  obtenerDocumentosSeleccionados(): Observable<RespuestaCatalogos> {
+    return this.http.get<RespuestaCatalogos>('assets/json/630103/documentos-seleccionados.json');
+  }
+
+  actualizarEstadoFormulario(DATOS:Tramite630103State): void {
+     Object.entries(DATOS).forEach(([key, value]) => {
+     this.tramite630103Store.setTramite630103State(key, value);
+    });
+  }
+  
+  getRegistroTomaMuestrasMercanciasData(): Observable<Tramite630103State> {
+    return this.http.get<Tramite630103State>('assets/json/630103/registro_toma_muestras_mercancias.json');
   }
 }

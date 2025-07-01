@@ -1,7 +1,8 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { ConfiguracionColumna } from '@ng-mf/data-access-user';
+import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
+import { Modal } from 'bootstrap';
 import { PARTIDASDELAMERCANCIA_TABLA } from '../../constantes/partidas-de-la-mercancia.enum';
 
 import { PartidasDeLaMercanciaModelo } from '../../models/partidas-de-la-mercancia.model';
@@ -31,11 +32,30 @@ import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
   styleUrl: './partidas-de-la-mercancia.component.scss',
 })
 export class PartidasDeLaMercanciaComponent {
+
+/**
+ * Referencia al elemento del modal de modificación de partida.
+ * Se utiliza para controlar la apertura y cierre del modal mediante la API de Bootstrap.
+ * 
+ * @type {ElementRef}
+ * @memberof PartidasDeLaMercanciaComponent
+ */
+   @ViewChild('modalModificarPartidaRef', { static: false }) modalModificarPartidaRef!: ElementRef;
+
   /**
    * @property {FormGroup} partidasDelaMercanciaForm
    * @description Formulario reactivo principal para capturar los datos de las partidas.
    */
   @Input() partidasDelaMercanciaForm!: FormGroup;
+
+  /**
+   * @description Indica si el formulario debe mostrarse en modo solo lectura.
+   * Cuando es `true`, todos los campos y acciones estarán deshabilitados y no podrán ser editados por el usuario.
+   * Este valor se recibe como entrada desde el componente padre.
+   * @type {boolean}
+   * @default false
+   */
+  @Input() esFormularioSoloLectura: boolean = false;
 
   /**
    * @property {FormGroup} formForTotalCount
@@ -62,11 +82,17 @@ export class PartidasDeLaMercanciaComponent {
   @Input() mostrarTabla = false;
 
   /**
-   * @event filaSeleccionadaChange
-   * @description Evento que emite las filas seleccionadas en la tabla dinámica.
-   */
-  @Output() filaSeleccionadaChange = new EventEmitter<PartidasDeLaMercanciaModelo[]>();
+ * Indica si el formulario ha sido enviado.
+ * Esta bandera se utiliza para mostrar mensajes de validación o controlar el flujo
+ * después de que el usuario intenta enviar el formulario.
+ *
+ * @type {boolean}
+ * @default false
+ */
+  @Input() formularioEnviado = false;
 
+
+ 
   /**
    * @event validarYEnviarFormularioEvent
    * @description Evento que se emite cuando se valida y envía el formulario.
@@ -74,11 +100,14 @@ export class PartidasDeLaMercanciaComponent {
   @Output() validarYEnviarFormularioEvent = new EventEmitter<void>();
 
   /**
-   * @event navegarParaModificarPartidaEvent
-   * @description Evento que se emite para navegar y modificar una partida específica.
-   */
-  @Output() navegarParaModificarPartidaEvent = new EventEmitter<void>();
+ * @event eliminarTablaEvent
+ * @description
+ * Evento que se emite cuando el usuario solicita eliminar todos los datos de la tabla dinámica.
+ * Permite que el componente padre realice la acción correspondiente de limpieza o eliminación.
+ */
+  @Output() eliminarTablaEvent = new EventEmitter<void>();
 
+ 
   /**
    * @event setValoresStoreEvent
    * @description
@@ -114,14 +143,6 @@ export class PartidasDeLaMercanciaComponent {
     return CONTROL ? CONTROL.invalid && (CONTROL.touched || CONTROL.dirty) : false;
   }
 
-  /**
-   * @method handleListaDeFilaSeleccionada
-   * @description Maneja las filas seleccionadas en la tabla dinámica y emite un evento.
-   * @param {any[]} filasSeleccionadas Lista de filas seleccionadas.
-   */
-  handleListaDeFilaSeleccionada(event: PartidasDeLaMercanciaModelo[]): void {
-    this.filaSeleccionadaChange.emit(event);
-  }
 
   /**
    * @method validarYEnviarFormulario
@@ -132,11 +153,25 @@ export class PartidasDeLaMercanciaComponent {
   }
 
   /**
+ * @method onclickEliminar
+ * @description
+ * Método que emite el evento `eliminarTablaEvent` cuando el usuario solicita eliminar todos los datos de la tabla dinámica.
+ * Permite que el componente padre realice la acción correspondiente de limpieza o eliminación.
+ *
+ * @returns {void}
+ */
+  onclickEliminar(): void {
+    this.eliminarTablaEvent.emit();
+  }
+
+  /**
    * @method navegarParaModificarPartida
    * @description Navega para modificar una partida específica, emitiendo un evento.
    */
   navegarParaModificarPartida(): void {
-    this.navegarParaModificarPartidaEvent.emit();
+    const MODALELEMENT = this.modalModificarPartidaRef.nativeElement;
+    const MODALINSTANCE = new Modal(MODALELEMENT);
+    MODALINSTANCE.show();
   }
 
   /**
@@ -148,5 +183,39 @@ export class PartidasDeLaMercanciaComponent {
    */
   setValoresStore(form: FormGroup, campo: string): void {
     this.setValoresStoreEvent.emit({ form, campo });
+  }
+
+  /**
+ * @method onModificarPartida
+ * @description
+ * Método encargado de validar el formulario de modificación de partida y, si es válido,
+ * ejecutar la lógica de guardado/actualización y cerrar el modal correspondiente utilizando la API de Bootstrap.
+ * Además, elimina manualmente el backdrop y limpia los estilos del body para evitar que la pantalla quede oscura.
+ * Si el formulario no es válido, marca todos los campos como tocados para mostrar los errores.
+ 
+ * - Valida el formulario reactivo de la partida.
+ * - Ejecuta la lógica de guardado/actualización (debe implementarse según la necesidad).
+ * - Cierra el modal de modificación de partida usando la instancia de Bootstrap Modal.
+ * - Elimina manualmente cualquier backdrop restante y limpia las clases/estilos del body.
+ * - Si el formulario es inválido, marca todos los campos como tocados para mostrar los mensajes de error.
+ *
+ * @returns {void}
+ */
+
+  onModificarPartida(): void {
+    if (this.partidasDelaMercanciaForm.valid) {
+      const MODALELEMENT = this.modalModificarPartidaRef.nativeElement;
+      const MODALINSTANCE = Modal.getOrCreateInstance(MODALELEMENT);
+      MODALINSTANCE.hide();
+
+      setTimeout(() => {
+      const BACKDROPS = document.querySelectorAll('.modal-backdrop');
+      BACKDROPS.forEach(bd => bd.parentNode?.removeChild(bd));
+      document.body.classList.remove('modal-open');
+      document.body.style.overflow = '';
+    }, 500);
+    } else {
+      this.partidasDelaMercanciaForm.markAllAsTouched();
+    }
   }
 }

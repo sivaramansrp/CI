@@ -7,8 +7,16 @@ import { TEXTOS } from '@ng-mf/data-access-user';
 import documentList from '@libs/shared/theme/assets/json/32502/document-list.json';
 
 
+
 /**
- * Este componente se muestra en PasoDos
+ * Decorador de componente de Angular que define las propiedades esenciales del componente.
+ * 
+ * Este decorador se utiliza para configurar el componente `PasoDosComponent`, especificando
+ * su selector, la ruta de su plantilla HTML y la ruta de sus estilos CSS.
+ * 
+ * @selector `app-paso-dos` - Selector utilizado para identificar el componente en la plantilla HTML.
+ * @templateUrl `./paso-dos.component.html` - Ruta relativa al archivo de plantilla HTML del componente.
+ * @styleUrl `./paso-dos.component.scss` - Ruta relativa al archivo de estilos CSS del componente.
  */
 @Component({
   selector: 'app-paso-dos',

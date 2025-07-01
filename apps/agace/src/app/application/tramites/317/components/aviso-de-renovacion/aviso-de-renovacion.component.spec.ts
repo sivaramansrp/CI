@@ -3,109 +3,164 @@ import { AvisoDeRenovacionComponent } from './aviso-de-renovacion.component';
 import { FormBuilder } from '@angular/forms';
 import { of, Subject } from 'rxjs';
 import { AvisoUnicoService } from '../../services/aviso-unico.service';
-import { UnicoStore } from '../../estados/unico.store';
+import { UnicoStore } from '../../estados/renovacion.store';
 import { UnicoQuery } from '../../estados/queries/unico.query';
+
+const mockService = {
+  getSolicitante: jest.fn().mockReturnValue(of({})), 
+  obtenerDatosLocalidad: jest.fn().mockReturnValue(of([])),
+  obtenerRadio: jest.fn().mockReturnValue(of([])), 
+};
+const mockUnicoStore = {
+  setfechaPago: jest.fn(),
+};
+const mockUnicoQuery = {
+  selectSolicitud$: of({
+    mapTipoTramite: 'A',
+    mapDeclaracionSolicitud: 'B',
+    envioAviso: true,
+    numeroAviso: '123',
+    numeroOperacion: '456',
+    banco: 'Banamex',
+    llavePago: 'LLAVE',
+    fechaPago: '2024-01-01',
+  }),
+};
+const mockConsultaioQuery = {
+  selectConsultaioState$: of({ readonly: true }),
+};
 
 describe('AvisoDeRenovacionComponent', () => {
   let component: AvisoDeRenovacionComponent;
-  let serviceMock: any;
-  let storeMock: any;
-  let queryMock: any;
 
   beforeEach(() => {
-    serviceMock = {
-      obtenerDatosLocalidad: jest.fn().mockReturnValue(of([{ id: 1, nombre: 'Localidad A' }])),
-      getSolicitante: jest.fn().mockReturnValue(of({
-        claveReferencia: 'ABC123',
-        cadenaDependencia: 'CAD123',
-        importePago: '1000.00'
-      })),
-      obtenerRadio: jest.fn().mockReturnValue(of([{ id: 1, descripcion: 'Física' }]))
-    };
+    jest.clearAllMocks();
+    component = new AvisoDeRenovacionComponent(
+      new FormBuilder(),
+      mockService as any,
+      mockUnicoStore as any,
+      mockUnicoQuery as any,
+      mockConsultaioQuery as any
+    );
+    // Mock Subject to avoid memory leaks
+    (component as any).destroyed$ = new Subject<void>();
+  });
 
-    storeMock = {
-      setfechaPago: jest.fn(),
-    };
+  it('should initialize with default values', () => {
+    expect(component.defaultSelect).toBe('Rubro A');
+    expect(component.esFormularioSoloLectura).toBe(true);
+    expect(component.fechaInicioInput).toBeDefined();
+  });
 
-    queryMock = {
-      selectSolicitud$: of({
-        modalidad: 'online',
-        protestaVerdad: true,
-        envioAviso: false,
-        numeroAviso: '123456',
-        numeroOperacion: 'OP789',
-        banco: 'Bank A',
-        llavePago: 'LLAVE123',
-        fechaPago: '2024-10-10'
-      })
-    };
+  it('should call inicializarEstadoFormulario and actualizarEstado on ngOnInit', () => {
+    
+    const spyUpdate = jest.spyOn(component, 'actualizarEstado');
+    component.ngOnInit();
+   
+    expect(spyUpdate).toHaveBeenCalled();
+  });
 
-    TestBed.configureTestingModule({
-      providers: [
-        FormBuilder,
-        { provide: AvisoUnicoService, useValue: serviceMock },
-        { provide: UnicoStore, useValue: storeMock },
-        { provide: UnicoQuery, useValue: queryMock }
-      ]
+  it('should disable form if esFormularioSoloLectura is true', () => {
+    component.solicitudState = {
+      mapTipoTramite: 'A',
+      mapDeclaracionSolicitud: 'B',
+      envioAviso: true,
+      numeroAviso: '123',
+      numeroOperacion: '456',
+      banco: 'Banamex',
+      llavePago: 'LLAVE',
+      fechaPago: '2024-01-01',
+    } as any;
+    component.avisoForm = new FormBuilder().group({
+      claveReferencia: [{ value: '', disabled: false }],
     });
-
-    const fb = TestBed.inject(FormBuilder);
-    const service = TestBed.inject(AvisoUnicoService);
-    const store = TestBed.inject(UnicoStore);
-    const query = TestBed.inject(UnicoQuery);
-
-    component = new AvisoDeRenovacionComponent(fb, service, store, query);
+    component.esFormularioSoloLectura = true;
+    component.actualizarEstado();
+    expect(component.avisoForm.disabled).toBe(true);
   });
 
-  it('should initialize and set up form and states', () => {
-    component.ngOnInit();
-
-    expect(component.avisoForm).toBeDefined();
-    expect(serviceMock.obtenerDatosLocalidad).toHaveBeenCalled();
-    expect(serviceMock.obtenerRadio).toHaveBeenCalled();
-    expect(serviceMock.getSolicitante).toHaveBeenCalled();
-    expect(component.solicitudState.modalidad).toBe('online');
+  it('should enable form if esFormularioSoloLectura is false', () => {
+    component.solicitudState = {
+      mapTipoTramite: 'A',
+      mapDeclaracionSolicitud: 'B',
+      envioAviso: true,
+      numeroAviso: '123',
+      numeroOperacion: '456',
+      banco: 'Banamex',
+      llavePago: 'LLAVE',
+      fechaPago: '2024-01-01',
+    } as any;
+    component.avisoForm = new FormBuilder().group({
+      claveReferencia: [{ value: '', disabled: false }],
+    });
+    component.esFormularioSoloLectura = false;
+    component.actualizarEstado();
+    expect(component.avisoForm.enabled).toBe(true);
   });
 
-  it('should patch form with solicitante data', () => {
-    component.ngOnInit();
-    expect(component.avisoForm.get('claveReferencia')?.value).toBe('ABC123');
-    expect(component.avisoForm.get('cadenaDependencia')?.value).toBe('CAD123');
-    expect(component.avisoForm.get('importePago')?.value).toBe('1000.00');
+  it('should patch form values from getSolicitante', () => {
+    mockService.getSolicitante.mockReturnValue(of({
+      claveReferencia: 'CR',
+      cadenaDependencia: 'CD',
+      importePago: 100,
+    }));
+    component.solicitudState = {
+      mapTipoTramite: 'A',
+      mapDeclaracionSolicitud: 'B',
+      envioAviso: true,
+      numeroAviso: '123',
+      numeroOperacion: '456',
+      banco: 'Banamex',
+      llavePago: 'LLAVE',
+      fechaPago: '2024-01-01',
+    } as any;
+    component.actualizarEstado();
+    // Form should be patched asynchronously, so we check after a tick
+    setTimeout(() => {
+      expect(component.avisoForm.value.claveReferencia).toBe('CR');
+      expect(component.avisoForm.value.cadenaDependencia).toBe('CD');
+      expect(component.avisoForm.value.importePago).toBe(100);
+    }, 0);
   });
 
-  it('should set localidadList correctly', () => {
-    component.ngOnInit();
-    expect(component.localidadList).toEqual([{ id: 1, nombre: 'Localidad A' }]);
+  it('should update fechaPago and call setfechaPago on onFechaCambiada', () => {
+    component.avisoForm = new FormBuilder().group({
+      fechaPago: [''],
+    });
+    component.cambioFechaPago('2024-06-01');
+    expect(component.avisoForm.get('fechaPago')?.value).toBe('2024-06-01');
+    expect(mockUnicoStore.setfechaPago).toHaveBeenCalledWith('2024-06-01');
   });
 
-  it('should update fechaPago on date change', () => {
-    component.ngOnInit();
-    component.onFechaCambiada('2025-01-01');
-    expect(component.avisoForm.get('fechaPago')?.value).toBe('2025-01-01');
-    expect(storeMock.setfechaPago).toHaveBeenCalledWith('2025-01-01');
-  });
-
-  it('should reset payment related fields', () => {
-    component.ngOnInit();
+  it('should reset payment fields on resetPagoDatos', () => {
+    component.avisoForm = new FormBuilder().group({
+      numeroOperacion: ['op'],
+      banco: ['bank'],
+      llavePago: ['key'],
+      fechaPago: ['date'],
+    });
     component.resetPagoDatos();
-    expect(component.avisoForm.get('numeroOperacion')?.value).toBe('');
-    expect(component.avisoForm.get('banco')?.value).toBe('');
-    expect(component.avisoForm.get('llavePago')?.value).toBe('');
-    expect(component.avisoForm.get('fechaPago')?.value).toBe('');
+    expect(component.avisoForm.value).toEqual({
+      numeroOperacion: '',
+      banco: '',
+      llavePago: '',
+      fechaPago: '',
+    });
   });
 
-  it('should set store values using setValoresStore', () => {
-    const mockStoreFn = jest.fn();
-    storeMock.setSomeValue = mockStoreFn;
-    component.ngOnInit();
-    component.avisoForm.get('banco')?.setValue('TestBank');
-    component.setValoresStore(component.avisoForm, 'banco', 'setSomeValue' as any);
-    expect(mockStoreFn).toHaveBeenCalledWith('TestBank');
+  it('should set value in store using setValoresStore', () => {
+    component.avisoForm = new FormBuilder().group({
+      testField: ['testValue'],
+    });
+    (mockUnicoStore as any).setTestField = jest.fn();
+    component.setValoresStore(component.avisoForm, 'testField', 'setTestField' as any);
+    expect((mockUnicoStore as any).setTestField).toHaveBeenCalledWith('testValue');
   });
 
-  it('should complete destroyed$ on destroy', () => {
-    const spy = jest.spyOn(component['destroyed$'], 'next');
+  it('should complete destroyed$ on ngOnDestroy', () => {
+    const destroyed$ = new Subject<void>();
+    (component as any).destroyed$ = destroyed$;
+    const spy = jest.spyOn(destroyed$, 'complete');
     component.ngOnDestroy();
     expect(spy).toHaveBeenCalled();
   });

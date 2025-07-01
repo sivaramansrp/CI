@@ -2,11 +2,12 @@ import {
   Catalogo,
   CategoriaMensaje,
   ConfiguracionColumna,
+  ConsultaioQuery,
   CrosslistComponent,
   Notificacion,
   TablaSeleccion,
   TipoNotificacionEnum,
-} from '@libs/shared/data-access-user/src';
+} from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import {
   CrosslistBoton,
@@ -14,7 +15,7 @@ import {
 } from '../../enum/botons.enum';
 import { DESTINATARIO_TABLA_CONFIGURACION, DestinatarioConfiguracionItem, MERCANCIA_TABLA_CONFIGURACION, MercanciaConfiguracionItem } from '../../enum/destinatario-tabla.enum';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 import {
   Tramite300105State,
   Tramite300105Store,
@@ -177,6 +178,17 @@ export class DestinatariosComponent implements OnInit, OnDestroy {
   esOperacionDeActualizacion: boolean = false;
 
   /**
+   * Indica si el popup de relación de mercancía está abierto.
+   */
+  relacionMercanciaPopupAbierto: boolean = false;
+
+  /**
+  * Indica si el formulario está en modo solo lectura.
+  * Cuando es `true`, los campos del formulario no se pueden editar.
+  */
+  esFormularioSoloLectura: boolean = false; 
+
+  /**
    * Constructor del componente.
    * autorizacionDeRayosXService Servicio para manejar datos relacionados con autorizaciones de vida silvestre.
    * tramite300105Store Almacén de estado para el trámite 300105.
@@ -187,9 +199,24 @@ export class DestinatariosComponent implements OnInit, OnDestroy {
     public autorizacionDeRayosXService: AutorizacionDeRayosXService,
     private tramite300105Store: Tramite300105Store,
     private tramite300105Query: Tramite300105Query,
-    private formBuilder: FormBuilder
-  ) {
-    // No se realiza ninguna acción aquí.
+    private formBuilder: FormBuilder,
+    private consultaioQuery: ConsultaioQuery
+  ) {  
+      /**
+       * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
+       *
+       * - Asigna el valor de solo lectura (`readonly`) a la propiedad `esFormularioSoloLectura`.
+       * - Llama a `inicializarEstadoFormulario()` para aplicar configuraciones basadas en el estado recibido.
+       * - La suscripción se cancela automáticamente cuando `destroyNotifier$` emite un valor (para evitar fugas de memoria).
+       */
+      this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.notificadorDestruccion$),
+        map((seccionState) => {
+         this.esFormularioSoloLectura = seccionState.readonly || true;
+        })
+      )
+      .subscribe()
   }
 
   /**
@@ -437,9 +464,15 @@ export class DestinatariosComponent implements OnInit, OnDestroy {
    * Valida el formulario, actualiza o agrega una nueva fila en la tabla de mercancías,
    * y actualiza el estado del almacén correspondiente.
    */
-  enviarFormularioMercancia(): void {
+  enviarFormularioMercancia(isGuardar: boolean = false): void {
+    this.formularioMercancia.markAllAsTouched();
+
+    if (this.formularioMercancia.invalid) {
+      return;
+    }
+
     const OBTENER_DESCRIPCION = (array: Catalogo[], index: number): string => array[index - 1]?.descripcion || '';
-  
+
     const TABLA_ROW: DestinatarioConfiguracionItem = {
       id: this.esOperacionDeActualizacion
         ? this.formularioMercancia.get('id')?.value
@@ -457,18 +490,51 @@ export class DestinatariosComponent implements OnInit, OnDestroy {
         this.formularioMercancia.get('tipoMercancia')?.value
       ),
     };
-  
-    const EXISTING_INDEX = this.datosTablaDestinatario.findIndex(item => item.id === TABLA_ROW.id);
-  
-    if (EXISTING_INDEX > -1) {
-      this.datosTablaDestinatario[EXISTING_INDEX] = TABLA_ROW;
-    } else {
-      this.datosTablaDestinatario = [...this.datosTablaDestinatario, TABLA_ROW];
-    }
     
-    this.tramite300105Store.setDestinatarioTablaDatos(this.datosTablaDestinatario);
-    this.formularioMercancia.reset();
-    this.alternarModalMercancia();
+    if (!isGuardar || this.esOperacionDeActualizacion) {
+      const EXISTING_INDEX = this.datosTablaDestinatario.findIndex(item => item.id === TABLA_ROW.id);
+
+      if (EXISTING_INDEX > -1) {
+        this.datosTablaDestinatario[EXISTING_INDEX] = TABLA_ROW;
+      } else if (!isGuardar) {
+        this.datosTablaDestinatario = [...this.datosTablaDestinatario, TABLA_ROW];
+      }
+
+      this.tramite300105Store.setDestinatarioTablaDatos(this.datosTablaDestinatario);
+    }
+
+    if (!isGuardar) {
+      // Si es "Relacionar mercancia", mostrar notificación pero no cerrar el modal
+      this.mostrarNotificacionRelacionMercancia();
+    } else {
+      // Si es "Guardar", resetear el formulario y cerrar el modal
+      this.formularioMercancia.reset();
+      this.alternarModalMercancia();
+    }
+  }
+
+  /**
+   * Muestra notificación después de relacionar mercancía.
+   */
+  mostrarNotificacionRelacionMercancia(): void {
+    this.nuevaNotificacion = {
+      tipoNotificacion: TipoNotificacionEnum.ALERTA,
+      categoria: CategoriaMensaje.EXITO,
+      modo: 'modal',
+      titulo: '',
+      mensaje: 'Relación agregada',
+      cerrar: false,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
+    this.relacionMercanciaPopupAbierto = true;
+  }
+
+  /**
+   * Cierra el popup de relación de mercancía.
+   */
+  cerrarRelacionMercanciaPopup(): void {
+    this.relacionMercanciaPopupAbierto = false;
   }
 
   /**

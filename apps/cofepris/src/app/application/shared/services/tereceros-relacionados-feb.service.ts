@@ -1,8 +1,12 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 
-import { Catalogo } from "@libs/shared/data-access-user/src";
+import { Catalogo, Fabricante, Otros } from "@libs/shared/data-access-user/src";
 import { Observable } from "rxjs";
+
+
+import { DestinatarioModel, FacricanteModel, FacturadorModel, ProveedorModel } from "../models/terceros-fabricante-relocionados.model";
+import { Destinatario } from "../models/terceros-relacionados.model";
 
 @Injectable({
   providedIn: 'root',
@@ -88,4 +92,66 @@ export class TercerosRelacionadosFebService {
   getEncabezadoDeTabla(): Observable<{ columns: string[] }> {
     return this.http.get<{ columns: string[] }>('assets/json/cofepris/encabezado-de-tabla.json');
   }
+  /**
+   * 
+   * @returns {Observable<FacricanteModel>} Observable que emite un objeto `FacricanteModel`.
+   * @description Este método realiza una petición HTTP para obtener el formulario de fabricante.
+   */
+ getFabricanteForm(): Observable<FacricanteModel> {
+  return this.http.get<FacricanteModel>('assets/json/cofepris/fabricante-form.json');
+}
+/**
+ * Obtiene el formulario de destinatario desde un archivo JSON local.
+ * @param {void}
+ * @returns {Observable<DestinatarioModel>} Observable que emite un objeto `DestinatarioModel`.
+ */
+ getDestinatarioForm(): Observable<DestinatarioModel> {
+  return this.http.get<DestinatarioModel>('assets/json/cofepris/destinatario-form.json');
+}
+/**
+ * Obtiene el formulario de proveedor desde un archivo JSON local.
+ * @param {void}
+ * @returns {Observable<ProveedorModel>} Observable que emite un objeto `ProveedorModel`.
+ */
+ getProveedorForm(): Observable<ProveedorModel> {
+  return this.http.get<ProveedorModel>('assets/json/cofepris/proveedor-form.json');
+}
+/**
+ *  * Obtiene el formulario de facturador desde un archivo JSON local.
+ * @param {void}
+ * @returns {Observable<FacturadorModel>} Observable que emite un objeto `FacturadorModel`.
+ */
+ getFacturadorForm(): Observable<FacturadorModel> {
+  return this.http.get<FacturadorModel>('assets/json/cofepris/facturador-form.json');
+}
+
+  /**
+   * Obtiene los datos de fabricantes desde un archivo JSON local.
+   *
+   * @returns {Observable<Fabricante[]>} Observable que emite un arreglo de objetos `Fabricante`.
+   * @description Este método realiza una petición HTTP para obtener los datos de fabricantes.
+   */
+  getFabricanteTabla(): Observable<Fabricante[]> {
+    return this.http.get<Fabricante[]>('assets/json/260905/fabricante.json');
+  }
+
+  /**
+   * Obtiene los datos de "otros" desde un archivo JSON local.
+   *
+   * @returns {Observable<Otros[]>} Observable que emite un arreglo de objetos `Otros`.
+   * @description Este método realiza una petición HTTP para obtener los datos de "otros".
+   */
+  getOtrosTabla(): Observable<Otros[]> {
+    return this.http.get<Otros[]>('assets/json/260905/otros.json');
+  }
+
+    /**
+     * Obtiene los datos de la tabla de fabricantes como destinatarios desde un archivo JSON local.
+     *
+     * @returns {Observable<Destinatario[]>} Observable que emite un arreglo de objetos `Destinatario`.
+     * @description Este método realiza una petición HTTP para obtener los datos de la tabla de fabricantes como destinatarios.
+     */
+    getFabricanteTablaDatos(): Observable<Destinatario[]> {
+      return this.http.get<Destinatario[]>('assets/json/260905/fabricante.json');
+    }
 }

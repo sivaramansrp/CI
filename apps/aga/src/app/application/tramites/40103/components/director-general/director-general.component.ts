@@ -5,8 +5,9 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { map, takeUntil } from 'rxjs/operators';
 import { Chofer40103Query } from '../../estados/chofer40103.query';
 import { Chofer40103Service } from '../../estados/chofer40103.service';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { Subject } from 'rxjs';
-import mockData from '@libs/shared/theme/assets/json/40103/director-general-mockdata.json';
+
 @Component({
   selector: 'app-director-general',
   templateUrl: './director-general.component.html',
@@ -49,7 +50,8 @@ export class DirectorGeneralComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private chofer40103Store: Chofer40103Store,
     private chofer40103Service: Chofer40103Service,
-    private chofer40103Query: Chofer40103Query
+    private chofer40103Query: Chofer40103Query,
+    private consultaioQuery: ConsultaioQuery
   ) {}
 
   /**
@@ -68,44 +70,31 @@ export class DirectorGeneralComponent implements OnInit, OnDestroy {
         })
       ).subscribe();
     this.crearFormularioDirectorGeneral();
-    this.establecerValoresDeFormulario();
-    this.actualizarTienda(this.directorGeneralForm.value);
+
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          if(seccionState.readonly) {
+            this.directorGeneralForm.disable();
+          } 
+        })
+      ).subscribe();
   }
 
   /**
    * Crea el formulario para el director general.
    */
   crearFormularioDirectorGeneral(): void {
+    const STATE = this.chofer40103Store?.getValue();
+
     this.directorGeneralForm = this.fb.group({
-      nombre: [this.solicitud40103State?.curp, [Validators.required]],
-      primerApellido: [this.solicitud40103State?.primerApellido, [Validators.required]],
-      segundoApellido: [this.solicitud40103State?.segundoApellido, [Validators.required]],
+      nombre: [STATE.nombre, [Validators.required]],
+      primerApellido: [STATE.primerApellido, [Validators.required]],
+      segundoApellido: [STATE.segundoApellido, [Validators.required]],
     });
   }
 
-  /**
-   * Establece los valores del formulario utilizando datos simulados.
-   */
-  establecerValoresDeFormulario(): void {
-    if (mockData) {
-      setTimeout(() => {
-        this.directorGeneralForm.patchValue({
-          nombre: mockData.nombre || '',
-          primerApellido: mockData.primerApellido || '',
-          segundoApellido: mockData.segundoApellido || '',
-        });
-      });
-    }
-  }
-
-  /**
-   * Actualiza la tienda con los datos del formulario actualizados.
-   * @param updatedData Los datos actualizados del formulario.
-   */
-  actualizarTienda(actualizarTienda: unknown): void {
-    const DATOS_EXISTENTES = this.chofer40103Query.getValue().choferes;
-    // Aquí puedes agregar la lógica para actualizar la tienda con los datos actualizados
-  }
   /**
    * Método del ciclo de vida de Angular que se llama cuando el componente se destruye.
    * Libera la suscripción a los cambios del formulario.
@@ -115,7 +104,7 @@ export class DirectorGeneralComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
-    /**
+  /**
    * Establecer valores en el store del trámite.
    * @param form Formulario reactivo.
    * @param campo Nombre del campo.

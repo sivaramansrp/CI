@@ -1,5 +1,5 @@
+import { DatosDelRegistrar, DatosDelRegistrarManual } from '../models/proveedores.model';
 import { CROSLISTA_DE_DATOS } from '../constants/proveedores.enum';
-import { DatosDelRegistrarManual } from '../models/proveedores.model';
 import { Injectable } from '@angular/core';
 import { Store } from '@datorama/akita';
 import { StoreConfig } from '@datorama/akita';
@@ -42,6 +42,12 @@ export interface Tramite420101State {
    */
   datosProveedoresManual: DatosDelRegistrarManual[];
 
+  /**
+   * @type {DatosDelRegistrar[]}
+   * Datos que se muestran en la tabla
+   */
+  datosTabla: DatosDelRegistrar[];
+
 }
 
 /**
@@ -59,6 +65,7 @@ export function createInitialState(): Tramite420101State {
     razonSocial: '',
     domicilioFiscal: '',
     usoCrossListDatos: CROSLISTA_DE_DATOS,
+    datosTabla: [],
   };
 }
 
@@ -156,5 +163,18 @@ export function createInitialState(): Tramite420101State {
       ...state,
       domicilioFiscal,
     }));
+  }
+
+    /**
+ * Actualiza el estado del formulario con los datos proporcionados.
+ * 
+ * @param DATOS - Estado de la solicitud `Solicitud230401State` con la información 
+ *                del tipo de solicitud a actualizar en el store.
+ */
+  actualizarEstadoFormulario(DATOS: Tramite420101State): void {
+    this.update((state) => ({
+      ...state,
+      ...DATOS
+    }))
   }
 }

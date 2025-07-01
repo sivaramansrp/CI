@@ -1,0 +1,84 @@
+<div class="container">
+    <ng-titulo titulo="Anexo II" /> 
+    <form [formGroup]="anexoDosForm">  
+        <div class="row">
+            <div class="col-md-4">     
+              <div class="form-group">                            
+                <label class="form-label">Contenedores, cajas de trailer:</label>  
+                <label class="form-label" for="fraccionArancelaria">Fracción arancelaria:</label>               
+                <input class="form-control" id="fraccionArancelaria" type="number" formControlName="fraccionArancelaria" (change)="setValoresStore(anexoDosForm,'fraccionArancelaria', 'setFraccionArancelaria')"           
+                 />
+              </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-8">     
+                <div class="form-group">                 
+                  <label class="form-label" for="descripcion">Descripción:</label>
+                  <input class="form-control" id="descripcion" type="text" formControlName="descripcion" (change)="setValoresStore(anexoDosForm,'descripcion', 'setDescripcion')"           
+                   />
+                </div>
+              </div>
+        </div>
+        <div class="col-md-12 mt-5 d-flex justify-content-end">
+            <button type="button" class="btn btn-danger ms-3" (click)="anexoDosElimiar()" [disabled]="esFormularioSoloLectura" >Elimiar</button>
+            <button type="button" class="btn btn-primary ms-3" (click)="anexoDosAgregar()" [disabled]="esFormularioSoloLectura">Agregar</button>
+        </div>
+        <div class="row">
+            <h6>Descripción anexo II:</h6>
+              <app-tabla-dinamica
+                [configuracionTabla]="configuracionDosDatos"
+                [datos]="anexoDos"
+                [tipoSeleccionTabla]="checkbox"
+                [tipoSeleccionTabla]="checkbox" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
+              ></app-tabla-dinamica>
+              <nav aria-label="Page navigation example">
+                <ul class="pagination justify-content-center">
+                  <li class="page-item"><a class="page-link">1</a></li>
+                </ul>
+              </nav>
+          </div>
+        
+
+    </form>
+    <ng-titulo titulo="Anexo III" />
+    <form [formGroup]="anexoTresForm">
+        <ng-alert [CONTENIDO]="anexoTresAlerta"></ng-alert>
+        <div class="row">
+            <div class="col-md-4">     
+              <div class="form-group">
+                <label class="form-label" for="fraccionTres">Fracción arancelaria:</label>
+                <input class="form-control" id="fraccionTres" type="number" formControlName="fraccionTres" (change)="setValoresStore(anexoTresForm,'fraccionTres', 'setFraccionTres')"           
+                 />
+              </div>           
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-8">     
+                <div class="form-group">                 
+                  <label class="form-label" for="descripcionTres">Descripción:</label>
+                  <input class="form-control" id="descripcionTres" type="text" formControlName="descripcionTres" (change)="setValoresStore(anexoTresForm,'descripcionTres', 'setDescripcionTres')"           
+                   />
+                </div>             
+              </div>
+        </div>
+        <div class="col-md-12 mt-5 d-flex justify-content-end">
+            <button type="button" class="btn btn-danger ms-3" (click)="anexoTresElimiar()" [disabled]="esFormularioSoloLectura">Elimiar</button>
+            <button type="button" class="btn btn-primary ms-3" (click)="anexoTresAgregar()" [disabled]="esFormularioSoloLectura">Agregar</button>
+        </div>
+        <div class="row">
+            <h6>Descripción anexo III:</h6>
+              <app-tabla-dinamica
+                [configuracionTabla]="configuracionDosDatos"
+                [datos]="anexoTres"
+                [tipoSeleccionTabla]="checkbox"
+                [tipoSeleccionTabla]="checkbox" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
+              ></app-tabla-dinamica>
+              <nav aria-label="Page navigation example">
+                <ul class="pagination justify-content-center">
+                  <li class="page-item"><a class="page-link">1</a></li>
+                </ul>
+              </nav>
+          </div>
+    </form>
+</div>

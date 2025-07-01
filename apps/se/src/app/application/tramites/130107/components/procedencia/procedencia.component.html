@@ -1,0 +1,18 @@
+<form [formGroup]="forma">
+    <div class="row">
+        <formas-dinamicas formularioTitulo="País(es) procedencia" [forma]="ninoFormGroup"
+            [formularioDatos]="paisProcedencia" [estado]="solicitudDeRegistroState"
+            [soloLectura]="consultaState.readonly"
+            (emitirCambioDeValor)="establecerCambioDeValor($event)"></formas-dinamicas>
+    </div>
+    <div class="row mt-5">
+        <crosslist [fechas]="seleccionarOrigenDelPais" [label]="paisDeProcedenciaLabel"
+            [botones]="paisDeProcedenciaBotones" [isDisabled]="consultaState.readonly"></crosslist>
+    </div>
+    <div class="row">
+        <formas-dinamicas [forma]="ninoFormGroup" [formularioDatos]="paisProcedenciaTodos"
+            [estado]="solicitudDeRegistroState" [soloLectura]="consultaState.readonly"
+            (emitirCambioDeValor)="establecerCambioDeValor($event)"></formas-dinamicas>
+    </div>
+
+</form>

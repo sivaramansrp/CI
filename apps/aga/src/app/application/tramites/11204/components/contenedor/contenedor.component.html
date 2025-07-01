@@ -7,21 +7,19 @@
                     <br><br>
                     <div class="col-md-4">
                         <div class="radio">
-                            <label>
-                                <input type="radio" formControlName="tipoBusqueda" id="idRadioContenedor"
-                                    value="Contenedor" class="form-check-input" (change)="onChange('tipoBusqueda', $event)">
-                                Contenedor
-                            </label>
+                            <input type="radio" formControlName="tipoBusqueda" id="idRadioContenedor"
+                                value="Contenedor" class="form-check-input" (change)="onChange('tipoBusqueda', $event)"
+                                [attr.disabled]="radioContenedor ? true : null">
+                            Contenedor
                         </div>
                     </div>
 
                     <div class="col-md-4">
                         <div class="radio">
-                            <label>
-                                <input type="radio" formControlName="tipoBusqueda" id="idRedioExcel" value="Archivo CSV"
-                                    class="form-check-input" (change)="onChange('tipoBusqueda', $event)">
-                                Archivo CSV
-                            </label>
+                            <input type="radio" formControlName="tipoBusqueda" id="idRedioExcel" value="Archivo CSV"
+                                class="form-check-input" (change)="onChange('tipoBusqueda', $event)"
+                                [attr.disabled]="radioArchivoCsv ? true : null">
+                            Archivo CSV
                         </div>
                     </div>
                 </div>
@@ -42,7 +40,10 @@
                         <div class="form-group">
                             <app-catalogo-select [catalogo]="catalogoList" [label]="aduana.labelNombre"
                                 [placeholder]="aduana.primerOpcion" [required]="true" formControlName="aduana"
-                                (change)="onChange('aduana', $event)" [ngClass]="isValid('aduana') ? 'required' : ''"></app-catalogo-select>
+                                (change)="onChange('aduana', $event)" [isDisabled]="soloLectura"></app-catalogo-select>
+                                <div *ngIf="isInvalid('aduana')" class="mensaje-error">
+                                    Este campo es obligatorio.
+                                </div>
                         </div>
                     </div>
                 </div>
@@ -61,19 +62,26 @@
                 <div class="row">
                     <div class="col-md-4">
                         <div class="form-group">
-                            <label for="inicialesContenedor">Iniciales del equipo</label>
-                            <span class="require">*</span>
+                            <label for="inicialesContenedor">Iniciales del equipo*:</label>
                             <input type="text" formControlName="inicialesContenedor" id="inicialesContenedor"
-                                maxlength="10" class="form-control" (change)="onChange('inicialesContenedor', $event)">
+                                 class="form-control" [required]="true" (change)="onChange('inicialesContenedor', $event)" [disabled]="soloLectura">
+                                <div *ngIf="isInvalid('inicialesContenedor')" class="mensaje-error">
+                                    Este campo es obligatorio.
+                                </div>
                         </div>
                     </div>
 
                     <div class="col-md-4">
                         <div class="form-group">
-                            <label for="numeroContenedor">Número de equipo</label>
-                            <span class="require">*</span>
-                            <input type="text" formControlName="numeroContenedor" id="numeroContenedor" maxlength="15"
-                                class="form-control" (change)="onChange('numeroContenedor', $event)">
+                            <label for="numeroContenedor">Número de equipo*:</label>
+                            <input type="text" formControlName="numeroContenedor" id="numeroContenedor"
+                                class="form-control" [required]="true" (change)="onChange('numeroContenedor', $event)" [disabled]="soloLectura">
+                                <div *ngIf="isInvalid('numeroContenedor')" class="mensaje-error">
+                                    Este campo es obligatorio.
+                                </div>
+                                <div *ngIf="solicitudForm.get('numeroContenedor')?.touched && solicitudForm.get('numeroContenedor')?.errors?.['minlength']" class="mensaje-error">
+                                    Por favor, no escribas menos de 6 caracteres
+                                </div>
                         </div>
                     </div>
                 </div>
@@ -81,9 +89,9 @@
                 <div class="row">
                     <div class="col-md-12" *ngIf="mostrarButtons">
                         <div class="form-group pull-right">
-                            <button type="button" class="btn btn-default" (click)="limpiarCampos()">Limpiar</button>
+                            <button type="button" class="btn btn-default" (click)="limpiarCampos()" [disabled]="soloLectura">Limpiar</button>
                             <button type="button" class="btn btn-primary ms-2" (click)="datosCapturaModal()"
-                                data-bs-toggle="modal" data-bs-target="#modalAgregarConstanciaTransferencia">Buscar</button>
+                                data-bs-toggle="modal" [disabled]="soloLectura">Buscar</button>
                         </div>
                     </div>
                 </div>
@@ -95,26 +103,35 @@
                         <div class="form-group">
                             <app-catalogo-select [catalogo]="contenedores.catalogos" [label]="contenedores.labelNombre"
                             [placeholder]="contenedores.primerOpcion" [required]="true" formControlName="contenedores"
-                            (change)="setValoresStore(solicitudForm,'contenedores', 'setContenedores')"></app-catalogo-select>
+                            (change)="setValoresStore(solicitudForm,'contenedores', 'setContenedores')" [isDisabled]="soloLectura"></app-catalogo-select>
+                            <div *ngIf="isInvalid('contenedores')" class="mensaje-error">
+                                Este campo es obligatorio.
+                            </div>
                         </div>
                     </div>
                     <div class="col-md-4">
                         <div class="form-group">
-                            <label for="digitoDeControl">Dígito verificador</label>
+                            <label for="digitoDeControl">Dígito verificador:</label>
                             <input type="text" formControlName="digitoDeControl" id="digitoDeControl" maxlength="1"
-                                class="form-control" (change)="onChange('digitoDeControl', $event)">
+                                class="form-control" (change)="onChange('digitoDeControl', $event)" [disabled]="soloLectura">
                         </div>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-4">
                         <div class="form-group datepicker-group">
-                            <input-fecha [datos]="fechaIngreso" (valorCambiado)="cambioFechaIngreso($event)"></input-fecha>
+                            <input-fecha [datos]="fechaIngreso" (valorCambiado)="cambioFechaIngreso($event)" [isDisabled]="soloLectura"></input-fecha>
                         </div>
                     </div>
                     <div class="col-md-4">
                         <div class="form-group datepicker-group">
-                            <input-fecha [datos]="Vigencia" (valorCambiado)="cambioVigencia($event)"></input-fecha>
+                            <input-fecha [datos]="Vigencia" (valorCambiado)="cambioVigencia($event)" [isDisabled]="soloLectura"></input-fecha>
+                            <div *ngIf="isInvalid('Vigencia')" class="mensaje-error">
+                                Este campo es obligatorio.
+                            </div>
+                            <div *ngIf="isInvalid('fechaIngreso')" class="mensaje-error">
+                                La fecha de vigencia debe ser mayor que la fecha de ingreso
+                            </div>
                         </div>
                     </div>
                     <br />
@@ -122,7 +139,7 @@
                         <div class="col-md-12">
                             <div class="form-group pull-right">
                                 <button type="button" class="btn btn-primary ms-2"
-                                    (click)="datosCaptura()">Agregar</button>
+                                    (click)="datosCaptura()" [disabled]="soloLectura">Agregar</button>
                             </div>
                         </div>
                     </div>
@@ -139,20 +156,31 @@
                             <app-catalogo-select [catalogo]="catalogoList" [label]="aduana.labelNombre"
                                 [placeholder]="aduana.primerOpcion" [required]="true"
                                 formControlName="aduanaMenuDesplegable"
-                                (change)="setValoresStore(solicitudForm,'aduanaMenuDesplegable', 'setAduanaMenuDesplegable')"></app-catalogo-select>
+                                (change)="setValoresStore(solicitudForm,'aduanaMenuDesplegable', 'setAduanaMenuDesplegable')"
+                                [isDisabled]="soloLectura"></app-catalogo-select>
+                        </div>
+                    </div>
+                    <div class="row align-items-cente">
+                        <div class="col-md-8">
+                            <ng-titulo titulo="Adjuntar archivo" />
+                            <div class="d-flex align-items-center">
+                                <div class="col-md-4">
+                                    <label for="archivoSeleccionado" class="form-label">Archivo seleccionado*:</label>
+                                </div>
+                                <div class="col-md-8">
+                                    <input class="form-control" type="text" name="archivoSeleccionado" id="archivoSeleccionado"
+                                        disabled>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-4">
-                            <ng-titulo titulo="Adjuntar archivo" />
-                            <label for="archivoSeleccionado" class="form-label">Archivo Seleccionado*:</label>
-                            <input class="form-control" type="file" name="archivoSeleccionado" id="archivoSeleccionado"
-                                required>
-                        </div>
                         <div class="col-md-4 d-flex justify-content-end cargarbtn">
-                            <button type="button" class="btn btn-default" (click)="adjuntarArchivo()">Cargar
-                                Archivo</button>
+                            <button type="button" class="btn btn-default" data-bs-toggle="modal" 
+                                data-bs-target="#modalArchivoCsv" [disabled]="soloLectura">Cargar archivo</button>
                         </div>
+                    </div>
+                    <div class="row">
                         <div *ngIf="mostrarArchivoSeleccionadoTable" class="table-container ">
                             <app-tabla-dinamica [configuracionTabla]="csvTabla"
                                 [datos]="datosDelCsvArchivo"></app-tabla-dinamica>
@@ -162,7 +190,7 @@
             </div>
         </ng-container>
 
-        <div class="col-md-12" id="IdGridContenedoresITC"
+        <div class="col-md-12 mt-5" id="IdGridContenedoresITC"
             *ngIf="!solicitud11204State?.tipoBusqueda || solicitud11204State?.tipoBusqueda === 'Contenedor'">
             <br>
             <div class="table-responsive">
@@ -179,28 +207,33 @@
                 </nav>
             </div>
         </div>
-        <div class="row" style="margin-top: 30px;margin-bottom: 30px;">
-            <div class="form-group">
-                <div class="col-md-12">
-                    <div class="pull-right row">
-                        <div class="col-md-5">
-                            <button type="button" class="btn btn-danger">
-                                Cancelar
-                            </button>
+        @if (consultaDatos.create) {
+            <div class="row" style="margin-top: 30px;margin-bottom: 30px;">
+                <div class="form-group">
+                    <div class="col-md-12">
+                        <div class="pull-left text-muted text-vertical-align-button" id="lblCamposObligatorios">
+                            * Campos obligatorios
                         </div>
-                        <div class="col-md-5" id="botonGuardar">
-                            <button type="submit" class="btn btn-primary" (click)="continuar()">
-                                Continuar
-                            </button>
+                        <div class="pull-right row">
+                            <div class="col-md-5">
+                                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalCancelar">
+                                    Cancelar
+                                </button>
+                            </div>
+                            <div class="col-md-5" id="botonGuardar">
+                                <button type="submit" class="btn btn-primary" (click)="continuar()">
+                                    Continuar
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+        }
     </form>
 
     <div class="modal fade" id="modalAgregarConstanciaTransferencia" tabindex="-1" role="dialog"
-        aria-labelledby="modalAgregarConstanciaTransferenciaLabel" aria-hidden="true">
+        aria-labelledby="modalAgregarConstanciaTransferenciaLabel" aria-hidden="true" #modalAgregarConstanciaTransferencia>
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -212,9 +245,46 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-primary" (click)="mostrarTipoContenedor()"
                         data-bs-dismiss="modal">Si</button>
-                    <button type="button" class="btn btn-default" data-bs-dismiss="modal">No</button>
+                    <button type="button" class="btn btn-default" (click)="hideModal()" data-bs-dismiss="modal">No</button>
                 </div>
             </div>
         </div>
     </div>
+
+    <div class="modal fade" id="modalCancelar" tabindex="-1" role="dialog"
+        aria-labelledby="modalCancelar" aria-hidden="true" #modalCancelar>
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Cancelar</h4>
+                </div>
+                <div class="modal-body">
+                    <p>¿Está seguro que desea cancelar?. Se borrarán los datos capturados.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" (click)="limpiarCampos()"
+                        data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-default" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modalArchivoCsv" tabindex="-1" role="dialog"
+        aria-labelledby="modalArchivoCsv" aria-hidden="true" #modalArchivoCsv>
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <ng-titulo titulo="Cargar archivo" />
+                <div class="modal-body justify-content-start mb-5">
+                    <label for="archivoSeleccionado" class="form-label">Archivo:</label>   
+                    <input class="form-control" type="file" name="archivoSeleccionado" id="archivoSeleccionado">
+                </div>
+                <div class="modal-footer justify-content-end">
+                    <button type="button" class="btn btn-default" data-bs-dismiss="modal">Regresar</button>
+                    <button type="button" class="btn btn-primary" (click)="adjuntarArchivo()" data-bs-dismiss="modal">Enviar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div>

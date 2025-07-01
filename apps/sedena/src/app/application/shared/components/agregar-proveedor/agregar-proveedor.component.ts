@@ -1,15 +1,36 @@
-import { CAMPO_OBLIGATORIO_PROVEEDOR, TIPO_PERSONA_OPCIONES } from '../../constants/datos-solicitud.enum';
+import {
+  AGREGARPROVEEDORFORM,
+  CAMPO_OBLIGATORIO_PROVEEDOR,
+  TIPO_PERSONA_OPCIONES,
+} from '../../constants/datos-solicitud.enum';
 import { CommonModule, Location } from '@angular/common';
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { DestinoFinal, Proveedor } from '../../models/terceros-relacionados.model';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+} from '@angular/core';
+import {
+  DestinoFinal,
+  Proveedor,
+} from '../../models/terceros-relacionados.model';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
+import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
 import { InputRadioComponent } from '@ng-mf/data-access-user';
 import { Subject } from 'rxjs';
 import { TipoPersona } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
+import { map } from 'rxjs/operators';
 import { takeUntil } from 'rxjs';
 
 /**
@@ -39,12 +60,12 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit {
    */
   public tipoPersona = TipoPersona;
   /**
-   * @property {Subject<void>} unsubscribe$
+   * @property {Subject<void>} destroyNotifier$
    * Subject para cancelar suscripciones activas y evitar fugas de memoria.
    * Se completa en el hook `ngOnDestroy`.
    * @private
    */
-  private unsubscribe$ = new Subject<void>();
+  private destroyNotifier$ = new Subject<void>();
 
   /**
    * @property {Proveedor[]} proveedores
@@ -70,7 +91,13 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit {
    * @type {number}
    */
   @Input() idProcedimiento!: number;
-
+  /**
+   * Indica si el formulario se encuentra en modo solo lectura.
+   * Cuando es verdadero, los campos del formulario no pueden ser editados.
+   * @property {boolean} esFormularioSoloLectura
+   * @default false
+   */
+  @Input() esFormularioSoloLectura: boolean = false;
   /**
    * @property updateProveedorTablaDatos
    * @description Evento que emite una lista actualizada de objetos `Proveedor` hacia el componente padre.
@@ -79,13 +106,19 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit {
    */
   @Output() updateProveedorTablaDatos = new EventEmitter<Proveedor[]>();
 
-    /**
+  /**
+   * Evento que se emite cuando el usuario desea cancelar una acción.
+   * @property {EventEmitter<boolean>} cancelarEventListener
+   */
+  @Output() cancelarEventListener = new EventEmitter<boolean>();
+
+  /**
    * Datos del formulario que pueden ser de tipo `DestinoFinal`, `Proveedor`, `null` o `undefined`.
    * Este input se utiliza para recibir la información necesaria desde el componente padre.
    *
    * @type {DestinoFinal | Proveedor | null | undefined}
    */
-    @Input() formaDatos!: DestinoFinal | Proveedor | null | undefined;
+  @Input() formaDatos!: DestinoFinal | Proveedor | null | undefined;
 
   /**
    * Opciones de radio para seleccionar el tipo de persona.
@@ -106,15 +139,52 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit {
    *
    * @param fb - FormBuilder para construir el formulario reactivo.
    * @param datosSolicitudService - Servicio para obtener datos del backend.
-   * @param tramiteStore - Store que administra el estado del trámite actual.
-   * @param tramiteQuery - Servicio para consultar el estado del trámite.
-   * @param ubicaccion - Servicio de Angular para navegación de retroceso.
+   * @param ubicaccion - Servicio de ubicación para navegar entre vistas.
+   * @param consultaioQuery - Servicio para consultar el estado del trámite.
+   *
    */
   constructor(
     private fb: FormBuilder,
     private datosSolicitudService: DatosSolicitudService,
-    private ubicaccion: Location // eslint-disable-next-line no-empty-function
-  ) {}
+    private ubicaccion: Location,
+    private consultaioQuery: ConsultaioQuery
+  ) {
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState: { readonly: boolean }) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
+  }
+  /**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.
+   * Además, obtiene la información del catálogo de mercancía.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.crearFormaulario();
+    }
+  }
+
+  /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormulario(): void {
+    this.crearFormaulario();
+    if (this.esFormularioSoloLectura) {
+      this.agregarProveedorForm.disable();
+    } else if (!this.esFormularioSoloLectura) {
+      this.agregarProveedorForm.enable();
+    } else {
+      // No se requiere ninguna acción en el formulario
+    }
+  }
   /**
    * Crea el formulario reactivo `agregarProveedorForm` utilizando `FormBuilder`.
    * Define los campos y sus validaciones.
@@ -128,22 +198,22 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit {
         [
           Validators.required,
           Validators.minLength(2),
-          Validators.maxLength(150),
+          Validators.maxLength(254),
         ],
       ],
-      nombres: ['', Validators.required],
-      primerApellido: ['', Validators.required],
-      segundoApellido: [''],
+      nombres: ['', [Validators.required, Validators.maxLength(200)]],
+      primerApellido: ['', [Validators.required, Validators.maxLength(200)]],
+      segundoApellido: ['', Validators.maxLength(200)],
       pais: ['', Validators.required],
-      estado: ['', Validators.required],
-      codigoPostal: ['', Validators.required],
-      colonia: [''],
-      calle: ['', Validators.required],
-      numeroExterior: ['', Validators.required],
-      numeroInterior: [''],
-      lada: [''],
-      telefono: [''],
-      correoElectronico: ['', [Validators.required, Validators.email]],
+      estado: ['', [Validators.required, Validators.maxLength(120)]],
+      codigoPostal: ['', [Validators.required, Validators.maxLength(12)]],
+      colonia: ['', Validators.required],
+      calle: ['', [Validators.required, Validators.maxLength(300)]],
+      numeroExterior: ['', [Validators.required, Validators.maxLength(55)]],
+      numeroInterior: ['', Validators.maxLength(55)],
+      lada: ['', Validators.maxLength(5)],
+      telefono: ['', Validators.maxLength(24)],
+      correoElectronico: ['', [Validators.email, Validators.maxLength(320)]],
     });
     this.agregarProveedorForm.disable();
     this.agregarProveedorForm.get('tipoPersona')?.enable();
@@ -154,10 +224,17 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit {
    */
   ngOnInit(): void {
     this.crearFormaulario();
-    this.campoObligatorio = CAMPO_OBLIGATORIO_PROVEEDOR.includes(this.idProcedimiento)
+    this.campoObligatorio = CAMPO_OBLIGATORIO_PROVEEDOR.includes(
+      this.idProcedimiento
+    );
     this.campoObligatorioChange();
+    if (AGREGARPROVEEDORFORM.includes(this.idProcedimiento)) {
+      this.agregarProveedorForm.enable();
+    } else {
+      this.agregarProveedorForm.disable();
+    }
     this.cargarDatos();
-    if(this.formaDatos) {
+    if (this.formaDatos) {
       this.agregarProveedorForm.patchValue(this.formaDatos);
     }
   }
@@ -176,15 +253,14 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit {
     const CODIGOPOSTAL = this.agregarProveedorForm.get('codigoPostal');
     const CALLE = this.agregarProveedorForm.get('calle');
     const NUMEROEXTERIOR = this.agregarProveedorForm.get('numeroExterior');
-    if(this.campoObligatorio){
+    if (this.campoObligatorio) {
       NOMBRES?.setValidators([Validators.required]);
       PRIMERAPELLIDO?.setValidators([Validators.required]);
       ESTADO?.setValidators([Validators.required]);
       CODIGOPOSTAL?.setValidators([Validators.required]);
       CALLE?.setValidators([Validators.required]);
       NUMEROEXTERIOR?.setValidators([Validators.required]);
-    }
-    else{
+    } else {
       NOMBRES?.clearValidators();
       PRIMERAPELLIDO?.clearValidators();
       ESTADO?.clearValidators();
@@ -207,8 +283,8 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit {
   cargarDatos(): void {
     this.datosSolicitudService
       .obtenerListaPaises()
-      .pipe(takeUntil(this.unsubscribe$))
-      .subscribe((data) => {
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data: Catalogo[]) => {
         this.paisesDatos = data;
       });
   }
@@ -219,6 +295,10 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit {
    * local, actualiza el store del trámite y luego limpia el formulario y regresa a la vista anterior.
    */
   guardarProveedor(): void {
+    if (this.agregarProveedorForm.invalid) {
+      this.agregarProveedorForm.markAllAsTouched();
+      return;
+    }
     const NUEVO_PROVEEDOR: Proveedor = {
       nombreRazonSocial: `${this.agregarProveedorForm.value.nombres} ${
         this.agregarProveedorForm.value.primerApellido
@@ -253,6 +333,8 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit {
    */
   limpiarFormulario(): void {
     this.agregarProveedorForm.reset();
+    this.agregarProveedorForm.disable();
+    this.agregarProveedorForm.get('tipoPersona')?.enable();
   }
   /**
    * @method cancelar
@@ -261,7 +343,7 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit {
    * @returns {void} Este método no retorna ningún valor.
    */
   cancelar(): void {
-    this.ubicaccion.back();
+    this.cancelarEventListener.emit(true);
   }
   /**
    * * Método que se ejecuta cuando se selecciona un país en el formulario.
@@ -280,7 +362,7 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit {
    * @description Hook de destrucción del componente. Libera las suscripciones activas.
    */
   ngOnDestroy(): void {
-    this.unsubscribe$.next();
-    this.unsubscribe$.complete();
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }

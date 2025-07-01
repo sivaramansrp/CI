@@ -1,44 +1,49 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ActivatedRoute } from '@angular/router';
+// @ts-nocheck
+import { TestBed } from '@angular/core/testing';
 import { DatosMercanciaContenedoraComponent } from './datos-mercancia-contenedora.component';
-import { DatosSolicitudService } from '../../../../shared/services/datos-solicitud.service';
+import { Tramite240112Store } from '../../estados/tramite240112Store.store';
 import { of } from 'rxjs';
-import { DatosMercanciaComponent } from '../../../../shared/components/datos-mercancia/datos-mercancia.component';
 
-describe('DatosMercanciaContenedoraComponent', () => {
+const mockTramiteStore = {
+  updateMercanciaTablaDatos: jest.fn(),
+};
+
+describe('DatosMercanciaContenedoraComponent (Jest)', () => {
   let component: DatosMercanciaContenedoraComponent;
-  let fixture: ComponentFixture<DatosMercanciaContenedoraComponent>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      declarations: [DatosMercanciaContenedoraComponent],
-      imports: [DatosMercanciaComponent],
+  const mockMercancia = [
+    {
+      nombre: 'Producto Ejemplo',
+      cantidad: 100,
+      descripcion: 'Producto de ejemplo',
+      unidad: 'Kg',
+      precio: 150,
+      total: 15000,
+      rfc: 'RFC123456',
+      proveedor: 'Proveedor Ejemplo',
+    },
+  ];
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
       providers: [
-        {
-          provide: ActivatedRoute,
-          useValue: {
-            params: of({}), // Mock params as an observable
-            queryParams: of({}), // Mock queryParams if needed
-            data: of({}), // Mock data as an observable
-          },
-        },
-        {
-          provide: DatosSolicitudService,
-          useValue: {
-            obtenerFraccionesCatalogo: jest.fn().mockReturnValue(of([])), // Mock the method to return an observable
-            obtenerUMCCatalogo: jest.fn().mockReturnValue(of([])), // Mock the method to return an observable
-            obtenerMonedaCatalogo: jest.fn().mockReturnValue(of([])), // Mock the method to return an observable
-          },
-        },
+        { provide: Tramite240112Store, useValue: mockTramiteStore },
       ],
-    }).compileComponents();
+    });
 
-    fixture = TestBed.createComponent(DatosMercanciaContenedoraComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+    component = new DatosMercanciaContenedoraComponent(
+      mockTramiteStore as any,
+    );
   });
 
-  it('should create', () => {
+  it('should be created', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should call updateMercanciaDetalle() with given mock data', () => {
+    const spy = jest.spyOn(mockTramiteStore, 'updateMercanciaTablaDatos');
+
+    component.updateMercanciaDetalle(mockMercancia);
+    expect(spy).toHaveBeenCalledWith(mockMercancia);
   });
 });

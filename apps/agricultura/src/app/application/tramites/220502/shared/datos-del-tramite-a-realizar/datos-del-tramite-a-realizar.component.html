@@ -1,0 +1,85 @@
+<fieldset [formGroupName]="claveDeControl">
+  <ng-titulo titulo="Datos del trámite a realizar" />
+  <div class="row">
+    <div class="col-md-4">
+      <div class="form-field">
+        <app-catalogo-select
+          id="certificadosAutorizados"
+          [catalogo]="certificadosAutorizados.catalogos"
+          [label]="certificadosAutorizados.labelNombre"
+          [placeholder]="certificadosAutorizados.primerOpcion"
+          [required]="certificadosAutorizados.required"
+          formControlName="certificadosAutorizados"
+          [isDisabled]="formularioDeshabilitado"
+          (selectionChange)="setCertificadosAutorizados($event)"
+        ></app-catalogo-select>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="form-field">
+        <input-fecha
+          [datos]="configuracionFechaFinVigencia"
+          (valorCambiado)="cambioFechaInicio($event)"
+          [isDisabled]="formularioDeshabilitado"
+          [setFecha]="this.solicitud220502State.fechaDeInspeccion"
+        ></input-fecha>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="form-field">
+        <app-catalogo-select
+          id="horaDeInspeccion"
+          [catalogo]="horaDeInspeccion.catalogos"
+          [label]="horaDeInspeccion.labelNombre"
+          [placeholder]="horaDeInspeccion.primerOpcion"
+          [required]="horaDeInspeccion.required"
+          formControlName="horaDeInspeccion"
+          [isDisabled]="formularioDeshabilitado"
+          (selectionChange)="setHoraDeInspeccion($event)"
+        ></app-catalogo-select>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="form-field">
+        <app-catalogo-select
+          id="aduanaDeIngreso"
+          [catalogo]="aduanaDeIngreso.catalogos"
+          [label]="aduanaDeIngreso.labelNombre"
+          [placeholder]="aduanaDeIngreso.primerOpcion"
+          [required]="aduanaDeIngreso.required"
+          formControlName="aduanaDeIngreso"
+          [isDisabled]="formularioDeshabilitado"
+          (selectionChange)="setAduanaDeIngreso($event)"
+        ></app-catalogo-select>
+      </div>
+    </div>
+    <div class="col-md-8">
+      <div class="form-field">
+        <app-catalogo-select
+          id="sanidadAgropecuaria"
+          [catalogo]="sanidadAgropecuaria.catalogos"
+          [label]="sanidadAgropecuaria.labelNombre"
+          [placeholder]="sanidadAgropecuaria.primerOpcion"
+          [required]="sanidadAgropecuaria.required"
+          formControlName="sanidadAgropecuaria"
+          [isDisabled]="formularioDeshabilitado"
+          (selectionChange)="setSanidadAgropecuaria($event)"
+        ></app-catalogo-select>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="form-field">
+        <app-catalogo-select
+          id="puntoDeInspeccion"
+          [catalogo]="puntoDeInspeccion.catalogos"
+          [label]="puntoDeInspeccion.labelNombre"
+          [placeholder]="puntoDeInspeccion.primerOpcion"
+          [required]="puntoDeInspeccion.required"
+          formControlName="puntoDeInspeccion"
+          [isDisabled]="formularioDeshabilitado"
+          (selectionChange)="setPuntoDeInspeccion($event)"
+        ></app-catalogo-select>
+      </div>
+    </div>
+  </div>
+</fieldset>

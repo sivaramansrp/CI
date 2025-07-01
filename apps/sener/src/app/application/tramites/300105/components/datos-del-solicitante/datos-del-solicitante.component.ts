@@ -1,4 +1,5 @@
-import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, Inject, OnDestroy, OnInit, Output } from '@angular/core';
+import { ConsultaioQuery, REG_X } from '@ng-mf/data-access-user';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
 import {
@@ -19,15 +20,19 @@ import { Tramite300105Query } from '../../estados/tramite300105.query';
   templateUrl: './datos-del-solicitante.component.html',
 })
 export class DatosDelSolicitanteComponent implements OnInit, OnDestroy {
+  /** 
+   * Evento que emite el tipo de operación seleccionado al componente padre. 
+   */ 
+  @Output() pasarTipoOperacion: EventEmitter<string> = new EventEmitter<string>();
   /**
    * Formulario de la solicitud.
    */
   formSolicitud!: FormGroup;
 
-   /**
+  /**
    * Opciones de botón de radio.
    */
-   opcionDeBotonDeRadio = OPCIONES_DE_BOTON_DE_RADIO;
+  opcionDeBotonDeRadio = OPCIONES_DE_BOTON_DE_RADIO;
 
   /**
    * Estado de la solicitud de la sección 300105.
@@ -39,6 +44,17 @@ export class DatosDelSolicitanteComponent implements OnInit, OnDestroy {
    */
   private destroyNotifier$: Subject<void> = new Subject();
 
+  /** 
+  * Almacena el valor seleccionado del tipo de operación. 
+  */
+  VALOR_SELECCIONADO: string = '';
+
+  /**
+  * Indica si el formulario está en modo solo lectura.
+  * Cuando es `true`, los campos del formulario no se pueden editar.
+  */
+  esFormularioSoloLectura: boolean = false; 
+
   /**
    * Constructor del componente.
    */
@@ -47,9 +63,24 @@ export class DatosDelSolicitanteComponent implements OnInit, OnDestroy {
     private tramite300105Store: Tramite300105Store,
     private tramite300105Query: Tramite300105Query,
     @Inject(AutorizacionDeRayosXService)
-    private autorizacionDeRayosXService: AutorizacionDeRayosXService
+    private autorizacionDeRayosXService: AutorizacionDeRayosXService,
+    private consultaioQuery: ConsultaioQuery
   ) {
-    // No se realiza ninguna acción aquí.
+    /**
+     * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
+     *
+     * - Asigna el valor de solo lectura (`readonly`) a la propiedad `esFormularioSoloLectura`.
+     * - Llama a `inicializarEstadoFormulario()` para aplicar configuraciones basadas en el estado recibido.
+     * - La suscripción se cancela automáticamente cuando `destroyNotifier$` emite un valor (para evitar fugas de memoria).
+     */
+    this.consultaioQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState) => {
+       this.esFormularioSoloLectura = seccionState.readonly;
+      })
+    )
+    .subscribe()
   }
 
   /**
@@ -86,31 +117,50 @@ export class DatosDelSolicitanteComponent implements OnInit, OnDestroy {
    */
   initializarFormulario(): void {
     this.tramite300105Query.selectTramite300105$
-    .pipe(
-      takeUntil(this.destroyNotifier$),
-      map((seccionState) => {
-        this.solicitudState = seccionState;
-      })
-    )
-    .subscribe();
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.solicitudState = seccionState;
+        })
+      )
+      .subscribe();
     this.formSolicitud = this.fb.group({
       datosSolicitante: this.fb.group({
-        numeroExpediente: [this.solicitudState?.numeroExpediente, Validators.required],
-        tipoOperacion: [
-          this.solicitudState?.tipoOperacion],
+        numeroExpediente: [
+          this.solicitudState?.numeroExpediente,
+          [
+            Validators.required,
+            Validators.maxLength(6),
+            Validators.pattern(REG_X.SOLO_NUMEROS)
+          ],
+        ],
+        tipoOperacion: [this.solicitudState?.tipoOperacion],
         finalidad: [this.solicitudState?.finalidad],
-        isExento: [
-          this.solicitudState?.isExento],
-        isAutorizacion: [
-          this.solicitudState?.isAutorizacion],
+        isExento: [this.solicitudState?.isExento],
+        isAutorizacion: [this.solicitudState?.isAutorizacion],
         numAutorizacion1: [
-            this.solicitudState?.numAutorizacion1, [Validators.required]],
+          this.solicitudState?.numAutorizacion1,
+          [Validators.required, Validators.pattern(REG_X.SOLO_NUMEROS)]
+        ],
         numAutorizacion2: [
-          this.solicitudState?.numAutorizacion2, [Validators.required]],
+          this.solicitudState?.numAutorizacion2,
+          [Validators.required, Validators.pattern(REG_X.SOLO_NUMEROS)]
+        ],
         numAutorizacion3: [
-          this.solicitudState?.numAutorizacion3, [Validators.required]],
+          this.solicitudState?.numAutorizacion3,
+          [Validators.required, Validators.pattern(REG_X.SOLO_NUMEROS)]
+        ],
       }),
     });
+    if (this.solicitudState?.tipoOperacion) {
+      this.obtenerTipoOperacionSeleccionado();
+    }
+
+    if(this.esFormularioSoloLectura){
+      this.formSolicitud.disable();
+    } else {
+      this.formSolicitud.enable();
+    }
   }
 
   /**
@@ -118,7 +168,7 @@ export class DatosDelSolicitanteComponent implements OnInit, OnDestroy {
    */
   setValoresStore(form: FormGroup, campo: string): void {
     const VALOR = form.get(campo)?.value;
-    this.tramite300105Store.establecerDatos({[campo]: VALOR});
+    this.tramite300105Store.establecerDatos({ [campo]: VALOR });
   }
 
   /**
@@ -161,9 +211,16 @@ export class DatosDelSolicitanteComponent implements OnInit, OnDestroy {
     return this.formSolicitud.get('datosSolicitante') as FormGroup;
   }
 
+  /** 
+   * Obtiene el valor del tipo de operación desde el formulario y lo emite al componente padre. 
+   */
+  obtenerTipoOperacionSeleccionado(): void {
+    const VALOR_SELECCIONADO = this.formSolicitud.get('datosSolicitante.tipoOperacion')?.value;
+    this.pasarTipoOperacion.emit(VALOR_SELECCIONADO);
+  }
   /**
-  * Metodo y para destruir el componente y liberar recursos.
-  */
+   * Metodo y para destruir el componente y liberar recursos.
+   */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();

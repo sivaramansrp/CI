@@ -23,19 +23,22 @@ import {
   REGEX_DIAMETRO,
   REGEX_PROFUNDIDAD,
 } from '@libs/shared/data-access-user/src';
+import { Subject, map, takeUntil } from 'rxjs';
+import { Tramite270201State, Tramite270201Store } from '../../estados/tramites/tramite270201.store';
 import { AlertComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { MANIFIESTOS_DECLARACION } from '../../constantes/aviso-siglos.enum';
 import { ModalComponent } from '../modal/modal.component';
 import { OPCIONES_DE_BOTON_DE_RADIO } from '../../constantes/aviso-siglos.enum';
 import { ObraTablaDatos } from '../../models/aviso-siglos.models';
 import { SolicitudService } from '../../services/solicitud.service';
-import { Subject } from 'rxjs';
 import { TablaDatos } from '../../models/aviso-siglos.models';
 import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
 import { TableComponent } from '@libs/shared/data-access-user/src';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
-import { Tramite270201Store } from '../../estados/tramites/tramite270201.store';
-import { takeUntil } from 'rxjs';
+import { Tramite270201Query } from '../../estados/queries/tramite270201.query';
+import obraDeArteDummy from '@libs/shared/theme/assets/json/270201/obra-de-arte-dummy.json'; // adjust path if needed
 
 /**
  * Constante que contiene el texto del manifiesto de alerta sobre la propiedad y datos técnicos de la obra(s).
@@ -207,6 +210,21 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   tablaObraDeArteData: string[] = [];
 
+ /**
+  * Indica si el formulario está en modo solo lectura.
+  * Cuando es `true`, los campos del formulario no se pueden editar.
+  */
+   esFormularioSoloLectura: boolean = false;
+
+   /** Estado actual del trámite 270201 asociado a la solicitud. 
+   * Contiene datos del flujo y validaciones del proceso. */
+   public solicitudState!: Tramite270201State;
+
+  /**
+   * Texto de los manifiestos.
+   */
+  manifiestosText: string = '';
+
   /**
    * @constructor
    * @description
@@ -217,14 +235,25 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @param {FormBuilder} fb - Utilizado para construir y gestionar formularios reactivos.
    * @param {Tramite270201Store} tramite270201Store - Almacén que gestiona el estado del trámite 270201.
    * @param {SolicitudService} solicitudService - Servicio encargado de realizar solicitudes HTTP
+   * @param {ConsultaioQuery} consultaioQuery - Query para obtener el estado del store de consulta IO.
    * y obtener datos relacionados con el trámite.
    */
   constructor(
     private fb: FormBuilder,
     private tramite270201Store: Tramite270201Store,
-    private solicitudService: SolicitudService
+    private tramite270201Query: Tramite270201Query,
+    private solicitudService: SolicitudService,
+    private consultaioQuery: ConsultaioQuery
   ) {
-    // La lógica del constructor se puede añadir aquí si es necesario
+      this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroy$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
   }
 
   /**
@@ -245,6 +274,41 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * ```
    */
   ngOnInit(): void {
+   /** Texto que contiene los manifiestos declarados. */
+    this.manifiestosText = MANIFIESTOS_DECLARACION.MANIFIESTOS;
+
+      // Suscribe al estado del trámite y restaura las filas de la tabla si existen
+  this.tramite270201Query.selectDatosSolicitud$
+    .pipe(
+      takeUntil(this.destroy$),
+      map((solicitudState) => {
+        this.solicitudState = solicitudState as Tramite270201State;
+
+        // Restaurar las filas de la tabla de obras de arte si existen en el store
+        if (
+          this.solicitudState &&
+          typeof this.solicitudState === 'object' &&
+          this.solicitudState.ObraDeArte &&
+          Array.isArray(this.solicitudState.ObraDeArte)
+        ) {
+          // Evita duplicados si navegas varias veces
+          this.obraDeArteRowData = [...this.solicitudState.ObraDeArte];
+        }
+
+        /**
+        * Verifica si no hay datos de obra de arte y, de ser así, inicializa el arreglo
+        * con datos dummy y actualiza el store correspondiente.
+        */
+        if(this.obraDeArteRowData.length === 0) {
+          const OBRA_DE_ARTE_ROW: TablaDatos = {
+            tbodyData: obraDeArteDummy,
+          };
+          this.obraDeArteRowData.push(OBRA_DE_ARTE_ROW);
+          this.tramite270201Store.setObraDeArte(this.obraDeArteRowData);
+        }
+      })
+    )
+    .subscribe();
     /**
      * @description
      * Obtiene los datos de las columnas para la tabla de obras de arte desde el servicio de solicitud.
@@ -347,17 +411,48 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
      */
     this.initializeObraDeArteFormGroup();
 
-    /**
-     * Configura el texto HTML para el mensaje del manifiesto de alerta.
-     */
-    this.TEXTO_MANIFIESTO_ALERT = `
-    <div>
-      <div class="form-check">
-        <input class="form-check-input" type="checkbox" id="manifiestoCheckbox">
-        <p>Manifiesto que la información sobre la propiedád de la obra(s) y los datos técnicos de la obra(s) son ciertos y verdaderos.*</p>
-      </div>
-    </div>
-  `;
+    /** Llama al método que configura el formulario según el estado de solo lectura. */
+    this.inicializarEstadoFormulario();
+  }
+
+ /**
+   * Determina si se debe cargar un formulario nuevo o uno existente.  
+   * Ejecuta la lógica correspondiente según el estado del componente.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else if(this.solicitudFormGroup && this.obraDeArteFormgroup) {
+       this.solicitudFormGroup.enable();
+       this.obraDeArteFormgroup.enable();
+    }
+  }
+
+
+   /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormulario(): void {
+    this.initializeSolicitudFormGroup();
+    this.initializeObraDeArteFormGroup();
+    if (this.solicitudFormGroup && this.esFormularioSoloLectura) {
+      this.solicitudFormGroup.disable();
+    } else if (!this.esFormularioSoloLectura) {
+      this.solicitudFormGroup.enable();
+    } 
+
+    if (this.obraDeArteFormgroup && this.esFormularioSoloLectura) {
+      this.obraDeArteFormgroup.disable();
+      if (this.obraDeArteRowData.length === 0) {
+      const OBRA_DE_ARTE_ROW: TablaDatos = {
+      tbodyData: obraDeArteDummy,
+    };
+    this.obraDeArteRowData.push(OBRA_DE_ARTE_ROW);
+  }
+    } else if (!this.esFormularioSoloLectura) {
+      this.obraDeArteFormgroup.enable();
+    }
   }
 
   /**
@@ -456,7 +551,38 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
        * @default ''
        */
       aduanaEntrada: new FormControl('', [Validators.required]),
+
+        /**
+       * @control manifiesto
+       * @description
+       * Control de formulario para el campo 'manifiesto'
+       * Es obligatorio y debe ser completado.
+       * @default true
+       */
+      manifiesto: new FormControl({ value: true, disabled: this.esFormularioSoloLectura },
+      [Validators.required]),
     });
+
+      /** Suscribe al estado de solicitud 270201 y lo asigna a `solicitudState`.  
+      * Usa `takeUntil` para limpiar la suscripción al destruir el componente. */
+      this.tramite270201Query.selectDatosSolicitud$
+      .pipe(
+        takeUntil(this.destroy$),
+        map((seccionState) => {
+          this.solicitudState = seccionState as Tramite270201State;
+        })
+      )
+      .subscribe()
+
+        this.solicitudFormGroup.patchValue({
+          tipoDeOperacion: this.solicitudState.tipoDeOperacion,
+          tipoDeMovimiento: this.solicitudState.tipoDeMovimiento,
+          motivo: this.solicitudState.motivo,
+          pais: this.solicitudState.pais,
+          ciudad: this.solicitudState.ciudad,
+          medioTransporte: this.solicitudState.medioTransporte,
+          aduanaEntrada: this.solicitudState.aduanaEntrada,
+        });
   }
 
   /**
@@ -655,6 +781,35 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
        */
       descripcionArancelaria: ['', [Validators.required]],
     });
+
+
+  /** Suscribe al estado de solicitud 270201 y lo asigna a `solicitudState`.  
+ * Usa `takeUntil` para limpiar la suscripción al destruir el componente. */
+   this.tramite270201Query.selectDatosSolicitud$
+      .pipe(
+        takeUntil(this.destroy$),
+        map((seccionState) => {
+          this.solicitudState = seccionState as Tramite270201State;
+        })
+      )
+      .subscribe()
+
+          this.obraDeArteFormgroup.patchValue({
+          autor: this.solicitudState.autor,
+          titulo: this.solicitudState.titulo,
+          tecnicaDeRealizacion: this.solicitudState.tecnicaDeRealizacion,
+          alto: this.solicitudState.alto,
+          ancho: this.solicitudState.ancho,
+          profundidad: this.solicitudState.profundidad,
+          diametro: this.solicitudState.diametro,
+          variables: this.solicitudState.variables,
+          anoDeCreacion: this.solicitudState.anoDeCreacion,
+          avaluo: this.solicitudState.avaluo,
+          moneda: this.solicitudState.moneda,
+          propietario: this.solicitudState.propietario,
+          fraccionArancelaria: this.solicitudState.fraccionArancelaria,
+          descripcionArancelaria: this.solicitudState.descripcionArancelaria,
+        });
   }
 
   /**

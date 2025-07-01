@@ -1,11 +1,8 @@
-/* eslint-disable no-empty-function */
-/* eslint-disable @nx/enforce-module-boundaries */
-/* eslint-disable sort-imports */
+import { BtnContinuarComponent, FirmaElectronicaComponent } from '@ng-mf/data-access-user';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Component, } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { BtnContinuarComponent, FirmaElectronicaComponent } from '@ng-mf/data-access-user';
 /**
  * Componente para el paso tres del wizard.
  */
@@ -18,7 +15,7 @@ import { BtnContinuarComponent, FirmaElectronicaComponent } from '@ng-mf/data-ac
   
 })
 export class PasoTresComponent {
-
+ 
   /**
    * Constructor del componente.
    * @param router Servicio de enrutamiento.

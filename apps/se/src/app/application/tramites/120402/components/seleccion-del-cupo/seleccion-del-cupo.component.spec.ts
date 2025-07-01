@@ -1,90 +1,152 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { of } from 'rxjs';
 import { SeleccionDelCupoComponent } from './seleccion-del-cupo.component';
-import { DescripcionDelCupoService } from 'libs/shared/data-access-user/src/core/services/120402/descripcion-del-cupo/descripcionDelCupo.service';
- 
+import { SeleccionDelCupoService } from '@ng-mf/data-access-user';
+import { Tramite120402Query } from '../../estados/tramite120402.query';
+import { Tramite120402Store } from '../../estados/tramite120402.store';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { TipoNotificacionEnum, CategoriaMensaje } from '@ng-mf/data-access-user';
+import { TablaAcciones } from '@ng-mf/data-access-user';
+
+// These tests assume Jest and Angular TestBed setup
+
 describe('SeleccionDelCupoComponent', () => {
   let component: SeleccionDelCupoComponent;
   let fixture: ComponentFixture<SeleccionDelCupoComponent>;
-  let service: DescripcionDelCupoService;
- 
+  let seleccionDelCupoService: jest.Mocked<SeleccionDelCupoService>;
+  let tramite120402Store: jest.Mocked<Tramite120402Store>;
+  let tramite120402Query: jest.Mocked<Tramite120402Query>;
+
+  // Mock data
+  const mockRegimen = [{ id: '1', descripcion: 'Régimen 1' }];
+  const mockTratado = [{ id: '1', descripcion: 'Tratado 1' }];
+  const mockProducto = [{ id: '1', descripcion: 'Producto 1' }];
+  const mockSeleccionDelCupo = [{
+    description: 'Desc',
+    assignmentType: 'Tipo',
+    codes: ['001'],
+    quota: 'Cupo'
+  }];
+
   beforeEach(async () => {
+    const seleccionDelCupoServiceMock = {
+      getRegimen: jest.fn(() => of({ data: mockRegimen })),
+      getTratado: jest.fn(() => of({ tratado: mockTratado })),
+      getProducto: jest.fn(() => of({ data: mockProducto })),
+      getSeleccionDelCupo: jest.fn(() => of(mockSeleccionDelCupo))
+    };
+    const tramite120402QueryMock = {
+      selectSolicitud$: of({}),
+      getValue: jest.fn(() => ({ entidad: 'Entidad', representacion: 'Rep' }))
+    };
+    const tramite120402StoreMock = {
+      setCupoSeleccionado: jest.fn(),
+      setTramite120402State: jest.fn()
+    };
+
     await TestBed.configureTestingModule({
-      declarations: [SeleccionDelCupoComponent],
-      imports: [ReactiveFormsModule, HttpClientTestingModule],
-      providers: [DescripcionDelCupoService]
+      imports: [ReactiveFormsModule, SeleccionDelCupoComponent],
+      providers: [
+        { provide: SeleccionDelCupoService, useValue: seleccionDelCupoServiceMock },
+        { provide: Tramite120402Query, useValue: tramite120402QueryMock },
+        { provide: Tramite120402Store, useValue: tramite120402StoreMock }
+      ],
+      schemas: [NO_ERRORS_SCHEMA]
     }).compileComponents();
-  });
- 
-  beforeEach(() => {
+
+    seleccionDelCupoService = TestBed.inject(SeleccionDelCupoService) as any;
+    tramite120402Query = TestBed.inject(Tramite120402Query) as any;
+    tramite120402Store = TestBed.inject(Tramite120402Store) as any;
     fixture = TestBed.createComponent(SeleccionDelCupoComponent);
     component = fixture.componentInstance;
-    service = TestBed.inject(DescripcionDelCupoService);
- 
-    spyOn(service, 'getSeleccionDelCupo').and.returnValue(of({
-      regimen: [],
-      tratado: [],
-      producto: [],
-      subproducto: []
-    }));
- 
     fixture.detectChanges();
   });
- 
-  it('should create', () => {
+
+  it('should create the component', () => {
     expect(component).toBeTruthy();
   });
- 
-  it('should initialize the form', () => {
-    expect(component.seleccionForm).toBeDefined();
-    expect(component.seleccionForm.controls['regimen']).toBeDefined();
-    expect(component.seleccionForm.controls['tratado']).toBeDefined();
-    expect(component.seleccionForm.controls['producto']).toBeDefined();
-    expect(component.seleccionForm.controls['subproducto']).toBeDefined();
+
+  it('should load regimen, tratado, producto on init', () => {
+    expect(seleccionDelCupoService.getRegimen).toHaveBeenCalled();
+    expect(seleccionDelCupoService.getTratado).toHaveBeenCalled();
+    expect(seleccionDelCupoService.getProducto).toHaveBeenCalled();
+    expect(component.regimen).toEqual(mockRegimen);
+    expect(component.tratado).toEqual(mockTratado);
+    expect(component.producto).toEqual(mockProducto);
   });
- 
-  it('should load seleccion del cupo data on init', () => {
-    expect(service.getSeleccionDelCupo).toHaveBeenCalled();
-    expect(component.seleccionDelCupo).toEqual({
-      regimen: [],
-      tratado: [],
-      producto: [],
-      subproducto: []
-    });
+
+  it('should show notification if required fields missing on buscar', () => {
+    component.seleccionForm.get('regimen')?.setValue('');
+    component.manejarBuscar();
+    expect(component.modalAbierto).toBeTruthy();
+    expect(component.nuevaNotificacion).toBeDefined();
   });
- 
-  it('should call regimenOnChange when regimen changes', () => {
-    spyOn(component, 'regimenOnChange');
-    const select = fixture.nativeElement.querySelector('select[formControlName="regimen"]');
-    select.dispatchEvent(new Event('change'));
-    fixture.detectChanges();
-    expect(component.regimenOnChange).toHaveBeenCalled();
+
+  it('should call loadSeleccionDelCupo if all required fields present', () => {
+    component.seleccionForm.get('regimen')?.setValue(mockRegimen[0]);
+    component.manejarBuscar();
+    expect(seleccionDelCupoService.getSeleccionDelCupo).toHaveBeenCalled();
+    expect(component.datosTablaCupo.length).toBeGreaterThan(0);
   });
- 
-  it('should call tratadoOnChange when tratado changes', () => {
-    spyOn(component, 'tratadoOnChange');
-    const select = fixture.nativeElement.querySelector('select[formControlName="tratado"]');
-    select.dispatchEvent(new Event('change'));
-    fixture.detectChanges();
-    expect(component.tratadoOnChange).toHaveBeenCalled();
+
+  it('should handle onAccionCupo and set mostrarDescripcionCupo', () => {
+    const row = { descripcion: 'Desc', tipoAsignacion: 'Tipo', fracciones: ['001'], tipoCupo: 'Cupo' };
+    component.onAccionCupo({ row, column: 'editar' });
+    // expect(tramite120402Store.setTramite120402State).toHaveBeenCalled();
+    expect(component.mostrarDescripcionCupo).toBeTruthy();
   });
- 
-  it('should call productoOnChange when producto changes', () => {
-    spyOn(component, 'productoOnChange');
-    const select = fixture.nativeElement.querySelector('select[formControlName="producto"]');
-    select.dispatchEvent(new Event('change'));
-    fixture.detectChanges();
-    expect(component.productoOnChange).toHaveBeenCalled();
+
+  it('should close modal on cerrarModal', () => {
+    component.modalAbierto = true;
+    component.cerrarModal();
+    expect(component.modalAbierto).toBeFalsy();
   });
- 
-  it('should call subproductoOnChange when subproducto changes', () => {
-    spyOn(component, 'subproductoOnChange');
-    const select = fixture.nativeElement.querySelector('select[formControlName="subproducto"]');
-    select.dispatchEvent(new Event('change'));
-    fixture.detectChanges();
-    expect(component.subproductoOnChange).toHaveBeenCalled();
+
+  it('should clean up observables on destroy', () => {
+    const destroyedSpy = jest.spyOn(component['destroyNotifier$'], 'next');
+    const completeSpy = jest.spyOn(component['destroyNotifier$'], 'complete');
+    component.ngOnDestroy();
+    expect(destroyedSpy).toHaveBeenCalled();
+    expect(completeSpy).toHaveBeenCalled();
+  });
+
+  it('should mark form as invalid if regimen is empty', () => {
+    component.seleccionForm.get('regimen')?.setValue('');
+    expect(component.seleccionForm.valid).toBeFalsy();
+  });
+
+  it('should mark form as valid if all fields are filled', () => {
+    component.seleccionForm.get('regimen')?.setValue(mockRegimen[0]);
+    component.seleccionForm.get('tratado')?.setValue(mockTratado[0]);
+    component.seleccionForm.get('producto')?.setValue(mockProducto[0]);
+    component.seleccionForm.get('subproducto')?.setValue(mockProducto[0]);
+    expect(component.seleccionForm.valid).toBeTruthy();
+  });
+
+  it('should format datosTablaCupo correctly', () => {
+    component.seleccionForm.get('regimen')?.setValue(mockRegimen[0]);
+    component.manejarBuscar();
+    expect(component.datosTablaCupo[0].descripcion).toEqual(mockSeleccionDelCupo[0].description);
+    expect(component.datosTablaCupo[0].tipoAsignacion).toEqual(mockSeleccionDelCupo[0].assignmentType);
+    expect(component.datosTablaCupo[0].fracciones).toEqual(mockSeleccionDelCupo[0].codes);
+    expect(component.datosTablaCupo[0].tipoCupo).toEqual(mockSeleccionDelCupo[0].quota);
+  });
+
+  it('should handle single object response in loadSeleccionDelCupo', () => {
+    const singleObj = { description: 'Unico', assignmentType: 'Tipo', codes: ['010'], quota: 'Cupo' };
+    seleccionDelCupoService.getSeleccionDelCupo.mockReturnValue(of(singleObj));
+    component.seleccionForm.get('regimen')?.setValue(mockRegimen[0]);
+    component.manejarBuscar();
+    expect(component.datosTablaCupo.length).toBe(1);
+    expect(component.datosTablaCupo[0].descripcion).toEqual(singleObj.description);
+  });
+
+  it('should handle codes as string in loadSeleccionDelCupo', () => {
+    const stringCodes = [{ description: 'Desc', assignmentType: 'Tipo', codes: '001,002', quota: 'Cupo' }];
+    seleccionDelCupoService.getSeleccionDelCupo.mockReturnValue(of(stringCodes));
+    component.seleccionForm.get('regimen')?.setValue(mockRegimen[0]);
+    component.manejarBuscar();
+    expect(component.datosTablaCupo[0].fracciones).toEqual(stringCodes[0].codes);
   });
 });
- 

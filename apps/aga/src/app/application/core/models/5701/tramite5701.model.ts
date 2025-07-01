@@ -101,24 +101,43 @@ export interface Personas {
 
 // Pedimento
 export interface DatosComponentePedimento {
-    patente: number;
+    patente: string;
     idAduanaDespacho: number;
 }
 
 export interface Persona {
-    gafeteRespoDespacho?: number ;
+    gafeteRespoDespacho?: number;
     nombre: string;
     primerApellido: string;
     segundoApellido: string;
 }
 
+/**
+ * Representa un pedimento en el sistema.
+ * 
+ * @interface Pedimento
+ * 
+ * @property {number} patente - Número de patente asociado al pedimento.
+ * @property {number} pedimento - Número único del pedimento.
+ * @property {number} aduana - Código de la aduana correspondiente.
+ * @property {string} estadoPedimento - Estado actual del pedimento.
+ * @property {string} subEstadoPedimento - Subestado específico del pedimento.
+ * @property {number} idTipoPedimento - Identificador del tipo de pedimento.
+ * @property {string} descTipoPedimento - Descripción del tipo de pedimento.
+ * @property {string} numero - Número de referencia del pedimento.
+ * @property {string} comprobanteValor - Comprobante de valor asociado al pedimento.
+ * @property {string} pedimentoValidado - Indicador de validación del pedimento.
+ */
 export interface Pedimento {
-    patente: number;
+    idPedimento: number;
+    patente: string;
     pedimento: number;
     aduana: number;
-    idTipoPedimento: number;
+    tipoPedimento: number;
+    estadoPedimento: string;
+    subEstadoPedimento: string;
     descTipoPedimento: string;
     numero: string;
     comprobanteValor: string;
-    pedimentoValidado: boolean;
-  }
+    pedimentoValidado: string;
+}

@@ -52,6 +52,7 @@
                   [catalogo]="bancoCatalogo.catalogos"
                   formControlName="banco"
                   [label]="'Banco'"
+                  [isDisabled]="esFormularioSoloLectura"
                   [required]="true"
                   (change)="
                     setValoresStore(

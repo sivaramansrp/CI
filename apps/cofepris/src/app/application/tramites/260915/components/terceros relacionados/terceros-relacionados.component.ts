@@ -1,23 +1,43 @@
-import { CommonModule } from '@angular/common';
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { Modal } from 'bootstrap';
-import { ReplaySubject } from 'rxjs';
-import { map, takeUntil } from 'rxjs/operators';
+import { AlertComponent, Catalogo, CatalogosSelect, InputRadioComponent, Notificacion, NotificacionesComponent, Pedimento, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
+import { FormBuilder, FormGroup,ReactiveFormsModule,Validators} from '@angular/forms';
 
-import { AlertComponent, Catalogo, CatalogosSelect, ConfiguracionColumna, InputRadioComponent, Notificacion, NotificacionesComponent, Pedimento, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { TEXTOS, TIPO_PERSONA_RADIO_OPTIONS } from '../../constants/constantes.enum';
+
+import { Solicitud260915State, Solicitud260915Store } from '../../estados/tramites260915.store';
+import { map, takeUntil } from 'rxjs/operators';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
+import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 
 import { DESTINATARIO_CONFIGURACION_TABLA } from '../../constants/column-config.enum';
-import { TEXTOS, TIPO_PERSONA_RADIO_OPTIONS } from '../../constants/constantes.enum';
 import { Destinatario } from '../../models/destinatario.model';
-import { Solicitud260915Query } from '../../estados/tramites260915.query';
-import { Solicitud260915State, Solicitud260915Store } from '../../estados/tramites260915.store';
+import { Modal } from 'bootstrap';
 import { PermisoSanitarioDispositivosMedicosService } from '../../services/permiso-sanitario-dispositivos-medicos.service';
+import { ReplaySubject } from 'rxjs';
+import { Solicitud260915Query } from '../../estados/tramites260915.query';
 import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-relacionados/terceros-relacionados.component';
 
 /**
- * Componente para gestionar los terceros relacionados en el trámite.
+ * Componente para gestionar los terceros relacionados en el trámite 260915.
+ * Permite agregar, editar y eliminar terceros relacionados, así como gestionar la visualización de formularios y tablas.
+ * Integra catálogos, notificaciones, selección de tipo de persona y manejo de estados de solo lectura.
+ *
+ * @selector app-terceros-relacionados
+ * @standalone true
+ * @imports [
+ *   CommonModule,
+ *   TercerosRelacionadosComponent,
+ *   AlertComponent,
+ *   TituloComponent,
+ *   TablaDinamicaComponent,
+ *   ReactiveFormsModule,
+ *   CatalogoSelectComponent,
+ *   NotificacionesComponent,
+ *   InputRadioComponent
+ * ]
+ * @templateUrl ./terceros-relacionados.component.html
+ * @styleUrl ./terceros-relacionados.component.scss
  */
 @Component({
   selector: 'app-terceros-relacionados',
@@ -37,6 +57,12 @@ import { TercerosRelacionadosComponent } from '../../../../shared/components/ter
   styleUrl: './terceros-relacionados.component.scss',
 })
 export class TercerosrelacionadosComponent implements OnInit, OnDestroy {
+
+  /**
+   * Indica si el formulario está en modo solo lectura.
+   */
+  esFormularioSoloLectura: boolean = false;
+
   /** Constantes de texto utilizadas en el componente */
   TEXTOS = TEXTOS;
 
@@ -50,7 +76,7 @@ export class TercerosrelacionadosComponent implements OnInit, OnDestroy {
   selectedRows: Set<number> = new Set();
 
   /** Fila seleccionada actualmente */
-  selectedRow: any = null;
+  selectedRow: unknown = null;
 
   /** Estado del destinatario que se está agregando */
   agregarDestinatarioState!: Solicitud260915State;
@@ -81,10 +107,12 @@ export class TercerosrelacionadosComponent implements OnInit, OnDestroy {
    * Variable para almacenar el tipo de público.
    */
   tipoDePublicos: string = '';
+
   /**
    * Opciones de radio para seleccionar el tipo de persona.
    */
   tipoPersonaRadioOptions = TIPO_PERSONA_RADIO_OPTIONS;
+
   /**
    * Notificación actual que se mostrará en el componente.
    */
@@ -99,6 +127,7 @@ export class TercerosrelacionadosComponent implements OnInit, OnDestroy {
    * Lista de pedimentos gestionados en el componente.
    */
   pedimentos: Array<Pedimento> = [];
+
   /** Datos de la tabla de destinatarios */
   tableData: Destinatario[] = [];
 
@@ -107,17 +136,28 @@ export class TercerosrelacionadosComponent implements OnInit, OnDestroy {
 
   /**
    * Constructor del componente.
+   * Inicializa el formulario y suscribe el estado de solo lectura.
    * @param fb FormBuilder para crear formularios reactivos.
-   * @param registrarsolicitudmcp Servicio para registrar solicitudes MCP.
-   * @param solicitud260702Store Almacén de estado para el trámite 260702.
-   * @param solicitud260702Query Consulta de estado para el trámite 260702.
+   * @param permisosanitariodispositivosmedicosservice Servicio para obtener catálogos y datos.
+   * @param solicitud260915Store Almacén de estado para el trámite 260915.
+   * @param solicitud260915Query Consulta de estado para el trámite 260915.
+   * @param consultaioQuery Servicio para consultar el estado de la solicitud.
    */
   constructor(
     private fb: FormBuilder,
-    private permisosanitariodisposivos: PermisoSanitarioDispositivosMedicosService,
+    private permisosanitariodispositivosmedicosservice: PermisoSanitarioDispositivosMedicosService,
     private solicitud260915Store: Solicitud260915Store,
-    private solicitud260915Query: Solicitud260915Query
+    private solicitud260915Query: Solicitud260915Query,
+    public consultaioQuery: ConsultaioQuery,
   ) {
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+        })
+      )
+      .subscribe();
     this.crearFormTransporte();
   }
 
@@ -174,20 +214,48 @@ export class TercerosrelacionadosComponent implements OnInit, OnDestroy {
 
   /**
    * Método que se ejecuta al inicializar el componente.
+   * Suscribe el estado de la solicitud y prepara el formulario y los datos de países.
    */
   ngOnInit(): void {
-    this.solicitud260915Query.selectSolicitud$
+    this.solicitud260915Query.selectSolicitud260915$
       .pipe(
         takeUntil(this.destroyed$),
-        map((seccionState: any) => {
+        map((seccionState: Solicitud260915State) => {
           this.agregarDestinatarioState = seccionState;
         })
       )
       .subscribe();
 
-    this.crearFormTransporte();
+    this.inicializarEstadoFormulario();
     this.getPaisData();
   }
+
+  /**
+   * Inicializa el formulario dependiendo del modo (solo lectura o editable).
+   * Si está en solo lectura, carga y bloquea el formulario.
+   * Si no, crea un formulario editable.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.crearFormTransporte();
+    }
+  }
+
+  /**
+   * Crea el formulario y, si está en modo solo lectura, lo deshabilita.
+   * De lo contrario, lo habilita para edición.
+   */
+  guardarDatosFormulario(): void {
+    this.crearFormTransporte();
+    if (this.esFormularioSoloLectura) {
+      this.destinatarioForm.disable();
+    } else {
+      this.destinatarioForm.enable();
+    }
+  }
+
   /**
    * Elimina un pedimento de la lista.
    * @param borrar Indica si se debe proceder con la eliminación.
@@ -195,10 +263,11 @@ export class TercerosrelacionadosComponent implements OnInit, OnDestroy {
   eliminarPedimento(borrar: boolean): void {
     if (borrar) {
       this.pedimentos.splice(this.elementoParaEliminar, 1);
-      this.eliminarMercancias(); // Call the deletion logic
+      this.eliminarMercancias();
       this.abrirModal(0, true);
     }
   }
+
   /**
    * Abre un modal para mostrar una notificación.
    * @param i Índice del elemento seleccionado (por defecto 0).
@@ -236,8 +305,8 @@ export class TercerosrelacionadosComponent implements OnInit, OnDestroy {
   /**
    * Obtiene los datos del catálogo de países.
    */
-  getPaisData() {
-    this.permisosanitariodisposivos
+  getPaisData(): void {
+    this.permisosanitariodispositivosmedicosservice
       .getPaisData()
       .pipe(takeUntil(this.destroyed$))
       .subscribe((data: Catalogo[]) => {
@@ -248,7 +317,7 @@ export class TercerosrelacionadosComponent implements OnInit, OnDestroy {
   /**
    * Getter para obtener el tipo de persona seleccionado.
    */
-  get selectedTipoPersona() {
+  get selectedTipoPersona(): string | null {
     return this.agregarDestinatario.get('tipoPersona')?.value;
   }
 
@@ -262,15 +331,15 @@ export class TercerosrelacionadosComponent implements OnInit, OnDestroy {
   /**
    * Guarda los datos del formulario en la tabla.
    */
-  onGuardar() {
-    const formData = this.destinatarioForm.value;
-    if (formData.agregarDestinatario) {
-      const destinatario = {
-        ...formData.agregarDestinatario,
-        ...formData.datosPersonales, // Combina objetos anidados en una estructura plana
-        pais: this.getPaisName(formData.datosPersonales.pais), // Mapea el id de `pais` a su descripción
-      };
-      this.tableData.push(destinatario);
+  onGuardar(): void {
+    const FORM_DATA = this.destinatarioForm.value;
+    if (FORM_DATA.agregarDestinatario) {
+        const DESTINATARIO = {
+            ...FORM_DATA.agregarDestinatario,
+            ...FORM_DATA.datosPersonales,
+            pais: this.getPaisName(FORM_DATA.datosPersonales.pais),
+        };
+      this.tableData.push(DESTINATARIO);
     }
     this.destinatarioForm.reset();
   }
@@ -281,10 +350,10 @@ export class TercerosrelacionadosComponent implements OnInit, OnDestroy {
    * @returns Nombre del país o 'N/A' si no se encuentra.
    */
   private getPaisName(paisId: string): string {
-    const pais = this.paisData.catalogos.find(
+    const PAIS = this.paisData.catalogos.find(
       (catalogo) => catalogo.id === Number(paisId)
     );
-    return pais ? pais.descripcion : 'N/A';
+    return PAIS ? PAIS.descripcion : 'N/A';
   }
 
   /**
@@ -304,7 +373,6 @@ export class TercerosrelacionadosComponent implements OnInit, OnDestroy {
       this.tableData = this.tableData.filter(
         (row) => !this.selectedRows.has(row.id)
       );
-
       this.selectedRows.clear();
     }
   }
@@ -314,31 +382,31 @@ export class TercerosrelacionadosComponent implements OnInit, OnDestroy {
    */
   openModificarMercancias(): void {
     if (this.selectedRows.size === 1) {
-      const selectedId = Array.from(this.selectedRows)[0];
-      const selectedRowData = this.tableData.find(
-        (row) => row.id === selectedId
+      const SELECTED_ID = Array.from(this.selectedRows)[0];
+      const SELECTED_ROW_DATA = this.tableData.find(
+        (row) => row.id === SELECTED_ID
       );
 
-      if (selectedRowData) {
+      if (SELECTED_ROW_DATA) {
         this.destinatarioForm.patchValue({
           agregarDestinatario: {
-            tipoPersona: selectedRowData.tipoPersona,
+            tipoPersona: SELECTED_ROW_DATA.tipoPersona,
           },
           datosPersonales: {
-            nombre: selectedRowData.nombre,
-            primerApellido: selectedRowData.primerApellido,
-            segundoApellido: selectedRowData.segundoApellido,
-            denominacion: selectedRowData.denominacion,
-            pais: selectedRowData.pais,
-            domicilio: selectedRowData.domicilio,
-            estado: selectedRowData.estado,
-            codigopostal: selectedRowData.codigopostal,
-            calle: selectedRowData.calle,
-            numeroExterior: selectedRowData.numeroExterior,
-            numeroInterior: selectedRowData.numeroInterior,
-            lada: selectedRowData.lada,
-            telefono: selectedRowData.telefono,
-            correoElectronico: selectedRowData.correoElectronico,
+            nombre: SELECTED_ROW_DATA.nombre,
+            primerApellido: SELECTED_ROW_DATA.primerApellido,
+            segundoApellido: SELECTED_ROW_DATA.segundoApellido,
+            denominacion: SELECTED_ROW_DATA.denominacion,
+            pais: SELECTED_ROW_DATA.pais,
+            domicilio: SELECTED_ROW_DATA.domicilio,
+            estado: SELECTED_ROW_DATA.estado,
+            codigopostal: SELECTED_ROW_DATA.codigopostal,
+            calle: SELECTED_ROW_DATA.calle,
+            numeroExterior: SELECTED_ROW_DATA.numeroExterior,
+            numeroInterior: SELECTED_ROW_DATA.numeroInterior,
+            lada: SELECTED_ROW_DATA.lada,
+            telefono: SELECTED_ROW_DATA.telefono,
+            correoElectronico: SELECTED_ROW_DATA.correoElectronico,
           },
         });
 
@@ -367,10 +435,10 @@ export class TercerosrelacionadosComponent implements OnInit, OnDestroy {
    */
   onConfirmarEliminacion(): void {
     this.eliminarMercancias();
-    const modalElement = document.getElementById('datoseliminadosModal');
-    if (modalElement) {
-      const datosEliminadosModal = new Modal(modalElement);
-      datosEliminadosModal.show();
+    const MODAL_ELEMENT = document.getElementById('datoseliminadosModal');
+    if (MODAL_ELEMENT) {
+      const DATOS_ELIMINADOS_MODAL = new Modal(MODAL_ELEMENT);
+      DATOS_ELIMINADOS_MODAL.show();
     }
     this.abrirModal();
   }
@@ -378,7 +446,7 @@ export class TercerosrelacionadosComponent implements OnInit, OnDestroy {
   /**
    * Limpia los datos del formulario.
    */
-  limpiarFormulario() {
+  limpiarFormulario(): void {
     this.destinatarioForm.reset();
   }
 
@@ -393,18 +461,16 @@ export class TercerosrelacionadosComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Establece valores en el store a partir del formulario.
-   * @param form Formulario reactivo.
-   * @param campo Nombre del campo en el formulario.
-   * @param metodoNombre Método del store para actualizar el valor.
+   * Actualiza un valor específico en el store del trámite.
+   *
+   * @param FormGroup Formulario reactivo del cual se obtiene el valor.
+   * @param control Nombre del control cuyo valor se actualizará en el store.
    */
-  setValoresStore(
-    form: FormGroup,
-    campo: string,
-    metodoNombre: keyof Solicitud260915Store
-  ): void {
-    const VALOR = form.get(campo)?.value;
-    (this.solicitud260915Store[metodoNombre] as (value: any) => void)(VALOR);
+  setValoresStore(FormGroup: FormGroup, control: string): void {
+    const VALOR = FormGroup.get(control)?.value;
+    this.solicitud260915Store.setTramite260915State({
+      [control]: VALOR
+    });
   }
 
   /**
@@ -417,6 +483,7 @@ export class TercerosrelacionadosComponent implements OnInit, OnDestroy {
 
   /**
    * Método que se ejecuta al destruir el componente.
+   * Libera recursos y completa las suscripciones.
    */
   ngOnDestroy(): void {
     this.destroyed$.next(true);

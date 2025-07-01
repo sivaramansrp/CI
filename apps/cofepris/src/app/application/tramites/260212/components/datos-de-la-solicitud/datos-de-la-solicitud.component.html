@@ -28,7 +28,7 @@
         </div>
         <ng-titulo titulo="Datos del establecimiento" />
         <div class="d-flex justify-content-end mt-3">
-          <button class="btn btn-primary">Seleccionar establecimiento</button>
+          <button class="btn btn-primary" [disabled]="esFormularioSoloLectura">Seleccionar establecimiento</button>
         </div>
 
         <div class="row">
@@ -68,7 +68,7 @@
           <div class="col-md-4">
             <div class="form-group">
               <app-catalogo-select [catalogo]="estado" [label]="'Estado'" [required]="true" name="estado"
-                formControlName="estado" (change)="getEstado()">
+                formControlName="estado" (change)="getEstado()" [isDisabled]="esFormularioSoloLectura">
               </app-catalogo-select>
             </div>
           </div>
@@ -122,7 +122,7 @@
         <h5 class="fs-4">S.C.I.A.N.*</h5>
         <div class="table-responsive">
           <app-tabla-dinamica [configuracionTabla]="configuracionTablaScian" [datos]="claveScianDatas"
-            [tipoSeleccionTabla]="tablaSeleccion.CHECKBOX">
+            [tipoSeleccionTabla]="tablaSeleccion.CHECKBOX" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura">
           </app-tabla-dinamica>
         </div>
 
@@ -131,7 +131,7 @@
             <button name="eliminarServicio" class="btn btn-danger">
               Eliminar
             </button>
-            <button name="agregarServicio" class="btn btn-primary mx-2" (click)="toggleScianFormulario()">
+            <button name="agregarServicio" class="btn btn-primary mx-2" (click)="toggleScianFormulario()" [disabled]="esFormularioSoloLectura">
               Agregar
             </button>
           </div>
@@ -140,15 +140,15 @@
         <app-formulario-operacion-comercial></app-formulario-operacion-comercial>
 
         <app-tabla-dinamica [configuracionTabla]="mercanciasTabla" [datos]="mercanicaData"
-          [tipoSeleccionTabla]="tablaSeleccion.UNDEFINED">
+          [tipoSeleccionTabla]="tablaSeleccion.CHECKBOX" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura">
         </app-tabla-dinamica>
 
         <div class="d-flex justify-content-end">
-          <button class="btn btn-primary" (click)="openMercanciasForm()">
+          <button class="btn btn-primary" (click)="openMercanciasForm()" [disabled]="esFormularioSoloLectura">
             Agregar
           </button>
-          <button class="btn btn-default ms-2">Modificar</button>
-          <button class="btn btn-default ms-2">Eliminar</button>
+          <button class="btn btn-default ms-2" [disabled]="esFormularioSoloLectura">Modificar</button>
+          <button class="btn btn-default ms-2" [disabled]="esFormularioSoloLectura">Eliminar</button>
         </div>
 
       </div>

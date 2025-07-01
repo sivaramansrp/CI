@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container-fluid ps-1">
     <ng-titulo [titulo]="'Manifiesto'"></ng-titulo>
     <form [formGroup]="manifiestoFormulario">
                 <div class="alert alert-info">
@@ -8,7 +8,7 @@
                                 [id]="'declaracion'"
                                 [label]="'*'"
                                 [required]="true"
-                                [isDisabled]="false"
+                                [isDisabled]="esFormularioSoloLectura"
                                 formControlName="declaracion"
                                 (change)="setValorStore(manifiestoFormulario, 'declaracion')">
                             </lib-input-check>

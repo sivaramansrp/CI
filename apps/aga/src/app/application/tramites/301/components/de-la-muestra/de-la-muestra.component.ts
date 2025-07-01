@@ -1,22 +1,18 @@
-/* eslint-disable @typescript-eslint/no-empty-function */
-/* eslint-disable no-empty-function */
-/* eslint-disable class-methods-use-this */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @nx/enforce-module-boundaries */
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import {
-  Solicitud301State,
-  Tramite301Store,
-} from '../../../../core/estados/tramites/tramite301.store';
-import { Subject, Subscription, map, takeUntil } from 'rxjs';
+import { Solicitud301State, Tramite301Store } from '../../../../core/estados/tramites/tramite301.store';
+import { Subject, map, takeUntil } from 'rxjs';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+
 import { Catalogo } from 'libs/shared/data-access-user/src/core/models/shared/catalogos.model';
 import { CatalogoSelectComponent } from 'libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
+import { CommonModule } from '@angular/common';
 import { TituloComponent } from 'libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
 import { Tramite301Query } from '../../../../core/queries/tramite301.query';
 
@@ -36,10 +32,23 @@ import { Tramite301Query } from '../../../../core/queries/tramite301.query';
   selector: 'app-de-la-muestra',
   templateUrl: './de-la-muestra.component.html',
   styleUrls: ['./de-la-muestra.component.scss'],
-  imports: [TituloComponent, ReactiveFormsModule, CatalogoSelectComponent],
+  imports: [CommonModule, TituloComponent, ReactiveFormsModule, CatalogoSelectComponent],
   standalone: true,
 })
 export class DeLaMuestraComponent implements OnInit, OnDestroy {
+
+  /**
+   * Referencia al elemento del modal de confirmación en la plantilla.
+   * Se utiliza para controlar la visualización del modal mediante código.
+   *
+   * @type {ElementRef}
+   * @memberof DeLaMuestraComponent
+   * @example
+   * this.modalConfirmacionRef.nativeElement.show();
+   */
+  @ViewChild('modalConfirmacionRef') modalConfirmacionRef!: ElementRef;
+
+
   /**
    * Datos del catálogo relacionados con la mercancía.
    *
@@ -56,11 +65,6 @@ export class DeLaMuestraComponent implements OnInit, OnDestroy {
   Informaciondela!: FormGroup;
 
   /**
-   * Suscripción a los cambios en el formulario react
-   */
-  private subscription: Subscription = new Subscription();
-
-  /**
    * Estado de la solicitud de la sección 301.
    */
   public solicitudState!: Solicitud301State;
@@ -69,6 +73,12 @@ export class DeLaMuestraComponent implements OnInit, OnDestroy {
    * Subject para notificar la destrucción del componente.
    */
   private destroyNotifier$: Subject<void> = new Subject();
+  
+  /**
+  * Indica si el formulario está en modo solo lectura.
+  * Cuando es `true`, los campos del formulario no se pueden editar.
+  */
+  esFormularioSoloLectura: boolean = false; 
 
   /**
    * Constructor del componente `DeLaMuestraComponent`.
@@ -80,46 +90,86 @@ export class DeLaMuestraComponent implements OnInit, OnDestroy {
   constructor(
     private fb: FormBuilder,
     private tramite301Store: Tramite301Store,
-    private tramite301Query: Tramite301Query
+    private tramite301Query: Tramite301Query,
+    private consultaioQuery: ConsultaioQuery,
   ) {
-    // add initialization code here
+    /**
+     * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
+     *
+     * - Asigna el valor de solo lectura (`readonly`) a la propiedad `esFormularioSoloLectura`.
+     * - Llama a `inicializarEstadoFormulario()` para aplicar configuraciones basadas en el estado recibido.
+     * - La suscripción se cancela automáticamente cuando `destroyNotifier$` emite un valor (para evitar fugas de memoria).
+     */
+    this.consultaioQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState)=>{
+        this.esFormularioSoloLectura = seccionState.readonly; 
+        this.inicializarEstadoFormulario();
+      })
+    )
+    .subscribe()
   }
 
   /**
-   * Método placeholder para la validación del formulario.
-   * Este método no tiene implementación actual, pero puede ser extendido
-   * para realizar validaciones adicionales en el futuro.
-   *
-   * @returns {void} No retorna nada, ya que es un método sin lógica por el momento.
-   */
-  validarFormulario(): void {}
-
-  /**
-   * Método del ciclo de vida `ngOnInit()` de Angular.
-   *
-   * Este método se ejecuta una vez que el componente ha sido inicializado.
-   * Realiza las siguientes acciones:
-   * - Llama al método `getMercancia()` para inicializar el objeto `mercancia`.
-   * - Crea el formulario reactivo `FormSolicitud` y lo inicializa con un campo obligatorio `folio`.
+   * Método del ciclo de vida que se ejecuta al iniciar el componente.  
+   * Llama a la función para inicializar el estado del formulario.
    */
   ngOnInit(): void {
-    this.subscription.add(
-      this.tramite301Query.selectSolicitud$
-        .pipe(
-          takeUntil(this.destroyNotifier$),
-          map((seccionState) => {
-            this.solicitudState = seccionState;
-          })
-        )
-        .subscribe()
-    );
+    this.inicializarEstadoFormulario();
+  }
+
+  /**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.  
+   * Además, obtiene la información del catálogo de mercancía.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.inicializarFormulario();
+    }  
     this.getMercancia();
+  }
+
+  /**
+   * Inicializa el formulario reactivo para capturar el valor de 'registro'.
+   * Suscribe al estado almacenado en el store mediante el query `tramite301Query.selectSolicitud$`
+   * y lo asigna a la variable local `solicitudState`. Luego, crea el formulario
+   * con el valor inicial obtenido del store.
+   */
+
+  inicializarFormulario(): void {
+    this.tramite301Query.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.solicitudState = seccionState;
+        })
+      )
+      .subscribe();
+
     this.Informaciondela = this.fb.group({
       datosImportadorExportador: this.fb.group({
-        folio: [this.solicitudState?.folio, Validators.required],
+        folio: [this.solicitudState?.folio, [Validators.required, Validators.maxLength(25)]],
         mercancia: [this.solicitudState?.mercancia, Validators.required],
       }),
     });
+  }
+
+  /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormulario(): void {
+      this.inicializarFormulario();
+      if (this.esFormularioSoloLectura) {
+        this.Informaciondela.disable();
+      } else if (!this.esFormularioSoloLectura) {
+        this.Informaciondela.enable();
+      } else {
+        // No se requiere ninguna acción en el formulario
+      }
   }
 
   /**
@@ -160,7 +210,6 @@ export class DeLaMuestraComponent implements OnInit, OnDestroy {
    * Método del ciclo de vida `ngOnDestroy()` de Angular.
    *
    * Este método se ejecuta cuando el componente es destruido y realiza las siguientes acciones:
-   * - Desuscribe la suscripción al observable `subscription`.
    */
   setValoresStore(
     form: FormGroup,
@@ -168,17 +217,49 @@ export class DeLaMuestraComponent implements OnInit, OnDestroy {
     metodoNombre: keyof Tramite301Store
   ): void {
     const VALOR = form.get(campo)?.value;
-    (this.tramite301Store[metodoNombre] as (value: any) => void)(VALOR);
+    (this.tramite301Store[metodoNombre] as (value: unknown) => void)(VALOR);
+  }
+
+  /**
+   * @method sobreElCambioFolio
+   * @description
+   * Valida la longitud del campo `folio` dentro del formulario.
+   * Si el valor del folio supera los 25 caracteres, muestra un modal de confirmación
+   * utilizando la referencia al elemento del modal en la plantilla.
+   *
+   * Funcionalidad:
+   * - Obtiene el valor del campo `folio` del formulario reactivo.
+   * - Si la longitud del folio es mayor a 25 caracteres, muestra el modal de confirmación.
+   *
+   * @example
+   * this.sobreElCambioFolio();
+   * // Si el folio es demasiado largo, se muestra el modal de advertencia.
+   */
+  sobreElCambioFolio(): void {
+    const FOLIO = this.Informaciondela.get('datosImportadorExportador.folio');
+    if (FOLIO && FOLIO.value?.length > 25) {
+      const MODAL = new bootstrap.Modal(this.modalConfirmacionRef.nativeElement);
+      MODAL.show();
+    }
+  }
+
+  /**
+   * Verifica si el control del formulario es inválido y ha sido tocado.
+   * @returns {boolean | null} `true` si el control es inválido y tocado, `null` si no existe el control.
+   */
+  esInvalido(): boolean | null {
+    const CAMPO = this.Informaciondela.get('datosImportadorExportador.folio');
+    return CAMPO ? CAMPO.invalid && CAMPO.touched : null;
   }
 
   /**
    * Método del ciclo de vida `ngOnDestroy()`.
    * Este método se ejecuta cuando el componente es destruido y realiza las siguientes acciones:
-   * - Desuscribe la suscripción al observable `subscription`.
    *
    * @memberof PagoDeDerechosComponent
    */
   ngOnDestroy(): void {
-    this.subscription.unsubscribe();
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }

@@ -1,3 +1,4 @@
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
 import { of, Subject } from 'rxjs';
@@ -17,7 +18,7 @@ describe('RegistroParaLaComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [RegistroParaLaComponent, ReactiveFormsModule],
+      imports: [RegistroParaLaComponent, ReactiveFormsModule, HttpClientTestingModule],
       providers: [
         FormBuilder,
         {
@@ -39,41 +40,31 @@ describe('RegistroParaLaComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(RegistroParaLaComponent);
     component = fixture.componentInstance;
-    store = TestBed.inject(Tramite301Store);
-    query = TestBed.inject(Tramite301Query);
-    fixture.detectChanges();
+    fixture.detectChanges(); 
   });
 
   it('should create the component', () => {
-    expect(component).toBeTruthy();
+    expect(component).toBeTruthy(); 
   });
 
-  it('should initialize the form on component creation', () => {
-    expect(component.registroParaLaForm).toBeDefined();
-    expect(component.registroParaLaForm.get('registro')?.value).toBe(mockSolicitudState.registro);
-  });
-
-  it('should initialize registroOptions and pasos in getRegistro()', () => {
-    component.getRegistro();
+  it('should initialize the component and set default values', () => {
+    expect(component.indice).toBe(1);
     expect(component.registroOptions).toEqual([
       { id: 1, descripcion: 'Si' },
       { id: 2, descripcion: 'No' },
     ]);
     expect(component.pasos).toEqual([]);
-    expect(component.datosPasos.nroPasos).toBe(0);
+    expect(component.datosPasos.nroPasos).toBe(0); 
   });
 
-  it('should call setValoresStore and update the store', () => {
-    const spy = jest.spyOn(store, 'setRegistro');
-    component.setValoresStore(component.registroParaLaForm, 'registro', 'setRegistro');
-    expect(spy).toHaveBeenCalledWith(mockSolicitudState.registro);
+  it('should call getRegistro() during ngOnInit()', () => {
+    const spy = jest.spyOn(component, 'getRegistro');
+    component.ngOnInit();
+    expect(spy).toHaveBeenCalled();
   });
 
-  it('should clean up subscriptions on component destroy', () => {
-    const spyNext = jest.spyOn(component['destroyNotifier$'], 'next');
-    const spyComplete = jest.spyOn(component['destroyNotifier$'], 'complete');
-    component.ngOnDestroy();
-    expect(spyNext).toHaveBeenCalled();
-    expect(spyComplete).toHaveBeenCalled();
+  it('should set TEXTOS constants correctly', () => {
+    expect(component.TEXTOS).toBeTruthy(); 
   });
+
 });

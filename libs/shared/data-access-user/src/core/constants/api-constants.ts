@@ -50,6 +50,45 @@ export const RFC_QUERY = '{rfc}'
 export const API_GET_VALIDA_RFC = `sat-t5701/rfc/valida/${RFC_QUERY}`;
 
 /**
+ * API que obtiene la información del contribuyente por RFC.
+ * @param RFC_QUERY El RFC del contribuyente
+ */
+export const API_GET_RFC_IDC = `idc/contribuyente/detalle/${RFC_QUERY}`
+/**
+ * API que valida si un RFC (Registro Federal de Contribuyentes) está certificado para la revisión de origen.
+ * * @param RFC_QUERY El RFC del contribuyente
+ */
+export const API_GET_RFC_ORIGEN = `certificacion/origen/valida/${RFC_QUERY}`;
+/**
+ * El tipo de trámite por el que se filtrará la información.
+ */
+export const TIPO_TRAMITE_QUERY = '{tipoTramite}';
+/**
+ * API para validar si un RFC tiene certificaciones vigentes.
+ * @param TIPO_TRAMITE_QUERY El tipo de trámite
+ * @param RFC_QUERY El RFC del solicitante
+ * @see http://api-vucem-1069277193.us-east-1.elb.amazonaws.com/api/catalogo/swagger-ui/index.html#/Certificaciones/valida-certificaciones
+ */
+export const API_GET_VALIDA_CERTIFICACIONES = `catalogo/valida-certificaciones/${TIPO_TRAMITE_QUERY}/${RFC_QUERY}`;
+/**
+ * La línea de pago por la que se filtrará la información.
+ */
+export const LINEA_PAGO_QUERY = '{lineaPago}';
+/**
+ * API para validar si una línea de pago es válida.
+ * @param LINEA_PAGO_QUERY La línea de pago
+ */
+export const API_GET_VALIDA_LINEA_PAGO = `pago/sea/${LINEA_PAGO_QUERY}`;
+/**
+ * API para obtener el monto del trámite
+ */
+export const API_GET_PARAMETRO_MONTO = `sat-t5701/parametro/monto`;
+/**
+ * API para guardar la solicitud
+ * @see http://api-vucem-1069277193.us-east-1.elb.amazonaws.com/api/sat-t5701/swagger-ui/index.html#/Solicitud/guardar
+ */
+export const API_POST_SOLICITUD = 'sat-t5701/guardar';
+/**
  * Indica el número de trámite a consultar.
  */
 export const TRAMITE = '{numeroTramite}';
@@ -60,3 +99,32 @@ export const TRAMITE = '{numeroTramite}';
  * @see http://api-vucem-1069277193.us-east-1.elb.amazonaws.com/api/tramite/5701/documentos?especifico=false
 */
 export const API_GET_DOCUMENTOS_OBLIGATORIOS = `tramite/{numeroTramite}/documentos` 
+
+/**
+ * API para recuperar el catálogo de paises
+ * @see http://api-vucem-1069277193.us-east-1.elb.amazonaws.com/api/catalogo/swagger-ui/index.html#/Pa%C3%ADs/consulta-paises-activos
+ */
+export const API_GET_PAISES = 'catalogo/paises';
+
+/**
+ * API para generar la cadena original de un trámite.
+ * @see http://api-vucem-1069277193.us-east-1.elb.amazonaws.com/api/tramite-flujo/swagger-ui/index.html#/Cadena/generar
+ */
+export const API_GENERAR_CADENA_ORIGINAL = 'api/tramite/solicitud/genera-cadena-original';
+
+/**
+ * API para enviar una firma electrónica.
+ * @see http://api-vucem-1069277193.us-east-1.elb.amazonaws.com/api/firma/swagger-ui/index.html#/Firma/firmar
+ */
+export const API_ENVIAR_FIRMA = 'api/tramite/firmar';
+
+
+
+
+/**
+ * API para recuperar las tareas por usuario.
+ * @see http://api-vucem-1069277193.us-east-1.elb.amazonaws.com/api/bandeja-tarea/swagger-ui/index.html#/Bandeja%20tarea/consultar-tareas-servicio
+ */
+export const API_GET_BANDEJATAREA = 'bandeja-tarea/usuario/tarea';
+
+

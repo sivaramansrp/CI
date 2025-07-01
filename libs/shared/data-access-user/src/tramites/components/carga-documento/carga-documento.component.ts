@@ -26,6 +26,7 @@ import {
   ESTATUS_CARGA_DOCUMENTO,
   MENSAJES_DOCUMENTOS,
   MENSAJES_MODAL,
+  OPCIONAL,
   UNIDADES_DOCUMENTOS,
 } from '../../../core/enums/mensajes-documentos.enum';
 import {
@@ -301,13 +302,21 @@ export class CargaDocumentoComponent implements OnInit, OnChanges {
         return;
       }
 
-      this.documentoSeleccionado = this.catalogoDocumentosObligatorios.find(
-        (doc) => doc.id_tipo_documento === id
-      ) as TipoDocumentos;
+      this.documentoSeleccionado =
+        tipo === OPCIONAL
+          ? (this.catalogoDocumentosOpcionales.find(
+              (doc) => doc.id_tipo_documento === id
+            ) as TipoDocumentos)
+          : (this.catalogoDocumentosObligatorios.find(
+              (doc) => doc.id_tipo_documento === id
+            ) as TipoDocumentos);
+
       const TAMANIO_REQUERIDO: number =
         CargaDocumentoComponent.convertirMbaBytes(
           this.documentoSeleccionado.tamanio_maximo
         );
+
+
       const TAMANIO_ARCHIVO: number = INFORMACION_ARCHIVO.size;
 
       if (TAMANIO_ARCHIVO > TAMANIO_REQUERIDO) {
@@ -654,7 +663,7 @@ export class CargaDocumentoComponent implements OnInit, OnChanges {
    * @param {any[]} archivosCargando - Lista de archivos a cargar.
    * @returns {Promise<void>} Promesa que se resuelve cuando la carga se completa.
    */
-  // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-explicit-any
+  // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-explicit-any, require-await
   async cargarArchivos(archivosCargando: any[]): Promise<void> {
     for (const ARCHIVO of archivosCargando) {
       // const DATA = await this.uploadFiles(ARCHIVO.archivo);  TODO: Descomentar cuando funcione el API de cargar documento

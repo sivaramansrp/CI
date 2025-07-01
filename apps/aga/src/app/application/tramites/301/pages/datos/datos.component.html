@@ -31,15 +31,24 @@
     </ul>
     <ng-container>
       @switch (indice) { @case (1) {
-      <!-- <p>componente de solicitud aquí</p> -->
       <solicitante #Solicitante></solicitante>
       } @case (2) {
-      <app-registro-para-la></app-registro-para-la>
-      <app-de-la-muestra></app-de-la-muestra>
-      <app-informacion-de-la></app-informacion-de-la>
+        @if(esDatosRespuesta) {
+          <app-registro-para-la (emitirElValorSeleccionado)="actualizarPagina($event)"></app-registro-para-la>
+          @if (seccionSeleccionada==='1') {
+            <app-de-la-muestra></app-de-la-muestra>
+            <app-informacion-de-la></app-informacion-de-la>
+          } @else if (seccionSeleccionada==='2') {
+            <app-informacion-de-la></app-informacion-de-la>
+          }
+        }
       } @case (3) {
+       @if(esDatosRespuesta){
       <app-pago-de-derechos></app-pago-de-derechos>
+         }
       } }
     </ng-container>
   </div>
 </div>
+
+

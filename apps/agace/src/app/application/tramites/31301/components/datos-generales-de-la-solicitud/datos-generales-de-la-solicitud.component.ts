@@ -3,6 +3,7 @@ import { CatalogosSelect } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
+import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 import { DOMICILIOS_CONFIGURACION_COLUMNAS } from '../../constants/solicitud.enum';
 import { DatosGeneralesDeLaSolicitudCatologo } from '../../models/solicitud.model';
 import { DatosGeneralesDeLaSolicitudDatos } from '../../models/solicitud.model';
@@ -56,7 +57,7 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
   datosGeneralesForm!: FormGroup;
 
   /** Subject utilizado para destruir observables y evitar fugas de memoria */
-  private destroy$: Subject<void> = new Subject<void>();
+  public destroy$: Subject<void> = new Subject<void>();
 
   /** Opciones para el tipo de endoso */
   tipoDeEndosoOpcion: InputRadio = {} as InputRadio;
@@ -78,25 +79,29 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
   tipoSeleccionTabla = TablaSeleccion.CHECKBOX;
 
   /** Configuración de columnas para la tabla de subcontratistas */
-  configuracionColumnas: ConfiguracionColumna<SubContratistas>[] = SUB_CONTRATISTAS_CONFIGURACION;
+  configuracionColumnas: ConfiguracionColumna<SubContratistas>[] =
+    SUB_CONTRATISTAS_CONFIGURACION;
 
   /** Lista de subcontratistas */
   listaDeSubcontratistas: SubContratistas[] = [] as SubContratistas[];
 
   /** Configuración de columnas para la sección de socios IC */
-  seccionSociosICConfiguracionColumnas: ConfiguracionColumna<SeccionSociosIC>[] = SECCION_SOCIOSIC_CONFIGURACION_COLUMNAS;
+  seccionSociosICConfiguracionColumnas: ConfiguracionColumna<SeccionSociosIC>[] =
+    SECCION_SOCIOSIC_CONFIGURACION_COLUMNAS;
 
   /** Lista de socios IC */
   listaSeccionSociosIC: SeccionSociosIC[] = [] as SeccionSociosIC[];
 
   /** Configuración de columnas para tipo de inversión */
-  tipoDeInversionConfiguracionColumnas: ConfiguracionColumna<TipoDeInversion>[] = TIPO_DE_INVERSION_CONFIGURACION_COLUMNAS;
+  tipoDeInversionConfiguracionColumnas: ConfiguracionColumna<TipoDeInversion>[] =
+    TIPO_DE_INVERSION_CONFIGURACION_COLUMNAS;
 
   /** Datos del tipo de inversión */
   tipoDeInversionDatos: TipoDeInversion[] = [] as TipoDeInversion[];
 
   /** Configuración de columnas para domicilios */
-  domiciliosConfiguracionColumnas: ConfiguracionColumna<Domicilios>[] = DOMICILIOS_CONFIGURACION_COLUMNAS;
+  domiciliosConfiguracionColumnas: ConfiguracionColumna<Domicilios>[] =
+    DOMICILIOS_CONFIGURACION_COLUMNAS;
 
   /** Datos de los domicilios */
   domiciliosDatos: Domicilios[] = [] as Domicilios[];
@@ -110,13 +115,36 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
   /** Emisor del evento de cambio en el tipo de endoso */
   @Output() tipoDeEndosoChanges = new EventEmitter();
 
+  /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  esFormularioSoloLectura: boolean = false;
+
   /** Constructor del componente que inyecta dependencias y obtiene datos iniciales */
   constructor(
     public fb: FormBuilder,
     public solicitudService: SolicitudService,
     public solicitud31301Store: Solicitud31301Store,
-    public solicitud31301Query: Solicitud31301Query
+    public solicitud31301Query: Solicitud31301Query,
+    public consultaioQuery: ConsultaioQuery
   ) {
+    /**
+     * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
+     *
+     * - Asigna el valor de solo lectura (`readonly`) a la propiedad `esFormularioSoloLectura`.
+     * - Llama a `inicializarEstadoFormulario()` para aplicar configuraciones basadas en el estado recibido.
+     * - La suscripción se cancela automáticamente cuando `destroyNotifier$` emite un valor (para evitar fugas de memoria).
+     */
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroy$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
     this.conseguirDatosGeneralesOpcionDeRadio();
     this.conseguirDatosGeneralesCatologo();
     this.conseguirListaDeSubcontratistas();
@@ -136,6 +164,41 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
    * - Emite el cambio de `tipoDeEndoso` una vez que los datos se actualizan.
    */
   ngOnInit(): void {
+    this.inicializarEstadoFormulario();
+  }
+
+  /**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario(); // Llama al método para cargar los datos del formulario
+    } else {
+      this.inicializarFormulario();
+    }
+  }
+
+  /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormulario(): void {
+    this.inicializarFormulario();
+    if (this.esFormularioSoloLectura) {
+      this.datosGeneralesForm.disable();
+    } else if (!this.esFormularioSoloLectura) {
+      this.datosGeneralesForm.enable();
+    } else {
+      // No se requiere ninguna acción en el formulario
+    }
+  }
+
+  /**
+   * Inicializa el formulario reactivo con los valores de razón social anteriores y actuales.
+   *
+   * Los campos del formulario están deshabilitados y tienen una validación de longitud máxima de 250 caracteres.
+   */
+  inicializarFormulario(): void {
     // Inicialización del formulario con los valores actuales del estado
     this.datosGeneralesForm = this.fb.group({
       tipoDeEndoso: [

@@ -1,10 +1,9 @@
-import { AMBIENTES, TramiteDetails } from '@ng-mf/data-access-user';
+import { AMBIENTES, OrigenPeticion, TramiteDetails, TramiteStore} from '@ng-mf/data-access-user';
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { TituloComponent } from "@ng-mf/data-access-user";
 import tramiteDetailsData from '@libs/shared/theme/assets/json/tramiteList.json'
-
 
 @Component({
   selector: 'seleccion-tramite-desde-panel',
@@ -28,6 +27,10 @@ export class SeleccionTramiteDesdePanelComponent implements OnInit {
   
   public tramiteData: TramiteDetails[] = [];
 
+  constructor(
+    private tramiteStore: TramiteStore,
+  ) { }
+
   ngOnInit(): void {
     if (window.location.host.indexOf('localhost') !== -1) {
       this.ruta = AMBIENTES.LOCALHOST;
@@ -45,4 +48,9 @@ export class SeleccionTramiteDesdePanelComponent implements OnInit {
       return 0;
     });
   }
+
+  public configuraOrigenPeticion(): void {
+    this.tramiteStore.establecerOrigenPeticion(OrigenPeticion.NUEVA);
+  }
 }
+   

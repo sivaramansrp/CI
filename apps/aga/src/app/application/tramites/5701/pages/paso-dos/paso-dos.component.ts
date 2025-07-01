@@ -1,15 +1,29 @@
-import { Component, DestroyRef, EventEmitter, Input, OnInit, Output, inject } from '@angular/core';
-import { Notificacion } from '@ng-mf/data-access-user';
-import { TEXTOS } from '@ng-mf/data-access-user';
+import {
+  Component,
+  DestroyRef,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  inject,
+} from '@angular/core';
+import { Notificacion, TEXTOS } from '@ng-mf/data-access-user';
 import { map } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+/**
+ * Componente que representa el paso dos del proceso de solicitud de documentos.
+ */
 @Component({
   selector: 'paso-dos',
   templateUrl: './paso-dos.component.html',
-  styleUrl: './paso-dos.component.scss'
+  styleUrl: './paso-dos.component.scss',
 })
-export class PasoDosComponent implements OnInit {
 
+/**
+ * Clase que representa el componente PasoDosComponent.
+ * Este componente se encarga de gestionar la carga de documentos en el segundo paso del proceso de
+ */
+export class PasoDosComponent implements OnInit {
   /**
    * Escucha el evento para cargar los documentos que se emite desde <solicitud-page>.
    * @type {EventEmitter<void>}
@@ -30,16 +44,14 @@ export class PasoDosComponent implements OnInit {
   /**
    * Propaga al componente <anexar-documentos> el evento para disparar el metodo mostrarSeccionCargaArchivosAccion() en <anexar-documentos>.
    * Este evento se utiliza para regresar a la sección de carga de documentos.
-  */
+   */
   @Output() reenviarRegresarSeccion = new EventEmitter<void>();
-
 
   /**
    * Evento que se emite para indicar si existen documentos para cargar, y así activar el botón de "Cargar Archivos en <solicitud-page>".
    * Este evento se utiliza para habilitar o deshabilitar el botón de carga de archivos en <solicitud-page>.
    */
   @Output() reenviarEventoCarga = new EventEmitter<boolean>();
-
 
   /**
    * Evento que se emite para indicar si la carga de documentos se realizó correctamente.
@@ -51,8 +63,7 @@ export class PasoDosComponent implements OnInit {
    * Referencia inyectada para gestionar la destrucción del componente y terminar las suscripciones.
    * @type {DestroyRef}
    */
-  private destroyRef = inject(DestroyRef)
-
+  private destroyRef = inject(DestroyRef);
 
   /**
    * Texto de instrucciones para el usuario que se mostraran el alert.
@@ -79,22 +90,30 @@ export class PasoDosComponent implements OnInit {
     cerrar: true,
     txtBtnAceptar: '',
     txtBtnCancelar: '',
-  }
+  };
 
+  /**
+   * Inicializa el componente PasoDosComponent.
+   * Se suscribe a los eventos de carga de archivos y regreso a la sección de carga
+   */
   ngOnInit(): void {
-    this.cargaArchivosEvento.pipe(
-      takeUntilDestroyed(this.destroyRef),
-      map(() => {
-        this.reenviarEvento.emit();
-      }))
+    this.cargaArchivosEvento
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        map(() => {
+          this.reenviarEvento.emit();
+        })
+      )
       .subscribe();
 
-    this.regresarSeccionCargarDocumentoEvento.pipe(
-      takeUntilDestroyed(this.destroyRef),
-      map(() => {
-        this.reenviarRegresarSeccion.emit();
-      })
-    ).subscribe();
+    this.regresarSeccionCargarDocumentoEvento
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        map(() => {
+          this.reenviarRegresarSeccion.emit();
+        })
+      )
+      .subscribe();
   }
 
   /**

@@ -63,7 +63,8 @@
           <app-tabla-dinamica
             [configuracionTabla]="configuracionTabla"
             [datos]="configuracionTablaDatos"
-            (filaClic)="onFilaClic()"
+            (filaClic)="onFilaClic($event)"
+            [acciones]="tablaAcciones"
           >
           </app-tabla-dinamica>
         </div>

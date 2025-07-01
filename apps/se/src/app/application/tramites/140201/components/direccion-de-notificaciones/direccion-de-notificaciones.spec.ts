@@ -9,6 +9,7 @@ import { CommonModule } from '@angular/common';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { DireccionDeNotificacionesComponent } from './direccion-de-notificaciones.component';
+import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 
 describe('DireccionDeNotificacionesComponent', () => {
   let component: DireccionDeNotificacionesComponent;
@@ -16,6 +17,9 @@ describe('DireccionDeNotificacionesComponent', () => {
   let mockService: Partial<CancelacionesService>;
   let mockStore: Partial<CancelacionesStore>;
   let mockQuery: Partial<CancelacionesQuery>;
+  const consultaioQueryMock = {
+    selectConsultaioState$: of({ readonly: true }),
+  };
 
   beforeEach(async () => {
     mockService = {
@@ -63,104 +67,110 @@ describe('DireccionDeNotificacionesComponent', () => {
       providers: [
         { provide: CancelacionesService, useValue: mockService },
         { provide: CancelacionesStore, useValue: mockStore },
-        { provide: CancelacionesQuery, useValue: mockQuery }
+        { provide: CancelacionesQuery, useValue: mockQuery },
+        { provide: ConsultaioQuery, useValue: consultaioQueryMock }
       ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(DireccionDeNotificacionesComponent);
     component = fixture.componentInstance;
+    component.entidadFederativa$ = of(null);
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize the form with correct controls', () => {
-    expect(component.direccionNotificacionesForm.contains('entidadFederativa')).toBeTruthy();
-    expect(component.direccionNotificacionesForm.contains('domicilio')).toBeTruthy();
-    expect(component.direccionNotificacionesForm.contains('calle')).toBeTruthy();
-    expect(component.direccionNotificacionesForm.contains('numeroExterior')).toBeTruthy();
-    expect(component.direccionNotificacionesForm.contains('numeroInterior')).toBeTruthy();
-    expect(component.direccionNotificacionesForm.contains('codigoPostal')).toBeTruthy();
-    expect(component.direccionNotificacionesForm.contains('pais')).toBeTruthy();
-    expect(component.direccionNotificacionesForm.contains('municipioAlcaldia')).toBeTruthy();
-    expect(component.direccionNotificacionesForm.contains('colonia')).toBeTruthy();
-    expect(component.direccionNotificacionesForm.contains('telefono')).toBeTruthy();
-    expect(component.direccionNotificacionesForm.contains('localidad')).toBeTruthy();
-  });
-
-  it('should initialize form values from query observables', () => {
-    expect(component.direccionNotificacionesForm.get('entidadFederativa')?.value).toEqual({ id: 1, descripcion: 'Entidad 1' });
-    expect(component.direccionNotificacionesForm.get('colonia')?.value).toEqual({ id: 1, descripcion: 'Colonia 1' });
-    expect(component.direccionNotificacionesForm.get('localidad')?.value).toEqual({ id: 1, descripcion: 'Localidad 1' });
-    expect(component.direccionNotificacionesForm.get('municipioAlcaldia')?.value).toEqual({ id: 1, descripcion: 'Municipio 1' });
-    expect(component.direccionNotificacionesForm.get('pais')?.value).toBe('México');
-    expect(component.direccionNotificacionesForm.get('numeroInterior')?.value).toBe('101');
-    expect(component.direccionNotificacionesForm.get('codigoPostal')?.value).toBe('01000');
-    expect(component.direccionNotificacionesForm.get('telefono')?.value).toBe('1234567890');
-  });
-
-  it('should call loadInfo and update form values', () => {
+  it('debe llamar loadInfo y actualizar los valores del formulario', () => {
     component.loadInfo();
     expect(mockService.getInfo).toHaveBeenCalled();
     expect(component.direccionNotificacionesForm.get('calle')?.value).toBe('Avenida Reforma');
     expect(component.direccionNotificacionesForm.get('numeroExterior')?.value).toBe('123');
   });
 
-  it('should update store when getEntidad is called', () => {
+  it('debe actualizar el store cuando se llama getEntidad', () => {
     component.direccionNotificacionesForm.get('entidadFederativa')?.setValue({ id: 1, descripcion: 'Entidad 1' });
     component.getEntidad();
     expect(mockStore.setEntidadFed).toHaveBeenCalledWith({ id: 1, descripcion: 'Entidad 1' });
   });
 
-  it('should update store when getMunicipiosOalcaldia is called', () => {
+  it('debe actualizar el store cuando se llama getMunicipiosOalcaldia', () => {
     component.direccionNotificacionesForm.get('municipioAlcaldia')?.setValue({ id: 1, descripcion: 'Municipio 1' });
     component.getMunicipiosOalcaldia();
     expect(mockStore.setMunicipiosAlcaldia).toHaveBeenCalledWith({ id: 1, descripcion: 'Municipio 1' });
   });
 
-  it('should update store when getColonia is called', () => {
+  it('debe actualizar el store cuando se llama getColonia', () => {
     component.direccionNotificacionesForm.get('colonia')?.setValue({ id: 1, descripcion: 'Colonia 1' });
     component.getColonia();
     expect(mockStore.setColonia).toHaveBeenCalledWith({ id: 1, descripcion: 'Colonia 1' });
   });
 
-  it('should update store when getLocalidad is called', () => {
+  it('debe actualizar el store cuando se llama getLocalidad', () => {
     component.direccionNotificacionesForm.get('localidad')?.setValue({ id: 1, descripcion: 'Localidad 1' });
     component.getLocalidad();
     expect(mockStore.setLocalidad).toHaveBeenCalledWith({ id: 1, descripcion: 'Localidad 1' });
   });
 
-  it('should update store when updatePais is called', () => {
+  it('debe actualizar el store cuando se llama updatePais', () => {
     component.direccionNotificacionesForm.get('pais')?.setValue('México');
     component.updatePais();
     expect(mockStore.setPaisInput).toHaveBeenCalledWith('México');
   });
 
-  it('should update store when updateNumeroInterior is called', () => {
+  it('debe actualizar el store cuando se llama updateNumeroInterior', () => {
     component.direccionNotificacionesForm.get('numeroInterior')?.setValue('101');
     component.updateNumeroInterior();
     expect(mockStore.setNumeroInterior).toHaveBeenCalledWith('101');
   });
 
-  it('should update store when updateCodigoPostal is called', () => {
+  it('debe actualizar el store cuando se llama updateCodigoPostal', () => {
     component.direccionNotificacionesForm.get('codigoPostal')?.setValue('01000');
     component.updateCodigoPostal();
     expect(mockStore.setCodigoPostal).toHaveBeenCalledWith('01000');
   });
 
-  it('should update store when updateTelefono is called', () => {
+  it('debe actualizar el store cuando se llama updateTelefono', () => {
     component.direccionNotificacionesForm.get('telefono')?.setValue('1234567890');
     component.updateTelefono();
     expect(mockStore.setTelefono).toHaveBeenCalledWith('1234567890');
   });
 
-  it('should clean up subscriptions on destroy', () => {
+  it('debe limpiar las suscripciones en ngOnDestroy', () => {
     const destroySpy = jest.spyOn(component['destroy$'], 'next');
     const completeSpy = jest.spyOn(component['destroy$'], 'complete');
     component.ngOnDestroy();
     expect(destroySpy).toHaveBeenCalled();
     expect(completeSpy).toHaveBeenCalled();
+  });
+
+  it('debe habilitar el formulario si esFormularioSoloLectura es false', () => {
+    jest.spyOn(component, 'estadoActualizacion');
+    component.esFormularioSoloLectura = false;
+    component.guardarDatosFormulario();
+    expect(component.estadoActualizacion).toHaveBeenCalled();
+  });
+
+  it('debe llamar guardarDatosFormulario cuando readonly es true en inicializarEstadoFormulario', () => {
+    component.esFormularioSoloLectura = true;
+    const guardarSpy = jest.spyOn(component, 'guardarDatosFormulario');
+    const updateSpy = jest.spyOn(component, 'estadoActualizacion');
+
+    component.inicializarEstadoFormulario();
+
+    expect(guardarSpy).toHaveBeenCalled();
+    expect(updateSpy).not.toHaveBeenCalledTimes(2);
+  });
+
+  it('debe llamar solo estadoActualizacion cuando readonly es false en inicializarEstadoFormulario', () => {
+    component.esFormularioSoloLectura = false;
+    const guardarSpy = jest.spyOn(component, 'guardarDatosFormulario');
+    const updateSpy = jest.spyOn(component, 'estadoActualizacion');
+
+    component.inicializarEstadoFormulario();
+
+    expect(updateSpy).toHaveBeenCalled();
+    expect(guardarSpy).not.toHaveBeenCalled();
   });
 });

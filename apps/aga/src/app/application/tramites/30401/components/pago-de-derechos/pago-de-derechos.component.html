@@ -13,6 +13,7 @@
             type="text"
             name="claveDeReferencia"
             formControlName="claveDeReferencia"
+            (input)="manejarEntradaMayusculas('claveDeReferencia', $event)"
             (change)="setValoresStore(pagoDeDerechosForm,'claveDeReferencia')"
           />
           <div *ngIf="esInvalido('claveDeReferencia')" class="text-danger">
@@ -31,6 +32,7 @@
             type="text"
             name="cadenaPagoDependencia"
             formControlName="cadenaPagoDependencia"
+            (input)="manejarEntradaMayusculas('cadenaPagoDependencia', $event)"
             (change)="setValoresStore(pagoDeDerechosForm,'cadenaPagoDependencia')"
           />
           <div *ngIf="esInvalido('cadenaPagoDependencia')" class="text-danger">
@@ -48,6 +50,7 @@
             id="clave"
             formControlName="clave"
             (change)="setValoresStore(pagoDeDerechosForm, 'clave')"
+            [isDisabled]="esFormularioSoloLectura"
           >
           </app-catalogo-select>
 
@@ -69,6 +72,7 @@
             type="text"
             name="llaveDePago"
             formControlName="llaveDePago"
+            (input)="manejarEntradaMayusculas('llaveDePago', $event)"
             (change)="setValoresStore(pagoDeDerechosForm,'llaveDePago')"
           />
           <div *ngIf="esInvalido('llaveDePago')" class="text-danger">
@@ -108,15 +112,18 @@
               (change)="setValoresStore(pagoDeDerechosForm,'impPago'); validarSinComas('impPago')"
             />
             <div *ngIf="esInvalido('impPago')" class="text-danger">
-              <small *ngIf="pagoDeDerechosForm.controls['llaveDePago'].hasError('required')">El importe de pago es requerido.</small>
+              <small *ngIf="pagoDeDerechosForm.controls['impPago'].hasError('required')">El importe de pago es requerido.</small>
               <small *ngIf="pagoDeDerechosForm.controls['impPago'].hasError('maxlength')">El importe de pago no puede exceder 16 caracteres.</small>
+              <small *ngIf="pagoDeDerechosForm.controls['impPago'].hasError('pattern')">
+                No cumple con el formato esperado.
+              </small>
           </div>
           </div>
         </div>
     </div>
 
     <div class="d-flex justify-content-end mt-5">
-      <button type="button" class="btn btn-primary ms-2 d-flex">Borrar datos del pago</button>
+      <button type="button" class="btn btn-primary ms-2 d-flex" (click)="borrarDatosDelPago()" [disabled]="esFormularioSoloLectura">Borrar datos del pago</button>
     </div>
 
     <div class="alert alert-info content-with-checkbox mt-5">
@@ -126,6 +133,7 @@
           [required]="true"
           formControlName="manifiestoDeclaracion"
           (change)="setValoresStore(pagoDeDerechosForm, 'manifiestoDeclaracion')"
+          [isDisabled]="esFormularioSoloLectura"
       ></lib-input-check>
     </div>
 

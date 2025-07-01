@@ -56,7 +56,7 @@ const ROUTES: Routes = [
       ),
   },
   {
-    path: 'registro-solicitud',
+    path: 'registro',
     loadChildren: () =>
       import('./tramites/31803/registro-solicitud.module').then(
         (m) => m.RegistroSolicitudModule
@@ -129,7 +129,7 @@ const ROUTES: Routes = [
       import('./tramites/31616/solicitud-de-registro-invocar.module').then(
         (m) => m.SolicitudDeRegistroInvocarModule
       ),
-    },
+  },
   {
     path: 'aviso-de-ampliacion',
     loadChildren: () =>
@@ -145,23 +145,30 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'registros-de-comercio-exterior',
+    loadChildren: () =>
+      import(
+        './tramites/31603/registros-de-comercio-exterior/registros-de-comercio-exterior.module'
+      ).then((m) => m.RegistrosDeComercioExteriorModule),
+  },
+  {
     path: 'garantia',
     loadChildren: () =>
-      import('./tramites/31101/garantia.module').then(
-        (m) => m.GarantiaModule
-      ),
+      import('./tramites/31101/garantia.module').then((m) => m.GarantiaModule),
   },
   {
     path: 'aviso-opcion-seguro-global',
     loadChildren: () =>
       import('./tramites/32515/aviso-opcion-seguro-global.module').then(
-        (m) => m.AvisoOpcionSeguroGlobalModule),
+        (m) => m.AvisoOpcionSeguroGlobalModule
+      ),
   },
   {
     path: 'acta-de-hechos',
     loadChildren: () =>
       import('./tramites/32516/acta-de-hechos.module').then(
-        (m) => m.ActaDeHechosModule),
+        (m) => m.ActaDeHechosModule
+      ),
   },
   {
     path: 'entrega-acta-solicitante',
@@ -177,11 +184,12 @@ const ROUTES: Routes = [
         (m) => m.ImportadorYOExportadorModule
       ),
   },
-  { 
+  {
     path: 'retorno-seguro-vehiculos-extranjeros',
     loadChildren: () =>
       import('./tramites/32514/aviso-retorno.module').then(
-        (m) => m.AvisoRetornoModule)
+        (m) => m.AvisoRetornoModule
+      ),
   },
   {
     path: 'aviso-mercancia',
@@ -190,6 +198,69 @@ const ROUTES: Routes = [
         (m) => m.AvisoDeMercanciaModule
       ),
   },
+  {
+    path: 'aviso',
+    loadChildren: () =>
+      import('./tramites/32301/aviso-modify-ivaEIepsAgace.module').then(
+        (m) => m.AvisoModifyIvaElepsAgaceModule
+      ),
+  },
+  {
+    path: 'cancelacion-garantia',
+    loadChildren: () =>
+      import('./tramites/31401/cancelacion-garantia.module').then(
+        (m) => m.CancelacionGarantiaModule
+      ),
+  },
+  {
+    path: 'subsecuentes',
+    loadComponent: () =>
+      import(
+        './subsecuentes/acuses-y-resoluciones-folio-del-tramite-detalles-contenedor/acuses-y-resoluciones-folio-del-tramite-detalles-contenedor.component'
+      ).then(
+        (m) => m.AcusesYResolucionesFolioDelTramiteDetallesContenedorComponent
+      ),
+  },
+  {
+    path: 'evaluar',
+    loadComponent: () =>
+      import('./evaluar/evaluar.component').then((m) => m.EvaluarComponent),
+  },
+  {
+    path: 'autorizar',
+    loadComponent: () =>
+      import('./autorizar/autorizar.component').then(
+        (m) => m.AutorizarComponent
+      ),
+  },
+  {
+    path: 'proceso-requerimiento',
+    loadComponent: () =>
+      import('./proceso-requerimiento/proceso-requerimiento.component').then(
+        (m) => m.ProcesoRequerimientoComponent
+      ),
+  },
+  {
+    path: 'verificar-dictamen',
+    loadComponent: () =>
+      import('./verificar-dictamen/verificar-dictamen.component').then((m) => m.VerificarDictamenComponent),
+  },
+  {
+    path: 'detalle-v-dictamen',
+    loadComponent: () =>
+      import('./detalle-v-dictamen/detalle-v-dictamen.component').then((m) => m.DetalleVDictamenComponent),
+  },
+  {
+    path: 'datos-generales-tramite',
+    loadComponent: () =>
+      import('./datos-generales-tramite/datos-generales-tramite.component').then((m) => m.DatosGeneralesTramiteComponent),
+  },
+  {
+      path: 'aviso-de-modificacion',
+    loadChildren: () => 
+      import('./tramites/30505/aviso-de-modificacion.module').then(
+        (m) => m.AvisoDeModificacionModule)
+  }
 ];
 
 @NgModule({

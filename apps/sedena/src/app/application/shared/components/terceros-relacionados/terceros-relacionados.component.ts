@@ -97,6 +97,16 @@ export class TercerosRelacionadosComponent implements OnInit{
 
   ocultarBotonModificar:boolean=false;
 
+  @Output() openModal = new EventEmitter<string>();
+
+  /**
+   * Indica si el formulario se encuentra en modo solo lectura.
+   * Cuando es verdadero, los campos del formulario no pueden ser editados.
+   * @property {boolean} esFormularioSoloLectura
+   * @default false
+   */
+  @Input() esFormularioSoloLectura: boolean = false;
+
   /**
    * Configuración de la tabla de destinatarios finales.
    * @property {any} destinoFinalTablaConfiguracion
@@ -138,9 +148,7 @@ export class TercerosRelacionadosComponent implements OnInit{
    * @returns {void}
    */
   irAAcciones(accionesPath: string): void {
-    this.router.navigate([accionesPath], {
-      relativeTo: this.activatedRoute,
-    });
+    this.openModal.emit(accionesPath)
   }
 
   /**
@@ -169,12 +177,9 @@ export class TercerosRelacionadosComponent implements OnInit{
    * @returns {void}
    */
   modificarDestinatario(): void {
-    this.modificarDestinarioDatos.emit(this.destinarioTablaSeleccionada[0])
-    this.router.navigate(['../agregar-destino-final'], { relativeTo: this.activatedRoute,queryParams: { destinario:this.destinarioTablaSeleccionada[0].codigoPostal } 
-    });
-  
+    this.modificarDestinarioDatos.emit(this.destinarioTablaSeleccionada[0]);
   }
-  
+
   /**
    * Elimina el destinatario final seleccionado y emite un evento con el destinatario eliminado.
    * 
@@ -201,8 +206,6 @@ export class TercerosRelacionadosComponent implements OnInit{
    */
   modificarProveedor(): void {
     this.modificarProveedorDatos.emit(this.proveedorTablaSeleccionada[0])
-    this.router.navigate(['../agregar-proveedor'], { relativeTo: this.activatedRoute,queryParams: {proveedor:this.proveedorTablaSeleccionada[0].rfc} 
-    });
   }
   ngOnInit(): void {
     this.ocultarBotones = OCULTAR_BOTONES.includes(this.idProcedimiento); 

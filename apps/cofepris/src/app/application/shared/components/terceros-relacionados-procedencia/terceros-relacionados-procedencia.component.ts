@@ -19,7 +19,9 @@ import { MANIFIESTOS_ALERT } from '../../constantes/permiso-importacion-biologic
 
 import { TercerosProcedenciaService } from '../../services/terceros-procedencia.service';
 
-import { Subject, takeUntil } from 'rxjs';
+import { Subject,map, takeUntil } from 'rxjs';
+
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 /**
  * Componente que gestiona los terceros relacionados.
  * Utiliza formularios reactivos y componentes personalizados para mostrar datos.
@@ -68,6 +70,12 @@ export class TercerosRelacionadosProcedenciaComponent implements OnInit {
    */
   TEXTO_DE_ALERTA: string = MANIFIESTOS_ALERT.DATOS_MANIFIESTOS;
 
+
+  /**
+   * Indica si el formulario está en modo solo lectura.
+   */
+  esFormularioSoloLectura: boolean = false;
+
   /**
    * @constructor
    * @param {FormBuilder} fb - Servicio para construir y gestionar formularios reactivos.
@@ -75,9 +83,17 @@ export class TercerosRelacionadosProcedenciaComponent implements OnInit {
    * 
    * La lógica del constructor se puede agregar aquí si es necesario.
    */
-  constructor(private fb: FormBuilder,
+  constructor(private fb: FormBuilder, private consultaioQuery: ConsultaioQuery,
     private tercerosProcedenciaService: TercerosProcedenciaService) {
     //La lógica del constructor se puede agregar aquí si es necesario
+    this.consultaioQuery.selectConsultaioState$
+        .pipe(
+          takeUntil(this.destroy$),
+          map((seccionState)=>{
+            this.esFormularioSoloLectura = seccionState.readonly; 
+          })
+        )
+        .subscribe()
   }
 
   /**
@@ -90,7 +106,11 @@ export class TercerosRelacionadosProcedenciaComponent implements OnInit {
    */
   ngOnInit(): void {
     this.tercerosProcedenciaService.getInformacioDeTabla().pipe(takeUntil(this.destroy$)).subscribe((data) => {
-      this.fabricanteHeaderData = data.columns
+      const API_DATOS = JSON.parse(JSON.stringify(data));
+      this.fabricanteHeaderData = API_DATOS.columns
+    });
+     this.tercerosProcedenciaService.getFabricanteDatos().pipe(takeUntil(this.destroy$)).subscribe((data) => {
+      this.fabricanteRowData = data;
     });
   }
 
@@ -164,6 +184,4 @@ export class TercerosRelacionadosProcedenciaComponent implements OnInit {
     this.fabricanteRowData.push({ tbodyData: Object.values(TABLE_ROW) });
     this.cerrarProcedencia();
   }
-
-
 }

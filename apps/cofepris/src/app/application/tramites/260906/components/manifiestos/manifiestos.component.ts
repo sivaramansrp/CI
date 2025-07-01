@@ -1,5 +1,5 @@
 import { AlertComponent, InputRadioComponent, TituloComponent } from '@libs/shared/data-access-user/src';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Solicitud260906State, Tramite260906Store } from '../../../../estados/tramites/tramite260906.store';
 import { Subject, map, takeUntil } from 'rxjs';
@@ -9,7 +9,8 @@ import { Tramite260906Query } from '../../../../estados/queries/tramite260906.qu
 import radioButtonMexicana from '@libs/shared/theme/assets/json/260906/radioButtonMexicana.json';
 
 /**
- * Componente principal para gestionar el formulario de manifiestos.
+ * Componente para gestionar los manifiestos de la solicitud.
+ * Permite al usuario indicar si desea presentar manifiestos y gestionar información confidencial.
  */
 @Component({
   selector: 'app-manifiestos',
@@ -24,54 +25,41 @@ import radioButtonMexicana from '@libs/shared/theme/assets/json/260906/radioButt
   templateUrl: './manifiestos.component.html',
   styleUrl: './manifiestos.component.css',
 })
-
-/**
- * Componente para gestionar los manifiestos de la solicitud.
- */
 export class ManifiestosComponent implements OnInit, OnDestroy {
-  /**
-   * Mensaje de alerta para el usuario.
-   */
+  /** Indica si el componente está en modo solo lectura */
+  @Input() soloLectura: boolean = false;
+  
+  /** Mensaje de alerta para el usuario */
   public mensaje: string = MENSAJE_DE_ALERTA;
-
-  /**
-   * Estado de la solicitud obtenido desde el store.
-   */
+  
+  /** Estado actual de la solicitud */
   public solicitudState!: Solicitud260906State;
-
-  /**
-   * Notificador para destruir observables activos y evitar pérdidas de memoria.
-   */
+  
+  /** Notificador para gestionar la destrucción de suscripciones */
   private destroyNotifier$: Subject<void> = new Subject();
-
-  /**
-   * Grupo de formularios principal para gestionar los manifiestos.
-   */
+  
+  /** Grupo de formularios para gestionar manifiestos */
   manifiestos!: FormGroup;
-
-  /**
-   * Opciones para los radio buttons, cargadas desde un archivo JSON.
-   * @type {RadioOptions[]}
-   */
+  
+  /** Opciones para los radio buttons */
   radioOptions = radioButtonMexicana;
 
   /**
-   * Constructor del componente.
-   * @param fb - FormBuilder para la creación de formularios.
-   * @param tramite260906Store - Servicio para interactuar con el store de Tramite260906.
-   * @param tramite260906Query - Servicio para consultar el estado de la solicitud.
+   * Constructor del componente
+   * 
+   * @param fb Constructor de formularios reactivos
+   * @param tramite260906Store Store para gestionar estado del trámite
+   * @param tramite260906Query Query para obtener estado de la solicitud
    */
   constructor(
     private fb: FormBuilder,
     private tramite260906Store: Tramite260906Store,
     private tramite260906Query: Tramite260906Query
-  ) {
-    // Dependencia inyectada para uso posterior
-  }
+  ) { }
 
   /**
-   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
-   * Obtiene el estado de la solicitud y crea el formulario de manifiestos.
+   * Método de inicialización del componente
+   * Configura suscripciones e inicializa formulario
    */
   ngOnInit(): void {
     this.tramite260906Query.selectSolicitud$
@@ -82,20 +70,30 @@ export class ManifiestosComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-    /**
-     * Inicialización del formulario de manifiestos.
-     */
+    
+    this.inicializarFormulario();
+    this.inicializarEstadoFormulario();
+  }
+
+  /**
+   * Inicializa el formulario de manifiestos
+   * @private
+   */
+  private inicializarFormulario(): void {
     this.manifiestos = this.fb.group({
       manifesto: [this.solicitudState.manifesto],
-      informacionConfidencial: [this.solicitudState?.informacionConfidencial, [Validators.required]],
+      informacionConfidencial: [
+        this.solicitudState?.informacionConfidencial, 
+        [Validators.required]],
     });
   }
 
   /**
-   * Establece el valor de un campo en el store de Tramite260906.
-   * @param form - El grupo de formularios que contiene el campo.
-   * @param campo - El nombre del campo cuyo valor se va a establecer.
-   * @param metodoNombre - El nombre del método en el store que se utilizará para establecer el valor.
+   * Establece valores en el store desde el formulario
+   * 
+   * @param form Grupo de formulario que contiene el campo
+   * @param campo Nombre del campo a actualizar
+   * @param metodoNombre Nombre del método en el store que actualiza el valor
    */
   setValoresStore(
     form: FormGroup,
@@ -107,8 +105,27 @@ export class ManifiestosComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Método del ciclo de vida de Angular que se llama cuando el componente se destruye.
-   * Este método completa el observable destroyNotifier$ para cancelar las suscripciones activas.
+   * Actualiza el indicador de manifiesto en el store
+   * 
+   * @param evento Evento que contiene el valor del checkbox
+   */
+  setManifesto(evento: Event): void {
+    const VALOR = (evento.target as HTMLInputElement).checked;
+    this.tramite260906Store.setManifesto(VALOR);
+  }
+
+  /**
+   * Actualiza el valor de información confidencial en el store
+   * 
+   * @param evento Valor seleccionado para la propiedad
+   */
+  setInformacionConfidencial(evento: string | number): void {
+    this.tramite260906Store.setInformacionConfidencial(evento);
+  }
+
+  /**
+   * Método de limpieza al destruir el componente
+   * Libera las suscripciones activas
    */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
@@ -116,20 +133,14 @@ export class ManifiestosComponent implements OnInit, OnDestroy {
   }
 
   /**
- * Actualiza el indicador de manifiesto en el Store.
- * @param evento - Evento que contiene el valor del indicador.
- */
-  setManifesto(evento: Event): void {
-    const VALOR = (evento.target as HTMLInputElement).checked;
-    this.tramite260906Store.setManifesto(VALOR);
-  }
-
-  /**
-* Actualiza el valor de "informacionConfidencial" en el Store.
-* @param {any} evento - Valor seleccionado para la propiedad "informacionConfidencial".
-* @returns {void}
-*/
-  setInformacionConfidencial(evento: string | number): void {
-    this.tramite260906Store.setInformacionConfidencial(evento);
+   * Inicializa el estado del formulario según modo solo lectura
+   * @private
+   */
+  private inicializarEstadoFormulario(): void {
+    if (this.soloLectura) {
+      this.manifiestos?.disable();
+    } else {
+      this.manifiestos?.enable();
+    }
   }
 }

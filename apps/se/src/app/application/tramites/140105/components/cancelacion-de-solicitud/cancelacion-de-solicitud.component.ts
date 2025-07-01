@@ -1,7 +1,10 @@
 import * as formData from '@libs/shared/theme/assets/json/140105/datos-del-formulario.json';
+import { Subject, map, takeUntil } from 'rxjs';
 import { Cancelacion } from '../../models/cancelacion-de-solicitus.model';
 import { Component } from '@angular/core';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { DesistimientoQuery } from '../../estados/desistimiento-de-permiso.query';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { OnDestroy } from '@angular/core';
@@ -9,12 +12,15 @@ import { OnInit } from '@angular/core';
 import { ServicioDeMensajesService } from '../../services/servicio-de-mensajes.service';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { Validators } from '@angular/forms';
-import { Subject, takeUntil } from 'rxjs';
+
+
 @Component({
   selector: 'app-cancelacion-de-solicitud',
   templateUrl: './cancelacion-de-solicitud.component.html',
   styleUrl: './cancelacion-de-solicitud.component.scss',
 })
+
+
 export class CancelacionDeSolicitudComponent implements OnInit, OnDestroy {
   /**
    * Formulario para capturar los datos de la solicitud.
@@ -28,6 +34,14 @@ export class CancelacionDeSolicitudComponent implements OnInit, OnDestroy {
    * Formulario para capturar el motivo de cancelación.
    */
   public cancelacionForm!: FormGroup;
+
+    /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  esFormularioSoloLectura: boolean = false;
+
+
   /**
    * Configuración de las columnas de la tabla de solicitudes de cancelación.
    */
@@ -50,12 +64,26 @@ export class CancelacionDeSolicitudComponent implements OnInit, OnDestroy {
    * Almacena los registros de cancelación para mostrar en la tabla.
    */
   cuerpoTablaCancelacion: Cancelacion[] = [];
+  
   /**
    * Indica si el usuario tiene permiso para realizar ciertas acciones.
    */
   public datosDePermiso: boolean = false;
 
-  constructor(private fb: FormBuilder, private servicioDeMensajesService: ServicioDeMensajesService) { }
+  /**
+   * Constructor del componente.
+   * 
+   * @param fb Servicio para la creación de formularios reactivos.
+   * @param servicioDeMensajesService Servicio para la gestión de mensajes y datos compartidos.
+   * @param consultaQuery Consulta para obtener el estado de la sección de consulta.
+   * @param desistimientoQuery Consulta para obtener el motivo de cancelación.
+   */
+  constructor(
+    private fb: FormBuilder,
+    private servicioDeMensajesService: ServicioDeMensajesService,
+    private consultaQuery: ConsultaioQuery,
+    private desistimientoQuery: DesistimientoQuery
+  ) { }
    /**
    * Método que se ejecuta al iniciar el componente.
    * Inicializa los formularios de solicitud y cancelación, 
@@ -78,14 +106,25 @@ export class CancelacionDeSolicitudComponent implements OnInit, OnDestroy {
     this.cancelacionForm = this.fb.group({
       motivoCancelacion: ['', Validators.required],
     });
+    
+
 
     this.servicioDeMensajesService.datos$.subscribe((datos) => {
       this.datosDePermiso = datos;
       if (this.datosDePermiso) {
         this.cuerpoTablaCancelacion = [formData as Cancelacion];
         this.servicioDeMensajesService.actualizarDatosForma(this.cuerpoTablaCancelacion as Cancelacion[]);
+        this.desistimientoQuery.selectMotivoCancelacion$ 
+         .pipe(takeUntil(this.destroyNotificationSubject$))
+      .subscribe(data => {
+          this.cancelacionForm.patchValue({
+      motivoCancelacion: data,
+    });       
+      });  
+     
       }
     });
+
 
      // Suscripción a los datos del servicio para llenar la tabla
     this.servicioDeMensajesService.obtenerDatos()
@@ -94,12 +133,22 @@ export class CancelacionDeSolicitudComponent implements OnInit, OnDestroy {
         if (Array.isArray(data?.datos)) {
           this.cuerpoTablaCancelacion = data.datos as Cancelacion[];
         } else {
-          console.error("Expected an array but received:", data?.datos);
           this.cuerpoTablaCancelacion = [];
         }
       });
 
+      
+      this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotificationSubject$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+        })
+      )
+      .subscribe();
   }
+  
+
 
   /**
    * Método que se ejecuta al destruir el componente.
@@ -107,7 +156,7 @@ export class CancelacionDeSolicitudComponent implements OnInit, OnDestroy {
    * para evitar posibles fugas de memoria o actualizaciones 
    * innecesarias cuando el componente ya no está activo.
    */
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this.servicioDeMensajesService.establecerDatosDePermiso(false);
     this.destroyNotificationSubject$.next();
     this.destroyNotificationSubject$.complete();
@@ -120,7 +169,7 @@ export class CancelacionDeSolicitudComponent implements OnInit, OnDestroy {
    * @param event Evento que desencadena la búsqueda.
    */
 
-  public busqueda(event: Event): void {
+  public busqueda(_event: Event): void {
     this.servicioDeMensajesService.enviarMensaje(true);
   }
    /**
@@ -130,7 +179,7 @@ export class CancelacionDeSolicitudComponent implements OnInit, OnDestroy {
    * 
    * @param event Evento que desencadena la eliminación.
    */
-  public eliminarRegistro(event: Event): void {
+  public eliminarRegistro(_event: Event): void {
     this.cuerpoTablaCancelacion = [];
     this.servicioDeMensajesService.actualizarDatosForma(this.cuerpoTablaCancelacion as Cancelacion[]);
   }

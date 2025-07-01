@@ -1,8 +1,8 @@
 import { Component, ViewChild } from '@angular/core';
-import{AccionBoton} from 'libs/shared/data-access-user/src/core/models/140103/cancelacion.model';
+import{AccionBoton} from '@libs/shared/data-access-user/src/core/models/140103/cancelacion.model';
 import { DatosPasos } from '@libs/shared/data-access-user/src';
 import { ListaPasosWizard } from '@libs/shared/data-access-user/src';
-import { OCTA_TEMPO } from 'libs/shared/data-access-user/src/core/services/130102/octava-temporal.enum';
+import { OCTA_TEMPO } from '@libs/shared/data-access-user/src/core/services/130102/octava-temporal.enum';
 import { WizardComponent } from '@libs/shared/data-access-user/src';
 
 
@@ -43,9 +43,13 @@ export class CancelacionDeComponent {
     if (e.valor > 0 && e.valor < 5) {
       this.indice = e.valor;
       if (e.accion === 'cont') {
-        this.wizardComponent.siguiente();
+        if (this.wizardComponent) {
+          this.wizardComponent.siguiente();
+        }
       } else {
-        this.wizardComponent.atras();
+        if (this.wizardComponent) {
+          this.wizardComponent.atras();
+        }
       }
     }
   }

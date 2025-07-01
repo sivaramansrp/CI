@@ -3,16 +3,16 @@
     <div class="row">
         <ul class="nav nav-tabs">
             <li [ngClass]="indice === 1 ? 'active' : ''">
-                <a data-toggle="tab" tabindex="0" (keyup)="seleccionaTab(1)" (click)="seleccionaTab(1)">Solicitante</a>
+                <a data-toggle="tab" (keyup)="seleccionaTab(1)" (click)="seleccionaTab(1)">Solicitante</a>
             </li>
             <li [ngClass]="indice === 2 ? 'active' : ''">
-                <a data-toggle="tab" tabindex="0" (keyup)="seleccionaTab(1)" (click)="seleccionaTab(2)">Domicilios de plantas</a>
+                <a data-toggle="tab" (keyup)="seleccionaTab(1)" (click)="seleccionaTab(2)">Domicilios de plantas</a>
             </li>
             <li [ngClass]="indice === 3 ? 'active' : ''">
-                <a data-toggle="tab" tabindex="0" (keyup)="seleccionaTab(1)" (click)="seleccionaTab(3)">Sectores y mercancías</a>
+                <a data-toggle="tab" (keyup)="seleccionaTab(1)" (click)="seleccionaTab(3)">Sectores y mercancías</a>
             </li>
             <li [ngClass]="indice === 4 ? 'active' : ''">
-                <a data-toggle="tab" tabindex="0" (keyup)="seleccionaTab(1)" (click)="seleccionaTab(4)">Productor indirecto</a>
+                <a data-toggle="tab" (keyup)="seleccionaTab(1)" (click)="seleccionaTab(4)">Productor indirecto</a>
             </li>
         </ul>
         <ng-container>
@@ -21,13 +21,19 @@
                     <app-solicitante></app-solicitante>
                 }
                 @case (2) {
+                    @if(esDatosRespuesta){
                    <app-domicilios-de-plantas></app-domicilios-de-plantas>
+                    }
                 }
                 @case(3) {
+                     @if(esDatosRespuesta){
                     <app-sectores-y-mercancias></app-sectores-y-mercancias>
+                     }
                 }
                 @case(4) {
+                     @if(esDatosRespuesta){
                     <app-productor-indirecto></app-productor-indirecto>
+                     }
                 }
 
             }

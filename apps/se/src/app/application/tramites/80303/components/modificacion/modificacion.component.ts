@@ -14,6 +14,19 @@ import { CommonModule } from '@angular/common';
 import { ModificacionProgramaImmexBajaSubmanufactureraService } from '../../services/modificacion-programa-immex-baja-submanufacturera.service';
 import { Tramite80303Query } from '../../estados/tramite80303Query.query';
 
+/**
+ * Decorador que define un componente en Angular.
+ * 
+ * Este decorador configura las propiedades esenciales del componente, como su selector,
+ * las dependencias importadas, y las rutas de los archivos de plantilla y estilos.
+ * 
+ * Propiedades:
+ * - `selector`: Define el nombre del selector que se utilizará para instanciar este componente en el HTML.
+ * - `standalone`: Indica si el componente es independiente y no requiere ser declarado en un módulo.
+ * - `imports`: Lista de módulos y componentes que se importan para ser utilizados dentro de este componente.
+ * - `templateUrl`: Ruta del archivo HTML que contiene la plantilla del componente.
+ * - `styleUrl`: Ruta del archivo SCSS que contiene los estilos del componente.
+ */
 @Component({
   selector: 'app-modificacion',
   standalone: true,
@@ -63,12 +76,34 @@ export class ModificacionComponent implements OnInit, OnDestroy {
    */
   submanufacturerasTablaDatos: EmpresaSubmanufacturera[] = [];
 
+  /**
+   * Constructor del componente ModificacionComponent.
+   * 
+   * Este constructor inicializa las dependencias necesarias para el funcionamiento del componente.
+   * 
+   * @param fb - Instancia de FormBuilder utilizada para crear y gestionar formularios reactivos.
+   * @param modificacionProgramaImmexBajaSubmanufactureraService - Servicio encargado de manejar la lógica relacionada con la modificación del programa IMMEX en el contexto de baja submanufacturera.
+   * @param tramite80303Querry - Servicio que proporciona acceso a las consultas relacionadas con el trámite 80303.
+   */
   constructor(
     private fb: FormBuilder,
     public modificacionProgramaImmexBajaSubmanufactureraService: ModificacionProgramaImmexBajaSubmanufactureraService,
     public tramite80303Querry: Tramite80303Query
   ) {}
 
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * 
+   * En este método se realizan las siguientes acciones:
+   * - Se invoca el método `crearFormaulario` para inicializar el formulario del componente.
+   * - Se utiliza el servicio `modificacionProgramaImmexBajaSubmanufactureraService` para obtener datos 
+   *   desde una URL específica y se pasa el identificador `submanufacturerasTablaDatos` junto con la ruta 
+   *   `/80303/subManufacturerasTablaDatos.json`.
+   * - Se suscribe al estado del trámite utilizando `tramite80303Querry.selectTramiteState$` y se actualiza 
+   *   la propiedad `submanufacturerasTablaDatos` con los datos obtenidos del estado.
+   * - La suscripción está gestionada con `takeUntil(this.destroyNotifier$)` para evitar fugas de memoria 
+   *   al destruir el componente.
+   */
   ngOnInit(): void {
     this.crearFormaulario();
     this.modificacionProgramaImmexBajaSubmanufactureraService.obtenerRespuestaPorUrl(

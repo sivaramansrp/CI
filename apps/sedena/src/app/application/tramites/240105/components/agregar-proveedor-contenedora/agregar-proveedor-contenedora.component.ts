@@ -1,6 +1,6 @@
+import { Component, EventEmitter, Output } from '@angular/core';
 import { AgregarProveedorComponent } from '../../../../shared/components/agregar-proveedor/agregar-proveedor.component';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
 import { ID_PROCEDIMIENTO } from '../../constants/importacion-armas-municiones.enum';
 import { Proveedor } from '../../../../shared/models/terceros-relacionados.model';
 import { Tramite240105Store } from '../../estados/tramite240105Store.store';
@@ -13,6 +13,17 @@ import { Tramite240105Store } from '../../estados/tramite240105Store.store';
   styleUrl: './agregar-proveedor-contenedora.component.scss',
 })
 export class AgregarProveedorContenedoraComponent {
+
+  /**
+   * @event cerrar
+   * @description Evento emitido para indicar que se debe cerrar el componente.
+   */
+  @Output() cerrar = new EventEmitter<void>();
+  
+  /**
+   * Identificador del procedimiento.
+   * @property {number} idProcedimiento
+   */   
   public readonly idProcedimiento = ID_PROCEDIMIENTO;
   /**
    * @constructor
@@ -32,5 +43,6 @@ export class AgregarProveedorContenedoraComponent {
    */
   updateProveedorTablaDatos(event: Proveedor[]): void {
     this.tramite240105Store.updateProveedorTablaDatos(event);
+    this.cerrar.emit()
   }
 }

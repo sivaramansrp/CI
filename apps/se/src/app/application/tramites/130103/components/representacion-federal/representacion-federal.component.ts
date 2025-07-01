@@ -2,7 +2,7 @@ import {
   Catalogo,
   ModeloDeFormaDinamica,
 } from '@libs/shared/data-access-user/src';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import {
   ImportacionDefinitiva130103State,
@@ -10,6 +10,7 @@ import {
 } from '../../../../estados/tramites/tramite130103.store';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { ConsultaioState } from '@ng-mf/data-access-user';
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
 import { REPRESENTACION_FEDERAL } from '../../constantes/importacion-definitiva.enum';
 import { Tramite130103Query } from '../../../../estados/queries/tramite130103.query';
@@ -44,6 +45,14 @@ import representacion from '@libs/shared/theme/assets/json/130119/representacion
   styleUrl: './representacion-federal.component.scss',
 })
 export class RepresentacionFederalComponent implements OnInit, OnDestroy {
+  
+  /**
+    * @property consultaState
+    * @description
+    * Estado actual de la consulta gestionado por el store `ConsultaioQuery`.
+    */
+    @Input() consultaState!: ConsultaioState;
+
   /**
    * compo doc
    * @property representacionFormdata
@@ -126,8 +135,10 @@ export class RepresentacionFederalComponent implements OnInit, OnDestroy {
    */
   constructor(
     private tramite130103Store: Tramite130103Store,
-    private tramite130103Query: Tramite130103Query // eslint-disable-next-line no-empty-function
-  ) {}
+    private tramite130103Query: Tramite130103Query
+  ) {
+    //
+  }
 
   /**
    * compo doc
@@ -265,7 +276,7 @@ export class RepresentacionFederalComponent implements OnInit, OnDestroy {
    *
    * @param {Object} event - Objeto que contiene el campo modificado y su nuevo valor.
    * @param {string} event.campo - Nombre del campo modificado.
-   * @param {any} event.valor - Nuevo valor del campo, que puede ser un objeto con un identificador o un valor directo.
+   * @param {string} event.valor - Nuevo valor del campo, que puede ser un objeto con un identificador o un valor directo.
    *
    * @example
    * this.establecerCambioDeValor({ campo: 'entidad', valor: { id: 1, descripcion: 'Ciudad de México' } });
@@ -274,17 +285,8 @@ export class RepresentacionFederalComponent implements OnInit, OnDestroy {
    * this.establecerCambioDeValor({ campo: 'observaciones', valor: 'Sin observaciones' });
    * // Actualiza el estado dinámico del campo "observaciones" con el valor "Sin observaciones".
    */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  establecerCambioDeValor(event: { campo: string; valor: any }): void {
-    if (
-      event &&
-      typeof event.valor === 'object' &&
-      event.valor !== null &&
-      'id' in event.valor
-    ) {
-      const VALOR = event.valor.id;
-      this.tramite130103Store.setDynamicFieldValue(event.campo, VALOR);
-    } else if (event) {
+  establecerCambioDeValor(event: { campo: string; valor: string | null }): void {
+    if (event) {
       this.tramite130103Store.setDynamicFieldValue(event.campo, event.valor);
     }
   }

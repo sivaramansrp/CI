@@ -6,6 +6,7 @@ import {FormBuilder,FormGroup,FormsModule,ReactiveFormsModule} from '@angular/fo
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ConsultaAvisoAcreditacionService } from '../../services/consulta-aviso-acreditacion.service';
+import { Router } from '@angular/router';
 import { Tramite32101Query } from '../../../../estados/queries/tramite32101.query';
 
 @Component({
@@ -67,8 +68,11 @@ export class ComponenteDeActualizacionComponent implements OnInit, OnDestroy {
    */
   public solicitudState!: Solicitud32101State;
 
+  configuracionTablaDatos: DatosDeLaTabla[] = [];
+
   constructor(
     private fb: FormBuilder,
+    private router: Router,
     private consultaAvisoAcreditacionService: ConsultaAvisoAcreditacionService,
     public tramite32101Store: Tramite32101Store,
     private tramite32101Query: Tramite32101Query
@@ -130,11 +134,12 @@ export class ComponenteDeActualizacionComponent implements OnInit, OnDestroy {
    * Utiliza el servicio `FormBuilder` para crear el grupo de controles.
    */
   initForm(): void {
+    const SELECTED_ROW = this.solicitudState.abc;
     this.modificarFormulario = this.fb.group({
-      tipoDeInversion: [],
-      descripcionGeneral: [this.solicitudState.abc?.descripcionGeneral],
-      valorEnPesos: [this.solicitudState.abc?.valorEnPesos],
-      formaAdquisicion: [],
+      tipoDeInversion: [SELECTED_ROW?.tipoDeInversion],
+      descripcionGeneral: [SELECTED_ROW?.descripcionGeneral],
+      valorEnPesos: [SELECTED_ROW?.valorEnPesos],
+      formaAdquisicion: [SELECTED_ROW?.formaAdquisicion],
     });
   }
 
@@ -222,21 +227,31 @@ export class ComponenteDeActualizacionComponent implements OnInit, OnDestroy {
    * ```
    */
   onGuardarCambios(): void {
-  const UPDATED_ROW: DatosDeLaTabla = {
-    id: this.solicitudState.abc?.id ?? 0,
-    tipoDeInversion: ComponenteDeActualizacionComponent.getDropdownLabel(
-      this.modificarFormulario.value.tipoDeInversion,
-      this.tramiteList.catalogos
-    ),
-    descripcionGeneral: this.modificarFormulario.value.descripcionGeneral,
-    formaAdquisicion: ComponenteDeActualizacionComponent.getDropdownLabel(
-      this.modificarFormulario.value.formaAdquisicion,
-      this.aduana.catalogos
-    ),
-    valorEnPesos: this.modificarFormulario.value.valorEnPesos,
-    comprobanteDePago: 'N/A',
-  };
-
-  this.consultaAvisoAcreditacionService.setUpdatedRow(UPDATED_ROW);
-}
+    const CURRENT_URL = this.router.url;
+    const UPDATED_ROW: DatosDeLaTabla = {
+      id: this.solicitudState.abc?.id ?? 0,
+      tipoDeInversion: ComponenteDeActualizacionComponent.getDropdownLabel(
+        this.modificarFormulario.value.tipoDeInversion,
+        this.tramiteList.catalogos
+      ),
+      descripcionGeneral: this.modificarFormulario.value.descripcionGeneral,
+      formaAdquisicion: ComponenteDeActualizacionComponent.getDropdownLabel(
+        this.modificarFormulario.value.formaAdquisicion,
+        this.aduana.catalogos
+      ),
+      valorEnPesos: this.modificarFormulario.value.valorEnPesos,
+      comprobanteDePago: 'N/A',
+    };
+    this.configuracionTablaDatos = [...this.configuracionTablaDatos, UPDATED_ROW];
+    this.consultaAvisoAcreditacionService.setUpdatedRow([UPDATED_ROW]);
+    this.tramite32101Store.setDatosDelContenedor(this.configuracionTablaDatos);
+    setTimeout(() => {
+      if (CURRENT_URL.includes('agace')) {
+        this.router.navigate(['/agace/consulta-aviso-acreditacion/solicitud']);
+      }
+      if (CURRENT_URL.includes('pago')) {
+        this.router.navigate(['/pago/consulta-aviso-acreditacion/solicitud']);
+      }
+    }, 100);
+  }
 }

@@ -1,8 +1,8 @@
-import { AlertComponent, Aviso, TituloComponent } from '@ng-mf/data-access-user';
+import { AVISO, AlertComponent, ConsultaioQuery, TituloComponent } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Solicitud260605State, Tramite260605Store } from '../../../../estados/tramites/tramite260605.store';
-import { Subject, Subscription, map, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ModificatNoticeService } from '../../services/modificat-notice.service';
 import { ReprestantanteData } from '../../models/aduaneras-informaciones.model';
@@ -47,7 +47,7 @@ export class RepresentanteComponent implements OnInit, OnDestroy {
    * @type {Aviso}
    * @memberof RepresentanteComponent
    */
-  public ADVERTENCIA = Aviso;
+  public ADVERTENCIA = AVISO;
 
   /**
    * Sujeto para notificar la destrucción del componente.
@@ -59,13 +59,10 @@ export class RepresentanteComponent implements OnInit, OnDestroy {
   private destroyNotifier$: Subject<void> = new Subject();
 
   /**
-   * Suscripción a los cambios en el formulario reactivo.
-   * 
-   * @private
-   * @type {Subscription}
-   * @memberof RepresentanteComponent
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
    */
-  private subscription: Subscription = new Subscription();
+  public esFormularioSoloLectura: boolean = false;
 
   /**
    * Datos de prueba del representante.
@@ -92,29 +89,45 @@ export class RepresentanteComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private tramite260605Store: Tramite260605Store,
     private tramite260605Query: Tramite260605Query,
-    private modificatNoticeService: ModificatNoticeService
+    private modificatNoticeService: ModificatNoticeService,
+    private consultaioQuery: ConsultaioQuery
   ) {
-    // Lógica de inicialización si es necesario
+    /**
+         * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
+         *
+         * - Asigna el valor de solo lectura (`readonly`) a la propiedad `esFormularioSoloLectura`.
+         * - Llama a `inicializarEstadoFormulario()` para aplicar configuraciones basadas en el estado recibido.
+         * - La suscripción se cancela automáticamente cuando `destroyNotifier$` emite un valor (para evitar fugas de memoria).
+         */
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+        })
+      )
+      .subscribe();
   }
 
-  
-
   /**
-   * Método que se ejecuta al iniciar el componente.
+   * Inicializa el formulario reactivo `aduanerasInformacionesForm` con los valores actuales del estado de la solicitud.
    * 
-   * @memberof RepresentanteComponent
+   * Suscribe al observable `selectSolicitud$` para obtener el estado más reciente de la solicitud y lo asigna a `solicitudState`.
+   * Luego, crea el formulario utilizando los valores de `solicitudState` y aplica las validaciones requeridas.
+   * 
+   * @remarks
+   * - Utiliza el operador `takeUntil` para limpiar la suscripción cuando el componente se destruye.
+   * - Los campos del formulario incluyen `numeroDePermiso` y `cstumbresAtuales`, ambos requeridos.
    */
-  ngOnInit(): void {
-    this.subscription.add(
-      this.tramite260605Query.selectSolicitud$
-        .pipe(
-          takeUntil(this.destroyNotifier$),
-          map((seccionState) => {
-            this.solicitudState = seccionState;
-          })
-        )
-        .subscribe()
-    );
+  inicializarFormulario(): void {
+    this.tramite260605Query.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.solicitudState = seccionState;
+        })
+      )
+      .subscribe();
     this.representante = this.fb.group({
       rfc: [this.solicitudState?.rfc, Validators.required],
       nombre: [this.solicitudState?.nombre, Validators.required],
@@ -126,6 +139,43 @@ export class RepresentanteComponent implements OnInit, OnDestroy {
     this.representante.get('apellidoMaterno')?.disable();
   }
 
+  /**
+    * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+    * Luego reinicializa el formulario con los valores actualizados desde el store.
+    */
+  guardarDatosFormulario(): void {
+    this.inicializarFormulario();
+    if (this.esFormularioSoloLectura) {
+      this.representante.disable();
+    } else if (!this.esFormularioSoloLectura) {
+      this.representante.enable();
+    }
+  }
+
+
+  /**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.  
+   * Además, obtiene la información del catálogo de mercancía.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.inicializarFormulario();
+    }
+  }
+
+
+
+  /**
+   * Método que se ejecuta al iniciar el componente.
+   * 
+   * @memberof RepresentanteComponent
+   */
+  ngOnInit(): void {
+    this.inicializarEstadoFormulario();
+  }
+
 
   /**
    * Método para obtener los datos disponibles de los representantes.
@@ -134,17 +184,17 @@ export class RepresentanteComponent implements OnInit, OnDestroy {
    *
    * @returns {void} Este método no retorna ningún valor.
    */
-  public obtenerAduanasDisponiblesDatos(): void { 
+  public obtenerAduanasDisponiblesDatos(): void {
     this.modificatNoticeService.ObtenerReprestantanteData()
-    .pipe(
-      takeUntil(this.destroyNotifier$)
-    ).subscribe((response) => {
-      this.representante.patchValue({
-        nombre: response.nombre,
-        apellidoPaterno: response.apellidoPaterno,
-        apellidoMaterno: response.apellidoMaterno
+      .pipe(
+        takeUntil(this.destroyNotifier$)
+      ).subscribe((response) => {
+        this.representante.patchValue({
+          nombre: response.nombre,
+          apellidoPaterno: response.apellidoPaterno,
+          apellidoMaterno: response.apellidoMaterno
+        });
       });
-    });
   }
 
   /**

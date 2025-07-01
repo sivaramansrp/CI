@@ -5,16 +5,17 @@
     [configuracionTabla]="ParqueAgentes"
     [datos]="agentesInfoList"
     (listaDeFilaSeleccionada)="manejarFilaSeleccionada($event)"
+    [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
   >
   </app-tabla-dinamica>
 
   <div class="d-flex justify-content-end">
     <div class="d-flex flex-row flex-wrap gap-3">
-        <button class="btn btn-primary" (click)="cargaArchivo()">Carga por archivo</button>
+        <button class="btn btn-primary" (click)="cargaArchivo()" [disabled]="esFormularioSoloLectura">Carga por archivo</button>
         <button class="btn btn-primary" [ngClass]="{'btn-secondary': !enableEliminarBoton}"
         [disabled]="!enableEliminarBoton" (click)="confirmEliminarAgentesItem()">Eliminar</button>
         <button class="btn btn-primary"  [disabled]="!enableModficarBoton" [ngClass]="{'btn-secondary': !enableEliminarBoton}" (click)="modificarItemAgentes()">Modificar</button>
-        <button class="btn btn-primary" (click)="agregarDialogoDatos()">Agregar</button>
+        <button class="btn btn-primary" (click)="agregarDialogoDatos()" [disabled]="esFormularioSoloLectura">Agregar</button>
     </div>
   </div>
 </div>
@@ -35,7 +36,7 @@
               <p class="fw-bold">Registro de Agentes Aduanales</p>
               <div class="row mb-3">
                 <div class="col-md-6">
-                  <label class="form-label" for="nombreAgente">Nombre(s)*</label>
+                  <label class="form-label" for="nombreAgente">Nombre(s)*:</label>
                   <input type="text" class="form-control" id="nombreAgente" formControlName="nombreAgente" />
                   <div *ngIf="esInvalido('marca')" class="text-danger">
                     <small *ngIf="formularioAgentesAduanales.controls['marca'].hasError('required')">
@@ -44,7 +45,7 @@
                   </div>
                 </div>
                 <div class="col-md-6">
-                  <label class="form-label" for="primerApellido">Primer Apellido*</label>
+                  <label class="form-label" for="primerApellido">Primer Apellido*:</label>
                   <input type="text" class="form-control" id="primerApellido" formControlName="primerApellido" />
                   <div *ngIf="esInvalido('segundoApellido')" class="text-danger">
                     <small *ngIf="formularioAgentesAduanales.controls['segundoApellido'].hasError('required')">
@@ -53,7 +54,7 @@
                   </div>
                 </div>
                 <div class="col-md-6">
-                  <label class="form-label" for="segundoApellido">Segundo Apellido*</label>
+                  <label class="form-label" for="segundoApellido">Segundo Apellido*:</label>
                   <input type="text" class="form-control" id="segundoApellido" formControlName="segundoApellido" />
                   <div *ngIf="esInvalido('segundoApellido')" class="text-danger">
                     <small *ngIf="formularioAgentesAduanales.controls['segundoApellido'].hasError('required')">
@@ -62,7 +63,7 @@
                   </div>
                 </div>
                 <div class="col-md-6">
-                  <label class="form-label" for="patente">Número de patente de agente aduanal*</label>
+                  <label class="form-label" for="patente">Número de patente de agente aduanal*:</label>
                   <input type="text" class="form-control" id="patente" formControlName="patente" />
                   <div *ngIf="esInvalido('patente')" class="text-danger">
                     <small *ngIf="formularioAgentesAduanales.controls['patente'].hasError('required')">
@@ -122,7 +123,7 @@
   <lib-notificaciones 
   *ngIf="confirmEliminarPopupAbierto"
   [notificacionInput]="nuevaNotificacion" 
-  (confirmacionModal)="eliminarAgentesItem()">
+  (confirmacionModal)="eliminarAgentesItem($event)">
 </lib-notificaciones>
 
 <lib-notificaciones 

@@ -134,6 +134,7 @@ export interface DatosModificacion {
   tipo: string;
   programa: string;
   actividadProductivaActual: string;
+  actividadProductiva?: string;
 }
 
 /**

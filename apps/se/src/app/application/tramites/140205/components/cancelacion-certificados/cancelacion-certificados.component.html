@@ -1,0 +1,177 @@
+<form [formGroup]="solicitudForm">
+  <ng-titulo titulo="Buscar cupos" />
+  <ng-container formGroupName="grupoCupo">
+    <div class="row">
+      <div class="col-md-4">
+        <app-catalogo-select [catalogo]="optionsAduanero" [label]="'Régimen aduanero'" [required]="true" id="aduanero"
+          formControlName="aduanero" [isDisabled]="soloLectura" [ngClass]="isValid(grupoCupo,'aduanero') ? 'required' : ''"
+          (change)="setValoresStore(grupoCupo, 'aduanero', 'setGrupoCupoAduanero')">
+        </app-catalogo-select>
+      </div>
+
+      <div class="col-md-4">
+        <app-catalogo-select [catalogo]="optionsMecanismo" [label]="'Mecanismo de asignación'" [required]="true"
+          id="mecanismo" formControlName="mecanismo" [isDisabled]="soloLectura" [ngClass]="isValid(grupoCupo,'mecanismo') ? 'required' : ''"
+          (change)="setValoresStore(grupoCupo, 'mecanismo', 'setGrupoCupoMecanismo')">
+        </app-catalogo-select>
+      </div>
+
+      <div class="col-md-4">
+        <app-catalogo-select [catalogo]="optionsMecanismo" [label]="'Tratado o bloque comercial'" [required]="true"
+          id="tratado" formControlName="tratado" [isDisabled]="soloLectura" [ngClass]="isValid(grupoCupo,'tratado') ? 'required' : ''"
+          (change)="setValoresStore(grupoCupo, 'tratado', 'setGrupoCupoTratado')">
+        </app-catalogo-select>
+      </div>
+    </div>
+
+
+    <div class="row">
+      <div class="col-md-4">
+        <app-catalogo-select [catalogo]="optionsMecanismo" [label]="'Nombre de producto'" [required]="true"
+          id="nombreProducto" formControlName="nombreProducto" [isDisabled]="soloLectura"
+          [ngClass]="isValid(grupoCupo,'nombreProducto') ? 'required' : ''"
+          (change)="setValoresStore(grupoCupo, 'nombreProducto', 'setGrupoCupoNombreProducto')">
+        </app-catalogo-select>
+      </div>
+
+      <div class="col-md-4">
+        <app-catalogo-select [catalogo]="optionsMecanismo" [label]="'Nombre del subproducto'" [required]="true"
+          id="nombreSubproducto" formControlName="nombreSubproducto" [isDisabled]="soloLectura"
+          [ngClass]="isValid(grupoCupo,'nombreSubproducto') ? 'required' : ''"
+          (change)="setValoresStore(grupoCupo, 'nombreSubproducto', 'setGrupoCupoNombreProducto')">
+        </app-catalogo-select>
+      </div>
+      <div class="col-md-4">
+        <app-catalogo-select [catalogo]="optionsMecanismo" [label]="'Representación federal'" [required]="true"
+          id="federal" formControlName="federal" [isDisabled]="soloLectura" [ngClass]="isValid(grupoCupo,'federal') ? 'required' : ''"
+          (change)="setValoresStore(grupoCupo, 'federal', 'setGrupoCupoNombreProducto')">
+        </app-catalogo-select>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12 mt-3">
+        <div class="pull-right">
+          <button type="button" class="btn btn-primary" [disabled]="soloLectura" (click)="buscarCupos()">
+            Buscar
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <ng-titulo titulo="Cupos disponibles" />
+    <div class="row">
+      <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccion.CHECKBOX" [configuracionTabla]="tablaDeDatos.encabezadas"
+        [datos]="tablaDeDatos.datos" (listaDeFilaSeleccionada)="filaSeleccionada($event)"></app-tabla-dinamica>
+    </div>
+
+
+  </ng-container>
+
+  <ng-container formGroupName="grupoDatalleCupo">
+    <ng-titulo titulo="Detalle del cupo" />
+    <div class="row">
+      <div class="col-md-4 mb-3">
+        <label>Régimen aduanero</label>
+        <input type="text" class="form-control" formControlName="aduanero" id="aduanero"
+          (change)="setValoresStore(grupoDatalleCupo, 'aduanero', 'setGrupoDatalleCupoAduanero')" />
+      </div>
+      <div class="col-md-4 mb-3">
+        <label>Descripción del producto</label>
+        <input type="text" class="form-control" formControlName="descripcionProducto" id="descripcionProducto"
+          (change)="setValoresStore(grupoDatalleCupo, 'descripcionProducto', 'setGrupoDatalleCupoDescripcionProducto')" />
+      </div>
+      <div class="col-md-4 mb-3">
+        <label>Clasificación del subproducto</label>
+        <input type="text" class="form-control" formControlName="clasificacionSubproducto" id="clasificacionSubproducto"
+          (change)="setValoresStore(grupoDatalleCupo, 'clasificacionSubproducto', 'setGrupoDatalleCupoClasificacionSubproducto')" />
+      </div>
+
+    </div>
+
+
+    <div class="row">
+      <div class="col-md-4 mb-3">
+        <label>Unidad de medida</label>
+        <input type="text" class="form-control" formControlName="unidad" id="unidad"
+          (change)="setValoresStore(grupoDatalleCupo, 'unidad', 'setGrupoDatalleCupoUnidad')" />
+      </div>
+      <div class="col-md-4 mb-3">
+        <label>Mecanismo de asignación</label>
+        <input type="text" class="form-control" formControlName="mecanismo" id="mecanismo"
+          (change)="setValoresStore(grupoDatalleCupo, 'mecanismo', 'setGrupoDatalleCupoMecanismo')" />
+      </div>
+      <div class="col-md-4 mb-3">
+        <label>Tratado / Acuerdo</label>
+        <input type="text" class="form-control" formControlName="tratado" id="tratado"
+          (change)="setValoresStore(grupoDatalleCupo, 'tratado', 'setGrupoDatalleCupoTratado')" />
+      </div>
+
+    </div>
+    <div clss="row">
+      <label for="arancelarias" class="form-label">Fracciones arancelarias</label>
+      <textarea id="arancelarias" formControlName="arancelarias" class="mb-4 h-20 w-100" placeholder="" rows="2"
+        (change)="setValoresStore(grupoDatalleCupo,'arancelarias', 'setGrupoDatalleCupoArancelarias')"></textarea>
+    </div>
+
+    <div clss="row">
+      <label for="paises" class="form-label">Países:</label>
+      <textarea id="paises" formControlName="paises" class="mb-4 h-20 w-100" placeholder="" rows="2"
+        (change)="setValoresStore(grupoDatalleCupo,'paises', 'setGrupoDatalleCupoPaises')"></textarea>
+    </div>
+
+    <div clss="row">
+      <label for="observaciones" class="form-label">Observaciones:</label>
+      <textarea id="observaciones" formControlName="observaciones" class="mb-4 h-20 w-100" placeholder="" rows="2"
+        (change)="setValoresStore(grupoDatalleCupo,'observaciones', 'setGrupoDatalleCupoObservaciones')"></textarea>
+    </div>
+
+    <div clss="row">
+      <label for="fundamentos" class="form-label">Fundamentos:</label>
+      <textarea id="fundamentos" formControlName="fundamentos" class="mb-4 h-20 w-100" placeholder="" rows="2"
+        (change)="setValoresStore(grupoDatalleCupo,'fundamentos', 'setGrupoDatalleCupoFundamentos')"></textarea>
+    </div>
+
+    <div clss="row">
+
+      <div class="col-md-6 mb-3">
+        <label>Fecha de inicio de vigencia</label>
+        <input type="text" class="form-control" formControlName="inicio" id="inicio"
+          (change)="setValoresStore(grupoDatalleCupo, 'inicio', 'setGrupoDatalleCupoInicio')" />
+      </div>
+      <div class="col-md-6 mb-3">
+        <label>Fecha de fin de vigencia</label>
+        <input type="text" class="form-control" formControlName="fin" id="fin"
+          (change)="setValoresStore(grupoDatalleCupo, 'fin', 'setGrupoDatalleCupoFin')" />
+      </div>
+    </div>
+
+  </ng-container>
+
+  <ng-titulo titulo="Oficio" />
+  <ng-container formGroupName="grupoFolio">
+    <div clss="row">
+      <div class="col-md-4 mb-3">
+        <label>Monto asignado</label>
+        <input type="text" class="form-control" formControlName="montoAsignado" id="montoAsignado"
+          (change)="setValoresStore(grupoFolio, 'montoAsignado', 'setGrupoFolioMontoAsignado')" />
+      </div>
+      <div class="col-md-4 mb-3">
+        <label>Monto disponible</label>
+        <input type="text" class="form-control" formControlName="montoDisponible" id="montoDisponible"
+          (change)="setValoresStore(grupoFolio, 'montoDisponible', 'setGrupoFolioMontoDisponible')" />
+      </div>
+
+      <div class="col-md-4 mb-3">
+        <label>Monto expedido</label>
+        <input type="text" class="form-control" formControlName="montoExpedido" id="montoExpedido"
+          (change)="setValoresStore(grupoFolio, 'montoExpedido', 'setGrupoFolioMontoExpedido')" />
+      </div>
+    </div>
+
+    <ng-titulo titulo="Cupos disponibles" />
+    <div class="row">
+      <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccion.CHECKBOX" [configuracionTabla]="tablaDatos.encabezadas"
+        [datos]="tablaDatos.datos" (listaDeFilaSeleccionada)="filaDisposible($event)"></app-tabla-dinamica>
+    </div>
+  </ng-container>
+</form>

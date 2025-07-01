@@ -15,6 +15,7 @@
               [required]="true"
               (change)="aduanaSeleccion()"
               name="aduana"
+              [isDisabled]="esFormularioSoloLectura"
             >
             </app-catalogo-select>
           </div>
@@ -26,6 +27,7 @@
               [required]="true"
               formControlName="organismoPublico"
               (change)="organismoPublico()"
+              [isDisabled]="esFormularioSoloLectura"
             ></lib-input-check>
           </div>
         </div>
@@ -33,9 +35,8 @@
         <div class="row">
           <div class="col-md-6">
             <label for="usoEspecifico"
-              >Fin al cual se destinará la mercancía</label
+              >Fin al cual se destinará la mercancía*:</label
             >
-            <span class="require">*</span>
           </div>
           <div class="col-md-12">
             <div class="form-group">
@@ -51,6 +52,7 @@
                     'setUsoEspecifico')"
                 cols="110"
                 rows="4"
+                [disabled]="esFormularioSoloLectura"
               ></textarea>
             </div>
           </div>
@@ -59,16 +61,18 @@
               [commonTableHeader]="mercanciaHeaderData"
               [commonTableBody]="mercanciaBodyData"
             ></ng-table>
+            <div *ngIf="esFormularioSoloLectura" class="disable-overlay"></div>
           </div>
           <div class="col-md-12 mt-5 d-flex justify-content-end">
-            <button type="button" class="btn btn-default">Modificar</button>
-            <button type="button" class="btn btn-default ms-3">Eliminar</button>
+            <button type="button" class="btn btn-default" [disabled]="esFormularioSoloLectura">Modificar</button>
+            <button type="button" class="btn btn-default ms-3" [disabled]="esFormularioSoloLectura">Eliminar</button>
             <button
               type="button"
               class="btn btn-primary ms-3"
               data-bs-toggle="modal"
               data-bs-target="#modalAgregarMercancias"
               (click)="abrirDialogoMercancias()"
+              [disabled]="esFormularioSoloLectura"
             >
               Agregar
             </button>
@@ -79,8 +83,7 @@
         <div class="row">
           <div class="col-md-4">
             <div class="form-group">
-              <label for="rfc">RFC</label>
-              <span class="require">*</span>
+              <label for="rfc">RFC*:</label>
               <span
                 class="bi bi-question-circle-fill"
                 title="Registro Federal de Contribuyentes"
@@ -93,13 +96,13 @@
                 maxlength="13"
                 class="form-control"
                 (change)="setValoresStore(exencionImpuestos, 'rfc', 'setRfc')"
+                [disabled]="esFormularioSoloLectura"
               />
             </div>
           </div>
           <div class="col-md-8">
             <div class="form-group">
-              <label for="numeroProgramaImmex">Número de programa Immex</label>
-              <span class="require">*</span>
+              <label for="numeroProgramaImmex">Número de programa Immex*:</label>
               <span
                 class="bi bi-question-circle-fill"
                 title="Registro Federal de Contribuyentes"
@@ -116,6 +119,7 @@
                     exencionImpuestos,
                     'numeroProgramaImmex',
                     'setNumeroProgramaImmex')"
+                [disabled]="esFormularioSoloLectura"
               />
             </div>
           </div>
@@ -123,8 +127,7 @@
         <div class="row">
           <div class="col-md-8">
             <div class="form-group">
-              <label for="razonSocial">Nombre / Razón Social</label>
-              <span class="require">*</span>
+              <label for="razonSocial">Nombre / Razón Social*:</label>
               <input
                 type="text"
                 id="razonSocial"
@@ -146,13 +149,12 @@
               [required]="true"
               formControlName="pais"
               (change)="paisSeleccion()"
-              name="pais"
+              name="pais" [isDisabled]="true"
             ></app-catalogo-select>
           </div>
           <div class="col-md-4">
             <div class="form-group">
-              <label for="codigoPostal">C.P. o zona postal</label>
-              <span class="require">*</span>
+              <label for="codigoPostal">C.P. o zona postal*:</label>
               <input
                 type="text"
                 id="codigoPostal"
@@ -165,8 +167,7 @@
           </div>
           <div class="col-md-4">
             <div class="form-group">
-              <label for="estado">Estado</label>
-              <span class="require">*</span>
+              <label for="estado">Estado*:</label>
               <input
                 type="text"
                 id="estado"
@@ -181,8 +182,7 @@
         <div class="row">
           <div class="col-md-4">
             <div class="form-group">
-              <label for="colonia">Colonia</label>
-              <span class="require">*</span>
+              <label for="colonia">Colonia*:</label>
               <input
                 type="text"
                 id="colonia"
@@ -195,8 +195,7 @@
           </div>
           <div class="col-md-8">
             <div class="form-group">
-              <label for="calle">Calle</label>
-              <span class="require">*</span>
+              <label for="calle">Calle*:</label>
               <input
                 type="text"
                 id="calle"
@@ -211,8 +210,7 @@
         <div class="row">
           <div class="col-md-4">
             <div class="form-group">
-              <label for="numeroExterior">Número y/o letra exterior</label>
-              <span class="require">*</span>
+              <label for="numeroExterior">Número y/o letra exterior*:</label>
               <input
                 type="text"
                 id="numeroExterior"
@@ -225,8 +223,7 @@
           </div>
           <div class="col-md-4">
             <div class="form-group">
-              <label for="numeroInterior">Número y/o letra interior</label>
-              <span class="require">*</span>
+              <label for="numeroInterior">Número y/o letra interior:</label>
               <input
                 type="text"
                 id="numeroInterior"
@@ -241,7 +238,7 @@
         <div class="row">
           <div class="col-md-8">
             <div class="form-group">
-              <label for="correoElectronico">Correo electrónico</label>
+              <label for="correoElectronico">Correo electrónico:</label>
               <input
                 type="email"
                 id="correoElectronico"
@@ -254,7 +251,7 @@
           </div>
           <div class="col-md-4">
             <div class="form-group">
-              <label for="telefono">Teléfono</label>
+              <label for="telefono">Teléfono:</label>
               <input
                 type="tel"
                 id="telefono"
@@ -270,7 +267,7 @@
           <div class="col-md-8">
             <div class="form-group">
               <label for="correoElectronicoOpcional"
-                >Correo electrónico (opcional)</label
+                >Correo electrónico (opcional):</label
               >
               <input
                 type="email"
@@ -283,12 +280,13 @@
                     exencionImpuestos,
                     'correoElectronicoOpcional',
                     'setCorreoElectronicoOpcional')"
+                [disabled]="esFormularioSoloLectura"
               />
             </div>
           </div>
           <div class="col-md-4">
             <div class="form-group">
-              <label for="telefonoOpcional">Teléfono (opcional)</label>
+              <label for="telefonoOpcional">Teléfono (opcional):</label>
               <input
                 type="tel"
                 id="telefonoOpcional"
@@ -300,6 +298,7 @@
                     exencionImpuestos,
                     'telefonoOpcional',
                     'setTelefonoOpcional')"
+                [disabled]="esFormularioSoloLectura"
               />
             </div>
           </div>
@@ -341,14 +340,13 @@
                   [required]="true"
                   formControlName="condicionMercancia"
                   (change)="condicionMercanciaSeleccion()"
-                  name="condicionMercancia"
+                  name="condicionMercancia" [isDisabled]="true"
                 ></app-catalogo-select>
               </div>
             </div>
             <div class="row">
               <div class="col-md-8">
-                <label for="cantidadComercial">Cantidad</label>
-                <span class="require">*</span>
+                <label for="cantidadComercial">Cantidad*:</label>
                 <input
                   type="text"
                   class="form-control"
@@ -407,7 +405,6 @@
                   [label]="'Año de importación temporal'"
                   name="ano"
                   formControlName="ano"
-                  [required]="true"
                   (change)="anoSeleccion()"
                 ></app-catalogo-select>
               </div>
@@ -432,7 +429,7 @@
             <div class="row">
               <div class="col-md-8">
                 <div class="form-group">
-                  <label for="serie">Serie:</label>
+                  <label for="serie">Número de serie:</label>
                   <input
                     type="text"
                     class="form-control"
@@ -452,7 +449,7 @@
           </ng-container>
         </form>
       </div>
-      <div class="modal-footer custom-footer">
+      <div class="modal-footer custom-footer justify-content-end">
         <button
           type="button"
           class="btn btn-primary"

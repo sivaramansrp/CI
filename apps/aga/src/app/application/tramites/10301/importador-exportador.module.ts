@@ -4,12 +4,10 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ImportadorExportadorService } from './services/importador-exportador.service';
 
-import { DatosDelTramiteComponent } from './components/datos-del-tramite/datos-del-tramite.component';
 import { ImportadorExportadorRoutingModule } from './importador-exportador-routing.module';
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
-import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.component';
 import { ToastrService } from 'ngx-toastr';
 
 
@@ -34,9 +32,7 @@ import { ToastrService } from 'ngx-toastr';
     CrosslistComponent,
     ReactiveFormsModule,
     PasoUnoComponent,
-    SolicitudPageComponent,
     PasoTresComponent,
-    DatosDelTramiteComponent,
     PasoDosComponent,    
     
 ],

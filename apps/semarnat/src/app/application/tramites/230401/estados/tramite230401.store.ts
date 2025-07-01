@@ -1,63 +1,166 @@
+import { PagoDerechosState, SustanciaSensible } from "../models/tramies230401.model";
 import { Store, StoreConfig } from "@datorama/akita";
 import { Injectable } from "@angular/core";
-import { PagoDerechosState } from "../models/tramies230401.models";
 
 /**
- * Representa el estado de una solicitud específica.
- * 
- * @interface Solicitud230401State
- * 
- * @property {string} tipoSolicitud - Tipo de solicitud.
- * @property {boolean} autorizacion - Indica si la solicitud está autorizada.
- * @property {string} noDePermisocoferprise - Número de permiso de coferprise.
- * @property {string} nombreComercial - Nombre comercial del producto.
- * @property {string} cantidadAutorizada - Cantidad autorizada.
- * @property {string} fraccionArancelaria - Fracción arancelaria.
- * @property {string} descripcionDeLaFraccion - Descripción de la fracción arancelaria.
- * @property {string} numeroCas - Número CAS.
- * @property {string} descripcionNoArancelaria - Descripción no arancelaria.
- * @property {string} nombreQuimico - Nombre químico.
- * @property {string} nombreDeLaMercancia - Nombre de la mercancía.
- * @property {number} unNumero - Número UN.
- * @property {string} datosNombreComercial - Datos del nombre comercial.
- * @property {string} datosNumeroComun - Datos del número común.
- * @property {number} datosPorcentaje - Porcentaje de datos.
- * @property {string} datosComponentes - Componentes de los datos.
- * @property {string} clasificacion - Clasificación.
- * @property {string} estadoFisico - Estado físico.
- * @property {string} datosObjecto - Datos del objeto.
- * @property {string} especifique - Especificación adicional.
- * @property {string} especifiqueDos - Segunda especificación adicional.
- * @property {number} cantidad - Cantidad.
- * @property {string} cantidadLetra - Cantidad en letras.
- * @property {string} unidadDeMedida - Unidad de medida.
+ * Representa el estado de la solicitud 230401.
+ * Contiene información detallada sobre la solicitud, incluyendo datos comerciales, químicos, 
+ * clasificación, estado físico, cantidad, unidad de medida y derechos de pago.
  */
 export interface Solicitud230401State {
+  /**
+   * Tipo de solicitud realizada.
+   * @example "Importación"
+   */
   tipoSolicitud: string;
+
+  /**
+   * Indica si la solicitud ha sido autorizada.
+   * @example true
+   */
   autorizada: boolean;
+
+  /**
+   * Número de permiso de la empresa.
+   * @example "12345-ABC"
+   */
   noDePermisocoferprise: string;
+
+  /**
+   * Nombre comercial asociado a la solicitud.
+   * @example "Comercializadora XYZ"
+   */
   nombreComercial: string;
+
+  /**
+   * Cantidad autorizada para la solicitud.
+   * @example "500 kg"
+   */
   cantidadAutorizada: string;
+
+  /**
+   * Fracción arancelaria correspondiente.
+   * @example "2903.15.00"
+   */
   fraccionArancelaria: string;
+
+  /**
+   * Descripción de la fracción arancelaria.
+   * @example "Compuestos orgánicos"
+   */
   descripcionDeLaFraccion: string;
+
+  /**
+   * Número CAS (Chemical Abstracts Service) de la sustancia.
+   * @example "50-00-0"
+   */
   numeroCas: string;
+
+  /**
+   * Descripción no arancelaria de la sustancia.
+   * @example "Formaldehído"
+   */
   descripcionNoArancelaria: string;
+
+  /**
+   * Nombre químico de la sustancia.
+   * @example "Metanal"
+   */
   nombreQuimico: string;
+
+  /**
+   * Nombre de la mercancía asociada.
+   * @example "Solución de formaldehído"
+   */
   nombreDeLaMercancia: string;
+
+  /**
+   * Número UN (United Nations) para transporte de mercancías peligrosas.
+   * @example 2209
+   */
   unNumero: number;
+
+  /**
+   * Datos adicionales sobre el nombre comercial.
+   * @example "Producto registrado bajo la marca XYZ"
+   */
   datosNombreComercial: string;
+
+  /**
+   * Datos adicionales sobre el número común.
+   * @example "Número común asociado a la sustancia"
+   */
   datosNumeroComun: string;
+
+  /**
+   * Porcentaje de concentración de la sustancia.
+   * @example 37.5
+   */
   datosPorcentaje: number;
+
+  /**
+   * Componentes adicionales de la sustancia.
+   * @example "Agua, metanol"
+   */
   datosComponentes: string;
+
+  /**
+   * Clasificación de la sustancia o mercancía.
+   * @example "Sustancia peligrosa"
+   */
   clasificacion: string;
+
+  /**
+   * Estado físico de la sustancia.
+   * @example "Líquido"
+   */
   estadoFisico: string;
+
+  /**
+   * Datos adicionales sobre el objeto de la solicitud.
+   * @example "Importación para uso industrial"
+   */
   datosObjecto: string;
+
+  /**
+   * Especificación adicional sobre la solicitud.
+   * @example "Uso en procesos de manufactura"
+   */
   especifique: string;
+
+  /**
+   * Segunda especificación adicional sobre la solicitud.
+   * @example "Uso en laboratorio químico"
+   */
   especifiqueDos: string;
+
+  /**
+   * Cantidad solicitada.
+   * @example 500
+   */
   cantidad: number;
+
+  /**
+   * Cantidad solicitada en letras.
+   * @example "Quinientos kilogramos"
+   */
   cantidadLetra: string;
+
+  /**
+   * Unidad de medida de la cantidad solicitada.
+   * @example "kg"
+   */
   unidadDeMedida: string;
-  pagoDerechosState: PagoDerechosState
+
+  /**
+   * Estado relacionado con el pago de derechos.
+   */
+  pagoDerechosState: PagoDerechosState;
+
+  /**
+   * Tabla de datos sobre sustancias sensibles.
+   */
+  sustanciasSensiblesTablaDatos: SustanciaSensible[];
 }
 
 /**
@@ -91,6 +194,7 @@ export function initializeSolicitud230401State(): Solicitud230401State {
     cantidad: 1,
     cantidadLetra: 'Uno',
     unidadDeMedida: '',
+    sustanciasSensiblesTablaDatos: [],
     pagoDerechosState: {
       clave: '084001963',
       dependencia: '0100160910791',
@@ -102,6 +206,21 @@ export function initializeSolicitud230401State(): Solicitud230401State {
   }
 }
 
+/**
+ * Clase que representa el almacén de estado para el trámite 230401.
+ * Proporciona métodos para actualizar diferentes propiedades del estado relacionado con el trámite.
+ * 
+ * @remarks
+ * Esta clase utiliza Akita para la gestión del estado.
+ * Cada método permite actualizar una propiedad específica del estado.
+ * 
+ * @example
+ * ```typescript
+ * const store = new Tramite230401Store();
+ * store.setTipoSolicitud('Importación');
+ * store.setCantidad(100);
+ * ```
+ */
 @Injectable({
   providedIn: 'root',
 })
@@ -431,4 +550,21 @@ export class Tramite230401Store extends Store<Solicitud230401State> {
       },
     }));
   }
+
+  
+  /**
+   * Agrega un nuevo elemento a la lista de datos de sustancias sensibles en el estado.
+   *
+   * @param sustanciasSensiblesTablaDatos - El objeto de tipo `SustanciaSensible` que se añadirá a la lista existente.
+   * 
+   * Este método actualiza el estado actualizando la propiedad `sustanciasSensiblesTablaDatos` 
+   * con una nueva lista que incluye el nuevo elemento proporcionado.
+   */
+  public setSustanciasSensiblesTablaDatos(sustanciasSensiblesTablaDatos: SustanciaSensible[]): void {
+    this.update((state) => ({
+      ...state,
+      sustanciasSensiblesTablaDatos
+    }));
+  }
+
 }

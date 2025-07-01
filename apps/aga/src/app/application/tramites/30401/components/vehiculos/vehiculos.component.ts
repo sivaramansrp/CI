@@ -2,6 +2,7 @@ import {
   CategoriaMensaje,
   Notificacion,
   NotificacionesComponent,
+  REGEX_PATRON_ALFANUMERICO,
   TablaDinamicaComponent,
   TablaSeleccion,
   TipoNotificacionEnum,
@@ -10,12 +11,14 @@ import {
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NOTA, VEHICULOS_TABLA_DATOS } from '../../enums/registro-empresas-transporte.enum';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil} from 'rxjs';
 import { Tramite30401Store, Tramites30401State } from '../../estados/tramites30401.store';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { Modal } from 'bootstrap';
 import { Tramite30401Query } from '../../estados/tramites30401.query';
 import { VehiculosTabla } from '../../modelos/registro-empresas-transporte.model';
+
 
 /**
  * Componente VehiculosComponent para la gestión de vehículos dentro del sistema.
@@ -45,6 +48,11 @@ import { VehiculosTabla } from '../../modelos/registro-empresas-transporte.model
   styleUrl: './vehiculos.component.scss',
 })
 export class VehiculosComponent implements OnInit {
+    /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  esFormularioSoloLectura: boolean = false;
   /**
    * Define si el diálogo exitoso está habilitado.
    *
@@ -179,8 +187,17 @@ export class VehiculosComponent implements OnInit {
   constructor(
     public fb: FormBuilder,
     private tramite30401Store: Tramite30401Store,
-    private tramite30401Query: Tramite30401Query
+    private tramite30401Query: Tramite30401Query,
+    private consultaioQuery: ConsultaioQuery
   ) {
+      this.consultaioQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.destroyed$),
+      map((seccionState) => {
+       this.esFormularioSoloLectura = seccionState.readonly;
+      })
+    )
+    .subscribe();
     this.crearFormulario();
     this.inicializarFormularioArchivo();
   }
@@ -212,7 +229,7 @@ export class VehiculosComponent implements OnInit {
       id: [null],
       marca: ['', [Validators.required]],
       modelo: ['', [Validators.required]],
-      vin: ['', [Validators.required]],
+      vin: ['', [Validators.required, Validators.pattern(REGEX_PATRON_ALFANUMERICO)]],
     });
   }
 
@@ -328,7 +345,7 @@ export class VehiculosComponent implements OnInit {
       const OBJETO = { id: ID, marca: MARCA, modelo: MODELO, vin: VIN };
 
       this.vehiculosInfoList = [...this.vehiculosInfoList, OBJETO];
-      this.tramite30401Store.setVehiculosTablaDatos([OBJETO]);
+      this.tramite30401Store.establecerDatos({vehiculosTablaDatos:this.vehiculosInfoList});
     } else {
       this.vehiculosInfoList = this.vehiculosInfoList.map((elemento) =>
         elemento.id === this.filaSeleccionadaVehiculos.id
@@ -336,7 +353,7 @@ export class VehiculosComponent implements OnInit {
           : elemento
       );
 
-      this.tramite30401Store.setVehiculosTablaDatos(this.vehiculosInfoList);
+      this.tramite30401Store.establecerDatos({vehiculosTablaDatos:this.vehiculosInfoList});
       this.filaSeleccionadaVehiculos = {} as VehiculosTabla;
     }
   }
@@ -353,16 +370,16 @@ export class VehiculosComponent implements OnInit {
    * fila Fila seleccionada.
    */
   manejarFilaSeleccionada(fila: VehiculosTabla[]): void {
-    if (fila.length === 0) {
+    this.listaFilaSeleccionadaVehiculos = fila;
+      if (fila.length === 0) {
+      this.filaSeleccionadaVehiculos = {} as VehiculosTabla;
       this.enableModficarBoton = false;
       this.enableEliminarBoton = false;
       return;
     }
-    this.listaFilaSeleccionadaVehiculos = fila;
-    this.filaSeleccionadaVehiculos = fila[fila.length - 1];
-    this.enableModficarBoton = true;
-    this.enableEliminarBoton = true;
+  this.filaSeleccionadaVehiculos = fila[fila.length - 1];
   }
+  
 
   /**
    * Actualiza la fila seleccionada con los datos más recientes de la tabla.
@@ -381,18 +398,21 @@ export class VehiculosComponent implements OnInit {
    * Filtra y elimina los elementos seleccionados de la tabla de mercancías.
    * Actualiza el estado del almacén y cierra el popup de confirmación de eliminación.
    */
-  eliminarVehiculosItem(): void {
-    const IDS_TO_DELETE = this.listaFilaSeleccionadaVehiculos.map(
-      (item) => item.id
-    );
+  eliminarVehiculosItem(evento:boolean): void {
+    if(evento === true) {
+      const IDS_TO_DELETE = this.listaFilaSeleccionadaVehiculos.map(
+        (item) => item.id
+      );
 
-    this.vehiculosInfoList = this.vehiculosInfoList.filter(
-      (item) => !IDS_TO_DELETE.includes(item.id)
-    );
+      this.vehiculosInfoList = this.vehiculosInfoList.filter(
+        (item) => !IDS_TO_DELETE.includes(item.id)
+      );
 
-    this.listaFilaSeleccionadaVehiculos = [];
-    this.tramite30401Store.setVehiculosTablaDatos(this.vehiculosInfoList);
-    this.cerrarEliminarConfirmationPopup();
+      this.listaFilaSeleccionadaVehiculos = [];
+      this.filaSeleccionadaVehiculos = {} as VehiculosTabla;
+      this.tramite30401Store.establecerDatos({vehiculosTablaDatos:this.vehiculosInfoList});
+      this.cerrarEliminarConfirmationPopup();
+    }
   }
 
   /**
@@ -409,18 +429,42 @@ export class VehiculosComponent implements OnInit {
    * y abre el modal para editar los datos.
    */
   modificarItemVehiculos(): void {
-    if (
-      this.listaFilaSeleccionadaVehiculos &&
-      this.listaFilaSeleccionadaVehiculos?.length === 1
-    ) {
-      this.actualizarFilaSeleccionada();
-      this.agregarDialogoDatos();
-      this.patchModifyiedData();
-    } else {
-      this.abrirMultipleSeleccionPopup();
+    const SELECCIONADAS = this.listaFilaSeleccionadaVehiculos;
+  
+    if (!SELECCIONADAS || SELECCIONADAS.length === 0) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: TipoNotificacionEnum.ALERTA,
+        categoria: CategoriaMensaje.ALERTA,
+        modo: 'modal',
+        titulo: '',
+        mensaje: 'Selecciona un registro',
+        cerrar: false,
+        txtBtnAceptar: 'Cerrar',
+        txtBtnCancelar: '',
+      };
+      this.multipleSeleccionPopupAbierto = true;
+      return;
     }
+  
+    if (SELECCIONADAS.length > 1) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: TipoNotificacionEnum.ALERTA,
+        categoria: CategoriaMensaje.ALERTA,
+        modo: 'modal',
+        titulo: '',
+        mensaje: 'Selecciona sólo un registro para modificar.',
+        cerrar: false,
+        txtBtnAceptar: 'Cerrar',
+        txtBtnCancelar: '',
+      };
+      this.multipleSeleccionPopupAbierto = true;
+      return;
+    }
+    this.actualizarFilaSeleccionada();
+    this.agregarDialogoDatos();
+    this.patchModifyiedData();
   }
-
+  
   /**
    * @method patchModifyiedData
    * Rellena el formulario con los datos de la fila seleccionada para su modificación.
@@ -448,12 +492,10 @@ export class VehiculosComponent implements OnInit {
       titulo: '',
       mensaje: 'Selecciona sólo un registro para modificar.',
       cerrar: false,
-      txtBtnAceptar: 'Cerca',
+      txtBtnAceptar: 'Cerrar',
       txtBtnCancelar: '',
     };
-    if (this.enableModficarBoton) {
-      this.multipleSeleccionPopupAbierto = true;
-    }
+    this.multipleSeleccionPopupAbierto = true;
   }
 
   /**
@@ -463,11 +505,21 @@ export class VehiculosComponent implements OnInit {
    */
   confirmEliminarVehiculosItem(): void {
     if (this.listaFilaSeleccionadaVehiculos.length === 0) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: TipoNotificacionEnum.ALERTA,
+        categoria: CategoriaMensaje.ALERTA,
+        modo: 'modal',
+        titulo: '',
+        mensaje: 'Debes seleccionar al menos un registro para eliminar.',
+        cerrar: false,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+      this.multipleSeleccionPopupAbierto = true;
       return;
     }
     this.abrirElimninarConfirmationopup();
   }
-
   /**
    * @method abrirElimninarConfirmationopup
    * Abre un popup de confirmación para eliminar los registros seleccionados.

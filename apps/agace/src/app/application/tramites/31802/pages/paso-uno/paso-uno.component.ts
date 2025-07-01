@@ -1,9 +1,10 @@
 import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState, FormularioDinamico, TIPO_PERSONA, ValidacionesFormularioService } from '@ng-mf/data-access-user';
 import { DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL, PERSONA_MORAL_NACIONAL, } from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { FormularioDinamico, TIPO_PERSONA, ValidacionesFormularioService } from '@ng-mf/data-access-user';
-import { ReplaySubject, map, takeUntil } from 'rxjs';
+import { ReplaySubject, Subject, map, takeUntil } from 'rxjs';
 import { Solicitud31802State, Tramite31802Store } from '../../state/Tramite31802.store';
+import { RegistroSolicitudService } from '../../services/registro-solicitud-service.service';
 import { SolicitanteComponent, } from '@libs/shared/data-access-user/src';
 import { Tramite31802Query } from '../../state/Tramite31802.query';
 
@@ -16,7 +17,12 @@ import { Tramite31802Query } from '../../state/Tramite31802.query';
   styles: ``,
 })
 export class PasoUnoComponent implements AfterViewInit,OnInit, OnDestroy {
+  /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
+  public esDatosRespuesta: boolean = false; // Indica si hay datos de respuesta del servidor
 
+  private destroyNotifier$: Subject<void> = new Subject(); // Subject para manejar la destrucción de suscripciones
+  public consultaState!: ConsultaioState; // Estado de la consulta
+  
   /**
   * Referencia al componente de solicitante.
   */
@@ -64,10 +70,12 @@ export class PasoUnoComponent implements AfterViewInit,OnInit, OnDestroy {
  * @param validacionesService - Servicio para realizar validaciones personalizadas en los formularios.
  */
   constructor(
+    private consultaQuery: ConsultaioQuery, // Servicio para consultar el estado
     public fb: FormBuilder,
     private store: Tramite31802Store,
     private query: Tramite31802Query,
-    private validacionesService: ValidacionesFormularioService
+    private validacionesService: ValidacionesFormularioService,
+    private solicitud31802Service:RegistroSolicitudService, // Servicio para manejar el estado de la solicitud 31802
   ) {
     // El constructor se utiliza para la inyección de dependencias.
   }
@@ -77,17 +85,44 @@ export class PasoUnoComponent implements AfterViewInit,OnInit, OnDestroy {
     * Configura el formulario, obtiene datos iniciales y suscribe al estado global.
     */
   ngOnInit(): void {
-    this.query.selectSolicitud$
+    this.consultaQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyed$),
-        map((seccionState) => {
-          this.solicitudState = seccionState;
+        map((consultaState) => {
+          this.consultaState = consultaState;
         })
       )
       .subscribe();
-    this.donanteDomicilio();
+    // Inicializa el formulario con los valores actuales del estado
+    if (this.consultaState?.update) {
+      this.guardarDatosFormulario();
+    } else {
+      this.esDatosRespuesta = true;
+    }
   }
 
+  /**
+ * Obtiene los datos del aviso de renovación desde el servicio y actualiza el estado global del formulario.
+ * 
+ * Este método realiza una petición al servicio para obtener los datos del aviso de renovación desde un archivo JSON local.
+ * Al recibir la respuesta, marca que existen datos de respuesta y actualiza el estado del formulario en el store
+ * utilizando el método `actualizarEstadoFormulario` del servicio.
+ * La suscripción se cancela automáticamente al destruir el componente para evitar fugas de memoria.
+ */
+
+    guardarDatosFormulario(): void {
+    // Método para guardar los datos del formulario
+    this.solicitud31802Service
+      .getDatosDeAvisoRenovacionDoc().pipe(
+        takeUntil(this.destroyNotifier$) // Se desuscribe al destruir el componente
+      )
+      .subscribe((resp) => {
+        if (resp) {
+          this.esDatosRespuesta = true; // Marca que hay datos de respuesta
+          this.solicitud31802Service.actualizarEstadoFormulario(resp); // Actualiza el estado del formulario con la respuesta
+        }
+      });
+  }
 
   /**
    * Método que se ejecuta después de que las vistas del componente han sido inicializadas.

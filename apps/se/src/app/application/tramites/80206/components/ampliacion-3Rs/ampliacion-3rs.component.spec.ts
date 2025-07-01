@@ -5,7 +5,6 @@ import { isPlatformBrowser } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { Observable, of as observableOf,Subject, throwError } from 'rxjs';
-
 import { Component } from '@angular/core';
 import { Ampliacion3RsComponent } from './ampliacion-3rs.component';
 import { FormBuilder } from '@angular/forms';
@@ -91,10 +90,7 @@ describe('Ampliacion3RsComponent', () => {
     component.inicializarFormularioDesdeAlmacen = jest.fn();
     component.obtenerSectorSelectList = jest.fn();
     component.ngOnInit();
-    // expect(component.obtenerReglaSelectList).toHaveBeenCalled();
-    // expect(component.inicializarFormularioDesdeAlmacen).toHaveBeenCalled();
-    // expect(component.obtenerSectorSelectList).toHaveBeenCalled();
-  });
+   });
 
   it('should run #inicializarFormularioDesdeAlmacen()', async () => {
     component.ampliacionServiciosQuery = component.ampliacionServiciosQuery || {};
@@ -104,15 +100,13 @@ describe('Ampliacion3RsComponent', () => {
     component.formularioInfoRegistro = component.formularioInfoRegistro || {};
     component.formularioInfoRegistro.patchValue = jest.fn();
     component.inicializarFormularioDesdeAlmacen();
-    // expect(component.ampliacionServiciosService.enviarDeberiaMostrar).toHaveBeenCalled();
-    // expect(component.formularioInfoRegistro.patchValue).toHaveBeenCalled();
   });
 
   it('should run #inicializarFormularioInfoRegistro()', async () => {
     component.fb = component.fb || {};
     component.fb.group = jest.fn();
     component.inicializarFormularioInfoRegistro();
-    // expect(component.fb.group).toHaveBeenCalled();
+   
   });
 
   it('should run #obtenerReglaSelectList()', async () => {
@@ -129,10 +123,7 @@ describe('Ampliacion3RsComponent', () => {
       reglaSeleccionada: {}
     });
     component.obtenerReglaSelectList();
-    // expect(component.subscription.add).toHaveBeenCalled();
-    // expect(component.ampliacionServiciosService.obtenerReglaSelectList).toHaveBeenCalled();
-    // expect(component.tramite80206Store.setReglaSeleccionada).toHaveBeenCalled();
-  });
+      });
 
   it('should run #obtenerSectorSelectList()', async () => {
     component.subscription = component.subscription || {};
@@ -148,10 +139,7 @@ describe('Ampliacion3RsComponent', () => {
       sectorDesplegable: {}
     });
     component.obtenerSectorSelectList();
-    // expect(component.subscription.add).toHaveBeenCalled();
-    // expect(component.ampliacionServiciosService.obtenerSectorSelectList).toHaveBeenCalled();
-    // expect(component.tramite80206Store.setSectorDesplegable).toHaveBeenCalled();
-  });
+     });
 
   it('should run #eliminarServiciosGrid()', async () => {
     component.domiciliosSeleccionados = component.domiciliosSeleccionados || {};
@@ -159,8 +147,7 @@ describe('Ampliacion3RsComponent', () => {
     component.tramite80206Store = component.tramite80206Store || {};
     component.tramite80206Store.setDatosSector = jest.fn();
     component.eliminarServiciosGrid();
-    // expect(component.tramite80206Store.setDatosSector).toHaveBeenCalled();
-  });
+ });
 
   it('should run #agregarServiciosAmpliacion()', async () => {
     component.recibioSector = component.recibioSector || {};
@@ -171,8 +158,7 @@ describe('Ampliacion3RsComponent', () => {
     component.tramite80206Store = component.tramite80206Store || {};
     component.tramite80206Store.setDatosSector = jest.fn();
     component.agregarServiciosAmpliacion();
-    // expect(component.tramite80206Store.setDatosSector).toHaveBeenCalled();
-  });
+    });
 
   it('should run #ngOnDestroy()', async () => {
     component.ampliacionServiciosService = component.ampliacionServiciosService || {};
@@ -181,10 +167,7 @@ describe('Ampliacion3RsComponent', () => {
     component.destroyNotifier$.next = jest.fn();
     component.destroyNotifier$.complete = jest.fn();
     component.ngOnDestroy();
-    // expect(component.ampliacionServiciosService.enviarDeberiaMostrar).toHaveBeenCalled();
-    // expect(component.destroyNotifier$.next).toHaveBeenCalled();
-    // expect(component.destroyNotifier$.complete).toHaveBeenCalled();
-  });
+   });
 
   it('should run #procesarDatosDelHijo()', async () => {
     component.ampliacionServiciosService = component.ampliacionServiciosService || {};
@@ -193,17 +176,13 @@ describe('Ampliacion3RsComponent', () => {
     component.tramite80206Store.setIsSelectedRegla = jest.fn();
     component.tramite80206Store.setAduanaDeIngresoSeleccion = jest.fn();
     component.procesarDatosDelHijo({});
-    // expect(component.ampliacionServiciosService.enviarDeberiaMostrar).toHaveBeenCalled();
-    // expect(component.tramite80206Store.setIsSelectedRegla).toHaveBeenCalled();
-    // expect(component.tramite80206Store.setAduanaDeIngresoSeleccion).toHaveBeenCalled();
-  });
+   });
 
   it('should run #cambioDeSector()', async () => {
     component.tramite80206Store = component.tramite80206Store || {};
     component.tramite80206Store.setSectorSeleccion = jest.fn();
     component.cambioDeSector({});
-    // expect(component.tramite80206Store.setSectorSeleccion).toHaveBeenCalled();
-  });
+   });
 
   it('should run #seleccionarDomicilios()', async () => {
 

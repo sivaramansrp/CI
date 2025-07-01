@@ -14,6 +14,7 @@ describe('InvocarPageComponent', () => {
     let queryMock: any;
     let routerMock: any;
     let validacionesServiceMock: any;
+    let router: Router;
 
     beforeEach(async () => {
         storeMock = {
@@ -26,6 +27,7 @@ describe('InvocarPageComponent', () => {
 
         routerMock = {
             navigate: jest.fn(),
+            url: 'invocar-modulo',
         };
 
         validacionesServiceMock = {
@@ -47,6 +49,7 @@ describe('InvocarPageComponent', () => {
         fixture = TestBed.createComponent(InvocarPageComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
+        router = TestBed.inject(Router);
     });
 
     afterEach(() => {
@@ -85,7 +88,7 @@ describe('InvocarPageComponent', () => {
     it('debería navegar a la página del solicitante si el formulario es válido al buscar', () => {
         component.folioFormulario.get('folioPermiso')?.setValue('12345');
         component.buscar();
-        expect(routerMock.navigate).toHaveBeenCalledWith(['/pago/modificacion-descripcion/solicitante']);
+        expect(router.navigate).toHaveBeenCalledWith(['solicitante']);
     });
 
     it('no debería navegar si el formulario no es válido al buscar', () => {

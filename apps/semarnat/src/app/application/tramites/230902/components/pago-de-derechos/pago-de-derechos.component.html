@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container-fluid px-0">
   <ng-titulo titulo="Pago de derechos" />
   <form [formGroup]="formPagoDerechos">
     <div class="form">
@@ -20,7 +20,7 @@
         <div class="col-md-4">
           <div class="form-group">
             <app-catalogo-select [catalogo]="this.permisoCitesService.banco" formControlName="banco" [label]="'Banco'"
-              [required]="true" name="banco" (change)="onBancoSeleccion()"></app-catalogo-select>
+              [required]="true" name="banco" [isDisabled]="esFormularioSoloLectura" (change)="setValoresStore(formPagoDerechos,'banco')"></app-catalogo-select>
           </div>
         </div>
       </div>
@@ -31,7 +31,7 @@
             <label class="control-label" for="llaveDePago">Llave de pago</label>
             <input class="form-control" id="llaveDePago" type="text" formControlName="llaveDePago" [required]="true"
               [class.is-invalid]="formPagoDerechos.get('llaveDePago')?.touched && formPagoDerechos.get('llaveDePago')?.invalid"
-              (input)="onllavaDePagoChange($event)">
+              (input)="onllavaDePagoChange()" (change)="setValoresStore(formPagoDerechos,'llaveDePago')">
             <div class="invalid-feedback"
               *ngIf="formPagoDerechos.get('llaveDePago')?.touched && formPagoDerechos.get('llaveDePago')?.invalid">
               <span *ngIf="formPagoDerechos.get('llaveDePago')?.hasError('required')">Este campo es
@@ -39,11 +39,10 @@
             </div>
           </div>
         </div>
-        <div class="col-md-4">
-          <input-fecha [setFecha]="formPagoDerechos.get('fecPago')?.value" [datos]="fechaFinalInput"
-            (valorCambiado)="cambioFechaFinal($event)"
-            [class.is-invalid]="formPagoDerechos.get('fecPago')?.touched && formPagoDerechos.get('fecPago')?.invalid">
+        <div class="col-md-4" [ngClass]="{ 'disabled-field': esFormularioSoloLectura }">
+          <input-fecha [setFecha]="formPagoDerechos.get('fecPago')?.value" [isDisabled]="esFormularioSoloLectura"  [datos]="fechaFinalInput" (valorCambiado)="cambioFechaFinal($event)"  [class.is-invalid]="formPagoDerechos.get('fecPago')?.touched && formPagoDerechos.get('fecPago')?.invalid">
           </input-fecha>
+          
           <div class="invalid-feedback"
             *ngIf="formPagoDerechos.get('fecPago')?.touched && formPagoDerechos.get('fecPago')?.invalid">
             <span *ngIf="formPagoDerechos.get('fecPago')?.hasError('required')">Este campo es obligatorio.</span>

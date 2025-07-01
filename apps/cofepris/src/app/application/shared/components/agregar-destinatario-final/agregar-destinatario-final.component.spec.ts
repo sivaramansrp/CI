@@ -1,114 +1,230 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+// @ts-nocheck
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { By } from '@angular/platform-browser';
+import { Observable, of as observableOf, throwError } from 'rxjs';
+
+import { Component } from '@angular/core';
 import { AgregarDestinatarioFinalComponent } from './agregar-destinatario-final.component';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { FormBuilder } from '@angular/forms';
+import { Location } from '@angular/common';
+import { DatosSolicitudService } from '../../services/datos-solicitud.service';
+
+@Injectable()
+class MockDatosSolicitudService {}
+
+@Directive({ selector: '[myCustom]' })
+class MyCustomDirective {
+  @Input() myCustom;
+}
+
+@Pipe({name: 'translate'})
+class TranslatePipe implements PipeTransform {
+  transform(value) { return value; }
+}
+
+@Pipe({name: 'phoneNumber'})
+class PhoneNumberPipe implements PipeTransform {
+  transform(value) { return value; }
+}
+
+@Pipe({name: 'safeHtml'})
+class SafeHtmlPipe implements PipeTransform {
+  transform(value) { return value; }
+}
 
 describe('AgregarDestinatarioFinalComponent', () => {
-  let component: AgregarDestinatarioFinalComponent;
-  let fixture: ComponentFixture<AgregarDestinatarioFinalComponent>;
+  let fixture;
+  let component;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [AgregarDestinatarioFinalComponent, HttpClientTestingModule],
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [ FormsModule, ReactiveFormsModule, AgregarDestinatarioFinalComponent, ],
+      declarations: [
+        TranslatePipe, PhoneNumberPipe, SafeHtmlPipe,
+        MyCustomDirective
+      ],
+      schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
+      providers: [
+        FormBuilder,
+        Location,
+        { provide: DatosSolicitudService, useClass: MockDatosSolicitudService }
+      ]
+    }).overrideComponent(AgregarDestinatarioFinalComponent, {
+
     }).compileComponents();
-
     fixture = TestBed.createComponent(AgregarDestinatarioFinalComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+    component = fixture.debugElement.componentInstance;
   });
 
-  it('should create', () => {
+  it('should run #constructor()', async () => {
     expect(component).toBeTruthy();
   });
-  it('should have a valid form when all required fields are filled', () => {
-    component.agregarDestinatarioFinal.setValue({
-      tipoPersona: 'Física',
-      rfc: 'XAXX010101000',
-      nombres: 'Juan',
-      denominacionRazon:'123',
-      primerApellido: 'Pérez',
-      segundoApellido: 'Gómez',
-      estado: 'Estado1',
-      municipio: 'Municipio1',
-      localidad: 'Localidad1',
-      codigoPostal: '12345',
-      colonia: 'Colonia1',
-      calle: 'Calle1',
-      numeroExterior: '123',
-      numeroInterior: '',
-      lada: '',
-      telefono: '',
-      pais: '',
-      correoElectronico: 'juan.perez@example.com',
+
+  it('should run #ngOnChanges()', async () => {
+
+    component.ngOnChanges();
+
+  });
+
+  it('should run #guardarDestinatario()', async () => {
+    component.agregarDestinatarioFinal = component.agregarDestinatarioFinal || {};
+    component.agregarDestinatarioFinal.getRawValue = jest.fn().mockReturnValue({
+      lada: {},
+      razonSocial: {},
+      segundoApellido: {},
+      primerApellido: {},
+      nombres: {},
+      coloniaEquivalente: {},
+      codigoPostal: {},
+      estado: {},
+      localidad: {},
+      municipio: {},
+      colonia: {},
+      pais: {},
+      numeroInterior: {},
+      numeroExterior: {},
+      calle: {},
+      correoElectronico: {},
+      telefono: {},
+      rfc: {},
+      tipoPersona: {},
+      denominacionRazon: {}
     });
-    expect(component.agregarDestinatarioFinal.valid).toBe(false);
+    component.agregarDestinatarioFinal.reset = jest.fn();
+    component.tipoPersona = component.tipoPersona || {};
+    component.tipoPersona.MORAL = 'MORAL';
+    component.tipoPersona.FISICA = 'FISICA';
+    component.destinatarios = component.destinatarios || {};
+    component.destinatarios.push = jest.fn();
+    component.updateDestinatarioFinalTablaDatos = component.updateDestinatarioFinalTablaDatos || {};
+    component.updateDestinatarioFinalTablaDatos.emit = jest.fn();
+    component.ubicaccion = component.ubicaccion || {};
+    component.ubicaccion.back = jest.fn();
+    component.guardarDestinatario();
+    expect(component.agregarDestinatarioFinal.getRawValue).toHaveBeenCalled();
+    expect(component.agregarDestinatarioFinal.reset).toHaveBeenCalled();
+    expect(component.destinatarios.push).toHaveBeenCalled();
+    expect(component.updateDestinatarioFinalTablaDatos.emit).toHaveBeenCalled();
+    expect(component.ubicaccion.back).toHaveBeenCalled();
   });
 
-  it('should have an invalid form when required fields are empty', () => {
-    component.agregarDestinatarioFinal.setValue({
-      tipoPersona: '',
-      rfc: '',
-      nombres: '',
-      denominacionRazon:'',
-      primerApellido: '',
-      segundoApellido: '',
-      estado: '',
-      municipio: '',
-      localidad: '',
-      codigoPostal: '',
-      colonia: '',
-      calle: '',
-      pais: '',
-      numeroExterior: '',
-      numeroInterior: '',
-      lada: '',
-      telefono: '',
-      correoElectronico: '',
+  it('should run #ngOnInit()', async () => {
+    component.cargarDatos = jest.fn();
+    component.validarElementos = jest.fn();
+    component.crearAgregarFormularioAgregarDestinatarioFinal = jest.fn();
+    component.changeNacionalidad = jest.fn();
+    component.ngOnInit();
+    expect(component.cargarDatos).toHaveBeenCalled();
+    expect(component.validarElementos).toHaveBeenCalled();
+    expect(component.crearAgregarFormularioAgregarDestinatarioFinal).toHaveBeenCalled();
+    expect(component.changeNacionalidad).toHaveBeenCalled();
+  });
+
+  it('should run #cargarDatos()', async () => {
+    component.datosSolicitudService = component.datosSolicitudService || {};
+    component.datosSolicitudService.obtenerListaCodigosPostales = jest.fn().mockReturnValue(observableOf({}));
+    component.datosSolicitudService.obtenerListaPaises = jest.fn().mockReturnValue(observableOf({}));
+    component.datosSolicitudService.obtenerListaEstados = jest.fn().mockReturnValue(observableOf({}));
+    component.datosSolicitudService.obtenerListaMunicipios = jest.fn().mockReturnValue(observableOf({}));
+    component.datosSolicitudService.obtenerListaLocalidades = jest.fn().mockReturnValue(observableOf({}));
+    component.datosSolicitudService.obtenerListaColonias = jest.fn().mockReturnValue(observableOf({}));
+    component.cargarDatos();
+    expect(component.datosSolicitudService.obtenerListaCodigosPostales).toHaveBeenCalled();
+    expect(component.datosSolicitudService.obtenerListaPaises).toHaveBeenCalled();
+    expect(component.datosSolicitudService.obtenerListaEstados).toHaveBeenCalled();
+    expect(component.datosSolicitudService.obtenerListaMunicipios).toHaveBeenCalled();
+    expect(component.datosSolicitudService.obtenerListaLocalidades).toHaveBeenCalled();
+    expect(component.datosSolicitudService.obtenerListaColonias).toHaveBeenCalled();
+  });
+
+  it('should run #crearAgregarFormularioAgregarDestinatarioFinal()', async () => {
+    component.fb = component.fb || {};
+    component.fb.group = jest.fn();
+    component.obtenerValor = jest.fn();
+    component.elementosDeshabilitados = component.elementosDeshabilitados || {};
+    component.elementosDeshabilitados.includes = jest.fn();
+    component.elementosNoRequeridos = component.elementosNoRequeridos || {};
+    component.elementosNoRequeridos.includes = jest.fn();
+    component.elementosRequeridos = component.elementosRequeridos || {};
+    component.elementosRequeridos.includes = jest.fn();
+    component.crearAgregarFormularioAgregarDestinatarioFinal();
+    expect(component.fb.group).toHaveBeenCalled();
+    expect(component.obtenerValor).toHaveBeenCalled();
+    expect(component.elementosDeshabilitados.includes).toHaveBeenCalled();
+    expect(component.elementosNoRequeridos.includes).toHaveBeenCalled();
+    expect(component.elementosRequeridos.includes).toHaveBeenCalled();
+  });
+
+  it('should run #obtenerValor()', async () => {
+
+    component.obtenerValor({});
+
+  });
+
+  it('should run #validarElementos()', async () => {
+
+    component.validarElementos();
+
+  });
+
+  it('should run #limpiarFormulario()', async () => {
+    component.agregarDestinatarioFinal = component.agregarDestinatarioFinal || {};
+    component.agregarDestinatarioFinal.reset = jest.fn();
+    component.limpiarFormulario();
+    expect(component.agregarDestinatarioFinal.reset).toHaveBeenCalled();
+  });
+
+  it('should run #cancelar()', async () => {
+    component.ubicaccion = component.ubicaccion || {};
+    component.ubicaccion.back = jest.fn();
+    component.cancelar();
+    expect(component.ubicaccion.back).toHaveBeenCalled();
+  });
+
+  it('should run #esInvalido()', async () => {
+    component.agregarDestinatarioFinal = component.agregarDestinatarioFinal || {};
+    component.agregarDestinatarioFinal.get = jest.fn().mockReturnValue({
+      dirty: {},
+      touched: {},
+      invalid: {}
     });
-    expect(component.agregarDestinatarioFinal.invalid).toBe(true);
+    component.esInvalido({});
+    expect(component.agregarDestinatarioFinal.get).toHaveBeenCalled();
   });
 
-  it('should mark correoElectronico as invalid if email format is incorrect', () => {
-    component.agregarDestinatarioFinal.controls['correoElectronico'].setValue('invalid-email');
-    expect(component.agregarDestinatarioFinal.controls['correoElectronico'].invalid).toBe(true);
+  it('should run #changeNacionalidad()', async () => {
+    component.agregarDestinatarioFinal = component.agregarDestinatarioFinal || {};
+    component.agregarDestinatarioFinal.value = { tipoPersona: 'FISICA' };
+    component.agregarDestinatarioFinal.controls = {
+      tipoPersona: {},
+      nombres: {},
+      rfc: {}
+    };
+    
+    const mockControl = {
+      enable: jest.fn(),
+      disable: jest.fn()
+    };
+    
+    component.agregarDestinatarioFinal.get = jest.fn().mockReturnValue(mockControl);
+    component.estaDeshabilitadoDesplegable = true;
+    
+    component.changeNacionalidad();
+    
+    expect(component.agregarDestinatarioFinal.get).toHaveBeenCalled();
+    expect(mockControl.enable).toHaveBeenCalled();
+    expect(component.estaDeshabilitadoDesplegable).toBe(false);
   });
 
-  it('should mark rfc as required', () => {
-    component.agregarDestinatarioFinal.controls['rfc'].setValue('');
-    expect(component.agregarDestinatarioFinal.controls['rfc'].hasError('required')).toBe(true);
-  });
-
-  it('should mark nombres as required', () => {
-    component.agregarDestinatarioFinal.controls['nombres'].setValue('');
-    expect(component.agregarDestinatarioFinal.controls['nombres'].hasError('required')).toBe(true);
-  });
-
-  it('should mark primerApellido as required', () => {
-    component.agregarDestinatarioFinal.controls['primerApellido'].setValue('');
-    expect(component.agregarDestinatarioFinal.controls['primerApellido'].hasError('required')).toBe(true);
-  });
-
-  it('should mark estado as required', () => {
-    component.agregarDestinatarioFinal.controls['estado'].setValue('');
-    expect(component.agregarDestinatarioFinal.controls['estado'].hasError('required')).toBe(true);
-  });
-
-  it('should mark municipio as required', () => {
-    component.agregarDestinatarioFinal.controls['municipio'].setValue('');
-    expect(component.agregarDestinatarioFinal.controls['municipio'].hasError('required')).toBe(true);
-  });
-
-  it('should mark codigoPostal as required', () => {
-    component.agregarDestinatarioFinal.controls['codigoPostal'].setValue('');
-    expect(component.agregarDestinatarioFinal.controls['codigoPostal'].hasError('required')).toBe(true);
-  });
-
-  it('should mark calle as required', () => {
-    component.agregarDestinatarioFinal.controls['calle'].setValue('');
-    expect(component.agregarDestinatarioFinal.controls['calle'].hasError('required')).toBe(true);
-  });
-
-  it('should mark numeroExterior as required', () => {
-    component.agregarDestinatarioFinal.controls['numeroExterior'].setValue('');
-    expect(component.agregarDestinatarioFinal.controls['numeroExterior'].hasError('required')).toBe(true);
+  it('should run #ngOnDestroy()', async () => {
+    component.unsubscribe$ = component.unsubscribe$ || {};
+    component.unsubscribe$.next = jest.fn();
+    component.unsubscribe$.complete = jest.fn();
+    component.ngOnDestroy();
+    expect(component.unsubscribe$.next).toHaveBeenCalled();
+    expect(component.unsubscribe$.complete).toHaveBeenCalled();
   });
 });

@@ -30,6 +30,7 @@ export const FORMULARIO_DATOS_MERCANCIA = [
         ],
         marcadorDePosicion: '',
         valorPredeterminado: '',
+        
         marginTop: 4
     },
     {
@@ -262,7 +263,7 @@ export const FORMULARIO_DATOS_AUTORIZACION = [
         id: 'folioInformacionGeneralAutorizacion',
         labelNombre: 'Folio de autorización de importación temporal formato en papel',
         campo: 'folioInformacionGeneralAutorizacion',
-        clase: 'col-md-8',
+        clase: 'col-md-8 ps-0',
         tipoInput: 'text',
         desactivado: false,
         soloLectura: false,
@@ -278,7 +279,7 @@ export const FORMULARIO_DATOS_AUTORIZACION = [
         id: 'aduanaDeIngreso',
         labelNombre: 'Aduana de ingreso',
         campo: 'aduanaDeIngreso',
-        clase: 'col-md-4 form-group',
+        clase: 'col-md-4 ps-0 form-group',
         tipoInput: 'select-catalogos',
         desactivado: false,
         soloLectura: false,
@@ -293,7 +294,7 @@ export const FORMULARIO_DATOS_AUTORIZACION = [
         id: 'seccionAduanera',
         labelNombre: 'Sección aduanera',
         campo: 'seccionAduanera',
-        clase: 'col-md-4 form-group',
+        clase: 'col-md-4 ps-0 form-group',
         tipoInput: 'select-catalogos',
         desactivado: false,
         soloLectura: false,
@@ -308,7 +309,7 @@ export const FORMULARIO_DATOS_AUTORIZACION = [
         id: 'fechaIngreso',
         labelNombre: 'Fecha de ingreso',
         campo: 'fechaIngreso',
-        clase: 'col-md-4',
+        clase: 'col-md-4 ps-0',
         tipoInput: 'date',
         desactivado: false,
         soloLectura: false,
@@ -324,7 +325,7 @@ export const FORMULARIO_DATOS_AUTORIZACION = [
         id: 'fechaVencimiento',
         labelNombre: 'Fecha de vencimiento',
         campo: 'fechaVencimiento',
-        clase: 'col-md-4',
+        clase: 'col-md-4 ps-0',
         tipoInput: 'date',
         desactivado: false,
         soloLectura: false,
@@ -372,7 +373,6 @@ export const FORMULARIO_FECHA_IMPORTACION = [
         validadores: [
             { tipo: 'required' }
         ],
-        tooltipQuestionCircle:"true",
         marcadorDePosicion: '',
         valorPredeterminado: '',
         marginTop: 4,

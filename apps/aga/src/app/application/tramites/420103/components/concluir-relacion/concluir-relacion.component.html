@@ -7,10 +7,10 @@
         <div class="mb-3 row">
           <label for="rfc" class="col-sm-2 col-form-label">RFC:</label>
           <div class="col-sm-10">
-            <input type="text" class="form-control" id="rfc">
+            <input type="text" class="form-control" id="rfc" formControlName="rfc">
           </div>
         </div>
-        <button class="col-md-offset-2" (click)="buscarDatosRelacion()">BUSAR</button>
+        <button class="col-md-offset-2" (click)="buscarDatosRelacion()" [disabled]="esFormularioSoloLectura">BUSAR</button>
       </div>
     </div>
 
@@ -32,7 +32,7 @@
 
   <div class="row mt-5">
     <app-tabla-dinamica [tipoSeleccionTabla]="seleccionTabla" [configuracionTabla]="configuracionTabla"
-      [datos]="datosTabla"></app-tabla-dinamica>
+      [datos]="datosTabla" [isDisabled]="esFormularioSoloLectura"></app-tabla-dinamica>
   </div>
-  <button class="col-md-offset-11">Limpiar</button>
+  <button class="col-md-offset-11" [disabled]="esFormularioSoloLectura">Limpiar</button>
 </div>

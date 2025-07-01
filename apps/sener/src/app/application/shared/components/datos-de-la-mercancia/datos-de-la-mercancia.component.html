@@ -13,7 +13,7 @@
       <div class="col-md-12">
         <label for="descripcion" class="form-label">Descripción de la mercancía*:</label>
         <textarea id="descripcion" class="form-control descripcion-text-box"
-          placeholder="Descripción de la mercancía" rows="8" formControlName="descripcion"
+          placeholder="Descripción de la mercancía" rows="8" formControlName="descripcion" [maxlength]="1000"
           (change)="setValoresStore(form, 'descripcion')"></textarea>
         <div *ngIf="esInvalido('descripcion')" class="text-danger">
           <small *ngIf="form.controls['descripcion'].errors?.['required']">
@@ -22,8 +22,8 @@
           <small *ngIf="form.controls['descripcion'].errors?.['minlength']">
             Debe tener al menos 10 caracteres.
           </small>
-          <small *ngIf="form.controls['descripcion'].errors?.['maxlength']">
-            No puede exceder 500 caracteres.
+          <small *ngIf="form.controls['descripcion'].errors?.['pattern']">
+            Por favor, corrige la descripción/dirección
           </small>
         </div>
       </div>
@@ -35,6 +35,7 @@
             [label]="mercanciaInputValues[i].label"
             [placeholder]="mercanciaInputValues[i].placeholder"
             [required]="mercanciaInputValues[i].required"
+            [isDisabled]="esFormularioSoloLectura"
             [formControlName]="mercanciaInputValues[i].controlName"
             (change)="alCambioDelCampo(form, mercanciaInputValues[i].controlName, i)">
             </app-catalogo-select>
@@ -71,8 +72,11 @@
           <small *ngIf="form.controls['cantidad'].errors?.['required']">
             Este campo es obligatorio.
           </small>
-          <small *ngIf="form.controls['cantidad'].errors?.['pattern']">
-            Solo se permiten números.
+          <small *ngIf="form.controls['cantidad'].errors?.['pattern'] && !esValorNumerico('cantidad')">
+            Por favor, escribe un número entero válido
+          </small>
+          <small *ngIf="form.controls['cantidad'].errors?.['pattern'] && esValorNumerico('cantidad')">
+            Por favor, escribe un valor menor o igual a 999999999999.99
           </small>
           <small *ngIf="form.controls['cantidad'].errors?.['min']">
             Debe ser mayor que 0.
@@ -87,8 +91,11 @@
           <small *ngIf="form.controls['valorFacturaUSD'].errors?.['required']">
             Este campo es obligatorio.
           </small>
-          <small *ngIf="form.controls['valorFacturaUSD'].errors?.['pattern']">
-            Ingrese un valor numérico válido (ej. 100.50).
+          <small *ngIf="form.controls['valorFacturaUSD'].errors?.['pattern'] && !esValorNumerico('valorFacturaUSD')">
+            Por favor, escribe un número entero válido
+          </small>
+          <small *ngIf="form.controls['valorFacturaUSD'].errors?.['pattern'] && esValorNumerico('valorFacturaUSD')">
+            Por favor, escribe un valor menor o igual a 999999999999.99
           </small>
           <small *ngIf="form.controls['valorFacturaUSD'].errors?.['min']">
             Debe ser mayor que 0.

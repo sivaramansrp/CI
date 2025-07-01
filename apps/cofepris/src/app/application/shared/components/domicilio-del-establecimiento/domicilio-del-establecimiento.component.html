@@ -10,8 +10,8 @@
                 </div>
             </div>
             <div class="col-md-4">
-                <app-catalogo-select [label]="'Estado*:'" [placeholder]="'Seleccione un valor'" [catalogo]="datosEstado"
-                    formControlName="estado" (change)="setValoresStore(domicilioForm,'estado', 'setEstado')">
+                <app-catalogo-select [label]="'Estado*'" [placeholder]="'Seleccione un valor'" [catalogo]="datosEstado"
+                    formControlName="estado" (change)="setValoresStore(domicilioForm,'estado', 'setEstado')"[isDisabled]="esFormularioSoloLectura">
                 </app-catalogo-select>
             </div>
             <div class="col-md-4">
@@ -63,7 +63,7 @@
             <div class="form-group">
                 <label class="form-label" for="scian">S.C.I.A.N.*:</label>
                 <app-tabla-dinamica [configuracionTabla]="configuracionTabla" [datos]="datosData"
-                    [tipoSeleccionTabla]="tipoSeleccionTabla.CHECKBOX" formcontrolname="scian">
+                    [tipoSeleccionTabla]="tipoSeleccionTabla.CHECKBOX" formcontrolname="scian" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura">
                 </app-tabla-dinamica>
             </div>
         </div>
@@ -73,7 +73,7 @@
                 Eliminar
             </button>
             <button type="button" class="btn btn-primary btn-space" data-bs-toggle="modal" data-bs-target="#modalClave"
-                (click)="mostrarModeloClave()">
+                (click)="mostrarModeloClave()" [disabled]="esFormularioSoloLectura">
                 Agregar
             </button>
         </div>
@@ -91,7 +91,8 @@
             <div class="col-md-4">
             <div class="form-group">
             <label class="form-label" for="noLicenciaSanitaria">No. de licencia sanitaria*:<i
-            class="bi bi-question-circle-fill"></i></label>
+            class="bi bi-question-circle-fill"   title="Número de la autorización
+indicado en el documento emitido por la autoridad sanitaria competente" ata-bs-toggle="tooltip"></i></label>
             <input class="form-control" id="noLicenciaSanitaria" formControlName="noLicenciaSanitaria"
             placeholder="" type="text" (change)="setValoresStore(domicilioForm,'noLicenciaSanitaria', 'setNoLicenciaSanitaria')"/>
             </div>
@@ -100,14 +101,14 @@
         <div class="row">
             <div class="col-md-4">
             <div class="form-group btn-space">
-                <app-catalogo-select [label]="'Régimen al que se destinará*:'" [placeholder]="'Seleccione un valor'"
-                [catalogo]="datosEstado" formControlName="regimenDestinado" (change)="setValoresStore(domicilioForm,'regimenDestinado', 'setRegimenDestinado')">
+                <app-catalogo-select [label]="'Régimen al que se destinará*'" [placeholder]="'Seleccione un valor'"
+                [catalogo]="datosEstado" formControlName="regimenDestinado" (change)="setValoresStore(domicilioForm,'regimenDestinado', 'setRegimenDestinado')" [isDisabled]="esFormularioSoloLectura">
                 </app-catalogo-select>
             </div>
             </div>
             <div class="col-md-8">
-            <div class="form-group"> <app-catalogo-select [label]="'Aduana*:'" [placeholder]="'Seleccione un valor'"
-                [catalogo]="datosEstado" formControlName="aduana" (change)="setValoresStore(domicilioForm,'aduana', 'setAduana')">
+            <div class="form-group"> <app-catalogo-select [label]="'Aduana*'" [placeholder]="'Seleccione un valor'"
+                [catalogo]="datosEstado" formControlName="aduana" (change)="setValoresStore(domicilioForm,'aduana', 'setAduana')" [isDisabled]="esFormularioSoloLectura">
                 </app-catalogo-select>
             </div>
             </div>
@@ -117,14 +118,14 @@
             <div class="form-group">
                 <label class="form-label" for="scian">Datos del producto*:</label>
                 <app-tabla-dinamica [configuracionTabla]="configuracionTablaProductoDatos" [datos]="datosProducto"
-                    [tipoSeleccionTabla]="tipoSeleccionTabla.CHECKBOX" formcontrolname="datosProducto">
+                    [tipoSeleccionTabla]="tipoSeleccionTabla.CHECKBOX" formcontrolname="datosProducto" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura">
                 </app-tabla-dinamica>
             </div>
         </div>
 
         <div class="d-flex justify-content-end">
             <button type="button" class="btn btn-primary btn-space" data-bs-toggle="modal" data-bs-target="#datosDelProducto"
-                (click)="datosDelProducto()">
+                (click)="datosDelProducto()" [disabled]="esFormularioSoloLectura">
                 Agregar
             </button>
         </div>
@@ -136,6 +137,7 @@
             <div class="form-group">
                 <app-input-radio
                 [radioOptions]="radioOptions"
+                [selectedValue]="defaultSelect"
                 [isRequired]="true"
                 [layout]="'horizontal'"
                 [gap]="'493px'"
@@ -164,7 +166,7 @@
                             <div class="col-md-4">
                                 <app-catalogo-select [label]="'Clave S.C.I.A.N.*:'"
                                     [placeholder]="'Seleccione un valor'" [catalogo]="claveScian"
-                                    formControlName="claveScian" (change)="setValoresStore(claveScianForm,'claveScian', 'setClaveScian')">
+                                    formControlName="claveScian" (change)="setValoresStore(claveScianForm,'claveScian', 'setClaveScian')"[isDisabled]="esFormularioSoloLectura">
                                 </app-catalogo-select>
                             </div>
                         </div>
@@ -172,7 +174,7 @@
                             <div class="col-md-4">
                                 <app-catalogo-select [label]="'Descripción del S.C.I.A.N.:'"
                                     [placeholder]="'Seleccione un valor'" [catalogo]="descripcionScian"
-                                    formControlName="descripcionScian" (change)="setValoresStore(claveScianForm,'descripcionScian', 'setDescripcionScian')">
+                                    formControlName="descripcionScian" (change)="setValoresStore(claveScianForm,'descripcionScian', 'setDescripcionScian')"[isDisabled]="esFormularioSoloLectura">
                                 </app-catalogo-select>
                             </div>
                         </div>
@@ -181,7 +183,7 @@
                 <div class="modal-footer custom-footer justify-content-center">
                     <button type="button" class="btn btn-primary" data-bs-dismiss="modal" #closeModal>Cancelar</button>
                     <button type="button" class="btn btn-primary">Limpiar</button>
-                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" #closeModal>Agregar</button>
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" #closeModal [disabled]="esFormularioSoloLectura">Agregar</button>
                 </div>
             </div>
         </div>

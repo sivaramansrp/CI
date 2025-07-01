@@ -1,27 +1,32 @@
-import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ReactiveFormsModule } from '@angular/forms';
-import { map, ReplaySubject, takeUntil } from 'rxjs';
-
+import { ADUANA_DATA, CLASIFICACION_PRODUCTO_DATA, CLAVE_SCIAN_DATA, DESCRIPCION_SCIAN_DATA, ESPECIFICAR_DATA, ESTADO_DATA, ESTADO_FISICO_DATA, REGIMEN_AL_QUE_DATA, TIPO_PRODUCTO_DATA } from '../../constants/catalogs.enum';
 import { Catalogo, InputFecha, InputRadioComponent, Notificacion, NotificacionesComponent, Pedimento, TablaSeleccion } from '@libs/shared/data-access-user/src';
-import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
-import { CrosslistComponent } from '../../../../../../../../../libs/shared/data-access-user/src/tramites/components/crosslist/crosslist.component';
-import { InputCheckComponent } from '@libs/shared/data-access-user/src';
-import { InputFechaComponent } from '../../../../../../../../../libs/shared/data-access-user/src/tramites/components/input-fecha/input-fecha.component';
-import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
-import { TituloComponent } from '@libs/shared/data-access-user/src';
+import { ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 
-import { CLASIFICACION_PRODUCTO_DATA, CLAVE_SCIAN_DATA, DESCRIPCION_SCIAN_DATA, ESTADO_DATA, ESTADO_FISICO_DATA, ESPECIFICAR_DATA, REGIMEN_AL_QUE_DATA, TIPO_PRODUCTO_DATA, ADUANA_DATA } from '../../constants/catalogs.enum';
 import { CONFIGURACION_COLUMNAS_MERCANCIAS, CONFIGURACION_COLUMNAS_SOLI } from '../../constants/column-config.enum';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HACERLOS_RADIO_OPTIONS, OPCION_DE_BOTON_DE_RADIO, TEXTOS } from '../../constants/constantes.enum';
+
+import { CrossList,MercanciaCrossList,MercanciasInfo } from '../../models/mercancia.model';
 import { FilaData, FilaData2, ListaClave } from '../../models/fila-modal';
-import { MercanciaCrossList, CrossList, CrossListLable } from '../../models/mercancia.model';
+import { ReplaySubject, map, takeUntil } from 'rxjs';
+import { Solicitud260915State, Solicitud260915Store } from '../../estados/tramites260915.store';
+import { CommonModule } from '@angular/common';
+
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
+
+import { CrosslistComponent } from '@libs/shared/data-access-user/src/tramites/components/crosslist/crosslist.component';
+
+import { DatosEmpresaComponent } from '../datos-empresa/datos-empresa.component';
+import { InputFechaComponent } from '@libs/shared/data-access-user/src/tramites/components/input-fecha/input-fecha.component';
+
+import { InputCheckComponent } from '@libs/shared/data-access-user/src';
 import { Modal } from 'bootstrap';
 import { PermisoSanitarioDispositivosMedicosService } from '../../services/permiso-sanitario-dispositivos-medicos.service';
+import { ReactiveFormsModule } from '@angular/forms';
 import { Solicitud260915Query } from '../../estados/tramites260915.query';
-import { Solicitud260915State, Solicitud260915Store } from '../../estados/tramites260915.store';
-import { DatosEmpresaComponent } from '../datos-empresa/datos-empresa.component';
+import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
+import { TituloComponent } from '@libs/shared/data-access-user/src';
 
 /**
  * Componente para gestionar los datos de la solicitud.
@@ -39,7 +44,10 @@ export class DatosdelasolicitudComponent implements OnInit,OnDestroy {
 
    /** Constantes de texto utilizadas en el componente */
    TEXTOS = TEXTOS;
- 
+
+     /** Indica si el formulario está en modo solo lectura */
+  esFormularioSoloLectura: boolean = false;
+
    /** Estado actual de los datos de la solicitud */
    dataDeLaSolicitudState!: Solicitud260915State;
  
@@ -61,7 +69,7 @@ export class DatosdelasolicitudComponent implements OnInit,OnDestroy {
  selectedMercanciasDatos: FilaData2[] = [];
 
  /** Configuración de la tabla de mercancias */
- public mercanciasConfiguracionTabla: FilaData2[] = [];
+ public mercanciasConfiguracionTabla: MercanciasInfo[] = [];
 
  /** Lista de claves para la tabla */
  public listaClaveTabla: ListaClave[] = [];
@@ -139,7 +147,7 @@ opcionDeBotonDeRadio = OPCION_DE_BOTON_DE_RADIO;
   tableData: FilaData[] = [];
 
  /** Datos de las mercancías. */
-mercanciasData: FilaData2[] = [];
+mercanciasData: MercanciasInfo[] = [];
 
   /** Conjunto de filas seleccionadas */
   filasSeleccionadas: Set<number> = new Set();
@@ -148,7 +156,7 @@ mercanciasData: FilaData2[] = [];
   hacerlosRadioOptions = HACERLOS_RADIO_OPTIONS;
 
   /** Fila seleccionada */
-  selectedRow: any;
+  SELECTED_ROW: unknown;
 
   /** Configuración de datos del estado */
   public estadoData = ESTADO_DATA;
@@ -174,13 +182,65 @@ mercanciasData: FilaData2[] = [];
   /** Configuración para el campo de selección del tipo de producto */
   public tipoProductoData = TIPO_PRODUCTO_DATA;
 
-  public estadoFisicoData = ESTADO_FISICO_DATA;
+/** 
+ * Datos de configuración para el estado físico de la mercancía.
+ */
+public estadoFisicoData = ESTADO_FISICO_DATA;
+
+  /** Constructor del componente 
+   * @param consultaioQuery Consulta de estado de solo lectura.*/
 
   constructor(private fb: FormBuilder, 
     private permisosanitariodisposivos: PermisoSanitarioDispositivosMedicosService,
      private cdr: ChangeDetectorRef,
      private solicitud260915Store: Solicitud260915Store,
-    private solicitud260915Query: Solicitud260915Query) {}
+    private solicitud260915Query: Solicitud260915Query,
+    public consultaioQuery: ConsultaioQuery,
+  ) {
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
+  }
+
+  /**
+   * Inicializa el formulario dependiendo del modo (solo lectura o editable).
+   * Si está en solo lectura, carga y bloquea el formulario.
+   * Si no, crea un formulario editable.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.createForm();
+      this.createclaveScianForm();
+    }
+  }
+
+  /**
+   * Crea el formulario y, si está en modo solo lectura, lo deshabilita.
+   * De lo contrario, lo habilita para edición.
+   */
+  guardarDatosFormulario(): void {
+    this.createForm();
+    this.createclaveScianForm();
+    if (this.esFormularioSoloLectura) {
+      this.dataDeLaSolicitudForm.disable();
+      this.clavaScianForm.disable();
+      this.datosDelTramiteRealizar.disable();
+    } else {
+      this.dataDeLaSolicitudForm.enable();
+      this.clavaScianForm.enable();
+      this.datosDelTramiteRealizar.enable();
+     
+    }
+  }
+
 
  /** Configuración de columnas para la tabla de solicitud */
  configuracionColumnasoli = CONFIGURACION_COLUMNAS_SOLI;
@@ -190,16 +250,7 @@ mercanciasData: FilaData2[] = [];
 
 /** Inicialización del componente */
   ngOnInit(): void {
-   this.solicitud260915Query.selectSolicitud$
-        .pipe(
-          takeUntil(this.destroyed$),
-          map((seccionState) => {
-            this.dataDeLaSolicitudState = seccionState;
-          })
-        )
-        .subscribe();
-    
-    this.createForm();
+    this.inicializarEstadoFormulario();
     this.getEstadosData();
     this.getClaveScianData();
     this.getClaveDescripcionDelData();
@@ -211,6 +262,7 @@ mercanciasData: FilaData2[] = [];
     this.getMercanciaCrosslistData();
     this.createclaveScianForm();
     this.getEstadoFisicoData();
+    this.getMercanciasDatosData();
   }
  
  /**
@@ -219,6 +271,14 @@ mercanciasData: FilaData2[] = [];
  * ambos marcados como requeridos.
  */
   createclaveScianForm(): void {
+    this.solicitud260915Query.selectSolicitud260915$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState) => {
+          this.dataDeLaSolicitudState = seccionState;
+        })
+      )
+      .subscribe();
     this.clavaScianForm = this.fb.group({
       claveScianG: this.fb.group({
         claveScian: ['', Validators.required],
@@ -228,7 +288,15 @@ mercanciasData: FilaData2[] = [];
   }
 
   /** Configuración del formulario con validaciones para los campos del trámite. */
-createForm(){
+createForm(): void{
+    this.solicitud260915Query.selectSolicitud260915$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState) => {
+          this.dataDeLaSolicitudState = seccionState;
+        })
+      )
+      .subscribe();
   this.dataDeLaSolicitudForm = this.fb.group({
       descripcionFraccionArancelaria: [this.dataDeLaSolicitudState?.descripcionFraccionArancelaria, Validators.required],
       cantidadUMT:[this.dataDeLaSolicitudState?.cantidadUMT, Validators.required],
@@ -244,8 +312,11 @@ createForm(){
       estadoFisico:[this.dataDeLaSolicitudState?.estadoFisico, Validators.required],
       presentacionFarmaceutica:[this.dataDeLaSolicitudState?.presentacionFarmaceutica, Validators.required],
       fraccionArancelaria:[this.dataDeLaSolicitudState?.fraccionArancelaria, Validators.required],
-    datosDelTramiteRealizar: this.fb.group({
-      justification: [this.dataDeLaSolicitudState?.justification, Validators.required],
+      
+      
+      datosDelTramiteRealizar: this.fb.group({
+      tipoOperacion:[this.dataDeLaSolicitudState?.tipoOperacion],
+      justification: [{ value: this.dataDeLaSolicitudState.justification || '', disabled: true }],
       denominacion: [this.dataDeLaSolicitudState?.denominacion, Validators.required],
       correoElectronico: [this.dataDeLaSolicitudState?.correoElectronico, Validators.required],
       codigopostal: [this.dataDeLaSolicitudState?.codigopostal, Validators.required],
@@ -257,16 +328,20 @@ createForm(){
       lada: [this.dataDeLaSolicitudState?.lada, Validators.required],
       telefono: [this.dataDeLaSolicitudState?.telefono, Validators.required],
       avisoDeFuncionamiento: [this.dataDeLaSolicitudState?.avisoDeFuncionamiento || false, Validators.required],
+     
       licenciaSanitaria: [
         { value: this.dataDeLaSolicitudState?.licenciaSanitaria || '', disabled: !this.dataDeLaSolicitudState?.avisoDeFuncionamiento },
         Validators.required,
       ],
       regimenalque: [this.dataDeLaSolicitudState?.regimenalque, Validators.required],
       aduana: [this.dataDeLaSolicitudState?.aduana, Validators.required],
+      maniFestos:[this.dataDeLaSolicitudState?.maniFestos, Validators.required],
+      LosDatosNotifier: [this.dataDeLaSolicitudState?.LosDatosNotifier],
       rfc: [this.dataDeLaSolicitudState?.rfc, Validators.required],
       legalRazonSocial: [this.dataDeLaSolicitudState?.legalRazonSocial, Validators.required],
       apellidoPaterno: [this.dataDeLaSolicitudState?.apellidoPaterno, Validators.required],
       apellidoMaterno: [this.dataDeLaSolicitudState?.apellidoMaterno,Validators.required],
+       
     }),
    
   });
@@ -285,10 +360,10 @@ clearNotificacion(): void {
  * Busca el elemento del modal en el DOM, lo oculta y limpia cualquier notificación activa.
  */
 closeModal(): void {
-  const modalElement = document.getElementById('modalAgregarMercancia');
-  if (modalElement) {
-    const modal = new Modal(modalElement);
-    modal.hide();
+  const MODAL_ELEMENT = document.getElementById('modalAgregarMercancia');
+  if (MODAL_ELEMENT) {
+    const MODAL_INSTANCE = new Modal(MODAL_ELEMENT);
+    MODAL_INSTANCE.hide();
     this.clearNotificacion(); // Limpia la notificación cuando el modal se cierra programáticamente
   }
 }
@@ -299,13 +374,13 @@ closeModal(): void {
  */
 eliminarPedimento(borrar: boolean): void {
   if (borrar) {
-    // Filter out the selected rows
+    // Filtrar las filas seleccionadas
     this.tableData = this.tableData.filter((row) => {
-      const rowId = row.id || (row.claveScianG && row.claveScianG.claveScian);
-      return !this.filasSeleccionadas.has(Number(rowId));
+      const ROW_ID = row.id || (row.claveScianG && row.claveScianG.claveScian);
+      return !this.filasSeleccionadas.has(Number(ROW_ID));
     });
 
-    // Clear the selection and notification
+    // Borrar la selección y la notificación
     this.filasSeleccionadas.clear();
     this.nuevaNotificacion = null;
   }
@@ -362,10 +437,10 @@ getMercanciaCrosslistData(): void {
     .subscribe({
       next: (respuesta: MercanciaCrossList[]) => {
         if (respuesta.length > 0) {
-          const firstItem = respuesta[0];
-          this.paisOrigenCrossList = firstItem.paisOrigenCrossList;
-          this.paisProcedencisCrossList = firstItem.paisProcedencisCrossList;
-          this.usoEspecificoCrossList = firstItem.usoEspecificoCrossList;
+          const FIRST_ITEM = respuesta[0];
+          this.paisOrigenCrossList = FIRST_ITEM.paisOrigenCrossList;
+          this.paisProcedencisCrossList = FIRST_ITEM.paisProcedencisCrossList;
+          this.usoEspecificoCrossList = FIRST_ITEM.usoEspecificoCrossList;
         } 
       },
       error: (err) => {
@@ -398,7 +473,7 @@ usoEspecificoColapsable(): void {
 }
 
    /** Obtiene los datos de los estados */
-  getEstadosData() {
+  getEstadosData(): void {
     this.permisosanitariodisposivos.getEstadosData()
       .pipe(takeUntil(this.destroyed$))
       .subscribe((data: Catalogo[]) => {
@@ -406,7 +481,7 @@ usoEspecificoColapsable(): void {
       });
   }
     /** Obtiene los datos de clave SCIAN */
-  getClaveScianData() {
+  getClaveScianData(): void {
     this.permisosanitariodisposivos.getClaveScianData()
       .pipe(takeUntil(this.destroyed$))
       .subscribe((data) => {
@@ -415,7 +490,7 @@ usoEspecificoColapsable(): void {
   }
 
     /** Obtiene los datos de descripción del SCIAN */
-  getClaveDescripcionDelData(){
+  getClaveDescripcionDelData(): void{
     this.permisosanitariodisposivos.getClaveDescripcionDelData()
       .pipe(takeUntil(this.destroyed$))
       .subscribe((data) => {
@@ -424,7 +499,7 @@ usoEspecificoColapsable(): void {
   }
 
     /** Obtiene los datos del régimen */
-  getRegimenalqueData(){
+  getRegimenalqueData(): void{
     this.permisosanitariodisposivos.getRegimenalqueData()
       .pipe(takeUntil(this.destroyed$))
       .subscribe((data) => {
@@ -433,7 +508,7 @@ usoEspecificoColapsable(): void {
   }
 
     /** Obtiene los datos de la aduana */
-  getAduanaData(){
+  getAduanaData(): void{
     this.permisosanitariodisposivos.getAduanaData()
       .pipe(takeUntil(this.destroyed$))
       .subscribe((data) => {
@@ -442,7 +517,7 @@ usoEspecificoColapsable(): void {
   }
 
   /** Obtiene los datos del estado físico desde el servicio y los asigna al catálogo correspondiente. */
-  getEstadoFisicoData(){
+  getEstadoFisicoData(): void{
     this.permisosanitariodisposivos.getEstadoFisicoData()
       .pipe(takeUntil(this.destroyed$))
       .subscribe((data) => {
@@ -461,7 +536,7 @@ usoEspecificoColapsable(): void {
   }
 
     /** Obtiene los datos de clasificación del producto */
-  getClasificacionDelProductoData(){
+  getClasificacionDelProductoData(): void{
     this.permisosanitariodisposivos.getClasificacionDelProductoData()
     .pipe(takeUntil(this.destroyed$))
     .subscribe((data) => {
@@ -469,7 +544,7 @@ usoEspecificoColapsable(): void {
     });
   }
     /** Obtiene los datos para especificar clasificación del producto */
-  getEspificarData(){
+  getEspificarData(): void{
     this.permisosanitariodisposivos.getEspificarData()
     .pipe(takeUntil(this.destroyed$))
     .subscribe((data) => {
@@ -478,7 +553,7 @@ usoEspecificoColapsable(): void {
   }
 
     /** Obtiene los datos del tipo de producto */
-  getTipoProductoData(){
+  getTipoProductoData(): void{
     this.permisosanitariodisposivos.getTipoProductoData()
     .pipe(takeUntil(this.destroyed$))
     .subscribe((data) => {
@@ -492,14 +567,14 @@ usoEspecificoColapsable(): void {
   }
 
     /** Limpia el formulario de clave SCIAN */
-  onLimpiar() {
+  onLimpiar(): void {
     this.clavaScianForm.reset();
   }
 
 /**
  * Muestra el formulario para agregar una nueva clave SCIAN.
  */  
-onAgregar(){
+onAgregar(): void{
     this.showClavaScianForm = true; 
     
   }
@@ -517,7 +592,7 @@ onAgregar(){
   }
   
     /** Cancela la acción de agregar clave SCIAN */
-  onCancelar() {
+  onCancelar(): void {
     this.showClavaScianForm = false; 
     this.clavaScianForm.reset(); 
   }
@@ -531,9 +606,9 @@ onAgregar(){
  }
 
   /** Maneja la selección de filas */
-    onfilasSeleccionadas(filasSeleccionadas: FilaData[] | FilaData2[]): void {
-       if (filasSeleccionadas.length > 0 && 'clasificaionProductos' in filasSeleccionadas[0]) {
-        this.filasSeleccionadas = new Set((filasSeleccionadas as FilaData2[]).map((row) => row.id));
+    onfilasSeleccionadas(filasSeleccionadas: FilaData[] | MercanciasInfo[]): void {
+      if (filasSeleccionadas.length > 0 && 'clasificaionProductos' in filasSeleccionadas[0]) {
+        this.filasSeleccionadas = new Set((filasSeleccionadas as MercanciasInfo[]).map((row) => row.id));
        }
       else if (filasSeleccionadas.length > 0 && 'claveScianG' in filasSeleccionadas[0] && 'claveScian' in filasSeleccionadas[0].claveScianG) {
         this.filasSeleccionadas = new Set((filasSeleccionadas as FilaData[]).map((row) => Number(row.claveScianG.claveScian)));
@@ -546,16 +621,16 @@ onAgregar(){
  * Busca las descripciones correspondientes en los catálogos y las asigna al formulario.
  * Luego, agrega los datos a la tabla y reinicia el formulario.
  */ 
-  onSubmit() {
-    const formData = { ...this.clavaScianForm.value };
-    formData.claveScianG.claveScian = this.claveScianData.catalogos.find(
-      (item: Catalogo) => String(item.id) === String(formData.claveScianG.claveScian)
+  onSubmit(): void {
+    const FORM_DATA = { ...this.clavaScianForm.value };
+    FORM_DATA.claveScianG.claveScian = this.claveScianData.catalogos.find(
+      (item: Catalogo) => String(item.id) === String(FORM_DATA.claveScianG.claveScian)
     )?.descripcion || 'Not Found';
   
-    formData.claveScianG.descripcionDelScian = this.descripcionDelScianData.catalogos.find(
-      (item: Catalogo) => String(item.id) === String(formData.claveScianG.descripcionDelScian)
+    FORM_DATA.claveScianG.descripcionDelScian = this.descripcionDelScianData.catalogos.find(
+      (item: Catalogo) => String(item.id) === String(FORM_DATA.claveScianG.descripcionDelScian)
     )?.descripcion || 'Not Found';
-    this.tableData.push(formData);
+    this.tableData.push(FORM_DATA);
     this.showClavaScianForm = false;
       this.clavaScianForm.reset(); 
   }
@@ -570,107 +645,136 @@ get datosDelTramiteRealizar(): FormGroup {
  * De lo contrario, lo habilita.
  */
 toggleLicenciaSanitaria(): void {
-  const avisoDeFuncionamiento = this.dataDeLaSolicitudForm.get('datosDelTramiteRealizar.avisoDeFuncionamiento')?.value;
-  const licenciaSanitariaControl = this.dataDeLaSolicitudForm.get('datosDelTramiteRealizar.licenciaSanitaria');
+  const AVISO_DE_FUNCIONAMIENTO = this.dataDeLaSolicitudForm.get('datosDelTramiteRealizar.avisoDeFuncionamiento')?.value;
+  const LICENCIA_SANITARIA_CONTROL = this.dataDeLaSolicitudForm.get('datosDelTramiteRealizar.licenciaSanitaria');
 
-  if (avisoDeFuncionamiento) {
-    licenciaSanitariaControl?.disable();
+  if (AVISO_DE_FUNCIONAMIENTO) {
+    LICENCIA_SANITARIA_CONTROL?.disable();
   } else {
-    licenciaSanitariaControl?.enable();
+    LICENCIA_SANITARIA_CONTROL?.enable();
   }
 }
 /** Guarda los datos del formulario de la solicitud. */
-onSave() {
-    const formData = { ...this.dataDeLaSolicitudForm.value };
-    formData.tipoProducto = this.tipoProductoData.catalogos.find(
-      (item: Catalogo) => String(item.id) === String(formData.tipoProducto)
-    )?.descripcion || formData.tipoProducto;
+onSave(): void {
+    const FORM_DATA = { ...this.dataDeLaSolicitudForm.value };
+    FORM_DATA.tipoProducto = this.tipoProductoData.catalogos.find(
+      (item: Catalogo) => String(item.id) === String(FORM_DATA.tipoProducto)
+    )?.descripcion || FORM_DATA.tipoProducto;
   
-    formData.clasificaionProductos = this.delProducto.catalogos.find(
-      (item: Catalogo) => String(item.id) === String(formData.clasificaionProductos)
-    )?.descripcion || formData.clasificaionProductos;
+    FORM_DATA.clasificaionProductos = this.delProducto.catalogos.find(
+      (item: Catalogo) => String(item.id) === String(FORM_DATA.clasificaionProductos)
+    )?.descripcion || FORM_DATA.clasificaionProductos;
   
-    formData.especificarProducto = this.especificarData.catalogos.find(
-      (item: Catalogo) => String(item.id) === String(formData.especificarProducto)
-    )?.descripcion || formData.especificarProducto;
+    FORM_DATA.especificarProducto = this.especificarData.catalogos.find(
+      (item: Catalogo) => String(item.id) === String(FORM_DATA.especificarProducto)
+    )?.descripcion || FORM_DATA.especificarProducto;
   
-    formData.estadoFisico = this.estadoFisicoData.catalogos.find(
-      (item: Catalogo) => String(item.id) === String(formData.estadoFisico)
-    )?.descripcion || formData.estadoFisico;
+    FORM_DATA.estadoFisico = this.estadoFisicoData.catalogos.find(
+      (item: Catalogo) => String(item.id) === String(FORM_DATA.estadoFisico)
+    )?.descripcion || FORM_DATA.estadoFisico;
     if (this.indiceFilaSeleccionada !== null) {
-      this.mercanciasData[this.indiceFilaSeleccionada] = { ...this.mercanciasData[this.indiceFilaSeleccionada], ...formData };
+      this.mercanciasData[this.indiceFilaSeleccionada] = { ...this.mercanciasData[this.indiceFilaSeleccionada], ...FORM_DATA };
       this.indiceFilaSeleccionada = null; 
     } else {
-      this.mercanciasData.push(formData);
+      this.mercanciasData.push(FORM_DATA);
     }
     this.dataDeLaSolicitudForm.reset();
   
-}
-/** Elimina las filas seleccionadas de la tabla de mercancías. */
-onDeleted(): void {
-  if (!this.filasSeleccionadas || this.filasSeleccionadas.size === 0) {
-    return;
-  }
-
-  this.mercanciasData = this.mercanciasData.filter((row) => !this.filasSeleccionadas.has(row.id));
-  this.filasSeleccionadas.clear();
-
 }
 /** Modifica una fila seleccionada de la tabla de mercancías. 
  * Verifica que solo haya una fila seleccionada. Si la fila existe, 
  * carga sus datos en el formulario y muestra el modal para editarla.
  */
 onModificar(): void {
-  if (!this.filasSeleccionadas || this.filasSeleccionadas.size !== 1) {
+  if (!this.filasSeleccionadas || this.filasSeleccionadas.size > 1) {
     return;
   }
-  const selectedId = Array.from(this.filasSeleccionadas)[0];
-  const selectedRowIndex = this.mercanciasData.findIndex((row) => row.id === selectedId);
 
-  if (selectedRowIndex === -1) {
+  const SELECTED_ID = Array.from(this.filasSeleccionadas)[0];
+  const SELECTED_ROW_INDEX = this.mercanciasData.findIndex((row) => row.id === SELECTED_ID);
+
+  if (SELECTED_ROW_INDEX === -1) {
     return;
   }
-  this.indiceFilaSeleccionada = selectedRowIndex;
-  const selectedRow = this.mercanciasData[selectedRowIndex];
-  this.dataDeLaSolicitudForm.patchValue(this.mercanciasData[selectedRowIndex]);
+
+  this.indiceFilaSeleccionada = SELECTED_ROW_INDEX;
+  const SELECTED_ROW = this.mercanciasData[SELECTED_ROW_INDEX];
+
+  // Parche los valores del formulario con la asignación correcta para los campos del catálogo
   this.dataDeLaSolicitudForm.patchValue({
-    descripcionFraccionArancelaria: selectedRow.descripcionFraccionArancelaria,
-    cantidadUMT: selectedRow.cantidadUMT,
-    umt: selectedRow.umt,
-    cantidadUMC: selectedRow.cantidadUMC,
-    umc: selectedRow.umc,
-    tipoProducto: selectedRow.tipoProducto,
-    clasificaionProductos: selectedRow.clasificaionProductos,
-    especificarProducto: selectedRow.especificarProducto,
-    nombreProductoEspecifico: selectedRow.nombreProductoEspecifico,
-    denominacionDistintiva: selectedRow.denominacionDistintiva,
-    denominacionNombre: selectedRow.denominacionNombre,
-    estadoFisico: selectedRow.estadoFisico,
-    presentacionFarmaceutica: selectedRow.presentacionFarmaceutica,
-    fraccionArancelaria: selectedRow.fraccionArancelaria,
+    descripcionFraccionArancelaria: SELECTED_ROW.descripcionFraccion,
+    cantidadUMT: SELECTED_ROW.cantidadUMT,
+    umt: SELECTED_ROW.unidadUMT,
+    cantidadUMC: SELECTED_ROW.cantidadUMC,
+    umc: SELECTED_ROW.unidad,
+    tipoProducto: this.tipoProductoData.catalogos.find(
+      (item) => item.descripcion === SELECTED_ROW.tipoProducto
+    )?.id || SELECTED_ROW.tipoProducto,
+    clasificaionProductos: this.delProducto.catalogos.find(
+      (item) => item.descripcion === SELECTED_ROW.clasificacion
+    )?.id || SELECTED_ROW.clasificacion,
+    especificarProducto: this.especificarData.catalogos.find(
+      (item) => item.descripcion === SELECTED_ROW.especificar
+    )?.id || SELECTED_ROW.especificar,
+    nombreProductoEspecifico: SELECTED_ROW.denominacionEspecifica,
+    denominacionDistintiva: SELECTED_ROW.denominacionDistintiva,
+    denominacionNombre: SELECTED_ROW.denominacionComun,
+    estadoFisico: this.estadoFisicoData.catalogos.find(
+      (item) => item.descripcion === SELECTED_ROW.estadoFisico
+    )?.id || SELECTED_ROW.estadoFisico,
+    presentacionFarmaceutica: SELECTED_ROW.presentacion,
+    fraccionArancelaria: SELECTED_ROW.fraccionArancelaria,
   });
-  const modalElement = document.getElementById('modalAgregarMercancia');
-  if (modalElement) {
-    const modalInstance = new Modal(modalElement);
-    modalInstance.show();
-  }
+
+  // mostrar el modal
+  const MODAL_ELEMENT = document.getElementById('modalAgregarMercancia');
+  if (MODAL_ELEMENT) {
+    const MODAL_INSTANCE = new Modal(MODAL_ELEMENT);
+    MODAL_INSTANCE.show();
+  } 
 }
-/** Establece un valor en el store a partir de un campo del formulario. 
- * Obtiene el valor del campo especificado en el formulario y lo asigna 
- * al método correspondiente del store.
- * 
- * @param form El formulario reactivo del cual se obtiene el valor.
- * @param campo El nombre del campo en el formulario.
- * @param metodoNombre El nombre del método en el store donde se asignará el valor.
+/**
+ * Maneja el evento de cambio en el tipo de operación.
+ * Si el tipo de operación es "modificación", habilita el campo de justificación.
+ * En caso contrario, deshabilita el campo de justificación y lo limpia.
  */
-setValoresStore(
-  form: FormGroup,
-  campo: string,
-  metodoNombre: keyof Solicitud260915Store
-): void {
-  const VALOR = form.get(campo)?.value;
-  (this.solicitud260915Store[metodoNombre] as (value: any) => void)(VALOR);
+changeEvent(): void{
+  const TIPO_OPERACION = this.dataDeLaSolicitudForm.get('datosDelTramiteRealizar.tipoOperacion')?.value;
+  const JUSTIFICACION_CONTROL = this.dataDeLaSolicitudForm.get('datosDelTramiteRealizar.justification'); 
+
+      if (TIPO_OPERACION === 'modificacion') {
+        JUSTIFICACION_CONTROL?.enable(); 
+      } else {
+        JUSTIFICACION_CONTROL?.disable(); 
+        JUSTIFICACION_CONTROL?.setValue(''); 
+      }
+    
 }
+/**
+ * Obtiene los datos de las mercancías desde el servicio.
+ * Realiza una solicitud al servicio `PermisoSanitarioDispositivosMedicosService`
+ * y actualiza la propiedad `mercanciasData` con los datos obtenidos.
+ */
+getMercanciasDatosData(): void {
+  this.permisosanitariodisposivos.getMercanciasDatosData()
+        .pipe(takeUntil(this.destroyed$))
+        .subscribe((data) => {
+        this.mercanciasData = data as unknown as MercanciasInfo[];
+        });
+}
+
+  /**
+   * Actualiza un valor específico en el store del trámite.
+   *
+   * @param FormGroup Formulario reactivo del cual se obtiene el valor.
+   * @param control Nombre del control cuyo valor se actualizará en el store.
+   */
+  setValoresStore(FormGroup: FormGroup, control: string): void {
+    const VALOR = FormGroup.get(control)?.value;
+    this.solicitud260915Store.setTramite260915State({
+      [control]: VALOR
+    });
+  }
 
   /** Destrucción del componente */
   ngOnDestroy(): void {

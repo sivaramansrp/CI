@@ -5,11 +5,7 @@
       <div class="row">
         <div class="col-md-6">
           <label class="form-label" for="folio"
-            >Folio:<span
-              class="bi bi-question-circle-fill fs-4 m-1"
-              title="Title"
-              ata-bs-toggle="tooltip"
-            ></span>
+            >Folio:
           </label>
           <input
             type="text"
@@ -24,13 +20,19 @@
           <label class="form-label" for="fechaInicial"
             >Fecha inicio tr&aacute;mite:</label
           >
-          <input
-            type="text"
-            class="form-control"
-            id="fechaInicial"
-            formControlName="fechaInicial"
-            readonly
-          />
+          <div class="position-relative">
+            <input
+              type="text"
+              class="form-control input-fecha"
+              id="fechaInicial"
+              formControlName="fechaInicial"
+              readonly
+            />
+            <span class="position-absolute top-50 end-0 translate-middle-y me-3">
+              <i class="bi bi-calendar-event disabled"></i>
+            </span>
+          </div>     
+      
         </div>
 
         <div class="col-md-12">
@@ -98,29 +100,13 @@
 
         <div class="row mt-5">
           <div class="col-md-12 mt-5 d-flex justify-content-end">
-            <button type="button" class="btn btn-primary" (click)="regresar()">
-              Regresar
-            </button>
             <button
+              *ngFor="let btn of botonesAcciones"
               type="button"
-              class="btn btn-danger ms-2"
-              (click)="solicitarCancelacion()"
+              [class]="btn.clase"
+              (click)="alHacerClickEnBoton(btn.urlAccion)"
             >
-              Solicitar cancelación
-            </button>
-            <button
-              type="button"
-              class="btn btn-danger ms-2"
-              (click)="solicitarModificacion()"
-            >
-              Solicitar modificación
-            </button>
-            <button
-              type="button"
-              class="btn btn-primary ms-2"
-              (click)="desistir()"
-            >
-              Desistir
+              {{ btn.etiqueta }}
             </button>
           </div>
         </div>

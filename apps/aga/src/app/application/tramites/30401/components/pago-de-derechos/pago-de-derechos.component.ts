@@ -5,11 +5,16 @@
  */
 
 import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
-import { AlertComponent, Catalogo, CatalogoSelectComponent, InputCheckComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { AlertComponent, Catalogo, REGEX_NUMERO_DECIMAL_2_DIGITOS, REGEX_PATRON_ALFANUMERICO, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Subject, takeUntil } from 'rxjs';
+import { InputCheckComponent } from '@libs/shared/data-access-user/src/tramites/components/input-check/input-check.component';
+
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
+
+import { Subject, map, takeUntil, } from 'rxjs';
 import { Tramite30401Store, Tramites30401State } from '../../estados/tramites30401.store';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery} from '@ng-mf/data-access-user';
 import { NOTA } from '../../enums/registro-empresas-transporte.enum';
 import { RegistroEmpresasTransporteService } from '../../services/registro-empresas-transporte.service';
 import { Tramite30401Query } from '../../estados/tramites30401.query';
@@ -45,6 +50,11 @@ import { Tramite30401Query } from '../../estados/tramites30401.query';
   styleUrl: './pago-de-derechos.component.scss',
 })
 export class PagoDeDerechosComponent implements OnInit, OnDestroy {
+     /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  esFormularioSoloLectura: boolean = false;
   /**
    * Formulario reactivo para manejar los campos de entrada del usuario.
    */
@@ -87,9 +97,18 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     public fb: FormBuilder,
     private tramite30401Store: Tramite30401Store,
     private tramite30401Query: Tramite30401Query,
-    private Servicio: RegistroEmpresasTransporteService
+    private Servicio: RegistroEmpresasTransporteService,
+    private consultaioQuery: ConsultaioQuery
   ) {
-    // No se necesita lógica de inicialización adicional.
+     this.consultaioQuery.selectConsultaioState$
+        .pipe(
+          takeUntil(this.destroyed$),
+          map((seccionState) => {
+           this.esFormularioSoloLectura = seccionState.readonly;
+           this.crearForm();
+          })
+        )
+        .subscribe();
   }
 
   /**
@@ -97,47 +116,81 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.enPatchStoredFormData();
-    this.crearForm();
     this.obtenerBancoList();
+    this.inicializarEstadoFormulario();
   }
 
   /**
    * Crea el formulario reactivo con las reglas de validación para cada control.
    */
   crearForm(): void {
-    this.pagoDeDerechosForm = this.fb.group({
-      claveDeReferencia: [
-        this.seccionState.claveDeReferencia,
-        [Validators.required, Validators.maxLength(9)],
-      ],
-      cadenaPagoDependencia: [
-        this.seccionState.cadenaPagoDependencia,
-        [Validators.required, Validators.maxLength(14)],
-      ],
-      clave: [this.seccionState.clave, Validators.required],
-      llaveDePago: [
-        this.seccionState.fecPago,
-        [Validators.required, Validators.maxLength(10)],
-      ],
-      fecPago: [
-        this.seccionState.fecPago,
-        [Validators.required, PagoDeDerechosComponent.fechaLimValidator()],
-      ],
-      impPago: [
-        this.seccionState.impPago,
+   this.pagoDeDerechosForm = this.fb.group({
+  claveDeReferencia: [
+    this.seccionState?.claveDeReferencia || '',
+    [Validators.required, Validators.maxLength(9), Validators.pattern(REGEX_PATRON_ALFANUMERICO)],
+  ],
+  cadenaPagoDependencia: [
+    this.seccionState?.cadenaPagoDependencia || '',
+    [Validators.required, Validators.maxLength(14), Validators.pattern(REGEX_PATRON_ALFANUMERICO)],
+  ],
+  clave: [this.seccionState?.clave || '', Validators.required],
+  llaveDePago: [
+    this.seccionState?.llaveDePago || '',
+    [Validators.required, Validators.maxLength(10), Validators.pattern(REGEX_PATRON_ALFANUMERICO)],
+  ],
+  fecPago: [
+    this.seccionState?.fecPago || '',
+    [Validators.required, PagoDeDerechosComponent.fechaLimValidator()],
+  ],
+  impPago: [
+        this.seccionState?.impPago || '',
         [
           Validators.required,
           Validators.maxLength(16),
           PagoDeDerechosComponent.noComaValidator(),
+          Validators.pattern(REGEX_NUMERO_DECIMAL_2_DIGITOS),
         ],
       ],
       manifiestoDeclaracion: [
-        this.seccionState.manifiestoDeclaracion,
+        this.seccionState?.manifiestoDeclaracion || '',
         [Validators.requiredTrue],
       ],
-    });
+});
+
   }
 
+  /**
+   * Método que se ejecuta al inicializar el componente.
+   * Dependiendo del modo de solo lectura (`esFormularioSoloLectura`),
+   * inicializa el formulario o guarda los datos del formulario.
+   */
+inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.crearForm();
+    }
+  }
+    /**
+   * @method
+   * @name guardarDatosFormulario
+   * @description
+   * Inicializa los formularios y obtiene los datos de la tabla.
+   * Dependiendo del modo de solo lectura (`esFormularioSoloLectura`),
+   * deshabilita o habilita todos los formularios del componente.
+   * Si el formulario está en modo solo lectura, todos los formularios se deshabilitan para evitar modificaciones.
+   * Si no está en modo solo lectura, todos los formularios se habilitan para permitir la edición.
+   *
+   * @returns {void}
+   */
+  guardarDatosFormulario(): void {
+    this.crearForm();
+    if (this.esFormularioSoloLectura) {
+      this.pagoDeDerechosForm.disable();
+    } else {
+      this.pagoDeDerechosForm.enable();
+    }
+  }
   /**
    * Método para validar que el campo de un formulario no contenga comas.
    * Actualiza el estado de validez del campo especificado sin emitir eventos adicionales.
@@ -150,6 +203,24 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
       ?.updateValueAndValidity({ emitEvent: false });
   }
 
+  /**
+ * Maneja la transformación a mayúsculas de los valores de los campos de entrada.
+ *
+ * @param {string} field - Nombre del campo de control del formulario.
+ * @param {Event} event - Evento activado por el cambio en el campo de entrada.
+ *
+ * @description
+ * Este método captura el evento de entrada y convierte el valor ingresado
+ * a mayúsculas antes de actualizar el control de formulario especificado. 
+ * Se evita la emisión del evento para prevenir actualizaciones innecesarias del formulario.
+ */
+
+  public manejarEntradaMayusculas(field: string, event: Event): void {
+    const INPUT = event.target as HTMLInputElement;
+    if (INPUT && INPUT.value) {
+      this.pagoDeDerechosForm.get(field)?.setValue(INPUT.value.toUpperCase(), { emitEvent: false });
+    }
+  }
   /**
    * Método para validar cambios en un campo de formulario relacionado con fechas futuras.
    * Monitorea los cambios de valor del campo especificado y actualiza su estado de validación sin emitir eventos adicionales.
@@ -243,6 +314,16 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
       : false;
   }
 
+  /**
+ * Restablece el formulario de pago de derechos.
+ *
+ * @description
+ * Este método reinicia todos los valores del formulario `pagoDeDerechosForm`,
+ * eliminando cualquier dato ingresado previamente.
+ */
+  public borrarDatosDelPago(): void {
+    this.pagoDeDerechosForm.reset();
+  }
   /**
    * Método de ciclo de vida de Angular que se ejecuta al destruir el componente.
    */

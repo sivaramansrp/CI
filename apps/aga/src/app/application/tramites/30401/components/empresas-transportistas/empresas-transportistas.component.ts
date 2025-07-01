@@ -1,10 +1,12 @@
-import { Catalogo, CrosslistComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Catalogo, REGEX_SOLO_DIGITOS, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Observable, Subject, map, takeUntil } from 'rxjs';
 import { CROSLISTA_ENTRADA } from '../../enums/croslista.enums';
 import { CapitalSocialComponent } from '../capital-social/capital-social.component';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery} from '@ng-mf/data-access-user';
+import { CrosslistComponent } from '@libs/shared/data-access-user/src/tramites/components/crosslist/crosslist.component';
 import { DatosGeneralesComponent } from '../datos-generales/datos-generales.component';
 import { DireccionEmpresaComponent } from '../direccion-empresa/direccion-empresa.component';
 import { NOTA } from '../../enums/registro-empresas-transporte.enum';
@@ -12,7 +14,6 @@ import { RegistroEmpresasTransporteService } from '../../services/registro-empre
 import { Tramite30401Query } from '../../estados/tramites30401.query';
 import { Tramites30401State } from '../../estados/tramites30401.store';
 import { permisoComponent } from '../permiso-expedido/permiso-expedido.component';
-
 /**
  * @packageDocumentation
  * @module EmpresasTransportistasComponent
@@ -47,6 +48,11 @@ import { permisoComponent } from '../permiso-expedido/permiso-expedido.component
   styleUrl: './empresas-transportistas.component.scss',
 })
 export class EmpresasTransportistasComponent implements OnInit, OnDestroy {
+    /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  esFormularioSoloLectura: boolean = false;
   /**
    * @property {FormGroup} empresasForm
    * Formulario reactivo que contiene los controles y validaciones para los datos de las empresas transportistas.
@@ -139,12 +145,12 @@ export class EmpresasTransportistasComponent implements OnInit, OnDestroy {
     {
       btnNombre: 'Agregar',
       class: 'btn-primary',
-      funcion: (): void => this.crossList.toArray()[0].agregar('t'),
+      funcion: (): void => this.crossList.toArray()[0].agregar(''),
     },
     {
       btnNombre: 'Agregar todos',
       class: 'btn-default',
-      funcion: (): void => this.crossList.toArray()[0].agregar(''),
+      funcion: (): void => this.crossList.toArray()[0].agregar('t'),
     },
     {
       btnNombre: 'Eliminar',
@@ -169,7 +175,18 @@ export class EmpresasTransportistasComponent implements OnInit, OnDestroy {
     public fb: FormBuilder,
     private tramite30401Query: Tramite30401Query,
     private Servicio: RegistroEmpresasTransporteService,
-  ) {}
+    private consultaioQuery: ConsultaioQuery
+  ) {
+    this.consultaioQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.destroyed$),
+      map((seccionState) => {
+       this.esFormularioSoloLectura = seccionState.readonly;
+        this.inicializarEstadoFormulario();
+      })
+    )
+    .subscribe();
+  }
 
   /**
    * @method aduanasEntradaSeleccionadasChange
@@ -189,8 +206,8 @@ export class EmpresasTransportistasComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.enPatchStoredFormData();
-    this.crearForm();
     this.obtenerlistadescargable();
+     this.inicializarEstadoFormulario();
   }
 
   /**
@@ -204,9 +221,9 @@ export class EmpresasTransportistasComponent implements OnInit, OnDestroy {
         tipoTransito: [this.seccionState?.tipoTransito, Validators.required],
       }),
       cboAduanasActuarSeleccionadas: [
-        this.seccionState.cboAduanasActuarSeleccionadas,
-        Validators.required,
-      ],
+      this.seccionState?.cboAduanasActuarSeleccionadas || [],
+      Validators.required,
+    ],
       domicilio: this.fb.group({
         calle: [
           this.seccionState?.calle,
@@ -214,11 +231,11 @@ export class EmpresasTransportistasComponent implements OnInit, OnDestroy {
         ],
         numeroExterior: [
           this.seccionState?.numeroExterior,
-          [Validators.required, Validators.maxLength(55)],
+          [Validators.required, Validators.maxLength(55), Validators.pattern(REGEX_SOLO_DIGITOS)],
         ],
         numeroInterior: [
           this.seccionState?.numeroInterior,
-          [Validators.maxLength(55)],
+          [Validators.maxLength(55),Validators.pattern(REGEX_SOLO_DIGITOS)],
         ],
         entidadFederativa: [
           this.seccionState?.entidadFederativa,
@@ -236,12 +253,19 @@ export class EmpresasTransportistasComponent implements OnInit, OnDestroy {
         ],
       }),
       empresasCapitalSocial: this.fb.group({
-        capitalSocial: [this.seccionState?.capitalSocial, Validators.required],
+        capitalSocial: [
+          this.seccionState?.capitalSocial, 
+          [
+            Validators.required,
+            Validators.pattern(REGEX_SOLO_DIGITOS),
+            Validators.maxLength(20)
+          ]
+        ],
       }),
       permiso: this.fb.group({
         numeroFolioPermiso: [
           this.seccionState?.numeroFolioPermiso,
-          [Validators.required, Validators.maxLength(20)],
+          [Validators.required, Validators.maxLength(20),Validators.pattern(REGEX_SOLO_DIGITOS)],
         ],
         fechaExpedicion: [
           this.seccionState?.fechaExpedicion,
@@ -259,6 +283,39 @@ export class EmpresasTransportistasComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * @method inicializarEstadoFormulario
+   * Inicializa el estado del formulario dependiendo del modo de solo lectura.
+   * Si el formulario está en modo solo lectura, se guardan los datos del formulario.
+   * Si no, se crea el formulario reactivo.
+   */
+inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.crearForm();
+    }
+  }
+    /**
+   * @method
+   * @name guardarDatosFormulario
+   * @description
+   * Inicializa los formularios y obtiene los datos de la tabla.
+   * Dependiendo del modo de solo lectura (`esFormularioSoloLectura`),
+   * deshabilita o habilita todos los formularios del componente.
+   * Si el formulario está en modo solo lectura, todos los formularios se deshabilitan para evitar modificaciones.
+   * Si no está en modo solo lectura, todos los formularios se habilitan para permitir la edición.
+   *
+   * @returns {void}
+   */
+  guardarDatosFormulario(): void {
+    this.crearForm();
+    if (this.esFormularioSoloLectura) {
+      this.empresasForm.disable();
+    } else {
+      this.empresasForm.enable();
+    }
+  }
   /**
    * @method obtenerlistadescargable
    * Obtiene las listas necesarias para llenar los selectores del formulario.

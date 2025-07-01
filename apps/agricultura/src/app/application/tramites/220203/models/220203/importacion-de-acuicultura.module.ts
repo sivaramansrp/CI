@@ -1,0 +1,292 @@
+import { PersonaTerceros } from "@libs/shared/data-access-user/src";
+
+/**
+ * @fileoverview
+ * Modelos y utilidades para la gestión de datos del trámite de importación de acuicultura (220203).
+ * Incluye la definición de las interfaces principales, auxiliares y la función para crear el estado inicial.
+ * Cobertura compodoc 100%: cada interfaz y función está documentada.
+ * @module importacionDeAcuiculturaModule
+ */
+
+/**
+ * Interfaz que define la estructura de los pasos en un componente tipo wizard para el trámite 220203.
+ * @interface ListaPasosWizard220203
+ * @property {number} indice - Índice del paso.
+ * @property {string} titulo - Título del paso.
+ * @property {boolean} activo - Indica si el paso está activo.
+ * @property {boolean} completado - Indica si el paso ha sido completado.
+ */
+export interface ListaPasosWizard220203 {
+    indice: number;
+    titulo: string;
+    activo: boolean;
+    completado: boolean;
+}
+
+/**
+ * Interfaz que define la estructura de las acciones de los botones.
+ * @interface AccionBoton
+ * @property {string} accion - Acción del botón (ej: 'siguiente', 'anterior').
+ * @property {number} valor - Valor asociado a la acción (ej: índice del paso).
+ */
+export interface AccionBoton {
+    accion: string;
+    valor: number;
+}
+
+/**
+ * Interfaz que define la estructura de las opciones de un radio button.
+ * @interface OpcionDeRadio
+ * @property {string} label - Etiqueta o texto visible para la opción de radio.
+ * @property {string} value - Valor asociado a la opción de radio.
+ */
+export interface OpcionDeRadio {
+    label: string;
+    value: string;
+}
+
+/**
+ * Interfaz que agrupa los datos de la mercancía para el trámite 220203.
+ * @interface DatosMercancia220203
+ * @property {RealizarGroup} realizarGroup - Datos de ingreso y verificación.
+ * @property {MercanciaGroup} mercanciaGroup - Datos específicos de la mercancía.
+ * @property {Detalles} detalles - Detalles adicionales de la mercancía.
+ */
+export interface DatosMercancia220203 {
+    realizarGroup: RealizarGroup;
+    mercanciaGroup: MercanciaGroup;
+    detalles: Detalles;
+}
+
+/**
+ * Interfaz que define los datos de ingreso y verificación de la mercancía.
+ * @interface RealizarGroup
+ * @property {string} aduanaIngreso - Aduana de ingreso.
+ * @property {string} oficinaInspeccion - Oficina de inspección.
+ * @property {string} puntoInspeccion - Punto de inspección.
+ * @property {string} numeroGuia - Número de guía.
+ * @property {string} regimen - Régimen aduanero.
+ */
+export interface RealizarGroup {
+    aduanaIngreso: string;
+    oficinaInspeccion: string;
+    puntoInspeccion: string;
+    numeroGuia: string;
+    regimen: string;
+}
+
+/**
+ * Interfaz que define los datos específicos de la mercancía.
+ * @interface MercanciaGroup
+ * @property {string} tipoRequisito
+ * @property {string} requisito
+ * @property {string} numeroCertificadoInternacional
+ * @property {string} numeroOficioCasoEspecial
+ * @property {string} fraccionArancelaria
+ * @property {string} descripcionFraccionArancelaria
+ * @property {string} nico
+ * @property {string} descripcionNico
+ * @property {string} descripcion
+ * @property {string} cantidadUMT
+ * @property {string} umt
+ * @property {string} cantidadUMC
+ * @property {string} umc
+ * @property {string} uso
+ * @property {string} numeroDeLote
+ * @property {string} faseDeDesarrollo
+ * @property {string} especie
+ * @property {string} paisDeOrigen
+ * @property {string} paisDeProcedencia
+ */
+export interface MercanciaGroup {
+    tipoRequisito: string;
+    requisito: string;
+    numeroCertificadoInternacional: string;
+    numeroOficioCasoEspecial: string;
+    fraccionArancelaria: string;
+    descripcionFraccionArancelaria: string;
+    nico: string;
+    descripcionNico: string;
+    descripcion: string;
+    cantidadUMT: string;
+    umt: string;
+    cantidadUMC: string;
+    umc: string;
+    uso: string;
+    numeroDeLote: string;
+    faseDeDesarrollo: string;
+    especie: string;
+    paisDeOrigen: string;
+    paisDeProcedencia: string;
+}
+
+/**
+ * Interfaz que define los detalles adicionales de la mercancía.
+ * @interface Detalles
+ * @property {string} nombreCientifico - Nombre científico de la mercancía.
+ */
+export interface Detalles {
+    nombreCientifico: string;
+}
+
+/**
+ * Interfaz que define los datos del formulario de movilización.
+ * @interface FormularioMovilizacion
+ * @property {string} medioDeTransporte - Medio de transporte utilizado.
+ * @property {string} identificacionTransporte - Identificación del transporte.
+ * @property {string} puntoVerificacion - Punto de verificación.
+ * @property {string} nombreEmpresaTransportista - Nombre de la empresa transportista.
+ */
+export interface FormularioMovilizacion {
+    medioDeTransporte: string;
+    identificacionTransporte: string;
+    puntoVerificacion: string;
+    nombreEmpresaTransportista: string;
+}
+
+/**
+ * Interfaz que define los datos del formulario de pago.
+ * @interface FormularioPago
+ * @property {string} exentoPago
+ * @property {string} justificacion
+ * @property {string} claveReferencia
+ * @property {string} cadenaDependencia
+ * @property {string} banco
+ * @property {string} llavePago
+ * @property {string} fechaPago
+ * @property {string} importePago
+ */
+export interface FormularioPago {
+    exentoPago: string;
+    justificacion: string;
+    claveReferencia: string;
+    cadenaDependencia: string;
+    banco: string;
+    llavePago: string;
+    fechaPago: string;
+    importePago: string;
+}
+
+/**
+ * Interfaz que indica el estado de validez de los datos para cada sección del trámite.
+ * @interface EnviarDatos
+ * @property {boolean} pagoDeformaValida - Indica si el pago es válido.
+ * @property {boolean} dataParaMovilizacion - Indica si los datos de movilización son válidos.
+ * @property {boolean} dataDeLaSolicitud - Indica si los datos de la solicitud son válidos.
+ */
+export interface EnviarDatos {
+    pagoDeformaValida: boolean,
+    dataParaMovilizacion: boolean,
+    dataDeLaSolicitud: boolean,
+}
+
+/**
+ * Interfaz que define los datos de consulta del trámite.
+ * @interface Consulta
+ * @property {string} procedureId
+ * @property {string} parameter
+ * @property {string} department
+ * @property {string} folioTramite
+ * @property {string} tipoDeTramite
+ * @property {string} estadoDeTramite
+ * @property {boolean} readonly
+ * @property {boolean} create
+ * @property {boolean} update
+ * @property {string} consultaioSolicitante
+ */
+export interface Consulta {
+    procedureId: string, 
+    parameter: string, 
+    department: string, 
+    folioTramite: string, 
+    tipoDeTramite: string, 
+    estadoDeTramite: string, 
+    readonly: boolean, 
+    create: boolean, 
+    update: boolean, 
+    consultaioSolicitante: string, 
+}
+
+/**
+ * Interfaz principal que agrupa todos los datos del trámite de importación de acuicultura.
+ * @interface Acuicultura
+ * @property {FormularioPago} formularioPago - Datos del formulario de pago.
+ * @property {FormularioMovilizacion} formularioMovilizacion - Datos del formulario de movilización.
+ * @property {DatosMercancia220203} datosMercancia - Datos de la mercancía.
+ * @property {EnviarDatos} formaValida - Estado de validez de cada sección.
+ * @property {PersonaTerceros[]} tercerosRelacionados - Lista de terceros relacionados.
+ */
+export interface Acuicultura {
+    formularioPago: FormularioPago;
+    formularioMovilizacion: FormularioMovilizacion;
+    datosMercancia: DatosMercancia220203;
+    formaValida: EnviarDatos;
+    tercerosRelacionados: PersonaTerceros[];
+}
+
+/**
+ * Función para crear el estado inicial del trámite de acuicultura, permitiendo sobreescribir valores por defecto.
+ * @function createDatosState
+ * @param {Partial<Acuicultura>} [params={}] - Parámetros opcionales para inicializar el estado.
+ * @returns {Acuicultura} Estado inicial de tipo Acuicultura.
+ * @description Devuelve un objeto con todas las propiedades inicializadas, útil para el store Akita.
+ */
+export function createDatosState(params: Partial<Acuicultura> = {}): Acuicultura {
+    return {
+        formularioPago: params.formularioPago || {
+            exentoPago: '',
+            justificacion: '',
+            claveReferencia: '',
+            cadenaDependencia: '',
+            banco: '',
+            llavePago: '',
+            fechaPago: '',
+            importePago: ''
+        },
+        formularioMovilizacion: params.formularioMovilizacion || {
+            medioDeTransporte: '',
+            identificacionTransporte: '',
+            puntoVerificacion: '',
+            nombreEmpresaTransportista: ''
+        },
+        datosMercancia: params?.datosMercancia || {
+            realizarGroup: {
+                aduanaIngreso: '',
+                oficinaInspeccion: '',
+                puntoInspeccion: '',
+                numeroGuia: '',
+                regimen: ''
+            },
+            mercanciaGroup: {
+                tipoRequisito: '',
+                requisito: '',
+                numeroCertificadoInternacional: '',
+                numeroOficioCasoEspecial: '',
+                fraccionArancelaria: '',
+                descripcionFraccionArancelaria: '',
+                nico: '',
+                descripcionNico: '',
+                descripcion: '',
+                cantidadUMT: '',
+                umt: '',
+                cantidadUMC: '',
+                umc: '',
+                uso: '',
+                numeroDeLote: '',
+                faseDeDesarrollo: '',
+                especie: '',
+                paisDeOrigen: '',
+                paisDeProcedencia: ''
+            },
+            detalles: {
+                nombreCientifico: ''
+            },
+        },
+        tercerosRelacionados: params.tercerosRelacionados || [],
+        formaValida: params?.formaValida || {
+            pagoDeformaValida: false,
+            dataParaMovilizacion: false,
+            dataDeLaSolicitud: false
+        },
+    };
+}

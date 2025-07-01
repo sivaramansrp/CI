@@ -1,28 +1,36 @@
 <form [formGroup]="forma">
     <div class="row">
         <formas-dinamicas formularioTitulo="País(es) procedencia" [forma]="ninoFormGroup" [formularioDatos]="paisProcedenciaFormData"
-        [estado]="importacionstate" (emitirCambioDeValor)="establecerCambioDeValor($event)"></formas-dinamicas>
+        [estado]="importacionstate" [soloLectura]="consultaState.readonly" (emitirCambioDeValor)="establecerCambioDeValor($event)"></formas-dinamicas>
     </div>
     <div class="row mt-5">
         <crosslist
+            [showSearchInput1]="true"
+            [showSearchInput2]="true"
             [fechas]="seleccionarOrigenDelPais"
             [label]="paisDeProcedenciaLabel"
-            [botones]="paisDeProcedenciaBotones"
+            [botonField]="paisDeProcedenciaBotones"
+            [isDisabled]="consultaState.readonly"
         ></crosslist>
     </div>
     <div class="row mt-5">
         <div class="col-md-8">
             <div class="form-group">
-                <label class="form-label" for="justificacion">Justificación y beneficio que se obtiene: </label>
+                <label class="form-label" for="justificacion">Justificación y beneficio que se obtiene*: </label>
                 <textarea 
                 class="form-control min-height" 
                 id="justificacion" 
                 name="justificacion"
                 formControlName="justificacion"
                 rows="5"
+                [ngClass]="isValid('justificacion') ? 'required' : ''"
                 (change)="eventoDeCambioDeValor($event, 'justificacion')"
-            ></textarea>
-
+                ></textarea>
+                @if (forma.controls['justificacion'].invalid && forma.controls['justificacion'].touched) {
+                    <div class="mensaje-error">
+                        Este campo es obligatorio.
+                    </div>
+                }
             </div>
         </div>
 
@@ -32,13 +40,18 @@
             <div class="form-group">
                 <label class="form-label" for="observaciones">Observaciones: </label>
                 <textarea 
-                    class="form-control min-height" 
-                    id="observaciones" 
-                    name="observaciones"
-                    formControlName="observaciones"
-                    rows="5"
-                    (change)="eventoDeCambioDeValor($event, 'observaciones')"
+                class="form-control min-height" 
+                id="observaciones" 
+                name="observaciones"
+                formControlName="observaciones"
+                rows="5"
+                (change)="eventoDeCambioDeValor($event, 'observaciones')"
                 ></textarea>
+                @if (forma.get('observaciones')?.errors?.['maxlength'] && forma.get('observaciones')?.touched) {
+                    <div class="mensaje-error">
+                        Debe tener como máximo 512 caracteres.
+                    </div> 
+                }
             </div>
         </div>
     </div>

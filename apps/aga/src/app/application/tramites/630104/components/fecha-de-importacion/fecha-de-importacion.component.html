@@ -1,0 +1,11 @@
+
+<div class="container">
+    <ng-titulo [titulo]="'Fecha de Importación '"></ng-titulo>
+    <div class="row">
+        <formas-dinamicas 
+        [forma]="FechaDeImportacionTemporalFormulario" 
+        [formularioDatos]="formularioFechaDeImportacion"
+        [soloLectura]="esSoloLectura" 
+        (emitirCambioDeValor)="establecerCambioDeValor($event)"></formas-dinamicas>
+    </div>
+    </div>

@@ -19,7 +19,6 @@ import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RepresentanteFiscalComponent } from '@ng-mf/data-access-user';
 import { RouterModule } from '@angular/router';
-import { SelectCatalogosComponent } from '@ng-mf/data-access-user';
 import { SelectPaisesComponent } from '@ng-mf/data-access-user';
 import { SharedModule } from '@ng-mf/data-access-user';
 import { SolicitanteComponent } from './components/solicitante/solicitante.component';
@@ -34,7 +33,6 @@ import { forwardRef } from '@angular/core';
     SolicitantePageComponent,
     PasoUnoComponent,
     PasoDosComponent,
-    // AsignarPersonaComponent,
     DatosTramiteComponent,
   ],
   imports: [
@@ -49,7 +47,6 @@ import { forwardRef } from '@angular/core';
     ReactiveFormsModule,
     forwardRef(() => AlertComponent),
     forwardRef(() => FirmaElectronicaComponent),
-    forwardRef(() => SelectCatalogosComponent),
     forwardRef(() => AnexarDocumentosComponent),
     forwardRef(() => InputCheckComponent),
     forwardRef(() => InputFechaComponent),

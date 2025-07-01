@@ -5,11 +5,12 @@
       <div class="contenedor-de-mesa">
         <app-tabla-dinamica [configuracionTabla]="configuracionTabla" [datos]="datosTablaMercancia"
           [tipoSeleccionTabla]="tipoSeleccionTabla"
+          [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
           (listaDeFilaSeleccionada)="manejarFilaSeleccionada($event)"></app-tabla-dinamica>
       </div>
       <div class="row mt-3" style="padding-bottom: 20px; text-align: right">
         <div>
-          <button type="button" class="btn btn-primary me-2" (click)="mostrarFormularioMercanciaModal()">
+          <button type="button" class="btn btn-primary me-2" [disabled]="esFormularioSoloLectura" (click)="mostrarFormularioMercanciaModal()">
             Agregar
           </button>
           <button type="button" class="btn btn-default me-2" [disabled]="!enableModficarBoton"
@@ -19,7 +20,7 @@
           <button type="button" class="btn me-2"
             [ngClass]="{'btn-default': !enableEliminarBoton, 'btn-danger': enableEliminarBoton}"
             [disabled]="!enableEliminarBoton" (click)="confirmEliminarMercanciaItem()">Eliminar</button>
-            <button type="button" class="btn btn-primary me-2" (click)="mostrarFormularioMercanciaModal()">
+            <button type="button" class="btn btn-primary me-2" [disabled]="esFormularioSoloLectura" (click)="mostrarFormularioMercanciaModal()">
               Ver detalle
             </button>
         </div>
@@ -34,13 +35,14 @@
               formControlName="observaciones"
               class="form-control"
               rows="4"
+              (blur)="guardarObservaciones()" 
             ></textarea>
       </div>
     </div>
 
-    <ng-titulo titulo="Aduanas de salida" />
+    <ng-titulo *ngIf="tipoOperacionSeleccionado" titulo="Aduanas de salida" />
 
-    <div class="row mt-3">
+   <div *ngIf="tipoOperacionSeleccionado" class="row mt-3">
       <div class="col-md-12 mt-3">
         <crosslist [fechas]="listaOriginalMovimientos" [fechasSeleccionadas]="listSeleccionadaMovimientos"
           [botones]="botonesMovimientos"></crosslist>
@@ -58,6 +60,14 @@
       [notificacionInput]="nuevaNotificacion" 
       (confirmacionModal)="cerrarMultipleSeleccionPopup()">
     </lib-notificaciones>
+
+    <lib-notificaciones *ngIf="serieAgregadaPopupAbierto" [notificacionInput]="nuevaNotificacion"
+      (confirmacionModal)="cerrarSerieAgregadaPopup()">
+    </lib-notificaciones>
+    
+    <lib-notificaciones *ngIf="mercanciaAgregadaPopupAbierto" [notificacionInput]="nuevaNotificacion"
+      (confirmacionModal)="cerrarMercanciaAgregadaPopup()">
+    </lib-notificaciones>
   </form>
 
   @if(mostrarModalDatosMercancia){
@@ -71,7 +81,7 @@
           </div>
           <div class="col-md-5">
             <div class="form-group">
-              <input id="numEquipos" type="text" class="form-control" formControlName="numEquipos" [required]="true"
+              <input id="numEquipos" type="text" class="form-control" formControlName="numEquipos" [required]="true" maxlength="2"
                 [class.is-invalid]="formularioMercancia.get('numEquipos')?.touched && formularioMercancia.get('numEquipos')?.invalid" />
             </div>
             <div *ngIf="esControlInvalido('numEquipos')" class="text-danger">
@@ -84,7 +94,7 @@
           <div class="col-md-5">
             <div class="form-group">
               <label class="form-label" for="marca">Marca*:</label>
-              <input id="marca" type="text" class="form-control" formControlName="marca" [required]="true"
+              <input id="marca" type="text" class="form-control" formControlName="marca" [required]="true" maxlength="50"
                 [class.is-invalid]="formularioMercancia.get('marca')?.touched && formularioMercancia.get('marca')?.invalid" />
             </div>
             <div *ngIf="esControlInvalido('marca')" class="text-danger">
@@ -95,7 +105,7 @@
           <div class="col-md-5">
             <div class="form-group">
               <label class="form-label" for="modelo">Modelo*:</label>
-              <input id="modelo" type="text" class="form-control" formControlName="modelo" [required]="true"
+              <input id="modelo" type="text" class="form-control" formControlName="modelo" [required]="true" maxlength="100"
                 [class.is-invalid]="formularioMercancia.get('modelo')?.touched && formularioMercancia.get('modelo')?.invalid" />
             </div>
             <div *ngIf="esControlInvalido('modelo')" class="text-danger">
@@ -108,7 +118,7 @@
           <div class="col-md-5">
             <div class="form-group">
               <label class="form-label" for="voltaje">Voltaje máximo del tubo de R-X*:</label>
-              <input id="voltaje" type="text" class="form-control" formControlName="voltaje" [required]="true"
+              <input id="voltaje" type="text" class="form-control" formControlName="voltaje" [required]="true" maxlength="11"
                 [class.is-invalid]="formularioMercancia.get('voltaje')?.touched && formularioMercancia.get('voltaje')?.invalid" />
             </div>
             <div *ngIf="esControlInvalido('voltaje')" class="text-danger">
@@ -126,7 +136,7 @@
           <div class="col-md-5">
             <div class="form-group">
               <label class="form-label" for="corriente">Corriente máxima del tubo de R-X*:</label>
-              <input id="corriente" type="text" class="form-control" formControlName="corriente" [required]="true"
+              <input id="corriente" type="text" class="form-control" formControlName="corriente" [required]="true" maxlength="11"
                 [class.is-invalid]="formularioMercancia.get('corriente')?.touched && formularioMercancia.get('corriente')?.invalid" />
             </div>
             <div *ngIf="esControlInvalido('corriente')" class="text-danger">
@@ -159,7 +169,7 @@
           <div class="col-md-5">
             <div class="form-group">
               <label class="form-label" for="serie">Número de serie*:</label>
-              <input id="serie" type="text" class="form-control" formControlName="serie" [required]="true"
+              <input id="serie" type="text" class="form-control" formControlName="serie" [required]="true" maxlength="150"
                 [class.is-invalid]="formularioMercancia.get('serie')?.touched && formularioMercancia.get('serie')?.invalid" />
             </div>
             <div *ngIf="esControlInvalido('serie')" class="text-danger">
@@ -169,10 +179,10 @@
           </div>
           <div class="col-md-5 d-flex justify-content-start gap-1">
             <div class="form-group mt-auto">
-              <button type="button" class="btn btn-primary" (click)="enviarFormularioMercancia()">
+              <button type="button" class="btn btn-primary" [disabled]="esFormularioSoloLectura" (click)="enviarFormularioMercancia(true)">
                 Agregar
               </button>
-              <button type="button" class="btn btn-default">Limpiar</button>
+              <button type="button" class="btn btn-default" [disabled]="esFormularioSoloLectura">Limpiar</button>
             </div>
           </div>
         </div>
@@ -185,17 +195,17 @@
             </div>
           </div>
           <div class="col-md-12 mt-3 d-flex justify-content-end gap-1">
-            <button type="button" class="btn btn-danger" (click)="alternarModalMercancia()">
+            <button type="button" class="btn btn-danger" [disabled]="esFormularioSoloLectura" (click)="alternarModalMercancia()">
               Eliminar
             </button>  
           </div>
         </div>
         <div class="row mt-5">
           <div class="col-md-12 d-flex justify-content-end gap-1">
-            <button type="button" class="btn btn-primary" (click)="enviarFormularioMercancia()">
+            <button type="button" class="btn btn-primary" [disabled]="esFormularioSoloLectura" (click)="enviarFormularioMercancia(false)">
               Guardar
             </button>
-            <button type="button" class="btn btn-danger" (click)="alternarModalMercancia()">
+            <button type="button" class="btn btn-danger" [disabled]="esFormularioSoloLectura" (click)="alternarModalMercancia()">
               Cancelar
             </button>        
           </div>

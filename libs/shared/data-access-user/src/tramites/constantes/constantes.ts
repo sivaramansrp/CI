@@ -78,9 +78,9 @@ export const TIPO_PERSONA = {
  * Contiene identificadores para solicitudes individuales, semanales y mensuales.
  */
 export const TIPO_SOLICITUD = {
-  INDIVIDUAL: 27,
-  SEMANAL: 28,
-  MENSUAL: 29,
+  INDIVIDUAL: 1,
+  SEMANAL: 2,
+  MENSUAL: 3,
 };
 
 /**
@@ -158,5 +158,11 @@ export const enum TEXTO_FILA_REGISTRO{
   ACTIVADA = 'Activada',
   BAJA = 'Baja',
 }
+
+/**
+ * @description Constantes relacionadas con el proceso de generación de línea de captura.
+ * Contiene la URL para generar la línea de captura y el texto del botón para continuar.
+ */
+export const GENERAR_LINEA_CAPTURA_URL = 'https://pccem.mat.sat.gob.mx/PTSC/cet/FmpceContr/faces/resources/pages/pagos/formularioMultiplePago.jsf';
 
 

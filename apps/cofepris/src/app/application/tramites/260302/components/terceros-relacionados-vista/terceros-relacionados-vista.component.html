@@ -8,39 +8,53 @@
     ></ng-alert>
   </div>
   <div class="row mt-5">
-    <h6>Destinatario(Destino final)*:</h6>
+    <h6>Destinatario (destino final)*:</h6>
   </div>
   <div class="row mt-5">
     <app-tabla-dinamica
       [configuracionTabla]="configuracionTablaDestinatario"
       [datos]="(destinatarioTablaDatos$ | async) || []"
       [tipoSeleccionTabla]="tipoSeleccionTabla"
+      (listaDeFilaSeleccionada)="seleccionadaDestinatario = $event"
     ></app-tabla-dinamica>
   </div>
 
   <div class="row mt-5">
     <div class="col-md-12">
       <div class="pull-right">
-        <button
-          type="button"
-          name="modificarMercancias"
-          class="btn btn-default"
+        <ng-container
+          *ngIf="destinatarioTablaDatos$ | async as destinatarioDatos"
         >
-          Modificar
-        </button>
-        <button
-          type="button"
-          name="eliminarMercancias"
-          class="btn btn-danger ms-2"
-        >
-          Eliminar
-        </button>
+          <ng-container
+            *ngIf="destinatarioDatos && destinatarioDatos.length > 0"
+          >
+            <button
+              type="button"
+              name="modificarMercancias"
+              class="btn btn-default"
+              (click)="modificarDestinatario()"
+              [disabled]="esFormularioSoloLectura"
+            >
+              Modificar
+            </button>
+            <button
+              type="button"
+              name="eliminarMercancias"
+              class="btn btn-danger ms-2"
+              (click)="eliminarDestinatario()"
+              [disabled]="esFormularioSoloLectura"
+            >
+              Eliminar
+            </button>
+          </ng-container>
+        </ng-container>
 
         <button
           type="button"
           name="agregarMercancias"
           class="btn btn-primary ms-2"
           (click)="navigate(tipoTablaDatos.DESTINATARIO)"
+          [disabled]="esFormularioSoloLectura"
         >
           Agregar
         </button>
@@ -54,32 +68,41 @@
       [configuracionTabla]="configuracionTablaOtros"
       [datos]="(otrasTablaDatos$ | async) || []"
       [tipoSeleccionTabla]="tipoSeleccionTabla"
+      (listaDeFilaSeleccionada)="seleccionadaOtros = $event"
     ></app-tabla-dinamica>
   </div>
 
   <div class="row mt-5">
     <div class="col-md-12">
       <div class="pull-right">
-        <button
-          type="button"
-          name="modificarMercancias"
-          class="btn btn-default"
-        >
-          Modificar
-        </button>
-        <button
-          type="button"
-          name="eliminarMercancias"
-          class="btn btn-danger ms-2"
-        >
-          Eliminar
-        </button>
-
+        <ng-container *ngIf="otrasTablaDatos$ | async as otrasDatos">
+          <ng-container *ngIf="otrasDatos && otrasDatos.length > 0">
+            <button
+              type="button"
+              name="modificarMercancias"
+              class="btn btn-default"
+              (click)="modificarOtros()"
+              [disabled]="esFormularioSoloLectura"
+            >
+              Modificar
+            </button>
+            <button
+              type="button"
+              name="eliminarMercancias"
+              class="btn btn-danger ms-2"
+              (click)="eliminarOtros()"
+              [disabled]="esFormularioSoloLectura"
+            >
+              Eliminar
+            </button>
+          </ng-container>
+        </ng-container>
         <button
           type="button"
           name="agregarMercancias"
           class="btn btn-primary ms-2"
           (click)="navigateOtros()"
+          [disabled]="esFormularioSoloLectura"
         >
           Agregar
         </button>
@@ -89,3 +112,12 @@
 
   <div class="row mt-5"></div>
 </div>
+@if(mostrarAlerta){
+<section>
+  <lib-notificaciones
+    [notificacionInput]="seleccionarFilaNotificacion"
+    (confirmacionModal)="mostrarAlerta = false"
+  >
+  </lib-notificaciones>
+</section>
+}

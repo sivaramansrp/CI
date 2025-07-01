@@ -1,15 +1,6 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable require-await */
-/* eslint-disable @typescript-eslint/no-empty-function */
-/* eslint-disable no-empty-function */
-/* eslint-disable class-methods-use-this */
-/* eslint-disable @typescript-eslint/ban-ts-comment */
-/* eslint-disable sort-imports */
-/* eslint-disable max-classes-per-file */
-// @ts-nocheck
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { CUSTOM_ELEMENTS_SCHEMA, Directive, Injectable, Input, NO_ERRORS_SCHEMA, Output, Pipe, PipeTransform } from '@angular/core';
+
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -17,42 +8,21 @@ import { Observable, of as observableOf, throwError } from 'rxjs';
 
 import { Component } from '@angular/core';
 import { PasoUnoComponent } from './paso-uno.component';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
-@Directive({ selector: '[myCustom]' })
-class MyCustomDirective {
-  @Input() myCustom;
-}
-
-@Pipe({name: 'translate'})
-class TranslatePipe implements PipeTransform {
-  transform(value) { return value; }
-}
-
-@Pipe({name: 'phoneNumber'})
-class PhoneNumberPipe implements PipeTransform {
-  transform(value) { return value; }
-}
-
-@Pipe({name: 'safeHtml'})
-class SafeHtmlPipe implements PipeTransform {
-  transform(value) { return value; }
-}
 
 describe('PasoUnoComponent', () => {
-  let fixture;
-  let component;
+  let fixture: ComponentFixture<PasoUnoComponent>;
+  let component: { ngOnDestroy: () => void; seleccionaTab: (arg0: {}) => void; consultaQuery: { selectConsultaioState$?: any; }; ngOnInit: () => void; destroyNotifier$: { next?: any; complete?: any; }; };
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule ],
-      declarations: [
-        PasoUnoComponent,
-        TranslatePipe, PhoneNumberPipe, SafeHtmlPipe,
-        MyCustomDirective
+      imports: [ FormsModule, ReactiveFormsModule, PasoUnoComponent,HttpClientTestingModule,
       ],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
       providers: [
-
+        ConsultaioQuery
       ]
     }).overrideComponent(PasoUnoComponent, {
 
@@ -74,6 +44,22 @@ describe('PasoUnoComponent', () => {
 
     component.seleccionaTab({});
 
+  });
+
+  it('should run #ngOnInit()', async () => {
+    component.consultaQuery = component.consultaQuery || {};
+    component.consultaQuery.selectConsultaioState$ = observableOf({});
+    component.ngOnInit();
+
+  });
+
+  it('should run #ngOnDestroy()', async () => {
+    component.destroyNotifier$ = component.destroyNotifier$ || {};
+    component.destroyNotifier$.next = jest.fn();
+    component.destroyNotifier$.complete = jest.fn();
+    component.ngOnDestroy();
+    expect(component.destroyNotifier$.next).toHaveBeenCalled();
+    expect(component.destroyNotifier$.complete).toHaveBeenCalled();
   });
 
 });

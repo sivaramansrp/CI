@@ -21,7 +21,7 @@
     <section class="body-text fw-bold mb-2 mt-2">
       <span class="text-danger">*</span> Indique si para efectos del presente
       trámite se acredita como parte de un mismo grupo de conformidad con la
-      regla .1.7.
+      regla 7.1.7.
     </section>
 
     <app-input-radio
@@ -56,7 +56,7 @@
     />
 
     <section class="mb-4 fw-bold">
-      Indique cual(es) de las empresas que forman parte del grupo cuentan con la
+      Indique cual (es) de las empresas que forman parte del grupo cuentan con la
       Certificación en materia de IVA e IEPS, o en su caso, se encuentran en
       proceso de solicitud, o se van a certificar de conformidad con el
       calendario establecido en el articulo Segundo de la Sexta Resolución de
@@ -88,11 +88,11 @@
     </div>
 
     <div class="button-container">
-      <button class="btn btn-primary" (click)="agregarOpenModal()">
+      <button class="btn btn-primary" (click)="agregarOpenModal()" disabled="esFormularioSoloLectura ? true : false">
         Agregar
       </button>
-      <button class="btn btn-default ms-2">Modificar</button>
-      <button class="btn btn-default ms-2">Eliminar</button>
+      <button class="btn btn-default ms-2" disabled="esFormularioSoloLectura ? true : false">Modificar</button>
+      <button class="btn btn-default ms-2" disabled="esFormularioSoloLectura ? true : false">Eliminar</button>
     </div>
 
     <section class="fw-medium mt-3">
@@ -159,6 +159,7 @@
           name="tipoDe"
           class="fw-bold"
           formControlName="tipoDe"
+          [isDisabled]="esFormularioSoloLectura ? true : false"
           (change)="setValoresStore(ivaForm,'tipoDe', 'setTipoDe')"
         ></app-catalogo-select>
       </div>
@@ -185,7 +186,7 @@
         />
       </div>
       <div class="col-8 d-flex align-items-end justify-content-end">
-        <button class="btn btn-primary">Agregar</button>
+        <button class="btn btn-primary" disabled="esFormularioSoloLectura ? true : false">Agregar</button>
       </div>
     </div>
 
@@ -214,14 +215,14 @@
     </div>
 
     <div class="button-container">
-      <button class="btn btn-default ms-2">Modificar</button>
-      <button class="btn btn-default ms-2">Eliminar</button>
+      <button class="btn btn-default ms-2" disabled="esFormularioSoloLectura ? true : false">Modificar</button>
+      <button class="btn btn-default ms-2" disabled="esFormularioSoloLectura ? true : false">Eliminar</button>
     </div>
 
     <p class="fw-bold">
       <span class="text-danger"> *</span>Ha contado previamente con la
       Certificación en materia de IVA e IEPS, el Registro en el Esquema de
-      Certificación Empresas bajo la modalidad IVA e IEPS o Garantia del interés
+      Certificación de Empresas bajo la modalidad IVA e IEPS o Garantia del interés
       fiscal del IVA e IEPS
     </p>
 
@@ -255,6 +256,7 @@
     ></app-input-radio>
 
     <div class="row">
+      <ng-titulo titulo="Pago de derechos" />
       <form [formGroup]="formularioDePago">
         <div class="col-md-6">
           <span class="require">*</span
@@ -305,6 +307,7 @@
             [required]="true"
             name="banco"
             formControlName="banco"
+            [isDisabled]="esFormularioSoloLectura ? true : false"
             (change)="setValoresStore(formularioDePago,'banco', 'setBanco')"
           ></app-catalogo-select>
         </div>
@@ -374,7 +377,7 @@
         </div>
 
         <div class="col-md-12 text-end mt-3">
-          <button class="btn btn-danger">Borrar datos del pago</button>
+          <button class="btn btn-danger" disabled="esFormularioSoloLectura ? true : false">Borrar datos del pago</button>
         </div>
       </form>
     </div>
@@ -399,6 +402,7 @@
           class="close position-absolute top-0 end-0 m-3"
           (click)="cerrarModal()"
           aria-label="Close"
+          disabled="esFormularioSoloLectura ? true : false"
         >
           <span class="color-white" aria-hidden="true">&times;</span>
         </button>
@@ -414,7 +418,7 @@
                 class="form-control me-2 w-50"
                 formControlName="rfc"
               />
-              <button class="btn btn-info">Buscar</button>
+              <button class="btn btn-info" disabled="esFormularioSoloLectura ? true : false">Buscar</button>
             </div>
             @if (ivaForm.get('rfc')?.invalid && ivaForm.get('rfc')?.touched) {
             <div class="text-danger">
@@ -450,7 +454,7 @@
         </form>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary">Limpiar</button>
+        <button type="button" class="btn btn-secondary" disabled="esFormularioSoloLectura ? true : false">Limpiar</button>
         <button
           type="button"
           class="btn btn-primary p-2"
@@ -462,6 +466,7 @@
           type="button"
           class="btn btn-danger p-2"
           (click)="cerrarModal()"
+          disabled="esFormularioSoloLectura ? true : false"
         >
           Cancelar
         </button>

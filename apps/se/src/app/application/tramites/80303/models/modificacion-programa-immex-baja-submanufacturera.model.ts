@@ -1,37 +1,94 @@
 import { ConfiguracionColumna } from '@ng-mf/data-access-user'; // adjust the import path if needed
 
+
 /**
  * Representa la información de una empresa submanufacturera.
- *
- * @property estatus - El estado actual de la empresa submanufacturera.
- * @property rfc - El Registro Federal de Contribuyentes (RFC) de la empresa.
- * @property razonSocial - La razón social de la empresa.
- * @property calle - La calle donde se encuentra ubicada la empresa.
- * @property numeroInterior - El número interior del domicilio de la empresa.
- * @property numeroExterior - El número exterior del domicilio de la empresa.
- * @property codigoPostal - El código postal del domicilio de la empresa.
- * @property localidad - La localidad donde se encuentra la empresa.
- * @property municipioAlcaldia - El municipio o alcaldía donde se encuentra la empresa.
- * @property entidadFederativa - La entidad federativa (estado) donde se encuentra la empresa.
- * @property pais - El país donde se encuentra la empresa.
- * @property telefono - El número de teléfono de contacto de la empresa.
- * @property fax - El número de fax de la empresa.
- * @property correoElectronico - La dirección de correo electrónico de la empresa.
+ * Esta interfaz define las propiedades necesarias para describir los datos de una empresa submanufacturera
+ * en el contexto de un programa IMMEX.
  */
 export interface EmpresaSubmanufacturera {
+  /**
+   * El estatus actual de la empresa submanufacturera.
+   * Puede indicar si está activa, inactiva, o en otro estado.
+   */
   estatus: string;
+
+  /**
+   * El Registro Federal de Contribuyentes (RFC) de la empresa submanufacturera.
+   * Es un identificador único utilizado para propósitos fiscales en México.
+   */
   rfc: string;
+
+  /**
+   * La razón social de la empresa submanufacturera.
+   * Representa el nombre oficial registrado de la empresa.
+   */
   razonSocial: string;
+
+  /**
+   * La calle donde se encuentra ubicada la empresa submanufacturera.
+   * Parte de la dirección física de la empresa.
+   */
   calle: string;
+
+  /**
+   * El número interior del edificio donde se encuentra la empresa submanufacturera.
+   * Especifica una ubicación más precisa dentro de un edificio.
+   */
   numeroInterior: string;
+
+  /**
+   * El número exterior del edificio donde se encuentra la empresa submanufacturera.
+   * Indica la ubicación del edificio en la calle.
+   */
   numeroExterior: string;
+
+  /**
+   * El código postal de la ubicación de la empresa submanufacturera.
+   * Ayuda a identificar la región específica dentro del país.
+   */
   codigoPostal: string;
+
+  /**
+   * La localidad donde se encuentra la empresa submanufacturera.
+   * Puede ser un barrio, colonia o área específica dentro de un municipio.
+   */
   localidad: string;
+
+  /**
+   * El municipio o alcaldía donde se encuentra la empresa submanufacturera.
+   * Representa una división administrativa dentro de una entidad federativa.
+   */
   municipioAlcaldia: string;
+
+  /**
+   * La entidad federativa donde se encuentra la empresa submanufacturera.
+   * Corresponde al estado dentro de México.
+   */
   entidadFederativa: string;
+
+  /**
+   * El país donde se encuentra la empresa submanufacturera.
+   * Representa la nación en la que opera la empresa.
+   */
   pais: string;
+
+  /**
+   * El número de teléfono de contacto de la empresa submanufacturera.
+   * Permite la comunicación directa con la empresa.
+   */
   telefono: string;
+
+  /**
+   * El número de fax de la empresa submanufacturera.
+   * Utilizado para enviar documentos de manera electrónica.
+   */
   fax: string;
+
+  /**
+   * La dirección de correo electrónico de la empresa submanufacturera.
+   * Permite la comunicación digital con la empresa.
+   */
   correoElectronico: string;
 }
 
@@ -83,20 +140,35 @@ export const EMPRESA_SUBMANUFACTURERA_ENCABEZADO_DE_TABLA: ConfiguracionColumna<
     },
   ];
 
-/**
- * Representa la información de una bitácora de modificaciones.
- *
- * @property tipoModificacion - El tipo de modificación realizada.
- * @property fechaModificacion - La fecha en que se realizó la modificación.
- * @property valoresAnteriores - Los valores anteriores antes de la modificación.
- * @property valoresNuevos - Los nuevos valores después de la modificación.
- *
- */
 
+/**
+ * Representa la bitácora de modificaciones realizadas en el sistema.
+ * Contiene información detallada sobre el tipo de modificación, la fecha en que se realizó,
+ * y los valores anteriores y nuevos asociados a la modificación.
+ */
 export interface Bitacora {
+  /**
+   * Tipo de modificación realizada.
+   * Ejemplo: "Actualización", "Eliminación", "Creación".
+   */
   tipoModificacion: string;
+
+  /**
+   * Fecha en la que se realizó la modificación.
+   * Formato esperado: "YYYY-MM-DD".
+   */
   fechaModificacion: string;
+
+  /**
+   * Valores anteriores antes de realizar la modificación.
+   * Representa el estado previo de los datos modificados.
+   */
   valoresAnteriores: string;
+
+  /**
+   * Valores nuevos después de realizar la modificación.
+   * Representa el estado actualizado de los datos modificados.
+   */
   valoresNuevos: string;
 }
 
@@ -128,3 +200,34 @@ export const BITACORA_ENCABEZADO_DE_TABLA: ConfiguracionColumna<Bitacora>[] = [
     orden: 4,
   },
 ];
+
+
+/**
+ * Representa los datos necesarios para realizar una modificación en el programa IMMEX.
+ * Contiene información sobre el RFC, la representación federal, el tipo de modificación y el programa a modificar.
+ */
+export interface ModificacionDatos {
+  /**
+   * El Registro Federal de Contribuyentes (RFC) de la empresa que solicita la modificación.
+   * Este campo es obligatorio y debe ser único para cada empresa.
+   */
+  rfc: string;
+
+  /**
+   * La representación federal asociada a la empresa que solicita la modificación.
+   * Indica la delegación o entidad federal correspondiente.
+   */
+  representacionFederal: string;
+
+  /**
+   * El tipo de modificación que se desea realizar en el programa IMMEX.
+   * Puede incluir opciones como alta, baja o cambio de submanufacturera.
+   */
+  tipoModificacion: string;
+
+  /**
+   * El programa IMMEX específico que se desea modificar.
+   * Este campo identifica el programa que será afectado por la solicitud.
+   */
+  modificacionPrograma: string;
+}

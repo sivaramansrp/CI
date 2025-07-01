@@ -1,12 +1,30 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DatosSolicitudComponent } from './datos-solicitud.component';
-import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { MercDesmSinMonService } from '../../services/merc-desm-sin-mon.service';
+import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MercanciasDesmontadasOSinMontarService } from '../../services/mercancias-desmontadas-o-sin-montar.service';
 import { Solicitud32501Query } from '../../estados/solicitud32501.query';
 import { Solicitud32501Store } from '../../estados/solicitud32501.store';
-import { of, Subject } from 'rxjs';
+import { of } from 'rxjs';
 import { ElementRef, NO_ERRORS_SCHEMA } from '@angular/core';
 import { Modal } from 'bootstrap';
+import { CommonModule } from '@angular/common';
+import {
+  AlertComponent,
+  AnexarDocumentosComponent,
+  BtnContinuarComponent,
+  CatalogoSelectComponent,
+  CrosslistComponent,
+  InputCheckComponent,
+  InputFechaComponent,
+  InputHoraComponent,
+  InputRadioComponent,
+  SelectPaisesComponent,
+  TablaDinamicaComponent,
+  TituloComponent,
+  WizardComponent,
+} from '@libs/shared/data-access-user/src';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
+import * as bootstrap from 'bootstrap';
 
 describe('DatosSolicitudComponent', () => {
   let component: DatosSolicitudComponent;
@@ -17,200 +35,377 @@ describe('DatosSolicitudComponent', () => {
 
   beforeEach(async () => {
     mercDesmSinMonServiceMock = {
-      obtenerAvisoDelCatalogo: jest.fn().mockReturnValue(of({})),
-      obtenerOperacionDeImportacion: jest.fn().mockReturnValue(of([])),
+      obtenerAvisoDelCatalogo: jest.fn(() =>
+        of({
+          cveFraccionArancelaria: {
+            catalogos: [
+              {
+                id: 1,
+                descripcion: '01031001-Reproductors de raza..',
+              },
+              {
+                id: 2,
+                descripcion: '01031002-Reproductors de raza..',
+              },
+              {
+                id: 3,
+                descripcion: '01031003-Reproductors de raza..',
+              },
+            ],
+            labelNombre: 'Fracción arancelaria',
+            required: true,
+            primerOpcion: 'Seleccione una opción',
+          },
+          entidadFederativa: {
+            catalogos: [
+              {
+                id: 1,
+                descripcion: 'MEXICO-1',
+              },
+              {
+                id: 2,
+                descripcion: 'MEXICO-2',
+              },
+              {
+                id: 3,
+                descripcion: 'MEXICO-3',
+              },
+            ],
+            labelNombre: 'Entidad federativa',
+            required: true,
+            primerOpcion: 'Seleccione una opción',
+          },
+          delegacionMunicipio: {
+            catalogos: [
+              {
+                id: 1,
+                descripcion: 'ATENCO-1',
+              },
+              {
+                id: 2,
+                descripcion: 'ATENCO-2',
+              },
+              {
+                id: 3,
+                descripcion: 'ATENCO-3',
+              },
+            ],
+            labelNombre: 'Alcaldía o municipio',
+            required: true,
+            primerOpcion: 'Seleccione una opción',
+          },
+          colonia: {
+            catalogos: [
+              {
+                id: 1,
+                descripcion: 'LA NORIA-1',
+              },
+              {
+                id: 2,
+                descripcion: 'LA NORIA-2',
+              },
+              {
+                id: 3,
+                descripcion: 'LA NORIA-3',
+              },
+            ],
+            labelNombre: 'Colonia',
+            required: true,
+            primerOpcion: 'Seleccione una opción',
+          },
+          aduanaDeImportacion: {
+            catalogos: [
+              {
+                id: 1,
+                descripcion: 'Test-1',
+              },
+              {
+                id: 2,
+                descripcion: 'Test-2',
+              },
+              {
+                id: 3,
+                descripcion: 'Test-3',
+              },
+            ],
+            labelNombre: 'Aduana de importación',
+            required: true,
+            primerOpcion: 'Seleccione una opción',
+          },
+          opcionTipoDeDocumento: {
+            labelNombre: 'Tipo de documento',
+            required: false,
+            primerOpcion: 'Seleccione un tipo de documento',
+            catalogos: [
+              {
+                id: 1,
+                descripcion: 'Manifiesto',
+              },
+              {
+                id: 2,
+                descripcion: 'ID Oficial',
+              },
+              {
+                id: 3,
+                descripcion: 'Actas',
+              },
+              {
+                id: 4,
+                descripcion: 'Poderes',
+              },
+              {
+                id: 5,
+                descripcion: 'Otros',
+              },
+            ],
+          },
+        })
+      ),
+      obtenerOperacionDeImportacion: jest.fn(() =>
+        of([
+          {
+            agenteAduanal: '1234',
+            rfc: 'LEQ18101314S7',
+            numeroDePedimento: '12345678',
+            aduanaDeImportacion: 'ENSENADA',
+          },
+        ])
+      ),
+      obtenerAvisoOpcionesDeRadio: jest.fn(() =>
+        of({
+          opcionesDeRadio: [
+            {
+              label: 'Importación',
+              value: 'TAV.IMP',
+            },
+            {
+              label: 'Montaje',
+              value: 'TAV.MON',
+            },
+          ],
+          required: false,
+        })
+      ),
     };
 
     solicitud32501QueryMock = {
-      seleccionarSolicitud$: of({}),
+      seleccionarSolicitud$: of({
+        adace: '',
+        fechaIniExposicion: '',
+        ideGenerica1: '',
+        idTransaccionVU: '',
+        cveFraccionArancelaria: '',
+        nico: '',
+        peso: '',
+        valorUSD: '',
+        descripcionMercancia: '',
+        nombreComercial: '',
+        entidadFederativa: '',
+        delegacionMunicipio: '',
+        colonia: '',
+        calle: '',
+        numeroExterior: '',
+        numeroInterior: '',
+        codigoPostal: '',
+        patente: '',
+        rfc: '',
+        pedimento: '',
+        aduana: '',
+      }),
     };
 
     solicitud32501StoreMock = {
-      actualizarCveFraccionArancelaria: jest.fn().mockReturnValue(new Subject()),
-      actualizarEntidadFederativa: jest.fn(),
-      actualizarDelegacionMunicipio: jest.fn(),
-      actualizarColonia: jest.fn(),
-      actualizarIdTransaccionVU: jest.fn(),
-      actualizarNico: jest.fn(),
-      actualizarPeso: jest.fn(),
-      actualizarValorUSD: jest.fn(),
-      actualizarDescripcionMercancia: jest.fn(),
-      actualizarCodigoPostal: jest.fn(),
-      actualizarNumeroInterior: jest.fn(),
-      actualizarNumeroExterior: jest.fn(),
-      actualizarCalle: jest.fn(),
-      actualizarNombreComercial: jest.fn(),
+      establecerDatos: jest.fn(() => of({})),
     };
 
     await TestBed.configureTestingModule({
-      declarations: [DatosSolicitudComponent],
-      imports: [ReactiveFormsModule],
+      imports: [
+        DatosSolicitudComponent,
+        ReactiveFormsModule,
+        CommonModule,
+        FormsModule,
+        WizardComponent,
+        BtnContinuarComponent,
+        InputCheckComponent,
+        InputFechaComponent,
+        InputHoraComponent,
+        CrosslistComponent,
+        TituloComponent,
+        SelectPaisesComponent,
+        AnexarDocumentosComponent,
+        AlertComponent,
+        CatalogoSelectComponent,
+        InputRadioComponent,
+        TablaDinamicaComponent,
+      ],
       providers: [
         FormBuilder,
-        { provide: MercDesmSinMonService, useValue: mercDesmSinMonServiceMock },
+        provideHttpClientTesting(),
+        {
+          provide: MercanciasDesmontadasOSinMontarService,
+          useValue: mercDesmSinMonServiceMock,
+        },
         { provide: Solicitud32501Query, useValue: solicitud32501QueryMock },
         { provide: Solicitud32501Store, useValue: solicitud32501StoreMock },
       ],
       schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
-  });
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(DatosSolicitudComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize the form on ngOnInit', () => {
+  it('debe inicializar el formulario en ngOnInit', () => {
     component.ngOnInit();
     expect(component.formAviso).toBeDefined();
     expect(component.formAviso.get('adace')).toBeTruthy();
     expect(component.formAviso.get('fechaIniExposicion')).toBeTruthy();
   });
 
-  it('should call obtenerAvisoDelCatalogo on initialization', () => {
-    const spy = jest.spyOn(
-      mercDesmSinMonServiceMock,
-      'obtenerAvisoDelCatalogo'
-    );
-    component.ngOnInit();
-    expect(spy).toHaveBeenCalled();
+  it('debe llamar obtenerAvisoDelCatalogo al inicializar', () => {
+    jest.spyOn(mercDesmSinMonServiceMock, 'obtenerAvisoDelCatalogo');
+    component.obtenerAvisoDelCatalogo();
+    expect(mercDesmSinMonServiceMock.obtenerAvisoDelCatalogo).toHaveBeenCalled();
   });
 
-  it('should call obtenerOperacionDeImportacion on initialization', () => {
-    const spy = jest.spyOn(
-      mercDesmSinMonServiceMock,
-      'obtenerOperacionDeImportacion'
-    );
-    component.ngOnInit();
-    expect(spy).toHaveBeenCalled();
+  it('debe llamar obtenerOperacionDeImportacion al inicializar', () => {
+    jest.spyOn(mercDesmSinMonServiceMock, 'obtenerOperacionDeImportacion');
+    component.obtenerOperacionDeImportacion();
+    expect(mercDesmSinMonServiceMock.obtenerOperacionDeImportacion).toHaveBeenCalled();
   });
 
-  it('should update tipoAviso when setTipoDeAviso is called', () => {
+  it('debe llamar obtenerAvisoOpcionesDeRadio y establecer avisoOpcionesDeRadio', () => {
+    jest.spyOn(mercDesmSinMonServiceMock, 'obtenerAvisoOpcionesDeRadio');
+    component.obtenerAvisoOpcionesDeRadio();
+    expect(mercDesmSinMonServiceMock.obtenerAvisoOpcionesDeRadio).toHaveBeenCalled();
+  });
+
+  it('debe actualizar tipoAviso cuando se llama setTipoDeAviso', () => {
     component.setTipoDeAviso('TAV.IMP');
     expect(component.tipoAviso).toBe('TAV.IMP');
+    expect(solicitud32501StoreMock.establecerDatos).toHaveBeenCalledWith({ ideGenerica1: 'TAV.IMP' });
   });
 
-  it('should call actualizarCveFraccionArancelaria on store when triggered', () => {
-    const catalogoMock = { id: 1, descripcion: 'Test' };
-    component.actualizarCveFraccionArancelaria(catalogoMock);
-    expect(
-      solicitud32501StoreMock.actualizarCveFraccionArancelaria
-    ).toHaveBeenCalledWith(1);
+  it('debe actualizar descripcionMercancia usando establecerValoresEnEstado', () => {
+    component.formAviso.get('descripcionMercancia')?.setValue('Descripción de prueba');
+    component.establecerValoresEnEstado(component.formAviso, 'descripcionMercancia');
+    expect(solicitud32501StoreMock.establecerDatos).toHaveBeenCalledWith({ descripcionMercancia: 'Descripción de prueba' });
   });
 
-  it('should call actualizarEntidadFederativa on store when triggered', () => {
-    const catalogoMock = { id: 1, descripcion: 'Test' };
-    component.actualizarEntidadFederativa(catalogoMock);
-    expect(
-      solicitud32501StoreMock.actualizarEntidadFederativa
-    ).toHaveBeenCalledWith(1);
+  it('debe actualizar nombreComercial usando establecerValoresEnEstado', () => {
+    component.formAviso.get('nombreComercial')?.setValue('Comercial Test');
+    component.establecerValoresEnEstado(component.formAviso, 'nombreComercial');
+    expect(solicitud32501StoreMock.establecerDatos).toHaveBeenCalledWith({ nombreComercial: 'Comercial Test' });
   });
 
-  it('should call actualizarDelegacionMunicipio on store when triggered', () => {
-    const catalogoMock = { id: 1, descripcion: 'Test' };
-    component.actualizarDelegacionMunicipio(catalogoMock);
-    expect(
-      solicitud32501StoreMock.actualizarDelegacionMunicipio
-    ).toHaveBeenCalledWith(1);
+  it('debe actualizar calle usando establecerValoresEnEstado', () => {
+    component.formAviso.get('calle')?.setValue('Calle Test');
+    component.establecerValoresEnEstado(component.formAviso, 'calle');
+    expect(solicitud32501StoreMock.establecerDatos).toHaveBeenCalledWith({ calle: 'Calle Test' });
   });
 
-  it('should call actualizarColonia on store when triggered', () => {
-    const catalogoMock = { id: 1, descripcion: 'Test' };
-    component.actualizarColonia(catalogoMock);
-    expect(solicitud32501StoreMock.actualizarColonia).toHaveBeenCalledWith(1);
+  it('debe actualizar numeroExterior usando establecerValoresEnEstado', () => {
+    component.formAviso.get('numeroExterior')?.setValue('123');
+    component.establecerValoresEnEstado(component.formAviso, 'numeroExterior');
+    expect(solicitud32501StoreMock.establecerDatos).toHaveBeenCalledWith({ numeroExterior: '123' });
   });
 
-  it('should clean up subscriptions on ngOnDestroy', () => {
-    const spy = jest.spyOn(component['destroyed$'], 'next');
+  it('debe actualizar numeroInterior usando establecerValoresEnEstado', () => {
+    component.formAviso.get('numeroInterior')?.setValue('A1');
+    component.establecerValoresEnEstado(component.formAviso, 'numeroInterior');
+    expect(solicitud32501StoreMock.establecerDatos).toHaveBeenCalledWith({ numeroInterior: 'A1' });
+  });
+
+  it('debe actualizar codigoPostal usando establecerValoresEnEstado', () => {
+    component.formAviso.get('codigoPostal')?.setValue('54321');
+    component.establecerValoresEnEstado(component.formAviso, 'codigoPostal');
+    expect(solicitud32501StoreMock.establecerDatos).toHaveBeenCalledWith({ codigoPostal: '54321' });
+  });
+
+  it('debe actualizar entidadFederativa usando establecerValoresEnEstado', () => {
+    component.formAviso.get('entidadFederativa')?.setValue(1);
+    component.establecerValoresEnEstado(component.formAviso, 'entidadFederativa');
+    expect(solicitud32501StoreMock.establecerDatos).toHaveBeenCalledWith({ entidadFederativa: 1 });
+  });
+
+  it('debe actualizar delegacionMunicipio usando establecerValoresEnEstado', () => {
+    component.formAviso.get('delegacionMunicipio')?.setValue(2);
+    component.establecerValoresEnEstado(component.formAviso, 'delegacionMunicipio');
+    expect(solicitud32501StoreMock.establecerDatos).toHaveBeenCalledWith({ delegacionMunicipio: 2 });
+  });
+
+  it('debe actualizar colonia usando establecerValoresEnEstado', () => {
+    component.formAviso.get('colonia')?.setValue(3);
+    component.establecerValoresEnEstado(component.formAviso, 'colonia');
+    expect(solicitud32501StoreMock.establecerDatos).toHaveBeenCalledWith({ colonia: 3 });
+  });
+
+  it('debe actualizar cveFraccionArancelaria usando establecerValoresEnEstado', () => {
+    component.formAviso.get('cveFraccionArancelaria')?.setValue(1);
+    component.establecerValoresEnEstado(component.formAviso, 'cveFraccionArancelaria');
+    expect(solicitud32501StoreMock.establecerDatos).toHaveBeenCalledWith({ cveFraccionArancelaria: 1 });
+  });
+
+  it('debe actualizar idTransaccionVU usando actualizarNumeroValor', () => {
+    const EVENT = { target: { value: '1234567890123456789012345' } } as any;
+    component.actualizarNumeroValor('idTransaccionVU', EVENT);
+    expect(solicitud32501StoreMock.establecerDatos).toHaveBeenCalledWith({ idTransaccionVU: '1234567890123456789012345' });
+  });
+
+  it('debe actualizar nico usando actualizarNumeroValor', () => {
+    const EVENT = { target: { value: '12' } } as any;
+    component.actualizarNumeroValor('nico', EVENT);
+    expect(solicitud32501StoreMock.establecerDatos).toHaveBeenCalledWith({ nico: '12' });
+  });
+
+  it('debe actualizar peso usando actualizarNumeroValor', () => {
+    const EVENT = { target: { value: '100.50' } } as any;
+    component.actualizarNumeroValor('peso', EVENT);
+    expect(solicitud32501StoreMock.establecerDatos).toHaveBeenCalledWith({ peso: '100.50' });
+  });
+
+  it('debe actualizar valorUSD usando actualizarNumeroValor', () => {
+    const EVENT = { target: { value: '200.75' } } as any;
+    component.actualizarNumeroValor('valorUSD', EVENT);
+    expect(solicitud32501StoreMock.establecerDatos).toHaveBeenCalledWith({ valorUSD: '200.75' });
+  });
+
+  it('debe limpiar las suscripciones en ngOnDestroy', () => {
+    const SPY = jest.spyOn(component['destroyed$'], 'next');
     component.ngOnDestroy();
-    expect(spy).toHaveBeenCalled();
+    expect(SPY).toHaveBeenCalled();
   });
 
-  it('should validate form fields correctly', () => {
-    const control = component.formAviso.get('fechaIniExposicion');
-    control?.setValue('');
-    control?.markAsTouched();
-    expect(component.noEsValido('fechaIniExposicion')).toBe(true);
-  });
-
-  it('should call actualizarIdTransaccionVU on store when triggered', () => {
-    const eventMock = { target: { value: '12345' } } as unknown as Event;
-    component.actualizarIdTransaccionVU(eventMock);
-    expect(solicitud32501StoreMock.actualizarIdTransaccionVU).toHaveBeenCalledWith('12345');
-  });
-
-  it('should call actualizarNico on store when triggered', () => {
-    const eventMock = { target: { value: '67890' } } as unknown as Event;
-    component.actualizarNico(eventMock);
-    expect(solicitud32501StoreMock.actualizarNico).toHaveBeenCalledWith('67890');
-  });
-
-  it('should call actualizarPeso on store when triggered', () => {
-    const eventMock = { target: { value: '100.50' } } as unknown as Event;
-    component.actualizarPeso(eventMock);
-    expect(solicitud32501StoreMock.actualizarPeso).toHaveBeenCalledWith('100.50');
-  });
-
-  it('should call actualizarValorUSD on store when triggered', () => {
-    const eventMock = { target: { value: '200.75' } } as unknown as Event;
-    component.actualizarValorUSD(eventMock);
-    expect(solicitud32501StoreMock.actualizarValorUSD).toHaveBeenCalledWith('200.75');
-  });
-
-  it('should call actualizarDescripcionMercancia on store when triggered', () => {
-    const eventMock = { target: { value: 'Test Description' } } as unknown as Event;
-    component.actualizarDescripcionMercancia(eventMock);
-    expect(solicitud32501StoreMock.actualizarDescripcionMercancia).toHaveBeenCalledWith('Test Description');
-  });
-
-  it('should call actualizarCodigoPostal on store when triggered', () => {
-    const eventMock = { target: { value: '12345' } } as unknown as Event;
-    component.actualizarCodigoPostal(eventMock);
-    expect(solicitud32501StoreMock.actualizarCodigoPostal).toHaveBeenCalledWith('12345');
-  });
-
-  it('should call actualizarNumeroInterior on store when triggered', () => {
-    const eventMock = { target: { value: 'A1' } } as unknown as Event;
-    component.actualizarNumeroInterior(eventMock);
-    expect(solicitud32501StoreMock.actualizarNumeroInterior).toHaveBeenCalledWith('A1');
-  });
-
-  it('should call actualizarNumeroExterior on store when triggered', () => {
-    const eventMock = { target: { value: 'B2' } } as unknown as Event;
-    component.actualizarNumeroExterior(eventMock);
-    expect(solicitud32501StoreMock.actualizarNumeroExterior).toHaveBeenCalledWith('B2');
-  });
-
-  it('should call actualizarCalle on store when triggered', () => {
-    const eventMock = { target: { value: 'Main Street' } } as unknown as Event;
-    component.actualizarCalle(eventMock);
-    expect(solicitud32501StoreMock.actualizarCalle).toHaveBeenCalledWith('Main Street');
-  });
-
-  it('should call actualizarNombreComercial on store when triggered', () => {
-    const eventMock = { target: { value: 'Test Business' } } as unknown as Event;
-    component.actualizarNombreComercial(eventMock);
-    expect(solicitud32501StoreMock.actualizarNombreComercial).toHaveBeenCalledWith('Test Business');
-  });
-
-  it('should show modal when modificarOperacionImp is called', () => {
-    const modalMock = { nativeElement: document.createElement('div') };
-    component.modalElement = modalMock as ElementRef;
-    const modalInstanceSpy = jest.spyOn(Modal.prototype, 'show');
+  it('debe mostrar el modal cuando se llama modificarOperacionImp', () => {
+    const MODAL_MOCK = { nativeElement: document.createElement('div') };
+    component.modalElement = MODAL_MOCK as ElementRef;
+    const showSpy = jest.fn();
+    const MODAL_INSTANCE_MOCK = { show: showSpy };
+    const MODAL_CONSTRUCTOR_SPY = jest
+      .spyOn(bootstrap, 'Modal')
+      .mockImplementation(() => MODAL_INSTANCE_MOCK as unknown as Modal);
     component.modificarOperacionImp();
-    expect(modalInstanceSpy).toHaveBeenCalled();
+    expect(MODAL_CONSTRUCTOR_SPY).toHaveBeenCalledWith(MODAL_MOCK.nativeElement);
+    expect(showSpy).toHaveBeenCalled();
+    MODAL_CONSTRUCTOR_SPY.mockRestore();
   });
 
-  it('should show modal when agregarOperacionImp is called', () => {
-    const modalMock = { nativeElement: document.createElement('div') };
-    component.modalElement = modalMock as ElementRef;
-    const modalInstanceSpy = jest.spyOn(Modal.prototype, 'show');
+  it('debe mostrar el modal cuando se llama agregarOperacionImp', () => {
+    const MODAL_MOCK = { nativeElement: document.createElement('div') };
+    component.modalElement = MODAL_MOCK as ElementRef;
+    const showSpy = jest.fn();
+    const MODAL_INSTANCE_MOCK = { show: showSpy };
+    const MODAL_CONSTRUCTOR_SPY = jest
+      .spyOn(bootstrap, 'Modal')
+      .mockImplementation(() => MODAL_INSTANCE_MOCK as unknown as Modal);
     component.agregarOperacionImp();
-    expect(modalInstanceSpy).toHaveBeenCalled();
+    expect(MODAL_CONSTRUCTOR_SPY).toHaveBeenCalledWith(MODAL_MOCK.nativeElement);
+    expect(showSpy).toHaveBeenCalled();
+    MODAL_CONSTRUCTOR_SPY.mockRestore();
   });
 });

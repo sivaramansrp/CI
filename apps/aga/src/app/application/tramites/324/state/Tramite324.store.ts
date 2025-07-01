@@ -93,54 +93,16 @@ export class Tramite324Store extends Store<Solicitud324State> {
   }
 
   /**
-   * Agrega un nuevo acceso a la lista de accesos configurados.
-   * @param newAccesos Objeto que representa el nuevo acceso a agregar.
+   * Agrega uno o varios accesos a la lista de accesos configurados.
+   * @param newAccesos Objeto o arreglo que representa el/los nuevo(s) acceso(s) a agregar.
    */
-  public addAccesosDatos(newAccesos: AccesosTabla): void {
+  public addAccesosDatos(newAccesos: AccesosTabla | AccesosTabla[]): void {
     this.update((state) => ({
       ...state,
-      AccesosDatos: [...state.AccesosDatos, newAccesos],
+      AccesosDatos: Array.isArray(newAccesos)
+        ? [...state.AccesosDatos, ...newAccesos] 
+        : [...state.AccesosDatos, newAccesos],
     }));
-  }
-
-  /**
-   * Actualiza el RFC en el estado.
-   * @param rfc Nuevo valor del RFC.
-   */
-  public setRFC(rfc: string): void {
-    this.update((state) => ({ ...state, rfc }));
-  }
-
-  /**
-   * Actualiza la aduana en el estado.
-   * @param aduana Nuevo valor de la aduana.
-   */
-  public setAduana(aduana: string): void {
-    this.update((state) => ({ ...state, aduana }));
-  }
-
-  /**
-   * Actualiza el sistema en el estado.
-   * @param sistema Nuevo valor del sistema.
-   */
-  public setSistema(sistema: string): void {
-    this.update((state) => ({ ...state, sistema }));
-  }
-
-  /**
-   * Actualiza el rol en el estado.
-   * @param rol Nuevo valor del rol.
-   */
-  public setRol(rol: string): void {
-    this.update((state) => ({ ...state, rol }));
-  }
-
-  /**
-   * Actualiza el tipo de movimiento en el estado.
-   * @param tipoMovimiento Nuevo valor del tipo de movimiento.
-   */
-  public setTipoMovimiento(tipoMovimiento: string): void {
-    this.update((state) => ({ ...state, tipoMovimiento }));
   }
 
   /**

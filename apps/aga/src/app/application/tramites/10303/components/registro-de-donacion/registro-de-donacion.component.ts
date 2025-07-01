@@ -3,10 +3,10 @@ import { Subject, map, merge, takeUntil } from 'rxjs';
 import { Modal } from 'bootstrap';
 
 import { DonacionesExtranjerasService } from '../../services/donaciones-extranjeras/donaciones-extranjeras.service';
-import mercanciaTable from 'libs/shared/theme/assets/json/10303/mercancia-table.json';
+import mercanciaTable from '@libs/shared/theme/assets/json/10303/mercancia-table.json';
 
 import { BasicRequerimientos, BasicRequerimientosRespuesta, Manifiestos, ManifiestosRespuesta } from '../../models/donaciones-extranjeras.model';
-import { CATALOGOS_ID, Catalogo } from '@ng-mf/data-access-user';
+import { Catalogo, ConsultaioQuery, TableBodyData } from '@ng-mf/data-access-user';
 import { FECHA_CADUCIDAD, OPCIONES_DE_BOTON_DE_RADIO, PANELS, TEXTOS } from '../../constantes/donaciones-extranjeras.enum';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { RegistroDeDonacion10303State, Tramite10303Store } from '../../estados/tramites/tramite10303.store';
@@ -107,7 +107,7 @@ export class RegistroDeDonacionComponent implements OnInit, OnDestroy {
   /**
    * Cuerpo de la tabla de mercancías.
    */
-  public mercanciaBodyData: unknown = [];
+  public mercanciaBodyData: TableBodyData[] = [];
 
   /**
    * Datos de la tabla de mercancía.
@@ -183,24 +183,75 @@ export class RegistroDeDonacionComponent implements OnInit, OnDestroy {
   entradaArchivo!: HTMLInputElement;
 
   /**
-   * Constructor del componente.
-   * 
-   * @param donacionesExtranjerasService Servicio para gestionar las donaciones extranjeras.
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  formularioDeshabilitado!: boolean;
+
+  /**
+   * Constructor del componente RegistroDeDonacionComponent.
+   * @param donacionesExtranjerasService donacionesExtranjerasService para manejar las donaciones extranjeras.
+   * @param fb FormBuilder para crear formularios reactivos.
+   * @param tramite10303Store tramite10303Store para manejar el estado del trámite 10303.
+   * @param tramite10303Query tramite10303Query para consultar el estado del trámite 10303.
+   * @param validacionesService validacionesService para validar formularios.
+   * @param consultaioQuery consultaioQuery para consultar el estado de la consulta.
    */
   constructor(
     private donacionesExtranjerasService: DonacionesExtranjerasService,
     private fb: FormBuilder,
     private tramite10303Store: Tramite10303Store,
     private tramite10303Query: Tramite10303Query,
-    private validacionesService: ValidacionesFormularioService
+    private validacionesService: ValidacionesFormularioService,
+    private consultaioQuery: ConsultaioQuery,
   ) {
-    // El constructor se utiliza para la inyección de dependencias   
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destruirNotificador$),
+        map((seccionState) => {
+          this.formularioDeshabilitado = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
   }
 
   /**
-   * Hook del ciclo de vida que se llama después de que las propiedades enlazadas a datos de una directiva se inicializan.
+   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
    */
   ngOnInit(): void {
+    this.inicializarEstadoFormulario();
+  }
+
+  /**
+   * Determina si se debe cargar un formulario nuevo o uno existente.
+   * Ejecuta la lógica correspondiente según el estado del componente.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.formularioDeshabilitado) {
+      this.guardarDatosFormulario();
+    } else {
+      this.crearFormulario();
+    }
+  }
+
+  /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormulario(): void {
+    this.crearFormulario();
+    
+    if (this.formularioDeshabilitado) {
+      this.registroDonacionForm.disable();
+      this.agregarMercanciasForm.disable();
+    } else if (!this.formularioDeshabilitado) {
+      this.registroDonacionForm.enable();
+      this.agregarMercanciasForm.enable();
+    }
+  }
+
+  crearFormulario(): void {    
     this.inicializaCatalogos();
 
     this.obtenerBasicoRequerimientos();
@@ -387,7 +438,7 @@ export class RegistroDeDonacionComponent implements OnInit, OnDestroy {
    */
   private inicializaCatalogos(): void {
     const ADUANA$ = this.donacionesExtranjerasService
-      .getAduana(CATALOGOS_ID.CAT_ADUANA)
+      .getAduana()
       .pipe(
         map((resp) => {
           this.aduana = resp.data;
@@ -395,7 +446,7 @@ export class RegistroDeDonacionComponent implements OnInit, OnDestroy {
       );
 
     const DESTINO_DONACION$ = this.donacionesExtranjerasService
-      .getDestinoDonacion(CATALOGOS_ID.CAT_DESTINO_DONACION)
+      .getDestinoDonacion()
       .pipe(
         map((resp) => {
           this.destinoDonacion = resp.data;
@@ -403,7 +454,7 @@ export class RegistroDeDonacionComponent implements OnInit, OnDestroy {
       );
 
     const TIPO_DE_MERCANCIA$ = this.donacionesExtranjerasService
-      .getTipoDeMercancia(CATALOGOS_ID.CAT_TIPO_DE_MERCANCIA)
+      .getTipoDeMercancia()
       .pipe(
         map((resp) => {
           this.tipoDeMercancia = resp.data;
@@ -411,7 +462,7 @@ export class RegistroDeDonacionComponent implements OnInit, OnDestroy {
       );
 
     const UNIDAD_MEDIDA$ = this.donacionesExtranjerasService
-      .getUnidadMedida(CATALOGOS_ID.CAT_UMC)
+      .getUnidadMedida()
       .pipe(
         map((resp) => {
           this.unidadMedida = resp.data;
@@ -419,7 +470,7 @@ export class RegistroDeDonacionComponent implements OnInit, OnDestroy {
       );
 
     const UMT$ = this.donacionesExtranjerasService
-      .getUmt(CATALOGOS_ID.CAT_UMT)
+      .getUmt()
       .pipe(
         map((resp) => {
           this.UMT = resp.data;
@@ -427,7 +478,7 @@ export class RegistroDeDonacionComponent implements OnInit, OnDestroy {
       );
 
     const PAIS_PROCEDENCIA_OTRO$ = this.donacionesExtranjerasService
-      .getProcedenciaOtro(CATALOGOS_ID.CAT_PROCEDENCIA_OTRO)
+      .getProcedenciaOtro()
       .pipe(
         map((resp) => {
           this.paisProcedenciaOtro = resp.data;
@@ -435,7 +486,7 @@ export class RegistroDeDonacionComponent implements OnInit, OnDestroy {
       );
 
     const CONDICION_MERCANCIA$ = this.donacionesExtranjerasService
-      .getCondicionMercancia(CATALOGOS_ID.CAT_CONDICION_MERCANCIA)
+      .getCondicionMercancia()
       .pipe(
         map((resp) => {
           this.condicionMercancia = resp.data;
@@ -443,7 +494,7 @@ export class RegistroDeDonacionComponent implements OnInit, OnDestroy {
       );
 
     const PAIS_ORIGEN_MEDICAMENTO$ = this.donacionesExtranjerasService
-      .getPaisOrigenMedicamento(CATALOGOS_ID.CAT_PAIS_ORIGEN_MEDICAMENTO)
+      .getPaisOrigenMedicamento()
       .pipe(
         map((resp) => {
           this.paisOrigenMedicamento = resp.data;
@@ -451,7 +502,7 @@ export class RegistroDeDonacionComponent implements OnInit, OnDestroy {
       );
 
     const PAIS_PROCEDENCIA_MEDICAMENTO$ = this.donacionesExtranjerasService
-      .getPaisProcedenciaMedicamento(CATALOGOS_ID.CAT_PAIS_PROCEDENCIA_MEDICAMENTO)
+      .getPaisProcedenciaMedicamento()
       .pipe(
         map((resp) => {
           this.paisProcedenciaMedicamento = resp.data;

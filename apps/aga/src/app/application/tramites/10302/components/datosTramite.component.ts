@@ -1,4 +1,19 @@
-import { CommonModule } from '@angular/common';
+import {
+  AlertComponent,
+  CatalogoSelectComponent,
+  InputCheckComponent,
+  REGEX_POSTAL,
+  REGEX_TELEFONO_DIGITOS,
+  TableBodyData,
+  TableComponent,
+  TituloComponent,
+  ValidacionesFormularioService,
+} from '@libs/shared/data-access-user/src';
+import {
+  Catalogo,
+  Solicitud10302State,
+  Tramite10302Store,
+} from '../estados/tramite10302.store';
 import {
   Component,
   ElementRef,
@@ -6,6 +21,7 @@ import {
   OnInit,
   ViewChild,
 } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import {
   FormBuilder,
   FormGroup,
@@ -13,27 +29,13 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Modal } from 'bootstrap';
-import { map, merge, Subject, takeUntil } from 'rxjs';
-import {
-  AlertComponent,
-  CatalogoSelectComponent,
-  InputCheckComponent,
-  REGEX_POSTAL,
-  REGEX_TELEFONO_DIGITOS,
-  TableComponent,
-  TituloComponent,
-  ValidacionesFormularioService,
-} from '@libs/shared/data-access-user/src';
-import mercanciaTable from 'libs/shared/theme/assets/json/10302/mercancia-table.json';
-import { datosDelMercancia } from '../models/exencion-impuestos.model';
+import { Subject, map, merge, takeUntil } from 'rxjs';
+import { CommonModule } from '@angular/common';
+import { DatosDelMercancia } from '../models/exencion-impuestos.model';
 import { ExencionImpuestosService } from '../services/exencion-impuestos.service';
-import {
-  Catalogo,
-  Solicitud10302State,
-  Tramite10302Store,
-} from '../estados/tramite10302.store';
+import { Modal } from 'bootstrap';
 import { Tramite10302Query } from '../estados/tramite10302.query';
+import mercanciaTable from '@libs/shared/theme/assets/json/10302/mercancia-table.json';
 
 /**
  * Componente que representa la funcionalidad de datos del trámite.
@@ -83,7 +85,7 @@ export class DatosTramiteComponent implements OnInit, OnDestroy {
   /**
    * Cuerpo de la tabla de mercancías.
    */
-  public mercanciaBodyData: unknown = [];
+  public mercanciaBodyData: TableBodyData[] = [];
 
   /**
    * Datos de la tabla de mercancías.
@@ -155,7 +157,20 @@ export class DatosTramiteComponent implements OnInit, OnDestroy {
   /**
    * Datos de las mercancías.
    */
-  public datosDelMercancia: datosDelMercancia[] = [];
+  public datosDelMercancia: DatosDelMercancia[] = [];
+
+  /**
+   * @property {ConsultaioState} consultaDatos
+   * @description Estado actual de la consulta, que contiene información relacionada con el trámite y el solicitante.
+   */
+  consultaDatos!: ConsultaioState;
+
+  /**
+   * @property {boolean} soloLectura
+   * @description Indica si el formulario o los campos están en modo de solo lectura.
+   * @default false
+   */
+  esFormularioSoloLectura: boolean = false;
 
   /**
    * Constructor del componente.
@@ -170,7 +185,8 @@ export class DatosTramiteComponent implements OnInit, OnDestroy {
     private store: Tramite10302Store,
     private query: Tramite10302Query,
     public fb: FormBuilder,
-    private validacionesService: ValidacionesFormularioService
+    private validacionesService: ValidacionesFormularioService,
+    private consultaioQuery: ConsultaioQuery
   ) {}
 
   /**
@@ -178,12 +194,21 @@ export class DatosTramiteComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.inicializaCatalogos();
-
     this.query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.solicitudState = seccionState;
+        })
+      )
+      .subscribe();
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.consultaDatos = seccionState;
+          this.esFormularioSoloLectura = this.consultaDatos.readonly;
+          this.inicializarEstadoFormulario();
         })
       )
       .subscribe();
@@ -269,8 +294,8 @@ export class DatosTramiteComponent implements OnInit, OnDestroy {
           Validators.required,
         ],
         razonSocial: [
-          { value: '', disabled: true },
-          [this.solicitudState?.razonSocial, Validators.required],
+          { value: this.solicitudState?.razonSocial, disabled: true },
+          [Validators.required],
         ],
         correoElectronicoOpcional: [
           this.solicitudState?.correoElectronicoOpcional,
@@ -281,33 +306,27 @@ export class DatosTramiteComponent implements OnInit, OnDestroy {
           [Validators.required, Validators.maxLength(30)],
         ],
         calle: [
-          { value: '', disabled: true },
-          this.solicitudState?.calle,
+          { value: this.solicitudState?.calle, disabled: true },
           [Validators.required, Validators.maxLength(80)],
         ],
         numeroExterior: [
-          { value: '', disabled: true },
-          this.solicitudState?.numeroExterior,
+          { value: this.solicitudState?.numeroExterior, disabled: true },
           [Validators.required, Validators.maxLength(40)],
         ],
         numeroInterior: [
-          { value: '', disabled: true },
-          this.solicitudState?.numeroInterior,
+          { value: this.solicitudState?.numeroInterior, disabled: true },
           [Validators.maxLength(30)],
         ],
         telefono: [
-          { value: '', disabled: true },
-          this.solicitudState?.telefono,
+          { value: this.solicitudState?.telefono, disabled: true },
           [Validators.required, Validators.pattern(REGEX_TELEFONO_DIGITOS)],
         ],
         correoElectronico: [
-          { value: '', disabled: true },
-          this.solicitudState?.correoElectronico,
+          { value: this.solicitudState?.correoElectronico, disabled: true },
           [Validators.required, Validators.email, Validators.maxLength(50)],
         ],
         codigoPostal: [
-          { value: '', disabled: true },
-          this.solicitudState?.codigoPostal,
+          { value: this.solicitudState?.codigoPostal, disabled: true },
           [
             Validators.required,
             Validators.pattern(REGEX_POSTAL),
@@ -315,13 +334,11 @@ export class DatosTramiteComponent implements OnInit, OnDestroy {
           ],
         ],
         estado: [
-          { value: '', disabled: true },
-          this.solicitudState?.estado,
+          { value: this.solicitudState?.estado, disabled: true },
           [Validators.required, Validators.maxLength(80)],
         ],
         colonia: [
-          { value: '', disabled: true },
-          this.solicitudState?.colonia,
+          { value: this.solicitudState?.colonia, disabled: true },
           [Validators.required, Validators.maxLength(50)],
         ],
       }),
@@ -345,6 +362,37 @@ export class DatosTramiteComponent implements OnInit, OnDestroy {
         serie: [this.solicitudState?.ano],
       }),
     });
+    this.inicializarEstadoFormulario();
+  }
+
+  /**
+  * @method inicializarEstadoFormulario
+  * @description Inicializa el estado del formulario según el modo de solo lectura.
+  * 
+  * Si la propiedad `soloLectura` es verdadera, deshabilita todos los controles del formulario.
+  * En caso contrario, habilita los controles del formulario
+  * 
+  * @returns {void}
+  */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.tramiteForm?.disable();
+    } else {
+      this.tramiteForm?.enable();
+      const CAMPOS_DESHABILITADOS = [
+        'razonSocial',
+        'calle',
+        'numeroExterior',
+        'numeroInterior',
+        'telefono',
+        'correoElectronico',
+        'codigoPostal',
+        'estado',
+        'colonia'
+      ];
+      const GRUPO = this.tramiteForm.get('exencionImpuestos');
+      CAMPOS_DESHABILITADOS.forEach(campo => GRUPO?.get(campo)?.disable());
+    }
   }
 
   /**
@@ -481,7 +529,7 @@ export class DatosTramiteComponent implements OnInit, OnDestroy {
             respuesta.datos.id = this.datosDelMercancia.length + 1;
             this.datosDelMercancia.push(respuesta.datos);
             (
-              this.store.setDelMercancia as (valor: datosDelMercancia[]) => void
+              this.store.setDelMercancia as (valor: DatosDelMercancia[]) => void
             )(this.datosDelMercancia);
             const DATOS = {
               tbodyData: [
@@ -508,6 +556,7 @@ export class DatosTramiteComponent implements OnInit, OnDestroy {
   /**
    * Limpia los datos de mercancías.
    */
+  // eslint-disable-next-line class-methods-use-this
   limpiarMercancias(): void {
     // Implementar la lógica para limpiar las mercancías.
   }

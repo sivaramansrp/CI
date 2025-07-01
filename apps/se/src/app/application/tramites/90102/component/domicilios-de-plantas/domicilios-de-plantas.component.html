@@ -1,0 +1,89 @@
+<div class="container">
+    <form [formGroup]="forma">
+        <div class="row mt-5">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label class="form-label" for="modalidad">Selecciona la modalidad</label>
+                    <input type="text" value="" class="form-control" id="modalidad"
+                        placeholder="Selecciona la modalidad" formControlName="modalidad" (change)="
+                        setValoresStore(
+                        forma,
+                        'modalidad',
+                        'setModalidad'
+                        )">
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <ng-titulo titulo="Consulta de domicilios"></ng-titulo>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <ng-alert [CONTENIDO]="TEXTO"></ng-alert>
+            </div>
+        </div>
+        <div class="row mb-5">
+            <div class="col-md-4">
+                <app-catalogo-select [catalogo]="estadoSeleccionar" [label]="'Estado'" [required]="true"
+                    formControlName="Estado" name="Estado" (change)="
+                    setValoresStore(
+                    forma,
+                    'Estado',
+                    'setEstado'
+                    )"
+                    [isDisabled]="esFormularioSoloLectura">
+                </app-catalogo-select>
+            </div>
+            <div class="col-md-4"></div>
+            <div class="col-md-4 text-end">
+                <button type="button" class="btn btn-primary" [disabled]="esFormularioSoloLectura">Mostrar domicilios</button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12" [ngClass]="{'enable-scrollbar': true}">
+                <h6>Datos de las plantas donde se realizarán las operaciones PROSEC disponibles:</h6>
+                <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX"
+                    [configuracionTabla]="plantaColumnsConfiguracion" [datos]="plantasDatos"
+                    [disableSeleccionTablaCheckBox]="esFormularioSoloLectura">
+                </app-tabla-dinamica>
+            </div>
+        </div>
+        <div class="row mb-5">
+            <div class="col-md-12 text-end mt-5">
+                <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura">Eliminar plantas</button>
+                <button class="btn btn-primary" [disabled]="esFormularioSoloLectura">Agregar plantas</button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX"
+                    [configuracionTabla]="plantaColumnsConfiguracion" [datos]="plantasDatos"
+                [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"></app-tabla-dinamica>
+            </div>
+        </div>
+        <div class="row mb-5">
+            <div class="col-md-4">
+                <app-catalogo-select [catalogo]="RepresentacionFederal" [label]="'Representación federal'"
+                    [required]="true" formControlName="RepresentacionFederal" name="RepresentacionFederal" (change)="
+                setValoresStore(
+                forma,
+                'RepresentacionFederal',
+                'setRepresentacionFederal'
+                )"
+                [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
+            </div>
+            <div class="col-md-4">
+                <app-catalogo-select [catalogo]="ActividadProductiva" [label]="'Actividad productiva'" [required]="true"
+                    formControlName="ActividadProductiva" name="ActividadProductiva" (change)="
+                setValoresStore(
+                forma,
+                'ActividadProductiva',
+                'setActividadProductiva'
+                )"
+                [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
+            </div>
+        </div>
+    </form>
+</div>

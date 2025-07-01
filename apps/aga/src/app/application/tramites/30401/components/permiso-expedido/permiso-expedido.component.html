@@ -20,11 +20,16 @@
           <div *ngIf="esInvalido('numeroFolioPermiso')" class="text-danger">
             <small
             *ngIf="
-              inicializarFormulario.controls['calle'].hasError('maxlength')
+              inicializarFormulario.controls['numeroFolioPermiso'].hasError('maxlength')
             "
           >
             La calle no puede exceder los 20 caracteres.</small
           >
+          <small
+          *ngIf="inicializarFormulario.controls['numeroFolioPermiso'].hasError('pattern')"
+        >
+          Solo se permiten números.
+        </small>
           </div>
         </div>
       </div>
@@ -56,6 +61,7 @@
           [required]="true"
           formControlName="elCapitalSocial"
             (change)="setValoresStore(inicializarFormulario, 'elCapitalSocial')"
+          [isDisabled]="esFormularioSoloLectura"
       ></lib-input-check>
 
     </div>
@@ -67,6 +73,7 @@
           [required]="true"
           formControlName="miRepresentada"
             (change)="setValoresStore(inicializarFormulario, 'miRepresentada')"
+          [isDisabled]="esFormularioSoloLectura"
       ></lib-input-check>
 
     </div>

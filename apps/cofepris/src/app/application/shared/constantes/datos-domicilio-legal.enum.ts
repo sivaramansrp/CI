@@ -1,11 +1,15 @@
 import { ConfiguracionVisibilidad } from "../models/datos-domicilio-legal.model";
+import { CrossListLable } from "../models/datos-solicitud.model";
 
 /*
  * Mensaje de alerta que informa al usuario sobre el cumplimiento de requisitos y normatividad aplicable.
  * También establece que la notificación del trámite será a través de la Ventanilla Única de Comercio Exterior.
  */
-export const MENSAJE_DE_ALERTA: string =
-  'Cumplo con los requisitos y normatividad aplicable, sin que me eximan de que la autoridad sanitaria verifique su cumplimiento, esto sin perjuicio de las sanciones en que puedo incurrir por falsedad de declaraciones dadas a una autoridad. Asimismo acepto que la notificación de este trámite, sea a través de la Ventanilla Única de Comercio Exterior por los mecanismos de la misma.';
+export const MENSAJE_DE_ALERTA = {
+  message: `
+    Cumplo con los requisitos y normatividad aplicable, sin que me eximan de que la autoridad sanitaria verifique su cumplimiento, esto sin perjuicio de las sanciones en que puedo incurrir por falsedad de declaraciones dadas a una autoridad. Asimismo acepto que la notificación de este trámite, sea a través de la Ventanilla Única de Comercio Exterior por los mecanismos de la misma. 
+    `,
+}
 
 /*
  * Lista de países disponibles para selección en el formulario.
@@ -78,3 +82,26 @@ export const DEFAULT_CONFIGURACION_VISIBILIDAD: ConfiguracionVisibilidad = {
   paisProveedor: true, // Indica si el país del proveedor es visible. Por defecto es `true`.
   paisProcedencia: true, // Indica si el país de procedencia es visible. Por defecto es `true`.
 };
+
+
+/*
+ * Configuración de la notificación de alerta para indicar la falta de comunicación con el Sistema de COFEPRIS.
+ */
+export const NUEVA_NOTIFICACION = {
+  tipoNotificacion: 'alert', // Define el tipo de notificación como alerta.
+  categoria: 'danger', // Categoría de la notificación, indica un mensaje crítico.
+  modo: 'action', // Modo en el que se presenta la notificación, requiere acción del usuario.
+  titulo: '', // Título de la notificación, actualmente vacío.
+  mensaje: 
+    'Por el momento no hay comunicación con el Sistema de COFEPRIS, favor de capturar su establecimiento.', 
+    // Mensaje que informa sobre la falta de comunicación y solicita captura de datos.
+  cerrar: false, // Indica si la notificación se puede cerrar manualmente. `false` significa que no se puede cerrar.
+  tiempoDeEspera: 2000, // Tiempo de espera antes de que la notificación desaparezca automáticamente, en milisegundos.
+  txtBtnAceptar: 'Aceptar', // Texto del botón para aceptar la notificación.
+  txtBtnCancelar: 'Cancelar', // Texto del botón para cancelar la notificación.
+};
+
+export const PAIS_DE_PROCEDENCIA_LABEL: CrossListLable = {
+    tituluDeLaIzquierda: ' País de orígen',
+    derecha: 'País(es) seleccionado(s)',
+  }
