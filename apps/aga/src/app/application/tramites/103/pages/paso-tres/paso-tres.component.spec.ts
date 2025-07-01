@@ -11,7 +11,7 @@ describe('PasoTresComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [PasoTresComponent],
+      imports: [PasoTresComponent], 
       providers: [ToastrService,
         provideToastr({
           positionClass: 'toast-top-right',
