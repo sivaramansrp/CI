@@ -75,14 +75,14 @@ describe('UsoEspicificoComponent', () => {
     jest.clearAllMocks();
   });
 
-  it('should create the component', () => {
+  it('debe crear el componente', () => {
     fixture = TestBed.createComponent(UsoEspicificoComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
     expect(component).toBeTruthy();
   });
 
-  it('should call setValoresStore and store value', () => {
+  it('debería llamar a setValoresStore y almacenar el valor', () => {
     consultaioSubject.next({ readonly: false });
     tramiteQuerySubject.next(solicitudMockState);
 
@@ -96,7 +96,7 @@ describe('UsoEspicificoComponent', () => {
   });
 
 
-  it('should validate no leading spaces', () => {
+  it('No debe validarse ningún espacio inicial', () => {
     const controlWithSpace = { value: '  Leading' } as any;
     const controlValid = { value: 'Valid' } as any;
 
@@ -104,7 +104,7 @@ describe('UsoEspicificoComponent', () => {
     expect(UsoEspicificoComponent['noLeadingSpacesValidator'](controlValid)).toBeNull();
   });
 
-  it('should unsubscribe on destroy', () => {
+  it('debería desuscribirse en destroy', () => {
     fixture = TestBed.createComponent(UsoEspicificoComponent);
     component = fixture.componentInstance;
     const nextSpy = jest.spyOn(component['destroyNotifier$'], 'next');
@@ -112,7 +112,7 @@ describe('UsoEspicificoComponent', () => {
  
   });
 
-  it('should add item to datosSocios and reset form on agregar()', () => {
+  it('debería agregar un elemento a datosSocios y restablecer el formulario en agregar()', () => {
     fixture = TestBed.createComponent(UsoEspicificoComponent);
     component = fixture.componentInstance;
     component.catalogos = [
@@ -131,7 +131,7 @@ describe('UsoEspicificoComponent', () => {
     expect(resetSpy).toHaveBeenCalled();
   });
 
-  it('should update descripción field with predefined text', () => {
+  it('debería actualizar el campo descripción con texto predefinido', () => {
     consultaioSubject.next({ readonly: false });
     tramiteQuerySubject.next(solicitudMockState);
     fixture = TestBed.createComponent(UsoEspicificoComponent);
@@ -141,7 +141,7 @@ describe('UsoEspicificoComponent', () => {
     expect(component.usoEspicificoForm.get('descripción')?.value).toContain('Descripción fraccion PROSEC');
   });
 
-  it('should return correct description from catalog', () => {
+  it('debería retornar la descripción correcta del catálogo', () => {
     fixture = TestBed.createComponent(UsoEspicificoComponent);
     component = fixture.componentInstance;
     component.catalogos = [{ id: 1, descripcion: 'Test Desc' }] as any;
@@ -153,7 +153,7 @@ describe('UsoEspicificoComponent', () => {
     expect(result).toBe('Test Desc');
   });
 
-  it('should initialize the form with controls', () => {
+  it('debería inicializar el formulario con los controles', () => {
     fixture = TestBed.createComponent(UsoEspicificoComponent);
     component = fixture.componentInstance;
     component.inicializarFormulario();
@@ -161,7 +161,7 @@ describe('UsoEspicificoComponent', () => {
     expect(component.usoEspicificoForm.contains('descripción')).toBe(true);
   });
 
-  it('should apply required validators', () => {
+  it('debería aplicar validadores requeridos', () => {
     fixture = TestBed.createComponent(UsoEspicificoComponent);
     component = fixture.componentInstance;
     component.inicializarFormulario();
@@ -173,7 +173,7 @@ describe('UsoEspicificoComponent', () => {
     expect(descripcion?.valid).toBe(false);
   });
 
-  it('should add a valid item to datosSocios and reset the form', () => {
+  it('debería agregar un elemento válido a datosSocios y restablecer el formulario', () => {
     fixture = TestBed.createComponent(UsoEspicificoComponent);
     component = fixture.componentInstance;
     component.catalogos = [{ id: 1, descripcion: 'Fracción A' }];
@@ -189,7 +189,7 @@ describe('UsoEspicificoComponent', () => {
   });
 
 
-  it('should not add duplicate fraccionArancelariaProsec entries', () => {
+  it('No se deben agregar entradas duplicadas de fraccionArancelariaProsec', () => {
     fixture = TestBed.createComponent(UsoEspicificoComponent);
     component = fixture.componentInstance;
     component.datosSocios = [{
@@ -205,7 +205,7 @@ describe('UsoEspicificoComponent', () => {
     expect(component.datosSocios.length).toBe(1);
   });
 
-  it('should set description value when obtenerRequisitosFraccionArancelariaEsquema is called', () => {
+  it('debería establecer el valor de descripción cuando se llama a obtenerRequisitosFraccionArancelariaEsquema', () => {
     fixture = TestBed.createComponent(UsoEspicificoComponent);
     component = fixture.componentInstance;
     component.inicializarFormulario();
@@ -217,7 +217,7 @@ describe('UsoEspicificoComponent', () => {
     );
   });
 
-  it('should return the correct fracción arancelaria descripción', () => {
+  it('debería retornar la descripción correcta de la fracción arancelaria', () => {
     fixture = TestBed.createComponent(UsoEspicificoComponent);
     component = fixture.componentInstance;
     component.catalogos = [
@@ -229,5 +229,28 @@ describe('UsoEspicificoComponent', () => {
     const result = component.obtenerFraccionArancelariaProsec();
     expect(result).toBe('Fracción 2');
   });
+
+it('debería deshabilitar el formulario si readonly es true en guardarDatosFormulario', () => {
+  fixture = TestBed.createComponent(UsoEspicificoComponent);
+  component = fixture.componentInstance;
+  component.consultaState = { readonly: true } as any;
+
+  component.inicializarFormulario();
+  component.guardarDatosFormulario();
+
+  expect(component.usoEspicificoForm.disabled).toBe(true);
+});
+
+it('debería habilitar el formulario si readonly es false en guardarDatosFormulario', () => {
+  fixture = TestBed.createComponent(UsoEspicificoComponent);
+  component = fixture.componentInstance;
+  component.consultaState = { readonly: false } as any;
+
+  component.inicializarFormulario();
+  component.guardarDatosFormulario();
+
+  expect(component.usoEspicificoForm.enabled).toBe(true);
+});
+
 
 });

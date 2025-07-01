@@ -2,7 +2,6 @@ import { CatalogosSelect, ConsultaioQuery, ConsultaioState } from '@ng-mf/data-a
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Catalogo } from '@ng-mf/data-access-user';
-import { HttpCoreService } from '@ng-mf/data-access-user';
 import { MediodetransporteService } from '../../services/medio-de-transporte.service';
 import { Solicitud220402Query } from '../../estados/queries/tramites220402.query';
 import { Solicitud220402State } from '../../estados/tramites/tramites220402.store';
@@ -70,7 +69,6 @@ export class TransporteComponent implements OnDestroy, OnInit {
   constructor(
     private fb: FormBuilder,
     private validacionesService: ValidacionesFormularioService,
-    private httpCoreService: HttpCoreService,
     private mediodetransporteService: MediodetransporteService,
     private solicitud220402Store: Solicitud220402Store,
     private solicitud220402Query: Solicitud220402Query,

@@ -1,7 +1,10 @@
-import { DestinoFinal, Proveedor } from '../../../../shared/models/terceros-relacionados.model';
+import { Component, EventEmitter, Output } from '@angular/core';
+import {
+  DestinoFinal,
+  Proveedor,
+} from '../../../../shared/models/terceros-relacionados.model';
 import { AgregarDestinatarioFinalComponent } from '../../../../shared/components/agregar-destinatario-final/agregar-destinatario-final.component';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
 import { ID_PROCEDIMIENTO } from '../../constants/importacion-sustancias-quimicas.enum';
 import { Observable } from 'rxjs';
 import { Tramite240106Query } from '../../estados/tramite240106Query.query';
@@ -21,25 +24,33 @@ import { Tramite240106Store } from '../../estados/tramite240106Store.store';
   styleUrl: './agregar-destinatario-final-contenedora.component.scss',
 })
 export class AgregarDestinatarioFinalContenedoraComponent {
- 
-    /**
+  /**
+   * Evento emitido cuando se solicita cerrar el componente.
+   *
+   * @event cerrar
+   */
+  @Output() cerrar = new EventEmitter<void>();
+
+  /**
    * @property {boolean} estaOculto - Indica si el elemento está oculto o visible.
    * @remarks Este valor determina la visibilidad del componente en la interfaz de usuario.
    * @command Cambiar el valor de esta propiedad para alternar la visibilidad.
    */
-    public readonly idProcedimiento:number = ID_PROCEDIMIENTO;
+  
+  public readonly idProcedimiento = ID_PROCEDIMIENTO;
 
-    /**
-     * Observable que emite información sobre el destino final, proveedor o un valor nulo/indefinido.
-     * 
-     * @type {Observable<DestinoFinal | Proveedor | null | undefined>}
-     * 
-     * @remarks
-     * Este observable se utiliza para gestionar los datos relacionados con los derechos
-     * y destinatarios finales en el contexto de la aplicación.
-     */
-    public terechosDatos$!: Observable<DestinoFinal | Proveedor | null | undefined>;
-
+  /**
+   * Observable que emite información sobre el destino final, proveedor o un valor nulo/indefinido.
+   *
+   * @type {Observable<DestinoFinal | Proveedor | null | undefined>}
+   *
+   * @remarks
+   * Este observable se utiliza para gestionar los datos relacionados con los derechos
+   * y destinatarios finales en el contexto de la aplicación.
+   */
+  public terechosDatos$!: Observable<
+    DestinoFinal | Proveedor | null | undefined
+  >;
 
   /**
    * Constructor del componente.
@@ -49,10 +60,12 @@ export class AgregarDestinatarioFinalContenedoraComponent {
    * @returns {void}
    */
   // eslint-disable-next-line no-empty-function
-  constructor(public tramiteStore: Tramite240106Store, public tramiteQuery: Tramite240106Query) {
+  constructor(
+    public tramiteStore: Tramite240106Store,
+    public tramiteQuery: Tramite240106Query
+  ) {
     this.terechosDatos$ = this.tramiteQuery.obtenerTercerosDatos$;
-    }
- 
+  }
 
   /**
    * Actualiza la lista de destinatarios finales en el store del trámite.

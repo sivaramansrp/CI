@@ -24,14 +24,13 @@ import {
   Catalogo,
   CatalogoSelectComponent,
   ConfiguracionColumna,
-  InputRadioComponent,
   SeccionLibQuery,
   SeccionLibState,
   SeccionLibStore,
   TablaDinamicaComponent,
   TituloComponent,
 } from '@ng-mf/data-access-user';
-
+import { InputRadioComponent } from "@libs/shared/data-access-user/src/tramites/components/input-radio/input-radio.component";
 import { VALIDO } from '../../constantes/elegibilidad-de-textiles.enums';
 
 import {

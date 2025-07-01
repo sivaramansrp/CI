@@ -1,11 +1,10 @@
+import { Tramite130116State, Tramite130116Store } from '../../../estados/tramites/tramites130116.store';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-
-import { ProductoResponse } from '../../../shared/constantes/vehiculos-adaptados.enum';
-
 import { PartidasDeLaMercanciaModelo } from '../../../shared/models/partidas-de-la-mercancia.model';
+import { ProductoResponse } from '../../../shared/constantes/vehiculos-adaptados.enum';
 
 /**
  * Servicio para gestionar la importación de vehículos.
@@ -20,7 +19,7 @@ export class SolicitudImportacionAmbulanciaService {
    * Constructor del servicio.
    * Servicio HttpClient para realizar solicitudes HTTP.
    */
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient,private tramite130116Store: Tramite130116Store) {
     //
   }
 
@@ -88,4 +87,19 @@ export class SolicitudImportacionAmbulanciaService {
           'assets/json/130111/partidas-de-la.json'
         );
   }
+
+    /**
+   * Actualiza el estado del formulario en el store.
+   * @param DATOS Estado actualizado del trámite.
+   */
+  actualizarEstadoFormulario(DATOS: Tramite130116State): void {
+      this.tramite130116Store.actualizarEstado(DATOS);
+  }
+  /**
+ * Obtiene los datos de la solicitud.
+ * @returns Observable con los datos de la solicitud.
+ */
+getDatosDeLaSolicitud(): Observable<Tramite130116State> {
+    return this.http.get<Tramite130116State>('assets/json/130116/datos-de-la-solicitud.json');
+}
 }

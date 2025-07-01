@@ -57,7 +57,7 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
   datosGeneralesForm!: FormGroup;
 
   /** Subject utilizado para destruir observables y evitar fugas de memoria */
-  private destroy$: Subject<void> = new Subject<void>();
+  public destroy$: Subject<void> = new Subject<void>();
 
   /** Opciones para el tipo de endoso */
   tipoDeEndosoOpcion: InputRadio = {} as InputRadio;

@@ -11,12 +11,14 @@ import {
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NOTA, VEHICULOS_TABLA_DATOS } from '../../enums/registro-empresas-transporte.enum';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil} from 'rxjs';
 import { Tramite30401Store, Tramites30401State } from '../../estados/tramites30401.store';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { Modal } from 'bootstrap';
 import { Tramite30401Query } from '../../estados/tramites30401.query';
 import { VehiculosTabla } from '../../modelos/registro-empresas-transporte.model';
+
 
 /**
  * Componente VehiculosComponent para la gestión de vehículos dentro del sistema.
@@ -46,6 +48,11 @@ import { VehiculosTabla } from '../../modelos/registro-empresas-transporte.model
   styleUrl: './vehiculos.component.scss',
 })
 export class VehiculosComponent implements OnInit {
+    /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  esFormularioSoloLectura: boolean = false;
   /**
    * Define si el diálogo exitoso está habilitado.
    *
@@ -180,8 +187,17 @@ export class VehiculosComponent implements OnInit {
   constructor(
     public fb: FormBuilder,
     private tramite30401Store: Tramite30401Store,
-    private tramite30401Query: Tramite30401Query
+    private tramite30401Query: Tramite30401Query,
+    private consultaioQuery: ConsultaioQuery
   ) {
+      this.consultaioQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.destroyed$),
+      map((seccionState) => {
+       this.esFormularioSoloLectura = seccionState.readonly;
+      })
+    )
+    .subscribe();
     this.crearFormulario();
     this.inicializarFormularioArchivo();
   }
@@ -329,7 +345,7 @@ export class VehiculosComponent implements OnInit {
       const OBJETO = { id: ID, marca: MARCA, modelo: MODELO, vin: VIN };
 
       this.vehiculosInfoList = [...this.vehiculosInfoList, OBJETO];
-      this.tramite30401Store.setVehiculosTablaDatos([OBJETO]);
+      this.tramite30401Store.establecerDatos({vehiculosTablaDatos:this.vehiculosInfoList});
     } else {
       this.vehiculosInfoList = this.vehiculosInfoList.map((elemento) =>
         elemento.id === this.filaSeleccionadaVehiculos.id
@@ -337,7 +353,7 @@ export class VehiculosComponent implements OnInit {
           : elemento
       );
 
-      this.tramite30401Store.setVehiculosTablaDatos(this.vehiculosInfoList);
+      this.tramite30401Store.establecerDatos({vehiculosTablaDatos:this.vehiculosInfoList});
       this.filaSeleccionadaVehiculos = {} as VehiculosTabla;
     }
   }
@@ -382,18 +398,21 @@ export class VehiculosComponent implements OnInit {
    * Filtra y elimina los elementos seleccionados de la tabla de mercancías.
    * Actualiza el estado del almacén y cierra el popup de confirmación de eliminación.
    */
-  eliminarVehiculosItem(): void {
-    const IDS_TO_DELETE = this.listaFilaSeleccionadaVehiculos.map(
-      (item) => item.id
-    );
+  eliminarVehiculosItem(evento:boolean): void {
+    if(evento === true) {
+      const IDS_TO_DELETE = this.listaFilaSeleccionadaVehiculos.map(
+        (item) => item.id
+      );
 
-    this.vehiculosInfoList = this.vehiculosInfoList.filter(
-      (item) => !IDS_TO_DELETE.includes(item.id)
-    );
+      this.vehiculosInfoList = this.vehiculosInfoList.filter(
+        (item) => !IDS_TO_DELETE.includes(item.id)
+      );
 
-    this.listaFilaSeleccionadaVehiculos = [];
-    this.tramite30401Store.setVehiculosTablaDatos(this.vehiculosInfoList);
-    this.cerrarEliminarConfirmationPopup();
+      this.listaFilaSeleccionadaVehiculos = [];
+      this.filaSeleccionadaVehiculos = {} as VehiculosTabla;
+      this.tramite30401Store.establecerDatos({vehiculosTablaDatos:this.vehiculosInfoList});
+      this.cerrarEliminarConfirmationPopup();
+    }
   }
 
   /**

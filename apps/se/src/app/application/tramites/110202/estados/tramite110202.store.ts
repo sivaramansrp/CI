@@ -3,128 +3,287 @@ import { Catalogo } from '@ng-mf/data-access-user';
 import { Injectable } from '@angular/core';
 import { Mercancia } from '../models/configuracion-columna.model';
 
-// Interfaz que define el estado del trámite.
+
 /**
  * @interface TramiteState
- * @description Representa el estado de un trámite en la aplicación, incluyendo datos relacionados con catálogos, formularios, mercancías y destinatarios.
- * 
- * @property {Catalogo[]} idiomaDatos - Lista de datos de idiomas disponibles.
- * @property {Catalogo} idiomaDatosSeleccion - Idioma seleccionado.
- * @property {Catalogo[]} paisDestin - Lista de países de destino disponibles.
- * @property {Catalogo} paisDestinSeleccion - País de destino seleccionado.
- * @property {Catalogo[]} medioDeTransporte - Lista de medios de transporte disponibles.
- * @property {Catalogo} medioDeTransporteSeleccion - Medio de transporte seleccionado.
- * @property {Catalogo} entidadFederativaSeleccion - Entidad federativa seleccionada.
- * @property {Catalogo[]} entidadFederativaDatos - Lista de entidades federativas disponibles.
- * @property {Catalogo[]} representacionFederalDatos - Lista de representaciones federales disponibles.
- * @property {Catalogo} representacionFederalSeleccion - Representación federal seleccionada.
- * @property {Catalogo[]} altaPlanta - Lista de plantas disponibles para alta.
- * @property {Catalogo} estado - Estado actual del trámite.
- * @property {Catalogo[]} factura - Lista de facturas disponibles.
- * @property {Catalogo} facturas - Factura seleccionada.
- * @property {Catalogo} umc - Unidad de medida y conteo seleccionada.
- * @property {Catalogo[]} umcs - Lista de unidades de medida y conteo disponibles.
- * @property {Catalogo} masa - Masa seleccionada.
- * @property {Catalogo[]} masaBruta - Lista de masas brutas disponibles.
- * @property {Catalogo[]} paisBloques - Lista de bloques de países disponibles.
- * @property {Catalogo} paisBloque - Bloque de país seleccionado.
- * @property {{ [key: string]: unknown }} formCertificado - Datos del formulario de certificado.
- * @property {{ [key: string]: unknown }} formDatosCertificado - Datos específicos del formulario de certificado.
- * @property {{ [key: string]: unknown }} mercanciaForm - Datos del formulario de mercancía.
- * @property {{ [key: string]: boolean }} formaValida - Validación de los formularios.
- * @property {Mercancia[]} buscarMercancia - Lista de mercancías buscadas.
- * @property {Mercancia[]} mercanciaTabla - Lista de mercancías mostradas en la tabla.
- * @property {{ [key: string]: unknown }} destinatarioForm - Datos del formulario del destinatario.
- * @property {{ [key: string]: unknown }} formDestinatario - Datos específicos del destinatario.
- * @property {{ [key: string]: unknown }} formDatosDelDestinatario - Datos adicionales del destinatario.
- * 
- * @command Este estado se utiliza para gestionar los datos y formularios relacionados con un trámite específico.
+ * @description
+ * Interfaz que representa la estructura completa del estado del formulario de un trámite.
+ * Este estado incluye catálogos, selecciones, formularios dinámicos, listas de mercancía, datos del destinatario y banderas de validación.
  */
 export interface TramiteState {
+  /** Lista de idiomas disponibles como catálogo */
   idiomaDatos: Catalogo[];
+
+  /** Idioma seleccionado actualmente */
   idiomaDatosSeleccion: Catalogo;
+
+  /** Lista de países destino como catálogo */
   paisDestin: Catalogo[];
+
+  /** País destino seleccionado */
   paisDestinSeleccion: Catalogo;
+
+  /** Lista de medios de transporte disponibles */
   medioDeTransporte: Catalogo[];
+
+  /** Medio de transporte seleccionado */
   medioDeTransporteSeleccion: Catalogo;
+
+  /** Entidad federativa seleccionada */
   entidadFederativaSeleccion: Catalogo;
+
+  /** Lista de entidades federativas disponibles */
   entidadFederativaDatos: Catalogo[];
+
+  /** Lista de representaciones federales disponibles */
   representacionFederalDatos: Catalogo[];
+
+  /** Representación federal seleccionada */
   representacionFederalSeleccion: Catalogo;
+
+  /** Lista de opciones para alta de planta */
   altaPlanta: Catalogo[];
+
+  /** Estado actual del trámite */
   estado: Catalogo;
+
+  /** Lista de facturas como catálogo */
   factura: Catalogo[];
-  facturas: Catalogo,
+
+  /** Factura seleccionada actualmente */
+  facturas: Catalogo;
+
+  /** Unidad de medida comercial seleccionada */
   umc: Catalogo;
-  umcs: Catalogo[],
+
+  /** Lista de unidades de medida comercial disponibles */
+  umcs: Catalogo[];
+
+  /** Unidad de medida de masa seleccionada */
   masa: Catalogo;
-  masaBruta: Catalogo[],
+
+  /** Lista de unidades de masa bruta disponibles */
+  masaBruta: Catalogo[];
+
+  /** Lista de países por bloque comercial */
   paisBloques: Catalogo[];
+
+  /** País seleccionado dentro del bloque comercial */
   paisBloque: Catalogo;
-  formCertificado: { [key: string]: unknown};
-  formDatosCertificado: { [key: string]: unknown};
-  mercanciaForm: { [key: string]: unknown}
+
+  /**
+   * Datos del formulario principal del certificado.
+   * Clave-valor que puede contener strings, números, objetos u otros tipos.
+   */
+  formCertificado: { [key: string]: unknown };
+
+  /**
+   * Datos del formulario relacionados con los detalles del certificado.
+   * Estructura dinámica y flexible.
+   */
+  formDatosCertificado: { [key: string]: unknown };
+
+  /**
+   * Datos específicos del formulario de mercancía.
+   * Cada clave representa un campo.
+   */
+  mercanciaForm: { [key: string]: unknown };
+
+  /**
+   * Objeto que contiene banderas booleanas para validar formularios.
+   * Cada clave representa una sección del formulario.
+   */
   formaValida: { [key: string]: boolean };
+
+  /** Lista de mercancías encontradas en la búsqueda */
   buscarMercancia: Mercancia[];
+
+  /** Lista de mercancías mostradas en la tabla */
   mercanciaTabla: Mercancia[];
 
-  destinatarioForm: { [key: string]: unknown};
-  formDestinatario: { [key: string]: unknown};
-  formDatosDelDestinatario: { [key: string]: unknown};
+  /** Datos generales del destinatario en formulario dinámico */
+  destinatarioForm: { [key: string]: unknown };
+
+  /** Formulario general del destinatario */
+  formDestinatario: { [key: string]: unknown };
+
+  /** Formulario con los datos específicos del destinatario */
+  formDatosDelDestinatario: { [key: string]: unknown };
 }
 
-// Interfaz que define el estado de la solicitud 110204.
+/**
+ * @interface Solicitud110202State
+ * @description
+ * Interfaz que define la estructura del estado para el trámite de solicitud 110202.
+ * Contiene datos relacionados con la mercancía, información del solicitante, origen/destino y otros campos asociados al formulario.
+ */
 export interface Solicitud110202State {
+  /** Régimen de la mercancía (por ejemplo, definitivo, temporal) */
   regimenMercancia: string;
+
+  /** Clasificación del régimen aplicable */
   clasifiRegimen: string;
+
+  /** Valor del Tratado de Libre Comercio o Acuerdo aplicable */
   valueTA: string;
+
+  /** Fracción arancelaria correspondiente a la mercancía */
   fraccionArancelaria: string;
+
+  /** NICO (Número de Identificación Comercial) relacionado con la fracción */
   nico: string;
+
+  /** Unidad de medida tarifaria usada para la mercancía */
   unidadMedidaTarifaria: string;
+
+  /** Cantidad medida en unidad tarifaria */
   cantidadTarifaria: number;
+
+  /** Valor total de la factura en dólares estadounidenses */
   valorFacturaUSD: number;
+
+  /** Precio unitario de la mercancía en dólares estadounidenses */
   precioUnitarioUSD: string;
+
+  /** País de origen de la mercancía */
   paisOrigen: string;
+
+  /** País de destino de la mercancía */
   paisDestino: string;
+
+  /** Identificador del lote o agrupación de productos */
   lote: string;
+
+  /** Fecha de salida de la mercancía (en formato ISO o compatible) */
   fechaSalida: string;
+
+  /** Observaciones generales relacionadas con la solicitud */
   observaciones: string;
+
+  /** Observaciones específicas relacionadas con la mercancía */
   observacionMerc: string;
+
+  /** Tipo de persona (por ejemplo, FÍSICA o MORAL) */
   tipoPersona: string;
+
+  /** Nombre de la persona física (en caso de no ser razón social) */
   nombre: string;
+
+  /** Apellido paterno del solicitante */
   apellidoPaterno: string;
+
+  /** Apellido materno del solicitante */
   apellidoMaterno: string;
+
+  /** Razón social (en caso de persona moral) */
   razonSocial: string;
+
+  /** Nombre del molino asociado (si aplica) */
   molino: string;
+
+  /** Dirección o domicilio del solicitante */
   domicilio: string;
+
+  /** Estado o entidad federativa del domicilio */
   estado: string;
+
+  /** País perteneciente a un bloque comercial (ej. MERCOSUR, USMCA) */
   paisBloque: string;
+
+  /** Número o identificador de la factura comercial */
   factura: string;
+
+  /** Unidad de medida comercial utilizada */
   umc: string;
+
+  /** Representación federal asociada (puede usarse en trámites centralizados) */
   representacionFederal: string;
 }
 
-// Estado inicial para el trámite.
+/**
+ * Estado inicial para el store del trámite 110202.
+ *
+ * Contiene la estructura y valores predeterminados para todos los campos y formularios
+ * relacionados con el trámite, incluyendo listas de selección, formularios de datos,
+ * estados de validación y objetos seleccionados.
+ *
+ * @remarks
+ * Este estado inicial es utilizado para inicializar y resetear el store del trámite,
+ * asegurando que todos los campos tengan valores definidos y consistentes al inicio.
+ *
+ * @property altaPlanta Lista de plantas de producción registradas.
+ * @property paisBloques Lista de países o bloques económicos seleccionables.
+ * @property buscarMercancia Resultado de búsqueda de mercancías.
+ * @property mercanciaTabla Lista de mercancías añadidas a la tabla.
+ * @property estado Estado actual del trámite.
+ * @property umc Unidad de medida comercial seleccionada.
+ * @property umcs Lista de unidades de medida comerciales disponibles.
+ * @property masa Unidad de medida de masa seleccionada.
+ * @property masaBruta Lista de masas brutas disponibles.
+ * @property factura Lista de facturas asociadas al trámite.
+ * @property formaValida Estado de validación de los diferentes formularios.
+ * @property formCertificado Formulario de información del certificado.
+ * @property formDatosCertificado Formulario de datos adicionales del certificado.
+ * @property mercanciaForm Formulario de información de la mercancía.
+ * @property facturas Factura seleccionada actualmente.
+ * @property paisBloque País o bloque económico seleccionado.
+ * @property idiomaDatosSeleccion Idioma seleccionado para los datos.
+ * @property idiomaDatos Lista de idiomas disponibles.
+ * @property paisDestin Lista de países destino.
+ * @property paisDestinSeleccion País destino seleccionado.
+ * @property medioDeTransporte Lista de medios de transporte.
+ * @property medioDeTransporteSeleccion Medio de transporte seleccionado.
+ * @property entidadFederativaSeleccion Entidad federativa seleccionada.
+ * @property entidadFederativaDatos Lista de entidades federativas disponibles.
+ * @property representacionFederalDatos Lista de representaciones federales disponibles.
+ * @property representacionFederalSeleccion Representación federal seleccionada.
+ * @property formDestinatario Formulario con información del destinatario (ubicación y contacto).
+ * @property formDatosDelDestinatario Formulario con información fiscal y general del destinatario.
+ * @property destinatarioForm Formulario adicional para el destinatario.
+ */
 export const INITIAL_STATE: TramiteState = {
+  /** Lista de alta planta (por ejemplo, plantas de producción registradas) */
   altaPlanta: [],
+
+  /** Lista de países o bloques económicos seleccionables */
   paisBloques: [],
+
+  /** Resultado de búsqueda de mercancías */
   buscarMercancia: [],
+
+  /** Lista de mercancías añadidas a la tabla */
   mercanciaTabla: [],
+
+  /** Estado actual del trámite */
   estado: {
     id: -1,
     descripcion: '',
   },
+
+  /** Unidad de medida comercial seleccionada */
   umc: { id: -1, descripcion: '' },
+
+  /** Lista de unidades de medida comerciales disponibles */
   umcs: [],
+
+  /** Unidad de medida de masa seleccionada */
   masa: { id: -1, descripcion: '' },
+
+  /** Lista de masas brutas disponibles */
   masaBruta: [],
+
+  /** Lista de facturas asociadas al trámite */
   factura: [],
+
+  /** Estado de validación de los diferentes formularios */
   formaValida: {
     certificado: false,
     datos: false,
     destinatrio: false,
     datosDestinatario: false,
   },
+
+  /** Formulario de información del certificado */
   formCertificado: {
     entidadFederativa: '',
     bloque: '',
@@ -134,6 +293,8 @@ export const INITIAL_STATE: TramiteState = {
     fechaInicioInput: '',
     fechaFinalInput: '',
   },
+
+  /** Formulario de datos adicionales del certificado */
   formDatosCertificado: {
     observacionesDates: '',
     idiomaDates: '',
@@ -141,6 +302,8 @@ export const INITIAL_STATE: TramiteState = {
     EntidadFederativaDates: '',
     representacionFederalDates: '',
   },
+
+  /** Formulario de información de la mercancía */
   mercanciaForm: {
     fraccionArancelaria: '',
     nombreComercialMercancia: '',
@@ -162,24 +325,50 @@ export const INITIAL_STATE: TramiteState = {
     fechaFinalInput: '',
     nalad: ''
   },
+
+  /** Factura seleccionada actualmente */
   facturas: {
     id: -1,
     descripcion: '',
   },
+
+  /** País o bloque económico seleccionado */
   paisBloque: {
     id: -1,
     descripcion: '',
   },
+
+  /** Idioma seleccionado para los datos */
   idiomaDatosSeleccion: { id: -1, descripcion: '' },
+
+  /** Lista de idiomas disponibles */
   idiomaDatos: [],
+
+  /** Lista de países destino */
   paisDestin: [],
+
+  /** País destino seleccionado */
   paisDestinSeleccion: { id: -1, descripcion: '' },
+
+  /** Lista de medios de transporte */
   medioDeTransporte: [],
+
+  /** Medio de transporte seleccionado */
   medioDeTransporteSeleccion: { id: -1, descripcion: '' },
+
+  /** Entidad federativa seleccionada */
   entidadFederativaSeleccion: { id: -1, descripcion: '' },
+
+  /** Lista de entidades federativas disponibles */
   entidadFederativaDatos: [],
+
+  /** Lista de representaciones federales disponibles */
   representacionFederalDatos: [],
+
+  /** Representación federal seleccionada */
   representacionFederalSeleccion: { id: -1, descripcion: '' },
+
+  /** Formulario con información del destinatario (ubicación y contacto) */
   formDestinatario: {
     paisDestin: '',
     ciudad: '',
@@ -191,6 +380,7 @@ export const INITIAL_STATE: TramiteState = {
     correoElectronico: ''
   },
 
+  /** Formulario con información fiscal y general del destinatario */
   formDatosDelDestinatario: {
     nombres: '',
     primerApellido: '',
@@ -199,6 +389,7 @@ export const INITIAL_STATE: TramiteState = {
     razonSocial: ''
   },
 
+  /** Formulario adicional para el destinatario */
   destinatarioForm: {
     medioDeTransporte: '',
   }
@@ -218,10 +409,9 @@ export const INITIAL_STATE: TramiteState = {
 @StoreConfig({ name: 'tramite-110202', resettable: true })
 export class Tramite110202Store extends Store<TramiteState> {
 
-  constructor() {
-    super(INITIAL_STATE);
-  }
-
+constructor() {
+  super(INITIAL_STATE);
+}
   /**
    * Establece el estado en el almacén.
    * 

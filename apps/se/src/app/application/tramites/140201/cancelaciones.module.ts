@@ -10,11 +10,11 @@ import {
   WizardComponent,
 } from '@libs/shared/data-access-user/src';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { CancelacionDeAutorizacionesComponent } from './components/cancelacion-de-autorizaciones/cancelacion-de-autorizaciones.component';
 import { CancelacionesComponent } from './pages/cancelaciones/cancelaciones.component';
 import { DatosComponent } from './pages/datos/datos.component';
 import { DatosNotificationRecipientsComponent } from './components/datos-notification-recipients/datos-notification-recipients.component';
-
-import { CancelacionDeAutorizacionesComponent } from './components/cancelacion-de-autorizaciones/cancelacion-de-autorizaciones.component';
+import { DireccionDeNotificacionesComponent } from './components/direccion-de-notificaciones/direccion-de-notificaciones.component';
 import { EntidadExternaComponent } from './components/entidad-externa/entidad-externa.component';
 import { provideHttpClient } from '@angular/common/http';
 
@@ -42,7 +42,7 @@ import { PasoDosComponent } from '../90305/component/paso-dos/paso-dos.component
     PasoDosComponent,
     CancelacionDeAutorizacionesComponent,
     EntidadExternaComponent,
- 
+    DireccionDeNotificacionesComponent
   ],
   providers: [provideHttpClient(),ToastrService],
 })

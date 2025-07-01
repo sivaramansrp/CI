@@ -41,16 +41,81 @@ describe('PasoCapturarSolicitudComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should run #getValorIndice()', async () => {
+  it('should run #getValorIndice() siguiente', async () => {
     component.wizardComponent = component.wizardComponent || {};
     component.wizardComponent.siguiente = jest.fn();
     component.wizardComponent.atras = jest.fn();
     component.getValorIndice({
-      valor: {},
-      accion: {}
+      valor: 2,
+      accion: 'cont'
     });
-    // expect(component.wizardComponent.siguiente).toHaveBeenCalled();
-    // expect(component.wizardComponent.atras).toHaveBeenCalled();
+    expect(component.wizardComponent.siguiente).toHaveBeenCalled();
+  });
+  it('should run #getValorIndice() atras', async () => {
+    component.wizardComponent = component.wizardComponent || {};
+    component.wizardComponent.siguiente = jest.fn();
+    component.wizardComponent.atras = jest.fn();
+    component.getValorIndice({
+      valor: 2,
+      accion: 'nonto'
+    });
+    expect(component.wizardComponent.atras).toHaveBeenCalled();
   });
 
+  it('should not call any wizardComponent methods if valor is out of range', async () => {
+    component.wizardComponent = component.wizardComponent || {};
+    component.wizardComponent.siguiente = jest.fn();
+    component.wizardComponent.atras = jest.fn();
+    component.getValorIndice({
+      valor: 0,
+      accion: 'cont'
+    });
+    expect(component.wizardComponent.siguiente).not.toHaveBeenCalled();
+    expect(component.wizardComponent.atras).not.toHaveBeenCalled();
+
+    component.getValorIndice({
+      valor: 5,
+      accion: 'cont'
+    });
+    expect(component.wizardComponent.siguiente).not.toHaveBeenCalled();
+    expect(component.wizardComponent.atras).not.toHaveBeenCalled();
+  });
+
+  it('should update indice correctly when valor is valid', async () => {
+    component.wizardComponent = component.wizardComponent || {};
+    component.indice = 1;
+    component.wizardComponent.siguiente = jest.fn();
+    component.wizardComponent.atras = jest.fn();
+    component.getValorIndice({
+      valor: 3,
+      accion: 'cont'
+    });
+    expect(component.indice).toBe(3);
+  });
+
+  it('should not update indice when valor is out of range', async () => {
+    component.wizardComponent = component.wizardComponent || {};
+    component.indice = 1;
+    component.getValorIndice({
+      valor: 0,
+      accion: 'cont'
+    });
+    expect(component.indice).toBe(1);
+
+    component.getValorIndice({
+      valor: 5,
+      accion: 'cont'
+    });
+    expect(component.indice).toBe(1);
+  });
+
+  it('should handle undefined wizardComponent gracefully', async () => {
+    component.wizardComponent = undefined;
+    expect(() => {
+      component.getValorIndice({
+        valor: 2,
+        accion: 'cont'
+      });
+    }).toThrow();
+  });
 });

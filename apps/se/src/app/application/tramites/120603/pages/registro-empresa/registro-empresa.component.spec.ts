@@ -9,27 +9,24 @@ import { Observable, of as observableOf, throwError } from 'rxjs';
 import { Component } from '@angular/core';
 import { RegistroEmpresaComponent } from './registro-empresa.component';
 import { SeccionLibQuery, SeccionLibStore } from '@ng-mf/data-access-user';
-
-@Directive({ selector: '[myCustom]' })
-class MyCustomDirective {
-  @Input() myCustom: any;
-}
-
+import { provideHttpClient } from '@angular/common/http';
 
 
 describe('RegistroEmpresaComponent', () => {
   let fixture: ComponentFixture<RegistroEmpresaComponent>;
-  let component: { ngOnDestroy: () => void; seleccionaTab: (arg0: {}) => void; seccionQuery: { selectSeccionState$?: any; }; ngOnInit: () => void; pedimentos: { splice?: any; }; eliminarPedimento: (arg0: {}) => void; abrirModal: jest.Mock<any, any, any> | (() => void); wizardComponent: { siguiente?: any; atras?: any; }; getValorIndice: (arg0: { valor: {}; accion: {}; }) => void; onAlertClick: () => void; destroyed$: { next?: any; complete?: any; }; };
+  let component: {
+    indice: number; ngOnDestroy: () => void; seleccionaTab: (arg0: {}) => void; seccionQuery: { selectSeccionState$?: any; }; ngOnInit: () => void; pedimentos: { splice?: any; }; eliminarPedimento: (arg0: {}) => void; abrirModal: jest.Mock<any, any, any> | (() => void); wizardComponent: { siguiente?: any; atras?: any; }; getValorIndice: (arg0: { valor: {}; accion: {}; }) => void; onAlertClick: () => void; destroyed$: { next?: any; complete?: any; }; 
+};
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [ FormsModule, ReactiveFormsModule ],
       declarations: [
         RegistroEmpresaComponent,
-        MyCustomDirective
       ],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
       providers: [
+        provideHttpClient(),
         SeccionLibQuery,
         SeccionLibStore
       ]
@@ -66,7 +63,7 @@ describe('RegistroEmpresaComponent', () => {
     component.pedimentos = component.pedimentos || {};
     component.pedimentos.splice = jest.fn();
     component.eliminarPedimento({});
-    expect(component.pedimentos.splice).toHaveBeenCalled();
+     expect(component.pedimentos.splice).toHaveBeenCalled();
   });
 
   it('should run #abrirModal()', async () => {
@@ -80,26 +77,27 @@ describe('RegistroEmpresaComponent', () => {
       atras: jest.fn(),
     };
   
+    component.indice = 1; 
     component.getValorIndice({
-      valor: {},
-      accion: 'siguiente',
+      valor: 3, 
+      accion: 'cont',
     });
   
     expect(component.wizardComponent.siguiente).toHaveBeenCalled();
     expect(component.wizardComponent.atras).not.toHaveBeenCalled();
   
     component.getValorIndice({
-      valor: {},
+      valor: 2, 
       accion: 'atras',
     });
   
     expect(component.wizardComponent.atras).toHaveBeenCalled();
+    expect(component.wizardComponent.siguiente).toHaveBeenCalledTimes(1); 
   });
-
   it('should run #onAlertClick()', async () => {
     component.abrirModal = jest.fn();
     component.onAlertClick();
-    expect(component.abrirModal).toHaveBeenCalled();
+     expect(component.abrirModal).toHaveBeenCalled();
   });
 
   it('should run #ngOnDestroy()', async () => {
@@ -107,8 +105,8 @@ describe('RegistroEmpresaComponent', () => {
     component.destroyed$.next = jest.fn();
     component.destroyed$.complete = jest.fn();
     component.ngOnDestroy();
-    expect(component.destroyed$.next).toHaveBeenCalled();
-    expect(component.destroyed$.complete).toHaveBeenCalled();
+     expect(component.destroyed$.next).toHaveBeenCalled();
+     expect(component.destroyed$.complete).toHaveBeenCalled();
   });
 
 });

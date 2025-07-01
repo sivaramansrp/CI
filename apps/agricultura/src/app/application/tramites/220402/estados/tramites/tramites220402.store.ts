@@ -1,5 +1,5 @@
+import { DatosGenerales, Destinatario } from '../../models/pantallas-captura.model';
 import { Store, StoreConfig } from '@datorama/akita';
-import { DatosGenerales } from '../../models/pantallas-captura.model';
 import { Injectable } from '@angular/core';
 
 /**
@@ -244,6 +244,22 @@ export interface Solicitud220402State {
    * Importe del pago realizado.
    */
   importePago: string;
+  /**
+   * Nombre común del producto.
+   */
+  nombreComun: string;
+
+  /**
+   * Nombre científico del producto.
+   */
+  nombreCientifico: string;
+
+  /**
+   * Descripción detallada del producto.
+   */
+  descripcionProducto: string;
+  /** Lista de destinatarios relacionados con el trámite. */
+  destinatario: Destinatario[];
 }
 
 export function createInitialSolicitudState(): Solicitud220402State {
@@ -252,7 +268,7 @@ export function createInitialSolicitudState(): Solicitud220402State {
     seccionAduanera: '',
     puntoDestino: '',
     paisDeDestino: '',
-    paisDeProcedencia: '',
+    paisDeProcedencia: '1',
     rangoDeFechas: '',
     fechaInicio: '',
     fechaFinal: '',
@@ -294,7 +310,11 @@ export function createInitialSolicitudState(): Solicitud220402State {
     banco: '',
     llaveDePago: '',
     fechaPago: '',
-    importePago: ''
+    importePago: '',
+    nombreComun: '',
+    nombreCientifico: '',
+    descripcionProducto: '',
+    destinatario: []
   }
 }
 
@@ -773,6 +793,52 @@ export class Solicitud220402Store extends Store<Solicitud220402State> {
     this.update((state) => ({
       ...state,
       importePago
+    }));
+  }
+  /**
+   * Actualiza el estado con el nombre común del producto.
+   * 
+   * @param {string} nombreComun - Nombre común del producto.
+   */
+  public setNombreComun(nombreComun: string): void {
+    this.update((state) => ({
+      ...state,
+      nombreComun
+    }));
+  }
+
+  /**
+   * Actualiza el estado con el nombre científico del producto.
+   * 
+   * @param {string} nombreCientifico - Nombre científico del producto.
+   */
+  public setNombreCientifico(nombreCientifico: string): void {
+    this.update((state) => ({
+      ...state,
+      nombreCientifico
+    }));
+  }
+
+  /**
+   * Actualiza el estado con la descripción detallada del producto.
+   * 
+   * @param {string} descripcionProducto - Descripción detallada del producto.
+   */
+  public setDescripcionProducto(descripcionProducto: string): void {
+    this.update((state) => ({
+      ...state,
+      descripcionProducto
+    }));
+  }
+  /**
+   * Actualiza el estado con la lista de destinatarios relacionados con el trámite.
+   * 
+   * @param {Destinatario[]} destinatario - Lista de destinatarios a actualizar en el estado.
+   */
+  public setDestinatario(destinatario: Destinatario[]): void {
+    this.update((state) => ({
+      ...state,
+      destinatario
     }));
   }
 

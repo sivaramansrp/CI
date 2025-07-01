@@ -17,16 +17,35 @@ import {
   ProductorIndirecto,
   Sector,
 } from '../models/datos-info.model';
-
 /**
  * Pasos del proceso de ampliación de servicios.
+ * @export
  * @constant {Array<Object>} PASOS
  */
 export const PASOS = [
   {
+    /**
+     * Índice del paso.
+     * @property {number} indice
+     */
     indice: 1,
+
+    /**
+     * Título del paso.
+     * @property {string} titulo
+     */
     titulo: 'Capturar solicitud',
+
+    /**
+     * Indica si el paso está activo.
+     * @property {boolean} activo
+     */
     activo: true,
+
+    /**
+     * Indica si el paso está completado.
+     * @property {boolean} completado
+     */
     completado: true,
   },
   {
@@ -43,32 +62,33 @@ export const PASOS = [
   },
 ];
 
-
 /**
- * @const CONFIGURACION_BITCORA
- * @description Configuración utilizada para definir las propiedades de la bitácora de modificaciones.
- * Cada objeto dentro del arreglo representa una columna con su encabezado, clave de acceso y orden.
- * 
- * @type {Array<{encabezado: string, clave: (ele: Bitacora) => string | undefined, orden: number}>}
- * 
- * @property {string} encabezado - El título de la columna que se mostrará en la interfaz de usuario.
- * @property {(ele: Bitacora) => string | undefined} clave - Una función que toma un objeto de tipo `Bitacora` y devuelve el valor correspondiente a la columna.
- * @property {number} orden - El orden en el que se mostrará la columna en la tabla.
- * 
- * @example
- * // Ejemplo de uso:
- * CONFIGURACION_BITCORA.forEach(config => {
- *   console.log(config.encabezado); // Muestra el encabezado de cada columna
- * });
+ * Configuración utilizada para definir las propiedades de la bitácora de modificaciones.
+ * @export
+ * @constant {Array<Object>} CONFIGURACION_BITCORA
  */
 export const CONFIGURACION_BITCORA = [
   {
-    encabezado: 'Tipo modificación ',
+    /**
+     * Encabezado de la columna: Tipo modificación.
+     * @property {string} encabezado
+     */
+    encabezado: 'Tipo modificación',
+
+    /**
+     * Función que devuelve el valor del tipo de modificación.
+     * @property {(ele: Bitacora) => string | undefined} clave
+     */
     clave: (ele: Bitacora): string | undefined => ele.tipoModificacion,
+
+    /**
+     * Orden de la columna.
+     * @property {number} orden
+     */
     orden: 1,
   },
   {
-    encabezado: 'Fecha modificación  ',
+    encabezado: 'Fecha modificación',
     clave: (ele: Bitacora): string | undefined => ele.fechaModificacion,
     orden: 2,
   },
@@ -78,36 +98,39 @@ export const CONFIGURACION_BITCORA = [
     orden: 3,
   },
   {
-    encabezado: 'Valores nuevos ',
+    encabezado: 'Valores nuevos',
     clave: (ele: Bitacora): string | undefined => ele.valoresNuevos,
     orden: 4,
   },
 ];
 
 /**
- * @const CONFIGURACION_SECTOR
- * @description Configuración utilizada para definir las propiedades de los sectores en la aplicación.
- * Contiene una lista de objetos que especifican encabezados, claves y el orden de las columnas.
- * 
- * @property {string} encabezado - El título o encabezado que se mostrará en la interfaz de usuario.
- * @property {(ele: Sector) => string | undefined} clave - Una función que toma un objeto de tipo `Sector` 
- * y devuelve el valor correspondiente a la clave especificada.
- * @property {number} orden - El orden en el que se deben mostrar las columnas en la interfaz.
- * 
- * @example
- * // Ejemplo de uso:
- * CONFIGURACION_SECTOR.forEach(config => {
- *   console.log(config.encabezado);
- * });
+ * Configuración utilizada para definir las propiedades de los sectores en la aplicación.
+ * @export
+ * @constant {Array<Object>} CONFIGURACION_SECTOR
  */
 export const CONFIGURACION_SECTOR = [
   {
+    /**
+     * Encabezado de la columna: Lista de sectores.
+     * @property {string} encabezado
+     */
     encabezado: 'Lista de sectores',
+
+    /**
+     * Función que devuelve el valor de la lista de sectores.
+     * @property {(ele: Sector) => string | undefined} clave
+     */
     clave: (ele: Sector): string | undefined => ele.listaSectores,
+
+    /**
+     * Orden de la columna.
+     * @property {number} orden
+     */
     orden: 1,
   },
   {
-    encabezado: 'Clave del sector ',
+    encabezado: 'Clave del sector',
     clave: (ele: Sector): string | undefined => ele.claveSector,
     orden: 2,
   },
@@ -119,30 +142,37 @@ export const CONFIGURACION_SECTOR = [
 ];
 
 /**
- * @const CONFIGURACION_PRODUCTOR_INDIRECTO
- * @description Configuración utilizada para definir las propiedades de los productores indirectos en el sistema.
- * Cada objeto en el arreglo representa una columna con su encabezado, clave de acceso y orden de aparición.
- * 
- * @type {Array<{encabezado: string, clave: (ele: ProductorIndirecto) => string | undefined, orden: number}>}
- * 
- * @property {string} encabezado - El título o nombre de la columna que se mostrará en la interfaz de usuario.
- * @property {(ele: ProductorIndirecto) => string | undefined} clave - Una función que toma un objeto de tipo `ProductorIndirecto` 
- * y devuelve el valor correspondiente a la columna.
- * @property {number} orden - El orden en el que la columna debe aparecer en la tabla.
+ * Configuración utilizada para definir las propiedades de los productores indirectos en el sistema.
+ * @export
+ * @constant {Array<Object>} CONFIGURACION_PRODUCTOR_INDIRECTO
  */
 export const CONFIGURACION_PRODUCTOR_INDIRECTO = [
   {
-    encabezado: 'Registro federal de contribuyentes  ',
+    /**
+     * Encabezado de la columna: Registro federal de contribuyentes.
+     * @property {string} encabezado
+     */
+    encabezado: 'Registro federal de contribuyentes',
+
+    /**
+     * Función que devuelve el RFC del productor indirecto.
+     * @property {(ele: ProductorIndirecto) => string | undefined} clave
+     */
     clave: (ele: ProductorIndirecto): string | undefined => ele.rfc,
+
+    /**
+     * Orden de la columna.
+     * @property {number} orden
+     */
     orden: 1,
   },
   {
-    encabezado: 'Denominación o razón social  ',
+    encabezado: 'Denominación o razón social',
     clave: (ele: ProductorIndirecto): string | undefined => ele.denominacion,
     orden: 2,
   },
   {
-    encabezado: 'Correo ',
+    encabezado: 'Correo',
     clave: (ele: ProductorIndirecto): string | undefined => ele.correo,
     orden: 3,
   },
@@ -153,26 +183,34 @@ export const CONFIGURACION_PRODUCTOR_INDIRECTO = [
   },
 ];
 
-
 /**
- * @const CONFIGURACION_MERCANCIAS_A_PRODUCIR
- * @description Configuración utilizada para definir las propiedades de las mercancías a producir.
- * Contiene información sobre el encabezado, la clave y el orden de las columnas.
- * 
- * @property {string} encabezado - El título de la columna que se mostrará en la interfaz de usuario.
- * @property {Function} clave - Una función que toma un objeto de tipo `MercanciasAProducir` y devuelve
- * un valor de tipo `string` o `undefined`, correspondiente a la clave específica de la columna.
- * @property {number} orden - El orden en el que se deben mostrar las columnas.
+ * Configuración utilizada para definir las propiedades de las mercancías a producir.
+ * @export
+ * @constant {Array<Object>} CONFIGURACION_MERCANCIAS_A_PRODUCIR
  */
 export const CONFIGURACION_MERCANCIAS_A_PRODUCIR = [
   {
-    encabezado: 'Fracción arancelaria  ',
+    /**
+     * Encabezado de la columna: Fracción arancelaria.
+     * @property {string} encabezado
+     */
+    encabezado: 'Fracción arancelaria',
+
+    /**
+     * Función que devuelve la fracción arancelaria de la mercancía.
+     * @property {(ele: MercanciasAProducir) => string | undefined} clave
+     */
     clave: (ele: MercanciasAProducir): string | undefined =>
       ele.fraccionArancelaria,
+
+    /**
+     * Orden de la columna.
+     * @property {number} orden
+     */
     orden: 1,
   },
   {
-    encabezado: 'Clave del sector ',
+    encabezado: 'Clave del sector',
     clave: (ele: MercanciasAProducir): string | undefined => ele.claveSector,
     orden: 2,
   },
@@ -182,22 +220,29 @@ export const CONFIGURACION_MERCANCIAS_A_PRODUCIR = [
     orden: 3,
   },
 ];
-
 /**
- * @const CONFIGURACION_PLANTAS
- * @description Configuración de las columnas para la visualización de datos relacionados con las plantas.
- * Cada objeto en el arreglo representa una columna con su encabezado, clave de acceso a los datos y orden de aparición.
- * 
- * @type {Array<{encabezado: string, clave: (ele: Plantas) => string | undefined, orden: number}>}
- * 
- * @property {string} encabezado - El nombre de la columna que se mostrará en la interfaz de usuario.
- * @property {(ele: Plantas) => string | undefined} clave - Una función que toma un objeto de tipo `Plantas` y devuelve el valor correspondiente a la columna.
- * @property {number} orden - El orden en el que se mostrará la columna en la tabla.
+ * Configuración de las columnas para la visualización de datos relacionados con las plantas.
+ * @export
+ * @constant {Array<Object>} CONFIGURACION_PLANTAS
  */
 export const CONFIGURACION_PLANTAS = [
   {
+    /**
+     * Encabezado de la columna: Calle.
+     * @property {string} encabezado
+     */
     encabezado: 'Calle',
+
+    /**
+     * Función que devuelve el valor de la calle.
+     * @property {(ele: Plantas) => string | undefined} clave
+     */
     clave: (ele: Plantas): string | undefined => ele.calle,
+
+    /**
+     * Orden de la columna.
+     * @property {number} orden
+     */
     orden: 1,
   },
   {
@@ -206,12 +251,12 @@ export const CONFIGURACION_PLANTAS = [
     orden: 2,
   },
   {
-    encabezado: 'Número interior ',
+    encabezado: 'Número interior',
     clave: (ele: Plantas): string | undefined => ele.numeroInterior,
     orden: 3,
   },
   {
-    encabezado: 'Código postal ',
+    encabezado: 'Código postal',
     clave: (ele: Plantas): string | undefined => ele.codingPostal,
     orden: 4,
   },
@@ -236,7 +281,7 @@ export const CONFIGURACION_PLANTAS = [
     orden: 7,
   },
   {
-    encabezado: 'Registro federal de contribuyentes ',
+    encabezado: 'Registro federal de contribuyentes',
     clave: (ele: Plantas): string | undefined => ele.rfc,
     orden: 8,
   },
@@ -251,33 +296,35 @@ export const CONFIGURACION_PLANTAS = [
     orden: 9,
   },
   {
-    encabezado: 'Estatus ',
+    encabezado: 'Estatus',
     clave: (ele: Plantas): string | undefined => ele.estatus,
     orden: 9,
   },
 ];
 
 /**
- * @const CONFIGURACION_MODIFICACION
- * @description Configuración utilizada para definir las propiedades de modificación en una lista de datos.
- * Cada objeto dentro del arreglo representa una columna con su encabezado, clave de acceso y orden.
- * 
- * @type {Array<{encabezado: string, clave: (ele: DatosDelModificacion) => string | number | undefined, orden: number}>}
- * 
- * @property {string} encabezado - El título de la columna que se mostrará en la interfaz de usuario.
- * @property {(ele: DatosDelModificacion) => string | number | undefined} clave - Una función que toma un objeto de tipo `DatosDelModificacion` y devuelve el valor correspondiente a la columna.
- * @property {number} orden - El orden en el que se mostrará la columna en la tabla.
- * 
- * @example
- * // Ejemplo de uso:
- * CONFIGURACION_MODIFICACION.forEach(config => {
- *   console.log(config.encabezado); // Muestra el encabezado de cada columna
- * });
+ * Configuración utilizada para definir las propiedades de modificación en una lista de datos.
+ * @export
+ * @constant {Array<Object>} CONFIGURACION_MODIFICACION
  */
 export const CONFIGURACION_MODIFICACION = [
   {
+    /**
+     * Encabezado de la columna: Estatus.
+     * @property {string} encabezado
+     */
     encabezado: 'Estatus',
+
+    /**
+     * Función que devuelve el valor del estatus.
+     * @property {(ele: DatosDelModificacion) => string | undefined} clave
+     */
     clave: (ele: DatosDelModificacion): string | undefined => ele.desEstatus,
+
+    /**
+     * Orden de la columna.
+     * @property {number} orden
+     */
     orden: 1,
   },
   {
@@ -297,7 +344,6 @@ export const CONFIGURACION_MODIFICACION = [
       ele.numeroExterior,
     orden: 4,
   },
-
   {
     encabezado: 'Código Postal',
     clave: (ele: DatosDelModificacion): number | undefined => ele.codigoPostal,

@@ -1,4 +1,4 @@
-import { BANDEJA_SOLICITUDES_FORMAS, BandejaDeSolicitudes, ConfiguracionColumna, ConsultaTramite } from '@libs/shared/data-access-user/src';
+import { BANDEJA_SOLICITUDES_FORMAS, ConfiguracionColumna, ConsultaTramite } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { BandejaDeSolicitudeService } from '../services/bandeja-de-solicitude.service';
@@ -28,7 +28,7 @@ export class MenuConsultaTramiteComponent implements OnInit, OnDestroy {
   /* 
    * Datos que se mostrarán en la tabla de solicitudes.
    */
-  public bandejaTablaDatos: BandejaDeSolicitudes[] = [];
+  public bandejaTablaDatos: ConsultaTramite[] = [];
 
     /* 
    * Estructura del formulario usado en la bandeja de solicitudes.
@@ -54,7 +54,7 @@ export class MenuConsultaTramiteComponent implements OnInit, OnDestroy {
    * lo cual puede ser útil para operaciones como filtrado, búsqueda o restablecimiento
    * de la tabla a su estado inicial.
    */
-  public copiarBandejaTablaDatos: BandejaDeSolicitudes[] = [];
+  public copiarBandejaTablaDatos: ConsultaTramite[] = [];
     
   /*
    * Constructor del componente.
@@ -86,7 +86,7 @@ export class MenuConsultaTramiteComponent implements OnInit, OnDestroy {
    * Actualiza la propiedad `numeroDeProcedimiento` del objeto de departamento seleccionado
    * con el valor proporcionado en el evento.
    */
-  public procedureNumero(evento: { campo: string; valor: any }): void {
+  public procedureNumero(evento: { campo: string; valor: string }): void {
     const NUMERO_DE_PROCEDIMIENTO = evento.valor;
     this.selectedDepartamentoObj.numeroDeProcedimiento = NUMERO_DE_PROCEDIMIENTO;
   }

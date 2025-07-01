@@ -16,7 +16,7 @@ describe('RegistroAgentesComponent', () => {
 
   beforeEach(() => {
     tramite30401StoreMock = {
-      setAgentesTablaDatos: jest.fn(),
+       establecerDatos: jest.fn(),
     };
 
     tramite30401QueryMock = {
@@ -51,16 +51,16 @@ describe('RegistroAgentesComponent', () => {
     jest.clearAllMocks();
   });
 
-  it('should create the component', () => {
+  it('debería crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize the form on creation', () => {
+  it('debe inicializar el formulario al crearlo', () => {
     expect(component.formularioAgentesAduanales).toBeDefined();
     expect(component.formularioAgentesAduanales.valid).toBeFalsy();
   });
 
-  it('should reset the form when limpiarFormulario is called', () => {
+  it('Debería reiniciar el formulario cuando se llama a limpiarFormulario', () => {
     component.formularioAgentesAduanales.patchValue({
       primerApellido: 'Test',
     });
@@ -68,7 +68,7 @@ describe('RegistroAgentesComponent', () => {
     expect(component.formularioAgentesAduanales.value.primerApellido).toBeNull();
   });
 
-  it('should add a new agent to the list when agentesInfoDatos is called', () => {
+  it('debe agregar un nuevo agente a la lista cuando se llama a agentesInfoDatos', () => {
     component.formularioAgentesAduanales.patchValue({
       nombreAgente: 'John',
       primerApellido: 'Doe',
@@ -77,10 +77,10 @@ describe('RegistroAgentesComponent', () => {
     });
     component.agentesInfoDatos();
     expect(component.agentesInfoList.length).toBe(1);
-    expect(tramite30401StoreMock.setAgentesTablaDatos).toHaveBeenCalled();
+    expect(tramite30401StoreMock.establecerDatos).toHaveBeenCalled();
   });
 
-  it('should update an existing agent when agentesInfoDatos is called with a selected row', () => {
+  it('debe actualizar un agente existente cuando se llama a AgentesInfoDatos con una fila seleccionada', () => {
     component.filaSeleccionadaAgentes = { id: 1 } as any;
     component.agentesInfoList = [{ id: 1, primerApellido: 'Old' } as any];
     component.formularioAgentesAduanales.patchValue({
@@ -90,7 +90,7 @@ describe('RegistroAgentesComponent', () => {
     expect(component.agentesInfoList[0].primerApellido).toBe('Updated');
   });
 
-  it('should open the modal when agregarDialogoDatos is called', () => {
+  it('debe abrir el modal cuando se llama agregarDialogoDatos', () => {
     const modalSpy = jest.spyOn(Modal.prototype, 'show').mockImplementation(() => {});
     component.registroDeAgentesElemento = {
       nativeElement: document.createElement('div'),
@@ -99,7 +99,7 @@ describe('RegistroAgentesComponent', () => {
     expect(modalSpy).toHaveBeenCalled();
   });
 
-  it('should close the modal when cambiarEstadoModal is called', () => {
+  it('debe cerrar el modal cuando se llama a cambiarEstadoModal', () => {
     const modalSpy = jest.spyOn(Modal.prototype, 'hide').mockImplementation(() => {});
     component.registroDeAgentesElemento = {
       nativeElement: document.createElement('div'),
@@ -111,13 +111,13 @@ describe('RegistroAgentesComponent', () => {
     expect(modalSpy).toHaveBeenCalled();
   });
 
-  it('should mark all form controls as touched when enviarDialogData is called with invalid form', () => {
+  it('Debe marcar todos los controles de formulario como tocados cuando se llama a enviarDialogData con un formulario no válido', () => {
     const markAllAsTouchedSpy = jest.spyOn(component.formularioAgentesAduanales, 'markAllAsTouched');
     component.enviarDialogData();
     expect(markAllAsTouchedSpy).toHaveBeenCalled();
   });
 
-  it('should add a new agent and reset the form when enviarDialogData is called with valid form', () => {
+  it('Se debe agregar un nuevo agente y restablecer el formulario cuando se llama a enviarDialogData con un formulario válido', () => {
     component.formularioAgentesAduanales.patchValue({
       nombreAgente: 'John',
       primerApellido: 'Doe',
@@ -129,7 +129,7 @@ describe('RegistroAgentesComponent', () => {
     expect(component.agentesInfoList[0].primerApellido).toBe('Doe');
   });
 
-  it('should delete selected agents when eliminarAgentesItem is called', () => {
+  it('Debe eliminar los agentes seleccionados cuando se llama a eliminarAgentesItem', () => {
     component.agentesInfoList = [
       { id: 1 } as any,
       { id: 2 } as any,
@@ -140,7 +140,7 @@ describe('RegistroAgentesComponent', () => {
     expect(component.agentesInfoList[0].id).toBe(2);
   });
 
-  it('should patch form data when patchModifyiedData is called', () => {
+  it('Se deben parchear los datos del formulario cuando se llama a patchModifyiedData', () => {
     component.filaSeleccionadaAgentes = {
       nombreAgente: 'John',
       primerApellido: 'Doe',
@@ -151,14 +151,14 @@ describe('RegistroAgentesComponent', () => {
     expect(component.formularioAgentesAduanales.value.primerApellido).toBe('Doe');
   });
 
-  it('should handle invalid form controls with esInvalido', () => {
+  it('Debería manejar controles de formulario no válidos con esInvalido', () => {
     const controlName = 'primerApellido';
     component.formularioAgentesAduanales.get(controlName)?.setErrors({ required: true });
     component.formularioAgentesAduanales.get(controlName)?.markAsTouched();
     expect(component.esInvalido(controlName)).toBe(true);
   });
 
-  it('should call abrirMultipleSeleccionPopup when listaFilaSeleccionadaAgentes is empty or has more than one item', () => {
+  it('Debe llamar a abrirMultipleSeleccionPopup cuando listaFilaSeleccionadaAgentes esté vacía o tenga más de un elemento', () => {
     component.listaFilaSeleccionadaAgentes = [];
     const abrirMultipleSeleccionPopupSpy = jest.spyOn(component, 'abrirMultipleSeleccionPopup').mockImplementation(() => {});
     component.modificarItemAgentes();
@@ -169,21 +169,21 @@ describe('RegistroAgentesComponent', () => {
     expect(abrirMultipleSeleccionPopupSpy).toHaveBeenCalledTimes(2);
   });
 
-  it('should return early and not call abrirElimninarConfirmationopup when listaFilaSeleccionadaAgentes is empty', () => {
+  it('Debería regresar temprano y no llamar a abrirElimninarConfirmationopup cuando listaFilaSeleccionadaAgentes esté vacía', () => {
     component.listaFilaSeleccionadaAgentes = [];
     const abrirElimninarConfirmationopupSpy = jest.spyOn(component, 'abrirElimninarConfirmationopup').mockImplementation(() => {});
     component.confirmEliminarAgentesItem();
     expect(abrirElimninarConfirmationopupSpy).not.toHaveBeenCalled();
   });
 
-  it('should call abrirElimninarConfirmationopup when listaFilaSeleccionadaAgentes has items', () => {
+  it('Debería llamar a abrirElimninarConfirmationopup cuando listaFilaSeleccionadaAgentes tenga elementos', () => {
     component.listaFilaSeleccionadaAgentes = [{ id: 1 } as any];
     const abrirElimninarConfirmationopupSpy = jest.spyOn(component, 'abrirElimninarConfirmationopup').mockImplementation(() => {});
     component.confirmEliminarAgentesItem();
     expect(abrirElimninarConfirmationopupSpy).toHaveBeenCalled();
   });
 
-  it('should set multipleSeleccionPopupAbierto and multipleSeleccionPopupCerrado to false when cerrarMultipleSeleccionPopup is called', () => {
+  it('debe establecer multipleSeleccionPopupAbierto y multipleSeleccionPopupCerrado en falso cuando se llama a cerrarMultipleSeleccionPopup', () => {
     component.multipleSeleccionPopupAbierto = true;
     component.multipleSeleccionPopupCerrado = true;
     component.cerrarMultipleSeleccionPopup();
@@ -191,7 +191,7 @@ describe('RegistroAgentesComponent', () => {
     expect(component.multipleSeleccionPopupCerrado).toBe(false);
   });
 
-  it('should disable buttons and return early when fila is empty', () => {
+  it('Debería desactivar los botones y regresar antes cuando Fila esté vacío', () => {
     component.manejarFilaSeleccionada([]);
     expect(component.enableModficarBoton).toBe(false);
     expect(component.enableEliminarBoton).toBe(false);
@@ -199,7 +199,7 @@ describe('RegistroAgentesComponent', () => {
     expect(component.filaSeleccionadaAgentes).toBeUndefined();
   });
 
-  it('should update listaFilaSeleccionadaAgentes, filaSeleccionadaAgentes, and enable buttons when fila has items', () => {
+  it('Debería actualizar listaFilaSeleccionadaAgentes, filaSeleccionadaAgentes y habilitar botones cuando fila tenga artículos', () => {
     const mockFila = [
       { id: 1, nombreAgente: 'John', primerApellido: 'Doe' } as any,
       { id: 2, nombreAgente: 'Jane', primerApellido: 'Smith' } as any,

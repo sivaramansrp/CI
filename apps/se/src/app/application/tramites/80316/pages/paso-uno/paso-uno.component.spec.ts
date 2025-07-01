@@ -30,4 +30,8 @@ describe('PasoUnoComponent', () => {
     component.seleccionaTab(1);
   });
 
+  it('should run #ngOnInit()', () => {
+    expect(() => component.ngOnInit()).not.toThrow();
+  });
+
 });
