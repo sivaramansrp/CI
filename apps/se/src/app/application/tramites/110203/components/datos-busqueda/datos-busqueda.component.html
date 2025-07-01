@@ -11,7 +11,7 @@
             <div class="col-md-4">
                 <div class="form-group">
                     <label class="form-label" for="númeroDeCertificado">Número de certificado*:</label>
-                    <input class="form-control" id="númeroDeCertificado" type="number"
+                    <input class="form-control" id="númeroDeCertificado" type="text"  maxlength="20"
                         formControlName="numeroDeCertificado">
                 </div>
             </div>
@@ -27,7 +27,7 @@
             </div>
         </div>
         <div class="col-12 d-flex justify-content-end mt-3 mb-4">
-            <button class="btn btn-primary" [disabled]="!datosBusquedaFormulario.valid" (click)="buscar()">Buscar</button>
+            <button class="btn btn-primary"  (click)=" datosBusquedaFormulario.valid && buscar()">Buscar</button>
         </div>
     </form>
 

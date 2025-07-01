@@ -9,7 +9,7 @@ describe('ComplementariaImmexComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule ],
+      imports: [ComplementariaImmexComponent, FormsModule, ReactiveFormsModule ],
       declarations: [
       ],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],

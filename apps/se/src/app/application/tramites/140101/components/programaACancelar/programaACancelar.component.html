@@ -32,7 +32,7 @@
     <div class="col-md-4">
       <!-- Campo para mostrar el folio del programa -->
       <div class="form-group">
-        <label for="folioPrograma">Folio de Programa:</label>
+        <label for="folioPrograma">Folio de programa:</label>
         <input
           type="text"
           id="folioPrograma"
@@ -47,7 +47,7 @@
     <div class="col-md-4">
       <!-- Campo para mostrar la modalidad seleccionada -->
       <div class="form-group">
-        <label for="modalidad">Selección de Modalidad:</label>
+        <label for="modalidad">Selección de modalidad:</label>
         <input
           type="text"
           id="modalidad"
@@ -60,7 +60,7 @@
     <div class="col-md-4">
       <!-- Campo para mostrar la representación federal -->
       <div class="form-group">
-        <label for="representacionFederal">Representación Federal:</label>
+        <label for="representacionFederal">Representación federal:</label>
         <input
           type="text"
           id="representacionFederal"
@@ -75,7 +75,7 @@
     <div class="col-md-4">
       <!-- Campo para mostrar el tipo de programa -->
       <div class="form-group">
-        <label for="tipoPrograma">Tipo Programa:</label>
+        <label for="tipoPrograma">Tipo programa:</label>
         <input
           type="text"
           id="tipoPrograma"
@@ -103,11 +103,11 @@
     <div class="col-md-12">
       <!-- Campo para capturar el motivo de cancelación -->
       <div class="form-group">
-        <label for="motivoCancelacion">Motivo Cancelación<span class="require">*</span>:</label>
+        <label for="motivoCancelacion">Motivo cancelación<span class="require">*</span>:</label>
         <textarea
           id="motivoCancelacion"
           formControlName="solicitudObservaciones"
-          [ngClass]="isValid('solicitudObservaciones') ? 'required' : ''"
+          [ngClass]="programaForm.get('solicitudObservaciones')?.invalid && (programaForm.get('solicitudObservaciones')?.touched || programaForm.get('solicitudObservaciones')?.dirty) ? 'required' : ''"
           rows="5"
           class="form-control"
           (change)="setValoresStore(
@@ -131,7 +131,7 @@
           <lib-input-check
            [id]="'etiqueta'"
             [formControlName]="'confirmar'"
-            [label]="'Confirmo estar de acuerdo con la Cancelación del Programa IMMEX/PROSEC'"
+            [label]="'Confirmo estar de acuerdo con la cancelación del Programa IMMEX/PROSEC'"
             [required]="true"
             [isDisabled]="soloLectura"
             [ngClass]="isValid('confirmar') ? 'required' : ''"

@@ -11,11 +11,20 @@ describe('DatosRepLegalRecibirDonacionComponent', () => {
 
   beforeEach(() => {
     mockDonacionesExtranjerasService = {
-      getPaises: jest.fn(),
+      getPaises: jest.fn().mockReturnValue(of({ data: [] })),
       buscarContribuyente: jest.fn(),
     };
     mockTramite10303Store = {
       setCvePaisRepLegalAutorizado: jest.fn(),
+      setNombreRepLegalAutorizado: jest.fn(),
+      setCalleRepLegalAutorizado: jest.fn(),
+      setNumExteriorRepLegalAutorizado: jest.fn(),
+      setNumInteriorRepLegalAutorizado: jest.fn(),
+      setEstadoRepLegalAutorizado: jest.fn(),
+      setColoniaRepLegalAutorizado: jest.fn(),
+      setCodigoPostalRepLegalAutorizado: jest.fn(),
+      setCorreoElectronicoRepLegalAutorizado: jest.fn(),
+      setTelefonoRepLegalAutorizado: jest.fn()
     };
     mockTramite10303Query = {
       selectSeccionState$: of({
@@ -24,7 +33,9 @@ describe('DatosRepLegalRecibirDonacionComponent', () => {
       }),
     };
     mockToastr = {
-      error: jest.fn(),
+      error: jest.fn().mockReturnValue(
+        of(new Error('Valor erronio'))
+      )
     };
 
     component = new DatosRepLegalRecibirDonacionComponent(
@@ -61,16 +72,16 @@ describe('DatosRepLegalRecibirDonacionComponent', () => {
 
   it('should reset the form', () => {
     component.datosRepLegalRecibirDonacionForm = new FormBuilder().group({});
-    const resetSpy = jest.spyOn(
+    const RESET_SPY = jest.spyOn(
       component.datosRepLegalRecibirDonacionForm,
       'reset'
     );
     component.restablecerFormulario();
-    expect(resetSpy).toHaveBeenCalled();
+    expect(RESET_SPY).toHaveBeenCalled();
   });
 
   it('should fetch contributor and update form when found', () => {
-    const mockData = {
+    const MOCK_DATA = {
       data: [
         {
           rfc: 'ABC123',
@@ -90,7 +101,7 @@ describe('DatosRepLegalRecibirDonacionComponent', () => {
     };
 
     mockDonacionesExtranjerasService.buscarContribuyente.mockReturnValue(
-      of(mockData)
+      of(MOCK_DATA)
     );
 
     component.buscarContribuyenteRfc(3, 'ABC123');
@@ -103,12 +114,26 @@ describe('DatosRepLegalRecibirDonacionComponent', () => {
     mockDonacionesExtranjerasService.buscarContribuyente.mockReturnValue(
       of({ data: [null] })
     );
-    component.buscarContribuyenteRfc(3, 'ABC123');
+    component.buscarContribuyenteRfc(1, 'ABC123');
     expect(mockToastr.error).toHaveBeenCalledWith('Valor erronio');
   });
 
   it('should patch form values when contributor is found', () => {
-    const mockContributor = {
+    component.datosRepLegalRecibirDonacionForm = new FormBuilder().group({
+      rfcRepLegalAutorizado: [null],
+      nombreRepLegalAutorizado: [''],
+      calleRepLegalAutorizado: [''],
+      numExteriorRepLegalAutorizado: [''],
+      numInteriorRepLegalAutorizado: [''],
+      estadoRepLegalAutorizado: [''],
+      coloniaRepLegalAutorizado: [''],
+      codigoPostalRepLegalAutorizado: [''],
+      cvePaisRepLegalAutorizado: [''],
+      correoElectronicoRepLegalAutorizado: [''],
+      telefonoRepLegalAutorizado: ['']
+    });
+
+    const MOCK_CONTRIBUTOR = {
       rfc: 'ABC123',
       nombre: 'Jane',
       apellidoPaterno: 'Smith',
@@ -116,51 +141,53 @@ describe('DatosRepLegalRecibirDonacionComponent', () => {
       calle: 'Park Street',
       numeroExterior: '10',
       numeroInterior: '2B',
-      estado: 'Tamil Nadu',
-      colonia: 'Central',
+      estado: 'Test',
+      colonia: 'Test',
       codigoPostal: '600001',
       pais: 'India',
       correoElectronico: 'jane.smith@example.com',
       telefono: '9876543210',
     };
 
-    component.construirRepLegalAutorizado(mockContributor, true);
+    component.construirRepLegalAutorizado(MOCK_CONTRIBUTOR, true);
     expect(component.datosRepLegalRecibirDonacionForm.value).toEqual({
-      rfcRepLegalAutorizado: undefined,
+      rfcRepLegalAutorizado: null,
       nombreRepLegalAutorizado: 'Jane Smith ',
       calleRepLegalAutorizado: 'Park Street',
       numExteriorRepLegalAutorizado: '10',
       numInteriorRepLegalAutorizado: '2B',
       cvePaisRepLegalAutorizado: 'India',
       codigoPostalRepLegalAutorizado: '600001',
-      estadoRepLegalAutorizado: 'Tamil Nadu',
-      coloniaRepLegalAutorizado: 'Central',
+      estadoRepLegalAutorizado: 'Test',
+      coloniaRepLegalAutorizado: 'Test',
       correoElectronicoRepLegalAutorizado: 'jane.smith@example.com',
       telefonoRepLegalAutorizado: '9876543210',
     });
   });
 
   it('should reset form if contributor is not found', () => {
-    const resetSpy = jest.spyOn(
+    component.ngOnInit();
+
+    const RESET_SPY = jest.spyOn(
       component.datosRepLegalRecibirDonacionForm,
       'reset'
     );
     component.construirRepLegalAutorizado(null as any, false);
-    expect(resetSpy).toHaveBeenCalled();
+    expect(RESET_SPY).toHaveBeenCalled();
   });
 
   it('should clean up subscriptions on destroy', () => {
-    const destroySpy = jest.spyOn(
+    const DESTROY_SPY = jest.spyOn(
       (component as any).destruirNotificador$,
       'next'
     );
-    const completeSpy = jest.spyOn(
+    const COMPLETE_SPY = jest.spyOn(
       (component as any).destruirNotificador$,
       'complete'
     );
 
     component.ngOnDestroy();
-    expect(destroySpy).toHaveBeenCalled();
-    expect(completeSpy).toHaveBeenCalled();
+    expect(DESTROY_SPY).toHaveBeenCalled();
+    expect(COMPLETE_SPY).toHaveBeenCalled();
   });
 });

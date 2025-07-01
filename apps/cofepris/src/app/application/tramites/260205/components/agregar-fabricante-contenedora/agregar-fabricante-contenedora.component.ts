@@ -3,11 +3,18 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { Fabricante } from '../../../../shared/models/terceros-relacionados.model';
 import { Tramite260205Store } from '../../estados/stores/tramite260205.store';
+
 /**
  * @component AgregarFabricanteContenedoraComponent
- * @description Componente contenedor que utiliza el componente `AgregarFabricanteComponent` 
- * para gestionar la funcionalidad relacionada con los fabricantes. 
- * Este componente interactúa con el estado del trámite a través del store `Tramite260205Store`.
+ * @description Componente que actúa como contenedor para la funcionalidad de agregar fabricantes. 
+ * Este componente utiliza el store `Tramite260205Store` para gestionar el estado del trámite 
+ * y delega la funcionalidad de actualización de datos de fabricantes.
+ *
+ * @selector app-agregar-fabricante-contenedora
+ * @standalone true
+ * @imports CommonModule, AgregarFabricanteComponent
+ * @templateUrl ./agregar-fabricante-contenedora.component.html
+ * @styleUrl ./agregar-fabricante-contenedora.component.scss
  */
 @Component({
   selector: 'app-agregar-fabricante-contenedora',

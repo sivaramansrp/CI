@@ -62,6 +62,8 @@ export class Tramite220403Store extends Store<FormularioGrupo> {
   }
 
   /**
+   * @method setDatosRealizar
+   * @description
    * Establece los datos de modificación en el estado.
    * 
    * @param {DatosRealizar} datosRealizar - Los datos de modificación que se van a establecer en el estado.
@@ -76,6 +78,8 @@ export class Tramite220403Store extends Store<FormularioGrupo> {
   }
 
   /**
+   * @method setCombinacionRequerida
+   * @description
    * Establece la combinación requerida en el estado.
    * 
    * @param {CombinacionRequerida} combinacionRequerida - La combinación requerida que se va a establecer en el estado.
@@ -91,6 +95,8 @@ export class Tramite220403Store extends Store<FormularioGrupo> {
 
 
   /**
+   * @method setTransporte
+   * @description
    * Establece el Transporte en el almacén.
    * 
    * @param {Transporte} transporte - El Transporte que se va a establecer en el almacén.
@@ -105,6 +111,8 @@ export class Tramite220403Store extends Store<FormularioGrupo> {
   }
 
   /**
+   * @method setPagoDerechos
+   * @description
    * Establece el alta de PagoDerechos en el almacén.
    * 
    * @param {PagoDerechos} pagoDerechos - Representa las PagoDerechos a dar de alta.
@@ -119,6 +127,8 @@ export class Tramite220403Store extends Store<FormularioGrupo> {
   }
 
   /**
+   * @method setDatosRealizarValidada
+   * @description
    * Establece el estado de validación de la sección "Datos a Realizar".
    * 
    * @param {boolean} datosRealizarValidada - Indica si la sección de datos a realizar ha sido validada.
@@ -133,6 +143,8 @@ export class Tramite220403Store extends Store<FormularioGrupo> {
   }
 
   /**
+   * @method setCombinacionRequeridaValidada
+   * @description
    * Establece el estado de validación de la sección "Combinación Requerida".
    * 
    * @param {boolean} combinacionRequeridaValidada - Indica si la sección de combinación requerida ha sido validada.
@@ -147,6 +159,8 @@ export class Tramite220403Store extends Store<FormularioGrupo> {
   }
 
   /**
+   * @method setTransporteValidada
+   * @description
    * Establece el estado de validación de la sección "Transporte".
    * 
    * @param {boolean} transporteValidada - Indica si la sección de transporte ha sido validada.
@@ -177,6 +191,7 @@ export class Tramite220403Store extends Store<FormularioGrupo> {
   }
 
   /**
+   * @method actualizarTercerosRelacionados
    * @description Updates the store with related third parties.
    * @param tercerosRelacionados Array of related third-party persons.
    */
@@ -188,7 +203,9 @@ export class Tramite220403Store extends Store<FormularioGrupo> {
   }
 
   /**
-   * @description Resets the store to its initial state.
+   * @method limpiarFormulario
+   * @description 
+   * Resets the store to its initial state.
    */
   public limpiarFormulario(): void {
     this.reset();

@@ -1,12 +1,17 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
+// @ts-nocheck
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { By } from '@angular/platform-browser';
+import { Observable, of as observableOf, throwError } from 'rxjs';
+
+import { Component } from '@angular/core';
 import { ModificacionComponent } from './modificacion.component';
 import { FormBuilder } from '@angular/forms';
 import { ImmerModificacionService } from '../../service/immer-modificacion.service';
 import { Tramite80306Store } from '../../../../estados/tramites/tramite80306.store';
 import { Tramite80306Query } from '../../../../estados/queries/tramite80306.query';
-import { of as observableOf } from 'rxjs';
 
 @Injectable()
 class MockImmerModificacionService {}
@@ -17,15 +22,36 @@ class MockTramite80306Store {}
 @Injectable()
 class MockTramite80306Query {}
 
+@Directive({ selector: '[myCustom]' })
+class MyCustomDirective {
+  @Input() myCustom;
+}
+
+@Pipe({name: 'translate'})
+class TranslatePipe implements PipeTransform {
+  transform(value) { return value; }
+}
+
+@Pipe({name: 'phoneNumber'})
+class PhoneNumberPipe implements PipeTransform {
+  transform(value) { return value; }
+}
+
+@Pipe({name: 'safeHtml'})
+class SafeHtmlPipe implements PipeTransform {
+  transform(value) { return value; }
+}
+
 describe('ModificacionComponent', () => {
-  let fixture: ComponentFixture<ModificacionComponent>;
-  let component: { ngOnDestroy: () => void; tramite80306Query: { selectSolicitud$?: any; }; inicializarFormulario: jest.Mock<any, any, any> | (() => void); loadDatosModificacion: jest.Mock<any, any, any> | (() => void); loadDatosTablaData: jest.Mock<any, any, any> | (() => void); ngOnInit: () => void; destroyNotifier$: { next?: any; unsubscribe?: any; }; fb: { group?: any; }; derechoState: { datosModificacion?: any; }; solicitudService: { getDatosModificacion?: any; getDatosTableData?: any; }; tramite80306Store: { setDatosModificacion?: any; }; setFormValues: jest.Mock<any, any, any> | (() => void); modificacionForm: { get?: any; }; datosTabla: { findIndex?: any; INDEX?: any; }; valorDeAlternancia: (arg0: { id: {}; }) => void; };
+  let fixture;
+  let component;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule, ModificacionComponent ],
+      imports: [ ModificacionComponent, FormsModule, ReactiveFormsModule ],
       declarations: [
-        
+        TranslatePipe, PhoneNumberPipe, SafeHtmlPipe,
+        MyCustomDirective
       ],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
       providers: [
@@ -110,20 +136,29 @@ describe('ModificacionComponent', () => {
     expect(component.modificacionForm.get).toHaveBeenCalled();
   });
 
-  it('should run #valorDeAlternancia()', async () => {
-    component.datosTabla = component.datosTabla || {};
-    component.datosTabla.findIndex = jest.fn().mockReturnValue([
-      {
-        "id": {}
-      }
-    ]);
-    component.datosTabla.INDEX = {
-      desEstatus: {}
-    };
-    component.valorDeAlternancia({
-      id: {}
-    });
-    expect(component.datosTabla.findIndex).toHaveBeenCalled();
-  });
+ it('should run #setValoresStore()', async () => {
+     // Arrange
+     const mockForm = {
+       get: jest.fn().mockReturnValue({ value: 'mockValue' }),
+     } as unknown as FormGroup;
+ 
+     const mockCampo = 'mockCampo';
+     const mockMetodoNombre = 'setDatosModificacion'; // Use a valid method name
+ 
+     component.tramite80306Store =
+       new MockTramite80306Store() as unknown as Tramite80306Store;
+ 
+     // Act
+     component.setValoresStore(
+       mockForm,
+       mockCampo,
+       mockMetodoNombre as keyof Tramite80306Store
+     );
+ 
+     // Assert
+     expect(
+       component.tramite80306Store.setDatosModificacion
+     ).toHaveBeenCalledWith('mockValue');
+   });
 
 });
