@@ -205,18 +205,6 @@ describe('ContenedorComponent', () => {
     expect(component.exceptionCaught).toBe(false);
   });
 
-  // it('should call submitSolicitud when the form is valid', () => {
-  //   const submitSolicitudSpy = jest.spyOn(component['datosTramiteService'], 'submitSolicitud').mockReturnValue(of(null));
-  //   component.solicitudForm = new FormBuilder().group({
-  //     tipoBusqueda: ['testValue', Validators.required],
-  //   });
-
-  //   component.datosCaptura();
-
-  //   expect(submitSolicitudSpy).toHaveBeenCalledWith(component.solicitudForm.value);
-  //   expect(component.exceptionCaught).toBe(false);
-  // });
-
   it('should not call submitSolicitud when the form is invalid', () => {
     const submitSolicitudSpy = jest.spyOn(component['datosTramiteService'], 'submitSolicitud');
     component.solicitudForm = new FormBuilder().group({
@@ -389,15 +377,6 @@ describe('ContenedorComponent', () => {
     };
     reader.readAsText(mockFile);
   });
-  // it('should call submitSolicitud when the form is valid', () => {
-  //   const submitSolicitudSpy = jest.spyOn(component['datosTramiteService'], 'submitSolicitud').mockReturnValue(of(null));
-  //   component.solicitudForm = new FormBuilder().group({
-  //     tipoBusqueda: ['testValue', Validators.required],
-  //   });
-  //   component.datosCaptura();
-  //   expect(submitSolicitudSpy).toHaveBeenCalledWith(component.solicitudForm.value);
-  //   expect(component.exceptionCaught).toBe(false);
-  // });
 
   it('should not call submitSolicitud when the form is invalid', () => {
     const submitSolicitudSpy = jest.spyOn(component['datosTramiteService'], 'submitSolicitud');
