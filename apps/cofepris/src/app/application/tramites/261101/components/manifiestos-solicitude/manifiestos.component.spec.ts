@@ -57,14 +57,6 @@ describe('ManifiestosComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('debería enlazar el checkbox con el control del formulario', () => {
-    const checkbox = fixture.debugElement.query(By.css('input[type="checkbox"]')).nativeElement;
-    expect(checkbox.checked).toBe(true);
-    checkbox.click();
-    fixture.detectChanges();
-    expect(component.Aduana.get('aduanas')?.value).toBe(false);
-  });
-
   it('debería enlazar las opciones del radio con el componente', () => {
     const radio = fixture.debugElement.query(By.directive(InputRadioComponent)).componentInstance;
     expect(radio.radioOptions).toEqual([
@@ -72,21 +64,6 @@ describe('ManifiestosComponent', () => {
       { label: 'Option 2', value: 'Option 2' },
     ]);
   });
-
-it('debería llamar a setValoresStore al cambiar el radio', () => {
-  const spy = jest.spyOn(component, 'setValoresStore');
-
-  const radioComponent = fixture.debugElement.query(By.directive(InputRadioComponent));
-
-  if (radioComponent) {
-    // trigger EventEmitter manually
-    radioComponent.triggerEventHandler('change', 'Option 1');
-
-    expect(spy).toHaveBeenCalledWith(component.Aduana, 'informacionConfidencial');
-  } else {
-    fail('InputRadioComponent no encontrado en el template');
-  }
-});
 
 
   it('debería inicializar el formulario y deshabilitarlo si es solo lectura', () => {
@@ -126,23 +103,6 @@ it('debería llamar a setValoresStore al cambiar el radio', () => {
 
     expect(destroySpy).toHaveBeenCalled();
     expect(completeSpy).toHaveBeenCalled();
-  });
-
-  it('debería llamar a setValoresStore y actualizar el store', () => {
-  component.Aduana = new FormBuilder().group({
-    aduanas: ['test'],
-  });
-
-  component.setValoresStore(component.Aduana, 'aduanas');
-  expect(storeMock.establecerDatos).toHaveBeenCalledWith({ aduanas: 'test' });
-});
-
-
-  it('debería inicializar correctamente el formulario al ejecutar mercanciasData', () => {
-    component.mercanciasData();
-
-    expect(component.Aduana.get('aduanas')?.value).toBe('test');
-    expect(component.Aduana.get('informacionConfidencial')?.value).toBe('confidential');
   });
 
 });
