@@ -3544,6 +3544,10 @@ export class SolicitudComponent
       .subscribe();
   }
 
+  /**
+   * Limpia las fechas del formulario de datos del servicio.
+   * Si la fecha final está vacía, se marca como no tocada y príst
+   */
   limpiarFechas(): void {
     const FECHA = this.datosServicio.get('fechaFinal');
 
@@ -3553,6 +3557,9 @@ export class SolicitudComponent
     }
   }
 
+  /**
+   * Obtiene las secciones aduaneras y recintos catalogados para una aduana específica.
+   */
   obtenerSeccionRecinto(aduana: string): Observable<{
     seccionAduanera: Catalogos[];
     recintoCatalogo: Recinto[];
