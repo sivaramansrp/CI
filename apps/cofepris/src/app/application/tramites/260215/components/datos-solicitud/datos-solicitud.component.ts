@@ -4,6 +4,7 @@ import {
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ConsultaioQuery, TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import {
   FormBuilder,
   FormGroup,
@@ -16,11 +17,13 @@ import {
 } from '../../estados/tramites/tramite260215.store';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { ConfiguracionColumna } from '@ng-mf/data-access-user';
 import { DomicilioComponent } from '../domicilio-establecimiento/domicilio-establecimiento.component';
 import { ManifiestosComponent } from '../manifiestos-declaraciones/manifiestos-declaraciones.component';
 import { RepresentanteLegalComponent } from '../representante-legal/representante-legal.component';
+import { SolicitudModel } from '../../models/permiso-sanitario.model';
 import { Tramite260215Query } from '../../estados/queries/tramite260215.query';
+import { ServiciosPermisoSanitarioService } from '../../services/servicios-permiso-sanitario.service';
 
 /**
  * Componente responsable de gestionar y mostrar los datos principales del formulario,
@@ -37,6 +40,7 @@ import { Tramite260215Query } from '../../estados/queries/tramite260215.query';
     DomicilioComponent,
     ManifiestosComponent,
     RepresentanteLegalComponent,
+    TablaDinamicaComponent,
   ],
   templateUrl: './datos-solicitud.component.html',
   styleUrl: './datos-solicitud.component.css',
@@ -51,13 +55,13 @@ export class DatosDeLaComponent implements OnInit, OnDestroy {
    * Notificador para destruir observables.
    */
   private destroyNotifier$: Subject<void> = new Subject();
+  
 
-  /**
-   * Constructor del componente.
-   * @param fb
-   * @param tramite260215Store
-   * @param tramite260215Query
+    /**
+   * Arreglo que almacena los datos de la solicitud.
+   * Se utiliza para gestionar la información relacionada con las solicitudes en el componente.
    */
+    solicitudData: SolicitudModel[] = []
 
 
    /**
@@ -84,6 +88,7 @@ export class DatosDeLaComponent implements OnInit, OnDestroy {
     private tramite260215Store: Tramite260215Store,
     private tramite260215Query: Tramite260215Query,
     private consultaioQuery: ConsultaioQuery,
+    private serviciosPermisoSanitarioService: ServiciosPermisoSanitarioService,
   ) {
      /**
      * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
@@ -125,8 +130,18 @@ export class DatosDeLaComponent implements OnInit, OnDestroy {
       this.guardarDatosFormulario();
     } else {
       this.inicializarFormulario();
+
+       this.actualizarEstado();
     }  
   }
+
+  actualizarEstado(): void {
+    this.serviciosPermisoSanitarioService.getSolicitudes()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data): void => {
+        this.solicitudData = data
+      });
+    }
 
 /**
  * Inicializa el formulario reactivo para la solicitud del trámite 260215.
@@ -225,6 +240,18 @@ export class DatosDeLaComponent implements OnInit, OnDestroy {
       ) => void
     )(VALOR);
   }
+
+    /**
+   * Configuración de la tabla para mostrar las solicitudes.
+   * - Define las columnas con encabezados y claves para los datos relevantes de las solicitudes.
+   * - Incluye detalles como fecha de creación, mercancía, cantidad y proveedor.
+   */
+    configuracionTablaSolicitud: ConfiguracionColumna<SolicitudModel>[] = [
+      { encabezado: 'Fecha Creación', clave: (item: SolicitudModel) => item.fechaCreacion, orden: 1 },
+      { encabezado: 'Mercancía', clave: (item: SolicitudModel) => item.mercancía, orden: 2 },
+      { encabezado: 'Cantidad', clave: (item: SolicitudModel) => item.cantidad, orden: 3 },
+      { encabezado: 'Proveedor', clave: (item: SolicitudModel) => item.proveedor, orden: 4 }
+    ];
 
   /**
    * Método del ciclo de vida de Angular que se llama cuando el componente se destruye.

@@ -162,3 +162,14 @@ export interface TablaDatos {
    */
   tbodyData: string[];
 }
+
+/**
+ * Modelo de datos para una solicitud.
+ * Contiene información básica sobre la solicitud.
+ */
+export interface SolicitudModel {
+  fechaCreacion: string;
+  mercancía: string;
+  cantidad: string;
+  proveedor: string;
+}

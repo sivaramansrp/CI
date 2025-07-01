@@ -10,7 +10,7 @@ import { Observable, catchError, throwError } from 'rxjs';
 import { Solicitud260215State, Tramite260215Store } from '../estados/tramites/tramite260215.store';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { PermisoModel } from '../models/permiso-sanitario.model';
+import { PermisoModel, SolicitudModel } from '../models/permiso-sanitario.model';
 
 @Injectable({
   providedIn: 'root',
@@ -47,6 +47,14 @@ export class ServiciosPermisoSanitarioService {
       })
     );
   }
+
+   /**
+     * Obtiene la lista de solicitudes desde un recurso externo.
+     * @returns Un Observable que emite un arreglo de objetos de tipo SolicitudModel.
+     */
+    getSolicitudes(): Observable<SolicitudModel[]> {
+      return this.http.get<SolicitudModel[]>('assets/json/260215/solicitud.json');
+    }
 
   /**
    * Obtiene los datos del proveedor desde un archivo JSON local.
