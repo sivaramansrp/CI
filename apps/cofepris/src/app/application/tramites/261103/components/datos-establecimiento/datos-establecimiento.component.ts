@@ -33,7 +33,7 @@ export class DatosestablecimientoComponent implements OnInit, OnDestroy {
  * Se utiliza para gestionar y acceder a los datos relacionados con el estado
  * del procedimiento en curso.
  */
-  private seccionState!: DatosProcedureState;
+  public seccionState!: DatosProcedureState;
     /**
    * Subject para notificar la destrucción del componente.
    */
