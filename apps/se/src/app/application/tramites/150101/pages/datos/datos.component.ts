@@ -27,7 +27,9 @@ export class DatosComponent implements AfterViewInit, OnInit, OnDestroy {
    * para establecer el tipo de persona como MORAL_NACIONAL.
    */
   ngAfterViewInit(): void {
-    this.solicitante.obtenerTipoPersona(TIPO_PERSONA.MORAL_NACIONAL);
+    setTimeout(() => {
+      this.solicitante.obtenerTipoPersona(TIPO_PERSONA.MORAL_NACIONAL);
+    });
   }
 
   /**
