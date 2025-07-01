@@ -184,8 +184,8 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    */
   donanteDomicilio(): void {
     this.solicitudForm = this.fb.group({
-       folio: [{ value: this.solicitudState?.folio, disabled: this.soloLectura }, [Validators.required]],
-  motivoDelDes: [{ value: this.solicitudState?.motivoDelDes, disabled: this.soloLectura }, [Validators.required]],
+      folio: [{ value: this.solicitudState?.folio, disabled: this.soloLectura }, [Validators.required]],
+      motivoDelDes: [{ value: this.solicitudState?.motivoDelDes, disabled: this.soloLectura }, [Validators.required]],
     });
   }
 

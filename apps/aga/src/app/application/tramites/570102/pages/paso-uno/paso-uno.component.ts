@@ -108,7 +108,6 @@ export class PasoUnoComponent implements AfterViewInit, OnDestroy, OnInit {
    * Indica si existen datos disponibles.
    */
   isDataevent!: boolean;
-
   /**
    * Estado global de la solicitud 570102.
    * Contiene los valores actuales del trámite, como renovación, homologación, y otros datos relevantes.
