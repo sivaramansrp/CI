@@ -357,7 +357,20 @@ public inicializarTablaYCatalogoDatos(): void {
    * @returns Una copia profunda del objeto proporcionado.
    */
 
+/**
+ * Realiza una copia profunda de un objeto dado utilizando serialización y deserialización JSON.
+ * 
+ * @template T El tipo del objeto a copiar.
+ * @param obj El objeto que se desea copiar profundamente.
+ * @returns Una nueva instancia del objeto, completamente independiente del original.
+ * @remarks
+ * - Si el objeto es `undefined` o `null`, se retorna tal cual.
+ * - Esta función no copia correctamente objetos que contienen funciones, fechas, mapas, conjuntos, o propiedades no serializables por JSON.
+ */
 public static deepCopy<T>(obj: T): T {
+  if (obj === undefined || obj === null) {
+    return obj;
+  }
   return JSON.parse(JSON.stringify(obj));
 }
 

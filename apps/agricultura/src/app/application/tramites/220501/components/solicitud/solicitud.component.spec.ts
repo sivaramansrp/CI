@@ -5,21 +5,32 @@ import { SolicitudPantallasService } from '../../../220502/services/solicitud-pa
 import { of } from 'rxjs';
 import { CargarDatosIniciales } from '../../../220502/models/solicitud-pantallas.model';
 import { CatalogosSelect } from '@libs/shared/data-access-user/src';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 
 describe('SolicitudComponent', () => {
   let component: SolicitudComponent;
   let solicitudService: jest.Mocked<SolicitudPantallasService>;
+  let consultaioQuery: jest.Mocked<ConsultaioQuery>;
 
   beforeEach(() => {
     solicitudService = {
       getData: jest.fn()
     } as unknown as jest.Mocked<SolicitudPantallasService>;
 
+    consultaioQuery = {
+      getConsultaio: jest.fn().mockReturnValue(of({})),
+      selectConsultaioState$: of({ readonly: false }),
+    } as unknown as jest.Mocked<ConsultaioQuery>;
+
     TestBed.configureTestingModule({
-      providers: [FormBuilder, { provide: SolicitudPantallasService, useValue: solicitudService }]
+      providers: [
+        FormBuilder, 
+        { provide: SolicitudPantallasService, useValue: solicitudService },
+        { provide: ConsultaioQuery, useValue: consultaioQuery }
+      ]
     });
 
-    component = new SolicitudComponent(TestBed.inject(FormBuilder), solicitudService);
+    component = new SolicitudComponent(TestBed.inject(FormBuilder), solicitudService, consultaioQuery);
   });
 
   test('should create component', () => {

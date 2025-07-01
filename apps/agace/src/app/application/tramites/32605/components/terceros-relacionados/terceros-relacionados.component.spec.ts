@@ -425,6 +425,96 @@ describe('TercerosRelacionadosComponent', () => {
     );
   });
 
+  it('should not throw if guardarDatosEnlaceOperativo is called and modificacionEnlaceOperativoElement does not exist', () => {
+    component.modificacionEnlaceOperativoElement = null as any;
+    expect(() => component.guardarDatosEnlaceOperativo()).not.toThrow();
+  });
+
+  it('should not throw if guardarModificacionEnlaceOperativo is called and modificacionEnlaceOperativoElement does not exist', () => {
+    component.modificacionEnlaceOperativoElement = null as any;
+    expect(() => component.guardarModificacionEnlaceOperativo()).not.toThrow();
+  });
+
+  it('should call guardarDatosFormulario if esFormularioSoloLectura is true in inicializarEstadoFormulario', () => {
+    const guardarDatosFormularioSpy = jest.spyOn(component, 'guardarDatosFormulario');
+    component.esFormularioSoloLectura = true;
+    component.inicializarEstadoFormulario();
+    expect(guardarDatosFormularioSpy).toHaveBeenCalled();
+  });
+
+  it('should call inicializarFormulario if esFormularioSoloLectura is false in inicializarEstadoFormulario', () => {
+    const inicializarFormularioSpy = jest.spyOn(component, 'inicializarFormulario');
+    component.esFormularioSoloLectura = false;
+    component.inicializarEstadoFormulario();
+    expect(inicializarFormularioSpy).toHaveBeenCalled();
+  });
+
+  it('should call inicializarFormulario and disable form if esFormularioSoloLectura is true in guardarDatosFormulario', () => {
+    component.inicializarFormulario = jest.fn();
+    component.tercerosRelacionadosForm = {
+      disable: jest.fn(),
+      enable: jest.fn(),
+    } as any;
+    component.esFormularioSoloLectura = true;
+    component.guardarDatosFormulario();
+    expect(component.inicializarFormulario).toHaveBeenCalled();
+    expect(component.tercerosRelacionadosForm.disable).toHaveBeenCalled();
+    expect(component.tercerosRelacionadosForm.enable).not.toHaveBeenCalled();
+  });
+
+  it('should call inicializarFormulario and enable form if esFormularioSoloLectura is false in guardarDatosFormulario', () => {
+    component.inicializarFormulario = jest.fn();
+    component.tercerosRelacionadosForm = {
+      disable: jest.fn(),
+      enable: jest.fn(),
+    } as any;
+    component.esFormularioSoloLectura = false;
+    component.guardarDatosFormulario();
+    expect(component.inicializarFormulario).toHaveBeenCalled();
+    expect(component.tercerosRelacionadosForm.enable).toHaveBeenCalled();
+    expect(component.tercerosRelacionadosForm.disable).not.toHaveBeenCalled();
+  });
+
+  it('should not call enable or disable if esFormularioSoloLectura is neither true nor false in guardarDatosFormulario', () => {
+    component.inicializarFormulario = jest.fn();
+    component.tercerosRelacionadosForm = {
+      disable: jest.fn(()=> of()),
+      enable: jest.fn(()=> of()),
+    } as any;
+    component.guardarDatosFormulario();
+    expect(component.inicializarFormulario).toHaveBeenCalled();
+ });
+
+  it('should set seleccionEnlaceOperativoDatos when seleccionEnlaceOperativo is called', () => {
+    const mockEnlaces: any[] = [{ rfc: 'RFC1' }, { rfc: 'RFC2' }];
+    component.seleccionEnlaceOperativo(mockEnlaces);
+    expect(component.seleccionEnlaceOperativoDatos).toBe(mockEnlaces);
+  });
+
+  it('should remove the selected enlace operativo when cerrarDialogoEnlaceOperativo is called and seleccionEnlaceOperativoDatos has elements', () => {
+    component.seleccionEnlaceOperativoDatos = [{ rfc: 'RFC1' }] as any;
+    component.enlaceOperativosLista = [
+      { rfc: 'RFC1' },
+      { rfc: 'RFC2' },
+    ] as any;
+    component.cerrarDialogoEnlaceOperativo();
+    expect(component.enlaceOperativosLista).toEqual([{ rfc: 'RFC2' }]);
+  });
+
+  it('should not modify enlaceOperativosLista if seleccionEnlaceOperativoDatos is empty when cerrarDialogoEnlaceOperativo is called', () => {
+    component.seleccionEnlaceOperativoDatos = [] as any;
+    component.enlaceOperativosLista = [
+      { rfc: 'RFC1' },
+      { rfc: 'RFC2' },
+    ] as any;
+    component.cerrarDialogoEnlaceOperativo();
+    expect(component.enlaceOperativosLista).toEqual([
+      { rfc: 'RFC1' },
+      { rfc: 'RFC2' },
+    ]);
+  });
+
+
   it('should update store on actualizarCorreoElectronico', () => {
     const event = { target: { value: 'new@example.com' } } as any;
     component.actualizarCorreoElectronico(event);
@@ -432,6 +522,82 @@ describe('TercerosRelacionadosComponent', () => {
       solicitud32605StoreMock.actualizarCorreoElectronico
     ).toHaveBeenCalledWith('new@example.com');
   });
+
+  it('should add a new enlace operativo and pedimento, open modal, and update store when agregarEnlaceOperativo is called', () => {
+    const abrirModalSpy = jest.spyOn(component, 'abrirModal');
+    const actualizarEnlaceOperativosListaSpy = jest.spyOn(solicitud32605StoreMock, 'actualizarEnlaceOperativosLista');
+    component.pedimentos = [];
+    component.enlaceOperativosLista = [{ rfc: 'RFC_EXISTENTE' }] as any;
+    const nuevoEnlace: any = { rfc: 'RFC_NUEVO', nombre: 'Nuevo' };
+
+    component.agregarEnlaceOperativo(nuevoEnlace);
+
+    expect(abrirModalSpy).toHaveBeenCalledWith(
+      'Se debe registrar por lo menos un enlace operativo que no sea suplente.'
+    );
+
+    expect(component.pedimentos.length).toBe(1);
+    expect(component.pedimentos[0]).toEqual({
+      patente: 0,
+      pedimento: 0,
+      aduana: 0,
+      idTipoPedimento: 0,
+      descTipoPedimento: 'Por evaluar',
+      numero: '',
+      comprobanteValor: '',
+      pedimentoValidado: false,
+    });
+
+    expect(component.enlaceOperativosLista).toContainEqual(nuevoEnlace);
+    expect(component.enlaceOperativosLista.length).toBe(2);
+
+    expect(actualizarEnlaceOperativosListaSpy).toHaveBeenCalledWith(component.enlaceOperativosLista);
+  });
+
+  it('should set nuevaNotificacion and elementoParaEliminar when abrirModal is called', () => {
+    component.nuevaNotificacion = undefined as any;
+    component.elementoParaEliminar = undefined as any;
+    const mensaje = 'Mensaje de prueba';
+    const index = 3;
+
+    component.abrirModal(mensaje, index);
+
+    expect(component.nuevaNotificacion).toEqual({
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: mensaje,
+      cerrar: false,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    });
+    expect(component.elementoParaEliminar).toBe(index);
+  });
+
+  it('should set elementoParaEliminar to 0 if not provided in abrirModal', () => {
+    component.elementoParaEliminar = undefined as any;
+    component.abrirModal('Mensaje sin índice');
+    expect(component.elementoParaEliminar).toBe(0);
+  });
+
+  it('should not call store update methods if rfcTercero does not exist in buscarTerceroNacionalIDC', () => {
+    component.tercerosRelacionadosForm = {
+      get: jest.fn().mockReturnValue({ value: '' }),
+    } as any;
+
+    component.buscarTerceroNacionalIDC();
+
+    expect(solicitudServiceMock.conseguirRepresentanteLegalDatos).not.toHaveBeenCalled();
+    expect(solicitud32605StoreMock.actualizarRfc).not.toHaveBeenCalled();
+    expect(solicitud32605StoreMock.actualizarNombre).not.toHaveBeenCalled();
+    expect(solicitud32605StoreMock.actualizarApellidoPaterno).not.toHaveBeenCalled();
+    expect(solicitud32605StoreMock.actualizarApellidoMaterno).not.toHaveBeenCalled();
+    expect(solicitud32605StoreMock.actualizarTelefono).not.toHaveBeenCalled();
+    expect(solicitud32605StoreMock.actualizarCorreoElectronico).not.toHaveBeenCalled();
+  });
+
 
   it('should clean up subscriptions on ngOnDestroy', () => {
     const destroySpy = jest.spyOn(component['destroy$'], 'next');

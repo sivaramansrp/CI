@@ -73,6 +73,30 @@ describe('ModificacionDeDenominacionORazorsSocialComponent', () => {
     });
   });
 
+  it('should call inicializarFormulario and disable the form if esFormularioSoloLectura is true', () => {
+    const inicializarFormularioSpy = jest.spyOn(component, 'inicializarFormulario');
+    component.esFormularioSoloLectura = true;
+    component.registroPolizaEndosoForm = component.fb.group({
+      razonSocialAnterior: [{ value: '', disabled: false }],
+      razonSocialActual: [{ value: '', disabled: false }],
+    });
+    const disableSpy = jest.spyOn(component.registroPolizaEndosoForm, 'disable');
+    component.guardarDatosFormulario();
+    expect(inicializarFormularioSpy).toHaveBeenCalled();
+  });
+
+  it('should call inicializarFormulario and enable the form if esFormularioSoloLectura is false', () => {
+    const inicializarFormularioSpy = jest.spyOn(component, 'inicializarFormulario');
+    component.esFormularioSoloLectura = false;
+    component.registroPolizaEndosoForm = component.fb.group({
+      razonSocialAnterior: [{ value: '', disabled: true }],
+      razonSocialActual: [{ value: '', disabled: true }],
+    });
+    const enableSpy = jest.spyOn(component.registroPolizaEndosoForm, 'enable');
+    component.guardarDatosFormulario();
+    expect(inicializarFormularioSpy).toHaveBeenCalled();
+  });
+
   it('should unsubscribe from observables on destroy', () => {
     const destroySpy = jest.spyOn(component['destroy$'], 'next');
     const completeSpy = jest.spyOn(component['destroy$'], 'complete');
