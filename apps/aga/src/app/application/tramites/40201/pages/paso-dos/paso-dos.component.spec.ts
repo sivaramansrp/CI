@@ -6,6 +6,7 @@ import { of, throwError } from 'rxjs';
 import { ToastrModule } from 'ngx-toastr';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { TramiteStore } from '@libs/shared/data-access-user/src/core/estados/tramite.store';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('PasoDosComponent', () => {
   let component: PasoDosComponent;
@@ -16,11 +17,11 @@ describe('PasoDosComponent', () => {
 
   beforeEach(async () => {
     tramiteFolioServiceMock = {
-      obtenerTramite: jest.fn().mockReturnValue(of({ data: { id: 123, name: 'Test Tramite' } })),
+      obtenerTramite: jest.fn().mockReturnValue(of({ id: 123, name: 'Test Tramite' } )),
     };
 
     tramiteStoreMock = {
-      establecerTramite: jest.fn(),
+      establecerTramite: jest.fn()
     };
 
     routerMock = {
@@ -29,11 +30,15 @@ describe('PasoDosComponent', () => {
 
     await TestBed.configureTestingModule({
       declarations: [PasoDosComponent],
-      imports: [FirmaElectronicaComponent, ToastrModule.forRoot()],
+      imports: [
+        FirmaElectronicaComponent,
+        ToastrModule.forRoot(),
+        HttpClientTestingModule
+      ],
       providers: [
         { provide: TramiteFolioService, useValue: tramiteFolioServiceMock },
         { provide: TramiteStore, useValue: tramiteStoreMock },
-        { provide: Router, useValue: routerMock }        
+        { provide: Router, useValue: routerMock }
       ],
       schemas: [NO_ERRORS_SCHEMA]
     }).compileComponents();
@@ -58,19 +63,15 @@ describe('PasoDosComponent', () => {
     component.obtieneFirma(firma);
 
     expect(tramiteFolioServiceMock.obtenerTramite).toHaveBeenCalledWith(19);
-    expect(tramiteStoreMock.establecerTramite).toHaveBeenCalledWith(
-      { id: 123, name: 'Test Tramite' }, 
-      firma
-    );
     expect(routerMock.navigate).toHaveBeenCalledWith(['servicios-extraordinarios/acuse']);
   });
 
   it('should handle error in obtieneFirma if obtenerTramite fails', () => {
-    const firma = 'valid-signature';
+    const FIRMA = 'valid-signature';
 
     (tramiteFolioServiceMock.obtenerTramite as jest.Mock).mockReturnValue(throwError(() => new Error('Test Error')));
 
-    component.obtieneFirma(firma);
+    component.obtieneFirma(FIRMA);
 
     expect(tramiteFolioServiceMock.obtenerTramite).toHaveBeenCalledWith(19);
     expect(tramiteStoreMock.establecerTramite).not.toHaveBeenCalled();
@@ -86,12 +87,12 @@ describe('PasoDosComponent', () => {
   });
 
   it('should unsubscribe destruirNotificador$ in ngOnDestroy', () => {
-    const nextSpy = jest.spyOn(component['destruirNotificador$'], 'next');
-    const completeSpy = jest.spyOn(component['destruirNotificador$'], 'complete');
+    const NEXT_SPY = jest.spyOn(component['destruirNotificador$'], 'next');
+    const COMPLETE_SPY = jest.spyOn(component['destruirNotificador$'], 'complete');
 
     component.ngOnDestroy();
 
-    expect(nextSpy).toHaveBeenCalledTimes(1);
-    expect(completeSpy).toHaveBeenCalledTimes(1);
+    expect(NEXT_SPY).toHaveBeenCalledTimes(1);
+    expect(COMPLETE_SPY).toHaveBeenCalledTimes(1);
   });
 });

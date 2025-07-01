@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { DerechosComponent } from './derechos.component';
 
 describe('DerechosComponent', () => {
@@ -8,6 +9,7 @@ describe('DerechosComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [DerechosComponent],
+      schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
 
     fixture = TestBed.createComponent(DerechosComponent);

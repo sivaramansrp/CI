@@ -5,22 +5,44 @@
       <div class="col-md-4">
         <div class="form-group">
           <label class="form-label" for="nombre">Nombre(s):</label>
-          <input class="form-control" id="nombre" formControlName="nombre" type="text" [placeholder]="placeholder.nombre" (change)="setValoresStore(destinatarioForm,'nombre', 'setNombre')">
+          <input class="form-control" id="nombre" formControlName="nombre" maxlength="25" type="text" [readonly]="camposNombreSoloLectura" (change)="setValoresStore(destinatarioForm,'nombre', 'setNombre')">
         </div>
+        @if(destinatarioForm.controls['nombre'].invalid && destinatarioForm.controls['nombre'].touched) {
+  <div class="d-grid">
+    @if(destinatarioForm.controls['nombre'].errors?.['maxlength']) {
+      <span class="mensaje-error">El nombre no puede ser mayor a 30 caracteres</span>
+    }
+  </div>
+}
+
       </div>
 
       <div class="col-md-4">
         <div class="form-group">
           <label class="form-label" for="primer">Primer apellido:</label>
-          <input class="form-control" id="primer" formControlName="primer" type="text" [placeholder]="placeholder.primer" (change)="setValoresStore(destinatarioForm,'primer', 'setPrimer')">
+          <input class="form-control" id="primer" formControlName="primer" maxlength="20" type="text" [readonly]="camposNombreSoloLectura" (change)="setValoresStore(destinatarioForm,'primer', 'setPrimer')">
         </div>
+        @if(destinatarioForm.controls['primer'].invalid && destinatarioForm.controls['primer'].touched) {
+  <div class="d-grid">
+    @if(destinatarioForm.controls['primer'].errors?.['maxlength']) {
+      <span class="mensaje-error">El primer apellido no puede ser mayor a 20 caracteres</span>
+    }
+  </div>
+}
       </div>
 
       <div class="col-md-4">
         <div class="form-group">
           <label class="form-label" for="segundo">Segundo apellido:</label>
-          <input class="form-control" id="segundo" formControlName="segundo" type="text" [placeholder]="placeholder.segundo" (change)="setValoresStore(destinatarioForm,'segundo', 'setSegundo')">
+          <input class="form-control" id="segundo" formControlName="segundo" type="text" maxlength="20" [readonly]="camposNombreSoloLectura" (change)="setValoresStore(destinatarioForm,'segundo', 'setSegundo')">
         </div>
+        @if(destinatarioForm.controls['segundo'].invalid && destinatarioForm.controls['segundo'].touched) {
+  <div class="d-grid">
+    @if(destinatarioForm.controls['segundo'].errors?.['maxlength']) {
+      <span class="mensaje-error">El segundo apellido no puede ser mayor a 20 caracteres</span>
+    }
+  </div>
+}
       </div>
     </div>
 
@@ -28,15 +50,36 @@
       <div class="col-md-4">
         <div class="form-group">
           <label class="form-label" for="fiscal">Número de registro fiscal*:</label>
-          <input class="form-control" id="fiscal" formControlName="fiscal" type="number" [placeholder]="placeholder.fiscal" (change)="setValoresStore(destinatarioForm,'fiscal', 'setFiscal')">
+          <input class="form-control" id="fiscal" formControlName="fiscal" type="number" maxlength="30"  (change)="setValoresStore(destinatarioForm,'fiscal', 'setFiscal')">
         </div>
+        @if(destinatarioForm.controls['fiscal'].invalid && destinatarioForm.controls['fiscal'].touched) {
+  <div class="d-grid">
+    @if(destinatarioForm.controls['fiscal'].errors?.['required']) {
+      <span class="mensaje-error">Este campo es obligatorio</span>
+    }
+    @if(destinatarioForm.controls['fiscal'].errors?.['maxlength']) {
+      <span class="mensaje-error">El número fiscal no puede ser mayor a 30 caracteres</span>
+    }
+  </div>
+}
       </div>
 
       <div class="col-md-8">
         <div class="form-group">
           <label class="form-label" for="razon">Razón social:</label>
-          <input class="form-control" id="razon" formControlName="razon" type="text" [placeholder]="placeholder.razon" (change)="setValoresStore(destinatarioForm,'razon', 'setRazon')">
+          <input class="form-control" id="razon" formControlName="razon" type="text" maxlength="70"  (change)="setValoresStore(destinatarioForm,'razon', 'setRazon')"   [readonly]="destinatarioForm.get('nombre')?.value?.trim().length > 0">
         </div>
+        @if(destinatarioForm.controls['razon'].invalid && destinatarioForm.controls['razon'].touched) {
+  <div class="d-grid">
+    @if(destinatarioForm.controls['razon'].errors?.['required']) {
+      <span class="mensaje-error">Este campo es obligatorio</span>
+    }
+    @if(destinatarioForm.controls['razon'].errors?.['maxlength']) {
+      <span class="mensaje-error">La razón social no puede ser mayor a 70 caracteres</span>
+    }
+  </div>
+}
+
       </div>
     </div>
 
@@ -52,7 +95,7 @@
       <div class="col-md-4">
         <div class="form-group">
           <label class="form-label" for="letra">Número y/o letra:*</label>
-          <input class="form-control" id="letra" formControlName="letra" type="number" [placeholder]="placeholder.letra" (change)="setValoresStore(destinatarioForm,'letra', 'setLetra')">
+          <input class="form-control" id="letra" formControlName="letra" type="text" [placeholder]="placeholder.letra" (change)="setValoresStore(destinatarioForm,'letra', 'setLetra')">
         </div>
       </div>
     </div>
@@ -77,14 +120,14 @@
       <div class="col-md-4">
         <div class="form-group">
           <label class="form-label" for="fax">Fax:</label>
-          <input class="form-control" id="fax" formControlName="fax" type="number" [placeholder]="placeholder.fax" (change)="setValoresStore(destinatarioForm,'fax', 'setFax')">
+          <input class="form-control" id="fax" formControlName="fax" type="text" [placeholder]="placeholder.fax" (change)="setValoresStore(destinatarioForm,'fax', 'setFax')">
         </div>
       </div>
 
       <div class="col-md-4">
         <div class="form-group">
           <label class="form-label" for="telefono">Teléfono:</label>
-          <input class="form-control" id="telefono" formControlName="telefono" type="number" [placeholder]="placeholder.telefono" (change)="setValoresStore(destinatarioForm,'telefono', 'setTelefono')">
+          <input class="form-control" id="telefono" formControlName="telefono" type="text" [placeholder]="placeholder.telefono" (change)="setValoresStore(destinatarioForm,'telefono', 'setTelefono')">
         </div>
       </div>
     </div>
