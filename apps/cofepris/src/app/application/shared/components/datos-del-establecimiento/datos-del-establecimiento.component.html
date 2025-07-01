@@ -3,7 +3,9 @@
   <form [formGroup]="datosDelForm">
     <div class="container text-end mt-5">
       <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalAgregar"
-        (click)="abrirModal()" [disabled]="esFormularioSoloLectura">Seleccionar establecimiento</button>
+        (click)="abrirModal()" [disabled]="esFormularioSoloLectura"   data-bs-toggle="tooltip"
+  data-bs-placement="top"
+  title="Selecciona para habilitar los campos del establecimiento">Seleccionar establecimiento</button>
     </div>
     <div class="row">
       <div class="col-md-8">

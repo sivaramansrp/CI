@@ -4,6 +4,7 @@ import { ToastrModule } from 'ngx-toastr';
 import { ToastrService } from 'ngx-toastr';
 import { TOAST_CONFIG, DefaultGlobalConfig } from 'ngx-toastr';
 import { DebugElement } from '@angular/core';
+import { provideHttpClient } from '@angular/common/http';
 
 class MockToastrService {
   success(message?: string, title?: string, override?: any) {}
@@ -19,6 +20,7 @@ let component: PasoTresComponent;
     await TestBed.configureTestingModule({
       imports: [ToastrModule.forRoot(),PasoTresComponent],
       providers: [ToastrService,
+                provideHttpClient(),
                 { provide: ToastrService, useClass: MockToastrService },
                 { provide: TOAST_CONFIG, useValue: DefaultGlobalConfig }
 

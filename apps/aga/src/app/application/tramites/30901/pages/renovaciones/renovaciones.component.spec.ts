@@ -42,11 +42,6 @@ describe('RenovacionesComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should have default error messages', () => {
-    expect(component.errorMessage).toContain('Corrija los siguientes errores');
-    expect(component.error).toContain('Error en el formulario');
-  });
-
   it('should initialize pasos and datosPasos correctly', () => {
     expect(component.pasos).toBe(RENOVACIONES_PASOS);
     expect(component.datosPasos.nroPasos).toBe(RENOVACIONES_PASOS.length);

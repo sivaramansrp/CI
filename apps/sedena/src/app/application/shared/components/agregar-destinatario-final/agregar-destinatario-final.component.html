@@ -158,6 +158,7 @@
           [required]="true"
           maxlength="120"
           [isDisabled]="esFormularioSoloLectura"
+          (selectionChange)="agregarDestinatarioFinal.get('pais')?.setValue($event.id)"
         ></app-catalogo-select>
         <div class="error-message">
           <small *ngIf="agregarDestinatarioFinal.get('pais')?.touched && agregarDestinatarioFinal.get('pais')?.hasError('required')" class="text-danger">
@@ -211,6 +212,7 @@
           [required]="true"
           [isDisabled]="agregarDestinatarioFinal.get('pais')?.disabled ?? false"
           [isDisabled]="esFormularioSoloLectura"
+          (selectionChange)="agregarDestinatarioFinal.get('pais')?.setValue($event.id)"
         ></app-catalogo-select>
         <div class="error-message">
           <small *ngIf="agregarDestinatarioFinal.get('pais')?.touched && agregarDestinatarioFinal.get('pais')?.hasError('required')" class="text-danger">
@@ -226,6 +228,7 @@
           [required]="true"
           [isDisabled]="agregarDestinatarioFinal.get('estado')?.disabled ?? false"
           [isDisabled]="esFormularioSoloLectura"
+          (selectionChange)="agregarDestinatarioFinal.get('estado')?.setValue($event.id)"
         ></app-catalogo-select>
         <div class="error-message">
           <small *ngIf="agregarDestinatarioFinal.get('estado')?.touched && agregarDestinatarioFinal.get('estado')?.hasError('required')" class="text-danger">
@@ -241,6 +244,7 @@
           [required]="true"
           [isDisabled]="agregarDestinatarioFinal.get('municipio')?.disabled ?? false"
           [isDisabled]="esFormularioSoloLectura"
+          (selectionChange)="agregarDestinatarioFinal.get('municipio')?.setValue($event.id)"
         ></app-catalogo-select>
         <div class="error-message">
           <small *ngIf="agregarDestinatarioFinal.get('municipio')?.touched && agregarDestinatarioFinal.get('municipio')?.hasError('required')" class="text-danger">
@@ -259,6 +263,7 @@
           [required]="true"
           [isDisabled]="agregarDestinatarioFinal.get('localidad')?.disabled ?? false"
           [isDisabled]="esFormularioSoloLectura"
+          (selectionChange)="agregarDestinatarioFinal.get('localidad')?.setValue($event.id)"
         ></app-catalogo-select>
         <div class="error-message">
           <small *ngIf="agregarDestinatarioFinal.get('localidad')?.touched && agregarDestinatarioFinal.get('localidad')?.hasError('required')" class="text-danger">
@@ -273,6 +278,7 @@
           [label]="'Código postal o equivalente'"
           [required]="true"
           [isDisabled]="agregarDestinatarioFinal.get('codigoPostal')?.disabled ?? false"
+          (selectionChange)="agregarDestinatarioFinal.get('codigoPostal')?.setValue($event.id)"
           [isDisabled]="esFormularioSoloLectura"
         ></app-catalogo-select>
         <div class="error-message">
@@ -290,6 +296,7 @@
           [isDisabled]="agregarDestinatarioFinal.get('colonia')?.disabled ?? false"
           maxlength="120"
           [isDisabled]="esFormularioSoloLectura"
+          (selectionChange)="agregarDestinatarioFinal.get('colonia')?.setValue($event.id)"
         ></app-catalogo-select>
         <div class="error-message">
           <small *ngIf="agregarDestinatarioFinal.get('colonia')?.touched && agregarDestinatarioFinal.get('colonia')?.hasError('required')" class="text-danger">

@@ -101,6 +101,7 @@ export class ModalFuncionesComponent implements OnChanges {
        */
       // Aquí puedes agregar la lógica para guardar el archivo o realizar otras acciones necesarias.
       const NOMBRE_ARCHIVO = ARCHIVO.name;
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const EXTENSION_ARCHIVO = NOMBRE_ARCHIVO.split('.').pop()?.toLowerCase();
     }
   }

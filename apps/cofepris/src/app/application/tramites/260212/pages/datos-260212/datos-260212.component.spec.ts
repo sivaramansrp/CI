@@ -36,34 +36,34 @@ describe('Datos260212Component', () => {
     component.solicitante = { obtenerTipoPersona: jest.fn() } as any;
   });
 
-  it('should create', () => {
+  it('debería crearse', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should set esDatosRespuesta to true if update is false', () => {
+  it('debería establecer esDatosRespuesta en true si update es false', () => {
     component.consultaState = { update: false } as any;
     component.ngOnInit();
     expect(component.esDatosRespuesta).toBe(true);
   });
 
-  it('should set indice when seleccionaTab is called', () => {
+  it('debería establecer el índice cuando se llama seleccionaTab', () => {
     component.seleccionaTab(3);
     expect(component.indice).toBe(3);
   });
 
-  it('should call obtenerTipoPersona in ngAfterViewInit', () => {
+  it('debería llamar obtenerTipoPersona en ngAfterViewInit', () => {
     component.ngAfterViewInit();
     expect(component.solicitante.obtenerTipoPersona).toHaveBeenCalled();
   });
 
-  it('should call actualizarEstadoFormulario in guardarDatosFormulario', () => {
+  it('debería llamar actualizarEstadoFormulario en guardarDatosFormulario', () => {
     component.guardarDatosFormulario();
     const service = TestBed.inject(Service260212Service) as unknown as Service260212ServiceMock;
     expect(service.actualizarEstadoFormulario).toHaveBeenCalled();
     expect(component.esDatosRespuesta).toBe(true);
   });
 
-  it('should complete destroyNotifier$ on ngOnDestroy', () => {
+  it('debería completar destroyNotifier$ en ngOnDestroy', () => {
     const completeSpy = jest.spyOn((component as any).destroyNotifier$, 'complete');
     component.ngOnDestroy();
     expect(completeSpy).toHaveBeenCalled();

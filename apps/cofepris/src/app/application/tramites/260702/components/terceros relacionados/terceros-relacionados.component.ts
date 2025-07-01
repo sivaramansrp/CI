@@ -363,9 +363,10 @@ export class TercerosrelacionadosComponent implements OnInit, OnDestroy {
     const FORM_DATA = this.destinatarioForm.value;
     if (FORM_DATA.agregarDestinatario) {
       const DESTINATARIO = {
+        id: this.tableData.length + 1, 
         ...FORM_DATA.agregarDestinatario,
-        ...FORM_DATA.datosPersonales, // Combina objetos anidados en una estructura plana
-        pais: this.getPaisName(FORM_DATA.datosPersonales.pais), // Mapea el id de `pais` a su descripción
+        ...FORM_DATA.datosPersonales, 
+        pais: this.getPaisName(FORM_DATA.datosPersonales.pais),
       };
       this.tableData.push(DESTINATARIO);
     }
@@ -394,17 +395,17 @@ export class TercerosrelacionadosComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Elimina las mercancías seleccionadas de la tabla.
-   */
-  eliminarMercancias(): void {
-    if (this.selectedRows.size > 0) {
-      this.tableData = this.tableData.filter(
-        (row) => !this.selectedRows.has(row.id)
-      );
-
-      this.selectedRows.clear();
-    }
+ * Elimina la mercancía seleccionada de la tabla.
+ */
+eliminarMercancias(): void {
+  if (this.selectedRows.size === 1) {
+    const SELECTED_ID = Array.from(this.selectedRows)[0];
+    this.tableData = this.tableData.filter((row) => row.id !== SELECTED_ID);
+    this.selectedRows.clear();
+  } else {
+    console.warn('Debe seleccionar exactamente una fila para eliminar.');
   }
+}
 
   /**
    * Abre el formulario para modificar las mercancías seleccionadas.

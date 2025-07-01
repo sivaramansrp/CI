@@ -206,7 +206,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   }
 
 
-  /**
+ /**
  * Método del ciclo de vida Angular que se ejecuta al inicializar el componente.
  * - Inicializa el formulario de datos del establecimiento.
  * - Obtiene las solicitudes desde el servicio y las almacena en `solicitudData`.
@@ -216,6 +216,10 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.fomInitialize();
     this.inicializarEstadoFormulario();
+     this.solicitudService.getScianDatos().pipe(takeUntil(this.destroy$))
+          .subscribe((response: ClaveModel[]) => {
+            this.claveScianDatas = response;
+          });
   }
 
   /**

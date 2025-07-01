@@ -69,17 +69,17 @@ describe('DatosDeLaSolicitudComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize the form', () => {
+  it('debe inicializar el formulario', () => {
     component.fomInitialize();
     expect(component.datosEstablecimientoForm).toBeDefined();
     expect(component.datosEstablecimientoForm.get('denominacionRazonSocial')).toBeDefined();
   });
 
-  it('should toggle plegable state', () => {
+  it('debe alternar el estado plegable', () => {
     const prev = component.plegable;
     component.mostrarPlegable();
     expect(component.plegable).toBe(!prev);
@@ -97,22 +97,22 @@ describe('DatosDeLaSolicitudComponent', () => {
     expect(component.configuracionTablaScian[1].clave(claveItem)).toBe('B');
   });
 
-  it('should not throw if guardarDatosFormulario called before form initialized', () => {
+  it('no debe lanzar error si guardarDatosFormulario se llama antes de inicializar el formulario', () => {
     component.datosEstablecimientoForm = undefined as any;
     expect(() => component.guardarDatosFormulario()).not.toThrow();
   });
 
-  it('should not throw if inicializarEstadoFormulario called before form initialized', () => {
+  it('no debe lanzar error si inicializarEstadoFormulario se llama antes de inicializar el formulario', () => {
     component.datosEstablecimientoForm = undefined as any;
     component.esFormularioSoloLectura = true;
     expect(() => component.inicializarEstadoFormulario()).not.toThrow();
   });
 
-  it('should handle actualizarEstado with null/empty values', () => {
+  it('debe manejar actualizarEstado con valores nulos/vacíos', () => {
     component.fomInitialize();
-    // Set up spies for form controls
+    // Configura espías para los controles del formulario
     const setValueSpy = jest.spyOn(component.datosEstablecimientoForm.get('estado')!, 'setValue');
-    // Simulate observables emitting null/undefined
+    // Simula observables que emiten null/undefined
     (component as any).selectedEstado$ = of(null);
     (component as any).rfcDelResponsableSanitario$ = of(null);
     (component as any).denominacionRazonSocial$ = of(undefined);
@@ -128,7 +128,7 @@ describe('DatosDeLaSolicitudComponent', () => {
     expect(setValueSpy).not.toHaveBeenCalledWith(undefined);
   });
 
-  it('should call all update methods without error', () => {
+  it('debe llamar a todos los métodos de actualización sin error', () => {
     component.fomInitialize();
     component.datosEstablecimientoForm.get('rfcDelResponsableSanitario')?.setValue('RFC');
     component.datosEstablecimientoForm.get('denominacionRazonSocial')?.setValue('Denom');
@@ -152,7 +152,7 @@ describe('DatosDeLaSolicitudComponent', () => {
     expect(() => component.updateCodigoPostal()).not.toThrow();
   });
 
-  it('should call getEstado and getMunicipios without error', () => {
+  it('debe llamar a getEstado y getMunicipios sin error', () => {
     component.fomInitialize();
     component.datosEstablecimientoForm.get('estado')?.setValue('Estado');
     component.datosEstablecimientoForm.get('municipio')?.setValue('Mun');
@@ -171,7 +171,7 @@ describe('DatosDeLaSolicitudComponent', () => {
     expect(component.datosEstablecimientoForm.enabled).toBe(true);
   });
 
-  it('should call actualizarEstado in inicializarEstadoFormulario when not readonly', () => {
+  it('debe llamar a actualizarEstado en inicializarEstadoFormulario cuando no es solo lectura', () => {
     component.fomInitialize();
     component.esFormularioSoloLectura = false;
     const spy = jest.spyOn(component, 'actualizarEstado');
@@ -179,7 +179,7 @@ describe('DatosDeLaSolicitudComponent', () => {
     expect(spy).toHaveBeenCalled();
   });
 
-  it('should call guardarDatosFormulario in inicializarEstadoFormulario when readonly', () => {
+  it('debe llamar a guardarDatosFormulario en inicializarEstadoFormulario cuando es solo lectura', () => {
     component.fomInitialize();
     component.esFormularioSoloLectura = true;
     const spy = jest.spyOn(component, 'guardarDatosFormulario');
@@ -187,13 +187,12 @@ describe('DatosDeLaSolicitudComponent', () => {
     expect(spy).toHaveBeenCalled();
   });
 
-  it('should clean up on ngOnDestroy', () => {
+  it('debe limpiar al destruir el componente (ngOnDestroy)', () => {
     const spy = jest.spyOn((component as any).destroy$, 'next');
     const spy2 = jest.spyOn((component as any).destroy$, 'complete');
     
     component.ngOnDestroy();
     expect(spy).toHaveBeenCalled();
     expect(spy2).toHaveBeenCalled();
-    
   });
 });

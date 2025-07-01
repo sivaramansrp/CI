@@ -49,7 +49,7 @@ describe('FormularioOperacionComercialComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
@@ -66,19 +66,18 @@ describe('FormularioOperacionComercialComponent', () => {
   //   expect(regimenControl.valid).toBeTruthy();
   // });
 
-  it('should load clave data from the service', () => {
+  it('debe cargar datos de clave desde el servicio', () => {
     component.actualizarEstado();
     expect(component.clave).toEqual([{ id: 1, descripcion: 'Mock Clave' }]);
   });
 
-  it('should set regimen and entradas from observables', () => {
+  it('debe establecer regimen y entradas desde los observables', () => {
     component.actualizarEstado();
     expect(component.formularioOperacionForm.get('regimen')?.value).toBe('mockRegimen');
     expect(component.formularioOperacionForm.get('entradas')?.value).toBe('mockEntradas');
   });
 
-  it('should set empty string if observables emit falsy values', () => {
-    // Patch observables to emit falsy values
+  it('debe establecer cadena vacía si los observables emiten valores falsy', () => {
     (component as any).selectedRegimen$ = of('');
     (component as any).selectedEntradas$ = of(null);
     component.actualizarEstado();
@@ -86,7 +85,7 @@ describe('FormularioOperacionComercialComponent', () => {
     expect(component.formularioOperacionForm.get('entradas')?.value).toBe('');
   });
 
-  it('should toggle readonly state on alternarSoloLectura', () => {
+  it('debe alternar el estado de solo lectura en alternarSoloLectura', () => {
     component.esSoloLectura = true;
     const event = { target: { checked: true } } as any;
     component.alternarSoloLectura(event);
@@ -110,19 +109,19 @@ describe('FormularioOperacionComercialComponent', () => {
     expect(component.formularioOperacionForm.disabled).toBe(true);
   });
 
-  it('should enable form in edit mode', () => {
+  it('debe habilitar el formulario en modo edición', () => {
     component.formularioOperacionForm.disable();
     component.esFormularioSoloLectura = false;
     component.guardarDatosFormulario();
     expect(component.formularioOperacionForm.enabled).toBe(true);
   });
 
-  it('should not throw if guardarDatosFormulario called before form init', () => {
+  it('no debe lanzar error si guardarDatosFormulario se llama antes de inicializar el formulario', () => {
     (component as any).formularioOperacionForm = undefined;
     expect(() => component.guardarDatosFormulario()).not.toThrow();
   });
 
-  it('should not throw if inicializarEstadoFormulario called before form init', () => {
+  it('no debe lanzar error si inicializarEstadoFormulario se llama antes de inicializar el formulario', () => {
     (component as any).formularioOperacionForm = undefined;
     expect(() => component.inicializarEstadoFormulario()).not.toThrow();
   });
@@ -141,7 +140,7 @@ describe('FormularioOperacionComercialComponent', () => {
     expect(component.formControls).toBe(component.formularioOperacionForm.controls);
   });
 
-  it('should return clave via getClaveCatalog', () => {
+  it('debe retornar clave mediante getClaveCatalog', () => {
     component.clave = [{ id: 2, descripcion: 'Test' }];
     expect(component.getClaveCatalog()).toEqual([{ id: 2, descripcion: 'Test' }]);
   });

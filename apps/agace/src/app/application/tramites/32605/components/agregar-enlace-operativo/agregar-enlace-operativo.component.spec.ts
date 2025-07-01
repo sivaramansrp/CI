@@ -95,6 +95,100 @@ describe('AgregarEnlaceOperativoComponent', () => {
       agregarEnlaceSuplente: false,
     });
   });
+  it('should call guardarDatosFormulario if esFormularioSoloLectura is true in inicializarEstadoFormulario', () => {
+    const guardarDatosFormularioSpy = jest.spyOn(component, 'guardarDatosFormulario');
+    component.esFormularioSoloLectura = true;
+    component.inicializarEstadoFormulario();
+    expect(guardarDatosFormularioSpy).toHaveBeenCalled();
+  });
+
+  it('should call inicializarFormulario if esFormularioSoloLectura is false in inicializarEstadoFormulario', () => {
+    const inicializarFormularioSpy = jest.spyOn(component, 'inicializarFormulario');
+    component.esFormularioSoloLectura = false;
+    component.inicializarEstadoFormulario();
+    expect(inicializarFormularioSpy).toHaveBeenCalled();
+  });
+
+  it('should disable the form if esFormularioSoloLectura is true in guardarDatosFormulario', () => {
+    component.esFormularioSoloLectura = true;
+    component.inicializarFormulario = jest.fn(() => {
+      component.agregarEnlaceOperativoForm = component['fb'].group({
+        agregarEnlaceRfcTercero: [''],
+        agregarEnlaceRfc: [''],
+        agregarEnlaceNombre: [''],
+        agregarEnlaceApellidoPaterno: [''],
+        agregarEnlaceApellidoMaterno: [''],
+        agregarEnlaceCiudadEstado: [''],
+        agregarEnlaceCargo: [''],
+        agregarEnlaceTelefono: [''],
+        agregarEnlaceCorreoElectronico: [''],
+        agregarEnlaceSuplente: [false],
+      });
+    }) as any;
+    component.guardarDatosFormulario();
+    expect(component.agregarEnlaceOperativoForm.disabled).toBe(true);
+  });
+
+  it('should enable the form if esFormularioSoloLectura is false in guardarDatosFormulario', () => {
+    component.esFormularioSoloLectura = false;
+    component.inicializarFormulario = jest.fn(() => {
+      component.agregarEnlaceOperativoForm = component['fb'].group({
+        agregarEnlaceRfcTercero: [''],
+        agregarEnlaceRfc: [''],
+        agregarEnlaceNombre: [''],
+        agregarEnlaceApellidoPaterno: [''],
+        agregarEnlaceApellidoMaterno: [''],
+        agregarEnlaceCiudadEstado: [''],
+        agregarEnlaceCargo: [''],
+        agregarEnlaceTelefono: [''],
+        agregarEnlaceCorreoElectronico: [''],
+        agregarEnlaceSuplente: [false],
+      });
+    }) as any;
+    component.guardarDatosFormulario();
+    expect(component.agregarEnlaceOperativoForm.enabled).toBe(true);
+  });
+
+  it('noEsValido should return true if control is invalid and touched', () => {
+    component.agregarEnlaceOperativoForm.get('agregarEnlaceTelefono')?.markAsTouched();
+    component.agregarEnlaceOperativoForm.get('agregarEnlaceTelefono')?.setValue('');
+    expect(component.noEsValido('agregarEnlaceTelefono')).toBe(true);
+  });
+
+  it('noEsValido should return undefined if control does not exist', () => {
+    expect(component.noEsValido('campoInexistente')).toBeUndefined();
+  });
+  
+  it('should call actualizarRfcTercero on store when actualizarRfcTercero is called', () => {
+    const mockEvent = { target: { value: 'RFC789' } } as unknown as Event;
+    component.actualizarRfcTercero(mockEvent);
+    expect(solicitud32605StoreMock.actualizarRfcTercero).toHaveBeenCalledWith('RFC789');
+  });
+
+  it('should call actualizarTelefono on store when actualizarTelefono is called', () => {
+    const mockEvent = { target: { value: '5551234567' } } as unknown as Event;
+    component.actualizarTelefono(mockEvent);
+    expect(solicitud32605StoreMock.actualizarTelefono).toHaveBeenCalledWith('5551234567');
+  });
+
+  it('should call actualizarCorreoElectronico on store when actualizarCorreoElectronico is called', () => {
+    const mockEvent = { target: { value: 'test@email.com' } } as unknown as Event;
+    component.actualizarCorreoElectronico(mockEvent);
+    expect(solicitud32605StoreMock.actualizarCorreoElectronico).toHaveBeenCalledWith('test@email.com');
+  });
+
+  it('should call actualizarEnlaceCargo on store when agregarEnlaceCargo is called', () => {
+    const mockEvent = { target: { value: 'Director' } } as unknown as Event;
+    component.agregarEnlaceCargo(mockEvent);
+    expect(solicitud32605StoreMock.actualizarEnlaceCargo).toHaveBeenCalledWith('Director');
+  });
+
+  it('should call actualizarEnlaceSuplente on store when actualizarEnlaceSuplente is called', () => {
+    const mockEvent = { target: { checked: true } } as unknown as Event;
+    component.actualizarEnlaceSuplente(mockEvent);
+    expect(solicitud32605StoreMock.actualizarEnlaceSuplente).toHaveBeenCalledWith(true);
+  });
+
 
   it('should call solicitudService.conseguirRepresentanteLegalDatos on buscarTerceroNacionalIDC', () => {
     component.agregarEnlaceOperativoForm.get('rfcTercero')?.setValue('RFC123');

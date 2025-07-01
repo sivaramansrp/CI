@@ -26,11 +26,11 @@ describe('MercanciasTableFormComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize datosMercanciaForm properly', () => {
+  it('debe inicializar datosMercanciaForm correctamente', () => {
     expect(component.datosMercanciaForm).toBeDefined();
     const formControls = component.datosMercanciaForm.controls;
 
@@ -39,18 +39,18 @@ describe('MercanciasTableFormComponent', () => {
     expect(formControls['clasificacion'].hasError('required')).toBeTruthy();
   });
 
-  it('should emit Cancelar event when cerrarMercanciasTableForm is called', () => {
+  it('debe emitir el evento Cancelar cuando se llama cerrarMercanciasTableForm', () => {
     jest.spyOn(component.Cancelar, 'emit');
     component.cerrarMercanciasTableForm();
     expect(component.Cancelar.emit).toHaveBeenCalled();
   });
 
-  it('should populate "especificarClasificacion"', () => {
+  it('debe poblar "especificarClasificacion"', () => {
     expect(mockSolicitudService.getClave).toHaveBeenCalled();
     expect(component.especificarClasificacion).toEqual([{ id: 1, descripcion: 'Test Catalogo' }]);
   });
 
-  it('should set form values and mark fields as required', () => {
+  it('debe establecer valores del formulario y marcar campos como requeridos', () => {
     component.datosMercanciaForm.setValue({
       clasificacion: 'Test Classification',
       especificarClasificacion: 'Test Specification',
@@ -71,17 +71,28 @@ describe('MercanciasTableFormComponent', () => {
     expect(component.datosMercanciaForm.valid).toBeTruthy();
   });
 
-  it('should have invalid form when required fields are missing', () => {
+  it('debe ser inválido el formulario cuando faltan campos requeridos', () => {
     component.datosMercanciaForm.reset();
     expect(component.datosMercanciaForm.invalid).toBe(true);
     expect(component.datosMercanciaForm.get('clasificacion')?.hasError('required')).toBe(true);
   });
 
- 
-
-  it('should call getClasificacionProducto and getTestadoFisico on init', () => {
+  it('debe llamar a getClasificacionProducto y getTestadoFisico en ngOnInit', () => {
+    // Llama explícitamente a ngOnInit para cobertura
+    component.ngOnInit();
     expect(mockSolicitudService.getClasificacionProducto).toHaveBeenCalled();
     expect(mockSolicitudService.getTestadoFisico).toHaveBeenCalled();
   });
 
+  it('debe limpiar correctamente al destruir el componente si existe ngOnDestroy', () => {
+    if (typeof component.ngOnDestroy === 'function') {
+      expect(() => component.ngOnDestroy()).not.toThrow();
+    }
+  });
+
+  it('debe ejecutar cerrarMercanciasTableForm y emitir el evento Cancelar', () => {
+    const spy = jest.spyOn(component.Cancelar, 'emit');
+    component.cerrarMercanciasTableForm();
+    expect(spy).toHaveBeenCalled();
+  });
 });

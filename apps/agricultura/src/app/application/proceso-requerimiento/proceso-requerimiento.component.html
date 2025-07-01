@@ -4,8 +4,7 @@
   <div class="container">
     <div class="row">
       <div class="col-md-12">
-        <h1>Atender requerimiento</h1>
-      </div>
+              </div>
       <app-wizard [listaPasos]="pasos"></app-wizard>
     </div>
     <div class="mb-5">
@@ -53,14 +52,6 @@
         </div>
       </div>
     }
-
-    @if(indice !== 2 && esAcuse === false) {
-        <btn-continuar
-        [datos]="datosPasos"
-        (continuarEvento)="getValorIndice($event)"
-      ></btn-continuar>
-        }
-
     <div class="row mt-5 mb-5" *ngIf="esAcuse === false">
       <app-reviewers-tabs
         [viewChild]="viewChild"
@@ -68,8 +59,13 @@
         (viewChildcambioDePestana)="viewChildcambioDePestana($event)"
       ></app-reviewers-tabs>
     </div>
-
-    @if(indice === 2) {
+    @if(indice !== 2 && esAcuse === false) {
+        <btn-continuar
+        [datos]="datosPasos"
+        (continuarEvento)="getValorIndice($event)"
+      ></btn-continuar>
+        }
+      @if(indice === 2) {
     <btn-continuar
     [datos]="datosPasos"
     (continuarEvento)="getValorIndice($event)"

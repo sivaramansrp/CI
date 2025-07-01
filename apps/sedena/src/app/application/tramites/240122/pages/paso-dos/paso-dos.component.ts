@@ -7,15 +7,10 @@ import { TEXTOS_REQUISITOS } from '../../constantes/exportacion-explosivo-enum';
 /**
  * @component
  * @name PasoDosComponent
- * @description Este componente representa el segundo paso de un formulario en el flujo de trámites.
- * Se encarga de manejar la lógica relacionada con los tipos de documentos requeridos y seleccionados
- * por el usuario, así como de interactuar con los servicios necesarios para obtener los datos del catálogo.
- * 
- * @example
- * <app-paso-dos></app-paso-dos>
- * 
- * @implements OnInit
- * @implements OnDestroy
+ * @description
+ * Este componente representa el segundo paso del formulario en el flujo del trámite.
+ * Permite anexar documentos requeridos, consultando un catálogo de tipos de documentos
+ * y emitiendo eventos relacionados con la carga o navegación del paso.
  */
 @Component({
   selector: 'app-paso-dos',
@@ -25,89 +20,64 @@ import { TEXTOS_REQUISITOS } from '../../constantes/exportacion-explosivo-enum';
   styleUrl: './paso-dos.component.scss',
 })
 export class PasoDosComponent implements OnInit, OnDestroy {
-
   /**
-   * @property TEXTOS
-   * @description Contiene textos estáticos utilizados en este paso del formulario.
-   * @type {typeof TEXTOS_REQUISITOS}
+   * Contiene el texto de requisitos legales o aclaratorios para mostrar al usuario.
    */
   public TEXTOS = TEXTOS_REQUISITOS;
 
   /**
-   * @property tiposDocumentos
-   * @description Espacio reservado localmente para los tipos de documentos utilizados en este paso.
-   * @type {Catalogo[]}
+   * Lista de tipos de documentos que podrían utilizarse en este paso.
    */
   public tiposDocumentos: Catalogo[] = [];
 
   /**
-   * @property infoAlert
-   * @description Tipo de alerta de Bootstrap utilizado para mensajes informativos.
-   * @type {string}
+   * Tipo de alerta a mostrar (Bootstrap class).
    */
   public infoAlert = 'alert-info';
 
   /**
-   * @property catalogoDocumentos
-   * @description Contiene el catálogo de tipos de documentos obtenido desde la API.
-   * @type {Catalogo[]}
+   * Catálogo completo de documentos disponibles.
    */
   public catalogoDocumentos: Catalogo[] = [];
 
   /**
-   * @property documentosSeleccionados
-   * @description Lista de documentos seleccionados por el usuario.
-   * @type {Catalogo[]}
+   * Documentos seleccionados por el usuario en el componente.
    */
   public documentosSeleccionados: Catalogo[] = [];
 
   /**
-   * @property destroyNotifier$
-   * @description Notificador utilizado para cancelar suscripciones activas al destruir el componente.
-   * Previene fugas de memoria.
-   * @type {Subject<void>}
+   * Subject usado para cancelar suscripciones activas al destruir el componente.
    */
   private destroyNotifier$: Subject<void> = new Subject();
+
   /**
-   * @description Evento que almacena la información relacionada con la carga de archivos.
-   * @type {string}
+   * Evento emitido para indicar que se debe reenviar un evento padre.
+   */
+  @Output() reenviarEvento = new EventEmitter<void>();
+
+  /**
+   * Evento emitido para indicar que se debe regresar a la sección de carga de documentos.
+   */
+  @Output() regresarSeccionCargarDocumentoEvento = new EventEmitter<void>();
+
+  /**
+   * Constructor que inyecta el servicio de catálogos.
    *
-   * @remarks
-   * Esta propiedad se utiliza para gestionar el evento de carga de archivos en el componente.
+   * @param catalogosServices Servicio para obtener catálogos desde el backend.
    */
- @Output() reenviarEvento = new EventEmitter<void>();
-  /**
-   * @desc Evento que indica la sección a la que se debe regresar al cargar un documento.
-   * @type {string}
-   * @memberof PasoDosComponent
-   */
-
- @Output() regresarSeccionCargarDocumentoEvento = new EventEmitter<void>();
+  constructor(private catalogosServices: CatalogosService) {}
 
   /**
-   * @constructor
-   * @description Constructor del componente. Inyecta las dependencias necesarias.
-   * @param {CatalogosService} catalogosServices Servicio para obtener datos del catálogo necesarios en el formulario.
-   */
-  constructor(private catalogosServices: CatalogosService) {
-    // Las dependencias se inyectan aquí. No se necesita lógica de inicialización.
-  }
-
-  /**
-   * @method ngOnInit
-   * @description Hook del ciclo de vida de Angular que se ejecuta al inicializar el componente.
-   * Inicia la obtención de los tipos de documentos.
-   * @returns {void}
+   * Ciclo de vida: se ejecuta al iniciar el componente.
+   * Llama a la función para cargar tipos de documentos desde el catálogo.
    */
   ngOnInit(): void {
     this.getTiposDocumentos();
   }
 
   /**
-   * @method getTiposDocumentos
-   * @description Obtiene el catálogo de tipos de documentos para el trámite.
-   * Actualiza la lista `catalogoDocumentos` si la solicitud es exitosa.
-   * @returns {void}
+   * Obtiene del servicio los tipos de documentos requeridos.
+   * Actualiza la variable `catalogoDocumentos` con la respuesta.
    */
   public getTiposDocumentos(): void {
     this.catalogosServices
@@ -123,10 +93,8 @@ export class PasoDosComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * @method ngOnDestroy
-   * @description Hook del ciclo de vida de Angular que se ejecuta justo antes de destruir el componente.
-   * Limpia las suscripciones activas para prevenir fugas de memoria.
-   * @returns {void}
+   * Ciclo de vida: se ejecuta al destruir el componente.
+   * Cancela todas las suscripciones activas.
    */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();

@@ -1,7 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PasoUnoPagesComponent } from './paso-uno-pages.component';
-import { Component } from '@angular/core';
+import { Component, NO_ERRORS_SCHEMA } from '@angular/core';
 import { FormGroup, FormControl, ReactiveFormsModule } from '@angular/forms';
+import { provideHttpClient } from '@angular/common/http';
 
 describe('PasoUnoPagesComponent', () => {
   let component: PasoUnoPagesComponent;
@@ -51,7 +52,11 @@ describe('PasoUnoPagesComponent', () => {
         MockTercerosRelacionadosComponent,
         MockPagoDeDerechosComponent,
         MockTramitesAsociadosComponent
-      ]
+      ],
+      providers: [
+        provideHttpClient() // Mocked HTTP client
+      ],
+      schemas: [NO_ERRORS_SCHEMA]
     }).compileComponents();
 
     fixture = TestBed.createComponent(PasoUnoPagesComponent);

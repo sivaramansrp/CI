@@ -56,11 +56,11 @@ describe('PagoDeDerechosComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize form with required controls', () => {
+  it('debe inicializar el formulario con los controles requeridos', () => {
     expect(component.pagoDerechos.contains('claveDeReferncia')).toBe(true);
     expect(component.pagoDerechos.contains('cadenaDeLaDependencia')).toBe(true);
     expect(component.pagoDerechos.contains('banco')).toBe(true);
@@ -88,28 +88,28 @@ describe('PagoDeDerechosComponent', () => {
     expect(spy).toHaveBeenCalled();
   });
 
-  it('should call actualizarEstado if esFormularioSoloLectura is false', () => {
+  it('debe llamar a actualizarEstado si esFormularioSoloLectura es false', () => {
     const spy = jest.spyOn(component, 'actualizarEstado');
     component.esFormularioSoloLectura = false;
     component.inicializarEstadoFormulario();
     expect(spy).toHaveBeenCalled();
   });
 
-  it('should disable form in guardarDatosFormulario when readonly', () => {
+  it('debe deshabilitar el formulario en guardarDatosFormulario cuando es solo lectura', () => {
     component.pagoDerechos.enable();
     component.esFormularioSoloLectura = true;
     component.guardarDatosFormulario();
     expect(component.pagoDerechos.disabled).toBe(true);
   });
 
-  it('should enable form in guardarDatosFormulario when not readonly', () => {
+  it('debe habilitar el formulario en guardarDatosFormulario cuando no es solo lectura', () => {
     component.pagoDerechos.disable();
     component.esFormularioSoloLectura = false;
     component.guardarDatosFormulario();
     expect(component.pagoDerechos.enabled).toBe(true);
   });
 
-  it('should update dropdownData and form values in actualizarEstado', () => {
+  it('debe actualizar dropdownData y valores del formulario en actualizarEstado', () => {
     component.pagoDerechos.patchValue({
       banco: '',
       claveDeReferncia: '',
@@ -128,31 +128,31 @@ describe('PagoDeDerechosComponent', () => {
     expect(component.pagoDerechos.get('importeDePago')?.value).toBe('1000');
   });
 
-  it('should call setClaveDeReferncia on actualizarClaveDeReferncia', () => {
+  it('debe llamar a setClaveDeReferncia en actualizarClaveDeReferncia', () => {
     component.pagoDerechos.get('claveDeReferncia')?.setValue('testClave');
     component.actualizarClaveDeReferncia();
     expect(mockTramite260212Store.setClaveDeReferncia).toHaveBeenCalledWith('testClave');
   });
 
-  it('should call setCadenaDeLaDependencia on actualizarCadenaDeLaDependencia', () => {
+  it('debe llamar a setCadenaDeLaDependencia en actualizarCadenaDeLaDependencia', () => {
     component.pagoDerechos.get('cadenaDeLaDependencia')?.setValue('testCadena');
     component.actualizarCadenaDeLaDependencia();
     expect(mockTramite260212Store.setCadenaDeLaDependencia).toHaveBeenCalledWith('testCadena');
   });
 
-  it('should call setLlaveDePago on actualizarLlaveDePago', () => {
+  it('debe llamar a setLlaveDePago en actualizarLlaveDePago', () => {
     component.pagoDerechos.get('llaveDePago')?.setValue('testLlave');
     component.actualizarLlaveDePago();
     expect(mockTramite260212Store.setLlaveDePago).toHaveBeenCalledWith('testLlave');
   });
 
-  it('should call setFechaDePago on actualizarFechaDePago', () => {
+  it('debe llamar a setFechaDePago en actualizarFechaDePago', () => {
     component.pagoDerechos.get('fechaDePago')?.setValue('2024-06-01');
     component.actualizarFechaDePago();
     expect(mockTramite260212Store.setFechaDePago).toHaveBeenCalledWith('2024-06-01');
   });
 
-  it('should call setImporteDePago on actualizarImporteDePago', () => {
+  it('debe llamar a setImporteDePago en actualizarImporteDePago', () => {
     component.pagoDerechos.get('importeDePago')?.setValue('2000');
     component.actualizarImporteDePago();
     expect(mockTramite260212Store.setImporteDePago).toHaveBeenCalledWith('2000');
@@ -174,7 +174,7 @@ describe('PagoDeDerechosComponent', () => {
     
   });
 
-it('should not call guardarDatosFormulario if pagoDerechos is undefined', () => {
+  it('no debe llamar a guardarDatosFormulario si pagoDerechos es undefined', () => {
     const spy = jest.spyOn(component, 'guardarDatosFormulario');
     component.pagoDerechos = undefined as any;
     component.esFormularioSoloLectura = true;
@@ -182,7 +182,7 @@ it('should not call guardarDatosFormulario if pagoDerechos is undefined', () => 
     expect(spy).not.toHaveBeenCalled();
   });
 
-  it('should not set form values if observable emits falsy', () => {
+  it('no debe establecer valores del formulario si los observables emiten falsy', () => {
     mockTramite260212Query.selectedBanco$ = of('');
     mockTramite260212Query.selectedClaveDeReferncia$ = of(null);
     mockTramite260212Query.selectedCadenaDeLaDependencia$ = of(undefined);
@@ -213,31 +213,31 @@ it('should not call guardarDatosFormulario if pagoDerechos is undefined', () => 
     expect(component.pagoDerechos.get('importeDePago')?.value).toBe('');
   });
 
-  it('should handle actualizarClaveDeReferncia with empty value', () => {
+  it('debe manejar actualizarClaveDeReferncia con valor vacío', () => {
     component.pagoDerechos.get('claveDeReferncia')?.setValue('');
     component.actualizarClaveDeReferncia();
     expect(mockTramite260212Store.setClaveDeReferncia).toHaveBeenCalledWith('');
   });
 
-  it('should handle actualizarCadenaDeLaDependencia with empty value', () => {
+  it('debe manejar actualizarCadenaDeLaDependencia con valor vacío', () => {
     component.pagoDerechos.get('cadenaDeLaDependencia')?.setValue('');
     component.actualizarCadenaDeLaDependencia();
     expect(mockTramite260212Store.setCadenaDeLaDependencia).toHaveBeenCalledWith('');
   });
 
-  it('should handle actualizarLlaveDePago with empty value', () => {
+  it('debe manejar actualizarLlaveDePago con valor vacío', () => {
     component.pagoDerechos.get('llaveDePago')?.setValue('');
     component.actualizarLlaveDePago();
     expect(mockTramite260212Store.setLlaveDePago).toHaveBeenCalledWith('');
   });
 
-  it('should handle actualizarFechaDePago with empty value', () => {
+  it('debe manejar actualizarFechaDePago con valor vacío', () => {
     component.pagoDerechos.get('fechaDePago')?.setValue('');
     component.actualizarFechaDePago();
     expect(mockTramite260212Store.setFechaDePago).toHaveBeenCalledWith('');
   });
 
-  it('should handle actualizarImporteDePago with empty value', () => {
+  it('debe manejar actualizarImporteDePago con valor vacío', () => {
     component.pagoDerechos.get('importeDePago')?.setValue('');
     component.actualizarImporteDePago();
     expect(mockTramite260212Store.setImporteDePago).toHaveBeenCalledWith('');
@@ -249,12 +249,12 @@ it('should not call guardarDatosFormulario if pagoDerechos is undefined', () => 
     expect(mockTramite260212Store.setBanco).toHaveBeenCalledWith('');
   });
 
-  it('should call actualizarEstado even if pagoDerechos is undefined', () => {
+  it('debe llamar a actualizarEstado incluso si pagoDerechos es undefined', () => {
     component.pagoDerechos = undefined as any;
     expect(() => component.actualizarEstado()).not.toThrow();
   });
 
-  it('should call guardarDatosFormulario and enable/disable form correctly', () => {
+  it('debe llamar a guardarDatosFormulario y habilitar/deshabilitar el formulario correctamente', () => {
     component.pagoDerechos = component['fb'].group({
       claveDeReferncia: [''],
       cadenaDeLaDependencia: [''],
@@ -265,11 +265,13 @@ it('should not call guardarDatosFormulario if pagoDerechos is undefined', () => 
     });
     component.esFormularioSoloLectura = false;
     component.guardarDatosFormulario();
-    expect(component.pagoDerechos.enabled).toBe(true);
-
-    component.esFormularioSoloLectura = true;
-    component.guardarDatosFormulario();
-    expect(component.pagoDerechos.disabled).toBe(true);
+      expect(component.pagoDerechos.enabled).toBe(true);
+  
+      component.esFormularioSoloLectura = true;
+      component.guardarDatosFormulario();
+      expect(component.pagoDerechos.disabled).toBe(true);
+    });
+  
   });
 
   // it('should construct with readonly false and call actualizarEstado', () => {
@@ -285,4 +287,3 @@ it('should not call guardarDatosFormulario if pagoDerechos is undefined', () => 
   //   expect(spy).toHaveBeenCalled();
   //   spy.mockRestore();
   // });
-});
