@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 
 import { CATALOGOS_ID, Catalogo, CatalogosService, TEXTOS } from '@ng-mf/data-access-user';
 
@@ -12,6 +12,22 @@ import { CATALOGOS_ID, Catalogo, CatalogosService, TEXTOS } from '@ng-mf/data-ac
   styleUrl: './paso-dos.component.scss',
 })
 export class PasoDosComponent implements OnInit {
+  /**
+   * Evento emitido para reenviar el evento de solicitud de documentos.
+   * Este evento se utiliza para notificar al componente padre que se debe reenviar la solicitud
+   * de documentos requeridos.
+   * @type {EventEmitter<void>}
+   */
+  @Output() reenviarEvento = new EventEmitter<void>();
+
+  /**
+   * Evento emitido para regresar a la sección de cargar documento.
+   * Este evento se utiliza para notificar al componente padre que se debe regresar a la sección
+   * de cargar documento.
+   * @type {EventEmitter<void>}
+   */
+  @Output() regresarSeccionCargarDocumentoEvento = new EventEmitter<void>()
+  
   /**
    * Textos utilizados en el componente.
    */
