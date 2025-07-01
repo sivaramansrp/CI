@@ -270,5 +270,5 @@ export interface Catalogo {
    * @description
    * Texto descriptivo que proporciona información sobre el elemento del catálogo.
    */
-  description: string;
+  descripcion: string;
 }

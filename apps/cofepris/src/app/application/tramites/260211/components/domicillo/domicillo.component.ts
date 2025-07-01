@@ -465,10 +465,11 @@ this.tramite260211Query
     lada: [this.solicitudState?.lada],
     telefono: [this.solicitudState?.telefono, Validators.required],
     avisoCheckbox: [this.solicitudState?.avisoCheckbox],
-    licenciaSanitaria: [{ value: this.solicitudState?.licenciaSanitaria, disabled: false }],
+    licenciaSanitaria: ['',{disabled: false }],
     regimen: [this.solicitudState?.regimen],
     aduanasEntradas: [this.solicitudState?.aduanasEntradas],
     numeroPermiso: [this.solicitudState?.numeroPermiso],
+   
   });
  
   /**
@@ -598,14 +599,21 @@ onAvisoCheckboxChange(
   metodoNombre: keyof Tramite260211Store
 ): void {
   const CHECKBOX = event.target as HTMLInputElement;
+
+  const LICENCIASANITARIOCONTROL = this.domicilio.get('licenciaSanitaria');
+
   if (CHECKBOX.checked) {
-    this.domicilio.get('licenciaSanitaria')?.disable();
+    LICENCIASANITARIOCONTROL?.setValue(''); 
+    LICENCIASANITARIOCONTROL?.disable(); 
   } else {
-    this.domicilio.get('licenciaSanitaria')?.enable();
+    LICENCIASANITARIOCONTROL?.enable();
   }
+this.setValoresStore(this.domicilio, 'licenciaSanitaria', 'setLicenciaSanitaria');
+
   const VALOR = form.get(campo)?.value;
   (this.tramite260211Store[metodoNombre] as (value: any) => void)(VALOR);
 }
+
  
 /**
  * Alterna el estado colapsable de la primera sección.
