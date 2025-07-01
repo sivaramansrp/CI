@@ -50,7 +50,7 @@ export const NICO_TABLA = [
     },
     {
         
-        encabezado: 'Fecha vencimi',
+        encabezado: 'Fecha vencimiento',
         clave: (ele: NicoInfo) => ele.fecha_vencimi,
         orden: 6,
     },
