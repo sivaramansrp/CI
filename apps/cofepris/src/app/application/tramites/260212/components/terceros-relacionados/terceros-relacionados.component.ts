@@ -257,6 +257,19 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
   /** Subject para destruir el componente */
     private destroy$ = new Subject<void>();
 
+    /**
+   * @property desactivarCampos
+   * @type {boolean}
+   * @public
+   * @description
+   * Indica si los campos del formulario deben estar desactivados (no editables).
+   * Se utiliza para controlar la habilitación o deshabilitación de los campos según la lógica del componente.
+   * Por defecto, los campos están desactivados (`true`).
+   *
+   * @example
+   * this.desactivarCampos = false; // Habilita los campos
+   * this.desactivarCampos = true;  // Deshabilita los campos
+   */
   public desactivarCampos: boolean = true;
 
   /**
@@ -464,11 +477,6 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
        */
       correoElectronico: new FormControl({value: '', disabled: true}),
     });
-
-    // Deshabilita campos hasta que se seleccione el tipo de persona
-    // this.agregarFabricanteFormGroup.get('rfc')?.disable();
-    // this.agregarFabricanteFormGroup.get('curp')?.disable();
-    // this.agregarFabricanteFormGroup.get('denominacionRazonSocial')?.disable();
   }
 
   /**
@@ -566,11 +574,6 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
        */
       correoElectronico: new FormControl({value: '', disabled: true}),
     });
-
-    // Deshabilita campos hasta que se seleccione el tipo de persona
-    // this.agregarDestinatarioFormGroup.get('rfc')?.disable();
-    // this.agregarDestinatarioFormGroup.get('curp')?.disable();
-    // this.agregarDestinatarioFormGroup.get('denominacionRazonSocial')?.disable();
   }
 
   /**
@@ -644,12 +647,6 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
        */
       correoElectronico: new FormControl({value: '', disabled: true}),
     });
-
-    // Deshabilita campos hasta que se seleccione el tipo de persona
-    // this.agregarProveedorFormGroup.get('nombre')?.disable();
-    // this.agregarProveedorFormGroup.get('segundoApellido')?.disable();
-    // this.agregarProveedorFormGroup.get('primerApellido')?.disable();
-    // this.agregarProveedorFormGroup.get('denominacionRazonSocial')?.disable();
   }
 
   /**

@@ -14,8 +14,8 @@ import { Tramite260212Query } from '../../estados/tramite260212.query';
 import { Observable, Subject, map, takeUntil } from 'rxjs';
 import { PaisDeOrigenComponent } from '../pais-de-origen/pais-de-origen.component';
 
-import { EstadoFisico, MercanciaModel } from '../../models/permiso-maquila.models';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { MercanciaModel } from '../../models/permiso-maquila.models';
 
 /**
  * Componente MercanciasTableFormComponent
@@ -223,6 +223,17 @@ export class MercanciasTableFormComponent implements OnInit, OnDestroy {
     this.tramite260212Store.setDespecificarClasificacion(SELECTED_ESPECIFICIAR);
   }
 
+  /**
+   * @method agregar
+   * @description
+   * Valida el formulario de mercancías y, si es válido, emite los datos capturados a través del evento `agregarDatos`.
+   * Posteriormente, cierra el formulario llamando a `cerrarMercanciasTableForm()`.
+   * Si el formulario no es válido, marca todos los campos como tocados para mostrar los mensajes de validación.
+   *
+   * @example
+   * this.agregar();
+   * // Si el formulario es válido, emite los datos y cierra el formulario.
+   */
   agregar(): void {
     if (this.datosMercanciaForm.valid) {
       const DATOS = {form: this.datosMercanciaForm.value};
@@ -232,7 +243,16 @@ export class MercanciasTableFormComponent implements OnInit, OnDestroy {
       this.datosMercanciaForm.markAllAsTouched();
     }
   }
-
+  /**
+   * @method limpiar
+   * @description
+   * Limpia y restablece todos los campos del formulario de mercancías a su estado inicial.
+   * Este método se utiliza para borrar los datos ingresados por el usuario y dejar el formulario listo para una nueva captura.
+   *
+   * @example
+   * this.limpiar();
+   * // El formulario se restablece a sus valores iniciales.
+   */
   limpiar(): void {
     this.datosMercanciaForm.reset();
   }

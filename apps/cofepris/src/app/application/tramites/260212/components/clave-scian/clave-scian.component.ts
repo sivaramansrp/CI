@@ -184,6 +184,17 @@ export class ClaveScianComponent implements OnInit, OnDestroy {
     this.tramite260212Store.setClave(SELECTED_CLAVE);
   }
 
+  /**
+   * @method agregar
+   * @description
+   * Valida el formulario y, si es válido, emite los datos seleccionados de clave y descripción.
+   * Utiliza el método estático `obtenerDescripcion` para obtener la descripción correspondiente a la clave y descripción seleccionadas.
+   * Después de emitir los datos, ejecuta el método cancelar para limpiar o cerrar el formulario.
+   *
+   * @example
+   * this.agregar();
+   * // Si el formulario es válido, emite los datos y cierra el formulario.
+   */
   agregar(): void {
     if (this.claveForm.valid) {
       const FORMA_DATOS = { clave: ClaveScianComponent.obtenerDescripcion(this.clave, this.claveForm.value.clave), descripcion:  ClaveScianComponent.obtenerDescripcion(this.clave, this.claveForm.value.descripcion)};
@@ -192,6 +203,16 @@ export class ClaveScianComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * @method limpiar
+   * @description
+   * Limpia y restablece los valores del formulario "claveForm" a su estado inicial.
+   * Este método se utiliza para borrar los datos ingresados por el usuario y dejar el formulario listo para una nueva captura.
+   *
+   * @example
+   * this.limpiar();
+   * // El formulario se restablece a sus valores iniciales.
+   */
   limpiar(): void {
     this.claveForm.reset();
   }

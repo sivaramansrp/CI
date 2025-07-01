@@ -61,8 +61,8 @@ export class SolicitudService {
    * 
    * @returns Observable<[]> Un observable que emite la lista de clasificaciones de productos.
    */
-   getClasificacionProducto(){
-    return this.http.get<[]>('/assets/json/260212/clasificacionProducto.json')
+   getClasificacionProducto(): Observable<Catalogo[]>{
+    return this.http.get<Catalogo[]>('/assets/json/260212/clasificacionProducto.json')
   }
 
   /**

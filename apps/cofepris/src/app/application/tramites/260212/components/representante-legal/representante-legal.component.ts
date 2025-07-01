@@ -158,6 +158,18 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * @method buscar
+   * @description
+   * Busca los datos del representante legal utilizando el RFC proporcionado en el formulario.
+   * Si el campo RFC está vacío, marca el campo como tocado para mostrar la validación.
+   * Si el RFC está presente, realiza una solicitud al servicio para obtener los datos del representante
+   * y actualiza los campos del formulario con la respuesta recibida.
+   *
+   * @example
+   * this.buscar();
+   * // Si el RFC es válido, llena los campos de nombre y apellidos con los datos obtenidos.
+   */
   buscar(): void {
     if (!this.personaForm.get('rfc')?.value) {
       this.personaForm.get('rfc')?.markAllAsTouched();

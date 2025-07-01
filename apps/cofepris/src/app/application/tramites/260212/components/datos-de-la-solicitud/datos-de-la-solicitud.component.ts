@@ -141,12 +141,52 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   @ViewChild('modalSeleccionarEstablesmiento') modalElement!: ElementRef;
 
+  /**
+   * Referencia al elemento del modal para agregar o editar claves S.C.I.A.N.
+   * Se utiliza para controlar la visualización del modal desde el componente mediante código.
+   *
+   * @type {ElementRef}
+   * @memberof DatosDeLaSolicitudComponent
+   * @example
+   * this.modalScianRef.nativeElement.show();
+   */
   @ViewChild('modalScianRef') modalScianRef!: ElementRef;
 
+  /**
+   * Instancia del modal para agregar o editar claves S.C.I.A.N.
+   * Se utiliza para controlar la apertura y cierre del modal desde el componente.
+   *
+   * @type {Modal | null}
+   * @private
+   * @memberof DatosDeLaSolicitudComponent
+   * @example
+   * this.modalScianInstance?.show();
+   * this.modalScianInstance?.hide();
+   */
   private modalScianInstance: Modal | null = null;
 
+  /**
+   * Referencia al elemento del modal para agregar o editar mercancías.
+   * Se utiliza para controlar la visualización del modal desde el componente mediante código.
+   *
+   * @type {ElementRef}
+   * @memberof DatosDeLaSolicitudComponent
+   * @example
+   * this.modalMercanciasRef.nativeElement.show();
+   */
   @ViewChild('modalMercanciasRef') modalMercanciasRef!: ElementRef;
 
+  /**
+   * Instancia del modal para agregar o editar mercancías.
+   * Se utiliza para controlar la apertura y cierre del modal desde el componente.
+   *
+   * @type {Modal | null}
+   * @private
+   * @memberof DatosDeLaSolicitudComponent
+   * @example
+   * this.modalMercanciasInstance?.show();
+   * this.modalMercanciasInstance?.hide();
+   */
   private modalMercanciasInstance: Modal | null = null;
 
   /**
@@ -364,6 +404,19 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * @method agregarScian
+   * @description
+   * Agrega una nueva clave S.C.I.A.N. al arreglo `claveScianDatas`.
+   * Este método recibe un objeto con las propiedades `clave` y `descripcion` y lo almacena en el arreglo correspondiente.
+   * Se utiliza para gestionar las claves S.C.I.A.N. seleccionadas o capturadas por el usuario en el componente.
+   *
+   * @param {{clave: string, descripcion: string}} form - Objeto que contiene la clave y la descripción S.C.I.A.N. a agregar.
+   *
+   * @example
+   * this.agregarScian({ clave: '12345', descripcion: 'Descripción de la clave' });
+   * // Agrega la clave y descripción al arreglo de claves S.C.I.A.N.
+   */
   agregarScian(form: {clave: string, descripcion: string}): void {
     if (form) {
       this.claveScianDatas.push(form);
@@ -530,6 +583,16 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
         this.losDatos = data
       });
   }
+  /**
+   * @method seleccionarEstablecimiento
+   * @description
+   * Muestra el modal para seleccionar un establecimiento.
+   * Si la referencia al elemento modal existe, crea una instancia de Bootstrap Modal y la muestra.
+   *
+   * @example
+   * this.seleccionarEstablecimiento();
+   * // Abre el modal de selección de establecimiento.
+   */
 
   seleccionarEstablecimiento(): void {
     if (this.modalElement) {
@@ -538,6 +601,16 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * @method aceptar
+   * @description
+   * Cierra el modal de selección de establecimiento y habilita todos los controles del formulario `datosEstablecimientoForm`.
+   * Este método se utiliza después de que el usuario ha seleccionado un establecimiento y confirma la selección.
+   *
+   * @example
+   * this.aceptar();
+   * // Cierra el modal y habilita los campos del formulario.
+   */
   aceptar(): void {
     const MODAL_INSTANCE = Modal.getInstance(this.modalElement.nativeElement);
     MODAL_INSTANCE?.hide();
@@ -546,6 +619,19 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       });
   }
 
+  /**
+   * @method agregarMercanciasTabla
+   * @description
+   * Agrega una nueva mercancía al arreglo `mercanicaData`.
+   * Este método recibe un objeto con la propiedad `form` que contiene los datos de la mercancía a agregar.
+   * Se utiliza para gestionar la información de las mercancías asociadas en el componente.
+   *
+   * @param {{form: MercanciaModel}} event - Objeto que contiene el formulario con los datos de la mercancía.
+   *
+   * @example
+   * this.agregarMercanciasTabla({ form: nuevaMercancia });
+   * // Agrega la mercancía al arreglo de mercancías.
+   */
   agregarMercanciasTabla(event: {form: MercanciaModel}): void {
     if (event) {
       this.mercanicaData.push(event.form);
