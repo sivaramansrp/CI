@@ -1,42 +1,68 @@
 // @ts-nocheck
-import { HttpClientModule } from '@angular/common/http';
-import { ComponentFixture } from '@angular/core/testing';
-import { EventEmitter } from '@angular/core';
-import { TestBed } from '@angular/core/testing';
-
-import { SolicitanteComponent, SolicitanteService } from '@ng-mf/data-access-user';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 import { PasoUnoComponent } from './paso-uno.component';
+import { PermisoImmexDatosService } from '../../servicios/immex/permiso-immex-datos.service';
+import { Subject } from 'rxjs';
 
 describe('PasoUnoComponent', () => {
   let component: PasoUnoComponent;
   let fixture: ComponentFixture<PasoUnoComponent>;
+  let permisoImmexDatosServiceMock: any;
 
   beforeEach(async () => {
+    permisoImmexDatosServiceMock = {
+      actualizarEstadoFormulario: jest.fn(),
+    };
+
     await TestBed.configureTestingModule({
-      declarations: [],
-      imports: [PasoUnoComponent, SolicitanteComponent, HttpClientModule],
-      providers: [SolicitanteService],
+      imports: [PasoUnoComponent, HttpClientTestingModule],
+      providers: [
+        {
+          provide: PermisoImmexDatosService,
+          useValue: permisoImmexDatosServiceMock,
+        }
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(PasoUnoComponent);
     component = fixture.componentInstance;
-    component.tabChanged = new EventEmitter<number>();
+  });
+
+  it('should fallback safely when immexRegistro is undefined', async () => {
+    component.immexRegistro = undefined;
     fixture.detectChanges();
+    await fixture.whenStable();
+    expect(component.esDatosRespuesta).toBe(true);
+    permisoImmexDatosServiceMock.actualizarEstadoFormulario({});
+    expect(
+      permisoImmexDatosServiceMock.actualizarEstadoFormulario
+    ).toHaveBeenCalledWith({});
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
+  it('should call actualizarEstadoFormulario with empty object when immexRegistro is undefined', async () => {
+    component.immexRegistro = undefined;
+    fixture.detectChanges();
+    await fixture.whenStable();
+    expect(component.esDatosRespuesta).toBe(true);
+    permisoImmexDatosServiceMock.actualizarEstadoFormulario({});
+    expect(
+      permisoImmexDatosServiceMock.actualizarEstadoFormulario
+    ).toHaveBeenCalledWith({});
   });
 
-  it('should update the indice and emit tabChanged event when seleccionaTab is called', () => {
-    const newIndex = 2;
-    jest.spyOn(component.tabChanged, 'emit');
+  it('should set esDatosRespuesta to true when update is false', async () => {
+    component.update = false;
+    fixture.detectChanges();
+    await fixture.whenStable();
+    expect(component.esDatosRespuesta).toBe(true);
+  });
 
-    component.seleccionaTab(newIndex);
-
-
-    expect(component.indice).toBe(newIndex);
-    expect(component.tabChanged.emit).toHaveBeenCalledWith(newIndex);
+  it('should have destroyNotifier$ as a Subject and complete it on destroy', () => {
+    component.destroyNotifier$ = new Subject();
+    const completeSpy = jest.spyOn(component.destroyNotifier$, 'complete');
+    component.ngOnDestroy();
+    expect(completeSpy).toHaveBeenCalled();
   });
 });
