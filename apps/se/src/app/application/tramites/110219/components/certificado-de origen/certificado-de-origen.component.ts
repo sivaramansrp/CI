@@ -300,28 +300,28 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
    * Inicializa el formulario con los datos del estado de la solicitud.
    */
   donanteDomicilio(): void {
-    this.cancelacionForm = this.fb.group({
-      validacionForm: this.fb.group({
-        motivoCancelacion: [this.solicitudState?.motivoCancelacion, [Validators.required]],
-        fechaExpedicion: [this.solicitudState?.fechaExpedicion, [Validators.required]],
-        fechaVencimiento: [this.solicitudState?.fechaVencimiento, [Validators.required]],
-        certificadoDeOrigen: [this.solicitudState?.certificadoDeOrigen, [Validators.required]],
-        bloque: [this.solicitudState?.bloque, [Validators.required]],
-        acuerdo: [this.solicitudState?.acuerdo, [Validators.required]],
-        observaciones: [this.solicitudState?.observaciones, [Validators.required]],
-        nombre: [this.solicitudState?.nombre, [Validators.required]],
-        primerApellido: [this.solicitudState?.primerApellido, [Validators.required]],
-        segundoApellido: [this.solicitudState?.segundoApellido, [Validators.required]],
-        registroFiscal: [this.solicitudState?.registroFiscal, [Validators.required]],
-        razonSocial: [this.solicitudState?.razonSocial, [Validators.required]],
-        calle: [this.solicitudState?.calle, [Validators.required]],
-        numeroLetra: [this.solicitudState?.numeroLetra, [Validators.required]],
-        telefono: [this.solicitudState?.telefono, [Validators.required, Validators.pattern(/^[0-9]{10}$/)]],
-        ciudad: [this.solicitudState?.ciudad, [Validators.required]],
-        fax: [this.solicitudState?.fax, [Validators.required, Validators.pattern(/^[0-9]{10}$/)]],
-        correoElectronico: [this.solicitudState?.correoElectronico, [Validators.required, Validators.email]]
-      }),
-    });
+   this.cancelacionForm = this.fb.group({
+  validacionForm: this.fb.group({
+    motivoCancelacion: [{ value: this.solicitudState?.motivoCancelacion, disabled: this.soloLectura }, [Validators.required]],
+    fechaExpedicion: [{ value: this.solicitudState?.fechaExpedicion, disabled: this.soloLectura }, [Validators.required]],
+    fechaVencimiento: [{ value: this.solicitudState?.fechaVencimiento, disabled: this.soloLectura }, [Validators.required]],
+    certificadoDeOrigen: [{ value: this.solicitudState?.certificadoDeOrigen, disabled: this.soloLectura }, [Validators.required]],
+    bloque: [{ value: this.solicitudState?.bloque, disabled: this.soloLectura }, [Validators.required]],
+    acuerdo: [{ value: this.solicitudState?.acuerdo, disabled: this.soloLectura }, [Validators.required]],
+    observaciones: [{ value: this.solicitudState?.observaciones, disabled: this.soloLectura }, [Validators.required]],
+    nombre: [{ value: this.solicitudState?.nombre, disabled: this.soloLectura }, [Validators.required]],
+    primerApellido: [{ value: this.solicitudState?.primerApellido, disabled: this.soloLectura }, [Validators.required]],
+    segundoApellido: [{ value: this.solicitudState?.segundoApellido, disabled: this.soloLectura }, [Validators.required]],
+    registroFiscal: [{ value: this.solicitudState?.registroFiscal, disabled: this.soloLectura }, [Validators.required]],
+    razonSocial: [{ value: this.solicitudState?.razonSocial, disabled: this.soloLectura }, [Validators.required]],
+    calle: [{ value: this.solicitudState?.calle, disabled: this.soloLectura }, [Validators.required]],
+    numeroLetra: [{ value: this.solicitudState?.numeroLetra, disabled: this.soloLectura }, [Validators.required]],
+    telefono: [{ value: this.solicitudState?.telefono, disabled: this.soloLectura }, [Validators.required, Validators.pattern(/^[0-9]{10}$/)]],
+    ciudad: [{ value: this.solicitudState?.ciudad, disabled: this.soloLectura }, [Validators.required]],
+    fax: [{ value: this.solicitudState?.fax, disabled: this.soloLectura }, [Validators.required, Validators.pattern(/^[0-9]{10}$/)]],
+    correoElectronico: [{ value: this.solicitudState?.correoElectronico, disabled: this.soloLectura }, [Validators.required, Validators.email]],
+  }),
+});
 
     if (this.cancelacionForm.invalid) {
       this.cancelacionForm.markAllAsTouched();

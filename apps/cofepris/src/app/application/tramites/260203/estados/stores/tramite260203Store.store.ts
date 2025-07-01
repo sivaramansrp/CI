@@ -16,48 +16,93 @@ import { TablaOpcionConfig } from '../../../../shared/models/datos-solicitud.mod
 import { TablaScianConfig } from '../../../../shared/models/datos-solicitud.model';
 
 /**
- * Estado inicial del trámite 260203.
- * @interface Tramite260210State
- *
- * @property {Destinatario[]} destinatarioFinalTablaDatos - Lista de destinatarios finales.
- * @property {Facturador[]} facturadorTablaDatos - Lista de facturadores.
- * @property {Proveedor[]} proveedorTablaDatos - Lista de proveedores.
- * @property {Fabricante[]} fabricanteTablaDatos - Lista de fabricantes.
- * @property {DatosSolicitudFormState} datosSolicitudFormState - Información del formulario de solicitud.
- * @property {MercanciaForm} mercanciaForm - Datos del formulario de mercancías.
- * @property {TablaOpcionConfig[]} opcionConfigDatos - Opciones de configuración de tabla.
- * @property {TablaScianConfig[]} scianConfigDatos - Configuraciones SCIAN disponibles.
- * @property {TablaMercanciasDatos[]} tablaMercanciasConfigDatos - Configuración de tabla de mercancías.
- * @property {TablaOpcionConfig[]} seleccionadoopcionDatos - Opciones seleccionadas.
- * @property {TablaScianConfig[]} seleccionadoScianDatos - Configuraciones SCIAN seleccionadas.
- * @property {TablaMercanciasDatos[]} seleccionadoTablaMercanciasDatos - Mercancías seleccionadas.
- * @property {boolean} opcionesColapsableState - Estado del panel colapsable.
- * @property {PagoDerechosFormState} pagoDerechos - Estado del formulario de pago de derechos.
- * @property {DetalleMercancia[]} [detalleMercanciaTabla] - Lista de detalles de mercancía en formato de tabla.
- * @property {number} [indice] - Índice del trámite actual.
+ * Representa el estado de la aplicación para el trámite 260203.
  */
 export interface Tramite260203State {
+  /**
+   * Lista de destinatarios finales en la tabla de datos.
+   */
   destinatarioFinalTablaDatos: Destinatario[];
+
+  /**
+   * Lista de facturadores en la tabla de datos.
+   */
   facturadorTablaDatos: Facturador[];
+
+  /**
+   * Lista de proveedores en la tabla de datos.
+   */
   proveedorTablaDatos: Proveedor[];
+
+  /**
+   * Lista de fabricantes en la tabla de datos.
+   */
   fabricanteTablaDatos: Fabricante[];
+
+  /**
+   * Estado del formulario de datos de la solicitud.
+   */
   datosSolicitudFormState: DatosSolicitudFormState;
+
+  /**
+   * Información del formulario de mercancía.
+   */
   mercanciaForm: MercanciaForm;
+
+  /**
+   * Configuración de opciones en la tabla de datos.
+   */
   opcionConfigDatos: TablaOpcionConfig[];
+
+  /**
+   * Configuración de SCIAN en la tabla de datos.
+   */
   scianConfigDatos: TablaScianConfig[];
+
+  /**
+   * Configuración de mercancías en la tabla de datos.
+   */
   tablaMercanciasConfigDatos: TablaMercanciasDatos[];
+
+  /**
+   * Opciones seleccionadas en la tabla de datos.
+   */
   seleccionadoopcionDatos: TablaOpcionConfig[];
+
+  /**
+   * SCIAN seleccionado en la tabla de datos.
+   */
   seleccionadoScianDatos: TablaScianConfig[];
+
+  /**
+   * Mercancías seleccionadas en la tabla de datos.
+   */
   seleccionadoTablaMercanciasDatos: TablaMercanciasDatos[];
+
+  /**
+   * Estado de las opciones colapsables.
+   */
   opcionesColapsableState: boolean;
+
+  /**
+   * Información del formulario de pago de derechos.
+   */
   pagoDerechos: PagoDerechosFormState;
+
+  /**
+   * Detalle de mercancías en la tabla de datos.
+   */
   detalleMercanciaTabla: DetalleMercancia[];
+
+  /**
+   * Índice actual utilizado en el estado.
+   */
   indice: number;
 }
 
 /**
  * Crea el estado inicial del trámite 260203.
- * @returns {Tramite260203State} El estado inicial
+ * @returns {Tramite260203State} El estado inicials
  */
 export function createInitialState(): Tramite260203State {
   return {
@@ -129,9 +174,19 @@ export function createInitialState(): Tramite260203State {
   };
 }
 
+
 /**
- * Almacén del trámite 260203.
- * @class Tramite260203Store
+ * Decorador que marca esta clase como un servicio inyectable en Angular.
+ * 
+ * Este servicio se registra en el nivel raíz del inyector, lo que significa que estará disponible
+ * en toda la aplicación sin necesidad de declararlo explícitamente en los módulos.
+ * 
+ * @Injectable({
+ *   providedIn: 'root'
+ * })
+ * 
+ * - `providedIn: 'root'`: Indica que el servicio se proporciona en el inyector raíz de la aplicación.
+ * Esto asegura que haya una única instancia del servicio compartida en toda la aplicación.
  */
 @Injectable({
   providedIn: 'root',

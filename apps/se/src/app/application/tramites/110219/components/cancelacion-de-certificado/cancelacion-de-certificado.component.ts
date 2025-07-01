@@ -435,15 +435,15 @@ export class CancelacionDeCertificadoComponent implements OnInit, OnDestroy {
    * Inicializa el formulario con los datos del estado de la solicitud.
    */
   donanteDomicilio(): void {
-    this.cancelacionForm = this.fb.group({
-      validacionForm: this.fb.group({
-        numeroCertificado: [this.solicitudState?.numeroCertificado, [Validators.required, Validators.pattern(/^\d{14}$/)]],
-        tratado: [this.solicitudState?.tratado, [Validators.required]],
-        pais: [this.solicitudState?.pais, [Validators.required]],
-        fechaInicial: [this.solicitudState?.fechaInicial, [Validators.required]],
-        fechaFinal: [this.solicitudState?.fechaFinal, [Validators.required]],
-      }),
-    });
+   this.cancelacionForm = this.fb.group({
+  validacionForm: this.fb.group({
+    numeroCertificado: [{ value: this.solicitudState?.numeroCertificado, disabled: this.soloLectura }, [Validators.required]],
+    tratado: [{ value: this.solicitudState?.tratado, disabled: this.soloLectura }, [Validators.required]],
+    pais: [{ value: this.solicitudState?.pais, disabled: this.soloLectura }, [Validators.required]],
+    fechaInicial: [{ value: this.solicitudState?.fechaInicial, disabled: this.soloLectura }, [Validators.required]],
+    fechaFinal: [{ value: this.solicitudState?.fechaFinal, disabled: this.soloLectura }, [Validators.required]],
+  }),
+});
   }
 
   /**
