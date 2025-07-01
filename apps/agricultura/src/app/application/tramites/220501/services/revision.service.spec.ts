@@ -238,7 +238,6 @@ describe('RevisionService', () => {
       saldoPendiente: '',
       saldoACapturar: '',
       mostrarSeccion: true,
-      mercanciaTablaDatos: [],
       mercanciaTablaDatos: []
     };
 
