@@ -2583,7 +2583,6 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    * Método que maneja el evento de aceptar o no una accion del componente Notificación cuando este es un modal.
    */
   confirmacionModal(confirmar: boolean): void {
-    this.limpiarFechasHoras();
     switch (this.procesoModal) {
       case 'lda_dd':
         {
