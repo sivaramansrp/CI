@@ -233,8 +233,8 @@ export class DomicilioEstablecimientoAduanasComponent implements OnInit, OnDestr
    * Etiqueta de la lista de fechas.
    * */
   public aduanasDeLabel: CrossListLable = {
-    tituluDeLaIzquierda: 'Aduanas de entrada disponibles:',
-    derecha: 'Aduanas de entrada seleccionadas*:',
+    tituluDeLaIzquierda: 'Aduanas de entrada disponibles',
+    derecha: 'Aduanas de entrada seleccionadas*',
   };
 
   /**
