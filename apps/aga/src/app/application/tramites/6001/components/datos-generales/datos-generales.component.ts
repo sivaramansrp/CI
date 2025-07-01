@@ -39,6 +39,9 @@ export class DatosGeneralesComponent implements OnInit {
      */
     public registroDeSolicitudesTablaDatos: RegistroDeSolicitudesTabla[] = [];
 
+    /**
+     * Almacena la lista de entidades Sociedad que contienen datos generales relacionados con la aplicación.
+     */
     public sociedadDatos: Array<Sociedad> = [];
 
     /** Configuración de la tabla de sectores */
@@ -61,7 +64,14 @@ export class DatosGeneralesComponent implements OnInit {
    * Esta propiedad se utiliza para gestionar y almacenar datos de notificaciones.
    */
     public confirmarNotificacion!: Notificacion;
+    /**
+     * Representa la entidad de notificación asociada con la sociedad.
+     * Esta propiedad almacena los detalles de la notificación relevantes para el contexto actual.
+     */
     public sociedadNotificacion!: Notificacion;
+    /**
+     * Almacena el índice de la fila actualmente seleccionada en una lista o tabla.
+     */
     public selectedRowIndex: number | null = null;
 
 
@@ -222,6 +232,13 @@ export class DatosGeneralesComponent implements OnInit {
         });
     }
 
+    /**
+     * Muestra una notificación de alerta al intentar eliminar un registro de solicitud sin haber seleccionado uno.
+     * 
+     * Asigna a la propiedad `confirmarNotificacion` una notificación de tipo alerta con categoría 'danger',
+     * informando al usuario que debe seleccionar una solicitud. La notificación incluye un título, mensaje,
+     * y un botón 'Aceptar', y se cerrará automáticamente después de 2000 milisegundos.
+     */
     public eliminarRegistroSolicitud(): void {
         this.confirmarNotificacion = {
             tipoNotificacion: 'alert',
@@ -236,6 +253,12 @@ export class DatosGeneralesComponent implements OnInit {
         };
     }
 
+    /**
+     * Muestra una notificación de alerta al intentar editar un registro de solicitud sin haber seleccionado uno.
+     * 
+     * Asigna a la propiedad `confirmarNotificacion` una notificación de tipo alerta con categoría 'danger',
+     * informando al usuario que debe seleccionar una solicitud. La notificación requiere acción del usuario y se cerrará automáticamente después de 2000 milisegundos.
+     */
     public editarRegistroSolicitud(): void {
         this.confirmarNotificacion = {
             tipoNotificacion: 'alert',
@@ -250,6 +273,13 @@ export class DatosGeneralesComponent implements OnInit {
         };
     }
 
+    /**
+     * Muestra una notificación de alerta indicando que se debe seleccionar un renglón.
+     * 
+     * Este método asigna a la propiedad `sociedadNotificacion` una configuración de notificación
+     * de error, solicitando al usuario que seleccione un renglón. La notificación se muestra como
+     * una alerta de tipo peligro, incluye un botón "Aceptar" y se cierra automáticamente después de 2 segundos.
+     */
     public bajaDeCuentas(): void {
         this.sociedadNotificacion = {
             tipoNotificacion: 'alert',

@@ -70,6 +70,9 @@ export class AgregarCuentaComponent implements OnInit,OnDestroy {
    * Este estado se utiliza para gestionar los datos y el comportamiento asociado con el proceso de adición de cuentas.
    */
   public agregarCuentaState!: AgregarCuenta6001State;
+  /**
+   * Indica si el formulario "Agregar Cuenta" ha sido enviado.
+   */
   public tieneAgregarCuentaFormEnviado: boolean = false;
 
   /**
@@ -244,6 +247,9 @@ export class AgregarCuentaComponent implements OnInit,OnDestroy {
     }
   }
 
+  /**
+   * Cancela la operación actual de agregar una cuenta bancaria.
+   */
   public cancelar(): void {
     this.agregarCuentaForm.reset(this.agregarCuentaForm.value);
     this.agregarCuentaForm.updateValueAndValidity();
