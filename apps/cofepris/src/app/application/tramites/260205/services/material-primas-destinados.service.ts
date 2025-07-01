@@ -3,9 +3,16 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Tramite260205Store } from '../estados/stores/tramite260205.store';
 
+
 /**
- * Servicio encargado de manejar la lógica y comunicación relacionada con el trámite 260212.
- * Proporciona métodos para actualizar el estado del formulario y obtener datos de consulta.
+ * Decorador que marca la clase como un servicio inyectable en Angular.
+ * 
+ * Este servicio está registrado en el nivel raíz del sistema de inyección de dependencias,
+ * lo que significa que estará disponible en toda la aplicación sin necesidad de declararlo
+ * explícitamente en los módulos.
+ * 
+ * @decorator @Injectable
+ * @providedIn 'root' Indica que el servicio se proporciona en el nivel raíz de la aplicación.
  */
 @Injectable({
   providedIn: 'root',

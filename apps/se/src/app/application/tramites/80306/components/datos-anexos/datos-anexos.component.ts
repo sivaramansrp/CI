@@ -13,7 +13,6 @@ import { ToastrService } from 'ngx-toastr';
   styleUrl: './datos-anexos.component.scss',
   standalone: true,
   imports: [TablaDinamicaComponent, TituloComponent],
-  providers: [ImmerModificacionService, ToastrService],
 })
 export class DatosAnexosComponent implements OnDestroy, OnInit {
   /**

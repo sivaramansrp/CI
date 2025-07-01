@@ -1,11 +1,10 @@
-import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { ConsultaioQuery, ConsultaioState, FormularioDinamico, TIPO_PERSONA } from '@ng-mf/data-access-user';
+import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState, FormularioDinamico } from '@ng-mf/data-access-user';
 import { DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL, PERSONA_MORAL_NACIONAL } from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
 import { Mercancias, PlantasTabla, ProductorIndirecto, SectorTabla } from '../../../../shared/models/complementaria.model';
 import { ReplaySubject, map, takeUntil } from 'rxjs';
 import { Bitacora } from '../../../../shared/models/bitacora.model';
 import { CatalogosService } from '../../service/catalogos.service';
-import { SolicitanteComponent } from '@libs/shared/data-access-user/src';
 
 /**
  * Componente que representa el primer paso del trámite.
@@ -22,12 +21,6 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
    * Catálogo de entidades federativas.
    */
   entidadFederativa!: unknown;
-
-  /**
-   * Referencia al componente de solicitante.
-   */
-  @ViewChild(SolicitanteComponent) solicitante!: SolicitanteComponent;
-
   /**
    * Tipo de persona seleccionada (e.g., física o moral).
    */
@@ -140,7 +133,7 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
   ngAfterViewInit(): void {
     this.persona = PERSONA_MORAL_NACIONAL;
     this.domicilioFiscal = DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL;
-    this.solicitante.obtenerTipoPersona(TIPO_PERSONA.MORAL_NACIONAL);
+    // this.solicitante.obtenerTipoPersona(TIPO_PERSONA.MORAL_NACIONAL);
   }
 
   /**

@@ -12,7 +12,6 @@ import {
   PRODUCTO_TABLA,
   SCIAN_TABLA,
 } from '../../../../shared/constantes/datos-solicitud.enum';
-
 import {
   Tramite260202State,
   Tramite260202Store,
