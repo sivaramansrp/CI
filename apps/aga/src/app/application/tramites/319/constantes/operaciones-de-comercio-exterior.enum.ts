@@ -10,6 +10,7 @@ import { ConfiguracionColumna } from "@libs/shared/data-access-user/src";
  */
 
 /**
+ * Arreglo que define los pasos de un proceso en una solicitud de operaciones de comercio exterior.
  * @const PASOS
  * @description Arreglo que define los pasos de un proceso en una solicitud de operaciones de comercio exterior.
  * Cada paso incluye un índice, un título descriptivo, y los estados de actividad y completitud.
@@ -34,6 +35,7 @@ export const PASOS = [
 ];
 
 /**
+ *  Ruta relativa a los archivos JSON utilizados para las operaciones de comercio exterior.
  * @const URL
  * @description Ruta relativa a los archivos JSON utilizados para las operaciones de comercio exterior.
  * @type {string}
@@ -42,6 +44,8 @@ export const PASOS = [
 export const URL = '../../../../../assets/json/319/';
 
 /**
+ * Configuración de las columnas para la tabla de personas en el módulo de operaciones de comercio exterior.
+ * Cada objeto en el arreglo representa una columna con su encabezado, clave para acceder al valor en la fila, y el orden de aparición.
  * @const CONFIGURACION_PERSONAS_COLUMNAS
  * @description Configuración de las columnas para la tabla de personas en el módulo de operaciones de comercio exterior.
  * Cada objeto en el arreglo representa una columna con su encabezado, clave para acceder al valor en la fila, y el orden de aparición.
@@ -64,6 +68,7 @@ export const CONFIGURACION_PERSONAS_COLUMNAS: ConfiguracionColumna<Personas>[] =
 ];
 
 /**
+ * El orden
  * @const CONFIGURACION_SOLICITAR_COLUMNAS
  * @description Configuración de las columnas para la tabla de solicitudes en el módulo de operaciones de comercio exterior.
  * Cada objeto en el arreglo representa una columna con su encabezado, clave para acceder al valor en la fila, y el orden de aparición.
@@ -82,6 +87,7 @@ export const CONFIGURACION_SOLICITAR_COLUMNAS: ConfiguracionColumna<Solicitar>[]
 ];
 
 /**
+ * La fecha
  * @const TEXTOS
  * @description La constante `TEXTOS` contiene un mensaje de texto que indica que la fecha proporcionada no es válida 
  * porque aún no ha concluido el período especificado.
@@ -93,6 +99,7 @@ export const CONFIGURACION_SOLICITAR_COLUMNAS: ConfiguracionColumna<Solicitar>[]
 export const TEXTOS = "La fecha indicada NO es correcta por que aún no concluye:";
 
 /**
+ * alert-danger
  * @const INFO_ALERT
  * @description Constante que define el estilo de alerta para operaciones de comercio exterior.
  * @type {string}

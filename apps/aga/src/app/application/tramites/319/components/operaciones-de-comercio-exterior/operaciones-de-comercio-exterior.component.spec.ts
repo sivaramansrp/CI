@@ -5,6 +5,8 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { AlertComponent } from 'ngx-bootstrap/alert';
 import { ReactiveFormsModule, Validators } from '@angular/forms';
 import { OperacionesDeComercioExterioComponent } from './operaciones-de-comercio-exterior.component';
+import { FormControl } from '@angular/forms';
+import { validadorDeMesyAno } from './operaciones-de-comercio-exterior.component';
 
 describe('OperacionesDeComercioExteriorComponent', () => {
   let component: OperacionesDeComercioExterioComponent;
@@ -168,5 +170,25 @@ describe('OperacionesDeComercioExteriorComponent', () => {
     expect(component.tramite319Store.actualizarDatosForma).not.toHaveBeenCalled();
     expect(component.periodoView).toBe(true);
     expect(component.vistaAlerta).toBe(true);
+  });
+});
+describe('validadorDeMesyAno', () => {
+  it('should return null for valid MM/YYYY values', () => {
+    const validator = validadorDeMesyAno();
+    expect(validator(new FormControl('01/2024'))).toBeNull();
+    expect(validator(new FormControl('12/1999'))).toBeNull();
+    expect(validator(new FormControl('09/2023'))).toBeNull();
+  });
+
+  it('should return error object for invalid MM/YYYY values', () => {
+    const validator = validadorDeMesyAno();
+    expect(validator(new FormControl('13/2024'))).toEqual({ invalidMonthYear: true });
+    expect(validator(new FormControl('00/2024'))).toEqual({ invalidMonthYear: true });
+    expect(validator(new FormControl('2024/01'))).toEqual({ invalidMonthYear: true });
+    expect(validator(new FormControl('1/2024'))).toEqual({ invalidMonthYear: true });
+    expect(validator(new FormControl('01-2024'))).toEqual({ invalidMonthYear: true });
+    expect(validator(new FormControl(''))).toBeNull();
+    expect(validator(new FormControl(null))).toBeNull();
+    expect(validator(new FormControl(undefined))).toBeNull();
   });
 });
