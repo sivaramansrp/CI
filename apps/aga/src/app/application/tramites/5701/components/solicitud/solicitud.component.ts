@@ -2742,10 +2742,14 @@ export class SolicitudComponent
 
       case 'eliminar_solicitud':
         if (confirmar) {
-          const ID_SOLICITUD = this.solicitudState?.idSolicitud;
-          this.peticionEliminarSolicitud(23);
-          this.limpiarNotificacion();
-          this.procesoModal = '';
+          const ID_SOLICITUD = this.solicitudState.idSolicitud
+            ? this.solicitudState?.idSolicitud
+            : 0;
+          if (ID_SOLICITUD !== 0) {
+            this.peticionEliminarSolicitud(ID_SOLICITUD);
+            this.limpiarNotificacion();
+            this.procesoModal = '';
+          }
         }
         break;
       default:
