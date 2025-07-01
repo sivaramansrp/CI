@@ -1,5 +1,6 @@
 import { AlertComponent } from '@libs/shared/data-access-user/src/tramites/components/alert/alert.component';
 import { AnexarDocumentosComponent } from '@libs/shared/data-access-user/src/tramites/components/anexar-documentos/anexar-documentos.component';
+import { AvisoDePrivacidadComponent } from '../../shared/components/aviso-de-privacidad/aviso-de-privacidad.component';
 import { BtnContinuarComponent } from '@libs/shared/data-access-user/src/tramites/components/btn-continuar/btn-continuar.component';
 import { CatalogosService } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
@@ -42,6 +43,7 @@ import { provideHttpClient } from '@angular/common/http';
     AlertComponent,
     TituloComponent,
     DatosDeLaComponent,
+    AvisoDePrivacidadComponent,
   ],
   providers: [
     ServiciosPermisoSanitarioService,
