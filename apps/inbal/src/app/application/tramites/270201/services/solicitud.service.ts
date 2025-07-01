@@ -169,6 +169,10 @@ export class SolicitudService {
     this.tramite270201Store.setObraDeArte(DATOS.ObraDeArte);
   }
 
+  /**
+ * Obtiene los datos del aviso de importación desde un archivo JSON local.
+ * @returns Observable con el estado del trámite 270201.
+ */
   getRegistroTomaMuestrasMercanciasData(): Observable<Tramite270201State> {
     return this.http.get<Tramite270201State>('assets/json/270201/aviso-de-importacion.json');
   }

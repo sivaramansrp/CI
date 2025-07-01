@@ -219,6 +219,62 @@ describe('MiembroDeLaEmpresaComponent', () => {
     component.aceptarModal();
     expect(component.eventoActualizarMiembro.emit).toHaveBeenCalled();
   });
+  
+  it('should update miembroTipoPersonaMuestra and seleccionarTipoDePersona when actualizarMiembroTipoPersonaMuestra is called', () => {
+    const mockCatalogo = { id: 2 };
+    component.actualizarMiembroTipoPersonaMuestra(mockCatalogo as any);
+    expect(
+      solicitud31101StoreMock.actualizarMiembroTipoPersonaMuestra
+    ).toHaveBeenCalledWith(2);
+    expect(component.seleccionarTipoDePersona).toBe(2);
+  });
+
+  it('should update miembroApellidoPaterno when actualizarMiembroApellidoPaterno is called', () => {
+    const mockEvent = { target: { value: 'Perez' } } as any;
+    component.actualizarMiembroApellidoPaterno(mockEvent);
+    expect(
+      solicitud31101StoreMock.actualizarMiembroApellidoPaterno
+    ).toHaveBeenCalledWith('Perez');
+  });
+
+  it('should update miembroApellidoMaterno when actualizarMiembroApellidoMaterno is called', () => {
+    const mockEvent = { target: { value: 'Lopez' } } as any;
+    component.actualizarMiembroApellidoMaterno(mockEvent);
+    expect(
+      solicitud31101StoreMock.actualizarMiembroApellidoMaterno
+    ).toHaveBeenCalledWith('Lopez');
+  });
+
+  it('should update miembroNombreEmpresa when actualizarMiembroNombreEmpresa is called', () => {
+    const mockEvent = { target: { value: 'Empresa SA' } } as any;
+    component.actualizarMiembroNombreEmpresa(mockEvent);
+    expect(
+      solicitud31101StoreMock.actualizarMiembroNombreEmpresa
+    ).toHaveBeenCalledWith('Empresa SA');
+  });
+
+  it('should call actualizarMiembroRegistroFederal and actualizarMiembroNombreCompleto when buscarRFCDatos is called and miembroRfc has value', () => {
+    component.miembroEmpresaForm.get('miembroRfc')?.setValue('RFCVALUE');
+    component.buscarRFCDatos();
+    expect(
+      solicitud31101StoreMock.actualizarMiembroRegistroFederal
+    ).toHaveBeenCalledWith('MAVL621207C95');
+    expect(
+      solicitud31101StoreMock.actualizarMiembroNombreCompleto
+    ).toHaveBeenCalledWith('EUROFOODS DE MEXICO GONZALEZ PINAL');
+  });
+
+  it('should not call actualizarMiembroRegistroFederal or actualizarMiembroNombreCompleto when buscarRFCDatos is called and miembroRfc is empty', () => {
+    component.miembroEmpresaForm.get('miembroRfc')?.setValue('');
+    component.buscarRFCDatos();
+    expect(
+      solicitud31101StoreMock.actualizarMiembroRegistroFederal
+    ).not.toHaveBeenCalled();
+    expect(
+      solicitud31101StoreMock.actualizarMiembroNombreCompleto
+    ).not.toHaveBeenCalled();
+  });
+
 
   it('should clean up subscriptions on ngOnDestroy', () => {
     const destroySpy = jest.spyOn(component['destroy$'], 'next');

@@ -18,22 +18,126 @@ import { TablaScianConfig } from '../../../shared/models/datos-solicitud.model';
  * @description
  * Representa el estado de la tienda para el trámite 260216. Contiene datos relacionados
  * con destinatarios, facturadores, proveedores, fabricantes, formularios y configuraciones.
+ *
+ * @property {Destinatario[]} destinatarioFinalTablaDatos
+ * Lista de destinatarios finales asociados al trámite.
+ *
+ * @property {Facturador[]} facturadorTablaDatos
+ * Lista de facturadores asociados al trámite.
+ *
+ * @property {Proveedor[]} proveedorTablaDatos
+ * Lista de proveedores asociados al trámite.
+ *
+ * @property {Fabricante[]} fabricanteTablaDatos
+ * Lista de fabricantes asociados al trámite.
+ *
+ * @property {DatosSolicitudFormState} datosSolicitudFormState
+ * Estado del formulario de datos de la solicitud.
+ *
+ * @property {MercanciaForm} mercanciaForm
+ * Estado del formulario de mercancías.
+ *
+ * @property {TablaOpcionConfig[]} opcionConfigDatos
+ * Configuración de opciones de la tabla.
+ *
+ * @property {TablaScianConfig[]} scianConfigDatos
+ * Configuración de SCIAN en la tabla.
+ *
+ * @property {TablaMercanciasDatos[]} tablaMercanciasConfigDatos
+ * Configuración de la tabla de mercancías.
+ *
+ * @property {TablaOpcionConfig[]} seleccionadoopcionDatos
+ * Opciones seleccionadas en la tabla de opciones.
+ *
+ * @property {TablaScianConfig[]} seleccionadoScianDatos
+ * Opciones seleccionadas en la tabla de SCIAN.
+ *
+ * @property {TablaMercanciasDatos[]} seleccionadoTablaMercanciasDatos
+ * Mercancías seleccionadas en la tabla de mercancías.
+ *
+ * @property {boolean} opcionesColapsableState
+ * Estado de colapsabilidad de las opciones.
+ *
+ * @property {PagoDerechosFormState} pagoDerechos
+ * Estado del formulario de pago de derechos.
+ *
+ * @property {number | undefined} tabSeleccionado
+ * Índice de la pestaña seleccionada.
  */
 export interface Tramite260216State {
+  /**
+   * Lista de destinatarios finales asociados al trámite.
+   */
   destinatarioFinalTablaDatos: Destinatario[];
+
+  /**
+   * Lista de facturadores asociados al trámite.
+   */
   facturadorTablaDatos: Facturador[];
+
+  /**
+   * Lista de proveedores asociados al trámite.
+   */
   proveedorTablaDatos: Proveedor[];
+
+  /**
+   * Lista de fabricantes asociados al trámite.
+   */
   fabricanteTablaDatos: Fabricante[];
+
+  /**
+   * Estado del formulario de datos de la solicitud.
+   */
   datosSolicitudFormState: DatosSolicitudFormState;
+
+  /**
+   * Estado del formulario de mercancías.
+   */
   mercanciaForm: MercanciaForm;
+
+  /**
+   * Configuración de opciones de la tabla.
+   */
   opcionConfigDatos: TablaOpcionConfig[];
+
+  /**
+   * Configuración de SCIAN en la tabla.
+   */
   scianConfigDatos: TablaScianConfig[];
+
+  /**
+   * Configuración de la tabla de mercancías.
+   */
   tablaMercanciasConfigDatos: TablaMercanciasDatos[];
+
+  /**
+   * Opciones seleccionadas en la tabla de opciones.
+   */
   seleccionadoopcionDatos: TablaOpcionConfig[];
+
+  /**
+   * Opciones seleccionadas en la tabla de SCIAN.
+   */
   seleccionadoScianDatos: TablaScianConfig[];
+
+  /**
+   * Mercancías seleccionadas en la tabla de mercancías.
+   */
   seleccionadoTablaMercanciasDatos: TablaMercanciasDatos[];
+
+  /**
+   * Estado de colapsabilidad de las opciones.
+   */
   opcionesColapsableState: boolean;
+
+  /**
+   * Estado del formulario de pago de derechos.
+   */
   pagoDerechos: PagoDerechosFormState;
+
+  /**
+   * Índice de la pestaña seleccionada.
+   */
   tabSeleccionado?: number;
 }
 
@@ -41,8 +145,17 @@ export interface Tramite260216State {
  * @function
  * @name createInitialState
  * @description
- * Crea el estado inicial para la tienda del trámite 260216.
- * @returns {Tramite260216State} Estado inicial.
+ * Crea el estado inicial para la tienda del trámite 260216. Este estado inicializa todas las propiedades necesarias
+ * para gestionar los datos relacionados con el trámite, incluyendo destinatarios, facturadores, proveedores, fabricantes,
+ * formularios, configuraciones de tablas y más.
+ *
+ * @returns {Tramite260216State} Estado inicial del trámite 260216.
+ *
+ * @example
+ * ```typescript
+ * const initialState = createInitialState();
+ * console.log(initialState.destinatarioFinalTablaDatos); // []
+ * ```
  */
 export function createInitialState(): Tramite260216State {
   return {
@@ -95,7 +208,7 @@ export function createInitialState(): Tramite260216State {
       paisDeProcedenciaDatos: [],
     },
     opcionConfigDatos: TABLA_OPCION_DATA,
-    scianConfigDatos: [], // SCIAN_TABLA_DATA
+    scianConfigDatos: [], 
     tablaMercanciasConfigDatos: [],
     seleccionadoopcionDatos: [],
     seleccionadoScianDatos: [],
@@ -113,6 +226,18 @@ export function createInitialState(): Tramite260216State {
   };
 }
 
+/**
+ * @decorator
+ * @name Injectable
+ * @description
+ * Marca la clase `Tramite260216Store` como un servicio inyectable en Angular.
+ * Esto permite que el servicio sea proporcionado en el nivel raíz del módulo,
+ * asegurando que haya una única instancia compartida en toda la aplicación.
+ *
+ * @providedIn 'root'
+ * Indica que el servicio está disponible en el nivel raíz del módulo,
+ * lo que significa que puede ser inyectado en cualquier parte de la aplicación.
+ */
 @Injectable({
   providedIn: 'root',
 })

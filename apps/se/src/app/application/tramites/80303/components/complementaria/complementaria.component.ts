@@ -27,6 +27,18 @@ import { ModificacionProgramaImmexBajaSubmanufactureraService } from '../../serv
 import { Tramite80303Query } from '../../estados/tramite80303Query.query';
 import { signal } from '@angular/core';
 
+/**
+ * Decorador `@Component` utilizado para definir un componente en Angular.
+ * 
+ * Este decorador configura las propiedades esenciales del componente, como su selector,
+ * la plantilla HTML, los estilos y los módulos que se importan para su funcionamiento.
+ * 
+ * @property {string} selector - Nombre del selector que se utiliza para instanciar este componente en una plantilla HTML.
+ * @property {boolean} standalone - Indica si el componente es independiente y no requiere ser declarado en un módulo.
+ * @property {Array<any>} imports - Lista de módulos y componentes que se importan para ser utilizados dentro de este componente.
+ * @property {string} templateUrl - Ruta relativa al archivo HTML que define la estructura visual del componente.
+ * @property {string} styleUrl - Ruta relativa al archivo SCSS que define los estilos del componente.
+ */
 @Component({
   selector: 'app-complementaria',
   standalone: true,
@@ -267,6 +279,15 @@ export class ComplementariaComponent implements OnDestroy {
     });
   }
 
+  /**
+   * Maneja el evento de cambio de entrada en un elemento HTML de tipo input.
+   * 
+   * Este método se activa cuando ocurre un cambio en el valor del campo de entrada.
+   * Convierte el evento recibido en un elemento de entrada HTML y, si el elemento existe,
+   * actualiza el valor de la propiedad `certificacionSAT$` con el nuevo valor del campo de entrada.
+   * 
+   * @param event - El evento de cambio generado por el elemento de entrada HTML.
+   */
   onInputChange(event: Event): void {
     const INPUT_ELEMENT = event.target as HTMLInputElement;
     if (INPUT_ELEMENT) {

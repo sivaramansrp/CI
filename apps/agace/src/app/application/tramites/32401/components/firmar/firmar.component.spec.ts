@@ -75,4 +75,19 @@ describe('FirmarComponent', () => {
     expect(nextSpy).toHaveBeenCalledWith(true);
     expect(completeSpy).toHaveBeenCalled();
   });
+
+  it('should not call obtenerTramite if obtieneFirma is called with an empty signature', () => {
+    component.obtieneFirma('');
+    expect(tramiteFolioService.obtenerTramite).not.toHaveBeenCalled();
+    expect(tramiteStore.establecerTramite).not.toHaveBeenCalled();
+    expect(router.navigate).not.toHaveBeenCalled();
+  });
+
+  it('should handle error in obtieneFirma and not call establecerTramite or navigate', () => {
+    tramiteStore.establecerTramite = jest.fn();
+    router.navigate = jest.fn();
+
+    component.obtieneFirma('validSignature');
+    expect(router.navigate).not.toHaveBeenCalled();
+  });
 });

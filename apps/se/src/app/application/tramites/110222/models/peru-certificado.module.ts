@@ -1,126 +1,274 @@
-
 /**
- * Interfaz que representa un paso en un asistente (wizard).
- * 
- * @property {number} indice - El índice del paso dentro del asistente.
- * @property {string} titulo - El título descriptivo del paso.
- * @property {boolean} activo - Indica si el paso está actualmente activo.
- * @property {boolean} completado - Indica si el paso ha sido completado.
+ * @interface ListaPasoWizard
+ * @description
+ * Interfaz que representa un paso en el asistente (wizard) del trámite PROSEC.
+ * Cada objeto de esta interfaz define la información necesaria para mostrar y controlar el estado de un paso dentro del flujo del wizard.
  */
 export interface ListaPasoWizard {
+  /**
+   * @property {number} indice
+   * @description
+   * Índice del paso dentro del wizard. Determina el orden de aparición del paso.
+   */
   indice: number;
+
+  /**
+   * @property {string} titulo
+   * @description
+   * Título del paso que se muestra al usuario en la interfaz del wizard.
+   */
   titulo: string;
+
+  /**
+   * @property {boolean} activo
+   * @description
+   * Indica si el paso está activo actualmente en el flujo del wizard.
+   */
   activo: boolean;
+
+  /**
+   * @property {boolean} completado
+   * @description
+   * Indica si el paso ha sido completado por el usuario.
+   */
   completado: boolean;
 }
 
 /**
- * Representa la estructura de un botón de acción con su correspondiente acción y valor.
- * 
- * @property {string} accion - El nombre o tipo de acción que representa el botón.
- * @property {number} valor - El valor asociado a la acción del botón.
+ * @interface AccionBoton
+ * @description
+ * Interfaz que representa un botón de acción utilizado en el flujo del wizard del trámite PROSEC.
+ * Define la acción a ejecutar y el valor asociado a dicha acción, como el índice del paso al que se debe navegar.
  */
 export interface AccionBoton {
+  /**
+   * @property {string} accion
+   * @description
+   * Acción que se debe realizar (por ejemplo, avanzar o retroceder en el wizard).
+   */
   accion: string;
+
+  /**
+   * @property {number} valor
+   * @description
+   * Valor asociado a la acción, generalmente el índice del paso al que se debe navegar.
+   */
   valor: number;
 }
 
 /**
+ * @interface TablaDatosModal
+ * @description
  * Interfaz que representa los datos de una tabla modal en el contexto de un certificado en Perú.
  * 
- * @property {number} id - Identificador único del registro.
- * @property {number} fraccionArancelaria - Código de la fracción arancelaria asociada.
- * @property {string} nombreTecnico - Nombre técnico del producto.
- * @property {number} numeroDeRegistrodeProductos - Número de registro del producto.
- * @property {string} fechaExpedicion - Fecha de expedición del certificado (formato ISO 8601).
- * @property {string} fechaVencimiento - Fecha de vencimiento del certificado (formato ISO 8601).
- * @property {string} nombreComercial - Nombre comercial del producto.
  */
 export interface TablaDatosModal {
+  /**
+   * @property {number} id - Identificador único del registro.
+   * @description
+   * Identificador único del registro en la tabla de datos del certificado.
+   */
   id: number,
+  /**
+   * @property {number} fraccionArancelaria - Código de la fracción arancelaria asociada.
+   * @description
+   * Código de la fracción arancelaria asociada al producto del certificado.
+   */
   fraccionArancelaria: number,
+  /**
+   * @property {string} nombreTecnico - Nombre técnico del producto.
+   * @description
+   * Nombre técnico del producto registrado en el certificado.
+   */
   nombreTecnico: string,
+  /**
+   * @property {number} numeroDeRegistrodeProductos - Número de registro del producto.
+   *  @description
+   * Número de registro del producto en el certificado, utilizado para identificarlo de manera única.
+   */
   numeroDeRegistrodeProductos: number,
+  /**
+   * @property {string} fechaExpedicion - Fecha de expedición del certificado (formato ISO 8601).
+   * @description
+   * Fecha de expedición del certificado, representada en formato ISO 8601 (YYYY
+   */
   fechaExpedicion: string,
+  /**
+   * @property {string} fechaVencimiento - Fecha de vencimiento del certificado (formato ISO 8601).
+   * @description
+   * Fecha de vencimiento del certificado, representada en formato ISO 8601 (YYYY
+   */
   fechaVencimiento: string,
+  /**
+   * @property {string} nombreComercial - Nombre comercial del producto.
+   * @description
+   * Nombre comercial del producto registrado en el certificado, utilizado para su identificación en el mercado.
+   */
   nombreComercial: string
 }
 
 /**
+ * @interface RespuestaCatalogos
+ * @description
  * Interfaz que representa las columnas históricas de un productor.
- * 
- * @property {number} id - Identificador único del productor.
- * @property {string} nombreProductor - Nombre del productor.
- * @property {string} numeroRegistroFiscal - Número de registro fiscal del productor.
- * @property {string} direccion - Dirección del productor.
- * @property {string} correoElectronico - Correo electrónico del productor.
- * @property {string} telefono - Número de teléfono del productor.
- * @property {string} fax - Número de fax del productor.
+ *
  */
 export interface HistoricoColumnas {
+  /**
+   * @property {number} id - Identificador único del productor.
+   * @description
+   * Identificador único del productor en el sistema.
+   */
   id: number;
+  /**
+   * @property {string} nombreProductor - Nombre del productor.
+   * @description
+   * Nombre completo del productor registrado en el sistema.
+   */
   nombreProductor: string;
+  /**
+   * @property {string} numeroRegistroFiscal - Número de registro fiscal del productor.
+   * @description
+   * Registro fiscal del productor, utilizado para fines tributarios y legales.
+   */
   numeroRegistroFiscal: string;
+  /**
+   * @property {string} direccion - Dirección del productor.
+   * @description
+   * Dirección física del productor, donde se pueden localizar sus instalaciones.
+   */
   direccion: string;
+  /**
+   * @property {string} correoElectronico - Correo electrónico de contacto del productor.
+   * @description
+   * Correo electrónico utilizado para la comunicación con el productor.
+   */
   correoElectronico: string;
+  /**
+   * @property {string} telefono - Número de teléfono de contacto del productor.
+   * @description
+   * Número telefónico utilizado para contactar al productor.
+   */
   telefono: string;
+  /**
+   * @property {string} fax - Número de fax del productor.
+   * @description
+   * Número de fax utilizado para enviar documentos al productor.
+   */
   fax: string;
 }
 
 /**
- * Representa un productor exportador con un historial de datos.
+ * @interface ProductorExportador
+ * @description
+ * Interfaz que representa un productor exportador con un historial de datos asociados.
  * 
- * @property {HistoricoColumnas[]} datos - Lista de columnas históricas asociadas al productor exportador.
- * 
- * @comando Este modelo se utiliza para gestionar la información de los productores exportadores en el sistema.
  */
 export interface ProductorExportador {
+  /**
+  * @property {HistoricoColumnas[]} datos - Lista de columnas históricas asociadas al productor exportador.
+  * @description
+  * Arreglo que contiene los datos históricos del productor exportador, cada uno representado por un
+  * objeto de tipo `HistoricoColumnas`.
+  */
   datos: HistoricoColumnas[];
 }
 
 
 /**
+ * @interface MercanciaTabla
+ * @description
  * Interfaz que representa la tabla de mercancías.
  * Contiene información detallada sobre las mercancías, incluyendo fracción arancelaria,
  * tipo de factura, cantidad, unidad de medida, nombres técnicos y comerciales, 
  * valor de la mercancía y RFC del productor.
  * 
- * @interface MercanciaTabla
- * @property {string} fraccionArancelaria - Fracción arancelaria de la mercancía.
- * @property {string} tipoFactura - Tipo de factura asociada a la mercancía.
- * @property {string} cantidad - Cantidad de la mercancía.
- * @property {string} unidadMedida - Unidad de medida de la mercancía.
- * @property {string} nombreTecnico - Nombre técnico de la mercancía.
- * @property {string} nombreComercial - Nombre comercial de la mercancía.
- * @property {string} valorMercancia - Valor de la mercancía.
- * @property {string} rfcProductor - RFC del productor de la mercancía.
  */
 export interface MercanciaTabla {
+  /**
+   * @property {string} fraccionArancelaria - Fracción arancelaria de la mercancía.
+   * @description
+   * Código que clasifica la mercancía según el sistema arancelario.
+   */
   fraccionArancelaria: string;
+  /**
+   * @property {string} tipoFactura - Tipo de factura asociada a la mercancía.
+   * @description
+   * Tipo de documento fiscal que respalda la transacción de la mercancía.
+   */
   tipoFactura: string;
+  /**
+   * @property {string} cantidad - Cantidad de la mercancía.
+   * @description
+   * Cantidad total de la mercancía registrada en la transacción.
+   */
   cantidad: string;
+  /**
+   * @property {string} unidadMedida - Unidad de medida de la mercancía.
+   * @description
+   * Unidad en la que se mide la mercancía (por ejemplo, kilogramos, litros).
+   */
   unidadMedida: string;
+  /**
+   * @property {string} nombreTecnico - Nombre técnico de la mercancía.
+   * @description
+   * Denominación técnica del producto, utilizada para su identificación precisa.
+   */
   nombreTecnico: string;
+  /**
+   * @property {string} nombreComercial - Nombre comercial de la mercancía.
+   * @description
+   * Denominación comercial del producto, utilizada en el mercado.
+   */
   nombreComercial: string;
+  /**
+   * @property {string} valorMercancia - Valor de la mercancía.
+   * @description
+   * Valor monetario asignado a la mercancía, utilizado para fines fiscales y comerciales.
+   */
   valorMercancia: string;
+  /**
+   * @property {string} rfcProductor - RFC del productor de la mercancía.
+   * @description
+   * Registro Federal de Contribuyentes del productor responsable de la mercancía.
+   */
   rfcProductor: string;
 }
+
 /**
+ * @interface MercanciasHistorico
+ * @description
  * Interfaz que representa el historial de mercancías.
+ * Contiene una lista de objetos de tipo `MercanciaTabla` que almacenan los datos históricos de las mercancías asociadas al trámite.
  * 
- * @property datos - Lista de objetos de tipo `MercanciaTabla` que contienen los datos históricos de las mercancías.
  */
 export interface MercanciasHistorico {
+  /**
+  * @property {MercanciaTabla[]} datos - Lista de datos históricos de mercancías.
+  * @description
+  * Arreglo que contiene los datos históricos de mercancías, cada uno representado por un
+  * objeto de tipo `MercanciaTabla`.
+  */
   datos: MercanciaTabla[];
 }
 
 /**
+ * @interface Catalogo
+ * @description
  * Interfaz que representa un elemento de un catálogo.
  * 
- * @property {number} id - Identificador único del elemento del catálogo.
- * @property {string} descripcion - Descripción del elemento del catálogo.
  */
 export interface Catalogo {
+  /**
+   * @property {number} id - Identificador único del elemento del catálogo.
+   * @description
+   * Identificador único que distingue cada elemento dentro del catálogo.
+   */
   id: number;
-  descripcion: string;
+  /**
+   * @property {string} description - Descripción del elemento del catálogo.
+   * @description
+   * Texto descriptivo que proporciona información sobre el elemento del catálogo.
+   */
+  description: string;
 }

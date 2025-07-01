@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 
 import {
+  AlertComponent,
   BtnContinuarComponent,
   TituloComponent,
   WizardComponent,
@@ -30,6 +31,7 @@ import { SolicitudService } from './services/solicitud.service';
 @NgModule({
   declarations: [AvisoSiglosComponent, Datos270201Component],
   imports: [
+    AlertComponent,
     CommonModule,
     AvisoSiglosRoutingModule,
     WizardComponent,
