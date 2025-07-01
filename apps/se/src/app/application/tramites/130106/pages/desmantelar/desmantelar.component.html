@@ -3,7 +3,7 @@
     <div class="container">
         <div class="row">
             <div class="col-md-12">
-                <h1>Importación Vehículos usados para donación</h1>
+                <h1>Solicitud Importación Vehículos para desmantelar</h1>
             </div>
             <app-wizard [listaPasos]="pantallasPasos"></app-wizard>
         </div>
@@ -23,7 +23,10 @@
                   [datos]="datosPasos"
                   (continuarEvento)="getValorIndice($event)"
                 >
-                </btn-continuar>
+            </btn-continuar>
+            <div class="mt-5" *ngIf="indice === 2">
+                <ng-alert [CONTENIDO]="avisoPrivacidadAlert"></ng-alert>
+            </div>
         </div>
     </div>
 

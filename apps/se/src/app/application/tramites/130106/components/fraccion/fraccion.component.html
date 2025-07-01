@@ -45,7 +45,7 @@
             </div>
             <div class="col-md-4">
                 <div class="form-group">
-                    <label class="form-label" for="mercanciaFactura"> Valor factura USD*:</label>
+                    <label class="form-label" for="mercanciaFactura"> Valor partida USD*:</label>
                     <input class="form-control" id="mercanciaFactura" formControlName="mercanciaFactura"  type="number" (change)="setValoresStore(fraccionForm,'mercanciaFactura', 'setMercanciaFactura')">
                   </div>
 
@@ -89,14 +89,14 @@
             <div class="row">
                 <div class="col-md-4">
                     <div class="form-group">
-                        <label class="form-label" for="cantidadTotal">Cantidad:</label>
+                        <label class="form-label" for="cantidadTotal">Cantidad total:</label>
                         <input class="form-control" id="cantidadTotal" formControlName="cantidadTotal"  type="number" >
                       </div>
     
                 </div>
                 <div class="col-md-4">
                     <div class="form-group">
-                        <label class="form-label" for="valorTotal"> Valor factura USD:</label>
+                        <label class="form-label" for="valorTotal"> Valor total USD:</label>
                         <input class="form-control" id="valorTotal" formControlName="valorTotal"  type="number" >
                       </div>
     
@@ -214,6 +214,6 @@
         </div>
     </div>
 </div>
-    <ng-alert [CONTENIDO]="TEXTOS.Aviso"></ng-alert>
+    <!-- <ng-alert [CONTENIDO]="TEXTOS.Aviso"></ng-alert> -->
 
 </div>
