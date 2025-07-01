@@ -5,6 +5,7 @@ import { ValidacionesFormularioService } from '@libs/shared/data-access-user/src
 import { of } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('RepresentanteLegalComponent', () => {
   let component: RepresentanteLegalComponent;
@@ -15,7 +16,7 @@ describe('RepresentanteLegalComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [],
-      imports: [CommonModule, ReactiveFormsModule,RepresentanteLegalComponent],
+      imports: [CommonModule, ReactiveFormsModule,RepresentanteLegalComponent, HttpClientTestingModule],
       providers: [FormBuilder, ValidacionesFormularioService]
     }).compileComponents();
 
@@ -39,15 +40,13 @@ describe('RepresentanteLegalComponent', () => {
   });
 
   it('should validate form fields correctly', () => {
-    spyOn(validacionesService, 'isValid').and.returnValue(true);
-    expect(component.isValid('rfc')).toBe(true);
+    jest.spyOn(validacionesService, 'isValid').mockReturnValue(true);
+    expect(component.esValido('rfc')).toBe(true);
   });
 
   it('should fetch options and populate losDatos', () => {
-    spyOn(httpClient, 'get').and.returnValue(of([{ id: 1, value: 'Option 1' }]));
-
-    component.fetchSolicitudeOptions();
-
+    jest.spyOn(httpClient, 'get').mockReturnValue(of([{ id: 1, value: 'Option 1' }]));
+    component.obtenerOpcionesSolicitud();
     expect(component.losDatos.length).toBe(1);
     expect(component.losDatos[0].value).toBe('Option 1');
   });

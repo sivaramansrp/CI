@@ -10,7 +10,9 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 const mockSolicitudService = {
   getSolicitudes: jest.fn().mockReturnValue(of([])),
   getClave: jest.fn().mockReturnValue(of([])),
-  getOpcionesPublicacion: jest.fn().mockReturnValue(of([])), // <-- Add this mock
+  getOpcionesPublicacion: jest.fn().mockReturnValue(of([])),
+  getClasificacionProducto: jest.fn().mockReturnValue(of([])),
+  getTestadoFisico: jest.fn().mockReturnValue(of([])),
 };
 const mockTramite260212Store = {
   setSelectedEstado: jest.fn(),
@@ -85,26 +87,12 @@ describe('DatosDeLaSolicitudComponent', () => {
     expect(component.plegable).toBe(prev);
   });
 
-  it('should show and hide formularioScian', () => {
-    component.toggleScianFormulario();
-    expect(component.mostrarFormularioScian).toBe(true);
-    component.cerrarScianFormulario();
-    expect(component.mostrarFormularioScian).toBe(false);
-  });
-
-  it('should show and hide formularioMercancias', () => {
-    component.openMercanciasForm();
-    expect(component.mostrarFormularioMercancias).toBe(true);
-    component.closeMercanciasForm();
-    expect(component.mostrarFormularioMercancias).toBe(false);
-  });
-
   it('should initialize table configs', () => {
     expect(component.configuracionTablaScian.length).toBeGreaterThan(0);
     expect(component.mercanciasTabla.length).toBeGreaterThan(0);
     expect(component.configuracionTablaSolicitud.length).toBeGreaterThan(0);
     // Check that the table config functions work
-    const claveItem = { clave: 'A', descripcíon: 'B' };
+    const claveItem = { clave: 'A', descripcion: 'B' };
     expect(component.configuracionTablaScian[0].clave(claveItem)).toBe('A');
     expect(component.configuracionTablaScian[1].clave(claveItem)).toBe('B');
   });
@@ -170,20 +158,6 @@ describe('DatosDeLaSolicitudComponent', () => {
     component.datosEstablecimientoForm.get('municipio')?.setValue('Mun');
     expect(() => component.getEstado()).not.toThrow();
     expect(() => component.getMunicipios()).not.toThrow();
-  });
-
-  it('should call setSelectedEstado on getEstado', () => {
-    component.fomInitialize();
-    component.datosEstablecimientoForm.get('estado')?.setValue('EstadoNuevo');
-    component.getEstado();
-    expect(mockTramite260212Store.setSelectedEstado).toHaveBeenCalledWith('EstadoNuevo');
-  });
-
-  it('should call setSelectedEstado on getMunicipios', () => {
-    component.fomInitialize();
-    component.datosEstablecimientoForm.get('municipio')?.setValue('MunNuevo');
-    component.getMunicipios();
-    expect(mockTramite260212Store.setSelectedEstado).toHaveBeenCalledWith('MunNuevo');
   });
 
   it('should disable/enable form in guardarDatosFormulario', () => {

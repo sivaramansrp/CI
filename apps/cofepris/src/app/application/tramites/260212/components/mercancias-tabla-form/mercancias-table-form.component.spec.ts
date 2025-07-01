@@ -40,7 +40,7 @@ describe('MercanciasTableFormComponent', () => {
   });
 
   it('should emit Cancelar event when cerrarMercanciasTableForm is called', () => {
-    spyOn(component.Cancelar, 'emit');
+    jest.spyOn(component.Cancelar, 'emit');
     component.cerrarMercanciasTableForm();
     expect(component.Cancelar.emit).toHaveBeenCalled();
   });

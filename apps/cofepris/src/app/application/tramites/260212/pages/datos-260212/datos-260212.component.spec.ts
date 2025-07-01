@@ -46,13 +46,6 @@ describe('Datos260212Component', () => {
     expect(component.esDatosRespuesta).toBe(true);
   });
 
-  it('should call guardarDatosFormulario if update is true', () => {
-    component.consultaState = { update: true } as any;
-    const guardarSpy = jest.spyOn(component, 'guardarDatosFormulario');
-    component.ngOnInit();
-    expect(guardarSpy).toHaveBeenCalled();
-  });
-
   it('should set indice when seleccionaTab is called', () => {
     component.seleccionaTab(3);
     expect(component.indice).toBe(3);

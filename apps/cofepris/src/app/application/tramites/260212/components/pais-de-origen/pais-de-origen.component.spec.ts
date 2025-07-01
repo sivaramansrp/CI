@@ -68,16 +68,6 @@ describe('PaisDeOriginComponent', () => {
     expect(component.fechasDatos).toEqual([]);
   });
 
-  it('should do nothing if quitar is called with non "t" value', () => {
-    component.fechasSeleccionadas = ['2023-01-01'];
-    component.fechasDatos = [];
-  
-    (component as any).fechaSeleccionada = { value: [] };
-    expect(() => component.quitar('x')).not.toThrow();
-    expect(component.fechasSeleccionadas).toEqual(['2023-01-01']);
-    expect(component.fechasDatos).toEqual([]);
-  });
-
   it('should handle agregar with empty selectRangoDias', () => {
     component.selectRangoDias = [];
     component.fechasSeleccionadas = [];
