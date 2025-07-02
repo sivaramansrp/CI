@@ -119,7 +119,7 @@
     <div class="container text-end mt-5">
       <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura ? true : false">Eliminar</button>
       <button class="btn btn-primary me-2" [disabled]="esFormularioSoloLectura ? true : false" data-bs-toggle="modal"
-        data-bs-target="#modalAddAgent">
+        data-bs-target="#modalAddAgent" (click)="guardarScian()">
         Agregar
       </button>
     </div>
@@ -163,7 +163,7 @@
           <div class="form-group">
             <app-catalogo-select [catalogo]="estado" formControlName="claveScianModal" [label]="'Clave S.C.I.A.N.'"
               [required]="true" name="claveScianModal" [isDisabled]="esFormularioSoloLectura ? true : false"
-              (change)="setValoresStore(formAgente, 'claveScianModal', 'setClaveScianModal')"></app-catalogo-select>
+              (change)=" onClaveScianChange($event);setValoresStore(formAgente, 'claveScianModal', 'setClaveScianModal')" ></app-catalogo-select>
           </div>
           <div class="form-group">
             <app-catalogo-select [catalogo]="estado" formControlName="claveDescripcionModal"
@@ -175,7 +175,7 @@
       </div>
       <div class="modal-footer custom-footer">
         <button type="button" class="btn btn-default" [disabled]="esFormularioSoloLectura ? true : false"
-          data-bs-dismiss="modal">
+          data-bs-dismiss="modal" (click)="limpiarScianForm()">
           Limpiar
         </button>
         <button type="button" class="btn btn-default" [disabled]="esFormularioSoloLectura ? true : false"
