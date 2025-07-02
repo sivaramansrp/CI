@@ -113,7 +113,7 @@ export class AsignciontabComponent implements OnInit, OnDestroy {
       this.asignacionForm = this.fb.group({
       asignacionRadio: [this.solicitudState?.asignacionRadio || '', Validators.requiredTrue],
       asignacionsolitud: [this.solicitudState?.asignacionsolitud || '', Validators.required],
-      numTramite: [this.solicitudState?.numTramite || '', Validators.required],
+      numTramite: [this.solicitudState?.numTramite || '', [Validators.required, Validators.maxLength(30)]],
     });
   }
   

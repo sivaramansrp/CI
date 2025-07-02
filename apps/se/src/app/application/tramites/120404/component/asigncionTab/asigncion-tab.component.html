@@ -15,16 +15,17 @@
                     <div class="form-group">
                         <app-catalogo-select [catalogo]="solicitanteList" [required]="true" name="asignacionSolitud"  [label]="'Año del oficio de asignación'" formControlName="asignacionsolitud"  (change)="setValoresStore(asignacionForm,'asignacionsolitud')" [isDisabled]="esFormularioSoloLectura" >
                       </app-catalogo-select>
-                      <div *ngIf="isInvalid('asignacionsolitud')" class="text-danger">
+                      <div *ngIf="isInvalid('asignacionsolitud')" class="mensaje-error">
                         Este campo es obligatorio
                     </div>
                     </div>
                 </div>
                 <div class="col-md-6">
-                    <div class="form-group custom-clasifi-regimen-catalogo">
-                        <label for="clasificacionRegimen">Número de oficio de asignación*</label>
-                        <input type="text" class="form-control" formControlName="numTramite"  id="numTramite" (change)="setValoresStore(asignacionForm,'numTramite')">
-                        <div *ngIf="isInvalid('numTramite')" class="text-danger">
+                    <div class="form-group">
+                        <label for="clasificacionRegimen">Número de oficio de asignación*:</label>
+                        <input type="text" class="form-control" formControlName="numTramite"  id="numTramite" maxlength="30" [required]="true"
+                        (change)="setValoresStore(asignacionForm,'numTramite')">
+                        <div *ngIf="isInvalid('numTramite')" class="mensaje-error">
                                 Este campo es obligatorio
                             </div>
                     </div>
