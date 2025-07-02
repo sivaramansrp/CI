@@ -6,15 +6,26 @@ import { of } from 'rxjs';
 import { CargarDatosIniciales } from '../../../220502/models/solicitud-pantallas.model';
 import { CatalogosSelect } from '@libs/shared/data-access-user/src';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { Solicitud220501Store } from '../../estados/tramites220501.store';
 
 describe('SolicitudComponent', () => {
   let component: SolicitudComponent;
   let solicitudService: jest.Mocked<SolicitudPantallasService>;
   let consultaioQuery: jest.Mocked<ConsultaioQuery>;
+  let solicitud220501Store: jest.Mocked<Solicitud220501Store>;
 
   beforeEach(() => {
     solicitudService = {
-      getData: jest.fn()
+      getData: jest.fn().mockReturnValue(of({
+        hHistorialinspeccion: [],
+        dHistorialInspecciones: [],
+        dCarrosDeFerrocarril: [],
+        hCarroFerrocarril: [],
+        hSolicitud: [],
+        dSolicitud: [],
+        hMerchandise: [],
+        dMercancia: []
+      }))
     } as unknown as jest.Mocked<SolicitudPantallasService>;
 
     consultaioQuery = {
@@ -22,15 +33,26 @@ describe('SolicitudComponent', () => {
       selectConsultaioState$: of({ readonly: false }),
     } as unknown as jest.Mocked<ConsultaioQuery>;
 
+    solicitud220501Store = {
+      medioDeTransporte: -1,
+      identificacionTransporte: '',
+      esSolicitudFerros: '',
+      totalGuias: '',
+      foliodel: '',
+      aduanaIngreso: -1,
+      setMostrarSeccion: jest.fn(),
+    } as unknown as jest.Mocked<Solicitud220501Store>;
+
     TestBed.configureTestingModule({
       providers: [
-        FormBuilder, 
+        FormBuilder,
         { provide: SolicitudPantallasService, useValue: solicitudService },
-        { provide: ConsultaioQuery, useValue: consultaioQuery }
+        { provide: ConsultaioQuery, useValue: consultaioQuery },
+        { provide: Solicitud220501Store, useValue: solicitud220501Store }
       ]
     });
 
-    component = new SolicitudComponent(TestBed.inject(FormBuilder), solicitudService, consultaioQuery);
+    component = new SolicitudComponent(TestBed.inject(FormBuilder), solicitudService, consultaioQuery, solicitud220501Store);
   });
 
   test('should create component', () => {
@@ -110,19 +132,21 @@ describe('SolicitudComponent', () => {
           ]
         } as CatalogosSelect
     };
-    
+
     jest.spyOn(component, 'cargarDatosIniciales');
     solicitudService.getData.mockReturnValue(of(mockData));
-    component.ngOnInit();
+    component.cargarDatosIniciales();
     expect(component.cargarDatosIniciales).toHaveBeenCalled();
   });
 
   test('should toggle mostrarSeccion correctly', () => {
     component.onTransporteSeleccionado(false);
     expect(component.mostrarSeccion).toBe(false);
+    expect(solicitud220501Store.setMostrarSeccion).toHaveBeenCalledWith(false);
 
     component.onTransporteSeleccionado(true);
     expect(component.mostrarSeccion).toBe(true);
+    expect(solicitud220501Store.setMostrarSeccion).toHaveBeenCalledWith(true);
   });
 
   test('should populate data correctly when cargarDatosIniciales is called', () => {

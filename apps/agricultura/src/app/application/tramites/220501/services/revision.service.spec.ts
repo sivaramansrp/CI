@@ -237,6 +237,7 @@ describe('RevisionService', () => {
       cantidadTotalUMT: '',
       saldoPendiente: '',
       saldoACapturar: '',
+      mostrarSeccion: true,
       mercanciaTablaDatos: []
     };
 
