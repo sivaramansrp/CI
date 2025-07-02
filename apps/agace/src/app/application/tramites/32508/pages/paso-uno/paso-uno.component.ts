@@ -12,7 +12,7 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-paso-uno',
   templateUrl: './paso-uno.component.html',
-  styleUrl: './paso-uno.component.css',
+  styleUrl: './paso-uno.component.scss',
 })
 export class PasoUnoComponent implements OnInit, OnDestroy {
   constructor(
