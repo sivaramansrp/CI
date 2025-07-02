@@ -172,4 +172,38 @@ describe('ContenedorComponent', () => {
     const result = component.isInvalid('aduana');
     expect(typeof result === 'boolean' || result === undefined).toBeTruthy();
   });
+
+  it('should set mostrarSeccionArchivoCsv to true when mostrarCampos is called with "Archivo CSV"', () => {
+    component.inicializarFormulario();
+    component.solicitudForm.get('tipoBusqueda')?.setValue('Archivo CSV');
+    component.mostrarCampos();
+    expect(component.mostrarSeccionArchivoCsv).toBe(true);
+  });
+
+  it('should set mostrarSeccionContenedor to true when mostrarCampos is called with "Contenedor"', () => {
+    component.inicializarFormulario();
+    component.solicitudForm.get('tipoBusqueda')?.setValue('Contenedor');
+    component.mostrarCampos();
+    expect(component.mostrarSeccionContenedor).toBe(true);
+  });
+
+  it('should not set any mostrarSeccion flags if tipoBusqueda is unknown', () => {
+    component.inicializarFormulario();
+    component.solicitudForm.get('tipoBusqueda')?.setValue('Desconocido');
+    component.mostrarCampos();
+    expect(component.mostrarSeccionArchivoCsv).toBeFalsy();
+    expect(component.mostrarSeccionExcel).toBeFalsy();
+    expect(component.mostrarSeccionContenedor).toBeFalsy();
+  });
+
+  it('should handle minimal CSV in parseCSV gracefully', () => {
+    component.parseCSV('Aduana,Iniciales del equipo,Tipo de documento,Número de equipo,Dígito verificador,Fecha Ingreso,Vigencia\n');
+    expect(component.datosTabla.length).toBe(0);
+  });
+
+  it('should call continuarEvento.emit with value on continuar', () => {
+    const continuarEventoSpy = jest.spyOn(component.continuarEvento, 'emit');
+    component.continuar();
+    expect(continuarEventoSpy).toHaveBeenCalledWith('');
+  });
 });

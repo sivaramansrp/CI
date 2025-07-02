@@ -180,4 +180,87 @@ describe('DatosTramiteComponent', () => {
     expect(component).toBeTruthy();
   });
 
+  it('should reset agregarMercanciasForm and close modal after agregarMercancias success', () => {
+    // Mock service and form
+    const mockResp = { success: true, datos: { tipoDeMercancia: 'A', cantidad: 1, unidadMedida: 'U', ano: 2024, modelo: 'M', marca: 'B', serie: 'S', condicionMercancia: 'C' } };
+    component.exencionImpuestoService = {
+      agregarMercancias: jest.fn().mockReturnValue({
+        pipe: () => ({
+          subscribe: (cb: any) => cb(mockResp)
+        })
+      })
+    } as any;
+    component.getMercanciaTableData = {
+      mercanciaTable: { tableBody: [] }
+    } as any;
+    component.mercanciaBodyData = [];
+    component.agregarMercanciasForm = component.fb.group({
+      datosMercancia: component.fb.group({
+        tipoDeMercancia: ['A'],
+        cantidad: [1],
+        unidadMedida: ['U'],
+        ano: [2024],
+        modelo: ['M'],
+        marca: ['B'],
+        serie: ['S'],
+        condicionMercancia: ['C']
+      })
+    });
+    component.cerrarModal = jest.fn();
+    component.datosDelMercancia = [];
+    component.store = { setDelMercancia: jest.fn() } as any;
+
+    component.agregarMercancias();
+
+    expect(component.getMercanciaTableData.mercanciaTable.tableBody.length).toBe(1);
+    expect(component.mercanciaBodyData.length).toBe(1);
+    expect(component.cerrarModal).toHaveBeenCalled();
+  });
+
+  it('should not add row if agregarMercanciasForm is invalid', () => {
+    component.agregarMercanciasForm = component.fb.group({
+      datosMercancia: component.fb.group({
+        tipoDeMercancia: [''],
+      })
+    });
+    component.getMercanciaTableData = {
+      mercanciaTable: { tableBody: [] }
+    } as any;
+    component.datosDelMercancia = [];
+    component.store = { setDelMercancia: jest.fn() } as any;
+    component.cerrarModal = jest.fn();
+
+    component.agregarMercancias();
+
+    expect(component.getMercanciaTableData.mercanciaTable.tableBody.length).toBe(0);
+    expect(component.cerrarModal).not.toHaveBeenCalled();
+  });
+
+  it('should handle empty condicionMercancia data gracefully', () => {
+    component.condicionMercancia = [];
+    component.agregarMercanciasForm = component.fb.group({
+      datosMercancia: component.fb.group({
+        condicionMercancia: ['']
+      })
+    });
+    expect(() => component.condicionMercanciaSeleccion()).not.toThrow();
+  });
+
+  it('should handle empty unidadMedida data gracefully', () => {
+    component.unidadMedida = [];
+    component.agregarMercanciasForm = component.fb.group({
+      datosMercancia: component.fb.group({
+        unidadMedida: ['']
+      })
+    });
+    expect(() => component.unidadMedidaSeleccion()).not.toThrow();
+  });
+
+  it('should create the DatosTramiteComponent', () => {
+    expect(component).toBeDefined();
+  });
+
+  it('should run ngOnInit without errors', () => {
+    expect(() => component.ngOnInit()).not.toThrow();
+  });
 });

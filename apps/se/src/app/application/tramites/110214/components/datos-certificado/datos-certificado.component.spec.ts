@@ -150,4 +150,16 @@ describe('DatosCertificadoComponent', () => {
     expect(validarInicialmenteCertificadoServiceMock.obtenerEntidadFederativa).toHaveBeenCalled();
     expect(component.entidadFederativas).toEqual([{ id: 1, descripcion: 'Entidad 1' }]);
   });
+
+  it('should disable the form when soloLectura is true', () => {
+    component.soloLectura = true;
+    component.inicializarEstadoFormulario();
+    expect(component.formDatosCertificado.disabled).toBe(true);
+  });
+
+  it('should enable the form when soloLectura is false', () => {
+    component.soloLectura = false;
+    component.inicializarEstadoFormulario();
+    expect(component.formDatosCertificado.enabled).toBe(true);
+  });
 });

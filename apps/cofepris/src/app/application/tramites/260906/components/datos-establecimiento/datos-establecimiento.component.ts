@@ -68,7 +68,7 @@ export class DatosEstablecimientoComponent implements OnInit, OnDestroy {
   consultaDatos!: ConsultaioState;
   
   /** Indica si el formulario está en modo solo lectura */
-  soloLectura: boolean = false;
+  public soloLectura: boolean;
 
   /**
    * Constructor que inyecta dependencias necesarias
@@ -85,6 +85,7 @@ export class DatosEstablecimientoComponent implements OnInit, OnDestroy {
     private consultaioQuery: ConsultaioQuery
   ) {
     // Inicialización adicional si es necesario
+    this.soloLectura = false;
   }
 
   /**
@@ -219,7 +220,7 @@ export class DatosEstablecimientoComponent implements OnInit, OnDestroy {
    * Inicializa el estado del formulario según el modo de solo lectura
    * @private
    */
-  private inicializarEstadoFormulario(): void {
+  inicializarEstadoFormulario(): void {
     if (this.soloLectura) {
       this.forma?.disable();
     } else {

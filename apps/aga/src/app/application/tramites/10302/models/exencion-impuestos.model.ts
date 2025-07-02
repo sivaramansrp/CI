@@ -223,3 +223,16 @@ export interface ConsultaDatos {
    */
   datosDelMercancia: [];
 }
+
+/**
+ * Fila de la tabla de mercancías.
+ * Contiene los datos de una mercancía para mostrar en la tabla.
+ */
+export interface MercanciaTableRow {
+
+  /**
+   * Datos de la fila (cada columna como string).
+   */
+  tbodyData: string[];
+  
+}

@@ -27,11 +27,11 @@ import { ToastrService } from 'ngx-toastr';
   declarations: [PasoDosComponent,
     PasoTresComponent,
     PasoUnoComponent,
-    SolicitudPageComponent, AnexarDocumentosComponent,
-
+    SolicitudPageComponent
   ],
   imports: [
     CommonModule,
+    AnexarDocumentosComponent,
     RegistroRoutingModule,
     CatalogoSelectComponent,
     AlertComponent,
