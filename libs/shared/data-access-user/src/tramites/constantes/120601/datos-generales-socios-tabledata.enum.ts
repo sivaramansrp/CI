@@ -24,6 +24,9 @@ interface Representacion {
   colonia: string;
   municipio: string;
   estado: string;
+  pais: string;
+  localidad: string;
+  telefono: string;
 }
 
 export const DATOS_GENERALES_SOCIOS = [
@@ -127,5 +130,20 @@ export const DATOS_GENERALES_REPRESENTACION = [
     encabezado: 'Estado',
     clave: (ele: Representacion): string => ele.estado,
     orden: 7,
+  },
+   {
+    encabezado: 'Pais',
+    clave: (ele: Representacion): string => ele.pais,
+    orden: 8,
+  },
+   {
+    encabezado: 'Localidad',
+    clave: (ele: Representacion): string => ele.localidad,
+    orden: 9,
+  },
+   {
+    encabezado: 'Teléfono',
+    clave: (ele: Representacion): string => ele.telefono,
+    orden: 10,
   },
 ];
