@@ -355,6 +355,7 @@ export class RegistroRenovacionesMuestrasMercanciasComponent
    * @returns boolean
    */
   validarFormulario(): boolean {
+    // Verifica si el formulario es válido
     if (this.formRegistroMuestras.invalid) {
       this.formRegistroMuestras.markAllAsTouched();
     }

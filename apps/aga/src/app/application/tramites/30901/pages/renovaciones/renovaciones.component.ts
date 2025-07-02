@@ -3,11 +3,14 @@ import { BtnContinuarComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { DatosPasos } from '@ng-mf/data-access-user';
+import { ERROR_DE_CAMPO } from '../../constantes/constantes';
+import { ERROR_VERIFICAR } from '../../constantes/constantes';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { PasoDosComponent } from '../paso-dos/paso-dos.component';
 import { PasoTresComponent } from '../paso-tres/paso-tres.component';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { RENOVACIONES_PASOS } from '../../enums/renovaciones-muestras-mercancias.enum';
+import { SIGUIENTES_ERRORES } from '../../constantes/constantes';
 import { ViewChild } from '@angular/core';
 import { WizardComponent } from '@ng-mf/data-access-user';
 
@@ -55,6 +58,8 @@ export class RenovacionesComponent {
    */
   esValido = true;
 
+  mensajeError: string = '';
+
   /*
    * Esta variable se utiliza para almacenar la lista de pasos.
    */
@@ -94,10 +99,22 @@ export class RenovacionesComponent {
    */
   getValorIndice(evento: AccionBoton): void {
     if (evento.valor > 0 && evento.valor < 5) {
-      if (this.indice === 1) {
+      if (this.indice === 1 && this.pasoUnoComponent.indice === 2) {
+        const SOLICITUD_COMPONENT =
+          this.pasoUnoComponent
+            ?.registroRenovacionesMuestrasMercanciasComponent;
+        this.esValido = SOLICITUD_COMPONENT?.validarFormulario() ?? false;
+        this.mensajeError = ERROR_DE_CAMPO;
+      }
+
+      if (this.indice === 1 && this.pasoUnoComponent.indice === 4) {
         const SOLICITUD_COMPONENT =
           this.pasoUnoComponent?.pagoLineaDeCapturaComponent;
         this.esValido = SOLICITUD_COMPONENT?.validarFormulario() ?? false;
+        this.mensajeError = SIGUIENTES_ERRORES;
+        setTimeout(() => {
+          this.mensajeError = ERROR_VERIFICAR;
+        }, 1500);
       }
 
       if (!this.esValido) {
