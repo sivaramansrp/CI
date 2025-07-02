@@ -28,6 +28,17 @@ export class DatosComponent implements OnInit, OnDestroy {
    */
   public consultaState!: ConsultaioState;
 
+   /**
+   * @property desactivado
+   * @type {boolean}
+   * @public
+   * @description
+   * Indica si la pestaña está desactivada (no interactiva).
+   * Se utiliza para controlar la habilitación o deshabilitación de la pestaña en la interfaz.
+   * Por defecto, la pestaña inicia desactivada (`true`).
+   */
+  public desactivado: boolean = false;
+
   /**
    * Inicializa una nueva instancia del componente.
    */
@@ -71,6 +82,20 @@ export class DatosComponent implements OnInit, OnDestroy {
     this.pantallasSvc.getConsultaDatos().pipe(takeUntil(this.destroyNotifier$)).subscribe((response) => {
       this.pantallasSvc.actualizarEstadoFormulario(response);
     })
+   }
+
+   /**
+   * Habilita la pestaña si actualmente está desactivada.
+   * Cambia la variable `desactivado` a `false` para permitir la interacción con la pestaña.
+   *
+   * @example
+   * this.habilitarPestana();
+   * // La pestaña pasa de estar desactivada a habilitada.
+   */
+   habilitarPestana(): void {
+    if (this.desactivado) {
+      this.desactivado = false;
+    }
    }
 
     /**
