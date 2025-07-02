@@ -3,6 +3,16 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Tramite260213State } from '../estados/tramite260213Store.store';
 
+/**
+ * @service PermisoSanitarioMedicosUsoPersonalService
+ * @description
+ * Servicio de Angular para gestionar las solicitudes relacionadas con el trámite 260213.
+ * Este servicio realiza peticiones HTTP para obtener datos relacionados con el permiso sanitario
+ * de dispositivos médicos para uso personal.
+ *
+ * @providedIn root
+ * Este servicio está disponible en toda la aplicación a través del inyector raíz.
+ */
 @Injectable({
   providedIn: 'root'
 })

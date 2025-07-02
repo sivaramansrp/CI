@@ -31,10 +31,10 @@ import { ToastrService } from 'ngx-toastr';
   ],
   imports: [
     CommonModule,
+    AnexarDocumentosComponent,
     RegistroRoutingModule,
     CatalogoSelectComponent,
     AlertComponent,
-    AnexarDocumentosComponent,
     TituloComponent,
     FirmaElectronicaComponent,
     SolicitanteComponent,

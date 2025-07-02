@@ -1,104 +1,114 @@
-//@ts-nocheck
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import {
-  Pipe,
-  PipeTransform,
-  Injectable,
-  CUSTOM_ELEMENTS_SCHEMA,
-  NO_ERRORS_SCHEMA,
-  Directive,
-  Input,
-  Output,
-} from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { By } from '@angular/platform-browser';
-import { Observable, of as observableOf, throwError } from 'rxjs';
-import { Component } from '@angular/core';
+import { TestBed } from '@angular/core/testing';
 import { PasoUnoComponent } from './paso-uno.component';
-import { RegistroService } from '@ng-mf/data-access-user';
+import { of, Subject } from 'rxjs';
+import {
+  ConsultaioQuery,
+  ConsultaioState,
+  SolicitanteComponent,
+} from '@ng-mf/data-access-user';
+import {
+  RegistroSolicitudService,
+  SolicitudDatosResponse,
+} from '../../services/registro-solicitud-service.service';
+import {
+  PERSONA_MORAL_NACIONAL,
+  DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL,
+} from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
+import { CommonModule } from '@angular/common';
 import { SolicitudComponent } from '../../components/Solicitud.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 
-@Injectable()
-class MockRegistroService {}
-
-@Directive({ selector: '[myCustom]' })
-class MyCustomDirective {
-  @Input() myCustom;
-}
-
-@Pipe({ name: 'translate' })
-class TranslatePipe implements PipeTransform {
-  transform(value) {
-    return value;
-  }
-}
-
-@Pipe({ name: 'phoneNumber' })
-class PhoneNumberPipe implements PipeTransform {
-  transform(value) {
-    return value;
-  }
-}
-
-@Pipe({ name: 'safeHtml' })
-class SafeHtmlPipe implements PipeTransform {
-  transform(value) {
-    return value;
-  }
-}
-
 describe('PasoUnoComponent', () => {
-  let fixture;
-  let component;
+  let component: PasoUnoComponent;
+  let fixture: any;
+  let consultaQueryMock: jest.Mocked<Partial<ConsultaioQuery>>;
+  let solicitud31803ServiceMock: jest.Mocked<Partial<RegistroSolicitudService>>;
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule, FormsModule, ReactiveFormsModule, PasoUnoComponent,SolicitudComponent],
-      declarations: [
-        TranslatePipe,
-        PhoneNumberPipe,
-        SafeHtmlPipe,
-        MyCustomDirective,
+  beforeEach(async () => {
+    consultaQueryMock = {
+      selectConsultaioState$: of({ update: false } as ConsultaioState),
+    };
+    solicitud31803ServiceMock = {
+      getSolicitudDatos: jest.fn(),
+      actualizarEstadoFormulario: jest.fn(),
+    };
+    await TestBed.configureTestingModule({
+      imports: [
+        PasoUnoComponent,
+        CommonModule,
+        SolicitanteComponent,
+        SolicitudComponent,
+        HttpClientTestingModule,
       ],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
       providers: [
-        { provide: RegistroService, useClass: MockRegistroService },
-        // Add the following mock provider for _HttpClient
-        { provide: '_HttpClient', useValue: {} }
+        { provide: ConsultaioQuery, useValue: consultaQueryMock },
+        {
+          provide: RegistroSolicitudService,
+          useValue: solicitud31803ServiceMock,
+        },
       ],
-    })
-      .overrideComponent(PasoUnoComponent, {})
-      .compileComponents();
+    }).compileComponents();
     fixture = TestBed.createComponent(PasoUnoComponent);
-    component = fixture.debugElement.componentInstance;
+    component = fixture.componentInstance;
   });
 
-  afterEach(() => {
-    component.ngOnDestroy = function () {};
-    fixture.destroy();
-  });
-
-  it('should run #constructor()', async () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should run #ngAfterViewInit()', async () => {
-    component.solicitante = component.solicitante || {};
-    component.solicitante.obtenerTipoPersona = jest.fn();
+  it('should set esDatosRespuesta to true if consultaState.update is false', () => {
+    consultaQueryMock.selectConsultaioState$ = of({
+      update: false,
+    } as ConsultaioState);
+    component.ngOnInit();
+    expect(component.esDatosRespuesta).toBeTruthy();
+  });
+
+  it('should set esDatosRespuesta to true and update state when response is received', () => {
+    const response: SolicitudDatosResponse = {
+      numeroOperacion: '123',
+      banco: 'BBVA',
+      llave: 'abc',
+      manifiesto1: 'm1',
+      manifiesto2: 'm2',
+      fechaPago: '2024-01-01',
+    };
+    (solicitud31803ServiceMock.getSolicitudDatos as jest.Mock).mockReturnValue(
+      of(response)
+    );
+    component.guardarDatosFormulario();
+    expect(component.esDatosRespuesta).toBeTruthy();
+    expect(
+      solicitud31803ServiceMock.actualizarEstadoFormulario
+    ).toHaveBeenCalledWith({
+      numeroOperacion: '123',
+      banco: 'BBVA',
+      llave: 'abc',
+      manifiesto1: 'm1',
+      manifiesto2: 'm2',
+      fechaPago: '2024-01-01',
+    });
+  });
+
+  it('should set persona and domicilioFiscal arrays', () => {
     component.ngAfterViewInit();
-    expect(component.solicitante.obtenerTipoPersona).toHaveBeenCalled();
+    expect(component.persona).toBe(PERSONA_MORAL_NACIONAL);
+    expect(component.domicilioFiscal).toBe(
+      DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL
+    );
   });
 
-  it('should run #seleccionaTab()', async () => {
-    component.seleccionaTab({});
+  it('should set indice to the given value', () => {
+    component.seleccionaTab(3);
+    expect(component.indice).toBe(3);
   });
-  
-    it('should complete destroyNotifier$ on ngOnDestroy', () => {
-    const completeSpy = jest.spyOn(component['destroyNotifier$'], 'complete');
-    const nextSpy = jest.spyOn(component['destroyNotifier$'], 'next');
 
+  it('should complete destroyNotifier$', () => {
+    const nextSpy = jest.spyOn((component as any).destroyNotifier$, 'next');
+    const completeSpy = jest.spyOn(
+      (component as any).destroyNotifier$,
+      'complete'
+    );
     component.ngOnDestroy();
     expect(nextSpy).toHaveBeenCalled();
     expect(completeSpy).toHaveBeenCalled();

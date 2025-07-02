@@ -104,6 +104,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * Se suscribe al estado de la solicitud, inicializa el formulario y carga los datos del catálogo de bancos.
    */
   ngOnInit(): void {
+     this.donanteDomicilio();
     this.query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyed$),
@@ -112,7 +113,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-    this.donanteDomicilio();
+   
     this.obtenerDatosBanco();
     this.inicializarEstadoFormulario();
   }
@@ -193,16 +194,15 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * Utiliza el estado actual de la solicitud para inicializar los valores del formulario.
    */
   donanteDomicilio(): void {
-    this.pagoDeDerechosForm = this.fb.group({
-      claveDeReferencia: [this.solicitudState?.claveDeReferencia, [Validators.required]],
-      cadenaDependecia: [this.solicitudState?.cadenaDependecia, [Validators.required]],
-      fechaPago: [this.solicitudState?.fechaPago, [Validators.required]],
-      banco: [this.solicitudState?.banco, [Validators.required]],
-      liaveDePago: [this.solicitudState?.claveDeReferencia, [Validators.required]],
-      importeDePago: [this.solicitudState?.importeDePago, [Validators.required]],
-    });
-  }
-
+  this.pagoDeDerechosForm = this.fb.group({
+    claveDeReferencia: [{ value: this.solicitudState?.claveDeReferencia, disabled: this.soloLectura }, [Validators.required]],
+    cadenaDependecia: [{ value: this.solicitudState?.cadenaDependecia, disabled: this.soloLectura }, [Validators.required]],
+    fechaPago: [{ value: this.solicitudState?.fechaPago, disabled: this.soloLectura }, [Validators.required]],
+    banco: [{ value: this.solicitudState?.banco, disabled: this.soloLectura }, [Validators.required]],
+    liaveDePago: [{ value: this.solicitudState?.claveDeReferencia, disabled: this.soloLectura }, [Validators.required]],
+    importeDePago: [{ value: this.solicitudState?.importeDePago, disabled: this.soloLectura }, [Validators.required]],
+  });
+}
   /**
    * Método del ciclo de vida que se ejecuta al destruir el componente.
    *
