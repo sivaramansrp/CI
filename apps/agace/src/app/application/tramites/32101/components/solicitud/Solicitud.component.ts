@@ -555,8 +555,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * @param catalog - Una lista de objetos del catálogo que contiene descripciones.
    * @returns La descripción del elemento seleccionado si se encuentra, de lo contrario, 'N/A'.
    */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  static getDropdownLabel(selectedId: any, catalog: Catalogo[]): string {
+  static getDropdownLabel(selectedId: string | number, catalog: Catalogo[]): string {
     const NUMERIC_ID = typeof selectedId === 'string' ? parseInt(selectedId, 10) : selectedId;
     const SELECTED_ITEMS = catalog.find(
       (item) => {
