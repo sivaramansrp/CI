@@ -11,9 +11,10 @@ import { CATALOGOS_ID } from '@ng-mf/data-access-user';
   selector: 'app-paso-dos',
   templateUrl: './paso-dos.component.html',
   styleUrl: './paso-dos.component.scss',
-  })
+  standalone: false,
+})
 export class PasoDosComponent implements OnInit,OnDestroy {
-  private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
+ 
   /**
    * Textos utilizados en el componente.
    */
@@ -34,6 +35,11 @@ export class PasoDosComponent implements OnInit,OnDestroy {
    */
   catalogoDocumentos: Catalogo[] = [];
   
+     /**
+    * Notificador para destruir observables al destruir el componente.
+    * Se utiliza para gestionar la cancelación de suscripciones activas y evitar fugas de memoria.
+    */
+     public destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
   /**
    * Constructor del componente.
    * @param catalogosServices Servicio para obtener los catálogos necesarios para el trámite.
@@ -62,19 +68,15 @@ export class PasoDosComponent implements OnInit,OnDestroy {
           if (resp.length > 0) {
             this.catalogoDocumentos = resp;
           }
-        },
-        error: (_error): void => {
-          // Manejo de error al obtener los tipos de documentos.
-        },
+        }
       });
   }
  /**
    * Método de limpieza que se ejecuta cuando el componente se destruye.
    */
   ngOnDestroy(): void {
-    this.destroyed$.next(true);
-    this.destroyed$.complete();
-   
+   this.destroyed$.next(true);
+   this.destroyed$.complete();
   }
 
 }

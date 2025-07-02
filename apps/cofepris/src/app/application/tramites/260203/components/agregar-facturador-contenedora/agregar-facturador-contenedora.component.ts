@@ -4,13 +4,21 @@ import { Component } from '@angular/core';
 import { Facturador } from '../../../../shared/models/terceros-relacionados.model';
 import { Tramite260203Store } from '../../estados/stores/tramite260203Store.store';
 
+
 /**
  * @component AgregarFacturadorContenedoraComponent
- * @description Componente contenedor que utiliza el componente `AgregarFacturadorComponent` 
- * para gestionar la funcionalidad relacionada con los facturadores. 
- * Este componente interactúa con el estado del trámite a través del store `Tramite260203Store`.
+ * @description Componente Angular que representa un contenedor para agregar facturadores. 
+ * Este componente es autónomo y utiliza el módulo común de Angular y el componente `AgregarFacturadorComponent`.
+ * 
+ * @selector app-agregar-facturador-contenedora
+ * 
+ * @templateUrl ./agregar-facturador-contenedora.component.html
+ * @styleUrl ./agregar-facturador-contenedora.component.scss
+ * 
+ * @remarks Este componente está diseñado para interactuar con el store `Tramite260203Store` 
+ * para gestionar el estado del trámite relacionado. Proporciona funcionalidad para actualizar 
+ * los datos de facturadores en el store.
  */
-
 @Component({
   selector: 'app-agregar-facturador-contenedora',
   standalone: true,

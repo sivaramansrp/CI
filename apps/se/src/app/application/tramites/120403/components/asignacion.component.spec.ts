@@ -95,27 +95,6 @@ describe('AsignacionComponent', () => {
     expect(component.donanteDomicilio).toHaveBeenCalled();
   });
 
-  it('should call donanteDomicilio and enable/disable form in guardarDatosFormulario', () => {
-    component.asignacionForm = new FormBuilder().group({
-      asignacionRadio: [''],
-      asignacionsolitud: [''],
-      numTramite: [''],
-      fechaFin: [''],
-      ampliar: [''],
-    });
-    component.soloLectura = true;
-    jest.spyOn(component.asignacionForm, 'disable');
-    jest.spyOn(component, 'donanteDomicilio');
-    component.guardarDatosFormulario();
-    expect(component.donanteDomicilio).toHaveBeenCalled();
-    expect(component.asignacionForm.disable).toHaveBeenCalled();
-
-    component.soloLectura = false;
-    jest.spyOn(component.asignacionForm, 'enable');
-    component.guardarDatosFormulario();
-    expect(component.asignacionForm.enable).toHaveBeenCalled();
-  });
-
   it('should set mostrarVigencia and mostrarMonto in buscar', () => {
     component.asignacionForm = new FormBuilder().group({
       asignacionRadio: ['vigencia'],

@@ -9,11 +9,29 @@ import { DatosMercanciaComponent } from '../../../../shared/components/datos-mer
 import { Subject } from 'rxjs';
 import { TablaMercanciasDatos } from '../../../../shared/models/datos-solicitud.model';
 import { Tramite260204Query } from '../../estados/queries/tramite260204Query.query';
+
+
 /**
  * @component DatosMercanciaContenedoraComponent
- * @description Componente encargado de gestionar y actualizar la información de una mercancía seleccionada.
- * Observa el estado del trámite y permite al usuario seleccionar y modificar datos de mercancías
- * en la tabla principal.
+ * @description Componente Angular que representa la sección de datos de mercancías contenedoras 
+ * dentro de un trámite específico. Este componente es autónomo y utiliza otros módulos y componentes 
+ * como `CommonModule` y `DatosMercanciaComponent` para su funcionalidad.
+ *
+ * @selector app-datos-mercancia-contenedora
+ * Selector utilizado para instanciar este componente en una plantilla HTML.
+ *
+ * @standalone true
+ * Indica que este componente es autónomo y no depende de un módulo específico.
+ *
+ * @imports
+ * - `CommonModule`: Proporciona funcionalidades comunes de Angular como directivas estructurales.
+ * - `DatosMercanciaComponent`: Componente utilizado para manejar los datos de mercancías.
+ *
+ * @templateUrl './datos-mercancia-contenedora.component.html'
+ * Ruta del archivo HTML que define la estructura visual del componente.
+ *
+ * @styleUrl './datos-mercancia-contenedora.component.scss'
+ * Ruta del archivo SCSS que contiene los estilos específicos para este componente.
  */
 @Component({
   selector: 'app-datos-mercancia-contenedora',

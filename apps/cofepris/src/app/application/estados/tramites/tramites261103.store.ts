@@ -210,7 +210,7 @@ export function createInitialState(): DatosProcedureState {
     representanteLegalApMaterno: '',
     regimen: '',
     informacionConfidencial: '',
-    aduanas: '',
+    aduanas: '1',
     claveDeReferencia: '',
     cadenaPagoDependencia: '',
     bancoClave: '',

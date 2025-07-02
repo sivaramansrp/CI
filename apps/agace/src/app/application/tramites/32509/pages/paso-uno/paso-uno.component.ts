@@ -16,11 +16,14 @@ import { TipoDeAvisoComponent } from '../../components/tipo-de-aviso/tipo-de-avi
 })
 export class PasoUnoComponent implements OnInit, OnDestroy {
   /**
-   * @property {number} indice - El índice de la pestaña seleccionada.
+   * @property {number} indice 
+   * @descripcion
+   * El índice de la pestaña seleccionada.
    */
   indice: number = 1;
 
   /**
+   * @property {Subject<void>} destroyNotifier$
    * @descripcion
    * Subject utilizado para notificar y completar las suscripciones activas al destruir el componente,
    * evitando fugas de memoria.
@@ -30,6 +33,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
   private destroyNotifier$ = new Subject<void>();
 
   /**
+   * @property {boolean} formularioDeshabilitado
    * @descripcion
    * Indica si el formulario debe estar deshabilitado (solo lectura).
    * Cuando es verdadero, los controles del formulario estarán deshabilitados y no se podrán editar.
@@ -78,6 +82,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * @method guardarDatosFormulario
    * @descripcion
    * Obtiene los datos de acuicultura y actualiza el estado del formulario.
    * 
