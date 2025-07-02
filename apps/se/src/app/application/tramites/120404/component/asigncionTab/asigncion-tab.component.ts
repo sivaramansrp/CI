@@ -61,9 +61,13 @@ export class AsignciontabComponent implements OnInit, OnDestroy {
    */
    asignacionRadio = [
     {
-      label: 'Amplicacion de monto',
-      value: 'yes'
+      label: 'Ampliación de vigencia',
+      value: 'vigencia'
     },
+    {
+      label: 'Amplicacion de monto',
+      value: 'monto'
+    }
   ];
 
   /**
