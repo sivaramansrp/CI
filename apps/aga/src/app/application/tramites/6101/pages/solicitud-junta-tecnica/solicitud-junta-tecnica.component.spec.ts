@@ -11,12 +11,19 @@ import { PasoDosComponent } from '../paso-dos/paso-dos.component';
 import { PasoTresComponent } from '../paso-tres/paso-tres.component';
 import { SolicitudComponent } from '../../components/solicitud/solicitud.component';
 import { provideHttpClient } from '@angular/common/http';
+import { of } from 'rxjs';
 
 describe('SolicitudJuntaTecnicaComponent', () => {
   let component: SolicitudJuntaTecnicaComponent;
   let fixture: ComponentFixture<SolicitudJuntaTecnicaComponent>;
-
+  let wizardComponentSpy: jest.Mocked<WizardComponent>;
+  
   beforeEach(async () => {
+    wizardComponentSpy = {
+      siguiente: jest.fn(() => of()),
+      atras: jest.fn(() => of()),
+    } as unknown as jest.Mocked<WizardComponent>;
+    
     await TestBed.configureTestingModule({
       declarations: [
         PasoUnoComponent,
