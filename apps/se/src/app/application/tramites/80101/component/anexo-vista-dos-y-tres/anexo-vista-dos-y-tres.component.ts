@@ -11,6 +11,59 @@ import { Tramite80101Query } from '../../estados/tramite80101.query';
 import { Tramite80101Store } from '../../estados/tramite80101.store';
 import { takeUntil } from 'rxjs';
 
+/**
+ * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+ *
+ * Este método suscribe a dos observables (`anexoDosTableLista$` y `anexoTresTablaLista$`)
+ * para obtener las listas de datos correspondientes a los anexos dos y tres.
+ * Los datos se asignan a las propiedades `anexoDosTablaLista` y `anexoTresTablaLista`
+ * respectivamente, siempre que las listas no estén vacías.
+ *
+ * Además, utiliza el operador `takeUntil` para gestionar la suscripción y
+ * garantizar que se complete cuando el observable `destroyNotifier$` emita un valor,
+ * evitando así posibles fugas de memoria.
+ *
+ * @method ngOnInit
+ * @returns {void} No retorna ningún valor.
+ */
+
+/**
+ * Método para obtener la devolución de llamada del anexo dos.
+ *
+ * Este método actualiza la lista de encabezados del anexo dos (`anexoDosTablaLista`)
+ * con los datos proporcionados en el evento. Si el evento es nulo o indefinido,
+ * se asigna una lista vacía. Además, actualiza el estado global utilizando el método
+ * `setAnnexoDosTableLista` del almacén (`store`).
+ *
+ * @method obtenerAnexoDosDevolverLaLlamada
+ * @param {AnexoEncabezado[]} event - Evento que contiene la lista de encabezados del anexo dos.
+ * @returns {void} No retorna ningún valor.
+ */
+
+/**
+ * Método para obtener la devolución de llamada del anexo tres.
+ *
+ * Este método actualiza la lista de encabezados del anexo tres (`anexoTresTablaLista`)
+ * con los datos proporcionados en el evento. Si el evento es nulo o indefinido,
+ * se asigna una lista vacía. Además, actualiza el estado global utilizando el método
+ * `setAnnexoTresTableLista` del almacén (`store`).
+ *
+ * @method obtenerAnexoTresDevolverLaLlamada
+ * @param {AnexoEncabezado[]} event - Evento que contiene la lista de encabezados del anexo tres.
+ * @returns {void} No retorna ningún valor.
+ */
+
+/**
+ * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
+ *
+ * Este método emite un valor en el observable `destroyNotifier$` para indicar que
+ * las suscripciones deben completarse, evitando posibles fugas de memoria. También
+ * llama al método `complete` del observable para finalizarlo. Además, actualiza los
+ * `BehaviorSubject` relacionados con las tablas para ocultarlas.
+ *
+ * @method ngOnDestroy
+ * @returns {void} No retorna ningún valor.
+ */
 @Component({
   selector: 'app-anexo-vista-dos-y-tres',
   standalone: true,

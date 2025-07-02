@@ -3,8 +3,18 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Tramite260214State } from '../estados/tramite260214Store.store';
 
+/**
+ * @service
+ * @name ImportacionDispositivosMedicosUsoService
+ * @description
+ * Servicio que proporciona métodos para realizar solicitudes HTTP relacionadas con el trámite 260214.
+ * Permite obtener datos desde un archivo JSON para simular la respuesta de una API.
+ *
+ * @decorator Injectable
+ * Marca la clase como un servicio inyectable en Angular.
+ */
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ImportacionDispositivosMedicosUsoService {
 

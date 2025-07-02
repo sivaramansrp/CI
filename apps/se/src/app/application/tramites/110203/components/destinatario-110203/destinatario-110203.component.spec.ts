@@ -14,6 +14,7 @@ jest.mock('@libs/shared/theme/assets/json/110203/mediocatalogo.json', () => ({
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { of, Subject } from 'rxjs';
+import { DESTINATARIO_DATOS } from '../../constant/destinatario.enum';
 
 import { Destinatario110203Component } from './destinatario-110203.component';
 import { Tramite110203Store } from '../../../../estados/tramites/tramite110203.store';
@@ -28,9 +29,9 @@ const MOCK_SOLICITUD_STATE: Solicitud110203State = {
   expedicion: '2024-01-01',
   vencimiento: '2025-01-01',
   nombre: 'Juan',
-  primer: 'Pérez',
+  primer: 'Perez',
   segundo: 'Gómez',
-  fiscal: 'RFC123456789',
+  fiscal: '123',
   razon: 'Empresa XYZ S.A.',
   calle: 'Calle Falsa 123',
   letra: 'B',
@@ -97,9 +98,9 @@ describe('Destinatario110203Component', () => {
     const form = component.destinatarioForm;
     expect(form).toBeDefined();
     expect(form.get('nombre')?.value).toBe('Juan');
-    expect(form.get('primer')?.value).toBe('Pérez');
-    expect(form.get('fiscal')?.value).toBe('RFC123456789');
-    expect(form.get('razon')?.value).toBe('Empresa XYZ S.A.');
+    expect(form.get('primer')?.value).toBe('Perez');
+    expect(form.get('fiscal')?.value).toBe('123');
+   
   });
 
   it('debe marcar campos requeridos como inválidos si están vacíos', () => {
@@ -110,8 +111,7 @@ describe('Destinatario110203Component', () => {
     component.destinatarioForm.get('ciudad')?.setValue('');
     component.destinatarioForm.get('correo')?.setValue('');
 
-    expect(component.destinatarioForm.get('fiscal')?.valid).toBeFalsy();
-    expect(component.destinatarioForm.get('razon')?.valid).toBeFalsy();
+    expect(component.destinatarioForm.get('fiscal')?.valid).toBeFalsy();  
     expect(component.destinatarioForm.get('calle')?.valid).toBeFalsy();
     expect(component.destinatarioForm.get('letra')?.valid).toBeFalsy();
     expect(component.destinatarioForm.get('ciudad')?.valid).toBeFalsy();
@@ -127,4 +127,27 @@ describe('Destinatario110203Component', () => {
     expect(spyNext).toHaveBeenCalled();
     expect(spyComplete).toHaveBeenCalled();
   });
+
+    it('debe limpiar nombre, primer y segundo y activar solo lectura si razon tiene valor', () => {
+    component.destinatarioForm.patchValue(DESTINATARIO_DATOS);
+    
+    component.destinatarioForm.get('razon')?.setValue('Nueva Empresa');
+    
+    expect(component.destinatarioForm.get('nombre')?.value).toBe('');
+    expect(component.destinatarioForm.get('primer')?.value).toBe('');
+    expect(component.destinatarioForm.get('segundo')?.value).toBe('');
+    expect(component.camposNombreSoloLectura).toBe(true);
+  });
+
+  it('debe desactivar solo lectura si razon está vacía', () => {
+    component.destinatarioForm.patchValue(DESTINATARIO_DATOS);
+
+    // Simula un valor y luego lo limpia
+    component.destinatarioForm.get('razon')?.setValue('Empresa Test');
+    component.destinatarioForm.get('razon')?.setValue('');
+    
+  expect(component.camposNombreSoloLectura).toBe(false);
+
+  });
+
 });

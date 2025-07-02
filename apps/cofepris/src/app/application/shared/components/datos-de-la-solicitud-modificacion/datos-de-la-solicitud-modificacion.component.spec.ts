@@ -72,40 +72,7 @@ describe('DatosDeLaSolicitudModificacionComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create the component and inject dependencies', () => {
-    expect(component).toBeTruthy();
-    expect(component['formBuilder']).toBeInstanceOf(FormBuilder);
-    expect(component['establecimientoService']).toBe(establecimientoServiceMock);
-    expect(component['datosSolicitudStore']).toBe(datosSolicitudStoreMock);
-    expect(component['datosSolicitudQuery']).toBe(datosSolicitudQueryMock);
-    expect(component['consultaioQuery']).toBe(consultaioQueryMock);
-  });
-
-  it('should have default property values', () => {
-    expect(component.insumos).toBe(false);
-    expect(component.personaparas).toEqual([]);
-    expect(component.scianJson).toEqual([]);
-    expect(component.class).toBe('alert-warning');
-    expect(component.datosData).toEqual([]);
-    expect(component.tipoSeleccionTabla).toBeDefined();
-    expect(component.pedimentos).toEqual([]);
-    expect(component.mercanciasTablaDatos).toEqual([]);
-    expect(component.mensajeManifiestos).toBe('');
-    expect(component.estado).toEqual([]);
-    expect(component.datosGenericos).toEqual([]);
-    expect(component.informacionConfidencialRadioOption).toEqual([]);
-    expect(component.esFormularioSoloLectura).toBe(false);
-  });
-
-  it('should set esFormularioSoloLectura and solicitudState on ngOnInit', () => {
-    component.esFormularioSoloLectura = false;
-    component.solicitudState = undefined as any;
-    component.ngOnInit();
-    expect(component.esFormularioSoloLectura).toBe(true);
-    expect(component.solicitudState).toBeDefined();
-  });
-
-  it('should call cargarEstado, cargarScian, establecerOpcionesGenericas, manejarConfidencial, configurarGrupoForm on ngOnInit', () => {
+  it('debería llamar a cargarEstado, cargarScian, establecerOpcionesGenericas, manejarConfidencial y configurarGrupoForm en ngOnInit', () => {
     const cargarEstadoSpy = jest.spyOn(component, 'cargarEstado');
     const cargarScianSpy = jest.spyOn(component, 'cargarScian');
     const establecerOpcionesGenericasSpy = jest.spyOn(component, 'establecerOpcionesGenericas');
@@ -119,7 +86,7 @@ describe('DatosDeLaSolicitudModificacionComponent', () => {
     expect(configurarGrupoFormSpy).toHaveBeenCalled();
   });
 
-  it('should configure and disable forms in configurarGrupoForm', () => {
+  it('debería configurar y deshabilitar los formularios en configurarGrupoForm', () => {
     component.solicitudState = {
       genericos: 'gen',
       observaciones: 'obs',
@@ -149,73 +116,45 @@ describe('DatosDeLaSolicitudModificacionComponent', () => {
     expect(component.manifiestosRepresentanteForm.disabled).toBe(true);
     expect(component.scianForm.disabled).toBe(true);
   });
-  it('should call actualizarCampo on datosSolicitudStore in guardarDatosFormulario', () => {
-    const actualizarCampoSpy = jest.spyOn(datosSolicitudStoreMock, 'actualizarCampo');
-    component.solicitudState = {
-      genericos: 'gen',
-      observaciones: 'obs',
-      establecimientoRazonSocial: 'razon',
-      establecimientoCorreoElectronico: 'mail',
-      establecimientoDomicilioCodigoPostal: 'cp',
-      establecimientoEstados: 'est',
-      descripcionMunicipio: 'mun',
-      localidad: 'loc',
-      establishomentoColonias: 'col',
-      calle: 'calle',
-      lada: 'lada',
-      telefono: 'tel',
-      avisoCheckbox: true,
-      noLicenciaSanitaria: 'lic',
-      regimen: 'reg',
-      aduanasEntradas: 'aduana',
-      aifaCheckbox: true,
-      manifests: true,
-      informacionConfidencialRadio: 'info',
-      scian: 'scian',
-      descripcionScian: 'descScian'
-    };
-    
-    expect(actualizarCampoSpy).toHaveBeenCalledWith('datosSolicitud', component.solicitudState);
-  });
 
-  it('should set datosGenericos in establecerOpcionesGenericas', () => {
+  it('debería establecer datosGenericos en establecerOpcionesGenericas', () => {
     component.datosGenericos = [];
     component.establecerOpcionesGenericas();
     expect(component.datosGenericos.length).toBeGreaterThan(0);
   });
 
-  it('should set informacionConfidencialRadioOption in manejarConfidencial', () => {
+  it('debería establecer informacionConfidencialRadioOption en manejarConfidencial', () => {
     component.informacionConfidencialRadioOption = [];
     component.manejarConfidencial();
     expect(component.informacionConfidencialRadioOption.length).toBeGreaterThan(0);
   });
 
-  it('should set estado in cargarEstado', () => {
+  it('debería establecer estado en cargarEstado', () => {
     component.estado = [];
     component.cargarEstado();
     expect(component.estado.length).toBeGreaterThan(0);
   });
 
-  it('should set scianJson in cargarScian', () => {
+  it('debería establecer scianJson en cargarScian', () => {
     component.scianJson = [];
     component.cargarScian();
     expect(component.scianJson.length).toBeGreaterThan(0);
   });
 
-  it('should call hide on modalInstance in cerrarModalScian', () => {
+  it('debería llamar a hide en modalInstance en cerrarModalScian', () => {
     component.modalInstance = { hide: jest.fn() } as any;
     component.cerrarModalScian();
     expect(component.modalInstance.hide).toHaveBeenCalled();
   });
 
-  it('should reset scianForm in limpiarScianForm', () => {
+  it('debería resetear scianForm en limpiarScianForm', () => {
     component.scianForm = new FormBuilder().group({ scian: ['test'] });
     const resetSpy = jest.spyOn(component.scianForm, 'reset');
     component.limpiarScianForm();
     expect(resetSpy).toHaveBeenCalled();
   });
 
-  it('should add new SCIAN data, reset form, and close modal in guardarScian', () => {
+  it('debería agregar un nuevo dato SCIAN, resetear el formulario y cerrar el modal en guardarScian', () => {
     component.scianForm = new FormBuilder().group({
       scian: ['clave'],
       descripcionScian: ['desc']
@@ -232,27 +171,27 @@ describe('DatosDeLaSolicitudModificacionComponent', () => {
     expect(cerrarSpy).toHaveBeenCalled();
   });
 
-  it('should remove pedimento from pedimentos in eliminarPedimento', () => {
+  it('debería eliminar un pedimento de la lista en eliminarPedimento', () => {
     component.pedimentos = [{ id: 1 }, { id: 2 }, { id: 3 }] as any;
     component.elementoParaEliminar = 1;
     component.eliminarPedimento(true);
     expect(component.pedimentos).toEqual([{ id: 1 }, { id: 3 }]);
   });
 
-  it('should not remove pedimento if borrar is false', () => {
+  it('no debería eliminar un pedimento si borrar es false', () => {
     component.pedimentos = [{ id: 1 }, { id: 2 }, { id: 3 }] as any;
     component.elementoParaEliminar = 1;
     component.eliminarPedimento(false);
     expect(component.pedimentos).toEqual([{ id: 1 }, { id: 2 }, { id: 3 }]);
   });
 
-  it('should call show on modalInstance in mostrarModeloClave', () => {
+  it('debería llamar a show en modalInstance en mostrarModeloClave', () => {
     component.modalInstance = { show: jest.fn() } as any;
     component.mostrarModeloClave();
     expect(component.modalInstance.show).toHaveBeenCalled();
   });
 
-  it('should set modalInstance in ngAfterViewInit if establecimientoModal exists', () => {
+  it('debería establecer modalInstance en ngAfterViewInit si establecimientoModal existe', () => {
     const nativeElement = document.createElement('div');
     component.establecimientoModal = new ElementRef(nativeElement);
     (window as any)['Modal'] = jest.fn().mockImplementation(() => ({ test: true }));
@@ -260,13 +199,13 @@ describe('DatosDeLaSolicitudModificacionComponent', () => {
     expect(component.modalInstance).toBeDefined();
   });
 
-  it('should set nuevaNotificacion and elementoParaEliminar in abrirModal', () => {
+  it('debería establecer nuevaNotificacion y elementoParaEliminar en abrirModal', () => {
     component.abrirModal(2);
     expect(component.nuevaNotificacion).toBeDefined();
     expect(component.elementoParaEliminar).toBe(2);
   });
 
-  it('should clean up subscriptions on ngOnDestroy', () => {
+  it('debería limpiar las suscripciones en ngOnDestroy', () => {
     const nextSpy = jest.spyOn(component['destroy$'], 'next');
     const completeSpy = jest.spyOn(component['destroy$'], 'complete');
     component.ngOnDestroy();

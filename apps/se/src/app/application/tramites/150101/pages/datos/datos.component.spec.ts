@@ -1,61 +1,81 @@
-// @ts-nocheck
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { By } from '@angular/platform-browser';
-import { Observable, of as observableOf, throwError } from 'rxjs';
-
-import { Component } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DatosComponent } from './datos.component';
+import { TIPO_PERSONA } from '@libs/shared/data-access-user/src';
+import { of, Subject } from 'rxjs';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { Solicitud150101Store } from '../../estados/solicitud150101.store';
+import { SolicitudService } from '../../services/registro-solicitud-anual.service';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 
+class MockConsultaioQuery {
+  selectConsultaioState$ = of({ update: true });
+}
+
+class MockSolicitud150101Store {
+  setRegistroSolicitudAnualState = jest.fn();
+}
+
+class MockSolicitudService {
+  getRegistroSolicitudDatos = jest.fn(() => of({ nombre: 'Test Data' }));
+}
+
 describe('DatosComponent', () => {
-  let fixture;
-  let component;
+  let component: DatosComponent;
+  let fixture: ComponentFixture<DatosComponent>;
+  let solicitudService: MockSolicitudService;
+  let solicitudStore: MockSolicitud150101Store;
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule, HttpClientTestingModule ],
-      declarations: [
-        DatosComponent
-      ],
-      schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      declarations: [DatosComponent],
+      imports: [HttpClientTestingModule],
       providers: [
-
-      ]
-    }).overrideComponent(DatosComponent, {
-
+        { provide: ConsultaioQuery, useClass: MockConsultaioQuery },
+        { provide: Solicitud150101Store, useClass: MockSolicitud150101Store },
+        { provide: SolicitudService, useClass: MockSolicitudService },
+      ],
+      schemas: [NO_ERRORS_SCHEMA]
     }).compileComponents();
+
     fixture = TestBed.createComponent(DatosComponent);
-    component = fixture.debugElement.componentInstance;
+    component = fixture.componentInstance;
+    solicitudService = TestBed.inject(SolicitudService) as any;
+    solicitudStore = TestBed.inject(Solicitud150101Store) as any;
+
+    component.solicitante = {
+      obtenerTipoPersona: jest.fn()
+    } as any;
+
+    fixture.detectChanges();
   });
 
-  afterEach(() => {
-    component.ngOnDestroy = function() {};
-    fixture.destroy();
-  });
-
-  it('should run #constructor()', async () => {
+  it('should create the component', () => {
     expect(component).toBeTruthy();
   });
-
-  it('should run #ngAfterViewInit()', async () => {
-    component.solicitante = component.solicitante || {};
-    component.solicitante.obtenerTipoPersona = jest.fn();
-    component.ngAfterViewInit();
+  
+  it('should update esDatosRespuesta and call store when guardarDatosFormulario is called', () => {
+    component.guardarDatosFormulario();
+    expect(solicitudService.getRegistroSolicitudDatos).toHaveBeenCalled();
+    expect(solicitudStore.setRegistroSolicitudAnualState).toHaveBeenCalledWith({ nombre: 'Test Data' });
+    expect(component.esDatosRespuesta).toBe(true);
   });
 
-  it('should run #seleccionaTab()', async () => {
-
-    component.seleccionaTab({});
-
+  it('should update indice when seleccionaTab is called', () => {
+    component.seleccionaTab(3);
+    expect(component.indice).toBe(3);
   });
 
-  it('should run #getFilaDeInformeSeleccionada()', async () => {
-
-    component.getFilaDeInformeSeleccionada({});
-
+  it('should set estaHabilitado when getFilaDeInformeSeleccionada is called with true', () => {
+    component.getFilaDeInformeSeleccionada(true);
+    expect(component.estaHabilitado).toBe(true);
   });
 
+  it('should clean up subscriptions on destroy', () => {
+    const spy = jest.spyOn(component['destroyNotifier$'], 'next');
+    const completeSpy = jest.spyOn(component['destroyNotifier$'], 'complete');
+    component.ngOnDestroy();
+    expect(spy).toHaveBeenCalled();
+    expect(completeSpy).toHaveBeenCalled();
+  });
 });

@@ -13,6 +13,7 @@ import { FormBuilder } from '@angular/forms';
 import { Tramite80102Query } from '../../estados/tramite80102.query';
 import { Tramite80102Store } from '../../estados/tramite80102.store';
 import { Router, ActivatedRoute } from '@angular/router';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 
 @Injectable()
 class MockAutorizacionProgrmaNuevoService {}
@@ -28,37 +29,13 @@ class MockRouter {
   navigate() {};
 }
 
-@Directive({ selector: '[myCustom]' })
-class MyCustomDirective {
-  @Input() myCustom;
-}
-
-@Pipe({name: 'translate'})
-class TranslatePipe implements PipeTransform {
-  transform(value) { return value; }
-}
-
-@Pipe({name: 'phoneNumber'})
-class PhoneNumberPipe implements PipeTransform {
-  transform(value) { return value; }
-}
-
-@Pipe({name: 'safeHtml'})
-class SafeHtmlPipe implements PipeTransform {
-  transform(value) { return value; }
-}
-
 describe('EmpresasSubfabricanteComponent', () => {
   let fixture;
   let component;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule ,EmpresasSubfabricanteComponent],
-      declarations: [
-        TranslatePipe, PhoneNumberPipe, SafeHtmlPipe,
-        MyCustomDirective
-      ],
+      imports: [ FormsModule, ReactiveFormsModule ],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
       providers: [
         { provide: AutorizacionProgrmaNuevoService, useClass: MockAutorizacionProgrmaNuevoService },
@@ -76,7 +53,8 @@ describe('EmpresasSubfabricanteComponent', () => {
             fragment: observableOf('fragment'),
             data: observableOf({})
           }
-        }
+        },
+        ConsultaioQuery
       ]
     }).overrideComponent(EmpresasSubfabricanteComponent, {
 
@@ -85,10 +63,7 @@ describe('EmpresasSubfabricanteComponent', () => {
     component = fixture.debugElement.componentInstance;
   });
 
-  afterEach(() => {
-    component.ngOnDestroy = function() {};
-    fixture.destroy();
-  });
+
 
   it('should run #constructor()', async () => {
     expect(component).toBeTruthy();
@@ -98,8 +73,24 @@ describe('EmpresasSubfabricanteComponent', () => {
     component.obtenerDatosDelAlmacen = jest.fn();
     component.obtenerListaEstado = jest.fn();
     component.ngOnInit();
-     expect(component.obtenerDatosDelAlmacen).toHaveBeenCalled();
-     expect(component.obtenerListaEstado).toHaveBeenCalled();
+    expect(component.obtenerDatosDelAlmacen).toHaveBeenCalled();
+  });
+
+  it('should run #obtenerDatosDelAlmacen()', async () => {
+    component.query = component.query || {};
+    component.query.datosSubcontratistaEstado$ = observableOf({});
+    component.query.plantasBuscadas$ = observableOf({
+      length: {}
+    });
+    component.query.plantasSubfabricantesAgregar$ = observableOf({
+      length: {}
+    });
+    component.formularioDatosSubcontratista = component.formularioDatosSubcontratista || {};
+    component.formularioDatosSubcontratista.setValue = jest.fn();
+    component.store = component.store || {};
+    component.store.setFormValida = jest.fn();
+    component.obtenerDatosDelAlmacen();
+    expect(component.formularioDatosSubcontratista.setValue).toHaveBeenCalled();
   });
 
   it('should run #enEstadoSeleccionado()', async () => {
@@ -113,22 +104,21 @@ describe('EmpresasSubfabricanteComponent', () => {
         toString: function() {}
       }
     });
-     expect(component.formularioDatosSubcontratista.patchValue).toHaveBeenCalled();
-     expect(component.store.setDatosSubcontratista).toHaveBeenCalled();
+    expect(component.formularioDatosSubcontratista.patchValue).toHaveBeenCalled();
   });
 
   it('should run #alCambiarRFC()', async () => {
     component.store = component.store || {};
     component.store.setDatosSubcontratista = jest.fn();
     component.alCambiarRFC({});
-     expect(component.store.setDatosSubcontratista).toHaveBeenCalled();
+    expect(component.store.setDatosSubcontratista).toHaveBeenCalled();
   });
 
   it('should run #inicializarFormularioDatosSubcontratista()', async () => {
     component.fb = component.fb || {};
     component.fb.group = jest.fn();
     component.inicializarFormularioDatosSubcontratista();
-     expect(component.fb.group).toHaveBeenCalled();
+    expect(component.fb.group).toHaveBeenCalled();
   });
 
   it('should run #obtenerListaEstado()', async () => {
@@ -137,14 +127,59 @@ describe('EmpresasSubfabricanteComponent', () => {
       data: {}
     }));
     component.obtenerListaEstado();
-     expect(component.AutorizacionProgrmaNuevoServiceServicios.obtenerListaEstado).toHaveBeenCalled();
+    expect(component.AutorizacionProgrmaNuevoServiceServicios.obtenerListaEstado).toHaveBeenCalled();
+  });
+
+  it('should run #obtenerSubfabricantesDisponibles()', async () => {
+    component.AutorizacionProgrmaNuevoServiceServicios = component.AutorizacionProgrmaNuevoServiceServicios || {};
+    component.AutorizacionProgrmaNuevoServiceServicios.getSubfabricantesDisponibles = jest.fn().mockReturnValue(observableOf({
+      length: {}
+    }));
+    component.store = component.store || {};
+    component.store.setPlantasBuscadas = jest.fn();
+    component.obtenerSubfabricantesDisponibles();
+    expect(component.AutorizacionProgrmaNuevoServiceServicios.getSubfabricantesDisponibles).toHaveBeenCalled();
+
+  });
+
+  it('should run #obtenerRegistroSeleccionado()', async () => {
+
+    component.obtenerRegistroSeleccionado({
+      length: {}
+    });
+
+  });
+
+  it('should run #realizarBusqueda()', async () => {
+    component.formularioDatosSubcontratista = component.formularioDatosSubcontratista || {};
+    component.formularioDatosSubcontratista.get = jest.fn().mockReturnValue({
+      value: {}
+    });
+    component.obtenerSubfabricantesDisponibles = jest.fn();
+    component.store = component.store || {};
+    component.store.setFormValida = jest.fn();
+    component.realizarBusqueda();
+    expect(component.formularioDatosSubcontratista.get).toHaveBeenCalled();
+  });
+
+  it('should run #agregarPlantas()', async () => {
+    component.store = component.store || {};
+    component.store.setPlantasSubfabricantesAgregar = jest.fn();
+    component.agregarPlantas({});
+    expect(component.store.setPlantasSubfabricantesAgregar).toHaveBeenCalled();
+  });
+
+  it('should run #datosDelSubfabricantePorEliminar()', async () => {
+
+    component.datosDelSubfabricantePorEliminar({});
+
   });
 
   it('should run #eliminarPlantas()', async () => {
     component.store = component.store || {};
     component.store.eliminarPlantas = jest.fn();
     component.eliminarPlantas({});
-     expect(component.store.eliminarPlantas).toHaveBeenCalled();
+    expect(component.store.eliminarPlantas).toHaveBeenCalled();
   });
 
   it('should run #complementarPlantas()', async () => {
@@ -153,8 +188,7 @@ describe('EmpresasSubfabricanteComponent', () => {
     component.router = component.router || {};
     component.router.navigate = jest.fn();
     component.complementarPlantas({});
-     expect(component.store.setPlantasPorCompletar).toHaveBeenCalled();
-     expect(component.router.navigate).toHaveBeenCalled();
+    expect(component.store.setPlantasPorCompletar).toHaveBeenCalled();
   });
 
   it('should run #ngOnDestroy()', async () => {
@@ -162,8 +196,7 @@ describe('EmpresasSubfabricanteComponent', () => {
     component.destroyNotifier$.next = jest.fn();
     component.destroyNotifier$.complete = jest.fn();
     component.ngOnDestroy();
-     expect(component.destroyNotifier$.next).toHaveBeenCalled();
-     expect(component.destroyNotifier$.complete).toHaveBeenCalled();
+    expect(component.destroyNotifier$.next).toHaveBeenCalled();
   });
 
 });

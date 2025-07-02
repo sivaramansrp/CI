@@ -7,6 +7,28 @@ import { Tramite140218Query } from '../../estados/query/tramite140218.query';
 import { of } from 'rxjs';
 import { DatosSolicitudState } from '../../estados/store/tramite140218.store';
 
+// Mock the renuncia JSON import
+jest.mock('@libs/shared/theme/assets/json/140218/renuncia.json', () => ({
+  default: {
+    formData: {
+      folioTramite: "1701300200120251701000001",
+      tipoSolicitud: "Inicial",
+      regimen: "Definitivos",
+      clasificacionRegimen: "De exportación",
+      periodoVigencia: "Largo Plazo",
+      unidadMedida: "Metro Cúbico",
+      fraccionArancelaria: "27090099",
+      cantidadAutorizada: "100.00",
+      valorAutorizado: "100",
+      nico: "00",
+      descripcionNico: "Los demás",
+      acotacion: "Únicamente: Aceites crudos de petróleo",
+      permisoDesde: "08/03/2025",
+      permisoHasty: "08/03/2030"
+    }
+  }
+}));
+
 describe('RenunciaDeDerechosComponent', () => {
   let component: RenunciaDeDerechosComponent;
   let fixture: ComponentFixture<RenunciaDeDerechosComponent>;
@@ -16,6 +38,9 @@ describe('RenunciaDeDerechosComponent', () => {
   beforeEach(async () => {
     tramite140218Store = new Tramite140218Store();
     tramite140218Query = new Tramite140218Query(tramite140218Store);
+
+    // Create spy for the store update method
+    jest.spyOn(tramite140218Store, 'update').mockImplementation(() => {});
 
     const mockDatosSolicitudState: DatosSolicitudState = {
       folioTramite: '12345',
@@ -57,10 +82,10 @@ describe('RenunciaDeDerechosComponent', () => {
   it('should initialize the form with correct default values', () => {
     component.ngOnInit();
 
-    expect(component.renunciaDerechosForm.get('folioTramite')?.value).toEqual('12345');
-    expect(component.renunciaDerechosForm.get('tipoSolicitud')?.value).toEqual('Type A');
-    expect(component.renunciaDerechosForm.get('permisoHasty')?.value).toEqual('2025-12-31');
-    expect(component.renunciaDerechosForm.get('cantidadAutorizada')?.value).toEqual(100);
+    expect(component.renunciaDerechosForm.get('folioTramite')?.value).toEqual('1701300200120251701000001');
+    expect(component.renunciaDerechosForm.get('tipoSolicitud')?.value).toEqual('Inicial');
+    expect(component.renunciaDerechosForm.get('permisoHasty')?.value).toEqual('08/03/2030');
+    expect(component.renunciaDerechosForm.get('cantidadAutorizada')?.value).toEqual('100.00');
   });
 
   it('should disable certain form fields', () => {
@@ -75,11 +100,11 @@ describe('RenunciaDeDerechosComponent', () => {
     component.ngOnInit();
     component.updateStoreWithFormData();
 
-    expect(tramite140218Store.update).toHaveBeenCalledWith({
-      folioTramite: '12345',
-      tipoSolicitud: 'Type A',
-      permisoHasty: '2025-12-31',
-      cantidadAutorizada: 100
-    });
+    expect(tramite140218Store.update).toHaveBeenCalledWith(expect.objectContaining({
+      folioTramite: '1701300200120251701000001',
+      tipoSolicitud: 'Inicial',
+      permisoHasty: '08/03/2030',
+      cantidadAutorizada: '100.00'
+    }));
   });
 });

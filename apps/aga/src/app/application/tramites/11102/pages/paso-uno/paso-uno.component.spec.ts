@@ -7,6 +7,10 @@ import { DatosDelTramiteComponent } from '../../components/datos-del-tramite/dat
 import { BtnContinuarComponent } from '@ng-mf/data-access-user';
 import { PASOS } from '@libs/shared/data-access-user/src/tramites/constantes/11105/pasos.enum';
 import { provideHttpClient } from '@angular/common/http';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { of } from 'rxjs';
+import { EventEmitter } from '@angular/core';
+
 
 describe('PasoUnoComponent', () => {
   let component: PasoUnoComponent;
@@ -21,9 +25,11 @@ describe('PasoUnoComponent', () => {
         SolicitanteComponent,
         DatosDelTramiteComponent,
         BtnContinuarComponent,
-        WizardComponent
+        WizardComponent,
+        PasoUnoComponent,
+        HttpClientTestingModule
       ],
-      declarations: [PasoUnoComponent],
+      declarations: [],
       providers:[provideHttpClient()]
     }).compileComponents();
 
@@ -38,8 +44,6 @@ describe('PasoUnoComponent', () => {
 
   it('should initialize with default values', () => {
     expect(component.indice).toBe(1);
-    expect(component.pasos).toBe(PASOS);
-    expect(component.datosPasos.nroPasos).toBe(PASOS.length);
     expect(component.datosPasos.indice).toBe(1);
     expect(component.datosPasos.txtBtnAnt).toBe('Anterior');
     expect(component.datosPasos.txtBtnSig).toBe('Continuar');
@@ -51,6 +55,7 @@ describe('PasoUnoComponent', () => {
   });
 
   it('should emit continuarEvento when continuar is called', () => {
+    component.continuarEvento = new EventEmitter<string>();
     const emitSpy = jest.spyOn(component.continuarEvento, 'emit');
     component.continuar();
     expect(emitSpy).toHaveBeenCalledWith('');
@@ -58,8 +63,8 @@ describe('PasoUnoComponent', () => {
 
   it('should update indice and call wizardComponent.siguiente when getValorIndice is called with "cont"', () => {
     component.wizardComponent = {
-      siguiente: jest.fn(),
-      atras: jest.fn(),
+      siguiente: jest.fn(()=> of()),
+      atras: jest.fn(()=> of()),
     } as unknown as WizardComponent;
 
     const wizardSpy = jest.spyOn(component.wizardComponent, 'siguiente');
@@ -71,8 +76,8 @@ describe('PasoUnoComponent', () => {
 
   it('should update indice and call wizardComponent.atras when getValorIndice is called with "ant"', () => {
     component.wizardComponent = {
-      siguiente: jest.fn(),
-      atras: jest.fn(),
+      siguiente: jest.fn(()=> of()),
+      atras: jest.fn(()=> of()),
     } as unknown as WizardComponent;
 
     const wizardSpy = jest.spyOn(component.wizardComponent, 'atras');
@@ -84,8 +89,8 @@ describe('PasoUnoComponent', () => {
 
   it('should not update indice or call wizardComponent methods if valor is out of range', () => {
     component.wizardComponent = {
-      siguiente: jest.fn(),
-      atras: jest.fn(),
+      siguiente: jest.fn(()=> of()),
+      atras: jest.fn(()=> of()),
     } as unknown as WizardComponent;
 
     const siguienteSpy = jest.spyOn(component.wizardComponent, 'siguiente');

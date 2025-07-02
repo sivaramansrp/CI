@@ -5,6 +5,7 @@ import { ToastrModule, provideToastr } from 'ngx-toastr';
 import { PasoCuatroComponent } from './paso-cuatro.component';
 import { Router, RouterModule } from '@angular/router';
 import {TestBed } from '@angular/core/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 @Injectable()
 class MockRouter {
@@ -19,7 +20,7 @@ describe('PasoCuatroComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule, ToastrModule, RouterModule ],
+      imports: [ FormsModule, ReactiveFormsModule, ToastrModule, RouterModule, HttpClientTestingModule ],
       declarations: [
       ],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],

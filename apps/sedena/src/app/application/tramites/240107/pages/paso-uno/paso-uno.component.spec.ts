@@ -19,6 +19,7 @@ import { Observable, of as observableOf, throwError } from 'rxjs';
 
 import { SeccionLibStore } from '@libs/shared/data-access-user/src';
 import { PasoUnoComponent } from './paso-uno.component';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('PasoUnoComponent', () => {
   let fixture;
@@ -26,7 +27,7 @@ describe('PasoUnoComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule ],
+      imports: [ FormsModule, ReactiveFormsModule ,HttpClientTestingModule],
       declarations: [PasoUnoComponent,],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
       providers: [
