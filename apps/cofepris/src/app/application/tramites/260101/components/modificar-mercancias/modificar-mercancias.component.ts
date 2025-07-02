@@ -1,10 +1,11 @@
-import { Catalogo, ConsultaioQuery } from '@libs/shared/data-access-user/src';
+import { Catalogo, CatalogoSelectComponent, ConsultaioQuery, CrosslistComponent, InputFechaComponent, TablaDinamicaComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CatalogosSelect } from '@libs/shared/data-access-user/src';
 import { ClavesDeLotes } from '../../models/claves-de-lotes.model';
+import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
 import { CrossList } from '../../models/mercancia.model';
-import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { InputFecha } from '@libs/shared/data-access-user/src';
 import { Mercancia } from '../../models/mercancia.model';
@@ -29,6 +30,18 @@ import { takeUntil } from 'rxjs';
   selector: 'app-modificar-mercancias',
   templateUrl: './modificar-mercancias.component.html',
   styleUrl: './modificar-mercancias.component.scss',
+  standalone:true,
+  imports:[
+      ModificarMercanciasComponent,
+      CommonModule,
+      ReactiveFormsModule,
+      FormsModule,
+      CrosslistComponent,
+      TablaDinamicaComponent,
+      InputFechaComponent,
+      CatalogoSelectComponent,
+      TituloComponent,
+    ]
 })
 export class ModificarMercanciasComponent implements OnInit, OnDestroy {
   /**
