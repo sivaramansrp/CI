@@ -14,7 +14,7 @@
                             (change)="setValoresStore(agregarCuentaForm,'titularDeLaCuenta', 'setTitularDeLaCuenta')"
                             class="form-control" id="titular" >
                         </div>
-                        @if(agregarCuentaForm.controls['titularDeLaCuenta'].invalid && agregarCuentaForm.controls['titularDeLaCuenta'].touched) {
+                        @if((agregarCuentaForm.controls['titularDeLaCuenta'].invalid && tieneAgregarCuentaFormEnviado) || agregarCuentaForm.controls['titularDeLaCuenta'].touched) {
                             <div class="d-grid">
                                 @if(agregarCuentaForm.controls['titularDeLaCuenta'].errors?.['required']) {
                                     <span class="mensaje-error">Este campo es obligatorio</span>
@@ -38,6 +38,13 @@
                             name="persona"  
                             (change)="setValoresStore(agregarCuentaForm,'persona', 'setTipoDePersona')" >
                         </app-catalogo-select>
+                        @if((agregarCuentaForm.controls['persona'].invalid && tieneAgregarCuentaFormEnviado)) {
+                            <div class="d-grid">
+                                @if(agregarCuentaForm.controls['persona'].errors?.['required']) {
+                                    <span class="mensaje-error">Este campo es obligatorio</span>
+                                }
+                            </div>
+                        }
                     </div>
                 </div>
         
@@ -49,7 +56,7 @@
                             (change)="setValoresStore(agregarCuentaForm,'rfc', 'setRfc')"
                              class="form-control">
                         </div>
-                        @if(agregarCuentaForm.controls['rfc'].invalid && agregarCuentaForm.controls['rfc'].touched) {
+                        @if((agregarCuentaForm.controls['rfc'].invalid &&tieneAgregarCuentaFormEnviado) || agregarCuentaForm.controls['rfc'].touched) {
                             <div class="d-grid">
                                 @if(agregarCuentaForm.controls['rfc'].errors?.['required']) {
                                     <span class="mensaje-error">Este campo es obligatorio</span>
@@ -71,7 +78,7 @@
                              id="cuenta" 
                              class="form-control">
                         </div>
-                        @if(agregarCuentaForm.controls['numeroDeCuenta'].invalid && agregarCuentaForm.controls['numeroDeCuenta'].touched) {
+                        @if((agregarCuentaForm.controls['numeroDeCuenta'].invalid && tieneAgregarCuentaFormEnviado) || agregarCuentaForm.controls['numeroDeCuenta'].touched) {
                             <div class="d-grid">
                                 @if(agregarCuentaForm.controls['numeroDeCuenta'].errors?.['required']) {
                                     <span class="mensaje-error">Este campo es obligatorio</span>
@@ -95,6 +102,13 @@
                             formControlName="pais"
                             (change)="setValoresStore(agregarCuentaForm,'pais', 'setPaisDondeRadica')" >
                         </app-catalogo-select>
+                        @if((agregarCuentaForm.controls['pais'].invalid && tieneAgregarCuentaFormEnviado)) {
+                            <div class="d-grid">
+                                @if(agregarCuentaForm.controls['pais'].errors?.['required']) {
+                                    <span class="mensaje-error">Este campo es obligatorio</span>
+                                }
+                            </div>
+                        }
                     </div>
                 </div>
 
@@ -109,6 +123,13 @@
                             name="institucions"  
                             (change)="setValoresStore(agregarCuentaForm,'institucion', 'setInstitucion')" >
                         </app-catalogo-select>
+                        @if((agregarCuentaForm.controls['institucion'].invalid && tieneAgregarCuentaFormEnviado)) {
+                            <div class="d-grid">
+                                @if(agregarCuentaForm.controls['institucion'].errors?.['required']) {
+                                    <span class="mensaje-error">Este campo es obligatorio</span>
+                                }
+                            </div>
+                        }
                     </div>
                 </div>
 
@@ -124,6 +145,13 @@
                             name="estado"  
                             (change)="setValoresStore(agregarCuentaForm,'institucion', 'setInstitucion')" >
                         </app-catalogo-select>
+                        @if((agregarCuentaForm.controls['estado'].invalid && tieneAgregarCuentaFormEnviado)) {
+                            <div class="d-grid">
+                                @if(agregarCuentaForm.controls['estado'].errors?.['required']) {
+                                    <span class="mensaje-error">Este campo es obligatorio</span>
+                                }
+                            </div>
+                        }
                     </div>
                 </div>
 
@@ -137,7 +165,7 @@
                              id="sucursal" 
                              class="form-control">
                         </div>
-                        @if(agregarCuentaForm.controls['sucursal'].invalid && agregarCuentaForm.controls['sucursal'].touched) {
+                        @if((agregarCuentaForm.controls['sucursal'].invalid && tieneAgregarCuentaFormEnviado) || agregarCuentaForm.controls['sucursal'].touched) {
                             <div class="d-grid">
                                 @if(agregarCuentaForm.controls['sucursal'].errors?.['required']) {
                                     <span class="mensaje-error">Este campo es obligatorio</span>
@@ -162,7 +190,7 @@
                              id="plaza" 
                              class="form-control text-uppercase">
                         </div>
-                        @if(agregarCuentaForm.controls['numeroDePlaza'].invalid && agregarCuentaForm.controls['numeroDePlaza'].touched) {
+                        @if((agregarCuentaForm.controls['numeroDePlaza'].invalid && tieneAgregarCuentaFormEnviado) || agregarCuentaForm.controls['numeroDePlaza'].touched) {
                             <div class="d-grid">
                                 @if(agregarCuentaForm.controls['numeroDePlaza'].errors?.['required']) {
                                     <span class="mensaje-error">Este campo es obligatorio</span>
@@ -183,7 +211,7 @@
     <div class="row mb-3">
         <div class="d-flex justify-content-center">
             <button type="submit" class="btn btn-primary me-2" (click)="guardar()">Guardar</button>
-            <button type="button" class="btn btn-default">Cancelar</button>
+            <button type="button" class="btn btn-default" (click)="cancelar()">Cancelar</button>
         </div>
     </div>
 </div>
