@@ -308,10 +308,10 @@ export class DomicilioEstablecimientoAduanasComponent implements OnInit, OnDestr
     this.domicilio = this.fb.group({
       codigoPostal: [this.solicitudState?.codigoPostal, [Validators.required, Validators.maxLength(12)]],
       estado: [this.solicitudState?.estado, Validators.required],
-      muncipio: [this.solicitudState?.muncipio, Validators.required],
+      muncipio: [this.solicitudState?.muncipio, Validators.required , Validators.maxLength(120)],
       localidad: [this.solicitudState?.localidad],
       colonia: [this.solicitudState?.colonia],
-      calle: [this.solicitudState?.calle, [Validators.required]],
+      calle: [this.solicitudState?.calle, [Validators.required, Validators.maxLength(100)]],
       lada: [this.solicitudState?.lada],
       telefono: [this.solicitudState?.telefono, [Validators.required, Validators.maxLength(30)]],
       avisoCheckbox: [this.solicitudState?.avisoCheckbox, Validators.required],

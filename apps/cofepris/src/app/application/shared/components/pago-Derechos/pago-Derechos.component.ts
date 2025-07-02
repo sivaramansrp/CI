@@ -133,7 +133,13 @@ export class PagoDerechosComponent implements OnDestroy, OnInit {
       banco: [this.solicitudState?.banco , Validators.required], // Campo banco.
       llavePago: [this.solicitudState?.llavePago], // Campo llavePago.
       fechaPago: [this.solicitudState?.fechaPago , Validators.required], // Campo fechaPago.
-      importePago: [this.solicitudState?.importePago], // Campo importePago.
+      importePago: [
+        '',
+        [
+          Validators.required,
+          Validators.pattern(/^[0-9]+(\.[0-9]{1,2})?$/) ,Validators.maxLength(16)
+        ]
+      ],
     });
 
      /*
@@ -147,6 +153,10 @@ export class PagoDerechosComponent implements OnDestroy, OnInit {
       this.derechosForm.enable();
     }
 
+  }
+
+   get importePago() {
+    return this.derechosForm.get('importePago');
   }
   /**
    * method loadComboUnidadMedida
@@ -168,10 +178,36 @@ export class PagoDerechosComponent implements OnDestroy, OnInit {
    * param {string} campo - Nombre del campo en el formulario.
    * param {keyof AvisocalidadStore} metodoNombre - Método del store a invocar.
    */
+  // setValoresStore<T>(form: FormGroup, campo: string, metodoNombre: keyof AvisocalidadStore): void {
+  //   const VALOR = form.get(campo)?.value as T; // Obtiene el valor del campo.
+  //   (this.avisocalidadStore[metodoNombre] as (value: T) => void)(VALOR); // Llama al método correspondiente del store.
+  // }
+
   setValoresStore<T>(form: FormGroup, campo: string, metodoNombre: keyof AvisocalidadStore): void {
-    const VALOR = form.get(campo)?.value as T; // Obtiene el valor del campo.
-    (this.avisocalidadStore[metodoNombre] as (value: T) => void)(VALOR); // Llama al método correspondiente del store.
+  const CONTROL = form.get(campo);
+
+  if (!CONTROL) {
+    console.warn(`Control '${campo}' not found in form`);
+    return;
   }
+
+  if (CONTROL.invalid) {
+    console.warn(`Invalid input in field '${campo}':`, CONTROL.errors);
+    // Optional: Mark as touched to trigger validation error display
+    CONTROL.markAsTouched();
+    return;
+  }
+
+  const VALOR = CONTROL.value as T;
+  const STOREMETHOD = this.avisocalidadStore[metodoNombre] as (value: T) => void;
+
+  if (typeof STOREMETHOD === 'function') {
+    STOREMETHOD(VALOR);
+  } else {
+    console.error(`Store method '${String(metodoNombre)}' is not a function`);
+  }
+}
+
 
    /**
    * @method onReset

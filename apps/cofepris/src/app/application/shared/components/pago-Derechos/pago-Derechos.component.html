@@ -5,14 +5,14 @@
       <!-- Clave de referencia -->
       <div class="col-md-4">
         <label for="claveReferencia" class="form-label">Clave de referencia:</label>
-        <input type="text" id="claveReferencia" class="form-control" formControlName="claveReferencia"
+        <input type="text" id="claveReferencia" class="form-control" formControlName="claveReferencia" maxlength="9"
           (change)="setValoresStore(derechosForm,'claveReferencia', 'setclaveReferencia')" />
       </div>
 
       <!-- Cadena de la dependencia -->
       <div class="col-md-4">
         <label for="cadenaDependencia" class="form-label">Cadena de la dependencia:</label>
-        <input type="text" id="cadenaDependencia" class="form-control" formControlName="cadenaDependencia"
+        <input type="text" id="cadenaDependencia" class="form-control" formControlName="cadenaDependencia" maxlength="14"
           (change)="setValoresStore(derechosForm,'cadenaDependencia', 'setcadenaDependencia')" />
       </div>
 
@@ -27,7 +27,7 @@
       <!-- Llave de pago -->
       <div class="col-md-4">
         <label for="llavePago" class="form-label">Llave de pago:</label>
-        <input type="text" id="llavePago" class="form-control" formControlName="llavePago"
+        <input type="text" id="llavePago" class="form-control" formControlName="llavePago" maxlength="30"
           (change)="setValoresStore(derechosForm,'llavePago', 'setllavePago')" />
       </div>
       <!-- Fecha de pago -->
@@ -50,13 +50,39 @@
         </div>
         }
       </div>
-      <!-- Importe de pago -->
-      <div class="col-md-4">
-        <label for="importePago" class="form-label">Importe de pago:</label>
-        <input type="text" id="importePago" class="form-control" formControlName="importePago"
-          (change)="setValoresStore(derechosForm,'importePago', 'setimportePago')" />
-      </div>
+<div class="col-md-4">
+  <label for="importePago" class="form-label">Importe de pago:</label>
+  <input
+    type="text"
+    id="importePago"
+    class="form-control"
+    formControlName="importePago"
+    (change)="setValoresStore(derechosForm,'importePago', 'setimportePago')"
+    maxlength="16"
+  />
+  <div *ngIf="importePago?.invalid && (importePago?.dirty || importePago?.touched)" class="text-danger mt-1">
+    <div *ngIf="importePago?.errors?.['required']">
+      El campo es obligatorio.
     </div>
+    <div *ngIf="importePago?.errors?.['pattern']">
+      Solo se permiten valores numéricos 
+    </div>
+  </div>
+</div>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
 
     <div class="row mt-5">
       <div class="col-md-12">

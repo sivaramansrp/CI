@@ -33,7 +33,7 @@
     <div class="col-md-4">
       <div class="form-group">
         <label class="form-label" for="muncipio">Municipio y alcaldía * :</label>
-        <input class="form-control" id="muncipio" placeholder="" type="text" formControlName="muncipio"
+        <input class="form-control" id="muncipio" placeholder="" type="text" formControlName="muncipio" maxlength="120"
           (change)="setValoresStore(domicilio, 'muncipio', 'setMuncipio')" />
         <div class="d-grid">
           <div *ngIf="domicilio.get('muncipio')?.touched">
@@ -49,14 +49,14 @@
     <div class="col-md-4">
       <div class="form-group">
         <label class="form-label" for="localidad">Localidad:</label>
-        <input class="form-control" id="localidad" placeholder="" type="text" formControlName="localidad"
+        <input class="form-control" id="localidad" placeholder="" type="text" formControlName="localidad" maxlength="120"
           (change)="setValoresStore(domicilio, 'localidad', 'setLocalidad')" />
       </div>
     </div>
     <div class="col-md-4">
       <div class="form-group">
         <label class="form-label" for="colonia">Colonia:</label>
-        <input class="form-control" id="colonia" placeholder="" type="text" formControlName="colonia"
+        <input class="form-control" id="colonia" placeholder="" type="text" formControlName="colonia" maxlength="120"
           (change)="setValoresStore(domicilio, 'colonia', 'setColonia')" />
       </div>
     </div>
@@ -65,7 +65,12 @@
     <div class="col-md-8">
       <div class="form-group">
         <label class="form-label" for="calle">Calle * :</label>
-        <input class="form-control" id="calle" placeholder="" type="text" formControlName="calle"
+        <span
+              class="bi bi-question-circle-fill"
+              title="Calle y número"
+              data-bs-toggle="tooltip"
+            ></span>
+        <input class="form-control" id="calle" placeholder="" type="text" formControlName="calle" maxlength="100"
           (change)="setValoresStore(domicilio, 'calle', 'setCalle')" />
         <div class="d-grid">
           <div *ngIf="domicilio.get('calle')?.touched">
