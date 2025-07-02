@@ -13,6 +13,18 @@ import { Subject } from 'rxjs';
 import { Tramite80303Query } from '../../estados/tramite80303Query.query';
 import { takeUntil } from 'rxjs';
 
+/**
+ * Decorador de componente de Angular que define las propiedades y configuración del componente `BitacoraComponent`.
+ * 
+ * Este decorador especifica el selector del componente, los módulos importados, la plantilla HTML y los estilos asociados.
+ * 
+ * Propiedades:
+ * - `selector`: Define el nombre del selector que se utiliza para instanciar este componente en una plantilla HTML.
+ * - `standalone`: Indica que este componente es independiente y no requiere ser declarado en un módulo.
+ * - `imports`: Lista de módulos y componentes que se importan para ser utilizados dentro de este componente.
+ * - `templateUrl`: Ruta al archivo de plantilla HTML que define la estructura visual del componente.
+ * - `styleUrl`: Ruta al archivo de estilos SCSS que define la apariencia del componente.
+ */
 @Component({
   selector: 'app-bitacora',
   standalone: true,

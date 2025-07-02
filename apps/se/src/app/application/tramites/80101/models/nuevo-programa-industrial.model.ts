@@ -2,136 +2,267 @@ import { AnexoEncabezado, AnexoUnoEncabezado } from "../../../shared/models/nuev
 import { Catalogo, CatalogoPaises } from "@ng-mf/data-access-user";
 import { AnexoDosEncabezado } from "../../../shared/models/nuevo-programa-industrial.model";
 
+
 /**
- * Representa la estructura de datos para un servicio IMMEX.
- * 
- * @interface ServicioInmex
- * @property {string} [Servicio] - Nombre del servicio asociado al programa IMMEX.
- * @property {string} [RegistroContribuyentes] - Registro de contribuyentes relacionado con el servicio.
- * @property {string} [DenominaciónSocial] - Denominación social de la empresa asociada.
- * @property {string} [NumeroIMMEX] - Número de identificación del programa IMMEX.
- * @property {string} [AñoIMMEX] - Año en el que se otorgó el programa IMMEX.
+ * Representa un servicio IMMEX con información relevante sobre el programa industrial.
  */
 export interface ServicioInmex {
+  /**
+   * El nombre del servicio proporcionado.
+   * @type {string}
+   */
   Servicio?: string;
+
+  /**
+   * El registro de contribuyentes asociado al servicio.
+   * @type {string}
+   */
   RegistroContribuyentes?: string;
+
+  /**
+   * La denominación social de la empresa que utiliza el servicio.
+   * @type {string}
+   */
   DenominaciónSocial?: string;
+
+  /**
+   * El número IMMEX asignado al programa industrial.
+   * @type {string}
+   */
   NumeroIMMEX?: string;
+
+  /**
+   * El año en que se otorgó el número IMMEX.
+   * @type {string}
+   */
   AñoIMMEX?: string;
 }
+
+
 /**
- * Representa un servicio con información opcional sobre su descripción y tipo.
- * Esta interfaz se utiliza para modelar los datos relacionados con un servicio específico.
+ * Representa un servicio con información detallada.
  */
 export interface Servicio {
+  /**
+   * La descripción detallada del servicio.
+   * Este campo es opcional.
+   */
   descripiónDelServicio?: string;
+
+  /**
+   * Una descripción breve del servicio.
+   * Este campo es opcional.
+   */
   descripcion?: string;
+
+  /**
+   * El tipo del servicio.
+   * Este campo es opcional.
+   */
   tipode?: string;
 }
 
+
 /**
- * Representa la información relacionada con los servicios.
- * 
- * @interface InfoServicios
- * @property {string} seleccionaLaModalidad - Modalidad seleccionada para el servicio.
- * @property {string} folio - Número de folio asociado al servicio.
- * @property {string} ano - Año relacionado con el servicio.
+ * Representa la información de los servicios en el modelo de programa industrial.
  */
 export interface InfoServicios {
+  /**
+   * Indica la modalidad seleccionada por el usuario.
+   * @example "Modalidad A"
+   */
   seleccionaLaModalidad: string;
+
+  /**
+   * Representa el folio único asociado al servicio.
+   * @example "FOL123456"
+   */
   folio: string;
+
+  /**
+   * Año en el que se realiza el trámite o servicio.
+   * @example "2023"
+   */
   ano: string;
 }
 
 /**
- * Representa la estructura de los servicios relacionados con un programa industrial.
- * 
- * @interface Servicios
- * @property {string} seleccionaLaModalidad - Modalidad seleccionada para el servicio.
- * @property {string} folio - Número de folio asociado al servicio.
- * @property {string} ano - Año correspondiente al servicio.
+ * Representa los servicios relacionados con un programa industrial.
  */
 export interface Servicios {
+  /**
+   * La modalidad seleccionada para el servicio.
+   * @example "Modalidad A"
+   */
   seleccionaLaModalidad: string;
+
+  /**
+   * El folio único asociado al servicio.
+   * @example "12345"
+   */
   folio: string;
+
+  /**
+   * El año en el que se realiza el servicio.
+   * @example "2023"
+   */
   ano: string;
 }
 
 /**
- * Representa la estructura de un botón de acción con una acción específica y un valor asociado.
+ * Representa la estructura de un botón de acción con su correspondiente acción y valor.
  */
 export interface AccionBoton {
+  /**
+   * La acción que se ejecutará al presionar el botón.
+   * Ejemplo: "guardar", "eliminar", "actualizar".
+   */
   accion: string;
+
+  /**
+   * El valor asociado a la acción del botón.
+   * Puede representar un identificador, un estado o cualquier valor numérico relacionado.
+   */
   valor: number;
 }
 
+
 /**
  * Representa los datos de una empresa extranjera.
- * 
- * @interface DatosEmpresaExtranjera
- * @property {string} id - Identificador único de la empresa extranjera.
- * @property {string} taxIdEmpresaExt - Identificación fiscal de la empresa extranjera.
- * @property {string} nombreEmpresaExt - Nombre de la empresa extranjera.
- * @property {string} entidadFederativaEmpresaExt - Entidad federativa donde se encuentra la empresa extranjera.
- * @property {string} direccionEmpresaExtranjera - Dirección física de la empresa extranjera.
  */
 export interface DatosEmpresaExtranjera {
+  /**
+   * Identificador único de la empresa extranjera.
+   */
   id: string;
+
+  /**
+   * Identificación fiscal de la empresa extranjera.
+   */
   taxIdEmpresaExt: string;
+
+  /**
+   * Nombre de la empresa extranjera.
+   */
   nombreEmpresaExt: string;
+
+  /**
+   * Entidad federativa donde se encuentra la empresa extranjera.
+   */
   entidadFederativaEmpresaExt: string;
+
+  /**
+   * Dirección física de la empresa extranjera.
+   */
   direccionEmpresaExtranjera: string;
 }
 
+
 /**
  * Representa los datos de un catálogo utilizados en la aplicación.
- * Esta interfaz define las propiedades necesarias para configurar
- * y mostrar un elemento de catálogo en la interfaz de usuario.
- *
- * @property labelNombre - El nombre que se mostrará como etiqueta del campo.
- * @property campo - El identificador del campo asociado al catálogo.
- * @property class - La clase CSS que se aplicará al elemento para estilos personalizados.
- * @property tipo_input - El tipo de entrada (input) que se utilizará, como texto, número, etc.
- * @property required - Indica si el campo es obligatorio (true) o no (false).
- * @property opciones - Una lista opcional de países disponibles en el catálogo.
- * @property opcionesCatalogo - Una lista opcional de elementos genéricos del catálogo.
- * @property orden - El orden en el que se mostrará el elemento en la interfaz.
+ * Esta interfaz define las propiedades necesarias para configurar un catálogo con opciones y características específicas.
  */
 export interface DatosCatalago {
+  /**
+   * El nombre que se mostrará como etiqueta en el catálogo.
+   * @example "Nombre del Producto"
+   */
   labelNombre: string;
+
+  /**
+   * El nombre del campo asociado al catálogo.
+   * Este campo se utiliza para identificar el valor en el modelo de datos.
+   * @example "nombreProducto"
+   */
   campo: string;
+
+  /**
+   * La clase CSS que se aplicará al elemento del catálogo.
+   * Permite personalizar el estilo visual del catálogo.
+   * @example "form-control"
+   */
   class: string;
+
+  /**
+   * El tipo de entrada que se utilizará en el catálogo.
+   * Define el tipo de control de entrada, como texto, número, etc.
+   * @example "text"
+   */
   tipo_input: string;
+
+  /**
+   * Indica si el campo es obligatorio en el formulario.
+   * @example true
+   */
   required: boolean;
-  opciones?: CatalogoPaises[]
+
+  /**
+   * Opciones disponibles para el catálogo, representadas como una lista de países.
+   * Este campo es opcional.
+   */
+  opciones?: CatalogoPaises[];
+
+  /**
+   * Opciones adicionales disponibles para el catálogo, representadas como una lista genérica.
+   * Este campo es opcional.
+   */
   opcionesCatalogo?: Catalogo[];
+
+  /**
+   * El orden en el que se mostrará el catálogo en el formulario.
+   * @example 1
+   */
   orden: number;
 }
 
+
 /**
  * Representa la estructura de datos para los anexos dos y tres.
- * Contiene listas de encabezados para cada uno de los anexos.
+ * Esta interfaz define las listas de encabezados para los anexos dos y tres.
  */
-export interface AnnexoDosTres{
+export interface AnnexoDosTres {
+  /**
+   * Lista de encabezados para el anexo dos.
+   * Cada elemento de la lista representa un encabezado relacionado con el anexo dos.
+   */
   anexoDosTablaLista: AnexoEncabezado[];
+
+  /**
+   * Lista de encabezados para el anexo tres.
+   * Cada elemento de la lista representa un encabezado relacionado con el anexo tres.
+   */
   anexoTresTablaLista: AnexoEncabezado[];
 }
 
+
+
 /**
- * Representa la estructura de datos para el modelo de "Anexo Uno".
- * Esta interfaz define las propiedades necesarias para manejar la información
- * relacionada con la exportación, importación y navegación de datos, así como
- * la sección activa en el contexto de un programa industrial.
- *
- * Propiedades:
- * - `exportarDatosTabla`: Lista de encabezados de tipo `AnexoDosEncabezado` que representan los datos a exportar.
- * - `importarDatosTabla`: Lista de encabezados de tipo `AnexoUnoEncabezado` que representan los datos a importar.
- * - `datosParaNavegar`: Encabezado de tipo `AnexoUnoEncabezado` o `AnexoDosEncabezado` utilizado para la navegación de datos.
- * - `seccionActiva`: Cadena que indica la sección activa actual.
+ * Representa la estructura de datos para el modelo "AnnexoUno".
+ * Este modelo se utiliza para gestionar información relacionada con tablas de exportación e importación,
+ * datos de navegación y la sección activa en el contexto de un programa industrial.
  */
-export interface AnnexoUno{
+export interface AnnexoUno {
+  /**
+   * Contiene los datos de la tabla de exportación.
+   * Cada elemento de la tabla está representado por un objeto de tipo `AnexoDosEncabezado`.
+   */
   exportarDatosTabla: AnexoDosEncabezado[];
-  importarDatosTabla:AnexoUnoEncabezado[];
-  datosParaNavegar:AnexoUnoEncabezado | AnexoDosEncabezado ;
+
+  /**
+   * Contiene los datos de la tabla de importación.
+   * Cada elemento de la tabla está representado por un objeto de tipo `AnexoUnoEncabezado`.
+   */
+  importarDatosTabla: AnexoUnoEncabezado[];
+
+  /**
+   * Representa los datos utilizados para la navegación entre secciones.
+   * Puede ser un objeto de tipo `AnexoUnoEncabezado` o `AnexoDosEncabezado`.
+   */
+  datosParaNavegar: AnexoUnoEncabezado | AnexoDosEncabezado;
+
+  /**
+   * Indica la sección activa en el programa industrial.
+   * Este valor es una cadena que identifica la sección actual.
+   */
   seccionActiva: string;
 }

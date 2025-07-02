@@ -2,11 +2,11 @@ import {
   AccionBoton,
   DatosPasos,
   ListaPasosWizard,
+  WizardComponent
 } from '@ng-mf/data-access-user';
 import { Component, ViewChild } from '@angular/core';
-
 import { PASOS, TITULO_MENSAJE } from '../../constants/importacion-materias-primas.enum';
-import { WizardComponent } from '@ng-mf/data-access-user';
+
 /**
  * @component
  * @name ContenedorDePasosComponent

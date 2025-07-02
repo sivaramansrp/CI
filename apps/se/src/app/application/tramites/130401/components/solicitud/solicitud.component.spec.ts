@@ -6,7 +6,7 @@ import { ModificacionDescripcionService } from '../../services/modificacion-desc
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { of } from 'rxjs';
 import { DatosArancelaria, SolicitudTablaDatos } from '../../models/modificacion-descripcion.model';
-import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
+import { ConfiguracionColumna, ConsultaioQuery } from '@ng-mf/data-access-user';
 
 describe('SolicitudComponent', () => {
     let component: SolicitudComponent;
@@ -14,6 +14,7 @@ describe('SolicitudComponent', () => {
     let storeMock: any;
     let queryMock: any;
     let modificacionDescripcionServiceMock: any;
+    let consultaioQueryMock: any;
 
     beforeEach(async () => {
         storeMock = {
@@ -36,6 +37,10 @@ describe('SolicitudComponent', () => {
                 },
             }),
         };
+        consultaioQueryMock = {
+            selectConsultaioState$: of({ update: false }),
+        };
+
 
         modificacionDescripcionServiceMock = {
             obtenerPartidas: jest.fn().mockReturnValue(of({ datos: [] })),
@@ -50,6 +55,7 @@ describe('SolicitudComponent', () => {
                 { provide: Tramite130401Store, useValue: storeMock },
                 { provide: Tramite130401Query, useValue: queryMock },
                 { provide: ModificacionDescripcionService, useValue: modificacionDescripcionServiceMock },
+                { provide: ConsultaioQuery, useValue: consultaioQueryMock },
                 FormBuilder,
             ],
         }).compileComponents();
@@ -130,6 +136,10 @@ describe('SolicitudComponent', () => {
                 numeroFolioTramiteOriginal: '12345',
             },
         } as any;
+        component.consultaDatos = {
+            update: false,
+            readonly: false,
+        } as any;
         const cargarSolicitudSpy = jest.spyOn(component, 'cargarSolicitud');
         component.ngOnInit();
         expect(cargarSolicitudSpy).not.toHaveBeenCalled();
@@ -176,5 +186,23 @@ describe('SolicitudComponent', () => {
         component.ngOnDestroy();
         expect(destroySpy).toHaveBeenCalled();
         expect(completeSpy).toHaveBeenCalled();
+    });
+
+    it('should disable the form when soloLectura is true', () => {
+        component.soloLectura = true;
+        component.solicitudFormulario = new FormBuilder().group({
+            field: ['value'],
+        });
+        component.inicializarEstadoFormulario();
+        expect(component.solicitudFormulario.disabled).toBe(true);
+    });
+
+    it('should not disable the form when soloLectura is false', () => {
+        component.soloLectura = false;
+        component.solicitudFormulario = new FormBuilder().group({
+            field: ['value'],
+        });
+        component.inicializarEstadoFormulario();
+        expect(component.solicitudFormulario.enabled).toBe(true);
     });
 });

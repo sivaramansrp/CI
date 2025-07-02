@@ -21,7 +21,7 @@ export class PasoDosComponent implements OnInit, OnDestroy {
   tiposDocumentos: Catalogo[] = [];
   infoAlert = 'alert-info';
   catalogoDocumentos: Catalogo[] = [];
-  documentosSeleccionados = documentList.documentosSeleccionados;
+  // documentosSeleccionados = documentList.documentosSeleccionados;
   private destroy$: Subject<void> = new Subject<void>();
 
 

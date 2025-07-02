@@ -3,14 +3,15 @@ import { CommonModule } from '@angular/common';
 import { AcusePageComponent } from './acuse-page.component';
 import { AcuseComponent } from '@libs/shared/data-access-user/src';
 import { TITULO_ACUSE, ACUSE_SERVICIOS_EXTRAORDINARIOS, TXT_ALERTA_ACUSE } from '@libs/shared/data-access-user/src';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('AcusePageComponent', () => {
   let component: AcusePageComponent;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [CommonModule, AcuseComponent],
-      declarations: [AcusePageComponent],
+      imports: [CommonModule, AcuseComponent,AcusePageComponent, HttpClientTestingModule],
+      declarations: [],
     }).compileComponents();
 
     const fixture = TestBed.createComponent(AcusePageComponent);

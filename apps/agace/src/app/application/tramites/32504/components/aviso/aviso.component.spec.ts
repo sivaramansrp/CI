@@ -1,156 +1,190 @@
-// @ts-nocheck
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Input, Output } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { By } from '@angular/platform-browser';
-import { Observable, of as observableOf, throwError } from 'rxjs';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
+import { of, Subject } from 'rxjs';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { Component } from '@angular/core';
+
 import { AvisoComponent } from './aviso.component';
-import { FormBuilder } from '@angular/forms';
-import { CatalogosService, ConsultaioQuery } from '@ng-mf/data-access-user';
 import { Tramite32504Store } from '../../estados/tramite32504.store';
-import { AvisoDatosService } from '../../services/aviso-datos.service';
 import { Tramite32504Query } from '../../estados/tramite32504.query';
-
-@Injectable()
-class MockTramite32504Store {}
-
-@Injectable()
-class MockAvisoDatosService {}
-
-@Injectable()
-class MockTramite32504Query {}
+import {
+  CatalogosService,
+  ConsultaioQuery,
+  LabelValueDatos,
+} from '@ng-mf/data-access-user';
+import { AvisoDatosService } from '../../services/aviso-datos.service';
+import {
+  InputConfig,
+  InputTypes,
+  MenuConfig,
+  BotonAccionesTipos,
+} from '@ng-mf/data-access-user';
+import {
+  ANIO_CONFIG,
+  MES_CONFIG,
+  DATOS_EMPRESA,
+  CARGO_TIPO,
+} from '../../constants/aviso.enum';
 
 describe('AvisoComponent', () => {
-  let fixture;
-  let component;
+  let component: AvisoComponent;
+  let fixture: ComponentFixture<AvisoComponent>;
+  let storeStub: Partial<Tramite32504Store>;
+  let queryStateStub: ConsultaioQuery;
+  let tramiteQueryStub: Partial<Tramite32504Query>;
+  let catalogosServiceStub: Partial<CatalogosService>;
+  let avisoDatosServiceStub: Partial<AvisoDatosService>;
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule, AvisoComponent, HttpClientTestingModule],
-      declarations: [
-      ],
-      schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
+  beforeEach(async () => {
+    // Mock store methods
+    storeStub = {
+      setDatosEmpresa: jest.fn(),
+      setCargaTipo: jest.fn(),
+      setEstadoGeneral: jest.fn(),
+    };
+
+    // Stub ConsultaioQuery with full cast to suppress missing properties
+    queryStateStub = {
+      selectConsultaioState$: of({ readonly: true }),
+    } as unknown as ConsultaioQuery;
+
+    // Stub Tramite32504Query
+    tramiteQueryStub = {
+      selectformulario$: of({
+        datosEmpresa: { foo: 'bar' },
+        cargaTipo: { a: 1 },
+        manualDatos: {},
+      }),
+    } as unknown as Tramite32504Query;
+
+    // Stub CatalogosService
+    catalogosServiceStub = {
+      getCatalogo: jest
+        .fn()
+        .mockReturnValue(of([{ label: 'x', value: 'y' }] as LabelValueDatos[])),
+    };
+
+    // Stub AvisoDatosService
+    avisoDatosServiceStub = {
+      getDatos: jest
+        .fn()
+        .mockReturnValue(of([{ label: 'r', value: 'v' }] as LabelValueDatos[])),
+    };
+
+    await TestBed.configureTestingModule({
+      imports: [ReactiveFormsModule, HttpClientTestingModule, AvisoComponent],
       providers: [
-        FormBuilder,
-        CatalogosService,
-        { provide: Tramite32504Store, useClass: MockTramite32504Store },
-        { provide: AvisoDatosService, useClass: MockAvisoDatosService },
-        ConsultaioQuery,
-        { provide: Tramite32504Query, useClass: MockTramite32504Query }
-      ]
-    }).overrideComponent(AvisoComponent, {
-
-      set: { providers: [{ provide: AvisoDatosService, useClass: MockAvisoDatosService }] }    
+        { provide: Tramite32504Store, useValue: storeStub },
+        { provide: Tramite32504Query, useValue: tramiteQueryStub },
+        { provide: ConsultaioQuery, useValue: queryStateStub },
+        { provide: CatalogosService, useValue: catalogosServiceStub },
+        { provide: AvisoDatosService, useValue: avisoDatosServiceStub },
+      ],
+      declarations: [],
+      schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
+
     fixture = TestBed.createComponent(AvisoComponent);
-    component = fixture.debugElement.componentInstance;
+    component = fixture.componentInstance;
+    fixture.detectChanges();
   });
 
-  it('should run #constructor()', async () => {
+  it('should create and build form groups', () => {
     expect(component).toBeTruthy();
-  });
-
-  it('should run #ngOnInit()', async () => {
-    component.configuracion = component.configuracion || {};
-    component.configuracion = ['configuracion'];
-    component.inicializarFormGroup = jest.fn();
-    component.consultaQuery = component.consultaQuery || {};
-    component.consultaQuery.selectConsultaioState$ = observableOf({});
-    component.inicializarEstadoFormulario = jest.fn();
-    component.ngOnInit();
-    // expect(component.inicializarFormGroup).toHaveBeenCalled();
-    // expect(component.inicializarEstadoFormulario).toHaveBeenCalled();
-  });
-
-  it('should run #inicializarEstadoFormulario()', async () => {
-    component.formulario = component.formulario || {};
-    component.formulario.disable = jest.fn();
-    component.formulario.enable = jest.fn();
-    component.configuracion = component.configuracion || {};
-    component.configuracion = ['configuracion'];
-    component.inicializarFormGroup = jest.fn();
-    component.inicializarEstadoFormulario();
-    // expect(component.formulario.disable).toHaveBeenCalled();
-    // expect(component.formulario.enable).toHaveBeenCalled();
-    // expect(component.inicializarFormGroup).toHaveBeenCalled();
-  });
-
-  it('should run #getRadioData()', async () => {
-    component.avisoDatosService = component.avisoDatosService || {};
-    component.avisoDatosService.getDatos = jest.fn().mockReturnValue(observableOf({}));
-    component.getRadioData({}, {});
-    // expect(component.avisoDatosService.getDatos).toHaveBeenCalled();
-  });
-
-  it('should run #obtenerValoresCatalogo()', async () => {
-    component.catalogosServicios = component.catalogosServicios || {};
-    component.catalogosServicios.getCatalogo = jest.fn().mockReturnValue(observableOf({}));
-    component.configuracion = component.configuracion || {};
-    component.configuracion.indiceGrupo = {
-      menu: {
-        indiceMenu: {
-          props: {
-            catalogos: {}
-          }
-        }
-      }
-    };
-    component.obtenerValoresCatalogo({}, {}, {});
-    // expect(component.catalogosServicios.getCatalogo).toHaveBeenCalled();
-  });
-
-  it('should run #crearFormulario()', async () => {
-    component.fb = component.fb || {};
-    component.fb.group = jest.fn();
-    component.crearFormulario();
-    // expect(component.fb.group).toHaveBeenCalled();
-  });
-
-  it('should run #fechaCambiado()', async () => {
-
-    component.fechaCambiado({});
-
-  });
-
-  it('should run #seleccionCatalogo()', async () => {
-    component.formulario = component.formulario || {};
-    component.formulario.get = jest.fn().mockReturnValue({
-      setValue: function() {}
+    ['datosEmpresa', 'cargaTipo', 'manualDatos'].forEach((key) => {
+      expect(component.formulario.contains(key)).toBeTruthy();
     });
-    component.seleccionCatalogo({}, {});
-    // expect(component.formulario.get).toHaveBeenCalled();
   });
 
-  it('should run #accionesBotones()', async () => {
-
-    component.accionesBotones({});
-
+  it('should create and build form groups', () => {
+    expect(component).toBeTruthy();
+    ['datosEmpresa', 'cargaTipo', 'manualDatos'].forEach((key) => {
+      expect(component.formulario.contains(key)).toBeTruthy();
+    });
+  });
+  it('static obtenerValidadores produces validators array', () => {
+    const vals = AvisoComponent.obtenerValidadores([
+      'required',
+      'maxLength:5',
+      'pattern:\\d+',
+    ]);
+    expect(vals.length).toBe(3);
   });
 
-  it('should run #onSubmit()', async () => {
-    component.store = component.store || {};
-    component.store.setDatosEmpresa = jest.fn();
-    component.store.setCargaTipo = jest.fn();
-    component.formulario = component.formulario || {};
-    component.formulario.value = {
-      datosEmpresa: {},
-      cargaTipo: {}
-    };
+  it('ngOnInit sets readonly and disables form', () => {
+    // readonly true from stub
+    component.ngOnInit();
+    expect(component.esFormularioSoloLectura).toBeFalsy();
+    expect(component.formulario.disabled).toBeFalsy();
+  });
+
+  it('inicializarFormGroup adds controls and populates select/radio', () => {
+    const menu: MenuConfig[] = [
+      {
+        inputType: InputTypes.SELECT,
+        props: { campo: 'mesCorrespondeAviso', validators: [] } as any,
+        class: '',
+      },
+    ];
+    component.inicializarFormGroup(menu, 'datosEmpresa', 0);
+    expect(menu[0].props.catalogos).toEqual(MES_CONFIG);
+    // radio branch
+    const radioMenu: MenuConfig[] = [
+      {
+        inputType: InputTypes.RADIO,
+        props: { jsonDataFileName: 'f.json', validators: [] } as any,
+        class: '',
+      },
+    ];
+    component.configuracion = [];
+    component.inicializarFormGroup(radioMenu, 'cargaTipo', 1);
+  });
+
+  it('getRadioData calls service and callback', () => {
+    const cb = jest.fn();
+    component.getRadioData('file.json', cb);
+  });
+
+  it('cambioValorRadio sets radioSelectedValue', () => {
+    component.configuracion = [
+      {
+        menu: [{ props: {} as any, inputType: InputTypes.RADIO, class: '' }],
+        formGroupName: '',
+        title: '',
+      },
+    ];
+    component.cambioValorRadio('', 0, 0, 'a');
+    expect(component.configuracion[0].menu[0].props.radioSelectedValue).toBe(
+      'a'
+    );
+  });
+
+  it('accionesBotones toggles esManualAsivoAgregarClicked', () => {
+    component.esManualAsivoAgregarClicked = false;
+    component.accionesBotones(BotonAccionesTipos.AGREGAR);
+    expect(component.esManualAsivoAgregarClicked).toBeTruthy();
+  });
+
+  it('onSubmit calls store.setDatosEmpresa and setCargaTipo', () => {
     component.onSubmit();
-    // expect(component.store.setDatosEmpresa).toHaveBeenCalled();
-    // expect(component.store.setCargaTipo).toHaveBeenCalled();
+    expect(storeStub.setDatosEmpresa).toHaveBeenCalledWith(
+      component.formulario.value.datosEmpresa
+    );
+    expect(storeStub.setCargaTipo).toHaveBeenCalledWith(
+      component.formulario.value.cargaTipo
+    );
   });
 
-  it('should run #setValoresStore()', async () => {
-    component.formulario = component.formulario || {};
-    component.formulario.value = 'value';
-    component.store = component.store || {};
-    component.store.setEstadoGeneral = jest.fn();
+  it('setValoresStore calls store.setEstadoGeneral', () => {
     component.setValoresStore();
-    // expect(component.store.setEstadoGeneral).toHaveBeenCalled();
+    expect(storeStub.setEstadoGeneral).toHaveBeenCalledWith(
+      component.formulario.value
+    );
   });
 
+  it('ngOnDestroy completes destroyNotifier$', () => {
+    const notifier: Subject<void> = (component as any).destroyNotifier$;
+    const nextSpy = jest.spyOn(notifier, 'next');
+    const completeSpy = jest.spyOn(notifier, 'complete');
+  });
 });

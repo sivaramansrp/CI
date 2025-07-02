@@ -277,6 +277,20 @@ export class EvaluarComponent implements OnInit, OnDestroy {
     }
   }
   /**
+   * @method cancelar
+   * @description Método para restablecer los índices de las pestañas principales y de dictamen.
+   * 
+   * Este método se utiliza para reiniciar el flujo de navegación en el componente:
+   * - Establece el índice de la pestaña principal (`indice`) en 0.
+   * - Establece el índice de la pestaña de dictamen (`indiceDictamen`) en 1.
+   * 
+   * @returns {void}
+   */
+  cancelar(): void {
+    this.indice = 0;
+    this.indiceDictamen = 1;
+  }
+  /**
    * @method ngOnDestroy
    * @description Método del ciclo de vida que se ejecuta al destruir el componente.
    * 

@@ -1,35 +1,56 @@
-// @ts-nocheck
-import { async } from '@angular/core/testing';
-import { Injectable } from '@angular/core';
-import { Observable, of as observableOf, throwError } from 'rxjs';
-
+import { of } from 'rxjs';
 import { OperacionService } from './operacion.service';
 import { HttpClient } from '@angular/common/http';
-
-@Injectable()
-class MockHttpClient {
-  post() {};
-}
+import { Tramite319Store } from '../estados/tramite319Store.store';
 
 describe('OperacionService', () => {
-  let service;
+  let service: OperacionService;
+  let httpMock: jest.Mocked<HttpClient>;
+  let storeMock: jest.Mocked<Tramite319Store>;
 
   beforeEach(() => {
-    service = new OperacionService({});
+    httpMock = {
+      get: jest.fn(),
+    } as any;
+    storeMock = {
+      actualizarTodo: jest.fn(),
+    } as any;
+    service = new OperacionService(httpMock, storeMock);
   });
 
-  it('should run #obtenerSelectorList()', async () => {
-    service.http = service.http || {};
-    service.http.get = jest.fn().mockReturnValue(observableOf({}));
-    service.obtenerSelectorList({});
-    // expect(service.http.get).toHaveBeenCalled();
+  it('debe obtener la lista de catálogos correctamente', (done) => {
+    const mockResponse = { data: [{ id: 1, nombre: 'México' }] };
+    httpMock.get.mockReturnValue(of(mockResponse));
+    service.obtenerSelectorList('paises.json').subscribe((result) => {
+      expect(result).toEqual(mockResponse.data);
+      expect(httpMock.get).toHaveBeenCalledWith(service.url + 'paises.json');
+      done();
+    });
   });
 
-  it('should run #obtenerTablerList()', async () => {
-    service.http = service.http || {};
-    service.http.get = jest.fn().mockReturnValue(observableOf({}));
-    service.obtenerTablerList({});
-    // expect(service.http.get).toHaveBeenCalled();
+  it('debe obtener la lista de personas correctamente', (done) => {
+    const mockResponse = [{ rfc: 'XAXX010101000', nombre: 'Juan' }];
+    httpMock.get.mockReturnValue(of(mockResponse));
+    service.obtenerTablerList('personas.json').subscribe((result) => {
+      expect(result).toEqual(mockResponse);
+      expect(httpMock.get).toHaveBeenCalledWith(service.url + 'personas.json');
+      done();
+    });
   });
 
+  it('debe obtener los datos de registro de toma de muestras correctamente', (done) => {
+    const mockResponse = { datos: [], operacion: 'crear' };
+    httpMock.get.mockReturnValue(of(mockResponse));
+    service.getRegistroTomaMuestrasMercanciasData('registro.json').subscribe((result) => {
+      expect(result).toEqual(mockResponse);
+      expect(httpMock.get).toHaveBeenCalledWith(service.url + 'registro.json');
+      done();
+    });
+  });
+
+  it('debe actualizar el estado del formulario llamando a actualizarTodo en el store', () => {
+    const resp = { datos: [], operacion: 'editar' };
+    service.actualizarEstadoFormulario(resp);
+    expect(storeMock.actualizarTodo).toHaveBeenCalledWith(resp);
+  });
 });

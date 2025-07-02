@@ -69,7 +69,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
     public store: Tramite6403Store,
     public tramiteQuery: Tramite6403Query,
     private consultaQuery: ConsultaioQuery,
-    public reterno: RetornoDePartesService) {
+    public retornoDePartesService: RetornoDePartesService) {
     // El constructor se utiliza para la inyección de dependencias.
   }
 
@@ -107,7 +107,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    * Obtiene los datos de consulta del servicio y actualiza el store.
    */
   public guardarDatosFormularios(): void {
-    this.reterno
+    this.retornoDePartesService
       .getRegistroTomaMuestrasMercanciasData().pipe(takeUntil(this.destroyed$)).subscribe((respuesta) => {
         if (respuesta.success) {
           this.esDatosRespuesta = true;

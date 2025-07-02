@@ -1,5 +1,5 @@
 import { DatosDelTramiteComponent } from './datos-del-tramite.component';
-import { FormBuilder } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { of, Subject } from 'rxjs';
 
 describe('DatosDelTramiteComponent', () => {
@@ -51,6 +51,13 @@ describe('DatosDelTramiteComponent', () => {
       new FormBuilder(),
       mockValidacionesService
     );
+    component.tramiteForm = new FormBuilder().group({
+      fecha: new FormControl(''),
+      fechaSeleccionada: new FormControl(''),
+      fechasDatos: new FormControl([]),
+      fechasSeleccionadas: new FormControl([]),
+      valorSeleccionado: new FormControl('')
+    });
   });
 
   it('should create the component', () => {
@@ -140,4 +147,71 @@ describe('DatosDelTramiteComponent', () => {
     expect(sub1.unsubscribe).toHaveBeenCalled();
     expect(sub2.unsubscribe).toHaveBeenCalled();
   });
+
+  it('should open the popup and update the store', () => {
+    component.openPopup();
+
+    expect(component.isPopupOpen).toBe(true);
+    expect(mockStore.setIsPopupOpen).toHaveBeenCalledWith(true);
+  });
+
+  it('should close the popup and update the store', () => {
+    component.closePopup();
+
+    expect(component.isPopupOpen).toBe(false);
+    expect(component.isPopupClose).toBe(false);
+    expect(mockStore.setIsPopupOpen).toHaveBeenCalledWith(false);
+    expect(mockStore.setIsPopupClose).toHaveBeenCalledWith(false);
+  });
+
+  it('should hide the current table and update the store', () => {
+    component.nextTabla();
+
+    expect(component.showTabla).toBe(false);
+    expect(mockStore.setShowTabla).toHaveBeenCalledWith(false);
+  });
+
+  it('should return true if the form field is valid', () => {
+    const form = new FormGroup({});
+    const fieldName = 'someField';
+
+    (mockValidacionesService.isValid as jest.Mock).mockReturnValue(true);
+
+    const result = component.isValid(form, fieldName);
+
+    expect(mockValidacionesService.isValid).toHaveBeenCalledWith(form, fieldName);
+    expect(result).toBe(true);
+  });
+
+  it('should call data fetch methods and subscribe to query streams', () => {
+    component.esFormularioSoloLectura = false;
+
+    jest.spyOn(component, 'getAduanaIngresara');
+    jest.spyOn(component, 'getAno');
+    jest.spyOn(component, 'getCondicion');
+    jest.spyOn(component, 'getPais');
+    jest.spyOn(component, 'donanteDomicilio');
+    jest.spyOn(component, 'guardarDatosDelFormulario');
+
+    component.ngOnInit();
+
+    expect(component.getAduanaIngresara).toHaveBeenCalled();
+    expect(component.getAno).toHaveBeenCalled();
+    expect(component.getCondicion).toHaveBeenCalled();
+    expect(component.getPais).toHaveBeenCalled();
+
+    expect(component.donanteDomicilio).toHaveBeenCalled();
+    expect(component.guardarDatosDelFormulario).not.toHaveBeenCalled();
+  });
+
+  it('should call guardarDatosDelFormulario if esFormularioSoloLectura is true', () => {
+    component.esFormularioSoloLectura = true;
+    jest.spyOn(component, 'donanteDomicilio');
+    jest.spyOn(component, 'guardarDatosDelFormulario');
+    component.ngOnInit();
+
+    expect(component.guardarDatosDelFormulario).toHaveBeenCalled();
+    expect(component.donanteDomicilio).not.toHaveBeenCalled();
+  });
+
 });

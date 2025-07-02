@@ -1,7 +1,7 @@
 import { HttpClientTestingModule, HttpTestingController } from "@angular/common/http/testing";
 import { ValidarInicialmenteCertificadoService } from "./validar-inicialmente-certificado.service";
 import { TestBed } from "@angular/core/testing";
-import { CatalogoLista, DisponiblesTabla, ProductorExportador, SeleccionadasTabla } from "../models/validar-inicialmente-certificado.model";
+import { CatalogoLista, DisponiblesTabla, ProductorExportador, SeleccionadasTabla, RespuestaConsulta } from "../models/validar-inicialmente-certificado.model";
 
 describe('ValidarInicialmenteCertificadoService', () => {
     let service: ValidarInicialmenteCertificadoService;
@@ -161,6 +161,117 @@ describe('ValidarInicialmenteCertificadoService', () => {
         });
 
         const req = httpMock.expectOne('assets/json/110214/pais.json');
+        expect(req.request.method).toBe('GET');
+        req.flush(mockResponse);
+    });
+    it('should fetch getDatosConsulta', () => {
+        const mockResponse: RespuestaConsulta = {
+            "success": true,
+            "message": "",
+            "datos": {
+                "tercerOperador": true,
+                "blnPeriodo": "0",
+                "grupoOperador": {
+                    "nombre": "string",
+                    "apellidoPrimer": "string",
+                    "apellidoSegundo": "string",
+                    "numeroFiscal": "string",
+                    "razonSocial": "string",
+                },
+                "grupoTratado": {
+                    "tratado": "0",
+                    "pais": "5",
+                    "fraccionArancelaria": "1",
+                    "numeroRegistro": "producto",
+                    "nombreComercial": "comercial",
+                    "fechaFinalInput": "05/06/2025",
+                    "fechaInicialInput": "05/06/2025"
+                },
+                "mercanciaSeleccionadasTablaDatos": [
+                    {
+                        "id": 0,
+                        "fraccionArancelaria": "08888888",
+                        "cantidad": "100.00",
+                        "unidadMedida": "Caja",
+                        "valorMercancia": "100.00",
+                        "tipoFactura": "Manual",
+                        "numFactura": "1122232",
+                        "complementoDescripcion": "CAJA ROJA GRANDE",
+                        "fechaFactura": "2015-03-01",
+                        "rfcProductor": ""
+                    }
+                ],
+                "mercanciaDisponsiblesTablaDatos": [
+                    {
+                        "fraccionArancelaria": "34029002",
+                        "nombreTecnico": "Composiciones constituidas por polialquifenol-formaldehido oxietilado y/o polioxipropileno oxietilado, aunque contengan solventes orgánicos, para la fabricación de de hulsificantes para la industria petrolera.",
+                        "nombreComercial": "PRUEBA DE LA FIRMA DE ORIGEN",
+                        "numeroRegistroProductos": "254023028918",
+                        "fechaVencimiento": "2033-04-26",
+                        "fechaExpedicion": "2033-03-23"
+                    }
+                ],
+                "observaciones": "Observaciones",
+                "idioma": "1",
+                "entidadFederativa": "7",
+                "representacionFederal": "1",
+                "grupoReceptor": {
+                    "nombre": "Nombre",
+                    "apellidoPrimer": "Primer ",
+                    "apellidoSegundo": "Segundo",
+                    "numeroFiscal": "fiscal",
+                    "razonSocial": "https://www.google.com"
+                },
+                "grupoDeDirecciones": {
+                    "ciudad": "provincia",
+                    "calle": "Calle",
+                    "numeroLetra": "letra",
+                    "telefono": "123456789",
+                    "correoElectronico": "test@gmail.com"
+                },
+                "grupoRepresentativo": {
+                    "lugar": "Lugar",
+                    "nombreExportador": "exportador",
+                    "empresa": "Empresa",
+                    "cargo": "Cargo",
+                    "telefono": "123456789",
+                    "correoElectronico": "test@gmail.com"
+                },
+                "datosConfidencialesProductor": true,
+                "productorMismoExportador": true,
+                "productoresExportador": [
+                    {
+                        "id": 0,
+                        "nombreProductor": "LAURA CONTRERAS",
+                        "numeroRegistroFiscal": "AEVL621207B95",
+                        "direccion": "SAN GABRIEL 144 DURANGO",
+                        "correoElectronico": "laura2992@hotmail.com",
+                        "telefono": "044-6182999535",
+                        "fax": "6182999535"
+                    }
+                ],
+                "historicoMercanciaSeleccionadasTablaDatos": [
+                    {
+                        "id": 0,
+                        "rfcProductor": "",
+                        "fraccionArancelaria": "08888888",
+                        "cantidad": "100.00",
+                        "unidadMedida": "Caja",
+                        "valorMercancia": "100.00",
+                        "tipoFactura": "Manual",
+                        "numFactura": "1122232",
+                        "complementoDescripcion": "CAJA ROJA GRANDE",
+                        "fechaFactura": "2015-03-01"
+                    }
+                ]
+            }
+        }
+
+        service.getDatosConsulta().subscribe((response) => {
+            expect(response).toEqual(mockResponse);
+        });
+
+        const req = httpMock.expectOne('assets/json/110214/consulta-110214.json');
         expect(req.request.method).toBe('GET');
         req.flush(mockResponse);
     });

@@ -132,6 +132,84 @@ describe('SeccionSubcontratadosComponent', () => {
     ).toHaveBeenCalledWith(2);
   });
 
+  it('should update store on actualizarCatseleccionados', () => {
+    solicitud32605StoreMock.actualizarCatseleccionados = jest.fn();
+    const catalogo: Catalogo = { id: 5 } as Catalogo;
+    solicitud32605StoreMock.actualizarCatseleccionados(catalogo.id);
+    expect(solicitud32605StoreMock.actualizarCatseleccionados).toHaveBeenCalledWith(5);
+  });
+
+  it('should update store on actualizarServicio', () => {
+    solicitud32605StoreMock.actualizarServicio = jest.fn();
+    const catalogo: Catalogo = { id: 7 } as Catalogo;
+    solicitud32605StoreMock.actualizarServicio(catalogo.id);
+    expect(solicitud32605StoreMock.actualizarServicio).toHaveBeenCalledWith(7);
+  });
+
+  it('should update store on actualizar190', () => {
+    solicitud32605StoreMock.actualizar190 = jest.fn();
+    solicitud32605StoreMock.actualizar190('valor190');
+    expect(solicitud32605StoreMock.actualizar190).toHaveBeenCalledWith('valor190');
+    solicitud32605StoreMock.actualizar190(190);
+    expect(solicitud32605StoreMock.actualizar190).toHaveBeenCalledWith(190);
+  });
+
+  it('should update store on actualizar191', () => {
+    solicitud32605StoreMock.actualizar191 = jest.fn();
+    solicitud32605StoreMock.actualizar191('valor191');
+    expect(solicitud32605StoreMock.actualizar191).toHaveBeenCalledWith('valor191');
+    solicitud32605StoreMock.actualizar191(191);
+    expect(solicitud32605StoreMock.actualizar191).toHaveBeenCalledWith(191);
+  });
+
+  it('should update store on actualizar199', () => {
+    solicitud32605StoreMock.actualizar199 = jest.fn();
+    solicitud32605StoreMock.actualizar199('valor199');
+    expect(solicitud32605StoreMock.actualizar199).toHaveBeenCalledWith('valor199');
+    solicitud32605StoreMock.actualizar199(199);
+    expect(solicitud32605StoreMock.actualizar199).toHaveBeenCalledWith(199);
+  });
+
+  it('should update store on actualizarEmpleados', () => {
+    solicitud32605StoreMock.actualizarEmpleados = jest.fn();
+    const event = { target: { value: '33' } } as unknown as Event;
+    const value = (event.target as HTMLInputElement | null)?.value;
+    solicitud32605StoreMock.actualizarEmpleados(value);
+    expect(solicitud32605StoreMock.actualizarEmpleados).toHaveBeenCalledWith('33');
+  });
+
+  it('should update store on actualizarBimestre', () => {
+    solicitud32605StoreMock.actualizarBimestre = jest.fn();
+    const catalogo: Catalogo = { id: 2 } as Catalogo;
+    solicitud32605StoreMock.actualizarBimestre(catalogo.id);
+    expect(solicitud32605StoreMock.actualizarBimestre).toHaveBeenCalledWith(2);
+  });
+
+  it('should update store on actualizar2034', () => {
+    solicitud32605StoreMock.actualizar2034 = jest.fn();
+    solicitud32605StoreMock.actualizar2034('valor2034');
+    expect(solicitud32605StoreMock.actualizar2034).toHaveBeenCalledWith('valor2034');
+    solicitud32605StoreMock.actualizar2034(2034);
+    expect(solicitud32605StoreMock.actualizar2034).toHaveBeenCalledWith(2034);
+  });
+
+  it('should update store on actualizar236', () => {
+    solicitud32605StoreMock.actualizar236 = jest.fn();
+    solicitud32605StoreMock.actualizar236('valor236');
+    expect(solicitud32605StoreMock.actualizar236).toHaveBeenCalledWith('valor236');
+    solicitud32605StoreMock.actualizar236(236);
+    expect(solicitud32605StoreMock.actualizar236).toHaveBeenCalledWith(236);
+  });
+
+  it('should update store on actualizar237', () => {
+    solicitud32605StoreMock.actualizar237 = jest.fn();
+    solicitud32605StoreMock.actualizar237('valor237');
+    expect(solicitud32605StoreMock.actualizar237).toHaveBeenCalledWith('valor237');
+    solicitud32605StoreMock.actualizar237(237);
+    expect(solicitud32605StoreMock.actualizar237).toHaveBeenCalledWith(237);
+  });
+
+
   it('should emit data on cerrarModal', () => {
     jest.spyOn(component.seccionSubcontratados, 'emit');
     component.subcontratadosForm.setValue({
