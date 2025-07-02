@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DatosProcedureQuery } from '../../../../estados/queries/tramites261101.query';
 import { DatosProcedureState } from '../../../../estados/tramites/tramites261101.store';
 import { DatosProcedureStore } from '../../../../estados/tramites/tramites261101.store';
@@ -10,7 +10,7 @@ import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Subject } from 'rxjs';
-import { TituloComponent } from '@libs/shared/data-access-user/src';
+import { TituloComponent } from '@ng-mf/data-access-user';
 import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
 
@@ -26,14 +26,13 @@ export class DatosestablecimientoComponent implements OnInit, OnDestroy {
  * Formulario reactivo para datos preoperativos.
  */
   datosdelestablecimiento!: FormGroup;
-  /** Subject para notificar la destrucción del componente */
-  private destroy$ = new Subject<void>();
+
   /**
  * Variable que almacena el estado de la sección actual del procedimiento.
  * Se utiliza para gestionar y acceder a los datos relacionados con el estado
  * del procedimiento en curso.
  */
-  private seccionState!: DatosProcedureState;
+  public seccionState!: DatosProcedureState;
   /**
    * Subject para notificar la destrucción del componente.
    */
@@ -75,6 +74,39 @@ export class DatosestablecimientoComponent implements OnInit, OnDestroy {
       .subscribe();
   }
 
+   /**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.
+   * Además, obtiene la información del catálogo de mercancía.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.crearFormulario();
+    }
+  }
+
+  /**
+   * @method
+   * @name guardarDatosFormulario
+   * @description
+   * Inicializa los formularios y obtiene los datos de la tabla.
+   * Dependiendo del modo de solo lectura (`esFormularioSoloLectura`),
+   * deshabilita o habilita todos los formularios del componente.
+   * Si el formulario está en modo solo lectura, todos los formularios se deshabilitan para evitar modificaciones.
+   * Si no está en modo solo lectura, todos los formularios se habilitan para permitir la edición.
+   *
+   * @returns {void}
+   */
+  guardarDatosFormulario(): void {
+    this.crearFormulario();
+    if (this.esFormularioSoloLectura) {
+      this.datosdelestablecimiento.disable();
+    } else {
+      this.datosdelestablecimiento.enable();
+    }
+  }
+
   /**
  * Gancho de ciclo de vida `OnInit`.
  * 
@@ -85,6 +117,7 @@ export class DatosestablecimientoComponent implements OnInit, OnDestroy {
  *   obtenidos del estado actual.
  */
   ngOnInit(): void {
+    this.getValorStore();
     this.inicializarEstadoFormulario();
   }
 
@@ -97,20 +130,12 @@ export class DatosestablecimientoComponent implements OnInit, OnDestroy {
  * - `denominacion`: Representa la denominación del establecimiento, cuyo valor inicial
  *   se obtiene de la propiedad `denominacion` del estado de la sección (`seccionState`).
  */
-  crearFormulario(): void {
-    this.query.selectProrroga$
-    .pipe(
-      takeUntil(this.destroyNotifier$),
-      map((seccionState) => {
-        this.seccionState = seccionState;
-      })
-    )
-    .subscribe()
+  crearFormulario(): void {   
     this.datosdelestablecimiento = this.fb.group({
-      denominacion: [this.seccionState
-        ?.denominacion]
+      denominacion: [this.seccionState?.['denominacion']]
     });
   }
+  
   /**
     * Pasa el valor de un campo del formulario a la tienda para la gestión del estado.
     * @param form - El formulario reactivo.
@@ -122,65 +147,22 @@ export class DatosestablecimientoComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Obtiene el estado actual del trámite desde el store.
+   */
+  getValorStore(): void {
+    this.query.selectProrroga$.pipe(
+      takeUntil(this.destroyNotifier$)
+    ).subscribe(
+      (data) => {
+        this.seccionState = data;
+      });    
+  }
+
+  /**
 * Gancho de ciclo de vida OnDestroy
 */
   ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
-  }
-/**
- * Inicializa el estado del formulario.
- * 
- * Este método evalúa si el formulario debe ser inicializado en modo solo lectura o en modo editable.
- * 
- * 1. Si el formulario está en modo solo lectura (`esFormularioSoloLectura`):
- *    - Llama al método `guardarDatosFormulario` para cargar los datos y deshabilitar el formulario.
- * 
- * 2. Si el formulario no está en modo solo lectura:
- *    - Llama al método `crearFormulario` para inicializar el formulario reactivo.
- * 
- * 3. Se suscribe al observable `selectProrroga$` del servicio `DatosProcedureQuery` para obtener
- *    el estado actual del procedimiento y lo asigna a la variable `seccionState`.
- * 
- * Este método es útil para configurar el estado inicial del formulario y sincronizarlo
- * con los datos del estado global de la aplicación.
- * 
- * @returns {void}
- */
-  inicializarEstadoFormulario(): void {
-    if (this.esFormularioSoloLectura) {
-      this.guardarDatosFormulario();
-    } else {
-
-      this.crearFormulario();
-    }
-    this.query.selectProrroga$?.pipe(takeUntil(this.destroy$))
-      .subscribe((data: DatosProcedureState) => {
-        this.seccionState = data;
-      });
-  }
-
-/**
- * Carga los datos del formulario y actualiza su estado.
- * 
- * Este método realiza las siguientes acciones:
- * 
- * 1. Llama al método `crearFormulario` para inicializar el formulario reactivo con los datos obtenidos.
- * 2. Evalúa si el formulario está en modo solo lectura (`esFormularioSoloLectura`):
- *    - Si está en modo solo lectura, deshabilita el formulario utilizando el método `disable`.
- *    - Si no está en modo solo lectura, habilita el formulario utilizando el método `enable`.
- * 
- * Este método es útil para sincronizar los datos del formulario con el estado global de la aplicación
- * y configurar su estado (habilitado o deshabilitado) según corresponda.
- * 
- * @returns {void}
- */
-  guardarDatosFormulario(): void {
-    this.crearFormulario();
-    if (this.esFormularioSoloLectura) {
-      this.datosdelestablecimiento.disable();
-    } else{
-      this.datosdelestablecimiento.enable();
-    }
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }
