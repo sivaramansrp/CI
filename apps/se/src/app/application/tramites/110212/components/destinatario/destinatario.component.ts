@@ -286,15 +286,6 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Obtiene el grupo de transporte del formulario.
-   *
-   * @returns {FormGroup} El grupo de transporte.
-   */
-  get grupoDeTransporte(): FormGroup {
-    return this.registroFormulario.get('grupoDeTransporte') as FormGroup;
-  }
-
-  /**
    * Obtiene el grupo receptor del formulario.
    *
    * @returns {FormGroup} El grupo receptor.

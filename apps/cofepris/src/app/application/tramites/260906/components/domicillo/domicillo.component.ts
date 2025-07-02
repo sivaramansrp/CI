@@ -544,9 +544,8 @@ export class DomicilloComponent implements OnInit, OnDestroy {
 
   /**
    * Inicializa el estado del formulario según modo solo lectura
-   * @private
    */
-  private inicializarEstadoFormulario(): void {
+  inicializarEstadoFormulario(): void {
     if (this.soloLectura) {
       this.domicilio?.disable();
       this.formAgente?.disable();

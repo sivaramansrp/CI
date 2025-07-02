@@ -8,6 +8,7 @@ import { Observable, of as observableOf, throwError } from 'rxjs';
 
 import { Component } from '@angular/core';
 import { PasoUnoComponent } from './paso-uno.component';
+import { provideHttpClient } from '@angular/common/http';
 
 describe('PasoUnoComponent', () => {
   let fixture;
@@ -19,7 +20,7 @@ describe('PasoUnoComponent', () => {
       declarations: [],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
       providers: [
-
+        provideHttpClient()
       ]
     }).overrideComponent(PasoUnoComponent, {
 

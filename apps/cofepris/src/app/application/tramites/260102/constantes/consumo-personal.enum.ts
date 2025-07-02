@@ -1,47 +1,75 @@
 /**
- * Define una constante que representa la lista de pasos para un asistente (wizard).
- * Cada paso incluye su índice, título, estado de actividad y estado de completitud.
+ * Arreglo constante que define los pasos del proceso para la gestión de permisos.
+ * Cada objeto representa un paso específico con su índice, título, y los estados de activo y completado.
  *
- * Índice numérico del paso.
- * Título descriptivo del paso.
- * Indica si el paso está actualmente activo y visible.
- * Indica si el paso ha sido completado.
+ * @property {number} indice - El número de orden del paso dentro del proceso.
+ * @property {string} titulo - El nombre descriptivo del paso.
+ * @property {boolean} activo - Indica si el paso está actualmente activo para el usuario.
+ * @property {boolean} completado - Indica si el paso ya ha sido completado.
+ *
+ * Ejemplo de uso:
+ * - Para mostrar el flujo de pasos en un formulario de solicitud.
+ * - Para controlar la navegación entre pasos según el estado de cada uno.
  */
 export const PASOS = [
     {
-      indice: 1,
-      titulo: 'Capturar solicitud',
-      activo: true,
-      completado: true,
+        indice: 1,
+        titulo: 'Capturar solicitud',
+        activo: true,
+        completado: true,
     },
     {
-      indice: 2,
-      titulo: 'Anexar requisitos',
-      activo: false,
-      completado: false,
+        indice: 2,
+        titulo: 'Anexar requisitos',
+        activo: false,
+        completado: false,
     },
     {
-      indice: 4,
-      titulo: 'Firmar solicitud',
-      activo: false,
-      completado: false,
-    },
-  ];
+        indice: 3,
+        titulo: 'Firmar solicitud',
+        activo: false,
+        completado: false,
+    }
+];
+
+/**
+ * Objeto que agrupa los estados de validación de las secciones correspondientes a los pasos de un trámite de permiso de importación.
+ *
+ * @property {object} PASO_1 - Contiene los estados de validación de las secciones del primer paso del trámite.
+ * @property {boolean} PASO_1.VALIDACION_SECCION_1 - Indica si la Sección 1 del Paso 1 ha sido validada correctamente.
+ * @property {boolean} PASO_1.VALIDACION_SECCION_2 - Indica si la Sección 2 del Paso 1 ha sido validada correctamente.
+ * @property {boolean} PASO_1.VALIDACION_SECCION_3 - Indica si la Sección 3 del Paso 1 ha sido validada correctamente.
+ * @property {object} PASO_2 - Contiene el estado de validación de la sección del segundo paso del trámite.
+ * @property {boolean} PASO_2.VALIDACION_SECCION - Indica si la única sección del Paso 2 ha sido validada correctamente.
+ */
+export const SECCIONES_TRAMITE_260102 = {
+  /**
+   * Agrupa los estados de validación de las secciones del primer paso del trámite.
+   */
+  PASO_1: {
+    /**
+     * Indica si la Sección 1 del Paso 1 ha sido validada correctamente.
+     */
+    VALIDACION_SECCION_1: false,
+
+    /**
+     * Indica si la Sección 2 del Paso 1 ha sido validada correctamente.
+     */
+    VALIDACION_SECCION_2: true,
+
+    /**
+     * Indica si la Sección 3 del Paso 1 ha sido validada correctamente.
+     */
+    VALIDACION_SECCION_3: true,
+  },
 
   /**
-* Secciones a mostrar dentro de cada Paso de acuerdo al trámite
-*/
-export const SECCIONES_TRAMITE_260102 = {
-    PASO_1: {
-      VALIDACION_SECCION_1: false,
-      VALIDACION_SECCION_2: true,
-      VALIDACION_SECCION_3: false,
-      VALIDACION_SECCION_4: false,
-    },
-    PASO_2: {
-      VALIDACION_SECCION: true,
-    },
-    PASO_3: {
-      requiereValidacion: true,
-    },
-  };
+   * Agrupa el estado de validación del segundo paso del trámite.
+   */
+  PASO_2: {
+    /**
+     * Indica si la única sección del Paso 2 ha sido validada correctamente.
+     */
+    VALIDACION_SECCION: false,
+  }
+};
