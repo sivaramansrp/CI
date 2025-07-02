@@ -4,6 +4,7 @@ import { PasoTresComponent } from './paso-tres.component';
 import { FirmaElectronicaComponent } from '@libs/shared/data-access-user/src';
 import { ToastrModule } from 'ngx-toastr';
 import { Router } from '@angular/router';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('PasoTresComponent', () => {
   let component: PasoTresComponent;
@@ -19,6 +20,7 @@ describe('PasoTresComponent', () => {
       declarations: [PasoTresComponent],
       imports: [
         FirmaElectronicaComponent,
+        HttpClientTestingModule,
         ToastrModule.forRoot()
       ],
       providers: [
