@@ -189,6 +189,15 @@ export function createInitialState(): Tramite260219State {
   };
 }
 
+/**
+ * @class Tramite260219Store
+ * @description
+ * Clase que extiende `Store` para administrar el estado de `Tramite260219State`.
+ * Proporciona métodos para actualizar diferentes secciones del estado relacionado con el trámite 260219.
+ *
+ * @providedIn root
+ * Este servicio está disponible en toda la aplicación a través del inyector raíz.
+ */
 @Injectable({
   providedIn: 'root',
 })

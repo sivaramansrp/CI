@@ -23,61 +23,124 @@ import { SociaoAccionistas } from '../../../shared/models/complimentos.model';
 import { Store } from '@datorama/akita';
 import { StoreConfig } from '@datorama/akita';
 
+
 /**
- * Representa el estado de Tramite80101 en la aplicación.
- *
- * @interface Tramite80101State
- *
- * @property {Servicios} infoRegistro - Información del registro de servicios.
- * @property {Catalogo[]} aduanaDeIngreso - Lista de aduanas de ingreso disponibles.
- * @property {Servicio[]} datosImmex - Datos relacionados con el programa IMMEX.
- * @property {ServicioInmex[]} datos - Información detallada de servicios IMMEX.
- * @property {Catalogo} aduanaDeIngresoSelecion - Aduana de ingreso seleccionada.
- * @property {{ [key: string]: boolean }} formaValida - Validación de formularios por clave.
- * @property {ServicioInmex[]} empresas - Lista de empresas relacionadas con IMMEX.
- * @property {Servicio[]} servicios - Lista de servicios disponibles.
- * @property {string} rfcEmpresa - RFC de la empresa.
- * @property {string} numeroPrograma - Número del programa IMMEX.
- * @property {string} tiempoPrograma - Duración del programa IMMEX.
- * @property {CatalogoPaises[]} paisesOrigen - Lista de países de origen.
- * @property {DatosEmpresaExtranjera[]} datosEmpresaExtranjera - Información de empresas extranjeras.
- * @property {DatosEmpresaExtranjera} formaEmpresaExtranjera - Detalles de la empresa extranjera seleccionada.
- * @property {DatosComplimentos} datosComplimentos - Información de complementos relacionados.
- * @property {SociaoAccionistas[]} tablaDatosComplimentos - Tabla de datos de socios accionistas nacionales.
- * @property {SociaoAccionistas[]} tablaDatosComplimentosExtranjera - Tabla de datos de socios accionistas extranjeros.
- * @property {EmpressaSubFabricantePlantas} empressaSubFabricantePlantas - Información de subfabricantes y plantas.
- * @property {AnnexoDosTres} annexoDosTres - Información del anexo dos y tres.
- * @property {AnnexoUno} annexoUno - Información del anexo uno.
- * @property {number} indicePrevioRuta - Índice previo de la ruta seleccionada.
- * @property {FederatariosEncabezado[]} tablaDatosFederatarios - Tabla de datos de fedatarios públicos.
+ * Representa el estado de Tramite80101.
  */
 export interface Tramite80101State {
+  /**
+   * Información del registro de servicios.
+   */
   infoRegistro: Servicios;
+
+  /**
+   * Lista de aduanas de ingreso disponibles.
+   */
   aduanaDeIngreso: Catalogo[];
+
+  /**
+   * Datos relacionados con IMMEX.
+   */
   datosImmex: Servicio[];
+
+  /**
+   * Información detallada de servicios IMMEX.
+   */
   datos: ServicioInmex[];
+
+  /**
+   * Aduana de ingreso seleccionada.
+   */
   aduanaDeIngresoSelecion: Catalogo;
+
+  /**
+   * Validación de la forma, donde cada clave representa un campo y su valor indica si es válido.
+   */
   formaValida: { [key: string]: boolean };
+
+  /**
+   * Lista de empresas relacionadas con el servicio IMMEX.
+   */
   empresas: ServicioInmex[];
+
+  /**
+   * Lista de servicios disponibles.
+   */
   servicios: Servicio[];
+
+  /**
+   * RFC de la empresa.
+   */
   rfcEmpresa: string;
+
+  /**
+   * Número del programa IMMEX.
+   */
   numeroPrograma: string;
+
+  /**
+   * Tiempo de duración del programa IMMEX.
+   */
   tiempoPrograma: string;
+
+  /**
+   * Lista de países de origen disponibles.
+   */
   paisesOrigen: CatalogoPaises[];
+
+  /**
+   * Datos de empresas extranjeras relacionadas.
+   */
   datosEmpresaExtranjera: DatosEmpresaExtranjera[];
+
+  /**
+   * Información de la forma de la empresa extranjera.
+   */
   formaEmpresaExtranjera: DatosEmpresaExtranjera;
 
+  /**
+   * Datos complementarios relacionados con el trámite.
+   */
   datosComplimentos: DatosComplimentos;
 
+  /**
+   * Tabla de datos complementarios de socios y accionistas.
+   */
   tablaDatosComplimentos: SociaoAccionistas[];
+
+  /**
+   * Tabla de datos complementarios de socios y accionistas extranjeros.
+   */
   tablaDatosComplimentosExtranjera: SociaoAccionistas[];
 
+  /**
+   * Información de plantas de subfabricantes de la empresa.
+   */
   empressaSubFabricantePlantas: EmpressaSubFabricantePlantas;
+
+  /**
+   * Información relacionada con los anexos dos y tres.
+   */
   annexoDosTres: AnnexoDosTres;
+
+  /**
+   * Información relacionada con el anexo uno.
+   */
   annexoUno: AnnexoUno;
 
+  /**
+   * Índice previo de la ruta seleccionada.
+   */
   indicePrevioRuta: number;
+
+  /**
+   * Tabla de datos de federatarios.
+   */
   tablaDatosFederatarios: FederatariosEncabezado[];
+
+  /**
+   * Información detallada de federatarios.
+   */
   datosFederatarios: FederatariosEncabezado;
 }
 
@@ -244,6 +307,9 @@ export const INITIAL_AMPLIACION_SERVICIOS_STATE: Tramite80101State = {
 @Injectable({ providedIn: 'root' })
 @StoreConfig({ name: 'tramite-80102', resettable: true })
 export class Tramite80101Store extends Store<Tramite80101State> {
+  /**
+   * Crea una instancia de `Tramite80101Store` con el estado inicial definido en `INITIAL_AMPLIACION_SERVICIOS_STATE`.
+   */
   constructor() {
     super(INITIAL_AMPLIACION_SERVICIOS_STATE);
   }

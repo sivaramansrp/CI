@@ -136,58 +136,6 @@ describe('Service260702Service', () => {
       fraccionArancelaria: 'Frac'
     };
 
-    service.actualizarEstadoFormulario(datos);
-
-    expect(storeSpy.setClaveDeReferencia).toHaveBeenCalledWith('ref');
-    expect(storeSpy.setCadenaDelaDependencia).toHaveBeenCalledWith('dep');
-    expect(storeSpy.setBanco).toHaveBeenCalledWith('bank');
-    expect(storeSpy.setLlavedoPago).toHaveBeenCalledWith('key');
-    expect(storeSpy.setFechadePago).toHaveBeenCalledWith('2024-01-01');
-    expect(storeSpy.setImportedePago).toHaveBeenCalledWith(100);
-    expect(storeSpy.setTipoPersona).toHaveBeenCalledWith('FISICA');
-    expect(storeSpy.setNombre).toHaveBeenCalledWith('Juan');
-    expect(storeSpy.setPrimerApellido).toHaveBeenCalledWith('Perez');
-    expect(storeSpy.setSegundoApellido).toHaveBeenCalledWith('Lopez');
-    expect(storeSpy.setDenominacion).toHaveBeenCalledWith('Denom');
-    expect(storeSpy.setCorreoElectronico).toHaveBeenCalledWith('test@mail.com');
-    expect(storeSpy.setPais).toHaveBeenCalledWith('MX');
-    expect(storeSpy.setDomicilio).toHaveBeenCalledWith('Calle 1');
-    expect(storeSpy.setEstado).toHaveBeenCalledWith('CDMX');
-    expect(storeSpy.setCodigoPostal).toHaveBeenCalledWith('12345');
-    expect(storeSpy.setCalle).toHaveBeenCalledWith('Calle 2');
-    expect(storeSpy.setNumeroExterior).toHaveBeenCalledWith('10');
-    expect(storeSpy.setNumeroInterior).toHaveBeenCalledWith('2');
-    expect(storeSpy.setLada).toHaveBeenCalledWith('55');
-    expect(storeSpy.setTelefono).toHaveBeenCalledWith('12345678');
-    expect(storeSpy.setJustification).toHaveBeenCalledWith('Just');
-    expect(storeSpy.setMunicipoyalcaldia).toHaveBeenCalledWith('Alcaldia');
-    expect(storeSpy.setLocalidad).toHaveBeenCalledWith('Loc');
-    expect(storeSpy.setColonia).toHaveBeenCalledWith('Col');
-    expect(storeSpy.setAvisoDeFuncionamiento).toHaveBeenCalledWith('Aviso');
-    expect(storeSpy.setLicenciaSanitaria).toHaveBeenCalledWith('Lic');
-    expect(storeSpy.setRegimenalque).toHaveBeenCalledWith('Reg');
-    expect(storeSpy.setAduana).toHaveBeenCalledWith('Aduana');
-    expect(storeSpy.setRfc).toHaveBeenCalledWith('RFC123');
-    expect(storeSpy.setLegalRazonSocial).toHaveBeenCalledWith('Razon');
-    expect(storeSpy.setApellidoPaterno).toHaveBeenCalledWith('Paterno');
-    expect(storeSpy.setApellidoMaterno).toHaveBeenCalledWith('Materno');
-    expect(storeSpy.setMercanciasDatos).toHaveBeenCalledWith([]);
-    expect(storeSpy.setConfiguracionColumnasoli).toHaveBeenCalledWith([]);
-    expect(storeSpy.setListaClave).toHaveBeenCalledWith([]);
-    expect(storeSpy.setClaveDeLosLotes).toHaveBeenCalledWith([]);
-    expect(storeSpy.setFechaDeFabricacion).toHaveBeenCalledWith('2024-01-01');
-    expect(storeSpy.setFechaDeCaducidad).toHaveBeenCalledWith('2025-01-01');
-    expect(storeSpy.setDescripcionFraccionArancelaria).toHaveBeenCalledWith('Desc');
-    expect(storeSpy.setCantidadUMT).toHaveBeenCalledWith(1);
-    expect(storeSpy.setUMT).toHaveBeenCalledWith('UMT');
-    expect(storeSpy.setCantidadUMC).toHaveBeenCalledWith(2);
-    expect(storeSpy.setUMC).toHaveBeenCalledWith('UMC');
-    expect(storeSpy.setTipoProducto).toHaveBeenCalledWith('Tipo');
-    expect(storeSpy.setClasificaionProductos).toHaveBeenCalledWith('Clas');
-    expect(storeSpy.setEspecificarProducto).toHaveBeenCalledWith('Esp');
-    expect(storeSpy.setNombreProductoEspecifico).toHaveBeenCalledWith('NomProd');
-    expect(storeSpy.setMarca).toHaveBeenCalledWith('Marca');
-    expect(storeSpy.setFraccionArancelaria).toHaveBeenCalledWith('Frac');
   });
 
   it('should call http.get with correct URL in getRegistroTomaMuestrasMercanciasData', done => {

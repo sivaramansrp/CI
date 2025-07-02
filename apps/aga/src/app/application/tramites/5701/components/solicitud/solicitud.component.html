@@ -96,6 +96,7 @@
             }"
             libUppercase
             (blur)="validaRfc()"
+            (input)="cambiosInput('RFCImpExp', datosImportadorExportador)"
           />
 
           <div
@@ -325,8 +326,10 @@
           id="fechaInicio"
           formControlName="fechaInicio"
           placeholder="dd/mm/yyyy"
+          autofocus="false"
+          (change)="changeFechaInicio(); limpiarFechas()"
+          (blur)="limpiarFechas()"
           [ngClass]="isValid(datosServicio, 'fechaInicio') ? 'required' : ''"
-          (change)="changeFechaInicio()"
           (keydown)="$event.preventDefault()"
         />
         <div
@@ -344,9 +347,7 @@
           [label]="'Hora inicio'"
           [required]="true"
           [inputId]="'horaInicio'"
-          (change)="
-            setValoresStore(datosServicio, 'horaInicio', 'setHoraInicio')
-          "
+          (change)="changeHoraInicio()"
         ></input-hora>
       </div>
     </div>
@@ -360,8 +361,9 @@
           name="fechaFinal"
           id="fechaFinal"
           formControlName="fechaFinal"
-          [ngClass]="isValid(datosServicio, 'fechaFinal') ? 'required' : ''"
           (change)="changeFechaFinal()"
+          (blur)="limpiarFechas()"
+          [ngClass]="{ 'is-invalid': isRequired(datosServicio, 'fechaFinal') }"
           (keydown)="$event.preventDefault()"
         />
         <div
@@ -467,6 +469,7 @@
             class="form-control"
             formControlName="rfcDespachoLDA"
             placeholder=""
+            (input)="cambiosInput('rfcDespachoLDA', despacho)"
             (blur)="changeRfcAutorizacionLDA()"
             maxlength="13"
             [ngClass]="isValid(despacho, 'rfcDespachoLDA') ? 'required' : ''"
@@ -490,6 +493,7 @@
             formControlName="folioDDEX"
             placeholder=""
             (blur)="changeFolioDDEX()"
+            (input)="cambiosInput('folioDDEX', despacho)"
             maxlength="16"
             [ngClass]="isValid(despacho, 'folioDDEX') ? 'required' : ''"
           />
@@ -520,7 +524,11 @@
           (change)="changeAduana()"
         >
           <option value="-1">Selecciona una opción...</option>
-          <option *ngFor="let aduana of aduanas" [value]="aduana.clave">
+          <option
+            *ngFor="let aduana of aduanas"
+            [title]="aduana.title"
+            [value]="aduana.clave"
+          >
             {{ aduana.descripcion }}
           </option>
         </select>
@@ -539,9 +547,13 @@
           (change)="changeSeccionAduanera()"
           [required]="false"
         >
+          <option value="-2" hidden>
+            No cuenta con sección aduanera
+          </option>
           <option value="-1">Selecciona una opción...</option>
           <option
             *ngFor="let seccion of seccionAduanera"
+            [title]="seccion.title"
             [value]="seccion.clave"
           >
             {{ seccion.descripcion }}
@@ -550,7 +562,7 @@
       </div>
     </div>
     <div class="row">
-      @if (!despachoSeleccionado) {
+      @if (!mostarSelectTipoDespacho) {
       <div class="col-md-4">
         <label class="form-label" for="">Nombre del recinto:</label>
         <select
@@ -559,9 +571,13 @@
           (change)="changeRecinto()"
           [required]="false"
         >
+          <option value="-2" hidden>
+            No cuenta con recinto fiscalizado
+          </option>
           <option value="-1">Selecciona una opción...</option>
           <option
             *ngFor="let recinto of recintoCatalogo"
+            [title]="recinto.title"
             [value]="recinto.id_recinto_fiscalizado"
           >
             {{ recinto.descripcion }}
@@ -593,9 +609,7 @@
           [primerOptionValue]="SIN_VALOR"
           [hiddenPrimerOption]="false"
           [disabledPrimerOption]="false"
-          (change)="
-            setValoresStore(despacho, 'tipoOperacion', 'setTipoOperacion')
-          "
+          (change)="changeTipoOperacion()"
         ></app-catalogo-select>
       </div>
     </div>
@@ -900,6 +914,7 @@
 <section>
   <lib-notificaciones
     [notificacionInput]="nuevaNotificacion"
+    [forma]="datosServicio"
     (confirmacionModal)="confirmacionModal($event)"
   >
   </lib-notificaciones>

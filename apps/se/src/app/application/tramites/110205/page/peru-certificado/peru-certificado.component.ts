@@ -1,12 +1,12 @@
 /**
- * @component ProsecComponent
- * @description Este componente es responsable de manejar el flujo de pasos para el trámite PROSEC.
- * Incluye la lógica para la navegación entre pasos y la obtención de títulos.
+ * @component PeruCertificadoComponent
+ * @description
+ * El componente `PeruCertificadoComponent` es responsable de manejar el flujo de pasos para el trámite zoosanitario de importación del Perú.
+ * Utiliza un componente `WizardComponent` para gestionar la navegación entre pasos del trámite.
+ * También maneja la actualización del estado de la sección y la validez del formulario observando el estado del trámite.
  * 
- * @import { Component, ViewChild } from '@angular/core';
- * @import { WizardComponent } from '../../../../shared/components/wizard/wizard.component';
- * @import { DatosPasos } from '../../../../core/models/shared/components.model';
- * @import { PASOS } from '../../../../shared/constantes/prosec/prosec.module';
+ * @example
+ * <app-peru-certificado></app-peru-certificado>
  */
 
 import { AccionBoton, ListaPasoWizard } from '../../models/peru-certificado.module';
@@ -25,29 +25,37 @@ import { WizardComponent } from '@ng-mf/data-access-user';
 export class PeruCertificadoComponent implements OnDestroy {
 
   /**
-   * @property {Array<LISTAPASOWIZARD>} pasos - Array de pasos del wizard.
+   * @property {ListaPasoWizard[]} pasos
+   * @description
+   * Lista de pasos que componen el flujo del trámite en el wizard.
    */
   pasos: ListaPasoWizard[] = PASOS;
-   /**
-   * @description Propiedad pública que almacena los textos relacionados con el pago de derechos.
-   * @command PAGO_DE_DERECHOS
-   */
-   public TEXTOS = PAGO_DE_DERECHOS;
 
   /**
-   * @property {string | null} tituloMensaje - El título del mensaje.
+   * @property {string | null} tituloMensaje
+   * @description
+   * Título principal mostrado en el encabezado del trámite.
    */
   tituloMensaje: string | null = 'Zoosanitario para importación';
 
+  /**
+   * @property {WizardComponent} wizardComponent
+   * @description
+   * Referencia al componente hijo `WizardComponent`, utilizado para controlar la navegación entre pasos.
+   */
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
 
   /**
-   * @property {number} indice - El índice del paso actual.
+   * @property {number} indice
+   * @description
+   * Índice actual del paso activo dentro del wizard. Comienza en 1.
    */
   indice: number = 1;
 
   /**
-   * @property {DatosPasos} datosPasos - Datos de los pasos del wizard.
+   * @property {DatosPasos} datosPasos
+   * @description
+   * Objeto con metainformación sobre el flujo de pasos del wizard.
    */
   datosPasos: DatosPasos = {
     nroPasos: this.pasos.length,
@@ -57,19 +65,31 @@ export class PeruCertificadoComponent implements OnDestroy {
   };
 
   /**
+   * @property {any} TEXTOS
+   * @description
+   * Contiene los textos informativos para el pago de derechos.
+   */
+  public TEXTOS = PAGO_DE_DERECHOS;
+
+  /**
    * @property {Subject<void>} destroyNotifier$
-   * @description Subject utilizado como notificador para destruir las suscripciones activas
-   * Se utiliza junto con el operador takeUntil en las suscripciones de RxJS.
+   * @description
+   * Notificador para gestionar la destrucción de suscripciones reactivas y evitar fugas de memoria.
    */
   destroyNotifier$: Subject<void> = new Subject();
 
   /**
    * @constructor
-   * @param {SeccionLibStore} seccionStore - Servicio para gestionar el estado de la sección.
-   * @param {Tramite110205Query} tramiteQuery - Servicio para consultar el estado del trámite.
-   * Suscribe al observable FormaValida$ para actualizar el estado de la sección y la validez del formulario.
+   * @description
+   * Constructor del componente. Se encarga de suscribirse a `FormaValida$` del `Tramite110205Query`
+   * para actualizar el estado de la sección y la validez del formulario en el store de sección.
+   *
+   * @param {SeccionLibStore} seccionStore - Store para actualizar el estado de la sección.
+   * @param {Tramite110205Query} tramiteQuery - Query para observar el estado de validez del formulario.
    */
-  constructor(private seccionStore: SeccionLibStore, private tramiteQuery: Tramite110205Query,
+  constructor(
+    private seccionStore: SeccionLibStore,
+    private tramiteQuery: Tramite110205Query,
   ) {
     this.tramiteQuery.FormaValida$.pipe(
       takeUntil(this.destroyNotifier$)
@@ -81,8 +101,11 @@ export class PeruCertificadoComponent implements OnDestroy {
 
   /**
    * @method getValorIndice
-   * @description Maneja la acción del botón y determina la navegación (siguiente o anterior).
-   * @param {ACCIONBOTON} e - Objeto de acción que contiene la acción y el valor a manejar.
+   * @description
+   * Maneja la navegación entre pasos en el wizard. Cambia el índice actual
+   * y llama a los métodos `siguiente` o `atras` del `WizardComponent` dependiendo de la acción.
+   *
+   * @param {AccionBoton} e - Objeto que contiene la acción y el valor del paso a navegar.
    */
   getValorIndice(e: AccionBoton): void {
     if (e.valor > 0 && e.valor < 5) {
@@ -97,9 +120,9 @@ export class PeruCertificadoComponent implements OnDestroy {
 
   /**
    * @method ngOnDestroy
-   * @description Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
-   * Utiliza el Subject `destroyNotifier$` para notificar la destrucción y completar las suscripciones,
-   * evitando fugas de memoria.
+   * @description
+   * Método del ciclo de vida que se ejecuta al destruir el componente.
+   * Se utiliza para cerrar y completar las suscripciones activas.
    */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();

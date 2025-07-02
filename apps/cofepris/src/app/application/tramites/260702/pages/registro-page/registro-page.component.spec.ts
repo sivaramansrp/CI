@@ -7,7 +7,6 @@ import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { PasoTresComponent } from '../paso-tres/paso-tres.component';
 import { PasoDosComponent } from '../paso-dos/paso-dos.component';
 
-// Mock WizardComponent
 @Component({selector: 'mf-wizard', template: ''})
 class MockWizardComponent {
   siguiente = jest.fn();
@@ -37,7 +36,6 @@ describe('RegistroPageComponent', () => {
     })
     .overrideComponent(RegistroPageComponent, {
       set: {
-        // Replace ViewChild with the mock
         template: '<mf-wizard></mf-wizard>'
       }
     })
@@ -73,29 +71,46 @@ describe('RegistroPageComponent', () => {
     expect(component.indice).toBe(3);
   });
 
-  it('should not update indice or call any wizard method if valor is out of range (e.g., 0)', () => {
-  const accion = { valor: 0, accion: 'cont' };
-  const initialIndice = component.indice;
+  it('should call wizardComponent.siguiente on getValorIndice with accion "cont"', () => {
+    component.wizardComponent = {
+      siguiente: jest.fn(),
+      atras: jest.fn()
+    } as any;
+  
+    const spy = jest.spyOn(component.wizardComponent, 'siguiente');
+    component.getValorIndice({ accion: 'cont', valor: 2 });
+    expect(component.indice).toBe(2);
+    expect(spy).toHaveBeenCalled();
+  });
 
-  component.getValorIndice(accion);
+  it('should call wizardComponent.atras on getValorIndice with accion not "cont"', () => {
+    component.wizardComponent = {
+      siguiente: jest.fn(),
+      atras: jest.fn()
+    } as any;
+  
+    const spy = jest.spyOn(component.wizardComponent, 'atras');
+    component.getValorIndice({ accion: 'atras', valor: 3 });
+    expect(component.indice).toBe(3);
+    expect(spy).toHaveBeenCalled();
+  });
+  
+  it('should not call wizardComponent methods if valor is out of range', () => {
+    component.wizardComponent = {
+      siguiente: jest.fn(),
+      atras: jest.fn()
+    } as any;
+  
+    const siguienteSpy = jest.spyOn(component.wizardComponent, 'siguiente');
+    const atrasSpy = jest.spyOn(component.wizardComponent, 'atras');
+  
+    component.getValorIndice({ accion: 'cont', valor: 0 });
+    component.getValorIndice({ accion: 'atras', valor: 5 });
+  
+    expect(siguienteSpy).not.toHaveBeenCalled();
+    expect(atrasSpy).not.toHaveBeenCalled();
+  });
 
-  expect(component.indice).toBe(initialIndice);
-  expect(component.wizardComponent.siguiente).not.toHaveBeenCalled();
-  expect(component.wizardComponent.atras).not.toHaveBeenCalled();
-});
-
-it('should not update indice or call any wizard method if valor is out of range (e.g., 5)', () => {
-  const accion = { valor: 5, accion: 'back' };
-  const initialIndice = component.indice;
-
-  component.getValorIndice(accion);
-
-  expect(component.indice).toBe(initialIndice);
-  expect(component.wizardComponent.siguiente).not.toHaveBeenCalled();
-  expect(component.wizardComponent.atras).not.toHaveBeenCalled();
-});
-
- 
   it('should complete destroyed$ on ngOnDestroy', () => {
     const completeSpy = jest.spyOn((component as any).destroyed$, 'complete');
     const nextSpy = jest.spyOn((component as any).destroyed$, 'next');

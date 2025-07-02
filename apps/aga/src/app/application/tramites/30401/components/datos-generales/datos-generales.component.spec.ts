@@ -13,13 +13,12 @@ describe('DatosGeneralesComponent', () => {
   let mockStore: Tramite30401Store;
 
   beforeEach(async () => {
-    // Mock FormGroup structure
     const formBuilder = new FormBuilder();
     const rootFormGroup = formBuilder.group({
       datos: formBuilder.group({
         tipoTransito: new FormControl(''),
         descripcion: new FormControl(''),
-        cveFolioCaat: new FormControl('') // Add the missing control here
+        cveFolioCaat: new FormControl('') 
       })
     });
 
@@ -49,19 +48,19 @@ describe('DatosGeneralesComponent', () => {
     component.tipoTransitoList$ = of([]);
     component.cveFolioCaat$ = of('CAAT123');
     component.titulo = 'Título de Prueba';
-    fixture.detectChanges(); // triggers ngOnInit
+    fixture.detectChanges(); 
   });
 
-  it('should create', () => {
+  it('debería crear', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize form group on ngOnInit', () => {
+  it('debe inicializar el grupo de formularios en ngOnInit', () => {
     expect(component.inicializarFormulario).toBeTruthy();
     expect(component.inicializarFormulario.contains('tipoTransito')).toBe(true);
   });
 
-  it('should return true if control is invalid and touched or dirty', () => {
+  it('Debe devolver verdadero si el control no es válido y está tocado o sucio', () => {
     const control = component.inicializarFormulario.get('tipoTransito');
     control?.markAsTouched();
     control?.setErrors({ required: true });
@@ -69,7 +68,7 @@ describe('DatosGeneralesComponent', () => {
     expect(component.esInvalido('tipoTransito')).toBe(true);
   });
 
-  it('should return false if control is valid', () => {
+  it('Debe devolver falso si el control es válido', () => {
     const control = component.inicializarFormulario.get('tipoTransito');
     control?.setValue('valid');
     control?.markAsTouched();
@@ -77,15 +76,14 @@ describe('DatosGeneralesComponent', () => {
     expect(component.esInvalido('tipoTransito')).toBe(false);
   });
 
-  it('should call store.establecerDatos with correct value', () => {
+  it('Debería llamar a store.establecerDatos con el valor correcto', () => {
     component.inicializarFormulario.get('descripcion')?.setValue('Trámite de prueba');
     component.setValoresStore(component.inicializarFormulario, 'descripcion');
 
     expect(mockStore.establecerDatos).toHaveBeenCalledWith({ descripcion: 'Trámite de prueba' });
   });
 
-  it('should return true if a control is invalid, touched, or dirty in esInvalido', () => {
-    // Mock the form group and its get method
+  it('Debe devolver verdadero si un control no es válido, está tocado o sucio en esInvalido', () => {
     const mockControl = {
       invalid: true,
       touched: true,
@@ -98,8 +96,7 @@ describe('DatosGeneralesComponent', () => {
     expect(result).toBe(true);
   });
 
-  it('should return false if a control is valid in esInvalido', () => {
-    // Mock the form group and its get method
+  it('Debe devolver falso si un control es válido en esInvalido', () => {
     const mockControl = {
       invalid: false,
       touched: true,

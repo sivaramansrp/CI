@@ -1,22 +1,41 @@
 /**
- * @constant {Object} SECCIONES_TRAMITE - Representa las secciones y su estado de validación en el proceso de trámite.
- * @property {Object} PASO_1 - Contiene las validaciones de las secciones del paso 1.
- * @property {boolean} PASO_1.VALIDACION_SECCION_1 - Indica si la sección 1 del paso 1 está validada.
- * @property {boolean} PASO_1.VALIDACION_SECCION_2 - Indica si la sección 2 del paso 1 está validada.
- * @property {boolean} PASO_1.VALIDACION_SECCION_3 - Indica si la sección 3 del paso 1 está validada.
- * @property {boolean} PASO_1.VALIDACION_SECCION_4 - Indica si la sección 4 del paso 1 está validada.
- * @property {Object} PASO_2 - Contiene las validaciones de las secciones del paso 2.
- * @property {boolean} PASO_2.VALIDACION_SECCION - Indica si la sección del paso 2 está validada.
+ * Objeto que agrupa los estados de validación de las secciones correspondientes a los pasos de un trámite de permiso de importación.
+ *
+ * @property {object} PASO_1 - Contiene los estados de validación de las secciones del primer paso del trámite.
+ * @property {boolean} PASO_1.VALIDACION_SECCION_1 - Indica si la Sección 1 del Paso 1 ha sido validada correctamente.
+ * @property {boolean} PASO_1.VALIDACION_SECCION_2 - Indica si la Sección 2 del Paso 1 ha sido validada correctamente.
+ * @property {boolean} PASO_1.VALIDACION_SECCION_3 - Indica si la Sección 3 del Paso 1 ha sido validada correctamente.
+ * @property {object} PASO_2 - Contiene el estado de validación de la sección del segundo paso del trámite.
+ * @property {boolean} PASO_2.VALIDACION_SECCION - Indica si la única sección del Paso 2 ha sido validada correctamente.
  */
 export const SECCIONES_TRAMITE = {
-    PASO_1: {
-        VALIDACION_SECCION_1: false,
-        VALIDACION_SECCION_2: false,
-        VALIDACION_SECCION_3: false,
-        VALIDACION_SECCION_4: false,
-    },
-    PASO_2: {
-        VALIDACION_SECCION: false,
-    }
-};
+  /**
+   * Agrupa los estados de validación de las secciones del primer paso del trámite.
+   */
+  PASO_1: {
+    /**
+     * Indica si la Sección 1 del Paso 1 ha sido validada correctamente.
+     */
+    VALIDACION_SECCION_1: false,
 
+    /**
+     * Indica si la Sección 2 del Paso 1 ha sido validada correctamente.
+     */
+    VALIDACION_SECCION_2: true,
+
+    /**
+     * Indica si la Sección 3 del Paso 1 ha sido validada correctamente.
+     */
+    VALIDACION_SECCION_3: true,
+  },
+
+  /**
+   * Agrupa el estado de validación del segundo paso del trámite.
+   */
+  PASO_2: {
+    /**
+     * Indica si la única sección del Paso 2 ha sido validada correctamente.
+     */
+    VALIDACION_SECCION: false,
+  }
+};

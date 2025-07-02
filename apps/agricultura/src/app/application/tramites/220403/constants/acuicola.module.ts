@@ -1,5 +1,7 @@
 /**
- * @description Pasos del proceso en el módulo acuícola.
+ * Estos pasos guían al usuario a través del proceso de captura de solicitud, anexado de requisitos y firma de la solicitud.
+ * @description 
+ * Pasos del proceso en el módulo acuícola.
  * @author Equipo de desarrollo
  * @since 2024
  */
@@ -26,7 +28,9 @@ export const PASOS = [
 
 
 /**
- * @description Textos utilizados en la interfaz del módulo acuícola.
+ * Incluye instrucciones, advertencias y mensajes de ayuda para el usuario durante el proceso de captura y anexado de documentos.
+ * @description 
+ * Textos utilizados en la interfaz del módulo acuícola.
  * @author Equipo de desarrollo
  * @since 2024
  */
@@ -44,6 +48,9 @@ export const TEXTOS = {
 };
 
 /**
- * @description Constantes con el mensaje para el doble clic en un registro.
+ * Este mensaje se muestra al usuario para informarle que al dar doble clic en un registro, se creará una nueva solicitud con los mismos datos de la solicitud elegida.
+ * @description 
+ * Constantes con el mensaje para el doble clic en un registro.
+ * @author Equipo de desarrollo
  */
 export const MENSAJE_DOBLE_CLIC = "Al dar doble clic en el registro seleccionado creará una nueva solicitud con los mismos datos de la solicitud elegida.";

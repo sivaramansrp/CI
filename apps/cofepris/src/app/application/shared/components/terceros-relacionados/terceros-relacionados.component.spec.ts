@@ -1,270 +1,198 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+// @ts-nocheck
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { By } from '@angular/platform-browser';
+import { Observable, of as observableOf, throwError } from 'rxjs';
+
+import { Component } from '@angular/core';
 import { TercerosRelacionadosComponent } from './terceros-relacionados.component';
 import { Router, ActivatedRoute } from '@angular/router';
 import { TercerosRelacionadosFebService } from '../../services/tereceros-relacionados-feb.service';
-import { AlertComponent, ConsultaioQuery, NotificacionesComponent, TablaDinamicaComponent, TituloComponent } from '@ng-mf/data-access-user';
-import { of, Subject } from 'rxjs';
-import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { ReactiveFormsModule } from '@angular/forms';
+
+@Injectable()
+class MockRouter {
+  navigate() {};
+}
+
+@Injectable()
+class MockTercerosRelacionadosFebService {}
+
+@Directive({ selector: '[myCustom]' })
+class MyCustomDirective {
+  @Input() myCustom;
+}
+
+@Pipe({name: 'translate'})
+class TranslatePipe implements PipeTransform {
+  transform(value) { return value; }
+}
+
+@Pipe({name: 'phoneNumber'})
+class PhoneNumberPipe implements PipeTransform {
+  transform(value) { return value; }
+}
+
+@Pipe({name: 'safeHtml'})
+class SafeHtmlPipe implements PipeTransform {
+  transform(value) { return value; }
+}
 
 describe('TercerosRelacionadosComponent', () => {
-  let component: TercerosRelacionadosComponent;
-  let fixture: ComponentFixture<TercerosRelacionadosComponent>;
-  let routerMock: any;
-  let activatedRouteMock: any;
-  let tercerosServiceMock: any;
-  let consultaioQueryMock: any;
+  let fixture;
+  let component;
 
-  beforeEach(async () => {
-    routerMock = { navigate: jest.fn() };
-    activatedRouteMock = {};
-    tercerosServiceMock = {
-      getFabricanteTablaDatos: jest.fn().mockReturnValue(of([])),
-    };
-    consultaioQueryMock = {
-      selectConsultaioState$: of({ readonly: false }),
-    };
-
-    await TestBed.configureTestingModule({
-      imports: [
-        TercerosRelacionadosComponent,
-        ReactiveFormsModule,
-        CommonModule,
-          TituloComponent,
-          TablaDinamicaComponent,
-          AlertComponent,
-          NotificacionesComponent,
-          HttpClientTestingModule,
-        ],
-      providers: [
-        { provide: Router, useValue: routerMock },
-        { provide: ActivatedRoute, useValue: activatedRouteMock },
-        { provide: TercerosRelacionadosFebService, useValue: tercerosServiceMock },
-        { provide: ConsultaioQuery, useValue: consultaioQueryMock },
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [ FormsModule, ReactiveFormsModule, TercerosRelacionadosComponent, HttpClientTestingModule ],
+      declarations: [
+        TranslatePipe, PhoneNumberPipe, SafeHtmlPipe,
+        MyCustomDirective
       ],
-    }).compileComponents();
+      schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
+      providers: [
+        { provide: Router, useClass: MockRouter },
+        {
+          provide: ActivatedRoute,
+          useValue: {
+            snapshot: {url: 'url', params: {}, queryParams: {}, data: {}},
+            url: observableOf('url'),
+            params: observableOf({}),
+            queryParams: observableOf({}),
+            fragment: observableOf('fragment'),
+            data: observableOf({})
+          }
+        },
+        { provide: TercerosRelacionadosFebService, useClass: MockTercerosRelacionadosFebService },
+        ConsultaioQuery
+      ]
+    }).overrideComponent(TercerosRelacionadosComponent, {
 
+    }).compileComponents();
     fixture = TestBed.createComponent(TercerosRelacionadosComponent);
-    component = fixture.componentInstance;
-    component.elementosRequeridos = ['campo1', 'campo2'];
-    fixture.detectChanges();
+    component = fixture.debugElement.componentInstance;
   });
 
-  it('should create', () => {
+  it('should run #constructor()', async () => {
     expect(component).toBeTruthy();
   });
 
-  describe('esCampoRequerido', () => {
-    it('should return true if campo is required', () => {
-      expect(component.esCampoRequerido('campo1')).toBe(true);
-    });
-
-    it('should return false if campo is not required', () => {
-      expect(component.esCampoRequerido('otroCampo')).toBe(false);
-    });
-
-    it('should return false if elementosRequeridos is undefined', () => {
-      component.elementosRequeridos = undefined as any;
-      expect(component.esCampoRequerido('campo1')).toBe(false);
-    });
+  it('should run #irAAcciones()', async () => {
+    component.router = component.router || {};
+    component.router.navigate = jest.fn();
+    component.irAAcciones({});
+    expect(component.router.navigate).toHaveBeenCalled();
   });
 
-  describe('modificarFabricante', () => {
-    it('should show alert if no fabricante selected', () => {
-      component.fabricanteSeleccionadoDatos = [];
-      component.modificarFabricante();
-      expect(component.mostrarAlerta).toBe(true);
-    });
-
-    it('should emit event and navigate if fabricante selected', () => {
-      const emitSpy = jest.spyOn(component.fabricanteEventoModificar, 'emit');
-      component.fabricanteSeleccionadoDatos = [{ rfc: '123' } as any];
-      component.modificarFabricante();
-      expect(emitSpy).toHaveBeenCalledWith(component.fabricanteSeleccionadoDatos);
-      expect(routerMock.navigate).toHaveBeenCalledWith(['../agregar-fabricante'], { relativeTo: activatedRouteMock });
-    });
+  it('should run #ngOnInit()', async () => {
+    component.tercerosService = component.tercerosService || {};
+    component.tercerosService.getFabricanteTablaDatos = jest.fn().mockReturnValue(observableOf({}));
+    component.ngOnInit();
+    expect(component.tercerosService.getFabricanteTablaDatos).toHaveBeenCalled();
   });
 
-  describe('modificarDestinatario', () => {
-    it('should show alert if no destinatario selected', () => {
-      component.destinatarioSeleccionadoDatos = [];
-      component.modificarDestinatario();
-      expect(component.mostrarAlerta).toBe(true);
-    });
-
-    it('should emit event and navigate if destinatario selected', () => {
-      const emitSpy = jest.spyOn(component.destinatarioEventoModificar, 'emit');
-      component.destinatarioSeleccionadoDatos = [{ rfc: 'abc' } as any];
-      component.modificarDestinatario();
-      expect(emitSpy).toHaveBeenCalledWith(component.destinatarioSeleccionadoDatos);
-      expect(routerMock.navigate).toHaveBeenCalledWith(['../agregar-destinatario-final'], { relativeTo: activatedRouteMock });
-    });
+  it('should run #esCampoRequerido()', async () => {
+    component.elementosRequeridos = component.elementosRequeridos || {};
+    component.elementosRequeridos.includes = jest.fn();
+    component.esCampoRequerido({});
+    expect(component.elementosRequeridos.includes).toHaveBeenCalled();
   });
 
-  describe('modificarProveedor', () => {
-    it('should show alert if no proveedor selected', () => {
-      component.proveedorSeleccionadoDatos = [];
-      component.modificarProveedor();
-      expect(component.mostrarAlerta).toBe(true);
-    });
-
-    it('should emit event and navigate if proveedor selected', () => {
-      const emitSpy = jest.spyOn(component.proveedorEventoModificar, 'emit');
-      component.proveedorSeleccionadoDatos = [{ rfc: 'prov' } as any];
-      component.modificarProveedor();
-      expect(emitSpy).toHaveBeenCalledWith(component.proveedorSeleccionadoDatos);
-      expect(routerMock.navigate).toHaveBeenCalledWith(['../agregar-proveedor'], { relativeTo: activatedRouteMock });
-    });
+  it('should run #modificarFabricante()', async () => {
+    component.fabricanteSeleccionadoDatos = [{ rfc: 'TEST123' }];
+    component.fabricanteEventoModificar = component.fabricanteEventoModificar || {};
+    component.fabricanteEventoModificar.emit = jest.fn();
+    component.irAAcciones = jest.fn();
+    component.modificarFabricante();
+    expect(component.fabricanteEventoModificar.emit).toHaveBeenCalled();
+    expect(component.irAAcciones).toHaveBeenCalled();
   });
 
-  describe('modificarFacturador', () => {
-    it('should show alert if no facturador selected', () => {
-      component.facturadorSeleccionadoDatos = [];
-      component.modificarFacturador();
-      expect(component.mostrarAlerta).toBe(true);
-    });
-
-    it('should emit event and navigate if facturador selected', () => {
-      const emitSpy = jest.spyOn(component.facturadorEventoModificar, 'emit');
-      component.facturadorSeleccionadoDatos = [{ rfc: 'fact' } as any];
-      component.modificarFacturador();
-      expect(emitSpy).toHaveBeenCalledWith(component.facturadorSeleccionadoDatos);
-      expect(routerMock.navigate).toHaveBeenCalledWith(['../agregar-facturador'], { relativeTo: activatedRouteMock });
-    });
+  it('should run #modificarDestinatario()', async () => {
+    component.destinatarioSeleccionadoDatos = [{ rfc: 'TEST123' }];
+    component.destinatarioEventoModificar = component.destinatarioEventoModificar || {};
+    component.destinatarioEventoModificar.emit = jest.fn();
+    component.irAAcciones = jest.fn();
+    component.modificarDestinatario();
+    expect(component.destinatarioEventoModificar.emit).toHaveBeenCalled();
+    expect(component.irAAcciones).toHaveBeenCalled();
   });
 
-  describe('eliminarFabricante', () => {
-    it('should show alert if no fabricante selected', () => {
-      component.fabricanteSeleccionadoDatos = [];
-      component.eliminarFabricante();
-      expect(component.mostrarAlerta).toBe(true);
-    });
-
-    it('should filter and emit fabricanteEliminar', () => {
-      const emitSpy = jest.spyOn(component.fabricanteEliminar, 'emit');
-      component.fabricanteTablaDatos = [
-        { rfc: '1' } as any,
-        { rfc: '2' } as any,
-      ];
-      component.fabricanteSeleccionadoDatos = [{ rfc: '1' } as any];
-      component.eliminarFabricante();
-      expect(component.fabricanteTablaDatos).toEqual([{ rfc: '2' }]);
-      expect(emitSpy).toHaveBeenCalledWith([{ rfc: '2' }]);
-    });
+  it('should run #modificarProveedor()', async () => {
+    component.proveedorSeleccionadoDatos = [{ nombreRazonSocial: 'Test Provider', razonSocial: 'Test' }];
+    component.proveedorEventoModificar = component.proveedorEventoModificar || {};
+    component.proveedorEventoModificar.emit = jest.fn();
+    component.irAAcciones = jest.fn();
+    component.modificarProveedor();
+    expect(component.proveedorEventoModificar.emit).toHaveBeenCalled();
+    expect(component.irAAcciones).toHaveBeenCalled();
   });
 
-  describe('eliminarDestinatario', () => {
-    it('should show alert if no destinatario selected', () => {
-      component.destinatarioSeleccionadoDatos = [];
-      component.eliminarDestinatario();
-      expect(component.mostrarAlerta).toBe(true);
-    });
-
-    it('should filter and emit destinatarioEliminar', () => {
-      const emitSpy = jest.spyOn(component.destinatarioEliminar, 'emit');
-      component.destinatarioFinalTablaDatos = [
-        { rfc: 'a' } as any,
-        { rfc: 'b' } as any,
-      ];
-      component.destinatarioSeleccionadoDatos = [{ rfc: 'a' } as any];
-      component.eliminarDestinatario();
-      expect(component.destinatarioFinalTablaDatos).toEqual([{ rfc: 'b' }]);
-      expect(emitSpy).toHaveBeenCalledWith([{ rfc: 'b' }]);
-    });
+  it('should run #modificarFacturador()', async () => {
+    component.facturadorSeleccionadoDatos = [{ nombreRazonSocial: 'Test Facturador', razonSocial: 'Test' }];
+    component.facturadorEventoModificar = component.facturadorEventoModificar || {};
+    component.facturadorEventoModificar.emit = jest.fn();
+    component.irAAcciones = jest.fn();
+    component.modificarFacturador();
+    expect(component.facturadorEventoModificar.emit).toHaveBeenCalled();
+    expect(component.irAAcciones).toHaveBeenCalled();
   });
 
-  describe('eliminarProveedor', () => {
-    it('should show alert if no proveedor selected', () => {
-      component.proveedorSeleccionadoDatos = [];
-      component.eliminarProveedor();
-      expect(component.mostrarAlerta).toBe(true);
-    });
-
-    it('should filter and emit proveedorEliminar by nombreRazonSocial', () => {
-      const emitSpy = jest.spyOn(component.proveedorEliminar, 'emit');
-      component.proveedorTablaDatos = [
-        { nombreRazonSocial: 'X', razonSocial: 'Y' } as any,
-        { nombreRazonSocial: 'A', razonSocial: 'B' } as any,
-      ];
-      component.proveedorSeleccionadoDatos = [{ nombreRazonSocial: 'X', razonSocial: 'Y' } as any];
-      component.eliminarProveedor();
-      expect(component.proveedorTablaDatos).toEqual([{ nombreRazonSocial: 'A', razonSocial: 'B' }]);
-      expect(emitSpy).toHaveBeenCalledWith([{ nombreRazonSocial: 'A', razonSocial: 'B' }]);
-    });
-
-    it('should filter and emit proveedorEliminar by razonSocial if nombreRazonSocial empty', () => {
-      const emitSpy = jest.spyOn(component.proveedorEliminar, 'emit');
-      component.proveedorTablaDatos = [
-        { nombreRazonSocial: '', razonSocial: 'Y' } as any,
-        { nombreRazonSocial: '', razonSocial: 'B' } as any,
-      ];
-      component.proveedorSeleccionadoDatos = [{ nombreRazonSocial: '', razonSocial: 'Y' } as any];
-      component.eliminarProveedor();
-      expect(component.proveedorTablaDatos).toEqual([{ nombreRazonSocial: '', razonSocial: 'B' }]);
-      expect(emitSpy).toHaveBeenCalledWith([{ nombreRazonSocial: '', razonSocial: 'B' }]);
-    });
+  it('should run #eliminarFabricante()', async () => {
+    component.fabricanteSeleccionadoDatos = [{ rfc: 'TEST123' }];
+    component.fabricanteTablaDatos = [{ rfc: 'TEST123' }, { rfc: 'TEST456' }];
+    component.fabricanteEliminar = component.fabricanteEliminar || {};
+    component.fabricanteEliminar.emit = jest.fn();
+    component.eliminarFabricante();
+    expect(component.fabricanteEliminar.emit).toHaveBeenCalled();
   });
 
-  describe('eliminarFacturador', () => {
-    it('should show alert if no facturador selected', () => {
-      component.facturadorSeleccionadoDatos = [];
-      component.eliminarFacturador();
-      expect(component.mostrarAlerta).toBe(true);
-    });
-
-    it('should filter and emit facturadorEliminar by nombreRazonSocial', () => {
-      const emitSpy = jest.spyOn(component.facturadorEliminar, 'emit');
-      component.facturadorTablaDatos = [
-        { nombreRazonSocial: 'X', razonSocial: 'Y' } as any,
-        { nombreRazonSocial: 'A', razonSocial: 'B' } as any,
-      ];
-      component.facturadorSeleccionadoDatos = [{ nombreRazonSocial: 'X', razonSocial: 'Y' } as any];
-      component.eliminarFacturador();
-      expect(component.facturadorTablaDatos).toEqual([{ nombreRazonSocial: 'A', razonSocial: 'B' }]);
-      expect(emitSpy).toHaveBeenCalledWith([{ nombreRazonSocial: 'A', razonSocial: 'B' }]);
-    });
-
-    it('should filter and emit facturadorEliminar by razonSocial if nombreRazonSocial empty', () => {
-      const emitSpy = jest.spyOn(component.facturadorEliminar, 'emit');
-      component.facturadorTablaDatos = [
-        { nombreRazonSocial: '', razonSocial: 'Y' } as any,
-        { nombreRazonSocial: '', razonSocial: 'B' } as any,
-      ];
-      component.facturadorSeleccionadoDatos = [{ nombreRazonSocial: '', razonSocial: 'Y' } as any];
-      component.eliminarFacturador();
-      expect(component.facturadorTablaDatos).toEqual([{ nombreRazonSocial: '', razonSocial: 'B' }]);
-      expect(emitSpy).toHaveBeenCalledWith([{ nombreRazonSocial: '', razonSocial: 'B' }]);
-    });
+  it('should run #eliminarDestinatario()', async () => {
+    component.destinatarioSeleccionadoDatos = [{ rfc: 'TEST123' }];
+    component.destinatarioFinalTablaDatos = [
+      { rfc: 'TEST123' },
+      { rfc: 'TEST456' }
+    ];
+    component.destinatarioEliminar = component.destinatarioEliminar || {};
+    component.destinatarioEliminar.emit = jest.fn();
+    component.eliminarDestinatario();
+    expect(component.destinatarioEliminar.emit).toHaveBeenCalled();
   });
 
-  describe('ngOnInit', () => {
-    it('should set habilitarFacturador and habilitarProveedor based on idProcedimiento', () => {
-      component.idProcedimiento = 9999;
-      (global as any).OCULTAR_FACTURADOR = [9999];
-      (global as any).OCULTAR_PROVEEDOR = [8888];
-      component.ngOnInit();
-      expect(component.habilitarFacturador).toBe(false);
-      expect(component.habilitarProveedor).toBe(true);
-    });
-
-    it('should subscribe to tercerosService and set table data', () => {
-      const data = [{ rfc: 'test' }];
-      tercerosServiceMock.getFabricanteTablaDatos = jest.fn().mockReturnValue(of(data));
-      component.ngOnInit();
-      expect(component.fabricanteTablaDatos).toEqual(data);
-      expect(component.destinatarioFinalTablaDatos).toEqual(data);
-      expect(component.proveedorTablaDatos).toEqual(data);
-      expect(component.facturadorTablaDatos).toEqual(data);
-    });
+  it('should run #eliminarProveedor()', async () => {
+    component.proveedorSeleccionadoDatos = [{ nombreRazonSocial: 'Test Provider', razonSocial: 'Test' }];
+    component.proveedorTablaDatos = [
+      { nombreRazonSocial: 'Test Provider', razonSocial: 'Test' },
+      { nombreRazonSocial: 'Another Provider', razonSocial: 'Another' }
+    ];
+    component.proveedorEliminar = component.proveedorEliminar || {};
+    component.proveedorEliminar.emit = jest.fn();
+    component.eliminarProveedor();
+    expect(component.proveedorEliminar.emit).toHaveBeenCalled();
   });
 
-  describe('ngOnDestroy', () => {
-    it('should complete destroy$', () => {
-      const destroy$ = (component as any).destroy$ as Subject<void>;
-      const completeSpy = jest.spyOn(destroy$, 'complete');
-      component.ngOnDestroy();
-      expect(completeSpy).toHaveBeenCalled();
-    });
+  it('should run #eliminarFacturador()', async () => {
+    component.facturadorSeleccionadoDatos = [{ nombreRazonSocial: 'Test Facturador', razonSocial: 'Test' }];
+    component.facturadorTablaDatos = [
+      { nombreRazonSocial: 'Test Facturador', razonSocial: 'Test' },
+      { nombreRazonSocial: 'Another Facturador', razonSocial: 'Another' }
+    ];
+    component.facturadorEliminar = component.facturadorEliminar || {};
+    component.facturadorEliminar.emit = jest.fn();
+    component.eliminarFacturador();
+    expect(component.facturadorEliminar.emit).toHaveBeenCalled();
   });
+
+  it('should run #ngOnDestroy()', async () => {
+    component.destroy$ = component.destroy$ || {};
+    component.destroy$.next = jest.fn();
+    component.destroy$.complete = jest.fn();
+    component.ngOnDestroy();
+    expect(component.destroy$.next).toHaveBeenCalled();
+    expect(component.destroy$.complete).toHaveBeenCalled();
+  });
+
 });

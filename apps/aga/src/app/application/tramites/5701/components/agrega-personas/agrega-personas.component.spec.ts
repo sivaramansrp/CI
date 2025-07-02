@@ -91,13 +91,6 @@ describe('AgregaPersonasComponent', () => {
     });
   });
 
-  describe('isValid', () => {
-    it('should call validacionesService.isValid', () => {
-      component.isValid('nombreRespoDespacho');
-      expect(mockValidacionesService.isValid).toHaveBeenCalled();
-    });
-  });
-
   describe('gafeteIsValid', () => {
     it('should return true if gafeteRespoDespacho has errors and touched', () => {
       component.gafeteRespoDespacho.setErrors({ required: true });

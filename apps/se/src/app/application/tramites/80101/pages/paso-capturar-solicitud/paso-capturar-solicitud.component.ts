@@ -4,21 +4,62 @@ import { AccionBoton } from '../../models/nuevo-programa-industrial.model';
 import { Subject } from 'rxjs';
 import { Tramite80101Query } from '../../estados/tramite80101.query';
 import { takeUntil } from 'rxjs';
-// eslint-disable-next-line @nx/enforce-module-boundaries
 
+/**
+ * Obtiene el valor del índice de la acción del botón y actualiza el estado del componente.
+ * 
+ * Este método se utiliza para manejar las acciones de los botones en el componente. 
+ * Dependiendo del valor y la acción proporcionados, actualiza el índice actual y 
+ * navega hacia adelante o hacia atrás en el componente Wizard.
+ * 
+ * @param e - Un objeto de tipo `AccionBoton` que contiene dos propiedades:
+ *   - `valor`: Un número que representa el índice al que se desea navegar. Debe estar entre 1 y 4.
+ *   - `accion`: Una cadena que indica la acción a realizar. Puede ser:
+ *     - `'cont'`: Para avanzar al siguiente paso en el Wizard.
+ *     - `'atras'`: Para retroceder al paso anterior en el Wizard.
+ * 
+ * @remarks
+ * Si el valor proporcionado está fuera del rango permitido (menor que 1 o mayor que 4), 
+ * el método no realiza ninguna acción.
+ * 
+ * @example
+ * ```typescript
+ * const accion: AccionBoton = { valor: 2, accion: 'cont' };
+ * this.getValorIndice(accion); // Avanza al paso 2 en el Wizard.
+ * ```
+ */
 @Component({
   selector: 'app-paso-capturar-solicitud',
   templateUrl: './paso-capturar-solicitud.component.html',
 })
 export class PasoCapturarSolicitudComponent {
+  /**
+   * Lista de pasos del wizard.
+   * Esta propiedad almacena una lista de objetos que representan los pasos del wizard.
+   * Cada objeto contiene información sobre el paso, como su título y descripción.
+   */
   pasos: ListaPasosWizard[] = PASOS4;
+  /**
+   * Índice actual del paso en el wizard.
+   * Este valor se utiliza para determinar qué paso se está mostrando actualmente.
+   * El valor inicial es 1, lo que indica que el primer paso está activo al cargar el componente.
+   */
   indice: number = 1;
+  /**
+   * Datos de los pasos del wizard.
+   * Esta propiedad almacena información relacionada con el número de pasos, el índice actual,
+   * y los textos de los botones "Anterior" y "Continuar".
+   */
   datosPasos: DatosPasos = {
     nroPasos: this.pasos.length,
     indice: this.indice,
     txtBtnAnt: 'Anterior',
     txtBtnSig: 'Continuar',
   };
+  /**
+   * Componente Wizard utilizado para la navegación entre pasos.
+   * Este componente permite al usuario avanzar o retroceder entre los pasos del wizard.
+   */
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
   /**
  * 

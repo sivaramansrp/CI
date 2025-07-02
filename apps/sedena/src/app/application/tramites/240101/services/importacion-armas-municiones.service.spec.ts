@@ -1,41 +1,57 @@
-// @ts-nocheck
-import { async } from '@angular/core/testing';
-import { Injectable } from '@angular/core';
-import { Observable, of as observableOf, throwError } from 'rxjs';
-
+import { TestBed } from '@angular/core/testing';
 import { ImportacionArmasMunicionesService } from './importacion-armas-municiones.service';
-import { HttpClient } from '@angular/common/http';
 import { Tramite240101Store } from '../estados/tramite240101Store.store';
-
-@Injectable()
-class MockHttpClient {
-  post() {};
-}
-
-@Injectable()
-class MockTramite240101Store {}
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { Tramite240101State } from '../estados/tramite240101Store.store';
 
 describe('ImportacionArmasMunicionesService', () => {
-  let service;
+  let service: ImportacionArmasMunicionesService;
+  let httpMock: HttpTestingController;
+  let tramite240101Store: Tramite240101Store;
 
   beforeEach(() => {
-    service = new ImportacionArmasMunicionesService({}, {});
+    const storeMock = {
+      update: jest.fn()
+    };
+
+    TestBed.configureTestingModule({
+      imports: [HttpClientTestingModule],
+      providers: [
+        ImportacionArmasMunicionesService,
+        { provide: Tramite240101Store, useValue: storeMock }
+      ]
+    });
+
+    service = TestBed.inject(ImportacionArmasMunicionesService);
+    httpMock = TestBed.inject(HttpTestingController);
+    tramite240101Store = TestBed.inject(Tramite240101Store);
   });
 
-  it('should run #actualizarEstadoFormulario()', async () => {
-    service.tramite240101Store = service.tramite240101Store || {};
-    service.tramite240101Store.update = jest.fn().mockReturnValue([
-      null
-    ]);
-    service.actualizarEstadoFormulario({});
-    expect(service.tramite240101Store.update).toHaveBeenCalled();
+  afterEach(() => {
+    httpMock.verify();
   });
 
-  it('should run #obtenerRegistroTomarMuestrasDatos()', async () => {
-    service.httpClient = service.httpClient || {};
-    service.httpClient.get = jest.fn();
-    service.obtenerRegistroTomarMuestrasDatos();
-    expect(service.httpClient.get).toHaveBeenCalled();
+  it('should be created', () => {
+    expect(service).toBeTruthy();
   });
 
+  it('should call store.update with merged state in actualizarEstadoFormulario', () => {
+    const datos: Tramite240101State = { test: 'value' } as any;
+    service.actualizarEstadoFormulario(datos);
+    expect(tramite240101Store.update).toHaveBeenCalledWith(expect.any(Function));
+    // Optionally, test the merge logic:
+    const updateFn = (tramite240101Store.update as jest.Mock).mock.calls[0][0];
+    const prevState = { prev: 'state' };
+    expect(updateFn(prevState)).toEqual({ prev: 'state', test: 'value' });
+  });
+
+  it('should fetch registro tomar muestras datos from JSON', () => {
+    const mockResponse: Tramite240101State = { test: 'mock' } as any;
+    service.obtenerRegistroTomarMuestrasDatos().subscribe(data => {
+      expect(data).toEqual(mockResponse);
+    });
+    const req = httpMock.expectOne('assets/json/240101/respuestaDeActualizacionDe.json');
+    expect(req.request.method).toBe('GET');
+    req.flush(mockResponse);
+  });
 });
