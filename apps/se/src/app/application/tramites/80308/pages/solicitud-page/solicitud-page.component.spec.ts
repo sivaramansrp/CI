@@ -43,6 +43,26 @@ describe('SolicitudPageComponent', () => {
       accion: 'cont'
     });
     expect(component.wizardComponent.siguiente).toHaveBeenCalled();
+    component.getValorIndice({
+      valor: 2,
+      accion: 'cont'
+    });
+    component.getValorIndice({
+      valor: 3,
+      accion: 'cont'
+    });
+    component.getValorIndice({
+      valor: 4,
+      accion: 'cont'
+    });
+    component.getValorIndice({
+      valor: 5,
+      accion: 'cont'
+    });
+    component.getValorIndice({
+      valor: 1,
+      accion: 'test'
+    });
   });
 
   it('debe ejecutar #obtenerNombreDelTítulo()', () => {

@@ -54,7 +54,7 @@ export class BitacoraComponent implements OnDestroy, OnInit {
    */
   constructor(
     public modificionService: ImmerModificacionService,
-    private toastr: ToastrService
+    public toastr: ToastrService
   ) {}
 
   ngOnInit(): void {

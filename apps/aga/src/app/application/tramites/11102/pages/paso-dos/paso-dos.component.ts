@@ -1,12 +1,29 @@
-import { CATALOGOS_ID, Catalogo, CatalogoResponse, CatalogosService, TEXTOS } from '@ng-mf/data-access-user';
-import { Component, OnInit } from '@angular/core';
-
+import { AlertComponent } from '@ng-mf/data-access-user';
+import { AnexarDocumentosComponent } from '@ng-mf/data-access-user';
+import { CATALOGOS_ID } from '@ng-mf/data-access-user';
+import { Catalogo } from '@ng-mf/data-access-user';
+import { CatalogoResponse } from '@ng-mf/data-access-user';
+import { CatalogosService } from '@ng-mf/data-access-user';
+import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
+import { OnInit } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
+import { TEXTOS } from '@ng-mf/data-access-user';
+import { TituloComponent } from '@ng-mf/data-access-user';
 
 /**
  * Componente para gestionar el paso dos del trámite.
  */
 @Component({
   selector: 'paso-dos',
+  standalone: true,
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    TituloComponent,
+    AlertComponent,
+    AnexarDocumentosComponent,
+  ],
   templateUrl: './paso-dos.component.html',
   styleUrl: './paso-dos.component.scss',
 })
@@ -33,7 +50,7 @@ export class PasoDosComponent implements OnInit {
 
   /**
    * Constructor del componente.
-   * 
+   *
    * @param catalogosServices Servicio para gestionar los catálogos.
    */
   constructor(private catalogosServices: CatalogosService) {
@@ -43,7 +60,7 @@ export class PasoDosComponent implements OnInit {
   /**
    * Hook del ciclo de vida que se llama después de que las propiedades enlazadas a datos de una directiva se inicializan.
    */
-  ngOnInit() : void{
+  ngOnInit(): void {
     this.getTiposDocumentos();
     this.documentosSeleccionados = [
       {
@@ -65,11 +82,11 @@ export class PasoDosComponent implements OnInit {
     this.catalogosServices
       .getCatalogo(CATALOGOS_ID.CAT_TIPO_DOCUMENTO)
       .subscribe({
-        next: (resp:CatalogoResponse[]): void => {
+        next: (resp: CatalogoResponse[]): void => {
           if (resp.length > 0) {
             this.catalogoDocumentos = resp;
           }
-        }
+        },
       });
   }
 }

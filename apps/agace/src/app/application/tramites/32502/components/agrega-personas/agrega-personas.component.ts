@@ -12,7 +12,10 @@ import { Tramite32502Query } from '../../../../estados/queries/tramite32502.quer
 @Component({
   selector: 'agrega-personas',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule, NotificacionesComponent],
+  imports: [
+    ReactiveFormsModule, 
+    CommonModule, 
+    NotificacionesComponent],
   templateUrl: './agrega-personas.component.html',
   styleUrl: './agrega-personas.component.scss',
 })

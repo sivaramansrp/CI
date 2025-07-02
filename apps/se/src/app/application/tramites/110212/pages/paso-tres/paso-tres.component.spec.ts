@@ -5,6 +5,7 @@ import { provideToastr, ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
 import { FirmaElectronicaComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
+import { provideHttpClient } from '@angular/common/http';
 
 describe('PasoTresComponent', () => {
   let component: PasoTresComponent;
@@ -15,6 +16,7 @@ describe('PasoTresComponent', () => {
     await TestBed.configureTestingModule({
       imports: [PasoTresComponent, CommonModule, FirmaElectronicaComponent],
       providers: [ToastrService,
+        provideHttpClient(),
         provideToastr({
           positionClass: 'toast-top-right',
         }),],
@@ -40,5 +42,11 @@ describe('PasoTresComponent', () => {
     const firma = '';
     component.obtieneFirma(firma);
     expect(navigateSpy).not.toHaveBeenCalled();
+  });
+  it('should navigate to "inicialmente-certificado-origen/acuse" when FIRMA is valid', () => {
+    const navigateSpy = jest.spyOn(router, 'navigate');
+    const mockFirma = 'valid-firma';
+    component.obtieneFirma(mockFirma);
+    expect(navigateSpy).toHaveBeenCalledWith(['inicialmente-certificado-origen/acuse']);
   });
 });

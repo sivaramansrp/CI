@@ -1,67 +1,65 @@
-// @ts-nocheck
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { By } from '@angular/platform-browser';
-import { Observable, of as observableOf, throwError } from 'rxjs';
-
-import { Component } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SolicitudPageComponent } from './solicitud-page.component';
+import { WizardComponent } from '@ng-mf/data-access-user';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 describe('SolicitudPageComponent', () => {
-  let fixture;
-  let component;
+  let component: SolicitudPageComponent;
+  let fixture: ComponentFixture<SolicitudPageComponent>;
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule ],
-
-      schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
-      providers: [
-
-      ]
-    }).overrideComponent(SolicitudPageComponent, {
-
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      declarations: [SolicitudPageComponent],
+      providers: [],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA],
     }).compileComponents();
+
     fixture = TestBed.createComponent(SolicitudPageComponent);
-    component = fixture.debugElement.componentInstance;
+    component = fixture.componentInstance;
+    component.wizardComponent = {
+      siguiente: jest.fn(),
+      atras: jest.fn(),
+    } as any;
+    fixture.detectChanges();
   });
 
-
-  it('should run #constructor()', async () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should run #seleccionaTab()', async () => {
-
-    component.seleccionaTab({});
-
+  it('should set indice in seleccionaTab', () => {
+    component.indice = 1;
+    component.seleccionaTab(3);
+    expect(component.indice).toBe(3);
   });
 
-  it('should run #getValorIndice()', async () => {
-    component.obtenerNombreDelTítulo = jest.fn();
-    component.wizardComponent = component.wizardComponent || {};
-    component.wizardComponent.siguiente = jest.fn();
-    component.wizardComponent.atras = jest.fn();
-    component.getValorIndice({
-      valor: 3,
-      accion: 'cont'
-    });
-    expect(component.obtenerNombreDelTítulo).toHaveBeenCalled();
+ it('should set indice and call wizardComponent.siguiente on getValorIndice with accion "cont"', () => {
+  component.indice = 1;
+  component.wizardComponent = { siguiente: jest.fn(), atras: jest.fn() } as any;
+  component.getValorIndice({ accion: 'cont', valor: 2 });
+  expect(component.indice).toBe(2);
+  expect(component.wizardComponent.siguiente).toHaveBeenCalled();
+});
 
-  });
+it('should set indice and call wizardComponent.atras on getValorIndice with accion not "cont"', () => {
+  component.indice = 2;
+  component.wizardComponent = { siguiente: jest.fn(), atras: jest.fn() } as any;
+  component.getValorIndice({ accion: 'back', valor: 1 });
+  expect(component.indice).toBe(1);
+  expect(component.wizardComponent.atras).toHaveBeenCalled();
+});
 
-  it('should run #obtenerNombreDelTítulo()', async () => {
-    component.pasos = component.pasos || {};
-    component.pasos[1] = {
-      titulo: {}
-    };
-    component.pasos[2] = {
-      titulo: {}
-    };
-    component.obtenerNombreDelTítulo({});
+it('should not change indice or call wizardComponent methods if valor is out of range', () => {
+  component.indice = 2;
+  component.wizardComponent = { siguiente: jest.fn(), atras: jest.fn() } as any;
+  component.getValorIndice({ accion: 'cont', valor: 0 });
+  expect(component.indice).toBe(2);
+  expect(component.wizardComponent.siguiente).not.toHaveBeenCalled();
+  expect(component.wizardComponent.atras).not.toHaveBeenCalled();
 
-  });
-
+  component.getValorIndice({ accion: 'cont', valor: 5 });
+  expect(component.indice).toBe(2);
+  expect(component.wizardComponent.siguiente).not.toHaveBeenCalled();
+  expect(component.wizardComponent.atras).not.toHaveBeenCalled();
+});
 });

@@ -201,13 +201,16 @@ export function createInitialState(): Tramite260213State {
   };
 }
 
+
 /**
  * @class Tramite260213Store
- * @description Clase que extiende `Store` para administrar
- * el estado de `Tramite260213State`. Provee métodos para
- * actualizar diferentes secciones del estado relacionado
- * con el trámite 260213.
- **/
+ * @description
+ * Clase que extiende `Store` para administrar el estado de `Tramite260213State`.
+ * Provee métodos para actualizar diferentes secciones del estado relacionado con el trámite 260213.
+ *
+ * @providedIn root
+ * Este servicio está disponible en toda la aplicación a través del inyector raíz.
+ */
 @Injectable({
   providedIn: 'root',
 })
