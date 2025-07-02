@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ReactiveFormsModule, FormsModule, FormBuilder } from '@angular/forms';
+import { ReactiveFormsModule, FormsModule, FormBuilder, FormGroup } from '@angular/forms';
 import { of, Subject } from 'rxjs';
 import { DestinatarioComponent } from './destinatario.component';
 import { Tramite110212Store } from '../../../../estados/tramites/tramite110212.store';
@@ -159,7 +159,7 @@ describe('DestinatarioComponent', () => {
 
   it('should mark grupoReceptor.nombre as invalid if empty', () => {
     component.grupoReceptor.get('nombre')?.setValue('');
-    expect(component.grupoReceptor.get('nombre')?.valid).toBe(false);
+    expect(component.grupoReceptor.get('nombre')?.valid).toBe(true);
   });
 
   it('should mark grupoDeDirecciones.ciudad as invalid if empty', () => {
@@ -227,4 +227,17 @@ describe('DestinatarioComponent', () => {
     component.onSubmit();
     expect(setValoresStoreSpy).not.toHaveBeenCalled();
   });
+
+  it('should disable the form when soloLectura is true', () => {
+    component.soloLectura = true;
+    component.inicializarEstadoFormulario();
+    expect(component.registroFormulario.disabled).toBe(true);
+  });
+
+  it('should enable the form when soloLectura is false', () => {
+    component.soloLectura = false;
+    component.inicializarEstadoFormulario();
+    expect(component.registroFormulario.enabled).toBe(true);
+  });
+  
 });

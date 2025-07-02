@@ -2,7 +2,7 @@
 <br>
 <div class="row mt-5 mb-5">
   <div class="col-md-12 d-flex justify-content-end">
-    <button type="button" class="btn btn-default me-3"> Seleccionar establecimiento </button>
+    <button type="button" class="btn btn-default me-3"  [disabled]="esFormularioSoloLectura"> Seleccionar establecimiento </button>
   </div>
 </div>
 <form [formGroup]="datosdelestablecimiento">

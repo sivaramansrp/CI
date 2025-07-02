@@ -1,11 +1,12 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
+import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { of } from 'rxjs';
 import { ContenedorComponent } from './contenedor.component';
 import { DatosTramiteService } from 'libs/shared/data-access-user/src/core/services/11202/datos-tramite.service';
 import { Contenedor11202Store } from '../../../../core/estados/tramites/contenedor11202.store';
 import { Contenedor11202Query } from '../../../../core/queries/contenedor11202.query';
+
 
 describe('ContenedorComponent', () => {
   let component: ContenedorComponent;
@@ -170,5 +171,228 @@ describe('ContenedorComponent', () => {
 
     expect(datosTramiteService.getDatosTableData).toHaveBeenCalled();
     expect(component.datosTabla).toEqual(mockData);
+  });
+
+
+
+
+  it('should reset the form and clear related properties when limpiarCampos is called', () => {
+    component.solicitudForm = new FormBuilder().group({
+      tipoBusqueda: ['testValue'],
+    });
+    component.contenedores = [
+      {
+        "id": 1,
+        "inicialesContenedor": "inicialesContenedor",
+        "numeroContenedor": 2121,
+        "digitoVerificador": "digitoVerificador",
+        "digito": 22,
+        "tipoContenedor": "tipoContenedor",
+        "estadoConstancia": "estadoConstancia",
+        "aduana": 12,
+        "existeEnVUCEM": "existeEnVUCEM",
+        "idConstancia": "idConstancia",
+      }
+    ];
+    component.archivoSeleccionado = 'testFile';
+    component.exceptionCaught = true;
+
+    component.limpiarCampos();
+
+    expect(component.solicitudForm.value).toEqual({ tipoBusqueda: null });
+    expect(component.contenedores).toEqual([]);
+    expect(component.archivoSeleccionado).toBe('');
+    expect(component.exceptionCaught).toBe(false);
+  });
+
+  it('should not call submitSolicitud when the form is invalid', () => {
+    const submitSolicitudSpy = jest.spyOn(component['datosTramiteService'], 'submitSolicitud');
+    component.solicitudForm = new FormBuilder().group({
+      tipoBusqueda: ['', Validators.required],
+    });
+
+    component.datosCaptura();
+
+    expect(submitSolicitudSpy).not.toHaveBeenCalled();
+  });
+
+  it('should parse CSV and show the selected file table when a file is uploaded', () => {
+    const mockFile = new File(['Aduana,Tipo de equipo\nTestAduana,TestEquipo'], 'test.csv', { type: 'text/csv' });
+    const mockFileInput = {
+      files: [mockFile],
+    } as unknown as HTMLInputElement;
+
+    jest.spyOn(document, 'getElementById').mockReturnValue(mockFileInput);
+    const parseCSVSpy = jest.spyOn(component, 'parseCSV');
+
+    component.adjuntarArchivo();
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      expect(parseCSVSpy).toHaveBeenCalledWith('Aduana,Tipo de equipo\nTestAduana,TestEquipo');
+      expect(component.showArchivoSeleccionadoTable).toBe(true);
+    };
+    reader.readAsText(mockFile);
+  });
+  it('should parse CSV data and update datosTabla', () => {
+    const csvData = `Aduana,Tipo de equipo\nTestAduana,TestEquipo`;
+    component.parseCSV(csvData);
+
+    expect(component.datosTabla).toEqual([
+      { aduana: 'TestAduana', tipoEquipo: 'TestEquipo' },
+    ]);
+  });
+  it('should parse CSV and show the cargar archivo table when a file is uploaded', () => {
+    const mockFile = new File(['Aduana,Tipo de equipo\nTestAduana,TestEquipo'], 'test.csv', { type: 'text/csv' });
+    const mockFileInput = {
+      files: [mockFile],
+    } as unknown as HTMLInputElement;
+
+    jest.spyOn(document, 'getElementById').mockReturnValue(mockFileInput);
+    const parseCSVSpy = jest.spyOn(component, 'parseCSV');
+
+    component.Archivo();
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      expect(parseCSVSpy).toHaveBeenCalledWith('Aduana,Tipo de equipo\nTestAduana,TestEquipo');
+      expect(component.showCargarArchivoTable).toBe(true);
+    };
+    reader.readAsText(mockFile);
+  });
+  it('should reset the form and clear related properties when openModalCancelarTramite is called', () => {
+    component.solicitudForm = new FormBuilder().group({
+      tipoBusqueda: ['testValue'],
+    });
+    component.contenedores = [
+      {
+        "id": 1,
+        "inicialesContenedor": "inicialesContenedor",
+        "numeroContenedor": 2121,
+        "digitoVerificador": "digitoVerificador",
+        "digito": 22,
+        "tipoContenedor": "tipoContenedor",
+        "estadoConstancia": "estadoConstancia",
+        "aduana": 12,
+        "existeEnVUCEM": "existeEnVUCEM",
+        "idConstancia": "idConstancia",
+      }
+    ];
+    component.archivoSeleccionado = 'testFile';
+    component.exceptionCaught = true;
+
+    component.openModalCancelarTramite();
+
+    expect(component.solicitudForm.value).toEqual({ tipoBusqueda: null });
+    expect(component.contenedores).toEqual([]);
+    expect(component.archivoSeleccionado).toBe('');
+    expect(component.exceptionCaught).toBe(false);
+  });
+  it('should set currentIdx based on localStorage value', () => {
+    // Mock localStorage
+    const localStorageMock = {
+      getItem: jest.fn().mockReturnValue('2'),
+      setItem: jest.fn(),
+      removeItem: jest.fn(),
+      clear: jest.fn(),
+    };
+    Object.defineProperty(window, 'localStorage', { value: localStorageMock });
+    component.tabSeleccionado();
+    expect(localStorageMock.getItem).toHaveBeenCalledWith('currentIdx');
+    expect(component.currentIdx).toBe(2);
+  });
+
+  it('should set currentIdx to 0 if localStorage value is null', () => {
+    jest.spyOn(localStorage, 'getItem').mockReturnValue(null);
+
+    component.tabSeleccionado();
+
+    expect(component.currentIdx).toBe(0);
+  });
+  it('should reset tipoBusqueda and call mostrarCampos', () => {
+    const mostrarCamposSpy = jest.spyOn(component, 'mostrarCampos');
+    component.solicitudForm = new FormBuilder().group({
+      tipoBusqueda: ['testValue'],
+    });
+
+    component.cancelarRadioButton();
+
+    expect(component.solicitudForm.get('tipoBusqueda')?.value).toBe('');
+    expect(mostrarCamposSpy).toHaveBeenCalled();
+  });
+  it('should set agregarTipoContenedorVisible to true', () => {
+    component.agregarTipoContenedorVisible = false;
+
+    component.mostrarTIpoContenedor();
+
+    expect(component.agregarTipoContenedorVisible).toBe(true);
+  });
+
+  it('should disable the form when soloLectura is true', () => {
+    component.soloLectura = true;
+    component.solicitudForm = new FormBuilder().group({
+      testField: [''],
+    });
+    component.inicializarEstadoFormulario();
+    expect(component.solicitudForm.disabled).toBe(true);
+  });
+
+  it('should enable the form when soloLectura is false', () => {
+    component.soloLectura = false;
+    component.solicitudForm = new FormBuilder().group({
+      testField: [''],
+    });
+    component.inicializarEstadoFormulario();
+    expect(component.solicitudForm.enabled).toBe(true);
+  });
+  it('should parse CSV and show the cargar archivo table when a file is uploaded', () => {
+    const mockFile = new File(['Aduana,Tipo de equipo\nTestAduana,TestEquipo'], 'test.csv', { type: 'text/csv' });
+    const mockFileInput = {
+      files: [mockFile],
+    } as unknown as HTMLInputElement;
+
+    jest.spyOn(document, 'getElementById').mockReturnValue(mockFileInput);
+    const parseCSVSpy = jest.spyOn(component, 'parseCSV');
+    component.Archivo();
+    const reader = new FileReader();
+    reader.onload = () => {
+      expect(parseCSVSpy).toHaveBeenCalledWith('Aduana,Tipo de equipo\nTestAduana,TestEquipo');
+      expect(component.showCargarArchivoTable).toBe(true);
+    };
+    reader.readAsText(mockFile);
+  });
+
+  it('should parse CSV and show the archivo seleccionado table when a file is uploaded', () => {
+    const mockFile = new File(['Aduana,Tipo de equipo\nTestAduana,TestEquipo'], 'test.csv', { type: 'text/csv' });
+    const mockFileInput = {
+      files: [mockFile],
+    } as unknown as HTMLInputElement;
+    jest.spyOn(document, 'getElementById').mockReturnValue(mockFileInput);
+    const parseCSVSpy = jest.spyOn(component, 'parseCSV');
+    component.adjuntarArchivo();
+    const reader = new FileReader();
+    reader.onload = () => {
+      expect(parseCSVSpy).toHaveBeenCalledWith('Aduana,Tipo de equipo\nTestAduana,TestEquipo');
+      expect(component.showArchivoSeleccionadoTable).toBe(true);
+    };
+    reader.readAsText(mockFile);
+  });
+
+  it('should not call submitSolicitud when the form is invalid', () => {
+    const submitSolicitudSpy = jest.spyOn(component['datosTramiteService'], 'submitSolicitud');
+    component.solicitudForm = new FormBuilder().group({
+      tipoBusqueda: ['', Validators.required],
+    });
+    component.datosCaptura();
+    expect(submitSolicitudSpy).not.toHaveBeenCalled();
+  });
+  it('should set showArchivoSeleccionadoTable to true when no file is uploaded', () => {
+    const mockFileInput = {
+      files: [],
+    } as unknown as HTMLInputElement;
+
+    jest.spyOn(document, 'getElementById').mockReturnValue(mockFileInput);
+    component.adjuntarArchivo();
+    expect(component.showArchivoSeleccionadoTable).toBe(false);
   });
 });

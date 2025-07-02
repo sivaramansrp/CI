@@ -302,7 +302,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     private validacionesService: ValidacionesFormularioService,
     public tramite11201Store: Tramite11201Store,
     private tramite11201Query: Tramite11201Query,
-    private modalService: BsModalService,
+    public modalService: BsModalService,
     private consultaioQuery: ConsultaioQuery,
   ) {
     this.transporteList = {

@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL, PERSONA_MORAL_NACIONAL } from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
 import { FormularioDinamico, SolicitanteComponent, TIPO_PERSONA } from '@ng-mf/data-access-user';
@@ -16,7 +16,7 @@ import { Solicitud220501Store } from '../../estados/tramites220501.store';
   styles: ``,
   standalone: false,
 })
-export class PasoUnoComponent implements OnInit, AfterViewInit {
+export class PasoUnoComponent implements OnInit, OnDestroy, AfterViewInit {
   /** 
    * Referencia al componente SolicitanteComponent 
    */
@@ -48,14 +48,14 @@ export class PasoUnoComponent implements OnInit, AfterViewInit {
   public esDatosRespuesta: boolean = false;
 
   /**
-   * Indica si el formulario está deshabilitado.
-   */
-  formularioDeshabilitado: boolean = false;
-
-  /**
    * Subject para notificar la destrucción del componente.
    */
   private destroyNotifier$: Subject<void> = new Subject();
+
+  /**
+   * Indica si se debe mostrar la sección de revisión documental.
+   */
+  mostrarRevisionDocumental: boolean = true;
 
   /**
    * Constructor del componente.
@@ -81,6 +81,11 @@ export class PasoUnoComponent implements OnInit, AfterViewInit {
       .pipe(takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.consultaState = seccionState;
+          if (this.consultaState.readonly) {
+            this.mostrarRevisionDocumental = false;
+          } else {
+            this.mostrarRevisionDocumental = true;
+          }
         })
       )
       .subscribe();
@@ -132,4 +137,13 @@ export class PasoUnoComponent implements OnInit, AfterViewInit {
     this.indice = i;
   }
 
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
+   * Se utiliza para limpiar los recursos y evitar fugas de memoria.
+   * @return {void}
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
+  }
 }
