@@ -11,8 +11,12 @@ describe('DocumentosComponent', () => {
   let fixture: ComponentFixture<DocumentosComponent>;
   let folioQueryMock: any;
   let activatedRouteMock: any;
+  let windowOpenSpy: jest.SpyInstance;
 
   beforeEach(async () => {
+    // Mock para window.open
+    windowOpenSpy = jest.spyOn(window, 'open').mockImplementation(() => null);
+
     // Crear mock para FolioQuery
     folioQueryMock = {
       getFolio: jest.fn().mockReturnValue(of('DOC123456'))
@@ -66,6 +70,10 @@ describe('DocumentosComponent', () => {
     if (typeof component.getDocumentos === 'function') {
       jest.spyOn(component, 'getDocumentos');
     }
+  });
+  // Limpiamos los spies después de cada prueba
+  afterEach(() => {
+    windowOpenSpy.mockRestore();
   });
 
   it('should create', () => {
