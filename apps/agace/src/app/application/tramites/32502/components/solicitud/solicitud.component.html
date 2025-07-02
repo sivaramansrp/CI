@@ -27,7 +27,10 @@
           >
           <input
             class="form-control"
-            [class.is-invalid]="extranjeroAvisoAgace.get('razonSocial')?.touched && extranjeroAvisoAgace.get('razonSocial')?.invalid"
+            [class.is-invalid]="
+              extranjeroAvisoAgace.get('razonSocial')?.touched &&
+              extranjeroAvisoAgace.get('razonSocial')?.invalid
+            "
             type="text"
             formControlName="razonSocial"
             name="razonSocial"
@@ -55,7 +58,10 @@
           <label for="rfc" class="form-label">RFC*:</label>
           <input
             class="form-control"
-            [class.is-invalid]="extranjeroAvisoAgace.get('rfc')?.touched && extranjeroAvisoAgace.get('rfc')?.invalid"
+            [class.is-invalid]="
+              extranjeroAvisoAgace.get('rfc')?.touched &&
+              extranjeroAvisoAgace.get('rfc')?.invalid
+            "
             type="text"
             formControlName="rfc"
             name="rfc"
@@ -69,10 +75,7 @@
               extranjeroAvisoAgace.get('rfc')?.invalid
             "
           >
-            <span
-              *ngIf="
-                extranjeroAvisoAgace.get('rfc')?.hasError('required')
-              "
+            <span *ngIf="extranjeroAvisoAgace.get('rfc')?.hasError('required')"
               >Este campo es obligatorio.</span
             >
           </div>
@@ -127,7 +130,10 @@
           <label for="nico" class="form-label">NICO*:</label>
           <input
             class="form-control"
-            [class.is-invalid]="mercanciaST.get('nico')?.touched && mercanciaST.get('nico')?.invalid"
+            [class.is-invalid]="
+              mercanciaST.get('nico')?.touched &&
+              mercanciaST.get('nico')?.invalid
+            "
             type="number"
             formControlName="nico"
             name="nico"
@@ -141,22 +147,22 @@
               mercanciaST.get('nico')?.invalid
             "
           >
-            <span
-              *ngIf="
-                mercanciaST.get('nico')?.hasError('required')
-              "
+            <span *ngIf="mercanciaST.get('nico')?.hasError('required')"
               >Este campo es obligatorio.</span
             >
           </div>
         </div>
       </div>
 
-    <div class="row mb-3">
+      <div class="row mb-3">
         <div class="col-md-4">
           <label for="valorUSD" class="form-label">Valor USD*:</label>
           <input
             class="form-control"
-            [class.is-invalid]="mercanciaST.get('valorUSD')?.touched && mercanciaST.get('valorUSD')?.invalid"
+            [class.is-invalid]="
+              mercanciaST.get('valorUSD')?.touched &&
+              mercanciaST.get('valorUSD')?.invalid
+            "
             type="number"
             formControlName="valorUSD"
             name="valorUSD"
@@ -170,67 +176,63 @@
               mercanciaST.get('valorUSD')?.invalid
             "
           >
-            <span
-              *ngIf="
-                mercanciaST.get('valorUSD')?.hasError('required')
-              "
+            <span *ngIf="mercanciaST.get('valorUSD')?.hasError('required')"
               >Este campo es obligatorio.</span
             >
-          </div>       
+          </div>
         </div>
-    </div>
-    <div class="col-md-4">
-          <label for="marca" class="form-label">Marca*:</label>
-          <input
-            class="form-control"
-            [class.is-invalid]="mercanciaST.get('marca')?.touched && mercanciaST.get('marca')?.invalid"
-            type="text"
-            formControlName="marca"
-            name="marca"
-            id="marca"
-            (change)="setValoresStore(mercanciaST)"
-          />
-          <div
-            class="invalid-feedback"
-            *ngIf="
-              mercanciaST.get('marca')?.touched &&
-              mercanciaST.get('marca')?.invalid
-            "
-          >
-            <span
-              *ngIf="
-                mercanciaST.get('marca')?.hasError('required')
-              "
-              >Este campo es obligatorio.</span
-            >
-          </div>
-    </div>
         <div class="col-md-4">
-          <label for="peso" class="form-label">Peso (Kg)*:</label>
-          <input
-            class="form-control"
-            [class.is-invalid]="mercanciaST.get('peso')?.touched && mercanciaST.get('peso')?.invalid"
-            type="number"
-            formControlName="peso"
-            name="peso"
-            id="peso"
-            (change)="setValoresStore(mercanciaST)"
-          />
-          <div
-            class="invalid-feedback"
-            *ngIf="
-              mercanciaST.get('peso')?.touched &&
-              mercanciaST.get('peso')?.invalid
-            "
+        <label for="marca" class="form-label">Marca*:</label>
+        <input
+          class="form-control"
+          [class.is-invalid]="
+            mercanciaST.get('marca')?.touched &&
+            mercanciaST.get('marca')?.invalid
+          "
+          type="text"
+          formControlName="marca"
+          name="marca"
+          id="marca"
+          (change)="setValoresStore(mercanciaST)"
+        />
+        <div
+          class="invalid-feedback"
+          *ngIf="
+            mercanciaST.get('marca')?.touched &&
+            mercanciaST.get('marca')?.invalid
+          "
+        >
+          <span *ngIf="mercanciaST.get('marca')?.hasError('required')"
+            >Este campo es obligatorio.</span
           >
-            <span
-              *ngIf="
-                mercanciaST.get('peso')?.hasError('required')
-              "
-              >Este campo es obligatorio.</span
-            >
-          </div>
+        </div>
       </div>
+      <div class="col-md-4">
+        <label for="peso" class="form-label">Peso (Kg)*:</label>
+        <input
+          class="form-control"
+          [class.is-invalid]="
+            mercanciaST.get('peso')?.touched && mercanciaST.get('peso')?.invalid
+          "
+          type="number"
+          formControlName="peso"
+          name="peso"
+          id="peso"
+          (change)="setValoresStore(mercanciaST)"
+        />
+        <div
+          class="invalid-feedback"
+          *ngIf="
+            mercanciaST.get('peso')?.touched && mercanciaST.get('peso')?.invalid
+          "
+        >
+          <span *ngIf="mercanciaST.get('peso')?.hasError('required')"
+            >Este campo es obligatorio.</span
+          >
+        </div>
+      </div>
+      </div>
+      
       <div class="row mb-3">
         <div class="col-md-4">
           <input-fecha
@@ -259,7 +261,7 @@
       <div class="row mb-3">
         <div class="col-md-8">
           <label for="descripcionMercancia" class="form-label"
-            >Descripci&oacute;n de la mercancía*:</label
+            >Descripci&oacute;n de la mercancía:</label
           >
           <textarea
             cols="60"
@@ -282,9 +284,6 @@
           >
           <input
             class="form-control"
-            [ngClass]="
-              isValid(direccionST, 'informacionExtra') ? 'required' : ''
-            "
             type="text"
             formControlName="informacionExtra"
             maxlength="250"
@@ -334,7 +333,10 @@
           <label for="calle" class="form-label">Calle*:</label>
           <input
             class="form-control"
-            [class.is-invalid]="direccionST.get('calle')?.touched && direccionST.get('calle')?.invalid"
+            [class.is-invalid]="
+              direccionST.get('calle')?.touched &&
+              direccionST.get('calle')?.invalid
+            "
             type="text"
             formControlName="calle"
             name="calle"
@@ -348,10 +350,7 @@
               direccionST.get('calle')?.invalid
             "
           >
-            <span
-              *ngIf="
-                direccionST.get('calle')?.hasError('required')
-              "
+            <span *ngIf="direccionST.get('calle')?.hasError('required')"
               >Este campo es obligatorio.</span
             >
           </div>
@@ -362,7 +361,10 @@
           <label for="valorUSD" class="form-label">No. exterior*:</label>
           <input
             class="form-control"
-            [class.is-invalid]="direccionST.get('numeroExterior')?.touched && direccionST.get('numeroExterior')?.invalid"
+            [class.is-invalid]="
+              direccionST.get('numeroExterior')?.touched &&
+              direccionST.get('numeroExterior')?.invalid
+            "
             type="number"
             formControlName="numeroExterior"
             name="valorUSD"
@@ -377,9 +379,7 @@
             "
           >
             <span
-              *ngIf="
-                direccionST.get('numeroExterior')?.hasError('required')
-              "
+              *ngIf="direccionST.get('numeroExterior')?.hasError('required')"
               >Este campo es obligatorio.</span
             >
           </div>
@@ -388,7 +388,6 @@
           <label for="numeroInterior" class="form-label">No. interior:</label>
           <input
             class="form-control"
-            [ngClass]="isValid(direccionST, 'numeroInterior') ? 'required' : ''"
             type="text"
             formControlName="numeroInterior"
             name="numeroInterior"
@@ -400,13 +399,30 @@
           <label for="codigoPostal" class="form-label">Código postal*:</label>
           <input
             class="form-control"
-            [ngClass]="isValid(direccionST, 'codigoPostal') ? 'required' : ''"
-            type="number"
+            [class.is-invalid]="
+              direccionST.get('codigoPostal')?.touched &&
+              direccionST.get('codigoPostal')?.invalid
+            "
+            type="text"
             formControlName="codigoPostal"
             name="codigoPostal"
             id="codigoPostal"
             (change)="setValoresStore(direccionST)"
           />
+          <div
+            class="invalid-feedback"
+            *ngIf="
+              direccionST.get('codigoPostal')?.touched &&
+              direccionST.get('codigoPostal')?.invalid
+            "
+          >
+            <span *ngIf="direccionST.get('codigoPostal')?.hasError('required')"
+              >Este campo es obligatorio.</span
+            >
+            <span *ngIf="direccionST.get('codigoPostal')?.hasError('maxlength')"
+              >Este campo debe tener un máximo de 5 caracteres.</span
+            >
+          </div>
         </div>
       </div>
     </ng-container>
@@ -420,9 +436,6 @@
           >
           <input
             class="form-control"
-            [ngClass]="
-              isValid(pedimentoST, 'patenteAutorizacion') ? 'required' : ''
-            "
             type="number"
             formControlName="patenteAutorizacion"
             name="patenteAutorizacion"
@@ -436,15 +449,27 @@
           >
           <input
             class="form-control"
-            [ngClass]="
-              isValid(pedimentoST, 'rfcAgenteAduanal') ? 'required' : ''
-            "
             type="text"
             formControlName="rfcAgenteAduanal"
             name="rfcAgenteAduanal"
             id="rfcAgenteAduanal"
+            [class.is-invalid]="
+              pedimentoST.get('rfcAgenteAduanal')?.touched &&
+              pedimentoST.get('rfcAgenteAduanal')?.invalid
+            "
             (change)="setValoresStore(pedimentoST)"
           />
+           <div
+            class="invalid-feedback"
+            *ngIf="
+              pedimentoST.get('rfcAgenteAduanal')?.touched &&
+              pedimentoST.get('rfcAgenteAduanal')?.invalid
+            "
+          >
+            <span *ngIf="pedimentoST.get('rfcAgenteAduanal')?.hasError('maxlength')"
+              >Este campo debe tener un máximo de 12 caracteres.</span
+            >
+          </div>
         </div>
       </div>
       <div class="row mb-3">
@@ -465,7 +490,6 @@
           >
           <input
             class="form-control"
-            [ngClass]="isValid(pedimentoST, 'claveAduana') ? 'required' : ''"
             type="number"
             formControlName="claveAduana"
             name="claveAduana"
