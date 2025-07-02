@@ -7,10 +7,10 @@
  * El estado seleccionado se gestiona utilizando Akita para asegurar la persistencia del estado.
  */
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import {
   ConsultaioQuery,
-  TituloComponent,
+  TituloComponent
 } from '@ng-mf/data-access-user';
 import {
   FormBuilder,
@@ -44,7 +44,11 @@ import { Tramite90305Query } from '../../estados/tramite90305.query';
   styleUrl: './consultad-domicilios-90305.component.scss',
 })
 export class ConsultadDomicilios90305Component implements OnInit, OnDestroy {
- 
+  /**
+   * Evento emitido cuando se busca un domicilio
+   * @type {EventEmitter<any>}
+   */
+ @Output() domicilioBuscado = new EventEmitter<string>();
   /** Catálogo de estados cargado desde un archivo JSON */
   estadoJson: CatalogoResponse[] = [];
   /** Formulario reactivo para la consulta de domicilios */
@@ -119,11 +123,23 @@ export class ConsultadDomicilios90305Component implements OnInit, OnDestroy {
     }
     this.getEstadoCatalogo();
   }
+   
+/**
+ * Busca domicilios basados en el estado seleccionado en el formulario.
+ * Si el formulario es inválido, marca todos los campos como tocados.
+ */
 buscarDomicilios() {
+  
   if (this.formConsulta.invalid) {
     this.formConsulta.markAllAsTouched();
+    return;
   }
- 
+  const ESTADO_SELECCIONADO = this.formConsulta.get('estadoControl')?.value;
+  if (ESTADO_SELECCIONADO) {
+  
+    this.domicilioBuscado.emit(ESTADO_SELECCIONADO); // emit only the value
+
+  }
 }
   /**
    * Inicializa el formulario reactivo para capturar el estado seleccionado.

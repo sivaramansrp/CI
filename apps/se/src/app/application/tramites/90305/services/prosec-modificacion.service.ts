@@ -98,9 +98,12 @@ export class ProsecModificacionServiceTsService {
    * @param DATOS - Objeto que contiene el estado del trámite 90305.
    */
   actualizarEstadoFormulario(DATOS: Tramite90305State): void {
-    if(DATOS.selectedEstado){
+ 
     this.tramite90305Store.setSelectedEstado(DATOS.selectedEstado);
-    }
+    this.tramite90305Store.setRegistroFederalContribuyentes(DATOS.registroFederalContribuyentes);
+    this.tramite90305Store.setRepresentacionFederal(DATOS.representacionFederal);
+    this.tramite90305Store.setTipoModificacion(DATOS.tipoModificacion);
+    this.tramite90305Store.setModificacionPrograma(DATOS.modificacionPrograma);
   }
   registrarFormulario(key: string, formulario: FormGroup): void {
     this.formularios.set(key, formulario);
