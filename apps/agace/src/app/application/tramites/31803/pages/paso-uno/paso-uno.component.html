@@ -10,7 +10,7 @@
           (keydown.space)="seleccionaTab(2)" role="button" tabindex="2">Solicitud</a>
       </li>
     </ul>
-    <ng-container> @switch (indice) { @case (1) { <solicitante [tabindex]="1" #Solicitante></solicitante> } @case (2) {
+    <ng-container> @switch (indice) { @case (1) { <solicitante [tabindex]="1"></solicitante> } @case (2) {
       <app-solicitud [tabIndex]="2"></app-solicitud> } } </ng-container>
   </div>
 </div>

@@ -94,6 +94,15 @@ private destroyNotifier$: Subject<void> = new Subject<void>();
     return this.http.get<Mercancias[]>('assets/json/261103/mercancias.json');
   }
 
+  /**
+   * Obtiene los datos de las aduanas desde un archivo JSON.
+   * 
+   * @returns {Observable<Domicilio[]>} Un observable que emite una lista de objetos `Domicilio` con los datos de las aduanas.
+   */
+   getAduanaData(): Observable<Domicilio[]> {
+    return this.http.get<Domicilio[]>('assets/json/261103/aduana.json');
+  }
+
     /**
      * Obtiene los datos de la tabla SCIAN desde un archivo JSON.
      * @returns Un observable que emite una lista de objetos `ScianData` con los datos de la tabla SCIAN.

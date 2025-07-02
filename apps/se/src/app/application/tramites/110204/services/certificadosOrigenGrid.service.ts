@@ -9,7 +9,6 @@ import { Mercancia } from '../models/plantas-consulta.model';
   providedIn: 'root'
 })
 export class CertificadosOrigenGridService {
-  // eslint-disable-next-line no-empty-function
   constructor(private http: HttpClient, private store: Tramite110204Store) { }
 
   /**
