@@ -14,7 +14,6 @@ import { Tramite260601Store } from '../../../../estados/tramites/tramite260601.s
 import { Tramite260601Query } from '../../../../estados/queries/tramite260601.query';
 import { AvisoSanitarioService } from '../../services/aviso-sanitario.service';
 
-// Mocks for dependencies
 const mockTramite260601Store = {
   setTipoProducto: jest.fn(),
   setTercerosNacionalidadFabricante: jest.fn(),
@@ -127,7 +126,7 @@ describe('AgregarFabricanteComponent', () => {
         InputRadioComponent,
         CatalogoSelectComponent,
         AgregarFabricanteComponent,
-        HttpClientTestingModule
+        HttpClientTestingModule,
       ],
       declarations: [],
       providers: [
@@ -139,7 +138,7 @@ describe('AgregarFabricanteComponent', () => {
           useValue: mockAvisoSanitarioService,
         },
         { provide: 'ConsultaioQuery', useValue: mockConsultaioQuery },
-        // Provide tokens for constructor injection
+
         { provide: Tramite260601Store, useValue: mockTramite260601Store },
         { provide: Tramite260601Query, useValue: mockTramite260601Query },
         { provide: AvisoSanitarioService, useValue: mockAvisoSanitarioService },
@@ -151,7 +150,7 @@ describe('AgregarFabricanteComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(AgregarFabricanteComponent);
     component = fixture.componentInstance;
-    // Simulate consultaioQuery state emission
+
     consultaioStateSubject.next({ readonly: false });
     fixture.detectChanges();
   });
@@ -180,18 +179,15 @@ describe('AgregarFabricanteComponent', () => {
 
   it('should reset and update store on onNacionalidadCambio', () => {
     component.inicializarFormulario();
-    component.onNacionalidadCambio(2); // 2 = EXTRANJERO
+    component.onNacionalidadCambio(2);
     expect(
       mockTramite260601Store.setTercerosNacionalidadFabricante
     ).toHaveBeenCalledWith(2);
-    // expect(component.tipoPersonaOpciones.some((opt) => opt.value === 3)).toBe(
-    //   false
-    // ); // 3 = NO_CONTRIBUYENTE
   });
 
   it('should restore tipoPersonaOpciones on onNacionalidadCambio with NACIONAL', () => {
     component.inicializarFormulario();
-    component.onNacionalidadCambio(1); // 1 = NACIONAL
+    component.onNacionalidadCambio(1);
     expect(component.tipoPersonaOpciones.length).toBe(
       component.inicialTipoPersonaOpciones.length
     );
@@ -199,8 +195,8 @@ describe('AgregarFabricanteComponent', () => {
 
   it('should enable/disable fields on onTipoPersonaCambio for NACIONAL/FISICA', () => {
     component.inicializarFormulario();
-    component.avisoSanitarioState.tercerosNacionalidadFabricante = 1; // NACIONAL
-    component.avisoSanitarioState.tipoPersonaFabricante = 1; // FISICA
+    component.avisoSanitarioState.tercerosNacionalidadFabricante = 1;
+    component.avisoSanitarioState.tipoPersonaFabricante = 1;
     const enableSpy = jest.spyOn(
       component.datosGeneralesForm.get('rfcFabricante')!,
       'enable'
@@ -217,8 +213,8 @@ describe('AgregarFabricanteComponent', () => {
 
   it('should enable/disable fields on onTipoPersonaCambio for NACIONAL/NO_CONTRIBUYENTE', () => {
     component.inicializarFormulario();
-    component.avisoSanitarioState.tercerosNacionalidadFabricante = 1; // NACIONAL
-    component.avisoSanitarioState.tipoPersonaFabricante = 3; // NO_CONTRIBUYENTE
+    component.avisoSanitarioState.tercerosNacionalidadFabricante = 1;
+    component.avisoSanitarioState.tipoPersonaFabricante = 3;
     const enableSpy = jest.spyOn(
       component.datosGeneralesForm.get('curpFabricante')!,
       'enable'
@@ -234,21 +230,27 @@ describe('AgregarFabricanteComponent', () => {
   });
   it('should call guardarDatosFormulario if esFormularioSoloLectura is true in inicializarEstadoFormulario', () => {
     component.esFormularioSoloLectura = true;
-    const guardarDatosFormularioSpy = jest.spyOn(component, 'guardarDatosFormulario' as any);
+    const guardarDatosFormularioSpy = jest.spyOn(
+      component,
+      'guardarDatosFormulario' as any
+    );
     component.inicializarEstadoFormulario();
     expect(guardarDatosFormularioSpy).toHaveBeenCalled();
   });
 
   it('should call inicializarFormulario if esFormularioSoloLectura is false in inicializarEstadoFormulario', () => {
     component.esFormularioSoloLectura = false;
-    const inicializarFormularioSpy = jest.spyOn(component, 'inicializarFormulario');
+    const inicializarFormularioSpy = jest.spyOn(
+      component,
+      'inicializarFormulario'
+    );
     component.inicializarEstadoFormulario();
     expect(inicializarFormularioSpy).toHaveBeenCalled();
   });
   it('should enable datosPersonalesForm and domicilioForm for EXTRANJERO/FISICA', () => {
     component.inicializarFormulario();
-    component.avisoSanitarioState.tercerosNacionalidadFabricante = 2; // EXTRANJERO
-    component.avisoSanitarioState.tipoPersonaFabricante = 1; // FISICA
+    component.avisoSanitarioState.tercerosNacionalidadFabricante = 2;
+    component.avisoSanitarioState.tipoPersonaFabricante = 1;
     const enableDatosPersonalesSpy = jest.spyOn(
       component.datosPersonalesForm,
       'enable'

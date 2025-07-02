@@ -193,11 +193,6 @@ describe('AgregarProveedorComponent', () => {
   it('should call setTipoPersona and reset forms on onTipoPersonaCambio', () => {
     jest.spyOn(component, 'resetDatosPersonalesForm');
     jest.spyOn(component, 'resetDomicilioForm');
-    // component.avisoSanitarioState = {
-    //   ...mockTramite260601Query.selectSeccionState$['source']?._value,
-    //   tercerosNacionalidad: 'NACIONAL',
-    //   tipoPersona: 'FISICA',
-    // };
     component.onTipoPersonaCambio('FISICA');
     expect(mockTramite260601Store.setTipoPersona).toHaveBeenCalledWith(
       'FISICA'
