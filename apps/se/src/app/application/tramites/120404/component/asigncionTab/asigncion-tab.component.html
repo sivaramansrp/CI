@@ -40,10 +40,12 @@
         <div class="row mb-5">
             <div class="col-md-6"></div>
             <div class="col-md-6 text-end">
-                    <button class="btn btn-group btn-primary" type="button">Buscar</button>
+                    <button class="btn btn-group btn-primary" type="button" (click)="buscar()">Buscar</button>
             </div>
         </div>
 
     </form>
 </div>
+<div *ngIf="buscarDatos">
 <app-solicitantetab></app-solicitantetab>
+</div>
