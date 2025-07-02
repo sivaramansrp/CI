@@ -1,12 +1,19 @@
+/**
+ * Importación de tipos y modelos necesarios para la configuración de catálogos y columnas.
+ */
 import { CatalogosSelect } from '@libs/shared/data-access-user/src';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
 
 import { FilaData, FilaData2 } from '../models/fila-model';
 
+/**
+ * Texto informativo que se muestra al usuario sobre la funcionalidad de copiar datos de una solicitud.
+ */
 export const TEXTOS_SOLICITUD = `Al dar doble-clic en una Solicitud, se copiarán sus datos en esta Solicitud.`
 
 /**
- * Encabezados de la tabla de solicitudes.  
+ * Encabezados de la tabla de solicitudes.
+ * Define los títulos de las columnas que se mostrarán en la tabla.
  */
 export const SOLICITUD_HEADER = {
   "hSolicitud": [
@@ -17,6 +24,11 @@ export const SOLICITUD_HEADER = {
   ]
 }
 
+/**
+ * Configuración de catálogos utilizados en el formulario.
+ * Cada catálogo contiene información como el nombre, si es requerido,
+ * la primera opción que se muestra y una lista de opciones disponibles.
+ */
 export const CATALOGOS = {
   ENVASADO: {
     labelNombre: 'Envasado',
@@ -82,7 +94,10 @@ export const CATALOGOS = {
   } as CatalogosSelect,
 };
 
-
+/**
+ * Configuración de las columnas de la tabla de solicitudes.
+ * Define el encabezado, la clave para obtener el valor de cada fila y el orden de las columnas.
+ */
 export const CONFIGURACION_COLUMNAS_SOLI: ConfiguracionColumna<FilaData>[] = [
   {
     encabezado: 'Envasado',
@@ -176,6 +191,10 @@ export const CONFIGURACION_COLUMNAS_SOLI: ConfiguracionColumna<FilaData>[] = [
   },
 ];
 
+/**
+ * Configuración de las columnas de la tabla de solicitudes (segunda tabla).
+ * Similar a la primera configuración, pero con datos específicos para otra tabla.
+ */
 export const CONFIGURACION_COLUMNAS_SOLI_2: ConfiguracionColumna<FilaData2>[] = [
   {
     encabezado: 'Nombre/denominación o razón social',

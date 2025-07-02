@@ -12,6 +12,9 @@ import {
   CatalogosSelect,
   ConsultaioQuery,
   ConsultaioState,
+  REGEX_CODIGO_POSTAL,
+  REGEX_CORREO_ELECTRONICO,
+  REGEX_TELEFONO,
   TablaSeleccion,
   TableComponent,
 } from '@libs/shared/data-access-user/src';
@@ -197,11 +200,11 @@ export class TercerosRelacionadosComponent implements OnInit,OnDestroy {
         pais: [this.destinatarioState?.pais, [Validators.required]],
         codigopostal: [
           this.destinatarioState?.codigopostal,
-          [Validators.required, Validators.maxLength(5), Validators.pattern('^[0-9]+$')]],
-        telefono: [this.destinatarioState?.telefono, [Validators.required, Validators.pattern('^[0-9]+$')]],
+          [Validators.required, Validators.maxLength(5), Validators.pattern(REGEX_CODIGO_POSTAL)]],
+        telefono: [this.destinatarioState?.telefono, [Validators.required, Validators.pattern(REGEX_TELEFONO)]],
         correoelectronico: [
           this.destinatarioState?.correoelectronico,
-          [Validators.required, Validators.email]],
+          [Validators.required, Validators.pattern(REGEX_CORREO_ELECTRONICO)]],
         
       }),
     });
@@ -282,14 +285,33 @@ export class TercerosRelacionadosComponent implements OnInit,OnDestroy {
   /**
    * Método para limpiar el formulario.
    */
-  onLimpiar(): void {
-    this.destinatarioForm.reset();
-    this.destinatarioForm.patchValue({
-      datosDelTramiteRealizar: {
-        pais: 'Selecciona un medio de transporte',
-      },
-    });
-  }
+ /**
+ * Método para limpiar el formulario.
+ */
+onLimpiar(): void {
+  this.destinatarioForm.reset();
+  this.destinatarioForm.patchValue({
+    datosDelTramiteRealizar: {
+      pais: 'Selecciona un medio de transporte',
+    },
+  });
+
+  /**
+ * Recorre todos los controles del formulario `destinatarioForm` y marca cada uno como "tocado".
+ * Si el control es un `FormGroup`, también recorre sus controles secundarios y los marca como "tocados".
+ * Esto asegura que todos los campos del formulario muestren mensajes de validación si no son válidos.
+ */
+  Object.keys(this.destinatarioForm.controls).forEach((key) => {
+    const CONTROL = this.destinatarioForm.get(key);
+    if (CONTROL instanceof FormGroup) {
+      Object.keys(CONTROL.controls).forEach((subKey) => {
+        CONTROL.get(subKey)?.markAsTouched();
+      });
+    } else {
+      CONTROL?.markAsTouched();
+    }
+  });
+}
   /**
    * Método para seleccionar una fila de la tabla.
    * @param item Fila seleccionada.

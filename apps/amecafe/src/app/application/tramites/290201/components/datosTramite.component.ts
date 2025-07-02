@@ -6,7 +6,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 
 import { ReplaySubject,map, takeUntil } from 'rxjs';
 
-import { Catalogo, CatalogosSelect, ConsultaioQuery, ConsultaioState, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Catalogo, ConsultaioQuery, ConsultaioState, TituloComponent } from '@libs/shared/data-access-user/src';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { TableComponent } from '@libs/shared/data-access-user/src';
 
@@ -16,6 +16,7 @@ import { RegistrarSolicitudService } from '../services/registrar-solicitud.servi
 import { Solicitud290201Query } from '../../../estados/queries/tramites290201.query';
 
 import { Solicitud290201State, Solicitud290201Store } from '../../../estados/tramites/tramites290201.store';
+import { CATALOGOS_CONSTANTS } from '../constants/catalogos.enum';
 
 @Component({
   selector: 'app-datos-tramite',
@@ -58,91 +59,65 @@ export class DatosTramiteComponent implements OnDestroy, OnInit {
   
   /** Sujeto para manejar la destrucción del componente */
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
+/** 
+ * @property {CatalogosSelect} tiposData
+ * @description Configuración de datos para el campo "Tipos".
+ */
+public tiposData = CATALOGOS_CONSTANTS.TIPOS;
 
-  /** Configuración de datos para el campo "Tipos" */
-  public tiposData: CatalogosSelect = {
-    labelNombre: 'Tipos',
-    required: true,
-    primerOpcion: 'Seleccione una opción',
-    catalogos: [],
-  };
+/** 
+ * @property {CatalogosSelect} formasdelcafeData
+ * @description Configuración de datos para el campo "Formas del café".
+ */
+public formasdelcafeData = CATALOGOS_CONSTANTS.FORMAS_DEL_CAFE;
 
-  /** Configuración de datos para el campo "Formas del café" */
-  public formasdelcafeData: CatalogosSelect = {
-    labelNombre: 'Formas del café',
-    required: true,
-    primerOpcion: 'Seleccione una opción',
-    catalogos: [],
-  };
+/** 
+ * @property {CatalogosSelect} calidadData
+ * @description Configuración de datos para el campo "Calidad".
+ */
+public calidadData = CATALOGOS_CONSTANTS.CALIDAD;
 
-  /** Configuración de datos para el campo "Calidad" */
-  public calidadData: CatalogosSelect = {
-    labelNombre: 'Calidad',
-    required: true,
-    primerOpcion: 'Seleccione una opción',
-    catalogos: [],
-  };
+/** 
+ * @property {CatalogosSelect} procesosData
+ * @description Configuración de datos para el campo "Procesos".
+ */
+public procesosData = CATALOGOS_CONSTANTS.PROCESOS;
 
-  /** Configuración de datos para el campo "Procesos" */
-  public procesosData: CatalogosSelect = {
-    labelNombre: 'Procesos',
-    required: true,
-    primerOpcion: 'Seleccione una opción',
-    catalogos: [],
-  };
+/** 
+ * @property {CatalogosSelect} certificationsData
+ * @description Configuración de datos para el campo "Certificaciones".
+ */
+public certificationsData = CATALOGOS_CONSTANTS.CERTIFICACIONES;
 
-  /** Configuración de datos para el campo "Certificaciones" */
-  public certificationsData: CatalogosSelect = {
-    labelNombre: 'Certificaciones',
-    required: true,
-    primerOpcion: 'Seleccione una opción',
-    catalogos: [],
-  };
+/** 
+ * @property {CatalogosSelect} adunadesalidaData
+ * @description Configuración de datos para el campo "Aduana de salida".
+ */
+public adunadesalidaData = CATALOGOS_CONSTANTS.ADUANA_DE_SALIDA;
 
-  /** Configuración de datos para el campo "Aduana de salida" */
-  public adunadesalidaData: CatalogosSelect = {
-    labelNombre: 'Aduana de salida',
-    required: true,
-    primerOpcion: 'Seleccione una opción',
-    catalogos: [],
-  };
+/** 
+ * @property {CatalogosSelect} paisdestinoData
+ * @description Configuración de datos para el campo "País destino".
+ */
+public paisdestinoData = CATALOGOS_CONSTANTS.PAIS_DESTINO;
 
-  /** Configuración de datos para el campo "País destino" */
-  public paisdestinoData: CatalogosSelect = {
-    labelNombre: 'País destino',
-    required: true,
-    primerOpcion: 'Seleccione una opción',
-    catalogos: [],
-  };
+/** 
+ * @property {CatalogosSelect} entidaddeprocedenciaData
+ * @description Configuración de datos para el campo "Entidad de procedencia".
+ */
+public entidaddeprocedenciaData = CATALOGOS_CONSTANTS.ENTIDAD_DE_PROCEDENCIA;
 
-  /** Configuración de datos para el campo "Entidad de procedencia" */
-  public entidaddeprocedenciaData: CatalogosSelect = {
-    labelNombre: 'Entidad de procedencia',
-    required: true,
-    primerOpcion: 'Seleccione una opción',
-    catalogos: [],
-  };
+/** 
+ * @property {CatalogosSelect} ciclocafetaleroData
+ * @description Configuración de datos para el campo "Ciclo cafetalero".
+ */
+public ciclocafetaleroData = CATALOGOS_CONSTANTS.CICLO_CAFETALERO;
 
-  /** Configuración de datos para el campo "Ciclo cafetalero" */
-  public ciclocafetaleroData: CatalogosSelect = {
-    labelNombre: 'Ciclo cafetalero',
-    required: true,
-    primerOpcion: 'Seleccione una opción',
-    catalogos: [],
-  };
-
-  /**
+/** 
  * @property {CatalogosSelect} certificacionsData
  * @description Configuración de datos para el campo "Certificación".
- * @default Un objeto vacío con las propiedades inicializadas.
  */
-  public certificacionsData: CatalogosSelect = {
-    labelNombre: 'Certificacion',
-    required: true,
-    primerOpcion: 'Seleccione una opción',
-    catalogos: [],
-  };
-
+public certificacionsData = CATALOGOS_CONSTANTS.CERTIFICACION;
   constructor(
     /** Servicio para registrar solicitudes */
     private registrarsolicitud: RegistrarSolicitudService,

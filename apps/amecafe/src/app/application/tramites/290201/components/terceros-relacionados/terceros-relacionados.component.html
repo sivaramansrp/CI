@@ -37,6 +37,9 @@
                 [disabled]="esFormularioSoloLectura"/>
                 <label for="moral">Moral</label>
               </div>
+              <div *ngIf="datosDelTramiteRealizar.get('tipoPersona')?.touched && datosDelTramiteRealizar.get('tipoPersona')?.invalid" class="text-danger">
+                Este campo es obligatorio.
+              </div>
             </div>
             <div class="row">
               <div class="col-md-8 mb-3">
@@ -44,6 +47,11 @@
                 <input class="form-control" id="denominacion" type="text" formControlName="denominacion"
                 (change)="setValoresStore(datosDelTramiteRealizar,'denominacion', 'setDenominacion')"
                 [disabled]="esFormularioSoloLectura"/>
+                
+         <div *ngIf="datosDelTramiteRealizar.get('denominacion')?.touched && datosDelTramiteRealizar.get('denominacion')?.invalid" class="text-danger">
+           Este campo es obligatorio.
+           </div>
+
               </div>
             </div>
             <div class="row">
@@ -54,6 +62,11 @@
                style="height: 100px" formControlName="domicilio"
                 (change)="setValoresStore(datosDelTramiteRealizar,'domicilio', 'setDomicilio')" 
                 [disabled]="esFormularioSoloLectura"></textarea>
+                <div *ngIf="datosDelTramiteRealizar.get('domicilio')?.touched && datosDelTramiteRealizar.get('domicilio')?.invalid" class="text-danger">
+                  Este campo es obligatorio.
+                </div>
+    
+    
               </div>
             </div>
             </div>
@@ -73,6 +86,9 @@
               <div *ngIf="destinatarioForm.get('pais')?.errors?.['required']" class="text-danger">
                 Por favor, selecciona una opción.
               </div>
+              <div *ngIf="datosDelTramiteRealizar.get('pais')?.touched && datosDelTramiteRealizar.get('pais')?.invalid" class="text-danger">
+                Este campo es obligatorio.
+              </div>
              </div>
            </div>
             </div>
@@ -88,6 +104,9 @@
                 <div *ngIf="destinatarioForm.get('codigopostal')?.errors?.['pattern']" class="text-danger">
                   Por favor, sólo escribe dígitos.
                 </div>
+                <div *ngIf="datosDelTramiteRealizar.get('codigopostal')?.touched && datosDelTramiteRealizar.get('codigopostal')?.invalid" class="text-danger">
+                  Este campo es obligatorio.
+                </div>      
               </div>
             </div>
             <div class="row">
@@ -99,6 +118,10 @@
                 <div *ngIf="destinatarioForm.get('telefono')?.errors?.['pattern']" class="text-danger">
                   Por favor, sólo escribe dígitos.
                 </div>
+                <div *ngIf="datosDelTramiteRealizar.get('telefono')?.touched && datosDelTramiteRealizar.get('telefono')?.invalid" class="text-danger">
+                  Este campo es obligatorio.
+                </div>
+      
               </div>
                 <div class="col-md-4 mb-3">
                   <label class="form-label" for="correoelectronico">Correo electronico:</label>
@@ -107,6 +130,9 @@
                   [disabled]="esFormularioSoloLectura"/>
                   <div *ngIf="destinatarioForm.get('correoelectronico')?.errors?.['email']" class="text-danger">
                     Por favor, escribe una dirección de correo válida.
+                  </div>
+                  <div *ngIf="datosDelTramiteRealizar.get('correoelectronico')?.touched && datosDelTramiteRealizar.get('correoelectronico')?.invalid" class="text-danger">
+                    Este campo es obligatorio.
                   </div>
                 </div>
             </div>
