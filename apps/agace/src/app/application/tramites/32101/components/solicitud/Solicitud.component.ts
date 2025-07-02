@@ -297,7 +297,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       llaveDePago: [this.solicitudState?.llaveDePago],
       fechaInicialInput: [
         this.solicitudState?.fechaInicialInput,
-        [SolicitudComponent.validateFechaMenorIgualHoy.bind(this)], // Add the custom validator
+        [SolicitudComponent.validateFechaMenorIgualHoy.bind(this)],
       ],
       importeDePago: [
         { value: this.solicitudState?.importeDePago || '7735', disabled: true },
@@ -493,19 +493,19 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * @returns {void} Este método no retorna ningún valor.
    */
   poblarTabla(): void {
-    // Validate required fields before adding to table
+    // Validar campos requeridos antes de agregar a la tabla
     const REQUIRED_FIELDS = ['tipoDeInversion', 'valorEnPesos', 'descripcionGeneral', 'listaDeDocumentos'];
     const INVALID_FIELDS: string[] = [];
 
-    // Check if required fields are empty or invalid
+    // Verificar si los campos requeridos están vacíos o son inválidos
     REQUIRED_FIELDS.forEach(field => {
-      const control = this.registroForm.get(field);
-      if (!control?.value || control.invalid) {
+      const CONTROL = this.registroForm.get(field);
+      if (!CONTROL?.value || CONTROL.invalid) {
         INVALID_FIELDS.push(field);
       }
     });
 
-    // If any required field is invalid, show error and return
+    // Si algún campo requerido es inválido, mostrar error y salir
     if (INVALID_FIELDS.length > 0) {
       this.nuevaNotificacion = {
         tipoNotificacion: 'alert',
@@ -519,13 +519,12 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         txtBtnCancelar: '',
       };
       
-      // Mark all form controls as touched to show validation errors
+      // Marcar todos los controles del formulario como tocados para mostrar errores de validación
       this.registroForm.markAllAsTouched();
       return;
     }
 
     const FORM_VALUES = this.registroForm.value;
-    console.log('FORM_VALUES', FORM_VALUES);
     const NEW_ROW: DatosDeLaTabla = {
       id: this.configuracionTablaDatos.length + 1,
       tipoDeInversion: SolicitudComponent.getDropdownLabel(
@@ -541,7 +540,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       comprobanteDePago: 'N/A',
     };
 
-    console.log('NEW_ROW', NEW_ROW);
     this.configuracionTablaDatos = [...this.configuracionTablaDatos, NEW_ROW];
     this.tramite32101Store.setDatosDelContenedor(this.configuracionTablaDatos);
     this.abrirModal();
@@ -557,6 +555,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * @param catalog - Una lista de objetos del catálogo que contiene descripciones.
    * @returns La descripción del elemento seleccionado si se encuentra, de lo contrario, 'N/A'.
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   static getDropdownLabel(selectedId: any, catalog: Catalogo[]): string {
     const NUMERIC_ID = typeof selectedId === 'string' ? parseInt(selectedId, 10) : selectedId;
     const SELECTED_ITEMS = catalog.find(
@@ -660,16 +659,16 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     control: AbstractControl
   ): ValidationErrors | null {
     if (!control.value) {
-      return null; // Allow empty dates, let required validator handle this
+      return null;
     }
     let SELECTED_DATE: Date;
     if (typeof control.value === 'string' && control.value.includes('/')) {
-      const parts = control.value.split('/');
-      if (parts.length === 3) {
-        const day = parseInt(parts[0], 10);
-        const month = parseInt(parts[1], 10);
-        const year = parseInt(parts[2], 10);
-        SELECTED_DATE = new Date(year, month - 1, day); // month is 0-indexed
+      const PARTS = control.value.split('/');
+      if (PARTS.length === 3) {
+        const DAY = parseInt(PARTS[0], 10);
+        const MONTH = parseInt(PARTS[1], 10);
+        const YEAR = parseInt(PARTS[2], 10);
+        SELECTED_DATE = new Date(YEAR, MONTH - 1, DAY);
       } else {
         SELECTED_DATE = new Date(control.value);
       }
@@ -677,23 +676,22 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       SELECTED_DATE = new Date(control.value);
     }
     
-    // Check if the date is valid
+    // Verificar si la fecha es válida
     if (isNaN(SELECTED_DATE.getTime())) {
-      return { fechaInvalida: true }; // Return error for invalid dates
+      return { fechaInvalida: true }; // Retorna error para fechas inválidas
     }
     
     const CURRENT_DATE = new Date();
-    console.log('CURRENT_DATE:', CURRENT_DATE);
     
-    // Reset time to compare only dates
+    // Restablecer la hora para comparar solo las fechas
     SELECTED_DATE.setHours(0, 0, 0, 0);
     CURRENT_DATE.setHours(0, 0, 0, 0);
     
     if (SELECTED_DATE > CURRENT_DATE) {
-      return { fechaInvalida: true }; // Return an error object for future dates
+      return { fechaInvalida: true }; // Retorna un objeto de error para fechas futuras
     }
     
-    return null; // Return null if the date is valid (today or past)
+    return null; // Retorna null si la fecha es válida (hoy o pasada)
   }
 
   /**
