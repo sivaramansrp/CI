@@ -1,154 +1,452 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable sort-imports */
 /**
+ * Store de gestión del estado para el trámite 290101 de exportadores de café.
+ *
+ * Este archivo contiene la implementación del store de Akita que administra el estado completo
+ * del proceso de aplicación de exportadores de café, incluyendo formularios de solicitud,
+ * regiones, beneficios, bodegas y información de exportación de café.
+ *
+ * Utiliza el patrón de store de Akita para mantener un estado centralizado y reactivo
+ * que puede ser observado por los componentes de la aplicación.
+ *
+ * @fileoverview Store principal para el trámite 290101 - Exportadores de Café
  * @module TramiteStore
- * @description
- * Administra el estado del proceso de aplicación de exportadores de café utilizando Akita.
+ * @version 1.0.0
+ * @author Sistema VUCEM 3.0
  */
-import { Store, StoreConfig } from '@datorama/akita';
-import { DatosSolicitudFormaInt, BeneficiosFormaInt, BodegasFormaInt, CafExportFormaInt } from '../modelos/datos-de-interfaz.model';
-import {RegionesInfo, BeneficiosInfo, BodegasInfo, CafeExporacionInfo} from '../modelos/cafe-exportadores.model';
-import { RegionFormaInt } from '../modelos/datos-de-interfaz.model'
 import { Injectable } from '@angular/core';
 
+import { Store, StoreConfig } from '@datorama/akita';
+
+import {
+    BeneficiosFormaInt,
+    BodegasFormaInt,
+    CafExportFormaInt,
+  DatosSolicitudFormaInt,
+  RegionFormaInt
+} from '../modelos/datos-de-interfaz.model';
+
+import {
+    BeneficiosInfo,
+    BodegasInfo,
+    CafeExporacionInfo,
+    RegionesInfo,
+} from '../modelos/cafe-exportadores.model';
+
+
 /**
+ * Interfaz que define la estructura completa del estado del trámite 290101.
+ *
+ * Esta interfaz representa el estado global del trámite de exportadores de café,
+ * incluyendo todos los formularios individuales y las tablas de datos que componen
+ * el proceso completo de solicitud.
+ *
+ * Cada propiedad del estado mantiene información específica de diferentes secciones
+ * del trámite: solicitud principal, regiones, beneficios, bodegas y café de exportación.
+ *
  * @interface TramiteState
- * @description
- * Representa el estado de la modalidad de cambio.
+ * @since 1.0.0
  */
 export interface TramiteState {
     /**
-     * Estado de la solicitud.
-     * @type {DatosSolicitudFormaInt}
+     * Estado del formulario principal de solicitud del trámite.
+     *
+     * Contiene información básica como clave del padrón, observaciones,
+     * requerimientos de inspección e información confidencial.
+     *
+     * @property {DatosSolicitudFormaInt} SolicitudState
+     * @memberof TramiteState
      */
     SolicitudState: DatosSolicitudFormaInt;
 
     /**
-     * Estado del formulario de regiones.
-     * @type {RegionFormaInt}
+     * Estado del formulario de captura de regiones de compra.
+     *
+     * Almacena información sobre estados, productos de café, descripciones
+     * de regiones de compra, tipos de café y volúmenes.
+     *
+     * @property {RegionFormaInt} RegionFormatState
+     * @memberof TramiteState
      */
     RegionFormatState: RegionFormaInt;
-    /**
-     * Estado de la tabla de regiones.
-     * @type {RegionesInfo[]}
-     */
 
+    /**
+     * Colección de registros de regiones procesadas y almacenadas.
+     *
+     * Mantiene un array con todas las regiones de compra que han sido
+     * capturadas y validadas en el formulario correspondiente.
+     *
+     * @property {RegionesInfo[]} regionesTabla
+     * @memberof TramiteState
+     */
     regionesTabla: RegionesInfo[];
-    /**
-     * Estado de la tabla de beneficios.
-     * @type {BeneficiosInfo[]}
-     */
 
-    
-    beneficiosTabla: BeneficiosInfo[];
     /**
-     * Estado de la tabla de bodegas.
-     * @type {BodegasInfo[]}
+     * Colección de registros de beneficios procesados y almacenados.
+     *
+     * Contiene información detallada de todas las instalaciones de beneficio
+     * registradas para el exportador de café.
+     *
+     * @property {BeneficiosInfo[]} beneficiosTabla
+     * @memberof TramiteState
+     */
+    beneficiosTabla: BeneficiosInfo[];
+
+    /**
+     * Colección de registros de bodegas procesadas y almacenadas.
+     *
+     * Mantiene información sobre todas las instalaciones de almacenamiento
+     * asociadas al exportador.
+     *
+     * @property {BodegasInfo[]} bodegasTabla
+     * @memberof TramiteState
      */
     bodegasTabla: BodegasInfo[];
+
     /**
-     * Estado de la tabla de café de exportadores.
-     * @type {CafeExporacionInfo[]}
+     * Colección de registros de café de exportación procesados.
+     *
+     * Contiene información específica sobre los tipos de café que serán
+     * exportados, incluyendo descripciones, clasificaciones y concentraciones.
+     *
+     * @property {CafeExporacionInfo[]} cafeExportacionTabla
+     * @memberof TramiteState
      */
     cafeExportacionTabla: CafeExporacionInfo[];
 
-
     /**
-     * Estado del formulario de beneficios.
-     * @type {BeneficiosFormaInt}
+     * Estado del formulario de captura de datos de beneficios.
+     *
+     * Almacena información en proceso sobre instalaciones de beneficio,
+     * incluyendo datos de ubicación, capacidades y características operativas.
+     *
+     * @property {BeneficiosFormaInt} BeneficiosFormaState
+     * @memberof TramiteState
      */
     BeneficiosFormaState: BeneficiosFormaInt;
 
     /**
-     * Estado del formulario de bodegas.
-     * @type {BodegasFormaInt}
+     * Estado del formulario de captura de datos de bodegas.
+     *
+     * Contiene información en proceso sobre instalaciones de almacenamiento,
+     * incluyendo ubicación, propiedad y capacidades de almacenaje.
+     *
+     * @property {BodegasFormaInt} BodegasFormaState
+     * @memberof TramiteState
      */
     BodegasFormaState: BodegasFormaInt;
 
     /**
-     * Estado del formulario de café de exportadores.
-     * @type {CafExportFormaInt}
+     * Estado del formulario de captura de información de café para exportación.
+     *
+     * Almacena datos específicos sobre los productos de café que serán exportados,
+     * incluyendo descripciones, clasificaciones y porcentajes de concentración.
+     *
+     * @property {CafExportFormaInt} CafeExportFormState
+     * @memberof TramiteState
      */
     CafeExportFormState: CafExportFormaInt;
 }
 
 /**
+ * Función factory para crear el estado inicial del trámite 290101.
+ *
+ * Esta función inicializa todos los campos del estado con valores predeterminados
+ * apropiados para comenzar un nuevo proceso de solicitud de exportador de café.
+ *
+ * Todos los formularios se inicializan con valores vacíos o cero según corresponda,
+ * y todas las tablas de datos se inicializan como arrays vacíos.
+ *
  * @function createInitialState
- * @description
- * Inicializa el estado con valores predeterminados.
- * @returns {TramiteState} Estado inicial.
+ * @returns {TramiteState} Objeto de estado inicial con todos los valores predeterminados
+ * @since 1.0.0
+ * @example
+ * const initialState = createInitialState();
+ * console.log(initialState.SolicitudState.claveDelPadron); // ''
  */
 export function createInitialState(): TramiteState {
     return {
         SolicitudState: {
+            /**
+             * @property {string} claveDelPadron
+             * Clave única del padrón del exportador.
+             */
             claveDelPadron: '',
+
+            /**
+             * @property {string} observaciones
+             * Observaciones adicionales para la solicitud.
+             */
             observaciones: '',
+
+            /**
+             * @property {string} requiereInspeccionInmediata
+             * Indicador de requerimiento de inspección inmediata.
+             */
             requiereInspeccionInmediata: '',
+
+            /**
+             * @property {number} informacionConfidencial
+             * Indicador numérico de información confidencial.
+             */
             informacionConfidencial: 0
         },
         RegionFormatState: {
+            /**
+             * @property {string} estado
+             * Estado donde se realiza la compra de café.
+             */
             estado: '',
+
+            /**
+             * @property {string} productoCafe
+             * Tipo de producto de café.
+             */
             productoCafe: '',
+
+            /**
+             * @property {string} descRegionCompra
+             * Descripción de la región de compra.
+             */
             descRegionCompra: '',
+
+            /**
+             * @property {string} descripTipoCafe
+             * Descripción del tipo de café.
+             */
             descripTipoCafe: '',
+
+            /**
+             * @property {number} volumen
+             * Volumen de café en la región.
+             */
             volumen: 0
         },
         BeneficiosFormaState: {
+            /**
+             * @property {string} razonSocial
+             * Razón social del beneficio.
+             */
             razonSocial: '',
+
+            /**
+             * @property {string} propAlquil
+             * Indicador de propiedad o alquiler.
+             */
             propAlquil: '',
+
+            /**
+             * @property {string} calle
+             * Dirección - calle del beneficio.
+             */
             calle: '',
+
+            /**
+             * @property {number} numeroExterior
+             * Número exterior de la dirección.
+             */
             numeroExterior: 0,
+
+            /**
+             * @property {number} numeroInterior
+             * Número interior de la dirección.
+             */
             numeroInterior: 0,
+
+            /**
+             * @property {string} colonia
+             * Colonia donde se ubica el beneficio.
+             */
             colonia: '',
+
+            /**
+             * @property {number} estado
+             * Código del estado donde se ubica.
+             */
             estado: 0,
+
+            /**
+             * @property {number} codigoPostal
+             * Código postal de la ubicación.
+             */
             codigoPostal: 0,
+
+            /**
+             * @property {number} capacidadAlmacenaje
+             * Capacidad total de almacenaje.
+             */
             capacidadAlmacenaje: 0,
+
+            /**
+             * @property {number} volumenAlmacenaje
+             * Volumen actual de almacenaje.
+             */
             volumenAlmacenaje: 0
         },
         BodegasFormaState: {
+            /**
+             * @property {string} razonSocial
+             * Razón social de la bodega.
+             */
             razonSocial: '',
+
+            /**
+             * @property {string} propAlquil
+             * Indicador de propiedad o alquiler.
+             */
             propAlquil: '',
+
+            /**
+             * @property {string} calle
+             * Dirección - calle de la bodega.
+             */
             calle: '',
+
+            /**
+             * @property {number} numeroExterior
+             * Número exterior de la dirección.
+             */
             numeroExterior: 0,
+
+            /**
+             * @property {number} numeroInterior
+             * Número interior de la dirección.
+             */
             numeroInterior: 0,
+
+            /**
+             * @property {string} colonia
+             * Colonia donde se ubica la bodega.
+             */
             colonia: '',
+
+            /**
+             * @property {number} estado
+             * Código del estado donde se ubica.
+             */
             estado: 0,
+
+            /**
+             * @property {number} codigoPostal
+             * Código postal de la ubicación.
+             */
             codigoPostal: 0,
+
+            /**
+             * @property {number} capacidadAlmacenaje
+             * Capacidad total de almacenaje.
+             */
             capacidadAlmacenaje: 0
         },
         CafeExportFormState: {
+            /**
+             * @property {string} descripcionMercancia
+             * Descripción detallada de la mercancía de café.
+             */
             descripcionMercancia: '',
+
+            /**
+             * @property {string} clasificacion
+             * Clasificación del tipo de café.
+             */
             clasificacion: '',
+
+            /**
+             * @property {number} porcentajeConcentracion
+             * Porcentaje de concentración del café.
+             */
             porcentajeConcentracion: 0
         },
+        /**
+         * Arrays de datos inicializados como colecciones vacías.
+         * Estas propiedades almacenarán los registros procesados de cada sección.
+         */
+
+        /**
+         * @property {RegionesInfo[]} regionesTabla
+         * Colección vacía para almacenar regiones procesadas.
+         */
         regionesTabla: [],
+
+        /**
+         * @property {BeneficiosInfo[]} beneficiosTabla
+         * Colección vacía para almacenar beneficios procesados.
+         */
         beneficiosTabla: [],
+
+        /**
+         * @property {BodegasInfo[]} bodegasTabla
+         * Colección vacía para almacenar bodegas procesadas.
+         */
         bodegasTabla: [],
+
+        /**
+         * @property {CafeExporacionInfo[]} cafeExportacionTabla
+         * Colección vacía para almacenar información de café de exportación.
+         */
         cafeExportacionTabla: []
     };
 }
 
 /**
+ * Store principal para la gestión del estado del trámite 290101 - Exportadores de Café.
+ *
+ * Esta clase extiende el Store de Akita y proporciona métodos especializados para
+ * la gestión del estado del proceso de solicitud de exportadores de café.
+ *
+ * Incluye funcionalidades para:
+ * - Actualización de formularios individuales (solicitud, regiones, beneficios, bodegas, café)
+ * - Gestión de colecciones de datos (agregar y actualizar tablas)
+ * - Mantenimiento del estado reactivo para toda la aplicación
+ *
+ * El store utiliza el patrón inmutable de Akita para garantizar la predictibilidad
+ * y rastreabilidad de los cambios de estado.
+ *
  * @class TramiteStore
- * @description
- * Administra el estado del proceso de aplicación de exportadores de café utilizando Akita.
+ * @extends {Store<TramiteState>}
+ * @since 1.0.0
+ * @example
+ * // Inyectar el store en un componente
+ * constructor(private tramiteStore: TramiteStore) {}
+ *
+ * // Actualizar el estado de solicitud
+ * this.tramiteStore.setSolicitudTramite(nuevasSolicitudDatos);
  */
 @Injectable({ providedIn: 'root' })
 @StoreConfig({ name: 'cafe-exportadores' })
 export class TramiteStore extends Store<TramiteState> {
     /**
      * Constructor de la clase TramiteStore.
-     * Inicializa el estado con valores predeterminados.
+     *
+     * Inicializa el store con el estado predeterminado utilizando la función
+     * createInitialState() e invoca el constructor padre de Akita Store.
+     *
+     * @constructor
+     * @memberof TramiteStore
+     * @since 1.0.0
      */
     constructor() {
         super(createInitialState());
     }
 
     /**
+     * Actualiza el estado del formulario principal de solicitud.
+     *
+     * Este método reemplaza completamente el estado actual de SolicitudState
+     * con los nuevos datos proporcionados, manteniendo la inmutabilidad del estado.
+     *
      * @method setSolicitudTramite
-     * @description
-     * Actualiza el estado de `SolicitudState` con nuevos valores.
-     * @param {DatosSolicitudFormaInt} SolicitudState - Datos del formulario de solicitud.
+     * @param {DatosSolicitudFormaInt} SolicitudState - Objeto con los datos actualizados del formulario de solicitud
+     * @returns {void}
+     * @memberof TramiteStore
+     * @since 1.0.0
+     * @example
+     * const nuevosDatos = {
+     *   claveDelPadron: 'EXP001',
+     *   observaciones: 'Solicitud urgente',
+     *   requiereInspeccionInmediata: 'Si',
+     *   informacionConfidencial: 1
+     * };
+     * this.tramiteStore.setSolicitudTramite(nuevosDatos);
      */
     public setSolicitudTramite(SolicitudState: DatosSolicitudFormaInt): void {
         this.update((state) => ({
@@ -158,10 +456,26 @@ export class TramiteStore extends Store<TramiteState> {
     }
 
     /**
+     * Actualiza el estado del formulario de regiones de compra.
+     *
+     * Reemplaza el estado actual de RegionFormatState con los nuevos datos,
+     * incluyendo información sobre estados, productos de café, descripciones
+     * de regiones y volúmenes de compra.
+     *
      * @method setRegionTramite
-     * @description
-     * Actualiza el estado de `RegionFormatState` con nuevos valores.
-     * @param {RegionFormaInt} RegionFormatState - Datos del formulario de regiones.
+     * @param {RegionFormaInt} RegionFormatState - Objeto con los datos actualizados del formulario de regiones
+     * @returns {void}
+     * @memberof TramiteStore
+     * @since 1.0.0
+     * @example
+     * const regionDatos = {
+     *   estado: 'Chiapas',
+     *   productoCafe: 'Arabica',
+     *   descRegionCompra: 'Región montañosa',
+     *   descripTipoCafe: 'Café orgánico',
+     *   volumen: 1000
+     * };
+     * this.tramiteStore.setRegionTramite(regionDatos);
      */
     public setRegionTramite(RegionFormatState: RegionFormaInt): void {
         this.update((state) => ({
@@ -171,10 +485,26 @@ export class TramiteStore extends Store<TramiteState> {
     }
 
     /**
+     * Actualiza el estado del formulario de beneficios.
+     *
+     * Reemplaza el estado actual de BeneficiosFormaState con los nuevos datos,
+     * incluyendo información sobre instalaciones de beneficio, ubicación,
+     * capacidades de almacenaje y datos de propiedad.
+     *
      * @method setBeneficiosTramite
-     * @description
-     * Actualiza el estado de `BeneficiosFormaState` con nuevos valores.
-     * @param {BeneficiosFormaInt} BeneficiosFormaState - Datos del formulario de beneficios.
+     * @param {BeneficiosFormaInt} BeneficiosFormaState - Objeto con los datos actualizados del formulario de beneficios
+     * @returns {void}
+     * @memberof TramiteStore
+     * @since 1.0.0
+     * @example
+     * const beneficiosDatos = {
+     *   razonSocial: 'Beneficio San Juan S.A.',
+     *   propAlquil: 'Propio',
+     *   calle: 'Av. Principal 123',
+     *   capacidadAlmacenaje: 5000,
+     *   volumenAlmacenaje: 2500
+     * };
+     * this.tramiteStore.setBeneficiosTramite(beneficiosDatos);
      */
     public setBeneficiosTramite(BeneficiosFormaState: BeneficiosFormaInt): void {
         this.update((state) => ({
@@ -184,10 +514,25 @@ export class TramiteStore extends Store<TramiteState> {
     }
 
     /**
+     * Actualiza el estado del formulario de bodegas.
+     *
+     * Reemplaza el estado actual de BodegasFormaState con los nuevos datos,
+     * incluyendo información sobre instalaciones de almacenamiento, ubicación,
+     * capacidades y datos de propiedad.
+     *
      * @method setBodegasTramite
-     * @description
-     * Actualiza el estado de `BodegasFormaState` con nuevos valores.
-     * @param {BodegasFormaInt} BodegasFormaState - Datos del formulario de bodegas.
+     * @param {BodegasFormaInt} BodegasFormaState - Objeto con los datos actualizados del formulario de bodegas
+     * @returns {void}
+     * @memberof TramiteStore
+     * @since 1.0.0
+     * @example
+     * const bodegasDatos = {
+     *   razonSocial: 'Almacenes del Sur S.A.',
+     *   propAlquil: 'Alquilado',
+     *   calle: 'Calle Industrial 456',
+     *   capacidadAlmacenaje: 10000
+     * };
+     * this.tramiteStore.setBodegasTramite(bodegasDatos);
      */
     public setBodegasTramite(BodegasFormaState: BodegasFormaInt): void {
         this.update((state) => ({
@@ -197,10 +542,24 @@ export class TramiteStore extends Store<TramiteState> {
     }
 
     /**
+     * Actualiza el estado del formulario de café de exportación.
+     *
+     * Reemplaza el estado actual de CafeExportFormState con los nuevos datos,
+     * incluyendo información específica sobre los productos de café que serán
+     * exportados, clasificaciones y concentraciones.
+     *
      * @method setCafExportTramite
-     * @description
-     * Actualiza el estado de `CafeExportFormState` con nuevos valores.
-     * @param {CafExportFormaInt} CafeExportFormState - Datos del formulario de café de exportadores.
+     * @param {CafExportFormaInt} CafeExportFormState - Objeto con los datos actualizados del formulario de café de exportación
+     * @returns {void}
+     * @memberof TramiteStore
+     * @since 1.0.0
+     * @example
+     * const cafeDatos = {
+     *   descripcionMercancia: 'Café verde arabica especial',
+     *   clasificacion: 'Grado 1',
+     *   porcentajeConcentracion: 98.5
+     * };
+     * this.tramiteStore.setCafExportTramite(cafeDatos);
      */
     public setCafExportTramite(CafeExportFormState: CafExportFormaInt): void {
         this.update((state) => ({
@@ -209,10 +568,23 @@ export class TramiteStore extends Store<TramiteState> {
         }));
     }
     /**
+     * Agrega nuevos registros a la tabla de regiones de compra.
+     *
+     * Este método concatena los nuevos datos de regiones al array existente,
+     * manteniendo los registros previos. Utiliza el patrón spread operator
+     * para garantizar la inmutabilidad del estado.
+     *
      * @method setRegionesTabla
-     * @description
-     * Actualiza el estado de `regionesTabla` con nuevos valores.
-     * @param {RegionesInfo[]} regionesTabla - Datos de la tabla de regiones.
+     * @param {RegionesInfo[]} regionesTabla - Array de nuevos registros de regiones a agregar
+     * @returns {void}
+     * @memberof TramiteStore
+     * @since 1.0.0
+     * @example
+     * const nuevasRegiones = [
+     *   { estado: 'Chiapas', producto: 'Arabica', volumen: 1000 },
+     *   { estado: 'Veracruz', producto: 'Robusta', volumen: 800 }
+     * ];
+     * this.tramiteStore.setRegionesTabla(nuevasRegiones);
      */
     public setRegionesTabla(regionesTabla: RegionesInfo[]): void {
         this.update((state) => ({
@@ -222,10 +594,22 @@ export class TramiteStore extends Store<TramiteState> {
     }
     
     /**
+     * Agrega nuevos registros a la tabla de beneficios.
+     *
+     * Concatena los nuevos datos de beneficios al array existente,
+     * preservando los registros anteriores y manteniendo la inmutabilidad
+     * del estado mediante el uso de spread operators.
+     *
      * @method setBeneficiosTabla
-     * @description
-     * Actualiza el estado de `beneficiosTabla` con nuevos valores.
-     * @param {BeneficiosInfo[]} beneficiosTabla - Datos de la tabla de beneficios.
+     * @param {BeneficiosInfo[]} beneficiosTabla - Array de nuevos registros de beneficios a agregar
+     * @returns {void}
+     * @memberof TramiteStore
+     * @since 1.0.0
+     * @example
+     * const nuevosBeneficios = [
+     *   { razonSocial: 'Beneficio Norte', capacidad: 5000, ubicacion: 'Chiapas' }
+     * ];
+     * this.tramiteStore.setBeneficiosTabla(nuevosBeneficios);
      */
    
     public setBeneficiosTabla(beneficiosTabla: BeneficiosInfo[]): void {
@@ -235,10 +619,22 @@ export class TramiteStore extends Store<TramiteState> {
         }));
     }
     /**
+     * Agrega nuevos registros a la tabla de bodegas.
+     *
+     * Concatena los nuevos datos de bodegas al array existente,
+     * manteniendo los registros previos y garantizando la inmutabilidad
+     * del estado a través del patrón spread operator.
+     *
      * @method setBodegasTabla
-     * @description
-     * Actualiza el estado de `bodegasTabla` con nuevos valores.
-     * @param {BodegasInfo[]} bodegasTabla - Datos de la tabla de bodegas.
+     * @param {BodegasInfo[]} bodegasTabla - Array de nuevos registros de bodegas a agregar
+     * @returns {void}
+     * @memberof TramiteStore
+     * @since 1.0.0
+     * @example
+     * const nuevasBodegas = [
+     *   { razonSocial: 'Almacenes Central', capacidad: 8000, propiedad: 'Propio' }
+     * ];
+     * this.tramiteStore.setBodegasTabla(nuevasBodegas);
      */
     public setBodegasTabla(bodegasTabla: BodegasInfo[]): void {
         this.update((state) => ({
@@ -247,35 +643,122 @@ export class TramiteStore extends Store<TramiteState> {
         }));}
 
     /**
+     * Agrega nuevos registros a la tabla de café de exportación.
+     *
+     * Concatena los nuevos datos de café de exportación al array existente,
+     * preservando los registros anteriores y manteniendo la inmutabilidad
+     * del estado mediante el uso de spread operators.
+     *
      * @method setCafeExportacionTabla
-     * @description
-     * Actualiza el estado de `cafeExportacionTabla` con nuevos valores.
-     * @param {CafeExporacionInfo[]} cafeExportacionTabla - Datos de la tabla de café de exportadores.
-     * */
+     * @param {CafeExporacionInfo[]} cafeExportacionTabla - Array de nuevos registros de café de exportación a agregar
+     * @returns {void}
+     * @memberof TramiteStore
+     * @since 1.0.0
+     * @example
+     * const nuevosCafes = [
+     *   { descripcion: 'Café especial', clasificacion: 'Premium', concentracion: 99.2 }
+     * ];
+     * this.tramiteStore.setCafeExportacionTabla(nuevosCafes);
+     */
     public setCafeExportacionTabla(cafeExportacionTabla: CafeExporacionInfo[]): void {
         this.update((state) => ({
             ...state,
             cafeExportacionTabla: [...state.cafeExportacionTabla, ...cafeExportacionTabla],
         }));
     }
+    /**
+     * Reemplaza completamente la tabla de regiones de compra.
+     *
+     * A diferencia del método setRegionesTabla que agrega datos, este método
+     * reemplaza todo el array existente con los nuevos datos proporcionados.
+     * Útil para operaciones de actualización masiva o sincronización completa.
+     *
+     * @method updateRegionesTabla
+     * @param {RegionesInfo[]} regionesTabla - Array completo de registros de regiones que reemplazará los existentes
+     * @returns {void}
+     * @memberof TramiteStore
+     * @since 1.0.0
+     * @example
+     * const regionesActualizadas = [
+     *   { estado: 'Chiapas', producto: 'Arabica', volumen: 1200 },
+     *   { estado: 'Oaxaca', producto: 'Robusta', volumen: 900 }
+     * ];
+     * this.tramiteStore.updateRegionesTabla(regionesActualizadas);
+     */
     public updateRegionesTabla(regionesTabla: RegionesInfo[]): void {
         this.update((state) => ({
             ...state,
             regionesTabla,
         }));
     }
+
+    /**
+     * Reemplaza completamente la tabla de beneficios.
+     *
+     * Reemplaza todo el array existente de beneficios con los nuevos datos
+     * proporcionados, permitiendo una actualización completa de la colección.
+     *
+     * @method updateBeneficiosTabla
+     * @param {BeneficiosInfo[]} beneficiosTabla - Array completo de registros de beneficios que reemplazará los existentes
+     * @returns {void}
+     * @memberof TramiteStore
+     * @since 1.0.0
+     * @example
+     * const beneficiosActualizados = [
+     *   { razonSocial: 'Beneficio Actualizado', capacidad: 6000 }
+     * ];
+     * this.tramiteStore.updateBeneficiosTabla(beneficiosActualizados);
+     */
     public updateBeneficiosTabla(beneficiosTabla: BeneficiosInfo[]): void {
         this.update((state) => ({
             ...state,
             beneficiosTabla,
         }));
     }
+
+    /**
+     * Reemplaza completamente la tabla de bodegas.
+     *
+     * Sustituye todo el array existente de bodegas con los nuevos datos,
+     * proporcionando una forma de actualización masiva para la colección
+     * de instalaciones de almacenamiento.
+     *
+     * @method updateBodegasTabla
+     * @param {BodegasInfo[]} bodegasTabla - Array completo de registros de bodegas que reemplazará los existentes
+     * @returns {void}
+     * @memberof TramiteStore
+     * @since 1.0.0
+     * @example
+     * const bodegasActualizadas = [
+     *   { razonSocial: 'Nueva Bodega Central', capacidad: 12000 }
+     * ];
+     * this.tramiteStore.updateBodegasTabla(bodegasActualizadas);
+     */
     public updateBodegasTabla(bodegasTabla: BodegasInfo[]): void {
         this.update((state) => ({
             ...state,
             bodegasTabla,
         }));
     }
+
+    /**
+     * Reemplaza completamente la tabla de café de exportación.
+     *
+     * Sustituye todo el array existente de información de café de exportación
+     * con los nuevos datos, permitiendo una actualización completa de los
+     * productos de café registrados para exportación.
+     *
+     * @method updateCafeExportacionTabla
+     * @param {CafeExporacionInfo[]} cafeExportacionTabla - Array completo de registros de café de exportación que reemplazará los existentes
+     * @returns {void}
+     * @memberof TramiteStore
+     * @since 1.0.0
+     * @example
+     * const cafeActualizado = [
+     *   { descripcion: 'Café Premium Actualizado', clasificacion: 'AAA', concentracion: 99.8 }
+     * ];
+     * this.tramiteStore.updateCafeExportacionTabla(cafeActualizado);
+     */
     public updateCafeExportacionTabla(cafeExportacionTabla: CafeExporacionInfo[]): void {
         this.update((state) => ({
             ...state,

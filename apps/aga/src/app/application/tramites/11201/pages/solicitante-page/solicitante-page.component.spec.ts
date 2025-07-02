@@ -94,4 +94,9 @@ describe('SolicitantePageComponent', () => {
     const pasoDosElement = fixture.debugElement.query(By.css('app-paso-dos'));
     expect(pasoDosElement).toBeTruthy();
   });
+  it('should reset the indice to 1 when cancelar is called', () => {
+    component.indice = 3;
+    component.cancelar();
+    expect(component.indice).toBe(1);
+  });
 });

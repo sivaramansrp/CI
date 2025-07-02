@@ -7,6 +7,15 @@ import {
   Tramite260203Store,
 } from '../stores/tramite260203Store.store';
 
+/**
+ * Decorador que marca esta clase como un servicio inyectable en Angular.
+ * 
+ * Este servicio está registrado en el nivel raíz del inyector, lo que significa que estará disponible
+ * en toda la aplicación sin necesidad de declararlo explícitamente en los módulos. 
+ * 
+ * La anotación `@Injectable({ providedIn: 'root' })` asegura que Angular gestione la creación y el ciclo de vida 
+ * de esta clase como un singleton, proporcionando una única instancia compartida en toda la aplicación.
+ */
 @Injectable({ providedIn: 'root' })
 export class Tramite260203Query extends Query<Tramite260203State> {
   /**

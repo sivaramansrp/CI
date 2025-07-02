@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container mb-5">
     <form [formGroup]="modificacionForm">
         <div>
             <div class="row" style="padding-top: 45px;">
@@ -28,3 +28,4 @@
         <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.BUTTON" [configuracionTabla]="encabezadoDeTabla" [datos]="datosTabla" (alternarValor)="valorDeAlternancia($event)" [desactivarButton]="soloLectura"></app-tabla-dinamica>
     </div>
 </div>
+<app-complementaria-immex></app-complementaria-immex>

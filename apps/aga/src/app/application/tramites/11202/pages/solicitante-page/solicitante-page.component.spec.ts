@@ -41,7 +41,7 @@ describe('SolicitantePageComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  
+
   it('should set indice on seleccionaTab', () => {
     component.seleccionaTab(3);
     expect(component.indice).toBe(3);
@@ -60,5 +60,27 @@ describe('SolicitantePageComponent', () => {
     component.getValorIndice({ accion: 'prev', valor: 1 });
     expect(component.indice).toBe(1);
     expect(component.wizardComponent.atras).toHaveBeenCalled();
+  });
+
+  it('should call getValorIndice with the correct parameters when continuar is called', () => {
+    component.wizardComponent = {
+      siguiente: jest.fn(),
+      atras: jest.fn(),
+    } as any;
+    const getValorIndiceSpy = jest.spyOn(component, 'getValorIndice');
+    component.indice = 2;
+    component.continuar();
+    expect(getValorIndiceSpy).toHaveBeenCalledWith({ accion: 'cont', valor: 3 });
+  });
+
+  it('should call wizardComponent.siguiente when continuar is called and action is "cont"', () => {
+    component.wizardComponent = {
+      siguiente: jest.fn(),
+      atras: jest.fn(),
+    } as any;
+    const wizardSiguienteSpy = jest.spyOn(component.wizardComponent, 'siguiente');
+    component.indice = 2;
+    component.continuar();
+    expect(wizardSiguienteSpy).toHaveBeenCalled();
   });
 });
