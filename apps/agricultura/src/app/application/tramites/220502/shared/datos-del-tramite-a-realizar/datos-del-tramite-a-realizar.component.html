@@ -18,10 +18,11 @@
     <div class="col-md-4">
       <div class="form-field">
         <input-fecha
+          formControlName="fechaDeInspeccion"
           [datos]="configuracionFechaFinVigencia"
           (valorCambiado)="cambioFechaInicio($event)"
           [isDisabled]="formularioDeshabilitado"
-          [setFecha]="this.solicitud220502State.fechaDeInspeccion"
+          [setFecha]="solicitud220502State.fechaDeInspeccion"
         ></input-fecha>
       </div>
     </div>
