@@ -39,9 +39,9 @@
                     <div class="col-md-4">
                         <div class="form-group">
                             <app-catalogo-select [catalogo]="catalogoList" [label]="aduana.labelNombre"
-                                [placeholder]="aduana.primerOpcion" [required]="true" formControlName="aduana"
+                                [placeholder]="aduana.primerOpcion" formControlName="aduana"
                                 (change)="onChange('aduana', $event)" [isDisabled]="soloLectura"></app-catalogo-select>
-                                <div *ngIf="isInvalid('aduana')" class="mensaje-error">
+                                <div *ngIf="isInvalid('aduana') && solicitudForm.controls['aduana'].errors?.['required']" class="mensaje-error">
                                     Este campo es obligatorio.
                                 </div>
                         </div>
@@ -63,9 +63,9 @@
                     <div class="col-md-4">
                         <div class="form-group">
                             <label for="inicialesContenedor">Iniciales del equipo*:</label>
-                            <input type="text" formControlName="inicialesContenedor" id="inicialesContenedor"
+                            <input type="text" formControlName="inicialesContenedor" id="inicialesContenedor" maxlength="10"
                                  class="form-control" [required]="true" (change)="onChange('inicialesContenedor', $event)" [disabled]="soloLectura">
-                                <div *ngIf="isInvalid('inicialesContenedor')" class="mensaje-error">
+                                <div *ngIf="isInvalid('inicialesContenedor') && solicitudForm.controls['inicialesContenedor'].errors?.['required']" class="mensaje-error">
                                     Este campo es obligatorio.
                                 </div>
                         </div>
@@ -74,9 +74,9 @@
                     <div class="col-md-4">
                         <div class="form-group">
                             <label for="numeroContenedor">Número de equipo*:</label>
-                            <input type="text" formControlName="numeroContenedor" id="numeroContenedor"
+                            <input type="text" formControlName="numeroContenedor" id="numeroContenedor" maxlength="15"
                                 class="form-control" [required]="true" (change)="onChange('numeroContenedor', $event)" [disabled]="soloLectura">
-                                <div *ngIf="isInvalid('numeroContenedor')" class="mensaje-error">
+                                <div *ngIf="isInvalid('numeroContenedor') && solicitudForm.controls['numeroContenedor'].errors?.['required']" class="mensaje-error">
                                     Este campo es obligatorio.
                                 </div>
                                 <div *ngIf="solicitudForm.get('numeroContenedor')?.touched && solicitudForm.get('numeroContenedor')?.errors?.['minlength']" class="mensaje-error">
@@ -102,7 +102,7 @@
                     <div class="col-md-4">
                         <div class="form-group">
                             <app-catalogo-select [catalogo]="contenedores.catalogos" [label]="contenedores.labelNombre"
-                            [placeholder]="contenedores.primerOpcion" [required]="true" formControlName="contenedores"
+                            [placeholder]="contenedores.primerOpcion" formControlName="contenedores"
                             (change)="setValoresStore(solicitudForm,'contenedores', 'setContenedores')" [isDisabled]="soloLectura"></app-catalogo-select>
                             <div *ngIf="isInvalid('contenedores')" class="mensaje-error">
                                 Este campo es obligatorio.
@@ -125,13 +125,16 @@
                     </div>
                     <div class="col-md-4">
                         <div class="form-group datepicker-group">
-                            <input-fecha [datos]="Vigencia" (valorCambiado)="cambioVigencia($event)" [isDisabled]="soloLectura"></input-fecha>
-                            <div *ngIf="isInvalid('Vigencia')" class="mensaje-error">
+                            <input-fecha [datos]="vigencia" (valorCambiado)="cambioVigencia($event)" [isDisabled]="soloLectura"></input-fecha>
+                            <div *ngIf="isInvalid('vigencia') && solicitudForm.controls['vigencia'].errors?.['required']" class="mensaje-error">
                                 Este campo es obligatorio.
                             </div>
-                            <div *ngIf="isInvalid('fechaIngreso')" class="mensaje-error">
+                            <div *ngIf="solicitudForm.get('fechaIngreso')?.value && solicitudForm.get('vigencia')?.value && solicitudForm.get('vigencia')?.value < solicitudForm.get('fechaIngreso')?.value" class="mensaje-error">
                                 La fecha de vigencia debe ser mayor que la fecha de ingreso
                             </div>
+                            <!-- <div *ngIf="isInvalid('fechaIngreso') && solicitudForm.controls['fechaIngreso'].errors?.['required']" class="mensaje-error">
+                                La fecha de vigencia debe ser mayor que la fecha de ingreso
+                            </div> -->
                         </div>
                     </div>
                     <br />

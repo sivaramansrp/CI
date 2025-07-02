@@ -141,7 +141,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
    * @type {InputFecha}
    * @default VIGENCIA
    */
-  public Vigencia: InputFecha = VIGENCIA;
+  public vigencia: InputFecha = VIGENCIA;
 
   /** 
    * Desactiva el radio de "Contenedor" cuando se selecciona "Archivo CSV"
@@ -479,11 +479,11 @@ export class ContenedorComponent implements OnInit, OnDestroy {
   /**
    * Verifica si el control del formulario es inválido y ha sido tocado.
    * @param {string} id El nombre del control del formulario.
-   * @returns {boolean | undefined} `true` si el control es inválido y tocado, `null` si no existe el control.
+   * @returns {boolean} `true` si el control es inválido y tocado, `null` si no existe el control.
    */
-  isInvalid(id: string): boolean | undefined {
+  isInvalid(id: string): boolean {
     const CONTROL = this.solicitudForm.get(id);
-    return CONTROL ? CONTROL.invalid && CONTROL.touched : undefined;
+    return CONTROL ? CONTROL.invalid && (CONTROL.touched || CONTROL.dirty) : false;
   }
 
   /**
