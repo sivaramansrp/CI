@@ -511,6 +511,10 @@ export class DatosDelSolicitudModificacionComponent
    */
   mercanciasTablaDatos: MercanciasInfo[] = [];
   /**
+   * Datos de la tabla mercancías.
+   */
+  public seleccionados: MercanciasInfo[] = [];
+  /**
    * Indica si el formulario está en modo solo lectura.
    * Cuando es `true`, los formularios estarán deshabilitados y no se podrán editar.
    * Cuando es `false`, los formularios estarán habilitados para edición.
@@ -577,6 +581,32 @@ export class DatosDelSolicitudModificacionComponent
         })
       });
   }
+  /**
+   * @method loadScian
+   * @description
+   * Método que carga los datos SCIAN desde el servicio `EstablecimientoService`
+   * y los asigna al formulario `scianForm`.
+   */
+
+onSeleccionChange(event: MercanciasInfo[]): void {
+  this.seleccionados = event;
+}
+/**
+ * @method loadScian
+ * @description 
+ * Carga los datos SCIAN desde el servicio `EstablecimientoService`
+ * y los asigna al formulario `scianForm`.
+ */
+eliminarSeleccionados(): void {
+  this.seleccionados.forEach(row => {
+    const INDEX = this.mercanciasTablaDatos.indexOf(row);
+    if (INDEX > -1) {
+      this.mercanciasTablaDatos.splice(INDEX, 1);
+    }
+  });
+  this.seleccionados = [];
+}
+
 
   /**
   * @method obtenerScianTablaDatos
@@ -896,6 +926,29 @@ export class DatosDelSolicitudModificacionComponent
       this.cerrarModalMercancía();
     }
   }
+
+  limpiarMercancia(): void { 
+  this.abrirModalMercancia();
+  this.formMercancias.reset();
+ 
+  // this.formMercancias.reset({
+  //   clasificacion: '',
+  //   especificarClasificacionProducto: '',
+  //   denominacionEspecifica: '',
+  //   denominacionDistintiva: '',
+  //   denominacionComun: '',
+  //   tipoDeProducto: '',
+  //   estadoFisico: '',
+  //   estadoFormaFarmaceutica: '',
+  //   fraccionArancelaria: '',
+  //   descripcionFraccion: { value: '', disabled: true },
+  //   cantidadUMT: '',
+  //   UMT: { value: '', disabled: true },
+  //   cantidadUMC: '',
+  //   UMC: '',
+  //   presentacion: ''
+  // });
+}
   /* *
    * Método para eliminar un elemento de la tabla de mercancías.
    * @param index Índice del elemento a eliminar.
