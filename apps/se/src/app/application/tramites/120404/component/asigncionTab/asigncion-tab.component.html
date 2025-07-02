@@ -21,7 +21,7 @@
                         (change)="setValoresStore(asignacionForm,'asignacionsolitud')"
                         [isDisabled]="esFormularioSoloLectura">
                     </app-catalogo-select>
-                    <div *ngIf="isInvalid('asignacionsolitud')" class="text-danger">
+                    <div *ngIf="isInvalid('asignacionsolitud')" class="mensaje-error">
                         Este campo es obligatorio
                     </div>
                 </div>
@@ -31,7 +31,7 @@
                     <label for="clasificacionRegimen">Número de oficio de asignación*</label>
                     <input type="text" class="form-control" formControlName="numTramite" id="numTramite"
                         (change)="setValoresStore(asignacionForm,'numTramite')">
-                    <div *ngIf="isInvalid('numTramite')" class="text-danger">
+                    <div *ngIf="isInvalid('numTramite')" class="mensaje-error">
                         Este campo es obligatorio
                     </div>
                 </div>
