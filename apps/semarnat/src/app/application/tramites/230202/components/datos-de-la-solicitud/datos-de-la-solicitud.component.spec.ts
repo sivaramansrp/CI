@@ -286,7 +286,7 @@ describe('DatosDeLaSolicitudComponent', () => {
       })
     }) as any;
     const storeSpy = jest.spyOn(component.store, 'setDatosDetalle');
-    component.agregarDetalle(detalle);
+    component.agregarDetalle();
     expect(component.datosDetalle.length).toBe(1);
     expect(storeSpy).toHaveBeenCalledWith(component.datosDetalle);
   });
