@@ -9,3 +9,4 @@ export const OPCION_DE_BOTON_DE_RADIO = [
       "value": "no"
     }
 ];
+export const URL = '../../../../../assets/json/220201/';
