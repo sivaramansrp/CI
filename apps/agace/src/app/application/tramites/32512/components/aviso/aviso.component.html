@@ -1,0 +1,173 @@
+<form [formGroup]="aviosForm" class="w-100">
+  <div class="col-md-12 mb-1">
+    <ng-titulo titulo="Datos del lugar donde se encuentra la mercancía" />
+  </div>
+
+  <div class="col-md-8">
+    <label class="form-label">Condiciones materiales de la mercancía*:</label>
+    <input type="text" class="form-control" />
+  </div>
+
+  <div class="col-md-4">
+    <app-catalogo-select
+      [catalogo]="[]"
+      [label]="'Entidad federativa'"
+      [placeholder]="'Seleccione un valor'"
+      [required]="true"
+      [isDisabled]="false"
+      name="federativa"
+      id="federativa"
+      (selectionChange)="actualizarEntidadFederativa($event)"
+    ></app-catalogo-select>
+  </div>
+
+  <div class="col-md-4">
+    <app-catalogo-select
+      [catalogo]="[]"
+      [label]="'Municipio/ Alcaldía'"
+      [placeholder]="'Seleccione un valor'"
+      [required]="true"
+      [isDisabled]="false"
+      name="federativa"
+      id="federativa"
+      (selectionChange)="actualizarEntidadFederativa($event)"
+    ></app-catalogo-select>
+  </div>
+
+  <div class="col-md-4">
+    <app-catalogo-select
+      [catalogo]="[]"
+      [label]="'Colonia'"
+      [placeholder]="'Seleccione un valor'"
+      [required]="true"
+      [isDisabled]="false"
+      name="federativa"
+      id="federativa"
+      (selectionChange)="actualizarEntidadFederativa($event)"
+    ></app-catalogo-select>
+  </div>
+
+  <div class="col-md-4">
+    <label class="form-label">Calle*:</label>
+    <input type="text" class="form-control" />
+  </div>
+
+  <div class="col-md-4">
+    <label class="form-label">Número y/o letra exterior*:</label>
+    <input type="text" class="form-control" />
+  </div>
+
+  <div class="col-md-4">
+    <label class="form-label">Número y/o letra interior*:</label>
+    <input type="text" class="form-control" />
+  </div>
+
+  <div class="col-md-4">
+    <label class="form-label">Código Postal*:</label>
+    <input type="text" class="form-control" />
+  </div>
+
+  <div class="col-md-12 mb-1">
+    <ng-titulo
+      titulo="Lugar, fecha y hora donde se llevará a cabo la destrucción de la mercancía"
+    />
+  </div>
+
+  <div class="col-md-4">
+    <app-catalogo-select
+      [catalogo]="[]"
+      [label]="'Entidad Federativa'"
+      [placeholder]="'Seleccione un valor'"
+      [required]="true"
+      [isDisabled]="false"
+      name="federativa"
+      id="federativa"
+      (selectionChange)="actualizarEntidadFederativa($event)"
+    ></app-catalogo-select>
+  </div>
+
+  <div class="col-md-4">
+    <app-catalogo-select
+      [catalogo]="[]"
+      [label]="'Municipio/ Alcaldía'"
+      [placeholder]="'Seleccione un valor'"
+      [required]="true"
+      [isDisabled]="false"
+      name="federativa"
+      id="federativa"
+      (selectionChange)="actualizarEntidadFederativa($event)"
+    ></app-catalogo-select>
+  </div>
+
+  <div class="col-md-4">
+    <app-catalogo-select
+      [catalogo]="[]"
+      [label]="'Colonia'"
+      [placeholder]="'Seleccione un valor'"
+      [required]="true"
+      [isDisabled]="false"
+      name="federativa"
+      id="federativa"
+      (selectionChange)="actualizarEntidadFederativa($event)"
+    ></app-catalogo-select>
+  </div>
+
+  <div class="col-md-4">
+    <label class="form-label">Calle*:</label>
+    <input type="text" class="form-control" />
+  </div>
+
+  <div class="col-md-4">
+    <label class="form-label">Número y/o letra exterior*:</label>
+    <input type="text" class="form-control" />
+  </div>
+
+  <div class="col-md-4">
+    <label class="form-label">Número interior:</label>
+    <input type="text" class="form-control" />
+  </div>
+
+  <div class="col-md-4">
+    <label class="form-label">Código Postal*:</label>
+    <input type="text" class="form-control" />
+  </div>
+
+  <div class="col-md-4"></div>
+
+  <div class="col-md-4"></div>
+
+  <div class="col-md-12 mt-1 mb-1">
+    <ng-alert
+      [CONTENIDO]="
+        'En caso de que el interesado cambie la fecha de destrucción, deberá presentar un nuevo aviso.'
+      "
+    ></ng-alert>
+  </div>
+
+  <div class="col-md-8">
+    <input-fecha
+      [datos]="fechaDestruccionMercancia"
+      [isDisabled]="false"
+      [setFecha]="''"
+      (valorCambiado)="actualizarFechaFinVigencia1($event)"
+    >
+    </input-fecha>
+  </div>
+
+  <div class="col-md-4"></div>
+
+  <div class="col-md-8">
+    <label class="form-label"
+      >Hora en la que se llevará a cabo la destrucción de la mercancía*:</label
+    >
+    <input type="text" class="form-control" />
+  </div>
+
+  <div class="col-md-4"></div>
+
+  <div class="col-md-12 mb-1">
+    <ng-titulo
+      titulo="Datos de la mercancía que se destruirá y proceso de destrucción"
+    />
+  </div>
+</form>
