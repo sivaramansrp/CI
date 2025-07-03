@@ -2,7 +2,6 @@ name: Quality Lint and Test Affected Projects
 
 on:
   pull_request:
-    # Solo ejecutar cuando los PRs van hacia ramas principales
     branches: [ "develop", "staging", "production" ]
     paths:
       - 'apps/**'
@@ -11,7 +10,7 @@ on:
       - 'nx.json'
       - '.eslintrc.json'
   push:
-    branches: ["develop", "staging", "production" ]
+    branches: [ "develop", "staging", "production" ]
     paths:
       - 'apps/**'
       - 'libs/**'
@@ -23,50 +22,58 @@ jobs:
   build-deploy:
     runs-on: ubuntu-latest
     env:
-      NX_SKIP_POSTINSTALL: 1   # Evita la ejecución del postinstall de Nx
+      NX_SKIP_POSTINSTALL: 1
+
     steps:
-      # Obtiene el código de tu repositorio.
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      #  Configura la versión de Node.js requerida (22.14.0).
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '22.14.0'
-          
+
       - name: Instalar NX globalmente
         run: npm install -g nx@19.3.1
-        
-      # Instala el módulo nativo requerido para Linux.
+
       - name: Install native binding for Nx on Linux
         run: npm install @nx/nx-linux-x64-gnu
-        
-      # Instala el binding nativo de SWC para Linux (necesario para la compilación)
+
       - name: Install SWC native binding for Linux
         run: npm install @swc/core-linux-x64-gnu
-        
 
-      # 3. Instala las dependencias usando --force, tal como lo haces localmente.
       - name: Install dependencies
-        run: |
-          npm install --force
-        
+        run: npm install --force
+
       - name: Set up Docker Buildx
         id: buildx
         uses: docker/setup-buildx-action@v1
 
-
       - name: Get affected projects
         id: affected
         run: |
-          npx nx show projects --affected --base=origin/${{ github.event.pull_request.base.ref || 'main' }} --head=HEAD > affected.txt
-          cat affected.txt
-          echo "AFFECTED_PROJECTS<<EOF" >> $GITHUB_ENV
-          cat affected.txt >> $GITHUB_ENV
-          echo "EOF" >> $GITHUB_ENV
+          BASE_BRANCH="${{ github.event.pull_request.base.ref }}"
+          if [ -z "$BASE_BRANCH" ]; then
+            BASE_BRANCH="develop"
+          fi
+          echo "Base branch: $BASE_BRANCH"
+
+          npx nx show projects --affected --base=origin/$BASE_BRANCH --head=HEAD > affected.txt
+
+          if [ ! -s affected.txt ]; then
+            echo "✅ No hay proyectos afectados. Finalizando job."
+            echo "HAS_AFFECTED=false" >> $GITHUB_ENV
+            exit 0
+          else
+            cat affected.txt
+            echo "HAS_AFFECTED=true" >> $GITHUB_ENV
+            echo "AFFECTED_PROJECTS<<EOF" >> $GITHUB_ENV
+            cat affected.txt >> $GITHUB_ENV
+            echo "EOF" >> $GITHUB_ENV
+          fi
 
       - name: Run lint for affected projects
+        if: env.HAS_AFFECTED == 'true'
         run: |
           echo "🔍 Running lint for affected projects..."
           for project in $AFFECTED_PROJECTS; do
@@ -78,6 +85,7 @@ jobs:
           done
 
       - name: Run unit tests for affected projects
+        if: env.HAS_AFFECTED == 'true'
         continue-on-error: true
         run: |
           echo "🧪 Running unit tests for affected projects..."
