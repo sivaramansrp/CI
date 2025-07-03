@@ -1,8 +1,9 @@
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
-import { ConsultaioQuery, PersonaTerceros, TercerosComponent } from '@ng-mf/data-access-user';
+import { ConsultaioQuery, PersonaTerceros } from '@ng-mf/data-access-user';
 import { Subject, takeUntil } from 'rxjs';
 import { CertificadoZoosanitarioServiceService } from '../../services/220201/certificado-zoosanitario.service';
 import { CommonModule } from '@angular/common';
+import { TercerosrelacionadosComponent } from '../../../../shared/components/tercerosrelacionados/tercerosrelacionados.component';
 import { ZoosanitarioQuery } from '../../queries/220201/zoosanitario.query';
 
 /**
@@ -22,7 +23,7 @@ import { ZoosanitarioQuery } from '../../queries/220201/zoosanitario.query';
   standalone: true,
   imports: [
     CommonModule,
-    TercerosComponent
+  TercerosrelacionadosComponent
   ],
   templateUrl: './tercerospage.component.html',
   styleUrl: './tercerospage.component.scss',
