@@ -207,6 +207,8 @@ export class SeleccionDelCupoComponent implements OnInit, OnDestroy {
       producto: [this.solicitudState.producto, Validators.required],
       subproducto: [this.solicitudState.subproducto, Validators.required],
     });
+
+    this.datosTablaCupo = this.solicitudState.cupoTablaDatos || [];
   }
 
   /**
