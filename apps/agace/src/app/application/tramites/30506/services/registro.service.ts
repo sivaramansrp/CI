@@ -1,8 +1,8 @@
-import { Injectable } from '@angular/core';
 import { Catalogo } from '../state/Tramite30506.store';
-import { Observable } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
 import { ENVIRONMENT } from '@libs/shared/data-access-user/src';
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'

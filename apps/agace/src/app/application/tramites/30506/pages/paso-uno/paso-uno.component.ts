@@ -2,7 +2,6 @@ import {
   AfterViewInit,
   Component,
   OnDestroy,
-  OnInit,
 } from '@angular/core';
 import {
   ConsultaioQuery,
@@ -24,7 +23,7 @@ import { Subject} from 'rxjs';
   styles: ``,
  
 })
-export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
+export class PasoUnoComponent implements AfterViewInit, OnDestroy {
   /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
   public esDatosRespuesta: boolean = false; // Indica si hay datos de respuesta del servidor
 
@@ -38,18 +37,6 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
   constructor(
     private consultaQuery: ConsultaioQuery,    
   ) {}
-
-  /**
-   * Inicializa el componente y suscripciones al estado de consulta.
-   *
-   * Se suscribe al observable `selectConsultaioState$` para obtener el estado actual de la consulta.
-   * Si el estado indica que se debe actualizar (`update` es true), llama a `guardarDatosFormulario()` para cargar los datos
-   * y actualizar el estado global. Si no, marca que existen datos de respuesta.
-   * La suscripción se cancela automáticamente al destruir el componente para evitar fugas de memoria.
-   */
-  ngOnInit(): void {
-   
-  }
 
 
   /**
