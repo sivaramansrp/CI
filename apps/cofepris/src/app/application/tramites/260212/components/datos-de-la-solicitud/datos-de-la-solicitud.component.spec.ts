@@ -3,7 +3,7 @@ import { DatosDeLaSolicitudComponent } from './datos-de-la-solicitud.component';
 import { FormBuilder } from '@angular/forms';
 import { of } from 'rxjs';
 import { SolicitudService } from '../../services/solicitud.service';
-import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { ElementRef, NO_ERRORS_SCHEMA } from '@angular/core';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 // Mock dependencies
@@ -196,4 +196,34 @@ describe('DatosDeLaSolicitudComponent', () => {
     expect(spy).toHaveBeenCalled();
     expect(spy2).toHaveBeenCalled();
   });
+
+  it('debe agregar una clave Scian al arreglo', () => {
+    const form = { clave: '001', descripcion: 'Prueba' };
+    component.agregarScian(form);
+    expect(component.claveScianDatas).toContainEqual(form);
+  });
+
+  it('debe ocultar el modal Scian cuando se llama cerrarScianFormulario', () => {
+    const hideSpy = jest.fn();
+    component['modalScianInstance'] = { hide: hideSpy } as any;
+    component.cerrarScianFormulario();
+    expect(hideSpy).toHaveBeenCalled();
+  });
+
+  it('debe ocultar el modal de mercancías al llamar closeMercanciasForm', () => {
+    const hideSpy = jest.fn();
+    component['modalMercanciasInstance'] = { hide: hideSpy } as any;
+    component.closeMercanciasForm();
+    expect(hideSpy).toHaveBeenCalled();
+  });
+
+  it('debe obtener opciones de solicitud y asignarlas a losDatos', () => {
+    const mockOpciones = [{ id: 1, nombre: 'Opción 1' }];
+    mockSolicitudService.getOpcionesPublicacion.mockReturnValueOnce(of(mockOpciones));
+
+    component.obtenerOpcionesSolicitud();
+    expect(component.losDatos).toEqual(mockOpciones);
+  });
+
+
 });
