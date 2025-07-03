@@ -1,6 +1,6 @@
 
 import { AlertComponent, ConfiguracionColumna, ConsultaioQuery, TablaDinamicaComponent, TablaSeleccion } from '@ng-mf/data-access-user';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Solicitante110101State, Tramite110101Store } from '../../estados/tramites/solicitante110101.store';
 import { Subject, map, takeUntil } from 'rxjs';
@@ -37,6 +37,16 @@ import tratadosTable from '@libs/shared/theme/assets/json/110101/tratados-table.
   ]
 })
 export class TratadosComponent implements OnInit, OnDestroy {
+  /**
+   * Evento que se emite para habilitar la pestaña siguiente en el flujo del trámite.
+   * Se utiliza para notificar al componente padre que la pestaña puede ser activada,
+   * generalmente después de agregar o modificar un tratado exitosamente.
+   *
+   * @event habilitarPestana
+   * @type {EventEmitter<void>}
+   */
+  @Output() habilitarPestana = new EventEmitter<void>();
+
   /**
    * Array de filas seleccionadas en la tabla de tratados.
    * 
@@ -269,6 +279,7 @@ agregarTratado(): void {
   
   this.registroDeSolicitudesTablaDatos.push(ROW_DATA);
 }
+    this.habilitarPestana.emit();
     this.formularioTratados.reset();
   }
 }

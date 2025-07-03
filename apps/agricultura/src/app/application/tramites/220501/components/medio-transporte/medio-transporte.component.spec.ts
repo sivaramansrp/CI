@@ -1,61 +1,74 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MedioTransporteComponent } from './medio-transporte.component';
-import { FormBuilder } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { of } from 'rxjs';
 import { SagarpaService } from '../../services/sagarpa/sagarpa.service';
 import { Solicitud220501Store } from '../../estados/tramites220501.store';
 import { Solicitud220501Query } from '../../estados/tramites220501.query';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import mercanciaTableMock from '@libs/shared/theme/assets/json/220501/mercancia-table.json';
+
+jest.mock('@libs/shared/theme/assets/json/220501/mercancia-table.json', () => ({
+  __esModule: true,
+  default: {
+    tableHeader: ['Fracción', 'Descripción', 'NICO'],
+    tableBody: [{ tbodyData: ['0101', 'Caballos', '00'] }]
+  }
+}));
 
 describe('MedioTransporteComponent', () => {
   let component: MedioTransporteComponent;
   let fixture: ComponentFixture<MedioTransporteComponent>;
-  let sagarpaServiceMock: any;
-  let storeMock: any;
-  let queryMock: any;
+
+  let mockSagarpaService: any;
+  let mockStore: any;
+  let mockQuery: any;
+  let mockConsultaioQuery: any;
 
   beforeEach(async () => {
-    sagarpaServiceMock = {
-      getMediodetransporte: jest.fn().mockReturnValue(of({ data: [{ id: 1, nombre: 'Camion' }] }))
+    mockSagarpaService = {
+      getMediodetransporte: jest.fn().mockReturnValue(of({ data: [{ id: '1', descripcion: 'Aéreo' }] }))
     };
 
-    storeMock = {
-      setMedioDeTransporte: jest.fn(),
+    mockStore = {
+      setMercanciaTablaDatos: jest.fn(),
       setMostrarAgregarMercancia: jest.fn(),
+      setMedioDeTransporte: jest.fn(),
       setEsSolicitudFerros: jest.fn(),
       setIdentificacionTransporte: jest.fn(),
-      setTotalGuias: jest.fn(),
-      setMercanciaTablaDatos: jest.fn()
+      setTotalGuias: jest.fn()
     };
 
-    queryMock = {
+    mockQuery = {
       selectSolicitud$: of({
-        medioDeTransporte: 1,
+        medioDeTransporte: '1',
         identificacionTransporte: 'ABC123',
-        esSolicitudFerros: '1',
-        totalGuias: '5',
-        mostrarAgregarMercancia: true,
+        esSolicitudFerros: '0',
+        totalGuias: '3',
         mercanciaTablaDatos: []
       })
-    };    
+    };
+
+    mockConsultaioQuery = {
+      selectConsultaioState$: of({
+        readonly: false,
+        update: false
+      })
+    };
 
     await TestBed.configureTestingModule({
-      imports: [MedioTransporteComponent],
+      imports: [ReactiveFormsModule, MedioTransporteComponent],
       providers: [
         FormBuilder,
-        { provide: SagarpaService, useValue: sagarpaServiceMock },
-        { provide: Solicitud220501Store, useValue: storeMock },
-        { provide: Solicitud220501Query, useValue: queryMock }
+        { provide: SagarpaService, useValue: mockSagarpaService },
+        { provide: Solicitud220501Store, useValue: mockStore },
+        { provide: Solicitud220501Query, useValue: mockQuery },
+        { provide: ConsultaioQuery, useValue: mockConsultaioQuery }
       ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(MedioTransporteComponent);
     component = fixture.componentInstance;
-
-    component['getMercanciaTableData'] = {
-      tableHeader: ['Col1', 'Col2'],
-      tableBody: [{ tbodyData: ['Val1', 'Val2'] }]
-    };
-
     fixture.detectChanges();
   });
 
@@ -63,69 +76,91 @@ describe('MedioTransporteComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize form with values from store on init', () => {
-    expect(component.medioTransporteForm.value.medioDeTransporte).toBe(1);
-    expect(component.mostrarAgregarMercancia).toBe(true);
+  it('should initialize form with expected default values', () => {
+    const form = component.medioTransporteForm;
+    expect(form).toBeDefined();
+    expect(form.value).toEqual({
+      medioDeTransporte: '1',
+      identificacionTransporte: 'ABC123',
+      esSolicitudFerros: '0',
+      totalGuias: '3'
+    });
   });
 
-  it('should call inicializaCatalogos and obtenerMercancia on init', () => {
-    const catalogoSpy = jest.spyOn<any, any>(component, 'inicializaCatalogos');
-    const mercanciaSpy = jest.spyOn(component, 'obtenerMercancia');
-
-    component.ngOnInit();
-
-    expect(catalogoSpy).toHaveBeenCalled();
-    expect(mercanciaSpy).toHaveBeenCalled();
+  it('should load catalog on init', () => {
+    expect(mockSagarpaService.getMediodetransporte).toHaveBeenCalled();
+    expect(component.medioDeTransporte.length).toBeGreaterThan(0);
   });
 
-  it('should create form group with validators', () => {
-    component.crearFormulario();
-    expect(component.medioTransporteForm.contains('medioDeTransporte')).toBe(true);
+  it('should initialize mercancia table data if empty', () => {
+    expect(component.mercanciaBodyData[0].tbodyData).toEqual(mercanciaTableMock.tableBody[0].tbodyData);
+    expect(mockStore.setMercanciaTablaDatos).toHaveBeenCalledWith(expect.any(Array));
   });
 
-  it('should set mercancia header and body data', () => {
-    component.obtenerMercancia();
-    expect(component.mercanciaHeaderData.length).toBeGreaterThan(0);
-    expect(component.mercanciaBodyData.length).toBeGreaterThan(0);
+  it('should emit true when value is 1 in estableceSeleccionSolicitudFerro', () => {
+    const spy = jest.spyOn(component.transporteSeleccionado, 'emit');
+    component.estableceSeleccionSolicitudFerro('1');
+    expect(spy).toHaveBeenCalledWith(true);
+    expect(component.mostrarAgregarMercancia).toBe(false);
+    expect(mockStore.setMostrarAgregarMercancia).toHaveBeenCalledWith(false);
+    expect(mockStore.setEsSolicitudFerros).toHaveBeenCalledWith('1');
   });
 
-  it('should update store on modificarSaldosMercancia', () => {
+  it('should emit false when value is 0 in estableceSeleccionSolicitudFerro', () => {
+    const spy = jest.spyOn(component.transporteSeleccionado, 'emit');
+    component.estableceSeleccionSolicitudFerro('0');
+    expect(spy).toHaveBeenCalledWith(false);
+  });
+
+  it('should show AgregarMercancia and update store on modificarSaldosMercancia', () => {
     component.modificarSaldosMercancia();
     expect(component.mostrarAgregarMercancia).toBe(true);
-    expect(storeMock.setMostrarAgregarMercancia).toHaveBeenCalledWith(true);
+    expect(mockStore.setMostrarAgregarMercancia).toHaveBeenCalledWith(true);
   });
 
-  it('should update store on obtenerAgregarMercanciaEvent', () => {
+  it('should update mercancia data and hide agregar mercancia on actualizarMercanciaEnTabla', () => {
+    const data = {
+      fraccionArancelaria: '0101',
+      descripcionFraccion: 'Caballos',
+      nico: '00',
+      descripcion: 'Caballos pura sangre',
+      saldoACapturar: '10',
+      unidaddeMedidaDeUMT: 'KG',
+      cantidadTotalUMT: '500',
+      saldoPendiente: '5'
+    };
+    component.actualizarMercanciaEnTabla(data);
+    expect(component.mercanciaBodyData[0].tbodyData).toEqual(Object.values(data));
+    expect(component.mostrarAgregarMercancia).toBe(false);
+    expect(mockStore.setMercanciaTablaDatos).toHaveBeenCalledWith(Object.values(data));
+  });
+
+  it('should update store on medioDeTransporteSeleccion', () => {
+    component.medioDeTransporteSeleccion({ id: 99, descripcion: 'Prueba' });
+    expect(mockStore.setMedioDeTransporte).toHaveBeenCalledWith(99);
+  });
+
+  it('should get identificacionTransporte and update store', () => {
+    component.getIdentificacionTransporte();
+    expect(mockStore.setIdentificacionTransporte).toHaveBeenCalledWith('ABC123');
+  });
+
+  it('should get totalGuias and update store', () => {
+    component.getTotalGuiasAmparadas();
+    expect(mockStore.setTotalGuias).toHaveBeenCalledWith('3');
+  });
+
+  it('should update mostrarAgregarMercancia and notify store on obtenerAgregarMercanciaEvent', () => {
     component.obtenerAgregarMercanciaEvent(true);
     expect(component.mostrarAgregarMercancia).toBe(true);
-    expect(storeMock.setMostrarAgregarMercancia).toHaveBeenCalledWith(true);
+    expect(mockStore.setMostrarAgregarMercancia).toHaveBeenCalledWith(true);
   });
 
-  it('should emit true when estableceSeleccionSolicitudFerro is 1', () => {
-    const emitSpy = jest.spyOn(component.transporteSeleccionado, 'emit');
-    component.estableceSeleccionSolicitudFerro('1');
-    expect(emitSpy).toHaveBeenCalledWith(true);
-  });
-
-  it('should emit false when estableceSeleccionSolicitudFerro is 0', () => {
-    const emitSpy = jest.spyOn(component.transporteSeleccionado, 'emit');
-    component.estableceSeleccionSolicitudFerro('0');
-    expect(emitSpy).toHaveBeenCalledWith(false);
-  });
-
-  it('should call setIdentificacionTransporte', () => {
-    component.getIdentificacionTransporte();
-    expect(storeMock.setIdentificacionTransporte).toHaveBeenCalledWith('ABC123');
-  });
-
-  it('should call setTotalGuias', () => {
-    component.getTotalGuiasAmparadas();
-    expect(storeMock.setTotalGuias).toHaveBeenCalledWith('5');
-  });
-
-  it('should clean up on destroy', () => {
-    const spy = jest.spyOn(component['destroyed$'], 'next');
+  it('should complete destroyed$ on destroy', () => {
+    const nextSpy = jest.spyOn(component['destroyed$'], 'next');
+    const completeSpy = jest.spyOn(component['destroyed$'], 'complete');
     component.ngOnDestroy();
-    expect(spy).toHaveBeenCalled();
+    expect(nextSpy).toHaveBeenCalled();
+    expect(completeSpy).toHaveBeenCalled();
   });
 });

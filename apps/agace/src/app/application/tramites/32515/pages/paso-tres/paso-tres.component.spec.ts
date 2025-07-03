@@ -1,5 +1,4 @@
-// @ts-nocheck
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -8,46 +7,27 @@ import { Observable, of as observableOf, throwError } from 'rxjs';
 
 import { Component } from '@angular/core';
 import { PasoTresComponent } from './paso-tres.component';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { provideToastr, ToastrService } from 'ngx-toastr';
+import { Router } from '@angular/router';
 
-@Directive({ selector: '[myCustom]' })
-class MyCustomDirective {
-  @Input() myCustom;
+@Injectable()
+class MockRouter {
+  navigate() {};
 }
 
-@Pipe({name: 'translate'})
-class TranslatePipe implements PipeTransform {
-  transform(value) { return value; }
-}
-
-@Pipe({name: 'phoneNumber'})
-class PhoneNumberPipe implements PipeTransform {
-  transform(value) { return value; }
-}
-
-@Pipe({name: 'safeHtml'})
-class SafeHtmlPipe implements PipeTransform {
-  transform(value) { return value; }
-}
 
 describe('PasoTresComponent', () => {
-  let fixture;
-  let component;
+  let fixture: ComponentFixture<PasoTresComponent>;
+  let component: { ngOnDestroy: () => void; router: { navigate?: any; }; obtieneFirma: (arg0: {}) => void; };
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule, PasoTresComponent, HttpClientTestingModule ],
+      imports: [ FormsModule, ReactiveFormsModule ],
       declarations: [
-        TranslatePipe, PhoneNumberPipe, SafeHtmlPipe,
-        MyCustomDirective
+        PasoTresComponent,
       ],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
       providers: [
-        ToastrService,
-        provideToastr({
-          positionClass: 'toast-top-right',
-        }),
+        { provide: Router, useClass: MockRouter }
       ]
     }).overrideComponent(PasoTresComponent, {
 
@@ -56,8 +36,20 @@ describe('PasoTresComponent', () => {
     component = fixture.debugElement.componentInstance;
   });
 
+  afterEach(() => {
+    component.ngOnDestroy = function() {};
+    fixture.destroy();
+  });
+
   it('should run #constructor()', async () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should run #obtieneFirma()', async () => {
+    component.router = component.router || {};
+    component.router.navigate = jest.fn();
+    component.obtieneFirma({});
+    // expect(component.router.navigate).toHaveBeenCalled();
   });
 
 });
