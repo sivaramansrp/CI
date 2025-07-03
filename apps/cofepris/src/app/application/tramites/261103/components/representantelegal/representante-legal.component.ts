@@ -1,26 +1,19 @@
+
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DatosProcedureQuery } from '../../../../estados/queries/tramites261103.query';
 import { DatosProcedureState } from '../../../../estados/tramites/tramites261103.store';
 import { DatosProcedureStore } from '../../../../estados/tramites/tramites261103.store';
 import { Domicilio } from '../../modelos/domicilio-establecimientos.model';
-import { FormBuilder } from '@angular/forms';
-import { FormGroup } from '@angular/forms';
 import { ModificacionPermisoImportacionMedicamentosService } from '../../services/modificacion-permiso-importacion-medicamentos.service';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
-import { Subject } from 'rxjs';
-import { TablaSeleccion } from '@libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
-import { Validators } from '@angular/forms';
-import { map } from 'rxjs';
-import { takeUntil } from 'rxjs';
+
 @Component({
   selector: 'app-representante-legal',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule,TituloComponent],
+  imports: [CommonModule, ReactiveFormsModule, TituloComponent],
   templateUrl: './representante-legal.component.html',
   styleUrl: './representante-legal.component.scss',
 })
@@ -33,8 +26,6 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
 * Formulario reactivo para datos preoperativos.
 */
   AvisodeFuncionamiento!: FormGroup;
-  /** Enum para el tipo de selección de tabla */
-  public TablaSeleccion: TablaSeleccion = TablaSeleccion.CHECKBOX;
 
   /** Array para almacenar la respuesta de permisos cancelar */
   Domicilios: Domicilio[] = [];
@@ -72,18 +63,11 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
    */
   constructor(private fb: FormBuilder,
     private store: DatosProcedureStore,
-    private query: DatosProcedureQuery,
-    private consultaioQuery: ConsultaioQuery
+    private query: DatosProcedureQuery
   ) {
     // Constructor del componente
-    this.consultaioQuery.selectConsultaioState$
-    .pipe(
-      takeUntil(this.destroyNotifier$),
-      map((seccionState: { readonly: boolean })=>{
-        this.esFormularioSoloLectura = seccionState.readonly; 
-      })
-    )
-    .subscribe()
+    // Note: ConsultaioQuery removed due to lazy-loading restrictions
+    // ReadOnly state will be handled differently
   }
 
   /**

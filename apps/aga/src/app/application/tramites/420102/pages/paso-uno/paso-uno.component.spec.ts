@@ -1,40 +1,61 @@
 // @ts-nocheck
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import {
-  CUSTOM_ELEMENTS_SCHEMA,
-  NO_ERRORS_SCHEMA,
-  Injectable
-} from '@angular/core';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { of as observableOf } from 'rxjs';
+import { By } from '@angular/platform-browser';
+import { Observable, of as observableOf, throwError } from 'rxjs';
 
+import { Component } from '@angular/core';
 import { PasoUnoComponent } from './paso-uno.component';
-
-
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { SeccionLibStore } from '@libs/shared/data-access-user/src';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { ConcluirRelacionService } from '../../services/concluir-relacion.service';
 
 @Injectable()
-class MockTramite420102Store {}
+class MockConcluirRelacionService {}
+
+@Directive({ selector: '[myCustom]' })
+class MyCustomDirective {
+  @Input() myCustom;
+}
+
+@Pipe({name: 'translate'})
+class TranslatePipe implements PipeTransform {
+  transform(value) { return value; }
+}
+
+@Pipe({name: 'phoneNumber'})
+class PhoneNumberPipe implements PipeTransform {
+  transform(value) { return value; }
+}
+
+@Pipe({name: 'safeHtml'})
+class SafeHtmlPipe implements PipeTransform {
+  transform(value) { return value; }
+}
 
 describe('PasoUnoComponent', () => {
-  let fixture: ComponentFixture<PasoUnoComponent>;
-  let component: PasoUnoComponent;
+  let fixture;
+  let component;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [
-        FormsModule,
-        ReactiveFormsModule,
-        HttpClientTestingModule 
-      ],
+      imports: [ FormsModule, ReactiveFormsModule ],
       declarations: [
-        PasoUnoComponent 
+        PasoUnoComponent,
+        TranslatePipe, PhoneNumberPipe, SafeHtmlPipe,
+        MyCustomDirective
       ],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
+      schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
       providers: [
+        SeccionLibStore,
+        ConsultaioQuery,
+        { provide: ConcluirRelacionService, useClass: MockConcluirRelacionService }
       ]
-    }).compileComponents();
+    }).overrideComponent(PasoUnoComponent, {
 
+    }).compileComponents();
     fixture = TestBed.createComponent(PasoUnoComponent);
     component = fixture.debugElement.componentInstance;
   });
@@ -43,13 +64,28 @@ describe('PasoUnoComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should run #ngOnDestroy()', async () => {
-    component.destroyNotifier$ = component.destroyNotifier$ || {
-      next: jest.fn(),
-      complete: jest.fn()
-    };
-    component.ngOnDestroy();
-
-    
+  it('should run #guardarDatosFormulario()', async () => {
+    component.concluirRelacionService = component.concluirRelacionService || {};
+    component.concluirRelacionService.getRegistroTomaMuestrasMercanciasData = jest.fn().mockReturnValue(observableOf({}));
+    component.concluirRelacionService.actualizarEstadoFormulario = jest.fn();
+    component.guardarDatosFormulario();
+    expect(component.concluirRelacionService.getRegistroTomaMuestrasMercanciasData).toHaveBeenCalled();
+    expect(component.concluirRelacionService.actualizarEstadoFormulario).toHaveBeenCalled();
   });
+
+  it('should run #seleccionaTab()', async () => {
+
+    component.seleccionaTab({});
+
+  });
+
+  it('should run #ngOnDestroy()', async () => {
+    component.destroyNotifier$ = component.destroyNotifier$ || {};
+    component.destroyNotifier$.next = jest.fn();
+    component.destroyNotifier$.complete = jest.fn();
+    component.ngOnDestroy();
+    expect(component.destroyNotifier$.next).toHaveBeenCalled();
+    expect(component.destroyNotifier$.complete).toHaveBeenCalled();
+  });
+
 });

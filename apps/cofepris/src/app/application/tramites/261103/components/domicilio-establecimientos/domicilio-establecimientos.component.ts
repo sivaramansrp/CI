@@ -8,7 +8,7 @@ import { DatosProcedureStore } from '../../../../estados/tramites/tramites261103
 import { Domicilio } from '../../modelos/domicilio-establecimientos.model';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
-import { InputCheckComponent } from '@ng-mf/data-access-user';
+import { InputCheckComponent } from '@libs/shared/data-access-user/src/tramites/components/input-check/input-check.component';
 import { ModificacionPermisoImportacionMedicamentosService } from '../../services/modificacion-permiso-importacion-medicamentos.service';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';

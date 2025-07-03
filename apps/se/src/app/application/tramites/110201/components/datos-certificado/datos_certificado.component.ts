@@ -294,33 +294,20 @@ optionsRepresentacion!: Catalogo[];
   /**
    * Configura el formulario reactivo con los valores iniciales del estado.
    */
-  donanteDomicilio(): void {
-    this.registroForm = this.fb.group({
-      validacionForm: this.fb.group({
-        observaciones: [
-          this.solicitudState?.observaciones,
-          [Validators.required],
-        ],
-        presica: [this.solicitudState?.presica, [Validators.required]],
-        presenta: [this.solicitudState?.presenta, [Validators.required]],
-        idioma: [this.solicitudState?.idioma, [Validators.required]],
-        entidad: [this.solicitudState?.entidad, [Validators.required]],
-        representacion: [
-          this.solicitudState?.representacion,
-          [Validators.required],
-        ],
-        casillaVerificacion: [
-          this.solicitudState?.casillaVerificacion,
-          [Validators.requiredTrue],
-        ],
-        justificacion: [
-          this.solicitudState?.justificacion,
-          [Validators.required],
-        ],
-      }),
-    });
-  }
-
+ donanteDomicilio(): void {
+  this.registroForm = this.fb.group({
+    validacionForm: this.fb.group({
+      observaciones: [{ value: this.solicitudState?.observaciones, disabled: this.soloLectura }, [Validators.required]],
+      presica: [{ value: this.solicitudState?.presica, disabled: this.soloLectura }, [Validators.required]],
+      presenta: [{ value: this.solicitudState?.presenta, disabled: this.soloLectura }, [Validators.required]],
+      idioma: [{ value: this.solicitudState?.idioma, disabled: this.soloLectura }, [Validators.required]],
+      entidad: [{ value: this.solicitudState?.entidad, disabled: this.soloLectura }, [Validators.required]],
+      representacion: [{ value: this.solicitudState?.representacion, disabled: this.soloLectura }, [Validators.required]],
+      casillaVerificacion: [{ value: this.solicitudState?.casillaVerificacion, disabled: this.soloLectura }, [Validators.requiredTrue]],
+      justificacion: [{ value: this.solicitudState?.justificacion, disabled: this.soloLectura }, [Validators.required]],
+    }),
+  });
+}
   /**
    * Método que se ejecuta al destruir el componente.
    * Cancela todas las suscripciones activas.

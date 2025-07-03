@@ -1,74 +1,93 @@
-
 import { TablaMercanciasDatos } from "../../../shared/models/datos-solicitud.model";
+
 /**
- * Represents the data model for imported goods in a table format.
- * Extends the `TablaMercanciasDatos` interface to include additional properties.
- *
- * @property {string} [cantidadUmtValor] - The value of the quantity in the unit of measurement for transport (UMT).
- * @property {string} [cantidadUmcValor] - The value of the quantity in the unit of measurement for commerce (UMC).
- * @property {string} [marca] - The brand or trademark of the imported goods.
+ * @interface TablaMercanciasImportacion
+ * @description Representa el modelo de datos para mercancías importadas en formato de tabla.
+ * Extiende la interfaz `TablaMercanciasDatos` y agrega propiedades adicionales específicas.
+ * 
+ * @property {string} [cantidadUmtValor] - Valor correspondiente a la cantidad en unidad de medida para tarifa (UMT).
+ * @property {string} [cantidadUmcValor] - Valor correspondiente a la cantidad en unidad de medida para comercialización (UMC).
+ * @property {string} [marca] - Marca o nombre comercial de la mercancía importada.
  */
 export interface TablaMercanciasImportacion extends TablaMercanciasDatos {
-    cantidadUmtValor?:string;
-    cantidadUmcValor?:string;
-    marca?:string;
-  }
+  /** Cantidad en unidad de medida tarifa (UMT) */
+  cantidadUmtValor?: string;
 
+  /** Cantidad en unidad de medida comercialización (UMC) */
+  cantidadUmcValor?: string;
 
-  /**
- * @interface Facturador
- * @description Representa los datos correspondientes a un facturador.
- */
+  /** Marca del producto importado */
+  marca?: string;
+}
+
 /**
- * @description
- * Interfaz que representa la información de un facturador.
- * 
- * @property {number} [id] - Identificador único del facturador (opcional).
- * @property {string} curp - CURP del facturador.
- * @property {string} [rfc] - RFC del facturador (opcional).
- * @property {string} nombreDescripcion - Nombre o descripción del facturador.
- * @property {string} nacionalidad - Nacionalidad del facturador.
- * @property {string} tipoPersona - Tipo de persona (física o moral).
- * @property {string} nombres - Nombres del facturador.
- * @property {string} primerApellido - Primer apellido del facturador.
- * @property {string} segundoApellido - Segundo apellido del facturador.
- * @property {string} pais - País de residencia del facturador.
- * @property {string} estado - Estado de residencia del facturador.
- * @property {string} codigoPostal - Código postal del domicilio del facturador.
- * @property {string} colonia - Colonia del domicilio del facturador.
- * @property {string} calle - Calle del domicilio del facturador.
- * @property {string} numeroExterior - Número exterior del domicilio.
- * @property {string} numeroInterior - Número interior del domicilio.
- * @property {string} lada - Lada telefónica.
- * @property {string} telefono - Número de teléfono.
- * @property {string} correoElectronico - Correo electrónico de contacto.
- * @property {string} localidad - Localidad del domicilio.
- * @property {string} municipioAlcaldia - Municipio o alcaldía del domicilio.
- * @property {string} denominacionRazon - Denominación o razón social.
+ * @interface Facturador
+ * @description Representa la información detallada de un facturador.
  */
 export interface Facturador {
+  /** Identificador único del facturador (opcional) */
   id?: number;
+
+  /** CURP del facturador */
   curp: string;
+
+  /** RFC del facturador (opcional) */
   rfc?: string;
+
+  /** Nombre completo o descripción del facturador */
   nombreDescripcion: string;
+
+  /** Nacionalidad del facturador (e.g., 'Nacional', 'Extranjero') */
   nacionalidad: string;
+
+  /** Tipo de persona: 'Física' o 'Moral' */
   tipoPersona: string;
+
+  /** Nombres del facturador (solo para persona física) */
   nombres: string;
+
+  /** Primer apellido del facturador (solo para persona física) */
   primerApellido: string;
+
+  /** Segundo apellido del facturador (solo para persona física) */
   segundoApellido: string;
+
+  /** País de residencia del facturador */
   pais: string;
+
+  /** Estado o entidad federativa donde reside el facturador */
   estado: string;
+
+  /** Código postal del domicilio del facturador */
   codigoPostal: string;
+
+  /** Colonia o barrio del domicilio */
   colonia: string;
+
+  /** Calle donde reside el facturador */
   calle: string;
+
+  /** Número exterior del domicilio */
   numeroExterior: string;
+
+  /** Número interior del domicilio (si aplica) */
   numeroInterior: string;
+
+  /** Clave LADA del número telefónico */
   lada: string;
+
+  /** Número telefónico de contacto */
   telefono: string;
+
+  /** Correo electrónico del facturador */
   correoElectronico: string;
+
+  /** Localidad dentro del municipio o alcaldía */
   localidad: string;
+
+  /** Municipio o alcaldía del domicilio */
   municipioAlcaldia: string;
+
+  /** Denominación o razón social (solo para persona moral) */
   denominacionRazon: string;
-
-
 }

@@ -288,8 +288,8 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-    this.mercanciaDisponsiblesTablaDatos = this.solicitudState.mercanciaDisponsiblesTablaDatos;
-    this.mercanciaSeleccionadasTablaDatos = this.solicitudState.mercanciaSeleccionadasTablaDatos;
+    this.mercanciaDisponsiblesTablaDatos = this.solicitudState.mercanciaDisponsiblesTablaDatos ?? [];
+    this.mercanciaSeleccionadasTablaDatos = this.solicitudState.mercanciaSeleccionadasTablaDatos ?? [];
     this.inicializarFormularioCertificado();
     this.inicializarFormularioMercancia();
     this.inicializarFormularioArchivo();
@@ -322,15 +322,6 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
    */
   get grupoOperador(): FormGroup {
     return this.formularioCertificado.get('grupoOperador') as FormGroup;
-  }
-
-  /**
-   * Obtiene el grupo de formulario relacionado con el domicilio.
-   *
-   * @returns {FormGroup} El grupo de formulario del domicilio.
-   */
-  get grupoDeDomicilio(): FormGroup {
-    return this.formularioCertificado.get('grupoDeDomicilio') as FormGroup;
   }
 
   /**

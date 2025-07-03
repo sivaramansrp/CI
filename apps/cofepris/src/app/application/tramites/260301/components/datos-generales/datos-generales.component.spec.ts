@@ -92,24 +92,72 @@ describe('DatosGeneralesComponent', () => {
     expect(component.agregarDatosForm.reset).toHaveBeenCalled();
   });
 
-  it('should run #guardarDatos()', async () => {
-    component.tipoTablaDatos = component.tipoTablaDatos || {};
-    component.tipoTablaDatos.FABRICANTE = 'FABRICANTE';
-    component.tipoTablaDatos.FACTURADOR = 'FACTURADOR';
-    component.tipoTablaDatos.CERTIFICADO = 'CERTIFICADO';
-    component.tipoTablaDatos.PROVEEDOR = 'PROVEEDOR';
-    component.tipoTablaDatos.OTROS = 'OTROS';
+  it('should run #guardarDatos() for FABRICANTE', async () => {
+    component.tipoDatos = component.tipoTablaDatos.FABRICANTE;
     component.addFabricantes = jest.fn();
     component.agregarDatosForm = component.agregarDatosForm || {};
     component.agregarDatosForm.value = 'value';
-    component.addFacturadores = jest.fn();
-    component.addCertificadoTablaDatos = jest.fn();
-    component.addProveedores = jest.fn();
-    component.addOtros = jest.fn();
     component.router = component.router || {};
     component.router.navigate = jest.fn();
     component.guardarDatos();
+    expect(component.addFabricantes).toHaveBeenCalledWith(['value']);
+    expect(component.router.navigate).toHaveBeenCalledWith(['pago', 'importacion-materias-primas-estupefacientes']);
+  });
 
+  it('should run #guardarDatos() for FACTURADOR', async () => {
+    component.tipoDatos = component.tipoTablaDatos.FACTURADOR;
+    component.addFacturadores = jest.fn();
+    component.agregarDatosForm = component.agregarDatosForm || {};
+    component.agregarDatosForm.value = 'value';
+    component.router = component.router || {};
+    component.router.navigate = jest.fn();
+    component.guardarDatos();
+    expect(component.addFacturadores).toHaveBeenCalledWith(['value']);
+    expect(component.router.navigate).toHaveBeenCalledWith(['pago', 'importacion-materias-primas-estupefacientes']);
+  });
+
+  it('should run #guardarDatos() for CERTIFICADO', async () => {
+    component.tipoDatos = component.tipoTablaDatos.CERTIFICADO;
+    component.addCertificadoTablaDatos = jest.fn();
+    component.agregarDatosForm = component.agregarDatosForm || {};
+    component.agregarDatosForm.value = 'value';
+    component.router = component.router || {};
+    component.router.navigate = jest.fn();
+    component.guardarDatos();
+    expect(component.addCertificadoTablaDatos).toHaveBeenCalledWith(['value']);
+    expect(component.router.navigate).toHaveBeenCalledWith(['pago', 'importacion-materias-primas-estupefacientes']);
+  });
+
+  it('should run #guardarDatos() for PROVEEDOR', async () => {
+    component.tipoDatos = component.tipoTablaDatos.PROVEEDOR;
+    component.addProveedores = jest.fn();
+    component.agregarDatosForm = component.agregarDatosForm || {};
+    component.agregarDatosForm.value = 'value';
+    component.router = component.router || {};
+    component.router.navigate = jest.fn();
+    component.guardarDatos();
+    expect(component.addProveedores).toHaveBeenCalledWith(['value']);
+    expect(component.router.navigate).toHaveBeenCalledWith(['pago', 'importacion-materias-primas-estupefacientes']);
+  });
+
+  it('should run #guardarDatos() for OTROS', async () => {
+    component.tipoDatos = component.tipoTablaDatos.OTROS;
+    component.addOtros = jest.fn();
+    component.agregarDatosForm = component.agregarDatosForm || {};
+    component.agregarDatosForm.value = 'value';
+    component.router = component.router || {};
+    component.router.navigate = jest.fn();
+    component.guardarDatos();
+    expect(component.addOtros).toHaveBeenCalledWith(['value']);
+    expect(component.router.navigate).toHaveBeenCalledWith(['pago', 'importacion-materias-primas-estupefacientes']);
+  });
+
+  it('should run #guardarDatos() for default case', async () => {
+    component.tipoDatos = 'unknown';
+    component.router = component.router || {};
+    component.router.navigate = jest.fn();
+    component.guardarDatos();
+    expect(component.router.navigate).toHaveBeenCalledWith(['pago', 'importacion-materias-primas-estupefacientes']);
   });
 
   it('should run #addFabricantes()', async () => {
@@ -140,6 +188,13 @@ describe('DatosGeneralesComponent', () => {
     component.tramiteStore = component.tramiteStore || {};
     component.tramiteStore.updateFacturadorTablaDatos = jest.fn();
     component.addFacturadores({});
+  });
+
+  it('should run #crearFormulario()', async () => {
+    component.fb = component.fb || {};
+    component.fb.group = jest.fn().mockReturnValue({});
+    component.crearFormulario();
+    expect(component.fb.group).toHaveBeenCalled();
   });
 
 });
