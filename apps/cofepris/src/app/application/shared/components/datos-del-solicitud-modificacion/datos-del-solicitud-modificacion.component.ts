@@ -75,7 +75,7 @@ import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { EstablecimientoService } from '../../services/establecimiento.service';
 import { ManifiestosRepresentanteSeccionComponent } from '../manifiestos-representante-seccion/manifiestos-representante-seccion.component';
 
-import { NUEVA_NOTIFICACION, PAIS_DE_PROCEDENCIA_LABEL } from '../../constantes/datos-domicilio-legal.enum';
+import { NUEVA_NOTIFICACION, PAIS_DE_ORIGEN_LABEL, PAIS_DE_PROCEDENCIA_LABEL, USO_ESPECIFICO_LABEL } from '../../constantes/datos-domicilio-legal.enum';
 /*
  ** component
  */
@@ -366,6 +366,16 @@ export class DatosDelSolicitudModificacionComponent
    * Etiqueta para el crosslist de país de procedencia.
    */
   public paisDeProcedenciaLabel = PAIS_DE_PROCEDENCIA_LABEL;
+  /**
+   * Etiqueta para el uso específico.
+   */
+  public usoEspecificoLabel = USO_ESPECIFICO_LABEL;
+  /**
+   * Etiqueta para el país de origen.
+   * @type {CrossListLable}
+   */
+  public paisDeOrigenLabel = PAIS_DE_ORIGEN_LABEL;
+  
   /**
    * Lista de países para la selección de origen.
    */
@@ -679,7 +689,7 @@ eliminarSeleccionados(): void {
     this.domicilioEstablecimiento = this.fb.group({
       ideGenerica: ['', Validators.required],
       observaciones: [{ value: '', disabled: true }, [Validators.required, Validators.maxLength(2000)]],
-      establecimientoRFCResponsableSanitario: ['', [Validators.required,Validators.pattern(REGEX_RFC_FISICA)]],
+      establecimientoRFCResponsableSanitario: ['', [Validators.required,Validators.pattern(REGEX_RFC_FISICA), Validators.maxLength(13)]],
       establecimientoRazonSocial:['', Validators.required],
       establecimientoCorreoElectronico :['', [Validators.required, Validators.email]],
       establecimientoEstados :['', Validators.required],

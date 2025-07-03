@@ -139,7 +139,7 @@
           <div class="form-group">
             <label class="form-label" for="establecimientoRFCResponsableSanitario">RFC del responsable
               sanitario*:</label>
-            <input class="form-control" id="establecimientoRFCResponsableSanitarioId" placeholder="" type="text"
+            <input class="form-control" id="establecimientoRFCResponsableSanitarioId" placeholder="" type="text" maxlength="13"
               formControlName="establecimientoRFCResponsableSanitario" (change)="
                 enCambioDeControl(
                   'domicilioEstablecimiento',
@@ -801,7 +801,7 @@
                 @if(colapsable){
                 <div class="panel-collapse collapse in" id="panel-01">
                   <div class="panel-body">
-                    <crosslist [fechas]="seleccionarOrigenDelPais" [label]="paisDeProcedenciaLabel"
+                    <crosslist [fechas]="seleccionarOrigenDelPais" [label]="paisDeOrigenLabel"
                       [botones]="paisDeProcedenciaBotons"></crosslist>
                   </div>
                 </div>
@@ -839,7 +839,7 @@
                 @if(colapsableTres){
                 <div class="panel-collapse collapse in" id="panel-01">
                   <div class="panel-body">
-                    <crosslist [fechas]="seleccionarOrigenDelPaisTres" [label]="paisDeProcedenciaLabel"
+                    <crosslist [fechas]="seleccionarOrigenDelPaisTres" [label]="usoEspecificoLabel"
                       [botones]="paisDeProcedenciaBotonsTres"></crosslist>
                   </div>
                 </div>
