@@ -258,6 +258,8 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    */
  public esFormularioSoloLectura: boolean = false;
 
+  public desactivarCatalogoSelectEnPopup: boolean = true;
+
   /**
    * Constructor del componente.
    * Inyecta el FormBuilder, el store del trámite y el servicio de terceros.
@@ -490,6 +492,7 @@ fetchTableDummyJson(): void {
       formGroup.get('estado')?.enable();
       formGroup.get('codigoPostaloEquivalente')?.enable();
       formGroup.get('coloniaoEquivalente')?.enable();
+      this.desactivarCatalogoSelectEnPopup = false;
     } else {
       formGroup.get('rfc')?.disable();
       formGroup.get('curp')?.disable();
@@ -506,6 +509,7 @@ fetchTableDummyJson(): void {
       formGroup.get('estado')?.disable();
       formGroup.get('codigoPostaloEquivalente')?.disable();
       formGroup.get('coloniaoEquivalente')?.disable();
+      this.desactivarCatalogoSelectEnPopup = true;
     }
   }
 
