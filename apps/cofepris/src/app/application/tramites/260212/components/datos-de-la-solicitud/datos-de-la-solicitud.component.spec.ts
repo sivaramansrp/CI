@@ -13,6 +13,7 @@ const mockSolicitudService = {
   getOpcionesPublicacion: jest.fn().mockReturnValue(of([])),
   getClasificacionProducto: jest.fn().mockReturnValue(of([])),
   getTestadoFisico: jest.fn().mockReturnValue(of([])),
+  getScianDatos: jest.fn().mockReturnValue(of([]))
 };
 const mockTramite260212Store = {
   setSelectedEstado: jest.fn(),

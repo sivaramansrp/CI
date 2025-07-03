@@ -55,4 +55,33 @@ describe('RepresentanteLegalComponent', () => {
     expect(component.losDatos.length).toBe(1);
     expect(component.losDatos[0].value).toBe('Option 1');
   });
+
+  it('should enable form if esFormularioSoloLectura is false', () => {
+    component.esFormularioSoloLectura = false;
+    component.actualizarEstado();
+    component.guardarDatosFormulario();
+    expect(component.personaForm.enabled).toBe(true);
+  });
+
+  it('should patch value on successful buscar()', () => {
+    component.actualizarEstado();
+    const patchSpy = jest.spyOn(component.personaForm, 'patchValue');
+    const mockResponse = {
+      rfc: '',
+      nombre: 'Juan',
+      apellidoPaterno: 'Pérez',
+      apellidoMaterno: 'Gómez',
+    };
+
+    jest.spyOn(component['solicitudService'], 'ObtenerReprestantanteData').mockReturnValue(of(mockResponse));
+    component.personaForm.get('rfc')?.setValue('XAXX010101000');
+    component.buscar();
+
+    expect(patchSpy).toHaveBeenCalledWith({
+      nombre: 'Juan',
+      primerApellido: 'Pérez',
+      segundoApellido: 'Gómez'
+    });
+  });
+
 });
