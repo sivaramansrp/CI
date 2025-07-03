@@ -1,6 +1,9 @@
 import {
   AL_DAR,
   AlertComponent,
+  Notificacion,
+  NotificacionesComponent,
+  Pedimento,
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
@@ -21,9 +24,9 @@ import { ConfiguracionColumna } from '@ng-mf/data-access-user';
 import { DomicilioComponent } from '../domicilio-establecimiento/domicilio-establecimiento.component';
 import { ManifiestosComponent } from '../manifiestos-declaraciones/manifiestos-declaraciones.component';
 import { RepresentanteLegalComponent } from '../representante-legal/representante-legal.component';
+import { ServiciosPermisoSanitarioService } from '../../services/servicios-permiso-sanitario.service';
 import { SolicitudModel } from '../../models/permiso-sanitario.model';
 import { Tramite260215Query } from '../../estados/queries/tramite260215.query';
-import { ServiciosPermisoSanitarioService } from '../../services/servicios-permiso-sanitario.service';
 
 /**
  * Componente responsable de gestionar y mostrar los datos principales del formulario,
@@ -41,6 +44,7 @@ import { ServiciosPermisoSanitarioService } from '../../services/servicios-permi
     ManifiestosComponent,
     RepresentanteLegalComponent,
     TablaDinamicaComponent,
+    NotificacionesComponent,
   ],
   templateUrl: './datos-solicitud.component.html',
   styleUrl: './datos-solicitud.component.css',
@@ -69,6 +73,27 @@ export class DatosDeLaComponent implements OnInit, OnDestroy {
   * Cuando es `true`, los campos del formulario no se pueden editar.
   */
   public esFormularioSoloLectura: boolean = false; 
+
+   /**
+     * @description
+     * Objeto que representa una nueva notificación.
+     * Se utiliza para mostrar mensajes de alerta o información al usuario.
+     */
+    public nuevaNotificacion!: Notificacion;
+
+    /**
+   * @description
+   * Variable que almacena el índice del elemento que se desea eliminar de la lista de pedimentos.
+   * Utilizada para realizar operaciones de eliminación en el arreglo `pedimentos`.
+   */
+  elementoParaEliminar!: number;
+
+  /**
+     * @description
+     * Arreglo que almacena los pedimentos asociados al establecimiento.
+     * Cada pedimento contiene información relevante para el trámite.
+     */
+  pedimentos: Array<Pedimento> = [];
 
   /**
    * Constructor de la clase `DatosSolicitudComponent`.
@@ -209,6 +234,39 @@ export class DatosDeLaComponent implements OnInit, OnDestroy {
    * */
   ngOnInit():void {
    this.inicializarEstadoFormulario()
+  }
+
+    /**
+   * Método que se llama cuando se envía el formulario.
+   * Se utiliza para establecer los valores en el store de DatosDomicilioLegal.
+   */
+  abrirModal(i: number = 0): void {
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje:
+        'Por el momento no hay comunicación con el Sistema de COFEPRIS, favor de capturar su establecimiento.',
+      cerrar: true,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
+
+    this.elementoParaEliminar = i;
+  }
+
+  /**
+   * Método que se llama cuando se elimina un pedimento.
+   * @param {boolean} borrar - Indica si se debe eliminar el pedimento.
+   * Si es verdadero, se elimina el pedimento en la posición `elementoParaEliminar` del arreglo `pedimentos`.
+   */
+  eliminarPedimento(borrar: boolean): void {
+    this.alternarControlesDeFormulario();
+    if (borrar) {
+      this.pedimentos.splice(this.elementoParaEliminar, 1);
+    }
   }
 
   /**
