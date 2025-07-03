@@ -3,7 +3,7 @@
         <div class="col-md-12">
             <ng-titulo titulo="Agregar destinatario (destino final)" />
         </div>
-        <form>
+        <form [formGroup]="destinatarioForm">
             <div class="row">
                 <div class="col-md-12">
                     <div class="col-md-12">
@@ -22,108 +22,108 @@
                 <div class="row">
                     <div class="col-md-4">
                         <div class="form-group">
-                            <label class="form-label" for="numeroGuia">Nombre(s)*:</label>
-                            <input class="form-control" id="numeroGuia" placeholder="" type="text" libUppercase />
+                            <label class="form-label" for="nombre">Nombre(s)*:</label>
+                            <input class="form-control" id="nombre" placeholder="" type="text" libUppercase formControlName="nombre" />
                         </div>
                     </div>
                     <div class="col-md-4">
                         <div class="form-group">
-                            <label class="form-label" for="numeroGuia">Primer apellido*:</label>
-                            <input class="form-control" id="numeroGuia" placeholder="" type="text" libUppercase />
+                            <label class="form-label" for="primerApellido">Primer apellido*:</label>
+                            <input class="form-control" id="primerApellido" placeholder="" type="text" libUppercase formControlName="primerApellido" />
                         </div>
                     </div>
                     <div class="col-md-4">
                         <div class="form-group">
-                            <label class="form-label" for="numeroGuia">Segundo apellido</label>
-                            <input class="form-control" id="numeroGuia" placeholder="" type="text" libUppercase />
+                            <label class="form-label" for="segundoApellido">Segundo apellido</label>
+                            <input class="form-control" id="segundoApellido" placeholder="" type="text" libUppercase  formControlName="segundoApellido"/>
                         </div>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-8">
                         <div class="form-group">
-                            <label class="form-label" for="numeroGuia">Denominación/razón social*: </label>
-                            <input class="form-control" id="numeroGuia" placeholder="" type="text" libUppercase />
+                            <label class="form-label" for="razonSocial">Denominación/razón social*: </label>
+                            <input class="form-control" id="razonSocial" placeholder="" type="text" libUppercase formControlName="razonSocial"/>
                         </div>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-4">
                         <app-catalogo-select [catalogo]="pairsCatalog" [label]="'País'" [required]="true"
-                            name="nombreVeterinario" [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
+                            name="pais" [isDisabled]="true" formControlName="pais" ></app-catalogo-select>
                     </div>
                     <div class="col-md-4">
                         <div class="form-group">
-                            <label class="form-label" for="numeroGuia">Código postal*: </label>
-                            <input class="form-control" id="numeroGuia" placeholder="" type="text" libUppercase />
+                            <label class="form-label" for="codigoPostal">Código postal*: </label>
+                            <input class="form-control" id="codigoPostal" placeholder="" type="text" libUppercase formControlName="codigoPostal"/>
                         </div>
                     </div>
                     <div class="col-md-4">
                         <app-catalogo-select [catalogo]="estadoCatalog" [label]="'Estado'" [required]="true"
-                            name="nombreVeterinario" [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
+                            name="estado" [isDisabled]="esFormularioSoloLectura" formControlName="estado"></app-catalogo-select>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-4">
                         <app-catalogo-select [catalogo]="municipioCatalog" [label]="'Municipio o Alcaldía'"
-                            [required]="false" name="nombreVeterinario"
-                            [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
+                            [required]="false" name="municipio"
+                            [isDisabled]="esFormularioSoloLectura" formControlName="municipio"></app-catalogo-select>
                     </div>
                     <div class="col-md-4">
                         <app-catalogo-select [catalogo]="coloniaCatalog" [label]="'Colonia'" [required]="false"
-                            name="nombreVeterinario" [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
+                            name="colonia" [isDisabled]="esFormularioSoloLectura" formControlName="colonia"></app-catalogo-select>
                     </div>
                     <div class="col-md-4">
                         <div class="form-group">
-                            <label class="form-label" for="numeroGuia">Calle*: </label>
-                            <input class="form-control" id="numeroGuia" placeholder="" type="text" libUppercase />
+                            <label class="form-label" for="calle">Calle*: </label>
+                            <input class="form-control" id="calle" placeholder="" type="text" libUppercase formControlName="calle" />
                         </div>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-4">
                         <div class="form-group">
-                            <label class="form-label" for="numeroGuia">Número exterior*: </label>
-                            <input class="form-control" id="numeroGuia" placeholder="" type="text" libUppercase />
+                            <label class="form-label" for="numeroExterior">Número exterior*: </label>
+                            <input class="form-control" id="numeroExterior" placeholder="" type="text" libUppercase formControlName="numeroExterior" />
                         </div>
                     </div>
                     <div class="col-md-4">
                         <div class="form-group">
-                            <label class="form-label" for="numeroGuia">Número interior: </label>
-                            <input class="form-control" id="numeroGuia" placeholder="" type="text" libUppercase />
+                            <label class="form-label" for="numeroInterior">Número interior: </label>
+                            <input class="form-control" id="numeroInterior" placeholder="" type="text" libUppercase formControlName="numeroInterior"/>
                         </div>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-1">
                         <div class="form-group">
-                            <label class="form-label" for="numeroGuia">Lada: </label>
-                            <input class="form-control" id="numeroGuia" placeholder="" type="text" libUppercase />
+                            <label class="form-label" for="lada">Lada: </label>
+                            <input class="form-control" id="lada" placeholder="" type="text" libUppercase formControlName="lada"/>
                         </div>
                     </div>
                     <div class="col-md-3">
                         <div class="form-group">
-                            <label class="form-label" for="numeroGuia">Teléfono: </label>
-                            <input class="form-control" id="numeroGuia" placeholder="" type="text" libUppercase />
+                            <label class="form-label" for="telefono">Teléfono: </label>
+                            <input class="form-control" id="telefono" placeholder="" type="text" libUppercase formControlName="telefono"/>
                         </div>
                     </div>
                        <div class="col-md-4">
                         <div class="form-group">
-                            <label class="form-label" for="numeroGuia">Correo electrónico: </label>
-                            <input class="form-control" id="numeroGuia" placeholder="" type="text" libUppercase />
+                            <label class="form-label" for="correo">Correo electrónico: </label>
+                            <input class="form-control" id="correo" placeholder="" type="text" libUppercase formControlName="correo"/>
                         </div>
                     </div>
                 </div>
                 <div class="row mt-5 mb-5">
                     <div class="col-md-12 justify-content-end d-flex ">
                         <button type="button" class="btn btn-primary me-5" >
-                            Agregar destinatario
+                         Limpiar 
                         </button>
                         <button type="button" class="btn btn-default me-5" >
-                            Cancelar
+                            Cancelar 
                         </button>
                         <button type="button" class="btn btn-danger" >
-                            Eliminar destinatario
+                          Guardar 
                         </button>
                     </div>
                 </div>
