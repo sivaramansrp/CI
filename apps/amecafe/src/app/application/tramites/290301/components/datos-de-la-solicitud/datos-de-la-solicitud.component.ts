@@ -19,10 +19,10 @@ import {
   TablaSeleccion,
   TituloComponent,
 } from '@ng-mf/data-access-user';
-import { ReplaySubject, map, takeUntil } from 'rxjs';
+import { ReplaySubject, Subscription, map, takeUntil } from 'rxjs';
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import {
   Solicitud290301State,
   Solicitud290301Store,
@@ -101,9 +101,13 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   /** Indica si el formulario es de solo lectura */
   esFormularioSoloLectura: boolean = false;
 
+  private subscriptions: Subscription[] = [];
+
   constructor(
     /** Constructor para inicializar servicios y dependencias */
     private fb: FormBuilder,
+    private cdr: ChangeDetectorRef,
+
     private nacionalRegistroDelCafeExportadoresService: NacionalRegistroDelCafeExportadoresService,
     public solicitud290301Store: Solicitud290301Store,
     public solicitud290301Query: Solicitud290301Query,
@@ -112,20 +116,26 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   /** Método que se ejecuta al inicializar el componente */
   ngOnInit(): void {
     this.solicitud290301Query.selectSolicitud$
-      .pipe(
-        takeUntil(this.destroyed$),
-        map((seccionState: Solicitud290301State) => {
-          this.dataDeLaSolicitudState = seccionState;
-        })
-      )
-      .subscribe();
-     
-    this.createForm();
+  .pipe(
+    takeUntil(this.destroyed$),
+    map((seccionState: Solicitud290301State) => {
+      this.dataDeLaSolicitudState = seccionState;
+      this.createForm();
+      this.datosSolicitudForma.patchValue({
+        productorDeCafe: this.dataDeLaSolicitudState?.productorDeCafe || 'No',
+        claveDelPadron: this.dataDeLaSolicitudState?.claveDelPadron || '',
+      });
+      this.handleProductorDeCafeChange(); 
+    
+    })
+  )
+     .subscribe();
+
     this.getRegionsData();
     this.getBeneficiosData();
     this.getBodegasData();
     this.getCafeExportadoresData();
-
+    
     this.consultaioQuery.selectConsultaioState$
     .pipe(
       takeUntil(this.destroyed$),
@@ -135,22 +145,30 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
         this.inicializarEstadoFormulario(); 
       })
     )   
-   .subscribe();
-    this.inicializarEstadoFormulario();
+    .subscribe();   
+  
+     this.inicializarEstadoFormulario();
+     this.handleProductorDeCafeChange();
+
   }
 
   /** Método para crear el formulario reactivo */
   createForm(): void {
     this.datosSolicitudForma = this.fb.group({
-      justificacion: [this.dataDeLaSolicitudState?.justificacion],
-      productorDeCafe: [this.dataDeLaSolicitudState.productorDeCafe],
+      justificacion: [
+        this.dataDeLaSolicitudState?.justificacion,
+        [Validators.required, Validators.maxLength(4000)],
+      ], 
+      productorDeCafe: [
+        this.dataDeLaSolicitudState?.productorDeCafe || 'No', 
+      ],
       claveDelPadron: [
         {
           value: this.dataDeLaSolicitudState?.claveDelPadron || '',
-          disabled: this.dataDeLaSolicitudState?.productorDeCafe === 'No',
+          disabled: (this.dataDeLaSolicitudState?.productorDeCafe || 'No') === 'No', // Disable if default is 'No'
         },
       ],
-      observaciones: [this.dataDeLaSolicitudState?.observaciones],
+      observaciones: [this.dataDeLaSolicitudState?.observaciones,[Validators.required, Validators.maxLength(4000)]],
       requiereInspeccionInmediata: [
         this.dataDeLaSolicitudState?.requiereInspeccionInmediata,
       ],
@@ -158,7 +176,9 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
         this.dataDeLaSolicitudState?.informacionConfidencial,
       ],
     });
+
   }
+ 
   /**
    * Método para manejar el cambio del campo "productorDeCafe".
    * Este método habilita o deshabilita el campo "claveDelPadron"
@@ -166,19 +186,26 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    *
    * @param event Evento que se dispara al cambiar la selección del radio button.
    */
-  handleProductorDeCafeChange(_event: Event): void {
+  handleProductorDeCafeChange(): void {
     const VALUE = this.datosSolicitudForma.get('productorDeCafe')?.value;
-    const CLAVE_DEL_PADRON_CONTROL =
-      this.datosSolicitudForma.get('claveDelPadron');
+    const CLAVE_DEL_PADRON_CONTROL = this.datosSolicitudForma.get('claveDelPadron');
+   
+  
+    if (VALUE === 'No') {
+      if (CLAVE_DEL_PADRON_CONTROL?.enabled) {
+        CLAVE_DEL_PADRON_CONTROL.disable();
+        CLAVE_DEL_PADRON_CONTROL.setValue(''); 
 
-    if (VALUE === 'Si') {
-      CLAVE_DEL_PADRON_CONTROL?.enable();
-    } else if (VALUE === 'No' ) {
-      CLAVE_DEL_PADRON_CONTROL?.disable();
-      CLAVE_DEL_PADRON_CONTROL?.setValue('');
+      }
+      
+    } else if (VALUE === 'Si') {
+      if (CLAVE_DEL_PADRON_CONTROL?.disabled) {
+        CLAVE_DEL_PADRON_CONTROL.enable();
+        CLAVE_DEL_PADRON_CONTROL.setValue(this.dataDeLaSolicitudState?.claveDelPadron || ''); 
+
+      }
     }
-
-    
+  
   }
   /** Método para obtener los datos de las regiones */
   getRegionsData(): void {
@@ -229,6 +256,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     }
     else {
       this.datosSolicitudForma?.enable();
+      
     }
    
 }
