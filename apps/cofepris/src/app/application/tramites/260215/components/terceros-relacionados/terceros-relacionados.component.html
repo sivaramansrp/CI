@@ -154,6 +154,7 @@
                 [layout]="'vertical'"
                 (valueChange)="cambiarRadioFisica($event)"
                 [showTooltip]="true"
+                (change)="onTipoPersonaChange(agregarFabricanteFormGroup)"
               ></app-input-radio>
             </div>
           </div>
@@ -388,7 +389,7 @@
                 <app-catalogo-select
                   [catalogo]="localidadDropdownData"
                   [label]="'Localidad'"
-                  [required]="false"
+                  [required]="true"
                   for="localidad"
                   id="localidad"
                   formControlName="localidad"
@@ -401,7 +402,6 @@
                 <app-catalogo-select
                   [catalogo]="codigoPostalDropdownData"
                   [label]="'Código postal o equivalente'"
-                  [required]="true"
                   for="codigoPostaloEquivalente"
                   id="codigoPostaloEquivalente"
                   formControlName="codigoPostaloEquivalente"
@@ -632,6 +632,7 @@
                 [layout]="'vertical'"
                 (valueChange)="cambiarRadioFisica($event)"
                 [showTooltip]="true"
+                (change)="onTipoPersonaChange(agregarDestinatarioFormGroup)"
               ></app-input-radio>
             </div>
           </div>
@@ -931,6 +932,7 @@
                 [layout]="'vertical'"
                 (valueChange)="cambiarRadioFisica($event)"
                 [showTooltip]="true"
+                (change)="onTipoPersonaChange(agregarProveedorFormGroup)"
               ></app-input-radio>
             </div>
           </div>
@@ -1209,6 +1211,7 @@
                 [layout]="'vertical'"
                 (valueChange)="cambiarRadioFisica($event)"
                 [showTooltip]="true"
+                (change)="onTipoPersonaChange(agregarFacturadorFormGroup)"
               ></app-input-radio>
             </div>
           </div>
