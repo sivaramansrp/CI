@@ -2,7 +2,7 @@
 <form [formGroup]="formDatosCertificado">
     <div class="row">
         <div class="col-md-8">
-            <label for="observaciones" class="form-label">Observaciones</label>
+            <label for="observaciones" class="form-label">Observaciones:</label>
             <textarea id="observaciones" formControlName="observaciones"  class="mb-4 h-20 w-100" placeholder="" rows="6" (change)="setValoresStore(formDatosCertificado,'observaciones', 'setObservaciones')"></textarea>
           </div>
     </div>

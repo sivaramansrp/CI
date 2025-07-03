@@ -3,188 +3,261 @@ import { Injectable } from '@angular/core';
 
 /**
  * @interface DestruccionState
- * @description Representa el estado del formulario de destrucción.
+ * @description 
+ * Representa el estado del formulario de destrucción.
  */
 export interface DestruccionState {
-    /**
- * @descripcion Tipo de aviso relacionado con la destrucción.
+/**
+ * @property {string} tipoDeAviso
+ * @descripcion 
+ * Tipo de aviso relacionado con la destrucción.
  */
 tipoDeAviso: string;
 
 /**
- * @descripcion Nombre del solicitante.
+ * @property {string} nombre
+ * @descripcion 
+ * Nombre del solicitante.
  */
 nombre: string;
 
 /**
- * @descripcion RFC del solicitante.
+ * @property {string} rfc
+ * @descripcion 
+ * RFC del solicitante.
  */
 rfc: string;
 
 /**
- * @descripcion Entidad federativa del solicitante.
+ * @property {string} entidadFederativa
+ * @descripcion 
+ * Entidad federativa del solicitante.
  */
 entidadFederativa: string;
 
 /**
- * @descripcion Alcaldía o municipio del solicitante.
+ * @property {string} alcaldiaMunicipo
+ * @descripcion 
+ * Alcaldía o municipio del solicitante.
  */
 alcaldiaMunicipo: string;
 
 /**
- * @descripcion Colonia del solicitante.
+ * @property {string} colonia
+ * @descripcion 
+ * Colonia del solicitante.
  */
 colonia: string;
 
 /**
- * @descripcion Calle del solicitante.
+ * @property {string} calle
+ * @descripcion 
+ * Calle del solicitante.
  */
 calle: string;
 
 /**
- * @descripcion Número exterior del domicilio del solicitante.
+ * @property {string} numeroExterior
+ * @descripcion 
+ * Número exterior del domicilio del solicitante.
  */
 numeroExterior: string;
 
 /**
- * @descripcion Número interior del domicilio del solicitante.
+ * @property {string} numeroInterior
+ * @descripcion 
+ * Número interior del domicilio del solicitante.
  */
 numeroInterior: string;
 
 /**
- * @descripcion Código postal del domicilio del solicitante.
+ * @property {string} codigoPostal
+ * @descripcion 
+ * Código postal del domicilio del solicitante.
  */
 codigoPostal: string;
 
 /**
- * @descripcion Carta cupo asociada al trámite.
+ * @property {string} cartaCupo
+ * @descripcion 
+ * Carta cupo asociada al trámite.
  */
 cartaCupo: string;
 
 /**
- * @descripcion Número de acuse del trámite.
+ * @property {string} numeraDeAcuse
+ * @descripcion 
+ * Número de acuse del trámite.
  */
 numeraDeAcuse: string;
 
 /**
- * @descripcion Información sobre la destrucción de mercancía.
+ * @property {string} destruccionMercancia
+ * @descripcion 
+ * Información sobre la destrucción de mercancía.
  */
 destruccionMercancia: string;
 
 /**
- * @descripcion Entidad federativa donde se encuentra la mercancía.
+ * @property {string} merccanciaEntidadFederativa
+ * @descripcion 
+ * Entidad federativa donde se encuentra la mercancía.
  */
 merccanciaEntidadFederativa: string;
 
 /**
- * @descripcion Alcaldía o municipio donde se encuentra la mercancía.
+ * @property {string} merccanciaAlcaldiaMunicipo
+ * @descripcion 
+ * Alcaldía o municipio donde se encuentra la mercancía.
  */
 merccanciaAlcaldiaMunicipo: string;
 
 /**
- * @descripcion Colonia donde se encuentra la mercancía.
+ * @property {string} merccanciaColonia
+ * @descripcion 
+ * Colonia donde se encuentra la mercancía.
  */
 merccanciaColonia: string;
 
 /**
- * @descripcion Calle donde se encuentra la mercancía.
+ * @property {string} merccanciaCalle
+ * @descripcion 
+ * Calle donde se encuentra la mercancía.
  */
 merccanciaCalle: string;
 
 /**
- * @descripcion Número exterior del lugar donde se encuentra la mercancía.
+ * @property {string} merccanciaNumeroExterior
+ * @descripcion 
+ * Número exterior del lugar donde se encuentra la mercancía.
  */
 merccanciaNumeroExterior: string;
 
 /**
- * @descripcion Número interior del lugar donde se encuentra la mercancía.
+ * @property {string} merccanciaNumeroInterior
+ * @descripcion 
+ * Número interior del lugar donde se encuentra la mercancía.
  */
 merccanciaNumeroInterior: string;
 
 /**
- * @descripcion Código postal del lugar donde se encuentra la mercancía.
+ * @property {string} merccanciaCodigoPostal
+ * @descripcion 
+ * Código postal del lugar donde se encuentra la mercancía.
  */
 merccanciaCodigoPostal: string;
 
 /**
- * @descripcion Información sobre la acción de destruir la mercancía.
+ * @property {string} destruir
+ * @descripcion 
+ * Información sobre la acción de destruir la mercancía.
  */
 destruir: string;
 
 /**
- * @descripcion Tarifa asociada al trámite.
+ * @property {string} tarifa
+ * @descripcion 
+ * Tarifa asociada al trámite.
  */
 tarifa: string;
 
 /**
- * @descripcion Entidad federativa donde se llevará a cabo la destrucción.
+ * @property {string} destruccionEntidadFederativa
+ * @descripcion 
+ * Entidad federativa donde se llevará a cabo la destrucción.
  */
 destruccionEntidadFederativa: string;
 
 /**
- * @descripcion Alcaldía o municipio donde se llevará a cabo la destrucción.
+ * @property {string} destruccionAlcaldiaMunicipo
+ * @descripcion 
+ * Alcaldía o municipio donde se llevará a cabo la destrucción.
  */
 destruccionAlcaldiaMunicipo: string;
 
 /**
- * @descripcion Colonia donde se llevará a cabo la destrucción.
+ * @property {string} destruccionColonia
+ * @descripcion 
+ * Colonia donde se llevará a cabo la destrucción.
  */
 destruccionColonia: string;
 
 /**
- * @descripcion Calle donde se llevará a cabo la destrucción.
+ * @property {string} destruccionCalle
+ * @descripcion 
+ * Calle donde se llevará a cabo la destrucción.
  */
 destruccionCalle: string;
 
 /**
- * @descripcion Número exterior del lugar donde se llevará a cabo la destrucción.
+ * @property {string} destruccionNumeroExterior
+ * @descripcion 
+ * Número exterior del lugar donde se llevará a cabo la destrucción.
  */
 destruccionNumeroExterior: string;
 
 /**
- * @descripcion Número interior del lugar donde se llevará a cabo la destrucción.
+ * @property {string} destruccionNumeroInterior
+ * @descripcion 
+ * Número interior del lugar donde se llevará a cabo la destrucción.
  */
 destruccionNumeroInterior: string;
 
 /**
- * @descripcion Código postal del lugar donde se llevará a cabo la destrucción.
+ * @property {string} destruccionCodigoPostal
+ * @descripcion 
+ * Código postal del lugar donde se llevará a cabo la destrucción.
  */
 destruccionCodigoPostal: string;
 
 /**
- * @descripcion Hora en la que se llevará a cabo la destrucción.
+ * @property {string} destruccionHora
+ * @descripcion 
+ * Hora en la que se llevará a cabo la destrucción.
  */
 destruccionHora: string;
 
 /**
- * @descripcion Proceso de destrucción de la mercancía.
+ * @property {string} desturccionProceso
+ * @descripcion 
+ * Proceso de destrucción de la mercancía.
  */
 desturccionProceso: string;
 
 /**
- * @descripcion Información sobre el caso fortuito relacionado con la destrucción.
+ * @property {string} casofortuito
+ * @descripcion 
+ * Información sobre el caso fortuito relacionado con la destrucción.
  */
 casofortuito: string;
 
 /**
- * @descripcion Información sobre la donación de mercancía.
+ * @property {string} donoMercancia
+ * @descripcion 
+ * Información sobre la donación de mercancía.
  */
 donoMercancia: string;
 
 /**
- * @descripcion Condiciones materiales relacionadas con la destrucción.
+ * @property {string} condicionesMateriales
+ * @descripcion 
+ * Condiciones materiales relacionadas con la destrucción.
  */
 condicionesMateriales: string;
 
 /**
- * @descripcion Fecha en la que se llevó a cabo la destrucción.
+ * @property {string} caboDestruccionFecha
+ * @descripcion 
+ * Fecha en la que se llevó a cabo la destrucción.
  */
 caboDestruccionFecha: string;
 }
 
 /**
+ * Este estado inicial contiene todos los campos necesarios para el formulario, con valores por defecto.
  * @function createInitialState
- * @description Crea el estado inicial del formulario de destrucción.
+ * @description 
+ * Crea el estado inicial del formulario de destrucción.
  * @returns {DestruccionState} Estado inicial.
  */
 export function createInitialState(): DestruccionState {
@@ -227,9 +300,17 @@ export function createInitialState(): DestruccionState {
     };
 }
 
+
 /**
+ * @descripcion
+ * Store encargado de gestionar el estado global del formulario de destrucción para el trámite 32509.
+ * Permite actualizar y consultar los datos de los diferentes campos del formulario, así como el estado de cada sección.
+ * Utiliza Akita para la gestión reactiva del estado.
+ *
+ * Cada método con el decorador `@method` actualiza una propiedad específica del estado, permitiendo un manejo centralizado y reactivo de los datos del formulario.
+ * @export
  * @class DestruccionStore
- * @description Almacén para gestionar el estado del formulario de destrucción.
+ * @extends {Store<DestruccionState>}
  */
 @Injectable({
     providedIn: 'root',
@@ -238,7 +319,8 @@ export function createInitialState(): DestruccionState {
 export class DestruccionStore extends Store<DestruccionState> {
     /**
      * @constructor
-     * @description Inicializa el estado del almacén.
+     * @description 
+     * Inicializa el estado del almacén.
      */
     constructor() {
         super(createInitialState());
@@ -246,7 +328,8 @@ export class DestruccionStore extends Store<DestruccionState> {
 
     /**
      * @method setTipoDeAviso
-     * @description Actualiza el tipo de aviso en el estado.
+     * @description 
+     * Actualiza el tipo de aviso en el estado.
      * @param {string} tipoDeAviso - Tipo de aviso.
      */
     public setTipoDeAviso(tipoDeAviso: string): void {
@@ -258,7 +341,8 @@ export class DestruccionStore extends Store<DestruccionState> {
 
     /**
      * @method setNombre
-     * @description Actualiza el nombre en el estado.
+     * @description 
+     * Actualiza el nombre en el estado.
      * @param {string} nombre - Nombre del solicitante.
      */
     public setNombre(nombre: string): void {
@@ -270,7 +354,8 @@ export class DestruccionStore extends Store<DestruccionState> {
 
     /**
      * @method setRfc
-     * @description Actualiza el RFC en el estado.
+     * @description 
+     * Actualiza el RFC en el estado.
      * @param {string} rfc - RFC del solicitante.
      */
     public setRfc(rfc: string): void {
@@ -282,7 +367,8 @@ export class DestruccionStore extends Store<DestruccionState> {
 
     /**
      * @method setEntidadFederativa
-     * @description Actualiza la entidad federativa en el estado.
+     * @description 
+     * Actualiza la entidad federativa en el estado.
      * @param {string} entidadFederativa - Entidad federativa.
      */
     public setEntidadFederativa(entidadFederativa: string): void {
@@ -294,7 +380,8 @@ export class DestruccionStore extends Store<DestruccionState> {
 
     /**
      * @method setAlcaldiaMunicipo
-     * @description Actualiza la alcaldía o municipio en el estado.
+     * @description 
+     * Actualiza la alcaldía o municipio en el estado.
      * @param {string} alcaldiaMunicipo - Alcaldía o municipio.
      */
     public setAlcaldiaMunicipo(alcaldiaMunicipo: string): void {
@@ -306,7 +393,8 @@ export class DestruccionStore extends Store<DestruccionState> {
 
     /**
      * @method setColonia
-     * @description Actualiza la colonia en el estado.
+     * @description 
+     * Actualiza la colonia en el estado.
      * @param {string} colonia - Colonia.
      */
     public setColonia(colonia: string): void {
@@ -318,7 +406,8 @@ export class DestruccionStore extends Store<DestruccionState> {
 
     /**
      * @method setCalle
-     * @description Actualiza la calle en el estado.
+     * @description 
+     * Actualiza la calle en el estado.
      * @param {string} calle - Calle.
      */
     public setCalle(calle: string): void {
@@ -330,7 +419,8 @@ export class DestruccionStore extends Store<DestruccionState> {
 
     /**
      * @method setNumeroExterior
-     * @description Actualiza el número exterior en el estado.
+     * @description 
+     * Actualiza el número exterior en el estado.
      * @param {string} numeroExterior - Número exterior.
      */
     public setNumeroExterior(numeroExterior: string): void {
@@ -342,7 +432,8 @@ export class DestruccionStore extends Store<DestruccionState> {
 
     /**
      * @method setNumeroInterior
-     * @description Actualiza el número interior en el estado.
+     * @description 
+     * Actualiza el número interior en el estado.
      * @param {string} numeroInterior - Número interior.
      */
     public setNumeroInterior(numeroInterior: string): void {
@@ -354,7 +445,8 @@ export class DestruccionStore extends Store<DestruccionState> {
 
     /**
      * @method setCodigoPostal
-     * @description Actualiza el código postal en el estado.
+     * @description 
+     * Actualiza el código postal en el estado.
      * @param {string} codigoPostal - Código postal.
      */
     public setCodigoPostal(codigoPostal: string): void {
@@ -366,7 +458,8 @@ export class DestruccionStore extends Store<DestruccionState> {
 
     /**
      * @method setCartaCupo
-     * @description Establece el valor de la propiedad `cartaCupo` en el estado de la tienda.
+     * @description 
+     * Establece el valor de la propiedad `cartaCupo` en el estado de la tienda.
      * @param cartaCupo {string} - El nuevo valor de la carta cupo que se asignará al estado.
      * @example
      * // Ejemplo de uso:
@@ -381,7 +474,8 @@ export class DestruccionStore extends Store<DestruccionState> {
 
     /**
      * @method setNumeraDeAcuse
-     * @description Establece el valor de la propiedad `numeraDeAcuse` en el estado de la tienda.
+     * @description 
+     * Establece el valor de la propiedad `numeraDeAcuse` en el estado de la tienda.
      * @param numeraDeAcuse {string} - El nuevo valor del número de acuse que se asignará al estado.
      * @example
      * // Ejemplo de uso:
@@ -396,7 +490,8 @@ export class DestruccionStore extends Store<DestruccionState> {
 
     /**
      * @method setDestruccionMercancia
-     * @description Establece el valor de la propiedad `destruccionMercancia` en el estado de la tienda.
+     * @description 
+     * Establece el valor de la propiedad `destruccionMercancia` en el estado de la tienda.
      * @param destruccionMercancia {string} - El nuevo valor de la destrucción de mercancía que se asignará al estado.
      * @example
      * // Ejemplo de uso:
@@ -411,7 +506,8 @@ export class DestruccionStore extends Store<DestruccionState> {
 
     /**
      * @method setMerccanciaEntidadFederativa
-     * @description Establece el valor de la propiedad `merccanciaEntidadFederativa` en el estado de la tienda.
+     * @description 
+     * Establece el valor de la propiedad `merccanciaEntidadFederativa` en el estado de la tienda.
      * @param merccanciaEntidadFederativa {string} - El nuevo valor de la entidad federativa de la mercancía que se asignará al estado.
      * @example
      * // Ejemplo de uso:
@@ -426,7 +522,8 @@ export class DestruccionStore extends Store<DestruccionState> {
 
     /**
      * @method setMerccanciaAlcaldiaMunicipo
-     * @description Establece el valor de la propiedad `merccanciaAlcaldiaMunicipo` en el estado de la tienda.
+     * @description 
+     * Establece el valor de la propiedad `merccanciaAlcaldiaMunicipo` en el estado de la tienda.
      * @param merccanciaAlcaldiaMunicipo {string} - El nuevo valor de la alcaldía o municipio de la mercancía que se asignará al estado.
      * @example
      * // Ejemplo de uso:
@@ -441,7 +538,8 @@ export class DestruccionStore extends Store<DestruccionState> {
     
     /**
      * @method setMerccanciaColonia
-     * @description Establece el valor de la propiedad `merccanciaColonia` en el estado de la tienda.
+     * @description 
+     * Establece el valor de la propiedad `merccanciaColonia` en el estado de la tienda.
      * @param merccanciaColonia {string} - El nuevo valor de la colonia de la mercancía que se asignará al estado.
      * @example
      * // Ejemplo de uso:
@@ -456,7 +554,8 @@ export class DestruccionStore extends Store<DestruccionState> {
 
     /**
      * @method setMerccanciaCalle
-     * @description Establece el valor de la propiedad `merccanciaCalle` en el estado de la tienda.
+     * @description 
+     * Establece el valor de la propiedad `merccanciaCalle` en el estado de la tienda.
      * @param merccanciaCalle {string} - El nuevo valor de la calle de la mercancía que se asignará al estado.
      * @example
      * // Ejemplo de uso:
@@ -471,7 +570,8 @@ export class DestruccionStore extends Store<DestruccionState> {
 
     /**
      * @method setMerccanciaNumeroExterior
-     * @description Establece el valor de la propiedad `merccanciaNumeroExterior` en el estado de la tienda.
+     * @description 
+     * Establece el valor de la propiedad `merccanciaNumeroExterior` en el estado de la tienda.
      * @param merccanciaNumeroExterior {string} - El nuevo valor del número exterior de la mercancía que se asignará al estado.
      * @example
      * // Ejemplo de uso:
@@ -486,7 +586,8 @@ export class DestruccionStore extends Store<DestruccionState> {
 
     /**
      * @method setMerccanciaNumeroInterior
-     * @description Establece el valor de la propiedad `merccanciaNumeroInterior` en el estado de la tienda.
+     * @description 
+     * Establece el valor de la propiedad `merccanciaNumeroInterior` en el estado de la tienda.
      * @param merccanciaNumeroInterior {string} - El nuevo valor del número interior de la mercancía que se asignará al estado.
      * @example
      * // Ejemplo de uso:
@@ -501,7 +602,8 @@ export class DestruccionStore extends Store<DestruccionState> {
 
     /**
      * @method setMerccanciaCodigoPostal
-     * @description Establece el valor de la propiedad `merccanciaCodigoPostal` en el estado de la tienda.
+     * @description 
+     * Establece el valor de la propiedad `merccanciaCodigoPostal` en el estado de la tienda.
      * @param merccanciaCodigoPostal {string} - El nuevo valor del código postal de la mercancía que se asignará al estado.
      * @example
      * // Ejemplo de uso:
@@ -516,7 +618,8 @@ export class DestruccionStore extends Store<DestruccionState> {
 
     /**
      * @method setDestruir
-     * @description Actualiza el estado con el valor proporcionado para la propiedad `destruir`.
+     * @description 
+     * Actualiza el estado con el valor proporcionado para la propiedad `destruir`.
      * @param destruir {string} - El nuevo valor para la propiedad `destruir`.
      * @example
      * // Ejemplo de uso:
@@ -531,7 +634,8 @@ export class DestruccionStore extends Store<DestruccionState> {
 
     /**
      * @method setTarifa
-     * @description Establece el valor de la propiedad `tarifa` en el estado de la tienda.
+     * @description 
+     * Establece el valor de la propiedad `tarifa` en el estado de la tienda.
      * @param tarifa {string} - El nuevo valor de la tarifa que se asignará al estado.
      * @example
      * // Ejemplo de uso:
@@ -546,7 +650,8 @@ export class DestruccionStore extends Store<DestruccionState> {
 
     /**
      * @method setDestruccionEntidadFederativa
-     * @description Establece el valor de la propiedad `destruccionEntidadFederativa` en el estado de la tienda.
+     * @description 
+     * Establece el valor de la propiedad `destruccionEntidadFederativa` en el estado de la tienda.
      * @param destruccionEntidadFederativa {string} - El nuevo valor de la entidad federativa de destrucción que se asignará al estado.
      * @example
      * // Ejemplo de uso:

@@ -1,20 +1,27 @@
 import { CommonModule } from '@angular/common';
-
 import { Component } from '@angular/core';
-import { OnDestroy } from '@angular/core';
-
 import { FirmaElectronicaComponent } from '@ng-mf/data-access-user';
-
+import { OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
-
 import { ServiciosPantallaService } from '@libs/shared/data-access-user/src/core/services/31601/servicios-pantalla.service';
-
-import { TramiteCofeprisStore } from '../../../../estados/tramite.store';
-
 import { Subject } from 'rxjs';
+import { TramiteCofeprisStore } from '../../../../estados/tramite.store';
 import { catchError } from 'rxjs';
 import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
+
+
+/**
+ * Decorador de componente de Angular que define la configuración del componente `PasoTresComponent`.
+ * 
+ * Este componente es parte de la aplicación y representa el tercer paso en el flujo de trámites.
+ * 
+ * @selector `app-paso-tres` - Selector utilizado para instanciar este componente en una plantilla HTML.
+ * @standalone `true` - Indica que este componente es independiente y no requiere un módulo específico.
+ * @imports `[CommonModule, FirmaElectronicaComponent]` - Módulos y componentes importados para proporcionar funcionalidades adicionales.
+ * @templateUrl `./paso-tres.component.html` - Ruta del archivo HTML que define la estructura visual del componente.
+ * @styleUrl `./paso-tres.component.css` - Ruta del archivo CSS que define los estilos del componente.
+ */
 @Component({
   selector: 'app-paso-tres',
   standalone: true,

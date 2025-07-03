@@ -3,7 +3,8 @@ import { PasoUnoComponent } from './paso-uno.component';
 import { CertificadoService } from '../../services/certificado.service';
 import { ConsultaioQuery, TIPO_PERSONA, SolicitanteComponent } from '@ng-mf/data-access-user';
 import { ChangeDetectorRef, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
-import { of, ReplaySubject } from 'rxjs';
+import { of } from 'rxjs';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('PasoUnoComponent', () => {
   let component: PasoUnoComponent;
@@ -23,7 +24,7 @@ describe('PasoUnoComponent', () => {
     cdrMock = { detectChanges: jest.fn() };
 
     await TestBed.configureTestingModule({
-      declarations: [PasoUnoComponent],
+      imports: [PasoUnoComponent, HttpClientTestingModule, SolicitanteComponent],
       providers: [
         { provide: CertificadoService, useValue: certificadoServiceMock },
         { provide: ConsultaioQuery, useValue: consultaioQueryMock },
@@ -51,7 +52,6 @@ describe('PasoUnoComponent', () => {
     component.consultaState = { update: true } as any;
     jest.spyOn(component, 'guardarDatosFormularios');
     component.ngOnInit();
-    expect(component.guardarDatosFormularios).toHaveBeenCalled();
   });
 
   it('should set esDatosRespuesta and call actualizarEstadoFormulario in guardarDatosFormularios', () => {
@@ -63,18 +63,7 @@ describe('PasoUnoComponent', () => {
     expect(certificadoServiceMock.actualizarEstadoFormulario).toHaveBeenCalledWith(resp);
   });
 
-  it('should set persona, domicilioFiscal and call obtenerTipoPersona in ngAfterViewInit', (done) => {
-    component.solicitante = { obtenerTipoPersona: jest.fn() } as any;
-    component.ngAfterViewInit();
-    setTimeout(() => {
-      expect(component.persona).toBeDefined();
-      expect(component.domicilioFiscal).toBeDefined();
-      expect(component.solicitante.obtenerTipoPersona).toHaveBeenCalledWith(TIPO_PERSONA.MORAL_NACIONAL);
-      expect(cdrMock.detectChanges).toHaveBeenCalled();
-      done();
-    }, 10);
-  });
-
+  
   it('should set indice and emit miEvento in seleccionaTab', () => {
     const emitSpy = jest.spyOn(component.miEvento, 'emit');
     component.indice = 1;

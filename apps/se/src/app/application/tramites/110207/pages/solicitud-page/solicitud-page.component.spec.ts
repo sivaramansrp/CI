@@ -1,64 +1,64 @@
-// @ts-nocheck
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import {
-  Pipe,
-  PipeTransform,
-  Injectable,
-  CUSTOM_ELEMENTS_SCHEMA,
-  NO_ERRORS_SCHEMA,
-  Directive,
-  Input,
-  Output,
-} from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { By } from '@angular/platform-browser';
-import { Observable, of as observableOf, throwError } from 'rxjs';
-
-import { Component } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SolicitudPageComponent } from './solicitud-page.component';
-
+import { WizardComponent } from '@ng-mf/data-access-user';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 describe('SolicitudPageComponent', () => {
-  let fixture;
-  let component;
+  let component: SolicitudPageComponent;
+  let fixture: ComponentFixture<SolicitudPageComponent>;
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [FormsModule, ReactiveFormsModule],
-      declarations: [
-        SolicitudPageComponent
-      ],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
-      providers: [],
-    })
-      .overrideComponent(SolicitudPageComponent, {})
-      .compileComponents();
+  const wizardMock = {
+    atras: jest.fn(),
+    siguiente: jest.fn()
+  };
+
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      declarations: [SolicitudPageComponent],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA]
+    }).compileComponents();
+
     fixture = TestBed.createComponent(SolicitudPageComponent);
-    component = fixture.debugElement.componentInstance;
+    component = fixture.componentInstance;
+
+    component.wizardComponent = {
+      atras: jest.fn(),
+      siguiente: jest.fn()
+    } as unknown as WizardComponent;
+
+    fixture.detectChanges();
   });
 
-  afterEach(() => {
-    component.ngOnDestroy = function () {};
-    fixture.destroy();
-  });
-
-  it('should run #constructor()', async () => {
+  it('should create the component', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should run #seleccionaTab()', async () => {
-    component.seleccionaTab({});
+  it('should set indice in seleccionaTab', () => {
+    component.seleccionaTab(3);
+    expect(component.indice).toBe(3);
   });
 
-  it('should run #getValorIndice()', async () => {
-    component.wizardComponent = component.wizardComponent || {};
-    component.wizardComponent.siguiente = jest.fn();
-    component.wizardComponent.atras = jest.fn();
-    component.getValorIndice({
-      valor: {},
-      accion: {},
-    });
+  it('should handle all paths in getValorIndice correctly', () => {
+  const wizardMock = {
+    siguiente: jest.fn(),
+    atras: jest.fn()
+  };
+  component.wizardComponent = wizardMock as any;
 
-  });
+  component.getValorIndice({ accion: 'cont', valor: 2 });
+  expect(component.indice).toBe(2);
+  expect(wizardMock.siguiente).toHaveBeenCalled();
+
+  component.getValorIndice({ accion: 'back', valor: 3 });
+  expect(component.indice).toBe(3);
+  expect(wizardMock.atras).toHaveBeenCalled();
+
+  component.indice = 1;
+  component.getValorIndice({ accion: 'cont', valor: 0 });
+  expect(component.indice).toBe(1); 
+
+  component.indice = 1;
+  component.getValorIndice({ accion: 'back', valor: 5 });
+  expect(component.indice).toBe(1); 
+});
 });

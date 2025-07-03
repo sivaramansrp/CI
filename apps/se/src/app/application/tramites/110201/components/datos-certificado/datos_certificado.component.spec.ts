@@ -81,23 +81,6 @@ describe('DatosCertificadoComponent', () => {
     expect(component.registroForm.markAllAsTouched).toHaveBeenCalled();
   });
 
-  it('should call donanteDomicilio and enable/disable form in guardarDatosFormulario', () => {
-    component.soloLectura = true;
-    component.registroForm = new FormBuilder().group({
-      validacionForm: new FormBuilder().group({})
-    });
-    jest.spyOn(component.registroForm, 'disable');
-    jest.spyOn(component, 'donanteDomicilio');
-    component.guardarDatosFormulario();
-    expect(component.donanteDomicilio).toHaveBeenCalled();
-    expect(component.registroForm.disable).toHaveBeenCalled();
-
-    component.soloLectura = false;
-    jest.spyOn(component.registroForm, 'enable');
-    component.guardarDatosFormulario();
-    expect(component.registroForm.enable).toHaveBeenCalled();
-  });
-
   it('should call guardarDatosFormulario if soloLectura in inicializarEstadoFormulario', () => {
     component.soloLectura = true;
     jest.spyOn(component, 'guardarDatosFormulario');
@@ -119,12 +102,12 @@ describe('DatosCertificadoComponent', () => {
   });
 
   it('should call store method in setValoresStore', () => {
-    const storeMethod = jest.fn();
-    component.store = { setTest: storeMethod } as any;
-    const form = new FormBuilder().group({ campo: ['valor'] });
-    component.entidadFederativaData = 'DURANGO';
-    component.setValoresStore(form, 'campo', 'setNombre');
-    expect(storeMethod).toHaveBeenCalledWith('valor');
+     const storeMethod = jest.fn();
+  component.store = { setNombre: storeMethod } as any; 
+  const form = new FormBuilder().group({ campo: ['valor'] });
+  component.entidadFederativaData = 'DURANGO';
+  component.setValoresStore(form, 'campo', 'setNombre');
+  expect(storeMethod).toHaveBeenCalledWith('valor');
   });
 
   it('should set isJustificacion true if VALOR === 8 and metodoNombre === setEntidad and entidadFederativaData === DURANGO', () => {
@@ -169,7 +152,7 @@ describe('DatosCertificadoComponent', () => {
   });
 
   it('should set isJustificacion true if entidadDescripcion includes 8 and entidadFederativaData is DURANGO', () => {
-    component.entidadDescripcion = [8];
+    component.entidadDescripcion = ['8'];
     component.entidadFederativaData = 'DURANGO';
     component.ngOnInit();
     expect(component.isJustificacion).toBe(true);

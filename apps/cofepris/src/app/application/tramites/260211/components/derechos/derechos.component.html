@@ -24,8 +24,8 @@
                   <app-catalogo-select
                     [catalogo]="derechosList"
                     [isDisabled]="esFormularioSoloLectura ? true : false"
-                    [label]="'banco'"
-                    [placeholder]="'Seleccione una aduana'"
+                    [label]="'Banco'"
+                    [placeholder]="'Seleccione una opción'"
                     formControlName="banco"
                     (change)="setValoresStore(derechosForm,'banco', 'setbanco')"></app-catalogo-select>
                 </div>
@@ -59,15 +59,17 @@
                 </div>
               </div>
           </div>
-          <div class="row mt-5 mb-2">
-            <div class="col-md-8">
-            </div>
-            <div class="col-md-4">
-              <div class="btn-group">
-                <button type="button" class="btn btn-primary"  [disabled]="esFormularioSoloLectura ? true : false">Borrar datos del pago</button>
-              </div>
-            </div>
-          </div>   
+          
+          <div class="row mt-5">
+      <div class="col-md-12">
+        <div class="pull-right">
+          <button type="button" name="agregarMercancias" class="btn btn-primary ms-2"
+            [disabled]="esFormularioSoloLectura ? true : false">
+            Borrar datos del pago
+          </button>
+        </div>
+      </div>
+    </div>
       </form>
   </div>
   

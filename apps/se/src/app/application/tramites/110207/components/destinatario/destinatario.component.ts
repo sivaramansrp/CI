@@ -248,29 +248,29 @@ options!: Catalogo[];
   /**
    * Configura el formulario reactivo con los valores iniciales del estado.
    */
-  donanteDomicilio(): void {
-    this.registroForm = this.fb.group({
-      validacionForm: this.fb.group({
-        nacion: [this.solicitudState?.nacion, [Validators.required]],
-        transporte: [this.solicitudState?.transporte, [Validators.required]],
-        nombre: [this.solicitudState?.nombre, [Validators.required]],
-        apellidoPrimer: [this.solicitudState?.apellidoPrimer,[Validators.required],],
-        apellidoSegundo: [this.solicitudState?.apellidoSegundo,[Validators.required], ],
-        numeroFiscal: [this.solicitudState?.numeroFiscal,[Validators.required],],
-        razonSocial: [this.solicitudState?.razonSocial, [Validators.required]],
-        ciudad: [this.solicitudState?.ciudad, [Validators.required]],
-        calle: [this.solicitudState?.calle, [Validators.required]],
-        numeroLetra: [this.solicitudState?.numeroLetra, [Validators.required]],
-        lada: [this.solicitudState?.lada, [Validators.required]],
-        telefono: [this.solicitudState?.telefono, [Validators.required, Validators.pattern(REGEX_SOLO_DIGITOS)],],
-        fax: [this.solicitudState?.fax, [Validators.pattern(REGEX_SOLO_DIGITOS)]],
-        correoElectronico: [this.solicitudState?.correoElectronico,[Validators.required, Validators.email],],
-        rutaCompleta: [this.solicitudState?.rutaCompleta,Validators.required, ],
-        puertoEmbarque: [ this.solicitudState?.puertoEmbarque,Validators.required, ],
-        puertoDesembarque: [this.solicitudState?.puertoDesembarque,Validators.required, ],
-      }),
-    });
-  }
+donanteDomicilio(): void {
+  this.registroForm = this.fb.group({
+    validacionForm: this.fb.group({
+      nacion: [{ value: this.solicitudState?.nacion, disabled: this.soloLectura }, [Validators.required]],
+      transporte: [{ value: this.solicitudState?.transporte, disabled: this.soloLectura }, [Validators.required]],
+      nombre: [{ value: this.solicitudState?.nombre, disabled: this.soloLectura }, [Validators.required]],
+      apellidoPrimer: [{ value: this.solicitudState?.apellidoPrimer, disabled: this.soloLectura }, [Validators.required]],
+      apellidoSegundo: [{ value: this.solicitudState?.apellidoSegundo, disabled: this.soloLectura }, [Validators.required]],
+      numeroFiscal: [{ value: this.solicitudState?.numeroFiscal, disabled: this.soloLectura }, [Validators.required]],
+      razonSocial: [{ value: this.solicitudState?.razonSocial, disabled: this.soloLectura }, [Validators.required]],
+      ciudad: [{ value: this.solicitudState?.ciudad, disabled: this.soloLectura }, [Validators.required]],
+      calle: [{ value: this.solicitudState?.calle, disabled: this.soloLectura }, [Validators.required]],
+      numeroLetra: [{ value: this.solicitudState?.numeroLetra, disabled: this.soloLectura }, [Validators.required]],
+      lada: [{ value: this.solicitudState?.lada, disabled: this.soloLectura }, [Validators.required]],
+      telefono: [{ value: this.solicitudState?.telefono, disabled: this.soloLectura }, [Validators.required, Validators.pattern(REGEX_SOLO_DIGITOS)]],
+      fax: [{ value: this.solicitudState?.fax, disabled: this.soloLectura }, [Validators.pattern(REGEX_SOLO_DIGITOS)]],
+      correoElectronico: [{ value: this.solicitudState?.correoElectronico, disabled: this.soloLectura }, [Validators.required, Validators.email]],
+      rutaCompleta: [{ value: this.solicitudState?.rutaCompleta, disabled: this.soloLectura }, Validators.required],
+      puertoEmbarque: [{ value: this.solicitudState?.puertoEmbarque, disabled: this.soloLectura }, Validators.required],
+      puertoDesembarque: [{ value: this.solicitudState?.puertoDesembarque, disabled: this.soloLectura }, Validators.required],
+    }),
+  });
+}
 
   /**
    * Método que se ejecuta al destruir el componente.

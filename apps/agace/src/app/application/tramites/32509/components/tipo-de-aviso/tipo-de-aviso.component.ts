@@ -8,7 +8,15 @@ import { CommonModule } from '@angular/common';
 import { DestruccionQuery } from '../../estados/Tramite32509.query';
 
 /**
- * @description Componente para gestionar el formulario de tipo de aviso en el trámite 32509.
+ * @component
+ * @name TipoDeAvisoComponent
+ * @descripcion
+ * Componente encargado de gestionar el formulario de tipo de aviso para el trámite 32509.
+ * Permite seleccionar el tipo de aviso, capturar información relacionada y manejar la lógica de validación y estado del formulario.
+ * Utiliza formularios reactivos y se integra con los stores y queries para el manejo de estado.
+ *
+ * @example
+ * <app-tipo-de-aviso [formularioDeshabilitado]="true"></app-tipo-de-aviso>
  */
 @Component({
   selector: 'app-tipo-de-aviso',
@@ -19,72 +27,100 @@ import { DestruccionQuery } from '../../estados/Tramite32509.query';
 })
 export class TipoDeAvisoComponent implements OnInit, OnDestroy {
   /**
-   * @property {FormGroup} avisoForm - Formulario reactivo para capturar los datos del aviso.
+   * @property {FormGroup} avisoForm 
+   * @descripcion
+   * Formulario reactivo para capturar los datos del aviso.
    */
   avisoForm!: FormGroup;
 
   /**
-   * @property {Array} avisoOpciones - Opciones disponibles para el tipo de aviso.
+   * @property {Array} avisoOpciones
+   * @description
+   * Opciones disponibles para el tipo de aviso.
    */
   avisoOpciones = AVISO_OPCIONES;
 
   /**
-   * @property {string} MENSAJE - Mensaje informativo relacionado con el aviso.
+   * @property {string} MENSAJE 
+   * @descripcion
+   * Mensaje informativo relacionado con el aviso.
    */
   MENSAJE = MENSAJE;
 
   /**
-   * @property {string} desrtuccionFecha - Fecha de destrucción predeterminada.
+   * @property {string} desrtuccionFecha 
+   * @descripcion
+   * Fecha de destrucción predeterminada.
    */
   desrtuccionFecha = DESTRUCCION_FECHA;
 
   /**
-   * @property {Array} casoFortuitoOpcion - Opciones para el caso fortuito.
+   * @property {Array} casoFortuitoOpcion 
+   * @descripcion
+   * Opciones para el caso fortuito.
    */
   casoFortuitoOpcion = CASO_FORTUITO;
 
   /**
-   * @property {string} avisoValor - Valor seleccionado para el tipo de aviso.
+   * @property {string} avisoValor 
+   * @descripcion
+   * Valor seleccionado para el tipo de aviso.
    */
   avisoValor: string = 'deposito_fiscal';
 
   /**
-   * @property {string} TEXTO - Texto informativo relacionado con el aviso.
+   * @property {string} TEXTO 
+   * @descripcion
+   * Texto informativo relacionado con el aviso.
    */
   TEXTO = TEXTO;
 
   /**
-   * @property {HTMLInputElement} entradaArchivo - Referencia al input de archivo.
+   * @property {HTMLInputElement} entradaArchivo 
+   * @descripcion
+   * Referencia al input de archivo.
    */
   entradaArchivo!: HTMLInputElement;
 
   /**
-   * @property {string} etiquetaDeArchivo - Etiqueta del archivo seleccionado.
+   * @property {string} etiquetaDeArchivo 
+   * @descripcion
+   * Etiqueta del archivo seleccionado.
    */
   etiquetaDeArchivo: string = ETIQUETA_DE_ARCHIVO;
 
   /**
-   * @property {File | null} archivoMedicamentos - Archivo seleccionado para los medicamentos.
+   * @property {File | null} archivoMedicamentos 
+   * @descripcion
+   * Archivo seleccionado para los medicamentos.
    */
   archivoMedicamentos: File | null = null;
 
   /**
-   * @property {Subject<void>} destroyNotifier$ - Notificador para manejar la destrucción de suscripciones.
+   * @property {Subject<void>} destroyNotifier$ 
+   * @descripcion
+   * Notificador para manejar la destrucción de suscripciones.
    */
   private destroyNotifier$: Subject<void> = new Subject();
 
   /**
-   * @property {DestruccionState} destruccionState - Estado actual del formulario de destrucción.
+   * @property {DestruccionState} destruccionState 
+   * @descripcion
+   * Estado actual del formulario de destrucción.
    */
   private destruccionState!: DestruccionState;
 
   /**
-   * @property {SeccionLibState} seccionState - Estado actual de la sección.
+   * @property {SeccionLibState} seccionState 
+   * @descripcion
+   * Estado actual de la sección.
    */
   private seccionState!: SeccionLibState;
 
   /**
-   * @property {string} DestruccionFecha - Fecha de destrucción seleccionada.
+   * @property {string} DestruccionFecha 
+   * @descripcion
+   * Fecha de destrucción seleccionada.
    */
   DestruccionFecha: string = '15/03/2025';
 
@@ -120,6 +156,7 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
   ) {}
 
   /**
+   * @method ngOnInit
    * @description Inicializa el componente y configura las suscripciones necesarias.
    */
   ngOnInit(): void {
@@ -163,12 +200,11 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * @method inicializarEstadoFormulario
+   * @descripcion
    * Inicializa el estado del formulario según si está en modo solo lectura o editable.
    * Si el formulario está en modo solo lectura, deshabilita todos los controles.
    * Si no, habilita los controles para permitir la edición.
-   *
-   * @method
-   * @memberof CertificadoOrigenComponent
    */
   inicializarEstadoFormulario(): void {
     if (this.esFormularioSoloLectura) {
@@ -179,10 +215,10 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
     } 
   }
 
-  
-
   /**
-   * @description Configura el formulario reactivo con los valores iniciales.
+   * @method initActionBuilder
+   * @descripcion
+   * Configura el formulario reactivo con los valores iniciales provenientes del estado.
    */
   initActionBuilder(): void {
     this.avisoForm = this.fb.group({
@@ -225,63 +261,65 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * @description Cambia los campos obligatorios del formulario según el tipo de aviso seleccionado.
-   * Este método ajusta los validadores de los campos relacionados con la destrucción dependiendo
-   * del valor actual del tipo de aviso. Si el tipo de aviso es 'deposito_fiscal', los campos se
-   * marcan como requeridos; en caso contrario, se eliminan los validadores requeridos.
+   * @method campoObligatorioChange
+   * @descripcion
+   * Cambia los campos obligatorios del formulario según el tipo de aviso seleccionado.
+   * Ajusta los validadores de los campos relacionados con la destrucción dependiendo del valor actual del tipo de aviso.
+   * Si el tipo de aviso es 'deposito_fiscal', los campos se marcan como requeridos; en caso contrario, se eliminan los validadores requeridos.
    * Se actualiza la validez de los controles afectados.
    * @returns {void}
    */
   campoObligatorioChange(): void {
-      const DESTRUCCIONENTIDADFEDERATIVA = this.avisoForm.get('destruccionEntidadFederativa');
-      const DESTRUCCIONALCALDIAMUNICIPO = this.avisoForm.get('destruccionAlcaldiaMunicipo');
-      const DESTRUCCIONCOLONIA = this.avisoForm.get('destruccionColonia');
-      const DESTRUCCIONCALLE = this.avisoForm.get('destruccionCalle');
-      const DESTRUCCIONNUMEROEXTERIOR = this.avisoForm.get('destruccionNumeroExterior');
-      const DESTRUCCIONNUMEROINTERIOR = this.avisoForm.get('destruccionNumeroInterior');
-      const DESTRUCCIONCODIGOPOSTAL = this.avisoForm.get('destruccionCodigoPostal');
-      const DESTRUCCIONHORA = this.avisoForm.get('destruccionHora');
-      const DESTRUCCIONPROCESO = this.avisoForm.get('desturccionProceso');
-      const CASOFORTUITO = this.avisoForm.get('casofortuito');
-      if(this.destruccionState.tipoDeAviso === 'deposito_fiscal') {
-        DESTRUCCIONENTIDADFEDERATIVA?.setValidators([Validators.required]);
-        DESTRUCCIONALCALDIAMUNICIPO?.setValidators([Validators.required]);
-        DESTRUCCIONCOLONIA?.setValidators([Validators.required]);
-        DESTRUCCIONCALLE?.setValidators([Validators.required]);
-        DESTRUCCIONNUMEROEXTERIOR?.setValidators([Validators.required]);
-        DESTRUCCIONNUMEROINTERIOR?.setValidators([Validators.required]);
-        DESTRUCCIONCODIGOPOSTAL?.setValidators([Validators.required]);
-        DESTRUCCIONHORA?.setValidators([Validators.required]);
-        DESTRUCCIONPROCESO?.setValidators([Validators.required]);
-        CASOFORTUITO?.setValidators([Validators.required]);
-      }
-      else{
-        DESTRUCCIONENTIDADFEDERATIVA?.clearValidators();
-        DESTRUCCIONALCALDIAMUNICIPO?.clearValidators();
-        DESTRUCCIONCOLONIA?.clearValidators();
-        DESTRUCCIONCALLE?.clearValidators();
-        DESTRUCCIONNUMEROEXTERIOR?.clearValidators();
-        DESTRUCCIONNUMEROINTERIOR?.clearValidators();
-        DESTRUCCIONCODIGOPOSTAL?.clearValidators();
-        DESTRUCCIONHORA?.clearValidators();
-        DESTRUCCIONPROCESO?.clearValidators();
-        CASOFORTUITO?.clearValidators();
-      }
-      DESTRUCCIONENTIDADFEDERATIVA?.updateValueAndValidity();
-      DESTRUCCIONALCALDIAMUNICIPO?.updateValueAndValidity();
-      DESTRUCCIONCOLONIA?.updateValueAndValidity();
-      DESTRUCCIONCALLE?.updateValueAndValidity();
-      DESTRUCCIONNUMEROEXTERIOR?.updateValueAndValidity();
-      DESTRUCCIONNUMEROINTERIOR?.updateValueAndValidity();
-      DESTRUCCIONCODIGOPOSTAL?.updateValueAndValidity();
-      DESTRUCCIONHORA?.updateValueAndValidity();
-      DESTRUCCIONPROCESO?.updateValueAndValidity();
-      CASOFORTUITO?.updateValueAndValidity();
+    const DESTRUCCIONENTIDADFEDERATIVA = this.avisoForm.get('destruccionEntidadFederativa');
+    const DESTRUCCIONALCALDIAMUNICIPO = this.avisoForm.get('destruccionAlcaldiaMunicipo');
+    const DESTRUCCIONCOLONIA = this.avisoForm.get('destruccionColonia');
+    const DESTRUCCIONCALLE = this.avisoForm.get('destruccionCalle');
+    const DESTRUCCIONNUMEROEXTERIOR = this.avisoForm.get('destruccionNumeroExterior');
+    const DESTRUCCIONNUMEROINTERIOR = this.avisoForm.get('destruccionNumeroInterior');
+    const DESTRUCCIONCODIGOPOSTAL = this.avisoForm.get('destruccionCodigoPostal');
+    const DESTRUCCIONHORA = this.avisoForm.get('destruccionHora');
+    const DESTRUCCIONPROCESO = this.avisoForm.get('desturccionProceso');
+    const CASOFORTUITO = this.avisoForm.get('casofortuito');
+    if(this.destruccionState.tipoDeAviso === 'deposito_fiscal') {
+      DESTRUCCIONENTIDADFEDERATIVA?.setValidators([Validators.required]);
+      DESTRUCCIONALCALDIAMUNICIPO?.setValidators([Validators.required]);
+      DESTRUCCIONCOLONIA?.setValidators([Validators.required]);
+      DESTRUCCIONCALLE?.setValidators([Validators.required]);
+      DESTRUCCIONNUMEROEXTERIOR?.setValidators([Validators.required]);
+      DESTRUCCIONNUMEROINTERIOR?.setValidators([Validators.required]);
+      DESTRUCCIONCODIGOPOSTAL?.setValidators([Validators.required]);
+      DESTRUCCIONHORA?.setValidators([Validators.required]);
+      DESTRUCCIONPROCESO?.setValidators([Validators.required]);
+      CASOFORTUITO?.setValidators([Validators.required]);
     }
-
+    else{
+      DESTRUCCIONENTIDADFEDERATIVA?.clearValidators();
+      DESTRUCCIONALCALDIAMUNICIPO?.clearValidators();
+      DESTRUCCIONCOLONIA?.clearValidators();
+      DESTRUCCIONCALLE?.clearValidators();
+      DESTRUCCIONNUMEROEXTERIOR?.clearValidators();
+      DESTRUCCIONNUMEROINTERIOR?.clearValidators();
+      DESTRUCCIONCODIGOPOSTAL?.clearValidators();
+      DESTRUCCIONHORA?.clearValidators();
+      DESTRUCCIONPROCESO?.clearValidators();
+      CASOFORTUITO?.clearValidators();
+    }
+    DESTRUCCIONENTIDADFEDERATIVA?.updateValueAndValidity();
+    DESTRUCCIONALCALDIAMUNICIPO?.updateValueAndValidity();
+    DESTRUCCIONCOLONIA?.updateValueAndValidity();
+    DESTRUCCIONCALLE?.updateValueAndValidity();
+    DESTRUCCIONNUMEROEXTERIOR?.updateValueAndValidity();
+    DESTRUCCIONNUMEROINTERIOR?.updateValueAndValidity();
+    DESTRUCCIONCODIGOPOSTAL?.updateValueAndValidity();
+    DESTRUCCIONHORA?.updateValueAndValidity();
+    DESTRUCCIONPROCESO?.updateValueAndValidity();
+    CASOFORTUITO?.updateValueAndValidity();
+  }
 
   /**
-   * @description Actualiza la fecha de destrucción en el formulario.
+   * @method cambioFecha
+   * @descripcion
+   * Actualiza la fecha de destrucción en el formulario.
    * @param {string} nuevoValor - Nuevo valor de la fecha.
    */
   cambioFecha(nuevoValor: string): void {
@@ -292,7 +330,9 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * @description Actualiza el valor del tipo de aviso en el formulario.
+   * @method avisoValorRadio
+   * @descripcion
+   * Actualiza el valor del tipo de aviso en el formulario.
    * @param {string} nombreControl - Nombre del control en el formulario.
    * @param {string} valor - Valor a asignar.
    */
@@ -304,7 +344,9 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * @description Activa la selección de un archivo.
+   * @method activarSeleccionArchivo
+   * @descripcion
+   * Activa la selección de un archivo abriendo el diálogo de selección de archivos.
    */
   activarSeleccionArchivo(): void {
     this.entradaArchivo = document.getElementById('archivoMedicamentos') as HTMLInputElement;
@@ -314,7 +356,9 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * @description Maneja el cambio de archivo seleccionado.
+   * @method onCambioDeArchivo
+   * @descripcion
+   * Maneja el cambio de archivo seleccionado y actualiza la etiqueta del archivo.
    * @param {Event} event - Evento de cambio de archivo.
    */
   onCambioDeArchivo(event: Event): void {
@@ -329,7 +373,9 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * @description Establece valores en el store a partir del formulario.
+   * @method setValoresStore
+   * @descripcion
+   * Establece valores en el store a partir del formulario.
    * @param {FormGroup} form - Formulario reactivo.
    * @param {string} campo - Nombre del campo en el formulario.
    * @param {keyof DestruccionStore} metodoNombre - Método del store a invocar.
@@ -346,14 +392,15 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * @method ngOnDestroy
+   * @descripcion
    * Limpia las suscripciones activas cuando el componente es destruido.
    * Este método se llama automáticamente cuando el componente es destruido para evitar fugas de memoria.
-   * @method ngOnDestroy
+   * @lifecycle
    * @returns {void}
    */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
-
 }
