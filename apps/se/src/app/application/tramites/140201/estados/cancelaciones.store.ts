@@ -263,7 +263,10 @@ export class CancelacionesStore extends Store<CancelacionesState> {
       folioOficioSolicitudIPC,
     }));
   }
-
+  /**
+   * Establece la fecha de pago en el estado.
+   * @param {string} fechaPago - La fecha de pago a establecer.
+   */
   public setFechaPago(fechaPago: string) {
     this.update((state) => ({
       ...state,
