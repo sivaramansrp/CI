@@ -1,42 +1,36 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { PagoDeDerechosComponent } from './pago-de-derechos.component';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { of, Subject } from 'rxjs';
 import { RevisionService } from '../../services/revision.service';
 import { Solicitud220503Store } from '../../estados/tramites220503.store';
 import { Solicitud220503Query } from '../../estados/tramites220503.query';
-import { of } from 'rxjs';
-import {
-  Catalogo,
-  CatalogoSelectComponent,
-  CatalogosSelect,
-  InputRadioComponent,
-  TituloComponent,
-} from '@ng-mf/data-access-user';
+import { CatalogoSelectComponent, ConsultaioQuery, InputRadioComponent, TituloComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
+import { HttpClientModule } from '@angular/common/http';
 
 describe('PagoDeDerechosComponent', () => {
   let component: PagoDeDerechosComponent;
-  let fixture: ComponentFixture<PagoDeDerechosComponent>;
-  let revisionServiceMock: jest.Mocked<RevisionService>;
-  let solicitudStoreMock: jest.Mocked<Solicitud220503Store>;
-  let solicitudQueryMock: jest.Mocked<Solicitud220503Query>;
+  let fixture: any;
+  let revisionServiceMock: any;
+  let solicitudStoreMock: any;
+  let solicitudQueryMock: any;
+  let consultaioQueryMock: any;
 
   beforeEach(async () => {
     revisionServiceMock = {
-      getPagoDeDerechos: jest.fn(),
-      getJustificacion: jest.fn(),
-      getBanco: jest.fn(),
-      getAduanaIngreso: jest.fn(),
-      getOficianaInspeccion: jest.fn(),
-      getPuntoInspeccion: jest.fn(),
-      getEstablecimiento: jest.fn(),
-      getRegimenDestinaran: jest.fn(),
-      getMovilizacionNacional: jest.fn(),
-      getPuntoVerificacion: jest.fn(),
-      getEmpresaTransportista: jest.fn(),
-      getDatosDelaSolicitud: jest.fn(),
-      getMovilizacion: jest.fn(),
-    } as any;
+      getPagoDeDerechos: jest.fn().mockReturnValue(of({
+        justificacion: 'justificacion',
+        claveReferencia: 'claveReferencia',
+        cadenaDependencia: 'cadenaDependencia',
+        banco: 'banco',
+        llavePago: 'llavePago',
+        importePago: 'importePago',
+        fetchapago: 'fetchapago'
+      })),
+      getJustificacion: jest.fn().mockReturnValue(of({ code: 200, data: [{ id: 1, nombre: 'Justificación 1' }] })),
+      getBanco: jest.fn().mockReturnValue(of({ code: 200, data: [{ id: 1, nombre: 'Banco 1' }] }))
+    };
 
     solicitudStoreMock = {
       setJustificacion: jest.fn(),
@@ -46,66 +40,39 @@ describe('PagoDeDerechosComponent', () => {
       setIlavePago: jest.fn(),
       setImportePago: jest.fn(),
       setFetchaPago: jest.fn(),
-      setExentoPagoNo: jest.fn(),
-    } as any;
+      setExentoPagoNo: jest.fn()
+    };
 
     solicitudQueryMock = {
-      selectSolicitud$: jest.fn(),
-      __store__: {} as any,
-      select: jest.fn(),
-      selectLoading: jest.fn(),
-      selectError: jest.fn(),
-      selectEntity: jest.fn(),
-      selectAll: jest.fn(),
-      selectActiveId: jest.fn(),
-      selectActive: jest.fn(),
-      config: {} as any,
-    } as any;
+      selectSolicitud$: of({
+        exentoPagoNo: 'no',
+        justificacion: 'justificacion',
+        claveReferencia: 'claveReferencia',
+        cadenaDependencia: 'cadenaDependencia',
+        banco: 'banco',
+        llavePago: 'llavePago',
+        importePago: 'importePago',
+        fetchapago: 'fetchapago'
+      })
+    };
+
+    consultaioQueryMock = {
+      selectConsultaioState$: of({ readonly: false })
+    };
 
     await TestBed.configureTestingModule({
-      declarations: [],
-      imports: [
-        ReactiveFormsModule,
-        PagoDeDerechosComponent,
-        CommonModule,
-        CatalogoSelectComponent,
-        InputRadioComponent,
-        TituloComponent,
-      ],
+      imports: [PagoDeDerechosComponent, CommonModule, CatalogoSelectComponent, ReactiveFormsModule, InputRadioComponent,TituloComponent, HttpClientModule],
       providers: [
         FormBuilder,
         { provide: RevisionService, useValue: revisionServiceMock },
         { provide: Solicitud220503Store, useValue: solicitudStoreMock },
         { provide: Solicitud220503Query, useValue: solicitudQueryMock },
-      ],
+        { provide: ConsultaioQuery, useValue: consultaioQueryMock }
+      ]
     }).compileComponents();
-  });
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(PagoDeDerechosComponent);
     component = fixture.componentInstance;
-
-    (solicitudQueryMock.selectSolicitud$ as any).mockReturnValue(
-      of({
-        exentoPagoNo: '1',
-        justificacion: 'Test Justification',
-        claveReferencia: '12345',
-        cadenaDependencia: 'Test Dependency',
-        banco: 'Test Bank',
-        llavePago: 'Test Key',
-        importePago: '1000',
-        fetchapago: '2023-01-01',
-      }) as any
-    );
-
-    revisionServiceMock.getPagoDeDerechos.mockReturnValue(of({}));
-    revisionServiceMock.getJustificacion.mockReturnValue(
-      of({ code: 200, data: [], message: '' })
-    );
-    revisionServiceMock.getBanco.mockReturnValue(
-      of({ code: 200, data: [], message: '' })
-    );
-
     fixture.detectChanges();
   });
 
@@ -113,98 +80,103 @@ describe('PagoDeDerechosComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize the form on ngOnInit', () => {
-    expect(component.pagoForm).toBeDefined();
-    expect(component.pagoForm.get('exentoPagoNo')?.value).toBe('1');
-    expect(component.pagoForm.get('justificacion')?.value).toBe(
-      'Test Justification'
-    );
+  it('should initialize the form with store values', () => {
+    expect(component.pagoForm.value.exentoPagoNo).toBe('no');
+    expect(component.pagoForm.value.justificacion).toBe('justificacion');
+    expect(component.pagoForm.value.claveReferencia).toBe('claveReferencia');
+    expect(component.pagoForm.value.cadenaDependencia).toBe('cadenaDependencia');
+    expect(component.pagoForm.value.banco).toBe('banco');
+    expect(component.pagoForm.value.llavePago).toBe('llavePago');
+    expect(component.pagoForm.value.importePago).toBe('importePago');
+    expect(component.pagoForm.value.fetchapago).toBe('fetchapago');
   });
 
-  it('should call getPagoDeDerechos on initialization', () => {
-    expect(revisionServiceMock.getPagoDeDerechos).toHaveBeenCalled();
+  it('should call setJustificacion on selectJustificacionCatalogo', () => {
+    component.selectJustificacionCatalogo({ id: 5, nombre: 'Test' } as any);
+    expect(solicitudStoreMock.setJustificacion).toHaveBeenCalledWith(5);
   });
 
-  it('should call getJustificacion on initialization', () => {
-    expect(revisionServiceMock.getJustificacion).toHaveBeenCalled();
-  });
-
-  it('should call getBanco on initialization', () => {
-    expect(revisionServiceMock.getBanco).toHaveBeenCalled();
-  });
-
-  it('should update the store when selectJustificacionCatalogo is called', () => {
-    const mockCatalogo = {
-      id: 123,
-      descripcion: 'string',
-      clave: 'string',
-      tam: 'string',
-      dpi: 'string',
-      relacionadaUmtId: 123,
-      relacionadaAcotacionId: 123,
-    };
-    component.selectJustificacionCatalogo(mockCatalogo);
-    expect(solicitudStoreMock.setJustificacion).toHaveBeenCalledWith('123');
-  });
-
-  it('should update the store when setClaveReferencia is called', () => {
-    const event = { target: { value: 'Test Reference' } } as any;
+  it('should call setClaveReferencia on setClaveReferencia', () => {
+    const event = { target: { value: 'clave123' } } as any;
     component.setClaveReferencia(event);
-    expect(solicitudStoreMock.setClaveReferencia).toHaveBeenCalledWith(
-      'Test Reference'
-    );
+    expect(solicitudStoreMock.setClaveReferencia).toHaveBeenCalledWith('clave123');
   });
 
-  it('should update the store when setCadenaDependencia is called', () => {
-    const event = { target: { value: 'Test Dependency' } } as any;
+  it('should call setCadenaDependencia on setCadenaDependencia', () => {
+    const event = { target: { value: 'cadena123' } } as any;
     component.setCadenaDependencia(event);
-    expect(solicitudStoreMock.setCadenaDependencia).toHaveBeenCalledWith(
-      'Test Dependency'
-    );
+    expect(solicitudStoreMock.setCadenaDependencia).toHaveBeenCalledWith('cadena123');
   });
 
-  it('should update the store when setExentoPagoNo is called', () => {
-    component.setExentoPagoNo('1');
-    expect(solicitudStoreMock.setExentoPagoNo).toHaveBeenCalledWith('1');
+  it('should call setExentoPagoNo on setExentoPagoNo', () => {
+    component.setExentoPagoNo('yes');
+    expect(solicitudStoreMock.setExentoPagoNo).toHaveBeenCalledWith('yes');
   });
 
-  it('should update the store when selectBancoCatalogo is called', () => {
-    const mockCatalogo = {
-      id: 123,
-      descripcion: 'string',
-      clave: 'string',
-      tam: 'string',
-      dpi: 'string',
-      relacionadaUmtId: 123,
-      relacionadaAcotacionId: 123,
-    };
-    component.selectBancoCatalogo(mockCatalogo);
-    expect(solicitudStoreMock.setBanco).toHaveBeenCalledWith('456');
+  it('should call setBanco on selectBancoCatalogo', () => {
+    component.selectBancoCatalogo({ id: 7, nombre: 'Banco Test' } as any);
+    expect(solicitudStoreMock.setBanco).toHaveBeenCalledWith(7);
   });
 
-  it('should update the store when setIlavePago is called', () => {
-    const event = { target: { value: 'Test Key' } } as any;
+  it('should call setIlavePago on setIlavePago', () => {
+    const event = { target: { value: 'llave123' } } as any;
     component.setIlavePago(event);
-    expect(solicitudStoreMock.setIlavePago).toHaveBeenCalledWith('Test Key');
+    expect(solicitudStoreMock.setIlavePago).toHaveBeenCalledWith('llave123');
   });
 
-  it('should update the store when setFetchaPago is called', () => {
-    const event = { target: { value: '2023-01-01' } } as any;
+  it('should call setFetchaPago on setFetchaPago', () => {
+    const event = { target: { value: '2024-01-01' } } as any;
     component.setFetchaPago(event);
-    expect(solicitudStoreMock.setFetchaPago).toHaveBeenCalledWith('2023-01-01');
+    expect(solicitudStoreMock.setFetchaPago).toHaveBeenCalledWith('2024-01-01');
   });
 
-  it('should update the store when setImportePago is called', () => {
+  it('should call setImportePago on setImportePago', () => {
     const event = { target: { value: '1000' } } as any;
     component.setImportePago(event);
     expect(solicitudStoreMock.setImportePago).toHaveBeenCalledWith('1000');
   });
 
+  it('should set justificacion catalogos after getJustificacion', () => {
+    component.getJustificacion();
+    expect(component.justificacion.catalogos.length).toBeGreaterThan(0);
+    expect(component.justificacion.labelNombre).toBe('Justificación');
+  });
+
+  it('should set banco catalogos after getBanco', () => {
+    component.getBanco();
+    expect(component.banco.catalogos.length).toBeGreaterThan(0);
+    expect(component.banco.labelNombre).toBe('Banco');
+  });
+
+  it('should update store with getPagoDeDerechos', () => {
+    component.getPagoDeDerechos();
+    expect(solicitudStoreMock.setJustificacion).toHaveBeenCalledWith('justificacion');
+    expect(solicitudStoreMock.setClaveReferencia).toHaveBeenCalledWith('claveReferencia');
+    expect(solicitudStoreMock.setCadenaDependencia).toHaveBeenCalledWith('cadenaDependencia');
+    expect(solicitudStoreMock.setBanco).toHaveBeenCalledWith('banco');
+    expect(solicitudStoreMock.setIlavePago).toHaveBeenCalledWith('llavePago');
+    expect(solicitudStoreMock.setImportePago).toHaveBeenCalledWith('importePago');
+    expect(solicitudStoreMock.setFetchaPago).toHaveBeenCalledWith('fetchapago');
+  });
+
+  it('should disable the form if esFormularioSoloLectura is true', () => {
+    component.esFormularioSoloLectura = true;
+    component.guardarDatosFormulario();
+    expect(component.pagoForm.disabled).toBe(true);
+  });
+
+  it('should enable the form if esFormularioSoloLectura is false', () => {
+    component.esFormularioSoloLectura = false;
+    component.guardarDatosFormulario();
+    expect(component.pagoForm.enabled).toBe(true);
+  });
+
   it('should complete destroyed$ on ngOnDestroy', () => {
-    const destroyedSpy = jest.spyOn(component['destroyed$'], 'next');
-    const completeSpy = jest.spyOn(component['destroyed$'], 'complete');
+    const destroyed$ = (component as any).destroyed$ as Subject<void>;
+    jest.spyOn(destroyed$, 'next');
+    jest.spyOn(destroyed$, 'complete');
     component.ngOnDestroy();
-    expect(destroyedSpy).toHaveBeenCalled();
-    expect(completeSpy).toHaveBeenCalled();
+    expect(destroyed$.next).toHaveBeenCalled();
+    expect(destroyed$.complete).toHaveBeenCalled();
   });
 });
