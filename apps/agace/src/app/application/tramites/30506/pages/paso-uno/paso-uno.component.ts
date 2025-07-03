@@ -12,7 +12,7 @@ import {
   DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL,
   PERSONA_MORAL_NACIONAL,
 } from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
-import { Subject} from 'rxjs';
+import { Subject } from 'rxjs';
 
 /**
  * Componente que representa el primer paso del trámite.
@@ -21,12 +21,11 @@ import { Subject} from 'rxjs';
   selector: 'app-paso-uno',
   templateUrl: './paso-uno.component.html',
   styles: ``,
- 
+
 })
 export class PasoUnoComponent implements AfterViewInit, OnDestroy {
   /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
   public esDatosRespuesta: boolean = false; // Indica si hay datos de respuesta del servidor
-
   private destroyNotifier$: Subject<void> = new Subject(); // Subject para manejar la destrucción de suscripciones
   public consultaState!: ConsultaioState; // Estado de la consulta
   public datosRespuesta: unknown; // Datos de respuesta del servidor
@@ -35,8 +34,8 @@ export class PasoUnoComponent implements AfterViewInit, OnDestroy {
    * @param router Inyecta el servicio Router para la navegación.
    */
   constructor(
-    private consultaQuery: ConsultaioQuery,    
-  ) {}
+    private consultaQuery: ConsultaioQuery,
+  ) { }
 
 
   /**

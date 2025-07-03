@@ -13,6 +13,10 @@ export class RegistroService {
     * AppConfig es una inyección de dependencias que proporciona la configuración de la aplicación.
     */
   urlServer = ENVIRONMENT.URL_SERVER;
+  /**
+   * urlServerCatalogos es la URL del servidor para los catálogos auxiliares.
+   * Se utiliza para obtener datos de catálogos desde un archivo JSON.
+   */
   urlServerCatalogos = ENVIRONMENT.URL_SERVER_JSON_AUXILIAR;
 
   /**

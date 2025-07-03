@@ -30,12 +30,16 @@ interface AccionBoton {
 @Component({
   templateUrl: './solicitud-page.component.html',
   styles: ``,
- 
+
 })
 /**
  * Componente que representa la página de solicitud.
  */
 export class SolicitudPageComponent {
+  /**
+   * Texto de alerta para terceros.
+   * Este texto se muestra cuando la solicitud es registrada temporalmente.
+   */
   TEXTO_DE_ALERTA: string = TERCEROS_TEXTO_DE_ALERTA;
   /**
    * Lista de pasos del asistente.
@@ -74,7 +78,7 @@ export class SolicitudPageComponent {
    * Obtiene el valor del índice de la acción del botón.
    * @param e Acción del botón.
    */
-  getValorIndice(e: AccionBoton):void {
+  getValorIndice(e: AccionBoton): void {
     if (e.valor > 0 && e.valor < 5) {
       this.indice = e.valor;
       if (e.accion === 'cont') {

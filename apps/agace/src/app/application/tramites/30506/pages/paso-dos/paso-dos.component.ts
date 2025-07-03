@@ -1,7 +1,7 @@
 import { Catalogo, CatalogosService, TEXTOS } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ReplaySubject, takeUntil } from 'rxjs';
-import {CATALOGOS_ID} from '@ng-mf/data-access-user';
+import { CATALOGOS_ID } from '@ng-mf/data-access-user';
 
 
 /**
@@ -12,14 +12,14 @@ import {CATALOGOS_ID} from '@ng-mf/data-access-user';
   selector: 'app-paso-dos',
   templateUrl: './paso-dos.component.html',
   styleUrl: './paso-dos.component.scss',
-  
+
 })
 export class PasoDosComponent implements OnInit, OnDestroy {
   /**
      * Observable para manejar la destrucción del componente.
      * Se utiliza para cancelar suscripciones activas.
      */
-    private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
+  private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
   /**
    * Textos utilizados en el componente.
    */
@@ -39,7 +39,7 @@ export class PasoDosComponent implements OnInit, OnDestroy {
    * Catálogo de documentos disponibles.
    */
   catalogoDocumentos: Catalogo[] = [];
-  
+
   /**
    * Constructor del componente.
    * @param catalogosServices Servicio para obtener los catálogos necesarios para el trámite.
@@ -47,8 +47,8 @@ export class PasoDosComponent implements OnInit, OnDestroy {
   constructor(private catalogosServices: CatalogosService) {
     // El constructor se utiliza para la inyección de dependencias.
   }
-  
-  
+
+
   /**
    * Método que se ejecuta al inicializar el componente.
    * Obtiene los tipos de documentos disponibles y establece los documentos seleccionados por defecto.

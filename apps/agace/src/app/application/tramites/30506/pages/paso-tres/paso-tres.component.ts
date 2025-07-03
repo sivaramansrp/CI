@@ -1,8 +1,10 @@
 import { Component, OnDestroy } from '@angular/core';
-import { FirmaElectronicaComponent, TramiteFolioService} from '@ng-mf/data-access-user';
 import { ReplaySubject, catchError, map, takeUntil } from 'rxjs';
 import { Router } from '@angular/router';
+import { TramiteFolioService } from '@ng-mf/data-access-user';
 import { TramiteStore } from '@ng-mf/data-access-user';
+
+
 /**
  * Componente que representa el paso tres del trámite.
  */
@@ -10,7 +12,7 @@ import { TramiteStore } from '@ng-mf/data-access-user';
   selector: 'app-paso-tres',
   templateUrl: './paso-tres.component.html',
   styleUrl: './paso-tres.component.scss',
-  
+
 })
 export class PasoTresComponent implements OnDestroy {
   /**
@@ -22,7 +24,9 @@ export class PasoTresComponent implements OnDestroy {
    * Se utiliza para cancelar suscripciones activas.
    */
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
-
+  /**
+   * Constructor del componente.
+   */
   constructor(
     private router: Router,
     private serviciosExtraordinariosServices: TramiteFolioService,

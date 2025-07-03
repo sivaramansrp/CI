@@ -80,18 +80,18 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     * Subject para destruir notificador.
     */
   consultaDatos!: ConsultaioState;
-  
-/**
- * Indica si el formulario se encuentra en modo solo lectura.
- * Si es `true`, los controles del formulario estarán deshabilitados para evitar modificaciones.
- */
-esFormularioSoloLectura: boolean = false;
 
-/**
- * Subject utilizado para notificar y limpiar suscripciones activas al destruir el componente.
- * Se emite un valor y se completa en el método `ngOnDestroy` para evitar fugas de memoria.
- */
-public destroyNotifier$: ReplaySubject<boolean> = new ReplaySubject(1);
+  /**
+   * Indica si el formulario se encuentra en modo solo lectura.
+   * Si es `true`, los controles del formulario estarán deshabilitados para evitar modificaciones.
+   */
+  esFormularioSoloLectura: boolean = false;
+
+  /**
+   * Subject utilizado para notificar y limpiar suscripciones activas al destruir el componente.
+   * Se emite un valor y se completa en el método `ngOnDestroy` para evitar fugas de memoria.
+   */
+  public destroyNotifier$: ReplaySubject<boolean> = new ReplaySubject(1);
 
   /**
   * Configuración para el catálogo de bancos.
@@ -142,26 +142,26 @@ public destroyNotifier$: ReplaySubject<boolean> = new ReplaySubject(1);
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
-          this.solicitudState = seccionState;       
+          this.solicitudState = seccionState;
         })
       )
       .subscribe();
-     this.donanteDomicilio()
+    this.donanteDomicilio()
   }
 
-/**
- * Determina el estado inicial del formulario según el modo de solo lectura.
- * 
- * Si el formulario está en modo solo lectura, llama a `guardarDatosDelFormulario()` para deshabilitar los campos.
- * Si no está en modo solo lectura, llama a `datosDeAvisoForm()` para aplicar la configuración correspondiente.
- */
-inicializarEstadoFormulario(): void {
-  if (this.esFormularioSoloLectura) {
-    this.guardarDatosDelFormulario();
-  } else {
-    this.datosDeAvisoForm();
+  /**
+   * Determina el estado inicial del formulario según el modo de solo lectura.
+   * 
+   * Si el formulario está en modo solo lectura, llama a `guardarDatosDelFormulario()` para deshabilitar los campos.
+   * Si no está en modo solo lectura, llama a `datosDeAvisoForm()` para aplicar la configuración correspondiente.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosDelFormulario();
+    } else {
+      this.datosDeAvisoForm();
+    }
   }
-}
 
 
   /**
@@ -249,22 +249,22 @@ inicializarEstadoFormulario(): void {
     }
   }
 
-/**
- * Inicializa el formulario reactivo `registroForm` con los valores actuales del estado de la solicitud.
- * 
- * Crea el formulario con los campos requeridos y sus validaciones, utilizando los valores actuales de `solicitudState`.
- * Al finalizar, llama a `inicializarEstadoFormulario()` para aplicar la configuración de solo lectura si corresponde.
- */
+  /**
+   * Inicializa el formulario reactivo `registroForm` con los valores actuales del estado de la solicitud.
+   * 
+   * Crea el formulario con los campos requeridos y sus validaciones, utilizando los valores actuales de `solicitudState`.
+   * Al finalizar, llama a `inicializarEstadoFormulario()` para aplicar la configuración de solo lectura si corresponde.
+   */
   donanteDomicilio(): void {
     this.registroForm = this.fb.group({
       banco: [this.solicitudState?.banco, [Validators.required]],
       llave: [this.solicitudState?.llave, [Validators.required]],
       manifiesto1: [this.solicitudState?.manifiesto1, [Validators.required]],
       manifiesto2: [this.solicitudState?.manifiesto2, [Validators.required]],
-      numeroOperacion: [this.solicitudState?.numeroOperacion,[Validators.required],],
+      numeroOperacion: [this.solicitudState?.numeroOperacion, [Validators.required],],
       fechaPago: [this.solicitudState?.fechaPago, [Validators.required]],
-      fechaInicio : [this.solicitudState?.fechaInicio, [Validators.required]],
-      fechaFinal : [this.solicitudState?.fechaFinal, [Validators.required]],
+      fechaInicio: [this.solicitudState?.fechaInicio, [Validators.required]],
+      fechaFinal: [this.solicitudState?.fechaFinal, [Validators.required]],
     });
     this.inicializarEstadoFormulario();
   }
