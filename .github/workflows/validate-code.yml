@@ -27,6 +27,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # 👈 Importante: necesario para acceder a origin/develop
 
       - name: Setup Node.js
         uses: actions/setup-node@v3
@@ -58,12 +60,12 @@ jobs:
           fi
           echo "Base branch: $BASE_BRANCH"
 
+          echo "🔍 Detectando proyectos afectados con base en origin/$BASE_BRANCH ..."
           npx nx show projects --affected --base=origin/$BASE_BRANCH --head=HEAD > affected.txt
 
           if [ ! -s affected.txt ]; then
             echo "✅ No hay proyectos afectados. Finalizando job."
             echo "HAS_AFFECTED=false" >> $GITHUB_ENV
-            exit 0
           else
             cat affected.txt
             echo "HAS_AFFECTED=true" >> $GITHUB_ENV
@@ -75,7 +77,7 @@ jobs:
       - name: Run lint for affected projects
         if: env.HAS_AFFECTED == 'true'
         run: |
-          echo "🔍 Running lint for affected projects..."
+          echo "🔍 Ejecutando lint..."
           for project in $AFFECTED_PROJECTS; do
             if npx nx run $project:lint 2>/dev/null; then
               echo "✅ Lint passed for $project"
@@ -88,7 +90,7 @@ jobs:
         if: env.HAS_AFFECTED == 'true'
         continue-on-error: true
         run: |
-          echo "🧪 Running unit tests for affected projects..."
+          echo "🧪 Ejecutando tests..."
           for project in $AFFECTED_PROJECTS; do
             if npx nx run $project:test --watch=false --browsers=ChromeHeadless 2>/dev/null; then
               echo "✅ Tests passed for $project"
