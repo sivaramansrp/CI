@@ -122,7 +122,7 @@ export class SolicitudPageComponent implements OnInit, OnDestroy {
    *
    * @param {AccionBoton} e - El objeto que contiene la acción y el valor del índice.
    */
-  getValorIndice(e: AccionBoton): void { console.log('getValorIndice : 125 : ', this.transportacion, ' :: ', e);
+  getValorIndice(e: AccionBoton): void {
     if (e.valor > 0 && e.valor < 5) {
       if (this.transportacion && e.valor === 2) {
         this.nombre = true;
