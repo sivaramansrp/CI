@@ -57,7 +57,7 @@ export class AgregardestinatarioComponent implements OnInit,AfterViewInit {
       primerApellido: ['', Validators.required],
       segundoApellido: [''],
       razonSocial: ['', Validators.required],
-      pais: ['', Validators.required],
+      pais: ['1', Validators.required],
       codigoPostal: ['', Validators.required],
       estado: ['', Validators.required],
       municipio: [''],

@@ -1,3 +1,4 @@
+import { ActivatedRoute, Router } from '@angular/router';
 import { AlertComponent, ConfiguracionColumna, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, Input } from '@angular/core';
 import {TercerosrelacionadosTable, TercerosrelacionadosdestinoTable} from '../../models/tercerosrelacionados.model';
@@ -68,4 +69,11 @@ export class TercerosrelacionadosComponent {
         { encabezado: 'Código Postal', clave: (fila) => fila.codigoPostal, orden: 11 },
       ];
       cuerpoTablaDestino:TercerosrelacionadosdestinoTable[]=[];
+
+constructor(public readonly router: Router,public route: ActivatedRoute) {}
+
+  goToAgregarDestinatario():void {
+  this.router.navigate(['../agregar-destinatario'], { relativeTo: this.route });
+}
+
 }

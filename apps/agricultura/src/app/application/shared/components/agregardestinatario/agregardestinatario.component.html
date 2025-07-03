@@ -39,7 +39,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="row">
+                <div class="row" *ngIf="destinatarioForm.value.tipoMercancia === 'yes'">
                     <div class="col-md-8">
                         <div class="form-group">
                             <label class="form-label" for="razonSocial">Denominación/razón social*: </label>
@@ -116,13 +116,15 @@
                 </div>
                 <div class="row mt-5 mb-5">
                     <div class="col-md-12 justify-content-end d-flex ">
-                        <button type="button" class="btn btn-primary me-5" >
+                        <button type="button" class="btn btn-primary me-5"  [disabled]="esFormularioSoloLectura" >
                          Limpiar 
                         </button>
-                        <button type="button" class="btn btn-default me-5" >
+                        <button type="button" class="btn btn-default me-5" [disabled]="esFormularioSoloLectura" >
                             Cancelar 
                         </button>
-                        <button type="button" class="btn btn-danger" >
+                        <button type="button" class="btn btn-danger" 
+                            [disabled]="destinatarioForm.invalid || esFormularioSoloLectura"
+                            >
                           Guardar 
                         </button>
                     </div>

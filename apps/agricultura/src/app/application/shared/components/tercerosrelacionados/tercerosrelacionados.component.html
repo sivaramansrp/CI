@@ -32,7 +32,7 @@
                 [configuracionTabla]="configuracionColumnasDestino" [datos]="cuerpoTablaDestino" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"></app-tabla-dinamica>
         </div>
          <div class="col-md-12 d-flex justify-content-end">
-                <button class="btn btn-primary me-3" [disabled]="esFormularioSoloLectura">Agregar</button>
+                <button class="btn btn-primary me-3" [disabled]="esFormularioSoloLectura" (click)="goToAgregarDestinatario()">Agregar</button>
                 <button class="btn btn-default" [disabled]="esFormularioSoloLectura">Buscar</button>      
         </div>
     </div>
