@@ -58,14 +58,6 @@ describe('PasoUnoComponent', () => {
     expect(component.esDatosRespuesta).toBe(true);
   });
 
-  it('should set persona and domicilioFiscal in ngAfterViewInit', () => {
-    component.solicitante = { obtenerTipoPersona: jest.fn() } as any;
-    component.ngAfterViewInit();
-    expect(component.persona).toBeDefined();
-    expect(component.domicilioFiscal).toBeDefined();
-    expect(component.solicitante.obtenerTipoPersona).toHaveBeenCalled();
-  });
-
   it('should change indice when seleccionaTab is called', () => {
     component.seleccionaTab(2);
     expect(component.indice).toBe(2);

@@ -74,6 +74,8 @@ export class DatosDelDestinatarioComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.inicializarEstadoFormulario();
+    this.desactivarRazonSocial();
+    this.desactivarNombre();
   }
 
   /**
@@ -123,6 +125,33 @@ export class DatosDelDestinatarioComponent implements OnInit, OnDestroy {
   ): void {
     const VALOR = form.get(campo)?.value;
     (this.tramite110208Store[metodoNombre] as (value: unknown) => void)(VALOR);
+  }
+
+  /**
+   * Desactiva el campo 'razonSocial' si el campo 'nombres' tiene valor,
+   * de lo contrario lo activa.
+  */
+  desactivarRazonSocial(): void {
+    if (this.datosDestinatario.get('nombres')?.value) {
+      this.datosDestinatario.get('razonSocial')?.disable();
+    } else {
+      this.datosDestinatario.get('razonSocial')?.enable();
+    }
+  }
+  /**
+   * Desactiva los campos de nombre completo (nombres, apellidos) 
+   * si el campo 'razonSocial' tiene valor, de lo contrario los activa.
+  */
+  desactivarNombre(): void {
+    if (this.datosDestinatario.get('razonSocial')?.value) {
+      this.datosDestinatario.get('nombres')?.disable();
+      this.datosDestinatario.get('primerApellido')?.disable();
+      this.datosDestinatario.get('segundoApellido')?.disable();
+    } else {
+      this.datosDestinatario.get('nombres')?.enable();
+      this.datosDestinatario.get('primerApellido')?.enable();
+      this.datosDestinatario.get('segundoApellido')?.enable();
+    }
   }
 
   /**
