@@ -84,3 +84,22 @@ export interface AvisoValor {
    */
   importePago: string;
 }
+
+export interface TipoDevAviso {
+  /** Modalidad de certificación */
+  modalidadCertificacion: string;
+  /** Indica si es un cliente o proveedor extranjero */
+  foreignClientsSuppliers: boolean,
+  /** Indica si es un proveedor nacional */
+  nationalSuppliers: boolean,
+  /** Indica si hay modificaciones de socios */
+  modificationsMembers: boolean,
+  /** Indica si hay cambios en los documentos legales */
+  changesToLegalDocuments: boolean,
+  /** Indica si es un aviso de fusión o escisión */
+  mergerOrSplitNotice: boolean,
+  /** Indica si hay fracciones adicionales */
+  additionFractions: boolean,
+  /** Aceptación de la sección 253 */
+  acepto253: boolean,
+}

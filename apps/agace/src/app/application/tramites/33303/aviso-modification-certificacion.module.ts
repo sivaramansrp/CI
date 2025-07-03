@@ -16,7 +16,7 @@ import { provideHttpClient } from '@angular/common/http';
 import { AvisoUnicoService } from './services/aviso-unico.service';
 import { PasoDosComponent } from './components/paso-dos/paso-dos.component';
 import { PasoTresComponent } from './components/paso-tres/paso-tres.component';
-// import { TipoDeAvisoComponent } from './components/tipoDeAviso/tipoDeAviso.component';
+import { TipoDeAvisoComponent } from './components/tipoDeAviso/tipoDeAviso.component';
 
 @NgModule({
   declarations: [ DatosComponent,PantallasComponent],
@@ -31,7 +31,7 @@ import { PasoTresComponent } from './components/paso-tres/paso-tres.component';
   WizardComponent,
   PasoDosComponent,
   PasoTresComponent,
-  // TipoDeAvisoComponent
+  TipoDeAvisoComponent
   ],
   providers: [
     ToastrService,

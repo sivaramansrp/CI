@@ -2,6 +2,22 @@ import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
 
 /**
+ * Definición de la interfaz `Catalogo`.
+ * Representa un objeto con un identificador único y una descripción asociada.
+ */
+export interface Catalogo {
+    /**
+     * Identificador único del catálogo.
+     */
+    id: number;
+
+    /**
+     * Descripción del elemento dentro del catálogo.
+     */
+    descripcion: string;
+}
+
+/**
  * @interface
  * @name UnicoState
  * @description
@@ -73,6 +89,16 @@ export interface UnicoState {
    * @description Importe del pago relacionado con la solicitud.
    */
   importePago: string;
+
+  modalidadCertificacion: string;
+
+  foreignClientsSuppliers: boolean;
+  nationalSuppliers: boolean;
+  modificationsMembers: boolean;
+  changesToLegalDocuments: boolean;
+  mergerOrSplitNotice?: boolean;
+  additionFractions?: boolean;
+  acepto253?: boolean;
 }
 
 /**
@@ -96,6 +122,14 @@ export function createInitialState(): UnicoState {
     llavePago: '',
     fechaPago: '',
     importePago: '',
+    modalidadCertificacion: '',
+    foreignClientsSuppliers: false,
+    nationalSuppliers: false,
+    modificationsMembers: false,
+    changesToLegalDocuments: false,
+    mergerOrSplitNotice: false,
+    additionFractions: false,
+    acepto253: false,
   };
 }
 
@@ -258,6 +292,18 @@ export class UnicoStore extends Store<UnicoState> {
     this.update((state) => ({
       ...state,
       importePago,
+    }));
+  }
+
+   /**
+   * Establece la modalidad de certificación en el estado.
+   * 
+   * @param {string} EV - La modalidad de certificación a establecer.
+   */
+  setModalidadCertificacion(EV: string): void {
+    this.update((state) => ({
+      ...state,
+      modalidadCertificacion: EV
     }));
   }
 }
