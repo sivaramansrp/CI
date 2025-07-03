@@ -1,43 +1,51 @@
-
-<div class="container">
-<form [formGroup]="asignacionForm"  class="mt-5">
-            <app-input-radio
-            [radioOptions]="asignacionRadio"
-            [isRequired]="true"
-            [selectedValue]="selectedValue"
-            [layout]="'vertical'"
-            formControlName="asignacionRadio"
-            (change)="setValoresStore(asignacionForm,'asignacionRadio')"
-            ></app-input-radio>
-             <ng-titulo titulo="Número de oficio de asingación" />
-              <div class="row mb-3">
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <app-catalogo-select [catalogo]="solicitanteList" [required]="true" name="asignacionSolitud"  [label]="'Año del oficio de asignación'" formControlName="asignacionsolitud"  (change)="setValoresStore(asignacionForm,'asignacionsolitud')" [isDisabled]="esFormularioSoloLectura" >
-                      </app-catalogo-select>
-                      <div *ngIf="isInvalid('asignacionsolitud')" class="text-danger">
+<div class="container form-container">
+    <form [formGroup]="asignacionForm" class="mt-5">
+        <ng-titulo titulo="Mecanismo de asignación directa" />
+        <div class="row mb-3">
+            <div class="col">
+                <div class="form-group">
+                <label for="estimado">Estimado contribuyente, debido a que usted cuenta con una autorización previa para
+                    este trámite, debe seleccionar la modalidad del trámite a requerir:</label>
+                <app-input-radio [radioOptions]="asignacionRadio" [isRequired]="true" [selectedValue]="selectedValue"
+                    [layout]="'vertical'" formControlName="asignacionRadio"
+                    (change)="setValoresStore(asignacionForm,'asignacionRadio')"></app-input-radio>
+                </div>
+            </div>
+        </div>
+        <ng-titulo titulo="Número de oficio de asignación" />
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <app-catalogo-select [catalogo]="solicitanteList" [required]="true" name="asignacionSolitud"
+                        [label]="'Año del oficio de asignación'" formControlName="asignacionsolitud"
+                        (change)="setValoresStore(asignacionForm,'asignacionsolitud')"
+                        [isDisabled]="esFormularioSoloLectura">
+                    </app-catalogo-select>
+                    <div *ngIf="isInvalid('asignacionsolitud')" class="mensaje-error">
                         Este campo es obligatorio
                     </div>
-                    </div>
                 </div>
-                <div class="col-md-6">
-                    <div class="form-group custom-clasifi-regimen-catalogo">
-                        <label for="clasificacionRegimen">Número de oficio de asignación*</label>
-                        <input type="text" class="form-control" formControlName="numTramite"  id="numTramite" (change)="setValoresStore(asignacionForm,'numTramite')">
-                        <div *ngIf="isInvalid('numTramite')" class="text-danger">
-                                Este campo es obligatorio
-                            </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group custom-clasifi-regimen-catalogo">
+                    <label for="clasificacionRegimen">Número de oficio de asignación*</label>
+                    <input type="text" class="form-control" formControlName="numTramite" id="numTramite"
+                        (change)="setValoresStore(asignacionForm,'numTramite')">
+                    <div *ngIf="isInvalid('numTramite')" class="mensaje-error">
+                        Este campo es obligatorio
                     </div>
                 </div>
             </div>
+        </div>
         <div class="row mb-5">
-            <div class="col-md-6 col-sm-6"></div>
-            <div class="col-md-6 col-sm-6 text-end">
-              <div class="btn-group">
-                <button class="btn btn-primary me-2" type="button">Buscar</button>
-                </div>
+            <div class="col-md-6"></div>
+            <div class="col-md-6 text-end">
+                    <button class="btn btn-group btn-primary" type="button" (click)="buscar()">Buscar</button>
             </div>
-          </div>
-        
-    <form>
+        </div>
+
+    </form>
+</div>
+<div *ngIf="buscarDatos">
 <app-solicitantetab></app-solicitantetab>
+</div>
