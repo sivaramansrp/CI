@@ -1,1 +1,133 @@
-<p>agregardestinatario works!</p>
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <ng-titulo titulo="Agregar destinatario (destino final)" />
+        </div>
+        <form>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="col-md-12">
+                        <label for="certficacion_a">Tipo persona*:</label>
+                    </div>
+                    <div>
+                        <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [layout]="'vertical'"
+                            name="tipoMercancia" formControlName="tipoMercancia"></app-input-radio>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <ng-titulo titulo="Datos personales" />
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label class="form-label" for="numeroGuia">Nombre(s)*:</label>
+                            <input class="form-control" id="numeroGuia" placeholder="" type="text" libUppercase />
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label class="form-label" for="numeroGuia">Primer apellido*:</label>
+                            <input class="form-control" id="numeroGuia" placeholder="" type="text" libUppercase />
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label class="form-label" for="numeroGuia">Segundo apellido</label>
+                            <input class="form-control" id="numeroGuia" placeholder="" type="text" libUppercase />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="form-group">
+                            <label class="form-label" for="numeroGuia">Denominación/razón social*: </label>
+                            <input class="form-control" id="numeroGuia" placeholder="" type="text" libUppercase />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <app-catalogo-select [catalogo]="pairsCatalog" [label]="'País'" [required]="true"
+                            name="nombreVeterinario" [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label class="form-label" for="numeroGuia">Código postal*: </label>
+                            <input class="form-control" id="numeroGuia" placeholder="" type="text" libUppercase />
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <app-catalogo-select [catalogo]="estadoCatalog" [label]="'Estado'" [required]="true"
+                            name="nombreVeterinario" [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <app-catalogo-select [catalogo]="municipioCatalog" [label]="'Municipio o Alcaldía'"
+                            [required]="false" name="nombreVeterinario"
+                            [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
+                    </div>
+                    <div class="col-md-4">
+                        <app-catalogo-select [catalogo]="coloniaCatalog" [label]="'Colonia'" [required]="false"
+                            name="nombreVeterinario" [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label class="form-label" for="numeroGuia">Calle*: </label>
+                            <input class="form-control" id="numeroGuia" placeholder="" type="text" libUppercase />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label class="form-label" for="numeroGuia">Número exterior*: </label>
+                            <input class="form-control" id="numeroGuia" placeholder="" type="text" libUppercase />
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label class="form-label" for="numeroGuia">Número interior: </label>
+                            <input class="form-control" id="numeroGuia" placeholder="" type="text" libUppercase />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-1">
+                        <div class="form-group">
+                            <label class="form-label" for="numeroGuia">Lada: </label>
+                            <input class="form-control" id="numeroGuia" placeholder="" type="text" libUppercase />
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label class="form-label" for="numeroGuia">Teléfono: </label>
+                            <input class="form-control" id="numeroGuia" placeholder="" type="text" libUppercase />
+                        </div>
+                    </div>
+                       <div class="col-md-4">
+                        <div class="form-group">
+                            <label class="form-label" for="numeroGuia">Correo electrónico: </label>
+                            <input class="form-control" id="numeroGuia" placeholder="" type="text" libUppercase />
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-5 mb-5">
+                    <div class="col-md-12 justify-content-end d-flex ">
+                        <button type="button" class="btn btn-primary me-5" >
+                            Agregar destinatario
+                        </button>
+                        <button type="button" class="btn btn-default me-5" >
+                            Cancelar
+                        </button>
+                        <button type="button" class="btn btn-danger" >
+                            Eliminar destinatario
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
