@@ -7,10 +7,10 @@ import {
   RespuestaTabla,
 } from '../components/domicilio-establecimiento/domicilio-establecimiento.component';
 import { Observable, catchError, throwError } from 'rxjs';
+import { PermisoModel, ReprestantanteData, SolicitudModel } from '../models/permiso-sanitario.model';
 import { Solicitud260215State, Tramite260215Store } from '../estados/tramites/tramite260215.store';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { PermisoModel, ReprestantanteData, SolicitudModel } from '../models/permiso-sanitario.model';
 
 @Injectable({
   providedIn: 'root',
