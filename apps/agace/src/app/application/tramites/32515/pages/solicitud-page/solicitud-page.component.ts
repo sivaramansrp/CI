@@ -1,5 +1,5 @@
+import { AVISO, DatosPasos, ListaPasosWizard, WizardComponent } from '@ng-mf/data-access-user';
 import { Component, ViewChild } from '@angular/core';
-import { DatosPasos, ListaPasosWizard, PAGO_DE_DERECHOS, WizardComponent } from '@ng-mf/data-access-user';
 import { PASOS } from "../../constantes/modificacion-aviso-seguro-global.enum";
 
 /**
@@ -77,7 +77,7 @@ export class SolicitudPageComponent {
    * 
    * @command Estos textos son importados desde una constante compartida y pueden ser utilizados en la plantilla.
    */
-  TEXTOS = PAGO_DE_DERECHOS;
+  TEXTOS = AVISO;
 
   /**
    * @method seleccionaTab

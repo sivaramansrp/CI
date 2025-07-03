@@ -32,7 +32,7 @@ export const DATOS_DEL_SOLICITANTE = [
     labelNombre: 'Ingresos acumulables', // Etiqueta visible
     campo: 'acumulables', // Nombre del campo para el binding
     clase: 'col-md-4', // Clase para el diseño del formulario (Bootstrap)
-    tipoInput: 'number', // Tipo de campo
+    tipoInput: 'text', // Tipo de campo
     desactivado: false, // Indica si está deshabilitado
     soloLectura: false, // Indica si solo es de lectura
     validadores: [{ tipo: 'required', mensaje: '' }], // Validadores asociados
@@ -45,7 +45,7 @@ export const DATOS_DEL_SOLICITANTE = [
     labelNombre: 'Capital social mínimo pagado',
     campo: 'socialPagado',
     clase: 'col-md-4',
-    tipoInput: 'number',
+    tipoInput: 'text',
     desactivado: false,
     soloLectura: false,
     validadores: [{ tipo: 'required', mensaje: '' }],
@@ -198,6 +198,7 @@ export const DATOS_DEL_SEGURO = [
     valorPredeterminado: '',
     marginTop: 0,
     habilitado: true,
+    tooltipQuestionCircle: true,
   },
   {
     id: 'datosDelSeguro.valorTotalMercancias',
@@ -212,6 +213,7 @@ export const DATOS_DEL_SEGURO = [
     valorPredeterminado: '',
     marginTop: 0,
     habilitado: true,
+    tooltipQuestionCircle: true,
   },
   {
     id: 'datosDelSeguro.factorAplicable',
@@ -226,6 +228,7 @@ export const DATOS_DEL_SEGURO = [
     valorPredeterminado: '',
     marginTop: 0,
     habilitado: true,
+    tooltipQuestionCircle: true,
   },
 ];
 
