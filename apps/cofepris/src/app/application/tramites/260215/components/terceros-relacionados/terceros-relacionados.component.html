@@ -160,7 +160,7 @@
           </div>
         </div>
       </div>
-      <hr />
+      <br />
 
       <!-- toggling inputs based on radio button selection -->
 
@@ -186,8 +186,8 @@
             </div>
           </div>
         </div>
-        <hr />
-        <hr />
+        <br />
+        <br />
         <h5>Datos personales</h5>
         <div class="row d-flex datos-personales-form-container">
           <div class="col-md-4">
@@ -335,8 +335,8 @@
         </div>
         }
 
-        <hr />
-        <hr />
+        <br />
+        <br />
 
         <!-- Domicilio-form-container -->
         <h5>Domicilio</h5>
@@ -384,7 +384,7 @@
                 ></app-catalogo-select>
               </div>
             </div>
-            <hr />
+            <br />
 
             <div class="col-md-4 mt-2">
               <div class="form-group">
@@ -585,7 +585,7 @@
               />
             </div>
           </div>
-          <hr />
+          <br />
 
           <!-- campos -->
           <div class="col-md-3 text-muted text-vertical-align-button">
@@ -644,10 +644,9 @@
           </div>
         </div>
       </div>
-      <hr />
+      <br />
 
       <div class="row">
-        <div>
           <div class="col-md-4">
             <div class="form-group">
               <label for="rfc" class="form-label"
@@ -669,22 +668,49 @@
         </div>
 
         @if (fisica || (!fisica && !moral)){
-        <div class="row">
+        <br />
+        <br />
+        <h5>Datos personales</h5>
+        <div class="row d-flex datos-personales-form-container">
           <div class="col-md-4">
             <div class="form-group">
-              <label for="curp" class="form-label"
-                >C.U.R.P*:<span
-                  class="bi bi-question-circle-fill fs-4 m-1"
-                  title="Title"
-                  ata-bs-toggle="tooltip"
-                ></span>
-              </label>
+              <label for="nombre" class="form-label">Nombre(s)*: </label>
               <input
                 type="text"
-                id="curp"
-                formControlName="curp"
+                id="nombre"
+                formControlName="nombre"
+                name="nombre"
                 class="form-control"
-                name="curp"
+              />
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="form-label" for="primerApellido"
+                >Primer apellido*:</label
+              >
+              <input
+                type="text"
+                id="primerApellido"
+                formControlName="primerApellido"
+                name="primerApellido"
+                class="form-control"
+              />
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="form-label" for="segundoApellido"
+                >Segundo apellido:</label
+              >
+              <input
+                type="text"
+                id="segundoApellido"
+                formControlName="segundoApellido"
+                name="segundoApellido"
+                class="form-control"
               />
             </div>
           </div>
@@ -708,8 +734,8 @@
         </div>
         }
 
-        <hr />
-        <hr />
+        <br />
+        <br />
 
         <!-- Domicilio-form-container -->
         <h5>Domicilio</h5>
@@ -732,7 +758,7 @@
             <div class="form-group">
               <app-catalogo-select
                 [catalogo]="dropdownData"
-                [label]="'Estado/localidad*'"
+                [label]="'Estado/localidad'"
                 [required]="true"
                 for="estadoLocalidad"
                 id="estadoLocalidad"
@@ -746,7 +772,7 @@
             <div class="form-group">
               <app-catalogo-select
                 [catalogo]="municipioDropdownData"
-                [label]="'Municipio/alcaldia:'"
+                [label]="'Municipio/alcaldia'"
                 [required]="true"
                 for="municipioAlcaldia"
                 id="municipioAlcaldia"
@@ -761,7 +787,7 @@
               <app-catalogo-select
                 [catalogo]="localidadDropdownData"
                 [label]="'Localidad'"
-                [required]="false"
+                [required]="true"
                 for="localidad"
                 id="localidad"
                 formControlName="localidad"
@@ -774,7 +800,7 @@
             <div class="form-group">
               <app-catalogo-select
                 [catalogo]="codigoPostalDropdownData"
-                [label]="'Código postal o equivalente:'"
+                [label]="'Código postal o equivalente*'"
                 for="codigoPostaloEquivalente"
                 id="codigoPostaloEquivalente"
                 formControlName="codigoPostaloEquivalente"
@@ -787,7 +813,7 @@
             <div class="form-group">
               <app-catalogo-select
                 [catalogo]="coloniaDropdownData"
-                [label]="'Colonia:'"
+                [label]="'Colonia '"
                 for="colonia"
                 id="colonia"
                 formControlName="colonia"
@@ -892,7 +918,7 @@
               />
             </div>
           </div>
-          <hr />
+          <br />
 
           <!-- campos -->
           <div class="col-md-3 text-muted text-vertical-align-button">
@@ -920,7 +946,6 @@
             </div>
           </div>
         </div>
-      </div>
     </form>
   </div>
 </app-modal>
@@ -950,7 +975,7 @@
           </div>
         </div>
       </div>
-      <hr />
+      <br />
 
       @if (fisica || (!fisica && !moral)) {
       <h5>Datos personales</h5>
@@ -1079,8 +1104,8 @@
           </div>
         </div>
 
-        <hr />
-        <hr />
+        <br />
+        <br />
 
         <div class="col-md-8">
           <div class="form-group">
@@ -1175,7 +1200,7 @@
             />
           </div>
         </div>
-        <hr />
+        <br />
 
         <div class="col-md-3 text-muted text-vertical-align-button">
           <span>*Campos obligatorios</span>
@@ -1230,7 +1255,7 @@
           </div>
         </div>
       </div>
-      <hr />
+      <br />
 
       <div>
         @if (fisica || (!fisica && !moral)) {
@@ -1297,8 +1322,8 @@
           </div>
         </div>
         }
-        <hr />
-        <hr />
+        <br />
+        <br />
 
         <h5>Domicilio</h5>
         <div class="row">
@@ -1359,8 +1384,8 @@
             </div>
           </div>
 
-          <hr />
-          <hr />
+          <br />
+          <br />
 
           <div class="col-md-8">
             <div class="form-group">
@@ -1455,7 +1480,7 @@
               />
             </div>
           </div>
-          <hr />
+          <br />
 
           <div class="col-md-3 text-muted text-vertical-align-button">
             <span>*Campos obligatorios</span>

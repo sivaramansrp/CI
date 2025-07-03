@@ -544,6 +544,21 @@ fetchTableDummyJson(): void {
        */
       pais: new FormControl('', [Validators.required]),
       /**
+       * Control del formulario para el nombre del usuario.
+       * Este campo es obligatorio.
+       */
+      nombre: new FormControl({ value: '', disabled: true }, [Validators.required]),
+      /**
+       * Control del formulario para el primer apellido del usuario.
+       * Este campo es obligatorio.
+       */
+      primerApellido: new FormControl({ value: '', disabled: true }, [Validators.required]),
+      /**
+       * Control del formulario para el segundo apellido del usuario.
+       * Este campo es obligatorio.
+       */
+      segundoApellido: new FormControl({ value: '', disabled: true }, [Validators.required]),
+      /**
        * Estado o localidad del destinatario.
        */
       estadoLocalidad: new FormControl('', [Validators.required]),
