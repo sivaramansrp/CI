@@ -8,7 +8,7 @@
           <textarea
             cols="80"
             rows="5"
-            formControlName="observaciones" [disabled]="soloLectura"
+            formControlName="observaciones" 
             (change)="
               setValoresStore(
                 validacionForm,
@@ -27,7 +27,7 @@
           <textarea
             cols="80"
             rows="5"
-            formControlName="presica" [disabled]="soloLectura"
+            formControlName="presica" 
             (change)="setValoresStore(validacionForm, 'presica', 'setPresica')"
           ></textarea>
         </div>
@@ -40,7 +40,7 @@
           <textarea
             cols="80"
             rows="5"
-            formControlName="presenta" [disabled]="soloLectura"
+            formControlName="presenta" 
             (change)="
               setValoresStore(validacionForm, 'presenta', 'setPresenta')
             "
@@ -56,7 +56,7 @@
           [required]="true"
           id="idioma"
           formControlName="idioma"
-          [isDisabled]="soloLectura"
+          
           (change)="setValoresStore(validacionForm, 'idioma', 'setIdioma')"
         ></app-catalogo-select>
       </div>
@@ -69,7 +69,7 @@
           <label style="font-weight: bold">
             <input
               type="checkbox"
-              formControlName="casillaVerificacion" [disabled]="soloLectura"
+              formControlName="casillaVerificacion" 
               (change)="
                 setValoresStore(
                   validacionForm,
@@ -88,7 +88,7 @@
               <textarea
                 cols="80"
                 rows="5"
-                formControlName="justificacion" [disabled]="soloLectura"
+                formControlName="justificacion" 
                 (change)="
                   setValoresStore(
                     validacionForm,
@@ -109,7 +109,7 @@
             [label]="'Entidad federativa'"
             [required]="true"
             formControlName="entidad"
-            [isDisabled]="soloLectura"
+            
             (change)="setValoresStore(validacionForm, 'entidad', 'setEntidad')"
           ></app-catalogo-select>
         </div>
@@ -120,7 +120,7 @@
             [required]="true"
             id="representacion"
             formControlName="representacion"
-            [isDisabled]="soloLectura"
+            
             (change)="
               setValoresStore(
                 validacionForm,

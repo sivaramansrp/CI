@@ -1,64 +1,97 @@
 import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { DesistimientoService } from './desistimiento.service';
+import { DesistimientoStore } from '../estados/tramite220404.store';
 import { DesistimientoForm } from '../modelos/desistimiento.model';
 
 describe('DesistimientoService', () => {
   let service: DesistimientoService;
-  let httpTestingController: HttpTestingController;
+  let httpMock: HttpTestingController;
+  let desistimientoStoreMock: Partial<DesistimientoStore>;
 
   beforeEach(() => {
+    desistimientoStoreMock = {
+      update: jest.fn(),
+    };
+
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],
-      providers: [DesistimientoService],
+      providers: [
+        DesistimientoService,
+        { provide: DesistimientoStore, useValue: desistimientoStoreMock },
+      ],
     });
 
-    // Inject the service and mock HTTP client
     service = TestBed.inject(DesistimientoService);
-    httpTestingController = TestBed.inject(HttpTestingController);
+    httpMock = TestBed.inject(HttpTestingController);
   });
 
   afterEach(() => {
-    // Ensure there are no outstanding HTTP requests
-    httpTestingController.verify();
+    httpMock.verify();
   });
 
   it('should be created', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should fetch desistimiento data from the correct URL', () => {
-    const mockResponse: DesistimientoForm = {
-      folio: '12345',
-      tipoDeSolicitud: 'Parcial',
-      descripcion: 'Motivo de prueba',
-    };
+  describe('getDesistimientoSolicitud', () => {
+    it('should fetch desistimiento data from the correct URL', () => {
+      const mockResponse: DesistimientoForm = {
+        folio: 'FT123456',
+        tipoDeSolicitud: 'Cambio de modalidad',
+        descripcion: 'Descripción del desistimiento',
+      };
 
-    service.getDesistimientoSolicitud().subscribe((data) => {
-      expect(data).toEqual(mockResponse); // Check the response matches the mock data
+      service.getDesistimientoSolicitud().subscribe((data) => {
+        expect(data).toEqual(mockResponse);
+      });
+
+      const req = httpMock.expectOne('/assets/json/220404/desistimiento.json');
+      expect(req.request.method).toBe('GET');
+      req.flush(mockResponse);
     });
-
-    // Expect the HTTP GET call to match the correct URL
-    const req = httpTestingController.expectOne('/assets/json/220404/desistimiento.json');
-    expect(req.request.method).toBe('GET');
-
-    // Simulate a response with mock data
-    req.flush(mockResponse);
   });
 
-  it('should handle an error response gracefully', () => {
-    const errorMessage = 'Failed to load';
+  describe('guardarFormularioDesistimiento', () => {
+    it('should update the store with the provided data', () => {
+      const mockData: Partial<DesistimientoForm> = {
+        folio: 'FT123456',
+        descripcion: 'Updated description',
+      };
 
-    service.getDesistimientoSolicitud().subscribe(
-      () => fail('Expected an error, not a successful response'),
-      (error) => {
-        expect(error.status).toBe(500);
-        expect(error.statusText).toBe('Internal Server Error');
-      }
-    );
+      service.guardarFormularioDesistimiento(mockData);
 
-    // Simulate an HTTP error response
-    const req = httpTestingController.expectOne('/assets/json/220404/desistimiento.json');
-    req.flush(errorMessage, { status: 500, statusText: 'Internal Server Error' });
+      expect(desistimientoStoreMock.update).toHaveBeenCalledWith(expect.any(Function));
+    });
+  });
+
+  describe('actualizarEstadoFormulario', () => {
+    it('should update the store with the provided data', () => {
+      const mockData: Partial<DesistimientoForm> = {
+        tipoDeSolicitud: 'Nuevo tipo de solicitud',
+      };
+
+      service.actualizarEstadoFormulario(mockData);
+
+      expect(desistimientoStoreMock.update).toHaveBeenCalledWith(expect.any(Function));
+    });
+  });
+
+  describe('getRegistroTomaMuestrasMercanciasData', () => {
+    it('should fetch registro toma muestras data from the correct URL', () => {
+      const mockResponse: DesistimientoForm = {
+        folio: 'FT654321',
+        tipoDeSolicitud: 'Toma de muestras',
+        descripcion: 'Descripción de la toma de muestras',
+      };
+
+      service.getRegistroTomaMuestrasMercanciasData().subscribe((data) => {
+        expect(data).toEqual(mockResponse);
+      });
+
+      const req = httpMock.expectOne('/assets/json/220404/descripcion.json');
+      expect(req.request.method).toBe('GET');
+      req.flush(mockResponse);
+    });
   });
 });

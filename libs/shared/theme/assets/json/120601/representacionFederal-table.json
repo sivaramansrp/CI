@@ -6,6 +6,9 @@
         "codigoPostal": "32679",
         "colonia": "PARQUE INDUSTRIAL AZTECA",
         "municipio": "JUAREZ",
-        "estado": "CHIHUAHUA"
+        "estado": "CHIHUAHUA",
+        "pais": "MEXICO",
+        "localidad": "JUAREZ",
+        "telefono": "6561234567"
     }
 ]

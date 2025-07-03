@@ -6,6 +6,19 @@ import {
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { TEXTOS_REQUISITOS } from '../../constants/importacion-materias-primas.enum'
+
+
+/**
+ * Obtiene el catálogo de los tipos de documentos disponibles para el trámite.
+ * 
+ * Este método realiza una solicitud al servicio `CatalogosService` para obtener 
+ * los datos del catálogo correspondiente al identificador `CATALOGOS_ID.CAT_TIPO_DOCUMENTO`. 
+ * Utiliza el operador `takeUntil` para gestionar la suscripción y asegurarse de que 
+ * se limpie cuando el componente sea destruido. Los datos obtenidos se asignan a la 
+ * propiedad `catalogoDocumentos` si la respuesta contiene elementos.
+ * 
+ * @returns {void} No retorna ningún valor.
+ */
 @Component({
   selector: 'app-paso-dos',
   templateUrl: './paso-dos.component.html',
@@ -41,16 +54,44 @@ export class PasoDosComponent implements OnInit, OnDestroy {
    */
   private destroyNotifier$: Subject<void> = new Subject();
 
+  /**
+   * Constructor de la clase PasoDosComponent.
+   * 
+   * Este constructor se utiliza para inicializar la instancia del componente 
+   * y para inyectar las dependencias necesarias, en este caso el servicio `CatalogosService`.
+   * 
+   * @param catalogosServices - Servicio que proporciona acceso a los catálogos necesarios 
+   *                            para el funcionamiento del componente.
+   */
   constructor(private catalogosServices: CatalogosService) {
     // Necesito inyectar los servicios a través del constructor, de modo que el constructor esté vacío.
   }
 
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta después de que el componente ha sido inicializado.
+   * 
+   * En este método, se realiza la llamada al método `getTiposDocumentos` para obtener 
+   * los tipos de documentos necesarios para el funcionamiento del componente.
+   * 
+   * @returns {void} No retorna ningún valor.
+   */
   ngOnInit(): void {
     this.getTiposDocumentos();
   }
 
+
   /**
-   * Obtiene el catalgoso de los tipos de documentos disponibles para el trámite.
+   * Obtiene los tipos de documentos desde el catálogo correspondiente.
+   * 
+   * Este método utiliza el servicio `catalogosServices` para recuperar los datos 
+   * del catálogo identificado por `CATALOGOS_ID.CAT_TIPO_DOCUMENTO`. Los datos 
+   * obtenidos se almacenan en la propiedad `catalogoDocumentos` si la respuesta 
+   * contiene elementos.
+   * 
+   * La operación está vinculada al observable `destroyNotifier$` para garantizar 
+   * que se detenga cuando el componente se destruya, evitando fugas de memoria.
+   * 
+   * @returns {void} Este método no devuelve ningún valor.
    */
   getTiposDocumentos(): void {
     this.catalogosServices

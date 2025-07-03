@@ -149,6 +149,18 @@ actualizarEstadoFormulario(): void {
 }
 
   /**
+   * @description Verifica si un control del formulario es inválido.
+   * @param nombreControl El nombre del control a verificar.
+   * @returns Verdadero si el control es inválido y está tocado o modificado, de lo contrario, falso.
+   */
+  esInvalido(nombreControl: string): boolean {
+    const CONTROL = this.FormSolicitud.get(nombreControl);
+    return CONTROL
+      ? CONTROL.invalid && (CONTROL.touched || CONTROL.dirty)
+      : false;
+  }
+
+  /**
    * Hook del ciclo de vida - inicializa el componente y los formularios.
    */
   ngOnInit(): void {

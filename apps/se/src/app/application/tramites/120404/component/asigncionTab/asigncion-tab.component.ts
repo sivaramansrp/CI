@@ -61,9 +61,13 @@ export class AsignciontabComponent implements OnInit, OnDestroy {
    */
    asignacionRadio = [
     {
-      label: 'Amplicacion de monto',
-      value: 'yes'
+      label: 'Ampliación de vigencia',
+      value: 'vigencia'
     },
+    {
+      label: 'Amplicacion de monto',
+      value: 'monto'
+    }
   ];
 
   /**
@@ -79,6 +83,13 @@ export class AsignciontabComponent implements OnInit, OnDestroy {
    * Indica si el formulario es de solo lectura.
    */
   esFormularioSoloLectura: boolean = false;
+  
+  /**
+   * Indica si se está ejecutando una búsqueda de datos.
+   * Se establece en true cuando se inicia el proceso de búsqueda
+   * y se puede usar para mostrar indicadores de carga o deshabilitar controles.
+   */
+  buscarDatos: boolean = false;
 
   /**
    * Constructor del componente.
@@ -111,9 +122,9 @@ export class AsignciontabComponent implements OnInit, OnDestroy {
   initForm(): void {
      this.obtenerEstadoSolicitud();
       this.asignacionForm = this.fb.group({
-      asignacionRadio: [this.solicitudState?.asignacionRadio || '', Validators.requiredTrue],
+      asignacionRadio: [this.solicitudState?.asignacionRadio || ''],
       asignacionsolitud: [this.solicitudState?.asignacionsolitud || '', Validators.required],
-      numTramite: [this.solicitudState?.numTramite || '', Validators.required],
+      numTramite: [this.solicitudState?.numTramite || '', [Validators.required, Validators.maxLength(30)]],
     });
   }
   
@@ -184,6 +195,22 @@ export class AsignciontabComponent implements OnInit, OnDestroy {
   setValoresStore(form: FormGroup, campo: string): void {
     const VALOR = form.get(campo)?.value;
     this.tramite120404Store.establecerDatos({ [campo]: VALOR });
+  }
+
+  /**
+   * Inicia el proceso de búsqueda de datos.
+   * Establece la bandera `buscarDatos` en true para indicar que se está ejecutando una búsqueda.
+   * Este método se ejecuta cuando el usuario hace clic en el botón "Buscar" del formulario.
+   * 
+   * @returns {void} No retorna ningún valor.
+   */
+  buscar(): void {
+ if (this.asignacionForm.valid) {
+    this.buscarDatos = true;
+  } else {
+    this.asignacionForm.markAllAsTouched();
+    this.buscarDatos = false;
+  }
   }
 
   /**

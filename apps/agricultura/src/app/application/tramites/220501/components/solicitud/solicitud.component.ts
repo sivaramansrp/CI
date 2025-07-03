@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import {Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
@@ -13,6 +13,7 @@ import { HistorialInspeccionFisicaComponent } from '../../../220502/shared/histo
 import { MedioTransporteComponent } from '../medio-transporte/medio-transporte.component';
 import { ResponsableInspeccionEnPuntoComponent } from '../../../220502/shared/responsable-inspeccion-en-punto/responsable-inspeccion-en-punto.component';
 import { Solicitud } from '../../../220502/models/solicitud-pantallas.model'
+import { Solicitud220501Store } from '../../estados/tramites220501.store';
 import { SolicitudDatosComponent } from '../../../220502/shared/solicitud-datos/solicitud-datos.component';
 import { SolicitudPantallasService } from '../../../220502/services/solicitud-pantallas.service';
 import { TEXTOS } from '../../constantes/texto-enum';
@@ -28,7 +29,7 @@ import { TEXTOS } from '../../constantes/texto-enum';
     MedioTransporteComponent, CarrosDeFerrocarrilComponent, HistorialInspeccionFisicaComponent
   ],
 })
-export class SolicitudComponent implements OnInit, OnDestroy {
+export class SolicitudComponent implements OnDestroy {
   /**
    * Constantes de texto.
    */
@@ -93,7 +94,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * Indica si el formulario está en modo solo lectura.
    * Cuando es `true`, los campos del formulario no se pueden editar.
    */
-  formularioDeshabilitado!: boolean;
+  formularioDeshabilitado: boolean = false;
 
   /**
    * Subject para desuscribirse de los observables.
@@ -110,36 +111,34 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private solicitudService: SolicitudPantallasService,
     private consultaioQuery: ConsultaioQuery,
+    private solicitud220501Store: Solicitud220501Store
   ) {
     this.consultaioQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyed$),
         map((seccionState) => {
           this.formularioDeshabilitado = seccionState.readonly;
-          this.inicializarEstadoFormulario();
+          if(seccionState.readonly || seccionState.update){
+             this.inicializarEstadoFormulario();
+          }
         })
       )
       .subscribe();
+
+    this.crearFormulario();
+    this.cargarDatosIniciales();
   }
 
   /**
-   * Método del ciclo de vida que se ejecuta al iniciar el componente.
-   * Llama a la función que determina cómo inicializar el formulario.
-   */
-  ngOnInit(): void {
-    this.inicializarEstadoFormulario();
-  }
-
-  /**
-   * Determina si se debe cargar un formulario nuevo o uno existente.
-   * Ejecuta la lógica correspondiente según el estado del componente.
+   * Método para inicializar el estado del formulario.
+   * Si `formularioDeshabilitado` es `true`, deshabilita el formulario,
+   * de lo contrario, lo habilita.
    */
   inicializarEstadoFormulario(): void {
     if (this.formularioDeshabilitado) {
-      this.guardarDatosFormulario();
-    } else {
-      this.crearFormulario();
-      this.cargarDatosIniciales();
+      this.form?.disable();
+    } else if (!this.formularioDeshabilitado) {
+      this.form?.enable();
     }
   }
 
@@ -169,25 +168,12 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
-   * Luego reinicializa el formulario con los valores actualizados desde el store.
-   */
-  guardarDatosFormulario(): void {
-    this.crearFormulario();
-    this.cargarDatosIniciales();
-    if (this.formularioDeshabilitado) {
-      this.form.disable();
-    } else if (!this.formularioDeshabilitado) {
-      this.form.enable();
-    }
-  }
-
-  /**
    * Método para manejar el evento de selección de transporte.
    * @param value Valor booleano que indica si se debe mostrar la sección.
    */
   onTransporteSeleccionado(value: boolean): void {
     this.mostrarSeccion = value;
+    this.solicitud220501Store.setMostrarSeccion(value);
   }
 
   /**

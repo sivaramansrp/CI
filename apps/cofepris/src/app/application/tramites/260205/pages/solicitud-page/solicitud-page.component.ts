@@ -1,20 +1,16 @@
-import { CommonModule } from '@angular/common';
-
-import { Component } from '@angular/core';
-import { ViewChild } from '@angular/core';
-
+import { PASOS, TITULO_MENSAJE } from '../../constantes/materias-primas.enum';
 import { AccionBoton } from '@ng-mf/data-access-user';
 import { BtnContinuarComponent } from '@ng-mf/data-access-user';
+import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
 import { DatosPasos } from '@ng-mf/data-access-user';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
-import { WizardComponent } from '@ng-mf/data-access-user';
-
-import { PASOS } from '../../models/permiso-sanitario-importacion-medicamentos.model';
-
 import { PasoDosComponent } from '../paso-dos/paso-dos.component';
 import { PasoTresComponent } from '../paso-tres/paso-tres.component';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
-import { TITULO_MENSAJE } from '../../constantes/materias-primas.enum';
+import { ViewChild } from '@angular/core';
+import { WizardComponent } from '@ng-mf/data-access-user';
+
 /**
  * @component SolicitudPageComponent
  * @description Componente principal de la página de solicitud. Controla la navegación
