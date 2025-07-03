@@ -84,7 +84,7 @@
               </div>
             </div>
           </div>
-          <div class="row">
+          <div class="row" *ngIf="!(mostrarTerceros === 'Extranjero' && (showValue === 'Física' || showValue === 'Moral'))">
             <div class="col-md-4">
               <label class="mt-1 mb-3" for="tercerosRfc"
                 >RFC*:</label
@@ -126,8 +126,8 @@
           </div>
          </form>
       <form [formGroup]="formTercerosDatos">
-        <div *ngIf="showDatosPersonales">
-          <div>
+        <div *ngIf="mostrarTerceros === 'Extranjero' || mostrarTerceros === 'Nacional'">
+          <div *ngIf="showValue === 'Física' && (mostrarTerceros === 'Nacional' || mostrarTerceros === 'Extranjero')">
             <label>Datos personales </label>
             <div class="row">
               <div class="col-md-4">
@@ -169,7 +169,7 @@
             </div>
           </div>
       
-            <div class="row" *ngIf="showValue !== 'Fisica'">
+            <div class="row" *ngIf="showValue === 'Moral' && (mostrarTerceros === 'Nacional' || mostrarTerceros === 'Extranjero')">
               <div id="contenidoRazonSocial" class="col-md-8 mb-3">
                 <label for="tercerosDenominacionRazonSocial"
                   >Denominación/razón social
