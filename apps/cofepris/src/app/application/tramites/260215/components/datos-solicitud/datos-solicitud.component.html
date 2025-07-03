@@ -38,7 +38,7 @@
           type="button"
           class="btn btn-primary"
           [disabled]="esFormularioSoloLectura"
-          (click)="alternarControlesDeFormulario()"
+          (click)="abrirModal()"
         >
           Seleccionar establecimiento
         </button>
@@ -97,3 +97,9 @@
   <app-manifiestos></app-manifiestos>
   <app-representante-legal></app-representante-legal>
 </div>
+@if (nuevaNotificacion) {
+  <section>
+    <lib-notificaciones [notificacionInput]="nuevaNotificacion" (confirmacionModal)="eliminarPedimento($event)">
+    </lib-notificaciones>
+  </section>
+  }
