@@ -35,7 +35,11 @@ export const DATOS_DEL_SOLICITANTE = [
     tipoInput: 'text', // Tipo de campo
     desactivado: false, // Indica si está deshabilitado
     soloLectura: false, // Indica si solo es de lectura
-    validadores: [{ tipo: 'required', mensaje: '' }], // Validadores asociados
+    validadores: [{ tipo: 'required', mensaje: '' }, {
+        tipo: 'maxlength',
+        valor: 50,
+        
+      }], // Validadores asociados
     marcadorDePosicion: '', // Texto de placeholder
     valorPredeterminado: '', // Valor inicial
     marginTop: 0, // Margen superior personalizado
@@ -48,7 +52,11 @@ export const DATOS_DEL_SOLICITANTE = [
     tipoInput: 'text',
     desactivado: false,
     soloLectura: false,
-    validadores: [{ tipo: 'required', mensaje: '' }],
+    validadores: [{ tipo: 'required', mensaje: '' }, {
+        tipo: 'maxlength',
+        valor: 50,
+        
+      }],
     marcadorDePosicion: '',
     valorPredeterminado: '',
     marginTop: 0,
@@ -199,6 +207,7 @@ export const DATOS_DEL_SEGURO = [
     marginTop: 0,
     habilitado: true,
     tooltipQuestionCircle: true,
+    tooltipTxt:"Indicará el monto total pagado por la póliza de seguro global del año anterior o la vigente al momento de la importación, según se trate:"
   },
   {
     id: 'datosDelSeguro.valorTotalMercancias',
@@ -214,6 +223,7 @@ export const DATOS_DEL_SEGURO = [
     marginTop: 0,
     habilitado: true,
     tooltipQuestionCircle: true,
+    tooltipTxt:"Señalar el valor de transacción de las mercancías importadas en el año anterior o las que estime importar durante el año de cobertura de la pólíza, según se trate."
   },
   {
     id: 'datosDelSeguro.factorAplicable',
@@ -229,6 +239,7 @@ export const DATOS_DEL_SEGURO = [
     marginTop: 0,
     habilitado: true,
     tooltipQuestionCircle: true,
+    tooltipTxt: 'El factor que resulte de dividir los conceptos anteriores, conforme lo dispuesto en el artículo 117, fracción I del Reglamento de la Ley Adunera.',
   },
 ];
 
@@ -353,7 +364,6 @@ export const INFORMACION_DE_COMPANIA = [
     tipoInput: 'text',
     desactivado: false,
     soloLectura: false,
-    validadores: [{ tipo: 'required' }],
     marcadorDePosicion: '',
     valorPredeterminado: '',
     marginTop: 0,
