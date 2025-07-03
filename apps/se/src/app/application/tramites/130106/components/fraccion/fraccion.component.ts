@@ -312,7 +312,7 @@ export class FraccionComponent implements OnInit, OnDestroy {
       
     };
     this.partidas.push(NEWPARTIDA);
-    console.log(this.partidas); // Imprime las partidas en la consola para depuración
+   
      const VALOR_TOTAL = this.partidas.reduce((acc, item) => acc + Number(item.mercanciaCantidad), 0);
 
        this.fraccionForm.patchValue({

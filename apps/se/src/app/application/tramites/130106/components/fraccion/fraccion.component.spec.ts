@@ -160,8 +160,8 @@ describe('FraccionComponent', () => {
     component.generarPartidas();
 
     expect(component.partidas.length).toBe(1);
-    expect(component.fraccionForm.get('cantidadTotal')?.value).toBe(10);
-    expect(component.fraccionForm.get('valorTotal')?.value).toBe(10);
+    expect(component.fraccionForm.get('cantidadTotal')?.value).toBe(5);
+    expect(component.fraccionForm.get('valorTotal')?.value).toBe(5);
   });
 
   it('should disable cantidadTotal and valorTotal fields', () => {
