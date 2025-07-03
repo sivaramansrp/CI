@@ -1,90 +1,111 @@
-import { TestBed } from '@angular/core/testing';
-import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DerechosComponent } from './derechos.component';
-import { SanitarioService } from '../../services/sanitario.service';
+import { ReactiveFormsModule } from '@angular/forms';
+import { of, Subject } from 'rxjs';
 import { Sanitario260906Store } from '../../../../estados/tramites/sanitario260906.store';
 import { Permiso260906Query } from '../../../../estados/queries/permiso260906.query';
-import { of, Subject } from 'rxjs';
+import { SanitarioService } from '../../services/sanitario.service';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
+import { Catalogo } from '@ng-mf/data-access-user';
+import { Solicitud260906State } from '../../../../estados/tramites/sanitario260906.store';
+import { provideHttpClient } from '@angular/common/http';
 
 describe('DerechosComponent', () => {
   let component: DerechosComponent;
-  let sanitarioServiceMock: any;
-  let sanitarioStoreMock: any;
-  let permisoQueryMock: any;
+  let fixture: ComponentFixture<DerechosComponent>;
+  let sanitario260906StoreMock: Partial<Sanitario260906Store>;
+  let permiso260906QueryMock: Partial<Permiso260906Query>;
+  let consultaioQueryMock: Partial<ConsultaioQuery>;
 
-  beforeEach(() => {
-    sanitarioServiceMock = {
-      getDatos: jest.fn().mockReturnValue(of([])),
+    const mockConsultaioState: ConsultaioState = {
+      readonly: false
+    } as ConsultaioState;
+  
+      const mockSelectSolicitud: Solicitud260906State = {
+        referencia: 'REF123',
+        cadenaDependencia: 'CADENA123',
+        llave: 'LLAVE123',
+        banco: 'BANCO123',
+        tipoFetch: '2025-06-26',
+        importe: '1000',
+      } as Solicitud260906State;
+
+  beforeEach(async () => {
+    sanitario260906StoreMock = {
+      setreferencia: jest.fn(),
+      setcadenaDependencia: jest.fn(),
+      setbanco: jest.fn(),
+      setLlave: jest.fn(),
+      setimporte: jest.fn(),
     };
 
-    sanitarioStoreMock = {
-      update: jest.fn(),
+    permiso260906QueryMock = {
+      selectSolicitud$: of(mockSelectSolicitud),
     };
 
-    permisoQueryMock = {
-      selectSolicitud$: of({
-        referencia: 'Referencia Test',
-        Chandenadependencia: 'Dependencia Test',
-        Llave: 'Llave Test',
-        benco: 'Benco Test',
-        deFetch: 'Fetch Test',
-        importe: 1000,
-      }),
+    consultaioQueryMock = {
+      selectConsultaioState$: of(mockConsultaioState),
     };
 
-    TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule],
-      providers: [
-        FormBuilder,
-        { provide: SanitarioService, useValue: sanitarioServiceMock },
-        { provide: Sanitario260906Store, useValue: sanitarioStoreMock },
-        { provide: Permiso260906Query, useValue: permisoQueryMock },
+    await TestBed.configureTestingModule({
+      declarations: [],
+      imports: [ReactiveFormsModule, DerechosComponent],
+      providers: [ provideHttpClient(),
+        { provide: Sanitario260906Store, useValue: sanitario260906StoreMock },
+        { provide: Permiso260906Query, useValue: permiso260906QueryMock },
+        { provide: ConsultaioQuery, useValue: consultaioQueryMock },
       ],
-    });
+    }).compileComponents();
 
-    const fb = TestBed.inject(FormBuilder);
-    component = new DerechosComponent(fb, sanitarioServiceMock, sanitarioStoreMock, permisoQueryMock);
-    component.ngOnInit(); // Asegurarse de inicializar el componente
+    fixture = TestBed.createComponent(DerechosComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
   });
 
-  it('debería crear el componente', () => {
+  it('should create the component', () => {
     expect(component).toBeTruthy();
   });
 
-  it('debería inicializar el formulario derechosForm en ngOnInit', () => {
-    expect(component.derechosForm).toBeDefined();
-    expect(component.derechosForm.controls['referencia'].value).toBe('Referencia Test');
-    expect(component.derechosForm.controls['importe'].value).toBe(1000);
+  it('should initialize the form with default values', () => {
+    expect(component.derechosForm.value).toEqual({
+      referencia: 'REF123',
+      cadenaDependencia: 'CADENA123',
+      llave: 'LLAVE123',
+      banco: 'BANCO123',
+      tipoFetch: '2025-06-26',
+      importe: '1000',
+    });
   });
 
-  it('debería cargar la lista de derechos en loadComboUnidadMedida', () => {
-    component.loadComboUnidadMedida();
-    expect(sanitarioServiceMock.getDatos).toHaveBeenCalled();
-    expect(component.derechosList).toEqual([]);
+  it('should call setreferencia in the store when setValoresStore is triggered for referencia', () => {
+    const referenciaControl = component.derechosForm.get('referencia');
+    referenciaControl?.setValue('NEW_REF');
+    component.setValoresStore(component.derechosForm, 'referencia', 'setreferencia');
+    expect(sanitario260906StoreMock.setreferencia).toHaveBeenCalledWith('NEW_REF');
   });
 
-  it('debería actualizar el valor en el store cuando se llama a setValoresStore', () => {
-    component.derechosForm.controls['referencia'].setValue('Nueva Referencia');
-    component.setValoresStore(component.derechosForm, 'referencia', 'update');
-    expect(sanitarioStoreMock.update).toHaveBeenCalledWith('Nueva Referencia');
+  it('should disable the form in readonly mode', () => {
+    component.soloLectura = true;
+    component.inicializarEstadoFormulario();
+    expect(component.derechosForm.disabled).toBe(true);
   });
 
-  it('debería limpiar los observables en ngOnDestroy', () => {
-    const destroyedSpy = jest.spyOn(component['destroyed$'], 'next');
-    const destroyNotifierSpy = jest.spyOn(component['destroyNotifier$'], 'next');
+  it('should enable the form when not in readonly mode', () => {
+    component.soloLectura = false;
+    component.inicializarEstadoFormulario();
+    expect(component.derechosForm.enabled).toBe(true);
+  });
+
+  it('should update the tipoFetch field when onFechaCambiada is called', () => {
+    component.onFechaCambiada('2025-07-01');
+    expect(component.derechosForm.get('tipoFetch')?.value).toBe('2025-07-01');
+  });
+
+  it('should clean up subscriptions on component destroy', () => {
+    const destroySpy = jest.spyOn(component['destroyNotifier$'], 'next');
+    const completeSpy = jest.spyOn(component['destroyNotifier$'], 'complete');
     component.ngOnDestroy();
-    expect(destroyedSpy).toHaveBeenCalledTimes(1);
-    expect(destroyNotifierSpy).toHaveBeenCalledTimes(1);
-  });
-
-  it('debería manejar un formulario válido', () => {
-    component.derechosForm.controls['referencia'].setValue('Referencia Válida');
-    component.derechosForm.controls['importe'].setValue(500);
-    expect(component.derechosForm.valid).toBe(true);
-  });
-
-  it('debería manejar un formulario inválido', () => {
-    component.derechosForm.controls['referencia'].setValue('');
-    expect(component.derechosForm.valid).toBe(false);
+    expect(destroySpy).toHaveBeenCalled();
+    expect(completeSpy).toHaveBeenCalled();
   });
 });

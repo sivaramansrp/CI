@@ -154,6 +154,7 @@
                 [layout]="'vertical'"
                 (valueChange)="cambiarRadioFisica($event)"
                 [showTooltip]="true"
+                (change)="onTipoPersonaChange(agregarFabricanteFormGroup)"
               ></app-input-radio>
             </div>
           </div>
@@ -220,7 +221,7 @@
           <div class="col-md-4">
             <div class="form-group">
               <label class="form-label" for="segundoApellido"
-                >Segundo apellido*:</label
+                >Segundo apellido:</label
               >
               <input
                 type="text"
@@ -321,7 +322,7 @@
           <div class="col-md-4">
             <div class="form-group">
               <label class="form-label" for="segundoApellido"
-                >Segundo apellido*:</label
+                >Segundo apellido:</label
               >
               <input
                 type="text"
@@ -352,6 +353,7 @@
                   for="pais"
                   id="pais"
                   formControlName="pais"
+                  [isDisabled]="desactivarCatalogoSelectEnPopup"
                 ></app-catalogo-select>
               </div>
             </div>
@@ -365,6 +367,7 @@
                   for="estadoLocalidad"
                   id="estadoLocalidad"
                   formControlName="estadoLocalidad"
+                  [isDisabled]="desactivarCatalogoSelectEnPopup"
                 ></app-catalogo-select>
               </div>
             </div>
@@ -378,6 +381,7 @@
                   for="municipioAlcaldia"
                   id="municipioAlcaldia"
                   formControlName="municipioAlcaldia"
+                  [isDisabled]="desactivarCatalogoSelectEnPopup"
                 ></app-catalogo-select>
               </div>
             </div>
@@ -388,10 +392,11 @@
                 <app-catalogo-select
                   [catalogo]="localidadDropdownData"
                   [label]="'Localidad'"
-                  [required]="false"
+                  [required]="true"
                   for="localidad"
                   id="localidad"
                   formControlName="localidad"
+                  [isDisabled]="desactivarCatalogoSelectEnPopup"
                 ></app-catalogo-select>
               </div>
             </div>
@@ -401,10 +406,10 @@
                 <app-catalogo-select
                   [catalogo]="codigoPostalDropdownData"
                   [label]="'Código postal o equivalente'"
-                  [required]="true"
                   for="codigoPostaloEquivalente"
                   id="codigoPostaloEquivalente"
                   formControlName="codigoPostaloEquivalente"
+                  [isDisabled]="desactivarCatalogoSelectEnPopup"
                 ></app-catalogo-select>
               </div>
             </div>
@@ -417,6 +422,7 @@
                   for="colonia"
                   id="colonia"
                   formControlName="colonia"
+                  [isDisabled]="desactivarCatalogoSelectEnPopup"
                 ></app-catalogo-select>
               </div>
             </div>
@@ -432,6 +438,7 @@
                   for="pais"
                   id="pais"
                   formControlName="pais"
+                  [isDisabled]="desactivarCatalogoSelectEnPopup"
                 ></app-catalogo-select>
               </div>
             </div>
@@ -632,6 +639,7 @@
                 [layout]="'vertical'"
                 (valueChange)="cambiarRadioFisica($event)"
                 [showTooltip]="true"
+                (change)="onTipoPersonaChange(agregarDestinatarioFormGroup)"
               ></app-input-radio>
             </div>
           </div>
@@ -716,6 +724,7 @@
                 for="pais"
                 id="pais"
                 formControlName="pais"
+                [isDisabled]="desactivarCatalogoSelectEnPopup"
               ></app-catalogo-select>
             </div>
           </div>
@@ -729,6 +738,7 @@
                 for="estadoLocalidad"
                 id="estadoLocalidad"
                 formControlName="estadoLocalidad"
+                [isDisabled]="desactivarCatalogoSelectEnPopup"
               ></app-catalogo-select>
             </div>
           </div>
@@ -742,6 +752,7 @@
                 for="municipioAlcaldia"
                 id="municipioAlcaldia"
                 formControlName="municipioAlcaldia"
+                [isDisabled]="desactivarCatalogoSelectEnPopup"
               ></app-catalogo-select>
             </div>
           </div>
@@ -755,6 +766,7 @@
                 for="localidad"
                 id="localidad"
                 formControlName="localidad"
+                [isDisabled]="desactivarCatalogoSelectEnPopup"
               ></app-catalogo-select>
             </div>
           </div>
@@ -767,6 +779,7 @@
                 for="codigoPostaloEquivalente"
                 id="codigoPostaloEquivalente"
                 formControlName="codigoPostaloEquivalente"
+                [isDisabled]="desactivarCatalogoSelectEnPopup"
               ></app-catalogo-select>
             </div>
           </div>
@@ -779,6 +792,7 @@
                 for="colonia"
                 id="colonia"
                 formControlName="colonia"
+                [isDisabled]="desactivarCatalogoSelectEnPopup"
               ></app-catalogo-select>
             </div>
           </div>
@@ -931,6 +945,7 @@
                 [layout]="'vertical'"
                 (valueChange)="cambiarRadioFisica($event)"
                 [showTooltip]="true"
+                (change)="onTipoPersonaChange(agregarProveedorFormGroup)"
               ></app-input-radio>
             </div>
           </div>
@@ -1017,6 +1032,7 @@
               for="pais"
               id="pais"
               formControlName="pais"
+              [isDisabled]="desactivarCatalogoSelectEnPopup"
             ></app-catalogo-select>
           </div>
         </div>
@@ -1209,6 +1225,7 @@
                 [layout]="'vertical'"
                 (valueChange)="cambiarRadioFisica($event)"
                 [showTooltip]="true"
+                (change)="onTipoPersonaChange(agregarFacturadorFormGroup)"
               ></app-input-radio>
             </div>
           </div>
@@ -1295,6 +1312,7 @@
                 for="pais"
                 id="pais"
                 formControlName="pais"
+                [isDisabled]="desactivarCatalogoSelectEnPopup"
               ></app-catalogo-select>
             </div>
           </div>

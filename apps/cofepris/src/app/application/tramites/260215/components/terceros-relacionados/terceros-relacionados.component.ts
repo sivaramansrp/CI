@@ -258,6 +258,8 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    */
  public esFormularioSoloLectura: boolean = false;
 
+  public desactivarCatalogoSelectEnPopup: boolean = true;
+
   /**
    * Constructor del componente.
    * Inyecta el FormBuilder, el store del trámite y el servicio de terceros.
@@ -354,7 +356,7 @@ fetchTableDummyJson(): void {
        * RFC del tercero.
        * Requiere validación adicional mediante `rfcValidator`.
        */
-      rfc: new FormControl('', [
+      rfc: new FormControl({ value: '', disabled: true }, [
         Validators.required,
         TercerosRelacionadosComponent.rfcValidator,
       ]),
@@ -362,7 +364,7 @@ fetchTableDummyJson(): void {
        * CURP del tercero.
        * Requiere validación adicional mediante `curpValidator`.
        */
-      curp: new FormControl('', [
+      curp: new FormControl({ value: '', disabled: true }, [
         Validators.required,
         TercerosRelacionadosComponent.curpValidator,
       ]),
@@ -370,21 +372,21 @@ fetchTableDummyJson(): void {
        * Control del formulario para el nombre del usuario.
        * Este campo es obligatorio.
        */
-      nombre: new FormControl('', [Validators.required]),
+      nombre: new FormControl({ value: '', disabled: true }, [Validators.required]),
       /**
        * Control del formulario para el primer apellido del usuario.
        * Este campo es obligatorio.
        */
-      primerApellido: new FormControl('', [Validators.required]),
+      primerApellido: new FormControl({ value: '', disabled: true }, [Validators.required]),
       /**
        * Control del formulario para el segundo apellido del usuario.
        * Este campo es obligatorio.
        */
-      segundoApellido: new FormControl('', [Validators.required]),
+      segundoApellido: new FormControl({ value: '', disabled: true }, [Validators.required]),
       /**
        * Denominación o razón social del tercero.
        */
-      denominacionRazonSocial: new FormControl('', [Validators.required]),
+      denominacionRazonSocial: new FormControl({ value: '', disabled: true }, [Validators.required]),
       /**
        * País del tercero.
        * Requiere validación adicional mediante `requiredPaisValidator`.
@@ -424,30 +426,30 @@ fetchTableDummyJson(): void {
       /**
        * Calle del tercero.
        */
-      calle: new FormControl('', [Validators.required]),
+      calle: new FormControl({ value: '', disabled: true }, [Validators.required]),
       /**
        * Número exterior del tercero.
        */
-      numeroExterior: new FormControl('', [Validators.required]),
+      numeroExterior: new FormControl({ value: '', disabled: true }, [Validators.required]),
       /**
        * Número interior del tercero.
        */
-      numeroInterior: new FormControl(''),
+      numeroInterior: new FormControl({ value: '', disabled: true }),
       /**
        * Lada del tercero.
        */
-      lada: new FormControl(''),
+      lada: new FormControl({ value: '', disabled: true }),
       /**
        * Teléfono del tercero.
        * Requiere validación adicional mediante `telefonoValidator`.
        */
-      telefono: new FormControl('', [
+      telefono: new FormControl({ value: '', disabled: true }, [
         TercerosRelacionadosComponent.telefonoValidator,
       ]),
       /**
        * Correo electrónico del tercero.
        */
-      correoElectronico: new FormControl(''),
+      correoElectronico: new FormControl({ value: '', disabled: true }),
       /**
        * Código del extranjero.
        */
@@ -462,22 +464,53 @@ fetchTableDummyJson(): void {
       extranjeroColonia: new FormControl('', [Validators.required]),
     });
 
-    // Deshabilita campos hasta que se seleccione el tipo de persona
-    this.agregarFabricanteFormGroup.get('rfc')?.disable();
-    this.agregarFabricanteFormGroup.get('curp')?.disable();
-    this.agregarFabricanteFormGroup.get('denominacionRazonSocial')?.disable();
+  }
 
-    // Habilita campos al cambiar el tipo de persona
-    this.agregarFabricanteFormGroup
-      .get('tipoPersona')
-      ?.valueChanges.pipe(takeUntil(this.destroyNotifier$))
-      .subscribe(() => {
-        this.agregarFabricanteFormGroup.get('rfc')?.enable();
-        this.agregarFabricanteFormGroup.get('curp')?.enable();
-        this.agregarFabricanteFormGroup
-          .get('denominacionRazonSocial')
-          ?.enable();
-      });
+  /**
+   * Valida el RFC del tercero.
+   * Utiliza expresiones regulares para verificar el formato correcto.
+   *
+   * @param control Control del formulario que contiene el RFC.
+   * @returns Un objeto de error si el RFC es inválido, o `null` si es válido.
+   */
+  onTipoPersonaChange(formGroup: FormGroup): void {
+    this.tipoPersonaSelection = formGroup.get('tipoPersona')?.value || '';
+    const TIPO_PERSONA_CONTROL = formGroup.get('tipoPersona');
+    if (TIPO_PERSONA_CONTROL?.value) {
+      formGroup.get('rfc')?.enable();
+      formGroup.get('curp')?.enable();
+      formGroup.get('denominacionRazonSocial')?.enable();
+      formGroup.get('nombre')?.enable();
+      formGroup.get('primerApellido')?.enable();
+      formGroup.get('segundoApellido')?.enable();
+      formGroup.get('calle')?.enable();
+      formGroup.get('numeroExterior')?.enable();
+      formGroup.get('numeroInterior')?.enable();
+      formGroup.get('lada')?.enable();
+      formGroup.get('telefono')?.enable();
+      formGroup.get('correoElectronico')?.enable();
+      formGroup.get('estado')?.enable();
+      formGroup.get('codigoPostaloEquivalente')?.enable();
+      formGroup.get('coloniaoEquivalente')?.enable();
+      this.desactivarCatalogoSelectEnPopup = false;
+    } else {
+      formGroup.get('rfc')?.disable();
+      formGroup.get('curp')?.disable();
+      formGroup.get('denominacionRazonSocial')?.disable();
+      formGroup.get('nombre')?.disable();
+      formGroup.get('primerApellido')?.disable();
+      formGroup.get('segundoApellido')?.disable();
+      formGroup.get('calle')?.disable();
+      formGroup.get('numeroExterior')?.disable();
+      formGroup.get('numeroInterior')?.disable();
+      formGroup.get('lada')?.disable();
+      formGroup.get('telefono')?.disable();
+      formGroup.get('correoElectronico')?.disable();
+      formGroup.get('estado')?.disable();
+      formGroup.get('codigoPostaloEquivalente')?.disable();
+      formGroup.get('coloniaoEquivalente')?.disable();
+      this.desactivarCatalogoSelectEnPopup = true;
+    }
   }
 
   /**
@@ -497,15 +530,15 @@ fetchTableDummyJson(): void {
       /**
        * RFC del destinatario.
        */
-      rfc: new FormControl('', [Validators.required]),
+      rfc: new FormControl({ value: '', disabled: true }, [Validators.required]),
       /**
        * CURP del destinatario.
        */
-      curp: new FormControl('', [Validators.required]),
+      curp: new FormControl({ value: '', disabled: true }, [Validators.required]),
       /**
        * Denominación o razón social del destinatario.
        */
-      denominacionRazonSocial: new FormControl('', [Validators.required]),
+      denominacionRazonSocial: new FormControl({ value: '', disabled: true }, [Validators.required]),
       /**
        * País del destinatario.
        */
@@ -541,29 +574,29 @@ fetchTableDummyJson(): void {
       /**
        * Calle del destinatario.
        */
-      calle: new FormControl('', [Validators.required]),
+      calle: new FormControl({ value: '', disabled: true }, [Validators.required]),
       /**
        * Número exterior del destinatario.
        */
-      numeroExterior: new FormControl('', [Validators.required]),
+      numeroExterior: new FormControl({ value: '', disabled: true }, [Validators.required]),
       /**
        * Número interior del destinatario.
        */
-      numeroInterior: new FormControl(''),
+      numeroInterior: new FormControl({ value: '', disabled: true }),
       /**
        * Lada del destinatario.
        */
-      lada: new FormControl(''),
+      lada: new FormControl({ value: '', disabled: true }),
       /**
        * Teléfono del destinatario.
        */
-      telefono: new FormControl('', [
+      telefono: new FormControl({ value: '', disabled: true }, [
         TercerosRelacionadosComponent.telefonoValidator,
       ]),
       /**
        * Correo electrónico del destinatario.
        */
-      correoElectronico: new FormControl(''),
+      correoElectronico: new FormControl({ value: '', disabled: true }),
     });
 
     // Deshabilita campos hasta que se seleccione el tipo de persona
@@ -601,79 +634,62 @@ fetchTableDummyJson(): void {
       /**
        * Nombre del proveedor.
        */
-      nombre: new FormControl('', [Validators.required]),
+      nombre: new FormControl({ value: '', disabled: true }, [Validators.required]),
       /**
        * Primer apellido del proveedor.
        */
-      primerApellido: new FormControl('', [Validators.required]),
+      primerApellido: new FormControl({ value: '', disabled: true }, [Validators.required]),
       /**
        * Denominación o razón social del proveedor.
        */
-      denominacionRazonSocial: new FormControl('', [Validators.required]),
+      denominacionRazonSocial: new FormControl({ value: '', disabled: true }, [Validators.required]),
       /**
        * Segundo apellido del proveedor (opcional).
        */
-      segundoApellido: new FormControl(''),
+      segundoApellido: new FormControl({ value: '', disabled: true }),
       /**
        * País del proveedor.
        */
-      pais: new FormControl('', [Validators.required]),
+      pais: new FormControl({ value: '', disabled: true }, [Validators.required]),
       /**
        * Estado del proveedor.
        */
-      estado: new FormControl('', [Validators.required]),
+      estado: new FormControl({ value: '', disabled: true }, [Validators.required]),
       /**
        * Código postal del proveedor (opcional).
        */
-      codigoPostaloEquivalente: new FormControl(''),
+      codigoPostaloEquivalente: new FormControl({ value: '', disabled: true }),
       /**
        * Colonia equivalente del proveedor (opcional).
        */
-      coloniaoEquivalente: new FormControl(''),
+      coloniaoEquivalente: new FormControl({ value: '', disabled: true }),
       /**
        * Calle del proveedor.
        */
-      calle: new FormControl('', [Validators.required]),
+      calle: new FormControl({ value: '', disabled: true }, [Validators.required]),
       /**
        * Número exterior del proveedor.
        */
-      numeroExterior: new FormControl('', [Validators.required]),
+      numeroExterior: new FormControl({ value: '', disabled: true }, [Validators.required]),
       /**
        * Número interior del proveedor (opcional).
        */
-      numeroInterior: new FormControl(''),
+      numeroInterior: new FormControl({ value: '', disabled: true }),
       /**
        * Lada del proveedor (opcional).
        */
-      lada: new FormControl(''),
+      lada: new FormControl({ value: '', disabled: true }),
       /**
        * Teléfono del proveedor (opcional).
        */
-      telefono: new FormControl('', [
+      telefono: new FormControl({ value: '', disabled: true }, [
         TercerosRelacionadosComponent.telefonoValidator,
       ]),
       /**
        * Correo electrónico del proveedor (opcional).
        */
-      correoElectronico: new FormControl(''),
+      correoElectronico: new FormControl({ value: '', disabled: true }),
     });
-
-    // Deshabilita campos hasta que se seleccione el tipo de persona
-    this.agregarProveedorFormGroup.get('nombre')?.disable();
-    this.agregarProveedorFormGroup.get('segundoApellido')?.disable();
-    this.agregarProveedorFormGroup.get('primerApellido')?.disable();
-    this.agregarProveedorFormGroup.get('denominacionRazonSocial')?.disable();
-
-    // Habilita campos al cambiar el tipo de persona
-    this.agregarProveedorFormGroup
-      .get('tipoPersona')
-      ?.valueChanges.pipe(takeUntil(this.destroyNotifier$))
-      .subscribe(() => {
-        this.agregarProveedorFormGroup.get('nombre')?.enable();
-        this.agregarProveedorFormGroup.get('primerApellido')?.enable();
-        this.agregarProveedorFormGroup.get('segundoApellido')?.enable();
-        this.agregarProveedorFormGroup.get('denominacionRazonSocial')?.enable();
-      });
   }
 
   /**
@@ -693,19 +709,19 @@ fetchTableDummyJson(): void {
       /**
        * Nombre del facturador.
        */
-      nombre: new FormControl('', [Validators.required]),
+      nombre: new FormControl({ value: '', disabled: true }, [Validators.required]),
       /**
        * Primer apellido del facturador.
        */
-      primerApellido: new FormControl('', [Validators.required]),
+      primerApellido: new FormControl({ value: '', disabled: true }, [Validators.required]),
       /**
        * Denominación o razón social del facturador.
        */
-      denominacionRazonSocial: new FormControl('', [Validators.required]),
+      denominacionRazonSocial: new FormControl({ value: '', disabled: true }, [Validators.required]),
       /**
        * Segundo apellido del facturador (opcional).
        */
-      segundoApellido: new FormControl(''),
+      segundoApellido: new FormControl({ value: '', disabled: true }),
       /**
        * País del facturador.
        * Requiere validación adicional mediante `requiredPaisValidator`.
@@ -717,61 +733,42 @@ fetchTableDummyJson(): void {
       /**
        * Estado del facturador.
        */
-      estado: new FormControl('', [Validators.required]),
+      estado: new FormControl({ value: '', disabled: true }, [Validators.required]),
       /**
        * Código postal del facturador (opcional).
        */
-      codigoPostaloEquivalente: new FormControl(''),
+      codigoPostaloEquivalente: new FormControl({ value: '', disabled: true }),
       /**
        * Colonia equivalente del facturador (opcional).
        */
-      coloniaoEquivalente: new FormControl(''),
+      coloniaoEquivalente: new FormControl({ value: '', disabled: true }),
       /**
        * Calle del facturador.
        */
-      calle: new FormControl('', [Validators.required]),
+      calle: new FormControl({ value: '', disabled: true }, [Validators.required]),
       /**
        * Número exterior del facturador.
        */
-      numeroExterior: new FormControl('', [Validators.required]),
+      numeroExterior: new FormControl({ value: '', disabled: true }, [Validators.required]),
       /**
        * Número interior del facturador (opcional).
        */
-      numeroInterior: new FormControl(''),
+      numeroInterior: new FormControl({ value: '', disabled: true }),
       /**
        * Lada del facturador (opcional).
        */
-      lada: new FormControl(''),
+      lada: new FormControl({ value: '', disabled: true }),
       /**
        * Teléfono del facturador (opcional).
        */
-      telefono: new FormControl('', [
+      telefono: new FormControl({ value: '', disabled: true }, [
         TercerosRelacionadosComponent.telefonoValidator,
       ]),
       /**
        * Correo electrónico del facturador (opcional).
        */
-      correoElectronico: new FormControl(''),
+      correoElectronico: new FormControl({ value: '', disabled: true }),
     });
-
-    // Deshabilita campos hasta que se seleccione el tipo de persona
-    this.agregarFacturadorFormGroup.get('nombre')?.disable();
-    this.agregarFacturadorFormGroup.get('segundoApellido')?.disable();
-    this.agregarFacturadorFormGroup.get('primerApellido')?.disable();
-    this.agregarFacturadorFormGroup.get('denominacionRazonSocial')?.disable();
-
-    // Habilita campos al cambiar el tipo de persona
-    this.agregarFacturadorFormGroup
-      .get('tipoPersona')
-      ?.valueChanges.pipe(takeUntil(this.destroyNotifier$))
-      .subscribe(() => {
-        this.agregarFacturadorFormGroup.get('nombre')?.enable();
-        this.agregarFacturadorFormGroup.get('primerApellido')?.enable();
-        this.agregarFacturadorFormGroup.get('segundoApellido')?.enable();
-        this.agregarFacturadorFormGroup
-          .get('denominacionRazonSocial')
-          ?.enable();
-      });
   }
 
   /**

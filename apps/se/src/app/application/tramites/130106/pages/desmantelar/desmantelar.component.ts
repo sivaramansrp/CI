@@ -1,6 +1,6 @@
+import { AVISO, DatosPasos } from '@libs/shared/data-access-user/src';
 import { Component, ViewChild } from '@angular/core';
 import{AccionBoton} from '@libs/shared/data-access-user/src/core/models/140103/cancelacion.model';
-import { DatosPasos } from '@libs/shared/data-access-user/src';
 import { ListaPasosWizard } from '@libs/shared/data-access-user/src';
 import { OCTA_TEMPO } from '@libs/shared/data-access-user/src/core/services/130102/octava-temporal.enum';
 import { WizardComponent } from '@libs/shared/data-access-user/src';
@@ -24,6 +24,11 @@ export class DesmantelarComponent {
   indice: number = 1;
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
  
+  /**
+   * Mensaje relacionado con el aviso de privacidad simplificado.
+   */
+  public avisoPrivacidadAlert: string = AVISO.Aviso;
+
   datosPasos: DatosPasos = {
     nroPasos: this.pantallasPasos.length,
     indice: this.indice,

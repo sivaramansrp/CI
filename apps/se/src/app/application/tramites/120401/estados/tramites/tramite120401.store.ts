@@ -6,26 +6,69 @@ import { SeleccionDelCupoTabla } from '../../models/asignacion-directa-cupo.mode
 
 
 /**
- * Representa el estado de la aplicación para el trámite 120401.
+ * @fileoverview
+ * Este archivo define la interfaz `Tramite120401State` utilizada para representar el estado de la aplicación
+ * en el contexto del trámite 120401. Proporciona una estructura de datos que incluye información sobre
+ * entidades, representaciones, regímenes, tratados, productos, subproductos y la cantidad solicitada.
  * 
+ * @module Tramite120401Store
+ * @description
+ * Este archivo contiene la definición de la interfaz `Tramite120401State`, que se utiliza para manejar
+ * el estado relacionado con el trámite 120401 en la aplicación.
+ */
+
+/**
  * @interface Tramite120401State
- * 
- * @property {Catalogo | null} entidad - Entidad asociada al trámite, puede ser nula.
- * @property {Catalogo | null} representacion - Representación asociada al trámite, puede ser nula.
- * @property {Catalogo | null} regimen - Régimen asociado al trámite, puede ser nulo.
- * @property {Catalogo | null} tratado - Tratado asociado al trámite, puede ser nulo.
- * @property {Catalogo | null} producto - Producto asociado al trámite, puede ser nulo.
- * @property {Catalogo | null} subproducto - Subproducto asociado al trámite, puede ser nulo.
- * @property {string} cantidadSolicitada - Cantidad solicitada en el trámite.
+ * @description
+ * Representa el estado de la aplicación para el trámite 120401.
  */
 export interface Tramite120401State {
-  datos : SeleccionDelCupoTabla[];
+  /**
+   * Lista de datos seleccionados relacionados con el cupo.
+   * @type {SeleccionDelCupoTabla[]}
+   */
+  datos: SeleccionDelCupoTabla[];
+
+  /**
+   * Entidad asociada al trámite. Puede ser nula si no se ha seleccionado ninguna entidad.
+   * @type {Catalogo | null}
+   */
   entidad: Catalogo | null;
+
+  /**
+   * Representación asociada al trámite. Puede ser nula si no se ha seleccionado ninguna representación.
+   * @type {Catalogo | null}
+   */
   representacion: Catalogo | null;
+
+  /**
+   * Régimen asociado al trámite. Puede ser nulo si no se ha seleccionado ningún régimen.
+   * @type {Catalogo | null}
+   */
   regimen: Catalogo | null;
+
+  /**
+   * Tratado asociado al trámite. Puede ser nulo si no se ha seleccionado ningún tratado.
+   * @type {Catalogo | null}
+   */
   tratado: Catalogo | null;
+
+  /**
+   * Producto asociado al trámite. Puede ser nulo si no se ha seleccionado ningún producto.
+   * @type {Catalogo | null}
+   */
   producto: Catalogo | null;
+
+  /**
+   * Subproducto asociado al trámite. Puede ser nulo si no se ha seleccionado ningún subproducto.
+   * @type {Catalogo | null}
+   */
   subproducto: Catalogo | null;
+
+  /**
+   * Cantidad solicitada en el trámite.
+   * @type {string}
+   */
   cantidadSolicitada: string;
 }
 

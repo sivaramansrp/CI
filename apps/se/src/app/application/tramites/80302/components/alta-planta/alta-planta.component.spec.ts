@@ -11,10 +11,10 @@ import { Component } from '@angular/core';
 import { AltaPlantaComponent } from './alta-planta.component';
 import { FormBuilder } from '@angular/forms';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { ModificacionSolicitudeService } from '../../services/modificacion-solicitude.service';
+import { ModificacionSolicitudeService } from '../../../80308/services/modificacion-solicitude.service';
 import { ToastrService } from 'ngx-toastr';
-import { Tramite80308Store } from '../../estados/tramite80308.store';
-import { Tramite80308Query } from '../../estados/tramite80308.query';
+import { Tramite80308Query } from '../../../80308/estados/tramite80308.query';
+import { Tramite80308Store } from '../../../80308/estados/tramite80308.store';
 
 @Injectable()
 class MockTramite80308Store {
@@ -38,7 +38,7 @@ describe('AltaPlantaComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule, ToastrModule, HttpClientTestingModule ],
+      imports: [AltaPlantaComponent, FormsModule, ReactiveFormsModule, ToastrModule, HttpClientTestingModule ],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
       providers: [
         FormBuilder,
@@ -137,5 +137,68 @@ describe('AltaPlantaComponent', () => {
     expect(component.destroyNotifier$.next).toHaveBeenCalled();
     expect(component.destroyNotifier$.complete).toHaveBeenCalled();
   });
+
+  it('should return FormControl from formularioControl getter', () => {
+  component.formulario = new FormBuilder().group({
+    entidadFederativa: ['MX']
+  });
+  const control = component.formularioControl;
+  expect(control).toBeTruthy();
+  expect(control.value).toBe('MX');
+});
+
+it('should show error if entidadFederativa is invalid in buscarDomicilios()', () => {
+  component.formulario = new FormBuilder().group({
+    entidadFederativa: ['-1']
+  });
+  component.toastr = { error: jest.fn() } as any;
+
+  component.buscarDomicilios();
+
+  expect(component.toastr.error).toHaveBeenCalledWith('Seleccione una entidad federativa válida.');
+});
+
+it('should fetch domicilios when entidadFederativa is valid in buscarDomicilios()', () => {
+  component.formulario = new FormBuilder().group({
+    entidadFederativa: ['9']
+  });
+
+  component.modificionService = {
+    obtenerDomicilios: jest.fn().mockReturnValue(observableOf([]))
+  } as any;
+  component.store = { setbuscarDomicilios: jest.fn() } as any;
+  component.toastr = { error: jest.fn() } as any;
+
+  component.buscarDomicilios();
+
+  expect(component.modificionService.obtenerDomicilios).toHaveBeenCalled();
+  expect(component.store.setbuscarDomicilios).toHaveBeenCalledWith([]);
+});
+
+it('should update domiciliosSeleccionados when seleccionarDomicilios() is called', () => {
+  const mockDomicilio = { calle: 'Calle Falsa 123' } as any;
+  component.seleccionarDomicilios(mockDomicilio);
+  expect(component.domiciliosSeleccionados).toEqual([{ calle: 'Calle Falsa 123' }]);
+});
+
+it('should not call agregarDomicilios if domiciliosSeleccionados is empty', () => {
+  component.domiciliosSeleccionados = [];
+  component.store = { aggregrarDomicilios: jest.fn() } as any;
+  component.aplicarAccion();
+});
+
+it('should not call eliminarDomicilios if domiciliosSeleccionados is empty', () => {
+  component.domiciliosSeleccionados = [];
+  component.store = { eliminarDomicilios: jest.fn() } as any;
+  component.eliminarPlantas();
+});
+
+it('should call setEstado in tipoEstadoSeleccion()', () => {
+  const mockEstado = { id: 1, descripcion: 'CDMX' };
+  component.store = { setEstado: jest.fn() } as any;
+  component.tipoEstadoSeleccion(mockEstado as any);
+  expect(component.store.setEstado).toHaveBeenCalledWith(mockEstado);
+});
+
 
 });

@@ -25,7 +25,10 @@ describe('PantallasSvcService', () => {
     descripcion: 'Producto industrial',
     valorTransaccion: '500000',
     entidad: 'CDMX',
-    representacion: 'Legal'
+    representacion: 'Legal',
+    metodoSeparacion: false,
+    exportadorAutorizado: false,
+    informacionRadios: ''
   };
 
   beforeEach(() => {

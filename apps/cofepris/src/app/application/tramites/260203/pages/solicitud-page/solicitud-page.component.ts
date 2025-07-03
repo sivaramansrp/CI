@@ -9,7 +9,7 @@ import { DatosPasos } from '@ng-mf/data-access-user';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { WizardComponent } from '@ng-mf/data-access-user';
 
-import { PASOS } from '../../models/permiso-sanitario-importacion-medicamentos.model';
+import { PASOS } from '../../constantes/materias-primas.enum';
 
 import { PasoDosComponent } from '../paso-dos/paso-dos.component';
 import { PasoTresComponent } from '../paso-tres/paso-tres.component';

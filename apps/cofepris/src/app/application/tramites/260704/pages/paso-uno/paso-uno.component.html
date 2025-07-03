@@ -17,7 +17,7 @@
         <a data-toggle="tab" (click)="seleccionaTab(5)" (keydown.enter)="seleccionaTab(5)" (keydown.space)="seleccionaTab(5)" role="button" tabindex="5">Trámites Asociados</a>
       </li>
     </ul>
-    <ng-container> @switch (indice) { @case (1) { <solicitante [tabindex]="1" #Solicitante></solicitante>
+    <ng-container> @switch (indice) { @case (1) { <solicitante [tabindex]="1"></solicitante>
       <div class="row">
         <div class="col-md-12 m-5">
 
@@ -47,10 +47,15 @@
           </div>
         </div>
       </div> } 
-      @case (2) { <app-datos-de-la-solicitud [tabIndex]="2"></app-datos-de-la-solicitud> } 
-      @case (3) { <app-terceros-relacinados [tabIndex]="3"></app-terceros-relacinados> }
-     @case (4) { <app-pago-de-derechos [tabIndex]="4"></app-pago-de-derechos> } 
-     @case (5) { <app-tramites-asociados [tabIndex]="5"></app-tramites-asociados> } 
+      @case (2) {
+         @if(esDatosRespuesta){
+         <app-datos-de-la-solicitud [tabIndex]="2"></app-datos-de-la-solicitud> }} 
+      @case (3) {
+         @if(esDatosRespuesta){ <app-terceros-relacinados [tabIndex]="3"></app-terceros-relacinados> }}
+     @case (4) {
+       @if(esDatosRespuesta){ <app-pago-de-derechos [tabIndex]="4"></app-pago-de-derechos> } }
+     @case (5) { 
+       @if(esDatosRespuesta){<app-tramites-asociados [tabIndex]="5"></app-tramites-asociados> } }
     }
     </ng-container>
   </div>

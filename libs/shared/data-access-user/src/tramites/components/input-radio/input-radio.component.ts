@@ -67,7 +67,7 @@ export class InputRadioComponent implements ControlValueAccessor, OnInit {
    * Diseño de los botones de radio, ya sea 'vertical' u 'horizontal'.
    * @default 'vertical'
    */
-  @Input() layout: 'vertical' | 'horizontal' = 'vertical';
+  @Input() layout: 'vertical' | 'horizontal' | 'radio-label-wrap' = 'vertical';
 
   /**
    * Entrada que determina la posición de la etiqueta respecto al botón de opción:
@@ -209,6 +209,16 @@ export class InputRadioComponent implements ControlValueAccessor, OnInit {
       return {
         display: 'inline-block',
         'margin-right': '30px',
+      };
+    }
+    
+    if (this.layout === 'radio-label-wrap') {
+      return {
+        'margin-bottom': '10px',
+        display: 'flex',
+        'align-items': 'baseline',
+        gap: '8px',
+        'max-width': '100%',
       };
     }
 

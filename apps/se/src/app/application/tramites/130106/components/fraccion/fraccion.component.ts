@@ -1,20 +1,44 @@
+import { AbstractControl, ValidationErrors } from '@angular/forms';
 import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna,CrosslistComponent,TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy,OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Solicitud130106State, Tramite130106Store } from '../../../../estados/tramites/tramite130106.store';
 import {Subject, map,takeUntil } from 'rxjs';
 import { AVISO } from '@libs/shared/data-access-user/src/tramites/constantes/aviso-privacidad.enum'
+import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { Partidas } from '@libs/shared/data-access-user/src/core/models/130106/partidas.model';
 import { Tramite130106Query } from '../../../../estados/queries/tramite130106.query';
 import fraccions from '@libs/shared/theme/assets/json/130106/fraccion.json';
+
+/**
+ * Valida que el valor sea un número válido:
+ * - Máximo 3 dígitos decimales
+ */
+export function formFieldValidator(control: AbstractControl): ValidationErrors | null {
+  const VALUE = control.value;
+  if (VALUE === null || VALUE === undefined || VALUE === '') {
+    return null;
+  }
+  const STRING_VALUE = VALUE.toString();
+  if (!/^\d+(\.\d+)?$/.test(STRING_VALUE)) {
+    return { pattern: true };
+  }
+
+  const DECIMAL_VALUE = STRING_VALUE.split('.')[1];
+  if (DECIMAL_VALUE && DECIMAL_VALUE.length > 3) {
+    return { tooManyDecimals: true };
+  }
+  return null;
+}
+
 /**
  * Componente que maneja el formulario de fracción, incluyendo la inicialización y la gestión de fechas seleccionadas.
  */
 @Component({
   selector: 'app-fraccion', // Selector del componente en el DOM
   standalone: true,
-  imports: [CatalogoSelectComponent, FormsModule, ReactiveFormsModule, TituloComponent, TablaDinamicaComponent, CrosslistComponent,AlertComponent], // Importa los módulos necesarios para el funcionamiento del componente
+  imports: [CatalogoSelectComponent, FormsModule, ReactiveFormsModule, TituloComponent, TablaDinamicaComponent, CrosslistComponent,AlertComponent,CommonModule], // Importa los módulos necesarios para el funcionamiento del componente
   templateUrl: './fraccion.component.html', // Define la plantilla HTML del componente
   styleUrl: './fraccion.component.scss' // Define los estilos CSS del componente
 })
@@ -63,6 +87,19 @@ export class FraccionComponent implements OnInit, OnDestroy {
    */
   partidas: Partidas[] = [];
 
+   /**
+   * **Indicador de alerta**  
+   * 
+   * Determina si se debe mostrar una alerta en la interfaz de usuario.
+   */
+  public mostrarAlerta:boolean = false;
+  /**
+   * **Mensaje de alerta**  
+   * 
+   * Contiene el texto que se mostrará en la alerta.
+   */
+  public mensajeDeAlerta = '';
+
   /**
    * Constructor que inyecta dependencias necesarias para el componente.
    * @param fb - FormBuilder para crear el formulario reactivo.
@@ -97,7 +134,11 @@ export class FraccionComponent implements OnInit, OnDestroy {
     { encabezado: 'Precio unitario USD', clave: (item: Partidas) => item.precio, orden: 5 },
     { encabezado: 'Total USD', clave: (item: Partidas) => item.total, orden: 6 }
   ];
-// Enum o clase que representa las opciones de selección en la tabla
+
+/**
+ * Asigna la clase o enumeración `TablaSeleccion` a una propiedad del mismo nombre.
+ * Se utiliza para acceder a `TablaSeleccion` desde la plantilla HTML del componente.
+ */
   TablaSeleccion = TablaSeleccion;
 /**
  * Constante que contiene los textos del aviso a mostrar en la interfaz.
@@ -247,11 +288,11 @@ export class FraccionComponent implements OnInit, OnDestroy {
     // Crea el formulario con los valores predeterminados
     this.fraccionForm = this.fb.group({
       fraccion: [this.solicitudState.fraccion, Validators.required],
-      cantidad: [this.solicitudState.cantidad, [Validators.required, Validators.pattern(/^[0-9]*$/)]],
-      factura: [this.solicitudState.factura, [Validators.required, Validators.pattern(/^[0-9]*$/)]],
+      cantidad: [this.solicitudState.cantidad, [Validators.required, formFieldValidator]],
+      factura: [this.solicitudState.factura, [Validators.required, formFieldValidator]],
       umt: [this.solicitudState.umt, Validators.required],
-      mercanciaCantidad: [this.solicitudState.cantidad, [Validators.required, Validators.pattern(/^[0-9]*$/)]],
-      mercanciaFactura: [this.solicitudState.factura, [Validators.required, Validators.pattern(/^[0-9]*$/)]],
+      mercanciaCantidad: [this.solicitudState.cantidad, [Validators.required, formFieldValidator]],
+      mercanciaFactura: [this.solicitudState.factura, [Validators.required, formFieldValidator]],
       descripcion: [this.solicitudState.umt, Validators.required],
       cantidadTotal: [this.solicitudState.umt, Validators.required],
       valorTotal: [this.solicitudState.umt, Validators.required],
@@ -285,11 +326,58 @@ export class FraccionComponent implements OnInit, OnDestroy {
     this.fraccionForm.get('valorTotal')?.disable();
   }
 
+/**
+ * Cierra el modal de alerta estableciendo `mostrarAlerta` en falso.
+ * Se utiliza para ocultar el componente de alerta en la interfaz.
+ */
+  cerrarModal():void {
+  this.mostrarAlerta = false;
+  }
+
   /**
    * Convierte los datos del formulario en una nueva partida y la agrega a la lista de partidas.
    */
   generarPartidas(): void {
     const FORMDATA = this.fraccionForm.value; // Obtiene los datos del formulario
+
+ /**
+ * Verifica si la cantidad de mercancía es cero (numérica o como string).
+ * Si es así, muestra una alerta con un mensaje al usuario.
+ */
+  if (FORMDATA.mercanciaCantidad === 0 || FORMDATA.mercanciaCantidad === "0") {
+    this.mensajeDeAlerta = 'Debe agregar el valor en dolares de la partida.';
+    this.mostrarAlerta = true;
+    return;
+  }
+
+/**
+ * Valida el formato de la cantidad ingresada como string.
+ * Muestra una alerta si excede 14 dígitos enteros o 3 decimales.
+ */
+  const CANTIDAD_VALUE = FORMDATA.mercanciaCantidad?.toString();
+  if (CANTIDAD_VALUE) {
+    const [INTEGER_PART, DECIMAL_PART] = CANTIDAD_VALUE.split('.');
+    if (INTEGER_PART.length > 14 || (DECIMAL_PART && DECIMAL_PART.length > 3)) {
+      this.mensajeDeAlerta = 'La cantidad no cumple el formato especificado. Formato es máximo 14 dígitos enteros y máximo 3 decimales';
+      this.mostrarAlerta = true;
+      return;
+    }
+  }
+
+/**
+ * Valida el formato del valor en factura como string.
+ * Muestra una alerta si excede 16 dígitos enteros o 3 decimales.
+ */
+  const FACTURA_VALUE = FORMDATA.mercanciaFactura?.toString();
+  if (FACTURA_VALUE) {
+    const [INTEGER_PART, DECIMAL_PART] = FACTURA_VALUE.split('.');
+    if (INTEGER_PART.length > 16 || (DECIMAL_PART && DECIMAL_PART.length > 3)) {
+      this.mensajeDeAlerta = 'El valor USD no cumple el formato especificado. Formato es máximo 16 dígitos enteros y máximo 3 decimales';
+      this.mostrarAlerta = true;
+      return;
+    }
+  }
+
     const NEWPARTIDA: Partidas = {
       cantidad: FORMDATA.cantidad, // Asigna la cantidad
       unidad: fraccions?.UMT.find(item => item.id === Number(FORMDATA?.umt))?.descripcion, // Asigna la unidad
