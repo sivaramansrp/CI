@@ -194,7 +194,7 @@
         </ng-container>
 
         <div class="col-md-12 mt-5" id="IdGridContenedoresITC"
-            *ngIf="!solicitud11204State?.tipoBusqueda || solicitud11204State?.tipoBusqueda === 'Contenedor'">
+            *ngIf="!solicitudForm.get('tipoBusqueda')?.value || solicitudForm.get('tipoBusqueda')?.value === 'Contenedor'">
             <br>
             <div class="table-responsive">
                 <div class="innercontainer">

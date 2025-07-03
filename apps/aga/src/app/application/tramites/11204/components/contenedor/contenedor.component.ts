@@ -608,15 +608,6 @@ export class ContenedorComponent implements OnInit, OnDestroy {
           respuesta.datos.id = this.datosDelContenedor.length + 1;
           this.datosDelContenedor.push(respuesta.datos);
           (this.Tramite11204Store.setDelContenedor as (valor: DatosDelContenedor[]) => void)(this.datosDelContenedor);
-          // this.solicitudForm.patchValue({
-          //   aduana: '',
-          //   fechaIngreso: '',
-          //   vigencia: '',
-          //   digitoDeControl: '',
-          //   inicialesContenedor: '',
-          //   numeroContenedor: '',
-          //   contenedores: ''
-          // });
           this.solicitudForm.reset();
           this.solicitudForm.markAsUntouched();
           this.solicitudForm.markAsPristine();
