@@ -252,7 +252,7 @@ export class DatosGeneralesComponent implements OnInit, OnDestroy {
       ],
       aduanaIngreso: [
         this.Solicitud220503State.aduanaIngreso,
-        Validators.required,
+        Validators.required, 
       ],
       oficinaInspeccion: [
         this.Solicitud220503State.oficinaInspeccion,
@@ -275,10 +275,7 @@ export class DatosGeneralesComponent implements OnInit, OnDestroy {
         Validators.required,
       ],
       regimen: [this.Solicitud220503State.regimen, Validators.required],
-      capturaDatosMercancia: [this.Solicitud220503State.capturaDatosMercancia],
-      coordenadas: [
-        { value: this.Solicitud220503State.coordenadas, disabled: true },
-      ],
+
       movilizacion: [
         this.Solicitud220503State.movilizacion,
         Validators.required,
@@ -292,7 +289,7 @@ export class DatosGeneralesComponent implements OnInit, OnDestroy {
         Validators.required,
       ],
     });
-
+this.forma.disable();
     this.Solicitud220503Query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyed$),
@@ -308,9 +305,6 @@ export class DatosGeneralesComponent implements OnInit, OnDestroy {
             nombre: this.Solicitud220503State.nombre,
             numeroguia: this.Solicitud220503State.numeroguia,
             regimen: this.Solicitud220503State.regimen,
-            capturaDatosMercancia:
-              this.Solicitud220503State.capturaDatosMercancia,
-            coordenadas: this.Solicitud220503State.coordenadas,
             movilizacion: this.Solicitud220503State.movilizacion,
             transporte: this.Solicitud220503State.transporte,
             punto: this.Solicitud220503State.punto,
@@ -376,7 +370,6 @@ export class DatosGeneralesComponent implements OnInit, OnDestroy {
           );
           this.Solicitud220503Store.setNombre(resp.nombre);
           this.Solicitud220503Store.setNumeroguia(resp.numeroguia);
-          this.Solicitud220503Store.setCoordenadas(resp.coordenadas);
           this.Solicitud220503Store.setTransporte(resp.transporte);
           this.Solicitud220503Store.setNombreEmpresa(resp.nombreEmpresa);
         },
@@ -644,16 +637,6 @@ export class DatosGeneralesComponent implements OnInit, OnDestroy {
    */
   seleccionarMovilizacionNacional(event: Catalogo): void {
     this.Solicitud220503Store.setMovilizacion(event.id);
-  }
-
-  /**
-   * Método para establecer el valor de captura de datos de mercancía.
-   * Actualiza el estado con el valor proporcionado.
-   *
-   * @param value - Valor de tipo string o number que representa la captura de datos de la mercancía.
-   */
-  setCapturaDatosMercancia(value: string | number): void {
-    this.Solicitud220503Store.setCapturaDatosMercancia(value);
   }
 
   /**
