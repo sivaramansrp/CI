@@ -10,11 +10,11 @@ import {
   Tramite260215Store,
 } from '../../estados/tramites/tramite260215.store';
 import { Subject, map, takeUntil } from 'rxjs';
+import { TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
-import { TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
-import { Tramite260215Query } from '../../estados/queries/tramite260215.query';
 import { ServiciosPermisoSanitarioService } from '../../services/servicios-permiso-sanitario.service';
+import { Tramite260215Query } from '../../estados/queries/tramite260215.query';
 
 /**
  * Componente principal para gestionar el formulario de representante.
