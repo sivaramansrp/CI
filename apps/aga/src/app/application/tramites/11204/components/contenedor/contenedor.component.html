@@ -2,24 +2,27 @@
     <form [formGroup]="solicitudForm" id="formSolicitud">
         <ng-titulo titulo="Ingresar por:" />
         <ng-container>
-            <div class="row">
+            <div class="row tipo-busqueda-radio">
                 <div class="col-md-12">
-                    <br><br>
                     <div class="col-md-4">
                         <div class="radio">
-                            <input type="radio" formControlName="tipoBusqueda" id="idRadioContenedor"
-                                value="Contenedor" class="form-check-input" (change)="onChange('tipoBusqueda', $event)"
-                                [attr.disabled]="radioContenedor ? true : null">
-                            Contenedor
+                            <label>
+                                <input type="radio" formControlName="tipoBusqueda" id="idRadioContenedor"
+                                    value="Contenedor" class="form-check-input" (change)="onChange('tipoBusqueda', $event)"
+                                    [attr.disabled]="radioContenedor ? true : null">
+                                Contenedor
+                            </label>
                         </div>
                     </div>
 
                     <div class="col-md-4">
                         <div class="radio">
-                            <input type="radio" formControlName="tipoBusqueda" id="idRedioExcel" value="Archivo CSV"
-                                class="form-check-input" (change)="onChange('tipoBusqueda', $event)"
-                                [attr.disabled]="radioArchivoCsv ? true : null">
-                            Archivo CSV
+                            <label>
+                                <input type="radio" formControlName="tipoBusqueda" id="idRedioExcel" value="Archivo CSV"
+                                    class="form-check-input" (change)="onChange('tipoBusqueda', $event)"
+                                    [attr.disabled]="radioArchivoCsv ? true : null">
+                                Archivo CSV
+                            </label>
                         </div>
                     </div>
                 </div>
@@ -85,7 +88,6 @@
                         </div>
                     </div>
                 </div>
-                <br />
                 <div class="row">
                     <div class="col-md-12" *ngIf="mostrarButtons">
                         <div class="form-group pull-right">
@@ -111,8 +113,9 @@
                     </div>
                     <div class="col-md-4">
                         <div class="form-group">
-                            <label for="digitoDeControl">Dígito verificador:</label>
+                            <label for="digitoDeControl" class="mt-2">Dígito verificador:</label>
                             <input type="text" formControlName="digitoDeControl" id="digitoDeControl" maxlength="1"
+                                pattern="[0-9]" inputmode="numeric" autocomplete="off"
                                 class="form-control" (change)="onChange('digitoDeControl', $event)" [disabled]="soloLectura">
                         </div>
                     </div>
@@ -129,12 +132,9 @@
                             <div *ngIf="isInvalid('vigencia') && solicitudForm.controls['vigencia'].errors?.['required']" class="mensaje-error">
                                 Este campo es obligatorio.
                             </div>
-                            <div *ngIf="solicitudForm.get('fechaIngreso')?.value && solicitudForm.get('vigencia')?.value && solicitudForm.get('vigencia')?.value < solicitudForm.get('fechaIngreso')?.value" class="mensaje-error">
+                            <div *ngIf="solicitudForm.get('vigencia')?.hasError('fechaInvalida')" class="mensaje-error">
                                 La fecha de vigencia debe ser mayor que la fecha de ingreso
                             </div>
-                            <!-- <div *ngIf="isInvalid('fechaIngreso') && solicitudForm.controls['fechaIngreso'].errors?.['required']" class="mensaje-error">
-                                La fecha de vigencia debe ser mayor que la fecha de ingreso
-                            </div> -->
                         </div>
                     </div>
                     <br />
@@ -248,7 +248,7 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-primary" (click)="mostrarTipoContenedor()"
                         data-bs-dismiss="modal">Si</button>
-                    <button type="button" class="btn btn-default" (click)="hideModal()" data-bs-dismiss="modal">No</button>
+                    <button type="button" class="btn btn-default" data-bs-dismiss="modal">No</button>
                 </div>
             </div>
         </div>
@@ -265,7 +265,7 @@
                     <p>¿Está seguro que desea cancelar?. Se borrarán los datos capturados.</p>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" (click)="limpiarCampos()"
+                    <button type="button" class="btn btn-danger" (click)="cancelar()"
                         data-bs-dismiss="modal">Cancelar</button>
                     <button type="button" class="btn btn-default" data-bs-dismiss="modal">Cerrar</button>
                 </div>

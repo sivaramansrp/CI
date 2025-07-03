@@ -287,6 +287,12 @@ export class ContenedorComponent implements OnInit, OnDestroy {
       .subscribe();
     this.inicializarFormulario();
     this.tabSeleccionado();
+    this.solicitudForm.get('fechaIngreso')?.valueChanges.subscribe(() => {
+      this.validateFechas();
+    });
+    this.solicitudForm.get('vigencia')?.valueChanges.subscribe(() => {
+      this.validateFechas();
+    });
     this.cargarCatalogos();
     this.fetchgetaduanaLista();
     this.loadDatosTablaData();
@@ -325,6 +331,33 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     } else {
       this.solicitudForm?.enable();
     }
+  }
+
+  validateFechas() {
+    const FECHA_INGRESO = this.solicitudForm.get('fechaIngreso')?.value;
+    const VIGENCIA = this.solicitudForm.get('vigencia')?.value;
+
+    if (!FECHA_INGRESO || !VIGENCIA) {
+      this.solicitudForm.get('vigencia')?.setErrors(null);
+      return;
+    }
+    const PARSEDINGRESO = this.parseDDMMYYYY(FECHA_INGRESO);
+    const PARSEDVIGENCIA = this.parseDDMMYYYY(VIGENCIA);
+
+    if (PARSEDINGRESO && PARSEDVIGENCIA && PARSEDVIGENCIA < PARSEDINGRESO) {
+      this.solicitudForm.get('vigencia')?.setErrors({ fechaInvalida: true });
+    } else {
+      this.solicitudForm.get('vigencia')?.setErrors(null);
+    }
+  }
+
+  parseDDMMYYYY(dateStr: string): Date | null {
+    if (!dateStr) return null;
+
+    const [day, month, year] = dateStr.split('/');
+    if (!day || !month || !year) return null;
+
+    return new Date(Number(year), Number(month) - 1, Number(day));
   }
 
   onChange(controlName: string, event: Event): void {
@@ -421,6 +454,13 @@ export class ContenedorComponent implements OnInit, OnDestroy {
    */
   limpiarCampos(): void {
     this.solicitudForm.reset();
+  }
+
+  /**
+   * cancelar del formulario.
+   */
+  cancelar(): void {
+    this.solicitudForm.reset();
     this.radioContenedor = false;
     this.radioArchivoCsv = false;
     this.mostrarSeccionArchivoCsv = false;
@@ -435,6 +475,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
    * Mostrar tipo de contenedor.
    */
   mostrarTipoContenedor(): void {
+    this.mostrarButtons = false;
     this.mostrarAgregarTipoContenedor = true;
   }
 
@@ -446,21 +487,10 @@ export class ContenedorComponent implements OnInit, OnDestroy {
       if (this.modalElement) {
         const MODAL_INSTANCE = new Modal(this.modalElement.nativeElement);
         MODAL_INSTANCE.show();
-        this.mostrarButtons = false;
-        this.solicitudForm.reset();
       }
     } else {
       this.solicitudForm.markAllAsTouched();
     }
-  }
-
-  /** 
-  * Cierra el modal manualmente desde el componente
-  */
-  hideModal(): void {
-    const MODAL_INSTANCE = new Modal(this.modalElement.nativeElement);
-    MODAL_INSTANCE.hide();
-    this.mostrarButtons = true;
   }
 
   /**
@@ -578,15 +608,15 @@ export class ContenedorComponent implements OnInit, OnDestroy {
           respuesta.datos.id = this.datosDelContenedor.length + 1;
           this.datosDelContenedor.push(respuesta.datos);
           (this.Tramite11204Store.setDelContenedor as (valor: DatosDelContenedor[]) => void)(this.datosDelContenedor);
-          this.solicitudForm.patchValue({
-            aduana: '',
-            fechaIngreso: '',
-            vigencia: '',
-            digitoDeControl: '',
-            inicialesContenedor: '',
-            numeroContenedor: '',
-            contenedores: ''
-          });
+          // this.solicitudForm.patchValue({
+          //   aduana: '',
+          //   fechaIngreso: '',
+          //   vigencia: '',
+          //   digitoDeControl: '',
+          //   inicialesContenedor: '',
+          //   numeroContenedor: '',
+          //   contenedores: ''
+          // });
           this.solicitudForm.reset();
           this.solicitudForm.markAsUntouched();
           this.solicitudForm.markAsPristine();
