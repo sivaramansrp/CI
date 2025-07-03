@@ -91,7 +91,7 @@ export class SolicitantetabComponent implements OnInit, OnDestroy {
       autorizado: [{ value: '', disabled: true }],
       expendido: [{ value: '', disabled: true }],
       disponible: [{ value: '', disabled: true }],
-      ampliar: [{ value: '', disabled: true }],
+      ampliar: [{ value: ''}],
     });
   }
 

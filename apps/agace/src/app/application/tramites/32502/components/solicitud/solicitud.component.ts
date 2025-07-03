@@ -282,7 +282,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       pedimentoST: this.fb.group({
       patenteAutorizacion: [
         this.seccionState?.patenteAutorizacion,
-        Validators.required
+        [Validators.required, Validators.maxLength(4)]
       ],
       rfcAgenteAduanal: [
         this.seccionState?.rfcAgenteAduanal,
