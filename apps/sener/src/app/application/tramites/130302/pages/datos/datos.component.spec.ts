@@ -81,12 +81,22 @@ describe('DatosComponent', () => {
   });
 
   it('guardarDatosFormulario should not call actualizarEstadoFormulario if resp is falsy', () => {
-    // Use undefined instead of null to match Observable<{}> type
-    service130302Service.getRegistroTomaMuestrasMercanciasData = jest.fn(() => of({}));
+    // Return undefined which is falsy and compatible with the type
+    service130302Service.getRegistroTomaMuestrasMercanciasData = jest.fn(() => of(undefined as any));
     const actualizarSpy = jest.spyOn(service130302Service, 'actualizarEstadoFormulario');
     component['service130302Service'] = service130302Service as any;
     component.guardarDatosFormulario();
     expect(actualizarSpy).not.toHaveBeenCalled();
+  });
+
+  it('guardarDatosFormulario should call actualizarEstadoFormulario if resp is truthy', () => {
+    const mockResponse = { saldoDisponible: '1000', fechaPago: '2025-01-01' };
+    service130302Service.getRegistroTomaMuestrasMercanciasData = jest.fn(() => of(mockResponse as any));
+    const actualizarSpy = jest.spyOn(service130302Service, 'actualizarEstadoFormulario');
+    component['service130302Service'] = service130302Service as any;
+    component.guardarDatosFormulario();
+    expect(component.esDatosRespuesta).toBe(true);
+    expect(actualizarSpy).toHaveBeenCalledWith(mockResponse);
   });
 
   it('should clean up destroyNotifier$ on ngOnDestroy', () => {

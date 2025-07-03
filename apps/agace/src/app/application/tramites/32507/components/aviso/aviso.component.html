@@ -6,7 +6,7 @@
           <label for="adace" class="form-label">ADACE:</label>
           <input class="form-control" [ngClass]="isValid(adaceFormulario, 'adace') ? 'required' : ''" type="text"
             formControlName="adace" name="adace" id="adace"
-            (change)="setValoresStore(avisoFormulario, 'adace', 'setAvisoFormularioAdace')" />
+            (change)="setValoresStore(avisoFormulario, 'adace', 'setAvisoFormularioAdace')" readonly/>
         </div>
       </div>
     </ng-container>
@@ -24,7 +24,7 @@
     <input id="valorProgramaImmex" name="valorProgramaImmex" class="form-control"
       [ngClass]="isValid(datosEmpresa, 'valorProgramaImmex') ? 'required' : ''" type="text" maxlength="9"
       formControlName="valorProgramaImmex"
-      (keyup)="sanitizeAlphanumeric(datosEmpresa,'valorProgramaImmex',$event)"
+      (keyup)="avisoComponent.sanitizeAlphanumeric(datosEmpresa,'valorProgramaImmex',$event)"
       (change)="setValoresStore(datosEmpresa, 'valorProgramaImmex', 'setAvisoFormularioValorProgramaImmex')" />
   </div>
 </div>
@@ -38,7 +38,7 @@
     <input id="valorAnioProgramaImmex" name="valorAnioProgramaImmex" class="form-control" type="text"
       maxlength="4" formControlName="valorAnioProgramaImmex"
       [ngClass]="isValid(datosEmpresa, 'valorAnioProgramaImmex') ? 'required' : ''"
-      (keyup)="sanitizeAlphanumeric(datosEmpresa,'valorAnioProgramaImmex',$event)"
+      (keyup)="avisoComponent.sanitizeAlphanumeric(datosEmpresa,'valorAnioProgramaImmex',$event)"
       (change)="setValoresStore(datosEmpresa, 'valorAnioProgramaImmex', 'setAvisoFormularioValorAnioProgramaImmex')" />
   </div>
 </div>

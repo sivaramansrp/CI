@@ -1,6 +1,6 @@
 {
     "success": true,
-    "message": "",
+    "message": "data",
     "datos": {
         "tipoOperacion": "PRO",
         "observaciones": "Operación estándar con verificación de calidad",

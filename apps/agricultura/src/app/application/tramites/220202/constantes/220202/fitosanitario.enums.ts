@@ -25,12 +25,24 @@ export const PASOS = [
 ];
 
 
-
 /**
- * @description Constante que define los campos para persona moral o física nacional.
- * Cada objeto representa un campo con su etiqueta, nombre de campo, clase CSS, tipo de input,
- * estado disabled, tooltip, validadores y placeholder.
- * @constant {Array<Object>} FITOSANITARIO_PERSONA_MORAL_O_FISICA_NACIONAL
+ * @const FITOSANITARIO_PERSONA_MORAL_O_FISICA_NACIONAL
+ * 
+ * Arreglo de objetos que define la configuración de los campos de formulario para la captura de datos
+ * de una persona moral o física nacional en el contexto fitosanitario.
+ * 
+ * Cada objeto representa un campo del formulario e incluye las siguientes propiedades:
+ * - `labelNombre`: Etiqueta descriptiva que se muestra al usuario.
+ * - `campo`: Nombre de la propiedad asociada al campo.
+ * - `class`: Clases CSS para el diseño responsivo del campo.
+ * - `tipo_input`: Tipo de entrada del campo (por ejemplo, 'text').
+ * - `disabled`: Indica si el campo está deshabilitado.
+ * - `tooltip`: Texto de ayuda que se muestra como tooltip.
+ * - `validators`: Arreglo de validadores aplicados al campo (por ejemplo, 'required', 'maxLength').
+ * - `placeholder`: Texto de marcador de posición para el campo.
+ * 
+ * Este arreglo es utilizado para generar dinámicamente los campos del formulario de dirección y contacto,
+ * asegurando la validación y presentación adecuada de los datos requeridos por el trámite fitosanitario.
  */
 export const FITOSANITARIO_PERSONA_MORAL_O_FISICA_NACIONAL = [
     {
@@ -149,7 +161,7 @@ export const FITOSANITARIO_PERSONA_MORAL_O_FISICA_NACIONAL = [
  * @description Constante que define la instrucción para el doble clic en la tabla.
  * @constant {string} INSTRUCCION_DOBLE_CLIC
  */
-export const INSTRUCCION_DOBLE_CLIC = 'Al dar doble clic en el registro seleccionado creará una nueva solicitud con los mismos datos de la solicitud elegida';
+export const INSTRUCCION_DOBLE_CLIC = 'Al dar doble clic en el registro seleccionado creara una nueva solicitud con los mismos datos de la solicitud elegida.';
 
 /**
  * @description Constante que define el mensaje para tablas obligatorias.
@@ -177,12 +189,12 @@ export const TEXTOS_REQUISITOS = {
     <p>- Si necesitas anexar más de un documento del mismo tipo selecciónalo de la lista y presiona "Agregar nuevo".</p>`,
     ADJUNTAR: `<p>Si deseas adjuntar un nuevo documento, selecciona la opción --Adjuntar nuevo documento-- y presiona el botón "Adjuntar documentos"</p>`,
 };
+
 /**
- * @description Constante que define la configuración para el input de fecha de pago.
- * Esta constante contiene la ruta relativa a los archivos JSON necesarios para la configuración.
- * @constant {Object} URL
+ * Constante que define la ruta relativa a los archivos JSON necesarios para la configuración del input de fecha de pago.
  */
-export const URL = '../../../../../assets/json/220202/';
+export const URL: string = '../../../../../assets/json/220202/';
+
 
 /**
  * @description Constante que define la configuración para el input de fecha final de pago en acuicultura.
@@ -196,7 +208,9 @@ export const FECHA_SALIDA_ACUICULTURA = {
 };
 
 /**
- * @description Constantes con las opciones de radio para la exención de pago.
+ * @description Constante que define las opciones para un campo de tipo radio.
+ * Cada objeto representa una opción con su etiqueta y valor.
+ * @constant {Array<Object>}
  */
 export const TIPO_RADIO = [
     {
@@ -208,3 +222,25 @@ export const TIPO_RADIO = [
         value: "Si"
     }
 ];
+
+/**
+ * Contiene el texto HTML para mostrar un aviso de privacidad simplificado.
+ * Este aviso informa al usuario sobre el tratamiento de datos personales por parte del Servicio de Administración Tributaria (SAT)
+ * a través de la Ventanilla Digital Mexicana de Comercio Exterior (VUCE).
+ * Incluye información sobre el uso, transferencia y protección de los datos personales, así como un enlace al aviso de privacidad integral.
+ *
+ * @constant
+ * @type {string}
+ */
+export const ALERT_TEXTO = `<div>  
+  <div style="text-align: center; margin-bottom: 10px;">
+    <strong style="color: #007baf;">Aviso de privacidad simplificado</strong>
+  </div>
+  <p style="margin-top: 10px; text-align: justify;">
+    El Servicio de Administración Tributaria (SAT), es el sujeto obligado y responsable del tratamiento de los datos personales que se recaban a través de la Ventanilla Digital Mexicana de Comercio Exterior (VUCE), los datos personales podrán ser utilizados y transferidos a la autoridades competentes, con la finalidad de llevar a cabo cualquier trámite relacionado con importaciones, exportaciones y tránsito de mercancías de comercio exterior, incluyendo las regulaciones y restricciones no arancelarias que, conforme a la legislación aplicable, sea exigido por las autoridades competentes en materia de comercio exterior y/o consultar información sobre los procedimientos para la importación, exportación y tránsito de mercancías de comercio exterior, incluyendo las regulaciones y restricciones no arancelarias, así como las notificaciones que se deriven de dichos trámites y serán protegidos, incorporados y tratados en el sistema de datos personales de la VUCEM, asimismo podrán ser transmitidos a las autoridades competentes establecidas en el Decreto por el que se establece la Ventanilla Digital Mexicana de Comercio Exterior, publicado en el Diario Oficial de la Federación el 14 de enero de 2011, así como al propio titular de la información. El titular, en su caso, podrá manifestar su negativa para el tratamiento de sus datos personales para finalidades y transferencias de los mismos que requieran el consentimiento del titular. Si desea conocer nuestro aviso de privacidad integral, lo podrá consultar en el portal.
+  </p>
+  <p style="margin-top: 10px;text-align: center;">
+    <a href="#" style="text-decoration: underline;">Aviso de privacidad integral</a>
+  </p>
+</div>
+`;

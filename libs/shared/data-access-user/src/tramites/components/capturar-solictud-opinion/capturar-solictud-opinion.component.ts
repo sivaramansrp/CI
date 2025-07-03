@@ -172,7 +172,7 @@ export class CapturarSolictudOpinionComponent implements OnInit, OnDestroy {
     this.eliminarOpinion(index);
   }
 
-  enviarOpiniones() {
+  enviarOpiniones() :void{
     this.router.navigate(['funcionario/firma-electronica']);
   }
 }

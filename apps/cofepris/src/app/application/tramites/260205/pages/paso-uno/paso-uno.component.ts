@@ -11,6 +11,23 @@ import { TercerosRelacionadosVistaComponent } from '../../components/terceros-re
 import { Tramite260205Query } from '../../estados/queries/tramite260205.query';
 import { Tramite260205Store } from '../../estados/stores/tramite260205.store';
 
+
+/**
+ * Decorador que define un componente Angular llamado `PasoUnoComponent`.
+ * Este componente es parte de la aplicación y representa la primera etapa de un trámite específico.
+ * 
+ * @selector `app-paso-uno` - Selector utilizado para identificar este componente en las plantillas HTML.
+ * @standalone `true` - Indica que este componente es independiente y no requiere un módulo específico.
+ * @imports - Lista de módulos y componentes que se importan para ser utilizados dentro de este componente:
+ *   - `CommonModule`: Proporciona directivas comunes de Angular como `ngIf` y `ngFor`.
+ *   - `SolicitanteComponent`: Componente relacionado con la información del solicitante.
+ *   - `ContenedorDeDatosSolicitudComponent`: Componente que contiene los datos de la solicitud.
+ *   - `TercerosRelacionadosVistaComponent`: Componente para visualizar terceros relacionados.
+ *   - `PagoDeDerechosComponent`: Componente para gestionar el pago de derechos.
+ *   - `PagoDeDerechosContenedoraComponent`: Componente contenedor para el pago de derechos.
+ * @templateUrl `./paso-uno.component.html` - Ruta del archivo HTML que define la estructura visual del componente.
+ * @styleUrl `./paso-uno.component.scss` - Ruta del archivo SCSS que contiene los estilos específicos del componente.
+ */
 @Component({
   selector: 'app-paso-uno',
   standalone: true,
@@ -83,25 +100,46 @@ export class PasoUnoComponent implements OnDestroy {
       });  
   }
 
-   /**
-   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
-   * Luego reinicializa el formulario con los valores actualizados desde el store.
+
+  /**
+   * Guarda los datos del formulario y actualiza el estado del formulario en el servicio correspondiente.
+   * 
+   * Este método realiza una solicitud al servicio `materiasPrimasDestinadosService` para obtener los datos 
+   * del trámite y, si la respuesta es válida, actualiza el estado del formulario con los datos obtenidos.
+   * 
+   * Utiliza el operador `takeUntil` para gestionar la suscripción y asegurarse de que se cancele 
+   * cuando el observable `destroyNotifier$` emita un valor, evitando fugas de memoria.
+   * 
+   * @returns {void} No retorna ningún valor.
+   * 
+   * @remarks
+   * - Este método depende de `materiasPrimasDestinadosService` para realizar la solicitud y actualizar el estado.
+   * - La propiedad `esDatosRespuesta` se establece en `true` si la respuesta del servicio es válida.
+   * - Es importante asegurarse de que `destroyNotifier$` esté correctamente configurado para evitar problemas de suscripción.
    */
-   guardarDatosFormulario(): void {
+  guardarDatosFormulario(): void {
     this.materiasPrimasDestinadosService
       .getTramiteDatos().pipe(
         takeUntil(this.destroyNotifier$)
       )
       .subscribe((resp) => {
-        if(resp){
-        this.esDatosRespuesta = true;
-        this.materiasPrimasDestinadosService.actualizarEstadoFormulario(resp);
+        if (resp) {
+          this.esDatosRespuesta = true;
+          this.materiasPrimasDestinadosService.actualizarEstadoFormulario(resp);
         }
       });
   }
 
+
   /**
-   * Limpia los recursos observables al destruir el componente.
+   * Método del ciclo de vida de Angular que se llama cuando el componente se destruye.
+   * 
+   * Este método se utiliza para realizar tareas de limpieza, como notificar a los observables
+   * que deben finalizar y liberar recursos asociados al componente. En este caso, se envía
+   * una señal al observable `destroyNotifier$` para indicar que debe completarse y finalizar.
+   * 
+   * Es importante implementar este método para evitar fugas de memoria y garantizar que
+   * los recursos utilizados por el componente se liberen correctamente.
    */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();

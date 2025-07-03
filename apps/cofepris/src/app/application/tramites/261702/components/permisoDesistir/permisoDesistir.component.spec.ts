@@ -34,69 +34,65 @@ describe('PermisoDesistirComponent', () => {
 
     fixture = TestBed.createComponent(PermisoDesistirComponent);
     component = fixture.componentInstance;
+
+    // Add this line before detectChanges
+    component.consultaState = { readonly: false } as any;
+
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('debe crearse', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize form correctly', () => {
+  it('debe inicializar el formulario correctamente', () => {
     const ninoFormGroup = component.forma.get('ninoFormGroup') as FormGroup;
     expect(ninoFormGroup).toBeDefined();
     expect(component.forma).toBeDefined();
   });
   
-    it('should clear subscriptions on ngOnDestroy', () => {
-      const nextSpy = jest.spyOn(component['destruirNotificador$'], 'next');
-      const completeSpy = jest.spyOn(component['destruirNotificador$'], 'complete');
-      component.ngOnDestroy();
-      expect(nextSpy).toHaveBeenCalled();
-      expect(completeSpy).toHaveBeenCalled();
-    });
+  it('debe limpiar las suscripciones en ngOnDestroy', () => {
+    const nextSpy = jest.spyOn(component['destruirNotificador$'], 'next');
+    const completeSpy = jest.spyOn(component['destruirNotificador$'], 'complete');
+    component.ngOnDestroy();
+    expect(nextSpy).toHaveBeenCalled();
+    expect(completeSpy).toHaveBeenCalled();
+  });
   
-    it('should set and remove validators dynamically', () => {
-      const ninoFormGroup = component.ninoFormGroup;
-      ninoFormGroup.addControl('folio', new FormBuilder().control(''));
-      ninoFormGroup.get('folio')?.setValidators([Validators.required]);
-      ninoFormGroup.get('folio')?.updateValueAndValidity();
-      expect(ninoFormGroup.get('folio')?.validator).toBeDefined();
-      ninoFormGroup.get('folio')?.setValidators([]);
-      ninoFormGroup.get('folio')?.updateValueAndValidity();
-      expect(ninoFormGroup.get('folio')?.validator).toBeNull();
-    });
+  it('debe establecer y eliminar validadores dinámicamente', () => {
+    const ninoFormGroup = component.ninoFormGroup;
+    ninoFormGroup.addControl('folio', new FormBuilder().control(''));
+    ninoFormGroup.get('folio')?.setValidators([Validators.required]);
+    ninoFormGroup.get('folio')?.updateValueAndValidity();
+    expect(ninoFormGroup.get('folio')?.validator).toBeDefined();
+    ninoFormGroup.get('folio')?.setValidators([]);
+    ninoFormGroup.get('folio')?.updateValueAndValidity();
+    expect(ninoFormGroup.get('folio')?.validator).toBeNull();
+  });
 
-    it('should handle null or undefined values in form value changes', () => {
-      const ninoFormGroup = component.ninoFormGroup;
-      ninoFormGroup.addControl('testField', new FormControl(null));
-      ninoFormGroup.get('testField')?.setValue(null);
-      fixture.detectChanges();
-      expect(mockTramite261702Store.setDynamicFieldValue).toHaveBeenCalledWith('testField', null);
-    });
+  it('debe llamar a setDynamicFieldValue con el campo y valor correctos', () => {
+    const campo = 'folio';
+    const value = 'folio';
+    component.cambioEnValoresStore(campo, value);
+    expect(mockTramite261702Store.setDynamicFieldValue).toHaveBeenCalledWith(campo, value);
+  });
 
-    it('should call setDynamicFieldValue with correct campo and value', () => {
-      const campo = 'folio';
-      const value = 'folio';
-      component.cambioEnValoresStore(campo, value);
-      expect(mockTramite261702Store.setDynamicFieldValue).toHaveBeenCalledWith(campo, value);
-    });
+  it('debe llamar a setDynamicFieldValue con un valor numérico', () => {
+    const campo = 'testCampo';
+    const value = 12345;
+    component.cambioEnValoresStore(campo, value);
+    expect(mockTramite261702Store.setDynamicFieldValue).toHaveBeenCalledWith(campo, 12345);
+  });
 
-    it('should call setDynamicFieldValue with numeric value', () => {
-      const campo = 'testCampo';
-      const value = 12345;
-      component.cambioEnValoresStore(campo, value);
-      expect(mockTramite261702Store.setDynamicFieldValue).toHaveBeenCalledWith(campo, 12345);
-    });
-
-    it('should not call setDynamicFieldValue if value is unchanged', () => {
-      const campo = 'testCampo';
-      const value = 'testValue';
-      jest.spyOn(mockTramite261702Store, 'setDynamicFieldValue');
-      mockTramite261702Store.setDynamicFieldValue.mockClear();
-      component.cambioEnValoresStore(campo, value);
-      expect(mockTramite261702Store.setDynamicFieldValue).toHaveBeenCalledTimes(1);
-      component.cambioEnValoresStore(campo, value);
-      expect(mockTramite261702Store.setDynamicFieldValue).toHaveBeenCalledTimes(2);
-    });
+  it('no debe llamar a setDynamicFieldValue si el valor no ha cambiado', () => {
+    const campo = 'testCampo';
+    const value = 'testValue';
+    jest.spyOn(mockTramite261702Store, 'setDynamicFieldValue');
+    mockTramite261702Store.setDynamicFieldValue.mockClear();
+    component.cambioEnValoresStore(campo, value);
+    expect(mockTramite261702Store.setDynamicFieldValue).toHaveBeenCalledTimes(1);
+    component.cambioEnValoresStore(campo, value);
+    expect(mockTramite261702Store.setDynamicFieldValue).toHaveBeenCalledTimes(2);
+  });
   
 });

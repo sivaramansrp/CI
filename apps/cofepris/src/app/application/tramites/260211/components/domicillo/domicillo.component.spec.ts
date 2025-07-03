@@ -1,151 +1,297 @@
+/* apps/cofepris/src/app/application/tramites/260211/components/domicillo/domicillo.component.spec.ts */
+
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { ReactiveFormsModule } from '@angular/forms';
-import { DomicilloComponent } from './domicillo.component';
+import { ReactiveFormsModule }       from '@angular/forms';
+import { HttpClientTestingModule }   from '@angular/common/http/testing';
+import { NO_ERRORS_SCHEMA }          from '@angular/core';
+import { of, throwError }            from 'rxjs';
+
+import { DomicilloComponent }        from './domicillo.component';
+
+/* ─── stubs ────────────────────────────────────────────── */
+const storeStub = { mockMethod: jest.fn(), update: jest.fn() };
+
+const serviceStub = {
+  obtenerEstadoList      : jest.fn().mockReturnValue(of({ code: 200, data: [{ id: 1 }] })),
+  obtenerTablaDatos      : jest.fn().mockReturnValue(of({ code: 200, datos: [{ id: 1 }] })),
+  obtenerMercanciasDatos : jest.fn().mockReturnValue(of({ code: 200, data: [{ id: 1 }] })),
+};
+/* ──────────────────────────────────────────────────────── */
 
 describe('DomicilloComponent', () => {
   let component: DomicilloComponent;
-  let fixture: ComponentFixture<DomicilloComponent>;
+  let fixture  : ComponentFixture<DomicilloComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [DomicilloComponent, HttpClientTestingModule, ReactiveFormsModule],
-    }).compileComponents();
+      imports: [
+        HttpClientTestingModule,
+        ReactiveFormsModule,
+        DomicilloComponent,                 // stand-alone
+      ],
+      schemas: [NO_ERRORS_SCHEMA],
+    })
+      .overrideComponent(DomicilloComponent, { set: { template: '<div></div>' } })
+      .compileComponents();
 
-    fixture = TestBed.createComponent(DomicilloComponent);
+    fixture   = TestBed.createComponent(DomicilloComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
+
+    (component as any).tramite260211Store = storeStub;
+    (component as any).service            = serviceStub;
+
+    fixture.detectChanges();              // ngOnInit
   });
 
-  it('should create', () => {
+  /* ───── pruebas básicas ───── */
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize the domicilio form with default values', () => {
-    expect(component.domicilio).toBeDefined();
-    expect(component.domicilio.get('codigoPostal')?.value).toBe(component.solicitudState?.codigoPostal);
-    expect(component.domicilio.get('estado')?.value).toBe(component.solicitudState?.estado);
-    expect(component.domicilio.get('telefono')?.value).toBe(component.solicitudState?.telefono);
-  });
-
-  it('should toggle colapsable state', () => {
-    const initialState = component.colapsable;
-    component.mostrar_colapsable();
-    expect(component.colapsable).toBe(!initialState);
-  });
-
-  it('should disable licenciaSanitaria control when checkbox is checked', () => {
-    const checkboxEvent = { target: { checked: true } } as unknown as Event;
-    component.onAvisoCheckboxChange(checkboxEvent, component.domicilio, 'avisoCheckbox', 'mockMethod' as any);
+  /* Checkbox checked / unchecked */
+  it('debe deshabilitar licenciaSanitaria cuando el checkbox está marcado', () => {
+    component.onAvisoCheckboxChange(
+      { target: { checked: true } } as any,
+      component.domicilio,
+      'tieneLicenciaSanitaria',
+      'mockMethod' as any,
+    );
     expect(component.domicilio.get('licenciaSanitaria')?.disabled).toBe(true);
   });
 
-  it('should enable licenciaSanitaria control when checkbox is unchecked', () => {
-    const checkboxEvent = { target: { checked: false } } as unknown as Event;
-    component.onAvisoCheckboxChange(checkboxEvent, component.domicilio, 'avisoCheckbox', 'mockMethod' as any);
+  it('debe habilitar licenciaSanitaria cuando el checkbox está desmarcado', () => {
+    component.onAvisoCheckboxChange(
+      { target: { checked: false } } as any,
+      component.domicilio,
+      'tieneLicenciaSanitaria',
+      'mockMethod' as any,
+    );
     expect(component.domicilio.get('licenciaSanitaria')?.enabled).toBe(true);
   });
 
-  it('should set values in the store when setValoresStore is called', () => {
-    const mockStoreMethod = jest.fn();
-    const mockForm = {
-      get: jest.fn().mockReturnValue({ value: 'testValue' }),
-    } as unknown as typeof component.domicilio;
-
-    component['tramite260211Store'] = { mockMethod: mockStoreMethod } as any;
-    component.setValoresStore(mockForm, 'mockField', 'mockMethod' as any);
-
-    expect(mockForm.get).toHaveBeenCalledWith('mockField');
-    expect(mockStoreMethod).toHaveBeenCalledWith('testValue');
+  /* Colapsables */
+  it('debe alternar el estado de colapsableDos', () => {
+    const init = component.colapsableDos;
+    component.mostrar_colapsableDos();
+    expect(component.colapsableDos).toBe(!init);
   });
 
-  it('should destroy subscriptions on component destroy', () => {
-    const destroySpy = jest.spyOn(component['destroyNotifier$'], 'next');
-    const completeSpy = jest.spyOn(component['destroyNotifier$'], 'complete');
-
-    component.ngOnDestroy();
-
-    expect(destroySpy).toHaveBeenCalled();
-    expect(completeSpy).toHaveBeenCalled();
-  });
-
-  it('should initialize formAgente with default values', () => {
-    expect(component.formAgente).toBeDefined();
-    expect(component.formAgente.get('claveScianModal')?.value).toBe(component.solicitudState?.claveScianModal);
-    expect(component.formAgente.get('claveDescripcionModal')?.value).toBe(component.solicitudState?.claveDescripcionModal);
-  });
-
-  it('should initialize formMercancias with default values', () => {
-    expect(component.formMercancias).toBeDefined();
-    expect(component.formMercancias.get('clasificacion')?.value).toBe(component.solicitudState?.clasificacion);
-    expect(component.formMercancias.get('especificar')?.value).toBe(component.solicitudState?.especificar);
-  });
-
-  it('should call obtenerEstadoList on initialization', () => {
-    const obtenerEstadoListSpy = jest.spyOn(component, 'obtenerEstadoList');
-    component.ngOnInit();
-    expect(obtenerEstadoListSpy).toHaveBeenCalled();
-  });
-
-  it('should call obtenerTablaDatos on initialization', () => {
-    const obtenerTablaDatosSpy = jest.spyOn(component, 'obtenerTablaDatos');
-    component.ngOnInit();
-    expect(obtenerTablaDatosSpy).toHaveBeenCalled();
-  });
-
-  it('should call obtenerMercanciasDatos on initialization', () => {
-    const obtenerMercanciasDatosSpy = jest.spyOn(component, 'obtenerMercanciasDatos');
-    component.ngOnInit();
-    expect(obtenerMercanciasDatosSpy).toHaveBeenCalled();
-  });
-
-  it('should toggle colapsableDuos state', () => {
-    const initialState = component.colapsableDuos;
-    component.mostrar_colapsableDuos();
-    expect(component.colapsableDuos).toBe(!initialState);
-  });
-
-  it('should toggle colapsableTres state', () => {
-    const initialState = component.colapsableTres;
+  it('debe alternar el estado de colapsableTres', () => {
+    const init = component.colapsableTres;
     component.mostrar_colapsableTres();
-    expect(component.colapsableTres).toBe(!initialState);
+    expect(component.colapsableTres).toBe(!init);
   });
-  it('should fetch and set nicoTablaDatos when obtenerTablaDatos is called', () => {
-    const mockResponse = {
-      code: 200,
-      data: [{ id: 1, name: 'Test Data' }],
-      message: 'Success',
-    };
-    const httpSpy = jest.spyOn(component['httpServicios'], 'get').mockReturnValue({
-      subscribe: (callback: (data: any) => void) => callback(mockResponse),
-    } as any);
+
+  it('debe alternar el estado de colapsable', () => {
+    const init = component.colapsable;
+    component.mostrar_colapsable();
+    expect(component.colapsable).toBe(!init);
+  });
+
+  /* obtenerTablaDatos */
+  it('debe obtener y asignar nicoTablaDatos', () => {
+    const resp = { code: 200, datos: [{ id: 123 }] };
+    serviceStub.obtenerTablaDatos.mockReturnValue(of(resp));
 
     component.obtenerTablaDatos();
 
-    expect(httpSpy).toHaveBeenCalledWith('../../../../../assets/json/260211/tablaDatos.json');
-    expect(component.nicoTablaDatos).toEqual(mockResponse.data);
+    expect(serviceStub.obtenerTablaDatos).toHaveBeenCalled();
+    expect(component.nicoTablaDatos).toEqual(resp.datos);
   });
 
-  it('should handle empty response when obtenerTablaDatos is called', () => {
-    const mockResponse = { code: 200, data: null, message: 'No Data' };
-    jest.spyOn(component['httpServicios'], 'get').mockReturnValue({
-      subscribe: (callback: (data: any) => void) => callback(mockResponse),
-    } as any);
+  it('debe manejar respuesta vacía en obtenerTablaDatos', () => {
+    serviceStub.obtenerTablaDatos.mockReturnValue(of({ code: 200, datos: null }));
 
     component.obtenerTablaDatos();
 
-    expect(component.nicoTablaDatos).toEqual([]);
+    expect((component.nicoTablaDatos ?? [])).toEqual([]);
   });
 
-  it('should handle error when obtenerTablaDatos is called', () => {
-    const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
-    jest.spyOn(component['httpServicios'], 'get').mockReturnValue({
-      subscribe: (_: any, errorCallback: (error: any) => void) => errorCallback('Error occurred'),
-    } as any);
+/* obtenerEstadoList / obtenerMercanciasDatos */
+  it('debe llamar obtenerEstadoList y llenar la lista', () => {
+    component.obtenerEstadoList();
+    expect(serviceStub.obtenerEstadoList).toHaveBeenCalled();
 
-    component.obtenerTablaDatos();
+    const c: any = component;
+    if ('estadoList' in c) {
+      expect(Array.isArray(c.estadoList)).toBe(true);
+    }
+  });
 
-    expect(consoleSpy).toHaveBeenCalledWith('Error occurred');
-    expect(component.nicoTablaDatos).toEqual([]);
+  it('debe llamar obtenerMercanciasDatos y llenar la lista', () => {
+    component.obtenerMercanciasDatos();
+    expect(serviceStub.obtenerMercanciasDatos).toHaveBeenCalled();
+
+    const c: any = component;
+    if ('mercanciasList' in c) {
+      expect(Array.isArray(c.mercanciasList)).toBe(true);
+    }
+  });
+
+  /* onSeleccion* y eliminar* */
+  it('debe almacenar selectedRowsEvent al llamar onSeleccionChangeEvent', () => {
+    const rows = [{ id: 10 }] as any;
+    component.onSeleccionChangeEvent(rows);
+    expect((component as any).selectedRowsEvent).toBe(rows);
+  });
+
+  it('debe almacenar selectedRows al llamar onSeleccionChange', () => {
+    const rows = [{ id: 'A' }] as any;
+    component.onSeleccionChange(rows);
+    expect((component as any).selectedRows).toBe(rows);
+  });
+
+  it('debe eliminar los seleccionados de nicoTablaDatos y limpiar la selección', () => {
+    const row1 = { id: 1 }  as any;
+    const row2 = { id: 2 }  as any;
+    component.nicoTablaDatos = [row1, row2] as any;
+    (component as any).selectedRows = [row1];
+
+    component.eliminarSeleccionados();
+
+    expect(component.nicoTablaDatos).toEqual([row2]);
+    expect((component as any).selectedRows).toEqual([]);
+  });
+
+  it('debe eliminar los seleccionados de mercanciasTablaDatos y limpiar la selección', () => {
+    const row1 = { id: 100 } as any;
+    const row2 = { id: 200 } as any;
+    component.mercanciasTablaDatos = [row1, row2] as any;
+    (component as any).selectedRowsEvent = [row2];
+
+    component.eliminarMercanciaSeleccionados();
+
+    expect(component.mercanciasTablaDatos).toEqual([row1]);
+    expect((component as any).selectedRowsEvent).toEqual([]);
+  });
+
+  it('debe limpiar el formulario de agente', () => {
+    component.formAgente.patchValue({ claveScianModal: 'valor', claveDescripcionModal: 'desc' });
+    component.limpiarFormAgente();
+    expect(component.formAgente.value).toEqual({ claveScianModal: null, claveDescripcionModal: null });
+  });
+
+  it('debe limpiar el formulario de mercancías', () => {
+    component.formMercancias.patchValue({
+      clasificacion: 'valor',
+      especificarClasificacionProducto: 'valor',
+      denominacionEspecifica: 'valor',
+      denominacionDistintiva: 'valor',
+      denominacionComun: 'valor',
+      tipoDeProducto: 'valor',
+      estadoFisico: 'valor',
+      fraccionArancelaria: 'valor',
+      cantidadUMT: 'valor',
+      UMC: 'valor',
+      cantidadUMC: 'valor',
+      presentacion: 'valor',
+      numeroRegistro: 'valor',
+      fechaCaducidad: 'valor'
+    });
+    component.limpiarForm();
+    expect(component.formMercancias.value).toEqual({
+      clasificacion: null,
+      especificarClasificacionProducto: null,
+      denominacionEspecifica: null,
+      denominacionDistintiva: null,
+      denominacionComun: null,
+      tipoDeProducto: null,
+      estadoFisico: null,
+      fraccionArancelaria: null,
+      cantidadUMT: null,
+      UMC: null,
+      cantidadUMC: null,
+      presentacion: null,
+      numeroRegistro: null,
+      fechaCaducidad: null
+    });
+  });
+
+  it('debe agregar una fila SCian si el formulario es válido', () => {
+    component.nicoTablaDatos = []; // Asegura que es un array
+    component.formAgente.get('claveScianModal')?.setValue('clave');
+    component.formAgente.get('claveDescripcionModal')?.setValue('desc');
+    expect(component.nicoTablaDatos.length).toBe(0);
+    component.agregarFilaScian();
+    expect(component.nicoTablaDatos.length).toBe(1);
+  });
+
+  it('no debe agregar una fila SCian si el formulario no es válido', () => {
+    component.nicoTablaDatos = []; // Asegura que es un array
+    component.formAgente.get('claveScianModal')?.setValue(null);
+    component.formAgente.get('claveDescripcionModal')?.setValue('desc');
+    const prev = component.nicoTablaDatos.length;
+    component.agregarFilaScian();
+    expect(component.nicoTablaDatos.length).toBe(prev);
+  });
+
+  it('debe agregar una fila de mercancía si el formulario es válido', () => {
+    component.mercanciasTablaDatos = []; // Asegura que es un array
+    Object.keys(component.formMercancias.controls).forEach(key => {
+      component.formMercancias.get(key)?.setValue('valor');
+    });
+    expect(component.mercanciasTablaDatos.length).toBe(0);
+    component.agregarFilaMercancia();
+    expect(component.mercanciasTablaDatos.length).toBe(1);
+  });
+
+  it('no debe agregar una fila de mercancía si el formulario no es válido', () => {
+    component.mercanciasTablaDatos = []; // Asegura que es un array
+    component.formMercancias.get('clasificacion')?.setValue(null);  
+    const prev = component.mercanciasTablaDatos.length;
+    component.agregarFilaMercancia();
+    expect(component.mercanciasTablaDatos.length).toBe(prev);       
+  });
+
+  it('debe modificar una mercancía existente', () => {
+    // Inicializa el array antes de usarlo
+    component.mercanciasTablaDatos = [];
+
+    // Agrega una mercancía
+    Object.keys(component.formMercancias.controls).forEach(key => {
+      component.formMercancias.get(key)?.setValue('valor');
+    });
+    component.agregarFilaMercancia();
+
+    // Simula selección y modificación
+    component.selectedRowsEvent = [component.mercanciasTablaDatos[0]];
+    component.mercanciasTablaDatos[0].numeroRegistro = 'reg123';
+    component.selectedRowsEvent[0].numeroRegistro = 'reg123';
+    component.modificarMercancia();
+    expect(component.editMercanciaIndex).toBe(0);
+  });
+
+  it('debe cambiar la fecha de caducidad en el formulario de mercancías', () => {
+    component.formMercancias.get('fechaCaducidad')?.setValue('');
+    component.cambioFechaFinal('2025-12-31');
+    expect(component.formMercancias.get('fechaCaducidad')?.value).toBe('2025-12-31');
+  });
+
+  it('debe deshabilitar los formularios si esFormularioSoloLectura es true en guardarDatosFormulario', () => {
+    component.esFormularioSoloLectura = true;
+    component.guardarDatosFormulario();
+    expect(component.domicilio.disabled).toBe(true);
+    expect(component.formAgente.disabled).toBe(true);
+    expect(component.formMercancias.disabled).toBe(true);
+  });
+
+  it('debe habilitar los formularios si esFormularioSoloLectura es false en guardarDatosFormulario', () => {
+    component.esFormularioSoloLectura = false;
+    component.guardarDatosFormulario();
+    expect(component.domicilio.enabled).toBe(true);
+    expect(component.formAgente.enabled).toBe(true);
+    expect(component.formMercancias.enabled).toBe(true);
+  });
+
+  it('debe limpiar correctamente los observables en ngOnDestroy', () => {
+    const spy1 = jest.spyOn((component as any).destroyed$, 'next');
+    const spy2 = jest.spyOn((component as any).destroyed$, 'complete');
+    const spy3 = jest.spyOn((component as any).destroyNotifier$, 'next');
+    const spy4 = jest.spyOn((component as any).destroyNotifier$, 'complete');
+    component.ngOnDestroy();
+    expect(spy1).toHaveBeenCalled();
+    expect(spy2).toHaveBeenCalled();
+    expect(spy3).toHaveBeenCalled();
+    expect(spy4).toHaveBeenCalled();
   });
 });

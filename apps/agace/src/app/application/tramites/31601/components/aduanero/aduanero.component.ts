@@ -1,40 +1,45 @@
-import {
-  AfterViewInit,
-  Component,
-  ElementRef,
-  OnDestroy,
-  OnInit,
-  TemplateRef,
-  ViewChild,
-} from '@angular/core';
-import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
-import { Catalogo, ConfiguracionColumna, TablaSeleccion, TableBodyData, TableComponent, TableData, TablePaginationComponent, TituloComponent } from '@ng-mf/data-access-user';
-import {
-  FormBuilder,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
-import {
-  MENCIONE_TABLA_CONFIGURACION,
-  MencioneConfiguracionItem,
-} from '../../enum/mencione-tabla.enum';
-import {
-  Solicitud31601State,
-  Tramite31601Store,
-} from '../../../../estados/tramites/tramite31601.store';
-import { Subject, map, takeUntil } from 'rxjs';
+import { Catalogo, Notificacion, NotificacionesComponent } from '@ng-mf/data-access-user';
+import { ControlInventariosItem, Tabla } from '../../models/models31601.model';
+
+import { AfterViewInit } from '@angular/core';
 import { AgregarMiembroDeLaEmpresaComponent } from '../agregar-miembro-de-la-empresa/agregar-miembro-de-la-empresa.component';
+import { BsModalRef } from 'ngx-bootstrap/modal';
+import { BsModalService } from 'ngx-bootstrap/modal';
+import { CONTROL_INVENTARIOS_TABLA_CONFIGURACION } from '../../constantes/antecesor.enum';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
+import { ConfiguracionColumna } from '@ng-mf/data-access-user';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { ElementRef } from '@angular/core';
+import { FormBuilder } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
 import { InputRadioComponent } from '@libs/shared/data-access-user/src/tramites/components/input-radio/input-radio.component';
 import Instalaciones from '@libs/shared/theme/assets/json/31601/Instalaciones.json';
+import { MENCIONE_TABLA_CONFIGURACION } from '../../enum/mencione-tabla.enum';
+import { MencioneConfiguracionItem } from '../../enum/mencione-tabla.enum';
 import { Modal } from 'bootstrap';
+import { OnDestroy } from '@angular/core';
+import { OnInit } from '@angular/core';
 import { REGEX_RFC } from '@libs/shared/data-access-user/src/tramites/constantes/regex.constants';
+import { ReactiveFormsModule } from '@angular/forms';
+import { Solicitud31601State } from '../../../../estados/tramites/tramite31601.store';
 import { Solocitud31601Service } from '../../services/service31601.service';
+import { Subject } from 'rxjs';
 import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
+import { TablaSeleccion } from '@ng-mf/data-access-user';
+import { TableBody } from '../../models/models31601.model';
+import { TableComponent } from '@ng-mf/data-access-user';
+import { TablePaginationComponent } from '@ng-mf/data-access-user';
+import { TemplateRef } from '@angular/core';
+import { TituloComponent } from '@ng-mf/data-access-user';
 import { Tramite31601Query } from '../../../../estados/queries/tramite31601.query';
+import { Tramite31601Store } from '../../../../estados/tramites/tramite31601.store';
+import { Validators } from '@angular/forms';
+import { ViewChild } from '@angular/core';
+import { map } from 'rxjs';
+import { takeUntil } from 'rxjs';
+
 import applicantRegistrados from '@libs/shared/theme/assets/json/31601/applicantRegistrados.json';
 import comboBimestres from '@libs/shared/theme/assets/json/31601/comboBimestres.json';
 import comboIMMEXJson from '@libs/shared/theme/assets/json/31601/comboIMMEX.json';
@@ -75,6 +80,7 @@ import serviciosAgace from '@libs/shared/theme/assets/json/31601/serviciosAgace.
     TituloComponent,
     AgregarMiembroDeLaEmpresaComponent,
     TablaDinamicaComponent,
+    NotificacionesComponent,
   ],
   providers: [BsModalService],
 })
@@ -153,7 +159,7 @@ export class AduaneroComponent implements OnInit, AfterViewInit, OnDestroy {
   /**
    * Datos de control de inventarios obtenidos desde JSON
    */
-  controlInventarios: TableData = controlInventarios;
+  controlInventarios: Tabla = controlInventarios;
 
   /**
    * Lista de opciones IMMEX cargadas desde JSON
@@ -228,7 +234,7 @@ export class AduaneroComponent implements OnInit, AfterViewInit, OnDestroy {
   /**
    * Datos del cuerpo de la tabla de empleados
    */
-  public empleadosBodyData: TableBodyData[] = [];
+  public empleadosBodyData: TableBody[] = [];
 
   /**
    * Encabezados de la tabla de domicilios
@@ -238,7 +244,7 @@ export class AduaneroComponent implements OnInit, AfterViewInit, OnDestroy {
   /**
    * Datos del cuerpo de la tabla de domicilios
    */
-  public domiciliosBodyData: TableBodyData[] = [];
+  public domiciliosBodyData: TableBody[] = [];
 
   /**
    * Encabezados de la tabla de instalaciones
@@ -248,7 +254,7 @@ export class AduaneroComponent implements OnInit, AfterViewInit, OnDestroy {
   /**
    * Datos del cuerpo de la tabla de instalaciones
    */
-  public InstalacionesBodyData: TableBodyData[] = [];
+  public InstalacionesBodyData: TableBody[] = [];
 
   /**
    * Estado de la solicitud
@@ -330,6 +336,63 @@ export class AduaneroComponent implements OnInit, AfterViewInit, OnDestroy {
    * Indica si el popup está cerrado.
    */
   confirmEliminarPopupCerrado: boolean = true;
+
+  /**
+   * Configuración de las columnas para la tabla de control de inventarios.
+   */
+  configuracionTablaControlInventarios: ConfiguracionColumna<ControlInventariosItem>[] =
+    CONTROL_INVENTARIOS_TABLA_CONFIGURACION;
+
+  /**
+   * Datos de la tabla de control de inventarios.
+   */
+  datosTablaControlInventarios: ControlInventariosItem[] = [];
+
+  /**
+   * Indica si el botón de eliminar debe estar habilitado para control inventarios.
+   */
+  enableEliminarBotonControlInventarios: boolean = false;
+
+  /**
+   * Indica si el botón de modificar debe estar habilitado para control inventarios.
+   */
+  enableModificarBotonControlInventarios: boolean = false;
+
+  /**
+   * Lista de filas seleccionadas en la tabla de control inventarios.
+   */
+  listaFilaSeleccionadaControlInventarios: ControlInventariosItem[] = [];
+
+  /**
+   * Fila seleccionada actualmente en la tabla de control inventarios.
+   */
+  filaSeleccionadaControlInventarios: ControlInventariosItem | null = null;
+
+  /**
+   * Indica si el popup de confirmación de eliminación está abierto para control inventarios.
+   */
+  confirmEliminarPopupAbiertoControlInventarios: boolean = false;
+
+  /**
+   * Referencia al modal de control inventarios en la plantilla HTML
+   */
+  @ViewChild('controlInventariosModal', { static: false })
+  controlInventariosModal!: ElementRef;
+
+  /**
+   * Instancia del modal de control inventarios (Bootstrap)
+   */
+  modalInstanceControlInventarios!: Modal;
+
+  /**
+   * Indica si los campos obligatorios de control inventarios han sido respondidos.
+   */
+  camposObligatoriosRespondidosControlInventarios: boolean = false;
+
+  /**
+   * Configuración para mostrar notificación de éxito
+   */
+  public notificacionExito: Notificacion | null = null;
 
   /**
    * Indica si los campos obligatorios han sido respondidos.
@@ -433,7 +496,15 @@ export class AduaneroComponent implements OnInit, AfterViewInit, OnDestroy {
       preOperativo: [this.solicitudState?.preOperativo, Validators.required],
       indiqueSi: [this.solicitudState?.indiqueSi, Validators.required],
       senale: [this.solicitudState?.senale, Validators.required],
-      empPropios: [this.solicitudState?.empPropios],
+      empPropios: [
+        this.solicitudState?.empPropios,
+        [
+          Validators.required,
+          Validators.min(1),
+          Validators.max(99999999),
+          Validators.maxLength(8),
+        ],
+      ],
       bimestre: [this.solicitudState?.bimestre],
       senaleSi: [this.solicitudState?.senaleSi, Validators.required],
       seMomento: [this.solicitudState?.seMomento, Validators.required],
@@ -533,6 +604,236 @@ export class AduaneroComponent implements OnInit, AfterViewInit, OnDestroy {
         this.instalacionesModal.nativeElement
       );
     }
+
+    if (this.controlInventariosModal) {
+      this.modalInstanceControlInventarios = new Modal(
+        this.controlInventariosModal.nativeElement
+      );
+    }
+  }
+
+  /**
+   * Maneja la selección de filas en la tabla de control inventarios.
+   */
+  manejarFilaSeleccionadaControlInventarios(fila: ControlInventariosItem[]): void {
+    if (fila.length === 0) {
+      this.enableModificarBotonControlInventarios = false;
+      this.enableEliminarBotonControlInventarios = false;
+      return;
+    }
+    this.listaFilaSeleccionadaControlInventarios = fila;
+    this.filaSeleccionadaControlInventarios = fila[fila.length - 1];
+    this.enableModificarBotonControlInventarios = true;
+    this.enableEliminarBotonControlInventarios = true;
+  }
+
+  /**
+   * Abre el modal de control inventarios para agregar nuevo elemento.
+   */
+  openControlInventariosModal(): void {
+    if (this.modalInstanceControlInventarios) {
+      this.preOperativeForm.patchValue({
+        nombreDel: '',
+        lugarDeRadicacion: '',
+        indiqueCheck: false
+      });
+      this.modalInstanceControlInventarios.show();
+    }
+  }
+
+  /**
+   * Abre el modal de control inventarios para modificar elemento existente.
+   */
+  openModifyControlInventariosModal(): void {
+    if (this.modalInstanceControlInventarios && this.filaSeleccionadaControlInventarios) {
+      this.preOperativeForm.patchValue({
+        nombreDel: this.filaSeleccionadaControlInventarios.nombreSistema,
+        lugarDeRadicacion: this.filaSeleccionadaControlInventarios.lugarRadicacion,
+        indiqueCheck: this.filaSeleccionadaControlInventarios.anexo24
+      });
+      this.modalInstanceControlInventarios.show();
+    }
+  }
+
+  /**
+   * Cierra el modal de control inventarios.
+   */
+  closeControlInventariosModal(): void {
+    if (this.modalInstanceControlInventarios) {
+      this.modalInstanceControlInventarios.hide();
+    }
+  }
+
+
+  /**
+   * Agrega un nuevo elemento a la tabla de control de inventarios directamente.
+   */
+  agregarNuevoElementoControlInventarios(): void {
+    this.camposObligatoriosRespondidosControlInventarios =
+      Boolean(this.preOperativeForm.get('nombreDel')?.valid) &&
+      Boolean(this.preOperativeForm.get('lugarDeRadicacion')?.valid);
+
+    if (this.camposObligatoriosRespondidosControlInventarios) {
+      const NEW_ITEM: ControlInventariosItem = {
+        id: (this.datosTablaControlInventarios.length + 1).toString(),
+        nombreSistema: this.preOperativeForm.get('nombreDel')?.value,
+        lugarRadicacion: this.preOperativeForm.get('lugarDeRadicacion')?.value,
+        anexo24: this.preOperativeForm.get('indiqueCheck')?.value || false
+      };
+
+      this.datosTablaControlInventarios.push(NEW_ITEM);
+      this.tramite31601Store.setControlInventariosTablaDatos(this.datosTablaControlInventarios);
+      this.preOperativeForm.patchValue({
+        nombreDel: '',
+        lugarDeRadicacion: '',
+        indiqueCheck: false
+      });
+
+      this.camposObligatoriosRespondidosControlInventarios = false;
+      this.mostrarNotificacionExito();
+    }
+  }
+
+  /**
+   * Muestra la notificación de éxito después de agregar un elemento
+   */
+  private mostrarNotificacionExito(): void {
+    this.notificacionExito = {
+      tipoNotificacion: 'alert',
+      categoria: 'success',
+      modo: '',
+      titulo: '',
+      mensaje: 'Datos guardados correctamente.',
+      cerrar: false,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+      tamanioModal: 'modal-sm'
+    };
+  }
+
+  /**
+   * Maneja la confirmación de la notificación
+   */
+  onConfirmacionNotificacion(confirmado: boolean): void {
+    if (confirmado) {
+      this.notificacionExito = null;
+    }
+  }
+
+  /**
+   * Modifica un elemento existente en la tabla de control inventarios usando modal.
+   */
+  modificaControlInventariosItem(): void {
+    if (this.filaSeleccionadaControlInventarios) {
+      this.camposObligatoriosRespondidosControlInventarios =
+        Boolean(this.preOperativeForm.get('nombreDel')?.valid) &&
+        Boolean(this.preOperativeForm.get('lugarDeRadicacion')?.valid);
+
+      if (this.camposObligatoriosRespondidosControlInventarios) {
+        const INDEX = this.datosTablaControlInventarios.findIndex(
+          item => item.id === this.filaSeleccionadaControlInventarios!.id
+        );
+
+        if (INDEX !== -1) {
+          this.datosTablaControlInventarios[INDEX] = {
+            ...this.filaSeleccionadaControlInventarios,
+            nombreSistema: this.preOperativeForm.get('nombreDel')?.value,
+            lugarRadicacion: this.preOperativeForm.get('lugarDeRadicacion')?.value,
+            anexo24: this.preOperativeForm.get('indiqueCheck')?.value || false
+          };
+
+          this.tramite31601Store.setControlInventariosTablaDatos(this.datosTablaControlInventarios);
+          this.closeControlInventariosModal();
+          this.camposObligatoriosRespondidosControlInventarios = false;
+        }
+      }
+    }
+  }
+
+  /**
+   * Confirma la eliminación de los elementos seleccionados.
+   */
+  confirmEliminarControlInventariosItem(): void {
+    if (this.listaFilaSeleccionadaControlInventarios.length === 0) {
+      return;
+    }
+    this.abrirEliminarConfirmationPopupControlInventarios();
+  }
+
+  /**
+   * Abre el popup de confirmación de eliminación para control inventarios.
+   */
+  abrirEliminarConfirmationPopupControlInventarios(): void {
+    this.confirmEliminarPopupAbiertoControlInventarios = true;
+  }
+
+  /**
+   * Cierra el popup de confirmación de eliminación para control inventarios.
+   */
+  cerrarEliminarConfirmationPopupControlInventarios(): void {
+    this.confirmEliminarPopupAbiertoControlInventarios = false;
+  }
+
+  /**
+   * Elimina los elementos seleccionados de la tabla de control inventarios.
+   */
+  eliminarControlInventariosItem(): void {
+    const IDS_ELIMINAR = this.listaFilaSeleccionadaControlInventarios.map(
+      (item) => item.id
+    );
+
+    this.datosTablaControlInventarios = this.datosTablaControlInventarios.filter(
+      (item) => !IDS_ELIMINAR.includes(item.id)
+    );
+
+    this.listaFilaSeleccionadaControlInventarios = [];
+    this.tramite31601Store.setControlInventariosTablaDatos(this.datosTablaControlInventarios);
+    this.cerrarEliminarConfirmationPopupControlInventarios();
+  }
+
+    /**
+   * Indica si se debe mostrar la tabla de subcontratación.
+   * 
+   * Retorna true si la opción seleccionada en el radio 'senaleSi' es 'Si'.
+   * Esto permite mostrar u ocultar dinámicamente la sección relacionada
+   * con trabajadores subcontratados en el formulario.
+   */
+  get showSubcontratacionTable(): boolean {
+    return this.preOperativeForm?.get('senaleSi')?.value === 'Si';
+  }
+  
+  /**
+   * Nombre del archivo seleccionado por el usuario.
+   * Se actualiza cada vez que el usuario selecciona un archivo en el input correspondiente.
+   */
+  public selectedFileName: string = '';
+
+  /**
+   * Maneja el evento de selección de archivo.
+   * 
+   * Este método se ejecuta cuando el usuario selecciona un archivo en el input de tipo file.
+   * Actualiza la propiedad `selectedFileName` con el nombre del archivo seleccionado.
+   * Si no se selecciona ningún archivo, la propiedad se establece como una cadena vacía.
+   * 
+   *  event Evento de cambio generado por el input de tipo file.
+   */
+  onFileSelected(event: Event): void {
+    const INPUT = event.target as HTMLInputElement;
+    if (INPUT.files && INPUT.files.length > 0) {
+      this.selectedFileName = INPUT.files[0].name;
+    } else {
+      this.selectedFileName = '';
+    }
+  }
+  /**
+   * Indica si se debe mostrar la sección relacionada con el campo 'senale'.
+   * 
+   * Retorna true si la opción seleccionada en el radio 'senale' es 'Si'.
+   * Esto permite mostrar u ocultar dinámicamente la sección correspondiente
+   * en el formulario.
+   */
+  get showsenale(): boolean {
+    return this.preOperativeForm?.get('senale')?.value === 'Si';
   }
 
   /**

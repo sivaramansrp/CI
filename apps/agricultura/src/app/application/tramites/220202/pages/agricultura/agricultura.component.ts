@@ -1,8 +1,7 @@
+import { ALERT_TEXTO, PASOS } from '../../constantes/220202/fitosanitario.enums';
+import { AccionBoton, ListaPasosWizard } from '../../models/220202/fitosanitario.model';
 import { Component, ViewChild } from '@angular/core';
 import { DatosPasos, WizardComponent } from '@ng-mf/data-access-user';
-
-import { AccionBoton, ListaPasosWizard } from '../../models/220202/fitosanitario.model';
-import { PASOS } from '../../constantes/220202/fitosanitario.enums';
 
 /**
  * @fileoverview Componente para la gestión del formulario de agricultura.
@@ -24,6 +23,13 @@ import { PASOS } from '../../constantes/220202/fitosanitario.enums';
   templateUrl: './agricultura.component.html',
 })
 export class AgriculturaComponent {
+
+  /**
+   * @description Texto que se muestra en la alerta del formulario.
+   * Este texto es utilizado para proporcionar información al usuario sobre el propósito del formulario.
+   * @type {string}
+   */
+  public readonly alertText = ALERT_TEXTO;
 
   /**
    * @description Array de objetos que definen los pasos del formulario.

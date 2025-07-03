@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 import { Tramite260214State, Tramite260214Store } from '../../estados/tramite260214Store.store';
-import { map, takeUntil } from 'rxjs';
+import { map,takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { DatosMercanciaComponent } from '../../../../shared/components/datos-mercancia/datos-mercancia.component';
 import { Subject } from 'rxjs';

@@ -158,7 +158,7 @@ describe('PagoLineaDeCapturaComponent', () => {
       setLineaCaptura: jest.fn(() => of('NEWLINEA')),
       setValorPago: jest.fn(() => of('2000')),
       setPagoDerechosLista: jest.fn(() =>
-        of([{ linea: 'NEWLINEA', monto: '1000' }])
+        of([{"linea": "FIRSTLINEA", "monto": "1234"}])
       ),
     } as any;
 
@@ -210,10 +210,32 @@ describe('PagoLineaDeCapturaComponent', () => {
     expect(component.formPagoLC.get('valorPago')).toBeTruthy();
   });
 
-  it('should call setLineaCaptura and update store', () => {
-    component.formPagoLC.get('lineaCaptura')?.setValue('NEWLINEA');
-    component.setLineaCaptura();
-    expect(solicitudStoreSpy.setLineaCaptura).toHaveBeenCalledWith('NEWLINEA');
+  it('should clean and uppercase input, patch form, and call setLineaCaptura', () => {
+    const patchValueSpy = jest.spyOn(component.formPagoLC, 'patchValue');
+    const setLineaCapturaSpy = jest.spyOn(solicitudStoreSpy, 'setLineaCaptura');
+    (global as any).REGEX_REEMPLAZAR = /[^A-Z0-9]/gi;
+    const input = document.createElement('input');
+    input.value = 'abc-123*';
+    const event = { target: input } as unknown as Event;
+
+    component.setLineaCaptura(event);
+
+    expect(patchValueSpy).toHaveBeenCalledWith({ lineaCaptura: 'ABC123' });
+    expect(setLineaCapturaSpy).toHaveBeenCalledWith('ABC123');
+  });
+
+  it('should handle empty input in setLineaCaptura', () => {
+    const patchValueSpy = jest.spyOn(component.formPagoLC, 'patchValue');
+    const setLineaCapturaSpy = jest.spyOn(solicitudStoreSpy, 'setLineaCaptura');
+    (global as any).REGEX_REEMPLAZAR = /[^A-Z0-9]/gi;
+    const input = document.createElement('input');
+    input.value = '';
+    const event = { target: input } as unknown as Event;
+
+    component.setLineaCaptura(event);
+
+    expect(patchValueSpy).toHaveBeenCalledWith({ lineaCaptura: '' });
+    expect(setLineaCapturaSpy).toHaveBeenCalledWith('');
   });
 
   it('should reset lineaCaptura on limpiarCampos', () => {
@@ -228,8 +250,29 @@ describe('PagoLineaDeCapturaComponent', () => {
     expect(solicitudStoreSpy.setPagoDerechosLista).not.toHaveBeenCalled();
   });
 
-  it('should not add tarifa if linea already exists', () => {
-    component.pagoDerechosLista = [{ linea: 'DUPLICATE', monto: '1000' }];
+  it('should not add tarifa if formPagoLC is invalid (missing valorPago)', () => {
+    component.pagoDerechosLista = [];
+    component.formPagoLC.get('lineaCaptura')?.setValue('SOMELINEA');
+    component.formPagoLC.get('valorPago')?.setValue('');
+    component.formPagoLC.get('valorPago')?.setErrors({ required: true });
+    component.anadirTarifasDePago();
+    expect(solicitudStoreSpy.setPagoDerechosLista).not.toHaveBeenCalled();
+  });
+
+  it('should not add tarifa if formPagoLC is invalid (missing lineaCaptura)', () => {
+    component.pagoDerechosLista = [];
+    component.formPagoLC.get('lineaCaptura')?.setValue('');
+    component.formPagoLC.get('valorPago')?.setValue('1000');
+    component.formPagoLC.get('lineaCaptura')?.setErrors({ required: true });
+    component.anadirTarifasDePago();
+    expect(solicitudStoreSpy.setPagoDerechosLista).not.toHaveBeenCalled();
+  });
+
+  it('should iterate over pagoDerechosLista using for-in and skip adding if duplicate found', () => {
+    component.pagoDerechosLista = [
+      { linea: 'DUPLICATE', monto: '1000' },
+      { linea: 'OTHER', monto: '2000' }
+    ];
     component.formPagoLC.get('lineaCaptura')?.setValue('DUPLICATE');
     component.formPagoLC.get('valorPago')?.setValue('1000');
     component.anadirTarifasDePago();

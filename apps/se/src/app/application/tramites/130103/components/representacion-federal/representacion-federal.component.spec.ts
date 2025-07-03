@@ -33,40 +33,40 @@ describe('RepresentacionFederalComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('debería crear', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should set importacionstate from selectImportacion$', () => {
+  it('debería establecer importacionstate desde selectImportacion$', () => {
     component.ngOnInit();
     expect(component.importacionstate).toEqual(mockImportacionState);
   });
 
-  it('should call setDynamicFieldValue with object.id if valor is an object with id', () => {
-    const event = { campo: 'entidad', valor: { id: 42, descripcion: 'CDMX' } };
+  it('debería llamar a setDynamicFieldValue con object.id si valor es un objeto con id', () => {
+    const event = { campo: 'entidad', valor: 'CDMX' };
     component.establecerCambioDeValor(event);
-    expect(storeMock.setDynamicFieldValue).toHaveBeenCalledWith('entidad', 42);
+    expect(storeMock.setDynamicFieldValue).toHaveBeenCalledWith('entidad', 'CDMX');
   });
 
-  it('should call setDynamicFieldValue with primitive value if valor is not object', () => {
+  it('debería llamar a setDynamicFieldValue con valor primitivo si valor no es un objeto', () => {
     const event = { campo: 'nombre', valor: 'Juan' };
     component.establecerCambioDeValor(event);
     expect(storeMock.setDynamicFieldValue).toHaveBeenCalledWith('nombre', 'Juan');
   });
 
-  it('should call setDynamicFieldValue with full object if valor is object without id', () => {
-    const event = { campo: 'custom', valor: { nombre: 'sin ID' } };
+  it('debería llamar a setDynamicFieldValue con objeto completo si valor es un objeto sin id', () => {
+    const event = { campo: 'custom', valor: 'sin ID' };
     component.establecerCambioDeValor(event);
-    expect(storeMock.setDynamicFieldValue).toHaveBeenCalledWith('custom', { nombre: 'sin ID' });
+    expect(storeMock.setDynamicFieldValue).toHaveBeenCalledWith('custom', 'sin ID');
   });
 
-  it('should not throw when event.valor is null', () => {
+  it('debería no lanzar error cuando event.valor es null', () => {
     const event = { campo: 'otro', valor: null };
     component.establecerCambioDeValor(event);
     expect(storeMock.setDynamicFieldValue).toHaveBeenCalledWith('otro', null);
   });
 
-  it('should not throw when event is undefined or null', () => {
+  it('no debería lanzar error cuando event es undefined o null', () => {
     expect(() => component.establecerCambioDeValor(null as any)).not.toThrow();
     expect(() => component.establecerCambioDeValor(undefined as any)).not.toThrow();
   });

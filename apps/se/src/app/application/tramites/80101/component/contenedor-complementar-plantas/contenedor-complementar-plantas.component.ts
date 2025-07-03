@@ -5,6 +5,27 @@ import { CommonModule } from '@angular/common';
 import { DetallesPlantasComponent } from '../../../../shared/components/detalles-plantas/detalles-plantas.component';
 import { PlantasSubfabricante } from '../../../../shared/models/empresas-subfabricanta.model';
 import { Tramite80101Query} from '../../estados/tramite80101.query';
+
+
+/**
+ * Regresa a la ruta de la solicitud relativa al contexto actual.
+ * 
+ * Este método utiliza el servicio de enrutamiento de Angular (`Router`) para redirigir al usuario
+ * a la página de solicitud. La navegación se realiza de manera relativa a la ruta activa actual,
+ * lo que permite mantener el contexto de navegación dentro de la estructura de rutas del módulo.
+ * 
+ * @remarks
+ * Este método es útil para manejar la navegación en aplicaciones con rutas jerárquicas,
+ * asegurando que el usuario pueda regresar a una página específica dentro del flujo de trabajo.
+ * 
+ * @example
+ * ```typescript
+ * regressarPlantas();
+ * ```
+ * Esto redirigirá al usuario a la ruta `../solicitud` relativa a la ruta activa actual.
+ * 
+ * @method regressarPlantas
+ */
 @Component({
   selector: 'app-contenedor-complementar-plantas',
   standalone: true,

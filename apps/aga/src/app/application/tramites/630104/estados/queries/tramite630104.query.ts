@@ -27,4 +27,13 @@ export class Tramite630104Query extends Query<Tramite630104State> {
   ) {
     super(store);
   }
+  
+  /**
+   * Observable que selecciona el estado completo de la sección.
+   * Permite suscribirse a los cambios en el estado del trámite 420103.
+   */
+  selectSeccionState$ = this.select((state) => {
+    return state;
+  });
+
 }

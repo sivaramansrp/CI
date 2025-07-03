@@ -1,5 +1,5 @@
+import { Component, EventEmitter, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
 import { DatosMercanciaComponent } from '../../../../shared/components/datos-mercancia/datos-mercancia.component';
 import { MercanciaDetalle } from '../../../../shared/models/datos-del-tramite.model';
 import { Tramite240106Store } from '../../estados/tramite240106Store.store';
@@ -18,6 +18,8 @@ import { Tramite240106Store } from '../../estados/tramite240106Store.store';
   styleUrl: './datos-mercancia-contenedora.component.scss',
 })
 export class DatosMercanciaContenedoraComponent {
+
+  @Output() cerrar = new EventEmitter<void>();
   /**
    * Constructor del componente.
    *

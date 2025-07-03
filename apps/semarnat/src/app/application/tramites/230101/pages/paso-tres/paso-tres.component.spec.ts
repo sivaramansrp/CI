@@ -11,14 +11,14 @@ describe('PasoTresComponent', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [PasoTresComponent],
-      imports: [RouterTestingModule], // Provides a mock Router
+      imports: [RouterTestingModule], 
     }).compileComponents();
 
     fixture = TestBed.createComponent(PasoTresComponent);
     component = fixture.componentInstance;
     mockRouter = TestBed.inject(Router);
 
-    jest.spyOn(mockRouter, 'navigate'); // Spy on the navigate method
+    jest.spyOn(mockRouter, 'navigate'); 
   });
 
   it('should create the component', () => {

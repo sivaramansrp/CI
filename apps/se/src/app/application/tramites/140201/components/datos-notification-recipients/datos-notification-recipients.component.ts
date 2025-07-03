@@ -5,7 +5,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Subject, Subscription, map, takeUntil } from 'rxjs';
+import { Observable, Subject, Subscription, map, takeUntil } from 'rxjs';
 import { CancelacionesQuery } from '../../estados/cancelaciones.query';
 import { CancelacionesService } from '../../services/cancelaciones.service';
 import { CancelacionesStore } from '../../estados/cancelaciones.store';
@@ -39,7 +39,11 @@ export class DatosNotificationRecipientsComponent implements OnInit, OnDestroy {
   formularioDeNotificacionesForm!: FormGroup;
   /** Subject para manejar la destrucción de las suscripciones */
   private destroy$ = new Subject<void>();
-
+  /**
+   * Observable para la entidad federativa.
+   * Se inicializa como un observable vacío.
+   */
+  entidadFederativa$!: Observable<unknown>;
   /**
    * Suscripción a los cambios en el formulario react
    */

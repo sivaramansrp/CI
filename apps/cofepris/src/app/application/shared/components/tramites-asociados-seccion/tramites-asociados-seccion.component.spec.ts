@@ -8,7 +8,7 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 describe('TramitesAsociadosSeccionComponent', () => {
-  let component: TramitesAsociadosSeccionComponent;
+  let componente: TramitesAsociadosSeccionComponent;
   let fixture: ComponentFixture<TramitesAsociadosSeccionComponent>;
   let mockEstablecimientoService: jest.Mocked<EstablecimientoService>;
 
@@ -18,7 +18,7 @@ describe('TramitesAsociadosSeccionComponent', () => {
     } as unknown as jest.Mocked<EstablecimientoService>;
 
     await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule, FormsModule, HttpClientTestingModule,TramitesAsociadosSeccionComponent],
+      imports: [ReactiveFormsModule, FormsModule, HttpClientTestingModule, TramitesAsociadosSeccionComponent],
       declarations: [],
       providers: [{ provide: EstablecimientoService, useValue: mockEstablecimientoService }],
     }).compileComponents();
@@ -26,12 +26,12 @@ describe('TramitesAsociadosSeccionComponent', () => {
 
   beforeEach(() => {
     fixture = TestBed.createComponent(TramitesAsociadosSeccionComponent);
-    component = fixture.componentInstance;
+    componente = fixture.componentInstance;
 
-    // Mock the destroy$ Subject to avoid errors during ngOnDestroy
-    component['destroy$'] = new Subject<void>();
+    // Mock del Subject destroy$ para evitar errores en ngOnDestroy
+    componente['destroy$'] = new Subject<void>();
 
-    // Mock the enListaDeAsociados method to return an observable with mock data
+    // Mock del método enListaDeAsociados para devolver un observable con datos simulados
     mockEstablecimientoService.enListaDeAsociados.mockReturnValue(of([
       { id: 1, folioTramite: 'FT123', tipoTramite: 'Tipo 1', estatus: 'Activo', fechaAltaDeRegistro: '2025-04-09' },
     ]));
@@ -40,19 +40,19 @@ describe('TramitesAsociadosSeccionComponent', () => {
   });
 
   afterEach(() => {
-    // Ensure the destroy$ Subject is completed to avoid memory leaks
-    component['destroy$'].next();
-    component['destroy$'].complete();
+    // Asegura que el Subject destroy$ se complete para evitar memory leaks
+    componente['destroy$'].next();
+    componente['destroy$'].complete();
 
     fixture.destroy();
   });
 
-  it('should create the component', () => {
-    expect(component).toBeTruthy();
+  it('debería crear el componente', () => {
+    expect(componente).toBeTruthy();
   });
 
-  it('should initialize the table configuration', () => {
-    expect(component.configuracionTablaTramites).toEqual([
+  it('debería inicializar la configuración de la tabla', () => {
+    expect(componente.configuracionTablaTramites).toEqual([
       { encabezado: '', clave: expect.any(Function), orden: 1 },
       { encabezado: 'Folio trámite', clave: expect.any(Function), orden: 2 },
       { encabezado: 'Tipo trámite', clave: expect.any(Function), orden: 3 },
@@ -61,28 +61,28 @@ describe('TramitesAsociadosSeccionComponent', () => {
     ]);
   });
 
-  it('should call obtenerListaDeAsociados on ngOnInit', () => {
-    const obtenerListaDeAsociadosSpy = jest.spyOn(component, 'obtenerListaDeAsociados');
-    component.ngOnInit();
-    expect(obtenerListaDeAsociadosSpy).toHaveBeenCalled();
+  it('debería llamar a obtenerListaDeAsociados en ngOnInit', () => {
+    const spyObtenerLista = jest.spyOn(componente, 'obtenerListaDeAsociados');
+    componente.ngOnInit();
+    expect(spyObtenerLista).toHaveBeenCalled();
   });
 
-  it('should fetch and assign asociados data to the table', () => {
-    component.obtenerListaDeAsociados();
+  it('debería obtener y asignar los datos de asociados a la tabla', () => {
+    componente.obtenerListaDeAsociados();
 
-    expect(component.acuseTablaDatos).toEqual([
+    expect(componente.acuseTablaDatos).toEqual([
       { id: 1, folioTramite: 'FT123', tipoTramite: 'Tipo 1', estatus: 'Activo', fechaAltaDeRegistro: '2025-04-09' },
     ]);
     expect(mockEstablecimientoService.enListaDeAsociados).toHaveBeenCalled();
   });
 
-  it('should clean up subscriptions on ngOnDestroy', () => {
-    const destroySpy = jest.spyOn(component['destroy$'], 'next');
-    const completeSpy = jest.spyOn(component['destroy$'], 'complete');
+  it('debería limpiar las suscripciones en ngOnDestroy', () => {
+    const spyNext = jest.spyOn(componente['destroy$'], 'next');
+    const spyComplete = jest.spyOn(componente['destroy$'], 'complete');
 
-    component.ngOnDestroy();
+    componente.ngOnDestroy();
 
-    expect(destroySpy).toHaveBeenCalled();
-    expect(completeSpy).toHaveBeenCalled();
+    expect(spyNext).toHaveBeenCalled();
+    expect(spyComplete).toHaveBeenCalled();
   });
 });

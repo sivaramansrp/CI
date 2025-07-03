@@ -67,7 +67,7 @@ export class DatosPorGarantiaComponent implements OnInit, OnDestroy {
   };
 
   /** Subject usado para destruir suscripciones al finalizar el componente */
-  private destroy$: Subject<void> = new Subject<void>();
+  public destroy$: Subject<void> = new Subject<void>();
 
   /** Estado actual de la solicitud almacenado en el store */
   solicitud31301State: Solicitud31301State = {} as Solicitud31301State;

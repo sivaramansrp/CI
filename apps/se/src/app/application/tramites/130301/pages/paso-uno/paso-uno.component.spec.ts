@@ -2,6 +2,8 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PasoUnoComponent } from './paso-uno.component';
 import { SolicitanteComponent, TIPO_PERSONA } from '@libs/shared/data-access-user/src';
 import { Component } from '@angular/core';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
 
 @Component({
   selector: 'app-mock-solicitante',
@@ -18,7 +20,9 @@ describe('PasoUnoComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
+      imports: [HttpClientTestingModule],
       declarations: [PasoUnoComponent, MockSolicitanteComponent],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
     }).compileComponents();
 
     fixture = TestBed.createComponent(PasoUnoComponent);
@@ -28,25 +32,26 @@ describe('PasoUnoComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize indice to 1', () => {
+  it('debe inicializar indice en 1', () => {
     expect(component.indice).toBe(1);
   });
 
-  it('should call obtenerTipoPersona with TIPO_PERSONA.MORAL_NACIONAL on ngAfterViewInit', () => {
+  it('debe llamar a obtenerTipoPersona con TIPO_PERSONA.MORAL_NACIONAL en ngAfterViewInit', () => {
+    component.solicitante = mockSolicitante as unknown as SolicitanteComponent;
     component.ngAfterViewInit();
     expect(mockSolicitante.obtenerTipoPersona).toHaveBeenCalledWith(TIPO_PERSONA.MORAL_NACIONAL);
   });
 
-  it('should update indice when seleccionaTab is called', () => {
+  it('debe actualizar indice cuando se llama a seleccionaTab', () => {
     component.seleccionaTab(2);
     expect(component.indice).toBe(2);
   });
 
-  it('should not call obtenerTipoPersona if solicitante is undefined', () => {
+  it('no debe llamar a obtenerTipoPersona si solicitante es undefined', () => {
     component.solicitante = undefined as unknown as SolicitanteComponent;
     expect(() => component.ngAfterViewInit()).not.toThrow();
   });

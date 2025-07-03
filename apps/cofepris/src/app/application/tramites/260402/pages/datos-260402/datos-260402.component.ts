@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
-import { Subject, forkJoin, map, takeUntil } from 'rxjs';
+import { Subject, forkJoin, takeUntil } from 'rxjs';
 import { Solocitud260402Service } from '../../services/service260402.service';
 
 /**

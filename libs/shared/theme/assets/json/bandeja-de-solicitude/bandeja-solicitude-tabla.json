@@ -999,15 +999,6 @@
     "numeroDeProcedimiento": "30901"
   },
   {
-    "id": 220501,
-    "tipoDeTramite": "Solicitud de Permiso",
-    "fecha": "2023-10-01",
-    "fechaActualizacion": "2023-10-05",
-    "diasTranscurridos": "4",
-    "departamento": "AGRICULTURA",
-    "numeroDeProcedimiento": "220501"
-  },
-  {
     "id": 220402,
     "tipoDeTramite": "Solicitud de Permiso",
     "fecha": "2023-10-01",
@@ -1332,15 +1323,6 @@
     "numeroDeProcedimiento": "110205"
   },
   {
-    "id": 130106,
-    "tipoDeTramite": "Expedición de Certificados de Cupo Licitación pública",
-    "fecha": "2023-10-01",
-    "fechaActualizacion": "2023-10-05",
-    "diasTranscurridos": "4",
-    "departamento": "SE",
-    "numeroDeProcedimiento": "130106"
-  },
-  {
     "id": 220702,
     "tipoDeTramite": "Solicitud",
     "fecha": "2024-10-05",
@@ -1357,6 +1339,15 @@
     "diasTranscurridos": "4",
     "departamento": "AGA",
     "numeroDeProcedimiento": "302"
+  },
+  {
+    "id": 5601,
+    "tipoDeTramite": "Solicitud de cs Permiso",
+    "fecha": "2023-10-01",
+    "fechaActualizacion": "2023-10-05",
+    "diasTranscurridos": "4",
+    "departamento": "AGA",
+    "numeroDeProcedimiento": "5601"
   },
   {
     "id": 150103,
@@ -1402,6 +1393,15 @@
     "diasTranscurridos": "4",
     "departamento": "COFEPRIS",
     "numeroDeProcedimiento": "260211"
+  },
+  {
+    "id": 260212,
+    "tipoDeTramite": "Solicitud de Permiso",
+    "fecha": "2023-10-01",
+    "fechaActualizacion": "2023-10-05",
+    "diasTranscurridos": "4",
+    "departamento": "COFEPRIS",
+    "numeroDeProcedimiento": "260212"
   },
   {
     "id": 110204,
@@ -1711,7 +1711,7 @@
   },
     {
     "id": 260704,
-    "tipoDeTramite": "Solicitud Procedure 260701",
+    "tipoDeTramite": "Solicitud Procedure 260704",
     "fecha": "2024-11-01",
     "fechaActualizacion": "2024-11-07",
     "diasTranscurridos": "4",
@@ -1755,6 +1755,15 @@
     "numeroDeProcedimiento": "31802"
   },
   {
+   "id": 31803,
+   "tipoDeTramite": "Solicitud de acuso",
+   "fecha": "2023-10-01",
+   "fechaActualizacion": "2023-10-05",
+   "diasTranscurridos": "4",
+   "departamento": "AGACE",
+   "numeroDeProcedimiento": "31803"
+},
+{
     "id": 260104,
     "tipoDeTramite": "Antecesor",
     "fecha": "2023-10-01",
@@ -1888,6 +1897,15 @@
     "diasTranscurridos": "4",
     "departamento": "SE",
     "numeroDeProcedimiento": "120401"
+},
+{
+    "id": 31203,
+    "tipoDeTramite": "Solicitud proceso Interno",
+    "fecha": "2023-10-01",
+    "fechaActualizacion": "2023-10-05",
+    "diasTranscurridos": "4",
+    "departamento": "AGA",
+    "numeroDeProcedimiento": "31203"
   },
   {
     "id": 260205,
@@ -2491,6 +2509,15 @@
     "departamento": "COFEPRIS",
     "numeroDeProcedimiento": "260301"
   },
+  {
+    "id": 11102,
+    "tipoDeTramite": "Solicitud de cs Permiso",
+    "fecha": "2023-10-01",
+    "fechaActualizacion": "2023-10-05",
+    "diasTranscurridos": "4",
+    "departamento": "AGA",
+    "numeroDeProcedimiento": "11102"
+  },
     {
   "id": 260103,
   "tipoDeTramite": "Solicitud de Permiso",
@@ -2710,6 +2737,15 @@
     "numeroDeProcedimiento": "260507"
   },
   {
+     "id": 11101,
+    "tipoDeTramite": "Solicitud Procedure 11101",
+    "fecha": "2024-11-01",
+    "fechaActualizacion": "2024-11-07",
+    "diasTranscurridos": "4",
+    "departamento": "AGA",
+    "numeroDeProcedimiento": "11101"
+  },
+  {
     "id": 6403,
   "tipoDeTramite": "Solicitud de Permiso",
   "fecha": "2023-10-01",
@@ -2781,6 +2817,15 @@
     "departamento": "AGA",
     "numeroDeProcedimiento": "324"
   },
+  {
+    "id": 80105,
+    "tipoDeTramite": "Solicitud de Permiso",
+    "fecha": "2023-10-01",
+    "fechaActualizacion": "2023-10-05",
+    "diasTranscurridos": "4",
+    "departamento": "SE",
+    "numeroDeProcedimiento": "80105"
+  },
    {
     "id": 32505,
     "tipoDeTramite": "Solicitud de Permiso",
@@ -2791,6 +2836,15 @@
     "numeroDeProcedimiento": "32505"
   },
   {
+      "id": 40201,
+      "tipoDeTramite": "Expedición de Certificados de Cupo Licitación pública",
+      "fecha": "2023-10-01",
+      "fechaActualizacion": "2023-10-05",
+      "diasTranscurridos": "4",
+      "departamento": "AGA",
+      "numeroDeProcedimiento": "40201"
+    },
+  {
     "id": 11105,
     "tipoDeTramite": "Solicitud de Permiso",
     "fecha": "2023-10-01",
@@ -2798,7 +2852,69 @@
     "diasTranscurridos": "4",
     "departamento": "AGA",
     "numeroDeProcedimiento": "11105"
+  },
+  {
+  "id": 130120,
+  "tipoDeTramite": "Solicitud de Permiso",
+  "fecha": "2023-10-01",
+  "fechaActualizacion": "2023-10-05",
+  "diasTranscurridos": "4",
+  "departamento": "SE",
+  "numeroDeProcedimiento": "130120"
+  },
+  {
+    "id": 570102,
+    "tipoDeTramite": "Solicitud de Permiso",
+    "fecha": "2023-10-01",
+    "fechaActualizacion": "2023-10-05",
+    "diasTranscurridos": "4",
+    "departamento": "AGA",
+    "numeroDeProcedimiento": "570102"
+  },
+  {
+    "id": 6001,
+    "tipoDeTramite": "Solicitud de Permiso",
+    "fecha": "2023-10-01",
+    "fechaActualizacion": "2023-10-05",
+    "diasTranscurridos": "4",
+    "departamento": "AGA",
+    "numeroDeProcedimiento": "6001"
+  },
+  {
+    "id":80301,
+    "tipoDeTramite": "Solicitud de Permiso",
+    "fecha": "2023-10-01",
+    "fechaActualizacion": "2023-10-05",
+    "diasTranscurridos": "4",
+    "departamento": "SE",
+    "numeroDeProcedimiento": "80301"
+  },
+  {
+    "id": 110212,
+    "tipoDeTramite": "Solicitud de Permiso",
+    "fecha": "2023-10-01",
+    "fechaActualizacion": "2023-10-05",
+    "diasTranscurridos": "4",
+    "departamento": "SE",
+    "numeroDeProcedimiento": "110212"
+  },
+  {
+    "id": 40401,
+    "tipoDeTramite": "Solicitud de Permiso",
+    "fecha": "2023-10-01",
+    "fechaActualizacion": "2023-10-05",
+    "diasTranscurridos": "4",
+    "departamento": "AGA",
+    "numeroDeProcedimiento": "40401"
+  },
+  {
+    "id": 30401,
+    "tipoDeTramite": "Solicitud de Permiso",
+    "fecha": "2023-10-01",
+    "fechaActualizacion": "2023-10-05",
+    "diasTranscurridos": "4",
+    "departamento": "AGA",
+    "numeroDeProcedimiento": "30401"
   }
-
 
 ]

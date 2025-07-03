@@ -42,6 +42,12 @@ export interface RepresentacionFederal {
     municipio: string;
     /** Estado */
     estado: string;
+    /** País */
+    pais: string;
+    /** Localidad */
+    localidad: string;
+    /** Teléfono */
+    telefono: string;
 }
 
 /**

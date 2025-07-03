@@ -5,6 +5,7 @@
     [grupoDeFormulario]="'numeroCaat'"
     [tipoTransitoList$] = "tipoTransitoList$"
     [cveFolioCaat$] = "cveFolioCaat$"
+    [esFormularioSoloLectura]="esFormularioSoloLectura"
     ></app-datos-generales>
     <div class="row mt-2">
       <div class="col-md-12">
@@ -18,6 +19,7 @@
           (fechasSeleccionadasChange)="
             aduanasEntradaSeleccionadasChange($event)
           "
+          [isDisabled]="esFormularioSoloLectura"
         ></crosslist>
       </div>
     </div>
@@ -28,12 +30,14 @@
     [entidadFederativaList$]="entidadFederativaList$"
     [delegacionMunicipioList$] = "delegacionMunicipioList$"
     [coloniaList$] = "coloniaList$"
+    [esFormularioSoloLectura]="esFormularioSoloLectura"
     >
     </app-direccion-empresa>
       
     <app-capital-social
     [titulo] = "'Capital social'"
     [grupoDeFormulario]="'empresasCapitalSocial'"
+    [esFormularioSoloLectura]="esFormularioSoloLectura"
     >
     </app-capital-social>
 
@@ -42,6 +46,7 @@
     [grupoDeFormulario]="'permiso'"
     [capitalSocialNota]="CAPITAL_SOCIAL_NOTA"
     [miRepresentadaNota]="MI_REPRESENTADA_NOTA"
+    [esFormularioSoloLectura]="esFormularioSoloLectura"
     >
     </app-permiso-expedido>
     
