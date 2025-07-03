@@ -17,6 +17,10 @@ export interface Catalogo {
 export interface Solicitud30506State {
   /** Número de operación asociado a la solicitud. */
   numeroOperacion: string;
+  /** Fecha de inicio del trámite. */
+  fechaInicio : string;
+  /** Fecha final del trámite. */
+  fechaFinal : string;
   /** Lista de bancos asociados a la solicitud. */
   banco: string;
   /** Llave única asociada a la solicitud. */
@@ -36,6 +40,8 @@ export interface Solicitud30506State {
 export function createInitialState(): Solicitud30506State {
   return {
     numeroOperacion: '',
+    fechaInicio:'29/05/2025',
+    fechaFinal: '29/06/2025',
     banco:'',
     llave: '',
     manifiesto1: '',
@@ -76,7 +82,20 @@ export class Tramite30506Store extends Store<Solicitud30506State> {
   public setNumeroOperacion(numeroOperacion: string): void {
     this.update((state) => ({ ...state, numeroOperacion }));
   }
-
+  /**
+   * Actualiza la fecha de inicio y final en el estado.
+   * @param fechaInicio Fecha de inicio de tipo `string`.
+   */
+  public setFechaInicio(fechaInicio: string): void {
+    this.update((state) => ({ ...state, fechaInicio }));
+  }
+  /**
+   * Actualiza la fecha final en el estado.
+   * @param fechaFinal Fecha final de tipo `string`.
+   */
+  public setFechaFinal(fechaFinal: string): void {
+    this.update((state) => ({ ...state, fechaFinal }));
+  }
   /**
    * Actualiza la llave en el estado.
    * @param llave Llave única de tipo `string`.

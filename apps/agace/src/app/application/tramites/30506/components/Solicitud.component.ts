@@ -262,11 +262,10 @@ inicializarEstadoFormulario(): void {
       llave: [this.solicitudState?.llave, [Validators.required]],
       manifiesto1: [this.solicitudState?.manifiesto1, [Validators.required]],
       manifiesto2: [this.solicitudState?.manifiesto2, [Validators.required]],
-      numeroOperacion: [
-        this.solicitudState?.numeroOperacion,
-        [Validators.required],
-      ],
+      numeroOperacion: [this.solicitudState?.numeroOperacion,[Validators.required],],
       fechaPago: [this.solicitudState?.fechaPago, [Validators.required]],
+      fechaInicio : [this.solicitudState?.fechaInicio, [Validators.required]],
+      fechaFinal : [this.solicitudState?.fechaFinal, [Validators.required]],
     });
     this.inicializarEstadoFormulario();
   }

@@ -6,35 +6,31 @@
     <div class="row mt-5">
       <div class="col-md-8">
         <label>Número de oficio*:</label>
-        <input type="text" class="form-control gris-color" readonly required />
+        <input type="text" class="form-control" value="25000000346347642731" readonly required />
       </div>
     </div>
     <div class="row mt-5">
       <div class="col-md-4">
-        <input-fecha [datos]="fechaInicialInput" class="disabled-input-fecha"></input-fecha>
+        <input-fecha [setFecha]="registroForm.get('fechaInicio')?.value" [datos]="fechaInicialInput" class="disabled-input-fecha"></input-fecha>
       </div>
       <div class="col-md-4">
-        <input-fecha [datos]="fechaFinalInput" class="disabled-input-fecha"></input-fecha>
+        <input-fecha [setFecha]="registroForm.get('fechaFinal')?.value" [datos]="fechaFinalInput" class="disabled-input-fecha"></input-fecha>
       </div>
     </div>
     <ng-titulo titulo="Pago de derechos" />
     <label class="label-spacing">{{ solicitudEnum.CORRESPONDIENTE }}</label>
     <div class="row mt-5">
-      <div class="col-md-6">
+      <div class="col-md-8">
         <label>Clave de referencia:</label>
-        <input type="text" class="form-control gris-color" readonly required />
-      </div>
-      <div class="col-md-6">
-        <label>Número de operación:</label>
-        <input type="text" class="form-control" formControlName="numeroOperacion" (change)=" setValoresStore( registroForm, 'numeroOperacion', 'setNumeroOperacion' ) " />
+        <input type="text" class="form-control" value="250034634" readonly required />
       </div>
     </div>
     <div class="row mt-5">
-      <div class="col-md-6">
+      <div class="col-md-8">
         <label>Cadena de la dependencia:</label>
-        <input type="text" class="form-control gris-color" readonly required />
+        <input type="text" class="form-control" value="2500000AGAR03463" readonly required />
       </div>
-      <div class="col-md-6">
+      <div class="col-md-4">
         <app-catalogo-select [catalogo]="bancoCatalogo.catalogos" [label]="'Banco'" formControlName="banco" (change)="setValoresStore(registroForm, 'banco', 'setBanco')"></app-catalogo-select>
       </div>
     </div>
@@ -48,7 +44,7 @@
       </div>
       <div class="col-md-4">
         <label>Importe de pago:</label>
-        <input type="text" class="form-control gris-color" readonly />
+        <input type="text" class="form-control" value="6427" readonly />
       </div>
     </div>
     <div class="row mt-5">

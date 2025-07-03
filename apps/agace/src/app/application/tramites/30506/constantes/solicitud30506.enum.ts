@@ -9,7 +9,8 @@ export enum Solicitud30506Enum {
    * Describe los datos en los que se otorgó el registro en el esquema de certificación
    * o, en su caso, de la última renovación.
    */
-  DATOS_REGISTRO = 'Datos en que se otorgó su Registro en el Despacho de Mercancías de las Empresas, ó en su caso, de la última Renovación',
+  DATOS_REGISTRO = `Datos en que se otorgó su Registro en el Despacho de Mercancías de las Empresas, ó en su caso, de la última 
+  Renovación`,
   
   /**
    * Texto para la modalidad de socio comercial.
@@ -22,12 +23,12 @@ export enum Solicitud30506Enum {
    * Declara que las circunstancias por las que se otorgó el registro no han cambiado
    * y que se continúa cumpliendo con los requisitos inherentes.
    */
-  MANIFIESTO_1 = 'Manifiesto bajo protesta de decir verdad, que las circunstancias por las que se otorgó el Registro en el Esquema de Certificación de Empresas, no han variado y continúo cumpliendo con los requisitos inherentes a la misma.',
+  MANIFIESTO_1 = 'Manifiesto bajo protesta de decir verdad, que las circunstancias por las que se otorgó la autorización, no han variado y continuo cumpliendo con los requisitos inherentes a la misma.*',
 
   /**
    * Texto para el segundo manifiesto.
    * Declara que los datos proporcionados son ciertos y que las facultades otorgadas
    * para representar a la solicitante no han sido modificadas ni revocadas.
    */
-  MANIFIESTO_2 = 'Bajo protesta de decir verdad, manifiesto que los datos asentados en el presente documento son ciertos y que las facultades que me fueron otorgadas para representar a la solicitante no me han sido modificadas y/o revocadas.',
+  MANIFIESTO_2 = 'Bajo protesta de decir verdad, manifiesto que los datos asentados en el presente documento son ciertos y que las facultades que me fueron otorgadas para representar a la solicitante no me han sido modificadas y/o revocadas.*',
 }
