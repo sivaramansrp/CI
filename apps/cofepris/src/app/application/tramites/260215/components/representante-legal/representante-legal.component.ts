@@ -12,8 +12,9 @@ import {
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
-import { TituloComponent } from '@libs/shared/data-access-user/src';
+import { TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
 import { Tramite260215Query } from '../../estados/queries/tramite260215.query';
+import { ServiciosPermisoSanitarioService } from '../../services/servicios-permiso-sanitario.service';
 
 /**
  * Componente principal para gestionar el formulario de representante.
@@ -36,6 +37,16 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
    */
   private destroyNotifier$: Subject<void> = new Subject();
 
+    /**
+   * Verifica si un campo específico del formulario es válido.
+   * @param field Nombre del campo del formulario a validar.
+   * @returns `true` si el campo es válido; de lo contrario, `false`.
+   */
+  
+  esValido(field: string): boolean {
+    return Boolean(this.validacionesService.isValid(this.representante, field));
+  }
+
 /**
    * Indica si el formulario está en modo solo lectura.
    * Cuando es `true`, los campos del formulario no se pueden editar.
@@ -52,7 +63,10 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
     private readonly fb: FormBuilder,
     private tramite260215Store: Tramite260215Store,
     private tramite260215Query: Tramite260215Query,
-    private consultaioQuery: ConsultaioQuery
+    private consultaioQuery: ConsultaioQuery,
+    private validacionesService: ValidacionesFormularioService,
+    private service: ServiciosPermisoSanitarioService,
+    
   ) {
    this.consultaioQuery.selectConsultaioState$
       .pipe(
@@ -75,6 +89,23 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
       this.representante.disable();
     } else if (!this.esFormularioSoloLectura) {
       this.representante.enable();
+    }
+  }
+
+   buscar(): void {
+    if (!this.representante.get('rfc')?.value) {
+      this.representante.get('rfc')?.markAllAsTouched();
+    } else {
+      this.service.ObtenerReprestantanteData()
+      .pipe(
+        takeUntil(this.destroyNotifier$)
+      ).subscribe((response) => {
+        this.representante.patchValue({
+          nombre: response.nombre,
+          primerApellido: response.apellidoPaterno,
+          segundoApellido: response.apellidoMaterno
+        });
+      });
     }
   }
 

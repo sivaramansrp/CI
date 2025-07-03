@@ -10,7 +10,7 @@ import { Observable, catchError, throwError } from 'rxjs';
 import { Solicitud260215State, Tramite260215Store } from '../estados/tramites/tramite260215.store';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { PermisoModel, SolicitudModel } from '../models/permiso-sanitario.model';
+import { PermisoModel, ReprestantanteData, SolicitudModel } from '../models/permiso-sanitario.model';
 
 @Injectable({
   providedIn: 'root',
@@ -215,4 +215,24 @@ export class ServiciosPermisoSanitarioService {
   getRegistroTomaMuestrasMercanciasData(): Observable<Solicitud260215State> {
     return this.http.get<Solicitud260215State>('assets/json/260215/registro_toma_muestras_mercancias.json');
   }
+  
+      /**
+     * Recupera los DATOS del representante desde un archivo JSON local.
+     *
+     * Este método envía una solicitud HTTP GET para recuperar los DATOS del archivo JSON especificado.
+     * Se espera que los DATOS sean del tipo `ReprestantanteData`.
+     *
+     * @returns {Observable<ReprestantanteData>} Un observable que emite los DATOS del representante obtenidos.
+     * @throws Lanzará un error si la solicitud HTTP falla.
+     * @memberof ModificatNoticeService
+     */
+    public ObtenerReprestantanteData(): Observable<ReprestantanteData> {
+      return this.http
+        .get<ReprestantanteData>('assets/json/260215/represtantante.json')
+        .pipe(
+          catchError((error) => {
+            return throwError(() => error);
+          })
+        );
+    }
 }
