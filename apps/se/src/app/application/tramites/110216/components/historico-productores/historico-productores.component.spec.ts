@@ -19,6 +19,35 @@ describe('HistoricoProductoresComponent', () => {
   let tramiteQueryMock: any;
   let validacionesServiceMock: any;
   let mockEvento: HistoricoColumnas[];
+  let mokeJson = [
+    {
+      "id": 1,
+      "nombreProductor": "LAURA CONTRERAS",
+      "numeroRegistroFiscal": "AEVL621207B95",
+      "direccion": "SAN GABRIEL 144 DURANGO",
+      "correoElectronico": "laura2992@hotmail.com",
+      "telefono": "044-6182999535",
+      "fax": "6182999535"
+    },
+    {
+      "id": 2,
+      "nombreProductor": "LAURA CONTRERAS",
+      "numeroRegistroFiscal": "AEVL621207B95",
+      "direccion": "SAN GABRIEL 144 DURANGO",
+      "correoElectronico": "laura2992@hotmail.com",
+      "telefono": "044-6182999535",
+      "fax": "6182999535"
+    },
+    {
+      "id": 3,
+      "nombreProductor": "LAURA CONTRERAS",
+      "numeroRegistroFiscal": "AEVL621207B95",
+      "direccion": "SAN GABRIEL 144 DURANGO",
+      "correoElectronico": "laura2992@hotmail.com",
+      "telefono": "044-6182999535",
+      "fax": "6182999535"
+    },
+  ];
 
   beforeEach(async () => {
     certificadosOrigenServiceMock = {
@@ -200,5 +229,38 @@ describe('HistoricoProductoresComponent', () => {
   it('should update seleccionadoAgregarProductoresExportador when obtenerAnadirProductosSeleccionados is called', () => {
     component.obtenerAnadirProductosSeleccionados(mockEvento);
     expect(component.seleccionadoAgregarProductoresExportador).toEqual(mockEvento);
+  });
+  it('should disable both forms when soloLectura is true', () => {
+    component.soloLectura = true;
+    component.inicializarEstadoFormulario();
+    expect(component.formulario.disabled).toBe(true);
+    expect(component.agregarDatosProductorFormulario.disabled).toBe(true);
+  });
+
+  it('should enable both forms when soloLectura is false', () => {
+    component.soloLectura = false;
+    component.inicializarEstadoFormulario();
+    expect(component.formulario.enabled).toBe(true);
+    expect(component.agregarDatosProductorFormulario.enabled).toBe(true);
+  });
+
+  it('should move selected producers from productoresExportador to agregarProductoresExportador', () => {
+    component.productoresExportador = mokeJson;
+    component.seleccionadoProductoresExportador = [mokeJson[1], mokeJson[2]];
+    component.agregarProductoresExportador = [
+      {
+        "id": 4,
+        "nombreProductor": "LAURA CONTRERAS",
+        "numeroRegistroFiscal": "AEVL621207B95",
+        "direccion": "SAN GABRIEL 144 DURANGO",
+        "correoElectronico": "laura2992@hotmail.com",
+        "telefono": "044-6182999535",
+        "fax": "6182999535"
+      },
+    ];
+    component.productoresSeleccionados();
+    expect(component.agregarProductoresExportador).toEqual([...component.agregarProductoresExportador, ...component.seleccionadoProductoresExportador]);
+    expect(component.productoresExportador).toEqual([mokeJson[0]]);
+    expect(component.seleccionadoProductoresExportador).toEqual([]);
   });
 });

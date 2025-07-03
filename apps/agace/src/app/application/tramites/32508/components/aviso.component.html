@@ -9,7 +9,7 @@
   <ng-titulo titulo="Datos del recinto fiscalizado que presenta el dictamen" />
   <div class="row mt-5">
     <div class="col-md-4">
-      <label>Clave de recinto fiscalizado:*</label>
+      <label>Clave de recinto fiscalizado*:</label>
       <input type="text" class="form-control" required formControlName="claveFiscalizado"
         (change)=" setValoresStore( avisoForm, 'claveFiscalizado', 'setClaveFiscalizador' ) " [disabled]="esFormularioSoloLectura" />
     </div>
@@ -24,19 +24,19 @@
   <ng-titulo titulo="Datos del CPI que elaboró el dictamen" />
   <div class="row mt-5">
     <div class="col-md-4">
-      <label>RFC:*</label>
+      <label>RFC*:</label>
       <input type="text" class="form-control" required formControlName="rfc"
         (change)=" setValoresStore( avisoForm, 'rfc', 'setRfc' ) " [disabled]="esFormularioSoloLectura" />
     </div>
     <div class="col-md-6">
-      <label>Nombre:*</label>
+      <label>Nombre*:</label>
       <input type="text" class="form-control" formControlName="nombre" 
         (change)=" setValoresStore( avisoForm, 'nombre', 'setNombre' ) " [disabled]="esFormularioSoloLectura" required />
     </div>
   </div>
   <div class="row mt-5">
     <div class="col-md-4">
-      <label>Número de inscripción o registro:*</label>
+      <label>Número de inscripción o registro*:</label>
       <input type="text" class="form-control" required formControlName="numeroInscripcion"
         (change)=" setValoresStore( avisoForm, 'numeroInscripcion', 'setNumeroInscripcion' ) " [disabled]="esFormularioSoloLectura" />
     </div>
@@ -84,24 +84,24 @@
   <div *ngIf="monstrarDisminucion && !mostrarCompensacion && !mostrarDisminucionYCompensacion">
     <div class="row mt-5">
       <div class="col-md-6">
-        <label>Saldo pendiente de disminuir del dictamen anterior:*</label>
+        <label>Saldo pendiente de disminuir del dictamen anterior*:</label>
         <input type="text" class="form-control" required formControlName="saldoPendiente"
           (change)=" setValoresStore( avisoForm, 'saldoPendiente', 'setSaldoPendiente' ) " [disabled]="esFormularioSoloLectura" />
       </div>
     </div>
     <div class="row mt-5">
       <div class="col-md-4">
-        <label>Aprovechamiento total a cargo:*</label>
+        <label>Aprovechamiento total a cargo*:</label>
         <input type="text" class="form-control" required formControlName="aprovechamiento"
           (change)=" setValoresStore( avisoForm, 'aprovechamiento', 'setAprovechamiento' ) " [disabled]="esFormularioSoloLectura" />
       </div>
       <div class="col-md-4">
-        <label>Disminución aplicada:*</label>
+        <label>Disminución aplicada*:</label>
         <input type="text" class="form-control" required formControlName="disminucionAplicada"
           (change)=" setValoresStore( avisoForm, 'disminucionAplicada', 'setDisminucionAplicada' ) " [disabled]="esFormularioSoloLectura" />
       </div>
       <div class="col-md-4">
-        <label>Saldo pendiente de disminuir:*</label>
+        <label>Saldo pendiente de disminuir*:</label>
         <input type="text" class="form-control" required formControlName="saldoPendienteDisminuir"
           (change)=" setValoresStore( avisoForm, 'saldoPendienteDisminuir', 'setSaldoPendienteDisminuir' ) " [disabled]="esFormularioSoloLectura" />
       </div>
@@ -109,7 +109,7 @@
     <div class="row mt-5"></div>
     <div class="row mt-5"></div>
     <div class="row mt-5">
-      <label>Plantilla de disminución:*</label>
+      <label>Plantilla de disminución*:</label>
       <label>Para descargar plantilla del archivo excel da click <a href="aqui" (click)="esFormularioSoloLectura ? $event.preventDefault() : null"
         [class.disabled]="esFormularioSoloLectura">aquí</a>
       </label>
@@ -150,24 +150,24 @@
   <div *ngIf="mostrarCompensacion && !monstrarDisminucion && !mostrarDisminucionYCompensacion">
     <div class="row mt-5">
       <div class="col-md-6">
-        <label>Saldo pendiente de compensar del dictamen anterior:*</label>
+        <label>Saldo pendiente de compensar del dictamen anterior*:</label>
         <input type="text" class="form-control" required formControlName="saldoPendiente"
           (change)=" setValoresStore( avisoForm, 'saldoPendiente', 'setSaldoPendiente' ) " [disabled]="esFormularioSoloLectura" />
       </div>
     </div>
     <div class="row mt-5">
       <div class="col-md-4">
-        <label>Aprovechamiento total a cargo:*</label>
+        <label>Aprovechamiento total a cargo*:</label>
         <input type="text" class="form-control" required formControlName="aprovechamiento"
           (change)=" setValoresStore( avisoForm, 'aprovechamiento', 'setAprovechamiento' ) " [disabled]="esFormularioSoloLectura" />
       </div>
       <div class="col-md-4">
-        <label>Compensación aplicada:*</label>
+        <label>Compensación aplicada*:</label>
         <input type="text" class="form-control" required formControlName="compensacionAplicada"
           (change)=" setValoresStore( avisoForm, 'compensacionAplicada', 'setCompensacionAplicada' ) " [disabled]="esFormularioSoloLectura" />
       </div>
       <div class="col-md-4">
-        <label>Saldo pendiente de compensar:*</label>
+        <label>Saldo pendiente de compensar*:</label>
         <input type="text" class="form-control" required formControlName="saldoPendienteCompensar"
           (change)=" setValoresStore( avisoForm, 'saldoPendienteCompensar', 'setSaldoPendienteCompensar' ) " [disabled]="esFormularioSoloLectura" />
       </div>
@@ -175,7 +175,7 @@
     <div class="row mt-5"></div>
     <div class="row mt-5"></div>
     <div class="row mt-5">
-      <label>Plantilla de compensación:*</label>
+      <label>Plantilla de compensación*:</label>
       <label>Para descargar plantilla del archivo excel da click <a href="aqui" (click)="esFormularioSoloLectura ? $event.preventDefault() : null"
         [class.disabled]="esFormularioSoloLectura" >aquí</a>
       </label>
@@ -212,41 +212,41 @@
   <div *ngIf="mostrarDisminucionYCompensacion && !monstrarDisminucion && !mostrarCompensacion">
     <div class="row mt-5">
       <div class="col-md-6">
-        <label>Saldo pendiente de compensar del dictamen anterior:*</label>
+        <label>Saldo pendiente de compensar del dictamen anterior*:</label>
         <input type="text" class="form-control" required formControlName="saldoPendiente"
           (change)=" setValoresStore( avisoForm, 'saldoPendiente', 'setSaldoPendiente' ) " [disabled]="esFormularioSoloLectura" />
       </div>
       <div class="col-md-6">
-        <label>Saldo pendiente de disminuir del dictamen anterior:*</label>
+        <label>Saldo pendiente de disminuir del dictamen anterior*:</label>
         <input type="text" class="form-control" required formControlName="saldoPendiente"
           (change)=" setValoresStore( avisoForm, 'saldoPendiente', 'setSaldoPendiente' ) " [disabled]="esFormularioSoloLectura" />
       </div>
     </div>
     <div class="row mt-5">
       <div class="col-md-4">
-        <label>Aprovechamiento total a cargo:*</label>
+        <label>Aprovechamiento total a cargo*:</label>
         <input type="text" class="form-control" required formControlName="aprovechamiento"
           (change)=" setValoresStore( avisoForm, 'aprovechamiento', 'setAprovechamiento' ) " [disabled]="esFormularioSoloLectura" />
       </div>
       <div class="col-md-4">
-        <label>Compensación aplicada:*</label>
+        <label>Compensación aplicada*:</label>
         <input type="text" class="form-control" required formControlName="compensacionAplicada"
           (change)=" setValoresStore( avisoForm, 'compensacionAplicada', 'setCompensacionAplicada' ) " [disabled]="esFormularioSoloLectura" />
       </div>
       <div class="col-md-4">
-        <label>Disminución aplicada:*</label>
+        <label>Disminución aplicada*:</label>
         <input type="text" class="form-control" required formControlName="disminucionAplicada"
           (change)=" setValoresStore( avisoForm, 'disminucionAplicada', 'setDisminucionAplicada' ) " [disabled]="esFormularioSoloLectura" />
       </div>
     </div>
     <div class="row mt-5">
       <div class="col-md-4">
-        <label>Saldo pendiente de compensar:*</label>
+        <label>Saldo pendiente de compensar*:</label>
         <input type="text" class="form-control" required formControlName="saldoPendienteCompensar"
           (change)=" setValoresStore( avisoForm, 'saldoPendienteCompensar', 'setSaldoPendienteCompensar' ) " [disabled]="esFormularioSoloLectura" />
       </div>
       <div class="col-md-4">
-        <label>Saldo pendiente de disminuir:*</label>
+        <label>Saldo pendiente de disminuir*:</label>
         <input type="text" class="form-control" required formControlName="saldoPendienteDisminuir"
           (change)=" setValoresStore( avisoForm, 'saldoPendienteDisminuir', 'setSaldoPendienteDisminuir' ) " [disabled]="esFormularioSoloLectura" />
       </div>
@@ -254,7 +254,7 @@
     <ng-titulo titulo="Plantillas" />
     <!-- Plantilla de compensación -->
     <div class="row mt-5">
-      <label>Plantilla de compensación:*</label>
+      <label>Plantilla de compensación*:</label>
       <label>Para descargar plantilla del archivo excel da click <a href="aqui" (click)="esFormularioSoloLectura ? $event.preventDefault() : null"
         [class.disabled]="esFormularioSoloLectura">aquí</a>
       </label>
@@ -288,7 +288,7 @@
     </div>
     <!-- Plantilla de disminución -->
     <div class="row mt-5">
-      <label>Plantilla de disminución:*</label>
+      <label>Plantilla de disminución*:</label>
       <label>Para descargar plantilla del archivo excel da click <a href="aqui" (click)="esFormularioSoloLectura ? $event.preventDefault() : null"
         [class.disabled]="esFormularioSoloLectura">aquí</a>
       </label>

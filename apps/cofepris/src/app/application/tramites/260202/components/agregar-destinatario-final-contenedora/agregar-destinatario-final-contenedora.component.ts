@@ -7,11 +7,21 @@ import { Tramite260202Store } from '../../estados/tramite260202Store.store';
 
 /**
  * @component AgregarDestinatarioFinalContenedoraComponent
- * @description Componente contenedor que utiliza el componente `AgregarDestinatarioFinalComponent` 
- * para gestionar la funcionalidad relacionada con los destinatarios finales. 
- * Este componente interactúa con el estado del trámite a través del store `Tramite260202Store`.
+ * @description Componente Angular encargado de gestionar la funcionalidad relacionada con los destinatarios finales 
+ * en el trámite identificado por el procedimiento `ID_PROCEDIMIENTO`. Este componente interactúa con el store 
+ * `Tramite260202Store` para actualizar y administrar el estado de los destinatarios finales.
+ * 
+ * @selector app-agregar-destinatario-final-contenedora
+ * @standalone true
+ * @imports CommonModule, AgregarDestinatarioFinalComponent
+ * @templateUrl ./agregar-destinatario-final-contenedora.component.html
+ * @styleUrl ./agregar-destinatario-final-contenedora.component.scss
+ * 
+ * @remarks
+ * Este componente forma parte del módulo de trámites y está diseñado para trabajar con el trámite específico 
+ * identificado como `260202`. Proporciona métodos para actualizar los datos de los destinatarios finales 
+ * en el store correspondiente, facilitando la interacción entre la interfaz de usuario y el estado de la aplicación.
  */
-
 @Component({
   selector: 'app-agregar-destinatario-final-contenedora',
   standalone: true,
@@ -19,7 +29,19 @@ import { Tramite260202Store } from '../../estados/tramite260202Store.store';
   templateUrl: './agregar-destinatario-final-contenedora.component.html',
   styleUrl: './agregar-destinatario-final-contenedora.component.scss',
 })
+/**
+ * @class AgregarDestinatarioFinalContenedoraComponent
+ * @description Componente encargado de gestionar la funcionalidad relacionada con los destinatarios finales 
+ * en el trámite identificado por el procedimiento `ID_PROCEDIMIENTO`. Este componente interactúa con el 
+ * store `Tramite260202Store` para actualizar y administrar el estado de los destinatarios finales.
+ * 
+ * @remarks
+ * Este componente forma parte del módulo de trámites y está diseñado para trabajar con el trámite específico 
+ * identificado como `260202`. Proporciona métodos para actualizar los datos de los destinatarios finales 
+ * en el store correspondiente.
+ */
 export class AgregarDestinatarioFinalContenedoraComponent {
+
   /**
    * @property {string} idProcedimiento
    * @description Identificador del procedimiento, utilizado para la gestión del trámite.
@@ -43,7 +65,6 @@ export class AgregarDestinatarioFinalContenedoraComponent {
    * @param {Destinatario[]} event - Lista de destinatarios finales que se actualizarán en el store.
    * @returns {void} Este método no retorna ningún valor.
    */
-
   updateDestinatarioFinalTablaDatos(event: Destinatario[]): void {
     this.tramiteStore.updateDestinatarioFinalTablaDatos(event);
   }

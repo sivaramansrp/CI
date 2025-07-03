@@ -1,4 +1,5 @@
-import { AlertComponent, Catalogo, CatalogoSelectComponent, ConsultaioQuery, InputRadioComponent, TableComponent, TituloComponent } from '@ng-mf/data-access-user';
+import { AlertComponent, Catalogo, ConsultaioQuery, TableComponent, TituloComponent } from '@ng-mf/data-access-user';
+import { CatalogoSelectComponent, InputRadioComponent } from '@libs/shared/data-access-user/src';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
@@ -6,7 +7,6 @@ import { EventEmitter } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
 import { Output } from '@angular/core';
 import { Subject } from 'rxjs';
 import { Validators } from '@angular/forms';
@@ -42,7 +42,7 @@ import mercanciaTable from '@libs/shared/theme/assets/json/220501/mercancia-tabl
  * 
  * @class MedioTransporteComponent
  */
-export class MedioTransporteComponent implements OnInit, OnDestroy {
+export class MedioTransporteComponent implements OnDestroy {
   /**
    * Evento emitido cuando se selecciona un medio de transporte.
    */
@@ -123,7 +123,7 @@ export class MedioTransporteComponent implements OnInit, OnDestroy {
   /**
    * Indica si el formulario está deshabilitado.
    */
-  formularioDeshabilitado!: boolean;
+  formularioDeshabilitado: boolean = false;
 
   /**
    * Constructor del componente.
@@ -143,18 +143,14 @@ export class MedioTransporteComponent implements OnInit, OnDestroy {
         takeUntil(this.destroyed$),
         map((seccionState) => {
           this.formularioDeshabilitado = seccionState.readonly;
-          this.inicializarEstadoFormulario();
+          if(seccionState.readonly || seccionState.update){
+             this.inicializarEstadoFormulario();
+          }
         })
       )
       .subscribe();
-  }
 
-  /**
-   * Método del ciclo de vida que se ejecuta al iniciar el componente.
-   * Llama a la función que determina cómo inicializar el formulario.
-   */
-  ngOnInit(): void {
-    this.inicializarEstadoFormulario();
+    this.inicializarFormulario();
   }
 
   /**
@@ -163,22 +159,9 @@ export class MedioTransporteComponent implements OnInit, OnDestroy {
    */
   inicializarEstadoFormulario(): void {
     if (this.formularioDeshabilitado) {
-      this.guardarDatosFormulario();
-    } else {
-      this.inicializarFormulario();
-    }
-  }
-
-  /**
-   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
-   * Luego reinicializa el formulario con los valores actualizados desde el store.
-   */
-  guardarDatosFormulario(): void {
-    this.inicializarFormulario();
-    if (this.formularioDeshabilitado) {
-      this.medioTransporteForm.disable();
+      this.medioTransporteForm?.disable();
     } else if (!this.formularioDeshabilitado) {
-      this.medioTransporteForm.enable();
+      this.medioTransporteForm?.enable();
     }
   }
 
@@ -210,10 +193,6 @@ export class MedioTransporteComponent implements OnInit, OnDestroy {
               tbodyData: this.solicitud220501State.mercanciaTablaDatos,
             }
           ]
-          if (this.solicitud220501State.esSolicitudFerros === '1') {
-            this.esSolicitudFerrosValor = '1';
-            this.mostrarAgregarMercancia = this.solicitud220501State.mostrarAgregarMercancia;
-          }
         })
       )
       .subscribe();
@@ -231,6 +210,8 @@ export class MedioTransporteComponent implements OnInit, OnDestroy {
       esSolicitudFerros: new FormControl(this.solicitud220501State.esSolicitudFerros, [Validators.required]),
       totalGuias: new FormControl(this.solicitud220501State.totalGuias, [Validators.maxLength(50)]),
     });
+
+    this.inicializarEstadoFormulario();    
   }
 
   /**
@@ -282,6 +263,7 @@ export class MedioTransporteComponent implements OnInit, OnDestroy {
     ];
     this.solicitud220501Store.setMercanciaTablaDatos(this.mercanciaBodyData[0].tbodyData);
     this.mostrarAgregarMercancia = false;
+    this.solicitud220501Store.setMostrarAgregarMercancia(this.mostrarAgregarMercancia);
   }
 
   /**

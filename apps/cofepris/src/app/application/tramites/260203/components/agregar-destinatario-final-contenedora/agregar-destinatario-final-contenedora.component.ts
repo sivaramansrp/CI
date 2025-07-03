@@ -4,13 +4,22 @@ import { Component } from '@angular/core';
 import { Destinatario } from '../../../../shared/models/terceros-relacionados.model';
 import { Tramite260203Store } from '../../estados/stores/tramite260203Store.store';
 
+
 /**
  * @component AgregarDestinatarioFinalContenedoraComponent
- * @description Componente contenedor que utiliza el componente `AgregarDestinatarioFinalComponent` 
- * para gestionar la funcionalidad relacionada con los destinatarios finales. 
- * Este componente interactúa con el estado del trámite a través del store `Tramite260203Store`.
+ * @description Componente que actúa como contenedor para gestionar la funcionalidad de agregar destinatarios finales 
+ * en el trámite 260203. Este componente utiliza el store `Tramite260203Store` para administrar el estado del trámite 
+ * y delega la lógica de actualización de datos a través de métodos específicos.
+ * 
+ * @selector app-agregar-destinatario-final-contenedora
+ * @standalone true
+ * @imports 
+ * - CommonModule: Módulo común de Angular que proporciona directivas y servicios básicos.
+ * - AgregarDestinatarioFinalComponent: Componente hijo que contiene la lógica específica para agregar destinatarios finales.
+ * 
+ * @templateUrl ./agregar-destinatario-final-contenedora.component.html
+ * @styleUrl ./agregar-destinatario-final-contenedora.component.scss
  */
-
 @Component({
   selector: 'app-agregar-destinatario-final-contenedora',
   standalone: true,

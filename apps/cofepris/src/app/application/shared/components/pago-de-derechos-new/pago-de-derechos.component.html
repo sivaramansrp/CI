@@ -93,13 +93,22 @@
             />
           </div>
         </div>
-        <div class="col-md-4">
-          <input-fecha
-            [setFecha]="formularioPagoDerechos.get('fecPago')?.value"
-            [datos]="configuracionFechaFinal"
-            (valorCambiado)="setValoresStore(formularioPagoDerechos, 'fecPago')"
-            [isDisabled]="isDisabled"
+          <div class="col-md-4">
+          <div class="form-group">
+            <label class="form-label">Fecha de pago:</label>
+            <input
+            class="form-control"
+            placeholder=""
+            type="date"
+            name="fecPago"
+            formControlName="fecPago"
+            (change)="setValoresStore(formularioPagoDerechos,'fecPago'); validarFechaFutura('fecPago')"
           />
+            <div *ngIf="esInvalido('fecPago')" class="text-danger">
+              <small *ngIf="formularioPagoDerechos.controls['fecPago'].hasError('required')">Fecha de pago es obligatoria.</small>
+              <small *ngIf="formularioPagoDerechos.get('fecPago')?.hasError('fechaLim')">La fecha de pago debe ser menor o igual a la fecha actual</small>
+          </div>
+          </div>
         </div>
         <div class="col-md-4">
           <div class="form-group">

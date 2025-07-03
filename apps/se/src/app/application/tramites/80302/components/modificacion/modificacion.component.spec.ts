@@ -145,31 +145,47 @@ describe('ModificacionComponent', () => {
     ).toHaveBeenCalledWith('mockValue');
   });
 
-  it('should run #setValoresStore()', async () => {
-    component.tramite80302Store = component.tramite80302Store || {};
-    component.tramite80302Store.metodoNombre = jest.fn();
-    component.setValoresStore({
-      get: function() {
-        return {
-          value: {}
-        };
-      }
-    }, {}, {});
+  it('should run #setFormValues()', async () => {
+    component.modificacionForm = new FormBuilder().group({
+      rfc: [''],
+      federal: [''],
+      tipo: [''],
+      programa: [''],
+    });
+
+    component.derechoState = {
+      datosModificacion: {
+        rfc: 'ABC1234567',
+        federal: 'FEDERAL',
+        tipo: 'Tipo A',
+        programa: 'Programa B',
+      },
+    } as any;
+
+    component.setFormValues();
+
+    expect(component.modificacionForm.get('rfc')?.value).toBe('ABC1234567');
+    expect(component.modificacionForm.get('federal')?.value).toBe('FEDERAL');
+    expect(component.modificacionForm.get('tipo')?.value).toBe('Tipo A');
+    expect(component.modificacionForm.get('programa')?.value).toBe('Programa B');
   });
 
-  it('should run #valorDeAlternancia()', async () => {
-    component.datosTabla = component.datosTabla || {};
-    component.datosTabla.findIndex = jest.fn().mockReturnValue([
-      {
-        "id": {}
-      }
-    ]);
-    component.datosTabla.index = {
-      desEstatus: {}
-    };
-    component.valorDeAlternancia({
-      id: {}
-    });
+  it('should toggle desEstatus from "Baja" to "Activada" in #valorDeAlternancia()', () => {
+    const mockRow = { id: 1, desEstatus: 'Baja' };
+    component.datosTabla = [{ id: 1, desEstatus: 'Baja' }];
+    
+    component.valorDeAlternancia({ row: mockRow });
+    
+    expect(component.datosTabla[0].desEstatus).toBe('Activada');
+  });
+
+  it('should toggle desEstatus from "Activada" to "Baja" in #valorDeAlternancia()', () => {
+    const mockRow = { id: 1, desEstatus: 'Activada' };
+    component.datosTabla = [{ id: 1, desEstatus: 'Activada' }];
+    
+    component.valorDeAlternancia({ row: mockRow });
+    
+    expect(component.datosTabla[0].desEstatus).toBe('Baja');
   });
 
 });

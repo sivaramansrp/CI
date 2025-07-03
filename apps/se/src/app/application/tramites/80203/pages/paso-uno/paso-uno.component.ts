@@ -1,81 +1,99 @@
-/* eslint-disable no-empty-function */
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { ConsultaioQuery, ConsultaioState, SeccionLibStore, SolicitanteComponent } from '@ng-mf/data-access-user';
-import { Subject,map, takeUntil } from 'rxjs';
-import { Anexo1Component } from '../../components/anexo-1/anexo-1.component';
+import {
+  Component,
+  EventEmitter,
+  OnDestroy,
+  OnInit,
+  Output,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
+
+import { Subject, map, takeUntil } from 'rxjs';
+
+import {
+  ConsultaioQuery,
+  ConsultaioState,
+  SeccionLibStore,
+  SolicitanteComponent,
+} from '@ng-mf/data-access-user';
+import { Anexo1Component } from '../../components/anexo-1/anexo-1.component';
 import { PermisoImmexDatosService } from '../../servicios/immex/permiso-immex-datos.service';
 import { SECCIONES_TRAMITE_80203 } from '../../constantes/immex-registro-de-solicitud-modality.enums';
 import { immexRegistroform } from '../../modelos/immex-registro-de-solicitud-modality.model';
+
 /**
  * Componente para mostrar el subtítulo del asistente.
  * @component PasoUnoComponent
  * @selector app-paso-uno
  * @templateUrl ./paso-uno.component.html
- * @styleUrls ./paso-uno.component.scss --220202
+ * @styleUrls ./paso-uno.component.scss
+ * @standalone
+ * @imports CommonModule, SolicitanteComponent, Anexo1Component
+ * @description
+ * Clase que implementa la lógica del primer paso del formulario multipaso.
  */
 @Component({
   selector: 'app-paso-uno',
   templateUrl: './paso-uno.component.html',
   styleUrl: './paso-uno.component.scss',
-  standalone:true,
-  imports: [
-        CommonModule,
-        SolicitanteComponent,
-        Anexo1Component
-  ]
+  standalone: true,
+  imports: [CommonModule, SolicitanteComponent, Anexo1Component],
 })
 
 /**
  * @class PasoUnoComponent
- * @description 
+ * @description
  * Clase que implementa la lógica del primer paso del formulario multipaso.
  */
-export class PasoUnoComponent implements OnInit {
-    /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
+export class PasoUnoComponent implements OnInit, OnDestroy {
+  /**
+   * Datos de respuesta del servidor utilizados para actualizar el formulario.
+   */
   public esDatosRespuesta: boolean = false;
 
-    /** Subject para notificar la destrucción del componente. */
+  /**
+   * Subject para notificar la destrucción del componente.
+   */
   private destroyNotifier$: Subject<void> = new Subject();
 
-
   /**
-   * @property consultaState
-   * @description Estado actual de la consulta para el trámite.
-   * @type {ConsultaioState}
-   * @memberof PasoUnoComponent
+   * Estado actual de la consulta para el trámite.
    */
-  public consultaState!:ConsultaioState;
+  public consultaState!: ConsultaioState;
 
   /**
-   * @property {number} indice
-   * @description Índice de la pestaña actualmente seleccionada.
+   * Índice de la pestaña actualmente seleccionada.
    * @default 1
    */
   indice: number = 1;
 
   /**
-   * @constructor
-   * @description Constructor que inicializa el store de la sección.
-   * @param {SeccionLibStore} seccionStore - Servicio para manejar el estado de las secciones.
+   * Constructor que inicializa el store de la sección.
+   * @param seccionStore Servicio para manejar el estado de las secciones.
+   * @param consultaQuery Servicio para consultar el estado de la consulta.
+   * @param permisoImmexDatosService Servicio para obtener y actualizar datos IMMEX.
    */
-  constructor(private seccionStore: SeccionLibStore,
-       private readonly consultaQuery: ConsultaioQuery,
-      private permisoImmexDatosService: PermisoImmexDatosService,
+  constructor(
+    private seccionStore: SeccionLibStore,
+    private readonly consultaQuery: ConsultaioQuery,
+    private permisoImmexDatosService: PermisoImmexDatosService
   ) {}
 
   /**
-   * @method ngOnInit
-   * @description Método de inicialización del componente. Asigna las secciones del formulario.
+   * Método de inicialización del componente. Asigna las secciones del formulario.
+   * @inheritdoc
    */
   ngOnInit(): void {
-     this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyNotifier$),map((seccionState) => {
+    this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
           this.consultaState = seccionState;
-      })).subscribe();
-    if(this.consultaState.update) {
+        })
+      )
+      .subscribe();
+    if (this.consultaState.update) {
       this.guardarDatosFormulario();
-    }
-    else {
+    } else {
       this.esDatosRespuesta = true;
     }
     this.asignarSecciones();
@@ -86,21 +104,20 @@ export class PasoUnoComponent implements OnInit {
    */
   guardarDatosFormulario(): void {
     this.permisoImmexDatosService
-      .getRegistroTomaMuestrasMercanciasData().pipe(
-        takeUntil(this.destroyNotifier$)
-      )
+      .getRegistroTomaMuestrasMercanciasData()
+      .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((resp) => {
-        if(resp){
-        this.esDatosRespuesta = true;
-      this.permisoImmexDatosService.actualizarEstadoFormulario(resp?.immexRegistro || {} as immexRegistroform)
+        if (resp) {
+          this.esDatosRespuesta = true;
+          this.permisoImmexDatosService.actualizarEstadoFormulario(
+            resp?.immexRegistro || ({} as immexRegistroform)
+          );
         }
       });
   }
 
-
   /**
-   * @property {Array<{ index: number; title: string; component: string; }>} seccionesDeLaSolicitud
-   * @description Lista de pasos dentro del formulario con sus respectivos componentes.
+   * Lista de pasos dentro del formulario con sus respectivos componentes.
    */
   seccionesDeLaSolicitud = [
     { index: 1, title: 'Solicitante', component: 'solicitante' },
@@ -108,16 +125,13 @@ export class PasoUnoComponent implements OnInit {
   ];
 
   /**
-   * @event tabChanged
-   * @description Evento emitido al cambiar de pestaña.
-   * @type {EventEmitter<number>}
+   * Evento emitido al cambiar de pestaña.
    */
   @Output() tabChanged = new EventEmitter<number>();
 
   /**
-   * @method seleccionaTab
-   * @description Cambia el índice de la pestaña seleccionada y emite el evento `tabChanged`.
-   * @param {number} i - El índice de la pestaña a seleccionar.
+   * Cambia el índice de la pestaña seleccionada y emite el evento `tabChanged`.
+   * @param i El índice de la pestaña a seleccionar.
    */
   seleccionaTab(i: number): void {
     this.indice = i;
@@ -125,8 +139,7 @@ export class PasoUnoComponent implements OnInit {
   }
 
   /**
-   * @method asignarSecciones
-   * @description Método privado que asigna las secciones del formulario y establece su estado inicial.
+   * Método privado que asigna las secciones del formulario y establece su estado inicial.
    */
   private asignarSecciones(): void {
     const SECCIONES: boolean[] = [];
@@ -134,7 +147,12 @@ export class PasoUnoComponent implements OnInit {
     const PREDETERMINADO = SECCIONES_TRAMITE_80203;
 
     for (const LLAVE_SECCION in PREDETERMINADO.PASO_1) {
-      if (Object.prototype.hasOwnProperty.call(PREDETERMINADO.PASO_1, LLAVE_SECCION)) {
+      if (
+        Object.prototype.hasOwnProperty.call(
+          PREDETERMINADO.PASO_1,
+          LLAVE_SECCION
+        )
+      ) {
         // @ts-expect-error - Ignorar error de tipo
         SECCIONES.push(PREDETERMINADO.PASO_1[LLAVE_SECCION]);
         FORMA_VALIDA.push(false);
@@ -143,5 +161,13 @@ export class PasoUnoComponent implements OnInit {
 
     this.seccionStore.establecerSeccion(SECCIONES);
     this.seccionStore.establecerFormaValida(FORMA_VALIDA);
+  }
+  /**
+   * Limpia las suscripciones y recursos al destruir el componente.
+   * @inheritdoc
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }

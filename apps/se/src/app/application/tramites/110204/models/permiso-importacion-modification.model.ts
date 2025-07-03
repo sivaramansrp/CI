@@ -1,99 +1,105 @@
 import { CatalogosSelect } from '@ng-mf/data-access-user';
 import { FormularioDinamico } from '@ng-mf/data-access-user';
 
-
 /**
- * Interfaz que representa una lista de pasos en un asistente (wizard).
- * 
- * @property {number} indice - Índice del paso en el wizard.
- * @property {string} titulo - Título del paso.
- * @property {boolean} activo - Indica si el paso está activo en el wizard.
- * @property {boolean} completado - Indica si el paso ha sido completado.
+ * @interface ListaPasosWizard
+ * @description
+ * Representa la configuración de un paso dentro de un asistente o "wizard".
+ * Se utiliza para controlar el flujo entre pasos, activación y finalización.
  */
 export interface ListaPasosWizard {
-  indice: number; // Índice del paso en el wizard.
-  titulo: string; // Título del paso.
-  activo: boolean; // Indica si el paso está activo en el wizard.
-  completado: boolean; // Indica si el paso ha sido completado.
+  /** Índice del paso dentro del flujo del asistente */
+  indice: number;
+  /** Título mostrado para el paso */
+  titulo: string;
+  /** Indica si el paso está actualmente activo */
+  activo: boolean;
+  /** Indica si el paso ha sido completado */
+  completado: boolean;
 }
 
-
 /**
- * Configuración de entrada para un formulario.
- * 
- * @property {string} title - Título del input.
- * @property {string} formGroupName - Nombre del formulario o grupo de inputs.
- * @property {MenuConfig[]} menu - Menú de configuración de los inputs.
+ * @interface InputConfig
+ * @description
+ * Configuración para una sección o grupo de inputs en un formulario dinámico.
  */
 export interface InputConfig {
-  title: string; // Título del input.
-  formGroupName: string; // Nombre del formulario o grupo de inputs.
-  menu: MenuConfig[]; // Menú de configuración de los inputs.
+  /** Título que se muestra para el grupo de inputs */
+  title: string;
+  /** Nombre del grupo o sección del formulario (formGroupName) */
+  formGroupName: string;
+  /** Lista de inputs y su configuración individual */
+  menu: MenuConfig[];
 }
 
 /**
- * Interfaz que define la configuración de un menú.
- * 
- * @property {string} inputType - Tipo de input (por ejemplo, 'text', 'select', etc.).
- * @property {FormularioDinamico | CatalogosSelect | undefined} props - Propiedades dinámicas o catálogo de selección para el input.
- * @property {string} class - Clase CSS asociada con el input.
- * @property {string} [visibility] - Condición opcional para la visibilidad del input (si es necesario).
- * @property {string[]} [radioConfig] - Configuración de los radio buttons (si se aplica).
+ * @interface MenuConfig
+ * @description
+ * Define las propiedades y configuración para un input dentro de un formulario.
  */
 export interface MenuConfig {
-  inputType: string; // Tipo de input (por ejemplo, 'text', 'select', etc.).
-  props: FormularioDinamico | CatalogosSelect | undefined; // Propiedades dinámicas o catálogo de selección para el input.
-  class: string; // Clase CSS asociada con el input.
-  visibility?: string; // Condición opcional para la visibilidad del input (si es necesario).
-  radioConfig?: string[]; // Configuración de los radio buttons (si se aplica).
+  /** Tipo de input (e.g. 'text', 'select', 'radio') */
+  inputType: string;
+  /**
+   * Propiedades que definen el comportamiento del input.
+   * Puede ser un formulario dinámico o un catálogo selectivo.
+   */
+  props: FormularioDinamico | CatalogosSelect | undefined;
+  /** Clase CSS asociada para estilos personalizados */
+  class: string;
+  /** (Opcional) Condición de visibilidad del input */
+  visibility?: string;
+  /** (Opcional) Configuración de opciones si es un radio button */
+  radioConfig?: string[];
 }
 
 /**
- * Interfaz que representa los datos de la mercancía.
- * 
- * @property {string} descripcion - Descripción de la mercancía.
- * @property {string} marca - Marca de la mercancía.
- * @property {string} tipoEntrada - Tipo de entrada de la mercancía.
- * @property {string} fraccion - Fracción arancelaria de la mercancía.
- * @property {string} nico - NICO (Número de Identificación Comercial).
- * @property {string} umt - Unidad de medida tarifaria.
- * @property {string} facturaNumero - Número de la factura.
- * @property {string} facturaFecha - Fecha de la factura.
- * @property {string} umc - Unidad de medida comercial.
- * @property {string} otroUmc - Otro tipo de unidad de medida comercial (si aplica).
- * @property {string} cantidadUmc - Cantidad en unidades comerciales.
- * @property {string} factorConversion - Factor de conversión entre unidades.
- * @property {string} cantidadUmt - Cantidad en unidades de medida tarifarias.
- * @property {string} valorFactura - Valor total de la factura.
- * @property {string} monedaComercializacion - Moneda de comercialización de la mercancía.
- * @property {string} valorFacturaUsd - Valor total de la factura en USD.
- * @property {string} precioUnitarioUsd - Precio unitario en USD.
- * @property {string} paisExportador - País exportador de la mercancía.
- * @property {string} paisOrigen - País de origen de la mercancía.
- * @property {string} valorTotalFactura - Valor total de la factura (en moneda local).
- * @property {string} valorTotalFacturaUsd - Valor total de la factura en USD.
+ * @interface DatosMercancia
+ * @description
+ * Representa la estructura de datos necesaria para capturar información
+ * detallada sobre una mercancía en un trámite de importación/exportación.
  */
 export interface DatosMercancia {
-  descripcion: string; // Descripción de la mercancía.
-  marca: string; // Marca de la mercancía.
-  tipoEntrada: string; // Tipo de entrada de la mercancía.
-  fraccion: string; // Fracción arancelaria de la mercancía.
-  nico: string; // NICO (Número de Identificación Comercial).
-  umt: string; // Unidad de medida tarifaria.
-  facturaNumero: string; // Número de la factura.
-  facturaFecha: string; // Fecha de la factura.
-  umc: string; // Unidad de medida comercial.
-  otroUmc: string; // Otro tipo de unidad de medida comercial (si aplica).
-  cantidadUmc: string; // Cantidad en unidades comerciales.
-  factorConversion: string; // Factor de conversión entre unidades.
-  cantidadUmt: string; // Cantidad en unidades de medida tarifarias.
-  valorFactura: string; // Valor total de la factura.
-  monedaComercializacion: string; // Moneda de comercialización de la mercancía.
-  valorFacturaUsd: string; // Valor total de la factura en USD.
-  precioUnitarioUsd: string; // Precio unitario en USD.
-  paisExportador: string; // País exportador de la mercancía.
-  paisOrigen: string; // País de origen de la mercancía.
-  valorTotalFactura: string; // Valor total de la factura (en moneda local).
-  valorTotalFacturaUsd: string; // Valor total de la factura en USD.
+  /** Descripción general de la mercancía */
+  descripcion: string;
+  /** Marca del producto o mercancía */
+  marca: string;
+  /** Tipo de entrada de la mercancía (e.g. importación, nacional, etc.) */
+  tipoEntrada: string;
+  /** Fracción arancelaria aplicable */
+  fraccion: string;
+  /** Número de Identificación Comercial (NICO) */
+  nico: string;
+  /** Unidad de medida tarifaria */
+  umt: string;
+  /** Número de la factura relacionada */
+  facturaNumero: string;
+  /** Fecha de emisión de la factura */
+  facturaFecha: string;
+  /** Unidad de medida comercial */
+  umc: string;
+  /** Otro tipo de unidad de medida comercial (si aplica) */
+  otroUmc: string;
+  /** Cantidad medida en unidades comerciales */
+  cantidadUmc: string;
+  /** Factor de conversión entre UMT y UMC */
+  factorConversion: string;
+  /** Cantidad medida en unidades tarifarias */
+  cantidadUmt: string;
+  /** Valor total expresado en la factura (moneda local) */
+  valorFactura: string;
+  /** Moneda en la que se comercializa la mercancía */
+  monedaComercializacion: string;
+  /** Valor total de la factura en dólares estadounidenses */
+  valorFacturaUsd: string;
+  /** Precio por unidad en dólares estadounidenses */
+  precioUnitarioUsd: string;
+  /** País desde donde se exporta la mercancía */
+  paisExportador: string;
+  /** País de origen de la mercancía */
+  paisOrigen: string;
+  /** Valor total en la moneda local */
+  valorTotalFactura: string;
+  /** Valor total convertido a dólares estadounidenses */
+  valorTotalFacturaUsd: string;
 }
-
