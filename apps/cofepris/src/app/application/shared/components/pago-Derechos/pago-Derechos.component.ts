@@ -154,7 +154,11 @@ export class PagoDerechosComponent implements OnDestroy, OnInit {
     }
 
   }
-
+/**
+ * Obtiene el control del formulario 'importePago' del formulario 'derechosForm'.
+ * 
+ * @returns {AbstractControl} El control 'importePago' del formulario.
+ */
   get importePago() {
     return this.derechosForm.get('importePago');
   }
