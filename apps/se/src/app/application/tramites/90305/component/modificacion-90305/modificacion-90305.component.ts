@@ -56,7 +56,11 @@ export class Modificacion90305Component implements OnInit {
  * @param {ProsecModificacionServiceTsService} listaDomicilios - Servicio para
  */
   constructor(private listaDomicilios: ProsecModificacionServiceTsService) {}
-
+/**
+ * Inicializa el componente Modificacion90305Component
+ * @description
+ * Este método se ejecuta al inicializar el componente y se encarga de obtener la lista
+ */
 
  ngOnInit(): void {
     this.listaDomicilios.getListaDomicilios().subscribe((resp) => {

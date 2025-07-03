@@ -49,11 +49,19 @@ export class ProsecModificacionComponent implements OnInit {
    * @type {ListaPasosWizard[]}
    */
   pantallasPasos: ListaPasosWizard[] = PROSEC_MODIFICACION;
+  /**
+   * @description Constructor del componente.
+   * Inyecta los servicios necesarios para la consulta y la modificación de domicilios.
+   */
   constructor(private consultaQuery: ConsultaioQuery,
     private listaDomicilios: ProsecModificacionServiceTsService,
   ){
 
   }
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * Se suscribe al estado de la consulta para obtener el estado actual y asignarlo a
+   */
  ngOnInit(): void {
     this.consultaQuery.selectConsultaioState$
     .pipe(
