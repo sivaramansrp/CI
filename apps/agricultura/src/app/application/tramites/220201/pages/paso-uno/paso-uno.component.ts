@@ -44,7 +44,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    * @property {number} indice - Índice de la pestaña actualmente seleccionada.
    * @default 1
    */
-  indice: number = 4;
+  indice: number = 1;
 
   /**
    * Lista de secciones del formulario.
