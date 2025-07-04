@@ -24,7 +24,7 @@ export class AvisoUnicoService {
   constructor(private http: HttpClient) {
     // Constructor
   }
-private jsonUrl = 'assets/json/32301';
+private jsonUrl = 'assets/json/33303';
  private fileName = 'tipoDeAviso.json';
   /**
    * @method

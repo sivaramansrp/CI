@@ -129,11 +129,7 @@ export class AvisoDeRenovacionComponent implements OnInit, OnDestroy {
       .subscribe();
 
     this.avisoForm = this.fb.group({
-      mapTipoTramite: [this.solicitudState?.mapTipoTramite],
-      mapDeclaracionSolicitud: [this.solicitudState?.mapDeclaracionSolicitud],
-      envioAviso: [this.solicitudState?.envioAviso],
-      numeroAviso: [this.solicitudState?.numeroAviso],
-      claveReferencia: [{ value: '', disabled: true }],
+     claveReferencia: [{ value: '', disabled: true }],
       numeroOperacion: [this.solicitudState?.numeroOperacion],
       cadenaDependencia: [{ value: '', disabled: true }],
       banco: [this.solicitudState?.banco],
