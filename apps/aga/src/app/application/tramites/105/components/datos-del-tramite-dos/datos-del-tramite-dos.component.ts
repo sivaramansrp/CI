@@ -1,3 +1,4 @@
+import { Agentes_DATOS, AgentestableDatos, MERCANCIA_TABLEDOS_TABLE_BODY_DATA } from '../../constantes/datos-del-tramite.enum';
 import {
   Catalogo,
   ConsultaioQuery,
@@ -18,7 +19,6 @@ import { Subject, map, takeUntil } from 'rxjs';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { CommonModule } from '@angular/common';
 import { InvoCarService } from '../../services/invocar.service';
-import { Agentes_DATOS, AgentestableDatos, MERCANCIA_TABLEDOS_TABLE_BODY_DATA } from '../../constantes/datos-del-tramite.enum';
 import { Tramite105Query } from '../../estados/tramite105.query';
 import mercanciaTable from '@libs/shared/theme/assets/json/105/mercancia-table.json';
 
@@ -413,7 +413,6 @@ export class DatosDelTramiteDosComponent implements OnInit, OnDestroy {
       return;
     }
     const MERCANCIA = this.agenteForm.value;
-    console.log(MERCANCIA);
    this.mercanciTablaDatos.push(MERCANCIA as AgentestableDatos);
     this.agenteForm.reset();
     this.cerrarModal();

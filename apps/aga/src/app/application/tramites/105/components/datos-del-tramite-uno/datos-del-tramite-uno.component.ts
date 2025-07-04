@@ -311,7 +311,6 @@ export class DatosDelTramiteUnoComponent implements OnInit, OnDestroy {
    * @example
    * // Ejemplo de uso:
    * this.crearDatosDelTramiteForm();
-   * console.log(this.datosDelTramite.value);
    * 
    * @property {FormGroup} datosDelTramite - El formulario reactivo creado por este método.
    * 
@@ -607,7 +606,6 @@ export class DatosDelTramiteUnoComponent implements OnInit, OnDestroy {
     if (!this.agregarForm.valid) {
       return;
     }this.agregarForm.get('descripcion')?.enable();
-    console.log(this.agregarForm.value)
     const MERCANCIA = this.agregarForm.value;
     this.mercanciTablaDatos.push(MERCANCIA)
     this.agregarForm.reset();
