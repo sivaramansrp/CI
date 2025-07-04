@@ -1,6 +1,6 @@
 import { ActivatedRoute, Router } from '@angular/router';
 import { AlertComponent, CatalogoSelectComponent, ConfiguracionColumna, InputRadioComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
-import { Component, ElementRef, EventEmitter,Input, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter,Input, Output, ViewChild } from '@angular/core';
 import {DatosDeLaSolicitud, TercerosrelacionadosTable, TercerosrelacionadosdestinoTable} from '../../models/tercerosrelacionados.model';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { OPCION_DE_BOTON_DE_RADIO, SELECCIONADO } from '../../constantes/tercerosrelacionados.enum';
