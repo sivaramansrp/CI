@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   base64ToHex,
   encodeToISO88591Hex,
+  formatearFechaConMoment,
 } from '@libs/shared/data-access-user/src/core/utils/utilerias';
 import { CadenaOriginalRequest } from '@libs/shared/data-access-user/src/core/models/shared/firma-electronica/request/cadena-original-request.model';
 
@@ -120,10 +121,10 @@ export class PasoTresComponent implements OnInit, OnDestroy {
   obtenerCadenaOriginal(): void {
     this.cadenaOriginalService.generarCadena().subscribe({
       next: (response) => {
-        this.datosCadena = response.datos;
+        this.datosCadena = response.datos as CadenaOriginalRequest;
         this.firma.obtenerCadenaOriginal(this.datosCadena).subscribe({
           next: (resp) => {
-            this.cadenaOriginal = resp.datos;
+            this.cadenaOriginal = typeof resp.datos === 'string' ? resp.datos : undefined;
           },
           error: (err) => console.error('Error al generar cadena:', err),
         });
@@ -164,7 +165,7 @@ export class PasoTresComponent implements OnInit, OnDestroy {
     const ID_SOLICITUD = this.tramite5701Query.getValue().idSolicitud;
 
     this.documentoService
-      .obtenerDatosFirma()
+      .obtenerDatosFirma<FirmarRequest>()
       .pipe(
         takeUntil(this.destroy$),
         switchMap((response) => {
@@ -173,14 +174,14 @@ export class PasoTresComponent implements OnInit, OnDestroy {
             cadena_original: CADENAHEX,
             cert_serial_number: this.datosFirmaReales.certSerialNumber,
             clave_usuario: this.datosFirmaReales.rfc,
-            fecha_firma: new Date().toISOString(),
+            fecha_firma: formatearFechaConMoment(new Date().toISOString()),
             clave_rol: 'Solicitante',
             sello: FIRMAHEX,
-            fecha_fin_vigencia: this.datosFirmaReales.fechaFin,
-            documentos_requeridos: response.datos.documentos_requeridos,
+            fecha_fin_vigencia: formatearFechaConMoment(this.datosFirmaReales.fechaFin),
+            documentos_requeridos: response.datos?.documentos_requeridos || [],
           };
 
-          return this.firma.enviarFirma(PAYLOAD).pipe(
+          return this.firma.enviarFirma<string>(PAYLOAD).pipe(
             tap((firmaResponse: BaseResponse<string>) => {
               if (firmaResponse.datos) {
                 this.folio = firmaResponse.datos;
@@ -201,6 +202,7 @@ export class PasoTresComponent implements OnInit, OnDestroy {
             ID_SOLICITUD ?? 0
           );
           this.router.navigate([`${this.url}/acuse`]);
+          this.tramite5701Store.limpiarSolicitud();
         }),
         catchError((error) => {
           console.error('Error en el proceso de firma:', error);

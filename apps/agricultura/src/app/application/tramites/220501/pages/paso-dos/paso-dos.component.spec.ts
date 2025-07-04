@@ -20,14 +20,44 @@ describe('PasoDosComponent', () => {
         ToastrModule.forRoot()
       ]
     })
-    .compileComponents();
-    
+      .compileComponents();
+
     fixture = TestBed.createComponent(PasoDosComponent);
     component = fixture.componentInstance;
+
+    component.tiposDocumentos = [
+      { id: 1, descripcion: 'INE' },
+      { id: 2, descripcion: 'Pasaporte' }
+    ];
+
+    component.documentosSeleccionados = [
+      {
+        id: 1,
+        descripcion: 'Documentos que ampare el valor de la mercancía'
+      },
+      {
+        id: 2,
+        descripcion: 'Documentos del medio de transporte (Guías, BL o carta porte según corresponda)'
+      }
+    ];
+
     fixture.detectChanges();
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should add document with matching ID to documentosSeleccionados', () => {
+    component.agregarDocumento(2);
+
+    expect(component.documentosSeleccionados.length).toBe(3);
+    expect(component.documentosSeleccionados[0]).toEqual({ id: 1, descripcion: 'Documentos que ampare el valor de la mercancía' });
+  });
+
+  it('should not add any document if ID does not match', () => {
+    component.agregarDocumento(3);
+
+    expect(component.documentosSeleccionados.length).toBe(2);
   });
 });

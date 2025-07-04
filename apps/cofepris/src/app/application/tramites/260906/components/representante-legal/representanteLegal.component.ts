@@ -41,7 +41,7 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
    * @param tramite260906Query Query para obtener estado de la solicitud
    */
   constructor(
-    private readonly fb: FormBuilder,
+    public readonly fb: FormBuilder,
     private tramite260906Store: Tramite260906Store,
     private tramite260906Query: Tramite260906Query
   ) { }

@@ -1,9 +1,43 @@
+/**
+ * @fileoverview
+ * El `ScianTablaContenedoraComponent` es un componente de Angular diseñado para gestionar la funcionalidad relacionada con la tabla SCIAN.
+ * Este componente utiliza el componente `ScianTablaComponent` y se comunica con el estado del trámite 260218 a través del store `Tramite260218Store`.
+ * 
+ * @module ScianTablaContenedoraComponent
+ * @description
+ * Este componente actúa como un contenedor para gestionar y actualizar los datos seleccionados de la tabla SCIAN en el flujo del trámite 260218.
+ */
+
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { ScianTablaComponent } from '../../../../shared/components/scian-tabla/scian-tabla.component';
 import { TablaScianConfig } from '../../../../shared/models/datos-solicitud.model';
 import { Tramite260218Store } from '../../estados/tramite260218Store.store';
 
+/**
+ * @component
+ * @name ScianTablaContenedoraComponent
+ * @description
+ * Componente contenedor que utiliza el componente `ScianTablaComponent` 
+ * para gestionar la funcionalidad relacionada con la tabla SCIAN. 
+ * Este componente interactúa con el estado del trámite a través del store `Tramite260218Store`.
+ *
+ * @selector app-scian-tabla-contenedora
+ * Define el selector del componente que se utiliza en las plantillas HTML para instanciar este componente.
+ *
+ * @standalone true
+ * Indica que este componente es independiente y no requiere un módulo Angular para ser utilizado.
+ *
+ * @templateUrl ./scian-tabla-contenedora.component.html
+ * Especifica la ubicación del archivo de plantilla HTML asociado con este componente.
+ *
+ * @styleUrl ./scian-tabla-contenedora.component.scss
+ * Especifica la ubicación del archivo de estilos CSS asociado con este componente.
+ *
+ * @imports
+ * - CommonModule: Proporciona directivas comunes de Angular como `ngIf` y `ngFor`.
+ * - ScianTablaComponent: Componente compartido para gestionar los datos de la tabla SCIAN.
+ */
 @Component({
   selector: 'app-scian-tabla-contenedora',
   standalone: true,
@@ -14,6 +48,7 @@ import { Tramite260218Store } from '../../estados/tramite260218Store.store';
 export class ScianTablaContenedoraComponent {
   /**
    * @property {TablaScianConfig} scianSeleccionado
+   * @description
    * Contiene la configuración seleccionada de la tabla SCIAN.
    * Este objeto es utilizado para almacenar la información de la selección actual en la tabla.
    */
@@ -21,31 +56,38 @@ export class ScianTablaContenedoraComponent {
 
   /**
    * @constructor
-   * Inyecta el servicio `Tramite260218Store` para actualizar el estado del store
+   * @description
+   * Constructor que inyecta el servicio `Tramite260218Store` para actualizar el estado del store
    * con los datos seleccionados de la tabla SCIAN.
-   *
-   * @param tramite260218Store - Store que maneja el estado de la información del trámite.
+   * 
+   * @param {Tramite260218Store} tramite260218Store - Store que maneja el estado de la información del trámite.
    */
   constructor(private tramite260218Store: Tramite260218Store) {
-        // no realizar ninguna acción
+    // no realizar ninguna acción
   }
 
   /**
    * @method obtenerSeleccionado
-   * @description Este método se llama cuando se selecciona un nuevo elemento en la tabla SCIAN.
-   * 
+   * @description
+   * Este método se llama cuando se selecciona un nuevo elemento en la tabla SCIAN.
    * Actualiza el estado del store con la configuración seleccionada de la tabla SCIAN.
-   * El estado `scianConfigDatos` se actualiza con el objeto `event`, que contiene la
-   * configuración de la tabla seleccionada.
-   *
+   * 
    * @param {TablaScianConfig} event - Objeto que contiene los datos seleccionados de la tabla SCIAN.
    * El objeto `event` es de tipo `TablaScianConfig` y contiene la configuración actual seleccionada.
+   *
+   * @returns {void} Este método no retorna ningún valor.
+   *
+   * @example
+   * ```typescript
+   * const seleccion = { id: 1, descripcion: 'Actividad económica' };
+   * this.obtenerSeleccionado(seleccion);
+   * ```
    */
   obtenerSeleccionado(event: TablaScianConfig): void {
     // Actualiza el estado del store con la configuración seleccionada de la tabla SCIAN
     this.tramite260218Store.update((state) => ({
       ...state,
-      scianConfigDatos: [event] // Asigna el nuevo valor de la configuración seleccionada
+      scianConfigDatos: [event], // Asigna el nuevo valor de la configuración seleccionada
     }));
   }
 }

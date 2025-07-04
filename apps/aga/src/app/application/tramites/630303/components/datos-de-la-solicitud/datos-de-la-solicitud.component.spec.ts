@@ -36,7 +36,7 @@ describe('DatosDeLaSolicitudComponent', () => {
     } as any;
 
    mockConsultaioQuery = {
-  selectConsultaioState$: of({ readonly: true }), // Direct mock
+  selectConsultaioState$: of({ readonly: true }), 
 } as any;
 
 

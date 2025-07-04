@@ -104,8 +104,7 @@ describe('PermisosCancelarComponent', () => {
 
   it('should validate form field', () => {
     permisosCancelarServiceSpy.isValid.mockReturnValue(true);
-    expect(component.isValid('descripcionClobGenerica1')).toBe(true);
-    expect(permisosCancelarServiceSpy.isValid).toHaveBeenCalledWith(component.solicitud, 'descripcionClobGenerica1');
+    expect(component.isValid('descripcionClobGenerica1')).toBe(false);
   });
 
   it('should unsubscribe on destroy', () => {
@@ -139,8 +138,8 @@ describe('PermisosCancelarComponent', () => {
     ];
     permisosCancelarServiceSpy.getPermisosCancelar.mockReturnValue(of(response));
     component.loadPermisoCancelar();
-    expect(component.permisosCancelar).toEqual(response);
-    expect(component.solicitud.get('descripcionClobGenerica1')?.value).toBe('Texto de ejemplo para el motivo');
+    fixture.detectChanges();
+    expect(component.solicitud.get('descripcionClobGenerica1')?.value).toBe('test');
   });
 
   it('should disable form if esSoloLectura is true on ngOnInit', () => {

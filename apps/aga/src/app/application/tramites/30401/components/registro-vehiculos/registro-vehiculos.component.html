@@ -5,12 +5,13 @@
     [configuracionTabla]="ParqueVehicular"
     [datos]="registroVehiculosInfoList"
     (listaDeFilaSeleccionada)="manejarFilaSeleccionada($event)"
+    [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
   >
   </app-tabla-dinamica>
 
   <div class="d-flex justify-content-end">
     <div class="d-flex flex-row flex-wrap gap-3">
-      <button class="btn btn-primary" (click)="cargaArchivo()">
+      <button class="btn btn-primary" (click)="cargaArchivo()" [disabled]="esFormularioSoloLectura">
         Carga por archivo
       </button>
       <button
@@ -29,8 +30,10 @@
       >
         Modificar
       </button>
-      <button class="btn btn-primary" (click)="agregarDialogoDatos()">
+      <button class="btn btn-primary" (click)="agregarDialogoDatos()"
+      [disabled]="esFormularioSoloLectura">
         Agregar
+        
       </button>
     </div>
   </div>
@@ -642,7 +645,7 @@
 <lib-notificaciones
   *ngIf="confirmEliminarPopupAbierto"
   [notificacionInput]="nuevaNotificacion"
-  (confirmacionModal)="eliminarVehiculosItem()"
+  (confirmacionModal)="eliminarVehiculosItem($event)"
 >
 </lib-notificaciones>
 

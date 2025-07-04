@@ -78,7 +78,6 @@ export class ManifiestoComponent implements OnInit, OnDestroy {
         takeUntil(this.destroyed$),
         map((seccionState) => {
           this.esFormularioSoloLectura = seccionState.readonly;
-          // Solo inicializar estado del formulario si ya existe
           if (this.manifiestoFormulario) {
             this.inicializarEstadoFormulario();
           }

@@ -14,6 +14,7 @@ export interface AcuseYResolucionesFolioTramite {
   tipoDeTramite: string;
   dependencia: string;
   fechInicioTramite: string;
+  estadoDeTramite:string
 }
 
 /**

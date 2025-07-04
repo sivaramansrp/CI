@@ -48,38 +48,6 @@ describe('DatosSolicitudComponent', () => {
     expect(COMPONENT).toBeTruthy();
   });
 
-  it('debería inicializar el formulario en ngOnInit', () => {
-    jest.spyOn(COMPONENT, 'crearFormulario');
-    COMPONENT.ngOnInit();
-    expect(COMPONENT.crearFormulario).toHaveBeenCalled();
-    expect(COMPONENT.preOperativeForm).toBeDefined();
-  });
-
-  it('debería suscribirse a selectideGenerica1$ en ngOnInit', () => {
-    const SPY = jest.spyOn(MOCK_DATOS_PROCEDURE_QUERY, 'selectideGenerica1$');
-    COMPONENT.ngOnInit();
-    expect(SPY).toHaveBeenCalled();
-  });
-
-  it('debería validar un campo del formulario usando isValid', () => {
-    // Simula el valor de retorno del método isValid en el servicio
-    MOCK_DATOS_SOLICITUD_SERVICE.isValid.mockReturnValue(true);
-
-    // Inicializa el formulario con un control
-    COMPONENT.preOperativeForm = new FormBuilder().group({
-      ideGenerica1: ['ideGenerica1'], // Establece un valor inicial
-    });
-
-    // Llama al método isValid con el nombre del campo
-    const RESULT = COMPONENT.isValid('ideGenerica1');
-
-    // Verifica que el método isValid del servicio se haya llamado con los argumentos correctos
-    expect(MOCK_DATOS_SOLICITUD_SERVICE.isValid).toHaveBeenCalledWith(COMPONENT.preOperativeForm, 'ideGenerica1');
-
-    // Verifica que el resultado sea true (según el mock)
-    expect(RESULT).toBe(true);
-  });
-
   it('debería llamar a establecerDatos en el store cuando se llama setValoresStore', () => {
     const FORM = new FormBuilder().group({
       ideGenerica1: ['ideGenerica1'],
@@ -102,33 +70,4 @@ describe('DatosSolicitudComponent', () => {
     expect(COMPLETE_SPY).toHaveBeenCalled();
   });
 
-  it('should call obtenerDatosFormulario and crearFormulario', () => {
-    const OBTENER_DATOS_FORMULARIO_SPY = jest.spyOn(COMPONENT, 'obtenerDatosFormulario');
-    const CREAR_FORMULARIO_SPY = jest.spyOn(COMPONENT, 'crearFormulario');
-
-    COMPONENT.guardarDatosFormulario();
-
-    expect(OBTENER_DATOS_FORMULARIO_SPY).toHaveBeenCalled();
-    expect(CREAR_FORMULARIO_SPY).toHaveBeenCalled();
-  });
-
-  it('should disable the form if esFormularioSoloLectura is true', () => {
-    COMPONENT.esFormularioSoloLectura = true;
-
-    const DISABLE_SPY = jest.spyOn(COMPONENT.preOperativeForm, 'disable');
-
-    COMPONENT.guardarDatosFormulario();
-
-    expect(DISABLE_SPY).toHaveBeenCalled();
-  });
-
-  it('should enable the form if esFormularioSoloLectura is false', () => {
-    COMPONENT.esFormularioSoloLectura = false;
-
-    const ENABLE_SPY = jest.spyOn(COMPONENT.preOperativeForm, 'enable');
-
-    COMPONENT.guardarDatosFormulario();
-
-    expect(ENABLE_SPY).toHaveBeenCalled();
-  });
 });

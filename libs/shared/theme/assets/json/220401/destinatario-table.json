@@ -1,13 +1,21 @@
 
 {
     "tableHeader": [
-        "Nombre/Denominación o Razón Social",
+        "Nombre/denominación o razón social",
         "Teléfono",
         "Correo Electrónico",
         "Domicilio",
         "País"
     ],
     "tableBody": [
-
+          {
+            "tbodyData": [
+                "Establecimiento 1",
+                "123-456-7890",
+                "correo",
+                "Actividad 1",
+                "Otro detalle"
+            ]
+        }
     ]
 }

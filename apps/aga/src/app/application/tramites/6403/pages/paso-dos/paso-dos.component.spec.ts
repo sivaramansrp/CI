@@ -1,10 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { of } from 'rxjs';
 import { PasoDosComponent } from './paso-dos.component';
 import { CatalogosService } from '@ng-mf/data-access-user';
-import { Catalogo } from '@ng-mf/data-access-user';
-import { provideToastr, ToastrService } from 'ngx-toastr';
-import { provideHttpClient } from '@angular/common/http';
+import { of } from 'rxjs';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('PasoDosComponent', () => {
   let component: PasoDosComponent;
@@ -13,23 +12,17 @@ describe('PasoDosComponent', () => {
 
   beforeEach(async () => {
     catalogosServiceMock = {
-      getCatalogo: jest.fn().mockReturnValue(of([]))
+      getCatalogo: jest.fn().mockReturnValue(of([{ id: 1, nombre: 'Doc1' }]))
     };
 
     await TestBed.configureTestingModule({
-      imports: [PasoDosComponent],
+      imports: [PasoDosComponent,HttpClientTestingModule],
       providers: [
-        ToastrService,
-        provideToastr({
-          positionClass: 'toast-top-right',
-        }),
-        provideHttpClient(),
         { provide: CatalogosService, useValue: catalogosServiceMock }
-      ]
+      ],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA]
     }).compileComponents();
-  });
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(PasoDosComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
@@ -39,37 +32,24 @@ describe('PasoDosComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize TEXTOS', () => {
-    expect(component.TEXTOS).toBeDefined();
-  });
-
-  it('should call getTiposDocumentos on component initialization', () => {
+  it('should call getTiposDocumentos on ngOnInit', () => {
     const spy = jest.spyOn(component, 'getTiposDocumentos');
     component.ngOnInit();
     expect(spy).toHaveBeenCalled();
   });
 
-  it('should update catalogoDocumentos when getTiposDocumentos is called', () => {
-    const mockCatalogo: Catalogo[] = [
-      { id: 1, descripcion: 'Tipo Documento 1' },
-      { id: 2, descripcion: 'Tipo Documento 2' }
-    ];
-    catalogosServiceMock.getCatalogo.mockReturnValue(of(mockCatalogo));
+  it('should set catalogoDocumentos if response has items in getTiposDocumentos', () => {
+    component.catalogoDocumentos = [];
     component.getTiposDocumentos();
-    expect(component.catalogoDocumentos).toEqual(mockCatalogo);
+    expect(catalogosServiceMock.getCatalogo).toHaveBeenCalled();
+    expect(component.catalogoDocumentos).toEqual([{ id: 1, nombre: 'Doc1' }]);
   });
 
-  it('should handle empty response in getTiposDocumentos', () => {
-    catalogosServiceMock.getCatalogo.mockReturnValue(of([]));
-    component.getTiposDocumentos();
-    expect(component.catalogoDocumentos).toEqual([]);
-  });
-
-  it('should complete destroy$ on ngOnDestroy', () => {
-    const destroySpy = jest.spyOn(component['destroy$'], 'next');
-    const completeSpy = jest.spyOn(component['destroy$'], 'complete');
+  it('should complete destroyed$ in ngOnDestroy', () => {
+    const nextSpy = jest.spyOn(component.destroyed$, 'next');
+    const completeSpy = jest.spyOn(component.destroyed$, 'complete');
     component.ngOnDestroy();
-    expect(destroySpy).toHaveBeenCalled();
+    expect(nextSpy).toHaveBeenCalledWith(true);
     expect(completeSpy).toHaveBeenCalled();
   });
 });

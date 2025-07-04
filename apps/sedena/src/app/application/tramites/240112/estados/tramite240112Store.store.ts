@@ -8,29 +8,47 @@ import { Store } from '@datorama/akita';
 import { StoreConfig } from '@datorama/akita';
 
 /**
- * Interfaz que representa el estado completo del trámite 240111.
- *
- * @property {number} [tabSeleccionado] - Pestaña actualmente activa en el flujo.
- * @property {DestinoFinal[]} destinatarioFinalTablaDatos - Lista de destinatarios finales registrados.
- * @property {Proveedor[]} proveedorTablaDatos - Lista de proveedores registrados.
- * @property {PagoDerechosFormState} pagoDerechos - Información del formulario de pago de derechos.
- * @property {MercanciaDetalle[]} merccancialTablaDatos - Lista de mercancías registradas.
- * @property {DatosDelTramiteFormState} datosDelTramite - Información general del formulario de datos del trámite.
+ * Interface que define la estructura del estado para el trámite 240112.
+ * Centraliza la información sobre la pestaña activa, tablas de destinatarios, proveedores,
+ * datos de pago y detalles generales del trámite.
  */
 export interface Tramite240112State {
+  /**
+   * Índice de la pestaña actualmente seleccionada.
+   * Puede ser indefinido al inicio.
+   */
   tabSeleccionado?: number;
+
+  /**
+   * Arreglo con los datos de los destinatarios finales.
+   */
   destinatarioFinalTablaDatos: DestinoFinal[];
+
+  /**
+   * Arreglo con los datos de proveedores asociados.
+   */
   proveedorTablaDatos: Proveedor[];
+
+  /**
+   * Estado del formulario de pago de derechos.
+   */
   pagoDerechos: PagoDerechosFormState;
+
+  /**
+   * Arreglo con los detalles de la mercancía.
+   */
   merccancialTablaDatos: MercanciaDetalle[];
+
+  /**
+   * Datos generales del trámite.
+   */
   datosDelTramite: DatosDelTramiteFormState;
 }
 
 /**
- * Crea el estado inicial para el trámite 240111.
- *
- * @function createInitialState
- * @returns {Tramite240112State} El estado inicial del store.
+ * Función que crea el estado inicial del store para el trámite 240112.
+ * 
+ * @returns {Tramite240112State} Estado inicial completo con valores por defecto.
  */
 export function createInitialState(): Tramite240112State {
   return {
@@ -56,42 +74,44 @@ export function createInitialState(): Tramite240112State {
 }
 
 /**
- * Store que maneja el estado del trámite 240111.
- * Utiliza Akita para el control reactivo del estado.
+ * Store encargado de manejar el estado del trámite 240112.
+ * Utiliza la librería Akita para la gestión reactiva y centralizada del estado.
+ * 
+ * @decorator Injectable - Permite la inyección del store como servicio singleton.
+ * @decorator StoreConfig - Configura el nombre del store y habilita la función de reset.
  */
 @Injectable({
   providedIn: 'root',
 })
 @StoreConfig({ name: 'tramite240112', resettable: true })
 export class Tramite240112Store extends Store<Tramite240112State> {
+  /**
+   * Constructor que inicializa el store con el estado inicial definido.
+   */
   constructor() {
     super(createInitialState());
   }
 
   /**
-   * Cambia la pestaña actualmente seleccionada.
-   *
-   * @method updateTabSeleccionado
-   * @param {number} tabSeleccionado - Índice de la nueva pestaña seleccionada.
+   * Actualiza la pestaña seleccionada en la interfaz de usuario.
+   * 
+   * @param {number} tabSeleccionado - Índice numérico de la pestaña a activar.
    * @returns {void}
    */
   public updateTabSeleccionado(tabSeleccionado: number): void {
     this.update((state) => ({
       ...state,
-      tabSeleccionado: tabSeleccionado,
+      tabSeleccionado,
     }));
   }
 
   /**
-   * Actualiza los datos generales del formulario de trámite.
-   *
-   * @method updateDatosDelTramiteFormState
-   * @param {DatosDelTramiteFormState} datosDelTramiteFormState - Estado actualizado del formulario.
+   * Actualiza el estado completo de los datos generales del trámite.
+   * 
+   * @param {DatosDelTramiteFormState} datosDelTramiteFormState - Nuevo estado con los datos actualizados.
    * @returns {void}
    */
-  public updateDatosDelTramiteFormState(
-    datosDelTramiteFormState: DatosDelTramiteFormState
-  ): void {
+  public updateDatosDelTramiteFormState(datosDelTramiteFormState: DatosDelTramiteFormState): void {
     this.update((state) => ({
       ...state,
       datosDelTramite: datosDelTramiteFormState,
@@ -99,15 +119,12 @@ export class Tramite240112Store extends Store<Tramite240112State> {
   }
 
   /**
-   * Actualiza los datos del formulario de pago de derechos.
-   *
-   * @method updatePagoDerechosFormState
-   * @param {PagoDerechosFormState} pagoDerechosFormState - Estado actualizado del formulario de pago.
+   * Actualiza el estado del formulario de pago de derechos.
+   * 
+   * @param {PagoDerechosFormState} pagoDerechosFormState - Nuevos datos de pago.
    * @returns {void}
    */
-  public updatePagoDerechosFormState(
-    pagoDerechosFormState: PagoDerechosFormState
-  ): void {
+  public updatePagoDerechosFormState(pagoDerechosFormState: PagoDerechosFormState): void {
     this.update((state) => ({
       ...state,
       pagoDerechos: pagoDerechosFormState,
@@ -115,29 +132,22 @@ export class Tramite240112Store extends Store<Tramite240112State> {
   }
 
   /**
-   * Agrega nuevos registros a la tabla de destinatarios finales.
-   *
-   * @method updateDestinatarioFinalTablaDatos
-   * @param {DestinoFinal[]} newDestinatarios - Nuevos destinatarios a agregar.
+   * Agrega uno o más destinatarios finales a la tabla existente.
+   * 
+   * @param {DestinoFinal[]} newDestinatarios - Array de nuevos destinatarios a agregar.
    * @returns {void}
    */
-  public updateDestinatarioFinalTablaDatos(
-    newDestinatarios: DestinoFinal[]
-  ): void {
+  public updateDestinatarioFinalTablaDatos(newDestinatarios: DestinoFinal[]): void {
     this.update((state) => ({
       ...state,
-      destinatarioFinalTablaDatos: [
-        ...state.destinatarioFinalTablaDatos,
-        ...newDestinatarios,
-      ],
+      destinatarioFinalTablaDatos: [...state.destinatarioFinalTablaDatos, ...newDestinatarios],
     }));
   }
 
   /**
-   * Agrega nuevos registros a la tabla de proveedores.
-   *
-   * @method updateProveedorTablaDatos
-   * @param {Proveedor[]} newProveedores - Nuevos proveedores a agregar.
+   * Agrega uno o más proveedores a la tabla existente.
+   * 
+   * @param {Proveedor[]} newProveedores - Array de nuevos proveedores a agregar.
    * @returns {void}
    */
   public updateProveedorTablaDatos(newProveedores: Proveedor[]): void {
@@ -148,10 +158,9 @@ export class Tramite240112Store extends Store<Tramite240112State> {
   }
 
   /**
-   * Agrega nuevos registros a la tabla de mercancías.
-   *
-   * @method updateMercanciaTablaDatos
-   * @param {MercanciaDetalle[]} newMercancia - Nuevas mercancías a agregar.
+   * Agrega uno o más registros de mercancía a la tabla existente.
+   * 
+   * @param {MercanciaDetalle[]} newMercancia - Array de nuevos detalles de mercancía a agregar.
    * @returns {void}
    */
   public updateMercanciaTablaDatos(newMercancia: MercanciaDetalle[]): void {

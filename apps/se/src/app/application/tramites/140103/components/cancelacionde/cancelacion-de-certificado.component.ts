@@ -293,8 +293,6 @@ export class CancelacionDeCertificateComponent implements OnInit, OnDestroy {
   inicializarEstadoFormulario(): void {
     if (this.esFormularioSoloLectura) {
       this.guardarDatosFormulario();
-    } else {
-       this.cancelacionForm.enable();
     }
   }
 

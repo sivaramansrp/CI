@@ -19,7 +19,6 @@ import { Tramite80101Store } from '../../estados/tramite80101.store';
  * Componente para la vista de federatarios y plantas
  * @export FederatariosYPlantasVistaComponent
  * */
-
 @Component({
   selector: 'app-federatarios-y-plantas-vista',
   standalone: true,
