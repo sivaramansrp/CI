@@ -1,4 +1,5 @@
-import { PersonaTerceros } from "@ng-mf/data-access-user";
+import { Catalogo, PersonaTerceros } from "@ng-mf/data-access-user";
+import { DatosForma } from "./certificado-zoosanitario.model";
 import { TercerosrelacionadosdestinoTable } from "../../../../shared/models/tercerosrelacionados.model";
 
 /**
@@ -23,6 +24,10 @@ export interface CapturarSolicitud {
   pagoDeDerechos: PagoDeDerechos;
   tercerosRelacionados: TercerosrelacionadosdestinoTable[];
   validarEnvio: ValidarEnvio;
+  tablaDatos: FilaSolicitud[];
+  selectedDatos: FilaSolicitud[];
+   datos: DatosForma;
+   
 }
 
 /**
@@ -97,49 +102,53 @@ export interface DatosParaMovilizacionNacional {
   transporte: string;
   punto: string;
 }
-
 /**
- * Representa una fila o entrada dentro de los requisitos de la solicitud.
- * @interface FilaSolicitud
- * @property {string} noPartida Número de partida arancelaria.
- * @property {string} tipoRequisito Tipo de requisito solicitado.
- * @property {string} requisito Descripción del requisito.
- * @property {string} numeroCertificadoInternacional Número de certificado internacional si aplica.
- * @property {string} fraccionArancelaria Fracción arancelaria correspondiente.
- * @property {string} descripcionFraccion Descripción textual de la fracción.
- * @property {string} nico Número de identificación comercial.
- * @property {string} descripcionNico Descripción del nico.
- * @property {string} descripcion Descripción general.
- * @property {string} unidadDeMedidaDeTarifaUMT Unidad de medida de tarifa.
- * @property {number} cantidadUMT Cantidad en UMT.
- * @property {string} unidadDeMedidaDeComercializacionUMC Unidad de medida de comercialización.
- * @property {number} cantidadUMC Cantidad en UMC.
- * @property {string} especie Especie de la mercancía.
- * @property {string} uso Uso de la mercancía.
- * @property {string} paisDeOrigen País de origen.
- * @property {string} paisDeProcedencia País de procedencia.
- * @property {string} certificadoInternacionalElectronico Certificado internacional electrónico.
+ * Representa una fila de solicitud para trámites fitosanitarios.
+ * Contiene información detallada sobre el producto, requisitos, certificados,
+ * cantidades y procedencia, utilizada en la gestión de solicitudes.
+ *
+ * @property {string} noPartida - Número de partida.
+ * @property {string} tipoRequisito - Tipo de requisito solicitado.
+ * @property {string} requisito - Descripción del requisito.
+ * @property {string} numeroCertificadoInternacional - Número del certificado internacional.
+ * @property {string} fraccionArancelaria - Fracción arancelaria del producto.
+ * @property {string} descripcionFraccion - Descripción de la fracción arancelaria.
+ * @property {string} nico - Código NICO.
+ * @property {string} descripcionNico - Descripción del NICO.
+ * @property {string} descripcion - Descripción general del producto.
+ * @property {string} umt - Unidad de medida de trámite (UMT).
+ * @property {string | number} cantidadUMT - Cantidad en UMT.
+ * @property {string} umc - Unidad de medida de comercialización (UMC).
+ * @property {string | number} cantidadUMC - Cantidad en UMC.
+ * @property {string} uso - Uso previsto del producto.
+ * @property {string} tipoDeProducto - Tipo de producto.
+ * @property {string} numeroDeLote - Número de lote del producto.
+ * @property {string} paisDeOrigen - País de origen del producto.
+ * @property {string} paisDeProcedencia - País de procedencia del producto.
+ * @property {string} certificadoInternacionalElectronico - Certificado internacional electrónico asociado.
  */
 export interface FilaSolicitud {
-  noPartida: string;
-  tipoRequisito: string;
-  requisito: string;
-  numeroCertificadoInternacional: string;
-  fraccionArancelaria: string;
-  descripcionFraccion: string;
-  nico: string;
-  descripcionNico: string;
-  descripcion: string; 
-  unidadDeMedidaDeTarifaUMT: string;
-  cantidadUMT: number;
-  unidadDeMedidaDeComercializacionUMC: string;
-  cantidadUMC: number;
-  especie: string;
-  uso: string;
-  paisDeOrigen: string;
-  paisDeProcedencia: string;
-  certificadoInternacionalElectronico: string;
+    noPartida: string;
+    tipoRequisito: string;
+    requisito: string;
+    numeroCertificadoInternacional: string;
+    fraccionArancelaria: string;
+    descripcionFraccion: string;
+    nico: string;
+    descripcionNico: string;
+    descripcion: string;
+    umt: string;
+    cantidadUMT: string | number;
+    umc: string; // Unidad de medida de comercialización (UMC)
+    cantidadUMC: string | number;
+    uso: string;
+    tipoDeProducto: string;
+    numeroDeLote: string;
+    paisDeOrigen: string;
+    paisDeProcedencia: string;
+    certificadoInternacionalElectronico: string;
 }
+
 
 /**
  * Representa los datos de una solicitud en el trámite 220201.
@@ -195,7 +204,19 @@ export interface PagoDeDerechos {
   importePago: string;
   fechaPago: string;
 }
-
+export interface DatosDeLaSolicituds {
+    tipoRequisitoList: Catalogo[];
+    requisitoList: Catalogo[];
+    fraccionArancelariaList: Catalogo[];
+    nicoList: Catalogo[];
+    umtList: Catalogo[];
+    umcList: Catalogo[];
+    especieList: Catalogo[];
+    usoList: Catalogo[];
+    paisOrigenList: Catalogo[];
+    paisDeProcedenciaList: Catalogo[];
+    sexoList: Catalogo[];
+}
 /**
  * Crea un estado inicial de la solicitud `CapturarSolicitud`, con valores por defecto si no se especifican.
  * @function createDatosState
@@ -204,6 +225,29 @@ export interface PagoDeDerechos {
  */
 export function createDatosState(params: Partial<CapturarSolicitud> = {}): CapturarSolicitud {
   return {
+    datos: params.datos || {
+    aduanaDeIngreso: '',
+    oficinaDeInspeccion: '',
+    puntoDeInspeccion: '',
+    numeroDeGuia: '',
+    regimen: '',
+    numeroDeCarro: '',
+    tipoDeRequisito: '',
+    requisito: '',
+    numeroCertificadoInternacional: '',
+    fraccionArancelaria: '',
+    descripcionFraccion: '',
+    nico: '',
+    descripcionNico: '',
+    descripcion: '',
+    cantidadUMT: '',
+    umt: '',
+    cantidadUMC: '',
+    umc: '',
+    uso: '',
+    tipoDeProducto: '',
+    tipoMercancia: '',
+    },
     datosDeLaSolicitud: params.datosDeLaSolicitud || {
       tipoMercancia: '',
       aduanaIngreso: '',
@@ -239,5 +283,7 @@ export function createDatosState(params: Partial<CapturarSolicitud> = {}): Captu
       dataDeLaSolicitud:  false }
       ,
       tercerosRelacionados: params.tercerosRelacionados || [],
+         tablaDatos: params.tablaDatos || [],
+        selectedDatos: params.selectedDatos || [],
   }
 }

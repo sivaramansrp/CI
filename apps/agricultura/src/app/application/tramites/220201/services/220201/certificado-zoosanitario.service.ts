@@ -1,6 +1,7 @@
 import {
   CapturarSolicitud,
   DatosDeLaSolicitud,
+  DatosDeLaSolicituds,
   DatosParaMovilizacionNacional,
   PagoDeDerechos,
   ValidarEnvio,
@@ -207,5 +208,20 @@ export class CertificadoZoosanitarioServiceService {
     this.updateDatosParaMovilizacionNacional(datos?.datosParaMovilizacionNacional || {} as DatosDeLaSolicitud);
     this.updateTercerosRelacionado(datos?.tercerosRelacionados || {} as TercerosrelacionadosdestinoTable[] );
     this.updateValidarEnvio(datos?.validarEnvio || {} as ValidarEnvio);
+  }
+    /**
+   * @description Obtiene los datos de la solicitud a partir de una URL específica.
+   * @param {string} url - URL del archivo JSON que contiene los datos de la solicitud.
+   * @returns {Observable<DatosDeLaSolicitud>} Observable con los datos de la solicitud.
+   */
+  obtenerRespuestaPorUrl(url: string): Observable<DatosDeLaSolicituds> {
+      return this.http.get<DatosDeLaSolicituds>(`../../../../../assets/json/220201/${url}`);
+  }
+   /**
+   * @description Obtiene todos los datos del formulario como observable.
+   * @returns {Observable<ListaDeDatosFinal>} Observable con todos los datos del formulario.
+   */
+  getAllDatosForma(): Observable<CapturarSolicitud> {
+    return this.zoosanitarioStore._select(state => state); // Select the entire state
   }
 }

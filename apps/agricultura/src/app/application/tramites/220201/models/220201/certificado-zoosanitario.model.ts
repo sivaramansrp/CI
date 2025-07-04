@@ -72,3 +72,52 @@ export interface RadioOpcion {
     label: string;
     value: string;
 }   
+
+/**
+ * Representa los datos de un formulario fitosanitario para trámites de importación o inspección.
+ *
+ * @property {string} aduanaDeIngreso - Nombre de la aduana por donde ingresa la mercancía.
+ * @property {string} oficinaDeInspeccion - Oficina responsable de la inspección.
+ * @property {string} puntoDeInspeccion - Punto específico donde se realiza la inspección.
+ * @property {string} [numeroDeGuia] - Número de guía de la mercancía (opcional).
+ * @property {string} regimen - Régimen aduanero aplicable.
+ * @property {string} [numeroDeCarro] - Número del carro o vehículo de transporte (opcional).
+ * @property {string} [tipoDeRequisito] - Tipo de requisito solicitado (opcional).
+ * @property {string} [requisito] - Descripción del requisito (opcional).
+ * @property {string} [numeroCertificadoInternacional] - Número de certificado internacional (opcional).
+ * @property {string} [fraccionArancelaria] - Fracción arancelaria del producto (opcional).
+ * @property {string} [descripcionFraccion] - Descripción de la fracción arancelaria (opcional).
+ * @property {string} [nico] - Número de Identificación Comercial (opcional).
+ * @property {string} [descripcionNico] - Descripción del NICO (opcional).
+ * @property {string} [descripcion] - Descripción general del producto (opcional).
+ * @property {string | number} [cantidadUMT] - Cantidad en Unidad de Medida de Transporte (opcional).
+ * @property {string} [umt] - Unidad de Medida de Transporte (opcional).
+ * @property {string | number} [cantidadUMC] - Cantidad en Unidad de Medida Comercial (opcional).
+ * @property {string} [umc] - Unidad de Medida Comercial (opcional).
+ * @property {string} [uso] - Uso o destino del producto (opcional).
+ * @property {string} [tipoDeProducto] - Tipo de producto transportado (opcional).
+ */
+export interface DatosForma {
+    aduanaDeIngreso: string;
+    oficinaDeInspeccion: string;
+    puntoDeInspeccion: string;
+    numeroDeGuia?: string;
+    regimen: string;
+    numeroDeCarro?: string;
+    tipoDeRequisito?: string;
+    requisito?: string;
+    numeroCertificadoInternacional?: string;
+    fraccionArancelaria?: string;
+    descripcionFraccion?: string;
+    nico?: string;
+    descripcionNico?: string;
+    descripcion?: string;
+    cantidadUMT?: string | number;
+    umt?: string;
+    cantidadUMC?: string | number;
+    umc?: string;
+    uso?: string;
+    tipoDeProducto?: string;
+    tipoMercancia?: string; // Tipo de mercancía, por ejemplo, "animal", "vegetal", etc.
+}
+
