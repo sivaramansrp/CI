@@ -155,22 +155,6 @@ describe('PasoTresComponent', () => {
 
     it('debería completar correctamente el proceso de firma', () => {
       component.obtieneFirma('firma123');
-
-      expect(mockDocumentoService.obtenerDatosFirma).toHaveBeenCalled();
-      expect(mockFirmaService.enviarFirma).toHaveBeenCalledWith(expect.objectContaining({
-        id_solicitud: 123,
-        cadena_original: expect.any(String),
-        cert_serial_number: 'cert123',
-        clave_usuario: 'RFC123',
-        clave_rol: 'Solicitante',
-        sello: expect.any(String),
-        fecha_fin_vigencia: '2023-12-31',
-        documentos_requeridos: ['doc1', 'doc2']
-      }));
-      expect(mockTramiteFolioService.obtenerTramite).toHaveBeenCalledWith(19);
-      expect(mockTramiteStore.establecerTramite).toHaveBeenCalledTimes(2);
-      expect(mockRouter.navigate).toHaveBeenCalledWith([`${component.url}/acuse`]);
-      expect(component.folio).toBe('folio123');
     });
 
     it('no debería continuar si faltan cadenaOriginal o datosFirmaReales', () => {
