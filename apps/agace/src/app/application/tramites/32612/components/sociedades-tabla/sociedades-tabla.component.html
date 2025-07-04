@@ -1,0 +1,39 @@
+<div class="row">
+  <div class="col-md-12">
+    <h5 class="mb-3">Sociedades</h5>
+        <app-tabla-dinamica
+            [configuracionTabla]="configuracionTabla"
+            [datos]="sociedadesDatos"
+            [tipoSeleccionTabla]="checkbox">
+        </app-tabla-dinamica>
+         <div class="d-flex justify-content-end">
+            <button type="button" class="btn btn-primary me-2">
+                Agregar
+            </button>
+            <button class="btn btn-danger me-2" type="button">
+                Modificar
+            </button>
+            <button class="btn btn-default" type="button">
+                Eliminar
+            </button>
+        </div>
+        <ng-titulo titulo="Datos de las instalaciones de la agencia"></ng-titulo>
+        <p class="fw-bold">Es necesario indicar todas las instalaciones pertenecientes al RFC del agente aduanal solicitante y de sus sociedades, asociadas a la aduana de adscripción, así como cada una de las instalaciones asociadas a las aduanas adicionales pertenecientes al agente aduanal solicitante.</p>
+        <app-tabla-dinamica
+            [configuracionTabla]="configuracionDatosTabla"
+            [datos]="instalacionesDatos"
+            [tipoSeleccionTabla]="checkbox">
+        </app-tabla-dinamica>
+        <div class="d-flex justify-content-end">
+            <button type="button" class="btn btn-primary me-2">
+                Agregar
+            </button>
+            <button class="btn btn-danger me-2" type="button">
+                Modificar
+            </button>
+            <button class="btn btn-default" type="button">
+                Eliminar
+            </button>
+        </div>
+  </div>
+</div>

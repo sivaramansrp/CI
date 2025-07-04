@@ -31,4 +31,28 @@ export class EsquemaDeCertificacionService {
         })
       );
     }
+
+    getIndiqueCatalogo(): Observable<JSONResponse> {
+      return this.http.get<JSONResponse>('assets/json/32612/catalog-indique.json').pipe(
+        catchError((error) => {
+          return throwError(() => error);
+        })
+      );
+    }
+
+    getSociedadesTablaDatos(): Observable<JSONResponse> {
+      return this.http.get<JSONResponse>('assets/json/32612/socidad-tabla.json').pipe(
+        catchError((error) => {
+          return throwError(() => error);
+        })
+      );
+    }
+
+    getDatosDeLasInstalaciones(): Observable<JSONResponse> {
+      return this.http.get<JSONResponse>('assets/json/32612/datos-instalaciones.json').pipe(
+        catchError((error) => {
+          return throwError(() => error);
+        })
+      );
+    }
 }

@@ -1,0 +1,93 @@
+<div class="container">
+  <div class="row mt-4">
+    <div class="col-md-6">
+        <strong>Conforme a la regla 7.1.5, fracción II, acredite lo siguiente:</strong>
+    </div>
+  </div>
+  <form action="">
+    <div class="row mb-2 mt-2">
+        <div class="col-md-6">
+          <div class="form-group">
+            <label class="form-label">Número de patente aduanal</label>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+             <input type="text" class="form-control" />
+            </div>
+        </div>
+    </div>
+    <div class="row mb-2">
+        <div class="col-md-6">
+          <div class="form-group">
+            <label for="indique">Indique la aduana de adscripción del Agente Aduanal:</label>
+            <span class="pt-2">Aduana de adscripción</span>
+          </div>
+        </div>
+        <div class="col-md-6">
+            <app-catalogo-select
+              [catalogo]="indiqueCatalogo"
+              [required]="true">
+            </app-catalogo-select>
+        </div>
+      </div>
+  </form>
+  <div class="row mb-2">
+    <p class="fw-bold">Señale si cuenta con aduanas adicionales autorizadas</p>
+  </div>
+      <div class="row mt-2">
+      <div class="col-md-12">
+        <h5>Aduanas Autorizadas*:</h5>
+        <crosslist
+          [id]="'cboAduanasActuar'"
+          [fechas]="seleccionarAduanasEntrada"
+          [fechasSeleccionadas]="seleccionadasAduanasEntradaDatos"
+          [botones]="aduanasEntradaBotons"
+        ></crosslist>
+      </div>
+    </div>
+    <ng-titulo titulo="Permite seleccionar aduanas y agregarlas a la lista de aduanas autorizadas para el agente hasta un máximo de 3."></ng-titulo>
+    <form action="">
+        <div class="row mt-2">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="form-label">Número de trabajadores registrados ante el IMSS:*</label>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <input type="text" class="form-control" />
+                </div>
+            </div>
+        </div>
+        <div class="row mt-2">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="form-label">Número de trabajadores registrados mediante contrato de prestación de
+                        servicios contratistas de quienes reciba servicios especializados o la ejecución de obras
+                        especializadas.:*</label>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group mt-5">
+                    <input type="text" class="form-control" />
+                </div>
+            </div>
+        </div>
+        <div class="row mt-2">
+            <div class="col-md-9">
+                <div class="form-group">
+                    <label class="form-label">Describa los servicios adicionales a la gestión aduanera que presta el Agente Aduanal.*</label>
+                    <input type="text" class="form-control" />
+                </div>
+            </div>
+        </div>
+    </form>
+    <div class="row mt-2">
+        <div class="col-md-12">
+            <p class="fw-bold"><span>* </span>En caso de haberse incorporado y/o constituido una o más sociedades, de conformidad con la fracción II del artículo 163 de la Ley, derogada mediante Decreto publicado en el DOF, el 25 de junio de 2018, estas deberán encontrarse al corriente en el cumplimiento de obligaciones fiscales. Muestre las sociedades indicando cuales están al corriente en el cumplimiento de sus obligaciones fiscales.</p>
+            <p class="fw-bold"><span>* </span>Modifique las Sociedades del Agente Aduanal asociadas al solicitante bajo la modalidad de Socio Comercial Certificado en el Esquema Integral de Certificación.</p>
+        </div>
+    </div>
+    <app-sociedades-tabla></app-sociedades-tabla>
+</div>
