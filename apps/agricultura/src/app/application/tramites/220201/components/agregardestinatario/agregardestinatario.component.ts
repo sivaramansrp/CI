@@ -160,6 +160,7 @@ export class AgregardestinatarioComponent implements OnInit,AfterViewInit {
   enCambioValorRadio(): void {
       const RAZON_SOCIAL_CTRL = this.destinatarioForm.get('razonSocial');
     if(this.destinatarioForm.value.tipoMercancia === 'no'){
+
 RAZON_SOCIAL_CTRL?.clearValidators();
 RAZON_SOCIAL_CTRL?.updateValueAndValidity();
   }
