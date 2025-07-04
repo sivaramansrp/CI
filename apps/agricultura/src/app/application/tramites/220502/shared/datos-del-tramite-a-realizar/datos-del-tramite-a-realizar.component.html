@@ -15,16 +15,30 @@
         ></app-catalogo-select>
       </div>
     </div>
-    <div class="col-md-4">
-      <div class="form-field">
-        <input-fecha
-          [datos]="configuracionFechaFinVigencia"
-          (valorCambiado)="cambioFechaInicio($event)"
-          [isDisabled]="formularioDeshabilitado"
-          [setFecha]="this.solicitud220502State.fechaDeInspeccion"
-        ></input-fecha>
+    @if (procedimiento === 220502) {
+      <div class="col-md-4">
+        <div class="form-field">
+          <input-fecha
+            [datos]="configuracionFechaFinVigencia"
+            (valorCambiado)="cambioFechaInicio($event)"
+            [isDisabled]="formularioDeshabilitado"
+            [setFecha]="this.solicitud220502State.fechaDeInspeccion"
+          ></input-fecha>
+        </div>
       </div>
-    </div>
+    }
+    @if (procedimiento === 220501) {
+      <div class="col-md-4">
+        <div class="form-field">
+          <input-fecha
+            [datos]="configuracionFechaInspeccion"
+            (valorCambiado)="cambioFechaInspeccion($event)"
+            [isDisabled]="formularioDeshabilitado"
+            [setFecha]="this.solicitud220502State.fechaInspeccion"
+          ></input-fecha>
+        </div>
+      </div>
+    }
     <div class="col-md-4">
       <div class="form-field">
         <app-catalogo-select
