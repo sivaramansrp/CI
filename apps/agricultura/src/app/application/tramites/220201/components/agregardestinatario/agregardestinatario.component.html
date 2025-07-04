@@ -12,6 +12,9 @@
                     <div>
                         <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [layout]="'vertical'"
                             name="tipoMercancia" formControlName="tipoMercancia" (valueChange)="enCambioValorRadio()"></app-input-radio>
+                        <div *ngIf="destinatarioForm.get('tipoMercancia')?.invalid && destinatarioForm.get('tipoMercancia')?.touched" class="text-danger">
+                            Este campo es obligatorio.
+                        </div>
                     </div>
                 </div>
             </div>
@@ -24,6 +27,9 @@
                         <div class="form-group">
                             <label class="form-label" for="nombre">Nombre(s)*:</label>
                             <input class="form-control" id="nombre" placeholder="" type="text" libUppercase formControlName="nombre" />
+                            <div *ngIf="destinatarioForm.get('nombre')?.hasError('required') && destinatarioForm.get('nombre')?.touched" class="text-danger">
+                                Este campo es obligatorio.
+                            </div>
                             <div *ngIf="destinatarioForm.get('nombre')?.hasError('maxLength') && destinatarioForm.get('nombre')?.touched" class="text-danger">
                                 No escribas más de 200 caracteres.
                             </div>
@@ -33,6 +39,9 @@
                         <div class="form-group">
                             <label class="form-label" for="primerApellido">Primer apellido*:</label>
                             <input class="form-control" id="primerApellido" placeholder="" type="text" libUppercase formControlName="primerApellido" />
+                            <div *ngIf="destinatarioForm.get('primerApellido')?.hasError('required') && destinatarioForm.get('primerApellido')?.touched" class="text-danger">
+                                Este campo es obligatorio.
+                            </div>
                             <div *ngIf="destinatarioForm.get('primerApellido')?.hasError('maxLength') && destinatarioForm.get('primerApellido')?.touched" class="text-danger">
                                 No escribas más de 200 caracteres.
                             </div>
@@ -53,6 +62,9 @@
                         <div class="form-group">
                             <label class="form-label" for="razonSocial">Denominación/razón social*: </label>
                             <input class="form-control" id="razonSocial" placeholder="" type="text" libUppercase formControlName="razonSocial"/>
+                            <div *ngIf="destinatarioForm.get('razonSocial')?.hasError('required') && destinatarioForm.get('razonSocial')?.touched" class="text-danger">
+                                Este campo es obligatorio.
+                            </div>
                             <div *ngIf="destinatarioForm.get('razonSocial')?.hasError('maxLength') && destinatarioForm.get('razonSocial')?.touched" class="text-danger">
                                 No escribas más de 250 caracteres.
                             </div>
@@ -63,11 +75,17 @@
                     <div class="col-md-4">
                         <app-catalogo-select [catalogo]="pairsCatalog" [label]="'País'" [required]="true"
                             name="pais" [isDisabled]="true" formControlName="pais" ></app-catalogo-select>
+                        <div *ngIf="destinatarioForm.get('pais')?.invalid && destinatarioForm.get('pais')?.touched" class="text-danger">
+                            Este campo es obligatorio.
+                        </div>
                     </div>
                     <div class="col-md-4">
                         <div class="form-group">
                             <label class="form-label" for="codigoPostal">Código postal*: </label>
                             <input class="form-control" id="codigoPostal" placeholder="" type="text" libUppercase formControlName="codigoPostal"/>
+                            <div *ngIf="destinatarioForm.get('codigoPostal')?.hasError('required') && destinatarioForm.get('codigoPostal')?.touched" class="text-danger">
+                                Este campo es obligatorio.
+                            </div>
                             <div *ngIf="destinatarioForm.get('codigoPostal')?.hasError('minLength') && destinatarioForm.get('codigoPostal')?.touched" class="text-danger">
                                 Por favor, no escribas menos de 5 caracteres
                             </div>
@@ -79,6 +97,9 @@
                     <div class="col-md-4">
                         <app-catalogo-select [catalogo]="estadoCatalog" [label]="'Estado'" [required]="true"
                             name="estado" [isDisabled]="esFormularioSoloLectura" formControlName="estado"></app-catalogo-select>
+                        <div *ngIf="destinatarioForm.get('estado')?.invalid && destinatarioForm.get('estado')?.touched" class="text-danger">
+                            Este campo es obligatorio.
+                        </div>
                     </div>
                 </div>
                 <div class="row">
@@ -95,6 +116,9 @@
                         <div class="form-group">
                             <label class="form-label" for="calle">Calle*: </label>
                             <input class="form-control" id="calle" placeholder="" type="text" libUppercase formControlName="calle" />
+                            <div *ngIf="destinatarioForm.get('calle')?.hasError('required') && destinatarioForm.get('calle')?.touched" class="text-danger">
+                                Este campo es obligatorio.
+                            </div>
                             <div *ngIf="destinatarioForm.get('calle')?.hasError('maxLength') && destinatarioForm.get('calle')?.touched" class="text-danger">
                                 No escribas más de 100 caracteres.
                             </div>
@@ -106,6 +130,9 @@
                         <div class="form-group">
                             <label class="form-label" for="numeroExterior">Número exterior*: </label>
                             <input class="form-control" id="numeroExterior" placeholder="" type="text" libUppercase formControlName="numeroExterior" />
+                            <div *ngIf="destinatarioForm.get('numeroExterior')?.hasError('required') && destinatarioForm.get('numeroExterior')?.touched" class="text-danger">
+                                Este campo es obligatorio.
+                            </div>
                             <div *ngIf="destinatarioForm.get('numeroExterior')?.hasError('maxLength') && destinatarioForm.get('numeroExterior')?.touched" class="text-danger">
                                 No escribas más de 55 caracteres.
                             </div>
