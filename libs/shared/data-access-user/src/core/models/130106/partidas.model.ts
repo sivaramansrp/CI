@@ -1,5 +1,5 @@
 export interface Partidas {
-    cantidad: number;
+    mercanciaCantidad: number;
     unidad? :string;  
     fraccion?:string;
     descripcion:string;  

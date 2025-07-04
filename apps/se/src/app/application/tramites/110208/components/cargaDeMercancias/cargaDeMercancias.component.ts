@@ -1,5 +1,5 @@
 import { ALERTA_PARA, FECHA_DE_FACTURA } from '@libs/shared/data-access-user/src/tramites/constantes/110208/certificado.enum';
-import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, InputFecha, InputFechaComponent, TablaDinamicaComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, InputFecha, InputFechaComponent, TablaDinamicaComponent, TituloComponent, TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MERCANCIA_TABLA, MercanciasFormInfo, MercanciasInfo } from '@libs/shared/data-access-user/src/core/models/110208/certificado.model';
@@ -33,7 +33,11 @@ export class CargaDeMercanciasComponent implements OnInit, OnDestroy {
   /**
    * Formulario reactivo para gestionar los datos de mercancías.
    */
-  formMercancia!: FormGroup;
+  formMercancia!: FormGroup; 
+  /**
+   * Tipo de selección de tabla (RADIO).
+   */
+  tipoSeleccionTabla = TablaSeleccion.RADIO;
   /**
    * Determina si el formulario debe estar en modo solo lectura.
    */
