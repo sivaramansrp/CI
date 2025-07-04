@@ -7,16 +7,19 @@
                     <label class="form-label" for="rfc">RFC*:</label>
                     <input
                         class="form-control"
+                        [ngClass]="esValido('rfc') ? 'required' : ''"
                         id="rfc"
                         placeholder=""
                         type="text"
                         formControlName="rfc"
-                        (change)="setValoresStore(representante,'rfc', 'setRfc')"
-                    />
+                        (change)="setValoresStore(representante,'rfc', 'setRfc')"/>
+                      @if (representante.get('rfc')?.hasError('required') && representante.get('rfc')?.touched) {
+          <div class="mensaje-error">Este campo es obligatorio.</div>
+        }
                 </div>
             </div>
             <div class="col-md-4">
-                <button class="btn btn-primary me-2" (click)="obtenerValor()">Buscar</button>
+                <button class="btn btn-primary me-2" (click)="obtenerValor()" (click)="buscar()">Buscar</button>
             </div>
         </div>
         <div class="row">

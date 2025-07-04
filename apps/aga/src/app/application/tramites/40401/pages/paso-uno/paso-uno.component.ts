@@ -1,6 +1,6 @@
-import { ConsultaioQuery, ConsultaioState, SolicitanteComponent } from '@ng-mf/data-access-user';
+import { ConsultaioQuery, ConsultaioState, SolicitanteComponent, TIPO_PERSONA } from '@ng-mf/data-access-user';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { Component } from '@angular/core';
 import { map } from 'rxjs';
@@ -28,7 +28,13 @@ import { Tramite40401Store } from '../../../../core/estados/tramites/tramite4040
     DatosDelTramiteComponent,
   ],
 })
-export class PasoUnoComponent implements OnInit, OnDestroy {
+export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
+  /**
+   * Referencia al componente hijo de tipo SolicitanteComponent.
+   */
+  @ViewChild(SolicitanteComponent)
+  solicitante!: SolicitanteComponent;
+
   /**
    * Índice del paso actual.
    */
@@ -128,4 +134,31 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
+
+    /**
+   * Gancho del ciclo de vida de Angular que se ejecuta
+   * después de que la vista del componente ha sido completamente inicializada.
+   * Inicializa los datos de persona y domicilio fiscal.
+   */
+    ngAfterViewInit(): void {
+      this.obtenerTipoPersona();
+    }
+    
+    /**
+     * @method obtenerTipoPersona
+     * @description Obtiene el tipo de persona y lo establece en el componente `SolicitanteComponent`.
+     * 
+     * Este método utiliza un `setTimeout` para ejecutar la función `obtenerTipoPersona` del componente `SolicitanteComponent` con el valor `TIPO_PERSONA.MORAL_NACIONAL`.
+     * 
+     * Verifica si la referencia al componente `SolicitanteComponent` existe antes de llamar al método.
+     * 
+     * @returns {void}
+     */
+    obtenerTipoPersona(): void {
+      setTimeout(() => {
+        if (this.solicitante) {
+          this.solicitante.obtenerTipoPersona(TIPO_PERSONA.MORAL_NACIONAL);
+        }
+      }, 50);
+    }
 }

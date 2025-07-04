@@ -23,7 +23,6 @@ describe('PasoUnoComponent', () => {
     await TestBed.configureTestingModule({
       declarations: [PasoUnoComponent],
       providers: [
-        { provide: require('@ng-mf/data-access-user').ConsultaioQuery, useValue: consultaQueryMock },
         { provide: require('../../services/service260917.service').Solocitud260917Service, useValue: solocitud260917ServiceMock }
       ],
       schemas: [NO_ERRORS_SCHEMA],

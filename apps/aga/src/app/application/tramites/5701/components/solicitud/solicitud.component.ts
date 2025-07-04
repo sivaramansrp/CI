@@ -12,6 +12,7 @@ import {
   DatosAgregarFormulario,
   FechasService,
   FormulariosService,
+  InputFecha,
   InputHoraComponent,
   MENSAJE_ALERTA_NO_FECHAS,
   MSG_ALERTA_ELIMINAR_ELEMENTO,
@@ -32,6 +33,7 @@ import {
   TEXTO_ACEPTAR,
   TEXTO_CANCELAR,
   TEXTO_CERRAR,
+  TEXTO_ELIMINAR_SOLICITUD,
   TIPO_SOLICITUD,
   TablaSeleccion,
   TipoDespachoService,
@@ -140,7 +142,9 @@ import patentes from 'libs/shared/theme/assets/json/5701/patentes.json';
 import rfcs from 'libs/shared/theme/assets/json/5701/rfcs.json';
 
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+
 import {
+  CONFIRMAR_ELIMINAR_SOLICITUD,
   MSG_ADUANA_PEDIMENTO,
   MSG_BORRAR_CAMPOS_RECINTOS,
   MSG_ERROR_NO_INFORMACION,
@@ -168,6 +172,8 @@ import { BodyValidaHorario } from '../../../../core/models/5701/ValidaHorario.mo
 import { BodyValidarEncargoConferido } from '../../../../core/models/5701/encargo-conferido.models';
 import { CheckInputTextComponent } from '../../../../shared/components/check-input-text/check-input-text.component';
 import { EncargoConferidoService } from '../../../../core/services/5701/encargo-conferido.service';
+import { GuardaSolicitudService } from '../../../../core/services/5701/guardar/guarda-solicitud.service';
+import { Router } from '@angular/router';
 import { SIN_VALOR_SELECT } from '@libs/shared/data-access-user/src/core/enums/transporte-componente.enum';
 import { ValidaDespachoService } from '../../../../core/services/5701/valida-despacho.service';
 import { ValidaHorarioService } from '../../../../core/services/5701/valida-horario.service';
@@ -516,6 +522,18 @@ export class SolicitudComponent
    */
   mostarSelectTipoDespacho: boolean = false;
 
+  readonly DatosFechaFinal: InputFecha = {
+    labelNombre: 'Fecha final*',
+    required: true,
+    habilitado: true,
+  };
+
+  readonly DatosFechaInicio: InputFecha = {
+    labelNombre: 'Fecha inicial*',
+    required: true,
+    habilitado: true,
+  };
+
   constructor(
     private seccionQuery: SeccionLibQuery,
     private seccionStore: SeccionLibStore,
@@ -550,7 +568,9 @@ export class SolicitudComponent
     private validaDespachosService: ValidaDespachoService,
     private domSanitizer: DomSanitizer,
     private readonly validaHorarioService: ValidaHorarioService,
-    private readonly encargoConferidoService: EncargoConferidoService
+    private readonly encargoConferidoService: EncargoConferidoService,
+    private readonly guardarSolicitudService: GuardaSolicitudService,
+    private readonly router: Router
   ) {}
 
   ngOnInit(): void {
@@ -2719,6 +2739,19 @@ export class SolicitudComponent
           this.procesoModal = '';
         }
         break;
+
+      case 'eliminar_solicitud':
+        if (confirmar) {
+          const ID_SOLICITUD = this.solicitudState.idSolicitud
+            ? this.solicitudState?.idSolicitud
+            : 0;
+          if (ID_SOLICITUD !== 0) {
+            this.peticionEliminarSolicitud(ID_SOLICITUD);
+            this.limpiarNotificacion();
+            this.procesoModal = '';
+          }
+        }
+        break;
       default:
         break;
     }
@@ -3596,5 +3629,77 @@ export class SolicitudComponent
         )
       )
     );
+  }
+
+  /**
+   * Muestra un modal de confirmación para eliminar una solicitud.
+   * @returns {void} No retorna ningún valor.
+   */
+  eliminarSolicitud(): void {
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: '',
+      modo: 'action',
+      titulo: TITULO_MODAL_AVISO,
+      mensaje: CONFIRMAR_ELIMINAR_SOLICITUD,
+      cerrar: false,
+      tamanioModal: 'md',
+      txtBtnAceptar: TEXTO_ELIMINAR_SOLICITUD,
+      txtBtnCancelar: TEXTO_CERRAR,
+    };
+    this.procesoModal = 'eliminar_solicitud';
+  }
+
+  /**
+   * Petición para eliminar una solicitud.
+   * {number} idSolicitud - ID de la solicitud a eliminar.
+   */
+  peticionEliminarSolicitud(idSolicitud: number): void {
+    this.guardarSolicitudService
+      .deleteSolicitud(idSolicitud)
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        tap((response) => {
+          if (response.datos) {
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'alert',
+              categoria: 'success',
+              modo: 'action',
+              titulo: TITULO_MODAL_AVISO,
+              mensaje: 'Solicitud eliminada correctamente',
+              cerrar: false,
+              txtBtnAceptar: TEXTO_CERRAR,
+              txtBtnCancelar: CAMPO_VACIO,
+            };
+            this.tramite5701Store.limpiarSolicitud();
+            this.router.navigate(['/seleccion-tramite']);
+          } else {
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'alert',
+              categoria: 'danger',
+              modo: 'action',
+              titulo: TITULO_MODAL_AVISO,
+              mensaje: 'MSJ_ERROR_ELIMINAR_SOLICITUD',
+              cerrar: false,
+              txtBtnAceptar: TEXTO_CERRAR,
+              txtBtnCancelar: CAMPO_VACIO,
+            };
+          }
+        }),
+        catchError((_error) => {
+          this.nuevaNotificacion = {
+            tipoNotificacion: 'alert',
+            categoria: 'danger',
+            modo: 'action',
+            titulo: TITULO_MODAL_AVISO,
+            mensaje: 'MSJ_ERROR_ELIMINAR_SOLICITUD',
+            cerrar: false,
+            txtBtnAceptar: TEXTO_CERRAR,
+            txtBtnCancelar: CAMPO_VACIO,
+          };
+          return EMPTY;
+        })
+      )
+      .subscribe();
   }
 }

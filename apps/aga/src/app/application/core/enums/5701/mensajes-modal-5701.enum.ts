@@ -219,3 +219,10 @@ export const MSJ_ERROR_FOLIO_DDEX =
  */
 export const MSJ_NO_RELACION_ENCARGO_CONFERIDO =
   'No cuenta con relación de encargo conferido.';
+
+/**
+ * Confirmacion de eliminación de solicitud
+ */
+export const CONFIRMAR_ELIMINAR_SOLICITUD =
+  '¿Estás seguro de que desea eliminar la solicitud?';
+
