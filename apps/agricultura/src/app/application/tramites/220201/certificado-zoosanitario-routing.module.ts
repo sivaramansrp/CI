@@ -13,6 +13,10 @@ export const ROUTES_ZOOSANITARIO: Routes = [
     component:AgregardestinatarioComponent
   },
   {
+  path: 'agregar-destinatario/:id',
+  component: AgregardestinatarioComponent
+  },
+  {
     path: '',
     pathMatch: 'full',
     redirectTo: 'zoosanitario',

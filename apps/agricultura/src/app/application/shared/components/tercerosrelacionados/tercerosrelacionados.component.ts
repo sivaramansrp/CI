@@ -35,6 +35,8 @@ export class TercerosrelacionadosComponent {
      * @type {TablaSeleccion}
      */
     tipoSeleccionsoli: TablaSeleccion = TablaSeleccion.CHECKBOX;
+
+    listaDeFilaSeleccionada: TercerosrelacionadosdestinoTable[] = [];
       /**
        * @description
        * Configuración de las columnas para la tabla de solicitudes de datos.
@@ -76,5 +78,15 @@ constructor(public readonly router: Router,public route: ActivatedRoute) {}
   goToAgregarDestinatario():void {
   this.router.navigate(['../agregar-destinatario'], { relativeTo: this.route });
 }
+  /**
 
+   * Actualiza filas seleccionadas de destinatarios.
+
+   * @param filas Filas seleccionadas.
+
+   */
+
+  onSeleccionDestinatario(filas: TercerosrelacionadosdestinoTable[]): void {
+    this.listaDeFilaSeleccionada = filas;
+  }
 }

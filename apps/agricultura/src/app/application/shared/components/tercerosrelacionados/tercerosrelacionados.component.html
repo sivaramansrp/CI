@@ -29,15 +29,15 @@
         </div>
         <div class="col-md-12">
             <app-tabla-dinamica [tipoSeleccionTabla]="tipoSeleccionsoli"
-                [configuracionTabla]="configuracionColumnasDestino" [datos]="cuerpoTablaDestino" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"></app-tabla-dinamica>
+                [configuracionTabla]="configuracionColumnasDestino" [datos]="cuerpoTablaDestino" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura" (listaDeFilaSeleccionada)="onSeleccionDestinatario($event)"></app-tabla-dinamica>
         </div>
          <div class="col-md-12 d-flex justify-content-end" *ngIf="cuerpoTablaDestino.length === 0">
                 <button class="btn btn-primary me-3" [disabled]="esFormularioSoloLectura" (click)="goToAgregarDestinatario()">Agregar</button>
                 <button class="btn btn-default" [disabled]="esFormularioSoloLectura">Buscar</button>      
         </div>
              <div class="col-md-12 d-flex justify-content-end" *ngIf="cuerpoTablaDestino.length === 1">
-                <button class="btn btn-primary me-3" [disabled]="esFormularioSoloLectura" (click)="goToAgregarDestinatario()">Modificar</button>
-                <button class="btn btn-default" [disabled]="esFormularioSoloLectura">Eliminar</button>      
+                <button class="btn btn-primary me-3" [disabled]="esFormularioSoloLectura || listaDeFilaSeleccionada.length === 0" (click)="goToAgregarDestinatario()">Modificar</button>
+                <button class="btn btn-default" [disabled]="esFormularioSoloLectura || listaDeFilaSeleccionada.length === 0" >Eliminar</button>      
         </div>
     </div>
 </div>
