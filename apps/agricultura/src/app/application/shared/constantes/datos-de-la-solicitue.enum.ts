@@ -1,4 +1,5 @@
-import { Sensible } from "../models/datos-de-la-solicitue.model";
+import { DetallasDatos, Sensible } from "../models/datos-de-la-solicitue.model";
+import { ConfiguracionColumna } from "@libs/shared/data-access-user/src";
 
 export const CONFIGURACION_SENSIBLES = [
   {
@@ -52,3 +53,43 @@ export const CONFIGURACION_SENSIBLES = [
     orden: 10,
   },
 ];
+
+
+export const CONFIGURACION_DETALLAS_DATOS: ConfiguracionColumna<DetallasDatos>[] = [
+  {
+    encabezado: 'Número de lote *',
+    clave: (dato: DetallasDatos): string | undefined => dato.numeroDeLote,
+    orden: 1,
+  },
+  {
+    encabezado: 'Fecha de elaboración o empaque o proceso',
+    clave: (dato: DetallasDatos): string | undefined => dato.fechaElaboracionEmpaqueProceso,
+    orden: 2,
+  },
+  {
+    encabezado: 'Fecha de producción o sacrificio',
+    clave: (dato: DetallasDatos): string | undefined => dato.fechaProduccionSacrificio,
+    orden: 3,
+  },
+  {
+    encabezado: 'Fecha de caducidad del producto o consumo preferente',
+    clave: (dato: DetallasDatos): string | undefined => dato.fechaCaducidadProducto,
+    orden: 4,
+  },
+  {
+    encabezado: 'Fecha fin de elaboración o empaque o proceso',
+    clave: (dato: DetallasDatos): string | undefined => dato.fechaFinElaboracionEmpaqueProceso,
+    orden: 5,
+  },
+  {
+    encabezado: 'Fecha fin de producción o sacrificio',
+    clave: (dato: DetallasDatos): string | undefined => dato.fechaFinProduccionSacrificio,
+    orden: 6,
+  },
+  {
+    encabezado: 'Fecha fin de caducidad del producto o consumo preferente',
+    clave: (dato: DetallasDatos): string | undefined => dato.fechaFinCaducidadProducto,
+    orden: 7,
+  }
+];
+

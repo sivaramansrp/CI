@@ -36,4 +36,13 @@ export class FitosanitarioQuery extends Query<ListaDeDatosFinal> {
    * @memberof FitosanitarioQuery
    */
   seleccionarPagoDerechos$ = this.select(estado => estado.pago);
+
+  /**
+   * Selector para obtener los datos de movilización.
+   *
+   * @readonly
+   * @type {Observable<any>}
+   * @memberof FitosanitarioQuery
+   */
+  seleccionarState$ = this.select(estado => estado);
 }

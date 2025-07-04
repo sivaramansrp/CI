@@ -1,4 +1,5 @@
 import { AgriculturaComponent } from './pages/agricultura/agricultura.component';
+import { AnimalesVivoContenedoraComponent } from './components/animales-vivo-contenedora/animales-vivo-contenedora.component';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { Routes } from '@angular/router';
@@ -15,6 +16,10 @@ export const ROUTES_FITOSANITARIO: Routes = [
     pathMatch: 'full',
     redirectTo: 'agricultura',
   },
+  {
+    path: 'animales-vivo',
+    component: AnimalesVivoContenedoraComponent
+  }
 
 ];
 

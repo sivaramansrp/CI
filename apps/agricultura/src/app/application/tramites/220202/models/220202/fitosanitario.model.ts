@@ -109,6 +109,11 @@ export interface ListaDeDatosFinal {
     tablaDatos: FilaSolicitud[];
 
     /**
+     * Fila de solicitud seleccionada actualmente.
+     */
+    selectedDatos: FilaSolicitud[];
+
+    /**
      * Arreglo de personas terceros asociadas.
      */
     personas: PersonaTerceros[];
@@ -235,6 +240,7 @@ export interface DatosForma {
     umc?: string;
     uso?: string;
     tipoDeProducto?: string;
+    tipoMercancia?: string; // Tipo de mercancía, por ejemplo, "animal", "vegetal", etc.
 }
 
 /**
@@ -423,6 +429,20 @@ export function createDatosState(params: Partial<ListaDeDatosFinal> = {}): Lista
             validaciondeFormulariodePago: finalEnviar(params.finalEnviar?.validaciondeFormulariodePago as boolean, false)
         },
         tablaDatos: params.tablaDatos || [],
+        selectedDatos: params.selectedDatos || [],
         personas: params.personas || []
     }
 }
+
+
+/**
+ * Interfaz que define una opción para un control de selección tipo radio button.
+ * 
+ * @interface RadioOpcion
+ * @property {string} label - Etiqueta visible para el usuario.
+ * @property {string} value - Valor interno asignado a la opción seleccionada.
+ */
+export interface RadioOpcion {
+    label: string;
+    value: string;
+}   
