@@ -4,67 +4,144 @@
   </div>
 
   <div class="col-md-8">
-    <label class="form-label">Condiciones materiales de la mercancía*:</label>
-    <input type="text" class="form-control" />
+    <label class="form-label"
+      >Condiciones materiales de la mercancía<span
+        class="require"
+        [ngClass]="{
+          'text-danger':
+            aviosForm.get('nombreComercial')?.invalid &&
+            aviosForm.get('nombreComercial')?.touched
+        }"
+        >*</span
+      >:</label
+    >
+    <input
+      type="text"
+      class="form-control"
+      formControlName="nombreComercial"
+      (change)="actualizarNombreComercial($event)"
+    />
+    <span
+      *ngIf="
+        aviosForm.get('nombreComercial')?.hasError('required') &&
+        aviosForm.get('nombreComercial')?.touched
+      "
+      id="descMercancia"
+      class="text-danger"
+    >
+      Este campo es obligatorio
+    </span>
   </div>
 
   <div class="col-md-4">
     <app-catalogo-select
-      [catalogo]="[]"
-      [label]="'Entidad federativa'"
-      [placeholder]="'Seleccione un valor'"
-      [required]="true"
+      formControlName="entidadFederativa"
+      [catalogo]="entidadFederativa.catalogos"
+      [label]="entidadFederativa.labelNombre"
+      [placeholder]="entidadFederativa.primerOpcion"
+      [required]="entidadFederativa.required"
       [isDisabled]="false"
-      name="federativa"
-      id="federativa"
+      name="entidadFederativa"
+      id="entidadFederativa"
       (selectionChange)="actualizarEntidadFederativa($event)"
     ></app-catalogo-select>
   </div>
 
   <div class="col-md-4">
     <app-catalogo-select
-      [catalogo]="[]"
-      [label]="'Municipio/ Alcaldía'"
-      [placeholder]="'Seleccione un valor'"
-      [required]="true"
+      formControlName="municipio"
+      [catalogo]="municipioAlcaldia.catalogos"
+      [label]="municipioAlcaldia.labelNombre"
+      [placeholder]="municipioAlcaldia.primerOpcion"
+      [required]="municipioAlcaldia.required"
       [isDisabled]="false"
-      name="federativa"
-      id="federativa"
-      (selectionChange)="actualizarEntidadFederativa($event)"
+      name="municipio"
+      id="municipio"
+      (selectionChange)="actualizarMunicipioAlcaldia($event)"
     ></app-catalogo-select>
   </div>
 
   <div class="col-md-4">
     <app-catalogo-select
-      [catalogo]="[]"
-      [label]="'Colonia'"
-      [placeholder]="'Seleccione un valor'"
-      [required]="true"
+      formControlName="colonia"
+      [catalogo]="colonia.catalogos"
+      [label]="colonia.labelNombre"
+      [placeholder]="colonia.primerOpcion"
+      [required]="colonia.required"
       [isDisabled]="false"
-      name="federativa"
-      id="federativa"
-      (selectionChange)="actualizarEntidadFederativa($event)"
+      name="colonia"
+      id="colonia"
+      (selectionChange)="actualizarColonia($event)"
     ></app-catalogo-select>
   </div>
 
   <div class="col-md-4">
-    <label class="form-label">Calle*:</label>
-    <input type="text" class="form-control" />
+    <label class="form-label"
+      >Calle<span
+        class="require"
+        [ngClass]="{
+          'text-danger':
+            aviosForm.get('calle')?.invalid && aviosForm.get('calle')?.touched
+        }"
+        >*</span
+      >:</label
+    >
+    <input
+      type="text"
+      class="form-control"
+      formControlName="calle"
+      (change)="actualizarCalle($event)"
+    />
   </div>
 
   <div class="col-md-4">
-    <label class="form-label">Número y/o letra exterior*:</label>
-    <input type="text" class="form-control" />
+    <label class="form-label"
+      >Número y/o letra exterior<span
+        class="require"
+        [ngClass]="{
+          'text-danger':
+            aviosForm.get('numeroExterior')?.invalid &&
+            aviosForm.get('numeroExterior')?.touched
+        }"
+        >*</span
+      >:</label
+    >
+    <input
+      type="text"
+      class="form-control"
+      formControlName="numeroExterior"
+      (change)="actualizarNumeroExterior($event)"
+    />
   </div>
 
   <div class="col-md-4">
-    <label class="form-label">Número y/o letra interior*:</label>
-    <input type="text" class="form-control" />
+    <label class="form-label">Número y/o letra interior:</label>
+    <input
+      type="text"
+      class="form-control"
+      formControlName="numeroInterior"
+      (change)="actualizarNumeroInterior($event)"
+    />
   </div>
 
   <div class="col-md-4">
-    <label class="form-label">Código Postal*:</label>
-    <input type="text" class="form-control" />
+    <label class="form-label"
+      >Código Postal<span
+        class="require"
+        [ngClass]="{
+          'text-danger':
+            aviosForm.get('codigoPostal')?.invalid &&
+            aviosForm.get('codigoPostal')?.touched
+        }"
+        >*</span
+      >:</label
+    >
+    <input
+      type="text"
+      class="form-control"
+      formControlName="codigoPostal"
+      (change)="actualizarCodigoPostal($event)"
+    />
   </div>
 
   <div class="col-md-12 mb-1">
@@ -75,69 +152,123 @@
 
   <div class="col-md-4">
     <app-catalogo-select
-      [catalogo]="[]"
-      [label]="'Entidad Federativa'"
-      [placeholder]="'Seleccione un valor'"
-      [required]="true"
+      formControlName="lugarEntidadFederativa"
+      [catalogo]="entidadFederativa.catalogos"
+      [label]="entidadFederativa.labelNombre"
+      [placeholder]="entidadFederativa.primerOpcion"
+      [required]="entidadFederativa.required"
       [isDisabled]="false"
       name="federativa"
       id="federativa"
-      (selectionChange)="actualizarEntidadFederativa($event)"
+      (selectionChange)="actualizarLugarEntidadFederativa($event)"
     ></app-catalogo-select>
   </div>
 
   <div class="col-md-4">
     <app-catalogo-select
-      [catalogo]="[]"
-      [label]="'Municipio/ Alcaldía'"
-      [placeholder]="'Seleccione un valor'"
-      [required]="true"
+      formControlName="lugarMunicipioAlcaldia"
+      [catalogo]="lugarMunicipioAlcaldia.catalogos"
+      [label]="lugarMunicipioAlcaldia.labelNombre"
+      [placeholder]="lugarMunicipioAlcaldia.primerOpcion"
+      [required]="lugarMunicipioAlcaldia.required"
       [isDisabled]="false"
-      name="federativa"
-      id="federativa"
-      (selectionChange)="actualizarEntidadFederativa($event)"
+      name="municipioAlcaldia"
+      id="municipioAlcaldia"
+      (selectionChange)="actualizarLugarMunicipioAlcaldia($event)"
     ></app-catalogo-select>
   </div>
 
   <div class="col-md-4">
     <app-catalogo-select
-      [catalogo]="[]"
-      [label]="'Colonia'"
-      [placeholder]="'Seleccione un valor'"
-      [required]="true"
+      formControlName="lugarColonia"
+      [catalogo]="lugarColonia.catalogos"
+      [label]="lugarColonia.labelNombre"
+      [placeholder]="lugarColonia.primerOpcion"
+      [required]="lugarColonia.required"
       [isDisabled]="false"
-      name="federativa"
-      id="federativa"
-      (selectionChange)="actualizarEntidadFederativa($event)"
+      name="colonia"
+      id="colonia"
+      (selectionChange)="actualizarLugarColonia($event)"
     ></app-catalogo-select>
   </div>
 
   <div class="col-md-4">
-    <label class="form-label">Calle*:</label>
-    <input type="text" class="form-control" />
+    <label class="form-label"
+      >Calle<span
+        class="require"
+        [ngClass]="{
+          'text-danger':
+            aviosForm.get('lugarCalle')?.invalid &&
+            aviosForm.get('lugarCalle')?.touched
+        }"
+        >*</span
+      >:</label
+    >
+    <input
+      type="text"
+      class="form-control"
+      formControlName="lugarCalle"
+      (change)="actualizarLugarCalle($event)"
+    />
   </div>
 
   <div class="col-md-4">
-    <label class="form-label">Número y/o letra exterior*:</label>
-    <input type="text" class="form-control" />
+    <label class="form-label"
+      >Número y/o letra exterior<span
+        class="require"
+        [ngClass]="{
+          'text-danger':
+            aviosForm.get('lugarNumeroExterior')?.invalid &&
+            aviosForm.get('lugarNumeroExterior')?.touched
+        }"
+        >*</span
+      >:</label
+    >
+    <input
+      type="text"
+      class="form-control"
+      formControlName="lugarNumeroExterior"
+      (change)="actualizarLugarNumeroExterior($event)"
+    />
   </div>
 
   <div class="col-md-4">
     <label class="form-label">Número interior:</label>
-    <input type="text" class="form-control" />
+    <input
+      type="text"
+      class="form-control"
+      formControlName="lugarNumeroInterior"
+      (change)="actualizarLugarNumeroInterior($event)"
+    />
   </div>
 
   <div class="col-md-4">
-    <label class="form-label">Código Postal*:</label>
-    <input type="text" class="form-control" />
+    <label class="form-label"
+      >Código Postal<span
+        class="require"
+        [ngClass]="{
+          'text-danger':
+            aviosForm.get('lugarCodigoPostal')?.invalid &&
+            aviosForm.get('lugarCodigoPostal')?.touched
+        }"
+        >*</span
+      >:</label
+    >
+    <input
+      type="text"
+      class="form-control"
+      formControlName="lugarCodigoPostal"
+      (change)="actualizarLugarCodigoPostal($event)"
+    />
   </div>
 
   <div class="col-md-4"></div>
 
   <div class="col-md-4"></div>
 
-  <div class="col-md-12 mt-1 mb-1">
+  <div class="col-md-12 mt-1 mb-1 mt-5">
     <ng-alert
+      class="text-center"
       [CONTENIDO]="
         'En caso de que el interesado cambie la fecha de destrucción, deberá presentar un nuevo aviso.'
       "
@@ -148,8 +279,8 @@
     <input-fecha
       [datos]="fechaDestruccionMercancia"
       [isDisabled]="false"
-      [setFecha]="''"
-      (valorCambiado)="actualizarFechaFinVigencia1($event)"
+      [setFecha]="aviosForm.get('generico1')?.value"
+      (valorCambiado)="actualizarGenerico1($event)"
     >
     </input-fecha>
   </div>
@@ -158,9 +289,22 @@
 
   <div class="col-md-8">
     <label class="form-label"
-      >Hora en la que se llevará a cabo la destrucción de la mercancía*:</label
+      >Hora en la que se llevará a cabo la destrucción de la mercancía<span
+        class="require"
+        [ngClass]="{
+          'text-danger':
+            aviosForm.get('generico2')?.invalid &&
+            aviosForm.get('generico2')?.touched
+        }"
+        >*</span
+      >:</label
     >
-    <input type="text" class="form-control" />
+    <input
+      type="text"
+      class="form-control"
+      formControlName="generico2"
+      (change)="actualizarGenerico2($event)"
+    />
   </div>
 
   <div class="col-md-4"></div>
@@ -169,5 +313,39 @@
     <ng-titulo
       titulo="Datos de la mercancía que se destruirá y proceso de destrucción"
     />
+  </div>
+
+  <div class="col-md-12">
+    <label class="form-label text-start"
+      >Plantilla de destrucción de mercancía*:</label
+    ><br />
+    <b>Para descargar plantilla del archivo de excel de click </b>
+    <a href="/assets/pdf/plantilla_aviso_destruccion.xls"><b>aquí</b></a>
+    <div class="row mt-5">
+      <div class="col-md-6">
+        <b>Archivo excel a incorporar</b>
+        <input
+          type="file"
+          accept=".xlsx"
+          class="form-control sfile"
+          name="destruccion"
+          formControlName="archivoDestruccion"
+          id="destruccion"
+          (change)="actualizarArchivoDestruccion($event)"
+          title="Examinar"
+        />
+      </div>
+      <div class="col-md-6 d-flex justify-content-end">
+        <button
+          type="button"
+          name="cargaArchivoProcesos"
+          [disabled]="false"
+          id="cargaArchivoProcesos"
+          class="btn btn-primary me-md-3"
+        >
+          Cargar archivo
+        </button>
+      </div>
+    </div>
   </div>
 </form>
