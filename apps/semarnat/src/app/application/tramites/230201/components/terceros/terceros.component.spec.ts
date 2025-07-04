@@ -9,6 +9,9 @@ import { DestinatarioConfiguracionItem } from '../../enum/destinatario-tabla.enu
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { PhytosanitaryExportacionService } from '../../services/phytosanitary-exportacion.service';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { TemplateRef } from '@angular/core';
 
 describe('TercerosComponent', () => {
   let component: TercerosComponent;
@@ -16,6 +19,8 @@ describe('TercerosComponent', () => {
   let tramite230201StoreMock: any;
   let tramite230201QueryMock: any;
   let modalServiceMock: any;
+  let phytosanitaryServiceMock: any;
+  let consultaioQueryMock: any;
 
   beforeEach(async () => {
     tramite230201StoreMock = {
@@ -27,12 +32,40 @@ describe('TercerosComponent', () => {
     tramite230201QueryMock = {
       selectSolicitud$: of({
         entidadFederativa: 'MORELOS',
-        destinatarios: [],
+        destinatarios: [
+          {
+            pais: 125,
+            ciudad: 'Cuernavaca',
+            domicilio: 'Calle 123',
+            codigoPostal: 62000,
+            nombre: 'John',
+            apellidoPaterno: 'Doe',
+            apellidoMaterno: 'Smith',
+            razonSocial: 'Test Company',
+            paisStr: 'México',
+          }
+        ],
+      }),
+    };
+
+    phytosanitaryServiceMock = {
+      getMetaInfo: jest.fn(() => of({ datos: { test: 'meta' } })),
+      getPais: jest.fn(() => of({ 
+        data: [
+          { id: 125, descripcion: 'México' },
+          { id: 126, descripcion: 'Estados Unidos' }
+        ] 
+      })),
+    };
+
+    consultaioQueryMock = {
+      selectConsultaioState$: of({
+        readonly: false,
       }),
     };
 
     modalServiceMock = {
-      show: jest.fn(),
+      show: jest.fn(() => ({ hide: jest.fn() })),
     };
 
     await TestBed.configureTestingModule({
@@ -44,6 +77,8 @@ describe('TercerosComponent', () => {
         { provide: Tramite230201Store, useValue: tramite230201StoreMock },
         { provide: Tramite230201Query, useValue: tramite230201QueryMock },
         { provide: BsModalService, useValue: modalServiceMock },
+        { provide: PhytosanitaryExportacionService, useValue: phytosanitaryServiceMock },
+        { provide: ConsultaioQuery, useValue: consultaioQueryMock },
         FormBuilder,
       ],
     }).compileComponents();
@@ -132,5 +167,174 @@ describe('TercerosComponent', () => {
     component.ngOnDestroy();
     expect(destroyNotifierSpy).toHaveBeenCalled();
     expect(destroyNotifierCompleteSpy).toHaveBeenCalled();
+  });
+
+  it('should update form state when readonly is false', () => {
+    component.soloLectura = false;
+    component.ngOnInit();
+    const enableSpy = jest.spyOn(component.formularioDestinatario, 'enable');
+    component.updateEstadoFormulario();
+    expect(enableSpy).toHaveBeenCalled();
+  });
+
+  it('should handle onTipoPersonaChange for fisica type', () => {
+    component.ngOnInit();
+    component.onTipoPersonaChange('fisica');
+    
+    const nombreControl = component.agregarMercanciasForm.get('nombre');
+    const apellidoPaternoControl = component.agregarMercanciasForm.get('apellidoPaterno');
+    const apellidoMaternoControl = component.agregarMercanciasForm.get('apellidoMaterno');
+    const razonSocialControl = component.agregarMercanciasForm.get('razonSocial');
+    
+    expect(nombreControl?.hasError('required')).toBe(true);
+    expect(apellidoPaternoControl?.hasError('required')).toBe(true);
+    expect(apellidoMaternoControl?.hasError('required')).toBe(true);
+    expect(razonSocialControl?.hasError('required')).toBe(false);
+  });
+
+  it('should handle onTipoPersonaChange for moral type', () => {
+    component.ngOnInit();
+    component.onTipoPersonaChange('moral');
+    
+    const nombreControl = component.agregarMercanciasForm.get('nombre');
+    const apellidoPaternoControl = component.agregarMercanciasForm.get('apellidoPaterno');
+    const apellidoMaternoControl = component.agregarMercanciasForm.get('apellidoMaterno');
+    const razonSocialControl = component.agregarMercanciasForm.get('razonSocial');
+    
+    expect(nombreControl?.hasError('required')).toBe(false);
+    expect(apellidoPaternoControl?.hasError('required')).toBe(false);
+    expect(apellidoMaternoControl?.hasError('required')).toBe(false);
+    expect(razonSocialControl?.hasError('required')).toBe(true);
+  });
+
+  it('should open popup when botonModificarHabilitado is true', () => {
+    component.botonModificarHabilitado = true;
+    component.abrirPopup();
+    expect(component.popupAbierto).toBe(true);
+    expect(tramite230201StoreMock.setTercerosPopupState).toHaveBeenCalledWith(true);
+  });
+
+  it('should not open popup when botonModificarHabilitado is false', () => {
+    component.botonModificarHabilitado = false;
+    component.abrirPopup();
+    expect(component.popupAbierto).toBe(false);
+  });
+
+
+  it('should not edit data modal when no fila is selected', () => {
+    const mockTemplate = {} as TemplateRef<unknown>;
+    component.filaSeleccionada = [];
+    component.editDataModal(mockTemplate);
+    expect(modalServiceMock.show).not.toHaveBeenCalled();
+  });
+
+  it('should eliminate selected items', () => {
+    component.datosTabla = [
+      {
+        pais: 125,
+        ciudad: 'Cuernavaca',
+        domicilio: 'Calle 123',
+        codigoPostal: 62000,
+        nombre: 'John',
+        apellidoPaterno: 'Doe',
+        apellidoMaterno: 'Smith',
+        razonSocial: 'Test Company',
+        paisStr: 'México',
+      }
+    ];
+    component.filaSeleccionada = [component.datosTabla[0]];
+    component.botonModificarHabilitado = true;
+    component.ngOnInit();
+    
+    component.eliminarSeleccionados();
+    
+    expect(component.datosTabla).toEqual([]);
+    expect(component.filaSeleccionada).toEqual([]);
+    expect(component.botonModificarHabilitado).toBe(false);
+    expect(tramite230201StoreMock.setDatosDestinatario).toHaveBeenCalledWith([]);
+  });
+
+  it('should save destinatario when form is valid', () => {
+    component.ngOnInit();
+    component.agregarMercanciasForm.patchValue({
+      pais: 125,
+      ciudad: 'Cuernavaca',
+      domicilio: 'Calle 123',
+      codigoPostal: 62000,
+      nombre: 'John',
+      apellidoPaterno: 'Doe',
+      apellidoMaterno: 'Smith',
+      razonSocial: 'Test Company',
+      nacionalidad: 'nacional',
+      tipoPersona: 'fisica'
+    });
+    
+    const cerrarModalSpy = jest.spyOn(component, 'cerrarModal');
+    component.guardarDestinatario();
+    
+    expect(component.datosTabla.length).toBe(1);
+    expect(component.datosTabla[0].paisStr).toBe('México');
+    expect(tramite230201StoreMock.setDatosDestinatario).toHaveBeenCalledWith(component.datosTabla);
+    expect(cerrarModalSpy).toHaveBeenCalled();
+  });
+
+  it('should replace existing data when saving destinatario with existing data', () => {
+    component.ngOnInit();
+    component.datosTabla = [
+      {
+        pais: 126,
+        ciudad: 'Test City',
+        domicilio: 'Test Address',
+        codigoPostal: 12345,
+        nombre: 'Test',
+        apellidoPaterno: 'User',
+        apellidoMaterno: 'Test',
+        razonSocial: 'Old Company',
+        paisStr: 'Estados Unidos',
+      }
+    ];
+    
+    component.agregarMercanciasForm.patchValue({
+      pais: 125,
+      ciudad: 'Cuernavaca',
+      domicilio: 'Calle 123',
+      codigoPostal: 62000,
+      nombre: 'John',
+      apellidoPaterno: 'Doe',
+      apellidoMaterno: 'Smith',
+      razonSocial: 'Test Company',
+      nacionalidad: 'nacional',
+      tipoPersona: 'fisica'
+    });
+    
+    component.guardarDestinatario();
+    
+    expect(component.datosTabla.length).toBe(1);
+    expect(component.datosTabla[0].paisStr).toBe('México');
+    expect(component.datosTabla[0].nombre).toBe('John');
+  });
+
+  it('should not save destinatario when form is invalid', () => {
+    component.ngOnInit();
+    component.agregarMercanciasForm.patchValue({
+      // Missing required fields
+      pais: '',
+      ciudad: '',
+      domicilio: '',
+      codigoPostal: '',
+    });
+    
+    const cerrarModalSpy = jest.spyOn(component, 'cerrarModal');
+    component.guardarDestinatario();
+    
+    expect(cerrarModalSpy).not.toHaveBeenCalled();
+  });
+
+
+
+  it('should load data from services on init', () => {
+    component.ngOnInit();
+    expect(phytosanitaryServiceMock.getMetaInfo).toHaveBeenCalled();
+    expect(phytosanitaryServiceMock.getPais).toHaveBeenCalled();
   });
 });

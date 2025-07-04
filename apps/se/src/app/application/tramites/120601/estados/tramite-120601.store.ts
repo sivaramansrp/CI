@@ -13,6 +13,20 @@ export interface Tramites120601State {
     persona: string;
     /** Cadena de dependencia o RFC del socio */
     cadenaDependencia: string;
+    /** Nombre del socio */
+    nombre?: string;
+    /** Primer apellido del socio */
+    apellidoPaterno?: string;
+    /** Código postal del socio */
+    codigoPostal?: string;
+    /** estado del socio */
+    estado?: string;
+    /** correo del socio */
+    correoElectronico?: string;
+    /** tax del socio */
+    taxId?: string;
+    /** Denominación del socio */
+    denominacion?: string;
   },
   /** Datos de la solicitud */
   datosDeLaSolicitud: {
@@ -39,9 +53,16 @@ export interface Tramites120601State {
 export function createInitialState(): Tramites120601State {
   return {
     datosGeneralesSocios: {
-      nacionalidad: 'No',
-      persona: 'No',
-      cadenaDependencia: ''
+      nacionalidad: 'Yes',
+      persona: 'Yes',
+      cadenaDependencia: '',
+      nombre: '',
+      apellidoPaterno: '',
+      codigoPostal: '',
+      estado: '',
+      correoElectronico: '',
+      taxId: '',
+      denominacion: ''
     },
     datosDeLaSolicitud: {
       tipoDeEmpresa: '',           
@@ -166,6 +187,20 @@ export class Tramite120601Store extends Store<Tramites120601State> {
         representacion
       }
     }))
+  }
+
+   /**
+   * Actualiza el estado con los nuevos datos proporcionados.
+   * Utiliza el método update del store para modificar el estado actual.
+   */
+  public establecerDatos(datos: Partial<Tramites120601State>): void {
+    this.update((state) => ({
+      ...state,
+      datosGeneralesSocios:{
+        ...state.datosGeneralesSocios,
+        ...datos,
+      },
+    }));
   }
 
 }

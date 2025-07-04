@@ -47,7 +47,7 @@ import { takeUntil } from 'rxjs';
 /** Componente para gestionar la solicitud de trámite */
 export class SolicitudComponent implements OnInit, OnDestroy {
   /** Grupo de formularios para manejar formularios reactivos.*/
-  form: FormGroup;
+  form!: FormGroup;
 
   /** Encabezados y datos para mostrar información de mercancías. */
   hMercanciaTabla: string[] = [];
@@ -113,9 +113,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-    this.form = this.fb.group(
-      {}
-    ); /** Inicializar un grupo de formulario vacío y obtener datos de formulario utilizando formGroupName de un componente secundario. */
   }
 
   /** Gancho de ciclo de vida para cargar datos iniciales cuando se inicializa el componente */
@@ -154,7 +151,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * Método para crear el formulario de la solicitud.
    */
   crearFormulario(): void {
-    this.form = this.fb.group({});
+    this.form = this.fb.group({});/** Inicializar un grupo de formulario vacío y obtener datos de formulario utilizando formGroupName de un componente secundario. */
   }
 
   /**

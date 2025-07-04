@@ -28,6 +28,21 @@ export interface MercanciaModel {
   formaFarmaceutica: string;
 
   estadoFsico: string;
+
+  fraccionArancelaria: string;
+
+  descripcionFraccion: string;
+
+  cantidadUMT: string;
+
+  UMT: string;
+
+  cantidadUMC: string;
+
+  UMC: string;
+  
+  tipoDeEnvase: string;
+  
 }
 
 /**
@@ -38,7 +53,7 @@ export interface ClaveModel {
 
   clave: string;
 
-  descripcíon: string;
+  descripcion: string;
 }
 
 /**
