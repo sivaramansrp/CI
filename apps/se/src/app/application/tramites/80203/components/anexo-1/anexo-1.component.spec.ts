@@ -1,80 +1,212 @@
 // @ts-nocheck
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
+import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input } from '@angular/core';
+import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
+import { of as observableOf, Subject } from 'rxjs';
+
 import { Anexo1Component } from './anexo-1.component';
-import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { PermisoImmexDatosService } from '../../servicios/immex/permiso-immex-datos.service';
 import { NicoService } from '../../servicios/nico/nico.service';
 import { ImmexRegistroQuery } from '../../estados/queries/tramite80203.query';
 import { ImmexRegistroStore } from '../../estados/tramites/tramite80203.store';
-import { of, Subject } from 'rxjs';
-import { NO_ERRORS_SCHEMA } from '@angular/core';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { SeccionLibQuery, ConsultaioQuery } from '@ng-mf/data-access-user';
+import { SeccionLibStore } from '@libs/shared/data-access-user/src';
 
-jest.mock('../../servicios/immex/permiso-immex-datos.service');
-jest.mock('../../servicios/nico/nico.service');
-jest.mock('../../estados/queries/tramite80203.query');
-jest.mock('../../estados/tramites/tramite80203.store');
+@Injectable()
+class MockPermisoImmexDatosService {
+  getDatos = jest.fn().mockReturnValue(observableOf({
+    permisoImmexDatos: [{ IMMEX_Columna_3: 'foo', IMMEX_Columna_4: 'bar' }],
+    fraccionDatos: [{ FRACCION_Columna_2: 'baz', FRACCION_Columna_5: 'qux', FRACCION_Columna_6: 'quux' }],
+    nicoDatos: [{}],
+  }));
+}
+@Injectable()
+class MockNicoService {
+  obtenerMenuDesplegable = jest.fn().mockReturnValue(observableOf([{ id: 1, nombre: 'Nico1' }]));
+}
+@Injectable()
+class MockImmexRegistroQuery {
+  selectImmexRegistro$ = observableOf({ immexRegistro: {} });
+}
+@Injectable()
+class MockImmexRegistroStore {
+  setImmexRegistro = jest.fn();
+}
+@Injectable()
+class MockSeccionLibQuery {
+  selectSeccionState$ = observableOf({ formaValida: [false, false, false], readonly: false });
+  getValue = () => ({ formaValida: [false, false, false], readonly: false });
+}
+@Injectable()
+class MockSeccionLibStore {
+  establecerFormaValida = jest.fn();
+}
 
-describe('Anexo1Component (Jest)', () => {
-  let component: Anexo1Component;
-  let fixture: ComponentFixture<Anexo1Component>;
-  
-  let permisoImmexDatosService: jest.Mocked<PermisoImmexDatosService>;
-  let nicoService: jest.Mocked<NicoService>;
-  let immexRegistroQuery: jest.Mocked<ImmexRegistroQuery>;
-  let immexRegistroStore: jest.Mocked<ImmexRegistroStore>;
+@Directive({ selector: '[myCustom]' })
+class MyCustomDirective { @Input() myCustom; }
+@Pipe({ name: 'translate' }) class TranslatePipe implements PipeTransform { transform(v) { return v; } }
+@Pipe({ name: 'phoneNumber' }) class PhoneNumberPipe implements PipeTransform { transform(v) { return v; } }
+@Pipe({ name: 'safeHtml' }) class SafeHtmlPipe implements PipeTransform { transform(v) { return v; } }
 
-  beforeEach(async () => {
-    permisoImmexDatosService = {
-      getDatos: jest.fn().mockReturnValue(of({
-        permisoImmexDatos: [],  
-        fraccionDatos: [],
-        nicoDatos: []
-      })),
-    } as unknown as jest.Mocked<PermisoImmexDatosService>;
+function getMockState() {
+  return {
+    permisoImmexDatos: [],
+    fraccionDatos: [],
+    nicoDatos: [],
+    fraccionArancelariaExportacion: '',
+    productoArancelariaExportacion: '',
+    fraccionArancelariaDesc: '',
+    productoDescExportacion: '',
+    FraccionDescExportacion: '',
+    exportacionDescExportacion: '',
+    Nico: '',
+    commodityImportacion: '',
+    commodityDescImportacion: '',
+    commodityNicoDescImportacion: '',
+    candiadAnual: '',
+    capacidadPeriodo: '',
+    candidadPorPeriodo: ''
+  };
+}
 
-    nicoService = {
-      obtenerMenuDesplegable: jest.fn().mockReturnValue(of([])),
-    } as unknown as jest.Mocked<NicoService>;
+function createMockForm(fb: FormBuilder, state = getMockState()) {
+  return fb.group({
+    exportacionForm: fb.group({
+      permisoImmexDatos: [state.permisoImmexDatos],
+      fraccionDatos: [state.fraccionDatos],
+      nicoDatos: [state.nicoDatos],
+      fraccionArancelariaExportacion: [state.fraccionArancelariaExportacion],
+      productoArancelariaExportacion: [state.productoArancelariaExportacion],
+      fraccionArancelariaDesc: [state.fraccionArancelariaDesc],
+      productoDescExportacion: [state.productoDescExportacion],
+      FraccionDescExportacion: [state.FraccionDescExportacion],
+      exportacionDescExportacion: [state.exportacionDescExportacion],
+      Nico: [state.Nico],
+    }),
+    importacionForm: fb.group({
+      fraccionDatos: [state.fraccionDatos],
+      nicoDatos: [state.nicoDatos],
+      commodityImportacion: [state.commodityImportacion],
+      commodityDescImportacion: [state.commodityDescImportacion],
+      commodityNicoDescImportacion: [state.commodityNicoDescImportacion],
+      candiadAnual: [state.candiadAnual],
+      capacidadPeriodo: [state.capacidadPeriodo],
+      candidadPorPeriodo: [state.candidadPorPeriodo],
+      Nico: [state.Nico],
+    }),
+  });
+}
 
-    immexRegistroQuery = {
-      selectImmexRegistro$: of({
-        immexRegistro: {
-          candidadPorPeriodo: 0,
-          capacidadPeriodo: 0,
-          candiadAnual: 0,
-          commodityNicoDescImportacion: '',
-          permisoImmexDatos: [],
-          fraccionDatos: [],
-          nicoDatos: [],
-        }
-      }),
-      select: jest.fn().mockReturnValue(of({})), 
-    } as unknown as jest.Mocked<ImmexRegistroQuery>;
+describe('Anexo1Component', () => {
+  let fixture;
+  let component;
+  let fb: FormBuilder;
 
-    immexRegistroStore = {
-      update: jest.fn()
-    } as unknown as jest.Mocked<ImmexRegistroStore>;
-
-    await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule, HttpClientTestingModule, Anexo1Component], 
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [Anexo1Component, FormsModule, ReactiveFormsModule],
+      declarations: [TranslatePipe, PhoneNumberPipe, SafeHtmlPipe, MyCustomDirective],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
       providers: [
-        { provide: PermisoImmexDatosService, useValue: permisoImmexDatosService },
-        { provide: NicoService, useValue: nicoService },
-        { provide: ImmexRegistroQuery, useValue: immexRegistroQuery },
-        { provide: ImmexRegistroStore, useValue: immexRegistroStore }
-      ],
-      schemas: [NO_ERRORS_SCHEMA]
+        FormBuilder,
+        { provide: PermisoImmexDatosService, useClass: MockPermisoImmexDatosService },
+        { provide: NicoService, useClass: MockNicoService },
+        { provide: ImmexRegistroQuery, useClass: MockImmexRegistroQuery },
+        { provide: ImmexRegistroStore, useClass: MockImmexRegistroStore },
+        { provide: SeccionLibQuery, useClass: MockSeccionLibQuery },
+        { provide: SeccionLibStore, useClass: MockSeccionLibStore },
+        ConsultaioQuery
+      ]
     }).compileComponents();
-    
-
     fixture = TestBed.createComponent(Anexo1Component);
     component = fixture.componentInstance;
+    fb = TestBed.inject(FormBuilder);
+    component.seccionQuery = TestBed.inject(SeccionLibQuery);
+    component.seccionStore = TestBed.inject(SeccionLibStore);
+    component.immexRegitroAnexoState = getMockState();
   });
 
-  // ✅ Add at least one test case
-  it('should create the component', () => {
-    expect(component).toBeTruthy();
+  afterEach(() => {
+    if (component) component.ngOnDestroy = () => {};
+    if (fixture) fixture.destroy();
   });
 
+  it('should create and initialize form', () => {
+    component.ngOnInit();
+    expect(component.immexRegistroform).toBeInstanceOf(FormGroup);
+    expect(component.immexRegistroform.get('exportacionForm')).toBeTruthy();
+    expect(component.immexRegistroform.get('importacionForm')).toBeTruthy();
+  });
+
+  it('should call inicializarEstadoFormulario on ngAfterViewInit', () => {
+    component.inicializarEstadoFormulario = jest.fn();
+    component.ngAfterViewInit();
+    expect(component.inicializarEstadoFormulario).toHaveBeenCalled();
+  });
+
+  it('should create a form group in creatFormSolicitud', () => {
+    component.fb = fb;
+    component.immexRegitroAnexoState = getMockState();
+    component.creatFormSolicitud();
+    expect(component.immexRegistroform instanceof FormGroup).toBe(true);
+  });
+
+  it('should disable and enable form in inicializarEstadoFormulario', () => {
+    component.immexRegistroform = fb.group({});
+    component.immexRegistroform.disable = jest.fn();
+    component.immexRegistroform.enable = jest.fn();
+    component.esFormularioSoloLectura = true;
+    component.inicializarEstadoFormulario();
+    expect(component.immexRegistroform.disable).toHaveBeenCalled();
+    component.esFormularioSoloLectura = false;
+    component.inicializarEstadoFormulario();
+    expect(component.immexRegistroform.enable).toHaveBeenCalled();
+  });
+
+  it('should clean up destroyNotifier$ on ngOnDestroy', () => {
+    const destroyNotifier$ = { next: jest.fn(), complete: jest.fn() };
+    component.destroyNotifier$ = destroyNotifier$;
+    component.ngOnDestroy();
+    expect(destroyNotifier$.next).toHaveBeenCalled();
+    expect(destroyNotifier$.complete).toHaveBeenCalled();
+  });
+
+  it('should fetch data and patch form', () => {
+    component.immexRegistroform = fb.group({
+      exportacionForm: fb.group({}),
+      importacionForm: fb.group({})
+    });
+    component.immexRegistroform.patchValue = jest.fn();
+    component.permisoImmexDatosService = TestBed.inject(PermisoImmexDatosService);
+    component.fetchData();
+    expect(component.immexRegistroform.patchValue).toHaveBeenCalled();
+    expect(Array.isArray(component.immexTableDatos)).toBe(true);
+    expect(Array.isArray(component.fraccionTablaDatos)).toBe(true);
+    expect(Array.isArray(component.nicoTablaDatos)).toBe(true);
+  });
+
+  it('should update nico on obtenerIngresoSelectList', () => {
+    component.nicoService = TestBed.inject(NicoService);
+    component.obtenerIngresoSelectList();
+    expect(Array.isArray(component.nico)).toBe(true);
+  });
+
+  it('should set UI state flags', () => {
+    component.showFraccionExport = false;
+    component.showFraccionExportacion();
+    expect(component.showFraccionExport).toBe(true);
+    component.showTableExport = false;
+    component.showTableExportacion();
+    expect(component.showTableExport).toBe(true);
+    component.showTableImport = false;
+    component.showTableImportacion();
+    expect(component.showTableImport).toBe(true);
+  });
+
+  it('should call get on immexRegistroform in disableFormControls', () => {
+    const getMock = jest.fn().mockReturnValue({ disable: jest.fn() });
+    component.immexRegistroform = { get: getMock };
+    component.disableFormControls();
+    expect(getMock).toHaveBeenCalled();
+  });
 });

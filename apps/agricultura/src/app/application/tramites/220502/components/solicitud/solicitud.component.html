@@ -1,7 +1,9 @@
 <div class="container">
     <form [formGroup]="form">
+      @if(isSolicitud){
       <!-- Solicitud Tabla -->
       <app-solicitud-datos [tablaHeadData]="hSolicitud" [tablaFilaDatos]="dSolicitud"></app-solicitud-datos>
+      }
       <!-- Datose del tramite a realizar -->
       <app-datos-del-tramite-a-realizar claveDeControl="datoseDelTramiteRealizar" [formularioDeshabilitado]="formularioDeshabilitado"></app-datos-del-tramite-a-realizar>
       <!-- Responsable inspeccion en punto -->

@@ -260,6 +260,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @default false
    */
   soloLectura: boolean = false;
+  detalles: never[] | undefined;
 
   /**
    * Constructor del componente.

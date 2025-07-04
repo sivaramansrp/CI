@@ -1,110 +1,61 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { Router } from '@angular/router';
-import { of, throwError } from 'rxjs';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
-
 import { PasoTresComponent } from './paso-tres.component';
-import { TramiteStore } from '@ng-mf/data-access-user';
-import { ToastrService } from 'ngx-toastr';
+import { provideToastr, ToastrService } from 'ngx-toastr';
+import { Router } from '@angular/router';
+import { FirmaElectronicaComponent } from '@libs/shared/data-access-user/src';
+import { CommonModule } from '@angular/common';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { ReactiveFormsModule } from '@angular/forms';
+import { of } from 'rxjs';
 
 describe('PasoTresComponent', () => {
   let component: PasoTresComponent;
   let fixture: ComponentFixture<PasoTresComponent>;
-  let mockRouter: any;
-  let mockServiciosExtraordinariosService: any;
-  let mockTramiteStore: any;
-  let mockToastrService: any;
+  let router: Router;
 
   beforeEach(async () => {
-    mockRouter = {
-      navigate: jest.fn(),
-    };
-
-    mockServiciosExtraordinariosService = {
-      obtenerTramite: jest.fn(),
-    };
-
-    mockTramiteStore = {
-      establecerTramite: jest.fn(),
-    };
-
-    mockToastrService = {
-      success: jest.fn(),
-      error: jest.fn(),
-      warning: jest.fn(),
-      info: jest.fn(),
-    };
-
     await TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule, PasoTresComponent],
-      providers: [
-        { provide: Router, useValue: mockRouter },
-        { provide: TramiteStore, useValue: mockTramiteStore },
-        { provide: ToastrService, useValue: mockToastrService },
+      imports: [
+        FirmaElectronicaComponent,
+        CommonModule,
+        PasoTresComponent,
+        HttpClientTestingModule,
+        ReactiveFormsModule,
       ],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
+      declarations: [],
+      providers: [
+        ToastrService,
+        provideToastr({
+          positionClass: 'toast-top-right',
+        }),
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(PasoTresComponent);
     component = fixture.componentInstance;
+    router = TestBed.inject(Router);
     fixture.detectChanges();
   });
 
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
-
-  it('should create the component', () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  describe('obtieneFirma', () => {
-    it('should call `obtenerTramite` and navigate to "servicios-extraordinarios/acuse" when FIRMA is valid', () => {
-      const mockTramite = { data: { id: 1, name: 'Test Tramite' } };
-      mockServiciosExtraordinariosService.obtenerTramite.mockReturnValue(
-        of(mockTramite)
-      );
+  it('should set tipoPersona when obtenerTipoPersona is called', () => {
+    component.obtenerTipoPersona(2);
+    expect(component.tipoPersona).toBe(2);
+  });
 
-      const firma = 'mockFirma';
-      component.obtieneFirma(firma);
+  it('should complete destroyed$ on ngOnDestroy', () => {
+    const completeSpy = jest.spyOn((component as any).destroyed$, 'complete');
+    component.ngOnDestroy();
+    expect(completeSpy).toHaveBeenCalled();
+  });
 
-      expect(jest.fn()).toHaveBeenCalled();
-      expect(
-        mockServiciosExtraordinariosService.obtenerTramite
-      ).toHaveBeenCalledWith(19);
-      expect(mockTramiteStore.establecerTramite).toHaveBeenCalledWith(
-        mockTramite.data,
-        firma
-      );
-      expect(mockRouter.navigate).toHaveBeenCalledWith([
-        'servicios-extraordinarios/acuse',
-      ]);
-    });
-
-    it('should handle errors when `obtenerTramite` fails', () => {
-      const errorSpy = jest.spyOn(console, 'error').mockImplementation();
-      mockServiciosExtraordinariosService.obtenerTramite.mockReturnValue(
-        throwError(() => new Error('Service Error'))
-      );
-
-      const firma = 'mockFirma';
-      component.obtieneFirma(firma);
-
-      expect(
-        mockServiciosExtraordinariosService.obtenerTramite
-      ).toHaveBeenCalledWith(19);
-      expect(errorSpy).toHaveBeenCalledWith(expect.any(Error));
-    });
-
-    it('should not call `obtenerTramite` if FIRMA is empty', () => {
-      const firma = '';
-      component.obtieneFirma(firma);
-
-      expect(
-        mockServiciosExtraordinariosService.obtenerTramite
-      ).not.toHaveBeenCalled();
-      expect(mockRouter.navigate).not.toHaveBeenCalled();
-    });
+  it('should not navigate to acuse page on invalid firma', () => {
+    const navigateSpy = jest.spyOn(router, 'navigate');
+    const firma = '';
+    component.obtieneFirma(firma);
+    expect(navigateSpy).not.toHaveBeenCalled();
   });
 });

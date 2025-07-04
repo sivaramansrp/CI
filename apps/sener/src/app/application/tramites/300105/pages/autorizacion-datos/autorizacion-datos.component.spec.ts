@@ -48,8 +48,8 @@ describe('AutorizacionDatosComponent', () => {
   };
 
   beforeEach(async () => {
-    // Mock para WizardComponent
-    const MOCK_WIZARD = {
+    // Crear el mock del WizardComponent una sola vez
+    MOCK_WIZARD_COMPONENT = {
       siguiente: jest.fn(),
       atras: jest.fn()
     } as unknown as jest.Mocked<WizardComponent>;
@@ -71,12 +71,17 @@ describe('AutorizacionDatosComponent', () => {
     FIXTURE = TestBed.createComponent(AutorizacionDatosComponent);
     COMPONENT = FIXTURE.componentInstance;
 
-    // Configurar el mock del WizardComponent después de la creación del componente
-    MOCK_WIZARD_COMPONENT = {
-      siguiente: jest.fn(),
-      atras: jest.fn()
-    } as unknown as jest.Mocked<WizardComponent>;
+    // Asignar el mock directamente a la propiedad ViewChild
+    COMPONENT.wizardComponent = MOCK_WIZARD_COMPONENT;
+    
+    // Detectar cambios para inicializar la vista
+    FIXTURE.detectChanges();
+  });
 
+  // Limpiar mocks antes de cada test
+  beforeEach(() => {
+    jest.clearAllMocks();
+    // Reasegurar que el mock esté disponible
     COMPONENT.wizardComponent = MOCK_WIZARD_COMPONENT;
   });
 
@@ -150,9 +155,6 @@ describe('AutorizacionDatosComponent', () => {
 
   // Pruebas para getValorIndice
   describe('getValorIndice', () => {
-    beforeEach(() => {
-      COMPONENT.wizardComponent = MOCK_WIZARD_COMPONENT;
-    });
 
     it('debería actualizar el índice cuando el valor está en rango válido', () => {
       const ACCION_BOTON: AccionBoton = {
@@ -494,6 +496,8 @@ describe('AutorizacionDatosComponent', () => {
   // Pruebas de casos límite y manejo de errores
   describe('Casos límite y manejo de errores', () => {
     it('debería manejar wizardComponent undefined', () => {
+      // Temporalmente establecer wizardComponent como undefined
+      const originalWizardComponent = COMPONENT.wizardComponent;
       COMPONENT.wizardComponent = undefined as any;
 
       const ACCION_BOTON: AccionBoton = {
@@ -504,6 +508,9 @@ describe('AutorizacionDatosComponent', () => {
       expect(() => {
         COMPONENT.getValorIndice(ACCION_BOTON);
       }).toThrow();
+
+      // Restaurar el wizardComponent para otros tests
+      COMPONENT.wizardComponent = originalWizardComponent;
     });
 
     it('debería manejar pasos array vacío', () => {
@@ -582,12 +589,6 @@ describe('AutorizacionDatosComponent', () => {
 
   // Pruebas de flujo completo del componente
   describe('Flujo completo del componente', () => {
-    beforeEach(() => {
-      COMPONENT.pasos = MOCK_PASOS_REGISTRO;
-      COMPONENT.pantallasPasos = MOCK_PASOS_REGISTRO;
-      COMPONENT.datosPasos = MOCK_DATOS_PASOS;
-      FIXTURE.detectChanges();
-    });
 
     it('debería ejecutar el flujo completo de navegación hacia adelante', () => {
       // Paso 1 -> Paso 2

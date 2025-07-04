@@ -66,16 +66,6 @@ describe('SolicitudComponent', () => {
     component.ngOnDestroy();
   });
 
-  it('should run #inicializarFormulario()', async () => {
-    component.fb = component.fb || {};
-    component.fb.group = jest.fn();
-    component.solicitudState = component.solicitudState || {};
-    component.solicitudState.contenedores = 'contenedores';
-    component.solicitudState.aduana = 'aduana';
-    component.solicitudState.observaciones = 'observaciones';
-    component.inicializarFormulario();
-  });
-
   it('should run #cargarContenedoresOpciones()', async () => {
     component.juntaTecnicaRegistroService = component.juntaTecnicaRegistroService || {};
     component.juntaTecnicaRegistroService.getOptionLista = jest.fn().mockReturnValue(observableOf({

@@ -1,134 +1,125 @@
 import { TestBed } from '@angular/core/testing';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { ModificacionPermisoImportacionMedicamentosService } from '../../services/modificacion-permiso-importacion-medicamentos.service';
-import { DatosProcedureQuery } from '../../../../estados/queries/tramites261103.query';
-import { DatosProcedureStore } from '../../../../estados/tramites/tramites261103.store';
-import { of } from 'rxjs';
+import { of, Subject } from 'rxjs';
 import { ModificacionPermisoImportacionMedicamentosComponent } from './modificacion-permiso-importacion-medicamentos';
-
+import { DatosProcedureStore } from '../../../../estados/tramites/tramites261103.store';
+import { DatosProcedureQuery } from '../../../../estados/queries/tramites261103.query';
+import { ModificacionPermisoImportacionMedicamentosService } from '../../services/modificacion-permiso-importacion-medicamentos.service';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+ 
 describe('ModificacionPermisoImportacionMedicamentosComponent', () => {
   let component: ModificacionPermisoImportacionMedicamentosComponent;
-  let MOCK_MODIFICACION_PERMISO_IMPORTACION_MEDICAMENTOS_SERVICE: { isValid: jest.Mock };
-  let MOCK_DATOS_PROCEDURE_STORE: { establecerDatos: jest.Mock };
-  let MOCK_DATOS_PROCEDURE_QUERY: { selectideGenerica1$: jest.Mock };
-
+  let destroy$: Subject<void>;
+ 
+  const mockStore = {
+    establecerDatos: jest.fn()
+  };
+ 
+  const mockQuery = {
+    selectProrroga$: of({
+      ideGenerica1: 'valor1',
+      observaciones: 'Justificación de prueba',
+    })
+  };
+ 
+jest.spyOn(ModificacionPermisoImportacionMedicamentosService, 'isValid').mockReturnValue(true);
+ 
+  const mockConsultaioQuery = {
+    selectConsultaioState$: of({ readonly: false })
+  };
+ 
   beforeEach(() => {
-    MOCK_MODIFICACION_PERMISO_IMPORTACION_MEDICAMENTOS_SERVICE = {
-      isValid: jest.fn() as jest.Mock,
-    };
-
-    MOCK_DATOS_PROCEDURE_STORE = {
-      establecerDatos: jest.fn(),
-    };
-
-    MOCK_DATOS_PROCEDURE_QUERY = {
-      selectideGenerica1$: jest.fn().mockReturnValue(
-        of({
-          ideGenerica1: 'ideGenerica1',
-          observaciones: 'Alguna justificación',
-        })
-      ),
-    };
-
     TestBed.configureTestingModule({
       imports: [ReactiveFormsModule, ModificacionPermisoImportacionMedicamentosComponent],
       providers: [
         FormBuilder,
-        { provide: ModificacionPermisoImportacionMedicamentosService, useValue: MOCK_MODIFICACION_PERMISO_IMPORTACION_MEDICAMENTOS_SERVICE },
-        { provide: DatosProcedureStore, useValue: MOCK_DATOS_PROCEDURE_STORE },
-        { provide: DatosProcedureQuery, useValue: MOCK_DATOS_PROCEDURE_QUERY },
+        { provide: DatosProcedureStore, useValue: mockStore },
+        { provide: DatosProcedureQuery, useValue: mockQuery },
+        { provide: ConsultaioQuery, useValue: mockConsultaioQuery },
+        {
+          provide: ModificacionPermisoImportacionMedicamentosService,
+          useValue: { isValid: jest.fn() }
+        }
       ],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA]
     }).compileComponents();
-
-    const FIXTURE = TestBed.createComponent(ModificacionPermisoImportacionMedicamentosComponent);
-    component = FIXTURE.componentInstance;
+ 
+    const fixture = TestBed.createComponent(ModificacionPermisoImportacionMedicamentosComponent);
+    component = fixture.componentInstance;
+    destroy$ = component['destroy$'];
+ 
   });
-
-  it('debería crear el componente', () => {
+ 
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+ 
+  it('debería crear el componente correctamente', () => {
     expect(component).toBeTruthy();
   });
-
-  it('debería inicializar el formulario en ngOnInit', () => {
-    jest.spyOn(component, 'crearFormulario');
+ 
+  it('debería llamar a inicializarEstadoFormulario al iniciar', () => {
+    const spy = jest.spyOn(component as any, 'inicializarEstadoFormulario');
     component.ngOnInit();
-    expect(component.crearFormulario).toHaveBeenCalled();
-    expect(component.preOperativeForm).toBeDefined();
+    expect(spy).toHaveBeenCalled();
   });
-
-  it('debería suscribirse a selectideGenerica1$ en ngOnInit', () => {
-    const SPY = jest.spyOn(MOCK_DATOS_PROCEDURE_QUERY, 'selectideGenerica1$');
-    component.ngOnInit();
-    expect(SPY).toHaveBeenCalled();
+ 
+  it('debería crear el formulario con los valores del estado', () => {
+    component.crearFormulario();
+    expect(component.preOperativeForm.get('ideGenerica1')?.value).toBe('valor1');
+    expect(component.preOperativeForm.get('observaciones')?.value).toBe('Justificación de prueba');
   });
-
-  it('debería validar un campo del formulario usando isValid', () => {
-    // Simula el valor de retorno del método isValid en el servicio
-    MOCK_MODIFICACION_PERMISO_IMPORTACION_MEDICAMENTOS_SERVICE.isValid.mockReturnValue(true);
-
-    // Inicializa el formulario con un control
-    component.preOperativeForm = new FormBuilder().group({
-      ideGenerica1: ['ideGenerica1'], // Establece un valor inicial
-    });
-
-    // Llama al método isValid con el nombre del campo
-    const RESULT = component.isValid('ideGenerica1');
-
-    // Verifica que el método isValid del servicio se haya llamado con los argumentos correctos
-    expect(MOCK_MODIFICACION_PERMISO_IMPORTACION_MEDICAMENTOS_SERVICE.isValid).toHaveBeenCalledWith(component.preOperativeForm, 'ideGenerica1');
-
-    // Verifica que el resultado sea true (según el mock)
-    expect(RESULT).toBe(true);
-  });
-
-  it('debería llamar a establecerDatos en el store cuando se llama setValoresStore', () => {
-    const FORM = new FormBuilder().group({
-      ideGenerica1: ['ideGenerica1'],
-    });
-    component.setValoresStore(FORM, 'ideGenerica1');
-    expect(MOCK_DATOS_PROCEDURE_STORE.establecerDatos).toHaveBeenCalledWith({ ideGenerica1: 'ideGenerica1' });
-  });
-
-  it('debería emitir setValoresStoreEvent cuando se llama setValoresStore', () => {
-    const FORM = new FormBuilder().group({
-      observaciones: ['Alguna justificación'],
-    });
-  });
-
-  it('debería limpiar las suscripciones en ngOnDestroy', () => {
-    const DESTROY_SPY = jest.spyOn(component['destroy$'], 'next');
-    const COMPLETE_SPY = jest.spyOn(component['destroy$'], 'complete');
-    component.ngOnDestroy();
-    expect(DESTROY_SPY).toHaveBeenCalledWith();
-    expect(COMPLETE_SPY).toHaveBeenCalled();
-  });
-
-  it('should call obtenerDatosFormulario and crearFormulario', () => {
-    const OBTENER_DATOS_FORMULARIO_SPY = jest.spyOn(component, 'obtenerDatosFormulario');
-    const CREAR_FORMULARIO_SPY = jest.spyOn(component, 'crearFormulario');
-
-    component.guardarDatosFormulario();
-
-    expect(OBTENER_DATOS_FORMULARIO_SPY).toHaveBeenCalled();
-    expect(CREAR_FORMULARIO_SPY).toHaveBeenCalled();
-  });
-
-  it('should disable the form if esFormularioSoloLectura is true', () => {
+ 
+  it('debería deshabilitar el formulario si esFormularioSoloLectura es true', () => {
     component.esFormularioSoloLectura = true;
-
-    const DISABLE_SPY = jest.spyOn(component.preOperativeForm, 'disable');
-
+    component.crearFormulario();
     component.guardarDatosFormulario();
-
-    expect(DISABLE_SPY).toHaveBeenCalled();
+    expect(component.preOperativeForm.disabled).toBe(true);
   });
-
-  it('should enable the form if esFormularioSoloLectura is false', () => {
+ 
+  it('debería habilitar el formulario si esFormularioSoloLectura es false', () => {
     component.esFormularioSoloLectura = false;
-
-    const ENABLE_SPY = jest.spyOn(component.preOperativeForm, 'enable');
-
+    component.crearFormulario();
     component.guardarDatosFormulario();
-
-    expect(ENABLE_SPY).toHaveBeenCalled();
+    expect(component.preOperativeForm.enabled).toBe(true);
+  });
+ 
+  it('debería llamar a establecerDatos en el store al ejecutar setValoresStore', () => {
+    const formulario = new FormBuilder().group({
+      observaciones: ['Texto de prueba'],
+    });
+    component.setValoresStore(formulario, 'observaciones');
+    expect(mockStore.establecerDatos).toHaveBeenCalledWith({ observaciones: 'Texto de prueba' });
+  });
+ 
+it('debería validar un campo con el servicio isValid', () => {
+  const spy = jest.spyOn(ModificacionPermisoImportacionMedicamentosService, 'isValid').mockReturnValue(true);
+ 
+  component.preOperativeForm = new FormBuilder().group({
+    ideGenerica1: ['valor válido'],
+  });
+ 
+  const resultado = component.isValid('ideGenerica1');
+ 
+  expect(resultado).toBe(true);
+  expect(spy).toHaveBeenCalledWith(component.preOperativeForm, 'ideGenerica1');
+});
+ 
+ 
+  it('debería limpiar las suscripciones en ngOnDestroy', () => {
+    const spyNext = jest.spyOn(destroy$, 'next');
+    const spyComplete = jest.spyOn(destroy$, 'complete');
+    component.ngOnDestroy();
+    expect(spyNext).toHaveBeenCalled();
+    expect(spyComplete).toHaveBeenCalled();
+  });
+ 
+  it('debería ejecutar obtenerDatosFormulario y crearFormulario al guardar datos', () => {
+    const spyObtener = jest.spyOn(component, 'obtenerDatosFormulario');
+    const spyCrear = jest.spyOn(component, 'crearFormulario');
+    component.guardarDatosFormulario();
+    expect(spyObtener).toHaveBeenCalled();
+    expect(spyCrear).toHaveBeenCalled();
   });
 });

@@ -1,12 +1,30 @@
-import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { ConsultaioQuery, ConsultaioState, FormularioDinamico, TIPO_PERSONA } from '@ng-mf/data-access-user';
-import { DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL, PERSONA_MORAL_NACIONAL, } from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
-import { RegistroSolicitudService, SolicitudDatosResponse } from '../../services/registro-solicitud-service.service';
-import { SharedModule, SolicitanteComponent, } from '@libs/shared/data-access-user/src';
+import {
+  AfterViewInit,
+  Component,
+  OnDestroy,
+  OnInit,
+} from '@angular/core';
+import {
+  ConsultaioQuery,
+  ConsultaioState,
+  FormularioDinamico,
+} from '@ng-mf/data-access-user';
+import {
+  DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL,
+  PERSONA_MORAL_NACIONAL,
+} from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
+import {
+  RegistroSolicitudService,
+  SolicitudDatosResponse,
+} from '../../services/registro-solicitud-service.service';
+import {
+  SharedModule,
+  SolicitanteComponent,
+} from '@libs/shared/data-access-user/src';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { Solicitud31803State } from '../../state/Tramite31803.store';
-import { SolicitudComponent } from "../../components/Solicitud.component";
+import { SolicitudComponent } from '../../components/Solicitud.component';
 
 /**
  * Componente que representa el primer paso del trámite.
@@ -24,7 +42,6 @@ import { SolicitudComponent } from "../../components/Solicitud.component";
   ],
 })
 export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
-
   /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
   public esDatosRespuesta: boolean = false; // Indica si hay datos de respuesta del servidor
 
@@ -37,17 +54,17 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
    */
   constructor(
     private consultaQuery: ConsultaioQuery,
-    private solicitud31803Service: RegistroSolicitudService, // Servicio para manejar el estado de la solicitud 31802
-  ) { }
+    private solicitud31803Service: RegistroSolicitudService // Servicio para manejar el estado de la solicitud 31802
+  ) {}
 
   /**
-     * Inicializa el componente y suscripciones al estado de consulta.
-     * 
-     * Se suscribe al observable `selectConsultaioState$` para obtener el estado actual de la consulta.
-     * Si el estado indica que se debe actualizar (`update` es true), llama a `guardarDatosFormulario()` para cargar los datos
-     * y actualizar el estado global. Si no, marca que existen datos de respuesta.
-     * La suscripción se cancela automáticamente al destruir el componente para evitar fugas de memoria.
-     */
+   * Inicializa el componente y suscripciones al estado de consulta.
+   *
+   * Se suscribe al observable `selectConsultaioState$` para obtener el estado actual de la consulta.
+   * Si el estado indica que se debe actualizar (`update` es true), llama a `guardarDatosFormulario()` para cargar los datos
+   * y actualizar el estado global. Si no, marca que existen datos de respuesta.
+   * La suscripción se cancela automáticamente al destruir el componente para evitar fugas de memoria.
+   */
   ngOnInit(): void {
     this.consultaQuery.selectConsultaioState$
       .pipe(
@@ -64,42 +81,36 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
     }
   }
 
-
   /**
    * Obtiene los datos de la solicitud desde el servicio y actualiza el estado global.
-   * 
+   *
    * Realiza una petición al servicio para obtener los datos de la solicitud.
    * Al recibir la respuesta, marca que existen datos de respuesta y construye un objeto `Solicitud31803State`
    * con los datos recibidos. Luego, actualiza el estado global del formulario utilizando el método
    * `actualizarEstadoFormulario` del servicio.
    * La suscripción se cancela automáticamente al destruir el componente para evitar fugas de memoria.
    */
-guardarDatosFormulario(): void {
-  this.solicitud31803Service
-    .getSolicitudDatos()
-    .pipe(
-      takeUntil(this.destroyNotifier$),
-    )
-    .subscribe((resp: SolicitudDatosResponse) => {
-      if (resp) {
-        this.esDatosRespuesta = true;
-        const SOLICITUD_STATE: Solicitud31803State = {
-          numeroOperacion: resp.numeroOperacion,
-          banco: resp.banco,
-          llave: resp.llave,
-          manifiesto1: resp.manifiesto1,
-          manifiesto2: resp.manifiesto2,
-          fechaPago: resp.fechaPago,
-        };
-        this.solicitud31803Service.actualizarEstadoFormulario(SOLICITUD_STATE);
-      }
-    });
-}
-
-  /**
- * Referencia al componente de solicitante.
- */
-  @ViewChild(SolicitanteComponent) solicitante!: SolicitanteComponent;
+  guardarDatosFormulario(): void {
+    this.solicitud31803Service
+      .getSolicitudDatos()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((resp: SolicitudDatosResponse) => {
+        if (resp) {
+          this.esDatosRespuesta = true;
+          const SOLICITUD_STATE: Solicitud31803State = {
+            numeroOperacion: resp.numeroOperacion,
+            banco: resp.banco,
+            llave: resp.llave,
+            manifiesto1: resp.manifiesto1,
+            manifiesto2: resp.manifiesto2,
+            fechaPago: resp.fechaPago,
+          };
+          this.solicitud31803Service.actualizarEstadoFormulario(
+            SOLICITUD_STATE
+          );
+        }
+      });
+  }
 
   /**
    * Tipo de persona seleccionada.
@@ -128,7 +139,6 @@ guardarDatosFormulario(): void {
   ngAfterViewInit(): void {
     this.persona = PERSONA_MORAL_NACIONAL;
     this.domicilioFiscal = DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL;
-    this.solicitante.obtenerTipoPersona(TIPO_PERSONA.MORAL_NACIONAL);
   }
 
   /**
@@ -138,14 +148,14 @@ guardarDatosFormulario(): void {
   seleccionaTab(i: number): void {
     this.indice = i;
   }
-/**
- * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
- *
- * Emite un valor y completa el subject `destroyNotifier$` para notificar a todas las suscripciones
- * que deben finalizarse, evitando así fugas de memoria.
- */
-ngOnDestroy(): void {
-  this.destroyNotifier$.next();
-  this.destroyNotifier$.complete();
-}
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
+   *
+   * Emite un valor y completa el subject `destroyNotifier$` para notificar a todas las suscripciones
+   * que deben finalizarse, evitando así fugas de memoria.
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
+  }
 }

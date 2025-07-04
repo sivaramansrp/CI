@@ -171,6 +171,7 @@ export class TercerosRelacinadosComponent implements OnInit, OnDestroy {
    * Se suscribe al estado de la solicitud, inicializa el formulario y carga la tabla de terceros.
    */
   ngOnInit(): void {
+    this.donanteDomicilio();
     this.query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyed$),
@@ -179,7 +180,7 @@ export class TercerosRelacinadosComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-    this.donanteDomicilio();
+    
     this.obtenerTablaTerceros();
     this.inicializarEstadoFormulario();
   }
@@ -290,25 +291,25 @@ export class TercerosRelacinadosComponent implements OnInit, OnDestroy {
    * Utiliza el estado actual de la solicitud para asignar los valores iniciales.
    */
   donanteDomicilio(): void {
-    this.tercerosForm = this.fb.group({
-      destinatario: [this.solicitudState?.destinatario, [Validators.required]],
-      fabricante: [this.solicitudState?.fabricante, [Validators.required]],
-      tipoPersona: [this.solicitudState?.tipoPersona, [Validators.required]],
-      nombre: [this.solicitudState?.nombre, [Validators.required]],
-      primerApellido: [this.solicitudState?.primerApellido, [Validators.required]],
-      segundoApellido: [this.solicitudState?.segundoApellido, [Validators.required]],
-      denominacion: [this.solicitudState?.denominacion, [Validators.required]],
-      pais: [this.solicitudState?.pais, [Validators.required]],
-      estados: [this.solicitudState?.estados, [Validators.required]],
-      codigoDeZip: [this.solicitudState?.codigoDeZip, [Validators.required]],
-      camino: [this.solicitudState?.camino, [Validators.required]],
-      numeroExterior: [this.solicitudState?.numeroExterior, [Validators.required]],
-      numeroInterior: [this.solicitudState?.numeroInterior, [Validators.required]],
-      ladaDeTerceros: [this.solicitudState?.ladaDeTerceros, [Validators.required]],
-      fon: [this.solicitudState?.fon, [Validators.required]],
-      email: [this.solicitudState?.email, [Validators.required]],
-    });
-  }
+  this.tercerosForm = this.fb.group({
+    destinatario: [{ value: this.solicitudState?.destinatario, disabled: this.soloLectura }, [Validators.required]],
+    fabricante: [{ value: this.solicitudState?.fabricante, disabled: this.soloLectura }, [Validators.required]],
+    tipoPersona: [{ value: this.solicitudState?.tipoPersona, disabled: this.soloLectura }, [Validators.required]],
+    nombre: [{ value: this.solicitudState?.nombre, disabled: this.soloLectura }, [Validators.required]],
+    primerApellido: [{ value: this.solicitudState?.primerApellido, disabled: this.soloLectura }, [Validators.required]],
+    segundoApellido: [{ value: this.solicitudState?.segundoApellido, disabled: this.soloLectura }, [Validators.required]],
+    denominacion: [{ value: this.solicitudState?.denominacion, disabled: this.soloLectura }, [Validators.required]],
+    pais: [{ value: this.solicitudState?.pais, disabled: this.soloLectura }, [Validators.required]],
+    estados: [{ value: this.solicitudState?.estados, disabled: this.soloLectura }, [Validators.required]],
+    codigoDeZip: [{ value: this.solicitudState?.codigoDeZip, disabled: this.soloLectura }, [Validators.required]],
+    camino: [{ value: this.solicitudState?.camino, disabled: this.soloLectura }, [Validators.required]],
+    numeroExterior: [{ value: this.solicitudState?.numeroExterior, disabled: this.soloLectura }, [Validators.required]],
+    numeroInterior: [{ value: this.solicitudState?.numeroInterior, disabled: this.soloLectura }, [Validators.required]],
+    ladaDeTerceros: [{ value: this.solicitudState?.ladaDeTerceros, disabled: this.soloLectura }, [Validators.required]],
+    fon: [{ value: this.solicitudState?.fon, disabled: this.soloLectura }, [Validators.required]],
+    email: [{ value: this.solicitudState?.email, disabled: this.soloLectura }, [Validators.required]],
+  });
+}
 
   /**
    * Método del ciclo de vida que se ejecuta al destruir el componente.

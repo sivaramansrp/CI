@@ -7,10 +7,10 @@
             <li [ngClass]="indice === 2 ? 'active' : ''">
                 <a data-toggle="tab" (keyup)="seleccionaTab(1)" (click)="seleccionaTab(2)">Tratados</a>
             </li>
-            <li [ngClass]="indice === 3 ? 'active' : ''">
+            <li [ngClass]="{ active: indice === 3, disabled: desactivado }">
                 <a data-toggle="tab" (keyup)="seleccionaTab(1)" (click)="seleccionaTab(3)">Datos de la mercancia</a>
             </li>
-            <li [ngClass]="indice === 4 ? 'active' : ''">
+            <li [ngClass]="{ active: indice === 4, disabled: desactivado }">
                 <a data-toggle="tab" (keyup)="seleccionaTab(1)" (click)="seleccionaTab(4)">Datos adicionales</a>
             </li>
         </ul>
@@ -20,7 +20,7 @@
                 <solicitante #Solicitante></solicitante>
             }
             @case (2) {
-                <app-tratados></app-tratados>
+                <app-tratados (habilitarPestana)="habilitarPestana()"></app-tratados>
             }
             @case (3) {
                 <app-datos-mercancia></app-datos-mercancia>

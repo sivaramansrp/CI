@@ -35,6 +35,12 @@ export interface Solicitante110101State {
   entidad: string;
   /** Representación legal o administrativa del solicitante. */
   representacion: string;
+    /** Método de separación contable seleccionado por el solicitante. */
+  metodoSeparacion: boolean;
+    /** Opción de exportador autorizado seleccionada por el solicitante. */
+  exportadorAutorizado: boolean;
+    /** Información seleccionada en los radios del formulario por el solicitante. */
+  informacionRadios: string;
 }
 
 
@@ -61,7 +67,10 @@ export function createSolicitanteInitialState(): Solicitante110101State {
     descripcion: '',
     valorTransaccion: '',
     entidad: '',
-    representacion: ''
+    representacion: '',
+    metodoSeparacion: false,
+    exportadorAutorizado: false,
+    informacionRadios: '' 
   };
 }
 
@@ -241,5 +250,37 @@ export class Tramite110101Store extends Store<Solicitante110101State> {
     }));
   }
 
+  /**
+   * Actualiza el estado con el valor de método de separación especificado.
+   * @param metodoSeparacion - El valor booleano a establecer en el estado.
+   */
+  public setMetodoSeparacion(metodoSeparacion: boolean): void {
+    this.update((state) => ({
+      ...state,
+      metodoSeparacion,
+    }));
+  }
+
+  /**
+   * Actualiza el estado con el valor de exportador autorizado especificado.
+   * @param exportadorAutorizado - El valor booleano a establecer en el estado para la opción de exportador autorizado.
+   */
+  public setExportadorAutorizado(exportadorAutorizado: boolean): void {
+    this.update((state) => ({
+      ...state,
+      exportadorAutorizado,
+    }));
+  }
+
+  /**
+   * Actualiza el estado con el valor seleccionado en los radios del formulario.
+   * @param informacionRadios - El valor seleccionado a establecer en el estado para la información de los radios.
+   */
+  public setInformacionRadios(informacionRadios: string): void {
+    this.update((state) => ({
+      ...state,
+      informacionRadios,
+    }));
+  }
 
 }

@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { SolicitudComponent } from './solicitud.component';
 
 describe('SolicitudComponent', () => {
@@ -8,6 +9,7 @@ describe('SolicitudComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [SolicitudComponent],
+      schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
 
     fixture = TestBed.createComponent(SolicitudComponent);

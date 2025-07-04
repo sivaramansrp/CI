@@ -15,10 +15,17 @@ import { Tramite260206Store } from '../../estados/stores/tramite260206Store.stor
 
 /**
  * @component TercerosRelacionadosVistaComponent
- * @description Componente de solo lectura que muestra las tablas de terceros relacionados
- * (fabricantes, destinatarios finales, proveedores y facturadores).
- * Consume observables del store para renderizar los datos en la vista mediante el componente
- * `TercerosRelacionadosComponent`.
+ * @description Componente de Angular que gestiona la visualización y manipulación de terceros relacionados
+ * en el trámite 260206 de COFEPRIS. Permite mostrar, agregar, modificar y eliminar fabricantes, 
+ * destinatarios finales, proveedores y facturadores. Este componente puede funcionar tanto en modo
+ * lectura como en modo edición, dependiendo del estado de consulta.
+ * 
+ * El componente implementa los interfaces OnInit y OnDestroy para gestionar adecuadamente
+ * el ciclo de vida y las suscripciones a observables del store de estado.
+ * 
+ * @implements {OnInit} - Interface del ciclo de vida para inicialización
+ * @implements {OnDestroy} - Interface del ciclo de vida para limpieza de recursos
+ * 
  */
 @Component({
   selector: 'app-terceros-relacionados-vista',
@@ -30,50 +37,99 @@ import { Tramite260206Store } from '../../estados/stores/tramite260206Store.stor
 export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
 
   /**
-   * que indica si el formulario está en modo solo lectura.
-   * Cuando es `true`, el formulario no permite modificaciones por parte del usuario.
-   *
+   * @property {boolean} esFormularioSoloLectura
+   * @description Propiedad booleana que determina el modo de operación del formulario.
+   * Cuando es `true`, el formulario está en modo solo lectura y no permite modificaciones
+   * por parte del usuario. Cuando es `false`, permite la edición de datos.
+   * Esta propiedad se establece automáticamente según el estado de consulta del trámite.
+   * 
    * @type {boolean}
+   * @default undefined - Se inicializa mediante suscripción al estado de consulta
+   * @access public
    */
   esFormularioSoloLectura!: boolean; 
 
   /**
    * @property {Fabricante[]} fabricanteTablaDatos
-   * Datos de la tabla de fabricantes.
+   * @description Arreglo que almacena los datos de la tabla de fabricantes relacionados al trámite.
+   * Contiene la información de todas las empresas fabricantes que participan en el proceso
+   * de importación o comercialización. Se actualiza automáticamente mediante suscripción
+   * al observable del store de estado.
+   * 
+   * @type {Fabricante[]}
+   * @default [] - Arreglo vacío por defecto
+   * @access public
    */
   fabricanteTablaDatos: Fabricante[] = [];
 
   /**
    * @property {Destinatario[]} destinatarioFinalTablaDatos
-   * Datos de la tabla de destinatarios finales.
+   * @description Arreglo que contiene los datos de la tabla de destinatarios finales.
+   * Representa las entidades que recibirán finalmente los productos o servicios
+   * del trámite. Se sincroniza automáticamente con el store de estado del componente.
+   * 
+   * @type {Destinatario[]}
+   * @default [] - Arreglo vacío por defecto
+   * @access public
    */
   destinatarioFinalTablaDatos: Destinatario[] = [];
 
   /**
    * @property {Proveedor[]} proveedorTablaDatos
-   * Datos de la tabla de proveedores.
+   * @description Arreglo que almacena la información de la tabla de proveedores.
+   * Contiene los datos de las empresas o entidades que suministran productos
+   * o servicios dentro del contexto del trámite. Se mantiene sincronizado
+   * mediante observables del store.
+   * 
+   * @type {Proveedor[]}
+   * @default [] - Arreglo vacío por defecto
+   * @access public
    */
   proveedorTablaDatos: Proveedor[] = [];
 
   /**
    * @property {Facturador[]} facturadorTablaDatos
-   * Datos de la tabla de facturadores.
+   * @description Arreglo que contiene los datos de la tabla de facturadores.
+   * Representa las entidades autorizadas para emitir facturas relacionadas
+   * con el trámite. Se actualiza automáticamente desde el store de estado
+   * mediante suscripciones a observables.
+   * 
+   * @type {Facturador[]}
+   * @default [] - Arreglo vacío por defecto
+   * @access public
    */
   facturadorTablaDatos: Facturador[] = [];
 
   /**
    * @property {Subject<void>} destroy$
-   * Subject para cancelar suscripciones y evitar fugas de memoria.
-   * @private
+   * @description Subject de RxJS utilizado para gestionar la limpieza de suscripciones
+   * y prevenir fugas de memoria. Se emite cuando el componente es destruido,
+   * permitiendo que todas las suscripciones activas se cancelen automáticamente
+   * mediante el operador takeUntil.
+   * 
+   * @type {Subject<void>}
+   * @access private
+   * @readonly
+   * @since 1.0.0
    */
   private destroy$ = new Subject<void>();
 
   /**
-   * @constructor
-   * Inyecta los servicios necesarios para consultar y actualizar el estado del trámite.
-   *
-   * @param tramiteStore - Store que gestiona el estado de los datos del trámite.
-   * @param tramiteQuery - Servicio de consulta que expone observables para leer los datos del store.
+   * @constructor TercerosRelacionadosVistaComponent
+   * @description Constructor del componente que inicializa las dependencias necesarias
+   * mediante inyección de dependencias de Angular. Establece la suscripción inicial
+   * al estado de consulta para determinar el modo de operación del formulario
+   * (solo lectura o editable).
+   * 
+   * @param {Tramite260206Store} tramiteStore - Store que gestiona el estado global de los datos 
+   *   del trámite 260206, incluyendo operaciones CRUD sobre terceros relacionados
+   * @param {Tramite260206Query} tramiteQuery - Servicio de consulta que expone observables 
+   *   reactivos para leer datos del store de manera eficiente
+   * @param {ConsultaioQuery} consultaQuery - Query service que proporciona información
+   *   sobre el estado de consulta y permisos del usuario actual
+   * 
+   * @access public
+   * @since 1.0.0
    */
   constructor(
     private tramiteStore: Tramite260206Store,
@@ -93,8 +149,18 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
 
   /**
    * @method ngOnInit
-   * @description Hook del ciclo de vida que se ejecuta al inicializar el componente.
-   * Suscribe los observables para mostrar los datos en la vista.
+   * @description Hook del ciclo de vida de Angular que se ejecuta después de la inicialización
+   * del componente y sus propiedades de entrada. Establece las suscripciones necesarias
+   * a los observables del store para mantener actualizados los datos de las tablas
+   * de terceros relacionados (fabricantes, destinatarios, proveedores y facturadores).
+   * 
+   * Todas las suscripciones utilizan el operador takeUntil con destroy$ para garantizar
+   * la limpieza automática cuando el componente sea destruido.
+   * 
+   * @returns {void}
+   * @implements {OnInit.ngOnInit}
+   * @access public
+   * @since 1.0.0
    */
   ngOnInit(): void {
     this.tramiteQuery.getFabricanteTablaDatos$
@@ -124,9 +190,15 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
 
   /**
    * @method addFabricantes
-   * @description Agrega nuevos fabricantes a la tabla de datos del trámite.
-   *
-   * @param newFabricantes - Lista de objetos `Fabricante` a agregar.
+   * @description Método público que agrega una lista de nuevos fabricantes a la tabla
+   * de datos del trámite. Utiliza el store para actualizar el estado global y
+   * notificar a todos los componentes suscritos sobre el cambio.
+   * 
+   * @param {Fabricante[]} newFabricantes - Arreglo de objetos Fabricante que contienen
+   *   la información de los nuevos fabricantes a agregar al trámite
+   * @returns {void}
+   * @access public
+   * @since 1.0.0
    */
   addFabricantes(newFabricantes: Fabricante[]): void {
     this.tramiteStore.updateFabricanteTablaDatos(newFabricantes);
@@ -134,9 +206,15 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
 
   /**
    * @method addDestinatarios
-   * @description Agrega nuevos destinatarios a la tabla de datos del destinatario final.
-   *
-   * @param newDestinatarios - Lista de objetos `Destinatario` a agregar.
+   * @description Método público que incorpora nuevos destinatarios finales a la tabla
+   * de datos correspondiente. Actualiza el estado global mediante el store para
+   * mantener la consistencia de datos en toda la aplicación.
+   * 
+   * @param {Destinatario[]} newDestinatarios - Arreglo de objetos Destinatario que
+   *   representan los nuevos destinatarios finales a registrar en el trámite
+   * @returns {void}
+   * @access public
+   * @since 1.0.0
    */
   addDestinatarios(newDestinatarios: Destinatario[]): void {
     this.tramiteStore.updateDestinatarioFinalTablaDatos(newDestinatarios);
@@ -144,9 +222,15 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
 
   /**
    * @method addProveedores
-   * @description Agrega nuevos proveedores a la tabla de datos del trámite.
-   *
-   * @param newProveedores - Lista de objetos `Proveedor` a agregar.
+   * @description Método público que añade nuevos proveedores a la tabla de datos
+   * del trámite. Interactúa con el store para persistir los cambios y notificar
+   * a los componentes dependientes sobre la actualización.
+   * 
+   * @param {Proveedor[]} newProveedores - Arreglo de objetos Proveedor con la información
+   *   de los nuevos proveedores que participarán en el trámite
+   * @returns {void}
+   * @access public
+   * @since 1.0.0
    */
   addProveedores(newProveedores: Proveedor[]): void {
     this.tramiteStore.updateProveedorTablaDatos(newProveedores);
@@ -154,9 +238,15 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
 
   /**
    * @method addFacturadores
-   * @description Agrega nuevos facturadores a la tabla de datos del trámite.
-   *
-   * @param newFacturadores - Lista de objetos `Facturador` a agregar.
+   * @description Método público que registra nuevos facturadores en la tabla de datos
+   * correspondiente. Utiliza el patrón store para gestionar el estado y garantizar
+   * la propagación de cambios a todos los observadores.
+   * 
+   * @param {Facturador[]} newFacturadores - Arreglo de objetos Facturador que contienen
+   *   los datos de las nuevas entidades autorizadas para facturación
+   * @returns {void}
+   * @access public
+   * @since 1.0.0
    */
   addFacturadores(newFacturadores: Facturador[]): void {
     this.tramiteStore.updateFacturadorTablaDatos(newFacturadores);
@@ -165,10 +255,15 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
 
   /**
    * @method fabricanteEventoModificar
-   * @description Actualiza la tabla de fabricantes en el store con el fabricante seleccionado.
-   *
-   * @param {Fabricante} seleccionadaFabricante - Objeto fabricante seleccionado.
+   * @description Método manejador de eventos que se ejecuta cuando se seleccionan
+   * fabricantes para modificación. Actualiza el store con la selección actual
+   * para permitir operaciones de edición sobre los registros seleccionados.
+   * 
+   * @param {Fabricante[]} seleccionadaFabricante - Arreglo de objetos Fabricante
+   *   que han sido seleccionados por el usuario para modificación
    * @returns {void}
+   * @access public
+   * @since 1.0.0
    */
   fabricanteEventoModificar(seleccionadaFabricante: Fabricante[]): void {
     this.tramiteStore.updateSeleccionadoTablaFabricanteDatos(seleccionadaFabricante);
@@ -176,10 +271,15 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
 
   /**
    * @method destinatarioEventoModificar
-   * @description Actualiza la tabla de destinatarios finales en el store con el destinatario seleccionado.
-   *
-   * @param {Destinatario} seleccionadaDestinatario - Objeto destinatario seleccionado.
+   * @description Método manejador de eventos que procesa la selección de destinatarios
+   * finales para modificación. Sincroniza la selección con el store para habilitar
+   * las operaciones de edición correspondientes.
+   * 
+   * @param {Destinatario[]} seleccionadaDestinatario - Arreglo de objetos Destinatario
+   *   seleccionados por el usuario para ser modificados
    * @returns {void}
+   * @access public
+   * @since 1.0.0
    */
   destinatarioEventoModificar(seleccionadaDestinatario: Destinatario[]): void {
     this.tramiteStore.updateSeleccionadoTablaDestinatarioDatos(
@@ -189,10 +289,15 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
 
   /**
    * @method proveedorEventoModificar
-   * @description Actualiza la tabla de proveedores en el store con el proveedor seleccionado.
-   *
-   * @param {Proveedor} seleccionadaProveedor - Objeto proveedor seleccionado.
+   * @description Método manejador de eventos que gestiona la selección de proveedores
+   * para modificación. Actualiza el estado del store con los proveedores seleccionados
+   * para facilitar las operaciones de edición subsecuentes.
+   * 
+   * @param {Proveedor[]} seleccionadaProveedor - Arreglo de objetos Proveedor
+   *   que el usuario ha seleccionado para modificar
    * @returns {void}
+   * @access public
+   * @since 1.0.0
    */
   proveedorEventoModificar(seleccionadaProveedor: Proveedor[]): void {
     this.tramiteStore.updateSeleccionadoTablaProveedorDatos(seleccionadaProveedor);
@@ -200,65 +305,97 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
 
   /**
    * @method facturadorEventoModificar
-   * @description Actualiza la tabla de facturadores en el store con el facturador seleccionado.
-   *
-   * @param {Facturador} seleccionadaFacturador - Objeto facturador seleccionado.
+   * @description Método manejador de eventos que procesa la selección de facturadores
+   * para modificación. Interactúa con el store para mantener actualizada la lista
+   * de facturadores seleccionados y habilitar su edición.
+   * 
+   * @param {Facturador[]} seleccionadaFacturador - Arreglo de objetos Facturador
+   *   seleccionados por el usuario para operaciones de modificación
    * @returns {void}
+   * @access public
+   * @since 1.0.0
    */
   facturadorEventoModificar(seleccionadaFacturador: Facturador[]): void {
     this.tramiteStore.updateSeleccionadoTablaFacturadorDatos(seleccionadaFacturador);
   }
 
   /**
- * @method eliminarFabricante
- * @description Elimina los fabricantes recibidos como parámetro y actualiza la tabla de fabricantes en el store.
- *
- * @param {Fabricante[]} fabricante - Lista de fabricantes actualizada después de la eliminación.
- * @returns {void}
- */
-  eliminarFabricante(fabricante:Fabricante[]):void{
-      this.tramiteStore.updateFabricanteTablaDatos(fabricante,TIPO_ACTUALIZACION.ELIMINAR);
+   * @method eliminarFabricante
+   * @description Método público que elimina fabricantes específicos de la tabla de datos.
+   * Recibe la lista actualizada después de la eliminación y actualiza el store
+   * utilizando el tipo de actualización ELIMINAR para mantener la integridad de los datos.
+   * 
+   * @param {Fabricante[]} fabricante - Arreglo actualizado de fabricantes después
+   *   de realizar la operación de eliminación
+   * @returns {void}
+   * @access public
+   * @since 1.0.0
+   */
+  eliminarFabricante(fabricante: Fabricante[]): void {
+    this.tramiteStore.updateFabricanteTablaDatos(fabricante, TIPO_ACTUALIZACION.ELIMINAR);
   }
 
   /**
    * @method eliminarDestinatario
-   * @description Elimina los destinatarios recibidos como parámetro y actualiza la tabla de destinatarios finales en el store.
-   *
-   * @param {Destinatario[]} destinatario - Lista de destinatarios actualizada después de la eliminación.
+   * @description Método público que procesa la eliminación de destinatarios finales.
+   * Actualiza el store con la lista resultante después de la eliminación,
+   * especificando el tipo de operación para el manejo correcto del estado.
+   * 
+   * @param {Destinatario[]} destinatario - Arreglo de destinatarios actualizado
+   *   post-eliminación que se sincronizará con el store
    * @returns {void}
+   * @access public
+   * @since 1.0.0
    */
-  eliminarDestinatario(destinatario:Destinatario[]):void{
-      this.tramiteStore.updateDestinatarioFinalTablaDatos(destinatario,TIPO_ACTUALIZACION.ELIMINAR);
+  eliminarDestinatario(destinatario: Destinatario[]): void {
+    this.tramiteStore.updateDestinatarioFinalTablaDatos(destinatario, TIPO_ACTUALIZACION.ELIMINAR);
   }
 
   /**
    * @method eliminarProveedor
-   * @description Elimina los proveedores recibidos como parámetro y actualiza la tabla de proveedores en el store.
-   *
-   * @param {Proveedor[]} proveedor - Lista de proveedores actualizada después de la eliminación.
+   * @description Método público que gestiona la eliminación de proveedores del trámite.
+   * Recibe la lista de proveedores actualizada y la sincroniza con el store
+   * usando el tipo de actualización apropiado para operaciones de eliminación.
+   * 
+   * @param {Proveedor[]} proveedor - Arreglo de proveedores resultante después
+   *   de la operación de eliminación
    * @returns {void}
+   * @access public
+   * @since 1.0.0
    */
-  eliminarProveedor(proveedor:Proveedor[]):void{
-      this.tramiteStore.updateProveedorTablaDatos(proveedor,TIPO_ACTUALIZACION.ELIMINAR);
+  eliminarProveedor(proveedor: Proveedor[]): void {
+    this.tramiteStore.updateProveedorTablaDatos(proveedor, TIPO_ACTUALIZACION.ELIMINAR);
   }
 
   /**
    * @method eliminarFacturador
-   * @description Elimina los facturadores recibidos como parámetro y actualiza la tabla de facturadores en el store.
-   *
-   * @param {Facturador[]} facturador - Lista de facturadores actualizada después de la eliminación.
+   * @description Método público que maneja la eliminación de facturadores del sistema.
+   * Actualiza el estado del store con la lista de facturadores resultante,
+   * especificando el tipo de operación ELIMINAR para el procesamiento correcto.
+   * 
+   * @param {Facturador[]} facturador - Arreglo de facturadores actualizado
+   *   después de realizar la eliminación correspondiente
    * @returns {void}
+   * @access public
+   * @since 1.0.0
    */
-  eliminarFacturador(facturador:Facturador[]):void{
-      this.tramiteStore.updateFacturadorTablaDatos(facturador,TIPO_ACTUALIZACION.ELIMINAR);
+  eliminarFacturador(facturador: Facturador[]): void {
+    this.tramiteStore.updateFacturadorTablaDatos(facturador, TIPO_ACTUALIZACION.ELIMINAR);
   }
 
   /**
-   * Método del ciclo de vida de Angular que se llama justo antes de que el componente sea destruido.
-   * Aquí se emiten señales para completar y limpiar cualquier suscripción o recurso que el componente
-   * haya estado utilizando, evitando posibles fugas de memoria.
-   *
+   * @method ngOnDestroy
+   * @description Hook del ciclo de vida de Angular que se ejecuta justo antes de que el
+   * componente sea destruido. Implementa la limpieza de recursos para prevenir fugas
+   * de memoria emitiendo una señal a través del Subject destroy$ que cancela todas
+   * las suscripciones activas, y posteriormente completa el Subject para liberar
+   * completamente los recursos.
+   * 
+   * Este método es crítico para el manejo adecuado de la memoria y debe ser llamado
+   * automáticamente por Angular cuando el componente sale del DOM.
+   * 
    * @returns {void}
+   * @implements {OnDestroy.ngOnDestroy}
    */
   ngOnDestroy(): void {
     this.destroy$.next();

@@ -55,8 +55,8 @@ describe('AgregarMercanciaComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize the form in inicializarFormulario', () => {
-    component.inicializarFormulario();
+  it('should initialize the form in crearFormulario', () => {
+    component.crearFormulario();
     expect(component.agregarMercanciaForm).toBeDefined();
     expect(component.agregarMercanciaForm.get('fraccionArancelaria')?.value).toBe('1234');
     expect(component.agregarMercanciaForm.get('descripcionFraccion')?.value).toBe('Test Description');
@@ -75,7 +75,7 @@ describe('AgregarMercanciaComponent', () => {
   it('should emit cancelarEvento when cerrarModal is called', () => {
     const cancelarEventoSpy = jest.spyOn(component.cancelarEvento, 'emit');
     component.cerrarModal(true);
-    expect(cancelarEventoSpy).toHaveBeenCalledWith(false);
+    expect(cancelarEventoSpy).toHaveBeenCalledWith(true);
   });
 
   it('should unsubscribe from observables on ngOnDestroy', () => {

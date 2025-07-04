@@ -1,3 +1,5 @@
+import { AvisoTabla, MercanciaTabla } from "../models/aviso-traslado.model";
+
 /**
  * Constante que define los pasos del wizard en el trámite.
  * 
@@ -78,4 +80,86 @@ export const TIPACA = [
     label: 'Carga Masiva',
   }
 ];
-
+/**
+ * @constant ENCABEZADAS_TABLA
+ * @description Configuración de los encabezados para la tabla de avisos.
+ * 
+ * Define las columnas y su configuración para la tabla de avisos. Cada columna incluye:
+ * - `encabezado`: El título de la columna.
+ * - `clave`: Una función que devuelve el valor correspondiente en los datos.
+ * - `orden`: La posición de la columna en la tabla.
+ */
+export const ENCABEZADAS_TABLA = [
+  { encabezado: 'RFC', clave: (ele: AvisoTabla): string => ele.rfc, orden: 1 },
+  {
+    encabezado: 'Nombre comercial',
+    clave: (ele: AvisoTabla): string => ele.nombreComercial,
+    orden: 2,
+  },
+  {
+    encabezado: 'Entidad federativa',
+    clave: (ele: AvisoTabla): string => ele.entidadFederativa,
+    orden: 3,
+  },
+  {
+    encabezado: 'Alcaldía o Municipio',
+    clave: (ele: AvisoTabla): string => ele.alcaldioOMuncipio,
+    orden: 4,
+  },
+  {
+    encabezado: 'Colonia',
+    clave: (ele: AvisoTabla): string => ele.colonia,
+    orden: 5,
+  },
+];
+/**
+ * @constant TABLA_DE_MERCANCIA
+ * @description Configuración de los encabezados para la tabla de mercancías.
+ * 
+ * Define las columnas y su configuración para la tabla de mercancías. Cada columna incluye:
+ * - `encabezado`: El título de la columna.
+ * - `clave`: Una función que devuelve el valor correspondiente en los datos.
+ * - `orden`: La posición de la columna en la tabla.
+ */
+export const TABLA_DE_MERCANCIA = [
+  { encabezado: 'Fracción arancelaria', clave: (ele: MercanciaTabla): string => ele.claveFraccionArancelaria, orden: 1 },
+  {
+    encabezado: 'NICO',
+    clave: (ele: MercanciaTabla): string => ele.nico,
+    orden: 2,
+  },
+  {
+    encabezado: 'Unidad de medida',
+    clave: (ele: MercanciaTabla): string => ele.claveUnidadMedida,
+    orden: 3,
+  },
+  {
+    encabezado: 'Cantidad',
+    clave: (ele: MercanciaTabla): string => ele.cantidad,
+    orden: 4,
+  },
+  {
+    encabezado: 'Valor USD',
+    clave: (ele: MercanciaTabla): string => ele.valorUSD,
+    orden: 5,
+  },
+  {
+    encabezado: 'Descripción de la Mercancía',
+    clave: (ele: MercanciaTabla): string => ele.descripcionMercancia,
+    orden: 6,
+  },
+  {
+    encabezado: 'Proceso llevará',
+    clave: (ele: MercanciaTabla): string => ele.descripcionProceso,
+    orden: 6,
+  }, {
+    encabezado: 'Número de exportación',
+    clave: (ele: MercanciaTabla): string => ele.numPedimentoExportacion,
+    orden: 6,
+  },
+  {
+    encabezado: 'Número de importación',
+    clave: (ele: MercanciaTabla): string => ele.numPedimentoImportacion,
+    orden: 6,
+  }
+];

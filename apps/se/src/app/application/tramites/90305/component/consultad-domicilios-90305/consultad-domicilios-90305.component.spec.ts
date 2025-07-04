@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
-import { of, Subject } from 'rxjs';
+import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
+import { of } from 'rxjs';
 import { CommonModule } from '@angular/common';
 
 import { ConsultadDomicilios90305Component } from './consultad-domicilios-90305.component';
@@ -34,41 +34,49 @@ describe('ConsultadDomicilios90305Component', () => {
     { id: 1, descripcion: 'Estado 1' },
     { id: 2, descripcion: 'Estado 2' },
   ];
+const MOCK_STATE: Tramite90305State = {
+  selectedEstado: 'Estado 1',
+  registroFederalContribuyentes: '',
+  representacionFederal: '',
+  tipoModificacion: '',
+  modificacionPrograma: ''
+};
+  
 
-  const MOCK_STATE: Tramite90305State = {
-    selectedEstado: 'Estado 1',
-  };
+  beforeEach(async () => {
+    Object.defineProperty(mockTramiteQuery, 'selectSolicitud$', {
+      get: () => of(MOCK_STATE),
+    });
 
-beforeEach(async () => {
-  Object.defineProperty(mockTramiteQuery, 'selectSolicitud$', {
-    get: () => of(MOCK_STATE),
-  });
+    Object.defineProperty(mockConsultaioQuery, 'selectConsultaioState$', {
+      get: () => of({ readonly: false }),
+    });
 
-  Object.defineProperty(mockConsultaioQuery, 'selectConsultaioState$', {
-    get: () => of({ readonly: false }), // change to true in other tests if needed
-  });
+    await TestBed.configureTestingModule({
+      imports: [
+        CommonModule,
+        ReactiveFormsModule,
+        TituloComponent,
+        CatalogoSelectComponent,
+        ConsultadDomicilios90305Component,
+      ],
+      providers: [
+        FormBuilder,
+        { provide: ProsecModificacionServiceTsService, useValue: mockProsecService },
+        { provide: Tramite90305Store, useValue: mockTramiteStore },
+        { provide: Tramite90305Query, useValue: mockTramiteQuery },
+        { provide: ConsultaioQuery, useValue: mockConsultaioQuery },
+      ],
+    }).compileComponents();
 
-  await TestBed.configureTestingModule({
-    imports: [
-      CommonModule,
-      ReactiveFormsModule,
-      TituloComponent,
-      CatalogoSelectComponent,
-      ConsultadDomicilios90305Component,
-    ],
-    providers: [
-      FormBuilder,
-      { provide: ProsecModificacionServiceTsService, useValue: mockProsecService },
-      { provide: Tramite90305Store, useValue: mockTramiteStore },
-      { provide: Tramite90305Query, useValue: mockTramiteQuery },
-      { provide: ConsultaioQuery, useValue: mockConsultaioQuery },
-    ],
-  }).compileComponents();
-
-  fixture = TestBed.createComponent(ConsultadDomicilios90305Component);
+ fixture = TestBed.createComponent(ConsultadDomicilios90305Component);
   component = fixture.componentInstance;
-});
-
+  // Use TestBed.inject to get FormBuilder for tests
+  const fb = TestBed.inject(FormBuilder);
+  component.formConsulta = fb.group({
+    estadoControl: ['', Validators.required]
+  });
+  });
 
   it('should create the component', () => {
     expect(component).toBeTruthy();
@@ -87,50 +95,50 @@ beforeEach(async () => {
 
   it('should initialize formConsulta with selectedEstado from state', () => {
     mockProsecService.getEstadoData.mockReturnValue(of(ESTADO_DATA));
-
     fixture.detectChanges();
-
     expect(component.formConsulta.get('estadoControl')?.value).toBe('Estado 1');
   });
 
-  describe('when esFormularioSoloLectura is true', () => {
-    let readonlyConsultaioQuery: any;
-
-    beforeEach(async () => {
-      readonlyConsultaioQuery = {
-        selectConsultaioState$: of({ readonly: true }),
-      };
-
-      await TestBed.resetTestingModule()
-        .configureTestingModule({
-          imports: [
-            CommonModule,
-            ReactiveFormsModule,
-            TituloComponent,
-            CatalogoSelectComponent,
-            ConsultadDomicilios90305Component,
-          ],
-          providers: [
-            FormBuilder,
-            { provide: ProsecModificacionServiceTsService, useValue: mockProsecService },
-            { provide: Tramite90305Store, useValue: mockTramiteStore },
-            { provide: Tramite90305Query, useValue: mockTramiteQuery },
-            { provide: ConsultaioQuery, useValue: readonlyConsultaioQuery },
-          ],
-        })
-        .compileComponents();
-
-      fixture = TestBed.createComponent(ConsultadDomicilios90305Component);
-      component = fixture.componentInstance;
-      mockProsecService.getEstadoData.mockReturnValue(of(ESTADO_DATA));
-      fixture.detectChanges();
+  describe('guardarDatosFormulario', () => {
+    it('should initialize form with selectedEstado and enable form when not readonly', () => {
+      component.solicitudState = { selectedEstado: 'Estado 1' } as any;
+      component.esFormularioSoloLectura = false;
+      component.guardarDatosFormulario();
+      expect(component.formConsulta.get('estadoControl')?.value).toBe('Estado 1');
+      expect(component.formConsulta.enabled).toBe(true);
     });
 
-    it('should set esFormularioSoloLectura to true', () => {
-      expect(component.esFormularioSoloLectura).toBe(false);
+    it('should initialize form with selectedEstado and disable form when readonly', () => {
+      component.solicitudState = { selectedEstado: 'Estado 2' } as any;
+      component.esFormularioSoloLectura = true;
+      component.guardarDatosFormulario();
+      expect(component.formConsulta.get('estadoControl')?.value).toBe('Estado 2');
+      expect(component.formConsulta.disabled).toBe(true);
     });
   });
 
+  describe('buscarDomicilios', () => {
+    it('should mark form as touched and not emit if invalid', () => {
+      const fb = TestBed.inject(FormBuilder);
+component.formConsulta = fb.group({
+  estadoControl: ['', Validators.required]
+});
+      const emitSpy = jest.spyOn(component.domicilioBuscado, 'emit');
+      component.buscarDomicilios();
+      expect(component.formConsulta.touched).toBe(true);
+      expect(emitSpy).not.toHaveBeenCalled();
+    });
+
+   it('should emit selected estado if form is valid', () => {
+  const fb = TestBed.inject(FormBuilder);
+  component.formConsulta = fb.group({
+    estadoControl: ['Estado 1', Validators.required]
+  });
+  const emitSpy = jest.spyOn(component.domicilioBuscado, 'emit');
+  component.buscarDomicilios();
+  expect(emitSpy).toHaveBeenCalledWith('Estado 1');
+});
+  });
 
   it('should set estadoCatalogo in getEstadoCatalogo()', () => {
     mockProsecService.getEstadoData.mockReturnValue(of(ESTADO_DATA));
@@ -145,22 +153,15 @@ beforeEach(async () => {
   });
 
   it('should call setSelectedEstado in getMunicipios()', () => {
-    mockProsecService.getEstadoData.mockReturnValue(of(ESTADO_DATA));
-
-    fixture.detectChanges();
-
-    component.formConsulta.get('estadoControl')?.setValue('Estado 2');
+    component.formConsulta.get('estadoControl')?.setValue('Estado Test');
     component.getMunicipios();
-
-    expect(mockTramiteStore.setSelectedEstado).toHaveBeenCalledWith('Estado 2');
+    expect(mockTramiteStore.setSelectedEstado).toHaveBeenCalledWith('Estado Test');
   });
 
   it('should call destroyNotifier$.next and complete on ngOnDestroy()', () => {
     const nextSpy = jest.spyOn((component as any).destroyNotifier$, 'next');
     const completeSpy = jest.spyOn((component as any).destroyNotifier$, 'complete');
-
     component.ngOnDestroy();
-
     expect(nextSpy).toHaveBeenCalled();
     expect(completeSpy).toHaveBeenCalled();
   });

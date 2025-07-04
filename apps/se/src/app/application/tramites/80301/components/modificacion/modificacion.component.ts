@@ -15,6 +15,7 @@ import {
 import { Solicitud80301State, Tramite80301Store } from '../../estados/tramite80301.store';
 
 import { CONFIGURACION_MODIFICACION } from '../../constantes/modificacion.enum';
+import { ComplementariaImmexComponent } from '../complementaria-immex/complementaria-immex.component';
 import { DatosDelModificacion } from '../../models/datos-tramite.model';
 import { SolicitudService } from '../../services/solicitud.service';
 import { Tramite80301Query } from '../../estados/tramite80301.query';
@@ -28,6 +29,7 @@ import { Tramite80301Query } from '../../estados/tramite80301.query';
     FormsModule,
     TituloComponent,
     TablaDinamicaComponent,
+    ComplementariaImmexComponent,
   ],
   templateUrl: './modificacion.component.html',
   styleUrl: './modificacion.component.css',
