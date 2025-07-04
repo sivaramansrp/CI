@@ -1,20 +1,26 @@
 import { ActivatedRoute, Router } from '@angular/router';
-import { AlertComponent, ConfiguracionColumna, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
-import { Component, EventEmitter,Input, Output } from '@angular/core';
-import {TercerosrelacionadosTable, TercerosrelacionadosdestinoTable} from '../../models/tercerosrelacionados.model';
+import { AlertComponent, CatalogoSelectComponent, ConfiguracionColumna, InputRadioComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Component, ElementRef, EventEmitter,Input, OnInit, Output, ViewChild } from '@angular/core';
+import {DatosDeLaSolicitud, TercerosrelacionadosTable, TercerosrelacionadosdestinoTable} from '../../models/tercerosrelacionados.model';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { OPCION_DE_BOTON_DE_RADIO, SELECCIONADO } from '../../constantes/tercerosrelacionados.enum';
 import { CommonModule } from '@angular/common';
-import { SELECCIONADO } from '../../constantes/tercerosrelacionados.enum';
+import { RadioOpcion } from '../../../tramites/220201/models/220201/certificado-zoosanitario.model';
 
 @Component({
   selector: 'app-tercerosrelacionados',
   standalone: true,
-  imports: [CommonModule,TituloComponent,AlertComponent,TablaDinamicaComponent],
+  imports: [CommonModule,TituloComponent,AlertComponent,TablaDinamicaComponent,ReactiveFormsModule,InputRadioComponent,CatalogoSelectComponent],
   templateUrl: './tercerosrelacionados.component.html',
   styleUrl: './tercerosrelacionados.component.scss',
 })
-export class TercerosrelacionadosComponent {
+export class TercerosrelacionadosComponent{
   infoAlert:string="alert-info"
   seleccionado:string = SELECCIONADO;
+  mostrarVista: boolean = false;
+  opcionDeBotonDeRadio: RadioOpcion[] =OPCION_DE_BOTON_DE_RADIO;
+  @ViewChild('nextField') nextField!: ElementRef<HTMLInputElement>;
+    @Input() catalogosDatos: DatosDeLaSolicitud = {} as DatosDeLaSolicitud;
     /**
        * Indica si el formulario debe mostrarse en modo solo lectura.
        *
@@ -73,10 +79,17 @@ export class TercerosrelacionadosComponent {
         { encabezado: 'Entidad Federativa', clave: (fila) => fila.estado, orden: 10 },
         { encabezado: 'Código Postal', clave: (fila) => fila.codigoPostal, orden: 11 },
       ];
-      
+       buscarForm!: FormGroup;
 
-constructor(public readonly router: Router,public route: ActivatedRoute) {}
-
+constructor(public readonly router: Router,public route: ActivatedRoute,private fb: FormBuilder) {
+  this.buscarForm = this.fb.group({
+      tipoPersona: ['yes'],
+      razonSocial: [''],
+      correoElectronico: [''],
+      pais: ['1'],
+      entidadFederativa: ['']
+    });
+}
 goToAgregarDestinatario():void {
   this.router.navigate(['../agregar-destinatario'], { relativeTo: this.route });
 }
@@ -100,4 +113,8 @@ modificarDestinatario():void{
     this.eliminarSeleccion.emit(this.listaDeFilaSeleccionada);
   }
 
+buscarDestinatario():void{
+this.mostrarVista=!this.mostrarVista;
+  this.nextField.nativeElement.focus();
+}
 }

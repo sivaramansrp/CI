@@ -1,3 +1,5 @@
+import { Catalogo } from "@libs/shared/data-access-user/src";
+
 export interface TercerosrelacionadosTable {
   exportadorNombre: string;
   exportadorTelefono: string;
@@ -22,4 +24,9 @@ export interface TercerosrelacionadosdestinoTable {
   lada?: string;
   telefono?: string;
   correo?: string;
+}
+
+export interface DatosDeLaSolicitud{
+  paises: Catalogo[];
+  estados: Catalogo[];
 }

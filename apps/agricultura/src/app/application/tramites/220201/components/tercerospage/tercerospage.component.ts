@@ -1,10 +1,11 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
+import { DatosDeLaSolicitud, TercerosrelacionadosdestinoTable } from '../../../../shared/models/tercerosrelacionados.model';
 import { Subject, takeUntil } from 'rxjs';
 import { CertificadoZoosanitarioServiceService } from '../../services/220201/certificado-zoosanitario.service';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { TercerosrelacionadosComponent } from '../../../../shared/components/tercerosrelacionados/tercerosrelacionados.component';
-import { TercerosrelacionadosdestinoTable } from '../../../../shared/models/tercerosrelacionados.model';
+import { TercerosrelacionadosService } from '../../../../shared/components/services/tercerosrelacionados/tercerosrelacionados.service';
 import { ZoosanitarioQuery } from '../../queries/220201/zoosanitario.query';
 
 /**
@@ -29,7 +30,7 @@ import { ZoosanitarioQuery } from '../../queries/220201/zoosanitario.query';
   templateUrl: './tercerospage.component.html',
   styleUrl: './tercerospage.component.scss',
 })
-export class TercerospageComponent implements OnInit, OnDestroy {
+export class TercerospageComponent implements OnInit, OnDestroy,AfterViewInit {
   /**
    * Subject utilizado como notificador para destruir suscripciones y evitar fugas de memoria.
    * 
@@ -55,7 +56,7 @@ export class TercerospageComponent implements OnInit, OnDestroy {
    * @property {boolean} esFormularioSoloLectura
    */
   esFormularioSoloLectura: boolean = false;
-
+catalogosDatos: DatosDeLaSolicitud = {} as DatosDeLaSolicitud;
   /**
    * Constructor del componente.
    * @method constructor
@@ -66,7 +67,8 @@ export class TercerospageComponent implements OnInit, OnDestroy {
   constructor(
     private consultaQuery: ConsultaioQuery,
     private readonly certificadoZoosanitarioServices: CertificadoZoosanitarioServiceService,
-    private readonly certificadoZoosanitarioQuery: ZoosanitarioQuery
+    private readonly certificadoZoosanitarioQuery: ZoosanitarioQuery,
+    public tercerosrelacionadosService: TercerosrelacionadosService
   ) {}
 
   /**
@@ -87,6 +89,21 @@ export class TercerospageComponent implements OnInit, OnDestroy {
           this.personas = datosDeLaSolicitud;
         }
       });
+  }
+  ngAfterViewInit(): void {
+    this.pairsCatalogChange();
+    this.estadoCatalogChange();
+  }
+
+  pairsCatalogChange():void {
+       this.tercerosrelacionadosService.obtenerSelectorList('paisprocedencia.json').pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
+          this.catalogosDatos.paises = data;
+        })
+  }
+  estadoCatalogChange():void {
+    this.tercerosrelacionadosService.obtenerSelectorList('estados.json').pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
+      this.catalogosDatos.estados = data;
+    })
   }
   /**
    * Navega a la página de agregar destinatario.
