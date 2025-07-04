@@ -1,4 +1,5 @@
 import { PersonaTerceros } from "@ng-mf/data-access-user";
+import { TercerosrelacionadosdestinoTable } from "../../../../shared/models/tercerosrelacionados.model";
 
 /**
  * @fileoverview Modelos y tipos para la captura y gestión de solicitudes del trámite 220201.
@@ -20,7 +21,7 @@ export interface CapturarSolicitud {
   datosDeLaSolicitud: DatosDeLaSolicitud;
   datosParaMovilizacionNacional: DatosParaMovilizacionNacional;
   pagoDeDerechos: PagoDeDerechos;
-  tercerosRelacionados: PersonaTerceros[];
+  tercerosRelacionados: TercerosrelacionadosdestinoTable[];
   validarEnvio: ValidarEnvio;
 }
 

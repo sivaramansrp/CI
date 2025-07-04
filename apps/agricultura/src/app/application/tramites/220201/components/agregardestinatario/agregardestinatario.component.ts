@@ -1,15 +1,17 @@
 import { AfterViewInit, Component, Input, OnInit, Output } from '@angular/core';
-import { Catalogo, CatalogoSelectComponent, InputRadioComponent } from '@libs/shared/data-access-user/src';
+import { Catalogo, CatalogoSelectComponent, InputRadioComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
+import { CertificadoZoosanitarioServiceService } from '../../services/220201/certificado-zoosanitario.service';
 import { CommonModule } from '@angular/common';
 import { EventEmitter } from '@angular/core';
-import { OPCION_DE_BOTON_DE_RADIO } from '../../constantes/tercerosrelacionados.enum';
-import { RadioOpcion } from '../../../tramites/220201/models/220201/certificado-zoosanitario.model';
+import { OPCION_DE_BOTON_DE_RADIO } from '../../../../shared/constantes/tercerosrelacionados.enum';
+import { RadioOpcion } from '../../models/220201/certificado-zoosanitario.model';
 import { Router } from '@angular/router';
-import { TercerosrelacionadosService } from '../services/tercerosrelacionados/tercerosrelacionados.service';
-import { TercerosrelacionadosdestinoTable } from '../../models/tercerosrelacionados.model';
-import { TituloComponent } from "../../../../../../../../libs/shared/data-access-user/src/tramites/components/titulo/titulo.component";
+import { TercerosrelacionadosService } from '../../../../shared/components/services/tercerosrelacionados/tercerosrelacionados.service';
+import { TercerosrelacionadosdestinoTable } from '../../../../shared/models/tercerosrelacionados.model';
+import { ZoosanitarioQuery } from '../../queries/220201/zoosanitario.query';
+
 
 @Component({
   selector: 'app-agregardestinatario',
@@ -53,7 +55,10 @@ export class AgregardestinatarioComponent implements OnInit,AfterViewInit {
    */
   private destroyNotifier$ = new Subject<void>();
   destinatarioForm!: FormGroup;
-  constructor(public fb: FormBuilder,public tercerosrelacionadosService: TercerosrelacionadosService,private router:Router){}
+  constructor(public fb: FormBuilder,public tercerosrelacionadosService: TercerosrelacionadosService,private router:Router,
+  private readonly certificadoZoosanitarioServices: CertificadoZoosanitarioServiceService,
+  private readonly certificadoZoosanitarioQuery: ZoosanitarioQuery,
+  ){}
   ngOnInit(): void {
      this.destinatarioForm = this.fb.group({
       tipoMercancia: ['yes', Validators.required],
@@ -102,7 +107,7 @@ export class AgregardestinatarioComponent implements OnInit,AfterViewInit {
   }
   onGuardarDestinatario():void{
     if (this.destinatarioForm.valid) {
-        this.guardarDestinatario.emit(this.destinatarioForm.value);
+      this.certificadoZoosanitarioServices.updateTercerosRelacionados(this.destinatarioForm.value as TercerosrelacionadosdestinoTable);
          this.router.navigate(['/pago/certificado-zoosanitario/zoosanitario']);
     }
     else {

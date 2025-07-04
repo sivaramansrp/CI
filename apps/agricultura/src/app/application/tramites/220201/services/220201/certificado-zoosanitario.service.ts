@@ -6,14 +6,12 @@ import {
   ValidarEnvio,
 } from '../../models/220201/capturar-solicitud.model';
 
-import { Injectable } from '@angular/core';
-
 import { Observable, map } from 'rxjs';
-
-import { ZoosanitarioStore } from '../../estados/220201/zoosanitario.store';
-
-import { PersonaTerceros, SeccionLibStore } from '@libs/shared/data-access-user/src';
 import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { SeccionLibStore } from '@libs/shared/data-access-user/src';
+import { TercerosrelacionadosdestinoTable } from '../../../../shared/models/tercerosrelacionados.model';
+import { ZoosanitarioStore } from '../../estados/220201/zoosanitario.store';
 
 /**
  * Servicio para la gestión de solicitudes del certificado zoosanitario.
@@ -64,11 +62,20 @@ export class CertificadoZoosanitarioServiceService {
   /**
    * Actualiza la lista de terceros relacionados con la solicitud.
    * @method updateTercerosRelacionados
-   * @param {PersonaTerceros[]} tercerosRelacionados Lista de terceros.
+   * @param {TercerosrelacionadosdestinoTable[]} tercerosRelacionados Lista de terceros.
    * @memberof CertificadoZoosanitarioServiceService
    */
-  updateTercerosRelacionados(tercerosRelacionados: PersonaTerceros[]): void {
+  updateTercerosRelacionados(tercerosRelacionados: TercerosrelacionadosdestinoTable): void {
     this.zoosanitarioStore.actualizarTercerosRelacionados(tercerosRelacionados);
+  }
+    /**
+   * Actualiza la lista de terceros relacionados con la solicitud.
+   * @method updateTercerosRelacionados
+   * @param {TercerosrelacionadosdestinoTable[]} tercerosRelacionados Lista de terceros.
+   * @memberof CertificadoZoosanitarioServiceService
+   */
+  updateTercerosRelacionado(tercerosRelacionados: TercerosrelacionadosdestinoTable[]): void {
+    this.zoosanitarioStore.updateTercerosRelacionados(tercerosRelacionados);
   }
 
   /**
@@ -198,7 +205,7 @@ export class CertificadoZoosanitarioServiceService {
     this.updatePagoDeDerechos(datos?.pagoDeDerechos || {} as PagoDeDerechos);
     this.updateDatosDeLaSolicitud(datos?.datosDeLaSolicitud || {} as DatosDeLaSolicitud);
     this.updateDatosParaMovilizacionNacional(datos?.datosParaMovilizacionNacional || {} as DatosDeLaSolicitud);
-    this.updateTercerosRelacionados(datos?.tercerosRelacionados || {} as PersonaTerceros[] );
+    this.updateTercerosRelacionado(datos?.tercerosRelacionados || {} as TercerosrelacionadosdestinoTable[] );
     this.updateValidarEnvio(datos?.validarEnvio || {} as ValidarEnvio);
   }
 }
