@@ -146,4 +146,27 @@ export class AgregardestinatarioComponent implements OnInit,AfterViewInit {
     this.destinatarioForm.markAllAsTouched(); 
     }
   }
+  onLimpiarDestinatario():void{
+    this.destinatarioForm.reset();
+    this.destinatarioForm.markAsPristine();
+    this.destinatarioForm.markAsUntouched();
+    this.destinatarioForm.patchValue({
+      tipoMercancia: 'yes',
+      pais: '1',})
+  }
+  onCancelarDestinatario():void{
+    this.router.navigate(['/pago/certificado-zoosanitario/zoosanitario']);  
+  }
+  enCambioValorRadio(): void {
+      const RAZON_SOCIAL_CTRL = this.destinatarioForm.get('razonSocial');
+    if(this.destinatarioForm.value.tipoMercancia === 'no'){
+RAZON_SOCIAL_CTRL?.clearValidators();
+RAZON_SOCIAL_CTRL?.updateValueAndValidity();
+  }
+else{
+  RAZON_SOCIAL_CTRL?.setValidators([Validators.required]);
+  RAZON_SOCIAL_CTRL?.updateValueAndValidity();
 }
+  }
+}
+

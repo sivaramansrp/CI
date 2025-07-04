@@ -11,7 +11,7 @@
                     </div>
                     <div>
                         <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [layout]="'vertical'"
-                            name="tipoMercancia" formControlName="tipoMercancia"></app-input-radio>
+                            name="tipoMercancia" formControlName="tipoMercancia" (valueChange)="enCambioValorRadio()"></app-input-radio>
                     </div>
                 </div>
             </div>
@@ -116,10 +116,10 @@
                 </div>
                 <div class="row mt-5 mb-5">
                     <div class="col-md-12 justify-content-end d-flex ">
-                        <button type="button" class="btn btn-primary me-5"  [disabled]="esFormularioSoloLectura" >
+                        <button type="button" class="btn btn-primary me-5"  [disabled]="esFormularioSoloLectura"  (click)="onLimpiarDestinatario()" >
                          Limpiar 
                         </button>
-                        <button type="button" class="btn btn-default me-5" [disabled]="esFormularioSoloLectura" >
+                        <button type="button" class="btn btn-default me-5" [disabled]="esFormularioSoloLectura"  (click)="onCancelarDestinatario()" >
                             Cancelar 
                         </button>
                         <button type="button" class="btn btn-danger" 
