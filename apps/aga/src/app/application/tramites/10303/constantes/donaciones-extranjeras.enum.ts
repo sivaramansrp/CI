@@ -62,3 +62,76 @@ export const OPCIONES_DE_BOTON_DE_RADIO = [
         value: '0',
     }
 ];
+
+/**
+ * Define los tipos de mercancía y los campos asociados que deben ser validados.
+ */
+export const VEHICULO_TIPO_DE_MERCANCIA = [
+    'datosMercancia.paisProcedenciaOtro',
+    'datosMercancia.condicionMercancia',
+    'datosMercancia.marca',
+    'datosMercancia.ano',
+    'datosMercancia.modelo',
+    'datosMercancia.serieNumero',
+    'datosMercancia.pasajerosNumero',
+    'datosMercancia.cilindrada',
+    'datosMercancia.combustibleTipo',
+    'datosMercancia.destinoDonacion',
+    'datosMercancia.solicitudDeInspeccion',
+    'datosMercancia.justificacionMerca',
+    'datosMercancia.descripcionMercanciaOtro',
+];
+
+/**
+ * Define los tipos de mercancía y los campos asociados que deben ser validados para medicamentos.
+ */
+export const MEDICAMENTOS_TIPO_DE_MERCANCIA = [
+    'datosMercancia.cantidadUMC',
+    'datosMercancia.cantidadUMT',
+    'datosMercancia.unidadMedida',
+    'datosMercancia.UMT',
+    'datosMercancia.paisProcedenciaOtro',
+    'datosMercancia.condicionMercancia',
+    'datosCofepris.fechaCaducidad',
+    'datosCofepris.ingredienteActivo',
+    'datosCofepris.tipoMedicamento',
+    'datosCofepris.presentacionFarma',
+    'datosCofepris.paisOrigenMedicamento',
+    'datosCofepris.paisProcedenciaMedicamento',
+    'datosMercancia.destinoDonacion',
+    'datosMercancia.solicitudDeInspeccion',
+    'datosMercancia.justificacionMerca',
+    'datosMercancia.descripcionMercanciaOtro',
+];
+
+/**
+ * Define los tipos de mercancía y los campos asociados que deben ser validados para equipo médico.
+ */
+export const MEDICOS_EQUIPO_TIPO_DE_MERCANCIA = [
+    'datosMercancia.cantidadUMC',
+    'datosMercancia.cantidadUMT',
+    'datosMercancia.unidadMedida',
+    'datosMercancia.UMT',
+    'datosMercancia.paisProcedenciaOtro',
+    'datosMercancia.condicionMercancia',
+    'datosMercancia.destinoDonacion',
+    'datosMercancia.solicitudDeInspeccion',
+    'datosMercancia.justificacionMerca',
+    'datosMercancia.descripcionMercanciaOtro',
+];
+
+/**
+ * Define los tipos de mercancía y los campos asociados que deben ser validados para alimentos.
+ */
+export const GENERAL_TIPO_DE_MERCANCIA = [
+    'datosMercancia.cantidadUMC',
+    'datosMercancia.cantidadUMT',
+    'datosMercancia.unidadMedida',
+    'datosMercancia.UMT',
+    'datosMercancia.paisProcedenciaOtro',
+    'datosMercancia.condicionMercancia',
+    'datosMercancia.destinoDonacion',
+    'datosMercancia.solicitudDeInspeccion',
+    'datosMercancia.justificacionMerca',
+    'datosMercancia.descripcionMercanciaOtro',
+];
