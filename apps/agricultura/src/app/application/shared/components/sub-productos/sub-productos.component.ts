@@ -1,4 +1,4 @@
-import { CatalogoSelectComponent, ConfiguracionColumna, TablaDinamicaComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { CatalogoSelectComponent, ConfiguracionColumna, InputRadioComponent, TablaDinamicaComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule, Location } from '@angular/common';
 import { Component, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { DetallasDatos, ProductoDetallaEventos, ProductosCatalogosDatos } from '../../models/datos-de-la-solicitue.model';
@@ -11,7 +11,7 @@ import { Subject } from 'rxjs';
 @Component({
   selector: 'app-sub-productos',
   standalone: true,
-  imports: [CommonModule, CatalogoSelectComponent, TituloComponent, ReactiveFormsModule, TablaDinamicaComponent],
+  imports: [CommonModule, CatalogoSelectComponent, TituloComponent, ReactiveFormsModule, TablaDinamicaComponent,InputRadioComponent],
   templateUrl: './sub-productos.component.html',
   styleUrl: './sub-productos.component.scss',
 })
