@@ -54,21 +54,6 @@ private jsonUrl = 'assets/json/33303';
     }
 
  /**
-   * @method
-   * @name obtenerRadio
-   * @description
-   * Obtiene una lista de objetos de tipo `PreOperativo` desde un archivo JSON local.
-   * @returns {Observable<PreOperativo[]>} Un observable que emite un arreglo de objetos `PreOperativo`.
-   * @example
-   * this.avisoUnicoService.obtenerRadio().subscribe((data: PreOperativo[]) => {
-   *   console.log(data);
-   * });
-   */
-  obtenerRadio(): Observable<PreOperativo[]> {
-    return this.http.get<PreOperativo[]>('assets/json/317/tipoPersonaradio.json');
-  }
-
-  /**
      * Método para obtener el tipo de aviso desde un archivo JSON.
      * Se realiza una solicitud HTTP y se maneja cualquier error que pueda ocurrir.
      *

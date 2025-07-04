@@ -98,6 +98,8 @@ export interface UnicoState {
   changesToLegalDocuments: boolean;
   mergerOrSplitNotice?: boolean;
   additionFractions?: boolean;
+  additionmodificación?: boolean;
+  additionPresentación?: boolean;
   acepto253?: boolean;
 }
 
@@ -129,6 +131,8 @@ export function createInitialState(): UnicoState {
     changesToLegalDocuments: false,
     mergerOrSplitNotice: false,
     additionFractions: false,
+    additionmodificación: false,
+    additionPresentación: false,
     acepto253: false,
   };
 }
@@ -306,4 +310,105 @@ export class UnicoStore extends Store<UnicoState> {
       modalidadCertificacion: EV
     }));
   }
+  /**
+   * Actualiza el estado de los proveedores extranjeros.
+   * 
+   * @param {boolean} foreignClientsSuppliers - Nuevo estado de los proveedores extranjeros.
+   */
+  public setforeignClientsSuppliers(foreignClientsSuppliers: boolean): void {
+    this.update((state) => ({
+      ...state,
+      foreignClientsSuppliers,
+    }));
+  
+}
+  /**
+   * Actualiza el estado de los proveedores nacionales.
+   * 
+   * @param {boolean} nationalSuppliers - Nuevo estado de los proveedores nacionales.
+   */
+  public setnationalSuppliers(nationalSuppliers: boolean): void {
+    this.update((state) => ({
+      ...state,
+      nationalSuppliers,
+    }));
+  }
+  /**
+   * Actualiza el estado de las modificaciones de miembros.
+   * 
+   * @param {boolean} modificationsMembers - Nuevo estado de las modificaciones de miembros.
+   */
+  public setmodificationsMembers(modificationsMembers: boolean): void {
+    this.update((state) => ({
+      ...state,
+      modificationsMembers,
+    }));
+}
+  /**
+   * Actualiza el estado de los cambios a documentos legales.
+   * 
+   * @param {boolean} changesToLegalDocuments - Nuevo estado de los cambios a documentos legales.
+   */
+  public setchangesToLegalDocuments(changesToLegalDocuments: boolean): void {
+    this.update((state) => ({
+      ...state,
+      changesToLegalDocuments,
+    }));
+  }
+  /**
+   * Actualiza el estado de la notificación de fusión o escisión.
+   * 
+   * @param {boolean} mergerOrSplitNotice - Nuevo estado de la notificación de fusión o escisión.
+   */
+  public setmergerOrSplitNotice(mergerOrSplitNotice: boolean): void {
+    this.update((state) => ({
+      ...state,
+      mergerOrSplitNotice,
+    }));
+
+}
+  /**
+   * Actualiza el estado de las fracciones adicionales.
+   * 
+   * @param {boolean} additionFractions - Nuevo estado de las fracciones adicionales.
+   */
+  public setadditionFractions(additionFractions: boolean): void {
+    this.update((state) => ({
+      ...state,
+      additionFractions,
+    }));
+  }
+  /**
+   * Actualiza el estado de la adición o modificación.
+   * 
+   * @param {boolean} additionmodificación - Nuevo estado de la adición o modificación.
+   */
+  public setadditionmodificación(additionmodificación: boolean): void {
+    this.update((state) => ({
+      ...state,
+      additionmodificación,
+    }));
+}
+  /**
+   * Actualiza el estado de la presentación de adición.
+   * 
+   * @param {boolean} additionPresentación - Nuevo estado de la presentación de adición.
+   */
+  public setadditionPresentación(additionPresentación: boolean): void {
+    this.update((state) => ({
+      ...state,
+      additionPresentación,
+    }));
+  }
+  /**
+   * Actualiza el estado de la aceptación del aviso 253.
+   * 
+   * @param {boolean} acepto253 - Nuevo estado de aceptación del aviso 253.
+   */
+  public setacepto253(acepto253: boolean): void {
+    this.update((state) => ({
+      ...state,
+      acepto253,
+    }));
+}
 }

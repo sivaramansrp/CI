@@ -117,6 +117,8 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
       changesToLegalDocuments: [this.solicitudState?.changesToLegalDocuments],
       mergerOrSplitNotice: [this.solicitudState?.mergerOrSplitNotice],
       additionFractions: [this.solicitudState?.additionFractions],
+      additionmodificación: [this.solicitudState?.additionmodificación],
+      additionPresentación: [this.solicitudState?.additionPresentación],
       acepto253: [this.solicitudState?.acepto253, Validators.required],
     });
   }
@@ -125,6 +127,17 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
    */
   aiEnviar(): void {
     this.tabEnabledData.emit(this.miFormulario.value);
+  }
+
+  /**
+   * Establece valores en el almacén desde el formulario.
+   * @param form Formulario reactivo.
+   * @param campo Nombre del campo en el formulario.
+   * @param metodoNombre Nombre del método en el almacén.
+   */
+  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof UnicoStore): void {
+    const VALOR = form.get(campo)?.value;
+    (this.unicoStore[metodoNombre] as (value: string) => void)(VALOR);
   }
   ngOnDestroy(): void {
     this.destroy$.next();

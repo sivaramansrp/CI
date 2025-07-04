@@ -154,13 +154,7 @@ export class AvisoDeRenovacionComponent implements OnInit, OnDestroy {
         this.localidadList = data as Catalogo[];
       });
 
-    this.service.obtenerRadio()
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe((resp) => {
-        this.tipoPersonaOptions = resp;
-      });
-
-    if (this.esFormularioSoloLectura) {
+ if (this.esFormularioSoloLectura) {
       this.avisoForm.disable();
     } else {
       this.avisoForm.enable();
