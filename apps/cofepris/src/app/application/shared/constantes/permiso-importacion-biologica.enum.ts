@@ -15,7 +15,7 @@ export const MANIFIESTOS_ALERT = {
  */
 export const FECHA_PAGO= {
   labelNombre:'Fecha de pago',
-  required: true,
+  required: false,
   habilitado: true,
 }
 
