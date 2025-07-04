@@ -15,8 +15,11 @@
       <solicitante [tabindex]="1"></solicitante>
       }
       @case (2) {
-      <app-datos-de-la-solicitud [tabindex]="2"></app-datos-de-la-solicitud>
-      }
+        @if(esDatosRespuesta){
+          <app-datos-de-la-solicitud [tabindex]="2"></app-datos-de-la-solicitud>
+
+          }
+        }
       }
     </ng-container>
   </div>
