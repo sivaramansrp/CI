@@ -27,6 +27,14 @@ export class FitosanitarioQuery extends Query<ListaDeDatosFinal> {
         super(store);
     }
 
+  /**
+   * Selector para obtener la lista de terceros relacionados.
+   *
+   * @readonly
+   * @type {Observable<any>}
+   * @memberof FitosanitarioQuery
+   */
+  seleccionarTercerosRelacionados$ = this.select(estado => estado.tercerosRelacionados);
     
   /**
    * Selector para obtener los datos de pago de derechos.

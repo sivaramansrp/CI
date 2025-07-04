@@ -1,4 +1,4 @@
-import { CatalogoSelectComponent, ConfiguracionColumna, TablaDinamicaComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { CatalogoSelectComponent, ConfiguracionColumna, InputRadioComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule, Location } from '@angular/common';
 import { Component, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { DetallasDatos, ProductoDetallaEventos, ProductosCatalogosDatos } from '../../models/datos-de-la-solicitue.model';
@@ -11,7 +11,7 @@ import { Subject } from 'rxjs';
 @Component({
   selector: 'app-sub-productos',
   standalone: true,
-  imports: [CommonModule, CatalogoSelectComponent, TituloComponent, ReactiveFormsModule, TablaDinamicaComponent],
+  imports: [CommonModule, CatalogoSelectComponent, TituloComponent, ReactiveFormsModule, TablaDinamicaComponent, InputRadioComponent],
   templateUrl: './sub-productos.component.html',
   styleUrl: './sub-productos.component.scss',
 })
@@ -68,6 +68,14 @@ public detallasDatosTablaSeleccionada: DetallasDatos[] = [];
   ];
 
   /**
+   * Indica si el formulario debe mostrarse en modo solo lectura.
+   * Cuando es true, los campos del formulario no serán editables por el usuario.
+   * 
+   * @type {boolean}
+   */
+  public tablaSeleccion: TablaSeleccion = TablaSeleccion.CHECKBOX;
+
+/**
    * Evento que se emite cuando se agregan datos al formulario de solicitud de animales vivos.
    * Este evento permite al componente padre recibir los datos del formulario para su procesamiento.
    * 
@@ -153,7 +161,7 @@ public detallasDatosTablaSeleccionada: DetallasDatos[] = [];
     this.agregarDatosFormulario.emit(
       {
         formulario: this.productosForm.value,
-        // tablaDatos: this.sensiblesTablaDatos
+        detallasDatosTablaDatos: this.detallasDatosTablaDatos
       }
     );
     this.ubicaccion.back();
@@ -168,9 +176,33 @@ public detallasDatosTablaSeleccionada: DetallasDatos[] = [];
    */
   limpiarAnimalesVivo(): void {
     this.productosForm.reset();
+    this.detallasDatosTablaDatos = [];
   }
 
-      /**
+  /**
+   * Agrega un nuevo detalle a la tabla de datos.
+   * Este método crea un nuevo objeto `DetallasDatos` a partir del formulario `detalleForm`
+   * y lo agrega al arreglo `detallasDatosTablaDatos`.
+   */
+  eliminarDetalle(): void {
+    this.detallasDatosTablaDatos = [];
+  }
+
+  agregarDetalle(): void {
+    const VALOR: DetallasDatos = {
+      numeroDeLote: this.detalleForm.value.numeroLote,
+      fechaElaboracionEmpaqueProceso: '',
+      fechaProduccionSacrificio: '',
+      fechaCaducidadProducto: '',
+      fechaFinElaboracionEmpaqueProceso: '',
+      fechaFinProduccionSacrificio: '',
+      fechaFinCaducidadProducto: ''
+    }
+    this.detallasDatosTablaDatos.push(VALOR);
+    this.detalleForm.reset();
+  }
+
+  /**
    * Método del ciclo de vida de Angular que se llama justo antes de destruir el componente.
    * Emite una señal a través del observable `destroy$` para notificar a los suscriptores que deben limpiar recursos y cancelar suscripciones.
    * Posteriormente, completa el observable para evitar fugas de memoria.

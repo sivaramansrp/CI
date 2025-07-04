@@ -1,4 +1,5 @@
 import { PersonaTerceros } from "@libs/shared/data-access-user/src";
+import { TercerosrelacionadosdestinoTable } from "../../../../shared/models/tercerosrelacionados.model";
 /**
  * @interface ListaPasosWizard
  * @description 
@@ -117,6 +118,10 @@ export interface ListaDeDatosFinal {
      * Arreglo de personas terceros asociadas.
      */
     personas: PersonaTerceros[];
+      /**
+   * Lista de terceros relacionados con la solicitud.
+   */
+  tercerosRelacionados: TercerosrelacionadosdestinoTable[];
 }
 
 /**
@@ -430,19 +435,24 @@ export function createDatosState(params: Partial<ListaDeDatosFinal> = {}): Lista
         },
         tablaDatos: params.tablaDatos || [],
         selectedDatos: params.selectedDatos || [],
-        personas: params.personas || []
+        personas: params.personas || [],
+        tercerosRelacionados: params.tercerosRelacionados || []
     }
-}
-
+}  
 
 /**
  * Interfaz que define una opción para un control de selección tipo radio button.
- * 
  * @interface RadioOpcion
  * @property {string} label - Etiqueta visible para el usuario.
  * @property {string} value - Valor interno asignado a la opción seleccionada.
  */
 export interface RadioOpcion {
+    /**
+     * Etiqueta visible para el usuario.
+     */
     label: string;
+    /**
+     * Valor interno asignado a la opción seleccionada.
+     */
     value: string;
-}   
+}

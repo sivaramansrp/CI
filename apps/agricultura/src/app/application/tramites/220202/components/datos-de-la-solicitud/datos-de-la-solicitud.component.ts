@@ -576,11 +576,18 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   agregarMercancia(): void {
     this.seleccionTabla([]);
-    if(this.forma.get('tipoMercancia')?.value === 'yes') {
-      this.router.navigate(['../animales-vivo'], {
-        relativeTo: this.activatedROute,
-      });
+    let URL = '';
+    if (this.forma.get('tipoMercancia')?.value === 'yes') {
+      URL = '../animales-vivo';
+    } else if (this.forma.get('tipoMercancia')?.value === 'no') {
+      URL = '../sub-productos'
     }
+    if (URL === '') {
+      return;
+    }
+    this.router.navigate([URL], {
+      relativeTo: this.activatedROute,
+    });
   }
 
   /**

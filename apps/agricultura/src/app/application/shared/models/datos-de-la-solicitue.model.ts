@@ -115,7 +115,7 @@ export interface ProductoDetallasForm {
 
 export interface ProductoDetallaEventos {
   formulario: ProductoDetallasForm;
-  // tablaDatos: Sensible[]
+  detallasDatosTablaDatos: DetallasDatos[]
 }
 
 
