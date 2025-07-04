@@ -165,7 +165,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       claveDelPadron: [
         {
           value: this.dataDeLaSolicitudState?.claveDelPadron || '',
-          disabled: (this.dataDeLaSolicitudState?.productorDeCafe || 'No') === 'No', // Disable if default is 'No'
+          disabled: (this.dataDeLaSolicitudState?.productorDeCafe || 'No') === 'No', // Deshabilitar si el valor predeterminado es 'No'
         },
       ],
       observaciones: [this.dataDeLaSolicitudState?.observaciones,[Validators.required, Validators.maxLength(4000)]],
