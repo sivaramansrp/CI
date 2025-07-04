@@ -7,7 +7,7 @@ import { PasoDuosComponent } from './pages/paso-duos/paso-duos.component';
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 import { RubroTransporteFerroviarioRoutingModule } from './rubro-transporte-ferroviario-routing.module';
-import { TercerosRelacionadosComponent } from '../32605/components/terceros-relacionados/terceros-relacionados.component';
+import { TercerosRelacionadosComponent } from '../../shared/components/terceros-relacionados/terceros-relacionados.component';
 
 @NgModule({
   declarations: [
