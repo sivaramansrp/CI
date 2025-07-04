@@ -1,11 +1,14 @@
 import { AVISO_OPCIONES, CASO_FORTUITO, DESTRUCCION_FECHA, ETIQUETA_DE_ARCHIVO, MENSAJE, TEXTO } from '../../constantes/destruccion-o-donacion';
-import { AlertComponent, InputFechaComponent, InputRadioComponent, SeccionLibQuery, SeccionLibState, SeccionLibStore, TituloComponent } from '@libs/shared/data-access-user/src';
+import { AlertComponent, Catalogo, CatalogoSelectComponent, CatalogosSelect, InputFechaComponent, InputRadioComponent, SeccionLibQuery, SeccionLibState, SeccionLibStore, TituloComponent } from '@libs/shared/data-access-user/src';
+import { AvisoDeMercanciaService } from '../service/aviso-de-mercancia';
+
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { DestruccionState, DestruccionStore } from '../../estados/Tramite32509.store';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { DestruccionQuery } from '../../estados/Tramite32509.query';
+
 
 /**
  * @component
@@ -23,7 +26,7 @@ import { DestruccionQuery } from '../../estados/Tramite32509.query';
   templateUrl: './tipo-de-aviso.component.html',
   styleUrl: './tipo-de-aviso.component.scss',
   standalone: true,
-  imports: [ReactiveFormsModule, AlertComponent, InputFechaComponent, TituloComponent, InputRadioComponent, CommonModule]
+  imports: [ReactiveFormsModule, AlertComponent, InputFechaComponent, TituloComponent, InputRadioComponent, CommonModule,CatalogoSelectComponent]
 })
 export class TipoDeAvisoComponent implements OnInit, OnDestroy {
   /**
@@ -66,8 +69,7 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
    * @descripcion
    * Valor seleccionado para el tipo de aviso.
    */
-  avisoValor: string = 'deposito_fiscal';
-
+  avisoValor: string = ''; // Default value to ensure no section is displayed initially
   /**
    * @property {string} TEXTO 
    * @descripcion
@@ -139,6 +141,57 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
    */
   esFormularioSoloLectura: boolean = false;
 
+  public entidadFederativaData: CatalogosSelect = {
+    labelNombre: 'Entidad federativa',
+    required: true,
+    primerOpcion: 'Seleccione una opción',
+    catalogos: [],
+  };
+
+  public alcaldiaMunicipoData: CatalogosSelect = {
+    labelNombre: 'Alcaldía o Municipio',
+    required: true,
+    primerOpcion: 'Seleccione una opción',
+    catalogos: [],
+  };
+
+  public coloniaData: CatalogosSelect = {
+    labelNombre: 'Colonia',
+    required: true,
+    primerOpcion: 'Seleccione una opción',
+    catalogos: [],
+  };
+
+  public merccanciaEntidadFederativaData: CatalogosSelect = {
+    labelNombre: 'Entidad federativa',
+    required: true,
+    primerOpcion: 'Seleccione una opción',
+    catalogos: [],
+  };
+
+  
+  public merccanciaAlcaldiaMunicipoData: CatalogosSelect = {
+    labelNombre: 'Alcaldía o Municipio',
+    required: true,
+    primerOpcion: 'Seleccione una opción',
+    catalogos: [],
+  };
+
+   
+  public merccanciaColoniaData: CatalogosSelect = {
+    labelNombre: 'Colonia',
+    required: true,
+    primerOpcion: 'Seleccione una opción',
+    catalogos: [],
+  };
+
+  public tarifaData: CatalogosSelect = {
+    labelNombre: 'Unidad de medida (Tarifa)',
+    required: true,
+    primerOpcion: 'Seleccione una opción',
+    catalogos: [],
+  };
+
   /**
    * @constructor
    * @param {FormBuilder} fb - Constructor para crear formularios reactivos.
@@ -152,7 +205,8 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
     private store: DestruccionStore,
     private query: DestruccionQuery,
     private seccionStore: SeccionLibStore,
-    private seccionQuery: SeccionLibQuery
+    private seccionQuery: SeccionLibQuery,
+    private avisodemercancia: AvisoDeMercanciaService,
   ) {}
 
   /**
@@ -179,6 +233,13 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
     this.initActionBuilder();
 
     this.campoObligatorioChange();
+    this.getEntidadFederativaData();
+    this.getAlcaldiaMunicipo();
+    this.getColonia();
+    this.getMerccanciaEntidadFederativa();
+    this.getMerccanciaAlcaldiaMunicipo();
+    this.getMerccanciaColonia();
+    this.getTarifa();
 
     this.seccionStore.establecerSeccion([false]);
 
@@ -260,6 +321,70 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
     });
   }
 
+  getEntidadFederativaData(): void {
+    this.avisodemercancia
+      .getEntidadFederativaData()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data) => {
+        this.entidadFederativaData.catalogos = data as Catalogo[];
+      });
+  }
+
+  getAlcaldiaMunicipo(): void {
+    this.avisodemercancia
+      .getAlcaldiaMunicipo()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data) => {
+        this.alcaldiaMunicipoData.catalogos = data as Catalogo[];
+      });
+  }
+
+  
+  getColonia(): void {
+    this.avisodemercancia
+      .getColonia()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data) => {
+        this.coloniaData.catalogos = data as Catalogo[];
+      });
+  }
+
+  getMerccanciaEntidadFederativa(): void {
+    this.avisodemercancia
+      .getMerccanciaEntidadFederativa()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data) => {
+        this.merccanciaEntidadFederativaData.catalogos = data as Catalogo[];
+      });
+  }
+
+  
+  getMerccanciaAlcaldiaMunicipo(): void {
+    this.avisodemercancia
+      .getMerccanciaAlcaldiaMunicipo()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data) => {
+        this.merccanciaAlcaldiaMunicipoData.catalogos = data as Catalogo[];
+      });
+  }
+
+  getMerccanciaColonia(): void {
+    this.avisodemercancia
+      .getMerccanciaColonia()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data) => {
+        this.merccanciaColoniaData.catalogos = data as Catalogo[];
+      });
+  }
+
+  getTarifa(): void {
+    this.avisodemercancia
+      .getTarifa()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data) => {
+        this.tarifaData.catalogos = data as Catalogo[];
+      });
+  }
   /**
    * @method campoObligatorioChange
    * @descripcion

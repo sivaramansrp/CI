@@ -6,11 +6,14 @@
  * @author Equipo VUCEM
  * @since 2025
  */
+
 import { DestruccionState, DestruccionStore } from '../../estados/Tramite32509.store';
+import { Catalogo } from '@libs/shared/data-access-user/src';
 import { DestruccionQuery } from '../../estados/Tramite32509.query';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable} from 'rxjs';
+
 
 /**
  * @descripcion
@@ -45,6 +48,35 @@ export class AvisoDeMercanciaService {
   public getAcuiculturaData(): Observable<DestruccionState> {
     return this.httpClient.get<DestruccionState>('assets/json/32509/tipo_form.json');
   }
+
+  getEntidadFederativaData(): Observable<Catalogo[]> {
+    return this.httpClient.get<Catalogo[]>('assets/json/32509/domicilio.json');
+  }
+
+  getAlcaldiaMunicipo(): Observable<Catalogo[]> {
+    return this.httpClient.get<Catalogo[]>('./assets/json/32509/alcaldio.json');
+  }
+
+  getColonia(): Observable<Catalogo[]> {
+    return this.httpClient.get<Catalogo[]>('./assets/json/32509/colonia.json');
+  }
+  
+  getMerccanciaEntidadFederativa(): Observable<Catalogo[]> {
+    return this.httpClient.get<Catalogo[]>('./assets/json/32509/domicilio.json');
+  }
+
+  getMerccanciaAlcaldiaMunicipo(): Observable<Catalogo[]> {
+    return this.httpClient.get<Catalogo[]>('./assets/json/32509/alcaldiaomunicipio.json');
+  }
+
+  getMerccanciaColonia(): Observable<Catalogo[]> {
+    return this.httpClient.get<Catalogo[]>('./assets/json/32509/mercanciascolonia.json');
+  }
+
+  getTarifa(): Observable<Catalogo[]> {
+    return this.httpClient.get<Catalogo[]>('./assets/json/32509/unidaddemedia.json');
+  }
+
 
   /**
    * @method actualizarEstadoFormulario
