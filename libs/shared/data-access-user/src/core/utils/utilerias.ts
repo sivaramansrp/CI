@@ -1,5 +1,6 @@
 import { AbstractControl, ValidationErrors } from "@angular/forms";
 import { REGEX_PATRON_DECIMAL_12_3 } from "../../tramites/constantes/regex.constants";
+import moment from "moment";
 
 /**
 * Validador personalizado para verificar si un valor numérico cumple con un formato específico.
@@ -80,3 +81,15 @@ export function dateLessThanOrEqualToday(control: AbstractControl): ValidationEr
       .map(char => char.charCodeAt(0).toString(16).padStart(2, '0'))
       .join('');
   }
+
+    /**
+     * Formatea una fecha dada en formato de cadena a una cadena con el formato 'YYYY-MM-DD HH:mm:ss' 
+     * utilizando Moment.js.
+     *
+     * @param fecha - La fecha en formato de cadena que se desea formatear.
+     * @returns Una cadena que representa la fecha formateada en el formato 'YYYY-MM-DD HH:mm:ss'.
+     */
+    export function formatearFechaConMoment(fecha: string): string {
+        const DATESTRING = new Date(fecha);
+        return moment(DATESTRING).format('YYYY-MM-DD HH:mm:ss');
+    }

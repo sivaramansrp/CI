@@ -208,9 +208,23 @@ export class InformacionDeLaComponent implements OnInit, OnDestroy {
   valorSeleccionadoFraccion(): void {
     if (this.informacionDeLaform.get('fraccionArancelaria')?.value) {
       this.informacionDeLaform.get('descripcionFraccion')?.enable();
+      const VALOR = InformacionDeLaComponent.obtenerDescripcion(this.fraccionArancelariaOptions, this.informacionDeLaform.get('fraccionArancelaria')?.value);
+      this.informacionDeLaform.get('descripcionFraccion')?.setValue(VALOR);
     } else {
       this.informacionDeLaform.get('descripcionFraccion')?.disable();
+      this.informacionDeLaform.get('descripcionFraccion')?.setValue('');
     }
+  }
+
+  /**
+ * @method obtenerDescripcion
+ * @description
+ * Obtiene la descripción de la fracción arancelaria seleccionada en el formulario dinámico.
+ * @returns {string} Descripción de la fracción arancelaria seleccionada o una cadena vacía si no existe.
+ */
+  public static obtenerDescripcion(array: Catalogo[], id: string): string {
+    const DESCRIPCION = array.find((ele: Catalogo) => Number(ele.id) === Number(id))?.descripcion;
+    return DESCRIPCION ?? '';
   }
 
   /**
@@ -222,8 +236,11 @@ export class InformacionDeLaComponent implements OnInit, OnDestroy {
   valorSeleccionadoNico(): void {
     if (this.informacionDeLaform.get('nico')?.value) {
       this.informacionDeLaform.get('descripcionNico')?.enable();
+      const VALOR = InformacionDeLaComponent.obtenerDescripcion(this.nicoOptions, this.informacionDeLaform.get('nico')?.value);
+      this.informacionDeLaform.get('descripcionNico')?.setValue(VALOR);
     } else {
       this.informacionDeLaform.get('descripcionNico')?.disable();
+      this.informacionDeLaform.get('descripcionNico')?.setValue('');
     }
   }
 

@@ -13,11 +13,17 @@ export interface MercanciaCertificado {
   nombreComercial: string;
   nombreIngles: string;
   complementoDescripcion: string;
-  numeroCertificado: string;
-  pais: string;
-  tratado: string;
-  fechaExpedicion: string;
-  fechaVencimiento: string;
+  marca: string;
+  criterio: string;
+  norma: string;
+  cantidadExportar: string;
+  unidad: string;
+  masaBruta : string;
+  comercializacion : string;
+  valorMercancia: string;
+  numeroFactura: string;
+  fechaFactura: string;
+  registroProductos: string;
 }
 
 export interface ProductoresAsociados {
@@ -26,7 +32,7 @@ export interface ProductoresAsociados {
   direccion: string;
   correoElectronico: string;
   telefono: string;
-  razonSocial: string;
+  fax: string;
 }
 
 export const FECHAI_NICIAL = {

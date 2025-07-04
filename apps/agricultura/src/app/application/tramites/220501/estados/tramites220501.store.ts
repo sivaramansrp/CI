@@ -156,6 +156,12 @@ export interface Solicitud220501State {
    * @type {string[]}
    */
   mercanciaTablaDatos: string[];
+
+  /**
+   * Indica si se debe mostrar la sección.
+   * @type {boolean}
+   */
+  mostrarSeccion: boolean;
 }
 
 /**
@@ -165,30 +171,30 @@ export interface Solicitud220501State {
  */
 export function crearEstadoInicial(): Solicitud220501State {
   return {
-    medioDeTransporte: 0,
+    medioDeTransporte: -1,
     identificacionTransporte: '',
     esSolicitudFerros: '',
     totalGuias: '',
     foliodel: '',
-    aduanaIngreso: 0,
-    oficinaInspeccion: 0,
-    puntoInspeccion: 0,
+    aduanaIngreso: -1,
+    oficinaInspeccion: -1,
+    puntoInspeccion: -1,
     claveUCON: '',
     establecimientoTIF: '',
     nombre: '',
     numeroguia: '',
-    regimen: 0,
-    capturaDatosMercancia: 0,
+    regimen: -1,
+    capturaDatosMercancia: -1,
     coordenadas: '',
-    movilizacion: 0,
+    movilizacion: -1,
     transporte: '',
-    punto: 0,
-    nombreEmpresa: 0,
-    exentoPagoNo: 0,
-    justificacion: 0,
+    punto: -1,
+    nombreEmpresa: -1,
+    exentoPagoNo: -1,
+    justificacion: -1,
     claveReferencia: '',
     cadenaDependencia: '',
-    banco: 0,
+    banco: -1,
     llavePago: '',
     importePago: '',
     fetchapago: '',
@@ -202,7 +208,8 @@ export function crearEstadoInicial(): Solicitud220501State {
     saldoPendiente: '',
     saldoACapturar: '',
 
-    mercanciaTablaDatos: []
+    mercanciaTablaDatos: [],
+    mostrarSeccion: true,
   };
 }
 
@@ -605,5 +612,17 @@ export class Solicitud220501Store extends Store<Solicitud220501State> {
    */
   public setSagarpaState(nuevoDatos: Solicitud220501State): void {
     this.update(nuevoDatos);
+  }
+
+  /**
+   * Establece si se debe mostrar la sección.
+   * @param mostrarSeccion Indica si se debe mostrar la sección.
+   * @returns void
+   */
+  public setMostrarSeccion(mostrarSeccion: boolean): void {
+    this.update((state) => ({
+      ...state,
+      mostrarSeccion,
+    }));
   }
 }

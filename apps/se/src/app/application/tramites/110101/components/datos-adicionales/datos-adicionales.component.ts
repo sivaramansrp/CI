@@ -1,4 +1,4 @@
-import { AlertComponent, ConsultaioQuery } from '@ng-mf/data-access-user';
+import { AlertComponent, ConsultaioQuery, InputRadioComponent } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Solicitante110101State, Tramite110101Store } from '../../estados/tramites/solicitante110101.store';
@@ -7,6 +7,7 @@ import { Catalogo } from '@libs/shared/data-access-user/src';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { CommonModule } from '@angular/common';
 import { PROTESTA } from '@ng-mf/data-access-user';
+import { RADIO_OPCIONS } from '../constante110101.enum';
 import { Solicitante110101Query } from '../../estados/queries/solicitante110101.query';
 import { TituloComponent } from '@ng-mf/data-access-user';
 /**
@@ -17,11 +18,14 @@ import { TituloComponent } from '@ng-mf/data-access-user';
   templateUrl: './datos-adicionales.component.html',
   styleUrl: './datos-adicionales.component.scss',
   standalone: true,
-  imports: [TituloComponent,
+  imports: [
+    TituloComponent,
     CommonModule,
     AlertComponent,    
     CatalogoSelectComponent,
-    ReactiveFormsModule]
+    ReactiveFormsModule,
+    InputRadioComponent
+  ]
 })
 export class DatosAdicionalesComponent implements OnInit, OnDestroy {
 
@@ -88,6 +92,19 @@ export class DatosAdicionalesComponent implements OnInit, OnDestroy {
    * Esta propiedad contiene toda la información relevante y el estado del solicitante.
    */
   public solicitudeState!: Solicitante110101State;
+
+  /**
+   * Opciones disponibles para el grupo de radio.
+   */
+  public radioOpcions = RADIO_OPCIONS;
+
+  /**
+   * Indica si se deben mostrar los campos adicionales relacionados con la opción de exportador autorizado.
+   * Cuando es `true`, se despliegan los campos adicionales en la interfaz; cuando es `false`, permanecen ocultos.
+   *
+   * @default false
+   */
+  public mostrarCampos: boolean = false;
   /**
    * constructor de la clase
    * Fetch the fetchtiposDocumentos datos
@@ -149,6 +166,9 @@ export class DatosAdicionalesComponent implements OnInit, OnDestroy {
     this.formulario = this.fb.group({
       entidad: [this.solicitudeState?.entidad, Validators.required],
       representacion: [this.solicitudeState?.representacion, Validators.required],
+      metodoSeparacion: [Boolean(this.solicitudeState?.metodoSeparacion), Validators.required],
+      exportadorAutorizado: [Boolean(this.solicitudeState?.exportadorAutorizado), Validators.required],
+      informacionRadios: [this.solicitudeState?.informacionRadios]
     });
   }
 
@@ -213,7 +233,10 @@ export class DatosAdicionalesComponent implements OnInit, OnDestroy {
    */
   public setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite110101Store): void {
     const VALOR = form.get(campo)?.value;
-    (this.tramite110101Store[metodoNombre] as (value: unknown) => void)(VALOR);
+    (this.tramite110101Store[metodoNombre] as (value: unknown) => void)(VALOR); 
+    if (campo === 'exportadorAutorizado') {
+      this.mostrarCampos = !this.mostrarCampos;
+    }
   }
 
 

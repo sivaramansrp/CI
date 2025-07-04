@@ -72,10 +72,6 @@ export class Solocitud220503Service {
     this.solicitud220503Store.setEstablecimientoTIF(DATOS.establecimientoTIF);
     this.solicitud220503Store.setNumeroguia(DATOS.numeroguia);
     this.solicitud220503Store.setRegimen(DATOS.regimen);
-    this.solicitud220503Store.setCapturaDatosMercancia(
-      DATOS.capturaDatosMercancia
-    );
-    this.solicitud220503Store.setCoordenadas(DATOS.coordenadas);
     this.solicitud220503Store.setMovilizacion(DATOS.movilizacion);
     this.solicitud220503Store.setTransporte(DATOS.transporte);
     this.solicitud220503Store.setNombreEmpresa(DATOS.nombreEmpresa);

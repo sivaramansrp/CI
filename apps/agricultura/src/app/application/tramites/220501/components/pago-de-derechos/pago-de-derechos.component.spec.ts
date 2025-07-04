@@ -72,7 +72,7 @@ describe('PagoDeDerechosComponent', () => {
   });
 
   it('should initialize the form on ngOnInit', () => {
-    component.ngOnInit();
+    component.inicializarFormulario();
     expect(component.pagoForm.get('banco')).toBeTruthy();
     expect(component.pagoForm.get('justificacion')).toBeTruthy();
     expect(mockRevisionService.getJustificacion).toHaveBeenCalled();

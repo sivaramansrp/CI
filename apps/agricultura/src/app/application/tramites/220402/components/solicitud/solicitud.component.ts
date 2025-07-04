@@ -1,6 +1,7 @@
 import { CONFIGURATION_TABLA_GENERALES, CONFIGURATION_TABLA_MERCANCIA, MUNICIPIODE_OPCIONS, RADIO_OPCIONS } from '../../constantes/certificado-zoosanitario.enum';
-import { CatalogoSelectComponent, ConfiguracionColumna, ConsultaioQuery, ConsultaioState, FECHA_FINAL, FECHA_INICIO, InputRadioComponent, Notificacion, NotificacionesComponent, REGEX_SOLO_DIGITOS, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@ng-mf/data-access-user';
+import { CatalogoSelectComponent, ConfiguracionColumna, FECHA_FINAL, FECHA_INICIO, InputRadioComponent, Notificacion, NotificacionesComponent, REGEX_SOLO_DIGITOS, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState, } from '@ng-mf/data-access-user';
 import { DatosGenerales, TablaMercancia } from '../../models/pantallas-captura.model';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Solicitud220402State, Solicitud220402Store } from '../../estados/tramites/tramites220402.store';
