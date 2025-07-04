@@ -92,7 +92,12 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
     }
   }
 
-   buscar(): void {
+   /**
+   * Busca los datos del representante legal a partir del RFC proporcionado.
+   * Si el campo RFC está vacío, marca todos los campos como tocados para mostrar errores de validación.
+   * Si el RFC está presente, consulta el servicio para obtener los datos del representante y los asigna al formulario.
+   */
+  buscar(): void {
     if (!this.representante.get('rfc')?.value) {
       this.representante.get('rfc')?.markAllAsTouched();
     } else {

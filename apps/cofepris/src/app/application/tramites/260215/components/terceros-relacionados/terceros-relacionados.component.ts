@@ -1,4 +1,24 @@
 /**
+ * Componente Angular para la gestión de terceros relacionados en un trámite sanitario.
+ * 
+ * Este componente permite agregar, editar y visualizar información de fabricantes, destinatarios, proveedores y facturadores
+ * mediante formularios reactivos y tablas. Incluye validaciones personalizadas para RFC, CURP, teléfono y país, así como
+ * lógica para alternar entre formularios y tablas según el tipo de tercero seleccionado. Además, soporta modo de solo lectura
+ * y carga de datos dummy para pruebas o vistas de solo consulta.
+ *
+ * Funcionalidades principales:
+ * - Manejo de formularios reactivos para cada tipo de tercero.
+ * - Validaciones personalizadas y control de habilitación/deshabilitación de campos.
+ * - Alternancia de vistas entre tabla y formularios.
+ * - Soporte para modo solo lectura y carga de datos de ejemplo.
+ * - Integración con servicios y store para la obtención y persistencia de datos.
+ *
+ * Uso:
+ * Este componente se utiliza dentro de un flujo de trámite sanitario donde es necesario capturar o mostrar información
+ * de terceros relacionados al proceso.
+ */
+
+/**
  * Importaciones necesarias para el funcionamiento del componente.
  */
 import {
