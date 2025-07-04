@@ -211,14 +211,14 @@ export class AsignacionComponent implements OnInit, OnDestroy {
    * Configura el formulario con los valores iniciales del estado.
    */
   donanteDomicilio(): void {
-    this.asignacionForm = this.fb.group({
-      asignacionRadio: [this.solicitudState?.asignacionRadio],
-      asignacionsolitud: [this.solicitudState?.asignacionsolitud, [Validators.required]],
-      numTramite: [this.solicitudState?.numTramite, [Validators.required]],
-      fechaFin: [this.solicitudState?.fechaFin, [Validators.required]],
-      ampliar: [this.solicitudState?.ampliar, [Validators.required]],
-    });
-  }
+  this.asignacionForm = this.fb.group({
+    asignacionRadio: [{ value: this.solicitudState?.asignacionRadio, disabled: this.soloLectura }],
+    asignacionsolitud: [{ value: this.solicitudState?.asignacionsolitud, disabled: this.soloLectura }, [Validators.required]],
+    numTramite: [{ value: this.solicitudState?.numTramite, disabled: this.soloLectura }, [Validators.required]],
+    fechaFin: [{ value: this.solicitudState?.fechaFin, disabled: this.soloLectura }, [Validators.required]],
+    ampliar: [{ value: this.solicitudState?.ampliar, disabled: this.soloLectura }, [Validators.required]],
+  });
+}
   /**
  * Método que se ejecuta al destruir el componente.
  */

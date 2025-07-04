@@ -1,10 +1,6 @@
+import {CATALOGOS_ID, Catalogo, CatalogosService, TEXTOS } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
-import { CATALOGOS_ID } from '@ng-mf/data-access-user';
-import { Catalogo } from '@ng-mf/data-access-user';
-import { CatalogosService } from '@ng-mf/data-access-user';
-import { TEXTOS } from '@ng-mf/data-access-user';
-import documentList from '@libs/shared/theme/assets/json/32502/document-list.json';
 
 
 /**
@@ -21,7 +17,7 @@ export class PasoDosComponent implements OnInit, OnDestroy {
   tiposDocumentos: Catalogo[] = [];
   infoAlert = 'alert-info';
   catalogoDocumentos: Catalogo[] = [];
-  documentosSeleccionados = documentList.documentosSeleccionados;
+  // documentosSeleccionados = documentList.documentosSeleccionados;
   private destroy$: Subject<void> = new Subject<void>();
 
 

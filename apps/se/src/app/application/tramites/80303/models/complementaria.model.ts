@@ -1,204 +1,438 @@
+
 /**
- * Representa la información básica del contribuyente.
- * 
- * @interface DatosContribuyente
- * @property {string} [RFC] - Registro Federal de Contribuyentes.
- * @property {string} [Nombres] - Nombre o nombres del contribuyente.
- * @property {string} [PrimerApellido] - Primer apellido del contribuyente.
- * @property {string} [SegundoApellido] - Segundo apellido del contribuyente.
+ * Representa los datos de un contribuyente.
  */
 export interface DatosContribuyente {
+  /**
+   * El Registro Federal de Contribuyentes (RFC) del contribuyente.
+   * Es opcional.
+   */
   RFC?: string;
+
+  /**
+   * Los nombres del contribuyente.
+   * Es opcional.
+   */
   Nombres?: string;
+
+  /**
+   * El primer apellido del contribuyente.
+   * Es opcional.
+   */
   PrimerApellido?: string;
+
+  /**
+   * El segundo apellido del contribuyente.
+   * Es opcional.
+   */
   SegundoApellido?: string;
 }
 
 
 /**
-* Representa la información de un federatario.
-* 
-* @interface Federatario
-* @property {string} [Nombre] - Nombre del federatario.
-* @property {string} [PrimerApellido] - Primer apellido.
-* @property {string} [SegundoApellido] - Segundo apellido.
-* @property {string} [NumeroActa] - Número de acta.
-* @property {string} [FechaActa] - Fecha del acta.
-* @property {string} [NumeroNotaria] - Número de notaría.
-* @property {string} [MunicipioDelegacion] - Municipio o Delegación.
-* @property {string} [EstadoDistrito] - Estado o Distrito Federal.
-*/
+ * Representa la información de un federatario público.
+ */
 export interface Federatario {
+  /**
+   * Nombre del federatario público.
+   * @optional
+   */
   Nombre?: string;
+
+  /**
+   * Primer apellido del federatario público.
+   * @optional
+   */
   PrimerApellido?: string;
+
+  /**
+   * Segundo apellido del federatario público.
+   * @optional
+   */
   SegundoApellido?: string;
+
+  /**
+   * Número del acta asociada al federatario público.
+   * @optional
+   */
   NumeroActa?: string;
+
+  /**
+   * Fecha en la que se emitió el acta asociada al federatario público.
+   * @optional
+   */
   FechaActa?: string;
+
+  /**
+   * Número de la notaría donde trabaja el federatario público.
+   * @optional
+   */
   NumeroNotaria?: string;
+
+  /**
+   * Municipio o delegación donde se encuentra la notaría del federatario público.
+   * @optional
+   */
   MunicipioDelegacion?: string;
+
+  /**
+   * Estado o distrito donde se encuentra la notaría del federatario público.
+   * @optional
+   */
   EstadoDistrito?: string;
 }
 
 
 /**
- * Interfaz utilizada para proporcionar los tipos de encabezados de tabla y listas
- * en el componente `tabladynamica`.
- * 
- * Esta interfaz define las propiedades necesarias para representar la información
- * relacionada con los federatarios que realizarán las operaciones, incluyendo datos
- * de dirección, identificación fiscal y estatus.
- * 
- * Propiedades:
- * - Calle: (Opcional) La calle donde se encuentra el federatario.
- * - NumeroExterior: (Opcional) El número exterior del domicilio.
- * - NumeroInterior: (Opcional) El número interior del domicilio.
- * - CodigoPostal: (Opcional) El código postal del domicilio.
- * - Colonia: (Opcional) La colonia donde se encuentra el federatario.
- * - Localidad: (Opcional) La localidad donde se encuentra el federatario.
- * - MunicipioDelegacion: (Opcional) El municipio o delegación donde se encuentra el federatario.
- * - EstadoDistrito: (Opcional) El estado o distrito donde se encuentra el federatario.
- * - Pais: (Opcional) El país donde se encuentra el federatario.
- * - RFC: (Opcional) Registro Federal de Contribuyentes del federatario.
- * - DomicilioFiscal: (Opcional) El domicilio fiscal registrado del federatario.
- * - DenominacionSocial: (Opcional) La denominación social del federatario.
- * - Estatus: (Opcional) El estatus actual del federatario.
+ * Representa la información relacionada con el federatario que realizará las operaciones.
+ * Esta interfaz define los detalles del domicilio, identificación fiscal y estatus del federatario.
  */
 export interface FederatarioRealizaranLasOperaciones {
+  /**
+   * La calle donde se encuentra ubicado el domicilio del federatario.
+   * @optional
+   */
   Calle?: string;
+
+  /**
+   * El número exterior del domicilio del federatario.
+   * @optional
+   */
   NumeroExterior?: string;
+
+  /**
+   * El número interior del domicilio del federatario, si aplica.
+   * @optional
+   */
   NumeroInterior?: string;
+
+  /**
+   * El código postal del domicilio del federatario.
+   * @optional
+   */
   CodigoPostal?: string;
+
+  /**
+   * La colonia donde se encuentra ubicado el domicilio del federatario.
+   * @optional
+   */
   Colonia?: string;
+
+  /**
+   * La localidad donde se encuentra ubicado el domicilio del federatario.
+   * @optional
+   */
   Localidad?: string;
+
+  /**
+   * El municipio o delegación donde se encuentra ubicado el domicilio del federatario.
+   * @optional
+   */
   MunicipioDelegacion?: string;
+
+  /**
+   * El estado o distrito donde se encuentra ubicado el domicilio del federatario.
+   * @optional
+   */
   EstadoDistrito?: string;
+
+  /**
+   * El país donde se encuentra ubicado el domicilio del federatario.
+   * @optional
+   */
   Pais?: string;
+
+  /**
+   * El Registro Federal de Contribuyentes (RFC) del federatario.
+   * @optional
+   */
   RFC?: string;
+
+  /**
+   * El domicilio fiscal del federatario.
+   * @optional
+   */
   DomicilioFiscal?: string;
+
+  /**
+   * La denominación social del federatario.
+   * @optional
+   */
   DenominacionSocial?: string;
+
+  /**
+   * El estatus actual del federatario.
+   * @optional
+   */
   Estatus?: string;
 }
 
 
 /**
  * Representa los datos de una empresa submanufacturera.
- * 
- * @property rfc - (Opcional) Registro Federal de Contribuyentes de la empresa.
- * @property razonSocial - (Opcional) Razón social de la empresa.
- * @property calle - (Opcional) Calle donde se encuentra la empresa.
- * @property numeroInterior - (Opcional) Número interior del domicilio de la empresa.
- * @property numeroExterior - (Opcional) Número exterior del domicilio de la empresa.
- * @property codigoPostal - (Opcional) Código postal del domicilio de la empresa.
- * @property colonia - (Opcional) Colonia donde se encuentra la empresa.
- * @property municipioDelegacion - (Opcional) Municipio o delegación donde se encuentra la empresa.
- * @property entidadFederativa - (Opcional) Entidad federativa donde se encuentra la empresa.
- * @property pais - (Opcional) País donde se encuentra la empresa.
- * @property telefono - (Opcional) Teléfono de contacto de la empresa.
- * @property estatus - (Opcional) Estatus actual de la empresa.
+ * Esta interfaz define las propiedades necesarias para describir la información básica de una empresa submanufacturera.
  */
 export interface DatosEmpresaSubmanufacturera {
+  /**
+   * RFC de la empresa submanufacturera.
+   * Este campo es opcional y puede contener el Registro Federal de Contribuyentes de la empresa.
+   */
   rfc?: string;
+
+  /**
+   * Razón social de la empresa submanufacturera.
+   * Este campo es opcional y puede contener el nombre legal de la empresa.
+   */
   razonSocial?: string;
+
+  /**
+   * Calle donde se encuentra ubicada la empresa submanufacturera.
+   * Este campo es opcional y puede contener el nombre de la calle.
+   */
   calle?: string;
+
+  /**
+   * Número interior del domicilio de la empresa submanufacturera.
+   * Este campo es opcional y puede contener el número interior del edificio o local.
+   */
   numeroInterior?: string;
+
+  /**
+   * Número exterior del domicilio de la empresa submanufacturera.
+   * Este campo es opcional y puede contener el número exterior del edificio o local.
+   */
   numeroExterior?: string;
+
+  /**
+   * Código postal del domicilio de la empresa submanufacturera.
+   * Este campo es opcional y puede contener el código postal correspondiente.
+   */
   codigoPostal?: string;
+
+  /**
+   * Colonia donde se encuentra ubicada la empresa submanufacturera.
+   * Este campo es opcional y puede contener el nombre de la colonia.
+   */
   colonia?: string;
+
+  /**
+   * Municipio o delegación donde se encuentra ubicada la empresa submanufacturera.
+   * Este campo es opcional y puede contener el nombre del municipio o delegación.
+   */
   municipioDelegacion?: string;
+
+  /**
+   * Entidad federativa donde se encuentra ubicada la empresa submanufacturera.
+   * Este campo es opcional y puede contener el nombre del estado o entidad federativa.
+   */
   entidadFederativa?: string;
+
+  /**
+   * País donde se encuentra ubicada la empresa submanufacturera.
+   * Este campo es opcional y puede contener el nombre del país.
+   */
   pais?: string;
+
+  /**
+   * Teléfono de contacto de la empresa submanufacturera.
+   * Este campo es opcional y puede contener el número telefónico de contacto.
+   */
   telefono?: string;
+
+  /**
+   * Estatus de la empresa submanufacturera.
+   * Este campo es opcional y puede contener información sobre el estado actual de la empresa.
+   */
   estatus?: string;
 }
+
 
 /**
  * Representa los datos de una planta manufacturera.
- * 
- * @property {string} [Calle] - La calle donde se encuentra la planta manufacturera.
- * @property {string} [NumeroExterior] - El número exterior del domicilio de la planta.
- * @property {string} [NumeroInterior] - El número interior del domicilio de la planta, si aplica.
- * @property {string} [CodigoPostal] - El código postal del domicilio de la planta.
- * @property {string} [Colonia] - La colonia donde se ubica la planta manufacturera.
- * @property {string} [MunicipioDelegacion] - El municipio o delegación donde se encuentra la planta.
- * @property {string} [EntidadFederativa] - La entidad federativa (estado) donde se ubica la planta.
- * @property {string} [Pais] - El país donde se encuentra la planta manufacturera.
- * @property {string} [RFC] - El Registro Federal de Contribuyentes (RFC) asociado a la planta.
- * @property {string} [DomicilioFiscal] - El domicilio fiscal registrado de la planta manufacturera.
- * @property {string} [Estatus] - El estatus actual de la planta manufacturera.
+ * Esta interfaz define las propiedades necesarias para describir la información de una planta manufacturera,
+ * incluyendo su ubicación, identificación fiscal y estado actual.
  */
 export interface DatosPlantaManufacturera {
+  /**
+   * La calle donde se encuentra ubicada la planta manufacturera.
+   * @optional
+   */
   Calle?: string;
+
+  /**
+   * El número exterior del domicilio de la planta manufacturera.
+   * @optional
+   */
   NumeroExterior?: string;
+
+  /**
+   * El número interior del domicilio de la planta manufacturera, si aplica.
+   * @optional
+   */
   NumeroInterior?: string;
+
+  /**
+   * El código postal correspondiente al domicilio de la planta manufacturera.
+   * @optional
+   */
   CodigoPostal?: string;
+
+  /**
+   * La colonia donde se encuentra ubicada la planta manufacturera.
+   * @optional
+   */
   Colonia?: string;
+
+  /**
+   * El municipio o delegación donde se encuentra ubicada la planta manufacturera.
+   * @optional
+   */
   MunicipioDelegacion?: string;
+
+  /**
+   * La entidad federativa (estado) donde se encuentra ubicada la planta manufacturera.
+   * @optional
+   */
   EntidadFederativa?: string;
+
+  /**
+   * El país donde se encuentra ubicada la planta manufacturera.
+   * @optional
+   */
   Pais?: string;
+
+  /**
+   * El Registro Federal de Contribuyentes (RFC) asociado a la planta manufacturera.
+   * @optional
+   */
   RFC?: string;
+
+  /**
+   * Indica si el domicilio de la planta manufacturera es también su domicilio fiscal.
+   * @optional
+   */
   DomicilioFiscal?: string;
+
+  /**
+   * El estado actual de la planta manufacturera (por ejemplo, activa, inactiva, etc.).
+   * @optional
+   */
   Estatus?: string;
 }
 
+
 /**
- * Representa un servicio IMMEX con información relevante sobre su descripción,
- * tipo, estado y estatus.
- *
- * @property descripcionServicio - Una descripción del servicio proporcionado.
- * @property tipoServicio - El tipo de servicio IMMEX.
- * @property testado - El estado actual del servicio.
- * @property estatus - El estatus del servicio.
+ * Representa un servicio IMMEX con información detallada sobre su descripción, tipo, estado y estatus.
  */
 export interface ServicioImmex {
+  /**
+   * La descripción del servicio IMMEX.
+   * Puede ser opcional y proporcionar detalles sobre el servicio.
+   */
   descripcionServicio?: string;
+
+  /**
+   * El tipo de servicio IMMEX.
+   * Indica la categoría o clasificación del servicio.
+   */
   tipoServicio?: string;
+
+  /**
+   * El estado del servicio IMMEX.
+   * Representa el estado actual del servicio, como "activo" o "inactivo".
+   */
   testado?: string;
+
+  /**
+   * El estatus del servicio IMMEX.
+   * Define el nivel o condición del servicio en un momento dado.
+   */
   estatus?: string;
 }
 
 /**
-* Representa la información de una fracción arancelaria en el anexo de exportación.
-* 
-* @interface AnexoExportacion
-* @property {string} [fraccionArancelaria] - Fracción arancelaria del producto.
-* @property {string} [descripcion] - Descripción del producto.
-* @property {string} [tipoFraccion] - Tipo de fracción.
-*/
+ * Representa un anexo de exportación con información detallada sobre la fracción arancelaria, descripción y tipo de fracción.
+ */
 export interface AnexoExportacion {
+  /**
+   * La fracción arancelaria asociada al anexo de exportación.
+   * Representa el código utilizado para clasificar productos en el comercio internacional.
+   * @optional
+   */
   fraccionArancelaria?: string;
+
+  /**
+   * Una descripción detallada del producto o elemento relacionado con la exportación.
+   * Proporciona información adicional sobre el contenido del anexo.
+   * @optional
+   */
   descripcion?: string;
+
+  /**
+   * El tipo de fracción arancelaria que se aplica al producto.
+   * Puede ser utilizado para identificar la categoría o clasificación específica.
+   * @optional
+   */
   tipoFraccion?: string;
 }
 
+
 /**
-* Representa una relación de fracción arancelaria entre exportación e importación.
-* 
-* @interface AnexoImportacion
-* @property {string} [fraccionExportacion] - Fracción arancelaria del producto exportado.
-* @property {string} [fraccionImportacion] - Fracción arancelaria de la mercancía importada.
-* @property {string} [descripcion] - Descripción de la mercancía.
-* @property {string} [tipoFraccion] - Tipo de fracción.
-*/
+ * Representa un anexo de importación con información detallada sobre las fracciones y su descripción.
+ */
 export interface AnexoImportacion {
+  /**
+   * La fracción correspondiente a la exportación.
+   * @optional
+   */
   fraccionExportacion?: string;
+
+  /**
+   * La fracción correspondiente a la importación.
+   * @optional
+   */
   fraccionImportacion?: string;
+
+  /**
+   * Una descripción detallada de la fracción.
+   * @optional
+   */
   descripcion?: string;
+
+  /**
+   * El tipo de fracción que se está manejando.
+   * @optional
+   */
   tipoFraccion?: string;
 }
 
 
 /**
-* Representa un producto sensible en la tabla de importación.
-*
-* @interface Sensible
-* @property {string} [fraccionImportacion] - Fracción arancelaria de importación.
-* @property {string} [cantidad] - Cantidad importada.
-* @property {string} [valor] - Valor de la importación.
-* @property {string} [unidadMedida] - Unidad de medida tarifaria.
-*/
+ * Representa un modelo para datos sensibles relacionados con importaciones.
+ * Este modelo incluye información sobre la fracción de importación, cantidad, valor y unidad de medida.
+ */
 export interface Sensible {
+  /**
+   * La fracción arancelaria de importación asociada al producto.
+   * @example "01012101"
+   */
   fraccionImportacion?: string;
+
+  /**
+   * La cantidad del producto importado.
+   * @example "100"
+   */
   cantidad?: string;
+
+  /**
+   * El valor monetario del producto importado.
+   * @example "1500.00"
+   */
   valor?: string;
+
+  /**
+   * La unidad de medida utilizada para la cantidad del producto.
+   * @example "kilogramos"
+   */
   unidadMedida?: string;
 }

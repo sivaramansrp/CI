@@ -89,8 +89,13 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   private destroyed$ = new Subject<void>();
 
   /** Bandera para deshabilitar el formulario */
-  formularioDeshabilitado: boolean =
-    false; 
+  formularioDeshabilitado: boolean = false;
+
+  /**
+   * Bandera que indica si la solicitud está en modo solo lectura.
+   * @type {boolean}
+   */
+  isSolicitud: boolean = false;
 
   /** Constructor para inyectar dependencias */
   constructor(
@@ -103,6 +108,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         takeUntil(this.destroyed$),
         map((seccionState) => {
           this.formularioDeshabilitado = seccionState.readonly;
+          this.isSolicitud = seccionState.create;
           this.inicializarEstadoFormulario();
         })
       )

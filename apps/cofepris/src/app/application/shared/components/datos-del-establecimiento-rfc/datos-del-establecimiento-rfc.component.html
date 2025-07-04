@@ -9,7 +9,7 @@
       <div class="col-md-4">
         <div class="form-group">
           <label class="form-label" for="rfcdel">RFC del responsable sanitario:</label>
-          <input class="form-control" id="rfcDel" formControlName="rfcDel" placeholder="" type="text" maxlength="254"
+          <input class="form-control" id="rfcDel" formControlName="rfcDel" placeholder="" type="text" maxlength="13"
         (change)="setValoresStore(datosDelForm,'rfcDel', 'setRfcDel')">
         </div>
         <div class="d-grid">
@@ -23,7 +23,7 @@
       <div class="col-md-8">
         <div class="form-group">
           <label class="form-label" for="denominacionRazonSocial">Denominación o razón social*:</label>
-          <input class="form-control" id="denominacionRazonSocial" placeholder="" type="text" maxlength="254" size="75"
+          <input class="form-control" id="denominacionRazonSocial" placeholder="" type="text" maxlength="100" size="75"
         formControlName="denominacionRazonSocial"
         (change)="setValoresStore(datosDelForm,'denominacionRazonSocial', 'setDenominacionRazonSocial')">
         </div>
@@ -54,7 +54,7 @@
           Este campo es obligatorio.
         </span>
         <span *ngIf="datosDelForm.controls['correoElectronico'].errors?.['maxlength']" class="mensaje-error">
-          El texto excede el límite de caracteres permitido.
+         Por favor, escribe una dirección de correo válida
         </span>
           </div>
         </div>

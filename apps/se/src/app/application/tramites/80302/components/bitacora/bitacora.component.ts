@@ -43,7 +43,7 @@ export class BitacoraComponent implements OnDestroy {
    */
   datos: Bitacora[] = [];
 
-  constructor( public modificionService: ModificacionSolicitudeService, private toastr: ToastrService ) {
+  constructor( public modificionService: ModificacionSolicitudeService, public toastr: ToastrService ) {
     this.modificionService
       .obtenerBitacora()
       .pipe(takeUntil(this.destroyNotifier$)) // Se cancela la suscripción cuando se destruye el componente.

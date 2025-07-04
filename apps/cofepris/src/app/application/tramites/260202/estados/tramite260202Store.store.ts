@@ -12,6 +12,7 @@ import { TABLA_OPCION_DATA } from '../../../shared/constantes/datos-solicitud.en
 import { TablaMercanciasDatos } from '../../../shared/models/datos-solicitud.model';
 import { TablaOpcionConfig } from '../../../shared/models/datos-solicitud.model';
 import { TablaScianConfig } from '../../../shared/models/datos-solicitud.model';
+
 /**
  * @interface
  * @name Tramite260202State
@@ -99,12 +100,33 @@ export interface Tramite260202State {
   tabSeleccionado?: number;
 }
 
+
 /**
- * @function
- * @name createInitialState
- * @description
- * Crea el estado inicial para la tienda del trámite 260202.
- * @returns {Tramite260202State} Estado inicial.
+ * Crea el estado inicial para la gestión del trámite 260202.
+ * 
+ * Este método devuelve un objeto que representa el estado inicial de la aplicación
+ * para el trámite específico. Incluye datos relacionados con destinatarios, facturadores,
+ * proveedores, fabricantes, formularios de solicitud, mercancías, configuraciones de tablas,
+ * opciones seleccionadas, estado de colapsables, información de pago de derechos y la pestaña seleccionada.
+ * 
+ * @returns {Tramite260202State} El estado inicial del trámite 260202.
+ * 
+ * Propiedades del estado inicial:
+ * - `destinatarioFinalTablaDatos`: Lista inicial vacía para los datos de destinatarios finales.
+ * - `facturadorTablaDatos`: Lista inicial vacía para los datos de facturadores.
+ * - `proveedorTablaDatos`: Lista inicial vacía para los datos de proveedores.
+ * - `fabricanteTablaDatos`: Lista inicial vacía para los datos de fabricantes.
+ * - `datosSolicitudFormState`: Estado inicial del formulario de solicitud, incluyendo campos como RFC, denominación, correo electrónico, dirección, teléfono, aviso, licencia sanitaria, régimen, entre otros.
+ * - `mercanciaForm`: Estado inicial del formulario de mercancías, con información sobre clasificación, denominación, tipo de producto, forma farmacéutica, estado físico, fracción arancelaria, cantidad, presentación, registro sanitario, fecha de caducidad, y países de origen y procedencia.
+ * - `opcionConfigDatos`: Configuración inicial de opciones de tabla.
+ * - `scianConfigDatos`: Configuración inicial vacía para datos SCIAN.
+ * - `tablaMercanciasConfigDatos`: Configuración inicial vacía para la tabla de mercancías.
+ * - `seleccionadoopcionDatos`: Lista inicial vacía para las opciones seleccionadas.
+ * - `seleccionadoScianDatos`: Lista inicial vacía para los datos SCIAN seleccionados.
+ * - `seleccionadoTablaMercanciasDatos`: Lista inicial vacía para los datos de la tabla de mercancías seleccionados.
+ * - `opcionesColapsableState`: Estado inicial del colapsable, por defecto `false`.
+ * - `pagoDerechos`: Información inicial de pago de derechos, incluyendo clave de referencia, cadena de dependencia, estado, llave de pago, fecha de pago e importe.
+ * - `tabSeleccionado`: Pestaña inicial seleccionada, por defecto `1`.
  */
 export function createInitialState(): Tramite260202State {
   return {
@@ -175,19 +197,63 @@ export function createInitialState(): Tramite260202State {
   };
 }
 
+/**
+ * @method updateScianConfigDatos
+ * @description Actualiza la configuración de SCIAN en el estado.
+ * SCIAN (Sistema de Clasificación Industrial de América del Norte) es utilizado para clasificar actividades económicas.
+ * Este método permite modificar la configuración relacionada con SCIAN en el estado de la tienda.
+ * 
+ * @param {TablaScianConfig[]} scianConfigDatos - Nueva configuración de SCIAN que se aplicará al estado.
+ * 
+ * @example
+ * ```typescript
+ * const nuevaConfigScian: TablaScianConfig[] = [
+ *   { id: 1, descripcion: 'Industria manufacturera' },
+ *   { id: 2, descripcion: 'Comercio al por mayor' },
+ * ];
+ * store.updateScianConfigDatos(nuevaConfigScian);
+ * ```
+ */
 @Injectable({
   providedIn: 'root',
 })
 @StoreConfig({ name: 'tramite260202', resettable: true })
 /**
- * @class
- * @name Tramite260202Store
- * @description
- * Tienda para manejar el estado del trámite 260202. Proporciona métodos para actualizar
- * diferentes partes del estado.
- * @extends {Store<Tramite260202State>}
+ * @class Tramite260202Store
+ * @description Clase que representa la tienda de estado para el trámite `260202`.
+ * 
+ * Esta clase extiende la funcionalidad de una tienda base (`Store`) y proporciona métodos
+ * para actualizar diferentes partes del estado relacionado con el trámite `260202`.
+ * 
+ * @remarks
+ * La clase Tramite260202Store es utilizada para gestionar el estado de la aplicación
+ * en el contexto de los trámites específicos del módulo `260202`. Proporciona métodos
+ * para actualizar formularios, tablas de datos y configuraciones relacionadas con el trámite.
+ * 
+ * @example
+ * ```typescript
+ * const store = new Tramite260202Store();
+ * store.updateDatosSolicitudFormState(datosSolicitudFormState);
+ * store.updateFabricanteTablaDatos(newFabricantes);
+ * ```
  */
 export class Tramite260202Store extends Store<Tramite260202State> {
+
+  /**
+   * Constructor de la clase `Tramite260202Store`.
+   * 
+   * Este constructor inicializa el estado inicial de la tienda utilizando la función `createInitialState`.
+   * La clase extiende una clase base que probablemente maneja la lógica de estado o almacenamiento.
+   * 
+   * @remarks
+   * Este constructor es fundamental para establecer el estado inicial de la aplicación
+   * en el contexto de los trámites relacionados con el módulo `260202`.
+   * 
+   * @example
+   * ```typescript
+   * const store = new Tramite260202Store();
+   * ```
+   */
   constructor() {
     super(createInitialState());
   }

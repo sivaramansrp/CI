@@ -294,6 +294,18 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
           // Evita duplicados si navegas varias veces
           this.obraDeArteRowData = [...this.solicitudState.ObraDeArte];
         }
+
+        /**
+        * Verifica si no hay datos de obra de arte y, de ser así, inicializa el arreglo
+        * con datos dummy y actualiza el store correspondiente.
+        */
+        if(this.obraDeArteRowData.length === 0) {
+          const OBRA_DE_ARTE_ROW: TablaDatos = {
+            tbodyData: obraDeArteDummy,
+          };
+          this.obraDeArteRowData.push(OBRA_DE_ARTE_ROW);
+          this.tramite270201Store.setObraDeArte(this.obraDeArteRowData);
+        }
       })
     )
     .subscribe();
@@ -547,7 +559,8 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
        * Es obligatorio y debe ser completado.
        * @default true
        */
-      manifiesto: new FormControl(true, [Validators.required]),
+      manifiesto: new FormControl({ value: true, disabled: this.esFormularioSoloLectura },
+      [Validators.required]),
     });
 
       /** Suscribe al estado de solicitud 270201 y lo asigna a `solicitudState`.  

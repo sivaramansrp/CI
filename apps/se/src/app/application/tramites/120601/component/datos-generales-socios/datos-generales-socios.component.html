@@ -74,7 +74,14 @@
                 type="text"
                 libUppercase
                 (change)="enCambioCadenaDependencia()"
-              />
+                [class.is-invalid]="FormSolicitud.get(['datosImportadorExportador','cadenaDependencia'])?.touched && FormSolicitud.get(['datosImportadorExportador','cadenaDependencia'])?.invalid"
+                required
+                />
+               <div *ngIf="esInvalido('datosImportadorExportador.cadenaDependencia')" class="text-danger">
+                  <small *ngIf="FormSolicitud.get(['datosImportadorExportador','cadenaDependencia'])?.errors?.['required']">
+                    Este campo es obligatorio.
+                  </small>
+                </div>
             </div>
           </div>
         </div>

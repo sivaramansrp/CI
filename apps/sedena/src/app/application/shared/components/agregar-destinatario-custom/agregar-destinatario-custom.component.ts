@@ -1,43 +1,34 @@
 import {
+  AfterViewInit,
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  Output
+} from '@angular/core';
+import {
   COLONIA_FIELD_FLAG,
+  DESTINATARIO_TITULO_CUSTOM,
   NUMERO_TRAMITE,
   PROCEDIMIENTOS_PARA_NO_CONTRIBUYENTE,
+  STR_NACIONAL,
+  TERCEROS_NACIONALIDAD_OPCIONES,
+  TIPO_PERSONA_OPCIONES
 } from '../../constants/datos-solicitud.enum';
-import { STR_NACIONAL } from '../../constants/datos-solicitud.enum';
-import { TERCEROS_NACIONALIDAD_OPCIONES } from '../../constants/datos-solicitud.enum';
-import { TIPO_PERSONA_OPCIONES } from '../../constants/datos-solicitud.enum';
-
+import { Catalogo, CatalogoSelectComponent, InputRadioComponent, TipoPersona, TituloComponent } from '@ng-mf/data-access-user';
+import { CommonModule, Location } from '@angular/common';
+import { DestinoFinal, Proveedor } from '../../models/terceros-relacionados.model';
 import {
-  DestinoFinal,
-  Proveedor,
-} from '../../models/terceros-relacionados.model';
-import { DESTINATARIO_TITULO_CUSTOM } from '../../constants/datos-solicitud.enum';
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators
+} from '@angular/forms';
+import { Subject, takeUntil } from 'rxjs';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
 
-import { CommonModule } from '@angular/common';
-import { Location } from '@angular/common';
-
-import { AfterViewInit, Component } from '@angular/core';
-import { EventEmitter } from '@angular/core';
-import { Input } from '@angular/core';
-import { OnChanges } from '@angular/core';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
-import { Output } from '@angular/core';
-
-import { FormBuilder } from '@angular/forms';
-import { FormGroup } from '@angular/forms';
-import { ReactiveFormsModule } from '@angular/forms';
-import { Validators } from '@angular/forms';
-
-import { Catalogo } from '@ng-mf/data-access-user';
-import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
-import { InputRadioComponent } from '@ng-mf/data-access-user';
-import { TipoPersona } from '@ng-mf/data-access-user';
-import { TituloComponent } from '@ng-mf/data-access-user';
-
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-agregar-destinatario-custom',
@@ -53,87 +44,81 @@ import { takeUntil } from 'rxjs';
   styleUrl: './agregar-destinatario-custom.component.scss',
 })
 export class AgregarDestinatarioCustomComponent
-  implements OnDestroy, OnInit, OnChanges, AfterViewInit
-{
+  implements OnDestroy, OnInit, OnChanges, AfterViewInit {
   /**
-   * Subject utilizado para gestionar la desuscripción de observables.
-   * Se completa en `ngOnDestroy()` para prevenir fugas de memoria.
-   * @property {Subject<void>} unsubscribe$
-   * @private
-   */
+  * Subject utilizado para gestionar la desuscripción de observables.
+  * Se completa en `ngOnDestroy()` para prevenir fugas de memoria.
+  * @type {Subject<void>}
+  */
   private unsubscribe$ = new Subject<void>();
 
   /**
    * Grupo de formulario reactivo para recopilar los datos del destinatario final.
-   * @property {FormGroup} agregarDestinatarioFinal
+   * @type {FormGroup}
    */
   agregarDestinatarioFinal!: FormGroup;
 
   /**
    * Datos de catálogo de países.
-   * @property {Catalogo[]} paisesDatos
+   * @type {Catalogo[]}
    */
   public paisesDatos: Catalogo[] = [];
 
   /**
    * Datos de catálogo de estados.
-   * @property {Catalogo[]} estadosDatos
+   * @type {Catalogo[]}
    */
   public estadosDatos: Catalogo[] = [];
 
   /**
    * Datos de catálogo de municipios.
-   * @property {Catalogo[]} municipiosDatos
+   * @type {Catalogo[]}
    */
   public municipiosDatos: Catalogo[] = [];
 
   /**
    * Datos de catálogo de localidades.
-   * @property {Catalogo[]} localidadesDatos
+   * @type {Catalogo[]}
    */
   public localidadesDatos: Catalogo[] = [];
 
   /**
    * Datos de catálogo de colonias.
-   * @property {Catalogo[]} coloniasDatos
+   * @type {Catalogo[]}
    */
   public coloniasDatos: Catalogo[] = [];
 
   /**
    * Datos de catálogo de códigos postales.
-   * @property {Catalogo[]} codigosPostalesDatos
+   * @type {Catalogo[]}
    */
   public codigosPostalesDatos: Catalogo[] = [];
 
   /**
-   * @property tipoPersona
-   * @description Proporciona acceso al enum `TipoPersona` para su uso en la clase.
-   * @type {TipoPersona}
+   * Enum TipoPersona, accesible desde el HTML.
+   * @type {typeof TipoPersona}
    */
   public tipoPersona = TipoPersona;
 
   /**
    * Arreglo que almacena la lista de destinatarios.
-   * @property {Destinatario[]} destinatarios
+   * @type {DestinoFinal[]}
    */
   destinatarios: DestinoFinal[] = [];
+
   /**
-   * @property destinatarioTituloModificar
-   * @description Título del destinatario en modo de modificación.
+   * Título del destinatario en modo de modificación.
    * @type {string}
    */
-
   destinatarioTituloModificar = DESTINATARIO_TITULO_CUSTOM;
   /**
-   * @property isDestinatarioModificar
-   * @description Indica si el destinatario está en modo de modificación.
+   * Indica si el destinatario está en modo de modificación.
    * @type {boolean}
    */
   isDestinatarioModificar: boolean = false;
 
   /**
-   * @property idProcedimiento
-   * @description Identificador del procedimiento asociado a este componente.
+   * Identificador del procedimiento asociado a este componente.
    * @type {number}
    */
   @Input() idProcedimiento!: number;
@@ -141,78 +126,61 @@ export class AgregarDestinatarioCustomComponent
   /**
    * Datos del formulario que pueden ser de tipo `DestinoFinal`, `Proveedor`, `null` o `undefined`.
    * Este input se utiliza para recibir la información necesaria desde el componente padre.
-   *
    * @type {DestinoFinal | Proveedor | null | undefined}
    */
   @Input() formaDatos!: DestinoFinal | Proveedor | null | undefined;
 
   /**
-   * Datos del formulario que pueden ser de tipo `DestinoFinal`, `Proveedor`, `null` o `undefined`.
-   * Este input se utiliza para recibir la información necesaria desde el componente padre.
-   *
+   * Indica si el formulario debe mostrarse en modo solo lectura.
    * @type {boolean}
    */
   @Input() esFormularioSoloLectura: boolean = false;
   /**
-   * @property mostrarCamposNoContribuyente
-   * @description Controla la visibilidad de los campos específicos para no contribuyentes.
+   * Controla la visibilidad de los campos específicos para no contribuyentes.
    * @type {boolean}
-   * @default false
    */
   public mostrarCamposNoContribuyente: boolean = false;
 
   /**
-   * @property mostrarCamposNoContribuyente
-   * @description Controla la visibilidad de los campos específicos para no contribuyentes.
+   * Controla la visibilidad del campo de colonia según el procedimiento.
    * @type {boolean}
-   * @default false
    */
   public colonia_visibilidad: boolean = false;
 
   /**
    * Emite la lista de destinatarios actualizada para ser consumida por otros componentes.
-   * @property {EventEmitter<Destinatario[]>} updateDestinatarioFinalTabla
-   **/
-
-  @Output() updateDestinatarioFinalTablaDatos = new EventEmitter<
-    DestinoFinal[]
-  >();
-  /**
-   * Emite la lista de destinatarios actualizada para ser consumida por otros componentes.
-   * @property {EventEmitter<Destinatario[]>} actualizaExistenteEnDestinatarioDatos
-   * @description Emite la lista de destinatarios actualizada para ser consumida por otros componentes.
-   * @type {EventEmitter<Destinatario[]>}
+   * @type {EventEmitter<DestinoFinal[]>}
    */
+  @Output() updateDestinatarioFinalTablaDatos = new EventEmitter<DestinoFinal[]>();
 
-  @Output() actualizaExistenteEnDestinatarioDatos = new EventEmitter<
-    DestinoFinal[]
-  >();
+  /**
+   * Emite los datos actualizados cuando se edita un destinatario existente.
+   * @type {EventEmitter<DestinoFinal[]>}
+   */
+  @Output() actualizaExistenteEnDestinatarioDatos = new EventEmitter<DestinoFinal[]>();
 
   /**
    * Evento que se emite cuando el usuario desea cancelar una acción.
-   * @property {EventEmitter<boolean>} cancelarEventListener
+   * @type {EventEmitter<boolean>}
    */
   @Output() cancelarEventListener = new EventEmitter<boolean>();
 
   /**
-   * Constante que almacena el valor de "Nacional" para su uso en el formulario.
-   * @property {string} nacionalStr
-   * @default STR_NACIONAL
-   */
-
-  public nacionalStr = STR_NACIONAL;
-
-  /**
    * Opciones de radio para seleccionar el tipo de persona.
+   * @type {any[]}
    */
   tipoPersonaRadioOpciones = TIPO_PERSONA_OPCIONES;
 
+  /**
+   * Datos de la tabla de destinatarios finales.
+   * @type {DestinoFinal[]}
+   */
   @Input() destinatarioFinalTablaDatos: DestinoFinal[] = [];
 
-  /*
-   * Opciones de nacionalidad para el formulario.
+  /**
+   * Opciones de nacionalidad para terceros.
+   * @type {any[]}
    */
-
   tercerosNacionalidadOpciones = TERCEROS_NACIONALIDAD_OPCIONES;
   /**
    * Crea el componente e inicializa el grupo de formulario.
@@ -220,12 +188,10 @@ export class AgregarDestinatarioCustomComponent
    * @param {FormBuilder} fb - Inyector de FormBuilder para crear formularios reactivos.
    * @param {Tramite260204Store} tramiteStore - Servicio que maneja las actualizaciones de estado para "Tramite260204".
    * @param {Tramite260204Query} tramiteQuery - Servicio para consultar el estado de "Tramite260204".
-   * @param {Location} ubicaccion - Servicio de Angular para navegar hacia atrás en el historial.
    * @param {DatosSolicitudService} datosSolicitudService - Servicio para obtener diferentes listas de datos.
    */
   constructor(
     private fb: FormBuilder,
-    private ubicaccion: Location,
     private datosSolicitudService: DatosSolicitudService
   ) {
     this.mostrarCamposNoContribuyente =
@@ -253,10 +219,8 @@ export class AgregarDestinatarioCustomComponent
     const NUEVO_DESTINATARIO: DestinoFinal = {
       nombreRazonSocial: DENOMINACIONRAZON_ONLY_FLAG
         ? `${this.agregarDestinatarioFinal.value.denominacionRazon}`.trim()
-        : `${this.agregarDestinatarioFinal.value.nombres} ${
-            this.agregarDestinatarioFinal.value.primerApellido
-          } ${
-            this.agregarDestinatarioFinal.value.segundoApellido || ''
+        : `${this.agregarDestinatarioFinal.value.nombres} ${this.agregarDestinatarioFinal.value.primerApellido
+          } ${this.agregarDestinatarioFinal.value.segundoApellido || ''
           } `.trim(),
       rfc: this.agregarDestinatarioFinal.value.rfc,
       curp: '',
@@ -292,7 +256,6 @@ export class AgregarDestinatarioCustomComponent
       this.updateDestinatarioFinalTablaDatos.emit(this.destinatarios);
     }
     this.agregarDestinatarioFinal.reset();
-    this.ubicaccion.back();
   }
 
   /**

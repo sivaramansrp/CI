@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -20,7 +20,8 @@ import { ConfiguracionColumna } from '../../../core/models/shared/configuracion-
   imports: [CommonModule, FormsModule],
   host: {},
 })
-export class TablaDinamicaComponent<T> {
+export class TablaDinamicaComponent<T> implements OnChanges {
+
   /**
    * indice el tipo de selección para la tabla.
    * Puede ser 'RADIO' para seleccionar una fila con un botón de radio.
@@ -164,7 +165,7 @@ export class TablaDinamicaComponent<T> {
    *
    * @type {number[]}
    */
-  filasSeleccionadas: number[] = [];
+  @Input() filasSeleccionadas: number[] = [];
 
   /**
    * Almacena un array de los indices de las acciones para la tabla definidos en el enum TablaAcciones
@@ -298,5 +299,17 @@ export class TablaDinamicaComponent<T> {
       this.batonValor = ESTADO_REGISTRO.ACTIVAR;
     }
     return this.batonValor;
+  }
+
+  /**
+   * Se ejecuta cuando cambia alguna de las propiedades @Input del componente.
+   * En este caso, si cambia el arreglo de datos, se limpia la selección actual de filas.
+   *
+   * @param cambios - Objeto que contiene los cambios en las propiedades @Input
+   */
+  ngOnChanges(cambios: SimpleChanges): void {
+    if(cambios['datos']) {
+      this.filasSeleccionadas = [];
+    }
   }
 }

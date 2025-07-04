@@ -5,118 +5,81 @@ import {
 import { Destinatario, Fabricante } from '../../../shared/models/terceros-relacionados.model';
 import { TablaMercanciasImportacion } from '../models/importicon-retorno.model';
 
-
 /**
- * @const PASOS
- * @description Pasos configurados para guiar al usuario en el proceso de solicitud.
- * Cada paso incluye un índice, un título descriptivo, y estados de actividad y completitud.
+ * Arreglo constante que define los pasos del proceso para la gestión de permisos.
+ * Cada objeto representa un paso específico con su índice, título, y los estados de activo y completado.
+ *
+ * @property {number} indice - El número de orden del paso dentro del proceso.
+ * @property {string} titulo - El nombre descriptivo del paso.
+ * @property {boolean} activo - Indica si el paso está actualmente activo para el usuario.
+ * @property {boolean} completado - Indica si el paso ya ha sido completado.
+ *
+ * Ejemplo de uso:
+ * - Para mostrar el flujo de pasos en un formulario de solicitud.
+ * - Para controlar la navegación entre pasos según el estado de cada uno.
  */
 export const PASOS = [
-  {
-    indice: 1,
-    titulo: 'Capturar solicitud',
-    activo: true,
-    completado: true,
-  },
-  {
-    indice: 2,
-    titulo: 'Anexar requisitos',
-    activo: false,
-    completado: false,
-  },
-  {
-    indice: 3,
-    titulo: 'Firmar solicitud',
-    activo: false,
-    completado: false,
-  },
+    {
+        indice: 1,
+        titulo: 'Capturar solicitud',
+        activo: true,
+        completado: true,
+    },
+    {
+        indice: 2,
+        titulo: 'Anexar requisitos',
+        activo: false,
+        completado: false,
+    },
+    {
+        indice: 3,
+        titulo: 'Firmar solicitud',
+        activo: false,
+        completado: false,
+    }
 ];
 
 /**
- * @const MENSAJE_TABLA_OBLIGATORIA
- * @description Mensaje que indica que la tabla es obligatoria.
+ * Title message used for the sanitary permit required for the prior importation of returned products.
  */
 export const TITULOMENSAJE = 'Permiso sanitario previo de importación por retorno de productos';
 
 
 /**
- * @const {string} TEXTOS_REQUISITOS
- * @description La constante `TEXTOS_REQUISITOS` contiene un mensaje informativo que se muestra al usuario
- * cuando una solicitud ha sido registrada con un número temporal. Este número no tiene validez legal y 
- * solo sirve para identificar la solicitud. Un folio oficial será asignado cuando la solicitud sea firmada.
+ * Mensaje informativo que se muestra al usuario después de registrar una solicitud.
  * 
- * @usage Utilizado en el proceso de registro de solicitudes para informar al usuario sobre el estado temporal
- * de su solicitud.
+ * Indica que la solicitud ha sido registrada con un número temporal, el cual no tiene validez legal
+ * y solo sirve para identificar la solicitud de manera provisional. Un folio oficial será asignado
+ * cuando la solicitud sea firmada.
  */
 export const TEXTOS_REQUISITOS =
   'La solicitud ha quedado registrada con el número temporal [202767640]. Este no tiene validez legal y sirve solamente para efectos de identificar tu Solicitud. Un folio oficial le será asignado a la solicitud al momento en que esta sea firmada.';
 
-
-/**
- * @const ID_PROCEDIMIENTO
- * @description Identificador único del procedimiento para el trámite 260302.
+/** * @const ID_PROCEDIMIENTO
+ * @description Identificador único del procedimiento de importación/retorno sanitario.
+ * Este ID es utilizado para referenciar el trámite específico dentro del sistema.      
+ * @constant
  * @type {number}
- */
+ * @default 260103
+ * */
 export const ID_PROCEDIMIENTO = 260103;
 
 /**
- * @const DESTINATARIO_ENCABEZADO_DE_TABLA
- * @description Columnas configuradas para mostrar los datos del fabricante en una tabla.
+ * Configuración de las columnas para la tabla de destinatarios en el trámite de importación/retorno sanitario.
+ *
+ * Cada objeto en el arreglo representa una columna de la tabla, especificando:
+ * - `encabezado`: El nombre que se mostrará en la cabecera de la columna.
+ * - `clave`: Una función que recibe una fila de tipo `Destinatario` y retorna el valor a mostrar en la columna correspondiente.
+ * - `orden`: El orden en el que aparecerá la columna en la tabla.
+ *
+ * Las columnas incluyen información como nombre o razón social, RFC, CURP, teléfono, correo electrónico, dirección y otros datos relevantes del destinatario.
+ *
+ * @see ConfiguracionColumna
+ * @see Destinatario
  */
-export const DESTINATARIO_ENCABEZADO_DE_TABLA: ConfiguracionColumna<Destinatario>[] =
-  [
-    {
-      encabezado: 'Nombre/Denominación o Razón Social',
-      clave: (fila) => fila.nombreRazonSocial,
-      orden: 1,
-    },
-    { encabezado: 'R.F.C.', clave: (fila) => fila.rfc, orden: 2 },
-    { encabezado: 'CURP', clave: (fila) => fila.curp, orden: 3 },
-    { encabezado: 'Teléfono', clave: (fila) => fila.telefono, orden: 4 },
-    {
-      encabezado: 'Correo Electrónico',
-      clave: (fila) => fila.correoElectronico,
-      orden: 5,
-    },
-    { encabezado: 'Calle', clave: (fila) => fila.calle, orden: 6 },
-    {
-      encabezado: 'Número Exterior',
-      clave: (fila) => fila.numeroExterior,
-      orden: 7,
-    },
-    {
-      encabezado: 'Número Interior',
-      clave: (fila) => fila.numeroInterior,
-      orden: 8,
-    },
-    { encabezado: 'País', clave: (fila) => fila.pais, orden: 9 },
-    { encabezado: 'Colonia', clave: (fila) => fila.colonia, orden: 10 },
-    {
-      encabezado: 'Municipio o Alcaldía',
-      clave: (fila) => fila.municipioAlcaldia,
-      orden: 11,
-    },
-    { encabezado: 'Localidad', clave: (fila) => fila.localidad, orden: 12 },
-    {
-      encabezado: 'Estado/Localidad',
-      clave: (fila) => fila.localidad,
-      orden: 13,
-    },
-    {
-      encabezado: 'Código Postal',
-      clave: (fila) => fila.codigoPostal,
-      orden: 14,
-    },
-  ];
-
-  /**
- * @const FABRICANTE_ENCABEZADO_DE_TABLA
- * @description Columnas configuradas para mostrar los datos del Fabricante en una tabla.
- */
-export const FABRICANTE_ENCABEZADO_DE_TABLA: ConfiguracionColumna<Fabricante>[] =
-[
-
+export const DESTINATARIO_ENCABEZADO_DE_TABLA: ConfiguracionColumna<Destinatario>[] = [
   {
+    /** Nombre o razón social del destinatario */
     encabezado: 'Nombre/Denominación o Razón Social',
     clave: (fila) => fila.nombreRazonSocial,
     orden: 1,
@@ -124,137 +87,176 @@ export const FABRICANTE_ENCABEZADO_DE_TABLA: ConfiguracionColumna<Fabricante>[] 
   { encabezado: 'R.F.C.', clave: (fila) => fila.rfc, orden: 2 },
   { encabezado: 'CURP', clave: (fila) => fila.curp, orden: 3 },
   { encabezado: 'Teléfono', clave: (fila) => fila.telefono, orden: 4 },
-  {
-    encabezado: 'Correo Electrónico',
-    clave: (fila) => fila.correoElectronico,
-    orden: 5,
-  },
+  { encabezado: 'Correo Electrónico', clave: (fila) => fila.correoElectronico, orden: 5 },
   { encabezado: 'Calle', clave: (fila) => fila.calle, orden: 6 },
-  {
-    encabezado: 'Número Exterior',
-    clave: (fila) => fila.numeroExterior,
-    orden: 7,
-  },
-  {
-    encabezado: 'Número Interior',
-    clave: (fila) => fila.numeroInterior,
-    orden: 8,
-  },
+  { encabezado: 'Número Exterior', clave: (fila) => fila.numeroExterior, orden: 7 },
+  { encabezado: 'Número Interior', clave: (fila) => fila.numeroInterior, orden: 8 },
   { encabezado: 'País', clave: (fila) => fila.pais, orden: 9 },
   { encabezado: 'Colonia', clave: (fila) => fila.colonia, orden: 10 },
-  {
-    encabezado: 'Municipio o Alcaldía',
-    clave: (fila) => fila.municipioAlcaldia,
-    orden: 11,
-  },
+  { encabezado: 'Municipio o Alcaldía', clave: (fila) => fila.municipioAlcaldia, orden: 11 },
   { encabezado: 'Localidad', clave: (fila) => fila.localidad, orden: 12 },
-  {
-    encabezado: 'Estado/Localidad',
-    clave: (fila) => fila.localidad,
-    orden: 13,
-  },
-  {
-    encabezado: 'Código Postal',
-    clave: (fila) => fila.codigoPostal,
-    orden: 14,
-  },
+  { encabezado: 'Estado/Localidad', clave: (fila) => fila.localidad, orden: 13 },
+  { encabezado: 'Código Postal', clave: (fila) => fila.codigoPostal, orden: 14 },
+];
+
+
+/**
+ * Arreglo de configuración que define las columnas para la tabla de fabricantes.
+ * 
+ * Cada objeto en el arreglo representa una columna, especificando:
+ * - `encabezado`: El nombre que se mostrará en la cabecera de la columna.
+ * - `clave`: Una función que recibe una fila de tipo `Fabricante` y retorna el valor a mostrar en esa columna.
+ * - `orden`: El orden en el que la columna debe aparecer en la tabla.
+ * 
+ * Este arreglo es utilizado para renderizar dinámicamente la tabla de fabricantes en la interfaz de usuario,
+ * asegurando consistencia en los encabezados y el mapeo de datos.
+ */
+export const FABRICANTE_ENCABEZADO_DE_TABLA: ConfiguracionColumna<Fabricante>[] = [
+  { encabezado: 'Nombre/Denominación o Razón Social', clave: (fila) => fila.nombreRazonSocial, orden: 1 },
+  { encabezado: 'R.F.C.', clave: (fila) => fila.rfc, orden: 2 },
+  { encabezado: 'CURP', clave: (fila) => fila.curp, orden: 3 },
+  { encabezado: 'Teléfono', clave: (fila) => fila.telefono, orden: 4 },
+  { encabezado: 'Correo Electrónico', clave: (fila) => fila.correoElectronico, orden: 5 },
+  { encabezado: 'Calle', clave: (fila) => fila.calle, orden: 6 },
+  { encabezado: 'Número Exterior', clave: (fila) => fila.numeroExterior, orden: 7 },
+  { encabezado: 'Número Interior', clave: (fila) => fila.numeroInterior, orden: 8 },
+  { encabezado: 'País', clave: (fila) => fila.pais, orden: 9 },
+  { encabezado: 'Colonia', clave: (fila) => fila.colonia, orden: 10 },
+  { encabezado: 'Municipio o Alcaldía', clave: (fila) => fila.municipioAlcaldia, orden: 11 },
+  { encabezado: 'Localidad', clave: (fila) => fila.localidad, orden: 12 },
+  { encabezado: 'Estado/Localidad', clave: (fila) => fila.localidad, orden: 13 },
+  { encabezado: 'Código Postal', clave: (fila) => fila.codigoPostal, orden: 14 },
 ];
 
 /**
  * @enum TIPO_TABLA_DATOS
- * @description Tipos de tablas de datos disponibles en la aplicación.
- * Se utiliza para identificar el tipo de tabla que se está utilizando.
+ * @description Identifica el tipo de tabla mostrada: destinatario o fabricante.
  */
 export enum TIPO_TABLA_DATOS {
+  /** Tabla de destinatario (destino final) */
   DESTINATARIO = 'Destinatario(Destino final)',
+  /** Tabla de fabricante */
   Fabricante = 'Fabricante',
 }
+
+
+/**
+ * Arreglo de definiciones de columnas para la tabla de productos de importación sanitaria.
+ *
+ * Cada objeto en el arreglo representa una columna de la tabla, especificando:
+ * - `encabezado`: El nombre visible de la columna.
+ * - `clave`: Función que extrae el valor correspondiente de un objeto `TablaMercanciasImportacion`.
+ * - `orden`: El orden en el que la columna debe aparecer.
+ *
+ * Las columnas incluyen información como clasificación, denominación, marca, fracción arancelaria,
+ * unidades de medida, cantidades, país de origen y procedencia, tipo y uso específico del producto.
+ *
+ * @constant
+ * @type {{
+ *   encabezado: string;
+ *   clave: (ele: TablaMercanciasImportacion) => string | undefined;
+ *   orden: number;
+ * }[]}
+ */
 export const PRODUCTO_TABLA_IMPORTACION = [
   {
+    /** Clasificación del producto */
     encabezado: 'Clasificación del producto',
-    clave: (ele: TablaMercanciasImportacion): string => ele.clasificacionProducto, // Reemplaza 'ele.clasificacionProducto' con la clave correcta
+    clave: (ele: TablaMercanciasImportacion): string => ele.clasificacionProducto,
     orden: 1,
   },
   {
+    /** Detalle adicional de la clasificación */
     encabezado: 'Especificar clasificación del producto',
-    clave: (ele: TablaMercanciasImportacion): string =>
-      ele.especificarClasificacionProducto, // Reemplaza 'ele.especificarClasificacionProducto' con la clave correcta
+    clave: (ele: TablaMercanciasImportacion): string => ele.especificarClasificacionProducto,
     orden: 2,
   },
   {
+    /** Nombre específico del producto */
     encabezado: 'Denominación específica del producto',
-    clave: (ele: TablaMercanciasImportacion): string | undefined =>
-      ele.denominacionEspecificaProducto, // Reemplaza 'ele.denominacionEspecificaProducto' con la clave correcta
+    clave: (ele: TablaMercanciasImportacion): string | undefined => ele.denominacionEspecificaProducto,
     orden: 3,
   },
   {
+    /** Marca del producto */
     encabezado: 'Marca',
-    clave: (ele: TablaMercanciasImportacion): string | undefined =>
-      ele.marca, // Reemplaza 'ele.denominacionEspecificaProducto' con la clave correcta
+    clave: (ele: TablaMercanciasImportacion): string | undefined => ele.marca,
     orden: 4,
   },
   {
+    /** Fracción arancelaria aplicable */
     encabezado: 'Fracción arancelaria',
-    clave: (ele: TablaMercanciasImportacion): string => ele.fraccionArancelaria, // Reemplaza 'ele.fraccionArancelaria' con la clave correcta
+    clave: (ele: TablaMercanciasImportacion): string => ele.fraccionArancelaria,
     orden: 5,
   },
   {
+    /** Descripción de la fracción arancelaria */
     encabezado: 'Descripción de la fracción',
-    clave: (ele: TablaMercanciasImportacion): string | undefined =>
-      ele.descripcionFraccion, // Reemplaza 'ele.descripcionFraccion' con la clave correcta
+    clave: (ele: TablaMercanciasImportacion): string | undefined => ele.descripcionFraccion,
     orden: 6,
   },
   {
+    /** Unidad de medida de tarifa (UMT) */
     encabezado: 'Unidad de medida de tarifa (UMT)',
-    clave: (ele: TablaMercanciasImportacion): string | undefined => ele.unidadMedidaTarifa, // Reemplaza 'ele.unidadMedidaTarifa' con la clave correcta
+    clave: (ele: TablaMercanciasImportacion): string | undefined => ele.unidadMedidaTarifa,
     orden: 7,
   },
   {
+    /** Cantidad correspondiente a UMT */
     encabezado: 'Cantidad UMT',
-    clave: (ele: TablaMercanciasImportacion): string => ele.cantidadUMT, // Reemplaza 'ele.cantidadUMT' con la clave correcta
+    clave: (ele: TablaMercanciasImportacion): string => ele.cantidadUMT,
     orden: 8,
   },
   {
+    /** Unidad de medida de comercialización (UMC) */
     encabezado: 'Unidad de medida de comercialización (UMC)',
-    clave: (ele: TablaMercanciasImportacion): string | undefined =>
-      ele.unidadMedidaComercializacion,
+    clave: (ele: TablaMercanciasImportacion): string | undefined => ele.unidadMedidaComercializacion,
     orden: 9,
   },
   {
+    /** Cantidad correspondiente a UMC */
     encabezado: 'Cantidad UMC',
-    clave: (ele: TablaMercanciasImportacion): string => ele.cantidadUMC, // Reemplaza 'ele.cantidadUMT' con la clave correcta
+    clave: (ele: TablaMercanciasImportacion): string => ele.cantidadUMC,
     orden: 10,
   },
   {
+    /** País de origen del producto */
     encabezado: 'Pais de origen',
-    clave: (ele: TablaMercanciasImportacion): string => ele.paisOrigen, // Reemplaza 'ele.cantidadUMT' con la clave correcta
+    clave: (ele: TablaMercanciasImportacion): string => ele.paisOrigen,
     orden: 11,
   },
   {
+    /** País de procedencia del producto */
     encabezado: 'Pais de procedencia',
-    clave: (ele: TablaMercanciasImportacion): string => ele.paisProcedencia, // Reemplaza 'ele.cantidadUMT' con la clave correcta
+    clave: (ele: TablaMercanciasImportacion): string => ele.paisProcedencia,
     orden: 12,
   },
   {
+    /** Tipo de producto (por categoría) */
     encabezado: 'Tipo producto',
-    clave: (ele: TablaMercanciasImportacion): string => ele.tipoProducto, // Reemplaza 'ele.tipoProducto' con la clave correcta
+    clave: (ele: TablaMercanciasImportacion): string => ele.tipoProducto,
     orden: 13,
   },
   {
+    /** Uso específico del producto importado */
     encabezado: 'Uso especifico',
-    clave: (ele: TablaMercanciasImportacion): string => ele.usoEspecifico, // Reemplaza 'ele.usoEspecifico' con la clave correcta
+    clave: (ele: TablaMercanciasImportacion): string => ele.usoEspecifico,
     orden: 14,
   },
 ];
 
 /**
- * @const TERCEROS_NACIONALIDAD_RADIO_OPCIONS
- * @description Opciones para el radio de nacionalidad de terceros.
- * Contiene dos opciones: "Nacional" y "Extranjero".
+ * Opciones para el radio button que permite seleccionar la nacionalidad de terceros.
  * 
- * @property {string} label - Etiqueta que describe la opción.
- * @property {string} value - Valor asociado a la opción. 
- * "true" para Nacional y "false" para Extranjero.
+ * Cada opción contiene una etiqueta (`label`) que representa el texto visible para el usuario,
+ * y un valor (`value`) en formato string que indica si la nacionalidad es nacional ("true") o extranjera ("false").
+ * 
+ * @example
+ * // Uso típico en un formulario de selección de nacionalidad:
+ * // [
+ * //   { label: 'Nacional', value: 'true' },
+ * //   { label: 'Extranjero', value: 'false' }
+ * // ]
  */
 export const TERCEROS_NACIONALIDAD_RADIO_OPCIONS = [
   { label: 'Nacional', value: 'true' },
@@ -263,46 +265,53 @@ export const TERCEROS_NACIONALIDAD_RADIO_OPCIONS = [
 
 
 /**
- * @const TERCEROS_PERSONA_RADIO_OPCIONS
- * @description Opciones de selección para el tipo de persona (Física o Moral) en un formulario.
- * @type {Array<{ label: string, value: TipoPersona }>}
- * 
- * @property {string} label - Etiqueta que describe el tipo de persona.
- * @property {TipoPersona} value - Valor asociado al tipo de persona, basado en la enumeración `TipoPersona`.
- * 
- * @usage
- * Este arreglo se utiliza para renderizar opciones de radio button en la interfaz de usuario,
- * permitiendo al usuario seleccionar entre una persona física o moral.
+ * Opciones de radio para seleccionar el tipo de persona (Física o Moral) en el formulario de terceros.
+ *
+ * Cada opción contiene:
+ * - `label`: Texto mostrado al usuario.
+ * - `value`: Valor asociado, correspondiente a una constante del enum `TipoPersona`.
+ * - `hint`: Texto de ayuda adicional mostrado junto a la opción.
+ *
+ * Utilizado para determinar si el tercero es una persona física o moral en los trámites de importación y retorno sanitario.
  */
 export const TERCEROS_PERSONA_RADIO_OPCIONS = [
-  { label: 'Física', value: TipoPersona.FISICA,hint:'Física' },
-  { label: 'Moral', value: TipoPersona.MORAL ,hint:'Moral'}
+  { label: 'Física', value: TipoPersona.FISICA, hint: 'Física' },
+  { label: 'Moral', value: TipoPersona.MORAL, hint: 'Moral' },
 ];
 
+
 /**
- * @const ELEMENTOS_REQUERIDOS
- * @description Lista de elementos requeridos para el trámite 260302.
- * @type {string[]}
- * @memberof exporticon-estupefacientes.enum
- * @usage Utilizado para validar los campos obligatorios en el formulario del trámite.
- * @example
- * ELEMENTOS_REQUERIDOS.includes('colonia'); // true
+ * Lista de elementos requeridos para el trámite de importación o retorno sanitario.
+ * 
+ * Contiene los nombres de los campos obligatorios que deben ser proporcionados:
+ * - 'denominacionRazon': Denominación o razón social de la empresa.
+ * - 'scian': Código SCIAN correspondiente a la actividad económica.
+ * - 'correoElectronico': Correo electrónico de contacto.
  */
-export const ELEMENTOS_REQUERIDOS=[
+export const ELEMENTOS_REQUERIDOS = [
   'denominacionRazon',
   'scian',
   'correoElectronico',
-]
+];
+
 
 /**
- * @const ELEMENTOS_ANADIDOS
- * @description Constante que define una lista de elementos adicionales utilizados en el trámite 260302.
- * Contiene los nombres de las propiedades relacionadas con información sanitaria y aduanera.
+ * Lista de identificadores de elementos que han sido añadidos en el proceso de importación o retorno sanitario.
  * 
- * @type {string[]}
+ * @remarks
+ * Cada elemento de este arreglo representa una clave utilizada para identificar campos o secciones específicas
+ * dentro del trámite correspondiente.
+ * 
  * @example
+ * // Uso típico:
+ * ELEMENTOS_ANADIDOS.forEach(elemento => {
+ *   console.log(elemento);
+ * });
+ * 
+ * @const
+ * @type {string[]}
  */
-export const ELEMENTOS_ANADIDOS=[
+export const ELEMENTOS_ANADIDOS = [
   'regimenLaMercancia',
   'domicilio-aduana',
-]
+];

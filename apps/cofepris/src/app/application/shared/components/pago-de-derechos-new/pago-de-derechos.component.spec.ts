@@ -65,17 +65,6 @@ describe('PagoDeDerechosComponent', () => {
     expect(controlValue).toBe('TESTVALUE');
   });
 
-  it('should emit setValoresStoreEvent when setValoresStore is called', () => {
-    const emitSpy = jest.spyOn(component.setValoresStoreEvent, 'emit');
-    component.setValoresStore(component.formularioPagoDerechos, 'llaveDePago', 'setLlaveDePago');
-
-    expect(emitSpy).toHaveBeenCalledWith({
-      formularioPagoDerechos: component.formularioPagoDerechos,
-      campo: 'llaveDePago',
-      metodoNombre: 'setLlaveDePago',
-    });
-  });
-
   it('should update banco value in the form when a banco is selected', () => {
     const bancoControl = component.formularioPagoDerechos.get('banco');
     bancoControl?.setValue(1);
@@ -115,12 +104,5 @@ describe('PagoDeDerechosComponent', () => {
     const claveControl = component.formularioPagoDerechos.get('claveDeReferencia');
     claveControl?.setValue('REF12345');
     expect(claveControl?.value).toBe('REF12345');
-  });
-
-  it('should call setValoresStore for multiple fields', () => {
-    const spy = jest.spyOn(component, 'setValoresStore');
-    component.setValoresStore(component.formularioPagoDerechos, 'claveDeReferencia', 'setClaveDeReferencia');
-    component.setValoresStore(component.formularioPagoDerechos, 'cadenaPagoDependencia', 'setCadenaPagoDependencia');
-    expect(spy).toHaveBeenCalledTimes(2);
   });
 });

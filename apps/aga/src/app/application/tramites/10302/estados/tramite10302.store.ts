@@ -171,7 +171,7 @@ export function createInitialState(): Solicitud10302State {
     showTabla: true,
     tipoDeMercancia: '',
     unidadMedida: '',
-    condicionMercancia: '',
+    condicionMercancia: '1',
     ano: null,
     cantidad: '',
     marca: '',

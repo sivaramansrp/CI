@@ -10,6 +10,7 @@ import { DetalleMercancia } from '../../../../shared/models/detalle-mercancia.mo
 import { Subject } from 'rxjs';
 import { TablaMercanciasDatos } from '../../../../shared/models/datos-solicitud.model';
 import { Tramite260203Query } from '../../estados/queries/tramite260203Query.query';
+
 /**
  * @component DatosMercanciaContenedoraComponent
  * @description Componente encargado de gestionar y actualizar la información de una mercancía seleccionada.
@@ -42,6 +43,17 @@ export class DatosMercanciaContenedoraComponent implements OnInit {
    * Estado completo del trámite, que contiene información como la tabla de mercancías.
    */
   public tramiteState!: Tramite260203State;
+
+  /**
+   * Observable que emite una lista de objetos de tipo `DetalleMercancia`.
+   * 
+   * Este flujo de datos se utiliza para gestionar y observar los detalles 
+   * de las mercancías contenidas en el componente. Los objetos de tipo 
+   * `DetalleMercancia` representan información específica sobre cada 
+   * mercancía, como su descripción, cantidad, y otros atributos relevantes.
+   * 
+   * @type {Observable<DetalleMercancia[]>}
+   */
   detalleMercancia$!: Observable<DetalleMercancia[]>;
 
   /**

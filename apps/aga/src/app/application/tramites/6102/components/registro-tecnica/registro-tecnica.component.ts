@@ -63,10 +63,10 @@ export class RegistroTecnicaComponent implements OnInit, OnDestroy {
    * @param router - Servicio de enrutamiento para la navegación entre rutas.
    */
   constructor(
-    private fb: FormBuilder,
+    public fb: FormBuilder,
     private store: Solicitud6102Store,
     private query: Solicitud6102Query,
-    private router: Router
+    public router: Router
   ) {}
 
   /**

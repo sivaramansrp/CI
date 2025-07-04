@@ -9,6 +9,15 @@ import { OPCIONES_DE_BOTON_DE_RADIO } from '../../constantes/materiales-peligros
 import { Tramite230501Query } from '../../estados/queries/tramite230501Query.query';
 import { Tramite230501Store } from '../../estados/stores/tramite230501Store.store';
 
+/**
+ * Componente Angular para gestionar el uso final de materiales peligrosos.
+ * Permite a los usuarios ingresar información sobre el usuario final y el uso final de los materiales.
+ * Utiliza formularios reactivos para la captura de datos y se integra con servicios para obtener catálogos.
+ * 
+ * @remarks
+ * Este componente es parte del trámite 230501 y se encarga de manejar la sección de uso final,
+ * incluyendo la validación de formularios y la interacción con el store del trámite.
+ */
 @Component({
   selector: 'app-uso-final',
   standalone: true,
@@ -163,9 +172,12 @@ export class UsoFinalComponent implements OnDestroy, OnInit {
     SEGUNDO_APELLIDO?.updateValueAndValidity();
     DENOMINACION_RAZON?.updateValueAndValidity();
   }
-    /**
-* Evalúa si se debe inicializar o cargar datos en el formulario.
-*/
+
+  /**
+   * Inicializa el estado del formulario de uso final.
+   * Si el formulario no existe, lo crea. Si el formulario está en modo solo lectura, lo desactiva.
+   * @returns {void}
+   */
   inicializarEstadoFormulario(): void {
     if (!this.usoFinalForm) {
       this.createUsoFinalForm();
