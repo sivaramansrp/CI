@@ -4,7 +4,8 @@ import {
   SolicitudPermisoState,
   Tramite260703Store,
 } from '../../estados/store/tramite260703.store';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { OPCIONES_DE_BOTON_DE_RADIO_INFORMACION_CONFIDENCIAL } from '../../enum/solicitud-permiso.enum';
 import { Tramite260703Query } from '../../estados/query/tramite260703.query';
 
@@ -38,6 +39,12 @@ export class DatosSolitudeComponent implements OnInit, OnDestroy {
    * Opciones de radio para seleccionar el tipo de solicitud.
    */
   radioOptions = OPCIONES_DE_BOTON_DE_RADIO_INFORMACION_CONFIDENCIAL;
+
+  /**
+  * Indica si el formulario está en modo solo lectura.
+  * Cuando es `true`, los campos del formulario no se pueden editar.
+  */
+   esFormularioSoloLectura: boolean = false; 
  
   /**
    * Constructor del componente.
@@ -48,8 +55,37 @@ export class DatosSolitudeComponent implements OnInit, OnDestroy {
   constructor(
     private formBuilder: FormBuilder,
     private tramite260703Store: Tramite260703Store,
-    private tramite260703Query: Tramite260703Query
-  ) {}
+    private tramite260703Query: Tramite260703Query,
+    private consultaioQuery: ConsultaioQuery
+  ) {
+    // Si es necesario, se puede agregar aquí la lógica del constructor.
+    this.consultaioQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.destruirNotificacion$),
+      map((seccionState) => {
+       this.esFormularioSoloLectura = seccionState.readonly;
+       
+      })
+    )
+    .subscribe()
+  }
+
+
+/**
+   * Guarda los datos del formulario de importador/exportador.
+   * Deshabilita los campos si el formulario está en modo solo lectura.
+   */
+
+  guardarDatosFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+    this.preOperativeForm.get('ideGenerica1')?.disable();
+    this.preOperativeForm.get('observaciones')?.disable();
+  }else {
+    this.preOperativeForm.get('ideGenerica1')?.enable();
+    this.preOperativeForm.get('observaciones')?.enable();
+  }
+}
+
 
   /**
    * Método del ciclo de vida que se ejecuta al inicializar el componente.
@@ -63,6 +99,7 @@ export class DatosSolitudeComponent implements OnInit, OnDestroy {
       });
 
     this.crearFormularioOperativo();
+     this.guardarDatosFormulario();
   }
 
   /**

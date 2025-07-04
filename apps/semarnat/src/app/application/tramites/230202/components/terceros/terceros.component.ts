@@ -156,6 +156,7 @@ export class TercerosComponent implements OnInit, OnDestroy {
    * @default false
    */
   soloLectura: boolean = false;
+  destinatarios: never[] | undefined;
 
   /**
    * Constructor del componente TercerosComponent.

@@ -1,5 +1,6 @@
 import { AbstractControl, ValidationErrors } from "@angular/forms";
 import { REGEX_PATRON_DECIMAL_12_3 } from "../../tramites/constantes/regex.constants";
+import moment from "moment";
 
 /**
 * Validador personalizado para verificar si un valor numérico cumple con un formato específico.
@@ -46,3 +47,49 @@ export function dateLessThanOrEqualToday(control: AbstractControl): ValidationEr
     }
     return null;
 }
+
+/**
+ * Convierte una cadena de texto a su representación hexadecimal en ISO-8859-1 (Latin-1).
+ * Los caracteres fuera del rango ISO-8859-1 (mayores a 255) son reemplazados por '3F' (el signo '?').
+ * 
+ * @param input - La cadena de texto a codificar
+ * @returns Una cadena hexadecimal que representa los bytes de la cadena codificada en ISO-8859-1
+ * 
+ */
+ export function encodeToISO88591Hex(input: string): string {
+  let hexString = '';
+  
+  for (let i = 0; i < input.length; i++) {
+    const CHAR_CODE = input.charCodeAt(i);
+    const BYTE = CHAR_CODE > 255 ? 0x3F : CHAR_CODE;
+    const HEX_BYTE = BYTE.toString(16).padStart(2, '0');
+    hexString += HEX_BYTE;
+  }
+  return hexString;
+}
+
+/**
+ * Convierte una cadena codificada en Base64 a su representación hexadecimal.
+ * 
+ * @param base64 - La cadena codificada en Base64 a convertir
+ * @returns Una cadena hexadecimal que representa los datos binarios decodificados
+ * 
+ */
+ export function base64ToHex(base64: string): string {
+    const BINARY = atob(base64);
+    return Array.from(BINARY)
+      .map(char => char.charCodeAt(0).toString(16).padStart(2, '0'))
+      .join('');
+  }
+
+    /**
+     * Formatea una fecha dada en formato de cadena a una cadena con el formato 'YYYY-MM-DD HH:mm:ss' 
+     * utilizando Moment.js.
+     *
+     * @param fecha - La fecha en formato de cadena que se desea formatear.
+     * @returns Una cadena que representa la fecha formateada en el formato 'YYYY-MM-DD HH:mm:ss'.
+     */
+    export function formatearFechaConMoment(fecha: string): string {
+        const DATESTRING = new Date(fecha);
+        return moment(DATESTRING).format('YYYY-MM-DD HH:mm:ss');
+    }

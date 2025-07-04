@@ -40,28 +40,131 @@ export interface Catalogo {
  * @property {string} numeroSerie - Número de serie del vehículo.
  */
 export interface Solicitud32514State {
+  /**
+   * @property {string} residenteNacExt 
+   * @description
+   * Indica si el residente es nacional o del extranjero.
+   */
   residenteNacExt: string;
+  /**
+   * @property {string} tipoSolicitude 
+   * @description
+   * Tipo de solicitud del permiso.
+   */
   tipoSolicitude: string;
+  /**
+   * @property {string} numeroVehiculo 
+   * @description
+   * Número de identificación del vehículo.
+   */
   numeroVehiculo: string;
+  /**
+   * @property {string} numeroPermiso 
+   * @description
+   * Número del permiso de importación temporal.
+   */
   numeroPermiso: string;
+  /**
+   * @property {string} fechaEmision 
+   * @description
+   * Fecha de emisión del permiso.
+   */
   fechaEmision: string;
+  /**
+   * @property {string} fechaVencimiento 
+   * @description
+   * Fecha de vencimiento del permiso.
+   */
   fechaVencimiento: string;
+  /**
+   * @property {string} númeroPedimento 
+   * @description
+   * Número de pedimento aduanal.
+   */
   númeroPedimento: string;
+  /**
+   * @property {string} fechaPedimento 
+   * @description
+   * Fecha del pedimento.
+   */
   fechaPedimento: string;
+  /**
+   * @property {string} avisoNacExt 
+   * @description
+   * Aviso relacionado con la residencia (nacional/extranjero).
+   */
   avisoNacExt: string;
+  /**
+   * @property {string} fechaAcuse 
+   * @description
+   * Fecha del acuse de recibo.
+   */
   fechaAcuse: string;
+  /**
+   * @property {string} conformidad 
+   * @description
+   * Documento de conformidad u observaciones.
+   */
   conformidad: string;
-
+  /**
+   * @property {string} marca 
+   * @description
+   * Marca del vehículo.
+   */
   marca: string;
+  /**
+   * @property {string} tipo 
+   * @description
+   * Tipo del vehículo.
+   */
   tipo: string;
+  /**
+   * @property {string} modelo 
+   * @description
+   * Modelo del vehículo.
+   */
   modelo: string;
+  /**
+   * @property {string} niv 
+   * @description
+   * Número de identificación vehicular (NIV).
+   */
   niv: string;
+  /**
+   * @property {string} numeroDePlacas 
+   * @description
+   * Número de placas del vehículo.
+   */
   numeroDePlacas: string;
+  /**
+   * @property {string} estadoPlacas 
+   * @description
+   * Estado donde están registradas las placas.
+   */
   estadoPlacas: string;
-
+  /**
+   * @property {string} declara 
+   * @description
+   * Declaración relacionada con la importación.
+   */
   declara: string;
+  /**
+   * @property {string} tipoVehiculo 
+   * @description
+   * Tipo específico de vehículo.
+   */
   tipoVehiculo: string;
+  /**
+   * @property {string} especifique 
+   * @description
+   * Detalles adicionales del tipo de vehículo.
+   */
   especifique: string;
+  /**
+   * @property {string} numeroSerie 
+   * @description
+   * Número de serie del vehículo.
+   */
   numeroSerie: string;
 }
 

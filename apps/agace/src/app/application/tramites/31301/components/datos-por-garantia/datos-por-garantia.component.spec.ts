@@ -117,10 +117,7 @@ describe('DatosPorGarantiaComponent', () => {
   });
 
   it('should call conseguirNombreInstitucionCatalogo on initialization', () => {
-    const spy = jest.spyOn(
-      component,
-      'conseguirNombreInstitucionCatalogo'
-    );
+    const spy = jest.spyOn(component, 'conseguirNombreInstitucionCatalogo');
     component.conseguirNombreInstitucionCatalogo();
     expect(spy).toHaveBeenCalled();
   });
@@ -139,7 +136,47 @@ describe('DatosPorGarantiaComponent', () => {
     ).toHaveBeenCalledWith(1);
   });
 
-  it('should complete destroy$ on ngOnDestroy', () => {
+  it('should set nombreInstitucionCatalogo after conseguirNombreInstitucionCatalogo is called', () => {
+    component.nombreInstitucionCatalogo = {
+      labelNombre: 'Datos de la póliza de fianza actual',
+      required: false,
+      primerOpcion: 'Seleccione un valor',
+      catalogos: [
+        { id: 1, descripcion: 'DORAMA, INSTITUCION DE GARANTIAS SA' },
+        { id: 2, descripcion: 'DORAMA, INSTITUCION DE GARANTIAS SA - 1' },
+      ],
+    } as any;
+    component.conseguirNombreInstitucionCatalogo();
+    expect(component.nombreInstitucionCatalogo).toEqual({
+      labelNombre: 'Datos de la póliza de fianza actual',
+      required: false,
+      primerOpcion: 'Seleccione un valor',
+      catalogos: [
+        { id: 1, descripcion: 'DORAMA, INSTITUCION DE GARANTIAS SA' },
+        { id: 2, descripcion: 'DORAMA, INSTITUCION DE GARANTIAS SA - 1' },
+      ],
+    });
+  });
+
+  it('should disable the form if esFormularioSoloLectura is true in guardarDatosFormulario', () => {
+    component.inicializarFormulario = jest.fn();
+    component.polizaDeFianzaForm = new FormBuilder().group({ test: [''] });
+    const disableSpy = jest.spyOn(component.polizaDeFianzaForm, 'disable');
+    component.esFormularioSoloLectura = true;
+    component.guardarDatosFormulario();
+    expect(disableSpy).toHaveBeenCalled();
+  });
+
+  it('should enable the form if esFormularioSoloLectura is false in guardarDatosFormulario', () => {
+    component.inicializarFormulario = jest.fn();
+    component.polizaDeFianzaForm = new FormBuilder().group({ test: [''] });
+    const enableSpy = jest.spyOn(component.polizaDeFianzaForm, 'enable');
+    component.esFormularioSoloLectura = false;
+    component.guardarDatosFormulario();
+    expect(enableSpy).toHaveBeenCalled();
+  });
+
+ it('should complete destroy$ on ngOnDestroy', () => {
     const destroySpy = jest.spyOn(component['destroy$'], 'next');
     const completeSpy = jest.spyOn(component['destroy$'], 'complete');
     component.ngOnDestroy();

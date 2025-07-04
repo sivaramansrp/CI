@@ -57,6 +57,7 @@ describe('TercerosRelacionadosComponent', () => {
 
     fixture = TestBed.createComponent(TercerosRelacionadosComponent);
     component = fixture.componentInstance;
+    (component as any).consultaState = { readonly: false };
     fixture.detectChanges();
   });
 
@@ -78,13 +79,16 @@ describe('TercerosRelacionadosComponent', () => {
     expect(component.otrosTablaDatos).toEqual(OTROS_MOCK);
   });
 
-  it('debe limpiar las suscripciones al destruirse', () => {
-    const nextSpy = jest.spyOn((component as any).destroyed$, 'next');
-    const completeSpy = jest.spyOn((component as any).destroyed$, 'complete');
+ it('debe limpiar las suscripciones al destruirse', () => {
+  // Asegura que consultaState existe para evitar errores en ngOnDestroy
+  (component as any).consultaState = { readonly: false };
 
-    component.ngOnDestroy();
+  const nextSpy = jest.spyOn((component as any).destroyed$, 'next');
+  const completeSpy = jest.spyOn((component as any).destroyed$, 'complete');
 
-    expect(nextSpy).toHaveBeenCalled();
-    expect(completeSpy).toHaveBeenCalled();
-  });
+  component.ngOnDestroy();
+
+  expect(nextSpy).toHaveBeenCalled();
+  expect(completeSpy).toHaveBeenCalled();
+});
 });

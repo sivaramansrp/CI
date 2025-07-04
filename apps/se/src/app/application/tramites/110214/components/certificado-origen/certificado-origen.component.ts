@@ -242,8 +242,8 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-    this.mercanciaDisponsiblesTablaDatos = this.solicitudState.mercanciaDisponsiblesTablaDatos;
-    this.mercanciaSeleccionadasTablaDatos = this.solicitudState.mercanciaSeleccionadasTablaDatos;
+    this.mercanciaDisponsiblesTablaDatos = this.solicitudState.mercanciaDisponsiblesTablaDatos ?? [];
+    this.mercanciaSeleccionadasTablaDatos = this.solicitudState.mercanciaSeleccionadasTablaDatos ?? [];
     this.inicializarFormularioCertificado();
     this.inicializarFormularioMercancia();
     this.inicializarFormularioArchivo();

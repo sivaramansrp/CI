@@ -1,3 +1,28 @@
+/**
+ * @description
+ * Servicio para gestionar la elegibilidad de textiles en el trámite 120301.
+ * Proporciona métodos para obtener catálogos, datos de tablas, datos precargados y el estado del formulario
+ * desde archivos JSON locales y desde el store de estado de elegibilidad de textiles.
+ *
+ * @example
+ * // Obtener un catálogo para un menú desplegable
+ * elegibilidadTextilesService.obtenerMenuDesplegable('archivo.json').subscribe(data => ...);
+ *
+ * // Obtener datos de una tabla
+ * elegibilidadTextilesService.obtenerTablaDatos<any>('tabla.json').subscribe(data => ...);
+ *
+ * // Obtener el estado actual del formulario
+ * elegibilidadTextilesService.getFormData().subscribe(state => ...);
+ *
+ * // Obtener la lista de países
+ * elegibilidadTextilesService.obtenerListaPaises().subscribe(paises => ...);
+ *
+ * // Obtener datos precargados
+ * elegibilidadTextilesService.getPrefillDatos().subscribe(prefill => ...);
+ *
+ * @see ElegibilidadDeTextilesStore
+ * @see TextilesState
+ */
 import { Catalogo, RespuestaCatalogos } from '@ng-mf/data-access-user';
 import {
   ElegibilidadDeTextilesStore,
@@ -7,12 +32,23 @@ import { Observable, map } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
+/**
+ * Servicio para la gestión de elegibilidad de textiles.
+ */
 @Injectable({
   providedIn: 'root',
 })
 export class ElegibilidadTextilesService {
+    /**
+   * Ruta base para los archivos JSON de catálogos y datos.
+   */
   url = '../../../../../assets/json/120301/';
 
+    /**
+   * Constructor del servicio.
+   * @param http Cliente HTTP para realizar solicitudes a archivos JSON.
+   * @param elegibilidadDeTextilesStore Store para el estado de elegibilidad de textiles.
+   */
   constructor(
     private readonly http: HttpClient,
     private elegibilidadDeTextilesStore: ElegibilidadDeTextilesStore
@@ -60,9 +96,8 @@ export class ElegibilidadTextilesService {
   }
 
   /**
-   * @method getPrefillDatos
-   * @description Obtiene los datos precargados desde un archivo JSON local.
-   * @returns {Observable<TextilesState>} Observable que emite el estado de datos textiles precargado.
+   * Obtiene los datos precargados desde un archivo JSON local.
+   * @returns Observable que emite el estado de datos textiles precargado.
    */
   getPrefillDatos(): Observable<TextilesState> {
     const JSONURL = 'assets/json/120301/datos-prefill.json';

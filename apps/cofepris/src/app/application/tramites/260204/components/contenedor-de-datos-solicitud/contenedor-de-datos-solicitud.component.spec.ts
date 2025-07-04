@@ -162,4 +162,14 @@ describe('ContenedorDeDatosSolicitudComponent', () => {
     expect(destroyNotifierSpy).toHaveBeenCalledTimes(1);
     expect(completeNotifierSpy).toHaveBeenCalledTimes(1);
   });
+
+  it('should handle empty state gracefully on ngOnInit', () => {
+    jest.spyOn(mockTramite260204Query.selectTramiteState$, 'pipe').mockReturnValue(of(null));
+    component.ngOnInit();
+    expect(component.tramiteState).toBeUndefined();
+    expect(component.opcionConfig.datos).toEqual([]);
+    expect(component.scianConfig.datos).toEqual([]);
+    expect(component.tablaMercanciasConfig.datos).toEqual([]);
+  });
+
 });

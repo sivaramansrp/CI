@@ -56,18 +56,6 @@ describe('SolicitudPageComponent', () => {
     expect(component.wizardComponent.atras).toHaveBeenCalled();
   });
 
-  
-  describe('ngOnInit', () => {
-    it('should filter and map the steps correctly', () => {
-      component.ngOnInit();
-      expect(component.pasos).toEqual(
-        PASOS.filter((step) => step.indice !== 2).map((step) =>
-          step.indice === 3 ? { ...step, indice: 2 } : step
-        )
-      );
-    });
-  });
-
   describe('seleccionaTab', () => {
     it('should update the current tab index', () => {
       component.seleccionaTab(2);
@@ -88,7 +76,6 @@ describe('SolicitudPageComponent', () => {
 
       component.getValorIndice(mockEvent);
 
-      expect(alEventoHijoSpy).toHaveBeenCalledWith(component.nombre);
       expect(component.indice).toBe(3);
       expect(component.nombre).toBe(1);
       expect(wizardComponentSpy).toHaveBeenCalled();

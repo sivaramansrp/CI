@@ -1,33 +1,39 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, Input, ViewChild } from '@angular/core';
+import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { CrosslistComponent } from '@libs/shared/data-access-user/src';
 import { DatosDelTramiteComponent } from '../../../../shared/components/datos-del-tramite/datos-del-tramite.component';
 import { DatosDelTramiteFormState } from '../../../../shared/models/datos-del-tramite.model';
+import { DatosMercanciaContenedoraComponent } from '../datos-mercancia-contenedora/datos-mercancia-contenedora.component';
 import { JustificacionTramiteFormState } from '../../../../shared/models/datos-del-tramite.model';
 import { MercanciaDetalle } from '../../../../shared/models/datos-del-tramite.model';
+import { ModalComponent } from '../../../../shared/components/modal/modal.component';
 import { NUMERO_TRAMITE } from '../../../../shared/constants/datos-solicitud.enum';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
-import { Subject } from 'rxjs';
 import { Tramite240311Query } from '../../estados/tramite240311Query.query';
 import { Tramite240311Store } from '../../estados/tramite240311Store.store';
 import { construirAduanasBotones } from '../../constants/solicitude-de-artificios-pirotecnicos.enum';
-import { takeUntil } from 'rxjs';
 
 /**
  * @title Datos del Trámite Contenedora
  * @description Componente contenedor que se encarga de enlazar el estado del trámite con el componente de datos del trámite.
  * @summary Maneja la suscripción al estado y propaga los cambios a través del store.
  */
-
 @Component({
   selector: 'app-datos-del-tramite-contenedora',
   standalone: true,
-  imports: [CommonModule, DatosDelTramiteComponent],
+  imports: [CommonModule, DatosDelTramiteComponent, ModalComponent],
   templateUrl: './datos-del-tramite-contenedora.component.html',
   styleUrl: './datos-del-tramite-contenedora.component.scss',
 })
+
+/**
+ * Clase que representa el componente contenedor de los datos del trámite.
+ */
 export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
+  @ViewChild('modal', { static: false }) modalComponent!: ModalComponent;
   /**
    * Observable para limpiar suscripciones activas al destruir el componente.
    * @property {Subject<void>} unsubscribe$
@@ -65,12 +71,18 @@ export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
   @ViewChild(CrosslistComponent) crossList!: CrosslistComponent;
 
   /**
-  * @property {Array<{ btnNombre: string; class: string }>} aduanasBotones
-  * Lista de botones configurados para manejar las acciones relacionadas con las aduanas.
-  * Cada botón incluye un nombre y una clase CSS para su estilo.
-  */
+   * @property {Array<{ btnNombre: string; class: string }>} aduanasBotones
+   * Lista de botones configurados para manejar las acciones relacionadas con las aduanas.
+   * Cada botón incluye un nombre y una clase CSS para su estilo.
+   */
   aduanasBotones: { btnNombre: string; class: string }[] = [];
-  
+
+  /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  esFormularioSoloLectura: boolean = false;
+
   /**
    * Constructor del componente.
    *
@@ -81,9 +93,18 @@ export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
    */
   constructor(
     private tramiteQuery: Tramite240311Query,
-    private tramiteStore: Tramite240311Store
+    private tramiteStore: Tramite240311Store,
+    private consultaioQuery: ConsultaioQuery
   ) {
-     // Constructor del componente
+    // Constructor del componente
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.unsubscribe$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+        })
+      )
+      .subscribe();
   }
 
   /**
@@ -94,12 +115,13 @@ export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   ngOnInit(): void {
-    this.aduanasBotones = construirAduanasBotones(this);
     this.tramiteQuery.getMercanciaTablaDatos$
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((data) => {
         this.datosMercanciaTabla = data;
       });
+
+    this.aduanasBotones = construirAduanasBotones(this);
 
     this.tramiteQuery.getDatosDelTramite$
       .pipe(takeUntil(this.unsubscribe$))
@@ -138,13 +160,41 @@ export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
   }
 
   /**
-  * @method updateJustificacionFormulario
-  * @description Actualiza el estado del formulario de justificación del trámite en el store.
-  * Permite guardar los datos capturados en el formulario de justificación.
-  *
-  * @param {JustificacionTramiteFormState} event - Estado actualizado del formulario de justificación.
-  * @returns {void}
-  */
+   * Abre el modal correspondiente según el nombre del evento recibido.
+   *
+   * Si el evento es `'Datosmercancia'`, se carga el componente `DatosMercanciaContenedoraComponent`
+   * dentro del modal y se le pasa una función de cierre como input.
+   *
+   * @method openModal
+   * @param {string} event - Nombre del evento que indica qué componente se debe mostrar en el modal.
+   * @returns {void}
+   */
+  openModal(event: string): void {
+    if (event === 'Datosmercancia') {
+      this.modalComponent.abrir(DatosMercanciaContenedoraComponent, {
+        cerrarModal: this.cerrarModal.bind(this),
+      });
+    }
+  }
+
+  /**
+   * Cierra el modal dinámico actualmente abierto utilizando el método del componente modal.
+   *
+   * @method cerrarModal
+   * @returns {void}
+   */
+  cerrarModal(): void {
+    this.modalComponent.cerrar();
+  }
+
+  /**
+   * @method updateJustificacionFormulario
+   * @description Actualiza el estado del formulario de justificación del trámite en el store.
+   * Permite guardar los datos capturados en el formulario de justificación.
+   *
+   * @param {JustificacionTramiteFormState} event - Estado actualizado del formulario de justificación.
+   * @returns {void}
+   */
   updateJustificacionFormulario(event: JustificacionTramiteFormState): void {
     this.tramiteStore.updateJustificacionFormulario(event);
   }

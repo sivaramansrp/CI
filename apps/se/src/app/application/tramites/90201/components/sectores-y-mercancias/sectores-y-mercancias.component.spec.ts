@@ -49,8 +49,8 @@ describe('SectoresYMercanciasComponent', () => {
   });
 
   it('should disable form when esFormularioSoloLectura is true in guardarDatosFormulario', () => {
-    component.establecerFormSectores();
     component.esFormularioSoloLectura = true;
+    component.establecerFormSectores();
     expect(component.sectoresForm.disabled).toBe(true);
   });
 
@@ -77,5 +77,101 @@ describe('SectoresYMercanciasComponent', () => {
     const completeSpy = jest.spyOn(component['destroyNotifier$'], 'complete');
     component.ngOnDestroy();
     expect(completeSpy).toHaveBeenCalled();
+  });
+
+  it('should set seleccion to true when sectorSeleccion is called', () => {
+    component.seleccion = false;
+    component.sectorSeleccion();
+    expect(component.seleccion).toBe(true);
+  });
+
+  it('should push event to seleccionadoDatos when seleccionDeFilaDeTabla is called', () => {
+    const event = { claveDel: 'A', sectores: 'B' } as any;
+    component.seleccionadoDatos = [];
+    component.seleccionDeFilaDeTabla(event);
+    expect(component.seleccionadoDatos[0]).toBe(event);
+  });
+
+  it('should remove sector from sectores when eliminarPedimento is called with borrar=true', () => {
+    const sector = { claveDel: 'A', sectores: 'B' } as any;
+    component.sectores = [sector];
+    component.seleccionadoDatos = [sector];
+    component.eliminarPedimento(true);
+    expect(component.sectores.length).toBe(0);
+  });
+
+  it('should not remove sector from sectores when eliminarPedimento is called with borrar=false', () => {
+    const sector = { claveDel: 'A', sectores: 'B' } as any;
+    component.sectores = [sector];
+    component.seleccionadoDatos = [sector];
+    component.eliminarPedimento(false);
+    expect(component.sectores.length).toBe(1);
+  });
+
+  it('should set nuevaNotificacion with correct values on eliminarSector', () => {
+    component.eliminarSector();
+    expect(component.nuevaNotificacion).toEqual({
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: '¿Está seguro que desea eliminar el sector seleccionado?',
+      cerrar: false,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: 'Cancelar',
+    });
+  });
+
+  it('should set eliminarMercanciaNotificacion with correct values on eliminarMercancia', () => {
+    component.eliminarMercancia();
+    expect(component.eliminarMercanciaNotificacion).toEqual({
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: 'Seleccione la fraccion que desea eliminar.',
+      cerrar: false,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    });
+  });
+
+  it('should clear fraccion value in sectoresForm when mercancia is called with borrar=true', () => {
+    component.establecerFormSectores();
+    component.sectoresForm.get('fraccion')?.setValue('12345678');
+    component.mercancia(true);
+    expect(component.sectoresForm.get('fraccion')?.value).toBe('');
+  });
+
+  it('should not clear fraccion value in sectoresForm when mercancia is called with borrar=false', () => {
+    component.establecerFormSectores();
+    component.sectoresForm.get('fraccion')?.setValue('12345678');
+    component.mercancia(false);
+    expect(component.sectoresForm.get('fraccion')?.value).toBe('12345678');
+  });
+
+  it('should call inicializaCatalogos and inicializarConsulta on ngOnInit', () => {
+    const catalogosSpy = jest.spyOn<any, any>(component as any, 'inicializaCatalogos');
+    const consultaSpy = jest.spyOn(component, 'inicializarConsulta');
+    component.ngOnInit();
+    expect(catalogosSpy).toHaveBeenCalled();
+    expect(consultaSpy).toHaveBeenCalled();
+  });
+
+  it('should set esFormularioSoloLectura in inicializarConsulta', () => {
+    component.esFormularioSoloLectura = false;
+    component.inicializarConsulta();
+    expect(component.esFormularioSoloLectura).toBe(false);
+  });
+
+  it('should set solicitudState in inicializarFormulario', () => {
+    component.solicitudState = undefined as any;
+    component.inicializarFormulario();
+    expect(component.solicitudState).toEqual({
+      sector: 'SectorX',
+      fraccion: '12345678'
+    });
   });
 });

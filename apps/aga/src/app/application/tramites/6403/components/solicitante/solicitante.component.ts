@@ -55,7 +55,7 @@ export class SolicitanteComponent implements OnInit, OnDestroy {
     public fb: FormBuilder,
     public store: Tramite6403Store,
     public tramiteQuery: Tramite6403Query,
-    public autorizacionImportacionService: RetornoDePartesService
+    public retornoDePartesService: RetornoDePartesService
   ) { 
     // El constructor se utiliza para la inyección de dependencias.
   }
@@ -107,7 +107,7 @@ export class SolicitanteComponent implements OnInit, OnDestroy {
    * Carga los datos del solicitante desde el servicio y los almacena en el store.
    */
   cargarDatosSolicitante(): void {
-    this.autorizacionImportacionService.obtenerDatosSolicitante().pipe(
+    this.retornoDePartesService.obtenerDatosSolicitante().pipe(
       takeUntil(this.destroyNotifier$)).subscribe((datos) => {
         (this.store.setDatosSolicitante as (valor: unknown) => void)(datos);
         this.inicializarFormulario();

@@ -10,7 +10,7 @@ import { Component } from '@angular/core';
 import { PasoUnoComponent } from './paso-uno.component';
 import { Tramite260202Query } from '../../estados/tramite260202Query.query';
 import { Tramite260202Store } from '../../estados/tramite260202Store.store';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 
 @Injectable()
 class MockTramite260202Query {}
@@ -69,4 +69,29 @@ describe('PasoUnoComponent', () => {
     expect(component.destroyNotifier$.complete).toHaveBeenCalled();
   });
 
+  it('should run #guardarDatosFormulario()', async () => {
+    component.getRegistroTomaMuestrasMercanciasData = jest.fn().mockReturnValue(observableOf({}));
+    component.actualizarEstadoFormulario = jest.fn();
+    component.guardarDatosFormulario();
+    expect(component.getRegistroTomaMuestrasMercanciasData).toHaveBeenCalled();
+    expect(component.actualizarEstadoFormulario).toHaveBeenCalled();
+  });
+
+  it('should run #actualizarEstadoFormulario()', async () => {
+    const mockData = { key: 'value' };
+    component.tramite260202Store = component.tramite260202Store || {};
+    component.tramite260202Store.update = jest.fn();
+    component.actualizarEstadoFormulario(mockData);
+    expect(component.tramite260202Store.update).toHaveBeenCalledWith(expect.any(Function));
+  });
+
+  it('should run #getRegistroTomaMuestrasMercanciasData()', async () => {
+    const mockHttpClient = TestBed.inject(HttpClient);
+    jest.spyOn(mockHttpClient, 'get').mockReturnValue(observableOf({}));
+    const result = component.getRegistroTomaMuestrasMercanciasData();
+    expect(mockHttpClient.get).toHaveBeenCalledWith('assets/json/260202/respuestaDeActualizacionDe.json');
+    result.subscribe((data) => {
+      expect(data).toEqual({});
+    });
+  });
 });

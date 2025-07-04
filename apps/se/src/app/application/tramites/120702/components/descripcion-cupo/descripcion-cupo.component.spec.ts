@@ -14,10 +14,13 @@ describe('DescripcionCupoComponent', () => {
 
     fixture = TestBed.createComponent(DescripcionCupoComponent);
     component = fixture.componentInstance;
+    component.consultaState = {
+      readonly: false,
+    } as any;
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('debería crear', () => {
     expect(component).toBeTruthy();
   });
 });

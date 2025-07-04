@@ -61,6 +61,7 @@
           [required]="true"
           formControlName="elCapitalSocial"
             (change)="setValoresStore(inicializarFormulario, 'elCapitalSocial')"
+          [isDisabled]="esFormularioSoloLectura"
       ></lib-input-check>
 
     </div>
@@ -72,6 +73,7 @@
           [required]="true"
           formControlName="miRepresentada"
             (change)="setValoresStore(inicializarFormulario, 'miRepresentada')"
+          [isDisabled]="esFormularioSoloLectura"
       ></lib-input-check>
 
     </div>

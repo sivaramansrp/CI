@@ -7,6 +7,15 @@ import { SociaoAccionistas } from '../../../../shared/models/complimentos.model'
 import { Tramite80101Query } from '../../estados/tramite80101.query';
 import { Tramite80101Store } from '../../estados/tramite80101.store';
 
+/**
+ * Componente Angular para agregar cumplimientos en el trámite 80101.
+ * Este componente permite gestionar los cumplimientos y accionistas asociados
+ * a un trámite específico, proporcionando funcionalidades para agregar, eliminar
+ * y modificar datos relacionados con los cumplimientos.
+ *
+ * @remarks
+ * Este componente es autónomo y utiliza el módulo `CommonModule` y el componente `ComplimentosComponent`.
+ */
 @Component({
   selector: 'app-aggregar-complimentos',
   standalone: true,

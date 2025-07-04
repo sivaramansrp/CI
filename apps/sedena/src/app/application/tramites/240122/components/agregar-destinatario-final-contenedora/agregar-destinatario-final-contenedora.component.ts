@@ -1,6 +1,6 @@
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { DestinoFinal, Proveedor } from '../../../../shared/models/terceros-relacionados.model';
-import { Observable, Subject,map,takeUntil } from 'rxjs';
+import { Observable, Subject, map, takeUntil } from 'rxjs';
 import { AgregarDestinatarioCustomComponent } from '../../../../shared/components/agregar-destinatario-custom/agregar-destinatario-custom.component';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
@@ -41,23 +41,23 @@ import { Tramite240122Store } from '../../estados/tramite240122Store.store';
   templateUrl: './agregar-destinatario-final-contenedora.component.html',
   styleUrl: './agregar-destinatario-final-contenedora.component.scss',
 })
-export class AgregarDestinatarioFinalContenedoraComponent implements OnInit,OnDestroy {
-    /**
-     * @event cerrar
-     * @description Evento emitido para indicar que se debe cerrar el componente.
-     * @remarks
-     * Este evento no envía ningún valor, simplemente notifica a los componentes padres que se debe realizar la acción de cierre.
-     * 
-     * @eventType void
-     * @es
-     * Evento que se dispara para cerrar el componente actual.
-     */
-    @Output() cerrar = new EventEmitter<void>();
+export class AgregarDestinatarioFinalContenedoraComponent implements OnInit, OnDestroy {
+  /**
+   * @event cerrar
+   * @description Evento emitido para indicar que se debe cerrar el componente.
+   * @remarks
+   * Este evento no envía ningún valor, simplemente notifica a los componentes padres que se debe realizar la acción de cierre.
+   * 
+   * @eventType void
+   * @es
+   * Evento que se dispara para cerrar el componente actual.
+   */
+  @Output() cerrar = new EventEmitter<void>();
   /**
    * @property {number} idProcedimiento - Identificador del procedimiento asociado al trámite.
    * @remarks Este valor se utiliza para identificar el trámite 240122.
    */
-  public readonly idProcedimiento:number = NUMERO_TRAMITE.TRAMITE_240122;
+  public readonly idProcedimiento: number = NUMERO_TRAMITE.TRAMITE_240122;
 
   /**
    * @property {Observable<DestinoFinal | Proveedor | null | undefined>} terechosDatos$ - Observable que emite información sobre el destino final, proveedor o un valor nulo/indefinido.
@@ -81,10 +81,10 @@ export class AgregarDestinatarioFinalContenedoraComponent implements OnInit,OnDe
    * @es
    * Indica si el formulario es solo de lectura.
    */
-  public esFormularioSoloLectura:boolean = false;
-    /**
-   * Subject para notificar la destrucción del componente.
-   */
+  public esFormularioSoloLectura: boolean = false;
+  /**
+ * Subject para notificar la destrucción del componente.
+ */
   private destroyNotifier$: Subject<void> = new Subject();
 
   /**
@@ -96,29 +96,29 @@ export class AgregarDestinatarioFinalContenedoraComponent implements OnInit,OnDe
    * @param {ConsultaioQuery} consultaioQuery - Query que permite obtener el estado de la consulta.
    * @returns {void}
    */
-  constructor(public tramiteStore: Tramite240122Store, public tramiteQuery: Tramite240122Query,private readonly consultaioQuery:ConsultaioQuery) {
+  constructor(public tramiteStore: Tramite240122Store, public tramiteQuery: Tramite240122Query, private readonly consultaioQuery: ConsultaioQuery) {
     this.terechosDatos$ = this.tramiteQuery.obtenerTercerosDatos$;
   }
-    /**
-   * @inheritdoc
-   * @description
-   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
-   * Suscribe al observable del estado de consulta para actualizar la propiedad
-   * `esFormularioSoloLectura` según el estado de solo lectura (`readonly`) de la sección.
-   * La suscripción se mantiene activa hasta que se emite un valor en `destroyNotifier$`,
-   * lo que previene fugas de memoria.
-   *
-   * @returns {void}
-   */
+  /**
+ * @inheritdoc
+ * @description
+ * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+ * Suscribe al observable del estado de consulta para actualizar la propiedad
+ * `esFormularioSoloLectura` según el estado de solo lectura (`readonly`) de la sección.
+ * La suscripción se mantiene activa hasta que se emite un valor en `destroyNotifier$`,
+ * lo que previene fugas de memoria.
+ *
+ * @returns {void}
+ */
   ngOnInit(): void {
-     this.consultaioQuery.selectConsultaioState$
-    .pipe(
-      takeUntil(this.destroyNotifier$),
-      map((seccionState)=>{
-        this.esFormularioSoloLectura = seccionState.readonly; 
-      })
-    )
-    .subscribe()
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+        })
+      )
+      .subscribe()
   }
 
   /**
@@ -131,8 +131,9 @@ export class AgregarDestinatarioFinalContenedoraComponent implements OnInit,OnDe
    */
   updateDestinatarioFinalTablaDatos(event: DestinoFinal[]): void {
     this.tramiteStore.updateDestinatarioFinalTablaDatos(event);
+    this.cerrar.emit();
   }
-  
+
   /**
    * Hook del ciclo de vida que se ejecuta al destruir el componente.
    * Libera las suscripciones activas para evitar fugas de memoria.

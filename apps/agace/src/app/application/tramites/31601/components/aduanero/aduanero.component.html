@@ -73,7 +73,7 @@
               />
               <label class="form-check-label" for="regimen_0">
                 Importación temporal para la elaboración, transformación o
-                reparación en programas de maquila o de exportación (IMMEX)
+                reparación en programas de maquila o de exportación (I M M E X)
               </label>
               <div class="d-none">
                 <input
@@ -299,10 +299,11 @@
           Este campo es obligatorio.
         </div>
       </div>
-      <div class="alert alert-danger mt-3 mb-5">
+      <div *ngIf="showsenale">
+        <div class="alert alert-danger mt-3 mb-5">
         <h6 class="mb-0">
           <strong>Nota:</strong> En el caso de la Modalidad de IVA e IEPS,
-          tendrá que contar con al meanos 10 trabajadores registrados.
+          tendrá que contar con al menos 10 trabajadores registrados.
         </h6>
       </div>
       <label class="fw-bold mb-5" for="">
@@ -312,39 +313,46 @@
 
       <div class="row mb-5">
         <div class="col-md-1"></div>
-        <div class="col-md-5">
-          <div class="form-group">
-            <label for="empPropios" class="form-label"
-              >Número de empleados</label
-            >
-            <input
-              type="text"
-              class="form-control"
-              id="empPropios"
-              name="empPropios"
-              maxlength="8"
-              formControlName="empPropios"
-              (change)="
-                setValoresStore(preOperativeForm, 'empPropios', 'setEmpPropios')
-              "
-            />
+        <div class="col-md-10">
+          <div class="row">
+             <div class="col-md-6">
+                <div class="form-group">
+                  <label for="empPropios" class="form-label">Número de empleados</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="empPropios"
+                    name="empPropios"
+                    maxlength="8"
+                    formControlName="empPropios"
+                    (change)="setValoresStore(preOperativeForm,'empPropios', 'setEmpPropios')"
+                  />
+                </div>
+             </div>
+             <div class="col-md-6">
+                <app-catalogo-select
+                  [label]="'Bimestre'"
+                  [placeholder]="'Seleccione un valor'"
+                  [catalogo]="comboBimestresIDC"
+                  formControlName="bimestre"
+                  [isDisabled]="esFormularioSoloLectura ? true : false"
+                  (change)="setValoresStore(preOperativeForm,'bimestre', 'setBimestre')"
+                >
+                </app-catalogo-select>
+             </div>
           </div>
-        </div>
-        <div class="col-md-5">
-          <app-catalogo-select
-            [label]="'Bimestre'"
-            [placeholder]="'Seleccione un valor'"
-            [catalogo]="comboBimestresIDC"
-            formControlName="bimestre"
-            [isDisabled]="esFormularioSoloLectura ? true : false"
-            (change)="
-              setValoresStore(preOperativeForm, 'bimestre', 'setBimestre')
-            "
-          >
-          </app-catalogo-select>
-        </div>
+            <div *ngIf="
+              (preOperativeForm.get('empPropios')?.invalid && preOperativeForm.get('empPropios')?.touched) ||
+              (preOperativeForm.get('bimestre')?.invalid && preOperativeForm.get('bimestre')?.touched)" class="text-danger">
+              Se debe agregar los datos del número de empleados propios del último bimestre
+            </div>
+        </div>  
         <div class="col-md-1"></div>
       </div>
+      
+      </div>
+     
+       
       <div class="mt-4 mb-5">
         <section class="body-text fw-bold mb-2">
           <span class="text-danger">*</span> Señale si al momento de ingresar su
@@ -864,10 +872,16 @@
           <div>
             <input
               type="file"
-              id="archivoNacionales"
-              class="form-control w-auto"
+              id="archivoNacionales" 
+              class="d-none"
               formControlName="archivoNacionales"
+               (change)="onFileSelected($event)"
             />
+            <label for="archivoNacionales" class="btn btn-primary">
+              Examinar
+            </label>
+            <span class="border px-2 py-2 ms-1 border-secondary">{{ selectedFileName || 'No file choosen' }}</span>
+    
           </div>
           <div>
             <button
@@ -926,12 +940,19 @@
           </label>
         </div>
         <div class="d-flex justify-content-between">
-          <div>
+           <div>
             <input
               type="file"
-              id="archivoNacionales"
-              class="form-control w-auto"
+              id="archivoNacionales" 
+              class="d-none"
+              formControlName="archivoNacionales"
+               (change)="onFileSelected($event)"
             />
+            <label for="archivoNacionales" class="btn btn-primary">
+              Examinar
+            </label>
+            <span class="border px-2 py-2 ms-1 border-secondary">{{ selectedFileName || 'No file choosen' }}</span>
+    
           </div>
           <div>
             <button
@@ -1007,217 +1028,229 @@
       </div>
     </div>
     <div class="w-100 p-3">
-      <ng-titulo titulo="Controls Inventarios"></ng-titulo>
+      <ng-titulo titulo="Control Inventarios"></ng-titulo>
       <div class="mt-4 form-group">
         <section class="body-text fw-bold mb-2">
           <span class="text-danger">*</span> Indique si cuenta con un sistema de
           control de inventarios.
         </section>
-        <app-input-radio
-          [radioOptions]="radioOptions"
-          [isRequired]="true"
-          [layout]="'horizontal'"
-          [gap]="'493px'"
-          [isBold]="true"
-          [labelMargin]="'0px'"
-          [description]="descriptionData.radio16.description"
-          [showDescription]="true"
-          formControlName="indiqueCuenta"
-          (change)="
+        <app-input-radio [radioOptions]="radioOptions" [isRequired]="true" [layout]="'horizontal'" [gap]="'493px'"
+          [isBold]="true" [labelMargin]="'0px'" [description]="descriptionData.radio16.description" [showDescription]="true"
+          formControlName="indiqueCuenta" (change)="
             setValoresStore(
               preOperativeForm,
               'indiqueCuenta',
               'setIndiqueCuenta'
             )
-          "
-        ></app-input-radio>
-        <div
-          *ngIf="
+          "></app-input-radio>
+        <div *ngIf="
             preOperativeForm.controls['indiqueCuenta'].invalid &&
             preOperativeForm.controls['indiqueCuenta'].touched
-          "
-          class="text-danger"
-        >
+          " class="text-danger">
           Este campo es obligatorio.
         </div>
       </div>
+    
       <div class="row">
         <!-- First Form Group -->
         <div class="col-md-6">
           <div class="form-group">
             <span class="require">* </span>
-            <label for="nombreDel" class="form-label"
-              >Nombre del sistema o datos para su identificación</label
-            >
-            <input
-              type="text"
-              class="form-control"
-              id="nombreDel"
-              formControlName="nombreDel"
-              (change)="
+            <label for="nombreDel" class="form-label">Nombre del sistema o datos para su identificación</label>
+            <input type="text" class="form-control" id="nombreDel" formControlName="nombreDel" (change)="
                 setValoresStore(preOperativeForm, 'nombreDel', 'setNombreDel')
-              "
-            />
-            <div
-              *ngIf="
+              " />
+            <div *ngIf="
                 preOperativeForm.controls['nombreDel'].invalid &&
                 preOperativeForm.controls['nombreDel'].touched
-              "
-              class="text-danger"
-            >
-              <span
-                *ngIf="preOperativeForm.controls['nombreDel'].errors?.['required']"
-                >Este campo es obligatorio.</span
-              >
-              <span
-                *ngIf="preOperativeForm.controls['nombreDel'].errors?.['minlength']"
-                >Debe tener al menos 3 caracteres.</span
-              >
-              <span
-                *ngIf="preOperativeForm.controls['nombreDel'].errors?.['maxlength']"
-                >No puede exceder los 250 caracteres.</span
-              >
+              " class="text-danger">
+              <span *ngIf="preOperativeForm.controls['nombreDel'].errors?.['required']">Este campo es obligatorio.</span>
+              <span *ngIf="preOperativeForm.controls['nombreDel'].errors?.['minlength']">Debe tener al menos 3
+                caracteres.</span>
+              <span *ngIf="preOperativeForm.controls['nombreDel'].errors?.['maxlength']">No puede exceder los 250
+                caracteres.</span>
             </div>
           </div>
         </div>
-
+      
         <!-- Second Form Group -->
         <div class="col-md-6">
           <div class="form-group">
             <span class="require">* </span>
-            <label for="lugarDeRadicacion" class="form-label"
-              >Lugar de radicación</label
-            >
-            <input
-              type="text"
-              class="form-control"
-              id="lugarDeRadicacion"
-              formControlName="lugarDeRadicacion"
-              (change)="
+            <label for="lugarDeRadicacion" class="form-label">Lugar de radicación</label>
+            <input type="text" class="form-control" id="lugarDeRadicacion" formControlName="lugarDeRadicacion" (change)="
                 setValoresStore(
                   preOperativeForm,
                   'lugarDeRadicacion',
                   'setLugarDeRadicacion'
                 )
-              "
-            />
-            <div
-              *ngIf="
+              " />
+            <div *ngIf="
                 preOperativeForm.controls['lugarDeRadicacion'].invalid &&
                 preOperativeForm.controls['lugarDeRadicacion'].touched
-              "
-              class="text-danger"
-            >
-              <span
-                *ngIf="preOperativeForm.controls['lugarDeRadicacion'].errors?.['required']"
-                >Este campo es obligatorio.</span
-              >
-              <span
-                *ngIf="preOperativeForm.controls['lugarDeRadicacion'].errors?.['minlength']"
-                >Debe tener al menos 3 caracteres.</span
-              >
-              <span
-                *ngIf="preOperativeForm.controls['lugarDeRadicacion'].errors?.['maxlength']"
-                >No puede exceder los 250 caracteres.</span
-              >
+              " class="text-danger">
+              <span *ngIf="preOperativeForm.controls['lugarDeRadicacion'].errors?.['required']">Este campo es
+                obligatorio.</span>
+              <span *ngIf="preOperativeForm.controls['lugarDeRadicacion'].errors?.['minlength']">Debe tener al menos 3
+                caracteres.</span>
+              <span *ngIf="preOperativeForm.controls['lugarDeRadicacion'].errors?.['maxlength']">No puede exceder los 250
+                caracteres.</span>
             </div>
           </div>
         </div>
       </div>
+    
       <div class="d-flex justify-content-between">
         <div class="d-flex align-items-center">
           <label class="me-2" for="indiqueCheck">
             Indique, si cuenta con un sistema de control de inventarios de
             conformidad con las disposiciones previstas por el Anexo 24.
             <span>
-              <input
-                class="form-check-input"
-                type="checkbox"
-                id="indiqueCheck"
-                formControlName="indiqueCheck"
-                (change)="
+              <input class="form-check-input" type="checkbox" id="indiqueCheck" formControlName="indiqueCheck" (change)="
                   setValoresStore(
                     preOperativeForm,
                     'indiqueCheck',
                     'setIndiqueCheck'
                   )
-                "
-              /> </span
-          ></label>
+                " /> </span></label>
         </div>
       </div>
-      <div class="d-flex align-items-end justify-content-end">
-        <button
-          type="button"
-          class="btn btn-primary"
-          disabled="esFormularioSoloLectura ? true : false"
-        >
+    
+      <div class="d-flex align-items-end justify-content-end mb-3">
+        <button type="button" class="btn btn-primary" (click)="agregarNuevoElementoControlInventarios()"
+          [disabled]="esFormularioSoloLectura">
           Agregar
         </button>
       </div>
-      <label for=""> Control Inventarios </label>
-
-      <div class="table-responsive">
-        <table class="table table-bordered table-striped">
-          <thead>
-            <tr>
-              <!-- Master checkbox to select all -->
-              <th scope="col">
-                <input type="checkbox" />
-              </th>
-              @for (header of controlInventarios.tableHeader; track $index) {
-              <th scope="col">{{ header }}</th>
-              }
-            </tr>
-          </thead>
-          <tbody>
-            @for (data of controlInventarios.tableBody; track $index) {
-            <tr>
-              <!-- Row checkbox -->
-              <td>
-                <input type="checkbox" />
-              </td>
-
-              @for (element of data.tbodyData; track $index) {
-              <td>
-                {{ element }}
-              </td>
-              }
-
-              <!-- Last column always contains a checkbox -->
-              <td>
-                <input type="checkbox" />
-              </td>
-            </tr>
-            }
-          </tbody>
-        </table>
+    
+      <label for="" class="mb-3"> Control Inventarios </label>
+    
+      <app-tabla-dinamica [configuracionTabla]="configuracionTablaControlInventarios" [datos]="datosTablaControlInventarios"
+        [tipoSeleccionTabla]="tipoSeleccionTabla"
+        (listaDeFilaSeleccionada)="manejarFilaSeleccionadaControlInventarios($event)"></app-tabla-dinamica>
+    
+      <div class="d-flex justify-content-center mb-3">
+        <app-table-pagination [totalItems]="datosTablaControlInventarios.length" [itemsPerPage]="itemsPerPage"
+          [currentPage]="currentPage" (pageChange)="onPageChange($event)"
+          (itemsPerPageChange)="onItemsPerPageChange($event)">
+        </app-table-pagination>
       </div>
-
-      <div class="d-flex justify-content-end">
-        <button
-          type="button"
-          class="btn btn-default btn-space"
-          (click)="openModifyModal()"
-          disabled="esFormularioSoloLectura ? true : false"
-        >
+    
+      <div class="d-flex justify-content-end mb-3">
+        <button type="button" class="btn btn-default btn-space" (click)="openModifyControlInventariosModal()"
+          [disabled]="!enableModificarBotonControlInventarios || esFormularioSoloLectura">
           Modificar
         </button>
-        <button
-          type="button"
-          class="btn btn-primary btn-space"
-          disabled="esFormularioSoloLectura ? true : false"
-        >
+        <button type="button" class="btn btn-primary btn-space"
+          [disabled]="!enableEliminarBotonControlInventarios || esFormularioSoloLectura"
+          (click)="confirmEliminarControlInventariosItem()">
           Eliminar
         </button>
       </div>
-      <label for="">
-        Deberá anexar un archivo simple de autorizaci&oacute;n para el
-        establecimiento del depósito fiscal para someterse al proceso de
-        ensamble y fabricaci&oacute;n de vehículos a empresas de la industria
-        terminal vigente
+    
+      <div class="modal" tabindex="-1" role="dialog" [ngClass]="{ show: confirmEliminarPopupAbiertoControlInventarios }"
+        [ngStyle]="{ display: confirmEliminarPopupAbiertoControlInventarios ? 'block' : 'none' }">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-div"></div>
+            <div class="modal-body">
+              <p>¿Estás seguro que deseas eliminar los registros marcados?</p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-primary" (click)="cerrarEliminarConfirmationPopupControlInventarios()">
+                Cancelar
+              </button>
+              <button type="button" class="btn btn-primary" (click)="eliminarControlInventariosItem()">
+                Aceptar
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-backdrop fade show" *ngIf="confirmEliminarPopupAbiertoControlInventarios"></div>
+    
+      <label for="" class="mt-3">
+        Deberá anexar un archivo con el reporte de saldos de mercancía de importación temporal o de mercancías objeto de operaciones de comercio exterior, de un periodo de un mes, que se encuentre dentro de los tres meses anteriores a la presentación de la solicitud.
       </label>
     </div>
+    
+    <div class="modal fade" #controlInventariosModal tabindex="-1" aria-labelledby="controlInventariosModalLabel"
+      aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="controlInventariosModalLabel">
+              {{ filaSeleccionadaControlInventarios ? 'Modificar' : 'Agregar' }} Inventario
+            </h5>
+          </div>
+          <div class="modal-body p-4">
+            <div class="row">
+              <div class="col-8">
+                <div class="form-group">
+                  <span class="require">*</span>
+                  <label for="nombreDelModal" class="form-label">Nombre del sistema o datos para su identificación</label>
+                  <input type="text" class="form-control" id="nombreDelModal" formControlName="nombreDel" />
+                  <div *ngIf="
+                      preOperativeForm.controls['nombreDel'].invalid &&
+                      preOperativeForm.controls['nombreDel'].touched
+                    " class="text-danger">
+                    <span *ngIf="preOperativeForm.controls['nombreDel'].errors?.['required']">
+                      Este campo es obligatorio.
+                    </span>
+                    <span *ngIf="preOperativeForm.controls['nombreDel'].errors?.['minlength']">
+                      Debe tener al menos 3 caracteres.
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-8">
+                <div class="form-group">
+                  <span class="require">*</span>
+                  <label for="lugarDeRadicacionModal" class="form-label">
+                    Lugar de radicación
+                  </label>
+                  <input type="text" class="form-control" id="lugarDeRadicacionModal" formControlName="lugarDeRadicacion" />
+                  <div *ngIf="
+                      preOperativeForm.controls['lugarDeRadicacion'].invalid &&
+                      preOperativeForm.controls['lugarDeRadicacion'].touched
+                    " class="text-danger">
+                    <span *ngIf="preOperativeForm.controls['lugarDeRadicacion'].errors?.['required']">
+                      Este campo es obligatorio.
+                    </span>
+                    <span *ngIf="preOperativeForm.controls['lugarDeRadicacion'].errors?.['minlength']">
+                      Debe tener al menos 3 caracteres.
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-12">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="indiqueCheckModal" formControlName="indiqueCheck" />
+                  <label class="form-check-label" for="indiqueCheckModal">
+                    Indique, si cuenta con un sistema de control de inventarios de
+                    conformidad con las disposiciones previstas por el Anexo 24.
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" data-bs-dismiss="modal"
+              (click)="filaSeleccionadaControlInventarios ? modificaControlInventariosItem() : agregarNuevoElementoControlInventarios()">
+              {{ filaSeleccionadaControlInventarios ? 'Modificar' : 'Agregar' }}
+            </button>
+          
+          </div>
+        </div>
+      </div>
+    </div>
+    <lib-notificaciones *ngIf="notificacionExito" [notificacionInput]="notificacionExito"
+      (confirmacionModal)="onConfirmacionNotificacion($event)">
+    </lib-notificaciones>
     <div class="w-100 p-3">
       <div class="form-group">
         <section class="body-text fw-bold mb-2">

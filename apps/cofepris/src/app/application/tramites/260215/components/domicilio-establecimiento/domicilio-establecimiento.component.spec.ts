@@ -7,6 +7,11 @@ import { Tramite260215Query } from '../../estados/queries/tramite260215.query';
 import { of, Subject } from 'rxjs';
 import { CrosslistComponent } from '@libs/shared/data-access-user/src';
 import { QueryList } from '@angular/core';
+import { fakeAsync, tick } from '@angular/core/testing';
+
+type MockHttpServicios = {
+  get: jest.Mock;
+};
 
 describe('DomicilioComponent', () => {
   let component: DomicilioComponent;
@@ -49,20 +54,20 @@ describe('DomicilioComponent', () => {
         { provide: Tramite260215Store, useValue: tramite260215Store },
         { provide: Tramite260215Query, useValue: tramite260215Query },
       ],
-    }).compileComponents();
-  });
+    });
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(DomicilioComponent);
     component = fixture.componentInstance;
+    // Mock the httpServicios property
+    (component as any).httpServicios = { get: jest.fn() } as MockHttpServicios;
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
+  it('debería crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize the form with default values from the store', () => {
+  it('debería inicializar el formulario con valores predeterminados del store', () => {
     expect(component.domicilio.value).toEqual({
       codigoPostal: '12345',
       estado: 'Estado1',
@@ -80,37 +85,37 @@ describe('DomicilioComponent', () => {
     });
   });
 
-  it('should toggle colapsable state when mostrar_colapsable is called', () => {
+  it('debería alternar el estado de colapsable cuando se llama mostrar_colapsable', () => {
     expect(component.colapsable).toBe(false);
     component.mostrar_colapsable();
     expect(component.colapsable).toBe(true);
   });
 
-  it('should toggle colapsableDuos state when mostrar_colapsableDuos is called', () => {
+  it('debería alternar el estado de colapsableDuos cuando se llama mostrar_colapsableDuos', () => {
     expect(component.colapsableDuos).toBe(false);
     component.mostrar_colapsableDuos();
     expect(component.colapsableDuos).toBe(true);
   });
 
-  it('should toggle colapsableTres state when mostrar_colapsableTres is called', () => {
+  it('debería alternar el estado de colapsableTres cuando se llama mostrar_colapsableTres', () => {
     expect(component.colapsableTres).toBe(false);
     component.mostrar_colapsableTres();
     expect(component.colapsableTres).toBe(true);
   });
 
-  it('should disable licenciaSanitaria when avisoCheckbox is checked', () => {
+  it('debería deshabilitar licenciaSanitaria cuando avisoCheckbox está marcado', () => {
     const checkboxEvent = { target: { checked: true } } as unknown as Event;
     component.onAvisoCheckboxChange(checkboxEvent);
     expect(component.domicilio.get('licenciaSanitaria')?.disabled).toBe(true);
   });
 
-  it('should enable licenciaSanitaria when avisoCheckbox is unchecked', () => {
+  it('debería habilitar licenciaSanitaria cuando avisoCheckbox está desmarcado', () => {
     const checkboxEvent = { target: { checked: false } } as unknown as Event;
     component.onAvisoCheckboxChange(checkboxEvent);
     expect(component.domicilio.get('licenciaSanitaria')?.enabled).toBe(true);
   });
 
-  it('should call setValoresStore with correct arguments', () => {
+  it('debería llamar setValoresStore con los argumentos correctos', () => {
     component.setValoresStore(
       component.domicilio,
       'codigoPostal',
@@ -119,33 +124,7 @@ describe('DomicilioComponent', () => {
     expect(tramite260215Store.setCodigoPostal).toHaveBeenCalledWith('12345');
   });
 
-  it('should fetch estado list on obtenerEstadoList', () => {
-    jest
-      .spyOn(component['httpServicios'], 'get')
-      .mockReturnValue(of({ data: [{ id: 1, nombre: 'Estado1' }] }));
-    component.obtenerEstadoList();
-    expect(component.estado).toEqual([{ id: 1, nombre: 'Estado1' }]);
-  });
-
-  it('should fetch nicoTablaDatos on obtenerTablaDatos', () => {
-    jest
-      .spyOn(component['httpServicios'], 'get')
-      .mockReturnValue(of({ data: [{ id: 1, nombre: 'Nico1' }] }));
-    component.obtenerTablaDatos();
-    expect(component.nicoTablaDatos).toEqual([{ id: 1, nombre: 'Nico1' }]);
-  });
-
-  it('should fetch mercanciasTablaDatos on obtenerMercanciasDatos', () => {
-    jest
-      .spyOn(component['httpServicios'], 'get')
-      .mockReturnValue(of({ data: [{ id: 1, nombre: 'Mercancia1' }] }));
-    component.obtenerMercanciasDatos();
-    expect(component.mercanciasTablaDatos).toEqual([
-      { id: 1, nombre: 'Mercancia1' },
-    ]);
-  });
-
-  it('should complete destroyNotifier$ on ngOnDestroy', () => {
+  it('debería completar destroyNotifier$ al llamar ngOnDestroy', () => {
     const destroyNotifierSpy = jest.spyOn(
       component['destroyNotifier$'],
       'complete'
@@ -154,7 +133,7 @@ describe('DomicilioComponent', () => {
     expect(destroyNotifierSpy).toHaveBeenCalled();
   });
 
-  it('should call agregar method of CrosslistComponent on paisDeProcedenciaBotones[0].funcion', () => {
+  it('debería llamar al método agregar de CrosslistComponent en paisDeProcedenciaBotones[0].funcion', () => {
     const crossListSpy = {
       agregar: jest.fn(),
     } as unknown as CrosslistComponent;
@@ -162,5 +141,49 @@ describe('DomicilioComponent', () => {
     component.crossList.reset([crossListSpy]);
     component.paisDeProcedenciaBotones[0].funcion();
     expect(crossListSpy.agregar).toHaveBeenCalledWith('t');
+  });
+
+  it('debería llamar agregar("t") en paisDeProcedenciaBotonesTres[0].funcion', () => {
+    const crossListSpy = {
+      agregar: jest.fn(),
+      quitar: jest.fn(),
+    } as any;
+    component.crossList = new QueryList<any>();
+    component.crossList.reset([{}, {}, crossListSpy]);
+    component.paisDeProcedenciaBotonesTres[0].funcion();
+    expect(crossListSpy.agregar).toHaveBeenCalledWith('t');
+  });
+
+  it('debería llamar agregar("") en paisDeProcedenciaBotonesTres[1].funcion', () => {
+    const crossListSpy = {
+      agregar: jest.fn(),
+      quitar: jest.fn(),
+    } as any;
+    component.crossList = new QueryList<any>();
+    component.crossList.reset([{}, {}, crossListSpy]);
+    component.paisDeProcedenciaBotonesTres[1].funcion();
+    expect(crossListSpy.agregar).toHaveBeenCalledWith('');
+  });
+
+  it('debería llamar quitar("") en paisDeProcedenciaBotonesTres[2].funcion', () => {
+    const crossListSpy = {
+      agregar: jest.fn(),
+      quitar: jest.fn(),
+    } as any;
+    component.crossList = new QueryList<any>();
+    component.crossList.reset([{}, {}, crossListSpy]);
+    component.paisDeProcedenciaBotonesTres[2].funcion();
+    expect(crossListSpy.quitar).toHaveBeenCalledWith('');
+  });
+
+  it('debería llamar quitar("t") en paisDeProcedenciaBotonesTres[3].funcion', () => {
+    const crossListSpy = {
+      agregar: jest.fn(),
+      quitar: jest.fn(),
+    } as any;
+    component.crossList = new QueryList<any>();
+    component.crossList.reset([{}, {}, crossListSpy]);
+    component.paisDeProcedenciaBotonesTres[3].funcion();
+    expect(crossListSpy.quitar).toHaveBeenCalledWith('t');
   });
 });

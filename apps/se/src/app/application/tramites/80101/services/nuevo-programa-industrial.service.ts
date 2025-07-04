@@ -16,6 +16,11 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { PlantasSubfabricante } from '../../../shared/models/empresas-subfabricanta.model';
 
+/**
+ * Servicio para gestionar las operaciones relacionadas con el programa industrial.
+ * Este servicio proporciona métodos para obtener datos desde archivos JSON locales,
+ * actualizar el estado del formulario y realizar otras operaciones relacionadas con el programa industrial.
+ */
 @Injectable({
   providedIn: 'root',
 })

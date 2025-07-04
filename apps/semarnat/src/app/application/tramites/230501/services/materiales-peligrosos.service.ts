@@ -11,9 +11,42 @@ import { Tramite230501State, Tramite230501Store } from '../estados/stores/tramit
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
+/**
+ * Decorador `@Injectable` que define un servicio como una clase que puede ser inyectada en otros componentes o servicios.
+ * 
+ * Este servicio está configurado con el proveedor `root`, lo que significa que se crea una única instancia compartida en toda la aplicación.
+ * 
+ * @remarks
+ * Este servicio está diseñado para gestionar las acciones relacionadas con las pantallas del trámite 230501. Proporciona métodos para inicializar y manejar los datos de los catálogos necesarios en el proceso del trámite, así como para actualizar el estado del formulario y obtener datos específicos desde archivos JSON.
+ * 
+ * @author Muneez
+ */
 @Injectable({
   providedIn: 'root'
 })
+/**
+ * Servicio para gestionar los datos relacionados con materiales peligrosos.
+ * 
+ * Este servicio proporciona métodos para interactuar con catálogos, listas de países, estados, municipios, localidades, códigos postales y colonias,
+ * así como para actualizar el estado del formulario y obtener datos específicos desde archivos JSON.
+ * 
+ * @remarks
+ * Los métodos de este servicio están diseñados para realizar solicitudes HTTP y procesar datos estructurados en formato JSON.
+ * También incluye funcionalidades para convertir números a letras y gestionar el estado de la solicitud en el store correspondiente.
+ * 
+ * @example
+ * // Ejemplo de uso para obtener la lista de países:
+ * const listaPaises = materialesPeligrososService.obtenerListaPaises().subscribe((paises) => {
+ *   console.log(paises);
+ * });
+ * 
+ * @example
+ * // Ejemplo de uso para actualizar el estado del formulario:
+ * materialesPeligrososService.actualizarEstadoFormulario({
+ *   tipoSolicitud: 'Nuevo',
+ *   datos: { nombre: 'Ejemplo' }
+ * });
+ */
 export class MaterialesPeligrososService {
   /**
    * Arreglo de objetos `Catalogo` que contiene los tipos de solicitud obtenidos desde `tiposDeSolicitud.json`.
@@ -60,9 +93,28 @@ export class MaterialesPeligrososService {
    */
   listoBanco: Catalogo[] = [];
 
-  constructor(public httpServicios: HttpClient, public tramite230501Store: Tramite230501Store) {
-    // No hacer nada
-  }
+  /**
+   * Constructor de la clase `MaterialesPeligrososService`.
+   * 
+   * @param httpServicios - Instancia de `HttpClient` utilizada para realizar solicitudes HTTP.
+   * @param tramite230501Store - Instancia de `Tramite230501Store` utilizada para gestionar el estado del trámite 230501.
+   */
+  constructor(public httpServicios: HttpClient,
+     public tramite230501Store: Tramite230501Store) {
+  
+    }
+
+  /**
+   * URL del archivo JSON que contiene información relacionada con el domicilio.
+   * 
+   * Esta propiedad se utiliza para especificar la ubicación del archivo JSON
+   * dentro de los activos de la aplicación. El archivo se encuentra en la ruta
+   * `assets/json/230501/domicilio.json` y se espera que contenga datos estructurados
+   * necesarios para el funcionamiento de los servicios relacionados con materiales peligrosos.
+   * 
+   * @private
+   * @type {string}
+   */
   private jsonUrl = 'assets/json/230501/domicilio.json';
 
   /**

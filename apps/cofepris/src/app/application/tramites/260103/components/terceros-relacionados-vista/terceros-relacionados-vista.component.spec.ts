@@ -114,4 +114,36 @@ describe('TercerosRelacionadosVistaComponent', () => {
     expect(component.destroy$.complete).toHaveBeenCalled();
   });
 
+  it('should call tramiteQuery.eliminarDestinatarioPorId and update destinatarioTablaDatos$ when eliminarDestinatario is called and there is a selected destinatario', () => {
+    const mockId = 123;
+    component.listaDeTablasSeleccionadasDestinatario = [{ id: mockId }];
+    component.tramiteQuery = {
+      eliminarDestinatarioPorId: jest.fn(),
+      getdestinatarioTablaDatos$: 'mockObservable'
+    };
+    component.eliminarDestinatario();
+    expect(component.tramiteQuery.eliminarDestinatarioPorId).toHaveBeenCalledWith(mockId);
+    expect(component.destinatarioTablaDatos$).toBe('mockObservable');
+  });
+
+  it('should not call tramiteQuery.eliminarDestinatarioPorId if no destinatario is selected', () => {
+    component.listaDeTablasSeleccionadasDestinatario = [];
+    component.tramiteQuery = {
+      eliminarDestinatarioPorId: jest.fn(),
+      getdestinatarioTablaDatos$: 'mockObservable'
+    };
+    component.eliminarDestinatario();
+    expect(component.tramiteQuery.eliminarDestinatarioPorId).not.toHaveBeenCalled();
+  });
+
+  it('should not call tramiteQuery.eliminarDestinatarioPorId if selected destinatario has undefined id', () => {
+    component.listaDeTablasSeleccionadasDestinatario = [{}];
+    component.tramiteQuery = {
+      eliminarDestinatarioPorId: jest.fn(),
+      getdestinatarioTablaDatos$: 'mockObservable'
+    };
+    component.eliminarDestinatario();
+    expect(component.tramiteQuery.eliminarDestinatarioPorId).not.toHaveBeenCalled();
+  });
+
 });

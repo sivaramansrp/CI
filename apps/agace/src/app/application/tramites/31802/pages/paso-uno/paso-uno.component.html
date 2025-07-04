@@ -9,7 +9,7 @@
           <a data-toggle="tab" (click)="seleccionaTab(2)" (keydown.enter)="seleccionaTab(2)" (keydown.space)="seleccionaTab(2)" role="button" tabindex="2">Aviso Único de Renovación</a>
         </li>
       </ul>
-      <ng-container> @switch (indice) { @case (1) { <solicitante [tabindex]="1" #Solicitante></solicitante>
+      <ng-container> @switch (indice) { @case (1) { <solicitante [tabindex]="1"></solicitante>
         <ng-titulo titulo="Aviso de renovación u homologación" />
         <div class="row">
           <lib-input-check [id]="'renovacion'" [label]="'Renovación'" [required]="false" formControlName="renovacion" (change)="establecerRenovacion($event)"></lib-input-check>

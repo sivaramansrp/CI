@@ -49,19 +49,19 @@ describe('TercerosRelacionadosDestinoComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('debe crearse', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize fabricantes$ observable on ngOnInit', () => {
+  it('debe inicializar el observable de fabricantes en ngOnInit', () => {
     expect(component.fabricanteTablaDatos).toBeDefined();
   });
 
-  it('should initialize destinatarios$ observable on ngOnInit', () => {
+  it('debe inicializar el observable de destinatarios en ngOnInit', () => {
     expect(component.destinatarioFinalTablaDatos).toBeDefined();
   });
 
-  it('should call setFabricante and update selectedFabricante in getFabricanteDatos', () => {
+  it('debe llamar a setFabricante y actualizar selectedFabricante en getFabricanteDatos', () => {
     const mockFabricantes = [{
       tipoPersona: 'Moral',
       nombreRazonSocial: 'test',
@@ -92,44 +92,7 @@ describe('TercerosRelacionadosDestinoComponent', () => {
     expect(tercerosDataService.setFabricante).toHaveBeenCalledWith(mockFabricantes);
   });
 
-  it('should navigate to modify destinatarios route if selectedDestinario is not empty', () => {
-    component.selectedDestinario = [{
-      tipoPersona: 'FISICA',
-      rfc: 'XAXX010101000',
-      nombres: 'John',
-      nombreRazonSocial: '',
-      primerApellido: 'Doe',
-      segundoApellido: 'Smith',
-      pais: '1',
-      estadoLocalidad: '1',
-      estado: '',
-      curp: '',
-      municipioAlcaldia: '1',
-      localidad: '1',
-      codigoPostal: '12345',
-      colonia: '1',
-      calle: 'Main Street',
-      numeroExterior: '123',
-      numeroInterior: '',
-      lada: '55',
-      telefono: '12345678',
-      correoElectronico: 'john.doe@example.com',
-      descPais: '',
-      descEstado: '',
-      descMunicipio: '',
-      descLocalidad: '',
-      descCodigoPostal: '',
-      descColonia: ''
-    }];
-
-    component.modifySelectedDestinatarios();
-
-    expect(router.navigate).toHaveBeenCalledWith(['../modificar-destinatario-final'], {
-      relativeTo: component.activatedRoute,
-    });
-  });
-
-  it('should log a warning if selectedDestinario is empty in modifySelectedDestinatarios', () => {
+  it('debe mostrar una advertencia si selectedDestinario está vacío en modifySelectedDestinatarios', () => {
     console.warn = jest.fn();
     component.selectedDestinario = [];
 

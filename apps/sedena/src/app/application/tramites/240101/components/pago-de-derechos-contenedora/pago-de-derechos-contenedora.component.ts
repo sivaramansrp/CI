@@ -1,15 +1,12 @@
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
 import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
 import { PagoDeDerechosComponent } from '../../../../shared/components/pago-de-derechos/pago-de-derechos.component';
 import { PagoDerechosFormState } from '../../../../shared/models/pago-de-derechos.model';
-import { Subject } from 'rxjs';
 import { Tramite240101Query } from '../../estados/tramite240101Query.query';
 import { Tramite240101Store } from '../../estados/tramite240101Store.store';
-import { map } from 'rxjs';
-import { takeUntil } from 'rxjs';
+
 /**
  * @title Pago de Derechos Contenedora
  * @description Componente contenedor que se encarga de enlazar el estado de pago de derechos con el formulario correspondiente.

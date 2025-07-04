@@ -1,3 +1,25 @@
+/**
+ * Conjunto de constantes de configuración para los campos y catálogos del trámite de Permiso de Importación.
+ *
+ * Este archivo contiene los arreglos y objetos que definen la estructura, validaciones, catálogos y textos
+ * utilizados en los formularios del trámite, incluyendo datos del solicitante, domicilio fiscal, datos de la mercancía,
+ * exportador, productor, representación federal y textos de ayuda.
+ *
+ * @const
+ * @export
+ * @category Configuración
+ * @description
+ * Cada constante representa la configuración de un grupo de campos o catálogos para una sección específica del trámite.
+ * Incluye validaciones, tipos de entrada, opciones de catálogo y textos HTML para instrucciones.
+ *
+ * @ejemplo
+ * DATOS_GENERALES_SOLICITANTE, DOMICILIO_FISCAL_SOLICITANTE, DATOS_REALIZAR, DATOS_MERCANCIA, DATOS_EXPORTACION,
+ * DATOS_PRODUCTOR, DATOS_EXPORTADOR, DATOS_FEDERAL, TEXTOS_REQUISITOS, TEXTOS
+ */
+
+/**
+ * Configuración de los campos para los datos generales del solicitante.
+ */
 export const DATOS_GENERALES_SOLICITANTE = [
     {
         labelNombre: 'Registro federal de contribuyentes:',
@@ -39,6 +61,9 @@ export const DATOS_GENERALES_SOLICITANTE = [
     }
 ];
 
+/**
+ * Configuración de los campos para el domicilio fiscal del solicitante.
+ */
 export const DOMICILIO_FISCAL_SOLICITANTE = [
     {
         labelNombre: 'País:',
@@ -143,82 +168,134 @@ export const DOMICILIO_FISCAL_SOLICITANTE = [
     }
 ];
 
+/**
+ * Configuración de los campos para los datos del trámite a realizar.
+ */
 export const DATOS_REALIZAR = [
     {
-        labelNombre: 'Régimen al que destinará la mercancía:',
+        labelNombre: 'Régimen al que destinará la mercancía',
         campo: 'régimen',
         required: true,
         primerOpcion: 'Selecciona un valor',
-        catalogos: [],
+        catalogos: [ 
+        { "id": 1, "descripcion": "Definitivos" },
+        { "id": 2, "descripcion": "Temporales" },
+        { "id": 3, "descripcion": "Depósito Fiscal" },
+        { "id": 4, "descripcion": "Tránsito de mercancías" },
+        { "id": 5, "descripcion": "Elaboración, transformación o reparación en recinto fiscalizado" },
+        { "id": 6, "descripcion": "Recinto fiscalizado estratégico" },
+        { "id": 7, "descripcion": "Importación" },
+        { "id": 8, "descripcion": "Exportación" },
+        { "id": 9, "descripcion": "Tránsito internacional" },
+        { "id": 10, "descripcion": "Depósito fiscal de gas licuado de petróleo o de gas natural" },
+        { "id": 11, "descripcion": "Depósito fiscal de vehículos" },
+        { "id": 12, "descripcion": "Definitivo de importación" },
+        { "id": 13, "descripcion": "Temporales de importación para retornar al extranjero en el mismo estado" },
+        { "id": 14, "descripcion": "Temporales de importación para elaboración, transformación o reparación para empresas con programa IMMEX" }
+        ],
     },
     {
-        labelNombre: 'Clasificación de regimen',
+        labelNombre: 'Clasificación de régimen',
         campo: 'classifición_régimen',
         required: true,
         primerOpcion: 'Selecciona un valor',
-        catalogos: [],
+        catalogos: [
+        { "id": 1, "descripcion": "De Importaci¿¿n" },
+        ],
     }
 ];
 
+/**
+ * Configuración de los campos para los datos de la mercancía.
+ */
 export const DATOS_MERCANCIA = [
     {
         labelNombre: 'Descripción de la mercancía*:',
         campo: 'descripción',
         class: 'col-md-8',
         tipo_input: 'textarea',
-        validators: ['required'],
+        validators: ['required', 'maxLength:4000'],
         placeholder: '',
         required: true,
+        storeFunction: 'setDescripcion',
     },
     {
-        labelNombre: 'Marca(s) comercial(es) y Modelo(s)*:',
+        labelNombre: 'Marca(s) comercial(es) y modelo(s)*:',
         campo: 'marca',
         class: 'col-md-8',
         tipo_input: 'text',
-        validators: ['required'],
+        validators: ['required', 'maxLength:256', 'pattern:^[a-zA-Z0-9 ]*$'],
+        required: true,
         placeholder: '',
+        storeFunction: 'setMarca',
     },
     {
         labelNombre: 'Tipo de aduana de entrada',
         campo: 'tipo_entrada',
         required: true,
         primerOpcion: 'Selecciona un valor',
-        catalogos: [],
+        validators: ['required'],
+        catalogos: [
+            { "id": 1, "descripcion": "Aeroportuaria" },
+            { "id": 1, "descripcion": "Fronteriza" },
+            { "id": 1, "descripcion": "Interior" },
+            { "id": 1, "descripcion": "Maritima" },
+            { "id": 1, "descripcion": "Terrestre" },
+        ],
+        storeFunction: 'setTipoEntrada',
     },
     {
         labelNombre: 'Fracción arancelaria',
         campo: 'fracción',
         required: true,
         primerOpcion: 'Selecciona un valor',
-        catalogos: [],
+        validators: ['required'],
+        catalogos: [
+            { "id": 1, "descripcion": "opción de selección simple uno" },
+        ],
+        storeFunction: 'setFraccion',
     },
     {
-        labelNombre: 'NICO:',
+        labelNombre: 'NICO',
         campo: 'nico',
+        class: 'col-md-8',
         required: true,
         primerOpcion: 'Selecciona un valor',
-        catalogos: [],
+        validators: ['required'],
+        catalogos: [
+            { "id": 1, "descripcion": "opción de selección simple uno" },
+        ],
+        storeFunction: 'setNico',
     },
     {
         labelNombre: 'Unidad de medida la tarifa(UMT)',
         campo: 'umt',
+        class: 'col-md-4',
         required: true,
         primerOpcion: 'Selecciona un valor',
-        catalogos: [],
+        validators: ['required'],
+        catalogos: [
+            { "id": 1, "descripcion": "opción de selección simple uno" },
+        ],
+        storeFunction: 'setUmt',
     },
     {
-        labelNombre: 'Número de factura*:',
+        labelNombre: 'Numero de factura*:',
         campo: 'factura_número',
-        class: 'col-md-8',
-        tipo_input: 'text',
-        validators: ['required'],
+        class: 'col-md-4',
+        tipo_input: 'number',
+        validators: ['required', 'maxLength:50', 'pattern:^[0-9]*$'],
+        required: true,
         placeholder: '',
+        storeFunction: 'setFacturaNumero',
     },
     {
         labelNombre: 'Fecha de factura',
         campo: 'factura_fecha',
         required: true,
+        validators: ['required'],
         habilitado: true,
+        storeFunction: 'setFacturaFecha',
     },
     {
         labelNombre: 'Unidad de medida de comercialización(UMC)',
@@ -226,54 +303,96 @@ export const DATOS_MERCANCIA = [
         class: 'col-md-4',
         required: true,
         primerOpcion: 'Selecciona un valor',
-        catalogos: [],
+        validators: ['required'],
+        catalogos: [
+            { "id": 1, "descripcion": "Abastecer combustible" },
+            { "id": 2, "descripcion": "Absorcion" },
+            { "id": 3, "descripcion": "access line" },
+            { "id": 4, "descripcion": "access line" },
+            { "id": 5, "descripcion": "accounting unit" },
+            { "id": 6, "descripcion": "Aceptacion de las condiciones del negocio" },
+            { "id": 7, "descripcion": "acre" },
+            { "id": 8, "descripcion": "acre" },
+            { "id": 9, "descripcion": "acre-foot (based on U.S. survey foot)" },
+            { "id": 10, "descripcion": "active unit" },
+            { "id": 11, "descripcion": "active unit" },
+            { "id": 12, "descripcion": "activity" },
+            { "id": 13, "descripcion": "activity" },
+            { "id": 14, "descripcion": "actual ton" }
+        ],
+        storeFunction: 'setUmc',
     },
     {
         labelNombre: 'Otro UMC:',
         campo: 'otro_umc',
         class: 'col-md-4',
         tipo_input: 'text',
-        validators: ['required'],
         placeholder: '',
+        storeFunction: 'setOtroUmc',
     },
     {
         labelNombre: 'Cantidad UMC*:',
         campo: 'cantidad_umc',
         class: 'col-md-4',
         tipo_input: 'text',
-        validators: ['required'],
+        validators: [
+            'required',
+            'pattern:^\\d{1,14}(\\.\\d{1,2})?$'
+        ],
         placeholder: '',
+        required: true,
+        storeFunction: 'setCantidadUmc',
     },
     {
         labelNombre: 'Factor de conversión*:',
         campo: 'factor_conversión',
         class: 'col-md-4',
         tipo_input: 'text',
-        validators: ['required'],
+        validators: [
+            'required',
+            'pattern:^\\d{1,14}(\\.\\d{1,4})?$'
+        ],
         placeholder: '',
+        required: true,
+        storeFunction: 'setFactorConversion',
     },
     {
         labelNombre: 'Cantidad UMT*:',
         campo: 'cantidad_umt',
         class: 'col-md-4',
         tipo_input: 'text',
-        validators: ['required'],
+        validators: [
+            'required',
+            'pattern:^\\d{1,14}(\\.\\d{1,2})?$'
+        ],
+        required: true,
         placeholder: '',
+        storeFunction: 'setCantidadUmt',
     },
     {
-        labelNombre: 'Valor de la factura de la mercancía a importar en términos de la Moneda de comercialización*:',
+        labelNombre: 'Valor de la factura de la mercancía a importar en términos de la Moneda de Comercialización*:',
         campo: 'valor_factura',
-        class: 'col-md-4',
+        class: 'col-md-8',
         tipo_input: 'text',
-        validators: ['required'],
+        validators: [
+            'required',
+            'pattern:^\\d{1,14}(\\.\\d{1,2})?$'
+        ],
+        required: true,
         placeholder: '',
+        storeFunction: 'setValorFactura',
     },
     {
         labelNombre: 'Moneda de comercialización',
         campo: 'moneda_comercialización',
+        class: 'col-md-8',
         required: true,
         primerOpcion: 'Selecciona una opcion',
-        catalogos: [],
+        validators: ['required'],
+        catalogos: [
+            { "id": 1, "descripcion": "Kuwaiti Dinar" },
+        ],
+        storeFunction: 'setMonedaComercializacion',
     },
     {
         labelNombre: 'Valor de la factura en USD de la mercancía a importar*:',
@@ -281,48 +400,111 @@ export const DATOS_MERCANCIA = [
         class: 'col-md-4',
         tipo_input: 'text',
         validators: ['required'],
+        required: true,
         placeholder: '',
+        storeFunction: 'setValorFacturaUsd',
     },
     {
         labelNombre: 'Precio unitario en USD*:',
         campo: 'precio_unitario_usd',
         class: 'col-md-4',
         tipo_input: 'text',
+        required: true,
         validators: ['required'],
         placeholder: '',
+        storeFunction: 'setPrecioUnitarioUsd',
     },
     {
         labelNombre: 'País exportador',
         campo: 'país_exportador',
+        class: 'col-md-4',
         required: true,
         primerOpcion: 'Selecciona el País',
-        catalogos: [],
+        validators: ['required'],
+        catalogos: [
+            {"id": 1, "descripcion": "Selecciona el país"},
+            {"id": 2, "descripcion": "AFGANISTAN (EMIRATO ISLAMICO DE)"},
+            {"id": 3, "descripcion": "ALBANIA (REPUBLICA DE)"},
+            {"id": 4, "descripcion": "ALEMANIA (REPUBLICA FEDERAL DE)"},
+            {"id": 5, "descripcion": "ANDORRA (PRINCIPADO DE)"},
+            {"id": 6, "descripcion": "ANGOLA (REPUBLICA DE)"},
+            {"id": 7, "descripcion": "ANGUILA"},
+            {"id": 8, "descripcion": "ANTARTIDA"},
+            {"id": 9, "descripcion": "ANTIGUA Y BARBUDA (COMUNIDAD BRITANICA DE NACIONES)"},
+            {"id": 10, "descripcion": "ANTILLAS NEERLANDESAS (TERRITORIO HOLANDES DE ULTRAMAR)"},
+            {"id": 11, "descripcion": "ARABIA SAUDITA (REINO DE)"},
+            {"id": 12, "descripcion": "ARGELIA (REPUBLICA DEMOCRATICA Y POPULAR DE)"},
+            {"id": 13, "descripcion": "ARGENTINA (REPUBLICA)"},
+            {"id": 14, "descripcion": "ARMENIA (REPUBLICA DE)"},
+            {"id": 15, "descripcion": "ARUBA (TERRITORIO HOLANDES DE ULTRAMAR)"},
+            {"id": 16, "descripcion": "AUSTRALIA (COMUNIDAD DE)"},
+            {"id": 17, "descripcion": "AUSTRIA (REPUBLICA DE)"},
+            {"id": 18, "descripcion": "AZERBAIJAN (REPUBLICA AZERBAIJANI)"},
+            {"id": 19, "descripcion": "BAHAMAS (COMUNIDAD DE LAS)"},
+            {"id": 20, "descripcion": "Kuwaiti Dinar"},
+        ],
+        storeFunction: 'setPaisExportador',
     },
     {
         labelNombre: 'País origen',
         campo: 'país_origen',
+        class: 'col-md-4',
         required: true,
         primerOpcion: 'Selecciona el País',
-        catalogos: [],
+        validators: ['required'],
+        catalogos: [
+             {"id": 1, "descripcion": "Selecciona el país"},
+            {"id": 2, "descripcion": "AFGANISTAN (EMIRATO ISLAMICO DE)"},
+            {"id": 3, "descripcion": "ALBANIA (REPUBLICA DE)"},
+            {"id": 4, "descripcion": "ALEMANIA (REPUBLICA FEDERAL DE)"},
+            {"id": 5, "descripcion": "ANDORRA (PRINCIPADO DE)"},
+            {"id": 6, "descripcion": "ANGOLA (REPUBLICA DE)"},
+            {"id": 7, "descripcion": "ANGUILA"},
+            {"id": 8, "descripcion": "ANTARTIDA"},
+            {"id": 9, "descripcion": "ANTIGUA Y BARBUDA (COMUNIDAD BRITANICA DE NACIONES)"},
+            {"id": 10, "descripcion": "ANTILLAS NEERLANDESAS (TERRITORIO HOLANDES DE ULTRAMAR)"},
+            {"id": 11, "descripcion": "ARABIA SAUDITA (REINO DE)"},
+            {"id": 12, "descripcion": "ARGELIA (REPUBLICA DEMOCRATICA Y POPULAR DE)"},
+            {"id": 13, "descripcion": "ARGENTINA (REPUBLICA)"},
+            {"id": 14, "descripcion": "ARMENIA (REPUBLICA DE)"},
+            {"id": 15, "descripcion": "ARUBA (TERRITORIO HOLANDES DE ULTRAMAR)"},
+            {"id": 16, "descripcion": "AUSTRALIA (COMUNIDAD DE)"},
+            {"id": 17, "descripcion": "AUSTRIA (REPUBLICA DE)"},
+            {"id": 18, "descripcion": "AZERBAIJAN (REPUBLICA AZERBAIJANI)"},
+            {"id": 19, "descripcion": "BAHAMAS (COMUNIDAD DE LAS)"},
+            {"id": 20, "descripcion": "BAHREIN (REINO DE)"},
+            {"id": 21, "descripcion": "Kuwaiti Dinar"},
+        ],
+        storeFunction: 'setPaisOrigen',
     },
     {
-        labelNombre: 'valor total de la factura en terminos de la Moneda de comercialización*:',
+        labelNombre: 'Valor total de la factura en términos de la Moneda de Comercialización*:',
         campo: 'valor_total_factura',
-        class: 'col-md-4',
+        class: 'col-md-8',
         tipo_input: 'text',
-        validators: ['required'],
+        validators: [
+            'required',
+            'pattern:^\\d{1,14}(\\.\\d{1,2})?$'
+        ],
         placeholder: '',
+        required: true,
+        storeFunction: 'setValorTotalFactura',
     },
     {
-        labelNombre: 'valor total de la factura USD de la mercancía a importar*:',
+        labelNombre: 'Valor total de la factura USD de la mercancía a importar*:',
         campo: 'valor_total_factura_usd',
-        class: 'col-md-4',
-        tipo_input: 'text',
+        class: 'col-md-8',
+        tipo_input: 'number',
         validators: ['required'],
         placeholder: '',
+        required: true,
+        storeFunction: 'setValorTotalFacturaUsd',
     },
 ];
 
+/**
+ * Configuración de los campos para los datos de exportación.
+ */
 export const DATOS_EXPORTACION = [
     {
         labelNombre: 'Número de documento*:',
@@ -339,7 +521,7 @@ export const DATOS_EXPORTACION = [
         habilitado: true,
     },
     {
-        labelNombre: 'Descripción de la mercancía*',
+        labelNombre: 'Descripción de la mercancía*:',
         campo: 'descripción',
         class: 'col-md-8',
         tipo_input: 'textarea',
@@ -347,7 +529,7 @@ export const DATOS_EXPORTACION = [
         placeholder: '',
     },
     {
-        labelNombre: 'código arancelario*:',
+        labelNombre: 'Código arancelario*:',
         campo: 'código_arancelario',
         class: 'col-md-4',
         tipo_input: 'text',
@@ -358,42 +540,45 @@ export const DATOS_EXPORTACION = [
         labelNombre: 'Cantidad en la unidad de medida senalada en el documento de exportacion*:',
         campo: 'cantidad_umt',
         class: 'col-md-4',
-        tipo_input: 'text',
-        validators: ['required'],
+        tipo_input: 'number',
+        validators: ['required', 'maxLength:50', 'pattern:^[0-9]*$'],
         placeholder: '',
     },
     {
-        labelNombre: 'Valor en USD de la mercancía a importar*',
+        labelNombre: 'Valor en USD de la mercancía a importar*:',
         campo: 'valor_usd',
         class: 'col-md-4',
-        tipo_input: 'text',
-        validators: ['required'],
+        tipo_input: 'number',
+        validators: ['required', 'maxLength:50', 'pattern:^[0-9]*$'],
         placeholder: '',
     },
     {
         labelNombre: 'Precio unitario en USD*:',
         campo: 'precio_unitario_usd',
         class: 'col-md-4',
-        tipo_input: 'text',
-        validators: ['required'],
+        tipo_input: 'number',
+        validators: ['required', 'maxLength:50', 'pattern:^[0-9]*$'],
         placeholder: '',
     },
 ];
 
+/**
+ * Configuración de los campos para los datos del productor.
+ */
 export const DATOS_PRODUCTOR = [
     {
-        labelNombre: 'Tipo de persona',
+        labelNombre: 'Tipo de persona*:',
         campo: 'persona_tipo',
         required: true,
         options: [],
-        selectedValue: '',
+        selectedValue: 'Física',
     },
     {
-        labelNombre: 'Datos personales Nombre(s)*:',
+        labelNombre: 'Nombre(s)*:',
         campo: 'personales_nombre',
         class: 'col-md-4',
         tipo_input: 'text',
-        validators: ['required'],
+        validators: ['required', 'maxLength:200'],
         placeholder: '',
         availableRadioOptions: ['Física',],
     },
@@ -402,7 +587,7 @@ export const DATOS_PRODUCTOR = [
         campo: 'primer_apellido',
         class: 'col-md-4',
         tipo_input: 'text',
-        validators: ['required'],
+        validators: ['required', 'maxLength:200'],
         placeholder: '',
         availableRadioOptions: ['Física',],
     },
@@ -411,7 +596,7 @@ export const DATOS_PRODUCTOR = [
         campo: 'segundo_apellido',
         class: 'col-md-4',
         tipo_input: 'text',
-        validators: ['required'],
+        validators: ['required', 'maxLength:200'],
         placeholder: '',
         availableRadioOptions: ['Física',],
     },
@@ -420,7 +605,7 @@ export const DATOS_PRODUCTOR = [
         campo: 'denominación_razón_social',
         class: 'col-md-4',
         tipo_input: 'text',
-        validators: ['required'],
+        validators: ['required', 'maxLength:250'],
         placeholder: '',
         availableRadioOptions: ['Moral'],
     },
@@ -429,23 +614,25 @@ export const DATOS_PRODUCTOR = [
         campo: 'domicilio',
         class: 'col-md-4',
         tipo_input: 'textarea',
-        validators: ['required'],
+        validators: ['required', 'maxLength:200'],
         placeholder: '',
         availableRadioOptions: ['Física', 'Moral', 'Ninguno'],
-
     },
 ];
 
+/**
+ * Configuración de los campos para los datos del exportador.
+ */
 export const DATOS_EXPORTADOR = [
     {
         labelNombre: 'Tipo de persona',
         campo: 'persona_tipo',
         required: true,
         options: [],
-        selectedValue: '',
+        selectedValue: 'Física',
     },
     {
-        labelNombre: 'Datos personales Nombre(s)*:',
+        labelNombre: 'Nombre(s)*:',
         campo: 'personales_nombre',
         class: 'col-md-4',
         tipo_input: 'text',
@@ -500,6 +687,48 @@ export const DATOS_EXPORTADOR = [
     },
 ];
 
+/**
+ * Configuración de los campos para la representación federal.
+ */
+export const DATOS_FEDERAL = [
+    {
+        labelNombre: 'Entidad Federativa',
+        campo: 'entidad_federativa',
+        class: 'col-md-8',
+        required: true,
+        primerOpcion: 'Selecciona una opción',
+        validators: ['required'],
+        catalogos: [
+            { "id": 1, "descripcion": "Aguascalientes" },
+            { "id": 2, "descripcion": "Baja California" },
+            { "id": 3, "descripcion": "Baja California Sur" },
+            { "id": 4, "descripcion": "Campeche" },
+            { "id": 5, "descripcion": "Chiapas" },
+            { "id": 6, "descripcion": "Chihuahua" },
+            { "id": 7, "descripcion": "Ciudad de México" },
+            { "id": 8, "descripcion": "Coahuila" },
+            { "id": 9, "descripcion": "Colima" },
+            { "id": 10, "descripcion": "Durango" },
+        ],
+    },
+    {
+        labelNombre: 'Representación federal',
+        campo: 'representacion_federal',
+        class: 'col-md-8',
+        required: true,
+        primerOpcion: 'Selecciona una opción',
+        validators: ['required'],
+        catalogos: [
+            { "id": 1, "descripcion": "MEXICALI" },
+            { "id": 2, "descripcion": "TIJUANAN" },
+            { "id": 3, "descripcion": "LAP AZ" }
+        ],
+    },
+];
+
+/**
+ * Textos HTML para los requisitos del trámite.
+ */
 export const TEXTOS_REQUISITOS = {
     INSTRUCCIONES: `<h6>Instrucciones</h6>
     <p>- De acuerdo al caso particular, algunos documentos podrían ser obligatorios</p>
@@ -508,6 +737,9 @@ export const TEXTOS_REQUISITOS = {
     ADJUNTAR: `<p>Si deseas adjuntar un nuevo documento, selecciona la opción --Adjuntar nuevo documento-- y presiona el botón "Adjuntar documentos"</p>`,
 };
 
+/**
+ * Textos HTML generales para instrucciones y adjuntar documentos.
+ */
 export const TEXTOS = {
     INSTRUCCIONES: `<h6>Instrucciones</h6>
     <p>- De acuerdo al caso particular, algunos documentos podrían ser obligatorios</p>

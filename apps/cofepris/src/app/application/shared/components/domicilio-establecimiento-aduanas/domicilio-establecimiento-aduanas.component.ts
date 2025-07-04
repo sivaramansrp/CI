@@ -11,6 +11,7 @@ import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DatosDomicilioLegalService } from '../../services/datos-domicilio-legal.service';
 import { DatosDomicilioService } from '../../../tramites/260512/services/datos-domicilio.service'
 import { InputCheckComponent } from '@libs/shared/data-access-user/src';
+import { Modal } from 'bootstrap';
 
 /**
  * Representa la estructura de la respuesta de una tabla.
@@ -77,6 +78,9 @@ export interface MercanciasTabla {
   styleUrls: ['./domicilio-establecimiento-aduanas.component.css'],
 })
 export class DomicilioEstablecimientoAduanasComponent implements OnInit, OnDestroy {
+
+
+  
   /**
    * Referencia a los componentes de la lista de fechas.
    */
@@ -125,6 +129,13 @@ export class DomicilioEstablecimientoAduanasComponent implements OnInit, OnDestr
    * @property {FormGroup} domicilio
    */
   domicilio!: FormGroup;
+
+  /**
+   * Instancia del Modal de Bootstrap utilizada para controlar la visualización y el comportamiento del cuadro de diálogo modal
+   * dentro del componente DomicilioEstablecimientoComponent.
+   *
+   * */
+  modalInstance!: Modal; /**
 
   /**
    * Grupo de formularios para el agente aduanal.
@@ -233,8 +244,8 @@ export class DomicilioEstablecimientoAduanasComponent implements OnInit, OnDestr
    * Etiqueta de la lista de fechas.
    * */
   public aduanasDeLabel: CrossListLable = {
-    tituluDeLaIzquierda: 'Aduanas de entrada disponibles:',
-    derecha: 'Aduanas de entrada seleccionadas*:',
+    tituluDeLaIzquierda: 'Aduanas de entrada disponibles',
+    derecha: 'Aduanas de entrada seleccionadas*',
   };
 
   /**
@@ -253,7 +264,16 @@ export class DomicilioEstablecimientoAduanasComponent implements OnInit, OnDestr
     derecha: 'País(es) seleccionado(s)*:',
   };
 
-
+ /**
+   * Catálogo de fracciones arancelarias y sus descripciones.
+   * @property {Array<{ fraccion: string, descripcion: string }>} fraccionesCatalogo
+   */
+  fraccionesCatalogo = [
+    { fraccion: '0101.21.01', descripcion: 'Caballos de carrera' },
+    { fraccion: '0201.30.00', descripcion: 'Carne de bovino congelada' },
+    { fraccion: '0402.10.01', descripcion: 'Leche en polvo, sin azúcar' },
+    { fraccion: '1006.30.99', descripcion: 'Arroz semiblanqueado' }
+  ];
   /**
    * Etiqueta de la lista de fechas.
    * */
@@ -276,7 +296,7 @@ export class DomicilioEstablecimientoAduanasComponent implements OnInit, OnDestr
       .subscribe()
 
     this.obtenerEstadoList();
-    this.obtenerTablaDatos();
+    // this.obtenerTablaDatos();
     this.obtenerMercanciasDatos();
     this.configurarGrupoForm(); // Configura el grupo de formularios con los valores iniciales.
 
@@ -308,10 +328,10 @@ export class DomicilioEstablecimientoAduanasComponent implements OnInit, OnDestr
     this.domicilio = this.fb.group({
       codigoPostal: [this.solicitudState?.codigoPostal, [Validators.required, Validators.maxLength(12)]],
       estado: [this.solicitudState?.estado, Validators.required],
-      muncipio: [this.solicitudState?.muncipio, Validators.required],
+      muncipio: [this.solicitudState?.muncipio, Validators.required , Validators.maxLength(120)],
       localidad: [this.solicitudState?.localidad],
       colonia: [this.solicitudState?.colonia],
-      calle: [this.solicitudState?.calle, [Validators.required]],
+      calle: [this.solicitudState?.calle, [Validators.required, Validators.maxLength(100)]],
       lada: [this.solicitudState?.lada],
       telefono: [this.solicitudState?.telefono, [Validators.required, Validators.maxLength(30)]],
       avisoCheckbox: [this.solicitudState?.avisoCheckbox, Validators.required],
@@ -444,6 +464,73 @@ export class DomicilioEstablecimientoAduanasComponent implements OnInit, OnDestr
     this.colapsableTres = !this.colapsableTres;
   }
 
+  /**
+   * @method onClaveScianChange
+   * @description Maneja el evento de cambio del dropdown y actualiza el campo de descripción.
+   * @param {Event} event - Evento de cambio del dropdown.
+   */
+  onClaveScianChange(event: Event): void {
+    const SELECTED_VALUE = (event.target as HTMLSelectElement).value;
+    const SELECTED_OPTION = this.estado.find((item) => item.id === Number(SELECTED_VALUE));
+
+    if (SELECTED_OPTION) {
+      this.formAgente.patchValue({
+        claveDescripcionModal: SELECTED_OPTION.descripcion,
+      });
+    }
+  }
+
+   /**
+   * @method limpiarScianForm
+   * @description Limpia y reinicia el formulario asociado al agente SCian.
+   * @returns {void}
+   * 
+   * @memberof DomicilioEstablecimientoComponent
+   */
+  limpiarScianForm(): void {
+    this.formAgente.reset();
+  }
+
+/**
+   * Guarda los datos del formulario del agente SCIAN en la tabla Nico.
+   * 
+   * Si el formulario `formAgente` es válido, crea un nuevo objeto `NicoInfo` con los valores
+   * de los campos `claveScianModal` y `claveDescripcionModal`, lo agrega al arreglo `nicoTablaDatos`,
+   * limpia el formulario y cierra el modal correspondiente.
+   *
+   * @returns {void}
+   * @memberof DomicilioComponent
+   */
+  guardarScian(): void {
+    if (this.formAgente.valid) {
+      const NUEVO_DATO: NicoInfo = {
+        clave_Scian: this.formAgente.get('claveScianModal')?.value,
+        descripcion_Scian: this.formAgente.get('claveDescripcionModal')?.value,
+      };
+this.nicoTablaDatos.push(NUEVO_DATO);
+  this.formAgente.reset();
+   this.cerrarModalScian();
+}
+  
+this.formMercancias.get('fraccionArancelaria')?.valueChanges.subscribe((valor: string) => {
+      const MATCHED = this.fraccionesCatalogo.find(item =>
+        item.fraccion.startsWith(valor)
+      );
+      const DESCRIPCION = MATCHED ? MATCHED.descripcion : '';
+      this.formMercancias.get('descripcionFraccion')?.setValue(DESCRIPCION);
+    });
+  }
+
+ /**
+   * @method cerrarModalScian
+   * @description Oculta el modal relacionado con el catálogo SCIAN.
+   * @returns {void}
+   *
+   * @memberof DomicilioEstablecimientoComponent
+   */
+  cerrarModalScian(): void {
+    this.modalInstance.hide();
+  }
   /**
  * @description
  * Método que actualiza el estado del store con los valores del formulario.

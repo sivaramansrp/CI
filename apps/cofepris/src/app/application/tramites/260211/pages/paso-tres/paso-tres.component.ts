@@ -1,18 +1,14 @@
-/* eslint-disable sort-imports */
-/* eslint-disable @nx/enforce-module-boundaries */
-/* eslint-disable @typescript-eslint/naming-convention */
- 
-import { catchError, map, Subject, takeUntil } from 'rxjs';
 import { Component, OnDestroy } from '@angular/core';
+import { Subject, catchError, map, takeUntil } from 'rxjs';
 import { Router } from '@angular/router';
-import { ServiciosPantallaService } from 'libs/shared/data-access-user/src/core/services/31601/servicios-pantalla.service';
+import { ServiciosPantallaService } from '@libs/shared/data-access-user/src/core/services/31601/servicios-pantalla.service';
 import { TramiteCofeprisStore } from '../../../../estados/tramite.store';
  
 /**
  * Componente para gestionar el paso tres del proceso de trámite.
  *
- * Este componente maneja la obtención de la firma del usuario
- * y posteriormente redirige a la pantalla de acuse si la firma es válida.
+ * Este componente maneja la obtención de la FIRMA del usuario
+ * y posteriormente redirige a la pantalla de acuse si la FIRMA es válida.
  */
 @Component({
   selector: 'app-paso-tres',
@@ -41,22 +37,22 @@ export class PasotresComponent implements OnDestroy{
   }
  
   /**
-   * Maneja el evento para obtener la firma del usuario.
-   * Si la firma es válida, obtiene el trámite correspondiente
+   * Maneja el evento para obtener la FIRMA del usuario.
+   * Si la FIRMA es válida, obtiene el trámite correspondiente
    * y redirige a la pantalla de acuse.
    *
-   * @param ev - La cadena de texto que representa la firma obtenida.
+   * @param ev - La cadena de texto que representa la FIRMA obtenida.
    */
   obtieneFirma(ev: string): void {
-    const firma: string = ev;
+    const FIRMA: string = ev;
  
-    if (firma) {
+    if (FIRMA) {
       // Obtiene el número de trámite y establece el trámite en el store
       this.serviciosExtraordinariosServices
         .obtenerTramite(19)
         .pipe(
           map((tramite) => {
-            this.TramiteCofeprisStore.establecerTramite(tramite.data, firma);
+            this.TramiteCofeprisStore.establecerTramite(tramite.data, FIRMA);
             // Redirige a la pantalla de acuse
             this.router.navigate(['servicios-extraordinarios/acuse']);
           }),

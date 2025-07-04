@@ -4,7 +4,6 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
 import { Tramite130110State, Tramite130110Store } from '../../../../estados/tramites/tramites130110.store';
 import { ConfiguracionColumna } from '@ng-mf/data-access-user';
-import { HttpClient } from '@angular/common/http';
 import { ImportacionNeumaticosComercializarService } from '../../services/importacion-neumaticos-comercializar.service';
 import { PARTIDASDELAMERCANCIA_TABLA } from '../../../../shared/constantes/partidas-de-la-mercancia.enum';
 import { PartidasDeLaMercanciaModelo } from '../../../../shared/models/partidas-de-la-mercancia.model';
@@ -174,18 +173,17 @@ export class SolicitudComponent implements OnInit, OnDestroy {
      */
     constructor(
       private fb: FormBuilder,
-      private http: HttpClient,
       private tramite130110Store: Tramite130110Store,
       private tramite130110Query: Tramite130110Query,
       private importacionNeumaticosComercializarService: ImportacionNeumaticosComercializarService,
       private consultaioQuery: ConsultaioQuery,
     ) {
-    this.consultaioQuery.selectConsultaioState$
+    this.inicializarFormularios();
+      this.consultaioQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyed$),
         map((seccionState)=>{
           this.esFormularioSoloLectura = seccionState.readonly; 
-          this.inicializarFormularios();
         })
       )
       .subscribe()
@@ -194,7 +192,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
      * jest.spyOnCiclo de vida de Angular: inicializa formularios, suscripciones y opciones al cargar el componente.
      */
     ngOnInit(): void {
-      this.inicializarFormularios();
       this.configuracionFormularioSuscripciones();
       this.opcionesDeBusqueda();
       this.formularioTotalCount();
@@ -243,24 +240,24 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         this.seccionState = data;
       });
       this.formDelTramite = this.fb.group({
-        solicitud: ['', Validators.required],
-        regimen: [{value:this.seccionState?.regimen,disabled: true}, Validators.required],
-        clasificacion: [{value:this.seccionState?.clasificacion,disabled: true}, Validators.required],
+        solicitud: [this.seccionState?.solicitud, Validators.required],
+        regimen: [this.seccionState?.regimen, Validators.required],
+        clasificacion: [this.seccionState?.clasificacion, Validators.required],
       });
    
       this.mercanciaForm = this.fb.group({
-        producto: ['Nuevo'],
+        producto: [],
         descripcion: [
-          '',
+           this.seccionState?.descripcion,
           [
             Validators.required,
             Validators.minLength(10),
             Validators.maxLength(500),
           ],
         ],
-        fraccion: ['', Validators.required],
+        fraccion: [this.seccionState?.fraccion, Validators.required],
         cantidad: [
-          '',
+           this.seccionState?.cantidad,
           [
             Validators.required,
             Validators.pattern(REG_X.SOLO_NUMEROS),
@@ -269,7 +266,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         ],
    
         valorFacturaUSD: [
-          '',
+           this.seccionState?.valorFacturaUSD,
           [
             Validators.required,
             Validators.pattern(REG_X.DECIMALES_DOS_LUGARES),
@@ -277,11 +274,11 @@ export class SolicitudComponent implements OnInit, OnDestroy {
           ],
         ],
    
-        unidadMedida: ['', Validators.required],
+        unidadMedida: [this.seccionState?.unidadMedida, Validators.required],
       });
       this.partidasDelaMercanciaForm = this.fb.group({
         cantidadPartidasDeLaMercancia: [
-          '',
+           this.seccionState?.cantidadPartidasDeLaMercancia,
           [
             Validators.required,
             Validators.pattern(REG_X.SOLO_NUMEROS),
@@ -289,11 +286,11 @@ export class SolicitudComponent implements OnInit, OnDestroy {
           ],
         ],
         descripcionPartidasDeLaMercancia: [
-          '',
+           this.seccionState?.descripcionPartidasDeLaMercancia,
           [Validators.required, Validators.maxLength(255)],
         ],
         valorPartidaUSDPartidasDeLaMercancia: [
-          '',
+           this.seccionState?.valorPartidaUSDPartidasDeLaMercancia,
           [
             Validators.required,
             Validators.min(0),
@@ -304,14 +301,14 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       });
    
       this.paisForm = this.fb.group({
-        bloque: [''],
-        usoEspecifico: ['', Validators.required],
-        justificacionImportacionExportacion: ['', [Validators.required]],
-        observaciones: [''],
+        bloque: [this.seccionState?.bloque ],
+        usoEspecifico: [this.seccionState?.usoEspecifico, Validators.required],
+        justificacionImportacionExportacion: [this.seccionState?.justificacionImportacionExportacion,Validators.required],
+        observaciones: [this.seccionState?.observaciones],
       });
       this.frmRepresentacionForm = this.fb.group({
-        entidad: ['', Validators.required],
-        representacion: ['', Validators.required],
+        entidad: [this.seccionState?.descripcion, Validators.required],
+        representacion: [this.seccionState?.descripcion, Validators.required],
       });
     }
     /**
@@ -418,7 +415,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         ? filasSeleccionadas
         : [];
       if (this.filaSeleccionada) {
-        this.tramite130110Store.storeTableValues(this.filaSeleccionada);
+        this.tramite130110Store.actualizarEstado({filaSeleccionada:this.filaSeleccionada});
       }
     }
   /**
@@ -461,8 +458,8 @@ export class SolicitudComponent implements OnInit, OnDestroy {
      */
     navegarParaModificarPartida(): void {
       if (this.filaSeleccionada) {
-        this.tramite130110Store.setMostrarTabla(true);
-        this.tramite130110Store.storeTableValues(this.filaSeleccionada);
+        this.tramite130110Store.actualizarEstado({mostrarTabla:true});
+        this.tramite130110Store.actualizarEstado({filaSeleccionada:this.filaSeleccionada});
       }
     }
   /**

@@ -8,7 +8,7 @@ import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 
 import { CommonModule } from '@angular/common';
 import { TituloComponent } from '@ng-mf/data-access-user';
-import { ProsecModificacionServiceTsService } from '../../services/prosec-modificacion.service.ts.service';
+import { ProsecModificacionServiceTsService } from '../../services/prosec-modificacion.service';
 import { ProductorIndirecto } from '../../models/prosec-modificacion.model';
 
 describe('ProductorIndirecto90305Component', () => {

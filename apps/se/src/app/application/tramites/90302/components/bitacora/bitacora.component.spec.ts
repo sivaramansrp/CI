@@ -72,61 +72,52 @@ describe('BitacoraComponent', () => {
     component.getProductorProsec = jest.fn();
     component.getSectoresProsec = jest.fn();
     component.ngOnInit();
-    // expect(component.getBitacoraProsec).toHaveBeenCalled();
-    // expect(component.getMercanciasProsec).toHaveBeenCalled();
-    // expect(component.getPlantasProsec).toHaveBeenCalled();
-    // expect(component.getProductorProsec).toHaveBeenCalled();
-    // expect(component.getSectoresProsec).toHaveBeenCalled();
+    
   });
 
   it('should run #getBitacoraProsec()', async () => {
     component.ampliacionServiciosService = component.ampliacionServiciosService || {};
     component.ampliacionServiciosService.getBitacoraProsec = jest.fn().mockReturnValue(observableOf({
-      code: {},
-      data: {}
+      code: 200,
+      data: "abc"
     }));
     component.getBitacoraProsec();
-    // expect(component.ampliacionServiciosService.getBitacoraProsec).toHaveBeenCalled();
-  });
+     });
 
   it('should run #getMercanciasProsec()', async () => {
     component.ampliacionServiciosService = component.ampliacionServiciosService || {};
     component.ampliacionServiciosService.getMercanciasProsec = jest.fn().mockReturnValue(observableOf({
-      code: {},
-      data: {}
+      code: 200,
+      data: "abc"
     }));
     component.getMercanciasProsec();
-    // expect(component.ampliacionServiciosService.getMercanciasProsec).toHaveBeenCalled();
   });
 
   it('should run #getPlantasProsec()', async () => {
     component.ampliacionServiciosService = component.ampliacionServiciosService || {};
     component.ampliacionServiciosService.getPlantasProsec = jest.fn().mockReturnValue(observableOf({
-      code: {},
-      data: {}
+      code: 200,
+      data: "abc"
     }));
     component.getPlantasProsec();
-    // expect(component.ampliacionServiciosService.getPlantasProsec).toHaveBeenCalled();
-  });
+    });
 
   it('should run #getProductorProsec()', async () => {
     component.ampliacionServiciosService = component.ampliacionServiciosService || {};
     component.ampliacionServiciosService.getProductorIndirectoProsec = jest.fn().mockReturnValue(observableOf({
-      code: {},
-      data: {}
+      code: 200,
+      data: "abc"
     }));
     component.getProductorProsec();
-    // expect(component.ampliacionServiciosService.getProductorIndirectoProsec).toHaveBeenCalled();
-  });
+    });
 
   it('should run #getSectoresProsec()', async () => {
     component.ampliacionServiciosService = component.ampliacionServiciosService || {};
     component.ampliacionServiciosService.getSectoresProsec = jest.fn().mockReturnValue(observableOf({
-      code: {},
-      data: {}
+      code: 200,
+      data: "abc"
     }));
     component.getSectoresProsec();
-    // expect(component.ampliacionServiciosService.getSectoresProsec).toHaveBeenCalled();
   });
 
   it('should run #ngOnDestroy()', async () => {
@@ -134,8 +125,6 @@ describe('BitacoraComponent', () => {
     component.destroyNotifier$.next = jest.fn();
     component.destroyNotifier$.complete = jest.fn();
     component.ngOnDestroy();
-    // expect(component.destroyNotifier$.next).toHaveBeenCalled();
-    // expect(component.destroyNotifier$.complete).toHaveBeenCalled();
-  });
+     });
 
 });

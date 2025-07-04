@@ -1,6 +1,7 @@
 import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState, SolicitanteComponent } from '@ng-mf/data-access-user';
 import { Subject, map, takeUntil } from 'rxjs';
+import { Solicitud31601State } from '../../../../estados/tramites/tramite31601.store';
 import { Solocitud31601Service } from '../../services/service31601.service';
 import { TIPO_PERSONA } from '@libs/shared/data-access-user/src/tramites/constantes/constantes';
 import { Tramite31601Query } from '../../../../estados/queries/tramite31601.query';
@@ -60,11 +61,17 @@ export class DatosComponent implements OnInit, AfterViewInit, OnDestroy {
 
   public isTabDisabled: boolean = true;
 
+   /**
+   * Estado de la solicitud.
+   */
+  public solicitudState!: Solicitud31601State;
+
   /**
    * Hook de inicialización del componente. Verifica el estado de actualización del store
    * y carga datos en caso necesario.
    */
   ngOnInit(): void {
+   this.crearRegimenForm();
     this.consultaQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -88,6 +95,23 @@ export class DatosComponent implements OnInit, AfterViewInit, OnDestroy {
         this.isTabDisabled = !(REGIMEN0 || REGIMEN1 || REGIMEN2 || REGIMEN3);
       });
 
+  }
+  
+  /**
+   * Suscribe el componente a los cambios del estado de la solicitud.
+   * Cada vez que el estado de la solicitud cambia en el store, se actualiza la propiedad
+   * local `solicitudState` con el nuevo valor.
+   * Esto permite que la interfaz reaccione automáticamente a los cambios en los checkboxes de régimen.
+   */
+  public crearRegimenForm(): void {
+    this.tramite31601Query.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.solicitudState = seccionState;
+        })
+      )
+      .subscribe();
   }
 
   /**
@@ -123,7 +147,41 @@ export class DatosComponent implements OnInit, AfterViewInit, OnDestroy {
       this.solicitante.obtenerTipoPersona(TIPO_PERSONA.MORAL_NACIONAL);
     }
   }
+  /**
+   * Indica si se debe mostrar la sección de "Importación temporal bajo la modalidad del programa IMMEX (sensibles)".
+   * Se muestra si el checkbox correspondiente a régimen_0 está seleccionado.
+   * @returns {boolean}
+   */
+  public get showIMMEXSensiblesSection(): boolean {
+    return Boolean(this.solicitudState?.regimen_0);
+  }
 
+  /**
+   * Indica si se debe mostrar la sección de "Depósito fiscal para someterse al proceso de ensamble y fabricación de vehículos".
+   * Se muestra si el checkbox correspondiente a régimen_1 está seleccionado.
+   * @returns {boolean}
+   */
+  public get showDepositoFiscalSection(): boolean {
+    return Boolean(this.solicitudState?.regimen_1);
+  }
+
+  /**
+   * Indica si se debe mostrar la sección de "Elaboración, transformación o reparación en recinto fiscalizado".
+   * Se muestra si el checkbox correspondiente a régimen_2 está seleccionado.
+   * @returns {boolean}
+   */
+  public get showRecintoFiscalizadoSection(): boolean {
+    return Boolean(this.solicitudState?.regimen_2);
+  }
+
+  /**
+   * Indica si se debe mostrar la sección de "Recinto fiscalizado estratégico".
+   * Se muestra si el checkbox correspondiente a régimen_3 está seleccionado.
+   * @returns {boolean}
+   */
+  public get showRecintoEstrategicoSection(): boolean {
+    return Boolean(this.solicitudState?.regimen_3);
+  }
   /**
    * Hook de destrucción del componente. Limpia las suscripciones activas para evitar fugas de memoria.
    */

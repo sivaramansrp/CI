@@ -134,6 +134,46 @@ describe('AgregarImmexProgramComponent', () => {
     ).toHaveBeenCalled();
   });
 
+  it('should call guardarDatosFormulario when esFormularioSoloLectura is true in inicializarEstadoFormulario', () => {
+    const guardarDatosFormularioSpy = jest.spyOn(
+      component,
+      'guardarDatosFormulario'
+    );
+    component.esFormularioSoloLectura = true;
+    component.inicializarEstadoFormulario();
+    expect(guardarDatosFormularioSpy).toHaveBeenCalled();
+  });
+
+  it('should call inicializarFormulario when esFormularioSoloLectura is false in inicializarEstadoFormulario', () => {
+    const inicializarFormularioSpy = jest.spyOn(
+      component,
+      'inicializarFormulario'
+    );
+    component.esFormularioSoloLectura = false;
+    component.inicializarEstadoFormulario();
+    expect(inicializarFormularioSpy).toHaveBeenCalled();
+  });
+
+  it('should disable the form when esFormularioSoloLectura is true in guardarDatosFormulario', () => {
+    component.esFormularioSoloLectura = true;
+    component.inicializarFormulario();
+    jest.spyOn(component, 'inicializarFormulario').mockImplementation(() => {});
+
+    const disableSpy = jest.spyOn(component.agregarImmexProgramForm, 'disable');
+    component.guardarDatosFormulario();
+    expect(disableSpy).toHaveBeenCalled();
+  });
+
+  it('should enable the form when esFormularioSoloLectura is false in guardarDatosFormulario', () => {
+    component.esFormularioSoloLectura = false;
+    component.inicializarFormulario();
+    jest.spyOn(component, 'inicializarFormulario').mockImplementation(() => {});
+
+    const enableSpy = jest.spyOn(component.agregarImmexProgramForm, 'enable');
+    component.guardarDatosFormulario();
+    expect(enableSpy).toHaveBeenCalled();
+  });
+
   it('should handle seleccionArentidadFederativa correctly', () => {
     const mockCatalogo: Catalogo = { id: 1, descripcion: 'Test' };
     component.domiciliosDatos = [

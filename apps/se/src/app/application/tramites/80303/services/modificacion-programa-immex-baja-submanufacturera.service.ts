@@ -4,6 +4,17 @@ import { ModificacionDatos } from '../models/modificacion-programa-immex-baja-su
 import { RespuestaCatalogos } from '@libs/shared/data-access-user/src';
 import { Tramite80303Store } from '../estados/tramite80303Store.store';
 
+/**
+ * Decorador que marca una clase como un servicio que puede ser inyectado en otros componentes o servicios.
+ * 
+ * Este servicio está registrado en el nivel raíz de la aplicación, lo que significa que su instancia será única
+ * y compartida en toda la aplicación. Esto permite que los datos y métodos del servicio sean accesibles desde
+ * cualquier parte de la aplicación sin necesidad de crear múltiples instancias.
+ * 
+ * @remarks
+ * Utilizar el decorador `@Injectable` con el proveedor `providedIn: 'root'` asegura que el servicio sea singleton
+ * y esté disponible globalmente en la aplicación Angular.
+ */
 @Injectable({
   providedIn: 'root',
 })

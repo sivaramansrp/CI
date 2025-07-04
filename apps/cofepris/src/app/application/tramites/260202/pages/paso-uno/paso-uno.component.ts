@@ -1,16 +1,31 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { map, Observable, Subject, takeUntil } from 'rxjs';
-import {
-  ConsultaioQuery,
-  ConsultaioState,
-} from '@libs/shared/data-access-user/src';
-import { Tramite260202Query } from '../../estados/tramite260202Query.query';
-import {
-  Tramite260202State,
-  Tramite260202Store,
-} from '../../estados/tramite260202Store.store';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
+import { Observable, Subject, map, takeUntil } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
+import { Tramite260202Query } from '../../estados/tramite260202Query.query';
+import { Tramite260202State } from '../../estados/tramite260202Store.store';
+import { Tramite260202Store } from '../../estados/tramite260202Store.store';
 
+
+
+/**
+ * @component PasoUnoComponent
+ * 
+ * @description Componente Angular que representa el primer paso en el flujo de trámites.
+ * Este componente se encarga de gestionar la lógica y el estado relacionado con la pestaña seleccionada,
+ * así como de interactuar con los servicios para obtener y actualizar datos del formulario.
+ * 
+ * @selector app-paso-uno
+ * 
+ * @templateUrl ./paso-uno.component.html
+ * 
+ * @styleUrl ./paso-uno.component.scss
+ * 
+ * @remarks
+ * - Este componente utiliza los servicios `Tramite260202Query` y `Tramite260202Store` para manejar el estado del flujo del trámite.
+ * - También interactúa con el servicio `ConsultaioQuery` para obtener el estado de consulta y actualizar el formulario según sea necesario.
+ * - Implementa los ciclos de vida de Angular `OnInit` y `OnDestroy` para inicializar y limpiar recursos respectivamente.
+ */
 @Component({
   selector: 'app-paso-uno',
   templateUrl: './paso-uno.component.html',
