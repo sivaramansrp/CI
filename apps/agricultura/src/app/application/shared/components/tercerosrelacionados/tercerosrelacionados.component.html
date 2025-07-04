@@ -43,7 +43,13 @@
                         name="entidadFederativa" [isDisabled]="esFormularioSoloLectura" ></app-catalogo-select>
                 </div>
             </div>
-
+            <div class="row">
+                <div class="col-md-12 d-flex justify-content-end">
+                    <button class="btn btn-primary me-3" [disabled]="esFormularioSoloLectura" (click)="buscarDestinatario()">Cerrar</button>
+                    <button class="btn btn-danger me-3" [disabled]="esFormularioSoloLectura"(click)="limpiarFormulario()" >Limpiar</button>
+                    <button class="btn btn-default" [disabled]="esFormularioSoloLectura">Buscar</button>
+               </div>
+            </div>
         </form>
 
     </div>

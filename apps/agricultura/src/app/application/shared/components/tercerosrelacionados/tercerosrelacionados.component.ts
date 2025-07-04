@@ -117,4 +117,11 @@ buscarDestinatario():void{
 this.mostrarVista=!this.mostrarVista;
   this.nextField.nativeElement.focus();
 }
+limpiarFormulario():void{
+  this.buscarForm.reset();
+  this.buscarForm.patchValue({
+    tipoPersona: 'yes',
+    pais: '1',
+  });
+}
 }
