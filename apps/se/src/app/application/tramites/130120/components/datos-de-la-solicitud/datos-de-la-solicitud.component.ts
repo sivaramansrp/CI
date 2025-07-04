@@ -547,7 +547,7 @@ tipoPersonaExportador: string = 'Física';
      if(campo.props.campo === 'factor_conversión') {
       initialValue = '1';
      }
-     if (campo.props.campo === 'cantidad_umt') {
+     else if (campo.props.campo === 'cantidad_umt') {
       initialValue = '0.00';
      }
     if (nombreGrupo === 'datosMercanica' && menuIndex === 11) {
