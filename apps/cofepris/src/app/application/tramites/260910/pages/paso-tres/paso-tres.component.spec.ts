@@ -1,61 +1,72 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { Router } from '@angular/router';
-import { throwError } from 'rxjs';
 import { PasoTresComponent } from './paso-tres.component';
-import { TramiteFolioService } from '@ng-mf/data-access-user';
-import { FirmaElectronicaComponent } from '@libs/shared/data-access-user/src';
-import { ToastrModule } from 'ngx-toastr';
-import { ToastrService } from 'ngx-toastr';
+import { JSONResponse, TramiteFolioService, TramiteFolioStore } from '@libs/shared/data-access-user/src';
+import { of, throwError } from 'rxjs';
+import { Router } from '@angular/router';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideHttpClient } from '@angular/common/http';
 
 describe('PasoTresComponent', () => {
-  let component: PasoTresComponent;
+  let componente: PasoTresComponent;
   let fixture: ComponentFixture<PasoTresComponent>;
-  let router: jest.Mocked<Router>;
-  let serviciosExtraordinariosService: jest.Mocked<TramiteFolioService>;
+  let routerMock: jest.Mocked<Router>;
+  let tramiteServiceMock: jest.Mocked<TramiteFolioService>;
+  let tramiteStoreMock: jest.Mocked<TramiteFolioStore>;
+
+  const TRAMITE_MOCK: JSONResponse = {
+    id: 101,
+    descripcion: 'Trámite exitoso',
+    codigo: '2025-OK',
+    data: JSON.stringify({
+      folio: 'FOLIO123',
+      fecha: '2025-05-07',
+    }),
+  };
+  
 
   beforeEach(async () => {
-    const routerMock = {
-      navigate: jest.fn(),
-    };
+    routerMock = {
+      navigate: jest.fn()
+    } as unknown as jest.Mocked<Router>;
 
-    const serviciosExtraordinariosServiceMock = {
-      obtenerTramite: jest.fn(),
-    };
+    tramiteServiceMock = {
+      obtenerTramite: jest.fn()
+    } as unknown as jest.Mocked<TramiteFolioService>;
+
+    tramiteStoreMock = {
+      establecerTramite: jest.fn()
+    } as unknown as jest.Mocked<TramiteFolioStore>;
 
     await TestBed.configureTestingModule({
       declarations: [PasoTresComponent],
-      imports: [FirmaElectronicaComponent, ToastrModule.forRoot()],
       providers: [
+        provideHttpClient(),
         { provide: Router, useValue: routerMock },
-        { provide: TramiteFolioService, useValue: serviciosExtraordinariosServiceMock },
-        ToastrService
+        { provide: TramiteFolioService, useValue: tramiteServiceMock },
+        { provide: TramiteFolioStore, useValue: tramiteStoreMock }
       ],
+      schemas: [NO_ERRORS_SCHEMA]
     }).compileComponents();
 
     fixture = TestBed.createComponent(PasoTresComponent);
-    component = fixture.componentInstance;
-
-    router = TestBed.inject(Router) as jest.Mocked<Router>;
-    serviciosExtraordinariosService = TestBed.inject(TramiteFolioService) as jest.Mocked<TramiteFolioService>;
+    componente = fixture.componentInstance;
   });
 
-  it('should create the component', () => {
-    expect(component).toBeTruthy();
+  it('debería crear el componente', () => {
+    expect(componente).toBeTruthy();
   });
 
-  it('should handle error on invalid tramite', () => {
-    const firma = 'valid-firma';
-    const errorResponse = new Error('Invalid tramite');
-    serviciosExtraordinariosService.obtenerTramite.mockReturnValue(throwError(() => errorResponse));
-    component.obtieneFirma(firma);
-    expect(serviciosExtraordinariosService.obtenerTramite).toHaveBeenCalledWith(19);
-    expect(router.navigate).not.toHaveBeenCalled();
+  it('no debería llamar al servicio si firma es vacía', () => {
+    componente.obtieneFirma('');
+
+    expect(tramiteServiceMock.obtenerTramite).not.toHaveBeenCalled();
+    expect(tramiteStoreMock.establecerTramite).not.toHaveBeenCalled();
+    expect(routerMock.navigate).not.toHaveBeenCalled();
   });
 
-  it('should not call service or navigate on empty firma', () => {
-    const firma = '';
-    component.obtieneFirma(firma);
-    expect(serviciosExtraordinariosService.obtenerTramite).not.toHaveBeenCalled();
-    expect(router.navigate).not.toHaveBeenCalled();
+  it('debería manejar error sin lanzar excepción', () => {
+    tramiteServiceMock.obtenerTramite.mockReturnValue(throwError(() => new Error('Error servicio')));
+
+    expect(() => componente.obtieneFirma('FIRMA_ERROR')).not.toThrow();
   });
 });

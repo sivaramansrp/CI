@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
  
 import { Store, StoreConfig } from '@datorama/akita';
 import { Catalogo } from '@libs/shared/data-access-user/src';
+import { FilaCupo } from '../model/seleccion-del-cupo-interfaces';
 
 /**
  * Interfaz que define el estado inicial del trámite 260911.
@@ -39,6 +40,12 @@ export interface Tramite120402State {
    * Cupo seleccionado para el trámite.
    */
   cupoSeleccionado: unknown | null; 
+
+  /**
+   * Datos de la tabla de cupos.
+   * Este campo puede ser nulo si no hay datos disponibles.
+   */
+  cupoTablaDatos: FilaCupo[] | null;
   /**
    * Estado del trámite 120402.
    * Este estado se utiliza para almacenar información relacionada con el trámite,
@@ -63,6 +70,7 @@ export function createInitialState(): Tramite120402State {
     subproducto: null,
     cantidadSolicitada: '',
     cupoSeleccionado: null,
+    cupoTablaDatos: [],
   };
 }
 

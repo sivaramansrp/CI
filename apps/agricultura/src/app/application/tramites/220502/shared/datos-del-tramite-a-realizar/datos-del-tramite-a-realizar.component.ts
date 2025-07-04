@@ -194,6 +194,8 @@ export class DatosDelTramiteARealizarComponent implements OnInit, OnDestroy {
 
     if (this.formularioDeshabilitado) {
       this.grupoFormularioPadre.disable();
+    } else {
+      this.grupoFormularioPadre.enable();
     }
   }
 

@@ -8,12 +8,12 @@
             (change)="setValoresStore(datosDelTramiteForm, 'pais', 'setPais')"></app-catalogo-select>
         </div>
         <div class="col-md-4">
-          <app-catalogo-select [catalogo]="optionsPais" [label]="'Código de Transportación Aéreo'" [required]="true" id="pais"
+          <app-catalogo-select [catalogo]="optionsCodigo" [label]="'Código de Transportación Aéreo'" [required]="true" id="pais"
             formControlName="codigo" [ngClass]="isValid(datosDelTramiteForm,'codigo') ? 'required' : ''"  [isDisabled]="readonly"
             (change)="setValoresStore(datosDelTramiteForm, 'codigo', 'setCodigo')"></app-catalogo-select>
         </div>
         <div class="col-md-4 mb-3" style="margin-top: 7px;">
-          <label>Empresa de Transportación Aérea*:</label>
+          <label>Código*:</label>
           <input type="text" class="form-control" formControlName="transportacion"
               [ngClass]="isValid(datosDelTramiteForm,'transportacion') ? 'required' : ''"
               (change)="setValoresStore(datosDelTramiteForm, 'transportacion', 'setTransportacion')" />
