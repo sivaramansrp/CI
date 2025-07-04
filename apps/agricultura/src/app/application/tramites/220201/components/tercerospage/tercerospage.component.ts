@@ -1,9 +1,10 @@
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
-import { ConsultaioQuery, PersonaTerceros } from '@ng-mf/data-access-user';
 import { Subject, takeUntil } from 'rxjs';
 import { CertificadoZoosanitarioServiceService } from '../../services/220201/certificado-zoosanitario.service';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { TercerosrelacionadosComponent } from '../../../../shared/components/tercerosrelacionados/tercerosrelacionados.component';
+import { TercerosrelacionadosdestinoTable } from '../../../../shared/models/tercerosrelacionados.model';
 import { ZoosanitarioQuery } from '../../queries/220201/zoosanitario.query';
 
 /**
@@ -45,7 +46,7 @@ export class TercerospageComponent implements OnInit, OnDestroy, AfterViewInit {
    * Lista de personas asociadas como terceros en el trámite actual.
    * @property {PersonaTerceros[]} personas
    */
-  personas: PersonaTerceros[] = [];
+  personas: TercerosrelacionadosdestinoTable[] = [];
 
   /**
    * Indica si el formulario se encuentra en modo solo lectura.
@@ -96,14 +97,6 @@ export class TercerospageComponent implements OnInit, OnDestroy, AfterViewInit {
       });
   }
 
-  /**
-   * Actualiza la lista de terceros relacionados en el store.
-   * @method onPersonasChanged
-   * @param {PersonaTerceros[]} event - Nueva lista de personas terceros.
-   */
-  onPersonasChanged(event: PersonaTerceros[]): void {
-    this.certificadoZoosanitarioServices.updateTercerosRelacionados(event);
-  }
 
   /**
    * Ciclo de vida de Angular que se ejecuta al destruir el componente.
