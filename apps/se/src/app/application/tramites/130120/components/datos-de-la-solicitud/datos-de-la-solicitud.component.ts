@@ -392,6 +392,8 @@ tipoPersonaExportador: string = 'Física';
    */
   esFormularioSoloLectura: boolean = false;
 
+  enableConversion: boolean = false;
+
   /**
    * Constructor del componente DatosDeLaSolicitudComponent.
    * Inicializa el formulario y configura los grupos de formularios basados en la configuración proporcionada.
@@ -542,6 +544,12 @@ tipoPersonaExportador: string = 'Física';
       const VALIDATORS = campo.props.validators ? DatosDeLaSolicitudComponent.getValidators(campo.props.validators) : [Validators.required];
       const CONTROL_NAME = campo.props.campo;
      let initialValue: string | number | null | undefined = '';
+     if(campo.props.campo === 'factor_conversión') {
+      initialValue = '1';
+     }
+     if (campo.props.campo === 'cantidad_umt') {
+      initialValue = '0.00';
+     }
     if (nombreGrupo === 'datosMercanica' && menuIndex === 11) {
       initialValue = 1;
     }
@@ -680,6 +688,7 @@ tipoPersonaExportador: string = 'Física';
   const UMCCATALOG = this.configuracion[1].menu[8].props.catalogos;
   if (UMCCATALOG && UMCCATALOG.length > 0) {
     const SELECTED = UMCCATALOG.find((item: {id: number, descripcion: string} ) => item.id === Number(VALOR));
+    this.enableConversion = true
     if (SELECTED) {
       this.otroUmcIncrement = 10 * Number(SELECTED.id);
       const OTROUMCCONTROL = this.formulario.get('datosMercanica')?.get(this.configuracion[1].menu[9].props.campo);
