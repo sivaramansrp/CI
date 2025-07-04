@@ -1,38 +1,73 @@
 <div class="container">
   <div class="row">
-    <form class="row mt-5" [formGroup]="datosDelTramiteDos" >
+    <form class="row mt-5" [formGroup]="datosDelTramiteDos">
       <ng-titulo titulo="Mercancías" />
 
       <div class="col-md-12">
         <label class="form-label" for="procedimientoCargaDescarga">
           Describa el procedimiento y los mecanismos que utilizará para la descarga y carga de la mercancía*
         </label>
-        <input type="text" class="form-control ht" id="procedimientoCargaDescarga" formControlName="procedimientoCargaDescarga"  (change)="setValoresStore(datosDelTramiteDos, 'procedimientoCargaDescarga', 'setProcedimientoCargaDescarga')"/>
+        <input type="text" class="form-control ht" id="procedimientoCargaDescarga"
+          formControlName="procedimientoCargaDescarga"
+          (change)="setValoresStore(datosDelTramiteDos, 'procedimientoCargaDescarga', 'setProcedimientoCargaDescarga')" maxlength="200" />
+        <div class="d-grid">
+          <div *ngIf="datosDelTramiteDos.get('procedimientoCargaDescarga')?.touched">
+            <small class="mensaje-error"
+              *ngIf="datosDelTramiteDos.get('procedimientoCargaDescarga')?.hasError('required')">
+              Este campo es obligatorio
+            </small>
+            <small class="mensaje-error" *ngIf="datosDelTramiteDos.get('procedimientoCargaDescarga')?.hasError('maxlength')">
+             no puede exceder 200 caracteres
+            </small>
+          </div>
+        </div>
       </div>
 
       <div class="col-md-12">
         <label class="form-label" for="sistemasMedicionUbicacion">
           Describa los tipos de sistemas de medición de la mercancía y su ubicación*
         </label>
-        <input type="text" class="form-control ht" id="sistemasMedicionUbicacion" formControlName="sistemasMedicionUbicacion" (change)="setValoresStore(datosDelTramiteDos, 'sistemasMedicionUbicacion', 'setSistemasMedicionUbicacion')" />
+        <input type="text" class="form-control ht" id="sistemasMedicionUbicacion"
+          formControlName="sistemasMedicionUbicacion"
+          (change)="setValoresStore(datosDelTramiteDos, 'sistemasMedicionUbicacion', 'setSistemasMedicionUbicacion')" maxlength="200" />
+        <div class="d-grid">
+          <div *ngIf="datosDelTramiteDos.get('sistemasMedicionUbicacion')?.touched">
+            <small class="mensaje-error"
+              *ngIf="datosDelTramiteDos.get('sistemasMedicionUbicacion')?.hasError('required')">
+              Este campo es obligatorio
+            </small>
+            <small class="mensaje-error" *ngIf="datosDelTramiteDos.get('sistemasMedicionUbicacion')?.hasError('maxlength')">
+              no puede exceder 200 caracteres
+            </small>
+          </div>
+        </div>
       </div>
 
       <div class="col-md-12">
         <label class="form-label" for="motivoNoDespachoAduana">
           Indique los motivos por los cuales no es posible despachar la mercancia por la aduana:*
         </label>
-        <input type="text" class="form-control ht" id="motivoNoDespachoAduana" formControlName="motivoNoDespachoAduana" (change)="setValoresStore(datosDelTramiteDos, 'motivoNoDespachoAduana', 'setMotivoNoDespachoAduana')" />
+        <input type="text" class="form-control ht" id="motivoNoDespachoAduana" formControlName="motivoNoDespachoAduana"
+          (change)="setValoresStore(datosDelTramiteDos, 'motivoNoDespachoAduana', 'setMotivoNoDespachoAduana')" maxlength="200"/>
+        <div class="d-grid">
+          <div *ngIf="datosDelTramiteDos.get('motivoNoDespachoAduana')?.touched">
+            <small class="mensaje-error" *ngIf="datosDelTramiteDos.get('motivoNoDespachoAduana')?.hasError('required')">
+              Este campo es obligatorio
+            </small>
+            <small class="mensaje-error" *ngIf="datosDelTramiteDos.get('motivoNoDespachoAduana')?.hasError('maxlength')">
+              no puede exceder 200 caracteres
+            </small>
+          </div>
+        </div>
       </div>
 
       <ng-titulo titulo="Agentes y apoderados aduanales" />
       <div class="row">
         <div class="col-md-8 mt-4">
-          <app-catalogo-select
-            [catalogo]="operaciones"
-            [label]="'Selecciona el tipo de figura para promover las operaciones'"
-            [required]="true"
-            [isDisabled]="esFormularioSoloLectura"
-            formControlName="operaciones"  (change)="setValoresStore(datosDelTramiteDos, 'operaciones', 'setOperaciones')">
+          <app-catalogo-select [catalogo]="operaciones"
+            [label]="'Selecciona el tipo de figura para promover las operaciones'" [required]="true"
+            [isDisabled]="esFormularioSoloLectura" formControlName="operaciones"
+            (change)="setValoresStore(datosDelTramiteDos, 'operaciones', 'setOperaciones')">
           </app-catalogo-select>
         </div>
       </div>
@@ -41,15 +76,21 @@
 
       <div class="row">
         <div class="col-md-12 mb-5 d-flex justify-content-end">
-          <button type="button" class="btn btn-primary ms-3" data-bs-toggle="modal" data-bs-target="#modalAgregar" (click)="abrirModal()" [disabled]="esFormularioSoloLectura">
+          <button type="button" class="btn btn-primary ms-3" data-bs-toggle="modal" data-bs-target="#modalAgregar"
+            (click)="abrirModal()" [disabled]="esFormularioSoloLectura">
             Agregar
           </button>
-          <button type="button" class="btn btn-default ms-3" [disabled]="esFormularioSoloLectura">Eliminar</button>
+          <button type="button" class="btn btn-danger ms-3 me-3" [disabled]="esFormularioSoloLectura">Eliminar</button>
           <button type="button" class="btn btn-default" [disabled]="esFormularioSoloLectura">Modificar</button>
         </div>
 
         <div class="table-container">
-          <ng-table [disableSeleccionTablaCheckBox]="esFormularioSoloLectura" [commonTableHeader]="mercanciaHeaderData" [commonTableBody]="mercanciaBodyData"> </ng-table>
+          <app-tabla-dinamica 
+          [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
+           [tipoSeleccionTabla]="checkbox"
+            [configuracionTabla]="configuracionTabla" 
+            [datos]="mercanciTablaDatos">
+        </app-tabla-dinamica>
         </div>
       </div>
     </form>
@@ -63,37 +104,81 @@
             <h4 class="modal-title">Agregar</h4>
           </div>
           <div class="modal-body">
-            <ng-titulo titulo="Fracciones arancelarias" />
-            <form [formGroup]="agenteForm" >
-              <p class="fw-bold">Registro de Agentes Aduanales</p>
+            <ng-titulo titulo="Registro de Agentes Aduanales" />
+            <form [formGroup]="agenteForm">
               <div class="row mb-3">
                 <div class="col-md-6">
-                  <label class="form-label" for="nombres">Nombre(s)*</label>
+                  <label class="form-label label-fnt" for="nombres">Nombre(s)*</label>
                   <input type="text" class="form-control" id="nombres" formControlName="nombres" />
+                  <div class="d-grid">
+                    <div *ngIf="agenteForm.get('nombres')?.touched">
+                      <small class="mensaje-error" *ngIf="agenteForm.get('nombres')?.hasError('required')">
+                        Este campo es obligatorio
+                      </small>
+                      <small class="mensaje-error" *ngIf="agenteForm.get('nombres')?.hasError('maxlength')">
+                        El Nombre(s) no puede exceder los 200 caracteres.
+                      </small>
+                    </div>
+                  </div>
                 </div>
                 <div class="col-md-6">
-                  <label class="form-label" for="primerApellido">Primer Apellido*</label>
+                  <label class="form-label label-fnt" for="primerApellido">Primer Apellido*</label>
                   <input type="text" class="form-control" id="primerApellido" formControlName="primerApellido" />
+                  <div class="d-grid">
+                    <div *ngIf="agenteForm.get('primerApellido')?.touched">
+                      <small class="mensaje-error" *ngIf="agenteForm.get('primerApellido')?.hasError('required')">
+                        Este campo es obligatorio
+                      </small>
+                      <small class="mensaje-error" *ngIf="agenteForm.get('primerApellido')?.hasError('maxlength')">
+                        El Primer Apellido no puede exceder los 200 caracteres.
+                      </small>
+                    </div>
+                  </div>
                 </div>
                 <div class="col-md-6">
-                  <label class="form-label" for="segundoApellido">Segundo Apellido*</label>
+                  <label class="form-label label-fnt" for="segundoApellido">Segundo Apellido*</label>
                   <input type="text" class="form-control" id="segundoApellido" formControlName="segundoApellido" />
+                  <div class="d-grid">
+                    <div *ngIf="agenteForm.get('segundoApellido')?.touched">
+                      <small class="mensaje-error" *ngIf="agenteForm.get('segundoApellido')?.hasError('required')">
+                        Este campo es obligatorio
+                      </small>
+                      <small class="mensaje-error" *ngIf="agenteForm.get('segundoApellido')?.hasError('maxlength')">
+                        El código postal no puede exceder los 200 caracteres.
+                      </small>
+                    </div>
+                  </div>
                 </div>
                 <div class="col-md-6">
-                  <label class="form-label" for="numeroPatente">Número de patente de agente aduanal*</label>
-                  <input type="text" class="form-control" id="numeroPatente" formControlName="numeroPatente" />
+                  <label class="form-label label-fnt" for="numeroPatente">Número de patente de agente aduanal*</label>
+                  <input type="number" class="form-control" id="numeroPatente" formControlName="numeroPatente"
+                    maxlength="4" pattern="[0-9]*" inputmode="numeric" />
+                  <div class="d-grid">
+                    <div *ngIf="agenteForm.get('numeroPatente')?.touched">
+                      <small class="mensaje-error" *ngIf="agenteForm.get('numeroPatente')?.hasError('required')">
+                        Este campo es obligatorio
+                      </small>
+                    </div>
+                  </div>
                 </div>
               </div>
             </form>
           </div>
 
           <div class="modal-footer custom-footer justify-content-center">
-            <button type="button" class="btn btn-primary" (click)="agregarMercancias()">Agregar</button>
+            <button type="button" class="btn btn-primary"
+            (click)="agregarMercancias()"
+             >Agregar</button>
+            <button type="button" class="btn btn-danger" data-bs-dismiss="modal" #closeModal>
+              Cancelar
+            </button>
             <button type="button" class="btn btn-default" data-bs-dismiss="modal" #closeModal>
-              Cerrar
+              Limpiar
             </button>
           </div>
         </div>
       </div>
     </div>
   </div>
+
+ 

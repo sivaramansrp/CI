@@ -1,6 +1,6 @@
-import { Catalogo, ConsultaioQuery, TableComponent, TituloComponent } from '@ng-mf/data-access-user';
+import { Catalogo, ConsultaioQuery, TableComponent, TituloComponent, TablaDinamicaComponent, TablaSeleccion } from '@ng-mf/data-access-user';
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { FRACCIONES_TABLEDOS_TABLE_BODY_DATA, OPCIONES_DE_BOTON_DE_RADIO } from '../../constantes/datos-del-tramite.enum';
+import { ACUSE_DATOS, FRACCIONES_TABLEDOS_TABLE_BODY_DATA, OPCIONES_DE_BOTON_DE_RADIO, tableDatos } from '../../constantes/datos-del-tramite.enum';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Solicitud105State, Tramite105Store, } from '../../estados/tramite105.store';
 import { Subject, Subscription, map, takeUntil } from 'rxjs';
@@ -20,7 +20,7 @@ interface TableBodyData {
   imports: [CommonModule,
     InputRadioComponent,
     TableComponent,
-    TituloComponent, CatalogoSelectComponent, ReactiveFormsModule, InputCheckComponent],
+    TituloComponent, CatalogoSelectComponent, ReactiveFormsModule, InputCheckComponent, TablaDinamicaComponent],
   templateUrl: './datos-del-tramite-uno.component.html',
   styleUrl: './datos-del-tramite-uno.component.scss',
 })
@@ -166,11 +166,36 @@ export class DatosDelTramiteUnoComponent implements OnInit, OnDestroy {
    * Referencia al botón para cerrar el modal.
    */
   @ViewChild('closeModal') closeModal!: ElementRef;
+  @ViewChild('closeModal') closeModal1!: ElementRef;
 
   /**
      * Opciones de botón de radio.
      */
   opcionDeBotonDeRadio = OPCIONES_DE_BOTON_DE_RADIO;
+
+  /**
+     * Configuración de la tabla utilizada en el componente para mostrar los datos del acuse.
+     * 
+     * @remarks
+     * Esta propiedad almacena la configuración de columnas, formato y otros parámetros
+     * necesarios para renderizar la tabla de datos del acuse en la interfaz de usuario.
+     * 
+     * @see ACUSE_DATOS para la definición de la configuración.
+     */
+  public configuracionTabla = ACUSE_DATOS;
+
+  /**
+   * Un arreglo de objetos `AcuseTablaDatos` que contiene los datos para la tabla.
+   * Estos datos se inicializan a partir de la constante `TablaDatos`.
+   */
+  public mercanciTablaDatos: tableDatos[] = [];
+
+
+  /**
+   * Representa el tipo de selección de checkbox utilizado en el componente.
+   * Esto se establece al valor de `TablaSeleccion.CHECKBOX`.
+   */
+  public checkbox = TablaSeleccion.CHECKBOX;
 
   /**
    * Suscripción activa.
@@ -196,7 +221,7 @@ export class DatosDelTramiteUnoComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-      this.obtenerMercancia();
+    this.obtenerMercancia();
     this.crearDatosDelTramiteForm();
     this.getPais();
     this.getAduana();
@@ -208,8 +233,8 @@ export class DatosDelTramiteUnoComponent implements OnInit, OnDestroy {
     if (this.esFormularioSoloLecturaActualizar) {
       this.crearDatosDelTramiteForm()
       this.alternarControles(true);
-      this.esFormularioSoloLectura=false;
-      this.deshabilitarSeleccion=false;
+      this.esFormularioSoloLectura = false;
+      this.deshabilitarSeleccion = false;
     }
   }
   /**
@@ -267,8 +292,8 @@ export class DatosDelTramiteUnoComponent implements OnInit, OnDestroy {
    */
   crearFormularioAgregar(): void {
     this.agregarForm = this.fb.group({
-      fraccionArancelaria: [{ value: '' }, Validators.required],
-      descripcion: ['', Validators.required],
+      fraccionArancelaria: [''],
+      descripcion: [{ value: '', disabled: true }],
       descripcionAdicional: ['']
     });
   }
@@ -328,14 +353,14 @@ export class DatosDelTramiteUnoComponent implements OnInit, OnDestroy {
 
       // Inputsimportacion
       pais: [{ value: this.solicitudState?.pais, disabled: true }, Validators.required],
-      codigoPostal: [{ value: this.solicitudState?.codigoPostal, disabled: true }],
+      codigoPostal: [{ value: this.solicitudState?.codigoPostal, disabled: true }, Validators.required],
       entidadFederativa: [{ value: this.solicitudState?.entidadFederativa, disabled: true }],
       municipioDelegacion: [{ value: this.solicitudState?.municipioDelegacion, disabled: true }],
-      localidad: [{ value: this.solicitudState?.localidad, disabled: true }],
+      localidad: [{ value: this.solicitudState?.localidad, disabled: true }, Validators.required],
       colonia: [{ value: this.solicitudState?.colonia, disabled: true }],
       entidadFederativaDos: [{ value: this.solicitudState?.entidadFederativaDos, disabled: true }],
-      calle: [{ value: this.solicitudState?.calle, disabled: true }],
-      numeroExterior: [{ value: this.solicitudState?.numeroExterior, disabled: true }],
+      calle: [{ value: this.solicitudState?.calle, disabled: true }, Validators.required],
+      numeroExterior: [{ value: this.solicitudState?.numeroExterior, disabled: true }, Validators.required],
       numeroInterior: [{ value: this.solicitudState?.numeroInterior, disabled: true }],
       ubicacionDescripcion: [{ value: this.solicitudState?.ubicacionDescripcion, disabled: true }],
       // Aduanas
@@ -392,14 +417,19 @@ export class DatosDelTramiteUnoComponent implements OnInit, OnDestroy {
   onCambioCheckbox(evento: Event, opcion: 'domicilio' | 'ubicacion'): void {
     const ELEMENTO_INPUT = evento.target as HTMLInputElement;
     const ESTA_SELECCIONADO = ELEMENTO_INPUT?.checked ?? false;
-
-    this.alternarControles(ESTA_SELECCIONADO);
-    this.deshabilitarSeleccion = !ESTA_SELECCIONADO;
-
     // Asegurar exclusividad entre las opciones
     if (opcion === 'domicilio') {
+      this.datosDelTramite.get("ubicacionDescripcion")?.disable();
+      this.datosDelTramite.get("pais")?.setValue("1");
+      this.deshabilitarSeleccion = !ESTA_SELECCIONADO;
+      this.alternarControles(ESTA_SELECCIONADO);
       this.datosDelTramite.get('ubicacion')?.setValue(false);
     } else if (opcion === 'ubicacion') {
+      if (ESTA_SELECCIONADO) {
+        this.datosDelTramite.get("ubicacionDescripcion")?.enable();
+      } else {
+        this.datosDelTramite.get("ubicacionDescripcion")?.disable();
+      }
       this.datosDelTramite.get('domicilio')?.setValue(false);
     }
   }
@@ -473,8 +503,8 @@ export class DatosDelTramiteUnoComponent implements OnInit, OnDestroy {
    */
   public getAgregarForm(): void {
     this.agregarForm = this.fb.group({
-      fraccionArancelaria: ['', Validators.required],
-      descripcion: ['', Validators.required],
+      fraccionArancelaria: [''],
+      descripcion: [{ value: '', disabled: true }],
       descripcionAdicional: ['']
     });
   }
@@ -567,6 +597,8 @@ export class DatosDelTramiteUnoComponent implements OnInit, OnDestroy {
       });
   }
 
+
+
   /**
    * @method agregarMercancias
    * @description Agrega una mercancía a la tabla de mercancías y reinicia el formulario.
@@ -574,11 +606,23 @@ export class DatosDelTramiteUnoComponent implements OnInit, OnDestroy {
   agregarMercancias(): void {
     if (!this.agregarForm.valid) {
       return;
-    }
+    }this.agregarForm.get('descripcion')?.enable();
+    console.log(this.agregarForm.value)
     const MERCANCIA = this.agregarForm.value;
-    this.getMercanciaTableData.mercanciaTable.tableBody.push(MERCANCIA);
+    this.mercanciTablaDatos.push(MERCANCIA)
     this.agregarForm.reset();
     this.cerrarModal();
+  }
+
+  /**
+   * Establece el valor del campo 'descripcion' en el formulario 'agregarForm' 
+   * utilizando el valor proporcionado por el evento.
+   * 
+   * @param event - Evento que contiene el nuevo valor para el campo 'descripcion'.
+   */
+  setDiscription(event: Event): void {
+    const inputElement = event.target as HTMLInputElement;
+    this.agregarForm.get('descripcion')?.setValue(inputElement.value);
   }
 
   /**
