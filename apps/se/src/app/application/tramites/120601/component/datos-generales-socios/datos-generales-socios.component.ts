@@ -175,9 +175,7 @@ actualizarEstadoFormulario(): void {
    */
   esInvalido(nombreControl: string): boolean {
     const CONTROL = this.FormSolicitud.get(nombreControl);
-    return CONTROL
-      ? CONTROL.invalid && (CONTROL.touched || CONTROL.dirty)
-      : false;
+    return CONTROL ? CONTROL.invalid && (CONTROL.touched || CONTROL.dirty) : false;
   }
 
   /**
@@ -335,13 +333,13 @@ actualizarEstadoFormulario(): void {
     this.camposPersonaMoralExtranjera = false;
 
     // Determinar qué campos mostrar según la combinación
-    if (NACIONALIDAD === 'Yes') { // Nacionalidad mexicana = Si
+    if (NACIONALIDAD === 'Yes') { 
       this.camposEntradaRegulares = true;
     } 
-    else if (NACIONALIDAD === 'No') { // Nacionalidad extranjera = No
-      if (TIPO_PERSONA === 'Yes') { // Persona física
+    else if (NACIONALIDAD === 'No') { 
+      if (TIPO_PERSONA === 'Yes') { 
         this.camposPersonaFisicaExtranjera = true;
-      } else if (TIPO_PERSONA === 'No') { // Persona moral
+      } else if (TIPO_PERSONA === 'No') { 
         this.camposPersonaMoralExtranjera = true;
       }
     }
