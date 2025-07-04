@@ -88,7 +88,19 @@ export class TercerospageComponent implements OnInit, OnDestroy {
         }
       });
   }
-
+  /**
+   * Navega a la página de agregar destinatario.
+   * 
+   * @remarks
+   * Este método redirige al usuario a la página de agregar destinatario,
+   * permitiendo la modificación de los datos de terceros relacionados.
+   * 
+   * @method goToAgregarDestinatario
+   */
+   handleEliminar() :void{
+     this.personas=[];
+     this.certificadoZoosanitarioServices.updateTercerosRelacionado([] as TercerosrelacionadosdestinoTable[]);
+   }
 
 
   /**

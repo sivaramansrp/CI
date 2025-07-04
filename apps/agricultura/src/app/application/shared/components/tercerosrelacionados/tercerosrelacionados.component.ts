@@ -1,6 +1,6 @@
 import { ActivatedRoute, Router } from '@angular/router';
 import { AlertComponent, ConfiguracionColumna, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter,Input, Output } from '@angular/core';
 import {TercerosrelacionadosTable, TercerosrelacionadosdestinoTable} from '../../models/tercerosrelacionados.model';
 import { CommonModule } from '@angular/common';
 import { SELECCIONADO } from '../../constantes/tercerosrelacionados.enum';
@@ -27,6 +27,7 @@ export class TercerosrelacionadosComponent {
        */
       @Input() esFormularioSoloLectura:boolean = false;
       @Input() cuerpoTablaDestino:TercerosrelacionadosdestinoTable[] = [];
+      @Output() eliminarSeleccion: EventEmitter<TercerosrelacionadosdestinoTable[]> = new EventEmitter();
 
     /**
      * @description
@@ -75,8 +76,12 @@ export class TercerosrelacionadosComponent {
 
 constructor(public readonly router: Router,public route: ActivatedRoute) {}
 
-  goToAgregarDestinatario():void {
+goToAgregarDestinatario():void {
   this.router.navigate(['../agregar-destinatario'], { relativeTo: this.route });
+}
+modificarDestinatario():void{
+    const ID = 1;
+  this.router.navigate(['../agregar-destinatario',ID], { relativeTo: this.route });
 }
   /**
 
@@ -89,4 +94,9 @@ constructor(public readonly router: Router,public route: ActivatedRoute) {}
   onSeleccionDestinatario(filas: TercerosrelacionadosdestinoTable[]): void {
     this.listaDeFilaSeleccionada = filas;
   }
+
+    emitEliminar():void {
+    this.eliminarSeleccion.emit(this.listaDeFilaSeleccionada);
+  }
+
 }
