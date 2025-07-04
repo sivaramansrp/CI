@@ -19,10 +19,11 @@
       <div class="col-md-4">
         <div class="form-field">
           <input-fecha
+            formControlName="fechaDeInspeccion"
             [datos]="configuracionFechaFinVigencia"
             (valorCambiado)="cambioFechaInicio($event)"
             [isDisabled]="formularioDeshabilitado"
-            [setFecha]="this.solicitud220502State.fechaDeInspeccion"
+            [setFecha]="solicitud220502State.fechaDeInspeccion"
           ></input-fecha>
         </div>
       </div>
@@ -31,10 +32,11 @@
       <div class="col-md-4">
         <div class="form-field">
           <input-fecha
+            formControlName="fechaInspeccion"
             [datos]="configuracionFechaInspeccion"
             (valorCambiado)="cambioFechaInspeccion($event)"
             [isDisabled]="formularioDeshabilitado"
-            [setFecha]="this.solicitud220502State.fechaInspeccion"
+            [setFecha]="solicitud220502State.fechaInspeccion"
           ></input-fecha>
         </div>
       </div>
