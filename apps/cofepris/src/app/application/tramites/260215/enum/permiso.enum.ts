@@ -27,7 +27,7 @@ export const MENSAJE_DE_ALERTA: string =
 
 export const INPUT_FECHA_CONFIG = {
   labelNombre: 'Fecha de pago',
-  required: true,
+  required: false,
   habilitado: true,
 };
 

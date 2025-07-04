@@ -30,10 +30,10 @@ export const INSPECCION_FISICA_PASOS = [
   export const OPCIONES_DE_BOTON_DE_RADIO = [
     {
       label: 'Sí',
-      value: '1',
+      value: 1,
     },
     {
       label: 'No',
-      value: '0',
+      value: 2,
     }
   ];

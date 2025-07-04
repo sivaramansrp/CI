@@ -10,7 +10,17 @@ import { PASOS } from "../../constantes/modificacion-aviso-seguro-global.enum";
  * @property valor - Índice del paso al que se desea navegar.
  */
 interface AccionBoton {
+  /**
+   * @property accion
+   * @description
+   * Define la acción a realizar al presionar el botón.
+   */
   accion: string;
+  /**
+   * @property valor
+   * @description
+   * Representa el índice del paso al que se desea navegar.
+   */
   valor: number;
 }
 
@@ -23,7 +33,8 @@ export class SolicitudPageComponent {
   /**
    * @property pasos
    * @type {ListaPasosWizard[]}
-   * @description Contiene la lista de pasos definidos para el wizard.
+   * @description 
+   * Contiene la lista de pasos definidos para el wizard.
    * 
    * @command Esta lista se importa desde una constante de enumeración `PASOS` y define la secuencia del flujo.
    */
@@ -33,7 +44,8 @@ export class SolicitudPageComponent {
    * @property indice
    * @type {number}
    * @default 1
-   * @description Representa el índice actual del paso activo en el wizard.
+   * @description 
+   * Representa el índice actual del paso activo en el wizard.
    * 
    * @command Se actualiza cuando el usuario navega entre pasos o pestañas.
    */
@@ -42,7 +54,8 @@ export class SolicitudPageComponent {
   /**
    * @property wizardComponent
    * @type {WizardComponent}
-   * @description Referencia al componente hijo `WizardComponent` para controlar la navegación entre pasos.
+   * @description 
+   * Referencia al componente hijo `WizardComponent` para controlar la navegación entre pasos.
    * 
    * @command Utiliza el decorador `@ViewChild` para obtener acceso directo a sus métodos `siguiente()` y `atras()`.
    */
@@ -51,7 +64,8 @@ export class SolicitudPageComponent {
   /**
    * @property datosPasos
    * @type {DatosPasos}
-   * @description Objeto que contiene la configuración del wizard, como el número de pasos, índice actual y texto de botones.
+   * @description 
+   * Objeto que contiene la configuración del wizard, como el número de pasos, índice actual y texto de botones.
    * 
    * @command Este objeto es utilizado como entrada para controlar dinámicamente el flujo del wizard.
    */
@@ -66,14 +80,16 @@ export class SolicitudPageComponent {
    * @property infoAlert
    * @type {string}
    * @default 'alert-info'
-   * @description Define el tipo de clase CSS a utilizar para mostrar mensajes de alerta informativos.
+   * @description 
+   * Define el tipo de clase CSS a utilizar para mostrar mensajes de alerta informativos.
    */
   public infoAlert = 'alert-info';
 
   /**
    * @property TEXTOS
    * @type {any}
-   * @description Contiene los textos relacionados con el módulo de pago de derechos.
+   * @description 
+   * Contiene los textos relacionados con el módulo de pago de derechos.
    * 
    * @command Estos textos son importados desde una constante compartida y pueden ser utilizados en la plantilla.
    */
@@ -81,7 +97,8 @@ export class SolicitudPageComponent {
 
   /**
    * @method seleccionaTab
-   * @description Cambia el valor del índice actual según la pestaña seleccionada por el usuario.
+   * @description 
+   * Cambia el valor del índice actual según la pestaña seleccionada por el usuario.
    * 
    * @param indice - Número de índice correspondiente a la pestaña seleccionada.
    * 
@@ -96,7 +113,8 @@ export class SolicitudPageComponent {
 
   /**
    * @method getValorIndice
-   * @description Determina la acción a realizar (avanzar o retroceder) y actualiza el índice del paso actual.
+   * @description 
+   * Determina la acción a realizar (avanzar o retroceder) y actualiza el índice del paso actual.
    * 
    * @param e - Objeto de tipo `AccionBoton` que contiene la acción (`'cont'` o `'atras'`) y el valor del nuevo índice.
    * 

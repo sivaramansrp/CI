@@ -133,7 +133,7 @@ services:
 
 #----------------------------------------------------------------
   modulefederation-se-microfront:
-    image: ghcr.io/vucem30/dockerized-modulefederation-se-microfront:1.0.0
+    image: ghcr.io/vucem30/dockerized-modulefederation-se-microfront:1.0.1
     build: 
       context: ./../
       dockerfile: apps/se/Dockerfile.dev
@@ -197,7 +197,7 @@ services:
 
 #----------------------------------------------------------------
   modulefederation-agace-microfront:
-    image: ghcr.io/vucem30/dockerized-modulefederation-agace-microfront:1.0.0
+    image: ghcr.io/vucem30/dockerized-modulefederation-agace-microfront:1.0.2
     build: 
       context: ./../
       dockerfile: apps/agace/Dockerfile.dev

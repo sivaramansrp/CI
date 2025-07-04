@@ -3,14 +3,15 @@
         <div class="row mb-4">
 
             <div class="col-md-4 mt-5">
-                <label>
-                    <input type="checkbox" (change)="alternarSoloLectura($event)" formControlName="avisoclave" /> Aviso de funcionamiento:
-                </label>
+                <p>
+                <input type="checkbox" (change)="alternarSoloLectura($event)" formControlName="avisoclave" />
+                Aviso de funcionamiento:</p>
             </div>
 
             <div class="col-md-4">
                 <div class="form-group">
-                    <label class="form-label" for="noLicenciaSanitaria:">No. de licencia sanitaria:</label>
+                    <label class="form-label" for="noLicenciaSanitaria:">No. de licencia sanitaria:<span class="bi bi-question-circle-fill fs-4 m-1" title="No. de licencia sanitaria" ata-bs-toggle="tooltip"></span>
+                    </label>
                     <input class="form-control" type="text" id="noLicenciaSanitaria" [readonly]="esSoloLectura"
                         [ngClass]="{'readonly-input': esSoloLectura}" formControlName="noLicenciaSanitaria">
                 </div>
@@ -19,13 +20,14 @@
         <div class="row pb-5 mb-5">
             <div class="col-md-4">
                 <div class="form-group">
-                    <app-catalogo-select [catalogo]="clave" [label]="'Régimen*:'" [required]="true" name="régimen"
+                    <app-catalogo-select [catalogo]="clave" [label]="'Régimen'" [required]="true" name="régimen" [tooltipQuestionCircle]="true"
                         formControlName="regimen" (change)="updateRegimen()" [isDisabled]="esFormularioSoloLectura">
                     </app-catalogo-select>
                 </div>
             </div>
+
             <div class="col-md-8 left-align">
-                <app-catalogo-select [catalogo]="clave" [label]="'Aduanas de entradas'" [required]="false" name="clave"
+                <app-catalogo-select [catalogo]="clave" [label]="'Aduanas de entradas'" [required]="true" name="clave"
                     formControlName="entradas" (change)="updateEntradas()" [isDisabled]="esFormularioSoloLectura">
                 </app-catalogo-select>
             </div>

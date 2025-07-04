@@ -1,10 +1,11 @@
-import { AlertComponent, ConsultaioQuery, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
+import { AlertComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { DESTINATARIO_CONFIGURACION_TABLA, EXPORTADOR_CONFIGURACION_TABLA } from '../../enums/sagarpa.enum';
 import { Destinatario, Exportador } from '../../models/pago-de-derechos.model';
 import { ITEMS, PERSONA, TERCEROS_TEXTO_DE_ALERTA } from '../../constantes/constantes';
 import { ReplaySubject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RevisionService } from '../../services/revision.service';
 
@@ -83,7 +84,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    * Indica si el formulario está en modo solo lectura.
    * Cuando es `true`, los campos del formulario no se pueden editar.
    */
-  formularioDeshabilitado!: boolean;
+  formularioDeshabilitado: boolean = false;
 
   /**
    * Constructor del componente.
