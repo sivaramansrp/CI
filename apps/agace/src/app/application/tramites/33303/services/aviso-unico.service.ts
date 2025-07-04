@@ -35,7 +35,7 @@ private jsonUrl = 'assets/json/33303';
    * En caso de error, lanza un observable con el error capturado.
    */
   obtenerDatosLocalidad(): Observable<unknown> {
-    return this.http.get('assets/json/317/aviso.json').pipe(
+    return this.http.get('assets/json/33303/aviso.json').pipe(
       catchError((error: unknown) => {
         return throwError(() => error);
       })
@@ -50,7 +50,7 @@ private jsonUrl = 'assets/json/33303';
    * @returns {Observable<unknown>} Un observable que emite los datos del solicitante.
    */
   getSolicitante(): Observable<AvisoValor> {
-    return this.http.get<AvisoValor>('assets/json/317/renovacion.json');
+    return this.http.get<AvisoValor>('assets/json/33303/renovacion.json');
     }
 
  /**

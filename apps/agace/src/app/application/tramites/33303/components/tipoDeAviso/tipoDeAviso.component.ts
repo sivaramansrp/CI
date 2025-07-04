@@ -16,7 +16,8 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { map, Subject, takeUntil } from 'rxjs';
+import { map, takeUntil } from 'rxjs';
+import { Subject } from 'rxjs';
 
 import { CommonModule } from '@angular/common';
 import { TipoDevAviso } from '../../models/aviso.model';
