@@ -124,6 +124,7 @@
                         </button>
                         <button type="button" class="btn btn-danger" 
                             [disabled]="destinatarioForm.invalid || esFormularioSoloLectura"
+                            (click)="onGuardarDestinatario()"
                             >
                           Guardar 
                         </button>

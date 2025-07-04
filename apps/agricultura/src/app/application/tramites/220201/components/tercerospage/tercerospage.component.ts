@@ -29,7 +29,7 @@ import { ZoosanitarioQuery } from '../../queries/220201/zoosanitario.query';
   templateUrl: './tercerospage.component.html',
   styleUrl: './tercerospage.component.scss',
 })
-export class TercerospageComponent implements OnInit, OnDestroy, AfterViewInit {
+export class TercerospageComponent implements OnInit, OnDestroy {
   /**
    * Subject utilizado como notificador para destruir suscripciones y evitar fugas de memoria.
    * 
@@ -80,15 +80,7 @@ export class TercerospageComponent implements OnInit, OnDestroy, AfterViewInit {
       .subscribe((seccionState) => {
         this.esFormularioSoloLectura = seccionState?.readonly;
       });
-  }
-
-  /**
-   * Ciclo de vida de Angular que se ejecuta después de que la vista ha sido inicializada.
-   * Suscribe a los terceros relacionados y actualiza la lista de personas.
-   * @method ngAfterViewInit
-   */
-  ngAfterViewInit(): void {
-    this.certificadoZoosanitarioQuery.seleccionarTercerosRelacionados$
+       this.certificadoZoosanitarioQuery.seleccionarTercerosRelacionados$
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((datosDeLaSolicitud) => {
         if (datosDeLaSolicitud) {
@@ -96,6 +88,7 @@ export class TercerospageComponent implements OnInit, OnDestroy, AfterViewInit {
         }
       });
   }
+
 
 
   /**

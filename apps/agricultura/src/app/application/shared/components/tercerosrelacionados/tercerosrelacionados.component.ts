@@ -26,6 +26,7 @@ export class TercerosrelacionadosComponent {
        * deshabilitando la edición de los campos.
        */
       @Input() esFormularioSoloLectura:boolean = false;
+      @Input() cuerpoTablaDestino:TercerosrelacionadosdestinoTable[] = [];
 
     /**
      * @description
@@ -68,7 +69,7 @@ export class TercerosrelacionadosComponent {
         { encabezado: 'Entidad Federativa', clave: (fila) => fila.estado, orden: 10 },
         { encabezado: 'Código Postal', clave: (fila) => fila.codigoPostal, orden: 11 },
       ];
-      cuerpoTablaDestino:TercerosrelacionadosdestinoTable[]=[];
+      
 
 constructor(public readonly router: Router,public route: ActivatedRoute) {}
 
