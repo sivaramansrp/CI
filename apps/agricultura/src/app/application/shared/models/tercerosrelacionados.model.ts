@@ -6,15 +6,20 @@ export interface TercerosrelacionadosTable {
   exportadorPais: string;
 }
 export interface TercerosrelacionadosdestinoTable {
-  exportadorNombre: string;
-  exportadorTelefono: string;
-  exportadorCorreo: string;
-  exportadorCalle: string;
-  exportadorNumeroExterior: string;
-  exportadorNumeroInterior: string;
-  exportadorPais: string;
-  colonia:string;
-  municipioAlcaldia:string;
-  entidadFederativa:string;
-  codigoPostal:string;
+  tipoMercancia: string;
+  nombre: string;
+  primerApellido: string;
+  segundoApellido?: string;
+  razonSocial: string;
+  pais: string;
+  codigoPostal: string;
+  estado: string;
+  municipio?: string;
+  colonia?: string;
+  calle: string;
+  numeroExterior: string;
+  numeroInterior?: string;
+  lada?: string;
+  telefono?: string;
+  correo?: string;
 }

@@ -1,5 +1,5 @@
 import { RouterModule, Routes } from '@angular/router';
-import { AgregardestinatarioComponent } from '../../shared/components/agregardestinatario/agregardestinatario.component';
+import { AgregardestinatarioComponent } from './components/agregardestinatario/agregardestinatario.component';
 import { NgModule } from '@angular/core';
 import { ZoosanitarioPageComponent } from './pages/zoosanitario-page/zoosanitario-page.component';
 

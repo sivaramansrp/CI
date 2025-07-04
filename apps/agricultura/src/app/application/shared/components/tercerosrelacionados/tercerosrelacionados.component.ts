@@ -56,16 +56,16 @@ export class TercerosrelacionadosComponent {
        * @type {ConfiguracionColumna<SolicitudData>[]}
        */
       configuracionColumnasDestino: ConfiguracionColumna<TercerosrelacionadosdestinoTable>[] = [
-        { encabezado: 'Nombre/denominación o razón social', clave: (fila) => fila.exportadorNombre, orden: 1 },
-        { encabezado: 'Teléfono', clave: (fila) => fila.exportadorTelefono, orden: 2 },
-        { encabezado: 'Correo', clave: (fila) => fila.exportadorCorreo, orden: 3 },
-        { encabezado: 'Calle', clave: (fila) => fila.exportadorCalle, orden: 4 },
-        { encabezado: 'Número exterior', clave: (fila) => fila.exportadorNumeroExterior, orden: 5 },
-        { encabezado: 'Número interior', clave: (fila) => fila.exportadorNumeroInterior, orden: 6 },
-        { encabezado: 'País', clave: (fila) => fila.exportadorPais, orden: 7 },
+        { encabezado: 'Nombre/denominación o razón social', clave: (fila) => fila.nombre, orden: 1 },
+        { encabezado: 'Teléfono', clave: (fila) => fila.telefono, orden: 2 },
+        { encabezado: 'Correo', clave: (fila) => fila.correo, orden: 3 },
+        { encabezado: 'Calle', clave: (fila) => fila.calle, orden: 4 },
+        { encabezado: 'Número exterior', clave: (fila) => fila.numeroExterior, orden: 5 },
+        { encabezado: 'Número interior', clave: (fila) => fila.numeroInterior, orden: 6 },
+        { encabezado: 'País', clave: (fila) => fila.pais, orden: 7 },
         { encabezado: 'Colonia', clave: (fila) => fila.colonia, orden: 8 },
-        { encabezado: 'Municipio/Alcaldía', clave: (fila) => fila.municipioAlcaldia, orden: 9 },
-        { encabezado: 'Entidad Federativa', clave: (fila) => fila.entidadFederativa, orden: 10 },
+        { encabezado: 'Municipio/Alcaldía', clave: (fila) => fila.municipio, orden: 9 },
+        { encabezado: 'Entidad Federativa', clave: (fila) => fila.estado, orden: 10 },
         { encabezado: 'Código Postal', clave: (fila) => fila.codigoPostal, orden: 11 },
       ];
       cuerpoTablaDestino:TercerosrelacionadosdestinoTable[]=[];

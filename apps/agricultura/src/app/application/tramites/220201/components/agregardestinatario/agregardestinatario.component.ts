@@ -1,11 +1,14 @@
-import { AfterViewInit, Component, Input, OnInit } from '@angular/core';
+import { AfterViewInit, Component, Input, OnInit, Output } from '@angular/core';
 import { Catalogo, CatalogoSelectComponent, InputRadioComponent } from '@libs/shared/data-access-user/src';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { EventEmitter } from '@angular/core';
 import { OPCION_DE_BOTON_DE_RADIO } from '../../constantes/tercerosrelacionados.enum';
 import { RadioOpcion } from '../../../tramites/220201/models/220201/certificado-zoosanitario.model';
+import { Router } from '@angular/router';
 import { TercerosrelacionadosService } from '../services/tercerosrelacionados/tercerosrelacionados.service';
+import { TercerosrelacionadosdestinoTable } from '../../models/tercerosrelacionados.model';
 import { TituloComponent } from "../../../../../../../../libs/shared/data-access-user/src/tramites/components/titulo/titulo.component";
 
 @Component({
@@ -31,6 +34,7 @@ export class AgregardestinatarioComponent implements OnInit,AfterViewInit {
          * deshabilitando la edición de los campos.
          */
         @Input() esFormularioSoloLectura:boolean = false;
+        @Output() guardarDestinatario = new EventEmitter<TercerosrelacionadosdestinoTable>();
 /**
    * Opciones para el botón de radio.
    * @property {RadioOpcion[]} opcionDeBotonDeRadio
@@ -49,7 +53,7 @@ export class AgregardestinatarioComponent implements OnInit,AfterViewInit {
    */
   private destroyNotifier$ = new Subject<void>();
   destinatarioForm!: FormGroup;
-  constructor(public fb: FormBuilder,public tercerosrelacionadosService: TercerosrelacionadosService){}
+  constructor(public fb: FormBuilder,public tercerosrelacionadosService: TercerosrelacionadosService,private router:Router){}
   ngOnInit(): void {
      this.destinatarioForm = this.fb.group({
       tipoMercancia: ['yes', Validators.required],
@@ -95,5 +99,14 @@ export class AgregardestinatarioComponent implements OnInit,AfterViewInit {
     this.tercerosrelacionadosService.obtenerSelectorList('colonias.json').pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
       this.coloniaCatalog = data;
     })
+  }
+  onGuardarDestinatario():void{
+    if (this.destinatarioForm.valid) {
+        this.guardarDestinatario.emit(this.destinatarioForm.value);
+         this.router.navigate(['/pago/certificado-zoosanitario/zoosanitario']);
+    }
+    else {
+    this.destinatarioForm.markAllAsTouched(); 
+    }
   }
 }
