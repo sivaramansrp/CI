@@ -1,6 +1,7 @@
-<div class="container">
+<div class="page">
+  <div class="container">
   <form [formGroup]="datosComunesForm">
-    <div class="row">
+    <div class="row mt-5">
       <div class="col-md-12">
         <label class="form-label text-start"
           >Señale el sector productivo o servicio al que pertenece</label
@@ -45,7 +46,7 @@
           [radioOptions]="sinoOpcion.radioOptions"
           [isRequired]="sinoOpcion.isRequired"
           [layout]="'horizontal'"
-          [gap]="'50px'"
+          [gridLayout]="true"
           (valueChange)="actualizar190($event)"
         ></app-input-radio>
       </div>
@@ -60,7 +61,7 @@
           [radioOptions]="sinoOpcion.radioOptions"
           [isRequired]="sinoOpcion.isRequired"
           [layout]="'horizontal'"
-          [gap]="'50px'"
+          [gridLayout]="true"
           (valueChange)="actualizar191($event)"
         ></app-input-radio>
       </div>
@@ -76,7 +77,7 @@
           [radioOptions]="sinoOpcion.radioOptions"
           [isRequired]="sinoOpcion.isRequired"
           [layout]="'horizontal'"
-          [gap]="'50px'"
+          [gridLayout]="true"
           (valueChange)="actualizar199($event)"
         ></app-input-radio>
       </div>
@@ -121,7 +122,7 @@
           [radioOptions]="sinoOpcion.radioOptions"
           [isRequired]="sinoOpcion.isRequired"
           [layout]="'horizontal'"
-          [gap]="'50px'"
+          [gridLayout]="true"
           (valueChange)="actualizar2034($event)"
         ></app-input-radio>
       </div>
@@ -135,7 +136,7 @@
           [radioOptions]="sinoOpcion.radioOptions"
           [isRequired]="sinoOpcion.isRequired"
           [layout]="'horizontal'"
-          [gap]="'50px'"
+          [gridLayout]="true"
           (valueChange)="actualizar236($event)"
         ></app-input-radio>
       </div>
@@ -151,7 +152,7 @@
           [radioOptions]="sinoOpcion.radioOptions"
           [isRequired]="sinoOpcion.isRequired"
           [layout]="'horizontal'"
-          [gap]="'50px'"
+          [gridLayout]="true"
           (valueChange)="actualizar237($event)"
         ></app-input-radio>
       </div>
@@ -193,7 +194,7 @@
           <button
             type="button"
             id="modificar"
-            class="btn btn-secondary ms-3"
+            class="btn btn-default ms-3"
             data-bs-toggle="modal"
             [disabled]="esFormularioSoloLectura"
             data-bs-target="#modalSeccionSubcontratados"
@@ -223,7 +224,7 @@
           [radioOptions]="sinoOpcion.radioOptions"
           [isRequired]="sinoOpcion.isRequired"
           [layout]="'horizontal'"
-          [gap]="'50px'"
+          [gridLayout]="true"
           (valueChange)="actualizar239($event)"
         ></app-input-radio>
       </div>
@@ -239,10 +240,28 @@
           [radioOptions]="sinoOpcion.radioOptions"
           [isRequired]="sinoOpcion.isRequired"
           [layout]="'horizontal'"
-          [gap]="'50px'"
+          [gridLayout]="true"
           (valueChange)="actualizar240($event)"
         ></app-input-radio>
       </div>
+
+      <!--- Need to add a radio field -->
+      @if (deRubroTransporteFerroviario) {
+        <div class="col-md-12 mt-4">
+        <label class="form-label text-start"
+          >Del mismo modo, indique si al momento de ingresar su solicitud se encuentra en el listado 
+          de empresas publicadas por el SAT en términos del artículo 69-B, cuarto párrafo del CFF. *</label
+        >
+        <app-input-radio
+          formControlName="242"
+          [radioOptions]="sinoOpcion.radioOptions"
+          [isRequired]="sinoOpcion.isRequired"
+          [layout]="'horizontal'"
+          [gridLayout]="true"
+          (valueChange)="actualizar243($event)"
+        ></app-input-radio>
+      </div>
+      }
 
       <div class="col-md-12 mt-4">
         <label class="form-label text-start"
@@ -254,7 +273,7 @@
           [radioOptions]="sinoOpcion.radioOptions"
           [isRequired]="sinoOpcion.isRequired"
           [layout]="'horizontal'"
-          [gap]="'50px'"
+          [gridLayout]="true"
           (valueChange)="actualizar243($event)"
         ></app-input-radio>
       </div>
@@ -269,7 +288,7 @@
           [radioOptions]="sinoOpcion.radioOptions"
           [isRequired]="sinoOpcion.isRequired"
           [layout]="'horizontal'"
-          [gap]="'50px'"
+          [gridLayout]="true"
           (valueChange)="actualizar244($event)"
         ></app-input-radio>
       </div>
@@ -285,7 +304,7 @@
           [radioOptions]="sinoOpcion.radioOptions"
           [isRequired]="sinoOpcion.isRequired"
           [layout]="'horizontal'"
-          [gap]="'50px'"
+          [gridLayout]="true"
           (valueChange)="actualizar245($event)"
         ></app-input-radio>
       </div>
@@ -335,7 +354,7 @@
               type="button"
               id="modificar"
               [disabled]="esFormularioSoloLectura"
-              class="btn btn-secondary"
+              class="btn btn-default"
               data-bs-toggle="modal"
               data-bs-target="#modalInstalacionesPrincipales"
               (click)="agregarInstalacionesPrincipales()"
@@ -376,7 +395,7 @@
             [radioOptions]="sinoOpcion.radioOptions"
             [isRequired]="sinoOpcion.isRequired"
             [layout]="'horizontal'"
-            [gap]="'50px'"
+            [gridLayout]="true"
             (valueChange)="actualizar246($event)"
           ></app-input-radio>
         </div>
@@ -392,7 +411,7 @@
             [radioOptions]="sinoOpcion.radioOptions"
             [isRequired]="sinoOpcion.isRequired"
             [layout]="'horizontal'"
-            [gap]="'50px'"
+            [gridLayout]="true"
             (valueChange)="actualizar247($event)"
           ></app-input-radio>
         </div>
@@ -442,8 +461,9 @@
             </div>
           </div>
         </div>
-
-        <div class="col-md-4 mt-4">
+<!--Registros field not required -->
+        @if (!deRubroTransporteFerroviario) {
+          <div class="col-md-4 mt-4">
           <label class="form-label text-start" for="actualmente1"
             >Registros que existen actualmente.</label
           >
@@ -456,6 +476,8 @@
             (change)="actualizarActualmente1($event)"
           />
         </div>
+        }
+        
 
         <div class="col-md-8"></div>
 
@@ -503,8 +525,8 @@
             </div>
           </div>
         </div>
-
-        <div class="col-md-4 mt-4">
+        @if (!deRubroTransporteFerroviario) {
+          <div class="col-md-4 mt-4">
           <label class="form-label text-start"
             >Registros que existen actualmente.</label
           >
@@ -517,6 +539,8 @@
             (change)="actualizarActualmente2($event)"
           />
         </div>
+        }
+        
 
         <div class="col-md-8"></div>
         <div class="col-md-12 mt-5">
@@ -548,7 +572,7 @@
             [radioOptions]="sinoOpcion.radioOptions"
             [isRequired]="sinoOpcion.isRequired"
             [layout]="'horizontal'"
-            [gap]="'50px'"
+            [gridLayout]="true"
             (valueChange)="actualizar248($event)"
           ></app-input-radio>
         </div>
@@ -568,7 +592,7 @@
             [radioOptions]="sinoOpcion.radioOptions"
             [isRequired]="sinoOpcion.isRequired"
             [layout]="'horizontal'"
-            [gap]="'50px'"
+            [gridLayout]="true"
             (valueChange)="actualizar249($event)"
           ></app-input-radio>
         </div>
@@ -632,7 +656,7 @@
 
         <div class="col-md-12 mt-5">
           <div class="d-flex justify-content-end mt-4">
-            <button type="button" id="modificar" class="btn btn-secondary ms-3" [disabled]="esFormularioSoloLectura">
+            <button type="button" id="modificar" class="btn btn-default ms-3" [disabled]="esFormularioSoloLectura">
               Modificar
             </button>
             <button
@@ -670,7 +694,7 @@
             [radioOptions]="sinoOpcion.radioOptions"
             [isRequired]="sinoOpcion.isRequired"
             [layout]="'horizontal'"
-            [gap]="'50px'"
+            [gridLayout]="true"
             (valueChange)="actualizar250($event)"
           ></app-input-radio>
         </div>
@@ -720,7 +744,7 @@
               type="button"
               id="modificar"
               [disabled]="esFormularioSoloLectura"
-              class="btn btn-secondary ms-3"
+              class="btn btn-default ms-3"
               data-bs-toggle="modal"
               data-bs-target="#modalAgregarMiembrosEmpresa"
               (click)="agregarMiembrosEmpresa()"
@@ -755,7 +779,7 @@
             [radioOptions]="sinoOpcion.radioOptions"
             [isRequired]="sinoOpcion.isRequired"
             [layout]="'horizontal'"
-            [gap]="'50px'"
+            [gridLayout]="true"
             (valueChange)="actualizar251($event)"
           ></app-input-radio>
         </div>
@@ -794,6 +818,7 @@
       </div>
     </div>
   </form>
+</div>
 </div>
 
 <div

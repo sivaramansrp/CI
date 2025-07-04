@@ -260,6 +260,11 @@ const ROUTES: Routes = [
     loadChildren: () => 
       import('./tramites/30505/aviso-de-modificacion.module').then(
         (m) => m.AvisoDeModificacionModule)
+  },
+  {
+    path: 'rubro-transporte-ferroviario',
+    loadChildren: () => 
+      import('./tramites/32613/rubro-transporte-ferroviario.module').then((m) => m.RubroTransporteFerroviarioModule)
   }
 ];
 

@@ -1,8 +1,8 @@
+import { Component, Input } from '@angular/core';
 import { Catalogo } from '@libs/shared/data-access-user/src';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CatalogosSelect } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
 import { ConfiguracionAporteColumna } from '@libs/shared/data-access-user/src';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
 import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
@@ -80,6 +80,9 @@ import { takeUntil } from 'rxjs';
  * datos necesarios en el flujo de la solicitud.
  */
 export class DatosComunesComponent implements OnInit, OnDestroy {
+  /** Indica si la solicitud corresponde al rubro de Transporte Ferroviario. */
+  @Input() deRubroTransporteFerroviario: boolean = false;
+
   /** Formulario principal que contiene los datos comunes del componente */
   datosComunesForm!: FormGroup;
 
@@ -277,6 +280,7 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
       '238': [this.solicitud32605State['238']],
       '239': [this.solicitud32605State['239']],
       '240': [this.solicitud32605State['240']],
+      '242': [this.solicitud32605State['242']],
       '243': [this.solicitud32605State['243']],
       '244': [this.solicitud32605State['244']],
       '245': [this.solicitud32605State['245']],
