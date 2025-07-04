@@ -91,14 +91,16 @@
         ></input-fecha>
       </div>
     </div>
-    <div class="col-md-6 mt-3">
-      <app-catalogo-select
-        [catalogo]="anoCatalogo.catalogos"
-        [label]="anoCatalogo.labelNombre"
-        formControlName="numeroPedimento"
-        (change)="setValoresStore('numeroPedimento')"
-        [isDisabled]="esFormularioSoloLectura"
-      ></app-catalogo-select>
+    <div *ngIf="avisoForm.get('tipoSolicitude')?.value === 'permiso'">
+      <div class="col-md-6 mt-3">
+        <app-catalogo-select
+          [catalogo]="anoCatalogo.catalogos"
+          [label]="anoCatalogo.labelNombre"
+          formControlName="numeroPedimento"
+          (change)="setValoresStore('numeroPedimento')"
+          [isDisabled]="esFormularioSoloLectura"
+        ></app-catalogo-select>
+      </div>
     </div>
   </div>
 
@@ -117,13 +119,13 @@
     ></app-input-radio>
 
     <div class="row mt-3" *ngIf="avisoForm.get('avisoNacExt')?.value === 'si'">
-      <app-catalogo-select
-        [catalogo]="anoCatalogo.catalogos"
-        [label]="'Fecha de acuse de recibo:*'"
-        (change)="setValoresStore('fechaAcuse')"
-        formControlName="fechaAcuse"
-        [isDisabled]="esFormularioSoloLectura"
-      ></app-catalogo-select>
+      <div class="col-md-6">
+        <input-fecha
+          [datos]="fechaAcuseRecibo"
+          [setFecha]="avisoForm.get('fechaAcuse')?.value"
+          [isDisabled]="esFormularioSoloLectura"
+        ></input-fecha>
+      </div>
     </div>
     <div class="row mt-3" *ngIf="avisoForm.get('avisoNacExt')?.value === 'si'">
       <label
@@ -131,13 +133,15 @@
         se realizó el traslado del vehículo a la franja ao región fronteriza o a
         la aduana de salida, de conformidad con el primer aviso*:</label
       >
-      <input
+      <div class="col-md-6">
+        <input
         type="text"
         class="form-control"
         required
         formControlName="conformidad"
         (change)="setValoresStore('conformidad')"
       />
+      </div>
     </div>
   </div>
 
@@ -215,8 +219,9 @@
         [isRequired]="true"
         [layout]="'horizontal'"
         formControlName="declara"
-        (change)="setValoresStore('declara')"
+        (change)="pamaRadioOption()"
       ></app-input-radio>
+      <small *ngIf="mostrarError" class="text-danger espaciador-campo-pequeño">Debes de seleccionar "No"</small>
     </div>
   </div>
   <ng-titulo titulo="Medio de transporte que movera la mercancía" />
