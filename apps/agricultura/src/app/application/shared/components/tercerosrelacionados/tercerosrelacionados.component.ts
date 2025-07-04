@@ -13,6 +13,7 @@ import { SELECCIONADO } from '../../constantes/tercerosrelacionados.enum';
   styleUrl: './tercerosrelacionados.component.scss',
 })
 export class TercerosrelacionadosComponent {
+  infoAlert:string="alert-info"
   seleccionado:string = SELECCIONADO;
     /**
        * Indica si el formulario debe mostrarse en modo solo lectura.
