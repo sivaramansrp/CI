@@ -260,7 +260,13 @@ const ROUTES: Routes = [
     loadChildren: () => 
       import('./tramites/30505/aviso-de-modificacion.module').then(
         (m) => m.AvisoDeModificacionModule)
-  }
+  },
+  {
+      path: 'certificacion-empresas',
+    loadChildren: () => 
+      import('./tramites/32609/oea-textil-registro.module').then(
+        (m) => m.OeaTextilRegistroModule)
+  },
 ];
 
 @NgModule({
