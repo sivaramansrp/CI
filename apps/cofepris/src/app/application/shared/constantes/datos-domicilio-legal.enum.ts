@@ -103,7 +103,7 @@ export const NUEVA_NOTIFICACION = {
 
 export const USO_ESPECIFICO_LABEL: CrossListLable = {
     tituluDeLaIzquierda: 'Uso específico',
-    derecha: 'Uso específico seleccionado*:',
+    derecha: 'Uso específico seleccionado*',
   }
 
 export const PAIS_DE_PROCEDENCIA_LABEL: CrossListLable = {
