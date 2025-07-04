@@ -1,8 +1,8 @@
+import { AlertComponent, Notificacion, NotificacionesComponent } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy } from '@angular/core';
 import { Subject, map, takeUntil } from 'rxjs';
 import { Tramite260912Store, Tramites260912State } from '../../estados/tramite-260912.store';
 import { ALERT } from '../../enums/datos-de-la-solicitud.enum';
-import { AlertComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { FormBuilder } from '@angular/forms';
@@ -43,6 +43,7 @@ import { Validators } from '@angular/forms';
     InputRadioComponent,
     ReactiveFormsModule,
     TituloComponent,
+    NotificacionesComponent,
   ],
   templateUrl: './datos-empresa.component.html',
   styleUrls: ['./datos-empresa.component.scss'],
@@ -85,6 +86,13 @@ export class DatosEmpresaComponent implements OnInit, OnDestroy {
    * Formulario de datos del establecimiento.
    */
   datosDelEstablecimiento!: FormGroup;
+
+  /**
+   * @description
+   * Objeto que representa una nueva notificación.
+   * Se utiliza para mostrar mensajes de alerta o información al usuario.
+   */
+  public nuevaNotificacion!: Notificacion;
 
   /**
    * Subject para manejar la destrucción del componente y evitar fugas de memoria.
@@ -172,7 +180,7 @@ export class DatosEmpresaComponent implements OnInit, OnDestroy {
       .subscribe();
     this.form = this.fb.group({
       btonDeRadio: [this.solicitudState?.btonDeRadio, [Validators.required]],
-      justificacion: [this.solicitudState?.justificacion, [Validators.required]],
+      justificacion: [this.solicitudState?.justificacion, [Validators.required, Validators.minLength(10), Validators.maxLength(500)]],
     });
 
     this.datosDelEstablecimiento = this.fb.group({
@@ -186,6 +194,7 @@ export class DatosEmpresaComponent implements OnInit, OnDestroy {
    * Método para habilitar los controles del formulario.
    */
   toggleFormControls(): void {
+    this.abrirModal();
     Object.keys(this.datosDelEstablecimiento.controls).forEach(
       (controlName) => {
         const CONTROL = this.datosDelEstablecimiento.get(controlName);
@@ -209,6 +218,38 @@ export class DatosEmpresaComponent implements OnInit, OnDestroy {
       [control]: VALOR
     });
   }
+
+  /**
+   * @description Verifica si un control del formulario es inválido.
+   * @param nombreControl El nombre del control a verificar.
+   * @returns Verdadero si el control es inválido y está tocado o modificado, de lo contrario, falso.
+   */
+  esInvalido(nombreControl: string): boolean {
+    const CONTROL = this.form.get(nombreControl);
+    return CONTROL
+      ? CONTROL.invalid && (CONTROL.touched || CONTROL.dirty)
+      : false;
+  }
+
+  /**
+   * Método que se llama cuando se envía el formulario.
+   * Se utiliza para establecer los valores en el store de DatosDomicilioLegal.
+   */
+  abrirModal(i: number = 0): void {
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje:
+        'Por el momento no hay comunicación con el Sistema de COFEPRIS, favor de capturar su establecimiento.',
+      cerrar: true,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
+  }  
+
   /**
    * Método de ciclo de vida de Angular que se ejecuta al destruir el componente.
    */
