@@ -22,6 +22,23 @@ import { MENSAJE_DE_ALERTA } from '../../enum/permiso.enum';
 import { Tramite260215Query } from '../../estados/queries/tramite260215.query';
 
 /**
+ * Componente Angular para la gestión de manifiestos y declaraciones en el trámite sanitario.
+ *
+ * Este componente permite capturar, editar y visualizar la información relacionada con los manifiestos y declaraciones
+ * requeridos en el proceso, utilizando formularios reactivos y opciones de cumplimiento configurables.
+ *
+ * Funcionalidades principales:
+ * - Manejo de formulario reactivo para manifiestos y cumplimiento.
+ * - Integración con servicios y store para la obtención y persistencia de datos.
+ * - Soporte para modo solo lectura y actualización automática según el estado del trámite.
+ * - Visualización de mensajes de alerta y opciones de cumplimiento dinámicas.
+ *
+ * Uso:
+ * Este componente se utiliza dentro del flujo de captura de información de un trámite sanitario,
+ * permitiendo al usuario ingresar y consultar los datos de manifiestos y declaraciones requeridas.
+ */
+
+/**
  * Componente principal para gestionar el formulario de manifiestos.
  */
 @Component({

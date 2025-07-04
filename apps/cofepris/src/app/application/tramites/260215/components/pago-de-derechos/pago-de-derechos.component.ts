@@ -17,6 +17,24 @@ import { TituloComponent } from '@libs/shared/data-access-user/src/tramites/comp
 import { Tramite260215Query } from '../../estados/queries/tramite260215.query';
 
 /**
+ * Componente Angular para la gestión del pago de derechos en el trámite sanitario.
+ *
+ * Este componente permite capturar, editar y visualizar la información relacionada con el pago de derechos,
+ * incluyendo datos bancarios, fecha e importe de pago, y otros campos relevantes del importador o exportador.
+ * Utiliza formularios reactivos y catálogos dinámicos para la selección de bancos.
+ *
+ * Funcionalidades principales:
+ * - Manejo de formulario reactivo para los datos de pago de derechos.
+ * - Integración con servicios y store para la obtención y persistencia de datos.
+ * - Soporte para modo solo lectura y actualización automática según el estado del trámite.
+ * - Carga dinámica de catálogos de bancos y configuración de campos de fecha.
+ *
+ * Uso:
+ * Este componente se utiliza dentro del flujo de captura de información de un trámite sanitario,
+ * permitiendo al usuario ingresar y consultar los datos de pago de derechos requeridos.
+ */
+
+/**
  * Componente para la sección de pago de derechos.
  */
 @Component({

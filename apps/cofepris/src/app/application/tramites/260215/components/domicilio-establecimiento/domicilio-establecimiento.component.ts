@@ -55,7 +55,22 @@ export interface MercanciasTabla {
 }
 
 /**
- * Componente para el domicilio del establecimiento.
+ * Componente Angular para la gestión del domicilio del establecimiento en el trámite sanitario.
+ *
+ * Este componente permite capturar, editar y visualizar la información del domicilio del establecimiento,
+ * así como la gestión de mercancías y agentes aduanales asociados. Utiliza formularios reactivos,
+ * tablas dinámicas y listas cruzadas para la selección de países y mercancías.
+ *
+ * Funcionalidades principales:
+ * - Manejo de formularios reactivos para domicilio, agente y mercancías.
+ * - Integración con servicios para la obtención y persistencia de datos.
+ * - Alternancia de secciones colapsables para una mejor experiencia de usuario.
+ * - Soporte para modo solo lectura y actualización automática según el estado del trámite.
+ * - Gestión de listas cruzadas y tablas dinámicas para la selección de países y mercancías.
+ *
+ * Uso:
+ * Este componente se utiliza dentro del flujo de captura de información de un trámite sanitario,
+ * permitiendo al usuario ingresar y consultar los datos del domicilio del establecimiento y sus mercancías.
  */
 @Component({
   selector: 'app-domicillo',
