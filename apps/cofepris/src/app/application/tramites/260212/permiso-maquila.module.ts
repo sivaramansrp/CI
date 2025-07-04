@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 
-import { BtnContinuarComponent, TituloComponent, WizardComponent } from '@ng-mf/data-access-user';
+import { AlertComponent, BtnContinuarComponent, TituloComponent, WizardComponent } from '@ng-mf/data-access-user';
 import { PermisoMaquilaComponent } from './pages/permiso-maquila/permiso-maquila.component';
 
 import { Datos260212Component } from './pages/datos-260212/datos-260212.component';
@@ -51,7 +51,8 @@ import { SubirDocumentoService } from '@libs/shared/data-access-user/src/core/se
     SolicitanteComponent,
     PasoDosComponent,
     PasoTresComponent,
-    BtnContinuarComponent
+    BtnContinuarComponent,
+    AlertComponent
   ],
   providers: [provideHttpClient(), ToastrService,SolicitudService,PagoDeDerechosService,TercerosService,InicioSesionService,SubirDocumentoService ],
 })

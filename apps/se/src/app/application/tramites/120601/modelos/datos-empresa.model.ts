@@ -12,6 +12,30 @@ export interface DatosSociosTable {
     apellidoPaterno: string;
     /** Apellido materno del socio */
     apellidoM: string;
+    /** Correo electrónico del socio */
+    correo: string;
+}
+
+/**
+ * Representa una fila de la tabla de socios.
+ */
+export interface DatosSociosTableExtranjeros {
+    /** TAX ID del socio extranjero */
+    taxID: string;
+    /** Razón social del socio extranjero */
+    razonSocial: string;
+    /** Nombre del socio extranjero */
+    nombre: string;
+    /** Apellido paterno del socio extranjero */
+    apellidoPaterno: string;
+    /** País del socio extranjero */
+    pais: string;
+    /** Estado del socio extranjero */
+    estado: string;
+    /** Correo electrónico del socio extranjero */
+    correo: string;
+    /** Código postal del socio extranjero */
+    codigoPostal: string;
 }
 
 /**
@@ -42,6 +66,12 @@ export interface RepresentacionFederal {
     municipio: string;
     /** Estado */
     estado: string;
+    /** País */
+    pais: string;
+    /** Localidad */
+    localidad: string;
+    /** Teléfono */
+    telefono: string;
 }
 
 /**
@@ -88,6 +118,10 @@ export interface DatosImportadorExportador {
 export interface FormSolicitud {
   /** Datos del importador/exportador */
   datosImportadorExportador: DatosImportadorExportador;
+  /** Datos generales del socio */
+  datosGeneralesSocios: DatosSociosTable;
+  /** Datos generales del socio extranjero */
+  datosGeneralesSociosExtranjeros: DatosSociosTableExtranjeros;
 }
 
 /**

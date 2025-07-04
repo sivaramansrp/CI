@@ -1,7 +1,7 @@
 
 <div class="container" [formGroup]="fraccionForm">
     <div>  
-           <div class="row">
+           <div class="row mt-4">
              <div class="col-md-12">
                 <app-catalogo-select [catalogo]="fraccion" [label]="'Fracción arancelaria'"   [required]="true" name="fraccion" [isDisabled]="esFormularioSoloLectura"
                 formControlName="fraccion" (change)="setValoresStore(fraccionForm,'fraccion', 'setFraccion')">
@@ -9,24 +9,51 @@
   
            </div>
            </div>
-           <div class="row">
+           <div class="row mt-4">
             <div class="col-md-4">
                 <div class="form-group">
                     <label class="form-label" for="cantidad">Cantidad*:</label>
-                    <input class="form-control" id="cantidad" formControlName="cantidad"  type="number" (change)="setValoresStore(fraccionForm,'cantidad', 'setCantidad')">
-                  </div>
+                    <input class="form-control" id="cantidad" formControlName="cantidad" (change)="setValoresStore(fraccionForm,'cantidad', 'setCantidad')" maxlength="18">
+                    @if(fraccionForm.controls['cantidad'].invalid && fraccionForm.controls['cantidad'].touched) {
+                    <div class="d-grid">
+                      @if(fraccionForm.controls['cantidad'].errors?.['required']) {
+                        <span class="mensaje-error">Este campo es obligatorio</span>
+                      }
+                      @if(fraccionForm.controls['cantidad'].errors?.['pattern']) {
+                        <span class="mensaje-error">Por favor, escribe un número entero válido</span>
+                      }
+                      @if(fraccionForm.controls['cantidad'].errors?.['tooManyDecimals']) {
+                        <span class="mensaje-error">El número debe tener 3 dígitos decimales</span>
+                      }
+                    </div>
+                    }
+                </div>
 
             </div>
             <div class="col-md-4">
                 <div class="form-group">
                     <label class="form-label" for="factura"> Valor factura USD*:</label>
-                    <input class="form-control" id="factura" formControlName="factura"  type="number" (change)="setValoresStore(fraccionForm,'factura', 'setFactura')">
+                    <input class="form-control" id="factura" formControlName="factura" (change)="setValoresStore(fraccionForm,'factura', 'setFactura')" maxlength="20">
+                      @if(fraccionForm.controls['factura'].invalid && fraccionForm.controls['factura'].touched) {
+                    <div class="d-grid">
+                      @if(fraccionForm.controls['factura'].errors?.['required']) {
+                        <span class="mensaje-error">Este campo es obligatorio</span>
+                      }
+                      @if(fraccionForm.controls['factura'].errors?.['pattern']) {
+                        <span class="mensaje-error">Por favor, escribe un número entero válido</span>
+                      }
+                      @if(fraccionForm.controls['factura'].errors?.['tooManyDecimals']) {
+                        <span class="mensaje-error">El número debe tener 3 dígitos decimales</span>
+                      }
+                    </div>
+                    }
                   </div>
 
             </div>
             <div class="col-md-4">
+                <div data-bs-toggle="tooltip" data-bs-placement="top" title="Selecciona la Unidad de Medida de Transacción (UMT)"></div>
                 <app-catalogo-select [catalogo]="umt" [label]="'UMT'"   [required]="true" name="umt"  [isDisabled]="esFormularioSoloLectura"
-                formControlName="umt" (change)="setValoresStore(fraccionForm,'umt', 'setUmt')">
+                formControlName="umt" (change)="setValoresStore(fraccionForm,'umt', 'setUmt')" [tooltipQuestionCircle]="true">
             </app-catalogo-select>
 
             </div>
@@ -39,19 +66,41 @@
             <div class="col-md-4">
                 <div class="form-group">
                     <label class="form-label" for="mercanciaCantidad">Cantidad*:</label>
-                    <input class="form-control" id="mercanciaCantidad" formControlName="mercanciaCantidad"  type="number" (change)="setValoresStore(fraccionForm,'mercanciaCantidad', 'setMercanciaCantidad')">
+                    <input class="form-control" id="mercanciaCantidad" formControlName="mercanciaCantidad" (change)="setValoresStore(fraccionForm,'mercanciaCantidad', 'setMercanciaCantidad')">
+                    @if(fraccionForm.controls['mercanciaCantidad'].invalid && fraccionForm.controls['mercanciaCantidad'].touched) {
+                    <div class="d-grid">
+                      @if(fraccionForm.controls['mercanciaCantidad'].errors?.['required']) {
+                        <span class="mensaje-error">Este campo es obligatorio</span>
+                      }
+                      @if(fraccionForm.controls['mercanciaCantidad'].errors?.['pattern']) {
+                        <span class="mensaje-error">Por favor, escribe un número entero válido</span>
+                      }
+                    </div>
+                    }
                   </div>
 
             </div>
             <div class="col-md-4">
                 <div class="form-group">
-                    <label class="form-label" for="mercanciaFactura"> Valor factura USD*:</label>
-                    <input class="form-control" id="mercanciaFactura" formControlName="mercanciaFactura"  type="number" (change)="setValoresStore(fraccionForm,'mercanciaFactura', 'setMercanciaFactura')">
+                    <label class="form-label" for="mercanciaFactura"> Valor partida USD*: </label>
+                    <span class="bi bi-question-circle-fill" title="En caso de no contar con valor factura proporciona el valor estimado"
+                     data-bs-toggle="tooltip"></span>
+                    <input class="form-control" id="mercanciaFactura" formControlName="mercanciaFactura" (change)="setValoresStore(fraccionForm,'mercanciaFactura', 'setMercanciaFactura')">
+                    @if(fraccionForm.controls['mercanciaFactura'].invalid && fraccionForm.controls['mercanciaFactura'].touched) {
+                    <div class="d-grid">
+                      @if(fraccionForm.controls['mercanciaFactura'].errors?.['required']) {
+                        <span class="mensaje-error">Este campo es obligatorio</span>
+                      }
+                      @if(fraccionForm.controls['mercanciaFactura'].errors?.['pattern']) {
+                        <span class="mensaje-error">Por favor, escribe un número entero válido</span>
+                      }
+                    </div>
+                    }
                   </div>
 
             </div>
         </div>
-        <div class="row">
+        <div class="row mt-4">
             <div class="col-md-8">
                 <div class="form-group">
                     <label class="form-label" for="descripcion"> Descripción*:</label>
@@ -62,7 +111,7 @@
             </div>
 
         </div>
-        <div class="row" style="padding-bottom: 20px;text-align: right;">
+        <div class="row mt-5" style="padding-bottom: 20px;text-align: right;">
             <div>
                 
                 <button type="button" class="btn btn-default me-2 btn-space" [disabled]="esFormularioSoloLectura">Cargar archivo</button>
@@ -71,7 +120,7 @@
             </div>
         </div>
         <div class="row"  style="padding-bottom: 20px;" >
-            <div class="col-md-12">
+            <div class="col-md-12 mt-5">
                 <div class="form-group">
                     <H6>Partidas</H6>
                     <app-tabla-dinamica 
@@ -89,26 +138,44 @@
             <div class="row">
                 <div class="col-md-4">
                     <div class="form-group">
-                        <label class="form-label" for="cantidadTotal">Cantidad:</label>
+                        <label class="form-label" for="cantidadTotal">Cantidad total:</label>
                         <input class="form-control" id="cantidadTotal" formControlName="cantidadTotal"  type="number" >
                       </div>
     
                 </div>
                 <div class="col-md-4">
                     <div class="form-group">
-                        <label class="form-label" for="valorTotal"> Valor factura USD:</label>
+                        <label class="form-label" for="valorTotal"> Valor total USD:</label>
                         <input class="form-control" id="valorTotal" formControlName="valorTotal"  type="number" >
                       </div>
     
                 </div>
             </div>
-            <div class="row" style="padding-top: 20px;text-align: right;">
+            <div class="row mt-5" style="padding-top: 20px;text-align: right;">
                 <div>
                     
                    
                     <button type="button" class="btn btn-danger me-2 btn-space" [disabled]="esFormularioSoloLectura">Eliminar partida</button>
                     <button type="button" class="btn btn-primary btn-space" [disabled]="esFormularioSoloLectura">Modificar partida</button>
                     
+                </div>
+            </div>
+
+            <!-- Modal de alerta -->
+            <div class="modal" tabindex="-1" [ngClass]="{'show': mostrarAlerta}"
+                [ngStyle]="{'display': mostrarAlerta ? 'block' : 'none', 'background': mostrarAlerta ? 'rgba(0,0,0,0.5)' : 'none'}">
+               <div class="modal-dialog modal-dialog-centered" style="max-width: 350px;">
+                    <div class="modal-content">
+                       <div class="modal-header">
+                            <button type="button" class="btn-close" aria-label="Close" (click)="cerrarModal()"></button>
+                        </div>
+                       <div class="modal-body">
+                            <p>{{ mensajeDeAlerta }}</p>
+                        </div>
+                        <div class="modal-footer justify-content-center">
+                            <button type="button" class="btn btn-primary" (click)="cerrarModal()">Aceptar</button>
+                       </div>
+                    </div>
                 </div>
             </div>
            
@@ -139,14 +206,14 @@
                                          
                       <div class="col-md-4 offset-md-4">
                         <div class="form-group">
-                            <label class="form-label" for="seleccionado">Páis seleccionado: *</label>
+                            <label class="form-label" for="seleccionado">Páis seleccionado*:</label>
                             <input class="form-control" id="seleccionado" formControlName="seleccionado"  type="text" (change)="setValoresStore(fraccionForm,'seleccionado', 'setSeleccionado')">
                           </div>
                       </div>
                     </div>
                
 
-                    <crosslist [fechas]="selectRangoDias" [isDisabled]="esFormularioSoloLectura" [botonField]="botonField"></crosslist>
+                    <crosslist [fechas]="selectRangoDias" [isDisabled]="esFormularioSoloLectura" [botones]="paisDeProcedenciaBotones" ></crosslist>
                   
                 
 
@@ -214,6 +281,5 @@
         </div>
     </div>
 </div>
-    <ng-alert [CONTENIDO]="TEXTOS.Aviso"></ng-alert>
 
 </div>

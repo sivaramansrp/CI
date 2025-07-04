@@ -96,10 +96,21 @@ export class CancelacionesQuery extends Query<CancelacionesState> {
   folioOficioSolicitudIPC$ = this.select((state) => state.folioOficioSolicitudIPC);
 
   /**
+   * Observable para la fecha de pago.
+   */
+  fechaPago$ = this.select((state) => state.fechaPago);
+  /**
    * Observable para el correo del solicitante IPC.
    */
   correoSolicitanteIPC$ = this.select((state) => state.correoSolicitanteIPC);
 
+  /**
+   * Selecciona el estado completo de la solicitud
+   */
+  selectSeccionState$ = this.select((state) => {
+    return state;
+  });
+  
   /**
    * @ignore
    */

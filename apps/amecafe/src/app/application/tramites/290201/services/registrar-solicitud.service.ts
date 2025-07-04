@@ -207,4 +207,12 @@ export class RegistrarSolicitudService {
  getConsultaData(): Observable<Solicitud290201State> {
   return this.http.get<Solicitud290201State>('assets/json/290201/consulta.json');
 }
+/**
+ * Obtiene los datos del destinatario.
+ * @returns Observable con los datos del destinatario en formato `Solicitud290201State`.
+ * @description Realiza una solicitud HTTP para obtener los datos del destinatario desde un archivo JSON.
+ */
+getDestinatarioData(): Observable<Solicitud290201State> {
+  return this.http.get<Solicitud290201State>('assets/json/290201/destinatariodata.json');
+}
 }

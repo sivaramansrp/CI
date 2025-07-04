@@ -9,7 +9,7 @@ import { NgModule } from '@angular/core';
     CommonModule,
     CertificadoRoutingModule,
     AlertComponent,
-    TablaDinamicaComponent
-  ]
+    TablaDinamicaComponent,
+  ],
 })
 export class CertificadoModule { }

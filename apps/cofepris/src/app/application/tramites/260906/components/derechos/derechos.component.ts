@@ -162,9 +162,8 @@ export class DerechosComponent implements OnInit, OnDestroy {
 
   /**
    * Inicializa el estado del formulario según el modo de solo lectura
-   * @private
    */
-  private inicializarEstadoFormulario(): void {
+  inicializarEstadoFormulario(): void {
     if (this.soloLectura) {
       this.derechosForm?.disable();
     } else {

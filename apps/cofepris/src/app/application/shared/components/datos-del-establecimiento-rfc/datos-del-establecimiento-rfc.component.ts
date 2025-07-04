@@ -190,8 +190,8 @@ export class DatosDelEstablecimientoRFCComponent implements OnInit, OnDestroy {
      * */
 
     this.datosDelForm = this.fb.group({
-      rfcDel: [this.solicitudState?.rfcDel, [Validators.maxLength(254)]],
-      denominacionRazonSocial: [this.solicitudState?.denominacionRazonSocial, [Validators.required, Validators.maxLength(254)]],
+      rfcDel: [this.solicitudState?.rfcDel, [Validators.maxLength(13)]],
+      denominacionRazonSocial: [this.solicitudState?.denominacionRazonSocial, [Validators.required, Validators.maxLength(100)]],
       correoElectronico: [this.solicitudState?.correoElectronico, [Validators.required, Validators.email, Validators.maxLength(320)]]
     });
 

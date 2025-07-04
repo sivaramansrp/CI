@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 
@@ -18,7 +18,7 @@ import { TercerosRelacionadosComponent } from '../terceros-relacionados/terceros
   standalone: true,
   imports: [DatosGeneralesComponent, TercerosRelacionadosComponent, PagoDeDerechosComponent, CommonModule],
 })
-export class RevisionDocumentalComponent implements OnInit {
+export class RevisionDocumentalComponent implements OnInit, OnDestroy {
 
   /**
   * Índice del tab seleccionado.
@@ -114,4 +114,13 @@ export class RevisionDocumentalComponent implements OnInit {
     this.indice = i;
   }
 
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
+   * Se utiliza para limpiar los recursos y evitar fugas de memoria.
+   * @return {void}
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
+  }
 }

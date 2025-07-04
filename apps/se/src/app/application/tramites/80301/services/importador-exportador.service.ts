@@ -26,7 +26,7 @@ export class ImportadorExportadorService {
   getAduanaIngresara(): Observable<RespuestaCatalogos> {
     return this.http
       .get<RespuestaCatalogos>('assets/json/80301/aduanaIngresara.json')
-      .pipe(tap((response) => this.store.setAduana(response.data)));
+      .pipe(tap((response) => this.store.setAduana(JSON.stringify(response.data))));
   }
 
    /**
@@ -36,7 +36,7 @@ export class ImportadorExportadorService {
    getAno(): Observable<RespuestaCatalogos> {
     return this.http
       .get<RespuestaCatalogos>('assets/json/80301/ano.json')
-      .pipe(tap((response) => this.store.setAno(response.data)));
+      .pipe(tap((response) => this.store.setAno(JSON.stringify(response.data))));
   }
 
 
