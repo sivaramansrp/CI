@@ -9,6 +9,15 @@ import { CommonModule } from '@angular/common';
 import { FitosanitarioStore } from '../../estados/fitosanitario.store';
 import { INSTRUCCION_DOBLE_CLIC } from '../../constantes/220202/fitosanitario.enums';
 
+  /**
+   * @description Constructor del componente.
+   * @param fb - FormBuilder para crear formularios reactivos.
+   * @param agriculturaApiService - Servicio para realizar peticiones HTTP relacionadas con la agricultura.
+   * @param consultaioQuery - Query para obtener el estado de la consulta.
+   * @param router - Router para navegar entre rutas.
+   * @param activatedROute - Ruta activada para obtener parámetros de la ruta actual.
+   * @param fitosanitarioStore - Store para manejar el estado del fitosanitario.
+   */
 @Component({
   selector: 'app-datos-de-la-solicitud',
   templateUrl: './datos-de-la-solicitud.component.html',

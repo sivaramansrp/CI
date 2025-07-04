@@ -8,6 +8,29 @@ import { EventEmitter } from '@angular/core';
 import { RadioOpcion } from '../../../tramites/220202/models/220202/fitosanitario.model';
 import { Subject } from 'rxjs';
 
+
+/**
+ * Decorador que define un componente de Angular.
+ * 
+ * Este componente es independiente (`standalone`) y puede ser utilizado sin necesidad de declararlo
+ * en un módulo. Está diseñado para gestionar y mostrar información relacionada con subproductos.
+ * 
+ * @selector `app-sub-productos` - Selector utilizado para instanciar este componente en una plantilla HTML.
+ * 
+ * @standalone `true` - Indica que este componente es independiente y no requiere ser declarado en un módulo.
+ * 
+ * @imports - Lista de módulos y componentes importados que son necesarios para el funcionamiento de este componente:
+ * - `CommonModule`: Proporciona directivas y servicios comunes de Angular.
+ * - `CatalogoSelectComponent`: Componente personalizado para seleccionar elementos de un catálogo.
+ * - `TituloComponent`: Componente personalizado para mostrar títulos.
+ * - `ReactiveFormsModule`: Módulo para trabajar con formularios reactivos en Angular.
+ * - `TablaDinamicaComponent`: Componente personalizado para mostrar tablas dinámicas.
+ * - `InputRadioComponent`: Componente personalizado para manejar botones de radio.
+ * 
+ * @templateUrl `./sub-productos.component.html` - Ruta al archivo de plantilla HTML que define la estructura visual del componente.
+ * 
+ * @styleUrl `./sub-productos.component.scss` - Ruta al archivo de estilos SCSS que define la apariencia del componente.
+ */
 @Component({
   selector: 'app-sub-productos',
   standalone: true,
@@ -24,8 +47,22 @@ export class SubProductosComponent implements OnInit, OnDestroy{
    */
   productosForm!: FormGroup;
 
+  /**
+   * Configuración de las columnas de la tabla que muestra los detalles de los datos sensibles.
+   * Utiliza un arreglo de tipo `ConfiguracionColumna<DetallasDatos>` para definir las propiedades
+   * y características de cada columna en la tabla.
+   * 
+   * @type {ConfiguracionColumna<DetallasDatos>[]}
+   */
 public configuracionDetallasDatosTabla: ConfiguracionColumna<DetallasDatos>[] = CONFIGURACION_DETALLAS_DATOS;
 
+/**
+   * Arreglo que almacena los detalles de los datos sensibles ingresados en el formulario.
+   * Cada elemento es un objeto de tipo `DetallasDatos` que contiene información específica
+   * sobre los animales vivos, como número de lote, fechas de producción, etc.
+   * 
+   * @type {DetallasDatos[]}
+   */
 public detallasDatosTablaDatos: DetallasDatos[] = [];
 
 public detallasDatosTablaSeleccionada: DetallasDatos[] = [];
@@ -84,10 +121,11 @@ public detallasDatosTablaSeleccionada: DetallasDatos[] = [];
   @Output() agregarDatosFormulario = new EventEmitter<ProductoDetallaEventos>();
 
   /**
- * Constructor del componente.
- * 
- * @param fb FormBuilder para crear formularios reactivos.
- */
+   * Constructor del componente.
+   * 
+   * @param fb - FormBuilder para crear formularios reactivos.
+   * @param ubicaccion - Servicio de ubicación para navegar entre páginas.
+   */
   constructor(private fb: FormBuilder,
     private ubicaccion: Location,
   ) {
@@ -102,6 +140,46 @@ public detallasDatosTablaSeleccionada: DetallasDatos[] = [];
   }
 
 
+    /**
+     * Crea y configura los formularios reactivos `productosForm` y `detalleForm` 
+     * utilizados en el componente para gestionar los datos relacionados con 
+     * productos y detalles específicos.
+     * 
+     * El formulario `productosForm` incluye los siguientes campos:
+     * - `tipoRequisito`: Campo obligatorio para especificar el tipo de requisito.
+     * - `requisito`: Campo obligatorio para definir el requisito.
+     * - `numeroCertificado`: Campo opcional con un máximo de 50 caracteres y que 
+     *   solo permite caracteres alfanuméricos.
+     * - `fraccionArancelaria`: Campo obligatorio para la fracción arancelaria.
+     * - `descripcionFraccion`: Campo opcional para la descripción de la fracción.
+     * - `nico`: Campo obligatorio para el NICO (Número de Identificación Comercial).
+     * - `descripcionNico`: Campo opcional para la descripción del NICO.
+     * - `descripcion`: Campo opcional con un máximo de 1000 caracteres y que solo 
+     *   permite caracteres alfanuméricos.
+     * - `cantidadUMT`: Campo opcional que acepta un número con hasta 12 dígitos 
+     *   enteros y 3 decimales.
+     * - `umt`: Campo obligatorio que está deshabilitado inicialmente.
+     * - `cantidadUMC`: Campo opcional que acepta un número con hasta 12 dígitos 
+     *   enteros y 3 decimales.
+     * - `umc`: Campo obligatorio para la unidad de medida comercial.
+     * - `especie`: Campo obligatorio para especificar la especie.
+     * - `uso`: Campo obligatorio para definir el uso.
+     * - `paisOrigen`: Campo obligatorio para el país de origen.
+     * - `paisDeProcedencia`: Campo obligatorio para el país de procedencia.
+     * - `presentacion`: Campo opcional para la presentación del producto.
+     * - `cantidadPresentacion`: Campo opcional para la cantidad en la presentación.
+     * - `tipoPresentacion`: Campo opcional para el tipo de presentación.
+     * - `tipoPlanta`: Campo opcional para el tipo de planta.
+     * - `plantaAutorizadaOrigen`: Campo opcional para la planta autorizada de origen.
+     * 
+     * El formulario `detalleForm` incluye los siguientes campos:
+     * - `numeroLote`: Campo opcional con un máximo de 16 caracteres y que solo 
+     *   permite caracteres alfanuméricos.
+     * - `rangoDeFecha`: Campo opcional para especificar un rango de fechas.
+     * 
+     * Este método inicializa ambos formularios con sus respectivos validadores 
+     * para garantizar la integridad de los datos ingresados.
+     */
     crearFormulario(): void {
       this.productosForm = this.fb.group({
         tipoRequisito: ['', Validators.required],
@@ -188,6 +266,24 @@ public detallasDatosTablaSeleccionada: DetallasDatos[] = [];
     this.detallasDatosTablaDatos = [];
   }
 
+
+  /**
+   * Agrega un nuevo detalle a la tabla de datos y reinicia el formulario de detalles.
+   * 
+   * Este método crea un objeto de tipo `DetallasDatos` utilizando los valores del formulario
+   * `detalleForm` y lo agrega al arreglo `detallasDatosTablaDatos`. Posteriormente, reinicia
+   * el formulario para que esté listo para ingresar nuevos datos.
+   * 
+   * @remarks
+   * - Las propiedades de fecha en el objeto `DetallasDatos` se inicializan como cadenas vacías.
+   * - Este método asume que `detalleForm` está correctamente configurado con los controles necesarios.
+   * 
+   * @example
+   * // Ejemplo de uso:
+   * this.agregarDetalle();
+   * 
+   * @returns {void} Este método no devuelve ningún valor.
+   */
   agregarDetalle(): void {
     const VALOR: DetallasDatos = {
       numeroDeLote: this.detalleForm.value.numeroLote,

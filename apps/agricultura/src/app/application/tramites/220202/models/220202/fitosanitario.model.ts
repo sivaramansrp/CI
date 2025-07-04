@@ -1,31 +1,51 @@
 import { PersonaTerceros } from "@libs/shared/data-access-user/src";
 import { TercerosrelacionadosdestinoTable } from "../../../../shared/models/tercerosrelacionados.model";
+
 /**
- * @interface ListaPasosWizard
- * @description 
- * Interfaz que define la estructura de los pasos en un componente tipo wizard.
- * 
- * @property {number} indice - Índice del paso.
- * @property {string} titulo - Título del paso.
- * @property {boolean} activo - Indica si el paso está activo.
- * @property {boolean} completado - Indica si el paso ha sido completado.
+ * Representa una lista de pasos en un asistente (wizard).
  */
 export interface ListaPasosWizard {
+    /**
+     * Índice del paso dentro del asistente.
+     * Este valor indica la posición del paso en la secuencia.
+     */
     indice: number;
+
+    /**
+     * Título descriptivo del paso.
+     * Este texto se utiliza para mostrar el nombre o descripción del paso en la interfaz de usuario.
+     */
     titulo: string;
+
+    /**
+     * Indica si el paso está activo.
+     * Un paso activo es el que actualmente está seleccionado o en progreso.
+     */
     activo: boolean;
+
+    /**
+     * Indica si el paso ha sido completado.
+     * Un paso completado es aquel que ya ha sido finalizado por el usuario.
+     */
     completado: boolean;
 }
 
+
 /**
- * @interface AccionBoton
- * @description 
- * Interfaz que define la estructura de las acciones de los botones en un formulario wizard.
- * @property {string} accion - Acción del botón (ej: 'siguiente', 'anterior').
- * @property {number} valor - Valor asociado a la acción (ej: índice del paso).
+ * Representa una acción asociada a un botón en la interfaz de usuario.
  */
 export interface AccionBoton {
+    /**
+     * Especifica el tipo de acción que se realizará al interactuar con el botón.
+     * @example "guardar", "eliminar", "editar"
+     */
     accion: string;
+
+    /**
+     * Representa un valor numérico asociado a la acción del botón.
+     * Este valor puede ser utilizado para identificar o parametrizar la acción.
+     * @example 1, 2, 3
+     */
     valor: number;
 }
 
@@ -43,34 +63,52 @@ export interface DatosDeTabla {
   message: string;
 }
 
+
 /**
- * @interface DatosDeFila
- * @description 
- * Interfaz que define la estructura de los datos de una fila en la tabla.
- * 
- * @property {string} fechaCreacion - Fecha en la que se creó el registro.
- * @property {string} mercancia - Nombre de la mercancía.
- * @property {number} cantidad - Cantidad de la mercancía.
- * @property {string} proveedor - Nombre del proveedor de la mercancía.
+ * Representa los datos de una fila en el modelo fitosanitario.
  */
 export interface DatosDeFila {
+    /**
+     * Fecha de creación de la fila.
+     * Representada como una cadena en formato ISO 8601.
+     */
     fechaCreacion: string;
+
+    /**
+     * Nombre de la mercancía asociada a la fila.
+     */
     mercancia: string;
+
+    /**
+     * Cantidad de la mercancía especificada.
+     * Representada como un número.
+     */
     cantidad: number;
+
+    /**
+     * Nombre del proveedor de la mercancía.
+     */
     proveedor: string;
 }
+
+
 /**
- * @interface FinalEnviar
- * @description 
- * Interfaz que agrupa los estados de validación de las diferentes secciones del formulario antes de enviar la información final.
- * 
- * @property {boolean} datosFormaValidacion - Indica si la validación de los datos del formulario principal fue exitosa.
- * @property {boolean} movilizacionValidacion - Indica si la validación de la sección de movilización fue exitosa.
- * @property {boolean} validaciondeFormulariodePago - Indica si la validación del formulario de pago fue exitosa.
+ * Interfaz que representa los datos finales necesarios para el envío de información.
  */
 export interface FinalEnviar {
+    /**
+     * Indica si los datos del formulario han sido validados correctamente.
+     */
     datosFormaValidacion: boolean;
+
+    /**
+     * Indica si la validación de la movilización ha sido realizada correctamente.
+     */
     movilizacionValidacion: boolean;
+
+    /**
+     * Indica si el formulario de pago ha sido validado correctamente.
+     */
     validaciondeFormulariodePago: boolean;
 }
 
@@ -124,20 +162,33 @@ export interface ListaDeDatosFinal {
   tercerosRelacionados: TercerosrelacionadosdestinoTable[];
 }
 
+
 /**
- * @interface Movilizacion
- * @description 
- * Interfaz que define la información de movilización de los productos.
- * 
- * @property {string} transporte - Tipo de transporte utilizado.
- * @property {string} guiaIdentificacion - Número de guía de identificación del producto.
- * @property {string} empresaTransportista - Nombre de la empresa transportista.
- * @property {string} punto - Punto de origen o destino del transporte.
+ * Representa la información relacionada con la movilización de bienes o productos.
  */
 export interface Movilizacion {
+    /**
+     * El tipo de transporte utilizado para la movilización.
+     * Puede ser terrestre, marítimo, aéreo, entre otros.
+     */
     transporte: string;
+
+    /**
+     * Identificación única de la guía asociada a la movilización.
+     * Este valor es utilizado para rastrear y verificar el transporte.
+     */
     guiaIdentificacion: string;
+
+    /**
+     * Nombre de la empresa encargada del transporte.
+     * Representa la entidad responsable de la movilización.
+     */
     empresaTransportista: string;
+
+    /**
+     * Medio específico de transporte utilizado.
+     * Ejemplo: camión, barco, avión, etc.
+     */
     medioTransporte: string;
 }
 
@@ -177,174 +228,381 @@ export interface PagoForm {
 }
 
 
+
 /**
- * Representa una mercancía dentro del trámite fitosanitario.
- *
- * @property {string} seleccionado - Indica si la mercancía ha sido seleccionada.
- * @property {string} noPartida - Número de partida de la mercancía.
- * @property {string} tipoRequisito - Tipo de requisito asociado a la mercancía.
- * @property {string} requisito - Descripción del requisito.
- * @property {string} numCertificadoInternacional - Número del certificado internacional relacionado.
- * @property {string} fraccionArancelaria - Fracción arancelaria correspondiente a la mercancía.
- * @property {string} descFraccion - Descripción de la fracción arancelaria.
- * @property {string} nico - Código NICO (Número de Identificación Comercial).
+ * Representa la información de una mercancía en el sistema.
  */
 export interface Mercancia {
+    /**
+     * Indica si la mercancía está seleccionada.
+     * @example "true" o "false"
+     */
     seleccionado: string;
+
+    /**
+     * Número de partida de la mercancía.
+     * @example "123456"
+     */
     noPartida: string;
+
+    /**
+     * Tipo de requisito asociado a la mercancía.
+     * @example "Sanitario", "Fitosanitario"
+     */
     tipoRequisito: string;
+
+    /**
+     * Descripción del requisito asociado a la mercancía.
+     * @example "Certificado de inspección"
+     */
     requisito: string;
+
+    /**
+     * Número del certificado internacional relacionado con la mercancía.
+     * @example "INT-2023-001"
+     */
     numCertificadoInternacional: string;
+
+    /**
+     * Fracción arancelaria de la mercancía.
+     * @example "0101.21.00"
+     */
     fraccionArancelaria: string;
+
+    /**
+     * Descripción de la fracción arancelaria.
+     * @example "Caballos pura sangre para reproducción"
+     */
     descFraccion: string;
+
+    /**
+     * Número de Identificación Comercial (NICO) de la mercancía.
+     * @example "NICO-12345"
+     */
     nico: string;
 }
 
+
 /**
- * Representa los datos de un formulario fitosanitario para trámites de importación o inspección.
- *
- * @property {string} aduanaDeIngreso - Nombre de la aduana por donde ingresa la mercancía.
- * @property {string} oficinaDeInspeccion - Oficina responsable de la inspección.
- * @property {string} puntoDeInspeccion - Punto específico donde se realiza la inspección.
- * @property {string} [numeroDeGuia] - Número de guía de la mercancía (opcional).
- * @property {string} regimen - Régimen aduanero aplicable.
- * @property {string} [numeroDeCarro] - Número del carro o vehículo de transporte (opcional).
- * @property {string} [tipoDeRequisito] - Tipo de requisito solicitado (opcional).
- * @property {string} [requisito] - Descripción del requisito (opcional).
- * @property {string} [numeroCertificadoInternacional] - Número de certificado internacional (opcional).
- * @property {string} [fraccionArancelaria] - Fracción arancelaria del producto (opcional).
- * @property {string} [descripcionFraccion] - Descripción de la fracción arancelaria (opcional).
- * @property {string} [nico] - Número de Identificación Comercial (opcional).
- * @property {string} [descripcionNico] - Descripción del NICO (opcional).
- * @property {string} [descripcion] - Descripción general del producto (opcional).
- * @property {string | number} [cantidadUMT] - Cantidad en Unidad de Medida de Transporte (opcional).
- * @property {string} [umt] - Unidad de Medida de Transporte (opcional).
- * @property {string | number} [cantidadUMC] - Cantidad en Unidad de Medida Comercial (opcional).
- * @property {string} [umc] - Unidad de Medida Comercial (opcional).
- * @property {string} [uso] - Uso o destino del producto (opcional).
- * @property {string} [tipoDeProducto] - Tipo de producto transportado (opcional).
+ * Representa los datos de un formulario fitosanitario.
  */
 export interface DatosForma {
+    /**
+     * Aduana de ingreso donde se realizará el trámite.
+     */
     aduanaDeIngreso: string;
+
+    /**
+     * Oficina de inspección asignada para la revisión.
+     */
     oficinaDeInspeccion: string;
+
+    /**
+     * Punto de inspección donde se llevará a cabo la verificación.
+     */
     puntoDeInspeccion: string;
+
+    /**
+     * Número de guía asociado al trámite (opcional).
+     */
     numeroDeGuia?: string;
+
+    /**
+     * Régimen aduanero aplicable al trámite.
+     */
     regimen: string;
+
+    /**
+     * Número del carro utilizado para el transporte (opcional).
+     */
     numeroDeCarro?: string;
+
+    /**
+     * Tipo de requisito necesario para el trámite (opcional).
+     */
     tipoDeRequisito?: string;
+
+    /**
+     * Requisito específico relacionado con el trámite (opcional).
+     */
     requisito?: string;
+
+    /**
+     * Número del certificado internacional asociado (opcional).
+     */
     numeroCertificadoInternacional?: string;
+
+    /**
+     * Fracción arancelaria correspondiente al producto (opcional).
+     */
     fraccionArancelaria?: string;
+
+    /**
+     * Descripción de la fracción arancelaria (opcional).
+     */
     descripcionFraccion?: string;
+
+    /**
+     * Número de Identificación Comercial (NICO) del producto (opcional).
+     */
     nico?: string;
+
+    /**
+     * Descripción del NICO del producto (opcional).
+     */
     descripcionNico?: string;
+
+    /**
+     * Descripción general del producto (opcional).
+     */
     descripcion?: string;
+
+    /**
+     * Cantidad en la Unidad de Medida de Transporte (UMT) (opcional).
+     */
     cantidadUMT?: string | number;
+
+    /**
+     * Unidad de Medida de Transporte (UMT) utilizada (opcional).
+     */
     umt?: string;
+
+    /**
+     * Cantidad en la Unidad de Medida Comercial (UMC) (opcional).
+     */
     cantidadUMC?: string | number;
+
+    /**
+     * Unidad de Medida Comercial (UMC) utilizada (opcional).
+     */
     umc?: string;
+
+    /**
+     * Uso previsto del producto (opcional).
+     */
     uso?: string;
+
+    /**
+     * Tipo de producto especificado (opcional).
+     */
     tipoDeProducto?: string;
-    tipoMercancia?: string; // Tipo de mercancía, por ejemplo, "animal", "vegetal", etc.
+
+    /**
+     * Tipo de mercancía relacionada con el trámite (opcional).
+     */
+    tipoMercancia?: string;
 }
 
+
 /**
- * Representa una fila de solicitud para trámites fitosanitarios.
- * Contiene información detallada sobre el producto, requisitos, certificados,
- * cantidades y procedencia, utilizada en la gestión de solicitudes.
- *
- * @property {string} noPartida - Número de partida.
- * @property {string} tipoRequisito - Tipo de requisito solicitado.
- * @property {string} requisito - Descripción del requisito.
- * @property {string} numeroCertificadoInternacional - Número del certificado internacional.
- * @property {string} fraccionArancelaria - Fracción arancelaria del producto.
- * @property {string} descripcionFraccion - Descripción de la fracción arancelaria.
- * @property {string} nico - Código NICO.
- * @property {string} descripcionNico - Descripción del NICO.
- * @property {string} descripcion - Descripción general del producto.
- * @property {string} umt - Unidad de medida de trámite (UMT).
- * @property {string | number} cantidadUMT - Cantidad en UMT.
- * @property {string} umc - Unidad de medida de comercialización (UMC).
- * @property {string | number} cantidadUMC - Cantidad en UMC.
- * @property {string} uso - Uso previsto del producto.
- * @property {string} tipoDeProducto - Tipo de producto.
- * @property {string} numeroDeLote - Número de lote del producto.
- * @property {string} paisDeOrigen - País de origen del producto.
- * @property {string} paisDeProcedencia - País de procedencia del producto.
- * @property {string} certificadoInternacionalElectronico - Certificado internacional electrónico asociado.
+ * Representa una fila de solicitud en el modelo fitosanitario.
  */
 export interface FilaSolicitud {
+    /**
+     * Número de partida asociado a la solicitud.
+     */
     noPartida: string;
+
+    /**
+     * Tipo de requisito relacionado con la solicitud.
+     */
     tipoRequisito: string;
+
+    /**
+     * Descripción del requisito solicitado.
+     */
     requisito: string;
+
+    /**
+     * Número del certificado internacional asociado.
+     */
     numeroCertificadoInternacional: string;
+
+    /**
+     * Fracción arancelaria correspondiente al producto.
+     */
     fraccionArancelaria: string;
+
+    /**
+     * Descripción de la fracción arancelaria.
+     */
     descripcionFraccion: string;
+
+    /**
+     * Número de Identificación Comercial (NICO) del producto.
+     */
     nico: string;
+
+    /**
+     * Descripción del Número de Identificación Comercial (NICO).
+     */
     descripcionNico: string;
+
+    /**
+     * Descripción general del producto.
+     */
     descripcion: string;
+
+    /**
+     * Unidad de medida de transporte (UMT) utilizada.
+     */
     umt: string;
+
+    /**
+     * Cantidad en la unidad de medida de transporte (UMT).
+     */
     cantidadUMT: string | number;
-    umc: string; // Unidad de medida de comercialización (UMC)
+
+    /**
+     * Unidad de medida de comercialización (UMC) utilizada.
+     */
+    umc: string;
+
+    /**
+     * Cantidad en la unidad de medida de comercialización (UMC).
+     */
     cantidadUMC: string | number;
+
+    /**
+     * Uso previsto del producto.
+     */
     uso: string;
+
+    /**
+     * Tipo de producto especificado en la solicitud.
+     */
     tipoDeProducto: string;
+
+    /**
+     * Número de lote asociado al producto.
+     */
     numeroDeLote: string;
+
+    /**
+     * País de origen del producto.
+     */
     paisDeOrigen: string;
+
+    /**
+     * País de procedencia del producto.
+     */
     paisDeProcedencia: string;
+
+    /**
+     * Certificado internacional electrónico asociado al producto.
+     */
     certificadoInternacionalElectronico: string;
 }
 
-/**
- * Representa la información relacionada con el pago de derechos para un trámite fitosanitario.
- *
- * @property exentoPago Indica si el pago está exento (por ejemplo, "sí" o "no").
- * @property justificacion Justificación en caso de exención de pago.
- * @property claveReferencia Clave de referencia del pago realizado.
- * @property cadenaDependencia Cadena de dependencia asociada al pago.
- * @property banco Nombre del banco donde se realizó el pago.
- * @property llavePago Llave única que identifica el pago.
- * @property importePago Monto total pagado.
- * @property fechaPago Fecha en la que se realizó el pago (formato string).
- */
-export interface PagoDeDerechos {
-  exentoPago: string;
-  justificacion: string;
-  claveReferencia: string;
-  cadenaDependencia: string;
-  banco: string;
-  llavePago: string;
-  importePago: string;
-  fechaPago:string;
-}
 
 /**
- * @interface SolicitudFilaTabla
- * @description
- * Modelo para una fila de la tabla con información de fecha de creación, mercancía, cantidad y proveedor.
- *
- * @property {string} fechaCreacion - Fecha en la que se creó el registro.
- * @property {string} mercancia - Nombre de la mercancía.
- * @property {number} cantidad - Cantidad de la mercancía.
- * @property {string} proveedor - Nombre del proveedor.
+ * Representa la información relacionada con el pago de derechos.
+ */
+export interface PagoDeDerechos {
+    /**
+     * Indica si el pago está exento.
+     * @example "true" o "false"
+     */
+    exentoPago: string;
+
+    /**
+     * Justificación para la exención del pago.
+     * @example "Exención por convenio especial"
+     */
+    justificacion: string;
+
+    /**
+     * Clave de referencia asociada al pago.
+     * @example "REF123456789"
+     */
+    claveReferencia: string;
+
+    /**
+     * Cadena que identifica a la dependencia relacionada con el pago.
+     * @example "Dependencia XYZ"
+     */
+    cadenaDependencia: string;
+
+    /**
+     * Nombre del banco donde se realizó el pago.
+     * @example "Banco Nacional"
+     */
+    banco: string;
+
+    /**
+     * Llave única que identifica el pago.
+     * @example "LLAVE123456"
+     */
+    llavePago: string;
+
+    /**
+     * Importe total del pago realizado.
+     * @example "1500.00"
+     */
+    importePago: string;
+
+    /**
+     * Fecha en la que se realizó el pago.
+     * @example "2023-10-05"
+     */
+    fechaPago: string;
+}
+
+
+
+/**
+ * Representa una fila de la tabla de solicitudes en el sistema.
  */
 export interface SolicitudFilaTabla {
+    /**
+     * Fecha de creación de la solicitud.
+     * Formato esperado: cadena de texto que representa una fecha.
+     */
     fechaCreacion: string;
+
+    /**
+     * Nombre de la mercancía asociada a la solicitud.
+     */
     mercancia: string;
+
+    /**
+     * Cantidad de mercancía solicitada.
+     * Representada como un número.
+     */
     cantidad: number;
+
+    /**
+     * Nombre del proveedor de la mercancía.
+     */
     proveedor: string;
 }
 
+
 /**
- * @interface ConsultaioSolicitante
- * @description 
- * Interfaz que representa los datos de consulta de un solicitante.
+ * Representa la información del solicitante para la consulta de un trámite fitosanitario.
  */
 export interface ConsultaioSolicitante {
-  folioDelTramite: string;
-  fechaDeInicio: string;
-  estadoDelTramite: string;
+    /**
+     * El folio único que identifica el trámite.
+     * @example "FT-123456789"
+     */
+    folioDelTramite: string;
+
+    /**
+     * La fecha en la que se inició el trámite.
+     * Formato esperado: "YYYY-MM-DD".
+     * @example "2023-01-15"
+     */
+    fechaDeInicio: string;
+
+    /**
+     * El estado actual del trámite.
+     * Puede representar estados como "En Proceso", "Completado", "Cancelado", etc.
+     * @example "En Proceso"
+     */
+    estadoDelTramite: string;
 }
+ 
 
 
 

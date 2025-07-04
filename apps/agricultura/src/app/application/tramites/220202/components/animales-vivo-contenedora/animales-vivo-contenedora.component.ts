@@ -8,6 +8,17 @@ import { FilaSolicitud } from '../../models/220202/fitosanitario.model';
 import { FitosanitarioQuery } from '../../queries/fitosanitario.query';
 import { FitosanitarioStore } from '../../estados/fitosanitario.store';
 
+/**
+ * @description Decorador que define un componente de Angular llamado `AnimalesVivoContenedoraComponent`.
+ * Este componente es independiente (standalone) y utiliza el módulo común de Angular (`CommonModule`) 
+ * y el componente `AnimalesVivoDetallesComponent` como dependencias importadas.
+ * 
+ * @selector `app-animales-vivo-contenedora` - Selector utilizado para instanciar este componente en una plantilla HTML.
+ * 
+ * @templateUrl `./animales-vivo-contenedora.component.html` - Ruta del archivo HTML que define la estructura visual del componente.
+ * 
+ * @styleUrl `./animales-vivo-contenedora.component.scss` - Ruta del archivo SCSS que contiene los estilos específicos del componente.
+ */
 @Component({
   selector: 'app-animales-vivo-contenedora',
   standalone: true,
@@ -55,6 +66,26 @@ export class AnimalesVivoContenedoraComponent implements OnDestroy{
 
 
 
+  /**
+   * Constructor de la clase `AnimalesVivoContenedoraComponent`.
+   * 
+   * Este constructor inicializa los servicios necesarios y configura las suscripciones
+   * para manejar los datos relacionados con los animales vivos en el contexto de la aplicación.
+   * 
+   * @param agriculturaApiService Servicio para interactuar con la API de Agricultura.
+   *                              Se utiliza para obtener datos desde un archivo JSON remoto.
+   * @param fitosanitarioQuery Servicio de consulta para acceder al estado de los datos fitosanitarios.
+   *                           Proporciona un flujo reactivo para observar cambios en el estado.
+   * @param fitosanitarioStore Servicio para manejar el almacenamiento del estado fitosanitario.
+   *                           Permite la gestión centralizada del estado de la aplicación.
+   * 
+   * @description
+   * - Obtiene datos desde un archivo JSON remoto utilizando el servicio `AgriculturaApiService`.
+   * - Configura una suscripción al estado reactivo proporcionado por `FitosanitarioQuery`.
+   * - Actualiza las propiedades locales `cuerpoTabla` y `formularioSolicitud` basándose en los datos
+   *   seleccionados del estado reactivo.
+   * - Maneja la destrucción de las suscripciones utilizando `takeUntil` con un observable de notificación.
+   */
   constructor(public agriculturaApiService: AgriculturaApiService,
     public fitosanitarioQuery: FitosanitarioQuery,
     public fitosanitarioStore: FitosanitarioStore
@@ -128,6 +159,16 @@ export class AnimalesVivoContenedoraComponent implements OnDestroy{
 
 
 
+  /**
+   * Método que se ejecuta automáticamente cuando el componente se destruye.
+   * 
+   * Este método emite un valor a través del observable `destroyNotifier$` para notificar
+   * a los suscriptores que el ciclo de vida del componente ha finalizado. Luego, completa
+   * el observable para liberar recursos y evitar posibles fugas de memoria.
+   * 
+   * Es una práctica común en Angular para manejar la limpieza de suscripciones a observables
+   * y otros recursos que deben ser liberados cuando el componente deja de existir.
+   */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
