@@ -102,4 +102,24 @@ export class SolicitudService {
         .get<Partial<Solicitud80302State>>('assets/json/80302/tramite_datos.json')
         .pipe(map((res: any) => res.data));
     }
+
+    /**
+     * Obtiene la lista de plantas desde un archivo JSON localizado en los activos.
+     * 
+     * @returns {Observable<Operacions[]>} Un observable que emite un arreglo de objetos `Operacions`.
+     */
+    obtenerPlanta(): Observable<Operacions[]> {
+      return this.http
+        .get<{data: Operacions[]}>('assets/json/80302/planta.json').pipe(map((res: {data: Operacions[]}) => res.data));
+    }
+
+    /**
+     * Obtiene una lista de servicios desde un archivo JSON local.
+     *
+     * @returns {Observable<Operacions[]>} Un observable que emite un arreglo de operaciones.
+     */
+    obtenerServicios(): Observable<Operacions[]> {
+      return this.http
+        .get<{data: Operacions[]}>('assets/json/80302/servicios.json').pipe(map((res: {data: Operacions[]}) => res.data));
+    }
 }
