@@ -56,17 +56,19 @@ import { Tramite260215Query } from '../../estados/queries/tramite260215.query';
 })
 export class ManifiestosComponent implements OnInit, OnDestroy {
   /**
-   * Mensaje de alerta.
+   * Mensaje de alerta mostrado en el formulario de manifiestos.
    */
   public mensaje: string = MENSAJE_DE_ALERTA;
 
   /**
    * Estado de la solicitud.
+   * Almacena el estado actual de la solicitud para el trámite 260215.
    */
   public solicitudState!: Solicitud260215State;
 
   /**
-   * Notificador para destruir observables.
+   * Notificador para destruir observables y evitar fugas de memoria.
+   * Se utiliza en combinación con takeUntil en las suscripciones.
    */
   private destroyNotifier$: Subject<void> = new Subject();
 
@@ -75,71 +77,72 @@ export class ManifiestosComponent implements OnInit, OnDestroy {
    * Estas opciones se utilizan para definir los posibles estados o tipos de cumplimiento
    * dentro del componente de manifiestos y declaraciones.
    */
- public cumplimientoOptions = CumplimientoOptions;
+  public cumplimientoOptions = CumplimientoOptions;
 
-  
   /**
-  * Indica si el formulario está en modo solo lectura.
-  * Cuando es `true`, los campos del formulario no se pueden editar.
-  */
- public esFormularioSoloLectura: boolean = false;
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  public esFormularioSoloLectura: boolean = false;
 
   /**
    * Constructor del componente.
-   * @param fb
-   * @param tramite260215Store
-   * @param tramite260215Query
+   * Inicializa servicios, suscriptores y determina el modo de solo lectura.
+   * @param fb FormBuilder para crear el formulario reactivo.
+   * @param tramite260215Store Store para manipular el estado de la solicitud.
+   * @param tramite260215Query Query para consultar el estado de la solicitud.
+   * @param consultaioQuery Query para consultar el estado de consulta IO.
    */
   constructor(
     private fb: FormBuilder,
     private tramite260215Store: Tramite260215Store,
     private tramite260215Query: Tramite260215Query,
-    private consultaioQuery: ConsultaioQuery,
-    ) {
-         /**
-           * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
-           *
-           * - Asigna el valor de solo lectura (`readonly`) a la propiedad `esFormularioSoloLectura`.
-           * - Llama a `inicializarEstadoFormulario()` para aplicar configuraciones basadas en el estado recibido.
-           * - La suscripción se cancela automáticamente cuando `destroyNotifier$` emite un valor (para evitar fugas de memoria).
-           */
-          this.consultaioQuery.selectConsultaioState$
-          .pipe(
-            takeUntil(this.destroyNotifier$),
-            map((seccionState)=>{
-              this.esFormularioSoloLectura = seccionState.readonly; 
-            })
-          )
-          .subscribe()
-        }
-  
-  
-  /**
-     * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
-     * Luego reinicializa el formulario con los valores actualizados desde el store.
-     */
-    guardarDatosFormulario(): void {
-        this.inicializarFormulario();
-        if (this.esFormularioSoloLectura) {
-          this.manifiestos.disable();
-        } else if (!this.esFormularioSoloLectura) {
-          this.manifiestos.enable();
-        }
-    }
-  
-  
+    private consultaioQuery: ConsultaioQuery
+  ) {
     /**
-     * Evalúa si se debe inicializar o cargar datos en el formulario.  
-     * Además, obtiene la información del catálogo de mercancía.
+     * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
+     *
+     * - Asigna el valor de solo lectura (`readonly`) a la propiedad `esFormularioSoloLectura`.
+     * - Llama a `inicializarEstadoFormulario()` para aplicar configuraciones basadas en el estado recibido.
+     * - La suscripción se cancela automáticamente cuando `destroyNotifier$` emite un valor (para evitar fugas de memoria).
      */
-    inicializarEstadoFormulario(): void {
-      if (this.esFormularioSoloLectura) {
-        this.guardarDatosFormulario();
-      } else {
-        this.inicializarFormulario();
-      }  
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+        })
+      )
+      .subscribe();
+  }
+
+  /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   * Si el formulario está en modo solo lectura, lo deshabilita; de lo contrario, lo habilita.
+   */
+  guardarDatosFormulario(): void {
+    this.inicializarFormulario();
+    if (this.esFormularioSoloLectura) {
+      this.manifiestos.disable();
+    } else if (!this.esFormularioSoloLectura) {
+      this.manifiestos.enable();
     }
-  
+  }
+
+  /**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.
+   * Si está en modo solo lectura, carga los datos y deshabilita el formulario.
+   * Si no, inicializa el formulario para edición.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.inicializarFormulario();
+    }
+  }
+
   /**
    * Inicializa el formulario de manifiestos y declaraciones.
    *
@@ -151,35 +154,40 @@ export class ManifiestosComponent implements OnInit, OnDestroy {
    * @remarks
    * La suscripción se gestiona con `takeUntil` para evitar fugas de memoria al destruir el componente.
    */
-   inicializarFormulario(): void {
-        this.tramite260215Query.selectSolicitud$
-          .pipe(
-            takeUntil(this.destroyNotifier$),
-            map((seccionState) => {
-              this.solicitudState = seccionState;
-            })
-          )
-          .subscribe()
-           this.manifiestos = this.fb.group({
-            mensaje: [Validators.required],
-            cumplimiento: [this.solicitudState?.cumplimiento, Validators.required],
-          });
-    }
+  inicializarFormulario(): void {
+    this.tramite260215Query
+      .selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.solicitudState = seccionState;
+        })
+      )
+      .subscribe();
+    this.manifiestos = this.fb.group({
+      mensaje: [Validators.required],
+      cumplimiento: [
+        this.solicitudState?.cumplimiento,
+        Validators.required,
+      ],
+    });
+  }
   /**
    * Grupo de formularios principal.
-   * @property {FormGroup} manifiestos
+   * Contiene los controles reactivos del formulario de manifiestos y declaraciones.
    */
-public manifiestos!: FormGroup;
+  public manifiestos!: FormGroup;
 
   /**
    * Método del ciclo de vida de Angular que se llama cuando el componente se inicializa.
+   * Inicializa el estado del formulario según el modo de solo lectura.
    */
   ngOnInit(): void {
-    this.inicializarEstadoFormulario()
+    this.inicializarEstadoFormulario();
   }
 
   /**
-   * Establece el valor de un campo en el store de Tramite31601.
+   * Actualiza el valor de un campo en el store de Tramite260215Store.
    * @param form - El grupo de formularios que contiene el campo.
    * @param campo - El nombre del campo cuyo valor se va a establecer.
    * @param metodoNombre - El nombre del método en el store que se utilizará para establecer el valor.
@@ -199,7 +207,7 @@ public manifiestos!: FormGroup;
 
   /**
    * Método del ciclo de vida de Angular que se llama cuando el componente se destruye.
-   * Este método completa el observable destroyNotifier$ para cancelar las suscripciones activas.
+   * Libera recursos y cancela suscripciones para evitar fugas de memoria.
    */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();

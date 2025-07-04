@@ -278,16 +278,21 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    */
  public esFormularioSoloLectura: boolean = false;
 
-  public desactivarCatalogoSelectEnPopup: boolean = true;
+/**
+ * Indica si los selectores de catálogos deben estar desactivados en el popup.
+ * Cuando es `true`, los selectores estarán deshabilitados.
+ */
+public desactivarCatalogoSelectEnPopup: boolean = true;
 
-  /**
-   * Constructor del componente.
-   * Inyecta el FormBuilder, el store del trámite y el servicio de terceros.
-   *
-   * @param fb Constructor de formularios para crear los formularios reactivos.
-   * @param sanitario260215Store Store del trámite 260215.
-   * @param service Servicio que proporciona datos de terceros.
-   */
+/**
+ * Constructor del componente.
+ * Inyecta el FormBuilder, el store del trámite, el servicio de terceros y la consulta de estado.
+ *
+ * @param fb Constructor de formularios para crear los formularios reactivos.
+ * @param sanitario260215Store Store del trámite 260215.
+ * @param service Servicio que proporciona datos de terceros.
+ * @param consultaioQuery Consulta para obtener el estado de solo lectura.
+ */
   constructor(
     private fb: FormBuilder,
     private sanitario260215Store: Sanitario260215Store,

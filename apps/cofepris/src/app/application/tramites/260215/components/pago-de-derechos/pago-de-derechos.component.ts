@@ -53,31 +53,34 @@ import { Tramite260215Query } from '../../estados/queries/tramite260215.query';
 export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   /**
    * Formulario de la solicitud.
+   * Contiene los controles reactivos para la captura de datos de pago de derechos.
    */
- public formSolicitud!: FormGroup;
+  public formSolicitud!: FormGroup;
 
   /**
    * Estado de la solicitud de la sección 301.
+   * Almacena el estado actual de la solicitud para el trámite 260215.
    */
   public solicitudState!: Solicitud260215State;
 
   /**
-   * Subject para notificar la destrucción del componente.
+   * Subject para notificar la destrucción del componente y evitar fugas de memoria.
+   * Se utiliza en combinación con takeUntil en las suscripciones.
    */
   private destroyNotifier$: Subject<void> = new Subject();
 
   /**
    * Constante para configurar el input de fecha.
+   * Proporciona la configuración necesaria para el componente de fecha.
    */
- public INPUT_FECHA_CONFIG = INPUT_FECHA_CONFIG;
+  public INPUT_FECHA_CONFIG = INPUT_FECHA_CONFIG;
 
   /**
    * Indica si el formulario está en modo solo lectura.
    * Cuando es `true`, los campos del formulario no se pueden editar.
    */
- public esFormularioSoloLectura: boolean = false;
+  public esFormularioSoloLectura: boolean = false;
 
- 
   /**
    * Constructor del componente PagoDeDerechosComponent.
    *
@@ -109,11 +112,11 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
       .subscribe();
   }
 
-
   /**
-     * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
-     * Luego reinicializa el formulario con los valores actualizados desde el store.
-     */
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   * Si el formulario está en modo solo lectura, lo deshabilita; de lo contrario, lo habilita.
+   */
   guardarDatosFormulario(): void {
     this.inicializarFormulario();
     if (this.esFormularioSoloLectura) {
@@ -123,10 +126,10 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     }
   }
 
-
   /**
-   * Evalúa si se debe inicializar o cargar datos en el formulario.  
-   * Además, obtiene la información del catálogo de mercancía.
+   * Evalúa si se debe inicializar o cargar datos en el formulario.
+   * Si está en modo solo lectura, carga los datos y deshabilita el formulario.
+   * Si no, inicializa el formulario para edición.
    */
   inicializarEstadoFormulario(): void {
     if (this.esFormularioSoloLectura) {
@@ -138,12 +141,12 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
 
   /**
    * Inicializa el formulario de solicitud para el trámite 260215.
-   * 
+   *
    * Este método suscribe al observable `selectSolicitud$` para obtener el estado actual de la solicitud
    * y asignarlo a la propiedad `solicitudState`. Posteriormente, crea el formulario reactivo `formSolicitud`
    * utilizando los valores obtenidos de `solicitudState`, agrupando los campos relacionados con los datos
    * del importador o exportador.
-   * 
+   *
    * El método utiliza `takeUntil` para gestionar la suscripción y evitar fugas de memoria.
    */
   inicializarFormulario(): void {
@@ -217,8 +220,8 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Método para actualizar el banco seleccionado.
-   * @param e {Catalogo} Banco seleccionado.
+   * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
+   * Libera recursos y cancela suscripciones para evitar fugas de memoria.
    */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
@@ -226,12 +229,10 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Método para actualizar el banco seleccionado.
-   * @param e {Catalogo} Banco seleccionado.
+   * Getter para acceder al grupo de datos del importador o exportador dentro del formulario principal.
+   * Facilita el acceso a los controles de datos de pago de derechos.
    */
   get datosImportadorExportador(): FormGroup {
     return this.formSolicitud.get('datosImportadorExportador') as FormGroup;
   }
-
-
 }

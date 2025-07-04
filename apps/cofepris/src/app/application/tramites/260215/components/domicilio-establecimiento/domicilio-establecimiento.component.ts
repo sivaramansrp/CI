@@ -90,40 +90,35 @@ export interface MercanciasTabla {
 export class DomicilioComponent implements OnInit, OnDestroy {
   /**
    * Referencia a los componentes de la lista de fechas.
+   * Permite manipular las listas cruzadas de países y mercancías.
    */
   @ViewChildren(CrosslistComponent) crossList!: QueryList<CrosslistComponent>;
 
   /**
    * Estado de la solicitud.
+   * Almacena el estado actual de la solicitud para el trámite 260215.
    */
   public solicitudState!: Solicitud260215State;
 
   /**
-   * Notificador para destruir observables.
+   * Notificador para destruir observables y evitar fugas de memoria.
+   * Se utiliza en combinación con takeUntil en las suscripciones.
    */
   private destroyNotifier$: Subject<void> = new Subject();
 
   /**
-  * Indica si el formulario está en modo solo lectura.
-  * Cuando es `true`, los campos del formulario no se pueden editar.
-  */
- public esFormularioSoloLectura: boolean = false;
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  public esFormularioSoloLectura: boolean = false;
 
   /**
-   * Constante para el mensaje de alerta.
+   * Constante para la configuración del input de fecha de caducidad.
+   * Proporciona la configuración necesaria para el componente de fecha.
    */
- public INPUT_FECHA_CADUCIDAD_CONFIG = INPUT_FECHA_CADUCIDAD_CONFIG;
+  public INPUT_FECHA_CADUCIDAD_CONFIG = INPUT_FECHA_CADUCIDAD_CONFIG;
   /**
-   * Constructor del componente.
-   * @param fb
-   * @param tramite260215Store
-   * @param tramite260215Query
-   * @param service
-   */
- 
-
-  /**
-   * Constructor de DomicilioEstablecimientoComponent.
+   * Constructor del componente DomicilioComponent.
    *
    * @param fb Instancia de FormBuilder para la creación y gestión de formularios reactivos.
    * @param tramite260215Store Store para el manejo del estado relacionado al trámite 260215.
@@ -142,62 +137,62 @@ export class DomicilioComponent implements OnInit, OnDestroy {
     private service: ServiciosPermisoSanitarioService,
     private consultaioQuery: ConsultaioQuery,
   ) {
-       /**
-         * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
-         *
-         * - Asigna el valor de solo lectura (`readonly`) a la propiedad `esFormularioSoloLectura`.
-         * - Llama a `inicializarEstadoFormulario()` para aplicar configuraciones basadas en el estado recibido.
-         * - La suscripción se cancela automáticamente cuando `destroyNotifier$` emite un valor (para evitar fugas de memoria).
-         */
-        this.consultaioQuery.selectConsultaioState$
-        .pipe(
-          takeUntil(this.destroyNotifier$),
-          map((seccionState)=>{
-            this.esFormularioSoloLectura = seccionState.readonly; 
-          })
-        )
-        .subscribe()
-      }
-
-
-/**
-   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
-   * Luego reinicializa el formulario con los valores actualizados desde el store.
-   */
-  guardarDatosFormulario(): void {
-      this.inicializarFormulario();
-      if (this.esFormularioSoloLectura) {
-        this.domicilio.disable();
-      } else if (!this.esFormularioSoloLectura) {
-        this.domicilio.enable();
-      }
+    /**
+     * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
+     *
+     * - Asigna el valor de solo lectura (`readonly`) a la propiedad `esFormularioSoloLectura`.
+     * - Llama a `inicializarEstadoFormulario()` para aplicar configuraciones basadas en el estado recibido.
+     * - La suscripción se cancela automáticamente cuando `destroyNotifier$` emite un valor (para evitar fugas de memoria).
+     */
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+        })
+      )
+      .subscribe();
   }
 
+  /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   * Si el formulario está en modo solo lectura, lo deshabilita; de lo contrario, lo habilita.
+   */
+  guardarDatosFormulario(): void {
+    this.inicializarFormulario();
+    if (this.esFormularioSoloLectura) {
+      this.domicilio.disable();
+    } else if (!this.esFormularioSoloLectura) {
+      this.domicilio.enable();
+    }
+  }
 
   /**
-   * Evalúa si se debe inicializar o cargar datos en el formulario.  
-   * Además, obtiene la información del catálogo de mercancía.
+   * Evalúa si se debe inicializar o cargar datos en el formulario.
+   * Si está en modo solo lectura, carga los datos y deshabilita el formulario.
+   * Si no, inicializa el formulario para edición.
    */
   inicializarEstadoFormulario(): void {
     if (this.esFormularioSoloLectura) {
       this.guardarDatosFormulario();
     } else {
       this.inicializarFormulario();
-    }  
+    }
   }
 
-/**
- * Inicializa los formularios reactivos utilizados en el componente, así como la obtención de datos necesarios para su funcionamiento.
- * 
- * - Suscribe al observable `selectSolicitud$` para obtener y asignar el estado de la solicitud actual.
- * - Llama a los métodos para obtener la lista de estados, la tabla de datos y los datos de mercancías.
- * - Configura los formularios `domicilio`, `formAgente` y `formMercancias` con sus respectivos controles y validadores.
- * 
- * @remarks
- * Este método debe ser llamado durante la inicialización del componente para asegurar que los formularios y datos requeridos estén disponibles.
- */
- inicializarFormulario(): void {
-       this.tramite260215Query.selectSolicitud$
+  /**
+   * Inicializa los formularios reactivos utilizados en el componente, así como la obtención de datos necesarios para su funcionamiento.
+   *
+   * - Suscribe al observable `selectSolicitud$` para obtener y asignar el estado de la solicitud actual.
+   * - Llama a los métodos para obtener la lista de estados, la tabla de datos y los datos de mercancías.
+   * - Configura los formularios `domicilio`, `formAgente` y `formMercancias` con sus respectivos controles y validadores.
+   *
+   * @remarks
+   * Este método debe ser llamado durante la inicialización del componente para asegurar que los formularios y datos requeridos estén disponibles.
+   */
+  inicializarFormulario(): void {
+    this.tramite260215Query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
@@ -252,127 +247,133 @@ export class DomicilioComponent implements OnInit, OnDestroy {
 
   /**
    * Grupo de formularios principal.
-   * @property {FormGroup} domicilio
+   * Contiene los controles reactivos del formulario de domicilio del establecimiento.
    */
- public domicilio!: FormGroup;
+  public domicilio!: FormGroup;
 
   /**
    * Grupo de formularios para el agente aduanal.
+   * Contiene los controles reactivos del formulario de agente aduanal.
    */
- public formAgente!: FormGroup;
+  public formAgente!: FormGroup;
 
   /**
-   * Grupo de formularios para las mercancias.
+   * Grupo de formularios para las mercancías.
+   * Contiene los controles reactivos del formulario de mercancías.
    */
-public formMercancias!: FormGroup;
+  public formMercancias!: FormGroup;
 
   /**
    * Control de formulario para la aduanasDeEntradaFecha.
+   * Permite gestionar la fecha de entrada de aduanas.
    */
- public aduanasDeEntradaFecha: FormControl = new FormControl('');
+  public aduanasDeEntradaFecha: FormControl = new FormControl('');
 
   /**
    * Control de formulario para la fecha aduanasDeEntradaFechaSeleccionada.
+   * Permite gestionar la fecha seleccionada de entrada de aduanas.
    */
- public aduanasDeEntradaFechaSeleccionada: FormControl = new FormControl('');
+  public aduanasDeEntradaFechaSeleccionada: FormControl = new FormControl('');
 
   /**
-   * Control de formulario para la aduanasDeEntradaFechaSeleccionada.
+   * Lista de estados obtenida del servicio.
+   * Se utiliza para poblar el catálogo de estados en el formulario.
    */
- public estado: Catalogo[] = [];
+  public estado: Catalogo[] = [];
 
   /**
-   * Lista de paises.
+   * Lista de países utilizada en las listas cruzadas.
    */
   public crosListaDePaises = CROSLISTA_DE_PAISES;
 
   /**
-   * Tabla de selección de checkbox.
+   * Tabla de selección de checkbox para mercancías.
    */
- public tablaSeleccionCheckbox: TablaSeleccion = TablaSeleccion.CHECKBOX;
+  public tablaSeleccionCheckbox: TablaSeleccion = TablaSeleccion.CHECKBOX;
 
   /**
-   * Tabla de selección de radio.
+   * Tabla de selección de radio para NICO.
    */
- public nicoTabla: ConfiguracionColumna<NicoInfo>[] = NICO_TABLA;
+  public nicoTabla: ConfiguracionColumna<NicoInfo>[] = NICO_TABLA;
 
   /**
-   * Datos de la tabla de selección de radio.
+   * Datos de la tabla de selección de radio para NICO.
    */
- public nicoTablaDatos: NicoInfo[] = [];
+  public nicoTablaDatos: NicoInfo[] = [];
 
   /**
-   * Tabla de selección de checkbox.
+   * Tabla de selección de checkbox para mercancías.
    */
- public mercanciasTabla: ConfiguracionColumna<MercanciasInfo>[] = MERCANCIAS_DATA;
+  public mercanciasTabla: ConfiguracionColumna<MercanciasInfo>[] = MERCANCIAS_DATA;
 
   /**
-   * Datos de la tabla de selección de checkbox.
+   * Datos de la tabla de selección de checkbox para mercancías.
    */
- public mercanciasTablaDatos: MercanciasInfo[] = [];
-
-  /**
-   * Lista de aduanas de entrada seleccionadas.
-   */
- public aduanasDeEntradaSeleccionadas: string[] = [];
+  public mercanciasTablaDatos: MercanciasInfo[] = [];
 
   /**
    * Lista de aduanas de entrada seleccionadas.
    */
- public aduanasDeEntradaDatos: string[] = [];
+  public aduanasDeEntradaSeleccionadas: string[] = [];
+
+  /**
+   * Lista de aduanas de entrada datos.
+   */
+  public aduanasDeEntradaDatos: string[] = [];
 
   /**
    * Indica si la sección es colapsable.
-   * @property {boolean} colapsable
+   * Permite alternar la visualización de la sección principal del formulario.
    */
- public colapsable: boolean = false;
+  public colapsable: boolean = false;
 
   /**
    * Indica si la sección es colapsableDuos.
-   * @property {boolean} colapsableDuos
+   * Permite alternar la visualización de la segunda sección colapsable.
    */
-public colapsableDuos: boolean = false;
+  public colapsableDuos: boolean = false;
 
   /**
    * Indica si la sección es colapsableTres.
-   * @property {boolean} colapsableTres
+   * Permite alternar la visualización de la tercera sección colapsable.
    */
- public colapsableTres: boolean = false;
+  public colapsableTres: boolean = false;
 
   /**
-   * Lista de rangos de días seleccionarOrigenDelPais.
+   * Lista de rangos de días para seleccionar el origen del país.
    */
- public seleccionarOrigenDelPais: string[] = this.crosListaDePaises;
+  public seleccionarOrigenDelPais: string[] = this.crosListaDePaises;
 
   /**
-   * Lista de rangos de días seleccionarOrigenDelPaisDuos.
+   * Lista de rangos de días para seleccionar el origen del país (segunda lista).
    */
- public seleccionarOrigenDelPaisDuos: string[] = this.crosListaDePaises;
+  public seleccionarOrigenDelPaisDuos: string[] = this.crosListaDePaises;
 
   /**
-   * Lista de rangos de días seleccionarOrigenDelPaisTres.
+   * Lista de rangos de días para seleccionar el origen del país (tercera lista).
    */
- public seleccionarOrigenDelPaisTres: string[] = this.crosListaDePaises;
+  public seleccionarOrigenDelPaisTres: string[] = this.crosListaDePaises;
 
   /**
-   * Etiqueta de la lista de fechas.
-   * */
+   * Etiqueta de la lista de fechas para países de procedencia.
+   * Define los textos de los lados izquierdo y derecho de la lista cruzada.
+   */
   public paisDeProcedenciaLabel: CrossListLable = {
     tituluDeLaIzquierda: 'País de procedencia',
     derecha: 'País(es) seleccionados',
   };
 
-  
   /**
    * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
    * Llama a la función `inicializarEstadoFormulario` para configurar el estado inicial del formulario.
    */
-  ngOnInit():void {
-   this.inicializarEstadoFormulario();
+  ngOnInit(): void {
+    this.inicializarEstadoFormulario();
   }
 
   /**
-   * Botones de acción disponibles para gestionar las listas de fechas.
+   * Botones de acción disponibles para gestionar las listas de fechas (primer grupo).
+   * Permiten agregar o quitar países de la lista cruzada principal.
    */
   readonly paisDeProcedenciaBotones = [
     {
@@ -402,7 +403,8 @@ public colapsableDuos: boolean = false;
   ];
 
   /**
-   * Botones de acción disponibles para gestionar las listas de fechas.
+   * Botones de acción disponibles para gestionar las listas de fechas (segundo grupo).
+   * Permiten agregar o quitar países de la segunda lista cruzada.
    */
   readonly paisDeProcedenciaBotonesDuos = [
     {
@@ -432,7 +434,8 @@ public colapsableDuos: boolean = false;
   ];
 
   /**
-   * Botones de acción disponibles para gestionar las listas de fechas.
+   * Botones de acción disponibles para gestionar las listas de fechas (tercer grupo).
+   * Permiten agregar o quitar países de la tercera lista cruzada.
    */
   readonly paisDeProcedenciaBotonesTres = [
     {
@@ -462,8 +465,7 @@ public colapsableDuos: boolean = false;
   ];
 
   /**
-   * Método para obtener el valor de la fecha seleccionada.
-   * @param event
+   * Método para obtener la lista de estados desde el servicio y asignarla al catálogo de estados.
    */
   obtenerEstadoList(): void {
     this.service
@@ -475,7 +477,7 @@ public colapsableDuos: boolean = false;
   }
 
   /**
-   * Método para obtener el valor de la fecha seleccionada.
+   * Método para obtener los datos de la tabla NICO desde el servicio y asignarlos a la tabla correspondiente.
    */
   obtenerTablaDatos(): void {
     this.service
@@ -487,7 +489,7 @@ public colapsableDuos: boolean = false;
   }
 
   /**
-   * Método para obtener el valor de la fecha seleccionada.
+   * Método para obtener los datos de la tabla de mercancías desde el servicio y asignarlos a la tabla correspondiente.
    */
   obtenerMercanciasDatos(): void {
     this.service
@@ -499,8 +501,8 @@ public colapsableDuos: boolean = false;
   }
 
   /**
-   * Método para obtener el valor de la fecha seleccionada.
-   * @param event
+   * Método para manejar el cambio del checkbox de aviso y habilitar/deshabilitar el campo de licencia sanitaria.
+   * @param event Evento de cambio del checkbox.
    */
   onAvisoCheckboxChange(event: Event): void {
     const CHECKBOX = event.target as HTMLInputElement;
@@ -512,26 +514,26 @@ public colapsableDuos: boolean = false;
   }
 
   /**
-   * Alterna el estado colapsable de la sección del formulario.
-   * @method mostrar_colapsable
+   * Alterna el estado colapsable de la sección principal del formulario.
+   * Permite mostrar u ocultar la sección principal.
    */
-  mostrar_colapsable():void {
+  mostrar_colapsable(): void {
     this.colapsable = !this.colapsable;
   }
 
   /**
-   * Alterna el estado colapsable de la sección del formulario.
-   * @method mostrar_colapsableDuos
+   * Alterna el estado colapsable de la segunda sección del formulario.
+   * Permite mostrar u ocultar la segunda sección.
    */
-  mostrar_colapsableDuos():void {
+  mostrar_colapsableDuos(): void {
     this.colapsableDuos = !this.colapsableDuos;
   }
 
   /**
-   * Alterna el estado colapsable de la sección del formulario.
-   * @method mostrar_colapsableTres
+   * Alterna el estado colapsable de la tercera sección del formulario.
+   * Permite mostrar u ocultar la tercera sección.
    */
-  mostrar_colapsableTres():void {
+  mostrar_colapsableTres(): void {
     this.colapsableTres = !this.colapsableTres;
   }
   /**
@@ -555,7 +557,7 @@ public colapsableDuos: boolean = false;
 
   /**
    * Método del ciclo de vida de Angular que se llama cuando el componente se destruye.
-   * Este método completa el observable destroyNotifier$ para cancelar las suscripciones activas.
+   * Libera recursos y cancela suscripciones para evitar fugas de memoria.
    */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
