@@ -53,19 +53,6 @@ describe('FormularioOperacionComercialComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  // it('should initialize the form with default values', () => {
-  //   expect(component.formularioOperacionForm).toBeDefined();
-  //   expect(component.formularioOperacionForm.controls['noLicenciaSanitaria'].value).toBe('');
-  //   expect(component.formularioOperacionForm.controls['regimen'].value).toBe('');
-  // });
-
-  // it('should validate "regimen" as a required field', () => {
-  //   const regimenControl = component.formularioOperacionForm.controls['regimen'];
-  //   expect(regimenControl.valid).toBeFalsy();
-  //   regimenControl.setValue('Valid Value');
-  //   expect(regimenControl.valid).toBeTruthy();
-  // });
-
   it('debe cargar datos de clave desde el servicio', () => {
     component.actualizarEstado();
     expect(component.clave).toEqual([{ id: 1, descripcion: 'Mock Clave' }]);
@@ -91,16 +78,6 @@ describe('FormularioOperacionComercialComponent', () => {
     component.alternarSoloLectura(event);
     expect(component.esSoloLectura).toBe(false);
   });
-
-  // it('should call setRegimen and setEntradas on updateRegimen/updateEntradas', () => {
-  //   const store = TestBed.inject('Tramite260212Store' as any) as MockTramite260212Store;
-  //   component.formularioOperacionForm.get('regimen')?.setValue('testRegimen');
-  //   component.formularioOperacionForm.get('entradas')?.setValue('testEntradas');
-  //   component.updateRegimen();
-  //   component.updateEntradas();
-  //   expect(store.setRegimen).toHaveBeenCalledWith('testRegimen');
-  //   expect(store.setEntradas).toHaveBeenCalledWith('testEntradas');
-  // });
 
   it('should disable form in readonly mode', () => {
     component.formularioOperacionForm.enable();

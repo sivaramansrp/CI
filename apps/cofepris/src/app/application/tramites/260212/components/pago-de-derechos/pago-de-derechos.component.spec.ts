@@ -273,17 +273,3 @@ describe('PagoDeDerechosComponent', () => {
     });
   
   });
-
-  // it('should construct with readonly false and call actualizarEstado', () => {
-  //   mockConsultaioQuery.selectConsultaioState$ = of({ readonly: false });
-  //   const spy = jest.spyOn(PagoDeDerechosComponent.prototype, 'inicializarEstadoFormulario');
-  //   const cmp = new PagoDeDerechosComponent(
-  //     TestBed.inject(FormBuilder),
-  //     mockPagoDeDerechosService,
-  //     mockTramite260212Store,
-  //     mockTramite260212Query,
-  //     mockConsultaioQuery
-  //   );
-  //   expect(spy).toHaveBeenCalled();
-  //   spy.mockRestore();
-  // });

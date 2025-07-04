@@ -22,21 +22,6 @@ describe('SolicitanteComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  // it('should initialize solicitudForm with correct controls and disabled state', () => {
-  //   const form = component.solicitudForm;
-
- 
-  //   expect(form.contains('rfc')).toBe(true);
-  //   expect(form.contains('denominacion')).toBe(true);
-  //   expect(form.contains('actividadEconomica')).toBe(true);
-  //   expect(form.contains('correoElectronico')).toBe(true);
-
-  //   expect(form.get('rfc')?.disabled).toBe(true);;
-  //   expect(form.get('denominacion')?.disabled).toBe(true);
-  //   expect(form.get('actividadEconomica')?.disabled).toBe(true);
-  //   expect(form.get('correoElectronico')?.disabled).toBe(true);
-  // });
-
   it('debería establecer los valores predeterminados de los controles del formulario correctamente', () => {
     component.establecerValoresDeFormulario();
 
