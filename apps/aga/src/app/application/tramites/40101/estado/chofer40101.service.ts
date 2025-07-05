@@ -180,11 +180,13 @@ export class Chofer40101Service {
    *
    * @returns {Observable<Catalogo[]>} Un observable que emite la lista de estados.
    */
-  getEstadosPorPais(): Observable<Catalogo[]> {
+  getEstadosPorPais(id: number): Observable<Catalogo[]> {
     return this.http.get<Catalogo[]>('/assets/json/40101/estado.json');
   }
 
-  getMunicipiosPorEstado(): Observable<Catalogo[]> {
+  getMunicipiosPorEstado(
+    claveEstado: number
+  ): Observable<Catalogo[]> {
     return this.http.get<Catalogo[]>(`/assets/json/40101/municipio.json`);
   }
   /**
@@ -193,7 +195,9 @@ export class Chofer40101Service {
    * @param claveMunicipio La clave del municipio.
    * @returns Un observable con la lista de colonias.
    */
-  getColoniasPorMunicipio(): Observable<Catalogo[]> {
+  getColoniasPorMunicipio(
+        municipiosId: number
+  ): Observable<Catalogo[]> {
     return this.http.get<Catalogo[]>(
       `/assets/json/40101/colonia.json`
     );
