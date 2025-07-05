@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { FirmaElectronicaComponent } from '@libs/shared/data-access-user/src';
 
 /**
  * @class PasoDosComponent
@@ -8,9 +7,7 @@ import { FirmaElectronicaComponent } from '@libs/shared/data-access-user/src';
  */
 @Component({
   selector: 'app-paso-dos',
-  standalone: true,
   templateUrl: './paso-dos.component.html',
   styleUrl: './paso-dos.component.scss',
-  imports: [FirmaElectronicaComponent],
 })
 export class PasoDosComponent {}

@@ -7,7 +7,7 @@
  */
 export interface BodyEstadoPedimento {
     aduana: number;
-    patente: number;
+    patente: string;
     pedimento: number;
 }
 
@@ -35,7 +35,7 @@ export interface EstadoPedimentoResponse {
  * @property {string} pedimento_valido - Indica si el pedimento es válido.
  */
 export interface EstadoPedimento {
-    patente: number;
+    patente: string;
     pedimento: number;
     aduana: number;
     estado_pedimento: string;

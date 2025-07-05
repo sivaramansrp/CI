@@ -1,5 +1,5 @@
-// @ts-nocheck
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -12,40 +12,33 @@ import { RegistrarSolicitudMcpService } from '../../services/registrar-solicitud
 import { FormBuilder } from '@angular/forms';
 import { Solicitud260702Store } from '../../estados/tramites260702.store';
 import { Solicitud260702Query } from '../../estados/tramites260702.query';
+import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 
-class MockRegistrarSolicitudMcpService {
-  getBancoData() {
-    return observableOf([]); // Mocked response for getBancoData
-  }
+@Injectable()
+class MockRegistrarSolicitudMcpService {}
 
-  getTramitesAsociados() {
-    return observableOf([]); // Mocked response for getTramitesAsociados
-  }
-}
-class MockSolicitud260702Store {
-  metodoNombre() {
-    return jest.fn();
-  }
-}
+@Injectable()
+class MockSolicitud260702Store {}
 
-class MockSolicitud260702Query {
-  selectSolicitud$ = observableOf({});
-}
+@Injectable()
+class MockSolicitud260702Query {}
+
+
 describe('PagoDeDerechoComponent', () => {
-  let fixture;
-  let component;
+  let fixture: ComponentFixture<PagoDeDerechoComponent>;
+  let component: { ngOnDestroy: () => void; pagoDeDerechosForm: { get?: any; disable?: any; enable?: any; reset?: any; }; pagoDeDerechos: any; inicializarEstadoFormulario: jest.Mock<any, any, any> | (() => void); ngOnInit: () => void; guardarDatosFormulario: jest.Mock<any, any, any> | (() => void); inicializarFormulario: jest.Mock<any, any, any> | (() => void); solicitud260702Query: { selectSolicitud$?: any; }; crearFormulario: jest.Mock<any, any, any> | (() => void); getBancoData: jest.Mock<any, any, any> | (() => void); registrarsolicitudmcp: { getBancoData?: any; }; bancoData: { catalogos?: any; }; fb: { group?: any; }; pagoDeDerechosState: { clavedereferencia?: any; cadenadeladependencia?: any; banco?: any; llavedepago?: any; fechadepago?: any; importedepago?: any; }; solicitud260702Store: { setFechadePago?: any; metodoNombre?: any; }; seleccionarFechaInicio: (arg0: {}) => void; clearForm: () => void; setValoresStore: (arg0: { get: () => { value: {}; }; }, arg1: {}, arg2: {}) => void; destroyed$: { next?: any; complete?: any; }; };
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [ FormsModule, ReactiveFormsModule,PagoDeDerechoComponent ],
-    
       schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
       providers: [
         { provide: RegistrarSolicitudMcpService, useClass: MockRegistrarSolicitudMcpService },
         FormBuilder,
         ChangeDetectorRef,
         { provide: Solicitud260702Store, useClass: MockSolicitud260702Store },
-        { provide: Solicitud260702Query, useClass: MockSolicitud260702Query }
+        { provide: Solicitud260702Query, useClass: MockSolicitud260702Query },
+        ConsultaioQuery
       ]
     }).overrideComponent(PagoDeDerechoComponent, {
 
@@ -55,7 +48,8 @@ describe('PagoDeDerechoComponent', () => {
   });
 
   afterEach(() => {
-   
+    component.ngOnDestroy = function() {};
+    fixture.destroy();
   });
 
   it('should run #constructor()', async () => {
@@ -66,18 +60,26 @@ describe('PagoDeDerechoComponent', () => {
     component.pagoDeDerechosForm = component.pagoDeDerechosForm || {};
     component.pagoDeDerechosForm.get = jest.fn();
     const pagoDeDerechos = component.pagoDeDerechos;
-    expect(component.pagoDeDerechosForm.get).toHaveBeenCalled();
+     expect(component.pagoDeDerechosForm.get).toHaveBeenCalled();
   });
 
   it('should run #ngOnInit()', async () => {
+    component.inicializarEstadoFormulario = jest.fn();
+    component.ngOnInit();
+     expect(component.inicializarEstadoFormulario).toHaveBeenCalled();
+  });
+
+
+  it('should run #inicializarFormulario()', async () => {
     component.solicitud260702Query = component.solicitud260702Query || {};
     component.solicitud260702Query.selectSolicitud$ = observableOf({});
-    component.createForm = jest.fn();
+    component.crearFormulario = jest.fn();
     component.getBancoData = jest.fn();
-    component.ngOnInit();
-    expect(component.createForm).toHaveBeenCalled();
-    expect(component.getBancoData).toHaveBeenCalled();
+    component.inicializarFormulario();
+     expect(component.crearFormulario).toHaveBeenCalled();
+     expect(component.getBancoData).toHaveBeenCalled();
   });
+
 
   it('should run #getBancoData()', async () => {
     component.registrarsolicitudmcp = component.registrarsolicitudmcp || {};
@@ -85,10 +87,10 @@ describe('PagoDeDerechoComponent', () => {
     component.bancoData = component.bancoData || {};
     component.bancoData.catalogos = 'catalogos';
     component.getBancoData();
-    expect(component.registrarsolicitudmcp.getBancoData).toHaveBeenCalled();
+     expect(component.registrarsolicitudmcp.getBancoData).toHaveBeenCalled();
   });
 
-  it('should run #createForm()', async () => {
+  it('should run #crearFormulario()', async () => {
     component.fb = component.fb || {};
     component.fb.group = jest.fn();
     component.pagoDeDerechosState = component.pagoDeDerechosState || {};
@@ -98,27 +100,36 @@ describe('PagoDeDerechoComponent', () => {
     component.pagoDeDerechosState.llavedepago = 'llavedepago';
     component.pagoDeDerechosState.fechadepago = 'fechadepago';
     component.pagoDeDerechosState.importedepago = 'importedepago';
-    component.createForm();
-    expect(component.fb.group).toHaveBeenCalled();
+    component.crearFormulario();
+     expect(component.fb.group).toHaveBeenCalled();
+  });
+
+  it('should run #seleccionarFechaInicio()', async () => {
+    component.solicitud260702Store = component.solicitud260702Store || {};
+    component.solicitud260702Store.setFechadePago = jest.fn();
+    component.seleccionarFechaInicio({});
+     expect(component.solicitud260702Store.setFechadePago).toHaveBeenCalled();
   });
 
   it('should run #clearForm()', async () => {
     component.pagoDeDerechosForm = component.pagoDeDerechosForm || {};
     component.pagoDeDerechosForm.reset = jest.fn();
     component.clearForm();
-    expect(component.pagoDeDerechosForm.reset).toHaveBeenCalled();
+     expect(component.pagoDeDerechosForm.reset).toHaveBeenCalled();
   });
 
   it('should run #setValoresStore()', async () => {
-    component.solicitud260702Store = component.solicitud260702Store || {};
-    component.solicitud260702Store['metodoNombre'] = jest.fn(); // Mock metodoNombre as a function
-  
-    const mockForm = {
-      get: jest.fn().mockReturnValue({ value: 'mockValue' }), // Mock form.get(campo)?.value
+    component.solicitud260702Store = {
+      metodoNombre: jest.fn(),
     };
   
-    component.setValoresStore(mockForm, 'campo', 'metodoNombre');
-    expect(component.solicitud260702Store['metodoNombre']).toHaveBeenCalledWith('mockValue');
+    const mockForm = {
+      get: jest.fn().mockReturnValue({ value: 'mockValue' }),
+    };
+  
+    component.setValoresStore(mockForm as any, 'campo', 'metodoNombre');
+  
+    expect(component.solicitud260702Store.metodoNombre).toHaveBeenCalledWith('mockValue');
   });
 
   it('should run #ngOnDestroy()', async () => {
@@ -126,8 +137,8 @@ describe('PagoDeDerechoComponent', () => {
     component.destroyed$.next = jest.fn();
     component.destroyed$.complete = jest.fn();
     component.ngOnDestroy();
-    expect(component.destroyed$.next).toHaveBeenCalled();
-    expect(component.destroyed$.complete).toHaveBeenCalled();
+     expect(component.destroyed$.next).toHaveBeenCalled();
+     expect(component.destroyed$.complete).toHaveBeenCalled();
   });
 
 });

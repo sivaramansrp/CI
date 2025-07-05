@@ -47,6 +47,10 @@ import { ConsultaResponsableService } from '../../../../core/services/5701/consu
 import { ResponsablesDespacho } from '../../../../core/models/5701/tramite5701.model';
 import { TIPO_GAFETE } from '../../../../constantes/5701/constantes-tramite';
 import { Tramite5701Query } from '../../../../core/queries/tramite5701.query';
+
+/**
+ * Componente para agregar personas responsables de despacho en un formulario.
+ */
 @Component({
   selector: 'agrega-personas',
   standalone: true,
@@ -61,20 +65,31 @@ import { Tramite5701Query } from '../../../../core/queries/tramite5701.query';
   templateUrl: './agrega-personas.component.html',
   styleUrl: './agrega-personas.component.scss',
 })
+/**
+ * Este componente permite agregar personas responsables de despacho a un formulario.
+ * Incluye funcionalidades para buscar responsables por gafete, agregar nuevos responsables,
+ */
 export class AgregaPersonasComponent implements OnInit, OnChanges, OnDestroy {
+  /**
+   * Lista de personas responsables de despacho seleccionadas.
+   * Esta propiedad se utiliza para mostrar los responsables de despacho que ya han sido seleccionados.
+   */
   @Input() personasResponsablesDespachoSeleccionados: ResponsablesDespacho[] =
     [];
 
+  /**
+   * Emite un evento cuando la lista de responsables de despacho cambia.
+   * Este evento se utiliza para notificar a otros componentes que la lista de responsables ha sido
+   */
   @Output() responsablesDespachoChange: EventEmitter<ResponsablesDespacho[]> =
     new EventEmitter<ResponsablesDespacho[]>();
+
   /**
-   * @description
    * Configuración de la tabla de responsables del despacho.
    */
   tablaSeleccion = TablaSeleccion;
 
   /**
-   * @description
    * Encabezado de la tabla de responsables del despacho.
    */
   encabezadoDeTablaResponsablesDespacho: ConfiguracionColumna<ResponsablesDespacho>[] =
@@ -122,22 +137,31 @@ export class AgregaPersonasComponent implements OnInit, OnChanges, OnDestroy {
   private destroyNotifier$: Subject<void> = new Subject();
 
   /**
-   * @descripcion Notificación para mostrar mensajes al usuario.
+   * Notificación para mostrar mensajes al usuario.
    */
   public nuevaNotificacion!: Notificacion;
 
   /**
-   * @description
+   *
    * Arreglo para almacenar los terceros seleccionados.
    */
   responsableSeleccionado: ResponsablesDespacho[] = [];
 
   /**
-   * @description
+   *
    * Clase para indicar si el formulario es inválido.
    */
   claseFormaNovalida = false;
 
+  /**
+   * Constructor del componente `AgregaPersonasComponent`.
+   * Se inyectan los servicios necesarios para la funcionalidad del componente.
+   *   fb
+   *   validacionesService
+   *   tramite5701Query
+   *   tramite5701Store
+   *   consultaResponsableService
+   */
   constructor(
     private fb: FormBuilder,
     private validacionesService: ValidacionesFormularioService,
@@ -146,6 +170,10 @@ export class AgregaPersonasComponent implements OnInit, OnChanges, OnDestroy {
     private consultaResponsableService: ConsultaResponsableService
   ) {}
 
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * Se suscribe al observable `selectSolicitud$` del `tramite5701Query
+   */
   ngOnInit(): void {
     this.tramite5701Query.selectSolicitud$
       .pipe(
@@ -161,6 +189,10 @@ export class AgregaPersonasComponent implements OnInit, OnChanges, OnDestroy {
     }
   }
 
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta cuando se detectan cambios en las propiedades de entrada del componente.
+   * changes : SimpleChanges - Objeto que contiene los cambios detectados en las propiedades de entrada.
+   */
   ngOnChanges(changes: SimpleChanges): void {
     if (
       changes['personasResponsablesDespachoSeleccionados'] &&
@@ -175,8 +207,8 @@ export class AgregaPersonasComponent implements OnInit, OnChanges, OnDestroy {
   /**
    * Verifica si un campo específico en el formulario de persona es válido.
    *
-   * @param {string} field - El nombre del campo a validar.
-   * @returns {boolean | null} - Devuelve `true` si el campo es válido, `false` si no lo es,
+   *   {string} field - El nombre del campo a validar.
+   * {boolean | null} - Devuelve `true` si el campo es válido, `false` si no lo es,
    * o `null` si no se puede determinar la validez.
    */
   isValid(field: string): boolean | null | undefined {
@@ -187,7 +219,7 @@ export class AgregaPersonasComponent implements OnInit, OnChanges, OnDestroy {
   /**
    * Verifica si el gafete es válido.
    *
-   * @returns {boolean | null} - Devuelve `true` si el gafete tiene errores y ha sido tocado,
+   * {boolean | null} - Devuelve `true` si el gafete tiene errores y ha sido tocado,
    *                             `false` si no tiene errores o no ha sido tocado,
    *                             o `null` si no se puede determinar.
    */
@@ -200,8 +232,6 @@ export class AgregaPersonasComponent implements OnInit, OnChanges, OnDestroy {
    *
    * - Si el valor del gafete está vacío, muestra un modal con un mensaje de error.
    * - Si no se encuentra una persona asociada al gafete, muestra un modal con un mensaje de error y habilita los campos del formulario.
-   *
-   * @returns {void} No retorna ningún valor.
    */
   buscarGafete(): void {
     const GAFETE = this.gafeteRespoDespacho.value;
@@ -272,8 +302,6 @@ export class AgregaPersonasComponent implements OnInit, OnChanges, OnDestroy {
    * - Habilita el control.
    * - Establece los validadores `Validators.required` y `Validators.maxLength(30)`.
    * - Actualiza el estado y la validez del control.
-   *
-   * @returns {void}
    */
   habilitarCamposFormulario(): void {
     Object.keys(this.personaForm.controls).forEach((campo) => {
@@ -292,8 +320,6 @@ export class AgregaPersonasComponent implements OnInit, OnChanges, OnDestroy {
    * - Si ya hay 5 personas en la lista, muestra un modal con un mensaje de advertencia.
    * - Si todas las validaciones pasan, crea un objeto 'responsable' con los datos del formulario y lo agrega a la lista de personas.
    * - Resetea el campo 'gafete' y el formulario 'personaForm' después de agregar la persona.
-   *
-   * @returns {void}
    */
   agregarPersona(): void {
     this.gafeteRespoDespacho.setValidators([
@@ -392,9 +418,9 @@ export class AgregaPersonasComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     this.gafeteRespoDespacho.setValue('');
-    
+
     responsable = null;
-    
+
     this.gafeteRespoDespacho.reset();
     this.claseFormaNovalida = false;
     this.personaForm.get('nombreRespoDespacho')?.disable();
@@ -406,10 +432,9 @@ export class AgregaPersonasComponent implements OnInit, OnChanges, OnDestroy {
   /**
    * Establece los valores en el store de tramite5701.
    *
-   * @param {FormGroup} form - El formulario del cual se obtiene el valor.
-   * @param {string} campo - El nombre del campo del formulario cuyo valor se va a obtener.
-   * @param {string} metodoNombre - El nombre del método en el store que se va a invocar con el valor del campo.
-   * @returns {void}
+   *   {FormGroup} form - El formulario del cual se obtiene el valor.
+   *   {string} campo - El nombre del campo del formulario cuyo valor se va a obtener.
+   *   {string} metodoNombre - El nombre del método en el store que se va a invocar con el valor del campo.
    */
   setValoresStore(
     form: FormGroup,
@@ -423,7 +448,6 @@ export class AgregaPersonasComponent implements OnInit, OnChanges, OnDestroy {
   /**
    * Elimina los terceros seleccionados del arreglo `personas`.
    * Si no hay terceros seleccionados, muestra una notificación de aviso.
-   * @returns {void}
    */
   eliminarResponsables(): void {
     if (this.responsableSeleccionado.length === 0) {
@@ -464,7 +488,6 @@ export class AgregaPersonasComponent implements OnInit, OnChanges, OnDestroy {
   /**
    * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
    * Notifica y completa el observable `destroyNotifier$` para limpiar suscripciones.
-   * @returns {void}
    */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();

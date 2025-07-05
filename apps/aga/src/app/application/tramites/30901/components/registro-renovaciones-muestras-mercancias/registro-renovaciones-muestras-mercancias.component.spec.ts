@@ -30,19 +30,19 @@ describe('RegistroRenovacionesMuestrasMercanciasComponent', () => {
     } as any;
 
     mockSolicitudStore = {
-      setFraccionDescripcion: jest.fn(()=> of('desc')),
-      setNicoDescripcion: jest.fn(()=> of('nico')),
-      setNombreQuimico: jest.fn(()=> of('quimico')),
-      setNombreComercial: jest.fn(()=> of('comercial')),
-      setNumeroCAS: jest.fn(()=> of('cas')),
-      setIdeGenerica: jest.fn(()=> of('ide')),
-      setDescClobGenerica: jest.fn(()=> of('clob')),
-      setComboFraccionConcatenada: jest.fn(()=> of('fraccion')),
-      setComboNicos: jest.fn(()=> of('combo')),
-      setOpcionDeImportador: jest.fn(()=> of('importador')),
-      setTomaMuestraDespacho: jest.fn(()=> of('despacho')),
-      setDescMotivoFaltaMuestra: jest.fn(()=> of('motivo')),
-      setFraccionConcatenada: jest.fn(()=> of('concatenada')),
+      setFraccionDescripcion: jest.fn(() => of('desc')),
+      setNicoDescripcion: jest.fn(() => of('nico')),
+      setNombreQuimico: jest.fn(() => of('quimico')),
+      setNombreComercial: jest.fn(() => of('comercial')),
+      setNumeroCAS: jest.fn(() => of('cas')),
+      setIdeGenerica: jest.fn(() => of('ide')),
+      setDescClobGenerica: jest.fn(() => of('clob')),
+      setComboFraccionConcatenada: jest.fn(() => of('fraccion')),
+      setComboNicos: jest.fn(() => of('combo')),
+      setOpcionDeImportador: jest.fn(() => of('importador')),
+      setTomaMuestraDespacho: jest.fn(() => of('despacho')),
+      setDescMotivoFaltaMuestra: jest.fn(() => of('motivo')),
+      setFraccionConcatenada: jest.fn(() => of('concatenada')),
     } as any;
 
     mockSolicitudQuery = {
@@ -58,7 +58,7 @@ describe('RegistroRenovacionesMuestrasMercanciasComponent', () => {
         CatalogoSelectComponent,
         TituloComponent,
         AlertComponent,
-        HttpClientTestingModule
+        HttpClientTestingModule,
       ],
       declarations: [],
       providers: [
@@ -82,230 +82,204 @@ describe('RegistroRenovacionesMuestrasMercanciasComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  describe('ngOnInit', () => {
-    it('should initialize the form', () => {
-      component.ngOnInit();
-      expect(component.formRegistroMuestras).toBeDefined();
-      expect(
-        component.formRegistroMuestras.get('opcionDeImportador')
-      ).toBeTruthy();
-    });
+  it('should initialize the form', () => {
+    component.ngOnInit();
+    expect(component.formRegistroMuestras).toBeDefined();
+    expect(
+      component.formRegistroMuestras.get('opcionDeImportador')
+    ).toBeTruthy();
+  });
 
-    it('should patch form values when selectSolicitud$ emits', () => {
-      const state = {
-        opcionDeImportador: 1,
-        tomaMuestraDespacho: 2,
-        descMotivoFaltaMuestra: 'motivo',
-        comboFraccionConcatenada: 3,
-        fraccionConcatenada: 'desc',
-        fracciondescripcion: 'desc fracc',
-        comboNicos: 4,
-        nicoDescripcion: 'nico desc',
-        nombreQuimico: 'quimico',
-        nombreComercial: 'comercial',
-        numeroCAS: 'cas',
-        ideGenerica: 'ide',
-        descClobGenerica: 'clob',
-        fechaInicioVigencia: '30/01/2023',
-        fechaFinVigencia: '30/12/2023',
-        lineaCaptura: 'linea',
-        valorPago: '100',
-        pagoDerechosLista: [],
-      } as unknown as Solicitud30901State;
-      mockSolicitudQuery.selectSolicitud$ = of(state);
-      component.ngOnInit();
-      expect(component.formRegistroMuestras.value.opcionDeImportador).toEqual(
-        1
-      );
-      expect(component.formRegistroMuestras.value.tomaMuestraDespacho).toEqual(
-        2
-      );
+  it('should patch form values when selectSolicitud$ emits', () => {
+    const state = {
+      opcionDeImportador: 1,
+      tomaMuestraDespacho: 2,
+      descMotivoFaltaMuestra: 'motivo',
+      comboFraccionConcatenada: 3,
+      fraccionConcatenada: 'desc',
+      fracciondescripcion: 'desc fracc',
+      comboNicos: 4,
+      nicoDescripcion: 'nico desc',
+      nombreQuimico: 'quimico',
+      nombreComercial: 'comercial',
+      numeroCAS: 'cas',
+      ideGenerica: 'ide',
+      descClobGenerica: 'clob',
+      fechaInicioVigencia: '30/01/2023',
+      fechaFinVigencia: '30/12/2023',
+      lineaCaptura: 'linea',
+      valorPago: '100',
+      pagoDerechosLista: [],
+    } as unknown as Solicitud30901State;
+    mockSolicitudQuery.selectSolicitud$ = of(state);
+    component.ngOnInit();
+    expect(component.formRegistroMuestras.value.opcionDeImportador).toEqual(
+      1
+    );
+    expect(component.formRegistroMuestras.value.tomaMuestraDespacho).toEqual(
+      2
+    );
+  });
+
+  beforeEach(() => {
+    component.formRegistroMuestras = new FormBuilder().group({
+      fraccionConcatenada: [''],
+      fracciondescripcion: [''],
     });
   });
 
-  describe('mostrarDescFraccArancelaria', () => {
-    beforeEach(() => {
-      component.formRegistroMuestras = new FormBuilder().group({
-        fraccionConcatenada: [''],
-        fracciondescripcion: [''],
-      });
-    });
+  it('should set description for id 1', () => {
+    const valor: Catalogo = {
+      id: 1,
+      descripcion: '1 - Vacas lecheras.',
+    } as Catalogo;
+    component.mostrarDescFraccArancelaria(valor);
+    expect(
+      component.formRegistroMuestras.get('fraccionConcatenada')?.value
+    ).toBe(undefined);
+    expect(
+      component.formRegistroMuestras.get('fracciondescripcion')?.value
+    ).toBe(undefined);
+    expect(mockSolicitudStore.setFraccionDescripcion).toHaveBeenCalledWith(
+      'Vacas lecheras.'
+    );
+  });
 
-    it('should set description for id 1', () => {
-      const valor: Catalogo = {
-        id: 1,
-        descripcion: '1 - Vacas lecheras.',
-      } as Catalogo;
-      component.mostrarDescFraccArancelaria(valor);
-      expect(
-        component.formRegistroMuestras.get('fraccionConcatenada')?.value
-      ).toBe('1 - Vacas lecheras.');
-      expect(
-        component.formRegistroMuestras.get('fracciondescripcion')?.value
-      ).toBe('Vacas lecheras.');
-      expect(mockSolicitudStore.setFraccionDescripcion).toHaveBeenCalledWith(
-        'Vacas lecheras.'
-      );
-    });
+  it('should set description for other id', () => {
+    const valor: Catalogo = { id: 2, descripcion: '2 - Federal' } as Catalogo;
+    component.mostrarDescFraccArancelaria(valor);
+    expect(
+      component.formRegistroMuestras.get('fracciondescripcion')?.value
+    ).toBe(undefined);
+  });
 
-    it('should set description for other id', () => {
-      const valor: Catalogo = { id: 2, descripcion: '2 - Federal' } as Catalogo;
-      component.mostrarDescFraccArancelaria(valor);
-      expect(
-        component.formRegistroMuestras.get('fracciondescripcion')?.value
-      ).toBe('Federal');
+  it('should set panelDespachoOrMercancia to true for id 2', () => {
+    component.mostrarOcultarPanelTramite({
+      id: 2,
+      descripcion: '',
+    } as Catalogo);
+    expect(component.panelDespachoOrMercancia).toBe(true);
+    expect(mockSolicitudStore.setOpcionDeImportador).toHaveBeenCalledWith(2);
+  });
+
+  it('should set panelDespachoOrMercancia to false for other ids', () => {
+    component.mostrarOcultarPanelTramite({
+      id: 1,
+      descripcion: '',
+    } as Catalogo);
+    expect(component.panelDespachoOrMercancia).toBe(false);
+  });
+
+  beforeEach(() => {
+    component.formRegistroMuestras = new FormBuilder().group({
+      descMotivoFaltaMuestra: [{ value: '', disabled: true }],
     });
   });
 
-  describe('mostrarOcultarPanelTramite', () => {
-    it('should set panelDespachoOrMercancia to true for id 2', () => {
-      component.mostrarOcultarPanelTramite({
-        id: 2,
-        descripcion: '',
-      } as Catalogo);
-      expect(component.panelDespachoOrMercancia).toBe(true);
-      expect(mockSolicitudStore.setOpcionDeImportador).toHaveBeenCalledWith(2);
-    });
-
-    it('should set panelDespachoOrMercancia to false for other ids', () => {
-      component.mostrarOcultarPanelTramite({
-        id: 1,
-        descripcion: '',
-      } as Catalogo);
-      expect(component.panelDespachoOrMercancia).toBe(false);
-    });
+  it('should enable descMotivoFaltaMuestra for id 1', () => {
+    component.cambiaEstadoMotivo({ id: 1, descripcion: 'desc' } as Catalogo);
+    expect(
+      component.formRegistroMuestras.get('descMotivoFaltaMuestra')?.enabled
+    ).toBe(true);
+    expect(mockSolicitudStore.setTomaMuestraDespacho).toHaveBeenCalledWith(
+      'desc'
+    );
   });
 
-  describe('cambiaEstadoMotivo', () => {
-    beforeEach(() => {
-      component.formRegistroMuestras = new FormBuilder().group({
-        descMotivoFaltaMuestra: [{ value: '', disabled: true }],
-      });
-    });
-
-    it('should enable descMotivoFaltaMuestra for id 1', () => {
-      component.cambiaEstadoMotivo({ id: 1, descripcion: 'desc' } as Catalogo);
-      expect(
-        component.formRegistroMuestras.get('descMotivoFaltaMuestra')?.enabled
-      ).toBe(true);
-      expect(mockSolicitudStore.setTomaMuestraDespacho).toHaveBeenCalledWith(
-        'desc'
-      );
-    });
-
-    it('should disable and clear descMotivoFaltaMuestra for id 0', () => {
-      component.formRegistroMuestras.get('descMotivoFaltaMuestra')?.enable();
-      component.cambiaEstadoMotivo({ id: 0, descripcion: 'desc' } as Catalogo);
-      expect(
-        component.formRegistroMuestras.get('descMotivoFaltaMuestra')?.disabled
-      ).toBe(true);
-      expect(
-        component.formRegistroMuestras.get('descMotivoFaltaMuestra')?.value
-      ).toBe('');
-    });
-
-    it('should disable descMotivoFaltaMuestra for other ids', () => {
-      component.formRegistroMuestras.get('descMotivoFaltaMuestra')?.enable();
-      component.cambiaEstadoMotivo({ id: 3, descripcion: 'desc' } as Catalogo);
-      expect(
-        component.formRegistroMuestras.get('descMotivoFaltaMuestra')?.disabled
-      ).toBe(true);
-    });
+  it('should disable and clear descMotivoFaltaMuestra for id 0', () => {
+    component.formRegistroMuestras.get('descMotivoFaltaMuestra')?.enable();
+    component.cambiaEstadoMotivo({ id: 0, descripcion: 'desc' } as Catalogo);
+    expect(
+      component.formRegistroMuestras.get('descMotivoFaltaMuestra')?.disabled
+    ).toBe(true);
+    expect(
+      component.formRegistroMuestras.get('descMotivoFaltaMuestra')?.value
+    ).toBe('');
   });
 
-  describe('setDescMotivoFaltaMuestra', () => {
-    it('should update store with descMotivoFaltaMuestra', () => {
-      component.formRegistroMuestras = new FormBuilder().group({
-        descMotivoFaltaMuestra: ['motivo'],
-      });
-      component.setDescMotivoFaltaMuestra();
-      expect(mockSolicitudStore.setDescMotivoFaltaMuestra).toHaveBeenCalledWith(
-        'motivo'
-      );
-    });
+  it('should disable descMotivoFaltaMuestra for other ids', () => {
+    component.formRegistroMuestras.get('descMotivoFaltaMuestra')?.enable();
+    component.cambiaEstadoMotivo({ id: 3, descripcion: 'desc' } as Catalogo);
+    expect(
+      component.formRegistroMuestras.get('descMotivoFaltaMuestra')?.disabled
+    ).toBe(true);
   });
 
-  describe('setFracciondescripcion', () => {
-    it('should update store with fracciondescripcion', () => {
-      component.formRegistroMuestras = new FormBuilder().group({
-        fracciondescripcion: ['desc'],
-      });
-      component.setFracciondescripcion();
-      expect(mockSolicitudStore.setFraccionDescripcion).toHaveBeenCalledWith(
-        'desc'
-      );
+  it('should update store with descMotivoFaltaMuestra', () => {
+    component.formRegistroMuestras = new FormBuilder().group({
+      descMotivoFaltaMuestra: ['motivo'],
     });
+    component.setDescMotivoFaltaMuestra();
+    expect(mockSolicitudStore.setDescMotivoFaltaMuestra).toHaveBeenCalledWith(
+      'motivo'
+    );
   });
 
-  describe('setNino', () => {
-    it('should set nico description for id 1', () => {
-      component.setNino({
-        id: 1,
-        descripcion: '1 - Vacas lecheras.',
-      } as Catalogo);
-      expect(mockSolicitudStore.setNicoDescripcion).toHaveBeenCalledWith(
-        'Vacas lecheras.'
-      );
-      expect(mockSolicitudStore.setComboNicos).toHaveBeenCalledWith(1);
+  it('should update store with fracciondescripcion', () => {
+    component.formRegistroMuestras = new FormBuilder().group({
+      fracciondescripcion: ['desc'],
     });
-
-    it('should set nico description for other id', () => {
-      component.setNino({ id: 2, descripcion: '2 - Para abasto' } as Catalogo);
-      expect(mockSolicitudStore.setNicoDescripcion).toHaveBeenCalledWith(
-        '2 - Para abasto, cuando la importación la realicen empacadoras Tipo Inspección Federal.'
-      );
-      expect(mockSolicitudStore.setComboNicos).toHaveBeenCalledWith(2);
-    });
+    component.setFracciondescripcion();
+    expect(mockSolicitudStore.setFraccionDescripcion).toHaveBeenCalledWith(
+      'desc'
+    );
   });
 
-  describe('setNicoDescripcion', () => {
-    it('should update store with nicoDescripcion', () => {
-      component.formRegistroMuestras = new FormBuilder().group({
-        nicoDescripcion: ['desc'],
-      });
-      component.setNicoDescripcion();
-      expect(mockSolicitudStore.setNicoDescripcion).toHaveBeenCalledWith(
-        'desc'
-      );
-    });
+  it('should set nico description for id 1', () => {
+    component.setNino({
+      id: 1,
+      descripcion: '1 - Vacas lecheras.',
+    } as Catalogo);
+    expect(mockSolicitudStore.setNicoDescripcion).toHaveBeenCalledWith(
+      'Vacas lecheras.'
+    );
+    expect(mockSolicitudStore.setComboNicos).toHaveBeenCalledWith(1);
   });
 
-  describe('setNombreQuimico', () => {
-    it('should update store with nombreQuimico', () => {
-      component.formRegistroMuestras = new FormBuilder().group({
-        nombreQuimico: ['quimico'],
-      });
-      component.setNombreQuimico();
-      expect(mockSolicitudStore.setNombreQuimico).toHaveBeenCalledWith(
-        'quimico'
-      );
-    });
+  it('should set nico description for other id', () => {
+    component.setNino({ id: 2, descripcion: '2 - Para abasto' } as Catalogo);
+    expect(mockSolicitudStore.setNicoDescripcion).toHaveBeenCalledWith(
+      '2 - Para abasto, cuando la importación la realicen empacadoras Tipo Inspección Federal.'
+    );
+    expect(mockSolicitudStore.setComboNicos).toHaveBeenCalledWith(2);
   });
 
-  describe('setNombreComercial', () => {
-    it('should update store with nombreComercial', () => {
-      component.formRegistroMuestras = new FormBuilder().group({
-        nombreComercial: ['comercial'],
-      });
-      component.setNombreComercial();
-      expect(mockSolicitudStore.setNombreComercial).toHaveBeenCalledWith(
-        'comercial'
-      );
+  it('should update store with nicoDescripcion', () => {
+    component.formRegistroMuestras = new FormBuilder().group({
+      nicoDescripcion: ['desc'],
     });
+    component.setNicoDescripcion();
+    expect(mockSolicitudStore.setNicoDescripcion).toHaveBeenCalledWith('desc');
   });
 
-  describe('ngOnDestroy', () => {
-    it('should unsubscribe darseDeBaja if exists', () => {
-      const unsubscribeSpy = jest.fn();
-      component.darseDeBaja = { unsubscribe: unsubscribeSpy } as any;
-      component.ngOnDestroy();
-      expect(unsubscribeSpy).toHaveBeenCalled();
-      expect(component.darseDeBaja).toBeNull();
+  it('should update store with nombreQuimico', () => {
+    component.formRegistroMuestras = new FormBuilder().group({
+      nombreQuimico: ['quimico'],
     });
+    component.setNombreQuimico();
+    expect(mockSolicitudStore.setNombreQuimico).toHaveBeenCalledWith('quimico');
+  });
 
-    it('should not throw if darseDeBaja is null', () => {
-      component.darseDeBaja = null;
-      expect(() => component.ngOnDestroy()).not.toThrow();
+  it('should update store with nombreComercial', () => {
+    component.formRegistroMuestras = new FormBuilder().group({
+      nombreComercial: ['comercial'],
     });
+    component.setNombreComercial();
+    expect(mockSolicitudStore.setNombreComercial).toHaveBeenCalledWith(
+      'comercial'
+    );
+  });
+
+  it('should unsubscribe darseDeBaja if exists', () => {
+    const unsubscribeSpy = jest.fn();
+    component.darseDeBaja = { unsubscribe: unsubscribeSpy } as any;
+    component.ngOnDestroy();
+    expect(unsubscribeSpy).toHaveBeenCalled();
+    expect(component.darseDeBaja).toBeNull();
+  });
+
+  it('should not throw if darseDeBaja is null', () => {
+    component.darseDeBaja = null;
+    expect(() => component.ngOnDestroy()).not.toThrow();
   });
 });

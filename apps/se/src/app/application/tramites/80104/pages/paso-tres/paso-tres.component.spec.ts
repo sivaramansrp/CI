@@ -1,10 +1,21 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { AlertComponent } from '@ng-mf/data-access-user';
-import { AnexarDocumentosComponent } from '@ng-mf/data-access-user';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { PasoTresComponent } from './paso-tres.component';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { ToastrModule } from 'ngx-toastr';
+import { Component, NO_ERRORS_SCHEMA } from '@angular/core';
+
+@Component({
+  selector: 'anexar-documentos',
+  template: ''
+})
+
+class MockAnexarDocumentosComponent {
+  cargaArchivosEvento = {
+    pipe: () => ({ subscribe: () => {} })
+  };
+}
 
 describe('PasoTresComponent', () => {
   let component: PasoTresComponent;
@@ -12,11 +23,12 @@ describe('PasoTresComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [PasoTresComponent],
-      imports: [ HttpClientTestingModule, TituloComponent, AlertComponent, AnexarDocumentosComponent , ToastrModule.forRoot()],
+      declarations: [PasoTresComponent, MockAnexarDocumentosComponent],
+      imports: [ HttpClientTestingModule, TituloComponent, AlertComponent , ToastrModule.forRoot()],
       providers: [
         { provide: 'ToastConfig', useValue: {} }
       ],
+      schemas: [NO_ERRORS_SCHEMA]
     })
     .compileComponents();
     
@@ -25,7 +37,7 @@ describe('PasoTresComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('debería crear', () => {
     expect(component).toBeTruthy();
   });
 });

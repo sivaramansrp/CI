@@ -1,17 +1,21 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
+import { CancelacionCertificadosService } from '../../services/cancelacionCertificados.service';
+
 import {
   FormBuilder,
   FormGroup,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Subject, map, takeUntil } from 'rxjs';
+import { ReplaySubject, Subject, map, takeUntil } from 'rxjs';
 import {
   Tramite140205State,
   Tramite140205Store,
 } from '../../../../estados/tramites/tramite140205.store';
-import { CancelacionCertificadosService } from '../../services/cancelacionCertificados.service';
+
 import { TituloComponent } from '@libs/shared/data-access-user/src';
+
 import { Tramite140205Query } from '../../../../estados/queries/tramite140205.query';
 
 
@@ -36,6 +40,19 @@ import { Tramite140205Query } from '../../../../estados/queries/tramite140205.qu
   imports: [TituloComponent, ReactiveFormsModule],
 })
 export class DatosEmpresaComponent implements OnInit, OnDestroy {
+
+    /**
+     * Subject para destruir notificador.
+     */
+    consultaDatos!: ConsultaioState;
+    /**
+     * Indica si el formulario está en modo solo lectura.
+     * Cuando es `true`, los campos del formulario no se pueden editar.
+     */
+    soloLectura: boolean = false;
+  
+    
+    private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
   /**
    * @property {FormGroup} solicitudForm
    * @description Grupo de formulario para gestionar los datos de la solicitud.
@@ -72,7 +89,8 @@ export class DatosEmpresaComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private store: Tramite140205Store,
     private query: Tramite140205Query,
-    private validacionesService: CancelacionCertificadosService
+    private validacionesService: CancelacionCertificadosService,
+     private consultaioQuery: ConsultaioQuery
   ) {}
 
   /**
@@ -90,8 +108,34 @@ export class DatosEmpresaComponent implements OnInit, OnDestroy {
       )
       .subscribe();
     this.initImpresaDatosFormulario();
+
+       this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState) => {
+          this.consultaDatos = seccionState;
+          this.soloLectura = this.consultaDatos.readonly;
+          this.inicializarFormulario();
+        })
+      )
+      .subscribe();
   }
 
+
+    /**
+   * Destruye el componente y libera recursos.
+   *
+   * Este método se llama cuando el componente se destruye, asegurando que no queden suscripciones activas.
+   */
+  inicializarFormulario(): void {
+    if (this.soloLectura) {
+      this.solicitudForm.disable();
+       this.mostrarDatosGenerales = true;
+
+    } else {
+      this.solicitudForm.enable();
+    }
+  }
   /**
    * @method buscarEmpresa
    * @description Método para habilitar la visualización de los datos generales de la empresa.
@@ -189,7 +233,9 @@ export class DatosEmpresaComponent implements OnInit, OnDestroy {
           [Validators.required, Validators.minLength(10)],
         ],
       }),
+      
     });
+    this.inicializarFormulario();
   }
 
   /**

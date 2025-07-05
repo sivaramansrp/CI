@@ -40,6 +40,17 @@ export class Tramite630307Store extends Store<Tramite630307State> {
   }
 
   /**
+     * Actualiza el estado de la solicitud con los valores proporcionados.
+     * Param valores Objeto parcial con los valores a actualizar.
+     */
+    public actualizarEstado(valores: Partial<Tramite630307State>): void {
+      this.update((state) => ({
+        ...state,
+        ...valores,
+      }));
+    }
+
+  /**
    * Actualiza el estado del trámite 630307 con los valores proporcionados.
    * 
    * @param valores - Valores parciales para actualizar el estado.

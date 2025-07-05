@@ -1,8 +1,7 @@
-/* eslint-disable no-alert */
 import {FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
+import { Notificacion, NotificacionesComponent, ValidacionesFormularioService } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
 
 import { Solicitud32502State, Tramite32502Store } from '../../../../estados/tramites/tramite32502.store';
 import { Persona } from '../../../../core/models/32502/tramite32502.model';
@@ -13,7 +12,10 @@ import { Tramite32502Query } from '../../../../estados/queries/tramite32502.quer
 @Component({
   selector: 'agrega-personas',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule],
+  imports: [
+    ReactiveFormsModule, 
+    CommonModule, 
+    NotificacionesComponent],
   templateUrl: './agrega-personas.component.html',
   styleUrl: './agrega-personas.component.scss',
 })
@@ -37,9 +39,9 @@ export class AgregaPersonasComponent {
    * Formulario para capturar los datos de una persona.
    */
   personaForm: FormGroup = this.fb.group({
-    nombre: [{value: this.tramite32502Store?.setNombre || "nombre", disabled: true }],
-    primerApellido: [{ value: this.tramite32502Store.setPrimerApellido, disabled: true }],
-    segundoApellido: [{ value: this.tramite32502Store.setSegundoApellido, disabled: true }],
+    nombre: [{value: this.solicitudState?.nombre, disabled: true }],
+    primerApellido: [{ value: this.solicitudState?.primerApellido, disabled: true }],
+    segundoApellido: [{ value: this.solicitudState?.segundoApellido, disabled: true }],
   });
 
   /**
@@ -57,6 +59,8 @@ export class AgregaPersonasComponent {
    */
   private destroyNotifier$: Subject<void> = new Subject();
 
+  public notificacion?: Notificacion;
+
   constructor(
     private fb: FormBuilder,
     private validacionesService: ValidacionesFormularioService,
@@ -73,7 +77,7 @@ export class AgregaPersonasComponent {
    * @param field - El nombre del campo a verificar.
    * @returns `true` si el campo es válido, `false` en caso contrario.
    */
-  isValid(field: string) {
+  isValid(field: string): boolean | null {
     return this.validacionesService.isValid(this.personaForm, field);
   }
 
@@ -82,7 +86,7 @@ export class AgregaPersonasComponent {
    * 
    * @returns `true` si el campo `gafete` tiene errores y ha sido tocado, `false` en caso contrario.
    */
-  get gafeteIsValid() {
+  get gafeteIsValid(): boolean | null {
     return this.gafete.errors && this.gafete.touched;
   }
 
@@ -91,18 +95,36 @@ export class AgregaPersonasComponent {
    * 
    * Si no se proporciona un gafete o no se encuentran datos, muestra una alerta.
    */
-  buscarGafete() {
+  buscarGafete(): void {
     const GAFETE = this.gafete.value;
 
     if (!GAFETE) {
-      alert('No has proporcionado información que es requerida.');
+      this.notificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: 'Información requerida',
+        mensaje: 'No has proporcionado información que es requerida.',
+        cerrar: true,
+        tiempoDeEspera: 3000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
       return;
     }
 
     if (!this.persona) {
-      alert(
-        'No se encontraron datos con el número de gafete, intenta de nuevo o agrega los datos restantes.'
-      );
+      this.notificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'warning',
+        modo: 'action',
+        titulo: 'No encontrado',
+        mensaje: 'No se encontraron datos con el número de gafete, intenta de nuevo o agrega los datos restantes.',
+        cerrar: true,
+        tiempoDeEspera: 3000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
       this.habilitarCamposFormulario();
     }
   }
@@ -135,12 +157,22 @@ export class AgregaPersonasComponent {
    * Si el formulario o el campo `gafete` son inválidos, muestra una alerta y marca todos los campos como tocados.
    * Si ya hay 5 personas en la lista, muestra una alerta indicando que no se pueden agregar más personas.
    */
-  agregarPersona() {
-    this.gafete.setValidators([Validators.required, Validators.maxLength(25)]);
+  agregarPersona(): void {
+   this.gafete.setValidators([Validators.required, Validators.maxLength(25)]);
     this.gafete.updateValueAndValidity();
 
     if (this.gafete.invalid || this.personaForm.invalid) {
-      alert('Debes capturar todos los datos marcados como obligatorios.');
+      this.notificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: 'Campos obligatorios',
+        mensaje: 'Debes capturar todos los datos marcados como obligatorios.',
+        cerrar: true,
+        tiempoDeEspera: 3000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
       this.gafete.markAllAsTouched();
       this.personaForm.markAllAsTouched();
       this.habilitarCamposFormulario();
@@ -148,7 +180,17 @@ export class AgregaPersonasComponent {
     }
 
     if (this.personas.length >= 5) {
-      alert('Solo puede agregar hasta 5 personas');
+      this.notificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: 'Límite alcanzado',
+        mensaje: 'Solo puede agregar hasta 5 personas',
+        cerrar: true,
+        tiempoDeEspera: 3000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
       return;
     }
 
@@ -169,7 +211,7 @@ export class AgregaPersonasComponent {
    * 
    * @param i - El índice de la persona a eliminar.
    */
-  eliminar(i: number) {
+  eliminar(i: number): void {
     this.personas.splice(i, 1);
     //modal de confirmacion de elimincacion
   }

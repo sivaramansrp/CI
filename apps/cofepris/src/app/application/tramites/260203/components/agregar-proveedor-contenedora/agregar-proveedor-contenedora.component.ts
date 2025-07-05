@@ -4,13 +4,19 @@ import { Component } from '@angular/core';
 import { Proveedor } from '../../../../shared/models/terceros-relacionados.model';
 import { Tramite260203Store } from '../../estados/stores/tramite260203Store.store';
 
+
 /**
  * @component AgregarProveedorContenedoraComponent
- * @description Componente contenedor que utiliza el componente `AgregarProveedorComponent`
- * para gestionar la funcionalidad relacionada con los proveedores.
- * Este componente interactúa con el estado del trámite a través del store `Tramite260203Store`.
+ * @description Componente Angular que actúa como contenedor para gestionar la funcionalidad de agregar proveedores 
+ * en el trámite 260203. Este componente utiliza el store `Tramite260203Store` para manejar el estado del trámite 
+ * y delega la lógica de actualización de datos de proveedores.
+ *
+ * @selector app-agregar-proveedor-contenedora
+ * @standalone true
+ * @imports CommonModule, AgregarProveedorComponent
+ * @templateUrl ./agregar-proveedor-contenedora.component.html
+ * @styleUrl ./agregar-proveedor-contenedora.component.scss
  */
-
 @Component({
   selector: 'app-agregar-proveedor-contenedora',
   standalone: true,

@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component } from '@angular/core';
 import { ID_PROCEDIMIENTO } from '../../../constants/importacion-materias-primas.enum';
+import { Input } from '@angular/core';
 import { PagoDeDerechosComponent } from '../../../../../shared/components/pago-de-derechos/pago-de-derechos.component';
 import { PagoDerechosFormState } from '../../../../../shared/models/terceros-relacionados.model';
 import { Tramite260202Store } from '../../../estados/tramite260202Store.store';
@@ -18,6 +19,32 @@ import { Tramite260202Store } from '../../../estados/tramite260202Store.store';
   templateUrl: './pago-de-derechos-contenedora.component.html',
   styleUrl: './pago-de-derechos-contenedora.component.scss',
 })
+
+/**
+ * @class PagoDeDerechosContenedoraComponent
+ * @description
+ * Componente encargado de gestionar el formulario de pago de derechos dentro del trámite 260202.
+ * Este componente interactúa con el store `Tramite260202Store` para obtener y actualizar el estado
+ * del formulario de pago de derechos. Además, permite habilitar o deshabilitar el formulario según
+ * las necesidades del usuario.
+ *
+ * @property {boolean} formularioDeshabilitado
+ * Indica si el formulario está deshabilitado. Por defecto, su valor es `false`.
+ *
+ * @property {PagoDerechosFormState} pagoDerechos
+ * Representa el estado actual del formulario de pago de derechos, obtenido del store del trámite.
+ *
+ * @property {string} idProcedimiento
+ * Identificador único del procedimiento asociado al trámite 260202.
+ *
+ * @constructor
+ * Inicializa el componente y establece el estado inicial del formulario de pago de derechos
+ * utilizando el store `Tramite260202Store`.
+ *
+ * @method updatePagoDerechos
+ * Actualiza el estado del formulario de pago de derechos en el store del trámite.
+ * Este método recibe como parámetro el estado actualizado del formulario y lo almacena en el store.
+ */
 export class PagoDeDerechosContenedoraComponent {
   /**
    * @property {boolean} formularioDeshabilitado
@@ -31,7 +58,6 @@ export class PagoDeDerechosContenedoraComponent {
    * @property {PagoDerechosFormState} pagoDerechos
    * @description Estado actual del formulario de pago de derechos, obtenido del store del trámite.
    */
-
   public pagoDerechos: PagoDerechosFormState;
   /**
    * @constructor
@@ -48,6 +74,15 @@ export class PagoDeDerechosContenedoraComponent {
    */
   public readonly idProcedimiento = ID_PROCEDIMIENTO;
 
+  /**
+   * Constructor de la clase `PagoDeDerechosContenedoraComponent`.
+   * 
+   * Este constructor inicializa el componente y establece el valor de `pagoDerechos`
+   * utilizando el estado actual de la tienda `Tramite260202Store`.
+   * 
+   * @param tramiteStore - Una instancia de la tienda `Tramite260202Store` que contiene
+   *                       los datos y el estado relacionados con el trámite 260202.
+   */
   constructor(public tramiteStore: Tramite260202Store) {
     this.pagoDerechos = this.tramiteStore.getValue().pagoDerechos;
   }

@@ -1,10 +1,10 @@
 
+import { PagoDerechosState,PagoDerechosStore } from '../stores/pago-de-derechos.store';
 import { Injectable } from '@angular/core';
 import { Query } from '@datorama/akita';
-import { pagoDerechosState, PagoDerechosStore } from '../stores/pago-de-derechos.store';
 
 @Injectable({ providedIn: 'root' })
-export class PagoDerechosQuery extends Query<pagoDerechosState> {
+export class PagoDerechosQuery extends Query<PagoDerechosState> {
   /**
    * Selecciona el estado completo de la solicitud
    */

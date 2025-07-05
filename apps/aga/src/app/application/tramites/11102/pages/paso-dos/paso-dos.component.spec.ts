@@ -1,7 +1,17 @@
 import { TestBed } from '@angular/core/testing';
 import { of } from 'rxjs';
 import { PasoDosComponent } from './paso-dos.component';
-import { Catalogo, CATALOGOS_ID, CatalogosService } from '@ng-mf/data-access-user';
+import {
+  AlertComponent,
+  AnexarDocumentosComponent,
+  Catalogo,
+  CATALOGOS_ID,
+  CatalogosService,
+  TituloComponent,
+} from '@ng-mf/data-access-user';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule } from '@angular/forms';
 
 describe('PasoDosComponent', () => {
   let component: PasoDosComponent;
@@ -13,7 +23,16 @@ describe('PasoDosComponent', () => {
     };
 
     TestBed.configureTestingModule({
-      declarations: [PasoDosComponent],
+      imports: [
+        PasoDosComponent,
+        HttpClientTestingModule,
+        CommonModule,
+        ReactiveFormsModule,
+        TituloComponent,
+        AlertComponent,
+        AnexarDocumentosComponent,
+      ],
+      declarations: [],
       providers: [
         PasoDosComponent,
         { provide: CatalogosService, useValue: mockCatalogosService },
@@ -21,7 +40,9 @@ describe('PasoDosComponent', () => {
     });
 
     component = TestBed.inject(PasoDosComponent);
-    catalogosService = TestBed.inject(CatalogosService) as jest.Mocked<CatalogosService>;
+    catalogosService = TestBed.inject(
+      CatalogosService
+    ) as jest.Mocked<CatalogosService>;
   });
   it('should create the component', () => {
     expect(component).toBeTruthy();
@@ -77,14 +98,18 @@ describe('PasoDosComponent', () => {
       ];
       catalogosService.getCatalogo.mockReturnValue(of(mockResponse));
       component.getTiposDocumentos();
-      expect(catalogosService.getCatalogo).toHaveBeenCalledWith(CATALOGOS_ID.CAT_TIPO_DOCUMENTO);
+      expect(catalogosService.getCatalogo).toHaveBeenCalledWith(
+        CATALOGOS_ID.CAT_TIPO_DOCUMENTO
+      );
       expect(component.catalogoDocumentos).toEqual(mockResponse);
     });
 
     it('should handle empty response gracefully', () => {
       catalogosService.getCatalogo.mockReturnValue(of([]));
       component.getTiposDocumentos();
-      expect(catalogosService.getCatalogo).toHaveBeenCalledWith(CATALOGOS_ID.CAT_TIPO_DOCUMENTO);
+      expect(catalogosService.getCatalogo).toHaveBeenCalledWith(
+        CATALOGOS_ID.CAT_TIPO_DOCUMENTO
+      );
       expect(component.catalogoDocumentos).toEqual([]);
     });
   });

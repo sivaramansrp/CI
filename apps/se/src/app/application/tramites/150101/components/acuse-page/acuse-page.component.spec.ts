@@ -4,6 +4,8 @@ import { CommonModule } from '@angular/common';
 import { AcuseComponent } from '@libs/shared/data-access-user/src';
 import { ACUSE_SERVICIOS_EXTRAORDINARIOS, TITULO_ACUSE, TXT_ALERTA_ACUSE } from '@libs/shared/data-access-user/src';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { ActivatedRoute } from '@angular/router';
+import { of } from 'rxjs';
 
 describe('AcusePageComponent', () => {
   let component: AcusePageComponent;
@@ -11,7 +13,21 @@ describe('AcusePageComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [CommonModule, AcuseComponent, AcusePageComponent, HttpClientTestingModule],
+      imports: [
+        CommonModule, 
+        AcuseComponent, 
+        AcusePageComponent,
+        HttpClientTestingModule
+      ],
+      providers: [
+        {
+          provide: ActivatedRoute,
+          useValue: {
+            snapshot: { paramMap: { get: () => '1' } },
+            queryParams: of({}),
+          },
+        },
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(AcusePageComponent);

@@ -1,81 +1,87 @@
-// @ts-nocheck
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { By } from '@angular/platform-browser';
-import { Observable, of as observableOf, throwError } from 'rxjs';
-import { AvisoDeAmpliacionService } from '../../services/aviso-de-ampliacion.service';
-import { Component } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SolicitudComponent } from './solicitud.component';
-import { FormBuilder } from '@angular/forms';
-import { Tramite32102Store } from '../../../../estados/tramites/tramite32102.store';
-import { Tramite32102Query } from '../../../../estados/queries/tramite32102.query';
-
-@Injectable()
-class MockAvisoDeAmpliacionService {}
-
-@Injectable()
-class MockTramite32102Store {}
-
-@Injectable()
-class MockTramite32102Query {}
+import { FormBuilder, ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
 
 describe('SolicitudComponent', () => {
-  let fixture;
-  let component;
+  let component: SolicitudComponent;
+  let fixture: ComponentFixture<SolicitudComponent>;
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule, SolicitudComponent ],
-      declarations: [ ],
-      schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
-      providers: [
-        { provide: AvisoDeAmpliacionService, useClass: MockAvisoDeAmpliacionService },
-        FormBuilder,
-        { provide: Tramite32102Store, useClass: MockTramite32102Store },
-        { provide: Tramite32102Query, useClass: MockTramite32102Query }
-      ]
-    }).overrideComponent(SolicitudComponent, {
-
-      set: { providers: [{ provide: AvisoDeAmpliacionService, useClass: MockAvisoDeAmpliacionService }] }    
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [ReactiveFormsModule, FormsModule],
+      declarations: [SolicitudComponent],
+      providers: [FormBuilder],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
     }).compileComponents();
+
     fixture = TestBed.createComponent(SolicitudComponent);
-    component = fixture.debugElement.componentInstance;
+    component = fixture.componentInstance;
+    component.solicitudState = {
+      MANIFIESTO_1: true,
+      MANIFIESTO_2: false,
+      MANIFIESTO_3: false,
+      MANIFIESTO_4: false,
+    } as any;
+    fixture.detectChanges();
   });
 
-  afterEach(() => {
-    component.ngOnDestroy = function() {};
-    fixture.destroy();
-  });
-
-  it('should run #constructor()', async () => {
+  it('debería crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should run #ngOnInit()', async () => {
-    component.tramite32102Query = component.tramite32102Query || {};
-    component.tramite32102Query.selectSolicitud$ = observableOf({});
-    component.inicializarFormulario = jest.fn();
-    component.ngOnInit();
-  });
-
-  it('should run #ngOnDestroy()', async () => {
-    component.destroyNotifier$ = component.destroyNotifier$ || {};
-    component.destroyNotifier$.next = jest.fn();
-    component.destroyNotifier$.complete = jest.fn();
-    component.ngOnDestroy();
-  });
-
-  it('should run #inicializarFormulario()', async () => {
-    component.fb = component.fb || {};
-    component.fb.group = jest.fn();
-    component.solicitudState = component.solicitudState || {};
-    component.solicitudState.MANIFIESTO_1 = 'MANIFIESTO_1';
-    component.solicitudState.MANIFIESTO_2 = 'MANIFIESTO_2';
-    component.solicitudState.MANIFIESTO_3 = 'MANIFIESTO_3';
-    component.solicitudState.MANIFIESTO_4 = 'MANIFIESTO_4';
+  it('debería inicializar el formulario con los valores del estado', () => {
     component.inicializarFormulario();
+    expect(component.formularioAvisoDeExtension.value.MANIFIESTO_1).toBe(true);
+    expect(component.formularioAvisoDeExtension.value.MANIFIESTO_2).toBe(false);
   });
 
+  it('debería marcar el formulario como inválido si no todos los checkboxes están seleccionados', () => {
+    component.inicializarFormulario();
+    expect(component.formularioAvisoDeExtension.valid).toBeFalsy();
+    component.formularioAvisoDeExtension.patchValue({
+      MANIFIESTO_1: true,
+      MANIFIESTO_2: true,
+      MANIFIESTO_3: true,
+      MANIFIESTO_4: true,
+    });
+    expect(component.formularioAvisoDeExtension.valid).toBe(true);
+  });
+
+  it('debería deshabilitar el formulario si esFormularioSoloLectura es true', () => {
+    component.esFormularioSoloLectura = true;
+    component.inicializarFormulario();
+    component.guardarDatosFormulario();
+    expect(component.formularioAvisoDeExtension.disabled).toBe(true);
+  });
+
+  it('debería habilitar el formulario si esFormularioSoloLectura es false', () => {
+    component.esFormularioSoloLectura = false;
+    component.inicializarFormulario();
+    component.guardarDatosFormulario();
+    expect(component.formularioAvisoDeExtension.enabled).toBe(true);
+  });
+
+  it('debería limpiar las suscripciones al destruir el componente', () => {
+    const spyNext = spyOn(component['destroyNotifier$'], 'next').and.callThrough();
+    const spyComplete = spyOn(component['destroyNotifier$'], 'complete').and.callThrough();
+    component.ngOnDestroy();
+    expect(spyNext).toHaveBeenCalled();
+    expect(spyComplete).toHaveBeenCalled();
+  });
+
+  it('debería establecer el valor en el store usando setValoresStore', () => {
+    component.formularioAvisoDeExtension = new FormBuilder().group({
+      MANIFIESTO_1: [true]
+    });
+    component.tramite32102Store = {
+      setManifiesto1: jasmine.createSpy('setManifiesto1')
+    } as any;
+    component.setValoresStore(
+      component.formularioAvisoDeExtension,
+      'MANIFIESTO_1',
+      'setManifiesto1' as keyof typeof component.tramite32102Store
+    );
+    expect(component.tramite32102Store.setManifiesto1).toHaveBeenCalledWith(true);
+  });
 });

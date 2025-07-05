@@ -1,4 +1,5 @@
 /**
+ * * Esta sección contiene los campos necesarios para completar el trámite de exportación de productos acuícolas.
  * @desc Configuración de los campos para la sección "Trámite a realizar".
  * @since 2024-06
  * @author Equipo Agricultura
@@ -58,6 +59,7 @@ export const DATOS_TRAMITE_REALIZAR = [
 ];
 
 /**
+ * Esta sección es necesaria para especificar la combinación de especie y país de destino, así como la instalación acuícola.
  * @desc Configuración de los campos para la sección "Combinación requerida".
  * @since 2024-06
  * @author Equipo Agricultura
@@ -91,6 +93,7 @@ export const DATOS_COMBINACION_REQUERIDA = [
 ];
 
 /**
+ * Esta sección es necesaria para especificar los detalles del medio de transporte utilizado para la exportación.
  * @desc Configuración de los campos para la sección "Transporte".
  * @since 2024-06
  * @author Equipo Agricultura
@@ -134,6 +137,7 @@ export const DATOS_TRANSPORTE = [
 ];
 
 /**
+ * Esta sección es necesaria para registrar los datos de pago de derechos relacionados con el trámite.
  * @desc Configuración de los campos para la sección "Pago de derechos".
  * @since 2024-06
  * @author Equipo Agricultura

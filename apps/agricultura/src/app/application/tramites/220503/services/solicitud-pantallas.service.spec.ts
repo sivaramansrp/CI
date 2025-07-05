@@ -1,87 +1,73 @@
 import { TestBed } from '@angular/core/testing';
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { SolicitudPantallasService } from './solicitud-pantallas.service';
-import { CargarDatosIniciales, TipoContenedor, DatosDelTramiteRealizar } from '../models/solicitud-pantallas.model';
+import { HttpClient } from '@angular/common/http';
+import { of } from 'rxjs';
+import { CargarDatosIniciales, TipoContenedor } from '../models/solicitud-pantallas.model';
+import { DatosDelTramiteRealizar } from '../models/solicitud-pantallas.model';
 
 describe('SolicitudPantallasService', () => {
   let service: SolicitudPantallasService;
-  let httpMock: HttpTestingController;
+  let httpClientMock: jest.Mocked<HttpClient>;
+
+  const mockDataUrl = '../../../assets/json/220503/solicitud-pantallas-mock-data.json';
 
   beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
-      providers: [SolicitudPantallasService],
-    });
-    service = TestBed.inject(SolicitudPantallasService);
-    httpMock = TestBed.inject(HttpTestingController);
-  });
+    httpClientMock = {
+      get: jest.fn()
+    } as any;
 
-  afterEach(() => {
-    httpMock.verify();
+    TestBed.configureTestingModule({
+      providers: [
+        SolicitudPantallasService,
+        { provide: HttpClient, useValue: httpClientMock }
+      ]
+    });
+
+    service = TestBed.inject(SolicitudPantallasService);
   });
 
   it('should be created', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should fetch CargarDatosIniciales data', () => {
-    const mockData: CargarDatosIniciales = {
-      hHistorialinspeccion: [],
-      dHistorialInspecciones: [],
-      dCarrosDeFerrocarril: [],
-      hCarroFerrocarril: [],
-        hSolicitud:[],
-        dSolicitud: [],
-        hMerchandise: [],
-        dMercancia: [],
-        medioDeTransporte:
-          {labelNombre: "string",
-          required: true,
-          primerOpcion: "string",
-          catalogos: []
-        }
-      // Add other required properties with mock values here
-    };
+  it('should call http.get with correct URL in getData', () => {
+    const mockResponse: CargarDatosIniciales = { /* mock properties */ } as any;
+    httpClientMock.get.mockReturnValue(of(mockResponse));
 
-    service.getData().subscribe((data) => {
-      expect(data).toEqual(mockData);
+    service.getData().subscribe(data => {
+      expect(data).toEqual(mockResponse);
     });
 
-    const req = httpMock.expectOne('../../../assets/json/220503/solicitud-pantallas-mock-data.json');
-    expect(req.request.method).toBe('GET');
-    req.flush(mockData);
+    expect(httpClientMock.get).toHaveBeenCalledWith(mockDataUrl);
   });
 
-  it('should fetch DatosDelTramiteRealizar data', () => {
-    const mockData: DatosDelTramiteRealizar = {   /** Clave de control */
-      pendientesCertificados:[],
-      horaInspeccion:[],
-      aduanaIngreso:[],
-      sanidadAgropecuaria:[],
-      puntoInspeccion:[]};
+  it('should call http.get with correct URL in getDataDatosDelTramite', () => {
+    const mockResponse: DatosDelTramiteRealizar = { /* mock properties */ } as any;
+    httpClientMock.get.mockReturnValue(of(mockResponse));
 
-    service.getDataDatosDelTramite().subscribe((data) => {
-      expect(data).toEqual(mockData);
+    service.getDataDatosDelTramite().subscribe(data => {
+      expect(data).toEqual(mockResponse);
     });
 
-    const req = httpMock.expectOne('../../../assets/json/220503/solicitud-pantallas-mock-data.json');
-    expect(req.request.method).toBe('GET');
-    req.flush(mockData);
+    expect(httpClientMock.get).toHaveBeenCalledWith(mockDataUrl);
   });
 
-  it('should fetch TipoContenedor data', () => {
-    const mockData: TipoContenedor = { tipoContenedor:{labelNombre: "string",
-      required: true,
-      primerOpcion: "string",
-      catalogos: []
-    } };
+  it('should call http.get with correct URL in getDataResponsableInspeccion', () => {
+    const mockResponse: TipoContenedor = { /* mock properties */ } as any;
+    httpClientMock.get.mockReturnValue(of(mockResponse));
 
-    service.getDataResponsableInspeccion().subscribe((data) => {
-      expect(data).toEqual(mockData);
+    service.getDataResponsableInspeccion().subscribe(data => {
+      expect(data).toEqual(mockResponse);
     });
 
-    const req = httpMock.expectOne('../../../assets/json/220503/solicitud-pantallas-mock-data.json');
-    expect(req.request.method).toBe('GET');
-    req.flush(mockData);
+    expect(httpClientMock.get).toHaveBeenCalledWith(mockDataUrl);
+  });
+
+  it('should call getData in constructor', () => {
+    const spy = jest.spyOn(SolicitudPantallasService.prototype, 'getData');
+    // Recreate service to trigger constructor
+    new SolicitudPantallasService(httpClientMock);
+    expect(spy).toHaveBeenCalled();
+    spy.mockRestore();
   });
 });

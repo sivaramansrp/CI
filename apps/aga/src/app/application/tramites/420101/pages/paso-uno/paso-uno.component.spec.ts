@@ -29,8 +29,8 @@ describe('PasoUnoComponent', () => {
         FormsModule,
         ReactiveFormsModule,
         HttpClientTestingModule,
-        PasoUnoComponent
       ],
+      declarations: [PasoUnoComponent],
       schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
       providers: [
         { provide: Tramite420101Query, useClass: MockTramite420101Query },

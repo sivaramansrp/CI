@@ -153,8 +153,8 @@ export class DetalleComponent implements OnInit, OnDestroy{
     this.detalleForm.get('DetalleData.paises')?.setValue('ESTADOS UNIDOS DE AMERICA');
     this.detalleForm.get('DetalleData.observaciones')?.setValue('observaciones');
     this.detalleForm.get('DetalleData.fundamentos')?.setValue('Fundamento de la vigencia del UPO');
-    this.detalleForm.get('DetalleData.inicio')?.setValue('2024-01-01');
-    this.detalleForm.get('DetalleData.fecha')?.setValue('2024-12-31');
+    this.detalleForm.get('DetalleData.inicio')?.setValue('01/01/2024');
+    this.detalleForm.get('DetalleData.fecha')?.setValue('31/12/2024');
   }
 
    /**

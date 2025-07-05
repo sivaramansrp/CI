@@ -1,5 +1,7 @@
+import { AvisoAgente } from "../../models/30505/aviso-modificacion.model";
 import { ConfiguracionColumna } from "@libs/shared/data-access-user/src";
-import { AvisoAgente, FusionEscision, TercerosRelacionados } from "../../models/30505/aviso-modificacion.model";
+import { FusionEscision } from "../../models/30505/aviso-modificacion.model";
+import { TercerosRelacionados } from "../../models/30505/aviso-modificacion.model";
 
 
 /**
@@ -187,10 +189,10 @@ export const FUSION_CONFIGURACION_TABLA: ConfiguracionColumna<FusionEscision>[] 
   [
     {
       encabezado: 'Registro Federal de Contribuyentes',
-      clave: (fila) => fila.certificacionModal == '1'? fila.rfcBusquedaModal: fila.rfcBusquedaModalSC,
+      clave: (fila) => fila.certificacionModal === '1'? fila.rfcBusquedaModal: fila.rfcBusquedaModalSC,
       orden: 1,
     },
-    { encabezado: 'Denominación o Razón Social', clave: (fila) => fila.certificacionModal == '1' ? fila.razonSocialFusionante : fila.razonSocialFusionanteSC, orden: 2},
+    { encabezado: 'Denominación o Razón Social', clave: (fila) => fila.certificacionModal === '1' ? fila.razonSocialFusionante : fila.razonSocialFusionanteSC, orden: 2},
     { encabezado: 'Folio VUCEM de la Última certificación/renovación', clave: (fila) => fila.folioVucemFusionante, orden: 3 },
     {
       encabezado: 'Fecha de fin de vigencia de la Última certificación/renovación',

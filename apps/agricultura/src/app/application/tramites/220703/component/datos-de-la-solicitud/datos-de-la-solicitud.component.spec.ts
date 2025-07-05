@@ -13,15 +13,36 @@ import { AcuicolaService } from '../../service/acuicola.service';
 import { TramiteStoreQuery } from '../../estados/tramite220703.query';
 import { TramiteStore } from '../../estados/tramite220703.store';
 import { SeccionLibQuery, SeccionLibStore } from '@libs/shared/data-access-user/src';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 
 @Injectable()
-class MockAcuicolaService { }
+class MockAcuicolaService {}
 
 @Injectable()
-class MockTramiteStoreQuery { }
+class MockTramiteStoreQuery {}
 
 @Injectable()
-class MockTramiteStore { }
+class MockTramiteStore {}
+
+@Directive({ selector: '[myCustom]' })
+class MyCustomDirective {
+  @Input() myCustom;
+}
+
+@Pipe({name: 'translate'})
+class TranslatePipe implements PipeTransform {
+  transform(value) { return value; }
+}
+
+@Pipe({name: 'phoneNumber'})
+class PhoneNumberPipe implements PipeTransform {
+  transform(value) { return value; }
+}
+
+@Pipe({name: 'safeHtml'})
+class SafeHtmlPipe implements PipeTransform {
+  transform(value) { return value; }
+}
 
 describe('DatosDeLaSolicitudComponent', () => {
   let fixture;
@@ -29,18 +50,20 @@ describe('DatosDeLaSolicitudComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [FormsModule, ReactiveFormsModule, DatosDeLaSolicitudComponent],
+      imports: [ FormsModule, ReactiveFormsModule, DatosDeLaSolicitudComponent, ],
       declarations: [
-
+        TranslatePipe, PhoneNumberPipe, SafeHtmlPipe,
+        MyCustomDirective
       ],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
+      schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
       providers: [
         FormBuilder,
         { provide: AcuicolaService, useClass: MockAcuicolaService },
         { provide: TramiteStoreQuery, useClass: MockTramiteStoreQuery },
         { provide: TramiteStore, useClass: MockTramiteStore },
         SeccionLibQuery,
-        SeccionLibStore
+        SeccionLibStore,
+        ConsultaioQuery
       ]
     }).overrideComponent(DatosDeLaSolicitudComponent, {
 
@@ -54,9 +77,7 @@ describe('DatosDeLaSolicitudComponent', () => {
   });
 
   it('should run #ngOnInit()', async () => {
-    component.tramiteStoreQuery = component.tramiteStoreQuery || {};
-    component.tramiteStoreQuery.selectSolicitudTramite$ = observableOf({});
-    component.iniciarFormulario = jest.fn();
+    component.inicializarEstadoFormulario = jest.fn();
     component.getHoraDeInspeccion = jest.fn();
     component.cargarDatos = jest.fn();
     component.getAduanaDeIngreso = jest.fn();
@@ -66,16 +87,12 @@ describe('DatosDeLaSolicitudComponent', () => {
     component.obtenerResponsableDatos = jest.fn();
     component.getMedioDeTransporte = jest.fn();
     component.getMercanciaDatos = jest.fn();
+    component.tramiteStoreQuery = component.tramiteStoreQuery || {};
+    component.tramiteStoreQuery.selectSolicitudTramite$ = observableOf({});
     component.datosDeLaSolicitudForm = component.datosDeLaSolicitudForm || {};
     component.datosDeLaSolicitudForm.patchValue = jest.fn();
-    component.datosDeLaSolicitudForm.statusChanges = observableOf({});
-    component.datosDeLaSolicitudForm.value = 'value';
-    component.tramiteStore = component.tramiteStore || {};
-    component.tramiteStore.setSolicitudTramite = jest.fn();
-    component.seccionQuery = component.seccionQuery || {};
-    component.seccionQuery.selectSeccionState$ = observableOf({});
     component.ngOnInit();
-    expect(component.iniciarFormulario).toHaveBeenCalled();
+    expect(component.inicializarEstadoFormulario).toHaveBeenCalled();
     expect(component.getHoraDeInspeccion).toHaveBeenCalled();
     expect(component.cargarDatos).toHaveBeenCalled();
     expect(component.getAduanaDeIngreso).toHaveBeenCalled();
@@ -84,16 +101,48 @@ describe('DatosDeLaSolicitudComponent', () => {
     expect(component.getTipoContenedor).toHaveBeenCalled();
     expect(component.obtenerResponsableDatos).toHaveBeenCalled();
     expect(component.getMedioDeTransporte).toHaveBeenCalled();
-
-   
-  
+    expect(component.getMercanciaDatos).toHaveBeenCalled();
+    expect(component.datosDeLaSolicitudForm.patchValue).toHaveBeenCalled();
   });
 
   it('should run #iniciarFormulario()', async () => {
     component.fb = component.fb || {};
     component.fb.group = jest.fn();
+    component.tramiteState = component.tramiteState || {};
+    component.tramiteState.justificacion = 'justificacion';
+    component.tramiteState.certificadosAutorizados = 'certificadosAutorizados';
+    component.tramiteState.fechaInspeccionInput = 'fechaInspeccionInput';
+    component.tramiteState.horaDeInspeccion = 'horaDeInspeccion';
+    component.tramiteState.aduanaDeIngreso = 'aduanaDeIngreso';
+    component.tramiteState.oficinaDeInspeccion = 'oficinaDeInspeccion';
+    component.tramiteState.puntoDeInspeccion = 'puntoDeInspeccion';
+    component.tramiteState.nombreInspector = 'nombreInspector';
+    component.tramiteState.primerApellido = 'primerApellido';
+    component.tramiteState.segundoApellido = 'segundoApellido';
+    component.tramiteState.cantidadContenedores = 'cantidadContenedores';
+    component.tramiteState.tipoContenedor = 'tipoContenedor';
+    component.tramiteState.medioDeTransporte = 'medioDeTransporte';
+    component.tramiteState.identificacionTransporte = 'identificacionTransporte';
+    component.tramiteState.esSolicitudFerros = 'esSolicitudFerros';
     component.iniciarFormulario();
     expect(component.fb.group).toHaveBeenCalled();
+  });
+  it('should run #inicializarEstadoFormulario()', async () => {
+    component.guardarDatosFormulario = jest.fn();
+    component.iniciarFormulario = jest.fn();
+    component.inicializarEstadoFormulario();
+    expect(component.guardarDatosFormulario).not.toHaveBeenCalled();
+    expect(component.iniciarFormulario).toHaveBeenCalled();
+  });
+  it('should run #guardarDatosFormulario()', async () => {
+    component.iniciarFormulario = jest.fn();
+    component.datosDeLaSolicitudForm = component.datosDeLaSolicitudForm || {};
+    component.datosDeLaSolicitudForm.disable = jest.fn();
+    component.datosDeLaSolicitudForm.enable = jest.fn();
+    component.guardarDatosFormulario();
+    expect(component.iniciarFormulario).toHaveBeenCalled();
+    expect(component.datosDeLaSolicitudForm.disable).not.toHaveBeenCalled();
+    expect(component.datosDeLaSolicitudForm.enable).toHaveBeenCalled();
   });
 
   it('should run #mostrarColapsable()', async () => {
@@ -102,15 +151,84 @@ describe('DatosDeLaSolicitudComponent', () => {
 
   });
 
-  it('should run #cambioFechaFinal()', async () => {
+  it('should run #cambioFechaInspeccion()', async () => {
     component.datosDeLaSolicitudForm = component.datosDeLaSolicitudForm || {};
     component.datosDeLaSolicitudForm.get = jest.fn().mockReturnValue({
-      markAsUntouched: function () { },
-      setValue: function () { }
+      markAsUntouched: function() {},
+      setValue: function() {}
     });
+    component.tramiteStore = component.tramiteStore || {};
+    component.tramiteStore.setFechaInicio = jest.fn();
+    component.cambioFechaInspeccion({});
+    expect(component.datosDeLaSolicitudForm.get).toHaveBeenCalled();
+    expect(component.tramiteStore.setFechaInicio).toHaveBeenCalled();
+  });
 
-  
- 
+  it('should run #cambioAduanaDeIngreso()', async () => {
+    component.tramiteStore = component.tramiteStore || {};
+    component.tramiteStore.setAduanaDeIngreso = jest.fn();
+    component.cambioAduanaDeIngreso({
+      id: {}
+    });
+    expect(component.tramiteStore.setAduanaDeIngreso).toHaveBeenCalled();
+  });
+
+  it('should run #cambioFechaInicio()', async () => {
+    component.tramiteStore = component.tramiteStore || {};
+    component.tramiteStore.setFechaDeInspeccion = jest.fn();
+    component.cambioFechaInicio({});
+    expect(component.tramiteStore.setFechaDeInspeccion).toHaveBeenCalled();
+  });
+
+  it('should run #cambioPuntoDeInspeccion()', async () => {
+    component.tramiteStore = component.tramiteStore || {};
+    component.tramiteStore.setPuntoDeInspeccion = jest.fn();
+    component.cambioPuntoDeInspeccion({
+      id: {}
+    });
+    expect(component.tramiteStore.setPuntoDeInspeccion).toHaveBeenCalled();
+  });
+
+  it('should run #cambioTipoContenedor()', async () => {
+    component.tramiteStore = component.tramiteStore || {};
+    component.tramiteStore.setTipoContenedor = jest.fn();
+    component.cambioTipoContenedor({
+      id: {}
+    });
+    expect(component.tramiteStore.setTipoContenedor).toHaveBeenCalled();
+  });
+
+  it('should run #cambioIdentificacionTransporte()', async () => {
+    component.tramiteStore = component.tramiteStore || {};
+    component.tramiteStore.setIdentificacionTransporte = jest.fn();
+    component.cambioIdentificacionTransporte({
+      target: {
+        value: {}
+      }
+    });
+    expect(component.tramiteStore.setIdentificacionTransporte).toHaveBeenCalled();
+  });
+
+  it('should run #cambioJustificacion()', async () => {
+    component.tramiteStore = component.tramiteStore || {};
+    component.tramiteStore.setJustificacion = jest.fn();
+    component.cambioJustificacion({
+      target: {
+        value: {}
+      }
+    });
+    expect(component.tramiteStore.setJustificacion).toHaveBeenCalled();
+  });
+
+  it('should run #cambioEsSolicitudFerros()', async () => {
+    component.tramiteStore = component.tramiteStore || {};
+    component.tramiteStore.setEsSolicitudFerros = jest.fn();
+    component.cambioEsSolicitudFerros({
+      target: {
+        value: {}
+      }
+    });
+    expect(component.tramiteStore.setEsSolicitudFerros).toHaveBeenCalled();
   });
 
   it('should run #cargarDatos()', async () => {
@@ -128,6 +246,18 @@ describe('DatosDeLaSolicitudComponent', () => {
     component.acuicolaService.getDatosMercancia = jest.fn().mockReturnValue(observableOf({}));
     component.getMercanciaDatos();
     expect(component.acuicolaService.getDatosMercancia).toHaveBeenCalled();
+  });
+
+  it('should run #cambiarFechaInicio()', async () => {
+    component.datosDeLaSolicitudForm = component.datosDeLaSolicitudForm || {};
+    component.datosDeLaSolicitudForm.patchValue = jest.fn();
+    component.datosDeLaSolicitudForm.get = jest.fn().mockReturnValue({
+      markAsUntouched: function() {},
+      setValue: function() {}
+    });
+    component.cambiarFechaInicio({});
+    expect(component.datosDeLaSolicitudForm.patchValue).toHaveBeenCalled();
+    expect(component.datosDeLaSolicitudForm.get).toHaveBeenCalled();
   });
 
   it('should run #getHoraDeInspeccion()', async () => {
@@ -209,4 +339,24 @@ describe('DatosDeLaSolicitudComponent', () => {
     expect(component.destroyNotifier$.unsubscribe).toHaveBeenCalled();
   });
 
+  it('should run #inicializarEstadoFormulario() when esFormularioSoloLectura is true', async () => {
+    component.guardarDatosFormulario = jest.fn();
+    component.iniciarFormulario = jest.fn();
+    component.esFormularioSoloLectura = true;
+    component.inicializarEstadoFormulario();
+    expect(component.guardarDatosFormulario).toHaveBeenCalled();
+    expect(component.iniciarFormulario).not.toHaveBeenCalled();
+  });
+
+  it('should run #guardarDatosFormulario() when esFormularioSoloLectura is true', async () => {
+    component.iniciarFormulario = jest.fn();
+    component.datosDeLaSolicitudForm = component.datosDeLaSolicitudForm || {};
+    component.datosDeLaSolicitudForm.disable = jest.fn();
+    component.datosDeLaSolicitudForm.enable = jest.fn();
+    component.esFormularioSoloLectura = true;
+    component.guardarDatosFormulario();
+    expect(component.iniciarFormulario).toHaveBeenCalled();
+    expect(component.datosDeLaSolicitudForm.disable).toHaveBeenCalled();
+    expect(component.datosDeLaSolicitudForm.enable).not.toHaveBeenCalled();
+  });
 });

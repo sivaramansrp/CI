@@ -210,4 +210,16 @@ describe('DestinatarioComponent', () => {
     component.onSubmit();
     expect(setValoresStoreSpy).not.toHaveBeenCalled();
   });
+
+  it('should disable the form when soloLectura is true', () => {
+    component.soloLectura = true;
+    component.inicializarEstadoFormulario();
+    expect(component.registroFormulario.disabled).toBe(true);
+  });
+
+  it('should enable the form when soloLectura is false', () => {
+    component.soloLectura = false;
+    component.inicializarEstadoFormulario();
+    expect(component.registroFormulario.enabled).toBe(true);
+  });
 });

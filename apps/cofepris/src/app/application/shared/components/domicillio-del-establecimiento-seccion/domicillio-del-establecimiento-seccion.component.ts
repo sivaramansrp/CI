@@ -10,7 +10,6 @@ import {
   AfterViewInit,
   Component,
   ElementRef,
-  Input,
   OnDestroy,
   OnInit,
   ViewChild,
@@ -25,8 +24,8 @@ import {
   TablaSeleccion,
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
+import { DatosDelSolicituteSeccionState,DatosDelSolicituteSeccionStateStore } from '../../estados/stores/datos-del-solicitute-seccion.store';
 import { DatosDelSolicituteSeccionQuery } from '../../estados/queries/datos-del-solicitute-seccion.query';
-import { DatosDelSolicituteSeccionStateStore, DatosDelSolicituteSeccionState } from '../../estados/stores/datos-del-solicitute-seccion.store';
 
 import {
   FormBuilder,
@@ -37,7 +36,7 @@ import {
 } from '@angular/forms';
 import { EstablecimientoService } from '../../services/establecimiento.service';
 
-import { map, Subject, takeUntil } from 'rxjs';
+import { Subject,map, takeUntil } from 'rxjs';
 import { ScianModel } from '../../models/datos-de-la-solicitud.model';
 
 import { Modal } from 'bootstrap';
@@ -274,8 +273,8 @@ export class DomicillioDelEstablecimientoSeccionComponent
   guardarScian(): void {
     if (this.scianForm.valid) {
       const SCIAN_DATA: ScianModel = {
-        claveScian: this.scianForm.get('scian')?.value,
-        descripcionScian: this.scianForm.get('descripcionScian')?.value,
+        claveScian: this.scianJson.find(item => item.id === Number(this.scianForm.get('scian')?.value))?.descripcion ?? '',
+        descripcionScian: this.scianJson.find(item => item.id === Number(this.scianForm.get('descripcionScian')?.value))?.descripcion ?? ''
       };
 
       // Agregar el nuevo dato a la tabla
@@ -360,6 +359,14 @@ export class DomicillioDelEstablecimientoSeccionComponent
 
   }
 
+  /**
+   * Maneja el evento de cambio en el campo de RFC del representante.
+   * Llama a la función para buscar el representante por RFC.
+   */
+  hasError(controlName: string, errorName: string) {
+    return this.domicilioEstablecimiento.get(controlName)?.touched &&
+           this.domicilioEstablecimiento.get(controlName)?.hasError(errorName);
+  }
 
   /**
    * Ciclo de vida `OnDestroy`.

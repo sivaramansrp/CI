@@ -10,7 +10,6 @@ import {
   AfterViewInit,
   Component,
   ElementRef,
-  Input,
   OnDestroy,
   OnInit,
   ViewChild,
@@ -26,14 +25,18 @@ import {
   Validators,
 } from '@angular/forms';
 
+import { DatosDelSolicituteSeccionState,DatosDelSolicituteSeccionStateStore } from '../../estados/stores/datos-del-solicitute-seccion.store';
+
+
 import { Modal } from 'bootstrap';
 
-import { map, Subject, takeUntil } from 'rxjs';
+import { Subject,map, takeUntil } from 'rxjs';
+
 
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 
 import { DatosDelSolicituteSeccionQuery } from '../../estados/queries/datos-del-solicitute-seccion.query';
-import { DatosDelSolicituteSeccionStateStore, DatosDelSolicituteSeccionState } from '../../estados/stores/datos-del-solicitute-seccion.store';
+
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 /**
  * compodoc
@@ -185,6 +188,15 @@ export class DatosDelEstablecimientoSeccionComponent
       } else {
         this.detosEstablecimiento.enable();
       }
+  }
+
+    /**
+   * Maneja el evento de cambio en el campo de RFC del representante.
+   * Llama a la función para buscar el representante por RFC.
+   */
+  hasError(controlName: string, errorName: string){
+    return this.detosEstablecimiento.get(controlName)?.touched &&
+           this.detosEstablecimiento.get(controlName)?.hasError(errorName);
   }
 
   /**

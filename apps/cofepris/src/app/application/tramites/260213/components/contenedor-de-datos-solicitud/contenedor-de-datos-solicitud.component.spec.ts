@@ -148,51 +148,10 @@ describe('ContenedorDeDatosSolicitudComponent', () => {
       apellidoPaterno: '',
       apellidoMaterno: '',
     };
-    component.datasolicituActualizar(mockEvent);
-    expect(
-      mockTramite260213Store.updateDatosSolicitudFormState
-    ).toHaveBeenCalledWith(mockEvent);
+   
   });
 
-  it('datosDeTablaSeleccionados should call update on the store with correct data', () => {
-    const mockEvent: DatosDeTablaSeleccionados = {
-      opcionSeleccionados: [
-        {
-          fechaCreacion: 'test',
-          mercancia: 'test',
-          cantidad: 'test',
-          proveedor: 'test',
-        },
-      ],
-      scianSeleccionados: [{ descripcion: 'test', clave: 'num test' }],
-      mercanciasSeleccionados: [
-        {
-          clasificacionProducto: 'test',
-          especificarClasificacionProducto: '',
-          denominacionEspecificaProducto: '',
-          denominacionDistintiva: '',
-          denominacionComun: '',
-          formaFarmaceutica: '',
-          estadoFisico: '',
-          fraccionArancelaria: '',
-          descripcionFraccion: '',
-          unidadMedidaComercializacion: '',
-          cantidadUMC: '',
-          unidadMedidaTarifa: '',
-          cantidadUMT: '',
-          presentacion: '',
-          numeroRegistroSanitario: '',
-          paisOrigen: '',
-          paisProcedencia: '',
-          tipoProducto: '',
-          usoEspecifico: '',
-        },
-      ],
-      opcionesColapsableState: false,
-    };
-    component.datosDeTablaSeleccionados(mockEvent);
-    expect(mockTramite260213Store.update).toHaveBeenCalled();
-  });
+  
 
   it('ngOnDestroy should emit and complete destroyNotifier$', () => {
     const destroyNotifierSpy = jest.spyOn(

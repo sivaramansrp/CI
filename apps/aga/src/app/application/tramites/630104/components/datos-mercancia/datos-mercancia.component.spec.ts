@@ -48,7 +48,7 @@ describe('DatosMercanciaComponent', () => {
   it('debería inicializar el formulario con valores por defecto', () => {
     componente.inicializarFormulario();
     expect(componente.datosMercancia.value).toEqual({
-      // Agrega aquí los valores por defecto esperados de los controles del formulario
+      
     });
   });
 

@@ -1,42 +1,80 @@
+/**
+ * @component
+ * @name PagoDeDerechosComponent
+ * @description
+ * Componente para la gestión del pago de derechos en el trámite 220701.
+ * Permite capturar, validar y almacenar la información relacionada con el pago de derechos en trámites de importación de acuicultura.
+ * Incluye lógica para la gestión de catálogos, validaciones, estado de la sección y comunicación con el store y servicios.
+ * Utiliza formularios reactivos y consume múltiples servicios para obtener catálogos y datos relacionados.
+ * Implementa la lógica de inicialización, carga de catálogos, manejo de estado y sincronización con el store de Akita.
+ * 
+ * @example
+ * <pago-de-derechos [esFormularioSoloLectura]="true"></pago-de-derechos>
+ */
+import { CommonModule } from '@angular/common';
+
+import {
+  Component,
+  Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+} from '@angular/core';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+
+import { Subject, delay, map, takeUntil, tap } from 'rxjs';
+
 import {
   Catalogo,
   CatalogoSelectComponent,
+  CatalogosSelect,
+  ConsultaioQuery,
+  InputFecha,
+  InputFechaComponent,
+  SeccionLibQuery,
+  SeccionLibState,
+  SeccionLibStore,
+  TituloComponent,
 } from '@libs/shared/data-access-user/src';
-import { AcuicolaService } from '../../servicios/acuicola.service';
-import { CatalogosSelect } from '@libs/shared/data-access-user/src';
-import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
-import { EXPEDICION_FACTURA_FECHA } from '../../constantes/inspeccion-fisica-zoosanitario.enums';
-import { FormBuilder } from '@angular/forms';
-import { FormGroup } from '@angular/forms';
-import { Input } from '@angular/core';
-import { InputFecha } from '@libs/shared/data-access-user/src';
-import { InputFechaComponent } from '@libs/shared/data-access-user/src';
+
 import { InputRadioComponent } from '@ng-mf/data-access-user';
-import { OnChanges } from '@angular/core';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
+
+import {
+  EXPEDICION_FACTURA_FECHA,
+  TIPO_RADIO,
+} from '../../constantes/inspeccion-fisica-zoosanitario.enums';
+
+import {
+  PagoDeDerechos,
+  PagoDeDerechosRevision,
+} from '../../modelos/acuicola.model';
 import { OpcionDeRadio } from '../../modelos/importacion-de-acuicultura.module';
-import { PagoDeDerechos } from '../../modelos/acuicola.model';
-import { PagoDeDerechosRevision } from '../../modelos/acuicola.model';
 import { PagosDeDerechosFormInt } from '../../modelos/datos-de-interfaz.model';
-import { ReactiveFormsModule } from '@angular/forms';
-import { SeccionLibQuery } from '@libs/shared/data-access-user/src';
-import { SeccionLibState } from '@libs/shared/data-access-user/src';
-import { SeccionLibStore } from '@libs/shared/data-access-user/src';
-import { Subject } from 'rxjs';
-import { TituloComponent } from '@libs/shared/data-access-user/src';
+
+import { AcuicolaService } from '../../servicios/acuicola.service';
+
 import { TramiteStore } from '../../estados/tramite220701.store';
 import { TramiteStoreQuery } from '../../estados/tramite220701.query';
-import { Validators } from '@angular/forms';
-import { delay } from 'rxjs/operators';
-import { map } from 'rxjs/operators';
-import { takeUntil } from 'rxjs/operators';
-import { tap } from 'rxjs/operators';
 
 import * as moment from 'moment';
-import { TIPO_RADIO } from '../../constantes/inspeccion-fisica-zoosanitario.enums';
+/**
+ * @component
+ * @name PagoDeDerechosComponent
+ * @description
+ * Componente para la gestión del pago de derechos en el trámite 220701.
+ * Permite capturar, validar y almacenar la información relacionada con el pago de derechos en trámites de importación de acuicultura.
+ * Incluye lógica para la gestión de catálogos, validaciones, estado de la sección y comunicación con el store y servicios.
+ * Utiliza formularios reactivos y consume múltiples servicios para obtener catálogos y datos relacionados.
+ * Implementa la lógica de inicialización, carga de catálogos, manejo de estado y sincronización con el store de Akita.
+ * 
+ * @example
+ * <pago-de-derechos [esFormularioSoloLectura]="true"></pago-de-derechos>
+ */
 @Component({
   selector: 'pago-de-derechos',
   standalone: true,

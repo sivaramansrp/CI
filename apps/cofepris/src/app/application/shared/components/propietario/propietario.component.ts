@@ -24,7 +24,7 @@ import {
 } from '@angular/forms';
 import { Modal } from 'bootstrap';
 
-import { map, Subject, takeUntil } from 'rxjs';
+import { Subject,map, takeUntil } from 'rxjs';
 
 import {
   ConfiguracionColumna,
@@ -125,6 +125,17 @@ export class PropietarioComponent implements AfterViewInit, OnInit, OnDestroy {
    * Valor mostrado en el formulario.
    */
   showValue: string = '';
+
+  /**
+   * Indica el valor actual para mostrar información relacionada con terceros.
+   * 
+   * @remarks
+   * Esta propiedad se utiliza para controlar la visualización de secciones o componentes
+   * relacionados con terceros dentro del componente propietario.
+   * 
+   * @defaultValue ''
+   */
+  mostrarTerceros: string = '';
 
 /**
  * Indica si el formulario debe mostrarse en modo solo lectura.
@@ -322,6 +333,8 @@ export class PropietarioComponent implements AfterViewInit, OnInit, OnDestroy {
       this.modalInstance.show();
     }
     this.formTercerosDatos.disable();
+     this.propietarioradioForm.get('tercerosCurp')?.disable();
+     this.propietarioradioForm.get('tercerosRfc')?.disable();
   }
 
   /**
@@ -333,6 +346,7 @@ export class PropietarioComponent implements AfterViewInit, OnInit, OnDestroy {
     }
   }
 
+
   /**
    * Maneja el cambio de selección en el formulario.
    * @param value Valor seleccionado.
@@ -340,11 +354,16 @@ export class PropietarioComponent implements AfterViewInit, OnInit, OnDestroy {
   onSelectionChange(value: string): void {
     this.showBuscarButton = value !== '';
     this.showValue = value;
+     this.propietarioradioForm.get('tercerosRfc')?.enable();
 
     if (this.showBuscarButton) {
       this.propietarioradioForm.get('tercerosCurp')?.disable();
     } else {
       this.propietarioradioForm.get('tercerosCurp')?.enable();
+    }
+
+     if (this.mostrarTerceros === 'Extranjero' && this.showValue === 'Física') {
+      this.formTercerosDatos.enable();
     }
   }
 
@@ -352,14 +371,17 @@ export class PropietarioComponent implements AfterViewInit, OnInit, OnDestroy {
    * Maneja el cambio de radio en el formulario.
    * @param value Valor seleccionado.
    */
-  onRadioChange(value: string | number): void {
+  onRadioChange(value: string|number ): void {
     this.showDatosPersonales = value === 'Nacional';
+    this.mostrarTerceros = String(value);
+
   }
 
   /**
    * Limpia todos los campos del formulario.
    */
   limpiarFormulario(): void {
+    this.propietarioradioForm.reset();
     this.formTercerosDatos.reset();
   }
 

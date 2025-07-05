@@ -11,6 +11,8 @@ import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 
 import { EstablecimientoService } from '../../services/establecimiento.service';
 
+import { DatosDelSolicituteSeccionState,DatosDelSolicituteSeccionStateStore } from '../../estados/stores/datos-del-solicitute-seccion.store';
+
 import {
   FormBuilder,
   FormGroup,
@@ -18,7 +20,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { map, Subject, takeUntil } from 'rxjs';
+import { Subject,map, takeUntil } from 'rxjs';
 
 import {
   InputRadioComponent,
@@ -29,7 +31,6 @@ import {
 import { MANIFIESTOS_DECLARACION } from '../../constantes/aviso-de-funcionamiento.enum';
 
 import { DatosDelSolicituteSeccionQuery } from '../../estados/queries/datos-del-solicitute-seccion.query';
-import { DatosDelSolicituteSeccionStateStore,DatosDelSolicituteSeccionState } from '../../estados/stores/datos-del-solicitute-seccion.store';
 
 import { Manifiestistos, PropietarioTipoPersona } from '../../models/datos-de-la-solicitud.model';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
@@ -193,9 +194,9 @@ export class ManifiestosRepresentanteSeccionComponent
       representanteRfc: ['', Validators.required],
       manifests: [true, Validators.required],
       informacionConfidencialRadio: ['', Validators.required],
-      representanteNombre: ['', Validators.required],
-      apellidoPaterno: ['', Validators.required],
-      apellidoMaterno: [''],
+      representanteNombre: [{ value: '', disabled: true }, Validators.required],
+      apellidoPaterno: [{ value: '', disabled: true }, Validators.required],
+      apellidoMaterno: [{ value: '', disabled: true }],
     });
 
     // Carga el estado inicial en el formulario desde el store

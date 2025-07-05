@@ -21,6 +21,11 @@ export class TramiteFolioQueries extends Query<TramiteFolioState> {
     return state.firma;
   });
 
+  /**
+ * Selector para ID de solicitud
+ */
+  selectIdSolicitud$ = this.select((state) => state.idSolicitud);
+
   constructor(protected override store: TramiteFolioStore) {
     super(store);
   }
@@ -39,5 +44,13 @@ export class TramiteFolioQueries extends Query<TramiteFolioState> {
    */
   getFirma(): string {
     return this.getValue()?.firma ?? '';
+  }
+
+  /**
+   * @description Función para obtener el ID de solicitud
+   * @returns Un número que representa el ID de la solicitud.
+   */
+  getIdSolicitud(): number {
+    return this.getValue()?.idSolicitud ?? 0;
   }
 }

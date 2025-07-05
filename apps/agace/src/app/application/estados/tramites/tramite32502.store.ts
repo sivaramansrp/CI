@@ -40,6 +40,11 @@ export interface Solicitud32502State {
   individualCheckbox: boolean [];
 }
 
+/**
+ * Crea el estado inicial para la solicitud 32502.
+ *
+ * @returns {Solicitud32502State} Objeto con todos los campos inicializados.
+ */
 export function createInitialState(): Solicitud32502State {
   return {
     adace: '',
@@ -81,241 +86,63 @@ export function createInitialState(): Solicitud32502State {
   providedIn: 'root',
 })
 @StoreConfig({ name: 'tramite32502', resettable: true })
+/**
+ * Clase encargada de manejar y actualizar el estado de la solicitud 32502.
+ */
 export class Tramite32502Store extends Store<Solicitud32502State> {
-  setFraccionRegla(arg0: string): void {
-    throw new Error('Method not implemented.');
+  /**
+ * Método estático para establecer la regla de fracción arancelaria en el estado de la solicitud.
+ * 
+ * @param {string} arg0 - Valor de la regla de fracción arancelaria que se desea establecer.
+ * 
+ * @throws {Error} Este método no está implementado actualmente y lanzará un error si se intenta utilizar.
+ * 
+ * @example
+ * Tramite32502Store.setFraccionRegla('Regla123');
+ * 
+ * Nota: Este método debe ser implementado para actualizar correctamente el estado de la solicitud.
+ */
+  public setFraccionRegla(campo: string,valor: string): void {
+   this.update((state) => ({
+      ...state,
+      [campo]: valor
+    }));
   }
+  /**
+   * Constructor: inicializa el estado con valores por defecto.
+   */
   constructor() {
     super(createInitialState());
   }
 
-  public setFraccionArancelaria(fraccionArancelaria: string) {
-    this.update((state) => ({
-      ...state,
-      fraccionArancelaria,
-    }));
-  }
-
-  public setRfc(rfc: string) {
-    this.update((state) => ({
-      ...state,
-      rfc,
-    }));
-  }
-
-  public setRazonSocial(razonSocial: string) {
-    this.update((state) => ({
-      ...state,
-      razonSocial,
-    }));
-  }
-
-  public setAdace(adace: string) {
-    this.update((state) => ({
-      ...state,
-      adace,
-    }));
-  }
-
-  public setRfcExtranjero(rfcExtranjero: string) {
-    this.update((state) => ({
-      ...state,
-      rfcExtranjero,
-    }));
-  }
-
-  public setCveFraccionArancelaria(cveFraccionArancelaria: string) {
+  public setCveFraccionArancelaria(cveFraccionArancelaria: string):void {
     this.update((state) => ({
       ...state,
       cveFraccionArancelaria,
     }));
   }
-
-  public setReglaFraccion(reglaFraccion: string) {
-    this.update((state) => ({
-      ...state,
-      reglaFraccion,
-    }));
-  }
-
-  public setNico(nico: string) {
-    this.update((state) => ({
-      ...state,
-      nico,
-    }));
-  }
-
-  public setValorUSD(valorUSD: string) {
-    this.update((state) => ({
-      ...state,
-      valorUSD,
-    }));
-  }
-
-  public setMarca(marca: string) {
-    this.update((state) => ({
-      ...state,
-      marca,
-    }));
-  }
-
-  public setPeso(peso: string) {
-    this.update((state) => ({
-      ...state,
-      peso,
-    }));
-  }
-
+/**
+ * Método para actualizar la fecha de inicio en el estado de la solicitud.
+ * 
+ * @param {string} fechaInicio - Valor de la fecha de inicio que se desea establecer en el estado.
+ * 
+ * @description Este método actualiza la propiedad `fechaInicio` del estado de la solicitud con el valor proporcionado.
+ * 
+ * @example
+ * const store = new Tramite32502Store();
+ * store.setFechaInicio('2025-06-26');
+ */
   public setFechaInicio(fechaInicio: string) {
     this.update((state) => ({
       ...state,
       fechaInicio,
     }));
   }
-
-  public setNumeroSerie(numeroSerie: string) {
-    this.update((state) => ({
-      ...state,
-      numeroSerie,
-    }));
-  }
-
-  public setDescripcionMercancia(descripcionMercancia: string) {
-    this.update((state) => ({
-      ...state,
-      descripcionMercancia,
-    }));
-  }
-
-  public setInformacionExtra(informacionExtra: string) {
-    this.update((state) => ({
-      ...state,
-      informacionExtra,
-    }));
-  }
-
-  public setEntidadFederativa(entidadFederativa: string) {
-    this.update((state) => ({
-      ...state,
-      entidadFederativa,
-    }));
-  }
-
-  public setDelegacionMunicipio(delegacionMunicipio: string) {
-    this.update((state) => ({
-      ...state,
-      delegacionMunicipio,
-    }));
-  }
-
-  public setColonia(colonia: string) {
-    this.update((state) => ({
-      ...state,
-      colonia,
-    }));
-  }
-
-  public setCalle(calle: string) {
-    this.update((state) => ({
-      ...state,
-      calle,
-    }));
-  }
-
-  public setNumeroExterior(numeroExterior: string) {
-    this.update((state) => ({
-      ...state,
-      numeroExterior,
-    }));
-  }
-
-  public setNumeroInterior(numeroInterior: string) {
-    this.update((state) => ({
-      ...state,
-      numeroInterior,
-    }));
-  }
-
-  public setCodigoPostal(codigoPostal: string) {
-    this.update((state) => ({
-      ...state,
-      codigoPostal,
-    }));
-  }
-
-  public setPatenteAutorizacion(patenteAutorizacion: string) {
-    this.update((state) => ({
-      ...state,
-      patenteAutorizacion,
-    }));
-  }
-
-  public setRfcAgenteAduanal(rfcAgenteAduanal: string) {
-    this.update((state) => ({
-      ...state,
-      rfcAgenteAduanal,
-    }));
-  }
-
-  public setNumeroPedimento(numeroPedimento: string) {
-    this.update((state) => ({
-      ...state,
-      numeroPedimento,
-    }));
-  }
-
-  public setClaveAduana(claveAduana: string) {
-    this.update((state) => ({
-      ...state,
-      claveAduana,
-    }));
-  }
-
-  public setNombre(nombre: string) {
-    this.update((state) => ({
-      ...state,
-      nombre,
-    }));
-  }
-
-  public setPrimerApellido(primerApellido: string) {
-    this.update((state) => ({
-      ...state,
-      primerApellido,
-    }));
-  }
-
-  public setSegundoApellido(segundoApellido: string) {
-    this.update((state) => ({
-      ...state,
-      segundoApellido,
-    }));
-  }
-
-  public setTipoDocumento(tipoDocumento: string) {
-    this.update((state) => ({
-      ...state,
-      tipoDocumento,
-    }));
-  }
-
-  public setDropdown(dropdown: string) {
-    this.update((state) => ({
-      ...state,
-      dropdown,
-    }));
-  }
-
-  public setCommonCheckbox(commonCheckbox: boolean) {
-    this.update((state) => ({
-      ...state,
-      commonCheckbox,
-    }));
-  }
-  public setIndividualCheckbox(individualCheckbox: []) {
-    this.update((state) => ({
-      ...state,
-      individualCheckbox,
-    }));
-  }
+    /** Métodos para actualizar diferentes propiedades del estado de la solicitud. */
+    public establecerDatos(datos: Partial<Solicitud32502State>): void {
+      this.update((state) => ({
+        ...state,
+        ...datos,
+      }));
+    }
 }

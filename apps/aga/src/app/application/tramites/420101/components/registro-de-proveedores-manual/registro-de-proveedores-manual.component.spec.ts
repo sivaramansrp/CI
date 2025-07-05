@@ -13,7 +13,6 @@ import { Location } from '@angular/common';
 import { Tramite420101Query } from '../../estados/tramite420101Query.query';
 import { Tramite420101Store } from '../../estados/tramite420101Store.store';
 import { RegistrarProveedoresService } from '../../service/registrar-proveedores.service';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 @Injectable()
 class MockTramite420101Query {}
@@ -24,14 +23,36 @@ class MockTramite420101Store {}
 @Injectable()
 class MockRegistrarProveedoresService {}
 
+@Directive({ selector: '[myCustom]' })
+class MyCustomDirective {
+  @Input() myCustom;
+}
+
+@Pipe({name: 'translate'})
+class TranslatePipe implements PipeTransform {
+  transform(value) { return value; }
+}
+
+@Pipe({name: 'phoneNumber'})
+class PhoneNumberPipe implements PipeTransform {
+  transform(value) { return value; }
+}
+
+@Pipe({name: 'safeHtml'})
+class SafeHtmlPipe implements PipeTransform {
+  transform(value) { return value; }
+}
+
 describe('RegistroDeProveedoresManualComponent', () => {
   let fixture;
   let component;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule, HttpClientTestingModule, RegistroDeProveedoresManualComponent, ],
+      imports: [ FormsModule, ReactiveFormsModule, RegistroDeProveedoresManualComponent ],
       declarations: [
+        TranslatePipe, PhoneNumberPipe, SafeHtmlPipe,
+        MyCustomDirective
       ],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
       providers: [

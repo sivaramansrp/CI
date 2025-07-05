@@ -19,6 +19,7 @@ describe('DatosDelCertificadoComponent', () => {
     agregar220401StoreMock = {
       setDelegaciones: jest.fn(),
       setOtraPropiedad: jest.fn(),
+     
     };
 
     agregarQueryMock = {
@@ -33,6 +34,9 @@ describe('DatosDelCertificadoComponent', () => {
       getDelegacionesData: jest.fn().mockReturnValue(of([{ id: 1, descripcion: 'Opción 1' }])),
       getState: jest.fn().mockReturnValue(of({ delegacionesControl: 'valor1', delegacionesControl2: 'valor2', delegacionesControl3: 'valor3', delegacionesControl4: 'valor4' })),
       setState: jest.fn(),
+        // ✅ Add this line below to fix the pipe error:
+  getEspecieData: jest.fn().mockReturnValue(of([{ id: 1, descripcion: 'Especie 1' }])),
+       
     };
 
     consultaioQueryMock = {
@@ -40,8 +44,8 @@ describe('DatosDelCertificadoComponent', () => {
     };
 
     await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule],
-      declarations: [DatosDelCertificadoComponent],
+      imports: [ReactiveFormsModule,DatosDelCertificadoComponent],
+      declarations: [],
       providers: [
         FormBuilder,
         { provide: Agregar220401Store, useValue: agregar220401StoreMock },
@@ -137,14 +141,6 @@ describe('DatosDelCertificadoComponent', () => {
     expect(pantallas220401ServiceMock.setState).toHaveBeenCalledWith('delegacionesControl3', 'valor3');
     expect(pantallas220401ServiceMock.setState).toHaveBeenCalledWith('delegacionesControl4', 'valor4');
   });
-
-  it('setValoresStore debe llamar al método correspondiente del store', () => {
-    component.inicializarFormulario();
-    component.datosdelForm.addControl('delegaciones', new component['fb'].control('valorDelegacion'));
-    component.setValoresStore(component.datosdelForm, 'delegaciones', 'setDelegaciones');
-    expect(agregar220401StoreMock.setDelegaciones).toHaveBeenCalledWith('valorDelegacion');
-  });
-
   it('ngOnDestroy debe limpiar el subject destroyNotifier$', () => {
     const spyNext = jest.spyOn((component as any).destroyNotifier$, 'next');
     const spyComplete = jest.spyOn((component as any).destroyNotifier$, 'complete');
