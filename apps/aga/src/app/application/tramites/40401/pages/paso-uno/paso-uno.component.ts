@@ -60,8 +60,7 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
     public store: Tramite40401Store,
     public tramiteQuery: Tramite40401Query,
     private consultaQuery: ConsultaioQuery,
-    private registroCaatAereoService: RegistroCaatAereoService,
-    private Tramite40401Store: Tramite40401Store
+    private registroCaatAereoService: RegistroCaatAereoService
   ) {
     // Inicializa el paso activo en el store
   }
@@ -120,9 +119,9 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
           this.esDatosRespuesta = true;
 
           // Actualiza el estado del chofer40103Store con los datos del director general
-          this.Tramite40401Store.setPais(data.TipoDeCaatAereo);
-          this.Tramite40401Store.setCodigo(data.DodigoDeTransportacion);
-          this.Tramite40401Store.setTransportacion(data.EmpresaDeTransportacion);
+          this.store.setPais(data.TipoDeCaatAereo);
+          this.store.setCodigo(data.DodigoDeTransportacion);
+          this.store.setTransportacion(data.EmpresaDeTransportacion);
         });
   }
   /**

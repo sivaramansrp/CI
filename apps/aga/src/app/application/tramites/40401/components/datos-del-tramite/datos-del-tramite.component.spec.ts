@@ -11,7 +11,15 @@ import { ValidacionesFormularioService } from '@libs/shared/data-access-user/src
 import { RegistroCaatAereoService } from '../../services/RegistroCaatAereoController.service';
 
 @Injectable()
-class MockRegistroCaatAereoService {}
+class MockRegistroCaatAereoService {
+  obtenerCAATAereo = jest.fn().mockReturnValue(observableOf({
+    datos: []
+  }));
+  
+  obtenerCodigoAereo = jest.fn().mockReturnValue(observableOf({
+    datos: []
+  }));
+}
 
 @Injectable()
 class MockTramite40401Store {}
@@ -21,7 +29,23 @@ class MockTramite40401Query {}
 
 describe('DatosDelTramiteComponent', () => {
   let fixture: ComponentFixture<DatosDelTramiteComponent>;
-  let component: { ngOnDestroy: () => void; tramiteQuery: { selectSolicitud$?: any; }; initializeForm: jest.Mock<any, any, any> | (() => void); cargarCAATAereo: jest.Mock<any, any, any> | (() => void); ngOnInit: () => void; formBuilder: { group?: any; }; solicitudState: { pais?: any; codigo?: any; transportacion?: any; }; registroCaatAereoService: { obtenerCAATAereo?: any; }; validacionesService: { isValid?: any; }; isValid: (arg0: {}, arg1: {}) => void; destroyNotifier$: { next?: any; complete?: any; }; };
+  let component: { 
+    ngOnDestroy: () => void; 
+    tramiteQuery: { selectSolicitud$?: any; }; 
+    initializeForm: jest.Mock<any, any, any> | (() => void); 
+    cargarCAATAereo: jest.Mock<any, any, any> | (() => void); 
+    ngOnInit: () => void; 
+    formBuilder: { group?: any; }; 
+    solicitudState: { pais?: any; codigo?: any; transportacion?: any; }; 
+    registroCaatAereoService: RegistroCaatAereoService; 
+    validacionesService: { isValid?: any; }; 
+    isValid: (arg0: {}, arg1: {}) => void; 
+    destroyNotifier$: { next?: any; complete?: any; };
+    datosDelTramiteForm: any;
+    store: any;
+    limpiar: () => void;
+    setValoresStore: jest.Mock<any, any, any> | ((form: any, campo: string, metodoNombre: string) => void);
+  };
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -75,10 +99,14 @@ describe('DatosDelTramiteComponent', () => {
   it('should run #cargarCAATAereo()', async () => {
     component.registroCaatAereoService = component.registroCaatAereoService || {};
     component.registroCaatAereoService.obtenerCAATAereo = jest.fn().mockReturnValue(observableOf({
-      datos: {}
+      datos: []
+    }));
+    component.registroCaatAereoService.obtenerCodigoAereo = jest.fn().mockReturnValue(observableOf({
+      datos: []
     }));
     component.cargarCAATAereo();
     expect(component.registroCaatAereoService.obtenerCAATAereo).toHaveBeenCalled();
+    expect(component.registroCaatAereoService.obtenerCodigoAereo).toHaveBeenCalled();
   });
 
   it('should run #isValid()', async () => {
@@ -95,6 +123,37 @@ describe('DatosDelTramiteComponent', () => {
     component.ngOnDestroy();
     expect(component.destroyNotifier$.next).toHaveBeenCalled();
     expect(component.destroyNotifier$.complete).toHaveBeenCalled();
+  });
+
+  it('should run #limpiar() and reset form and update store values', async () => {
+    // Arrange
+    const mockFormGroup = {
+      reset: jest.fn(),
+      get: jest.fn().mockImplementation((field: string) => ({
+        value: null // Simulating reset values
+      }))
+    };
+    
+    const mockStore = {
+      setPais: jest.fn(),
+      setCodigo: jest.fn(),
+      setTransportacion: jest.fn()
+    };
+
+    // Setup component properties
+    component.datosDelTramiteForm = mockFormGroup as any;
+    component.store = mockStore as any;
+    component.setValoresStore = jest.fn();
+
+    // Act
+    component.limpiar();
+
+    // Assert
+    expect(mockFormGroup.reset).toHaveBeenCalled();
+    expect(component.setValoresStore).toHaveBeenCalledTimes(3);
+    expect(component.setValoresStore).toHaveBeenCalledWith(mockFormGroup, 'pais', 'setPais');
+    expect(component.setValoresStore).toHaveBeenCalledWith(mockFormGroup, 'codigo', 'setCodigo');
+    expect(component.setValoresStore).toHaveBeenCalledWith(mockFormGroup, 'transportacion', 'setTransportacion');
   });
 
 });
