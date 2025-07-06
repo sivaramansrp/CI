@@ -10,7 +10,7 @@ import { Tramite40301Query } from '../estados/tramite40301.query';
   providedIn: 'root'
 })
 export class CapturarService {
-  private baseUrl: string = 'assets/json/40301/';
+  private baseUrl: string = 'assets/json/40301';
 
   constructor(private http: HttpClient,
               private tramite40301Store: Tramite40301Store,
