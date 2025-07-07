@@ -1,5 +1,5 @@
 import { AVISO_OPCIONES, CASO_FORTUITO, DESTRUCCION_FECHA, ETIQUETA_DE_ARCHIVO, MENSAJE, TEXTO } from '../../constantes/destruccion-o-donacion';
-import { AlertComponent, Catalogo, CatalogoSelectComponent, CatalogosSelect, InputFechaComponent, InputRadioComponent, SeccionLibQuery, SeccionLibState, SeccionLibStore, TituloComponent } from '@libs/shared/data-access-user/src';
+import { AlertComponent, Catalogo, CatalogoSelectComponent, CatalogosSelect, ConsultaioQuery, ConsultaioState, InputFechaComponent, InputRadioComponent, SeccionLibQuery, SeccionLibState, SeccionLibStore, TituloComponent } from '@libs/shared/data-access-user/src';
 import { AvisoDeMercanciaService } from '../service/aviso-de-mercancia';
 
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
@@ -134,11 +134,13 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
    */
    @Input() formularioDeshabilitado: boolean = false;
 
-   /**
-   * @descripcion
-   * Indica si el formulario se encuentra en modo solo lectura.
-   * Cuando es verdadero, los controles del formulario estarán deshabilitados.
-   */
+  /** Estado de la consulta que se obtiene del store. */
+  public consultaState!: ConsultaioState;
+
+  /** Consulta de estado para la solicitud */
+  consultaDatos!: ConsultaioState;
+  
+  /** Indica si el formulario es de solo lectura */
   esFormularioSoloLectura: boolean = false;
 
   public entidadFederativaData: CatalogosSelect = {
@@ -207,6 +209,7 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
     private seccionStore: SeccionLibStore,
     private seccionQuery: SeccionLibQuery,
     private avisodemercancia: AvisoDeMercanciaService,
+    private consultaioQuery: ConsultaioQuery
   ) {}
 
   /**
@@ -253,6 +256,19 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
         }
       }
       );
+      this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.consultaDatos = seccionState;
+          this.esFormularioSoloLectura = this.consultaDatos.readonly;
+          this.inicializarEstadoFormulario(); 
+        })
+      )   
+      .subscribe();   
+    
+       this.inicializarEstadoFormulario();
+  
 
     if(this.formularioDeshabilitado){
       this.esFormularioSoloLectura = true;
@@ -321,6 +337,14 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+ * @method getEntidadFederativaData
+ * @descripcion
+ * Este método obtiene los datos del catálogo de entidades federativas desde el servicio `AvisoDeMercanciaService`.
+ * Utiliza el operador `takeUntil` para gestionar la destrucción de la suscripción y evitar fugas de memoria.
+ * Los datos obtenidos se asignan a la propiedad `catalogos` del objeto `entidadFederativaData`.
+ * @returns {void}
+ */
   getEntidadFederativaData(): void {
     this.avisodemercancia
       .getEntidadFederativaData()
@@ -330,6 +354,14 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
       });
   }
 
+  /**
+ * @method getAlcaldiaMunicipo
+ * @descripcion
+ * Este método obtiene los datos del catálogo de alcaldías o municipios desde el servicio `AvisoDeMercanciaService`.
+ * Utiliza el operador `takeUntil` para gestionar la destrucción de la suscripción y evitar fugas de memoria.
+ * Los datos obtenidos se asignan a la propiedad `catalogos` del objeto `alcaldiaMunicipoData`.
+ * @returns {void}
+ */
   getAlcaldiaMunicipo(): void {
     this.avisodemercancia
       .getAlcaldiaMunicipo()
@@ -339,7 +371,14 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
       });
   }
 
-  
+  /**
+ * @method getColonia
+ * @descripcion
+ * Este método obtiene los datos del catálogo de colonias desde el servicio `AvisoDeMercanciaService`.
+ * Utiliza el operador `takeUntil` para gestionar la destrucción de la suscripción y evitar fugas de memoria.
+ * Los datos obtenidos se asignan a la propiedad `catalogos` del objeto `coloniaData`.
+ * @returns {void}
+ */
   getColonia(): void {
     this.avisodemercancia
       .getColonia()
@@ -349,6 +388,15 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
       });
   }
 
+  /**
+ * @method getMerccanciaEntidadFederativa
+ * @descripcion
+ * Este método obtiene los datos del catálogo de entidades federativas relacionadas con la mercancía 
+ * desde el servicio `AvisoDeMercanciaService`.
+ * Utiliza el operador `takeUntil` para gestionar la destrucción de la suscripción y evitar fugas de memoria.
+ * Los datos obtenidos se asignan a la propiedad `catalogos` del objeto `merccanciaEntidadFederativaData`.
+ * @returns {void}
+ */
   getMerccanciaEntidadFederativa(): void {
     this.avisodemercancia
       .getMerccanciaEntidadFederativa()
@@ -357,8 +405,15 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
         this.merccanciaEntidadFederativaData.catalogos = data as Catalogo[];
       });
   }
-
-  
+  /**
+ * @method getMerccanciaAlcaldiaMunicipo
+ * @descripcion
+ * Este método obtiene los datos del catálogo de alcaldías o municipios relacionados con la mercancía 
+ * desde el servicio `AvisoDeMercanciaService`.
+ * Utiliza el operador `takeUntil` para gestionar la destrucción de la suscripción y evitar fugas de memoria.
+ * Los datos obtenidos se asignan a la propiedad `catalogos` del objeto `merccanciaAlcaldiaMunicipoData`.
+ * @returns {void}
+ */
   getMerccanciaAlcaldiaMunicipo(): void {
     this.avisodemercancia
       .getMerccanciaAlcaldiaMunicipo()
@@ -368,6 +423,15 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
       });
   }
 
+  /**
+ * @method getMerccanciaColonia
+ * @descripcion
+ * Este método obtiene los datos del catálogo de colonias relacionadas con la mercancía 
+ * desde el servicio `AvisoDeMercanciaService`.
+ * Utiliza el operador `takeUntil` para gestionar la destrucción de la suscripción y evitar fugas de memoria.
+ * Los datos obtenidos se asignan a la propiedad `catalogos` del objeto `merccanciaColoniaData`.
+ * @returns {void}
+ */
   getMerccanciaColonia(): void {
     this.avisodemercancia
       .getMerccanciaColonia()
@@ -376,7 +440,14 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
         this.merccanciaColoniaData.catalogos = data as Catalogo[];
       });
   }
-
+/**
+ * @method getTarifa
+ * @descripcion
+ * Este método obtiene los datos del catálogo de tarifas desde el servicio `AvisoDeMercanciaService`.
+ * Utiliza el operador `takeUntil` para gestionar la destrucción de la suscripción y evitar fugas de memoria.
+ * Los datos obtenidos se asignan a la propiedad `catalogos` del objeto `tarifaData`.
+ * @returns {void}
+ */
   getTarifa(): void {
     this.avisodemercancia
       .getTarifa()

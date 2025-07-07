@@ -18,6 +18,7 @@
                 'tipoDeAviso',
                 'setTipoDeAviso'
                 )"
+                [disabled]="esFormularioSoloLectura ? true : false"
             ></app-input-radio>
             </div>
         </div>
@@ -58,6 +59,7 @@
                     'rfc',
                     'setRfc'
                     )"
+                    [disabled]="esFormularioSoloLectura"
                     >
                 </div>
             </div>
@@ -76,7 +78,7 @@
                    [placeholder]="entidadFederativaData.primerOpcion"
                    [required]="true"
                    (change)="setValoresStore(avisoForm,'entidadFederativa','setEntidadFederativa')"
-                  [disabled]="esFormularioSoloLectura"
+                   [isDisabled]="esFormularioSoloLectura" 
               ></app-catalogo-select>
                 </div>
             </div>
@@ -90,7 +92,7 @@
                     [placeholder]="alcaldiaMunicipoData.primerOpcion"
                     [required]="true"
                     (change)="setValoresStore(avisoForm,'alcaldiaMunicipo','setAlcaldiaMunicipo')"
-                   [disabled]="esFormularioSoloLectura"
+                    [isDisabled]="esFormularioSoloLectura" 
                ></app-catalogo-select>
                 </div>
             </div>
@@ -104,7 +106,7 @@
                     [placeholder]="coloniaData.primerOpcion"
                     [required]="true"
                     (change)="setValoresStore(avisoForm,'colonia','setColonia')"
-                   [disabled]="esFormularioSoloLectura"
+                    [isDisabled]="esFormularioSoloLectura" 
                ></app-catalogo-select>
                 </div>
             </div>
@@ -124,6 +126,7 @@
                     'calle',
                     'setCalle'
                     )"
+                    [disabled]="esFormularioSoloLectura"
                     >
                 </div>
             </div>
@@ -143,6 +146,7 @@
                     'numeroExterior',
                     'setNumeroExterior'
                     )"
+                    [disabled]="esFormularioSoloLectura"
                     >
                 </div>
             </div>
@@ -160,6 +164,7 @@
                     'numeroInterior',
                     'setNumeroInterior'
                     )"
+                    [disabled]="esFormularioSoloLectura"
                     >
                 </div>
             </div>
@@ -177,6 +182,7 @@
                     'codigoPostal',
                     'setCodigoPostal'
                     )"
+                    [disabled]="esFormularioSoloLectura"
                     >
                 </div>
             </div>
@@ -196,6 +202,7 @@
                     'cartaCupo',
                     'setCartaCupo'
                     )"
+                    [disabled]="esFormularioSoloLectura"
                     >
                 </div>
             </div>
@@ -219,6 +226,7 @@
                     'numeraDeAcuse',
                     'setNumeraDeAcuse'
                     )"
+                    [disabled]="esFormularioSoloLectura"
                     >
                 </div>
             </div>
@@ -246,6 +254,7 @@
                     'destruccionMercancia',
                     'setDestruccionMercancia'
                     )"
+                    [disabled]="esFormularioSoloLectura"
                     >
                 </div>
             </div>
@@ -266,7 +275,7 @@
                     [placeholder]="merccanciaEntidadFederativaData.primerOpcion"
                     [required]="true"
                     (change)="setValoresStore(avisoForm,'merccanciaEntidadFederativa','setMerccanciaEntidadFederativa')"
-                   [disabled]="esFormularioSoloLectura"
+                    [isDisabled]="esFormularioSoloLectura" 
                ></app-catalogo-select>
                 </div>
             </div>
@@ -280,7 +289,7 @@
                     [placeholder]="merccanciaAlcaldiaMunicipoData.primerOpcion"
                     [required]="true"
                     (change)="setValoresStore(avisoForm,'merccanciaAlcaldiaMunicipo','setMerccanciaAlcaldiaMunicipo')"
-                   [disabled]="esFormularioSoloLectura"
+                    [isDisabled]="esFormularioSoloLectura" 
                ></app-catalogo-select>
                 </div>
             </div>
@@ -294,7 +303,7 @@
                     [placeholder]="merccanciaColoniaData.primerOpcion"
                     [required]="true"
                     (change)="setValoresStore(avisoForm,'merccanciaColonia','setMerccanciaColonia')"
-                   [disabled]="esFormularioSoloLectura"
+                    [isDisabled]="esFormularioSoloLectura" 
                ></app-catalogo-select>
                 </div>
             </div>
@@ -314,6 +323,7 @@
                     'merccanciaCalle',
                     'setMerccanciaCalle'
                     )"
+                    [disabled]="esFormularioSoloLectura"
                     >
                 </div>
             </div>
@@ -333,6 +343,7 @@
                     'merccanciaNumeroExterior',
                     'setMerccanciaNumeroExterior'
                     )"
+                    [disabled]="esFormularioSoloLectura"
                     >
                 </div>
             </div>
@@ -350,6 +361,7 @@
                     'merccanciaNumeroInterior',
                     'setMerccanciaNumeroInterior'
                     )"
+                    [disabled]="esFormularioSoloLectura"
                     >
                 </div>
             </div>
@@ -367,6 +379,7 @@
                     'merccanciaCodigoPostal',
                     'setMerccanciaCodigoPostal'
                     )"
+                    [disabled]="esFormularioSoloLectura"
                     >
                 </div>
             </div>
@@ -386,6 +399,7 @@
                     'destruir',
                     'setDestruir'
                     )"
+                    [disabled]="esFormularioSoloLectura"
                     >
                 </div>
             </div>
@@ -399,7 +413,7 @@
                     [placeholder]="tarifaData.primerOpcion"
                     [required]="true"
                     (change)="setValoresStore(avisoForm,'tarifa','setTarifa')"
-                   [disabled]="esFormularioSoloLectura"
+                    [isDisabled]="esFormularioSoloLectura" 
                ></app-catalogo-select>
                 </div>
             </div>
@@ -420,7 +434,7 @@
                     [placeholder]="merccanciaEntidadFederativaData.primerOpcion"
                     [required]="true"
                     (change)="setValoresStore(avisoForm,'destruccionEntidadFederativa','setDestruccionEntidadFederativa')"
-                   [disabled]="esFormularioSoloLectura"
+                    [isDisabled]="esFormularioSoloLectura" 
                ></app-catalogo-select>
                 </div>
             </div>
@@ -434,7 +448,7 @@
                     [placeholder]="merccanciaAlcaldiaMunicipoData.primerOpcion"
                     [required]="true"
                     (change)="setValoresStore(avisoForm,'destruccionAlcaldiaMunicipo','setDestruccionAlcaldiaMunicipo')"
-                   [disabled]="esFormularioSoloLectura"
+                    [isDisabled]="esFormularioSoloLectura" 
                ></app-catalogo-select>
                 </div>
             </div>
@@ -448,7 +462,7 @@
                     [placeholder]="merccanciaColoniaData.primerOpcion"
                     [required]="true"
                     (change)="setValoresStore(avisoForm,'destruccionColonia','setDestruccionColonia')"
-                   [disabled]="esFormularioSoloLectura"
+                    [isDisabled]="esFormularioSoloLectura" 
                ></app-catalogo-select>
                 </div>
             </div>
@@ -462,6 +476,7 @@
                     class="form-control" 
                     id="destruccionCalle"
                     formControlName="destruccionCalle" 
+                    [disabled]="esFormularioSoloLectura"
                     >
                 </div>
             </div>
@@ -481,6 +496,7 @@
                     'destruccionNumeroExterior',
                     'setDestruccionNumeroExterior'
                     )"
+                    [disabled]="esFormularioSoloLectura"
                     >
                 </div>
             </div>
@@ -498,6 +514,7 @@
                     'destruccionNumeroInterior',
                     'setDestruccionNumeroInterior'
                     )"
+                    [disabled]="esFormularioSoloLectura"
                     >
                 </div>
             </div>
@@ -515,6 +532,7 @@
                     'destruccionCodigoPostal',
                     'setDestruccionCodigoPostal'
                     )"
+                    [disabled]="esFormularioSoloLectura"
                     >
                 </div>
             </div>
@@ -527,7 +545,8 @@
             <div class="row mt-5">
                 <div class="col-md-6">
                     <input-fecha [datos]="desrtuccionFecha" (valorCambiado)="cambioFecha($event)"
-                    [setFecha]="DestruccionFecha" name= "caboDestruccionFecha" ></input-fecha>
+                    [setFecha]="DestruccionFecha" name= "caboDestruccionFecha" 
+                ></input-fecha>
                 </div>
                 <div class="form-group">
                     <label class="form-label" for="destruccionHora">Hora en la que se llevará a cabo la destrucción*:</label>
@@ -542,6 +561,7 @@
                     'destruccionHora',
                     'setDestruccionHora'
                     )"
+                    [disabled]="esFormularioSoloLectura"
                     >
                 </div>
             </div>
@@ -560,6 +580,7 @@
                         'desturccionProceso',
                         'setDesturccionProceso'
                         )"
+                        [disabled]="esFormularioSoloLectura"
                         >
                     </div>
                 </div>
@@ -582,6 +603,7 @@
                     'casofortuito',
                     'setCasofortuito'
                     )"
+                    [disabled]="esFormularioSoloLectura ? true : false"
                   ></app-input-radio>
                 </div>
             </div>
@@ -596,16 +618,18 @@
                 <div class="col-md-8">
                     <button type="button" for="archivoMedicamentos" class="file-upload"
                         (click)="activarSeleccionArchivo()"
-                        disabled="esFormularioSoloLectura">
+                        [disabled]="esFormularioSoloLectura">
                         Seleccionar archivo
                     </button>
                     <span class="ml-2">{{ etiquetaDeArchivo }}</span>
                     <input type="file" id="archivoMedicamentos" (change)="onCambioDeArchivo($event)"
-                        class="file-upload" style="display: none;">
+                        class="file-upload" style="display: none;"
+                        [disabled]="esFormularioSoloLectura">
                 </div>
 
                 <div class="col-md-4 text-end">
-                    <button class="btn btn-primary mr-5px" disabled="esFormularioSoloLectura">Cargar
+                    <button class="btn btn-primary mr-5px" disabled="esFormularioSoloLectura"
+                    [disabled]="esFormularioSoloLectura">Cargar
                         archivo</button>
                 </div>
             </div>
@@ -632,6 +656,7 @@
                             'donoMercancia',
                             'setDonoMercancia'
                             )"
+                            [disabled]="esFormularioSoloLectura"
                         >
                     </div>
                 </div>
@@ -651,6 +676,7 @@
                             'condicionesMateriales',
                             'setCondicionesMateriales'
                             )"
+                            [disabled]="esFormularioSoloLectura"
                         >
                     </div>
                 </div>
