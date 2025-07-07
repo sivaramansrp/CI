@@ -137,15 +137,14 @@
   <div class="row mt-5">
     <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccionCheckbox" [configuracionTabla]="mercanciasTabla"
       [datos]="mercanciasTablaDatos"
-      [disableSeleccionTablaCheckBox]="esFormularioSoloLectura ? true : false"></app-tabla-dinamica>
+      [disableSeleccionTablaCheckBox]="esFormularioSoloLectura ? true : false"
+      (listaDeFilaSeleccionada)="onSeleccionChange($event)" ></app-tabla-dinamica>
     <div class="container text-end mt-5">
-      <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura ? true : false" data-bs-toggle="modal"
-        data-bs-target="#modalAddAgentMercancias">
+      <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura ? true : false" data-bs-toggle="modal" (click)="abrirModalMercancia()">
         Modificar
       </button>
-      <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura ? true : false">Eliminar</button>
-      <button class="btn btn-primary me-2" [disabled]="esFormularioSoloLectura ? true : false" data-bs-toggle="modal"
-        data-bs-target="#modalAddAgentMercancias">
+      <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura ? true : false" (click)="eliminarMercancia()">Eliminar</button>
+      <button class="btn btn-primary me-2" [disabled]="esFormularioSoloLectura ? true : false" data-bs-toggle="modal" (click)="abrirModalMercancia()">
         Agregar
       </button>
     </div>
@@ -191,7 +190,7 @@
   </div>
 </div>
 
-<div class="modal fade" id="modalAddAgentMercancias" tabindex="-1" aria-labelledby="modalAddAgentMercanciasLabel"
+<div class="modal fade" #modalAddAgentMercancias tabindex="-1" aria-labelledby="modalAddAgentMercanciasLabel"
   aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" style="max-width: 80vw">
     <div class="modal-content">
@@ -200,6 +199,7 @@
       </div>
       <div class="modal-body modal-height">
         <form [formGroup]="formMercancias">
+         <ng-titulo titulo="Identificación del producto"></ng-titulo> 
           <div class="form-group">
             <label for="nombreComercial">Nombre comercial* :</label>
             <input type="text" id="nombreComercial" formControlName="nombreComercial" class="form-control"
@@ -256,9 +256,15 @@
           </div>
 
           <div class="form-group">
-            <label for="fraccionArancelaria">Fracción arancelaria * :</label>
+            <label for="fraccionArancelaria">Fracción arancelaria * :
+               <span
+              class="bi bi-question-circle-fill"
+              title="No. de licencia sanitaria"
+              data-bs-toggle="tooltip"
+              ></span>
+            </label>
             <input type="text" id="fraccionArancelaria" formControlName="fraccionArancelaria" class="form-control"
-              (change)="setValoresStore(formMercancias, 'fraccionArancelaria', 'setFraccionArancelaria')" />
+              (change)="setValoresStore(formMercancias, 'fraccionArancelaria', 'setFraccionArancelaria');onFraccionChange()" />
             <div class="d-grid">
               <div *ngIf="formMercancias.get('fraccionArancelaria')?.touched">
                 <small class="mensaje-error" *ngIf="formMercancias.get('fraccionArancelaria')?.hasError('required')">
@@ -293,7 +299,12 @@
               </div>
             </div>
             <div class="col-md-6">
-              <label for="UMT">UMT * :</label>
+              <label for="UMT">UMT * :  
+                <span
+                   class="bi bi-question-circle-fill"
+                   title="UMT"
+                  data-bs-toggle="tooltip"
+                  ></span></label>
               <input type="text" id="UMT" formControlName="UMT" class="form-control"
                 (change)="setValoresStore(formMercancias, 'UMT', 'setUMT')" />
               <div class="d-grid">
@@ -323,7 +334,7 @@
             <div class="col-md-6">
               <div class="form-group">
                 <app-catalogo-select [catalogo]="estado" formControlName="UMC" [label]="'UMC'" [required]="true"
-                  name="UMC" [isDisabled]="esFormularioSoloLectura ? true : false"
+                  name="UMC"  [tooltipQuestionCircle]="true" [isDisabled]="esFormularioSoloLectura ? true : false"
                   (change)="setValoresStore(formMercancias, 'UMC', 'setUMC')"></app-catalogo-select>
               </div>
             </div>
@@ -409,7 +420,7 @@
       </div>
       <div class="modal-footer custom-footer">
         <button type="button" class="btn btn-default" [disabled]="esFormularioSoloLectura ? true : false"
-          data-bs-dismiss="modal">
+         (click)="limpiarMercanciaForm()">
           Limpiar
         </button>
         <button type="button" class="btn btn-default" [disabled]="esFormularioSoloLectura ? true : false"

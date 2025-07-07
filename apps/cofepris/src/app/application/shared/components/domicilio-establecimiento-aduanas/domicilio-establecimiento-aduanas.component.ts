@@ -1,7 +1,7 @@
 import { AvisocalidadStore, SolicitudState } from '../../estados/stores/aviso-calidad.store';
 import { CROSLISTA_DE_PAISES, INPUT_FECHA_CADUCIDAD_CONFIG, } from '../../constantes/datos-domicilio-legal.enum';
 import { Catalogo, CatalogoSelectComponent, ConfiguracionColumna, CrossListLable, CrosslistComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
-import { Component, OnDestroy, OnInit, QueryList, ViewChildren, } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren, } from '@angular/core';
 import { DATOS_MERCANCIAS, MercanciasInfo, NICO_TABLA, NicoInfo, } from '../../models/datos-domicilio-legal.model';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators, } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
@@ -77,10 +77,7 @@ export interface MercanciasTabla {
   templateUrl: './domicilio-establecimiento-aduanas.component.html',
   styleUrls: ['./domicilio-establecimiento-aduanas.component.css'],
 })
-export class DomicilioEstablecimientoAduanasComponent implements OnInit, OnDestroy {
-
-
-  
+export class DomicilioEstablecimientoAduanasComponent implements OnInit, OnDestroy, AfterViewInit {
   /**
    * Referencia a los componentes de la lista de fechas.
    */
@@ -91,6 +88,10 @@ export class DomicilioEstablecimientoAduanasComponent implements OnInit, OnDestr
    */
   public solicitudState!: SolicitudState;
 
+  /**
+   * Lista de datos de partidas.
+   */
+   public seleccionados: MercanciasInfo[] = [];
   /**
    * Notificador para destruir observables.
    */
@@ -124,6 +125,8 @@ export class DomicilioEstablecimientoAduanasComponent implements OnInit, OnDestr
     // Reservado para futuras inyecciones de dependencias o inicializaciones.
   }
 
+   @ViewChild('modalAddAgentMercancias', { static: false })
+   modalAddAgentMercancias!: ElementRef; 
   /**
    * Grupo de formularios principal.
    * @property {FormGroup} domicilio
@@ -274,6 +277,16 @@ export class DomicilioEstablecimientoAduanasComponent implements OnInit, OnDestr
     { fraccion: '0402.10.01', descripcion: 'Leche en polvo, sin azúcar' },
     { fraccion: '1006.30.99', descripcion: 'Arroz semiblanqueado' }
   ];
+   /**
+   * Ciclo de vida `AfterViewInit`.
+   * Inicializa la instancia del modal de Bootstrap.
+   */
+  ngAfterViewInit(): void {
+    if (this.modalAddAgentMercancias) {
+      this.modalInstance = new Modal(this.modalAddAgentMercancias.nativeElement);
+    }
+  }
+
   /**
    * Etiqueta de la lista de fechas.
    * */
@@ -301,7 +314,7 @@ export class DomicilioEstablecimientoAduanasComponent implements OnInit, OnDestr
     this.configurarGrupoForm(); // Configura el grupo de formularios con los valores iniciales.
 
   }
-
+ 
   /**
    * @method configurarGrupoForm
    * @description Configures the reactive form group for the "Datos del Establecimiento RFC" component.
@@ -351,7 +364,7 @@ export class DomicilioEstablecimientoAduanasComponent implements OnInit, OnDestr
      * Inicializa el grupo de formularios para las mercancías con los valores del estado de la solicitud.
      */ 
     this.formMercancias = this.fb.group({
-      nombreComercial: [this.solicitudState?.nombreComercial, Validators.required],
+      nombreComercial: [this.solicitudState?.nombreComercial, [Validators.required,Validators.maxLength(1000)]],
       nombreComun: [this.solicitudState?.nombreComun, Validators.required],
       nombreCientifico: [this.solicitudState?.nombreCientifico, Validators.required],
       usoEspecifico: [this.solicitudState?.usoEspecifico, Validators.required],
@@ -383,7 +396,6 @@ export class DomicilioEstablecimientoAduanasComponent implements OnInit, OnDestr
       this.formAgente.enable();
       this.formMercancias.enable();
     }
-
   }
   /**
    * Botones de acción disponibles para gestionar las listas de fechas.
@@ -479,6 +491,12 @@ export class DomicilioEstablecimientoAduanasComponent implements OnInit, OnDestr
       });
     }
   }
+  /**
+   * Abre el modal SCIAN.
+   */
+  abrirModalMercancia(): void {
+    this.modalInstance.show();
+  }
 
    /**
    * @method limpiarScianForm
@@ -520,7 +538,6 @@ this.formMercancias.get('fraccionArancelaria')?.valueChanges.subscribe((valor: s
       this.formMercancias.get('descripcionFraccion')?.setValue(DESCRIPCION);
     });
   }
-
  /**
    * @method cerrarModalScian
    * @description Oculta el modal relacionado con el catálogo SCIAN.
@@ -543,6 +560,81 @@ this.formMercancias.get('fraccionArancelaria')?.valueChanges.subscribe((valor: s
     (this.avisocalidadStore[metodoNombre] as (value: string | number) => void)(VALOR);
   }
 
+/** * Método que se ejecuta al enviar el formulario de domicilio.
+ * Actualiza el estado del store
+ */
+onSeleccionChange(event: MercanciasInfo[]): void {
+  this.seleccionados = event;
+}
+/**
+ * Método que se ejecuta al enviar el formulario de domicilio.
+ * Actualiza el estado del store con los valores del formulario de domicilio.
+ */
+eliminarMercancia(): void { 
+  this.seleccionados.forEach(row => {
+    const INDEX = this.mercanciasTablaDatos.indexOf(row);
+    if (INDEX > -1) {
+      this.mercanciasTablaDatos.splice(INDEX, 1);
+    }
+  });
+   this.seleccionados = [];
+}
+/**
+ * Método que se ejecuta al enviar el formulario de domicilio.
+ * Actualiza el estado del store con los valores del formulario de domicilio.
+ */
+
+limpiarMercanciaForm(): void { 
+  this.formMercancias.reset();
+   this.modalInstance.show();
+}
+/**
+ * Método que se ejecuta al enviar el formulario de domicilio.
+ * Agrega un nuevo producto a la tabla de mercancías si el formulario es válido.
+ * Si el formulario no es válido, marca todos los campos como tocados para mostrar errores.
+ */
+
+agregarProducto(): void {
+  if (this.formMercancias.valid) {
+    const PRODUCTO = {
+      nombreComercial: this.formMercancias.get('nombreComercial')?.value,
+      nombreComun: this.formMercancias.get('nombreComun')?.value,
+      nombreCientifico: this.formMercancias.get('nombreCientifico')?.value,
+      porcentajeConcentracion: this.formMercancias.get('porcentajeConcentracion')?.value,
+      clasificacionToxicologica: '',
+      objetoImportacion: '',
+      fraccionArancelaria: this.formMercancias.get('fraccionArancelaria')?.value,
+      descripcionFraccion: this.formMercancias.get('descripcionFraccion')?.value,
+      unidadMedidaTarifa: '',
+      cantidadUmt: '',
+      cantidadUmc: this.formMercancias.get('cantidadUmc')?.value,
+      paisProduccionIngredienteActivo: '',
+      paisElaboracionProducto: '',
+      paisProcedenciaUltimoPuerto:'',
+      paisOrigen: '',
+      numeroRegistroSanitario:'',
+      numeroCas: this.formMercancias.get('numeroCas')?.value,
+      estadoFisico: '',
+      usoEspecifico: this.formMercancias.get('usoEspecifico')?.value,
+      umc: '',
+    };
+
+    this.mercanciasTablaDatos.push(PRODUCTO);
+
+    this.formMercancias.reset();
+  } else {
+    this.formMercancias.markAllAsTouched();
+  }
+}
+
+/**
+ * Método que se ejecuta al cambiar la fracción arancelaria.
+ * Actualiza los valores de descripción de fracción y UMT en el formulario de mercancías.
+ */
+onFraccionChange(): void {
+  this.formMercancias.get('descripcionFraccion')?.setValue('Fracción válida');
+  this.formMercancias.get('UMT')?.setValue('KG');
+}
   /**
    * Método del ciclo de vida de Angular que se llama cuando el componente se destruye.
    * Este método completa el observable destroyNotifier$ para cancelar las suscripciones activas.
