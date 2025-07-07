@@ -78,13 +78,6 @@ describe('TercerospageComponent', () => {
 
   });
 
-  it('should run #ngAfterViewInit()', async () => {
-    component.certificadoZoosanitarioQuery = component.certificadoZoosanitarioQuery || {};
-    component.certificadoZoosanitarioQuery.seleccionarTercerosRelacionados$ = observableOf({});
-    component.ngAfterViewInit();
-
-  });
-
   it('should run #onPersonasChanged()', async () => {
     component.certificadoZoosanitarioServices = component.certificadoZoosanitarioServices || {};
     component.certificadoZoosanitarioServices.updateTercerosRelacionados = jest.fn();

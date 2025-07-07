@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
@@ -35,7 +35,7 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
    * Se espera que sea asignada antes de su uso.
    */
   public consultaState!: ConsultaioState;
-
+@ViewChild(SolicitudDatosComponent) SolicitudDatos!: SolicitudDatosComponent;
   /**
    * Constructor de la clase.
    * Inyecta los servicios necesarios para manejar la lógica de solicitudes y consultas.
@@ -80,6 +80,7 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
     } else {
       this.esDatosRespuesta = true;
     }
+    
   }
 
   /**

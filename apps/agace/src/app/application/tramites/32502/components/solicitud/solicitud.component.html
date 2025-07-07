@@ -453,7 +453,22 @@
             name="patenteAutorizacion"
             id="patenteAutorizacion"
             (change)="setValoresStore(pedimentoST)"
+            [class.is-invalid]="
+              pedimentoST.get('patenteAutorizacion')?.touched &&
+              pedimentoST.get('patenteAutorizacion')?.invalid
+            "
           />
+           <div
+            class="invalid-feedback"
+            *ngIf="
+              pedimentoST.get('patenteAutorizacion')?.touched &&
+              pedimentoST.get('patenteAutorizacion')?.invalid
+            "
+          >
+            <span *ngIf="pedimentoST.get('patenteAutorizacion')?.hasError('maxlength')"
+              >Este campo debe tener un máximo de 4 caracteres.</span
+            >
+          </div>
         </div>
         <div class="col-md-4">
           <label for="rfcAgenteAduanal" class="form-label"

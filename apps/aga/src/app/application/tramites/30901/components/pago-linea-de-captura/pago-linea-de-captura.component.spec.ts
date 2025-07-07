@@ -250,6 +250,63 @@ describe('PagoLineaDeCapturaComponent', () => {
     expect(solicitudStoreSpy.setPagoDerechosLista).not.toHaveBeenCalled();
   });
 
+  it('should add tarifa if form is valid and no duplicate exists in pagoDerechosLista', () => {
+    component.pagoDerechosLista = [
+      { linea: 'EXISTING', monto: '1000' }
+    ];
+    component.formPagoLC.get('lineaCaptura')?.setValue('NEWLINEA');
+    component.formPagoLC.get('valorPago')?.setValue('5000');
+    component.formPagoLC.get('lineaCaptura')?.setErrors(null);
+    component.formPagoLC.get('valorPago')?.setErrors(null);
+
+    component.anadirTarifasDePago();
+
+    expect(solicitudStoreSpy.setPagoDerechosLista).toHaveBeenCalledWith([
+      { linea: 'NEWLINEA', monto: '5000' }
+    ]);
+  });
+
+  it('should mark all as touched and not add tarifa if formPagoLC is invalid', () => {
+    const markAllAsTouchedSpy = jest.spyOn(component.formPagoLC, 'markAllAsTouched');
+    component.formPagoLC.get('lineaCaptura')?.setValue('');
+    component.formPagoLC.get('valorPago')?.setValue('');
+    component.formPagoLC.get('lineaCaptura')?.setErrors({ required: true });
+    component.formPagoLC.get('valorPago')?.setErrors({ required: true });
+
+    component.anadirTarifasDePago();
+
+    expect(markAllAsTouchedSpy).toHaveBeenCalled();
+    expect(solicitudStoreSpy.setPagoDerechosLista).not.toHaveBeenCalled();
+  });
+
+  it('should not add tarifa if lineaCaptura already exists in pagoDerechosLista', () => {
+    component.pagoDerechosLista = [
+      { linea: 'DUPLICATE', monto: '1000' }
+    ];
+    component.formPagoLC.get('lineaCaptura')?.setValue('DUPLICATE');
+    component.formPagoLC.get('valorPago')?.setValue('1000');
+    component.formPagoLC.get('lineaCaptura')?.setErrors(null);
+    component.formPagoLC.get('valorPago')?.setErrors(null);
+
+    component.anadirTarifasDePago();
+
+    expect(solicitudStoreSpy.setPagoDerechosLista).not.toHaveBeenCalled();
+  });
+
+  it('should handle pagoDerechosLista being empty and add tarifa', () => {
+    component.pagoDerechosLista = [];
+    component.formPagoLC.get('lineaCaptura')?.setValue('UNIQUE');
+    component.formPagoLC.get('valorPago')?.setValue('1234');
+    component.formPagoLC.get('lineaCaptura')?.setErrors(null);
+    component.formPagoLC.get('valorPago')?.setErrors(null);
+
+    component.anadirTarifasDePago();
+
+    expect(solicitudStoreSpy.setPagoDerechosLista).toHaveBeenCalledWith([
+      { linea: 'UNIQUE', monto: '1234' }
+    ]);
+  });
+
   it('should not add tarifa if formPagoLC is invalid (missing valorPago)', () => {
     component.pagoDerechosLista = [];
     component.formPagoLC.get('lineaCaptura')?.setValue('SOMELINEA');
@@ -313,6 +370,43 @@ describe('PagoLineaDeCapturaComponent', () => {
     component.formPagoLC.get('valorPago')?.setValue('50000');
     expect(component.validarFormulario()).toBe(true);
   });
+  it('should call guardarDatosFormulario when esFormularioSoloLectura is true in inicializarEstadoFormulario', () => {
+    const guardarDatosFormularioSpy = jest.spyOn(component, 'guardarDatosFormulario');
+    component.esFormularioSoloLectura = true;
+    component.inicializarEstadoFormulario();
+    expect(guardarDatosFormularioSpy).toHaveBeenCalled();
+  });
+
+  it('should call inicializarFormulario when esFormularioSoloLectura is false in inicializarEstadoFormulario', () => {
+    const inicializarFormularioSpy = jest.spyOn(component, 'inicializarFormulario');
+    component.esFormularioSoloLectura = false;
+    component.inicializarEstadoFormulario();
+    expect(inicializarFormularioSpy).toHaveBeenCalled();
+  });
+
+  it('should disable formPagoLC if esFormularioSoloLectura is true in guardarDatosFormulario', () => {
+    component.esFormularioSoloLectura = true;
+    component.formPagoLC.enable();
+    component.guardarDatosFormulario();
+    expect(component.formPagoLC.disabled).toBe(true);
+  });
+
+  it('should enable formPagoLC if esFormularioSoloLectura is false in guardarDatosFormulario', () => {
+    component.esFormularioSoloLectura = false;
+    component.formPagoLC.disable();
+    component.guardarDatosFormulario();
+    expect(component.formPagoLC.enabled).toBe(true);
+  });
+
+  it('should not throw or change formPagoLC if esFormularioSoloLectura is neither true nor false in guardarDatosFormulario', () => {
+    (component as any).esFormularioSoloLectura = undefined;
+    const enableSpy = jest.spyOn(component.formPagoLC, 'enable');
+    const disableSpy = jest.spyOn(component.formPagoLC, 'disable');
+    expect(() => component.guardarDatosFormulario()).not.toThrow();
+    expect(enableSpy).not.toHaveBeenCalled();
+    expect(disableSpy).not.toHaveBeenCalled();
+  });
+
 
   it('should unsubscribe darseDeBaja and complete destroyed$ on ngOnDestroy', () => {
     const unsubscribeSpy = jest.fn();
