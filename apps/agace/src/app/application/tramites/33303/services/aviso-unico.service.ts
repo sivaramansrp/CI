@@ -2,9 +2,9 @@ import { Injectable } from '@angular/core';
 
 import { HttpClient } from '@angular/common/http';
 
-import { Observable, catchError, of, throwError } from 'rxjs';
+import { Observable, catchError, throwError } from 'rxjs';
 
-import { AvisoValor, PreOperativo } from '../models/aviso.model';
+import { AvisoValor } from '../models/aviso.model';
 import { CatalogoResponse } from '@libs/shared/data-access-user/src';
 
 /**
@@ -52,40 +52,15 @@ private jsonUrl = 'assets/json/33303';
   getSolicitante(): Observable<AvisoValor> {
     return this.http.get<AvisoValor>('assets/json/33303/renovacion.json');
     }
-
  /**
-     * Método para obtener el tipo de aviso desde un archivo JSON.
-     * Se realiza una solicitud HTTP y se maneja cualquier error que pueda ocurrir.
-     *
-     * @returns Un `Observable` que contiene los datos del aviso en formato `CatalogoResponse`.
-     */
-    getAvisoModify(): Observable<CatalogoResponse> {
-      /**
-       * Realiza una solicitud HTTP para obtener los datos del tipo de aviso desde el archivo JSON.
-       */
-      return this.http
-        .get<CatalogoResponse>(`${this.jsonUrl}/${this.fileName}`)
-        .pipe(
-          /**
-           * Captura errores que puedan ocurrir durante la solicitud HTTP y los maneja.
-           */
-          catchError((error) => {
-            /**
-             * Registra el error en la consola para su análisis.
-             */
-            console.error('Error fetching data from:', this.jsonUrl, error);
-  
-            /**
-             * Retorna un objeto por defecto en caso de error para evitar que la aplicación falle.
-             */
-            return of({
-              id: 0,
-              descripcion: '',
-              code: 0,
-              data: [],
-              message: 'Respuesta por defecto debido a un error',
-            } as unknown as CatalogoResponse);
-          })
-        );
-    }
+   * @method
+   * @name getAvisoModify
+   * @description
+   * Obtiene los datos del solicitante desde un archivo JSON.
+   * @returns {Observable<CatalogoResponse>} Un observable que emite los datos del solicitante.
+   */
+
+getAvisoModify(): Observable<CatalogoResponse> {
+   return this.http.get<CatalogoResponse>('assets/json/33303/tipoDeAviso.json');
+  }
 }

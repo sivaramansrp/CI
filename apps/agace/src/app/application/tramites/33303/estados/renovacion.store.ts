@@ -90,16 +90,56 @@ export interface UnicoState {
    */
   importePago: string;
 
-  modalidadCertificacion: string;
+  /**
+   * @property {string} modalidadCertificacion
+   * @description Fecha de pago asociada a la solicitud.
+   */
 
+  modalidadCertificacion: string;
+    /**
+   * @property {boolean} foreignClientsSuppliers
+   * @description Fecha de pago asociada a la solicitud.
+   */
   foreignClientsSuppliers: boolean;
+    /**
+   * @property {boolean} nationalSuppliers
+   * @description Fecha de pago asociada a la solicitud.
+   */
   nationalSuppliers: boolean;
+  /**
+   * @property {boolean} modificationsMembers
+   * @description Fecha de pago asociada a la solicitud.
+   */
   modificationsMembers: boolean;
+  /**
+   * @property {boolean} changesToLegalDocuments
+   * @description Fecha de pago asociada a la solicitud.
+   */
   changesToLegalDocuments: boolean;
+  /**
+   * @property {boolean} mergerOrSplitNotice
+   * @description Fecha de pago asociada a la solicitud.
+   */
   mergerOrSplitNotice?: boolean;
+  /**
+   * @property {boolean} additionFractions
+   * @description Fecha de pago asociada a la solicitud.
+   */
   additionFractions?: boolean;
+  /**
+   * @property {boolean} additionmodificación
+   * @description Fecha de pago asociada a la solicitud.
+   */
   additionmodificación?: boolean;
+  /**
+   * @property {boolean} additionPresentación
+   * @description Fecha de pago asociada a la solicitud.
+   */
   additionPresentación?: boolean;
+  /**
+   * @property {boolean} acepto253
+   * @description Fecha de pago asociada a la solicitud.
+   */
   acepto253?: boolean;
 }
 

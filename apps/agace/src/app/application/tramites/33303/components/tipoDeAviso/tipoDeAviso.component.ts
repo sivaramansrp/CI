@@ -67,9 +67,21 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
 
   /** Sujeto para manejar el ciclo de vida de los observables */
   private destroy$: Subject<void> = new Subject<void>();
+   /**
+   * Constructor del componente.
+   * @param fb Constructor de formularios reactivos.
+   * @param service Servicio para obtener datos relacionados con el aviso único.
+   * @param unicoStore Almacén para manejar el estado de la aplicación.
+   * @param unicoQuery Consultas para obtener el estado actual de la aplicación.
+   */
 
-  constructor(private fb: FormBuilder,private service: AvisoUnicoService,private unicoStore: UnicoStore,
+   constructor(private fb: FormBuilder,private service: AvisoUnicoService,private unicoStore: UnicoStore,
       private unicoQuery: UnicoQuery) {}
+      
+  /**
+   * Método que se ejecuta al inicializar el componente.
+   * Configura el formulario, carga datos iniciales y suscribe al estado de la aplicación.
+   */    
 
   ngOnInit(): void {
      this.unicoQuery.selectSolicitud$
@@ -81,10 +93,6 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-    // this.miFormulario = this.fb.group({
-    //   modalidadCertificacion: ['', Validators.required],
-    //   // Otros campos del formulario
-    //   });
     this.inicializamiFormulario();
   }
 
@@ -139,6 +147,10 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
     const VALOR = form.get(campo)?.value;
     (this.unicoStore[metodoNombre] as (value: string) => void)(VALOR);
   }
+  /**
+   * Método que se ejecuta al destruir el componente.
+   * Libera recursos y cancela suscripciones.
+   */
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();

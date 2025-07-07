@@ -42,7 +42,7 @@ export class AvisoDeRenovacionComponent implements OnInit, OnDestroy {
  * Indica si el formulario está en modo solo lectura.
  * Cuando es `true`, los campos del formulario no se pueden editar.
  */
-  esFormularioSoloLectura: boolean = true;
+  esFormularioSoloLectura: boolean = false;
   /**
    * Fecha inicial para el campo de fecha.
    */
@@ -154,12 +154,32 @@ export class AvisoDeRenovacionComponent implements OnInit, OnDestroy {
         this.localidadList = data as Catalogo[];
       });
 
- if (this.esFormularioSoloLectura) {
+}
+  /**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.  
+   * Además, obtiene la información del catálogo de mercancía.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.actualizarEstado();
+    }
+  }
+
+   /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormulario(): void {
+    this.actualizarEstado();
+    if (this.esFormularioSoloLectura) {
       this.avisoForm.disable();
+      
     } else {
       this.avisoForm.enable();
-    }
-
+      
+    } 
   }
 /**
    * Actualiza el campo de fecha de pago en el formulario y en el estado global.
