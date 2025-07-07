@@ -46,6 +46,7 @@ describe('RegistroPageComponent', () => {
     // Attach the mock wizardComponent
     component.wizardComponent = new MockWizardComponent() as any;
     fixture.detectChanges();
+    
   });
 
   it('should create', () => {

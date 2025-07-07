@@ -23,7 +23,7 @@
             [catalogo]="justificacion.catalogos"
             [label]="justificacion.labelNombre"
             [placeholder]="justificacion.primerOpcion"
-            [isDisabled]="esFormularioSoloLectura"
+            [isDisabled]="true"
             formControlName="justificacion"
             (selectionChange)="selectJustificacionCatalogo($event)"
           ></app-catalogo-select>
@@ -69,7 +69,7 @@
             [catalogo]="banco.catalogos"
             [label]="banco.labelNombre"
             [placeholder]="banco.primerOpcion"
-            [isDisabled]="esFormularioSoloLectura"
+            [isDisabled]="true"
             formControlName="banco"
             (selectionChange)="selectBancoCatalogo($event)"
           ></app-catalogo-select>

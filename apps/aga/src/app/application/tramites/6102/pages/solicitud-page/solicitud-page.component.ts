@@ -56,7 +56,7 @@ export class SolicitudPageComponent {
     nroPasos: this.pasos.length,
     indice: this.indice,
     txtBtnAnt: 'Anterior',
-    txtBtnSig: 'Continuar',
+    txtBtnSig: 'Siguiente',
   };
 
   /**

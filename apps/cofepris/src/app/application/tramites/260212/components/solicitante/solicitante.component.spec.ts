@@ -15,9 +15,6 @@ describe('SolicitanteComponent', () => {
 
     const fixture = TestBed.createComponent(SolicitanteComponent);
     component = fixture.componentInstance;
-
-    component.establecerSolicitudForm();
-
     fixture.detectChanges();
   });
 
@@ -35,5 +32,15 @@ describe('SolicitanteComponent', () => {
     expect(component.solicitudForm.get('pais')?.value).toBe('ESTADOS UNIDOS MEXICANOS');
   });
 
-})
+  it('should call establecerValoresDeFormulario on initialization', () => {
+    const spy = jest.spyOn(component, 'establecerValoresDeFormulario').mockImplementation(() => {});
+    component.ngOnInit();
+    expect(spy).toHaveBeenCalled();
+  });
 
+  it('should call establecerValoresDeFormulario on initialization', () => {
+    const spy = jest.spyOn(component, 'establecerValoresDeFormulario');
+    component.ngOnInit();
+    expect(spy).toHaveBeenCalled();
+  });
+})

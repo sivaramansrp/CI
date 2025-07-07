@@ -1,7 +1,7 @@
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { Catalogo, CatalogoSelectComponent, CrosslistComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Catalogo, CatalogoSelectComponent, CrosslistComponent, TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
 
 
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -15,7 +15,7 @@ import { Observable, Subject, map, takeUntil } from 'rxjs';
 import { PaisDeOrigenComponent } from '../pais-de-origen/pais-de-origen.component';
 
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
-import { EstadoFisico } from '../../models/permiso-maquila.models';
+import { MercanciaModel } from '../../models/permiso-maquila.models';
 
 /**
  * Componente MercanciasTableFormComponent
@@ -48,6 +48,11 @@ export class MercanciasTableFormComponent implements OnInit, OnDestroy {
    * Evento de salida que emite una acción de Cancelaración.
    */
   @Output() Cancelar = new EventEmitter<void>();
+
+  /**
+   * Evento de salida que emite una acción de Cancelaración.
+   */
+  @Output() agregarDatos = new EventEmitter<{form: MercanciaModel}>();
 
   /**
     * Subject used for cleaning up component resources when destroyed.
@@ -101,7 +106,8 @@ export class MercanciasTableFormComponent implements OnInit, OnDestroy {
   constructor(private fb: FormBuilder, private solicitudService: SolicitudService,
     private tramite260212Store: Tramite260212Store,
     private tramite260212Query: Tramite260212Query,
-    private consultaioQuery: ConsultaioQuery
+    private consultaioQuery: ConsultaioQuery,
+    private validacionesService: ValidacionesFormularioService
   ) {
 
   }
@@ -129,9 +135,9 @@ export class MercanciasTableFormComponent implements OnInit, OnDestroy {
       tipoDeProducto: ['', Validators.required],
       estadoFisico: ['', Validators.required],
       fraccionArancelaria: ['', Validators.required],
-      descripcionFraccion: ['', Validators.required],
+      descripcionFraccion: [{value: 'Preparación de hidroxialuminato de sodio o de magnesio y sorbitol.', disabled: true}, Validators.required],
       cantidadUMT: ['', Validators.required],
-      UMT: ['', Validators.required],
+      UMT: [{value: 'Kilogramo', disabled: true}, Validators.required],
       cantidadUMC: ['', Validators.required],
       UMC: ['', Validators.required],
       tipoDeEnvase: ['', Validators.required]
@@ -197,11 +203,8 @@ export class MercanciasTableFormComponent implements OnInit, OnDestroy {
 
     this.solicitudService.getTestadoFisico()
       .pipe(takeUntil(this.destroy$))
-      .subscribe((data: EstadoFisico[]): void => {
-        this.estadoFisico = data.map(item => ({
-          id: item.id,
-          descripcion: item.descripcíon,
-        }));
+      .subscribe((data): void => {
+        this.estadoFisico = data;
       });
 
     this.selecteDespecificarClasificacion$.subscribe((selectedDespecificarClasificacion) => {
@@ -218,6 +221,50 @@ export class MercanciasTableFormComponent implements OnInit, OnDestroy {
   getEspecificar(): void {
     const SELECTED_ESPECIFICIAR = this.datosMercanciaForm.get('especificarClasificacion')?.value;
     this.tramite260212Store.setDespecificarClasificacion(SELECTED_ESPECIFICIAR);
+  }
+
+  /**
+   * @method agregar
+   * @description
+   * Valida el formulario de mercancías y, si es válido, emite los datos capturados a través del evento `agregarDatos`.
+   * Posteriormente, cierra el formulario llamando a `cerrarMercanciasTableForm()`.
+   * Si el formulario no es válido, marca todos los campos como tocados para mostrar los mensajes de validación.
+   *
+   * @example
+   * this.agregar();
+   * // Si el formulario es válido, emite los datos y cierra el formulario.
+   */
+  agregar(): void {
+    if (this.datosMercanciaForm.valid) {
+      const DATOS = {form: this.datosMercanciaForm.value};
+      this.agregarDatos.emit(DATOS);
+      this.cerrarMercanciasTableForm();
+    } else {
+      this.datosMercanciaForm.markAllAsTouched();
+    }
+  }
+  /**
+   * @method limpiar
+   * @description
+   * Limpia y restablece todos los campos del formulario de mercancías a su estado inicial.
+   * Este método se utiliza para borrar los datos ingresados por el usuario y dejar el formulario listo para una nueva captura.
+   *
+   * @example
+   * this.limpiar();
+   * // El formulario se restablece a sus valores iniciales.
+   */
+  limpiar(): void {
+    this.datosMercanciaForm.reset();
+  }
+
+  /**
+   * Verifica si un campo específico del formulario es válido.
+   * @param field Nombre del campo del formulario a validar.
+   * @returns `true` si el campo es válido; de lo contrario, `false`.
+   */
+  
+  esValido(field: string): boolean {
+    return Boolean(this.validacionesService.isValid(this.datosMercanciaForm, field));
   }
 
   /**

@@ -69,7 +69,11 @@ describe('PagoDeDerechosComponent', () => {
     expect(component.pagoDerechos.contains('importeDePago')).toBe(true);
   });
 
-it('debe llamar a guardarDatosFormulario si esFormularioSoloLectura es true', () => {
+  // it('should set esFormularioSoloLectura from consultaioQuery', () => {
+  //   expect(component.esFormularioSoloLectura).toBe(true);
+  // });
+
+  it('should call guardarDatosFormulario if esFormularioSoloLectura is true', () => {
     const spy = jest.spyOn(component, 'guardarDatosFormulario');
     component.esFormularioSoloLectura = true;
     component.pagoDerechos = component['fb'].group({
@@ -154,12 +158,20 @@ it('debe llamar a guardarDatosFormulario si esFormularioSoloLectura es true', ()
     expect(mockTramite260212Store.setImporteDePago).toHaveBeenCalledWith('2000');
   });
 
-  it('debe limpiar las suscripciones en ngOnDestroy', () => {
-    const destroySpy = jest.spyOn((component as any).destroy$, 'next');
-    const completeSpy = jest.spyOn((component as any).destroy$, 'complete');
+  it('should call setBanco on getMunicipios', () => {
+    component.pagoDerechos.get('banco')?.setValue('Banco 2');
+    component.obtenerBanco();
+    expect(mockTramite260212Store.setBanco).toHaveBeenCalledWith('Banco 2');
+  });
+
+  it('should clean up on ngOnDestroy', () => {
+    const spy = jest.spyOn((component as any).destroy$, 'next');
+    const spy2 = jest.spyOn((component as any).destroy$, 'complete');
+    
     component.ngOnDestroy();
-    expect(destroySpy).toHaveBeenCalled();
-    expect(completeSpy).toHaveBeenCalled();
+    expect(spy).toHaveBeenCalled();
+    expect(spy2).toHaveBeenCalled();
+    
   });
 
   it('no debe llamar a guardarDatosFormulario si pagoDerechos es undefined', () => {
@@ -231,6 +243,12 @@ it('debe llamar a guardarDatosFormulario si esFormularioSoloLectura es true', ()
     expect(mockTramite260212Store.setImporteDePago).toHaveBeenCalledWith('');
   });
 
+  it('should handle getMunicipios with empty value', () => {
+    component.pagoDerechos.get('banco')?.setValue('');
+    component.obtenerBanco();
+    expect(mockTramite260212Store.setBanco).toHaveBeenCalledWith('');
+  });
+
   it('debe llamar a actualizarEstado incluso si pagoDerechos es undefined', () => {
     component.pagoDerechos = undefined as any;
     expect(() => component.actualizarEstado()).not.toThrow();
@@ -255,5 +273,3 @@ it('debe llamar a guardarDatosFormulario si esFormularioSoloLectura es true', ()
     });
   
   });
-
- 

@@ -105,7 +105,7 @@ export class CancelacionDeAutorizacionesComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.cancelacionForm = this.fb.group({
       rfcIngresado: ['', [Validators.required, Validators.maxLength(13)]],
-      motivoCancelacion: ['', Validators.required]
+      motivoCancelacion: ['', [Validators.required, Validators.maxLength(255)]],
     });
 
     this.getCancelacioneServiceData();

@@ -28,6 +28,7 @@ export interface CancelacionesState {
   nombreSolicitanteIPC: string;
   cargoSolicitanteIPC: string;
   folioOficioSolicitudIPC: string;
+  fechaPago: string;
   correoSolicitanteIPC: string;
 }
 
@@ -55,6 +56,7 @@ export function createInitialState(): CancelacionesState {
     nombreSolicitanteIPC: '',
     cargoSolicitanteIPC: '',
     folioOficioSolicitudIPC: '',
+    fechaPago: '',
     correoSolicitanteIPC: '',
   };
 }
@@ -259,6 +261,16 @@ export class CancelacionesStore extends Store<CancelacionesState> {
     this.update((state) => ({
       ...state,
       folioOficioSolicitudIPC,
+    }));
+  }
+  /**
+   * Establece la fecha de pago en el estado.
+   * @param {string} fechaPago - La fecha de pago a establecer.
+   */
+  public setFechaPago(fechaPago: string) {
+    this.update((state) => ({
+      ...state,
+      fechaPago,
     }));
   }
 

@@ -4,7 +4,7 @@ import {
   DatosDeMercancias,
   HistorialInspeccionFisica,
 } from '../../models/solicitud-pantallas.model';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
 import { CatalogosSelect } from '@ng-mf/data-access-user';
@@ -70,6 +70,8 @@ export class SolicitudDatosComponent implements OnInit, OnDestroy {
    * @type {Subject<void>}
    */
   public destroyed$ = new Subject<void>();
+
+  @ViewChild(DatosDelTramiteARealizarComponent) datosDelTramiteARealizar!: DatosDelTramiteARealizarComponent;
 
   /** Constructor para inyectar dependencias */
   constructor(

@@ -9,7 +9,7 @@ import { DatosSolicitudService } from '../../services/datoSolicitude.service';
 import { Domicilio } from '../../modelos/domicilio-establecimientos.model';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
-import { InputCheckComponent } from '@libs/shared/data-access-user/src/tramites/components/input-check/input-check.component';
+import { InputCheckComponent } from '@libs/shared/data-access-user/src';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
