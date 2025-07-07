@@ -10,7 +10,7 @@
             id="manifiesto"
             [disabled]="formularioDeshabilitado ? true : false"
           />
-          <span class="fw-bold align-middle"> *</span>
+          <span class="fw-bold align-middle pt-2"> *</span>
           <div>{{ manifiestosText }} </div>
           <div *ngIf="hasError('manifests', 'required')" class="text-danger mt-1">
             Debe aceptar el manifiesto.
@@ -25,7 +25,7 @@
         <app-input-radio
         [radioOptions]="informacionConfidencialRadioOption"
         [isRequired]="true"
-        [layout]="'horizontal'"
+        [layout]="'vertical'"
         [gap]="'50px'"
         formControlName="informacionConfidencialRadio"
       ></app-input-radio>

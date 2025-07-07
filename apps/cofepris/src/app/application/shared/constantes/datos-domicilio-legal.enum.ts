@@ -105,3 +105,8 @@ export const PAIS_DE_PROCEDENCIA_LABEL: CrossListLable = {
     tituluDeLaIzquierda: ' País de orígen',
     derecha: 'País(es) seleccionado(s)',
   }
+
+  export const USO_ESPECIFICO_LABEL: CrossListLable = {
+    tituluDeLaIzquierda: 'Uso específico',
+    derecha: 'Uso específico seleccionado *',
+  }
