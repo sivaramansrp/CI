@@ -260,6 +260,11 @@ const ROUTES: Routes = [
     loadChildren: () => 
       import('./tramites/30505/aviso-de-modificacion.module').then(
         (m) => m.AvisoDeModificacionModule)
+  },
+  {
+    path: 'economico',
+    loadChildren: () =>
+      import('./tramites/32606/economico.module').then((m) => m.EconomicoModule),
   }
 ];
 
