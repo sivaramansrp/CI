@@ -13,12 +13,12 @@ describe('OpinionesComponent', () => {
   let activatedRouteMock: any;
 
   beforeEach(async () => {
-    // Crear mock para FolioQuery
+    /** Crear mock para FolioQuery */
     folioQueryMock = {
       getFolio: jest.fn().mockReturnValue(of('TRA123456'))
     };
 
-    // Crear mock para ActivatedRoute
+    /** Crear mock para ActivatedRoute */
     activatedRouteMock = {
       snapshot: {
         paramMap: {
@@ -49,8 +49,8 @@ describe('OpinionesComponent', () => {
 
     fixture = TestBed.createComponent(OpinionesComponent);
     component = fixture.componentInstance;
-    
-    // Si no existe el método seleccionaTab, lo creamos para la prueba
+
+    /** Si no existe el método seleccionaTab, lo creamos para la prueba */
     if (!component.seleccionaTab) {
       component.seleccionaTab = jest.fn((indice: number) => {
         component.indice = indice;
@@ -72,10 +72,10 @@ describe('OpinionesComponent', () => {
    * @group Inicialización
    */
   it('should retrieve folio from FolioQuery on init', () => {
-    // Verificar que se llamó al método getFolio
+    /** Verificar que se llamó al método getFolio */
     expect(folioQueryMock.getFolio).toHaveBeenCalled();
-    
-    // Verificar que el folio se estableció correctamente
+
+    /** Verificar que el folio se estableció correctamente */
     expect(component.folio).toBe('TRA123456');
   });
 
@@ -87,14 +87,14 @@ describe('OpinionesComponent', () => {
    * @group Interacción
    */
   it('should change the active tab when seleccionaTab is called', () => {
-    // El valor inicial debe ser 1
+    /** El valor inicial debe ser 1 */
     expect(component.indice).toBe(1);
-    
-    // Llamar al método con un nuevo valor
+
+    /** Llamar al método con un nuevo valor */
     component.seleccionaTab(2);
     fixture.detectChanges();
-    
-    // Verificar que el valor ha cambiado
+
+    /** Verificar que el valor ha cambiado */
     expect(component.indice).toBe(2);
   });
 });

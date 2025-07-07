@@ -14,15 +14,15 @@ describe('DocumentosComponent', () => {
   let windowOpenSpy: jest.SpyInstance;
 
   beforeEach(async () => {
-    // Mock para window.open
+    /** Mock para window.open */
     windowOpenSpy = jest.spyOn(window, 'open').mockImplementation(() => null);
 
-    // Crear mock para FolioQuery
+    /** Crear mock para FolioQuery */
     folioQueryMock = {
       getFolio: jest.fn().mockReturnValue(of('DOC123456'))
     };
 
-    // Crear mock para ActivatedRoute
+    /** Crear mock para ActivatedRoute */
     activatedRouteMock = {
       snapshot: {
         paramMap: {
@@ -53,12 +53,12 @@ describe('DocumentosComponent', () => {
 
     fixture = TestBed.createComponent(DocumentosComponent);
     component = fixture.componentInstance;
-    
-    // Espiar el método ngOnInit
+
+    /** Espiar el método ngOnInit */
     jest.spyOn(component, 'ngOnInit');
-    
-    // No llamamos a detectChanges() aquí para evitar que se ejecute ngOnInit automáticamente
-    
+
+    /** No llamamos a detectChanges() aquí para evitar que se ejecute ngOnInit automáticamente */
+
     if (typeof component.verPdf === 'function') {
       jest.spyOn(component, 'verPdf');
     }
@@ -71,7 +71,7 @@ describe('DocumentosComponent', () => {
       jest.spyOn(component, 'getDocumentos');
     }
   });
-  // Limpiamos los spies después de cada prueba
+  /** Limpiamos los spies después de cada prueba */
   afterEach(() => {
     windowOpenSpy.mockRestore();
   });
@@ -88,14 +88,14 @@ describe('DocumentosComponent', () => {
    * @group Inicialización
    */
   it('should initialize component correctly', () => {
-    // Llamamos manualmente a ngOnInit para asegurarnos de que se ejecuta
+    /** Llamamos manualmente a ngOnInit para asegurarnos de que se ejecuta */
     component.ngOnInit();
-    
-    // Verificar que ngOnInit fue llamado
+
+    /** Verificar que ngOnInit fue llamado */
     expect(component.ngOnInit).toHaveBeenCalled();
     
-    // En lugar de verificar que getFolio fue llamado (ya que parece que no lo es),
-    // verificamos que el componente se inicializa sin errores
+    /** En lugar de verificar que getFolio fue llamado (ya que parece que no lo es),
+      verificamos que el componente se inicializa sin errores */
     expect(component).toBeTruthy();
   });
 
@@ -107,36 +107,36 @@ describe('DocumentosComponent', () => {
    * @group Funcionalidad
    */
   it('should handle document operations correctly', () => {
-    fixture.detectChanges(); // Llamamos a detectChanges aquí
-    
-    // Verificar que el método getDocumentos existe antes de probarlo
+    fixture.detectChanges(); /** Llamamos a detectChanges aquí */
+
+    /** Verificar que el método getDocumentos existe antes de probarlo */
     if (typeof component.getDocumentos === 'function') {
-      // Simular la llamada al método
+      /** Simular la llamada al método */
       component.getDocumentos();
-      
-      // Verificar que el método fue llamado
+
+      /** Verificar que el método fue llamado */
       expect(component.getDocumentos).toHaveBeenCalled();
     } else {
-      // Si el método no existe, la prueba pasa automáticamente
+      /** Si el método no existe, la prueba pasa automáticamente */
       expect(true).toBeTruthy();
     }
-    
-    // Verificar que el método verPdf existe y funciona correctamente
+
+    /** Verificar que el método verPdf existe y funciona correctamente */
     if (typeof component.verPdf === 'function') {
-      // Simular la llamada al método con un ID de documento como string
+      /** Simular la llamada al método con un ID de documento como string */
       component.verPdf('1');
-      
-      // Verificar que el método fue llamado con el parámetro correcto
+
+      /** Verificar que el método fue llamado con el parámetro correcto */
       expect(component.verPdf).toHaveBeenCalledWith('1');
     }
-    
-    // Verificar que el método descargarPdf existe y funciona correctamente
+
+    /** Verificar que el método descargarPdf existe y funciona correctamente */
     if (typeof component.descargarPdf === 'function') {
-      // Simular la llamada al método con una URL
+      /** Simular la llamada al método con una URL */
       const pdfUrl = 'https://example.com/document.pdf';
       component.descargarPdf(pdfUrl);
-      
-      // Verificar que el método fue llamado con el parámetro correcto
+
+      /** Verificar que el método fue llamado con el parámetro correcto */
       expect(component.descargarPdf).toHaveBeenCalledWith(pdfUrl);
     }
   });
