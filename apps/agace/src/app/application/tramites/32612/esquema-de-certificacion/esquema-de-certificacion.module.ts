@@ -13,6 +13,8 @@ import { DatosComunesComponent } from '../../../shared/components/datos-comunes/
 import { TercerosRelacionadosComponent } from '../../../shared/components/terceros-relacionados/terceros-relacionados.component';
 import { AgenteAduanalComponent } from '../components/agente-aduanal/agente-aduanal.component';
 import { PerfilesComponent } from '../components/perfiles/perfiles.component';
+import { ToastrModule, ToastrService } from 'ngx-toastr';
+import { BsModalService } from 'ngx-bootstrap/modal';
 
 
 @NgModule({
@@ -30,11 +32,14 @@ import { PerfilesComponent } from '../components/perfiles/perfiles.component';
     TercerosRelacionadosComponent,
     DatosComunesComponent,
     AgenteAduanalComponent,
-    PerfilesComponent
+    PerfilesComponent,
+    ToastrModule.forRoot()
   ],
     providers: [
+      ToastrService,
       provideHttpClient(),
-      EsquemaDeCertificacionService
+      EsquemaDeCertificacionService,
+      BsModalService
     ],
 })
 export class EsquemaDeCertificacionModule { }

@@ -7,7 +7,7 @@
             [tipoSeleccionTabla]="checkbox">
         </app-tabla-dinamica>
          <div class="d-flex justify-content-end">
-            <button type="button" class="btn btn-primary me-2">
+            <button type="button" class="btn btn-primary me-2" (click)="abrirModal(sociedades)">
                 Agregar
             </button>
             <button class="btn btn-danger me-2" type="button">
@@ -25,7 +25,7 @@
             [tipoSeleccionTabla]="checkbox">
         </app-tabla-dinamica>
         <div class="d-flex justify-content-end">
-            <button type="button" class="btn btn-primary me-2">
+            <button type="button" class="btn btn-primary me-2" (click)="abrirModal(agregar)">
                 Agregar
             </button>
             <button class="btn btn-danger me-2" type="button">
@@ -37,3 +37,112 @@
         </div>
   </div>
 </div>
+<formas-dinamicas 
+    [forma]="indiqueSiFormGroup" 
+    [formularioDatos]="indiqueDatos"
+    >
+</formas-dinamicas>
+<div class="row mt-2">
+    <div class="col-md-12">
+        <p class="fw-bold"><span>* </span>Indique los mandatarios del agente aduanal y si estos se encuentran al corriente en el cumplimiento de obligaciones fiscales.</p>
+    </div>
+    <div class="col-md-12">
+        <h5 class="mt-2">Mandatarios de agente aduanal</h5>
+        <app-tabla-dinamica
+            [configuracionTabla]="configuracionMandatariosTabla"
+            [datos]="mandatariosDatos"
+            [tipoSeleccionTabla]="checkbox">
+        </app-tabla-dinamica>
+        <div class="d-flex justify-content-end">
+            <button type="button" class="btn btn-primary me-2" (click)="abrirModal(mandatarios)">
+                Agregar
+            </button>
+            <button class="btn btn-danger me-2" type="button">
+                Modificar
+            </button>
+            <button class="btn btn-default" type="button">
+                Eliminar
+            </button>
+        </div>
+    </div>
+</div>
+
+
+<ng-template #sociedades>
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">Agregar Sociedades del Agente Aduanal</h4>
+  </div>
+  <div class="modal-body">
+    <!-- [estado]="importacionstate" -->
+    <formas-dinamicas 
+        [forma]="agregarSociedadesFormGroup" 
+        [formularioDatos]="agregarSociedadesDatos"
+        >
+    </formas-dinamicas>
+  </div>
+  <div class="modal-footer d-flex justify-content-end">
+    <button type="button" class="btn btn-primary">
+        Aceptar
+    </button>
+    <button type="button" class="btn btn-default me-2" (click)="modalRef?.hide()">
+        Limpiar
+    </button>
+    <button type="button" class="btn btn-danger" (click)="modalRef?.hide()">
+        Cancelar
+    </button>
+ </div>
+</ng-template>
+
+<ng-template #agregar>
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">Agregar</h4>
+  </div>
+  <div class="modal-body">
+    <formas-dinamicas 
+        [forma]="agregarFormGroup" 
+        [formularioDatos]="agregarDatos"
+        >
+    </formas-dinamicas>
+    <h5 class="mt-3 fw-bold">Instalaciones</h5>
+    <app-tabla-dinamica
+        [configuracionTabla]="configuracionInstalaciones"
+        [datos]="instalaciones"
+        [tipoSeleccionTabla]="checkbox">
+    </app-tabla-dinamica>
+  </div>
+  <div class="modal-footer d-flex justify-content-end">
+    <button type="button" class="btn btn-primary">
+        Aceptar
+    </button>
+    <button type="button" class="btn btn-default me-2" (click)="modalRef?.hide()">
+        Eliminar
+    </button>
+    <button type="button" class="btn btn-danger" (click)="modalRef?.hide()">
+        Cancelar
+    </button>
+ </div>
+</ng-template>
+
+<ng-template #mandatarios>
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">Agregar mandatarios del Agente Aduanal</h4>
+  </div>
+  <div class="modal-body">
+    <formas-dinamicas 
+        [forma]="mandatariosDelAgenteFormGroup" 
+        [formularioDatos]="mandatariosDelAgenteDatos"
+        >
+    </formas-dinamicas>
+  </div>
+  <div class="modal-footer d-flex justify-content-end">
+    <button type="button" class="btn btn-primary">
+        Aceptar
+    </button>
+    <button type="button" class="btn btn-default me-2" (click)="modalRef?.hide()">
+        Limpiar
+    </button>
+    <button type="button" class="btn btn-danger" (click)="modalRef?.hide()">
+        Cancelar
+    </button>
+ </div>
+</ng-template>

@@ -1,10 +1,13 @@
 import { Component, OnDestroy, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Catalogo, CatalogoSelectComponent, CrosslistComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Catalogo, CatalogoSelectComponent, CrosslistComponent, InputRadioComponent, ModeloDeFormaDinamica, TituloComponent } from '@libs/shared/data-access-user/src';
 import { EsquemaDeCertificacionService } from '../../services/esquema-de-certificacion.service';
 import { Subject, takeUntil } from 'rxjs';
 import { CROSLISTA_ENTRADA } from '../../constants/croslista.enums';
 import { SociedadesTablaComponent } from '../sociedades-tabla/sociedades-tabla.component';
+import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
+import { FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { CLASIFICACION, CONFIGURACION, CONFIGURACION_COMERCIAL_CERTIFICADO, PAGO_DE_DERECHOS, RADIO_OPCIONS } from '../../constants/agente-aduanal.enum';
 
 @Component({
   selector: 'app-agente-aduanal',
@@ -14,7 +17,11 @@ import { SociedadesTablaComponent } from '../sociedades-tabla/sociedades-tabla.c
     CatalogoSelectComponent,
     CrosslistComponent,
     TituloComponent,
-    SociedadesTablaComponent
+    SociedadesTablaComponent,
+    FormasDinamicasComponent,
+    ReactiveFormsModule,
+    TituloComponent,
+    InputRadioComponent
   ],
   templateUrl: './agente-aduanal.component.html',
   styleUrl: './agente-aduanal.component.scss',
@@ -49,7 +56,17 @@ export class AgenteAduanalComponent implements OnInit,OnDestroy {
     },
   ];
 
-
+  public forma: FormGroup = new FormGroup({
+    agenteFormGroup: new FormGroup({}),
+    comercialCertificadoFormGroup: new FormGroup({}),
+    clasificacionFormGroup: new FormGroup({}),
+    pagoDeDerechosFormGroup: new FormGroup({})
+  });
+  public agenteDatos = CONFIGURACION;
+  public opcionDeBotonDeRadio = RADIO_OPCIONS;
+  public comercialCertificadoDatos: ModeloDeFormaDinamica[] = CONFIGURACION_COMERCIAL_CERTIFICADO;
+  public clasificacionDatos = CLASIFICACION;
+  public pagoDeDerechosDatos = PAGO_DE_DERECHOS;
 
   constructor(
     private esquemaDeCertificacionSvc: EsquemaDeCertificacionService
@@ -59,6 +76,22 @@ export class AgenteAduanalComponent implements OnInit,OnDestroy {
 
   ngOnInit(): void {
     this.getIndiqueCatalogoDatos();
+  }
+
+  get agenteFormGroup(): FormGroup {
+    return this.forma.get('agenteFormGroup') as FormGroup;
+  }
+
+  get comercialCertificadoFormGroup(): FormGroup {
+    return this.forma.get('comercialCertificadoFormGroup') as FormGroup;
+  }
+
+  get clasificacionFormGroup(): FormGroup {
+    return this.forma.get('clasificacionFormGroup') as FormGroup;
+  }
+
+  get pagoDeDerechosFormGroup(): FormGroup {
+    return this.forma.get('pagoDeDerechosFormGroup') as FormGroup;
   }
 
   public getIndiqueCatalogoDatos(): void {
@@ -71,6 +104,14 @@ export class AgenteAduanalComponent implements OnInit,OnDestroy {
         // Manejo de errores
       }
     });
+  }
+
+  public seleccionarDatos(): void {
+      const VALOR = this.comercialCertificadoFormGroup.get('paginaElectronica')?.value;
+      const INDEX = this.comercialCertificadoDatos.findIndex(item => item.campo === 'pagina');
+      if (INDEX !== -1) {
+        this.comercialCertificadoDatos[INDEX] = VALOR === 'Si' ? { ...this.comercialCertificadoDatos[INDEX], mostrar: true } : { ...this.comercialCertificadoDatos[INDEX], mostrar: false };
+      }
   }
   
 

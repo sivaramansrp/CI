@@ -17,6 +17,19 @@ export interface DatosDeLasInstalaciones {
     actualizarPerfil: string;
 }
 
+export interface Instalaciones {
+    entidadFederativa: string;
+    municipioODelegacion: string;
+    colonia: string;
+    codigoPostal: string;
+}
+
+export interface MandatariosDeAgenteAduanal {
+    rfc: string;
+    nombre: string;
+    aiCorriente: string;
+}
+
 export const ENLACE_TABLA = [
   {
     encabezado: 'RFC',
@@ -85,5 +98,46 @@ export const CONFIGURACION_INSTALACIONES = [
         encabezado: 'Actualizar Perfil',
         clave: (ele: DatosDeLasInstalaciones): string => ele.actualizarPerfil,
         orden: 9,
+    }
+];
+
+export const CONFIGURACION_INSTALACIONES_TABLA = [
+    {
+        encabezado: 'Entidad Federativa',
+        clave: (ele: Instalaciones): string => ele.entidadFederativa,
+        orden: 1,
+    },
+    {
+        encabezado: 'Municipio o Delegación',
+        clave: (ele: Instalaciones): string => ele.municipioODelegacion,
+        orden: 2,
+    },
+    {
+        encabezado: 'Colonia, calle y número',
+        clave: (ele: Instalaciones): string => ele.colonia,
+        orden: 3,
+    },
+    {
+        encabezado: 'Código Postal',
+        clave: (ele: Instalaciones): string => ele.codigoPostal,
+        orden: 4,
+    }
+]
+
+export const MANDATARIOS_DE_AGENTE_ADUANAL = [
+    {
+        encabezado: 'RFC',
+        clave: (ele: MandatariosDeAgenteAduanal): string => ele.rfc,
+        orden: 1,
+    },
+    {
+        encabezado: 'Nombre',
+        clave: (ele: MandatariosDeAgenteAduanal): string => ele.nombre,
+        orden: 2,
+    },
+    {
+        encabezado: 'AI Corriente',
+        clave: (ele: MandatariosDeAgenteAduanal): string => ele.aiCorriente,
+        orden: 3,
     }
 ];
