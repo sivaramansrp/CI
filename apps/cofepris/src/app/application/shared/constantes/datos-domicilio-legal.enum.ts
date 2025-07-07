@@ -101,11 +101,13 @@ export const NUEVA_NOTIFICACION = {
   txtBtnCancelar: 'Cancelar', // Texto del botón para cancelar la notificación.
 };
 
+// Etiqueta para el campo "País de procedencia" en el formulario.
 export const PAIS_DE_PROCEDENCIA_LABEL: CrossListLable = {
-    tituluDeLaIzquierda: ' País de orígen',
-    derecha: 'País(es) seleccionado(s)',
-  }
+  tituluDeLaIzquierda: ' País de orígen',
+  derecha: 'País(es) seleccionado(s)',
+}
 
+  // Etiqueta para el campo "Uso específico" en el formulario.
   export const USO_ESPECIFICO_LABEL: CrossListLable = {
     tituluDeLaIzquierda: 'Uso específico',
     derecha: 'Uso específico seleccionado *',
