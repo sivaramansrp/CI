@@ -1,8 +1,7 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { MENSAJE_DE_EXITO_ETAPA_UNO, PASOS } from '../../constantes/certificado-zoosanitario.enum';
 import { DatosPasos } from '@ng-mf/data-access-user';
 import { ListaPasosWizard } from '../../models/pantallas-captura.model';
-import { MENSAJE_DE_EXITO_ETAPA_UNO } from '../../constantes/certificado-zoosanitario.enum';
-import { PASOS } from '@ng-mf/data-access-user';
 import { SECCIONES_TRAMITE_220402 } from '@ng-mf/data-access-user';
 import { SeccionQuery } from '../../../../estados/queries/seccion.query';
 import { SeccionState } from '../../../../estados/seccion.store';
