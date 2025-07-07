@@ -32,6 +32,62 @@ export class Tramite120601Query extends Query<Tramites120601State> {
   })
 
   /**
+   * Observable que emite los datos generales del socio desde el estado.
+   */
+  selectDatosGeneralesSocios$ = this.select((state) => {
+    return state.datosGeneralesSocios;  
+  })
+
+  /**
+   * Observable que emite los datos generales del socio desde el estado.
+   */
+  selectNombre$ = this.select((state) => {
+    return state.datosGeneralesSocios.nombre;
+  })
+
+  /**
+   * Observable que emite el apellido paterno del socio desde el estado.
+   */
+  selectApellidoPaterno$ = this.select((state) => {
+    return state.datosGeneralesSocios.apellidoPaterno;
+  })
+
+  /**
+   * Observable que emite el código postal del socio desde el estado.
+   */
+  selectCodigoPostal$ = this.select((state) => {
+    return state.datosGeneralesSocios.codigoPostal;
+  })
+
+  /**
+   * Observable que emite el estado del socio desde el estado.
+   */
+  selectEstadoGenerales$ = this.select((state) => {
+    return state.datosGeneralesSocios.estado;
+  })
+
+  /**
+   * Observable que emite el correo electrónico del socio desde el estado.
+   */
+  selectCorreoElectronico$ = this.select((state) => {
+    return state.datosGeneralesSocios.correoElectronico;
+  })
+
+  /**
+   * Observable que emite el taxId del socio desde el estado.
+   */
+  selectTaxId$ = this.select((state) => {
+    return state.datosGeneralesSocios.taxId;
+  })
+
+  /**
+   * Observable que emite la denominación del socio desde el estado.
+   */
+  selectDenominacion$ = this.select((state) => {
+    return state.datosGeneralesSocios.denominacion;
+  })
+
+  /**
    * Observable que emite el tipo de empresa seleccionada desde el estado.
    */
   selectTipoDeEmpresa$ = this.select((state) => {

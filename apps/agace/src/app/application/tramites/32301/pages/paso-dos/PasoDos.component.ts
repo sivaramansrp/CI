@@ -23,7 +23,7 @@ export class PasoDosComponent implements OnInit, OnDestroy {
   infoAlert = 'alert-info'; // Clase CSS para mostrar alertas de información
   catalogoDocumentos: Catalogo[] = []; // Catálogo de documentos
   documentosSeleccionados = documentList.documentosSeleccionados; // Lista de documentos seleccionados desde un archivo JSON
-  private destroy$: Subject<void> = new Subject<void>(); // Sujeto para manejar el ciclo de vida y evitar fugas de memoria
+  public destroy$: Subject<void> = new Subject<void>(); // Sujeto para manejar el ciclo de vida y evitar fugas de memoria
 
   constructor(
     private catalogosServices: CatalogosService, // Servicio para obtener los catálogos

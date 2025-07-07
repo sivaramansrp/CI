@@ -1,4 +1,9 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {
+  ComponentFixture,
+  TestBed,
+  fakeAsync,
+  tick,
+} from '@angular/core/testing';
 import { RenovacionesComponent } from './renovaciones.component';
 import {
   AlertComponent,
@@ -7,11 +12,30 @@ import {
 } from '@ng-mf/data-access-user';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { RENOVACIONES_PASOS } from '../../enums/renovaciones-muestras-mercancias.enum';
-import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import {
+  ERROR_DE_CAMPO,
+  ERROR_VERIFICAR,
+  SIGUIENTES_ERRORES,
+} from '../../constantes/constantes';
+import { Component } from '@angular/core';
+import { of } from 'rxjs';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { PasoDosComponent } from '../paso-dos/paso-dos.component';
 import { PasoTresComponent } from '../paso-tres/paso-tres.component';
 import { CommonModule } from '@angular/common';
+
+@Component({ selector: 'mock-wizard', template: '' })
+class MockWizardComponent {
+  siguiente = jest.fn(() => of());
+  atras = jest.fn(() => of());
+}
+
+@Component({ selector: 'mock-paso-uno', template: '' })
+class MockPasoUnoComponent {
+  indice = 1;
+  registroRenovacionesMuestrasMercanciasComponent: any = null;
+  pagoLineaDeCapturaComponent: any = null;
+}
 
 describe('RenovacionesComponent', () => {
   let component: RenovacionesComponent;
@@ -19,6 +43,7 @@ describe('RenovacionesComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
+      declarations: [MockWizardComponent, MockPasoUnoComponent],
       imports: [
         RenovacionesComponent,
         HttpClientTestingModule,
@@ -30,99 +55,126 @@ describe('RenovacionesComponent', () => {
         AlertComponent,
         CommonModule,
       ],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA],
+      providers: [],
     }).compileComponents();
-
     fixture = TestBed.createComponent(RenovacionesComponent);
     component = fixture.componentInstance;
+    component.wizardComponent = {
+      siguiente: jest.fn(() => of()),
+      atras: jest.fn(() => of()),
+    } as any;
+    component.pasoUnoComponent = { indice: 0 } as any;
+    component.wizardComponent = new MockWizardComponent() as any;
+    component.pasoUnoComponent = new MockPasoUnoComponent() as any;
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize pasos and datosPasos correctly', () => {
-    expect(component.pasos).toBe(RENOVACIONES_PASOS);
-    expect(component.datosPasos.nroPasos).toBe(RENOVACIONES_PASOS.length);
-    expect(component.datosPasos.indice).toBe(1);
-    expect(component.datosPasos.txtBtnAnt).toBe('Anterior');
-    expect(component.datosPasos.txtBtnSig).toBe('Continuar');
+  it('should call wizardComponent.siguiente() when accion is "cont" and esValido is true', () => {
+    const evento = { accion: 'cont', valor: 2 };
+    component.esValido = true;
+    component.wizardComponent = {
+      siguiente: jest.fn(() => of()),
+      atras: jest.fn(() => of()),
+    } as any;
+    component.getValorIndice(evento);
+    expect(component.indice).toBe(2);
+    expect(component.wizardComponent.siguiente).toHaveBeenCalled();
   });
 
-  describe('getValorIndice', () => {
-    let mockWizard: jest.Mocked<WizardComponent>;
-    let mockPasoUno: any;
+  it('should call wizardComponent.atras() when accion is not "cont" and esValido is true', () => {
+    const evento = { accion: 'back', valor: 2 };
+    component.esValido = true;
+    component.wizardComponent = {
+      siguiente: jest.fn(() => of()),
+      atras: jest.fn(() => of()),
+    } as any;
+    component.getValorIndice(evento);
+    expect(component.indice).toBe(2);
+    expect(component.wizardComponent.atras).toHaveBeenCalled();
+  });
 
-    beforeEach(() => {
-      mockWizard = {
-        siguiente: jest.fn(),
-        atras: jest.fn(),
+  it('should validate registroRenovacionesMuestrasMercanciasComponent when indice is 1 and pasoUnoComponent.indice is 2', () => {
+    component.indice = 1;
+    component.pasoUnoComponent.indice = 2;
+    component.pasoUnoComponent.registroRenovacionesMuestrasMercanciasComponent =
+      {
+        validarFormulario: () => false,
+        formRegistroMuestras: null,
+        TEXTOS: null,
+        opcionDeImportador: null,
+        fraccionArancelariaAga: null,
       } as any;
-      mockPasoUno = {
-        pagoLineaDeCapturaComponent: {
-          validarFormulario: jest.fn(),
-        },
-      };
-      component.wizardComponent = mockWizard;
-      component.pasoUnoComponent = mockPasoUno;
-    });
+    const evento = { accion: 'cont', valor: 2 };
+    component.getValorIndice(evento);
+    expect(component.esValido).toBe(false);
+    expect(component.mensajeError).toBe(ERROR_DE_CAMPO);
+    expect(component.datosPasos.indice).toBe(1);
+  });
 
-    it('should call validarFormulario and not proceed if invalid on first step', () => {
-      mockPasoUno.pagoLineaDeCapturaComponent.validarFormulario.mockReturnValue(
-        false
-      );
-      component.indice = 1;
-      component.esValido = true;
-      const evento = { accion: 'cont', valor: 2 };
-      component.getValorIndice(evento);
-      expect(
-        mockPasoUno.pagoLineaDeCapturaComponent.validarFormulario
-      ).toHaveBeenCalled();
-      expect(component.datosPasos.indice).toBe(1);
-      expect(component.indice).toBe(1);
-      expect(mockWizard.siguiente).not.toHaveBeenCalled();
-    });
+  it('should validate pagoLineaDeCapturaComponent and set error messages when indice is 1 and pasoUnoComponent.indice is 4', fakeAsync(() => {
+    component.indice = 1;
+    component.pasoUnoComponent.indice = 4;
+    component.pasoUnoComponent.pagoLineaDeCapturaComponent = {
+      validarFormulario: () => false,
+      formPagoLC: null,
+      tableData: [],
+      darseDeBaja: jest.fn(),
+      destroyed$: {
+        subscribe: jest.fn(() => of()),
+        unsubscribe: jest.fn(() => of()),
+      },
+    } as any;
+    const evento = { accion: 'cont', valor: 2 };
+    component.getValorIndice(evento);
+    expect(component.esValido).toBe(false);
+    expect(component.mensajeError).toBe(SIGUIENTES_ERRORES);
+    tick(1500);
+    expect(component.mensajeError).toBe(ERROR_VERIFICAR);
+    expect(component.datosPasos.indice).toBe(1);
+  }));
 
-    it('should proceed to next step if valid on first step and accion is "cont"', () => {
-      mockPasoUno.pagoLineaDeCapturaComponent.validarFormulario.mockReturnValue(
-        true
-      );
-      component.indice = 1;
-      component.esValido = true;
-      const evento = { accion: 'cont', valor: 2 };
-      component.getValorIndice(evento);
-      expect(component.indice).toBe(2);
-      expect(mockWizard.siguiente).toHaveBeenCalled();
-    });
+  it('should not change indice if evento.valor is out of range', () => {
+    const evento = { accion: 'cont', valor: 0 };
+    component.indice = 1;
+    component.wizardComponent = {
+      siguiente: jest.fn(() => of()),
+      atras: jest.fn(() => of()),
+    } as any;
+    component.getValorIndice(evento);
+    expect(component.indice).toBe(1);
+    expect(component.wizardComponent.siguiente).not.toHaveBeenCalled();
+    expect(component.wizardComponent.atras).not.toHaveBeenCalled();
+  });
 
-    it('should call wizard.atras if accion is not "cont"', () => {
-      mockPasoUno.pagoLineaDeCapturaComponent.validarFormulario.mockReturnValue(
-        true
-      );
-      component.indice = 1;
-      component.esValido = true;
-      const evento = { accion: 'back', valor: 2 };
-      component.getValorIndice(evento);
-      expect(component.indice).toBe(2);
-      expect(mockWizard.atras).toHaveBeenCalled();
-    });
+  it('should not proceed if esValido is false after validation', () => {
+    component.indice = 1;
+    component.pasoUnoComponent.indice = 2;
+    component.pasoUnoComponent.registroRenovacionesMuestrasMercanciasComponent =
+      {
+        validarFormulario: () => false,
+        formRegistroMuestras: null,
+        TEXTOS: null,
+        opcionDeImportador: null,
+        fraccionArancelariaAga: null,
+      } as any;
+    component.wizardComponent = {
+      siguiente: jest.fn(() => of()),
+      atras: jest.fn(() => of()),
+    } as any;
+    const evento = { accion: 'cont', valor: 2 };
+    component.getValorIndice(evento);
+    expect(component.indice).toBe(1);
+    expect(component.wizardComponent.siguiente).not.toHaveBeenCalled();
+  });
 
-    it('should not do anything if evento.valor is out of range', () => {
-      component.indice = 2;
-      const evento = { accion: 'cont', valor: 0 };
-      component.getValorIndice(evento);
-      expect(component.indice).toBe(2);
-      expect(mockWizard.siguiente).not.toHaveBeenCalled();
-      expect(mockWizard.atras).not.toHaveBeenCalled();
-    });
-
-    it('should not call validarFormulario if not on first step', () => {
-      component.indice = 2;
-      const evento = { accion: 'cont', valor: 3 };
-      component.getValorIndice(evento);
-      expect(component.indice).toBe(3);
-      expect(mockWizard.siguiente).toHaveBeenCalled();
-    });
+  it('should update datosPasos.indice to 1 if esValido is false', () => {
+    component.esValido = false;
+    const evento = { accion: 'cont', valor: 2 };
+    component.getValorIndice(evento);
+    expect(component.datosPasos.indice).toBe(1);
   });
 });

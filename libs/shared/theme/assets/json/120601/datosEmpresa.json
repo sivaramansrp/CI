@@ -14,6 +14,25 @@
       "nacionalidad": "No",  
       "persona": "Yes",       
       "cadenaDependencia": "RFC123456789"
+    },
+    "datosGeneralesSocios": {
+     "rfc": "DIP150930L51",
+      "razonsocial": "",
+      "nombre": "EUROFOODS DE MEXICO",
+      "apellidoPaterno": "GONALEZ",
+      "apellidoM": "PINAL",
+      "correo": "vucem2.5@hotmail.com"
+    },
+    "datosGeneralesSociosExtranjeros": {
+      "taxID": "DIP150930L51",
+        "razonSocial": "DESARROLLOS INMOBILIARIOS PUENTE DE CANTERA SA DE CV",
+        "nombre": "EUROFOODS DE MEXICO",
+        "apellidoPaterno": "GONALEZ",
+        "apellidoM": "PINAL",
+        "pais": "México",
+        "estado": "Jalisco",
+        "correo": "pstester0012@gmail.com",
+        "codigoPostal": "44100"
     }
   },
   "formularioParaConteoTotal": {

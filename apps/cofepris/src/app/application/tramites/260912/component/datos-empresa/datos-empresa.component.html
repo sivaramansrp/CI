@@ -44,6 +44,9 @@
         <div *ngIf="form.get('btonDeRadio')?.invalid && form.get('btonDeRadio')?.touched" class="text-danger">
           Por favor seleccione una opción.
         </div>
+        <small *ngIf="form.controls['btonDeRadio'].errors?.['required']" class="text-danger">
+          Este campo es obligatorio.
+        </small>
       </div>
 
       <div class="row">
@@ -52,9 +55,17 @@
             <label class="form-label">Justificación*:</label>
           <textarea class="form-control" rows="3" required="true" formControlName="justificacion"
               (change)="setValorStore(form,'justificacion')"></textarea>
-            <div *ngIf="form.get('justificacion')?.invalid && form.get('justificacion')?.touched" class="text-danger">
-              Por favor, corrija el motivo o justificación de la importación temporal.
-            </div>
+              <div *ngIf="esInvalido('justificacion')" class="text-danger">
+                <small *ngIf="form.controls['justificacion'].errors?.['required']">
+                  Este campo es obligatorio.
+                </small>
+                <small *ngIf="form.controls['justificacion'].errors?.['minlength']">
+                  Debe tener al menos 10 caracteres.
+                </small>
+                <small *ngIf="form.controls['justificacion'].errors?.['maxlength']">
+                  No puede exceder 500 caracteres.
+                </small>
+              </div>
           </div>
         </div>
       </div>
@@ -119,3 +130,10 @@
   </div>
 </div>
 </div>
+
+@if (nuevaNotificacion) {
+  <section>
+    <lib-notificaciones [notificacionInput]="nuevaNotificacion">
+    </lib-notificaciones>
+  </section>
+}

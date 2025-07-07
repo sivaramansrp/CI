@@ -255,7 +255,7 @@
               [formControlName]="configuracion[1].menu[9].props.campo"
               (change)="setValoresStore(formulario, 'datosMercanica', configuracion[1].menu[9].props.campo, 'setOtroUmc')"
               readonly
-              [disabled]="esFormularioSoloLectura"
+              [disabled]="true"
             />
           </div>
         </div>
@@ -305,7 +305,7 @@
               maxlength="19"
               pattern="^\d{1,14}(\.\d{1,4})?$"
               readonly
-              [disabled]="esFormularioSoloLectura"
+              [disabled]="enableConversion"
               (change)="setValoresStore(formulario, 'datosMercanica', configuracion[1].menu[11].props.campo, 'setFactorConversion')"
             />
             <div *ngIf="formulario.get('datosMercanica')?.get(configuracion[1].menu[11].props.campo)?.touched && formulario.get('datosMercanica')?.get(configuracion[1].menu[11].props.campo)?.invalid">

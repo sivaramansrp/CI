@@ -7,15 +7,22 @@
             <div
               class="panel-heading"
               (click)="mostrar_colapsable()"
-              tabindex="0"
             >
-              <p class="panel-title">Opciones de pre-llenado de Solicitud</p>
+            <h4 class="panel-title spaced-text fs-3"><i class="bi bi-clipboard"></i>Opciones de pre-llenado de Solicitud
+              </h4>
               <button [disabled]="esFormularioSoloLectura" type="button" class="collpase-button collapsed"></button>
             </div>
             @if(colapsable){
-            <div class="panel-collapse collapse in" id="panel-01">
+           <div class="panel-collapse collapse in" id="panel-01">
               <div class="panel-body">
-                <ng-alert [CONTENIDO]="TEXTOS.AlDar"></ng-alert>
+                <div class="row">
+                  <ng-alert [CONTENIDO]="TEXTOS.AlDar" [CUSTOMECLASS]="'text-center'"></ng-alert>
+                </div>
+                <h6 class="text-black">Solicitud</h6>
+                <div class="table-responsive">
+                  <app-tabla-dinamica [configuracionTabla]="configuracionTablaSolicitud" [datos]="solicitudData">
+                  </app-tabla-dinamica>
+                </div>
               </div>
             </div>
             }
@@ -31,7 +38,7 @@
           type="button"
           class="btn btn-primary"
           [disabled]="esFormularioSoloLectura"
-          (click)="alternarControlesDeFormulario()"
+          (click)="abrirModal()"
         >
           Seleccionar establecimiento
         </button>
@@ -90,3 +97,9 @@
   <app-manifiestos></app-manifiestos>
   <app-representante-legal></app-representante-legal>
 </div>
+@if (nuevaNotificacion) {
+  <section>
+    <lib-notificaciones [notificacionInput]="nuevaNotificacion" (confirmacionModal)="eliminarPedimento($event)">
+    </lib-notificaciones>
+  </section>
+  }
