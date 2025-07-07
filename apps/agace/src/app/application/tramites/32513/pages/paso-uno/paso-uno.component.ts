@@ -1,170 +1,124 @@
-import { AfterViewInit, EventEmitter, OnInit, Output } from '@angular/core';
-import { ConsultaioQuery, ConsultaioState, FormularioDinamico, SolicitanteComponent } from '@ng-mf/data-access-user';
-import { Subject, map, takeUntil } from 'rxjs';
-import { AltaPlantaComponent } from '../../components/alta-planta/alta-planta.component';
-import { BitacoraComponent } from '../../components/bitacora/bitacora.component';
 import { CommonModule } from '@angular/common';
-import { ComplementariaImmexComponent } from '../../components/complementaria-immex/complementaria-immex.component';
 import { Component } from '@angular/core';
-import { DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL } from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
-import { Input } from '@angular/core';
-import { ModificacionComponent } from '../../components/modificacion/modificacion.component';
-import { PERSONA_MORAL_NACIONAL } from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
-import { SolicitudService } from '../../services/solicitud.service';
-import { Tramite80316Store } from '../../estados/tramite80316.store';
+import { OnDestroy } from '@angular/core';
+import { FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL, PERSONA_MORAL_NACIONAL } from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
+import { Subject } from 'rxjs';
 import { ViewChild } from '@angular/core';
+import { FormularioDinamico, SolicitanteComponent, TIPO_PERSONA } from '@ng-mf/data-access-user';
+import { AvisoComponent } from '../../components/aviso.component';
 
 /**
- * Componente que representa la página de solicitud.
+ * Componente que representa el primer paso de un trámite.
+ * Maneja la visualización y activación de diferentes secciones (tabs) según el tipo de endoso.
  */
 @Component({
   selector: 'paso-uno',
-  templateUrl: './paso-uno.component.html',
-  styleUrl: './paso-uno.component.scss',
   standalone: true,
-  imports: [SolicitanteComponent, CommonModule, ModificacionComponent, AltaPlantaComponent, BitacoraComponent, ComplementariaImmexComponent]
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    SolicitanteComponent,
+    AvisoComponent,
+  ],
+  templateUrl: './paso-uno.component.html',
+  styleUrls: ['./paso-uno.component.scss'],
 })
-
-export class PasoUnoComponent implements AfterViewInit, OnInit {
+export class PasoUnoComponent implements OnDestroy {
   /**
-    * Referencia al componente `SolicitanteComponent`.
-    * 
-    * Esta propiedad utiliza `@ViewChild` para obtener una referencia al componente `SolicitanteComponent`.
-    */
-  @ViewChild(SolicitanteComponent) solicitante!: SolicitanteComponent;
-
-  /**
-   * Tipo de persona.
-   * 
-   * Esta propiedad almacena el tipo de persona como un número.
+   * Notificador para destruir las suscripciones y evitar fugas de memoria.
+   * Este `Subject` se utiliza para cancelar las suscripciones activas cuando
+   * el componente se destruye.
    */
-  tipoPersona!: number;
+  destroyNotifier$: Subject<void> = new Subject();
+
+  /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
+  public esDatosRespuesta: boolean = false;
+
+  @ViewChild(AvisoComponent) avisoComponent!: AvisoComponent;
 
   /**
-   * Lista de formularios dinámicos para la persona.
-   * 
-   * Esta propiedad contiene un array de objetos `FormularioDinamico` que representan los formularios dinámicos de la persona.
+   * Constructor del componente.
    */
-  persona: FormularioDinamico[] = [];
+  constructor() {
+    //Constructor del componente.
+  }
 
   /**
-   * Lista de formularios dinámicos para el domicilio fiscal.
-   * 
-   * Esta propiedad contiene un array de objetos `FormularioDinamico` que representan los formularios dinámicos del domicilio fiscal.
-   */
-  domicilioFiscal: FormularioDinamico[] = [];
-
-  /**
-   * Índice del paso actual en el wizard.
-   * 
-   * Esta propiedad indica el índice del paso actual en el wizard, comenzando desde 1.
+   * Índice utilizado para identificar la pestaña activa dentro del paso.
+   * @type {number}
    */
   indice: number = 1;
 
-  /**
-   * Evento de continuar.
-   * 
-   * Esta propiedad utiliza `@Output` para emitir un evento `continuarEvento` con una cadena como valor.
-   */
-  @Output() continuarEvento = new EventEmitter<string>();
+  solicitanteForm!: FormGroup;
+  @ViewChild(SolicitanteComponent) solicitante!: SolicitanteComponent;
+
+  tipoPersona!: number;
+  persona: FormularioDinamico[] = [];
+  domicilioFiscal: FormularioDinamico[] = [];
 
   /**
-   * Indicador de validación.
-   * 
-   * Esta propiedad indica si la validación es verdadera o falsa.
+   * Determina si la pestaña de modificación de denominación o razón social debe estar habilitada.
+   * @type {boolean}
    */
-  validacion: boolean = false;
+  isEnableModificacionTab: boolean = false;
 
-  /**
-   * Datos del número de pedimento.
-   * 
-   * Esta propiedad utiliza `@Input` para recibir datos del número de pedimento de tipo desconocido.
-   */
-  @Input() datosNroPedimento!: unknown;
-
-  /**
-   * @property {Subject<void>} destroyNotifier$
-   * @description Subject utilizado para notificar y completar las suscripciones activas al destruir el componente, evitando fugas de memoria.
-   */
-  public destroyNotifier$: Subject<void> = new Subject();
-
-  /**
-   * @property {ConsultaioState} consultaDatos
-   * @description Estado actual de la consulta, que contiene información relacionada con el trámite y el solicitante.
-   */
-  consultaDatos!: ConsultaioState;
-
-  /** 
-   * Indica si los datos son una respuesta de la consulta. 
-   */
-  public esDatosRespuesta: boolean = false;
-
-  constructor(private consultaioQuery: ConsultaioQuery, private solicitudService: SolicitudService,
-    public tramite80316Store: Tramite80316Store,
-  ) {
-    // El constructor se utiliza para la inyección de dependencias.
-  }
-  
   ngOnInit(): void {
-    this.consultaioQuery.selectConsultaioState$
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-        map((seccionState) => {
-          this.consultaDatos = seccionState;
-        })
-      )
-      .subscribe();
-    if (this.consultaDatos.update) {
-      this.fetchGetDatosConsulta();
-    } else {
-      this.esDatosRespuesta = true;
-    }
+    // this.solicitanteForm = this.fb.group({
+    //   adace: [{ value: this.solicitudState?.adace || 'ADACE-01', disabled: this.esFormularioSoloLectura }]
+    // });
+    // this.consultaioQuery.selectConsultaioState$
+    //   .pipe(
+    //     takeUntil(this.destroyNotifier$),
+    //     map((seccionState) => {
+    //       this.consultaDatos = seccionState;
+    //       this.esFormularioSoloLectura = this.consultaDatos.readonly;
+    //       this.inicializarEstadoFormulario();
+    //     })
+    //   )
+    //   .subscribe();
+    // if (this.consultaDatos.update) {
+    //   this.fetchGetDatosConsulta();
+    // }
   }
 
-  /**
-* Gancho de ciclo de vida angular que se llama después de que la vista del componente se haya inicializado por completo.
-*/
+
   ngAfterViewInit(): void {
+
     this.persona = PERSONA_MORAL_NACIONAL;
     this.domicilioFiscal = DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL;
-  }
-
-   /**
- * @method fetchGetDatosConsulta
- * @description Método para obtener los datos de consulta desde el servicio `DatosTramiteService` y actualizar el estado del store `tramite11204Store`.
- * 
- * Este método realiza una solicitud HTTP para obtener los datos de consulta y, si la respuesta es exitosa, actualiza múltiples propiedades del store con los datos recibidos.
- * Utiliza el operador `takeUntil` para cancelar la suscripción cuando el componente se destruye, evitando fugas de memoria.
- * 
- * @returns {void}
- */
-  public fetchGetDatosConsulta(): void {
-    this.solicitudService
-      .getDatosConsulta()
-      .pipe(takeUntil(this.destroyNotifier$)).subscribe((respuesta) => {
-        if (respuesta.success) {
-          this.esDatosRespuesta = true;
-          this.tramite80316Store.setActividadProductiva(respuesta.datos.actividadProductiva);
-        }
-      });
+    this.solicitante.obtenerTipoPersona(TIPO_PERSONA.MORAL_NACIONAL);
   }
 
   /**
-   * Selecciona una pestaña.
-   * @param i El índice de la pestaña a seleccionar.
+   * Cambia la pestaña activa según el índice proporcionado.
+   * @param i - El índice de la pestaña que se desea activar.
    */
   seleccionaTab(i: number): void {
     this.indice = i;
   }
 
   /**
- * Método para emitir un evento de continuar.
- * 
- * Este método emite un evento `continuarEvento` con una cadena vacía como valor.
- * Se utiliza para indicar que se debe continuar al siguiente paso en el proceso.
- *
- */
-  continuar(): void {
-    this.continuarEvento.emit('');
+   * Maneja el cambio de tipo de endoso y habilita o deshabilita la pestaña de modificación
+   * dependiendo del valor seleccionado.
+   *
+   * @param evento - El tipo de endoso seleccionado (puede ser string o número).
+   */
+  tipoDeEndosoChanges(evento: string | number): void {
+    if (evento === 3) {
+      this.isEnableModificacionTab = true;
+    } else {
+      this.isEnableModificacionTab = false;
+    }
+  }
+
+  /**
+   * Método que se ejecuta al destruir el componente.
+   * Este método emite un valor al `destroyNotifier$` y lo completa para cancelar
+   * todas las suscripciones activas y evitar fugas de memoria.
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }

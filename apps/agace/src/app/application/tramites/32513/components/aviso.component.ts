@@ -1,11 +1,228 @@
+import * as XLSX from 'xlsx';
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery, ConsultaioState, Notificacion, TituloComponent, VALID_FILE_REGEX } from '@libs/shared/data-access-user/src';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { map, Subject, takeUntil } from 'rxjs';
+import { Solicitud32513Query } from '../estados/solicitud32513.query';
+import { Solicitud32513State, Solicitud32513Store } from '../estados/solicitud32513.store';
+import { SOLICITUD_32513_ENUM } from '../constantes/anexo'
 
 @Component({
   selector: 'app-aviso',
   standalone: true,
-  imports: [CommonModule],
+  imports: [ 
+    CommonModule,
+    ReactiveFormsModule,
+    TituloComponent
+  ],
   templateUrl: './aviso.component.html',
-  styleUrl: './aviso.component.css',
+  styleUrl: './aviso.component.scss',
 })
-export class AvisoComponent {}
+export class AvisoComponent {
+  
+  /**
+   * Formulario reactivo utilizado para capturar los datos del aviso.
+   * Se inicializa en el método ngOnInit.
+   */
+  avisoForm!: FormGroup;
+
+  /**
+   * Estado de la solicitud.
+   */
+  public solicitudState!: Solicitud32513State;
+
+  /**
+   * Subject utilizado para destruir los observables al destruir el componente.
+   * Evita fugas de memoria al usar operadores como takeUntil.
+   */
+  destroyNotifier$: Subject<void> = new Subject();
+
+  /**
+   * @descripcion Notificación para mostrar mensajes al usuario.
+   */
+  public nuevaNotificacion!: Notificacion;
+  /**
+   * Elemento a eliminar de la tabla de pedimentos.
+   */
+  elementoParaEliminar!: number;
+
+  /**
+   * @property {ConsultaioState} consultaDatos
+   * @description Estado actual de la consulta, que contiene información relacionada con el trámite y el solicitante.
+   */
+  consultaDatos!: ConsultaioState;
+
+  /**
+   * @property {boolean} soloLectura
+   * @description Indica si el formulario o los campos están en modo de solo lectura.
+   * @default false
+   */
+  esFormularioSoloLectura: boolean = false;
+
+  /**
+   * Etiqueta del archivo seleccionado.
+   */
+  elgirDeArchivo: string = SOLICITUD_32513_ENUM.ELGIR_DE_ARCHIVO;
+
+  /**
+   * Elemento de entrada de archivo HTML.
+   *
+   * @type {HTMLInputElement}
+   */
+  elgirArchivo!: HTMLInputElement;
+
+  /**
+   * Archivo de medicamentos seleccionado.
+   */
+  archivoMedicamentos: File | null = null;
+
+  /**
+   * Constructor del componente AvisoComponent.
+   * Se encarga de inyectar los servicios y stores necesarios para la gestión del formulario
+   * y los datos asociados a la solicitud 32513.
+   */
+  constructor(
+    private fb: FormBuilder,
+    public solicitud32513Store: Solicitud32513Store,
+    public solicitud32513Query: Solicitud32513Query,
+    private consultaioQuery: ConsultaioQuery,
+  ) {
+    // Llamada para inicializar datos de catálogo al cargar el componente
+  }
+
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * Llama a los métodos para obtener datos de establecimientos, empleados, domicilios e instalaciones.
+   */
+  ngOnInit(): void {
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.consultaDatos = seccionState;
+          this.esFormularioSoloLectura = this.consultaDatos.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
+    this.solicitud32513Query.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.solicitudState = seccionState;
+        })
+      )
+      .subscribe();
+    this.inicializarFormulario();
+    this.inicializarEstadoFormulario();
+  }
+
+  inicializarFormulario(): void {
+  // Inicializa el formulario reactivo con los valores del estado.
+    // this.solicitudForm = this.fb.group({
+    //   regimen_0: [this.solicitudState?.regimen_0],
+    //   regimen_1: [this.solicitudState?.regimen_1],
+    //   regimen_2: [this.solicitudState?.regimen_2],
+    //   regimen_3: [this.solicitudState?.regimen_3],
+    //   manifiesto: [this.solicitudState?.manifiesto],
+    // });
+  }
+
+  /**
+  * @method inicializarEstadoFormulario
+  * @description Inicializa el estado del formulario según el modo de solo lectura.
+  * 
+  * Si la propiedad `soloLectura` es verdadera, deshabilita todos los controles del formulario.
+  * En caso contrario, habilita los controles del formulario
+  * 
+  * @returns {void}
+  */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.avisoForm?.disable();
+    } else {
+      this.avisoForm?.enable();
+    }
+  }
+
+  /**
+   * Método para cargar un archivo de proveedores.
+   * Valida que el archivo sea de formato Excel (.xls o .xlsx) y verifica el número de columnas.
+   * Si el archivo es válido, muestra un modal de confirmación; de lo contrario, muestra un modal de error.
+   */
+  cargarProveedores(): void {
+    const FILE_INPUT = document.getElementById(
+      'cargarProveedores'
+    ) as HTMLInputElement;
+    const FILE = FILE_INPUT.files?.[0];
+    if (FILE) {
+      if (VALID_FILE_REGEX.test(FILE.name)) {
+        const READER = new FileReader();
+        READER.onload = (e): void => {
+          const DATA = new Uint8Array(e.target?.result as ArrayBuffer);
+          const WORKBOOK = XLSX.read(DATA, { type: 'array' });
+          const JSON_DATA = XLSX.utils.sheet_to_json(
+            WORKBOOK.Sheets[WORKBOOK.SheetNames[0]],
+            { header: 1 }
+          );
+
+          const EXPECTED_COLUMNS = 5; // Agregue aquí el número requerido de columnas o lógica
+          const FIRST_ROW = JSON_DATA[0] as string[];
+          if (FIRST_ROW.length === EXPECTED_COLUMNS) {
+            // this.confirmarModal(); // Abre el modal de confirmación
+          } else {
+            // this.errorModal(); // Abre el modal de error
+          }
+        };
+
+        READER.readAsArrayBuffer(FILE);
+      }
+    }
+  }
+
+  /**
+   * Maneja el cambio de archivo en el input de archivo.
+   *
+   * @param event Evento de cambio de archivo.
+   *
+   * @returns {void}
+   */
+  onCambioDeArchivo(event: Event): void {
+    const TARGET = event.target as HTMLInputElement;
+
+    if (TARGET.files && TARGET.files.length > 0) {
+      this.archivoMedicamentos = TARGET.files[0];
+      this.elgirDeArchivo = this.archivoMedicamentos.name;
+    } else {
+      this.elgirDeArchivo = this.elgirArchivo?.value;
+    }
+  }
+
+  /**
+   * Activa la selección del archivo de medicamentos.
+   * @returns {void}
+   */
+  activarSeleccionArchivo(): void {
+    this.elgirArchivo = document.getElementById(
+      'archivoMedicamentos'
+    ) as HTMLInputElement;
+    if (this.elgirArchivo) {
+      this.elgirArchivo.click();
+    }
+  }
+
+  /**
+   * Método del ciclo de vida `OnDestroy`.
+   *
+   * Se ejecuta automáticamente cuando el componente se destruye.
+   *
+   * - Emite un valor al `destroyNotifier$` para cancelar todas las suscripciones activas.
+   * - Libera recursos y evita fugas de memoria.
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
+  }
+  
+}

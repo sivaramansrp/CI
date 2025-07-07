@@ -1,1 +1,45 @@
-<p>aviso works!</p>
+<form [formGroup]="avisoForm" class="w-100">
+    <div class="col-md-12">
+        <ng-titulo titulo="Datos de la mercancía importada" />
+    </div>
+
+    <div class="col-md-12">
+        <ng-titulo titulo="Datos de la mercancía que se destruirá" />
+    </div>
+    <div class="col-md-12">
+      <label class="form-label text-justify">
+        Para descargar plantilla del archivo de excel de click
+        <a [href]="" target="_blank" class="text-primary fw-bold" (click)="esFormularioSoloLectura ? $event.preventDefault() : null"
+        [class.disabled]="esFormularioSoloLectura">aquí</a>.
+      </label>
+      <div class="row mt-4 mb-4">
+        <div class="col-md-6">
+          <button type="button" for="archivoMedicamentos" class="file-upload" (click)="activarSeleccionArchivo()"
+            [disabled]="esFormularioSoloLectura">
+            seleccionar archivo
+          </button>
+          <span class="ml-2">{{ elgirDeArchivo }}</span>
+          <input type="file" id="archivoMedicamentos" (change)="onCambioDeArchivo($event)" class="file-upload"
+            style="display: none" />
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6 d-flex justify-content-end">
+          <button type="button" class="btn btn-default" (click)="cargarProveedores()" [disabled]="esFormularioSoloLectura">
+            Cargar
+          </button>
+        </div>
+      </div>
+    </div>
+
+</form>
+
+<!-- @if (nuevaNotificacion) {
+<section>
+  <lib-notificaciones
+    [notificacionInput]="nuevaNotificacion"
+    (confirmacionModal)="eliminarPedimento($event)"
+  >
+  </lib-notificaciones>
+</section>
+} -->

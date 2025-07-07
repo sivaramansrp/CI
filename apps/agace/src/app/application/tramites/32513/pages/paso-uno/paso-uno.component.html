@@ -2,56 +2,30 @@
   <div class="row">
     <ul class="nav nav-tabs">
       <li [ngClass]="indice === 1 ? 'active' : ''">
-        <a
-          data-toggle="tab"
-          (click)="seleccionaTab(1)"
-          (keydown.enter)="seleccionaTab(1)"
-          (keydown.space)="seleccionaTab(1)"
-          role="button"
-          tabindex="1"
-          >Solicitante</a
-        >
+        <a data-toggle="tab" (click)="seleccionaTab(1)" (keydown.enter)="seleccionaTab(1)"
+          (keydown.space)="seleccionaTab(1)" tabindex="1" role="button">Solicitante</a>
       </li>
-
       <li [ngClass]="indice === 2 ? 'active' : ''">
-        <a
-          data-toggle="tab"
-          (click)="seleccionaTab(2)"
-          (keydown.enter)="seleccionaTab(2)"
-          (keydown.space)="seleccionaTab(2)"
-          role="button"
-          tabindex="2"
-          >Modificación</a
-        >
-      </li>
-
-      <li [ngClass]="indice === 3 ? 'active' : ''">
-        <a
-          data-toggle="tab"
-          (click)="seleccionaTab(3)"
-          (keydown.enter)="seleccionaTab(3)"
-          (keydown.space)="seleccionaTab(3)"
-          role="button"
-          tabindex="3"
-          >Bitácora</a
-        >
+        <a data-toggle="tab" (click)="seleccionaTab(2)" (keydown.enter)="seleccionaTab(1)"
+          (keydown.space)="seleccionaTab(1)" tabindex="2" role="button">Tipo de aviso</a>
       </li>
     </ul>
 
     <ng-container>
-      @switch (indice) { @case (1) {
-      <solicitante #Solicitante (continuarEvento)="continuar()"></solicitante>
-      <div class="altaPlant col-md-12 mt-5">
-        <div class="row mt-5">
-          <app-complementaria-immex></app-complementaria-immex>
-        </div>
-      </div>
-      } @case (2) {
-      <app-modificacion (continuarEvento)="continuar()"></app-modificacion>
-      <app-alta-planta (continuarEvento)="continuar()"></app-alta-planta>
-      } @case (3) {
-      <app-bitacora></app-bitacora>
-      } }
+      @switch (indice) { 
+        @case (1) {
+          <solicitante #Solicitante></solicitante>
+          <div class="row mt-3" [formGroup]="solicitanteForm">
+            <div class="col-md-4">
+              <label>ADACE:</label>
+              <input type="text" class="form-control" formControlName="adace" readonly required/>
+            </div>
+          </div>
+        } 
+        @case (2){
+          <app-aviso></app-aviso>
+        } 
+        }
     </ng-container>
   </div>
 </div>

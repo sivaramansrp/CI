@@ -1,37 +1,66 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { PasoUnoComponent } from './paso-uno.component';
-import { provideHttpClient } from '@angular/common/http';
+import { BtnContinuarComponent, SolicitanteComponent } from '@libs/shared/data-access-user/src';
 
 describe('PasoUnoComponent', () => {
-  let fixture: ComponentFixture<PasoUnoComponent>;
   let component: PasoUnoComponent;
+  let fixture: ComponentFixture<PasoUnoComponent>;
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [FormsModule, ReactiveFormsModule, PasoUnoComponent],
-      providers: [provideHttpClient()]
-    }).overrideComponent(PasoUnoComponent, {
-
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      declarations: [
+      ],
+      imports: [
+        CommonModule,
+        SolicitanteComponent,
+        BtnContinuarComponent,
+        HttpClientTestingModule,
+        PasoUnoComponent
+      ],
     }).compileComponents();
+
     fixture = TestBed.createComponent(PasoUnoComponent);
-    component = fixture.debugElement.componentInstance;
+    component = fixture.componentInstance;
+    fixture.detectChanges();
   });
 
-  it('should run #constructor()', async () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should run #ngAfterViewInit()', async () => {
-    component.ngAfterViewInit();
+  it('should have default indice value as 1', () => {
+    expect(component.indice).toBe(1);
   });
 
-  it('should run #seleccionaTab()', async () => {
-    component.seleccionaTab(1);
+  it('should update indice when seleccionaTab is called', () => {
+    component.indice = 1;
+    expect(component.indice).toBe(1);
+
+    component.seleccionaTab(2);
+    expect(component.indice).toBe(2);
+
+    component.seleccionaTab(3);
+    expect(component.indice).toBe(3);
+
+    component.seleccionaTab(4);
+    expect(component.indice).toBe(4);
   });
 
-  it('should run #ngOnInit()', () => {
-    expect(() => component.ngOnInit()).not.toThrow();
+  it('should enable isEnableModificacionTab when tipoDeEndosoChanges is called with 3', () => {
+    component.tipoDeEndosoChanges(3);
+    expect(component.isEnableModificacionTab).toBe(true);
   });
 
+  it('should disable isEnableModificacionTab when tipoDeEndosoChanges is called with a value other than 3', () => {
+    component.tipoDeEndosoChanges(2);
+    expect(component.isEnableModificacionTab).toBe(false);
+
+    component.tipoDeEndosoChanges(0);
+    expect(component.isEnableModificacionTab).toBe(false);
+
+    component.tipoDeEndosoChanges('test');
+    expect(component.isEnableModificacionTab).toBe(false);
+  });
 });

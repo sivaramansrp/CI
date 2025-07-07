@@ -11,10 +11,10 @@ import { PasoDosComponent } from '../paso-dos/paso-dos.component';
 import { PasoTresComponent } from '../paso-tres/paso-tres.component';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { ReactiveFormsModule } from '@angular/forms';
-import { SOLICITUD_32513_ENUM } from '../../constantes/anexo';
 import { SolicitanteComponent } from '@ng-mf/data-access-user';
 import { ViewChild } from '@angular/core';
 import { WizardComponent } from '@ng-mf/data-access-user';
+import { SOLICITUD_32513_ENUM } from '../../constantes/anexo';
 
 /**
  * Interfaz que define la estructura de una acción de botón.
