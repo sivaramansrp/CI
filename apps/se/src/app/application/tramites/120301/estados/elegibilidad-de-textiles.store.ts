@@ -1,6 +1,7 @@
 import { Store, StoreConfig } from '@datorama/akita';
 import { Catalogo } from '@libs/shared/data-access-user/src';
 import { ConstanciaTramiteConfiguracion } from '@libs/shared/data-access-user/src/core/models/shared/acuse-y-resoluciones-folio-tramite.model';
+import { FitosanitarioForm } from '../models/elegibilidad-de-textiles.model';
 import { Injectable } from '@angular/core';
 
 /**
@@ -28,6 +29,12 @@ import { Injectable } from '@angular/core';
  * ```
  */
 export interface TextilesState {
+      /**
+     * @property {FitosanitarioForm} FitosanitarioForm
+     * Estado del formulario de solicitud que contiene la información básica del trámite.
+     */
+    SolicitudState: FitosanitarioForm;
+
   /** 
    * Número de factura asociado al trámite.
    * @type {string}
@@ -376,51 +383,52 @@ export interface TextilesState {
  */
 export function createInitialState(): TextilesState {
   return {
-    numeroFactura: '',
-    cantidadTotal: '',
-    unidadDeMedida: '',
-    fechaInicioInput: '',
-    valorDolares: '',
-    taxId: '',
-    razonSocial: '',
-    calle: '',
-    ciudad: '',
-    cp: '',
-    pais: '',
-    flexRadioRegistro: '',
-    estado: '',
-    representacionFederal: '',
-    fraccionArancelaria: '',
-    descripcionProducto: '',
-    tratado: '',
-    subproducto: '',
-    mecanismo: '',
-    typoCategoria: '',
-    typoRegimen: '',
-    descripcionCategoriaTextil: '',
-    PaisDestino: '',
-    unidadMedidaCategoriaTextil: '',
-    factorConversionCategoriaTextil: '',
-    fechaInicioVigencia: '',
-    fechaFinVigencia: '',
-    cantidadFacturas: '',
-    exportadorFabricanteMismo: '',
-    numeroRegistroFiscal: '',
-    tipo: '',
-    cantidadTotalImportador: '',
-    razonSocialImportador: '',
-    domicilio: '',
-    ciudadImportador: '',
-    cpImportador: '',
-    PaisImportador: '',
-    formaValida: [],
-    metrosCuadradosEquivalentes: 53,
-    cantidadFacturasTotal: 5,
-    numeroDeLaConstancia: '',
-    anoDeLaConstancia: '',
-    datosTablaConstanciaDelRegistro: [],
-    guardarBandera: false,
-  };
+  SolicitudState: {} as FitosanitarioForm,
+  numeroFactura: '',
+  cantidadTotal: '',
+  unidadDeMedida: '',
+  fechaInicioInput: '',
+  valorDolares: '',
+  taxId: '',
+  razonSocial: '',
+  calle: '',
+  ciudad: '',
+  cp: '',
+  pais: '',
+  flexRadioRegistro: '',
+  estado: '',
+  representacionFederal: '',
+  fraccionArancelaria: '',
+  descripcionProducto: '',
+  tratado: '',
+  subproducto: '',
+  mecanismo: '',
+  typoCategoria: '',
+  typoRegimen: '',
+  descripcionCategoriaTextil: '',
+  PaisDestino: '',
+  unidadMedidaCategoriaTextil: '',
+  factorConversionCategoriaTextil: '',
+  fechaInicioVigencia: '',
+  fechaFinVigencia: '',
+  cantidadFacturas: '',
+  exportadorFabricanteMismo: '',
+  numeroRegistroFiscal: '',
+  tipo: '',
+  cantidadTotalImportador: '',
+  razonSocialImportador: '',
+  domicilio: '',
+  ciudadImportador: '',
+  cpImportador: '',
+  PaisImportador: '',
+  formaValida: [],
+  metrosCuadradosEquivalentes: 0,
+  cantidadFacturasTotal: 0,
+  numeroDeLaConstancia: '',
+  anoDeLaConstancia: '',
+  datosTablaConstanciaDelRegistro: [],
+  guardarBandera: false,
+};
 }
 
 /**
