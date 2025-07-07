@@ -213,6 +213,21 @@ export class AvisoComponent {
   }
 
   /**
+   * Establece valores en el store del trámite.
+   * @param form Formulario del cual se obtiene el valor.
+   * @param campo Nombre del campo del formulario.
+   * @param metodoNombre Nombre del método en el store.
+   */
+  setValoresStore(
+    form: FormGroup,
+    campo: string,
+    metodoNombre: keyof Solicitud32513Store
+  ): void {
+    const VALOR = form.get(campo)?.value;
+    (this.solicitud32513Store[metodoNombre] as (value: unknown) => void)(VALOR);
+  }
+
+  /**
    * Método del ciclo de vida `OnDestroy`.
    *
    * Se ejecuta automáticamente cuando el componente se destruye.

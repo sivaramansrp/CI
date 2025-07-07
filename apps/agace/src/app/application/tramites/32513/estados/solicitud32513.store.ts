@@ -8,10 +8,9 @@ import { StoreConfig } from '@datorama/akita';
  */
 export interface Solicitud32513State {
   
-  /**
-   * Archivo cargado correspondiente a la destrucción de mercancía.
-   */
-  archivoDestruccion: File | null;
+  descripcionMercancia?: string; 
+  porcentajeDesperdicio?: string;
+
 }
 
 /**
@@ -23,7 +22,8 @@ export interface Solicitud32513State {
  */
 export function createInitialSolicitudState(): Solicitud32513State {
   return {
-    archivoDestruccion: null
+    descripcionMercancia: '', // Descripción de la mercancía, inicialmente vacío
+    porcentajeDesperdicio: '' // Porcentaje de desperdicio, inicialmente 0
   };
 }
 @Injectable({
@@ -41,22 +41,24 @@ export class Solicitud32513Store extends Store<Solicitud32513State> {
     super(createInitialSolicitudState());
   }
 
-  /**
-   * Actualiza el archivo de destrucción subido por el usuario.
-   *
-   * @param archivoDestruccion - Archivo tipo `File` cargado en el formulario.
-   */
-  actualizarArchivoDestruccion(archivoDestruccion: File): void {
-    this.update((state) => ({ 
-      ...state, 
-      archivoDestruccion 
+  public setDescripcionMercancia(descripcionMercancia: string): void {
+    this.update((state) => ({
+      ...state,
+      descripcionMercancia,
+    }));
+  }
+
+  public setPorcentajeDesperdicio(porcentajeDesperdicio: string): void {
+    this.update((state) => ({
+      ...state,
+      porcentajeDesperdicio,
     }));
   }
 
   /**
-   * Restaura el estado del store a su valor inicial.
+   * Limpia los datos de la solicitud.
    */
-  resetStore(): void {
+  public limpiarSolicitud(): void {
     this.reset();
   }
 }
