@@ -18,6 +18,7 @@
     <input
       type="text"
       class="form-control"
+      maxlength="250"
       formControlName="nombreComercial"
       (change)="actualizarNombreComercial($event)"
     />
@@ -89,9 +90,20 @@
     <input
       type="text"
       class="form-control"
+      maxlength="250"
       formControlName="calle"
       (change)="actualizarCalle($event)"
     />
+    <span
+      *ngIf="
+        aviosForm.get('calle')?.hasError('required') &&
+        aviosForm.get('calle')?.touched
+      "
+      id="descMercancia"
+      class="text-danger"
+    >
+      Este campo es obligatorio
+    </span>
   </div>
 
   <div class="col-md-4">
@@ -109,9 +121,21 @@
     <input
       type="text"
       class="form-control"
+      maxlength="15"
       formControlName="numeroExterior"
+      (input)="selectNumeroExterior($event)"
       (change)="actualizarNumeroExterior($event)"
     />
+    <span
+      *ngIf="
+        aviosForm.get('numeroExterior')?.hasError('required') &&
+        aviosForm.get('numeroExterior')?.touched
+      "
+      id="descMercancia"
+      class="text-danger"
+    >
+      Este campo es obligatorio
+    </span>
   </div>
 
   <div class="col-md-4">
@@ -119,7 +143,9 @@
     <input
       type="text"
       class="form-control"
+      maxlength="15"
       formControlName="numeroInterior"
+      (input)="selectNumeroInterior($event)"
       (change)="actualizarNumeroInterior($event)"
     />
   </div>
@@ -139,9 +165,21 @@
     <input
       type="text"
       class="form-control"
+      maxlength="5"
       formControlName="codigoPostal"
+      (input)="selectCodigoPostal($event)"
       (change)="actualizarCodigoPostal($event)"
     />
+    <span
+      *ngIf="
+        aviosForm.get('codigoPostal')?.hasError('required') &&
+        aviosForm.get('codigoPostal')?.touched
+      "
+      id="descMercancia"
+      class="text-danger"
+    >
+      Este campo es obligatorio
+    </span>
   </div>
 
   <div class="col-md-12 mb-1">
@@ -207,9 +245,20 @@
     <input
       type="text"
       class="form-control"
+      maxlength="250"
       formControlName="lugarCalle"
       (change)="actualizarLugarCalle($event)"
     />
+    <span
+      *ngIf="
+        aviosForm.get('lugarCalle')?.hasError('required') &&
+        aviosForm.get('lugarCalle')?.touched
+      "
+      id="descMercancia"
+      class="text-danger"
+    >
+      Este campo es obligatorio
+    </span>
   </div>
 
   <div class="col-md-4">
@@ -227,9 +276,21 @@
     <input
       type="text"
       class="form-control"
+      maxlength="15"
       formControlName="lugarNumeroExterior"
+      (input)="selectLugarNumeroExterior($event)"
       (change)="actualizarLugarNumeroExterior($event)"
     />
+    <span
+      *ngIf="
+        aviosForm.get('lugarNumeroExterior')?.hasError('required') &&
+        aviosForm.get('lugarNumeroExterior')?.touched
+      "
+      id="descMercancia"
+      class="text-danger"
+    >
+      Este campo es obligatorio
+    </span>
   </div>
 
   <div class="col-md-4">
@@ -237,7 +298,9 @@
     <input
       type="text"
       class="form-control"
+      maxlength="15"
       formControlName="lugarNumeroInterior"
+      (input)="selectLugarNumeroInterior($event)"
       (change)="actualizarLugarNumeroInterior($event)"
     />
   </div>
@@ -248,8 +311,8 @@
         class="require"
         [ngClass]="{
           'text-danger':
-            aviosForm.get('lugarCodigoPostal')?.invalid &&
-            aviosForm.get('lugarCodigoPostal')?.touched
+            aviosForm.get('lugarNumeroInterior')?.invalid &&
+            aviosForm.get('lugarNumeroInterior')?.touched
         }"
         >*</span
       >:</label
@@ -257,9 +320,21 @@
     <input
       type="text"
       class="form-control"
+      maxlength="5"
       formControlName="lugarCodigoPostal"
+      (input)="selectLugarCodigoPostal($event)"
       (change)="actualizarLugarCodigoPostal($event)"
     />
+    <span
+      *ngIf="
+        aviosForm.get('lugarCodigoPostal')?.hasError('required') &&
+        aviosForm.get('lugarCodigoPostal')?.touched
+      "
+      id="descMercancia"
+      class="text-danger"
+    >
+      Este campo es obligatorio
+    </span>
   </div>
 
   <div class="col-md-4"></div>
@@ -303,8 +378,20 @@
       type="text"
       class="form-control"
       formControlName="generico2"
+      maxlength="5"
+      (input)="selectGenerico2($event)"
       (change)="actualizarGenerico2($event)"
     />
+    <span
+      *ngIf="
+        aviosForm.get('generico2')?.hasError('required') &&
+        aviosForm.get('generico2')?.touched
+      "
+      id="descMercancia"
+      class="text-danger"
+    >
+      Este campo es obligatorio
+    </span>
   </div>
 
   <div class="col-md-4"></div>
@@ -326,7 +413,7 @@
         <b>Archivo excel a incorporar</b>
         <input
           type="file"
-          accept=".xlsx"
+          accept=".xls"
           class="form-control sfile"
           name="destruccion"
           formControlName="archivoDestruccion"
@@ -334,13 +421,25 @@
           (change)="actualizarArchivoDestruccion($event)"
           title="Examinar"
         />
+        <span
+          *ngIf="
+            aviosForm.get('archivoDestruccion')?.hasError('required') &&
+            aviosForm.get('archivoDestruccion')?.touched
+          "
+          id="descMercancia"
+          class="text-danger"
+        >
+          Este campo es obligatorio
+        </span>
       </div>
       <div class="col-md-6 d-flex justify-content-end">
         <button
           type="button"
           name="cargaArchivoProcesos"
           [disabled]="false"
+          style="height: 50px !important;"
           id="cargaArchivoProcesos"
+          (click)="cargaArchivoProcesos()"
           class="btn btn-primary me-md-3"
         >
           Cargar archivo
@@ -349,3 +448,12 @@
     </div>
   </div>
 </form>
+@if (nuevaNotificacion) {
+<section>
+  <lib-notificaciones
+    [notificacionInput]="nuevaNotificacion"
+    (confirmacionModal)="eliminarPedimento($event)"
+  >
+  </lib-notificaciones>
+</section>
+}

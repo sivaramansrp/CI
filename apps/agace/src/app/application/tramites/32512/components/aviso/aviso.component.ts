@@ -12,9 +12,13 @@ import { FormGroup } from '@angular/forms';
 import { InputFecha } from '@libs/shared/data-access-user/src';
 import { InputFechaComponent } from '@libs/shared/data-access-user/src';
 import { MUNICIPIO_ALCALDIA } from '../../constantes/solicitud.enum';
+import { Notificacion } from '@libs/shared/data-access-user/src';
 import { NotificacionesComponent } from '@libs/shared/data-access-user/src';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
+import { Pedimento } from '@libs/shared/data-access-user/src';
+import { REGEX_ALFANUMERICO_CON_ESPACIOS_REEMPLAZAR } from '@libs/shared/data-access-user/src';
+import { REGEX_NUMEROS } from '@libs/shared/data-access-user/src';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Solicitud32512Query } from '../../estados/solicitud32512.query';
 import { Solicitud32512State } from '../../estados/solicitud32512.store';
@@ -26,6 +30,14 @@ import { Validators } from '@angular/forms';
 import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
 
+/**
+ * @component AvisoComponent
+ * @description
+ * Componente encargado de mostrar el aviso y gestionar el formulario relacionado.
+ * Este componente es autónomo (standalone) y utiliza múltiples componentes y módulos
+ * compartidos para la construcción de su interfaz y funcionalidad.
+ *
+ */
 @Component({
   selector: 'app-aviso',
   standalone: true,
@@ -41,30 +53,96 @@ import { takeUntil } from 'rxjs';
   templateUrl: './aviso.component.html',
   styleUrl: './aviso.component.scss',
 })
+// Aquí puedes incluir las propiedades y métodos del componente con sus respectivas anotaciones si lo deseas
 export class AvisoComponent implements OnInit, OnDestroy {
+  /**
+   * Formulario reactivo utilizado para capturar los datos del aviso.
+   * Se inicializa en el método ngOnInit.
+   */
   aviosForm!: FormGroup;
+
+  /**
+   * Subject utilizado para destruir los observables al destruir el componente.
+   * Evita fugas de memoria al usar operadores como takeUntil.
+   */
   destroyNotifier$: Subject<void> = new Subject();
+
+  /**
+   * Catálogo de entidades federativas que se muestra en un select.
+   */
   entidadFederativa: CatalogosSelect = ENTIDAD_FEDERATIVA;
+
+  /**
+   * Catálogo de municipios o alcaldías que se muestra en un select.
+   */
   municipioAlcaldia: CatalogosSelect = MUNICIPIO_ALCALDIA;
+
+  /**
+   * Catálogo de colonias disponibles según el municipio/alcaldía seleccionado.
+   */
   colonia: CatalogosSelect = COLONIA;
+
+  /**
+   * Catálogo de municipios/alcaldías del lugar de destrucción de mercancía.
+   */
   lugarMunicipioAlcaldia: CatalogosSelect = MUNICIPIO_ALCALDIA;
+
+  /**
+   * Catálogo de colonias del lugar de destrucción de mercancía.
+   */
   lugarColonia: CatalogosSelect = COLONIA;
+
+  /**
+   * Configuración para el componente de fecha de destrucción de mercancía.
+   */
   fechaDestruccionMercancia: InputFecha = FECHA_DESTRUCCION_MERCANCIA;
+
+  /**
+   * Estado actual de la solicitud 32512, que contiene los datos compartidos entre componentes o servicios.
+   */
   solicitud32512State: Solicitud32512State = {} as Solicitud32512State;
+
+  /**
+   * @descripcion Notificación para mostrar mensajes al usuario.
+   */
+  public nuevaNotificacion!: Notificacion;
+  /**
+   * Elemento a eliminar de la tabla de pedimentos.
+   */
+  elementoParaEliminar!: number;
+
+  /**
+   * Array con los datos de los pedimentos.
+   * Se utiliza para almacenar los pedimentos ingresados por el usuario.
+   */
+  pedimentos: Array<Pedimento> = [];
+  /**
+   * Constructor del componente AvisoComponent.
+   * Se encarga de inyectar los servicios y stores necesarios para la gestión del formulario
+   * y los datos asociados a la solicitud 32512.
+   */
   constructor(
     private fb: FormBuilder,
     public solicitudService: SolicitudService,
     public solicitud32512Store: Solicitud32512Store,
     public solicitud32512Query: Solicitud32512Query
   ) {
+    // Llamada para inicializar datos de catálogo al cargar el componente
     this.conseguirEntidadFederativa();
   }
 
+  /**
+   * Método del ciclo de vida que se ejecuta al inicializar el componente.
+   *
+   * - Inicializa el formulario reactivo `aviosForm` con valores del estado actual (`solicitud32512State`)
+   * - Define validaciones como requeridos, longitud máxima y expresiones regulares
+   * - Se suscribe al observable `selectSolicitud$` para mantener sincronizado el formulario con el estado compartido
+   */
   ngOnInit(): void {
     this.aviosForm = this.fb.group({
       nombreComercial: [
         { value: this.solicitud32512State.nombreComercial, disbled: false },
-        [Validators.required],
+        [Validators.required, Validators.maxLength(250)],
       ],
       entidadFederativa: [
         { value: this.solicitud32512State.entidadFederativa, disbled: false },
@@ -80,19 +158,30 @@ export class AvisoComponent implements OnInit, OnDestroy {
       ],
       calle: [
         { value: this.solicitud32512State.calle, disbled: false },
-        [Validators.required],
+        [Validators.required, Validators.maxLength(250)],
       ],
       numeroExterior: [
         { value: this.solicitud32512State.numeroExterior, disbled: false },
-        [Validators.required],
+        [
+          Validators.required,
+          Validators.maxLength(15),
+          Validators.pattern(REGEX_ALFANUMERICO_CON_ESPACIOS_REEMPLAZAR),
+        ],
       ],
       numeroInterior: [
         { value: this.solicitud32512State.numeroInterior, disbled: false },
-        [],
+        [
+          Validators.maxLength(15),
+          Validators.pattern(REGEX_ALFANUMERICO_CON_ESPACIOS_REEMPLAZAR),
+        ],
       ],
       codigoPostal: [
         { value: this.solicitud32512State.codigoPostal, disbled: false },
-        [Validators.required],
+        [
+          Validators.required,
+          Validators.maxLength(5),
+          Validators.pattern(REGEX_NUMEROS),
+        ],
       ],
       lugarEntidadFederativa: [
         {
@@ -114,19 +203,30 @@ export class AvisoComponent implements OnInit, OnDestroy {
       ],
       lugarCalle: [
         { value: this.solicitud32512State.lugarCalle, disbled: false },
-        [Validators.required],
+        [Validators.required, Validators.maxLength(250)],
       ],
       lugarNumeroExterior: [
         { value: this.solicitud32512State.lugarNumeroExterior, disbled: false },
-        [Validators.required],
+        [
+          Validators.required,
+          Validators.maxLength(15),
+          Validators.pattern(REGEX_ALFANUMERICO_CON_ESPACIOS_REEMPLAZAR),
+        ],
       ],
       lugarNumeroInterior: [
         { value: this.solicitud32512State.lugarNumeroInterior, disbled: false },
-        [],
+        [
+          Validators.maxLength(15),
+          Validators.pattern(REGEX_ALFANUMERICO_CON_ESPACIOS_REEMPLAZAR),
+        ],
       ],
       lugarCodigoPostal: [
         { value: this.solicitud32512State.lugarCodigoPostal, disbled: false },
-        [Validators.required],
+        [
+          Validators.required,
+          Validators.maxLength(5),
+          Validators.pattern(REGEX_NUMEROS),
+        ],
       ],
       generico1: [
         { value: this.solicitud32512State.generico1, disbled: false },
@@ -174,6 +274,12 @@ export class AvisoComponent implements OnInit, OnDestroy {
       .subscribe();
   }
 
+  /**
+   * Obtiene el catálogo de entidades federativas desde el servicio `SolicitudService`
+   * y lo asigna al objeto `entidadFederativa.catalogos`.
+   *
+   * Esta información se utiliza en un campo select del formulario.
+   */
   conseguirEntidadFederativa(): void {
     this.solicitudService
       .conseguirEntidadFederativa()
@@ -185,6 +291,12 @@ export class AvisoComponent implements OnInit, OnDestroy {
       });
   }
 
+  /**
+   * Obtiene el catálogo de municipios o alcaldías desde el servicio `SolicitudService`
+   * y lo asigna a `municipioAlcaldia.catalogos`.
+   *
+   * Relacionado con la entidad federativa seleccionada.
+   */
   conseguirMunicipioAlcaldia(): void {
     this.solicitudService
       .conseguirMunicipioAlcaldia()
@@ -196,6 +308,12 @@ export class AvisoComponent implements OnInit, OnDestroy {
       });
   }
 
+  /**
+   * Obtiene el catálogo de colonias desde el servicio `SolicitudService`
+   * y lo asigna a `colonia.catalogos`.
+   *
+   * Las colonias dependen del municipio o alcaldía seleccionada.
+   */
   conseguirColonia(): void {
     this.solicitudService
       .conseguirColonia()
@@ -207,6 +325,10 @@ export class AvisoComponent implements OnInit, OnDestroy {
       });
   }
 
+  /**
+   * Obtiene el catálogo de municipios o alcaldías para el lugar de destrucción de mercancía
+   * desde el servicio `SolicitudService` y lo asigna a `lugarMunicipioAlcaldia.catalogos`.
+   */
   conseguirLugarMunicipioAlcaldia(): void {
     this.solicitudService
       .conseguirMunicipioAlcaldia()
@@ -218,6 +340,10 @@ export class AvisoComponent implements OnInit, OnDestroy {
       });
   }
 
+  /**
+   * Obtiene el catálogo de colonias para el lugar de destrucción de mercancía
+   * desde el servicio `SolicitudService` y lo asigna a `lugarColonia.catalogos`.
+   */
   conseguirLugarColonia(): void {
     this.solicitudService
       .conseguirColonia()
@@ -229,6 +355,10 @@ export class AvisoComponent implements OnInit, OnDestroy {
       });
   }
 
+  /**
+   * Actualiza la entidad federativa seleccionada.
+   * Si el ID del catálogo es válido, obtiene el catálogo de municipios y actualiza el estado.
+   */
   actualizarEntidadFederativa(evento: Catalogo): void {
     if (evento.id > 0) {
       this.conseguirMunicipioAlcaldia();
@@ -236,6 +366,10 @@ export class AvisoComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Actualiza el municipio o alcaldía seleccionada.
+   * Si el ID del catálogo es válido, obtiene el catálogo de colonias y actualiza el estado.
+   */
   actualizarMunicipioAlcaldia(evento: Catalogo): void {
     if (evento.id > 0) {
       this.conseguirColonia();
@@ -243,10 +377,17 @@ export class AvisoComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Actualiza la colonia seleccionada en el estado de la solicitud.
+   */
   actualizarColonia(evento: Catalogo): void {
     this.solicitud32512Store.actualizarColonia(evento.id);
   }
 
+  /**
+   * Actualiza la entidad federativa del lugar de destrucción.
+   * Si el ID es válido, obtiene el catálogo de municipios correspondientes.
+   */
   actualizarLugarEntidadFederativa(evento: Catalogo): void {
     if (evento.id > 0) {
       this.conseguirLugarMunicipioAlcaldia();
@@ -254,6 +395,10 @@ export class AvisoComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Actualiza el municipio o alcaldía del lugar de destrucción.
+   * Si el ID es válido, obtiene el catálogo de colonias correspondientes.
+   */
   actualizarLugarMunicipioAlcaldia(evento: Catalogo): void {
     if (evento.id > 0) {
       this.conseguirLugarColonia();
@@ -261,64 +406,205 @@ export class AvisoComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Actualiza la colonia del lugar de destrucción en el estado de la solicitud.
+   */
   actualizarLugarColonia(evento: Catalogo): void {
     this.solicitud32512Store.actualizarLugarColonia(evento.id);
   }
 
+  /**
+   * Actualiza el valor del campo "nombre comercial" en el estado de la solicitud.
+   */
   actualizarNombreComercial(evento: Event): void {
     const VALOR = (evento.target as HTMLInputElement).value;
     this.solicitud32512Store.actualizarNombreComercial(VALOR);
   }
 
+  /**
+   * Actualiza el valor del campo "calle" en el estado de la solicitud.
+   */
   actualizarCalle(evento: Event): void {
     const VALOR = (evento.target as HTMLInputElement).value;
     this.solicitud32512Store.actualizarCalle(VALOR);
   }
 
+  /**
+   * Actualiza el valor del campo "número exterior" en el estado de la solicitud.
+   */
   actualizarNumeroExterior(evento: Event): void {
     const VALOR = (evento.target as HTMLInputElement).value;
     this.solicitud32512Store.actualizarNumeroExterior(VALOR);
   }
 
+  /**
+   * Limpia el valor del número exterior aplicando una expresión regular y lo actualiza en el formulario.
+   */
+  selectNumeroExterior(evento: Event): void {
+    const INPUT = evento.target as HTMLInputElement;
+    const CLEANED_VALUE = INPUT.value.replace(
+      REGEX_ALFANUMERICO_CON_ESPACIOS_REEMPLAZAR,
+      ''
+    );
+
+    this.aviosForm.patchValue({
+      numeroExterior: CLEANED_VALUE,
+    });
+  }
+
+  /**
+   * Actualiza el valor del campo "número interior" en el estado de la solicitud.
+   */
   actualizarNumeroInterior(evento: Event): void {
     const VALOR = (evento.target as HTMLInputElement).value;
     this.solicitud32512Store.actualizarNumeroInterior(VALOR);
   }
 
+  /**
+   * Limpia el valor del número interior aplicando una expresión regular y lo actualiza en el formulario.
+   */
+  selectNumeroInterior(evento: Event): void {
+    const INPUT = evento.target as HTMLInputElement;
+    const CLEANED_VALUE = INPUT.value.replace(
+      REGEX_ALFANUMERICO_CON_ESPACIOS_REEMPLAZAR,
+      ''
+    );
+
+    this.aviosForm.patchValue({
+      numeroInterior: CLEANED_VALUE,
+    });
+  }
+
+  /**
+   * Actualiza el valor del campo "código postal" en el estado de la solicitud.
+   */
   actualizarCodigoPostal(evento: Event): void {
     const VALOR = (evento.target as HTMLInputElement).value;
     this.solicitud32512Store.actualizarCodigoPostal(VALOR);
   }
 
+  /**
+   * Limpia el valor del campo "código postal" aplicando una expresión regular
+   * y lo actualiza en el formulario reactivo.
+   */
+  selectCodigoPostal(evento: Event): void {
+    const INPUT = evento.target as HTMLInputElement;
+    const CLEANED_VALUE = INPUT.value.replace(REGEX_NUMEROS, '');
+
+    this.aviosForm.patchValue({
+      codigoPostal: CLEANED_VALUE,
+    });
+  }
+
+  /**
+   * Actualiza el valor del campo "calle del lugar" en el estado de la solicitud.
+   */
   actualizarLugarCalle(evento: Event): void {
     const VALOR = (evento.target as HTMLInputElement).value;
     this.solicitud32512Store.actualizarLugarCalle(VALOR);
   }
 
+  /**
+   * Actualiza el número exterior del lugar en el estado de la solicitud.
+   */
   actualizarLugarNumeroExterior(evento: Event): void {
     const VALOR = (evento.target as HTMLInputElement).value;
     this.solicitud32512Store.actualizarLugarNumeroExterior(VALOR);
   }
 
+  /**
+   * Limpia el número exterior del lugar aplicando una expresión regular
+   * y lo actualiza en el formulario reactivo.
+   */
+  selectLugarNumeroExterior(evento: Event): void {
+    const INPUT = evento.target as HTMLInputElement;
+    const CLEANED_VALUE = INPUT.value.replace(
+      REGEX_ALFANUMERICO_CON_ESPACIOS_REEMPLAZAR,
+      ''
+    );
+
+    this.aviosForm.patchValue({
+      lugarNumeroExterior: CLEANED_VALUE,
+    });
+  }
+
+  /**
+   * Actualiza el número interior del lugar en el estado de la solicitud.
+   */
   actualizarLugarNumeroInterior(evento: Event): void {
     const VALOR = (evento.target as HTMLInputElement).value;
     this.solicitud32512Store.actualizarLugarNumeroInterior(VALOR);
   }
 
+  /**
+   * Limpia el número interior del lugar aplicando una expresión regular
+   * y lo actualiza en el formulario.
+   */
+  selectLugarNumeroInterior(evento: Event): void {
+    const INPUT = evento.target as HTMLInputElement;
+    const CLEANED_VALUE = INPUT.value.replace(
+      REGEX_ALFANUMERICO_CON_ESPACIOS_REEMPLAZAR,
+      ''
+    );
+
+    this.aviosForm.patchValue({
+      lugarNumeroInterior: CLEANED_VALUE,
+    });
+  }
+
+  /**
+   * Actualiza el código postal del lugar de destrucción en el estado de la solicitud.
+   */
   actualizarLugarCodigoPostal(evento: Event): void {
     const VALOR = (evento.target as HTMLInputElement).value;
     this.solicitud32512Store.actualizarLugarCodigoPostal(VALOR);
   }
 
+  /**
+   * Limpia el código postal del lugar aplicando una expresión regular
+   * y lo actualiza en el formulario.
+   */
+  selectLugarCodigoPostal(evento: Event): void {
+    const INPUT = evento.target as HTMLInputElement;
+    const CLEANED_VALUE = INPUT.value.replace(REGEX_NUMEROS, '');
+
+    this.aviosForm.patchValue({
+      lugarCodigoPostal: CLEANED_VALUE,
+    });
+  }
+
+  /**
+   * Actualiza el valor del campo genérico 1 en el estado de la solicitud.
+   */
   actualizarGenerico1(evento: string): void {
     this.solicitud32512Store.actualizarGenerico1(evento);
   }
 
+  /**
+   * Actualiza el campo genérico 2 en el estado de la solicitud.
+   */
   actualizarGenerico2(evento: Event): void {
     const VALOR = (evento.target as HTMLInputElement).value;
     this.solicitud32512Store.actualizarGenerico2(VALOR);
   }
 
+  /**
+   * Limpia el valor del campo genérico 2 aplicando una expresión regular
+   * y lo actualiza en el formulario reactivo.
+   */
+  selectGenerico2(evento: Event): void {
+    const INPUT = evento.target as HTMLInputElement;
+    const CLEANED_VALUE = INPUT.value.replace(REGEX_NUMEROS, '');
+
+    this.aviosForm.patchValue({
+      generico2: CLEANED_VALUE,
+    });
+  }
+
+  /**
+   * Actualiza el archivo de destrucción en el estado de la solicitud.
+   * Este archivo es seleccionado desde un input tipo file.
+   */
   actualizarArchivoDestruccion(evento: Event): void {
     const INPUT = evento.target as HTMLInputElement;
     if (INPUT.files && INPUT.files.length > 0) {
@@ -327,6 +613,86 @@ export class AvisoComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Elimina un elemento de la tabla de pedimento, si se confirma la acción.
+   * @param borrar Indica si se debe proceder con la eliminación.
+   * @returns {void}
+   */
+  eliminarPedimento(borrar: boolean): void {
+    if (borrar) {
+      this.pedimentos.splice(this.elementoParaEliminar, 1);
+    }
+  }
+
+  /**
+   * Elimina un elemento de la lista de pedimentos en la posición especificada.
+   *
+   * @param {number} i - El índice del elemento a eliminar.
+   *
+   * @remarks
+   * Después de eliminar el elemento, se actualiza el título y mensaje del modal,
+   * y se abre el modal para mostrar un aviso al usuario.
+   */
+  abrirModal(mensaje: string, i: number = 0): void {
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: mensaje,
+      cerrar: false,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
+
+    this.elementoParaEliminar = i;
+  }
+
+  /**
+   * Simula la carga de un archivo relacionado con procesos o pedimentos.
+   *
+   * - Crea un objeto `PEDIMENTO` con valores por defecto.
+   * - Muestra un modal con el mensaje de confirmación de carga exitosa.
+   * - Agrega el pedimento al arreglo `pedimentos`.
+   *
+   * Este método puede usarse como parte de una simulación previa al envío
+   * o validación real de pedimentos.
+   */
+  cargaArchivoProcesos(): void {
+    const PEDIMENTO = {
+      patente: 0,
+      pedimento: 0,
+      aduana: 0,
+      idTipoPedimento: 0,
+      descTipoPedimento: 'Por evaluar',
+      numero: '',
+      comprobanteValor: '',
+      pedimentoValidado: false,
+    };
+    this.abrirModal('Se realizó la carga correctamente.');
+    this.pedimentos.push(PEDIMENTO);
+  }
+
+  /**
+   * Método para validar el formulario.
+   * @returns boolean
+   */
+  validarFormulario(): boolean {
+    if (this.aviosForm.invalid) {
+      this.aviosForm.markAllAsTouched();
+    }
+    return this.aviosForm.valid;
+  }
+
+  /**
+   * Método del ciclo de vida `OnDestroy`.
+   *
+   * Se ejecuta automáticamente cuando el componente se destruye.
+   *
+   * - Emite un valor al `destroyNotifier$` para cancelar todas las suscripciones activas.
+   * - Libera recursos y evita fugas de memoria.
+   */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();

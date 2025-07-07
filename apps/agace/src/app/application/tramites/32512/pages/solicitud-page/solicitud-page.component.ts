@@ -43,6 +43,7 @@ interface AccionBoton {
  * Componente que representa la página de solicitud.
  */
 export class SolicitudPageComponent {
+  esValido = true;
   /**
    * Lista de pasos del asistente.
    */
@@ -57,6 +58,12 @@ export class SolicitudPageComponent {
    * Referencia al componente del asistente.
    */
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
+
+  /**
+   * Referencia al componente de solicitud.
+
+   */
+  @ViewChild('pasoUno') pasoUnoComponent!: PasoUnoComponent;
 
   /**
    * Datos de los pasos del asistente.
@@ -80,10 +87,20 @@ export class SolicitudPageComponent {
    * Obtiene el valor del índice de la acción del botón.
    * @param e Acción del botón.
    */
-  getValorIndice(e: AccionBoton): void {
-    if (e.valor > 0 && e.valor < 5) {
-      this.indice = e.valor;
-      if (e.accion === 'cont') {
+  getValorIndice(evento: AccionBoton): void {
+    if (evento.valor > 0 && evento.valor < 5) {
+      if (this.indice === 1) {
+        const SOLICITUD_COMPONENT = this.pasoUnoComponent?.avisoComponent;
+        this.esValido = SOLICITUD_COMPONENT?.validarFormulario() ?? false;
+      }
+
+      if (!this.esValido) {
+        this.datosPasos.indice = 1;
+        return;
+      }
+
+      this.indice = evento.valor;
+      if (evento.accion === 'cont') {
         this.wizardComponent.siguiente();
       } else {
         this.wizardComponent.atras();

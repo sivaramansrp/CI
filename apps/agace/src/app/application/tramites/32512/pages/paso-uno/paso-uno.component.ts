@@ -5,6 +5,7 @@ import { OnDestroy } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { SolicitanteComponent } from '@libs/shared/data-access-user/src';
 import { Subject } from 'rxjs';
+import { ViewChild } from '@angular/core';
 
 /**
  * Componente que representa el primer paso de un trámite.
@@ -17,7 +18,7 @@ import { Subject } from 'rxjs';
     CommonModule,
     ReactiveFormsModule,
     SolicitanteComponent,
-    AvisoComponent
+    AvisoComponent,
   ],
   templateUrl: './paso-uno.component.html',
   styleUrls: ['./paso-uno.component.scss'],
@@ -33,6 +34,7 @@ export class PasoUnoComponent implements OnDestroy {
   /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
   public esDatosRespuesta: boolean = false;
 
+  @ViewChild(AvisoComponent) avisoComponent!: AvisoComponent;
 
   /**
    * Constructor del componente.
@@ -41,7 +43,7 @@ export class PasoUnoComponent implements OnDestroy {
     //Constructor del componente.
   }
 
-   /**
+  /**
    * Índice utilizado para identificar la pestaña activa dentro del paso.
    * @type {number}
    */

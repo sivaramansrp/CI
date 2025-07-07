@@ -19,18 +19,33 @@ export class SolicitudService {
     // Lógica del constructor aquí
   }
 
+  /**
+   * Obtiene el catálogo de entidades federativas desde un archivo JSON local.
+   *
+   * @returns Observable con un arreglo de objetos tipo Catalogo.
+   */
   conseguirEntidadFederativa(): Observable<Catalogo[]> {
     return this.http.get<Catalogo[]>(
       'assets/json/32512/entidad-federativa-catalogo.json'
     );
   }
 
+  /**
+   * Obtiene el catálogo de municipios o alcaldías desde un archivo JSON local.
+   *
+   * @returns Observable con un arreglo de objetos tipo Catalogo.
+   */
   conseguirMunicipioAlcaldia(): Observable<Catalogo[]> {
     return this.http.get<Catalogo[]>(
       'assets/json/32512/municipio-alcaldia-catalogo.json'
     );
   }
 
+  /**
+   * Obtiene el catálogo de colonias desde un archivo JSON local.
+   *
+   * @returns Observable con un arreglo de objetos tipo Catalogo.
+   */
   conseguirColonia(): Observable<Catalogo[]> {
     return this.http.get<Catalogo[]>('assets/json/32512/colonia-catalogo.json');
   }
