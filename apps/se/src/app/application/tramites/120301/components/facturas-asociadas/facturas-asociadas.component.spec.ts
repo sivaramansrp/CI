@@ -17,6 +17,24 @@ const seccionStateStub = {
 };
 
 const fullTextilesStateStub: TextilesState = {
+  SolicitudState: {
+    flexRadioRegistro: 'Option1',
+    estado: 'Estado Falso',
+    representacionFederal: 'Representation',
+    fraccionArancelaria: '1234.56.78',
+    descripcionProducto: 'Producto de prueba',
+    tratado: 'Tratado de prueba',
+    subproducto: 'Subproducto de prueba',
+    mecanismo: 'Mecanismo de prueba',
+    typoCategoria: 'Categoria de prueba',
+    typoRegimen: 'Regimen de prueba',
+    descripcionCategoriaTextil: 'Descripción de categoría',
+    pais: 'Pais Falso',
+    unidadMedidaCategoriaTextil: '',
+    factorConversionCategoriaTextil: '',
+    fechaInicioVigencia: '',
+    fechaFinVigencia: ''
+  },
   numeroFactura: 'NF123',
   cantidadTotal: '200',
   unidadDeMedida: 'm2',
@@ -27,18 +45,6 @@ const fullTextilesStateStub: TextilesState = {
   calle: 'Calle Falsa 123',
   ciudad: 'Ciudad Falsa',
   cp: '12345',
-  pais: 'Pais Falso',
-  flexRadioRegistro: 'Option1',
-  estado: 'Estado Falso',
-  representacionFederal: 'Representation',
-  fraccionArancelaria: '1234.56.78',
-  descripcionProducto: 'Producto de prueba',
-  tratado: 'Tratado de prueba',
-  subproducto: 'Subproducto de prueba',
-  mecanismo: 'Mecanismo de prueba',
-  typoCategoria: 'Categoria de prueba',
-  typoRegimen: 'Regimen de prueba',
-  descripcionCategoriaTextil: 'Descripcion de categoria textil',
   PaisDestino: 'Pais de destino',
   unidadMedidaCategoriaTextil: 'Unidad de medida textil',
   factorConversionCategoriaTextil: '1.5',
@@ -61,6 +67,18 @@ const fullTextilesStateStub: TextilesState = {
   numeroDeLaConstancia: '',
   datosTablaConstanciaDelRegistro: [],
   guardarBandera: false,
+  pais: '',
+  flexRadioRegistro: '',
+  estado: '',
+  representacionFederal: '',
+  fraccionArancelaria: '',
+  descripcionProducto: '',
+  tratado: '',
+  subproducto: '',
+  mecanismo: '',
+  typoCategoria: '',
+  typoRegimen: '',
+  descripcionCategoriaTextil: ''
 };
 
 describe('FormularioAsociacionFacturaComponent', () => {
