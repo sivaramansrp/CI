@@ -260,6 +260,12 @@ const ROUTES: Routes = [
     loadChildren: () => 
       import('./tramites/30505/aviso-de-modificacion.module').then(
         (m) => m.AvisoDeModificacionModule)
+  },
+   {
+      path: 'sce-socio-almacenamiento',
+    loadChildren: () => 
+      import('./tramites/32618/sce-socio-almacen.module').then(
+        (m) => m.SceSocioAlmacenModule)
   }
 ];
 

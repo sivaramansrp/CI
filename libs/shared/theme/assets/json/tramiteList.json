@@ -4220,5 +4220,12 @@
     "linkDashboard": "/se/cancelaciones-certificado/solicitud",
     "linkDepartment": "/pago/cancelaciones-certificado/solicitud",
     "department": "se"
+  },
+  {
+    "id": 606,
+    "tramite": 32618,
+    "linkDashboard": "/agace/sce-socio-almacenamiento/solicitud",
+    "linkDepartment": "/pago/sce-socio-almacenamiento/solicitud",
+    "department": "agace"
   }
 ]
