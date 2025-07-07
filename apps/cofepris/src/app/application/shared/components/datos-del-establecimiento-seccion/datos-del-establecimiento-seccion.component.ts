@@ -190,6 +190,15 @@ export class DatosDelEstablecimientoSeccionComponent
       }
   }
 
+    /**
+   * Maneja el evento de cambio en el campo de RFC del representante.
+   * Llama a la función para buscar el representante por RFC.
+   */
+  hasError(controlName: string, errorName: string){
+    return this.detosEstablecimiento.get(controlName)?.touched &&
+           this.detosEstablecimiento.get(controlName)?.hasError(errorName);
+  }
+
   /**
    * Ciclo de vida `OnDestroy`.
    * Limpia las suscripciones para evitar fugas de memoria.

@@ -79,6 +79,15 @@ export class DatosDelTramiteARealizarComponent implements OnInit, OnDestroy {
   };
 
   /**
+   * Configuración del campo de fecha para la 'Fecha de inspección'.
+   */
+  configuracionFechaInspeccion: InputFecha = {
+    labelNombre: 'Fecha de inspección',
+    required: true,
+    habilitado: true,
+  }
+
+  /**
    * Opciones de selección de formulario para diferentes datos del catálogo.
    */
   certificadosAutorizados: CatalogosSelect = {} as CatalogosSelect;
@@ -120,6 +129,11 @@ export class DatosDelTramiteARealizarComponent implements OnInit, OnDestroy {
    * Indica si el formulario está deshabilitado.
    */
   @Input() formularioDeshabilitado!: boolean;
+
+  /**
+   * Indica el número de procedimiento.
+   */
+  @Input() procedimiento!: number;
 
   /** Constructor para inyectar el servicio de solicitud de pantallas. */
   constructor(
@@ -163,6 +177,10 @@ export class DatosDelTramiteARealizarComponent implements OnInit, OnDestroy {
             this.solicitud220502State.fechaDeInspeccion,
             [Validators.required]
           ),
+          fechaInspeccion: new FormControl(
+            this.solicitud220502State.fechaInspeccion,
+            [Validators.required]
+          ),
         })
       );
       this.cargarDatosIniciales();
@@ -185,6 +203,7 @@ export class DatosDelTramiteARealizarComponent implements OnInit, OnDestroy {
                   this.solicitud220502State.sanidadAgropecuaria,
                 puntoDeInspeccion: this.solicitud220502State.puntoDeInspeccion,
                 fechaDeInspeccion: this.solicitud220502State.fechaDeInspeccion,
+                fechaInspeccion: this.solicitud220502State.fechaInspeccion
               });
             }
           })
@@ -325,6 +344,15 @@ export class DatosDelTramiteARealizarComponent implements OnInit, OnDestroy {
   cambioFechaInicio(nuevo_valor: string): void {
     this.solicitud220502Store.setFechaDeInspeccion(nuevo_valor);
   }
+
+  /**
+   * Maneja los cambios en el campo de fecha de inspección
+   * @param nuevo_valor El nuevo valor de fecha seleccionado.
+   */
+  cambioFechaInspeccion(nuevo_valor: string): void {
+    this.solicitud220502Store.setFechaInspeccion(nuevo_valor);
+  }
+
   /**
    * Establece los certificados autorizados en el estado de la solicitud.
    * @param event Objeto de tipo Catalogo que contiene el ID del certificado autorizado.

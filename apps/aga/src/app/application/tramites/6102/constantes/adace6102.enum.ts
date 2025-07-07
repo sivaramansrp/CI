@@ -16,5 +16,5 @@ export const RADIO_PARCIAL = [
  * @property {string} PREGUNTA_DE_REUNION - Texto que representa la pregunta sobre si se celebró la Junta Técnica.
  */
 export enum AprovechamientoTextos {
-  PREGUNTA_DE_REUNION = '¿Se celebró la Junta Técnica ?',
+  PREGUNTA_DE_REUNION = '¿ Se celebró la Junta Técnica ?',
 }

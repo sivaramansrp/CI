@@ -254,6 +254,17 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   }
 
   /**
+ * Restablece el formulario de pago de derechos.
+ *
+ * @description
+ * Este método reinicia todos los valores del formulario `pagoDeDerechosForm`,
+ * eliminando cualquier dato ingresado previamente.
+ */
+  public borrarDatosDelPago(): void {
+    this.pagoDerechos.reset();
+  }
+
+  /**
    * Limpia recursos y cancela suscripciones al destruir el componente.
    */
   ngOnDestroy(): void {
