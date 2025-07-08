@@ -114,4 +114,10 @@ describe('ResponsableInspeccionEnPuntoComponent', () => {
     expect(FORMGROUP.get('tipocontenedor')?.value).toBe('Tipo contenedor 1');
   });
 
+  it('should call cargarDatosIniciales on inicializarFormulario', () => {
+    const spy = jest.spyOn(component, 'cargarDatosIniciales');
+    component.ngOnInit();
+    expect(spy).toHaveBeenCalled();
+    spy.mockRestore();
+  });
  });

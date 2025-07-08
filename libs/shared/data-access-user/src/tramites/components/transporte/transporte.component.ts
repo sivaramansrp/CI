@@ -43,7 +43,6 @@ import {
   TransporteDespacho,
 } from '../../../core/models/shared/agregar-transporte.model';
 import {
-  MSG_ELIMINA_ELEMENTO,
   MSG_MODIFICA_ELEMENTO,
   TITULO_MODAL_AVISO,
 } from '../../../core/enums/mensajes-modal-comunes.enum';
@@ -56,7 +55,8 @@ import { Catalogo } from '../../../core/models/shared/catalogos.model';
 import { CatalogoSelectComponent } from '../catalogo-select/catalogo-select.component';
 import { CommonModule } from '@angular/common';
 import { ConfiguracionColumna } from '../../../core/models/shared/configuracion-columna.model';
-import { ICatalogo } from '../../../core/models/shared/catalogo.model';
+
+import { Catalogos } from '../../../core/models/shared/catalogo.model';
 import { InputCheckComponent } from '../input-check/input-check.component';
 import { InputHoraComponent } from '../input-hora/input-hora.component';
 import { Modal } from 'bootstrap';
@@ -209,7 +209,7 @@ export class TransporteComponent implements OnInit, OnChanges {
    * Lista del catalogo tipo de equipo
    * @type {ICatalogo[]}
    */
-  public tipoEquipoCatalogo: ICatalogo[] = [];
+  public tipoEquipoCatalogo: Catalogos[] = [];
 
   /**
    *  @description Lista de modelos de carros respecto al año.

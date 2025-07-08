@@ -302,6 +302,10 @@ export function createInitialState(): Tramite270201State {
 })
 @StoreConfig({ name: 'avisoSiglosState', resettable: true })
 export class Tramite270201Store extends Store<Tramite270201State> {
+
+  /**
+ * Constructor que inicializa el estado base del store usando `createInitialState`.
+ */
   constructor() {
     super(createInitialState());
   }

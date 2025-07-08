@@ -4,26 +4,22 @@
  * y la visualización condicional de campos según el tipo de propietario seleccionado.
  */
 
-import { CommonModule } from '@angular/common';
-
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Subject, takeUntil } from 'rxjs';
-
-import { CatalogoSelectComponent, SolicitanteComponent, TituloComponent } from '@ng-mf/data-access-user';
-
 import { Catalogo, ModeloDeFormaDinamica } from '@libs/shared/data-access-user/src';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ConsultaioQuery, SolicitanteComponent, TituloComponent } from '@ng-mf/data-access-user';
+import { FORMULARIO_TIPO_REPRESENTANTE_DIRECCION, FORMULARIO_TIPO_REPRESENTANTE_NOMBRE} from '../../enums/retorno-importacion-temporal.enum';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Subject, map, takeUntil } from 'rxjs';
+import { Tramite630104State, Tramite630104Store } from '../../estados/tramites/tramite630104.store';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
+import { CommonModule } from '@angular/common';
 import { DatosGeneralesComponent } from '../datos-generales/datos-generales.component';
 import { DomicilioFiscalComponent } from '../domicilio-fiscal/domicilio-fiscal.component';
+import { EquipoEInstrumentosMusicalesService } from '../../services/equipo-e-instrumentos-musicales.service';
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
-
-import { FORMULARIO_TIPO_REPRESENTANTE_DIRECCION, FORMULARIO_TIPO_REPRESENTANTE_NOMBRE} from '../../enums/retorno-importacion-temporal.enum';
+import { REGEX_NOMBRE } from "@libs/shared/data-access-user/src/tramites/constantes/regex.constants";
 import { Tramite630104Query } from '../../estados/queries/tramite630104.query';
 
-import { REGEX_NOMBRE } from "@libs/shared/data-access-user/src/tramites/constantes/regex.constants";
-
-import { Tramite630104State, Tramite630104Store } from '../../estados/tramites/tramite630104.store';
-import { EquipoEInstrumentosMusicalesService } from '../../services/equipo-e-instrumentos-musicales.service';
 
 @Component({
   selector: 'app-datos-del-nombre',
@@ -89,6 +85,12 @@ export class DatosDelNombreComponent implements OnInit, OnDestroy {
    */
   private destroyed$ = new Subject<void>();
 
+   /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  esFormularioSoloLectura: boolean = false;
+
   /**
    * Constructor del componente.
    * 
@@ -96,19 +98,38 @@ export class DatosDelNombreComponent implements OnInit, OnDestroy {
    * @param tramite630104Store - Store para manejar el estado del trámite.
    * @param tramite630104Query - Query para consultar el estado del trámite.
    * @param equipoEInstrumentosMusicalesService - Servicio para obtener datos de catálogos.
+   * @param consultaioQuery - Servicio para consultar el estado de la consulta de entrada/salida
    */
   constructor(
     private fb: FormBuilder,
     private tramite630104Store: Tramite630104Store,
     private tramite630104Query: Tramite630104Query,
-    private equipoEInstrumentosMusicalesService: EquipoEInstrumentosMusicalesService
-  ) { }
+    private equipoEInstrumentosMusicalesService: EquipoEInstrumentosMusicalesService,
+    private consultaioQuery: ConsultaioQuery
+  ) {
+    this.consultaioQuery.selectConsultaioState$
+        .pipe(
+          takeUntil(this.destroyed$),
+          map((seccionState) => {
+            this.esFormularioSoloLectura = seccionState.readonly;
+          })
+        )
+        .subscribe();
+   }
 
   /**
    * Método del ciclo de vida que se ejecuta al inicializar el componente.
    * Inicializa el formulario y obtiene datos de catálogos.
    */
   ngOnInit(): void {
+     this.tramite630104Query.selectSeccionState$
+    .pipe(takeUntil(this.destroyed$))
+    .subscribe((estado: Tramite630104State) => {
+      this.estadoSeleccionado = estado;
+      this.inicializarFormulario();
+      this.inicializarEstadoFormulario();
+      this.cambiarPropietario();
+    });
     this.getValorStore();
     this.inicializarFormulario();
     this.getconsultarPorRFC();
@@ -117,6 +138,40 @@ export class DatosDelNombreComponent implements OnInit, OnDestroy {
     this.cambiarPropietario();
     this.cambiarTipoPropietario();
   }
+
+  /**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.
+   * Además, obtiene la información del catálogo de mercancía.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.inicializarFormulario();
+    }
+  }
+
+  /**
+   * @method
+   * @name guardarDatosFormulario
+   * @description
+   * Inicializa los formularios y obtiene los datos de la tabla.
+   * Dependiendo del modo de solo lectura (`esFormularioSoloLectura`),
+   * deshabilita o habilita todos los formularios del componente.
+   * Si el formulario está en modo solo lectura, todos los formularios se deshabilitan para evitar modificaciones.
+   * Si no está en modo solo lectura, todos los formularios se habilitan para permitir la edición.
+   *
+   * @returns {void}
+   */
+  guardarDatosFormulario(): void {
+    this.inicializarFormulario();
+    if (this.esFormularioSoloLectura) {
+      this.datisDelNombre.disable();
+    } else {
+      this.datisDelNombre.enable();
+    }
+  }
+
 
   /**
    * Cambia el estado de la opción "Consultar por RFC" según el valor del formulario.
@@ -157,6 +212,9 @@ export class DatosDelNombreComponent implements OnInit, OnDestroy {
   cambiarPropietario(): void {
     this.mostrarTipoPropietario = this.datisDelNombre.get('esConsultaRep')?.value === '2';
     this.mostrarSolicitante = this.datisDelNombre.get('esConsultaRep')?.value === '1';
+    if (this.mostrarSolicitante && this.esFormularioSoloLectura) {
+      this.datisDelNombre.get('rfc')?.disable({ emitEvent: false });
+  }
   }
 
   /**

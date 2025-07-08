@@ -1,43 +1,74 @@
-import { CommonModule } from '@angular/common';
-import { Component} from '@angular/core';
-import { FirmaElectronicaComponent } from '@libs/shared/data-access-user/src';
+import { Component, OnDestroy } from '@angular/core';
+import { FirmaElectronicaComponent, TramiteFolioService, TramiteStore } from '@ng-mf/data-access-user';
+import { ReplaySubject, catchError, map, takeUntil } from 'rxjs';
 import { Router } from '@angular/router';
+
 /**
- * Componente para gestionar el paso cuatro del trámite 6403.
- * 
- * Este componente permite al usuario realizar la firma electrónica y, en caso de éxito,
- * redirigirlo a la página de acuse.
+ * Componente que representa el paso tres del trámite.
  */
 @Component({
   selector: 'app-paso-tres',
   templateUrl: './paso-tres.component.html',
   styleUrl: './paso-tres.component.scss',
-  standalone: true,
-  imports: [CommonModule, FirmaElectronicaComponent],
+  standalone:true,
+  imports: [FirmaElectronicaComponent]
 })
-export class PasoTresComponent {
+export class PasoTresComponent implements OnDestroy {
 
   /**
-   * Constructor del componente.
-   * 
-   * @param {Router} router - Servicio de Angular para manejar la navegación entre rutas.
+   * Componente de firma electrónica.
    */
-  constructor(private router: Router) {
-    // Constructor
-  }
-
+  private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
   /**
-   * Maneja la obtención de la firma electrónica.
-   * 
-   * Este método recibe la firma electrónica y, si es válida, redirige al usuario
-   * a la página de acuse.
-   * 
-   * @param {string} ev - Cadena que representa la firma electrónica obtenida.
+ * Tipo de persona.
+ */
+  tipoPersona!: number;
+  /**
+    * Constructor del componente.
+    * @param catalogosServices Servicio para obtener los catálogos necesarios para el trámite.
+    */
+  constructor(
+    private router: Router,
+    private serviciosExtraordinariosServices: TramiteFolioService,
+    private tramiteStore: TramiteStore
+  ) {
+    // El constructor se utiliza para la inyección de dependencias.
+  }
+  /**
+   * Obtiene el tipo de persona.
+   * @param tipo Tipo de persona.
+   */
+  obtenerTipoPersona(tipo: number): void {
+    this.tipoPersona = tipo;
+  }
+  /**
+   * Maneja el evento para obtener la firma y realiza acciones adicionales.
+   * @param ev - La cadena de texto que representa la firma obtenida.
    */
   obtieneFirma(ev: string): void {
-    const FIRMA = ev;
+    const FIRMA: string = ev;
     if (FIRMA) {
-      this.router.navigate(['aviso-traslado/acuse']);
+      // Obtiene el número de trámite
+      this.serviciosExtraordinariosServices
+        .obtenerTramite(19)
+        .pipe((takeUntil(this.destroyed$)),
+          map((tramite) => {
+            this.tramiteStore.establecerTramite(tramite.data, FIRMA);
+            this.router.navigate(['servicios-extraordinarios/acuse']);
+          }),
+          catchError((_error) => {
+            return _error;
+          })
+        )
+        .subscribe();
     }
   }
+  /**
+  * Método de limpieza que se ejecuta cuando el componente se destruye.
+  */
+  ngOnDestroy(): void {
+    this.destroyed$.next(true);
+    this.destroyed$.complete();
+  }
+
 }

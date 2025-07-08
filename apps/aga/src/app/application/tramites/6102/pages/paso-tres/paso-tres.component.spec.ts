@@ -1,37 +1,59 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { HttpClientModule } from '@angular/common/http';
-import { Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
+// @ts-nocheck
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { of as observableOf } from 'rxjs';
+import { By } from '@angular/platform-browser';
+import { Observable, of as observableOf, throwError } from 'rxjs';
+
+import { Component, TramiteStore } from '@angular/core';
 import { PasoTresComponent } from './paso-tres.component';
-import { TramiteStore } from '@ng-mf/data-access-user';
 import { Router } from '@angular/router';
 import { TramiteFolioService } from '@ng-mf/data-access-user';
+import { HttpClientModule } from '@angular/common/http';
 
 @Injectable()
 class MockRouter {
   navigate() {};
 }
 
-@Injectable()
-class MockTramiteStore {}
+@Directive({ selector: '[myCustom]' })
+class MyCustomDirective {
+  @Input() myCustom;
+}
 
+@Pipe({name: 'translate'})
+class TranslatePipe implements PipeTransform {
+  transform(value) { return value; }
+}
+
+@Pipe({name: 'phoneNumber'})
+class PhoneNumberPipe implements PipeTransform {
+  transform(value) { return value; }
+}
+
+@Pipe({name: 'safeHtml'})
+class SafeHtmlPipe implements PipeTransform {
+  transform(value) { return value; }
+}
 
 describe('PasoTresComponent', () => {
-  let fixture: ComponentFixture<PasoTresComponent>;
-  let component: { ngOnDestroy: () => void; obtenerTipoPersona: (arg0: {}) => void; serviciosExtraordinariosServices: { obtenerTramite?: any; }; tramiteStore: { establecerTramite?: any; }; router: { navigate?: any; }; obtieneFirma: (arg0: {}) => void; destroy$: { next?: any; complete?: any; }; };
+  let fixture;
+  let component;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [ FormsModule, ReactiveFormsModule, HttpClientModule ],
       declarations: [
-        PasoTresComponent
+        PasoTresComponent,
+        TranslatePipe, PhoneNumberPipe, SafeHtmlPipe,
+        MyCustomDirective
       ],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
       providers: [
         { provide: Router, useClass: MockRouter },
         TramiteFolioService,
-        { provide: TramiteStore, useClass: MockTramiteStore }
+        { provide: 'TramiteStore', useValue: TramiteStore }
       ]
     }).overrideComponent(PasoTresComponent, {
 

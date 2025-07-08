@@ -1,138 +1,110 @@
-/* eslint-disable @typescript-eslint/naming-convention */
-/* eslint-disable sort-imports */
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { of, Subject } from 'rxjs';
 import { DatosPorRegimenComponent } from './datos-por-regimen.component';
-import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
-import { CatalogoSelectComponent } from '../../../../shared/components/catalogo-select/catalogo-select.component';
-import { TableComponent } from '../../../../shared/components/table/table.component';
-import { ValidacionesFormularioService } from '../../../../core/services/shared/validaciones-formulario/validaciones-formulario.service';
-import { ServiciosPantallaService } from '../../../../core/services/31601/servicios-pantalla.service';
-import { Tramite31601Store } from '../../../../estados/tramites/tramites31601.store';
-import { of } from 'rxjs';
+import { Tramite31601Store } from '../../../../estados/tramites/tramite31601.store';
+import { Tramite31601Query } from '../../../../estados/queries/tramite31601.query';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 
 describe('DatosPorRegimenComponent', () => {
   let component: DatosPorRegimenComponent;
   let fixture: ComponentFixture<DatosPorRegimenComponent>;
-  let validacionesService: jasmine.SpyObj<ValidacionesFormularioService>;
-  let pantallaSvc: jasmine.SpyObj<ServiciosPantallaService>;
-  let tramite31601Store: jasmine.SpyObj<Tramite31601Store>;
+  let tramite31601StoreMock: Partial<Tramite31601Store>;
+  let tramite31601QueryMock: Partial<Tramite31601Query>;
+  let consultaioQueryMock: Partial<ConsultaioQuery>;
 
   beforeEach(async () => {
-    const validacionesServiceSpy = jasmine.createSpyObj(
-      'ValidacionesFormularioService',
-      ['isValid']
-    );
-    const pantallaSvcSpy = jasmine.createSpyObj('ServiciosPantallaService', [
-      'getBimestreUnoCatalogo',
-      'getBimestreDosCatalogo',
-      'getBimestreTresCatalogo',
-    ]);
-    const tramite31601StoreSpy = jasmine.createSpyObj('Tramite31601Store', [
-      'setComboBimestresOne',
-      'setComboBimestresTwo',
-      'setComboBimestresThree',
-    ]);
+    tramite31601StoreMock = {
+      setCancelacionProcedimiento: jest.fn(),
+      setCumpleLineamientos: jest.fn(),
+    };
+
+    tramite31601QueryMock = {
+      selectSolicitud$: of({
+        cancelacionProcedimiento: 'valorCancelacion',
+        cumpleLineamientos: 'valorLineamientos',
+        nombreCompleto: '',
+        tipoDePersonaMiembro: '',
+        nombreMiembro: '',
+        apellidoPaternoMiembro: '',
+      } as any)
+    };
+
+    consultaioQueryMock = {
+      selectConsultaioState$: of({
+        procedureId: '',
+        parameter: '',
+        department: '',
+        folioTramite: '',
+        user: null,
+        readonly: false,
+        loading: false,
+        error: null,
+        tipoDeTramite: '',
+        estadoDeTramite: '',
+        create: false,
+        update: false,
+        consultaioSolicitante: null,
+      })
+    };
 
     await TestBed.configureTestingModule({
-      declarations: [],
-      imports: [
-        ReactiveFormsModule,
-        DatosPorRegimenComponent,
-        TituloComponent,
-        CatalogoSelectComponent,
-        TableComponent,
-      ],
+      imports: [DatosPorRegimenComponent, ReactiveFormsModule],
       providers: [
-        {
-          provide: ValidacionesFormularioService,
-          useValue: validacionesServiceSpy,
-        },
-        { provide: ServiciosPantallaService, useValue: pantallaSvcSpy },
-        { provide: Tramite31601Store, useValue: tramite31601StoreSpy },
-      ],
+        FormBuilder,
+        { provide: Tramite31601Store, useValue: tramite31601StoreMock },
+        { provide: Tramite31601Query, useValue: tramite31601QueryMock },
+        { provide: ConsultaioQuery, useValue: consultaioQueryMock }
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(DatosPorRegimenComponent);
     component = fixture.componentInstance;
-    validacionesService = TestBed.inject(
-      ValidacionesFormularioService
-    ) as jasmine.SpyObj<ValidacionesFormularioService>;
-    pantallaSvc = TestBed.inject(
-      ServiciosPantallaService
-    ) as jasmine.SpyObj<ServiciosPantallaService>;
-    tramite31601Store = TestBed.inject(
-      Tramite31601Store
-    ) as jasmine.SpyObj<Tramite31601Store>;
-
-    pantallaSvc.getBimestreUnoCatalogo.and.returnValue(
-      of({ code: 200, message: 'Success', data: [] })
-    );
-    pantallaSvc.getBimestreDosCatalogo.and.returnValue(
-      of({ code: 200, message: 'Success', data: [] })
-    );
-    pantallaSvc.getBimestreTresCatalogo.and.returnValue(
-      of({ code: 200, message: 'Success', data: [] })
-    );
-
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('should create the component', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize one catalogs on init', () => {
-    expect(pantallaSvc.getBimestreUnoCatalogo).toHaveBeenCalledTimes(3);
+  it('should initialize the form on ngOnInit', () => {
+    const crearRegimenFormSpy = jest.spyOn(component, 'crearRegimenForm');
+    component.ngOnInit();
+    expect(crearRegimenFormSpy).toHaveBeenCalled();
   });
 
-  it('should initialize form on creation', () => {
-    expect(component.regimenForm).toBeDefined();
-  });
-
-  it('should create form on initialization', () => {
+  it('should create regimenForm with correct default values', () => {
     component.crearRegimenForm();
-    expect(component.regimenForm).toBeDefined();
+    expect(component.regimenForm.get('cancelacionProcedimiento')?.value).toBe('valorCancelacion');
+    expect(component.regimenForm.get('cumpleLineamientos')?.value).toBe('valorLineamientos');
   });
 
-  it('should set default form control values', () => {
-    component.establecervalorcontrolformulario();
-    expect(component.regimenForm.get('importaciones')?.value).toBe('Yes');
-    expect(component.regimenForm.get('infraestructura')?.value).toBe('Yes');
+  it('should disable form controls if esFormularioSoloLectura is true', () => {
+    component.esFormularioSoloLectura = true;
+    component.crearRegimenForm();
+    expect(component.regimenForm.get('cancelacionProcedimiento')?.disabled).toBe(true);
+    expect(component.regimenForm.get('cumpleLineamientos')?.disabled).toBe(true);
   });
 
-  it('should validate form fields', () => {
-    validacionesService.isValid.and.returnValue(true);
-    expect(component.isValid('importaciones')).toBeTrue();
-    expect(validacionesService.isValid).toHaveBeenCalledWith(
-      component.regimenForm,
-      'importaciones'
-    );
+  it('should enable form controls if esFormularioSoloLectura is false', () => {
+    component.esFormularioSoloLectura = false;
+    component.crearRegimenForm();
+    expect(component.regimenForm.get('cancelacionProcedimiento')?.enabled).toBe(true);
+    expect(component.regimenForm.get('cumpleLineamientos')?.enabled).toBe(true);
   });
 
-  it('should handle bimestre selections', () => {
-    component.regimenForm.get('comboBimestresOne')?.setValue('Bimestre 1');
-    component.bimestreUnoSeleccion();
-    expect(tramite31601Store.setComboBimestresOne).toHaveBeenCalledWith(
-      'Bimestre 1'
-    );
-
-    component.regimenForm.get('comboBimestresTwo')?.setValue('Bimestre 2');
-    component.bimestreDosSeleccion();
-    expect(tramite31601Store.setComboBimestresTwo).toHaveBeenCalledWith(
-      'Bimestre 2'
-    );
-
-    component.regimenForm.get('comboBimestresThree')?.setValue('Bimestre 3');
-    component.bimestreTresSeleccion();
-    expect(tramite31601Store.setComboBimestresThree).toHaveBeenCalledWith(
-      'Bimestre 3'
-    );
+  it('should call the correct store method in setValoresStore', () => {
+    component.crearRegimenForm();
+    component.regimenForm.get('cancelacionProcedimiento')?.setValue('nuevoValor');
+    component.setValoresStore('cancelacionProcedimiento', 'setCancelacionProcedimiento');
+    expect(tramite31601StoreMock.setCancelacionProcedimiento).toHaveBeenCalledWith('nuevoValor');
   });
 
-  it('should open modal and initialize form', () => {
-    component.abrirModal();
-    expect(component.modal).toBe('show');
-    expect(component.agregarForm).toBeDefined();
+  it('should clean up subscriptions on ngOnDestroy', () => {
+    const completeSpy = jest.spyOn((component as any).destroyNotifier$, 'complete');
+    const nextSpy = jest.spyOn((component as any).destroyNotifier$, 'next');
+    component.ngOnDestroy();
+    expect(nextSpy).toHaveBeenCalled();
+    expect(completeSpy).toHaveBeenCalled();
   });
 });

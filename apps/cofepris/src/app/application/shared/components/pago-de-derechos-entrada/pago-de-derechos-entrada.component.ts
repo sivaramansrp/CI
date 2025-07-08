@@ -4,19 +4,20 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FECHA_PAGO, MAXLENGTH,PAGO } from '../../constantes/permiso-importacion-biologica.enum';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 
 import { CatalogoResponse, CatalogoSelectComponent, InputFecha, InputFechaComponent } from '@libs/shared/data-access-user/src';
+import { PermisoImportacionBiologicaState, PermisoImportacionBiologicaStore } from '../../estados/permiso-importacion-biologica.store';
+
 
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 
 import { PagoDeDerechosEntradaService } from '../../services/pago-de-derechos-entrada.service';
-import { PermisoImportacionBiologicaState, PermisoImportacionBiologicaStore } from '../../estados/permiso-importacion-biologica.store';
 
 import { PermisoImportacionBiologicaQuery } from '../../estados/permiso-importacion-biologica.query';
 
-import { map, Observable, Subject, takeUntil } from 'rxjs';
-import { FECHA_PAGO, PAGO , MAXLENGTH } from '../../constantes/permiso-importacion-biologica.enum';
+import { Observable,Subject,map, takeUntil } from 'rxjs';
 import { REQUIRED_BANCO } from '../../constantes/datos-solicitud.enum';
 
 import {ConsultaioQuery} from '@ng-mf/data-access-user'
@@ -103,7 +104,7 @@ export class PagoDeDerechosEntradaComponent implements OnInit, OnDestroy {
   */
   @Input() public idProcedimiento!: number;
 
-  public requiredLabel:boolean = true;
+  public requiredLabel:boolean = false;
 
   public maxLength!: { [key: string]: number };
 
@@ -241,7 +242,7 @@ export class PagoDeDerechosEntradaComponent implements OnInit, OnDestroy {
       }
     });
 
-    this.requiredLabel = REQUIRED_BANCO.includes(this.idProcedimiento) ? false : true;
+    this.requiredLabel = REQUIRED_BANCO.includes(this.idProcedimiento) ? true : false;
 
     this.fechaFinalInput = REQUIRED_BANCO.includes(this.idProcedimiento) ? PAGO : FECHA_PAGO;
 
@@ -342,7 +343,15 @@ export class PagoDeDerechosEntradaComponent implements OnInit, OnDestroy {
    * @description Limpia todos los campos del formulario de pago de derechos.
    */
   onReset(): void {
-    this.pagoDerechos.reset();
+this.pagoDerechos.reset({
+  claveDeReferncia: '',
+  cadenaDeLaDependencia: '',
+  banco: '',
+  llaveDePago: '',
+  fechaDePago: this.pagoDerechos.get('fechaDePago')?.setValue(''),
+  importeDePago: ''
+});
+
   }
 
   /*

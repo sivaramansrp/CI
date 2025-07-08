@@ -11,8 +11,9 @@
             id="coordenadas"
             formControlName="coordenadas"
             placeholder=""
+            [maxlength]="80"
             type="text"
-               (change)="setValoresStore()"
+            (change)="setValoresStore()"
           />
         </div>
       </div>
@@ -49,20 +50,25 @@
             [label]="'Punto de verificación federal'"
             [required]="false"
             name="punto"
-             [isDisabled]="esFormularioSoloLectura"
-               (change)="setValoresStore()"
+            [isDisabled]="esFormularioSoloLectura"
+                           [tooltipQuestionCircle]="true"
+            [tooltipQuestionCircleText]="'Es el primer punto de Inspección Federal dentro del territorio nacional por donde cruzará el embarque'"
+            (change)="setValoresStore()"
           ></app-catalogo-select>
         </div>
         <div class="col-md-8">
-          <app-catalogo-select
-            [catalogo]="nombreDeLaEmpresaTransportista"
+           <label class="form-label" for="coordenadas"
+            >Nombre de la empresa transportista * :</label
+          >
+          <input
+            class="form-control"
+            id="nombre"
             formControlName="nombre"
-            [label]="'Nombre de la empresa transportista'"
-            [required]="true"
-            name="nombre"
-             [isDisabled]="esFormularioSoloLectura"
-               (change)="setValoresStore()"
-          ></app-catalogo-select>
+            placeholder=""
+            type="text"
+            (change)="setValoresStore()"
+            [maxlength]="80"
+          />
         </div>
       </div>
     </form>

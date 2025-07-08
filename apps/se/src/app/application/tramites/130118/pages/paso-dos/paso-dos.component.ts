@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 
@@ -35,7 +36,10 @@ export class PasoDosComponent implements OnInit, OnDestroy {
   /**
    * Subject para destruir notificador.
    */
-  private destruirNotificador$: Subject<void> = new Subject();
+   public destroyed$: Subject<void> = new Subject();
+   
+   cargaArchivosEvento = new Subject<any>();
+
 
   /**
    * Constructor del componente.
@@ -64,7 +68,7 @@ export class PasoDosComponent implements OnInit, OnDestroy {
   getTiposDocumentos(): void {
     this.catalogosServices
       .getCatalogo(CATALOGOS_ID.CAT_TIPO_DOCUMENTO)
-      .pipe(takeUntil(this.destruirNotificador$))
+      .pipe(takeUntil(this.destroyed$))
       .subscribe({
         next: (resp): void => {
           if (resp.length > 0) {
@@ -79,7 +83,7 @@ export class PasoDosComponent implements OnInit, OnDestroy {
    */
   obtenerDocumentosSeleccionados(): void {
     this.peximService.obtenerDocumentosSeleccionados()
-    .pipe(takeUntil(this.destruirNotificador$))
+    .pipe(takeUntil(this.destroyed$))
     .subscribe({
       next: (result: RespuestaCatalogos) => {
         this.documentosSeleccionados = result.data;
@@ -89,10 +93,10 @@ export class PasoDosComponent implements OnInit, OnDestroy {
 
   /**
     * Se ejecuta al destruir el componente.
-    * Emite un valor y completa el subject `destruirNotificador$` para cancelar las suscripciones.
+    * Emite un valor y completa el subject `destroyed$` para cancelar las suscripciones.
     */
     ngOnDestroy(): void {
-      this.destruirNotificador$.next();
-      this.destruirNotificador$.complete();
+      this.destroyed$.next();
+      this.destroyed$.complete();
     }
 }

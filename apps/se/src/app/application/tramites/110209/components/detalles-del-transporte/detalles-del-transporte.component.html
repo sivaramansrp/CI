@@ -32,13 +32,13 @@
                 </div>
             </div>
 
-            <div class="col-md-4">
+            <div class="col-md-4" *ngIf="formularioCargado">
                 <div class="form-group">
                     <input-fecha [setFecha]="detallesDelTransporteForm.get('fechaDeExpedicion')?.value" [datos]="fechaDeExpedicionInput"></input-fecha>
                 </div>
             </div>
 
-            <div class="col-md-4">
+            <div class="col-md-4" *ngIf="formularioCargado">
                 <div class="form-group">
                     <input-fecha [setFecha]="detallesDelTransporteForm.get('fechaDeVencimiento')?.value" [datos]="fechaDeVencimientoInput"></input-fecha>
                 </div>

@@ -10,11 +10,16 @@ import { Component } from '@angular/core';
 import { RequirementoComponent } from './requiremento.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder } from '@angular/forms';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { AutoridadService } from '../../services/autoridad.service';
 
 @Injectable()
 class MockRouter {
   navigate() {};
 }
+
+@Injectable()
+class MockAutoridadService {}
 
 @Directive({ selector: '[myCustom]' })
 class MyCustomDirective {
@@ -42,9 +47,8 @@ describe('RequirementoComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule, RequirementoComponent ],
+      imports: [ RequirementoComponent, FormsModule, ReactiveFormsModule ],
       declarations: [
-        
         TranslatePipe, PhoneNumberPipe, SafeHtmlPipe,
         MyCustomDirective
       ],
@@ -62,7 +66,9 @@ describe('RequirementoComponent', () => {
           }
         },
         FormBuilder,
-        { provide: Router, useClass: MockRouter }
+        { provide: Router, useClass: MockRouter },
+        ConsultaioQuery,
+        { provide: AutoridadService, useClass: MockAutoridadService }
       ]
     }).overrideComponent(RequirementoComponent, {
 
@@ -80,11 +86,34 @@ describe('RequirementoComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  // it('should run #ngOnInit()', async () => {
+  it('should run #ngOnInit()', () => {
+    const mockData = { folioTramite: '123', tipoTramite: 'tipoX' };
+    Object.defineProperty(history, 'state', {
+      value: { data: mockData },
+    });
 
-  //   component.ngOnInit();
+    component.consultaioQuery = {
+      selectConsultaioState$: observableOf({ update: true, readonly: false }),
+    } as any;
 
-  // });
+    component.guardarDatosFormulario = jest.fn();
+
+    component.ngOnInit();
+
+    expect(component.guardarDatosFormulario).toHaveBeenCalled();
+  });
+
+  it('should run #guardarDatosFormulario()', async () => {
+    component.autoridadService = component.autoridadService || {};
+    component.autoridadService.agregarRequerimiento = jest.fn().mockReturnValue(observableOf({
+      folioTramite: {},
+      tipoTramite: {}
+    }));
+    component.autoridadService.actualizarEstadoFormulario = jest.fn();
+    component.guardarDatosFormulario();
+    expect(component.autoridadService.agregarRequerimiento).toHaveBeenCalled();
+    expect(component.autoridadService.actualizarEstadoFormulario).toHaveBeenCalled();
+  });
 
   it('should run #seleccionaTab()', async () => {
 
@@ -96,14 +125,23 @@ describe('RequirementoComponent', () => {
     component.continuarEvento = component.continuarEvento || {};
     component.continuarEvento.emit = jest.fn();
     component.continuar();
-    // expect(component.continuarEvento.emit).toHaveBeenCalled();
+    expect(component.continuarEvento.emit).toHaveBeenCalled();
   });
 
   it('should run #cancelar()', async () => {
     component.router = component.router || {};
     component.router.navigate = jest.fn();
     component.cancelar();
-    // expect(component.router.navigate).toHaveBeenCalled();
+    expect(component.router.navigate).toHaveBeenCalled();
+  });
+
+  it('should run #ngOnDestroy()', async () => {
+    component.destroy$ = component.destroy$ || {};
+    component.destroy$.next = jest.fn();
+    component.destroy$.complete = jest.fn();
+    component.ngOnDestroy();
+    expect(component.destroy$.next).toHaveBeenCalled();
+    expect(component.destroy$.complete).toHaveBeenCalled();
   });
 
 });

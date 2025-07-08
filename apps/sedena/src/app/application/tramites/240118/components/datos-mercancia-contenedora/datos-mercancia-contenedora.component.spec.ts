@@ -1,65 +1,62 @@
 // @ts-nocheck
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { By } from '@angular/platform-browser';
-import { Observable, of as observableOf, throwError } from 'rxjs';
-
-import { Component } from '@angular/core';
-import { DatosMercanciaContenedoraComponent } from './datos-mercancia-contenedora.component';
-import { Tramite240118Store } from '../../estados/tramite240118Store.store';
+import {
+  ComponentFixture,
+  TestBed,
+  fakeAsync,
+  tick,
+} from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
+import { DatosMercanciaContenedoraComponent } from './datos-mercancia-contenedora.component';
 import { DatosSolicitudService } from '../../../../shared/services/datos-solicitud.service';
-
-@Injectable()
-class MockTramite240118Store {}
-
-@Injectable()
-class MockDatosSolicitudService {
-  obtenerDatosSolicitud() {
-    return observableOf({});
-  }
-}
+import { of, BehaviorSubject } from 'rxjs';
+import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 
 describe('DatosMercanciaContenedoraComponent', () => {
-  let fixture;
-  let component;
+  let component: DatosMercanciaContenedoraComponent;
+  let fixture: ComponentFixture<DatosMercanciaContenedoraComponent>;
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [ DatosMercanciaContenedoraComponent, FormsModule, ReactiveFormsModule ],
-      declarations: [],
-      schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
+  const mockReadonly$ = new BehaviorSubject({ readonly: false });
+
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [DatosMercanciaContenedoraComponent],
       providers: [
-        { provide: Tramite240118Store, useClass: MockTramite240118Store },
-        { provide: DatosSolicitudService, useClass: MockDatosSolicitudService },
         {
           provide: ActivatedRoute,
           useValue: {
-            snapshot: {
-              params: {},
-              queryParams: {}
-            }
-          }
-        }
-      ]
-    }).overrideComponent(DatosMercanciaContenedoraComponent, {
-
+            params: of({}),
+            queryParams: of({}),
+            data: of({}),
+          },
+        },
+        {
+          provide: DatosSolicitudService,
+          useValue: {
+            obtenerFraccionesCatalogo: jest.fn().mockReturnValue(of([])),
+            obtenerUMCCatalogo: jest.fn().mockReturnValue(of([])),
+            obtenerMonedaCatalogo: jest.fn().mockReturnValue(of([])),
+          },
+        },
+        {
+          provide: ConsultaioQuery,
+          useValue: {
+            selectConsultaioState$: mockReadonly$.asObservable(),
+          },
+        },
+      ],
     }).compileComponents();
+
     fixture = TestBed.createComponent(DatosMercanciaContenedoraComponent);
-    component = fixture.debugElement.componentInstance;
+    component = fixture.componentInstance;
   });
 
-  it('should run #constructor()', async () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should run #updateMercanciaDetalle()', async () => {
-    component.tramiteStore = component.tramiteStore || {};
-    component.tramiteStore.updateMercanciaTablaDatos = jest.fn();
-    component.updateMercanciaDetalle({});
-    expect(component.tramiteStore.updateMercanciaTablaDatos).toHaveBeenCalled();
-  });
+  it('should update esFormularioSoloLectura from observable', fakeAsync(() => {
+    mockReadonly$.next({ readonly: true });
 
+    tick();
+  }));
 });

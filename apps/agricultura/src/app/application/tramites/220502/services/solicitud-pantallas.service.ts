@@ -81,5 +81,7 @@ export class SolicitudPantallasService {
     this.solicitud220502Store.setIdentificacionTransporte(
       datos.identificacionTransporte
     );
+    this.solicitud220502Store.setTotalDeGuiasAmparadas(datos.totalDeGuiasAmparadas);
+    this.solicitud220502Store.setEsSolicitudFerros(datos.esSolicitudFerros);
   }
 }

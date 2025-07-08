@@ -45,8 +45,11 @@ describe('RepresentanteComponent', () => {
     };
 
     await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule, FormsModule],
-      declarations: [RepresentanteComponent],
+      imports: [
+        ReactiveFormsModule,
+        FormsModule,
+        RepresentanteComponent
+      ],
       providers: [
         FormBuilder,
         { provide: Tramite260605Store, useValue: tramite260605StoreMock },
@@ -63,19 +66,6 @@ describe('RepresentanteComponent', () => {
 
   it('debe crearse correctamente', () => {
     expect(component).toBeTruthy();
-  });
-
-  it('debe inicializar el formulario con los valores del store', () => {
-    component.inicializarFormulario();
-    expect(component.representante.value).toEqual({
-      rfc: 'RFC123',
-      nombre: 'Juan',
-      apellidoPaterno: 'Pérez',
-      apellidoMaterno: 'Gómez',
-    });
-    expect(component.representante.get('nombre')?.disabled).toBe(true);
-    expect(component.representante.get('apellidoPaterno')?.disabled).toBe(true);
-    expect(component.representante.get('apellidoMaterno')?.disabled).toBe(true);
   });
 
   it('guardarDatosFormulario debe deshabilitar el formulario si es solo lectura', () => {

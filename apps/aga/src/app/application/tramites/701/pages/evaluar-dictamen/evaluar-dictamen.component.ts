@@ -29,7 +29,4 @@ export class EvaluarDictamenComponent {
   guardarFirmar(): void { 
     this.firmar = true;
   }
-
-  
-
 }

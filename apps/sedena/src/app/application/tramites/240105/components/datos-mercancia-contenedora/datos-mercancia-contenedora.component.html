@@ -1,4 +1,6 @@
 <app-datos-mercancia
   (updateMercanciaDetalle)="updateMercanciaDetalle($event)"
   [idProcedimiento]="idProcedimiento"
+  (cancelarEventListener)="cerrar.emit()"
+  [esFormularioSoloLectura]="esFormularioSoloLectura"
 ></app-datos-mercancia>

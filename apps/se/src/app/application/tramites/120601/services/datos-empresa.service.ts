@@ -1,4 +1,4 @@
-import { DatosEmpresa, DatosSociosTable, RepresentacionFederal } from '../modelos/datos-empresa.model';
+import { DatosEmpresa, DatosSociosTable, DatosSociosTableExtranjeros, RepresentacionFederal } from '../modelos/datos-empresa.model';
 import { Catalogo } from '@libs/shared/data-access-user/src';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
@@ -39,6 +39,15 @@ export class DatosEmpresaService {
    */
   obtenerDatosTablaDeSocios(): Observable<DatosSociosTable[]> {
     return this.http.get<DatosSociosTable[]>(`${this.assetsJsonUrl}datosSocios-table.json`);
+  }
+
+   /**
+   * Obtiene los datos simulados para la tabla datosSocios.
+   * 
+   * @returns {Observable<DatosSociosTableExtranjeros[]>} Observable que emite los datos.
+   */
+  obtenerDatosTablaDeSociosExtranjeros(): Observable<DatosSociosTableExtranjeros[]> {
+    return this.http.get<DatosSociosTableExtranjeros[]>(`${this.assetsJsonUrl}datosSociosExtranjenos.json`);
   }
 
   /**

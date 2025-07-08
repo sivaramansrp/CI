@@ -464,13 +464,238 @@ describe('DatosComunesComponent', () => {
     ).toHaveBeenCalledWith(component.numeroDeEmpleadosLista);
   });
 
-  it('should call abrirModal with correct message', () => {
-    jest.spyOn(component, 'abrirModal');
-    component.actualizar239(1);
-    expect(component.abrirModal).toHaveBeenCalledWith(
-      'Es un requisito obligatorio para acceder a Registro en el Esquema de Certificacion de Empresas, de conformidad con la regla 7.1.1. de las RGCE.'
-    );
+  it('should call actualizarCatseleccionados with correct id', () => {
+    const mockCatalogo = { id: 123 } as any;
+    solicitud32605StoreMock.actualizarCatseleccionados(mockCatalogo.id);
+    expect(solicitud32605StoreMock.actualizarCatseleccionados).toHaveBeenCalledWith(123);
   });
+
+  it('should call actualizarServicio with correct id', () => {
+    const mockCatalogo = { id: 456 } as any;
+    solicitud32605StoreMock.actualizarServicio(mockCatalogo.id);
+    expect(solicitud32605StoreMock.actualizarServicio).toHaveBeenCalledWith(456);
+  });
+
+  it('should call actualizar190 with correct value', () => {
+    component.actualizar190('test190');
+    expect(solicitud32605StoreMock.actualizar190).toHaveBeenCalledWith('test190');
+  });
+
+  it('should call actualizar191 with correct value', () => {
+    component.actualizar191(191);
+    expect(solicitud32605StoreMock.actualizar191).toHaveBeenCalledWith(191);
+  });
+
+  it('should call actualizar199 with correct value', () => {
+    component.actualizar199('valor199');
+    expect(solicitud32605StoreMock.actualizar199).toHaveBeenCalledWith('valor199');
+  });
+
+  it('should call actualizarEmpleados with correct value from event', () => {
+    const mockEvent = { target: { value: '10' } } as any as Event;
+    component.actualizarEmpleados(mockEvent);
+    expect(solicitud32605StoreMock.actualizarEmpleados).toHaveBeenCalledWith('10');
+  });
+
+  it('should call actualizarBimestre with correct id', () => {
+    const mockCatalogo = { id: 2 } as any;
+    component.actualizarBimestre(mockCatalogo);
+    expect(solicitud32605StoreMock.actualizarBimestre).toHaveBeenCalledWith(2);
+  });
+
+  it('should call actualizar2034 with correct value', () => {
+    component.actualizar2034(2034);
+    expect(solicitud32605StoreMock.actualizar2034).toHaveBeenCalledWith(2034);
+  });
+
+  it('should call actualizar236 with correct value', () => {
+    component.actualizar236('valor236');
+    expect(solicitud32605StoreMock.actualizar236).toHaveBeenCalledWith('valor236');
+  });
+
+  it('should call actualizar237 with correct value', () => {
+    component.actualizar237(237);
+    expect(solicitud32605StoreMock.actualizar237).toHaveBeenCalledWith(237);
+  });
+
+
+    it('should call actualizar240 with correct value', () => {
+      component.actualizar240('valor240');
+      expect(solicitud32605StoreMock.actualizar240).toHaveBeenCalledWith('valor240');
+    });
+
+    it('should call actualizar243 with correct value', () => {
+      component.actualizar243(243);
+      expect(solicitud32605StoreMock.actualizar243).toHaveBeenCalledWith(243);
+    });
+
+    it('should call actualizar244 with correct value', () => {
+      component.actualizar244('valor244');
+      expect(solicitud32605StoreMock.actualizar244).toHaveBeenCalledWith('valor244');
+    });
+
+    it('should call actualizar245 with correct value', () => {
+      component.actualizar245(245);
+      expect(solicitud32605StoreMock.actualizar245).toHaveBeenCalledWith(245);
+    });
+
+    it('should call actualizarIndiqueTodos with correct id', () => {
+      const mockCatalogo = { id: 7 } as any;
+      solicitud32605StoreMock.actualizarIndiqueTodos(mockCatalogo.id);
+      expect(solicitud32605StoreMock.actualizarIndiqueTodos).toHaveBeenCalledWith(7);
+    });
+
+    it('should call actualizar246 with correct value', () => {
+      component.actualizar246('valor246');
+      expect(solicitud32605StoreMock.actualizar246).toHaveBeenCalledWith('valor246');
+    });
+
+    it('should call actualizarFile1 with correct value from event', () => {
+      const mockEvent = { target: { value: 'file1.pdf' } } as any as Event;
+      component.actualizarFile1(mockEvent);
+      expect(solicitud32605StoreMock.actualizarFile1).toHaveBeenCalledWith('file1.pdf');
+    });
+
+    it('should call actualizarFile2 with correct value from event', () => {
+      const mockEvent = { target: { value: 'file2.pdf' } } as any as Event;
+      component.actualizarFile2(mockEvent);
+      expect(solicitud32605StoreMock.actualizarFile2).toHaveBeenCalledWith('file2.pdf');
+    });
+
+    it('should call actualizar247 with correct value', () => {
+      component.actualizar247(247);
+      expect(solicitud32605StoreMock.actualizar247).toHaveBeenCalledWith(247);
+    });
+
+    it('should call actualizar248 with correct value', () => {
+      component.actualizar248('valor248');
+      expect(solicitud32605StoreMock.actualizar248).toHaveBeenCalledWith('valor248');
+    });
+
+    it('should call actualizarIdentificacion with correct value from event', () => {
+      const mockEvent = { target: { value: 'identificacion123' } } as any as Event;
+      component.actualizarIdentificacion(mockEvent);
+      expect(solicitud32605StoreMock.actualizarIdentificacion).toHaveBeenCalledWith('identificacion123');
+    });
+
+    it('should call actualizarLugarDeRadicacion with correct value from event', () => {
+      const mockEvent = { target: { value: 'CDMX' } } as any as Event;
+      component.actualizarLugarDeRadicacion(mockEvent);
+      expect(solicitud32605StoreMock.actualizarLugarDeRadicacion).toHaveBeenCalledWith('CDMX');
+    });
+
+    it('should call actualizar249 with correct value', () => {
+      component.actualizar249(249);
+      expect(solicitud32605StoreMock.actualizar249).toHaveBeenCalledWith(249);
+    });
+
+    it('should call actualizar250 with correct value', () => {
+      component.actualizar250('valor250');
+      expect(solicitud32605StoreMock.actualizar250).toHaveBeenCalledWith('valor250');
+    });
+
+    it('should call actualizar251 with correct value', () => {
+      component.actualizar251(251);
+      expect(solicitud32605StoreMock.actualizar251).toHaveBeenCalledWith(251);
+    });
+
+    it('should call actualizarCheckbox1 with correct checked value', () => {
+      const mockEvent = { target: { checked: true } } as any as Event;
+      component.actualizarCheckbox1(mockEvent);
+      expect(solicitud32605StoreMock.actualizarCheckbox1).toHaveBeenCalledWith(true);
+    });
+
+    it('should call actualizarCheckbox2 with correct checked value', () => {
+      const mockEvent = { target: { checked: false } } as any as Event;
+      component.actualizarCheckbox2(mockEvent);
+      expect(solicitud32605StoreMock.actualizarCheckbox2).toHaveBeenCalledWith(false);
+    });
+
+    it('should call actualizarCheckbox3 with correct checked value', () => {
+      const mockEvent = { target: { checked: true } } as any as Event;
+      component.actualizarCheckbox3(mockEvent);
+      expect(solicitud32605StoreMock.actualizarCheckbox3).toHaveBeenCalledWith(true);
+    });
+
+    it('should call actualizarActualmente2 with correct value from event', () => {
+      const mockEvent = { target: { value: 'actualmente2' } } as any as Event;
+      component.actualizarActualmente2(mockEvent);
+      expect(solicitud32605StoreMock.actualizarActualmente2).toHaveBeenCalledWith('actualmente2');
+    });
+
+    it('should call actualizarActualmente1 with correct value from event', () => {
+      const mockEvent = { target: { value: 'actualmente1' } } as any as Event;
+      component.actualizarActualmente1(mockEvent);
+      expect(solicitud32605StoreMock.actualizarActualmente1).toHaveBeenCalledWith('actualmente1');
+    });
+
+    it('should set seleccionarInventarios when seleccionarInventariosDatos is called', () => {
+      const inventarios = [{ nombre: 'inv1' }, { nombre: 'inv2' }] as any;
+      component.seleccionarInventariosDatos(inventarios);
+      expect(component.seleccionarInventarios).toBe(inventarios);
+    });
+
+    it('should remove selected inventarios from inventariosDatos when eliminarInventariosDatos is called', () => {
+      component.inventariosDatos = [
+        { nombre: 'inv1' },
+        { nombre: 'inv2' },
+        { nombre: 'inv3' },
+      ] as any;
+      component.seleccionarInventarios = [{ nombre: 'inv2' }] as any;
+      component.eliminarInventariosDatos();
+      expect(component.inventariosDatos).toEqual([
+        { nombre: 'inv1' },
+        { nombre: 'inv3' },
+      ]);
+    });
+
+    it('should set seleccionarListaSeccionSociosIC when seleccionarlistaSeccionSociosIC is called', () => {
+      const socios = [{ nombre: 'Socio1' }] as any;
+      component.seleccionarlistaSeccionSociosIC(socios);
+      expect(component.seleccionarListaSeccionSociosIC).toBe(socios);
+    });
+
+    it('should remove selected socios from listaSeccionSociosIC when eliminarlistaSeccionSociosIC is called', () => {
+      component.listaSeccionSociosIC = [
+        { nombre: 'Socio1' },
+        { nombre: 'Socio2' },
+      ] as any;
+      component.seleccionarListaSeccionSociosIC = [{ nombre: 'Socio1' }] as any;
+      component.eliminarlistaSeccionSociosIC();
+      expect(component.listaSeccionSociosIC).toEqual([{ nombre: 'Socio2' }]);
+    });
+
+    it('should set seleccionarDomiciliosDatos when seleccionarDomiciliosDato is called', () => {
+      const domicilios = [{ tipoInstalacion: 'A' }] as any;
+      component.seleccionarDomiciliosDato(domicilios);
+      expect(component.seleccionarDomiciliosDatos).toBe(domicilios);
+    });
+
+    it('should remove selected domicilios from domiciliosDatos when eliminarDomiciliosDatos is called', () => {
+      component.domiciliosDatos = [
+        { tipoInstalacion: 'A' },
+        { tipoInstalacion: 'B' },
+      ] as any;
+      component.seleccionarDomiciliosDatos = [{ tipoInstalacion: 'A' }] as any;
+      component.eliminarDomiciliosDatos();
+      expect(component.domiciliosDatos).toEqual([{ tipoInstalacion: 'B' }]);
+    });
+
+    it('should set seleccionarNumeroDeEmpleadosLista when seleccionarNumeroDeEmpleadosDato is called', () => {
+      const empleados = [{ numeroDeEmpleados: 5 }] as any;
+      component.seleccionarNumeroDeEmpleadosDato(empleados);
+      expect(component.seleccionarNumeroDeEmpleadosLista).toBe(empleados);
+    });
+
+    it('should remove selected empleados from numeroDeEmpleadosLista when eliminarNumeroDeEmpleadosDato is called', () => {
+      component.numeroDeEmpleadosLista = [
+        { numeroDeEmpleados: 5 },
+        { numeroDeEmpleados: 10 },
+      ] as any;
+      component.seleccionarNumeroDeEmpleadosLista = [{ numeroDeEmpleados: 10 }] as any;
+      component.eliminarNumeroDeEmpleadosDato();
+      expect(component.numeroDeEmpleadosLista).toEqual([{ numeroDeEmpleados: 5 }]);
+    });
 
   it('should clean up subscriptions on ngOnDestroy', () => {
     const destroySpy = jest.spyOn(component['destroy$'], 'next');

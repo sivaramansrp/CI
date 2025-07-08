@@ -29,21 +29,26 @@
     "importePago": "1500.00"
   },
   "tercerosRelacionados":[
-         {
-    "nombre": "Carlos Rodríguez",
-    "correo": "carlos.rodriguez@example.com"
-  },
-  {
-    "nombre": "Ana Martínez",
-    "correo": "ana.martinez@example.com"
-  },
-  {
-    "nombre": "Luis Fernández",
-    "correo": "luis.fernandez@example.com"
-  }
+    {
+      "tipoMercancia": "Ganado",
+      "nombre": "Juan",
+      "primerApellido": "Pérez",
+      "segundoApellido": "García",
+      "razonSocial": "Agropecuaria del Norte S.A. de C.V.",
+      "pais": "México",
+      "codigoPostal": "64000",
+      "estado": "Nuevo León",
+      "municipio": "Monterrey",
+      "colonia": "Centro",
+      "calle": "Av. Revolución",
+      "numeroExterior": "123",
+      "numeroInterior": "4B",
+      "lada": "81",
+      "telefono": "12345678",
+      "correo": "juan.perez@agronorte.com"
+    }
   ],
    "validarEnvio": {
-      "pagoDeformaValida": true,
       "dataParaMovilizacion": true,
       "dataDeLaSolicitud": true
     }

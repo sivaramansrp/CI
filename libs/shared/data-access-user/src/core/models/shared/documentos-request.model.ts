@@ -16,9 +16,9 @@
 /** Representa la solicitud para obtener documentos asociados a un trámite específico. */
 export interface DocumentosRequest {
     tipo_dependencia: string;
-    tipo_tramite:     string;
-    tipo_documento:   number;
-    parametros:       Parametros;
+    tipo_tramite: string;
+    tipo_documento: number;
+    parametros: Parametros;
 }
 
 /** Parámetros adicionales requeridos para la solicitud de documentos. */
@@ -28,7 +28,7 @@ export interface Parametros {
 
 /** Representa la respuesta al solicitar un documento. */
 export interface DocumentoResponse {
-    llave_archivo:  string;
+    llave_archivo: string;
     nombre_archivo: string;
-    contenido:      string;
+    contenido: string;
 }

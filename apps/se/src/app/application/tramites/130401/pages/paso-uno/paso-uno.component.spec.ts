@@ -5,6 +5,8 @@ import { Tramite130401Store } from '../../../../estados/tramites/tramite130401.s
 import { Tramite130401Query } from '../../../../estados/queries/tramite130401.query';
 import { Subject, of } from 'rxjs';
 import { provideHttpClient } from '@angular/common/http';
+import { ModificacionDescripcionService } from '../../services/modificacion-descripcion.service';
+
 
 
 describe('PasoUnoComponent', () => {
@@ -12,16 +14,32 @@ describe('PasoUnoComponent', () => {
   let fixture: ComponentFixture<PasoUnoComponent>;
   let tramiteStoreMock: any;
   let tramiteQueryMock: any;
+  let modificacionDescripcionServiceMock: any;
 
   beforeEach(async () => {
     tramiteStoreMock = {
       setPestanaActiva: jest.fn(),
+      setSolicitud: jest.fn(),
+      setMercancia: jest.fn(),
+      setMercanciaTablaDatos: jest.fn(),
     };
 
     tramiteQueryMock = {
       selectSolicitud$: of({
         pestanaActiva: 1,
       }),
+    };
+    modificacionDescripcionServiceMock = {
+      getDatosConsulta: jest.fn().mockReturnValue(
+        of({
+          success: true,
+          datos: {
+            datosSolicitud: { id: 1, descripcion: 'Solicitud Test' },
+            mercancia: [{ id: 1, descripcion: 'Mercancia Test' }],
+            mercanciaTablaDatos: [{ id: 1, descripcion: 'Tabla Test' }],
+          },
+        })
+      ),
     };
 
     await TestBed.configureTestingModule({
@@ -30,6 +48,7 @@ describe('PasoUnoComponent', () => {
         provideHttpClient(),
         { provide: Tramite130401Store, useValue: tramiteStoreMock },
         { provide: Tramite130401Query, useValue: tramiteQueryMock },
+        { provide: ModificacionDescripcionService, useValue: modificacionDescripcionServiceMock },
       ],
     }).compileComponents();
 
@@ -65,4 +84,14 @@ describe('PasoUnoComponent', () => {
     expect(nextSpy).toHaveBeenCalled();
     expect(completeSpy).toHaveBeenCalled();
   });
+
+  it('should fetch data and update the store when fetchGetDatosConsulta is called', () => {
+    component.fetchGetDatosConsulta();
+    expect(modificacionDescripcionServiceMock.getDatosConsulta).toHaveBeenCalled();
+    expect(tramiteStoreMock.setSolicitud).toHaveBeenCalledWith({ id: 1, descripcion: 'Solicitud Test' });
+    expect(tramiteStoreMock.setMercancia).toHaveBeenCalledWith([{ id: 1, descripcion: 'Mercancia Test' }]);
+    expect(tramiteStoreMock.setMercanciaTablaDatos).toHaveBeenCalledWith([{ id: 1, descripcion: 'Tabla Test' }]);
+    expect(component.esDatosRespuesta).toBe(true);
+  });
+
 });

@@ -13,6 +13,7 @@ table {
     }
     tbody {
         tr,th {
+            cursor: pointer;
             border-top: 1px solid #ddd;
         }
     }
@@ -23,4 +24,8 @@ td:first-child {
     text-align: center;
     width: 50px;
     border: 0 !important;
+}
+
+.selected-row {
+  background-color: #f0f0f0;
 }

@@ -1,34 +1,54 @@
-/**
- * @fileoverview This file defines the models used for handling responses related to 
- * "DestinoFinal" and "Proveedor" entities in the application. These interfaces are 
- * used to structure the API response data for these entities.
- */
-
 import { DestinoFinal } from '../../../shared/models/terceros-relacionados.model';
 import { Proveedor } from '../../../shared/models/terceros-relacionados.model';
 
 /**
  * @interface DestinoFinalRespuesta
- * @description Represents the structure of the API response for "DestinoFinal" data.
- * @property {number} code - The status code of the API response.
- * @property {DestinoFinal[]} data - The array of "DestinoFinal" objects returned by the API.
- * @property {string} message - The message associated with the API response.
+ * @description
+ * Define la estructura de la respuesta que se espera desde la API
+ * cuando se consultan los registros de destino final.
  */
 export interface DestinoFinalRespuesta {
-    code: number;
-    data: DestinoFinal[];
-    message: string;
+  /**
+   * Código de estado de la respuesta HTTP o lógica.
+   * 
+   * @example 200
+   */
+  code: number;
+
+  /**
+   * Lista de objetos de tipo `DestinoFinal` devueltos en la respuesta.
+   */
+  data: DestinoFinal[];
+
+  /**
+   * Mensaje descriptivo asociado con la respuesta.
+   * 
+   * @example "Consulta exitosa"
+   */
+  message: string;
 }
 
 /**
  * @interface ProveedorRespuesta
- * @description Represents the structure of the API response for "Proveedor" data.
- * @property {number} code - The status code of the API response.
- * @property {Proveedor[]} data - The array of "Proveedor" objects returned by the API.
- * @property {string} message - The message associated with the API response.
+ * @description
+ * Define la estructura de la respuesta que se espera desde la API
+ * cuando se consultan los proveedores relacionados al trámite.
  */
 export interface ProveedorRespuesta {
-    code: number;
-    data: Proveedor[];
-    message: string;
+  /**
+   * Código de estado devuelto por la API.
+   * 
+   * @example 200
+   */
+  code: number;
+
+  /**
+   * Arreglo de proveedores obtenidos en la respuesta.
+   */
+  data: Proveedor[];
+
+  /**
+   * Mensaje textual que acompaña a la respuesta.
+   */
+  message: string;
 }

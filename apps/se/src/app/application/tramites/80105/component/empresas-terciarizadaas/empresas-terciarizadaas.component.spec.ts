@@ -1,23 +1,31 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { of, Subject } from 'rxjs';
-import { EmpresasTerciarizadaasComponent } from '../../component/empresas-terciarizadaas/empresas-terciarizadaas.component';
+import { EmpresasTerciarizadaasComponent } from './empresas-terciarizadaas.component';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { of } from 'rxjs';
 import { NuevoProgramaIndustrialService } from '../../services/modalidad-terciarización.service';
 
 describe('EmpresasTerciarizadaasComponent', () => {
   let component: EmpresasTerciarizadaasComponent;
   let fixture: ComponentFixture<EmpresasTerciarizadaasComponent>;
-  let mockService: any;
-
+  let serviceMock: jest.Mocked<NuevoProgramaIndustrialService>;
+  
   beforeEach(async () => {
-    mockService = {
-      obtenerListaEstado: jest.fn().mockReturnValue(of({ data: [{ id: 1, nombre: 'Estado 1' }] }))
-    };
+    serviceMock = {
+      obtenerListaEstado: jest.fn().mockReturnValue(
+        of({
+          code: 200,
+          message: 'Success',
+          data: [
+            { id: 1, descripcion: 'Estado 1' },
+            { id: 2, descripcion: 'Estado 2' },
+          ],
+        })
+      ),
+    } as any;
 
     await TestBed.configureTestingModule({
-      imports: [EmpresasTerciarizadaasComponent],
-      providers: [
-        { provide: NuevoProgramaIndustrialService, useValue: mockService }
-      ]
+      imports: [EmpresasTerciarizadaasComponent, HttpClientTestingModule],
+      providers: [{ provide: NuevoProgramaIndustrialService, useValue: serviceMock }],
     }).compileComponents();
 
     fixture = TestBed.createComponent(EmpresasTerciarizadaasComponent);
@@ -29,23 +37,83 @@ describe('EmpresasTerciarizadaasComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('debe llamar obtenerListaEstado al inicializar y asignar estadosCatalogo', () => {
-    expect(mockService.obtenerListaEstado).toHaveBeenCalled();
-    expect(component.estadosCatalogo).toEqual([{ id: 1, nombre: 'Estado 1' }]);
+   it('Debería definir la configuración correcta de la tabla.', () => {
+    expect(component.parentTablaConfig.length).toBe(11);
+    expect(component.parentTablaConfig[0].encabezado).toBe('Calle');
+    expect(component.parentTablaConfig[10].encabezado).toBe('Razón social');
   });
 
-  it('debe actualizar estadosCatalogo cuando obtenerListaEstado recibe respuesta', () => {
-    component.estadosCatalogo = [];
-    mockService.obtenerListaEstado.mockReturnValue(of({ data: [{ id: 2, nombre: 'Estado 2' }] }));
+  it('Debería actualizar estadosCatalogo desde obtenerListaEstado()', () => {
+    const mockResponse = {
+      code: 200,
+      message: 'Success',
+      data: [
+        { id: 1, descripcion: 'Estado 1' },
+        { id: 2, descripcion: 'Estado 2' },
+      ],
+    };
+    serviceMock.obtenerListaEstado.mockReturnValue(of(mockResponse));
     component.obtenerListaEstado();
-    expect(component.estadosCatalogo).toEqual([{ id: 2, nombre: 'Estado 2' }]);
+    expect(serviceMock.obtenerListaEstado).toHaveBeenCalled();
+    expect(component.estadosCatalogo).toEqual(mockResponse.data);
   });
 
-  it('debe limpiar las suscripciones al destruir el componente', () => {
-    const spyNext = jest.spyOn<any, any>(component['destroyNotifier$'], 'next');
-    const spyComplete = jest.spyOn<any, any>(component['destroyNotifier$'], 'complete');
-    component.ngOnDestroy();
-    expect(spyNext).toHaveBeenCalled();
-    expect(spyComplete).toHaveBeenCalled();
+  it('no debería actualizar estadosCatalogo cuando el servicio devuelve null o undefined', () => {
+    serviceMock.obtenerListaEstado.mockReturnValue(of(null as any));
+    component.estadosCatalogo = [{ id: 99, descripcion: 'Preexisting' }];
+    component.obtenerListaEstado();
+    expect(serviceMock.obtenerListaEstado).toHaveBeenCalled();
+    expect(component.estadosCatalogo).toEqual([{ id: 99, descripcion: 'Preexisting' }]);
   });
+
+  it('debe limpiar destroyNotifier$ en ngOnDestroy', () => {
+    const nextSpy = jest.spyOn(component['destroyNotifier$'], 'next');
+    const completeSpy = jest.spyOn(component['destroyNotifier$'], 'complete');
+    component.ngOnDestroy();
+    expect(nextSpy).toHaveBeenCalled();
+    expect(completeSpy).toHaveBeenCalled();
+  });
+
+  it('Debería manejar un array de datos vacío desde obtenerListaEstado()', () => {
+  const mockResponse = {
+    code: 200,
+    message: 'Success',
+    data: [],
+  };
+  serviceMock.obtenerListaEstado.mockReturnValue(of(mockResponse));
+  component.obtenerListaEstado();
+  expect(serviceMock.obtenerListaEstado).toHaveBeenCalled();
+  expect(component.estadosCatalogo).toEqual([]);
+});
+
+it('Debería extraer los valores correctamente utilizando las claves de parentTablaConfig', () => {
+  const mockItem = {
+    calle: 'Av. Reforma',
+    numeroExterior: '123',
+    numeroInterior: '456',
+    codigoPostal: '11200',
+    colonia: 'Centro',
+    municipioDelegacion: 'Cuauhtémoc',
+    entidadFederativa: 'CDMX',
+    pais: 'México',
+    registroFederalContribuyentes: 'ABC123',
+    domicilioFiscalSolicitante: 'Sí',
+    razonSocial: 'Empresa SA de CV',
+  };
+
+  const results = component.parentTablaConfig.map(cfg => cfg.clave(mockItem));
+  expect(results).toEqual([
+    'Av. Reforma',
+    '123',
+    '456',
+    '11200',
+    'Centro',
+    'Cuauhtémoc',
+    'CDMX',
+    'México',
+    'ABC123',
+    'Sí',
+    'Empresa SA de CV',
+  ]);
+});
 });

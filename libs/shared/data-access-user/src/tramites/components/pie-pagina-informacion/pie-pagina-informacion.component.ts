@@ -1,9 +1,9 @@
-import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { DomSanitizer } from '@angular/platform-browser';
+
 import {
   INAI_LINK,
   POLITICAS_PRIVACIDAD,
-  POLITICAS_PRIVACIDAD_URL,
-  TERMINOS,
+  POLITICAS_PRIVACIDAD_URL
 } from '../../../core/enums/politicas-privacidad.enum';
 import {
   Notificacion,

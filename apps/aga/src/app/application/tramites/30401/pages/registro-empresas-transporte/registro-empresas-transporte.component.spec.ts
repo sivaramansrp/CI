@@ -12,7 +12,7 @@ describe('RegistroEmpresasTransporteComponent', () => {
     } as unknown as WizardComponent;
   });
 
-  it('should initialize with default values', () => {
+  it('debería inicializarse con valores predeterminados', () => {
     expect(component.indice).toBe(1);
     expect(component.datosPasos.nroPasos).toBe(component.pasos.length);
     expect(component.datosPasos.indice).toBe(component.indice);
@@ -21,7 +21,7 @@ describe('RegistroEmpresasTransporteComponent', () => {
     expect(component.AVISO_PRIVACIDAD_ADJUNTAR).toBeDefined();
   });
 
-  it('should update indice and call siguiente when accion is "cont"', () => {
+  it('debería actualizar el índice y llamar a siguiente cuando la acción sea "cont"', () => {
     const event = { accion: 'cont', valor: 2 };
     component.getValorIndice(event);
     expect(component.indice).toBe(2);
@@ -29,7 +29,7 @@ describe('RegistroEmpresasTransporteComponent', () => {
     expect(component.wizardComponent.atras).not.toHaveBeenCalled();
   });
 
-  it('should update indice and call atras when accion is not "cont"', () => {
+  it('Debería actualizar el índice y llamar a atras cuando la acción no sea "cont"', () => {
     const event = { accion: 'prev', valor: 2 };
     component.getValorIndice(event);
     expect(component.indice).toBe(2);

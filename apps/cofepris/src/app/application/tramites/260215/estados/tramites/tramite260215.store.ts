@@ -111,10 +111,6 @@ export interface Solicitud260215State {
    */
    aduanasEntradas:string;
    /**
-    * El valor de numeroPermiso.
-   */
-   numeroPermiso:string;
-   /**
     * El valor de clasificacion.
    */
    clasificacion:string;
@@ -307,10 +303,6 @@ export function createInitialState(): Solicitud260215State {
        * El valor de aduanasEntradas.
       */
       aduanasEntradas: '',
-      /**
-       * El valor de numeroPermiso.
-      */
-      numeroPermiso: '',
       /**
        * El valor de clasificacion.
       */
@@ -647,16 +639,6 @@ export class Tramite260215Store extends Store<Solicitud260215State> {
       this.update((state) => ({
           ...state,
           aduanasEntradas,
-      }));
-  }
-  /**
-   * Establece el estado de numeroPermiso.
-   * @param numeroPermiso - El valor de numeroPermiso.
-   */
-  public setNumeroPermiso(numeroPermiso: string) {
-      this.update((state) => ({
-          ...state,
-          numeroPermiso,
       }));
   }
   /**

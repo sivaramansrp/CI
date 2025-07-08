@@ -1,6 +1,9 @@
+import { Agentes_DATOS, AgentestableDatos, MERCANCIA_TABLEDOS_TABLE_BODY_DATA } from '../../constantes/datos-del-tramite.enum';
 import {
   Catalogo,
   ConsultaioQuery,
+  TablaDinamicaComponent,
+  TablaSeleccion,
   TableComponent,
   TituloComponent
 } from '@ng-mf/data-access-user';
@@ -16,7 +19,6 @@ import { Subject, map, takeUntil } from 'rxjs';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { CommonModule } from '@angular/common';
 import { InvoCarService } from '../../services/invocar.service';
-import { MERCANCIA_TABLEDOS_TABLE_BODY_DATA } from '../../constantes/datos-del-tramite.enum';
 import { Tramite105Query } from '../../estados/tramite105.query';
 import mercanciaTable from '@libs/shared/theme/assets/json/105/mercancia-table.json';
 
@@ -60,7 +62,7 @@ interface TableBodyData {
 @Component({
   selector: 'app-datos-del-tramite-dos',
   standalone: true,
-  imports: [CommonModule, TituloComponent, CatalogoSelectComponent, TableComponent, ReactiveFormsModule],
+  imports: [CommonModule, TituloComponent, CatalogoSelectComponent, TableComponent, ReactiveFormsModule,TablaDinamicaComponent],
   templateUrl: './datos-del-tramite-dos.component.html',
   styleUrl: './datos-del-tramite-dos.component.scss',
 })
@@ -129,6 +131,8 @@ export class DatosDelTramiteDosComponent implements OnInit, OnDestroy {
    * @memberof DatosDelTramiteDosComponent
    */
   @ViewChild('closeModal') closeModal!: ElementRef;
+  
+
 
   /**
    * Catálogo de operaciones.
@@ -173,6 +177,32 @@ export class DatosDelTramiteDosComponent implements OnInit, OnDestroy {
    * @param {InvoCarService} invoCarService - Servicio para obtener datos de catálogos.
    * @memberof DatosDelTramiteDosComponent
    */
+
+
+
+/**
+     * Configuración de la tabla utilizada en el componente para mostrar los datos del acuse.
+     * 
+     * @remarks
+     * Esta propiedad almacena la configuración de columnas, formato y otros parámetros
+     * necesarios para renderizar la tabla de datos del acuse en la interfaz de usuario.
+     * 
+     * @see ACUSE_DATOS para la definición de la configuración.
+     */
+  public configuracionTabla = Agentes_DATOS;
+
+  /**
+   * Un arreglo de objetos `AcuseTablaDatos` que contiene los datos para la tabla.
+   * Estos datos se inicializan a partir de la constante `TablaDatos`.
+   */
+  public mercanciTablaDatos: AgentestableDatos[] = [];
+
+
+  /**
+   * Representa el tipo de selección de checkbox utilizado en el componente.
+   * Esto se establece al valor de `TablaSeleccion.CHECKBOX`.
+   */
+  public checkbox = TablaSeleccion.CHECKBOX;
 
   /**
   * Indica si el formulario está en modo solo lectura.
@@ -296,17 +326,17 @@ export class DatosDelTramiteDosComponent implements OnInit, OnDestroy {
    */
   crearFormularios(): void {
     this.datosDelTramiteDos = this.fb.group({
-      procedimientoCargaDescarga: [this.solicitudState?.procedimientoCargaDescarga, Validators.required],
-      sistemasMedicionUbicacion: [this.solicitudState?.sistemasMedicionUbicacion, Validators.required],
-      motivoNoDespachoAduana: [this.solicitudState?.motivoNoDespachoAduana, Validators.required],
+      procedimientoCargaDescarga: [this.solicitudState?.procedimientoCargaDescarga, [Validators.required, Validators.maxLength(200)]],
+      sistemasMedicionUbicacion: [this.solicitudState?.sistemasMedicionUbicacion, [Validators.required, Validators.maxLength(200)]],
+      motivoNoDespachoAduana: [this.solicitudState?.motivoNoDespachoAduana, [Validators.required, Validators.maxLength(200)]],
       operaciones: [this.solicitudState?.operaciones, Validators.required],
     });
 
     this.agenteForm = this.fb.group({
-      nombres: ['', Validators.required],
-      primerApellido: ['', Validators.required],
-      segundoApellido: ['', Validators.required],
-      numeroPatente: ['', Validators.required],
+      nombres: ['', [Validators.required, Validators.maxLength(200)]],
+      primerApellido: ['', [Validators.required, Validators.maxLength(200)]],
+      segundoApellido: ['', [Validators.required, Validators.maxLength(200)]],
+      numeroPatente: ['', [Validators.required, Validators.maxLength(4)]],
     });
 
   }
@@ -356,6 +386,8 @@ export class DatosDelTramiteDosComponent implements OnInit, OnDestroy {
     this.modal = 'show';
   }
 
+
+  
   /**
    * Obtiene las operaciones desde el servicio.
    * 
@@ -377,10 +409,11 @@ export class DatosDelTramiteDosComponent implements OnInit, OnDestroy {
    */
   agregarMercancias(): void {
     if (!this.agenteForm.valid) {
+      this.agenteForm.markAllAsTouched();
       return;
     }
     const MERCANCIA = this.agenteForm.value;
-    this.getMercanciaTableData.mercanciaTabledos.tableBody.push(MERCANCIA);
+   this.mercanciTablaDatos.push(MERCANCIA as AgentestableDatos);
     this.agenteForm.reset();
     this.cerrarModal();
   }

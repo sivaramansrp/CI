@@ -19,7 +19,7 @@
                 <app-catalogo-select
                 [catalogo]="funcionZootecnica"
                 [tooltipQuestionCircle]="false"
-                [label]="'Función Zootécnica*'"
+                [label]="'Función zootécnica*'"
                 [placeholder]="'Seleccione un valor'"
                 formControlName="funcionZootecnica"
                 [isDisabled]="esFormularioSoloLectura"
@@ -47,7 +47,7 @@
                 <app-catalogo-select
                 [catalogo]="paisDestino"
                 [tooltipQuestionCircle]="false"
-                [label]="'País de destino'"
+                [label]="'País destino'"
                 [required]="true"
                 [placeholder]="'Seleccione un valor'"
                 [isDisabled]="esFormularioSoloLectura"
@@ -63,8 +63,8 @@
                 <app-catalogo-select
                 [catalogo]="nombreEstablecimiento"
                 [tooltipQuestionCircle]="false"
-                [label]="'Nombre, Denominación o Razón Social'"
-                [required]="true"
+                [label]="'Nombre, denominación o razón social del establecimiento de origen autorizado'"
+               
                 [placeholder]="'Seleccione un valor'"
                 [isDisabled]="esFormularioSoloLectura"
                 formControlName="nombreEstablecimiento"
@@ -79,8 +79,8 @@
                 <app-catalogo-select
                 [catalogo]="tipoActividad"
                 [tooltipQuestionCircle]="false"
-                [label]="'Tipo de Actividad del Establecimiento'"
-                [required]="true"
+                [label]="'Tipo de actividad del establecimiento'"
+                
                 [placeholder]="'Seleccione un valor'"
                 [isDisabled]="esFormularioSoloLectura"
                 formControlName="tipoActividad"
@@ -88,7 +88,7 @@
                 ></app-catalogo-select>
             </div>
             <div class="col-md-4">
-                <label for="otro" class="form-label">Otro</label>
+                <label for="otro" class="form-label">Otro:</label>
                 <input type="text" class="form-control" id="otro" formControlName="otro"
                 (change)="setValoresStore(formCombinacion,'otro', 'setotro')">
             </div>
@@ -96,7 +96,7 @@
 
         <div class="row mb-3">
             <div class="col-md-8">
-                    <label for="establecimientoAutorizado" class="form-label">Establecimiento de Origen Autorizado*</label>
+                    <label for="establecimientoAutorizado" class="form-label">Establecimiento de origen autorizado *</label>
                     <div class="d-flex d-flex p-5 fs-5">
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" id="nombreEstablecimientoCheck" formControlName="nombreEstablecimientoCheck" (change)="setValoresStore(formCombinacion,'nombreEstablecimientoCheck', 'setnombreEstablecimientoCheck')">
@@ -124,7 +124,7 @@
                 <app-catalogo-select
                 [catalogo]="aduanaSalida"
                 [tooltipQuestionCircle]="false"
-                [label]="'Aduana de Salida/Lugar de Embarque'"
+                [label]="'Aduana de salida/lugar de embarque'"
                 [required]="true"
                 [placeholder]="'Seleccione un valor'"
                 [isDisabled]="esFormularioSoloLectura"
@@ -140,7 +140,7 @@
                 <app-catalogo-select
                 [catalogo]="oisaSalida"
                 [tooltipQuestionCircle]="false"
-                [label]="'OISA de Salida'"
+                [label]="'OISA de salida'"
                 [required]="true"
                 [placeholder]="'Seleccione un valor'"
                 [isDisabled]="esFormularioSoloLectura"
@@ -156,7 +156,7 @@
                 <app-catalogo-select
                 [catalogo]="regimenMercancia"
                 [tooltipQuestionCircle]="false"
-                [label]="'Régimen al que se Destinará la Mercancía'"
+                [label]="'Régimen al que se destinará la mercancía '"
                 [required]="true"
                 [placeholder]="'Seleccione un valor'"
                 [isDisabled]="esFormularioSoloLectura"
@@ -172,7 +172,7 @@
                 <app-catalogo-select
                 [catalogo]="paisOrigen"
                 [tooltipQuestionCircle]="false"
-                [label]="'País de Origen'"
+                [label]="'País origen'"
                 [required]="true"
                 [placeholder]="'Seleccione un valor'"
                 [isDisabled]="esFormularioSoloLectura"
@@ -181,7 +181,7 @@
               ></app-catalogo-select>
             </div>
             <div class="col-md-4">
-                <label for="fechaArribo" class="form-label">Fecha Arribo País Importador</label>
+                <label for="fechaArribo" class="form-label">Fecha arribo país importador:</label>
                 <input type="date" class="form-control" id="fechaArribo" formControlName="fechaArribo" (change)="setValoresStore(formCombinacion,'fechaArribo', 'setfechaArribo')">
             </div>
         </div>
@@ -189,7 +189,7 @@
         <!-- puntoIngreso required field and maxlength 200 -->
         <div class="row mb-3">
             <div class="col-md-4">
-                <label for="puntoIngreso" class="form-label">Punto de Ingreso al País Destino</label>
+                <label for="puntoIngreso" class="form-label">Punto de ingreso al país destino:</label>
                 <input type="text" class="form-control" 
                     id="puntoIngreso" 
                     formControlName="puntoIngreso"

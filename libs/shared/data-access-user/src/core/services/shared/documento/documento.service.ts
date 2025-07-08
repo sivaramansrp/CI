@@ -1,6 +1,6 @@
 import { DocumentoResponse, DocumentosRequest } from '../../../models/shared/documentos-request.model';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, catchError, map, throwError } from 'rxjs';
+import { Observable, catchError, map, tap, throwError } from 'rxjs';
 import { BaseResponse } from '../../../models/5701/base-response.model';
 import { ENVIRONMENT } from '../../../../enviroments/enviroment';
 import { Injectable } from '@angular/core';
@@ -51,8 +51,8 @@ export class DocumentoService {
    * @param body
    * @returns BaseResponse
    */
-  generarDoc(body: DocumentosRequest): Observable<BaseResponse> {
-    return this.http.post<BaseResponse>(`${this.urlServerHost}/api/generador-documento/tramite/documento`, body);
+  generarDoc<T>(body: DocumentosRequest): Observable<BaseResponse<T>> {
+    return this.http.post<BaseResponse<T>>(`${this.urlServerHost}/api/generador-documento/tramite/documento`, body);
   }
 
   /**
@@ -62,7 +62,7 @@ export class DocumentoService {
    */
   getVisualizarDoc(nombre: string): Observable<BaseResponse<DocumentoResponse>> {
     const ENDPOINT = `${this.urlServerHost}/api/generador-documento/tramite/documento/${nombre}`;
-    return this.http.get<BaseResponse>(ENDPOINT).pipe(
+    return this.http.get<BaseResponse<DocumentoResponse>>(ENDPOINT).pipe(
       map(
         (response) => {
           return response;
@@ -74,4 +74,18 @@ export class DocumentoService {
     );
   }
 
+  /**
+ * @description Obtiene los datos para el payload de firma desde un JSON local
+ * @returns Observable con los datos de documentos requeridos para la firma
+ */
+  obtenerDatosFirma<T>(): Observable<BaseResponse<T>> {
+    const ENDPOINT = 'assets/json/5701/documentos-firma.json';
+    return this.http.get<BaseResponse<T>>(ENDPOINT).pipe(
+      tap(response => response),
+      catchError(() => {
+        const ERROR = new Error(`Error al obtener datos de firma: ${ENDPOINT}`);
+        return throwError(() => ERROR);
+      })
+    );
+  }
 }

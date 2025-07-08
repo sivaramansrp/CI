@@ -42,18 +42,18 @@ describe('PagoDeDerechosComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize the form on ngOnInit', () => {
+  it('debe inicializar el formulario en ngOnInit', () => {
     component.ngOnInit();
     expect(component.pagoDeDerechosForm).toBeTruthy();
     expect(component.pagoDeDerechosForm.contains('clave')).toBe(true);
     expect(component.pagoDeDerechosForm.contains('llaveDePago')).toBe(true);
   });
 
-  it('should validate fechaLimValidator correctly', () => {
+  it('Debería validar fechaLimValidator correctamente', () => {
     const control = { value: '2050-01-01' } as any;
     const result = PagoDeDerechosComponent.fechaLimValidator()(control);
     expect(result).toEqual({ fechaLim: true });
@@ -63,7 +63,7 @@ describe('PagoDeDerechosComponent', () => {
     expect(validResult).toBeNull();
   });
 
-  it('should validate noComaValidator correctly', () => {
+  it('debe validar noComaValidator correctamente', () => {
     const control = { value: '12,34' } as any;
     const result = PagoDeDerechosComponent.noComaValidator()(control);
     expect(result).toEqual({ noComa: true });
@@ -74,36 +74,33 @@ describe('PagoDeDerechosComponent', () => {
   });
 
   
-  it('should fetch bancoList on obtenerBancoList call', () => {
+  it('Debería obtener bancoList en la llamada obtenerBancoList', () => {
     
     const mockBancoList = [{ id: 1, descripcion: 'Banco 1' }];
 
-    // Ensure the mock is set up before the component is initialized
     (mockRegistroEmpresasTransporteService.onBancoList as jest.Mock).mockReturnValue(of(mockBancoList));
   
-    // Recreate the component to trigger ngOnInit
     fixture = TestBed.createComponent(PagoDeDerechosComponent);
     component = fixture.componentInstance;
     component.bancoList = mockBancoList;
     component.ngOnInit();
-    // expect(mockRegistroEmpresasTransporteService.onBancoList).toHaveBeenCalled();
-    fixture.detectChanges(); // Trigger change detection
-    expect(component.bancoList).toEqual(mockBancoList); // Verify the component's state
+    fixture.detectChanges();
+    expect(component.bancoList).toEqual(mockBancoList);
   });
 
-  it('should patch form data on enPatchStoredFormData call', () => {
+  it('Debería parchear los datos del formulario en la llamada enPatchStoredFormData', () => {
     component.enPatchStoredFormData();
     expect(component.pagoDeDerechosForm.get('clave')?.value).toEqual('');
     expect(component.pagoDeDerechosForm.get('fecPago')?.value).toEqual('');
   });
 
-  it('should mark control as invalid if esInvalido is called on an invalid field', () => {
+  it('Debe marcar el control como inválido si se llama a esInvalido en un campo inválido', () => {
     component.pagoDeDerechosForm.get('clave')?.setErrors({ required: true });
     component.pagoDeDerechosForm.get('clave')?.markAsTouched();
     expect(component.esInvalido('clave')).toBe(true);
   });
 
-  it('should unsubscribe from destroyed$ on component destroy', () => {
+  it('Debería darse de baja de destroy$ en el componente destroy', () => {
     const spy = jest.spyOn(component.destroyed$, 'next');
     const completeSpy = jest.spyOn(component.destroyed$, 'complete');
     component.ngOnDestroy();
@@ -111,7 +108,7 @@ describe('PagoDeDerechosComponent', () => {
     expect(completeSpy).toHaveBeenCalled();
   });
 
-  it('should call establecerDatos in Tramite30401Store with the correct value when setValoresStore is called', () => {
+  it('debe llamar a establecerDatos en Tramite30401Store con el valor correcto cuando se llama a setValoresStore', () => {
     const mockForm = new FormGroup({
       clave: new FormControl('testValue'),
     });
@@ -123,7 +120,7 @@ describe('PagoDeDerechosComponent', () => {
     expect(establecerDatosSpy).toHaveBeenCalledWith({ clave: 'testValue' });
   });
   
-  it('should not call establecerDatos if the form is null', () => {
+  it('No se debe llamar a establecerDatos si el formulario es nulo', () => {
     const establecerDatosSpy = jest.spyOn(mockTramite30401Store, 'establecerDatos');
   
     component.setValoresStore(null, 'clave');
@@ -131,7 +128,7 @@ describe('PagoDeDerechosComponent', () => {
     expect(establecerDatosSpy).not.toHaveBeenCalled();
   });
   
-  it('should not call establecerDatos if the control value is null or undefined', () => {
+  it('No se debe llamar a establecerDatos si el valor del control es nulo o indefinido', () => {
     const mockForm = new FormGroup({
       clave: new FormControl(null),
     });

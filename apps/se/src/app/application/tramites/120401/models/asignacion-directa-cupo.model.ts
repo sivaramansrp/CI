@@ -1,46 +1,114 @@
 /**
- * Representa la estructura de datos para la selección de un cupo en una tabla.
+ * @fileoverview
+ * Este archivo define las interfaces utilizadas en el módulo de asignación directa de cupos.
+ * Proporciona estructuras de datos para la selección de cupos en tablas y la descripción detallada de los cupos.
  * 
- * @property nombreProducto - El nombre del producto asociado al cupo.
- * @property nombreSubproducto - El nombre del subproducto relacionado con el producto principal.
- * @property mecanismoAsignacion - El mecanismo utilizado para la asignación del cupo.
- * @property fraccionesArancelarias - Las fracciones arancelarias asociadas al cupo.
- * @property tipoCupo - El tipo de cupo asignado.
+ * @module AsignacionDirectaCupoModel
+ * @description
+ * Este archivo contiene las definiciones de las interfaces necesarias para manejar los datos relacionados con
+ * la asignación directa de cupos, incluyendo la selección de cupos en tablas y la descripción detallada de los cupos.
+ */
+
+/**
+ * @interface SeleccionDelCupoTabla
+ * @description
+ * Representa la estructura de datos para la selección de un cupo en una tabla.
  */
 export interface SeleccionDelCupoTabla {
+  /**
+   * El nombre del producto asociado al cupo.
+   * @type {string}
+   */
   nombreProducto: string;
+
+  /**
+   * El nombre del subproducto relacionado con el producto principal.
+   * @type {string}
+   */
   nombreSubproducto: string;
+
+  /**
+   * El mecanismo utilizado para la asignación del cupo.
+   * @type {string}
+   */
   mecanismoAsignacion: string;
+
+  /**
+   * Las fracciones arancelarias asociadas al cupo.
+   * @type {string}
+   */
   fraccionesArancelarias: string;
+
+  /**
+   * El tipo de cupo asignado.
+   * @type {string}
+   */
   tipoCupo: string;
 }
 
-
 /**
- * Representa la descripción de un cupo en el sistema.
- * 
  * @interface DescripcionDelCupo
- * 
- * @property {string} claveDelCupo - Identificador único del cupo.
- * @property {string} mecanismoDeAsignacion - Método utilizado para asignar el cupo.
- * @property {string} descripcionDelProducto - Descripción del producto asociado al cupo.
- * @property {string} unidadDeMedida - Unidad de medida del producto.
- * @property {string} regimenAduanero - Régimen aduanero aplicable al cupo.
- * @property {string} fechaDeInicioDeVigenciaDelCupo - Fecha de inicio de la vigencia del cupo (formato ISO 8601).
- * @property {string} fechaDeFinDeVigenciaDelCupo - Fecha de fin de la vigencia del cupo (formato ISO 8601).
- * @property {string} fraccionesArancelarias - Fracciones arancelarias asociadas al cupo.
- * @property {string} tratadoAcuerdo - Tratado o acuerdo relacionado con el cupo.
- * @property {string} paises - Países involucrados en el cupo.
+ * @description
+ * Representa la descripción de un cupo en el sistema.
  */
 export interface DescripcionDelCupo {
+  /**
+   * Identificador único del cupo.
+   * @type {string}
+   */
   claveDelCupo: string;
+
+  /**
+   * Método utilizado para asignar el cupo.
+   * @type {string}
+   */
   mecanismoDeAsignacion: string;
+
+  /**
+   * Descripción del producto asociado al cupo.
+   * @type {string}
+   */
   descripcionDelProducto: string;
+
+  /**
+   * Unidad de medida del producto.
+   * @type {string}
+   */
   unidadDeMedida: string;
+
+  /**
+   * Régimen aduanero aplicable al cupo.
+   * @type {string}
+   */
   regimenAduanero: string;
+
+  /**
+   * Fecha de inicio de la vigencia del cupo (formato ISO 8601).
+   * @type {string}
+   */
   fechaDeInicioDeVigenciaDelCupo: string;
+
+  /**
+   * Fecha de fin de la vigencia del cupo (formato ISO 8601).
+   * @type {string}
+   */
   fechaDeFinDeVigenciaDelCupo: string;
+
+  /**
+   * Fracciones arancelarias asociadas al cupo.
+   * @type {string}
+   */
   fraccionesArancelarias: string;
+
+  /**
+   * Tratado o acuerdo relacionado con el cupo.
+   * @type {string}
+   */
   tratadoAcuerdo: string;
+
+  /**
+   * Países involucrados en el cupo.
+   * @type {string}
+   */
   paises: string;
 }
