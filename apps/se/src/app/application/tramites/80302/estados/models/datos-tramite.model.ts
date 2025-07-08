@@ -57,6 +57,14 @@ export interface DatosModificacion {
   programa: string;
 }
 
+export interface DatosDelServicios {
+  id?: number;
+  desEstatus?: string;
+  descripcion?: string;
+  tipoDeServicio?: string;
+  testado?: string;
+}
+
 export interface DatosDelModificacion {
   id?: number;
   calle?: string;
@@ -71,4 +79,11 @@ export interface DatosDelModificacion {
   domicilioFiscal?: string;
   razonSocial?: string;
   desEstatus?: string;
+}
+
+export interface DatosDelModificaciondos {
+  id?: number;
+  desEstatus?: string;
+  descripcion?: string;
+  tipoDeServicio?: string;
 }
