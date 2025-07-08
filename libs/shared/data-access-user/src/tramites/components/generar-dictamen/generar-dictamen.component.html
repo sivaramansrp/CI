@@ -1,8 +1,10 @@
 <form [formGroup]="dictamenForm">
     <div class="row ">
-        <div class="col-md-12" *ngIf="mostrarTitulo">
+        @if (mostrarTitulo) {
+        <div class="col-md-12">
             <h3 class="titulo-dictamen">Generar Dictamen</h3>
         </div>
+        }
         <div class="d-flex gap-3 justify-content-center">
             <div class="border px-4 py-2 d-flex align-items-center radio-button">
                 <input class="form-check-input me-3 seleccion-radio" type="radio" name="cumplimiento" value="1"
@@ -22,9 +24,11 @@
                 dictamen<span class="text-danger">*</span> :</label>
             <textarea id="justificacionDictamen" class="form-control text-height" formControlName="mensajeDictamen"
                 placeholder="" [ngClass]="isValid('mensajeDictamen') ? 'required' : ''"></textarea>
-            <div class="text-danger" *ngIf="dictamenForm.get('mensajeDictamen')?.invalid && dictamenForm.get('mensajeDictamen')?.touched">
+            @if (dictamenForm.get('mensajeDictamen')?.invalid && dictamenForm.get('mensajeDictamen')?.touched) {
+            <div class="text-danger">
                 Este campo es obligatorio.
             </div>
+            }
         </div>
     </div>
 
