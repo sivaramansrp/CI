@@ -13,6 +13,7 @@ import {
   ValidarEnvio,
 } from '../../models/220201/capturar-solicitud.model';
 import { PersonaTerceros } from '@libs/shared/data-access-user/src';
+import { TercerosrelacionadosdestinoTable } from '../../../../shared/models/tercerosrelacionados.model';
 
 describe('CertificadoZoosanitarioServiceService', () => {
   let service: CertificadoZoosanitarioServiceService;
@@ -43,10 +44,25 @@ describe('CertificadoZoosanitarioServiceService', () => {
     transporte: 'Camión',
     punto: 'Punto de control 1'
   } as DatosParaMovilizacionNacional;
-  const mockTercerosRelacionados: PersonaTerceros[] = [
-    { nombre: 'Juan Pérez', correo: 'juan.perez@example.com' },
-    { nombre: 'Ana Gómez', correo: 'ana.gomez@example.com' }
-  ];
+  const mockTercerosRelacionados: TercerosrelacionadosdestinoTable[] = [
+{
+    tipoMercancia: 'Animales vivos',
+    nombre: 'Carlos',
+    primerApellido: 'Ramírez',
+    segundoApellido: 'Sánchez',
+    razonSocial: 'Agropecuaria Ramírez S.A. de C.V.',
+    pais: 'México',
+    codigoPostal: '01234',
+    estado: 'Jalisco',
+    municipio: 'Guadalajara',
+    colonia: 'Centro',
+    calle: 'Av. Juárez',
+    numeroExterior: '123',
+    numeroInterior: '4B',
+    lada: '33',
+    telefono: '12345678',
+    correo: 'carlos.ramirez@agropecuaria.com'
+  }];
 
   const mockValidarEnvio: ValidarEnvio = {
     dataParaMovilizacion: true,
@@ -142,7 +158,7 @@ describe('CertificadoZoosanitarioServiceService', () => {
   describe('updateTercerosRelacionados', () => {
     it('should call actualizarTercerosRelacionados on zoosanitarioStore', () => {
       // Act
-      service.updateTercerosRelacionados(mockTercerosRelacionados);
+      service.updateTercerosRelacionado(mockTercerosRelacionados);
 
       // Assert
       expect(zoosanitarioStoreMock.actualizarTercerosRelacionados).toHaveBeenCalledWith(mockTercerosRelacionados);

@@ -23,7 +23,8 @@ describe('PasoUnoComponent', () => {
       setTextilesState: jest.fn()
     };
     elegibilidadTextilesServiceMock = {
-      getPrefillDatos: jest.fn().mockReturnValue(of({}))
+      getPrefillDatos: jest.fn().mockReturnValue(of({})),
+      actualizarEstadoFormulario: jest.fn()
     };
 
     await TestBed.configureTestingModule({
@@ -63,14 +64,14 @@ describe('PasoUnoComponent', () => {
     expect(component.mostrarOtraPestana).toBe(false);
   });
 
-  it('should call cargarDatosPrevios and set formularioDeshabilitado to false if consultaState.update is true', () => {
-    const cargarDatosPreviosSpy = jest.spyOn(component, 'cargarDatosPrevios');
+  it('should call guardarDatosFormulario and set formularioDeshabilitado to false if consultaState.update is true', () => {
+    const guardarDatosFormularioSpy = jest.spyOn(component, 'guardarDatosFormulario');
     component.consultaState = { update: true, readonly: false } as ConsultaioState;
     component.formularioDeshabilitado = true;
     // Simulate ngOnInit logic
     component.ngOnInit();
     expect(component.formularioDeshabilitado).toBe(false);
-    expect(cargarDatosPreviosSpy).toHaveBeenCalled();
+    expect(guardarDatosFormularioSpy).toHaveBeenCalled();
   });
 
   it('should set formularioDeshabilitado to true if consultaState.readonly is true', () => {
@@ -80,9 +81,9 @@ describe('PasoUnoComponent', () => {
     expect(component.formularioDeshabilitado).toBe(true);
   });
 
-  it('should call setTextilesState when cargarDatosPrevios is called', () => {
-    component.cargarDatosPrevios();
-    expect(elegibilidadDeTextilesStoreMock.setTextilesState).toHaveBeenCalled();
+  it('should call getPrefillDatos when guardarDatosFormulario is called', () => {
+    component.guardarDatosFormulario();
+    expect(elegibilidadTextilesServiceMock.getPrefillDatos).toHaveBeenCalled();
   });
 
   it('should complete destroyNotifier$ on ngOnDestroy', () => {
