@@ -3,7 +3,7 @@
  * @description Este componente es responsable de manejar el formulario del certificado de registro.
  * Incluye un formulario para capturar los datos del certificado de registro y funcionalidades adicionales.
  */
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -21,6 +21,7 @@ import {
   Catalogo,
   CatalogoSelectComponent,
   ConfiguracionColumna,
+  ConsultaioQuery,
   SeccionLibQuery,
   SeccionLibState,
   SeccionLibStore,
@@ -91,7 +92,7 @@ import { ElegibilidadTextilesService } from '../../services/elegibilidad-textile
     CatalogoSelectComponent,
   ],
 })
-export class ConstanciaDelRegistroComponent implements OnInit {
+export class ConstanciaDelRegistroComponent implements OnInit, OnDestroy {
   /**
    * @property {boolean} formularioDeshabilitado - Indica si el formulario está deshabilitado.
    * Propiedad de entrada que controla si todos los controles del formulario deben estar deshabilitados.
@@ -228,6 +229,7 @@ export class ConstanciaDelRegistroComponent implements OnInit {
    * @param {SeccionLibStore} seccionStore - Store para manejar el estado específico de las secciones del módulo.
    * @param {SeccionLibQuery} seccionQuery - Query para consultar y suscribirse al estado de las secciones.
    * @param {ElegibilidadTextilesService} ElegibilidadTextilesService - Servicio de dominio para manejar la lógica de negocio de elegibilidad de textiles.
+   * @param {ConsultaioQuery} consultaioQuery - Query para consultar el estado de solo lectura del trámite.
    */
   constructor(
     private fb: FormBuilder,
@@ -235,7 +237,8 @@ export class ConstanciaDelRegistroComponent implements OnInit {
     private ElegibilidadDeTextilesQuery: ElegibilidadDeTextilesQuery,
     private seccionStore: SeccionLibStore,
     private seccionQuery: SeccionLibQuery,
-    private ElegibilidadTextilesService: ElegibilidadTextilesService
+    private ElegibilidadTextilesService: ElegibilidadTextilesService,
+    private consultaioQuery: ConsultaioQuery
   ) {
     // Lógica del constructor si es necesario
   }
@@ -322,6 +325,34 @@ export class ConstanciaDelRegistroComponent implements OnInit {
 
     this.initActionFormBuild();
 
+    // Obtenga el estado actual de solo lectura inmediatamente
+    const CURRENT_STATE = this.consultaioQuery.getValue();
+    this.formularioDeshabilitado = CURRENT_STATE.readonly;
+    
+    // Aplicar el estado del formulario inicial según el valor de solo lectura actual
+    if (this.formularioDeshabilitado) {
+      this.fitosanitarioForm.disable();
+    } else {
+      this.fitosanitarioForm.enable();
+    }
+
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((consultaState) => {
+          // Lógica normal: solo lectura verdadero = deshabilitar campos, solo lectura falso = habilitar campos
+          this.formularioDeshabilitado = consultaState.readonly;
+          if (this.fitosanitarioForm) {
+            if (consultaState.readonly) {
+              this.fitosanitarioForm.disable();
+            } else {
+              this.fitosanitarioForm.enable();
+            }
+          }
+        })
+      )
+      .subscribe();
+
     this.seccionStore.establecerFormaValida([false]);
 
     if (
@@ -333,10 +364,6 @@ export class ConstanciaDelRegistroComponent implements OnInit {
       this.seccionStore.establecerFormaValida([true]);
     } else {
       this.seccionStore.establecerFormaValida([false]);
-    }
-
-    if (this.formularioDeshabilitado) {
-      this.fitosanitarioForm.disable();
     }
   }
 
@@ -399,7 +426,10 @@ export class ConstanciaDelRegistroComponent implements OnInit {
           key !== 'numeroDeLaConstancia' &&
           key !== 'flexRadioRegistro'
         ) {
-          this.fitosanitarioForm.get(key)?.disable();
+          // Deshabilitar solo si no está en modo de solo lectura
+          if (!this.formularioDeshabilitado) {
+            this.fitosanitarioForm.get(key)?.disable();
+          }
         }
       });
     }
@@ -485,7 +515,10 @@ export class ConstanciaDelRegistroComponent implements OnInit {
     Object.keys(FORM_VALUES).forEach((key) => {
       if (this.fitosanitarioForm.get(key)) {
         if (key !== 'anoDeLaConstancia' && key !== 'numeroDeLaConstancia') {
-          this.fitosanitarioForm.get(key)?.disable();
+          // Deshabilitar solo si no está en modo de solo lectura
+          if (!this.formularioDeshabilitado) {
+            this.fitosanitarioForm.get(key)?.disable();
+          }
         }
       }
     });
@@ -603,5 +636,25 @@ export class ConstanciaDelRegistroComponent implements OnInit {
 
       return FILTRO_ANO && FILTRO_NUMERO;
     });
+  }
+
+  /**
+   * @method ngOnDestroy
+   * @description
+   * Método del ciclo de vida de Angular que se ejecuta cuando el componente va a ser destruido.
+   * Se encarga de limpiar las suscripciones activas para evitar fugas de memoria,
+   * completando el Subject destroyNotifier$ que es utilizado por todas las suscripciones
+   * del componente con el operador takeUntil.
+   * 
+   * @returns {void} No retorna ningún valor.
+   * 
+   * @implements {OnDestroy}
+   * @public
+   * @memberof ConstanciaDelRegistroComponent
+   * @since 1.0.0
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }

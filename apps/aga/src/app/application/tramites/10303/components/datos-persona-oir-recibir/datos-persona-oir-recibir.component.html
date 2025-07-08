@@ -1,9 +1,9 @@
 <div [formGroup]="datosPersonaOirRecibirForm">
     <div class="row">
         <div class="col-md-4">
-            <label class="form-label" for="rfcPersonaAutorizada">R.F.C.* :</label>
+            <label class="form-label" for="rfcPersonaAutorizada">R.F.C.*: 
             <span class="bi bi-question-circle-fill" title="Registro Federal de Contribuyentes"
-                data-bs-toggle="tooltip"></span>
+                data-bs-toggle="tooltip"></span></label>
             <input type="text" class="form-control" id="rfcPersonaAutorizada" name="rfc" maxlength="13"
                 (blur)="buscarContribuyenteRfc(4, 'rfcPersonaAutorizada')" formControlName="rfcPersonaAutorizada"
                 (change)="setValoresStore(datosPersonaOirRecibirForm,'rfcPersonaAutorizada', 'setRfcPersonaAutorizada')">

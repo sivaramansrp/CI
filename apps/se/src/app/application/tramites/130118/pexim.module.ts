@@ -1,18 +1,16 @@
+import { AlertComponent, BtnContinuarComponent, CatalogoSelectComponent, CrosslistComponent, FirmaElectronicaComponent, InputCheckComponent, InputFechaComponent, InputHoraComponent, SelectPaisesComponent, SharedModule, SolicitanteComponent, TituloComponent, WizardComponent } from '@ng-mf/data-access-user';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { AnexarDocumentosComponent } from "@ng-mf/data-access-user";
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { RouterModule } from '@angular/router';
-
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-
-import { AlertComponent, BtnContinuarComponent, CatalogoSelectComponent, CrosslistComponent, FirmaElectronicaComponent, InputCheckComponent, InputFechaComponent, InputHoraComponent, SelectPaisesComponent, SharedModule, SolicitanteComponent, TituloComponent, WizardComponent } from '@ng-mf/data-access-user';
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 import { PeximRoutingModule } from './pexim-routing.module';
+import { RouterModule } from '@angular/router';
 import { SolicitudComponent } from './components/solicitud/solicitud.component';
 import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.component';
 import { ToastrService } from 'ngx-toastr';
-import { AnexarDocumentosComponent } from "../../../../../../../libs/shared/data-access-user/src/tramites/components/anexar-documentos/anexar-documentos.component";
 
 @NgModule({
   declarations: [
@@ -21,7 +19,6 @@ import { AnexarDocumentosComponent } from "../../../../../../../libs/shared/data
     PasoTresComponent,
     SolicitudPageComponent,
     SolicitudComponent,
-    
   ],
   imports: [
     CommonModule,
