@@ -126,7 +126,7 @@
         </div>
         <div class="row mt-5">
           <div class="col-12 container text-end mt-5">
-            <button class="btn btn-default me-2"
+            <button class="btn btn-danger me-2"
             [disabled]="formularioDeshabilitado" (click)="eliminarDatos()">Eliminar</button>
             <button class="btn btn-primary" (click)="aggregarDatos()"
             [disabled]="formularioDeshabilitado || !federatariosFormGroup.valid">
@@ -244,7 +244,7 @@
             <div class="d-flex flex-row flex-wrap">
               <div class="p-2">
                 <button
-                  class="btn btn-primary"
+                  class="btn btn-danger"
                   (click)="irAAcciones('../complementar-plantas-acciones')"
                   [disabled]="formularioDeshabilitado "
                 >
@@ -253,7 +253,7 @@
               </div>
               <div class="p-2">
                 <button
-                  class="btn btn-primary"
+                  class="btn btn-danger"
                   (click)="irAAcciones('../montos-inversion-acciones')"
                   [disabled]="formularioDeshabilitado "
                 >
@@ -262,7 +262,7 @@
               </div>
               <div class="p-2">
                 <button
-                  class="btn btn-primary"
+                  class="btn btn-danger"
                   (click)="irAAcciones('../empleados-acciones')"
                   [disabled]="formularioDeshabilitado "
                 >
@@ -271,7 +271,7 @@
               </div>
               <div class="p-2">
                 <button
-                  class="btn btn-primary"
+                  class="btn btn-danger"
                   (click)="irAAcciones('../capacidad-instalada-acciones')"
                   [disabled]="formularioDeshabilitado "
                 >
@@ -286,10 +286,12 @@
                   Carga por archivo
                 </button>
               </div>
-              <div class="p-2">
-                <button class="btn btn-primary"
-                [disabled]="formularioDeshabilitado ">Eliminar plantas</button>
-              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="p-2 pull-right">
+              <button class="btn btn-danger end"
+              [disabled]="formularioDeshabilitado ">Eliminar plantas</button>
             </div>
           </div>
           <div class="row mt-5">

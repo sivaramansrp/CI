@@ -6,6 +6,10 @@ import {
   CATALOGOS_ID,
   Catalogo,
   CatalogosService,
+  InputFecha,
+  InputFechaComponent,
+  Notificacion,
+  NotificacionesComponent,
   TablaDinamicaComponent,
   TablaSeleccion,
   TituloComponent,
@@ -24,6 +28,7 @@ import {
 } from '../../models/complimentos.model';
 import {
   ESTADO,
+  FECHA_DE_PAGO,
   FORMA_SOCIO,
   FORMA_SOCIO_ACCIONISTAS,
   FORMA_SOCIO_ACCIONISTAS_EXTRANJEROS,
@@ -63,6 +68,8 @@ import { SelectPaisesComponent } from '@libs/shared/data-access-user/src/tramite
     TituloComponent,
     CatalogoSelectComponent,
     SelectPaisesComponent,
+    NotificacionesComponent,
+    InputFechaComponent
   ],
   templateUrl: './complimentos.component.html',
   styleUrl: './complimentos.component.scss',
@@ -221,6 +228,34 @@ export class ComplimentosComponent implements OnInit, OnDestroy {
   /** Indica si el formulario debe mostrarse en modo solo lectura.  
  *  Controla la habilitación o deshabilitación de los campos. */
   esFormularioSoloLectura: boolean = false;
+
+  /**
+  * @description
+  * Objeto que representa una nueva notificación.
+  * Se utiliza para mostrar mensajes de alerta o información al usuario.
+  */
+    public eliminarNotificacion!: Notificacion;
+
+  /**
+  * @description
+  * Objeto que representa una nueva notificación.
+  * Se utiliza para mostrar mensajes de alerta o información al usuario.
+  */
+    public eliminarUnoConfirmationNotificacion!: Notificacion;
+
+     /**
+  * @description
+  * Objeto que representa una nueva notificación.
+  * Se utiliza para mostrar mensajes de alerta o información al usuario.
+  */
+    public eliminarDosConfirmationNotificacion!: Notificacion;
+
+      /**
+       * Configuración del input de fecha de inicio
+       * @property {InputFecha} fechaInicioInput
+       */
+      fechaInicioInput: InputFecha = FECHA_DE_PAGO;
+
   /**
    * Constructor para inicializar el formulario de datos del subcontratista.
    * @param {FormBuilder} fb - FormBuilder para la creación del formulario reactivo.
@@ -260,6 +295,18 @@ export class ComplimentosComponent implements OnInit, OnDestroy {
      this.inicializarFormulario();
     }  
   }
+
+  /**
+ * Verifica si un control del formulario es inválido.
+ * @param fechaDeActa El nombre del control a verificar.
+ * @returns Verdadero si el control es inválido y está tocado o modificado, de lo contrario, falso.
+ */
+  onFechaCambiada(fecha: string): void {
+    if (fecha) {
+      this.formaComplimentos.patchValue({ fechaDeActa: fecha });
+    }
+  }
+
     /**
    * @comdoc
    * Guarda los datos del formulario de combinación requerida.
@@ -482,6 +529,7 @@ this.formaComplimentos.disable();
     const VALUE = CONTROL.get('formaDatos')?.value;
     if (VALUE) {
       this.accionistasAgregados.emit(VALUE);
+      this.formaComplimentos.reset();
     }
   }
 
@@ -490,9 +538,90 @@ this.formaComplimentos.disable();
    * @returns {void}
    */
   eliminarAccionistas(): void {
+      this.eliminarUnoConfirmationNotificacion.cerrar = false;
     if (this.empresaAccionistasSeleccionados.length) {
       this.accionistasEliminados.emit(this.empresaAccionistasSeleccionados);
+    } else {
+      this.abrirEliminarModal();
     }
+  }
+
+  /**
+   * Abre un modal relacionado con las plantas Immex y configura una notificación
+   * para alertar al usuario en caso de que no se hayan seleccionado datos de las plantas.
+   *
+   * La notificación configurada tiene las siguientes características:
+   * - Tipo de notificación: 'alert'
+   * - Categoría: 'danger'
+   * - Modo: 'action'
+   * - Título: vacío
+   * - Mensaje: 'No se seleccionaron datos de las plantas Immex.'
+   * - Cierre automático: habilitado
+   * - Tiempo de espera: 2000 milisegundos
+   * - Texto del botón Aceptar: 'Aceptar'
+   * - Texto del botón Cancelar: vacío
+   *
+   * @returns {void} No retorna ningún valor.
+   */
+  abrirEliminarModal(): void {
+    this.eliminarNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: 'No hay datos seleccionados en la tabla.',
+      cerrar: true,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
+  }
+
+    /**
+   * Abre un modal relacionado con las plantas Immex y configura una notificación
+   * para alertar al usuario en caso de que no se hayan seleccionado datos de las plantas.
+   *
+   * La notificación configurada tiene las siguientes características:
+   * - Tipo de notificación: 'alert'
+   * - Categoría: 'danger'
+   * - Modo: 'action'
+   * - Título: vacío
+   * - Mensaje: 'No se seleccionaron datos de las plantas Immex.'
+   * - Cierre automático: habilitado
+   * - Tiempo de espera: 2000 milisegundos
+   * - Texto del botón Aceptar: 'Aceptar'
+   * - Texto del botón Cancelar: vacío
+   *
+   * @returns {void} No retorna ningún valor.
+   */
+  abrirEliminarUnoConfirmationModal(): void {
+    if(!this.empresaAccionistasSeleccionados.length) {
+      this.abrirEliminarModal();
+      return;
+    }
+    this.eliminarUnoConfirmationNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: '¿Estás seguro de que quieres eliminar?',
+      cerrar: true,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
+  }
+
+      /**
+   * Método para manejar la selección de plantas IMMEX.
+   * 
+   * Este método recibe un evento de tipo `PlantasImmex` y lo agrega al arreglo
+   * `plantasImmexSeleccionadoDatos`, asegurando que no se dupliquen entradas.
+   * 
+   * @param {PlantasImmex} event - Objeto de tipo `PlantasImmex` que representa la planta seleccionada.
+   */
+  closePlantasModal(): void {
+    this.eliminarNotificacion.cerrar = false;
   }
 
   /**
@@ -500,13 +629,50 @@ this.formaComplimentos.disable();
    * @returns {void}
    */
   eliminarAccionistasExtrenjeros(): void {
+    this.eliminarDosConfirmationNotificacion.cerrar = false;
     if (this.accionistasExtranjerosSeleccionados.length) {
       this.accionistasExtranjerosEliminado.emit(
         this.accionistasExtranjerosSeleccionados
       );
+    } else {
+      this.abrirEliminarModal();
     }
   }
 
+      /**
+   * Abre un modal relacionado con las plantas Immex y configura una notificación
+   * para alertar al usuario en caso de que no se hayan seleccionado datos de las plantas.
+   *
+   * La notificación configurada tiene las siguientes características:
+   * - Tipo de notificación: 'alert'
+   * - Categoría: 'danger'
+   * - Modo: 'action'
+   * - Título: vacío
+   * - Mensaje: 'No se seleccionaron datos de las plantas Immex.'
+   * - Cierre automático: habilitado
+   * - Tiempo de espera: 2000 milisegundos
+   * - Texto del botón Aceptar: 'Aceptar'
+   * - Texto del botón Cancelar: vacío
+   *
+   * @returns {void} No retorna ningún valor.
+   */
+  abrirEliminarDosConfirmationModal(): void {
+      if(!this.accionistasExtranjerosSeleccionados.length) {
+      this.abrirEliminarModal();
+      return;
+    }
+    this.eliminarDosConfirmationNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: '¿Estás seguro de que quieres eliminar?',
+      cerrar: true,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
+  }
   /**
    * @description Maneja la modificación del formulario basado en la nacionalidad y el tipo de persona.
    * @returns {void}

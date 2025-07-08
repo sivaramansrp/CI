@@ -8,6 +8,7 @@ export const FORMA_SOCIO_ACCIONISTAS: DatosCatalago[] = [
     class: 'col-md-7 col-sm-10 pr-5',
     tipo_input: 'text',
     required: true,
+    maxLength: 12,
     orden: 1,
   },
   {
@@ -33,6 +34,7 @@ export const FORMA_SOCIO_ACCIONISTAS: DatosCatalago[] = [
     class: 'col-md-6 col-10 mt-3',
     tipo_input: 'text',
     required: true,
+    maxLength: 12,
     orden: 4,
   },
   {
@@ -50,6 +52,7 @@ export const FORMA_SOCIO_ACCIONISTAS: DatosCatalago[] = [
     class: 'col-md-6 col-10 mt-3',
     tipo_input: 'text',
     required: true,
+    maxLength: 200,
     orden: 6,
   },
 ];
@@ -61,6 +64,7 @@ export const FORMA_SOCIO_ACCIONISTAS_EXTRANJEROS: DatosCatalago[] = [
     class: 'col-md-6 col-sm-10 mt-3',
     tipo_input: 'text',
     required: true,
+    maxLength: 200,
     orden: 1,
   },
   {
@@ -69,12 +73,13 @@ export const FORMA_SOCIO_ACCIONISTAS_EXTRANJEROS: DatosCatalago[] = [
     class: 'col-md-6 col-sm-10 mt-3',
     tipo_input: 'text',
     required: true,
+    maxLength: 200,
     orden: 2,
   },
   {
     labelNombre: 'País',
     campo: 'pais',
-    class: 'col-md-10 col-10 mt-1',
+    class: 'col-md-6 mt-1',
     tipo_input: 'select-paise',
     required: true,
     opciones: [],
@@ -86,6 +91,7 @@ export const FORMA_SOCIO_ACCIONISTAS_EXTRANJEROS: DatosCatalago[] = [
     class: 'col-md-6 col-10 mt-3',
     tipo_input: 'text',
     required: true,
+    maxLength: 12,
     orden: 4,
   },
   {
@@ -103,6 +109,7 @@ export const FORMA_SOCIO_ACCIONISTAS_EXTRANJEROS: DatosCatalago[] = [
     class: 'col-md-6 col-10 mt-3',
     tipo_input: 'text',
     required: true,
+    maxLength: 200,
     orden: 6,
   },
   {
@@ -111,6 +118,7 @@ export const FORMA_SOCIO_ACCIONISTAS_EXTRANJEROS: DatosCatalago[] = [
     class: 'col-md-6 col-sm-10 mt-3',
     tipo_input: 'text',
     required: true,
+    maxLength: 12,
     orden: 7,
   },
 ];
@@ -122,6 +130,7 @@ export const FORMA_SOCIO: DatosCatalago[] = [
     class: 'col-md-6 col-10 mt-3',
     tipo_input: 'text',
     required: true,
+    maxLength: 13,
     orden: 1,
   },
 ];
@@ -214,3 +223,17 @@ export const TABLA_SOCIO_ACCIONISTAS_EXTRANJEROS = [
 
 export const PAIS = 'pais';
 export const ESTADO = 'estado';
+
+
+/**
+ * Constante que representa la configuración de la fecha de pago.
+ * 
+ * @property {string} labelNombre - Etiqueta que describe el nombre del campo.
+ * @property {boolean} required - Indica si el campo es obligatorio.
+ * @property {boolean} habilitado - Indica si el campo está habilitado.
+ */
+export const FECHA_DE_PAGO = {
+  labelNombre: 'fecha de emision del acta',
+  required: true,
+  habilitado: true,
+};
