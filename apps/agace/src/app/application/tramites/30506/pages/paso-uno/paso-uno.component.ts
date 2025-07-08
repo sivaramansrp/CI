@@ -24,11 +24,26 @@ import { Subject } from 'rxjs';
 
 })
 export class PasoUnoComponent implements AfterViewInit, OnDestroy {
-  /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
-  public esDatosRespuesta: boolean = false; // Indica si hay datos de respuesta del servidor
-  private destroyNotifier$: Subject<void> = new Subject(); // Subject para manejar la destrucción de suscripciones
-  public consultaState!: ConsultaioState; // Estado de la consulta
-  public datosRespuesta: unknown; // Datos de respuesta del servidor
+  /**
+   * Indica si se deben mostrar los datos de respuesta.
+   * Inicialmente es falso, lo que significa que no se muestran.
+   */
+  public esDatosRespuesta: boolean = false; 
+  /**
+   * Subject para manejar la destrucción del componente y evitar fugas de memoria.
+   * Se utiliza para notificar a las suscripciones que deben finalizarse.
+   */
+  private destroyNotifier$: Subject<void> = new Subject(); 
+  /**
+   * Estado de la consulta, que se obtiene a través del ConsultaioQuery.
+   * Este estado contiene información sobre la consulta actual.
+   */
+  public consultaState!: ConsultaioState; 
+  /**
+   * Datos de respuesta que se pueden utilizar en el componente.
+   * Inicialmente es de tipo desconocido, lo que significa que no se ha definido aún.
+   */
+  public datosRespuesta: unknown; 
   /**
    * Constructor del componente PasoUnoComponent.
    * @param router Inyecta el servicio Router para la navegación.

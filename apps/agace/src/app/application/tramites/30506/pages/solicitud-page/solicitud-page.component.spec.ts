@@ -84,7 +84,6 @@ describe('SolicitudPageComponent', () => {
 
   describe('getValorIndice', () => {
     beforeEach(() => {
-      // Mock the wizardComponent
       component.wizardComponent = {
         siguiente: jest.fn(),
         atras: jest.fn()

@@ -50,18 +50,7 @@ describe('PasoUnoComponent', () => {
     expect(component['destroyNotifier$']).toBeInstanceOf(Object);
   });
 
-  describe('ngOnInit', () => {
-    it('should execute ngOnInit without errors', () => {
-      expect(() => component.ngOnInit()).not.toThrow();
-    });
-
-    it('should be called during component initialization', () => {
-      const spy = jest.spyOn(component, 'ngOnInit');
-      fixture.detectChanges();
-    });
-  });
-
-  describe('ngAfterViewInit', () => {
+   describe('ngAfterViewInit', () => {
     it('should set persona to PERSONA_MORAL_NACIONAL', () => {
       component.ngAfterViewInit();
       expect(component.persona).toBe(PERSONA_MORAL_NACIONAL);
@@ -183,7 +172,6 @@ describe('PasoUnoComponent', () => {
       
       fixture.detectChanges();
       
-      // expect(ngAfterViewInitSpy).toHaveBeenCalled();
     });
 
     it('should initialize persona and domicilioFiscal correctly after view init', () => {

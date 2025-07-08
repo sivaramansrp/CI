@@ -92,7 +92,6 @@ describe('SolicitudComponent', () => {
     expect(component.bancoCatalogo.labelNombre).toBe('Banco');
     expect(component.bancoCatalogo.required).toBe(false);
     expect(component.bancoCatalogo.primerOpcion).toBe('Selecciona un valor');
-    // expect(component.bancoCatalogo.catalogos).toEqual([]);
   });
 
   describe('ngOnInit', () => {
