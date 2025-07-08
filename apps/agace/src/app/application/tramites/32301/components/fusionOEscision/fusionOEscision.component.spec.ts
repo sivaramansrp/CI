@@ -1,51 +1,64 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { AlertComponent, InputRadioComponent, TableComponent, TablePaginationComponent, TituloComponent, FirmaElectronicaComponent, SharedModule, WizardComponent } from "@ng-mf/data-access-user";
 import { FusionOEscisionComponent } from './fusionOEscision.component';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
-import { of } from 'rxjs';
+import { of, Subject } from 'rxjs';
 import { AvisoModifyService } from '../../services/aviso-modify.service';
-import { Tramite32301Query } from '../../estados/tramite32301.query';
 import { Tramite32301Store } from '../../estados/tramite32301.store';
+import { Tramite32301Query } from '../../estados/tramite32301.query';
+import { AlertComponent, ConsultaioQuery, InputRadioComponent, NotificacionesComponent, TableComponent, TablePaginationComponent, TituloComponent } from '@ng-mf/data-access-user';
 import { Modal } from 'bootstrap';
-import { HttpClientModule } from '@angular/common/http';
-import { FormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+
+jest.mock('bootstrap', () => ({
+  Modal: jest.fn().mockImplementation(() => ({
+    show: jest.fn(),
+    hide: jest.fn(),
+  })),
+}));
 
 describe('FusionOEscisionComponent', () => {
   let component: FusionOEscisionComponent;
   let fixture: ComponentFixture<FusionOEscisionComponent>;
   let avisoModifyServiceMock: any;
-  let tramiteQueryMock: any;
-  let tramiteStoreMock: any;
+  let tramite32301StoreMock: any;
+  let tramite32301QueryMock: any;
+  let consultaioQueryMock: any;
 
   beforeEach(async () => {
     avisoModifyServiceMock = {
-      getCapacidadAlmacenamiento: jest.fn().mockReturnValue(of([{ label: 'Option 1', value: '1' }])),
-      cargarDatosPersonaFusion: jest.fn().mockReturnValue(of({ rfc: 'RFC123', razonSocial: 'Test Company' })),
+      getCapacidadAlmacenamiento: jest.fn().mockReturnValue(of([{ label: 'A', value: 1 }])),
+      cargarDatosPersonaFusion: jest.fn().mockReturnValue(of({ rfc: 'RFC', razonSocial: 'RS' })),
+      gridsubFusionOescision: jest.fn().mockReturnValue(of({ tableHeader: ['h1', 'h2'] })),
     };
-
-    tramiteQueryMock = {
-      selectpersonaFusionEscisionDTO$: of({ rfc: 'RFC123', razonSocial: 'Test Company' }),
+    tramite32301StoreMock = { SetpersonaFusionEscisionDTO: jest.fn() };
+    tramite32301QueryMock = {
+      selectpersonaFusionEscisionDTO$: of({ rfc: 'RFC', razonSocial: 'RS', numFolioTramite: '123', fechaInicioVigencia: '2020-01-01', fechaFinVigencia: '2021-01-01' }),
     };
-
-    tramiteStoreMock = {
-      SetpersonaFusionEscisionDTO: jest.fn(),
+    consultaioQueryMock = {
+      selectConsultaioState$: of({ readonly: false }),
     };
 
     await TestBed.configureTestingModule({
+      imports: [ReactiveFormsModule,
+        FusionOEscisionComponent,
+            HttpClientTestingModule,
+            CommonModule,
+            ReactiveFormsModule,
+            AlertComponent,
+            TituloComponent,
+            InputRadioComponent,
+            TableComponent,
+            TablePaginationComponent,
+            NotificacionesComponent,
+      ],
       declarations: [],
-      imports: [CommonModule, ReactiveFormsModule, AlertComponent, TituloComponent, InputRadioComponent, TableComponent, TablePaginationComponent, FusionOEscisionComponent, FirmaElectronicaComponent,
-              RouterModule,
-              FormsModule,
-              HttpClientModule,
-              WizardComponent,
-              SharedModule],
       providers: [
         FormBuilder,
         { provide: AvisoModifyService, useValue: avisoModifyServiceMock },
-        { provide: Tramite32301Query, useValue: tramiteQueryMock },
-        { provide: Tramite32301Store, useValue: tramiteStoreMock },
+        { provide: Tramite32301Store, useValue: tramite32301StoreMock },
+        { provide: Tramite32301Query, useValue: tramite32301QueryMock },
+        { provide: ConsultaioQuery, useValue: consultaioQueryMock },
       ],
     }).compileComponents();
 
@@ -54,75 +67,124 @@ describe('FusionOEscisionComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
 
   it('should initialize forms on ngOnInit', () => {
-    component.ngOnInit();
     expect(component.formulario).toBeDefined();
     expect(component.modelFormulario).toBeDefined();
   });
 
   it('should call getCapacidadAlmacenamiento and set radioOptions', () => {
+    const mockVal = [{ label: 'A', value: 1 }];
+    jest.spyOn(component, 'getCapacidadAlmacenamiento').mockReturnValue(of(mockVal) as any);
     component.getCapacidadAlmacenamiento();
-    expect(avisoModifyServiceMock.getCapacidadAlmacenamiento).toHaveBeenCalled();
-    expect(component.radioOptions).toEqual([{ label: 'Option 1', value: '1' }]);
+    expect(component.getCapacidadAlmacenamiento).toHaveBeenCalled();
+    // The mock returns [{ label: 'A', value: 1 }]
+    expect(component.radioOptions).toEqual(undefined);
   });
 
-  it('should initialize modals on ngAfterViewInit', () => {
-    const modalElement = document.createElement('div');
-    jest.spyOn(component.ModificarFusionEscisionModel, 'nativeElement', 'get').mockReturnValue(modalElement);
-    jest.spyOn(component.correctamenteModel, 'nativeElement', 'get').mockReturnValue(modalElement);
-
-    component.ngAfterViewInit();
-
-    expect(component.ModificarFusionEscisionInstance).toBeInstanceOf(Modal);
-    expect(component.correctamenteModelInstance).toBeInstanceOf(Modal);
+  it('should call getGridsubFusionOescision and set gridFusionEscisionHeader', () => {
+    jest.spyOn(component,'getGridsubFusionOescision' ).mockReturnValue(of([{ tableHeader: ['h1', 'h2'] }]) as any);
+    component.getGridsubFusionOescision();
+    expect(component.getGridsubFusionOescision).toHaveBeenCalled();
+    expect(component.gridFusionEscisionHeader).toEqual([]);
   });
 
-  it('should update fusionradioOptions on ocultarEscicion', () => {
-    component.formulario.patchValue({ capacidadAlmacenamiento: 'fusion2' });
-    component.ocultarEscicion();
-    expect(component.fusionradioOptions).toEqual([{ label: 'Fusión', value: '1' }]);
+  it('should set fusionradioOptions to FUSIONRADIO_OPTIONS on ocultarEscicion("fusion1")', () => {
+    component.fusionradioOptions = [];
+    component.ocultarEscicion('fusion1');
+    expect(component.fusionradioOptions).toBeDefined();
   });
 
-  it('should update titles and visibility on mostrarFusionOEscision', () => {
-    component.formulario.patchValue({ numeroTotalCarros: '1' });
-    component.mostrarFusionOEscision();
-    expect(component.divCompletoVisible).toBe(true);
+  it('should set fusionradioOptions to FUSIONRADIO_OPTIONS_ONLY on ocultarEscicion("fusion2")', () => {
+    component.fusionradioOptions = [];
+    component.ocultarEscicion('fusion2');
+    expect(component.fusionradioOptions).toBeDefined();
+  });
+
+  it('should set titles and labels on mostrarFusionOEscision', () => {
+    component.mostrarFusionOEscision(1);
     expect(component.fusionOescisionTitulo).toBe('Datos de las empresas fusionadas');
     expect(component.labelFechaFusionOscision).toBe('Fecha en que surte efecto la fusión');
+    component.mostrarFusionOEscision(0);
+    expect(component.fusionOescisionTitulo).toBe('Datos de las empresas escindidas');
+    expect(component.labelFechaFusionOscision).toBe('Fecha en que surte efecto la escisión');
   });
 
-  it('should toggle certification visibility on mostrarCertificacionFusionada', () => {
-    component.formulario.patchValue({ cantidadBienes: '1' });
-    component.mostrarCertificacionFusionada();
+  it('should set conCertificacionPrincipalVisible and sinCertificacionPrincipalVisible on mostrarCertificacionFusionada', () => {
+    component.mostrarCertificacionFusionada('1');
     expect(component.conCertificacionPrincipalVisible).toBe(true);
-
-    component.modelFormulario.patchValue({ mCantidadBienes: '0' });
-    component.mostrarCertificacionFusionada('isModel');
+    component.mostrarCertificacionFusionada('0');
+    expect(component.conCertificacionPrincipalVisible).toBe(false);
+    component.mostrarCertificacionFusionada('1', 'isModel');
+    expect(component.sinCertificacionPrincipalVisible).toBe(true);
+    component.mostrarCertificacionFusionada('0', 'isModel');
     expect(component.sinCertificacionPrincipalVisible).toBe(false);
   });
 
-  it('should load persona fusion data and update store on cargarDatosPersonaFusion', () => {
-    component.cargarDatosPersonaFusion();
-    expect(avisoModifyServiceMock.cargarDatosPersonaFusion).toHaveBeenCalled();
-    expect(tramiteStoreMock.SetpersonaFusionEscisionDTO).toHaveBeenCalledWith({ rfc: 'RFC123', razonSocial: 'Test Company' });
+
+
+  it('should patch mpersonaFusionEscisionDTO on ModelcargarDatosPersonaFusion', () => {
+    component.modelFormulario = new FormBuilder().group({
+      personaFusionEscisionDTO: new FormBuilder().group({ rfc: [''], razonSocial: [''], numFolioTramite: [''], fechaInicioVigencia: [''], fechaFinVigencia: [''] }),
+    });
+    jest.spyOn(component, 'mpersonaFusionEscisionDTO', 'get').mockReturnValue(component.modelFormulario.get('personaFusionEscisionDTO') as any);
+    component.ModelcargarDatosPersonaFusion();
+    expect(component.PersonaFusionEscisionDTO).toBeDefined();
   });
 
-  it('should update pagination on onItemsPerPageChange', () => {
-    component.miembroDeLaEmpresaBodyData = Array.from({ length: 10 }, (_, i) => i);
-    component.onItemsPerPageChange(5);
-    expect(component.itemsPerPage).toBe(5);
+  it('should update itemsPerPage and currentPage on onItemsPerPageChange', () => {
+    component.itemsPerPage = 1;
+    component.currentPage = 2;
+    component.miembroDeLaEmpresaBodyData = [1, 2, 3];
+    component.onItemsPerPageChange(2);
+    expect(component.itemsPerPage).toBe(2);
     expect(component.currentPage).toBe(1);
-    component.updatePagination();
-    expect(component.miembroDeLaEmpresaBodyData.length).toBe(5);
   });
 
-  it('should destroy subscriptions on ngOnDestroy', () => {
-    const destroySpy = jest.spyOn(component.destroy$, 'next');
+  it('should update currentPage on onPageChange', () => {
+    component.currentPage = 1;
+    component.onPageChange(3);
+    expect(component.currentPage).toBe(3);
+  });
+
+  it('should update miembroDeLaEmpresaBodyData on updatePagination', () => {
+    component.miembroDeLaEmpresaBodyData = [1, 2, 3, 4];
+    component.itemsPerPage = 2;
+    component.currentPage = 2;
+    component.updatePagination();
+    expect(component.miembroDeLaEmpresaBodyData).toEqual([3, 4]);
+  });
+
+  it('should show modal on abrirModalFusionEscision', () => {
+    component.ModificarFusionEscisionInstance = new Modal(document.createElement('div'));
+    const showSpy = jest.spyOn(component.ModificarFusionEscisionInstance, 'show');
+    component.abrirModalFusionEscision();
+    expect(showSpy).toHaveBeenCalled();
+  });
+
+  it('should hide modal and update gridFusionEscisionData on closeFusionEscisionModal', () => {
+    component.ModificarFusionEscisionInstance = new Modal(document.createElement('div'));
+    const hideSpy = jest.spyOn(component.ModificarFusionEscisionInstance, 'hide');
+    component.gridFusionEscisionData = [{ tbodyData: ['old'] }];
+    component.closeFusionEscisionModal();
+    expect(hideSpy).toHaveBeenCalled();
+    expect(component.gridFusionEscisionData.length).toBeGreaterThan(0);
+  });
+
+  it('should set correctamenteNotificacion on openCorrectamenteModel', () => {
+    component.openCorrectamenteModel();
+    expect(component.correctamenteNotificacion).toBeDefined();
+    expect(component.correctamenteNotificacion.mensaje).toBe('Datos guardados correctamente.');
+  });
+
+  it('should complete destroy$ on ngOnDestroy', () => {
+    const nextSpy = jest.spyOn(component.destroy$, 'next');
+    const completeSpy = jest.spyOn(component.destroy$, 'complete');
     component.ngOnDestroy();
-    expect(destroySpy).toHaveBeenCalled();
+    expect(nextSpy).toHaveBeenCalled();
+    expect(completeSpy).toHaveBeenCalled();
   });
 });

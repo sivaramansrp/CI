@@ -37,7 +37,7 @@ export class DatosComponent implements OnInit, OnDestroy {
    * Se utiliza para controlar la habilitación o deshabilitación de la pestaña en la interfaz.
    * Por defecto, la pestaña inicia desactivada (`true`).
    */
-  public desactivado: boolean = false;
+  public desactivado: boolean = true;
 
   /**
    * Inicializa una nueva instancia del componente.

@@ -1,6 +1,6 @@
 import { SolicitudService } from './solicitud.service';
 import { HttpClient } from '@angular/common/http';
-import { of } from 'rxjs';
+import { of, throwError } from 'rxjs';
 
 describe('SolicitudService (Jest)', () => {
   let service: SolicitudService;
@@ -71,4 +71,44 @@ describe('SolicitudService (Jest)', () => {
       done();
     });
   });
+
+  it('debería llamar a getScianDatos y devolver los datos esperados', (done) => {
+    const mockData = [{ clave: 'S1', descripcion: 'Scian 1' }];
+    httpClientMock.get.mockReturnValue(of(mockData));
+
+    service.getScianDatos().subscribe(data => {
+      expect(data).toEqual(mockData);
+      expect(httpClientMock.get).toHaveBeenCalledWith('assets/json/260402/scianDatos.json');
+      done();
+    });
+  });
+
+  it('debería llamar a ObtenerReprestantanteData y devolver los datos esperados', (done) => {
+    const mockData = { nombre: 'Representante', rfc: 'RFC123' } as any;
+    httpClientMock.get.mockReturnValue(of(mockData));
+
+    service.ObtenerReprestantanteData().subscribe(data => {
+      expect(data).toEqual(mockData);
+      expect(httpClientMock.get).toHaveBeenCalledWith('assets/json/260605/represtantante.json');
+      done();
+    });
+  });
+
+  it('debería manejar error en ObtenerReprestantanteData', (done) => {
+    const errorResponse = new Error('Error al obtener representante');
+    httpClientMock.get.mockReturnValue(
+      throwError(() => errorResponse)
+    );
+
+    service.ObtenerReprestantanteData().subscribe({
+      next: () => {},
+      error: (error) => {
+        expect(error).toBe(errorResponse);
+        expect(httpClientMock.get).toHaveBeenCalledWith('assets/json/260605/represtantante.json');
+        done();
+      }
+    });
+  });
+
+
 });
