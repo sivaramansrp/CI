@@ -6,6 +6,7 @@
       [datos]="datosTablaEnlace"
       [tipoSeleccionTabla]="tipoSeleccionTabla"
       (listaDeFilaSeleccionada)="manejarFilaSeleccionada($event)"
+      [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
     ></app-tabla-dinamica>
     <nav aria-label="Page navigation example">
       <ul class="pagination justify-content-center">
@@ -23,6 +24,8 @@
         data-bs-toggle="modal"
         data-bs-target="#modalAgregar"
         (click)="abrirModal()"
+        [disabled]="esFormularioSoloLectura"
+
       >
         Agregar
       </button>

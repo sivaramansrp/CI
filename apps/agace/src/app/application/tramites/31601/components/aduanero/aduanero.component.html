@@ -400,6 +400,7 @@
         [datos]="datosTablaMencione"
         [tipoSeleccionTabla]="tipoSeleccionTabla"
         (listaDeFilaSeleccionada)="manejarFilaSeleccionada($event)"
+        [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
       ></app-tabla-dinamica>
       <div class="d-flex justify-content-center">
         <app-table-pagination
@@ -1131,7 +1132,7 @@
     
       <app-tabla-dinamica [configuracionTabla]="configuracionTablaControlInventarios" [datos]="datosTablaControlInventarios"
         [tipoSeleccionTabla]="tipoSeleccionTabla"
-        (listaDeFilaSeleccionada)="manejarFilaSeleccionadaControlInventarios($event)"></app-tabla-dinamica>
+        (listaDeFilaSeleccionada)="manejarFilaSeleccionadaControlInventarios($event)" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"></app-tabla-dinamica>
     
       <div class="d-flex justify-content-center mb-3">
         <app-table-pagination [totalItems]="datosTablaControlInventarios.length" [itemsPerPage]="itemsPerPage"
@@ -1161,10 +1162,10 @@
               <p>¿Estás seguro que deseas eliminar los registros marcados?</p>
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-primary" (click)="cerrarEliminarConfirmationPopupControlInventarios()">
+              <button type="button" class="btn btn-primary" [disabled]="esFormularioSoloLectura" (click)="cerrarEliminarConfirmationPopupControlInventarios()">
                 Cancelar
               </button>
-              <button type="button" class="btn btn-primary" (click)="eliminarControlInventariosItem()">
+              <button type="button" class="btn btn-primary" [disabled]="esFormularioSoloLectura" (click)="eliminarControlInventariosItem()">
                 Aceptar
               </button>
             </div>
@@ -1243,7 +1244,7 @@
             </div>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-primary" data-bs-dismiss="modal"
+            <button type="button" class="btn btn-primary" data-bs-dismiss="modal" [disabled]="esFormularioSoloLectura"
               (click)="filaSeleccionadaControlInventarios ? modificaControlInventariosItem() : agregarNuevoElementoControlInventarios()">
               {{ filaSeleccionadaControlInventarios ? 'Modificar' : 'Agregar' }}
             </button>
@@ -1474,7 +1475,7 @@
       <div class="modal-header">
         <h5 class="modal-title" id="modifyModalLabel">Agregar</h5>
       </div>
-      <div class="modal-body p-4">
+      <div class="modal-body p-4" [formGroup]="preOperativeForm">
         <div class="row">
           <div class="col-6">
             <div class="form-group">

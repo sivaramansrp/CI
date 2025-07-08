@@ -1,4 +1,4 @@
-import { Catalogo, ConsultaioQuery, InputRadioComponent, TableComponent, TablePaginationComponent, TituloComponent } from '@ng-mf/data-access-user';
+import { Catalogo, ConsultaioQuery, InputRadioComponent, TableComponent, TablePaginationComponent,TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   FormBuilder,
@@ -114,9 +114,38 @@ export class DatosPorRegimenComponent implements OnInit,OnDestroy {
    * @memberof DatosPorRegimenComponent
    */
   ngOnInit():void {
-    this.crearRegimenForm();
+    this.inicializarCertificadoFormulario();
   }
-
+ /**
+   * Método para inicializar el formulario reactivo con los datos de la solicitud.
+   * 
+   * Este método configura los campos del formulario con los valores actuales del estado de la solicitud
+   * y aplica las validaciones necesarias. También deshabilita ciertos campos y establece valores predeterminados.
+   */
+  inicializarCertificadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+     this.crearRegimenForm();
+    }  
+  }
+    /**
+   * @comdoc
+   * Guarda los datos del formulario de combinación requerida.
+   * 
+   * Inicializa el formulario y ajusta su estado de habilitación según si es de solo lectura.
+   * - Si el formulario es de solo lectura, lo deshabilita.
+   * - Si no es de solo lectura, lo habilita.
+   * - Si no aplica ninguna de las condiciones anteriores, no realiza ninguna acción adicional.
+   */
+  guardarDatosFormulario(): void {
+      this.crearRegimenForm();
+      if (this.esFormularioSoloLectura) {
+        this.regimenForm.disable();        
+      } else {
+        this.regimenForm.enable();       
+      }
+  }
   /**
  * Crea e inicializa el FormGroup `regimenForm` con varios controles de formulario y sus validadores.
  * Los controles del formulario incluyen:
