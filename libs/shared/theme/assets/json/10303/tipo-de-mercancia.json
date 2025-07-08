@@ -3,15 +3,19 @@
     "data": [
         {
             "id": 1,
-            "descripcion": "Mercancía_01"
+            "descripcion": "Vehículo"
         },
         {
             "id": 2,
-            "descripcion": "Mercancía_02"
+            "descripcion": "Medicamentos"
         },
         {
             "id": 3,
-            "descripcion": "Mercancía_03"
+            "descripcion": "Equipo e insumos médicos"
+        },
+        {
+            "id": 4,
+            "descripcion": "General"
         }
     ],
     "message": "Consulta exitosa"

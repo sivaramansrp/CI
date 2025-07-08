@@ -1,5 +1,6 @@
 import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
+import { TableBodyData } from '@libs/shared/data-access-user/src';
 
 /**
  * Creacion del estado inicial para la interfaz de tramite 10303
@@ -20,8 +21,12 @@ export interface RegistroDeDonacion10303State {
     tipoDeMercancia: string;
     cantidadUMC: string;
     cantidadUMT: string;
+    cantidadUMCVehiculo: string;
+    cantidadUMTVehiculo: string;
     unidadMedida: string;
     UMT: string;
+    unidadMedidaVehiculo: string;
+    UMTVehiculo: string;
     paisProcedenciaOtro: string;
     condicionMercancia: string;
 
@@ -101,6 +106,21 @@ export interface RegistroDeDonacion10303State {
     cvePaisDonatario: string;
     correoElectronicoDonatario: string;
     telefonoDonatario: string;
+    seleccionadaTipoDeMercancia: number;
+
+    medicoDescripcion: string;
+    paisProcedencia: string;
+    paisMedicoOrigen: string;
+    marca: string;
+    ano: string;
+    modelo: string;
+    serieNumero: string;
+    pasajerosNumero: string;
+    cilindrada: string;
+    combustibleTipo: string;
+    vehiculoTipo: string;
+    descripcion: string;
+    mercanciaTablaDatos: TableBodyData[];
 }
 
 export function createInitialState(): RegistroDeDonacion10303State {
@@ -116,11 +136,15 @@ export function createInitialState(): RegistroDeDonacion10303State {
         solicitudDeInspeccion: '',
         justificacionMerca: '',
         descripcionMercanciaOtro: '',
-        tipoDeMercancia: '',
+        tipoDeMercancia: '4',
         cantidadUMC: '',
         cantidadUMT: '',
+        cantidadUMCVehiculo: '1',
+        cantidadUMTVehiculo: '1',
         unidadMedida: '',
         UMT: '',
+        unidadMedidaVehiculo: '1',
+        UMTVehiculo: '1',
         paisProcedenciaOtro: '',
         condicionMercancia: '',
 
@@ -200,6 +224,20 @@ export function createInitialState(): RegistroDeDonacion10303State {
         cvePaisDonatario: '',
         correoElectronicoDonatario: '',
         telefonoDonatario: '',
+        seleccionadaTipoDeMercancia: 4,
+        medicoDescripcion: '',
+        paisProcedencia: '',
+        paisMedicoOrigen: '',
+        marca: '',
+        ano: '',
+        modelo: '',
+        serieNumero: '',
+        pasajerosNumero: '',
+        cilindrada: '',
+        combustibleTipo: '',
+        vehiculoTipo: '',
+        descripcion: '',
+        mercanciaTablaDatos: []
     };
 }
 
@@ -296,6 +334,30 @@ export class Tramite10303Store extends Store<RegistroDeDonacion10303State> {
         }));
     }
 
+    /**
+     * Actualiza el estado del store con la vehículo cantidad UMC.
+     * @param cantidadUMCVehiculo - Vehículo cantidad UMC.
+     * @return {void}
+     */
+    public setCantidadUMCVehiculo(cantidadUMCVehiculo: string): void {
+        this.update((state) => ({
+            ...state,
+            cantidadUMCVehiculo,
+        }));
+    }
+
+    /**
+     * Actualiza el estado del store con la vehículo cantidad UMT.
+     * @param cantidadUMCVehiculo - Vehículo cantidad UMT.
+     * @return {void}
+     */
+    public setCantidadUMTVehiculo(cantidadUMTVehiculo: string): void {
+        this.update((state) => ({
+            ...state,
+            cantidadUMTVehiculo,
+        }));
+    }
+
     public setUnidadMedida(unidadMedida: string): void {
         this.update((state) => ({
             ...state,
@@ -307,6 +369,30 @@ export class Tramite10303Store extends Store<RegistroDeDonacion10303State> {
         this.update((state) => ({
             ...state,
             UMT,
+        }));
+    }
+
+    /**
+     * Actualiza el estado del store con la vehículo unidad UMT.
+     * @param unidadMedidaVehiculo - Vehículo unidad UMT.
+     * @return {void}
+     */
+    public setUnidadMedidaVehiculo(unidadMedidaVehiculo: string): void {
+        this.update((state) => ({
+            ...state,
+            unidadMedidaVehiculo,
+        }));
+    }
+
+    /**
+     * Actualiza el estado del store con la vehículo unidad UMT.
+     * @param UMTVehiculo - Vehículo unidad UMT.
+     * @return {void}
+     */
+    public setUMTVehiculo(UMTVehiculo: string): void {
+        this.update((state) => ({
+            ...state,
+            UMTVehiculo,
         }));
     }
 
@@ -834,6 +920,174 @@ export class Tramite10303Store extends Store<RegistroDeDonacion10303State> {
      * @return {void}
      */
     public setDonacionesExtranjerasState(nuevoDatos: RegistroDeDonacion10303State): void {
-    this.update(nuevoDatos);
-  }
+        this.update(nuevoDatos);
+    }
+
+    /**
+     * Actualiza el estado del store con el tipo de mercancía seleccionada.
+     * @param seleccionadaTipoDeMercancia - El índice del tipo de mercancía seleccionado
+     * @return {void}
+     */
+    public setSeleccionadaTipoDeMercancia(seleccionadaTipoDeMercancia: number): void {
+        this.update((state) => ({
+            ...state,
+            seleccionadaTipoDeMercancia,
+        }));
+    }
+
+    /**
+     * Actualiza el estado del store con la descripción médica.
+     * @param medicoDescripcion - Descripción médica a establecer.
+     * @return {void}
+     */
+    public setMedicoDescripcion(medicoDescripcion: string): void {
+        this.update((state) => ({
+            ...state,
+            medicoDescripcion,
+        }));
+    }
+
+    /**
+     * Actualiza el estado del store con el país de procedencia.
+     * @param paisProcedencia - País de procedencia a establecer.
+     * @return {void}
+     */
+    public setPaisProcedencia(paisProcedencia: string): void {
+        this.update((state) => ({
+            ...state,
+            paisProcedencia,
+        }));
+    }
+
+    /**
+     * Actualiza el estado del store con el país de origen médico.
+     * @param paisMedicoOrigen - País de origen médico a establecer.
+     * @return {void}
+     */
+    public setPaisMedicoOrigen(paisMedicoOrigen: string): void {
+        this.update((state) => ({
+            ...state,
+            paisMedicoOrigen,
+        }));
+    }
+
+    /**
+     * Actualiza el estado del store con la marca.
+     * @param marca - Marca a establecer.
+     * @return {void}
+     */
+    public setMarca(marca: string): void {
+        this.update((state) => ({
+            ...state,
+            marca,
+        }));
+    }
+
+    /**
+     * Actualiza el estado del store con el modelo.
+     * @param modelo - Modelo a establecer.
+     * @return {void}
+     */
+    public setModelo(modelo: string): void {
+        this.update((state) => ({
+            ...state,
+            modelo,
+        }));
+    }
+
+    /**
+     * Actualiza el estado del store con el año.
+     * @param ano - Año a establecer.
+     * @return {void}
+     */
+    public setAno(ano: string): void {
+        this.update((state) => ({
+            ...state,
+            ano,
+        }));
+    }
+
+    /**
+     * Actualiza el estado del store con el número de serie.
+     * @param serieNumero - Número de serie a establecer.
+     * @return {void}
+     */
+    public setSerieNumero(serieNumero: string): void {
+        this.update((state) => ({
+            ...state,
+            serieNumero,
+        }));
+    }
+
+    /**
+     * Actualiza el estado del store con el número de pasajeros.
+     * @param pasajerosNumero - Número de pasajeros a establecer.
+     * @return {void}
+     */
+    public setPasajerosNumero(pasajerosNumero: string): void {
+        this.update((state) => ({
+            ...state,
+            pasajerosNumero,
+        }));
+    }
+
+    /**
+     * Actualiza el estado del store con la cilindrada.
+     * @param cilindrada - Cilindrada a establecer.
+     * @return {void}
+     */
+    public setCilindrada(cilindrada: string): void {
+        this.update((state) => ({
+            ...state,
+            cilindrada,
+        }));
+    }
+
+    /**
+     * Actualiza el estado del store con el tipo de combustible.
+     * @param combustibleTipo - Tipo de combustible a establecer.
+     * @return {void}
+     */
+    public setCombustibleTipo(combustibleTipo: string): void {
+        this.update((state) => ({
+            ...state,
+            combustibleTipo,
+        }));
+    }
+
+    /**
+     * Actualiza el estado del store con el tipo de vehículo.
+     * @param vehiculoTipo - Tipo de vehículo a establecer.
+     * @return {void}
+     */
+    public setVehiculoTipo(vehiculoTipo: string): void {
+        this.update((state) => ({
+            ...state,
+            vehiculoTipo,
+        }));
+    }
+
+    /**
+     * Actualiza el estado del store con la descripción del vehículo.
+     * @param descripcion - Descripción del vehículo a establecer.
+     * @return {void}
+     */
+    public setDescripcion(descripcion: string): void {
+        this.update((state) => ({
+            ...state,
+            descripcion,
+        }));
+    }
+
+    /**
+     * Actualiza el estado del store con los datos de la mercancía en la tabla.
+     * @param mercanciaTablaDatos - Datos de la mercancía a establecer.
+     * @return {void}
+     */
+    public setMercanciaTablaDatos(mercanciaTablaDatos: TableBodyData[]): void {
+        this.update((state) => ({
+            ...state,
+            mercanciaTablaDatos,
+        }));
+    }
 }

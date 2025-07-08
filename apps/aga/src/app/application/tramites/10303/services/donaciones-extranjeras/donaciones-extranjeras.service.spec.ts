@@ -193,4 +193,52 @@ describe('DonacionesExtranjerasService', () => {
     expect(REQ.request.method).toBe('GET');
     REQ.flush(MOCK_RESPONSE);
   });
+
+  it('should fetch registro de donacion', () => {
+    const MOCK_RESPONSE: RespuestaCatalogos = { code:200, data: [], message: 'Success' };
+
+    service.getRegistroDeDonacionDatos().subscribe((response) => {
+      expect(response).toEqual(MOCK_RESPONSE);
+    });
+
+    const REQ = httpMock.expectOne('assets/json/10303/registro-de-donacion-datos.json');
+    expect(REQ.request.method).toBe('GET');
+    REQ.flush(MOCK_RESPONSE);
+  });
+
+  it('should fetch pais procedencia', () => {
+    const MOCK_RESPONSE: RespuestaCatalogos = { code:200, data: [], message: 'Success' };
+
+    service.getPaisProcedencia().subscribe((response) => {
+      expect(response).toEqual(MOCK_RESPONSE);
+    });
+
+    const REQ = httpMock.expectOne('assets/json/10303/pais-procedencia-medicamento.json');
+    expect(REQ.request.method).toBe('GET');
+    REQ.flush(MOCK_RESPONSE);
+  });
+
+  it('should fetch Pais Medico Origen', () => {
+    const MOCK_RESPONSE: RespuestaCatalogos = { code:200, data: [], message: 'Success' };
+
+    service.getPaisMedicoOrigen().subscribe((response) => {
+      expect(response).toEqual(MOCK_RESPONSE);
+    });
+
+    const REQ = httpMock.expectOne('assets/json/10303/pais-origen-medicamento.json');
+    expect(REQ.request.method).toBe('GET');
+    REQ.flush(MOCK_RESPONSE);
+  });
+
+  it('should fetch ano', () => {
+    const MOCK_RESPONSE: RespuestaCatalogos = { code:200, data: [], message: 'Success' };
+
+    service.getAno().subscribe((response) => {
+      expect(response).toEqual(MOCK_RESPONSE);
+    });
+
+    const REQ = httpMock.expectOne('assets/json/10303/ano.json');
+    expect(REQ.request.method).toBe('GET');
+    REQ.flush(MOCK_RESPONSE);
+  });
 });
