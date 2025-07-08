@@ -70,19 +70,7 @@
             </div>
         </div>
         <div *ngIf="mostrarMensajeArchivoValido" class="mt-3">
-            <textarea class="form-control mesaje-archivo mt-2" row="4" disabled>
-                {{ mensajeArchivoValido }}
-            </textarea>
+            <textarea class="form-control mesaje-archivo mt-2" rows="4" disabled>{{ mensajeArchivoValido }}</textarea>
         </div>
     </div>
 </form>
-
-<!-- @if (nuevaNotificacion) {
-<section>
-  <lib-notificaciones
-    [notificacionInput]="nuevaNotificacion"
-    (confirmacionModal)="eliminarPedimento($event)"
-  >
-  </lib-notificaciones>
-</section>
-} -->

@@ -6,6 +6,7 @@ import { map, Subject, takeUntil } from 'rxjs';
 import { Solicitud32513Query } from '../estados/solicitud32513.query';
 import { Solicitud32513State, Solicitud32513Store } from '../estados/solicitud32513.store';
 import { SOLICITUD_32513_ENUM } from '../constantes/anexo'
+import { AvisoService } from '../services/aviso.service';
 
 @Component({
   selector: 'app-aviso',
@@ -89,6 +90,7 @@ export class AvisoComponent {
     public solicitud32513Store: Solicitud32513Store,
     public solicitud32513Query: Solicitud32513Query,
     private consultaioQuery: ConsultaioQuery,
+    public avisoService: AvisoService
   ) {
     // Llamada para inicializar datos de catálogo al cargar el componente
   }
