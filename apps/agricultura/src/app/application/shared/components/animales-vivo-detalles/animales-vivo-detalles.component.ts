@@ -11,7 +11,6 @@ import { Subject } from 'rxjs';
   standalone: true,
   imports: [CommonModule, CatalogoSelectComponent, TituloComponent, ReactiveFormsModule, TablaDinamicaComponent],
   templateUrl: './animales-vivo-detalles.component.html',
-  styleUrl: './animales-vivo-detalles.component.scss',
 })
 export class AnimalesVivoDetallesComponent implements OnInit, OnDestroy {
 

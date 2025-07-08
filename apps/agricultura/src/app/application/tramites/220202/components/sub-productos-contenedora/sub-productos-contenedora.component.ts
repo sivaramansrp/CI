@@ -27,7 +27,6 @@ import { Subject } from 'rxjs';
   standalone: true,
   imports: [CommonModule, SubProductosComponent],
   templateUrl: './sub-productos-contenedora.component.html',
-  styleUrl: './sub-productos-contenedora.component.scss',
 })
 export class SubProductosContenedoraComponent {
 

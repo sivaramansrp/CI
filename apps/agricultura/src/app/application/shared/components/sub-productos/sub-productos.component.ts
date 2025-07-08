@@ -36,7 +36,6 @@ import { Subject } from 'rxjs';
   standalone: true,
   imports: [CommonModule, CatalogoSelectComponent, TituloComponent, ReactiveFormsModule, TablaDinamicaComponent, InputRadioComponent],
   templateUrl: './sub-productos.component.html',
-  styleUrl: './sub-productos.component.scss',
 })
 export class SubProductosComponent implements OnInit, OnDestroy{
   /**

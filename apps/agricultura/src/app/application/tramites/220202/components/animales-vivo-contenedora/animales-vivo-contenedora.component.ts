@@ -24,7 +24,6 @@ import { FitosanitarioStore } from '../../estados/fitosanitario.store';
   standalone: true,
   imports: [CommonModule, AnimalesVivoDetallesComponent],
   templateUrl: './animales-vivo-contenedora.component.html',
-  styleUrl: './animales-vivo-contenedora.component.scss',
 })
 export class AnimalesVivoContenedoraComponent implements OnDestroy{
   /**

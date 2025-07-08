@@ -632,7 +632,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   radioBotonSeleccionado(): void {
     const VALOR = this.forma.value.tipoMercancia;
-    if (VALOR !== '' && VALOR !== null && VALOR !== undefined) {
+    if (VALOR) {
       this.notificationCheck = true;
     } else {
       this.notificationCheck = false;

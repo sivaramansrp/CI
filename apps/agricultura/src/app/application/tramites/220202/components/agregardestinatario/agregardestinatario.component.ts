@@ -37,7 +37,6 @@ import { TercerosrelacionadosdestinoTable } from '../../../../shared/models/terc
     ReactiveFormsModule
   ],
   templateUrl: './agregardestinatario.component.html',
-  styleUrl: './agregardestinatario.component.scss',
 })
 export class AgregardestinatarioComponent implements OnInit, AfterViewInit {
   /**

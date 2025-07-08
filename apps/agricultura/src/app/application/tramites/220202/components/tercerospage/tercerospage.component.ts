@@ -35,7 +35,6 @@ import { TercerosrelacionadosService } from '../../../../shared/components/servi
     TercerosrelacionadosComponent
   ],
   templateUrl: './tercerospage.component.html',
-  styleUrl: './tercerospage.component.scss',
 })
 export class TercerospageComponent implements OnInit, OnDestroy, AfterViewInit {
   /**

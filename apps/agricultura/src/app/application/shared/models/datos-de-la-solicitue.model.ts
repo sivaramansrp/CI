@@ -84,9 +84,20 @@ export interface AnimalesFormularioSolicitudForm {
   paisDeProcedencia: string;
 }
 
+
+/**
+ * Representa los eventos relacionados con los animales en una solicitud.
+ */
 export interface AnimalesEventos {
+  /**
+   * El formulario asociado a la solicitud de animales.
+   */
   formulario: AnimalesFormularioSolicitudForm;
-  tablaDatos: Sensible[]
+
+  /**
+   * Una lista de datos sensibles relacionados con los animales.
+   */
+  tablaDatos: Sensible[];
 }
 
 export interface ProductoDetallasForm {
