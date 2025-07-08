@@ -109,7 +109,7 @@
                   name="fechaPago"
                   (change)="actualizarPago()"
                   (valorCambiado)="onFechaCambiada($event)"
-                  [isDisabled]="pagoForm.get('exentoPago')?.value === 'si'"
+                  [isDisabled]="esFormularioSoloLectura || pagoForm.get('exentoPago')?.value === 'si'"
                   ></input-fecha>
                   <div class="mensaje-error" *ngIf="pagoForm.get('fechaPago')?.errors?.['futureDateNotAllowed']">
                             "La fecha de pago debe ser menor o igual a la fecha actual."</div>

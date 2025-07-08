@@ -100,7 +100,7 @@ export class PagoDeDerechoComponent implements OnDestroy,OnInit,AfterViewInit {
      * deshabilitando la edición de los campos.
      */
     @Input() esFormularioSoloLectura:boolean = false;
-
+    
 
       /**
        * @description
