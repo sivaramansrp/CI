@@ -1,5 +1,5 @@
-import { AVISO, DatosPasos } from '@ng-mf/data-access-user';
 import { Component } from '@angular/core';
+import { DatosPasos } from '@ng-mf/data-access-user';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { PASOS } from '@ng-mf/data-access-user';
 import { ViewChild } from '@angular/core';
@@ -50,14 +50,6 @@ export class OeaTextilRegistroComponent {
  * Permite interactuar con sus propiedades y métodos en el código del componente principal.
  */
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
-
-  /**
- * Constante que almacena el valor de la nota de privacidad.
- * 
- * @constant AVISO_PRIVACIDAD_ADJUNTAR - Almacena el valor definido en `NOTA.AVISO_PRIVACIDAD_ADJUNTAR`.
- * Se utiliza para adjuntar o gestionar el aviso de privacidad dentro del sistema.
- */
-  AVISO_PRIVACIDAD_ADJUNTAR = AVISO.Aviso;
 
   /**
    * Datos relacionados con los pasos.
