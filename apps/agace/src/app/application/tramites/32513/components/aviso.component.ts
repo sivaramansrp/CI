@@ -1,8 +1,7 @@
-import * as XLSX from 'xlsx';
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ConsultaioQuery, ConsultaioState, Notificacion, TituloComponent, VALID_FILE_REGEX } from '@libs/shared/data-access-user/src';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { ConsultaioQuery, ConsultaioState, Notificacion, TituloComponent } from '@libs/shared/data-access-user/src';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { map, Subject, takeUntil } from 'rxjs';
 import { Solicitud32513Query } from '../estados/solicitud32513.query';
 import { Solicitud32513State, Solicitud32513Store } from '../estados/solicitud32513.store';
@@ -77,6 +76,9 @@ export class AvisoComponent {
    */
   archivoMedicamentos: File | null = null;
 
+  mostrarMensajeArchivoValido = false;
+  mensajeArchivoValido = SOLICITUD_32513_ENUM.MESAJE_ARCHIVO;
+
   /**
    * Constructor del componente AvisoComponent.
    * Se encarga de inyectar los servicios y stores necesarios para la gestión del formulario
@@ -119,14 +121,10 @@ export class AvisoComponent {
   }
 
   inicializarFormulario(): void {
-  // Inicializa el formulario reactivo con los valores del estado.
-    // this.solicitudForm = this.fb.group({
-    //   regimen_0: [this.solicitudState?.regimen_0],
-    //   regimen_1: [this.solicitudState?.regimen_1],
-    //   regimen_2: [this.solicitudState?.regimen_2],
-    //   regimen_3: [this.solicitudState?.regimen_3],
-    //   manifiesto: [this.solicitudState?.manifiesto],
-    // });
+    this.avisoForm = this.fb.group({
+      descripcionMercancia: [this.solicitudState?.descripcionMercancia, Validators.required],
+      porcentajeDesperdicio: [this.solicitudState?.porcentajeDesperdicio, Validators.required],
+    });
   }
 
   /**
@@ -152,31 +150,14 @@ export class AvisoComponent {
    * Si el archivo es válido, muestra un modal de confirmación; de lo contrario, muestra un modal de error.
    */
   cargarProveedores(): void {
-    const FILE_INPUT = document.getElementById(
-      'cargarProveedores'
-    ) as HTMLInputElement;
-    const FILE = FILE_INPUT.files?.[0];
+    const FILE_INPUT = document.getElementById('archivoMedicamentos') as HTMLInputElement;
+    const FILE = FILE_INPUT?.files?.[0];
     if (FILE) {
-      if (VALID_FILE_REGEX.test(FILE.name)) {
-        const READER = new FileReader();
-        READER.onload = (e): void => {
-          const DATA = new Uint8Array(e.target?.result as ArrayBuffer);
-          const WORKBOOK = XLSX.read(DATA, { type: 'array' });
-          const JSON_DATA = XLSX.utils.sheet_to_json(
-            WORKBOOK.Sheets[WORKBOOK.SheetNames[0]],
-            { header: 1 }
-          );
-
-          const EXPECTED_COLUMNS = 5; // Agregue aquí el número requerido de columnas o lógica
-          const FIRST_ROW = JSON_DATA[0] as string[];
-          if (FIRST_ROW.length === EXPECTED_COLUMNS) {
-            // this.confirmarModal(); // Abre el modal de confirmación
-          } else {
-            // this.errorModal(); // Abre el modal de error
-          }
-        };
-
-        READER.readAsArrayBuffer(FILE);
+      const EXT_FILE = FILE.name.toLowerCase().endsWith('.xlsx');
+      if (EXT_FILE) {
+        this.mostrarMensajeArchivoValido = true;
+      } else {
+        this.mostrarMensajeArchivoValido = false;
       }
     }
   }
@@ -210,6 +191,16 @@ export class AvisoComponent {
     if (this.elgirArchivo) {
       this.elgirArchivo.click();
     }
+  }
+
+  /**
+   * Verifica si el control del formulario es inválido y ha sido tocado.
+   * @param {string} id El nombre del control del formulario.
+   * @returns {boolean} `true` si el control es inválido y tocado, `null` si no existe el control.
+   */
+  isInvalid(id: string): boolean {
+    const CONTROL = this.avisoForm.get(id);
+    return CONTROL ? CONTROL.invalid && (CONTROL.touched || CONTROL.dirty) : false;
   }
 
   /**

@@ -1,4 +1,4 @@
-<form [formGroup]="avisoForm" class="w-100">
+<form [formGroup]="avisoForm">
     <div class="col-md-12">
         <ng-titulo titulo="Datos de la mercancía importada" />
     </div>
@@ -17,6 +17,9 @@
                 <input type="text" id="descripcionMercancia" formControlName="descripcionMercancia" class="form-control"
                     (change)="setValoresStore(avisoForm, 'descripcionMercancia', 'setDescripcionMercancia')"
                    [disabled]="esFormularioSoloLectura" />
+                    <div *ngIf="isInvalid('descripcionMercancia')" class="mensaje-error">
+                        Este campo es obligatorio.
+                    </div>
             </div>
         </div>
         <div class="row">
@@ -24,9 +27,12 @@
                 <label for="porcentajeDesperdicio">
                     Porcentaje que representa el desperdicio de destruir, de la mercancía importada temporalmente de la que procede*:
                 </label>
-                <input type="text" id="porcentajeDesperdicio" formControlName="porcentajeDesperdicio" class="form-control"
+                <input type="text" id="porcentajeDesperdicio" formControlName="porcentajeDesperdicio" class="form-control porWidth" 
                     (change)="setValoresStore(avisoForm, 'porcentajeDesperdicio', 'setPorcentajeDesperdicio')"
                    [disabled]="esFormularioSoloLectura" />
+                   <div *ngIf="isInvalid('porcentajeDesperdicio')" class="mensaje-error">
+                        Este campo es obligatorio.
+                    </div>
             </div>
         </div>
     </div>
@@ -39,9 +45,12 @@
             Para descargar plantilla del archivo de excel de click
             <a [href]="" target="_blank" class="text-primary fw-bold"
                 (click)="esFormularioSoloLectura ? $event.preventDefault() : null"
-                [class.disabled]="esFormularioSoloLectura">aquí</a>.
+                [class.disabled]="esFormularioSoloLectura">aquí</a>
         </label>
-        <div class="row mt-4 mb-4">
+        <div class="row">
+            <label class="form-label text-justify ml-1"> Cargar archivo: </label>
+        </div>
+        <div class="row">
             <div class="col-md-6">
                 <button type="button" for="archivoMedicamentos" class="file-upload" (click)="activarSeleccionArchivo()"
                     [disabled]="esFormularioSoloLectura">
@@ -60,8 +69,12 @@
                 </button>
             </div>
         </div>
+        <div *ngIf="mostrarMensajeArchivoValido" class="mt-3">
+            <textarea class="form-control mesaje-archivo mt-2" row="4" disabled>
+                {{ mensajeArchivoValido }}
+            </textarea>
+        </div>
     </div>
-
 </form>
 
 <!-- @if (nuevaNotificacion) {
