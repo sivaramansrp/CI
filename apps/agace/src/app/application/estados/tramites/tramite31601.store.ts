@@ -996,6 +996,10 @@ export class Tramite31601Store extends Store<Solicitud31601State> {
     }));
   }
   
+  /**
+   * Establece el valor de la fecha de pago en el estado.
+   * @param fechaPago La fecha de pago a establecer.
+   */
   public setFechaPago(fechaPago: string): void {
     this.update((state) => ({
       ...state,

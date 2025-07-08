@@ -115,6 +115,10 @@ export class CapturarIvaeiepsComponent implements OnInit,OnDestroy {
      */
     fechaFinalInput: InputFecha = FECHA_FINAL;
 
+    /**
+     * Controla la visibilidad de la sección de certificación.
+     * Se establece en true si el usuario selecciona "Sí" en el campo correspondiente.
+     */
     mostrarSeccionCertificacion: boolean = false;
 
 
