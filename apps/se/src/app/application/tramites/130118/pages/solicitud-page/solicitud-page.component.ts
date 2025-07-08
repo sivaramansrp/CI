@@ -224,6 +224,7 @@ export class SolicitudPageComponent implements OnInit {
         cve_unidad_medida_tarifaria: DATOS_MERCANCIA.unidadMedidaTarifaria === '-1' ? '1' : DATOS_MERCANCIA.unidadMedidaTarifaria,
         cve_pais_origen: DATOS_MERCANCIA.paisOrigen,
         cve_pais_destino: DATOS_MERCANCIA.paisDestino,
+        cantidad_tarifaria: DATOS_MERCANCIA.cantidadTarifaria,
         valor_factura_usd: DATOS_MERCANCIA.valorFacturaUSD.toString(),
         precio_unitario: DATOS_MERCANCIA.precioUnitarioUSD,
         lote: DATOS_MERCANCIA.lote,

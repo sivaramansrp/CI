@@ -1,8 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Subject, map, merge, takeUntil } from 'rxjs';
 
-import { CATALOGOS_ID, Catalogo, ConsultaioQuery, ConsultaioState, FECHA_SALIDA, InputFecha, REGEX_ONCE_ENTEROS_DOS_DECIMALES, REGEX_ONCE_ENTEROS_TRES_DECIMALES, ValidacionesFormularioService } from '@ng-mf/data-access-user';
+import { CATALOGOS_ID, Catalogo, Catalogos, ConsultaioQuery, ConsultaioState, EntidadesFederativasService, FECHA_SALIDA, FraccionArancelariaService, InputFecha, PaisesService, REGEX_ONCE_ENTEROS_DOS_DECIMALES, REGEX_ONCE_ENTEROS_TRES_DECIMALES, RegimenService, ValidacionesFormularioService } from '@ng-mf/data-access-user';
 import { Solicitud130118State, Tramite130118Store } from '../../estados/tramites/tramite130118.store';
 import { PeximService } from '../../service/pexim.service';
 import { Tramite130118Query } from '../../estados/queries/tramite130118.query';
@@ -21,22 +21,22 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   /**
    * Lista de catálogos de régimen de mercancía.
    */
-  regimenMercancia!: Catalogo[];
+  regimenMercancia!: Catalogos[];
 
   /**
    * Lista de catálogos de clasificación de régimen.
    */
-  clasifiRegimen!: Catalogo[];
+  clasifiRegimen!: Catalogos[];
 
   /**
    * Lista de catálogos de fracción arancelaria.
    */
-  fraccionArancelaria!: Catalogo[];
+  fraccionArancelaria!: Catalogos[];
 
   /**
    * Lista de catálogos de NICO.
    */
-  nico!: Catalogo[];
+  nico!: Catalogos[];
 
   /**
    * Lista de catálogos de país de origen.
@@ -46,22 +46,22 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   /**
    * Lista de catálogos de país de destino.
    */
-  paisDestino!: Catalogo[];
+  paisDestino!: Catalogos[];
 
   /**
    * Lista de catálogos de estado.
    */
-  estado!: Catalogo[];
+  estado!: Catalogos[];
 
   /**
    * Lista de catálogos de unidad de medida tarifaria.
    */
-  unidadMedidaTarifaria!: Catalogo[];
+  unidadMedidaTarifaria!: Catalogos[];
 
   /**
    * Lista de catálogos de representación federal.
    */
-  representacionFederal!: Catalogo[];
+  representacionFederal!: Catalogos[];
 
   /**
    * Estado de la solicitud.
@@ -107,6 +107,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * Cuando es `true`, los campos del formulario no se pueden editar.
    */
   esFormularioSoloLectura: boolean = false;
+  
 
   /**
    * Constructor del componente.
@@ -123,19 +124,12 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     private validacionesService: ValidacionesFormularioService,
     private tramite130118Store: Tramite130118Store,
     private tramite130118Query: Tramite130118Query,
-    private consultaioQuery: ConsultaioQuery
-  ) {
-    this.consultaioQuery.selectConsultaioState$
-      .pipe(
-        takeUntil(this.destruirNotificador$),
-        map((seccionState) => {
-          this.consultaDatos = seccionState;
-          this.esFormularioSoloLectura = this.consultaDatos.readonly;
-          this.inicializarEstadoFormulario();
-        })
-      )
-      .subscribe()
-  }
+    private consultaioQuery: ConsultaioQuery,
+    private regimenService: RegimenService,
+    private entidadesFederativasService: EntidadesFederativasService,
+    private paisesService: PaisesService,
+    private fraccionArancelariaService: FraccionArancelariaService
+  ) { }
 
   /**
    * Método que se ejecuta al inicializar el componente.
@@ -143,7 +137,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.inicializaCatalogos();
-    this.inicializarEstadoFormulario();
+
 
     this.tramite130118Query.selectSeccionState$
       .pipe(
@@ -154,6 +148,25 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       ).subscribe();
 
     this.crearFormSolicitud();
+
+
+    const REGIMEN_VALUE = this.datosRegimen.get('regimenMercancia')?.value;
+    if (REGIMEN_VALUE && REGIMEN_VALUE !== '-1') {
+      this.changeRegimen();
+    }
+
+    const FRACCION_GUARDADA = this.solicitudState?.fraccionArancelaria;
+    if (FRACCION_GUARDADA && FRACCION_GUARDADA !== '-1') {
+      this.datosMercancia.get('fraccionArancelaria')?.setValue(FRACCION_GUARDADA);
+      this.fraccionArancelariaChange();
+    }
+
+    const ESTADO_GUARDADO = this.solicitudState?.estado;
+    if (ESTADO_GUARDADO && ESTADO_GUARDADO !== '-1') {
+      this.registroFederal.get('estado')?.setValue(ESTADO_GUARDADO);
+      this.changeEntidad();
+    }
+
     this.regimenMercanciaSeleccion();
     this.clasifiRegimenSeleccion();
     this.fraccionArancelariaSeleccion();
@@ -237,21 +250,22 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * Método para crear el formulario principal de la solicitud.
    */
   crearFormSolicitud(): void {
+
     this.FormSolicitud = this.fb.group({
       datosRegimen: this.fb.group({
-        regimenMercancia: [this.solicitudState?.regimenMercancia],
-        clasifiRegimen: [{ value: this.solicitudState?.clasifiRegimen, disabled: true }]
+        regimenMercancia: [this.solicitudState?.regimenMercancia || '-1', Validators.required],
+        clasifiRegimen: [this.solicitudState?.clasifiRegimen || '-1', Validators.required]
       }),
       datosMercancia: this.fb.group({
-        valueTA: [this.solicitudState?.valueTA,[Validators.maxLength(1000), Validators.pattern(/^[^~`^]*$/)]],
-        fraccionArancelaria: [this.solicitudState?.fraccionArancelaria, Validators.required],
-        nico: [this.solicitudState?.nico, Validators.required],
-        unidadMedidaTarifaria: [this.solicitudState?.unidadMedidaTarifaria, Validators.required],
+        valueTA: [this.solicitudState?.valueTA, [Validators.maxLength(1000), Validators.pattern(/^[^~`^]*$/)]],
+        fraccionArancelaria: [this.solicitudState?.fraccionArancelaria || '-1', Validators.required],
+        nico: [{ value: this.solicitudState?.nico || '-1', disabled: true }, Validators.required],
+        unidadMedidaTarifaria: [{ value: this.solicitudState?.unidadMedidaTarifaria || '-1', disabled: true }, Validators.required],
         cantidadTarifaria: [this.solicitudState?.cantidadTarifaria, [Validators.min(0), Validators.max(999999999.99), Validators.pattern(REGEX_ONCE_ENTEROS_DOS_DECIMALES)]],
         valorFacturaUSD: [this.solicitudState?.valorFacturaUSD, [Validators.min(0), Validators.max(999999999.999), Validators.pattern(REGEX_ONCE_ENTEROS_TRES_DECIMALES)]],
-        precioUnitarioUSD: [ { value: this.solicitudState?.precioUnitarioUSD, disabled: true }],
-        paisOrigen: [this.solicitudState?.paisOrigen, Validators.required],
-        paisDestino: [this.solicitudState?.paisDestino, Validators.required],
+        precioUnitarioUSD: [{ value: this.solicitudState?.precioUnitarioUSD, disabled: true }],
+        paisOrigen: [this.solicitudState?.paisOrigen || '-1', Validators.required],
+        paisDestino: [this.solicitudState?.paisDestino || '-1', Validators.required],
         lote: [this.solicitudState?.lote, [Validators.maxLength(60)]],
         fechaSalida: [this.solicitudState?.fechaSalida, [Validators.required]],
         observaciones: [this.solicitudState?.observaciones, [Validators.maxLength(250)]],
@@ -266,55 +280,36 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         domicilio: [this.solicitudState?.domicilio, [Validators.maxLength(1000)]]
       }),
       registroFederal: this.fb.group({
-        estado: [this.solicitudState?.estado, Validators.required],
-        representacionFederal: [this.solicitudState?.representacionFederal, Validators.required]
+        estado: [this.solicitudState?.estado || '-1', Validators.required],
+        representacionFederal: [{ value: this.solicitudState?.representacionFederal || '-1', disabled: true }, Validators.required]
       })
     });
+  }
+
+  get form(): FormGroup {
+    return this.FormSolicitud;
   }
 
   /**
    * Inicializa los catálogos necesarios para el formulario.
    */
   private inicializaCatalogos(): void {
-    const REGIMEN_MERCANCIA$ = this.peximService
-      .getRegimenMercancia(CATALOGOS_ID.CAT_REGIMEN_MERCANCIA)
+    const REGIMEN_MERCANCIA$ = this.regimenService
+      .getRegimenes()
       .pipe(
         map((resp) => {
-          this.regimenMercancia = resp.data;
+          this.regimenMercancia = resp.datos;
         })
       );
 
-    const CLASIFI_REGIMEN$ = this.peximService
-      .getClasifiRegimen(CATALOGOS_ID.CAT_CLASIFI_REGIMEN)
+    const FRACCION_ARANCELARIA$ = this.fraccionArancelariaService
+      .getFracciones()
       .pipe(
         map((resp) => {
-          this.clasifiRegimen = resp.data;
+          this.fraccionArancelaria = resp.datos;
         })
       );
 
-    const FRACCION_ARANCELARIA$ = this.peximService
-      .getFraccionArancelariaCatalogo(CATALOGOS_ID.CAT_FRACCION_ARANCELARIA)
-      .pipe(
-        map((resp) => {
-          this.fraccionArancelaria = resp.data;
-        })
-      );
-
-    const NICO$ = this.peximService
-      .getNicoCatalogo(CATALOGOS_ID.CAT_NICO)
-      .pipe(
-        map((resp) => {
-          this.nico = resp.data;
-        })
-      );
-
-    const UNIDAD_MEDIDA_TARIFARIA$ = this.peximService
-      .getUnidadMedidaTarifariaCatalogo(CATALOGOS_ID.CAT_UNIDAD_MEDIDA_TARIFARIA)
-      .pipe(
-        map((resp) => {
-          this.unidadMedidaTarifaria = resp.data;
-        })
-      );
 
     const PAIS_ORIGEN$ = this.peximService
       .getPaisOrigenCatalogo(CATALOGOS_ID.CAT_PAIS_ORIGEN)
@@ -324,40 +319,30 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         })
       );
 
-    const PAIS_DESTINO$ = this.peximService
-      .getPaisDestinoCatalogo(CATALOGOS_ID.CAT_PAIS_DESTINO)
+    const PAIS_DESTINO$ = this.paisesService
+      .getPaisesT130118()
       .pipe(
         map((resp) => {
-          this.paisDestino = resp.data;
+          this.paisDestino = resp.datos;
         })
       );
 
-    const ESTADO$ = this.peximService
-      .getEstadoCatalogo(CATALOGOS_ID.CAT_ESTADO)
+    const ESTADO$ = this.entidadesFederativasService
+      .getEntidades()
       .pipe(
         map((resp) => {
-          this.estado = resp.data;
+          this.estado = resp.datos;
         })
       );
 
-    const REPRESENTACION_FEDERAL$ = this.peximService
-      .getRepresentacionFederal(CATALOGOS_ID.CAT_REPRESENTACION_FEDERAL)
-      .pipe(
-        map((resp) => {
-          this.representacionFederal = resp.data;
-        })
-      );
+
 
     merge(
       REGIMEN_MERCANCIA$,
-      CLASIFI_REGIMEN$,
       FRACCION_ARANCELARIA$,
-      NICO$,
-      UNIDAD_MEDIDA_TARIFARIA$,
       PAIS_ORIGEN$,
       PAIS_DESTINO$,
       ESTADO$,
-      REPRESENTACION_FEDERAL$
     )
       .pipe(takeUntil(this.destruirNotificador$))
       .subscribe();
@@ -588,6 +573,171 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     });
     this.tramite130118Store.setFechaSalida(nuevo_valor);
   }
+
+  // eslint-disable-next-line class-methods-use-this
+  isErrorNoMenosUno(form: FormGroup, field: string): boolean {
+    const CONTROL = form.get(field) as FormControl;
+
+    if (CONTROL) {
+      const ERROR_NO_MENOS_UNO = CONTROL.hasError('noMenosUno');
+      return ERROR_NO_MENOS_UNO && CONTROL.touched;
+    }
+
+    return false;
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  changeRegimen(): void {
+    const SELECTED_REGIMEN = this.datosRegimen.get('regimenMercancia')?.value;
+    this.tramite130118Store.setRegimenMercancia(SELECTED_REGIMEN);
+
+    const CLASIFI_CONTROL = this.datosRegimen.get('clasifiRegimen');
+
+    if (SELECTED_REGIMEN && SELECTED_REGIMEN !== '-1') {
+      this.regimenService.getRegimenesCve(SELECTED_REGIMEN).subscribe({
+        next: (response) => {
+          this.clasifiRegimen = response.datos || [];
+
+          if (this.clasifiRegimen.length > 0) {
+            CLASIFI_CONTROL?.enable();
+          } else {
+            CLASIFI_CONTROL?.disable();
+          }
+
+          // Restaurar valor si ya había uno guardado
+          const CLASIFI_GUARDADO = this.solicitudState?.clasifiRegimen || '-1';
+          CLASIFI_CONTROL?.setValue(CLASIFI_GUARDADO);
+        },
+        error: (error) => {
+          console.error('Error al obtener clasificación de régimen:', error);
+          this.clasifiRegimen = [];
+          CLASIFI_CONTROL?.disable();
+          const CLASIFI_GUARDADO = this.solicitudState?.clasifiRegimen || '-1';
+          CLASIFI_CONTROL?.setValue(CLASIFI_GUARDADO);
+        }
+      });
+    } else {
+      this.clasifiRegimen = [];
+      CLASIFI_CONTROL?.disable();
+      CLASIFI_CONTROL?.setValue('-1');
+    }
+  }
+
+
+  // eslint-disable-next-line class-methods-use-this
+  changeEntidad(): void {
+    const SELECTED_ESTADO = this.registroFederal.get('estado')?.value;
+
+    // Guarda el estado seleccionado en el store
+    this.tramite130118Store.setEstado(SELECTED_ESTADO);
+
+    const FEDERAL_CONTROL = this.registroFederal.get('representacionFederal');
+
+    if (SELECTED_ESTADO && SELECTED_ESTADO !== '-1') {
+      this.entidadesFederativasService.getEntidadesCve(SELECTED_ESTADO).subscribe({
+        next: (response) => {
+          this.representacionFederal = response.datos || [];
+
+          if (this.representacionFederal.length > 0) {
+            FEDERAL_CONTROL?.enable();
+          } else {
+            FEDERAL_CONTROL?.disable();
+          }
+
+          // Obtener valor guardado (si existe)
+          const REPRESENTACION_GUARDADA = this.solicitudState?.representacionFederal;
+
+          // Establecer valor: si está guardado, úsalo; si no, pon '-1'
+          if (REPRESENTACION_GUARDADA && REPRESENTACION_GUARDADA !== '-1') {
+            FEDERAL_CONTROL?.setValue(REPRESENTACION_GUARDADA);
+          } else {
+            FEDERAL_CONTROL?.setValue('-1');
+          }
+        },
+        error: (error) => {
+          console.error('Error al obtener representación federal:', error);
+          this.representacionFederal = [];
+          FEDERAL_CONTROL?.setValue('-1');
+          FEDERAL_CONTROL?.disable();
+        }
+      });
+    } else {
+      this.representacionFederal = [];
+      FEDERAL_CONTROL?.setValue('-1');
+      FEDERAL_CONTROL?.disable();
+    }
+  }
+
+
+  // eslint-disable-next-line class-methods-use-this
+  fraccionArancelariaChange(): void {
+    const SELECTED_FRACCION = this.datosMercancia.get('fraccionArancelaria')?.value;
+
+    // Guardar en el store
+    this.tramite130118Store.setFraccionArancelaria(SELECTED_FRACCION);
+
+    const NICO_CONTROL = this.datosMercancia.get('nico');
+    const UMT_CONTROL = this.datosMercancia.get('unidadMedidaTarifaria');
+
+    if (SELECTED_FRACCION && SELECTED_FRACCION !== '-1') {
+      // Llamada 1: obtener Nico
+      this.fraccionArancelariaService.getNico(SELECTED_FRACCION).subscribe({
+        next: (response) => {
+          this.nico = response.datos || [];
+
+          if (this.nico.length > 0) {
+            NICO_CONTROL?.enable();
+          } else {
+            NICO_CONTROL?.disable();
+          }
+
+          const NICO_GUARDADO = this.solicitudState?.nico || '-1';
+          NICO_CONTROL?.setValue(NICO_GUARDADO);
+        },
+        error: (error) => {
+          console.error('Error al obtener Nico:', error);
+          this.nico = [];
+          const NICO_GUARDADO = this.solicitudState?.nico || '-1';
+          NICO_CONTROL?.setValue(NICO_GUARDADO);
+          NICO_CONTROL?.disable();
+        }
+      });
+
+      // Llamada 2: obtener unidad de medida tarifaria
+      this.fraccionArancelariaService.getFraccionesCve(SELECTED_FRACCION).subscribe({
+        next: (response) => {
+          this.unidadMedidaTarifaria = response.datos || [];
+
+          if (this.unidadMedidaTarifaria.length > 0) {
+            UMT_CONTROL?.enable();
+          } else {
+            UMT_CONTROL?.disable();
+          }
+
+          const UMT_GUARDADO = this.solicitudState?.unidadMedidaTarifaria || '-1';
+          UMT_CONTROL?.setValue(UMT_GUARDADO);
+        },
+        error: (error) => {
+          console.error('Error al obtener unidad de medida tarifaria:', error);
+          this.unidadMedidaTarifaria = [];
+          const UMT_GUARDADO = this.solicitudState?.unidadMedidaTarifaria || '-1';
+          UMT_CONTROL?.setValue(UMT_GUARDADO);
+          UMT_CONTROL?.disable();
+        }
+      });
+
+    } else {
+      // Si seleccionan "Selecciona una opción..."
+      this.nico = [];
+      this.unidadMedidaTarifaria = [];
+      NICO_CONTROL?.setValue('-1');
+      NICO_CONTROL?.disable();
+      UMT_CONTROL?.setValue('-1');
+      UMT_CONTROL?.disable();
+    }
+  }
+
+
 
   /**
    * Se ejecuta al destruir el componente.
