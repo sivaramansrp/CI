@@ -1,0 +1,49 @@
+import { Injectable } from '@angular/core';
+
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/5701/base-response.model';
+import { ENVIRONMENT } from '@libs/shared/data-access-user/src';
+
+import { Observable, catchError, map, throwError } from 'rxjs';
+import { API_GET_INICIO } from '../../../constantes/130118/api-constants';
+import { IniciarRequest } from '../../models/request/iniciar-requst.model';
+
+
+@Injectable({
+  providedIn: 'root'
+})
+export class IniciarService {
+private readonly host: string;
+
+  constructor(private http: HttpClient) {
+    this.host = `${ENVIRONMENT.API_HOST}/api/`;
+  }
+
+  /**
+   * Inicia el trámite 130118.
+   * @param rfc RFC del contribuyente.
+   * @returns Observable con la respuesta del servidor.
+   */
+  postIniciar(PAYLOAD : IniciarRequest): Observable<BaseResponse<null>> {
+    const ENDPOINT = `${this.host}` + API_GET_INICIO;
+     
+
+    return this.http.post<BaseResponse<null>>(ENDPOINT, PAYLOAD).pipe(
+      map((response) => {
+        return response;
+      }),
+      catchError((httpError) => {
+        if (httpError instanceof HttpErrorResponse) {
+          return throwError(() => ({
+            success: false,
+            error: httpError.error,
+          }));
+        }
+        const ERROR = new Error(
+          `Ocurrió un error al guardar la información ${ENDPOINT} `
+        );
+        return throwError(() => ERROR);
+      })
+    );
+  }
+}
