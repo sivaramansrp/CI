@@ -1,3 +1,4 @@
+import { OnDestroy, OnInit } from '@angular/core';
 import { AlertComponent } from '@libs/shared/data-access-user/src';
 import { COLONIA } from '../../constantes/solicitud.enum';
 import { Catalogo } from '@libs/shared/data-access-user/src';
@@ -14,8 +15,6 @@ import { InputFechaComponent } from '@libs/shared/data-access-user/src';
 import { MUNICIPIO_ALCALDIA } from '../../constantes/solicitud.enum';
 import { Notificacion } from '@libs/shared/data-access-user/src';
 import { NotificacionesComponent } from '@libs/shared/data-access-user/src';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
 import { Pedimento } from '@libs/shared/data-access-user/src';
 import { REGEX_ALFANUMERICO_CON_ESPACIOS_REEMPLAZAR } from '@libs/shared/data-access-user/src';
 import { REGEX_NUMEROS } from '@libs/shared/data-access-user/src';
