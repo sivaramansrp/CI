@@ -261,6 +261,13 @@ const ROUTES: Routes = [
       import('./tramites/30505/aviso-de-modificacion.module').then(
         (m) => m.AvisoDeModificacionModule)
   },
+   {
+    path: 'registros',
+    loadChildren: () =>
+      import('./tramites/30506/registro.module').then(
+        (m) => m.RegistroModule
+      ),
+  },
   {
       path: 'aviso-destruccion-mercancias',
     loadChildren: () => 

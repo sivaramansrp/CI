@@ -146,6 +146,7 @@
             [isDisabled]="esFormularioSoloLectura"
             (change)="setValoresStore()"
             [tooltipQuestionCircle]="true"
+            [tooltipQuestionCircleText]="'Régimen al que se destinará la mercancía'"
           ></app-catalogo-select>
         </div>
     
@@ -179,15 +180,16 @@
                     [tipoSeleccionTabla]="tipoSeleccionsoli"
                     [configuracionTabla]="configuracionColumnasoli"
                     [datos]="cuerpoTabla"
+                     (listaDeFilaSeleccionada)="seleccionTabla($event)"
                   ></app-tabla-dinamica> 
           </div>
         </div>
         @if(!esFormularioSoloLectura){
-        <div class="row my-5">
+        <div class="row">
           <div class="col-md-12 d-flex justify-content-end">
-            <button type="button" class="btn btn-default" [disabled]="!notificationCheck">Modificar</button>
-            <button type="button" class="btn btn-danger ms-3"[disabled]="!notificationCheck">Eliminar</button>
-            <button type="button" class="btn btn-primary ms-3" [disabled]="!notificationCheck">Agregar</button>
+            <button type="button" class="btn btn-default" [disabled]="!notificationCheck"  (click)="modificarMercancia()">Modificar</button>
+            <button type="button" class="btn btn-danger ms-3"[disabled]="!notificationCheck" (click)="eliminarMercancia()">Eliminar</button>
+            <button type="button" class="btn btn-primary ms-3" [disabled]="!notificationCheck" (click)="agregarMercancia()">Agregar</button>
           </div>
         </div>
       }
