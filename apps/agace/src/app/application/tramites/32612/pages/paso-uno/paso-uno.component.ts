@@ -11,6 +11,8 @@ export class PasoUnoComponent {
    * Esta variable se utiliza para almacenar el índice del subtítulo.
    */
   indice: number = 1;
+  procedureNumero: string = '32612';
+  procedureActivo: boolean = true;
 
   /**
    * Selecciona una pestaña por su índice y actualiza el índice de la pestaña actual.

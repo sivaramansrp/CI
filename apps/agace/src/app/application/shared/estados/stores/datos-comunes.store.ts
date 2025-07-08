@@ -177,7 +177,14 @@ export interface DatosComunesState {
      * El valor de protesta.
      */
     protesta: boolean;
-
+   /**
+    * El valor de cumpleCon.
+    */
+   cumpleCon: string;
+    /**
+     * El valor de acreditaRealizar.
+     */
+  acreditaRealizar: string;
 
 }
 
@@ -354,6 +361,14 @@ export function createInitialState(): DatosComunesState {
          * El valor de protesta.
          */
         protesta: false,
+        /**
+         * El valor de cumpleCon.
+         */
+        cumpleCon: '',
+        /**
+         * El valor de acreditaRealizar.
+         */
+        acreditaRealizar: '',
       };
 }
 
@@ -761,6 +776,26 @@ public setVinculacionRegistroCancelado(vinculacionRegistroCancelado: boolean): v
         this.update((state) => ({
             ...state,
             protesta,
+        }));
+    }
+    /**
+     * Establece el estado de cumpleCon.
+     * @param cumpleCon - El valor de cumpleCon.
+     */
+    public setCumpleCon(cumpleCon: string): void {
+        this.update((state) => ({
+            ...state,
+            cumpleCon,
+        }));
+    }
+    /**
+     * Establece el estado de acreditaRealizar.
+     * @param acreditaRealizar - El valor de acreditaRealizar.
+     */
+    public setAcreditaRealizar(acreditaRealizar: string): void {
+        this.update((state) => ({
+            ...state,
+            acreditaRealizar,
         }));
     }
 }

@@ -211,6 +211,139 @@ export const CONFIGURACION_COMERCIAL_CERTIFICADO = [
         valorPredeterminado: '',
         marginTop: 0,
         mostrar: false
+    },
+    {
+        id: 'correo',
+        row: 5,
+        labelNombre: '',
+        campo: 'correo',
+        clase: 'col-md-12',
+        tipoInput: 'text',
+        desactivado: false,
+        soloLectura: false,
+        validadores: [
+          {
+          tipo: 'required'
+          }
+        ],
+        marcadorDePosicion: '',
+        valorPredeterminado: '',
+        marginTop: 0,
+        mostrar: false
+    },
+    {
+        id: 'lada',
+        row: 6,
+        labelNombre: 'Lada',
+        campo: 'lada',
+        clase: 'col-md-2',
+        tipoInput: 'text',
+        desactivado: false,
+        soloLectura: false,
+        validadores: [
+          {
+          tipo: 'required'
+          }
+        ],
+        marcadorDePosicion: '',
+        valorPredeterminado: '',
+        marginTop: 0,
+        mostrar: false
+    },
+    {
+        id: 'telefonoUno',
+        row: 6,
+        labelNombre: 'Teléfono',
+        campo: 'telefonoUno',
+        clase: 'col-md-7',
+        tipoInput: 'text',
+        desactivado: false,
+        soloLectura: false,
+        validadores: [
+          {
+          tipo: 'required'
+          }
+        ],
+        marcadorDePosicion: '',
+        valorPredeterminado: '',
+        marginTop: 0,
+        mostrar: false
+    },
+      {
+        id: 'ladaDos',
+        row: 7,
+        labelNombre: 'Lada',
+        campo: 'ladaDos',
+        clase: 'col-md-2',
+        tipoInput: 'text',
+        desactivado: false,
+        soloLectura: false,
+        validadores: [
+          {
+          tipo: 'required'
+          }
+        ],
+        marcadorDePosicion: '',
+        valorPredeterminado: '',
+        marginTop: 2,
+        mostrar: false
+    },
+    {
+        id: 'telefonoDos',
+        row: 7,
+        labelNombre: 'Teléfono',
+        campo: 'telefonoDos',
+        clase: 'col-md-7',
+        tipoInput: 'text',
+        desactivado: false,
+        soloLectura: false,
+        validadores: [
+          {
+          tipo: 'required'
+          }
+        ],
+        marcadorDePosicion: '',
+        valorPredeterminado: '',
+        marginTop: 2,
+        mostrar: false
+    },
+    {
+        id: 'ladatres',
+        row: 8,
+        labelNombre: 'Lada',
+        campo: 'ladaTres',
+        clase: 'col-md-2',
+        tipoInput: 'text',
+        desactivado: false,
+        soloLectura: false,
+        validadores: [
+          {
+          tipo: 'required'
+          }
+        ],
+        marcadorDePosicion: '',
+        valorPredeterminado: '',
+        marginTop: 2,
+        mostrar: false
+    },
+    {
+        id: 'telefonoTres',
+        row: 8,
+        labelNombre: 'Teléfono',
+        campo: 'telefonoTres',
+        clase: 'col-md-7',
+        tipoInput: 'text',
+        desactivado: false,
+        soloLectura: false,
+        validadores: [
+          {
+          tipo: 'required'
+          }
+        ],
+        marcadorDePosicion: '',
+        valorPredeterminado: '',
+        marginTop: 2,
+        mostrar: false
     }
 
 ]

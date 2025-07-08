@@ -1,7 +1,7 @@
 import { AGREGAR_MIEMBRO_TABLA, DATOS_COMUNES_TEXTOS, DATOS_COMUNES_TEXTOS_DOS, Miembro } from '../../models/datos-comunes.model';
 import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, InputCheckComponent, InputRadioComponent, TablaDinamicaComponent, TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
-import { Component, Inject, OnDestroy, OnInit, TemplateRef } from '@angular/core';
+import { Component, Inject, Input, OnDestroy, OnInit, TemplateRef } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { DatosComunesState, DatosComunesStore } from '../../estados/stores/datos-comunes.store';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -41,6 +41,11 @@ import radio_si_no from '@libs/shared/theme/assets/json/31601/radio_si_no.json';
 })
 export class DatosComunesComponent implements OnInit, OnDestroy {
 
+  @Input() procedureNumero: string = '';
+  @Input() procedureActivo: boolean = false;
+  public datosComunesObj = {
+    tieneProcedure: { numero: '', activo: false }
+  }
   /**
    * Un grupo de formulario reactivo utilizado para gestionar y validar
    * los campos de datos comunes dentro del componente. Este grupo de
@@ -211,6 +216,8 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
     this.datosComunesQuery.selectSolicitud$.pipe(takeUntil(this.destroyNotifier$),map((seccionState) => {
       this.solicitudState = seccionState;
     })).subscribe();
+    this.datosComunesObj.tieneProcedure.numero = this.procedureNumero;
+    this.datosComunesObj.tieneProcedure.activo = this.procedureActivo;
     this.getComboBimestres();
     this.getSectorProductivoAgace();
     this.getServiciosAgace();
@@ -277,6 +284,8 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
       empPropios:[this.solicitudState?.empPropios,Validators.maxLength(8)],
       bimestre:[this.solicitudState?.bimestre],
       senaleSi: [this.solicitudState?.senaleSi, Validators.required],
+      cumpleCon: [this.solicitudState?.cumpleCon, Validators.required],
+      acreditaRealizar: [this.solicitudState?.acreditaRealizar, Validators.required],
       seMomento: [this.solicitudState?.seMomento, Validators.required],
       encuentra: [this.solicitudState?.encuentra, Validators.required],
       delMismo: [this.solicitudState?.delMismo, Validators.required],

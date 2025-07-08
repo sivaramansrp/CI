@@ -106,12 +106,33 @@ export class AgenteAduanalComponent implements OnInit,OnDestroy {
     });
   }
 
-  public seleccionarDatos(): void {
-      const VALOR = this.comercialCertificadoFormGroup.get('paginaElectronica')?.value;
-      const INDEX = this.comercialCertificadoDatos.findIndex(item => item.campo === 'pagina');
-      if (INDEX !== -1) {
-        this.comercialCertificadoDatos[INDEX] = VALOR === 'Si' ? { ...this.comercialCertificadoDatos[INDEX], mostrar: true } : { ...this.comercialCertificadoDatos[INDEX], mostrar: false };
-      }
+  public seleccionarDatos(CAMPOS: { campo: string, control: string }[] = [
+    { campo: 'pagina', control: 'paginaElectronica' },
+    { campo: 'correo', control: 'correoElectronico' },
+    { campo: 'telefonoUno', control: 'telefonoContacto' },
+    { campo: 'lada', control: 'telefonoContacto' },
+    { campo: 'telefonoDos', control: 'telefonoContacto' },
+    { campo: 'ladaDos', control: 'telefonoContacto' },
+    { campo: 'telefonoTres', control: 'telefonoContacto' },
+    { campo: 'ladaTres', control: 'telefonoContacto' }
+  ]): void {
+    if (!Array.isArray(this.comercialCertificadoDatos)) { return; }
+    if (!CAMPOS.length) { return; }
+
+    const [{ campo: CAMPO, control: CONTROL }, ...REST] = CAMPOS;
+    const CONTROL_VALUE = this.comercialCertificadoFormGroup.get(CONTROL)?.value;
+    const INDEX = this.comercialCertificadoDatos.findIndex((ITEM: Partial<ModeloDeFormaDinamica>) => ITEM.campo === CAMPO);
+
+    if (INDEX !== -1) {
+      this.comercialCertificadoDatos[INDEX] = {
+        ...this.comercialCertificadoDatos[INDEX],
+        mostrar: CONTROL_VALUE === 'Si'
+      };
+    }
+
+    if (REST.length) {
+      this.seleccionarDatos(REST);
+    }
   }
   
 

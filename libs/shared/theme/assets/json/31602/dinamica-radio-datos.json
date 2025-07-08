@@ -8,7 +8,7 @@
     "radio3": {
       "descripcion": "Indique si autorizo al S A T hacer pública su opinión positiva sobre el cumplimiento de obligaciones fiscales"
     },
-    "radio4": { "descripcion": "Señale si cuenta con empleados propios" },
+    "radio4": { "descripcion": "Señale si cuenta con empleados  propios para realizar el proceso productivo o la prestación de servicios, registrado ante el I M S S" },
     "radio5": {
       "descripcion": "Señale si al momento de ingresar su solicitud la empresa solicitante cuenta con trabajadores subcontratados en los términos y condiciones que establecen 12-A al 15- D de la Ley Federal de Trabajao"
     },
@@ -56,6 +56,33 @@
     },
     "radio20": {
       "descripcion": "Indique si sus proveedores están en el listado de empresas publicadas por el SAT, conforme al artículo 69-B, cuarto párrafo del CFF."
+    },
+    "radio21": {
+      "descripcion": "Cumple con la obligación de retener y enterar el I S R de los trabajadores"
+    },
+    "radio22": {
+      "descripcion": "Acredita realizar el pago de cuotas obrero patronales"
+    },
+    "radio23": {
+      "descripcion": " En su caso, acredita cumplir con el registro y estar en el padrón a que se refiere el artículo 15 de la LFT."
+    },
+    "radio24": {
+      "descripcion": "Señale si al momento de ingresar su solicitud se encuentra en el listado de empresas publicadas por el SAT en términos del artículo 69, con excepción de lo dispuesto en la fracción VI."
+    },
+    "radio25": {
+      "descripcion": "Del mismo modo indique si al momento de ingresar su solicitud se encuentra en el listado de empresas publicadas por el SAT en términos del artículo 69-B, cuarto párrafo del CFF."
+    },
+    "radio26": {
+      "descripcion": "Señale si se encuentra en el listado de empresas publicadas por el SAT en términos del artículo 69-B Bis noveno párrafo del CFF."
+    },
+    "radio27": {
+      "descripcion": "Señale si sus certificados de sellos digitales están vigentes."
+    },
+    "radio28": {
+      "descripcion": "En caso afirmativo señale si se infringió alguno de los supuestos previstos en el artículo 17-H Bis del CFF, durante los últimos doce meses."
+    },
+    "radio29": {
+      "descripcion": " Señale si tiene actualizado sus medios de contacto para efectos del buzón tributario en términos del penúltimo párrafo del artículo 17-K del CFF."
     }
   }
   

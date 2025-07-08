@@ -1,5 +1,6 @@
 <form [formGroup]="comunesDosForm">
-<div class="row mb-3">
+@if(!datosComunesObj?.tieneProcedure?.activo) {
+  <div class="row mb-3">
     <div class="col-md-6">
         <app-catalogo-select
             [placeholder]="'Seleccione un valor'"
@@ -141,6 +142,149 @@
           </label>
     </div>
 </div>
+} @else {
+  <div class="row">
+    <div class="col-md-12">
+        <label for="ensucaso"><span class="text-danger">*</span> {{dinamicaRadio.radio23.descripcion}}</label>
+        <div class="form-group">
+            <app-input-radio
+              [radioOptions]="opcionDeBotonDeRadio"
+              [isRequired]="true"
+              [layout]="'horizontal'"
+              [gap]="'493px'"
+              formControlName="ensucaso"
+              [isBold]="true"
+              [labelMargin]="'0px'"
+              [showDescription]="true"
+            ></app-input-radio>
+          </div>
+          @if(comunesDosForm.controls['ensucaso'].invalid && comunesDosForm.controls['ensucaso'].touched) {
+            <div class="mensaje-error">Este campo es obligatorio.</div>
+          }
+    </div>
+</div>
+  <div class="row">
+    <div class="col-md-12">
+        <label for="alMomento"><span class="text-danger">*</span> {{dinamicaRadio.radio24.descripcion}}</label>
+        <div class="form-group">
+            <app-input-radio
+              [radioOptions]="opcionDeBotonDeRadio"
+              [isRequired]="true"
+              [layout]="'horizontal'"
+              [gap]="'493px'"
+              formControlName="alMomento"
+              [isBold]="true"
+              [labelMargin]="'0px'"
+              [showDescription]="true"
+            ></app-input-radio>
+          </div>
+          @if(comunesDosForm.controls['alMomento'].invalid && comunesDosForm.controls['alMomento'].touched) {
+            <div class="mensaje-error">Este campo es obligatorio.</div>
+          }
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <label for="delMismomodo"><span class="text-danger">*</span> {{dinamicaRadio.radio25.descripcion}}</label>
+        <div class="form-group">
+            <app-input-radio
+              [radioOptions]="opcionDeBotonDeRadio"
+              [isRequired]="true"
+              [layout]="'horizontal'"
+              [gap]="'493px'"
+              formControlName="delMismomodo"
+              [isBold]="true"
+              [labelMargin]="'0px'"
+              [showDescription]="true"
+            ></app-input-radio>
+          </div>
+          @if(comunesDosForm.controls['delMismomodo'].invalid && comunesDosForm.controls['delMismomodo'].touched) {
+            <div class="mensaje-error">Este campo es obligatorio.</div>
+          } 
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <label for="encuentra"><span class="text-danger">*</span> {{dinamicaRadio.radio26.descripcion}}</label>
+        <div class="form-group">
+            <app-input-radio
+              [radioOptions]="opcionDeBotonDeRadio"
+              [isRequired]="true"
+              [layout]="'horizontal'"
+              [gap]="'493px'"
+              formControlName="encuentra"
+              [isBold]="true"
+              [labelMargin]="'0px'"
+              [showDescription]="true"
+            ></app-input-radio>
+          </div>
+          @if(comunesDosForm.controls['encuentra'].invalid && comunesDosForm.controls['encuentra'].touched) {
+            <div class="mensaje-error">Este campo es obligatorio.</div>
+          }
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <label for="susCertificados"><span class="text-danger">*</span> {{dinamicaRadio.radio27.descripcion}}</label>
+        <div class="form-group">
+            <app-input-radio
+              [radioOptions]="opcionDeBotonDeRadio"
+              [isRequired]="true"
+              [layout]="'horizontal'"
+              [gap]="'493px'"
+              formControlName="susCertificados"
+              [isBold]="true"
+              [labelMargin]="'0px'"
+              [showDescription]="true"
+            ></app-input-radio>
+          </div>
+          @if(comunesDosForm.controls['susCertificados'].invalid && comunesDosForm.controls['susCertificados'].touched) {
+            <div class="mensaje-error">Este campo es obligatorio.</div>
+          }
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <label for="afirmativo"><span class="text-danger">*</span> {{dinamicaRadio.radio28.descripcion}}</label>
+        <div class="form-group">
+            <app-input-radio
+              [radioOptions]="opcionDeBotonDeRadio"
+              [isRequired]="true"
+              [layout]="'horizontal'"
+              [gap]="'493px'"
+              formControlName="afirmativo"
+              [isBold]="true"
+              [labelMargin]="'0px'"
+              [showDescription]="true"
+            ></app-input-radio>
+          </div>
+          @if(comunesDosForm.controls['afirmativo'].invalid && comunesDosForm.controls['afirmativo'].touched) {
+            <div class="mensaje-error">Este campo es obligatorio.</div>
+          }
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <label for="actualizado"><span class="text-danger">*</span> {{dinamicaRadio.radio29.descripcion}}</label>
+        <div class="form-group">
+            <app-input-radio
+              [radioOptions]="opcionDeBotonDeRadio"
+              [isRequired]="true"
+              [layout]="'horizontal'"
+              [gap]="'493px'"
+              [isBold]="true"
+              formControlName="actualizado"
+              [labelMargin]="'0px'"
+              [showDescription]="true"
+            ></app-input-radio>
+          </div>
+          @if(comunesDosForm.controls['actualizado'].invalid && comunesDosForm.controls['actualizado'].touched) {
+            <div class="mensaje-error">Este campo es obligatorio.</div>
+          }
+    </div>
+</div>
+}
+
 <ng-titulo titulo="Querella"></ng-titulo>
 <div class="row">
     <div class="col-md-12">
@@ -163,7 +307,8 @@
           }
     </div>
 </div>
-<ng-titulo titulo="Controls Inventarios"></ng-titulo>
+@if(!datosComunesObj?.tieneProcedure?.activo) {
+  <ng-titulo titulo="Controls Inventarios"></ng-titulo>
 <div class="row">
     <div class="col-md-12">
         <label for="indiqueCuenta"><span class="text-danger">*</span> {{dinamicaRadio.radio16.descripcion}}</label>
@@ -269,6 +414,7 @@
           }
     </div>
 </div>
+}
 <div class="row mt-3">
     <div class="col-md-12">
         <label for="rmfRadio"><span class="text-danger">*</span> {{dinamicaRadio.radio18.descripcion}}</label>
