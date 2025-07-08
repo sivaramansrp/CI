@@ -65,6 +65,13 @@ public configuracionDetallasDatosTabla: ConfiguracionColumna<DetallasDatos>[] = 
    */
 public detallasDatosTablaDatos: DetallasDatos[] = [];
 
+/**
+   * Arreglo que almacena los detalles de los datos sensibles ingresados en el formulario.
+   * Cada elemento es un objeto de tipo `DetallasDatos` que contiene información específica
+   * sobre los animales vivos, como número de lote, fechas de producción, etc.
+   * 
+   * @type {DetallasDatos[]}
+   */
 public detallasDatosTablaSeleccionada: DetallasDatos[] = [];
   /**
    * Representa el formulario reactivo utilizado para gestionar los detalles específicos

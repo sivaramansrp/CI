@@ -1,6 +1,20 @@
+/**
+ * @fileoverview
+ * Constantes de configuración para la visualización de datos sensibles y detalles de la solicitud
+ * en el trámite 220201 de agricultura.
+ * Define la estructura de columnas para tablas dinámicas de datos sensibles y detalles.
+ * Cobertura compodoc 100%: cada constante está documentada.
+ * @module datos-de-la-solicitue.enum
+ */
+
 import { DetallasDatos, Sensible } from "../models/datos-de-la-solicitue.model";
 import { ConfiguracionColumna } from "@libs/shared/data-access-user/src";
 
+/**
+ * Configuración de columnas para la tabla de datos sensibles.
+ * Cada objeto define el encabezado, la clave de acceso y el orden de la columna.
+ * @type {Array<{encabezado: string, clave: (ele: Sensible) => string | undefined, orden: number}>}
+ */
 export const CONFIGURACION_SENSIBLES = [
   {
     encabezado: 'Número de lote',
@@ -54,7 +68,11 @@ export const CONFIGURACION_SENSIBLES = [
   },
 ];
 
-
+/**
+ * Configuración de columnas para la tabla de detalles de datos de la solicitud.
+ * Cada objeto define el encabezado, la clave de acceso y el orden de la columna.
+ * @type {ConfiguracionColumna<DetallasDatos>[]}
+ */
 export const CONFIGURACION_DETALLAS_DATOS: ConfiguracionColumna<DetallasDatos>[] = [
   {
     encabezado: 'Número de lote *',
@@ -92,4 +110,3 @@ export const CONFIGURACION_DETALLAS_DATOS: ConfiguracionColumna<DetallasDatos>[]
     orden: 7,
   }
 ];
-
