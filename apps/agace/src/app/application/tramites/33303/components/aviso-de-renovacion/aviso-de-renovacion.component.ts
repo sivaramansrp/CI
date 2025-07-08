@@ -105,6 +105,7 @@ export class AvisoDeRenovacionComponent implements OnInit, OnDestroy {
       .subscribe();
 
     this.actualizarEstado();
+    this.inicializarEstadoFormulario();
   }
 
   /**
@@ -175,6 +176,8 @@ export class AvisoDeRenovacionComponent implements OnInit, OnDestroy {
     this.actualizarEstado();
     if (this.esFormularioSoloLectura) {
       this.avisoForm.disable();
+      
+
       
     } else {
       this.avisoForm.enable();
