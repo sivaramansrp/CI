@@ -1,3 +1,4 @@
+import { EventEmitter, Output } from '@angular/core';
 import { AlertComponent } from '@libs/shared/data-access-user/src';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { BsModalService } from 'ngx-bootstrap/modal';
@@ -25,6 +26,7 @@ import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { REGEX_RFC } from '@libs/shared/data-access-user/src';
 import { ReactiveFormsModule } from '@angular/forms';
+import { SharedModalComponent } from '../../../tramites/31602/components/shared-modal/shared-modal.component';
 import { Subject } from 'rxjs';
 import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src';
@@ -55,7 +57,8 @@ import { takeUntil } from 'rxjs';
     TablaDinamicaComponent,
     InputRadioComponent,
     TituloComponent,
-    InputCheckComponent
+    InputCheckComponent,
+    SharedModalComponent
   ],
   templateUrl: './datos-comunes-dos.component.html',
   styleUrl: './datos-comunes-dos.component.scss',
@@ -167,6 +170,7 @@ export class DatosComunesDosComponent implements OnInit,OnDestroy {
    */
   public esFormularioSoloLectura: boolean = false;
 
+  @Output() radioChanged = new EventEmitter<{ controlName: string, value: unknown }>();
 
   /**
    * Constructor de la clase DatosComunesDosComponent.
@@ -427,6 +431,23 @@ export class DatosComunesDosComponent implements OnInit,OnDestroy {
   public setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof DatosComunesStore): void {
     const VALOR = form.get(campo)?.value;
     (this.datosComunesStore[metodoNombre] as (value: unknown) => void)(VALOR);
+
+          // List of radio control names (add all your radio formControlNames here)
+  const RADIO_CONTROLS = [
+    'encuentraSus',
+    'rmfRadio',
+    'vinculacionRegistroCancelado',
+    'proveedoresListadoSAT',
+    'ingresar',
+    'momentoIngresar',
+    'indiqueCuenta',
+    'contabilidad'
+    // Add more if needed
+  ];
+
+if (RADIO_CONTROLS.includes(campo)) {
+  this.radioChanged.emit({ controlName: campo, value: VALOR });
+}
   }
 
   /**

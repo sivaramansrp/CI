@@ -4,6 +4,7 @@ import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { Component, Inject, OnDestroy, OnInit, TemplateRef } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { DatosComunesState, DatosComunesStore } from '../../estados/stores/datos-comunes.store';
+import { EventEmitter, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject,map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
@@ -172,6 +173,9 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
    */
   public esFormularioSoloLectura: boolean = false;
 
+  @Output() radioChanged = new EventEmitter<{ controlName: string, value: unknown }>();
+
+  @Output() mostrarDatosPorRegimenChange = new EventEmitter<boolean>();
 
   /**
    * Constructor de la clase DatosComunesComponent.
@@ -452,7 +456,33 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
   public setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof DatosComunesStore): void {
     const VALOR = form.get(campo)?.value;
     (this.datosComunesStore[metodoNombre] as (value: unknown) => void)(VALOR);
+
+   if (campo === 'regimenUno') {
+    this.mostrarDatosPorRegimenChange.emit(Boolean(VALOR));
   }
+
+      // List of radio control names (add all your radio formControlNames here)
+  const RADIO_CONTROLS = [
+    'autorizacionIVAIEPS',
+    'encuentra',
+    'delMismo',
+    'enCaso',
+    'preOperativo',
+    'indiqueSi',
+    'senale',
+    'senaleSi',
+    'senaleMomento'
+    // Add more if needed
+  ];
+
+  if (RADIO_CONTROLS.includes(campo)) {
+    this.radioChanged.emit({ controlName: campo, value: VALOR });
+  }
+  }
+
+onRadioChanged(event: { controlName: string, value: unknown }):void {
+  this.radioChanged.emit(event); // Pass event up to parent
+}
 
   /**
    * Evalúa si se debe inicializar o cargar datos en el formulario.

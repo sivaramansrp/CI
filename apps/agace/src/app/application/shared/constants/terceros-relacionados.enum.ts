@@ -110,7 +110,7 @@ export const REPRESENTANTE_LEGAL = [
         campo: 'telefono',
         clase: 'col-md-4',
         tipoInput: 'text',
-        desactivado: true,
+        desactivado: false,
         soloLectura: false,
         validadores: [
             { tipo: '' }
@@ -124,7 +124,7 @@ export const REPRESENTANTE_LEGAL = [
         campo: 'correoElectronico',
         clase: 'col-md-4',
         tipoInput: 'text',
-        desactivado: true,
+        desactivado: false,
         soloLectura: false,
         validadores:[
             {

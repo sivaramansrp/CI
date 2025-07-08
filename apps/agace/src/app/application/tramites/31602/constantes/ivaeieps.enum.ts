@@ -127,6 +127,63 @@ export const PERMISO_A_DESISTIR_DOS = [
   }
 ];
 
+export const INVERSION_MONTO = [
+    {
+      id: 'tipoInversion',
+      labelNombre: 'Tipo de inversión',
+      campo: 'tipoInversion',
+      clase: 'col-md-6',
+      tipoInput: 'text',
+      desactivado: false,
+      soloLectura: false,
+      validadores: [
+        {
+          tipo: 'required'
+        }
+      ],
+      marcadorDePosicion: '',
+      valorPredeterminado: '',
+      marginTop: 0
+    },
+    {
+      id: 'valorPesos',
+      labelNombre: 'Valor en pesos',
+      campo: 'valorPesos',
+      clase: 'col-md-6',
+      tipoInput: 'text',
+      desactivado: false,
+      soloLectura: false,
+      validadores: [
+        {
+          tipo: 'required'
+        }
+      ],
+      marcadorDePosicion: '',
+      valorPredeterminado: '',
+      marginTop: 0
+    },
+    {
+      id: 'descGeneral',
+      labelNombre: 'Descripción general',
+      campo: 'descGeneral',
+      clase: 'col-md-6',
+      tipoInput: 'text',
+      desactivado: false,
+      soloLectura: false,
+      validadores: [
+        {
+          tipo: 'required'
+        }
+      ],
+      marcadorDePosicion: '',
+      valorPredeterminado: '',
+      marginTop: 0
+    },
+];
+
+
+export const INVERSION_TABLA = [];
+
 
 /**
  * Constante que define un conjunto de configuraciones para los permisos relacionados con la certificación
@@ -227,12 +284,30 @@ export const CONFIGURACION_IVAEIEPS_DOS = [
     marcador_de_posicion: '',
   },
   {
-    labelNombre: 'Que durante los últimos 12 meses anteriores en promedio contaron con más de 1,000 empleados registrados ante el IMSS Número de empleados ante el IMSS.',
+    labelNombre: 'Fecha inicio de operaciones bajo el régimen',
+    campo: 'fechaInicio',
+    clase: 'col-md-6',
+    tipoInput: 'date',
+    desactivado: false,
+    soloLectura: false,
+    marcador_de_posicion: '',
+  },
+  {
+    labelNombre: 'Que durante los últimos 12 meses anteriores en promedio contaron con más de 1,000 empleados registrados ante el IMSS.',
     campo: 'anteElImss',
     clase: 'col-md-12',
     tipoInput: 'checkbox',
     desactivado: false,
     marcador_de_posicion: '',
+  },
+  {
+    labelNombre: 'Número de empleados ante el IMSS',
+    campo: 'numeroEmpleados',
+    clase: 'col-md-6',
+    tipoInput: 'text',
+    desactivado: false,
+    soloLectura: false,
+    marcadorDePosicion: '',
   },
   {
     labelNombre: 'Que el valor de su maquinaria y equipo es superior a los 50,000,000 de pesos.',
@@ -241,7 +316,16 @@ export const CONFIGURACION_IVAEIEPS_DOS = [
     tipoInput: 'checkbox',
     desactivado: false,
     marcador_de_posicion: '',
-  }
+  },
+    {
+    labelNombre: 'Valor total de la maquinaria y equipo',
+    campo: 'valorMaquinaria',
+    clase: 'col-md-6',
+    tipoInput: 'text',
+    desactivado: false,
+    soloLectura: false,
+    marcadorDePosicion: '',
+  },
 ];
 
 /**

@@ -1,4 +1,18 @@
 <div class="row">
+       <form [formGroup]="inversionGrupo">
+        <div class="row mb-3">
+            <formas-dinamicas 
+                [formularioTitulo]="'Indica el monto aproximado de su inversión en territorio nacional.'"
+                [forma]="inversionFormGroup" 
+                [formularioDatos]="inversionFormDatos"
+                [estado]="solicitudState"
+                [soloLectura]="esFormularioSoloLectura"
+                (emitirCambioDeValor)="establecerCambioDeValor($event)"
+                >
+            </formas-dinamicas>
+        </div>
+    </form>
+    <!-- added top form  -->
     <form [formGroup]="delGrupo">
         <div class="row mb-3">
             <formas-dinamicas 

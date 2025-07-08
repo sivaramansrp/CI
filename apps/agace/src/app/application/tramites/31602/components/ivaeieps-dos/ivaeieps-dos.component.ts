@@ -19,6 +19,7 @@ import { Tramite31602Query } from '../../estados/queries/tramite31602.query';
 import { Tramite31602Store } from '../../estados/stores/tramite31602.store';
 import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
+import {INVERSION_MONTO} from '../../constantes/ivaeieps.enum';
 
 /**
  * Componente que representa la sección del formulario de IVA e IEPS para un trámite específico (31602).
@@ -39,6 +40,11 @@ export class IvaeiepsDosComponent implements OnInit, OnDestroy {
    * Por defecto es `false`, permitiendo que los campos del formulario sean editables.
    */
   @Input() esFormularioSoloLectura: boolean = false;
+
+
+  public inversionGrupo: FormGroup = new FormGroup({
+    inversionFormGroup: new FormGroup({}),
+  });
   /**
    * Una instancia de FormGroup que representa la estructura del formulario `delGrupo`.
    *
@@ -81,6 +87,8 @@ export class IvaeiepsDosComponent implements OnInit, OnDestroy {
    * del formulario relacionados con la funcionalidad "porcentajeMonto" en el componente.
    */
   public porcentajeMontoForm!: FormGroup;
+
+public inversionFormDatos = INVERSION_MONTO;
 
   /**
    * Representa los datos del formulario para el proceso "Permiso a Desistir" en el módulo de IVA e IEPS.
@@ -168,6 +176,10 @@ export class IvaeiepsDosComponent implements OnInit, OnDestroy {
       porcentaje: [''],
       monto: [''],
     });
+  }
+
+  get inversionFormGroup(): FormGroup {
+    return this.inversionGrupo.get('inversionFormGroup') as FormGroup;
   }
 
   /**

@@ -26,6 +26,46 @@ export class PasoUnoComponent implements OnInit,OnDestroy {
    */
   public consultaState!: ConsultaioState;
 
+public mostrarDatosPorRegimen = false;
+  mostrarPopup = false;
+  popupMessage = '';
+
+  readonly POPUP_TRIGGER_VALUES: Record<string, string> = {
+  preOperativo: 'No',
+  indiqueSi: 'No',
+  senale: 'No',
+  senaleSi: 'No',
+  senaleMomento: 'No',
+  ingresar: 'No',
+  indiqueCuenta: 'No',
+  contabilidad: 'No',
+  // Add more controls here that should trigger on "No"
+  // e.g. otroControl: 'No',
+  // All others will default to "Si"
+};
+
+  // Centralized popup messages for all radios (including those from child shared components)
+  readonly POPUP_MESSAGES: Record<string, string> = {
+    autorizacionIVAIEPS: 'la empresa ya cuenta con una solicitud previa bajo el esquema pre-operativo, por lo que no podrá solicitario nuevamente.',
+    preOperativo: 'Es un requisito obligatorio para acceder al Registro en el Esquema de Certificaión de Empresas, de conformidad con la regla 7.1.1. de las RGCE.',
+    indiqueSi: 'Es un requisito obligatorio para acceder al Registro en el Esquema de Certificaión de Empresas, de conformidad con la regla 7.1.1. de las RGCE.',
+    senale:'Es un requisito obligatorio el contar con algún tipo de empleado, ya sea propio o subcontratado para acceder al Registro en el Esquema de Certificaión de Empresas, de conformidad con la regla 7.1.1. de las RGCE.',
+    senaleSi:'Es un requisito obligatorio el contar con algún tipo de empleado, ya sea propio o subcontratado para acceder al Registro en el Esquema de Certificaión de Empresas, de conformidad con la regla 7.1.1. de las RGCE.',
+    encuentra: 'Es un requisito obligatorio para acceder al Registro en el Esquema de Certificaión de Empresas, de conformidad con la regla 7.1.1. de las RGCE.',
+    senaleMomento: 'Es un requisito obligatorio para acceder al Registro en el Esquema de Certificaión de Empresas, de conformidad con la regla 7.1.1. de las RGCE.',
+    delMismo: 'Es un requisito obligatorio para acceder al Registro en el Esquema de Certificaión de Empresas, de conformidad con la regla 7.1.1. de las RGCE.',
+    enCaso: 'Es un requisito obligatorio para acceder al Registro en el Esquema de Certificaión de Empresas, de conformidad con la regla 7.1.1. de las RGCE.',
+    ingresar: 'Es un requisito obligatorio para acceder al Registro en el Esquema de Certificaión de Empresas, de conformidad con la regla 7.1.1. de las RGCE.',
+    momentoIngresar: 'Es un requisito obligatorio para acceder al Registro en el Esquema de Certificaión de Empresas, de conformidad con la regla 7.1.1. de las RGCE.',
+    encuentraSus: 'Es un requisito obligatorio para acceder al Registro en el Esquema de Certificaión de Empresas, de conformidad con la regla 7.1.1. de las RGCE.',
+    rmfRadio: 'Es un requisito obligatorio para acceder al Registro en el Esquema de Certificaión de Empresas, de conformidad con la regla 7.1.1. de las RGCE.',
+    vinculacionRegistroCancelado: 'Es un requisito obligatorio para acceder al Registro en el Esquema de Certificaión de Empresas, de conformidad con la regla 7.1.1. de las RGCE.',
+    proveedoresListadoSAT: 'Es un requisito obligatorio para acceder al Registro en el Esquema de Certificaión de Empresas, de conformidad con la regla 7.1.1. de las RGCE.',
+    indiqueCuenta: 'Debe agregar por lo menos un control de inventarios.',
+    contabilidad: 'Es un requisito obligatorio para acceder al Registro en el Esquema de Certificaión de Empresas, de conformidad con la regla 7.1.1. de las RGCE.',
+    // Add more as needed
+  };
+
   /**
    * Construye una instancia de PasoUnoComponent.
    * @param comercioExteriorSvc - Servicio para manejar operaciones relacionadas con comercio exterior.
@@ -120,6 +160,19 @@ export class PasoUnoComponent implements OnInit,OnDestroy {
       });
     })
   }
+
+  onRadioChanged(event: { controlName: string, value: unknown }): void {
+  // Use the trigger value from the map, default to "Si"
+  const TRIGGER_VALUE = this.POPUP_TRIGGER_VALUES[event.controlName] || 'Si';
+  if (event.value === TRIGGER_VALUE && this.POPUP_MESSAGES[event.controlName]) {
+    this.popupMessage = this.POPUP_MESSAGES[event.controlName];
+    this.mostrarPopup = true;
+  }
+  }
+
+cerrarPopup():void {
+  this.mostrarPopup = false;
+}
 
   /**
    * Método del ciclo de vida que se llama cuando el componente es destruido.

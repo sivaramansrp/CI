@@ -174,6 +174,20 @@ export class FederalDeTrabajaoComponent implements OnInit, OnDestroy {
     }
   }
 
+onAceptar(): void {
+  if (this.numeroDeEmpleadosForm.invalid) {
+    // Mark all controls as touched to show validation errors
+    this.numeroDeEmpleadosForm.markAllAsTouched();
+    return; // Do not close the modal
+  }
+  this.modalRef?.hide(); // Only close if valid
+}
+
+onCancelar(): void {
+  this.numeroDeEmpleadosForm.reset();
+  this.modalRef?.hide();
+}
+
   /**
    * Hook del ciclo de vida que se llama cuando el componente es destruido.
    * Limpia las suscripciones para prevenir fugas de memoria.
