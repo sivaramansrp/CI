@@ -4,13 +4,14 @@
 <form [formGroup]="manifiestosRepresentanteForm">
     <div class="form-check bg-light p-0">
         <div class="alert alert-info content-with-checkbox py-6">
+          <div class="checkbox-wrapper"></div>
           <input
             formControlName="manifests"
             type="checkbox"
             id="manifiesto"
             [disabled]="formularioDeshabilitado ? true : false"
           />
-          <span class="fw-bold align-middle pt-2"> *</span>
+          <span class="fw-bold align-middle">*</span>
           <div>{{ manifiestosText }} </div>
           <div *ngIf="hasError('manifests', 'required')" class="text-danger mt-1">
             Debe aceptar el manifiesto.
@@ -25,7 +26,7 @@
         <app-input-radio
         [radioOptions]="informacionConfidencialRadioOption"
         [isRequired]="true"
-        [layout]="'vertical'"
+        [layout]="'horizontal'"
         [gap]="'50px'"
         formControlName="informacionConfidencialRadio"
       ></app-input-radio>

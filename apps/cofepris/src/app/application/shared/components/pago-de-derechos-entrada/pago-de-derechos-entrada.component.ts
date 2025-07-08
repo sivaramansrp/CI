@@ -331,11 +331,32 @@ export class PagoDeDerechosEntradaComponent implements OnInit, OnDestroy {
  * @param nuevo_valor Nuevo valor de la fecha final.
 
  */
+fechaFuturaSeleccionada = false;
   cambioFechaDePago(nuevo_valor: string): void {
     this.pagoDerechos.patchValue({
       fechaDePago: nuevo_valor,
     });
-    this.permisoImportacionBiologicaStore.setFechaDePago(nuevo_valor);
+   this.permisoImportacionBiologicaStore.setFechaDePago(nuevo_valor);
+  this.pagoDerechos.get('fechaDePago')?.setValue(nuevo_valor);
+
+  let seleccionada: Date | null = null;
+  if (nuevo_valor && nuevo_valor.includes('/')) {
+    const [DAY, MONTH, YEAR] = nuevo_valor.split('/').map(Number);
+    seleccionada = new Date(YEAR, MONTH - 1, DAY);
+  } else {
+    seleccionada = new Date(nuevo_valor); 
+  }
+
+  const HOY = new Date();
+  HOY.setHours(0, 0, 0, 0);
+
+  if (seleccionada && seleccionada > HOY) {
+    this.fechaFuturaSeleccionada = true;
+    this.pagoDerechos.get('fechaDePago')?.setErrors({ futureDate: true });
+  } else {
+    this.fechaFuturaSeleccionada = false;
+    this.pagoDerechos.get('fechaDePago')?.setErrors(null);
+  }
   }
 
    /**
