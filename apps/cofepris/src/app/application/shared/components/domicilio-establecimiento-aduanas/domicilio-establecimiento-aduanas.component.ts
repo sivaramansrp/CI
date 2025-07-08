@@ -1,7 +1,7 @@
+import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren, } from '@angular/core';
 import { AvisocalidadStore, SolicitudState } from '../../estados/stores/aviso-calidad.store';
 import { CROSLISTA_DE_PAISES, INPUT_FECHA_CADUCIDAD_CONFIG, } from '../../constantes/datos-domicilio-legal.enum';
 import { Catalogo, CatalogoSelectComponent, ConfiguracionColumna, CrossListLable, CrosslistComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
-import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren, } from '@angular/core';
 import { DATOS_MERCANCIAS, MercanciasInfo, NICO_TABLA, NicoInfo, } from '../../models/datos-domicilio-legal.model';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators, } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
@@ -255,16 +255,16 @@ export class DomicilioEstablecimientoAduanasComponent implements OnInit, OnDestr
   * Etiqueta de la lista de fechas.
   * */
   public paisDeOrigenLabel: CrossListLable = {
-    tituluDeLaIzquierda: 'País de origen:',
-    derecha: 'País(es) seleccionado(s)*:',
+    tituluDeLaIzquierda: 'País de origen',
+    derecha: 'País(es) seleccionado(s)*',
   };
 
   /**
     * Etiqueta de la lista de fechas.
     * */
   public paisDeProcedenciaLabel: CrossListLable = {
-    tituluDeLaIzquierda: 'País de procedencia:',
-    derecha: 'País(es) seleccionado(s)*:',
+    tituluDeLaIzquierda: 'País de procedencia',
+    derecha: 'País(es) seleccionado(s)*',
   };
 
  /**
@@ -365,18 +365,18 @@ export class DomicilioEstablecimientoAduanasComponent implements OnInit, OnDestr
      */ 
     this.formMercancias = this.fb.group({
       nombreComercial: [this.solicitudState?.nombreComercial, [Validators.required,Validators.maxLength(1000)]],
-      nombreComun: [this.solicitudState?.nombreComun, Validators.required],
-      nombreCientifico: [this.solicitudState?.nombreCientifico, Validators.required],
-      usoEspecifico: [this.solicitudState?.usoEspecifico, Validators.required],
+      nombreComun: [this.solicitudState?.nombreComun,[Validators.required,Validators.maxLength(256)]],
+      nombreCientifico: [this.solicitudState?.nombreCientifico, [Validators.required, Validators.maxLength(256)]],
+      usoEspecifico: [this.solicitudState?.usoEspecifico, [Validators.required, Validators.maxLength(5000)]],
       estadofisico: [this.solicitudState?.estadoFisico, Validators.required],
-      fraccionArancelaria: [this.solicitudState?.fraccionArancelaria, Validators.required],
+      fraccionArancelaria: [this.solicitudState?.fraccionArancelaria, [Validators.required, Validators.maxLength(8)]],
       descripcionFraccion: [{ value: this.solicitudState?.descripcionFraccion, disabled: true }, Validators.required],
-      cantidadUMT: [this.solicitudState?.cantidadUMT, Validators.required],
+      cantidadUMT: [this.solicitudState?.cantidadUMT, [Validators.required, Validators.maxLength(20)]],
       UMT: [{ value: this.solicitudState?.UMT, disabled: true }, Validators.required],
-      cantidadUMC: [this.solicitudState?.cantidadUMC, Validators.required],
+      cantidadUMC: [this.solicitudState?.cantidadUMC, [Validators.required, Validators.maxLength(20)]],
       UMC: [this.solicitudState?.UMC, Validators.required],
-      numerocas: [this.solicitudState?.numeroCas, Validators.required],
-      porcentajeConcentracion: [this.solicitudState?.porcentajeConcentracion, Validators.required],
+      numerocas: [this.solicitudState?.numeroCas,[Validators.required, Validators.maxLength(20)]],
+      porcentajeConcentracion: [this.solicitudState?.porcentajeConcentracion,[ Validators.required, Validators.maxLength(100)]],
       clasificacionToxicologica: [this.solicitudState?.clasificacionToxicologica, Validators.required],
       objetoImportacion: [this.solicitudState?.objetoImportacion, Validators.required],
     });

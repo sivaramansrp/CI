@@ -124,6 +124,36 @@
       </button>
     </div>
   </div>
+    <div class="row align-item-center">
+      <div class="col-md-4 mt-5">
+        <lib-input-check
+          [label]="'Aviso de funcionamiento:'"
+          [id]="'avisoCheckbox'"
+          [required]="true"
+          formControlName="avisoCheckbox"
+          [isDisabled]="esFormularioSoloLectura"
+          (change)="setValoresStore(domicilio, 'avisoCheckbox', 'setAvisoCheckbox')"
+        ></lib-input-check>
+      </div>
+      <div class="col-md-4">
+        <div class="form-group">
+          <label class="form-label" for="licenciaSanitaria">No. de licencia sanitaria:
+            <span class="bi bi-question-circle-fill" title="No. de licencia sanitaria"
+              data-bs-toggle="tooltip"></span></label>
+          <input class="form-control" id="licenciaSanitaria" placeholder="" type="text"
+            formControlName="licenciaSanitaria" 
+            (change)="setValoresStore(domicilio, 'licenciaSanitaria', 'setLicenciaSanitaria')" 
+            />
+        </div>
+        @if(domicilio.controls['licenciaSanitaria'].invalid && domicilio.controls['licenciaSanitaria'].touched) {
+          <div class="d-grid">
+            @if(domicilio.controls['licenciaSanitaria'].errors?.['maxlength']) {
+              <span class="mensaje-error">No puede tener más de 20 caracteres</span>
+            }          
+          </div>
+        }
+      </div>
+    </div>
   <div class="row">
     <crosslist [fechas]="seleccionarOrigenDelPais" [label]="aduanasDeLabel" [botones]="paisDeProcedenciaBotones"
       [isDisabled]="esFormularioSoloLectura ? true : false">
@@ -202,7 +232,7 @@
          <ng-titulo titulo="Identificación del producto"></ng-titulo> 
           <div class="form-group">
             <label for="nombreComercial">Nombre comercial* :</label>
-            <input type="text" id="nombreComercial" formControlName="nombreComercial" class="form-control"
+            <input type="text" id="nombreComercial" formControlName="nombreComercial" class="form-control" maxlength="1000"
               (change)="setValoresStore(formMercancias, 'nombreComercial', 'setNombreComercial')" />
             <div class="d-grid">
               <div *ngIf="formMercancias.get('nombreComercial')?.touched">
@@ -214,7 +244,7 @@
           </div>
           <div class="form-group">
             <label for="nombreComun">Nombre común* :</label>
-            <input type="text" id="nombreComun" formControlName="nombreComun" class="form-control"
+            <input type="text" id="nombreComun" formControlName="nombreComun" class="form-control" maxlength="256"
               (change)="setValoresStore(formMercancias, 'nombreComun', 'setNombreComun')" />
             <div class="d-grid">
               <div *ngIf="formMercancias.get('nombreComun')?.touched">
@@ -226,7 +256,7 @@
           </div>
           <div class="form-group">
             <label for="nombreCientifico">Nombre científico* :</label>
-            <input type="text" id="nombreCientifico" formControlName="nombreCientifico" class="form-control"
+            <input type="text" id="nombreCientifico" formControlName="nombreCientifico" class="form-control" maxlength="256"
               (change)="setValoresStore(formMercancias, 'nombreCientifico', 'setNombreCientifico')" />
             <div class="d-grid">
               <div *ngIf="formMercancias.get('nombreCientifico')?.touched">
@@ -238,7 +268,7 @@
           </div>
           <div class="form-group">
             <label for="usoEspecifico" class="form-label text-start">Uso específico* :</label>
-            <textarea id="usoEspecifico" class="form-control" formControlName="usoEspecifico"
+            <textarea id="usoEspecifico" class="form-control" formControlName="usoEspecifico" maxlength="5000"
               (change)="setValoresStore(formMercancias, 'usoEspecifico', 'setUsoEspecifico')"></textarea>
             <div class="d-grid">
               <div *ngIf="formMercancias.get('usoEspecifico')?.touched">
@@ -263,7 +293,7 @@
               data-bs-toggle="tooltip"
               ></span>
             </label>
-            <input type="text" id="fraccionArancelaria" formControlName="fraccionArancelaria" class="form-control"
+            <input type="text" id="fraccionArancelaria" formControlName="fraccionArancelaria" class="form-control" maxlength="8"
               (change)="setValoresStore(formMercancias, 'fraccionArancelaria', 'setFraccionArancelaria');onFraccionChange()" />
             <div class="d-grid">
               <div *ngIf="formMercancias.get('fraccionArancelaria')?.touched">
@@ -288,7 +318,7 @@
           <div class="form-group row">
             <div class="col-md-6">
               <label for="cantidadUMT">Cantidad UMT * :</label>
-              <input type="text" id="cantidadUMT" formControlName="cantidadUMT" class="form-control"
+              <input type="text" id="cantidadUMT" formControlName="cantidadUMT" class="form-control" maxlength="20"
                 (change)="setValoresStore(formMercancias, 'cantidadUMT', 'setCantidadUMT')" />
               <div class="d-grid">
                 <div *ngIf="formMercancias.get('cantidadUMT')?.touched">
@@ -320,7 +350,7 @@
             <div class="col-md-6">
               <div class="form-group">
                 <label for="cantidadUMC">Cantidad UMC * :</label>
-                <input type="text" id="cantidadUMC" formControlName="cantidadUMC" class="form-control"
+                <input type="text" id="cantidadUMC" formControlName="cantidadUMC" class="form-control" maxlength="20"
                   (change)="setValoresStore(formMercancias, 'cantidadUMC', 'setCantidadUMC')" />
                 <div class="d-grid">
                   <div *ngIf="formMercancias.get('cantidadUMC')?.touched">
@@ -341,7 +371,7 @@
           </div>
           <div class="form-group">
             <label for="numerocas">Número CAS * :</label>
-            <input type="text" id="numerocas" formControlName="numerocas" class="form-control"
+            <input type="text" id="numerocas" formControlName="numerocas" class="form-control" maxlength="20"
               (change)="setValoresStore(formMercancias, 'numerocas', 'setNumerocas')" />
             <div class="d-grid">
               <div *ngIf="formMercancias.get('numerocas')?.touched">
@@ -353,7 +383,7 @@
           </div>
           <div class="form-group">
             <label for="porcentajeConcentracion">Porcentaje de concentración * :</label>
-            <input type="text" id="porcentajeConcentracion" formControlName="porcentajeConcentracion"
+            <input type="text" id="porcentajeConcentracion" formControlName="porcentajeConcentracion" maxlength="100"
               class="form-control"
               (change)="setValoresStore(formMercancias, 'porcentajeConcentracion', 'setPorcentajeConcentracion')" />
             <div class="d-grid">
