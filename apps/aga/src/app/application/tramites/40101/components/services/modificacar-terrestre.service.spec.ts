@@ -77,7 +77,6 @@ describe('modificarTerrestreService', () => {
   });
 
   afterEach(() => {
-    // Verify that no unmatched requests are outstanding
     httpMock.verify();
     jest.clearAllMocks();
   });
@@ -98,7 +97,7 @@ describe('modificarTerrestreService', () => {
 
   describe('obtenerTipoDeVehiculo', () => {
     it('should return observable with CatalogoLista data', () => {
-      // Execute
+      
       service.obtenerTipoDeVehiculo().subscribe(data => {
         expect(data).toEqual(mockCatalogoLista);
         expect(data.datos).toHaveLength(3);
@@ -106,12 +105,10 @@ describe('modificarTerrestreService', () => {
         expect(data.datos[0].descripcion).toBe('Tracto Camión');
       });
 
-      // Verify HTTP request
       const req = httpMock.expectOne('assets/json/40101/tipo-vehiculo-arrastre.json');
       expect(req.request.method).toBe('GET');
       expect(req.request.url).toBe('assets/json/40101/tipo-vehiculo-arrastre.json');
       
-      // Respond with mock data
       req.flush(mockCatalogoLista);
     });
 
@@ -196,10 +193,8 @@ describe('modificarTerrestreService', () => {
           {
             id: 1,
             descripcion: 'Tracto Camión'
-            // Missing valor and activo properties
           }
         ]
-        // Missing total and mensaje properties
       };
 
       service.obtenerTipoDeVehiculo().subscribe(data => {
@@ -215,19 +210,16 @@ describe('modificarTerrestreService', () => {
     it('should handle multiple consecutive calls', () => {
       let callCount = 0;
 
-      // First call
       service.obtenerTipoDeVehiculo().subscribe(data => {
         callCount++;
         expect(data).toEqual(mockCatalogoLista);
       });
 
-      // Second call
       service.obtenerTipoDeVehiculo().subscribe(data => {
         callCount++;
         expect(data).toEqual(mockCatalogoLista);
       });
 
-      // Fulfill both requests
       const requests = httpMock.match('assets/json/40101/tipo-vehiculo-arrastre.json');
       expect(requests.length).toBe(2);
       
@@ -376,19 +368,16 @@ describe('modificarTerrestreService', () => {
       let firstCallCompleted = false;
       let secondCallCompleted = false;
 
-      // First concurrent call
       service.obtenerPedimentoTabla().subscribe(data => {
         expect(data).toEqual(mockVehiculoTabla);
         firstCallCompleted = true;
       });
 
-      // Second concurrent call
       service.obtenerPedimentoTabla().subscribe(data => {
         expect(data).toEqual(mockVehiculoTabla);
         secondCallCompleted = true;
       });
 
-      // Fulfill both requests
       const requests = httpMock.match('assets/json/40101/vahiculo-dummy.json');
       expect(requests.length).toBe(2);
       
@@ -406,7 +395,6 @@ describe('modificarTerrestreService', () => {
       let catalogoSuccess = false;
       let vehiculoError = false;
 
-      // Successful catalog request
       service.obtenerTipoDeVehiculo().subscribe({
         next: (data) => {
           expect(data).toEqual(mockCatalogoLista);
@@ -415,7 +403,6 @@ describe('modificarTerrestreService', () => {
         error: () => fail('Should not error')
       });
 
-      // Failed vehicle table request
       service.obtenerPedimentoTabla().subscribe({
         next: () => fail('Should error'),
         error: (error) => {
@@ -424,7 +411,6 @@ describe('modificarTerrestreService', () => {
         }
       });
 
-      // Fulfill requests
       const catalogoReq = httpMock.expectOne('assets/json/40101/tipo-vehiculo-arrastre.json');
       catalogoReq.flush(mockCatalogoLista);
 
@@ -436,7 +422,6 @@ describe('modificarTerrestreService', () => {
     });
 
     it('should maintain service state across multiple calls', () => {
-      // Verify service doesn't maintain internal state that could cause issues
       service.obtenerTipoDeVehiculo().subscribe();
       service.obtenerPedimentoTabla().subscribe();
       service.obtenerTipoDeVehiculo().subscribe();
@@ -444,7 +429,6 @@ describe('modificarTerrestreService', () => {
       const requests = httpMock.match(() => true);
       expect(requests.length).toBe(3);
 
-      // Each request should be independent
       requests.forEach((req, index) => {
         if (index === 0 || index === 2) {
           expect(req.request.url).toBe('assets/json/40101/tipo-vehiculo-arrastre.json');
@@ -491,7 +475,6 @@ describe('modificarTerrestreService', () => {
     it('should handle rapid successive calls efficiently', () => {
       const startTime = performance.now();
       
-      // Make 10 rapid calls
       for (let i = 0; i < 10; i++) {
         service.obtenerTipoDeVehiculo().subscribe();
       }
@@ -502,7 +485,7 @@ describe('modificarTerrestreService', () => {
       requests.forEach(req => req.flush(mockCatalogoLista));
 
       const endTime = performance.now();
-      expect(endTime - startTime).toBeLessThan(100); // Should complete quickly
+      expect(endTime - startTime).toBeLessThan(100);
     });
   });
 });

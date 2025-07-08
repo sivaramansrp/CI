@@ -310,9 +310,6 @@ describe('DatosDeChoferesExtranjerosDialogComponent', () => {
 
     it('should reset form with default values', () => {
       component.resetForm();
-
-    //   expect(component.formChoferes.get('curp')?.value).toBe('');
-    //   expect(component.formChoferes.get('rfc')?.value).toBe('');
       expect(component.formChoferes.get('pais')?.value).toBe(1);
       expect(component.formChoferes.get('paisDeResidencia')?.value).toBe('1');
     });
@@ -337,7 +334,6 @@ describe('DatosDeChoferesExtranjerosDialogComponent', () => {
       const addModalEventSpy = jest.spyOn(component.addModalEvent, 'emit');
       const closeModalSpy = jest.spyOn(component, 'closeModal').mockImplementation();
       
-      // Set valid form data
       component.formChoferes.patchValue({
         numero: '12345',
         primerApellido: 'Test',
@@ -358,7 +354,6 @@ describe('DatosDeChoferesExtranjerosDialogComponent', () => {
     });
 
     it('should show alert when form is invalid', () => {
-      // Make form invalid by clearing required fields
       component.formChoferes.get('numero')?.setValue('');
       component.formChoferes.get('primerApellido')?.setValue('');
 
@@ -407,8 +402,8 @@ describe('DatosDeChoferesExtranjerosDialogComponent', () => {
         estado: '1',
         calle: 'Test Street',
         numeroExterior: '123',
-        pais: '999', // Non-existent ID
-        paisDeResidencia: '999', // Non-existent ID
+        pais: '999',
+        paisDeResidencia: '999',
         ciudad: 'Test City'
       });
 
@@ -473,24 +468,6 @@ describe('DatosDeChoferesExtranjerosDialogComponent', () => {
       await component.ngOnInit();
     });
 
-    // it('should handle errors in paisListData', async () => {
-    //   mockChofer40102Service.getPaisEmisor.mockReturnValue(throwError(() => new Error('Service error')));
-      
-    //   await component.paisListData();
-      
-    //   expect(component.paisList).toEqual([]);
-    // });
-
-    // it('should handle errors in fetchEstadosByPais', async () => {
-    //   mockChofer40102Service.getEstadosPorPais.mockReturnValue(throwError(() => new Error('Service error')));
-    //   const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
-      
-    //   const result = await (component as any).fetchEstadosByPais(mockPaises[0]);
-      
-    //   expect(consoleSpy).toHaveBeenCalledWith('Error al obtener estados por país:', expect.any(Error));
-    //   expect(result).toEqual([]);
-    // });
-
     it('should handle errors in fetchMunicipiosByEstado', async () => {
       mockChofer40102Service.getMunicipiosPorEstado.mockReturnValue(throwError(() => new Error('Service error')));
       const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
@@ -511,30 +488,6 @@ describe('DatosDeChoferesExtranjerosDialogComponent', () => {
       expect(result).toEqual([]);
     });
   });
-
-//   describe('updateListsData', () => {
-//     beforeEach(async () => {
-//       await component.ngOnInit();
-//       component.paisList = mockPaises;
-//     });
-
-//     it('should update pais with correct ID', () => {
-//       const testData = { ...mockChoferData };
-      
-//       (component as any).updateListsData(testData);
-
-//       expect(testData.pais).toBe('1');
-//     });
-
-//     it('should handle missing pais in catalog', () => {
-//       const testData = { ...mockChoferData, pais: 'NonExistent Country' };
-      
-//       (component as any).updateListsData(testData);
-
-//       // Should remain unchanged if not found
-//       expect(testData.pais).toBe('NonExistent Country');
-//     });
-//   });
 
   describe('ngOnDestroy', () => {
     it('should complete destroyed$ subject', () => {
@@ -575,11 +528,5 @@ describe('DatosDeChoferesExtranjerosDialogComponent', () => {
       
       expect(component.paisList).toEqual([]);
     });
-
-    // it('should handle undefined datosDeChofere', async () => {
-    //   component.datosDeChofere = undefined as any;
-      
-    //   await expect(component.ngOnInit()).resolves.not.toThrow();
-    // });
   });
 });

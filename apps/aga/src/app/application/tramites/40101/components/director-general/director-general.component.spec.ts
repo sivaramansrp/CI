@@ -109,12 +109,10 @@ describe('DirectorGeneralComponent', () => {
 
   describe('Consultaio State Subscription - Selected Logic', () => {
     beforeEach(() => {
-      // Setup component before each test in this describe block
       component.ngOnInit();
     });
 
     afterEach(() => {
-      // Cleanup after each test in this describe block
       if (component.destroyNotifier$ && !component.destroyNotifier$.closed) {
         component.destroyNotifier$.next();
         component.destroyNotifier$.complete();
@@ -122,80 +120,59 @@ describe('DirectorGeneralComponent', () => {
     });
 
     it('should disable form when consultaio state changes to readonly and handle form not being initialized yet', () => {
-      // Setup a subject to control when state changes are emitted
       const consultaioStateSubject = new Subject<any>();
       mockConsultaioQuery.selectConsultaioState$ = consultaioStateSubject.asObservable();
 
-      // Re-initialize component with new observable
       component.ngOnDestroy();
       component.ngOnInit();
 
-      // Verify form is created and initially enabled
       expect(component.directorGeneralForm).toBeDefined();
       expect(component.directorGeneralForm.enabled).toBeTruthy();
 
-      // Emit a readonly state change
       const readonlyState = { readonly: true, update: false, solicitudId: '12345' };
       consultaioStateSubject.next(readonlyState);
 
-      // Verify the form is now disabled
       expect(component.directorGeneralForm.disabled).toBeTruthy();
 
-      // Test that the subscription only disables when readonly is true
       const nonReadonlyState = { readonly: false, update: true, solicitudId: '12345' };
       consultaioStateSubject.next(nonReadonlyState);
 
-      // Form should remain disabled (the logic only disables, doesn't re-enable)
       expect(component.directorGeneralForm.disabled).toBeTruthy();
 
-      // Test edge case: undefined readonly property
       const undefinedReadonlyState = { update: true, solicitudId: '12345' };
       consultaioStateSubject.next(undefinedReadonlyState);
 
-      // Form should remain disabled (no action taken when readonly is undefined)
       expect(component.directorGeneralForm.disabled).toBeTruthy();
 
-      // Test edge case: null state
       consultaioStateSubject.next(null);
 
-      // Should not throw error and form should remain disabled
       expect(component.directorGeneralForm.disabled).toBeTruthy();
 
-      // Cleanup
       consultaioStateSubject.complete();
     });
 
     it('should handle consultaio state emission before form is created', () => {
-      // Setup subscription but don't create form yet
       const consultaioStateSubject = new Subject<any>();
       mockConsultaioQuery.selectConsultaioState$ = consultaioStateSubject.asObservable();
 
-      // Mock crearFormularioDirectorGeneral to delay form creation
       const originalCrearFormulario = component.crearFormularioDirectorGeneral;
       let formCreated = false;
       component.crearFormularioDirectorGeneral = jest.fn().mockImplementation(() => {
-        // Don't create form immediately
         formCreated = false;
       });
 
-      // Re-initialize component
       component.ngOnDestroy();
       component.ngOnInit();
 
-      // Emit readonly state before form is created
       consultaioStateSubject.next({ readonly: true });
 
-      // Should not throw error even though form doesn't exist yet
       expect(() => consultaioStateSubject.next({ readonly: true })).not.toThrow();
 
-      // Now create the form
       originalCrearFormulario.call(component);
       formCreated = true;
 
-      // Emit readonly state after form is created
       consultaioStateSubject.next({ readonly: true });
 
-      // Form should now be disabled
       expect(component.directorGeneralForm.disabled).toBeTruthy();
 
       consultaioStateSubject.complete();
@@ -205,25 +182,19 @@ describe('DirectorGeneralComponent', () => {
       const consultaioStateSubject = new Subject<any>();
       mockConsultaioQuery.selectConsultaioState$ = consultaioStateSubject.asObservable();
 
-      // Re-initialize component with new observable
       component.ngOnDestroy();
       component.ngOnInit();
 
-      // Emit state change - should work
       consultaioStateSubject.next({ readonly: true });
       expect(component.directorGeneralForm.disabled).toBeTruthy();
 
-      // Trigger destroy
       component.destroyNotifier$.next();
 
-      // Reset form to enabled to test if subscription is still active
       component.directorGeneralForm.enable();
       expect(component.directorGeneralForm.enabled).toBeTruthy();
 
-      // Emit state change after destroy - should not affect form
       consultaioStateSubject.next({ readonly: true });
 
-      // Form should remain enabled (subscription should be unsubscribed)
       expect(component.directorGeneralForm.enabled).toBeTruthy();
 
       consultaioStateSubject.complete();
@@ -233,20 +204,16 @@ describe('DirectorGeneralComponent', () => {
       const consultaioStateSubject = new Subject<any>();
       mockConsultaioQuery.selectConsultaioState$ = consultaioStateSubject.asObservable();
 
-      // Re-initialize component
       component.ngOnDestroy();
       component.ngOnInit();
 
-      // Emit valid state first
       consultaioStateSubject.next({ readonly: false });
       expect(component.directorGeneralForm.enabled).toBeTruthy();
 
-      // Emit error - should not crash the component
       expect(() => {
         consultaioStateSubject.error(new Error('Observable error'));
       }).not.toThrow();
 
-      // Form should still exist and be functional
       expect(component.directorGeneralForm).toBeDefined();
     });
 
@@ -254,17 +221,14 @@ describe('DirectorGeneralComponent', () => {
       const consultaioStateSubject = new Subject<any>();
       mockConsultaioQuery.selectConsultaioState$ = consultaioStateSubject.asObservable();
 
-      // Re-initialize component
       component.ngOnDestroy();
       component.ngOnInit();
 
-      // Emit rapid state changes
       consultaioStateSubject.next({ readonly: false });
       consultaioStateSubject.next({ readonly: true });
       consultaioStateSubject.next({ readonly: false });
       consultaioStateSubject.next({ readonly: true });
 
-      // Form should be disabled (last readonly: true should take effect)
       expect(component.directorGeneralForm.disabled).toBeTruthy();
 
       consultaioStateSubject.complete();

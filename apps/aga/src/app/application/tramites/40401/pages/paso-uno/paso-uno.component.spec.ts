@@ -27,7 +27,7 @@ describe('PasoUnoComponent', () => {
   };
 
   beforeEach(() => {
-    // Create mock services
+
     mockRegistroService = {
       obtenerCAATAereoData: jest.fn().mockReturnValue(observableOf(mockCaatAereoData))
     } as any;
@@ -89,25 +89,21 @@ describe('PasoUnoComponent', () => {
 
   describe('#seleccionaTab', () => {
     it('should update indice and call store.setPestanaActiva', () => {
-      // Arrange
+      
       const tabIndex = 2;
 
-      // Act
       component.seleccionaTab(tabIndex);
 
-      // Assert
       expect(component.indice).toBe(tabIndex);
       expect(mockStore.setPestanaActiva).toHaveBeenCalledWith(tabIndex);
     });
 
     it('should handle zero index', () => {
-      // Arrange
+      
       const tabIndex = 0;
 
-      // Act
       component.seleccionaTab(tabIndex);
 
-      // Assert
       expect(component.indice).toBe(tabIndex);
       expect(mockStore.setPestanaActiva).toHaveBeenCalledWith(tabIndex);
     });
@@ -115,10 +111,8 @@ describe('PasoUnoComponent', () => {
 
   describe('#guardarDatosFormulario', () => {
     it('should load CAAT Aereo data and update store', () => {
-      // Act
       component.guardarDatosFormulario();
 
-      // Assert
       expect(mockRegistroService.obtenerCAATAereoData).toHaveBeenCalled();
       expect(component.esDatosRespuesta).toBe(true);
       expect(mockStore.setPais).toHaveBeenCalledWith(mockCaatAereoData.TipoDeCaatAereo);
@@ -127,22 +121,20 @@ describe('PasoUnoComponent', () => {
     });
 
     it('should handle service errors gracefully', () => {
-      // Arrange
+      
       mockRegistroService.obtenerCAATAereoData.mockReturnValue(
         new Observable(subscriber => subscriber.error('Service error'))
       );
 
-      // Act & Assert - Should not throw
       expect(() => component.guardarDatosFormulario()).not.toThrow();
     });
   });
 
   describe('#ngOnInit', () => {
     it('should initialize component and subscribe to queries', () => {
-      // Act
+  
       component.ngOnInit();
 
-      // Assert
       expect(component.tramiteState).toBeDefined();
       expect(component.consultaDatos).toBeDefined();
     });
@@ -158,55 +150,46 @@ describe('PasoUnoComponent', () => {
         mockConsultaQuery,
         mockRegistroService
       );
-      // Arrange
+      
       const spy = jest.spyOn(testComponent, 'guardarDatosFormulario');
 
-      // Act
       testComponent.ngOnInit();
 
       expect(testComponent.consultaDatos.update).toBe(true);
       expect(testComponent.consultaDatos.readonly).toBe(true);
-      // expect(testComponent.datosConsulta).toEqual(readonlyState);
-
-      // Assert
       expect(spy).toHaveBeenCalled();
     });
 
     it('should set esDatosRespuesta to true when consultaDatos.update is false', () => {
-      // Arrange
+      
       mockConsultaQuery.selectConsultaioState$ = observableOf({
         update: false,
         readonly: false
       } as unknown as ConsultaioState);
 
-      // Act
       component.ngOnInit();
 
-      // Assert
       expect(component.esDatosRespuesta).toBe(true);
     });
   });
 
   describe('#obtenerTipoPersona', () => {
     it('should handle when solicitante is undefined', () => {
-      // Arrange
+      
       component.solicitante = undefined as any;
 
-      // Act & Assert - Should not throw
       expect(() => component.obtenerTipoPersona()).not.toThrow();
     });
   });
 
   describe('#ngOnDestroy', () => {
     it('should complete destroyNotifier$ subject', () => {
-      // Arrange
+      
       const nextSpy = jest.spyOn(component.destroyNotifier$, 'next');
       const completeSpy = jest.spyOn(component.destroyNotifier$, 'complete');
 
-      // Act
       component.ngOnDestroy();
 
-      // Assert
       expect(nextSpy).toHaveBeenCalled();
       expect(completeSpy).toHaveBeenCalled();
     });

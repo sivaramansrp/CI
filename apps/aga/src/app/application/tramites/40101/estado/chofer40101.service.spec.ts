@@ -385,19 +385,6 @@ describe('Chofer40101Service', () => {
 
       expect(storeMock.update).toHaveBeenCalledWith(expect.any(Function));
       
-      // Test the update function
-      // const updateFunction = storeMock.update.mock.calls[0][0];
-      // const mockState = { existing: 'data' };
-      // const result = service.updateDatosDelChoferExtranjero(mockState);
-
-      // expect(result).toEqual({
-      //   existing: 'data',
-      //   nombre: mockDirectorGeneralData.nombre,
-      //   primerApellido: mockDirectorGeneralData.primerApellido,
-      //   segundoApellido: mockDirectorGeneralData.segundoApellido,
-      //   apellidoPaterno: mockDirectorGeneralData.primerApellido,
-      //   apellidoMaternoCHN: mockDirectorGeneralData.apellidoMaternoCHN
-      // });
     });
 
     it('should update datos del chofer nacional', () => {
@@ -405,14 +392,6 @@ describe('Chofer40101Service', () => {
 
       expect(storeMock.update).toHaveBeenCalledWith(expect.any(Function));
       
-      // const updateFunction = storeMock.update.mock.calls[0][0];
-      // const mockState = { existing: 'data' };
-      // const result = updateFunction(mockState);
-
-      // expect(result).toEqual({
-      //   existing: 'data',
-      //   datosDelChoferNacionalAlta: mockChoferNacionalData
-      // });
     });
 
     it('should update datos del chofer nacional modification', () => {
@@ -420,44 +399,18 @@ describe('Chofer40101Service', () => {
 
       expect(storeMock.update).toHaveBeenCalledWith(expect.any(Function));
       
-      // const updateFunction = storeMock.update.mock.calls[0][0];
-      // const mockState = { existing: 'data' };
-      // const result = updateFunction(mockState);
-
-      // expect(result).toEqual({
-      //   existing: 'data',
-      //   datosDelChoferNacionalModification: mockChoferNacionalData
-      // });
     });
 
     it('should update datos del chofer nacional retirada', () => {
       service.updateDatosDelChoferNacionalRetirada(mockChoferNacionalData);
 
       expect(storeMock.update).toHaveBeenCalledWith(expect.any(Function));
-      
-      // const updateFunction = storeMock.update.mock.calls[0][0];
-      // const mockState = { existing: 'data' };
-      // const result = updateFunction(mockState);
 
-      // expect(result).toEqual({
-      //   existing: 'data',
-      //   datosDelChoferNacionalRetirada: mockChoferNacionalData
-      // });
     });
 
     it('should update datos del chofer extranjero', () => {
       service.updateDatosDelChoferExtranjero(mockChoferExtranjeroData);
 
-      // expect(storeMock.update).toHaveBeenCalledWith(expect.any(Function));
-      
-      // const updateFunction = storeMock.update.mock.calls[0][0];
-      // const mockState = { existing: 'data' };
-      // const result = updateFunction(mockState);
-
-      // expect(result).toEqual({
-      //   existing: 'data',
-      //   datosDelChoferExtranjerosAlta: mockChoferExtranjeroData
-      // });
     });
 
     it('should update datos del chofer extranjero modification', () => {
@@ -465,29 +418,13 @@ describe('Chofer40101Service', () => {
 
       expect(storeMock.update).toHaveBeenCalledWith(expect.any(Function));
       
-      // const updateFunction = storeMock.update.mock.calls[0][0];
-      // const mockState = { existing: 'data' };
-      // const result = updateFunction(mockState);
-
-      // expect(result).toEqual({
-      //   existing: 'data',
-      //   datosDelChoferExtranjerosModification: mockChoferExtranjeroData
-      // });
     });
 
     it('should update datos del chofer extranjero retirada', () => {
       service.updateDatosDelChoferExtranjeroRetirada(mockChoferExtranjeroData);
 
       expect(storeMock.update).toHaveBeenCalledWith(expect.any(Function));
-      
-      // const updateFunction = storeMock.update.mock.calls[0][0];
-      // const mockState = { existing: 'data' };
-      // const result = updateFunction(mockState);
 
-      // expect(result).toEqual({
-      //   existing: 'data',
-      //   datosDelChoferExtranjerosRetirada: mockChoferExtranjeroData
-      // });
     });
   });
 
@@ -630,15 +567,6 @@ describe('Chofer40101Service', () => {
 
       expect(storeMock.update).toHaveBeenCalledTimes(2);
 
-      // // Verify first call updates nacional data
-      // const firstUpdateFunction = storeMock.update.mock.calls[0][0];
-      // const firstResult = firstUpdateFunction({});
-      // expect(firstResult).toHaveProperty('datosDelChoferNacionalAlta');
-
-      // // Verify second call updates extranjero data
-      // const secondUpdateFunction = storeMock.update.mock.calls[1][0];
-      // const secondResult = secondUpdateFunction({});
-      // expect(secondResult).toHaveProperty('datosDelChoferExtranjerosAlta');
     });
 
     it('should preserve existing state when updating', () => {
@@ -650,12 +578,6 @@ describe('Chofer40101Service', () => {
 
       service.updateDatosDelChoferNacional(mockChoferNacionalData);
 
-      // const updateFunction = storeMock.update.mock.calls[0][0];
-      // const result = updateFunction(existingState);
-
-      // expect(result.existingProperty).toBe('value');
-      // expect(result.otherProperty).toBe(123);
-      // expect(result.datosDelChoferNacionalAlta).toEqual(mockChoferNacionalData);
     });
   });
 
@@ -664,11 +586,7 @@ describe('Chofer40101Service', () => {
       service.updateDatosDelChoferNacional([]);
 
       expect(storeMock.update).toHaveBeenCalled();
-      
-      // const updateFunction = storeMock.update.mock.calls[0][0];
-      // const result = updateFunction({});
 
-      // expect(result.datosDelChoferNacionalAlta).toEqual([]);
     });
 
     it('should handle null responses from HTTP calls', () => {

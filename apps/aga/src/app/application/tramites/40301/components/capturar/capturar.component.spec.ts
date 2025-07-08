@@ -39,7 +39,6 @@ describe('CapturarComponent', () => {
   ];
 
   beforeEach(async () => {
-    // Create mock services
     mockCapturarService = {
       getCatalogo: jest.fn().mockReturnValue(of(mockCatalogData)),
       getTramiteState: jest.fn().mockReturnValue(of(mockTramiteState))
@@ -112,14 +111,11 @@ describe('CapturarComponent', () => {
    */
   describe('#ngOnInit', () => {
     it('should initialize component on ngOnInit', () => {
-      // Arrange
       const establecerSolicitudFormSpy = jest.spyOn(component, 'establecerSolicitudForm');
       const suscribirseAlEstadoSpy = jest.spyOn(component, 'suscribirseAlEstado');
 
-      // Act
       component.ngOnInit();
 
-      // Assert
       expect(component.solicitudState).toEqual(mockTramiteState);
       expect(component.consultaDatos).toEqual(mockConsultaState);
       expect(component.soloLectura).toBe(mockConsultaState.readonly);
@@ -128,23 +124,18 @@ describe('CapturarComponent', () => {
     });
 
     it('should disable form when soloLectura is true', () => {
-      // Arrange
       const readonlyConsultaState = { ...mockConsultaState, readonly: true };
       mockConsultaioQuery.selectConsultaioState$ = of(readonlyConsultaState);
 
-      // Act
       component.ngOnInit();
 
-      // Assert
       expect(component.soloLectura).toBe(true);
       expect(component.solicitudForm.disabled).toBe(true);
     });
 
     it('should not disable form when soloLectura is false', () => {
-      // Act
       component.ngOnInit();
 
-      // Assert
       expect(component.soloLectura).toBe(false);
       expect(component.solicitudForm.enabled).toBe(true);
     });
@@ -160,10 +151,8 @@ describe('CapturarComponent', () => {
     });
 
     it('should create form with correct structure and validations', () => {
-      // Act
       component.establecerSolicitudForm();
 
-      // Assert
       expect(component.solicitudForm).toBeDefined();
       expect(component.solicitudForm.get('cveFolioCaat')).toBeTruthy();
       expect(component.solicitudForm.get('rol')).toBeTruthy();
@@ -174,10 +163,8 @@ describe('CapturarComponent', () => {
     });
 
     it('should set initial values from solicitudState', () => {
-      // Act
       component.establecerSolicitudForm();
 
-      // Assert
       expect(component.solicitudForm.get('cveFolioCaat')?.value).toBe(mockTramiteState.cveFolioCaat);
       expect(component.solicitudForm.get('rol')?.value).toBe(mockTramiteState.rol);
       expect(component.solicitudForm.get('tipoAgente')?.value).toBe(mockTramiteState.tipoAgente);
@@ -187,16 +174,13 @@ describe('CapturarComponent', () => {
     });
 
     it('should apply correct validators', () => {
-      // Act
       component.establecerSolicitudForm();
 
-      // Assert
       const tipoAgenteControl = component.solicitudForm.get('tipoAgente');
       const directorGeneralNombreControl = component.solicitudForm.get('directorGeneralNombre');
       const primerApellidoControl = component.solicitudForm.get('primerApellido');
       const segundoApellidoControl = component.solicitudForm.get('segundoApellido');
 
-      // Required validations
       tipoAgenteControl?.setValue('');
       expect(tipoAgenteControl?.invalid).toBe(true);
       expect(tipoAgenteControl?.hasError('required')).toBe(true);
@@ -209,7 +193,6 @@ describe('CapturarComponent', () => {
       expect(primerApellidoControl?.invalid).toBe(true);
       expect(primerApellidoControl?.hasError('required')).toBe(true);
 
-      // MaxLength validations
       const longString = 'a'.repeat(201);
       directorGeneralNombreControl?.setValue(longString);
       expect(directorGeneralNombreControl?.hasError('maxlength')).toBe(true);
@@ -222,13 +205,10 @@ describe('CapturarComponent', () => {
     });
 
     it('should disable appropriate fields when soloLectura is true', () => {
-      // Arrange
       component.soloLectura = true;
 
-      // Act
       component.establecerSolicitudForm();
 
-      // Assert
       expect(component.solicitudForm.get('cveFolioCaat')?.disabled).toBe(true);
       expect(component.solicitudForm.get('rol')?.disabled).toBe(true);
       expect(component.solicitudForm.get('tipoAgente')?.disabled).toBe(true);
@@ -243,19 +223,15 @@ describe('CapturarComponent', () => {
    */
   describe('#readMetaInfo', () => {
     it('should load catalog data successfully', () => {
-      // Act
       component.readMetaInfo();
 
-      // Assert
       expect(mockCapturarService.getCatalogo).toHaveBeenCalled();
       expect(component.agentCatalog).toEqual(mockCatalogData);
     });
 
     it('should handle service errors gracefully', () => {
-      // Arrange
       mockCapturarService.getCatalogo.mockReturnValue(throwError('Service error'));
 
-      // Act & Assert - Should not throw
       expect(() => component.readMetaInfo()).not.toThrow();
     });
   });
@@ -269,22 +245,16 @@ describe('CapturarComponent', () => {
     });
 
     it('should subscribe to tramite state and patch form values', () => {
-      // Arrange
       const patchValueSpy = jest.spyOn(component.solicitudForm, 'patchValue');
 
-      // Act
       component.suscribirseAlEstado();
 
-      // Assert
       expect(mockCapturarService.getTramiteState).toHaveBeenCalled();
       expect(patchValueSpy).toHaveBeenCalledWith(mockTramiteState);
     });
 
     it('should handle service errors without throwing', () => {
-      // Arrange
       mockCapturarService.getTramiteState.mockReturnValue(throwError('Service error'));
-
-      // Act & Assert - Should not throw
       expect(() => component.suscribirseAlEstado()).not.toThrow();
     });
   });
@@ -298,7 +268,6 @@ describe('CapturarComponent', () => {
     });
 
     it('should return true when form is valid', () => {
-      // Arrange
       component.solicitudForm.patchValue({
         tipoAgente: 'Agente naviero',
         directorGeneralNombre: 'Juan Carlos',
@@ -306,12 +275,10 @@ describe('CapturarComponent', () => {
         segundoApellido: 'García'
       });
 
-      // Act & Assert
       expect(component.isFormValid()).toBe(true);
     });
 
     it('should return false when form is invalid', () => {
-      // Arrange
       component.solicitudForm.patchValue({
         tipoAgente: '',
         directorGeneralNombre: '',
@@ -319,15 +286,12 @@ describe('CapturarComponent', () => {
         segundoApellido: ''
       });
 
-      // Act & Assert
       expect(component.isFormValid()).toBe(false);
     });
 
     it('should handle undefined form gracefully', () => {
-      // Arrange
       component.solicitudForm = undefined as any;
 
-      // Act & Assert
       expect(component.isFormValid()).toBeFalsy();
     });
   });
@@ -341,13 +305,10 @@ describe('CapturarComponent', () => {
     });
 
     it('should reset form and store', () => {
-      // Arrange
       const resetSpy = jest.spyOn(component.solicitudForm, 'reset');
 
-      // Act
       component.limpiarAgente();
 
-      // Assert
       expect(resetSpy).toHaveBeenCalled();
       expect(mockTramite40301Store.reset).toHaveBeenCalled();
     });
@@ -362,19 +323,15 @@ describe('CapturarComponent', () => {
     });
 
     it('should update tipoAgente in store', () => {
-      // Arrange
       const agentValue = 'Agente naviero';
       component.solicitudForm.get('tipoAgente')?.setValue(agentValue);
 
-      // Act
       component.conTipoAgenteData('tipoAgente');
 
-      // Assert
       expect(mockTramite40301Store.setTipoAgente).toHaveBeenCalledWith(agentValue);
     });
 
     it('should handle non-existent control gracefully', () => {
-      // Act & Assert - Should not throw
       expect(() => component.conTipoAgenteData('nonExistentControl')).not.toThrow();
     });
   });
@@ -388,19 +345,14 @@ describe('CapturarComponent', () => {
     });
 
     it('should update directorGeneralNombre in store', () => {
-      // Arrange
       const nombreValue = 'Juan Carlos';
       component.solicitudForm.get('directorGeneralNombre')?.setValue(nombreValue);
-
-      // Act
       component.actualizarDirectorGeneralNombre('directorGeneralNombre');
 
-      // Assert
       expect(mockTramite40301Store.setDirectorGeneralNombre).toHaveBeenCalledWith(nombreValue);
     });
 
     it('should handle non-existent control gracefully', () => {
-      // Act & Assert - Should not throw
       expect(() => component.actualizarDirectorGeneralNombre('nonExistentControl')).not.toThrow();
     });
   });
@@ -414,19 +366,15 @@ describe('CapturarComponent', () => {
     });
 
     it('should update primerApellido in store', () => {
-      // Arrange
       const apellidoValue = 'Pérez';
       component.solicitudForm.get('primerApellido')?.setValue(apellidoValue);
 
-      // Act
       component.actualizarPrimerApellido('primerApellido');
 
-      // Assert
       expect(mockTramite40301Store.setPrimerApellido).toHaveBeenCalledWith(apellidoValue);
     });
 
     it('should handle non-existent control gracefully', () => {
-      // Act & Assert - Should not throw
       expect(() => component.actualizarPrimerApellido('nonExistentControl')).not.toThrow();
     });
   });
@@ -440,19 +388,15 @@ describe('CapturarComponent', () => {
     });
 
     it('should update segundoApellido in store', () => {
-      // Arrange
       const apellidoValue = 'García';
       component.solicitudForm.get('segundoApellido')?.setValue(apellidoValue);
 
-      // Act
       component.actualizarApellidoMaterno('segundoApellido');
 
-      // Assert
       expect(mockTramite40301Store.setSegundoApellido).toHaveBeenCalledWith(apellidoValue);
     });
 
     it('should handle non-existent control gracefully', () => {
-      // Act & Assert - Should not throw
       expect(() => component.actualizarApellidoMaterno('nonExistentControl')).not.toThrow();
     });
   });
@@ -466,20 +410,16 @@ describe('CapturarComponent', () => {
     });
 
     it('should process valid form submission', () => {
-      // Arrange
       component.solicitudForm.patchValue({
         tipoAgente: 'Agente naviero',
         directorGeneralNombre: 'Juan Carlos',
         primerApellido: 'Pérez',
         segundoApellido: 'García'
       });
-
-      // Act & Assert - Should not throw
       expect(() => component.onSubmit()).not.toThrow();
     });
 
     it('should not process invalid form submission', () => {
-      // Arrange
       component.solicitudForm.patchValue({
         tipoAgente: '',
         directorGeneralNombre: '',
@@ -487,7 +427,6 @@ describe('CapturarComponent', () => {
         segundoApellido: ''
       });
 
-      // Act & Assert - Should not throw
       expect(() => component.onSubmit()).not.toThrow();
     });
   });
@@ -497,14 +436,9 @@ describe('CapturarComponent', () => {
    */
   describe('#ngOnDestroy', () => {
     it('should complete destruirNotificador$ subject', () => {
-      // Arrange
       const nextSpy = jest.spyOn(component['destruirNotificador$'], 'next');
       const completeSpy = jest.spyOn(component['destruirNotificador$'], 'complete');
-
-      // Act
       component.ngOnDestroy();
-
-      // Assert
       expect(nextSpy).toHaveBeenCalled();
       expect(completeSpy).toHaveBeenCalled();
     });
@@ -515,19 +449,15 @@ describe('CapturarComponent', () => {
    */
   describe('Integration Tests', () => {
     it('should handle complete workflow from initialization to form submission', () => {
-      // Act
       component.ngOnInit();
       
-      // Simulate user interactions
       component.conTipoAgenteData('tipoAgente');
       component.actualizarDirectorGeneralNombre('directorGeneralNombre');
       component.actualizarPrimerApellido('primerApellido');
       component.actualizarApellidoMaterno('segundoApellido');
       
-      // Submit form
       component.onSubmit();
 
-      // Assert
       expect(component.solicitudState).toEqual(mockTramiteState);
       expect(component.solicitudForm.valid).toBe(true);
       expect(mockTramite40301Store.setTipoAgente).toHaveBeenCalled();
@@ -537,24 +467,18 @@ describe('CapturarComponent', () => {
     });
 
     it('should handle readonly mode correctly', () => {
-      // Arrange
       const readonlyConsultaState = { ...mockConsultaState, readonly: true };
       mockConsultaioQuery.selectConsultaioState$ = of(readonlyConsultaState);
 
-      // Act
       component.ngOnInit();
 
-      // Assert
       expect(component.soloLectura).toBe(true);
       expect(component.solicitudForm.disabled).toBe(true);
     });
 
     it('should handle service errors during initialization', () => {
-      // Arrange
       mockTramite40301Query.selectSolicitud$ = throwError('Query error');
       mockConsultaioQuery.selectConsultaioState$ = throwError('Consulta error');
-
-      // Act & Assert - Should not throw
       expect(() => component.ngOnInit()).not.toThrow();
     });
   });

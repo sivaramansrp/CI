@@ -21,47 +21,29 @@ describe('ChofereAltaDeExtranjerosComponent', () => {
 
   const mockChoferExtranjeroData: ChoferesExtranjeros[] = [
     {
-      // id: 1,
-      // nombre: 'John',
       primerApellido: 'Doe',
       segundoApellido: 'Smith',
-      // numeroDeDocumento: 'ABC123456',
-      // tipoDocumento: 'Pasaporte',
-      // paisDocumento: 'USA',
-      // fechaVencimiento: '2025-12-31',
       calle: 'Main Street',
       numeroExterior: '123',
       numeroInterior: 'A',
       pais: 'USA',
       estado: 'California',
-      // municipioAlcaldia: 'Los Angeles',
-      // colonia: 'Downtown',
       paisDeResidencia: 'USA',
       ciudad: 'LA',
-      // localidad: 'Central',
       codigoPostal: '90210',
       correoElectronico: 'john@test.com',
       telefono: '5551234567'
     },
     {
-      // id: 2,
-      // nombre: 'Jane',
       primerApellido: 'Smith',
       segundoApellido: 'Johnson',
-      // numeroDeDocumento: 'XYZ789012',
-      // tipoDocumento: 'Visa',
-      // paisDocumento: 'Canada',
-      // fechaVencimiento: '2026-06-30',
       calle: 'Second Street',
       numeroExterior: '456',
       numeroInterior: 'B',
       pais: 'Canada',
       estado: 'Ontario',
-      // municipioAlcaldia: 'Toronto',
-      // colonia: 'Central',
       paisDeResidencia: 'Canada',
       ciudad: 'Toronto',
-      // localidad: 'Downtown',
       codigoPostal: 'M5V 3A8',
       correoElectronico: 'jane@test.com',
       telefono: '4161234567'
@@ -71,8 +53,6 @@ describe('ChofereAltaDeExtranjerosComponent', () => {
   const mockConsultaioState: ConsultaioState = {
     readonly: true,
     update: true,
-    // solicitudId: '12345',
-    // tipoOperacion: 'consulta'
   } as unknown as ConsultaioState;
 
   beforeEach(async () => {
@@ -139,24 +119,16 @@ describe('ChofereAltaDeExtranjerosComponent', () => {
   describe('ngOnInit', () => {
     it('should subscribe to selectSolicitud$ and set datosDelChoferExtranjeros', () => {
       component.ngOnInit();
-      
+
       expect(component.datosDelChoferExtranjeros).toEqual(mockChoferExtranjeroData);
     });
-
-    // it('should subscribe to selectConsultaioState$ and set datosConsulta and isReadonly when readonly is true', () => {
-      
-    //   component.ngOnInit();
-      
-    //   expect(component.datosConsulta).toEqual(mockConsultaioState);
-    //   expect(component.isReadonly).toBe(true);
-    // });
 
     it('should not set datosConsulta or isReadonly when readonly is false', () => {
       const nonReadonlyState = { ...mockConsultaioState, readonly: false };
       consultaioQueryMock.selectConsultaioState$ = of(nonReadonlyState);
-      
+
       component.ngOnInit();
-      
+
       expect(component.datosConsulta).toBeUndefined();
       expect(component.isReadonly).toBe(false);
     });
@@ -165,9 +137,9 @@ describe('ChofereAltaDeExtranjerosComponent', () => {
       chofer40101QueryMock.selectSolicitud$ = of({
         datosDelChoferExtranjerosAlta: null
       } as unknown as Choferesnacionales40101State);
-      
+
       component.ngOnInit();
-      
+
       expect(component.datosDelChoferExtranjeros).toEqual([]);
     });
 
@@ -175,9 +147,9 @@ describe('ChofereAltaDeExtranjerosComponent', () => {
       chofer40101QueryMock.selectSolicitud$ = of({
         datosDelChoferExtranjerosAlta: undefined
       } as unknown as Choferesnacionales40101State);
-      
+
       component.ngOnInit();
-      
+
       expect(component.datosDelChoferExtranjeros).toEqual([]);
     });
 
@@ -190,9 +162,9 @@ describe('ChofereAltaDeExtranjerosComponent', () => {
     it('should handle observable errors gracefully', () => {
       chofer40101QueryMock.selectSolicitud$ = throwError(() => new Error('Test error'));
       const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
-      
+
       expect(() => component.ngOnInit()).not.toThrow();
-      
+
       consoleSpy.mockRestore();
     });
   });
@@ -201,9 +173,9 @@ describe('ChofereAltaDeExtranjerosComponent', () => {
     it('should unsubscribe on destroy', () => {
       const nextSpy = jest.spyOn(component.destroy$, 'next');
       const completeSpy = jest.spyOn(component.destroy$, 'complete');
-      
+
       component.ngOnDestroy();
-      
+
       expect(nextSpy).toHaveBeenCalledWith(true);
       expect(completeSpy).toHaveBeenCalled();
     });
@@ -211,223 +183,144 @@ describe('ChofereAltaDeExtranjerosComponent', () => {
     it('should handle multiple destroy calls', () => {
       const nextSpy = jest.spyOn(component.destroy$, 'next');
       const completeSpy = jest.spyOn(component.destroy$, 'complete');
-      
+
       component.ngOnDestroy();
       component.ngOnDestroy();
-      
+
       expect(nextSpy).toHaveBeenCalledTimes(2);
       expect(completeSpy).toHaveBeenCalledTimes(2);
     });
   });
 
-  // describe('Modal Operations', () => {
-  //   beforeEach(() => {
-  //     component.ngOnInit();
-  //   });
-
-  //   // describe('openModalAgregarChoferExtranjero', () => {
-  //   //   it('should open modal for adding new chofer extranjero', () => {
-  //   //     const templateRef = {} as any;
-  //   //     component.modalAgregarChoferExtranjero = templateRef;
-        
-  //   //     component.openModalAgregarChoferExtranjero();
-        
-  //   //     expect(bsModalServiceMock.show).toHaveBeenCalledWith(templateRef, { class: 'modal-xl' });
-  //   //     expect(component.modalRef).toBe(mockModalRef);
-  //   //     expect(component.choferExtranjeroDatos).toEqual({});
-  //   //     expect(component.isEdit).toBe(false);
-  //   //   });
-
-  //   //   it('should handle missing template reference', () => {
-  //   //     component.modalAgregarChoferExtranjero = undefined;
-        
-  //   //     expect(() => component.openModalAgregarChoferExtranjero()).not.toThrow();
-  //   //   });
-  //   // });
-
-  //   // describe('openModalEditarChoferExtranjero', () => {
-  //   //   it('should open modal for editing existing chofer extranjero', () => {
-  //   //     const templateRef = {} as any;
-  //   //     const choferData = mockChoferExtranjeroData[0];
-  //   //     component.modalAgregarChoferExtranjero = templateRef;
-        
-  //   //     component.openModal(choferData);
-        
-  //   //     expect(bsModalServiceMock.show).toHaveBeenCalledWith(templateRef, { class: 'modal-xl' });
-  //   //     expect(component.modalRef).toBe(mockModalRef);
-  //   //     expect(component.choferExtranjeroDatos).toBe(choferData);
-  //   //     expect(component.isEdit).toBe(true);
-  //   //   });
-
-  //   //   it('should handle null chofer data', () => {
-  //   //     const templateRef = {} as any;
-  //   //     component.modalAgregarChoferExtranjero = templateRef;
-        
-  //   //     component.openModalEditarChoferExtranjero(null as any);
-        
-  //   //     expect(component.choferExtranjeroDatos).toBeNull();
-  //   //     expect(component.isEdit).toBe(true);
-  //   //   });
-
-  //   //   it('should handle missing template reference', () => {
-  //   //     component.modalAgregarChoferExtranjero = undefined;
-  //   //     const choferData = mockChoferExtranjeroData[0];
-        
-  //   //     expect(() => component.openModalEditarChoferExtranjero(choferData)).not.toThrow();
-  //   //   });
-  //   // });
-
-  //   // describe('closeModal', () => {
-  //   //   it('should close modal when modalRef exists', () => {
-  //   //     component.modalRef = mockModalRef;
-        
-  //   //     component.closeModal();
-        
-  //   //     expect(mockModalRef.hide).toHaveBeenCalled();
-  //   //   });
-
-  //   //   it('should handle missing modalRef gracefully', () => {
-  //   //     component.modalRef = undefined;
-        
-  //   //     expect(() => component.closeModal()).not.toThrow();
-  //   //   });
-  //   // });
-  // });
-
-  // describe('Data Operations', () => {
-   
-
-    describe('addChoferExtranjero', () => {
-      beforeEach(() => {
-        component.ngOnInit();
-        component.datosDelChoferExtranjeros = [...mockChoferExtranjeroData];
-      });
-
-      it('should add new chofer extranjero to the list', () => {
-        const newChofer: ChoferesExtranjeros = {
-          primerApellido: 'Chofer',
-          segundoApellido: 'Test',
-          calle: 'New Street',
-          numeroExterior: '789',
-          numeroInterior: 'C',
-          pais: 'Mexico',
-          estado: 'CDMX',
-          paisDeResidencia: 'Mexico',
-          ciudad: 'Mexico City',
-          codigoPostal: '01000',
-          correoElectronico: 'new@test.com',
-          telefono: '5559876543'
-        };
-        
-        const initialLength = component.datosDelChoferExtranjeros.length;
-        
-        
-        component.addModal(newChofer);
-        
-        expect(component.datosDelChoferExtranjeros.length).toBe(initialLength + 1);
-        expect(component.datosDelChoferExtranjeros).toContain(newChofer);
-        expect(chofer40101ServiceMock.updateDatosDelChoferExtranjero).toHaveBeenCalledWith(component.datosDelChoferExtranjeros);
-      });
-          
-      it('should add new chofer row and open modal dialog', () => {
-        const newChofer: ChoferesExtranjeros = {
-          primerApellido: 'Chofer',
-          segundoApellido: 'Test',
-          calle: 'New Street',
-          numeroExterior: '789',
-          numeroInterior: 'C',
-          pais: 'Mexico',
-          estado: 'CDMX',
-          paisDeResidencia: 'Mexico',
-          ciudad: 'Mexico City',
-          codigoPostal: '01000',
-          correoElectronico: 'new@test.com',
-          telefono: '5559876543'
-        };
-        
-        const initialLength = component.datosDelChoferExtranjeros.length;
-        const spy = jest.spyOn(component, 'openModal');
-        
-        component.addNewRow(newChofer as any);
-        
-        expect(component.datosChofere).toEqual({});
-        expect(spy).toHaveBeenCalled();
-      });
-
-      it('should allow editing row by open modal dialog when row is selected', () => {
-        const newChofer: ChoferesExtranjeros = {
-          primerApellido: 'Chofer',
-          segundoApellido: 'Test',
-          calle: 'New Street',
-          numeroExterior: '789',
-          numeroInterior: 'C',
-          pais: 'Mexico',
-          estado: 'CDMX',
-          paisDeResidencia: 'Mexico',
-          ciudad: 'Mexico City',
-          codigoPostal: '01000',
-          correoElectronico: 'new@test.com',
-          telefono: '5559876543'
-        };
-        
-        const initialLength = component.datosDelChoferExtranjeros.length;
-        const spy = jest.spyOn(component, 'openModal');
-        component.datosDelChoferExtranjerosSelected = [newChofer];
-
-        component.editSelectedRow(newChofer as any);
-        
-        expect(component.datosChofere).toEqual(newChofer);
-        expect(spy).toHaveBeenCalled();
-      });
-
-      it('should not allow editing row by open modal dialog when row is NOT selected', () => {
-        const newChofer: ChoferesExtranjeros = {
-          primerApellido: 'Chofer',
-          segundoApellido: 'Test',
-          calle: 'New Street',
-          numeroExterior: '789',
-          numeroInterior: 'C',
-          pais: 'Mexico',
-          estado: 'CDMX',
-          paisDeResidencia: 'Mexico',
-          ciudad: 'Mexico City',
-          codigoPostal: '01000',
-          correoElectronico: 'new@test.com',
-          telefono: '5559876543'
-        };
-        
-        const initialLength = component.datosDelChoferExtranjeros.length;
-        const spy = jest.spyOn(component, 'openModal');
-
-        component.editSelectedRow(newChofer as any);
-
-        expect(component.datosChofere).not.toEqual(newChofer);
-        expect(spy).not.toHaveBeenCalled();
-      });
-
-      
-      it('should delete row when row is selected', () => {
-        const newChofer: ChoferesExtranjeros = component.datosDelChoferExtranjeros[0];
-        
-        const initialLength = component.datosDelChoferExtranjeros.length;
-        component.datosDelChoferExtranjerosSelected = [newChofer];
-
-        component.deleteSelectedRow();
-
-        expect(component.datosDelChoferExtranjeros.length).toEqual(initialLength-1);
-      });
-
-      it('should not delete row when row is NOT selected', () => {
-        // const newChofer: ChoferesExtranjeros = component.datosDelChoferExtranjeros[0];
-        
-        const initialLength = component.datosDelChoferExtranjeros.length;
-        component.datosDelChoferExtranjerosSelected = [];
-
-        component.deleteSelectedRow();
-
-        expect(component.datosDelChoferExtranjeros.length).toEqual(initialLength);
-      });
+  describe('addChoferExtranjero', () => {
+    beforeEach(() => {
+      component.ngOnInit();
+      component.datosDelChoferExtranjeros = [...mockChoferExtranjeroData];
     });
+
+    it('should add new chofer extranjero to the list', () => {
+      const newChofer: ChoferesExtranjeros = {
+        primerApellido: 'Chofer',
+        segundoApellido: 'Test',
+        calle: 'New Street',
+        numeroExterior: '789',
+        numeroInterior: 'C',
+        pais: 'Mexico',
+        estado: 'CDMX',
+        paisDeResidencia: 'Mexico',
+        ciudad: 'Mexico City',
+        codigoPostal: '01000',
+        correoElectronico: 'new@test.com',
+        telefono: '5559876543'
+      };
+
+      const initialLength = component.datosDelChoferExtranjeros.length;
+
+
+      component.addModal(newChofer);
+
+      expect(component.datosDelChoferExtranjeros.length).toBe(initialLength + 1);
+      expect(component.datosDelChoferExtranjeros).toContain(newChofer);
+      expect(chofer40101ServiceMock.updateDatosDelChoferExtranjero).toHaveBeenCalledWith(component.datosDelChoferExtranjeros);
+    });
+
+    it('should add new chofer row and open modal dialog', () => {
+      const newChofer: ChoferesExtranjeros = {
+        primerApellido: 'Chofer',
+        segundoApellido: 'Test',
+        calle: 'New Street',
+        numeroExterior: '789',
+        numeroInterior: 'C',
+        pais: 'Mexico',
+        estado: 'CDMX',
+        paisDeResidencia: 'Mexico',
+        ciudad: 'Mexico City',
+        codigoPostal: '01000',
+        correoElectronico: 'new@test.com',
+        telefono: '5559876543'
+      };
+
+      const initialLength = component.datosDelChoferExtranjeros.length;
+      const spy = jest.spyOn(component, 'openModal');
+
+      component.addNewRow(newChofer as any);
+
+      expect(component.datosChofere).toEqual({});
+      expect(spy).toHaveBeenCalled();
+    });
+
+    it('should allow editing row by open modal dialog when row is selected', () => {
+      const newChofer: ChoferesExtranjeros = {
+        primerApellido: 'Chofer',
+        segundoApellido: 'Test',
+        calle: 'New Street',
+        numeroExterior: '789',
+        numeroInterior: 'C',
+        pais: 'Mexico',
+        estado: 'CDMX',
+        paisDeResidencia: 'Mexico',
+        ciudad: 'Mexico City',
+        codigoPostal: '01000',
+        correoElectronico: 'new@test.com',
+        telefono: '5559876543'
+      };
+
+      const initialLength = component.datosDelChoferExtranjeros.length;
+      const spy = jest.spyOn(component, 'openModal');
+      component.datosDelChoferExtranjerosSelected = [newChofer];
+
+      component.editSelectedRow(newChofer as any);
+
+      expect(component.datosChofere).toEqual(newChofer);
+      expect(spy).toHaveBeenCalled();
+    });
+
+    it('should not allow editing row by open modal dialog when row is NOT selected', () => {
+      const newChofer: ChoferesExtranjeros = {
+        primerApellido: 'Chofer',
+        segundoApellido: 'Test',
+        calle: 'New Street',
+        numeroExterior: '789',
+        numeroInterior: 'C',
+        pais: 'Mexico',
+        estado: 'CDMX',
+        paisDeResidencia: 'Mexico',
+        ciudad: 'Mexico City',
+        codigoPostal: '01000',
+        correoElectronico: 'new@test.com',
+        telefono: '5559876543'
+      };
+
+      const initialLength = component.datosDelChoferExtranjeros.length;
+      const spy = jest.spyOn(component, 'openModal');
+
+      component.editSelectedRow(newChofer as any);
+
+      expect(component.datosChofere).not.toEqual(newChofer);
+      expect(spy).not.toHaveBeenCalled();
+    });
+
+
+    it('should delete row when row is selected', () => {
+      const newChofer: ChoferesExtranjeros = component.datosDelChoferExtranjeros[0];
+
+      const initialLength = component.datosDelChoferExtranjeros.length;
+      component.datosDelChoferExtranjerosSelected = [newChofer];
+
+      component.deleteSelectedRow();
+
+      expect(component.datosDelChoferExtranjeros.length).toEqual(initialLength - 1);
+    });
+
+    it('should not delete row when row is NOT selected', () => {
+      const initialLength = component.datosDelChoferExtranjeros.length;
+      component.datosDelChoferExtranjerosSelected = [];
+
+      component.deleteSelectedRow();
+
+      expect(component.datosDelChoferExtranjeros.length).toEqual(initialLength);
+    });
+  });
 
 
   describe('Readonly Mode', () => {
@@ -435,10 +328,10 @@ describe('ChofereAltaDeExtranjerosComponent', () => {
       const readonlyState = { ...mockConsultaioState, readonly: true };
       consultaioQueryMock.selectConsultaioState$ = of(readonlyState);
       let comp = new ChofereAltaDeExtranjerosComponent(
-                        bsModalServiceMock, 
-                        chofer40101ServiceMock,
-                        chofer40101QueryMock,
-                        consultaioQueryMock
+        bsModalServiceMock,
+        chofer40101ServiceMock,
+        chofer40101QueryMock,
+        consultaioQueryMock
       );
 
       comp.ngOnInit();
@@ -450,9 +343,9 @@ describe('ChofereAltaDeExtranjerosComponent', () => {
     it('should not set readonly mode when consultaio state indicates not readonly', () => {
       const editableState = { ...mockConsultaioState, readonly: false };
       consultaioQueryMock.selectConsultaioState$ = of(editableState);
-      
+
       component.ngOnInit();
-      
+
       expect(component.isReadonly).toBe(false);
       expect(component.datosConsulta).toBeUndefined();
     });
@@ -474,70 +367,25 @@ describe('ChofereAltaDeExtranjerosComponent', () => {
     });
   });
 
-  // describe('Edge Cases', () => {
-  //   // it('should handle concurrent modal operations', () => {
-  //   //   const templateRef = {} as any;
-  //   //   component.modalAgregarChoferExtranjero = templateRef;
-      
-  //   //   component.openModalAgregarChoferExtranjero();
-  //   //   component.openModalEditarChoferExtranjero(mockChoferExtranjeroData[0]);
-      
-  //   //   expect(bsModalServiceMock.show).toHaveBeenCalledTimes(2);
-  //   //   expect(component.isEdit).toBe(true);
-  //   // });
-
-  //   // it('should handle data operations with malformed data', () => {
-  //   //   const malformedChofer = {
-  //   //     // Missing required fields
-  //   //     nombre: 'Malformed'
-  //   //   } as ChoferesExtranjeros;
-      
-  //   //   expect(() => {
-  //   //     component.addModal(malformedChofer);
-  //   //     component.editSelectedRow(malformedChofer);
-  //   //     component.deleteChoferExtranjero(malformedChofer);
-  //   //   }).not.toThrow();
-  //   // });
-
-  //   // it('should handle extremely large datasets', () => {
-  //   //   const largeDataset = Array.from({ length: 1000 }, (_, i) => ({
-  //   //     ...mockChoferExtranjeroData[0],
-  //   //     id: i + 1,
-  //   //     nombre: `Chofer ${i + 1}`
-  //   //   }));
-      
-  //   //   component.datosDelChoferExtranjeros = largeDataset;
-      
-  //   //   const newChofer = {
-  //   //     id: 1001,
-  //   //     nombre: 'New Large Dataset Chofer'
-  //   //   } as ChoferesExtranjeros;
-
-  //   //   component.addChoferExtranjero(newChofer);
-      
-  //   //   expect(component.datosDelChoferExtranjeros.length).toBe(1001);
-  //   // });
-  // });
-
   describe('Memory Management', () => {
     it('should properly clean up subscriptions', () => {
       const subscription = component.ngOnInit();
       const destroySpy = jest.spyOn(component.destroy$, 'next');
-      
+
       component.ngOnDestroy();
-      
+
       expect(destroySpy).toHaveBeenCalledWith(true);
     });
 
     it('should handle multiple subscription cleanup calls', () => {
       component.ngOnInit();
-      
+
       const nextSpy = jest.spyOn(component.destroy$, 'next');
       const completeSpy = jest.spyOn(component.destroy$, 'complete');
-      
+
       component.ngOnDestroy();
       component.ngOnDestroy();
-      
+
       expect(nextSpy).toHaveBeenCalledTimes(2);
       expect(completeSpy).toHaveBeenCalledTimes(2);
     });

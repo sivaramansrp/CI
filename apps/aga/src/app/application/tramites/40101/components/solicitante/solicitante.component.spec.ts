@@ -65,7 +65,6 @@ describe('SolicitanteComponent', () => {
 
     fixture = TestBed.createComponent(SolicitanteComponent);
     component = fixture.componentInstance;
-    // Ensure FormBuilder is injected if needed
     if (!component.formBuilder && TestBed.inject(FormBuilder)) {
       component.formBuilder = TestBed.inject(FormBuilder);
     }
@@ -114,15 +113,9 @@ describe('SolicitanteComponent', () => {
   });
 
   it('should set all form values from mockData', async () => {
-    // Re-import component to use the mocked data
     const { SolicitanteComponent } = await import('./solicitante.component');
     const mockDataTest = await import('@libs/shared/theme/assets/json/40101/solicitante-mockdata.json');
     const { FormBuilder } = await import('@angular/forms');
-
-    // const fb = TestBed.inject(FormBuilder);
-    // const component = new SolicitanteComponent(fb);
-    // component.solicitudData = mockData;
-    
 
     component.ngOnInit();
     component.setFormValues();
@@ -143,5 +136,3 @@ describe('SolicitanteComponent', () => {
     expect(component.solicitudForm.get('telefono')?.value).toBe(mockDataTest.telefono);
   });
 });
-
-// We recommend installing an extension to run jest tests.

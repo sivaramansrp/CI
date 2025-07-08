@@ -473,24 +473,6 @@ describe('DatosDeChoferesExtranjerosDialogComponent', () => {
       await component.ngOnInit();
     });
 
-    // it('should handle errors in paisListData', async () => {
-    //   mockChofer40103Service.getPaisEmisor.mockReturnValue(throwError(() => new Error('Service error')));
-      
-    //   await component.paisListData();
-      
-    //   expect(component.paisList).toEqual([]);
-    // });
-
-    // it('should handle errors in fetchEstadosByPais', async () => {
-    //   mockChofer40103Service.getEstadosPorPais.mockReturnValue(throwError(() => new Error('Service error')));
-    //   const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
-      
-    //   const result = await (component as any).fetchEstadosByPais(mockPaises[0]);
-      
-    //   expect(consoleSpy).toHaveBeenCalledWith('Error al obtener estados por país:', expect.any(Error));
-    //   expect(result).toEqual([]);
-    // });
-
     it('should handle errors in fetchMunicipiosByEstado', async () => {
       mockChofer40103Service.getMunicipiosPorEstado.mockReturnValue(throwError(() => new Error('Service error')));
       const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
@@ -511,30 +493,6 @@ describe('DatosDeChoferesExtranjerosDialogComponent', () => {
       expect(result).toEqual([]);
     });
   });
-
-//   describe('updateListsData', () => {
-//     beforeEach(async () => {
-//       await component.ngOnInit();
-//       component.paisList = mockPaises;
-//     });
-
-//     it('should update pais with correct ID', () => {
-//       const testData = { ...mockChoferData };
-      
-//       (component as any).updateListsData(testData);
-
-//       expect(testData.pais).toBe('1');
-//     });
-
-//     it('should handle missing pais in catalog', () => {
-//       const testData = { ...mockChoferData, pais: 'NonExistent Country' };
-      
-//       (component as any).updateListsData(testData);
-
-//       // Should remain unchanged if not found
-//       expect(testData.pais).toBe('NonExistent Country');
-//     });
-//   });
 
   describe('ngOnDestroy', () => {
     it('should complete destroyed$ subject', () => {
@@ -575,11 +533,5 @@ describe('DatosDeChoferesExtranjerosDialogComponent', () => {
       
       expect(component.paisList).toEqual([]);
     });
-
-    // it('should handle undefined datosDeChofere', async () => {
-    //   component.datosDeChofere = undefined as any;
-      
-    //   await expect(component.ngOnInit()).resolves.not.toThrow();
-    // });
   });
 });

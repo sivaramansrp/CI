@@ -23,8 +23,6 @@ describe('ChofereNacionalComponent', () => {
         readonly: true,
         update: true,
       } as ConsultaioState),
-
-      // select : jest.fn().mockReturnValue(of({ readonly: true, update: true } as unknown as ConsultaioState))
     } as ConsultaioQuery;
   let mockModalRef: jest.Mocked<BsModalRef>;
 
@@ -305,7 +303,6 @@ describe('ChofereNacionalComponent', () => {
     it('should handle complete workflow: add, select, edit, delete', () => {
       component.ngOnInit();
       
-      // Add new chofer
       const newChofer: DatosDelChoferNacional = {
         id: '3',
         nombre: 'Test Chofer',
@@ -316,11 +313,9 @@ describe('ChofereNacionalComponent', () => {
       component.addModal(newChofer);
       expect(component.datosDelChoferNacional).toContain(newChofer);
       
-      // Select chofer
       component.onChofereNationalSelected([newChofer]);
       expect(component.datosDelChoferNacionalSelected).toContain(newChofer);
       
-      // Delete selected chofer
       component.deleteSelectedRow();
       expect(component.datosDelChoferNacional).not.toContain(newChofer);
       expect(component.datosDelChoferNacionalSelected).toEqual([]);

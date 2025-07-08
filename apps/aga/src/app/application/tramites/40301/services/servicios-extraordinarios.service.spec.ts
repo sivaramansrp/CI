@@ -287,25 +287,6 @@ describe('ServiciosExtraordinariosService', () => {
       const req = httpMock.expectOne(`${ENVIRONMENT.URL_SERVER_JSON_AUXILIAR}/${tramiteId}`);
       req.error(new ErrorEvent('JSON Parse Error'));
     });
-
-    // it('should handle timeout errors', () => {
-    //   // Arrange
-    //   const tramiteId = 123;
-
-    //   // Act
-    //   service.obtenerTramite(tramiteId).subscribe({
-    //     next: () => fail('Expected a timeout error'),
-    //     error: (error) => {
-    //       // Assert
-    //       expect(error).toBeDefined();
-    //       expect(error.type).toBe('timeout');
-    //     }
-    //   });
-
-    //   // Assert HTTP request and simulate timeout
-    //   const req = httpMock.expectOne(`${ENVIRONMENT.URL_SERVER_JSON_AUXILIAR}/${tramiteId}`);
-    //   req.error(new ErrorEvent('timeout', { type: 'timeout' }));
-    // });
   });
 
   /**

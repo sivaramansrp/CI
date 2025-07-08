@@ -53,14 +53,8 @@ describe('ChofereModificationDeChoferesComponent', () => {
 
   const mockChoferesExtranjeros: ChoferesExtranjeros[] = [
     {
-    //   licenciaDeConducir: 'LIC123456',
-    //   paisEmisor: 'Estados Unidos',
-    //   fechaVencimiento: '2025-12-31',
-    //   nombre: 'John',
       primerApellido: 'Smith',
       segundoApellido: 'Johnson',
-    //   fechaNacimiento: '1985-05-15',
-    //   domicilio: '123 Main St',
       ciudad: 'New York',
       estado: 'NY',
       codigoPostal: '10001',
@@ -68,14 +62,8 @@ describe('ChofereModificationDeChoferesComponent', () => {
       correoElectronico: 'john.smith@email.com'
     },
     {
-    //   licenciaDeConducir: 'LIC789012',
-    //   paisEmisor: 'Canadá',
-    //   fechaVencimiento: '2024-11-30',
-    //   nombre: 'Maria',
       primerApellido: 'Garcia',
       segundoApellido: 'Lopez',
-    //   fechaNacimiento: '1990-08-20',
-    //   domicilio: '456 Oak Ave',
       ciudad: 'Toronto',
       estado: 'ON',
       codigoPostal: 'M5V 3A8',
@@ -159,10 +147,6 @@ describe('ChofereModificationDeChoferesComponent', () => {
     it('should create', () => {
       expect(component).toBeTruthy();
     });
-
-    // it('should be a standalone component', () => {
-    //   expect(component).toBeInstanceOf(ChofereModificationDeChoferesComponent);
-    // });
 
     it('should initialize with correct default values', () => {
       expect(component.tipoSeleccionTabla).toBe(TablaSeleccion.CHECKBOX);

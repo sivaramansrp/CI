@@ -116,16 +116,6 @@ describe('ChofereNacionalRetiradaComponent', () => {
       expect(component.datosDelChoferNacional).toEqual(mockDatosDelChoferNacional);
     });
 
-    // it('should subscribe to consultaioQuery.selectConsultaioState$ and update readonly state', () => {
-    //   const mockState: ConsultaioState = { readonly: true } as ConsultaioState;
-    //   mockConsultaioQuery.selectConsultaioState$ = of(mockState);
-
-    //   component.ngOnInit();
-
-    //   expect(component.datosConsulta).toEqual(mockState);
-    //   expect(component.isReadonly).toBe(true);
-    // });
-
     it('should handle empty datosDelChoferNacionalRetirada', () => {
       mockChofer40103Query.selectSolicitud$ = of({
         datosDelChoferNacionalRetirada: undefined
@@ -239,16 +229,6 @@ describe('ChofereNacionalRetiradaComponent', () => {
   });
 
   describe('Modal Management', () => {
-    // it('should open modal with correct configuration', () => {
-    //   const mockTemplate = {} as TemplateRef<unknown>;
-
-    //   component.openModal(mockTemplate);
-
-    //   expect(mockBsModalService.show).toHaveBeenCalledWith(mockTemplate, {
-    //     class: 'modal-fullscreen'
-    //   });
-    //   expect(component.modalRef).toBe(mockModalRef);
-    // });
 
     it('should close modal and clear reference', () => {
       component.modalRef = mockModalRef;
@@ -314,7 +294,6 @@ describe('ChofereNacionalRetiradaComponent', () => {
 
       component.ngOnDestroy();
 
-    //   expect(destroyedSpy).toHaveBeenCalledWith(undefined);
       expect(completeSpy).toHaveBeenCalled();
     });
 
@@ -332,21 +311,16 @@ describe('ChofereNacionalRetiradaComponent', () => {
       const mockTemplate = {} as TemplateRef<unknown>;
       component.modalComponent = {} as DatosDeChoferesNacionalDialogComponent;
 
-      // Add new chofer
       component.addNewRow(mockTemplate);
       component.addModal(mockDatosDelChoferNacional[0]);
 
       expect(component.datosDelChoferNacional).toContain(mockDatosDelChoferNacional[0]);
-
-      // Select chofer
       component.onChofereNationalSelected([mockDatosDelChoferNacional[0]]);
       expect(component.datosDelChoferNacionalSelected).toEqual([mockDatosDelChoferNacional[0]]);
 
-      // Edit selected chofer
       component.editSelectedRow(mockTemplate);
       expect(component.datosChofere).toEqual(mockDatosDelChoferNacional[0]);
 
-      // Delete selected chofer
       component.deleteSelectedRow();
       expect(component.datosDelChoferNacional).toEqual([]);
       expect(component.datosDelChoferNacionalSelected).toEqual([]);

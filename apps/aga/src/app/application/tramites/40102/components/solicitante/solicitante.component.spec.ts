@@ -142,5 +142,3 @@ describe('SolicitanteComponent', () => {
     expect(component.solicitudForm.get('telefono')?.value).toBe(mockDataTest.telefono);
   });
 });
-
-// We recommend installing an extension to run jest tests.

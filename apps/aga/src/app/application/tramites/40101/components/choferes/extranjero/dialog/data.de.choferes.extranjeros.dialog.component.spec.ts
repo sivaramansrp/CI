@@ -173,7 +173,7 @@ describe('DatosDeChoferesExtranjerosDialogComponent', () => {
 
     it('should validate max length for numero field', () => {
       const numeroControl = component.formChoferes.get('numero');
-      
+
       numeroControl?.setValue('12345678901'); // 11 characters
       expect(numeroControl?.hasError('maxlength')).toBeTruthy();
 
@@ -183,7 +183,7 @@ describe('DatosDeChoferesExtranjerosDialogComponent', () => {
 
     it('should validate numero del seguro social pattern', () => {
       const seguroControl = component.formChoferes.get('numeroDelSeguroSocial');
-      
+
       // Invalid pattern (not 11 digits)
       seguroControl?.setValue('1234567890');
       expect(seguroControl?.hasError('pattern')).toBeTruthy();
@@ -199,7 +199,7 @@ describe('DatosDeChoferesExtranjerosDialogComponent', () => {
 
     it('should validate codigo postal pattern', () => {
       const codigoPostalControl = component.formChoferes.get('codigoPostal');
-      
+
       // Invalid pattern (not 5 digits)
       codigoPostalControl?.setValue('1234');
       expect(codigoPostalControl?.hasError('pattern')).toBeTruthy();
@@ -218,88 +218,16 @@ describe('DatosDeChoferesExtranjerosDialogComponent', () => {
       const ideFiscalControl = component.formChoferes.get('numberDeIdeFiscal');
       const calleControl = component.formChoferes.get('calle');
 
-      // Test primer apellido max length (50)
       primerApellidoControl?.setValue('A'.repeat(51));
       expect(primerApellidoControl?.hasError('maxlength')).toBeTruthy();
 
-      // Test ide fiscal max length (13)
       ideFiscalControl?.setValue('A'.repeat(14));
       expect(ideFiscalControl?.hasError('maxlength')).toBeTruthy();
 
-      // Test calle max length (100)
       calleControl?.setValue('A'.repeat(101));
       expect(calleControl?.hasError('maxlength')).toBeTruthy();
     });
   });
-
-//   describe('Dropdown Cascading', () => {
-//     beforeEach(async () => {
-//       await component.ngOnInit();
-//     });
-
-//     it('should update estados when país changes', () => {
-//       const mockPais = mockPaises[0];
-      
-//       component.onPaisChange(mockPais);
-
-//       expect(mockChofer40101Service.getEstadosPorPais).toHaveBeenCalledWith(mockPais.id);
-//       expect(component.formChoferes.get('estado')?.value).toBe(null);
-//       expect(component.formChoferes.get('municipioAlcaldia')?.value).toBe(null);
-//       expect(component.formChoferes.get('colonia')?.value).toBe(null);
-//     });
-
-//     it('should update municipios when estado changes', () => {
-//       const mockEstado = mockEstados[0];
-      
-//       component.onEstadoChange(mockEstado);
-
-//       expect(mockChofer40101Service.getMunicipiosPorEstado).toHaveBeenCalledWith(mockEstado.id);
-//       expect(component.formChoferes.get('municipioAlcaldia')?.value).toBe(null);
-//       expect(component.formChoferes.get('colonia')?.value).toBe(null);
-//     });
-
-//     it('should update colonias when municipio changes', () => {
-//       const mockMunicipio = mockMunicipios[0];
-      
-//       component.onMunicipioChange(mockMunicipio);
-
-//       expect(mockChofer40101Service.getColoniasPorMunicipio).toHaveBeenCalledWith(mockMunicipio.id);
-//       expect(component.formChoferes.get('colonia')?.value).toBe(null);
-//     });
-//   });
-
-//   describe('CURP Input Handling', () => {
-//     beforeEach(async () => {
-//       await component.ngOnInit();
-//     });
-
-//     it('should trigger chofer search when CURP has 18 characters', () => {
-//       const buscarChoferSpy = jest.spyOn(component, 'buscarChoferNacional').mockResolvedValue();
-      
-//       component.formChoferes.get('curp')?.setValue('ABCD123456HDFRNN09');
-//       component.onCurpInput();
-
-//       expect(buscarChoferSpy).toHaveBeenCalledWith('ABCD123456HDFRNN09');
-//     });
-
-//     it('should not trigger search when CURP has less than 18 characters', () => {
-//       const buscarChoferSpy = jest.spyOn(component, 'buscarChoferNacional').mockResolvedValue();
-      
-//       component.formChoferes.get('curp')?.setValue('ABCD123456');
-//       component.onCurpInput();
-
-//       expect(buscarChoferSpy).not.toHaveBeenCalled();
-//     });
-
-//     it('should not trigger search when CURP is empty', () => {
-//       const buscarChoferSpy = jest.spyOn(component, 'buscarChoferNacional').mockResolvedValue();
-      
-//       component.formChoferes.get('curp')?.setValue('');
-//       component.onCurpInput();
-
-//       expect(buscarChoferSpy).not.toHaveBeenCalled();
-//     });
-//   });
 
   describe('buscarChoferNacional', () => {
     beforeEach(async () => {
@@ -379,16 +307,13 @@ describe('DatosDeChoferesExtranjerosDialogComponent', () => {
 
     it('should reset form with default values', () => {
       component.resetForm();
-
-    //   expect(component.formChoferes.get('curp')?.value).toBe('');
-    //   expect(component.formChoferes.get('rfc')?.value).toBe('');
       expect(component.formChoferes.get('pais')?.value).toBe(1);
       expect(component.formChoferes.get('paisDeResidencia')?.value).toBe('1');
     });
 
     it('should clear all form fields', () => {
       const resetSpy = jest.spyOn(component.formChoferes, 'reset');
-      
+
       component.limpiarFormulario();
 
       expect(resetSpy).toHaveBeenCalled();
@@ -405,8 +330,7 @@ describe('DatosDeChoferesExtranjerosDialogComponent', () => {
     it('should save and emit data when form is valid', () => {
       const addModalEventSpy = jest.spyOn(component.addModalEvent, 'emit');
       const closeModalSpy = jest.spyOn(component, 'closeModal').mockImplementation();
-      
-      // Set valid form data
+
       component.formChoferes.patchValue({
         numero: '12345',
         primerApellido: 'Test',
@@ -427,7 +351,6 @@ describe('DatosDeChoferesExtranjerosDialogComponent', () => {
     });
 
     it('should show alert when form is invalid', () => {
-      // Make form invalid by clearing required fields
       component.formChoferes.get('numero')?.setValue('');
       component.formChoferes.get('primerApellido')?.setValue('');
 
@@ -441,7 +364,7 @@ describe('DatosDeChoferesExtranjerosDialogComponent', () => {
     it('should transform catalog IDs to descriptions', () => {
       const addModalEventSpy = jest.spyOn(component.addModalEvent, 'emit');
       const closeModalSpy = jest.spyOn(component, 'closeModal').mockImplementation();
-      
+
       component.formChoferes.patchValue({
         numero: '12345',
         primerApellido: 'Test',
@@ -466,7 +389,7 @@ describe('DatosDeChoferesExtranjerosDialogComponent', () => {
     it('should handle missing catalog descriptions', () => {
       const addModalEventSpy = jest.spyOn(component.addModalEvent, 'emit');
       const closeModalSpy = jest.spyOn(component, 'closeModal').mockImplementation();
-      
+
       component.formChoferes.patchValue({
         numero: '12345',
         primerApellido: 'Test',
@@ -476,8 +399,8 @@ describe('DatosDeChoferesExtranjerosDialogComponent', () => {
         estado: '1',
         calle: 'Test Street',
         numeroExterior: '123',
-        pais: '999', // Non-existent ID
-        paisDeResidencia: '999', // Non-existent ID
+        pais: '999',
+        paisDeResidencia: '999',
         ciudad: 'Test City'
       });
 
@@ -530,7 +453,7 @@ describe('DatosDeChoferesExtranjerosDialogComponent', () => {
 
     it('should return form controls', () => {
       const controls = component.getFormValues;
-      
+
       expect(controls['numero']).toBeDefined();
       expect(controls['primerApellido']).toBeDefined();
       expect(controls['numeroDelSeguroSocial']).toBeDefined();
@@ -542,30 +465,12 @@ describe('DatosDeChoferesExtranjerosDialogComponent', () => {
       await component.ngOnInit();
     });
 
-    // it('should handle errors in paisListData', async () => {
-    //   mockChofer40101Service.getPaisEmisor.mockReturnValue(throwError(() => new Error('Service error')));
-      
-    //   await component.paisListData();
-      
-    //   expect(component.paisList).toEqual([]);
-    // });
-
-    // it('should handle errors in fetchEstadosByPais', async () => {
-    //   mockChofer40101Service.getEstadosPorPais.mockReturnValue(throwError(() => new Error('Service error')));
-    //   const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
-      
-    //   const result = await (component as any).fetchEstadosByPais(mockPaises[0]);
-      
-    //   expect(consoleSpy).toHaveBeenCalledWith('Error al obtener estados por país:', expect.any(Error));
-    //   expect(result).toEqual([]);
-    // });
-
     it('should handle errors in fetchMunicipiosByEstado', async () => {
       mockChofer40101Service.getMunicipiosPorEstado.mockReturnValue(throwError(() => new Error('Service error')));
       const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
-      
+
       const result = await (component as any).fetchMunicipiosByEstado(mockEstados[0]);
-      
+
       expect(consoleSpy).toHaveBeenCalledWith('Error al obtener municipios por estado:', expect.any(Error));
       expect(result).toEqual([]);
     });
@@ -573,37 +478,13 @@ describe('DatosDeChoferesExtranjerosDialogComponent', () => {
     it('should handle errors in fetchColoniasByMunicipio', async () => {
       mockChofer40101Service.getColoniasPorMunicipio.mockReturnValue(throwError(() => new Error('Service error')));
       const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
-      
+
       const result = await (component as any).fetchColoniasByMunicipio(mockMunicipios[0]);
-      
+
       expect(consoleSpy).toHaveBeenCalledWith('Error al obtener colonias por municipio:', expect.any(Error));
       expect(result).toEqual([]);
     });
   });
-
-//   describe('updateListsData', () => {
-//     beforeEach(async () => {
-//       await component.ngOnInit();
-//       component.paisList = mockPaises;
-//     });
-
-//     it('should update pais with correct ID', () => {
-//       const testData = { ...mockChoferData };
-      
-//       (component as any).updateListsData(testData);
-
-//       expect(testData.pais).toBe('1');
-//     });
-
-//     it('should handle missing pais in catalog', () => {
-//       const testData = { ...mockChoferData, pais: 'NonExistent Country' };
-      
-//       (component as any).updateListsData(testData);
-
-//       // Should remain unchanged if not found
-//       expect(testData.pais).toBe('NonExistent Country');
-//     });
-//   });
 
   describe('ngOnDestroy', () => {
     it('should complete destroyed$ subject', () => {
@@ -631,24 +512,18 @@ describe('DatosDeChoferesExtranjerosDialogComponent', () => {
   describe('Edge Cases', () => {
     it('should handle empty paisList on initialization', async () => {
       mockChofer40101Service.getPaisEmisor.mockReturnValue(of([]));
-      
+
       await component.ngOnInit();
-      
+
       expect(component.paisList).toEqual([]);
     });
 
     it('should handle null response from service', async () => {
       mockChofer40101Service.getPaisEmisor.mockReturnValue(of(null as any));
-      
+
       await component.ngOnInit();
-      
+
       expect(component.paisList).toEqual([]);
     });
-
-    // it('should handle undefined datosDeChofere', async () => {
-    //   component.datosDeChofere = undefined as any;
-      
-    //   await expect(component.ngOnInit()).resolves.not.toThrow();
-    // });
   });
 });

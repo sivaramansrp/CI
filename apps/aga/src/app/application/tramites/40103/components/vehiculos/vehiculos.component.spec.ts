@@ -181,12 +181,6 @@ describe('VehiculosComponent', () => {
       
       expect(() => component.ngOnInit()).not.toThrow();
     });
-
-    // it('should handle empty state from query', () => {
-    //   mockQuery.selectSolicitud$ = of({} as Tramite40103State);
-      
-    //   expect(() => component.ngOnInit()).not.toThrow();
-    // });
   });
 
   describe('selectTab', () => {
@@ -304,25 +298,6 @@ describe('VehiculosComponent', () => {
     beforeEach(() => {
       component.ngOnInit();
     });
-
-    // describe('setValoresStore', () => {
-    //   it('should call store method with form field value', () => {
-    //     const testForm = component.vehiculoFormulario;
-    //     testForm.get('numero')?.setValue('VEH123');
-
-    //     component.setValoresStore(testForm, 'numero', 'setDatosVehiculoNumero');
-
-    //     expect(mockStore.setDatosVehiculoNumero).toHaveBeenCalledWith('VEH123');
-    //   });
-
-    //   it('should handle non-existent form field', () => {
-    //     const testForm = component.vehiculoFormulario;
-
-    //     component.setValoresStore(testForm, 'nonExistentField', 'setDatosVehiculoNumero');
-
-    //     expect(mockStore.setDatosVehiculoNumero).toHaveBeenCalledWith(undefined);
-    //   });
-    // });
 
     describe('inicializarFormulario', () => {
       it('should create vehiculo form with proper validators and initial values', () => {
@@ -451,19 +426,6 @@ describe('VehiculosComponent', () => {
     });
 
     describe('agregarUnidadData', () => {
-      // it('should add new unidad when form is valid and not in edit mode', () => {
-      //   component.unidadFormulario.patchValue({
-      //     vinVehiculo: 'VIN999',
-      //     tipoDeUnidadArrastre: 'Remolque'
-      //   });
-      //   component.editUnidadIndex = null;
-
-      //   component.agregarUnidadData();
-
-      //   expect(component.unidadesTablaConfig.datos.length).toBe(1);
-      //   expect(component.closeUnidadModal.nativeElement.click).toHaveBeenCalled();
-      // });
-
       it('should update existing unidad when in edit mode', () => {
         const mockUnidad = { vinVehiculo: 'VIN789' };
         component.unidadesTablaConfig.datos = [mockUnidad as any];
@@ -567,31 +529,6 @@ describe('VehiculosComponent', () => {
   });
 
   describe('Integration Tests', () => {
-    // it('should work correctly from initialization to form submission', () => {
-    //   component.ngOnInit();
-      
-    //   // Verify initialization
-    //   expect(component.vehiculoFormulario).toBeDefined();
-    //   expect(component.unidadFormulario).toBeDefined();
-      
-    //   // Add new vehiculo
-    //   component.vehiculoFormulario.patchValue({
-    //     numero: '003',
-    //     tipoDeVehiculo: 'Camión'
-    //   });
-    //   component.agregarVahiculodata();
-      
-    //   expect(component.vehiculosTablaConfig.datos.length).toBe(1);
-      
-    //   // Edit vehiculo
-    //   component.startEditVehiculo(0);
-    //   expect(component.editIndex).toBe(0);
-      
-    //   component.vehiculoFormulario.patchValue({ numero: '003-edited' });
-    //   component.agregarVahiculodata();
-      
-    //   expect(component.vehiculosTablaConfig.datos[0].numero).toBe('003-edited');
-    // });
 
     it('should handle tab switching and maintain state', () => {
       component.ngOnInit();
@@ -616,22 +553,6 @@ describe('VehiculosComponent', () => {
       
       expect(() => component.inicializarFormulario()).toThrow();
     });
-
-    // it('should handle large datasets efficiently', () => {
-    //   const largeDataset = Array.from({ length: 1000 }, (_, index) => ({
-    //     numero: `${index}`,
-    //     tipoDeVehiculo: 'Camión'
-    //   }));
-      
-    //   component.vehiculosTablaConfig.datos = largeDataset as any[];
-      
-    //   const startTime = performance.now();
-    //   component.eliminarPedimento();
-    //   const endTime = performance.now();
-      
-    //   expect(endTime - startTime).toBeLessThan(50);
-    //   expect(component.vehiculosTablaConfig.datos).toEqual([]);
-    // });
 
     it('should handle modal operations without ViewChild elements', () => {
       component.vehiculoModal = null as any;

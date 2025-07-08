@@ -502,7 +502,7 @@ describe('modificarTerrestreService', () => {
       requests.forEach(req => req.flush(mockCatalogoLista));
 
       const endTime = performance.now();
-      expect(endTime - startTime).toBeLessThan(100); // Should complete quickly
+      expect(endTime - startTime).toBeLessThan(100);
     });
   });
 });

@@ -19,9 +19,7 @@ describe('VehiculosComponent', () => {
   let mockValidaciones: any;
 
   beforeEach(async () => {
-    mockStore = {
-      // Add mock methods if needed
-    };
+    mockStore = {};
     mockQuery = {
       selectSolicitud$: of({
         datosVehiculo: {},
@@ -60,7 +58,6 @@ describe('VehiculosComponent', () => {
 
     fixture = TestBed.createComponent(VehiculosComponent);
     component = fixture.componentInstance;
-    // Provide minimal state for forms
     component.tramiteState = {
       datosVehiculo: {},
       datosUnidad: {},
@@ -223,9 +220,6 @@ describe('VehiculosComponent', () => {
   });
 });
 
-
-
-// Mock Bootstrap Modal
 jest.mock('bootstrap', () => ({
   Modal: jest.fn().mockImplementation(() => ({
     show: jest.fn(),
@@ -283,8 +277,6 @@ describe('VehiculosComponent - Selected Functions', () => {
       hide: jest.fn(),
     } as unknown as jest.Mocked<Modal>;
 
-    // (Modal as jest.Mock).mockReturnValue(mockModal);
-
     mockStore = {
       update: jest.fn(),
     } as unknown as jest.Mocked<Tramite40102Store>;
@@ -318,7 +310,6 @@ describe('VehiculosComponent - Selected Functions', () => {
     fixture = TestBed.createComponent(VehiculosComponent);
     component = fixture.componentInstance;
 
-    // Initialize component state
     component.tramiteState = mockTramiteState;
     component.ngOnInit();
   });
@@ -329,7 +320,6 @@ describe('VehiculosComponent - Selected Functions', () => {
 
   describe('eliminarPedimento', () => {
     it('should clear vehiculos table data and reset edit index and form', () => {
-      // Setup initial state
       component.vehiculosTablaConfig.datos = [{ numero: '1', tipoDeVehiculo: 'Camión', marca: 'Ford' } as any];
       component.editIndex = 5;
       const resetSpy = jest.spyOn(component.vehiculoFormulario, 'reset');
@@ -361,13 +351,13 @@ describe('VehiculosComponent - Selected Functions', () => {
     it('should reset form even when form is already pristine', () => {
       // Setup
       const resetSpy = jest.spyOn(component.vehiculoFormulario, 'reset');
-      component.vehiculoFormulario.reset(); // Already reset
+      component.vehiculoFormulario.reset(); 
 
       // Execute
       component.eliminarPedimento();
 
       // Verify - reset should still be called
-      expect(resetSpy).toHaveBeenCalledTimes(2); // Once in setup, once in method
+      expect(resetSpy).toHaveBeenCalledTimes(2); 
     });
 
     it('should handle multiple consecutive calls', () => {
@@ -445,7 +435,7 @@ describe('VehiculosComponent - Selected Functions', () => {
       const endTime = performance.now();
 
       // Verify performance and correctness
-      expect(endTime - startTime).toBeLessThan(10); // Should complete in less than 10ms
+      expect(endTime - startTime).toBeLessThan(10);
       expect(component.unidadesTablaConfig.datos).toEqual([]);
       expect(component.editUnidadIndex).toBeNull();
     });
@@ -654,8 +644,8 @@ describe('VehiculosComponent - Selected Functions', () => {
       const unidadEndTime = performance.now();
 
       // Verify performance and correctness
-      expect(vehiculoEndTime - vehiculoStartTime).toBeLessThan(50); // Should complete in less than 50ms
-      expect(unidadEndTime - unidadStartTime).toBeLessThan(50); // Should complete in less than 50ms
+      expect(vehiculoEndTime - vehiculoStartTime).toBeLessThan(50);
+      expect(unidadEndTime - unidadStartTime).toBeLessThan(50);
       expect(component.vehiculosTablaConfig.datos).toEqual([]);
       expect(component.unidadesTablaConfig.datos).toEqual([]);
     });

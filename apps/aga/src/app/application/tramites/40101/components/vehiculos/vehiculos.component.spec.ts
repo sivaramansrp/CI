@@ -20,7 +20,6 @@ describe('VehiculosComponent', () => {
 
   beforeEach(async () => {
     mockStore = {
-      // Add mock methods if needed
     };
     mockQuery = {
       selectSolicitud$: of({
@@ -60,7 +59,6 @@ describe('VehiculosComponent', () => {
 
     fixture = TestBed.createComponent(VehiculosComponent);
     component = fixture.componentInstance;
-    // Provide minimal state for forms
     component.tramiteState = {
       datosVehiculo: {},
       datosUnidad: {},
@@ -225,7 +223,6 @@ describe('VehiculosComponent', () => {
 
 
 
-// Mock Bootstrap Modal
 jest.mock('bootstrap', () => ({
   Modal: jest.fn().mockImplementation(() => ({
     show: jest.fn(),
@@ -283,8 +280,6 @@ describe('VehiculosComponent - Selected Functions', () => {
       hide: jest.fn(),
     } as unknown as jest.Mocked<Modal>;
 
-    // (Modal as jest.Mock).mockReturnValue(mockModal);
-
     mockStore = {
       update: jest.fn(),
     } as unknown as jest.Mocked<Tramite40101Store>;
@@ -318,7 +313,6 @@ describe('VehiculosComponent - Selected Functions', () => {
     fixture = TestBed.createComponent(VehiculosComponent);
     component = fixture.componentInstance;
 
-    // Initialize component state
     component.tramiteState = mockTramiteState;
     component.ngOnInit();
   });
@@ -329,58 +323,46 @@ describe('VehiculosComponent - Selected Functions', () => {
 
   describe('eliminarPedimento', () => {
     it('should clear vehiculos table data and reset edit index and form', () => {
-      // Setup initial state
       component.vehiculosTablaConfig.datos = [{ numero: '1', tipoDeVehiculo: 'Camión', marca: 'Ford' } as any];
       component.editIndex = 5;
       const resetSpy = jest.spyOn(component.vehiculoFormulario, 'reset');
 
-      // Execute
       component.eliminarPedimento();
 
-      // Verify
       expect(component.vehiculosTablaConfig.datos).toEqual([]);
       expect(component.editIndex).toBeNull();
       expect(resetSpy).toHaveBeenCalled();
     });
 
     it('should handle empty table data without errors', () => {
-      // Setup
       component.vehiculosTablaConfig.datos = [];
       component.editIndex = null;
       const resetSpy = jest.spyOn(component.vehiculoFormulario, 'reset');
 
-      // Execute
       expect(() => component.eliminarPedimento()).not.toThrow();
 
-      // Verify
       expect(component.vehiculosTablaConfig.datos).toEqual([]);
       expect(component.editIndex).toBeNull();
       expect(resetSpy).toHaveBeenCalled();
     });
 
     it('should reset form even when form is already pristine', () => {
-      // Setup
       const resetSpy = jest.spyOn(component.vehiculoFormulario, 'reset');
-      component.vehiculoFormulario.reset(); // Already reset
+      component.vehiculoFormulario.reset();
 
-      // Execute
       component.eliminarPedimento();
 
-      // Verify - reset should still be called
-      expect(resetSpy).toHaveBeenCalledTimes(2); // Once in setup, once in method
+      expect(resetSpy).toHaveBeenCalledTimes(2);
     });
 
     it('should handle multiple consecutive calls', () => {
-      // Setup initial data
       component.vehiculosTablaConfig.datos = [{ numero: '1' } as any, { numero: '2' } as any];
       component.editIndex = 1;
 
-      // Execute multiple times
       component.eliminarPedimento();
       component.eliminarPedimento();
       component.eliminarPedimento();
 
-      // Verify state remains consistent
       expect(component.vehiculosTablaConfig.datos).toEqual([]);
       expect(component.editIndex).toBeNull();
     });
@@ -388,50 +370,40 @@ describe('VehiculosComponent - Selected Functions', () => {
 
   describe('eliminarUnidadPedimento', () => {
     it('should clear unidades table data and reset edit index and form', () => {
-      // Setup initial state
       component.unidadesTablaConfig.datos = [{ vinVehiculo: 'VIN123', tipoDeUnidadArrastre: 'Remolque' } as any];
       component.editUnidadIndex = 3;
       const resetSpy = jest.spyOn(component.unidadFormulario, 'reset');
 
-      // Execute
       component.eliminarUnidadPedimento();
 
-      // Verify
       expect(component.unidadesTablaConfig.datos).toEqual([]);
       expect(component.editUnidadIndex).toBeNull();
       expect(resetSpy).toHaveBeenCalled();
     });
 
     it('should handle empty unidades table data without errors', () => {
-      // Setup
       component.unidadesTablaConfig.datos = [];
       component.editUnidadIndex = null;
       const resetSpy = jest.spyOn(component.unidadFormulario, 'reset');
 
-      // Execute
       expect(() => component.eliminarUnidadPedimento()).not.toThrow();
 
-      // Verify
       expect(component.unidadesTablaConfig.datos).toEqual([]);
       expect(component.editUnidadIndex).toBeNull();
       expect(resetSpy).toHaveBeenCalled();
     });
 
     it('should reset form when form has validation errors', () => {
-      // Setup form with errors
       component.unidadFormulario.get('vinVehiculo')?.setErrors({ required: true });
       const resetSpy = jest.spyOn(component.unidadFormulario, 'reset');
 
-      // Execute
       component.eliminarUnidadPedimento();
 
-      // Verify
       expect(resetSpy).toHaveBeenCalled();
       expect(component.editUnidadIndex).toBeNull();
     });
 
     it('should handle large datasets efficiently', () => {
-      // Setup large dataset
       const largeDataset = Array.from({ length: 1000 }, (_, i) => ({
         vinVehiculo: `VIN${i}`,
         tipoDeUnidadArrastre: `Type${i}`,
@@ -439,13 +411,11 @@ describe('VehiculosComponent - Selected Functions', () => {
       component.unidadesTablaConfig.datos = largeDataset as any[];
       component.editUnidadIndex = 999;
 
-      // Execute
       const startTime = performance.now();
       component.eliminarUnidadPedimento();
       const endTime = performance.now();
 
-      // Verify performance and correctness
-      expect(endTime - startTime).toBeLessThan(10); // Should complete in less than 10ms
+      expect(endTime - startTime).toBeLessThan(10);
       expect(component.unidadesTablaConfig.datos).toEqual([]);
       expect(component.editUnidadIndex).toBeNull();
     });
@@ -453,91 +423,74 @@ describe('VehiculosComponent - Selected Functions', () => {
 
   describe('abiertoPedimento', () => {
     it('should show modal when vehiculoModal is available', () => {
-      // Setup mock ElementRef
       const mockElementRef = {
         nativeElement: document.createElement('div'),
       } as ElementRef;
       component.vehiculoModal = mockElementRef;
 
-      // Execute
       component.abiertoPedimento();
 
-      // Verify
       expect(Modal).toHaveBeenCalledWith(mockElementRef.nativeElement);
     });
 
     it('should not throw error when vehiculoModal is undefined', () => {
-      // Setup
       component.vehiculoModal = undefined as any;
 
-      // Execute & Verify
       expect(() => component.abiertoPedimento()).not.toThrow();
       expect(Modal).not.toHaveBeenCalled();
     });
 
     it('should not throw error when vehiculoModal is null', () => {
-      // Setup
       component.vehiculoModal = null as any;
 
-      // Execute & Verify
       expect(() => component.abiertoPedimento()).not.toThrow();
       expect(Modal).not.toHaveBeenCalled();
     });
 
     it('should create new Modal instance each time', () => {
-      // Setup
       const mockElementRef = {
         nativeElement: document.createElement('div'),
       } as ElementRef;
       component.vehiculoModal = mockElementRef;
 
-      // Execute multiple times
       component.abiertoPedimento();
       component.abiertoPedimento();
       component.abiertoPedimento();
 
-      // Verify
       expect(Modal).toHaveBeenCalledTimes(3);
     });
 
     it('should create new unidadModal instance each time', () => {
-      // Setup
       const mockElementRef = {
         nativeElement: document.createElement('div'),
       } as ElementRef;
       component.unidadModal = mockElementRef;
 
-      // Execute multiple times
       component.abiertoPedimentoUnidad();
       component.abiertoPedimentoUnidad();
       component.abiertoPedimentoUnidad();
 
-      // Verify
       expect(Modal).toHaveBeenCalledTimes(3);
     });
 
     it('should work with different DOM elements', () => {
-      // Setup different element types
       const divElement = document.createElement('div');
       const modalElement = document.createElement('modal');
 
       const mockElementRef1 = { nativeElement: divElement } as ElementRef;
       const mockElementRef2 = { nativeElement: modalElement } as ElementRef;
 
-      // Execute with different elements
       component.vehiculoModal = mockElementRef1;
       component.abiertoPedimento();
 
       component.vehiculoModal = mockElementRef2;
       component.abiertoPedimento();
 
-      // Verify
       expect(Modal).toHaveBeenCalledWith(divElement);
       expect(Modal).toHaveBeenCalledWith(modalElement);
     });
 
     it('should handle truthy but invalid vehiculoModal values', () => {
-      // Setup various truthy but invalid values
       const invalidValues = [
         { nativeElement: null },
         { nativeElement: undefined },
@@ -550,10 +503,8 @@ describe('VehiculosComponent - Selected Functions', () => {
         component.vehiculoModal = invalidValue as any;
 
         if (invalidValue.nativeElement) {
-          // Should attempt to create modal even with invalid element
           expect(() => component.abiertoPedimento()).not.toThrow();
         } else {
-          // Should handle missing nativeElement
           expect(() => component.abiertoPedimento()).not.toThrow();
         }
       });
@@ -562,7 +513,6 @@ describe('VehiculosComponent - Selected Functions', () => {
 
   describe('Integration Tests', () => {
     it('should work correctly when eliminarPedimento is called before abiertoPedimento', () => {
-      // Setup
       component.vehiculosTablaConfig.datos = [{ numero: '1' } as any];
       component.editIndex = 1;
       const mockElementRef = {
@@ -570,18 +520,15 @@ describe('VehiculosComponent - Selected Functions', () => {
       } as ElementRef;
       component.vehiculoModal = mockElementRef;
 
-      // Execute
       component.eliminarPedimento();
       component.abiertoPedimento();
 
-      // Verify
       expect(component.vehiculosTablaConfig.datos).toEqual([]);
       expect(component.editIndex).toBeNull();
       expect(Modal).toHaveBeenCalled();
     });
 
     it('should handle rapid consecutive calls to all three methods', () => {
-      // Setup
       const mockElementRef = {
         nativeElement: document.createElement('div'),
       } as ElementRef;
@@ -589,14 +536,12 @@ describe('VehiculosComponent - Selected Functions', () => {
       component.vehiculosTablaConfig.datos = [{ numero: '1' } as any];
       component.unidadesTablaConfig.datos = [{ vinVehiculo: 'VIN1' } as any];
 
-      // Execute rapid calls
       component.eliminarPedimento();
       component.eliminarUnidadPedimento();
       component.abiertoPedimento();
       component.eliminarPedimento();
       component.abiertoPedimento();
 
-      // Verify final state
       expect(component.vehiculosTablaConfig.datos).toEqual([]);
       expect(component.unidadesTablaConfig.datos).toEqual([]);
       expect(component.editIndex).toBeNull();
@@ -607,19 +552,15 @@ describe('VehiculosComponent - Selected Functions', () => {
 
   describe('Edge Cases and Error Handling', () => {
     it('should handle component destruction during method execution', () => {
-      // Setup
       component.destroyNotifier$ = new Subject<void>();
       const destroySpy = jest.spyOn(component.destroyNotifier$, 'next');
 
-      // Execute methods
       component.eliminarPedimento();
       component.eliminarUnidadPedimento();
 
-      // Simulate component destruction
       component.destroyNotifier$.next();
       component.destroyNotifier$.complete();
 
-      // Verify methods still work after destruction signal
       expect(() => {
         component.eliminarPedimento();
         component.eliminarUnidadPedimento();
@@ -627,24 +568,20 @@ describe('VehiculosComponent - Selected Functions', () => {
     });
 
     it('should maintain data integrity when forms are undefined', () => {
-      // Setup - simulate forms not being initialized
       component.vehiculoFormulario = undefined as any;
       component.unidadFormulario = undefined as any;
 
-      // Execute & Verify - should handle gracefully
       expect(() => component.eliminarPedimento()).toThrow();
       expect(() => component.eliminarUnidadPedimento()).toThrow();
     });
 
     it('should handle memory constraints with large datasets', () => {
-      // Setup very large datasets
       const hugeVehiculoDataset = Array.from({ length: 10000 }, (_, i) => ({ numero: `${i}` }));
       const hugeUnidadDataset = Array.from({ length: 10000 }, (_, i) => ({ vinVehiculo: `VIN${i}` }));
 
       component.vehiculosTablaConfig.datos = hugeVehiculoDataset as any;
       component.unidadesTablaConfig.datos = hugeUnidadDataset as any;
 
-      // Execute
       const vehiculoStartTime = performance.now();
       component.eliminarPedimento();
       const vehiculoEndTime = performance.now();
@@ -653,9 +590,8 @@ describe('VehiculosComponent - Selected Functions', () => {
       component.eliminarUnidadPedimento();
       const unidadEndTime = performance.now();
 
-      // Verify performance and correctness
-      expect(vehiculoEndTime - vehiculoStartTime).toBeLessThan(50); // Should complete in less than 50ms
-      expect(unidadEndTime - unidadStartTime).toBeLessThan(50); // Should complete in less than 50ms
+      expect(vehiculoEndTime - vehiculoStartTime).toBeLessThan(50);
+      expect(unidadEndTime - unidadStartTime).toBeLessThan(50);
       expect(component.vehiculosTablaConfig.datos).toEqual([]);
       expect(component.unidadesTablaConfig.datos).toEqual([]);
     });

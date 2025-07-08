@@ -126,11 +126,10 @@ describe('DatosDelTramiteComponent', () => {
   });
 
   it('should run #limpiar() and reset form and update store values', async () => {
-    // Arrange
     const mockFormGroup = {
       reset: jest.fn(),
       get: jest.fn().mockImplementation((field: string) => ({
-        value: null // Simulating reset values
+        value: null
       }))
     };
     
@@ -140,15 +139,12 @@ describe('DatosDelTramiteComponent', () => {
       setTransportacion: jest.fn()
     };
 
-    // Setup component properties
     component.datosDelTramiteForm = mockFormGroup as any;
     component.store = mockStore as any;
     component.setValoresStore = jest.fn();
 
-    // Act
     component.limpiar();
 
-    // Assert
     expect(mockFormGroup.reset).toHaveBeenCalled();
     expect(component.setValoresStore).toHaveBeenCalledTimes(3);
     expect(component.setValoresStore).toHaveBeenCalledWith(mockFormGroup, 'pais', 'setPais');
