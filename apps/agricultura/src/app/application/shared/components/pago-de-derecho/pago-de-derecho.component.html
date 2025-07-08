@@ -101,13 +101,10 @@
          </div>
          <div class="col-md-4">
             <div class="form-group">
-               <input-fecha
-               [datos]="fechaInicioInput"
-               name="fechaPago"
-               (change)="actualizarPago()"
-               (valorCambiado)="onFechaCambiada($event)"
-               [isDisabled]="pagoForm.get('exentoPago')?.value === 'si'"
-               ></input-fecha>
+              <input-fecha [datos]="fechaInicioInput" name="fechaPago"
+               (valorCambiado)="cambioFechaCaducidad($event)"
+               [setFecha]="pagoForm.get('fechaPago')?.value"
+               [isDisabled]="esFormularioSoloLectura"></input-fecha>
             </div>
          </div>
          <div class="col-md-4">
