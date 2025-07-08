@@ -374,10 +374,6 @@ export class DatosDelSolicitudModificacionComponent
    */
   public usoEspecificoLabel = USO_ESPECIFICO_LABEL;
   /**
-   * Etiqueta para el uso específico.
-   */
-  public usoEspecificoLabel = USO_ESPECIFICO_LABEL;
-  /**
    * Etiqueta para el país de origen.
    * @type {CrossListLable}
    */
