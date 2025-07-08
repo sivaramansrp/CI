@@ -50,7 +50,7 @@
       fracción VIII del artículo 26 del Código Fiscal de la Federación, de los
       créditos fiscales que llegaran a originarse.
     </p>
-
+<div *ngIf="mostrarSeccionCertificacion">
     <ng-titulo
       titulo="Empresas del grupo certificadas en materia de IVA e IEPS"
     />
@@ -88,13 +88,13 @@
     </div>
 
     <div class="button-container">
-      <button class="btn btn-primary" (click)="agregarOpenModal()" disabled="esFormularioSoloLectura ? true : false">
+      <button class="btn btn-primary" (click)="agregarOpenModal()" [disabled]="esFormularioSoloLectura ? true : false">
         Agregar
       </button>
-      <button class="btn btn-default ms-2" disabled="esFormularioSoloLectura ? true : false">Modificar</button>
-      <button class="btn btn-default ms-2" disabled="esFormularioSoloLectura ? true : false">Eliminar</button>
+      <button class="btn btn-default ms-2" [disabled]="esFormularioSoloLectura ? true : false">Modificar</button>
+      <button class="btn btn-default ms-2" [disabled]="esFormularioSoloLectura ? true : false">Eliminar</button>
     </div>
-
+</div>
     <section class="fw-medium mt-3">
       <span class="text-danger">*</span> Señale, en su caso, el tipo de
       información que la solicitante acredita, a través de alguna de las
@@ -186,7 +186,7 @@
         />
       </div>
       <div class="col-8 d-flex align-items-end justify-content-end">
-        <button class="btn btn-primary" disabled="esFormularioSoloLectura ? true : false">Agregar</button>
+        <button class="btn btn-primary" [disabled]="esFormularioSoloLectura ? true : false">Agregar</button>
       </div>
     </div>
 
@@ -215,8 +215,8 @@
     </div>
 
     <div class="button-container">
-      <button class="btn btn-default ms-2" disabled="esFormularioSoloLectura ? true : false">Modificar</button>
-      <button class="btn btn-default ms-2" disabled="esFormularioSoloLectura ? true : false">Eliminar</button>
+      <button class="btn btn-default ms-2" [disabled]="esFormularioSoloLectura ? true : false">Modificar</button>
+      <button class="btn btn-default ms-2" [disabled]="esFormularioSoloLectura ? true : false">Eliminar</button>
     </div>
 
     <p class="fw-bold">
@@ -348,18 +348,8 @@
           </div>
         </div>
         <div class="col-md-3">
-          <span class="require">*</span
-          ><label class="form-label width-unset" for="fechaPago"
-            >Fecha de pago</label
-          >
-          <input
-            type="text"
-            class="form-control"
-            id="fechaPago"
-            readonly
-            [disabled]="true"
-            formControlName="fechaPago"
-          />
+            <input-fecha [datos]="fechaFinalInput" name="fechaPago" [setFecha]="formularioDePago.get('fechaPago')?.value" (valorCambiado)="onFechaCambiada($event)" [isDisabled]="esFormularioSoloLectura"></input-fecha>
+
         </div>
         <div class="col-md-3">
           <span class="require">*</span
@@ -377,7 +367,7 @@
         </div>
 
         <div class="col-md-12 text-end mt-3">
-          <button class="btn btn-danger" disabled="esFormularioSoloLectura ? true : false">Borrar datos del pago</button>
+          <button class="btn btn-danger" [disabled]="esFormularioSoloLectura ? true : false">Borrar datos del pago</button>
         </div>
       </form>
     </div>
