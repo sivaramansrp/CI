@@ -33,6 +33,7 @@ import { Subject, map, merge, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { DatosDelMercancia } from '../models/exencion-impuestos.model';
 import { ExencionImpuestosService } from '../services/exencion-impuestos.service';
+import { MercanciaTableRow } from '../models/exencion-impuestos.model';
 import { Modal } from 'bootstrap';
 import { Tramite10302Query } from '../estados/tramite10302.query';
 import mercanciaTable from '@libs/shared/theme/assets/json/10302/mercancia-table.json';
@@ -90,7 +91,12 @@ export class DatosTramiteComponent implements OnInit, OnDestroy {
   /**
    * Datos de la tabla de mercancías.
    */
-  public getMercanciaTableData = mercanciaTable;
+  public getMercanciaTableData: {
+    mercanciaTable: {
+      tableHeader: string[];
+      tableBody: MercanciaTableRow[];
+    };
+  } = mercanciaTable as any;
 
   /**
    * Catálogos seleccionados.
@@ -181,8 +187,8 @@ export class DatosTramiteComponent implements OnInit, OnDestroy {
    * @param validacionesService Servicio para manejar validaciones de formularios.
    */
   constructor(
-    private exencionImpuestoService: ExencionImpuestosService,
-    private store: Tramite10302Store,
+    public exencionImpuestoService: ExencionImpuestosService,
+    public store: Tramite10302Store,
     private query: Tramite10302Query,
     public fb: FormBuilder,
     private validacionesService: ValidacionesFormularioService,
@@ -356,10 +362,10 @@ export class DatosTramiteComponent implements OnInit, OnDestroy {
         ],
         unidadMedida: [this.solicitudState?.unidadMedida, Validators.required],
         ano: [this.solicitudState?.ano, Validators.required],
-        cantidad: [this.solicitudState?.ano, Validators.required],
-        marca: [this.solicitudState?.ano],
-        modelo: [this.solicitudState?.ano],
-        serie: [this.solicitudState?.ano],
+        cantidad: [this.solicitudState?.cantidad, Validators.required],
+        marca: [this.solicitudState?.marca],
+        modelo: [this.solicitudState?.modelo],
+        serie: [this.solicitudState?.serie]
       }),
     });
     this.inicializarEstadoFormulario();
@@ -543,7 +549,11 @@ export class DatosTramiteComponent implements OnInit, OnDestroy {
                 respuesta.datos.condicionMercancia,
               ],
             };
+            if (!Array.isArray(this.getMercanciaTableData.mercanciaTable.tableBody)) {
+              this.getMercanciaTableData.mercanciaTable.tableBody = [];
+            }
             this.getMercanciaTableData.mercanciaTable.tableBody.push(DATOS);
+            this.mercanciaBodyData = [...this.getMercanciaTableData.mercanciaTable.tableBody];
           }
           this.agregarMercanciasForm.reset();
           this.agregarMercanciasForm.markAsUntouched();

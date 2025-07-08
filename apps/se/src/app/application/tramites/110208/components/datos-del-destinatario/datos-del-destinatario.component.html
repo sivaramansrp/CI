@@ -5,7 +5,7 @@
         <div class="col-md-4">
             <label for="nombres" class="form-label">Nombre(s):</label>
             <input type="text" class="form-control" formControlName="nombres"
-                id="nombres" (change)="setValoresStore(datosDestinatario,'nombres', 'setNombres')">
+                id="nombres" (change)="setValoresStore(datosDestinatario,'nombres', 'setNombres')" (focusout)="desactivarRazonSocial()">
         </div>
     
         <div class="col-md-4">
@@ -26,7 +26,7 @@
     
         <div class="col-md-8">
             <label for="razonSocial" class="form-label">Razón social:</label>
-            <input type="text" class="form-control" formControlName="razonSocial" id="razonSocial" (change)="setValoresStore(datosDestinatario,'razonSocial', 'setRazonSocial')">
+            <input type="text" class="form-control" formControlName="razonSocial" id="razonSocial" (change)="setValoresStore(datosDestinatario,'razonSocial', 'setRazonSocial')" (focusout)="desactivarNombre()">
         </div>
     </div>
 </form>

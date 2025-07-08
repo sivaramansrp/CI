@@ -169,6 +169,10 @@ export const IMPORTANTE = {
   Importante: `<p><strong>Importante: </strong>Si existe duda respecto del producto a registrar o al pago correspondiente, favor de comunicarse a los teléfonos 55 5128 2544, 55 5128 2595 y 55 5128 2553</p>`,
 };
 
+export const MERCHANDISE_IMPORTANTE = {
+  Importante: `<p><strong>Importante: </strong>Si existe duda respecto del producto a registrar o al pago correspondiente, por favor comunicate a los teléfonos 0155 5128 2544 y 0155 5128 2595</p>`,
+};
+
 export const ALERTA_DE_MATERIAL = {
   ADJUNTAR: `<p>de no existir el material en el sistema, debes de realizer la gestión de la solicitud en físico y de manera presencial.</p>`,
 };

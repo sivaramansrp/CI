@@ -14,7 +14,7 @@ import {
   TablaSeleccion,
   TituloComponent,
 } from '@ng-mf/data-access-user';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { map, takeUntil } from 'rxjs/operators';
 import { CommonModule } from '@angular/common';
@@ -149,7 +149,7 @@ export class ListaDomicilios90305Component implements OnInit, OnDestroy {
   TablaSeleccion = TablaSeleccion;
 
   /** Datos de domicilios obtenidos del servicio */
-  personaparas: ProsecModificacionModel[] = [];
+ @Input() personaparas: ProsecModificacionModel[] = [];
 
   /** Método del ciclo de vida de Angular - inicializa el componente y carga la lista de domicilios y consulta */
   ngOnInit(): void {

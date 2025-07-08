@@ -29,8 +29,6 @@ export interface Solicitud220503State {
   establecimientoTIF: string;
   numeroguia: string;
   regimen: number;
-  capturaDatosMercancia: string | number;
-  coordenadas: string;
   movilizacion: number;
   transporte: string;
   punto: number;
@@ -75,8 +73,6 @@ export function crearEstadoInicial(): Solicitud220503State {
     establecimientoTIF: '',
     numeroguia: '',
     regimen: 0,
-    capturaDatosMercancia: 0,
-    coordenadas: '',
     movilizacion: 0,
     transporte: '',
     punto: 0,
@@ -378,32 +374,6 @@ export class Solicitud220503Store extends Store<Solicitud220503State> {
     this.update((state) => ({
       ...state,
       regimen,
-    }));
-  }
-
-  /**
-   * Método para establecer los datos de captura de mercancía.
-   *
-   * @param capturaDatosMercancia - Cadena de texto o número con los datos de captura.
-   */
-  public setCapturaDatosMercancia(
-    capturaDatosMercancia: string | number
-  ): void {
-    this.update((state) => ({
-      ...state,
-      capturaDatosMercancia,
-    }));
-  }
-
-  /**
-   * Método para establecer las coordenadas de ubicación.
-   *
-   * @param coordenadas - Cadena de texto con las coordenadas.
-   */
-  public setCoordenadas(coordenadas: string): void {
-    this.update((state) => ({
-      ...state,
-      coordenadas,
     }));
   }
 

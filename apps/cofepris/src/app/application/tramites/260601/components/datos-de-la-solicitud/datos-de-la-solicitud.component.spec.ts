@@ -42,13 +42,7 @@ describe('DatosDeLaSolicitudComponent', () => {
   });
 
   it('should initialize tablaHeadData with mockTablaHeadDatos', () => {
-    const mockTablaHeadDatos = {
-      "hSolicitud": [
-        "Fecha Creación",
-        "Mercancía",
-        "Cantidad",
-        "Proovedor"
-      ]};
+    const mockTablaHeadDatos = ["Fecha Creación", "Mercancía", "Cantidad", "Proveedor"];
     expect(component.tablaHeadData).toEqual(mockTablaHeadDatos);
   });
 

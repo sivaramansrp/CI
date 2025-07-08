@@ -49,8 +49,8 @@
           (change)="onControlChange('representanteRfc')"
          
         />
-        <div *ngIf="hasError('representanteNombre', 'required')" class="text-danger mt-1">
-          El nombre o razón social del representante legal es obligatorio.
+        <div *ngIf="hasError('representanteRfc', 'required')" class="text-danger mt-1">
+          Este campo es obligatorio
         </div>
       </div>
     </div>
@@ -80,7 +80,7 @@
           (change)="onControlChange('representanteNombre')"
         />
         <div *ngIf="hasError('representanteNombre', 'required')" class="text-danger mt-1">
-          El nombre o razón social del representante legal es obligatorio.
+          Este campo es obligatorio
         </div>
       </div>
     </div>
@@ -97,7 +97,7 @@
           (change)="onControlChange('apellidoPaterno')"
         />
         <div *ngIf="hasError('apellidoPaterno', 'required')" class="text-danger mt-1">
-          El apellido paterno es obligatorio.
+          Este campo es obligatorio
         </div>
       </div>
     </div>

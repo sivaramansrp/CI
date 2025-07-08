@@ -2,6 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { PasoTresComponent } from './paso-tres.component';
 import { provideToastr, ToastrService } from 'ngx-toastr';
+import { provideHttpClient } from '@angular/common/http';
 
 
 describe('PasoTresComponent', () => {
@@ -17,6 +18,7 @@ describe('PasoTresComponent', () => {
       imports: [PasoTresComponent],
       providers: [
         ToastrService,
+        provideHttpClient(),
         provideToastr({
           positionClass: 'toast-top-right',
         }),

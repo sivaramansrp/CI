@@ -253,7 +253,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * - `tipoDeInversion`: Lista de documentos, requerido.
    * - `valorEnPesos`: Valor en pesos, requerido.
    * - `descripcionGeneral`: Descripción general, requerido.
-   * - `listaDeDocumentos`: Lista de documentos.
+   * - `listaDeDocumentos`: Lista de documentos, requerido.
    * - `manifiesto1`, `manifiesto2`, `manifiesto3`: Manifiestos opcionales.
    * - `claveDeReferencia`: Clave de referencia, deshabilitado por defecto con un valor predeterminado.
    * - `cadenaDeLaDependencia`: Cadena de la dependencia, deshabilitado por defecto con un valor predeterminado.
@@ -276,7 +276,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         this.solicitudState?.descripcionGeneral,
         [Validators.required],
       ],
-      listaDeDocumentos: [this.solicitudState?.listaDeDocumentos],
+      listaDeDocumentos: [this.solicitudState?.listaDeDocumentos, [Validators.required]],
       manifiesto1: [this.solicitudState?.manifiesto1],
       manifiesto2: [this.solicitudState?.manifiesto2],
       manifiesto3: [this.solicitudState?.manifiesto3],
@@ -297,7 +297,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       llaveDePago: [this.solicitudState?.llaveDePago],
       fechaInicialInput: [
         this.solicitudState?.fechaInicialInput,
-        [SolicitudComponent.validateFechaMenorIgualHoy.bind(this)], // Add the custom validator
+        [SolicitudComponent.validateFechaMenorIgualHoy.bind(this)],
       ],
       importeDePago: [
         { value: this.solicitudState?.importeDePago || '7735', disabled: true },
@@ -484,6 +484,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * @remarks
    * - Los valores del formulario se procesan para obtener etiquetas legibles desde catálogos.
    * - El formulario se reinicia y se marca como no modificado después de agregar la fila.
+   * - Se validan los campos requeridos antes de agregar la fila a la tabla.
    *
    * @example
    * // Ejemplo de uso:
@@ -492,6 +493,37 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * @returns {void} Este método no retorna ningún valor.
    */
   poblarTabla(): void {
+    // Validar campos requeridos antes de agregar a la tabla
+    const REQUIRED_FIELDS = ['tipoDeInversion', 'valorEnPesos', 'descripcionGeneral', 'listaDeDocumentos'];
+    const INVALID_FIELDS: string[] = [];
+
+    // Verificar si los campos requeridos están vacíos o son inválidos
+    REQUIRED_FIELDS.forEach(field => {
+      const CONTROL = this.registroForm.get(field);
+      if (!CONTROL?.value || CONTROL.invalid) {
+        INVALID_FIELDS.push(field);
+      }
+    });
+
+    // Si algún campo requerido es inválido, mostrar error y salir
+    if (INVALID_FIELDS.length > 0) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: 'Error de validación',
+        mensaje: 'Por favor, complete todos los campos requeridos antes de agregar.',
+        cerrar: true,
+        tiempoDeEspera: 3000,
+        txtBtnAceptar: 'De acuerdo',
+        txtBtnCancelar: '',
+      };
+      
+      // Marcar todos los controles del formulario como tocados para mostrar errores de validación
+      this.registroForm.markAllAsTouched();
+      return;
+    }
+
     const FORM_VALUES = this.registroForm.value;
     const NEW_ROW: DatosDeLaTabla = {
       id: this.configuracionTablaDatos.length + 1,
@@ -507,6 +539,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       valorEnPesos: FORM_VALUES.valorEnPesos,
       comprobanteDePago: 'N/A',
     };
+
     this.configuracionTablaDatos = [...this.configuracionTablaDatos, NEW_ROW];
     this.tramite32101Store.setDatosDelContenedor(this.configuracionTablaDatos);
     this.abrirModal();
@@ -518,14 +551,16 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   /**
    * Obtiene la etiqueta de un elemento seleccionado en un catálogo desplegable.
    *
-   * @param selectedId - El ID del elemento seleccionado (actualmente no se utiliza en la lógica).
+   * @param selectedId - El ID del elemento seleccionado.
    * @param catalog - Una lista de objetos del catálogo que contiene descripciones.
    * @returns La descripción del elemento seleccionado si se encuentra, de lo contrario, 'N/A'.
    */
-  static getDropdownLabel(selectedId: number, catalog: Catalogo[]): string {
+  static getDropdownLabel(selectedId: string | number, catalog: Catalogo[]): string {
+    const NUMERIC_ID = typeof selectedId === 'string' ? parseInt(selectedId, 10) : selectedId;
     const SELECTED_ITEMS = catalog.find(
-      // eslint-disable-next-line no-self-compare
-      (item) => item.descripcion === item.descripcion
+      (item) => {
+        return item.id === NUMERIC_ID;
+      }
     );
     return SELECTED_ITEMS ? SELECTED_ITEMS.descripcion : 'N/A';
   }
@@ -622,12 +657,40 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   static validateFechaMenorIgualHoy(
     control: AbstractControl
   ): ValidationErrors | null {
-    const SELECTED_DATE = new Date(control.value);
-    const CURRENT_DATE = new Date();
-    if (SELECTED_DATE < CURRENT_DATE) {
-      return { fechaInvalida: true }; // Return an error object
+    if (!control.value) {
+      return null;
     }
-    return null; // Return null if the date is valid
+    let SELECTED_DATE: Date;
+    if (typeof control.value === 'string' && control.value.includes('/')) {
+      const PARTS = control.value.split('/');
+      if (PARTS.length === 3) {
+        const DAY = parseInt(PARTS[0], 10);
+        const MONTH = parseInt(PARTS[1], 10);
+        const YEAR = parseInt(PARTS[2], 10);
+        SELECTED_DATE = new Date(YEAR, MONTH - 1, DAY);
+      } else {
+        SELECTED_DATE = new Date(control.value);
+      }
+    } else {
+      SELECTED_DATE = new Date(control.value);
+    }
+    
+    // Verificar si la fecha es válida
+    if (isNaN(SELECTED_DATE.getTime())) {
+      return { fechaInvalida: true }; // Retorna error para fechas inválidas
+    }
+    
+    const CURRENT_DATE = new Date();
+    
+    // Restablecer la hora para comparar solo las fechas
+    SELECTED_DATE.setHours(0, 0, 0, 0);
+    CURRENT_DATE.setHours(0, 0, 0, 0);
+    
+    if (SELECTED_DATE > CURRENT_DATE) {
+      return { fechaInvalida: true }; // Retorna un objeto de error para fechas futuras
+    }
+    
+    return null; // Retorna null si la fecha es válida (hoy o pasada)
   }
 
   /**
@@ -653,13 +716,19 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * - `llaveDePago`: Llave de pago utilizada.
    * - `fechaInicialInput`: Fecha inicial de la operación.
    *
-   * Utiliza el método `reset()` para limpiar los valores de cada control.
+   * Utiliza el método `reset()` para limpiar los valores de cada control y
+   * elimina cualquier error de validación asociado.
    */
   borrar(): void {
     this.registroForm.get('numeroDeOperacion')?.reset();
     this.registroForm.get('banco')?.reset();
     this.registroForm.get('llaveDePago')?.reset();
-    this.registroForm.get('fechaInicialInput')?.reset();
+    const FECHA_CONTROL = this.registroForm.get('fechaInicialInput');
+    FECHA_CONTROL?.setValue('');
+    FECHA_CONTROL?.setErrors(null);
+    FECHA_CONTROL?.markAsUntouched();
+    FECHA_CONTROL?.markAsPristine();
+    this.tramite32101Store.setFechaInicialInput('');
   }
 
   /**
@@ -684,15 +753,15 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   }
 
   /**
-  * Abre el modal y configura la notificación para eliminar un pedimento. 
+  * Abre el modal y configura la notificación para confirmar que se agregaron datos a la tabla. 
   */
   abrirModal(i: number = 0): void {
     this.nuevaNotificacion = {
       tipoNotificacion: 'alert',
-      categoria: 'danger',
+      categoria: 'success',
       modo: 'action',
       titulo: '',
-      mensaje: 'Datos guardados correctamente',
+      mensaje: 'Datos agregados a la tabla correctamente',
       cerrar: false,
       tiempoDeEspera: 2000,
       txtBtnAceptar: 'Aceptar',

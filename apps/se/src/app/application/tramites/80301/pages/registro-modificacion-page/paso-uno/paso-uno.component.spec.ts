@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PasoUnoComponent } from './paso-uno.component';
 import { Component } from '@angular/core';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 // Componentes mockeados
 @Component({ selector: 'solicitante', template: '' })
@@ -23,7 +24,8 @@ fdescribe('PasoUnoComponent', () => {
         MockSolicitante,
         MockModificacion,
         MockBitacora
-      ]
+      ],
+      imports: [HttpClientTestingModule],
     }).compileComponents();
 
     fixture = TestBed.createComponent(PasoUnoComponent);

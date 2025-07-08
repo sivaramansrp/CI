@@ -537,7 +537,7 @@ export const DATOS_EXPORTACION = [
         placeholder: '',
     },
     {
-        labelNombre: 'Cantidad en la unidad de medida senalada en el documento de exportacion*:',
+        labelNombre: 'Cantidad en la unidad de medida señalada en el documento de exportación*:',
         campo: 'cantidad_umt',
         class: 'col-md-4',
         tipo_input: 'number',

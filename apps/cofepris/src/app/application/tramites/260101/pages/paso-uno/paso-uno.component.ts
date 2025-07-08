@@ -1,7 +1,14 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
+import { ConsultaioQuery, ConsultaioState, SolicitanteComponent } from '@ng-mf/data-access-user';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
+import { CommonModule } from '@angular/common';
+import { ModificarDestinatarioComponent } from '../../components/modificar-destinatario/modificar-destinatario.component';
+import { ModificarMercanciasComponent } from '../../components/modificar-mercancias/modificar-mercancias.component';
+import { PagoDerechosComponent } from '../../components/pago-derechos/pago-derechos.component';
 import { Service260101Service } from '../../services/service260101.service';
+import { SolicitudDatosComponent } from '../../components/solicitud-datos/solicitud-datos.component';
+import { TercerosRelacionadosComponent } from '../../components/terceros-relacionados/terceros-relacionados.component';
 
 /**
  * El componente PasoUnoComponent se encarga de gestionar la lógica para el primer paso (Paso Uno) de un proceso.
@@ -11,6 +18,18 @@ import { Service260101Service } from '../../services/service260101.service';
   selector: 'app-paso-uno',
   templateUrl: './paso-uno.component.html',
   styles: ``,
+  standalone:true,
+  imports:[
+      SolicitudDatosComponent,
+      ModificarMercanciasComponent,
+      PagoDerechosComponent,
+      TercerosRelacionadosComponent,
+      ModificarDestinatarioComponent,
+      CommonModule,
+      ReactiveFormsModule,
+      FormsModule,
+      SolicitanteComponent,
+    ]
 })
 export class PasoUnoComponent implements OnInit, OnDestroy {
   /**

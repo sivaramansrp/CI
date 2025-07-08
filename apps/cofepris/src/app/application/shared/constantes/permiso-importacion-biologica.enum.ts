@@ -14,7 +14,7 @@ export const MANIFIESTOS_ALERT = {
  * @property {boolean} habilitado - Indica si el campo está habilitado.
  */
 export const FECHA_PAGO= {
-  labelNombre:'Fecha de pago:',
+  labelNombre:'Fecha de pago',
   required: false,
   habilitado: true,
 }

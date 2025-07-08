@@ -104,7 +104,7 @@ export class PagoDeDerechosEntradaComponent implements OnInit, OnDestroy {
   */
   @Input() public idProcedimiento!: number;
 
-  public requiredLabel:boolean = true;
+  public requiredLabel:boolean = false;
 
   public maxLength!: { [key: string]: number };
 
@@ -242,7 +242,7 @@ export class PagoDeDerechosEntradaComponent implements OnInit, OnDestroy {
       }
     });
 
-    this.requiredLabel = REQUIRED_BANCO.includes(this.idProcedimiento) ? false : true;
+    this.requiredLabel = REQUIRED_BANCO.includes(this.idProcedimiento) ? true : false;
 
     this.fechaFinalInput = REQUIRED_BANCO.includes(this.idProcedimiento) ? PAGO : FECHA_PAGO;
 
@@ -364,7 +364,15 @@ fechaFuturaSeleccionada = false;
    * @description Limpia todos los campos del formulario de pago de derechos.
    */
   onReset(): void {
-    this.pagoDerechos.reset();
+this.pagoDerechos.reset({
+  claveDeReferncia: '',
+  cadenaDeLaDependencia: '',
+  banco: '',
+  llaveDePago: '',
+  fechaDePago: this.pagoDerechos.get('fechaDePago')?.setValue(''),
+  importeDePago: ''
+});
+
   }
 
   /*

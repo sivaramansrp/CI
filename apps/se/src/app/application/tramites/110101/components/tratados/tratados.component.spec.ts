@@ -180,4 +180,70 @@ describe('TratadosComponent (Jest)', () => {
     expect(nextSpy).toHaveBeenCalled();
     expect(completeSpy).toHaveBeenCalled();
   });
+
+  it('debe activar modo edición y cargar valores al formulario en modificarTratado', () => {
+  component.registroDeSolicitudesTablaDatos = [
+    { pais: 'México', tratado: 'TLCAN', origen: 'Nacional' }
+  ];
+  component.paisCatalogo = [{ id: 1, descripcion: 'México' }];
+  component.tratadoCatalogo = [{ id: 1, descripcion: 'TLCAN' }];
+  component.origenCatalogo = [{ id: 1, descripcion: 'Nacional' }];
+
+  component.selectedRowIndex = 0;
+  component.inicializarFormulario();
+  component.modificarTratado();
+
+  expect(component.isEditMode).toBe(true);
+  expect(component.formularioTratados.value).toEqual({
+    pais: 1,
+    tratado: 1,
+    origen: 1
+  });
+});
+
+it('debe seleccionar una fila correctamente', () => {
+  const row = { pais: 'México', tratado: 'TLCAN', origen: 'Nacional' };
+  component.registroDeSolicitudesTablaDatos = [row];
+  component.inicializarFormulario();
+  component.onSeleccionChange([row]);
+
+  expect(component.selectedRows).toEqual([row]);
+  expect(component.selectedRowIndex).toBe(0);
+});
+
+it('debe limpiar selección y resetear formulario si múltiples filas son seleccionadas', () => {
+  const row1 = { pais: 'México', tratado: 'TLCAN', origen: 'Nacional' };
+  const row2 = { pais: 'Canadá', tratado: 'CPTPP', origen: 'Internacional' };
+  component.inicializarFormulario();
+  const resetSpy = jest.spyOn(component.formularioTratados, 'reset');
+  component.onSeleccionChange([row1, row2]);
+
+  expect(component.selectedRows).toEqual([]);
+  expect(component.selectedRowIndex).toBeNull();
+  expect(resetSpy).toHaveBeenCalled();
+});
+
+it('debe eliminar tratados seleccionados correctamente', () => {
+  const row1 = { pais: 'México', tratado: 'TLCAN', origen: 'Nacional' };
+  const row2 = { pais: 'Canadá', tratado: 'CPTPP', origen: 'Internacional' };
+  component.registroDeSolicitudesTablaDatos = [row1, row2];
+  component.selectedRows = [row1];
+
+  component.eliminarTratado();
+
+  expect(component.registroDeSolicitudesTablaDatos).toEqual([row2]);
+  expect(component.selectedRows).toEqual([]);
+});
+
+it('no debe eliminar si no hay selección', () => {
+  const initial = [{ pais: 'México', tratado: 'TLCAN', origen: 'Nacional' }];
+  component.registroDeSolicitudesTablaDatos = [...initial];
+  component.selectedRows = [];
+
+  component.eliminarTratado();
+
+  expect(component.registroDeSolicitudesTablaDatos).toEqual(initial);
+});
+
+
 });

@@ -1361,9 +1361,9 @@ export class TercerosRelacionadoesComponent implements OnInit, OnDestroy {
 
   /**
 * Inicializa el estado del formulario según el modo de solo lectura.
-* @private
+* @public
 */
-  private inicializarEstadoFormulario(): void {
+  public inicializarEstadoFormulario(): void {
     if (this.soloLectura) {
       this.agregarFabricanteFormGroup?.disable();
       this.agregarDestinatarioFormGroup?.disable();
