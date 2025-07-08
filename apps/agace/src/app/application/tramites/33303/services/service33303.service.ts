@@ -50,6 +50,34 @@ export class Service317Service {
     if (DATOS.mapTipoTramite) {
       this.unicoStore.setmapTipoTramite(DATOS.mapTipoTramite);
     }
+   
+    if (DATOS.foreignClientsSuppliers) {
+      this.unicoStore.setforeignClientsSuppliers(DATOS.foreignClientsSuppliers);
+    }
+    if (DATOS.nationalSuppliers) {
+      this.unicoStore.setnationalSuppliers(DATOS.nationalSuppliers);
+    }
+    if (DATOS.modificationsMembers) {
+      this.unicoStore.setmodificationsMembers(DATOS.modificationsMembers);
+    }
+    if (DATOS.changesToLegalDocuments) {
+      this.unicoStore.setchangesToLegalDocuments(DATOS.changesToLegalDocuments);
+    }
+    if (DATOS.mergerOrSplitNotice) {
+      this.unicoStore.setmergerOrSplitNotice(DATOS.mergerOrSplitNotice);
+    }
+    if (DATOS.additionFractions) {
+      this.unicoStore.setadditionFractions(DATOS.additionFractions);
+    }
+    if (DATOS.additionmodificación) {
+      this.unicoStore.setadditionmodificación(DATOS.additionmodificación);
+    }
+    if (DATOS.additionPresentación) {
+      this.unicoStore.setadditionPresentación(DATOS.additionPresentación);
+    }
+    if (DATOS.acepto253) {
+      this.unicoStore.setacepto253(DATOS.acepto253);
+    }
   }
 
   /**
@@ -57,7 +85,7 @@ export class Service317Service {
    * @returns Observable con el estado del trámite 317.
    */
   getRegistroTomaMuestrasMercanciasData(): Observable<UnicoState> {
-    return this.http.get<UnicoState>('assets/json/317/consulta.json');
+    return this.http.get<UnicoState>('assets/json/33303/consulta.json');
   }
 
 }

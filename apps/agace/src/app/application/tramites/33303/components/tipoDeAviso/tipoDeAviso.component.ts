@@ -1,5 +1,6 @@
 import {
   AlertComponent,
+  ConsultaioQuery,
   InputCheckComponent,
   TituloComponent,
 } from '@ng-mf/data-access-user';
@@ -45,6 +46,19 @@ import { UnicoState, UnicoStore } from '../../estados/renovacion.store';
   templateUrl: './tipoDeAviso.component.html',
 })
 export class TipoDeAvisoComponent implements OnInit, OnDestroy {
+
+   /**
+ * Indica si el formulario está en modo solo lectura.
+ * Cuando es `true`, los campos del formulario no se pueden editar.
+ */
+  esFormularioSoloLectura: boolean = false;
+
+   /**
+   * Observable para manejar la destrucción del componente.
+   */
+  private destroyed$ = new Subject<void>();
+
+  /**
   /** Formulario reactivo para gestionar los tipos de aviso */
   miFormulario!: FormGroup;
 
@@ -76,7 +90,7 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
    */
 
    constructor(private fb: FormBuilder,private service: AvisoUnicoService,private unicoStore: UnicoStore,
-      private unicoQuery: UnicoQuery) {}
+      private unicoQuery: UnicoQuery,private consultaioQuery: ConsultaioQuery) {}
       
   /**
    * Método que se ejecuta al inicializar el componente.
@@ -90,6 +104,15 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
         map((seccionState) => {
           this.solicitudState = seccionState;
           this.crearFormMiFormulario();
+        })
+      )
+      .subscribe();
+
+      this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroy$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
         })
       )
       .subscribe();
@@ -129,6 +152,39 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
       additionPresentación: [this.solicitudState?.additionPresentación],
       acepto253: [this.solicitudState?.acepto253, Validators.required],
     });
+
+    //  if (this.esFormularioSoloLectura) {
+    //   this.miFormulario.disable();
+    // } else {
+    //   this.miFormulario.enable();
+    // }
+  }
+
+   /**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.  
+   * Además, obtiene la información del catálogo de mercancía.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.crearFormMiFormulario();
+    }
+  }
+
+   /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormulario(): void {
+    this.crearFormMiFormulario();
+    if (this.esFormularioSoloLectura) {
+      this.miFormulario.disable();
+      
+    } else {
+      this.miFormulario.enable();
+      
+    } 
   }
 /**
    * Emite los valores del formulario cuando el usuario lo envía.
