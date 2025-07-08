@@ -1,7 +1,8 @@
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
-import { Catalogo, ConsultaioQuery } from '@libs/shared/data-access-user/src';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Catalogo, CatalogoSelectComponent, ConsultaioQuery, InputRadioComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CatalogosSelect } from '@libs/shared/data-access-user/src';
+import { CommonModule } from '@angular/common';
 import { DestinatarioCatalogos } from '../../models/destinatario.model';
 import { DestinatarioImitar } from '../../models/mercancia.model';
 import { REGEX_CORREO_ELECTRONICO } from '@libs/shared/data-access-user/src';
@@ -22,6 +23,16 @@ import { takeUntil } from 'rxjs';
   selector: 'app-modificar-destinatario',
   templateUrl: './modificar-destinatario.component.html',
   styleUrl: './modificar-destinatario.component.scss',
+  standalone:true,
+  imports:[
+      ModificarDestinatarioComponent,
+      CommonModule,
+      ReactiveFormsModule,
+      CatalogoSelectComponent,
+      FormsModule,
+      InputRadioComponent,
+      TituloComponent
+    ]
 })
 export class ModificarDestinatarioComponent
   implements OnInit, OnDestroy, AfterViewInit
