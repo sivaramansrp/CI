@@ -19,9 +19,12 @@
     <div class="row mt-5">
         <div class="col-md-12">
             <label for="justificacionDictamen" class="form-label">Sentido dictamen / justificación del
-                dictamen</label><span class="text-danger">*</span>
+                dictamen<span class="text-danger">*</span> :</label>
             <textarea id="justificacionDictamen" class="form-control text-height" formControlName="mensajeDictamen"
                 placeholder="" [ngClass]="isValid('mensajeDictamen') ? 'required' : ''"></textarea>
+            <div class="text-danger" *ngIf="dictamenForm.get('mensajeDictamen')?.invalid && dictamenForm.get('mensajeDictamen')?.touched">
+                Este campo es obligatorio.
+            </div>
         </div>
     </div>
 
