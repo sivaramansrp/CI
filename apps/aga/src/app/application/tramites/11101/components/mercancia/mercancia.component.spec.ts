@@ -45,7 +45,6 @@ describe('MercanciaComponent', () => {
     component.tramite11101Query = component.tramite11101Query || {};
     component.tramite11101Query.selectSeccionState$ = observableOf({});
     component.ngOnInit();
-    // expect(component.setFormValues).toHaveBeenCalled();
   });
 
   it('should run #setFormValues()', async () => {
@@ -54,7 +53,6 @@ describe('MercanciaComponent', () => {
       setValue: function() {}
     });
     component.setFormValues();
-    // expect(component.mercanciaForm.get).toHaveBeenCalled();
   });
 
 });
