@@ -1,33 +1,38 @@
-import { OnDestroy, OnInit } from '@angular/core';
-import { AlertComponent } from '@libs/shared/data-access-user/src';
-import { COLONIA } from '../../constantes/solicitud.enum';
-import { Catalogo } from '@libs/shared/data-access-user/src';
-import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
-import { CatalogosSelect } from '@libs/shared/data-access-user/src';
+import {
+  AlertComponent,
+  Catalogo,
+  CatalogoSelectComponent,
+  CatalogosSelect,
+  InputFecha,
+  InputFechaComponent,
+  Notificacion,
+  NotificacionesComponent,
+  Pedimento,
+  REGEX_ALFANUMERICO_CON_ESPACIOS_REEMPLAZAR,
+  REGEX_NUMEROS,
+  TituloComponent,
+} from '@libs/shared/data-access-user/src';
+import {
+  COLONIA,
+  ENTIDAD_FEDERATIVA,
+  FECHA_DESTRUCCION_MERCANCIA,
+  MUNICIPIO_ALCALDIA,
+} from '../../constantes/solicitud.enum';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import {
+  Solicitud32512State,
+  Solicitud32512Store,
+} from '../../estados/solicitud32512.store';
+import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { ENTIDAD_FEDERATIVA } from '../../constantes/solicitud.enum';
-import { FECHA_DESTRUCCION_MERCANCIA } from '../../constantes/solicitud.enum';
-import { FormBuilder } from '@angular/forms';
-import { FormGroup } from '@angular/forms';
-import { InputFecha } from '@libs/shared/data-access-user/src';
-import { InputFechaComponent } from '@libs/shared/data-access-user/src';
-import { MUNICIPIO_ALCALDIA } from '../../constantes/solicitud.enum';
-import { Notificacion } from '@libs/shared/data-access-user/src';
-import { NotificacionesComponent } from '@libs/shared/data-access-user/src';
-import { Pedimento } from '@libs/shared/data-access-user/src';
-import { REGEX_ALFANUMERICO_CON_ESPACIOS_REEMPLAZAR } from '@libs/shared/data-access-user/src';
-import { REGEX_NUMEROS } from '@libs/shared/data-access-user/src';
-import { ReactiveFormsModule } from '@angular/forms';
 import { Solicitud32512Query } from '../../estados/solicitud32512.query';
-import { Solicitud32512State } from '../../estados/solicitud32512.store';
-import { Solicitud32512Store } from '../../estados/solicitud32512.store';
 import { SolicitudService } from '../../services/solicitud.service';
-import { Subject } from 'rxjs';
-import { TituloComponent } from '@libs/shared/data-access-user/src';
-import { Validators } from '@angular/forms';
-import { map } from 'rxjs';
-import { takeUntil } from 'rxjs';
 
 /**
  * @component AvisoComponent
