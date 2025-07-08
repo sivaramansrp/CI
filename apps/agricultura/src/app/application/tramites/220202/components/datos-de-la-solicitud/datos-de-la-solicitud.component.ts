@@ -648,7 +648,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   eliminarMercancia(): void {
     const VALOR = this.fitosanitarioStore.getValue().tablaDatos;
-    if (VALOR.length === 0) {
+    if (VALOR && VALOR.length === 0) {
       return;
     }
     const FILTERED_VALOR = VALOR.filter(
