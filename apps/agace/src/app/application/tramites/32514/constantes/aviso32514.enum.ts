@@ -127,7 +127,7 @@ export const FECHA_FRANJO = {
  */
 export const FECHA_ACUSE = {
    /** Etiqueta para la fecha inicial. */
-   labelNombre: 'Fecha de acuse de recibo:*',
+   labelNombre: 'Fecha de acuse de recibo',
    /** Indica si el campo es obligatorio. */
    required: true,
    /** Indica si el campo está habilitado. */

@@ -48,7 +48,11 @@
         required
         formControlName="numeroPermiso"
         (change)="setValoresStore('numeroPermiso')"
+        maxlength="50"
       />
+      <div *ngIf="avisoForm.get('numeroPermiso')?.touched && avisoForm.get('numeroPermiso')?.invalid">
+        <small *ngIf="avisoForm.get('numeroPermiso')?.errors?.['required']" class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
+      </div>
     </div>
 
     <div class="row mt-3">
@@ -58,6 +62,9 @@
           [setFecha]="avisoForm.get('fechaEmision')?.value"
           [isDisabled]="esFormularioSoloLectura"
         ></input-fecha>
+        <div *ngIf="avisoForm.get('fechaEmision')?.touched && avisoForm.get('fechaEmision')?.invalid">
+        <small *ngIf="avisoForm.get('marca')?.errors?.['fechaEmision']" class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
+      </div>
       </div>
       <div class="col-md-6">
         <input-fecha
@@ -81,7 +88,12 @@
           required
           formControlName="numeroFranja"
           (change)="setValoresStore('numeroFranja')"
+          pattern="^[0-9]*$"
+          maxlength="15"
         />
+        <div *ngIf="avisoForm.get('numeroFranja')?.touched && avisoForm.get('numeroFranja')?.invalid">
+        <small *ngIf="avisoForm.get('numeroFranja')?.errors?.['required']" class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
+      </div>
       </div>
       <div class="col-md-10">
         <input-fecha
@@ -89,6 +101,9 @@
           [setFecha]="avisoForm.get('fechaFranja')?.value"
           [isDisabled]="esFormularioSoloLectura"
         ></input-fecha>
+        <div *ngIf="avisoForm.get('fechaFranja')?.touched && avisoForm.get('fechaFranja')?.invalid">
+        <small *ngIf="avisoForm.get('fechaFranja')?.errors?.['required']" class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
+      </div>
       </div>
     </div>
     <div *ngIf="avisoForm.get('tipoSolicitude')?.value === 'permiso'">
@@ -110,6 +125,7 @@
       >¿Es la segunda ocasion en la que se presenta el aviso?*:
     </label>
 
+    <div>
     <app-input-radio
       [radioOptions]="radioParcial"
       [isRequired]="true"
@@ -117,7 +133,7 @@
       formControlName="avisoNacExt"
       (change)="setValoresStore('avisoNacExt')"
     ></app-input-radio>
-
+    </div>
     <div class="row mt-3" *ngIf="avisoForm.get('avisoNacExt')?.value === 'si'">
       <div class="col-md-6">
         <input-fecha
@@ -125,6 +141,9 @@
           [setFecha]="avisoForm.get('fechaAcuse')?.value"
           [isDisabled]="esFormularioSoloLectura"
         ></input-fecha>
+        <div *ngIf="avisoForm.get('fechaAcuse')?.touched && avisoForm.get('fechaAcuse')?.invalid">
+        <small *ngIf="avisoForm.get('fechaAcuse')?.errors?.['required']" class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
+      </div>
       </div>
     </div>
     <div class="row mt-3" *ngIf="avisoForm.get('avisoNacExt')?.value === 'si'">
@@ -140,7 +159,11 @@
         required
         formControlName="conformidad"
         (change)="setValoresStore('conformidad')"
+        maxlength="500"
       />
+      </div>
+      <div *ngIf="avisoForm.get('conformidad')?.touched && avisoForm.get('conformidad')?.invalid">
+        <small *ngIf="avisoForm.get('conformidad')?.errors?.['required']" class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
       </div>
     </div>
   </div>
@@ -157,7 +180,12 @@
         required
         formControlName="marca"
         (change)="setValoresStore('marca')"
+        maxlength="50"
+        pattern="^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$"
       />
+      <div *ngIf="avisoForm.get('marca')?.touched && avisoForm.get('marca')?.invalid">
+        <small *ngIf="avisoForm.get('marca')?.errors?.['required']" class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
+      </div>
     </div>
     <div class="col-4 mt-3">
       <label>Tipo:*</label>
@@ -167,7 +195,12 @@
         required
         formControlName="tipo"
         (change)="setValoresStore('tipo')"
+        maxlength="50"
+        pattern="^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$"
       />
+      <div *ngIf="avisoForm.get('tipo')?.touched && avisoForm.get('tipo')?.invalid">
+        <small *ngIf="avisoForm.get('tipo')?.errors?.['required']" class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
+      </div>
     </div>
     <div class="col-4 mt-3">
       <label>Modelo:*</label>
@@ -177,7 +210,11 @@
         required
         formControlName="modelo"
         (change)="setValoresStore('modelo')"
+        maxlength="50"
       />
+      <div *ngIf="avisoForm.get('modelo')?.touched && avisoForm.get('modelo')?.invalid">
+        <small *ngIf="avisoForm.get('modelo')?.errors?.['required']" class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
+      </div>
     </div>
     <div class="col-4 mt-3">
       <label>NIV:*</label>
@@ -187,7 +224,11 @@
         required
         formControlName="niv"
         (change)="setValoresStore('niv')"
+        maxlength="50"
       />
+      <div *ngIf="avisoForm.get('niv')?.touched && avisoForm.get('niv')?.invalid">
+        <small *ngIf="avisoForm.get('niv')?.errors?.['required']" class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
+      </div>
     </div>
     <div class="col-4 mt-3">
       <label>Número de placas:*</label>
@@ -197,7 +238,11 @@
         required
         formControlName="numeroDePlacas"
         (change)="setValoresStore('numeroDePlacas')"
+        maxlength="50"
       />
+      <div *ngIf="avisoForm.get('numeroDePlacas')?.touched && avisoForm.get('numeroDePlacas')?.invalid">
+        <small *ngIf="avisoForm.get('numeroDePlacas')?.errors?.['required']" class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
+      </div>
     </div>
     <div class="col-4 mt-3">
       <label>Estado que espidió las placas:*</label>
@@ -207,7 +252,12 @@
         required
         formControlName="estadoPlacas"
         (change)="setValoresStore('estadoPlacas')"
+        maxlength="50"
+        pattern="^[a-zA-Z]*$"
       />
+      <div *ngIf="avisoForm.get('estadoPlacas')?.touched && avisoForm.get('estadoPlacas')?.invalid">
+        <small *ngIf="avisoForm.get('estadoPlacas')?.errors?.['required']" class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
+      </div>
     </div>
     <div class="col-12 mt-3">
       <label class="mt-4"
