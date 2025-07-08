@@ -101,13 +101,25 @@ export const NUEVA_NOTIFICACION = {
   txtBtnCancelar: 'Cancelar', // Texto del botón para cancelar la notificación.
 };
 
-// Etiqueta para el campo "País de procedencia" en el formulario.
+/**
+ * @comdoc
+ * Constante que define las etiquetas utilizadas para la selección de país de procedencia.
+ * 
+ * @property {string} tituluDeLaIzquierda - Etiqueta que se muestra a la izquierda, indicando el país de origen.
+ * @property {string} derecha - Etiqueta que se muestra a la derecha, indicando los países seleccionados.
+ */
 export const PAIS_DE_PROCEDENCIA_LABEL: CrossListLable = {
   tituluDeLaIzquierda: ' País de orígen',
   derecha: 'País(es) seleccionado(s)',
 }
 
-  // Etiqueta para el campo "Uso específico" en el formulario.
+  /**
+   * @comdoc
+   * Constante que define las etiquetas utilizadas para la selección de uso específico.
+   * 
+   * @property {string} tituluDeLaIzquierda - Etiqueta que se muestra a la izquierda, indicando el uso específico.
+   * @property {string} derecha - Etiqueta que se muestra a la derecha, indicando el uso específico seleccionado.
+   */
   export const USO_ESPECIFICO_LABEL: CrossListLable = {
     tituluDeLaIzquierda: 'Uso específico',
     derecha: 'Uso específico seleccionado *',
