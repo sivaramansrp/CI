@@ -117,6 +117,35 @@ export interface Solicitud31601State {
   controlInventariosDatos: ControlInventariosItem[];
   cancelacionProcedimiento: string;
   cumpleLineamientos: string;
+  nombre: string;
+  rfcDatos:string;
+    indiques: string;
+  cuenta: string;
+  mismo: string;
+  empresa: string;
+  propios: string;
+  empleadoss: string;
+  socios: string;
+  encuentras: string;
+  cumplido: string;
+  procedimiento: string;
+  determinan: string;
+   transferenciasDatos: string;
+  transferenciasdos: string;
+  retornosDatos: string;
+  retornosdos: string;
+  constanciasDatos: string;
+  constanciasdos: string;
+  monedaTotal: string;
+  porcentajeTotal: string;
+  capture:string;
+  deEmpleados: string;
+bimestreDatos: string;
+numeroDeEmpleados: string;
+bimestredos: string;
+numeroDatos: string;
+bimestres: string;
+
 }
 /**
  * Función para crear el estado inicial de Solicitud31601.
@@ -231,6 +260,34 @@ export function createInitialState(): Solicitud31601State {
     controlInventariosDatos: [],
     cancelacionProcedimiento: '',
     cumpleLineamientos: '',
+    nombre:  '',
+  rfcDatos: '',
+   indiques: '',
+      cuenta: '',
+      mismo: '',
+      empresa: '',
+      propios: '',
+      empleadoss: '',
+      socios: '',
+      encuentras: '',
+      cumplido: '',
+      procedimiento: '',
+      determinan: '',
+        transferenciasDatos: '',
+    transferenciasdos: '',
+    retornosDatos: '',
+    retornosdos: '',
+    constanciasDatos: '',
+    constanciasdos: '',
+    monedaTotal: '',
+    porcentajeTotal: '',
+    capture: '',
+     bimestreDatos: '',
+    numeroDeEmpleados: '',
+    bimestredos: '',
+    numeroDatos: '',
+    bimestres: '',
+    deEmpleados:''
   };
 }
 /**
@@ -993,4 +1050,195 @@ export class Tramite31601Store extends Store<Solicitud31601State> {
       cumpleLineamientos,
     }));
   }
+   public setRfcDatos(rfcDatos: string): void {
+    this.update((state) => ({
+      ...state,
+      rfcDatos,
+    }));
+  }
+   public setNombre(nombre: string): void {
+    this.update((state) => ({
+      ...state,
+      nombre,
+    }));
+  }
+  setIndiques(val: string): void {
+  this.update(state => ({
+    ...state,
+    indiques: val
+  }));
+}
+
+setCuenta(val: string): void {
+  this.update(state => ({
+    ...state,
+    cuenta: val
+  }));
+}
+
+setMismo(val: string): void {
+  this.update(state => ({
+    ...state,
+    mismo: val
+  }));
+}
+
+setEmpresa(val: string): void {
+  this.update(state => ({
+    ...state,
+    empresa: val
+  }));
+}
+
+setPropios(val: string): void {
+  this.update(state => ({
+    ...state,
+    propios: val
+  }));
+}
+
+setEmpleadoss(val: string): void {
+  this.update(state => ({
+    ...state,
+    empleadoss: val
+  }));
+}
+
+setSocios(val: string): void {
+  this.update(state => ({
+    ...state,
+    socios: val
+  }));
+}
+
+setEncuentras(val: string): void {
+  this.update(state => ({
+    ...state,
+    encuentras: val
+  }));
+}
+
+setCumplido(val: string): void {
+  this.update(state => ({
+    ...state,
+    cumplido: val
+  }));
+}
+
+setProcedimiento(val: string): void {
+  this.update(state => ({
+    ...state,
+    procedimiento: val
+  }));
+}
+
+setDeterminan(val: string): void {
+  this.update(state => ({
+    ...state,
+    determinan: val
+  }));
+}
+setTransferenciasDatos(value: string): void {
+  this.update((state) => ({
+    ...state,
+    transferenciasDatos: value,
+  }));
+}
+
+setTransferenciasdos(value: string): void {
+  this.update((state) => ({
+    ...state,
+    transferenciasdos: value,
+  }));
+}
+
+setRetornosDatos(value: string): void {
+  this.update((state) => ({
+    ...state,
+    retornosDatos: value,
+  }));
+}
+
+setRetornosdos(value: string): void {
+  this.update((state) => ({
+    ...state,
+    retornosdos: value,
+  }));
+}
+
+setConstanciasDatos(value: string): void {
+  this.update((state) => ({
+    ...state,
+    constanciasDatos: value,
+  }));
+}
+
+setConstanciasdos(value: string): void {
+  this.update((state) => ({
+    ...state,
+    constanciasdos: value,
+  }));
+}
+
+setMonedaTotal(value: string): void {
+  this.update((state) => ({
+    ...state,
+    monedaTotal: value,
+  }));
+}
+
+setPorcentajeTotal(value: string): void {
+  this.update((state) => ({
+    ...state,
+    porcentajeTotal: value,
+  }));
+}
+setCapture(value: string): void {
+  this.update((state) => ({
+    ...state,
+    capture: value,
+  }));
+}
+setBimestreDatos(bimestreDatos: string): void {
+  this.update((state) => ({
+    ...state,
+    bimestreDatos,
+  }));
+}
+
+setNumeroDeEmpleados(numeroDeEmpleados: string): void {
+  this.update((state) => ({
+    ...state,
+    numeroDeEmpleados,
+  }));
+}
+
+setBimestredos(bimestredos: string): void {
+  this.update((state) => ({
+    ...state,
+    bimestredos,
+  }));
+}
+
+setNumeroDatos(numeroDatos: string): void {
+  this.update((state) => ({
+    ...state,
+    numeroDatos,
+  }));
+}
+
+setBimestres(bimestres: string): void {
+  this.update((state) => ({
+    ...state,
+    bimestres,
+  }));
+}
+setDeEmpleados(deEmpleados: string): void {
+  this.update((state) => ({
+    ...state,
+    deEmpleados,
+  }));
+}
+
+
 }

@@ -28,6 +28,7 @@ import { TituloComponent } from '@ng-mf/data-access-user';
 import { Tramite31601Query } from '../../../../estados/queries/tramite31601.query';
 import enlace from '@libs/shared/theme/assets/json/31601/enlace.json';
 import enlaceData from '@libs/shared/theme/assets/json/31601/enlace-data.json';
+import representanteDatos from '@libs/shared/theme/assets/json/31601/represtantante-data.json';
 
 /**
  * @component EnlaceComponent
@@ -71,6 +72,10 @@ export class EnlaceComponent implements OnInit, OnDestroy {
    * @private
    */
   private destroyNotifier$: Subject<void> = new Subject();
+ /**
+   * Datos predefinidos del representante.
+   */
+  datosRepresentativos = representanteDatos;
 
   /**
    * Indica si el formulario está en modo solo lectura.
@@ -489,7 +494,31 @@ export class EnlaceComponent implements OnInit, OnDestroy {
     const VALOR = form.get(campo)?.value;
     (this.tramite31601Store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
+/**
+ * @description
+ * Método que busca el valor del campo `resigtroReprestantante` y, si existe,
+ * actualiza (patch) los campos del formulario `represtantante` con los datos del
+ * objeto `datosRepresentativos`. Esto incluye RFC, nombre, apellidos, teléfono,
+ * correo y ciudad del representante.
+ */
+    openBuscar(): void {
+    
+  const RESGISTRO_VALUE = this.represtantante.get('resigtroReprestantante')?.value;
 
+  if (RESGISTRO_VALUE) {
+    this.represtantante.patchValue({
+      rfcReprestantante: RESGISTRO_VALUE,
+      nombreReprestante: this.datosRepresentativos.nombre,
+      apellidoPaterno: this.datosRepresentativos.apellidoPaterno,
+      apellidoMaterno: this.datosRepresentativos.apellidoMaterno,
+      telefono:this.datosRepresentativos.telefono,
+      correo:this.datosRepresentativos.correo,
+      cuidad:this.datosRepresentativos.cuidad,
+      telefonoReprestantante:this.datosRepresentativos.telefono,
+      correoReprestantante:this.datosRepresentativos.correo,    
+    });
+  }
+}
   /**
    * Método de limpieza que se ejecuta al destruir el componente. Cancela suscripciones.
    */

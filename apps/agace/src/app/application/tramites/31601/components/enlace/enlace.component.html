@@ -166,7 +166,7 @@
                   <button
                     class="btn btn-default"
                     type="button"
-                    disabled="esFormularioSoloLectura ? true : false"
+                    [disabled]="esFormularioSoloLectura" (click)="openBuscar()"
                   >
                     Buscar
                   </button>
@@ -339,7 +339,7 @@
             (click)="saveDatos()"
             [disabled]="represtantante.get('resigtroReprestantante')?.value === ''"
           >
-            Agregar
+            Aceptar
           </button>
             <button
             type="button"

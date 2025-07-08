@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ConsultaioQuery, TituloComponent } from '@ng-mf/data-access-user';
+import { ConsultaioQuery, Notificacion, NotificacionesComponent, TituloComponent } from '@ng-mf/data-access-user';
 import {
   FormBuilder,
   FormGroup,
@@ -22,7 +22,7 @@ import representanteDatos from '@libs/shared/theme/assets/json/31601/represtanta
   templateUrl: './represtantante.component.html', // Ruta a la plantilla HTML
   styleUrl: './represtantante.component.scss', // Ruta al archivo de estilos SCSS
   standalone: true, // Define que el componente puede funcionar de forma independiente (sin módulo específico)
-  imports: [CommonModule, TituloComponent, ReactiveFormsModule, FormsModule], // Módulos y componentes necesarios
+  imports: [CommonModule, TituloComponent, ReactiveFormsModule, FormsModule ,NotificacionesComponent], // Módulos y componentes necesarios
 })
 export class ReprestantanteComponent implements OnInit, OnDestroy {
   /**
@@ -50,6 +50,11 @@ export class ReprestantanteComponent implements OnInit, OnDestroy {
   * Cuando es `true`, los campos del formulario no se pueden editar.
   */
   esFormularioSoloLectura: boolean = false; 
+   /**
+   * @description
+   * Notificación actual que se muestra en el componente.
+   */
+  public nuevaNotificacion!: Notificacion;
 
   /**
    * Constructor del componente.
@@ -82,6 +87,40 @@ export class ReprestantanteComponent implements OnInit, OnDestroy {
     // Inicializa el formulario con las validaciones
     this.inicializarEstadoFormulario();
   }
+  /*  
+  Asigna datos al formulario si 'resigtro' tiene un valor válido.  
+  Llena automáticamente los campos con datos de `datosRepresentativos`.  
+  Evita que el usuario tenga que escribir manualmente la información.  
+  Mejora la experiencia al buscar un representante existente.  
+*/
+   openBuscar(): void {
+    
+  const RESGISTRO_VALUE = this.represtantante.get('resigtro')?.value;
+
+  if (RESGISTRO_VALUE) {
+    this.represtantante.patchValue({
+      rfcDatos: RESGISTRO_VALUE,
+      nombre: this.datosRepresentativos.nombre,
+      apellidoPaterno: this.datosRepresentativos.apellidoPaterno,
+      apellidoMaterno: this.datosRepresentativos.apellidoMaterno,
+      telefono:this.datosRepresentativos.telefono,
+      correo:this.datosRepresentativos.correo
+    });
+  }
+   this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: 'Mensaje',
+      mensaje: 'Datos guardados correctamente.',
+      cerrar: false,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
+
+    
+  }
 
   /**
    * @method inicializarEstadoFormulario
@@ -107,13 +146,13 @@ export class ReprestantanteComponent implements OnInit, OnDestroy {
       .subscribe();
 
     this.represtantante = this.fb.group({
-      resigtro: [this.solicitudState?.resigtro && this.solicitudState?.resigtro !=='' ? this.solicitudState?.resigtro : this.datosRepresentativos.resigtro, Validators.required],
-      rfc: ['', Validators.required],
-      nombre: ['', Validators.required],
-      apellidoPaterno: ['', Validators.required],
-      apellidoMaterno: ['', Validators.required],
-      telefono: [this.solicitudState?.telefono && this.solicitudState?.telefono !=='' ? this.solicitudState?.telefono : this.datosRepresentativos.telefono, Validators.required],
-      correo: [this.solicitudState?.correo && this.solicitudState?.correo !=='' ? this.solicitudState?.correo : this.datosRepresentativos.correo, Validators.required],
+      resigtro: [this.solicitudState?.resigtro, Validators.required],
+      rfcDatos: [this.solicitudState?.rfcDatos, Validators.required],
+      nombre: [this.solicitudState?.nombre, Validators.required],
+      apellidoPaterno: [this.solicitudState?.apellidoPaterno, Validators.required],
+      apellidoMaterno: [this.solicitudState?.apellidoMaterno, Validators.required],
+      telefono: [this.solicitudState?.telefono, Validators.required],
+      correo: [this.solicitudState?.correo, Validators.required],
     });
 
     // Deshabilita los campos que no deben ser modificados
@@ -121,14 +160,6 @@ export class ReprestantanteComponent implements OnInit, OnDestroy {
     this.represtantante.get('nombre')?.disable();
     this.represtantante.get('apellidoPaterno')?.disable();
     this.represtantante.get('apellidoMaterno')?.disable();
-
-    // Rellena el formulario con los datos del representante
-    this.represtantante.patchValue({
-      rfc: this.datosRepresentativos.rfc,
-      nombre: this.datosRepresentativos.nombre,
-      apellidoPaterno: this.datosRepresentativos.apellidoPaterno,
-      apellidoMaterno: this.datosRepresentativos.apellidoMaterno,
-    });
 
     if (this.esFormularioSoloLectura && this.represtantante) {
      this.represtantante.disable();
