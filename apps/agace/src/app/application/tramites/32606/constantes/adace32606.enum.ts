@@ -1,18 +1,6 @@
 import { CatalogosSelect } from "@libs/shared/data-access-user/src";
 
 /**
- * Textos relacionados con el aprovechamiento.
- */
-export enum AprovechamientoTextos {
-  /** Texto para el aprovechamiento parcial. */
-  PARCIAL = 'Pago de aprovechamiento con compensación y/o disminución parcial',
-  /** Texto para el aprovechamiento total. */
-  TOTAL = 'Aprovechamiento totalmente compensado y/o disminuido',
-  /** Título del dictamen de aprovechamiento. */
-  TITULO = 'Dictamen de compensación o disminución contra el aprovechamiento a cargo de Recintos Fiscalizados (Regla 2.3.5.)'
-}
-
-/**
  * Opciones para los radios relacionados con el aprovechamiento.
  */
 export const RADIO_OPCIONS = [
@@ -64,9 +52,9 @@ export const FECHA_PAGO = {
 /**
  * Configuración para el catálogo de años.
  */
-export const ANO_CATALOGO: CatalogosSelect = {
+export const  SECTOR_PRODUCTIVO: CatalogosSelect = {
   /** Etiqueta para el catálogo de años. */
-  labelNombre: 'Año del periodo reportado',
+  labelNombre: 'Sector Productivo',
   /** Indica si el campo es obligatorio. */
   required: true,
   /** Texto de la primera opción del catálogo. */
@@ -78,9 +66,9 @@ export const ANO_CATALOGO: CatalogosSelect = {
 /**
  * Configuración para el catálogo de meses.
  */
-export const MES_CATALOGO: CatalogosSelect = {
+export const SERVICIO_CATALOGO: CatalogosSelect = {
   /** Etiqueta para el catálogo de meses. */
-  labelNombre: 'Mes del periodo reportado',
+  labelNombre: 'Servicio',
   /** Indica si el campo es obligatorio. */
   required: true,
   /** Texto de la primera opción del catálogo. */
