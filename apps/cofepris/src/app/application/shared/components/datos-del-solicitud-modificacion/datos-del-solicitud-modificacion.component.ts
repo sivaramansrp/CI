@@ -940,24 +940,6 @@ eliminarSeleccionados(): void {
   limpiarMercancia(): void { 
   this.abrirModalMercancia();
   this.formMercancias.reset();
- 
-  // this.formMercancias.reset({
-  //   clasificacion: '',
-  //   especificarClasificacionProducto: '',
-  //   denominacionEspecifica: '',
-  //   denominacionDistintiva: '',
-  //   denominacionComun: '',
-  //   tipoDeProducto: '',
-  //   estadoFisico: '',
-  //   estadoFormaFarmaceutica: '',
-  //   fraccionArancelaria: '',
-  //   descripcionFraccion: { value: '', disabled: true },
-  //   cantidadUMT: '',
-  //   UMT: { value: '', disabled: true },
-  //   cantidadUMC: '',
-  //   UMC: '',
-  //   presentacion: ''
-  // });
 }
   /* *
    * Método para eliminar un elemento de la tabla de mercancías.
