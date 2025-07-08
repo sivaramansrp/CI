@@ -1,10 +1,23 @@
-import { AlertComponent, AnexarDocumentosComponent, BtnContinuarComponent, CatalogoSelectComponent, CatalogosService, CrosslistComponent,FirmaElectronicaComponent, InputRadioComponent, SolicitanteComponent, TableComponent, TituloComponent, TramiteFolioService, WizardComponent } from '@ng-mf/data-access-user';
+import {
+  AlertComponent,
+  AnexarDocumentosComponent,
+  BtnContinuarComponent,
+  CatalogoSelectComponent,
+  CatalogosService,
+  CrosslistComponent,
+  FirmaElectronicaComponent,
+  InputRadioComponent,
+  SolicitanteComponent,
+  TableComponent,
+  TituloComponent,
+  TramiteFolioService,
+  WizardComponent
+} from '@ng-mf/data-access-user';
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { ImportadorExportadorService } from './services/importador-exportador.service';
-
 import { ImportadorExportadorRoutingModule } from './importador-exportador-routing.module';
+import { ImportadorExportadorService } from './services/importador-exportador.service';
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
