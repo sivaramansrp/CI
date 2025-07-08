@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { Catalogo, CatalogoSelectComponent, InputFecha, InputFechaComponent, InputRadioComponent, REGEX_LLAVE_DE_PAGO_DE_DERECHO, RespuestaCatalogos, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Catalogo, CatalogoSelectComponent, InputFecha, InputFechaComponent, InputRadioComponent, REGEX_LLAVE_DE_PAGO_DE_DERECHO, RespuestaCatalogos, TituloComponent, dateLessThanOrEqualToday } from '@libs/shared/data-access-user/src';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
@@ -35,7 +35,16 @@ export class PagoDeDerechoComponent implements OnDestroy,OnInit,AfterViewInit {
      */
     justificacionSelector: Catalogo[] = [];
   
-  
+    /**
+     * Indica si se debe establecer la fecha de pago.
+     * @type {boolean}
+     * @default true
+     * @see https://compodoc.app/
+     *
+     * @description
+     * Esta propiedad controla si el campo de fecha de pago debe ser editable o no.
+     */
+  public setFecha = true;
     
   
     /**
@@ -52,10 +61,11 @@ export class PagoDeDerechoComponent implements OnDestroy,OnInit,AfterViewInit {
       claveReferencia: [""],
       cadenaDependencia: [""],
       banco: [""],
-      llavePago: [""],
+      llavePago: ["", [Validators.maxLength(50), Validators.pattern(/^[a-zA-Z0-9]*$/)]],
       importePago: [""],
-      fechaPago:[""]
+      fechaPago: ["", [Validators.required, dateLessThanOrEqualToday]]
     });
+
   
     /**
      * Opciones disponibles para el campo de radio sobre la exención de pago.
@@ -141,6 +151,9 @@ export class PagoDeDerechoComponent implements OnDestroy,OnInit,AfterViewInit {
       });
       if (this.pagoForm.value.exentoPago === 'no') {
         this.pagoForm.get('llavePago')?.enable();
+        this.pagoForm.get('fechaPago')?.enable();
+        this.fechaInicioInput.habilitado = true;
+        this.pagoForm.get('fechaPago')?.setValidators([Validators.required]);
         this.pagoForm.get('llavePago')?.setValidators([Validators.required,
         Validators.pattern(REGEX_LLAVE_DE_PAGO_DE_DERECHO),
         Validators.maxLength(30)]);
@@ -209,7 +222,7 @@ export class PagoDeDerechoComponent implements OnDestroy,OnInit,AfterViewInit {
         }
         else if(!this.esFormularioSoloLectura && this.pagoForm.value.exentoPago === 'no') {
           this.fechaInicioInput.required=true;
-          this.fechaInicioInput.habilitado=false;
+          this.fechaInicioInput.habilitado=true;
           this.pagoForm.get('justificacion')?.disable();
           this.pagoForm.get('claveReferencia')?.disable();
           this.pagoForm.get('cadenaDependencia')?.disable();
@@ -257,13 +270,21 @@ export class PagoDeDerechoComponent implements OnDestroy,OnInit,AfterViewInit {
   }
 
   /**
-   * Actualiza la fecha de caducidad en el formulario de registro de donación y en el store de trámite 10303.
-   *
-   * @param {string} nuevo_valor - El nuevo valor de la fecha de caducidad.
+   * @description Método que se ejecuta al hacer clic en el botón "Borrar".
+   * Resetea el formulario de pago y restablece los valores predeterminados.
+   * @param {void}
    * @returns {void}
    */
-  cambioFechaCaducidad(fechaPago: string): void {
-    this.pagoForm.get('fechaPago')?.setValue(fechaPago);
+  onBorrar(): void{
+    this.setFecha = false;
+    const EXTENDO_PAGO = JSON.parse(JSON.stringify(this.pagoForm.get('exentoPago')?.value));
+    this.pagoForm.reset();
+    this.pagoForm.patchValue({
+      exentoPago: EXTENDO_PAGO ? EXTENDO_PAGO : 'no',
+    });
+    setTimeout(() => {
+      this.setFecha = true;  
+    })
   }
 
    /**

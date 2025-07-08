@@ -34,7 +34,6 @@ import { RadioOpcion } from '../../../tramites/220201/models/220201/certificado-
     CatalogoSelectComponent
   ],
   templateUrl: './tercerosrelacionados.component.html',
-  styleUrl: './tercerosrelacionados.component.scss',
 })
 export class TercerosrelacionadosComponent {
   /**
