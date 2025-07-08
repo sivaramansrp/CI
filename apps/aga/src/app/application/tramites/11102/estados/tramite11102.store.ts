@@ -178,94 +178,153 @@ export interface Solicitud11102StaObjResp {
  */
 export interface ModificacionDonacionesImmexResponse {
   modificacionDonacionesImmex: {
-    // Nombre del organismo público receptor de la donación.
+    /**
+     * Nombre del organismo público receptor de la donación.
+     */
     organismoPublico: string;
 
-    // Lista de aduanas por las que ingresará la mercancía. Cada una incluye ID y descripción.
+    /**
+     * Lista de aduanas por las que ingresará la mercancía. Cada una incluye ID y descripción.
+     */
     aduana: {
-      // Identificador único de la aduana.
+      /**
+       * Identificador único de la aduana.
+       */
       id: number;
 
-      // Descripción o nombre de la aduana.
+      /**
+       * Descripción o nombre de la aduana.
+       */
       descripcion: string;
     }[];
 
-    // Lista de países involucrados en la operación. Incluye ID y descripción.
+    /**
+     * Lista de países involucrados en la operación. Incluye ID y descripción.
+     */
     pais: {
-      // Identificador único del país.
+      /**
+       * Identificador único del país.
+       */
       id: number;
 
-      // Nombre o descripción del país.
+      /**
+       * Nombre o descripción del país.
+       */
       descripcion: string;
     }[];
 
-    // RFC de la empresa que realiza la donación.
+    /**
+     * RFC de la empresa que realiza la donación.
+     */
     rfc: string;
 
-    // Número del programa IMMEX con el que está registrada la empresa.
+    /**
+     * Número del programa IMMEX con el que está registrada la empresa.
+     */
     numeroProgramaImmex: string;
 
-    // Razón social de la empresa donante.
+    /**
+     * Razón social de la empresa donante.
+     */
     razonSocial: string;
 
-    // Correo electrónico alternativo del contacto (opcional).
+    /**
+     * Correo electrónico alternativo del contacto (opcional).
+     */
     correoElectronicoOpcional: string;
 
-    // Teléfono alternativo de contacto (opcional).
+    /**
+     * Teléfono alternativo de contacto (opcional).
+     */
     telefonoOpcional: string;
 
-    // Calle del domicilio fiscal o de operación de la empresa.
+    /**
+     * Calle del domicilio fiscal o de operación de la empresa.
+     */
     calle: string;
 
-    // Número exterior del domicilio.
+    /**
+     * Número exterior del domicilio.
+     */
     numeroExterior: string;
 
-    // Número interior del domicilio (si aplica).
+    /**
+     * Número interior del domicilio (si aplica).
+     */
     numeroInterior: string;
 
-    // Teléfono principal de contacto.
+    /**
+     * Teléfono principal de contacto.
+     */
     telefono: string;
 
-    // Correo electrónico principal de contacto.
+    /**
+     * Correo electrónico principal de contacto.
+     */
     correoElectronico: string;
 
-    // Código postal correspondiente al domicilio.
+    /**
+     * Código postal correspondiente al domicilio.
+     */
     codigoPostal: string;
 
-    // Estado o entidad federativa donde se ubica el domicilio.
+    /**
+     * Estado o entidad federativa donde se ubica el domicilio.
+     */
     estado: string;
 
-    // Colonia o fraccionamiento del domicilio.
+    /**
+     * Colonia o fraccionamiento del domicilio.
+     */
     colonia: string;
 
-    // Detalles específicos de la mercancía que será donada.
+    /**
+     * Detalles específicos de la mercancía que será donada.
+     */
     datosMercancia: {
-      // Tipo o categoría de la mercancía donada.
+      /**
+       * Tipo o categoría de la mercancía donada.
+       */
       tipoDeMercancia: string;
 
-      // Cantidad total de mercancía a donar.
+      /**
+       * Cantidad total de mercancía a donar.
+       */
       cantidad: string;
 
-      // Unidad de medida en la que se cuantifica la mercancía (kg, piezas, litros, etc.).
+      /**
+       * Unidad de medida en la que se cuantifica la mercancía (kg, piezas, litros, etc.).
+       */
       unidadMedida: string;
 
-      // Año de fabricación o importación de la mercancía.
+      /**
+       * Año de fabricación o importación de la mercancía.
+       */
       ano: string;
 
-      // Modelo del producto o equipo donado.
+      /**
+       * Modelo del producto o equipo donado.
+       */
       modelo: string;
 
-      // Marca del producto o equipo donado.
+      /**
+       * Marca del producto o equipo donado.
+       */
       marca: string;
 
-      // Número de serie único del producto (si aplica).
+      /**
+       * Número de serie único del producto (si aplica).
+       */
       serie: string;
 
-      // Condición física o de uso de la mercancía (nueva, usada, funcional, etc.).
+      /**
+       * Condición física o de uso de la mercancía (nueva, usada, funcional, etc.).
+       */
       condicionMercancia: string;
     };
   };
 }
+
 
 
 /**
