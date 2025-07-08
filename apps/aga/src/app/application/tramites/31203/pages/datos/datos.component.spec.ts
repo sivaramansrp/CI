@@ -74,7 +74,6 @@ describe('DatosComponent', () => {
     component.consultaState.update = 'update';
     component.guardarDatosFormulario = jest.fn();
     component.ngOnInit();
-    // expect(component.guardarDatosFormulario).toHaveBeenCalled();
   });
 
   it('should run #guardarDatosFormulario()', async () => {
@@ -82,15 +81,12 @@ describe('DatosComponent', () => {
     component.service.getDatosDeTrtamitelDoc = jest.fn().mockReturnValue(observableOf({}));
     component.service.actualizarEstadoFormulario = jest.fn();
     component.guardarDatosFormulario();
-    // expect(component.service.getDatosDeTrtamitelDoc).toHaveBeenCalled();
-    // expect(component.service.actualizarEstadoFormulario).toHaveBeenCalled();
   });
 
   it('should run #ngAfterViewInit()', async () => {
     component.solicitante = component.solicitante || {};
     component.solicitante.obtenerTipoPersona = jest.fn();
     component.ngAfterViewInit();
-    // expect(component.solicitante.obtenerTipoPersona).toHaveBeenCalled();
   });
 
   it('should run #seleccionaTab()', async () => {
@@ -104,8 +100,6 @@ describe('DatosComponent', () => {
     component.destroyNotifier$.next = jest.fn();
     component.destroyNotifier$.complete = jest.fn();
     component.ngOnDestroy();
-    // expect(component.destroyNotifier$.next).toHaveBeenCalled();
-    // expect(component.destroyNotifier$.complete).toHaveBeenCalled();
   });
 
 });
