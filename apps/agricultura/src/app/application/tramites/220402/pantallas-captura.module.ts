@@ -29,7 +29,7 @@ import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.co
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { TransporteComponent } from './components/transporte/transporte.component';
-import { WizardComponent } from '@ng-mf/data-access-user';
+import { WizardComponent } from '@libs/shared/data-access-user/src';
 
 
 @NgModule({

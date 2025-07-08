@@ -262,10 +262,17 @@ const ROUTES: Routes = [
         (m) => m.AvisoDeModificacionModule)
   },
   {
-    path: 'esquema-de-certificacion',
+        path: 'esquema-de-certificacion',
     loadChildren: () =>
       import('./tramites/32612/esquema-de-certificacion/esquema-de-certificacion.module').then(
         (m) => m.EsquemaDeCertificacionModule
+      )
+  },
+   {
+    path: 'registros',
+    loadChildren: () =>
+      import('./tramites/30506/registro.module').then(
+        (m) => m.RegistroModule
       ),
   }
 ];
