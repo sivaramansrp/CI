@@ -171,6 +171,22 @@ export class LibBandejaComponent<T> implements OnInit {
         item.encabezado !== 'Origin'
     );
   }
+
+  /*
+   * Maneja el cambio de selección de un departamento
+   * Emite el evento con el campo y valor del departamento seleccionado
+   */
+  borrar(): void {
+    this.dinamicasBandejaForma.reset();
+    this.configuracionTablaDatos = [];
+    this.hasValidForm = false;
+    this.tieneConfiguracionTablaDatos = false;
+    this.seleccionadoDepartamento = {
+      tieneDepartamento: false,
+      numeroDeProcedimiento: '',
+      nombreDelDepartamento: '',
+    };
+  }
   /*
    * Envía los datos del formulario. Marca el formulario como válido si no hay errores
    */
