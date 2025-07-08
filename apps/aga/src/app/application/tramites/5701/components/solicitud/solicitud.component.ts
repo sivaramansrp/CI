@@ -104,7 +104,6 @@ import {
   map,
   merge,
   switchMap,
-  take,
   takeUntil,
   tap,
   throwError,
@@ -477,7 +476,6 @@ export class SolicitudComponent
    */
   radioPatentes = patentes.patentes;
   rfcs = rfcs.rfcs;
-
   /**
    * @description Bandera para indicar si la hora de inicio del servicio no ha sido marcada.
    */
