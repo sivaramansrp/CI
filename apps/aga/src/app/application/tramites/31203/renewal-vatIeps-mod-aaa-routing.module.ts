@@ -1,6 +1,5 @@
-import { NgModule } from '@angular/core';
-
 import { RouterModule, Routes } from '@angular/router';
+import { NgModule } from '@angular/core';
 import { PantallasComponent } from './pages/pantallas/pantallas.component';
 
 /**
