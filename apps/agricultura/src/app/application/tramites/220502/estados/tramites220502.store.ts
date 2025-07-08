@@ -12,6 +12,7 @@ export interface Solicitud220502State {
   sanidadAgropecuaria: number;
   puntoDeInspeccion: number;
   fechaDeInspeccion: string;
+  fechaInspeccion: string;
   nombre: string;
   primerapellido: string;
   segundoapellido: string;
@@ -36,6 +37,7 @@ export function crearEstadoInicial(): Solicitud220502State {
     sanidadAgropecuaria: 0,
     puntoDeInspeccion: 0,
     fechaDeInspeccion: '',
+    fechaInspeccion: '',
     nombre: '',
     primerapellido: '',
     segundoapellido: '',
@@ -131,6 +133,18 @@ export class Solicitud220502Store extends Store<Solicitud220502State> {
     this.update((state) => ({
       ...state,
       fechaDeInspeccion,
+    }));
+  }
+
+  /**
+   * Actualiza la fecha de inspección en el estado.
+   * 
+   * @param fechaInspeccion - Fecha en la que se realizará la inspección.
+   */
+  public setFechaInspeccion(fechaInspeccion: string): void {
+    this.update((state) => ({
+      ...state,
+      fechaInspeccion,
     }));
   }
 

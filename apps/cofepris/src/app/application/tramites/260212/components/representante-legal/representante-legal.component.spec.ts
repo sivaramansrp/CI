@@ -5,6 +5,7 @@ import { ValidacionesFormularioService } from '@libs/shared/data-access-user/src
 import { of } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('RepresentanteLegalComponent', () => {
   let component: RepresentanteLegalComponent;
@@ -15,7 +16,12 @@ describe('RepresentanteLegalComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [],
-      imports: [CommonModule, ReactiveFormsModule,RepresentanteLegalComponent],
+      imports: [
+        CommonModule,
+        ReactiveFormsModule,
+        RepresentanteLegalComponent,
+        HttpClientTestingModule // <-- Agrega este módulo para proveer HttpClient
+      ],
       providers: [FormBuilder, ValidacionesFormularioService]
     }).compileComponents();
 
@@ -26,11 +32,11 @@ describe('RepresentanteLegalComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
+  it('debería crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize the form with default values', () => {
+  it('debería inicializar el formulario con los valores predeterminados', () => {
     expect(component.personaForm).toBeDefined();
     expect(component.personaForm.controls['rfc'].value).toBe('');
     expect(component.personaForm.controls['nombre'].disabled).toBe(true);
@@ -39,16 +45,43 @@ describe('RepresentanteLegalComponent', () => {
   });
 
   it('should validate form fields correctly', () => {
-    spyOn(validacionesService, 'isValid').and.returnValue(true);
-    expect(component.isValid('rfc')).toBe(true);
+    jest.spyOn(validacionesService, 'isValid').mockReturnValue(true);
+    expect(component.esValido('rfc')).toBe(true);
   });
 
   it('should fetch options and populate losDatos', () => {
-    spyOn(httpClient, 'get').and.returnValue(of([{ id: 1, value: 'Option 1' }]));
-
-    component.fetchSolicitudeOptions();
-
+    jest.spyOn(httpClient, 'get').mockReturnValue(of([{ id: 1, value: 'Option 1' }]));
+    component.obtenerOpcionesSolicitud();
     expect(component.losDatos.length).toBe(1);
     expect(component.losDatos[0].value).toBe('Option 1');
   });
+
+  it('should enable form if esFormularioSoloLectura is false', () => {
+    component.esFormularioSoloLectura = false;
+    component.actualizarEstado();
+    component.guardarDatosFormulario();
+    expect(component.personaForm.enabled).toBe(true);
+  });
+
+  it('should patch value on successful buscar()', () => {
+    component.actualizarEstado();
+    const patchSpy = jest.spyOn(component.personaForm, 'patchValue');
+    const mockResponse = {
+      rfc: '',
+      nombre: 'Juan',
+      apellidoPaterno: 'Pérez',
+      apellidoMaterno: 'Gómez',
+    };
+
+    jest.spyOn(component['solicitudService'], 'ObtenerReprestantanteData').mockReturnValue(of(mockResponse));
+    component.personaForm.get('rfc')?.setValue('XAXX010101000');
+    component.buscar();
+
+    expect(patchSpy).toHaveBeenCalledWith({
+      nombre: 'Juan',
+      primerApellido: 'Pérez',
+      segundoApellido: 'Gómez'
+    });
+  });
+
 });

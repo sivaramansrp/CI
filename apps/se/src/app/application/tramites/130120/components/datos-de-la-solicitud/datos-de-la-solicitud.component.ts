@@ -392,6 +392,8 @@ tipoPersonaExportador: string = 'Física';
    */
   esFormularioSoloLectura: boolean = false;
 
+  enableConversion: boolean = false;
+
   /**
    * Constructor del componente DatosDeLaSolicitudComponent.
    * Inicializa el formulario y configura los grupos de formularios basados en la configuración proporcionada.
@@ -486,10 +488,15 @@ tipoPersonaExportador: string = 'Física';
         ) {
           this.tipoPersonaProductor = storeValue.datosProductor.persona_tipo;
         }
+         if (
+          storeValue.datosExportador &&
+          storeValue.datosExportador.persona_tipo
+        ) {
+          this.tipoPersonaExportador = storeValue.datosExportador.persona_tipo;
+        }
       }
     });
 
-    // Listen for form changes and update the store
     this.formulario.valueChanges.pipe(
       takeUntil(this.destroyNotifier$)
     ).subscribe((formValue) => {
@@ -537,6 +544,12 @@ tipoPersonaExportador: string = 'Física';
       const VALIDATORS = campo.props.validators ? DatosDeLaSolicitudComponent.getValidators(campo.props.validators) : [Validators.required];
       const CONTROL_NAME = campo.props.campo;
      let initialValue: string | number | null | undefined = '';
+     if(campo.props.campo === 'factor_conversión') {
+      initialValue = '1';
+     }
+     else if (campo.props.campo === 'cantidad_umt') {
+      initialValue = '0.00';
+     }
     if (nombreGrupo === 'datosMercanica' && menuIndex === 11) {
       initialValue = 1;
     }
@@ -597,8 +610,6 @@ tipoPersonaExportador: string = 'Física';
    * @param evento Nueva fecha.
    */
   fechaCambiado(evento: string): void {
-    // Example: this.formulario.get('datosExporta.fecha_documento').setValue(evento);
-    // Make sure to mark as touched/dirty if needed
     this.formulario.patchValue({
         datosMercanica: { factura_fecha: evento },
       });
@@ -606,13 +617,11 @@ tipoPersonaExportador: string = 'Física';
     this.setFormGroupValidity();
   }
 
-    /**
+  /**
    * Maneja el cambio de la fecha del documento de exportación.
    * @param evento Nueva fecha.
    */
   fechaDocumento(evento: string): void {
-    // Example: this.formulario.get('datosExporta.fecha_documento').setValue(evento);
-    // Make sure to mark as touched/dirty if needed
     this.formulario.patchValue({
         datosExportador: { fecha_documento: evento },
       });
@@ -679,6 +688,7 @@ tipoPersonaExportador: string = 'Física';
   const UMCCATALOG = this.configuracion[1].menu[8].props.catalogos;
   if (UMCCATALOG && UMCCATALOG.length > 0) {
     const SELECTED = UMCCATALOG.find((item: {id: number, descripcion: string} ) => item.id === Number(VALOR));
+    this.enableConversion = true
     if (SELECTED) {
       this.otroUmcIncrement = 10 * Number(SELECTED.id);
       const OTROUMCCONTROL = this.formulario.get('datosMercanica')?.get(this.configuracion[1].menu[9].props.campo);
@@ -687,6 +697,10 @@ tipoPersonaExportador: string = 'Física';
         OTROUMCCONTROL.markAsDirty();
         OTROUMCCONTROL.markAsTouched();
       }
+    }
+    const FACTORINPUT = document.getElementById('factor_conversión') as HTMLInputElement | null;
+    if (FACTORINPUT) {
+      FACTORINPUT.readOnly = false;
     }
   }
 }

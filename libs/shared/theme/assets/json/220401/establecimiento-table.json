@@ -1,13 +1,14 @@
 
 {
     "tableHeader": [
-        "Nombre/Denominación o Razón Social",
+        "Nombre/denominación o razón social",
         "Teléfono",
         "Correo Electrónico",
         "Tipo de Actividad del Establecimiento",
         "Otro",
         "Número de Certificado",
-        "Domicilio"
+        "Domicilio",
+        "País"
     ],
     "tableBody": [
         {
@@ -18,7 +19,8 @@
                 "Actividad 1",
                 "Otro detalle",
                 "Certificado 001",
-                "Domicilio 1"
+                "Domicilio 1",
+                "Otro detalle"
             ]
         }
     ]

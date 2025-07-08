@@ -13,7 +13,6 @@ import { Tramite260203Query } from '../../estados/queries/tramite260203Query.que
 import { Tramite260203Store } from '../../estados/stores/tramite260203Store.store';
 
 
-
 /**
  * @component TercerosRelacionadosVistaComponent
  * @description Componente de solo lectura que muestra las tablas de terceros relacionados

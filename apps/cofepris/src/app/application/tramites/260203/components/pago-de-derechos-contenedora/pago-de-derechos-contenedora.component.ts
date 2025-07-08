@@ -25,7 +25,6 @@ export class PagoDeDerechosContenedoraComponent {
    * @property {PagoDerechosFormState} pagoDerechos
    * @description Estado actual del formulario de pago de derechos, obtenido del store del trámite.
    */
-
   public pagoDerechos: PagoDerechosFormState;
 
   /**

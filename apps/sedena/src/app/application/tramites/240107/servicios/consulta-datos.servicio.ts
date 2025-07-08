@@ -1,3 +1,9 @@
+/**
+ * Servicio para consultar y actualizar los datos del trámite 240107.
+ * Proporciona métodos para actualizar diferentes secciones del estado del formulario
+ * y obtener los datos de la solicitud desde un archivo JSON.
+ */
+
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -5,9 +11,26 @@ import { SeccionLibStore } from '@ng-mf/data-access-user';
 import { Tramite240107State } from '../estados/tramite240107Store.store';
 import { Tramite240107Store } from '../estados/tramite240107Store.store';
 
+/**
+ * Servicio para consultar y actualizar los datos del trámite 240107.
+ * Proporciona métodos para actualizar diferentes secciones del estado del formulario
+ * y obtener los datos de la solicitud desde un archivo JSON.
+ *
+ * @author
+ * @version 1.0
+ * @since 2025-06-24
+ */
 @Injectable({
   providedIn: 'root',
 })
+/**
+ * @description
+ * Servicio Angular inyectable para el manejo de los datos del trámite 240107.
+ * Permite actualizar el estado del formulario y obtener datos de la solicitud desde un archivo JSON.
+ *
+ * @see Tramite240107Store
+ * @see Tramite240107State
+ */
 export class ConsultaDatosService {
   constructor(
     private http: HttpClient,

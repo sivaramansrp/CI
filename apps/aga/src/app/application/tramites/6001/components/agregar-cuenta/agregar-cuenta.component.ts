@@ -9,6 +9,7 @@ import { REGEX_RFC } from '@libs/shared/data-access-user/src/tramites/constantes
 import { RegistroCuentasBancariasService } from '../../services/registro-cuentas-bancarias.service';
 import { TituloComponent } from '@libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
 import { Tramite6001Query } from '../../estados/tramite6001.query';
+import { resetStores } from '@datorama/akita/src/lib/resetStores';
 
 
 /**
@@ -69,6 +70,10 @@ export class AgregarCuentaComponent implements OnInit,OnDestroy {
    * Este estado se utiliza para gestionar los datos y el comportamiento asociado con el proceso de adición de cuentas.
    */
   public agregarCuentaState!: AgregarCuenta6001State;
+  /**
+   * Indica si el formulario "Agregar Cuenta" ha sido enviado.
+   */
+  public tieneAgregarCuentaFormEnviado: boolean = false;
 
   /**
    * Constructor del componente AgregarCuentaComponent.
@@ -236,6 +241,19 @@ export class AgregarCuentaComponent implements OnInit,OnDestroy {
    * @returns {void}
    */
   public guardar(): void {
+    this.tieneAgregarCuentaFormEnviado = true;
+    if(this.agregarCuentaForm.valid) {
+      this._registroCuentasBancariasSvc.cambiarComponente('DatosGenerales');
+    }
+  }
+
+  /**
+   * Cancela la operación actual de agregar una cuenta bancaria.
+   */
+  public cancelar(): void {
+    this.agregarCuentaForm.reset(this.agregarCuentaForm.value);
+    this.agregarCuentaForm.updateValueAndValidity();
+    resetStores(); 
     this._registroCuentasBancariasSvc.cambiarComponente('DatosGenerales');
   }
 

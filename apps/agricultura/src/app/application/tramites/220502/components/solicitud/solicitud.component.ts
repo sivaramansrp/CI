@@ -47,7 +47,7 @@ import { takeUntil } from 'rxjs';
 /** Componente para gestionar la solicitud de trámite */
 export class SolicitudComponent implements OnInit, OnDestroy {
   /** Grupo de formularios para manejar formularios reactivos.*/
-  form: FormGroup;
+  form!: FormGroup;
 
   /** Encabezados y datos para mostrar información de mercancías. */
   hMercanciaTabla: string[] = [];
@@ -89,8 +89,13 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   private destroyed$ = new Subject<void>();
 
   /** Bandera para deshabilitar el formulario */
-  formularioDeshabilitado: boolean =
-    false; 
+  formularioDeshabilitado: boolean = false;
+
+  /**
+   * Bandera que indica si la solicitud está en modo solo lectura.
+   * @type {boolean}
+   */
+  isSolicitud: boolean = false;
 
   /** Constructor para inyectar dependencias */
   constructor(
@@ -103,13 +108,11 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         takeUntil(this.destroyed$),
         map((seccionState) => {
           this.formularioDeshabilitado = seccionState.readonly;
+          this.isSolicitud = seccionState.create;
           this.inicializarEstadoFormulario();
         })
       )
       .subscribe();
-    this.form = this.fb.group(
-      {}
-    ); /** Inicializar un grupo de formulario vacío y obtener datos de formulario utilizando formGroupName de un componente secundario. */
   }
 
   /** Gancho de ciclo de vida para cargar datos iniciales cuando se inicializa el componente */
@@ -148,7 +151,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * Método para crear el formulario de la solicitud.
    */
   crearFormulario(): void {
-    this.form = this.fb.group({});
+    this.form = this.fb.group({});/** Inicializar un grupo de formulario vacío y obtener datos de formulario utilizando formGroupName de un componente secundario. */
   }
 
   /**

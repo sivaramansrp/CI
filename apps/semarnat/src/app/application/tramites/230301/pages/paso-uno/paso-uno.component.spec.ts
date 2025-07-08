@@ -1,24 +1,95 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+// @ts-nocheck
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { By } from '@angular/platform-browser';
+import { Observable, of as observableOf, throwError } from 'rxjs';
+
+import { Component } from '@angular/core';
 import { PasoUnoComponent } from './paso-uno.component';
-import {DesistimientoModule} from '../../desistimiento.module'; 
-import { CommonModule } from '@angular/common';
+import { Solicitud230301Store } from '../../estados/tramites/tramites230301.store';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { DesistimientoSolicitudService } from '../../services/desistimiento-solicitud.service';
+
+@Injectable()
+class MockSolicitud230301Store {}
+
+@Injectable()
+class MockDesistimientoSolicitudService {}
+
+@Directive({ selector: '[myCustom]' })
+class MyCustomDirective {
+  @Input() myCustom;
+}
+
+@Pipe({name: 'translate'})
+class TranslatePipe implements PipeTransform {
+  transform(value) { return value; }
+}
+
+@Pipe({name: 'phoneNumber'})
+class PhoneNumberPipe implements PipeTransform {
+  transform(value) { return value; }
+}
+
+@Pipe({name: 'safeHtml'})
+class SafeHtmlPipe implements PipeTransform {
+  transform(value) { return value; }
+}
 
 describe('PasoUnoComponent', () => {
-  let component: PasoUnoComponent;
-  let fixture: ComponentFixture<PasoUnoComponent>;
+  let fixture;
+  let component;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      declarations: [PasoUnoComponent],
-      imports: [DesistimientoModule, CommonModule],
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [ FormsModule, ReactiveFormsModule ],
+      declarations: [
+        PasoUnoComponent,
+        TranslatePipe, PhoneNumberPipe, SafeHtmlPipe,
+        MyCustomDirective
+      ],
+      schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
+      providers: [
+        { provide: Solicitud230301Store, useClass: MockSolicitud230301Store },
+        ConsultaioQuery,
+        { provide: DesistimientoSolicitudService, useClass: MockDesistimientoSolicitudService }
+      ]
+    }).overrideComponent(PasoUnoComponent, {
+
     }).compileComponents();
-
     fixture = TestBed.createComponent(PasoUnoComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+    component = fixture.debugElement.componentInstance;
   });
 
-  it('should create', () => {
+
+  it('should run #constructor()', async () => {
     expect(component).toBeTruthy();
   });
+
+  it('should run #seleccionaTab()', async () => {
+
+    component.seleccionaTab({});
+
+  });
+
+  it('should run #guardarDatosFormulario()', async () => {
+    component.desistimientoSolicitudService = component.desistimientoSolicitudService || {};
+    component.desistimientoSolicitudService.getRegistroTomaMuestrasMercanciasData = jest.fn().mockReturnValue(observableOf({}));
+    component.desistimientoSolicitudService.actualizarEstadoFormulario = jest.fn();
+    component.guardarDatosFormulario();
+    expect(component.desistimientoSolicitudService.getRegistroTomaMuestrasMercanciasData).toHaveBeenCalled();
+    expect(component.desistimientoSolicitudService.actualizarEstadoFormulario).toHaveBeenCalled();
+  });
+
+  it('should run #ngOnDestroy()', async () => {
+    component.destroyNotifier$ = component.destroyNotifier$ || {};
+    component.destroyNotifier$.next = jest.fn();
+    component.destroyNotifier$.complete = jest.fn();
+    component.ngOnDestroy();
+    expect(component.destroyNotifier$.next).toHaveBeenCalled();
+    expect(component.destroyNotifier$.complete).toHaveBeenCalled();
+  });
+
 });

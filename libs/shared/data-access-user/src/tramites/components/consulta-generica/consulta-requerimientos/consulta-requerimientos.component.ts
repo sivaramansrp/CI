@@ -84,7 +84,7 @@ export class ConsultarequerimientosComponent implements OnInit, OnDestroy {
    * @param {number} id - El id del requerimiento para visualizar el detalle.
    * @returns {void}
    */
-  static verDetalleRequerimiento(id: number): void {
+  static verDetalleRequerimiento(_id: number): void {
     /**
      * Aquí puedes implementar la lógica para abrir el detalle en una nueva pestaña.
      */

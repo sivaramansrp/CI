@@ -2,7 +2,7 @@
   <form [formGroup]="formulario">
     <div class="form" formGroupName="datosRealizer">
       <ng-titulo [titulo]="'Datos del trámite a realizar'"></ng-titulo>
-      <div class="row align-items-center">
+      <div class="row align-items-end">
         <div class="col-md-8">
           <div class="form-group">
             <app-catalogo-select
@@ -14,12 +14,12 @@
               (change)="setValoresStore(formulario, 'datosRealizer', 'régimen', 'setrégimen')">
             </app-catalogo-select>
             <div *ngIf="formulario.get('datosRealizer')?.get(configuracion[0].menu[0].props.campo)?.touched && formulario.get('datosRealizer')?.get(configuracion[0].menu[0].props.campo)?.invalid">
-              <small *ngIf="formulario.get('datosRealizer')?.get(configuracion[0].menu[0].props.campo)?.errors?.['required']" class="text-danger">Este campo es obligatorio</small>
+              <small *ngIf="formulario.get('datosRealizer')?.get(configuracion[0].menu[0].props.campo)?.errors?.['required']" class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
             </div>
           </div>
         </div>
         <div class="col-md-8">
-          <div class="form-group">
+          <div class="form-group espaciador-campo">
             <app-catalogo-select
               [catalogo]="configuracion[0].menu[1].props.catalogos"
               [label]="configuracion[0].menu[1].props.labelNombre"
@@ -30,7 +30,7 @@
               >
             </app-catalogo-select>
             <div *ngIf="formulario.get('datosRealizer')?.get(configuracion[0].menu[1].props.campo)?.touched && formulario.get('datosRealizer')?.get(configuracion[0].menu[1].props.campo)?.invalid">
-              <small *ngIf="formulario.get('datosRealizer')?.get(configuracion[0].menu[1].props.campo)?.errors?.['required']" class="text-danger">Este campo es obligatorio</small>
+              <small *ngIf="formulario.get('datosRealizer')?.get(configuracion[0].menu[1].props.campo)?.errors?.['required']" class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
             </div>
           </div>
         </div>
@@ -42,7 +42,7 @@
       <ng-titulo [titulo]="'Datos de la mercancía'"></ng-titulo>
 
       <!-- Descripción de la mercancía -->
-      <div class="row align-items-center">
+      <div class="row align-items-end">
         <div class="col-md-8">
           <div class="form-group">
             <label class="form-label" [for]="configuracion[1].menu[0].props.campo">
@@ -60,15 +60,15 @@
               >
             </textarea>
             <div *ngIf="formulario.get('datosMercanica')?.get(configuracion[1].menu[0].props.campo)?.touched && formulario.get('datosMercanica')?.get(configuracion[1].menu[0].props.campo)?.invalid">
-              <small *ngIf="formulario.get('datosMercanica')?.get(configuracion[1].menu[0].props.campo)?.errors?.['required']" class="text-danger">Este campo es obligatorio</small>
-              <small *ngIf="formulario.get('datosMercanica')?.get(configuracion[1].menu[0].props.campo)?.errors?.['maxlength']" class="text-danger">No puede exceder 4000 caracteres.</small>
+              <small *ngIf="formulario.get('datosMercanica')?.get(configuracion[1].menu[0].props.campo)?.errors?.['required']" class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
+              <small *ngIf="formulario.get('datosMercanica')?.get(configuracion[1].menu[0].props.campo)?.errors?.['maxlength']" class="text-danger espaciador-campo-pequeño">No puede exceder 4000 caracteres.</small>
             </div>
           </div>
         </div>
       </div>
 
       <!-- Marca(s) comercial(es) y modelo(s) -->
-      <div class="row align-items-center espaciador-campo">
+      <div class="row align-items-end espaciador-campo">
         <div class="col-md-8">
           <div class="form-group">
             <label class="form-label" [for]="configuracion[1].menu[1].props.campo">
@@ -88,16 +88,16 @@
               (change)="setValoresStore(formulario, 'datosMercanica', configuracion[1].menu[1].props.campo, 'setMarca')"
             />
             <div *ngIf="formulario.get('datosMercanica')?.get(configuracion[1].menu[1].props.campo)?.touched && formulario.get('datosMercanica')?.get(configuracion[1].menu[1].props.campo)?.invalid">
-              <small *ngIf="formulario.get('datosMercanica')?.get(configuracion[1].menu[1].props.campo)?.errors?.['required']" class="text-danger">Este campo es obligatorio</small>
-              <small *ngIf="formulario.get('datosMercanica')?.get(configuracion[1].menu[1].props.campo)?.errors?.['maxlength']" class="text-danger">No puede exceder 256 caracteres.</small>
-              <small *ngIf="formulario.get('datosMercanica')?.get(configuracion[1].menu[1].props.campo)?.errors?.['pattern']" class="text-danger">Solo caracteres alfanuméricos.</small>
+              <small *ngIf="formulario.get('datosMercanica')?.get(configuracion[1].menu[1].props.campo)?.errors?.['required']" class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
+              <small *ngIf="formulario.get('datosMercanica')?.get(configuracion[1].menu[1].props.campo)?.errors?.['maxlength']" class="text-danger espaciador-campo-pequeño">No puede exceder 256 caracteres.</small>
+              <small *ngIf="formulario.get('datosMercanica')?.get(configuracion[1].menu[1].props.campo)?.errors?.['pattern']" class="text-danger espaciador-campo-pequeño">Solo caracteres alfanuméricos.</small>
             </div>
           </div>
         </div>
       </div>
 
       <!-- Tipo de aduana de entrada -->
-      <div class="row align-items-center espaciador-campo">
+      <div class="row align-items-end espaciador-campo">
         <div class="col-md-8">
           <div class="form-group">
             <app-catalogo-select
@@ -110,14 +110,14 @@
               (change)="setValoresStore(formulario, 'datosMercanica', configuracion[1].menu[2].props.campo, 'setTipoEntrada')">
             </app-catalogo-select>
             <div *ngIf="formulario.get('datosMercanica')?.get(configuracion[1].menu[2].props.campo)?.touched && formulario.get('datosMercanica')?.get(configuracion[1].menu[2].props.campo)?.invalid">
-              <small class="text-danger">Este campo es obligatorio</small>
+              <small class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
             </div>
           </div>
         </div>
       </div>
 
       <!-- Fracción arancelaria -->
-      <div class="row align-items-center espaciador-campo">
+      <div class="row align-items-end espaciador-campo">
         <div class="col-md-8">
           <div class="form-group">
             <app-catalogo-select
@@ -130,14 +130,14 @@
               (change)="setValoresStore(formulario, 'datosMercanica', configuracion[1].menu[3].props.campo, 'setFraccion')">
             </app-catalogo-select>
             <div *ngIf="formulario.get('datosMercanica')?.get(configuracion[1].menu[3].props.campo)?.touched && formulario.get('datosMercanica')?.get(configuracion[1].menu[3].props.campo)?.invalid">
-              <small class="text-danger">Este campo es obligatorio</small>
+              <small class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
             </div>
           </div>
         </div>
       </div>
 
       <!-- NICO -->
-      <div class="row align-items-center espaciador-campo">
+      <div class="row align-items-end espaciador-campo">
         <div class="col-md-8">
           <div class="form-group">
             <app-catalogo-select
@@ -150,14 +150,14 @@
               (change)="setValoresStore(formulario, 'datosMercanica', configuracion[1].menu[4].props.campo, 'setNico')">
             </app-catalogo-select>
             <div *ngIf="formulario.get('datosMercanica')?.get(configuracion[1].menu[4].props.campo)?.touched && formulario.get('datosMercanica')?.get(configuracion[1].menu[4].props.campo)?.invalid">
-              <small class="text-danger">Este campo es obligatorio</small>
+              <small class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
             </div>
           </div>
         </div>
       </div>
 
       <!-- UMT & Numero de factura -->
-      <div class="row align-items-center espaciador-campo">
+      <div class="row align-items-end espaciador-campo">
         <div class="col-md-4">
           <div class="form-group">
             <app-catalogo-select
@@ -169,8 +169,9 @@
               name="umt"
               (change)="setValoresStore(formulario, 'datosMercanica', configuracion[1].menu[5].props.campo, 'setUmt')">
             </app-catalogo-select>
-            <div *ngIf="formulario.get('datosMercanica')?.get(configuracion[1].menu[5].props.campo)?.touched && formulario.get('datosMercanica')?.get(configuracion[1].menu[5].props.campo)?.invalid">
-              <small class="text-danger">Este campo es obligatorio</small>
+            <div class="contenedor-error">
+              <small *ngIf="formulario.get('datosMercanica')?.get(configuracion[1].menu[5].props.campo)?.touched && formulario.get('datosMercanica')?.get(configuracion[1].menu[5].props.campo)?.invalid"
+              class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
             </div>
           </div>
         </div>
@@ -192,17 +193,19 @@
               [disabled]="esFormularioSoloLectura"
               (change)="setValoresStore(formulario, 'datosMercanica', configuracion[1].menu[6].props.campo, 'setFacturaNumero')"
             />
-            <div *ngIf="formulario.get('datosMercanica')?.get(configuracion[1].menu[6].props.campo)?.touched && formulario.get('datosMercanica')?.get(configuracion[1].menu[6].props.campo)?.invalid">
-              <small *ngIf="formulario.get('datosMercanica')?.get(configuracion[1].menu[6].props.campo)?.errors?.['required']" class="text-danger">Este campo es obligatorio</small>
-              <small *ngIf="formulario.get('datosMercanica')?.get(configuracion[1].menu[6].props.campo)?.errors?.['maxlength']" class="text-danger">No puede exceder 50 caracteres.</small>
-              <small *ngIf="formulario.get('datosMercanica')?.get(configuracion[1].menu[6].props.campo)?.errors?.['pattern']" class="text-danger">Solo números permitidos.</small>
+            <div class="contenedor-error">
+              <span *ngIf="formulario.get('datosMercanica')?.get(configuracion[1].menu[6].props.campo)?.touched && formulario.get('datosMercanica')?.get(configuracion[1].menu[6].props.campo)?.invalid">
+                <small *ngIf="formulario.get('datosMercanica')?.get(configuracion[1].menu[6].props.campo)?.errors?.['required']" class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
+                <small *ngIf="formulario.get('datosMercanica')?.get(configuracion[1].menu[6].props.campo)?.errors?.['maxlength']" class="text-danger espaciador-campo-pequeño">No puede exceder 50 caracteres.</small>
+                <small *ngIf="formulario.get('datosMercanica')?.get(configuracion[1].menu[6].props.campo)?.errors?.['pattern']" class="text-danger espaciador-campo-pequeño">Solo números permitidos.</small>
+              </span>
             </div>
           </div>
         </div>
       </div>
 
       <!-- Fecha de factura & UMC -->
-      <div class="row align-items-center espaciador-campo">
+      <div class="row align-items-end espaciador-campo">
         <div class="col-md-4">
           <div class="form-group">
             <input-fecha
@@ -229,7 +232,7 @@
               (change)="onUmcChange(formulario, 'datosMercanica', configuracion[1].menu[8].props.campo, 'setUmc')">
             </app-catalogo-select>
             <div *ngIf="formulario.get('datosMercanica.umc')?.touched && formulario.get('datosMercanica.umc')?.invalid">
-              <small class="text-danger">Este campo es obligatorio</small>
+              <small class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
             </div>
           </div>
         </div>
@@ -237,7 +240,7 @@
       <!-- BREAK_CONTENT -->
 
       <!-- Row 4 -->
-      <div class="row align-items-center espaciador-campo">
+      <div class="row align-items-end espaciador-campo">
         <!-- 9: Otro UMC -->
         <div class="col-md-4">
           <div class="form-group">
@@ -252,7 +255,7 @@
               [formControlName]="configuracion[1].menu[9].props.campo"
               (change)="setValoresStore(formulario, 'datosMercanica', configuracion[1].menu[9].props.campo, 'setOtroUmc')"
               readonly
-              [disabled]="esFormularioSoloLectura"
+              [disabled]="true"
             />
           </div>
         </div>
@@ -276,8 +279,8 @@
               (input)="setValoresStore(formulario, 'datosMercanica', configuracion[1].menu[10].props.campo, 'setCantidadUmc'); onCantidadUmcOrFactorChange(); "
             />
             <div *ngIf="formulario.get('datosMercanica')?.get(configuracion[1].menu[10].props.campo)?.touched && formulario.get('datosMercanica')?.get(configuracion[1].menu[10].props.campo)?.invalid">
-              <small *ngIf="formulario.get('datosMercanica')?.get(configuracion[1].menu[10].props.campo)?.errors?.['required']" class="text-danger">Este campo es obligatorio</small>
-              <small *ngIf="formulario.get('datosMercanica')?.get(configuracion[1].menu[10].props.campo)?.errors?.['pattern']" class="text-danger">El valor capturado no es válido.</small>
+              <small *ngIf="formulario.get('datosMercanica')?.get(configuracion[1].menu[10].props.campo)?.errors?.['required']" class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
+              <small *ngIf="formulario.get('datosMercanica')?.get(configuracion[1].menu[10].props.campo)?.errors?.['pattern']" class="text-danger espaciador-campo-pequeño">El valor capturado no es válido.</small>
             </div>
           </div>
         </div>
@@ -285,7 +288,7 @@
       <!-- BREAK_CONTENT -->
 
       <!-- Row 5 -->
-      <div class="row align-items-center espaciador-campo">
+      <div class="row align-items-end espaciador-campo">
         <!-- 11: Factor de conversión -->
         <div class="col-md-4">
           <div class="form-group ">
@@ -302,12 +305,12 @@
               maxlength="19"
               pattern="^\d{1,14}(\.\d{1,4})?$"
               readonly
-              [disabled]="esFormularioSoloLectura"
+              [disabled]="enableConversion"
               (change)="setValoresStore(formulario, 'datosMercanica', configuracion[1].menu[11].props.campo, 'setFactorConversion')"
             />
             <div *ngIf="formulario.get('datosMercanica')?.get(configuracion[1].menu[11].props.campo)?.touched && formulario.get('datosMercanica')?.get(configuracion[1].menu[11].props.campo)?.invalid">
-              <small *ngIf="formulario.get('datosMercanica')?.get(configuracion[1].menu[11].props.campo)?.errors?.['required']" class="text-danger">Este campo es obligatorio</small>
-              <small *ngIf="formulario.get('datosMercanica')?.get(configuracion[1].menu[11].props.campo)?.errors?.['pattern']" class="text-danger">El valor capturado no es válido.</small>
+              <small *ngIf="formulario.get('datosMercanica')?.get(configuracion[1].menu[11].props.campo)?.errors?.['required']" class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
+              <small *ngIf="formulario.get('datosMercanica')?.get(configuracion[1].menu[11].props.campo)?.errors?.['pattern']" class="text-danger espaciador-campo-pequeño">El valor capturado no es válido.</small>
             </div>
           </div>
         </div>
@@ -319,6 +322,7 @@
               {{ configuracion[1].menu[12].props.labelNombre }}
             </label>
             <input
+              readonly
               class="form-control disabled-bg"
               [type]="configuracion[1].menu[12].props.tipo_input"
               [id]="configuracion[1].menu[12].props.campo"
@@ -327,12 +331,12 @@
               [required]="configuracion[1].menu[12].props.required"
               maxlength="17"
               pattern="^\d{1,14}(\.\d{1,2})?$"
-              [disabled]="esFormularioSoloLectura"
+              [disabled]="true"
               (change)="setValoresStore(formulario, 'datosMercanica', configuracion[1].menu[11].props.campo, 'setCantidadUmt')"
             />
             <div *ngIf="formulario.get('datosMercanica')?.get(configuracion[1].menu[12].props.campo)?.touched && formulario.get('datosMercanica')?.get(configuracion[1].menu[10].props.campo)?.invalid">
-              <small *ngIf="formulario.get('datosMercanica')?.get(configuracion[1].menu[12].props.campo)?.errors?.['required']" class="text-danger">Este campo es obligatorio</small>
-              <small *ngIf="formulario.get('datosMercanica')?.get(configuracion[1].menu[12].props.campo)?.errors?.['pattern']" class="text-danger">El valor capturado no es válido.</small>
+              <small *ngIf="formulario.get('datosMercanica')?.get(configuracion[1].menu[12].props.campo)?.errors?.['required']" class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
+              <small *ngIf="formulario.get('datosMercanica')?.get(configuracion[1].menu[12].props.campo)?.errors?.['pattern']" class="text-danger espaciador-campo-pequeño">El valor capturado no es válido.</small>
             </div>
           </div>
         </div>
@@ -340,9 +344,9 @@
       <!-- BREAK_CONTENT -->
 
       <!-- Row 6 -->
-      <div class="row align-items-center espaciador-campo">
+      <div class="row align-items-end">
         <!-- 13: Valor de la factura de la mercancía a importar en términos de la Moneda de Comercialización* -->
-        <div class="col-md-8">
+        <div class="col-md-8 espaciador-campo">
           <div class="form-group">
             <label [for]="configuracion[1].menu[13].props.campo">
               {{ configuracion[1].menu[13].props.labelNombre }}
@@ -360,14 +364,14 @@
               (change)="setMercanciaImportar()"
             />
             <div *ngIf="formulario.get('datosMercanica')?.get(configuracion[1].menu[13].props.campo)?.touched && formulario.get('datosMercanica')?.get(configuracion[1].menu[13].props.campo)?.invalid">
-              <small *ngIf="formulario.get('datosMercanica')?.get(configuracion[1].menu[13].props.campo)?.errors?.['required']" class="text-danger">Este campo es obligatorio</small>
-              <small *ngIf="formulario.get('datosMercanica')?.get(configuracion[1].menu[13].props.campo)?.errors?.['pattern']" class="text-danger">El valor capturado no es válido.</small>
+              <small *ngIf="formulario.get('datosMercanica')?.get(configuracion[1].menu[13].props.campo)?.errors?.['required']" class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
+              <small *ngIf="formulario.get('datosMercanica')?.get(configuracion[1].menu[13].props.campo)?.errors?.['pattern']" class="text-danger espaciador-campo-pequeño">El valor capturado no es válido.</small>
             </div>
           </div>
         </div>
 
         <!-- 14: Moneda de comercialización -->
-        <div class="col-md-8">
+        <div class="col-md-8 espaciador-campo">
           <div class="form-group">
             <app-catalogo-select
               [catalogo]="configuracion[1].menu[14].props.catalogos"
@@ -380,7 +384,7 @@
               >
             </app-catalogo-select>
             <div *ngIf="formulario.get('datosMercanica.moneda_comercialización')?.touched && formulario.get('datosMercanica.moneda_comercialización')?.invalid">
-              <small class="text-danger">Este campo es obligatorio</small>
+              <small class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
             </div>
           </div>
         </div>
@@ -388,7 +392,7 @@
       <!-- BREAK_CONTENT -->
 
       <!-- Row 7 -->
-      <div class="row align-items-center espaciador-campo">
+      <div class="row align-items-end espaciador-campo">
         <!-- 15: Valor de la factura en USD de la mercancía a importar* -->
         <div class="col-md-4">
           <div class="form-group">
@@ -403,11 +407,11 @@
               [placeholder]="configuracion[1].menu[15].props.placeholder"
               [formControlName]="configuracion[1].menu[15].props.campo"
               [required]="configuracion[1].menu[15].props.required"
-              [disabled]="esFormularioSoloLectura"
+              [disabled]="true"
               (change)="setValoresStore(formulario, 'datosMercanica', configuracion[1].menu[15].props.campo, 'setValorFacturaUsd')"
             />
             <div *ngIf="formulario.get('datosMercanica')?.get(configuracion[1].menu[15].props.campo)?.touched && formulario.get('datosMercanica')?.get(configuracion[1].menu[15].props.campo)?.invalid">
-              <small *ngIf="formulario.get('datosMercanica')?.get(configuracion[1].menu[15].props.campo)?.errors?.['required']" class="text-danger">Este campo es obligatorio</small>
+              <small *ngIf="formulario.get('datosMercanica')?.get(configuracion[1].menu[15].props.campo)?.errors?.['required']" class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
             </div>
           </div>
         </div>
@@ -426,11 +430,11 @@
               [placeholder]="configuracion[1].menu[16].props.placeholder"
               [formControlName]="configuracion[1].menu[16].props.campo"
               [required]="configuracion[1].menu[16].props.required"
-              [disabled]="esFormularioSoloLectura"
+              [disabled]="true"
               (change)="setValoresStore(formulario, 'datosMercanica', configuracion[1].menu[16].props.campo, 'setPrecioUnitarioUsd')"
             />
             <div *ngIf="formulario.get('datosMercanica')?.get(configuracion[1].menu[16].props.campo)?.touched && formulario.get('datosMercanica')?.get(configuracion[1].menu[16].props.campo)?.invalid">
-              <small *ngIf="formulario.get('datosMercanica')?.get(configuracion[1].menu[16].props.campo)?.errors?.['required']" class="text-danger">Este campo es obligatorio</small>
+              <small *ngIf="formulario.get('datosMercanica')?.get(configuracion[1].menu[16].props.campo)?.errors?.['required']" class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
             </div>
           </div>
         </div>
@@ -438,7 +442,7 @@
       <!-- BREAK_CONTENT -->
 
       <!-- Row 8 -->
-      <div class="row align-items-center espaciador-campo">
+      <div class="row align-items-end espaciador-campo">
         <!-- 17: País exportador -->
         <div class="col-md-4">
           <div class="form-group">
@@ -453,7 +457,7 @@
               >
             </app-catalogo-select>
             <div *ngIf="formulario.get('datosMercanica.país_exportador')?.touched && formulario.get('datosMercanica.país_exportador')?.invalid">
-              <small class="text-danger">Este campo es obligatorio</small>
+              <small class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
             </div>
           </div>
         </div>
@@ -472,7 +476,7 @@
             >
             </app-catalogo-select>
             <div *ngIf="formulario.get('datosMercanica.país_origen')?.touched && formulario.get('datosMercanica.país_origen')?.invalid">
-              <small class="text-danger">Este campo es obligatorio</small>
+              <small class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
             </div>
           </div>
         </div>
@@ -480,7 +484,7 @@
       <!-- BREAK_CONTENT -->
 
       <!-- Row 9 -->
-      <div class="row align-items-center espaciador-campo">
+      <div class="row align-items-end espaciador-campo">
         <!-- 19: Valor total de la factura in términos de la Moneda de Comercialización -->
         <div class="col-md-8">
           <div class="form-group">
@@ -500,14 +504,14 @@
               (change)="setTotalMercanciaImportar()"
             />
             <div *ngIf="formulario.get('datosMercanica')?.get(configuracion[1].menu[19].props.campo)?.touched && formulario.get('datosMercanica')?.get(configuracion[1].menu[19].props.campo)?.invalid">
-              <small *ngIf="formulario.get('datosMercanica')?.get(configuracion[1].menu[19].props.campo)?.errors?.['required']" class="text-danger">Este campo es obligatorio</small>
-              <small *ngIf="formulario.get('datosMercanica')?.get(configuracion[1].menu[19].props.campo)?.errors?.['pattern']" class="text-danger">El valor capturado no es válido.</small>
+              <small *ngIf="formulario.get('datosMercanica')?.get(configuracion[1].menu[19].props.campo)?.errors?.['required']" class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
+              <small *ngIf="formulario.get('datosMercanica')?.get(configuracion[1].menu[19].props.campo)?.errors?.['pattern']" class="text-danger espaciador-campo-pequeño">El valor capturado no es válido.</small>
             </div>
           </div>
         </div>
 
         <!-- 20: Valor total de la factura USD de la mercancía a importar -->
-        <div class="col-md-8">
+        <div class="col-md-8 espaciador-campo">
           <div class="form-group">
             <label class="form-label" [for]="configuracion[1].menu[20].props.campo">
               {{ configuracion[1].menu[20].props.labelNombre }}
@@ -520,11 +524,11 @@
               [placeholder]="configuracion[1].menu[20].props.placeholder"
               [formControlName]="configuracion[1].menu[20].props.campo"
               [required]="configuracion[1].menu[20].props.required"
-              [disabled]="esFormularioSoloLectura"
+              [disabled]="true"
               (change)="setValoresStore(formulario, 'datosMercanica', configuracion[1].menu[20].props.campo, 'setValorTotalFacturaUsd')"
             />
             <div *ngIf="formulario.get('datosMercanica')?.get(configuracion[1].menu[20].props.campo)?.touched && formulario.get('datosMercanica')?.get(configuracion[1].menu[20].props.campo)?.invalid">
-              <small *ngIf="formulario.get('datosMercanica')?.get(configuracion[1].menu[20].props.campo)?.errors?.['required']" class="text-danger">Este campo es obligatorio</small>
+              <small *ngIf="formulario.get('datosMercanica')?.get(configuracion[1].menu[20].props.campo)?.errors?.['required']" class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
             </div>
           </div>
         </div>
@@ -534,7 +538,7 @@
     <!-- Grupo: Documento de salida del país de exportación -->
 <div class="form" formGroupName="datosExporta">
   <ng-titulo [titulo]="'Documento de salida del país de exportación'"></ng-titulo>
-  <div class="row align-items-center">
+  <div class="row align-items-end">
     <!-- Número de documento* -->
     <div class="col-md-4">
       <div class="form-group">
@@ -554,8 +558,8 @@
           libUppercase
         />
         <div *ngIf="formulario.get('datosExporta')?.get(configuracion[2].menu[0].props.campo)?.touched && formulario.get('datosExporta')?.get(configuracion[2].menu[0].props.campo)?.invalid">
-          <small *ngIf="formulario.get('datosExporta')?.get(configuracion[2].menu[0].props.campo)?.errors?.['required']" class="text-danger">Este campo es obligatorio</small>
-          <small *ngIf="formulario.get('datosExporta')?.get(configuracion[2].menu[0].props.campo)?.errors?.['maxlength']" class="text-danger">No puede exceder 100 caracteres.</small>
+          <small *ngIf="formulario.get('datosExporta')?.get(configuracion[2].menu[0].props.campo)?.errors?.['required']" class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
+          <small *ngIf="formulario.get('datosExporta')?.get(configuracion[2].menu[0].props.campo)?.errors?.['maxlength']" class="text-danger espaciador-campo-pequeño">No puede exceder 100 caracteres.</small>
         </div>
       </div>
     </div>
@@ -571,21 +575,20 @@
           (valorCambiado)="fechaDocumento($event)">
         </input-fecha>
         <div *ngIf="formulario.get('datosExporta')?.get(configuracion[2].menu[1].props.campo)?.touched && formulario.get('datosExporta')?.get(configuracion[2].menu[1].props.campo)?.invalid">
-          <small *ngIf="formulario.get('datosExporta')?.get(configuracion[2].menu[1].props.campo)?.errors?.['required']" class="text-danger">Este campo es obligatorio</small>
+          <small *ngIf="formulario.get('datosExporta')?.get(configuracion[2].menu[1].props.campo)?.errors?.['required']" class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
         </div>
       </div>
     </div>
   </div>
-  <div class="row align-items-center">
+  <div class="row align-items-end espaciador-campo">
     <!-- Descripción de la mercancía* -->
     <div class="col-md-8">
       <div class="form-group">
-        <label class="form-label" [for]="configuracion[2].menu[2].props.campo">
+        <label class="form-label" >
           {{ configuracion[2].menu[2].props.labelNombre }}
         </label>
         <textarea
           class="form-control text-area-size"
-          [id]="configuracion[2].menu[2].props.campo"
           [formControlName]="configuracion[2].menu[2].props.campo"
           rows="3"
           maxlength="4000"
@@ -594,13 +597,13 @@
           (change)="setValoresStore(formulario, 'datosExporta', configuracion[2].menu[2].props.campo, 'setDescripcionExportacion')"
         ></textarea>
         <div *ngIf="formulario.get('datosExporta')?.get(configuracion[2].menu[2].props.campo)?.touched && formulario.get('datosExporta')?.get(configuracion[2].menu[2].props.campo)?.invalid">
-          <small *ngIf="formulario.get('datosExporta')?.get(configuracion[2].menu[2].props.campo)?.errors?.['required']" class="text-danger">Este campo es obligatorio</small>
-          <small *ngIf="formulario.get('datosExporta')?.get(configuracion[2].menu[2].props.campo)?.errors?.['maxlength']" class="text-danger">No puede exceder 4000 caracteres.</small>
+          <small *ngIf="formulario.get('datosExporta')?.get(configuracion[2].menu[2].props.campo)?.errors?.['required']" class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
+          <small *ngIf="formulario.get('datosExporta')?.get(configuracion[2].menu[2].props.campo)?.errors?.['maxlength']" class="text-danger espaciador-campo-pequeño">No puede exceder 4000 caracteres.</small>
         </div>
       </div>
     </div>
   </div>
-  <div class="row align-items-center">
+  <div class="row align-items-end espaciador-campo">
     <!-- Código arancelario* -->
     <div class="col-md-4">
       <div class="form-group">
@@ -620,22 +623,22 @@
           (change)="setValoresStore(formulario, 'datosExporta', configuracion[2].menu[3].props.campo, 'setCodigo_arancelario')"
         />
         <div *ngIf="formulario.get('datosExporta')?.get(configuracion[2].menu[3].props.campo)?.touched && formulario.get('datosExporta')?.get(configuracion[2].menu[3].props.campo)?.invalid">
-          <small *ngIf="formulario.get('datosExporta')?.get(configuracion[2].menu[3].props.campo)?.errors?.['required']" class="text-danger">Este campo es obligatorio</small>
-          <small *ngIf="formulario.get('datosExporta')?.get(configuracion[2].menu[3].props.campo)?.errors?.['maxlength']" class="text-danger">No puede exceder 100 caracteres.</small>
-          <small *ngIf="formulario.get('datosExporta')?.get(configuracion[2].menu[3].props.campo)?.errors?.['pattern']" class="text-danger">Solo caracteres alfanuméricos.</small>
+          <small *ngIf="formulario.get('datosExporta')?.get(configuracion[2].menu[3].props.campo)?.errors?.['required']" class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
+          <small *ngIf="formulario.get('datosExporta')?.get(configuracion[2].menu[3].props.campo)?.errors?.['maxlength']" class="text-danger espaciador-campo-pequeño">No puede exceder 100 caracteres.</small>
+          <small *ngIf="formulario.get('datosExporta')?.get(configuracion[2].menu[3].props.campo)?.errors?.['pattern']" class="text-danger espaciador-campo-pequeño">Solo caracteres alfanuméricos.</small>
         </div>
       </div>
     </div>
     <!-- Cantidad in la unidad de medida señalada en el documento de exportación* -->
     <div class="col-md-4">
       <div class="form-group">
-        <label class="" [for]="configuracion[2].menu[4].props.campo">
+        <label class="">
           {{ configuracion[2].menu[4].props.labelNombre }}
         </label>
         <input
           class="form-control"
           [type]="configuracion[2].menu[4].props.tipo_input"
-          [id]="configuracion[2].menu[4].props.campo"
+          [id]="configuracion[2].menu[4].props.campo+'_Exporta'"
           [placeholder]="configuracion[2].menu[4].props.placeholder"
           [formControlName]="configuracion[2].menu[4].props.campo"
           [required]="configuracion[2].menu[4].props.required"
@@ -645,13 +648,13 @@
           (change)="setValoresStore(formulario, 'datosExporta', configuracion[2].menu[4].props.campo, 'setCantidad_umt')"
         />
         <div *ngIf="formulario.get('datosExporta')?.get(configuracion[2].menu[4].props.campo)?.touched && formulario.get('datosExporta')?.get(configuracion[2].menu[4].props.campo)?.invalid">
-          <small *ngIf="formulario.get('datosExporta')?.get(configuracion[2].menu[4].props.campo)?.errors?.['required']" class="text-danger">Este campo es obligatorio</small>
-          <small *ngIf="formulario.get('datosExporta')?.get(configuracion[2].menu[4].props.campo)?.errors?.['pattern'] || formulario.get('datosExporta')?.get(configuracion[2].menu[4].props.campo)?.errors?.['maxlength']" class="text-danger">El valor capturado no es válido.</small>
+          <small *ngIf="formulario.get('datosExporta')?.get(configuracion[2].menu[4].props.campo)?.errors?.['required']" class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
+          <small *ngIf="formulario.get('datosExporta')?.get(configuracion[2].menu[4].props.campo)?.errors?.['pattern'] || formulario.get('datosExporta')?.get(configuracion[2].menu[4].props.campo)?.errors?.['maxlength']" class="text-danger espaciador-campo-pequeño">El valor capturado no es válido.</small>
         </div>
       </div>
     </div>
   </div>
-  <div class="row align-items-center">
+  <div class="row align-items-end espaciador-campo">
     <!-- Valor en USD de la mercancía a importar* -->
     <div class="col-md-4">
       <div class="form-group">
@@ -671,21 +674,21 @@
           (change)="setValoresStore(formulario, 'datosExporta', configuracion[2].menu[5].props.campo, 'setValor_usd')"
         />
         <div *ngIf="formulario.get('datosExporta')?.get(configuracion[2].menu[5].props.campo)?.touched && formulario.get('datosExporta')?.get(configuracion[2].menu[5].props.campo)?.invalid">
-          <small *ngIf="formulario.get('datosExporta')?.get(configuracion[2].menu[5].props.campo)?.errors?.['required']" class="text-danger">Este campo es obligatorio</small>
-          <small *ngIf="formulario.get('datosExporta')?.get(configuracion[2].menu[5].props.campo)?.errors?.['pattern'] || formulario.get('datosExporta')?.get(configuracion[2].menu[5].props.campo)?.errors?.['maxlength']" class="text-danger">El valor capturado no es válido.</small>
+          <small *ngIf="formulario.get('datosExporta')?.get(configuracion[2].menu[5].props.campo)?.errors?.['required']" class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
+          <small *ngIf="formulario.get('datosExporta')?.get(configuracion[2].menu[5].props.campo)?.errors?.['pattern'] || formulario.get('datosExporta')?.get(configuracion[2].menu[5].props.campo)?.errors?.['maxlength']" class="text-danger espaciador-campo-pequeño">El valor capturado no es válido.</small>
         </div>
       </div>
     </div>
     <!-- Precio unitario en USD* -->
     <div class="col-md-4">
       <div class="form-group">
-        <label class="form-label" [for]="configuracion[2].menu[6].props.campo">
+        <label class="form-label" >
           {{ configuracion[2].menu[6].props.labelNombre }}
         </label>
         <input
           class="form-control"
           [type]="configuracion[2].menu[6].props.tipo_input"
-          [id]="configuracion[2].menu[6].props.campo"
+          [id]="configuracion[2].menu[6].props.campo+'_Exporta'"
           [placeholder]="configuracion[2].menu[6].props.placeholder"
           [formControlName]="configuracion[2].menu[6].props.campo"
           [disabled]="esFormularioSoloLectura"
@@ -695,8 +698,8 @@
           (change)="setValoresStore(formulario, 'datosExporta', configuracion[2].menu[6].props.campo, 'setPrecio_unitario_usd')"
         />
         <div *ngIf="formulario.get('datosExporta')?.get(configuracion[2].menu[6].props.campo)?.touched && formulario.get('datosExporta')?.get(configuracion[2].menu[6].props.campo)?.invalid">
-          <small *ngIf="formulario.get('datosExporta')?.get(configuracion[2].menu[6].props.campo)?.errors?.['required']" class="text-danger">Este campo es obligatorio</small>
-          <small *ngIf="formulario.get('datosExporta')?.get(configuracion[2].menu[6].props.campo)?.errors?.['pattern'] || formulario.get('datosExporta')?.get(configuracion[2].menu[6].props.campo)?.errors?.['maxlength']" class="text-danger">El valor capturado no es válido.</small>
+          <small *ngIf="formulario.get('datosExporta')?.get(configuracion[2].menu[6].props.campo)?.errors?.['required']" class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
+          <small *ngIf="formulario.get('datosExporta')?.get(configuracion[2].menu[6].props.campo)?.errors?.['pattern'] || formulario.get('datosExporta')?.get(configuracion[2].menu[6].props.campo)?.errors?.['maxlength']" class="text-danger espaciador-campo-pequeño">El valor capturado no es válido.</small>
         </div>
       </div>
     </div>
@@ -706,27 +709,36 @@
     <!-- Grupo: Datos del productor -->
     <div class="form" formGroupName="datosProductor">
       <ng-titulo [titulo]="'Datos del productor'"></ng-titulo>
-      <div class="row align-items-center">
+      <div class="row align-items-end">
         <!-- Tipo de persona radio -->
         <div class="col-md-8">
           <div class="form-group">
             <label class="form-label" [for]="configuracion[3].menu[0].props.campo">
               {{ configuracion[3].menu[0].props.labelNombre }}
             </label>
-            <app-input-radio
-              [radioOptions]="configuracion[3].menu[0].props.radioOptions"
-              [selectedValue]="formulario.get('datosProductor.persona_tipo')?.value"
-              [isRequired]="true"
-              (valueChange)="onTipoPersonaProductorChange($event)"
-              [layout]="'horizontal'">
-            </app-input-radio>
+            <b> 
+              <app-input-radio
+                [radioOptions]="configuracion[3].menu[0].props.radioOptions"
+                [selectedValue]="formulario.get('datosProductor.persona_tipo')?.value"
+                [isRequired]="true"
+                (valueChange)="onTipoPersonaProductorChange($event)"
+                [layout]="'horizontal'">
+              </app-input-radio> 
+            </b>
           </div>
         </div>
       </div>
 
       <!-- FÍSICA -->
       <div *ngIf="tipoPersonaProductor === 'Física'">
-        <div class="row align-items-center">
+        <div class="row align-items-end ">
+        <div class="col-md-8">
+          <div class="form-group">
+            <label class="form-label"><b>Datos personales</b></label>
+          </div>
+        </div>
+      </div>
+        <div class="row align-items-end ">
           <div class="col-md-8">
             <div class="form-group">
               <label class="form-label" [for]="configuracion[3].menu[1].props.campo">
@@ -744,12 +756,12 @@
                 (change)="setValoresStore(formulario, 'datosProductor', configuracion[3].menu[1].props.campo, 'setPersonales_nombre')"
               />
               <div *ngIf="formulario.get('datosProductor')?.get(configuracion[3].menu[1].props.campo)?.touched && formulario.get('datosProductor')?.get(configuracion[3].menu[1].props.campo)?.invalid">
-                <small *ngIf="formulario.get('datosProductor')?.get(configuracion[3].menu[1].props.campo)?.errors?.['maxlength']" class="text-danger">No puede exceder 200 caracteres.</small>
+                <small *ngIf="formulario.get('datosProductor')?.get(configuracion[3].menu[1].props.campo)?.errors?.['maxlength']" class="text-danger espaciador-campo-pequeño">No puede exceder 200 caracteres.</small>
               </div>
             </div>
           </div>
         </div>
-        <div class="row align-items-center">
+        <div class="row align-items-end espaciador-campo">
           <div class="col-md-8">
             <div class="form-group">
               <label class="form-label" [for]="configuracion[3].menu[2].props.campo">
@@ -767,12 +779,12 @@
                 (change)="setValoresStore(formulario, 'datosProductor', configuracion[3].menu[2].props.campo, 'setPrimer_apellido')"
               />
               <div *ngIf="formulario.get('datosProductor')?.get(configuracion[3].menu[2].props.campo)?.touched && formulario.get('datosProductor')?.get(configuracion[3].menu[2].props.campo)?.invalid">
-                <small *ngIf="formulario.get('datosProductor')?.get(configuracion[3].menu[2].props.campo)?.errors?.['maxlength']" class="text-danger">No puede exceder 200 caracteres.</small>
+                <small *ngIf="formulario.get('datosProductor')?.get(configuracion[3].menu[2].props.campo)?.errors?.['maxlength']" class="text-danger espaciador-campo-pequeño">No puede exceder 200 caracteres.</small>
               </div>
             </div>
           </div>
         </div>
-        <div class="row align-items-center">
+        <div class="row align-items-end espaciador-campo">
           <div class="col-md-8">
             <div class="form-group">
               <label class="form-label" [for]="configuracion[3].menu[3].props.campo">
@@ -790,15 +802,15 @@
                 (change)="setValoresStore(formulario, 'datosProductor', configuracion[3].menu[3].props.campo, 'setSegundo_apellido')"
               />
               <div *ngIf="formulario.get('datosProductor')?.get(configuracion[3].menu[3].props.campo)?.touched && formulario.get('datosProductor')?.get(configuracion[3].menu[3].props.campo)?.invalid">
-                <small *ngIf="formulario.get('datosProductor')?.get(configuracion[3].menu[3].props.campo)?.errors?.['maxlength']" class="text-danger">No puede exceder 200 caracteres.</small>
+                <small *ngIf="formulario.get('datosProductor')?.get(configuracion[3].menu[3].props.campo)?.errors?.['maxlength']" class="text-danger espaciador-campo-pequeño">No puede exceder 200 caracteres.</small>
               </div>
             </div>
           </div>
         </div>
-        <div class="row align-items-center">
+        <div class="row align-items-end espaciador-campo">
           <div class="col-md-8">
             <div class="form-group">
-              <label class="form-label" [for]="configuracion[3].menu[5].props.campo">
+              <label class="form-label">
                 {{ configuracion[3].menu[5].props.labelNombre }}
               </label>
               <textarea
@@ -812,7 +824,7 @@
                 (change)="setValoresStore(formulario, 'datosProductor', configuracion[3].menu[5].props.campo, 'setDomicilio')"
               ></textarea>
               <div *ngIf="formulario.get('datosProductor')?.get(configuracion[3].menu[5].props.campo)?.touched && formulario.get('datosProductor')?.get(configuracion[3].menu[5].props.campo)?.invalid">
-                <small *ngIf="formulario.get('datosProductor')?.get(configuracion[3].menu[5].props.campo)?.errors?.['maxlength']" class="text-danger">No puede exceder 200 caracteres.</small>
+                <small *ngIf="formulario.get('datosProductor')?.get(configuracion[3].menu[5].props.campo)?.errors?.['maxlength']" class="text-danger espaciador-campo-pequeño">No puede exceder 200 caracteres.</small>
               </div>
             </div>
           </div>
@@ -821,7 +833,7 @@
 
       <!-- MORAL -->
       <div *ngIf="tipoPersonaProductor === 'Moral'">
-        <div class="row align-items-center">
+        <div class="row align-items-end espaciador-campo">
           <div class="col-md-8">
             <div class="form-group">
               <label class="form-label" [for]="configuracion[3].menu[4].props.campo">
@@ -839,12 +851,12 @@
                 (change)="setValoresStore(formulario, 'datosProductor', configuracion[3].menu[4].props.campo, 'setDenominación_razón_social')"
               />
               <div *ngIf="formulario.get('datosProductor')?.get(configuracion[3].menu[4].props.campo)?.touched && formulario.get('datosProductor')?.get(configuracion[3].menu[4].props.campo)?.invalid">
-                <small *ngIf="formulario.get('datosProductor')?.get(configuracion[3].menu[4].props.campo)?.errors?.['maxlength']" class="text-danger">No puede exceder 250 caracteres.</small>
+                <small *ngIf="formulario.get('datosProductor')?.get(configuracion[3].menu[4].props.campo)?.errors?.['maxlength']" class="text-danger espaciador-campo-pequeño">No puede exceder 250 caracteres.</small>
               </div>
             </div>
           </div>
         </div>
-        <div class="row align-items-center">
+        <div class="row align-items-end espaciador-campo">
           <div class="col-md-8">
             <div class="form-group">
               <label class="form-label" [for]="configuracion[3].menu[5].props.campo">
@@ -861,7 +873,7 @@
                 (change)="setValoresStore(formulario, 'datosProductor', configuracion[3].menu[5].props.campo, 'setDomicilio')"
               ></textarea>
               <div *ngIf="formulario.get('datosProductor')?.get(configuracion[3].menu[5].props.campo)?.touched && formulario.get('datosProductor')?.get(configuracion[3].menu[5].props.campo)?.invalid">
-                <small *ngIf="formulario.get('datosProductor')?.get(configuracion[3].menu[5].props.campo)?.errors?.['maxlength']" class="text-danger">No puede exceder 200 caracteres.</small>
+                <small *ngIf="formulario.get('datosProductor')?.get(configuracion[3].menu[5].props.campo)?.errors?.['maxlength']" class="text-danger espaciador-campo-pequeño">No puede exceder 200 caracteres.</small>
               </div>
             </div>
           </div>
@@ -870,10 +882,10 @@
 
       <!-- NINGUNO -->
       <div *ngIf="tipoPersonaProductor === 'Ninguno'">
-        <div class="row align-items-center">
+        <div class="row align-items-end espaciador-campo">
           <div class="col-md-8">
             <div class="form-group">
-              <label class="form-label" [for]="configuracion[3].menu[5].props.campo">
+              <label class="form-label">
                 {{ configuracion[3].menu[5].props.labelNombre }}
               </label>
               <textarea
@@ -895,35 +907,44 @@
     <!-- Grupo: Datos del exportador -->
     <div class="form" formGroupName="datosExportador">
       <ng-titulo [titulo]="'Datos del exportador'"></ng-titulo>
-      <div class="row align-items-center">
+      <div class="row align-items-end">
         <div class="col-md-8">
           <div class="form-group">
             <label class="form-label" [for]="configuracion[4].menu[0].props.campo">
               {{ configuracion[4].menu[0].props.labelNombre }}
             </label>
-            <app-input-radio
+            <b>
+              <app-input-radio
               [radioOptions]="configuracion[4].menu[0].props.radioOptions"
-              [selectedValue]="tipoPersonaExportador"
+              [selectedValue]="formulario.get('datosExportador.persona_tipo')?.value"
               [isRequired]="true"
               (valueChange)="onTipoPersonaExportadorChange($event)"
               [layout]="'horizontal'">
-            </app-input-radio>
+              </app-input-radio>
+            </b>
           </div>
         </div>
       </div>
 
+      <div class="row align-items-end ">
+        <div class="col-md-8">
+          <div class="form-group">
+            <label class="form-label"><b>Datos personales</b></label>
+          </div>
+        </div>
+      </div>
       <!-- FÍSICA -->
       <div *ngIf="tipoPersonaExportador === 'Física'">
-        <div class="row align-items-center">
+        <div class="row align-items-end">
           <div class="col-md-8">
             <div class="form-group">
-              <label class="form-label" [for]="configuracion[4].menu[1].props.campo">
+              <label class="form-label">
                 {{ configuracion[4].menu[1].props.labelNombre }}
               </label>
               <input
                 class="form-control"
                 [type]="configuracion[4].menu[1].props.tipo_input"
-                [id]="configuracion[4].menu[1].props.campo"
+                [id]="configuracion[4].menu[1].props.campo+'_Exporta'"
                 [disabled]="esFormularioSoloLectura"
                 [placeholder]="configuracion[4].menu[1].props.placeholder"
                 [formControlName]="configuracion[4].menu[1].props.campo"
@@ -934,17 +955,17 @@
             </div>
           </div>
         </div>
-        <div class="row align-items-center">
+        <div class="row align-items-end espaciador-campo">
           <div class="col-md-8">
             <div class="form-group">
-              <label class="form-label" [for]="configuracion[4].menu[2].props.campo">
+              <label class="form-label">
                 {{ configuracion[4].menu[2].props.labelNombre }}
               </label>
               <input
                 class="form-control"
                 [type]="configuracion[4].menu[2].props.tipo_input"
                 [disabled]="esFormularioSoloLectura"
-                [id]="configuracion[4].menu[2].props.campo"
+                [id]="configuracion[4].menu[2].props.campo+'_Exporta'"
                 [placeholder]="configuracion[4].menu[2].props.placeholder"
                 [formControlName]="configuracion[4].menu[2].props.campo"
                 [required]="true"
@@ -954,10 +975,10 @@
             </div>
           </div>
         </div>
-        <div class="row align-items-center">
+        <div class="row align-items-end espaciador-campo">
           <div class="col-md-8">
             <div class="form-group">
-              <label class="form-label" [for]="configuracion[4].menu[3].props.campo">
+              <label class="form-label">
                 {{ configuracion[4].menu[3].props.labelNombre }}
               </label>
               <input
@@ -974,10 +995,10 @@
             </div>
           </div>
         </div>
-        <div class="row align-items-center">
+        <div class="row align-items-end espaciador-campo">
           <div class="col-md-8">
             <div class="form-group">
-              <label class="form-label" [for]="configuracion[4].menu[5].props.campo">
+              <label class="form-label">
                 {{ configuracion[4].menu[5].props.labelNombre }}
               </label>
               <textarea
@@ -993,7 +1014,7 @@
             </div>
           </div>
         </div>
-        <div class="row align-items-center">
+        <div class="row align-items-end espaciador-campo">
           <div class="col-md-8">
             <div class="form-group">
               <label class="form-label" [for]="configuracion[4].menu[6].props.campo">
@@ -1016,17 +1037,17 @@
 
       <!-- MORAL -->
       <div *ngIf="tipoPersonaExportador === 'Moral'">
-        <div class="row align-items-center">
+        <div class="row align-items-end espaciador-campo">
           <div class="col-md-8">
             <div class="form-group">
-              <label class="form-label" [for]="configuracion[4].menu[4].props.campo">
+              <label class="form-label">
                 {{ configuracion[4].menu[4].props.labelNombre }}
               </label>
               <input
                 class="form-control"
                 [type]="configuracion[4].menu[4].props.tipo_input"
                 [disabled]="esFormularioSoloLectura"
-                [id]="configuracion[4].menu[4].props.campo"
+                [id]="configuracion[4].menu[4].props.campo+'_Exportador'"
                 [placeholder]="configuracion[4].menu[4].props.placeholder"
                 [formControlName]="configuracion[4].menu[4].props.campo"
                 [required]="true"
@@ -1036,15 +1057,15 @@
             </div>
           </div>
         </div>
-        <div class="row align-items-center">
+        <div class="row align-items-end espaciador-campo">
           <div class="col-md-8">
             <div class="form-group">
-              <label class="form-label" [for]="configuracion[4].menu[5].props.campo">
+              <label class="form-label">
                 {{ configuracion[4].menu[5].props.labelNombre }}
               </label>
               <textarea
                 class="form-control text-area-size"
-                [id]="configuracion[4].menu[5].props.campo"
+                [id]="configuracion[4].menu[5].props.campo+'_Exportador'"
                 [formControlName]="configuracion[4].menu[5].props.campo"
                 rows="3"
                 [required]="true"
@@ -1055,7 +1076,7 @@
             </div>
           </div>
         </div>
-        <div class="row align-items-center">
+        <div class="row align-items-end espaciador-campo">
           <div class="col-md-8">
             <div class="form-group">
               <label class="form-label" [for]="configuracion[4].menu[6].props.campo">
@@ -1079,7 +1100,7 @@
 
     <div class="form" formGroupName="datosFederal">
       <ng-titulo [titulo]="'Representación federal'"></ng-titulo>
-      <div class="row align-items-center">
+      <div class="row align-items-end">
         <!-- Entidad federativa -->
         <div class="col-md-6">
           <div class="form-group">
@@ -1092,7 +1113,7 @@
               (change)="setValoresStore(formulario, 'datosFederal', configuracion[5].menu[0].props.campo, 'setEntidad_federativa')">
             </app-catalogo-select>
             <div *ngIf="formulario.get('datosFederal')?.get(configuracion[5].menu[0].props.campo)?.touched && formulario.get('datosFederal')?.get(configuracion[5].menu[0].props.campo)?.invalid">
-              <small *ngIf="formulario.get('datosFederal')?.get(configuracion[5].menu[0].props.campo)?.errors?.['required']" class="text-danger">Este campo es obligatorio</small>
+              <small *ngIf="formulario.get('datosFederal')?.get(configuracion[5].menu[0].props.campo)?.errors?.['required']" class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
             </div>
           </div>
         </div>
@@ -1108,12 +1129,11 @@
               (change)="setValoresStore(formulario, 'datosFederal', configuracion[5].menu[1].props.campo, 'setRepresentacion_federal')">
             </app-catalogo-select>
             <div *ngIf="formulario.get('datosFederal')?.get(configuracion[5].menu[1].props.campo)?.touched && formulario.get('datosFederal')?.get(configuracion[5].menu[1].props.campo)?.invalid">
-              <small *ngIf="formulario.get('datosFederal')?.get(configuracion[5].menu[1].props.campo)?.errors?.['required']" class="text-danger">Este campo es obligatorio</small>
+              <small *ngIf="formulario.get('datosFederal')?.get(configuracion[5].menu[1].props.campo)?.errors?.['required']" class="text-danger espaciador-campo-pequeño">Este campo es obligatorio</small>
             </div>
           </div>
         </div>
       </div>
     </div>
-
   </form>
 </div>

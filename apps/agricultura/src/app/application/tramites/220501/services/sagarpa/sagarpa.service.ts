@@ -45,7 +45,7 @@ export class SagarpaService {
     this.solicitud220502Store.setCertificadosAutorizados(DATOS.certificadosAutorizados);
     this.solicitud220502Store.setHoraDeInspeccion(DATOS.horaDeInspeccion);
     this.solicitud220502Store.setAduanaDeIngreso(DATOS.aduanaDeIngreso);
-    this.solicitud220502Store.setFechaDeInspeccion(DATOS.fechaDeInspeccion);
+    this.solicitud220502Store.setFechaInspeccion(DATOS.fechaInspeccion);
     this.solicitud220502Store.setSanidadAgropecuaria(DATOS.sanidadAgropecuaria);
     this.solicitud220502Store.setPuntoDeInspeccion(DATOS.puntoDeInspeccion);
   }

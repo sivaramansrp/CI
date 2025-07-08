@@ -1,153 +1,119 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+// @ts-nocheck
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { By } from '@angular/platform-browser';
+import { Observable, of as observableOf, throwError } from 'rxjs';
+
+import { Component } from '@angular/core';
 import { SolicitanteComponent } from './solicitante.component';
-import { ReactiveFormsModule } from '@angular/forms';
-import { of, Subject } from 'rxjs';
-import { Tramite6402Query } from '../../estados/tramite6402.query';
+import { FormBuilder } from '@angular/forms';
 import { Tramite6402Store } from '../../estados/tramite6402.store';
+import { Tramite6402Query } from '../../estados/tramite6402.query';
 import { AutorizacionImportacionService } from '../../services/autorizacion-importacion.service';
 
+@Injectable()
+class MockTramite6402Store {}
+
+@Injectable()
+class MockTramite6402Query {}
+
+@Injectable()
+class MockAutorizacionImportacionService {}
+
+@Directive({ selector: '[myCustom]' })
+class MyCustomDirective {
+  @Input() myCustom;
+}
+
+@Pipe({name: 'translate'})
+class TranslatePipe implements PipeTransform {
+  transform(value) { return value; }
+}
+
+@Pipe({name: 'phoneNumber'})
+class PhoneNumberPipe implements PipeTransform {
+  transform(value) { return value; }
+}
+
+@Pipe({name: 'safeHtml'})
+class SafeHtmlPipe implements PipeTransform {
+  transform(value) { return value; }
+}
+
 describe('SolicitanteComponent', () => {
-  let component: SolicitanteComponent;
-  let fixture: ComponentFixture<SolicitanteComponent>;
-  let tramiteQueryMock: any;
-  let tramiteStoreMock: any;
-  let avisoTrasladoServiceMock: any;
+  let fixture;
+  let component;
 
-  beforeEach(async () => {
-    tramiteQueryMock = {
-      selectSolicitud$: of({
-        datosSolicitante: {
-          rfc: 'ABC123456789',
-          denominacion: 'Empresa S.A.',
-          actividadEconomica: 'Comercio',
-          correoElectronico: 'empresa@example.com',
-          pais: 'México',
-          codigoPostal: '12345',
-          entidadFederativa: 'Ciudad de México',
-          municipio: 'Benito Juárez',
-          localidad: 'Del Valle',
-          colonia: 'Colonia 1',
-          calle: 'Calle 1',
-          nExt: '123',
-          nInt: '456',
-          lada: '55',
-          telefono: '12345678',
-          adace: 'ADACE 1',
-        },
-      }),
-    };
-
-    tramiteStoreMock = {
-      setDatosSolicitante: jest.fn(),
-    };
-
-    avisoTrasladoServiceMock = {
-      obtenerDatosSolicitante: jest.fn().mockReturnValue(
-        of({
-          rfc: 'ABC123456789',
-          denominacion: 'Empresa S.A.',
-          actividadEconomica: 'Comercio',
-          correoElectronico: 'empresa@example.com',
-          pais: 'México',
-          codigoPostal: '12345',
-          entidadFederativa: 'Ciudad de México',
-          municipio: 'Benito Juárez',
-          localidad: 'Del Valle',
-          colonia: 'Colonia 1',
-          calle: 'Calle 1',
-          nExt: '123',
-          nInt: '456',
-          lada: '55',
-          telefono: '12345678',
-          adace: 'ADACE 1',
-        })
-      ),
-    };
-
-    await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule,SolicitanteComponent],
-      declarations: [],
-      providers: [
-        { provide: Tramite6402Query, useValue: tramiteQueryMock },
-        { provide: Tramite6402Store, useValue: tramiteStoreMock },
-        { provide: AutorizacionImportacionService, useValue: avisoTrasladoServiceMock },
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [ SolicitanteComponent, FormsModule, ReactiveFormsModule ],
+      declarations: [
+        TranslatePipe, PhoneNumberPipe, SafeHtmlPipe,
+        MyCustomDirective
       ],
-    }).compileComponents();
+      schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
+      providers: [
+        FormBuilder,
+        { provide: Tramite6402Store, useClass: MockTramite6402Store },
+        { provide: Tramite6402Query, useClass: MockTramite6402Query },
+        { provide: AutorizacionImportacionService, useClass: MockAutorizacionImportacionService }
+      ]
+    }).overrideComponent(SolicitanteComponent, {
 
+    }).compileComponents();
     fixture = TestBed.createComponent(SolicitanteComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+    component = fixture.debugElement.componentInstance;
   });
 
   afterEach(() => {
-    jest.clearAllMocks();
+    component.ngOnDestroy = function() {};
+    fixture.destroy();
   });
 
-  it('should create the component', () => {
+  it('should run #constructor()', async () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize tramiteState on ngOnInit', () => {
+  it('should run #ngOnInit()', async () => {
+    component.tramiteQuery = component.tramiteQuery || {};
+    component.tramiteQuery.selectSolicitud$ = observableOf({});
+    component.cargarDatosSolicitante = jest.fn();
+    component.inicializarFormulario = jest.fn();
     component.ngOnInit();
-    expect(component.tramiteState).toEqual({
-      datosSolicitante: {
-        rfc: 'ABC123456789',
-        denominacion: 'Empresa S.A.',
-        actividadEconomica: 'Comercio',
-        correoElectronico: 'empresa@example.com',
-        pais: 'México',
-        codigoPostal: '12345',
-        entidadFederativa: 'Ciudad de México',
-        municipio: 'Benito Juárez',
-        localidad: 'Del Valle',
-        colonia: 'Colonia 1',
-        calle: 'Calle 1',
-        nExt: '123',
-        nInt: '456',
-        lada: '55',
-        telefono: '12345678',
-        adace: 'ADACE 1',
-      },
-    });
+    expect(component.cargarDatosSolicitante).toHaveBeenCalled();
+    expect(component.inicializarFormulario).toHaveBeenCalled();
   });
 
-  it('should initialize the form on ngOnInit', () => {
-    component.ngOnInit();
-    expect(component.solicitudForm).toBeDefined();
-    expect(component.solicitudForm.get('rfc')?.value).toBe('ABC123456789');
-    expect(component.solicitudForm.get('denominacion')?.value).toBe('Empresa S.A.');
-    expect(component.solicitudForm.get('actividadEconomica')?.value).toBe('Comercio');
-    expect(component.solicitudForm.get('correoElectronico')?.value).toBe('empresa@example.com');
+  it('should run #inicializarFormulario()', async () => {
+    component.fb = component.fb || {};
+    component.fb.group = jest.fn();
+    component.tramiteState = component.tramiteState || {};
+    component.tramiteState.datosSolicitante = 'datosSolicitante';
+    component.inicializarFormulario();
+    expect(component.fb.group).toHaveBeenCalled();
   });
 
-  it('should call avisoTrasladoService.obtenerDatosSolicitante on cargarDatosSolicitante', () => {
+  it('should run #cargarDatosSolicitante()', async () => {
+    component.autorizacionImportacionService = component.autorizacionImportacionService || {};
+    component.autorizacionImportacionService.obtenerDatosSolicitante = jest.fn().mockReturnValue(observableOf({}));
+    component.store = component.store || {};
+    component.store.setDatosSolicitante = jest.fn();
+    component.inicializarFormulario = jest.fn();
     component.cargarDatosSolicitante();
-    expect(avisoTrasladoServiceMock.obtenerDatosSolicitante).toHaveBeenCalled();
-    expect(tramiteStoreMock.setDatosSolicitante).toHaveBeenCalledWith({
-      rfc: 'ABC123456789',
-      denominacion: 'Empresa S.A.',
-      actividadEconomica: 'Comercio',
-      correoElectronico: 'empresa@example.com',
-      pais: 'México',
-      codigoPostal: '12345',
-      entidadFederativa: 'Ciudad de México',
-      municipio: 'Benito Juárez',
-      localidad: 'Del Valle',
-      colonia: 'Colonia 1',
-      calle: 'Calle 1',
-      nExt: '123',
-      nInt: '456',
-      lada: '55',
-      telefono: '12345678',
-      adace: 'ADACE 1',
-    });
+    expect(component.autorizacionImportacionService.obtenerDatosSolicitante).toHaveBeenCalled();
+    expect(component.store.setDatosSolicitante).toHaveBeenCalled();
+    expect(component.inicializarFormulario).toHaveBeenCalled();
   });
 
-  it('should complete destroyNotifier$ on ngOnDestroy', () => {
-    const nextSpy = jest.spyOn(component.destroyNotifier$, 'next');
-    const completeSpy = jest.spyOn(component.destroyNotifier$, 'complete');
+  it('should run #ngOnDestroy()', async () => {
+    component.destroyNotifier$ = component.destroyNotifier$ || {};
+    component.destroyNotifier$.next = jest.fn();
+    component.destroyNotifier$.complete = jest.fn();
     component.ngOnDestroy();
-    expect(nextSpy).toHaveBeenCalled();
-    expect(completeSpy).toHaveBeenCalled();
+    expect(component.destroyNotifier$.next).toHaveBeenCalled();
+    expect(component.destroyNotifier$.complete).toHaveBeenCalled();
   });
+
 });

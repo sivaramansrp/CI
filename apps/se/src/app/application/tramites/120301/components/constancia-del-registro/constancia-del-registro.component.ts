@@ -2,17 +2,8 @@
  * @component ConstanciaDelRegistroComponent
  * @description Este componente es responsable de manejar el formulario del certificado de registro.
  * Incluye un formulario para capturar los datos del certificado de registro y funcionalidades adicionales.
- *
- * @import { Component } from '@angular/core';
- * @import { FormBuilder, FormGroup, Validators } from '@angular/forms';
  */
-import {
-  Component,
-  EventEmitter,
-  Input,
-  OnInit,
-  Output,
-} from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -30,14 +21,14 @@ import {
   Catalogo,
   CatalogoSelectComponent,
   ConfiguracionColumna,
-  InputRadioComponent,
+  ConsultaioQuery,
   SeccionLibQuery,
   SeccionLibState,
   SeccionLibStore,
   TablaDinamicaComponent,
   TituloComponent,
 } from '@ng-mf/data-access-user';
-
+import { InputRadioComponent } from "@libs/shared/data-access-user/src/tramites/components/input-radio/input-radio.component";
 import { VALIDO } from '../../constantes/elegibilidad-de-textiles.enums';
 
 import {
@@ -50,8 +41,43 @@ import { ElegibilidadTextilesService } from '../../services/elegibilidad-textile
 
 /**
  * @component ConstanciaDelRegistroComponent
- * @description Este componente es responsable de manejar el formulario del certificado de registro.
- * Incluye un formulario para capturar los datos del certificado de registro y funcionalidades adicionales.
+ * @description
+ * Componente responsable de manejar el formulario del certificado de registro en el trámite de elegibilidad de textiles.
+ * Permite capturar, mostrar y gestionar datos del certificado de registro mediante formularios y tablas dinámicas.
+ * Gestiona el estado de validez del formulario y la sincronización con el store de la aplicación.
+ *
+ * @example
+ * <app-constancia-del-registro [formularioDeshabilitado]="true"></app-constancia-del-registro>
+ *
+ * @property {boolean} formularioDeshabilitado - Indica si el formulario está deshabilitado.
+ * @property {FormGroup} fitosanitarioForm - Formulario reactivo para capturar los datos del certificado de registro.
+ * @property {string[]} selectRangoDias - Array de rangos de días seleccionables.
+ * @property {boolean} colapsable - Controla el estado colapsable del panel.
+ * @property {FormGroup} ConstanciaDelRegistro - Formulario para datos adicionales del certificado de registro.
+ * @property {any} radioOptions - Opciones de radio cargadas desde un archivo JSON.
+ * @property {string | number} selectedValue - Valor seleccionado en las opciones de radio.
+ * @property {string[]} tableColumns - Encabezados de columnas de la tabla.
+ * @property {ConfiguracionColumna<ConstanciaTramiteConfiguracion>[]} configuracionTabla - Configuración de columnas de la tabla de datos.
+ * @property {ConstanciaTramiteConfiguracion[]} configuracionTablaDatos - Datos de la tabla de constancias de trámite.
+ * @property {Catalogo[]} paisesDatos - Datos del catálogo de países.
+ * @property {boolean} guardarBandera - Bandera para indicar si se deben guardar los datos.
+ * @property {EventEmitter<boolean>} mostrarTabs - Emite un valor booleano para mostrar las pestañas adicionales.
+ *
+ * @method ngOnInit Inicializa el componente y obtiene los datos necesarios.
+ * @method initActionFormBuild Inicializa el formulario reactivo.
+ * @method onValueChange Maneja el cambio de valor en las opciones de radio.
+ * @method setValoresStore Establece valores en el store de textiles.
+ * @method onFilaClic Maneja el evento de clic en una fila de la tabla.
+ * @method buscarEvaluar Valida y busca datos asociados a la constancia.
+ * @method guardarEvaluate Emite un evento para mostrar las pestañas y realiza scroll al inicio.
+ * @method recuperarDatosAsociadas Recupera los datos asociados para la tabla de constancia del registro.
+ * @method filtrarDatos Filtra los datos de la tabla según el año y número de constancia.
+ *
+ * @see ElegibilidadDeTextilesStore
+ * @see ElegibilidadDeTextilesQuery
+ * @see SeccionLibStore
+ * @see SeccionLibQuery
+ * @see ElegibilidadTextilesService
  */
 @Component({
   selector: 'app-constancia-del-registro',
@@ -66,59 +92,89 @@ import { ElegibilidadTextilesService } from '../../services/elegibilidad-textile
     CatalogoSelectComponent,
   ],
 })
-export class ConstanciaDelRegistroComponent implements OnInit {
+export class ConstanciaDelRegistroComponent implements OnInit, OnDestroy {
   /**
    * @property {boolean} formularioDeshabilitado - Indica si el formulario está deshabilitado.
+   * Propiedad de entrada que controla si todos los controles del formulario deben estar deshabilitados.
+   * Cuando es true, impide la edición de cualquier campo del formulario.
    */
   @Input()
   formularioDeshabilitado: boolean = false;
+
   /**
    * @property {FormGroup} fitosanitarioForm - El grupo de formularios para capturar los datos del certificado de registro.
+   * Formulario reactivo principal que contiene todos los controles necesarios para la captura
+   * de información relacionada con la constancia del registro fitosanitario.
+   * Incluye validaciones y manejo de estado para cada campo del formulario.
    */
   fitosanitarioForm!: FormGroup;
 
   /**
    * @property {string[]} selectRangoDias - Array de rangos de días seleccionables.
+   * Contiene las opciones disponibles para seleccionar rangos de días en los controles de fecha.
+   * Se utiliza para limitar las opciones de selección temporal en el formulario.
    */
   selectRangoDias: string[] = [];
 
   /**
-   * @property {boolean} colapsable - Booleano para controlar el estado colapsable.
+   * @property {boolean} colapsable - Booleano para controlar el estado colapsable del panel.
+   * Determina si las secciones de la interfaz pueden expandirse o contraerse.
+   * Utilizado para mejorar la experiencia de usuario al organizar la información en paneles.
    */
   colapsable: boolean = false;
 
   /**
    * @property {FormGroup} ConstanciaDelRegistro - El grupo de formularios para los datos del certificado de registro.
+   * Formulario secundario que maneja información adicional específica de la constancia del registro.
+   * Complementa al formulario principal con campos especializados.
    */
   ConstanciaDelRegistro!: FormGroup;
 
   /**
    * @property {any} radioOptions - Opciones de radio cargadas desde un archivo JSON.
+   * Contiene las configuraciones y opciones disponibles para los controles de radio button.
+   * Se inicializa con datos estáticos importados desde un archivo JSON externo.
    */
   radioOptions = radioOptionsData;
 
   /**
    * @property {string | number} selectedValue - Valor seleccionado en las opciones de radio.
+   * Almacena el valor actualmente seleccionado en los controles de radio button.
+   * Puede ser de tipo string o number dependiendo del tipo de opción seleccionada.
    */
   selectedValue: string | number = '';
 
   /**
    * @property {Subject<void>} destroyNotifier$ - Sujeto para manejar la destrucción de suscripciones.
+   * Subject privado utilizado con el operador takeUntil para cancelar automáticamente
+   * todas las suscripciones activas cuando el componente es destruido.
+   * Implementa el patrón estándar para prevenir fugas de memoria en Angular.
+   * @private
    */
   private destroyNotifier$: Subject<void> = new Subject();
 
   /**
    * @property {TextilesState} constanciaState - Estado actual de los textiles.
+   * Almacena el estado completo relacionado con la elegibilidad de textiles.
+   * Se actualiza mediante suscripciones al query correspondiente y contiene
+   * toda la información necesaria para el funcionamiento del componente.
+   * @private
    */
   private constanciaState!: TextilesState;
 
   /**
    * @property {SeccionLibState} seccionState - Estado actual de la sección.
+   * Mantiene el estado específico de la sección dentro del módulo de librerías.
+   * Controla aspectos como la validez de la sección y su estado de activación.
+   * @private
    */
   private seccionState!: SeccionLibState;
 
   /**
    * @property {string[]} tableColumns - Array de encabezados de columnas de la tabla.
+   * Define los títulos de las columnas que se mostrarán en la tabla de datos.
+   * Se utiliza como referencia para la configuración visual de la tabla.
+   * Incluye información sobre constancias, fracciones arancelarias, regímenes, países y fechas.
    */
   tableColumns = [
     'Número de constancia de registro',
@@ -130,38 +186,50 @@ export class ConstanciaDelRegistroComponent implements OnInit {
   ];
 
   /**
-   * Arreglo que almacena la configuración de la tabla de datos para constancias de trámite.
-   *
-   * @property {ConfiguracionColumna<ConstanciaTramiteConfiguracion>[]} configuracionTabla - Configuración de la tabla de datos.
-   *
+   * @property {ConstanciaTramiteConfiguracion[]} configuracionTablaDatos - Datos de la tabla de constancias de trámite.
+   * Arreglo que almacena toda la información de las constancias de trámite que se muestran en la tabla.
+   * Se actualiza dinámicamente mediante consultas al servicio y filtrado de datos.
+   * Cada elemento contiene información completa sobre una constancia específica.
    */
   public configuracionTablaDatos: ConstanciaTramiteConfiguracion[] = [];
 
   /**
-   * Arreglo que contiene los datos del catálogo de países.
-   * @type {Catalogo[]}
+   * @property {Catalogo[]} paisesDatos - Datos del catálogo de países.
+   * Arreglo que contiene la información completa del catálogo de países disponibles.
+   * Se utiliza para poblar controles de selección y validar datos de país de destino/origen.
+   * Se carga desde el servicio al inicializar el componente.
    */
   public paisesDatos: Catalogo[] = [];
 
   /**
    * @property {boolean} guardarBandera - Bandera para indicar si se deben guardar los datos.
+   * Controla el estado de guardado y determina si los datos han sido procesados correctamente.
+   * Se utiliza para habilitar/deshabilitar controles del formulario y mostrar opciones adicionales.
+   * Su valor se sincroniza con el estado global del store.
    */
   public guardarBandera: boolean = false;
 
   /**
    * @property {EventEmitter<boolean>} mostrarTabs - Emite un valor booleano para mostrar las pestañas adicionales.
+   * EventEmitter que comunica al componente padre cuándo debe mostrar las pestañas de navegación.
+   * Se activa cuando el usuario completa exitosamente el proceso de guardado o validación.
+   * Permite la coordinación entre componentes para la navegación de la interfaz.
    */
   @Output() mostrarTabs: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   /**
    * @constructor
-   * @description Constructor del componente. Inicializa los servicios necesarios.
-   * @param {FormBuilder} fb - Servicio para la creación de formularios reactivos.
-   * @param {ElegibilidadDeTextilesStore} ElegibilidadDeTextilesStore - Store para manejar el estado de elegibilidad de textiles.
-   * @param {ElegibilidadDeTextilesQuery} ElegibilidadDeTextilesQuery - Query para consultar el estado de elegibilidad de textiles.
-   * @param {SeccionLibStore} seccionStore - Store para manejar el estado de la sección.
-   * @param {SeccionLibQuery} seccionQuery - Query para consultar el estado de la sección.
-   * @param {ElegibilidadTextilesService} ElegibilidadTextilesService - Servicio para manejar la lógica de elegibilidad de textiles.
+   * @description Constructor del componente. Inicializa los servicios necesarios para el funcionamiento del componente.
+   * Inyecta todas las dependencias requeridas para el manejo de formularios reactivos,
+   * gestión de estado global y local, consultas de datos y servicios específicos del dominio.
+   * Establece la base para la comunicación entre el componente y los servicios del sistema.
+   * @param {FormBuilder} fb - Servicio de Angular para la creación y gestión de formularios reactivos.
+   * @param {ElegibilidadDeTextilesStore} ElegibilidadDeTextilesStore - Store para manejar el estado global de elegibilidad de textiles.
+   * @param {ElegibilidadDeTextilesQuery} ElegibilidadDeTextilesQuery - Query para consultar y suscribirse al estado de elegibilidad de textiles.
+   * @param {SeccionLibStore} seccionStore - Store para manejar el estado específico de las secciones del módulo.
+   * @param {SeccionLibQuery} seccionQuery - Query para consultar y suscribirse al estado de las secciones.
+   * @param {ElegibilidadTextilesService} ElegibilidadTextilesService - Servicio de dominio para manejar la lógica de negocio de elegibilidad de textiles.
+   * @param {ConsultaioQuery} consultaioQuery - Query para consultar el estado de solo lectura del trámite.
    */
   constructor(
     private fb: FormBuilder,
@@ -169,13 +237,18 @@ export class ConstanciaDelRegistroComponent implements OnInit {
     private ElegibilidadDeTextilesQuery: ElegibilidadDeTextilesQuery,
     private seccionStore: SeccionLibStore,
     private seccionQuery: SeccionLibQuery,
-    private ElegibilidadTextilesService: ElegibilidadTextilesService
+    private ElegibilidadTextilesService: ElegibilidadTextilesService,
+    private consultaioQuery: ConsultaioQuery
   ) {
     // Lógica del constructor si es necesario
   }
 
   /**
-   * Configuración de las columnas de la tabla.
+   * @property {ConfiguracionColumna<ConstanciaTramiteConfiguracion>[]} configuracionTabla - Configuración de las columnas de la tabla.
+   * Define la estructura, comportamiento y apariencia de cada columna en la tabla de datos.
+   * Cada elemento especifica el encabezado, la función de acceso a los datos (clave),
+   * y el orden de visualización. Se utiliza por el componente TablaDinamicaComponent
+   * para renderizar correctamente la información de las constancias de trámite.
    */
   configuracionTabla: ConfiguracionColumna<ConstanciaTramiteConfiguracion>[] = [
     {
@@ -218,6 +291,12 @@ export class ConstanciaDelRegistroComponent implements OnInit {
   /**
    * @method ngOnInit
    * @description Método que se ejecuta al inicializar el componente.
+   * Configura todas las suscripciones necesarias para el manejo del estado,
+   * inicializa el formulario reactivo, carga los datos del catálogo de países,
+   * establece la validación inicial del formulario y maneja el estado de habilitación
+   * basado en las propiedades de entrada. También configura la lógica de validación
+   * condicional según el estado previo del componente.
+   * @returns {void} No retorna ningún valor.
    */
   ngOnInit(): void {
     this.seccionQuery.selectSeccionState$
@@ -246,6 +325,34 @@ export class ConstanciaDelRegistroComponent implements OnInit {
 
     this.initActionFormBuild();
 
+    // Obtenga el estado actual de solo lectura inmediatamente
+    const CURRENT_STATE = this.consultaioQuery.getValue();
+    this.formularioDeshabilitado = CURRENT_STATE.readonly;
+    
+    // Aplicar el estado del formulario inicial según el valor de solo lectura actual
+    if (this.formularioDeshabilitado) {
+      this.fitosanitarioForm.disable();
+    } else {
+      this.fitosanitarioForm.enable();
+    }
+
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((consultaState) => {
+          // Lógica normal: solo lectura verdadero = deshabilitar campos, solo lectura falso = habilitar campos
+          this.formularioDeshabilitado = consultaState.readonly;
+          if (this.fitosanitarioForm) {
+            if (consultaState.readonly) {
+              this.fitosanitarioForm.disable();
+            } else {
+              this.fitosanitarioForm.enable();
+            }
+          }
+        })
+      )
+      .subscribe();
+
     this.seccionStore.establecerFormaValida([false]);
 
     if (
@@ -258,15 +365,16 @@ export class ConstanciaDelRegistroComponent implements OnInit {
     } else {
       this.seccionStore.establecerFormaValida([false]);
     }
-
-    if (this.formularioDeshabilitado) {
-      this.fitosanitarioForm.disable();
-    }
   }
 
   /**
    * @method initActionFormBuild
    * @description Inicializa el formulario reactivo para capturar los datos del certificado de registro.
+   * Crea todos los controles del formulario con sus valores iniciales obtenidos del estado actual,
+   * aplicando las validaciones necesarias para cada campo. Configura campos para información
+   * del certificado, datos del producto, fechas de vigencia y ubicación geográfica.
+   * También maneja el estado de la tabla de datos y la bandera de guardado.
+   * @returns {void} No retorna ningún valor.
    */
   initActionFormBuild(): void {
     this.fitosanitarioForm = this.fb.group({
@@ -318,7 +426,10 @@ export class ConstanciaDelRegistroComponent implements OnInit {
           key !== 'numeroDeLaConstancia' &&
           key !== 'flexRadioRegistro'
         ) {
-          this.fitosanitarioForm.get(key)?.disable();
+          // Deshabilitar solo si no está en modo de solo lectura
+          if (!this.formularioDeshabilitado) {
+            this.fitosanitarioForm.get(key)?.disable();
+          }
         }
       });
     }
@@ -327,7 +438,11 @@ export class ConstanciaDelRegistroComponent implements OnInit {
   /**
    * @method onValueChange
    * @description Maneja el cambio de valor en las opciones de radio.
-   * @param {string | number} newValue - Nuevo valor seleccionado.
+   * Se ejecuta cuando el usuario selecciona una nueva opción en los controles de radio button.
+   * Actualiza la propiedad selectedValue con el nuevo valor seleccionado,
+   * lo que puede desencadenar cambios en la interfaz o validaciones adicionales.
+   * @param {string | number} newValue - Nuevo valor seleccionado en las opciones de radio.
+   * @returns {void} No retorna ningún valor.
    */
   onValueChange(newValue: number | string): void {
     this.selectedValue = newValue;
@@ -336,9 +451,13 @@ export class ConstanciaDelRegistroComponent implements OnInit {
   /**
    * @method setValoresStore
    * @description Establece los valores en el store de textiles.
-   * @param {FormGroup} form - El formulario reactivo.
-   * @param {string} campo - El nombre del campo.
-   * @param {keyof ElegibilidadDeTextilesStore} metodoNombre - El método del store a invocar.
+   * Método utilitario que extrae el valor de un campo específico del formulario
+   * y lo almacena en el store global utilizando el método especificado.
+   * Facilita la sincronización entre el estado del formulario y el estado global de la aplicación.
+   * @param {FormGroup} form - El formulario reactivo del cual extraer el valor.
+   * @param {string} campo - El nombre del campo del formulario a extraer.
+   * @param {keyof ElegibilidadDeTextilesStore} metodoNombre - El nombre del método del store a invocar para guardar el valor.
+   * @returns {void} No retorna ningún valor.
    */
   setValoresStore(
     form: FormGroup,
@@ -353,9 +472,13 @@ export class ConstanciaDelRegistroComponent implements OnInit {
 
   /**
    * @method onFilaClic
-   * @description Maneja el evento de clic en una fila de la tabla. Actualiza los valores del formulario y los almacena en el store.
-   * También deshabilita los campos del formulario una vez que se llenan con los valores seleccionados.
-   * @param {ConstanciaTramiteConfiguracion} fila - Datos de la fila seleccionada en la tabla.
+   * @description Maneja el evento de clic en una fila de la tabla. 
+   * Actualiza los valores del formulario con los datos de la fila seleccionada,
+   * almacena los valores en el store global, deshabilita los campos del formulario
+   * (excepto año y número de constancia) y activa la bandera de guardado.
+   * Este método permite la selección y carga automática de datos desde la tabla.
+   * @param {ConstanciaTramiteConfiguracion} fila - Datos de la fila seleccionada en la tabla que contiene la información completa de la constancia.
+   * @returns {void} No retorna ningún valor.
    */
   onFilaClic(fila: ConstanciaTramiteConfiguracion): void {
     if (!fila) {
@@ -392,7 +515,10 @@ export class ConstanciaDelRegistroComponent implements OnInit {
     Object.keys(FORM_VALUES).forEach((key) => {
       if (this.fitosanitarioForm.get(key)) {
         if (key !== 'anoDeLaConstancia' && key !== 'numeroDeLaConstancia') {
-          this.fitosanitarioForm.get(key)?.disable();
+          // Deshabilitar solo si no está en modo de solo lectura
+          if (!this.formularioDeshabilitado) {
+            this.fitosanitarioForm.get(key)?.disable();
+          }
         }
       }
     });
@@ -405,13 +531,12 @@ export class ConstanciaDelRegistroComponent implements OnInit {
   }
 
   /**
-   * @method
-   * @description
-   * Valida los campos 'anoDeLaConstancia' y 'numeroDeLaConstancia' del formulario fitosanitario.
-   * Si alguno de los campos es inválido, marca los controles como tocados y detiene la ejecución.
-   * Si ambos campos son válidos, recupera los datos asociados y actualiza el estado de la tienda
-   * ElegibilidadDeTextilesStore con los valores actuales del formulario.
-   *
+   * @method buscarEvaluar
+   * @description Valida los campos 'anoDeLaConstancia' y 'numeroDeLaConstancia' del formulario fitosanitario.
+   * Realiza validación de campos requeridos, marca los controles como tocados para mostrar errores,
+   * y si la validación es exitosa, procede a recuperar los datos asociados de la constancia.
+   * También actualiza el estado global del store con los valores validados del formulario.
+   * Este método es el punto de entrada para la búsqueda y validación de constancias.
    * @returns {void} No retorna ningún valor.
    */
   buscarEvaluar(): void {
@@ -441,10 +566,13 @@ export class ConstanciaDelRegistroComponent implements OnInit {
   }
 
   /**
-   * Emite un evento para mostrar las pestañas (tabs) en la interfaz de usuario.
-   *
+   * @method guardarEvaluate
+   * @description Emite un evento para mostrar las pestañas (tabs) en la interfaz de usuario y realiza un scroll al inicio de la página.
+   * Se ejecuta cuando el usuario ha completado exitosamente el proceso de captura y validación de la constancia.
+   * Notifica al componente padre que debe mostrar las pestañas adicionales de navegación
+   * y mejora la experiencia de usuario llevando la vista al inicio de la página.
    * @returns {void} No retorna ningún valor.
-   * @event mostrarTabs
+   * @fires mostrarTabs Evento que indica al componente padre que debe mostrar las pestañas de navegación.
    */
   guardarEvaluate(): void {
     this.mostrarTabs.emit(true);
@@ -452,14 +580,12 @@ export class ConstanciaDelRegistroComponent implements OnInit {
   }
 
   /**
-   * Recupera los datos asociados para la tabla de constancia del registro.
-   *
-   * Utiliza el servicio `ElegibilidadTextilesService` para obtener los datos desde un archivo JSON,
-   * filtra los datos utilizando el método `filtrarDatos`, y actualiza tanto la propiedad local
-   * `configuracionTablaDatos` como el estado en el store `ElegibilidadDeTextilesStore`.
-   *
-   * En caso de error durante la obtención de los datos, se muestra un mensaje en la consola.
-   *
+   * @method recuperarDatosAsociadas
+   * @description Recupera los datos asociados para la tabla de constancia del registro.
+   * Utiliza el servicio ElegibilidadTextilesService para obtener los datos desde un archivo JSON,
+   * aplica filtros basados en los criterios del formulario utilizando el método filtrarDatos,
+   * y actualiza tanto la propiedad local configuracionTablaDatos como el estado global en el store.
+   * La operación se realiza de forma reactiva con manejo de suscripciones para evitar fugas de memoria.
    * @returns {void} No retorna ningún valor.
    */
   recuperarDatosAsociadas(): void {
@@ -483,33 +609,52 @@ export class ConstanciaDelRegistroComponent implements OnInit {
   }
 
   /**
-   * @function filtrarDatos
+   * @method filtrarDatos
    * @description Filtra los datos de la tabla según el año de la constancia y el número de la constancia.
-   * Obtiene los valores directamente del formulario.
-   * @param {ConstanciaTramiteConfiguracion[]} datos - Datos a filtrar.
-   * @returns {ConstanciaTramiteConfiguracion[]} Datos filtrados.
+   * Obtiene los criterios de filtrado directamente de los valores del formulario fitosanitario
+   * y aplica filtros de coincidencia tanto por año (extraído de la fecha de inicio de vigencia)
+   * como por número de constancia. Permite filtrado parcial si algún criterio está vacío.
+   * @param {ConstanciaTramiteConfiguracion[]} datos - Array de datos de constancias a filtrar.
+   * @returns {ConstanciaTramiteConfiguracion[]} Array de datos filtrados que coinciden con los criterios especificados.
    */
   filtrarDatos(
     datos: ConstanciaTramiteConfiguracion[]
   ): ConstanciaTramiteConfiguracion[] {
     const ANO_DE_LA_CONSTANCIA =
-      this.fitosanitarioForm.get('anoDeLaConstancia')?.value;
-    const NUMERO_CONSTANCIA = this.fitosanitarioForm.get(
-      'numeroDeLaConstancia'
-    )?.value;
+      this.fitosanitarioForm.get('anoDeLaConstancia')?.value || '';
+    const NUMERO_CONSTANCIA =
+      this.fitosanitarioForm.get('numeroDeLaConstancia')?.value || '';
 
     return datos.filter((ITEM) => {
-      const ANO_ITEM = new Date(
-        ITEM.fechaInicioVigencia.split('/').reverse().join('/')
-      ).getFullYear();
+      const ANO_ITEM = new Date(ITEM.fechaInicioVigencia).getFullYear();
       const FILTRO_ANO = ANO_DE_LA_CONSTANCIA
-        ? ANO_ITEM === Number(ANO_DE_LA_CONSTANCIA)
+        ? ANO_ITEM === parseInt(ANO_DE_LA_CONSTANCIA, 10)
         : true;
       const FILTRO_NUMERO = NUMERO_CONSTANCIA
-        ? ITEM.numeroDeConstancia === NUMERO_CONSTANCIA
+        ? ITEM.numeroDeConstancia.toString() === NUMERO_CONSTANCIA.toString()
         : true;
 
       return FILTRO_ANO && FILTRO_NUMERO;
     });
+  }
+
+  /**
+   * @method ngOnDestroy
+   * @description
+   * Método del ciclo de vida de Angular que se ejecuta cuando el componente va a ser destruido.
+   * Se encarga de limpiar las suscripciones activas para evitar fugas de memoria,
+   * completando el Subject destroyNotifier$ que es utilizado por todas las suscripciones
+   * del componente con el operador takeUntil.
+   * 
+   * @returns {void} No retorna ningún valor.
+   * 
+   * @implements {OnDestroy}
+   * @public
+   * @memberof ConstanciaDelRegistroComponent
+   * @since 1.0.0
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }

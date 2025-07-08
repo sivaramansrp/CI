@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { AvisoTrasladoService } from './aviso-traslado.service';
-import { CatalogoLista, AvisoTablaDatos, MercanciaTablaDatos, DatosSolicitante } from '../models/aviso-traslado.model';
+import { CatalogoLista, AvisoTablaDatos, MercanciaTablaDatos, DatosSolicitante, RespuestaConsulta } from '../models/aviso-traslado.model';
 
 describe('AvisoTrasladoService', () => {
     let service: AvisoTrasladoService;
@@ -24,7 +24,7 @@ describe('AvisoTrasladoService', () => {
     it('debería crearse el servicio', () => {
         expect(service).toBeTruthy();
     });
-    
+
 
     it('debería obtener los datos del solicitante', () => {
         const mockResponse: DatosSolicitante = {
@@ -159,5 +159,57 @@ describe('AvisoTrasladoService', () => {
         const req = httpMock.expectOne('assets/json/32503/entidad-federativa.json');
         expect(req.request.method).toBe('GET');
         req.flush(mockResponse);
+    });
+    it('should fetch datos consulta from the correct URL', () => {
+        const mockResponse: RespuestaConsulta = {
+            "success": true,
+            "message": "",
+            "datos": {
+                "avisoFormulario": {
+                    "adace": "adace",
+                    "valorProgramaImmex": "  programa IMMEX",
+                    "valorAnioProgramaImmex": "Año de programa",
+                    "tipoAviso": "prorroga",
+                    "idTransaccion": "aviso inicial",
+                    "motivoProrroga": "de la Prórroga",
+                    "fechaTranslado": "15/10/2025",
+                    "nombreComercial": "comercial",
+                    "claveEntidadFederativa": "2",
+                    "claveDelegacionMunicipio": "3",
+                    "claveColonia": "5",
+                    "calle": "Calle",
+                    "numeroExterior": "1",
+                    "numeroInterior": "12",
+                    "codigoPostal": "34343",
+                    "tipoCarga": "manual"
+                },
+                "tablaDeDatos": [
+                    {
+                        "id": 1,
+                        "rfc": "XAXX010101000",
+                        "nombreComercial": "NOMBRE COMERCIAL",
+                        "entidadFederativa": "ENTIDAD FEDERATIVA",
+                        "alcaldioOMuncipio": "ALCALDIA O MUNICIPIO",
+                        "colonia": "COLONIA"
+                    },
+                    {
+                        "id": 1,
+                        "rfc": "XAXX010101000",
+                        "nombreComercial": "NOMBRE COMERCIAL",
+                        "entidadFederativa": "ENTIDAD FEDERATIVA",
+                        "alcaldioOMuncipio": "ALCALDIA O MUNICIPIO",
+                        "colonia": "COLONIA"
+                    }
+                ]
+            }
+        };
+
+        service.getDatosConsulta().subscribe((response) => {
+            expect(response).toEqual(mockResponse);
+        });
+
+        const req = httpMock.expectOne('assets/json/32503/consulta-32503.json');
+        expect(req.request.method).toBe('GET');
+        req.flush(mockResponse); // Simulate the HTTP response
     });
 });

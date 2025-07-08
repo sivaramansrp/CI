@@ -65,7 +65,6 @@ import scianTable from '@libs/shared/theme/assets/json/260601/scian-table.json';
   templateUrl: './datos-del-establecimiento.component.html',
   styleUrl: './datos-del-establecimiento.component.css',
 })
-/*eslint class-methods-use-this: ["error", { "exceptMethods": ["enCambioDeValor", "abrirDialogoAgregarDatosSCIAN", "agregarAgente", "limpiarDatosSCIAN", "agregarDatosSCIAN"] }] */
 export class DatosDelEstablecimientoComponent implements OnInit, OnDestroy {
   /**
    * Formulario principal para los datos del establecimiento.
@@ -197,11 +196,11 @@ export class DatosDelEstablecimientoComponent implements OnInit, OnDestroy {
    * @param consultaioQuery Query para observar cambios en el estado de la consulta.
    */
   constructor(
-    private fb: FormBuilder,
-    private avisoSanitarioService: AvisoSanitarioService,
-    private tramite260601Store: Tramite260601Store,
-    private tramite260601Query: Tramite260601Query,
-    private consultaioQuery: ConsultaioQuery
+    public fb: FormBuilder,
+    public avisoSanitarioService: AvisoSanitarioService,
+    public tramite260601Store: Tramite260601Store,
+    public tramite260601Query: Tramite260601Query,
+    public consultaioQuery: ConsultaioQuery
   ) {
     /**
      * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
@@ -390,7 +389,7 @@ export class DatosDelEstablecimientoComponent implements OnInit, OnDestroy {
       .getEstado(CATALOGOS_ID.CAT_ESTADO)
       .pipe(
         map((resp) => {
-          this.estado = resp.data;
+          this.estado = resp?.data;
         })
       );
 
@@ -489,16 +488,16 @@ export class DatosDelEstablecimientoComponent implements OnInit, OnDestroy {
    * Obtiene los datos para la tabla SCIAN.
    */
   public obtenerSCIAN(): void {
-    this.scianHeaderData = this.getSCIANTableData.tableHeader;
-    this.scianBodyData = this.getSCIANTableData.tableBody;
+    this.scianHeaderData = this.getSCIANTableData?.tableHeader;
+    this.scianBodyData = this.getSCIANTableData?.tableBody;
   }
 
   /**
    * Obtiene los datos para la tabla de productos.
    */
   public obtenerProducto(): void {
-    this.productoHeaderData = this.getProductoTableData.tableHeader;
-    this.productoBodyData = this.getProductoTableData.tableBody;
+    this.productoHeaderData = this.getProductoTableData?.tableHeader;
+    this.productoBodyData = this.getProductoTableData?.tableBody;
   }
 
   /**
@@ -553,41 +552,6 @@ export class DatosDelEstablecimientoComponent implements OnInit, OnDestroy {
       'seleccionadaManifiesto',
       'setSeleccionadaManifiesto'
     );
-  }
-
-  /**
-   * Maneja el evento de cambio de valor.
-   */
-  enCambioDeValor(): void {
-    // Implementar la lógica para evento de cambio de valor.
-  }
-
-  /**
-   * Abre el diálogo para agregar datos SCIAN.
-   */
-  abrirDialogoAgregarDatosSCIAN(): void {
-    // Implementar la lógica para abrir dialogo agregar datos SCIAN.
-  }
-
-  /**
-   * Agrega un agente relacionado con el establecimiento.
-   */
-  agregarAgente(): void {
-    // Implementar la lógica para agregar agente.
-  }
-
-  /**
-   * Limpia los datos SCIAN del formulario.
-   */
-  limpiarDatosSCIAN(): void {
-    // Implementar la lógica para limpiar datos SCIAN.
-  }
-
-  /**
-   * Agrega los datos SCIAN al formulario.
-   */
-  agregarDatosSCIAN(): void {
-    // Implementar la lógica para agregar datos SCIAN.
   }
 
   /**

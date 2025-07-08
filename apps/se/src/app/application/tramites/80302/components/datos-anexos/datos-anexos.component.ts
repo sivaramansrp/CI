@@ -1,5 +1,5 @@
 import { CONFIGURACION_ANEXOS_IMPORTACION, CONFIGURACION_ANEXOS_TABLA } from '../../../80308/constantes/modificacion.enum';
-import { Component, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ConfiguracionColumna, TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { Subject, takeUntil } from 'rxjs';
 import { Anexo } from '../../estados/models/plantas-consulta.model';
@@ -13,9 +13,8 @@ import { ToastrService } from 'ngx-toastr';
   styleUrl: './datos-anexos.component.scss',
   standalone: true,
   imports: [TablaDinamicaComponent, TituloComponent],
-  providers: [SolicitudService, ToastrService],
 })
-export class DatosAnexosComponent implements OnDestroy {
+export class DatosAnexosComponent implements OnInit, OnDestroy {
   /**
    * Subject utilizado para notificar cuando se debe completar y limpiar las suscripciones activas.
    * Esto evita fugas de memoria al completar las suscripciones al destruir el componente.
@@ -54,7 +53,11 @@ export class DatosAnexosComponent implements OnDestroy {
     public solicitudService: SolicitudService,
     private toastr: ToastrService 
   ) {
-    this.obteneComplimentaria(); // Carga los anexos complementarios.
+   
+  }
+
+  ngOnInit(): void {
+     this.obteneComplimentaria(); // Carga los anexos complementarios.
   }
 
   /**

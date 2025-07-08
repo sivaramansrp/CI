@@ -2,10 +2,36 @@ import { DatosGrupos, createDatosGruposState } from '../models/permiso-importaci
 import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
 
+/**
+ * @Injectable
+ * Marca esta clase como inyectable y disponible en el inyector raíz de Angular.
+ * Esto permite que el store sea utilizado en cualquier parte de la aplicación.
+ */
 @Injectable({
     providedIn: 'root',
 })
+
+/**
+ * @StoreConfig
+ * Configuración del store de Akita.
+ * 
+ * @param name Nombre del store: 'seccion'.
+ * @param resettable Indica si el store puede ser reseteado a su estado inicial: true.
+ */
 @StoreConfig({ name: 'seccion', resettable: true })
+
+/**
+ * Store principal para gestionar el estado del trámite de Permiso de Importación.
+ *
+ * Extiende de la clase Store de Akita y administra el estado reactivo de los datos agrupados del formulario,
+ * permitiendo actualizar, limpiar y modificar secciones específicas del permiso de importación.
+ *
+ * Proporciona métodos para actualizar campos individuales o grupos de datos, así como para resetear el estado.
+ *
+ * @export
+ * @class PermisoImportacionStore
+ * @extends {Store<DatosGrupos>}
+ */
 export class PermisoImportacionStore extends Store<DatosGrupos> {
     /**
      * Inicializa el store con el estado inicial de los datos de grupos.
@@ -26,6 +52,7 @@ export class PermisoImportacionStore extends Store<DatosGrupos> {
     }
 
     /**
+     * Actualiza el valor de la entidad federativa.
      * @method setrégimen
      * @description Actualiza el valor de la entidad federativa.
      * @param {string} entidadFederativa - Lista de entidades federativas.
@@ -40,6 +67,7 @@ export class PermisoImportacionStore extends Store<DatosGrupos> {
     }
 
     /**
+     * Actualiza el valor de la clasificación del régimen.
      * @method setclassifición_régimen
      * @description Actualiza el valor de la clasificación del régimen.
      * @param {string} classifición_régimen - Clasificación del régimen.
@@ -52,6 +80,7 @@ export class PermisoImportacionStore extends Store<DatosGrupos> {
     }
 
     /**
+     * Actualiza el valor de la descripción.
      * @method setDescripcion
      * @description Actualiza el valor de la descripción.
      * @param {string} descripción - Descripción del régimen.
@@ -65,6 +94,7 @@ export class PermisoImportacionStore extends Store<DatosGrupos> {
     
     
     /**
+     * Actualiza el valor de la marca de la mercancía.
      * @method setmarca
      * @description Actualiza el valor de la marca de la mercancía.
      * @param {string} marca - Marca(s) comercial(es) y modelo(s).
@@ -77,6 +107,7 @@ export class PermisoImportacionStore extends Store<DatosGrupos> {
     }
 
     /**
+     * Actualiza el tipo de aduana de entrada.
      * @method settipo_entrada
      * @description Actualiza el tipo de aduana de entrada.
      * @param {string} tipo_entrada - Tipo de aduana de entrada.
@@ -89,6 +120,7 @@ export class PermisoImportacionStore extends Store<DatosGrupos> {
     }
 
     /**
+     * Actualiza la fracción arancelaria.
      * @method setfracción
      * @description Actualiza la fracción arancelaria.
      * @param {string} fracción - Fracción arancelaria.
@@ -101,6 +133,7 @@ export class PermisoImportacionStore extends Store<DatosGrupos> {
     }
 
     /**
+     * Actualiza el valor de NICO.
      * @method setnico
      * @description Actualiza el valor de NICO.
      * @param {string} nico - NICO.
@@ -113,6 +146,7 @@ export class PermisoImportacionStore extends Store<DatosGrupos> {
     }
 
     /**
+     * Actualiza la unidad de medida la tarifa (UMT).
      * @method setumt
      * @description Actualiza la unidad de medida la tarifa (UMT).
      * @param {string} umt - Unidad de medida la tarifa.
@@ -125,6 +159,7 @@ export class PermisoImportacionStore extends Store<DatosGrupos> {
     }
 
     /**
+     * Actualiza el número de factura.
      * @method setfactura_número
      * @description Actualiza el número de factura.
      * @param {string} factura_número - Número de factura.
@@ -137,6 +172,7 @@ export class PermisoImportacionStore extends Store<DatosGrupos> {
     }
 
     /**
+     * Actualiza la fecha de factura.
      * @method setfactura_fecha
      * @description Actualiza la fecha de factura.
      * @param {string} factura_fecha - Fecha de factura.
@@ -152,6 +188,7 @@ export class PermisoImportacionStore extends Store<DatosGrupos> {
     }
 
     /**
+     * Actualiza la unidad de medida de comercialización (UMC).
      * @method setumc
      * @description Actualiza la unidad de medida de comercialización (UMC).
      * @param {string} umc - Unidad de medida de comercialización.
@@ -164,6 +201,7 @@ export class PermisoImportacionStore extends Store<DatosGrupos> {
     }
 
     /**
+     * Actualiza el valor de otro UMC.
      * @method setotro_umc
      * @description Actualiza el valor de otro UMC.
      * @param {string} otro_umc - Otro UMC.
@@ -176,6 +214,7 @@ export class PermisoImportacionStore extends Store<DatosGrupos> {
     }
 
     /**
+     * Actualiza la cantidad UMC.
      * @method setcantidad_umc
      * @description Actualiza la cantidad UMC.
      * @param {string} cantidad_umc - Cantidad UMC.
@@ -188,6 +227,7 @@ export class PermisoImportacionStore extends Store<DatosGrupos> {
     }
 
     /**
+     * Actualiza el factor de conversión.
      * @method setfactor_conversión
      * @description Actualiza el factor de conversión.
      * @param {string} factor_conversión - Factor de conversión.
@@ -200,6 +240,7 @@ export class PermisoImportacionStore extends Store<DatosGrupos> {
     }
 
     /**
+     * Actualiza la cantidad UMT.
      * @method setcantidad_umt
      * @description Actualiza la cantidad UMT.
      * @param {string} cantidad_umt - Cantidad UMT.
@@ -212,6 +253,7 @@ export class PermisoImportacionStore extends Store<DatosGrupos> {
     }
 
     /**
+     * Actualiza el valor de la factura de la mercancía a importar en términos de la Moneda de Comercialización.
      * @method setvalor_factura
      * @description Actualiza el valor de la factura de la mercancía a importar en términos de la Moneda de Comercialización.
      * @param {string} valor_factura - Valor de la factura.
@@ -224,6 +266,7 @@ export class PermisoImportacionStore extends Store<DatosGrupos> {
     }
 
     /**
+     * Actualiza la moneda de comercialización.
      * @method setmoneda_comercialización
      * @description Actualiza la moneda de comercialización.
      * @param {string} moneda_comercialización - Moneda de comercialización.
@@ -236,6 +279,7 @@ export class PermisoImportacionStore extends Store<DatosGrupos> {
     }
 
     /**
+     * Actualiza el valor de la factura en USD de la mercancía a importar.
      * @method setvalor_factura_usd
      * @description Actualiza el valor de la factura en USD de la mercancía a importar.
      * @param {string} valor_factura_usd - Valor de la factura en USD.
@@ -248,6 +292,7 @@ export class PermisoImportacionStore extends Store<DatosGrupos> {
     }
 
     /**
+     * 
      * @method setprecio_unitario_usd
      * @description Actualiza el precio unitario en USD.
      * @param {string} precio_unitario_usd - Precio unitario en USD.

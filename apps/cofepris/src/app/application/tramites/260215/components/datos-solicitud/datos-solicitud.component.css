@@ -6,3 +6,11 @@
 .panel-title span {
   margin: 0px 15px;
 }
+
+.spaced-text {
+    word-spacing: 20px;
+    font-family: auto;
+    display: flex;
+    align-items: center; 
+    gap: 5px;
+  }

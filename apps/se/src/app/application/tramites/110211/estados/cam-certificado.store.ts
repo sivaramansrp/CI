@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
 import { Mercancia } from '../../../shared/models/modificacion.enum';
 
 /**
- * @descripcion
+ * @description
  * Interfaz que define el estado del certificado CAM.
  */
 /**
@@ -83,8 +83,8 @@ export interface CamState {
 }
 
 /**
- * @descripcion
  * Función que crea el estado inicial del certificado CAM.
+ * @method createInitialState
  */
 export function createInitialState(): CamState {
   return {
@@ -191,8 +191,8 @@ export function createInitialState(): CamState {
 @StoreConfig({ name: 'camstore', resettable: true })
 export class camCertificadoStore extends Store<CamState> {
   /**
-   * @descripcion
    * Constructor que inicializa el almacén con el estado inicial.
+   * @method constructor
    */
   constructor() {
     super(createInitialState());

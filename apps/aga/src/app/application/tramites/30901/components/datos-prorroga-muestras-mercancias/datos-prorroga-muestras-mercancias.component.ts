@@ -250,8 +250,8 @@ export class DatosProrrogaMuestrasMercanciasComponent
         map((datos: Solicitud30901State) => {
           this.solicitud30901State = datos;
           this.formDatosProrroga.patchValue({
-            fechaInicioVigencia: this.solicitud30901State.fechaInicioVigencia,
-            fechaFinVigencia: this.solicitud30901State.fechaFinVigencia,
+            fechaInicioVigencia: datos.fechaInicioVigencia,
+            fechaFinVigencia: datos.fechaFinVigencia,
           });
         })
       )

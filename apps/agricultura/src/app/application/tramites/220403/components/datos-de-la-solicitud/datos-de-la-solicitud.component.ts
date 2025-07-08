@@ -39,10 +39,35 @@ import { Tramite220403Query } from '../../estados/tramite220403.query';
 import { Tramite220403Store } from '../../estados/tramite220403.store';
 
 
+/**
+ * @interface FilaSolicitud
+ * @description
+ * Representa una fila de la tabla de solicitudes, incluyendo información relevante sobre la solicitud.
+ */
 interface FilaSolicitud {
+  /**
+   * @property {string} fechaCreacion
+   * @description
+   * Fecha de creación de la solicitud en formato ISO 8601.
+   */
   fechaCreacion: string;
+  /**
+   * @property {string} mercancia
+   * @description
+   * Nombre o descripción de la mercancía solicitada.
+   */
   mercancia: string;
+  /**
+   * @property {number} cantidad
+   * @description
+   * Cantidad de la mercancía solicitada.
+   */
   cantidad: number;
+  /**
+   * @property {string} proveedor
+   * @description
+   * Nombre del proveedor de la mercancía.
+   */
   proveedor: string;
 }
 @Component({
@@ -56,6 +81,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
 
   /**
    * @input
+   * @property {boolean} formularioDeshabilitado
    * @description
    * Indica si el formulario debe estar deshabilitado. Cuando es `true`, los controles del formulario estarán inactivos y no permitirán la edición por parte del usuario.
    * @type {boolean}
@@ -63,6 +89,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    @Input() formularioDeshabilitado: boolean = false;
 
    /**
+    * @property {boolean} esFormularioSoloLectura
    * @descripcion
    * Indica si el formulario se encuentra en modo solo lectura.
    * Cuando es verdadero, los controles del formulario estarán deshabilitados.
@@ -70,11 +97,16 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   esFormularioSoloLectura: boolean = false;
 
   /**
+   * @property {Subject<void>} destroyNotifier$
+   * @private
+   * @description
    * Notificador para la destrucción del componente y la cancelación de suscripciones.
    */
   private destroyNotifier$: Subject<void> = new Subject();
   
   /**
+   * @property {DatosRealizar} datosRealizar
+   * @description
    * Datos del trámite a realizar.
    */
   datosRealizar!: DatosRealizar;
@@ -88,25 +120,30 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   combinacionRequerida!: CombinacionRequerida;
 
    /**
+    * @property {boolean} colapsable
    * @description Indica si la sección es colapsable.
    * @type {boolean}
    */
   colapsable: boolean = false;
 
   /**
+   * @property {string} alertMessage
    * @description Mensaje que se muestra en una alerta al hacer doble clic.
    * @type {string}
    */
   alertMessage: string = MENSAJE_DOBLE_CLIC;
 
   /**
+   * @property {LabelValueDatos[]}
    * @description Tipo de selección para la tabla de solicitudes.
    * @type {TablaSeleccion}
    */
   tipoSeleccionsoli: TablaSeleccion = TablaSeleccion.UNDEFINED;
 
   /**
-   * @description Configuración de columnas para la tabla de solicitudes.
+   * @property {ConfiguracionColumna<FilaSolicitud>[]}
+   * @description
+   * Configuración de columnas para la tabla de solicitudes.
    * @type {ConfiguracionColumna<FilaSolicitud>[]}
    */
   configuracionColumnasoli: ConfiguracionColumna<FilaSolicitud>[] = [
@@ -359,6 +396,7 @@ private seccionState!: SeccionLibState
   }
 
   /**
+   * @method ngOnDestroy
    * @inheritdoc
    * @description
    * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
@@ -424,7 +462,7 @@ private seccionState!: SeccionLibState
    * Si el formulario está en modo solo lectura, deshabilita todos los controles.
    * Si no, habilita los controles para permitir la edición.
    *
-   * @method
+   * @method inicializarEstadoFormulario
    * @memberof CertificadoOrigenComponent
    */
   inicializarEstadoFormulario(): void {
@@ -438,6 +476,8 @@ private seccionState!: SeccionLibState
   
 
   /**
+   * @method crearFormulario
+   * @description
    * Crea el formulario principal e inicializa los subgrupos.
    */
   crearFormulario(): void {
@@ -448,6 +488,7 @@ private seccionState!: SeccionLibState
   }
 
   /**
+   * @method inicializarFormGroup
    * Inicializa un grupo de formularios con controles basados en la configuración proporcionada.
    * @param configuracion - La configuración para los controles del formulario.
    * @param nombreGrupo - El nombre del grupo de formularios.
@@ -489,6 +530,7 @@ private seccionState!: SeccionLibState
   }
 
   /**
+   * @method getRadioData
    * Obtenga las opciones de entrada de radio del servicio
    * @param fileName - Este es el nombre del archivo json que necesitamos para las opciones
    * @param callback - Función de devolución de llamada donde se establece la opción en el menú
@@ -503,6 +545,7 @@ private seccionState!: SeccionLibState
   }
 
   /**
+   * @method obtenerValoresCatalogo
    * Obtiene los valores del catálogo y actualiza la configuración.
    * @param indiceGrupo - El índice del grupo en la matriz de configuración.
    * @param indiceMenu - El índice del menú en el grupo.
@@ -549,6 +592,7 @@ private seccionState!: SeccionLibState
   }
 
   /**
+   * @method fechaCambiado
    * Maneja el evento de cambio para la entrada de fecha.
    * @param evento - El nuevo valor de la fecha como cadena.
    */
@@ -558,6 +602,7 @@ private seccionState!: SeccionLibState
   }
 
   /**
+   * @method seleccionCatalogo
    * Maneja el evento de selección para un catálogo.
    * @param nombreControlFormulario - El nombre del control del formulario a actualizar.
    * @param evento - El valor seleccionado del catálogo.
@@ -567,6 +612,7 @@ private seccionState!: SeccionLibState
   }
 
   /**
+   * @method cambioValorRadio
    * Maneja el evento de cambio para una entrada de radio.
    * @param claveRadio - La clave de la entrada de radio.
    * @param evento - El nuevo valor de la entrada de radio.
@@ -581,13 +627,23 @@ private seccionState!: SeccionLibState
       evento;
   }
 
+  /**
+   * @method ngOnDestroy
+   * @inheritdoc
+   * @description
+   * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
+   * Libera recursos y cancela suscripciones para evitar fugas de memoria.
+   * @memberof DatosDeLaSolicitudComponent
+   */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
 
   /**
-   * @description Muestra o esconde la sección colapsable.
+   * @method mostrar_colapsable
+   * @description 
+   * Muestra o esconde la sección colapsable.
    */
   mostrar_colapsable(): void {
     this.colapsable = !this.colapsable;

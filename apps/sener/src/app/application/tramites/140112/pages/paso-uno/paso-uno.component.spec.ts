@@ -30,6 +30,9 @@ describe('PasoUnoComponent', () => {
         PasoUnoComponent,
         MockSolicitanteComponent,
         MockDesistimientoSolicitudPermisoComponent
+      ],
+      providers: [
+        provideHttpClient()
       ]
     }).compileComponents();
 

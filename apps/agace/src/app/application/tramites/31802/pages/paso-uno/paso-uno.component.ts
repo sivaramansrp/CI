@@ -1,11 +1,9 @@
-import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { ConsultaioQuery, ConsultaioState, FormularioDinamico, TIPO_PERSONA, ValidacionesFormularioService } from '@ng-mf/data-access-user';
-import { DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL, PERSONA_MORAL_NACIONAL, } from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState, FormularioDinamico, ValidacionesFormularioService } from '@ng-mf/data-access-user';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ReplaySubject, Subject, map, takeUntil } from 'rxjs';
 import { Solicitud31802State, Tramite31802Store } from '../../state/Tramite31802.store';
 import { RegistroSolicitudService } from '../../services/registro-solicitud-service.service';
-import { SolicitanteComponent, } from '@libs/shared/data-access-user/src';
 import { Tramite31802Query } from '../../state/Tramite31802.query';
 
 /**
@@ -16,18 +14,13 @@ import { Tramite31802Query } from '../../state/Tramite31802.query';
   templateUrl: './paso-uno.component.html',
   styles: ``,
 })
-export class PasoUnoComponent implements AfterViewInit,OnInit, OnDestroy {
+export class PasoUnoComponent implements OnInit, OnDestroy {
   /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
   public esDatosRespuesta: boolean = false; // Indica si hay datos de respuesta del servidor
 
   private destroyNotifier$: Subject<void> = new Subject(); // Subject para manejar la destrucción de suscripciones
   public consultaState!: ConsultaioState; // Estado de la consulta
   
-  /**
-  * Referencia al componente de solicitante.
-  */
-  @ViewChild(SolicitanteComponent) solicitante!: SolicitanteComponent;
-
   /**
    * Tipo de persona seleccionada.
    */
@@ -124,16 +117,7 @@ export class PasoUnoComponent implements AfterViewInit,OnInit, OnDestroy {
       });
   }
 
-  /**
-   * Método que se ejecuta después de que las vistas del componente han sido inicializadas.
-   * Configura los formularios dinámicos y obtiene el tipo de persona.
-   */
-  ngAfterViewInit(): void {
-    this.persona = PERSONA_MORAL_NACIONAL;
-    this.domicilioFiscal = DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL;
-    this.solicitante.obtenerTipoPersona(TIPO_PERSONA.MORAL_NACIONAL);
-  }
-  /**
+   /**
  * Establece el valor de renovación en el estado global.
  * @param evento Evento del tipo `Event` que contiene el valor del checkbox.
  */

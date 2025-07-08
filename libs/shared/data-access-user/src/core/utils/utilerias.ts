@@ -1,5 +1,6 @@
 import { AbstractControl, ValidationErrors } from "@angular/forms";
 import { REGEX_PATRON_DECIMAL_12_3 } from "../../tramites/constantes/regex.constants";
+import moment from "moment";
 
 /**
 * Validador personalizado para verificar si un valor numérico cumple con un formato específico.
@@ -59,10 +60,10 @@ export function dateLessThanOrEqualToday(control: AbstractControl): ValidationEr
   let hexString = '';
   
   for (let i = 0; i < input.length; i++) {
-    const charCode = input.charCodeAt(i);
-    const byte = charCode > 255 ? 0x3F : charCode;
-    const hexByte = byte.toString(16).padStart(2, '0');
-    hexString += hexByte;
+    const CHAR_CODE = input.charCodeAt(i);
+    const BYTE = CHAR_CODE > 255 ? 0x3F : CHAR_CODE;
+    const HEX_BYTE = BYTE.toString(16).padStart(2, '0');
+    hexString += HEX_BYTE;
   }
   return hexString;
 }
@@ -75,8 +76,20 @@ export function dateLessThanOrEqualToday(control: AbstractControl): ValidationEr
  * 
  */
  export function base64ToHex(base64: string): string {
-    const binary = atob(base64);
-    return Array.from(binary)
+    const BINARY = atob(base64);
+    return Array.from(BINARY)
       .map(char => char.charCodeAt(0).toString(16).padStart(2, '0'))
       .join('');
   }
+
+    /**
+     * Formatea una fecha dada en formato de cadena a una cadena con el formato 'YYYY-MM-DD HH:mm:ss' 
+     * utilizando Moment.js.
+     *
+     * @param fecha - La fecha en formato de cadena que se desea formatear.
+     * @returns Una cadena que representa la fecha formateada en el formato 'YYYY-MM-DD HH:mm:ss'.
+     */
+    export function formatearFechaConMoment(fecha: string): string {
+        const DATESTRING = new Date(fecha);
+        return moment(DATESTRING).format('YYYY-MM-DD HH:mm:ss');
+    }

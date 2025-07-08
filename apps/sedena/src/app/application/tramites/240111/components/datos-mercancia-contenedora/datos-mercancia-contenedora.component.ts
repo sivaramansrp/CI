@@ -1,5 +1,5 @@
+import { Component, EventEmitter, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
 import { DatosMercanciaComponent } from '../../../../shared/components/datos-mercancia/datos-mercancia.component';
 import { ID_PROCEDIMIENTO } from '../../constants/importacion-armas-municiones.enum';
 import { MercanciaDetalle } from '../../../../shared/models/datos-del-tramite.model';
@@ -19,6 +19,13 @@ import { Tramite240111Store } from '../../estados/tramite240111Store.store';
   styleUrl: './datos-mercancia-contenedora.component.css',
 })
 export class DatosMercanciaContenedoraComponent {
+
+  /**
+   * @output cerrar
+   * Evento emitido cuando se solicita cerrar el componente.
+   */
+   @Output() cerrar = new EventEmitter<void>();
+
   /**
    * @property {string} idProcedimiento
    * @description Identificador del procedimiento asociado al trámite.

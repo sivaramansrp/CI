@@ -326,7 +326,7 @@
           id="fechaInicio"
           formControlName="fechaInicio"
           placeholder="dd/mm/yyyy"
-          autofocus = "false"
+          autofocus="false"
           (change)="changeFechaInicio(); limpiarFechas()"
           (blur)="limpiarFechas()"
           [ngClass]="isValid(datosServicio, 'fechaInicio') ? 'required' : ''"
@@ -363,7 +363,7 @@
           formControlName="fechaFinal"
           (change)="changeFechaFinal()"
           (blur)="limpiarFechas()"
-          [ngClass]="{'is-invalid' : isRequired(datosServicio, 'fechaFinal')}"
+          [ngClass]="{ 'is-invalid': isRequired(datosServicio, 'fechaFinal') }"
           (keydown)="$event.preventDefault()"
         />
         <div
@@ -524,7 +524,11 @@
           (change)="changeAduana()"
         >
           <option value="-1">Selecciona una opción...</option>
-          <option *ngFor="let aduana of aduanas" [title]="aduana.title" [value]="aduana.clave">
+          <option
+            *ngFor="let aduana of aduanas"
+            [title]="aduana.title"
+            [value]="aduana.clave"
+          >
             {{ aduana.descripcion }}
           </option>
         </select>
@@ -543,6 +547,9 @@
           (change)="changeSeccionAduanera()"
           [required]="false"
         >
+          <option value="-2" hidden>
+            No cuenta con sección aduanera
+          </option>
           <option value="-1">Selecciona una opción...</option>
           <option
             *ngFor="let seccion of seccionAduanera"
@@ -555,7 +562,7 @@
       </div>
     </div>
     <div class="row">
-      @if (!despachoSeleccionado) {
+      @if (!mostarSelectTipoDespacho) {
       <div class="col-md-4">
         <label class="form-label" for="">Nombre del recinto:</label>
         <select
@@ -564,10 +571,13 @@
           (change)="changeRecinto()"
           [required]="false"
         >
+          <option value="-2" hidden>
+            No cuenta con recinto fiscalizado
+          </option>
           <option value="-1">Selecciona una opción...</option>
           <option
             *ngFor="let recinto of recintoCatalogo"
-            [title]="recinto.title" 
+            [title]="recinto.title"
             [value]="recinto.id_recinto_fiscalizado"
           >
             {{ recinto.descripcion }}
@@ -599,9 +609,7 @@
           [primerOptionValue]="SIN_VALOR"
           [hiddenPrimerOption]="false"
           [disabledPrimerOption]="false"
-          (change)="
-            changeTipoOperacion()
-          "
+          (change)="changeTipoOperacion()"
         ></app-catalogo-select>
       </div>
     </div>
@@ -882,13 +890,14 @@
           (listaDeFilaSeleccionada)="lineaCapturaSeleccionados = $event"
         >
         </app-tabla-dinamica>
-        <div class="row">
-          <div class="col-md-12 d-flex justify-content-center">
-            <app-table-pagination></app-table-pagination>
-          </div>
-        </div>
       </div>
       <div class="col-md-2"></div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-12 d-flex justify-content-center">
+        <app-paginador-tabla [totalPaginas]="1"></app-paginador-tabla>
+      </div>
     </div>
   </div>
   }
@@ -896,7 +905,7 @@
 
 <div class="row mt-5" *ngIf="editarSolicitud">
   <div class="col-md12">
-    <button type="button" class="btn btn-danger">
+    <button type="button" class="btn btn-danger" (click)="eliminarSolicitud()">
       Eliminar Solicitud Pendiente
     </button>
   </div>
@@ -906,7 +915,7 @@
 <section>
   <lib-notificaciones
     [notificacionInput]="nuevaNotificacion"
-    [forma] = 'datosServicio'
+    [forma]="datosServicio"
     (confirmacionModal)="confirmacionModal($event)"
   >
   </lib-notificaciones>

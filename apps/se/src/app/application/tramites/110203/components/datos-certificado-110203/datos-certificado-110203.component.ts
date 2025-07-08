@@ -237,6 +237,30 @@ export class DatosCertificado110203Component implements OnInit, OnDestroy {
    */
     this.inicializarFormulario();
    }
+   /**
+ * Formatea el valor de un campo numérico del formulario a 4 decimales.
+ *
+ * Este método obtiene el valor del control especificado por su nombre,
+ * y si el valor no es nulo ni vacío, lo convierte a número flotante
+ * con 4 cifras decimales. Luego actualiza el control sin disparar eventos.
+ *
+ * @param controlName - El nombre del campo dentro del formulario `mercanciasForm` que se desea formatear.
+ */
+formatDecimal(controlName: string): void {
+  const DATA = this.mercanciasForm.get(controlName);
+  if (!DATA) 
+    {
+      return;
+    }
+
+  const VALUE = DATA.value;
+
+  if (VALUE !== null && VALUE !== '') {
+    // Convert to float and format with 4 decimal places
+    const FORMAT_DATOS = parseFloat(VALUE).toFixed(4);
+    DATA.setValue(FORMAT_DATOS, { emitEvent: false });
+  }
+}
 
   /**
    * Inicializa el formulario reactivo con los valores actuales del estado de la solicitud.

@@ -62,15 +62,15 @@ describe('ManifiestoComponent', () => {
     subjectEstadoConsulta.complete();
   });
 
-  it('should create the component', fakeAsync(() => {
+  it('debería crear el componente', fakeAsync(() => {
     componente.ngOnInit();
     tick();
     fixture.detectChanges();
     expect(componente).toBeTruthy();
   }));
 
-  describe('Readonly behavior after init', () => {
-    it('should reflect readonly as false after state change', fakeAsync(() => {
+  describe('Comportamiento de solo lectura después de la inicialización', () => {
+    it('debería reflejar solo lectura como falso después del cambio de estado', fakeAsync(() => {
       componente.ngOnInit();
       tick();
       fixture.detectChanges();
@@ -86,40 +86,40 @@ describe('ManifiestoComponent', () => {
     }));
   });
 
-  describe('Form initialization', () => {
+  describe('Inicialización del formulario', () => {
     beforeEach(fakeAsync(() => {
       componente.ngOnInit();
       tick();
       fixture.detectChanges();
     }));
 
-    it('should init form with state value', () => {
+    it('debería inicializar el formulario con el valor del estado', () => {
       expect(componente.manifiestoFormulario.get('declaracion')?.value)
         .toBe(datosTramiteSimulados.declaracion);
     });
 
-    it('should apply required validator', () => {
+    it('debería aplicar el validador requerido', () => {
       const control = componente.manifiestoFormulario.get('declaracion');
       control?.setValue('');
       expect(control?.hasError('required')).toBe(true);
     });
   });
 
-  describe('Store interaction', () => {
+  describe('Interacción con el Store', () => {
     beforeEach(fakeAsync(() => {
       componente.ngOnInit();
       tick();
       fixture.detectChanges();
     }));
 
-    it('should update store value on setValorStore()', () => {
-      const newVal = 'New text';
-      componente.manifiestoFormulario.patchValue({ declaracion: newVal });
+    it('debería actualizar el valor del store en setValorStore()', () => {
+      const nuevoValor = 'Nuevo texto';
+      componente.manifiestoFormulario.patchValue({ declaracion: nuevoValor });
       componente.setValorStore(componente.manifiestoFormulario, 'declaracion');
-      expect(mockTramite630303Store.setTramite630303State).toHaveBeenCalledWith('declaracion', newVal);
+      expect(mockTramite630303Store.setTramite630303State).toHaveBeenCalledWith('declaracion', nuevoValor);
     });
 
-    it('should handle removed control safely', () => {
+    it('debería manejar el control eliminado de forma segura', () => {
       componente.manifiestoFormulario.removeControl('declaracion');
       expect(() => componente.setValorStore(componente.manifiestoFormulario, 'declaracion')).not.toThrow();
     });
