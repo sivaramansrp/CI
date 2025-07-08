@@ -90,7 +90,7 @@ export class PagoDeDerechoComponent implements OnDestroy,OnInit,AfterViewInit {
      * deshabilitando la edición de los campos.
      */
     @Input() esFormularioSoloLectura:boolean = false;
-
+    
 
       /**
        * @description
@@ -254,6 +254,16 @@ export class PagoDeDerechoComponent implements OnDestroy,OnInit,AfterViewInit {
    */
   actualizarPago(): void {
     this.pagoChanged.emit(this.pagoForm?.value);
+  }
+
+  /**
+   * Actualiza la fecha de caducidad en el formulario de registro de donación y en el store de trámite 10303.
+   *
+   * @param {string} nuevo_valor - El nuevo valor de la fecha de caducidad.
+   * @returns {void}
+   */
+  cambioFechaCaducidad(fechaPago: string): void {
+    this.pagoForm.get('fechaPago')?.setValue(fechaPago);
   }
 
    /**
