@@ -86,4 +86,14 @@ export class ZoosanitarioQuery extends Query<CapturarSolicitud> {
    * @memberof ZoosanitarioQuery
    */
   seleccionarValidarEnvio$ = this.select(estado => estado.validarEnvio);
+
+  
+  /**
+   * Selector para obtener los datos de movilización.
+   *
+   * @readonly
+   * @type {Observable<any>}
+   * @memberof FitosanitarioQuery
+   */
+  seleccionarState$ = this.select(estado => estado);
 }

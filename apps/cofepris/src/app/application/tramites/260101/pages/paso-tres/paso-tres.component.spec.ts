@@ -1,64 +1,62 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { Router } from '@angular/router';
-import { of, throwError } from 'rxjs';
 import { PasoTresComponent } from './paso-tres.component';
-import { TramiteFolioService } from '@ng-mf/data-access-user';
+import { Router } from '@angular/router';
+import { FirmaElectronicaComponent, TramiteFolioService } from '@ng-mf/data-access-user';
+import { of, throwError } from 'rxjs';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { ToastrModule, ToastrService } from 'ngx-toastr';
 
 describe('PasoTresComponent', () => {
   let component: PasoTresComponent;
   let fixture: ComponentFixture<PasoTresComponent>;
-  let router: jest.Mocked<Router>;
-  let serviciosExtraordinariosService: jest.Mocked<TramiteFolioService>;
+  let mockRouter: any;
+  let mockTramiteFolioService: any;
 
   beforeEach(async () => {
-    const routerMock = {
-      navigate: jest.fn(),
-    };
-
-    const serviciosExtraordinariosServiceMock = {
-      obtenerTramite: jest.fn(),
+    mockRouter = { navigate: jest.fn() };
+    mockTramiteFolioService = {
+      obtenerTramite: jest.fn()
     };
 
     await TestBed.configureTestingModule({
-      declarations: [PasoTresComponent],
+      imports: [PasoTresComponent, FirmaElectronicaComponent, HttpClientTestingModule, ToastrModule.forRoot()],
       providers: [
-        { provide: Router, useValue: routerMock },
-        { provide: TramiteFolioService, useValue: serviciosExtraordinariosServiceMock },
-      ],
+        ToastrService,
+        { provide: TramiteFolioService, useValue: mockTramiteFolioService },
+        { provide: FirmaElectronicaComponent, useValue: FirmaElectronicaComponent },
+        { provide: Router, useValue: mockRouter },
+        { provide: TramiteFolioService, useValue: mockTramiteFolioService }
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(PasoTresComponent);
     component = fixture.componentInstance;
-
-    router = TestBed.inject(Router) as jest.Mocked<Router>;
-    serviciosExtraordinariosService = TestBed.inject(TramiteFolioService) as jest.Mocked<TramiteFolioService>;
   });
 
-  it('should create the component', () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should navigate to acuse on valid firma', () => {
-     const firma = 'valid-firma';
-    serviciosExtraordinariosService.obtenerTramite.mockReturnValue(of());
-    component.obtieneFirma(firma);
-    expect(serviciosExtraordinariosService.obtenerTramite).toHaveBeenCalledWith(19);
-    expect(router.navigate).toHaveBeenCalledWith(['servicios-extraordinarios/acuse']);
+  it('should call obtenerTramite and navigate on valid firma', () => {
+    mockTramiteFolioService.obtenerTramite.mockReturnValue(of({}));
+    component.obtieneFirma('valid-firma');
+    expect(mockTramiteFolioService.obtenerTramite).toHaveBeenCalledWith(19);
+    expect(mockRouter.navigate).toHaveBeenCalledWith(['servicios-extraordinarios/acuse']);
   });
 
-  it('should handle error on invalid tramite', () => {
-    const firma = 'valid-firma';
-    const errorResponse = new Error('Invalid tramite');
-    serviciosExtraordinariosService.obtenerTramite.mockReturnValue(throwError(() => errorResponse));
-    component.obtieneFirma(firma);
-    expect(serviciosExtraordinariosService.obtenerTramite).toHaveBeenCalledWith(19);
-    expect(router.navigate).not.toHaveBeenCalled();
+  it('should not call obtenerTramite if firma is empty', () => {
+    component.obtieneFirma('');
+    expect(mockTramiteFolioService.obtenerTramite).not.toHaveBeenCalled();
+    expect(mockRouter.navigate).not.toHaveBeenCalled();
   });
 
-  it('should not call service or navigate on empty firma', () => {
-    const firma = '';
-    component.obtieneFirma(firma);
-    expect(serviciosExtraordinariosService.obtenerTramite).not.toHaveBeenCalled();
-    expect(router.navigate).not.toHaveBeenCalled();
+  it('should handle error from obtenerTramite', () => {
+    const error = new Error('Service error');
+    mockTramiteFolioService.obtenerTramite.mockReturnValue(throwError(() => error));
+    // Spy on catchError return value (though in this code, error is just returned, not handled)
+    component.obtieneFirma('valid-firma');
+    expect(mockTramiteFolioService.obtenerTramite).toHaveBeenCalledWith(19);
+    // Navigation should not be called on error
+    expect(mockRouter.navigate).not.toHaveBeenCalled();
   });
 });
