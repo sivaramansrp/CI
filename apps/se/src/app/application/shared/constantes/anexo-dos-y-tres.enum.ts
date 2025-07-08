@@ -170,3 +170,34 @@ export const PROYECTO_IMMEX_CONFIG = [
     orden: 7,
   },
 ];
+
+export const ANEXO_II_SERVICIO = [
+  {
+    encabezado: 'Fracción',
+    clave: (ele: AnexoDosEncabezado): string => ele.encabezadoFraccion,
+    orden: 1,
+  },
+  {
+    encabezado: 'Fracción arancelaria del producto de exportación',
+    clave: (ele: AnexoDosEncabezado): string =>
+      ele.encabezadoFraccionExportacion,
+    orden: 2,
+  },
+  {
+    encabezado: 'Descripción comercial',
+    clave: (ele: AnexoDosEncabezado): string =>
+      ele.encabezadoDescripcionComercial,
+    orden: 3,
+  },
+  {
+    encabezado: 'Fracción arancelaria de la mercancía de importación',
+    clave: (ele: AnexoDosEncabezado): string =>
+      ele.encabezadoFraccionImportacion,
+    orden: 4,
+  },
+  {
+    encabezado: 'Estatus',
+    clave: (ele: AnexoDosEncabezado): string => (ele.estatus ? 'Activo' : 'Inactivo'),
+    orden: 5,
+  },
+];

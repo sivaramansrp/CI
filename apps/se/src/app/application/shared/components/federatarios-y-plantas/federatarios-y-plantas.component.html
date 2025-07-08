@@ -14,33 +14,47 @@
                     id="nombre"
                     formControlName="nombre"
                     type="text"
+                    maxlength="20"
                   />
+                  <div *ngIf="federatariosFormGroup.get('nombre')?.invalid && federatariosFormGroup.get('nombre')?.touched" class="text-danger">
+                    <small *ngIf="federatariosFormGroup.get('nombre')?.errors?.['required']">Este campo es obligatorio.</small>
+                    <small *ngIf="federatariosFormGroup.get('nombre')?.errors?.['maxlength']">El nombre no puede exceder los 20 caracteres.</small>
+                  </div>
                 </div>
               </div>
               <div class="col-md-4">
                 <div class="form-group">
                   <label class="form-label" for="primerApellido"
-                    >Primer apellido*</label
+                  >Primer apellido*</label
                   >
                   <input
-                    class="form-control min-hgt"
-                    id="primerApellido"
-                    formControlName="primerApellido"
-                    type="text"
+                  class="form-control min-hgt"
+                  id="primerApellido"
+                  formControlName="primerApellido"
+                  type="text"
+                  maxlength="20"
                   />
+                  <div *ngIf="federatariosFormGroup.get('primerApellido')?.invalid && federatariosFormGroup.get('primerApellido')?.touched" class="text-danger">
+                  <small *ngIf="federatariosFormGroup.get('primerApellido')?.errors?.['required']">Este campo es obligatorio.</small>
+                  <small *ngIf="federatariosFormGroup.get('primerApellido')?.errors?.['maxlength']">El apellido no puede exceder los 20 caracteres.</small>
+                  </div>
                 </div>
               </div>
               <div class="col-md-4">
                 <div class="form-group">
                   <label class="form-label" for="segundoApellido"
-                    >Segundo apellido:</label
+                  >Segundo apellido:</label
                   >
                   <input
-                    class="form-control min-hgt"
-                    id="segundoApellido"
-                    formControlName="segundoApellido"
-                    type="text"
+                  class="form-control min-hgt"
+                  id="segundoApellido"
+                  formControlName="segundoApellido"
+                  type="text"
+                  maxlength="20"
                   />
+                  <div *ngIf="federatariosFormGroup.get('segundoApellido')?.invalid && federatariosFormGroup.get('segundoApellido')?.touched" class="text-danger">
+                  <small *ngIf="federatariosFormGroup.get('segundoApellido')?.errors?.['maxlength']">El apellido no puede exceder los 20 caracteres.</small>
+                  </div>
                 </div>
               </div>
             </div>
@@ -49,41 +63,49 @@
         <div class="row mt-5">
           <div class="col-md-4">
             <div class="form-group">
-              <label class="form-label" for="numeroDeActa"
-                >Número de acta*:</label
-              >
+              <label class="form-label" for="numeroDeActa">Número de acta*:</label>
               <input
                 class="form-control min-hgt"
                 id="numeroDeActa"
                 formControlName="numeroDeActa"
                 type="text"
+                maxlength="6"
               />
+              <div *ngIf="federatariosFormGroup.get('numeroDeActa')?.invalid && federatariosFormGroup.get('numeroDeActa')?.touched" class="text-danger">
+                <small *ngIf="federatariosFormGroup.get('numeroDeActa')?.errors?.['required']">Este campo es obligatorio.</small>
+                <small *ngIf="federatariosFormGroup.get('numeroDeActa')?.errors?.['maxlength']">El número de acta no puede exceder los 6 caracteres.</small>
+              </div>
             </div>
           </div>
           <div class="col-md-4">
             <div class="form-group">
-              <input-fecha [datos]="fechaInicioInput" [isDisabled]="formularioDeshabilitado"></input-fecha>
+              <input-fecha [datos]="fechaInicioInput" [isDisabled]="formularioDeshabilitado"
+              (valorCambiado)="onFechaCambiada($event)" [setFecha]="federatariosFormGroup.get('fechaInicioInput')?.value"
+              ></input-fecha>
             </div>
           </div>
 
           <div class="col-md-4">
             <div class="form-group">
-              <label class="form-label" for="numeroDeNotaria"
-                >Número de notaría*:</label
-              >
+              <label class="form-label" for="numeroDeNotaria">Número de notaría*:</label>
               <input
                 class="form-control min-hgt"
                 id="numeroDeNotaria"
                 formControlName="numeroDeNotaria"
                 type="text"
+                maxlength="6"
               />
+              <div *ngIf="federatariosFormGroup.get('numeroDeNotaria')?.invalid && federatariosFormGroup.get('numeroDeNotaria')?.touched" class="text-danger">
+                <small *ngIf="federatariosFormGroup.get('numeroDeNotaria')?.errors?.['required']">Este campo es obligatorio.</small>
+                <small *ngIf="federatariosFormGroup.get('numeroDeNotaria')?.errors?.['maxlength']">El número de notaría no puede exceder los 6 caracteres.</small>
+              </div>
             </div>
           </div>
         </div>
         <div class="row mt-5">
           <div class="col-md-4">
             <app-catalogo-select
-              [catalogo]="estadoOptions"
+              [catalogo]="estadoOptionsConfig.estadosFederatarios"
               formControlName="estado"
               [label]="'Estado'"
               [required]="true"
@@ -93,7 +115,7 @@
           </div>
           <div class="col-md-4">
             <app-catalogo-select
-              [catalogo]="estadoOptions"
+              [catalogo]="estadoOptionsConfig.municipio"
               formControlName="estadoOptions"
               [label]="'Municipio o alcaldía'"
               [required]="true"
@@ -105,9 +127,9 @@
         <div class="row mt-5">
           <div class="col-12 container text-end mt-5">
             <button class="btn btn-default me-2"
-            [disabled]="formularioDeshabilitado">Eliminar</button>
+            [disabled]="formularioDeshabilitado" (click)="eliminarDatos()">Eliminar</button>
             <button class="btn btn-primary" (click)="aggregarDatos()"
-            [disabled]="formularioDeshabilitado">
+            [disabled]="formularioDeshabilitado || !federatariosFormGroup.valid">
               Agregar
             </button>
           </div>
@@ -126,6 +148,7 @@
             [configuracionTabla]="federatariosConfig.TablaEncabezado"
             [tipoSeleccionTabla]="federatariosConfig.TablaSeleccion"
             [datos]="federatariosDatos"
+            (listaDeFilaSeleccionada)="federatariosSeleccionadoDatos=$event"
             [disableSeleccionTablaCheckBox]="formularioDeshabilitado"
           ></app-tabla-dinamica>
         </div>
@@ -147,7 +170,7 @@
           <div class="row">
             <div class="col-md-4">
               <app-catalogo-select
-                [catalogo]="estadoOptions"
+                [catalogo]="estadoOptionsConfig.estadoImmex"
                 [label]="'Estado'"
                 [required]="true"
                 name="estadoUno"
@@ -211,6 +234,7 @@
                   [configuracionTabla]="plantasImmexConfig.TablaEncabezado"
                   [tipoSeleccionTabla]="plantasImmexConfig.TablaSeleccion"
                   [datos]="plantasImmexDatos"
+                  (listaDeFilaSeleccionada)="plantasImmexSeleccionadoDatos=$event"
                   [disableSeleccionTablaCheckBox]="formularioDeshabilitado"
                 ></app-tabla-dinamica>
               </div>
@@ -222,7 +246,7 @@
                 <button
                   class="btn btn-primary"
                   (click)="irAAcciones('../complementar-plantas-acciones')"
-                  [disabled]="formularioDeshabilitado"
+                  [disabled]="formularioDeshabilitado "
                 >
                   Complementar planta
                 </button>
@@ -231,7 +255,7 @@
                 <button
                   class="btn btn-primary"
                   (click)="irAAcciones('../montos-inversion-acciones')"
-                  [disabled]="formularioDeshabilitado"
+                  [disabled]="formularioDeshabilitado "
                 >
                   Montos de inversión
                 </button>
@@ -240,7 +264,7 @@
                 <button
                   class="btn btn-primary"
                   (click)="irAAcciones('../empleados-acciones')"
-                  [disabled]="formularioDeshabilitado"
+                  [disabled]="formularioDeshabilitado "
                 >
                   Empleados
                 </button>
@@ -249,7 +273,7 @@
                 <button
                   class="btn btn-primary"
                   (click)="irAAcciones('../capacidad-instalada-acciones')"
-                  [disabled]="formularioDeshabilitado"
+                  [disabled]="formularioDeshabilitado "
                 >
                   Capacidad Instalada
                 </button>
@@ -258,20 +282,20 @@
                 <button
                   class="btn btn-primary"
                   (click)="irAAcciones('../proveedor-por-archivo')"
-                [disabled]="formularioDeshabilitado">
+                [disabled]="formularioDeshabilitado ">
                   Carga por archivo
                 </button>
               </div>
               <div class="p-2">
                 <button class="btn btn-primary"
-                [disabled]="formularioDeshabilitado">Eliminar plantas</button>
+                [disabled]="formularioDeshabilitado ">Eliminar plantas</button>
               </div>
             </div>
           </div>
           <div class="row mt-5">
             <div class="col-md-4">
               <app-catalogo-select
-                [catalogo]="estadoOptions"
+                [catalogo]="estadoOptionsConfig.municipio"
                 [label]="'Representación federal'"
                 [required]="true"
                 name="estadoDos"
@@ -280,7 +304,7 @@
             </div>
             <div class="col-md-4">
               <app-catalogo-select
-                [catalogo]="estadoOptions"
+                [catalogo]="estadoOptionsConfig.municipio"
                 [label]="'Actividad productiva'"
                 [required]="true"
                 name="estadoTres"
@@ -293,3 +317,17 @@
     </div>
   </div>
 </div>
+
+@if (miembrosNotificacion && miembrosNotificacion.cerrar) {
+<section>
+    <lib-notificaciones [notificacionInput]="miembrosNotificacion" (confirmacionModal)="closeModal()">
+    </lib-notificaciones>
+</section>
+}
+
+@if (plantasNotificacion && plantasNotificacion.cerrar) {
+<section>
+    <lib-notificaciones [notificacionInput]="plantasNotificacion" (confirmacionModal)="closePlantasModal()">
+    </lib-notificaciones>
+</section>
+}

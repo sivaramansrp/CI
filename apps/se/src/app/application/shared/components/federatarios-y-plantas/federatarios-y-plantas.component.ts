@@ -4,7 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 
-import { AlertComponent } from '@ng-mf/data-access-user';
+import { AlertComponent, Notificacion, NotificacionesComponent } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { InputFecha } from '@ng-mf/data-access-user';
 import { InputFechaComponent } from '@ng-mf/data-access-user';
@@ -12,6 +12,7 @@ import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
 
 import {
+  CatalogoDatosIdx,
   EstadoCatalogo,
   EstadoOptionCatalogo,
   FederatariosEncabezado,
@@ -48,6 +49,7 @@ import { Validators } from '@angular/forms';
     InputFechaComponent,
     CatalogoSelectComponent,
     FormsModule,
+    NotificacionesComponent
   ],
   templateUrl: './federatarios-y-plantas.component.html',
   styleUrl: './federatarios-y-plantas.component.scss',
@@ -121,6 +123,12 @@ export class FederatariosYPlantasComponent implements OnInit {
   fechaInicioInput: InputFecha = FECHA_DE_PAGO;
 
   /**
+   * Opciones del catálogo de estados para el formulario
+   * @property {CatalogoDatosIdx} estadoOptionsConfig
+   */
+  @Input() estadoOptionsConfig!: CatalogoDatosIdx;
+
+  /**
    * Opciones de estados disponibles
    * @property {[]} estadoOptions
    */
@@ -145,6 +153,65 @@ export class FederatariosYPlantasComponent implements OnInit {
   @Output() datosFormaFedratario: EventEmitter<FederatariosEncabezado> =
     new EventEmitter<FederatariosEncabezado>(true);
 
+
+  /**
+   * Arreglo que almacena los datos seleccionados de plantas IMMEX.
+   * 
+   * Este arreglo contiene objetos de tipo `PlantasImmex` que representan
+   * las plantas IMMEX seleccionadas por el usuario en la interfaz de usuario.
+   * 
+   * Uso:
+   * - Este arreglo se utiliza para gestionar y procesar la información
+   *   relacionada con las plantas IMMEX seleccionadas.
+   * - Puede ser modificado dinámicamente en función de las acciones del usuario.
+   * 
+   * Propósito:
+   * - Facilitar la manipulación y el acceso a los datos de las plantas IMMEX
+   *   seleccionadas en el componente.
+   * 
+   * Ejemplo:
+   * ```typescript
+   * this.plantasImmexSeleccionadoDatos.push(nuevaPlantaImmex);
+   * ```
+   */
+  public plantasImmexSeleccionadoDatos: PlantasImmex[] = [];
+
+  /**
+   * Arreglo que almacena los datos seleccionados de plantas disponibles.
+   * 
+   * Este arreglo contiene objetos de tipo `PlantasDisponibles` que representan
+   * las plantas disponibles seleccionadas por el usuario en la interfaz de usuario.
+   * 
+   * Uso:
+   * - Este arreglo se utiliza para gestionar y procesar la información
+   *   relacionada con las plantas disponibles seleccionadas.
+   * - Puede ser modificado dinámicamente en función de las acciones del usuario.
+   * 
+   * Propósito:
+   * - Facilitar la manipulación y el acceso a los datos de las plantas
+   *   disponibles seleccionadas en el componente.
+   * 
+   * Ejemplo:
+   * ```typescript
+   * this.plantasDisponiblesSeleccionadoDatos.push(nuevaPlantaDisponible);
+   * ```
+   */
+  public federatariosSeleccionadoDatos: FederatariosEncabezado[] = [];
+
+    /**
+     * @description
+     * Objeto que representa una nueva notificación.
+     * Se utiliza para mostrar mensajes de alerta o información al usuario.
+     */
+    public miembrosNotificacion!: Notificacion;
+
+  /**
+* @description
+* Objeto que representa una nueva notificación.
+* Se utiliza para mostrar mensajes de alerta o información al usuario.
+*/
+  public plantasNotificacion!: Notificacion;
+
   /**
    * Constructor de la clase FederatariosYPlantasComponent.
    * @param {Router} router - Servicio de Angular para la navegación.
@@ -162,6 +229,15 @@ export class FederatariosYPlantasComponent implements OnInit {
     if (this.formularioDeshabilitado) {
       this.federatariosFormGroup.disable();
     }
+    if(!this.estadoOptionsConfig){
+      this.estadoOptionsConfig = {
+        estadosFederatarios: [],
+        municipio: [],
+        estadoImmex: [],
+        representacionFederal: [],
+        actividadProductiva: []
+      };
+    }
   }
 
   /**
@@ -173,15 +249,29 @@ export class FederatariosYPlantasComponent implements OnInit {
     this.federatariosFormGroup = new FormGroup({
       nombre: new FormControl(
         this.datosFederatarios?.nombre,
+        [Validators.required, Validators.maxLength(20)]
+      ),
+      fechaInicioInput: new FormControl(this.datosFederatarios?.fechaDelActa,
         Validators.required
       ),
-      fechaInicioInput: new FormControl(this.datosFederatarios?.fechaDelActa),
-      primerApellido: new FormControl(this.datosFederatarios?.primerApellido),
-      segundoApellido: new FormControl(this.datosFederatarios?.segundoApellido),
-      numeroDeActa: new FormControl(this.datosFederatarios?.numeroDeActa),
-      numeroDeNotaria: new FormControl(this.datosFederatarios?.numeroDeNotaria),
-      estado: new FormControl(''),
-      estadoOptions: new FormControl(''),
+      primerApellido: new FormControl(this.datosFederatarios?.primerApellido,
+        [Validators.required, Validators.maxLength(20)]
+      ),
+      segundoApellido: new FormControl(this.datosFederatarios?.segundoApellido,
+        [Validators.required, Validators.maxLength(20)]
+      ),
+      numeroDeActa: new FormControl(this.datosFederatarios?.numeroDeActa,
+        [Validators.required, Validators.maxLength(6)]
+      ),
+      numeroDeNotaria: new FormControl(this.datosFederatarios?.numeroDeNotaria,
+        [Validators.required, Validators.maxLength(6)]
+      ),
+      estado: new FormControl('',
+        Validators.required
+      ),
+      estadoOptions: new FormControl('',
+        Validators.required
+      ),
     });
   }
   /**
@@ -189,9 +279,24 @@ export class FederatariosYPlantasComponent implements OnInit {
    * @param accionesPath
    */
   irAAcciones(accionesPath: string): void {
+    // if (this.plantasImmexSeleccionadoDatos.length === 0){
+    //   this.abrirPlantasModal();
+    //   return;
+    // }
     this.router.navigate([accionesPath], {
       relativeTo: this.activatedRoute,
     });
+  }
+
+  /**
+   * Verifica si un control del formulario es inválido.
+   * @param nombreControl El nombre del control a verificar.
+   * @returns Verdadero si el control es inválido y está tocado o modificado, de lo contrario, falso.
+   */
+  onFechaCambiada(fecha: string): void {
+    if (fecha) {
+      this.federatariosFormGroup.patchValue({ fechaInicioInput: fecha });
+    }
   }
 
   /**
@@ -200,5 +305,132 @@ export class FederatariosYPlantasComponent implements OnInit {
    */
   aggregarDatos(): void {
     this.datosFormaFedratario.emit(this.federatariosFormGroup.value);
+    this.federatariosFormGroup.reset();
   }
+
+  /**
+   * Elimina los datos seleccionados de la lista de federatarios.
+   * 
+   * Este método filtra los elementos seleccionados (`federatariosSeleccionadoDatos`)
+   * y elimina aquellos que también están presentes en la lista de datos de federatarios (`federatariosDatos`).
+   * 
+   * @remarks
+   * - La operación se realiza utilizando el método `filter` para crear una nueva lista
+   *   que excluye los elementos comunes entre `federatariosSeleccionadoDatos` y `federatariosDatos`.
+   * - Este método no modifica directamente la lista original de `federatariosDatos`.
+   * 
+   * @example
+   * ```typescript
+   * // Antes de llamar al método:
+   * this.federatariosSeleccionadoDatos = ['A', 'B', 'C'];
+   * this.federatariosDatos = ['B', 'C'];
+   * 
+   * this.eliminarDatos();
+   * 
+   * // Después de llamar al método:
+   * this.federatariosSeleccionadoDatos = ['A'];
+   * ```
+   */
+  eliminarDatos(): void {
+    if (this.federatariosSeleccionadoDatos.length === 0) {
+      this.abrirUnoModal();
+      return;
+    }
+    this.federatariosDatos = this.federatariosDatos.filter(
+      (item) => !this.federatariosSeleccionadoDatos.includes(item)
+    );
+  }
+
+  /**
+   * Abre un modal con una notificación para los miembros federados.
+   * 
+   * Este método configura un objeto de notificación con los detalles necesarios
+   * para mostrar un mensaje de alerta en caso de que no se hayan seleccionado
+   * datos de los miembros federados. La notificación incluye el tipo, categoría,
+   * modo, título, mensaje, opciones de cierre, tiempo de espera y textos de los
+   * botones de acción.
+   * 
+   * Propiedades configuradas en la notificación:
+   * - `tipoNotificacion`: Define el tipo de notificación, en este caso, 'alert'.
+   * - `categoria`: Especifica la categoría de la notificación, en este caso, 'danger'.
+   * - `modo`: Indica el modo de la notificación, en este caso, 'action'.
+   * - `titulo`: Título de la notificación (vacío en este caso).
+   * - `mensaje`: Mensaje que se muestra en la notificación, indicando que no se
+   *   seleccionaron datos de los miembros federados.
+   * - `cerrar`: Indica si la notificación puede cerrarse manualmente.
+   * - `tiempoDeEspera`: Tiempo en milisegundos antes de que la notificación se cierre automáticamente.
+   * - `txtBtnAceptar`: Texto del botón de aceptación, en este caso, 'Aceptar'.
+   * - `txtBtnCancelar`: Texto del botón de cancelación (vacío en este caso).
+   * 
+   * @returns {void} Este método no retorna ningún valor.
+   */
+  abrirUnoModal(): void {
+    this.miembrosNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: 'No se seleccionaron datos de los miembros federados.',
+      cerrar: true,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
+  }
+
+  /**
+   * Método para manejar la selección de plantas IMMEX.
+   * 
+   * Este método recibe un evento de tipo `PlantasImmex` y lo agrega al arreglo
+   * `plantasImmexSeleccionadoDatos`, asegurando que no se dupliquen entradas.
+   * 
+   * @param {PlantasImmex} event - Objeto de tipo `PlantasImmex` que representa la planta seleccionada.
+   */
+  closeModal(): void {
+    this.miembrosNotificacion.cerrar = false;
+  }
+
+    /**
+   * Método para manejar la selección de plantas IMMEX.
+   * 
+   * Este método recibe un evento de tipo `PlantasImmex` y lo agrega al arreglo
+   * `plantasImmexSeleccionadoDatos`, asegurando que no se dupliquen entradas.
+   * 
+   * @param {PlantasImmex} event - Objeto de tipo `PlantasImmex` que representa la planta seleccionada.
+   */
+  closePlantasModal(): void {
+    this.plantasNotificacion.cerrar = false;
+  }
+
+  /**
+   * Abre un modal relacionado con las plantas Immex y configura una notificación
+   * para alertar al usuario en caso de que no se hayan seleccionado datos de las plantas.
+   *
+   * La notificación configurada tiene las siguientes características:
+   * - Tipo de notificación: 'alert'
+   * - Categoría: 'danger'
+   * - Modo: 'action'
+   * - Título: vacío
+   * - Mensaje: 'No se seleccionaron datos de las plantas Immex.'
+   * - Cierre automático: habilitado
+   * - Tiempo de espera: 2000 milisegundos
+   * - Texto del botón Aceptar: 'Aceptar'
+   * - Texto del botón Cancelar: vacío
+   *
+   * @returns {void} No retorna ningún valor.
+   */
+  abrirPlantasModal(): void {
+    this.plantasNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: 'No se seleccionaron datos de las plantas Immex.',
+      cerrar: true,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
+  }
+
 }
