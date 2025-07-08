@@ -343,7 +343,15 @@ export class PagoDeDerechosEntradaComponent implements OnInit, OnDestroy {
    * @description Limpia todos los campos del formulario de pago de derechos.
    */
   onReset(): void {
-    this.pagoDerechos.reset();
+this.pagoDerechos.reset({
+  claveDeReferncia: '',
+  cadenaDeLaDependencia: '',
+  banco: '',
+  llaveDePago: '',
+  fechaDePago: this.pagoDerechos.get('fechaDePago')?.setValue(''),
+  importeDePago: ''
+});
+
   }
 
   /*

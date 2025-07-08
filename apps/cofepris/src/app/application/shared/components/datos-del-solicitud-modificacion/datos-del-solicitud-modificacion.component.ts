@@ -68,14 +68,13 @@ import {
   ScianModel,
 } from '../../models/datos-de-la-solicitud.model';
 import { Subject ,map, takeUntil } from 'rxjs';
-import { ScianData } from '../../../shared/models/datos-modificacion.model';
 
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 
 import { EstablecimientoService } from '../../services/establecimiento.service';
 import { ManifiestosRepresentanteSeccionComponent } from '../manifiestos-representante-seccion/manifiestos-representante-seccion.component';
 
-import { NUEVA_NOTIFICACION, PAIS_DE_PROCEDENCIA_LABEL } from '../../constantes/datos-domicilio-legal.enum';
+import { NUEVA_NOTIFICACION, PAIS_DE_PROCEDENCIA_LABEL, USO_ESPECIFICO_LABEL } from '../../constantes/datos-domicilio-legal.enum';
 /*
  ** component
  */
@@ -366,6 +365,14 @@ export class DatosDelSolicitudModificacionComponent
    * Etiqueta para el crosslist de país de procedencia.
    */
   public paisDeProcedenciaLabel = PAIS_DE_PROCEDENCIA_LABEL;
+
+  /**
+   * Etiqueta para el campo de uso específico.
+   * 
+   * Esta propiedad almacena la etiqueta que se utiliza para mostrar el campo "Uso Específico"
+   * en los formularios o tablas del componente.
+   */
+  public usoEspecificoLabel = USO_ESPECIFICO_LABEL;
   /**
    * Lista de países para la selección de origen.
    */
@@ -678,7 +685,6 @@ export class DatosDelSolicitudModificacionComponent
       clasificacion: ['', Validators.required],
       especificarClasificacionProducto: ['', Validators.required],
       denominacionEspecifica: ['', Validators.required],
-      denominacionDistintiva: ['', Validators.required],
       denominacionComun: ['', Validators.required],
       tipoDeProducto: ['', Validators.required],
       estadoFisico: ['', Validators.required],
@@ -864,7 +870,7 @@ export class DatosDelSolicitudModificacionComponent
         denominacionEspecifica: this.formMercancias.get(
           'denominacionEspecifica'
         )?.value,
-        denominacionDistintiva: this.formMercancias.get(
+        denominacionDistintiva: this.formMercancias?.get(
           'denominacionDistintiva'
         )?.value,
         denominacionComun: this.formMercancias.get('denominacionComun')?.value,
