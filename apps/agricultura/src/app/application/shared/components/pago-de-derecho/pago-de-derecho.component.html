@@ -103,7 +103,8 @@
             <div class="form-group">
               <input-fecha [datos]="fechaInicioInput" name="fechaPago"
                (valorCambiado)="cambioFechaCaducidad($event)"
-               [setFecha]="pagoForm.get('fechaPago')?.value"></input-fecha>
+               [setFecha]="pagoForm.get('fechaPago')?.value"
+               [isDisabled]="esFormularioSoloLectura"></input-fecha>
             </div>
          </div>
          <div class="col-md-4">
