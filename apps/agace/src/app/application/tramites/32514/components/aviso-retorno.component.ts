@@ -1,6 +1,6 @@
 import { ANO_CATALOGO, FECHA_ACUSE, FECHA_FRANJO, FECHA_INICIAL, FECHA_PAGO, RADIO_PARCIAL, RADIO_RESIDENTE, RADIO_TIPO_SOLICITUDE, RADIO_VEHICULO } from '../constantes/aviso32514.enum';
-import { Catalogo, CatalogoSelectComponent, ConsultaioQuery, InputFecha, InputFechaComponent, InputRadioComponent, NotificacionesComponent, TituloComponent } from '@libs/shared/data-access-user/src';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Catalogo, CatalogoSelectComponent, ConsultaioQuery, InputFecha, InputFechaComponent, InputRadioComponent, NotificacionesComponent, SoloLetrasNumerosDirective, SoloNumerosDirective, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Component, OnDestroy, OnInit, forwardRef } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ReplaySubject, map, takeUntil } from 'rxjs';
 import { Solicitud32514State, Tramite32514Store } from '../state/Tramite32514.store';
@@ -22,7 +22,9 @@ import { Tramite32514Query } from '../state/Tramite32514.query';
     InputRadioComponent,
     CatalogoSelectComponent,
     InputFechaComponent,
-    NotificacionesComponent
+    NotificacionesComponent,
+    forwardRef(() => SoloNumerosDirective),
+    forwardRef(() => SoloLetrasNumerosDirective),
   ],
   providers: [AdaceService],
   templateUrl: './aviso-retorno.component.html',
