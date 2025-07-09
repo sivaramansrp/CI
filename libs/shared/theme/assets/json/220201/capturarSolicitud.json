@@ -53,4 +53,38 @@
       "dataParaMovilizacion": true,
       "dataDeLaSolicitud": true
     }
+    ,
+    "tablaDatos": [
+      {
+        "noPartida": "1",
+        "tipoRequisito": "Sanitario",
+        "requisito": "Certificado Zoosanitario",
+        "numeroCertificadoInternacional": "INT-2025-001",
+        "fraccionArancelaria": "0102.90.99",
+        "descripcionFraccion": "Ganado bovino, raza Angus",
+        "nico": "01",
+        "descripcionNico": "Bovino para engorda",
+        "descripcion": "50 reses Angus, 2 años, procedentes de Texas",
+        "umt": "Cabeza",
+        "cantidadUMT": 50,
+        "umc": "Cabeza",
+        "cantidadUMC": 50,
+        "uso": "Engorda",
+        "tipoDeProducto": "Animal vivo",
+        "numeroDeLote": "LOT-2025-ANGUS",
+        "paisDeOrigen": "Estados Unidos",
+        "paisDeProcedencia": "Estados Unidos",
+        "certificadoInternacionalElectronico": "E-CERT-987654"
+      }
+    ],
+    "datosForma": [
+        {
+          "exportadorNombre": "Agropecuaria del Norte S.A. de C.V.",
+          "exportadorTelefono": "8112345678",
+          "exportadorCorreo": "contacto@agronorte.com",
+          "exportadorDomicilio": "Av. Revolución 123, Centro, Monterrey, Nuevo León, 64000",
+          "exportadorPais": "México"
+        }
+      
+      ]
 }
