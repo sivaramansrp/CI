@@ -161,7 +161,7 @@ export const FITOSANITARIO_PERSONA_MORAL_O_FISICA_NACIONAL = [
  * @description Constante que define la instrucción para el doble clic en la tabla.
  * @constant {string} INSTRUCCION_DOBLE_CLIC
  */
-export const INSTRUCCION_DOBLE_CLIC = 'Al dar doble clic en el registro seleccionado creara una nueva solicitud con los mismos datos de la solicitud elegida.';
+export const INSTRUCCION_DOBLE_CLIC = 'Al dar doble clic en el registro seleccionado creara una nueva solicitud con los mismos datos de la solcitud elegida.';
 
 /**
  * @description Constante que define el mensaje para tablas obligatorias.

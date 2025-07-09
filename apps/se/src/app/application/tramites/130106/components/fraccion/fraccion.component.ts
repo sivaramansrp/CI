@@ -1,6 +1,6 @@
 import { AbstractControl, ValidationErrors } from '@angular/forms';
 import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna,CrosslistComponent,TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
-import { Component, OnDestroy,OnInit } from '@angular/core';
+import { Component, OnDestroy,OnInit, QueryList, ViewChildren } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Solicitud130106State, Tramite130106Store } from '../../../../estados/tramites/tramite130106.store';
 import {Subject, map,takeUntil } from 'rxjs';
@@ -127,7 +127,7 @@ export class FraccionComponent implements OnInit, OnDestroy {
    * Datos que configuran las columnas de la tabla de partidas.
    */
   partidasDatas: ConfiguracionColumna<Partidas>[] = [
-    { encabezado: 'Cantidad', clave: (item: Partidas) => item.cantidad, orden: 1 },
+    { encabezado: 'Cantidad', clave: (item: Partidas) => item.mercanciaCantidad, orden: 1 },
     { encabezado: 'Unidad de medida', clave: (item: Partidas) => item.unidad, orden: 2 },
     { encabezado: 'Fracción arancelaria', clave: (item: Partidas) => item.fraccion, orden: 3 },
     { encabezado: 'Descripción', clave: (item: Partidas) => item.descripcion, orden: 4 },
@@ -170,30 +170,37 @@ export class FraccionComponent implements OnInit, OnDestroy {
    * Control de formulario para la fecha seleccionada.
    */
   fechaSeleccionada: FormControl = new FormControl('');
-
+ /**
+   * @property crossList
+   * @description
+   * Referencia a los componentes de listas cruzadas para manejar la selección de países.
+   * 
+   * @type {QueryList<CrosslistComponent>}
+   */
+  @ViewChildren(CrosslistComponent) crossList!: QueryList<CrosslistComponent>;
   /**
    * Definición de los botones con su respectiva acción para agregar y quitar fechas.
    */
-  botonField = [
+  paisDeProcedenciaBotones = [
     {
       btnNombre: 'Agregar todos',
-      class: 'btn-primary',
-      funcion: (): void => this.agregar(''),
+      class: 'btn-default',
+      funcion: (): void => this.crossList.toArray()[0].agregar('t'),
     },
     {
       btnNombre: 'Agregar selección',
-      class: 'btn-default',
-      funcion: (): void => this.agregar('t'),
+      class: 'btn-primary',
+      funcion: (): void => this.crossList.toArray()[0].agregar(''),
     },
     {
       btnNombre: 'Restar selección',
-      class: 'btn-danger',
-      funcion: (): void => this.quitar(''),
+      class: 'btn-primary',
+      funcion: (): void => this.crossList.toArray()[0].quitar(''),
     },
     {
       btnNombre: 'Restar todos',
       class: 'btn-default',
-      funcion: (): void => this.quitar('t'),
+      funcion: (): void => this.crossList.toArray()[0].quitar('t'),
     },
   ];
   /**
@@ -338,6 +345,11 @@ export class FraccionComponent implements OnInit, OnDestroy {
    * Convierte los datos del formulario en una nueva partida y la agrega a la lista de partidas.
    */
   generarPartidas(): void {
+     const CONTROL = this.fraccionForm.get('mercanciaCantidad');
+  
+  if (!CONTROL || !CONTROL.valid) {
+    return; 
+  }
     const FORMDATA = this.fraccionForm.value; // Obtiene los datos del formulario
 
  /**
@@ -379,17 +391,25 @@ export class FraccionComponent implements OnInit, OnDestroy {
   }
 
     const NEWPARTIDA: Partidas = {
-      cantidad: FORMDATA.cantidad, // Asigna la cantidad
+      mercanciaCantidad: FORMDATA.mercanciaCantidad, // Asigna la cantidad
       unidad: fraccions?.UMT.find(item => item.id === Number(FORMDATA?.umt))?.descripcion, // Asigna la unidad
       fraccion: fraccions?.fraccion.find(item => item.id === Number(FORMDATA?.fraccion))?.descripcion, // Asigna la fracción arancelaria
       descripcion: FORMDATA.descripcion, // Asigna la descripción
       precio: 1.000, // Precio fijo
-      total: FORMDATA.cantidad // Total calculado con la cantidad
+      total: FORMDATA.mercanciaCantidad // Total calculado con la cantidad
+      
     };
     this.partidas.push(NEWPARTIDA);
-    this.fraccionForm.patchValue({
-      cantidadTotal: FORMDATA.cantidad,
-      valorTotal:FORMDATA.cantidad
+   
+     const VALOR_TOTAL = this.partidas.reduce((acc, item) => acc + Number(item.mercanciaCantidad), 0);
+
+       this.fraccionForm.patchValue({
+      cantidadTotal:VALOR_TOTAL,
+      valorTotal:VALOR_TOTAL,
+      descripcion: '',
+      mercanciaFactura: '',
+      mercanciaCantidad: '',
+
     }); // Agrega la nueva partida a la lista
   }
   /**

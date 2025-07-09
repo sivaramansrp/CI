@@ -146,6 +146,7 @@ bimestredos: string;
 numeroDatos: string;
 bimestres: string;
 
+  fechaPago: string;
 }
 /**
  * Función para crear el estado inicial de Solicitud31601.
@@ -287,7 +288,8 @@ export function createInitialState(): Solicitud31601State {
     bimestredos: '',
     numeroDatos: '',
     bimestres: '',
-    deEmpleados:''
+    deEmpleados:'',
+    fechaPago:''
   };
 }
 /**
@@ -1402,4 +1404,16 @@ setDeEmpleados(deEmpleados: string): void {
     deEmpleados,
   }));
 }
+
+ 
+  /**
+   * Establece el valor de la fecha de pago en el estado.
+   * @param fechaPago La fecha de pago a establecer.
+   */
+  public setFechaPago(fechaPago: string): void {
+    this.update((state) => ({
+      ...state,
+      fechaPago,
+    }));
+  }
 }

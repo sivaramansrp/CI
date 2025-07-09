@@ -41,7 +41,7 @@
             "horaDeInspeccion": 1,
             "aduanaDeIngreso": 1,
             "sanidadAgropecuaria": 1,
-            "fechaDeInspeccion": "01/05/2025",
+            "fechaInspeccion": "01/05/2025",
             "primerapellido": "Primer_Apellido",
             "segundoapellido": "Segundo_Apellido",
             "mercancia": "Mercancia",

@@ -1,7 +1,6 @@
+import { UnicoState, UnicoStore } from '../renovacion.store';
 import { Injectable } from '@angular/core';
 import { Query } from '@datorama/akita';
-
-import { UnicoState, UnicoStore } from '../renovacion.store';
 
 /**
  * Service to query the state of Solicitud31203.

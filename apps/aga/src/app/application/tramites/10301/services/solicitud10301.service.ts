@@ -4,48 +4,64 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
+/**
+ * Servicio encargado de gestionar los datos del trámite 10301.
+ * Proporciona métodos para actualizar el estado del formulario en el store
+ * y obtener los datos iniciales desde un archivo JSON local.
+ */
 @Injectable({
-    providedIn: 'root',
+  providedIn: 'root',
 })
 export class Solicitud10301Service {
-    /**
-     * AppConfig es una inyección de dependencias que proporciona la configuración de la aplicación.
-     */
-    urlServer = ENVIRONMENT.URL_SERVER;
-    urlServerCatalogos = ENVIRONMENT.URL_SERVER_JSON_AUXILIAR;
+  /**
+   * URL base del servidor principal definida en la configuración del entorno.
+   */
+  urlServer = ENVIRONMENT.URL_SERVER;
 
-    constructor(private http: HttpClient, private tramite10301Store: Tramite10301Store,) {
-        // Lógica de inicialización si es necesario
-    }
+  /**
+   * URL base para obtener archivos JSON auxiliares (catálogos) desde configuración.
+   */
+  urlServerCatalogos = ENVIRONMENT.URL_SERVER_JSON_AUXILIAR;
 
-    /**
-     * Actualiza el estado del formulario en el store con los datos proporcionados.
-     * @param DATOS Objeto con los datos del formulario de tipo Solicitud10301State.
-     */
-    actualizarEstadoFormulario(DATOS: Solicitud10301State): void {
-        this.tramite10301Store.setTipoMercancia(DATOS.tipoMercancia);
-        this.tramite10301Store.setUsoEspecifico(DATOS.usoEspecifico);
-        this.tramite10301Store.setMarca(DATOS.marca);
-        this.tramite10301Store.setModelo(DATOS.modelo);
-        this.tramite10301Store.setSerie(DATOS.serie);
-        this.tramite10301Store.setCalle(DATOS.calle);
-        this.tramite10301Store.setNumeroExterior(DATOS.numeroExterior);
-        this.tramite10301Store.setNumeroInterior(DATOS.numeroInterior);
-        this.tramite10301Store.setTelefono(DATOS.telefono);
-        this.tramite10301Store.setCorreoElectronico(DATOS.correoElectronico);
-        this.tramite10301Store.setCodigoPostal(DATOS.codigoPostal);
-        this.tramite10301Store.setEstado(DATOS.estado);
-        this.tramite10301Store.setColonia(DATOS.colonia);
-        this.tramite10301Store.setOpcion(DATOS.opcion);
-    }
+  /**
+   * Constructor que inyecta el cliente HTTP y el store para manejar el estado.
+   * @param http Cliente HTTP para realizar peticiones.
+   * @param tramite10301Store Store de Akita para gestión de estado del trámite.
+   */
+  constructor(private http: HttpClient, private tramite10301Store: Tramite10301Store) {
+    // Constructor para inyección de dependencias
+  }
 
-    /**
-     * Obtiene los datos del trámite desde un archivo JSON local.
-     * @returns Observable con los datos del formulario de tipo Solicitud10301State.
-     */
-    public getDatosDeTrtamitelDoc(): Observable<Solicitud10301State> {
-        return this.http.get<Solicitud10301State>(
-            'assets/json/10301/datos-del-tramite.json'
-        );
-    }
+  /**
+   * Actualiza el estado del formulario almacenado en el store con los datos recibidos.
+   * Cada propiedad del objeto DATOS es asignada al store correspondiente.
+   * @param DATOS Objeto con los datos actuales del formulario (tipo Solicitud10301State).
+   */
+  actualizarEstadoFormulario(DATOS: Solicitud10301State): void {
+    this.tramite10301Store.setTipoMercancia(DATOS.tipoMercancia);
+    this.tramite10301Store.setUsoEspecifico(DATOS.usoEspecifico);
+    this.tramite10301Store.setMarca(DATOS.marca);
+    this.tramite10301Store.setModelo(DATOS.modelo);
+    this.tramite10301Store.setSerie(DATOS.serie);
+    this.tramite10301Store.setCalle(DATOS.calle);
+    this.tramite10301Store.setNumeroExterior(DATOS.numeroExterior);
+    this.tramite10301Store.setNumeroInterior(DATOS.numeroInterior);
+    this.tramite10301Store.setTelefono(DATOS.telefono);
+    this.tramite10301Store.setCorreoElectronico(DATOS.correoElectronico);
+    this.tramite10301Store.setCodigoPostal(DATOS.codigoPostal);
+    this.tramite10301Store.setEstado(DATOS.estado);
+    this.tramite10301Store.setColonia(DATOS.colonia);
+    this.tramite10301Store.setOpcion(DATOS.opcion);
+  }
+
+  /**
+   * Obtiene los datos del trámite desde un archivo JSON local.
+   * Este método permite inicializar o cargar los datos previamente almacenados.
+   * @returns Observable que emite un objeto de tipo Solicitud10301State con los datos del trámite.
+   */
+  public getDatosDeTrtamitelDoc(): Observable<Solicitud10301State> {
+    return this.http.get<Solicitud10301State>(
+      'assets/json/10301/datos-del-tramite.json'
+    );
+  }
 }

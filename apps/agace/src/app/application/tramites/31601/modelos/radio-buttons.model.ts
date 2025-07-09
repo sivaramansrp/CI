@@ -8,4 +8,14 @@
 export interface RadioBotons {
     label: string;
     value: string;
-}   
+}  
+
+  /**
+ * Configuración para la fecha final de vigencia.
+ * Contiene las propiedades necesarias para mostrar y validar el campo en el formulario.
+ */
+  export const FECHA_FINAL = {
+    labelNombre: 'Fecha de pago',
+    required: true,
+    habilitado: true
+  };

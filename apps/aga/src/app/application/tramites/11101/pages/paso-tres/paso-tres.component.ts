@@ -1,8 +1,10 @@
+import {
+  TramiteFolioService,
+  TramiteFolioStore
+} from '@ng-mf/data-access-user';
 import { catchError, map } from 'rxjs';
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { TramiteFolioService } from '@ng-mf/data-access-user';
-import { TramiteFolioStore } from '@ng-mf/data-access-user';
 
 /**
  * Componente para gestionar el paso tres del trámite.

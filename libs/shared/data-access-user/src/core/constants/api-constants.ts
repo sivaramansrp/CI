@@ -6,7 +6,7 @@ export const API_GET_ADUANA = 'catalogo/aduanas';
 /**
  * La clave de la aduana por la que se filtrará la información.
  */
-export const CLAVE_ADUANA_QUERY = '{claveAduana}'
+export const CLAVE_ADUANA_QUERY = '{claveAduana}';
 /**
  * API para recuperar el catálogo de aduanas
  * @param CLAVE_ADUANA_QUERY La clave de la aduana seleccionada por el usuario
@@ -16,7 +16,7 @@ export const API_GET_SECCION_ADUANA = `catalogo/seccion-aduanas/${CLAVE_ADUANA_Q
 /**
  * La clave de la patente por la que se filtrará la información.
  */
-export const CLAVE_PATENTE_QUERY = '{clavePatente}'
+export const CLAVE_PATENTE_QUERY = '{clavePatente}';
 /**
  * API para recuperar los recintos inherentes de una aduana.
  * @param CLAVE_ADUANA_QUERY El clave de la aduana seleccionada por el usuario.
@@ -41,7 +41,7 @@ export const API_CONSULTAR_VALIDACION = `privado/${TIPO_TRANSPORTE}/valida`;
 /**
  * El RFC del solicitante y/o apoderado
  */
-export const RFC_QUERY = '{rfc}'
+export const RFC_QUERY = '{rfc}';
 /**
  * API que permite verificar si el RFC proporcionado es válido.
  * @param RFC_QUERY EL RFC
@@ -53,7 +53,7 @@ export const API_GET_VALIDA_RFC = `sat-t5701/rfc/valida/${RFC_QUERY}`;
  * API que obtiene la información del contribuyente por RFC.
  * @param RFC_QUERY El RFC del contribuyente
  */
-export const API_GET_RFC_IDC = `idc/contribuyente/detalle/${RFC_QUERY}`
+export const API_GET_RFC_IDC = `idc/contribuyente/detalle/${RFC_QUERY}`;
 /**
  * API que valida si un RFC (Registro Federal de Contribuyentes) está certificado para la revisión de origen.
  * * @param RFC_QUERY El RFC del contribuyente
@@ -79,6 +79,7 @@ export const LINEA_PAGO_QUERY = '{lineaPago}';
  * @param LINEA_PAGO_QUERY La línea de pago
  */
 export const API_GET_VALIDA_LINEA_PAGO = `pago/sea/${LINEA_PAGO_QUERY}`;
+
 /**
  * API para obtener el monto del trámite
  */
@@ -88,17 +89,30 @@ export const API_GET_PARAMETRO_MONTO = `sat-t5701/parametro/monto`;
  * @see http://api-vucem-1069277193.us-east-1.elb.amazonaws.com/api/sat-t5701/swagger-ui/index.html#/Solicitud/guardar
  */
 export const API_POST_SOLICITUD = 'sat-t5701/guardar';
+
+/**
+ * ID del trámite a eliminar.
+ * Este ID se debe reemplazar por el ID del trámite que se desea eliminar.
+ * @see http://api-vucem-1069277193.us-east-1.elb.amazonaws.com/api/sat-t5701/swagger-ui/index.html#/Tramite/elimina-tramite-pendiente-by-id
+ */
+export const ID_TRAMITE = '{idTramite}';
+
+/**
+ * API para eliminar un trámite pendiente.
+ */
+export const API_ELIMINAR_TRAMITE = `sat-t5701/tramite/pendiente/${ID_TRAMITE}`;
+
 /**
  * Indica el número de trámite a consultar.
  */
 export const TRAMITE = '{numeroTramite}';
 
-/** 
+/**
  * API  para obtener el catálogo de cdocumentos obligatorios, según el trámite.
  * @param TRAMITE el trámite seleccionado por el usuario.
  * @see http://api-vucem-1069277193.us-east-1.elb.amazonaws.com/api/tramite/5701/documentos?especifico=false
-*/
-export const API_GET_DOCUMENTOS_OBLIGATORIOS = `tramite/{numeroTramite}/documentos` 
+ */
+export const API_GET_DOCUMENTOS_OBLIGATORIOS = `tramite/{numeroTramite}/documentos`;
 
 /**
  * API para recuperar el catálogo de paises
@@ -110,7 +124,8 @@ export const API_GET_PAISES = 'catalogo/paises';
  * API para generar la cadena original de un trámite.
  * @see http://api-vucem-1069277193.us-east-1.elb.amazonaws.com/api/tramite-flujo/swagger-ui/index.html#/Cadena/generar
  */
-export const API_GENERAR_CADENA_ORIGINAL = 'api/tramite/solicitud/genera-cadena-original';
+export const API_GENERAR_CADENA_ORIGINAL =
+  'api/tramite/solicitud/genera-cadena-original';
 
 /**
  * API para enviar una firma electrónica.
@@ -118,13 +133,8 @@ export const API_GENERAR_CADENA_ORIGINAL = 'api/tramite/solicitud/genera-cadena-
  */
 export const API_ENVIAR_FIRMA = 'api/tramite/firmar';
 
-
-
-
 /**
  * API para recuperar las tareas por usuario.
  * @see http://api-vucem-1069277193.us-east-1.elb.amazonaws.com/api/bandeja-tarea/swagger-ui/index.html#/Bandeja%20tarea/consultar-tareas-servicio
  */
 export const API_GET_BANDEJATAREA = 'bandeja-tarea/usuario/tarea';
-
-

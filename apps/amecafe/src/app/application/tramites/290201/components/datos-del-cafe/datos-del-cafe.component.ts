@@ -6,11 +6,12 @@
 import { CommonModule } from '@angular/common';
 
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+
+import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ReplaySubject,map, takeUntil } from 'rxjs';
 
 import { AcuseComponent, ConsultaioQuery, ConsultaioState, InputFecha, InputFechaComponent, TablaSeleccion } from '@libs/shared/data-access-user/src';
-import { Catalogo, CatalogosSelect, ConfiguracionColumna, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Catalogo, TituloComponent } from '@libs/shared/data-access-user/src';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { ReactiveFormsModule } from '@angular/forms';
 import { TableComponent } from '@libs/shared/data-access-user/src';
@@ -22,6 +23,10 @@ import { Solicitud290201Query } from '../../../../estados/queries/tramites290201
 import { Solicitud290201State, Solicitud290201Store } from '../../../../estados/tramites/tramites290201.store';
 import { FilaData } from '../../models/fila-model';
 import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
+
+import { Modal } from 'bootstrap';
+
+import { CATALOGOS, CONFIGURACION_COLUMNAS_SOLI } from '../../constants/tabla-enum';
 @Component({
   selector: 'app-datos-del-cafe',
   standalone: true,
@@ -51,94 +56,49 @@ export class DatosDelCafeComponent implements OnDestroy, OnInit {
   public dataCafeState!: Solicitud290201State;
 
   /**
-   * Datos del catálogo para el campo "Envasado".
+   * Modal para la confirmación de eliminación.
    */
-  public envasadoenData: CatalogosSelect = {
-    labelNombre: 'Envasado',
-    required: true,
-    primerOpcion: 'Selecciona un medio de transporte',
-    catalogos: [],
-  };
+  public envasadoenData = { ...CATALOGOS.ENVASADO };
 
-  /**
-   * Datos del catálogo para el campo "¿Utilizó café como materia prima importada?".
-   */
-  public utilizoCafeComoData: CatalogosSelect = {
-    labelNombre: 'Utilizó cafe como materia prima importada para elaborar este producto?',
-    required: true,
-    primerOpcion: 'Selecciona un medio de transporte',
-    catalogos: [],
-  };
+/**
+ * Datos del catálogo para el campo "¿Utilizó café como materia prima importada?".
+ */
+public utilizoCafeComoData = { ...CATALOGOS.UTILIZO_CAFE_COMO };
 
-  /**
-   * Datos del catálogo para el campo "País de importación".
-   */
-  public paisdeimportacionData: CatalogosSelect = {
-    labelNombre: 'País de importación',
-    required: true,
-    primerOpcion: 'Selecciona un medio de transporte',
-    catalogos: [],
-  };
+/**
+ * Datos del catálogo para el campo "País de importación".
+ */
+public paisdeimportacionData = { ...CATALOGOS.PAIS_DE_IMPORTACION };
 
-  /**
-   * Datos del catálogo para el campo "Fracción arancelaria".
-   */
-  public fraccionarancelariaData: CatalogosSelect = {
-    labelNombre: 'Fracción arancelaria',
-    required: true,
-    primerOpcion: 'Selecciona un medio de transporte',
-    catalogos: [],
-  };
+/**
+ * Datos del catálogo para el campo "Fracción arancelaria".
+ */
+public fraccionarancelariaData = { ...CATALOGOS.FRACCION_ARANCELARIA };
 
-  /**
-   * Datos del catálogo para el campo "Unidad de medida".
-   */
-  public unidaddemedidaData: CatalogosSelect = {
-    labelNombre: 'Unidad de medida',
-    required: true,
-    primerOpcion: 'Selecciona un medio de transporte',
-    catalogos: [],
-  };
+/**
+ * Datos del catálogo para el campo "Unidad de medida".
+ */
+public unidaddemedidaData = { ...CATALOGOS.UNIDAD_DE_MEDIDA };
 
-  /**
-   * Datos del catálogo para el campo "Dólar".
-   */
-  public dolarData: CatalogosSelect = {
-    labelNombre: ' ',
-    required: true,
-    primerOpcion: 'Selecciona un medio de transporte',
-    catalogos: [],
-  };
+/**
+ * Datos del catálogo para el campo "Dólar".
+ */
+public dolarData = { ...CATALOGOS.DOLAR };
 
-  /**
-   * Datos del catálogo para el campo "¿El café tiene características especiales?".
-   */
-  public elcafeData: CatalogosSelect = {
-    labelNombre: 'El café tiene características especiales?',
-    required: true,
-    primerOpcion: 'Selecciona un medio de transporte',
-    catalogos: [],
-  };
+/**
+ * Datos del catálogo para el campo "¿El café tiene características especiales?".
+ */
+public elcafeData = { ...CATALOGOS.EL_CAFE };
 
-  /**
-   * Datos del catálogo para el campo "País de transbordo".
-   */
-  public paisdetransbordoData: CatalogosSelect = {
-    labelNombre: 'País de transbordo',
-    required: true,
-    primerOpcion: 'Selecciona un medio de transporte',
-    catalogos: [],
-  };
+/**
+ * Datos del catálogo para el campo "País de transbordo".
+ */
+public paisdetransbordoData = { ...CATALOGOS.PAIS_DE_TRANSBORDO };
 
-  /**
-   * Datos del catálogo para el campo "Medio de transporte".
-   */
-  public mediodetransporteData: CatalogosSelect = {
-    labelNombre: 'Medio de transporte',
-    required: true,
-    primerOpcion: 'Selecciona un medio de transporte',
-    catalogos: [],
-  };
+/**
+ * Datos del catálogo para el campo "Medio de transporte".
+ */
+public mediodetransporteData = { ...CATALOGOS.MEDIO_DE_TRANSPORTE };
 
   /**
    * Indica si el formulario es visible o no.
@@ -199,103 +159,13 @@ consultaDatos!: ConsultaioState;
    * Configuración de las columnas de la tabla `configuracionColumnasoli`.
  */
 
-  configuracionColumnasoli: ConfiguracionColumna<FilaData>[] = [
-    {
-      encabezado: 'Envasado',
-      clave: (fila) => fila.datosDelTramiteRealizar.envasadoen,
-      orden: 1,
-    },
-    {
-      encabezado: 'Utilizó café como materia prima?',
-      clave: (fila) => fila.datosDelTramiteRealizar.utilizoCafeComo,
-      orden: 2,
-    },
-    {
-      encabezado: 'Cantidad utilizada',
-      clave: (fila) => fila.datosDelTramiteRealizar.cantidadutilizada,
-      orden: 3,
-    },
-    {
-      encabezado: 'No.pedimento',
-      clave: (fila) => fila.datosDelTramiteRealizar.numerodepedimento,
-      orden: 4,
-    },
-    {
-      encabezado: 'País',
-      clave: (fila) => fila.datosDelTramiteRealizar.paisdeimportacion,
-      orden: 5,
-    },
-    {
-      encabezado: 'Fracción arancelaria',
-      clave: (fila) => fila.datosDelTramiteRealizar.fraccionarancelaria,
-      orden: 6,
-    },
-    {
-      encabezado: 'Unidad de medida',
-      clave: (fila) => fila.datosDelTramiteRealizar.cantidad,
-      orden: 7,
-    },
-    {
-      encabezado: 'Precio aplicable',
-      clave: (fila) => fila.datosDelTramiteRealizar.unidaddemedida,
-      orden: 8,
-    },
-    {
-      encabezado: 'Moneda',
-      clave: (fila) => fila.datosDelTramiteRealizar.precioapplicable,
-      orden: 9,
-    },
-    {
-      encabezado: 'Lote',
-      clave: (fila) => fila.datosDelTramiteRealizar.dolar,
-      orden: 10,
-    },
-    {
-      encabezado: 'País',
-      clave: (fila) => fila.datosDelTramiteRealizar.lote,
-      orden: 11,
-    },
-    {
-      encabezado: 'Otras marcas',
-      clave: (fila) => fila.datosDelTramiteRealizar.otrasmarcas,
-      orden: 12,
-    },
-{
-      encabezado: 'El café  tiene características especiales?',
-      clave: (fila) => fila.datosDelTramiteRealizar.elcafe,
-      orden: 13,
-    },
-    {
-      encabezado: 'Fecha de exportación',
-      clave: (fila) => fila.datosDelTramiteRealizar.fechaexportacion,
-      orden: 14,
-    },
-    {
-      encabezado: 'País de transbordo',
-      clave: (fila) => fila.datosDelTramiteRealizar.paisdetransbordo,
-      orden: 15,
-    },
-    {
-      encabezado: 'Medio de transporte',
-      clave: (fila) => fila.datosDelTramiteRealizar.mediodetransporte,
-      orden: 16,
-    },
-    {
-      encabezado: 'Identificador transporte',
-      clave: (fila) => fila.datosDelTramiteRealizar.Identificadordel,
-      orden: 17,
-    },
-    {
-      encabezado: 'Observaciones',
-      clave: (fila) => fila.datosDelTramiteRealizar.observaciones,
-      orden: 18,
-    },
-  ];
+  configuracionColumnasoli = CONFIGURACION_COLUMNAS_SOLI;
+
   /**
    * Configuración de las columnas de la tabla `configuracionColumnasoli`.
    */
   fechaexportacion: InputFecha = {
-    labelNombre: 'Fecha de pago*:',
+    labelNombre: 'Fecha exportación*:',
     required: false,
     habilitado: true,
   };
@@ -322,19 +192,24 @@ consultaDatos!: ConsultaioState;
         numerodepedimento: [this.dataCafeState?.numerodepedimento, Validators.required],
         paisdeimportacion: [this.dataCafeState?.paisdeimportacion, Validators.required],
         fraccionarancelaria: [this.dataCafeState?.fraccionarancelaria, Validators.required],
-        cantidad: [this.dataCafeState?.cantidad, Validators.required],
+        cantidad: [this.dataCafeState?.cantidad, Validators.pattern(/^\d+$/)],
         unidaddemedida: [this.dataCafeState?.unidaddemedida, Validators.required],
-        precioapplicable: [this.dataCafeState?.precioapplicable, Validators.required],
+        precioapplicable: [this.dataCafeState?.precioapplicable,Validators.pattern(/^\d{1,7}(\.\d{1,3})?$/)],
         dolar: [this.dataCafeState?.dolar, Validators.required],
-        lote: [this.dataCafeState?.lote, Validators.required],
+        lote: [this.dataCafeState?.lote,[
+          Validators.required,
+          Validators.pattern('^[0-9]*$') 
+        ]],
         otrasmarcas: [this.dataCafeState?.otrasmarcas, Validators.required],
         elcafe: [this.dataCafeState?.elcafe, Validators.required],
         fechaexportacion: [this.dataCafeState?.fechaexportacion, Validators.required],
         paisdetransbordo: [this.dataCafeState?.paisdetransbordo, Validators.required],
         mediodetransporte: [this.dataCafeState?.mediodetransporte, Validators.required],
-        Identificadordel: [this.dataCafeState?.Identificadordel, Validators.required],
-        observaciones: [this.dataCafeState?.observaciones, Validators.required],
-      }),
+        Identificadordel: [this.dataCafeState?.Identificadordel,[
+          Validators.required,
+          Validators.maxLength(5) 
+        ]],
+        observaciones: [this.dataCafeState?.observaciones, [Validators.required, Validators.maxLength(250)]]}),
     });
   }
 
@@ -365,7 +240,8 @@ consultaDatos!: ConsultaioState;
       .subscribe();
       this.inicializarEstadoFormulario();
   }
- 
+  
+  
   /**
    * Obtiene los datos del catálogo "Envasado".
    */
@@ -465,55 +341,73 @@ consultaDatos!: ConsultaioState;
         this.mediodetransporteData.catalogos = data as Catalogo[];
       });
   }
+  isEditMode: boolean = false; 
+editingRowId: number | null = null; 
 /**
  * Este método se ejecuta al enviar el formulario. Su propósito es procesar los datos ingresados
  * en el formulario, transformarlos según los catálogos correspondientes y agregarlos a la tabla de datos.
  */
-  onSubmit(): void {
-    this.esFormularioVisible = false;
+onSubmit(): void {
+  const FORM_DATA = { id: this.editingRowId || this.tableData.length + 1, ...this.dataCafeForm.value };
 
-    const FORM_DATA = { ...this.dataCafeForm.value };
+  FORM_DATA.datosDelTramiteRealizar.envasadoen = this.envasadoenData.catalogos.find(
+    (item: Catalogo) => String(item.id) === String(FORM_DATA.datosDelTramiteRealizar.envasadoen),
+  )?.descripcion;
 
-    FORM_DATA.datosDelTramiteRealizar.envasadoen = this.envasadoenData.catalogos.find(
-      (item: Catalogo) => String(item.id) === String(FORM_DATA.datosDelTramiteRealizar.envasadoen),
-    )?.descripcion;
+  FORM_DATA.datosDelTramiteRealizar.utilizoCafeComo = this.utilizoCafeComoData.catalogos.find(
+    (item: Catalogo) => String(item.id) === String(FORM_DATA.datosDelTramiteRealizar.utilizoCafeComo),
+  )?.descripcion;
 
-    FORM_DATA.datosDelTramiteRealizar.utilizoCafeComo = this.utilizoCafeComoData.catalogos.find(
-      (item: Catalogo) => String(item.id) === String(FORM_DATA.datosDelTramiteRealizar.utilizoCafeComo),
-    )?.descripcion;
+  FORM_DATA.datosDelTramiteRealizar.paisdeimportacion = this.paisdeimportacionData.catalogos.find(
+    (item: Catalogo) => String(item.id) === String(FORM_DATA.datosDelTramiteRealizar.paisdeimportacion),
+  )?.descripcion;
 
-    FORM_DATA.datosDelTramiteRealizar.paisdeimportacion = this.paisdeimportacionData.catalogos.find(
-      (item: Catalogo) => String(item.id) === String(FORM_DATA.datosDelTramiteRealizar.paisdeimportacion),
-    )?.descripcion;
+  FORM_DATA.datosDelTramiteRealizar.fraccionarancelaria = this.fraccionarancelariaData.catalogos.find(
+    (item: Catalogo) => String(item.id) === String(FORM_DATA.datosDelTramiteRealizar.fraccionarancelaria),
+  )?.descripcion;
 
-    FORM_DATA.datosDelTramiteRealizar.fraccionarancelaria = this.fraccionarancelariaData.catalogos.find(
-      (item: Catalogo) => String(item.id) === String(FORM_DATA.datosDelTramiteRealizar.fraccionarancelaria),
-    )?.descripcion;
+  FORM_DATA.datosDelTramiteRealizar.unidaddemedida = this.unidaddemedidaData.catalogos.find(
+    (item: Catalogo) => String(item.id) === String(FORM_DATA.datosDelTramiteRealizar.unidaddemedida),
+  )?.descripcion;
 
-    FORM_DATA.datosDelTramiteRealizar.unidaddemedida = this.unidaddemedidaData.catalogos.find(
-      (item: Catalogo) => String(item.id) === String(FORM_DATA.datosDelTramiteRealizar.unidaddemedida),
-    )?.descripcion;
+  FORM_DATA.datosDelTramiteRealizar.dolar = this.dolarData.catalogos.find(
+    (item: Catalogo) => String(item.id) === String(FORM_DATA.datosDelTramiteRealizar.dolar),
+  )?.descripcion;
 
-    FORM_DATA.datosDelTramiteRealizar.dolar = this.dolarData.catalogos.find(
-      (item: Catalogo) => String(item.id) === String(FORM_DATA.datosDelTramiteRealizar.dolar),
-    )?.descripcion;
+  FORM_DATA.datosDelTramiteRealizar.elcafe = this.elcafeData.catalogos.find(
+    (item: Catalogo) => String(item.id) === String(FORM_DATA.datosDelTramiteRealizar.elcafe),
+  )?.descripcion;
 
-    FORM_DATA.datosDelTramiteRealizar.elcafe = this.elcafeData.catalogos.find(
-      (item: Catalogo) => String(item.id) === String(FORM_DATA.datosDelTramiteRealizar.elcafe),
-    )?.descripcion;
+  FORM_DATA.datosDelTramiteRealizar.paisdetransbordo = this.paisdetransbordoData.catalogos.find(
+    (item: Catalogo) => String(item.id) === String(FORM_DATA.datosDelTramiteRealizar.paisdetransbordo),
+  )?.descripcion;
 
-    FORM_DATA.datosDelTramiteRealizar.paisdetransbordo = this.paisdetransbordoData.catalogos.find(
-      (item: Catalogo) => String(item.id) === String(FORM_DATA.datosDelTramiteRealizar.paisdetransbordo),
-    )?.descripcion;
+  FORM_DATA.datosDelTramiteRealizar.mediodetransporte = this.mediodetransporteData.catalogos.find(
+    (item: Catalogo) => String(item.id) === String(FORM_DATA.datosDelTramiteRealizar.mediodetransporte),
+  )?.descripcion;
 
-    FORM_DATA.datosDelTramiteRealizar.mediodetransporte = this.mediodetransporteData.catalogos.find(
-      (item: Catalogo) => String(item.id) === String(FORM_DATA.datosDelTramiteRealizar.mediodetransporte),
-    )?.descripcion;
-
+  if (this.isEditMode && this.editingRowId !== null) {
+    const INDEX = this.tableData.findIndex((row) => row.id === this.editingRowId);
+    if (INDEX !== -1) {
+      this.tableData[INDEX] = FORM_DATA;
+    }
+  } else {
     this.tableData.push(FORM_DATA);
-    
   }
 
+  this.isEditMode = false;
+  this.editingRowId = null;
+  this.dataCafeForm.reset();
+  this.esFormularioVisible = false;
+
+  const MODAL_ELEMENT = document.getElementById('datosCafeModal');
+  if (MODAL_ELEMENT) {
+    const MODAL_INSTANCE = Modal.getInstance(MODAL_ELEMENT);
+    if (MODAL_INSTANCE) {
+      MODAL_INSTANCE.hide();
+    }
+  }
+}
 /**
  * Este método se utiliza para mostrar el formulario al usuario.
  */
@@ -523,9 +417,26 @@ consultaDatos!: ConsultaioState;
   /**
    * Este método se ejecuta cuando el usuario selecciona una fila de la tabla. Su propósito es
  */
-  onRowClick(rowData: FilaData): void {
+  onRowClick( rowData: FilaData): void {
+    this.isEditMode = true; 
+    this.editingRowId = rowData.id;
+   
+    if (!rowData.datosDelTramiteRealizar) {
+      console.error('Row data is missing datosDelTramiteRealizar:', rowData);
+      return;
+    }
+    const TARGET = event?.target as HTMLElement;
+    if (TARGET.tagName === 'INPUT' && TARGET.getAttribute('type') === 'checkbox') {
+      return; 
+    }
+  
+    if (this.selectedRows.has(rowData.id)) {
+      return;
+    }
+ 
     this.dataCafeForm.patchValue({
-      envasadoen: this.envasadoenData.catalogos.find(
+      datosDelTramiteRealizar: {
+        envasadoen: this.envasadoenData.catalogos.find(
         (item: Catalogo) => item.descripcion === rowData.datosDelTramiteRealizar.envasadoen,
       )?.id || '',
       utilizoCafeComo: this.utilizoCafeComoData.catalogos.find(
@@ -552,16 +463,24 @@ consultaDatos!: ConsultaioState;
       mediodetransporte: this.mediodetransporteData.catalogos.find(
         (item: Catalogo) => item.descripcion === rowData.datosDelTramiteRealizar.mediodetransporte,
       )?.id || '',
+    }
     });
-
     this.esFormularioVisible = true;
+
+    const MODAL_ELEMENT = document.getElementById('datosCafeModal');
+    if (MODAL_ELEMENT) {
+      const MODAL_INSTANCE = new Modal(MODAL_ELEMENT); 
+      MODAL_INSTANCE.show();
+    }
   }
  /**
   * Este método se utiliza para eliminar las filas seleccionadas de la tabla.
   *  */ 
   onDeleteSelectedRows(): void {
-    if (this.selectedRows && this.selectedRows.size > 0) {
-      this.tableData = this.tableData.filter(row => !this.selectedRows.has(row.id));
+    if (this.selectedRows.size === 1) {
+      const SELECTED_ID = Array.from(this.selectedRows)[0];
+
+      this.tableData = this.tableData.filter((row) => row.id !== SELECTED_ID);
       this.selectedRows.clear();
       this.dataCafeForm.reset();
       this.esFormularioVisible = false;
@@ -573,8 +492,17 @@ consultaDatos!: ConsultaioState;
    * @param selectedRows Este método se utiliza para actualizar las filas seleccionadas en la tabla.
    */
   onSelectedRowsChange(selectedRows: FilaData[]): void {
-    this.selectedRows = new Set(selectedRows.map(row => row.id)); // Update selected rows
-    this.esFormularioVisible = false;
+    
+    this.selectedRows = new Set(selectedRows.map((row) => row.id)); 
+    this.esFormularioVisible = false; 
+    
+    const MODAL_ELEMENT = document.getElementById('datosCafeModal');
+    if (MODAL_ELEMENT) {
+        const MODAL_INSTANCE = Modal.getInstance(MODAL_ELEMENT);
+        if (MODAL_INSTANCE) {
+            MODAL_INSTANCE.hide();
+        }
+    }
   }
   get datosDelTramiteRealizar(): FormGroup {
     return this.dataCafeForm.get('datosDelTramiteRealizar') as FormGroup;
@@ -590,6 +518,16 @@ consultaDatos!: ConsultaioState;
     else {
       this.dataCafeForm?.enable();
     }
+}
+
+static cantidadUtilizadaValidator(group: AbstractControl): { [key: string]: boolean } | null {
+  const CANTIDAD_UTILIZADA = group.get('cantidadutilizada')?.value;
+  const CANTIDAD = group.get('cantidad')?.value;
+
+  if (CANTIDAD_UTILIZADA && CANTIDAD && CANTIDAD_UTILIZADA > CANTIDAD) {
+    return { cantidadUtilizadaExceeds: true };
+  }
+  return null;
 }
   /**
    * Este método se utiliza para actualizar un valor específico en el store de la solicitud.

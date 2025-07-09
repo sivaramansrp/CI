@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ConsultaioQuery, Notificacion, NotificacionesComponent, REGEX_LLAVE_DE_PAGO, REGEX_RFC, TituloComponent } from '@ng-mf/data-access-user';
+import { ConsultaioQuery, InputFecha, InputFechaComponent, Notificacion, NotificacionesComponent, REGEX_LLAVE_DE_PAGO, REGEX_RFC, TituloComponent } from '@ng-mf/data-access-user';
 import { FormBuilder,FormGroup,ReactiveFormsModule,Validators} from '@angular/forms';
 import { PagoData ,TableData} from '@libs/shared/data-access-user/src/core/models/31601/servicios-pantallas.model';
 import { Solicitud31601State,Tramite31601Store } from '../../../../estados/tramites/tramite31601.store';
@@ -18,6 +18,7 @@ import radio_si_no from '@libs/shared/theme/assets/json/31601/radio_si_no.json';
 import table from '@libs/shared/theme/assets/json/31601/table.json';
 import tableDetos from '@libs/shared/theme/assets/json/31601/table-datos.json';
 
+import { FECHA_FINAL } from '../../modelos/radio-buttons.model';
 /**
  * @Component - CapturarIvaeiepsComponent
  *
@@ -34,7 +35,7 @@ import tableDetos from '@libs/shared/theme/assets/json/31601/table-datos.json';
     ReactiveFormsModule,
     CatalogoSelectComponent,
     CommonModule,
-    InputRadioComponent,NotificacionesComponent
+    InputRadioComponent,NotificacionesComponent,InputFechaComponent
   ],
   templateUrl: './capturar-ivaeieps.component.html',
   styleUrl: './capturar-ivaeieps.component.scss',
@@ -113,6 +114,18 @@ export class CapturarIvaeiepsComponent implements OnInit,OnDestroy {
   */
   esFormularioSoloLectura: boolean = false; 
 
+    /**
+     * Configuración para el campo de fecha final.
+     */
+    fechaFinalInput: InputFecha = FECHA_FINAL;
+
+    /**
+     * Controla la visibilidad de la sección de certificación.
+     * Se establece en true si el usuario selecciona "Sí" en el campo correspondiente.
+     */
+    mostrarSeccionCertificacion: boolean = false;
+
+
   /**
    * Construye una instancia de CapturarIvaeiepsComponent.
    *
@@ -150,6 +163,13 @@ export class CapturarIvaeiepsComponent implements OnInit,OnDestroy {
   ngOnInit(): void {
     this.inicializarForms();
     this.poblarPagoForm(mockData);
+
+     this.ivaForm.get('indiqueIva')?.valueChanges.subscribe(value => {
+    this.mostrarSeccionCertificacion = value === 'Si';
+  });
+
+  // Optionally initialize value on load
+  this.mostrarSeccionCertificacion = this.ivaForm.get('indiqueIva')?.value === 'Si';
   }
 
   /**
@@ -435,6 +455,21 @@ if (TIPO_DE && VALOR_PESOS && DESCRIPCION) {
   setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite31601Store): void {
     const VALOR = form.get(campo)?.value;
     (this.tramite31601Store[metodoNombre] as (value: unknown) => void)(VALOR);
+  }
+
+    /**
+   * @method onFechaCambiada
+   * @description Actualiza la fecha de pago en el formulario.
+   *
+   * @param {string} fecha - Fecha seleccionada en el componente `InputFecha`.
+   */
+  onFechaCambiada(fecha: string): void {
+    this.formularioDePago.patchValue({ fechaPago: fecha });
+    this.setValoresStore(
+      this.formularioDePago,
+      'fechaPago',
+      'setFechaPago'
+    );
   }
 
   /**

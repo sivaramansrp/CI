@@ -1,14 +1,32 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 
-import { CATALOGOS_ID, Catalogo, CatalogosService, TEXTOS } from '@ng-mf/data-access-user';
+import {
+  AlertComponent,
+  AnexarDocumentosComponent,
+  CATALOGOS_ID,
+  Catalogo,
+  CatalogosService,
+  TEXTOS,
+  TituloComponent,
+} from '@ng-mf/data-access-user';
 import { AvisoSanitarioService } from '../../services/aviso-sanitario.service';
+import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule } from '@angular/forms';
 
 /**
  * Componente para gestionar el paso dos del trámite.
  */
 @Component({
   selector: 'app-paso-dos',
+  standalone: true,
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    TituloComponent,
+    AlertComponent,
+    AnexarDocumentosComponent,
+  ],
   templateUrl: './paso-dos.component.html',
   styles: ``,
 })
@@ -40,7 +58,7 @@ export class PasoDosComponent implements OnInit, OnDestroy {
 
   /**
    * Constructor del componente.
-   * 
+   *
    * @param catalogosServices Servicio para gestionar los catálogos.
    * @param avisoSanitarioService Servicio para gestionar las operaciones relacionadas con aviso sanitario.
    */
@@ -71,7 +89,7 @@ export class PasoDosComponent implements OnInit, OnDestroy {
           if (resp.length > 0) {
             this.catalogoDocumentos = resp;
           }
-        }
+        },
       });
   }
 
@@ -79,13 +97,14 @@ export class PasoDosComponent implements OnInit, OnDestroy {
    * Recupera la lista de documentos seleccionados.
    */
   obtenerDocumentosSeleccionados(): void {
-    this.avisoSanitarioService.obtenerDocumentosSeleccionados()
+    this.avisoSanitarioService
+      .obtenerDocumentosSeleccionados()
       .pipe(takeUntil(this.destruirNotificador$))
       .subscribe({
         next: (result) => {
           this.documentosSeleccionados = result.data;
-        }
-      })
+        },
+      });
   }
 
   /**
