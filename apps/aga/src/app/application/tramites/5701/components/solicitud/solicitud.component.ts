@@ -474,8 +474,8 @@ export class SolicitudComponent
   /**
    * Arrelgo de patentes de la empresa
    */
-  radioPatentes = patentes.patentes;
-  rfcs = rfcs.rfcs;
+  radioPatentes: string[] = [];
+  rfcs: unknown[] = [];
   /**
    * @description Bandera para indicar si la hora de inicio del servicio no ha sido marcada.
    */
@@ -573,6 +573,8 @@ export class SolicitudComponent
   ) {}
 
   ngOnInit(): void {
+    this.radioPatentes = patentes?.patentes?.map((p: { label: string; value: number }) => p.label) ?? [];
+    this.rfcs = rfcs?.rfcs;
     this.validaTipoPersona();
     this.inicializaCatalogos();
 
