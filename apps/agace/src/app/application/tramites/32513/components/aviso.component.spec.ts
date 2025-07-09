@@ -3,7 +3,6 @@ import { AvisoComponent } from './aviso.component';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { of, Subject } from 'rxjs';
 
-// Mocks for dependencies
 const mockSolicitudState = {
   descripcionMercancia: 'desc',
   porcentajeDesperdicio: 10,
@@ -42,10 +41,8 @@ describe('AvisoComponent', () => {
 
     fixture = TestBed.createComponent(AvisoComponent);
     component = fixture.componentInstance;
-    // Inject mocks
     component.solicitud32513Store = mockStore as any;
     component.solicitud32513Query = mockQuery as any;
-    // Set initial state for tests
     component.solicitudState = mockSolicitudState as any;
     component.inicializarFormulario();
     fixture.detectChanges();

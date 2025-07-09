@@ -48,7 +48,14 @@ export class PasoDosComponent implements OnInit, OnDestroy {
   /** Observable para manejar la destrucción de suscripciones */
   private destroy$: Subject<void> = new Subject<void>();
 
+  /**
+   * Evento emitido para reenviar el evento de carga de documentos al componente padre.
+   */
   @Output() reenviarEvento = new EventEmitter<void>();
+
+/**
+ * Evento emitido para regresar a la sección de carga de documentos en el componente padre.
+ */
   @Output() regresarSeccionCargarDocumentoEvento = new EventEmitter<void>()
 
   /**

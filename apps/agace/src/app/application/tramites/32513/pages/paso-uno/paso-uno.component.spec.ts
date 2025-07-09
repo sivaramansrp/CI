@@ -5,7 +5,6 @@ import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
 import { SolicitanteComponent } from '@libs/shared/data-access-user/src';
 import { provideHttpClient } from '@angular/common/http';
 
-// Mock services and dependencies if needed
 class MockSolicitud32513Store {}
 class MockSolicitud32513Query {}
 

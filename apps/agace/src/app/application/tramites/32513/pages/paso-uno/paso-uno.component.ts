@@ -1,7 +1,6 @@
-import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL, PERSONA_MORAL_NACIONAL } from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { FormularioDinamico, SolicitanteComponent, TIPO_PERSONA } from '@ng-mf/data-access-user';
+import { FormularioDinamico, SolicitanteComponent } from '@ng-mf/data-access-user';
 import { Solicitud32513State, Solicitud32513Store } from '../../estados/solicitud32513.store';
 import { AvisoComponent } from '../../components/aviso.component';
 import { CommonModule } from '@angular/common';
@@ -105,16 +104,6 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
       adace: [{ value: this.solicitudState?.adace, disabled: true }]
     });
   }
-
-  // /**
-  //  * Método del ciclo de vida que se ejecuta después de que la vista ha sido inicializada.
-  //  * Inicializa los datos de persona y domicilio fiscal, y obtiene el tipo de persona.
-  //  */
-  // ngAfterViewInit(): void {
-  //   this.persona = PERSONA_MORAL_NACIONAL;
-  //   this.domicilioFiscal = DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL;
-  //   this.solicitante.obtenerTipoPersona(TIPO_PERSONA.MORAL_NACIONAL);
-  // }
 
   /**
    * Cambia la pestaña activa según el índice proporcionado.

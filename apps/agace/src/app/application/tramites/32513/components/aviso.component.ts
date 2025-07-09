@@ -7,6 +7,9 @@ import { CommonModule } from '@angular/common';
 import { SOLICITUD_32513_ENUM } from '../constantes/anexo';
 import { Solicitud32513Query } from '../estados/solicitud32513.query';
 
+/**
+ * Componente encargado de la gestión del aviso
+ */
 @Component({
   selector: 'app-aviso',
   standalone: true,
