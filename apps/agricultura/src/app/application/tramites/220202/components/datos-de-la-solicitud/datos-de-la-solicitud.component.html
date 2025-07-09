@@ -45,6 +45,7 @@
       <div class="row">
         <div class="col-md-12">
           <app-catalogo-select
+            placeholder=" Selecciona un valor"
             [catalogo]="aduanaList"
             formControlName="aduanaDeIngreso"
             [label]="'Aduana de ingreso'"
@@ -56,6 +57,7 @@
         </div>
         <div class="col-md-12">
           <app-catalogo-select
+            placeholder=" Selecciona un valor"
             [catalogo]="agropecuariaList"
             formControlName="oficinaDeInspeccion"
             [label]="'Oficina de inspección de Sanidad Agropecuaria'"
@@ -67,6 +69,7 @@
         </div>
         <div class="col-md-12">
           <app-catalogo-select
+            placeholder=" Selecciona un valor"
             [catalogo]="puntoList"
             formControlName="puntoDeInspeccion"
             [label]="'Punto de inspección'"
@@ -93,6 +96,7 @@
         </div>
         <div class="col-md-6">
           <app-catalogo-select
+            placeholder=" Selecciona un valor"
             [catalogo]="regimeList"
             formControlName="regimen"
             [label]="'Régimen'"
@@ -119,6 +123,17 @@
           </div>
       
         </div>
+
+              <div class="row">
+                <ng-titulo titulo="Tipo de Mercancía" />
+                <div class="col-md-12">
+                  <label for="certficacion_a">Captura de datos de mercancía</label>
+                </div>
+                <div class="col-md-12">
+                  <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [layout]="'vertical'" name="tipoMercancia"
+                    formControlName="tipoMercancia" (change)="radioBotonSeleccionado()"></app-input-radio>
+                </div>
+              </div>
         <div class="row">
           <div class="col-md-12">
             <h5>Mercancías</h5>
@@ -128,6 +143,7 @@
             [tipoSeleccionTabla]="tipoSeleccionsoliMercancias"
             [configuracionTabla]="configuracionColumnasoli"
             [datos]="cuerpoTabla"
+            (listaDeFilaSeleccionada)="seleccionTabla($event)"
           >
           </app-tabla-dinamica>
           </div>
@@ -136,9 +152,9 @@
 
     <div class="row mt-3">
       <div class="col-md-12 d-flex justify-content-end">
-        <button type="button" class="btn btn-primary" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">Limpiar</button>
-        <button type="button" class="btn btn-primary" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">Cancelar</button>
-        <button type="button" class="btn btn-primary" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">Agregar</button>
+        <button type="button" class="btn btn-primary" (click)="modificarMercancia()">Modificar</button>
+        <button type="button" class="btn btn-primary ms-3" (click)="eliminarMercancia()">Eliminar</button>
+        <button type="button" class="btn btn-primary ms-3" (click)="agregarMercancia()">Agregar</button>
       </div>
     </div>
   

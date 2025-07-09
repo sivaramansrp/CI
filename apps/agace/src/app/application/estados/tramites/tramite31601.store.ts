@@ -117,6 +117,7 @@ export interface Solicitud31601State {
   controlInventariosDatos: ControlInventariosItem[];
   cancelacionProcedimiento: string;
   cumpleLineamientos: string;
+  fechaPago: string;
 }
 /**
  * Función para crear el estado inicial de Solicitud31601.
@@ -231,6 +232,7 @@ export function createInitialState(): Solicitud31601State {
     controlInventariosDatos: [],
     cancelacionProcedimiento: '',
     cumpleLineamientos: '',
+    fechaPago:''
   };
 }
 /**
@@ -991,6 +993,17 @@ export class Tramite31601Store extends Store<Solicitud31601State> {
     this.update((state) => ({
       ...state,
       cumpleLineamientos,
+    }));
+  }
+  
+  /**
+   * Establece el valor de la fecha de pago en el estado.
+   * @param fechaPago La fecha de pago a establecer.
+   */
+  public setFechaPago(fechaPago: string): void {
+    this.update((state) => ({
+      ...state,
+      fechaPago,
     }));
   }
 }

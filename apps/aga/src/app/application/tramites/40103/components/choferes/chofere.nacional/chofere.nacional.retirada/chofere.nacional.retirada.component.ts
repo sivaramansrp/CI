@@ -1,12 +1,12 @@
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
-import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { Subject, map, takeUntil } from 'rxjs';
 import {
     TablaDinamicaComponent,
   TablaSeleccion,
 } from '@libs/shared/data-access-user/src';
-import { CHOFERES_NACIONALES_ALTA } from '../../../../enum/choferes-enum';
+import { CHOFERES_NACIONALES_ALTA } from '../../../../enum/choferes.enum';
 import { Chofer40103Query } from '../../../../estados/chofer40103.query';
 import { Chofer40103Service } from '../../../../estados/chofer40103.service';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src/core/models/shared/configuracion-columna.model';
@@ -26,7 +26,7 @@ import { TituloComponent } from '@ng-mf/data-access-user';
   ],
   providers: [BsModalService],
 })
-export class ChofereNacionalRetiradaComponent implements OnInit {
+export class ChofereNacionalRetiradaComponent implements OnInit, OnDestroy {
 
   // ======================= PROPIEDADES =======================
 
@@ -143,6 +143,16 @@ export class ChofereNacionalRetiradaComponent implements OnInit {
       ).subscribe();
 
   }
+
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
+   * Limpia las suscripciones y evita fugas de memoria.
+   */
+  ngOnDestroy(): void {
+    this.destroyed$.next();
+    this.destroyed$.complete();
+  }
+
 
   /**
    * Maneja el evento de selección de filas en la tabla de choferes nacionales.

@@ -4,17 +4,20 @@ import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 
 import { SELECCIONADO, TEXTOS } from '../../constantes/certificado-zoosanitario.enum';
 
-import {AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, ConsultaioQuery, InputRadioComponent, Notificacion, NotificacionesComponent, RespuestaCatalogos, SharedModule, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
+import {AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, InputRadioComponent, Notificacion, NotificacionesComponent, RespuestaCatalogos, SharedModule, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 
 import { HttpClient } from '@angular/common/http';
 
-import { RadioOpcion } from '../../models/220201/certificado-zoosanitario.model';
+import { DatosForma, RadioOpcion } from '../../models/220201/certificado-zoosanitario.model';
 
+import { ActivatedRoute, Router } from '@angular/router';
 import { FilaSolicitud, SolicitudData } from '../../models/220201/capturar-solicitud.model';
 import {Subject, debounceTime, map, takeUntil } from 'rxjs';
 import { CertificadoZoosanitarioServiceService } from '../../services/220201/certificado-zoosanitario.service';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { ZoosanitarioQuery } from '../../queries/220201/zoosanitario.query';
+import { ZoosanitarioStore } from '../../estados/220201/zoosanitario.store';
 
 /**
  * @fileoverview Componente para la gestión del formulario de datos de la solicitud.
@@ -130,7 +133,11 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
       "value": "no"
     },
   ];
-
+  /**
+   * @description Almacena los datos del formulario principal.
+   * @type {DatosForma}
+   */
+  formulariodataStore: DatosForma = {} as DatosForma;
   /**
    * @desc Arreglo que contiene las filas de la solicitud.
    * @type {FilaSolicitud[]}
@@ -153,7 +160,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
    * Utiliza la enumeración TablaSeleccion para definir el tipo de selección.
    * @type {TablaSeleccion}
    */
-  tipoSeleccionsoli: TablaSeleccion = TablaSeleccion.UNDEFINED;
+  tipoSeleccionsoli: TablaSeleccion = TablaSeleccion.CHECKBOX;
 
   /**
    * @description
@@ -179,11 +186,10 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
     { encabezado: 'Nico', clave: (fila) => fila.nico, orden: 7 },
     { encabezado: 'Descripción Nico', clave: (fila) => fila.descripcionNico, orden: 8 },
     { encabezado: 'Descripción', clave: (fila) => fila.descripcion, orden: 9 },
-    { encabezado: 'Unidad de medida de tarifa (UMT)', clave: (fila) => fila.unidadDeMedidaDeTarifaUMT, orden: 10 },
+    { encabezado: 'Unidad de medida de tarifa (UMT)', clave: (fila) => fila.umt, orden: 10 },
     { encabezado: 'Cantidad UMT', clave: (fila) => fila.cantidadUMT, orden: 11 },
-    { encabezado: 'Unidad de medida de comercialización (UMC)', clave: (fila) => fila.unidadDeMedidaDeComercializacionUMC, orden: 12 },
+    { encabezado: 'Unidad de medida de comercialización (UMC)', clave: (fila) => fila.umc, orden: 12 },
     { encabezado: 'Cantidad UMC', clave: (fila) => fila.cantidadUMC, orden: 13 },
-    { encabezado: 'Especie', clave: (fila) => fila.especie, orden: 14 },
     { encabezado: 'Uso', clave: (fila) => fila.uso, orden: 15 },
     { encabezado: 'País de origen', clave: (fila) => fila.paisDeOrigen, orden: 16 },
     { encabezado: 'País de procedencia', clave: (fila) => fila.paisDeProcedencia, orden: 17 },
@@ -287,7 +293,10 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
     private readonly httpServicios: HttpClient,
     private readonly certificadoZoosanitarioServices: CertificadoZoosanitarioServiceService,
     private readonly certificadoZoosanitarioQuery: ZoosanitarioQuery,
-    private consultaQuery: ConsultaioQuery
+    private consultaQuery: ConsultaioQuery,
+     public fitosanitarioStore: ZoosanitarioStore,
+       public router: Router,
+          public activatedRoute: ActivatedRoute
   ) {
     this.obtenerListasDesplegables();
   }
@@ -307,6 +316,12 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
    * @method ngOnInit
    */
   ngOnInit(): void {
+     this.certificadoZoosanitarioServices.getAllDatosForma()
+    .pipe(takeUntil(this.destroyNotifier$))
+    .subscribe((datos) => {
+      this.formulariodataStore = datos.datos;
+      this.cuerpoTabla = datos.tablaDatos;      
+    });
     this.crearFormulario();
     this.initActionFormBuild();
     this.nuevaNotificacion = {
@@ -374,7 +389,19 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
     });
     this.certificadoZoosanitarioQuery.seleccionarDatosSolicitud$.pipe(takeUntil(this.destroyNotifier$)).subscribe((datosDeLaSolicitud) => {
       if (datosDeLaSolicitud) {
-        this.datosDelaSolicitud.patchValue(datosDeLaSolicitud);
+        this.datosDelaSolicitud.patchValue({
+          tipoMercancia: datosDeLaSolicitud.tipoMercancia || 'yes',
+          aduanaIngreso: datosDeLaSolicitud.aduanaIngreso || '',
+          oficinaInspeccion: datosDeLaSolicitud.oficinaInspeccion || '',
+          puntoInspeccion: datosDeLaSolicitud.puntoInspeccion || '',
+          claveUCON: datosDeLaSolicitud.claveUCON || '',
+          establecimientoTIF: datosDeLaSolicitud.establecimientoTIF || '',
+          nombreVeterinario: datosDeLaSolicitud.nombreVeterinario || '',
+          numeroGuia: datosDeLaSolicitud.numeroGuia || '',
+          certificacion: datosDeLaSolicitud.certificacion || '',
+          regimen: datosDeLaSolicitud.regimen || ''
+        })
+        this.notificationCheck=true;
       }
     });
     this.forma.setControl('datosDelaSolicitud', this.datosDelaSolicitud);
@@ -501,6 +528,68 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
     }
   }
 
+  /**
+   * @description Navega a la página de agregar mercancía.
+   * Este método redirige al usuario a la ruta relativa '../animales-vivo' para agregar una nueva mercancía.
+   * @method agregarMercancia
+   * @returns {void}
+   */
+  modificarMercancia(): void {
+    this.seleccionTabla([]);
+    if(this.forma.get('tipoMercancia')?.value === 'yes') {
+      this.router.navigate(['../animales-vivo'], {
+        relativeTo: this.activatedRoute,
+      });
+    }
+  }
+    /**
+   * @description Selecciona una fila de la tabla de solicitudes y actualiza el estado del store.
+   * Este método se llama cuando se selecciona una fila en la tabla de solicitudes.
+   * Actualiza el estado del store con los datos de la fila seleccionada.
+   * @method seleccionTabla
+   * @param {FilaSolicitud} event - Datos de la fila seleccionada.
+   */
+  seleccionTabla(event: FilaSolicitud[]): void {
+    this.fitosanitarioStore.update(
+      (state) => ({
+        ...state,
+        selectedDatos: event
+      })
+    )
+  }
+   /**
+   * @description Método que se ejecuta cuando el componente es destruido.
+   * Utiliza un Subject para notificar a las suscripciones que deben ser destruidas, evitando fugas de memoria.
+   * @method ngOnDestroy
+   * @returns {void}
+   */
+  eliminarMercancia(): void {
+    const VALOR = this.fitosanitarioStore.getValue().tablaDatos;
+    if (VALOR.length === 0) {
+      return;
+    }
+    const FILTERED_VALOR = VALOR.filter(
+      (item) => !this.fitosanitarioStore.getValue().selectedDatos.includes(item)
+    );
+    this.fitosanitarioStore.update(
+      (state) => ({
+      ...state,
+      tablaDatos: FILTERED_VALOR
+      })
+    );
+
+  }
+   /**
+   * @description Navega a la página de modificar mercancía.
+   * Este método redirige al usuario a la ruta relativa '../animales-vivo' para modificar una mercancía existente.
+   * @method agregarMercancia
+   * @returns {void}
+   */
+  agregarMercancia(): void {
+    this.router.navigate(['../animales-vivo'], {
+      relativeTo: this.activatedRoute,
+    });
+  }
   /**
    * Método del ciclo de vida de Angular que se llama justo antes de que el componente sea destruido.
    * Se utiliza para emitir una notificación y completar el observable `destroyNotifier$`, 

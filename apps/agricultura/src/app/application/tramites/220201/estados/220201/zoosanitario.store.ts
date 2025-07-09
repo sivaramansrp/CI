@@ -1,16 +1,16 @@
 import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
-import { PersonaTerceros } from '@libs/shared/data-access-user/src';
 
 import {
-    CapturarSolicitud,
-    DatosDeLaSolicitud,
+  CapturarSolicitud,
+  DatosDeLaSolicitud,
   DatosParaMovilizacionNacional,
   PagoDeDerechos,
   Solicitante,
   ValidarEnvio,
   createDatosState
 } from '../../models/220201/capturar-solicitud.model';
+import { TercerosrelacionadosdestinoTable } from '../../../../shared/models/tercerosrelacionados.model';
 
 
 /**
@@ -113,12 +113,26 @@ export class ZoosanitarioStore extends Store<CapturarSolicitud> {
     }));
   }
 
+ /**
+ * Actualiza el store con una persona tercero relacionada.
+ * @method actualizarTercerosRelacionados
+ * @param {TercerosrelacionadosdestinoTable} nuevoTercero Persona tercero relacionada.
+ */
+public actualizarTercerosRelacionados(nuevoTercero: TercerosrelacionadosdestinoTable): void {
+  this.update(state => ({
+    ...state,
+    tercerosRelacionados: [
+      ...state.tercerosRelacionados,
+      nuevoTercero
+    ]
+  }));
+}
   /**
    * Actualiza el store con la lista de terceros relacionados.
-   * @method actualizarTercerosRelacionados
-   * @param {PersonaTerceros[]} tercerosRelacionados Lista de personas terceros relacionadas.
+   * @method updateTercerosRelacionados
+   * @param {TercerosrelacionadosdestinoTable[]} tercerosRelacionados Lista de personas terceros relacionadas.
    */
-  public actualizarTercerosRelacionados(tercerosRelacionados: PersonaTerceros[]): void {
+  public updateTercerosRelacionados(tercerosRelacionados: TercerosrelacionadosdestinoTable[]): void {
     this.update(state => ({
       ...state,
       tercerosRelacionados: tercerosRelacionados,

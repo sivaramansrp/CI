@@ -1,15 +1,43 @@
-import { AfterViewInit, ChangeDetectorRef, Component,OnDestroy, OnInit, ViewChild} from '@angular/core';
-import { ConsultaioQuery, ConsultaioState, FormularioDinamico, SolicitanteComponent, TIPO_PERSONA } from '@ng-mf/data-access-user';
-import { DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL, PERSONA_MORAL_NACIONAL } from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
+import {
+  AfterViewInit,
+  ChangeDetectorRef,
+  Component,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
+import {
+  ConsultaioQuery,
+  ConsultaioState,
+  FormularioDinamico,
+  SolicitanteComponent,
+  TIPO_PERSONA,
+} from '@ng-mf/data-access-user';
+import {
+  DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL,
+  PERSONA_MORAL_NACIONAL,
+} from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
 import { Subject, map, takeUntil } from 'rxjs';
 import { AvisoSanitarioState } from '../../../../estados/tramites/tramite260601.store';
-import { Service260601Service } from "../../services/service260601.service"
+import { CommonModule } from '@angular/common';
+import { DatosDeLaSolicitudComponent } from '../../components/datos-de-la-solicitud/datos-de-la-solicitud.component';
+import { ReactiveFormsModule } from '@angular/forms';
+import { Service260601Service } from '../../services/service260601.service';
+import { TercerosRelacionadosComponent } from '../../components/terceros-relacionados/terceros-relacionados.component';
 
 /**
  * Componente para gestionar el paso uno del trámite.
  */
 @Component({
   selector: 'app-datos',
+  standalone: true,
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    SolicitanteComponent,
+    TercerosRelacionadosComponent,
+    DatosDeLaSolicitudComponent
+  ],
   templateUrl: './datos.component.html',
   styles: ``,
 })
@@ -19,17 +47,17 @@ export class DatosComponent implements AfterViewInit, OnInit, OnDestroy {
    */
   @ViewChild(SolicitanteComponent) solicitante!: SolicitanteComponent;
 
-  /** 
-   * Configuración del formulario para la persona moral 
+  /**
+   * Configuración del formulario para la persona moral
    */
   persona: FormularioDinamico[] = [];
 
-  /** 
-   * Configuración del formulario para el domicilio fiscal 
+  /**
+   * Configuración del formulario para el domicilio fiscal
    */
   domicilioFiscal: FormularioDinamico[] = [];
 
-    /** Subject para notificar la destrucción del componente. */
+  /** Subject para notificar la destrucción del componente. */
   private destroyNotifier$: Subject<void> = new Subject();
 
   /** Estado actual de la consulta obtenido desde el store. */
@@ -41,12 +69,13 @@ export class DatosComponent implements AfterViewInit, OnInit, OnDestroy {
   /**
    * Constructor del componente.
    * Se utiliza para la inyección de dependencias.
-   * 
+   *
    * @param cdr Servicio para detectar cambios manualmente.
    * @param consultaQuery Servicio para consultar el estado de la consulta.
    * @param service260601Service Servicio para gestionar la lógica del trámite 260601.
    */
-  constructor(private cdr: ChangeDetectorRef,
+  constructor(
+    private cdr: ChangeDetectorRef,
     private consultaQuery: ConsultaioQuery,
     private service260601Service: Service260601Service
   ) {
@@ -60,14 +89,19 @@ export class DatosComponent implements AfterViewInit, OnInit, OnDestroy {
    * En caso contrario, activa la bandera para mostrar los datos de respuesta.
    */
   ngOnInit(): void {
-    this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyNotifier$),map((seccionState) => {
-        this.consultaState = seccionState;
-    })).subscribe();
-      if(this.consultaState.update) {
-          this.guardarDatosFormulario();
-        } else {
-          this.esDatosRespuesta = true;
-        }
+    this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.consultaState = seccionState;
+        })
+      )
+      .subscribe();
+    if (this.consultaState.update) {
+      this.guardarDatosFormulario();
+    } else {
+      this.esDatosRespuesta = true;
+    }
   }
 
   /**
@@ -76,13 +110,12 @@ export class DatosComponent implements AfterViewInit, OnInit, OnDestroy {
    */
   guardarDatosFormulario(): void {
     this.service260601Service
-      .getRegistroTomaMuestrasMercanciasData().pipe(
-        takeUntil(this.destroyNotifier$)
-      )
-      .subscribe((resp:AvisoSanitarioState) => {
-        if(resp){
-        this.esDatosRespuesta = true;
-        this.service260601Service.actualizarEstadoFormulario(resp);
+      .getRegistroTomaMuestrasMercanciasData()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((resp: AvisoSanitarioState) => {
+        if (resp) {
+          this.esDatosRespuesta = true;
+          this.service260601Service.actualizarEstadoFormulario(resp);
         }
       });
   }
@@ -108,13 +141,13 @@ export class DatosComponent implements AfterViewInit, OnInit, OnDestroy {
 
   /**
    * Selecciona la pestaña especificada.
-   * 
+   *
    * @param i - El índice de la pestaña a seleccionar.
    */
   seleccionaTab(i: number): void {
     this.indice = i;
   }
-   /**
+  /**
    * Método del ciclo de vida `ngOnDestroy`.
    * Se ejecuta cuando el componente es destruido.
    * Notifica a los observables suscritos que deben finalizar y libera los recursos asociados.
@@ -126,5 +159,4 @@ export class DatosComponent implements AfterViewInit, OnInit, OnDestroy {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
-  
 }
