@@ -3,44 +3,79 @@ import { Store } from '@datorama/akita';
 import { StoreConfig } from '@datorama/akita';
 
 /**
- * Estado centralizado para la solicitud 32513.
- * Contiene todos los campos necesarios para el llenado del formulario correspondiente.
+ * Interfaz que define la estructura del estado centralizado para la solicitud 32513.
+ * Contiene los campos necesarios para el llenado del formulario correspondiente.
  */
 export interface Solicitud32513State {
-  
-  descripcionMercancia?: string; 
+  /**
+   * Descripción de la mercancía.
+   */
+  descripcionMercancia?: string;
+
+  /**
+   * Porcentaje de desperdicio.
+   */
   porcentajeDesperdicio?: string;
 
+  /**
+   * Código ADACE.
+   */
+  adace?: string;
 }
 
 /**
  * Función que crea el estado inicial de la solicitud.
- * Esta función devuelve un objeto vacío que representa el estado inicial
- * de la solicitud, el cual puede ser modificado posteriormente.
+ * Devuelve un objeto con los valores iniciales para cada campo del estado.
  *
  * @returns {Solicitud32513State} Estado inicial de la solicitud.
  */
 export function createInitialSolicitudState(): Solicitud32513State {
   return {
-    descripcionMercancia: '', // Descripción de la mercancía, inicialmente vacío
-    porcentajeDesperdicio: '' // Porcentaje de desperdicio, inicialmente 0
+    /**
+     * Descripción de la mercancía, inicialmente vacío.
+     */
+    descripcionMercancia: '',
+
+    /**
+     * Porcentaje de desperdicio, inicialmente vacío.
+     */
+    porcentajeDesperdicio: '',
+
+    /**
+     * Código ADACE, inicialmente establecido en 'ADACE-01'.
+     */
+    adace: 'ADACE-01'
   };
 }
+
 @Injectable({
   providedIn: 'root',
 })
 
 @StoreConfig({
-  name: 'solicitud32513', // Nombre de la configuración para el store
-  resettable: true, // Habilita la opción de restablecer el estado del store
+  /**
+   * Nombre de la configuración para el store.
+   */
+  name: 'solicitud32513',
+
+  /**
+   * Habilita la opción de restablecer el estado del store.
+   */
+  resettable: true,
 })
 export class Solicitud32513Store extends Store<Solicitud32513State> {
-
+  /**
+   * Constructor de la clase Solicitud32513Store.
+   * Inicializa el store con el estado inicial definido por createInitialSolicitudState().
+   */
   constructor() {
-    // Llama al constructor de la clase padre Store con el estado inicial
     super(createInitialSolicitudState());
   }
 
+  /**
+   * Actualiza la descripción de la mercancía en el estado.
+   * @param descripcionMercancia Nueva descripción de la mercancía.
+   */
   public setDescripcionMercancia(descripcionMercancia: string): void {
     this.update((state) => ({
       ...state,
@@ -48,6 +83,10 @@ export class Solicitud32513Store extends Store<Solicitud32513State> {
     }));
   }
 
+  /**
+   * Actualiza el porcentaje de desperdicio en el estado.
+   * @param porcentajeDesperdicio Nuevo porcentaje de desperdicio.
+   */
   public setPorcentajeDesperdicio(porcentajeDesperdicio: string): void {
     this.update((state) => ({
       ...state,
@@ -56,7 +95,18 @@ export class Solicitud32513Store extends Store<Solicitud32513State> {
   }
 
   /**
-   * Limpia los datos de la solicitud.
+   * Actualiza el código ADACE en el estado.
+   * @param adace Nuevo código ADACE.
+   */
+  public setAdace(adace: string): void {
+    this.update((state) => ({
+      ...state,
+      adace,
+    }));
+  }
+
+  /**
+   * Limpia los datos de la solicitud, restableciendo el estado a sus valores iniciales.
    */
   public limpiarSolicitud(): void {
     this.reset();

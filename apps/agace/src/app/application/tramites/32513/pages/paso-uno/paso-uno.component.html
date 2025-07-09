@@ -14,11 +14,11 @@
     <ng-container>
       @switch (indice) { 
         @case (1) {
-          <solicitante #Solicitante></solicitante>
+          <solicitante></solicitante>
           <div class="row mt-3" [formGroup]="solicitanteForm">
             <div class="col-md-4">
               <label>ADACE:</label>
-              <input type="text" class="form-control" formControlName="adace" readonly required/>
+              <input type="text" class="form-control" formControlName="adace" required/>
             </div>
           </div>
         } 

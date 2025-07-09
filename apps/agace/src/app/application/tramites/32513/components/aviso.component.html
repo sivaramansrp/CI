@@ -15,11 +15,10 @@
                     Descripción de la mercancía importada temporalmente de donde procede el desperdicio a destruir*:
                 </label>
                 <input type="text" id="descripcionMercancia" formControlName="descripcionMercancia" class="form-control"
-                    (change)="setValoresStore(avisoForm, 'descripcionMercancia', 'setDescripcionMercancia')"
-                   [disabled]="esFormularioSoloLectura" />
-                    <div *ngIf="isInvalid('descripcionMercancia')" class="mensaje-error">
-                        Este campo es obligatorio.
-                    </div>
+                    (change)="setValoresStore(avisoForm, 'descripcionMercancia', 'setDescripcionMercancia')"/>
+                <div *ngIf="isInvalid('descripcionMercancia')" class="mensaje-error">
+                    Este campo es obligatorio.
+                </div>
             </div>
         </div>
         <div class="row">
@@ -28,32 +27,27 @@
                     Porcentaje que representa el desperdicio de destruir, de la mercancía importada temporalmente de la que procede*:
                 </label>
                 <input type="text" id="porcentajeDesperdicio" formControlName="porcentajeDesperdicio" class="form-control porWidth" 
-                    (change)="setValoresStore(avisoForm, 'porcentajeDesperdicio', 'setPorcentajeDesperdicio')"
-                   [disabled]="esFormularioSoloLectura" />
-                   <div *ngIf="isInvalid('porcentajeDesperdicio')" class="mensaje-error">
-                        Este campo es obligatorio.
-                    </div>
+                    (change)="setValoresStore(avisoForm, 'porcentajeDesperdicio', 'setPorcentajeDesperdicio')"/>
+                <div *ngIf="isInvalid('porcentajeDesperdicio')" class="mensaje-error">
+                    Este campo es obligatorio.
+                </div>
             </div>
         </div>
     </div>
-
     <div class="col-md-12">
         <ng-titulo titulo="Datos de la mercancía que se destruirá" />
     </div>
     <div class="col-md-12">
         <label class="form-label text-justify">
             Para descargar plantilla del archivo de excel de click
-            <a [href]="" target="_blank" class="text-primary fw-bold"
-                (click)="esFormularioSoloLectura ? $event.preventDefault() : null"
-                [class.disabled]="esFormularioSoloLectura">aquí</a>
+            <a [href]="" target="_blank" class="text-primary fw-bold">aquí</a>
         </label>
         <div class="row">
             <label class="form-label text-justify ml-1"> Cargar archivo: </label>
         </div>
         <div class="row">
             <div class="col-md-6">
-                <button type="button" for="archivoMedicamentos" class="file-upload" (click)="activarSeleccionArchivo()"
-                    [disabled]="esFormularioSoloLectura">
+                <button type="button" for="archivoMedicamentos" class="file-upload" (click)="activarSeleccionArchivo()">
                     seleccionar archivo
                 </button>
                 <span class="ml-2">{{ elgirDeArchivo }}</span>
@@ -63,8 +57,7 @@
         </div>
         <div class="row">
             <div class="col-md-6 d-flex justify-content-end">
-                <button type="button" class="btn btn-default" (click)="cargarProveedores()"
-                    [disabled]="esFormularioSoloLectura">
+                <button type="button" class="btn btn-default" (click)="cargarProveedores()">
                     Cargar
                 </button>
             </div>

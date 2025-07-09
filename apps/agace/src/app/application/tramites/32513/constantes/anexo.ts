@@ -14,6 +14,9 @@ export const SOLICITUD_32513_ENUM = {
    */
   ELGIR_DE_ARCHIVO: 'Sin archivos seleccionados',
 
+  /**
+   * Mensaje que se muestra cuando el archivo cargado tiene el formato correcto.
+   */
   MESAJE_ARCHIVO: 'El formato del archivo es correcto. Se enviará un correo electrónico de notificación con el resultado.'
 
 };

@@ -1,8 +1,13 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { CommonModule } from '@angular/common';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { PasoUnoComponent } from './paso-uno.component';
-import { BtnContinuarComponent, SolicitanteComponent } from '@libs/shared/data-access-user/src';
+import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
+import { SolicitanteComponent } from '@libs/shared/data-access-user/src';
+import { provideHttpClient } from '@angular/common/http';
+
+// Mock services and dependencies if needed
+class MockSolicitud32513Store {}
+class MockSolicitud32513Query {}
 
 describe('PasoUnoComponent', () => {
   let component: PasoUnoComponent;
@@ -10,14 +15,17 @@ describe('PasoUnoComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [
-      ],
       imports: [
         CommonModule,
+        ReactiveFormsModule,
+        PasoUnoComponent,
         SolicitanteComponent,
-        BtnContinuarComponent,
-        HttpClientTestingModule,
-        PasoUnoComponent
+      ],
+      providers: [
+        provideHttpClient(),
+        FormBuilder,
+        { provide: 'Solicitud32513Store', useClass: MockSolicitud32513Store },
+        { provide: 'Solicitud32513Query', useClass: MockSolicitud32513Query },
       ],
     }).compileComponents();
 
@@ -36,8 +44,6 @@ describe('PasoUnoComponent', () => {
 
   it('should update indice when seleccionaTab is called', () => {
     component.indice = 1;
-    expect(component.indice).toBe(1);
-
     component.seleccionaTab(2);
     expect(component.indice).toBe(2);
 
