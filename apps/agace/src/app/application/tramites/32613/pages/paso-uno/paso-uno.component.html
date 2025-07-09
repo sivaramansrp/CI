@@ -65,16 +65,17 @@
             <solicitante></solicitante>
         } @case (2) {
             <!-- @if(esDatosRespuesta) { -->
-                <app-datos-comunes [deRubroTransporteFerroviario]="true"></app-datos-comunes>
+                <!-- <app-datos-comunes [deRubroTransporteFerroviario]="true"></app-datos-comunes> -->
+                 <app-datos-comunes-tres></app-datos-comunes-tres>
             <!-- } -->
         } @case (3) {
             <!-- @if(esDatosRespuesta) { -->
                 <shared-terceros-relacionados [consultaState]="consultaState"></shared-terceros-relacionados>
             <!-- } -->
         } @case (4) {
-            <!-- @if(esDatosRespuesta) {
-                <app-importador-exportador></app-importador-exportador>
-            } -->
+            <!-- @if(esDatosRespuesta) { -->
+                <app-transporte-ferroviario></app-transporte-ferroviario>
+            <!-- } -->
         } @case (5) {
             <!-- @if(esDatosRespuesta) {
                 <app-c-tpat></app-c-tpat>

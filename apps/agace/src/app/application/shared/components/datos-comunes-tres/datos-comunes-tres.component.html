@@ -1,0 +1,84 @@
+<div class="page">
+    <div class="container">
+        <form [formGroup]="datosComunesForm">
+            <div class="row mt-5">
+                <label class="form-label text-start">Señale el sector productivo o servicio al que pertenece</label>
+            </div>
+            <div class="row">
+                <formas-dinamicas
+                [forma]="ninoFormGroup"
+                [formularioDatos]="datosComunesFormData"
+                [templateMap]="templateMap"
+                (emitirCambioDeValor)="establecerCambioDeValor($event)"
+                ></formas-dinamicas>
+            </div>
+        </form>
+    </div>
+</div>
+
+<ng-template #customTemplate1>
+    <div class="alert alert-info">
+        <div class="form-check">
+        <p><b>Nota: </b>Si no encuadra en los sectores o los servicios de los
+        catálogos, deberá seleccionar el más cercano a sus actividades.</p>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #customTemplate2>
+    @if (mostrarNumeroSolicitudSeccion) {
+        <div class="col-md-12 mt-3 custom-section">
+            <p>Mencione el nombre, RFC y número de empleados que le proveen las empresas que le prestan el servicio de subcontratación*</p>
+        </div>
+        <div class="col-md-12">
+        <label class="form-label text-start"
+          >Número de empleados que le proveen en el último bimestre anterior a
+          su solicitud</label
+        >
+        <app-tabla-dinamica
+          [tipoSeleccionTabla]="numeroDeEmpleadosTabla"
+          [configuracionTabla]="numeroDeEmpleadosConfiguracionColumnas"
+          [datos]="numeroDeEmpleadosLista"
+          (listaDeFilaSeleccionada)="seleccionarNumeroDeEmpleadosDato($event)"
+        >
+        </app-tabla-dinamica>
+      </div>
+
+      <div class="col-md-12 mt-3">
+        <div class="d-flex justify-content-end mt-4">
+          <button type="button" id="agregar" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalSeccionSubcontratados" (click)="agregarSubcontratados()">Agregar</button>
+          <button type="button" id="modificar" class="btn btn-default ms-3" data-bs-toggle="modal" data-bs-target="#modalSeccionSubcontratados" (click)="agregarSubcontratados()">Modificar</button>
+          <button type="button" id="eliminar" class="btn btn-danger ms-3" (click)="eliminarNumeroDeEmpleadosDato()">Eliminar</button>
+          <!-- [disabled]="esFormularioSoloLectura" -->
+        </div>
+      </div>
+    }
+</ng-template>
+
+<div class="modal fade" id="modalSeccionSubcontratados" tabindex="-1" aria-labelledby="modalSeccionSubcontratadosLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+        <!-- NEED TO WORK -->
+      <!-- <app-seccion-subcontratados
+        (seccionSubcontratados)="seccionSubcontratados($event)"
+      ></app-seccion-subcontratados> -->
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" #modalConfirmacion id="modalConfirmacion" tabindex="-1" aria-labelledby="modalConfirmacionLabel" aria-hidden="true">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+        <div class="modal-header">
+            <p></p>
+        </div>
+        <div class="modal-body">
+            <p>Es un requisito obligatorio para acceder al Registro en el Esquema de 
+            Certificacion de Empresas, de conformidad con la regla 7.1.1 de las RGCE.</p>
+        </div>
+        <div class="modal-footer custom-footer">
+            <button type="button" class="btn btn-default" data-bs-dismiss="modal">Aceptar</button>
+        </div>
+    </div>
+  </div>
+</div>

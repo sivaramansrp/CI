@@ -1,6 +1,6 @@
 import { AlertComponent, BtnContinuarComponent, SolicitanteComponent, WizardComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
-import { DatosComunesComponent } from '../32605/components/datos-comunes/datos-comunes.component';
+import { DatosComunesTresComponent } from '../../shared/components/datos-comunes-tres/datos-comunes-tres.component';
 import { NgModule } from '@angular/core';
 import { PantallasComponent } from './pages/pantallas/pantallas.component';
 import { PasoDuosComponent } from './pages/paso-duos/paso-duos.component';
@@ -8,6 +8,7 @@ import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 import { RubroTransporteFerroviarioRoutingModule } from './rubro-transporte-ferroviario-routing.module';
 import { TercerosRelacionadosComponent } from '../../shared/components/terceros-relacionados/terceros-relacionados.component';
+import { TransporteFerroviarioComponent } from './components/transporte-ferroviario/transporte-ferroviario.component';
 
 @NgModule({
   declarations: [
@@ -23,8 +24,9 @@ import { TercerosRelacionadosComponent } from '../../shared/components/terceros-
     BtnContinuarComponent,
     AlertComponent,
     SolicitanteComponent,
-    DatosComunesComponent,
-    TercerosRelacionadosComponent
+    DatosComunesTresComponent,
+    TercerosRelacionadosComponent,
+    TransporteFerroviarioComponent
   ]
 })
 export class RubroTransporteFerroviarioModule { }

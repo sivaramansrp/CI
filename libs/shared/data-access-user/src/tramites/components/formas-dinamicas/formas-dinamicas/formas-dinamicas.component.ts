@@ -1,8 +1,8 @@
 import { AbstractControl, ControlValueAccessor, FormBuilder, FormControl, FormGroup, NG_VALUE_ACCESSOR, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
-import { Component, HostListener, Input, OnInit, Output, forwardRef } from '@angular/core';
+import { CommonModule, NgTemplateOutlet } from '@angular/common';
+import { Component, HostListener, Input, OnInit, Output, TemplateRef, forwardRef } from '@angular/core';
 import { ModeloDeFormaDinamica, Validadores } from '../../../../core/models/shared/forms-model';
 import { CatalogoSelectComponent } from '../../catalogo-select/catalogo-select.component';
-import { CommonModule } from '@angular/common';
 import { EventEmitter } from '@angular/core';
 import { InputFecha } from '../../../../../src/core/models/shared/components.model';
 import { InputFechaComponent } from '../../input-fecha/input-fecha.component';
@@ -43,7 +43,8 @@ import { ValidadoresDeFormulariosComponent } from '../../validadores-de-formular
     CatalogoSelectComponent,
     InputRadioComponent,
     TituloComponent,
-    InputFechaComponent
+    InputFechaComponent,
+    NgTemplateOutlet
   ],
   templateUrl: './formas-dinamicas.component.html',
   styleUrl: './formas-dinamicas.component.scss',
@@ -119,6 +120,8 @@ export class FormasDinamicasComponent implements ControlValueAccessor, OnInit {
   * Por defecto es `false`.
   */
   @Input() soloLectura: boolean = false;
+
+  @Input() templateMap: Record<string, TemplateRef<unknown>> = {};
 
   /**
   * compo doc
