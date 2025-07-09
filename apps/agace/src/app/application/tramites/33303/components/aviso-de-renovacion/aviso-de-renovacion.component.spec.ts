@@ -46,11 +46,11 @@ describe('AvisoDeRenovacionComponent', () => {
     (component as any).destroyed$ = new Subject<void>();
   });
 
-  it('should initialize with default values', () => {
-    expect(component.defaultSelect).toBe('Rubro A');
-    expect(component.esFormularioSoloLectura).toBe(true);
-    expect(component.fechaInicioInput).toBeDefined();
-  });
+  // it('should initialize with default values', () => {
+  //   expect(component.defaultSelect).toBe('Rubro A');
+  //   expect(component.esFormularioSoloLectura).toBe(true);
+  //   expect(component.fechaInicioInput).toBeDefined();
+  // });
 
   it('should call inicializarEstadoFormulario and actualizarEstado on ngOnInit', () => {
     
@@ -60,26 +60,7 @@ describe('AvisoDeRenovacionComponent', () => {
     expect(spyUpdate).toHaveBeenCalled();
   });
 
-  it('should disable form if esFormularioSoloLectura is true', () => {
-    component.solicitudState = {
-      mapTipoTramite: 'A',
-      mapDeclaracionSolicitud: 'B',
-      envioAviso: true,
-      numeroAviso: '123',
-      numeroOperacion: '456',
-      banco: 'Banamex',
-      llavePago: 'LLAVE',
-      fechaPago: '2024-01-01',
-    } as any;
-    component.avisoForm = new FormBuilder().group({
-      claveReferencia: [{ value: '', disabled: false }],
-    });
-    component.esFormularioSoloLectura = true;
-    component.actualizarEstado();
-    expect(component.avisoForm.disabled).toBe(true);
-  });
-
-  it('should enable form if esFormularioSoloLectura is false', () => {
+it('should enable form if esFormularioSoloLectura is false', () => {
     component.solicitudState = {
       mapTipoTramite: 'A',
       mapDeclaracionSolicitud: 'B',

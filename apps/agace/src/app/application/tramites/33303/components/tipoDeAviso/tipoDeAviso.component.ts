@@ -153,11 +153,6 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
       acepto253: [this.solicitudState?.acepto253, Validators.required],
     });
 
-    //  if (this.esFormularioSoloLectura) {
-    //   this.miFormulario.disable();
-    // } else {
-    //   this.miFormulario.enable();
-    // }
   }
 
    /**

@@ -1,108 +1,133 @@
-import { AlertComponent, InputCheckComponent, TituloComponent, FirmaElectronicaComponent, SharedModule, WizardComponent  } from "@ng-mf/data-access-user";
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { AvisoModifyService } from '../../services/aviso-modify.service';
+import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
+import { TipoDeAvisoComponent } from './tipoDeAviso.component';  // Import the standalone component
+import { AvisoUnicoService } from '../../services/aviso-unico.service';
+import { UnicoStore } from '../../estados/renovacion.store';
+import { UnicoQuery } from '../../estados/queries/unico.query';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { of } from 'rxjs';
-import { TipoDeAvisoComponent } from './tipoDeAviso.component';
-import { Tramite32301Query } from '../../estados/tramite32301.query';
-import { Tramite32301Store } from '../../estados/tramite32301.store';
-import { CommonModule } from '@angular/common';
-import { HttpClientModule } from '@angular/common/http';
-import { FormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
 
+class MockAvisoUnicoService {
+  getAvisoModify() {
+    return of({ descripcion: 'Test Description' });
+  }
+}
+
+class MockUnicoStore {
+  setModalidadCertificacion = jasmine.createSpy('setModalidadCertificacion');
+}
+
+class MockUnicoQuery {
+  selectSolicitud$ = of({
+    modalidadCertificacion: 'Initial Certification',
+    foreignClientsSuppliers: true,
+    nationalSuppliers: false,
+    modificationsMembers: true,
+    changesToLegalDocuments: false,
+    mergerOrSplitNotice: false,
+    additionFractions: true,
+    additionmodificación: false,
+    additionPresentación: true,
+    acepto253: true,
+  });
+}
+
+class MockConsultaioQuery {
+  selectConsultaioState$ = of({ readonly: false });
+}
 
 describe('TipoDeAvisoComponent', () => {
   let component: TipoDeAvisoComponent;
   let fixture: ComponentFixture<TipoDeAvisoComponent>;
-  let avisoModifyServiceMock: any;
-  let tramiteQueryMock: any;
-  let tramiteStoreMock: any;
-
-  beforeEach(async () => {
-    avisoModifyServiceMock = {
-      getAvisoModify: jest.fn().mockReturnValue(of({ descripcion: 'Test Description' })),
-    };
-
-    tramiteQueryMock = {
-      select: jest.fn().mockReturnValue(of({ modalidadCertificacion: 'Test Modalidad' })),
-    };
-
-    tramiteStoreMock = {
-      setModalidadCertificacion: jest.fn(),
-      setforeignClientsSuppliers: jest.fn(),
-      setNationalSuppliers: jest.fn(),
-      setModificationsMembers: jest.fn(),
-      setChangesToLegalDocuments: jest.fn(),
-      setMergerOrSplitNotice: jest.fn(),
-      setAdditionFractions: jest.fn(),
-      setAcepto253: jest.fn(),
-    };
-
-    await TestBed.configureTestingModule({
-      declarations: [],
-      imports: [ReactiveFormsModule, AlertComponent, InputCheckComponent, TituloComponent, TipoDeAvisoComponent, FirmaElectronicaComponent, RouterModule,
-                                  FormsModule,
-                                  HttpClientModule,
-                                  WizardComponent,
-                                  SharedModule],
-      providers: [
-        FormBuilder,
-        { provide: AvisoModifyService, useValue: avisoModifyServiceMock },
-        { provide: Tramite32301Query, useValue: tramiteQueryMock },
-        { provide: Tramite32301Store, useValue: tramiteStoreMock },
-      ],
-    }).compileComponents();
-  });
 
   beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [
+        ReactiveFormsModule, // Add ReactiveFormsModule
+        TipoDeAvisoComponent, // Add the standalone component here
+      ],
+      providers: [
+        { provide: AvisoUnicoService, useClass: MockAvisoUnicoService },
+        { provide: UnicoStore, useClass: MockUnicoStore },
+        { provide: UnicoQuery, useClass: MockUnicoQuery },
+        { provide: ConsultaioQuery, useClass: MockConsultaioQuery },
+      ],
+    }).compileComponents();
+
     fixture = TestBed.createComponent(TipoDeAvisoComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
+    fixture.detectChanges(); // triggers ngOnInit
   });
 
-  it('should create the component', () => {
+  // Test: Component Initialization
+  it('should create and initialize the form', () => {
     expect(component).toBeTruthy();
-  });
-
-  it('should initialize the form on component initialization', () => {
     expect(component.miFormulario).toBeDefined();
-    expect(component.miFormulario.get('modalidadCertificacion')?.value).toBeUndefined();
+    expect(component.miFormulario.controls['modalidadCertificacion'].value).toBe('Initial Certification');
   });
 
-  it('should call getAvisoModify and setModalidadCertificacion on inicializamiFormulario', () => {
+  // Test: Form Disabled When `esFormularioSoloLectura` is True
+  it('should disable the form when esFormularioSoloLectura is true', () => {
+    component.esFormularioSoloLectura = true;
+    component.inicializarEstadoFormulario();
+    fixture.detectChanges();
+
+    const modalidadControl = component.miFormulario.controls['modalidadCertificacion'];
+    expect(modalidadControl.disabled).toBe(true);
+  });
+
+  // Test: Form Should be Enabled When `esFormularioSoloLectura` is False
+  it('should enable the form when esFormularioSoloLectura is false', () => {
+    component.esFormularioSoloLectura = false;
+    component.inicializarEstadoFormulario();
+    fixture.detectChanges();
+
+    const modalidadControl = component.miFormulario.controls['modalidadCertificacion'];
+    expect(modalidadControl.enabled).toBe(true);
+  });
+
+  // Test: `inicializamiFormulario()` Method
+  it('should call setModalidadCertificacion with the correct value', () => {
     component.inicializamiFormulario();
-    expect(avisoModifyServiceMock.getAvisoModify).toHaveBeenCalled();
-    expect(tramiteStoreMock.setModalidadCertificacion).toHaveBeenCalledWith('Test Description');
+    expect(component['unicoStore'].setModalidadCertificacion).toHaveBeenCalledWith('Test Description');
   });
 
-  it('should update the form when Tramite32301Query emits a new state', () => {
-    component.ngOnInit();
-    expect(component.tipoDevAviso.modalidadCertificacion).toBe('Test Modalidad');
-  });
+  // Test: `aiEnviar()` Method
+  it('should emit the form value when aiEnviar is called', () => {
+    spyOn(component.tabEnabledData, 'emit');
+    component.miFormulario.controls['modalidadCertificacion'].setValue('Updated Certification');
+    component.aiEnviar();
 
-  it('should emit form values on onSubmit', () => {
-    jest.spyOn(component.tabEnabledData, 'emit');
-    component.miFormulario.setValue({
-      modalidadCertificacion: 'Test',
-      foreignClientsSuppliers: true,
-      nationalSuppliers: false,
-      modificationsMembers: true,
-      changesToLegalDocuments: true,
-      mergerOrSplitNotice: false,
-      additionFractions: true,
-      acepto253: false,
-    });
-    component.onSubmit();
     expect(component.tabEnabledData.emit).toHaveBeenCalledWith({
-      modalidadCertificacion: 'Test',
+      modalidadCertificacion: 'Updated Certification',
       foreignClientsSuppliers: true,
       nationalSuppliers: false,
       modificationsMembers: true,
-      changesToLegalDocuments: true,
+      changesToLegalDocuments: false,
       mergerOrSplitNotice: false,
       additionFractions: true,
-      acepto253: false,
+      additionmodificación: false,
+      additionPresentación: true,
+      acepto253: true,
     });
+  });
+
+  // Test: `ngOnDestroy()` Method
+  it('should call next and complete on destroy$', () => {
+    spyOn(component['destroy$'], 'next');
+    spyOn(component['destroy$'], 'complete');
+
+    component.ngOnDestroy();
+
+    expect(component['destroy$'].next).toHaveBeenCalled();
+    expect(component['destroy$'].complete).toHaveBeenCalled();
+  });
+
+  // Test: Form Validation for Required Field (`acepto253`)
+  it('should mark acepto253 as required', () => {
+    const acepto253Control = component.miFormulario.controls['acepto253'];
+    acepto253Control.setValue('');
+    expect(acepto253Control.valid).toBeFalsy();
+    expect(acepto253Control.hasError('required')).toBeTruthy();
   });
 });
