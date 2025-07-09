@@ -2,12 +2,14 @@ import { AVISO_OPCIONES, CASO_FORTUITO, DESTRUCCION_FECHA, ETIQUETA_DE_ARCHIVO, 
 import { AlertComponent, Catalogo, CatalogoSelectComponent, CatalogosSelect, ConsultaioQuery, ConsultaioState, InputFechaComponent, InputRadioComponent, SeccionLibQuery, SeccionLibState, SeccionLibStore, TituloComponent } from '@libs/shared/data-access-user/src';
 import { AvisoDeMercanciaService } from '../service/aviso-de-mercancia';
 
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, Inject, Input, OnDestroy, OnInit } from '@angular/core';
 import { DestruccionState, DestruccionStore } from '../../estados/Tramite32509.store';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { DestruccionQuery } from '../../estados/Tramite32509.query';
+
+import { DOCUMENT } from '@angular/common';
 
 
 /**
@@ -143,56 +145,97 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
   /** Indica si el formulario es de solo lectura */
   esFormularioSoloLectura: boolean = false;
 
-  public entidadFederativaData: CatalogosSelect = {
+
+  /**
+ * @propiedad {CatalogosSelect} entidadFederativaData
+ * @descripción
+ * Datos del catálogo para la selección de la entidad federativa.
+ * Incluye el nombre de la etiqueta, si es requerido, la primera opción por defecto y los datos del catálogo.
+ */
+public entidadFederativaData: CatalogosSelect = {
     labelNombre: 'Entidad federativa',
     required: true,
     primerOpcion: 'Seleccione una opción',
     catalogos: [],
-  };
+};
 
-  public alcaldiaMunicipoData: CatalogosSelect = {
+/**
+ * @propiedad {CatalogosSelect} alcaldiaMunicipoData
+ * @descripción
+ * Datos del catálogo para la selección de la alcaldía o municipio.
+ * Incluye el nombre de la etiqueta, si es requerido, la primera opción por defecto y los datos del catálogo.
+ */
+public alcaldiaMunicipoData: CatalogosSelect = {
     labelNombre: 'Alcaldía o Municipio',
     required: true,
     primerOpcion: 'Seleccione una opción',
     catalogos: [],
-  };
+};
 
-  public coloniaData: CatalogosSelect = {
+/**
+ * @propiedad {CatalogosSelect} coloniaData
+ * @descripción
+ * Datos del catálogo para la selección de la colonia.
+ * Incluye el nombre de la etiqueta, si es requerido, la primera opción por defecto y los datos del catálogo.
+ */
+public coloniaData: CatalogosSelect = {
     labelNombre: 'Colonia',
     required: true,
     primerOpcion: 'Seleccione una opción',
     catalogos: [],
-  };
+};
 
-  public merccanciaEntidadFederativaData: CatalogosSelect = {
+/**
+ * @propiedad {CatalogosSelect} merccanciaEntidadFederativaData
+ * @descripción
+ * Datos del catálogo para la selección de la entidad federativa relacionada con la mercancía.
+ * Incluye el nombre de la etiqueta, si es requerido, la primera opción por defecto y los datos del catálogo.
+ */
+public merccanciaEntidadFederativaData: CatalogosSelect = {
     labelNombre: 'Entidad federativa',
     required: true,
     primerOpcion: 'Seleccione una opción',
     catalogos: [],
-  };
+};
 
-  
-  public merccanciaAlcaldiaMunicipoData: CatalogosSelect = {
+/**
+ * @propiedad {CatalogosSelect} merccanciaAlcaldiaMunicipoData
+ * @descripción
+ * Datos del catálogo para la selección de la alcaldía o municipio relacionado con la mercancía.
+ * Incluye el nombre de la etiqueta, si es requerido, la primera opción por defecto y los datos del catálogo.
+ */
+public merccanciaAlcaldiaMunicipoData: CatalogosSelect = {
     labelNombre: 'Alcaldía o Municipio',
     required: true,
     primerOpcion: 'Seleccione una opción',
     catalogos: [],
-  };
+};
 
-   
-  public merccanciaColoniaData: CatalogosSelect = {
+/**
+ * @propiedad {CatalogosSelect} merccanciaColoniaData
+ * @descripción
+ * Datos del catálogo para la selección de la colonia relacionada con la mercancía.
+ * Incluye el nombre de la etiqueta, si es requerido, la primera opción por defecto y los datos del catálogo.
+ */
+public merccanciaColoniaData: CatalogosSelect = {
     labelNombre: 'Colonia',
     required: true,
     primerOpcion: 'Seleccione una opción',
     catalogos: [],
-  };
+};
 
-  public tarifaData: CatalogosSelect = {
+/**
+ * @propiedad {CatalogosSelect} tarifaData
+ * @descripción
+ * Datos del catálogo para la selección de la unidad de medida (tarifa).
+ * Incluye el nombre de la etiqueta, si es requerido, la primera opción por defecto y los datos del catálogo.
+ */
+public tarifaData: CatalogosSelect = {
     labelNombre: 'Unidad de medida (Tarifa)',
     required: true,
     primerOpcion: 'Seleccione una opción',
     catalogos: [],
-  };
+};
 
   /**
    * @constructor
@@ -209,7 +252,9 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
     private seccionStore: SeccionLibStore,
     private seccionQuery: SeccionLibQuery,
     private avisodemercancia: AvisoDeMercanciaService,
-    private consultaioQuery: ConsultaioQuery
+    private consultaioQuery: ConsultaioQuery,
+    @Inject(DOCUMENT) private document: Document
+
   ) {}
 
   /**

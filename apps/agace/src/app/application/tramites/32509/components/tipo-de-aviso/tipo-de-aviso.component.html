@@ -231,7 +231,9 @@
                 </div>
             </div>
         </div>
-    <div *ngIf="avisoValor === 'deposito_fiscal' || avisoValor === 'fisco_federal'">
+        
+        @if(avisoValor === 'deposito_fiscal' || avisoValor === 'fisco_federal'){
+
         <div class="col-md-12">
             <ng-titulo titulo="Causas que motivan la destrucción" />
         </div>
@@ -258,9 +260,10 @@
                     >
                 </div>
             </div>
-        </div>
-        <div *ngIf="avisoValor === 'deposito_fiscal' || avisoValor === 'fisco_federal'">
-
+        
+         </div>
+    
+     @if(avisoValor === 'deposito_fiscal' || avisoValor === 'fisco_federal'){
         <div class="col-md-12">
             <ng-titulo titulo="Lugar donde se encuentra la mercancía y cantidad de mercancía" />
         </div>
@@ -307,8 +310,8 @@
                ></app-catalogo-select>
                 </div>
             </div>
-        </div>
-        <div class="row mt-5">
+         </div>
+         <div class="row mt-5">
             <div class="col-md-12">
                 <div class="form-group">
                     <label class="form-label" for="merccanciaCalle">Calle*:</label>
@@ -327,8 +330,8 @@
                     >
                 </div>
             </div>
-        </div>
-        <div class="row mt-5">
+          </div>
+          <div class="row mt-5">
             <div class="col-md-4">
                 <div class="form-group">
                     <label class="form-label" for="merccanciaNumeroExterior">Número exterior*:</label>
@@ -383,8 +386,8 @@
                     >
                 </div>
             </div>
-        </div>
-        <div class="row mt-5">
+         </div>
+         <div class="row mt-5">
             <div class="col-md-4">
                 <div class="form-group">
                     <label class="form-label" for="destruir">Cantidad de mercancías a destruir*:</label>
@@ -416,10 +419,12 @@
                     [isDisabled]="esFormularioSoloLectura" 
                ></app-catalogo-select>
                 </div>
-            </div>
+            </div>    
         </div>
-        </div>
-    <div *ngIf="avisoValor === 'deposito_fiscal'">
+    
+      }
+        @if(avisoValor === 'deposito_fiscal'){
+
         <div class="col-md-12">
             <ng-titulo titulo="Lugar donde se llevará a cabo la destrucción de la mercancía" />
         </div>
@@ -537,9 +542,10 @@
                 </div>
             </div>
         </div>
-    </div>
-    <div *ngIf="avisoValor === 'deposito_fiscal'">
-        <div class="row mt-5">
+     }
+        @if(avisoValor === 'deposito_fiscal'){
+
+          <div class="row mt-5">
                 <ng-alert [CONTENIDO]="MENSAJE"></ng-alert>
             </div>
             <div class="row mt-5">
@@ -607,8 +613,8 @@
                   ></app-input-radio>
                 </div>
             </div>
-        </div>
-        <div *ngIf="avisoValor === 'deposito_fiscal'">
+     }
+            @if(avisoValor === 'deposito_fiscal'){
             <div class="col-md-12">
                 <ng-titulo titulo="Datos de las mercancías" />
             </div>
@@ -633,10 +639,11 @@
                         archivo</button>
                 </div>
             </div>
-        </div>        
-    </div>
+        }
+      }
+
    
-    <div *ngIf="avisoValor === 'fisco_federal'">
+        @if(avisoValor === 'fisco_federal'){
 
             <div class="row mt-5">
                 <ng-alert [CONTENIDO]="TEXTO"></ng-alert>
@@ -681,6 +688,7 @@
                     </div>
                 </div>
             </div>
-    </div>
-    </form>
+        }
+   </form>
+
 </div>

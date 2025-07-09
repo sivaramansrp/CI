@@ -49,34 +49,75 @@ export class AvisoDeMercanciaService {
     return this.httpClient.get<DestruccionState>('assets/json/32509/tipo_form.json');
   }
 
-  getEntidadFederativaData(): Observable<Catalogo[]> {
-    return this.httpClient.get<Catalogo[]>('assets/json/32509/domicilio.json');
-  }
+/**
+ * @method getEntidadFederativaData
+ * Obtiene los datos de las entidades federativas desde un archivo JSON local.
+ * 
+ * @returns {Observable<Catalogo[]>} Observable con la lista de entidades federativas.
+ */
+getEntidadFederativaData(): Observable<Catalogo[]> {
+  return this.httpClient.get<Catalogo[]>('assets/json/32509/domicilio.json');
+}
 
-  getAlcaldiaMunicipo(): Observable<Catalogo[]> {
-    return this.httpClient.get<Catalogo[]>('./assets/json/32509/alcaldio.json');
-  }
+/**
+* @method getAlcaldiaMunicipo
+* Obtiene los datos de las alcaldías o municipios desde un archivo JSON local.
+* 
+* @returns {Observable<Catalogo[]>} Observable con la lista de alcaldías o municipios.
+*/
+getAlcaldiaMunicipo(): Observable<Catalogo[]> {
+  return this.httpClient.get<Catalogo[]>('./assets/json/32509/alcaldio.json');
+}
 
-  getColonia(): Observable<Catalogo[]> {
-    return this.httpClient.get<Catalogo[]>('./assets/json/32509/colonia.json');
-  }
-  
-  getMerccanciaEntidadFederativa(): Observable<Catalogo[]> {
-    return this.httpClient.get<Catalogo[]>('./assets/json/32509/domicilio.json');
-  }
+/**
+* @method getColonia
+* Obtiene los datos de las colonias desde un archivo JSON local.
+* 
+* @returns {Observable<Catalogo[]>} Observable con la lista de colonias.
+*/
+getColonia(): Observable<Catalogo[]> {
+  return this.httpClient.get<Catalogo[]>('./assets/json/32509/colonia.json');
+}
 
-  getMerccanciaAlcaldiaMunicipo(): Observable<Catalogo[]> {
-    return this.httpClient.get<Catalogo[]>('./assets/json/32509/alcaldiaomunicipio.json');
-  }
+/**
+* @method getMerccanciaEntidadFederativa
+* Obtiene los datos de las entidades federativas relacionadas con la mercancía desde un archivo JSON local.
+* 
+* @returns {Observable<Catalogo[]>} Observable con la lista de entidades federativas de la mercancía.
+*/
+getMerccanciaEntidadFederativa(): Observable<Catalogo[]> {
+  return this.httpClient.get<Catalogo[]>('./assets/json/32509/domicilio.json');
+}
 
-  getMerccanciaColonia(): Observable<Catalogo[]> {
-    return this.httpClient.get<Catalogo[]>('./assets/json/32509/mercanciascolonia.json');
-  }
+/**
+* @method getMerccanciaAlcaldiaMunicipo
+* Obtiene los datos de las alcaldías o municipios relacionados con la mercancía desde un archivo JSON local.
+* 
+* @returns {Observable<Catalogo[]>} Observable con la lista de alcaldías o municipios de la mercancía.
+*/
+getMerccanciaAlcaldiaMunicipo(): Observable<Catalogo[]> {
+  return this.httpClient.get<Catalogo[]>('./assets/json/32509/alcaldiaomunicipio.json');
+}
 
-  getTarifa(): Observable<Catalogo[]> {
-    return this.httpClient.get<Catalogo[]>('./assets/json/32509/unidaddemedia.json');
-  }
+/**
+* @method getMerccanciaColonia
+* Obtiene los datos de las colonias relacionadas con la mercancía desde un archivo JSON local.
+* 
+* @returns {Observable<Catalogo[]>} Observable con la lista de colonias de la mercancía.
+*/
+getMerccanciaColonia(): Observable<Catalogo[]> {
+  return this.httpClient.get<Catalogo[]>('./assets/json/32509/mercanciascolonia.json');
+}
 
+/**
+* @method getTarifa
+* Obtiene los datos de las tarifas desde un archivo JSON local.
+* 
+* @returns {Observable<Catalogo[]>} Observable con la lista de tarifas.
+*/
+getTarifa(): Observable<Catalogo[]> {
+  return this.httpClient.get<Catalogo[]>('./assets/json/32509/unidaddemedia.json');
+}
 
   /**
    * @method actualizarEstadoFormulario
