@@ -1,35 +1,50 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { AlertComponent, TituloComponent } from "@ng-mf/data-access-user";
+import { AdicionProcesosComponent } from './adicionProcesos.component';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { of, Subject } from 'rxjs';
-import { AdicionProcesosComponent } from './adicionProcesos.component';
-import { Tramite32301Query } from '../../estados/tramite32301.query';
 import { Tramite32301Store } from '../../estados/tramite32301.store';
-import { Modal } from 'bootstrap';
+import { Tramite32301Query } from '../../estados/tramite32301.query';
+import { AlertComponent, ConsultaioQuery, NotificacionesComponent, TituloComponent } from '@ng-mf/data-access-user';
+import { Notificacion } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('AdicionProcesosComponent', () => {
   let component: AdicionProcesosComponent;
   let fixture: ComponentFixture<AdicionProcesosComponent>;
-  let mockStore: jest.Mocked<Tramite32301Store>;
-  let mockQuery: jest.Mocked<Tramite32301Query>;
+  let storeMock: any;
+  let queryMock: any;
+  let consultaioQueryMock: any;
 
   beforeEach(async () => {
-    mockStore = {
+    storeMock = {
       setRegistrosProveedoresExtranjeros: jest.fn(),
-    } as unknown as jest.Mocked<Tramite32301Store>;
-
-    mockQuery = {
-      select: jest.fn().mockReturnValue(of({ archivoExtranjero: [], registrosProveedoresExtranjeros: '0' })),
-    } as unknown as jest.Mocked<Tramite32301Query>;
+    };
+    queryMock = {
+      select: jest.fn().mockReturnValue(of({
+        archivoExtranjero: [],
+        registrosProveedoresExtranjeros: '0',
+      })),
+    };
+    consultaioQueryMock = {
+      selectConsultaioState$: of({ readonly: false }),
+    };
 
     await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule, CommonModule, ReactiveFormsModule, TituloComponent, AlertComponent, AdicionProcesosComponent],
+      imports: [ReactiveFormsModule,
+         CommonModule,
+         AdicionProcesosComponent,
+         TituloComponent,
+         AlertComponent,
+         NotificacionesComponent,
+         HttpClientTestingModule
+      ],
       declarations: [],
       providers: [
         FormBuilder,
-        { provide: Tramite32301Store, useValue: mockStore },
-        { provide: Tramite32301Query, useValue: mockQuery },
+        { provide: Tramite32301Store, useValue: storeMock },
+        { provide: Tramite32301Query, useValue: queryMock },
+        { provide: ConsultaioQuery, useValue: consultaioQueryMock },
       ],
     }).compileComponents();
 
@@ -42,58 +57,122 @@ describe('AdicionProcesosComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize titles and call store methods on ngOnInit', () => {
+  it('should initialize ProveedoresTitulo and call inicializarEstadoFormulario on ngOnInit', () => {
+    const spy = jest.spyOn(component, 'inicializarEstadoFormulario');
     component.ngOnInit();
     expect(component.ProveedoresTitulo).toBe('Proceso(s) productivo(s)*');
-    expect(mockStore.setRegistrosProveedoresExtranjeros).toHaveBeenCalledWith({
+    expect(spy).toHaveBeenCalled();
+  });
+
+  it('should call guardarDatosFormulario if esFormularioSoloLectura is true', () => {
+    const spy = jest.spyOn(component, 'guardarDatosFormulario');
+    component.esFormularioSoloLectura = true;
+    component.inicializarEstadoFormulario();
+    expect(spy).toHaveBeenCalled();
+  });
+
+  it('should call inicializarFormulario if esFormularioSoloLectura is false', () => {
+    const spy = jest.spyOn(component, 'inicializarFormulario');
+    component.esFormularioSoloLectura = false;
+    component.inicializarEstadoFormulario();
+    expect(spy).toHaveBeenCalled();
+  });
+
+  it('should disable form if esFormularioSoloLectura is true in guardarDatosFormulario', () => {
+    component.inicializarFormulario = jest.fn(() => {
+      component.proveedorXtranjForm = new FormBuilder().group({
+        archivoExtranjero: [''],
+        registrosProveedoresExtranjeros: [{ value: '', disabled: true }],
+      });
+    }) as any;
+    component.esFormularioSoloLectura = true;
+    component.guardarDatosFormulario();
+    expect(component.proveedorXtranjForm.disabled).toBe(true);
+  });
+
+  it('should enable form if esFormularioSoloLectura is false in guardarDatosFormulario', () => {
+    component.inicializarFormulario = jest.fn(() => {
+      component.proveedorXtranjForm = new FormBuilder().group({
+        archivoExtranjero: [''],
+        registrosProveedoresExtranjeros: [{ value: '', disabled: true }],
+      });
+    }) as any;
+    component.esFormularioSoloLectura = false;
+    component.guardarDatosFormulario();
+    expect(component.proveedorXtranjForm.enabled).toBe(true);
+  });
+
+  it('should call setRegistrosProveedoresExtranjeros on inicializaProveedorExtranjer', () => {
+    component.inicializaProveedorExtranjer();
+    expect(storeMock.setRegistrosProveedoresExtranjeros).toHaveBeenCalledWith({
       archivoExtranjero: [],
       registrosProveedoresExtranjeros: '0',
     });
   });
 
-  it('should create the form with correct initial values', () => {
+  it('should create the form with crearFormProveedorExtranjer', () => {
+    component.proveedorExtranjero = {
+      archivoExtranjero: ['file'],
+      registrosProveedoresExtranjeros: '1',
+    } as any;
     component.crearFormProveedorExtranjer();
-    expect(component.proveedorXtranjForm.value).toEqual({
-      archivoExtranjero: null,
-      registrosProveedoresExtranjeros: { value: '0', disabled: true },
+    expect(component.proveedorXtranjForm.get('archivoExtranjero')?.value).toEqual(['file']);
+    expect(component.proveedorXtranjForm.get('registrosProveedoresExtranjeros')?.disabled).toBe(true);
+  });
+
+  it('should patch value and update validity on file selected', () => {
+    component.proveedorXtranjForm = new FormBuilder().group({
+      archivoExtranjero: [''],
+      registrosProveedoresExtranjeros: [{ value: '', disabled: true }],
+    });
+    const file = new File([''], 'filename.txt');
+    const event = {
+      target: {
+        files: [file],
+      },
+    } as any as Event;
+    const patchSpy = jest.spyOn(component.proveedorXtranjForm, 'patchValue');
+    const updateSpy = jest.spyOn(component.proveedorXtranjForm.get('archivoExtranjero')!, 'updateValueAndValidity');
+    component.onFileSelected(event);
+    expect(patchSpy).toHaveBeenCalledWith({ archivoExtranjero: file });
+    expect(updateSpy).toHaveBeenCalled();
+  });
+
+  it('should call openCargaExtranjeroModel if no file is selected', () => {
+    component.proveedorXtranjForm = new FormBuilder().group({
+      archivoExtranjero: [''],
+      registrosProveedoresExtranjeros: [{ value: '', disabled: true }],
+    });
+    const spy = jest.spyOn(component, 'openCargaExtranjeroModel');
+    const event = {
+      target: {
+        files: [],
+      },
+    } as any as Event;
+    component.onFileSelected(event);
+    expect(spy).toHaveBeenCalled();
+  });
+
+  it('should set nuevaNotificacion with correct values in openCargaExtranjeroModel', () => {
+    component.openCargaExtranjeroModel();
+    expect(component.nuevaNotificacion).toEqual({
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: 'El archivo debe contener al menos un registro.',
+      cerrar: false,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
     });
   });
 
-  it('should patch form value on file selection', () => {
-    const mockFile = new File(['content'], 'test.txt', { type: 'text/plain' });
-    const event = { target: { files: [mockFile] } } as unknown as Event;
-
-    component.crearFormProveedorExtranjer();
-    component.onFileSelected(event);
-
-    expect(component.proveedorXtranjForm.get('archivoExtranjero')?.value).toBe(mockFile);
-  });
-
-  it('should open the modal when no file is selected', () => {
-    const modalInstance = { show: jest.fn() } as unknown as Modal;
-    component.CargaExtranjeroModelInstance = modalInstance;
-
-    const event = { target: { files: null } } as unknown as Event;
-    component.onFileSelected(event);
-
-    expect(modalInstance.show).toHaveBeenCalled();
-  });
-
-  it('should close the modal when closeCargaExtranjeroModel is called', () => {
-    const modalInstance = { hide: jest.fn() } as unknown as Modal;
-    component.CargaExtranjeroModelInstance = modalInstance;
-
-    component.closeCargaExtranjeroModel();
-    expect(modalInstance.hide).toHaveBeenCalled();
-  });
-
-  it('should clean up subscriptions on ngOnDestroy', () => {
-    const destroySpy = jest.spyOn(component['destroy$'], 'next');
-    const completeSpy = jest.spyOn(component['destroy$'], 'complete');
-
+  it('should complete destroy$ on ngOnDestroy', () => {
+    const nextSpy = jest.spyOn((component as any).destroy$, 'next');
+    const completeSpy = jest.spyOn((component as any).destroy$, 'complete');
     component.ngOnDestroy();
-
-    expect(destroySpy).toHaveBeenCalled();
+    expect(nextSpy).toHaveBeenCalled();
     expect(completeSpy).toHaveBeenCalled();
   });
 });

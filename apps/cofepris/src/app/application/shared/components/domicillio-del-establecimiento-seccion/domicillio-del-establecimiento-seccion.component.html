@@ -10,12 +10,15 @@
 
       <div>
         <input
-          type="text"
+          type="text" maxlength="245"
           id="establecimientoDomicilioCodigoPostalId"
           formControlName="establecimientoDomicilioCodigoPostal"
           class="form-control"
           (change)="onControlChange('establecimientoDomicilioCodigoPostal')"
         />
+        <div *ngIf="hasError('establecimientoDomicilioCodigoPostal', 'required')" class="text-danger mt-1">
+          Este campo es obligatorio
+        </div>
       </div>
     </div>
 
@@ -27,7 +30,9 @@
          [isDisabled]="formularioDeshabilitado"
         formControlName="establecimientoDomicilioEstado"
         (change)="onControlChange('establecimientoDomicilioEstado')"
+        [required]="true"
       ></app-catalogo-select>
+      
     </div>
 
     <div id="establecimientoMunicipioYAlcaldia" class="col-md-4">
@@ -37,23 +42,26 @@
 
       <div>
         <input
-          type="text"
+          type="text" maxlength="245"
           id="establecimientoMunicipioYAlcaldiaId"
           formControlName="establecimientoMunicipioYAlcaldia"
           class="form-control"
           (change)="onControlChange('establecimientoMunicipioYAlcaldia')"
         />
+        <div *ngIf="hasError('establecimientoMunicipioYAlcaldia', 'required')" class="text-danger mt-1">
+          Este campo es obligatorio
+        </div>
       </div>
     </div>
   </div>
   <div class="row">
     <div id="establecimientoDomicilioLocalidad" class="col-md-4">
       <label for="establecimientoDomicilioLocalidad"
-        >Localidad <span class="require">*</span>:</label
+        >Localidad:</label
       >
       <div>
         <input
-          type="text"
+          type="text" maxlength="245"
           id="establecimientoDomicilioLocalidadId"
           formControlName="establecimientoDomicilioLocalidad"
           class="form-control"
@@ -64,11 +72,11 @@
 
     <div id="establecimientoDomicilioColonia" class="col-md-4">
       <label for="establecimientoDomicilioColonia"
-        >Colonia <span class="require">*</span>:</label
+        >Colonia:</label
       >
       <div>
         <input
-          type="text"
+          type="text" maxlength="245"
           id="establecimientoDomicilioColoniaId"
           formControlName="establecimientoDomicilioColonia"
           class="form-control"
@@ -82,27 +90,30 @@
   <div class="row">
     <div id="establecimientoDomicilioCalle" class="col-md-8">
       <label for="establecimientoDomicilioCalle"
-        >Calle <span class="require">*</span>:</label
+        >Calle <span class="bi bi-question-circle-fill require" data-bs-toggle="tooltip">*</span>:</label
       >
       <div>
         <input
-          type="text"
+          type="text" maxlength="245"
           id="establecimientoDomicilioCalleId"
           formControlName="establecimientoDomicilioCalle"
           class="form-control"
           (change)="onControlChange('establecimientoDomicilioCalle')"
         />
+        <div *ngIf="hasError('establecimientoDomicilioCalle', 'required')" class="text-danger mt-1">
+          Este campo es obligatorio
+        </div>
       </div>
     </div>
   </div>
-  <div class="row">
+  <div class="row mb-5">
     <div id="establecimientoDomicilioLada" class="col-md-1">
       <label for="establecimientoDomicilioLada"
         >Lada <span class="require">*</span>:</label
       >
       <div>
         <input
-          type="text"
+          type="text" maxlength="245"
           id="establecimientoDomicilioLadaId"
           formControlName="establecimientoDomicilioLada"
           class="form-control"
@@ -117,12 +128,15 @@
       >
       <div>
         <input
-          type="text"
+          type="text" maxlength="245"
           id="establecimientoDomicilioTelefonoId"
           formControlName="establecimientoDomicilioTelefono"
           class="form-control"
           (change)="onControlChange('establecimientoDomicilioTelefono')"
         />
+        <div *ngIf="hasError('establecimientoDomicilioTelefono', 'required')" class="text-danger mt-1">
+          Este campo es obligatorio
+        </div>
       </div>
     </div>
 
@@ -150,14 +164,14 @@
     </div>
 
  
-  <div class="row">
+  <div class="row pt-6">
     <div id="rfcDelProfesionalResponsable" class="col-md-4">
       <label for="rfcDelProfesionalResponsable"
         >RFC del profesional responsable :</label
       >
       <div>
         <input
-          type="text"
+          type="text" maxlength="245"
           id="rfcDelProfesionalResponsableId"
           formControlName="rfcDelProfesionalResponsable"
           class="form-control"
@@ -172,7 +186,7 @@
       >
       <div>
         <input
-          type="text"
+          type="text" maxlength="245"
           id="nombreDelProfesionalResponsableId"
           formControlName="nombreDelProfesionalResponsable"
           class="form-control"
@@ -186,7 +200,7 @@
     <div class="col-md-4">
       <div class="form-check">
         <input
-          type="checkbox"
+          type="checkbox" maxlength="245"
           id="avisoDeFuncionamientoId"
           formControlName="avisoDeFuncionamiento"
           class="form-check-input"
@@ -202,7 +216,7 @@
 
       <div class="d-flex flex-column align-items-end">
         <input
-          type="text"
+          type="text" maxlength="245"
           id="noDeLicenciaSanitariaId"
           formControlName="noDeLicenciaSanitaria"
           class="form-control"
@@ -215,15 +229,15 @@
         <div class="col-md-12 row mt-4">
           <textarea
             id="message"
-            class="form-control mb-5"
+            class="form-control mb-5 h-100"
             placeholder=""
             formControlName="noDeLicenciaSanitariaObservaciones"
             (change)="onControlChange('noDeLicenciaSanitariaObservaciones')"
-            rows="15"
+            row="4"
           ></textarea>
         </div>
         <div>
-          <button type="button" class="btn btn-primary" [disabled]="isCheckboxChecked()" [disabled]="formularioDeshabilitado ? true : false">Eliminar</button>
+          <button type="button" class=" btn btn-danger" [disabled]="isCheckboxChecked()" [disabled]="formularioDeshabilitado ? true : false">Eliminar</button>
         </div>
       </div>
     </div>
@@ -281,14 +295,13 @@
           </div>
           <div class="row">
             <div class="col-md-8">
-              <label for="descripcionScian">Descripción del S.C.I.A.N.</label>
-              <input
-                type="text"
-                id="descripcionScianId"
+              <app-catalogo-select
+                [catalogo]="scianJson"
+                [label]="'Descripción del S.C.I.A.N.*'"
+                [placeholder]="'Seleccione una valor'"
                 formControlName="descripcionScian"
-                class="form-control"
                 (change)="onControlChange('descripcionScian')"
-              />
+              ></app-catalogo-select>
             </div>
           </div>
         </div>

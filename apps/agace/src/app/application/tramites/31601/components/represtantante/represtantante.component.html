@@ -24,15 +24,16 @@
               <input
                 class="form-control"
                 id="rfc"
-                formControlName="rfc"
+                formControlName="rfcDatos"
                 type="text"
+                (change)="setValoresStore(represtantante,'rfcDatos', 'setRfcDatos')"
               />
             </div>
           </div>
 
           <div class="col-md-4 d-flex align-items-center">
             <div class="btn-group">
-              <button class="btn btn-default" type="button" disabled="esFormularioSoloLectura ? true : false">Buscar</button>
+              <button class="btn btn-default" type="button"  [disabled]="esFormularioSoloLectura" (click)="openBuscar()">Buscar</button>
             </div>
           </div>
         </div>
@@ -45,6 +46,7 @@
                 id="nombre"
                 formControlName="nombre"
                 type="text"
+                (change)="setValoresStore(represtantante,'nombre', 'setNombre')"
               />
             </div>
           </div>
@@ -58,6 +60,7 @@
                 id="apellidoPaterno"
                 formControlName="apellidoPaterno"
                 type="text"
+                (change)="setValoresStore(represtantante,'apellidoPaterno', 'setApellidoPaterno')"
               />
             </div>
           </div>
@@ -71,6 +74,7 @@
                 id="apellidoMaterno"
                 formControlName="apellidoMaterno"
                 type="text"
+                (change)="setValoresStore(represtantante,'apellidoMaterno', 'setApellidoMaterno')"
               />
             </div>
           </div>
@@ -104,4 +108,10 @@
       </ng-container>
     </form>
   </div>
+  @if (nuevaNotificacion) {
+<section>
+  <lib-notificaciones [notificacionInput]="nuevaNotificacion" >
+  </lib-notificaciones>
+</section>
+}
 </div>

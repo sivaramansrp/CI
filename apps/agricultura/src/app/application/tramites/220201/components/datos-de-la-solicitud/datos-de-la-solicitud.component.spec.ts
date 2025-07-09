@@ -15,6 +15,8 @@ import { CertificadoZoosanitarioServiceService } from '../../services/220201/cer
 import { ZoosanitarioQuery } from '../../queries/220201/zoosanitario.query';
 import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 import { ToastrModule } from 'ngx-toastr';
+import { ActivatedRoute } from '@angular/router';
+import { MockCertificadoEnum } from '../../constantes/mockCertificado.enum';
 
 describe('DatosDeLaSolicitudComponent', () => {
   let component: DatosDeLaSolicitudComponent;
@@ -22,18 +24,30 @@ describe('DatosDeLaSolicitudComponent', () => {
   let httpMock: HttpTestingController;
   let destroyNotifier$: Subject<void>;
 
-  const mockCertificadoService = {
-    actualizarFormaValida: jest.fn(),
-    updateDatosDeLaSolicitud: jest.fn(),
-  };
+const mockCertificadoService = {
+  actualizarFormaValida: jest.fn(),
+  updateDatosDeLaSolicitud: jest.fn(),
+  getAllDatosForma: jest.fn(() =>
+    of({
+      datos: {
+        tipoMercancia: MockCertificadoEnum.tipoMercancia,
+        aduanaIngreso: MockCertificadoEnum.aduanaIngreso,
+        oficinaInspeccion: MockCertificadoEnum.oficinaInspeccion,
+        puntoInspeccion: MockCertificadoEnum.puntoInspeccion,
+        regimen: MockCertificadoEnum.regimen,
+      },
+      tablaDatos: [],
+    })
+  ),
+};
 
   const mockZoosanitarioQuery = {
     seleccionarDatosSolicitud$: of({
-      tipoMercancia: 'yes',
-      aduanaIngreso: '123',
-      oficinaInspeccion: '456',
-      puntoInspeccion: '789',
-      regimen: 'A1',
+      tipoMercancia: MockCertificadoEnum.tipoMercancia,
+      aduanaIngreso: MockCertificadoEnum.aduanaIngreso,
+      oficinaInspeccion: MockCertificadoEnum.oficinaInspeccion,
+      puntoInspeccion: MockCertificadoEnum.puntoInspeccion,
+      regimen: MockCertificadoEnum.regimen,
     }),
   };
 
@@ -41,33 +55,35 @@ describe('DatosDeLaSolicitudComponent', () => {
     selectConsultaioState$: of({ readonly: true }),
   };
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [
-        ReactiveFormsModule,
-        HttpClientTestingModule,
-        TituloComponent,
-        CatalogoSelectComponent,
-        InputRadioComponent,
-        AlertComponent,
-        TablaDinamicaComponent,
-        NotificacionesComponent,
-        DatosDeLaSolicitudComponent,
-        ToastrModule.forRoot(),
-      ],
-      providers: [
-        { provide: CertificadoZoosanitarioServiceService, useValue: mockCertificadoService },
-        { provide: ZoosanitarioQuery, useValue: mockZoosanitarioQuery },
-        { provide: ConsultaioQuery, useValue: mockConsultaQuery },
-      ],
-    }).compileComponents();
+beforeEach(async () => {
+  await TestBed.configureTestingModule({
+    imports: [
+      ReactiveFormsModule,
+      HttpClientTestingModule,
+      TituloComponent,
+      CatalogoSelectComponent,
+      InputRadioComponent,
+      AlertComponent,
+      TablaDinamicaComponent,
+      NotificacionesComponent,
+      DatosDeLaSolicitudComponent,
+      ToastrModule.forRoot()
+    ],
+    providers: [
+      { provide: ActivatedRoute, useValue: { snapshot: { paramMap: { get: () => null } } } }, // ✅ Mocked properly
+      { provide: CertificadoZoosanitarioServiceService, useValue: mockCertificadoService },
+      { provide: ZoosanitarioQuery, useValue: mockZoosanitarioQuery },
+      { provide: ConsultaioQuery, useValue: mockConsultaQuery },
+    ],
+  }).compileComponents();
 
-    fixture = TestBed.createComponent(DatosDeLaSolicitudComponent);
-    component = fixture.componentInstance;
-    httpMock = TestBed.inject(HttpTestingController);
-    destroyNotifier$ = (component as any).destroyNotifier$;
-    fixture.detectChanges();
-  });
+  fixture = TestBed.createComponent(DatosDeLaSolicitudComponent);
+  component = fixture.componentInstance;
+  httpMock = TestBed.inject(HttpTestingController);
+  destroyNotifier$ = (component as any).destroyNotifier$;
+  fixture.detectChanges();
+});
+
 
   it('should create', () => {
     expect(component).toBeTruthy();
@@ -267,5 +283,9 @@ it('should call actualizarFormaValida when form is valid', fakeAsync(() => {
   flush();
   expect(mockCertificadoService.actualizarFormaValida).toHaveBeenCalledWith({ dataDeLaSolicitud: true });
 }));
-
+it('should create the form group with crearFormulario', () => {
+  component.crearFormulario();
+  expect(component.forma).toBeDefined();
+  expect(component.forma.get('datosDelaSolicitud')).toBeDefined();
+});
 });

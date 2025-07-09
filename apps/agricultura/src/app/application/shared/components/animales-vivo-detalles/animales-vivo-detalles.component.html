@@ -28,8 +28,10 @@
             </div>
             <div class="col-md-8 form-group">
                 <label class="form-label">Descripción de la fracción arancelaria*</label>
-                <input type="text" class="form-control" formControlName="descripcionFraccion"
-                     />
+                <input type="text" class="form-control" formControlName="descripcionFraccion" maxlength="1000" />
+                <div *ngIf="mercanciaForm.get('descripcionFraccion')?.hasError('maxlength') && mercanciaForm.get('descripcionFraccion')?.touched" class="text-danger">
+                    Por favor, no escribas más de 1000 caracteres
+                </div>
             </div>
         </div>
 
@@ -55,7 +57,13 @@
         <div class="row mt-5">
             <div class="col-md-4 form-group">
                 <label class="form-label">Cantidad UMT*</label>
-                <input type="text" class="form-control" formControlName="cantidadUMT"  />
+                <input type="text" class="form-control" formControlName="cantidadUMT" />
+                <div *ngIf="mercanciaForm.get('cantidadUMT')?.hasError('pattern') && mercanciaForm.get('cantidadUMT')?.touched" class="text-danger">
+                    Este campo permite doce números enteros y hasta tres decimales
+                </div>
+                <div *ngIf="mercanciaForm.get('cantidadUMT')?.hasError('max') && mercanciaForm.get('cantidadUMT')?.touched" class="text-danger">
+                    Por favor, escribe un valor menor o igual a 999999999999.999
+                </div>
             </div>
             <div class="col-md-4">
                 <app-catalogo-select [catalogo]="catalogosDatos.umtList" formControlName="umt" [label]="'UMT'" [required]="true"
@@ -65,7 +73,13 @@
         <div class="row">
             <div class="col-md-4 form-group">
                 <label class="form-label">Cantidad UMC*</label>
-                <input type="text" class="form-control" formControlName="cantidadUMC"  />
+                <input type="text" class="form-control" formControlName="cantidadUMC" />
+                <div *ngIf="mercanciaForm.get('cantidadUMC')?.hasError('pattern') && mercanciaForm.get('cantidadUMC')?.touched" class="text-danger">
+                    Este campo permite doce números enteros y hasta tres decimales
+                </div>
+                <div *ngIf="mercanciaForm.get('cantidadUMC')?.hasError('max') && mercanciaForm.get('cantidadUMC')?.touched" class="text-danger">
+                    Por favor, escribe un valor menor o igual a 999999999999.999
+                </div>
             </div>
             <div class="col-md-4">
                 <app-catalogo-select [catalogo]="catalogosDatos.umcList" formControlName="umc" [label]="'UMC'" [required]="true"
@@ -175,8 +189,8 @@
             <div class="row mt-2">
           <div class="col-md-12 d-flex justify-content-end">
               <button type="button" class="btn btn-default ms-3" (click)="limpiarAnimalesVivo()">Limpiar</button>
-              <button type="button" class="btn btn-default ms-3">Cancelar</button>
-              <button type="button" class="btn btn-primary ms-3">Agregar</button>
+              <button type="button" class="btn btn-default ms-3" (click)="cancelar()">Cancelar</button>
+              <button type="button" class="btn btn-primary ms-3" (click)="agregarAnimales()">Agregar</button>
           </div>
         </div>
 </div>

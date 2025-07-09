@@ -1,0 +1,11 @@
+{
+  "datos": [
+    { "id": 0, "codigo": "TPT", "descripcion": "Transporte de Pasajeros" },
+    { "id": 1, "codigo": "CARG", "descripcion": "Transporte Exclusivo de Carga" },
+    { "id": 2, "codigo": "MIXTO", "descripcion": "Transporte Mixto (Pasajeros y Carga)" },
+    { "id": 3, "codigo": "PRIV", "descripcion": "Aviación Privada" },
+    { "id": 4, "codigo": "ESC", "descripcion": "Escuela de Vuelo" },
+    { "id": 5, "codigo": "ESP", "descripcion": "Servicios Aéreos Especializados" },
+    { "id": 6, "codigo": "MED", "descripcion": "Evacuación Médica (Ambulancia Aérea)" }
+  ]
+}

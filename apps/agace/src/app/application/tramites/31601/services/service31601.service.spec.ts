@@ -27,7 +27,7 @@ describe('Solocitud31601Service', () => {
       'setComboBimestresDos', 'setComboBimestresTres', 'setProveedorCumplimiento', 'setDeclaracionISR',
       'setCancelacion', 'setCumplimientoReglas', 'setRecintoFiscalizado', 'setRecintoEstrategico',
       'setCumplimientoLineamientos', 'setManifieste', 'setIndiqueIva', 'setEmpleados', 'setInfraestructura',
-      'setMonto', 'setAntiguedad', 'setTipoDe', 'setValorPesos', 'setDescripcion', 'setHaContado', 'setEnCasoIva'
+      'setMonto', 'setAntiguedad', 'setTipoDe', 'setValorPesos', 'setDescripcion', 'setHaContado', 'setEnCasoIva','setEnlaceTablaDatos'
     ].forEach(method => {
       mockStore[method] = jest.fn();
     });
@@ -146,8 +146,40 @@ describe('Solocitud31601Service', () => {
       correoReprestantante: 'rep@dominio.com',
       suplente: 'Suplente',
       tipoDocumento: 'INE',
-      mencioneDatos: [], 
-      enlaceDatos: [],  
+      mencioneDatos: [],
+      enlaceDatos: [],
+      estadoResidencia: '',
+      controlInventariosDatos: [],
+      cancelacionProcedimiento: '',
+      cumpleLineamientos: '',
+      nombre: '',
+      rfcDatos: '',
+      indiques: '',
+      cuenta: '',
+      mismo: '',
+      empresa: '',
+      propios: '',
+      empleadoss: '',
+      socios: '',
+      encuentras: '',
+      cumplido: '',
+      procedimiento: '',
+      determinan: '',
+      transferenciasDatos: '',
+      transferenciasdos: '',
+      retornosDatos: '',
+      retornosdos: '',
+      constanciasDatos: '',
+      constanciasdos: '',
+      monedaTotal: '',
+      porcentajeTotal: '',
+      capture: '',
+      deEmpleados: '',
+      bimestreDatos: '',
+      numeroDeEmpleados: '',
+      bimestredos: '',
+      numeroDatos: '',
+      bimestres: ''
     };
 
     service.actualizarEstadoFormulario(datos);

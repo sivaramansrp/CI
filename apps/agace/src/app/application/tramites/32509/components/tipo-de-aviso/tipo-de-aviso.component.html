@@ -18,6 +18,7 @@
                 'tipoDeAviso',
                 'setTipoDeAviso'
                 )"
+                [disabled]="esFormularioSoloLectura ? true : false"
             ></app-input-radio>
             </div>
         </div>
@@ -58,6 +59,7 @@
                     'rfc',
                     'setRfc'
                     )"
+                    [disabled]="esFormularioSoloLectura"
                     >
                 </div>
             </div>
@@ -67,54 +69,45 @@
         </div>
         <div class="row mt-5">
             <div class="col-md-4">
-                <div class="form-group">
-                    <label class="form-label" for="entidadFederativa">Entidad federativa*:</label>
-                    <input type="text" 
-                    value=""
-                    class="form-control" 
-                    id="entidadFederativa"
-                    formControlName="entidadFederativa" 
-                    (change)="
-                    setValoresStore(
-                    avisoForm,
-                    'entidadFederativa',
-                    'setEntidadFederativa'
-                    )"
-                    >
+             <div class="form-group">
+                <app-catalogo-select
+                   id="entidadFederativaData"
+                   formControlName="entidadFederativa"
+                   [catalogo]="entidadFederativaData.catalogos"
+                   [label]="'Entidad federativa'"
+                   [placeholder]="entidadFederativaData.primerOpcion"
+                   [required]="true"
+                   (change)="setValoresStore(avisoForm,'entidadFederativa','setEntidadFederativa')"
+                   [isDisabled]="esFormularioSoloLectura" 
+              ></app-catalogo-select>
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="form-group">
-                    <label class="form-label" for="alcaldiaMunicipo">Alcaldía o Municipio*:</label>
-                    <input type="text" 
-                    value=""
-                    class="form-control" 
-                    id="alcaldiaMunicipo"
+                    <app-catalogo-select
+                    id="alcaldiaMunicipoData"
                     formControlName="alcaldiaMunicipo"
-                    (change)="
-                    setValoresStore(
-                    avisoForm,
-                    'alcaldiaMunicipo',
-                    'setAlcaldiaMunicipo'
-                    )"
-                    >
+                    [catalogo]="alcaldiaMunicipoData.catalogos"
+                    [label]="'Alcaldía o Municipio'"
+                    [placeholder]="alcaldiaMunicipoData.primerOpcion"
+                    [required]="true"
+                    (change)="setValoresStore(avisoForm,'alcaldiaMunicipo','setAlcaldiaMunicipo')"
+                    [isDisabled]="esFormularioSoloLectura" 
+               ></app-catalogo-select>
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="form-group">
-                    <label class="form-label" for="colonia">Colonia*:</label>
-                    <input type="text" 
-                    value=""
-                    class="form-control" 
-                    id="colonia"
+                    <app-catalogo-select
+                    id="coloniaData"
                     formControlName="colonia"
-                    (change)="
-                    setValoresStore(
-                    avisoForm,
-                    'colonia',
-                    'setColonia'
-                    )"
-                    >
+                    [catalogo]="coloniaData.catalogos"
+                    [label]="'Colonia'"
+                    [placeholder]="coloniaData.primerOpcion"
+                    [required]="true"
+                    (change)="setValoresStore(avisoForm,'colonia','setColonia')"
+                    [isDisabled]="esFormularioSoloLectura" 
+               ></app-catalogo-select>
                 </div>
             </div>
         </div>
@@ -133,6 +126,7 @@
                     'calle',
                     'setCalle'
                     )"
+                    [disabled]="esFormularioSoloLectura"
                     >
                 </div>
             </div>
@@ -152,6 +146,7 @@
                     'numeroExterior',
                     'setNumeroExterior'
                     )"
+                    [disabled]="esFormularioSoloLectura"
                     >
                 </div>
             </div>
@@ -169,6 +164,7 @@
                     'numeroInterior',
                     'setNumeroInterior'
                     )"
+                    [disabled]="esFormularioSoloLectura"
                     >
                 </div>
             </div>
@@ -186,6 +182,7 @@
                     'codigoPostal',
                     'setCodigoPostal'
                     )"
+                    [disabled]="esFormularioSoloLectura"
                     >
                 </div>
             </div>
@@ -205,6 +202,7 @@
                     'cartaCupo',
                     'setCartaCupo'
                     )"
+                    [disabled]="esFormularioSoloLectura"
                     >
                 </div>
             </div>
@@ -228,10 +226,14 @@
                     'numeraDeAcuse',
                     'setNumeraDeAcuse'
                     )"
+                    [disabled]="esFormularioSoloLectura"
                     >
                 </div>
             </div>
         </div>
+        
+        @if(avisoValor === 'deposito_fiscal' || avisoValor === 'fisco_federal'){
+
         <div class="col-md-12">
             <ng-titulo titulo="Causas que motivan la destrucción" />
         </div>
@@ -254,67 +256,62 @@
                     'destruccionMercancia',
                     'setDestruccionMercancia'
                     )"
+                    [disabled]="esFormularioSoloLectura"
                     >
                 </div>
             </div>
-        </div>
+        
+         </div>
+    
+     @if(avisoValor === 'deposito_fiscal' || avisoValor === 'fisco_federal'){
         <div class="col-md-12">
             <ng-titulo titulo="Lugar donde se encuentra la mercancía y cantidad de mercancía" />
         </div>
         <div class="row mt-5">
             <div class="col-md-4">
                 <div class="form-group">
-                    <label class="form-label" for="merccanciaEntidadFederativa">Entidad federativa*:</label>
-                    <input type="text" 
-                    value=""
-                    class="form-control" 
-                    id="merccanciaEntidadFederativa"
-                    formControlName="merccanciaEntidadFederativa" 
-                    (change)="
-                    setValoresStore(
-                    avisoForm,
-                    'merccanciaEntidadFederativa',
-                    'setMerccanciaEntidadFederativa'
-                    )"
-                    >
+                    <app-catalogo-select
+                    id="merccanciaEntidadFederativaData"
+                    formControlName="merccanciaEntidadFederativa"
+                    [catalogo]="merccanciaEntidadFederativaData.catalogos"
+                    [label]="'Entidad federativa'"
+                    [placeholder]="merccanciaEntidadFederativaData.primerOpcion"
+                    [required]="true"
+                    (change)="setValoresStore(avisoForm,'merccanciaEntidadFederativa','setMerccanciaEntidadFederativa')"
+                    [isDisabled]="esFormularioSoloLectura" 
+               ></app-catalogo-select>
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="form-group">
-                    <label class="form-label" for="merccanciaAlcaldiaMunicipo">Alcaldía o Municipio*:</label>
-                    <input type="text" 
-                    value=""
-                    class="form-control" 
-                    id="merccanciaAlcaldiaMunicipo"
-                    formControlName="merccanciaAlcaldiaMunicipo" 
-                    (change)="
-                    setValoresStore(
-                    avisoForm,
-                    'merccanciaAlcaldiaMunicipo',
-                    'setMerccanciaAlcaldiaMunicipo'
-                    )"
-                    >
+                    <app-catalogo-select
+                    id="merccanciaAlcaldiaMunicipoData"
+                    formControlName="merccanciaAlcaldiaMunicipo"
+                    [catalogo]="merccanciaAlcaldiaMunicipoData.catalogos"
+                    [label]="'Alcaldía o Municipio'"
+                    [placeholder]="merccanciaAlcaldiaMunicipoData.primerOpcion"
+                    [required]="true"
+                    (change)="setValoresStore(avisoForm,'merccanciaAlcaldiaMunicipo','setMerccanciaAlcaldiaMunicipo')"
+                    [isDisabled]="esFormularioSoloLectura" 
+               ></app-catalogo-select>
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="form-group">
-                    <label class="form-label" for="merccanciaColonia">Colonia*:</label>
-                    <input type="text" 
-                    value=""
-                    class="form-control" 
-                    id="merccanciaColonia"
-                    formControlName="merccanciaColonia" 
-                    (change)="
-                    setValoresStore(
-                    avisoForm,
-                    'merccanciaColonia',
-                    'setMerccanciaColonia'
-                    )"
-                    >
+                    <app-catalogo-select
+                    id="merccanciaColoniaData"
+                    formControlName="merccanciaColonia"
+                    [catalogo]="merccanciaColoniaData.catalogos"
+                    [label]="'Colonia'"
+                    [placeholder]="merccanciaColoniaData.primerOpcion"
+                    [required]="true"
+                    (change)="setValoresStore(avisoForm,'merccanciaColonia','setMerccanciaColonia')"
+                    [isDisabled]="esFormularioSoloLectura" 
+               ></app-catalogo-select>
                 </div>
             </div>
-        </div>
-        <div class="row mt-5">
+         </div>
+         <div class="row mt-5">
             <div class="col-md-12">
                 <div class="form-group">
                     <label class="form-label" for="merccanciaCalle">Calle*:</label>
@@ -329,11 +326,12 @@
                     'merccanciaCalle',
                     'setMerccanciaCalle'
                     )"
+                    [disabled]="esFormularioSoloLectura"
                     >
                 </div>
             </div>
-        </div>
-        <div class="row mt-5">
+          </div>
+          <div class="row mt-5">
             <div class="col-md-4">
                 <div class="form-group">
                     <label class="form-label" for="merccanciaNumeroExterior">Número exterior*:</label>
@@ -348,6 +346,7 @@
                     'merccanciaNumeroExterior',
                     'setMerccanciaNumeroExterior'
                     )"
+                    [disabled]="esFormularioSoloLectura"
                     >
                 </div>
             </div>
@@ -365,6 +364,7 @@
                     'merccanciaNumeroInterior',
                     'setMerccanciaNumeroInterior'
                     )"
+                    [disabled]="esFormularioSoloLectura"
                     >
                 </div>
             </div>
@@ -382,11 +382,12 @@
                     'merccanciaCodigoPostal',
                     'setMerccanciaCodigoPostal'
                     )"
+                    [disabled]="esFormularioSoloLectura"
                     >
                 </div>
             </div>
-        </div>
-        <div class="row mt-5">
+         </div>
+         <div class="row mt-5">
             <div class="col-md-4">
                 <div class="form-group">
                     <label class="form-label" for="destruir">Cantidad de mercancías a destruir*:</label>
@@ -401,63 +402,73 @@
                     'destruir',
                     'setDestruir'
                     )"
+                    [disabled]="esFormularioSoloLectura"
                     >
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="form-group">
-                    <label class="form-label" for="tarifa">Unidad de medida (Tarifa)*:</label>
-                    <input type="text" 
-                    value=""
-                    class="form-control" 
-                    id="tarifa"
-                    formControlName="tarifa" 
-                    (change)="
-                    setValoresStore(
-                    avisoForm,
-                    'tarifa',
-                    'setTarifa'
-                    )"
-                    >
+                    <app-catalogo-select
+                    id="tarifaData"
+                    formControlName="tarifa"
+                    [catalogo]="tarifaData.catalogos"
+                    [label]="'Unidad de medida (Tarifa)'"
+                    [placeholder]="tarifaData.primerOpcion"
+                    [required]="true"
+                    (change)="setValoresStore(avisoForm,'tarifa','setTarifa')"
+                    [isDisabled]="esFormularioSoloLectura" 
+               ></app-catalogo-select>
                 </div>
-            </div>
+            </div>    
         </div>
+    
+      }
         @if(avisoValor === 'deposito_fiscal'){
+
         <div class="col-md-12">
             <ng-titulo titulo="Lugar donde se llevará a cabo la destrucción de la mercancía" />
         </div>
         <div class="row mt-5">
             <div class="col-md-4">
                 <div class="form-group">
-                    <label class="form-label" for="destruccionEntidadFederativa">Entidad federativa*:</label>
-                    <input type="text" 
-                    value=""
-                    class="form-control" 
-                    id="destruccionEntidadFederativa"
-                    formControlName="destruccionEntidadFederativa" 
-                    >
+                    <app-catalogo-select
+                    id="merccanciaEntidadFederativaData"
+                    formControlName="destruccionEntidadFederativa"
+                    [catalogo]="merccanciaEntidadFederativaData.catalogos"
+                    [label]="'Entidad federativa'"
+                    [placeholder]="merccanciaEntidadFederativaData.primerOpcion"
+                    [required]="true"
+                    (change)="setValoresStore(avisoForm,'destruccionEntidadFederativa','setDestruccionEntidadFederativa')"
+                    [isDisabled]="esFormularioSoloLectura" 
+               ></app-catalogo-select>
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="form-group">
-                    <label class="form-label" for="destruccionAlcaldiaMunicipo">Alcaldía o Municipio*:</label>
-                    <input type="text" 
-                    value=""
-                    class="form-control" 
-                    id="destruccionAlcaldiaMunicipo"
-                    formControlName="destruccionAlcaldiaMunicipo" 
-                    >
+                    <app-catalogo-select
+                    id="merccanciaAlcaldiaMunicipoData"
+                    formControlName="destruccionAlcaldiaMunicipo"
+                    [catalogo]="merccanciaAlcaldiaMunicipoData.catalogos"
+                    [label]="'Alcaldía o Municipio'"
+                    [placeholder]="merccanciaAlcaldiaMunicipoData.primerOpcion"
+                    [required]="true"
+                    (change)="setValoresStore(avisoForm,'destruccionAlcaldiaMunicipo','setDestruccionAlcaldiaMunicipo')"
+                    [isDisabled]="esFormularioSoloLectura" 
+               ></app-catalogo-select>
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="form-group">
-                    <label class="form-label" for="destruccionColonia">Colonia*:</label>
-                    <input type="text" 
-                    value=""
-                    class="form-control" 
-                    id="destruccionColonia"
-                    formControlName="destruccionColonia" 
-                    >
+                    <app-catalogo-select
+                    id="merccanciaColoniaData"
+                    formControlName="destruccionColonia"
+                    [catalogo]="merccanciaColoniaData.catalogos"
+                    [label]="'Colonia'"
+                    [placeholder]="merccanciaColoniaData.primerOpcion"
+                    [required]="true"
+                    (change)="setValoresStore(avisoForm,'destruccionColonia','setDestruccionColonia')"
+                    [isDisabled]="esFormularioSoloLectura" 
+               ></app-catalogo-select>
                 </div>
             </div>
         </div>
@@ -470,6 +481,7 @@
                     class="form-control" 
                     id="destruccionCalle"
                     formControlName="destruccionCalle" 
+                    [disabled]="esFormularioSoloLectura"
                     >
                 </div>
             </div>
@@ -489,6 +501,7 @@
                     'destruccionNumeroExterior',
                     'setDestruccionNumeroExterior'
                     )"
+                    [disabled]="esFormularioSoloLectura"
                     >
                 </div>
             </div>
@@ -506,6 +519,7 @@
                     'destruccionNumeroInterior',
                     'setDestruccionNumeroInterior'
                     )"
+                    [disabled]="esFormularioSoloLectura"
                     >
                 </div>
             </div>
@@ -523,17 +537,22 @@
                     'destruccionCodigoPostal',
                     'setDestruccionCodigoPostal'
                     )"
+                    [disabled]="esFormularioSoloLectura"
                     >
                 </div>
             </div>
         </div>
-            <div class="row mt-5">
+     }
+        @if(avisoValor === 'deposito_fiscal'){
+
+          <div class="row mt-5">
                 <ng-alert [CONTENIDO]="MENSAJE"></ng-alert>
             </div>
             <div class="row mt-5">
                 <div class="col-md-6">
                     <input-fecha [datos]="desrtuccionFecha" (valorCambiado)="cambioFecha($event)"
-                    [setFecha]="DestruccionFecha" name= "caboDestruccionFecha" ></input-fecha>
+                    [setFecha]="DestruccionFecha" name= "caboDestruccionFecha" 
+                ></input-fecha>
                 </div>
                 <div class="form-group">
                     <label class="form-label" for="destruccionHora">Hora en la que se llevará a cabo la destrucción*:</label>
@@ -548,6 +567,7 @@
                     'destruccionHora',
                     'setDestruccionHora'
                     )"
+                    [disabled]="esFormularioSoloLectura"
                     >
                 </div>
             </div>
@@ -566,6 +586,7 @@
                         'desturccionProceso',
                         'setDesturccionProceso'
                         )"
+                        [disabled]="esFormularioSoloLectura"
                         >
                     </div>
                 </div>
@@ -588,9 +609,12 @@
                     'casofortuito',
                     'setCasofortuito'
                     )"
+                    [disabled]="esFormularioSoloLectura ? true : false"
                   ></app-input-radio>
                 </div>
             </div>
+     }
+            @if(avisoValor === 'deposito_fiscal'){
             <div class="col-md-12">
                 <ng-titulo titulo="Datos de las mercancías" />
             </div>
@@ -600,21 +624,27 @@
                 <div class="col-md-8">
                     <button type="button" for="archivoMedicamentos" class="file-upload"
                         (click)="activarSeleccionArchivo()"
-                        disabled="esFormularioSoloLectura">
+                        [disabled]="esFormularioSoloLectura">
                         Seleccionar archivo
                     </button>
                     <span class="ml-2">{{ etiquetaDeArchivo }}</span>
                     <input type="file" id="archivoMedicamentos" (change)="onCambioDeArchivo($event)"
-                        class="file-upload" style="display: none;">
+                        class="file-upload" style="display: none;"
+                        [disabled]="esFormularioSoloLectura">
                 </div>
 
                 <div class="col-md-4 text-end">
-                    <button class="btn btn-primary mr-5px" disabled="esFormularioSoloLectura">Cargar
+                    <button class="btn btn-primary mr-5px" disabled="esFormularioSoloLectura"
+                    [disabled]="esFormularioSoloLectura">Cargar
                         archivo</button>
                 </div>
             </div>
         }
-        @else{
+      }
+
+   
+        @if(avisoValor === 'fisco_federal'){
+
             <div class="row mt-5">
                 <ng-alert [CONTENIDO]="TEXTO"></ng-alert>
             </div>
@@ -633,6 +663,7 @@
                             'donoMercancia',
                             'setDonoMercancia'
                             )"
+                            [disabled]="esFormularioSoloLectura"
                         >
                     </div>
                 </div>
@@ -652,11 +683,12 @@
                             'condicionesMateriales',
                             'setCondicionesMateriales'
                             )"
+                            [disabled]="esFormularioSoloLectura"
                         >
                     </div>
                 </div>
             </div>
         }
-        
-    </form>
+   </form>
+
 </div>

@@ -1,13 +1,15 @@
-import { Catalogo, ConsultaioQuery } from '@libs/shared/data-access-user/src';
+import { AlertComponent, Catalogo, CatalogoSelectComponent, ConsultaioQuery, InputRadioComponent, TablaDinamicaComponent, TableComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CatalogosSelect } from '@libs/shared/data-access-user/src';
+import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
 import { DatosDeSolicitud } from '../../models/solicitud-datos.model';
 import { ElementRef } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { Mercancia } from '../../models/mercancia.model';
 import { Modal } from 'bootstrap';
+import { ModificarMercanciasComponent } from '../modificar-mercancias/modificar-mercancias.component';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { REGEX_CORREO_ELECTRONICO } from '@libs/shared/data-access-user/src';
@@ -35,6 +37,19 @@ import { takeUntil } from 'rxjs';
   selector: 'app-solicitud-datos',
   templateUrl: './solicitud-datos.component.html',
   styleUrl: './solicitud-datos.component.scss',
+  standalone:true,
+  imports:[
+    CommonModule,
+      ReactiveFormsModule,
+      FormsModule,
+      InputRadioComponent,
+      TablaDinamicaComponent,
+      CatalogoSelectComponent,
+      TableComponent,
+      AlertComponent,
+      TituloComponent,
+      ModificarMercanciasComponent
+    ]
 })
 /**
  * Componente que representa los datos de la solicitud
@@ -494,8 +509,7 @@ export class SolicitudDatosComponent implements OnInit, OnDestroy {
    * Obtiene los datos iniciales de la solicitud y los actualiza en el estado.
    */
   obtenerSolicitud(): void {
-    this.solicitudDatosService
-      .obtenerSolicitud()
+    this.solicitudDatosService.obtenerSolicitud()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe({
         next: (respuesta: Solicitud) => {

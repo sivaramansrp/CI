@@ -190,7 +190,7 @@
             [label]="'IMMEX (Número/aaaa):'"
             [required]="false"
             [reverse]="true"
-            [hidden]="false"
+            [hidden]="false"  
             [maxLengthValidacion]="300"
             (checkboxChange)="checkImmex($event)"
           ></lib-check-input-text>
@@ -485,7 +485,7 @@
       } @else if (despacho.get('dd')?.value) {
       <div class="col-md-4">
         <div class="form-group">
-          <label for="tipo" class="form-label">Autorizacion DDEX*:</label>
+          <label for="tipo" class="form-label">Autorización DDEX*:</label>
           <input
             type="text"
             id="folioDDEX"
@@ -890,13 +890,14 @@
           (listaDeFilaSeleccionada)="lineaCapturaSeleccionados = $event"
         >
         </app-tabla-dinamica>
-        <div class="row">
-          <div class="col-md-12 d-flex justify-content-center">
-            <app-table-pagination></app-table-pagination>
-          </div>
-        </div>
       </div>
       <div class="col-md-2"></div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-12 d-flex justify-content-center">
+        <app-paginador-tabla [totalPaginas]="1"></app-paginador-tabla>
+      </div>
     </div>
   </div>
   }
@@ -904,7 +905,7 @@
 
 <div class="row mt-5" *ngIf="editarSolicitud">
   <div class="col-md12">
-    <button type="button" class="btn btn-danger">
+    <button type="button" class="btn btn-danger" (click)="eliminarSolicitud()">
       Eliminar Solicitud Pendiente
     </button>
   </div>

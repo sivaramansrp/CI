@@ -3,14 +3,17 @@ import { DatosDeLaSolicitudComponent } from './datos-de-la-solicitud.component';
 import { FormBuilder } from '@angular/forms';
 import { of } from 'rxjs';
 import { SolicitudService } from '../../services/solicitud.service';
-import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { ElementRef, NO_ERRORS_SCHEMA } from '@angular/core';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 // Mock dependencies
 const mockSolicitudService = {
   getSolicitudes: jest.fn().mockReturnValue(of([])),
   getClave: jest.fn().mockReturnValue(of([])),
-  getOpcionesPublicacion: jest.fn().mockReturnValue(of([])), // <-- Add this mock
+  getOpcionesPublicacion: jest.fn().mockReturnValue(of([])),
+  getClasificacionProducto: jest.fn().mockReturnValue(of([])),
+  getTestadoFisico: jest.fn().mockReturnValue(of([])),
+  getScianDatos: jest.fn().mockReturnValue(of([]))
 };
 const mockTramite260212Store = {
   setSelectedEstado: jest.fn(),
@@ -85,26 +88,12 @@ describe('DatosDeLaSolicitudComponent', () => {
     expect(component.plegable).toBe(prev);
   });
 
-  it('debe mostrar y ocultar el formularioScian', () => {
-    component.toggleScianFormulario();
-    expect(component.mostrarFormularioScian).toBe(true);
-    component.cerrarScianFormulario();
-    expect(component.mostrarFormularioScian).toBe(false);
-  });
-
-  it('debe mostrar y ocultar el formularioMercancias', () => {
-    component.openMercanciasForm();
-    expect(component.mostrarFormularioMercancias).toBe(true);
-    component.closeMercanciasForm();
-    expect(component.mostrarFormularioMercancias).toBe(false);
-  });
-
-  it('debe inicializar las configuraciones de la tabla', () => {
+  it('should initialize table configs', () => {
     expect(component.configuracionTablaScian.length).toBeGreaterThan(0);
     expect(component.mercanciasTabla.length).toBeGreaterThan(0);
     expect(component.configuracionTablaSolicitud.length).toBeGreaterThan(0);
-    // Verifica que las funciones de configuración de la tabla funcionen
-    const claveItem = { clave: 'A', descripcíon: 'B' };
+    // Check that the table config functions work
+    const claveItem = { clave: 'A', descripcion: 'B' };
     expect(component.configuracionTablaScian[0].clave(claveItem)).toBe('A');
     expect(component.configuracionTablaScian[1].clave(claveItem)).toBe('B');
   });
@@ -172,7 +161,7 @@ describe('DatosDeLaSolicitudComponent', () => {
     expect(() => component.getMunicipios()).not.toThrow();
   });
 
-it('debe deshabilitar/habilitar el formulario en guardarDatosFormulario', () => {
+  it('should disable/enable form in guardarDatosFormulario', () => {
     component.fomInitialize();
     component.esFormularioSoloLectura = true;
     component.guardarDatosFormulario();
@@ -207,4 +196,34 @@ it('debe deshabilitar/habilitar el formulario en guardarDatosFormulario', () => 
     expect(spy).toHaveBeenCalled();
     expect(spy2).toHaveBeenCalled();
   });
+
+  it('debe agregar una clave Scian al arreglo', () => {
+    const form = { clave: '001', descripcion: 'Prueba' };
+    component.agregarScian(form);
+    expect(component.claveScianDatas).toContainEqual(form);
+  });
+
+  it('debe ocultar el modal Scian cuando se llama cerrarScianFormulario', () => {
+    const hideSpy = jest.fn();
+    component['modalScianInstance'] = { hide: hideSpy } as any;
+    component.cerrarScianFormulario();
+    expect(hideSpy).toHaveBeenCalled();
+  });
+
+  it('debe ocultar el modal de mercancías al llamar closeMercanciasForm', () => {
+    const hideSpy = jest.fn();
+    component['modalMercanciasInstance'] = { hide: hideSpy } as any;
+    component.closeMercanciasForm();
+    expect(hideSpy).toHaveBeenCalled();
+  });
+
+  it('debe obtener opciones de solicitud y asignarlas a losDatos', () => {
+    const mockOpciones = [{ id: 1, nombre: 'Opción 1' }];
+    mockSolicitudService.getOpcionesPublicacion.mockReturnValueOnce(of(mockOpciones));
+
+    component.obtenerOpcionesSolicitud();
+    expect(component.losDatos).toEqual(mockOpciones);
+  });
+
+
 });
