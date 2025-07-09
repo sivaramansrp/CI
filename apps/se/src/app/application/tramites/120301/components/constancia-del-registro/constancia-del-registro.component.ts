@@ -384,11 +384,11 @@ export class ConstanciaDelRegistroComponent implements OnInit, OnDestroy {
           : 'Todos',
       ],
       anoDeLaConstancia: [
-        this.constanciaState.anoDeLaConstancia,
+        this.constanciaState.anoDeLaConstancia ? this.constanciaState.anoDeLaConstancia.toString() : '',
         Validators.required,
       ],
       numeroDeLaConstancia: [
-        this.constanciaState.numeroDeLaConstancia,
+        this.constanciaState.numeroDeLaConstancia ? this.constanciaState.numeroDeLaConstancia.toString() : '',
         Validators.required,
       ],
       estado: [this.constanciaState.estado],
@@ -542,6 +542,7 @@ export class ConstanciaDelRegistroComponent implements OnInit, OnDestroy {
   buscarEvaluar(): void {
     const ANO_CONTROL = this.fitosanitarioForm.get('anoDeLaConstancia');
     const NUMEROCONTROL = this.fitosanitarioForm.get('numeroDeLaConstancia');
+    
     ANO_CONTROL?.markAsTouched();
     NUMEROCONTROL?.markAsTouched();
     if (ANO_CONTROL?.invalid || NUMEROCONTROL?.invalid) {
@@ -656,5 +657,49 @@ export class ConstanciaDelRegistroComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
+  }
+
+  /**
+   * @method onAnoConstanciaChange
+   * @description Maneja el evento de cambio de selección en el catálogo de años de constancia.
+   * Marca el control del formulario como tocado y actualiza el valor en el store.
+   * @param {Catalogo} selectedOption - La opción seleccionada del catálogo.
+   * @returns {void} No retorna ningún valor.
+   */
+  onAnoConstanciaChange(selectedOption: Catalogo): void {
+    const CONTROL = this.fitosanitarioForm.get('anoDeLaConstancia');
+    if (CONTROL && selectedOption) {
+      // Ensure the value is set as string to match the catalog data
+      const VALUE = selectedOption.id?.toString() || '';
+      CONTROL.setValue(VALUE);
+      CONTROL.markAsTouched();
+      CONTROL.updateValueAndValidity();
+      
+      // Update the store with the selected value
+      this.ElegibilidadDeTextilesStore.setAnoDeLaConstancia(VALUE);
+    }
+  }
+
+  /**
+   * @method onAnoConstanciaChangeFromSelect
+   * @description Maneja el evento de cambio regular del dropdown cuando selectionChange no funciona.
+   * @param {Event} event - El evento de cambio del dropdown.
+   * @returns {void} No retorna ningún valor.
+   */
+  onAnoConstanciaChangeFromSelect(event: Event): void {
+    const SELECT_ELEMENT = event.target as HTMLSelectElement;
+    const VALUE = SELECT_ELEMENT.value;
+    
+    if (VALUE && VALUE !== '-1') {
+      const CONTROL = this.fitosanitarioForm.get('anoDeLaConstancia');
+      if (CONTROL) {
+        CONTROL.setValue(VALUE);
+        CONTROL.markAsTouched();
+        CONTROL.updateValueAndValidity();
+        
+        // Update the store with the selected value
+        this.ElegibilidadDeTextilesStore.setAnoDeLaConstancia(VALUE);
+      }
+    }
   }
 }
