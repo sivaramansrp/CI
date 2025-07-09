@@ -35,7 +35,7 @@
     <ng-titulo titulo="Datos generales" />
     <div class="row col-12">
       <div class="col-md-8 mb-4">
-        <label for="pagina">Página web</label>
+        <label for="pagina">Página web*:</label>
         <input
           type="text"
           id="pagina"
@@ -44,9 +44,14 @@
           maxlength="120"
           formControlName="paginaWWeb"
         />
+         <div
+          *ngIf="formaComplimentos.get('datosGeneralis.paginaWWeb')?.invalid && formaComplimentos.get('datosGeneralis.paginaWWeb')?.touched"
+          class="text-danger">
+          Este campo es obligatorio.
+        </div>
       </div>
       <div class="col-md-8">
-        <label for="localizacion">localización</label>
+        <label for="localizacion">localización*:</label>
         <input
           type="text"
           id="localizacion"
@@ -55,6 +60,11 @@
           maxlength="120"
           formControlName="localizacion"
         />
+        <div
+            *ngIf="formaComplimentos.get('datosGeneralis.localizacion')?.invalid && formaComplimentos.get('datosGeneralis.localizacion')?.touched"
+            class="text-danger">
+            Este campo es obligatorio.
+          </div>
       </div>
     </div>
   </div>
@@ -63,7 +73,7 @@
     <ng-titulo titulo="Obligaciones fiscales" />
     <div class="row">
       <div class="col-md-4">
-        <label for="Opinion">Opinión positiva del SAT</label>
+        <label for="Opinion">Opinión positiva del SAT*:</label>
         <input
           type="text"
           id="Opinion"
@@ -71,14 +81,24 @@
           class="form-control"
           formControlName="opinionPositiva"
         />
+        <div
+          *ngIf="formaComplimentos.get('obligacionesFiscales.opinionPositiva')?.invalid && formaComplimentos.get('datosGeneralis.localizacion')?.touched"
+          class="text-danger">
+          Este campo es obligatorio.
+        </div>
       </div>
       <div class="col-md-4">
-        <label for="expedicion">Fecha de expedición</label>
+        <label for="expedicion">Fecha de expedición*:</label>
         <input
           type="date"
           class="form-control"
           formControlName="fechaExpedicion"
         />
+                <div
+                  *ngIf="formaComplimentos.get('obligacionesFiscales.fechaExpedicion')?.invalid && formaComplimentos.get('datosGeneralis.localizacion')?.touched"
+                  class="text-danger">
+                  Este campo es obligatorio.
+                </div>
       </div>
       <div class="col-12 mt-5">
         <div class="alert alert-info text-start">
