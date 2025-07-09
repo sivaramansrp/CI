@@ -1,4 +1,4 @@
-import { PATRON_LETRAS_NUMEROS_ESPACIOS, PATRON_MAYUSCULAS_NUMEROS_SIMBOLOS, PATRON_NUMERO_DECIMAL_10_2, PATRON_NUMERO_DECIMAL_3_18, REGEX_ALFANUMERICO_CON_ESPACIOS, REGEX_CORREO_ELECTRONICO, REGEX_LETRAS_NUMEROS_COMA_PARENTESIS_ESPACIO, REGEX_PATRON_ALFANUMERICO, REGEX_SOLO_NÚMERO } from "@libs/shared/data-access-user/src";
+import { PATRON_LETRAS_NUMEROS_ESPACIOS, PATRON_MAYUSCULAS_NUMEROS_SIMBOLOS, PATRON_NUMERO_DECIMAL_10_2, PATRON_NUMERO_DECIMAL_3_18, REGEX_ALFANUMERICO_CON_ESPACIOS, REGEX_CORREO_ELECTRONICO, REGEX_LETRAS_NUMEROS_COMA_PARENTESIS_ESPACIO, REGEX_PATRON_ALFANUMERICO, REGEX_TELEFONO } from "@libs/shared/data-access-user/src";
 
 /**
  * Lista de pasos del proceso de captura y firma de solicitud.
@@ -160,7 +160,7 @@ export const REPRESENTANTE_LEGAL = [
         valor: 15,
         
       },
-      { tipo: 'pattern', valor: REGEX_SOLO_NÚMERO, mensaje: 'Solo se permiten números.' }],
+      { tipo: 'pattern', valor: REGEX_TELEFONO, mensaje: 'Solo se permiten números.' }],
   
     marcadorDePosicion: '',
     valorPredeterminado: '',
@@ -207,7 +207,7 @@ export const DATOS_DEL_SEGURO = [
     habilitado: true,
   },
   {
-    id: 'representante.fechaDeTerminoVigencia',
+    id: 'datosDelSeguro.fechaDeTerminoVigencia',
     labelNombre: 'Fecha de término de la vigencia del seguro',
     campo: 'fechaDeTerminoVigencia',
     clase: 'col-md-6',
@@ -533,3 +533,14 @@ export const INFORMACION_DE_COMPANIA = [
     habilitado: true,
   },
 ];
+
+export const ERROR_FORMA_ALERT =
+`
+<div class="d-flex justify-content-center text-center">
+  <div>
+    <div class="col-md-12">
+      Faltan campos por capturar.
+    </div>
+  </div>
+</div>
+`;

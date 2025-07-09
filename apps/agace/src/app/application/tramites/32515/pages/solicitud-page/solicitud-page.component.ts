@@ -1,6 +1,7 @@
 import { AVISO, DatosPasos, ListaPasosWizard, WizardComponent } from '@ng-mf/data-access-user';
 import { Component, ViewChild } from '@angular/core';
-import { PASOS } from "../../constantes/modificacion-aviso-seguro-global.enum";
+import { ERROR_FORMA_ALERT, PASOS } from "../../constantes/modificacion-aviso-seguro-global.enum";
+import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 
 /**
  * @interface AccionBoton
@@ -61,6 +62,25 @@ export class SolicitudPageComponent {
    */
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
 
+
+
+/**
+ * Referencia al componente hijo `PasoUnoComponent` para acceder a sus métodos de validación de formularios.
+ * const isValid = this.pasoUnoComponent.validateForms();
+ * const formsValidity = this.pasoUnoComponent.getAllFormsValidity();
+ */
+@ViewChild('pasoUnoRef') pasoUnoComponent!: PasoUnoComponent;
+
+/**
+ * Contiene el mensaje de error que se muestra cuando la validación de formularios falla.
+ */
+public formErrorAlert = ERROR_FORMA_ALERT;
+
+/**
+ * Controla la visibilidad del mensaje de error cuando la validación de formularios falla.
+ * }
+ */
+esFormaValido: boolean = false;
   /**
    * @property datosPasos
    * @type {DatosPasos}
@@ -112,29 +132,81 @@ export class SolicitudPageComponent {
   }
 
   /**
-   * @method getValorIndice
-   * @description 
    * Determina la acción a realizar (avanzar o retroceder) y actualiza el índice del paso actual.
+   * Objeto de tipo `AccionBoton` que contiene la acción (`'cont'` o `'atras'`) y el valor del nuevo índice.
    * 
-   * @param e - Objeto de tipo `AccionBoton` que contiene la acción (`'cont'` o `'atras'`) y el valor del nuevo índice.
+   * Este método valida que el nuevo índice esté dentro de un rango válido (1 a 4), luego ejecuta el método correspondiente del componente `WizardComponent`.
    * 
-   * @remarks Este método valida que el nuevo índice esté dentro de un rango válido (1 a 4), luego ejecuta el método correspondiente del componente `WizardComponent`.
-   * 
-   * @command Si la acción es `'cont'`, se avanza al siguiente paso llamando `siguiente()` del `wizardComponent`.
-   * @command Si la acción es distinta, se retrocede llamando `atras()` del `wizardComponent`.
-   * 
-   * @example
+   * Si la acción es `'cont'`, se avanza al siguiente paso llamando `siguiente()` del `wizardComponent`.
+   * Si la acción es distinta, se retrocede llamando `atras()` del `wizardComponent`.
    * this.getValorIndice({ accion: 'cont', valor: 2 }); // Avanza al paso 2.
    */
-  getValorIndice(e: AccionBoton): void {
-    if (e.valor > 0 && e.valor < 5) {
-      this.indice = e.valor;
-      if (e.accion === 'cont') {
-        this.wizardComponent.siguiente();
-      } else {
-        this.wizardComponent.atras();
-      }
+ getValorIndice(e: AccionBoton): void {
+  this.esFormaValido = false;
+  
+  // Validar formularios antes de continuar desde el paso uno
+  if (this.indice === 1 && e.accion === 'cont') {
+    const ISVALID = this.validarTodosFormulariosPasoUno();
+    if (!ISVALID) {
+      this.esFormaValido = true;
+      return; // Detener ejecución si los formularios son inválidos
     }
   }
+
+  // Calcular el nuevo índice basado en la acción
+  let indiceActualizado = e.valor;
+  if (e.accion === 'cont') {
+    indiceActualizado = e.valor + 1;
+  } else if (e.accion === 'ant') {
+    indiceActualizado = e.valor - 1;
+  }
+
+  // Validar que el nuevo índice esté dentro de los límites permitidos
+  if (indiceActualizado > 0 && indiceActualizado <= this.pasos.length) {
+    
+    // Actualizar el índice y datosPasos
+    this.indice = indiceActualizado;
+    this.datosPasos.indice = indiceActualizado;
+    
+    if (e.accion === 'cont') {
+      this.wizardComponent.siguiente();
+    } else if (e.accion === 'ant') {
+      this.wizardComponent.atras();
+    }
+  }
+}
+
+
+/**
+ * Valida todos los formularios del primer paso antes de permitir continuar al siguiente paso.
+ */
+private validarTodosFormulariosPasoUno(): boolean {
+  if (!this.pasoUnoComponent) {
+    return true;
+  }
+
+  // Primero llamar validarFormularios para marcar los campos inválidos como tocados
+  const ISFORM_VALID_TOUCHED = this.pasoUnoComponent.validarFormularios();
+  
+  if (!ISFORM_VALID_TOUCHED) {
+    return false;
+  }
+
+  // Luego verificar la validez general
+  const FORMS_VALIDITY = this.pasoUnoComponent.obtenerValidacionTotalFormularios();
+  const CURRENT_TAB_INDEX = this.pasoUnoComponent.indice;
+  
+  // Validar según la pestaña activa
+  if (CURRENT_TAB_INDEX === 1 && !FORMS_VALIDITY.tab1Valid) {
+    return false;
+  }
+  
+  if (CURRENT_TAB_INDEX === 2 && !FORMS_VALIDITY.tab2Valid) {
+    return false;
+  }
+
+  return true;
+}
+
 
 }
