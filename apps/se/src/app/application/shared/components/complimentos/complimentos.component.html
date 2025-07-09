@@ -90,7 +90,7 @@
               aria-label="Seleccionar"
               formControlName="aceptarObligacionFiscal"
               class="mr-3"
-            />* Compromiso de vantas anuales por un valor superior a 500.000
+            /> * Compromiso de vantas anuales por un valor superior a 500,000
             dólares de los Estados Unidos de América, o su equivalente en moneda
             nacional, o bien facturar exportaciones, cuanda menos por el 10% de
             su facturación total.
@@ -377,8 +377,7 @@
 
     <div class="col-12">
       <label> Socios y accionistas </label>
-      <label class="my-3 col-12">Datos de los Socios y/o accionistas </label>
-
+      <label class="my-3 col-12">Datos de los Socios y/o accionistas: </label>
       <app-tabla-dinamica
         [configuracionTabla]="tablaSociaAccionistas"
         [tipoSeleccionTabla]="tablaSeleccion.CHECKBOX"
@@ -402,6 +401,7 @@
 
     <div class="col-12">
       <label> Socios y accionistas Extranjeros </label>
+      <label class="my-3 col-12">Datos de los Socios y/o accionistas: </label>
       <app-tabla-dinamica
         [configuracionTabla]="tablaSociaAccionistasExtranjeros"
         [tipoSeleccionTabla]="tablaSeleccion.CHECKBOX"
