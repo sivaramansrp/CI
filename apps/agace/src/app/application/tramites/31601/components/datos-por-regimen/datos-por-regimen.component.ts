@@ -1,4 +1,5 @@
-import { Catalogo, ConsultaioQuery, InputRadioComponent, TableComponent, TablePaginationComponent,TituloComponent } from '@libs/shared/data-access-user/src';
+import { CONFIGURATION_TABLA_EMPLEADOS_BIMESTRE, EMPLEADOS_BIMESTRE } from '../../constantes/antecesor.enum';
+import { Catalogo, ConfiguracionColumna, ConsultaioQuery, InputRadioComponent, TablaDinamicaComponent, TablaSeleccion, TableComponent, TablePaginationComponent,TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   FormBuilder,
@@ -13,6 +14,8 @@ import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/trami
 import { CommonModule } from '@angular/common';
 import { RadioBotons } from '../../modelos/radio-buttons.model';
 import { Tramite31601Query } from '../../../../estados/queries/tramite31601.query';
+
+import { EmpleadoBimestre } from '../../modelos/antecesor.modal';
 
 /**
  * Componente DatosPorRegimen que se utiliza para mostrar y gestionar los DatosPorRegimen.
@@ -34,7 +37,7 @@ import { Tramite31601Query } from '../../../../estados/queries/tramite31601.quer
     CommonModule,
     ReactiveFormsModule,
     TableComponent,
-    TablePaginationComponent,FormsModule
+    TablePaginationComponent,FormsModule,TablaDinamicaComponent
   ],
 })
 export class DatosPorRegimenComponent implements OnInit,OnDestroy {
@@ -60,6 +63,11 @@ export class DatosPorRegimenComponent implements OnInit,OnDestroy {
             }];
 
   /**
+   * Configuración de las columnas de la tabla de exportadores.
+   * Define el encabezado, clave y el orden de las columnas para la tabla de exportadores.
+   */
+  public checkbox = TablaSeleccion.CHECKBOX;
+  /**
    * Array de objetos RadioBotons que representan las opciones de radio disponibles.
    * Cada objeto contiene una etiqueta y un valor.
    */
@@ -84,7 +92,17 @@ export class DatosPorRegimenComponent implements OnInit,OnDestroy {
    * Notificador para destruir observables.
    */
   private destroyNotifier$: Subject<void> = new Subject();
+ /**
+ * Configuración de las columnas para la tabla de exportadores.
+ * Se utiliza para definir qué columnas se mostrarán, su orden y propiedades.
+ */
+  configuracionTabla: ConfiguracionColumna<EmpleadoBimestre>[] =CONFIGURATION_TABLA_EMPLEADOS_BIMESTRE;
 
+    /**
+   * Lista de destinatarios obtenida desde un archivo JSON.
+   * Cada destinatario contiene información como nombre, teléfono, correo electrónico y dirección.
+   */
+  destinatario: EmpleadoBimestre[] = EMPLEADOS_BIMESTRE;
   /**
  * Constructor de la clase DatosPorRegimenComponent.
  * 
@@ -217,8 +235,7 @@ export class DatosPorRegimenComponent implements OnInit,OnDestroy {
   numeroDeEmpleados: [this.solicitudState.numeroDeEmpleados || '', Validators.required],
   bimestredos: [this.solicitudState.bimestredos || '', Validators.required],  
   numeroDatos: [this.solicitudState.numeroDatos || '', Validators.required],
-  bimestres: [this.solicitudState.bimestres || '', Validators.required],
-  
+  bimestres: [this.solicitudState.bimestres || '', Validators.required],  
     });
    this.regimenForm.get('monedaTotal')?.disable();
     this.regimenForm.get('porcentajeTotal')?.disable();

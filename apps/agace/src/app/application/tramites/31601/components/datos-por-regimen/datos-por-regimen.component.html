@@ -1,9 +1,11 @@
 <div class="container mt-5">
 <form [formGroup]="regimenForm">
+  <div *ngIf="solicitudState?.regimen_0">
+  
   <div class="row">
           <div class="col-md-12">
         <label
-          >Indique si realiza o realizará importaciones temporales de mercancías de las fracciones arancelarias listadas en el Anexo II del Decreto IMMEX y/o de las fracciones arancelarias listadas en el Anexo 28</label
+          >*Indique si realiza o realizará importaciones temporales de mercancías de las fracciones arancelarias listadas en el Anexo II del Decreto IMMEX y/o de las fracciones arancelarias listadas en el Anexo 28</label
         >
       </div>
       <div class="col-md-12">
@@ -21,12 +23,13 @@
         ></app-input-radio>
       </div>
      </div>
+   
       <ng-titulo titulo="Importación temporal bajo la modalidad del programa IMMEX (sensibles)" />
 
   <div class="row">
           <div class="col-md-12">
         <label
-          >Indique si cuenta con infraestructura necesaria para realizar la operación del programa IMMEX al proceso industrial o de servicio de conformidad con la modalidad de su programa</label
+          >*Indique si cuenta con infraestructura necesaria para realizar la operación del programa IMMEX al proceso industrial o de servicio de conformidad con la modalidad de su programa</label
         >
       </div>
       <div class="col-md-12">
@@ -45,7 +48,7 @@
       </div>
        <div class="col-md-12">
         <label
-          >Indique si durante los últimos doce meses, el valor de la mercancía transformada y retornada, retornada en su mismo estado, o a lo que se prestó un servicio, durante dicho periodo representa al menos el 80% del valor de las importaciones temporales de insumos durante el mismo período. (Declare solo aquellos conceptos que apliquen)</label
+          >*Indique si durante los últimos doce meses, el valor de la mercancía transformada y retornada, retornada en su mismo estado, o a lo que se prestó un servicio, durante dicho periodo representa al menos el 80% del valor de las importaciones temporales de insumos durante el mismo período. (Declare solo aquellos conceptos que apliquen)</label
         >
       </div>
       <div class="col-md-12">
@@ -61,7 +64,7 @@
       </div>
        <div class="col-md-12">
         <label
-          >¿La empresa solicitante ha realizado operaciones al amparo del Programa IMMEX en al menos los 12 meses previos a la solicitud?</label
+          >*¿La empresa solicitante ha realizado operaciones al amparo del Programa IMMEX en al menos los 12 meses previos a la solicitud?</label
         >
       </div>
       <div class="col-md-12">
@@ -76,6 +79,7 @@
         ></app-input-radio>
       </div>
           </div>
+
   <div  *ngIf="regimenForm.get('empresa')?.value === 'Yes'">
   <div class="row">
           <div class="col-md-3">
@@ -136,11 +140,13 @@
       </div>
   </div>
 </div>
+ 
+
 
      <div class="row">
           <div class="col-md-12">
         <label
-          >Señale si la empresa cuenta con empleados propios.</label
+          >*Señale si la empresa cuenta con empleados propios.</label
         >
       </div>
       <div class="col-md-12">
@@ -201,7 +207,7 @@
         </div>
        <div class="col-md-12">
         <label
-          >¿Cuenta con empleados subcontratados?</label
+          >*¿Cuenta con empleados subcontratados?</label
         >
       </div>
       <div class="col-md-12">
@@ -218,9 +224,45 @@
           "
         ></app-input-radio>
       </div>
+  <div  *ngIf="regimenForm.get('empleadoss')?.value === 'Yes'">
+<div class="container">
+  <P>*Número de empleados que le proveen en los últimos tres bimestres anteriores a su solicitud</P>
+      <app-tabla-dinamica
+    [configuracionTabla]="configuracionTabla"
+    [datos]="destinatario"
+    [tipoSeleccionTabla]="checkbox"
+    [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
+  ></app-tabla-dinamica>
+   <div class="d-flex justify-content-end">
+        <button
+          type="button"
+          class="btn btn-default btn-space"
+          
+          [disabled]="esFormularioSoloLectura"
+        >
+          Modificar
+        </button>
+        <button
+          type="button"
+          class="btn btn-primary btn-space"
+          [disabled]="esFormularioSoloLectura"
+        
+        >
+          Eliminar
+        </button>
+        <button
+          type="button"
+          class="btn btn-default btn-primary"          
+          [disabled]="esFormularioSoloLectura"
+        >
+          Agregar
+        </button>
+      </div>
+      </div>
+      </div>
        <div class="col-md-12">
         <label
-          >Indique si los socios y accionistas, representante legal, administrador único o miembros del consejo de administración de la empresa declararon ingresos acumulables en la declaración anual de los dos ejercicios previos ante la autoridad fiscal para los fines del ISR.</label
+          >*Indique si los socios y accionistas, representante legal, administrador único o miembros del consejo de administración de la empresa declararon ingresos acumulables en la declaración anual de los dos ejercicios previos ante la autoridad fiscal para los fines del ISR.</label
         >
       </div>
       <div class="col-md-12">
@@ -238,17 +280,18 @@
         ></app-input-radio>
       </div>
      </div>
-
+</div>
+<div *ngIf="solicitudState?.regimen_1">
  <ng-titulo titulo="Depósito fiscal para someterse al proceso de ensamble y fabricación de vehículos" />
    <div class="row">
       <div class="col-md-12">
         <label
-          >Deberá anexar una copia simple de autorización para el establecimiento del depósito fiscal para someterse al proceso de ensamble y fabricación de vehículos o empresas de la industria terminal vigente.</label
+          >*Deberá anexar una copia simple de autorización para el establecimiento del depósito fiscal para someterse al proceso de ensamble y fabricación de vehículos o empresas de la industria terminal vigente.</label
         >
       </div>
           <div class="col-md-12">
         <label
-          >Indique si se encuentra sujeto a un procedimiento de cancelación</label
+          >*Indique si se encuentra sujeto a un procedimiento de cancelación</label
         >
       </div>
       <div class="col-md-12">
@@ -267,7 +310,7 @@
       </div>
       <div class="col-md-12">
         <label
-          >Indique si ha cumplido adecuadamente con los requisitos de las reglas 4.5.30 y 4.5.32</label
+          >*Indique si ha cumplido adecuadamente con los requisitos de las reglas 4.5.30 y 4.5.32</label
         >
       </div>
       <div class="col-md-12">
@@ -285,17 +328,19 @@
         ></app-input-radio>
       </div>
    </div>
+   </div>
+   <div *ngIf="solicitudState?.regimen_2">
    <ng-titulo titulo="Elaboración, transformación o reparación en recinto fiscalizado" />
 
    <div class="row">
       <div class="col-md-12">
         <label
-          > Deberá anexar copia simple de la autorización vigente emitida por el SAT para la elaboración, transformación o reparación en recinto fiscalizado.</label
+          >*Deberá anexar copia simple de la autorización vigente emitida por el SAT para la elaboración, transformación o reparación en recinto fiscalizado.</label
         >
       </div>
           <div class="col-md-12">
         <label
-          >Indique si se encuentra sujeto a un procedimiento de cancelación</label
+          >*Indique si se encuentra sujeto a un procedimiento de cancelación</label
         >
       </div>
       <div class="col-md-12">
@@ -314,7 +359,7 @@
       </div>
       <div class="col-md-12">
         <label
-          >Indique si cumple con los lineamientos que determinan las autoridades aduaneras para el control, vigilancia y seguridad del recinto y de las mercancías del comercio exterior.</label
+          >*Indique si cumple con los lineamientos que determinan las autoridades aduaneras para el control, vigilancia y seguridad del recinto y de las mercancías del comercio exterior.</label
         >
       </div>
       <div class="col-md-12">
@@ -332,7 +377,8 @@
         ></app-input-radio>
       </div>
    </div>
-
+   </div>
+<div *ngIf="solicitudState?.regimen_3">
   <ng-titulo titulo="Recinto fiscalizado estratégico" />
   <p>
     Deberá anexar copia simple de la autorización vigente emitida por el SAT
@@ -343,7 +389,7 @@
     
       <div class="col-md-12">
         <label
-          >Indique si se encuentra sujeto a un procedimiento de
+          >*Indique si se encuentra sujeto a un procedimiento de
           cancelación</label
         >
       </div>
@@ -363,7 +409,7 @@
       </div>
       <div class="col-md-12">
         <label
-          >Indique si cumple con los lineamientos que determinen las autoridades
+          >*Indique si cumple con los lineamientos que determinen las autoridades
           aduaneras para el control, vigilancia y seguridad del recinto y de las
           mercancias del comercio exterior</label
         >
@@ -379,6 +425,7 @@
           "
         ></app-input-radio>
       </div>
+     </div>
      </div>
    </form>
 </div>
