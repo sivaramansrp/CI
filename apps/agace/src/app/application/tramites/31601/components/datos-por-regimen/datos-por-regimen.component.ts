@@ -1,9 +1,8 @@
-import { Catalogo, ConsultaioQuery, InputRadioComponent, TableComponent, TablePaginationComponent,TituloComponent } from '@libs/shared/data-access-user/src';
+import { Catalogo, ConsultaioQuery, InputRadioComponent, TableComponent, TablePaginationComponent, TituloComponent } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
-  FormsModule,
   ReactiveFormsModule,
   Validators
 } from '@angular/forms';
@@ -34,7 +33,7 @@ import { Tramite31601Query } from '../../../../estados/queries/tramite31601.quer
     CommonModule,
     ReactiveFormsModule,
     TableComponent,
-    TablePaginationComponent,FormsModule
+    TablePaginationComponent,
   ],
 })
 export class DatosPorRegimenComponent implements OnInit,OnDestroy {
@@ -49,15 +48,6 @@ export class DatosPorRegimenComponent implements OnInit,OnDestroy {
    * Estado de la solicitud.
    */
   public solicitudState!: Solicitud31601State;
-/* 
-  Catálogo de captura utilizado para almacenar una lista de opciones disponibles.
-  Cada objeto contiene un identificador y una descripción.
-*/
-   public capturecatalogo: Catalogo[] =[
-            {
-              "id": 1,
-              "descripcion": "123"
-            }];
 
   /**
    * Array de objetos RadioBotons que representan las opciones de radio disponibles.
@@ -73,7 +63,14 @@ export class DatosPorRegimenComponent implements OnInit,OnDestroy {
       value:"No"
     }
   ]
-
+/* 
+  Catálogo de captura utilizado para almacenar una lista de opciones disponibles.
+  Cada objeto contiene un identificador y una descripción.
+*/
+   public capturecatalogo: Catalogo[] =[ {
+              "id": 1,
+              "descripcion": "123"
+            }];
    /**
   * Indica si el formulario está en modo solo lectura.
   * Cuando es `true`, los campos del formulario no se pueden editar.
@@ -117,7 +114,8 @@ export class DatosPorRegimenComponent implements OnInit,OnDestroy {
    * @memberof DatosPorRegimenComponent
    */
   ngOnInit():void {
-    this.inicializarCertificadoFormulario();
+
+ this.inicializarCertificadoFormulario();
   }
  /**
    * Método para inicializar el formulario reactivo con los datos de la solicitud.
@@ -149,6 +147,7 @@ export class DatosPorRegimenComponent implements OnInit,OnDestroy {
         this.regimenForm.enable();       
       }
   }
+
   /**
  * Crea e inicializa el FormGroup `regimenForm` con varios controles de formulario y sus validadores.
  * Los controles del formulario incluyen:
@@ -186,11 +185,12 @@ export class DatosPorRegimenComponent implements OnInit,OnDestroy {
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.solicitudState = seccionState;
+           
         })
       )
       .subscribe();
     this.regimenForm = this.fb.group({
-        indiques: [this.solicitudState.indiques, Validators.required],
+      indiques: [this.solicitudState.indiques, Validators.required],
   cuenta: [this.solicitudState.cuenta, Validators.required],
   mismo: [this.solicitudState.mismo, Validators.required],
   empresa: [this.solicitudState.empresa, Validators.required],
@@ -218,10 +218,8 @@ export class DatosPorRegimenComponent implements OnInit,OnDestroy {
   bimestredos: [this.solicitudState.bimestredos || '', Validators.required],  
   numeroDatos: [this.solicitudState.numeroDatos || '', Validators.required],
   bimestres: [this.solicitudState.bimestres || '', Validators.required],
-  
     });
-   this.regimenForm.get('monedaTotal')?.disable();
-    this.regimenForm.get('porcentajeTotal')?.disable();
+
     if (this.esFormularioSoloLectura) {
       Object.keys(this.regimenForm.controls).forEach((key) => {
         this.regimenForm.get(key)?.disable();

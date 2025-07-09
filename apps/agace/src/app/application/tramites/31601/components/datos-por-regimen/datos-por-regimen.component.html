@@ -1,5 +1,7 @@
 <div class="container mt-5">
 <form [formGroup]="regimenForm">
+  <div *ngIf="solicitudState?.regimen_0">
+  
   <div class="row">
           <div class="col-md-12">
         <label
@@ -21,6 +23,7 @@
         ></app-input-radio>
       </div>
      </div>
+   
       <ng-titulo titulo="Importación temporal bajo la modalidad del programa IMMEX (sensibles)" />
 
   <div class="row">
@@ -76,6 +79,7 @@
         ></app-input-radio>
       </div>
           </div>
+
   <div  *ngIf="regimenForm.get('empresa')?.value === 'Yes'">
   <div class="row">
           <div class="col-md-3">
@@ -136,6 +140,8 @@
       </div>
   </div>
 </div>
+ 
+
 
      <div class="row">
           <div class="col-md-12">
@@ -238,7 +244,8 @@
         ></app-input-radio>
       </div>
      </div>
-
+</div>
+<div *ngIf="solicitudState?.regimen_1">
  <ng-titulo titulo="Depósito fiscal para someterse al proceso de ensamble y fabricación de vehículos" />
    <div class="row">
       <div class="col-md-12">
@@ -285,6 +292,8 @@
         ></app-input-radio>
       </div>
    </div>
+   </div>
+   <div *ngIf="solicitudState?.regimen_2">
    <ng-titulo titulo="Elaboración, transformación o reparación en recinto fiscalizado" />
 
    <div class="row">
@@ -332,7 +341,8 @@
         ></app-input-radio>
       </div>
    </div>
-
+   </div>
+<div *ngIf="solicitudState?.regimen_3">
   <ng-titulo titulo="Recinto fiscalizado estratégico" />
   <p>
     Deberá anexar copia simple de la autorización vigente emitida por el SAT
@@ -379,6 +389,7 @@
           "
         ></app-input-radio>
       </div>
+     </div>
      </div>
    </form>
 </div>
