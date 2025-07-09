@@ -1,5 +1,4 @@
 <form [formGroup]="forma">
-<app-domicilios-rfc-solicitante></app-domicilios-rfc-solicitante>
     <div class="row mt-5">
         <div class="col-md-6">
             <div class="form-group">
@@ -8,14 +7,6 @@
                     formControlName="sectorProductivo" (change)="
             setValoresStore(forma,'sectorProductivo'); manejarCamposMutuamenteExcluyentes('sectorProductivo', 'sectorServicio', $event)"
             [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
-
-                <div *ngIf="esInvalido('sectorProductivo')" class="text-danger">
-                    <small *ngIf="
-              forma.controls['sectorProductivo'].hasError(
-                'required'
-              )
-            ">Este campo es obligatorio.</small>
-                </div>
             </div>
         </div>
 
@@ -26,12 +17,6 @@
                     formControlName="sectorServicio"
                     (change)="setValoresStore(forma, 'sectorServicio'); manejarCamposMutuamenteExcluyentes('sectorServicio', 'sectorProductivo', $event)"
                     [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
-
-                <div *ngIf="esInvalido('sectorServicio')" class="text-danger">
-                    <small *ngIf="
-              forma.controls['sectorServicio'].hasError('required')
-            ">Este campo es obligatorio.</small>
-                </div>
             </div>
         </div>
     </div>
@@ -44,6 +29,9 @@
             <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'"
                 formControlName="cumplimientoFiscalAduanero" (valueChange)="onSeleccionfalsa($event)"
                 (change)="setValoresStore(forma,'cumplimientoFiscalAduanero')"></app-input-radio>
+            <div *ngIf="esInvalido('cumplimientoFiscalAduanero')" class="text-danger">
+                <small *ngIf="forma.controls['cumplimientoFiscalAduanero'].hasError('required')">Respuesta Obligatoria</small>
+            </div>
         </div>
     </div>
 
@@ -53,6 +41,9 @@
             <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'"
                 formControlName="autorizaOpinionSAT" (valueChange)="onSeleccionfalsa($event)"
                 (change)="setValoresStore(forma,'autorizaOpinionSAT')"></app-input-radio>
+            <div *ngIf="esInvalido('autorizaOpinionSAT')" class="text-danger">
+                <small *ngIf="forma.controls['autorizaOpinionSAT'].hasError('required')">Respuesta Obligatoria</small>
+            </div>
         </div>
     </div>
 
@@ -62,6 +53,9 @@
             <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'"
                 formControlName="cuentaConEmpleadosPropios" (valueChange)="enCambioDeValor($event); onSeleccionfalsa($event, EMPLEADO_REQUISITO)"
                 (change)="setValoresStore(forma,'cuentaConEmpleadosPropios')"></app-input-radio>
+            <div *ngIf="esInvalido('cuentaConEmpleadosPropios')" class="text-danger">
+                <small *ngIf="forma.controls['cuentaConEmpleadosPropios'].hasError('required')">Respuesta Obligatoria</small>
+            </div>
         </div>
     </div>
 
@@ -79,15 +73,7 @@
                 <div *ngIf="esInvalido('numeroDeEmpleadas')" class="text-danger">
                     <small *ngIf="
                 forma.controls['numeroDeEmpleadas'].hasError('required')
-              ">Este campo es obligatorio.</small>
-                    <!-- <small *ngIf="forma.controls['capitalSocial'].hasError('pattern')">
-              No cumple con el formato esperado
-            </small>
-          <small
-            *ngIf="forma.controls['capitalSocial'].hasError('maxlength')"
-          >
-            El capital social no puede exceder los 20 caracteres.
-          </small> -->
+              ">Respuesta Obligatoria</small>
                 </div>
             </div>
         </div>
@@ -103,7 +89,7 @@
                 <div *ngIf="esInvalido('bimestreUltimo')" class="text-danger">
                     <small *ngIf="
               forma.controls['bimestreUltimo'].hasError('required')
-            ">Este campo es obligatorio.</small>
+            ">Respuesta Obligatoria</small>
                 </div>
             </div>
         </div>
@@ -115,6 +101,9 @@
             <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'"
                 formControlName="retencionISRTrabajadores" (valueChange)="onSeleccionfalsa($event)"
                 (change)="setValoresStore(forma,'retencionISRTrabajadores')"></app-input-radio>
+            <div *ngIf="esInvalido('retencionISRTrabajadores')" class="text-danger">
+                <small *ngIf="forma.controls['retencionISRTrabajadores'].hasError('required')">Respuesta Obligatoria</small>
+            </div>
         </div>
     </div>
 
@@ -124,6 +113,9 @@
             <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'"
                 formControlName="pagoCuotasIMSS" (valueChange)="onSeleccionfalsa($event); manejarPagoCuotasIMSS($event)"
                 (change)="setValoresStore(forma,'pagoCuotasIMSS')"></app-input-radio>
+            <div *ngIf="esInvalido('pagoCuotasIMSS')" class="text-danger">
+                <small *ngIf="forma.controls['pagoCuotasIMSS'].hasError('required')">Respuesta Obligatoria</small>
+            </div>
         </div>
     </div>
 
@@ -139,6 +131,9 @@
             <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'"
                 formControlName="cuentaConSubcontratacionEspecializada" (valueChange)="toggleTablaPorValor($event)"
                 (change)="setValoresStore(forma,'cuentaConSubcontratacionEspecializada')"></app-input-radio>
+            <div *ngIf="esInvalido('cuentaConSubcontratacionEspecializada')" class="text-danger">
+                <small *ngIf="forma.controls['cuentaConSubcontratacionEspecializada'].hasError('required')">Respuesta Obligatoria</small>
+            </div>
         </div>
 
         <ng-container *ngIf="esTablaVisible">
@@ -149,11 +144,14 @@
 
 
             <div class="row" *ngIf="esTablaVisible">
-        <div class="col-md-12 pt-5">
+        <div class="col-md-12">
             <label class="form-label text-left">En su caso, acredita cumplir con el registro y estar en el padrón a que se refiere el artículo 15 de la LFT.*:</label>
             <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'"
                 formControlName="registroPadronLFT" (valueChange)="onSeleccionfalsa($event)"
                 (change)="setValoresStore(forma,'registroPadronLFT')"></app-input-radio>
+            <div *ngIf="esInvalido('registroPadronLFT')" class="text-danger">
+                <small *ngIf="forma.controls['registroPadronLFT'].hasError('required')">Respuesta Obligatoria</small>
+            </div>
         </div>
     </div>
 
@@ -163,6 +161,9 @@
             <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'"
                 formControlName="listadoSATArt69" (valueChange)="onSeleccionVerdadera($event)"
                 (change)="setValoresStore(forma,'listadoSATArt69')"></app-input-radio>
+            <div *ngIf="esInvalido('listadoSATArt69')" class="text-danger">
+                <small *ngIf="forma.controls['listadoSATArt69'].hasError('required')">Respuesta Obligatoria</small>
+            </div>
         </div>
     </div>
 
@@ -172,6 +173,9 @@
             <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'"
                 formControlName="listadoSATArt69B" (valueChange)="onSeleccionVerdadera($event)"
                 (change)="setValoresStore(forma,'listadoSATArt69B')"></app-input-radio>
+            <div *ngIf="esInvalido('listadoSATArt69B')" class="text-danger">
+                <small *ngIf="forma.controls['listadoSATArt69B'].hasError('required')">Respuesta Obligatoria</small>
+            </div>
         </div>
     </div>
 
@@ -181,6 +185,9 @@
             <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'"
                 formControlName="listadoSATArt69BBis" (valueChange)="onSeleccionVerdadera($event)"
                 (change)="setValoresStore(forma,'listadoSATArt69BBis')"></app-input-radio>
+            <div *ngIf="esInvalido('listadoSATArt69BBis')" class="text-danger">
+                <small *ngIf="forma.controls['listadoSATArt69BBis'].hasError('required')">Respuesta Obligatoria</small>
+            </div>
         </div>
     </div>
 
@@ -190,6 +197,9 @@
             <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'"
                 formControlName="certificadosSellosVigentes" (valueChange)="onSeleccionfalsa($event)"
                 (change)="setValoresStore(forma,'certificadosSellosVigentes')"></app-input-radio>
+            <div *ngIf="esInvalido('certificadosSellosVigentes')" class="text-danger">
+                <small *ngIf="forma.controls['certificadosSellosVigentes'].hasError('required')">Respuesta Obligatoria</small>
+            </div>
         </div>
     </div>
 
@@ -199,13 +209,16 @@
             <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'"
                 formControlName="infringioSupuestos17HBis" (valueChange)="onSeleccionVerdadera($event)"
                 (change)="setValoresStore(forma,'infringioSupuestos17HBis')"></app-input-radio>
+            <div *ngIf="esInvalido('infringioSupuestos17HBis')" class="text-danger">
+                <small *ngIf="forma.controls['infringioSupuestos17HBis'].hasError('required')">Respuesta Obligatoria</small>
+            </div>
         </div>
     </div>
 
 
     <div class="row">
         <div class="col-md-12 pt-5">
-            <h2>new table section will come here</h2>
+            <app-domicilios-rfc-solicitante></app-domicilios-rfc-solicitante>
         </div>
     </div>
 
@@ -215,6 +228,9 @@
             <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'"
                 formControlName="mediosContactoActualizadosBuzon" (valueChange)="onSeleccionfalsa($event)"
                 (change)="setValoresStore(forma,'mediosContactoActualizadosBuzon')"></app-input-radio>
+            <div *ngIf="esInvalido('mediosContactoActualizadosBuzon')" class="text-danger">
+                <small *ngIf="forma.controls['mediosContactoActualizadosBuzon'].hasError('required')">Respuesta Obligatoria</small>
+            </div>
         </div>
     </div>
 
@@ -224,8 +240,63 @@
             <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'"
                 formControlName="suspensionPadronImportadoresExportadores" (valueChange)="onSeleccionVerdadera($event)"
                 (change)="setValoresStore(forma,'suspensionPadronImportadoresExportadores')"></app-input-radio>
+            <div *ngIf="esInvalido('suspensionPadronImportadoresExportadores')" class="text-danger">
+                <small *ngIf="forma.controls['suspensionPadronImportadoresExportadores'].hasError('required')">Respuesta Obligatoria</small>
+            </div>
         </div>
     </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <ng-titulo [titulo]="'Querella'"></ng-titulo>
+            <label for="" class="form-label text-left">Señale si el SAT ha interpuesto querella o denuncia penal en contra de los socios, accionistas, según corresponda, representante legal, e integrantes de la administración de la empresa solicitante o declaratoria de perjuicio, según corresponda, durante los últimos tres años anteriores a la presentación de la solicitud de certificación.*:</label>
+            <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'"
+                formControlName="querellaSATUltimos3Anios" (valueChange)="onSeleccionVerdadera($event)"
+                (change)="setValoresStore(forma,'querellaSATUltimos3Anios')"></app-input-radio>
+            <div *ngIf="esInvalido('querellaSATUltimos3Anios')" class="text-danger">
+                <small *ngIf="forma.controls['querellaSATUltimos3Anios'].hasError('required')">Respuesta Obligatoria</small>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-md-12">
+<app-control-inventarios></app-control-inventarios>
+        </div>
+    </div>
+
+     <div class="row">
+        <div class="col-md-12 pt-5">
+            <label class="form-label text-left">Señale si ingresa mensualmente su información contable a través del portal del SAT, de conformidad con el artículo 28, fracción IV, del CFF y las reglas 2.8.1.5. y la 2.8.1.6. de la RMF.*:</label>
+            <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'"
+                formControlName="ingresoInfoContableSAT" (valueChange)="onSeleccionVerdadera($event)"
+                (change)="setValoresStore(forma,'ingresoInfoContableSAT')"></app-input-radio>
+            <div *ngIf="esInvalido('ingresoInfoContableSAT')" class="text-danger">
+                <small *ngIf="forma.controls['ingresoInfoContableSAT'].hasError('required')">Respuesta Obligatoria</small>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <h2>Table will go here</h2>
+            <app-agregar-miembro-empresa></app-agregar-miembro-empresa>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12 pt-5">
+            <label class="form-label text-left">Manifieste si sus socios o accionistas, según corresponda, representantes legales con facultad para actos de dominio e integrantes de la administración, no se encuentren vinculados con alguna empresa a la que se le hubiere cancelado su Registro en el Esquema de Certificación de Empresas, de conformidad con la regla 7.2.4., apartado A, fracciones V, VI y VII y apartado B, fracciones II, y III y V y/o de la regla 7.2.5., fracciones VI, VII y XI.*:</label>
+            <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'"
+                formControlName="ingresoInfoContableSAT" (valueChange)="onSeleccionVerdadera($event)"
+                (change)="setValoresStore(forma,'ingresoInfoContableSAT')"></app-input-radio>
+            <div *ngIf="esInvalido('ingresoInfoContableSAT')" class="text-danger">
+                <small *ngIf="forma.controls['ingresoInfoContableSAT'].hasError('required')">Respuesta Obligatoria</small>
+            </div>
+        </div>
+    </div>
+
 </form>
 
 <lib-notificaciones 

@@ -276,6 +276,7 @@ export class NumeroEmpleadosBimestreComponent implements OnInit, OnDestroy {
       this.enNuevaNotificacion(this.CONFIRMACION_NUMEROEMPLEADOS);
        this.esHabilitarElDialogo = true;
       this.NumeroEmpleadosInfoDatos();
+      this.registroNumeroEmpleadosForm.reset();
       this.cambiarEstadoModal();
     } else {
       this.enNuevaNotificacion(this.MENSAJE_DE_VALIDACION);

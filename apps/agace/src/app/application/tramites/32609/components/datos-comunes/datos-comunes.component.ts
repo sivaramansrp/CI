@@ -1,10 +1,12 @@
-import { Catalogo, CatalogoSelectComponent, CategoriaMensaje, ConsultaioQuery, InputRadioComponent, Notificacion, NotificacionesComponent, TipoNotificacionEnum } from '@libs/shared/data-access-user/src';
+import { Catalogo, CatalogoSelectComponent, CategoriaMensaje, ConsultaioQuery, InputRadioComponent, Notificacion, NotificacionesComponent, TipoNotificacionEnum, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NOTA, OPCIONES_DE_BOTON_DE_RADIO } from '../../enums/oea-textil-registro.enum';
 import { Subject, map, takeUntil } from 'rxjs';
 import { Tramite32609Store, Tramites32609State } from '../../estados/tramites32609.store';
+import { AgregarMiembroEmpresaComponent } from '../agregar-miembro-empresa/agregar-miembro-empresa.component';
 import { CommonModule } from '@angular/common';
+import { ControlInventariosComponent } from '../control-inventarios/control-inventarios.component';
 import { DomiciliosRfcSolicitanteComponent } from '../domicilios-rfc-solicitante/domicilios-rfc-solicitante.component';
 import { NumeroEmpleadosBimestreComponent } from '../numero-empleados-bimestre/numero-empleados-bimestre.component';
 import { OeaTextilRegistroService } from '../../services/oea-textil-registro.service';
@@ -20,6 +22,9 @@ import { OeaTextilRegistroService } from '../../services/oea-textil-registro.ser
       NotificacionesComponent,
       NumeroEmpleadosBimestreComponent,
       DomiciliosRfcSolicitanteComponent,
+      ControlInventariosComponent,
+      TituloComponent,
+      AgregarMiembroEmpresaComponent
     ],
   templateUrl: './datos-comunes.component.html',
   styleUrl: './datos-comunes.component.css',
@@ -132,8 +137,8 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
      */
     crearForm(): void {
       this.forma = this.fb.group({
-          sectorProductivo: [this.seccionState?.sectorProductivo, Validators.required],
-          sectorServicio: [this.seccionState?.sectorServicio, Validators.required],
+          sectorProductivo: [this.seccionState?.sectorProductivo],
+          sectorServicio: [this.seccionState?.sectorServicio],
           cumplimientoFiscalAduanero: [this.seccionState?.cumplimientoFiscalAduanero, Validators.required],
           autorizaOpinionSAT: [this.seccionState?.autorizaOpinionSAT, Validators.required],
           cuentaConEmpleadosPropios: [this.seccionState?.cuentaConEmpleadosPropios, Validators.required],
@@ -149,7 +154,21 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
           certificadosSellosVigentes: [this.seccionState?.certificadosSellosVigentes, Validators.required],
           infringioSupuestos17HBis: [this.seccionState?.infringioSupuestos17HBis, Validators.required],
           mediosContactoActualizadosBuzon: [this.seccionState?.mediosContactoActualizadosBuzon, Validators.required],
-          suspensionPadronImportadoresExportadores: [this.seccionState?.suspensionPadronImportadoresExportadores, Validators.required]
+          suspensionPadronImportadoresExportadores: [this.seccionState?.suspensionPadronImportadoresExportadores, Validators.required],
+          querellaSATUltimos3Anios: [this.seccionState?.querellaSATUltimos3Anios, Validators.required],
+          ingresoInfoContableSAT: [this.seccionState?.ingresoInfoContableSAT, Validators.required],
+      });
+    }
+
+    onValidateForm(): void {
+      this.forma.markAllAsTouched();
+      
+      // Update validation status for all controls
+      Object.keys(this.forma.controls).forEach(key => {
+        const CONTROL = this.forma.get(key);
+        if (CONTROL) {
+          CONTROL.updateValueAndValidity();
+        }
       });
     }
   
@@ -261,6 +280,11 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
     const CONTROL = form.get(campo);
     if (CONTROL && CONTROL.value !== null && CONTROL.value !== undefined) {
       this.tramite32609Store.establecerDatos({ [campo]: CONTROL.value });
+      
+      // Clear validation errors if the field now has a valid value
+      if (CONTROL.valid && CONTROL.touched) {
+        CONTROL.markAsPristine();
+      }
     }
   }
 
@@ -314,6 +338,12 @@ onSeleccionVerdadera(evento:string | number, nota?:string): void {
   
   }
 
+  /**
+   * Método que se ejecuta cuando se selecciona una opción del botón de radio.
+   * Habilita o deshabilita el diálogo de confirmación según la opción seleccionada.
+   * @param {string, number} evento - El evento del cambio de valor del botón de radio.
+   * @param {string} nota - Nota opcional para enviar al diálogo.
+   */
   onSeleccionfalsa(evento:string | number, nota?:string): void {
     if (evento && (evento === '0' || evento === 0)) {
       this.enviarDialogData(nota);
