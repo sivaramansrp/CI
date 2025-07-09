@@ -16,6 +16,7 @@ import { ZoosanitarioQuery } from '../../queries/220201/zoosanitario.query';
 import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 import { ToastrModule } from 'ngx-toastr';
 import { ActivatedRoute } from '@angular/router';
+import { MockCertificadoEnum } from '../../constantes/mockCertificado.enum';
 
 describe('DatosDeLaSolicitudComponent', () => {
   let component: DatosDeLaSolicitudComponent;
@@ -29,11 +30,11 @@ const mockCertificadoService = {
   getAllDatosForma: jest.fn(() =>
     of({
       datos: {
-        tipoMercancia: 'yes',
-        aduanaIngreso: '123',
-        oficinaInspeccion: '456',
-        puntoInspeccion: '789',
-        regimen: 'A1',
+        tipoMercancia: MockCertificadoEnum.tipoMercancia,
+        aduanaIngreso: MockCertificadoEnum.aduanaIngreso,
+        oficinaInspeccion: MockCertificadoEnum.oficinaInspeccion,
+        puntoInspeccion: MockCertificadoEnum.puntoInspeccion,
+        regimen: MockCertificadoEnum.regimen,
       },
       tablaDatos: [],
     })
@@ -42,11 +43,11 @@ const mockCertificadoService = {
 
   const mockZoosanitarioQuery = {
     seleccionarDatosSolicitud$: of({
-      tipoMercancia: 'yes',
-      aduanaIngreso: '123',
-      oficinaInspeccion: '456',
-      puntoInspeccion: '789',
-      regimen: 'A1',
+      tipoMercancia: MockCertificadoEnum.tipoMercancia,
+      aduanaIngreso: MockCertificadoEnum.aduanaIngreso,
+      oficinaInspeccion: MockCertificadoEnum.oficinaInspeccion,
+      puntoInspeccion: MockCertificadoEnum.puntoInspeccion,
+      regimen: MockCertificadoEnum.regimen,
     }),
   };
 

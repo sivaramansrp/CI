@@ -105,10 +105,12 @@
             <div class="form-group">
                @if(setFecha){
                   <input-fecha
+                  [setFecha]="pagoForm.get('fechaPago')?.value"
                   [datos]="fechaInicioInput"
                   name="fechaPago"
                   (change)="actualizarPago()"
                   (valorCambiado)="onFechaCambiada($event)"
+                  
                   [isDisabled]="esFormularioSoloLectura || pagoForm.get('exentoPago')?.value === 'si'"
                   ></input-fecha>
                   <div class="mensaje-error" *ngIf="pagoForm.get('fechaPago')?.errors?.['futureDateNotAllowed']">
