@@ -1,26 +1,8 @@
 import { CatalogosSelect } from "@libs/shared/data-access-user/src";
-
-/**
- * Opciones para los radios relacionados con el aprovechamiento.
- */
-export const RADIO_OPCIONS = [
-  { label: 'Disminución', value: 'disminucion' },
-  { label: 'Compensación', value: 'compensacion' },
-  { label: 'Disminución y Compensación', value: 'disminucionYCompensacion' },
-];
-
-/**
- * Opciones para el radio relacionado con la disminución parcial.
- */
-export const RADIO_PARCIAL = [
-  { label: 'Sí', value: 'si' },
-  { label: 'No', value: 'no' },
-];
-
 /**
  * Opciones para el radio relacionado con la disminución total.
  */
-export const RADIO_TOTAL = [
+export const RADIO_01 = [
   { label: 'Sí', value: 'si' },
   { label: 'No', value: 'no' },
 ];
@@ -69,6 +51,28 @@ export const  SECTOR_PRODUCTIVO: CatalogosSelect = {
 export const SERVICIO_CATALOGO: CatalogosSelect = {
   /** Etiqueta para el catálogo de meses. */
   labelNombre: 'Servicio',
+  /** Indica si el campo es obligatorio. */
+  required: true,
+  /** Texto de la primera opción del catálogo. */
+  primerOpcion: 'Selecciona un valor',
+  /** Lista de elementos del catálogo. */
+  catalogos: [],
+};
+
+export const BIOMESTRE_CATALOGO: CatalogosSelect = {
+  /** Etiqueta para el catálogo de bimestres. */
+  labelNombre: 'Biomestre',
+  /** Indica si el campo es obligatorio. */
+  required: true,
+  /** Texto de la primera opción del catálogo. */
+  primerOpcion: 'Selecciona un valor',
+  /** Lista de elementos del catálogo. */
+  catalogos: [],
+};
+
+export const DOMICILIO_CATALOGO: CatalogosSelect = {
+  /** Etiqueta para el catálogo de domicilios. */
+  labelNombre: '',
   /** Indica si el campo es obligatorio. */
   required: true,
   /** Texto de la primera opción del catálogo. */

@@ -19,13 +19,7 @@
       </li>
     </ul>
     <ng-container> @switch (indice) { @case (1) { <solicitante [tabindex]="1"></solicitante>
-      <div class="row mt-3" [formGroup]="solicitanteForm">
-        <div class="col-md-4">
-          <label>ADACE:</label>
-          <input type="text" class="form-control" formControlName="adace" required />
-        </div>
-      </div>
-      } @case (2) {
+            } @case (2) {
          <app-datos-comunes [tabIndex]="2"></app-datos-comunes> }
         @case (3) {
          <app-terceros-relacinados [tabIndex]="3"></app-terceros-relacinados> }
