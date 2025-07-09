@@ -8,6 +8,7 @@ import { of, Subject } from 'rxjs';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AlertComponent } from 'ngx-bootstrap/alert';
+import { provideHttpClient } from '@angular/common/http';
 
 describe('TipoDeAvisoComponent', () => {
   let component: TipoDeAvisoComponent;
@@ -65,8 +66,8 @@ describe('TipoDeAvisoComponent', () => {
     };
     mockSeccionLibQuery = {
       selectSeccionState$: of({
-        seccion: [true, false], // Adjusted to match the expected boolean[] type
-        formaValida: [true], // Adjusted to match the expected boolean[] type
+        seccion: [true, false], 
+        formaValida: [true], 
       }),
     };
 
@@ -74,6 +75,7 @@ describe('TipoDeAvisoComponent', () => {
       declarations: [],
       imports: [ReactiveFormsModule, AlertComponent, InputFechaComponent, TituloComponent, InputRadioComponent, CommonModule, TipoDeAvisoComponent],
       providers: [
+        provideHttpClient(),
         FormBuilder,
         { provide: DestruccionStore, useValue: mockDestruccionStore },
         { provide: DestruccionQuery, useValue: mockDestruccionQuery },
