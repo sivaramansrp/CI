@@ -125,7 +125,7 @@
             <div class="btn-group">
                 <button class="btn btn-default me-1" type="button" id="btnScianEliminar">Eliminar</button>
                 <button type="button" class="btn btn-primary ms-2" id="btnScianAgregar" data-bs-toggle="modal"
-                    data-bs-target="#modalAddSCIAN" (click)="abrirDialogoAgregarDatosSCIAN()">
+                    data-bs-target="#modalAddSCIAN">
                     Agregar
                 </button>
             </div>
@@ -164,11 +164,11 @@
                                     Cancelar
                                 </button>
                                 <button type="button" name="limpiarSCIAN" class="btn btn-danger ms-2"
-                                    (click)="limpiarDatosSCIAN()">
+                                    >
                                     Limpiar
                                 </button>
                                 <button type="button" name="agregar" class="btn btn-primary ms-2"
-                                    (click)="agregarDatosSCIAN()">
+                                    >
                                     Agregar
                                 </button>
                             </div>
@@ -271,7 +271,7 @@
             <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'"
                 formControlName="informacionConfidencial"
                 (change)="setValoresStore(manifiestosForm,'informacionConfidencial', 'setInformacionConfidencial')"
-                (valueChange)="enCambioDeValor()"></app-input-radio>
+                ></app-input-radio>
         </div>
     </div>
 </ng-container>

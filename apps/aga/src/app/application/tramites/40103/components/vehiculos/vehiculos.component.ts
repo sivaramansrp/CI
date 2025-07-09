@@ -15,7 +15,7 @@ import {
 import {
   Tramite40103State,
   Tramite40103Store,
-} from '../../estados/Tramite40103Store';
+} from '../../estados/tramite40103.store';
 import {
   CatalogoLista,
   UnidadTabla,

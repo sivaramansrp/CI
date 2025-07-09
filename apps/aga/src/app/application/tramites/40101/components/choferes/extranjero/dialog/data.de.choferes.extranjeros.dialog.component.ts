@@ -195,8 +195,6 @@ export class DatosDeChoferesExtranjerosDialogComponent implements OnInit, OnDest
   onPaisChange(value: Catalogo): void {
     this.fetchEstadosByPais(value);
     this.formChoferes.controls['estado'].reset();
-    this.formChoferes.controls['municipioAlcaldia'].reset();
-    this.formChoferes.controls['colonia'].reset();
   }
 
   /**
@@ -226,9 +224,6 @@ export class DatosDeChoferesExtranjerosDialogComponent implements OnInit, OnDest
   onEstadoChange(value: Catalogo): void {
 
     this.fetchMunicipiosByEstado(value);
-
-    this.formChoferes.controls['municipioAlcaldia'].reset();
-    this.formChoferes.controls['colonia'].reset();
   }
 
   /**
@@ -258,8 +253,6 @@ export class DatosDeChoferesExtranjerosDialogComponent implements OnInit, OnDest
    */
   onMunicipioChange(value: Catalogo): void {
     this.fetchColoniasByMunicipio(value);
-
-    this.formChoferes.controls['colonia'].reset();
   }
 
   /**
@@ -313,8 +306,8 @@ export class DatosDeChoferesExtranjerosDialogComponent implements OnInit, OnDest
    */
   resetForm(): void {
     this.formChoferes.reset({
-      curp: '',
-      rfc: '',
+      // curp: '',
+      // rfc: '',
       nombre: '',
       primerApellido: '',
       segundoApellido: '',
@@ -325,8 +318,6 @@ export class DatosDeChoferesExtranjerosDialogComponent implements OnInit, OnDest
       numeroInterior: '',
       pais: 1,
       estado: '',
-      municipioAlcaldia: '',
-      colonia: '',
       paisDeResidencia: '1',
       ciudad: '',
       localidad: '',
@@ -338,23 +329,12 @@ export class DatosDeChoferesExtranjerosDialogComponent implements OnInit, OnDest
   }
 
   /**
-   * Maneja la entrada en el campo CURP y busca automáticamente el chofer si la longitud es suficiente.
-   * @returns {void}
-   */
-  onCurpInput(): void {
-    const CURP_VALUE = this.formChoferes.get('curp')?.value;
-    if (CURP_VALUE && CURP_VALUE.length >= 18) {
-      this.buscarChoferNacional(CURP_VALUE);
-    }
-  }
-
-  /**
    * Busca información de un chofer nacional utilizando su CURP y actualiza el formulario.
-   * @param curp CURP del chofer nacional.
+   * @param numeroDelSeguroSocial CURP del chofer nacional.
    * @returns {Promise<void>}
    */
-  async buscarChoferNacional(curp: string): Promise<void> {
-    if (!curp) {
+  async buscarChoferNacional(numeroDelSeguroSocial: string): Promise<void> {
+    if (!numeroDelSeguroSocial) {
       //this.showNotification = true;
       this.alertaNotificacion = {
         tipoNotificacion: TipoNotificacionEnum.ALERTA,

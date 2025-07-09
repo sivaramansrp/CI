@@ -40,7 +40,6 @@ describe('DomicilioComponent', () => {
         licenciaSanitaria: 'Licencia1',
         regimen: 'Regimen1',
         aduanasEntradas: ['Aduana1'],
-        numeroPermiso: 'Permiso1',
       }),
     } as unknown as jest.Mocked<Tramite260215Query>;
 
@@ -81,7 +80,6 @@ describe('DomicilioComponent', () => {
       licenciaSanitaria: 'Licencia1',
       regimen: 'Regimen1',
       aduanasEntradas: ['Aduana1'],
-      numeroPermiso: 'Permiso1',
     });
   });
 

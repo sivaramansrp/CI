@@ -1,37 +1,46 @@
-import { AfterViewInit } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  EventEmitter,
+  OnDestroy,
+  OnInit,
+  Output,
+  ViewChild
+} from '@angular/core';
+import {
+  ConsultaioQuery,
+  ConsultaioState,
+  DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL,
+  DatosPasos,
+  FormularioDinamico,
+  ListaPasosWizard,
+  PERSONA_MORAL_NACIONAL,
+  SolicitanteComponent,
+  WizardComponent
+} from '@ng-mf/data-access-user';
+import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { ConsultaioQuery } from '@ng-mf/data-access-user';
-import { ConsultaioState } from '@ng-mf/data-access-user';
-import { DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL } from '@ng-mf/data-access-user';
 import { DatosDelTramiteComponent } from '../../components/datos-del-tramite/datos-del-tramite.component';
-import { DatosPasos } from '@ng-mf/data-access-user';
-import { EventEmitter } from '@angular/core';
-import { FormularioDinamico } from '@ng-mf/data-access-user';
-import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { ModificacionDonacionesImmexService } from '../../services/modificacion-donaciones-immex.service';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
-import { Output } from '@angular/core';
 import { PASOS } from '../../constants/pasos.enum';
-import { PERSONA_MORAL_NACIONAL } from '@ng-mf/data-access-user';
 import { ReactiveFormsModule } from '@angular/forms';
-import { SolicitanteComponent } from '@ng-mf/data-access-user';
 import { Solicitud11102StaObjResp } from '../../estados/tramite11102.store';
-import { Subject } from 'rxjs';
-import { ViewChild } from '@angular/core';
-import { WizardComponent } from '@ng-mf/data-access-user';
-import { map } from 'rxjs';
-import { takeUntil } from 'rxjs';
 
+/**
+ * Interfaz que representa una acción ejecutada por un botón dentro de un flujo o formulario paso a paso.
+ */
 interface AccionBoton {
   /**
-   * Acción a realizar (e.g., 'cont' para continuar, 'ant' para retroceder).
+   * Acción que se desea ejecutar, como por ejemplo:
+   * - `'cont'`: para continuar al siguiente paso.
+   * - `'ant'`: para retroceder al paso anterior.
+   * - Otros valores definidos por el flujo.
    */
   accion: string;
 
   /**
-   * Índice del paso al que se desea navegar.
+   * Índice numérico del paso al que se quiere navegar.
+   * Usado para controlar la navegación dentro del flujo.
    */
   valor: number;
 }

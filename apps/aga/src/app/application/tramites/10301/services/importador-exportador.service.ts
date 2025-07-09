@@ -1,26 +1,31 @@
+import { Observable,tap } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
 import { RespuestaCatalogos } from '@libs/shared/data-access-user/src';
-import { Tramite10301Store} from '../../10301/estados/tramite10301.store'
-import { tap } from 'rxjs/operators';
+import { Tramite10301Store } from '../../10301/estados/tramite10301.store';
+
 /**
  * Servicio para obtener datos relacionados con importadores y exportadores.
+ * Proporciona métodos para obtener catálogos necesarios para el trámite,
+ * como aduanas, años, condiciones, países, tipos de documentos y más.
+ * Los datos obtenidos se almacenan en el estado mediante Akita Store.
  */
 @Injectable({
   providedIn: 'root',
 })
 export class ImportadorExportadorService {
   /**
-   * Constructor que se utiliza para la inyección de dependencias.
-   * @param http Servicio HTTP para realizar solicitudes.
-   * @param store Store de Akita para gestionar el estado.
+   * Constructor que inyecta dependencias necesarias para el servicio.
+   * @param http Cliente HTTP para realizar peticiones a recursos JSON.
+   * @param store Store de Akita para gestionar y actualizar el estado global.
    */
   constructor(private http: HttpClient, private store: Tramite10301Store) {
-    // El constructor se utiliza para la inyección de dependencias.
+    // Constructor para inyección de dependencias
   }
-/**
+
+  /**
    * Obtiene el catálogo de aduanas por las que ingresará la mercancía.
+   * Los datos se guardan en el store para su uso posterior.
    * @returns Observable con la respuesta del catálogo de aduanas.
    */
   getAduanaIngresara(): Observable<RespuestaCatalogos> {
@@ -32,7 +37,8 @@ export class ImportadorExportadorService {
   }
 
   /**
-   * Obtiene el catálogo de años.
+   * Obtiene el catálogo de años disponibles para seleccionar.
+   * Actualiza el estado con los datos obtenidos.
    * @returns Observable con la respuesta del catálogo de años.
    */
   getAno(): Observable<RespuestaCatalogos> {
@@ -42,7 +48,8 @@ export class ImportadorExportadorService {
   }
 
   /**
-   * Obtiene el catálogo de condiciones.
+   * Obtiene el catálogo de condiciones de la mercancía.
+   * Actualiza el estado con los datos obtenidos.
    * @returns Observable con la respuesta del catálogo de condiciones.
    */
   getCondicion(): Observable<RespuestaCatalogos> {
@@ -54,7 +61,8 @@ export class ImportadorExportadorService {
   }
 
   /**
-   * Obtiene el catálogo de países.
+   * Obtiene el catálogo de países para selección en el trámite.
+   * Actualiza el estado con los datos obtenidos.
    * @returns Observable con la respuesta del catálogo de países.
    */
   getPais(): Observable<RespuestaCatalogos> {
@@ -64,7 +72,8 @@ export class ImportadorExportadorService {
   }
 
   /**
-   * Obtiene el catálogo de tipos de documentos.
+   * Obtiene el catálogo de tipos de documentos requeridos.
+   * Actualiza el estado con los datos obtenidos.
    * @returns Observable con la respuesta del catálogo de tipos de documentos.
    */
   getTipoDocumento(): Observable<RespuestaCatalogos> {
@@ -75,7 +84,12 @@ export class ImportadorExportadorService {
     );
   }
 
-  getFechasSeleccionadas(): Observable<RespuestaCatalogos>{
+  /**
+   * Obtiene el catálogo de fechas seleccionadas para uso en el trámite.
+   * Actualiza el estado con los datos obtenidos.
+   * @returns Observable con la respuesta del catálogo de fechas seleccionadas.
+   */
+  getFechasSeleccionadas(): Observable<RespuestaCatalogos> {
     return this.http.get<RespuestaCatalogos>(
       'assets/json/10301/fechasSeleccionadas.json'
     ).pipe(
@@ -83,11 +97,15 @@ export class ImportadorExportadorService {
     );
   }
 
+  /**
+   * Obtiene el catálogo de documentos relacionados con el trámite.
+   * Actualiza el estado con los datos obtenidos.
+   * @returns Observable con la respuesta del catálogo de documentos.
+   */
   getDocumentos(): Observable<RespuestaCatalogos> {
     return this.http.get<RespuestaCatalogos>(
       'assets/json/10301/documentos.json'
-    )
-    .pipe(
+    ).pipe(
       tap(response => this.store.setDocumentos(response.data))
     );
   }

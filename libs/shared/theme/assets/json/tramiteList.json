@@ -3089,8 +3089,8 @@
   {
     "id": 444,
     "tramite": 32512,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/agace/aviso-destruccion-mercancias/solicitud",
+    "linkDepartment": "/pago/aviso-destruccion-mercancias/solicitud",
     "department": "agace"
   },
   {
@@ -4220,5 +4220,12 @@
     "linkDashboard": "/se/cancelaciones-certificado/solicitud",
     "linkDepartment": "/pago/cancelaciones-certificado/solicitud",
     "department": "se"
+  },
+  {
+    "id": 191,
+    "tramite": 30506,
+    "linkDashboard": "/agace/registros/solicitud",
+    "linkDepartment": "/pago/registros/solicitud",
+    "department": "agace"
   }
 ]

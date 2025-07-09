@@ -4,13 +4,14 @@
 <form [formGroup]="manifiestosRepresentanteForm">
     <div class="form-check bg-light p-0">
         <div class="alert alert-info content-with-checkbox py-6">
+          <div class="checkbox-wrapper"></div>
           <input
             formControlName="manifests"
             type="checkbox"
             id="manifiesto"
             [disabled]="formularioDeshabilitado ? true : false"
           />
-          <span class="fw-bold align-middle"> *</span>
+          <span class="fw-bold align-middle">*</span>
           <div>{{ manifiestosText }} </div>
           <div *ngIf="hasError('manifests', 'required')" class="text-danger mt-1">
             Debe aceptar el manifiesto.
@@ -25,7 +26,7 @@
         <app-input-radio
         [radioOptions]="informacionConfidencialRadioOption"
         [isRequired]="true"
-        [layout]="'vertical'"
+        [layout]="'horizontal'"
         [gap]="'50px'"
         formControlName="informacionConfidencialRadio"
       ></app-input-radio>
@@ -48,8 +49,8 @@
           (change)="onControlChange('representanteRfc')"
          
         />
-        <div *ngIf="hasError('representanteNombre', 'required')" class="text-danger mt-1">
-          El nombre o razón social del representante legal es obligatorio.
+        <div *ngIf="hasError('representanteRfc', 'required')" class="text-danger mt-1">
+          Este campo es obligatorio
         </div>
       </div>
     </div>
@@ -79,7 +80,7 @@
           (change)="onControlChange('representanteNombre')"
         />
         <div *ngIf="hasError('representanteNombre', 'required')" class="text-danger mt-1">
-          El nombre o razón social del representante legal es obligatorio.
+          Este campo es obligatorio
         </div>
       </div>
     </div>
@@ -96,7 +97,7 @@
           (change)="onControlChange('apellidoPaterno')"
         />
         <div *ngIf="hasError('apellidoPaterno', 'required')" class="text-danger mt-1">
-          El apellido paterno es obligatorio.
+          Este campo es obligatorio
         </div>
       </div>
     </div>
