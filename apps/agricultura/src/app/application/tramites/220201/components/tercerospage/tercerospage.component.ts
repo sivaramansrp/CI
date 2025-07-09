@@ -100,8 +100,8 @@ export class TercerospageComponent implements OnInit, OnDestroy, AfterViewInit {
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((datosDeLaSolicitud) => {
         if (datosDeLaSolicitud) {
-          this.personas = datosDeLaSolicitud.tercerosRelacionados || [];
-          this.datosForma = datosDeLaSolicitud.datosForma || [];
+          this.personas = datosDeLaSolicitud.tercerosRelacionados;
+          this.datosForma = datosDeLaSolicitud.datosForma;
         }
       });
   }
