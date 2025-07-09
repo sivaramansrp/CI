@@ -71,7 +71,7 @@ describe('AdaceService', () => {
 
     it('actualizarEstadoFormulario should call store.update with merged state', () => {
         const datos: Solicitud32514State = { foo: 'bar' } as any;
-        service.actualizarEstadoFormulario(datos);
+        store.actualizarEstadoFormulario(datos);
         expect(store.update).toHaveBeenCalledWith(expect.any(Function));
         // Simulate the update function
         const state = { existing: 'value' };
