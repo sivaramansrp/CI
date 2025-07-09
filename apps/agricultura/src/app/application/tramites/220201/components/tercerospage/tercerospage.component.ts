@@ -8,14 +8,13 @@
  */
 
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
-import { DatosDeLaSolicitud, TercerosrelacionadosdestinoTable } from '../../../../shared/models/tercerosrelacionados.model';
+import { DatosDeLaSolicitud,TercerosrelacionadosTable, TercerosrelacionadosdestinoTable } from '../../../../shared/models/tercerosrelacionados.model';
 import { Subject, takeUntil } from 'rxjs';
 import { CertificadoZoosanitarioServiceService } from '../../services/220201/certificado-zoosanitario.service';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { TercerosrelacionadosComponent } from '../../../../shared/components/tercerosrelacionados/tercerosrelacionados.component';
 import { TercerosrelacionadosService } from '../../../../shared/components/services/tercerosrelacionados/tercerosrelacionados.service';
-import { ZoosanitarioQuery } from '../../queries/220201/zoosanitario.query';
 
 /**
  * Componente para la gestión de terceros relacionados en el trámite.
@@ -65,6 +64,13 @@ export class TercerospageComponent implements OnInit, OnDestroy, AfterViewInit {
    * @type {DatosDeLaSolicitud}
    */
   catalogosDatos: DatosDeLaSolicitud = {} as DatosDeLaSolicitud;
+  /**
+   * Datos de la forma relacionados con terceros.
+   * Esta propiedad almacena los datos específicos de la forma que se relacionan con los terceros.
+   * @type {TercerosrelacionadosTable[]}
+   */
+
+  datosForma: TercerosrelacionadosTable[] = [];
 
   /**
    * Constructor del componente.
@@ -76,7 +82,6 @@ export class TercerospageComponent implements OnInit, OnDestroy, AfterViewInit {
   constructor(
     private consultaQuery: ConsultaioQuery,
     private readonly certificadoZoosanitarioServices: CertificadoZoosanitarioServiceService,
-    private readonly certificadoZoosanitarioQuery: ZoosanitarioQuery,
     public tercerosrelacionadosService: TercerosrelacionadosService
   ) {}
 
@@ -91,11 +96,12 @@ export class TercerospageComponent implements OnInit, OnDestroy, AfterViewInit {
       .subscribe((seccionState) => {
         this.esFormularioSoloLectura = seccionState?.readonly;
       });
-    this.certificadoZoosanitarioQuery.seleccionarTercerosRelacionados$
+    this.certificadoZoosanitarioServices.getAllDatosForma()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((datosDeLaSolicitud) => {
         if (datosDeLaSolicitud) {
-          this.personas = datosDeLaSolicitud;
+          this.personas = datosDeLaSolicitud.tercerosRelacionados;
+          this.datosForma = datosDeLaSolicitud.datosForma;
         }
       });
   }
