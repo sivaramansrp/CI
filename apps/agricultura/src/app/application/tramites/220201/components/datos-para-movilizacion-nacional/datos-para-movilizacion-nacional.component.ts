@@ -1,7 +1,6 @@
 import {
   Catalogo,
   CatalogoSelectComponent,
-  ConsultaioQuery,
   RespuestaCatalogos,
   SharedModule,
   TituloComponent
@@ -12,6 +11,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { Subject, map, takeUntil } from 'rxjs';
 import { CertificadoZoosanitarioServiceService } from '../../services/220201/certificado-zoosanitario.service';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { HttpClient } from '@angular/common/http';
 import { ZoosanitarioQuery } from '../../queries/220201/zoosanitario.query';
 

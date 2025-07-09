@@ -1,6 +1,6 @@
 <div class="container">
     <form [formGroup]="productosForm">
-        <ng-titulo titulo="Datos Generales de la Mercancía Animal" />
+        <ng-titulo titulo="Datos Generales de la Mercancía Productos o Subproductos" />
 
         <div class="row">
             <div class="col-md-4">
@@ -162,12 +162,15 @@
                 </div>
                 </div>
             </div>
-    
-    
         </div>
     </form>
-
-    <div class="row">
+            <div class="row mt-2">
+          <div class="col-md-12 d-flex justify-content-end">
+              <button type="button" class="btn btn-default ms-3" (click)="eliminarDetalle()">Eliminar Detallo</button>
+              <button type="button" class="btn btn-primary ms-3" (click)="agregarDetalle()">Agregar Detallo</button>
+          </div>
+        </div>
+    <div class="row mt-5">
   <app-tabla-dinamica
     [tipoSeleccionTabla]="tablaSeleccion"
     [configuracionTabla]="configuracionDetallasDatosTabla"
