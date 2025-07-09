@@ -4,7 +4,7 @@ import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 
 import { SELECCIONADO, TEXTOS } from '../../constantes/certificado-zoosanitario.enum';
 
-import {AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, ConsultaioQuery, InputRadioComponent, Notificacion, NotificacionesComponent, RespuestaCatalogos, SharedModule, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
+import {AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, InputRadioComponent, Notificacion, NotificacionesComponent, RespuestaCatalogos, SharedModule, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 
 import { HttpClient } from '@angular/common/http';
 
@@ -15,6 +15,7 @@ import { FilaSolicitud, SolicitudData } from '../../models/220201/capturar-solic
 import {Subject, debounceTime, map, takeUntil } from 'rxjs';
 import { CertificadoZoosanitarioServiceService } from '../../services/220201/certificado-zoosanitario.service';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { ZoosanitarioQuery } from '../../queries/220201/zoosanitario.query';
 import { ZoosanitarioStore } from '../../estados/220201/zoosanitario.store';
 
@@ -388,7 +389,19 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
     });
     this.certificadoZoosanitarioQuery.seleccionarDatosSolicitud$.pipe(takeUntil(this.destroyNotifier$)).subscribe((datosDeLaSolicitud) => {
       if (datosDeLaSolicitud) {
-        this.datosDelaSolicitud.patchValue(datosDeLaSolicitud);
+        this.datosDelaSolicitud.patchValue({
+          tipoMercancia: datosDeLaSolicitud.tipoMercancia || 'yes',
+          aduanaIngreso: datosDeLaSolicitud.aduanaIngreso || '',
+          oficinaInspeccion: datosDeLaSolicitud.oficinaInspeccion || '',
+          puntoInspeccion: datosDeLaSolicitud.puntoInspeccion || '',
+          claveUCON: datosDeLaSolicitud.claveUCON || '',
+          establecimientoTIF: datosDeLaSolicitud.establecimientoTIF || '',
+          nombreVeterinario: datosDeLaSolicitud.nombreVeterinario || '',
+          numeroGuia: datosDeLaSolicitud.numeroGuia || '',
+          certificacion: datosDeLaSolicitud.certificacion || '',
+          regimen: datosDeLaSolicitud.regimen || ''
+        })
+        this.notificationCheck=true;
       }
     });
     this.forma.setControl('datosDelaSolicitud', this.datosDelaSolicitud);

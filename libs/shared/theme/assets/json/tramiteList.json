@@ -3089,8 +3089,8 @@
   {
     "id": 444,
     "tramite": 32512,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/agace/aviso-destruccion-mercancias/solicitud",
+    "linkDepartment": "/pago/aviso-destruccion-mercancias/solicitud",
     "department": "agace"
   },
   {

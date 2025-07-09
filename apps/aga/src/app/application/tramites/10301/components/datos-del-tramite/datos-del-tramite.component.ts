@@ -195,8 +195,20 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
    * 
    */
   formularioDeshabilitado: boolean = true;
+  /**
+   * Indicates whether the selected location is a country.
+   * Set to `true` if the location is a country, otherwise `false`.
+   */
   isPais: boolean = false;
+    /**
+   * Indicates whether the selected location is a country.
+   * Set to `true` if the location is a country, otherwise `false`.
+   */
   isDesplegableDepaises: boolean = false;
+    /**
+   * Indicates whether the selected location is a country.
+   * Set to `true` if the location is a country, otherwise `false`.
+   */
   isAdunaMarcancia: boolean = false;
   /**
    * Botones de acción disponibles para gestionar las listas de fechas.
@@ -231,8 +243,16 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
    * @param importarExportar Servicio de importador/exportador.
    * @param store Store de Akita para gestionar el estado.
    * @param query Query de Akita para seleccionar el estado.
+   * @param fb FormBuilder para crear formularios reactivos.
+   * @param validacionesService Servicio de validaciones de formularios.
+   * * Este componente se encarga de manejar los datos del trámite 10301, incluyendo la gestión de fechas,
+   * * la selección de aduanas, años, condiciones y países, así como la validación del formulario.
+   * @remarks
+   * Este componente se encarga de manejar los datos del trámite 10301, incluyendo la gestión de fechas,
+   * la selección de aduanas, años, condiciones y países, así como la validación del formulario.
+   * Este componente es parte de la aplicación de gestión de trámites aduaneros y se
+   * utiliza para capturar y validar la información relacionada con el trámite 10301.
    */
-
   constructor(
     private consultaioQuery: ConsultaioQuery,
     private importarExportar: ImportadorExportadorService,
@@ -449,6 +469,14 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
   }
 
 
+  /**
+   * Obtiene la información de la aduana por la que ingresará la mercancía y actualiza el store con los datos obtenidos.
+   * 
+   * Este método se suscribe al observable `getAduanaIngresara` del servicio `importarExportar`.
+   * Si la respuesta es exitosa (código HTTP 200), almacena los datos recibidos en el estado de la aplicación usando el método `store.setAduana`.
+   * 
+   * @returns void
+   */
   getAduanaIngresara(): void {
     this.getAduanaIngresaraSubscription = this.importarExportar
       .getAduanaIngresara()
@@ -497,6 +525,12 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
     return this.validacionesService.isValid(form, field) || false;
   }
 
+  /**
+   * Habilita o deshabilita el formulario `tramiteForm` según el estado de solo lectura.
+   * 
+   * - Si el formulario está en modo solo lectura (`esFormularioSoloLectura` es `true`), el formulario se deshabilita.
+   * - De lo contrario, el formulario se habilita.
+   */
   guardarDatosDelFormulario(): void {
     if (this.esFormularioSoloLectura) {
       this.tramiteForm.disable();

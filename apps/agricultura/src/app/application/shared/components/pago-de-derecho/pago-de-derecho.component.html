@@ -4,7 +4,7 @@
          <ng-titulo titulo="Pago de derechos" />
          <div class="row mt-2">
             <div class="col-md-12">
-               <label for="certficacion_a">Exento de pago</label>
+               <label for="certficacion_a">Exento de pago*:</label>
             </div>
             <div class="col-md-4">
                <app-input-radio
@@ -19,6 +19,7 @@
          </div>
          <div class="col-md-4">
             <app-catalogo-select
+            placeholder=" Selecciona un valor"
             [catalogo]="justificacionSelector"
             formControlName="justificacion"
             [label]="'Justificación'"
@@ -32,7 +33,7 @@
          <div class="col-md-4">
             <div class="form-group">
                <label class="form-label" for="nombreImportExport"
-                  >Clave de referencia*</label
+                  >Clave de referencia*:</label
                   >
                <input
                   class="form-control"
@@ -48,7 +49,7 @@
          <div class="col-md-4">
             <div class="form-group">
                <label class="form-label" for="nombreImportExport"
-                  >Cadena de la dependencia*</label
+                  >Cadena de la dependencia*:</label
                   >
                <input
                   class="form-control"
@@ -64,6 +65,7 @@
          </div>
          <div class="col-md-4">
             <app-catalogo-select
+            placeholder=" Selecciona un valor"
             [catalogo]="bancoSelector"
             formControlName="banco"
             [label]="'Banco'"
@@ -101,13 +103,17 @@
          </div>
          <div class="col-md-4">
             <div class="form-group">
-               <input-fecha
-               [datos]="fechaInicioInput"
-               name="fechaPago"
-               (change)="actualizarPago()"
-               (valorCambiado)="onFechaCambiada($event)"
-               [isDisabled]="pagoForm.get('exentoPago')?.value === 'si'"
-               ></input-fecha>
+               @if(setFecha){
+                  <input-fecha
+                  [datos]="fechaInicioInput"
+                  name="fechaPago"
+                  (change)="actualizarPago()"
+                  (valorCambiado)="onFechaCambiada($event)"
+                  [isDisabled]="esFormularioSoloLectura || pagoForm.get('exentoPago')?.value === 'si'"
+                  ></input-fecha>
+                  <div class="mensaje-error" *ngIf="pagoForm.get('fechaPago')?.errors?.['futureDateNotAllowed']">
+                            "La fecha de pago debe ser menor o igual a la fecha actual."</div>
+               }
             </div>
          </div>
          <div class="col-md-4">
@@ -131,7 +137,7 @@
        <div class="row mt-3">
             <div class="col-md-12 text-right">
               <div class="form-group">
-                <button type="button" class="btn btn-danger">Borrar datos del pago</button>
+                <button type="button" class="btn btn-danger" (click)="onBorrar()">Borrar datos del pago</button>
               </div>
             </div>
           </div>

@@ -2,45 +2,43 @@
  * @interface
  * @name AccionBoton
  * @description
- * Representa una acción asociada a un botón en la interfaz de usuario.
+ * Representa una acción específica que se puede ejecutar desde un botón dentro de la interfaz de usuario.
+ * Puede utilizarse para navegación entre pasos, acciones contextuales, etc.
  */
 export interface AccionBoton {
   /**
-   * Nombre de la acción asociada al botón.
+   * Nombre o identificador de la acción del botón (por ejemplo, 'cont' para continuar, 'ant' para anterior).
    * @type {string}
    */
   accion: string;
 
   /**
-   * Valor numérico asociado a la acción del botón.
+   * Valor numérico que representa un índice o paso asociado a la acción.
    * @type {number}
    */
   valor: number;
 }
 
 /**
- * @constant
- * @name FECHA_DE_PAGO
- * @description
+ * Representa la configuración de un campo de formulario relacionado con fecha de pago.
+ */
+export interface FechaDePagoConfig {
+  /** Nombre que se muestra en la etiqueta del campo. */
+  labelNombre: string;
+
+  /** Define si el campo es obligatorio. */
+  required: boolean;
+
+  /** Indica si el campo está habilitado para interacción. */
+  habilitado: boolean;
+}
+
+/**
  * Configuración predeterminada para el campo de fecha de pago.
  */
-export const FECHA_DE_PAGO = {
-  /**
-   * Nombre de la etiqueta que describe el campo de fecha de pago.
-   * @type {string}
-   */
+export const FECHA_DE_PAGO: FechaDePagoConfig = {
   labelNombre: 'Fecha de pago',
-
-  /**
-   * Indica si el campo de fecha de pago es obligatorio.
-   * @type {boolean}
-   */
   required: false,
-
-  /**
-   * Indica si el campo de fecha de pago está habilitado.
-   * @type {boolean}
-   */
   habilitado: true,
 };
 
@@ -48,17 +46,18 @@ export const FECHA_DE_PAGO = {
  * @interface
  * @name PreOperativo
  * @description
- * Representa una opción preoperativa con una etiqueta y un valor asociado.
+ * Estructura que representa una opción preoperativa con su texto visible (label) y valor técnico (value).
+ * Utilizado comúnmente en listas desplegables o selecciones previas a una operación.
  */
 export interface PreOperativo {
   /**
-   * Etiqueta que describe la opción preoperativa.
+   * Texto descriptivo visible para el usuario.
    * @type {string}
    */
   label: string;
 
   /**
-   * Valor asociado a la opción preoperativa.
+   * Valor técnico asociado a la opción, usado internamente en el sistema.
    * @type {string}
    */
   value: string;
@@ -68,27 +67,25 @@ export interface PreOperativo {
  * @interface
  * @name AvisoValor
  * @description
- * Representa los valores asociados a un aviso, incluyendo clave de referencia, cadena de dependencia e importe de pago.
+ * Define la estructura de datos de un aviso relacionado con pagos.
+ * Incluye clave de referencia, cadena de dependencia e importe asociado al aviso.
  */
 export interface AvisoValor {
   /**
-   * Clave de referencia del aviso.
+   * Clave de referencia única asignada al aviso.
    * @type {string}
-   * @description claveReferencia del valor en español.
    */
   claveReferencia: string;
 
   /**
-   * Cadena de dependencia asociada al aviso.
+   * Cadena que representa a la dependencia asociada al aviso.
    * @type {string}
-   * @description cadenaDependencia asociada al valor.
    */
   cadenaDependencia: string;
 
   /**
-   * Importe de pago asociado al aviso.
+   * Monto o cantidad económica relacionada con el aviso de pago.
    * @type {string}
-   * @description Importe de pago asociado al valor.
    */
   importePago: string;
 }
