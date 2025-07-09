@@ -274,7 +274,15 @@ const ROUTES: Routes = [
       import('./tramites/30506/registro.module').then(
         (m) => m.RegistroModule
       ),
-  }
+  },
+  {
+      path: 'aviso-destruccion-mercancias',
+    loadChildren: () => 
+      import('./tramites/32512/aviso-destruccion-mercancias.module').then(
+        (m) => m.AvisoDestruccionMercanciasModule)
+  },
+
+  
 ];
 
 @NgModule({

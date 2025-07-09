@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ConsultaioQuery, ConsultaioState, TableComponent, TituloComponent } from '@ng-mf/data-access-user';
+import { ConsultaioQuery, ConsultaioState, TituloComponent } from '@ng-mf/data-access-user';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
 import { Tramite11101Store, Tramitenacionales11101State } from '../../estados/tramite11101.store';
@@ -8,17 +8,39 @@ import { MercanciaComponent } from '../mercancia/mercancia.component';
 import { Tramite11101Query } from '../../estados/tramite11101.query';
 import { TramiteFolioService } from '../../service/servicios-extraordinarios.service';
 
-
+/**
+ * Componente Angular para gestionar el formulario de aviso en el trámite 11101.
+ *
+ * Este componente permite capturar y mostrar los datos del aviso, alternar entre los modos de carga masiva y manual,
+ * y controlar el estado de solo lectura del formulario según el estado de la consulta.
+ * Utiliza formularios reactivos para la validación y captura de datos, y se integra con servicios y stores para
+ * manejar el estado global del trámite.
+ *
+ * @remarks
+ * - El formulario puede estar en modo solo lectura, deshabilitando todos los controles para evitar modificaciones.
+ * - Permite alternar entre los modos de carga masiva y manual, afectando la interfaz y la lógica del formulario.
+ * - Se suscribe a los estados de consulta y trámite para mantener los datos sincronizados y evitar fugas de memoria.
+ *
+ * @example
+ * ```html
+ * <app-tipode-aviso></app-tipode-aviso>
+ * ```
+ *
+ * @see Tramite11101Query
+ * @see TramiteFolioService
+ * @see Tramite11101Store
+ * @see ConsultaioQuery
+ */
 @Component({
   selector: 'app-tipode-aviso',
   templateUrl: './tipode-aviso.component.html',
   styleUrls: ['./tipode-aviso.component.scss'],
   standalone: true,
-  imports: [TituloComponent, FormsModule, ReactiveFormsModule, MercanciaComponent, CommonModule, TableComponent]
+  imports: [TituloComponent, FormsModule, ReactiveFormsModule, MercanciaComponent, CommonModule]
 })
 export class TipodeAvisoComponent implements OnInit, OnDestroy {
 
-  /**
+  /** 
    * Indica si la carga masiva está habilitada.
    * @type {boolean}
    */
@@ -40,11 +62,24 @@ export class TipodeAvisoComponent implements OnInit, OnDestroy {
 * Si es `true`, los controles del formulario estarán deshabilitados para evitar modificaciones.
 */
   esFormularioSoloLectura: boolean = false
+  /**
+   * Indica si la opción manual está actualmente seleccionada.
+   * Se utiliza para alternar elementos de la interfaz o lógica basada en el estado de selección manual.
+   */
   isManualSelected: boolean = false
 
   /**
    * Constructor de la clase. Inicializa el FormBuilder.
    * @param {FormBuilder} formBuilder - Servicio para construir formularios reactivos.
+   * @param {Tramite11101Query} query - Servicio para consultar el estado del trámite.
+   * @param {TramiteFolioService} service - Servicio para manejar la lógica del trámite.
+   * @param {Tramite11101Store} store - Almacén para manejar el estado del trámite.
+   * @param {ConsultaioQuery} consultaioQuery - Servicio para consultar el estado de la consulta. 
+   * @constructor
+   * @description
+   * Este constructor inyecta los servicios necesarios para manejar el estado del formulario y la consulta.
+   * Utiliza `ConsultaioQuery` para obtener el estado de la consulta y configurar el formulario reactivo.
+   * También inicializa el estado del formulario según si es de solo lectura o no.
    */
   constructor(
     private consultaioQuery: ConsultaioQuery,
@@ -63,7 +98,15 @@ export class TipodeAvisoComponent implements OnInit, OnDestroy {
       )
       .subscribe()
   }
+  /**
+   * Estado de la solicitud que contiene los datos del formulario.
+   * @type {Tramitenacionales11101State}
+   */
   public solicitudState!: Tramitenacionales11101State;
+  /**
+   * Notificador para cancelar suscripciones activas al destruir el componente.
+   * Se emite un valor y se completa en el método `ngOnDestroy` para evitar fugas de memoria.
+   */
   private destroyNotifier$: Subject<void> = new Subject<void>();
   /**
    * Método de inicialización del componente.
