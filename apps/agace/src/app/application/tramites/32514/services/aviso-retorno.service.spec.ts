@@ -12,7 +12,10 @@ describe('AdaceService', () => {
 
     beforeEach(() => {
         const storeMock = {
-            update: jest.fn()
+            update: jest.fn(),
+            actualizarEstadoFormulario: function(datos: any) {
+                this.update((state: any) => ({ ...state, ...datos }));
+            }
         };
 
         TestBed.configureTestingModule({
