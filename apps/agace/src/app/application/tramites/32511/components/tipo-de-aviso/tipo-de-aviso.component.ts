@@ -1,13 +1,13 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Subject, map, merge, takeUntil } from 'rxjs';
-import { CommonModule } from '@angular/common';
-
 import { AlertComponent, Catalogo, CatalogoSelectComponent, InputFecha, InputFechaComponent, InputRadioComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Avisos32511State, Tramite32511Store } from '../../../../estados/tramites/tramite32511.store';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FECHA_CONCLUSION_EVENTO, FECHA_DESTRUCION, FECHA_INICIO_EVENTO, OPCIONES_DE_BOTON_DE_RADIO, TEXTOS } from '../../constantes/avisos.enum';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Subject, map, merge, takeUntil } from 'rxjs';
 import { AvisoService } from '../../services/aviso.service';
+import { CommonModule } from '@angular/common';
 import { Tramite32511Query } from '../../../../estados/queries/tramite32511.query';
+
 
 /**
  * Componente para manejar el tipo de aviso de destrucción de mercancías importadas temporalmente para competencias y eventos deportivos.

@@ -1,8 +1,8 @@
+import { CATALOGOS_ID, Catalogo, CatalogosService, TEXTOS } from '@ng-mf/data-access-user';
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
-
-import { CATALOGOS_ID, Catalogo, CatalogosService, TEXTOS } from '@ng-mf/data-access-user';
 import { AvisoService } from '../../services/aviso.service';
+
 
 /**
  * Componente para gestionar el paso dos del trámite.

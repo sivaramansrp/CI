@@ -1,7 +1,6 @@
+import { Avisos32511State, Tramite32511Store } from '../tramites/tramite32511.store';
 import { Injectable } from '@angular/core';
 import { Query } from '@datorama/akita';
-
-import { Avisos32511State, Tramite32511Store } from '../tramites/tramite32511.store';
 
 /**
  * Servicio de consulta para el trámite 32511.
