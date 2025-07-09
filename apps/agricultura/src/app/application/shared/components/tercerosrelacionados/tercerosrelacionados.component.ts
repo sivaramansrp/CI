@@ -86,6 +86,12 @@ export class TercerosrelacionadosComponent {
    * @type {TercerosrelacionadosdestinoTable[]}
    */
   @Input() cuerpoTablaDestino: TercerosrelacionadosdestinoTable[] = [];
+    /**
+   * Cuerpo de la tabla de exportadores.
+   * @type {TercerosrelacionadosTable[]}
+   */
+  @Input() cuerpoTablaExportador: TercerosrelacionadosTable[] = [];
+
 
   /**
    * Evento emitido al eliminar una selección de destinatarios.
@@ -118,11 +124,6 @@ export class TercerosrelacionadosComponent {
     { encabezado: 'País', clave: (fila) => fila.exportadorPais, orden: 5 },
   ];
 
-  /**
-   * Cuerpo de la tabla de exportadores.
-   * @type {TercerosrelacionadosTable[]}
-   */
-  cuerpoTablaExportador: TercerosrelacionadosTable[] = [];
 
   /**
    * Configuración de las columnas para la tabla de destinatarios.

@@ -36,8 +36,7 @@ describe('TercerospageComponent', () => {
     component = new TercerospageComponent(
       consultaQueryMock,
       certificadoZoosanitarioServicesMock,
-      certificadoZoosanitarioQueryMock,
-      tercerosrelacionadosServiceMock
+      certificadoZoosanitarioQueryMock
     );
   });
 

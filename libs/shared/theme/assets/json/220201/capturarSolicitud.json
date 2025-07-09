@@ -53,4 +53,38 @@
       "dataParaMovilizacion": true,
       "dataDeLaSolicitud": true
     }
+    ,
+    "tablaDatos": [
+      {
+      "noPartida": "001",
+      "tipoRequisito": "Sanitario",
+      "requisito": "Certificado de salud",
+      "numeroCertificadoInternacional": "INT-12345",
+      "fraccionArancelaria": "0101.21.00",
+      "descripcionFraccion": "Caballos reproductores de raza pura"  ,
+      "nico": "01",
+      "descripcionNico": "Caballos",
+      "descripcion": "Caballo pura sangre para reproducción",
+      "umt": "Cabeza",
+      "cantidadUMT": 2,
+      "umc": "Cabeza",
+      "cantidadUMC": 2,
+      "uso": "Reproducción",
+      "tipoDeProducto": "Animal Vivo",
+      "numeroDeLote": "L-2024-001",
+      "paisDeOrigen": "México",
+      "paisDeProcedencia": "México",
+      "certificadoInternacionalElectronico": "E-CERT-001"
+
+      }
+    ],
+    "datosForma": [
+       {
+                "exportadorNombre": "Juan Pérez",
+                "exportadorTelefono": "555-1234",
+                "exportadorCorreo": "juan.perez@email.com",
+                "exportadorDomicilio": "Calle Falsa 123, Ciudad de México",
+                "exportadorPais": "México"
+        }
+      ]
 }
