@@ -49,7 +49,10 @@ export class DatosPorRegimenComponent implements OnInit,OnDestroy {
    * Estado de la solicitud.
    */
   public solicitudState!: Solicitud31601State;
-
+/* 
+  Catálogo de captura utilizado para almacenar una lista de opciones disponibles.
+  Cada objeto contiene un identificador y una descripción.
+*/
    public capturecatalogo: Catalogo[] =[
             {
               "id": 1,

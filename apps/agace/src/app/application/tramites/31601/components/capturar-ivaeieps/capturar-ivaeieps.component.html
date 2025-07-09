@@ -420,7 +420,7 @@
                 class="form-control me-2 w-50"
                 formControlName="rfc"
               />
-              <button class="btn btn-info" [disabled]="esFormularioSoloLectura" (click)="BuscarDatos()">Buscar</button>
+              <button class="btn btn-info" [disabled]="esFormularioSoloLectura" (click)="buscarDatos()">Buscar</button>
             </div>
             @if (ivaForm.get('rfc')?.invalid && ivaForm.get('rfc')?.touched) {
             <div class="text-danger">

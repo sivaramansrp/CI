@@ -374,7 +374,7 @@ if (TIPO_DE && VALOR_PESOS && DESCRIPCION) {
    *
    * @returns {nulo}
    */
-    BuscarDatos(): void {
+    buscarDatos(): void {
       const RESGISTRO_VALUE = this.ivaForm.get('rfc')?.value;
           
     if (RESGISTRO_VALUE) {
