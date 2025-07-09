@@ -80,16 +80,29 @@
             </app-tabla-dinamica>
         </div>
     </div>
-    <div class="d-flex justify-content-end">
-        <app-table-pagination [totalItems]="totalItems" [itemsPerPage]="itemsPerPage" [currentPage]="currentPage"
-            (pageChange)="onPageChange($event)" (itemsPerPageChange)="onItemsPerPageChange($event)">
-        </app-table-pagination>
-        <div class="d-flex justify-content-center align-items-center gap-3">
-            <button type="button" class="border-0 bg-transparent text-dark fs-4">&lt;</button>
-            <button type="button" class="border-0 bg-transparent text-dark fs-4">&gt;</button>
-        </div>
 
+    <div class="row mt-2 mb-4">
+  <div class="col-12">
+    <div class="pagination-footer-container">
+      <div class="pagination-footer-content">
+        <span class="text-muted fw-semibold ">Filas por página</span>
+
+        <select class="form-select form-select-sm pagination-select">
+          <option selected>5</option>
+          <option>10</option>
+          <option>25</option>
+        </select>
+
+        <span class="text-muted fw-semibold">1–5 de 10</span>
+
+        <button type="button" class="pagination-arrow disabled lg">&lt;</button>
+        <button type="button" class="pagination-arrow lg">&gt;</button>
+      </div>
     </div>
+  </div>
+</div>
+
+
     } @else if(hasValidForm && !tieneConfiguracionTablaDatos) {
     <div class="row mt-5">
         <div class="col-md-12">
