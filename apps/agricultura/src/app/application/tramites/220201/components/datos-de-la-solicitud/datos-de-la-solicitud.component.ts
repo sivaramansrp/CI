@@ -278,6 +278,11 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
       proovedor: 'Print Masters'
     }
   ];
+  /**
+   * Mensaje de error para mostrar en caso de que no se encuentre información.
+   * @property {string} messageDeError
+   */
+  messageDeError: string = '';
 
   /**
    * Constructor del componente.
@@ -324,17 +329,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
     });
     this.crearFormulario();
     this.initActionFormBuild();
-    this.nuevaNotificacion = {
-      tipoNotificacion: 'alert',
-      categoria: 'danger',
-      modo: 'action',
-      titulo: '',
-      mensaje: `'No existe información para la clave UCON: ${this.forma.get('datosDelaSolicitud.claveUCON')?.value} y RFC: LEQI8101314S7 proporcionados. Favor de verificar.'`,
-      cerrar: false,
-      tiempoDeEspera: 2000,
-      txtBtnAceptar: 'OK',
-      txtBtnCancelar: '',
-    };
+   
   }
 
    ngAfterViewInit(): void {
@@ -366,6 +361,18 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
         } else {
           const PATTERN = /^UCON[a-zA-Z0-9]{4,10}$/;
           this.moduloEmergente = !PATTERN.test(value);
+          this.messageDeError = `'No existe información para la clave UCON: ${this.datosDelaSolicitud.get('claveUCON')?.value} y RFC: LEQI8101314S7 proporcionados. Favor de verificar.'`;
+           this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: this.messageDeError,
+      cerrar: false,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'OK',
+      txtBtnCancelar: '',
+    };
         }
       });
   }
