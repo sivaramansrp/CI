@@ -1,8 +1,9 @@
+import { Catalogo, ConsultaioQuery, InputRadioComponent, TableComponent, TablePaginationComponent,TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ConsultaioQuery, InputRadioComponent, TableComponent, TablePaginationComponent, TituloComponent } from '@ng-mf/data-access-user';
 import {
   FormBuilder,
   FormGroup,
+  FormsModule,
   ReactiveFormsModule,
   Validators
 } from '@angular/forms';
@@ -33,7 +34,7 @@ import { Tramite31601Query } from '../../../../estados/queries/tramite31601.quer
     CommonModule,
     ReactiveFormsModule,
     TableComponent,
-    TablePaginationComponent,
+    TablePaginationComponent,FormsModule
   ],
 })
 export class DatosPorRegimenComponent implements OnInit,OnDestroy {
@@ -48,6 +49,15 @@ export class DatosPorRegimenComponent implements OnInit,OnDestroy {
    * Estado de la solicitud.
    */
   public solicitudState!: Solicitud31601State;
+/* 
+  Catálogo de captura utilizado para almacenar una lista de opciones disponibles.
+  Cada objeto contiene un identificador y una descripción.
+*/
+   public capturecatalogo: Catalogo[] =[
+            {
+              "id": 1,
+              "descripcion": "123"
+            }];
 
   /**
    * Array de objetos RadioBotons que representan las opciones de radio disponibles.
@@ -107,9 +117,38 @@ export class DatosPorRegimenComponent implements OnInit,OnDestroy {
    * @memberof DatosPorRegimenComponent
    */
   ngOnInit():void {
-    this.crearRegimenForm();
+    this.inicializarCertificadoFormulario();
   }
-
+ /**
+   * Método para inicializar el formulario reactivo con los datos de la solicitud.
+   * 
+   * Este método configura los campos del formulario con los valores actuales del estado de la solicitud
+   * y aplica las validaciones necesarias. También deshabilita ciertos campos y establece valores predeterminados.
+   */
+  inicializarCertificadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+     this.crearRegimenForm();
+    }  
+  }
+    /**
+   * @comdoc
+   * Guarda los datos del formulario de combinación requerida.
+   * 
+   * Inicializa el formulario y ajusta su estado de habilitación según si es de solo lectura.
+   * - Si el formulario es de solo lectura, lo deshabilita.
+   * - Si no es de solo lectura, lo habilita.
+   * - Si no aplica ninguna de las condiciones anteriores, no realiza ninguna acción adicional.
+   */
+  guardarDatosFormulario(): void {
+      this.crearRegimenForm();
+      if (this.esFormularioSoloLectura) {
+        this.regimenForm.disable();        
+      } else {
+        this.regimenForm.enable();       
+      }
+  }
   /**
  * Crea e inicializa el FormGroup `regimenForm` con varios controles de formulario y sus validadores.
  * Los controles del formulario incluyen:
@@ -151,10 +190,38 @@ export class DatosPorRegimenComponent implements OnInit,OnDestroy {
       )
       .subscribe();
     this.regimenForm = this.fb.group({
+        indiques: [this.solicitudState.indiques, Validators.required],
+  cuenta: [this.solicitudState.cuenta, Validators.required],
+  mismo: [this.solicitudState.mismo, Validators.required],
+  empresa: [this.solicitudState.empresa, Validators.required],
+  propios: [this.solicitudState.propios, Validators.required],
+  empleadoss: [this.solicitudState.empleadoss, Validators.required],
+  socios: [this.solicitudState.socios, Validators.required],
+  encuentras: [this.solicitudState.encuentras, Validators.required],
+  cumplido: [this.solicitudState.cumplido, Validators.required],
+  procedimiento: [this.solicitudState.procedimiento, Validators.required],
+  determinan: [this.solicitudState.determinan, Validators.required],
       cancelacionProcedimiento: [this.solicitudState.cancelacionProcedimiento, Validators.required],
-      cumpleLineamientos: [this.solicitudState.cumpleLineamientos, Validators.required]
+      cumpleLineamientos: [this.solicitudState.cumpleLineamientos, Validators.required],
+      transferenciasDatos: [this.solicitudState?.transferenciasDatos ?? '', Validators.required],
+  transferenciasdos: [this.solicitudState?.transferenciasdos ?? '', Validators.required],
+  retornosDatos: [this.solicitudState?.retornosDatos ?? '', Validators.required],
+  retornosdos: [this.solicitudState?.retornosdos ?? '', Validators.required],
+  constanciasDatos: [this.solicitudState?.constanciasDatos ?? '', Validators.required],
+  constanciasdos: [this.solicitudState?.constanciasdos ?? '', Validators.required],
+  monedaTotal: [this.solicitudState?.monedaTotal ?? '', Validators.required],
+  porcentajeTotal: [this.solicitudState?.porcentajeTotal ?? '', Validators.required],
+  capture: [this.solicitudState?.capture ?? '', Validators.required],
+   deEmpleados: [this.solicitudState.deEmpleados || '', Validators.required],
+  bimestreDatos: [this.solicitudState.bimestreDatos || '', Validators.required],  
+  numeroDeEmpleados: [this.solicitudState.numeroDeEmpleados || '', Validators.required],
+  bimestredos: [this.solicitudState.bimestredos || '', Validators.required],  
+  numeroDatos: [this.solicitudState.numeroDatos || '', Validators.required],
+  bimestres: [this.solicitudState.bimestres || '', Validators.required],
+  
     });
-
+   this.regimenForm.get('monedaTotal')?.disable();
+    this.regimenForm.get('porcentajeTotal')?.disable();
     if (this.esFormularioSoloLectura) {
       Object.keys(this.regimenForm.controls).forEach((key) => {
         this.regimenForm.get(key)?.disable();
