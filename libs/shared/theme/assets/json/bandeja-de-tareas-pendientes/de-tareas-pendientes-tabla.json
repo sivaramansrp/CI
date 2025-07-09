@@ -5163,16 +5163,6 @@
     "origin": "FLUJO_FUNCIONARIO_VERIFICAR-REQUERIMIENTO-RESOLUCION"
   },
   {
-    "folioTramite": "0453067309596292181625870",
-    "tipoDeTramite": "Registro de solicitud de servicio",
-    "nombreDeLaTarea": "Generar opinión",
-    "fechaDeAsignacion": "2023-10-07",
-    "estadoDeTramite": "En Proceso",
-    "departamento": "se",
-    "numeroDeProcedimiento": "120301",
-    "origin": "FLUJO_FUNCIONARIO_GENERAR_ OPINION"
-  },
-  {
     "folioTramite": "0215523965732296454220203",
     "tipoDeTramite": "Solicitud de Proceso Interno",
     "nombreDeLaTarea": "Evaluar solicitud",
