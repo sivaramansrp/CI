@@ -329,7 +329,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
     });
     this.crearFormulario();
     this.initActionFormBuild();
-   
+   this.nuevaNotificacion={} as Notificacion;
   }
 
    ngAfterViewInit(): void {

@@ -45,4 +45,38 @@ describe('CertificadoZoosanitarioServiceService', () => {
       done();
     });
   });
+  it('should call http.get with the correct URL in obtenerRespuestaPorUrl', (done) => {
+    const httpClientSpy = { get: jest.fn() };
+    const testUrl = 'testfile.json';
+    const expectedUrl = `../../../../../assets/json/220201/${testUrl}`;
+    const expectedResponse = { some: 'data' };
+
+    // Replace the http client in the service with our spy
+    (service as any).http = httpClientSpy;
+    httpClientSpy.get.mockReturnValue(of(expectedResponse));
+
+    service.obtenerRespuestaPorUrl(testUrl).subscribe((resp) => {
+      expect(httpClientSpy.get).toHaveBeenCalledWith(expectedUrl);
+      expect(resp).toEqual(expectedResponse);
+      done();
+    });
+  });
+  it('should return all form data from store via getFormData()', (done) => {
+    service.getFormData().subscribe((data) => {
+      expect(mockZoosanitarioStore._select).toHaveBeenCalled();
+      expect(data).toEqual(mockStoreData);
+      done();
+    });
+  });
+  it('should return validarEnvio from store via getValidarEnvio()', (done) => {
+    const validarEnvioMock = { seccion1: true, seccion2: false };
+    mockZoosanitarioStore._select.mockReturnValueOnce(of(validarEnvioMock));
+
+    service.getValidarEnvio().subscribe((data) => {
+      expect(mockZoosanitarioStore._select).toHaveBeenCalledWith(expect.any(Function));
+      expect(data).toEqual(validarEnvioMock);
+      done();
+    });
+  });
+  
 });
