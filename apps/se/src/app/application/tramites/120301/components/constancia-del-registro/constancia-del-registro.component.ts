@@ -354,17 +354,8 @@ export class ConstanciaDelRegistroComponent implements OnInit, OnDestroy {
       .subscribe();
 
     this.seccionStore.establecerFormaValida([false]);
-
-    if (
-      this.constanciaState.formaValida &&
-      this.constanciaState.formaValida[0] &&
-      this.constanciaState.formaValida[0].descripcion === VALIDO
-    ) {
-      this.seccionStore.establecerSeccion([true]);
-      this.seccionStore.establecerFormaValida([true]);
-    } else {
-      this.seccionStore.establecerFormaValida([false]);
-    }
+    this.seccionStore.establecerSeccion([true]);
+    this.seccionStore.establecerFormaValida([true]);
   }
 
   /**
@@ -669,13 +660,11 @@ export class ConstanciaDelRegistroComponent implements OnInit, OnDestroy {
   onAnoConstanciaChange(selectedOption: Catalogo): void {
     const CONTROL = this.fitosanitarioForm.get('anoDeLaConstancia');
     if (CONTROL && selectedOption) {
-      // Ensure the value is set as string to match the catalog data
       const VALUE = selectedOption.id?.toString() || '';
       CONTROL.setValue(VALUE);
       CONTROL.markAsTouched();
       CONTROL.updateValueAndValidity();
       
-      // Update the store with the selected value
       this.ElegibilidadDeTextilesStore.setAnoDeLaConstancia(VALUE);
     }
   }
@@ -696,8 +685,7 @@ export class ConstanciaDelRegistroComponent implements OnInit, OnDestroy {
         CONTROL.setValue(VALUE);
         CONTROL.markAsTouched();
         CONTROL.updateValueAndValidity();
-        
-        // Update the store with the selected value
+
         this.ElegibilidadDeTextilesStore.setAnoDeLaConstancia(VALUE);
       }
     }
