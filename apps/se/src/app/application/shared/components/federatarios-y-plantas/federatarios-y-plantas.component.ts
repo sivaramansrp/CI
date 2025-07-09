@@ -279,10 +279,10 @@ export class FederatariosYPlantasComponent implements OnInit {
    * @param accionesPath
    */
   irAAcciones(accionesPath: string): void {
-    // if (this.plantasImmexSeleccionadoDatos.length === 0){
-    //   this.abrirPlantasModal();
-    //   return;
-    // }
+    if (!this.plantasImmexSeleccionadoDatos.length){
+      this.abrirPlantasModal();
+      return;
+    }
     this.router.navigate([accionesPath], {
       relativeTo: this.activatedRoute,
     });
