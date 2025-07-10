@@ -1,5 +1,11 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { ReplaySubject, takeUntil } from 'rxjs';
 import { Router, RouterModule } from '@angular/router';
 import { AcuseYResolucionesFolioTramite } from '../../../core/models/shared/acuse-y-resoluciones-folio-tramite.model';
@@ -128,12 +134,17 @@ export class AcusesYResolucionesFolioDelTramiteBusquedaComponent
     this.formBusqueda = this.formBuilder.group({
       solicitante: 'INTEGRADORA DE URBANIZACIONES SIGNUM, S DE RL DE CV',
       rfc: 'AAL0409235E6',
-      folio: [{ value: '', disabled: false }],
+      folio: [
+        { value: '', disabled: false },
+        [Validators.maxLength(25), Validators.pattern(/^[0-9]*$/)],
+      ],
       fechaInicial: [{ value: '', disabled: false }],
       fechaFinal: [{ value: '', disabled: false }],
     });
   }
-
+  public get folio(): FormControl {
+    return this.formBusqueda.get('folio') as FormControl;
+  }
   /**
    * Maneja el cambio en el campo de fecha inicial.
    * @param nuevo_valor Nuevo valor para la fecha inicial.

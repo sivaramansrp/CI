@@ -29,10 +29,24 @@
                   <input
                     class="form-control"
                     id="folio"
-                    placeholder="Ingrese un folio"
                     type="text"
                     formControlName="folio"
+                    [class.is-invalid]="
+                      folio.invalid && (folio.dirty || folio.touched)
+                    "
                   />
+
+                  <div
+                    *ngIf="folio.invalid && (folio.dirty || folio.touched)"
+                    class="invalid-feedback"
+                  >
+                    <div *ngIf="folio.hasError('maxlength')">
+                      Por favor, no escriba más de 25 caracteres
+                    </div>
+                    <div *ngIf="folio.hasError('pattern')">
+                      Existen datos incorrectos que no cumplen con el formato.
+                    </div>
+                  </div>
                 </div>
                 <div class="col-md-4">
                   <input-fecha
