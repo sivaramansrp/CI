@@ -157,7 +157,7 @@ export class AcusesYResolucionesFolioDelTramiteBusquedaComponent
    */
   configuracionTabla: ConfiguracionColumna<AcuseYResolucionesFolioTramite>[] = [
     {
-      encabezado: 'Folio trámite',
+      encabezado: 'Folio',
       clave: (artículo) => artículo.folioTramite,
       orden: 1,
     },
