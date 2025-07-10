@@ -1,10 +1,10 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
 
 import { Catalogo, CatalogoSelectComponent, CatalogosSelect } from '@libs/shared/data-access-user/src';
-import { CommonModule, Location } from '@angular/common';
+import { CommonModule, DOCUMENT, Location } from '@angular/common';
 import { Solicitud30505State, Solicitud30505Store } from '../../../../estados/tramites/tramites30505.store';
 import { AvisoAgente } from '../../../../core/models/30505/aviso-modificacion.model';
 import { Solicitud30505Query } from '../../../../estados/queries/tramites30505.query';
@@ -87,12 +87,18 @@ export class AgregarAgenteComponent implements OnInit,OnDestroy {
    */
   agenteDatos: AvisoAgente[] = [];
 
-
-  public tipoMovimientoData: CatalogosSelect = {
-    labelNombre: '*Tipo Movimiento',
-    required: true,
-    primerOpcion: 'Seleccione una estatus',
-    catalogos: [],
+/**
+ * Objeto que representa los datos del catálogo para el tipo de movimiento.
+ * 
+ * Contiene las propiedades necesarias para configurar un componente de selección
+ * de catálogo, incluyendo el nombre de la etiqueta, si es requerido, la primera
+ * opción a mostrar y el arreglo de catálogos disponibles.
+ */
+public tipoMovimientoData: CatalogosSelect = {
+  labelNombre: '*Tipo Movimiento',
+  required: true,
+  primerOpcion: 'Seleccione una estatus',
+  catalogos: [],
 };
   /**
    * Constructor de la clase AgregarAgenteComponent.
@@ -106,9 +112,9 @@ export class AgregarAgenteComponent implements OnInit,OnDestroy {
     private fb: FormBuilder,
     private tramite30505Store: Solicitud30505Store,
     private tramite30505Query: Solicitud30505Query,
-        private tercerosService: TercerosRelacionadosService,
-    
-    private ubicaccion : Location
+    private tercerosService: TercerosRelacionadosService,
+    private ubicaccion : Location,
+    @Inject(DOCUMENT) private document: Document
   ) {}
 
   /**
@@ -190,6 +196,17 @@ export class AgregarAgenteComponent implements OnInit,OnDestroy {
     this.mostrarAgente = false;
   }
 
+  /**
+ * Obtiene los datos del catálogo para el tipo de movimiento desde el servicio `tercerosService`.
+ * 
+ * Este método realiza una solicitud al servicio `getTipoMovimientoData` y se suscribe al resultado,
+ * asignando los datos obtenidos al arreglo `catalogos` dentro del objeto `tipoMovimientoData`.
+ * 
+ * Utiliza el operador `takeUntil` para cancelar la suscripción cuando el componente se destruye,
+ * evitando fugas de memoria.
+ * 
+ * @returns {void} No retorna ningún valor.
+ */
   getTipoMovimientoData(): void {
     this.tercerosService
       .getTipoMovimientoData()

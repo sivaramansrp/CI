@@ -151,16 +151,32 @@ public nuevaNotificacion: Notificacion | null = null;
     });
 
   }
-
+/**
+ * Elimina un pedimento del arreglo `pedimentos` si se confirma la acción.
+ * 
+ * Si el parámetro `borrar` es `true`, elimina el elemento en la posición indicada
+ * por la propiedad `elementoParaEliminar`. Posteriormente, limpia la notificación activa.
+ * 
+ * @param borrar Indica si se debe proceder con la eliminación del pedimento.
+ * @returns {void} No retorna ningún valor.
+ */
   eliminarPedimento(borrar: boolean): void {
     if (borrar) {
       this.pedimentos.splice(this.elementoParaEliminar, 1);
     }
     this.nuevaNotificacion = null;
-
-   
   }
- 
+ /**
+ * Abre un modal de notificación para confirmar una acción o mostrar un mensaje.
+ * 
+ * Configura una nueva notificación con los parámetros proporcionados, incluyendo
+ * el índice del elemento a eliminar y un mensaje personalizado. La notificación
+ * incluye opciones de aceptar o cancelar.
+ * 
+ * @param i Índice del elemento relacionado con la notificación (por defecto 0).
+ * @param mensaje Mensaje a mostrar en la notificación (por defecto un mensaje genérico).
+ * @returns {void} No retorna ningún valor.
+ */
   abrirModal(i: number = 0, mensaje: string = 'EI RFC capturado no cuenta con registro de Despacho de Mercancias'): void {
     this.nuevaNotificacion = {
       tipoNotificacion: 'alert',
