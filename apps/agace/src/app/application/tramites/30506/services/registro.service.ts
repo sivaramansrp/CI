@@ -1,4 +1,4 @@
-import { Catalogo } from '../state/Tramite30506.store';
+import { Catalogo, Solicitud30506State, Tramite30506Store } from '../state/Tramite30506.store';
 import { ENVIRONMENT } from '@libs/shared/data-access-user/src';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
@@ -26,11 +26,35 @@ export class RegistroService {
    * @param http Cliente HTTP para realizar solicitudes a servicios externos.
    */
   constructor(
-    private http: HttpClient,
+    private http: HttpClient, private tramite30506Store: Tramite30506Store
   ) {
     // El constructor se utiliza para la inyección de dependencias.
   }
 
+  /**
+     * Actualiza el estado global del formulario con los datos proporcionados.
+     * @param DATOS Objeto con los datos del formulario de tipo Solicitud30506State.
+     */
+  actualizarEstadoFormulario(DATOS: Solicitud30506State): void {
+    this.tramite30506Store.setBanco(DATOS.banco);
+    this.tramite30506Store.setNumeroOperacion(DATOS.numeroOperacion);
+    this.tramite30506Store.setFechaInicio(DATOS.fechaInicio);
+    this.tramite30506Store.setFechaFinal(DATOS.fechaFinal);
+    this.tramite30506Store.setLlave(DATOS.llave);
+    this.tramite30506Store.setFechaPago(DATOS.fechaPago);
+    this.tramite30506Store.setManifiesto1(DATOS.manifiesto1);
+    this.tramite30506Store.setManifiesto2(DATOS.manifiesto2);
+    this.tramite30506Store.setClaveReferencia(DATOS.claveReferencia);
+    this.tramite30506Store.setCadenaDependecia(DATOS.cadenaDependecia ); 
+    this.tramite30506Store.setImportePago(DATOS.importePago);
+  }
+  /**
+     * Obtiene los datos del registro de toma de muestras de mercancías desde un archivo JSON.
+     * @returns Observable con los datos del formulario.
+     */
+  getRegistroTomaMuestrasMercanciasData(): Observable<Solicitud30506State> {
+    return this.http.get<Solicitud30506State>('assets/json/30506/registro_toma_muestras_mercancias.json');
+  }
   /**
    * Obtiene los datos del catálogo de bancos.
    * Realiza una solicitud HTTP para obtener la lista de bancos desde un archivo JSON.

@@ -6,7 +6,7 @@
     <div class="row mt-5">
       <div class="col-md-8">
         <label>Número de oficio*:</label>
-        <input type="text" class="form-control" value="25000000346347642731" readonly required />
+        <input type="text" class="form-control" value="25000000346347642731" formControlName="numeroOperacion" readonly required />
       </div>
     </div>
     <div class="row mt-5">
@@ -22,13 +22,13 @@
     <div class="row mt-5">
       <div class="col-md-8">
         <label>Clave de referencia:</label>
-        <input type="text" class="form-control" value="250034634" readonly required />
+        <input type="text" class="form-control" value="250034634" formControlName="claveReferencia" readonly required />
       </div>
     </div>
     <div class="row mt-5">
       <div class="col-md-8">
         <label>Cadena de la dependencia:</label>
-        <input type="text" class="form-control" value="2500000AGAR03463" readonly required />
+        <input type="text" class="form-control" value="2500000AGAR03463" formControlName="cadenaDependecia" readonly required />
       </div>
       <div class="col-md-4">
         <app-catalogo-select [catalogo]="bancoCatalogo.catalogos" [label]="'Banco'" formControlName="banco" (change)="setValoresStore(registroForm, 'banco', 'setBanco')"></app-catalogo-select>
@@ -44,7 +44,7 @@
       </div>
       <div class="col-md-4">
         <label>Importe de pago:</label>
-        <input type="text" class="form-control" value="6427" readonly />
+        <input type="text" class="form-control" value="6427" formControlName="importePago" readonly />
       </div>
     </div>
     <div class="row mt-5">
