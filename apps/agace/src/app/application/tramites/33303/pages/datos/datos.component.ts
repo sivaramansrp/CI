@@ -2,7 +2,7 @@ import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { SolicitanteComponent, TIPO_PERSONA } from '@libs/shared/data-access-user/src';
 import { Subject, map, takeUntil } from 'rxjs';
-import { Service317Service } from '../../services/service33303.service';
+import { Service33303Service } from '../../services/service33303.service';
 
 @Component({
   selector: 'app-datos',
@@ -22,20 +22,20 @@ export class DatosComponent implements OnInit, OnDestroy, AfterViewInit {
   private destroyNotifier$: Subject<void> = new Subject();
   /**
    * @property
-   * @description Estado actual de la consulta para el trámite 317.
+   * @description Estado actual de la consulta para el trámite 33303.
    * @type {ConsultaioState}
-   * @memberof Datos317Component
+   * @memberof Datos33303Component
    */
   public consultaState!: ConsultaioState;
 
   /**
    * @constructor
    * @param consultaQuery - Servicio para realizar consultas relacionadas con la aplicación.
-   * @param service317Service - Servicio específico para manejar la lógica del trámite 317.
-   * @description Inyecta los servicios necesarios para la gestión de datos en el componente de datos del trámite 317.
+   * @param service33303Service - Servicio específico para manejar la lógica del trámite 33303.
+   * @description Inyecta los servicios necesarios para la gestión de datos en el componente de datos del trámite 33303.
    */
   constructor(private consultaQuery: ConsultaioQuery,
-    private service317Service: Service317Service) { }
+    private service33303Service: Service33303Service) { }
   /**
      * @inheritdoc
      * @method ngOnInit
@@ -92,17 +92,17 @@ export class DatosPageComponent {
    * 
    * @returns {void}
    * 
-   * @memberof Datos317Component
+   * @memberof Datos33303Component
    */
   guardarDatosFormulario(): void {
-    this.service317Service
+    this.service33303Service
       .getRegistroTomaMuestrasMercanciasData().pipe(
         takeUntil(this.destroyNotifier$)
       )
       .subscribe((resp) => {
         if (resp) {
           this.esDatosRespuesta = true;
-          this.service317Service.actualizarEstadoFormulario(resp);
+          this.service33303Service.actualizarEstadoFormulario(resp);
         }
       });
   }

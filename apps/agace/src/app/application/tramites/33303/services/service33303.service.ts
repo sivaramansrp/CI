@@ -11,7 +11,7 @@ import { Observable } from 'rxjs';
 @Injectable({
   providedIn: 'root',
 })
-export class Service317Service {
+export class Service33303Service {
   /**
    * URL del servidor principal.
    */
@@ -24,7 +24,7 @@ export class Service317Service {
   /**
    * Constructor del servicio.
    * @param http Cliente HTTP para realizar peticiones.
-   * @param tramite317Store Almacén de estado para el trámite 317.
+   * @param tramite33303Store Almacén de estado para el trámite 33303.
    */
   constructor(private http: HttpClient, private unicoStore: UnicoStore,) {
     // Lógica de inicialización si es necesario
@@ -32,7 +32,7 @@ export class Service317Service {
 
   /**
    * Actualiza el estado del formulario en el store a partir de los datos proporcionados.
-   * @param DATOS Estado actual del formulario de trámite 317.
+   * @param DATOS Estado actual del formulario de trámite 33303.
    */
   actualizarEstadoFormulario(DATOS: UnicoState): void {
     if (DATOS.numeroOperacion) {
