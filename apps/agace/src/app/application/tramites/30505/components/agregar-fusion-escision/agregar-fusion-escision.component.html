@@ -36,6 +36,12 @@
           size="30"
           (change)="cambioRFC()"
         />
+        @if (nuevaNotificacion) {
+          <section>
+          <lib-notificaciones [notificacionInput]="nuevaNotificacion" (confirmacionModal)="eliminarPedimento($event)">
+          </lib-notificaciones>
+          </section>
+          }
         <div
           *ngIf="
             fusionEscisionForm.get('rfcBusquedaModal')?.invalid &&
@@ -240,6 +246,12 @@
         >
           Aceptar
         </button>
+        @if (nuevaNotificacion) {
+          <section>
+          <lib-notificaciones [notificacionInput]="nuevaNotificacion" (confirmacionModal)="eliminarPedimento($event)">
+          </lib-notificaciones>
+          </section>
+          }
         <button
           type="button"
           name="btnCancelar"

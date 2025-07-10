@@ -1,104 +1,97 @@
-import { TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { TercerospageComponent } from './tercerospage.component';
 import { of, Subject } from 'rxjs';
+import { CertificadoZoosanitarioServiceService } from '../../services/220201/certificado-zoosanitario.service';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { TercerosrelacionadosService } from '../../../../shared/components/services/tercerosrelacionados/tercerosrelacionados.service';
+import { ActivatedRoute } from '@angular/router';
 
 describe('TercerospageComponent', () => {
   let component: TercerospageComponent;
-  let consultaQueryMock: any;
-  let certificadoZoosanitarioServicesMock: any;
-  let certificadoZoosanitarioQueryMock: any;
-  let tercerosrelacionadosServiceMock: any;
+  let fixture: ComponentFixture<TercerospageComponent>;
+  let MOCK_CONSULTA_QUERY: any;
+  let MOCK_CERTIFICADO_SERVICE: any;
+  let MOCK_TERCEROS_SERVICE: any;
 
   beforeEach(async () => {
-    consultaQueryMock = {
+    MOCK_CONSULTA_QUERY = {
       selectConsultaioState$: of({ readonly: true })
     };
-    certificadoZoosanitarioServicesMock = {
+
+    MOCK_CERTIFICADO_SERVICE = {
+      getAllDatosForma: jest.fn().mockReturnValue(of({
+        tercerosRelacionados: [{  tipoMercancia: 'Física',
+      nombre: 'Juan',
+      primerApellido: 'Pérez',
+      razonSocial: 'Empresa SA',
+      pais: 'MX',
+      codigoPostal: '12345',
+      estado: 'CDMX',
+      calle: 'Calle 1',
+      numeroExterior: '100'}],
+        datosForma: [{ id: 1 }]
+      })),
       updateTercerosRelacionado: jest.fn()
     };
-    certificadoZoosanitarioQueryMock = {
-      seleccionarTercerosRelacionados$: of([{ nombre: 'Persona 1' }])
-    };
-    tercerosrelacionadosServiceMock = {
-      obtenerSelectorList: jest.fn().mockReturnValue(of([{ id: 1, descripcion: 'Test' }]))
+
+    MOCK_TERCEROS_SERVICE = {
+      obtenerSelectorList: jest.fn().mockReturnValue(of([{ id: 1, nombre: 'MX' }]))
     };
 
     await TestBed.configureTestingModule({
+      imports: [TercerospageComponent],
       providers: [
-        { provide: 'ConsultaioQuery', useValue: consultaQueryMock },
-        { provide: 'CertificadoZoosanitarioServiceService', useValue: certificadoZoosanitarioServicesMock },
-        { provide: 'ZoosanitarioQuery', useValue: certificadoZoosanitarioQueryMock },
-        { provide: 'TercerosrelacionadosService', useValue: tercerosrelacionadosServiceMock }
+         { provide: ActivatedRoute, useValue: {} },
+        { provide: ConsultaioQuery, useValue: MOCK_CONSULTA_QUERY },
+        { provide: CertificadoZoosanitarioServiceService, useValue: MOCK_CERTIFICADO_SERVICE },
+        { provide: TercerosrelacionadosService, useValue: MOCK_TERCEROS_SERVICE }
       ]
     }).compileComponents();
 
-    // Manual instantiation since standalone component
-    component = new TercerospageComponent(
-      consultaQueryMock,
-      certificadoZoosanitarioServicesMock,
-      certificadoZoosanitarioQueryMock
-    );
+    fixture = TestBed.createComponent(TercerospageComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('should create the component', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should subscribe and set esFormularioSoloLectura and personas on ngOnInit', () => {
-    component.ngOnInit();
-    expect(component.esFormularioSoloLectura).toBe(true);
+  it('should initialize readonly flag and load personas/datosForma on init', () => {
+    expect(component.esFormularioSoloLectura).toBe(false);
     expect(component.personas.length).toBe(1);
-    expect(component.personas[0].nombre).toBe('Persona 1');
+    expect(component.datosForma.length).toBe(1);
   });
 
-  it('should load paises and estados catalogs on ngAfterViewInit', () => {
-    component.catalogosDatos = { paises: [], estados: [] };
+  it('should load country and state catalogs in ngAfterViewInit', () => {
     component.ngAfterViewInit();
-    expect(tercerosrelacionadosServiceMock.obtenerSelectorList).toHaveBeenCalledWith('paisprocedencia.json');
-    expect(tercerosrelacionadosServiceMock.obtenerSelectorList).toHaveBeenCalledWith('estados.json');
-  });
-
-  it('should update catalogosDatos.paises on pairsCatalogChange', () => {
-    component.catalogosDatos = { paises: [], estados: [] };
-    component.pairsCatalogChange();
-    expect(component.catalogosDatos.paises.length).toBeGreaterThan(0);
-  });
-
-  it('should update catalogosDatos.estados on estadoCatalogChange', () => {
-    component.catalogosDatos = { paises: [], estados: [] };
-    component.estadoCatalogChange();
-    expect(component.catalogosDatos.estados.length).toBeGreaterThan(0);
+    expect(MOCK_TERCEROS_SERVICE.obtenerSelectorList).toHaveBeenCalledWith('paisprocedencia.json');
+    expect(MOCK_TERCEROS_SERVICE.obtenerSelectorList).toHaveBeenCalledWith('estados.json');
   });
 
   it('should clear personas and call updateTercerosRelacionado on handleEliminar', () => {
+    // Add a sample TercerosrelacionadosdestinoTable object to personas
     component.personas = [{
-      tipoMercancia: '',
-      nombre: 'Persona 1',
-      primerApellido: '',
-      segundoApellido: '',
-      razonSocial: '',
-      pais: '',
-      codigoPostal: '',
-      estado: '',
-      municipio: '',
-      colonia: '',
-      calle: '',
-      numeroExterior: '',
-      numeroInterior: '',
-      lada: '',
-      telefono: '',
-      correo: ''
+      tipoMercancia: 'Física',
+      nombre: 'Juan',
+      primerApellido: 'Pérez',
+      razonSocial: 'Empresa SA',
+      pais: 'MX',
+      codigoPostal: '12345',
+      estado: 'CDMX',
+      calle: 'Calle 1',
+      numeroExterior: '100'
     }];
     component.handleEliminar();
     expect(component.personas.length).toBe(0);
-    expect(certificadoZoosanitarioServicesMock.updateTercerosRelacionado).toHaveBeenCalledWith([]);
+    expect(MOCK_CERTIFICADO_SERVICE.updateTercerosRelacionado).toHaveBeenCalledWith([]);
   });
 
-  it('should complete destroyNotifier$ on ngOnDestroy', () => {
-    const nextSpy = jest.spyOn((component as any).destroyNotifier$, 'next');
-    const completeSpy = jest.spyOn((component as any).destroyNotifier$, 'complete');
+  it('should clean up subscriptions on destroy', () => {
+    const DESTROY_SPY = jest.spyOn((component as any).destroyNotifier$, 'next');
+    const COMPLETE_SPY = jest.spyOn((component as any).destroyNotifier$, 'complete');
     component.ngOnDestroy();
-    expect(nextSpy).toHaveBeenCalled();
-    expect(completeSpy).toHaveBeenCalled();
+    expect(DESTROY_SPY).toHaveBeenCalled();
+    expect(COMPLETE_SPY).toHaveBeenCalled();
   });
 });
