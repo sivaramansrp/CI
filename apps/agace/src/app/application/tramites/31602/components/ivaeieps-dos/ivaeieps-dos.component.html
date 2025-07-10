@@ -1,5 +1,5 @@
 <div class="row">
-       <form [formGroup]="inversionGrupo">
+    <form [formGroup]="inversionGrupo">
         <div class="row mb-3">
             <formas-dinamicas 
                 [formularioTitulo]="'Indica el monto aproximado de su inversión en territorio nacional.'"
@@ -10,9 +10,26 @@
                 (emitirCambioDeValor)="establecerCambioDeValor($event)"
                 >
             </formas-dinamicas>
+            <div class="d-flex justify-content-end mt-2">
+                <button type="button" class="btn btn-primary" [disabled]="esFormularioSoloLectura">Agregar</button>
+            </div>
+        </div>
+        <div class="table-container mt-4">
+            <div class="table-header pb-2">
+                <h5>Datos de la inversión</h5>
+            </div>
+            <app-tabla-dinamica
+                [tipoSeleccionTabla]="tablaSeleccionCheckbox" 
+                [configuracionTabla]="configuracionTabla"
+                [datos]="inversionGrupoDatos">
+            </app-tabla-dinamica>
+             <div class="d-flex justify-content-end mt-2">
+                <button type="button" class="btn btn-default ms-2" [disabled]="esFormularioSoloLectura">Modificar</button>
+                <button type="button" class="btn btn-danger ms-2" [disabled]="esFormularioSoloLectura">Eliminar</button>
+            </div>
         </div>
     </form>
-    <!-- added top form  -->
+    
     <form [formGroup]="delGrupo">
         <div class="row mb-3">
             <formas-dinamicas 
