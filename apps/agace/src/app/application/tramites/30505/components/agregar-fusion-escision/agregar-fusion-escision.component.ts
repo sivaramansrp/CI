@@ -6,7 +6,8 @@ import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule, Location } from '@angular/common';
 import { Solicitud30505State, Solicitud30505Store } from '../../../../estados/tramites/tramites30505.store';
 import { FusionEscision } from '../../../../core/models/30505/aviso-modificacion.model';
-import { InputRadioComponent } from '@libs/shared/data-access-user/src';
+
+import { InputRadioComponent, Notificacion, NotificacionesComponent, Pedimento } from '@libs/shared/data-access-user/src';
 import { SI_NO_RADIO } from '../../../../core/enums/30505/aviso-de-modificacion.enum';
 import { Solicitud30505Query } from '../../../../estados/queries/tramites30505.query';
 import { TercerosRelacionadosService } from '../../services/terceros-relacionados.service';
@@ -37,7 +38,7 @@ import { TercerosRelacionadosService } from '../../services/terceros-relacionado
   templateUrl: './agregar-fusion-escision.component.html',
   styleUrls: ['./agregar-fusion-escision.component.scss'],
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, InputRadioComponent]
+  imports: [CommonModule, ReactiveFormsModule, InputRadioComponent,NotificacionesComponent]
 })
 export class AgregarFusionEscisionComponent implements OnDestroy, OnInit {
 
@@ -75,6 +76,21 @@ export class AgregarFusionEscisionComponent implements OnDestroy, OnInit {
    * @private
    */
   private avisoState!: Solicitud30505State;
+/**
+ * Representa el índice del elemento que se desea eliminar.
+ */
+elementoParaEliminar!: number;
+
+/**
+ * Arreglo que almacena los pedimentos relacionados.
+ */
+pedimentos: Array<Pedimento> = [];
+
+/**
+ * Objeto que contiene la información de la notificación actual.
+ * Puede ser nulo si no hay ninguna notificación activa.
+ */
+public nuevaNotificacion: Notificacion | null = null;
 
   /**
    * Constructor de la clase AgregarFusionEscisionComponent.
@@ -134,6 +150,31 @@ export class AgregarFusionEscisionComponent implements OnDestroy, OnInit {
       razonSocialFusionanteSC: [this.avisoState?.razonSocialFusionanteSC, Validators.required]
     });
 
+  }
+
+  eliminarPedimento(borrar: boolean): void {
+    if (borrar) {
+      this.pedimentos.splice(this.elementoParaEliminar, 1);
+    }
+    this.nuevaNotificacion = null;
+
+   
+  }
+ 
+  abrirModal(i: number = 0, mensaje: string = 'EI RFC capturado no cuenta con registro de Despacho de Mercancias'): void {
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: mensaje, 
+      cerrar: false,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: 'Cancelar',
+    };
+  
+    this.elementoParaEliminar = i;
   }
 
   /**
@@ -226,10 +267,13 @@ export class AgregarFusionEscisionComponent implements OnDestroy, OnInit {
    
     this.fusionEscisionData.push(FUSION_ESCISION_VALUE);
     this.tramiteStore.updateFusionDatos(this.fusionEscisionData);
+    this.abrirModal(0, 'Datos guardados correctamente'); 
     this.fusionEscisionForm.reset();
-    this.ubicaccion.back();
+    setTimeout(() => {
+      this.ubicaccion.back();
+    }, 2000);
+   
   }
-
 
   /**
    * Cierra el diálogo de fusión o escisión y navega a la ubicación anterior.
@@ -255,6 +299,7 @@ export class AgregarFusionEscisionComponent implements OnDestroy, OnInit {
   cambioRFC(): void {
     const RFC = this.fusionEscisionForm.get('rfcBusquedaModal')?.value;
     this.tramiteStore.setAvisoDatos('rfcBusquedaModal',RFC);
+    this.abrirModal();
   }
 
 
@@ -269,6 +314,7 @@ export class AgregarFusionEscisionComponent implements OnDestroy, OnInit {
   cambioRfcSC(): void {
     const VALOR = this.fusionEscisionForm.get('rfcBusquedaModalSC')?.value;
     this.tramiteStore.setAvisoDatos('rfcBusquedaModalSC',VALOR);
+    
   }
 
 

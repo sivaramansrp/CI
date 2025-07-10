@@ -1,4 +1,4 @@
-import { AlertComponent, TablaDinamicaComponent, TableComponent } from '@ng-mf/data-access-user';
+import { AlertComponent, NotificacionesComponent, TablaDinamicaComponent, TableComponent } from '@ng-mf/data-access-user';
 import { ToastrModule, ToastrService } from 'ngx-toastr';
 import { AgregarAgenteComponent } from './components/agregar-agente/agregar-agente.component';
 import { AnexarDocumentosComponent } from '@ng-mf/data-access-user';
@@ -15,7 +15,8 @@ import { FormsModule } from '@angular/forms';
 import { FusionOEscisionComponent } from './components/fusion-o-escision/fusion-o-escision.component';
 import { ModificarAgenteComponent } from './components/modificar-agente/modificar-agente.component';
 import { ModificarFusionEscisionComponent } from './components/modificar-fusion-escision/modificar-fusion-escision.component';
-import { NgModule } from '@angular/core';
+
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
@@ -58,10 +59,12 @@ import { WizardComponent } from '@ng-mf/data-access-user';
     ModificarFusionEscisionComponent,
     AvisoDeModificationRoutingModule,
     TablaDinamicaComponent,
+    NotificacionesComponent,
     ToastrModule.forRoot()
   ],
   exports: [
   ],
   providers: [ToastrService],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class AvisoDeModificacionModule {}

@@ -1,6 +1,7 @@
-import { Catalogo, CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
+import { Catalogo, CatalogoSelectComponent, CatalogosSelect, Notificacion, NotificacionesComponent, Pedimento } from '@libs/shared/data-access-user/src';
 import { CommonModule,Location } from '@angular/common';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
 import { AvisoAgente } from '../../../../core/models/30505/aviso-modificacion.model';
@@ -8,6 +9,7 @@ import { Solicitud30505Store } from '../../../../estados/tramites/tramites30505.
 import { TercerosRelacionadosService } from '../../services/terceros-relacionados.service';
 import productivo from '@libs/shared/theme/assets/json/30505/productivo.json';
 
+import { AgregarAgenteComponent } from '../agregar-agente/agregar-agente.component';
 /**
  * Componente para agregar un agente en el trámite 30505.
  *
@@ -24,7 +26,7 @@ import productivo from '@libs/shared/theme/assets/json/30505/productivo.json';
   templateUrl: './modificar-agente.component.html',
    styleUrl: './modificar-agente.component.scss',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule,CatalogoSelectComponent]
+  imports: [CommonModule, ReactiveFormsModule,CatalogoSelectComponent,AgregarAgenteComponent,NotificacionesComponent]
 })
 export class ModificarAgenteComponent implements OnInit,OnDestroy {
 
@@ -83,8 +85,59 @@ export class ModificarAgenteComponent implements OnInit,OnDestroy {
    * para su modificación. Inicialmente se define como un objeto vacío
    * con el tipo `AvisoAgente`.
    */
-  selectedAgente = {} as AvisoAgente;
-  
+  /**
+ * Representa el agente seleccionado en el componente.
+ * 
+ * @type {AvisoAgente}
+ * @remarks
+ * Este objeto almacena la información del agente que ha sido seleccionado
+ * para su modificación. Inicialmente se define como un objeto vacío
+ * con el tipo `AvisoAgente`.
+ */
+selectedAgente = {} as AvisoAgente;
+
+/**
+ * Contiene los datos del catálogo de tipos de movimiento.
+ * 
+ * @type {CatalogosSelect}
+ * @remarks
+ * Este objeto incluye información como el nombre del campo, si es requerido,
+ * la primera opción a mostrar y el arreglo de catálogos disponibles.
+ */
+public tipoMovimientoData: CatalogosSelect = {
+  labelNombre: '*Tipo Movimiento',
+  required: true,
+  primerOpcion: 'Seleccione una estatus',
+  catalogos: [],
+};
+
+/**
+ * Representa una nueva notificación en el componente.
+ * 
+ * @type {Notificacion}
+ * @remarks
+ * Este objeto se utiliza para gestionar y mostrar notificaciones en el componente.
+ */
+public nuevaNotificacion: Notificacion | null = null;
+
+/**
+ * Índice del elemento que se desea eliminar.
+ * 
+ * @type {number}
+ * @remarks
+ * Este valor se utiliza para identificar el elemento que será eliminado
+ * del arreglo correspondiente.
+ */
+elementoParaEliminar!: number;
+
+/**
+ * Arreglo que contiene los pedimentos relacionados.
+ * 
+ * @type {Array<Pedimento>}
+ * @remarks
+ * Este arreglo almacena los pedimentos que se gestionan en el componente.
+ */
+pedimentos: Array<Pedimento> = [];
 
   /**
    * Constructor de la clase AgregarAgenteComponent.
@@ -98,7 +151,8 @@ export class ModificarAgenteComponent implements OnInit,OnDestroy {
     private fb: FormBuilder,
     private tramite30505Store: Solicitud30505Store,
     private tercerosService: TercerosRelacionadosService,
-    private ubicaccion : Location
+    private ubicaccion : Location,
+    private cdr: ChangeDetectorRef
   ) {}
 
   /**
@@ -112,16 +166,66 @@ export class ModificarAgenteComponent implements OnInit,OnDestroy {
    * La suscripción se gestiona con `takeUntil(this.destroyNotifier$)` para evitar fugas de memoria.
    */
   ngOnInit(): void {
+    this.tercerosService.getAvisoAgenteData().subscribe(
+      (data) => {
+        this.tercerosService.setAgente(data); 
+      },
+      (error) => {
+        console.error('Error fetching agent data:', error);
+      }
+    );
+  
+    // Subscribe to the agent data
     this.tercerosService.agente$
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((agente) => {
-        if (agente && agente.length > 0) {
+  
+        if (!agente || agente.length === 0) {
+          this.selectedAgente = {
+            tipoFigura: '',
+            numPatenteModal: '',
+            nombre: '',
+            apellidoPaterno: '',
+            apellidoMaterno: '',
+            razonSocial: '',
+            tipoMovimiento: '',
+          };
+        } else {
           this.selectedAgente = agente[0];
         }
+  
+        this.crearFormulario(); 
       });
-    this.crearFormulario()
+  
+    this.getTipoMovimientoData(); 
   }
 
+ /**
+ * Obtiene los datos del catálogo de tipos de movimiento desde el servicio `TercerosRelacionadosService`.
+ *
+ * Este método realiza una suscripción al observable `getTipoMovimientoData` del servicio,
+ * recuperando los datos del catálogo y asignándolos a la propiedad `tipoMovimientoData.catalogos`.
+ * 
+ * @remarks
+ * La suscripción se gestiona con `takeUntil(this.destroyNotifier$)` para evitar fugas de memoria.
+ * 
+ * @example
+ * this.getTipoMovimientoData();
+ */
+getTipoMovimientoData(): void {
+  this.tercerosService
+    .getTipoMovimientoData()
+    .pipe(takeUntil(this.destroyNotifier$))
+    .subscribe((data) => {
+      this.tipoMovimientoData.catalogos = data as unknown as Catalogo[];
+    });
+}
+  
+/**
+ * Handles the selection of a table row and binds the data to the form fields.
+ * 
+ * @param agente The selected agent data from the table.
+ */
   /**
    * Crea y configura el formulario reactivo para el trámite de agregar agente.
    * 
@@ -138,19 +242,49 @@ export class ModificarAgenteComponent implements OnInit,OnDestroy {
   public crearFormulario():void{
     this.datosTramite = this.fb.group({
       tipoFigura: [this.selectedAgente?.tipoFigura, Validators.required],
-      patenteModificada: [this.selectedAgente?.patenteModificada, Validators.required],
-      numPatenteModal: [this.selectedAgente?.numPatenteModal, [Validators.required, Validators.maxLength(4)]],
-      rfcModal: [{ value: this.selectedAgente.rfcModal}, [Validators.required, Validators.maxLength(13)]],
-      obligFisc: [this.selectedAgente?.obligFisc, Validators.requiredTrue],
-      autPantente: [this.selectedAgente?.autPantente, Validators.requiredTrue],
+      numPatenteModal: [{ value: this.selectedAgente?.numPatenteModal, disabled: true }, [Validators.required, Validators.maxLength(4)]],
       nombre: [{ value: this.selectedAgente?.nombre, disabled: true }, Validators.required],
       apellidoPaterno: [{ value: this.selectedAgente?.apellidoPaterno, disabled: true }, Validators.required],
       apellidoMaterno: [{ value: this.selectedAgente?.apellidoMaterno, disabled: true }, Validators.required],
-      razonSocial: [this.selectedAgente?.razonSocial, Validators.required],
-      patente2: [this.selectedAgente?.patente2, [Validators.required, Validators.maxLength(15)]],
-      razonAgencia: [this.selectedAgente?.razonAgencia, Validators.required]
+      razonSocial: [{ value: this.selectedAgente?.razonSocial, disabled: true }, Validators.required],
+      tipoMovimiento:[this.selectedAgente?.tipoMovimiento, Validators.required]
+
     });
   }
+/**
+ * Elimina un pedimento del arreglo de pedimentos si se confirma la acción.
+ * 
+ * @param borrar Indica si se debe proceder con la eliminación del pedimento.
+ * @returns {void} No retorna ningún valor.
+ */
+eliminarPedimento(borrar: boolean): void {
+  if (borrar) {
+    this.pedimentos.splice(this.elementoParaEliminar, 1);
+  }
+  this.nuevaNotificacion = null;
+}
+
+/**
+* Abre un modal de notificación con un mensaje predefinido.
+* 
+* @param i Índice del elemento relacionado con la notificación (opcional, valor predeterminado: 0).
+* @returns {void} No retorna ningún valor.
+*/
+abrirModal(i: number = 0): void {
+  this.nuevaNotificacion = {
+    tipoNotificacion: 'alert',
+    categoria: 'danger',
+    modo: 'action',
+    titulo: '',
+    mensaje: 'Datos guardados correctamente',
+    cerrar: false,
+    tiempoDeEspera: 2000,
+    txtBtnAceptar: 'Aceptar',
+    txtBtnCancelar: '',
+  };
+
+  this.elementoParaEliminar = i;
+}
 
   /**
    * Maneja el evento de selección de figura en el formulario.
@@ -232,27 +366,35 @@ export class ModificarAgenteComponent implements OnInit,OnDestroy {
    *
    * @returns {void} No retorna ningún valor.
    */
-  aceptarSociedadesScc():void{
-    const VALOR_FORMULARIO = this.datosTramite.getRawValue();
+  aceptarSociedadesScc(): void {
 
-     const NUEVO_AGENTE = {
+    const VALOR_FORMULARIO = this.datosTramite.getRawValue();
+  
+    const MODIFICADO_AGENTE = {
       tipoFigura: VALOR_FORMULARIO.tipoFigura,
-      patenteModificada: VALOR_FORMULARIO.patenteModificada,
       numPatenteModal: VALOR_FORMULARIO.numPatenteModal,
-      rfcModal: VALOR_FORMULARIO.rfcModal,
-      obligFisc: VALOR_FORMULARIO.obligFisc,
-      autPantente: VALOR_FORMULARIO.autPantente,
       nombre: VALOR_FORMULARIO.nombre,
       apellidoPaterno: VALOR_FORMULARIO.apellidoPaterno,
-      apellidoMaterno:VALOR_FORMULARIO.apellidoMaterno,
+      apellidoMaterno: VALOR_FORMULARIO.apellidoMaterno,
       razonSocial: VALOR_FORMULARIO.razonSocial,
-      patente2: VALOR_FORMULARIO.patente2,
-      razonAgencia: VALOR_FORMULARIO.razonAgencia
+      tipoMovimiento: VALOR_FORMULARIO.tipoMovimiento,
     };
+  
+    const INDEX = this.agenteDatos.findIndex(
+      (agente) => agente.numPatenteModal === this.selectedAgente.numPatenteModal
+    );
+    if (INDEX !== -1) {
+      this.agenteDatos[INDEX] = MODIFICADO_AGENTE;
+    } else {
+      this.agenteDatos.push(MODIFICADO_AGENTE);
+    }
 
-    this.agenteDatos.push(NUEVO_AGENTE);
     this.tramite30505Store.updateAgenteDatos(this.agenteDatos);
+    this.abrirModal();
     this.datosTramite.reset();
-    this.ubicaccion.back();
+    setTimeout(() => {
+      this.ubicaccion.back();
+    }, 3000);
+
   }
 }
