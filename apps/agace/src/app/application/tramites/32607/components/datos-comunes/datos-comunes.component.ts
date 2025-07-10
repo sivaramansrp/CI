@@ -9,6 +9,7 @@ import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 import { DOMICILIOS_CONFIGURACION_COLUMNAS } from '../../constants/solicitud.enum';
 import { Domicilios } from '../../models/solicitud.model';
 import { ElementRef } from '@angular/core';
+import { EnlaceOperativoComponent } from '../enlace-operativo/enlace-operativo.component';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { INVENTARIOS_CONFIGURACION } from '../../constants/solicitud.enum';
@@ -18,6 +19,7 @@ import { InstalacionesPrincipalesComponent } from '../instalaciones-principales/
 import { Inventarios } from '../../models/solicitud.model';
 import { MiembroDeLaEmpresaComponent } from '../miembro-de-la-empresa/miembro-de-la-empresa.component';
 import { Modal } from 'bootstrap';
+import { ModificarInventarioComponent } from '../modificar-inventario/modificar-inventario.component';
 import { NUMERO_DE_EMPLEADOS_CONFIGURACION } from '../../constants/solicitud.enum';
 import { Notificacion } from '@libs/shared/data-access-user/src';
 import { NotificacionesComponent } from '@libs/shared/data-access-user/src';
@@ -68,6 +70,8 @@ import { takeUntil } from 'rxjs';
     InstalacionesPrincipalesComponent,
     TablaConEntradaComponent,
     ToastrModule,
+    EnlaceOperativoComponent,
+    ModificarInventarioComponent,
   ],
   providers: [SolicitudService, ToastrService],
   templateUrl: './datos-comunes.component.html',
@@ -99,7 +103,7 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
   bimestre: CatalogosSelect = {} as CatalogosSelect;
 
   /** Catálogo con opción para indicar "todos" */
-  indiqueTodos: CatalogosSelect = {} as CatalogosSelect;
+  // indiqueTodos: CatalogosSelect = {} as CatalogosSelect;
 
   /** Estado actual del formulario 32607 */
   solicitud32607State: Solicitud32607State = {} as Solicitud32607State;
@@ -154,6 +158,9 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
   @ViewChild('modalAgregarMiembrosEmpresa', { static: false })
   modalElement!: ElementRef;
 
+  @ViewChild('modalModificarInventario', { static: false })
+  modalModificarInventarioElement!: ElementRef;
+
   /**
    * Referencia al modal de la sección de subcontratados.
    */
@@ -165,6 +172,12 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
    */
   @ViewChild('modalInstalacionesPrincipales', { static: false })
   modalInstalacionesPrincipalesElement!: ElementRef;
+
+  /**
+   * Referencia al modal de instalaciones principales.
+   */
+  @ViewChild('modalEnlaceOperativo', { static: false })
+  modalEnlaceOperativoElement!: ElementRef;
 
   /**
    * Notificación utilizada para mostrar mensajes al usuario.
@@ -285,7 +298,7 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
       '243': [this.solicitud32607State['243']],
       '244': [this.solicitud32607State['244']],
       '245': [this.solicitud32607State['245']],
-      indiqueTodos: [this.solicitud32607State.indiqueTodos],
+      // indiqueTodos: [this.solicitud32607State.indiqueTodos],
       '246': [this.solicitud32607State['246']],
       file1: [this.solicitud32607State.file1],
       file2: [this.solicitud32607State.file2],
@@ -330,7 +343,7 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
             '243': this.solicitud32607State['243'],
             '244': this.solicitud32607State['244'],
             '245': this.solicitud32607State['245'],
-            indiqueTodos: this.solicitud32607State.indiqueTodos,
+            // indiqueTodos: this.solicitud32607State.indiqueTodos,
             '246': this.solicitud32607State['246'],
             file1: this.solicitud32607State.file1,
             file2: this.solicitud32607State.file2,
@@ -385,7 +398,7 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
           this.sectorProductivo = respuesta.sectorProductivo;
           this.servicio = respuesta.servicio;
           this.bimestre = respuesta.bimestre;
-          this.indiqueTodos = respuesta.indiqueTodos;
+          // this.indiqueTodos = respuesta.indiqueTodos;
         },
       });
   }
@@ -433,10 +446,23 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
    * Muestra el modal para agregar instalaciones principales de la empresa.
    * Utiliza el elemento referenciado como modalInstalacionesPrincipalesElement.
    */
-  agregarInstalacionesPrincipales(): void {
+  modificarInstalacionesPrincipales(): void {
     if (this.modalElement) {
       const MODAL_INSTANCE = new Modal(
         this.modalInstalacionesPrincipalesElement.nativeElement
+      );
+      MODAL_INSTANCE.show();
+    }
+  }
+
+  /**
+   * Muestra el modal para agregar instalaciones principales de la empresa.
+   * Utiliza el elemento referenciado como modalInstalacionesPrincipalesElement.
+   */
+  agregarInstalacionesPrincipales(): void {
+    if (this.modalElement) {
+      const MODAL_INSTANCE = new Modal(
+        this.modalEnlaceOperativoElement.nativeElement
       );
       MODAL_INSTANCE.show();
     }
@@ -660,7 +686,7 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
     this.solicitud32607Store.actualizar240(valor);
   }
 
-    /**
+  /**
    * Actualiza el campo '241' en el estado global.
    *
    * @param {string | number} valor - Valor para el campo 240.
@@ -701,9 +727,9 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
    *
    * @param {Catalogo} valor - Elemento del catálogo correspondiente.
    */
-  actualizarIndiqueTodos(valor: Catalogo): void {
-    this.solicitud32607Store.actualizarIndiqueTodos(valor.id);
-  }
+  // actualizarIndiqueTodos(valor: Catalogo): void {
+  //   this.solicitud32607Store.actualizarIndiqueTodos(valor.id);
+  // }
 
   /**
    * Actualiza el campo '246' en el estado global.
@@ -914,6 +940,67 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
           this.numeroDeEmpleadosLista.splice(INDICE, 1);
         }
       });
+    }
+  }
+
+  agregarControlInventarios(): void {
+    const NOMBRE = this.datosComunesForm.get('nombre')?.value;
+    const LUGARRADICACION = this.datosComunesForm.get('lugarRadicacion')?.value;
+    const ANEXO24 = this.datosComunesForm.get('anexo24')?.value;
+
+    if (NOMBRE && LUGARRADICACION) {
+      this.inventariosDatos.push({
+        nombre: NOMBRE,
+        lugarRadicacion: LUGARRADICACION,
+        anexo24: ANEXO24,
+      });
+    } else {
+      const PEDIMENTO = {
+        patente: 0,
+        pedimento: 0,
+        aduana: 0,
+        idTipoPedimento: 0,
+        descTipoPedimento: 'Por evaluar',
+        numero: '',
+        comprobanteValor: '',
+        pedimentoValidado: false,
+      };
+      this.abrirModal(
+        'Debe capturar todos los datos marcados como obligatorios.'
+      );
+      this.pedimentos.push(PEDIMENTO);
+    }
+  }
+
+  modificarInventario(): void {
+    if (this.seleccionarInventarios.length === 0) {
+      const PEDIMENTO = {
+        patente: 0,
+        pedimento: 0,
+        aduana: 0,
+        idTipoPedimento: 0,
+        descTipoPedimento: 'Por evaluar',
+        numero: '',
+        comprobanteValor: '',
+        pedimentoValidado: false,
+      };
+      this.abrirModal(
+        'Debe capturar todos los datos marcados como obligatorios.'
+      );
+      this.pedimentos.push(PEDIMENTO);
+    } else if (this.seleccionarInventarios.length > 0) {
+      if (this.modalElement) {
+        const MODAL_INSTANCE = new Modal(
+          this.modalModificarInventarioElement.nativeElement
+        );
+        MODAL_INSTANCE.show();
+      }
+    }
+  }
+
+  eliminarPedimento(borrar: boolean): void {
+    if (borrar) {
+      this.pedimentos.splice(this.elementoParaEliminar, 1);
     }
   }
 

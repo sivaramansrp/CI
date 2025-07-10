@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ImportadorExportadorComponent } from './importador-exportador.component';
+import { AeronavesComponent } from './aeronaves.component';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { SolicitudService } from '../../services/solicitud.service';
 import { Solicitud32607Store } from '../../estados/solicitud32607.store';
@@ -24,9 +24,9 @@ import {
 import { AgregarTransportistasComponent } from '../agregar-transportistas/agregar-transportistas.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 
-describe('ImportadorExportadorComponent', () => {
-  let component: ImportadorExportadorComponent;
-  let fixture: ComponentFixture<ImportadorExportadorComponent>;
+describe('AeronavesComponent', () => {
+  let component: AeronavesComponent;
+  let fixture: ComponentFixture<AeronavesComponent>;
   let solicitudServiceMock: jest.Mocked<SolicitudService>;
   let solicitud32607StoreMock: jest.Mocked<Solicitud32607Store>;
   let solicitud32607QueryMock: jest.Mocked<Solicitud32607Query>;
@@ -217,7 +217,7 @@ describe('ImportadorExportadorComponent', () => {
 
     await TestBed.configureTestingModule({
       imports: [
-        ImportadorExportadorComponent,
+        AeronavesComponent,
         CommonModule,
         ReactiveFormsModule,
         InputRadioComponent,
@@ -238,7 +238,7 @@ describe('ImportadorExportadorComponent', () => {
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ImportadorExportadorComponent);
+    fixture = TestBed.createComponent(AeronavesComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
@@ -249,7 +249,7 @@ describe('ImportadorExportadorComponent', () => {
 
   it('should initialize the form on ngOnInit', () => {
     component.ngOnInit();
-    expect(component.importadorExportadorForm).toBeDefined();
+    expect(component.aeronavesForm).toBeDefined();
   });
 
   it('should call conseguirTransportistasLista on initialization', () => {

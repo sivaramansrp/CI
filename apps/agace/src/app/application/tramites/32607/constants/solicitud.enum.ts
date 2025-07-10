@@ -1,4 +1,5 @@
 import {
+  CatalogosSelect,
   ConfiguracionAporteColumna,
   ConfiguracionColumna,
   InputFecha,
@@ -7,6 +8,7 @@ import {
 import {
   Domicilios,
   EnlaceOperativo,
+  Instalacions,
   Inventarios,
   NumeroDeEmpleados,
   RecibirNotificaciones,
@@ -373,13 +375,13 @@ export const DOMICILIOS_CONFIGURACION_COLUMNAS: ConfiguracionColumna<Domicilios>
   [
     {
       /** Instalaciones principales de la empresa. */
-      encabezado: 'Instalaciones principales',
+      encabezado: 'Instalaciones principales*',
       clave: (item: Domicilios) => item.instalacionPrincipal,
       orden: 1,
     },
     {
       /** Tipo de instalación de la empresa. */
-      encabezado: 'Tipo de instalación',
+      encabezado: 'Tipo de instalación*',
       clave: (item: Domicilios) => item.tipoInstalacion,
       orden: 1,
     },
@@ -432,8 +434,8 @@ export const DOMICILIOS_CONFIGURACION_COLUMNAS: ConfiguracionColumna<Domicilios>
       orden: 1,
     },
     {
-      /** Reconocimiento mutuo para la instalación C-TPAT. */
-      encabezado: 'Reconocimiento Mutuo (Instalación C-TPAT)',
+      /** Reconocimiento mutuo para la instalación CTPAT. */
+      encabezado: 'Reconocimiento Mutuo (Instalación CTPAT)',
       clave: (item: Domicilios) => item.instalacionCtpat,
       orden: 1,
     },
@@ -443,36 +445,36 @@ export const DOMICILIOS_CONFIGURACION_COLUMNAS: ConfiguracionColumna<Domicilios>
       clave: (item: Domicilios) => item.instalacionPerfil,
       orden: 1,
     },
-    {
-      /** Perfil del Recinto Fiscalizado Estratégico. */
-      encabezado: 'Perfil del Recinto Fiscalizado Estratégico',
-      clave: (item: Domicilios) => item.instalacionPerfilRFE,
-      orden: 1,
-    },
-    {
-      /** Perfil del Auto Transportista Terrestre. */
-      encabezado: 'Perfil del Auto Transportista Terrestre',
-      clave: (item: Domicilios) => item.instalacionPerfilAuto,
-      orden: 1,
-    },
-    {
-      /** Perfil del Transportista Ferroviario. */
-      encabezado: 'Perfil del Transportista Ferroviario',
-      clave: (item: Domicilios) => item.instalacionPerfilFerro,
-      orden: 1,
-    },
-    {
-      /** Perfil del Recinto Fiscalizado. */
-      encabezado: 'Perfil del Recinto Fiscalizado',
-      clave: (item: Domicilios) => item.instalacionPerfilRf,
-      orden: 1,
-    },
-    {
-      /** Perfil de Mensajería y Paquetería. */
-      encabezado: 'Perfil de Mensajería y Paquetería',
-      clave: (item: Domicilios) => item.instalacionPerfilMensajeria,
-      orden: 1,
-    },
+    // {
+    //   /** Perfil del Recinto Fiscalizado Estratégico. */
+    //   encabezado: 'Perfil del Recinto Fiscalizado Estratégico',
+    //   clave: (item: Domicilios) => item.instalacionPerfilRFE,
+    //   orden: 1,
+    // },
+    // {
+    //   /** Perfil del Auto Transportista Terrestre. */
+    //   encabezado: 'Perfil del Auto Transportista Terrestre',
+    //   clave: (item: Domicilios) => item.instalacionPerfilAuto,
+    //   orden: 1,
+    // },
+    // {
+    //   /** Perfil del Transportista Ferroviario. */
+    //   encabezado: 'Perfil del Transportista Ferroviario',
+    //   clave: (item: Domicilios) => item.instalacionPerfilFerro,
+    //   orden: 1,
+    // },
+    // {
+    //   /** Perfil del Recinto Fiscalizado. */
+    //   encabezado: 'Perfil del Recinto Fiscalizado',
+    //   clave: (item: Domicilios) => item.instalacionPerfilRf,
+    //   orden: 1,
+    // },
+    // {
+    //   /** Perfil de Mensajería y Paquetería. */
+    //   encabezado: 'Perfil de Mensajería y Paquetería',
+    //   clave: (item: Domicilios) => item.instalacionPerfilMensajeria,
+    //   orden: 1,
+    // },
   ];
 
 /**
@@ -565,4 +567,45 @@ export const SECCION_SOCIOSIC_CONFIGURACION_COLUMNAS: ConfiguracionColumna<Secci
       clave: (item: SeccionSociosIC) => item.nombreEmpresa,
       orden: 1,
     },
+  ];
+
+export const ENTIDAD_FEDERATIVE: CatalogosSelect = {
+  labelNombre: 'Entidad federativa',
+  required: false,
+  primerOpcion: 'Seleccion un valor',
+  catalogos: [],
+};
+
+export const INSTALACIONS_CONFIGURACION_COLUMNAS: ConfiguracionColumna<Instalacions>[] =
+  [
+    {
+      /** Entidad federativa donde está ubicada la instalación. */
+      encabezado: 'Entidad federativa',
+      clave: (item: Instalacions) => item.entidadFederativa,
+      orden: 1,
+    },
+    {
+      /** Municipio o delegación donde se encuentra la instalación. */
+      encabezado: 'Municipio o delegación',
+      clave: (item: Instalacions) => item.municipioDelegacion,
+      orden: 1,
+    },
+    {
+      /** Dirección completa del domicilio, incluyendo colonia, calle y número. */
+      encabezado: 'Colonia, calle y número',
+      clave: (item: Instalacions) => item.direccion,
+      orden: 1,
+    },
+    {
+      /** Código postal correspondiente al domicilio. */
+      encabezado: 'Código postal',
+      clave: (item: Instalacions) => item.codigoPostal,
+      orden: 1,
+    },
+    {
+      /** Registro del domicilio ante la Secretaría de Economía (SE) o el Servicio de Administración Tributaria (SAT). */
+      encabezado: 'Registro ante SE/SAT',
+      clave: (item: Instalacions) => item.registroSESAT,
+      orden: 1,
+    }
   ];

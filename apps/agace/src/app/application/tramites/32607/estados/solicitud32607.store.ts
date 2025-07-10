@@ -406,7 +406,7 @@ export interface Solicitud32607State {
    */
   '240': string | number;
 
-    /**
+  /**
    * Valor asociado con el código 241 (puede ser un número o una cadena).
    */
   '241': string | number;
@@ -525,6 +525,32 @@ export interface Solicitud32607State {
    * Lista de objetos que contienen los datos relacionados con los enlaces operativos.
    */
   enlaceOperativosLista: EnlaceOperativo[];
+
+  entidad: number;
+
+  '301': number | string;
+
+  numeroIMMEX: string;
+
+  modalidadIMMEX: string;
+
+  '302': number | string;
+
+  rubroCertificacion: string;
+
+  fechaFinVigenciaRubro: string;
+
+  numeroOficio: string;
+
+  '306': number | string;
+
+  '307': number | string;
+
+  '308': number | string;
+
+  inventarioNombre: string;
+  inventarioAnexo: boolean;
+  inventarioLugar: string;
 }
 
 /**
@@ -637,6 +663,20 @@ export function createInitialSolicitudState(): Solicitud32607State {
     domiciliosDatos: [] as Domicilios[],
     listaSeccionSociosIC: [] as SeccionSociosIC[],
     enlaceOperativosLista: [] as EnlaceOperativo[],
+    entidad: 0,
+    '301': 0,
+    numeroIMMEX: '',
+    modalidadIMMEX: '',
+    '302': 0,
+    rubroCertificacion: '',
+    fechaFinVigenciaRubro: '',
+    numeroOficio: '',
+    '306': 0,
+    '307': 0,
+    '308': 0,
+    inventarioNombre: '',
+    inventarioAnexo: false,
+    inventarioLugar: '',
   };
 }
 @Injectable({
@@ -1575,6 +1615,62 @@ export class Solicitud32607Store extends Store<Solicitud32607State> {
    */
   actualizarEnlaceOperativosLista(valor: EnlaceOperativo[]): void {
     this.update((state) => ({ ...state, enlaceOperativosLista: valor }));
+  }
+
+  actualizarEntidad(valor: number): void {
+    this.update((state) => ({ ...state, entidad: valor }));
+  }
+
+  actualizar301(valor: number | string): void {
+    this.update((state) => ({ ...state, '301': valor }));
+  }
+
+  actualizarNumeroIMMEX(valor: string): void {
+    this.update((state) => ({ ...state, numeroIMMEX: valor }));
+  }
+
+  actualizarModalidadIMMEX(valor: string): void {
+    this.update((state) => ({ ...state, modalidadIMMEX: valor }));
+  }
+
+  actualizar302(valor: number | string): void {
+    this.update((state) => ({ ...state, '302': valor }));
+  }
+
+  actualizarRubroCertificacion(valor: string): void {
+    this.update((state) => ({ ...state, rubroCertificacion: valor }));
+  }
+
+  actualizarFechaFinVigenciaRubro(valor: string): void {
+    this.update((state) => ({ ...state, fechaFinVigenciaRubro: valor }));
+  }
+
+  actualizarNumeroOficio(valor: string): void {
+    this.update((state) => ({ ...state, numeroOficio: valor }));
+  }
+
+  actualizar306(valor: number | string): void {
+    this.update((state) => ({ ...state, '306': valor }));
+  }
+
+  actualizar307(valor: number | string): void {
+    this.update((state) => ({ ...state, '307': valor }));
+  }
+
+  actualizar308(valor: number | string): void {
+    this.update((state) => ({ ...state, '308': valor }));
+  }
+
+  actualizarInventarioNombre(valor: string): void {
+    this.update((state) => ({ ...state, inventarioNombre: valor }));
+  }
+
+  actualizarInventarioAnexo(valor: boolean): void {
+    this.update((state) => ({ ...state, inventarioAnexo: valor }));
+  }
+
+  actualizarInventarioLugar(valor: string): void {
+    this.update((state) => ({ ...state, inventarioLugar: valor }));
   }
 
   /**

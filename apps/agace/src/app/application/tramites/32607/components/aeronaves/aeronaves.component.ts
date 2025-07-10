@@ -38,7 +38,7 @@ import { takeUntil } from 'rxjs';
  * dinámicas.
  */
 @Component({
-  selector: 'app-importador-exportador',
+  selector: 'app-aeronaves',
   standalone: true,
   imports: [
     CommonModule,
@@ -50,12 +50,12 @@ import { takeUntil } from 'rxjs';
     AgregarTransportistasComponent,
   ],
   providers: [SolicitudService],
-  templateUrl: './importador-exportador.component.html',
-  styleUrl: './importador-exportador.component.scss',
+  templateUrl: './aeronaves.component.html',
+  styleUrl: './aeronaves.component.scss',
 })
-export class ImportadorExportadorComponent implements OnInit, OnDestroy {
-  /** Formulario reactivo para el componente importador-exportador */
-  importadorExportadorForm!: FormGroup;
+export class AeronavesComponent implements OnInit, OnDestroy {
+  /** Formulario reactivo para el componente aeronaves */
+  aeronavesForm!: FormGroup;
 
   /** Sujeto que maneja la destrucción de suscripciones */
   private destroy$: Subject<void> = new Subject<void>();
@@ -109,6 +109,8 @@ export class ImportadorExportadorComponent implements OnInit, OnDestroy {
   /** Referencia a la vista del modal de transportistas */
   @ViewChild('transportistas', { static: false })
   transportistaElement!: ElementRef;
+
+  validaComercioExterior: number | string = 0;
 
   /**
    * Constructor del componente
@@ -169,16 +171,16 @@ export class ImportadorExportadorComponent implements OnInit, OnDestroy {
   guardarDatosFormulario(): void {
     this.inicializarFormulario();
     if (this.esFormularioSoloLectura) {
-      this.importadorExportadorForm.disable();
+      this.aeronavesForm.disable();
     } else if (!this.esFormularioSoloLectura) {
-      this.importadorExportadorForm.enable();
+      this.aeronavesForm.enable();
     } else {
       // No se requiere ninguna acción en el formulario
     }
   }
 
   /**
-   * Inicializa el formulario `importadorExportadorForm` con los valores del estado actual `solicitud32607State`.
+   * Inicializa el formulario `aeronavesForm` con los valores del estado actual `solicitud32607State`.
    *
    * Este formulario recopila información relacionada con operaciones de importación y exportación,
    * como identificadores de campos (`2042`, `2043`, `2044`), fechas clave, montos y detalles bancarios.
@@ -193,10 +195,26 @@ export class ImportadorExportadorComponent implements OnInit, OnDestroy {
    * La suscripción se gestiona con `takeUntil` para evitar fugas de memoria.
    */
   inicializarFormulario(): void {
-    this.importadorExportadorForm = this.fb.group({
+    this.aeronavesForm = this.fb.group({
       '2042': [this.solicitud32607State[2042]],
       '2043': [this.solicitud32607State[2043]],
       '2044': [this.solicitud32607State[2044]],
+      '301': [this.solicitud32607State[301]],
+      '302': [this.solicitud32607State[302]],
+      '306': [this.solicitud32607State[306], [Validators.required]],
+      '307': [this.solicitud32607State[307], [Validators.required]],
+      '308': [this.solicitud32607State[308], [Validators.required]],
+      numeroIMMEX: [
+        this.solicitud32607State.numeroIMMEX,
+        [Validators.required],
+      ],
+      modalidadIMMEX: [
+        this.solicitud32607State.modalidadIMMEX,
+        [Validators.required],
+      ],
+      rubroCertificacion: [this.solicitud32607State.rubroCertificacion],
+      fechaFinVigenciaRubro: [this.solicitud32607State.fechaFinVigenciaRubro],
+      numeroOficio: [this.solicitud32607State.numeroOficio],
       fechaInicioComercio: [
         { value: this.solicitud32607State.fechaInicioComercio, disabled: true },
         Validators.required,
@@ -218,10 +236,21 @@ export class ImportadorExportadorComponent implements OnInit, OnDestroy {
         takeUntil(this.destroy$),
         map((respuesta: Solicitud32607State) => {
           this.solicitud32607State = respuesta;
-          this.importadorExportadorForm.patchValue({
+          this.aeronavesForm.patchValue({
             '2042': this.solicitud32607State[2042],
             '2043': this.solicitud32607State[2043],
             '2044': this.solicitud32607State[2044],
+            '301': this.solicitud32607State[301],
+            '302': this.solicitud32607State[302],
+            '306': this.solicitud32607State[306],
+            '307': this.solicitud32607State[307],
+            '308': this.solicitud32607State[308],
+            numeroIMMEX: this.solicitud32607State.numeroIMMEX,
+            modalidadIMMEX: this.solicitud32607State.modalidadIMMEX,
+            rubroCertificacion: this.solicitud32607State.rubroCertificacion,
+            fechaFinVigenciaRubro:
+              this.solicitud32607State.fechaFinVigenciaRubro,
+            numeroOficio: this.solicitud32607State.numeroOficio,
             fechaInicioComercio: this.solicitud32607State.fechaInicioComercio,
             fechaPago: this.solicitud32607State.fechaPago,
             monto: this.solicitud32607State.monto,
@@ -269,6 +298,7 @@ export class ImportadorExportadorComponent implements OnInit, OnDestroy {
    */
   actualizar2042(evento: string | number): void {
     this.solicitud32607Store.actualizar2042(evento);
+    this.validaComercioExterior = evento;
   }
 
   /**
@@ -343,6 +373,51 @@ export class ImportadorExportadorComponent implements OnInit, OnDestroy {
    */
   transportistasDatos(evento: TransportistasTable): void {
     this.transportistasLista.push(evento);
+  }
+
+  actualizar301(evento: number | string): void {
+    this.solicitud32607Store.actualizar301(evento);
+  }
+
+  actualizarNumeroIMMEX(evento: Event): void {
+    const VALOR = (evento.target as HTMLInputElement).value;
+    this.solicitud32607Store.actualizarNumeroIMMEX(VALOR);
+  }
+
+  actualizarModalidadIMMEX(evento: Event): void {
+    const VALOR = (evento.target as HTMLInputElement).value;
+    this.solicitud32607Store.actualizarModalidadIMMEX(VALOR);
+  }
+
+  actualizar302(evento: number | string): void {
+    this.solicitud32607Store.actualizar302(evento);
+  }
+
+  actualizarRubroCertificacion(evento: Event): void {
+    const VALOR = (evento.target as HTMLInputElement).value;
+    this.solicitud32607Store.actualizarRubroCertificacion(VALOR);
+  }
+
+  actualizarFechaFinVigenciaRubro(evento: Event): void {
+    const VALOR = (evento.target as HTMLInputElement).value;
+    this.solicitud32607Store.actualizarFechaFinVigenciaRubro(VALOR);
+  }
+
+  actualizarNumeroOficio(evento: Event): void {
+    const VALOR = (evento.target as HTMLInputElement).value;
+    this.solicitud32607Store.actualizarNumeroOficio(VALOR);
+  }
+
+  actualizar306(evento: number | string): void {
+    this.solicitud32607Store.actualizar306(evento);
+  }
+
+  actualizar307(evento: number | string): void {
+    this.solicitud32607Store.actualizar307(evento);
+  }
+
+  actualizar308(evento: number | string): void {
+    this.solicitud32607Store.actualizar308(evento);
   }
 
   /**

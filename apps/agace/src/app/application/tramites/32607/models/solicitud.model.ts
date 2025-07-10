@@ -1074,3 +1074,11 @@ export interface GuardarDatosFormulario {
    */
   enlaceOperativosLista: EnlaceOperativo[];
 }
+
+export interface Instalacions {
+  entidadFederativa: string;
+  municipioDelegacion: string;
+  direccion: string;
+  codigoPostal: string;
+  registroSESAT: string;
+}

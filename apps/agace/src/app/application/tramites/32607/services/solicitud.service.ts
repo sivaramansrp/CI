@@ -1,4 +1,5 @@
-import { EnlaceOperativo } from '../models/solicitud.model';
+import { EnlaceOperativo, Instalacions } from '../models/solicitud.model';
+import { Catalogo } from '@libs/shared/data-access-user/src';
 import { GuardarDatosFormulario } from '../models/solicitud.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
@@ -123,6 +124,16 @@ export class SolicitudService {
   guardarDatosFormulario(): Observable<GuardarDatosFormulario> {
     return this.http.get<GuardarDatosFormulario>(
       'assets/json/32607/guardar-datos-formulario.json'
+    );
+  }
+
+  guardarInstalacions(): Observable<Instalacions[]> {
+    return this.http.get<Instalacions[]>('assets/json/32607/instalacions.json');
+  }
+
+  guardarEntidadFederative(): Observable<Catalogo[]> {
+    return this.http.get<Catalogo[]>(
+      'assets/json/32607/entidad-federative.json'
     );
   }
 

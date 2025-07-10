@@ -37,8 +37,8 @@
       <div class="col-md-12 mt-4">
         <label class="form-label text-start"
           >Señale si al momento de ingresar su solicitud si se encuentra al
-          corriente en el cumplimiento de sus obligaciones fiscales y aduaneras
-          *</label
+          corriente en el cumplimiento de sus obligaciones fiscales y
+          aduaneras*</label
         >
         <app-input-radio
           formControlName="190"
@@ -53,7 +53,7 @@
       <div class="col-md-12 mt-4">
         <label class="form-label text-start"
           >Indique si autorizó al S A T hacer pública su opinión positiva sobre
-          el cumplimiento de obligaciones fiscales *</label
+          el cumplimiento de obligaciones fiscales*</label
         >
         <app-input-radio
           formControlName="191"
@@ -68,8 +68,8 @@
       <div class="col-md-12 mt-4">
         <label class="form-label text-start"
           >Señale si cuenta con empleados propios para realizar el proceso
-          productivo o la prestación de servicios, registrado ante el I M S S
-          *</label
+          productivo o la prestación de servicios, registrado ante el I M S
+          S*</label
         >
         <app-input-radio
           formControlName="199"
@@ -114,7 +114,7 @@
       <div class="col-md-12 mt-4">
         <label class="form-label text-start"
           >Cumple con la obligación de retener y enterar el I S R de los
-          trabajadores *</label
+          trabajadores*</label
         >
         <app-input-radio
           formControlName="2034"
@@ -128,7 +128,7 @@
 
       <div class="col-md-12 mt-4">
         <label class="form-label text-start"
-          >Acredita realizar el pago de cuotas obrero patronales *</label
+          >Acredita realizar el pago de cuotas obrero patronales*</label
         >
         <app-input-radio
           formControlName="236"
@@ -144,7 +144,7 @@
         <label class="form-label text-start"
           >Señale si al momento de ingresar su solicitud la empresa solicitante
           cuenta con subcontratación de servicios especializados o de ejecución
-          de obras especializadas *</label
+          de obras especializadas*</label
         >
         <app-input-radio
           formControlName="237"
@@ -246,7 +246,7 @@
       </div>
 
       <div class="col-md-12 mt-4">
-        <label class="form-label text-start"></label>
+        <label class="form-label text-start">
           Del mismo modo indique si al momento de ingresar su solicitud se
           encuentra en el listado de empresas publicadas por el SAT en términos
           del artículo 69-B, cuarto párrafo del CFF.*</label
@@ -307,7 +307,7 @@
         ></app-input-radio>
       </div>
 
-      <div class="col-md-4 mt-1">
+      <!-- <div class="col-md-4 mt-1">
         <app-catalogo-select
           formControlName="indiqueTodos"
           [catalogo]="indiqueTodos.catalogos"
@@ -316,7 +316,7 @@
           [required]="indiqueTodos.required"
           (selectionChange)="actualizarIndiqueTodos($event)"
         ></app-catalogo-select>
-      </div>
+      </div> -->
       <div class="col-md-8 mt-1"></div>
       <div class="col-md-12 mt-4">
         <label class="form-label text-start"
@@ -329,10 +329,10 @@
         <div class="alert alert-info">
           <div class="form-check">
             <b> Nota:</b> De contar con un programa IMMEX activo y vigente al
-            momento de ingresar la solicitud, se mostrarn los domicilios
-            registrados ante la Secretaria de Economia. Asi mismo, podra incluir
+            momento de ingresar la solicitud, se mostrarán los domicilios
+            registrados ante la Secretaria de Economía. Así mismo, podrá incluir
             otros domicilios que se encuentren relacionados con el RFC del
-            solicitante, dando click en el boton "Agregar" y seleccionado la
+            solicitante, dando click en el botón "Agregar" y seleccionado la
             Entidad Federativa.
           </div>
         </div>
@@ -350,12 +350,23 @@
           <div class="d-flex justify-content-end mt-4">
             <button
               type="button"
+              id="agregar"
+              [disabled]="esFormularioSoloLectura"
+              class="btn btn-primary me-3"
+              data-bs-toggle="modal"
+              data-bs-target="#modalEnlaceOperativo"
+              (click)="agregarInstalacionesPrincipales()"
+            >
+              Agregar
+            </button>
+            <button
+              type="button"
               id="modificar"
               [disabled]="esFormularioSoloLectura"
               class="btn btn-secondary"
               data-bs-toggle="modal"
               data-bs-target="#modalInstalacionesPrincipales"
-              (click)="agregarInstalacionesPrincipales()"
+              (click)="modificarInstalacionesPrincipales()"
             >
               Modificar
             </button>
@@ -367,17 +378,6 @@
               (click)="eliminarDomiciliosDatos()"
             >
               Eliminar
-            </button>
-            <button
-              type="button"
-              id="agregar"
-              [disabled]="esFormularioSoloLectura"
-              class="btn btn-primary ms-3"
-              data-bs-toggle="modal"
-              data-bs-target="#modalInstalacionesPrincipales"
-              (click)="agregarInstalacionesPrincipales()"
-            >
-              Agregar
             </button>
           </div>
         </div>
@@ -428,9 +428,7 @@
           >
           <div class="mt-3">
             <b>Para descargar plantilla del archivo de excel de click </b>
-            <a href="/assets/pdf/carga_proveedoresExtranjeros_aviso.xlsx"
-              >aquí</a
-            >
+            <a href="/assets/pdf/carga_proveedoresExtranjerosIC.xlsx">aquí</a>
           </div>
           <div class="row" style="margin-top: 20px">
             <div class="col-md-4">
@@ -489,9 +487,7 @@
           >
           <div class="mt-3">
             <b>Para descargar la plantilla del archivo de excel de click </b>
-            <a href="/assets/pdf/carga_proveedoresExtranjeros_aviso.xlsx"
-              >aquí</a
-            >
+            <a href="/assets/pdf/carga_proveedoresNacionesIC.xlsx">aquí</a>
           </div>
           <div class="row" style="margin-top: 20px">
             <div class="col-md-4">
@@ -597,9 +593,11 @@
           <input
             type="text"
             class="form-control"
+            maxlength="250"
+            size="50"
             formControlName="identificacion"
             name="identificacion"
-            id="identificacion"
+            id="inventario"
             (change)="actualizarIdentificacion($event)"
           />
         </div>
@@ -609,8 +607,9 @@
             type="text"
             class="form-control"
             name="lugarDeRadicacion"
+            maxlength="250"
             formControlName="lugarDeRadicacion"
-            id="lugarDeRadicacion"
+            id="inventario"
             (change)="actualizarLugarDeRadicacion($event)"
           />
         </div>
@@ -635,6 +634,7 @@
             id=""
             class="btn btn-primary me-md-3"
             [disabled]="esFormularioSoloLectura"
+            (click)="agregarControlInventarios()"
           >
             Agregar
           </button>
@@ -660,6 +660,9 @@
               id="modificar"
               class="btn btn-secondary ms-3"
               [disabled]="esFormularioSoloLectura"
+              data-bs-toggle="modal"
+              data-bs-target="#modalModificarInventario"
+              (click)="modificarInventario()"
             >
               Modificar
             </button>
@@ -868,6 +871,42 @@
       <app-instalaciones-principales
         (instalacionesPrincipales)="instalacionesPrincipales($event)"
       ></app-instalaciones-principales>
+    </div>
+  </div>
+</div>
+<div
+  class="modal fade"
+  id="modalEnlaceOperativo"
+  tabindex="-1"
+  aria-labelledby="modalEnlaceOperativoLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <app-enlace-operativo></app-enlace-operativo>
+    </div>
+  </div>
+</div>
+
+@if (nuevaNotificacion) {
+<section>
+  <lib-notificaciones
+    [notificacionInput]="nuevaNotificacion"
+    (confirmacionModal)="eliminarPedimento($event)"
+  ></lib-notificaciones>
+</section>
+}
+
+<div
+  class="modal fade"
+  id="modalModificarInventario"
+  tabindex="-1"
+  aria-labelledby="modalModificarInventarioLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <app-modificar-inventario></app-modificar-inventario>
     </div>
   </div>
 </div>

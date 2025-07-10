@@ -1,5 +1,5 @@
 <div class="container">
-  <form [formGroup]="importadorExportadorForm">
+  <form [formGroup]="aeronavesForm">
     <div class="row">
       <div class="col-md-12">
         <label class="form-label text-start"
@@ -22,18 +22,65 @@
           (valueChange)="actualizar2042($event)"
         ></app-input-radio>
       </div>
+      @if(validaComercioExterior === 1){
       <div class="col-md-6 mt-4">
         <input-fecha
           [datos]="fechaDeFinDeVigencia"
           [isDisabled]="esFormularioSoloLectura"
-          [setFecha]="
-            importadorExportadorForm.get('fechaInicioComercio')?.value
-          "
+          [setFecha]="aeronavesForm.get('fechaInicioComercio')?.value"
           (valorCambiado)="actualizarFechaInicioComercio($event)"
         >
         </input-fecha>
       </div>
       <div class="col-md-6 mt-4"></div>
+      } @if(validaComercioExterior === 2){
+      <div class="col-md-12 mt-4">
+        <label class="form-label text-start">
+          Señale si forma parte de un mismo grupo, siempre que las empresas de
+          grupo hayan efectuado operaciones de comercio exterior en el plazo
+          referido. *</label
+        >
+        <app-input-radio
+          [radioOptions]="sinoOpcion.radioOptions"
+          [isRequired]="sinoOpcion.isRequired"
+          [layout]="'horizontal'"
+          [gap]="'50px'"
+          formControlName="306"
+          (valueChange)="actualizar306($event)"
+        ></app-input-radio>
+      </div>
+      <div class="col-md-12 mt-4">
+        <label class="form-label text-start">
+          Señale si su constitución resultó de una fusión o escisión, siempre
+          que las empresas fusionantes o, en su caso, la sociedad escindente,
+          hayan efectuado operaciones de comercio exterior.*</label
+        >
+        <app-input-radio
+          [radioOptions]="sinoOpcion.radioOptions"
+          [isRequired]="sinoOpcion.isRequired"
+          [layout]="'horizontal'"
+          [gap]="'50px'"
+          formControlName="307"
+          (valueChange)="actualizar307($event)"
+        ></app-input-radio>
+      </div>
+
+      <div class="col-md-12 mt-4">
+        <label class="form-label text-start">
+          Señale si previo a su constitución ha operado durante los últimos 2
+          años como empresa extranjera al amparo de otra empresa con Programa
+          IMMEX en la modalidad de albergue.*</label
+        >
+        <app-input-radio
+          [radioOptions]="sinoOpcion.radioOptions"
+          [isRequired]="sinoOpcion.isRequired"
+          [layout]="'horizontal'"
+          [gap]="'50px'"
+          formControlName="308"
+          (valueChange)="actualizar308($event)"
+        ></app-input-radio>
+      </div>
+      }
       <div class="col-md-12">
         <label class="form-label text-start">
           Señale si ha efectuado el pago del derecho correspondiente a la fecha
@@ -46,7 +93,7 @@
         <input-fecha
           [datos]="fechaDePago"
           [isDisabled]="esFormularioSoloLectura"
-          [setFecha]="importadorExportadorForm.get('fechaPago')?.value"
+          [setFecha]="aeronavesForm.get('fechaPago')?.value"
           (valorCambiado)="actualizarFechaPago($event)"
         >
         </input-fecha>
@@ -134,6 +181,103 @@
           </button>
         </div>
       </div>
+      <div class="col-md-12 mt-4">
+        <label class="form-label text-start"
+          >Indique el número de su Programa IMMEX y la modalidad. *</label
+        >
+        <app-input-radio
+          [radioOptions]="sinoOpcion.radioOptions"
+          [isRequired]="sinoOpcion.isRequired"
+          [layout]="'horizontal'"
+          [gap]="'50px'"
+          formControlName="301"
+          (valueChange)="actualizar301($event)"
+        ></app-input-radio>
+      </div>
+      <div class="col-md-4 mt-4">
+        <label class="form-label text-start">Número de Programa IMMEX:*</label>
+        <input
+          class="form-control"
+          formControlName="numeroIMMEX"
+          maxlength="20"
+          type="text"
+          size="35"
+          id="numeroAeronaves"
+          name="numeroIMMEX"
+        />
+      </div>
+      <div class="col-md-8 mt-4"></div>
+      <div class="col-md-4 mt-4">
+        <label class="form-label text-start">
+          Modalidad del Programa IMMEX:*</label
+        >
+        <input
+          class="form-control"
+          formControlName="modalidadIMMEX"
+          maxlength="20"
+          type="text"
+          size="35"
+          id="modalidadAeronaves"
+          name="modalidadIMMEX"
+        />
+      </div>
+      <div class="col-md-8 mt-4"></div>
+      <div class="col-md-12 mt-4">
+        <label class="form-label text-start">
+          Señale si cuenta con el Registro en el Esquema de Certificación de
+          Empresas en la Modalidad de IVA e IEPS en cualquiera de sus rubros.
+          *</label
+        >
+        <app-input-radio
+          [radioOptions]="sinoOpcion.radioOptions"
+          [isRequired]="sinoOpcion.isRequired"
+          [layout]="'horizontal'"
+          [gap]="'50px'"
+          formControlName="302"
+          (valueChange)="actualizar302($event)"
+        ></app-input-radio>
+      </div>
+
+      <div class="col-md-4 mt-4">
+        <label class="form-label text-start"> Modalidad I V A e I E P S</label>
+        <input
+          class="form-control"
+          formControlName="rubroCertificacion"
+          maxlength="3"
+          type="text"
+          size="35"
+          id="rubroAeronaves"
+          name="rubroCertificacion"
+          (change)="actualizarRubroCertificacion($event)"
+        />
+      </div>
+      <div class="col-md-4 mt-4">
+        <label class="form-label text-start"> Fecha De Registro</label>
+        <input
+          class="form-control"
+          formControlName="fechaFinVigenciaRubro"
+          maxlength="20"
+          type="text"
+          size="35"
+          id="fechaFinVigenciaAeronaves"
+          name="fechaFinVigenciaRubro"
+          (change)="actualizarFechaFinVigenciaRubro($event)"
+        />
+      </div>
+      <div class="col-md-4 mt-4">
+        <label class="form-label text-start"> Número de autorización</label>
+        <input
+          class="form-control"
+          formControlName="numeroOficio"
+          maxlength="35"
+          type="text"
+          size="35"
+          id="numeroOficioAeronaves"
+          name="numeroOficio"
+          (change)="actualizarNumeroOficio($event)"
+        />
+      </div>
+
       <div class="col-md-12">
         <ng-titulo titulo="Reconocimiento Mutuo" />
       </div>
