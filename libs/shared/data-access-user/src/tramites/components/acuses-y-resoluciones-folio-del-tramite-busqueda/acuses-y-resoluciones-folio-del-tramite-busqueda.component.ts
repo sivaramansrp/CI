@@ -20,8 +20,8 @@ import tramiteDetailsData from '@libs/shared/theme/assets/json/tramiteList.json'
  */
 export const FECHA_INICIO = {
   labelNombre: 'Fecha inicial',
-  required: true,
   habilitado: true,
+  required: false,
 };
 
 /**
@@ -29,8 +29,8 @@ export const FECHA_INICIO = {
  */
 export const FECHA_FINAL = {
   labelNombre: 'Fecha final',
-  required: true,
   habilitado: true,
+  required: false,
 };
 
 /**
@@ -126,9 +126,9 @@ export class AcusesYResolucionesFolioDelTramiteBusquedaComponent
   ngOnInit(): void {
     this.getAucesYResolucionesFolioTramiteDatos();
     this.formBusqueda = this.formBuilder.group({
-      solicitante: '',
-      rfc: '',
-      folio: [{ value: '0100001000320251005000002', disabled: false }],
+      solicitante: 'INTEGRADORA DE URBANIZACIONES SIGNUM, S DE RL DE CV',
+      rfc: 'AAL0409235E6',
+      folio: [{ value: '', disabled: false }],
       fechaInicial: [{ value: '', disabled: false }],
       fechaFinal: [{ value: '', disabled: false }],
     });
@@ -164,7 +164,7 @@ export class AcusesYResolucionesFolioDelTramiteBusquedaComponent
     {
       encabezado: 'Número de procedimiento',
       clave: (artículo) => artículo.numeroDeProcedimiento,
-      orden: 0
+      orden: 0,
     },
     {
       encabezado: 'Tipo de trámite',
