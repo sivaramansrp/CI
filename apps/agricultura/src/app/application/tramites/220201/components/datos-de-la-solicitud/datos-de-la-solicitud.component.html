@@ -17,7 +17,7 @@
                 </h4>
                 <button type="button" class="collpase-button collapsed"></button>
               </div>
-              @if(colapsable){
+              @if(colapsable && !esFormularioSoloLectura){
               <div class="panel-collapse collapse in" id="panel-01">
                 <div class="panel-body">
                   <ng-alert [CONTENIDO]="seleccionado"></ng-alert>
