@@ -1,161 +1,272 @@
-import { Catalogo } from "../state/Tramite32508.store";
+// import { Catalogo } from "../state/Tramite32508.store";
 
-/**
- * Interfaz que representa la respuesta de una consulta general.
- */
-export interface RespuestaConsulta {
-  /**
-   * Indica si la operación fue exitosa.
-   * @type {boolean}
-   */
-  success: boolean;
+import { ConfiguracionColumna } from "@libs/shared/data-access-user/src";
+
+// /**
+//  * Interfaz que representa la respuesta de una consulta general.
+//  */
+// export interface RespuestaConsulta {
+//   /**
+//    * Indica si la operación fue exitosa.
+//    * @type {boolean}
+//    */
+//   success: boolean;
+
+//   /**
+//    * Datos obtenidos de la consulta.
+//    * @type {ConsultaDatos}
+//    */
+//   datos: ConsultaDatos;
+
+//   /**
+//    * Mensaje de la respuesta.
+//    * @type {string}
+//    */
+//   message: string;
+// }
+
+// /**
+//  * Interfaz que representa los datos generales obtenidos de una consulta.
+//  */
+// export interface ConsultaDatos {
+//   /**
+//    * Clave del fiscalizado.
+//    * @type {string}
+//    */
+//   claveFiscalizado: string;
+
+//   /**
+//    * adace.
+//    * @type {string}
+//    */
+//   adace: string;
+
+//   /**
+//    * Tipo de dictamen.
+//    * @type {string}
+//    */
+//   tipoDictamen: string;
+
+//   /**
+//    * RFC del fiscalizado.
+//    * @type {string}
+//    */
+//   rfc: string;
+
+//   /**
+//    * Nombre del fiscalizado.
+//    * @type {string}
+//    */
+//   nombre: string;
+
+//   /**
+//    * Número de inscripción.
+//    * @type {string}
+//    */
+//   numeroInscripcion: string;
+
+//   /**
+//    * Catálogo de años.
+//    * @type {Catalogo[] | null}
+//    */
+//   ano: Catalogo[] | null;
+
+//   /**
+//    * Catálogo de meses.
+//    * @type {Catalogo[] | null}
+//    */
+//   mes: Catalogo[] | null;
+
+//   /**
+//    * Opción seleccionada en el radio parcial.
+//    * @type {string}
+//    */
+//   radioParcial: string;
+
+//   /**
+//    * Opción seleccionada en el radio total.
+//    * @type {string}
+//    */
+//   radioTotal: string;
+
+//   /**
+//    * Saldo pendiente del dictamen anterior.
+//    * @type {string}
+//    */
+//   saldoPendiente: string;
+
+//   /**
+//    * Aprovechamiento total a cargo.
+//    * @type {string}
+//    */
+//   aprovechamiento: string;
+
+//   /**
+//    * Disminución aplicada.
+//    * @type {string}
+//    */
+//   disminucionAplicada: string;
+
+//   /**
+//    * Compensación aplicada.
+//    * @type {string}
+//    */
+//   compensacionAplicada: string;
+
+//   /**
+//    * Saldo pendiente por disminuir.
+//    * @type {string}
+//    */
+//   saldoPendienteDisminuir: string;
+
+//   /**
+//    * Cantidad pagada.
+//    * @type {string}
+//    */
+//   cantidad: string;
+
+//   /**
+//    * Llave de pago.
+//    * @type {string}
+//    */
+//   llaveDePago: string;
+
+//   /**
+//    * Archivos adjuntos.
+//    * @type {File[]}
+//    */
+//   archivo: File[];
+
+//   /**
+//    * Fecha de pago.
+//    * @type {string}
+//    */
+//   fechaPago: string;
+
+//   /**
+//    * Fecha de elaboración.
+//    * @type {string}
+//    */
+//   fechaElaboracion: string;
+
+//   /**
+//    * Saldo pendiente por compensar.
+//    * @type {string}
+//    */
+//   saldoPendienteCompensar: string;
+
+//   /**
+//    * Lista de datos relacionados con la mercancía.
+//    * @type {Array<any>}
+//    */
+//   datosDelMercancia: [];
+// }
+
+export interface Domicillio {
+  instalacionPrincipal: string;
+
+  /** Clave del tipo de instalación */
+  cveTipoInstalacion?: string;
+
+  /** Tipo de instalación */
+  tipoInstalacion: string;
+
+  /** Clave de la entidad federativa */
+  cveEntidadFederativa?: string;
+
+  /** Nombre de la entidad federativa */
+  entidadFederativa: string;
+
+  /** Clave de delegación o municipio */
+  cveDelegacionMunicipio?: string;
+
+  /** Nombre del municipio o delegación */
+  municipioDelegacion: string;
+
+  /** Dirección completa */
+  direccion: string;
+
+  /** Código postal del domicilio */
+  codigoPostal: string;
+
+  /** Registro en SESAT */
+  registroSESAT: string;
+
+  /** Proceso productivo en el domicilio */
+  procesoProductivo: string;
 
   /**
-   * Datos obtenidos de la consulta.
-   * @type {ConsultaDatos}
+   * Documento que acredita la propiedad o posesión del inmueble.
    */
-  datos: ConsultaDatos;
+  acreditaInmueble: string;
 
   /**
-   * Mensaje de la respuesta.
-   * @type {string}
+   * Operaciones de comercio exterior realizadas en el inmueble.
    */
-  message: string;
-}
-
-/**
- * Interfaz que representa los datos generales obtenidos de una consulta.
- */
-export interface ConsultaDatos {
-  /**
-   * Clave del fiscalizado.
-   * @type {string}
-   */
-  claveFiscalizado: string;
+  operacionesCExt: string;
 
   /**
-   * adace.
-   * @type {string}
+   * Indica si la instalación cuenta con certificación CTPAT.
    */
-  adace: string;
+  instalacionCtpat: string;
 
   /**
-   * Tipo de dictamen.
-   * @type {string}
+   * Perfil de la instalación general.
    */
-  tipoDictamen: string;
+  instalacionPerfil: string;
 
   /**
-   * RFC del fiscalizado.
-   * @type {string}
+   * Perfil de la instalación como Recinto Fiscalizado Estratégico (RFE).
    */
-  rfc: string;
+  instalacionPerfilRFE: string;
 
   /**
-   * Nombre del fiscalizado.
-   * @type {string}
+   * Perfil de la instalación en el sector automotriz.
    */
-  nombre: string;
+  instalacionPerfilAuto: string;
 
   /**
-   * Número de inscripción.
-   * @type {string}
+   * Perfil de la instalación en el sector ferroviario.
    */
-  numeroInscripcion: string;
+  instalacionPerfilFerro: string;
 
   /**
-   * Catálogo de años.
-   * @type {Catalogo[] | null}
+   * Perfil de la instalación como Recinto Fiscal (RF).
    */
-  ano: Catalogo[] | null;
+  instalacionPerfilRf: string;
 
   /**
-   * Catálogo de meses.
-   * @type {Catalogo[] | null}
+   * Perfil de la instalación dedicada a mensajería y paquetería.
    */
-  mes: Catalogo[] | null;
+  instalacionPerfilMensajeria: string;
 
   /**
-   * Opción seleccionada en el radio parcial.
-   * @type {string}
+   * Número exterior del domicilio.
    */
-  radioParcial: string;
+  noExterior?: string;
 
   /**
-   * Opción seleccionada en el radio total.
-   * @type {string}
+   * Número interior del domicilio (opcional).
    */
-  radioTotal: string;
+  noInterior?: string;
 
   /**
-   * Saldo pendiente del dictamen anterior.
-   * @type {string}
+   * Clave de la colonia (opcional).
    */
-  saldoPendiente: string;
+  cveColonia?: string;
 
   /**
-   * Aprovechamiento total a cargo.
-   * @type {string}
+   * Nombre de la calle (opcional).
    */
-  aprovechamiento: string;
+  calle?: string;
 
   /**
-   * Disminución aplicada.
-   * @type {string}
+   * Descripción de la colonia (opcional).
    */
-  disminucionAplicada: string;
+  descCol?: string;
 
   /**
-   * Compensación aplicada.
-   * @type {string}
+   * Identificador del recinto (opcional).
    */
-  compensacionAplicada: string;
-
-  /**
-   * Saldo pendiente por disminuir.
-   * @type {string}
-   */
-  saldoPendienteDisminuir: string;
-
-  /**
-   * Cantidad pagada.
-   * @type {string}
-   */
-  cantidad: string;
-
-  /**
-   * Llave de pago.
-   * @type {string}
-   */
-  llaveDePago: string;
-
-  /**
-   * Archivos adjuntos.
-   * @type {File[]}
-   */
-  archivo: File[];
-
-  /**
-   * Fecha de pago.
-   * @type {string}
-   */
-  fechaPago: string;
-
-  /**
-   * Fecha de elaboración.
-   * @type {string}
-   */
-  fechaElaboracion: string;
-
-  /**
-   * Saldo pendiente por compensar.
-   * @type {string}
-   */
-  saldoPendienteCompensar: string;
-
-  /**
-   * Lista de datos relacionados con la mercancía.
-   * @type {Array<any>}
-   */
-  datosDelMercancia: [];
+  idRecinto?: string;
 }

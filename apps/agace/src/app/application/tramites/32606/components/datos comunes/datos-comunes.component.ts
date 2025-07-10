@@ -4,14 +4,17 @@ import { Catalogo, CatalogoSelectComponent, InputRadioComponent } from '@libs/sh
 import { BIOMESTRE_CATALOGO, DOMICILIO_CATALOGO, RADIO_01, SECTOR_PRODUCTIVO, SERVICIO_CATALOGO } from '../../constantes/adace32606.enum';
 import { EconomicoService } from '../../services/economico.service';
 import { map, ReplaySubject, takeUntil } from 'rxjs';
-import { Tramite32606Query } from '../../state/Tramite32508.query';
-import { Solicitud32606State, Tramite32606Store } from '../../state/Tramite32508.store';
+import { Tramite32606Query } from '../../state/Tramite32606.query';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { DomicillioComponent } from '../domicillio/domicillio.component';
+import { Solicitud32606State, Tramite32606Store } from '../../state/Tramite32606.store';
+import { QuerellaComponent } from '../querella/querella.component';
 
 @Component({
   selector: 'app-datos-comunes',
   standalone: true,
-  imports: [CommonModule, CatalogoSelectComponent, InputRadioComponent, ReactiveFormsModule],
+  imports: [CommonModule, CatalogoSelectComponent, InputRadioComponent, ReactiveFormsModule, 
+    DomicillioComponent,QuerellaComponent],
   templateUrl: './datos-comunes.component.html',
   styleUrl: './datos-comunes.component.css',
 })
@@ -27,7 +30,7 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
   public solicitudState!: Solicitud32606State;
   radioOpcions01 = RADIO_01;
   public datosComunesForm!: FormGroup;
- 
+
   constructor(private economico: EconomicoService,
     public query: Tramite32606Query,
     public store: Tramite32606Store,

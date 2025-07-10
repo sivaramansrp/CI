@@ -1,0 +1,148 @@
+<form [formGroup]="domicillioForm">
+    <div class="row">
+        <div class="col-md-6" style="margin-top: 10px;">
+            <app-catalogo-select [catalogo]="domicillio.catalogos" [label]="''"
+                formControlName="domicillio"></app-catalogo-select>
+        </div>
+    </div>
+    <div class="row mt-12" style="margin-top: 10px;">
+        <label class="form-label text-start">Indique todos los domicilios registrados ante el RFC del solicitante e
+            indique aquellos en que se desarrollen actividades relacionadas con su proceso productivo y/o la prestación
+            de
+            servicios.</label>
+    </div>
+    <div class="col-md-12 mt-5">
+        <div class="alert alert-info">
+            <div class="form-check">
+                <b> Nota:</b> De contar con un programa IMMEX activo y vigente al momento de ingresar la solicitud, se
+                mostrarán los domicilios registrados ante la Secretaria de Economía. Así mismo, podrá incluir otros
+                domicilios que se encuentren relacionados con el RFC del solicitante, dando click en el botón "Agregar"
+                y seleccionado la Entidad Federativa.
+            </div>
+        </div>
+    </div>
+    <div class="row mt-12">
+        <div class="col-md-12">
+            <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX"
+                [configuracionTabla]="domicillioTabla"></app-tabla-dinamica>
+        </div>
+    </div>
+    <div class="col-md-12 mt-5 d-flex justify-content-end align-items-end">
+        <div class="btn-group">
+            <button type="button" class="btn btn-default"> Modificar </button>
+            <button type="button" class="btn btn-danger 3 ms-3"> Eliminar </button>
+            <button type="button" class="btn btn-primary ms-3"> Agregar </button>
+        </div>
+    </div>
+
+    <div class="col-md-12 mt-4">
+        <label class="form-label text-start"><span style="color: red;">*</span> Señale si tiene actualizado sus medios
+            de contacto para efectos del buzón tributario en términos del penúltimo párrafo del artículo 17-K del
+            CFF.</label>
+        <app-input-radio [radioOptions]="radioOpcions07" [isRequired]="true" [layout]="'horizontal'" [gap]="'445px'"
+            formControlName="tipoRadio07"></app-input-radio>
+    </div>
+
+    <div class="col-md-12 mt-4">
+        <label class="form-label text-start"><span style="color: red;">*</span> Señale si se encuentra suspendida en el
+            Padrón de Importadores o en el Padrón de Importadores de Sectores Específicos o Padrón de Exportadores
+            Sectorial.</label>
+        <app-input-radio [radioOptions]="radioOpcions07" [isRequired]="true" [layout]="'horizontal'" [gap]="'445px'"
+            formControlName="tipoRadio08"></app-input-radio>
+    </div>
+    <!-- Clientes y Proveedores en el Extranjero -->
+    <div class="col-md-12">
+        <ng-titulo titulo="Clientes y Proveedores en el Extranjero" />
+    </div>
+
+    <div class="col-md-12">
+        <label class="form-label text-start">Anexe un archivo que contenga el nombre y dirección de sus clientes
+            y proveedores en el extranjero directa o indirectamente vinculados
+            con el régimen aduanero con el que se solicita el registro, con los
+            que realizó operaciones de comercio exterior durante los últimos
+            doce meses</label>
+
+        <div>
+            <b>Para descargar plantilla del archivo de excel de click </b>
+            <a href="/assets/pdf/carga_proveedoresExtranjeros_aviso.xlsx">aquí</a>
+        </div>
+        <div class="row mt-3">
+            <div class="bottom-buffer">
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="form-group">
+                            <input class="visually-hidden-file" type="file" (change)="alSeleccionarArchivo($event)"
+                                id="archivoAdjuntar" size="60" formControlName="file1" />
+                            <label class="custome-file-label" for="archivoAdjuntar" value="Seleccionar archivo"
+                                style="background-color: rgb(41, 110, 194); font-weight: bold">Examinar</label>
+                            <p style="display: inline-block"> {{ nombreArchivo }} </p>
+                            <br />
+                        </div>
+                    </div>
+                    <div class="col-md-4 mt-5 d-flex justify-content-end">
+                        <button type="button" class="btn btn-primary ms-3"> Anexar... </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12 d-flex align-items-center">
+            <label class="form-label text-start me-3 mb-0" style="white-space: nowrap;">
+                Registros que existen actualmente.
+            </label>
+            <div class="col-md-4">
+                <input type="text" class="form-control" formControlName="actualmente" name="actualmente"
+                    id="actualmente" />
+            </div>
+        </div>
+    </div>
+    <!-- Proveedores -->
+    <div class="col-md-12">
+        <ng-titulo titulo="Proveedores" />
+    </div>
+
+    <div class="col-md-12">
+        <label class="form-label text-start">Anexe un archivo que contenga el nombre y clave en el R F C de sus
+            proveedores de insumos adquiridos en territorio nacional, vinculados
+            al proceso bajo el régimen que solicita, de los últimos 6
+            meses</label>
+
+        <div>
+            <b>Para descargar plantilla del archivo de excel de click </b>
+            <a href="/assets/pdf/carga_proveedoresExtranjeros_aviso.xlsx">aquí</a>
+        </div>
+        <div class="row mt-3">
+            <div class="bottom-buffer">
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="form-group">
+                            <input class="visually-hidden-file" type="file" (change)="alSeleccionarArchivo2($event)"
+                                id="archivoAdjuntar" size="60" formControlName="file2" />
+                            <label class="custome-file-label" for="archivoAdjuntar" value="Seleccionar archivo"
+                                style="background-color: rgb(41, 110, 194); font-weight: bold">Examinar</label>
+                            <p style="display: inline-block"> {{ nombreArchivo2 }} </p>
+                            <br />
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 mt-5 d-flex justify-content-end">
+                        <button type="button" class="btn btn-primary ms-3"> Anexar... </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12 d-flex align-items-center">
+            <label class="form-label text-start me-3 mb-0" style="white-space: nowrap;">
+                Registros que existen actualmente.
+            </label>
+            <div class="col-md-4">
+                <input type="text" class="form-control" formControlName="actualmente2" name="actualmente2"
+                    id="actualmente2" />
+            </div>
+        </div>
+    </div>
+
+</form>

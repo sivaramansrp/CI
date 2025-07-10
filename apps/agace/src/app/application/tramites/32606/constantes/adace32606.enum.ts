@@ -1,8 +1,14 @@
-import { CatalogosSelect } from "@libs/shared/data-access-user/src";
+import { CatalogosSelect, ConfiguracionColumna } from "@libs/shared/data-access-user/src";
+import { Domicillio } from "../models/adace.model";
 /**
  * Opciones para el radio relacionado con la disminución total.
  */
 export const RADIO_01 = [
+  { label: 'Sí', value: 'si' },
+  { label: 'No', value: 'no' },
+];
+
+export const RADIO_07 = [
   { label: 'Sí', value: 'si' },
   { label: 'No', value: 'no' },
 ];
@@ -71,7 +77,7 @@ export const BIOMESTRE_CATALOGO: CatalogosSelect = {
 };
 
 export const DOMICILIO_CATALOGO: CatalogosSelect = {
-  /** Etiqueta para el catálogo de domicilios. */
+  /** Etiqueta para el catálogo de Domicillio. */
   labelNombre: '',
   /** Indica si el campo es obligatorio. */
   required: true,
@@ -80,3 +86,108 @@ export const DOMICILIO_CATALOGO: CatalogosSelect = {
   /** Lista de elementos del catálogo. */
   catalogos: [],
 };
+
+export const DOMICILLIO_TABLA: ConfiguracionColumna<Domicillio>[] = [
+  {
+        /** Instalaciones principales de la empresa. */
+        encabezado: 'Instalaciones principales',
+        clave: (item: Domicillio) => item.instalacionPrincipal,
+        orden: 1,
+      },
+      {
+        /** Tipo de instalación de la empresa. */
+        encabezado: 'Tipo de instalación',
+        clave: (item: Domicillio) => item.tipoInstalacion,
+        orden: 1,
+      },
+      {
+        /** Entidad federativa donde está ubicada la instalación. */
+        encabezado: 'Entidad federativa',
+        clave: (item: Domicillio) => item.entidadFederativa,
+        orden: 1,
+      },
+      {
+        /** Municipio o delegación donde se encuentra la instalación. */
+        encabezado: 'Municipio o delegación',
+        clave: (item: Domicillio) => item.municipioDelegacion,
+        orden: 1,
+      },
+      {
+        /** Dirección completa del domicilio, incluyendo colonia, calle y número. */
+        encabezado: 'Colonia, calle y número',
+        clave: (item: Domicillio) => item.direccion,
+        orden: 1,
+      },
+      {
+        /** Código postal correspondiente al domicilio. */
+        encabezado: 'Código postal',
+        clave: (item: Domicillio) => item.codigoPostal,
+        orden: 1,
+      },
+      {
+        /** Registro del domicilio ante la Secretaría de Economía (SE) o el Servicio de Administración Tributaria (SAT). */
+        encabezado: 'Registro ante SE/SAT',
+        clave: (item: Domicillio) => item.registroSESAT,
+        orden: 1,
+      },
+      {
+        /** Proceso productivo que se realiza en la instalación. */
+        encabezado: 'Proceso Productivo',
+        clave: (item: Domicillio) => item.procesoProductivo,
+        orden: 1,
+      },
+      {
+        /** Indica si el domicilio acredita el uso y goce del inmueble. */
+        encabezado: 'Acredita el uso y Goce del Inmueble',
+        clave: (item: Domicillio) => item.acreditaInmueble,
+        orden: 1,
+      },
+      {
+        /** Indica si la instalación realiza operaciones de Comercio Exterior. */
+        encabezado: 'Realiza operaciones de Comercio Exterior',
+        clave: (item: Domicillio) => item.operacionesCExt,
+        orden: 1,
+      },
+      {
+        /** Reconocimiento mutuo para la instalación C-TPAT. */
+        encabezado: 'Reconocimiento Mutuo (Instalación C-TPAT)',
+        clave: (item: Domicillio) => item.instalacionCtpat,
+        orden: 1,
+      },
+      {
+        /** Perfil de la empresa correspondiente a la instalación. */
+        encabezado: 'Perfil de la empresa',
+        clave: (item: Domicillio) => item.instalacionPerfil,
+        orden: 1,
+      },
+      {
+        /** Perfil del Recinto Fiscalizado Estratégico. */
+        encabezado: 'Perfil del Recinto Fiscalizado Estratégico',
+        clave: (item: Domicillio) => item.instalacionPerfilRFE,
+        orden: 1,
+      },
+      {
+        /** Perfil del Auto Transportista Terrestre. */
+        encabezado: 'Perfil del Auto Transportista Terrestre',
+        clave: (item: Domicillio) => item.instalacionPerfilAuto,
+        orden: 1,
+      },
+      {
+        /** Perfil del Transportista Ferroviario. */
+        encabezado: 'Perfil del Transportista Ferroviario',
+        clave: (item: Domicillio) => item.instalacionPerfilFerro,
+        orden: 1,
+      },
+      {
+        /** Perfil del Recinto Fiscalizado. */
+        encabezado: 'Perfil del Recinto Fiscalizado',
+        clave: (item: Domicillio) => item.instalacionPerfilRf,
+        orden: 1,
+      },
+      {
+        /** Perfil de Mensajería y Paquetería. */
+        encabezado: 'Perfil de Mensajería y Paquetería',
+        clave: (item: Domicillio) => item.instalacionPerfilMensajeria,
+        orden: 1,
+      },
+];

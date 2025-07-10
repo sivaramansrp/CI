@@ -3,7 +3,7 @@ import { ConsultaioQuery, ConsultaioState, FormularioDinamico } from '@ng-mf/dat
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
 import { Router } from '@angular/router';
-import { Solicitud32606State, Tramite32606Store } from '../../state/Tramite32508.store';
+import { Solicitud32606State, Tramite32606Store } from '../../state/Tramite32606.store';
 
 /**
  * Componente que representa el primer paso del trámite.
