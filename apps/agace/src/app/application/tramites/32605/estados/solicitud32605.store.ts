@@ -134,7 +134,7 @@ export interface Solicitud32605State {
   /**
    * Fecha de inicio de operaciones de comercio exterior.
    */
-  fechaInicioComercio: string;
+  
 
   /**
    * Fecha de pago asociada a la solicitud.
@@ -520,6 +520,20 @@ export interface Solicitud32605State {
    * Lista de objetos que contienen los datos relacionados con los enlaces operativos.
    */
   enlaceOperativosLista: EnlaceOperativo[];
+
+
+  // -------------------------------------------------------------
+  comercioExteriorRealizado: string; // Indica si se realiza comercio exterior
+  fechaDePago:string; // Fecha de pago asociada a la solicitud
+  fechaInicioComercio: string;
+  esParteGrupoComercioExterior: string; // Indica si es parte de un grupo de comercio exterior
+  rfcEnclaveOperativo: string; // RFC del enclave operativo
+  enlaceOperativorfc: string; // RFC del enlace operativo
+  denominacionRazonsocial: string; // Razón social del enlace operativo
+  domicilio: string; // Domicilio del enlace operativo
+  inputfechaDeLaUltimaOperacion: string; // Fecha de la última operación
+  fusionEscisionConOperacionExterior: string; // Indica si hay fusión o escisión con operación exterior
+  //--------------------------------------------------------------
 }
 
 /**
@@ -553,7 +567,7 @@ export function createInitialSolicitudState(): Solicitud32605State {
     '2042': 0,
     '2043': 0,
     '2044': 0,
-    fechaInicioComercio: '',
+   
     fechaPago: '',
     monto: '',
     operacionesBancarias: '',
@@ -631,6 +645,20 @@ export function createInitialSolicitudState(): Solicitud32605State {
     domiciliosDatos: [] as Domicilios[],
     listaSeccionSociosIC: [] as SeccionSociosIC[],
     enlaceOperativosLista: [] as EnlaceOperativo[],
+
+
+    //-------------------------------------------------------------
+    comercioExteriorRealizado:"",
+    fechaDePago: "",
+     fechaInicioComercio: '',
+     esParteGrupoComercioExterior: '',
+     rfcEnclaveOperativo: '',
+     enlaceOperativorfc:'',
+     denominacionRazonsocial: '',
+     domicilio: '',
+     inputfechaDeLaUltimaOperacion: '', // Fecha de la última operación
+     fusionEscisionConOperacionExterior: '', // Indica si hay fusión o escisión con operación exterior
+     //--------------------------------------------------------------
   };
 }
 @Injectable({
@@ -1568,4 +1596,20 @@ export class Solicitud32605Store extends Store<Solicitud32605State> {
   resetStore(): void {
     this.reset();
   }
+
+
+
+  //------------------------------------------------------------------------------
+
+  /**
+   * Actualiza el estado del store con los valores proporcionados.
+   * Valores parciales para actualizar el estado.
+   */
+  public actualizarEstado(valores: Partial<Solicitud32605State>): void {
+    this.update((state) => ({
+      ...state,
+      ...valores,
+    }));
+  }
+  //-------------------------------------------------------------------------------
 }

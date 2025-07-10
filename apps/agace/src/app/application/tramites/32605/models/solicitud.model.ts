@@ -1074,3 +1074,9 @@ export interface GuardarDatosFormulario {
    */
   enlaceOperativosLista: EnlaceOperativo[];
 }
+
+export interface RFCEnlaceOperativo {
+  enlaceOperativorfc: string;
+  denominacionRazonsocial: string;
+  domicilio: string;
+}

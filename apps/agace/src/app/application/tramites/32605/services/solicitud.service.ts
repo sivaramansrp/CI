@@ -1,4 +1,4 @@
-import { EnlaceOperativo } from '../models/solicitud.model';
+import { EnlaceOperativo, RFCEnlaceOperativo } from '../models/solicitud.model';
 import { GuardarDatosFormulario } from '../models/solicitud.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
@@ -303,5 +303,17 @@ export class SolicitudService {
     this.solicitud32605Store.actualizarCheckbox3(resp.checkbox3);
     this.solicitud32605Store.actualizarActualmente2(resp.actualmente2);
     this.solicitud32605Store.actualizarActualmente1(resp.actualmente1);
+  }
+
+
+  //service para guardar los datos del formulario
+
+   /**
+   * Obtiene los datos de una empresa por RFC
+   * @param rfc RFC de la empresa a buscar
+   * @returns Observable con los datos de la empresa
+   */
+  conseguirDatosPorRFC(rfc: string): Observable<{ [key: string]: RFCEnlaceOperativo }> {
+    return this.http.get<{ [key: string]: RFCEnlaceOperativo }>('assets/json/32605/rfc-datos.json');
   }
 }

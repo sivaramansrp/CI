@@ -1,37 +1,16 @@
-import { AgregarTransportistasComponent } from '../agregar-transportistas/agregar-transportistas.component';
+import { Component, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ConfiguracionColumna, InputFecha, InputFechaComponent, InputRadioComponent, TablaDinamicaComponent, TablaSeleccion } from '@ng-mf/data-access-user';
+import { EMPRESA_DEL_GRUPO, EMPRESA_DEL_GRUPO_CON_FECHA, EmpresaDelGrupo, FECHA_DE_INICIO, FECHA_DE_PAGO, OPCIONES_DE_BOTON_DE_RADIO } from '../../constants/datos-comunes.enum';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Subject, takeUntil } from 'rxjs';
+import { BsModalRef } from 'ngx-bootstrap/modal';
+import { BsModalService } from 'ngx-bootstrap/modal';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
-import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
-import { ElementRef } from '@angular/core';
-import { FECHA_DE_INICIO } from '../../constants/solicitud.enum';
-import { FECHA_DE_PAGO } from '../../constants/solicitud.enum';
-import { FormBuilder } from '@angular/forms';
-import { FormGroup } from '@angular/forms';
-import { InputFecha } from '@libs/shared/data-access-user/src';
-import { InputFechaComponent } from '@libs/shared/data-access-user/src';
-import { InputRadio } from '../../models/solicitud.model';
-import { InputRadioComponent } from '@libs/shared/data-access-user/src';
-import { Modal } from 'bootstrap';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
-import { Solicitud32605Query } from '../../estados/solicitud32605.query';
+import { FECHA_DELA_ULTIMA_OPERACION } from'../../constants/datos-comunes.enum';
+import { RFCEnlaceOperativo } from '../../models/solicitud.model';
 import { Solicitud32605State } from '../../estados/solicitud32605.store';
-import { Solicitud32605Store } from '../../estados/solicitud32605.store';
-import { SolicitudRadioLista } from '../../models/solicitud.model';
 import { SolicitudService } from '../../services/solicitud.service';
-import { Subject } from 'rxjs';
-import { TRANSPORTISTAS_CONFIGURACION } from '../../constants/solicitud.enum';
-import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
-import { TablaSeleccion } from '@libs/shared/data-access-user/src';
-import { TituloComponent } from '@libs/shared/data-access-user/src';
-import { TransportistasTable } from '../../models/solicitud.model';
-import { Validators } from '@angular/forms';
-import { ViewChild } from '@angular/core';
-import { map } from 'rxjs';
-import { takeUntil } from 'rxjs';
-
+import { TemplateRef } from '@angular/core';
 /**
  * Componente principal para gestionar los datos de importador y exportador
  * en el formulario, incluyendo la integración con transportistas y validaciones
@@ -40,76 +19,49 @@ import { takeUntil } from 'rxjs';
 @Component({
   selector: 'app-importador-exportador',
   standalone: true,
+  providers: [BsModalService],
   imports: [
     CommonModule,
     ReactiveFormsModule,
     InputRadioComponent,
     InputFechaComponent,
-    TituloComponent,
-    TablaDinamicaComponent,
-    AgregarTransportistasComponent,
+    TablaDinamicaComponent
+   
   ],
-  providers: [SolicitudService],
   templateUrl: './importador-exportador.component.html',
   styleUrl: './importador-exportador.component.scss',
 })
 export class ImportadorExportadorComponent implements OnInit, OnDestroy {
-  /** Formulario reactivo para el componente importador-exportador */
-  importadorExportadorForm!: FormGroup;
 
   /** Sujeto que maneja la destrucción de suscripciones */
   private destroy$: Subject<void> = new Subject<void>();
-
-  /** Opciones de radio para la selección de valores */
-  sinoOpcion: InputRadio = {} as InputRadio;
-  /**
-   * Representa una opción de radio para el reconocimiento mutuo.
-   * Se utiliza para manejar las opciones relacionadas con el mutuo en el formulario.
-   */
-  mutuo: InputRadio = {} as InputRadio;
-
-  /**
-   * Representa una opción de radio para la clasificación de la información.
-   * Se utiliza para manejar las opciones relacionadas con la clasificación de la información en el formulario.
-   */
-  clasificacionInformacion: InputRadio = {} as InputRadio;
-
-  /** Estado de la solicitud */
-  solicitud32605State: Solicitud32605State = {} as Solicitud32605State;
-
-  /** Fechas de inicio y pago de la solicitud */
+  importadorExportadorForm!: FormGroup;
+  agregarEnlaceOperativoForm!: FormGroup;
+  opcionDeBotonDeRadio = OPCIONES_DE_BOTON_DE_RADIO;
+  solicitudState!: Solicitud32605State;
+  fechaInicioInput: InputFecha = FECHA_DE_PAGO;
   fechaDeFinDeVigencia: InputFecha = FECHA_DE_INICIO;
-  /**
-   * Fecha de pago asociada a la solicitud.
-   * Se inicializa con el valor constante `FECHA_DE_PAGO` que contiene la fecha predeterminada de pago.
-   */
-  fechaDePago: InputFecha = FECHA_DE_PAGO;
-
-  /** Configuración y lista de transportistas */
-  transportistasTabla = TablaSeleccion.CHECKBOX;
-  /**
-   * Configuración de las columnas para la tabla de transportistas.
-   * Se inicializa con la configuración predeterminada definida en `TRANSPORTISTAS_CONFIGURACION`.
-   */
-  transportistasConfiguracionColumnas: ConfiguracionColumna<TransportistasTable>[] =
-    TRANSPORTISTAS_CONFIGURACION;
-
-  /**
-   * Lista de transportistas disponibles para ser seleccionados en el formulario.
-   * Se llena dinámicamente con los datos de transportistas obtenidos desde el servicio.
-   */
-  transportistasLista: TransportistasTable[] = [];
-
-  /**
-   * Indica si el formulario está en modo solo lectura.
-   * Cuando es `true`, los campos del formulario no se pueden editar.
-   */
-  esFormularioSoloLectura: boolean = false;
-
-  /** Referencia a la vista del modal de transportistas */
-  @ViewChild('transportistas', { static: false })
-  transportistaElement!: ElementRef;
-
+  fechaDeLaUltimaOperacion: InputFecha = FECHA_DELA_ULTIMA_OPERACION;
+  comercioExteriorActivo: boolean = false;
+  noComercioExteriorActivo: boolean = false;
+  parteGrupoComercioExterior: boolean = false;
+  esFusionOEscisionConComercioExterior: boolean = false;
+  tableHeaderDatos: ConfiguracionColumna<EmpresaDelGrupo>[] = EMPRESA_DEL_GRUPO;
+  tablaDatos: EmpresaDelGrupo[] = [];
+  mostrarColumnaFecha: boolean = false;
+  tablaSeleccionCheckbox: TablaSeleccion = TablaSeleccion.CHECKBOX;
+  modalRef?: BsModalRef;
+  modalRefabir?: BsModalRef;
+  isEditMode: boolean = false;
+  selectedEmpresa: EmpresaDelGrupo | null = null;
+  mensajeSeleccion: string = '';
+  @ViewChild('template') template!: TemplateRef<void>;
+  @ViewChild('templateFechaInvalida') templateFechaInvalida!: TemplateRef<void>;
+  @ViewChild('templateExito') templateExito!: TemplateRef<void>;
+  @ViewChild('templateRFCDuplicado') templateRFCDuplicado!: TemplateRef<void>;
+  @ViewChild('templateDatosObligatorios') templateDatosObligatorios!: TemplateRef<void>;
+  @ViewChild('templateConfirmacionEliminacion') templateConfirmacionEliminacion!: TemplateRef<void>;
+  @ViewChild('templateSeleccionRequerida') templateSeleccionRequerida!: TemplateRef<void>;
   /**
    * Constructor del componente
    * @param fb FormBuilder para crear formularios reactivos
@@ -117,235 +69,443 @@ export class ImportadorExportadorComponent implements OnInit, OnDestroy {
    * @param solicitud32605Store Store para manejar el estado de la solicitud
    * @param solicitud32605Query Consulta para obtener el estado de la solicitud
    */
-  constructor(
-    private fb: FormBuilder,
-    public solicitudService: SolicitudService,
-    public solicitud32605Store: Solicitud32605Store,
-    public solicitud32605Query: Solicitud32605Query,
-    public consultaioQuery: ConsultaioQuery
+  constructor( public fb: FormBuilder,
+    @Inject(BsModalService)
+    private modalService: BsModalService,
+    private solicitudService: SolicitudService,
   ) {
-    /**
-     * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
-     *
-     * - Asigna el valor de solo lectura (`readonly`) a la propiedad `esFormularioSoloLectura`.
-     * - Llama a `inicializarEstadoFormulario()` para aplicar configuraciones basadas en el estado recibido.
-     * - La suscripción se cancela automáticamente cuando `destroyNotifier$` emite un valor (para evitar fugas de memoria).
-     */
-    this.consultaioQuery.selectConsultaioState$
-      .pipe(
-        takeUntil(this.destroy$),
-        map((seccionState) => {
-          this.esFormularioSoloLectura = seccionState.readonly;
-          this.inicializarEstadoFormulario();
-        })
-      )
-      .subscribe();
-    this.conseguirOpcionDeRadio();
-    this.conseguirTransportistasLista();
+  // Inicialización de dependencias
   }
 
   /**
    * Método llamado al inicializar el componente, configura el formulario con los valores del estado de solicitud
    */
   ngOnInit(): void {
-    this.inicializarEstadoFormulario();
-  }
-
-  /**
-   * Evalúa si se debe inicializar o cargar datos en el formulario.
-   */
-  inicializarEstadoFormulario(): void {
-    if (this.esFormularioSoloLectura) {
-      this.guardarDatosFormulario(); // Llama al método para cargar los datos del formulario
-    } else {
-      this.inicializarFormulario();
-    }
-  }
-
-  /**
-   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
-   * Luego reinicializa el formulario con los valores actualizados desde el store.
-   */
-  guardarDatosFormulario(): void {
     this.inicializarFormulario();
-    if (this.esFormularioSoloLectura) {
-      this.importadorExportadorForm.disable();
-    } else if (!this.esFormularioSoloLectura) {
-      this.importadorExportadorForm.enable();
-    } else {
-      // No se requiere ninguna acción en el formulario
-    }
   }
 
-  /**
-   * Inicializa el formulario `importadorExportadorForm` con los valores del estado actual `solicitud32605State`.
-   *
-   * Este formulario recopila información relacionada con operaciones de importación y exportación,
-   * como identificadores de campos (`2042`, `2043`, `2044`), fechas clave, montos y detalles bancarios.
-   *
-   * Detalles del formulario:
-   * - Algunos campos como `fechaInicioComercio` se inician deshabilitados y con validaciones (`Validators.required`).
-   * - Otros campos tienen validaciones específicas como `Validators.maxLength`.
-   *
-   * El método también se suscribe al observable `selectSolicitud$` para actualizar el formulario cuando
-   * cambie el estado global de la solicitud.
-   *
-   * La suscripción se gestiona con `takeUntil` para evitar fugas de memoria.
-   */
+
   inicializarFormulario(): void {
     this.importadorExportadorForm = this.fb.group({
-      '2042': [this.solicitud32605State[2042]],
-      '2043': [this.solicitud32605State[2043]],
-      '2044': [this.solicitud32605State[2044]],
-      fechaInicioComercio: [
-        { value: this.solicitud32605State.fechaInicioComercio, disabled: true },
-        Validators.required,
+      comercioExteriorRealizado : [this.solicitudState?.comercioExteriorRealizado, Validators.required],
+      fechaDePago: [this.solicitudState?.fechaDePago, Validators.required],
+      fechaInicioComercio: [this.solicitudState?.fechaInicioComercio, Validators.required],
+      esParteGrupoComercioExterior: [this.solicitudState?.esParteGrupoComercioExterior, Validators.required],
+      fusionEscisionConOperacionExterior: [this.solicitudState?.fusionEscisionConOperacionExterior, Validators.required],
+    })
+    this.agregarEnlaceOperativoForm = this.fb.group({
+      rfcEnclaveOperativo:[this.solicitudState?.rfcEnclaveOperativo, Validators.required],
+      enlaceOperativorfc: [
+        {value:this.solicitudState?.enlaceOperativorfc, disabled: true}
       ],
-      fechaPago: [this.solicitud32605State.fechaPago],
-      monto: [this.solicitud32605State.monto, [Validators.maxLength(10)]],
-      operacionesBancarias: [
-        this.solicitud32605State.operacionesBancarias,
-        [Validators.maxLength(25)],
+      denominacionRazonsocial: [
+        {value:this.solicitudState?.denominacionRazonsocial, disabled: true}
       ],
-      llavePago: [
-        this.solicitud32605State.llavePago,
-        [Validators.maxLength(25)],
-      ],
+      domicilio: [{value:this.solicitudState?.domicilio, disabled: true}],
+      inputfechaDeLaUltimaOperacion: [{value:this.solicitudState?.inputfechaDeLaUltimaOperacion, disabled: true}],
     });
-
-    this.solicitud32605Query.selectSolicitud$
-      .pipe(
-        takeUntil(this.destroy$),
-        map((respuesta: Solicitud32605State) => {
-          this.solicitud32605State = respuesta;
-          this.importadorExportadorForm.patchValue({
-            '2042': this.solicitud32605State[2042],
-            '2043': this.solicitud32605State[2043],
-            '2044': this.solicitud32605State[2044],
-            fechaInicioComercio: this.solicitud32605State.fechaInicioComercio,
-            fechaPago: this.solicitud32605State.fechaPago,
-            monto: this.solicitud32605State.monto,
-            operacionesBancarias: this.solicitud32605State.operacionesBancarias,
-            llavePago: this.solicitud32605State.llavePago,
-          });
-        })
-      )
-      .subscribe();
   }
 
-  /**
-   * Obtiene las opciones de radio desde el servicio de solicitud
+    /**
+   * Maneja el cambio de valor en el campo de fecha.
+   * @param nuevo_valor Nuevo valor de la fecha.
    */
-  conseguirOpcionDeRadio(): void {
-    this.solicitudService
-      .conseguirOpcionDeRadio()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (respuesta: SolicitudRadioLista) => {
-          this.sinoOpcion = respuesta.requisitos;
-          this.mutuo = respuesta.reconocimientoMutuo;
-          this.clasificacionInformacion = respuesta.clasificacionInformacion;
-        },
-      });
+   onFechaCambiada(nuevo_valor: string): void {
+    this.importadorExportadorForm.get('fechaDePago')?.setValue(nuevo_valor);
+    this.importadorExportadorForm.get('fechaDePago')?.markAsUntouched();
   }
 
-  /**
-   * Obtiene la lista de transportistas desde el servicio de solicitud
-   */
-  conseguirTransportistasLista(): void {
-    this.solicitudService
-      .conseguirTransportistasLista()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (respuesta: TransportistasTable[]) => {
-          this.transportistasLista = respuesta;
-        },
-      });
+   actualizarFechaInicioComercio(nuevo_valor: string): void {
+    this.importadorExportadorForm.get('fechaInicioComercio')?.setValue(nuevo_valor);
+    this.importadorExportadorForm.get('fechaInicioComercio')?.markAsUntouched();
   }
 
-  /**
-   * Actualiza el valor de la propiedad 2042 en el store
-   * @param evento Nuevo valor para la propiedad
-   */
-  actualizar2042(evento: string | number): void {
-    this.solicitud32605Store.actualizar2042(evento);
+  actualizarFechaDeLaUltimaOperacion(nuevo_valor: string): void {
+    this.agregarEnlaceOperativoForm.get('inputfechaDeLaUltimaOperacion')?.setValue(nuevo_valor);
+    this.agregarEnlaceOperativoForm.get('inputfechaDeLaUltimaOperacion')?.markAsUntouched(); 
+   // Validar si la fecha seleccionada es mayor que la fecha actual
+   
+    if (ImportadorExportadorComponent.esFechaFutura(nuevo_valor)) {
+    this.mostrarModalFechaInvalida();
   }
 
-  /**
-   * Actualiza el valor de la propiedad 2043 en el store
-   * @param evento Nuevo valor para la propiedad
+ 
+  }
+   /**
+   * Verifica si la fecha seleccionada es mayor que la fecha actual
+   * @param fechaSeleccionada Fecha en formato DD/MM/YYYY o similar
+   * @returns true si la fecha es futura, false en caso contrario
    */
-  actualizar2043(evento: string | number): void {
-    this.solicitud32605Store.actualizar2043(evento);
+static esFechaFutura(fechaSeleccionada: string): boolean {
+  if (!fechaSeleccionada)
+  {
+    return false;
+  }
+  
+  // Analizar la fecha - asumiendo formato DD/MM/YYYY
+  let fechaSeleccionadaDate: Date;
+  
+  if (fechaSeleccionada.includes('/')) {
+    const FECHA_PARTS = fechaSeleccionada.split('/');
+    if (FECHA_PARTS.length !== 3) 
+      {
+        return false;
+      }
+    const DIA = parseInt(FECHA_PARTS[0], 10);
+    const MES = parseInt(FECHA_PARTS[1], 10) - 1; // El mes está indexado desde 0
+    const ANIO = parseInt(FECHA_PARTS[2], 10);
+
+    fechaSeleccionadaDate = new Date(ANIO, MES, DIA);
+  } else {
+    // Intentar analizar como formato de fecha estándar
+    fechaSeleccionadaDate = new Date(fechaSeleccionada);
   }
 
-  /**
-   * Actualiza el valor de la propiedad 2044 en el store
-   * @param evento Nuevo valor para la propiedad
-   */
-  actualizar2044(evento: string | number): void {
-    this.solicitud32605Store.actualizar2044(evento);
+  const FECHA_ACTUAL = new Date();
+
+  // Reiniciar horas para comparar solo fechas
+  FECHA_ACTUAL.setHours(0, 0, 0, 0);
+  fechaSeleccionadaDate.setHours(0, 0, 0, 0);
+
+  return fechaSeleccionadaDate > FECHA_ACTUAL;
+}
+
+ mostrarModalFechaInvalida(): void {
+  const MODAL_CONFIG = {
+    animated: true,
+    keyboard: false,
+    backdrop: true,
+    ignoreBackdropClick: true,
+    class: 'modal-sm'
+  };
+
+  this.modalRef = this.modalService.show(this.templateFechaInvalida, MODAL_CONFIG);
+}
+cancelarModal():void{
+  this.modalRefabir?.hide();
+  this.agregarEnlaceOperativoForm.reset();
+  this.resetEditMode();
+}
+ cerrarModalFechaInvalida(): void {
+  this.modalRef?.hide();
+}
+
+   abrirModal(template: TemplateRef<void>): void {
+    this.modalRefabir = this.modalService.show(template, { class: 'modal-lg',});
   }
 
-  /**
-   * Actualiza la fecha de inicio del comercio en el store
-   * @param evento Fecha de inicio del comercio
-   */
-  actualizarFechaInicioComercio(evento: string): void {
-    this.solicitud32605Store.actualizarFechaInicioComercio(evento);
-  }
-
-  /**
-   * Actualiza la fecha de pago en el store
-   * @param evento Fecha de pago
-   */
-  actualizarFechaPago(evento: string): void {
-    this.solicitud32605Store.actualizarFechaPago(evento);
-  }
-
-  /**
-   * Actualiza el monto de la solicitud en el store
-   * @param evento Monto de la solicitud
-   */
-  actualizarMonto(evento: string): void {
-    this.solicitud32605Store.actualizarMonto(evento);
-  }
-
-  /**
-   * Actualiza las operaciones bancarias en el store
-   * @param evento Operaciones bancarias
-   */
-  actualizarOperacionesBancarias(evento: string): void {
-    this.solicitud32605Store.actualizarOperacionesBancarias(evento);
-  }
-
-  /**
-   * Actualiza la llave de pago en el store
-   * @param evento Llave de pago
-   */
-  actualizarLlavePago(evento: string): void {
-    this.solicitud32605Store.actualizarLlavePago(evento);
-  }
-
-  /**
-   * Muestra el modal para agregar un nuevo transportista
-   */
-  agregarTransportistaModel(): void {
-    if (this.transportistaElement) {
-      const MODAL_INSTANCE = new Modal(this.transportistaElement.nativeElement);
-      MODAL_INSTANCE.show();
+  buscarRFC():void{
+    const RFC = this.agregarEnlaceOperativoForm.get('rfcEnclaveOperativo')?.value;
+    if (RFC) {
+      // Verificar si el RFC ya existe en la tabla
+      if (this.existeRFCEnTabla(RFC)) {
+        this.mostrarModalRFCDuplicado();
+        return;
+      }
+      
+      this.buscarDatosPorRFC(RFC);
     }
   }
+    existeRFCEnTabla(rfc: string): boolean {
+    return this.tablaDatos.some(empresa => 
+      empresa.rfcEnclaveOperativo?.toLowerCase() === rfc.toLowerCase()
+    );
+  }
+   mostrarModalRFCDuplicado(): void {
+    const MODAL_CONFIG = {
+      animated: true,
+      keyboard: false,
+      backdrop: true,
+      ignoreBackdropClick: true,
+      class: 'modal-sm'
+    };
 
-  /**
-   * Agrega un transportista a la lista
-   * @param evento Datos del transportista
-   */
-  transportistasDatos(evento: TransportistasTable): void {
-    this.transportistasLista.push(evento);
+    this.modalRef = this.modalService.show(this.templateRFCDuplicado, MODAL_CONFIG);
+  }
+   cerrarModalRFCDuplicado(): void {
+    this.modalRef?.hide();
+   
+  }
+   buscarDatosPorRFC(rfc: string): void {
+    this.solicitudService.conseguirDatosPorRFC(rfc)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (datos) => {
+          const EMPRESA_DATA = datos[rfc];
+          if (EMPRESA_DATA) {
+            this.patchearDatosEmpresa(EMPRESA_DATA);
+          } else {
+            this.limpiarCamposEmpresa();
+          }
+        },
+        error: (error) => {
+          console.error('Error al buscar datos del RFC:', error);
+          this.limpiarCamposEmpresa();
+        }
+      });
   }
 
-  /**
+   patchearDatosEmpresa(empresaData: RFCEnlaceOperativo): void {
+    this.agregarEnlaceOperativoForm.patchValue({
+      enlaceOperativorfc: empresaData.enlaceOperativorfc,
+      denominacionRazonsocial: empresaData.denominacionRazonsocial,
+      domicilio: empresaData.domicilio
+    });
+  }
+   limpiarCamposEmpresa(): void {
+    this.agregarEnlaceOperativoForm.patchValue({
+      enlaceOperativorfc: '',
+      denominacionRazonsocial: '',
+      domicilio: '',
+      inputfechaDeLaUltimaOperacion: ''
+    });
+  }
+   
+aceptarEnlaceOperativo(): void {
+  const RFC_VALUE = this.agregarEnlaceOperativoForm.get('rfcEnclaveOperativo')?.value;
+  const DATE_VALUE = this.agregarEnlaceOperativoForm.get('inputfechaDeLaUltimaOperacion')?.value;
+  
+  // Verificar que el campo RFC requerido esté lleno
+  if (!RFC_VALUE?.trim()) {
+    this.agregarEnlaceOperativoForm.get('rfcEnclaveOperativo')?.markAsTouched();
+    return;
+  }
+  
+  // In edit mode, check if RFC exists in other records (excluding current one)
+  if (this.isEditMode && this.existeRFCEnTablaExcluyendo(RFC_VALUE, this.selectedEmpresa?.rfcEnclaveOperativo)) {
+    this.mostrarModalDatosObligatorios();
+    return;
+  }
+  // In add mode, check if RFC already exists
+  if (!this.isEditMode && this.existeRFCEnTabla(RFC_VALUE)) {
+    this.mostrarModalDatosObligatorios();
+    return;
+  }
+  // Verificar si la fecha es futura (si se proporciona)
+  if (DATE_VALUE && ImportadorExportadorComponent.esFechaFutura(DATE_VALUE)) {
+    this.mostrarModalFechaInvalida();
+    return;
+  }
+  
+  // Proceder con agregar los datos
+  const FORMDATOS = this.agregarEnlaceOperativoForm.getRawValue();
+  
+  const EMPRESA_DATA: EmpresaDelGrupo = {
+    rfcEnclaveOperativo: FORMDATOS.rfcEnclaveOperativo,
+    denominacionRazonsocial: FORMDATOS.denominacionRazonsocial,
+    domicilio: FORMDATOS.domicilio,
+    inputfechaDeLaUltimaOperacion: FORMDATOS.inputfechaDeLaUltimaOperacion
+  };
+
+  if (this.isEditMode && this.selectedEmpresa) {
+    // Update existing record
+    const INDEX = this.tablaDatos.findIndex(emp => 
+      emp.rfcEnclaveOperativo === this.selectedEmpresa?.rfcEnclaveOperativo
+    );
+    if (INDEX !== -1) {
+      this.tablaDatos[INDEX] = EMPRESA_DATA;
+      this.tablaDatos = [...this.tablaDatos]; // Trigger change detection
+    }
+  } else {
+    // Add new record
+    this.tablaDatos = [...this.tablaDatos, EMPRESA_DATA];
+  }
+  
+  // Mostrar la columna de fecha después de agregar el primer elemento
+  if (!this.mostrarColumnaFecha) {
+    this.mostrarColumnaFecha = true;
+    this.tableHeaderDatos = EMPRESA_DEL_GRUPO_CON_FECHA;
+  }
+  
+  this.limpiarFormulario();
+  this.resetEditMode();
+  this.modalRefabir?.hide();
+  this.mostrarModalExito();
+}
+existeRFCEnTablaExcluyendo(rfc: string, rfcExcluir?: string): boolean {
+  return this.tablaDatos.some(empresa => 
+    empresa.rfcEnclaveOperativo?.toLowerCase() === rfc.toLowerCase() &&
+    empresa.rfcEnclaveOperativo?.toLowerCase() !== rfcExcluir?.toLowerCase()
+  );
+}
+resetEditMode(): void {
+  this.isEditMode = false;
+  this.selectedEmpresa = null;
+  
+  // Disable fields again
+  // this.agregarEnlaceOperativoForm.get('enlaceOperativorfc')?.disable();
+  // this.agregarEnlaceOperativoForm.get('denominacionRazonsocial')?.disable();
+  // this.agregarEnlaceOperativoForm.get('domicilio')?.disable();
+  // this.agregarEnlaceOperativoForm.get('inputfechaDeLaUltimaOperacion')?.disable();
+}
+mostrarModalDatosObligatorios(): void {
+  const MODAL_CONFIG = {
+    animated: true,
+    keyboard: false,
+    backdrop: true,
+    ignoreBackdropClick: true,
+    class: 'modal-sm'
+  };
+
+  this.modalRef = this.modalService.show(this.templateDatosObligatorios, MODAL_CONFIG);
+}
+
+cerrarModalDatosObligatorios(): void {
+  this.modalRef?.hide();
+}
+   limpiarFormulario(): void {
+    this.agregarEnlaceOperativoForm.reset();
+    this.agregarEnlaceOperativoForm.patchValue({
+      rfcEnclaveOperativo: '',
+      enlaceOperativorfc: '',
+      denominacionRazonsocial: '',
+      domicilio: '',
+      inputfechaDeLaUltimaOperacion:''
+    });
+    this.resetEditMode();
+  }
+    /**
+   * Marca todos los campos del formulario como tocados para mostrar errores de validación
+   */
+  marcarCamposComoTocados(): void {
+    Object.keys(this.agregarEnlaceOperativoForm.controls).forEach(key => {
+      this.agregarEnlaceOperativoForm.get(key)?.markAsTouched();
+    });
+  }
+  mostrarModalExito(): void {
+    const MODAL_CONFIG = {
+      animated: true,
+      keyboard: false,
+      backdrop: true,
+      ignoreBackdropClick: true,
+      class: 'modal-sm'
+    };
+
+    this.modalRef = this.modalService.show(this.templateExito, MODAL_CONFIG);
+  }
+
+  cerrarModalExito(): void {
+    this.modalRef?.hide();
+  }
+  onFilaSeleccionada(empresa: EmpresaDelGrupo): void {
+  this.selectedEmpresa = empresa;
+}
+ 
+  modificarEmpresa(): void {
+  if (this.tablaDatos.length === 0 || !this.selectedEmpresa) {
+    this.mensajeSeleccion = 'Debe seleccionar un elemento';
+    this.mostrarModalSeleccionRequerida();
+    return;
+  }
+  
+  this.isEditMode = true;
+  
+  // Clear only the RFC field and patch other fields from selected row
+  this.agregarEnlaceOperativoForm.patchValue({
+    rfcEnclaveOperativo: '', // Blank RFC
+    enlaceOperativorfc: this.selectedEmpresa.rfcEnclaveOperativo,
+    denominacionRazonsocial: this.selectedEmpresa.denominacionRazonsocial,
+    domicilio: this.selectedEmpresa.domicilio,
+    inputfechaDeLaUltimaOperacion: this.selectedEmpresa.inputfechaDeLaUltimaOperacion || ''
+  });
+  
+  // // Enable the fields for editing
+  // this.agregarEnlaceOperativoForm.get('enlaceOperativorfc')?.enable();
+  // this.agregarEnlaceOperativoForm.get('denominacionRazonsocial')?.enable();
+  // this.agregarEnlaceOperativoForm.get('domicilio')?.enable();
+  // this.agregarEnlaceOperativoForm.get('inputfechaDeLaUltimaOperacion')?.enable();
+  
+  // Open the modal
+  this.abrirModal(this.template);
+}
+
+eliminarEmpresa(): void {
+ if (this.tablaDatos.length === 0 || !this.selectedEmpresa) {
+    this.mensajeSeleccion = 'Debe seleccionar un elemento';
+    this.mostrarModalSeleccionRequerida();
+    return;
+  }
+  
+  // Show confirmation modal before deleting
+  this.mostrarModalConfirmacionEliminacion();
+}
+// Add method to confirm and execute deletion
+confirmarEliminacionEmpresa(): void {
+  if (!this.selectedEmpresa) {
+    return;
+  }
+  
+  // Remove the selected company from the table
+  this.tablaDatos = this.tablaDatos.filter(empresa => 
+    empresa.rfcEnclaveOperativo !== this.selectedEmpresa?.rfcEnclaveOperativo
+  );
+  
+  // Clear selection
+  this.selectedEmpresa = null;
+  
+  // Close confirmation modal and show success
+  this.modalRef?.hide();
+   this.mensajeSeleccion = 'Datos eliminados correctamente';
+   this.mostrarModalSeleccionRequerida();
+}
+// Add modal for selection required message
+mostrarModalSeleccionRequerida(): void {
+  const MODAL_CONFIG = {
+    animated: true,
+    keyboard: false,
+    backdrop: true,
+    ignoreBackdropClick: true,
+    class: 'modal-sm'
+  };
+
+  this.modalRef = this.modalService.show(this.templateSeleccionRequerida, MODAL_CONFIG);
+}
+mostrarModalConfirmacionEliminacion(): void {
+  const MODAL_CONFIG = {
+    animated: true,
+    keyboard: false,
+    backdrop: true,
+    ignoreBackdropClick: true,
+    class: 'modal-m'
+  };
+
+  this.modalRef = this.modalService.show(this.templateConfirmacionEliminacion, MODAL_CONFIG);
+}
+// Add close methods for new modals
+cerrarModalSeleccionRequerida(): void {
+  this.modalRef?.hide();
+}
+
+cerrarModalConfirmacionEliminacion(): void {
+  this.modalRef?.hide();
+}
+onRadioChange(controlName: string): void {
+  const VALOR = this.importadorExportadorForm.get(controlName)?.value;
+  const IS_TRUE = VALOR === '1' || VALOR === true;
+  const IS_FALSE = VALOR === '0' || VALOR === false;
+
+  switch (controlName) {
+    case 'comercioExteriorRealizado':
+      this.comercioExteriorActivo = IS_TRUE;
+      this.noComercioExteriorActivo = IS_FALSE;
+      this.esFusionOEscisionConComercioExterior = IS_FALSE
+      break;
+      
+    case 'esParteGrupoComercioExterior':
+      this.parteGrupoComercioExterior = IS_TRUE;
+      this.esFusionOEscisionConComercioExterior = IS_TRUE
+      break;
+      
+    case 'fusionEscisionConOperacionExterior':
+      //logic
+      break;
+      
+    default:
+      console.warn(`Unhandled radio control: ${controlName}`);
+      break;
+  }
+}
+   /**
    * Método llamado al destruir el componente, limpia las suscripciones
    */
   ngOnDestroy(): void {
