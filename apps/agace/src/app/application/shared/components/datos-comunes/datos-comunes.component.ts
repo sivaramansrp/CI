@@ -172,9 +172,19 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
    * Cuando se establece en `true`, los campos del formulario no son editables por el usuario.
    */
   public esFormularioSoloLectura: boolean = false;
-
+/**
+ * Evento emitido cuando se produce un cambio en algún control tipo radio del formulario.
+ *
+ * El evento emite un objeto que contiene el nombre del control (`controlName`) y el valor seleccionado (`value`).
+ * Este evento permite a los componentes padres reaccionar ante cambios en los botones de radio del formulario.
+ */
   @Output() radioChanged = new EventEmitter<{ controlName: string, value: unknown }>();
-
+/**
+ * Evento emitido cuando cambia la visibilidad del componente "Datos por Régimen".
+ *
+ * El evento emite un valor booleano que indica si el componente debe mostrarse (`true`) u ocultarse (`false`).
+ * Es útil para que el componente padre controle la visualización condicional de "Datos por Régimen".
+ */
   @Output() mostrarDatosPorRegimenChange = new EventEmitter<boolean>();
 
   /**
@@ -457,11 +467,20 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
     const VALOR = form.get(campo)?.value;
     (this.datosComunesStore[metodoNombre] as (value: unknown) => void)(VALOR);
 
+/**
+ * Si el campo modificado es 'regimenUno', emite un evento para notificar el cambio de visibilidad
+ * del componente "Datos por Régimen" al componente padre.
+ *
+ * El evento `mostrarDatosPorRegimenChange` emite un valor booleano que indica si el componente
+ * "Datos por Régimen" debe mostrarse (`true`) u ocultarse (`false`), dependiendo de si el valor
+ * del campo es truthy o falsy.
+ */
    if (campo === 'regimenUno') {
     this.mostrarDatosPorRegimenChange.emit(Boolean(VALOR));
   }
 
-      // List of radio control names (add all your radio formControlNames here)
+/** Lista de nombres de controles tipo radio que deben emitir el evento radioChanged. 
+ * Se utiliza para identificar los controles relevantes en el formulario. */
   const RADIO_CONTROLS = [
     'autorizacionIVAIEPS',
     'encuentra',
@@ -472,16 +491,30 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
     'senale',
     'senaleSi',
     'senaleMomento'
-    // Add more if needed
   ];
 
+/**
+ * Si el campo modificado está incluido en la lista de controles tipo radio (`RADIO_CONTROLS`),
+ * emite el evento `radioChanged` con el nombre del control y el valor seleccionado.
+ *
+ * Esto permite que los componentes padres reaccionen ante cambios en los botones de radio
+ * relevantes del formulario.
+ */
   if (RADIO_CONTROLS.includes(campo)) {
     this.radioChanged.emit({ controlName: campo, value: VALOR });
   }
   }
-
+  
+/**
+ * Método que emite el evento `radioChanged` cuando se produce un cambio en un control tipo radio.
+ *
+ * Este método permite propagar el evento hacia los componentes padres, enviando un objeto
+ * que contiene el nombre del control (`controlName`) y el valor seleccionado (`value`).
+ *
+ * @param event Objeto con el nombre del control y el valor seleccionado.
+ */
 onRadioChanged(event: { controlName: string, value: unknown }):void {
-  this.radioChanged.emit(event); // Pass event up to parent
+  this.radioChanged.emit(event);
 }
 
   /**

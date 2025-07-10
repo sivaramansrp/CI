@@ -169,7 +169,12 @@ export class DatosComunesDosComponent implements OnInit,OnDestroy {
    * Cuando se establece en `true`, los campos del formulario no son editables por el usuario.
    */
   public esFormularioSoloLectura: boolean = false;
-
+/**
+ * Evento emitido cuando se produce un cambio en algún control tipo radio del formulario.
+ *
+ * El evento emite un objeto que contiene el nombre del control (`controlName`) y el valor seleccionado (`value`).
+ * Este evento permite a los componentes padres reaccionar ante cambios en los botones de radio del formulario.
+ */
   @Output() radioChanged = new EventEmitter<{ controlName: string, value: unknown }>();
 
   /**
@@ -432,7 +437,8 @@ export class DatosComunesDosComponent implements OnInit,OnDestroy {
     const VALOR = form.get(campo)?.value;
     (this.datosComunesStore[metodoNombre] as (value: unknown) => void)(VALOR);
 
-          // List of radio control names (add all your radio formControlNames here)
+    /** Lista de nombres de controles tipo radio que deben emitir el evento radioChanged. 
+     * Se utiliza para identificar los controles relevantes en el formulario. */
   const RADIO_CONTROLS = [
     'encuentraSus',
     'rmfRadio',
@@ -442,9 +448,15 @@ export class DatosComunesDosComponent implements OnInit,OnDestroy {
     'momentoIngresar',
     'indiqueCuenta',
     'contabilidad'
-    // Add more if needed
   ];
 
+  /**
+   * Si el campo modificado está incluido en la lista de controles tipo radio (`RADIO_CONTROLS`),
+   * emite el evento `radioChanged` con el nombre del control y el valor seleccionado.
+   *
+   * Esto permite que los componentes padres reaccionen ante cambios en los botones de radio
+   * relevantes del formulario.
+   */
 if (RADIO_CONTROLS.includes(campo)) {
   this.radioChanged.emit({ controlName: campo, value: VALOR });
 }

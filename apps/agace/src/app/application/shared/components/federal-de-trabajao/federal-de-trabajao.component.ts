@@ -174,15 +174,26 @@ export class FederalDeTrabajaoComponent implements OnInit, OnDestroy {
     }
   }
 
+/**
+ * Maneja la acción de aceptar en el formulario del modal.
+ *
+ * Si el formulario `numeroDeEmpleadosForm` es inválido, marca todos los controles como tocados para mostrar los errores de validación y no cierra el modal.
+ * Si el formulario es válido, cierra el modal ocultándolo.
+ */
 onAceptar(): void {
   if (this.numeroDeEmpleadosForm.invalid) {
-    // Mark all controls as touched to show validation errors
     this.numeroDeEmpleadosForm.markAllAsTouched();
-    return; // Do not close the modal
+    return; 
   }
-  this.modalRef?.hide(); // Only close if valid
+  this.modalRef?.hide();
 }
 
+/**
+ * Maneja la acción de cancelar en el formulario del modal.
+ *
+ * Este método restablece el formulario `numeroDeEmpleadosForm` a su estado inicial
+ * y cierra el modal ocultándolo.
+ */
 onCancelar(): void {
   this.numeroDeEmpleadosForm.reset();
   this.modalRef?.hide();

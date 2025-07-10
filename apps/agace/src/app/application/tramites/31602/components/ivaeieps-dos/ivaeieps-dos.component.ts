@@ -5,6 +5,7 @@ import { Component } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
+import {INVERSION_MONTO} from '../../constantes/ivaeieps.enum';
 import { Input } from '@angular/core';
 import { ModeloDeFormaDinamica } from '@libs/shared/data-access-user/src';
 import { OnDestroy } from '@angular/core';
@@ -19,7 +20,6 @@ import { Tramite31602Query } from '../../estados/queries/tramite31602.query';
 import { Tramite31602Store } from '../../estados/stores/tramite31602.store';
 import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
-import {INVERSION_MONTO} from '../../constantes/ivaeieps.enum';
 
 /**
  * Componente que representa la sección del formulario de IVA e IEPS para un trámite específico (31602).
@@ -41,7 +41,15 @@ export class IvaeiepsDosComponent implements OnInit, OnDestroy {
    */
   @Input() esFormularioSoloLectura: boolean = false;
 
-
+/**
+ * Una instancia de FormGroup que representa la estructura del formulario `inversionGrupo`.
+ *
+ * Este grupo de formularios contiene un FormGroup anidado llamado `inversionFormGroup`,
+ * que puede ser utilizado para definir y gestionar controles de formulario adicionales
+ * relacionados con la inversión dentro del componente.
+ *
+ * @type {FormGroup}
+ */
   public inversionGrupo: FormGroup = new FormGroup({
     inversionFormGroup: new FormGroup({}),
   });
@@ -87,8 +95,14 @@ export class IvaeiepsDosComponent implements OnInit, OnDestroy {
    * del formulario relacionados con la funcionalidad "porcentajeMonto" en el componente.
    */
   public porcentajeMontoForm!: FormGroup;
-
-public inversionFormDatos = INVERSION_MONTO;
+/**
+ * Contiene los datos de configuración para el formulario de inversión.
+ *
+ * Esta propiedad se inicializa con la constante `INVERSION_MONTO`, que define la estructura
+ * y los campos dinámicos que se mostrarán en la sección correspondiente al monto de inversión.
+ * Se utiliza para alimentar el componente de formularios dinámicos con los datos necesarios.
+ */
+  public inversionFormDatos = INVERSION_MONTO;
 
   /**
    * Representa los datos del formulario para el proceso "Permiso a Desistir" en el módulo de IVA e IEPS.
@@ -178,6 +192,14 @@ public inversionFormDatos = INVERSION_MONTO;
     });
   }
 
+  /**
+ * Getter para obtener el FormGroup anidado `inversionFormGroup` dentro de `inversionGrupo`.
+ *
+ * Este método permite acceder directamente al grupo de controles relacionados con la inversión,
+ * facilitando la manipulación y validación de los campos correspondientes en la plantilla o en la lógica del componente.
+ *
+ * @returns {FormGroup} La instancia de FormGroup asociada a `inversionFormGroup`.
+ */
   get inversionFormGroup(): FormGroup {
     return this.inversionGrupo.get('inversionFormGroup') as FormGroup;
   }
