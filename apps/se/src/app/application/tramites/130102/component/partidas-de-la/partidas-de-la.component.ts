@@ -247,6 +247,7 @@ export class PartidasDeLaComponent implements OnInit, AfterViewInit, OnDestroy {
       this.crearFormulario();
       if (this.esFormularioSoloLectura) {
         this.form.disable();
+        
       } else if (!this.esFormularioSoloLectura) {
         this.form.enable();
       } 
@@ -405,11 +406,13 @@ export class PartidasDeLaComponent implements OnInit, AfterViewInit, OnDestroy {
    */
   formularioTotalCount(): void {
     this.formForTotalCount = this.fb.group({
-      cantidadTotal: [{ disabled: true }],
-      valorTotalUSD: [{ disabled: true }],
+      cantidadTotal:[
+        this.solicitudState?.cantidadTotal,
+     { disabled: true }],
+      valorTotalUSD: [this.solicitudState?.valorTotalUSD, { disabled: true }],
     });
   }
- 
+   
   /**
    * Método para manejar la selección de fracción arancelaria TIGIE.
    * @param {Catalogo} aduana - Datos del catálogo seleccionado.
