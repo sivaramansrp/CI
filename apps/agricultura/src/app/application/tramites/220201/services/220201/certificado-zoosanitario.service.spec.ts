@@ -9,7 +9,7 @@ describe('CertificadoZoosanitarioServiceService', () => {
   let service: CertificadoZoosanitarioServiceService;
   let mockZoosanitarioStore: any;
 
-  const mockStoreData = {
+  const MOCK_STORE_DATA = {
     datosDeLaSolicitud: { tipoMercancia: 'yes' },
     datosParaMovilizacionNacional: {},
     pagoDeDerechos: {},
@@ -19,7 +19,7 @@ describe('CertificadoZoosanitarioServiceService', () => {
 
   beforeEach(() => {
     mockZoosanitarioStore = {
-      _select: jest.fn().mockReturnValue(of(mockStoreData)),
+      _select: jest.fn().mockReturnValue(of(MOCK_STORE_DATA)),
     };
 
     TestBed.configureTestingModule({
@@ -41,40 +41,40 @@ describe('CertificadoZoosanitarioServiceService', () => {
   it('should return all form data from store via getAllDatosForma()', (done) => {
     service.getAllDatosForma().subscribe((data) => {
       expect(mockZoosanitarioStore._select).toHaveBeenCalled();
-      expect(data).toEqual(mockStoreData);
+      expect(data).toEqual(MOCK_STORE_DATA);
       done();
     });
   });
   it('should call http.get with the correct URL in obtenerRespuestaPorUrl', (done) => {
-    const httpClientSpy = { get: jest.fn() };
-    const testUrl = 'testfile.json';
-    const expectedUrl = `../../../../../assets/json/220201/${testUrl}`;
-    const expectedResponse = { some: 'data' };
+    const HTTP_CLIENT_SPY = { get: jest.fn() };
+    const TEST_URL = 'testfile.json';
+    const EXPECTED_URL = `../../../../../assets/json/220201/${TEST_URL}`;
+    const EXPECTED_RESPONSE = { some: 'data' };
 
     // Replace the http client in the service with our spy
-    (service as any).http = httpClientSpy;
-    httpClientSpy.get.mockReturnValue(of(expectedResponse));
+    (service as any).http = HTTP_CLIENT_SPY;
+    HTTP_CLIENT_SPY.get.mockReturnValue(of(EXPECTED_RESPONSE));
 
-    service.obtenerRespuestaPorUrl(testUrl).subscribe((resp) => {
-      expect(httpClientSpy.get).toHaveBeenCalledWith(expectedUrl);
-      expect(resp).toEqual(expectedResponse);
+    service.obtenerRespuestaPorUrl(TEST_URL).subscribe((resp) => {
+      expect(HTTP_CLIENT_SPY.get).toHaveBeenCalledWith(EXPECTED_URL);
+      expect(resp).toEqual(EXPECTED_RESPONSE);
       done();
     });
   });
   it('should return all form data from store via getFormData()', (done) => {
     service.getFormData().subscribe((data) => {
       expect(mockZoosanitarioStore._select).toHaveBeenCalled();
-      expect(data).toEqual(mockStoreData);
+      expect(data).toEqual(MOCK_STORE_DATA);
       done();
     });
   });
   it('should return validarEnvio from store via getValidarEnvio()', (done) => {
-    const validarEnvioMock = { seccion1: true, seccion2: false };
-    mockZoosanitarioStore._select.mockReturnValueOnce(of(validarEnvioMock));
+    const VALIDAR_ENVIO_MOCK = { seccion1: true, seccion2: false };
+    mockZoosanitarioStore._select.mockReturnValueOnce(of(VALIDAR_ENVIO_MOCK));
 
     service.getValidarEnvio().subscribe((data) => {
       expect(mockZoosanitarioStore._select).toHaveBeenCalledWith(expect.any(Function));
-      expect(data).toEqual(validarEnvioMock);
+      expect(data).toEqual(VALIDAR_ENVIO_MOCK);
       done();
     });
   });

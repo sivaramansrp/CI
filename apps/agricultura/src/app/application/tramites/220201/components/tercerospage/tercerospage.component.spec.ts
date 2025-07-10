@@ -9,16 +9,16 @@ import { ActivatedRoute } from '@angular/router';
 describe('TercerospageComponent', () => {
   let component: TercerospageComponent;
   let fixture: ComponentFixture<TercerospageComponent>;
-  let mockConsultaQuery: any;
-  let mockCertificadoService: any;
-  let mockTercerosService: any;
+  let MOCK_CONSULTA_QUERY: any;
+  let MOCK_CERTIFICADO_SERVICE: any;
+  let MOCK_TERCEROS_SERVICE: any;
 
   beforeEach(async () => {
-    mockConsultaQuery = {
+    MOCK_CONSULTA_QUERY = {
       selectConsultaioState$: of({ readonly: true })
     };
 
-    mockCertificadoService = {
+    MOCK_CERTIFICADO_SERVICE = {
       getAllDatosForma: jest.fn().mockReturnValue(of({
         tercerosRelacionados: [{  tipoMercancia: 'Física',
       nombre: 'Juan',
@@ -34,7 +34,7 @@ describe('TercerospageComponent', () => {
       updateTercerosRelacionado: jest.fn()
     };
 
-    mockTercerosService = {
+    MOCK_TERCEROS_SERVICE = {
       obtenerSelectorList: jest.fn().mockReturnValue(of([{ id: 1, nombre: 'MX' }]))
     };
 
@@ -42,9 +42,9 @@ describe('TercerospageComponent', () => {
       imports: [TercerospageComponent],
       providers: [
          { provide: ActivatedRoute, useValue: {} },
-        { provide: ConsultaioQuery, useValue: mockConsultaQuery },
-        { provide: CertificadoZoosanitarioServiceService, useValue: mockCertificadoService },
-        { provide: TercerosrelacionadosService, useValue: mockTercerosService }
+        { provide: ConsultaioQuery, useValue: MOCK_CONSULTA_QUERY },
+        { provide: CertificadoZoosanitarioServiceService, useValue: MOCK_CERTIFICADO_SERVICE },
+        { provide: TercerosrelacionadosService, useValue: MOCK_TERCEROS_SERVICE }
       ]
     }).compileComponents();
 
@@ -65,8 +65,8 @@ describe('TercerospageComponent', () => {
 
   it('should load country and state catalogs in ngAfterViewInit', () => {
     component.ngAfterViewInit();
-    expect(mockTercerosService.obtenerSelectorList).toHaveBeenCalledWith('paisprocedencia.json');
-    expect(mockTercerosService.obtenerSelectorList).toHaveBeenCalledWith('estados.json');
+    expect(MOCK_TERCEROS_SERVICE.obtenerSelectorList).toHaveBeenCalledWith('paisprocedencia.json');
+    expect(MOCK_TERCEROS_SERVICE.obtenerSelectorList).toHaveBeenCalledWith('estados.json');
   });
 
   it('should clear personas and call updateTercerosRelacionado on handleEliminar', () => {
@@ -84,14 +84,14 @@ describe('TercerospageComponent', () => {
     }];
     component.handleEliminar();
     expect(component.personas.length).toBe(0);
-    expect(mockCertificadoService.updateTercerosRelacionado).toHaveBeenCalledWith([]);
+    expect(MOCK_CERTIFICADO_SERVICE.updateTercerosRelacionado).toHaveBeenCalledWith([]);
   });
 
   it('should clean up subscriptions on destroy', () => {
-    const destroySpy = jest.spyOn((component as any).destroyNotifier$, 'next');
-    const completeSpy = jest.spyOn((component as any).destroyNotifier$, 'complete');
+    const DESTROY_SPY = jest.spyOn((component as any).destroyNotifier$, 'next');
+    const COMPLETE_SPY = jest.spyOn((component as any).destroyNotifier$, 'complete');
     component.ngOnDestroy();
-    expect(destroySpy).toHaveBeenCalled();
-    expect(completeSpy).toHaveBeenCalled();
+    expect(DESTROY_SPY).toHaveBeenCalled();
+    expect(COMPLETE_SPY).toHaveBeenCalled();
   });
 });
