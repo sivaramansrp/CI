@@ -91,7 +91,7 @@ export class ImportadorExportadorComponent implements OnInit, OnDestroy {
       fechaDePago: [this.solicitudState?.fechaDePago, Validators.required],
       fechaInicioComercio: [this.solicitudState?.fechaInicioComercio, Validators.required],
       esParteGrupoComercioExterior: [this.solicitudState?.esParteGrupoComercioExterior, Validators.required],
-      fusionEscisionConOperacionExterior: [this.solicitudState?.fusionEscisionConOperacionExterior, Validators.required],
+      fusionEscisionConOperacionExterior: [this.solicitudState?.fusionEscisionConOperacionExterior, Validators.required]
     })
     this.agregarEnlaceOperativoForm = this.fb.group({
       rfcEnclaveOperativo:[this.solicitudState?.rfcEnclaveOperativo, Validators.required],
@@ -189,7 +189,19 @@ cancelarModal():void{
  cerrarModalFechaInvalida(): void {
   this.modalRef?.hide();
 }
-
+onComercioExteriorChange(): void {
+    const VALOR = this.importadorExportadorForm.get('comercioExteriorRealizado')?.value;
+    this.comercioExteriorActivo = VALOR === '1' || VALOR === true;
+    this.noComercioExteriorActivo = VALOR === '0' || VALOR === false;
+  }
+   onEsParteGrupoComercioExteriorChange(): void {
+    const VALOR = this.importadorExportadorForm.get('esParteGrupoComercioExterior')?.value;
+    this.parteGrupoComercioExterior = VALOR === '1' || VALOR === true;
+  }
+  onFusionEscisionConOperacionExteriorChange(): void{
+    const VALOR = this.importadorExportadorForm.get('fusionEscisionConOperacionExterior')?.value;
+    this.esFusionOEscisionConComercioExterior = VALOR === '1' || VALOR === true;
+  }
    abrirModal(template: TemplateRef<void>): void {
     this.modalRefabir = this.modalService.show(template, { class: 'modal-lg',});
   }
@@ -478,32 +490,6 @@ cerrarModalSeleccionRequerida(): void {
 
 cerrarModalConfirmacionEliminacion(): void {
   this.modalRef?.hide();
-}
-onRadioChange(controlName: string): void {
-  const VALOR = this.importadorExportadorForm.get(controlName)?.value;
-  const IS_TRUE = VALOR === '1' || VALOR === true;
-  const IS_FALSE = VALOR === '0' || VALOR === false;
-
-  switch (controlName) {
-    case 'comercioExteriorRealizado':
-      this.comercioExteriorActivo = IS_TRUE;
-      this.noComercioExteriorActivo = IS_FALSE;
-      this.esFusionOEscisionConComercioExterior = IS_FALSE
-      break;
-      
-    case 'esParteGrupoComercioExterior':
-      this.parteGrupoComercioExterior = IS_TRUE;
-      this.esFusionOEscisionConComercioExterior = IS_TRUE
-      break;
-      
-    case 'fusionEscisionConOperacionExterior':
-      //logic
-      break;
-      
-    default:
-      console.warn(`Unhandled radio control: ${controlName}`);
-      break;
-  }
 }
    /**
    * Método llamado al destruir el componente, limpia las suscripciones

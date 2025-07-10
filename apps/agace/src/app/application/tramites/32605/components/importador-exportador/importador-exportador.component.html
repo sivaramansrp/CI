@@ -17,7 +17,7 @@
        <app-input-radio [radioOptions]="opcionDeBotonDeRadio" 
                 [isRequired]="true" [layout]="'horizontal'" 
                 formControlName="comercioExteriorRealizado" 
-                (change)="onRadioChange('comercioExteriorRealizado')"></app-input-radio>
+                (change)="onComercioExteriorChange()"></app-input-radio>
         <div *ngIf="importadorExportadorForm.controls['comercioExteriorRealizado'].invalid &&
             importadorExportadorForm.controls['comercioExteriorRealizado'].touched"
             class="text-danger" >
@@ -47,7 +47,7 @@
        <app-input-radio [radioOptions]="opcionDeBotonDeRadio" 
                 [isRequired]="true" [layout]="'horizontal'" 
                 formControlName="esParteGrupoComercioExterior" 
-                (change)="onRadioChange('esParteGrupoComercioExterior')"></app-input-radio>
+                (change)="onEsParteGrupoComercioExteriorChange()"></app-input-radio>
         <div *ngIf="importadorExportadorForm.controls['esParteGrupoComercioExterior'].invalid &&
             importadorExportadorForm.controls['esParteGrupoComercioExterior'].touched"
             class="text-danger" >
@@ -91,7 +91,7 @@
 
 
       <!-- on click of NO -->
-      <div class="row" *ngIf="esFusionOEscisionConComercioExterior">
+      <div class="row" *ngIf="noComercioExteriorActivo">
       <div class="w-100 p-4">
       <div class="form-group">
         <label class="form-label text-left">
@@ -100,7 +100,7 @@
        <app-input-radio [radioOptions]="opcionDeBotonDeRadio" 
                 [isRequired]="true" [layout]="'horizontal'" 
                 formControlName="fusionEscisionConOperacionExterior" 
-                (change)="onRadioChange('fusionEscisionConOperacionExterior')"></app-input-radio>
+                (change)="onFusionEscisionConOperacionExteriorChange()"></app-input-radio>
         <div *ngIf="importadorExportadorForm.controls['fusionEscisionConOperacionExterior'].invalid &&
             importadorExportadorForm.controls['fusionEscisionConOperacionExterior'].touched"
             class="text-danger" >
