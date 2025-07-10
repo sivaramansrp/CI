@@ -6,11 +6,169 @@
             </div>
             <div class="row">
                 <formas-dinamicas
-                [forma]="ninoFormGroup"
-                [formularioDatos]="datosComunesFormData"
+                [forma]="ninoFormGroupUno"
+                [formularioDatos]="formDataUno"
                 [templateMap]="templateMap"
-                (emitirCambioDeValor)="establecerCambioDeValor($event)"
+                (emitirCambioDeValor)="establecerCambioDeValorUno($event)"
                 ></formas-dinamicas>
+            </div>
+
+            <div class="row">
+              <div class="col-md-12">
+                <ng-titulo titulo="Clientes y Proveedores en el Extranjero" />
+              </div>
+              <div class="col-md-12">
+                <label class="form-label text-start"
+                  >Anexe un archivo que contenga el nombre y dirección de sus clientes
+                  y proveedores en el extranjero directa o indirectamente vinculados
+                  con el régimen aduanero con el que se solicita el registro, con los
+                  que realizó operaciones de comercio exterior durante los últimos
+                  doce meses
+                </label>
+                <div class="mt-3">
+                  <b>Para descargar plantilla del archivo de excel de click </b>
+                  <a href="/assets/pdf/carga_proveedoresExtranjeros_aviso.xlsx">aquí</a>
+                </div>
+                <div class="row" style="margin-top: 20px">
+                  <div class="col-md-4">
+                    <input type="file" accept=".xlsx" class="form-control sfile" name="archivoExtranjero" id="archivoExtranjero" formControlName="archivoExtranjero" (change)="cambioEvento($event, 'archivoExtranjero')" title="Examinar"/>
+                  </div>
+                  <div class="col-md-4"></div>
+                  <div class="col-md-4 d-flex justify-content-end">
+                    <button type="button" name="cargaArchivoProcesos" id="cargaArchivoProcesos" class="btn btn-primary me-md-3" >Anexar</button>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4 mt-4">
+                <label class="form-label text-start" for="actualmente1" >Registros que existen actualmente.</label>
+                <input type="text" class="form-control" formControlName="clientesActualmente" name="clientesActualmente" id="clientesActualmente" (change)="cambioEvento($event, 'clientesActualmente')"/>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-12">
+                <ng-titulo titulo="Proveedores" />
+              </div>
+
+              <div class="col-md-12">
+                <label class="form-label text-start"
+                  >Anexe un archivo que contenga el nombre y clave en el R F C de sus
+                  proveedores de insumos adquiridos en territorio nacional, vinculados
+                  al proceso bajo el régimen que solicita, de los últimos 6
+                  meses</label>
+                <div class="mt-3">
+                  <b>Para descargar plantilla del archivo de excel de click </b>
+                  <a href="/assets/pdf/carga_proveedoresExtranjeros_aviso.xlsx">aquí</a>
+                </div>
+                <div class="row" style="margin-top: 20px">
+                  <div class="col-md-4">
+                    <input type="file" accept=".xlsx" class="form-control sfile" name="proveedoresExtranjero" id="proveedoresExtranjero" formControlName="proveedoresExtranjero" title="Examinar" (change)="cambioEvento($event, 'proveedoresExtranjero')"/>
+                  </div>
+                  <div class="col-md-4"></div>
+                  <div class="col-md-4 d-flex justify-content-end">
+                    <button type="button" name="cargaArchivoProcesos" id="cargaArchivoProcesos" class="btn btn-primary me-md-3">Anexar</button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-4 mt-4">
+                <label class="form-label text-start">Registros que existen actualmente.</label>
+                <input type="text" class="form-control" formControlName="proveedoresActualmente" name="proveedoresActualmente" id="proveedoresActualmente" (change)="cambioEvento($event, 'proveedoresActualmente')"/>
+              </div>
+              
+              <div class="col-md-12 mt-5">
+                <div class="alert alert-info">
+                  <div class="form-check">
+                    <p><b> Nota:</b> Los proveedores nacionales que se declaren deberán
+                    contar con la opinión positiva del cumplimiento de las
+                    obligaciones fiscales prevista en el artículo 32-D del código en
+                    la RFM.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-12">
+                <ng-titulo titulo="Querella" />
+              </div>
+              <div class="col-md-12 mt-4">
+                <label class="form-label text-start">
+                  Señale si el SAT ha interpuesto querella o denuncia penal en contra
+                  de los socios, accionistas, según corresponda, representante legal,
+                  e integrantes de la administración de la empresa solicitante o
+                  declaratoria de perjuicio, según corresponda, durante los últimos
+                  tres años anteriores a la presentación de la solicitud de
+                  certificación. *
+                </label>
+                <app-input-radio
+                  formControlName="senaleSiElSAT"
+                  [radioOptions]="sinoOpciones"
+                  [isRequired]="true"
+                  [layout]="'horizontal'"
+                  [gridLayout]="true"
+                  (change)="cambioEvento($event, 'senaleSiElSAT')"
+                ></app-input-radio>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-12">
+                <formas-dinamicas
+                formularioTitulo="Control Inventarios"
+                [forma]="ninoFormGroupDos"
+                [formularioDatos]="formDataDos"
+                (emitirCambioDeValor)="establecerCambioDeValorDos($event)"
+                ></formas-dinamicas>
+              </div>
+              <div class="col-md-12 d-flex justify-content-end">
+                <button type="button" name="" id="" class="btn btn-primary me-md-3">Agregar</button>
+              </div>
+
+              <div class="col-md-12 mt-4">
+                <label class="form-label text-start">Control Inventarios</label>
+              </div>
+              <div class="col-md-12 mt-4">
+                <app-tabla-con-entrada
+                  [tipoSeleccionTabla]="tablaSeleccionCheckbox"
+                  [configuracionTabla]="inventariosConfiguracionColumnas"
+                  [datos]="inventariosDatos"
+                  (listaDeFilaSeleccionada)="seleccionarInventariosDatos($event)"
+                >
+                </app-tabla-con-entrada>
+              </div>
+              <div class="col-md-12 mt-5">
+                  <div class="d-flex justify-content-end mt-4">
+                    <button type="button" id="modificar" class="btn btn-default ms-3">Modificar</button>
+                    <button type="button" id="eliminar" class="btn btn-danger ms-3" (click)="eliminarInventariosDatos()">Eliminar</button>
+                  </div>
+              </div>
+              <div class="col-md-12 mt-4">
+                <div class="alert alert-info">
+                  <div class="form-check text-start">
+                    Deberá anexar un archivo con el reporte de saldos de mercancía de
+                    importación temporal o de mercancías objeto de operaciones de
+                    comercio exterior, de un periodo de un mes, que se encuentre
+                    dentro de los tres meses anteriores a la presentación de la
+                    solicitud.
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-12 mt-4">
+                <label class="form-label text-start"
+                  >Señale si ingresa mensualmente su información contable a través del
+                  portal del SAT, de conformidad con el artículo 28, fracción IV, del
+                  CFF y las reglas 2.8.1.5. y la 2.8.1.6. de la RMF. *</label
+                >
+                <app-input-radio
+                  formContolName="senaleSiIngresaMensualmente"
+                  [radioOptions]="sinoOpciones"
+                  [isRequired]="true"
+                  [layout]="'horizontal'"
+                  [gridLayout]="true"
+                  (change)="cambioEvento($event, 'senaleSiIngresaMensualmente')"
+                ></app-input-radio>
+              </div>
             </div>
         </form>
     </div>
@@ -36,7 +194,7 @@
           su solicitud</label
         >
         <app-tabla-dinamica
-          [tipoSeleccionTabla]="numeroDeEmpleadosTabla"
+          [tipoSeleccionTabla]="tablaSeleccionCheckbox"
           [configuracionTabla]="numeroDeEmpleadosConfiguracionColumnas"
           [datos]="numeroDeEmpleadosLista"
           (listaDeFilaSeleccionada)="seleccionarNumeroDeEmpleadosDato($event)"
@@ -55,6 +213,36 @@
     }
 </ng-template>
 
+<ng-template #customTemplate3>
+    <div class="alert alert-info">
+        <div class="form-check">
+          <p><b> Nota:</b> De contar con un programa IMMEX activo y vigente al
+            momento de ingresar la solicitud, se mostrarn los domicilios
+            registrados ante la Secretaria de Economia. Asi mismo, podra incluir
+            otros domicilios que se encuentren relacionados con el RFC del
+            solicitante, dando click en el boton "Agregar" y seleccionado la
+            Entidad Federativa.
+          </p>
+        </div>
+    </div>
+    <div class="col-md-12 mt-5">
+      <app-tabla-dinamica
+        [tipoSeleccionTabla]="tablaSeleccionCheckbox"
+        [configuracionTabla]="domiciliosConfiguracionColumnas"
+        [datos]="domiciliosDatos"
+        (listaDeFilaSeleccionada)="seleccionarDomiciliosDato($event)"
+      >
+      </app-tabla-dinamica>
+    </div>
+    <div class="col-md-12 mt-5">
+      <div class="d-flex justify-content-end mt-4">
+        <button type="button" id="modificar" class="btn btn-default" data-bs-toggle="modal" data-bs-target="#modalInstalacionesPrincipales"(click)="agregarInstalacionesPrincipales()">Modificar</button>
+        <button type="button" id="eliminar" class="btn btn-danger ms-3"(click)="eliminarDomiciliosDatos()">Eliminar</button>
+        <button type="button" id="agregar" class="btn btn-primary ms-3" data-bs-toggle="modal" data-bs-target="#modalInstalacionesPrincipales" (click)="agregarInstalacionesPrincipales()">Agregar</button>
+      </div>
+    </div>
+</ng-template>
+
 <div class="modal fade" id="modalSeccionSubcontratados" tabindex="-1" aria-labelledby="modalSeccionSubcontratadosLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
@@ -62,6 +250,17 @@
       <!-- <app-seccion-subcontratados
         (seccionSubcontratados)="seccionSubcontratados($event)"
       ></app-seccion-subcontratados> -->
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="modalInstalacionesPrincipales" tabindex="-1" aria-labelledby="modalInstalacionesPrincipalesLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <!-- NEED TO WORK -->
+      <!-- <app-instalaciones-principales
+        (instalacionesPrincipales)="instalacionesPrincipales($event)"
+      ></app-instalaciones-principales> -->
     </div>
   </div>
 </div>

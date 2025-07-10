@@ -1,7 +1,8 @@
 import { Observable, catchError, throwError } from 'rxjs';
 import { Catalogo } from '@libs/shared/data-access-user/src';
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable } from '@angular/core'; 
+import { Inventarios } from '../models/datos-comunes-tres.model';
 
 @Injectable({
   providedIn: 'root'
@@ -61,5 +62,13 @@ export class DatosComunesTresService {
    */
   getIndiqueTodosdatos(): Observable<Catalogo> {
     return this.http.get<Catalogo>('assets/json/32613/indique-todos.json');
+  }
+
+  /**
+   * Obtiene los inventarios registrados desde un archivo JSON local.
+   * @returns Observable con un arreglo de Inventarios.
+   */
+  conseguirInventarios(): Observable<Inventarios[]> {
+    return this.http.get<Inventarios[]>('assets/json/32613/inventarios-datos.json');
   }
 }

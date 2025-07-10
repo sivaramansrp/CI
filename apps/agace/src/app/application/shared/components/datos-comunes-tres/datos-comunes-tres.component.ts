@@ -1,13 +1,13 @@
-import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { Catalogo, ConfiguracionColumna, ModeloDeFormaDinamica, TablaDinamicaComponent, TablaSeleccion } from '@libs/shared/data-access-user/src';
-import { DATOS_COMUNES, NUMERO_DE_EMPLEADOS_CONFIGURACION } from '../../constants/datos-comunes-tres.enum';
-import { FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { CONTROL_INVENTARIOS, DATOS_COMUNES, DOMICILIOS_CONFIGURACION_COLUMNAS, INVENTARIOS_CONFIGURACION, NUMERO_DE_EMPLEADOS_CONFIGURACION } from '../../constants/datos-comunes-tres.enum';
+import { Catalogo, ConfiguracionAporteColumna, ConfiguracionColumna, InputRadioComponent, ModeloDeFormaDinamica, TablaConEntradaComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Domicilios, Inventarios, NumeroDeEmpleados } from '../../models/datos-comunes-tres.model';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { DatosComunesTresService } from '../../services/datos-comunes-tres.service';
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
 import { Modal } from 'bootstrap';
-import { NumeroDeEmpleados } from '../../models/datos-comunes-tres.model';
 
 @Component({
   selector: 'app-datos-comunes-tres',
@@ -16,16 +16,21 @@ import { NumeroDeEmpleados } from '../../models/datos-comunes-tres.model';
     CommonModule,
     ReactiveFormsModule,
     FormasDinamicasComponent,
-    TablaDinamicaComponent
+    TablaDinamicaComponent,
+    TituloComponent,
+    InputRadioComponent,
+    TablaConEntradaComponent
   ],
   templateUrl: './datos-comunes-tres.component.html',
   styleUrl: './datos-comunes-tres.component.scss',
 })
-export class DatosComunesTresComponent implements OnInit, AfterViewInit {
+export class DatosComunesTresComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @ViewChild('customTemplate1') customTemplate1!: TemplateRef<unknown>;
 
   @ViewChild('customTemplate2') customTemplate2!: TemplateRef<unknown>;
+
+  @ViewChild('customTemplate3') customTemplate3!: TemplateRef<unknown>;
 
   /** Referencia al modal para agregar miembros de la empresa.*/
   @ViewChild('modalAgregarMiembrosEmpresa', { static: false }) modalElement!: ElementRef;
@@ -33,19 +38,31 @@ export class DatosComunesTresComponent implements OnInit, AfterViewInit {
   /** Referencia al modal de la sección de subcontratados.*/
   @ViewChild('modalSeccionSubcontratados', { static: false }) modalSeccionSubcontratadosElement!: ElementRef;
 
+  /** Referencia al modal de instalaciones principales.*/
+  @ViewChild('modalInstalacionesPrincipales', { static: false }) modalInstalacionesPrincipalesElement!: ElementRef;
+
   /** Referencia al modal para agregar miembros de la empresa.*/
   @ViewChild('modalConfirmacion', { static: false }) modalConfirmacion!: ElementRef;
 
   public templateMap: Record<string, TemplateRef<unknown>> = {};
 
   public datosComunesForm: FormGroup = new FormGroup({
-    ninoFormGroup: new FormGroup({}),
+    ninoFormGroupUno: new FormGroup({}),
+    ninoFormGroupDos: new FormGroup({}),
+    archivoExtranjero: new FormControl(''),
+    proveedoresExtranjero: new FormControl(''),
+    clientesActualmente: new FormControl(''),
+    proveedoresActualmente: new FormControl(''),
+    senaleSiElSAT: new FormControl(''),
+    senaleSiIngresaMensualmente: new FormControl(''),
   });
 
-  public datosComunesFormData = DATOS_COMUNES;
+  public formDataUno = DATOS_COMUNES;
+
+  public formDataDos = CONTROL_INVENTARIOS;
 
   /** Tipo de tabla utilizada para mostrar número de empleados (checkbox) */
-  public numeroDeEmpleadosTabla = TablaSeleccion.CHECKBOX;
+  public tablaSeleccionCheckbox = TablaSeleccion.CHECKBOX;
 
   /** Configuración de columnas para la tabla de número de empleados */
   public numeroDeEmpleadosConfiguracionColumnas: ConfiguracionColumna<NumeroDeEmpleados>[] = NUMERO_DE_EMPLEADOS_CONFIGURACION;
@@ -56,13 +73,46 @@ export class DatosComunesTresComponent implements OnInit, AfterViewInit {
   /** Lista de empleados seleccionados en la tabla */
   public seleccionarNumeroDeEmpleadosLista: NumeroDeEmpleados[] = [] as NumeroDeEmpleados[];
 
+  /** Domicilios seleccionados por el usuario */
+  public seleccionarDomiciliosDatos: Domicilios[] = [] as Domicilios[];
+
+  /** Inventarios seleccionados por el usuario */
+  public seleccionarInventarios: Inventarios[] = [] as Inventarios[];
+
+   /** Configuración de columnas para la tabla de domicilios */
+  public domiciliosConfiguracionColumnas: ConfiguracionColumna<Domicilios>[] = DOMICILIOS_CONFIGURACION_COLUMNAS;
+
+  /** Configuración de columnas para la tabla de inventarios */
+  public inventariosConfiguracionColumnas: ConfiguracionAporteColumna<Inventarios>[] = INVENTARIOS_CONFIGURACION;
+
+  /** Datos de los domicilios disponibles */
+  public domiciliosDatos: Domicilios[] = [] as Domicilios[];
+
+  /** Datos de inventarios registrados */
+  public inventariosDatos: Inventarios[] = [] as Inventarios[];
+
   public mostrarNumeroSolicitudSeccion: boolean = false;
 
-  /**
-  * Este getter devuelve el grupo de formularios anidado llamado `ninoFormGroup`
-  */
-  get ninoFormGroup(): FormGroup {
-    return this.datosComunesForm.get('ninoFormGroup') as FormGroup;
+  /** Modelo para la opción de tipo sí/no representado como radio button */
+  public sinoOpciones = [
+    {
+      "label": "Sí",
+      "value": 1
+    },
+    {
+      "label": "No",
+      "value": 2
+    }
+  ];
+
+  /** Este getter devuelve el grupo de formularios anidado llamado `ninoFormGroupUno`*/
+  get ninoFormGroupUno(): FormGroup {
+    return this.datosComunesForm.get('ninoFormGroupUno') as FormGroup;
+  }
+
+  /** Este getter devuelve el grupo de formularios anidado llamado `ninoFormGroupDos`*/
+  get ninoFormGroupDos(): FormGroup {
+    return this.datosComunesForm.get('ninoFormGroupDos') as FormGroup;
   }
 
   /** Subject para destruir el componente */
@@ -79,6 +129,19 @@ export class DatosComunesTresComponent implements OnInit, AfterViewInit {
     this.obtenerServicioOpciones();
     this.obtenerBimestreOpciones();
     this.obtenerIndiqueTodosOpciones();
+    this.conseguirInventarios();
+  }
+
+  /** Método para obtener los datos de inventarios desde el servicio. Los resultados se asignan a la propiedad `inventariosDatos`.*/
+  conseguirInventarios(): void {
+    this.datosComunesTresService
+      .conseguirInventarios()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (respuesta: Inventarios[]) => {
+          this.inventariosDatos = respuesta;
+        },
+      });
   }
 
   obtenerSectorProductivoOpciones(): void {
@@ -86,7 +149,7 @@ export class DatosComunesTresComponent implements OnInit, AfterViewInit {
       .getProductivoDatos()
       .pipe(takeUntil(this.destroy$))
       .subscribe((data) => {
-        const PRODUCTIVO_FIELD = this.datosComunesFormData.find(
+        const PRODUCTIVO_FIELD = this.formDataUno.find(
           (datos: ModeloDeFormaDinamica) => datos.campo === 'catseleccionados'
         ) as ModeloDeFormaDinamica;
         if (PRODUCTIVO_FIELD && !PRODUCTIVO_FIELD.opciones) {
@@ -107,7 +170,7 @@ export class DatosComunesTresComponent implements OnInit, AfterViewInit {
       .getServicioDatos()
       .pipe(takeUntil(this.destroy$))
       .subscribe((data) => {
-        const SERVICIO_FIELD = this.datosComunesFormData.find(
+        const SERVICIO_FIELD = this.formDataUno.find(
           (datos: ModeloDeFormaDinamica) => datos.campo === 'servicio'
         ) as ModeloDeFormaDinamica;
         if (SERVICIO_FIELD && !SERVICIO_FIELD.opciones) {
@@ -128,7 +191,7 @@ export class DatosComunesTresComponent implements OnInit, AfterViewInit {
       .getBimestreDatos()
       .pipe(takeUntil(this.destroy$))
       .subscribe((data: Catalogo) => {
-        const BIMESTRE_FIELD = this.datosComunesFormData.find(
+        const BIMESTRE_FIELD = this.formDataUno.find(
           (datos: ModeloDeFormaDinamica) => datos.campo === 'bimestre'
         ) as ModeloDeFormaDinamica;
         if (BIMESTRE_FIELD) {
@@ -149,7 +212,7 @@ export class DatosComunesTresComponent implements OnInit, AfterViewInit {
       .getIndiqueTodosdatos()
       .pipe(takeUntil(this.destroy$))
       .subscribe((data: Catalogo) => {
-        const INDIQUE_TODOS_FIELD = this.datosComunesFormData.find(
+        const INDIQUE_TODOS_FIELD = this.formDataUno.find(
           (datos: ModeloDeFormaDinamica) => datos.campo === 'indiqueTodos'
         ) as ModeloDeFormaDinamica;
         if (INDIQUE_TODOS_FIELD) {
@@ -169,7 +232,8 @@ export class DatosComunesTresComponent implements OnInit, AfterViewInit {
     Promise.resolve().then(() => {
       this.templateMap = {
         customSection1: this.customTemplate1,
-        customSection2: this.customTemplate2
+        customSection2: this.customTemplate2,
+        customSection3: this.customTemplate3
       };
     });
   }
@@ -179,7 +243,7 @@ export class DatosComunesTresComponent implements OnInit, AfterViewInit {
    * @param event Objeto que contiene el campo y el valor a actualizar.
    * Si el campo es 'tipoOperacion', se ejecuta el método alCambiarTipoOperacion.
    */
-  establecerCambioDeValor(event: { campo: string; valor: object | string }): void {
+  establecerCambioDeValorUno(event: { campo: string; valor: object | string }): void {
     if (event) {
       // Actualiza el valor dinámico en el store.
       // this.tramite5601Store.setDynamicFieldValue(event.campo, event.valor);
@@ -189,9 +253,9 @@ export class DatosComunesTresComponent implements OnInit, AfterViewInit {
         this.mostrarCampos('bimestre');
       }
 
-      if (this.ninoFormGroup.get('empleados')?.value) {
-        const CONTROL = this.ninoFormGroup.get('bimestre');
-        if (!this.ninoFormGroup.get('bimestre')?.value) {
+      if (this.ninoFormGroupUno.get('empleados')?.value) {
+        const CONTROL = this.ninoFormGroupUno.get('bimestre');
+        if (!this.ninoFormGroupUno.get('bimestre')?.value) {
           if (CONTROL) {
             CONTROL.setErrors({ custom: { mensaje: 'Se debe agregar los datos del número de empleados propios del último bimestre.' } });
             CONTROL.markAsTouched();
@@ -209,7 +273,7 @@ export class DatosComunesTresComponent implements OnInit, AfterViewInit {
         this.mostrarCampos('enSuCasoLFT');
       }
 
-      if (event.campo === 'senaleSiAlMomentoFraccionVI' || event.campo === 'senaleSiSusCertificados') {
+      if (event.campo === 'senaleSiAlMomentoFraccionVI' || event.campo === 'senaleSiSusCertificados' || event.campo === 'senalesiSeSectorial') {
         if (this.modalConfirmacion) {
           const MODAL_INSTANCE = new Modal(this.modalConfirmacion.nativeElement);
           MODAL_INSTANCE.show();
@@ -218,8 +282,20 @@ export class DatosComunesTresComponent implements OnInit, AfterViewInit {
     }
   }
 
+  /**
+   * Método para establecer un cambio de valor en el store.
+   * @param event Objeto que contiene el campo y el valor a actualizar.
+   * Si el campo es 'tipoOperacion', se ejecuta el método alCambiarTipoOperacion.
+   */
+  establecerCambioDeValorDos(event: { campo: string; valor: object | string }): void {
+    if (event) {
+      // Actualiza el valor dinámico en el store.
+      // this.tramite5601Store.setDynamicFieldValue(event.campo, event.valor);
+    }
+  }
+
   mostrarCampos(campo: string): void {
-    const CAMPO = this.datosComunesFormData.find(f => f.campo === campo);
+    const CAMPO = this.formDataUno.find(f => f.campo === campo);
     if (CAMPO) {
       CAMPO.mostrar = true;
     }
@@ -230,12 +306,33 @@ export class DatosComunesTresComponent implements OnInit, AfterViewInit {
     this.seleccionarNumeroDeEmpleadosLista = evento;
   }
 
+  /**  Guarda la selección de domicilios hecha por el usuario.*/
+  seleccionarDomiciliosDato(evento: Domicilios[]): void {
+    this.seleccionarDomiciliosDatos = evento;
+  }
+
+  /**  Guarda la selección de inventarios hecha por el usuario.*/
+  seleccionarInventariosDatos(evento: Inventarios[]): void {
+    this.seleccionarInventarios = evento;
+  }
+
   /** Muestra el modal para agregar subcontratados a la empresa.
   * Utiliza el elemento referenciado como modalSeccionSubcontratadosElement.
   */
   agregarSubcontratados(): void {
     if (this.modalElement) {
       const MODAL_INSTANCE = new Modal(this.modalSeccionSubcontratadosElement.nativeElement);
+      MODAL_INSTANCE.show();
+    }
+  }
+
+  /**
+   * Muestra el modal para agregar instalaciones principales de la empresa.
+   * Utiliza el elemento referenciado como modalInstalacionesPrincipalesElement.
+   */
+  agregarInstalacionesPrincipales(): void {
+    if (this.modalElement) {
+      const MODAL_INSTANCE = new Modal(this.modalInstalacionesPrincipalesElement.nativeElement);
       MODAL_INSTANCE.show();
     }
   }
@@ -252,5 +349,54 @@ export class DatosComunesTresComponent implements OnInit, AfterViewInit {
         }
       });
     }
+  }
+
+  /** Elimina los domicilios seleccionados de la lista.*/
+  eliminarDomiciliosDatos(): void {
+    if (this.seleccionarDomiciliosDatos.length > 0) {
+      this.seleccionarDomiciliosDatos.forEach((elemento) => {
+        const INDICE = this.domiciliosDatos.findIndex(
+          (inv) => inv.tipoInstalacion === elemento.tipoInstalacion
+        );
+        if (INDICE !== -1) {
+          this.domiciliosDatos.splice(INDICE, 1);
+        }
+      });
+    }
+  }
+
+  /** Elimina los inventarios seleccionados de la lista.*/
+  eliminarInventariosDatos(): void {
+    if (this.seleccionarInventarios.length > 0) {
+      this.seleccionarInventarios.forEach((elemento) => {
+        const INDICE = this.inventariosDatos.findIndex(
+          (inv) => inv.nombre === elemento.nombre
+        );
+        if (INDICE !== -1) {
+          this.inventariosDatos.splice(INDICE, 1);
+        }
+      });
+    }
+  }
+
+  /** Actualiza el valor del archivo 2 desde un input file.
+   * @param {Event} valor - Evento de cambio del input.
+   */
+  cambioEvento(event: Event, campo: string): void {
+    let VALOR;
+    if (event.target) {
+      VALOR = (event.target as HTMLInputElement).value;
+    } else {
+      VALOR = event;
+    }
+    console.log('campo', campo)
+    console.log('valor', VALOR)
+    // this.solicitud32605Store.actualizarFile2(VALOR);
+  }
+
+  /** Limpia y completa la señal de destrucción para evitar fugas de memoria.*/
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }
