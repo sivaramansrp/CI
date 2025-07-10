@@ -146,7 +146,17 @@ export class PartidasDeLaComponent implements OnInit, AfterViewInit, OnDestroy {
 * @property {OctavaTemporal[]} datosSocios
 * @description Datos de los socios obtenidos desde el store.
 */
-    datosSocios: OctavaTemporal[] = [];
+    datosSocios: OctavaTemporal[] = [
+  {
+    cantidad: 10,
+    unidadDeMedida: 'kg',
+    fraccionArancelaria: '0101.21.01',
+    descripción: 'Producto de ejemplo',
+    colonia: 'Centro',
+    precioUnitarioUSD: '15.50',
+    totalUsd: 155
+  },
+];
 
   /**
    * Formulario reactivo utilizado para gestionar los datos de las partidas de la mercancía.
@@ -395,8 +405,8 @@ export class PartidasDeLaComponent implements OnInit, AfterViewInit, OnDestroy {
    */
   formularioTotalCount(): void {
     this.formForTotalCount = this.fb.group({
-      cantidadTotal: [{ value: '', disabled: true }],
-      valorTotalUSD: [{ value: '', disabled: true }],
+      cantidadTotal: [{ disabled: true }],
+      valorTotalUSD: [{ disabled: true }],
     });
   }
  
