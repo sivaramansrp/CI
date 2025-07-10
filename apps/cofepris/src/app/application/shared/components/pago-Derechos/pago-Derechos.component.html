@@ -1,5 +1,6 @@
 <div class="container mt-4">
   <ng-titulo titulo="Pago de derechos"></ng-titulo>
+   <ng-alert [CONTENIDO]="DEBES_CAPTURAR" [CUSTOMECLASS]="infoAlert"></ng-alert>
   <form [formGroup]="derechosForm">
     <div class="row g-3">
       <!-- Clave de referencia -->
@@ -32,23 +33,24 @@
       </div>
       <!-- Fecha de pago -->
       <div class="col-md-4">
-        <div class="form-group">
+        <!-- <div class="form-group">
           <input-fecha [datos]="fechaInicioInput" [setFecha]="
                   derechosForm.get('fechaPago')
                     ?.value
                 " (valorCambiado)="cambioFechaPago($event)"
             [isDisabled]="esFormularioSoloLectura ? true : false"></input-fecha>
+              <div *ngIf="fechaFuturaSeleccionada" class="text-danger mt-1">
+            La fecha de pago debe ser menor o igual a la fecha actual.
+          </div>
+        </div> -->
+          <div class="input-group">
+          <input-fecha [setFecha]="derechosForm.get('fechaDePago')?.value" [datos]="fechaInicioInput"
+            (valorCambiado)="cambioFechaDePago($event)"
+            [isDisabled]="esFormularioSoloLectura ? true : false"></input-fecha>
+          <div *ngIf="fechaFuturaSeleccionada" class="text-danger mt-1">
+            La fecha de pago debe ser menor o igual a la fecha actual.
+          </div>
         </div>
-        @if (derechosForm.get('datosImportadorExportador.fechaPago')?.touched &&
-        derechosForm.get('datosImportadorExportador.fechaPago')?.invalid) {
-        <div class="mensaje-error">
-          @if (derechosForm.get('datosImportadorExportador.fechaPago')?.errors?.['required']) {
-          <span>Todos los campos de pago son requeridos</span>
-          } @else if (derechosForm.get('datosImportadorExportador.fechaPago')?.errors?.['fechaFuturaInvalida']) {
-          <span>La fecha de pago debe ser menor o igual a la fecha actual.</span>
-          }
-        </div>
-        }
       </div>
       <div class="col-md-4">
         <label for="importePago" class="form-label">Importe de pago:</label>
