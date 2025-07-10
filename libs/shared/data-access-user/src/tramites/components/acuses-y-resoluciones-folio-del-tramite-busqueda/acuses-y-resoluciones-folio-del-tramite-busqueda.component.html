@@ -1,11 +1,11 @@
 <div class="page">
   <div class="container">
-    <form [formGroup]="formBusqueda">
-      <div class="row">
-        <div class="col-md p-2">
-          <h1>Acuses y resoluciones</h1>
-        </div>
+    <div class="row">
+      <div class="col-md mb-3">
+        <h1>Acuses y resoluciones</h1>
       </div>
+    </div>
+    <form [formGroup]="formBusqueda">
       <div class="row">
         <div class="col-md-8 form-group">
           <label class="form-label" for="solicitante">Solicitante:</label>
@@ -18,7 +18,9 @@
           <label>RFC:</label>
           <p>{{ formBusqueda.get('rfc')?.value }}</p>
         </div>
-        <div class="acuses-y-resolutiones-busqueda">
+      </div>
+      <div class="row">
+        <div class="col acuses-y-resolutiones-busqueda">
           <div class="acuses-y-resoluciones-folio-tramite">
             <div class="acuses-y-resoluciones-cuerpo p-0">
               <div class="row">
