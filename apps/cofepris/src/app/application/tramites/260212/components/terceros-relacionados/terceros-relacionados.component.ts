@@ -3,8 +3,8 @@
  */
 import { CommonModule } from '@angular/common';
 
-import { Component, OnInit } from '@angular/core';
-import { AlertComponent } from '@ng-mf/data-access-user';
+import { AlertComponent, ConsultaioQuery } from '@ng-mf/data-access-user';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 
 import {
   Catalogo,
@@ -37,6 +37,7 @@ import {
   DatosSeleccionados,
   TablaDatos,
 } from '../../models/permiso-maquila.models';
+import { Subject, map, takeUntil } from 'rxjs';
 import { Tramite260212Store } from '../../../../estados/tramites/tramite260212.store';
 
 /**
@@ -44,7 +45,11 @@ import { Tramite260212Store } from '../../../../estados/tramites/tramite260212.s
  * Indica que las tablas con asterisco son obligatorias.
  */
 const TERCEROS_TEXTO_DE_ALERTA =
-  'Las tablas con asterisco son obligatorias y debes agregar por lo menos un registro.';
+  `
+  <div class="text-center">
+    Las tablas con asterisco son obligatorias y debes agregar por lo menos un registro.
+  </div>
+  `;
 
 /**
  * Componente que gestiona los terceros relacionados.
@@ -72,14 +77,14 @@ const TERCEROS_TEXTO_DE_ALERTA =
  * Componente que gestiona los terceros relacionados.
  * Utiliza formularios reactivos y componentes personalizados para mostrar datos.
  */
-export class TercerosRelacionadosComponent implements OnInit {
+export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
   /**
    * Indica si el formulario debe mostrarse solo en modo de lectura.
    * Inicialmente establecido en `true`.
    *
    * @description Cuando es verdadero, el usuario no puede editar los campos del formulario.
    */
- public esFormularioSoloLectura: boolean = true;
+ public esFormularioSoloLectura: boolean = false;
 
   /**
    * Indicador de visibilidad para la sección de la tabla.
@@ -249,6 +254,24 @@ export class TercerosRelacionadosComponent implements OnInit {
    */
   agregarFacturadorFormGroup!: FormGroup;
 
+  /** Subject para destruir el componente */
+    private destroy$ = new Subject<void>();
+
+    /**
+   * @property desactivarCampos
+   * @type {boolean}
+   * @public
+   * @description
+   * Indica si los campos del formulario deben estar desactivados (no editables).
+   * Se utiliza para controlar la habilitación o deshabilitación de los campos según la lógica del componente.
+   * Por defecto, los campos están desactivados (`true`).
+   *
+   * @example
+   * this.desactivarCampos = false; // Habilita los campos
+   * this.desactivarCampos = true;  // Deshabilita los campos
+   */
+  public desactivarCampos: boolean = true;
+
   /**
    * Constructor del componente.
    * Inyecta el FormBuilder, el store del trámite y el servicio de terceros.
@@ -260,7 +283,8 @@ export class TercerosRelacionadosComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private tramite260212Store: Tramite260212Store,
-    private tercerosService: TercerosService
+    private tercerosService: TercerosService,
+    private consultaioQuery: ConsultaioQuery
   ) {}
 
   /**
@@ -268,6 +292,16 @@ export class TercerosRelacionadosComponent implements OnInit {
    * Obtiene los datos para los selectores desde el servicio y inicializa los formularios.
    */
   ngOnInit(): void {
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroy$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+
+        })
+      )
+      .subscribe();
+    
     this.tercerosService.getEncabezadoDeTabla().subscribe((data: unknown) => {
       if (typeof data === 'object' && data !== null && 'columns' in data) {
         this.tablaEncabezadoData = (data as { columns: string[] }).columns;
@@ -357,97 +391,92 @@ export class TercerosRelacionadosComponent implements OnInit {
        * RFC del tercero.
        * Requiere validación adicional mediante `rfcValidator`.
        */
-      rfc: new FormControl('', [Validators.required, this.rfcValidator]),
+      rfc: new FormControl({value: '', disabled: true}, [Validators.required, this.rfcValidator]),
       /**
        * CURP del tercero.
        * Requiere validación adicional mediante `curpValidator`.
        */
-      curp: new FormControl('', [Validators.required, this.curpValidator]),
+      curp: new FormControl({value: '', disabled: true}, [Validators.required, this.curpValidator]),
       /**
        * Nombre del tercero.
        */
-      nombre: new FormControl('', [Validators.required]),
+      nombre: new FormControl({value: '', disabled: true}, [Validators.required]),
       /**
        *Primer Apellido del tercero.
        */
-      primerApellido: new FormControl('', [Validators.required]),
+      primerApellido: new FormControl({value: '', disabled: true}, [Validators.required]),
       /**
        * Segundo Apellido del tercero.
        */
-      segundoApellido: new FormControl('', [Validators.required]),
+      segundoApellido: new FormControl({value: '', disabled: true}, [Validators.required]),
       /**
        * Denominación o razón social del tercero.
        */
-      denominacionRazonSocial: new FormControl('', [Validators.required]),
+      denominacionRazonSocial: new FormControl({value: '', disabled: true}, [Validators.required]),
       /**
        * País del tercero.
        * Requiere validación adicional mediante `requiredPaisValidator`.
        */
-      pais: new FormControl('', [
+      pais: new FormControl({value: 1, disabled: true}, [
         Validators.required,
         this.requiredPaisValidator,
       ]),
 
-      extranjeroEstado: new FormControl('', [Validators.required]),
+      extranjeroEstado: new FormControl({value: '', disabled: true}, [Validators.required]),
       /**
        * Estado o localidad del tercero.
        */
-      estadoLocalidad: new FormControl('', [Validators.required]),
+      estadoLocalidad: new FormControl({value: '', disabled: true}, [Validators.required]),
       /**
        * Municipio o alcaldía del tercero.
        */
-      municipioAlcaldia: new FormControl('', [Validators.required]),
+      municipioAlcaldia: new FormControl({value: '', disabled: true}, [Validators.required]),
       /**
        * Localidad del tercero.
        */
-      localidad: new FormControl(''),
+      localidad: new FormControl({value: '', disabled: true}),
       /**
        * Entidad federativa del tercero.
        */
-      entidadFederativa: new FormControl('', [Validators.required]),
+      entidadFederativa: new FormControl({value: '', disabled: true}, [Validators.required]),
       /**
        * Código postal del tercero.
        */
-      codigoPostaloEquivalente: new FormControl('', [Validators.required]),
+      codigoPostaloEquivalente: new FormControl({value: '', disabled: true}, [Validators.required]),
       /**
        * Colonia del tercero.
        */
-      colonia: new FormControl(''),
+      colonia: new FormControl({value: '', disabled: true}),
       /**
        * Colonia equivalente del tercero.
        */
-      coloniaoEquivalente: new FormControl(''),
+      coloniaoEquivalente: new FormControl({value: '', disabled: true}),
       /**
        * Calle del tercero.
        */
-      calle: new FormControl('', [Validators.required]),
+      calle: new FormControl({value: '', disabled: true}, [Validators.required]),
       /**
        * Número exterior del tercero.
        */
-      numeroExterior: new FormControl('', [Validators.required]),
+      numeroExterior: new FormControl({value: '', disabled: true}, [Validators.required]),
       /**
        * Número interior del tercero.
        */
-      numeroInterior: new FormControl(''),
+      numeroInterior: new FormControl({value: '', disabled: true}),
       /**
        * Lada del tercero.
        */
-      lada: new FormControl(''),
+      lada: new FormControl({value: '', disabled: true}),
       /**
        * Teléfono del tercero.
        * Requiere validación adicional mediante `telefonoValidator`.
        */
-      telefono: new FormControl('', [this.telefonoValidator]),
+      telefono: new FormControl({value: '', disabled: true}, [this.telefonoValidator]),
       /**
        * Correo electrónico del tercero.
        */
-      correoElectronico: new FormControl(''),
+      correoElectronico: new FormControl({value: '', disabled: true}),
     });
-
-    // Deshabilita campos hasta que se seleccione el tipo de persona
-    this.agregarFabricanteFormGroup.get('rfc')?.disable();
-    this.agregarFabricanteFormGroup.get('curp')?.disable();
-    this.agregarFabricanteFormGroup.get('denominacionRazonSocial')?.disable();
   }
 
   /**
@@ -467,7 +496,7 @@ export class TercerosRelacionadosComponent implements OnInit {
       /**
        * RFC del destinatario.
        */
-      rfc: new FormControl('', [Validators.required]),
+      rfc: new FormControl({value: '', disabled: true}, [Validators.required]),
       /**
        * CURP del destinatario.
        */
@@ -475,69 +504,76 @@ export class TercerosRelacionadosComponent implements OnInit {
       /**
        * Denominación o razón social del destinatario.
        */
-      denominacionRazonSocial: new FormControl('', [Validators.required]),
+      denominacionRazonSocial: new FormControl({value: '', disabled: true}, [Validators.required]),
+       /**
+       * Nombre del tercero.
+       */
+      nombre: new FormControl({value: '', disabled: true}, [Validators.required]),
+      /**
+       *Primer Apellido del tercero.
+       */
+      primerApellido: new FormControl({value: '', disabled: true}, [Validators.required]),
+      /**
+       * Segundo Apellido del tercero.
+       */
+      segundoApellido: new FormControl({value: '', disabled: true}, [Validators.required]),
       /**
        * País del destinatario.
        */
-      pais: new FormControl('', [Validators.required]),
+      pais: new FormControl({value: 1, disabled: true}, [Validators.required]),
       /**
        * Estado o localidad del destinatario.
        */
-      estadoLocalidad: new FormControl('', [Validators.required]),
+      estadoLocalidad: new FormControl({value: '', disabled: true}, [Validators.required]),
       /**
        * Municipio o alcaldía del destinatario.
        */
-      municipioAlcaldia: new FormControl('', [Validators.required]),
+      municipioAlcaldia: new FormControl({value: '', disabled: true}, [Validators.required]),
       /**
        * Localidad del destinatario.
        */
-      localidad: new FormControl(''),
+      localidad: new FormControl({value: '', disabled: true}),
       /**
        * Entidad federativa del destinatario.
        */
-      entidadFederativa: new FormControl('', [Validators.required]),
+      entidadFederativa: new FormControl({value: '', disabled: true}, [Validators.required]),
       /**
        * Código postal del destinatario.
        */
-      codigoPostaloEquivalente: new FormControl('', [Validators.required]),
+      codigoPostaloEquivalente: new FormControl({value: '', disabled: true}, [Validators.required]),
       /**
        * Colonia del destinatario.
        */
-      colonia: new FormControl(''),
+      colonia: new FormControl({value: '', disabled: true}),
       /**
        * Colonia equivalente del destinatario.
        */
-      coloniaoEquivalente: new FormControl(''),
+      coloniaoEquivalente: new FormControl({value: '', disabled: true}),
       /**
        * Calle del destinatario.
        */
-      calle: new FormControl('', [Validators.required]),
+      calle: new FormControl({value: '', disabled: true}, [Validators.required]),
       /**
        * Número exterior del destinatario.
        */
-      numeroExterior: new FormControl('', [Validators.required]),
+      numeroExterior: new FormControl({value: '', disabled: true}, [Validators.required]),
       /**
        * Número interior del destinatario.
        */
-      numeroInterior: new FormControl(''),
+      numeroInterior: new FormControl({value: '', disabled: true}),
       /**
        * Lada del destinatario.
        */
-      lada: new FormControl(''),
+      lada: new FormControl({value: '', disabled: true}),
       /**
        * Teléfono del destinatario.
        */
-      telefono: new FormControl(''),
+      telefono: new FormControl({value: '', disabled: true}),
       /**
        * Correo electrónico del destinatario.
        */
-      correoElectronico: new FormControl(''),
+      correoElectronico: new FormControl({value: '', disabled: true}),
     });
-
-    // Deshabilita campos hasta que se seleccione el tipo de persona
-    this.agregarDestinatarioFormGroup.get('rfc')?.disable();
-    this.agregarDestinatarioFormGroup.get('curp')?.disable();
-    this.agregarDestinatarioFormGroup.get('denominacionRazonSocial')?.disable();
   }
 
   /**
@@ -557,66 +593,60 @@ export class TercerosRelacionadosComponent implements OnInit {
       /**
        * Nombre del proveedor.
        */
-      nombre: new FormControl('', [Validators.required]),
+      nombre: new FormControl({value: '', disabled: true}, [Validators.required]),
       /**
        * Primer apellido del proveedor.
        */
-      primerApellido: new FormControl('', [Validators.required]),
+      primerApellido: new FormControl({value: '', disabled: true}, [Validators.required]),
       /**
        * Denominación o razón social del proveedor.
        */
-      denominacionRazonSocial: new FormControl('', [Validators.required]),
+      denominacionRazonSocial: new FormControl({value: '', disabled: true}, [Validators.required]),
       /**
        * Segundo apellido del proveedor (opcional).
        */
-      segundoApellido: new FormControl(''),
+      segundoApellido: new FormControl({value: '', disabled: true}),
       /**
        * País del proveedor.
        */
-      pais: new FormControl('', [Validators.required]),
+      pais: new FormControl({value: 1, disabled: true}, [Validators.required]),
       /**
        * Estado del proveedor.
        */
-      estado: new FormControl('', [Validators.required]),
+      estado: new FormControl({value: '', disabled: true}, [Validators.required]),
       /**
        * Código postal del proveedor (opcional).
        */
-      codigoPostaloEquivalente: new FormControl(''),
+      codigoPostaloEquivalente: new FormControl({value: '', disabled: true}),
       /**
        * Colonia equivalente del proveedor (opcional).
        */
-      coloniaoEquivalente: new FormControl(''),
+      coloniaoEquivalente: new FormControl({value: '', disabled: true}),
       /**
        * Calle del proveedor.
        */
-      calle: new FormControl('', [Validators.required]),
+      calle: new FormControl({value: '', disabled: true}, [Validators.required]),
       /**
        * Número exterior del proveedor.
        */
-      numeroExterior: new FormControl('', [Validators.required]),
+      numeroExterior: new FormControl({value: '', disabled: true}, [Validators.required]),
       /**
        * Número interior del proveedor (opcional).
        */
-      numeroInterior: new FormControl(''),
+      numeroInterior: new FormControl({value: '', disabled: true}),
       /**
        * Lada del proveedor (opcional).
        */
-      lada: new FormControl(''),
+      lada: new FormControl({value: '', disabled: true}),
       /**
        * Teléfono del proveedor (opcional).
        */
-      telefono: new FormControl(''),
+      telefono: new FormControl({value: '', disabled: true}),
       /**
        * Correo electrónico del proveedor (opcional).
        */
-      correoElectronico: new FormControl(''),
+      correoElectronico: new FormControl({value: '', disabled: true}),
     });
-
-    // Deshabilita campos hasta que se seleccione el tipo de persona
-    this.agregarProveedorFormGroup.get('nombre')?.disable();
-    this.agregarProveedorFormGroup.get('segundoApellido')?.disable();
-    this.agregarProveedorFormGroup.get('primerApellido')?.disable();
-    this.agregarProveedorFormGroup.get('denominacionRazonSocial')?.disable();
   }
 
   /**
@@ -636,70 +666,64 @@ export class TercerosRelacionadosComponent implements OnInit {
       /**
        * Nombre del facturador.
        */
-      nombre: new FormControl('', [Validators.required]),
+      nombre: new FormControl({value: '', disabled: true}, [Validators.required]),
       /**
        * Primer apellido del facturador.
        */
-      primerApellido: new FormControl('', [Validators.required]),
+      primerApellido: new FormControl({value: '', disabled: true}, [Validators.required]),
       /**
        * Denominación o razón social del facturador.
        */
-      denominacionRazonSocial: new FormControl('', [Validators.required]),
+      denominacionRazonSocial: new FormControl({value: '', disabled: true}, [Validators.required]),
       /**
        * Segundo apellido del facturador (opcional).
        */
-      segundoApellido: new FormControl(''),
+      segundoApellido: new FormControl({value: '', disabled: true}),
       /**
        * País del facturador.
        * Requiere validación adicional mediante `requiredPaisValidator`.
        */
-      pais: new FormControl('', [
+      pais: new FormControl({value: 1, disabled: true}, [
         Validators.required,
         this.requiredPaisValidator,
       ]),
       /**
        * Estado del facturador.
        */
-      estado: new FormControl('', [Validators.required]),
+      estado: new FormControl({value: '', disabled: true}, [Validators.required]),
       /**
        * Código postal del facturador (opcional).
        */
-      codigoPostaloEquivalente: new FormControl(''),
+      codigoPostaloEquivalente: new FormControl({value: '', disabled: true}),
       /**
        * Colonia equivalente del facturador (opcional).
        */
-      coloniaoEquivalente: new FormControl(''),
+      coloniaoEquivalente: new FormControl({value: '', disabled: true}),
       /**
        * Calle del facturador.
        */
-      calle: new FormControl('', [Validators.required]),
+      calle: new FormControl({value: '', disabled: true}, [Validators.required]),
       /**
        * Número exterior del facturador.
        */
-      numeroExterior: new FormControl('', [Validators.required]),
+      numeroExterior: new FormControl({value: '', disabled: true}, [Validators.required]),
       /**
        * Número interior del facturador (opcional).
        */
-      numeroInterior: new FormControl(''),
+      numeroInterior: new FormControl({value: '', disabled: true}),
       /**
        * Lada del facturador (opcional).
        */
-      lada: new FormControl(''),
+      lada: new FormControl({value: '', disabled: true}),
       /**
        * Teléfono del facturador (opcional).
        */
-      telefono: new FormControl(''),
+      telefono: new FormControl({value: '', disabled: true}),
       /**
        * Correo electrónico del facturador (opcional).
        */
-      correoElectronico: new FormControl(''),
+      correoElectronico: new FormControl({value: '', disabled: true}),
     });
-
-    // Deshabilita campos hasta que se seleccione el tipo de persona
-    this.agregarFacturadorFormGroup.get('nombre')?.disable();
-    this.agregarFacturadorFormGroup.get('segundoApellido')?.disable();
-    this.agregarFacturadorFormGroup.get('primerApellido')?.disable();
-    this.agregarFacturadorFormGroup.get('denominacionRazonSocial')?.disable();
   }
 
   /**
@@ -777,44 +801,31 @@ export class TercerosRelacionadosComponent implements OnInit {
       this.fisica = false;
       this.moral = true;
     }
-
+    this.agregarFabricanteFormGroup.get('tipoPersona')?.setValue(checkBoxValue);
     /**
      * Habilita los campos del formulario según el tipo de grupo de formulario seleccionado.
      *
      * @param formGroupName Nombre del grupo de formulario.
      */
     if (formGroupName === 'Facturador') {
-      /**
-       * Habilita los campos del formulario de facturador.
-       */
-      this.agregarFacturadorFormGroup.get('nombre')?.enable();
-      this.agregarFacturadorFormGroup.get('primerApellido')?.enable();
-      this.agregarFacturadorFormGroup.get('segundoApellido')?.enable();
-      this.agregarFacturadorFormGroup.get('denominacionRazonSocial')?.enable();
+      Object.keys(this.agregarFacturadorFormGroup.controls).forEach(controlName => {
+          this.agregarFacturadorFormGroup.get(controlName)?.enable();
+      });
     } else if (formGroupName === 'Proveedor') {
-      /**
-       * Habilita los campos del formulario de proveedor.
-       */
-      this.agregarProveedorFormGroup.get('nombre')?.enable();
-      this.agregarProveedorFormGroup.get('primerApellido')?.enable();
-      this.agregarProveedorFormGroup.get('segundoApellido')?.enable();
-      this.agregarProveedorFormGroup.get('denominacionRazonSocial')?.enable();
+      Object.keys(this.agregarProveedorFormGroup.controls).forEach(controlName => {
+          this.agregarProveedorFormGroup.get(controlName)?.enable();
+      });
     } else if (formGroupName === 'Destinatario') {
-      /**
-       * Habilita los campos del formulario de destinatario.
-       */
-      this.agregarDestinatarioFormGroup.get('rfc')?.enable();
-      this.agregarDestinatarioFormGroup.get('curp')?.enable();
-      this.agregarDestinatarioFormGroup
-        .get('denominacionRazonSocial')
-        ?.enable();
+      Object.keys(this.agregarDestinatarioFormGroup.controls).forEach(controlName => {
+          this.agregarDestinatarioFormGroup.get(controlName)?.enable();
+      });
+      this.desactivarCampos = false;
     } else if (formGroupName === 'Fabricante') {
-      /**
-       * Habilita los campos del formulario de fabricante.
-       */
-      this.agregarFabricanteFormGroup.get('rfc')?.enable();
-      this.agregarFabricanteFormGroup.get('curp')?.enable();
-      this.agregarFabricanteFormGroup.get('denominacionRazonSocial')?.enable();
+      if (this.agregarFabricanteFormGroup.get('tercerosNacionalidad')?.value && this.agregarFabricanteFormGroup.get('tipoPersona')?.value) {
+        Object.keys(this.agregarFabricanteFormGroup.controls).forEach(controlName => {
+          this.agregarFabricanteFormGroup.get(controlName)?.enable();
+        });
+      }
     }
   }
 
@@ -826,6 +837,7 @@ export class TercerosRelacionadosComponent implements OnInit {
       this.nacional = false;
       this.extranjero = true;
     }
+    this.agregarFabricanteFormGroup.get('tercerosNacionalidad')?.setValue(checkBoxValue);
   }
 
   /**
@@ -1456,5 +1468,23 @@ export class TercerosRelacionadosComponent implements OnInit {
   telefonoValidator(control: AbstractControl): import('@angular/forms').ValidationErrors | null {
     const PATTERN = /^([0-9A-Za-z\-() ])*$/;
     return PATTERN.test(control.value) ? null : { invalidTelefono: true };
+  }
+
+   /**
+   * Verifica si el control del formulario es inválido y ha sido tocado.
+   * @returns {boolean | null} `true` si el control es inválido y tocado, `null` si no existe el control.
+   */
+  // eslint-disable-next-line class-methods-use-this
+  esInvalido(formgroupo: FormGroup, campo: string): boolean | null {
+    const CAMPO = formgroupo.get(campo);
+    return CAMPO ? CAMPO.invalid && CAMPO.touched : null;
+  }
+
+  /*
+  * Método del ciclo de vida de Angular - destruye el componente
+*/
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

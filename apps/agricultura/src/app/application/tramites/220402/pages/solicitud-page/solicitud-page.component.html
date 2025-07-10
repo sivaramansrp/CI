@@ -1,8 +1,12 @@
 <div class="page">
   <div class="container">
     <div class="row">
-      <div class="col-md-6">
+      <div class="col-md-6" *ngIf="indice !== 2">
         <h1>Certificado de Exportación Fitosanitario</h1>
+      </div>
+      <div class="col-md-12" *ngIf="indice === 2">
+        <h2>Cargar Archivo</h2>
+        <ng-alert style="text-align: center;" [CONTENIDO]="TEXTOS"></ng-alert>
       </div>
 
       <app-wizard [listaPasos]="pasos"></app-wizard>

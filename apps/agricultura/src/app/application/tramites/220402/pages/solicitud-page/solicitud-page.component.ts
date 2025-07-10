@@ -1,13 +1,13 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { MENSAJE_DE_EXITO_ETAPA_UNO, PASOS } from '../../constantes/certificado-zoosanitario.enum';
 import { DatosPasos } from '@ng-mf/data-access-user';
 import { ListaPasosWizard } from '../../models/pantallas-captura.model';
-import { PASOS } from '@ng-mf/data-access-user';
 import { SECCIONES_TRAMITE_220402 } from '@ng-mf/data-access-user';
 import { SeccionQuery } from '../../../../estados/queries/seccion.query';
 import { SeccionState } from '../../../../estados/seccion.store';
 import { SeccionStore } from '../../../../estados/seccion.store';
 import { Subject } from 'rxjs';
-import { WizardComponent } from '@ng-mf/data-access-user';
+import { WizardComponent } from '@libs/shared/data-access-user/src';
 import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
 
@@ -49,6 +49,12 @@ export class SolicitudPageComponent implements OnInit, OnDestroy {
    * @property {number} indice - Índice actual del paso.
    */
   indice: number = 1;
+
+  /**
+   * Objeto con los textos de los requisitos.
+   * @property {object} TEXTOS_REQUISITOS - Textos para los requisitos del certificado zoosanitario. --220201
+   */
+  TEXTOS = MENSAJE_DE_EXITO_ETAPA_UNO;
 
   /**
    * @property {SeccionState} seccion - Estado de la sección actual.

@@ -1,14 +1,14 @@
 [
     {
-      "label": "Oficina Estatal/OISA*",
-      "value": "Oficina Estatal/OISA"
+      "label": "Oficina Estatal/OISA *:",
+      "value": "Oficina Estatal/OISA "
     },
     {
-      "label": "Establecimiento TIF*",
-      "value": "Establecimiento TIF"
+      "label": "OISA (Sólo perros y gatos) *:",
+      "value": "OISA (Sólo perros y gatos) "
     },
     {
-      "label": "oficina central*",
-      "value": "oficina central"
+      "label": "Oficina central *:",
+      "value": "Oficina central "
     }
   ]

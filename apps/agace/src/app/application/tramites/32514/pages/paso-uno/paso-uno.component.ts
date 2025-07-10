@@ -4,6 +4,7 @@ import { DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL, PERSONA_MORAL_NACIONA
 import { Subject, map, takeUntil } from 'rxjs';
 import { AdaceService } from '../../services/aviso-retorno.service';
 import { SolicitanteComponent, } from '@libs/shared/data-access-user/src';
+import { Tramite32514Store } from '../../state/Tramite32514.store';
 /**
  * Componente que representa el primer paso del trámite.
  */
@@ -59,7 +60,8 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
      */
     constructor(
       private consultaQuery: ConsultaioQuery,
-      private adace: AdaceService
+      private adace: AdaceService,
+      private store: Tramite32514Store
     ) { }
   
     /**
@@ -100,7 +102,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
         .subscribe((resp) => {
           if (resp) {
             this.esDatosRespuesta = true;
-            this.adace.actualizarEstadoFormulario(resp);
+            this.store.actualizarEstadoFormulario(resp);
           }
         });
     }

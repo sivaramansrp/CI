@@ -1,101 +1,104 @@
-// @ts-nocheck
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { By } from '@angular/platform-browser';
-import { Observable, of as observableOf, throwError } from 'rxjs';
-
-import { Component } from '@angular/core';
+import { TestBed } from '@angular/core/testing';
 import { TercerospageComponent } from './tercerospage.component';
-import { ConsultaioQuery } from '@ng-mf/data-access-user';
-import { CertificadoZoosanitarioServiceService } from '../../services/220201/certificado-zoosanitario.service';
-import { ZoosanitarioQuery } from '../../queries/220201/zoosanitario.query';
-
-@Injectable()
-class MockCertificadoZoosanitarioServiceService {}
-
-@Injectable()
-class MockZoosanitarioQuery {}
-
-@Directive({ selector: '[myCustom]' })
-class MyCustomDirective {
-  @Input() myCustom;
-}
-
-@Pipe({name: 'translate'})
-class TranslatePipe implements PipeTransform {
-  transform(value) { return value; }
-}
-
-@Pipe({name: 'phoneNumber'})
-class PhoneNumberPipe implements PipeTransform {
-  transform(value) { return value; }
-}
-
-@Pipe({name: 'safeHtml'})
-class SafeHtmlPipe implements PipeTransform {
-  transform(value) { return value; }
-}
+import { of, Subject } from 'rxjs';
 
 describe('TercerospageComponent', () => {
-  let fixture;
-  let component;
+  let component: TercerospageComponent;
+  let consultaQueryMock: any;
+  let certificadoZoosanitarioServicesMock: any;
+  let certificadoZoosanitarioQueryMock: any;
+  let tercerosrelacionadosServiceMock: any;
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule, TercerospageComponent ],
-      declarations: [
-        TranslatePipe, PhoneNumberPipe, SafeHtmlPipe,
-        MyCustomDirective
-      ],
-      schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
+  beforeEach(async () => {
+    consultaQueryMock = {
+      selectConsultaioState$: of({ readonly: true })
+    };
+    certificadoZoosanitarioServicesMock = {
+      updateTercerosRelacionado: jest.fn()
+    };
+    certificadoZoosanitarioQueryMock = {
+      seleccionarTercerosRelacionados$: of([{ nombre: 'Persona 1' }])
+    };
+    tercerosrelacionadosServiceMock = {
+      obtenerSelectorList: jest.fn().mockReturnValue(of([{ id: 1, descripcion: 'Test' }]))
+    };
+
+    await TestBed.configureTestingModule({
       providers: [
-        ConsultaioQuery,
-        { provide: CertificadoZoosanitarioServiceService, useClass: MockCertificadoZoosanitarioServiceService },
-        { provide: ZoosanitarioQuery, useClass: MockZoosanitarioQuery }
+        { provide: 'ConsultaioQuery', useValue: consultaQueryMock },
+        { provide: 'CertificadoZoosanitarioServiceService', useValue: certificadoZoosanitarioServicesMock },
+        { provide: 'ZoosanitarioQuery', useValue: certificadoZoosanitarioQueryMock },
+        { provide: 'TercerosrelacionadosService', useValue: tercerosrelacionadosServiceMock }
       ]
     }).compileComponents();
-    fixture = TestBed.createComponent(TercerospageComponent);
-    component = fixture.debugElement.componentInstance;
+
+    // Manual instantiation since standalone component
+    component = new TercerospageComponent(
+      consultaQueryMock,
+      certificadoZoosanitarioServicesMock,
+      certificadoZoosanitarioQueryMock
+    );
   });
 
-  afterEach(() => {
-    component.ngOnDestroy = function() {};
-    fixture.destroy();
-  });
-
-  it('should run #constructor()', async () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should run #ngOnInit()', async () => {
-    component.consultaQuery = component.consultaQuery || {};
-    component.consultaQuery.selectConsultaioState$ = observableOf({
-      readonly: {}
-    });
+  it('should subscribe and set esFormularioSoloLectura and personas on ngOnInit', () => {
     component.ngOnInit();
-
+    expect(component.esFormularioSoloLectura).toBe(true);
+    expect(component.personas.length).toBe(1);
+    expect(component.personas[0].nombre).toBe('Persona 1');
   });
 
-  it('should run #ngAfterViewInit()', async () => {
-    component.certificadoZoosanitarioQuery = component.certificadoZoosanitarioQuery || {};
-    component.certificadoZoosanitarioQuery.seleccionarTercerosRelacionados$ = observableOf({});
+  it('should load paises and estados catalogs on ngAfterViewInit', () => {
+    component.catalogosDatos = { paises: [], estados: [] };
     component.ngAfterViewInit();
-
+    expect(tercerosrelacionadosServiceMock.obtenerSelectorList).toHaveBeenCalledWith('paisprocedencia.json');
+    expect(tercerosrelacionadosServiceMock.obtenerSelectorList).toHaveBeenCalledWith('estados.json');
   });
 
-  it('should run #onPersonasChanged()', async () => {
-    component.certificadoZoosanitarioServices = component.certificadoZoosanitarioServices || {};
-    component.certificadoZoosanitarioServices.updateTercerosRelacionados = jest.fn();
-    component.onPersonasChanged({});
+  it('should update catalogosDatos.paises on pairsCatalogChange', () => {
+    component.catalogosDatos = { paises: [], estados: [] };
+    component.pairsCatalogChange();
+    expect(component.catalogosDatos.paises.length).toBeGreaterThan(0);
   });
 
-  it('should run #ngOnDestroy()', async () => {
-    component.destroyNotifier$ = component.destroyNotifier$ || {};
-    component.destroyNotifier$.next = jest.fn();
-    component.destroyNotifier$.complete = jest.fn();
+  it('should update catalogosDatos.estados on estadoCatalogChange', () => {
+    component.catalogosDatos = { paises: [], estados: [] };
+    component.estadoCatalogChange();
+    expect(component.catalogosDatos.estados.length).toBeGreaterThan(0);
+  });
+
+  it('should clear personas and call updateTercerosRelacionado on handleEliminar', () => {
+    component.personas = [{
+      tipoMercancia: '',
+      nombre: 'Persona 1',
+      primerApellido: '',
+      segundoApellido: '',
+      razonSocial: '',
+      pais: '',
+      codigoPostal: '',
+      estado: '',
+      municipio: '',
+      colonia: '',
+      calle: '',
+      numeroExterior: '',
+      numeroInterior: '',
+      lada: '',
+      telefono: '',
+      correo: ''
+    }];
+    component.handleEliminar();
+    expect(component.personas.length).toBe(0);
+    expect(certificadoZoosanitarioServicesMock.updateTercerosRelacionado).toHaveBeenCalledWith([]);
+  });
+
+  it('should complete destroyNotifier$ on ngOnDestroy', () => {
+    const nextSpy = jest.spyOn((component as any).destroyNotifier$, 'next');
+    const completeSpy = jest.spyOn((component as any).destroyNotifier$, 'complete');
     component.ngOnDestroy();
+    expect(nextSpy).toHaveBeenCalled();
+    expect(completeSpy).toHaveBeenCalled();
   });
-
 });

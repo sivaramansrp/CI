@@ -36,7 +36,7 @@ export function createChoferState(): Choferesnacionales40101State {
     
     datosDelChoferExtranjerosAlta: [],
     datosDelChoferExtranjerosModification: [],
-    datosDelChoferExtranjerosRetirada: [],
+    datosDelChoferExtranjerosRetirada: []
   };
 }
 
