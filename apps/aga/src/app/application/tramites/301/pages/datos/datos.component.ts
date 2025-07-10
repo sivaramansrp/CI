@@ -114,7 +114,7 @@ export class DatosComponent implements OnInit,OnDestroy,AfterViewInit {
    */
   ngAfterViewInit(): void {
     setTimeout(() => {
-      this.solicitante.obtenerTipoPersona(TIPO_PERSONA.MORAL_NACIONAL);
+      this.solicitante.obtenerTipoPersona(TIPO_PERSONA.FISICA_NACIONAL);
   });
   }
 

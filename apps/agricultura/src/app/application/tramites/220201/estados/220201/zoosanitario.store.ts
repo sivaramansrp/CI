@@ -5,12 +5,13 @@ import {
   CapturarSolicitud,
   DatosDeLaSolicitud,
   DatosParaMovilizacionNacional,
+  FilaSolicitud,
   PagoDeDerechos,
   Solicitante,
   ValidarEnvio,
   createDatosState
 } from '../../models/220201/capturar-solicitud.model';
-import { TercerosrelacionadosdestinoTable } from '../../../../shared/models/tercerosrelacionados.model';
+import { TercerosrelacionadosTable,TercerosrelacionadosdestinoTable } from '../../../../shared/models/tercerosrelacionados.model';
 
 
 /**
@@ -138,7 +139,28 @@ public actualizarTercerosRelacionados(nuevoTercero: TercerosrelacionadosdestinoT
       tercerosRelacionados: tercerosRelacionados,
     }));
   }
-
+  /**
+   * Actualiza el store con la lista de terceros relacionados.
+   * @method updateTercerosRelacionados
+   * @param {TercerosrelacionadosdestinoTable[]} tercerosRelacionados Lista de personas terceros relacionadas.
+   */
+  public updatedatosForma(tercerosRelacionados: TercerosrelacionadosTable[]): void {
+    this.update(state => ({
+      ...state,
+      datosForma: tercerosRelacionados,
+    }));
+  }
+   /**
+   * Actualiza el store con la lista de terceros relacionados.
+   * @method updateTercerosRelacionados
+   * @param {TercerosrelacionadosdestinoTable[]} tercerosRelacionados Lista de personas terceros relacionadas.
+   */
+  public updateFilaSolicitud(tercerosRelacionados: FilaSolicitud[]): void {
+    this.update(state => ({
+      ...state,
+      tablaDatos: tercerosRelacionados,
+    }));
+  }
   /**
    * Restaura el estado inicial del store, limpiando toda la información almacenada.
    * @method limpiarFormulario

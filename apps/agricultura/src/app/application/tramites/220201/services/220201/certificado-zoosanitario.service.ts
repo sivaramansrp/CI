@@ -3,15 +3,16 @@ import {
   DatosDeLaSolicitud,
   DatosDeLaSolicituds,
   DatosParaMovilizacionNacional,
+  FilaSolicitud,
   PagoDeDerechos,
   ValidarEnvio,
 } from '../../models/220201/capturar-solicitud.model';
 
 import { Observable, map } from 'rxjs';
+import {TercerosrelacionadosTable, TercerosrelacionadosdestinoTable } from '../../../../shared/models/tercerosrelacionados.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { SeccionLibStore } from '@libs/shared/data-access-user/src';
-import { TercerosrelacionadosdestinoTable } from '../../../../shared/models/tercerosrelacionados.model';
 import { ZoosanitarioStore } from '../../estados/220201/zoosanitario.store';
 
 /**
@@ -208,6 +209,8 @@ export class CertificadoZoosanitarioServiceService {
     this.updateDatosParaMovilizacionNacional(datos?.datosParaMovilizacionNacional || {} as DatosDeLaSolicitud);
     this.updateTercerosRelacionado(datos?.tercerosRelacionados || {} as TercerosrelacionadosdestinoTable[] );
     this.updateValidarEnvio(datos?.validarEnvio || {} as ValidarEnvio);
+    this.zoosanitarioStore.updateFilaSolicitud(datos?.tablaDatos || [] as FilaSolicitud[]);
+    this.zoosanitarioStore.updatedatosForma(datos?.datosForma || [] as TercerosrelacionadosTable[]);
   }
     /**
    * @description Obtiene los datos de la solicitud a partir de una URL específica.
