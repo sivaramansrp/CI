@@ -303,13 +303,13 @@ export class DatosComunesDosComponent implements OnInit,OnDestroy {
         proveedoresListadoSAT: [this.solicitudState?.proveedoresListadoSAT, Validators.required],
         numeroAutorizacionCITES: ['',[Validators.required,Validators.pattern(REGEX_RFC)]],
         archivoNacionales: [''],
-        ensucaso: [''],
-        alMomento: [''],
-        delMismomodo: [''],
-        encuentra: [''],
-        susCertificados: [''],
-        afirmativo: [''],
-        actualizado: ['']
+        ensucaso: [this.solicitudState?.ensucaso],
+        alMomento: [this.solicitudState?.alMomento],
+        delMismomodo: [this.solicitudState?.delMismomodo],
+        encuentra: [this.solicitudState?.encuentra],
+        susCertificados: [this.solicitudState?.susCertificados],
+        afirmativo: [this.solicitudState?.afirmativo],
+        actualizado: [this.solicitudState?.actualizado]
     });
   }
 

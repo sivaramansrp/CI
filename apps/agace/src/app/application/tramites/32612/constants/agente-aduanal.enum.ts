@@ -467,8 +467,8 @@ export const PAGO_DE_DERECHOS = [
     labelNombre: 'Fecha de pago',
     campo: 'fechaPago',
     clase: 'col-md-4',
-    tipoInput: 'text',
-    desactivado: true,
+    tipoInput: 'date',
+    desactivado: false,
     soloLectura: false,
     validadores: [
       {
@@ -477,7 +477,8 @@ export const PAGO_DE_DERECHOS = [
     ],
     marcadorDePosicion: '',
     valorPredeterminado: '',
-    marginTop: 0
+    marginTop: 0,
+    habilitado: true
   },
   {
     id: 'importePago',
