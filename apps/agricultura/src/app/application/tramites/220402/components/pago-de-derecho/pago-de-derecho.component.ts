@@ -126,10 +126,10 @@ export class PagoDeDerechoComponent implements OnInit, OnDestroy {
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.derechoState = seccionState;
+          this.inicializarFormulario();
         })
       )
       .subscribe();
-    this.inicializarFormulario();    
     this.consultaioQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -146,19 +146,25 @@ export class PagoDeDerechoComponent implements OnInit, OnDestroy {
    * @description Inicializa el formulario `FormSolicitud` con los datos del estado actual y configura su comportamiento dinámico.
    */
   inicializarFormulario(): void {
-    this.FormSolicitud = this.fb.group({
-      datosImportadorExportador: this.fb.group({
-        exentoDePago: [this.derechoState?.exentoDePago, [Validators.required]],
-        nombreImportExport: [this.derechoState?.nombreImportExport, [Validators.required]],
-        justificacion: [this.derechoState?.justificacion, [Validators.required]],
-        claveDeReferencia: [this.derechoState?.claveDeReferencia, []],
-        cadenaDependencia: [this.derechoState?.cadenaDependencia, [Validators.required]],
-        banco: [this.derechoState?.banco, [Validators.required]],
-        llaveDePago: [this.derechoState?.llaveDePago, [Validators.required]],
-        fechaPago: [this.derechoState?.fechaPago, [Validators.required, PagoDeDerechoComponent.fechaLimValidator()]],
-        importePago: [this.derechoState?.importePago, []],
-      }),
-    });
+    // Inicialice solo si el formulario no existe o el estado está disponible
+    if (!this.FormSolicitud || this.derechoState) {
+      this.FormSolicitud = this.fb.group({
+        datosImportadorExportador: this.fb.group({
+          exentoDePago: [this.derechoState?.exentoDePago, [Validators.required]],
+          nombreImportExport: [this.derechoState?.nombreImportExport, [Validators.required]],
+          justificacion: [this.derechoState?.justificacion, [Validators.required, Validators.maxLength(100)]],
+          claveDeReferencia: [this.derechoState?.claveDeReferencia, []],
+          cadenaDependencia: [this.derechoState?.cadenaDependencia, [Validators.required, Validators.maxLength(50)]],
+          banco: [this.derechoState?.banco, [Validators.required]],
+          llaveDePago: [this.derechoState?.llaveDePago, [Validators.required, Validators.maxLength(50)]],
+          fechaPago: [this.derechoState?.fechaPago, [Validators.required, PagoDeDerechoComponent.fechaLimValidator()]],
+          importePago: [this.derechoState?.importePago, []],
+        }),
+      });
+      
+      // Aplicar el estado del campo inicial según el valor de exentoDePago
+      this.actualizarCamposDeFormularioBasadosEnExentoDePago();
+    }
   }
   /**
    * @method inicializarEstadoFormulario
@@ -169,6 +175,8 @@ export class PagoDeDerechoComponent implements OnInit, OnDestroy {
       this.FormSolicitud?.disable();
     } else {
       this.FormSolicitud?.enable();
+      // Volver a aplicar el estado del campo después de habilitar el formulario
+      this.actualizarCamposDeFormularioBasadosEnExentoDePago();
     }
   }
   /**
@@ -207,24 +215,21 @@ export class PagoDeDerechoComponent implements OnInit, OnDestroy {
    */
 
   actualizarCamposDeFormularioBasadosEnExentoDePago(): void {
+    if (!this.FormSolicitud) {
+      return;
+    }
+    
+    // No modifique los estados de los campos si el formulario está en modo de solo lectura
+    if (this.soloLectura) {
+      return;
+    }
+    
     const EXENTODEPAGO = this.FormSolicitud.get('datosImportadorExportador.exentoDePago')?.value;
-    this.FormSolicitud.reset({
-      datosImportadorExportador: { exentoDePago: EXENTODEPAGO }
-    });
-    this.FormSolicitud?.enable();
-    if (EXENTODEPAGO === 'No') {
-      this.FormSolicitud.patchValue({
-        datosImportadorExportador: { claveDeReferencia: 454000554, importePago: 594.0 }
-      });
-      this.FormSolicitud.get('datosImportadorExportador.cadenaDependencia')?.setValidators([Validators.required]);
-      this.FormSolicitud.get('datosImportadorExportador.llaveDePago')?.setValidators([Validators.required]);
-      this.FormSolicitud.get('datosImportadorExportador.fechaPago')?.setValidators([Validators.required, PagoDeDerechoComponent.fechaLimValidator()]);
+    
+    // Si no se establece ningún valor, configure el estado predeterminado
+    if (EXENTODEPAGO === null || EXENTODEPAGO === undefined || EXENTODEPAGO === '') {
+      // Establezca el comportamiento predeterminado para cuando no se seleccione ninguna opción: deshabilite todos los campos de pago
       this.FormSolicitud.get('datosImportadorExportador.justificacion')?.setValidators([]);
-      this.FormSolicitud.get('datosImportadorExportador.justificacion')?.disable();
-      this.FormSolicitud.get('datosImportadorExportador.claveDeReferencia')?.disable();
-      this.FormSolicitud.get('datosImportadorExportador.importePago')?.disable();
-    } else {
-      this.FormSolicitud.get('datosImportadorExportador.justificacion')?.setValidators([Validators.required]);
       this.FormSolicitud.get('datosImportadorExportador.cadenaDependencia')?.setValidators([]);
       this.FormSolicitud.get('datosImportadorExportador.llaveDePago')?.setValidators([]);
       this.FormSolicitud.get('datosImportadorExportador.fechaPago')?.setValidators([]);
@@ -233,7 +238,48 @@ export class PagoDeDerechoComponent implements OnInit, OnDestroy {
       this.FormSolicitud.get('datosImportadorExportador.cadenaDependencia')?.disable();
       this.FormSolicitud.get('datosImportadorExportador.llaveDePago')?.disable();
       this.FormSolicitud.get('datosImportadorExportador.fechaPago')?.disable();
+      this.FormSolicitud.get('datosImportadorExportador.justificacion')?.disable();
+    } else {
+      // Restablecer solo si hay un valor y se está cambiando
+      const shouldReset = this.FormSolicitud.get('datosImportadorExportador.exentoDePago')?.dirty || false;
+      
+      if (shouldReset) {
+        this.FormSolicitud.reset({
+          datosImportadorExportador: { exentoDePago: EXENTODEPAGO }
+        });
+      }
+      
+      // Primero habilite el formulario, luego aplique deshabilitaciones específicas
+      this.FormSolicitud?.enable();
+      
+      if (EXENTODEPAGO === 'No') {
+        // No exenta - habilitar campos de pago
+        if (shouldReset) {
+          this.FormSolicitud.patchValue({
+            datosImportadorExportador: { claveDeReferencia: 454000554, importePago: 594.0 }
+          });
+        }
+        this.FormSolicitud.get('datosImportadorExportador.cadenaDependencia')?.setValidators([Validators.required]);
+        this.FormSolicitud.get('datosImportadorExportador.llaveDePago')?.setValidators([Validators.required]);
+        this.FormSolicitud.get('datosImportadorExportador.fechaPago')?.setValidators([Validators.required, PagoDeDerechoComponent.fechaLimValidator()]);
+        this.FormSolicitud.get('datosImportadorExportador.justificacion')?.setValidators([]);
+        this.FormSolicitud.get('datosImportadorExportador.justificacion')?.disable();
+        this.FormSolicitud.get('datosImportadorExportador.claveDeReferencia')?.disable();
+        this.FormSolicitud.get('datosImportadorExportador.importePago')?.disable();
+      } else if (EXENTODEPAGO === 'Si') {
+        // Exento: habilitar solo el campo de justificación
+        this.FormSolicitud.get('datosImportadorExportador.justificacion')?.setValidators([Validators.required]);
+        this.FormSolicitud.get('datosImportadorExportador.cadenaDependencia')?.setValidators([]);
+        this.FormSolicitud.get('datosImportadorExportador.llaveDePago')?.setValidators([]);
+        this.FormSolicitud.get('datosImportadorExportador.fechaPago')?.setValidators([]);
+        this.FormSolicitud.get('datosImportadorExportador.claveDeReferencia')?.disable();
+        this.FormSolicitud.get('datosImportadorExportador.importePago')?.disable();
+        this.FormSolicitud.get('datosImportadorExportador.cadenaDependencia')?.disable();
+        this.FormSolicitud.get('datosImportadorExportador.llaveDePago')?.disable();
+        this.FormSolicitud.get('datosImportadorExportador.fechaPago')?.disable();
+      }
     }
+    
     const GRUPO = this.FormSolicitud.get('datosImportadorExportador') as FormGroup;
     if (GRUPO) {
       Object.values(GRUPO.controls).forEach(control => {
