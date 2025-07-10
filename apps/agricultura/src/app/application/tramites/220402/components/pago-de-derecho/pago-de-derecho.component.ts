@@ -205,15 +205,25 @@ export class PagoDeDerechoComponent implements OnInit, OnDestroy {
         this.bancoCatalogo.catalogos = data as Catalogo[];
       });
   }
-  /**
-   * Actualiza los campos del formulario en función del valor de 'exentoDePago'.
-   *
-   * Si el valor es 'No', establece valores específicos en los campos del formulario y los desactiva.
-   * De lo contrario, restablece y desactiva los campos del formulario.
-   *
-   * @param value - El valor de 'exentoDePago' para determinar las actualizaciones de los campos del formulario.
-   */
 
+  /**
+ * Actualiza los campos del formulario en función del valor de 'exentoDePago'.
+ *
+ * Este método ajusta la validez, habilitación y deshabilitación de los campos del formulario
+ * 'FormSolicitud' según el valor seleccionado en el campo 'exentoDePago'. Si el formulario está
+ * en modo de solo lectura o no existe, no realiza ninguna acción.
+ *
+ * Comportamiento:
+ * - Si 'exentoDePago' no tiene valor, deshabilita y limpia los validadores de los campos de pago.
+ * - Si 'exentoDePago' es 'No', habilita y asigna validadores a los campos de pago, deshabilitando
+ *   el campo de justificación.
+ * - Si 'exentoDePago' es 'Si', habilita y asigna validador al campo de justificación, deshabilitando
+ *   los campos de pago.
+ * - Actualiza la validez de todos los controles del grupo 'datosImportadorExportador'.
+ *
+ * @method
+ * @returns {void}
+ */
   actualizarCamposDeFormularioBasadosEnExentoDePago(): void {
     if (!this.FormSolicitud) {
       return;
