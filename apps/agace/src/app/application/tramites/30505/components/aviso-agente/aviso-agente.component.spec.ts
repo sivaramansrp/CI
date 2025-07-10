@@ -6,7 +6,7 @@ import { Solicitud30505Query } from '../../../../estados/queries/tramites30505.q
 import { TercerosRelacionadosService } from '../../services/terceros-relacionados.service';
 import { of, Subject } from 'rxjs';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-
+import { provideHttpClient } from '@angular/common/http';
 describe('AvisoAgenteComponent', () => {
   let component: AvisoAgenteComponent;
   let fixture: ComponentFixture<AvisoAgenteComponent>;
@@ -28,6 +28,7 @@ describe('AvisoAgenteComponent', () => {
     await TestBed.configureTestingModule({
       imports: [AvisoAgenteComponent,HttpClientTestingModule],
       providers: [
+        provideHttpClient(),
         { provide: Router, useValue: routerMock },
         { provide: ActivatedRoute, useValue: routeMock },
         { provide: TercerosRelacionadosService, useValue: tercerosServiceMock },
