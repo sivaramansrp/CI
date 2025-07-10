@@ -6,22 +6,22 @@ import { CatalogoSelectComponent, TituloComponent } from '@libs/shared/data-acce
 import { ReactiveFormsModule } from '@angular/forms';
 
 describe('DatosParaMovilizacionNacionalComponent', () => {
-  let component: DatosParaMovilizacionNacionalComponent;
-  let fixture: ComponentFixture<DatosParaMovilizacionNacionalComponent>;
+  let COMPONENT: DatosParaMovilizacionNacionalComponent;
+  let FIXTURE: ComponentFixture<DatosParaMovilizacionNacionalComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [],
-      imports: [HttpClientTestingModule, TituloComponent, CatalogoSelectComponent, ReactiveFormsModule,DatosParaMovilizacionNacionalComponent]
+      imports: [HttpClientTestingModule, TituloComponent, CatalogoSelectComponent, ReactiveFormsModule, DatosParaMovilizacionNacionalComponent]
     })
       .compileComponents();
 
-    fixture = TestBed.createComponent(DatosParaMovilizacionNacionalComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+    FIXTURE = TestBed.createComponent(DatosParaMovilizacionNacionalComponent);
+    COMPONENT = FIXTURE.componentInstance;
+    FIXTURE.detectChanges();
   });
 
   it('should create', () => {
-    expect(component).toBeTruthy();
+    expect(COMPONENT).toBeTruthy();
   });
 });

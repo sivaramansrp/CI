@@ -63,7 +63,7 @@ export class PagoDeDerechoComponent implements OnDestroy,OnInit,AfterViewInit {
       banco: [""],
       llavePago: ["", [Validators.maxLength(50), Validators.pattern(/^[a-zA-Z0-9]*$/)]],
       importePago: [""],
-      fechaPago: ["", [Validators.required, dateLessThanOrEqualToday]]
+      fechaPago: [""]
     });
 
   
@@ -142,11 +142,11 @@ export class PagoDeDerechoComponent implements OnDestroy,OnInit,AfterViewInit {
     this.pagoForm.patchValue({
         exentoPago: this.pagoDeDerechos.exentoPago || 'no',
         justificacion: this.pagoDeDerechos.justificacion || '',
-        claveReferencia: this.pagoDeDerechos.claveReferencia || '', 
-        cadenaDependencia: this.pagoDeDerechos.cadenaDependencia || '',
+        claveReferencia: this.pagoDeDerechos.claveReferencia || '450006257', 
+        cadenaDependencia: this.pagoDeDerechos.cadenaDependencia || 'DO3456789012',
         banco: this.pagoDeDerechos.banco || '',
         llavePago: this.pagoDeDerechos.llavePago || '',
-        importePago: this.pagoDeDerechos.importePago || '',
+        importePago: this.pagoDeDerechos.importePago || '2562',
         fechaPago:this.pagoDeDerechos.fechaPago|| ''
       });
       if (this.pagoForm.value.exentoPago === 'no') {
@@ -218,7 +218,8 @@ export class PagoDeDerechoComponent implements OnDestroy,OnInit,AfterViewInit {
           this.pagoForm.get('banco')?.disable();
           this.pagoForm.get('llavePago')?.disable();
           this.pagoForm.get('importePago')?.disable();
-               this.pagoForm.get('fechaPago')?.enable();
+          this.pagoForm.get('fechaPago')?.enable();
+               
         }
         else if(!this.esFormularioSoloLectura && this.pagoForm.value.exentoPago === 'no') {
           this.fechaInicioInput.required=true;
@@ -234,7 +235,8 @@ export class PagoDeDerechoComponent implements OnDestroy,OnInit,AfterViewInit {
            Validators.pattern(REGEX_LLAVE_DE_PAGO_DE_DERECHO),
           Validators.maxLength(30)]);  
           this.pagoForm.get('importePago')?.disable();
-          this.pagoForm.get('fechaPago')?.enable();
+          this.pagoForm.get('fechaPago')?.disable();
+          this.pagoForm.get('fechaPago')?.clearValidators();
        }
         }
 

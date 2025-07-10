@@ -169,7 +169,7 @@
       </div>
         </div>
       <div class="row">
-        @if(notificationCheck){
+        @if(notificationCheck && !esFormularioSoloLectura){
         <ng-alert [CONTENIDO]="TEXTOS"></ng-alert>
       }
         <div class="row mt-5">
