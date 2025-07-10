@@ -400,6 +400,7 @@
         [datos]="datosTablaMencione"
         [tipoSeleccionTabla]="tipoSeleccionTabla"
         (listaDeFilaSeleccionada)="manejarFilaSeleccionada($event)"
+        [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
       ></app-tabla-dinamica>
       <div class="d-flex justify-content-center">
         <app-table-pagination
@@ -433,6 +434,7 @@
           type="button"
           class="btn btn-default btn-primary"
           (click)="openModifyModal()"
+          [disabled]="esFormularioSoloLectura"
         >
           Agregar
         </button>
@@ -458,6 +460,7 @@
                 type="button"
                 class="btn btn-primary"
                 (click)="cerrarMultipleSeleccionPopup()"
+                [disabled]="esFormularioSoloLectura"
               >
                 Aceptar
               </button>
@@ -488,6 +491,7 @@
                 type="button"
                 class="btn btn-primary"
                 (click)="cerrarEliminarConfirmationPopup()"
+                [disabled]="esFormularioSoloLectura"
               >
                 Cancelar
               </button>
@@ -495,6 +499,7 @@
                 type="button"
                 class="btn btn-primary"
                 (click)="eliminarMercanciaItem()"
+                [disabled]="esFormularioSoloLectura"
               >
                 Aceptar
               </button>
@@ -760,21 +765,21 @@
           type="button"
           class="btn btn-default btn-space"
           (click)="openInstalacionesModal()"
-          disabled="esFormularioSoloLectura ? true : false"
+         [disabled]="esFormularioSoloLectura"
         >
           Modificar
         </button>
         <button
           type="button"
           class="btn btn-primary btn-space"
-          disabled="esFormularioSoloLectura ? true : false"
+         [disabled]="esFormularioSoloLectura"
         >
           Eliminar
         </button>
         <button
           type="button"
           class="btn btn-primary btn-space"
-          disabled="esFormularioSoloLectura ? true : false"
+         [disabled]="esFormularioSoloLectura"
         >
           Agregar
         </button>
@@ -888,7 +893,7 @@
               id="uploadNewFileExtranjerosN"
               class="btn btn-primary"
               (click)="subirArchivo(template)"
-              disabled="esFormularioSoloLectura ? true : false"
+              [disabled]="esFormularioSoloLectura"
             >
               Anexar
             </button>
@@ -959,7 +964,7 @@
               id="uploadNewFileExtranjerosN"
               class="btn btn-primary"
               (click)="subirArchivo(template)"
-              disabled="esFormularioSoloLectura ? true : false"
+              [disabled]="esFormularioSoloLectura"
             >
               Anexar
             </button>
@@ -1127,7 +1132,7 @@
     
       <app-tabla-dinamica [configuracionTabla]="configuracionTablaControlInventarios" [datos]="datosTablaControlInventarios"
         [tipoSeleccionTabla]="tipoSeleccionTabla"
-        (listaDeFilaSeleccionada)="manejarFilaSeleccionadaControlInventarios($event)"></app-tabla-dinamica>
+        (listaDeFilaSeleccionada)="manejarFilaSeleccionadaControlInventarios($event)" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"></app-tabla-dinamica>
     
       <div class="d-flex justify-content-center mb-3">
         <app-table-pagination [totalItems]="datosTablaControlInventarios.length" [itemsPerPage]="itemsPerPage"
@@ -1157,10 +1162,10 @@
               <p>¿Estás seguro que deseas eliminar los registros marcados?</p>
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-primary" (click)="cerrarEliminarConfirmationPopupControlInventarios()">
+              <button type="button" class="btn btn-primary" [disabled]="esFormularioSoloLectura" (click)="cerrarEliminarConfirmationPopupControlInventarios()">
                 Cancelar
               </button>
-              <button type="button" class="btn btn-primary" (click)="eliminarControlInventariosItem()">
+              <button type="button" class="btn btn-primary" [disabled]="esFormularioSoloLectura" (click)="eliminarControlInventariosItem()">
                 Aceptar
               </button>
             </div>
@@ -1239,7 +1244,7 @@
             </div>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-primary" data-bs-dismiss="modal"
+            <button type="button" class="btn btn-primary" data-bs-dismiss="modal" [disabled]="esFormularioSoloLectura"
               (click)="filaSeleccionadaControlInventarios ? modificaControlInventariosItem() : agregarNuevoElementoControlInventarios()">
               {{ filaSeleccionadaControlInventarios ? 'Modificar' : 'Agregar' }}
             </button>
@@ -1441,12 +1446,14 @@
             type="button"
             class="btn btn-primary"
             data-bs-dismiss="modal"
+            [disabled]="esFormularioSoloLectura"
           >
             Aceptar
           </button>
           <button
             type="button"
             class="btn btn-primary"
+            [disabled]="esFormularioSoloLectura"
           >
             Cancelar
           </button>
@@ -1468,7 +1475,7 @@
       <div class="modal-header">
         <h5 class="modal-title" id="modifyModalLabel">Agregar</h5>
       </div>
-      <div class="modal-body p-4">
+      <div class="modal-body p-4" [formGroup]="preOperativeForm">
         <div class="row">
           <div class="col-6">
             <div class="form-group">
@@ -1500,7 +1507,7 @@
             </div>
           </div>
           <div class="col-4 d-flex align-items-end">
-            <button type="button" class="btn btn-primary">Buscar</button>
+            <button type="button" class="btn btn-primary" [disabled]="esFormularioSoloLectura">Buscar</button>
           </div>
         </div>
         <div class="row">
@@ -1607,10 +1614,10 @@
         </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" (click)="addNewMencioneItem()">
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" (click)="addNewMencioneItem()" [disabled]="esFormularioSoloLectura">
           Aceptar
         </button>
-        <button type="button" class="btn btn-primary"  data-bs-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-primary"  data-bs-dismiss="modal" [disabled]="esFormularioSoloLectura">Cancelar</button>
       </div>
     </div>
   </div>
@@ -1624,7 +1631,7 @@
       type="button"
       class="btn-close close pull-right"
       aria-label="Close"
-      disabled="esFormularioSoloLectura ? true : false"
+     [disabled]="esFormularioSoloLectura"
     >
       <span aria-hidden="true" class="visually-hidden">&times;</span>
     </button>
@@ -1635,7 +1642,7 @@
       type="button"
       class="btn btn-default"
       (click)="cerrar()"
-      disabled="esFormularioSoloLectura ? true : false"
+    [disabled]="esFormularioSoloLectura"
     >
       Aceptar
     </button>

@@ -472,10 +472,10 @@ export class SolicitudComponent
 
   //Estas variables se van a eliminar
   /**
-   * Arrelgo de patentes de la empresa
+   * Arreglo de patentes de la empresa, con label y value.
    */
-  radioPatentes = patentes.patentes;
-  rfcs = rfcs.rfcs;
+  radioPatentes: { label: string; value: string | number; hint?: string }[] = [];
+  rfcs: Catalogo[] = [];
   /**
    * @description Bandera para indicar si la hora de inicio del servicio no ha sido marcada.
    */
@@ -573,6 +573,12 @@ export class SolicitudComponent
   ) {}
 
   ngOnInit(): void {
+    this.radioPatentes = patentes?.patentes?.map((p: { label: string; value: string | number; hint?: string }) => ({
+      label: p.label,
+      value: p.value,
+      hint: p.hint
+    })) ?? [];
+    this.rfcs = rfcs?.rfcs;
     this.validaTipoPersona();
     this.inicializaCatalogos();
 
