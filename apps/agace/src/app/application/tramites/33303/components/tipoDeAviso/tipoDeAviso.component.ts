@@ -1,7 +1,7 @@
 import {
   AlertComponent,
   ConsultaioQuery,
-  InputCheckComponent,
+ 
   TituloComponent,
 } from '@ng-mf/data-access-user';
 import {
@@ -28,6 +28,7 @@ import { UnicoQuery } from '../../estados/queries/unico.query';
 
 import { UnicoState, UnicoStore } from '../../estados/renovacion.store';
 
+import { InputCheckComponent } from '@libs/shared/data-access-user/src';
 /**
  * Componente para manejar los tipos de aviso en el formulario de modificación.
  * Este componente contiene un formulario reactivo para capturar diversas opciones
@@ -103,10 +104,10 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
         takeUntil(this.destroy$),
         map((seccionState) => {
           this.solicitudState = seccionState;
-          this.crearFormMiFormulario();
-        })
+          })
       )
       .subscribe();
+       this.crearFormMiFormulario();
 
       this.consultaioQuery.selectConsultaioState$
       .pipe(
