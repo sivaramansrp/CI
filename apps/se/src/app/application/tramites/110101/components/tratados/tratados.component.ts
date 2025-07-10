@@ -217,7 +217,7 @@ export class TratadosComponent implements OnInit, OnDestroy {
      */
     public registroDeSolicitudesTablaDatos: RegistroDeSolicitudesTabla[] = [
        {
-    pais: 'México',
+    pais: 'Mexico',
     tratado: 'T-MEC',
     origen: 'Nacional'
   }
