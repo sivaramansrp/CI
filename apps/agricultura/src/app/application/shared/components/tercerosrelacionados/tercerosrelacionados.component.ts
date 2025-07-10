@@ -137,7 +137,7 @@ export class TercerosrelacionadosComponent {
   configuracionColumnasDestino: ConfiguracionColumna<TercerosrelacionadosdestinoTable>[] = [
     { encabezado: 'Nombre/denominación o razón social', clave: (fila) => fila.nombre, orden: 1 },
     { encabezado: 'Teléfono', clave: (fila) => fila.telefono, orden: 2 },
-    { encabezado: 'Correo', clave: (fila) => fila.correo, orden: 3 },
+    { encabezado: 'Correo electrónico', clave: (fila) => fila.correo, orden: 3 },
     { encabezado: 'Calle', clave: (fila) => fila.calle, orden: 4 },
     { encabezado: 'Número exterior', clave: (fila) => fila.numeroExterior, orden: 5 },
     { encabezado: 'Número interior', clave: (fila) => fila.numeroInterior, orden: 6 },
