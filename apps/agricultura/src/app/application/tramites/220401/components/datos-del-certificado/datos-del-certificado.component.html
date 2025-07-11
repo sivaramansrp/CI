@@ -78,28 +78,52 @@
     }
 
   </form>
-
+@if(datosdelForm.get('certificada')?.value === 'Animal')
+{
+  <ng-titulo titulo="Datos Generales de la Mercancía Animal"></ng-titulo>
+}
+@if(datosdelForm.get('certificada')?.value === 'Producto')
+{
   <ng-titulo titulo="Datos Generales de la Mercancía Producto o Subproducto de Origen Animal"></ng-titulo>
+
+}
+@if(datosdelForm.get('certificada')?.value === 'QFBA')
+{
+  <ng-titulo titulo="Datos Generales de la Mercancía QFBA"></ng-titulo>
+
+}
 
   <ng-table [disableSeleccionTablaCheckBox]="esFormularioSoloLectura? true : false" [commonTableHeader]="tableColumns"
     [commonTableBody]="mercanciasData"></ng-table>
   <div class="text-end">
-    <button class="btn btn-primary me-2" type="button" [disabled]="esFormularioSoloLectura? true : false" data-bs-toggle="modal"
-        data-bs-target="#modalAgregarMercancias" (click)="openModificarMercancias()">
+    <button class="btn btn-primary me-2" type="button" [disabled]="esFormularioSoloLectura? true : false"  >
       Carga por archivo
     </button>
-    <button class="btn btn-primary" type="button" [disabled]="esFormularioSoloLectura? true : false">
+    <button class="btn btn-primary" type="button" [disabled]="esFormularioSoloLectura? true : false" (click)="openModificarMercancias()" data-bs-toggle="modal"
+        data-bs-target="#modalAgregarMercancias">
       Agregar
     </button>
   </div>
   <form [formGroup]="datosdelForm">
-    <div class="col-md-12" style="padding: 0px; padding-top: 10px;">
+    <div class="col-md-12" style="padding: 0px; padding-top: 10px;" *ngIf="datosdelForm.get('certificada')?.value === 'Producto' || datosdelForm.get('certificada')?.value === 'QFBA'">
    <ng-alert [CONTENIDO]="TEXTO.mensaje" [CUSTOMECLASS]="infoAlert"></ng-alert>
     </div>
-   <div class="row">
+   <div class="row" *ngIf="datosdelForm.get('certificada')?.value === 'Producto' || datosdelForm.get('certificada')?.value === 'QFBA'">
     <div class="col-md-4">
       <label class="form-label" for="numeroTotal">Número total de bultos:</label>
       <input type="text" class="form-control" id="numeroTotal" formControlName="numeroTotal">
+   </div>
+    <div class="col-md-4" *ngIf="datosdelForm.get('certificada')?.value === 'QFBA'">
+      <app-catalogo-select
+                [catalogo]="paisOrigen"
+                [tooltipQuestionCircle]="false"
+                [label]="'Uso'"
+                [required]="true"
+                [placeholder]="'Seleccione un valor'"
+                [isDisabled]="esFormularioSoloLectura"
+                formControlName="uso"
+                (change)="setValoresStore(datosdelForm,'paisOrigen', 'setpaisOrigen')"
+              ></app-catalogo-select>
    </div>
    <div class="col-md-4">
       <app-catalogo-select
@@ -115,7 +139,7 @@
    </div>
   </div>
 
-  <div class="row">
+  <div class="row" *ngIf="datosdelForm.get('certificada')?.value === 'Producto' || datosdelForm.get('certificada')?.value === 'QFBA'">
     <div class="col-md-4">
       <label class="form-label" for="CantidadTotal">Cantidad total:<i
               class="bi bi-question-circle-fill"></i></label>
@@ -134,7 +158,7 @@
               ></app-catalogo-select>
    </div>
   </div>
-    <div class="mb-5">
+    <div class="mb-5" *ngIf="datosdelForm.get('certificada')?.value === 'Animal' || datosdelForm.get('certificada')?.value === 'Producto' || datosdelForm.get('certificada')?.value === 'QFBA'">
       <label for="message" class="form-label">Tratamiento:</label>
       <textarea class="form-control" rows="5" formControlName="datoscertificado"
         (change)="setValoresStore(datosdelForm,'datoscertificado','setdatoscertificado')"></textarea>
@@ -155,7 +179,8 @@
 >
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
-      <app-datos-generales-animales></app-datos-generales-animales>
+      <app-datos-generales-animales (cancelar)="cerrarModal()" data-bs-toggle="modal"
+        data-bs-target="#modalAgregarMercancias"></app-datos-generales-animales>
     </div>
   </div>
 </div>

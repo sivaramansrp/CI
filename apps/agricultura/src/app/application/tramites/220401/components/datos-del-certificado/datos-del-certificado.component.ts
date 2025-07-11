@@ -479,13 +479,20 @@ this.inicializarCertificadoFormulario();
      * Columnas de la tabla de mercancías.
      */
     tableColumns = [
+      'No. partida',
+      'Fracción arancelaria',
+      'Descripción de la fracción',
+      'Unidad de medida fracción de tarifa (UMT)',
+      'Cantidad UMT',
+      'Unidad de medida de comercialización (UMC)',
+      'Cantidad UMC',
       'Tratamiento',
       'Presentación',
       'Marcas embarque',
       'Fecha de caducidad',
       'Fecha sacrificio inicio',
       'Número de autorización CITES',
-      'Número de lote',
+      'Número de lote'
     ];
   
     /**
@@ -494,15 +501,10 @@ this.inicializarCertificadoFormulario();
      */
     mercanciasData = [
       {
-      tbodyData: [
-        'Establecimiento 1',
-        '123-456-7890',
-        'correo',
-        'Actividad 1',
-        'Otro detalle',
-        'Certificado 001',
-        'Domicilio 1',
-      ],
+     tbodyData: [
+          '1', '0201.30.00', 'Carne de bovino fresca', 'Kilogramo', '500', 'Caja', '25',
+          'Refrigerado', 'Caja sellada', 'MarcaX', '2025-12-31', '2024-06-01', 'CITES-123456', 'Lote-7890'
+        ],
       },
     ];
     /**
@@ -517,6 +519,12 @@ this.inicializarCertificadoFormulario();
       (this.agregar220401Store[metodoNombre] as (value: string) => void)(VALOR);
     }
     
+ cerrarModal(): void {
+ if (this.modalElement) {
+      const MODAL_INSTANCE = new Modal(this.modalElement.nativeElement);
+      MODAL_INSTANCE.hide();
+    }
+}
  
   /**
    * @comdoc

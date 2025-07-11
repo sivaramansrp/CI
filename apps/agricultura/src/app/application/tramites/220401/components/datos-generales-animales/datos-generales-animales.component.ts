@@ -1,6 +1,6 @@
 import { AbstractControl,FormBuilder,FormGroup,ReactiveFormsModule,ValidationErrors,Validators} from '@angular/forms';
 import { Agregar220401Store, Solicitud220401State } from '../../../../estados/tramites/agregar220401.store';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { ConsultaioQuery, REGEX_DESCRIPCION_ESPECIALES,REGEX_LEADING_SPACES} from '@ng-mf/data-access-user';
 import { Subject,map,takeUntil } from 'rxjs';
 import { AgregarQuery } from '../../../../estados/queries/agregar.query';
@@ -27,6 +27,9 @@ import sexoJson from '@libs/shared/theme/assets/json/220401/sexo.json';
   styleUrl: './datos-generales-animales.component.scss',
 })
 export class DatosGeneralesAnimalesComponent implements OnInit, OnDestroy {
+  /** Evento emitido al cancelar la acción */
+  @Output() cancelar = new EventEmitter<void>();
+
   /** Configuración del primer select de aduanas */
   frmMercanciaAnimal!: FormGroup;
   /**
@@ -321,6 +324,10 @@ this.inicializarGeneralesFormulario();
     const VALOR = form.get(campo)?.value;
     (this.agregar220401Store[metodoNombre] as (value: string) => void)(VALOR);
   }
+
+  onCancelar(): void {
+  this.cancelar.emit();
+}
 /**
    * @method crearFormCombinacion
    * @description Método para crear el formulario formCombinacion.
