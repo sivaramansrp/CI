@@ -8,7 +8,7 @@
  */
 
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
-import { DatosDeLaSolicitud, TercerosrelacionadosdestinoTable, TercerosrelacionadosTable } from '../../../../shared/models/tercerosrelacionados.model';
+import { DatosDeLaSolicitud, TercerosrelacionadosTable, TercerosrelacionadosdestinoTable } from '../../../../shared/models/tercerosrelacionados.model';
 import { Subject, takeUntil } from 'rxjs';
 import { AgriculturaApiService } from '../../services/220202/agricultura-api.service';
 import { CommonModule } from '@angular/common';
