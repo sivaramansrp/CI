@@ -35,7 +35,7 @@ jest.mock('@libs/shared/theme/assets/json/31601/table.json', () => ({
     tableHeader: [
       "RFC",
       "Denominction o razon social",
-      "CDomicilaa"
+      "Domicilaa"
     ],
     tableBody: [
       { tbodyData: [] }
