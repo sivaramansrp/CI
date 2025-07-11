@@ -15,7 +15,7 @@ export interface Solicitud32513State {
   /**
    * Porcentaje de desperdicio.
    */
-  porcentajeDesperdicio?: string;
+  porcentajeDesperdicio?: number;
 
   /**
    * Código ADACE.
@@ -39,7 +39,7 @@ export function createInitialSolicitudState(): Solicitud32513State {
     /**
      * Porcentaje de desperdicio, inicialmente vacío.
      */
-    porcentajeDesperdicio: '',
+    porcentajeDesperdicio: 0,
 
     /**
      * Código ADACE, inicialmente establecido en 'ADACE-01'.
@@ -87,7 +87,7 @@ export class Solicitud32513Store extends Store<Solicitud32513State> {
    * Actualiza el porcentaje de desperdicio en el estado.
    * @param porcentajeDesperdicio Nuevo porcentaje de desperdicio.
    */
-  public setPorcentajeDesperdicio(porcentajeDesperdicio: string): void {
+  public setPorcentajeDesperdicio(porcentajeDesperdicio: number): void {
     this.update((state) => ({
       ...state,
       porcentajeDesperdicio,

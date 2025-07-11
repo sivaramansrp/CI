@@ -1,4 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Notificacion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Solicitud32513State, Solicitud32513Store } from '../estados/solicitud32513.store';
@@ -76,6 +77,19 @@ export class AvisoComponent implements OnInit, OnDestroy {
   mensajeArchivoValido = SOLICITUD_32513_ENUM.MESAJE_ARCHIVO;
 
   /**
+   * @property {ConsultaioState} consultaDatos
+   * @description Estado actual de la consulta, que contiene información relacionada con el trámite y el solicitante.
+   */
+  consultaDatos!: ConsultaioState;
+
+  /**
+   * @property {boolean} soloLectura
+   * @description Indica si el formulario o los campos están en modo de solo lectura.
+   * @default false
+   */
+  esFormularioSoloLectura: boolean = false;
+
+  /**
    * Constructor del componente AvisoComponent.
    * Inyecta los servicios y stores necesarios para la gestión del formulario y los datos asociados al trámite 32513.
    * @param fb FormBuilder para la creación del formulario reactivo.
@@ -88,6 +102,7 @@ export class AvisoComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     public solicitud32513Store: Solicitud32513Store,
     public solicitud32513Query: Solicitud32513Query,
+    private consultaioQuery: ConsultaioQuery
   ) {}
 
   /**
@@ -95,6 +110,16 @@ export class AvisoComponent implements OnInit, OnDestroy {
    * Inicializa los datos de consulta y solicitud, y configura el formulario.
    */
   ngOnInit(): void {
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.consultaDatos = seccionState;
+          this.esFormularioSoloLectura = this.consultaDatos.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+    .subscribe();
     this.solicitud32513Query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -102,8 +127,9 @@ export class AvisoComponent implements OnInit, OnDestroy {
           this.solicitudState = seccionState;
         })
       )
-      .subscribe();
+    .subscribe();
     this.inicializarFormulario();
+    this.inicializarEstadoFormulario();
   }
 
   /**
@@ -114,6 +140,23 @@ export class AvisoComponent implements OnInit, OnDestroy {
       descripcionMercancia: [this.solicitudState?.descripcionMercancia, Validators.required],
       porcentajeDesperdicio: [this.solicitudState?.porcentajeDesperdicio, Validators.required],
     });
+  }
+
+  /**
+  * @method inicializarEstadoFormulario
+  * @description Inicializa el estado del formulario según el modo de solo lectura.
+  * 
+  * Si la propiedad `soloLectura` es verdadera, deshabilita todos los controles del formulario.
+  * En caso contrario, habilita los controles del formulario
+  * 
+  * @returns {void}
+  */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.avisoForm?.disable();
+    } else {
+      this.avisoForm?.enable();
+    }
   }
 
   /**

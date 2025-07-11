@@ -1,11 +1,12 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ConsultaioState, ConsultaioQuery, FormularioDinamico, SolicitanteComponent } from '@ng-mf/data-access-user';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { FormularioDinamico, SolicitanteComponent } from '@ng-mf/data-access-user';
 import { Solicitud32513State, Solicitud32513Store } from '../../estados/solicitud32513.store';
+import { Subject, map, takeUntil } from 'rxjs';
 import { AvisoComponent } from '../../components/aviso.component';
 import { CommonModule } from '@angular/common';
 import { Solicitud32513Query } from '../../estados/solicitud32513.query';
-import { Subject } from 'rxjs';
+import { AvisoService } from '../../services/aviso.service';
 
 /**
  * Componente que representa el primer paso del trámite 32513.
@@ -43,6 +44,12 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
   public esDatosRespuesta: boolean = false;
 
   /**
+   * @property {ConsultaioState} consultaDatos
+   * @description Estado actual de la consulta, que contiene información relacionada con el trámite y el solicitante.
+   */
+  consultaDatos!: ConsultaioState;
+
+  /**
    * Referencia al componente AvisoComponent hijo.
    */
   @ViewChild(AvisoComponent) avisoComponent!: AvisoComponent;
@@ -59,6 +66,8 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     public solicitud32513Store: Solicitud32513Store,
     public solicitud32513Query: Solicitud32513Query,
+    private consultaioQuery: ConsultaioQuery,
+    public avisoService: AvisoService
   ) {}
 
   /**
@@ -103,6 +112,41 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
     this.solicitanteForm = this.fb.group({
       adace: [{ value: this.solicitudState?.adace, disabled: true }]
     });
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.consultaDatos = seccionState;
+        })
+      )
+      .subscribe();
+    if (this.consultaDatos.update) {
+      this.fetchGetDatosConsulta();
+    } else {
+      this.esDatosRespuesta = true;
+    }
+  }
+
+  /**
+ * @method fetchGetDatosConsulta
+ * @description Método para obtener los datos de consulta desde el servicio `DatosTramiteService` y actualizar el estado del store `tramite32508Store`.
+ * 
+ * Este método realiza una solicitud HTTP para obtener los datos de consulta y, si la respuesta es exitosa, actualiza múltiples propiedades del store con los datos recibidos.
+ * Utiliza el operador `takeUntil` para cancelar la suscripción cuando el componente se destruye, evitando fugas de memoria.
+ * 
+ * @returns {void}
+ */
+  public fetchGetDatosConsulta(): void {
+    this.avisoService
+      .getDatosConsulta()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((respuesta) => {
+        if (respuesta.success) {
+          this.solicitud32513Store.setDescripcionMercancia(respuesta.datos.descripcionMercancia);
+          this.solicitud32513Store.setPorcentajeDesperdicio(respuesta.datos.porcentajeDesperdicio);
+          this.solicitud32513Store.setAdace(respuesta.datos.adace);
+        }
+      });
   }
 
   /**
