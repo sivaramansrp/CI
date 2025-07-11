@@ -1,5 +1,5 @@
 import { ConfiguracionAporteColumna, ConfiguracionColumna, TablaCampoSeleccion } from "@libs/shared/data-access-user/src";
-import { Domicilios, Inventarios, NumeroDeEmpleados, RecibirNotificaciones, SeccionSociosIC } from "../models/solicitud.model";
+import { Domicilios, EnlaceOperativo, Inventarios, NumeroDeEmpleados, RecibirNotificaciones, SeccionSociosIC } from "../models/solicitud.model";
 
 /**
  * Configuración de las columnas para la visualización de la información de domicilios.
@@ -282,3 +282,181 @@ export const DOMICILIOS_CONFIGURACION_COLUMNAS: ConfiguracionColumna<Domicilios>
               orden: 5,
             },
           ];
+          /**
+           * Configuración de columnas para la tabla de Enlace Operativo.
+           * Cada objeto en el arreglo define los detalles de una columna.
+           * La clave indica el valor que se mostrará, y el orden define la posición de la columna en la tabla.
+           */
+          export const ENLACE_OPERATIVO_CONFIGURACION: ConfiguracionColumna<EnlaceOperativo>[] =
+            [
+              /**
+               * Configuración para la columna "RFC".
+               * Muestra el RFC de cada enlace operativo.
+               */
+              {
+                encabezado: 'RFC',
+                clave: (item: EnlaceOperativo) => item.rfc,
+                orden: 1,
+              },
+          
+              /**
+               * Configuración para la columna "Nombre".
+               * Muestra el nombre de cada enlace operativo.
+               */
+              {
+                encabezado: 'Nombre',
+                clave: (item: EnlaceOperativo) => item.nombre,
+                orden: 1,
+              },
+          
+              /**
+               * Configuración para la columna "Apellido Paterno".
+               * Muestra el apellido paterno de cada enlace operativo.
+               */
+              {
+                encabezado: 'Apellido Paterno',
+                clave: (item: EnlaceOperativo) => item.apellidoPaterno,
+                orden: 1,
+              },
+          
+              /**
+               * Configuración para la columna "Apellido Materno".
+               * Muestra el apellido materno de cada enlace operativo.
+               */
+              {
+                encabezado: 'Apellido Materno',
+                clave: (item: EnlaceOperativo) => item.apellidoMaterno,
+                orden: 1,
+              },
+          
+              /**
+               * Configuración para la columna "Ciudad o Estado de Residencia".
+               * Muestra la clave de la ciudad o estado de residencia de cada enlace operativo.
+               */
+              {
+                encabezado: 'Ciudad o Estado de Residencia',
+                clave: (item: EnlaceOperativo) => item.claveCiudad,
+                orden: 1,
+              },
+          
+              /**
+               * Configuración para la columna "Ciudad".
+               * Muestra la ciudad de cada enlace operativo.
+               */
+              {
+                encabezado: 'Ciudad',
+                clave: (item: EnlaceOperativo) => item.ciudad,
+                orden: 1,
+              },
+          
+              /**
+               * Configuración para la columna "Cargo".
+               * Muestra el cargo de cada enlace operativo.
+               */
+              {
+                encabezado: 'Cargo',
+                clave: (item: EnlaceOperativo) => item.cargo,
+                orden: 1,
+              },
+          
+              /**
+               * Configuración para la columna "Teléfono".
+               * Muestra el número de teléfono de cada enlace operativo.
+               */
+              {
+                encabezado: 'teléfono',
+                clave: (item: EnlaceOperativo) => item.telefono,
+                orden: 1,
+              },
+          
+              /**
+               * Configuración para la columna "Correo".
+               * Muestra el correo electrónico de cada enlace operativo.
+               */
+              {
+                encabezado: 'Correo',
+                clave: (item: EnlaceOperativo) => item.correo,
+                orden: 1,
+              },
+          
+              /**
+               * Configuración para la columna "Suplente".
+               * Muestra si el enlace operativo es suplente.
+               */
+              {
+                encabezado: 'Suplente',
+                clave: (item: EnlaceOperativo) => item.suplente,
+                orden: 1,
+              },
+          
+              /**
+               * Configuración para la columna "Calle".
+               * Muestra la calle de la dirección de cada enlace operativo.
+               */
+              {
+                encabezado: 'Calle',
+                clave: (item: EnlaceOperativo) => item.calle,
+                orden: 1,
+              },
+          
+              /**
+               * Configuración para la columna "Número Exterior".
+               * Muestra el número exterior de la dirección de cada enlace operativo.
+               */
+              {
+                encabezado: 'Numero Exterior',
+                clave: (item: EnlaceOperativo) => item.numeroExterior,
+                orden: 1,
+              },
+          
+              /**
+               * Configuración para la columna "Número Interior".
+               * Muestra el número interior de la dirección de cada enlace operativo.
+               */
+              {
+                encabezado: 'Numero Interior',
+                clave: (item: EnlaceOperativo) => item.numeroInterior,
+                orden: 1,
+              },
+          
+              /**
+               * Configuración para la columna "Colonia".
+               * Muestra la colonia de la dirección de cada enlace operativo.
+               */
+              {
+                encabezado: 'Colonia',
+                clave: (item: EnlaceOperativo) => item.colonia,
+                orden: 1,
+              },
+          
+              /**
+               * Configuración para la columna "Código Postal".
+               * Muestra el código postal de la dirección de cada enlace operativo.
+               */
+              {
+                encabezado: 'Codigo Postal',
+                clave: (item: EnlaceOperativo) => item.codigoPostal,
+                orden: 1,
+              },
+          
+              /**
+               * Configuración para la columna "Localidad".
+               * Muestra la localidad de la dirección de cada enlace operativo.
+               */
+              {
+                encabezado: 'Localidad',
+                clave: (item: EnlaceOperativo) => item.localidad,
+                orden: 1,
+              },
+          
+              /**
+               * Configuración para la columna "Delegación o Municipio".
+               * Muestra la delegación o municipio de la dirección de cada enlace operativo.
+               */
+              {
+                encabezado: 'Delegacion Municipio',
+                clave: (item: EnlaceOperativo) => item.delegacionMunicipio,
+                orden: 1,
+              },
+            ];
+            

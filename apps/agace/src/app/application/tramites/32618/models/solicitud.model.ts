@@ -519,3 +519,4 @@ export interface RecibirNotificaciones {
   /** Apellido materno del solicitante */
   apellidoMaterno: string;
 }
+

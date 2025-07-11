@@ -43,7 +43,7 @@
           (keydown.space)="seleccionaTab(4)"
           tabindex="4"
           role="button"
-          >Importador y/o Exportador</a
+          >Almacén General</a
         >
       </li>
       <li [ngClass]="indice === 5 ? 'active' : ''">
@@ -54,7 +54,7 @@
           (keydown.space)="seleccionaTab(5)"
           tabindex="5"
           role="button"
-          >C-TPAT</a
+          >Perfiles AG</a
         >
       </li>
     </ul>
@@ -67,7 +67,7 @@
       } } @case (3) { @if(esDatosRespuesta){
     <app-terceros-relacionados></app-terceros-relacionados>
       } } @case (4) { @if(esDatosRespuesta){
-     
+     <app-almacen-general></app-almacen-general>
       } } @case (5) { @if(esDatosRespuesta){
      
       } } }

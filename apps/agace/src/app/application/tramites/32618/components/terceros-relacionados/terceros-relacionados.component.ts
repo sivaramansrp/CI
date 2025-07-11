@@ -17,10 +17,10 @@ import { OnInit } from '@angular/core';
 import { Pedimento } from '@libs/shared/data-access-user/src';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RepresentanteLegal } from '../../models/solicitud.model';
+import { SolicitudeService } from '../../services/solicitude.service';
 import { SolicitudQuery } from '../../estados/solicitud.query';
 import { SolicitudState } from '../../estados/solicitud.store';
 import { SolicitudStore } from '../../estados/solicitud.store';
-
 import { Subject } from 'rxjs';
 import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src';
@@ -29,7 +29,6 @@ import { Validators } from '@angular/forms';
 import { ViewChild } from '@angular/core';
 import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
-import { SolicitudeService } from '../../services/solicitude.service';
 /**
  * Componente encargado de mostrar la lista de terceros relacionados
  * que pueden recibir notificaciones. Utiliza una tabla dinámica para

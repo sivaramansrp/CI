@@ -11,15 +11,16 @@ import { Output } from '@angular/core';
 import { REGEX_TELEFONO_DIGITOS } from '@libs/shared/data-access-user/src';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RepresentanteLegal } from '../../models/solicitud.model';
-import { Solicitud32605Query } from '../../estados/solicitud32605.query';
-import { Solicitud32605State } from '../../estados/solicitud32605.store';
-import { Solicitud32605Store } from '../../estados/solicitud32605.store';
-import { SolicitudService } from '../../services/solicitud.service';
+import { SolicitudQuery } from '../../estados/solicitud.query';
+import { SolicitudState } from '../../estados/solicitud.store';
+import { SolicitudStore } from '../../estados/solicitud.store';
 import { Subject } from 'rxjs';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { Validators } from '@angular/forms';
 import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
+  
+import { SolicitudeService } from '../../services/solicitude.service';
 /**
  * Componente para agregar un enlace operativo.
  * Utiliza un formulario reactivo para capturar y emitir la información del enlace operativo.
@@ -43,7 +44,7 @@ export class AgregarEnlaceOperativoComponent implements OnInit, OnDestroy {
   private destroy$: Subject<void> = new Subject<void>();
 
   /** Estado actual de la solicitud */
-  solicitud32605State: Solicitud32605State = {} as Solicitud32605State;
+  SolicitudState: SolicitudState = {} as SolicitudState;
 
   /** Evento para emitir el objeto EnlaceOperativo al componente padre */
   @Output() agregarEnlaceOperativo = new EventEmitter<EnlaceOperativo>();
@@ -59,14 +60,14 @@ export class AgregarEnlaceOperativoComponent implements OnInit, OnDestroy {
    *
    * @param fb - Constructor de formularios reactivos.
    * @param solicitudService - Servicio para obtener y gestionar los datos de la solicitud.
-   * @param solicitud32605Store - Store de Akita para el estado de la solicitud 32605.
-   * @param solicitud32605Query - Consulta (query) de Akita para acceder al estado de la solicitud 32605.
+   * @param SolicitudStore - Store de Akita para el estado de la solicitud 32605.
+   * @param SolicitudQuery - Consulta (query) de Akita para acceder al estado de la solicitud 32605.
    */
   constructor(
     public fb: FormBuilder,
-    public solicitudService: SolicitudService,
-    public solicitud32605Store: Solicitud32605Store,
-    public solicitud32605Query: Solicitud32605Query,
+    public solicitudService: SolicitudeService,
+    public SolicitudStore: SolicitudStore,
+    public SolicitudQuery: SolicitudQuery,
     public consultaioQuery: ConsultaioQuery
   ) {
     /**
@@ -120,7 +121,7 @@ export class AgregarEnlaceOperativoComponent implements OnInit, OnDestroy {
 
   /**
    * Inicializa el formulario `agregarEnlaceOperativoForm` con los valores actuales
-   * del estado `solicitud32605State`.
+   * del estado `SolicitudState`.
    *
    * Algunos campos están deshabilitados porque no deben ser editables por el usuario.
    * Aplica validaciones como `required`, `email`, y un patrón para el teléfono.
@@ -133,61 +134,61 @@ export class AgregarEnlaceOperativoComponent implements OnInit, OnDestroy {
   inicializarFormulario(): void {
     this.agregarEnlaceOperativoForm = this.fb.group({
       agregarEnlaceRfcTercero: [
-        this.solicitud32605State.rfcTercero,
+        this.SolicitudState.rfcTercero,
         [Validators.required],
       ],
       agregarEnlaceRfc: [
-        { value: this.solicitud32605State.rfc, disabled: true },
+        { value: this.SolicitudState.rfc, disabled: true },
       ],
       agregarEnlaceNombre: [
-        { value: this.solicitud32605State.nombre, disabled: true },
+        { value: this.SolicitudState.nombre, disabled: true },
       ],
       agregarEnlaceApellidoPaterno: [
-        { value: this.solicitud32605State.apellidoPaterno, disabled: true },
+        { value: this.SolicitudState.apellidoPaterno, disabled: true },
       ],
       agregarEnlaceApellidoMaterno: [
-        { value: this.solicitud32605State.apellidoMaterno, disabled: true },
+        { value: this.SolicitudState.apellidoMaterno, disabled: true },
       ],
       agregarEnlaceCiudadEstado: [
         {
-          value: this.solicitud32605State.agregarEnlaceCiudadEstado,
+          value: this.SolicitudState.agregarEnlaceCiudadEstado,
           disabled: true,
         },
       ],
-      agregarEnlaceCargo: [this.solicitud32605State.agregarEnlaceCargo],
+      agregarEnlaceCargo: [this.SolicitudState.agregarEnlaceCargo],
       agregarEnlaceTelefono: [
-        this.solicitud32605State.telefono,
+        this.SolicitudState.telefono,
         [Validators.required, Validators.pattern(REGEX_TELEFONO_DIGITOS)],
       ],
       agregarEnlaceCorreoElectronico: [
-        this.solicitud32605State.correoElectronico,
+        this.SolicitudState.correoElectronico,
         [Validators.required, Validators.email],
       ],
-      agregarEnlaceSuplente: [this.solicitud32605State.agregarEnlaceSuplente],
+      agregarEnlaceSuplente: [this.SolicitudState.agregarEnlaceSuplente],
     });
 
     /** Escucha los cambios en el estado de la solicitud y actualiza el formulario */
-    this.solicitud32605Query.selectSolicitud$
+    this.SolicitudQuery.selectSolicitud$
       .pipe(
         takeUntil(this.destroy$),
-        map((respuesta: Solicitud32605State) => {
-          this.solicitud32605State = respuesta;
+        map((respuesta: SolicitudState) => {
+          this.SolicitudState = respuesta;
           this.agregarEnlaceOperativoForm.patchValue({
-            agregarEnlaceRfcTercero: this.solicitud32605State.rfcTercero,
-            agregarEnlaceRfc: this.solicitud32605State.rfc,
-            agregarEnlaceNombre: this.solicitud32605State.nombre,
+            agregarEnlaceRfcTercero: this.SolicitudState.rfcTercero,
+            agregarEnlaceRfc: this.SolicitudState.rfc,
+            agregarEnlaceNombre: this.SolicitudState.nombre,
             agregarEnlaceApellidoPaterno:
-              this.solicitud32605State.apellidoPaterno,
+              this.SolicitudState.apellidoPaterno,
             agregarEnlaceApellidoMaterno:
-              this.solicitud32605State.apellidoMaterno,
+              this.SolicitudState.apellidoMaterno,
             agregarEnlaceCiudadEstado:
-              this.solicitud32605State.agregarEnlaceCiudadEstado,
-            agregarEnlaceCargo: this.solicitud32605State.agregarEnlaceCargo,
-            agregarEnlaceTelefono: this.solicitud32605State.telefono,
+              this.SolicitudState.agregarEnlaceCiudadEstado,
+            agregarEnlaceCargo: this.SolicitudState.agregarEnlaceCargo,
+            agregarEnlaceTelefono: this.SolicitudState.telefono,
             agregarEnlaceCorreoElectronico:
-              this.solicitud32605State.correoElectronico,
+              this.SolicitudState.correoElectronico,
             agregarEnlaceSuplente:
-              this.solicitud32605State.agregarEnlaceSuplente,
+              this.SolicitudState.agregarEnlaceSuplente,
           });
         })
       )
@@ -204,16 +205,16 @@ export class AgregarEnlaceOperativoComponent implements OnInit, OnDestroy {
         .conseguirRepresentanteLegalDatos()
         .pipe(takeUntil(this.destroy$))
         .subscribe((respuesta: RepresentanteLegal) => {
-          this.solicitud32605Store.actualizarEnlaceRfc(respuesta.rfc);
-          this.solicitud32605Store.actualizarEnlaceNombre(respuesta.nombre);
-          this.solicitud32605Store.actualizarEnlaceApellidoPaterno(
+          this.SolicitudStore.actualizarEnlaceRfc(respuesta.rfc);
+          this.SolicitudStore.actualizarEnlaceNombre(respuesta.nombre);
+          this.SolicitudStore.actualizarEnlaceApellidoPaterno(
             respuesta.apellidoPaterno
           );
-          this.solicitud32605Store.actualizarEnlaceApellidoMaterno(
+          this.SolicitudStore.actualizarEnlaceApellidoMaterno(
             respuesta.apellidoMaterno
           );
-          this.solicitud32605Store.actualizarEnlaceTelefono(respuesta.telefono);
-          this.solicitud32605Store.actualizarEnlaceCorreoElectronico(
+          this.SolicitudStore.actualizarEnlaceTelefono(respuesta.telefono);
+          this.SolicitudStore.actualizarEnlaceCorreoElectronico(
             respuesta.correoElectronico
           );
         });
@@ -223,31 +224,31 @@ export class AgregarEnlaceOperativoComponent implements OnInit, OnDestroy {
   /** Actualiza el RFC del tercero en el store */
   actualizarRfcTercero(evento: Event): void {
     const VALOR = (evento.target as HTMLInputElement).value;
-    this.solicitud32605Store.actualizarRfcTercero(VALOR);
+    this.SolicitudStore.actualizarRfcTercero(VALOR);
   }
 
   /** Actualiza el teléfono en el store */
   actualizarTelefono(evento: Event): void {
     const VALOR = (evento.target as HTMLInputElement).value;
-    this.solicitud32605Store.actualizarTelefono(VALOR);
+    this.SolicitudStore.actualizarTelefono(VALOR);
   }
 
   /** Actualiza el correo electrónico en el store */
   actualizarCorreoElectronico(evento: Event): void {
     const VALOR = (evento.target as HTMLInputElement).value;
-    this.solicitud32605Store.actualizarCorreoElectronico(VALOR);
+    this.SolicitudStore.actualizarCorreoElectronico(VALOR);
   }
 
   /** Actualiza el cargo en el store */
   agregarEnlaceCargo(evento: Event): void {
     const VALOR = (evento.target as HTMLInputElement).value;
-    this.solicitud32605Store.actualizarEnlaceCargo(VALOR);
+    this.SolicitudStore.actualizarEnlaceCargo(VALOR);
   }
 
   /** Actualiza el valor del campo suplente en el store */
   actualizarEnlaceSuplente(evento: Event): void {
     const VALOR = (evento.target as HTMLInputElement).checked;
-    this.solicitud32605Store.actualizarEnlaceSuplente(VALOR);
+    this.SolicitudStore.actualizarEnlaceSuplente(VALOR);
   }
 
   /**
