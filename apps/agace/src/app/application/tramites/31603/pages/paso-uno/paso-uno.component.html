@@ -24,7 +24,7 @@
                     <solicitante></solicitante>
                 }              
                 @case (2) {
-                    <shared-datos-comunes></shared-datos-comunes>
+                    <shared-datos-comunes (radioChanged)="onRadioChanged($event)"></shared-datos-comunes>
                 }
                 @case(3) {
                     <shared-terceros-relacionados [consultaState]="consultaState"></shared-terceros-relacionados>
@@ -38,5 +38,10 @@
 
             }
         </ng-container>
+        <app-shared-modal
+            [visible]="mostrarPopup"
+            [message]="popupMessage"
+            (closed)="cerrarPopup()"
+        ></app-shared-modal>
     </div>
 </div>
