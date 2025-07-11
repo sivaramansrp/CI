@@ -34,10 +34,10 @@ import { Tramite90305Query } from '../../estados/tramite90305.query';
 export class ModificacionInfo90305Component implements OnInit, OnDestroy {
   /** Bandera de solo lectura (puedes adaptarla si tienes lógica para esto) */
   public esFormularioSoloLectura: boolean = false;
-      /**
-     * Estado de la solicitud de la sección.
-     */
-    public solicitudState!: Tramite90305State;
+  /**
+ * Estado de la solicitud de la sección.
+ */
+  public solicitudState!: Tramite90305State;
   /** Formulario de modificación de información */
   modificationInfoForm!: FormGroup;
   /** Subject para manejar la destrucción del componente y evitar fugas de memoria */
@@ -53,60 +53,96 @@ export class ModificacionInfo90305Component implements OnInit, OnDestroy {
     private modificaaionInfo: ProsecModificacionServiceTsService,
     private tramite90305Store: Tramite90305Store,
     private tramite90305Query: Tramite90305Query,
-      private consultaioQuery: ConsultaioQuery,
+    private consultaioQuery: ConsultaioQuery,
   ) {
     this.consultaioQuery.selectConsultaioState$
-       .pipe(
-         takeUntil(this.destroyed$),
-         map((seccionState)=>{
-           this.esFormularioSoloLectura = seccionState.readonly; 
-       
-         })
-       )
-       .subscribe()
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.crearFormCombinacion();
+        })
+      )
+      .subscribe()
   }
 
-  /** Método del ciclo de vida de Angular - se ejecuta al destruir el componente */
-  ngOnDestroy(): void {
-    this.destroyed$.next();
-    this.destroyed$.complete();
-  }
+
 
   /** Método del ciclo de vida de Angular - inicializa el formulario y carga la información */
   ngOnInit(): void {
-   
-   this.inicializarFormulario();
-    this.modificationInfoForm = this.fb.group({
-      registroFederalContribuyentes: [{ value: this.solicitudState?.registroFederalContribuyentes,disabled: false }],
-      representacionFederal: [{ value: this.solicitudState?.representacionFederal,disabled: false }],
-      tipoModificacion: [{ value: this.solicitudState?.tipoModificacion,disabled: false }],
-      modificacionPrograma: [{ value: this.solicitudState?.modificacionPrograma,disabled: false }],
-    });
-      if (this.esFormularioSoloLectura) {
-      this.modificationInfoForm.disable();
+    this.inicializarCombinacionFormulario();
+  }
+
+  /**
+   * Inicializa el formulario de combinación requerido.
+   * 
+   * Si el formulario está en modo solo lectura (`esFormularioSoloLectura`), 
+   * guarda los datos actuales del formulario llamando a `guardarDatosFormulario()`.
+   * De lo contrario, inicializa el formulario llamando a `inicializarFormulario()`.
+   */
+  inicializarCombinacionFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.inicializarFormulario()
     }
   }
+
+  /**
+   * @comdoc
+   * Guarda los datos del formulario de combinación requerida.
+   * 
+   * Inicializa el formulario y ajusta su estado de habilitación según si es de solo lectura.
+   * - Si el formulario es de solo lectura, lo deshabilita.
+   * - Si no es de solo lectura, lo habilita.
+   * - Si no aplica ninguna de las condiciones anteriores, no realiza ninguna acción adicional.
+   */
+  guardarDatosFormulario(): void {
+    this.inicializarFormulario();
+    if (this.esFormularioSoloLectura) {
+      this.modificationInfoForm.disable();
+    } else {
+      this.modificationInfoForm.enable();
+    }
+  }
+
   /**
    * Inicializa el formulario con los valores de la solicitud.
    */
   inicializarFormulario(): void {
-      this.tramite90305Query.selectSolicitud$
-        .pipe(
-          takeUntil(this.destroyed$),
-          map((seccionState) => {
-            this.solicitudState = seccionState;
-          })
-        )
-        .subscribe();
-        
-    }
-   
-
+    this.tramite90305Query.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState) => {
+          this.solicitudState = seccionState;
+        })
+      )
+      .subscribe();
+    this.crearFormCombinacion();
+    this.loadInfo();
+  }
 
   /**
-   * Carga la información de modificación desde el servicio y actualiza el formulario
-   */
-  loadInfo() :void{
+* @description createFormMerge se utiliza para crear el formulario denominado formCombinacion
+* 
+*/
+  /**
+ * Inicializa el formulario `formCombinacion` con los valores del estado `solicitudState`
+ * y aplica validación de longitud máxima (200) a `puntoIngreso`.
+ */
+  public crearFormCombinacion(): void {
+    this.modificationInfoForm = this.fb.group({
+      registroFederalContribuyentes: [{ value: this.solicitudState?.registroFederalContribuyentes, disabled: false }],
+      representacionFederal: [{ value: this.solicitudState?.representacionFederal, disabled: false }],
+      tipoModificacion: [{ value: this.solicitudState?.tipoModificacion, disabled: false }],
+      modificacionPrograma: [{ value: this.solicitudState?.modificacionPrograma, disabled: false }],
+    });
+  }
+
+  /**
+     * Carga la información de modificación desde el servicio y actualiza el formulario
+     */
+  loadInfo(): void {
     this.modificaaionInfo
       .getModoficacionInfo()
       .subscribe((data) => {
@@ -121,8 +157,14 @@ export class ModificacionInfo90305Component implements OnInit, OnDestroy {
   /**
    *
    */
-   onControlChange(controlName: string): void {
+  onControlChange(controlName: string): void {
     const UPDATED_VALUE = { [controlName]: this.modificationInfoForm.get(controlName)?.value };
     this.tramite90305Store.update(UPDATED_VALUE);
+  }
+
+  /** Método del ciclo de vida de Angular - se ejecuta al destruir el componente */
+  ngOnDestroy(): void {
+    this.destroyed$.next();
+    this.destroyed$.complete();
   }
 }
