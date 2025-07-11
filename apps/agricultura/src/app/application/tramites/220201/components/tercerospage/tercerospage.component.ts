@@ -70,7 +70,7 @@ export class TercerospageComponent implements OnInit, OnDestroy, AfterViewInit {
    * @type {TercerosrelacionadosTable[]}
    */
 
-  datosForma: TercerosrelacionadosTable[] = [];
+  datosForma: TercerosrelacionadosdestinoTable[] = [];
 
   /**
    * Constructor del componente.

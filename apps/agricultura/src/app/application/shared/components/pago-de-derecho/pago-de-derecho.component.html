@@ -90,6 +90,7 @@
                   formControlName="llavePago"
                   [ngClass]="esInvalido('llavePago') ? 'required' : ''"
                   (change)="actualizarPago()"
+                  [maxlength]="50"
                   />
                         <div *ngIf="esInvalido('llavePago')" class="text-danger">
                            <small *ngIf="pagoForm.controls['llavePago'].errors?.['required']">

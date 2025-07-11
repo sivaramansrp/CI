@@ -117,6 +117,8 @@ describe('FormularioRegistroService (Jest)', () => {
       observaciones: 'o',
       productos: 'y',
       solicitud: 'p',
+      cantidadTotal: 10,
+      valorTotalUSD: '500'
     };
 
     service.actualizarEstadoFormulario(mockState);
