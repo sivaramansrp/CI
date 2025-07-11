@@ -254,7 +254,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     this.FormSolicitud = this.fb.group({
       datosRegimen: this.fb.group({
         regimenMercancia: [this.solicitudState?.regimenMercancia || '-1', Validators.required],
-        clasifiRegimen: [this.solicitudState?.clasifiRegimen || '-1', Validators.required]
+        clasifiRegimen: [{ value: this.solicitudState?.clasifiRegimen || '-1', disabled: true }, Validators.required]
       }),
       datosMercancia: this.fb.group({
         valueTA: [this.solicitudState?.valueTA, [Validators.maxLength(1000), Validators.pattern(/^[^~`^]*$/)]],

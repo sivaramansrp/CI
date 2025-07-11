@@ -12,7 +12,9 @@ import { PeximRoutingModule } from './pexim-routing.module';
 import { SolicitudComponent } from './components/solicitud/solicitud.component';
 import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.component';
 import { ToastrService } from 'ngx-toastr';
+
 import { AnexarDocumentosComponent } from "../../../../../../../libs/shared/data-access-user/src/tramites/components/anexar-documentos/anexar-documentos.component";
+import { NotificacionesComponent } from "../../../../../../../libs/shared/data-access-user/src/tramites/components/notificaciones/notificaciones.component";
 
 @NgModule({
   declarations: [
@@ -42,7 +44,8 @@ import { AnexarDocumentosComponent } from "../../../../../../../libs/shared/data
     FirmaElectronicaComponent,
     AlertComponent,
     CatalogoSelectComponent,
-    AnexarDocumentosComponent
+    AnexarDocumentosComponent,
+    NotificacionesComponent
 ],
   exports: [
     SolicitudComponent

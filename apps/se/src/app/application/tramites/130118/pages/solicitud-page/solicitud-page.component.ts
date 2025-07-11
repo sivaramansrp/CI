@@ -4,7 +4,7 @@ import { Location } from '@angular/common';
 
 import { Component, OnInit, ViewChild } from '@angular/core';
 
-import { AVISO, DatosPasos, ListaPasosWizard, PASOS, WizardComponent } from '@ng-mf/data-access-user';
+import { AVISO, DatosPasos, ListaPasosWizard, Notificacion, PASOS, WizardComponent } from '@ng-mf/data-access-user';
 import { GuadarSolicitudRequest } from '../../../../core/models/request/guardar-solicitud-request.model';
 import { GuardarService } from '../../../../core/services/130118/guardar.service';
 import { IniciarService } from '../../../../core/services/130118/iniciar.service';
@@ -78,6 +78,8 @@ export class SolicitudPageComponent implements OnInit {
    */
   TEXTOS = AVISO.Aviso;
 
+   public nuevaNotificacion!: Notificacion;
+
   /**
    * Mensaje de alerta a mostrar en caso de error.
    */
@@ -113,6 +115,7 @@ export class SolicitudPageComponent implements OnInit {
     txtBtnAnt: 'Anterior',
     txtBtnSig: 'Continuar',
   };
+  
 
   ngOnInit(): void {
 
@@ -152,6 +155,15 @@ export class SolicitudPageComponent implements OnInit {
     this.indice = i;
   }
 
+  actualizarDatosPasos(): void {
+  this.datosPasos = {
+    nroPasos: this.pasos.length,
+    indice: this.indice,
+    txtBtnAnt: 'Anterior',
+    txtBtnSig: 'Continuar',
+  };
+}
+
   /**
    * Obtiene el valor del índice de la acción del botón y controla la navegación del asistente.
    * Valida el formulario del primer paso antes de avanzar.
@@ -167,12 +179,13 @@ export class SolicitudPageComponent implements OnInit {
 
               this.indice = 1;
               this.wizardComponent.indiceActual = 1;
+              this.actualizarDatosPasos();
               return;
             }
 
             if (e.valor > 0 && e.valor < 5) {
-
               this.indice = e.valor;
+              this.actualizarDatosPasos();
               if (e.accion === 'cont') {
                 this.wizardComponent.siguiente();
               } else {
@@ -189,6 +202,7 @@ export class SolicitudPageComponent implements OnInit {
     } else {
       if (e.valor > 0 && e.valor < 5) {
         this.indice = e.valor;
+        this.actualizarDatosPasos();
         if (e.accion === 'cont') {
           this.wizardComponent.siguiente();
         } else {
@@ -276,5 +290,20 @@ export class SolicitudPageComponent implements OnInit {
     const [DIA, MES, ANIO] = fecha.split('/');
     return `${ANIO}-${MES}-${DIA}`;
   }
+
+  mostrarErrorPersonalizado(error: any): void {
+  const MENSAJE = error?.mensaje || 'Error inesperado al guardar la solicitud.';
+  const DETALLE = error?.causa || error?.error || '';
+  this.nuevaNotificacion = {
+    tipoNotificacion: 'toastr',
+    categoria: 'error',
+    modo: 'action',
+    titulo: '',
+    mensaje: `${MENSAJE}${DETALLE ? ' - ' + DETALLE : ''}`,
+    cerrar: false,
+    txtBtnAceptar: '',
+    txtBtnCancelar: '',
+  };
+}
 
 }
