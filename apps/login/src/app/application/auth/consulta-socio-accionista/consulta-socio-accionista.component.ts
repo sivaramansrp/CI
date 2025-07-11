@@ -15,11 +15,29 @@ import { Router } from '@angular/router';
   styleUrl: './consulta-socio-accionista.component.scss',
 })
 export class ConsultaSocioAccionistaComponent implements OnInit {
+  /**
+   * Formulario para la consulta de socio accionista.
+   */
   public formConsultaSocioAccionista!: FormGroup;
+  /**
+   * Objeto que contiene los datos del socio accionista consultado.
+   */
   public socioAccionistaConsultado?: AccionistaStore;
+  /**
+   * Subject utilizado para destruir el observable y evitar memory leaks.
+   */
   private destroyNotifier$: Subject<void> = new Subject();
+  /**
+   * Indica si se deben registrar los datos del socio accionista nacional.
+   */
   public registrarDatos: boolean = false;
+  /**
+   * Objeto que contiene los datos del socio accionista nacional.
+   */
   socioAccionistaNacional!: ConsultaSocioNacional;
+  /**
+   * Lista de socios accionistas nacionales.
+   */
   public listadoSociosAccionistas: ConsultaSocioNacional[] = [];
 
   constructor(private fb: FormBuilder,
@@ -28,6 +46,10 @@ export class ConsultaSocioAccionistaComponent implements OnInit {
     private accionistaStore: AccionistaStoreService
   ) { }
 
+  /**
+   * Método que se ejecuta al destruir el componente.
+   * Se utiliza para limpiar los recursos y evitar memory leaks.
+   */
   ngOnInit(): void {
     this.busquedaQuery.selectSolicitud$
       .pipe(
@@ -43,7 +65,11 @@ export class ConsultaSocioAccionistaComponent implements OnInit {
     this.llenarCamposSocioAccionista();
   }
 
-  crearFormSocioAccionista() {
+  /**
+   * Método que se ejecuta al destruir el componente.
+   * Se utiliza para limpiar los recursos y evitar memory leaks.
+   */
+  crearFormSocioAccionista():void {
     this.formConsultaSocioAccionista = this.fb.group({
       rfc: [{ value: '', disabled: true }],
       nombre: [{ value: '', disabled: true }],
@@ -53,7 +79,10 @@ export class ConsultaSocioAccionistaComponent implements OnInit {
     });
   }
 
-  llenarCamposSocioAccionista() {
+  /**
+   * Método que llena los campos del formulario con los datos del socio accionista consultado.
+   */
+  llenarCamposSocioAccionista():void {
     if (this.socioAccionistaConsultado) {
       this.formConsultaSocioAccionista.get('rfc')?.setValue(this.socioAccionistaConsultado.accionistaNacional.rfc);
       this.formConsultaSocioAccionista.get('nombre')?.setValue(this.socioAccionistaConsultado.accionistaNacional.nombre);
@@ -61,7 +90,12 @@ export class ConsultaSocioAccionistaComponent implements OnInit {
       this.formConsultaSocioAccionista.get('apellidoMaterno')?.setValue(this.socioAccionistaConsultado.accionistaNacional.apellidoMaterno);
     }
   }
-  confirmarSocioNacional() {
+
+  /**
+   * Método que se ejecuta al confirmar el socio accionista nacional.
+   * Agrega el socio accionista nacional a la lista de socios accionistas y navega a la página de registro.
+   */
+  confirmarSocioNacional(): void {
     if (this.listadoSociosAccionistas.length === 0) {
       this.listadoSociosAccionistas = [];
     }
@@ -71,7 +105,11 @@ export class ConsultaSocioAccionistaComponent implements OnInit {
     this.router.navigate(['login/registro-socio-accionista']);
   }
 
-  cancelarGuardado() {
+  /**
+   * Método que se ejecuta al cancelar el guardado del socio accionista.
+   * Navega a la página de registro de socio accionista.
+   */
+  cancelarGuardado(): void {
     this.router.navigate(['login/registro-socio-accionista']);
   }
 }

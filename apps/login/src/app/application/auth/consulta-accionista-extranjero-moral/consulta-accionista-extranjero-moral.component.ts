@@ -73,7 +73,7 @@ export class ConsultaAccionistaExtranjeroMoralComponent implements OnInit {
   /**
    * Crea el formulario reactivo para el socio extranjero moral.
    */
-  crearFormSocioAccionista() {
+  crearFormSocioAccionista(): void {
     this.formConsultaSocioExtranjero = this.fb.group({
       razonSocial: [{ value: '', disabled: true }],
       pais: [{ value: '', disabled: true }],
@@ -88,7 +88,7 @@ export class ConsultaAccionistaExtranjeroMoralComponent implements OnInit {
   /**
    * Llena los campos del formulario con los datos del socio extranjero moral consultado.
    */
-  llenarCamposSocioAccionista() {
+  llenarCamposSocioAccionista(): void {
     if (this.accionistaExtranjeroConsultado) {
       this.formConsultaSocioExtranjero.get('razonSocial')?.setValue(this.accionistaExtranjeroConsultado.accionistaExtranjeroMoral.razonSocial);
       this.formConsultaSocioExtranjero.get('pais')?.setValue(this.accionistaExtranjeroConsultado.accionistaExtranjeroMoral.pais);
@@ -104,7 +104,7 @@ export class ConsultaAccionistaExtranjeroMoralComponent implements OnInit {
    * Confirma y guarda los datos del socio extranjero persona moral.
    * Si el formulario es válido, guarda el socio y actualiza el estado, mostrando notificaciones según el resultado.
    */
-  confirmarSocioExtranjeroMoral() {
+  confirmarSocioExtranjeroMoral(): void {
     if (this.formConsultaSocioExtranjero.invalid) {
       this.formConsultaSocioExtranjero.markAllAsTouched();
       return;
@@ -147,7 +147,7 @@ export class ConsultaAccionistaExtranjeroMoralComponent implements OnInit {
       .subscribe();
   }
 
-  cancelarGuardado() {
+  cancelarGuardado(): void {
     this.router.navigate(['login/registro-socio-accionista']);
   }
 }

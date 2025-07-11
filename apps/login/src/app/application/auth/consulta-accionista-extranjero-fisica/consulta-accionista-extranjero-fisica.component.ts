@@ -71,7 +71,7 @@ export class ConsultaAccionistaExtranjeroFisicaComponent implements OnInit {
   /**
    * Crea el formulario reactivo para el socio extranjero.
    */
-  crearFormSocioAccionista() {
+  crearFormSocioAccionista(): void {
     this.formConsultaSocioExtranjero = this.fb.group({
       nombre: [{ value: '', disabled: true }],
       apellidoPaterno: [{ value: '', disabled: true }],
@@ -91,7 +91,7 @@ export class ConsultaAccionistaExtranjeroFisicaComponent implements OnInit {
   /**
    * Llena los campos del formulario con los datos del socio extranjero consultado.
    */
-  llenarCamposSocioAccionista() {
+  llenarCamposSocioAccionista(): void {
     if (this.accionistaExtranjeroConsultado) {
       this.formConsultaSocioExtranjero.get('nombre')?.setValue(this.accionistaExtranjeroConsultado.accionistaExtranjeroFisica.nombre);
       this.formConsultaSocioExtranjero.get('apellidoPaterno')?.setValue(this.accionistaExtranjeroConsultado.accionistaExtranjeroFisica.apellidoPaterno);
@@ -112,7 +112,7 @@ export class ConsultaAccionistaExtranjeroFisicaComponent implements OnInit {
    * Confirma y guarda los datos del socio extranjero persona física.
    * Si el formulario es válido, guarda el socio y actualiza el estado, mostrando notificaciones según el resultado.
    */
-  confirmarExtranjeroFisica() {
+  confirmarExtranjeroFisica() : void {
     if (this.formConsultaSocioExtranjero.invalid) {
       this.formConsultaSocioExtranjero.markAllAsTouched();
       return;
@@ -154,7 +154,11 @@ export class ConsultaAccionistaExtranjeroFisicaComponent implements OnInit {
       .subscribe();
   }
 
-  cancelarGuardado() {
+  /**
+   * Método que se ejecuta al cancelar el guardado del socio accionista.
+   * Navega a la página de registro de socio accionista.
+   */
+  cancelarGuardado(): void {
     this.router.navigate(['login/registro-socio-accionista']);
   }
 }
